@@ -12,6 +12,6 @@ export default defineConfig({
       },
       ciWebServerCommand: 'nx run inbox:serve-static',
     }),
-    baseUrl: 'http://localhost:4201',
+    baseUrl: 'http://localhost:3001',
   },
 });
