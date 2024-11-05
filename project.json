@@ -1,5 +1,5 @@
 {
-  "name": "@erxes-front/source",
+  "name": "@erxes-front",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
     "local-registry": {
