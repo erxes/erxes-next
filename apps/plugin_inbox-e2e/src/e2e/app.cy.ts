@@ -1,6 +1,6 @@
 import { getGreeting } from '../support/app.po';
 
-describe('inbox-e2e', () => {
+describe('plugin_inbox-e2e', () => {
   beforeEach(() => cy.visit('/'));
 
   it('should display welcome message', () => {

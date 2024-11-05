@@ -4,7 +4,7 @@ import NxWelcome from './nx-welcome';
 
 import { Link, Route, Routes } from 'react-router-dom';
 
-const Inbox = React.lazy(() => import('inbox/Module'));
+const PluginInbox = React.lazy(() => import('plugin_inbox/Module'));
 
 export function App() {
   return (
@@ -14,12 +14,15 @@ export function App() {
           <Link to="/">Home</Link>
         </li>
         <li>
+          <Link to="/inbox">PluginInbox</Link>
+        </li>
+        <li>
           <Link to="/inbox">Inbox</Link>
         </li>
       </ul>
       <Routes>
         <Route path="/" element={<NxWelcome title="core" />} />
-        <Route path="/inbox" element={<Inbox />} />
+        <Route path="/inbox" element={<PluginInbox />} />
       </Routes>
     </React.Suspense>
   );

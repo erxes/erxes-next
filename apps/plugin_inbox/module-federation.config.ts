@@ -1,7 +1,7 @@
 import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 
 const config: ModuleFederationConfig = {
-  name: 'inbox',
+  name: 'plugin_inbox',
 
   exposes: {
     './Module': './src/remote-entry.ts',

@@ -3,7 +3,7 @@ import NxWelcome from './nx-welcome';
 export function App() {
   return (
     <div>
-      <NxWelcome title="inbox" />
+      <NxWelcome title="plugin_inbox" />
     </div>
   );
 }

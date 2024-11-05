@@ -1,7 +1,7 @@
 {
-  "name": "inbox",
+  "name": "plugin_inbox",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/inbox/src",
+  "sourceRoot": "apps/plugin_inbox/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,11 +11,14 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/apps/inbox",
-        "main": "apps/inbox/src/main.ts",
-        "tsConfig": "apps/inbox/tsconfig.app.json",
-        "rspackConfig": "apps/inbox/rspack.config.ts",
-        "assets": ["apps/inbox/src/favicon.ico", "apps/inbox/src/assets"]
+        "outputPath": "dist/apps/plugin_inbox",
+        "main": "apps/plugin_inbox/src/main.ts",
+        "tsConfig": "apps/plugin_inbox/tsconfig.app.json",
+        "rspackConfig": "apps/plugin_inbox/rspack.config.ts",
+        "assets": [
+          "apps/plugin_inbox/src/favicon.ico",
+          "apps/plugin_inbox/src/assets"
+        ]
       },
       "configurations": {
         "development": {
@@ -25,20 +28,20 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "apps/inbox/rspack.config.prod.ts"
+          "rspackConfig": "apps/plugin_inbox/rspack.config.prod.ts"
         }
       }
     },
     "serve": {
       "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
-        "buildTarget": "inbox:build:development",
-        "port": 3001
+        "buildTarget": "plugin_inbox:build:development",
+        "port": 3002
       },
       "configurations": {
         "development": {},
         "production": {
-          "buildTarget": "inbox:build:production"
+          "buildTarget": "plugin_inbox:build:production"
         }
       }
     },
@@ -46,14 +49,14 @@
       "executor": "@nx/rspack:module-federation-static-server",
       "defaultConfiguration": "production",
       "options": {
-        "serveTarget": "inbox:serve"
+        "serveTarget": "plugin_inbox:serve"
       },
       "configurations": {
         "development": {
-          "serveTarget": "inbox:serve:development"
+          "serveTarget": "plugin_inbox:serve:development"
         },
         "production": {
-          "serveTarget": "inbox:serve:production"
+          "serveTarget": "plugin_inbox:serve:production"
         }
       }
     }

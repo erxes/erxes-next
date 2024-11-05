@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 
-import App from '../app/app';
+import App from './app';
+
 describe('App', () => {
   it('should render successfully', () => {
     const { baseElement } = render(<App />);
@@ -9,6 +10,6 @@ describe('App', () => {
 
   it('should have a greeting as the title', () => {
     const { getByText } = render(<App />);
-    expect(getByText(/Welcome inbox/gi)).toBeTruthy();
+    expect(getByText(/Welcome plugin_inbox/gi)).toBeTruthy();
   });
 });

@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "inbox/Module": ["apps/inbox/src/remote-entry.ts"]
+      "plugin_inbox/Module": ["apps/plugin_inbox/src/remote-entry.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
