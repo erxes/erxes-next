@@ -1,0 +1,10 @@
+{
+  "name": "inbox-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/inbox-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["inbox"],
+  "// targets": "to see all targets run: nx show project inbox-e2e --web",
+  "targets": {}
+}
