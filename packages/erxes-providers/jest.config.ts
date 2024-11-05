@@ -1,10 +1,10 @@
 export default {
-  displayName: 'providers',
+  displayName: 'erxes-providers',
   preset: '../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': ['babel-jest', { presets: ['@nx/react/babel'] }],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/packages/providers',
+  coverageDirectory: '../../coverage/packages/erxes-providers',
 };
