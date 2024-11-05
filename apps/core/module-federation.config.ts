@@ -14,7 +14,7 @@ const config: ModuleFederationConfig = {
    * declare module 'my-external-remote';
    *
    */
-  remotes: ['plugin_inbox'],
+  remotes: ['plugin_inbox', 'plugin_task'],
 };
 
 /**
