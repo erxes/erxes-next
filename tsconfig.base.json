@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@erxes-front/providers": ["packages/providers/src/index.ts"],
       "plugin_inbox/Module": ["apps/plugin_inbox/src/remote-entry.ts"]
     }
   },
