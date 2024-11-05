@@ -7,12 +7,11 @@ export default defineConfig({
     ...nxE2EPreset(__filename, {
       cypressDir: 'src',
       webServerCommands: {
-        default: 'npx nx run inbox:serve',
-        production: 'npx nx run inbox:serve-static',
+        default: 'nx run inbox:serve',
+        production: 'nx run inbox:serve:production',
       },
-      ciWebServerCommand: 'npx nx run inbox:serve-static',
-      ciBaseUrl: 'http://localhost:4200',
+      ciWebServerCommand: 'nx run inbox:serve-static',
     }),
-    baseUrl: 'http://localhost:4200',
+    baseUrl: 'http://localhost:4201',
   },
 });

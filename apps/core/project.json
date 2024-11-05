@@ -4,6 +4,58 @@
   "sourceRoot": "apps/core/src",
   "projectType": "application",
   "tags": [],
-  "// targets": "to see all targets run: nx show project core --web",
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/apps/core",
+        "main": "apps/core/src/main.ts",
+        "tsConfig": "apps/core/tsconfig.app.json",
+        "rspackConfig": "apps/core/rspack.config.ts",
+        "assets": ["apps/core/src/favicon.ico", "apps/core/src/assets"]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "apps/core/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "core:build:development",
+        "port": 4200
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "core:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "core:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "core:serve:development"
+        },
+        "production": {
+          "serveTarget": "core:serve:production"
+        }
+      }
+    }
+  }
 }

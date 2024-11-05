@@ -6,66 +6,44 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/rspack:rspack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "compiler": "babel",
+        "target": "web",
         "outputPath": "dist/apps/inbox",
-        "index": "apps/inbox/src/index.html",
-        "baseHref": "/",
         "main": "apps/inbox/src/main.ts",
         "tsConfig": "apps/inbox/tsconfig.app.json",
-        "assets": ["apps/inbox/src/favicon.ico", "apps/inbox/src/assets"],
-        "styles": ["apps/inbox/src/styles.tailwind"],
-        "scripts": [],
-        "webpackConfig": "apps/inbox/webpack.config.ts",
-        "postcssConfig": "apps/inbox/postcss.config.js"
+        "rspackConfig": "apps/inbox/rspack.config.ts",
+        "assets": ["apps/inbox/src/favicon.ico", "apps/inbox/src/assets"]
       },
       "configurations": {
         "development": {
-          "extractLicenses": false,
-          "optimization": false,
-          "sourceMap": true,
-          "vendorChunk": true
+          "mode": "development"
         },
         "production": {
-          "fileReplacements": [
-            {
-              "replace": "apps/inbox/src/environments/environment.ts",
-              "with": "apps/inbox/src/environments/environment.prod.ts"
-            }
-          ],
+          "mode": "production",
           "optimization": true,
-          "outputHashing": "all",
           "sourceMap": false,
-          "namedChunks": false,
-          "extractLicenses": true,
-          "vendorChunk": false,
-          "webpackConfig": "apps/inbox/webpack.config.prod.ts"
+          "rspackConfig": "apps/inbox/rspack.config.prod.ts"
         }
       }
     },
     "serve": {
-      "executor": "@nx/react:module-federation-dev-server",
-      "defaultConfiguration": "development",
+      "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
-        "buildTarget": "inbox:build",
-        "hmr": true,
-        "port": 4200
+        "buildTarget": "inbox:build:development",
+        "port": 4201
       },
       "configurations": {
-        "development": {
-          "buildTarget": "inbox:build:development"
-        },
+        "development": {},
         "production": {
-          "buildTarget": "inbox:build:production",
-          "hmr": false
+          "buildTarget": "inbox:build:production"
         }
       }
     },
     "serve-static": {
-      "executor": "@nx/react:module-federation-static-server",
+      "executor": "@nx/rspack:module-federation-static-server",
       "defaultConfiguration": "production",
       "options": {
         "serveTarget": "inbox:serve"
