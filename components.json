@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tailwind": {
+    "config": "packages/erxes-ui/utils/tailwind.config.js",
+    "css": "packages/erxes-ui/utils/global.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "erxes-ui",
+    "utils": "erxes-ui/utils"
+  }
+}

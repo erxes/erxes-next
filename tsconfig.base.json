@@ -10,16 +10,42 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@erxes-front/erxes-providers": ["packages/erxes-providers/src/index.ts"],
-      "@erxes-front/erxes-ui": ["packages/erxes-ui/src/index.ts"],
-      "plugin_inbox/Module": ["apps/plugin_inbox/src/remote-entry.ts"],
-      "plugin_task/Module": ["apps/plugin_task/src/remote-entry.ts"]
+      "@erxes-front/erxes-providers": [
+        "packages/erxes-providers/src/index.ts"
+      ],
+      "@erxes-front/erxes-ui": [
+        "packages/erxes-ui/src/index.ts"
+      ],
+      "plugin_inbox/Module": [
+        "apps/plugin_inbox/src/remote-entry.ts"
+      ],
+      "plugin_task/Module": [
+        "apps/plugin_task/src/remote-entry.ts"
+      ],
+      "erxes-ui": [
+        "packages/erxes-ui/src/index.ts"
+      ],
+      "erxes-ui/utils": [
+        "packages/erxes-ui/utils/src/index.ts"
+      ],
+      "erxes-ui/*": [
+        "packages/erxes-ui/src/*"
+      ],
+      "erxes-ui/utils/*": [
+        "packages/erxes-ui/utils/src/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

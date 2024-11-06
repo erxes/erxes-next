@@ -5,15 +5,8 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/erxes-ui",
-        "main": "packages/erxes-ui/src/index.ts",
-        "tsConfig": "packages/erxes-ui/tsconfig.lib.json",
-        "assets": ["packages/erxes-ui/*.md"]
-      }
+    "add-component": {
+      "executor": "@nx-extend/shadcn-ui:add"
     }
   }
 }
