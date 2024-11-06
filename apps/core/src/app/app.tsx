@@ -3,12 +3,16 @@ import * as React from 'react';
 import NxWelcome from './nx-welcome';
 
 import { Link, Route, Routes } from 'react-router-dom';
+import { useAuth } from '@erxes-front/erxes-providers';
 
 const PluginTask = React.lazy(() => import('plugin_task/Module'));
 
 const PluginInbox = React.lazy(() => import('plugin_inbox/Module'));
 
 export function App() {
+  const { user } = useAuth();
+
+  console.log(user);
   return (
     <React.Suspense fallback={null}>
       <ul>

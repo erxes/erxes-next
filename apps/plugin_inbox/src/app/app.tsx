@@ -1,11 +1,9 @@
-import NxWelcome from './nx-welcome';
-
-export function App() {
+const PluginInbox = () => {
   return (
     <div>
-      <NxWelcome title="plugin_inbox" />
+      <h2>Inbox</h2>
     </div>
   );
-}
+};
 
-export default App;
+export default PluginInbox;

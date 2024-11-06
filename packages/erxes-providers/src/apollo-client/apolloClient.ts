@@ -14,7 +14,7 @@ import { createClient } from 'graphql-ws';
 import addMergeKeyfieldPolicy from './add-merge-keyfield-policy';
 import noIdNestedTypes from './no-id-nested-types';
 
-const { REACT_APP_API_SUBSCRIPTION_URL, REACT_APP_API_URL } = getEnv();
+import { REACT_APP_API_URL } from '@erxes-front/erxes-utils';
 
 // Create an http link:
 const httpLink = createHttpLink({
@@ -46,9 +46,9 @@ const authLink = setContext((_, { headers }) => {
 const httpLinkWithMiddleware = from([errorLink, authLink, httpLink]);
 
 // Subscription config
-export const wsLink: any = new GraphQLWsLink(
+export const wsLink = new GraphQLWsLink(
   createClient({
-    url: REACT_APP_API_SUBSCRIPTION_URL || 'ws://localhost:4000/graphql',
+    url: REACT_APP_API_URL || 'ws://localhost:4000/graphql',
     retryAttempts: 1000,
     retryWait: async () => {
       await new Promise((resolve) => setTimeout(resolve, 5000));

@@ -1,1 +1,1 @@
-export * from './lib/erxes-utils';
+export * from './utils';

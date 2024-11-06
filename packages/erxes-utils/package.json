@@ -2,6 +2,7 @@
   "name": "@erxes-front/erxes-utils",
   "version": "0.0.1",
   "dependencies": {
+    "@rspack/core": "^1.0.14",
     "tslib": "^2.3.0"
   },
   "type": "commonjs",
