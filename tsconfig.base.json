@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@erxes-front/erxes-providers": ["packages/erxes-providers/src/index.ts"],
-      "@erxes-front/erxes-utils": ["packages/erxes-utils/src/index.ts"],
+      "@erxes-front/erxes-ui": ["packages/erxes-ui/src/index.ts"],
       "plugin_inbox/Module": ["apps/plugin_inbox/src/remote-entry.ts"],
       "plugin_task/Module": ["apps/plugin_task/src/remote-entry.ts"]
     }

@@ -14,7 +14,7 @@ import { createClient } from 'graphql-ws';
 import addMergeKeyfieldPolicy from './add-merge-keyfield-policy';
 import noIdNestedTypes from './no-id-nested-types';
 
-import { REACT_APP_API_URL } from '@erxes-front/erxes-utils';
+import { REACT_APP_API_URL } from '@erxes-front/erxes-ui';
 
 // Create an http link:
 const httpLink = createHttpLink({
