@@ -4,6 +4,7 @@ import NxWelcome from './nx-welcome';
 
 import { Link, Route, Routes } from 'react-router-dom';
 import { useAuth } from '@erxes-front/erxes-providers';
+import { Button } from 'erxes-ui';
 
 const PluginTask = React.lazy(() => import('plugin_task/Module'));
 
@@ -18,6 +19,7 @@ export function App() {
       <ul className="flex gap-4 border-b border-gray-200">
         <li>
           <Link to="/">Home</Link>
+          <Button>132</Button>
         </li>
         <li>
           <Link to="/plugin-task">Task</Link>
