@@ -5,7 +5,7 @@ const PluginInbox = () => {
     <div>
       <h2>Inbox</h2>
 
-      <Button>23132</Button>
+      <Button className="bg-white">23132</Button>
     </div>
   );
 };
