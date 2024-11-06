@@ -1,13 +1,5 @@
-/*
- * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- This is a starter component and can be deleted.
- * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- Delete this file and get started with your project!
- * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- */
-
 export function NxWelcome({ title }: { title: string }) {
-  return <>inbox</>;
+  return <div className="text-2xl font-bold bg-blue-500">inbox</div>;
 }
 
 export default NxWelcome;

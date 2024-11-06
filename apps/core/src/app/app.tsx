@@ -15,18 +15,12 @@ export function App() {
   console.log(user);
   return (
     <React.Suspense fallback={null}>
-      <ul>
+      <ul className="flex gap-4 border-b border-gray-200">
         <li>
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/plugin-task">PluginTask</Link>
-        </li>
-        <li>
-          <Link to="/plugin-task">PluginTask</Link>
-        </li>
-        <li>
-          <Link to="/inbox">PluginInbox</Link>
+          <Link to="/plugin-task">Task</Link>
         </li>
         <li>
           <Link to="/inbox">Inbox</Link>
