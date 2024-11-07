@@ -1,0 +1,9 @@
+{
+  "$schema": "./$schema.json",
+  "nav": {
+    "plugins": "Plugins",
+    "teamInbox": "Team Inbox",
+    "inbox": "Inbox",
+    "tasks": "Tasks"
+  }
+}

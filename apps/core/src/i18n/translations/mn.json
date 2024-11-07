@@ -1,0 +1,9 @@
+{
+  "$schema": "./$schema.json",
+  "nav": {
+    "plugins": "Плагин",
+    "teamInbox": "Багийн имэйл хайрцаг",
+    "inbox": "Имэйл",
+    "tasks": "Даалгаврууд"
+  }
+}

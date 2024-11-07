@@ -58,20 +58,24 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ThemeSelector } from '../ThemeSelector';
+import { SelectLanguages } from '../SelectLanguages';
+import { useTranslation } from 'react-i18next';
 
 const data = {
   user: {
     name: 'khe.',
     email: 'khe@erxes.io',
-    avatar: '/avatars/shadcn.jpg',
+    avatar:
+      'https://lh3.googleusercontent.com/ogw/AF2bZyimKgaZe7HoKYoAiQ4Rt9qIKG-KEWXXba0WFGWRXTccXUs=s64-c-mo',
   },
   teams: [
     {
       name: 'Erxes',
       logo: () => (
         <svg
-          width="32"
-          height="32"
+          width="20"
+          height="20"
           viewBox="0 0 81 113"
           fill="currentcolor"
           xmlns="http://www.w3.org/2000/svg"
@@ -94,13 +98,13 @@ const data = {
   ],
   navMain: [
     {
-      title: 'Team Inbox',
+      title: 'teamInbox',
       url: '/inbox',
       icon: Mail,
       isActive: true,
       items: [
         {
-          title: 'Inbox',
+          title: 'inbox',
           url: '/inbox',
         },
         {
@@ -198,7 +202,7 @@ const data = {
   ],
 };
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon">
@@ -302,6 +306,7 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const { t } = useTranslation();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Plugins</SidebarGroupLabel>
@@ -317,7 +322,7 @@ export function NavMain({
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  <span>{t('nav.' + item.title)}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -327,7 +332,7 @@ export function NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
                         <Link to={subItem.url}>
-                          <span>{subItem.title}</span>
+                          <span>{t('nav.' + subItem.title)}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -399,6 +404,8 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
+            <ThemeSelector />
+            <SelectLanguages />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
@@ -487,5 +494,3 @@ export function NavProjects({
     </SidebarGroup>
   );
 }
-
-export default Layout;

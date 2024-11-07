@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "nav": {
+      "type": "object",
+      "properties": {
+        "plugins": {
+          "type": "string"
+        },
+        "teamInbox": {
+          "type": "string"
+        },
+        "inbox": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
