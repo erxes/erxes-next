@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.11.8",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -18,6 +19,8 @@
     "date-fns": "^4.1.0",
     "i18next": "^23.16.4",
     "i18next-browser-languagedetector": "^8.0.0",
+    "graphql": "^16.9.0",
+    "graphql-ws": "^5.16.0",
     "lucide-react": "^0.395.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",

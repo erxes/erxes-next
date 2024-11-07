@@ -7,7 +7,7 @@
  */
 
 export function NxWelcome({ title }: { title: string }) {
-  return <>sda</>;
+  return <>asdasdadasdasdassd</>;
 }
 
 export default NxWelcome;
