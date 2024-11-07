@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   BreadcrumbSeparator,
   BreadcrumbList,
@@ -7,29 +8,54 @@ import {
   Header,
 } from 'erxes-ui';
 
-const PluginInbox = () => {
+import { Route, Routes, Outlet } from 'react-router-dom';
+
+export function App() {
   return (
     <>
       <Header>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/task">Task</BreadcrumbLink>
+              <BreadcrumbLink href="/tasks">Task</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
           </BreadcrumbList>
         </Breadcrumb>
       </Header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div className="aspect-video rounded-xl bg-muted" />
-          <div className="aspect-video rounded-xl bg-muted/50" />
-          <div className="aspect-video rounded-xl bg-muted/50" />
-        </div>
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-      </div>
+
+      <React.Suspense>
+        <Routes>
+          <Route path="/" element={<TaskLayout />}>
+            <Route index element={<TaskHome />} />
+            <Route path="teams" element={<Teams />} />
+            <Route path="details/:id" element={<TaskDetails />} />
+          </Route>
+        </Routes>
+      </React.Suspense>
     </>
   );
-};
+}
 
-export default PluginInbox;
+function TaskLayout() {
+  return (
+    <div>
+      <h1>Task Plugdsadin</h1>
+      <Outlet /> {/* This will render nested routes */}
+    </div>
+  );
+}
+
+function TaskHome() {
+  return <div>dasds to Tasks</div>;
+}
+
+function Teams() {
+  return <div>Teams Page</div>;
+}
+
+function TaskDetails() {
+  return <div>Details for Task </div>;
+}
+
+export default App;

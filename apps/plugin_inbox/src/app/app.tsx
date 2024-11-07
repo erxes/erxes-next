@@ -15,7 +15,7 @@ const PluginInbox = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="#">Team Inbox</BreadcrumbLink>
+              <BreadcrumbLink href="/inbox">Team Inbox</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem>
