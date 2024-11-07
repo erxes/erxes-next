@@ -49,16 +49,19 @@ import {
   Folder,
   Trash2,
   Forward,
-  MapIcon,
-  User,
   Users,
   Search,
+  CreditCard,
+  Sparkles,
+  BadgeCheck,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeSelector } from '../ThemeSelector';
 import { SelectLanguages } from '../SelectLanguages';
 import { useTranslation } from 'react-i18next';
+import { CommandK } from '../CommandK';
+import React from 'react';
 
 const data = {
   user: {
@@ -102,7 +105,7 @@ const data = {
       isActive: true,
       items: [
         {
-          title: 'Inbox',
+          title: 'inbox',
           url: '/inbox',
         },
         {
@@ -155,10 +158,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <TeamSwitcher teams={data.teams} />
-          <SidebarMenuButton>
-            <Search />
-            <span>Search</span>
-          </SidebarMenuButton>
+          <CommandK />
         </SidebarHeader>
         <SidebarContent>
           <NavFavorites items={data.navFavorites} />
@@ -277,35 +277,44 @@ export function NavFavorites({
       <SidebarGroupLabel>Favorites</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={item.isActive}
-            className="group/collapsible"
-          >
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+          <React.Fragment key={item.title}>
+            {item.items ? (
+              <Collapsible
+                asChild
+                defaultOpen={item.isActive}
+                className="group/collapsible"
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip={item.title}>
+                      {item.icon && <item.icon />}
+                      <span>{t('nav.' + item.title)}</span>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.items?.map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton asChild>
+                            <Link to={subItem.url}>
+                              <span>{t('nav.' + subItem.title)}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+            ) : (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link to={item.url}>{item.icon && <item.icon />}</Link>
                 </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <Link to={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
+              </SidebarMenuItem>
+            )}
+          </React.Fragment>
         ))}
       </SidebarMenu>
     </SidebarGroup>
@@ -369,6 +378,8 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
+            <ThemeSelector />
+            <SelectLanguages />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
