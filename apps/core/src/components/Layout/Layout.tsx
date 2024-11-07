@@ -35,19 +35,15 @@ import {
   AudioWaveform,
   BookOpen,
   Command,
-  GalleryVerticalEnd,
   Settings2,
   Frame,
   PieChart,
   ChevronsUpDown,
   Plus,
   Bell,
-  CreditCard,
   LucideIcon,
   ChevronRight,
-  Sparkles,
   Mail,
-  BadgeCheck,
   ListTodo,
   LogOut,
   MoreHorizontal,
@@ -55,6 +51,9 @@ import {
   Trash2,
   Forward,
   MapIcon,
+  User,
+  Users,
+  Search,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -92,26 +91,12 @@ const data = {
       plan: 'Free',
     },
   ],
-  navMain: [
+  navFavorites: [
     {
       title: 'Team Inbox',
       url: '/inbox',
       icon: Mail,
       isActive: true,
-      items: [
-        {
-          title: 'Inbox',
-          url: '/inbox',
-        },
-        {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
     },
     {
       title: 'Tasks',
@@ -119,81 +104,30 @@ const data = {
       icon: ListTodo,
       items: [
         {
-          title: '💪 Team Khe.',
-          url: '#',
+          title: 'Teams',
+          url: '/tasks/teams',
         },
         {
-          title: '🦾 Team EJ',
-          url: '#',
+          title: 'Projects',
+          url: '/tasks/projects',
         },
         {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2,
-      items: [
-        {
-          title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
+          title: 'View',
+          url: '/tasks/views',
         },
       ],
     },
   ],
   projects: [
     {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame,
+      name: 'Contacts',
+      url: '/contacts',
+      icon: Users,
     },
     {
-      name: 'Sales & Marketing',
-      url: '#',
+      name: 'Insights',
+      url: '/insights',
       icon: PieChart,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: MapIcon,
     },
   ],
 };
@@ -204,12 +138,28 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <TeamSwitcher teams={data.teams} />
+          <SidebarMenuButton>
+            <Search />
+            <span>Search</span>
+          </SidebarMenuButton>
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={data.navMain} />
+          <NavFavorites items={data.navFavorites} />
           <NavProjects projects={data.projects} />
         </SidebarContent>
         <SidebarFooter>
+          <SidebarMenuButton asChild>
+            <a href="documentation">
+              <BookOpen />
+              <span>Documentation</span>
+            </a>
+          </SidebarMenuButton>
+          <SidebarMenuButton asChild>
+            <a href="/settings">
+              <Settings2 />
+              <span>Settings</span>
+            </a>
+          </SidebarMenuButton>
           <NavUser user={data.user} />
         </SidebarFooter>
         <SidebarRail />
@@ -279,7 +229,9 @@ export function TeamSwitcher({
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+              <div className="font-medium text-muted-foreground">
+                Add organization
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -288,7 +240,7 @@ export function TeamSwitcher({
   );
 }
 
-export function NavMain({
+export function NavFavorites({
   items,
 }: {
   items: {
@@ -304,7 +256,7 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Plugins</SidebarGroupLabel>
+      <SidebarGroupLabel>Favorites</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -314,26 +266,37 @@ export function NavMain({
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+              {!item.items ? (
+                <SidebarMenuButton asChild>
+                  <a href={item.url}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </a>
                 </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <Link to={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
+              ) : (
+                <>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton tooltip={item.title}>
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.items?.map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton asChild>
+                            <Link to={subItem.url}>
+                              <span>{subItem.title}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </>
+              )}
             </SidebarMenuItem>
           </Collapsible>
         ))}
@@ -394,21 +357,6 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
                 <Bell />
                 Notifications
               </DropdownMenuItem>
@@ -438,7 +386,7 @@ export function NavProjects({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupLabel>Plugins</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
