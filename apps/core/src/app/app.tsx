@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router-dom';
-import { Layout } from '../components/Layout';
 import Providers from '../providers/providers';
+import { SidebarMain } from '../components/Sidebar';
 
 export function App() {
   return (
     <Providers>
-      <Layout>
+      <SidebarMain>
         <Outlet />
-      </Layout>
+      </SidebarMain>
     </Providers>
   );
 }

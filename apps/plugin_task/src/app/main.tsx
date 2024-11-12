@@ -2,14 +2,7 @@ import * as React from 'react';
 
 import NxWelcome from './nx-welcome';
 
-import {
-  BreadcrumbSeparator,
-  BreadcrumbList,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Header,
-} from 'erxes-ui';
+import { Breadcrumb, Header } from 'erxes-ui';
 
 import { Route, Routes } from 'react-router-dom';
 
@@ -19,14 +12,14 @@ export function App() {
   return (
     <>
       <Header>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/tasks">dsadsa</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-          </BreadcrumbList>
-        </Breadcrumb>
+        <Breadcrumb.Root>
+          <Breadcrumb.List>
+            <Breadcrumb.Item className="hidden md:block">
+              <Breadcrumb.Link href="/tasks">dsadsa</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator className="hidden md:block" />
+          </Breadcrumb.List>
+        </Breadcrumb.Root>
       </Header>
       <React.Suspense fallback={null}>
         <Routes>

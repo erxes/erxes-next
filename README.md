@@ -80,3 +80,12 @@ And join the Nx community:
 - [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
 - [Our Youtube channel](https://www.youtube.com/@nxdevtools)
 - [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+## Quick Actions
+
+- suggest based on the current page
+- suggest based on the current user actions (recently clicked)
+- suggest based on the current user context (company, team, role)
+- suggest based on the current user intent (what they are trying to do)
+- suggest based on the current user location (browser location)
+- suggest based on the current user activity (user activity history)

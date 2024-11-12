@@ -4,13 +4,13 @@ import { ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '../lib/utils';
 
-const Breadcrumb = React.forwardRef<
+const BreadcrumbRoot = React.forwardRef<
   HTMLElement,
   React.ComponentPropsWithoutRef<'nav'> & {
     separator?: React.ReactNode;
   }
 >(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
-Breadcrumb.displayName = 'Breadcrumb';
+BreadcrumbRoot.displayName = 'BreadcrumbRoot';
 
 const BreadcrumbList = React.forwardRef<
   HTMLOListElement,
@@ -104,12 +104,12 @@ const BreadcrumbEllipsis = ({
 );
 BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis';
 
-export {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  BreadcrumbEllipsis,
+export const Breadcrumb = {
+  Root: BreadcrumbRoot,
+  List: BreadcrumbList,
+  Item: BreadcrumbItem,
+  Link: BreadcrumbLink,
+  Page: BreadcrumbPage,
+  Separator: BreadcrumbSeparator,
+  Ellipsis: BreadcrumbEllipsis,
 };

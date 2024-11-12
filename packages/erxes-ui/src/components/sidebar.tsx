@@ -8,7 +8,7 @@ import { cn } from '../lib/utils';
 import { Button } from './button';
 import { Input } from './input';
 import { Separator } from './separator';
-import { Sheet, SheetContent } from './sheet';
+import { Sheet } from './sheet';
 import {
   Tooltip,
   TooltipContent,
@@ -154,7 +154,7 @@ const SidebarProvider = React.forwardRef<
 );
 SidebarProvider.displayName = 'SidebarProvider';
 
-const Sidebar = React.forwardRef<
+const SidebarRoot = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'> & {
     side?: 'left' | 'right';
@@ -192,8 +192,8 @@ const Sidebar = React.forwardRef<
 
     if (isMobile) {
       return (
-        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-          <SheetContent
+        <Sheet.Root open={openMobile} onOpenChange={setOpenMobile} {...props}>
+          <Sheet.Content
             data-sidebar="sidebar"
             data-mobile="true"
             className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
@@ -205,8 +205,8 @@ const Sidebar = React.forwardRef<
             side={side}
           >
             <div className="flex h-full w-full flex-col">{children}</div>
-          </SheetContent>
-        </Sheet>
+          </Sheet.Content>
+        </Sheet.Root>
       );
     }
 
@@ -226,7 +226,7 @@ const Sidebar = React.forwardRef<
             'group-data-[collapsible=offcanvas]:w-0',
             'group-data-[side=right]:rotate-180',
             variant === 'floating' || variant === 'inset'
-              ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]'
+              ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon))]'
               : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon]'
           )}
         />
@@ -238,7 +238,7 @@ const Sidebar = React.forwardRef<
               : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
             // Adjust the padding for floating and inset variants.
             variant === 'floating' || variant === 'inset'
-              ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]'
+              ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+2px)]'
               : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l',
             className
           )}
@@ -255,7 +255,7 @@ const Sidebar = React.forwardRef<
     );
   }
 );
-Sidebar.displayName = 'Sidebar';
+SidebarRoot.displayName = 'SidebarRoot';
 
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
@@ -733,29 +733,29 @@ const SidebarMenuSubButton = React.forwardRef<
 });
 SidebarMenuSubButton.displayName = 'SidebarMenuSubButton';
 
-export {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupAction,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInput,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSkeleton,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarSeparator,
-  SidebarTrigger,
-  useSidebar,
+export const Sidebar = {
+  Root: SidebarRoot,
+  Content: SidebarContent,
+  Footer: SidebarFooter,
+  Group: SidebarGroup,
+  GroupAction: SidebarGroupAction,
+  GroupContent: SidebarGroupContent,
+  GroupLabel: SidebarGroupLabel,
+  Header: SidebarHeader,
+  Input: SidebarInput,
+  Inset: SidebarInset,
+  Menu: SidebarMenu,
+  MenuAction: SidebarMenuAction,
+  MenuBadge: SidebarMenuBadge,
+  MenuButton: SidebarMenuButton,
+  MenuItem: SidebarMenuItem,
+  MenuSkeleton: SidebarMenuSkeleton,
+  MenuSub: SidebarMenuSub,
+  MenuSubItem: SidebarMenuSubItem,
+  MenuSubButton: SidebarMenuSubButton,
+  Provider: SidebarProvider,
+  Rail: SidebarRail,
+  Separator: SidebarSeparator,
+  Trigger: SidebarTrigger,
+  useSidebar: useSidebar,
 };

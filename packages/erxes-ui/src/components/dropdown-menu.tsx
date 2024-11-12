@@ -6,18 +6,6 @@ import { Check, ChevronRight, Circle } from 'lucide-react';
 
 import { cn } from '../lib/utils';
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
-
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
-
-const DropdownMenuGroup = DropdownMenuPrimitive.Group;
-
-const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
-
-const DropdownMenuSub = DropdownMenuPrimitive.Sub;
-
-const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
-
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
@@ -182,20 +170,19 @@ const DropdownMenuShortcut = ({
 };
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
-export {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup,
+export const DropdownMenu = {
+  Root: DropdownMenuPrimitive.Root,
+  Trigger: DropdownMenuPrimitive.Trigger,
+  Group: DropdownMenuPrimitive.Group,
+  Portal: DropdownMenuPrimitive.Portal,
+  Sub: DropdownMenuPrimitive.Sub,
+  SubTrigger: DropdownMenuSubTrigger,
+  SubContent: DropdownMenuSubContent,
+  RadioGroup: DropdownMenuPrimitive.RadioGroup,
+  RadioItem: DropdownMenuRadioItem,
+  Content: DropdownMenuContent,
+  Item: DropdownMenuItem,
+  Label: DropdownMenuLabel,
+  Shortcut: DropdownMenuShortcut,
+  Separator: DropdownMenuSeparator,
 };

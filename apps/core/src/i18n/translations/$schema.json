@@ -9,16 +9,40 @@
     "nav": {
       "type": "object",
       "properties": {
-        "plugins": {
+        "contacts": {
           "type": "string"
         },
-        "teamInbox": {
+        "favorites": {
           "type": "string"
         },
         "inbox": {
           "type": "string"
         },
+        "insights": {
+          "type": "string"
+        },
+        "plugins": {
+          "type": "string"
+        },
+        "projects": {
+          "type": "string"
+        },
+        "settings": {
+          "type": "string"
+        },
+        "starred": {
+          "type": "string"
+        },
         "tasks": {
+          "type": "string"
+        },
+        "teamInbox": {
+          "type": "string"
+        },
+        "teams": {
+          "type": "string"
+        },
+        "views": {
           "type": "string"
         }
       }

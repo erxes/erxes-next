@@ -1,9 +1,17 @@
 {
   "$schema": "./$schema.json",
   "nav": {
-    "plugins": "Plugins",
-    "teamInbox": "Team Inbox",
+    "contacts": "Contacts",
+    "favorites": "Favorites",
     "inbox": "Inbox",
-    "tasks": "Tasks"
+    "insights": "Insights",
+    "plugins": "Plugins",
+    "projects": "Projects",
+    "settings": "Settings",
+    "starred": "Starred",
+    "tasks": "Tasks",
+    "teamInbox": "Team Inbox",
+    "teams": "Teams",
+    "views": "Views"
   }
 }

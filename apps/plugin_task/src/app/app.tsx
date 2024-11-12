@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  BreadcrumbSeparator,
-  BreadcrumbList,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Header,
-} from 'erxes-ui';
+import { Breadcrumb, Header } from 'erxes-ui';
 
 import { Route, Routes, Outlet } from 'react-router-dom';
 
@@ -14,14 +7,14 @@ export function App() {
   return (
     <>
       <Header>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/tasks">Task</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-          </BreadcrumbList>
-        </Breadcrumb>
+        <Breadcrumb.Root>
+          <Breadcrumb.List>
+            <Breadcrumb.Item className="hidden md:block">
+              <Breadcrumb.Link href="/tasks">Task</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator className="hidden md:block" />
+          </Breadcrumb.List>
+        </Breadcrumb.Root>
       </Header>
 
       <React.Suspense>

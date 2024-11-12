@@ -1,28 +1,20 @@
-import {
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  BreadcrumbList,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Header,
-} from 'erxes-ui';
+import { Breadcrumb, Header } from 'erxes-ui';
 
 const PluginInbox = () => {
   return (
     <>
       <Header>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/inbox">Team Inbox</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Starred</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <Breadcrumb.Root>
+          <Breadcrumb.List>
+            <Breadcrumb.Item className="hidden md:block">
+              <Breadcrumb.Link href="/inbox">Team Inbox</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator className="hidden md:block" />
+            <Breadcrumb.Item>
+              <Breadcrumb.Page>Starred</Breadcrumb.Page>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb.Root>
       </Header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="grid auto-rows-min gap-4 md:grid-cols-3">
