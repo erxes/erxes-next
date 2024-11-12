@@ -1,29 +1,44 @@
-import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import App from './app/app';
-import InboxPage from './routes/plugins/inbox';
-import TaskPage from './routes/plugins/task';
+import React, { Suspense } from 'react';
 
-// import Cart from './routes/cart';
-// import Products from './routes/products';
+const App = React.lazy(() => import('./app/app'));
+const InboxPage = React.lazy(() => import('./routes/plugins/inbox'));
+const TaskPage = React.lazy(() => import('./routes/plugins/task'));
+const SettingsPage = React.lazy(() => import('./routes/settings/routes'));
 
 export const router = createBrowserRouter([
   {
     path: '*',
-    element: <App />,
+    element: (
+      <Suspense fallback={<div>Loading App...</div>}>
+        <App />
+      </Suspense>
+    ),
     children: [
       {
         path: 'inbox/*',
-        element: <InboxPage />,
+        element: (
+          <Suspense fallback={<div>Loading Inbox...</div>}>
+            <InboxPage />
+          </Suspense>
+        ),
       },
       {
         path: 'tasks/*',
-        element: <TaskPage />,
+        element: (
+          <Suspense fallback={<div>Loading Tasks...</div>}>
+            <TaskPage />
+          </Suspense>
+        ),
       },
-      // {
-      //   path: 'cart',
-      //   element: <Cart />,
-      // },
+      {
+        path: 'settings/*',
+        element: (
+          <Suspense fallback={<div>Loading Settings...</div>}>
+            <SettingsPage />
+          </Suspense>
+        ),
+      },
     ],
   },
 ]);

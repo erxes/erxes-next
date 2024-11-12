@@ -97,10 +97,6 @@
       width: 1px;
     }
 
-    &::-webkit-scrollbar-track {
-      background: hsl(var(--background));
-    }
-
     &::-webkit-scrollbar-thumb {
       background-color: hsl(var(--border));
       border-radius: 10px;
@@ -109,6 +105,6 @@
 
     /* Custom scrollbar for IE, Edge and Firefox */
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) hsl(var(--background));
+    scrollbar-color: hsl(var(--border)) transparent;
   }
 }

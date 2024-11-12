@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeSelector } from '../ThemeSelector';
+import { Link } from 'react-router-dom';
 
 export function Organization() {
   const [activeTeam, setActiveTeam] = useState(organizations[0]);
@@ -18,14 +19,12 @@ export function Organization() {
       <Sidebar.MenuItem>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <Sidebar.MenuButton>
-              <span>
-                <activeTeam.logo className="size-5 rounded border" />
-              </span>
-              <h3 className="font-medium">{activeTeam.name}</h3>
-              <span className="text-xs text-muted-foreground">
-                <ChevronDown className="size-3" />
-              </span>
+            <Sidebar.MenuButton className="w-fit px-1.5">
+              <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                <activeTeam.logo className="size-3" />
+              </div>
+              <span className="truncate font-semibold">{activeTeam.name}</span>
+              <ChevronDown className="opacity-50" />
             </Sidebar.MenuButton>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg">
@@ -50,13 +49,17 @@ export function Organization() {
               <span>Add new workspace</span>
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
-            <DropdownMenu.Item>
-              <User />
-              <span>Account settings</span>
+            <DropdownMenu.Item asChild>
+              <Link to="/settings/account">
+                <User />
+                <span>Account settings</span>
+              </Link>
             </DropdownMenu.Item>
-            <DropdownMenu.Item>
-              <Settings />
-              <span>Workspace settings</span>
+            <DropdownMenu.Item asChild>
+              <Link to="/settings/workspace">
+                <Settings />
+                <span>Workspace settings</span>
+              </Link>
             </DropdownMenu.Item>
             <ThemeSelector />
             <DropdownMenu.Separator />

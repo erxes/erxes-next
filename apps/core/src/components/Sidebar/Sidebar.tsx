@@ -1,14 +1,20 @@
 import { Sidebar } from 'erxes-ui';
 import { User } from '../User';
 import { Organization } from '../Organization';
-import { ListTodo, Mail, PieChart, SquareCheck, Users } from 'lucide-react';
+import { Mail, PieChart, SquareCheck, Users } from 'lucide-react';
 import { SidebarNavigation } from '../SidebarNavigation';
 import { QuickActions } from '../QuickActions';
-
+import { SettingsSidebar } from '../SettingsSidebar';
+import { useLocation } from 'react-router-dom';
 export const SidebarMain = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Sidebar.Provider>
-      <Sidebar.Root collapsible="offcanvas" variant="inset">
+  const { pathname } = useLocation();
+
+  const renderSidebarContent = () => {
+    if (pathname.includes('/settings')) {
+      return <SettingsSidebar />;
+    }
+    return (
+      <>
         <Sidebar.Header>
           <Organization />
           <div className="flex">
@@ -27,6 +33,13 @@ export const SidebarMain = ({ children }: { children: React.ReactNode }) => {
         <Sidebar.Footer>
           <User />
         </Sidebar.Footer>
+      </>
+    );
+  };
+  return (
+    <Sidebar.Provider>
+      <Sidebar.Root collapsible="offcanvas" variant="inset">
+        {renderSidebarContent()}
         <Sidebar.Rail />
       </Sidebar.Root>
       <Sidebar.Inset>{children}</Sidebar.Inset>
