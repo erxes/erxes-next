@@ -1,0 +1,467 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type ProductsCustomFieldsData {
+  /// Field referred in an index, but found no data to define the type.
+  locationValue Json?
+}
+
+type UsersCustomFieldsData {
+  /// Field referred in an index, but found no data to define the type.
+  locationValue Json?
+}
+
+type UsersDetails {
+  firstName String
+  fullName  String
+  lastName  String
+}
+
+model activity_logs {
+  id          String   @id @map("_id")
+  v           Int      @map("__v")
+  action      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  content     Json?
+  contentId   String
+  contentType String
+  createdAt   DateTime @db.Date
+  createdBy   String
+
+  @@index([contentId], map: "contentId_1")
+  @@index([contentType], map: "contentType_1")
+  @@index([action], map: "action_1")
+}
+
+model apps {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model branches {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code  Json?  @unique(map: "code_1")
+  /// Field referred in an index, but found no data to define the type.
+  order Json?  @unique(map: "order_1")
+}
+
+model brands {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model companies {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  searchText Json?
+  /// Field referred in an index, but found no data to define the type.
+  status     Json?
+  /// Field referred in an index, but found no data to define the type.
+  tagIds     Json?
+
+  @@index([status], map: "status_1")
+  @@index([tagIds], map: "tagIds_1")
+  @@index([searchText], map: "searchText_1")
+}
+
+model configs {
+  id    String @id @map("_id")
+  v     Int    @map("__v")
+  code  String @unique(map: "code_1")
+  value String
+}
+
+model conformities {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  mainType   Json?
+  /// Field referred in an index, but found no data to define the type.
+  mainTypeId Json?
+  /// Field referred in an index, but found no data to define the type.
+  relType    Json?
+  /// Field referred in an index, but found no data to define the type.
+  relTypeId  Json?
+
+  @@index([mainTypeId], map: "mainTypeId_1")
+  @@index([relTypeId], map: "relTypeId_1")
+  @@index([mainType, mainTypeId, relType, relTypeId], map: "mainType_1_mainTypeId_1_relType_1_relTypeId_1")
+  @@index([relType, relTypeId, mainType], map: "relType_1_relTypeId_1_mainType_1")
+  @@index([mainType, relTypeId], map: "mainType_1_relTypeId_1")
+  @@index([relType, mainTypeId], map: "relType_1_mainTypeId_1")
+}
+
+model customers {
+  id                    String   @id @map("_id")
+  v                     Int      @map("__v")
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  addresses             Json?
+  createdAt             DateTime @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  customFieldsData      Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deviceTokens          Json?
+  doNotDisturb          String
+  emailValidationStatus String
+  emails                String[]
+  firstName             String
+  hasAuthority          String
+  /// Field referred in an index, but found no data to define the type.
+  integrationId         Json?
+  isSubscribed          String
+  lastName              String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  mergedIds             Json?
+  middleName            String
+  modifiedAt            DateTime @db.Date
+  ownerId               String
+  phoneValidationStatus String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  phones                Json?
+  primaryEmail          String
+  profileScore          Int
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  relatedIntegrationIds Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  scopeBrandIds         Json?
+  searchText            String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  sex                   Json?
+  state                 String
+  status                String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  tagIds                Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  trackedData           Json?
+
+  @@index([state], map: "state_1")
+  @@index([profileScore], map: "profileScore_1")
+  @@index([status], map: "status_1")
+  @@index([integrationId], map: "integrationId_1")
+  @@index([tagIds], map: "tagIds_1")
+  @@index([searchText], map: "searchText_1")
+}
+
+model dashboards {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  createdAt Json?
+  /// Field referred in an index, but found no data to define the type.
+  createdBy Json?
+
+  @@index([createdAt], map: "createdAt_1")
+  @@index([createdBy], map: "createdBy_1")
+}
+
+model departments {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code  Json?  @unique(map: "code_1")
+  /// Field referred in an index, but found no data to define the type.
+  order Json?  @unique(map: "order_1")
+}
+
+model email_deliveries {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model email_templates {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model fields_groups {
+  id                String  @id @map("_id")
+  v                 Int     @map("__v")
+  alwaysOpen        Boolean
+  code              String?
+  contentType       String
+  description       String
+  isDefinedByErxes  Boolean
+  isMultiple        Boolean
+  isVisible         Boolean
+  isVisibleInDetail Boolean
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  logics            Json?
+  name              String
+  order             Int
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  scopeBrandIds     Json?
+}
+
+model form_fields {
+  id                String  @id @map("_id")
+  v                 Int     @map("__v")
+  canHide           Boolean
+  contentType       String
+  groupId           String
+  isDefinedByErxes  Boolean
+  isVisible         Boolean
+  isVisibleInDetail Boolean
+  isVisibleToCreate Boolean
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  locationOptions   Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  logics            Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  objectListConfigs Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  options           Json?
+  order             Int?
+  relationType      String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  scopeBrandIds     Json?
+  searchable        Boolean
+  showInCard        Boolean
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  subFieldIds       Json?
+  text              String
+  type              String
+  validation        String?
+}
+
+model form_submissions {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model forms {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model insight_charts {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  contentId    Json?
+  /// Field referred in an index, but found no data to define the type.
+  name         Json?
+  /// Field referred in an index, but found no data to define the type.
+  templateType Json?
+
+  @@index([name], map: "name_1")
+  @@index([contentId], map: "contentId_1")
+  @@index([templateType], map: "templateType_1")
+}
+
+model installation_logs {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model internal_notes {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  contentType   Json?
+  /// Field referred in an index, but found no data to define the type.
+  contentTypeId Json?
+
+  @@index([contentType], map: "contentType_1")
+  @@index([contentTypeId], map: "contentTypeId_1")
+}
+
+model logs {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  action      String
+  addedData   String
+  createdAt   DateTime @db.Date
+  createdBy   String
+  description String
+  extraDesc   String
+  newData     String
+  objectId    String
+  type        String
+  unicode     String
+
+  @@index([createdAt], map: "createdAt_1")
+  @@index([objectId], map: "objectId_1")
+  @@index([description], map: "description_1")
+  @@index([type, action, createdBy], map: "type_1_action_1_createdBy_1")
+}
+
+model onboarding_histories {
+  id             String   @id @map("_id")
+  v              Int      @map("__v")
+  completedSteps String[]
+  userId         String
+}
+
+model permissions {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model positions {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code  Json?  @unique(map: "code_1")
+  /// Field referred in an index, but found no data to define the type.
+  order Json?  @unique(map: "order_1")
+}
+
+model product_categories {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code   Json?  @unique(map: "code_1")
+  /// Field referred in an index, but found no data to define the type.
+  status Json?
+
+  @@index([status], map: "status_1")
+}
+
+model products {
+  id               String                    @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  barcodes         Json?
+  /// Field referred in an index, but found no data to define the type.
+  code             Json?                     @unique(map: "code_1")
+  /// Field referred in an index, but found no data to define the type.
+  customFieldsData ProductsCustomFieldsData?
+  /// Field referred in an index, but found no data to define the type.
+  status           Json?
+  /// Field referred in an index, but found no data to define the type.
+  tagIds           Json?
+
+  @@index([tagIds], map: "tagIds_1")
+  @@index([barcodes], map: "barcodes_1")
+  @@index([customFieldsData.locationValue], map: "customFieldsData.locationValue_2dsphere")
+  @@index([status], map: "status_1")
+}
+
+model products_configs {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code Json?  @unique(map: "code_1")
+}
+
+model reports {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  createdAt Json?
+  /// Field referred in an index, but found no data to define the type.
+  createdBy Json?
+  /// Field referred in an index, but found no data to define the type.
+  name      Json?
+
+  @@index([name], map: "name_1")
+  @@index([createdAt], map: "createdAt_1")
+  @@index([createdBy], map: "createdBy_1")
+}
+
+model robot_entries {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model sections {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  createdAt Json?
+  /// Field referred in an index, but found no data to define the type.
+  createdBy Json?
+
+  @@index([createdAt], map: "createdAt_1")
+  @@index([createdBy], map: "createdBy_1")
+}
+
+model segments {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  contentType Json?
+  /// Field referred in an index, but found no data to define the type.
+  subOf       Json?
+
+  @@index([contentType], map: "contentType_1")
+  @@index([subOf], map: "subOf_1")
+}
+
+model structures {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code Json?  @unique(map: "code_1")
+}
+
+model tags {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  name     Json?
+  /// Field referred in an index, but found no data to define the type.
+  order    Json?
+  /// Field referred in an index, but found no data to define the type.
+  parentId Json?
+  /// Field referred in an index, but found no data to define the type.
+  type     Json?
+
+  @@index([type], map: "type_1")
+  @@index([order], map: "order_1")
+  @@index([parentId], map: "parentId_1")
+  @@index([type, order, name], map: "type_1_order_1_name_1")
+}
+
+model units {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code Json?  @unique(map: "code_1")
+}
+
+model uoms {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  code Json?  @unique(map: "code_1")
+}
+
+model user_groups {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  name Json?  @unique(map: "name_1")
+}
+
+model user_movements {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model users {
+  id                     String       @id @map("_id")
+  v                      Int          @map("__v")
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  branchIds              Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  brandIds               Json?
+  code                   String
+  createdAt              DateTime     @db.Date
+  /// Nested objects had no data in the sample dataset to introspect a nested type.
+  customFieldsData       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  departmentIds          Json?
+  details                UsersDetails
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deviceTokens           Json?
+  doNotDisturb           String
+  email                  String       @unique(map: "email_1")
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  emailSignatures        Json?
+  /// Field referred in an index, but found no data to define the type.
+  employeeId             Json?        @unique(map: "employeeId_1")
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  groupIds               Json?
+  isActive               Boolean
+  isOwner                Boolean
+  isShowNotification     Boolean
+  isSubscribed           String
+  password               String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  positionIds            Json?
+  role                   String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  scopeBrandIds          Json?
+  score                  Int
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  starredConversationIds Json?
+
+  @@index([customFieldsData.locationValue], map: "customFieldsData.locationValue_2dsphere")
+}
+
+model visitors {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  visitorId Json?  @unique(map: "visitorId_1")
+}

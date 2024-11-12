@@ -2,7 +2,7 @@
     "name": "backend-next",
     "scripts": {
         "db:pull": "prisma db pull",
-        "db:gen": "prisma db generate",
+        "db:gen": "prisma generate",
         "db:migrate": "prisma db migrate",
         "dev": "tsx watch src/index.ts"
     },
@@ -12,6 +12,7 @@
         "tsx": "4.19.2"
     },
     "dependencies": {
+        "@prisma/client": "5.22.0",
         "express": "5.0.1"
     }
 }
