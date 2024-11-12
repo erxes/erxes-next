@@ -13,3 +13,11 @@ model Customers {
 
   @@map("customers")
 }
+
+model Users {
+  id       String @id @map("_id")
+  email    String @unique(map: "email_1")
+  password String
+
+  @@map("users")
+}

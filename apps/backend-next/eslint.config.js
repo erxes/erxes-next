@@ -1,11 +1,11 @@
-import { configs } from 'eslint-plugin-cypress/flat';
-import baseConfig from '../../eslint.config.js';
+const nx = require('@nx/eslint-plugin');
+const baseConfig = require('../../eslint.config.js');
 
-export default [
-  configs['recommended'],
-
+module.exports = [
   ...baseConfig,
+  ...nx.configs['flat/react'],
   {
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     // Override or add rules here
     rules: {},
   },
