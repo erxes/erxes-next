@@ -1,0 +1,160 @@
+import { Button, ButtonProps } from './button';
+import { CircleUserRound, Trash2Icon, UploadIcon, X } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { cn } from '../lib/utils';
+
+type IUploadContext = {
+  previewUrl: string | null;
+  fileName: string | null;
+};
+
+const UploadContext = React.createContext<IUploadContext | null>(null);
+
+function useUpload() {
+  const context = React.useContext(UploadContext);
+  if (!context) {
+    throw new Error('useUpload must be used within a UploadProvider.');
+  }
+  return context;
+}
+
+const UploadRoot = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<'div'>
+>(({ className, ...props }, ref) => {
+  return <div ref={ref} className={cn('flex gap-4', className)} {...props} />;
+});
+
+UploadRoot.displayName = 'UploadRoot';
+
+const UploadPreview = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<'div'>
+>(({ className, ...props }, ref) => {
+  const previewRef = useRef<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const handleThumbnailClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+        previewRef.current = url;
+        console.log('File selected:', file);
+      }
+    },
+    []
+  );
+
+  const handleRemove = useCallback(() => {
+    previewUrl && URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    previewRef.current = null;
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      previewRef.current && URL.revokeObjectURL(previewRef.current);
+    };
+  }, []);
+
+  return (
+    <div>
+      <div className="relative inline-flex">
+        <Button
+          variant="outline"
+          className="relative size-16 overflow-hidden"
+          onClick={handleThumbnailClick}
+          aria-label={previewUrl ? 'Change image' : 'Upload image'}
+        >
+          {previewUrl ? (
+            <img
+              className="h-full w-full object-cover absolute"
+              src={previewUrl}
+              alt="Preview of uploaded"
+            />
+          ) : (
+            <div aria-hidden="true">
+              <CircleUserRound
+                className="opacity-60"
+                size={16}
+                strokeWidth={2}
+              />
+            </div>
+          )}
+        </Button>
+        {/* {previewUrl && (
+          <Button
+            onClick={handleRemove}
+            size="icon"
+            variant="destructive"
+            className="absolute -right-2 -top-2 size-6 rounded-full border-2 border-background"
+            aria-label="Remove image"
+          >
+            <X size={16} />
+          </Button>
+        )} */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+          accept="image/*"
+          aria-label="Upload image file"
+        />
+      </div>
+      {/* {fileName && (
+        <p className="mt-2 text-xs text-muted-foreground">{fileName}</p>
+      )} */}
+      <div className="sr-only" aria-live="polite" role="status">
+        {previewUrl
+          ? 'Image uploaded and preview available'
+          : 'No image uploaded'}
+      </div>
+    </div>
+  );
+});
+
+UploadPreview.displayName = 'UploadPreview';
+
+const UploadButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Button ref={ref} className={cn('flex', className)} {...props}>
+        <UploadIcon />
+        Upload
+      </Button>
+    );
+  }
+);
+
+UploadButton.displayName = 'UploadButton';
+
+const RemoveButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Button ref={ref} className={cn('flex', className)} {...props}>
+        <Trash2Icon />
+        Remove
+      </Button>
+    );
+  }
+);
+
+RemoveButton.displayName = 'RemoveButton';
+
+export const Upload = {
+  Root: UploadRoot,
+  Preview: UploadPreview,
+  Button: UploadButton,
+  RemoveButton: RemoveButton,
+};

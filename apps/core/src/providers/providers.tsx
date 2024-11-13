@@ -1,13 +1,13 @@
-import { PropsWithChildren } from 'react';
 import { ThemeProvider } from './theme-provider';
 import { AppAI18nWrapper } from './i18next-provider';
+import { Outlet } from 'react-router-dom';
 
-const Providers = ({ children }: PropsWithChildren) => {
+export const Providers = () => {
   return (
     <ThemeProvider>
-      <AppAI18nWrapper>{children}</AppAI18nWrapper>
+      <AppAI18nWrapper>
+        <Outlet />
+      </AppAI18nWrapper>
     </ThemeProvider>
   );
 };
-
-export default Providers;

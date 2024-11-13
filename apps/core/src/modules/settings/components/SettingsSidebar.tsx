@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Sidebar } from 'erxes-ui';
 import {
-  ChevronLeft,
   Bell,
   Menu,
   Home,
@@ -15,9 +14,26 @@ import {
   Settings,
   LinkIcon,
   Settings2,
+  XIcon,
+  CircleUserRound,
+  SwatchBook,
 } from 'lucide-react';
+import { SettingsPath } from '@/types/SettingsPath';
+import { AppPath } from '@/types/AppPath';
 
 const data = {
+  account: [
+    {
+      name: 'Profile',
+      icon: CircleUserRound,
+      path: SettingsPath.Profile,
+    },
+    {
+      name: 'Experience',
+      icon: SwatchBook,
+      path: SettingsPath.Experience,
+    },
+  ],
   nav: [
     { name: 'General', icon: Settings2 },
     { name: 'Notifications', icon: Bell },
@@ -43,8 +59,8 @@ export function SettingsSidebar() {
           <Sidebar.MenuItem>
             <Sidebar.MenuButton className="h-10" asChild>
               <Link to="/">
-                <ChevronLeft />
-                <span>Settings</span>
+                <XIcon />
+                <span>Exit Settings</span>
               </Link>
             </Sidebar.MenuButton>
           </Sidebar.MenuItem>
@@ -55,26 +71,13 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>Account Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {data.nav.map((item) => (
+              {data.account.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
-                  <Sidebar.MenuButton>
-                    <item.icon />
-                    <span>{item.name}</span>
-                  </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-              ))}
-            </Sidebar.Menu>
-          </Sidebar.GroupContent>
-        </Sidebar.Group>
-        <Sidebar.Group>
-          <Sidebar.GroupLabel>Workspace Settings</Sidebar.GroupLabel>
-          <Sidebar.GroupContent>
-            <Sidebar.Menu>
-              {data.nav.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <Sidebar.MenuButton>
-                    <item.icon />
-                    <span>{item.name}</span>
+                  <Sidebar.MenuButton asChild>
+                    <Link to={AppPath.Settings + '/' + item.path}>
+                      <item.icon />
+                      <span>{item.name}</span>
+                    </Link>
                   </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
               ))}

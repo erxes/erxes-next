@@ -1,0 +1,74 @@
+// Dependencies: pnpm install lucide-react
+
+import { RadioGroup } from 'erxes-ui';
+import { Check, Minus } from 'lucide-react';
+import { useTheme } from '~/providers/theme-provider';
+
+const items = [
+  {
+    id: 'radio-18-r1',
+    value: 'light',
+    label: 'Light',
+    image: '/assets/ui-light.webp',
+  },
+  {
+    id: 'radio-18-r2',
+    value: 'dark',
+    label: 'Dark',
+    image: '/assets/ui-dark.webp',
+  },
+  {
+    id: 'radio-18-r3',
+    value: 'system',
+    label: 'System',
+    image: '/assets/ui-system.webp',
+  },
+];
+
+export default function ChooseTheme() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <fieldset className="space-y-4">
+      <legend className="text-sm font-medium leading-none text-foreground">
+        Appearance
+      </legend>
+      <RadioGroup.Root
+        className="flex gap-3"
+        value={theme}
+        onValueChange={setTheme}
+      >
+        {items.map((item) => (
+          <label key={item.id}>
+            <RadioGroup.Item
+              id={item.id}
+              value={item.value}
+              className="peer sr-only after:absolute after:inset-0"
+            />
+            <img
+              src={item.image}
+              alt={item.label}
+              width={88}
+              height={70}
+              className="relative cursor-pointer overflow-hidden rounded-lg border border-input shadow-sm shadow-black/5 ring-offset-background transition-colors peer-[:focus-visible]:ring-2 peer-[:focus-visible]:ring-ring/70 peer-[:focus-visible]:ring-offset-2 peer-data-[disabled]:cursor-not-allowed peer-data-[state=checked]:border-ring peer-data-[state=checked]:bg-accent peer-data-[disabled]:opacity-50"
+            />
+            <span className="group mt-2 flex items-center gap-1 peer-data-[state=unchecked]:text-muted-foreground/70">
+              <Check
+                size={16}
+                strokeWidth={2}
+                className="peer-data-[state=unchecked]:group-[]:hidden"
+                aria-hidden="true"
+              />
+              <Minus
+                size={16}
+                strokeWidth={2}
+                className="peer-data-[state=checked]:group-[]:hidden"
+                aria-hidden="true"
+              />
+              <span className="text-xs font-medium">{item.label}</span>
+            </span>
+          </label>
+        ))}
+      </RadioGroup.Root>
+    </fieldset>
+  );
+}

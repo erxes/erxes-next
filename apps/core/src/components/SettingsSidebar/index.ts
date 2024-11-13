@@ -1,1 +1,1 @@
-export { SettingsSidebar } from './SettingsSidebar';
+export { SettingsSidebar } from '../../modules/settings/components/SettingsSidebar';

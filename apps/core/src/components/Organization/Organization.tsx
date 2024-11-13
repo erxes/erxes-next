@@ -11,6 +11,8 @@ import {
 import { useState } from 'react';
 import { ThemeSelector } from '../ThemeSelector';
 import { Link } from 'react-router-dom';
+import { SettingsPath } from '@/types/SettingsPath';
+import { AppPath } from '@/types/AppPath';
 
 export function Organization() {
   const [activeTeam, setActiveTeam] = useState(organizations[0]);
@@ -50,7 +52,7 @@ export function Organization() {
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item asChild>
-              <Link to="/settings/account">
+              <Link to={`/${AppPath.Settings}/${SettingsPath.ProfilePage}`}>
                 <User />
                 <span>Account settings</span>
               </Link>

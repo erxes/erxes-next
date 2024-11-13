@@ -6,11 +6,12 @@ import { SidebarNavigation } from '../SidebarNavigation';
 import { QuickActions } from '../QuickActions';
 import { SettingsSidebar } from '../SettingsSidebar';
 import { useLocation } from 'react-router-dom';
+import { AppPath } from '@/types/AppPath';
 export const SidebarMain = ({ children }: { children: React.ReactNode }) => {
   const { pathname } = useLocation();
 
   const renderSidebarContent = () => {
-    if (pathname.includes('/settings')) {
+    if (pathname.includes(AppPath.Settings)) {
       return <SettingsSidebar />;
     }
     return (
