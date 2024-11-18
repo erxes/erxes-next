@@ -1,17 +1,20 @@
 import { Sidebar } from 'erxes-ui';
-import { User } from '../User';
-import { Organization } from '../Organization';
+import { User } from './User';
+import { Organization } from './Organization';
 import { Mail, PieChart, SquareCheck, Users } from 'lucide-react';
-import { SidebarNavigation } from '../SidebarNavigation';
-import { QuickActions } from '../QuickActions';
-import { SettingsSidebar } from '../SettingsSidebar';
-import { useLocation } from 'react-router-dom';
-import { AppPath } from '@/types/AppPath';
-export const SidebarMain = ({ children }: { children: React.ReactNode }) => {
-  const { pathname } = useLocation();
+import { SidebarNavigation } from './SidebarNavigation';
+import { QuickActions } from '@/quickActions/components/QuickActions';
+import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
+import { useIsSettings } from '../hooks/useIsSettings';
 
+export const MainNavigationBar = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const isSettings = useIsSettings();
   const renderSidebarContent = () => {
-    if (pathname.includes(AppPath.Settings)) {
+    if (isSettings) {
       return <SettingsSidebar />;
     }
     return (
@@ -64,11 +67,11 @@ const navItems = [
           },
           {
             title: 'starred',
-            url: '#',
+            url: '/inbox/starred',
           },
           {
             title: 'settings',
-            url: '#',
+            url: '/inbox/settings',
           },
         ],
       },

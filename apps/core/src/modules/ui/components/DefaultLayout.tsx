@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import { SidebarMain } from '~/components/Sidebar';
+import { MainNavigationBar } from '@/navigation/components/MainNavigationBar';
 
 export const DefaultLayout = () => {
   return (
-    <SidebarMain>
+    <MainNavigationBar>
       <Outlet />
-    </SidebarMain>
+    </MainNavigationBar>
   );
 };

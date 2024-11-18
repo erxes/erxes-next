@@ -7,8 +7,8 @@ import {
   Bell,
   LogOut,
 } from 'lucide-react';
-import { ThemeSelector } from '../ThemeSelector';
-import { SelectLanguages } from '../SelectLanguages';
+import { ThemeSelector } from './ThemeSelector';
+import { SelectLanguages } from './SelectLanguages';
 
 export function User() {
   const { isMobile } = Sidebar.useSidebar();

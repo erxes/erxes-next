@@ -7,6 +7,9 @@ import { Providers } from '~/providers';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { AppPath } from '@/types/AppPath';
 import { SettingsRoutes } from '../components/SettingsRoutes';
+import { lazy, Suspense } from 'react';
+
+const Inbox = lazy(() => import('plugin_inbox/Module'));
 
 export const useCreateRouter = () => {
   return createBrowserRouter(
@@ -14,6 +17,14 @@ export const useCreateRouter = () => {
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
         <Route element={<DefaultLayout />}>
           <Route path="/" element={<></>} />
+          <Route
+            path={AppPath.InboxCatchAll}
+            element={
+              <Suspense fallback={<></>}>
+                <Inbox />
+              </Suspense>
+            }
+          />
           <Route path={AppPath.SettingsCatchAll} element={<SettingsRoutes />} />
         </Route>
       </Route>

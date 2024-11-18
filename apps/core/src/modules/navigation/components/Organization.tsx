@@ -9,7 +9,7 @@ import {
   User,
 } from 'lucide-react';
 import { useState } from 'react';
-import { ThemeSelector } from '../ThemeSelector';
+import { ThemeSelector } from './ThemeSelector';
 import { Link } from 'react-router-dom';
 import { SettingsPath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';
@@ -52,7 +52,7 @@ export function Organization() {
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item asChild>
-              <Link to={`/${AppPath.Settings}/${SettingsPath.ProfilePage}`}>
+              <Link to={`/${AppPath.Settings}/${SettingsPath.Profile}`}>
                 <User />
                 <span>Account settings</span>
               </Link>

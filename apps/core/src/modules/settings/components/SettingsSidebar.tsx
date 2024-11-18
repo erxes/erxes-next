@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Sidebar } from 'erxes-ui';
 import {
   Bell,
@@ -52,6 +52,8 @@ const data = {
 };
 
 export function SettingsSidebar() {
+  const location = useLocation();
+  console.log(location.pathname);
   return (
     <>
       <Sidebar.Header className="pb-0">
@@ -72,14 +74,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {data.account.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <Sidebar.MenuButton asChild>
-                    <Link to={AppPath.Settings + '/' + item.path}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </Link>
-                  </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
+                <SideBarItem key={item.name} item={item} />
               ))}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
@@ -103,3 +98,22 @@ export function SettingsSidebar() {
     </>
   );
 }
+
+const SideBarItem = ({ item }: { item: (typeof data.account)[0] }) => {
+  const location = useLocation();
+  return (
+    <Sidebar.MenuItem key={item.name}>
+      <Sidebar.MenuButton
+        asChild
+        isActive={
+          location.pathname === '/' + AppPath.Settings + '/' + item.path
+        }
+      >
+        <Link to={AppPath.Settings + '/' + item.path}>
+          <item.icon />
+          <span>{item.name}</span>
+        </Link>
+      </Sidebar.MenuButton>
+    </Sidebar.MenuItem>
+  );
+};

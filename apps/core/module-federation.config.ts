@@ -1,5 +1,12 @@
 import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 
+const coreLibraries = new Set([
+  'react',
+  'react-dom',
+  'react-router-dom',
+  'erxes-ui',
+]);
+
 const config: ModuleFederationConfig = {
   name: 'core',
   /**
@@ -14,6 +21,14 @@ const config: ModuleFederationConfig = {
    * declare module 'my-external-remote';
    *
    */
+  shared: (libraryName, defaultConfig) => {
+    if (coreLibraries.has(libraryName)) {
+      return defaultConfig;
+    }
+
+    // Returning false means the library is not shared.
+    return false;
+  },
   remotes: ['plugin_inbox', 'plugin_task'],
 };
 

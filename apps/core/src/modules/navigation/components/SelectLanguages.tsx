@@ -1,6 +1,6 @@
 import { DropdownMenu } from 'erxes-ui';
 import { LanguagesIcon } from 'lucide-react';
-import { AvailableLanguage, useSwitchLanguage } from '../../i18n';
+import { AvailableLanguage, useSwitchLanguage } from '~/i18n';
 
 export const SelectLanguages = () => {
   const { currentLanguage, languages, switchLanguage } = useSwitchLanguage();

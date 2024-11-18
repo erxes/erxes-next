@@ -1,5 +1,5 @@
 import ChooseTheme from '@/settings/components/ChooseTheme';
-import { Breadcrumb, Header, Upload, Label, Input, Button } from 'erxes-ui';
+import { Breadcrumb, Header, Label, Input } from 'erxes-ui';
 
 export const SettingsExperience = () => {
   return (
@@ -21,6 +21,24 @@ export const SettingsExperience = () => {
       <div className="flex flex-col gap-10 px-4">
         <div className="flex flex-col gap-4">
           <ChooseTheme />
+        </div>
+        <div className="flex flex-col gap-6">
+          <Label>Date and time</Label>
+          <p className="text-sm text-muted-foreground">
+            Configure how dates are displayed across the app
+          </p>
+          <div className="flex flex-col gap-1">
+            <Label className="text-xs text-muted-foreground">Time zone</Label>
+            <Input />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label className="text-xs text-muted-foreground">Date format</Label>
+            <Input />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label className="text-xs text-muted-foreground">Time format</Label>
+            <Input />
+          </div>
         </div>
       </div>
     </section>

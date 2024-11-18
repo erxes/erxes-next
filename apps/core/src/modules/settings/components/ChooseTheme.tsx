@@ -33,7 +33,7 @@ export default function ChooseTheme() {
         Appearance
       </legend>
       <RadioGroup.Root
-        className="flex gap-3"
+        className="flex gap-4"
         value={theme}
         onValueChange={setTheme}
       >
@@ -47,7 +47,7 @@ export default function ChooseTheme() {
             <img
               src={item.image}
               alt={item.label}
-              width={88}
+              width={140}
               height={70}
               className="relative cursor-pointer overflow-hidden rounded-lg border border-input shadow-sm shadow-black/5 ring-offset-background transition-colors peer-[:focus-visible]:ring-2 peer-[:focus-visible]:ring-ring/70 peer-[:focus-visible]:ring-offset-2 peer-data-[disabled]:cursor-not-allowed peer-data-[state=checked]:border-ring peer-data-[state=checked]:bg-accent peer-data-[disabled]:opacity-50"
             />

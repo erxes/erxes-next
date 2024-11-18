@@ -1,6 +1,5 @@
 import { DropdownMenu } from 'erxes-ui';
-import { useTheme } from '../../providers/theme-provider';
-import { ThemeOption } from '../../providers/theme-provider/theme-context';
+import { useTheme, Theme } from '~/providers/theme-provider';
 import { SunIcon, MoonIcon, LaptopIcon } from 'lucide-react';
 
 export const ThemeSelector = () => {
@@ -17,7 +16,7 @@ export const ThemeSelector = () => {
         <DropdownMenu.SubContent className="min-w-32">
           <DropdownMenu.RadioGroup
             value={theme}
-            onValueChange={(value) => setTheme(value as ThemeOption)}
+            onValueChange={(value) => setTheme(value as Theme)}
           >
             <DropdownMenu.RadioItem value="light">
               <SunIcon className="size-4 mr-2" />
