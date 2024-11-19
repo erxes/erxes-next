@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { SettingsPath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';
+import { motion } from 'framer-motion';
 
 const data = {
   account: [
@@ -55,7 +56,12 @@ export function SettingsSidebar() {
   const location = useLocation();
   console.log(location.pathname);
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      className="flex h-full w-full flex-col"
+    >
       <Sidebar.Header className="pb-0">
         <Sidebar.Menu>
           <Sidebar.MenuItem>
@@ -95,7 +101,7 @@ export function SettingsSidebar() {
           </Sidebar.GroupContent>
         </Sidebar.Group>
       </Sidebar.Content>
-    </>
+    </motion.div>
   );
 }
 

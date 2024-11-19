@@ -17,7 +17,7 @@ export const Header = React.forwardRef<HTMLButtonElement, IHeaderProps>(
         {...props}
       >
         <div className="flex items-center gap-2 px-4">
-          {/* <Sidebar.Trigger className="-ml-1" /> */}
+          <Sidebar.Trigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           {children}
         </div>

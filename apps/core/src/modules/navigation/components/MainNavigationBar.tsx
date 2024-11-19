@@ -6,6 +6,7 @@ import { SidebarNavigation } from './SidebarNavigation';
 import { QuickActions } from '@/quickActions/components/QuickActions';
 import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
 import { useIsSettings } from '../hooks/useIsSettings';
+import { AnimatePresence, motion } from 'motion/react';
 
 export const MainNavigationBar = ({
   children,
@@ -18,7 +19,12 @@ export const MainNavigationBar = ({
       return <SettingsSidebar />;
     }
     return (
-      <>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        className="flex h-full w-full flex-col"
+      >
         <Sidebar.Header>
           <Organization />
           <div className="flex">
@@ -37,13 +43,13 @@ export const MainNavigationBar = ({
         <Sidebar.Footer>
           <User />
         </Sidebar.Footer>
-      </>
+      </motion.div>
     );
   };
   return (
     <Sidebar.Provider>
       <Sidebar.Root collapsible="offcanvas" variant="inset">
-        {renderSidebarContent()}
+        <AnimatePresence>{renderSidebarContent()} </AnimatePresence>
         <Sidebar.Rail />
       </Sidebar.Root>
       <Sidebar.Inset>{children}</Sidebar.Inset>
