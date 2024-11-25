@@ -32,13 +32,7 @@ export const MainNavigationBar = ({
           </div>
         </Sidebar.Header>
         <Sidebar.Content>
-          {navItems.map((item) => (
-            <SidebarNavigation
-              key={item.label}
-              label={item.label}
-              items={item.items}
-            />
-          ))}
+          <SidebarNavigation />
         </Sidebar.Content>
         <Sidebar.Footer>
           <User />

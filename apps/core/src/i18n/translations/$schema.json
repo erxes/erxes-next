@@ -24,7 +24,13 @@
         "plugins": {
           "type": "string"
         },
+        "products": {
+          "type": "string"
+        },
         "projects": {
+          "type": "string"
+        },
+        "sales": {
           "type": "string"
         },
         "settings": {

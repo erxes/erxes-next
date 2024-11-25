@@ -6,9 +6,9 @@ const coreLibraries = new Set([
   'react-router-dom',
   'erxes-ui',
 ]);
+
 const config: ModuleFederationConfig = {
   name: 'plugin_inbox',
-
   exposes: {
     './Module': './src/remote-entry.ts',
   },
