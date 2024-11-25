@@ -1,6 +1,7 @@
 export * from './avatar';
 export * from './breadcrumb';
 export * from './button';
+export * from './checkbox';
 export * from './collapsible';
 export * from './command';
 export * from './dialog';

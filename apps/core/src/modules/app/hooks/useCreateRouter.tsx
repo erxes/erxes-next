@@ -9,6 +9,7 @@ import { AppPath } from '@/types/AppPath';
 import { SettingsRoutes } from '../components/SettingsRoutes';
 import { lazy, Suspense } from 'react';
 import ProductsRoutes from '../components/ProductsRoutes';
+import { SignInPage } from '~/app/sign-in/SignInPage';
 
 const Inbox = lazy(() => import('plugin_inbox/Module'));
 
@@ -18,6 +19,7 @@ export const useCreateRouter = () => {
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
         <Route element={<DefaultLayout />}>
           <Route path="/" element={<></>} />
+          <Route path="/sign-in" element={<SignInPage />} />
           <Route
             path={AppPath.InboxCatchAll}
             element={
