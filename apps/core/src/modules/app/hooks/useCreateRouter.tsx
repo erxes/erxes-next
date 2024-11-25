@@ -8,6 +8,7 @@ import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { AppPath } from '@/types/AppPath';
 import { SettingsRoutes } from '../components/SettingsRoutes';
 import { lazy, Suspense } from 'react';
+import ProductsRoutes from '../components/ProductsRoutes';
 
 const Inbox = lazy(() => import('plugin_inbox/Module'));
 
@@ -26,6 +27,7 @@ export const useCreateRouter = () => {
             }
           />
           <Route path={AppPath.SettingsCatchAll} element={<SettingsRoutes />} />
+          <Route path={AppPath.ProductsCatchAll} element={<ProductsRoutes />} />
         </Route>
       </Route>
     )

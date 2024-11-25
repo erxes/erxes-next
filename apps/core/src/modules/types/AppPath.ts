@@ -4,4 +4,6 @@ export enum AppPath {
   InboxCatchAll = `/${Inbox}/*`,
   Settings = 'settings',
   SettingsCatchAll = `/${Settings}/*`,
+  Products = 'products',
+  ProductsCatchAll = `/${Products}/*`,
 }
