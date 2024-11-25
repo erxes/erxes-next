@@ -2,7 +2,6 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadingState';
-import { AuthContext } from '@/auth/contexts/AuthContext';
 import { currentUserState } from '@/auth/states/currentUserState';
 
 export const UserProvider = ({ children }: React.PropsWithChildren) => {
@@ -10,12 +9,5 @@ export const UserProvider = ({ children }: React.PropsWithChildren) => {
 
   const currentUser = useRecoilValue(currentUserState);
 
-  return (
-    isCurrentUserLoaded &&
-    currentUser && (
-      <AuthContext.Provider value={{ currentUser }}>
-        {children}
-      </AuthContext.Provider>
-    )
-  );
+  return isCurrentUserLoaded && currentUser && { children };
 };
