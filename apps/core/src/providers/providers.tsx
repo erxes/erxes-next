@@ -1,16 +1,17 @@
-import { ThemeProvider } from './theme-provider';
-import { AppAI18nWrapper } from './i18next-provider';
 import { Outlet } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { ApolloProvider } from '@apollo/client';
+import apolloClient from './apollo-provider/apolloClient';
+// import { UserProvider } from '@/auth/providers/UserProvider';
+import { UserProviderEffect } from '@/auth/providers/UserProviderEffects';
+import { UserProvider } from '@/auth/providers/UserProvider';
 
 export const Providers = () => {
   return (
-    <RecoilRoot>
-      <ThemeProvider>
-        <AppAI18nWrapper>
-          <Outlet />
-        </AppAI18nWrapper>
-      </ThemeProvider>
-    </RecoilRoot>
+    <ApolloProvider client={apolloClient}>
+      <UserProviderEffect />
+      <UserProvider>
+        <Outlet />
+      </UserProvider>
+    </ApolloProvider>
   );
 };
