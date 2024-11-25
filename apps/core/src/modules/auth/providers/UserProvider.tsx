@@ -10,12 +10,12 @@ export const UserProvider = ({ children }: React.PropsWithChildren) => {
 
   const currentUser = useRecoilValue(currentUserState);
 
-  console.log(currentUser);
-
   return (
     isCurrentUserLoaded &&
     currentUser && (
-      <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>
+      <AuthContext.Provider value={{ currentUser }}>
+        {children}
+      </AuthContext.Provider>
     )
   );
 };
