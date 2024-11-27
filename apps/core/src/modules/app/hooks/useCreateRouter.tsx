@@ -10,6 +10,7 @@ import { SettingsRoutes } from '../components/SettingsRoutes';
 import { lazy, Suspense } from 'react';
 import ProductsRoutes from '../components/ProductsRoutes';
 import { SignInPage } from '~/app/sign-in/SignInPage';
+import { UserProvider } from '@/auth/providers/UserProvider';
 
 const Inbox = lazy(() => import('plugin_inbox/Module'));
 
@@ -17,19 +18,27 @@ export const useCreateRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
-        <Route element={<DefaultLayout />}>
-          <Route path="/" element={<></>} />
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route
-            path={AppPath.InboxCatchAll}
-            element={
-              <Suspense fallback={<></>}>
-                <Inbox />
-              </Suspense>
-            }
-          />
-          <Route path={AppPath.SettingsCatchAll} element={<SettingsRoutes />} />
-          <Route path={AppPath.ProductsCatchAll} element={<ProductsRoutes />} />
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route element={<UserProvider />}>
+          <Route element={<DefaultLayout />}>
+            <Route path="/" element={<></>} />
+            <Route
+              path={AppPath.InboxCatchAll}
+              element={
+                <Suspense fallback={<></>}>
+                  <Inbox />
+                </Suspense>
+              }
+            />
+            <Route
+              path={AppPath.SettingsCatchAll}
+              element={<SettingsRoutes />}
+            />
+            <Route
+              path={AppPath.ProductsCatchAll}
+              element={<ProductsRoutes />}
+            />
+          </Route>
         </Route>
       </Route>
     )

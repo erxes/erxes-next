@@ -18,6 +18,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<IUser | null>({ _id: '123', name: '132' });
+
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       {children}
