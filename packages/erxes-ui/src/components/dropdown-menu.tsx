@@ -182,6 +182,7 @@ export const DropdownMenu = {
   RadioItem: DropdownMenuRadioItem,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,
+  CheckboxItem: DropdownMenuCheckboxItem,
   Label: DropdownMenuLabel,
   Shortcut: DropdownMenuShortcut,
   Separator: DropdownMenuSeparator,

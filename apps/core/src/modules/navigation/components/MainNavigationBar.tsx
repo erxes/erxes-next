@@ -46,7 +46,9 @@ export const MainNavigationBar = ({
         <AnimatePresence>{renderSidebarContent()} </AnimatePresence>
         <Sidebar.Rail />
       </Sidebar.Root>
-      <Sidebar.Inset>{children}</Sidebar.Inset>
+      <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden">
+        {children}
+      </Sidebar.Inset>
     </Sidebar.Provider>
   );
 };
