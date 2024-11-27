@@ -15,7 +15,7 @@ import {
 } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react';
 
-import { Table, Input, Button, Checkbox } from 'erxes-ui';
+import { Table, Input, Button, Checkbox, DropdownMenu } from 'erxes-ui';
 
 const data: Payment[] = [
   {
@@ -124,31 +124,31 @@ export const columns: ColumnDef<Payment>[] = [
       const payment = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="end">
+            <DropdownMenu.Label>Actions</DropdownMenu.Label>
+            <DropdownMenu.Item
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
               Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item>View customer</DropdownMenu.Item>
+            <DropdownMenu.Item>View payment details</DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       );
     },
   },
 ];
 
-export function DataTableDemo() {
+export function ProductsList() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -177,7 +177,7 @@ export function DataTableDemo() {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full px-4">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
@@ -187,19 +187,19 @@ export function DataTableDemo() {
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
             <Button variant="outline" className="ml-auto">
               Columns <ChevronDown />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="end">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
                 return (
-                  <DropdownMenuCheckboxItem
+                  <DropdownMenu.CheckboxItem
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
@@ -208,61 +208,61 @@ export function DataTableDemo() {
                     }
                   >
                     {column.id}
-                  </DropdownMenuCheckboxItem>
+                  </DropdownMenu.CheckboxItem>
                 );
               })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </div>
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+        <Table.Root>
+          <Table.Header>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <Table.Row key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <Table.Head key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                    </TableHead>
+                    </Table.Head>
                   );
                 })}
-              </TableRow>
+              </Table.Row>
             ))}
-          </TableHeader>
-          <TableBody>
+          </Table.Header>
+          <Table.Body>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
+                <Table.Row
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <Table.Cell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
-                    </TableCell>
+                    </Table.Cell>
                   ))}
-                </TableRow>
+                </Table.Row>
               ))
             ) : (
-              <TableRow>
-                <TableCell
+              <Table.Row>
+                <Table.Cell
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
                   No results.
-                </TableCell>
-              </TableRow>
+                </Table.Cell>
+              </Table.Row>
             )}
-          </TableBody>
-        </Table>
+          </Table.Body>
+        </Table.Root>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
