@@ -19,7 +19,10 @@ export const useCreateRouter = () => {
     createRoutesFromElements(
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
         <Route path="/sign-in" element={<SignInPage />} />
-        <Route element={<UserProvider />}>
+        <Route
+          element={<UserProvider />}
+          loader={async () => Promise.resolve(null)}
+        >
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<></>} />
             <Route

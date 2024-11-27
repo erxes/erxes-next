@@ -1,15 +1,16 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { Navigate, useLocation } from 'react-router-dom';
+// import { Navigate, useLocation } from 'react-router-dom';
 import { isDefined, RocketIcon } from 'erxes-ui';
+import { Navigate, Outlet } from 'react-router-dom';
 
 import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadingState';
 import { currentUserState } from '@/auth/states/currentUserState';
 
-export const UserProvider = ({ children }: React.PropsWithChildren) => {
+export const UserProvider = () => {
   const isCurrentUserLoaded = useRecoilValue(isCurrentUserLoadedState);
+
   const currentUser = useRecoilValue(currentUserState);
-  const location = useLocation();
 
   if (!isCurrentUserLoaded) {
     return (
@@ -19,9 +20,10 @@ export const UserProvider = ({ children }: React.PropsWithChildren) => {
       </div>
     );
   }
-  if (!isDefined(currentUser) && location.pathname !== '/sign-in') {
+
+  if (isDefined(currentUser)) {
     return <Navigate to="/sign-in" replace />;
   }
 
-  return children;
+  return <Outlet />;
 };
