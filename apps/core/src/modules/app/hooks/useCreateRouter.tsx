@@ -9,20 +9,19 @@ import { AppPath } from '@/types/AppPath';
 import { SettingsRoutes } from '../components/SettingsRoutes';
 import { lazy, Suspense } from 'react';
 import ProductsRoutes from '../components/ProductsRoutes';
-import { SignInPage } from '~/app/sign-in/SignInPage';
+
 import { UserProvider } from '@/auth/providers/UserProvider';
 
 const Inbox = lazy(() => import('plugin_inbox/Module'));
+
+const LoginPage = lazy(() => import('~/app/login/LoginPage'));
 
 export const useCreateRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route
-          element={<UserProvider />}
-          loader={async () => Promise.resolve(null)}
-        >
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<UserProvider />}>
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<></>} />
             <Route

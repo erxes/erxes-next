@@ -3,3 +3,4 @@ export * from './state/utils/createState';
 export * from './isDefined';
 export * from './cookie-storage';
 export * from './recoil-effects';
+export * from './regex';

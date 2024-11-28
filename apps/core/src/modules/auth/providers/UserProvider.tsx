@@ -21,8 +21,8 @@ export const UserProvider = () => {
     );
   }
 
-  if (isDefined(currentUser)) {
-    return <Navigate to="/sign-in" replace />;
+  if (!isDefined(currentUser)) {
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

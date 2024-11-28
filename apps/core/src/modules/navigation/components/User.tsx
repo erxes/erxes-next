@@ -9,9 +9,12 @@ import {
 } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { SelectLanguages } from './SelectLanguages';
+import { useAuth } from '@/auth/hooks/useAuth';
 
 export function User() {
   const { isMobile } = Sidebar.useSidebar();
+
+  const { handleLogout } = useAuth();
   return (
     <Sidebar.Menu>
       <Sidebar.MenuItem>
@@ -75,7 +78,7 @@ export function User() {
               </DropdownMenu.Item>
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
-            <DropdownMenu.Item>
+            <DropdownMenu.Item onClick={() => handleLogout()}>
               <LogOut />
               Log out
             </DropdownMenu.Item>
