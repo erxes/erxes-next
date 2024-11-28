@@ -1,9 +1,9 @@
-import { SubmitHandler, UseFormReturn } from 'react-hook-form';
+import { SubmitHandler } from 'react-hook-form';
 import { FormType } from '@/auth/login/hooks/useLoginForm';
 import { useCallback } from 'react';
 import { useAuth } from '@/auth/hooks/useAuth';
 
-export const useLogin = (form: UseFormReturn<FormType>) => {
+export const useLogin = () => {
   const { handleCrendentialsLogin } = useAuth();
 
   const submitCertencial: SubmitHandler<FormType> = useCallback(

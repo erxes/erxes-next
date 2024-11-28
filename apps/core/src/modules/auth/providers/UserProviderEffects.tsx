@@ -13,7 +13,7 @@ export const UserProviderEffect = () => {
 
   const [isCurrentUserLoaded, setIsCurrentUserLoaded] = useRecoilState(
     isCurrentUserLoadedState
-  ) as any;
+  );
 
   const setCurrentUser = useSetRecoilState(currentUserState);
 

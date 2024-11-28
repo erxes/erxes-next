@@ -14,7 +14,7 @@ import { useLogin } from '@/auth/login/hooks/useLogin';
 const Login = () => {
   const { form } = useSignInUpForm();
 
-  const { submitCertencial } = useLogin(form);
+  const { submitCertencial } = useLogin();
 
   const submitHandler: SubmitHandler<FormType> = (data) => {
     submitCertencial(data);
