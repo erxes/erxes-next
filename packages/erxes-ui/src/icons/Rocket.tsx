@@ -23,22 +23,16 @@ const variants: Variants = {
 };
 
 const fireVariants: Variants = {
-  normal: {
+  initial: {
     d: 'M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z',
   },
   animate: {
-    d: [
-      'M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z',
-      'M4.5 16.5c-1.5 1.26-3 5.5-3 5.5s4.74-1 6-2.5c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z',
-      'M4.5 16.5c-1.5 1.26-2.2 4.8-2.2 4.8s3.94-0.3 5.2-1.8c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z',
-      'M4.5 16.5c-1.5 1.26-2.8 5.2-2.8 5.2s4.54-0.7 5.8-2.2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z',
-      'M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z',
-    ],
+    d: 'M4.5 16.5c-1.5 1.26-3 5.5-3 5.5s4.74-1 6-2.5c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z',
     transition: {
-      duration: 2,
-      ease: [0.4, 0, 0.2, 1],
+      duration: 1,
+      ease: 'easeInOut',
       repeat: Infinity,
-      times: [0, 0.2, 0.5, 0.8, 1],
+      repeatType: 'reverse',
     },
   },
 };
@@ -48,7 +42,7 @@ const RocketIcon = () => {
 
   useEffect(() => {
     controls.start('animate');
-  }, []);
+  }, [controls]);
 
   return (
     <div className="cursor-pointer select-none p-2 rounded-md duration-200 flex items-center justify-center">
@@ -66,6 +60,7 @@ const RocketIcon = () => {
         animate={controls}
       >
         <motion.path
+          initial="initial"
           d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
           variants={fireVariants}
           animate={controls}

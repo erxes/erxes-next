@@ -15,6 +15,7 @@ export function User() {
   const { isMobile } = Sidebar.useSidebar();
 
   const { handleLogout } = useAuth();
+
   return (
     <Sidebar.Menu>
       <Sidebar.MenuItem>
