@@ -17,9 +17,11 @@ export const UserProviderEffect = () => {
 
   const setCurrentUser = useSetRecoilState(currentUserState);
 
-  const { loading: queryLoading, data: queryData } = useQuery(currentUser, {
-    skip: isCurrentUserLoaded,
-  });
+  const {
+    loading: queryLoading,
+    data: queryData,
+    refetch,
+  } = useQuery(currentUser);
 
   useEffect(() => {
     if (!queryLoading) {
@@ -36,7 +38,14 @@ export const UserProviderEffect = () => {
     queryLoading,
     queryData?.currentUser,
     setIsCurrentUserLoaded,
+    queryData,
   ]);
 
-  return <></>;
+  useEffect(() => {
+    if (!isCurrentUserLoaded) {
+      refetch();
+    }
+  }, [isCurrentUserLoaded, refetch]);
+
+  return null;
 };

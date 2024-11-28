@@ -6,55 +6,45 @@ import { Logout } from '@/auth/graphql/mutations/logout';
 import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadingState';
 import { currentUserState } from '@/auth/states/currentUserState';
 
-import {
-  snapshot_UNSTABLE,
-  useGotoRecoilSnapshot,
-  useRecoilCallback,
-} from 'recoil';
+import { useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 
 export const useAuth = () => {
   const [login] = useMutation(Login);
   const [logout] = useMutation(Logout);
+  const setCurrentUser = useSetRecoilState(currentUserState);
+  const setIsCurrentUserLoaded = useSetRecoilState(isCurrentUserLoadedState);
+
+  const navigate = useNavigate();
 
   const client = useApolloClient();
 
-  const goToRecoilSnapshot = useGotoRecoilSnapshot();
-
   const handleCrendentialsLogin = useCallback(
     async (email: string, password: string) => {
-      await login({ variables: { email, password } }).catch((e) => {
-        console.log(e);
-      });
-    },
-    [login]
-  );
-
-  const handleLogout = useRecoilCallback(
-    ({ snapshot }) =>
-      async () => {
-        const emptySnapshot = snapshot_UNSTABLE();
-        await logout();
-
-        const isCurrentUserLoaded = snapshot
-          .getLoadable(isCurrentUserLoadedState)
-          .getValue();
-
-        const currentUser = snapshot.getLoadable(currentUserState).getValue();
-
-        const initialSnapshot = emptySnapshot.map(({ set }) => {
-          set(isCurrentUserLoadedState, isCurrentUserLoaded);
-          set(currentUserState, currentUser);
-          return undefined;
+      await login({ variables: { email, password } })
+        .then((response) => {
+          setIsCurrentUserLoaded(false);
+          response.data && navigate('/');
+        })
+        .catch((e) => {
+          console.log(e);
         });
-
-        goToRecoilSnapshot(initialSnapshot);
-
-        await client.clearStore();
-        sessionStorage.clear();
-        localStorage.clear();
-      },
-    [client, goToRecoilSnapshot]
+    },
+    [login, navigate, setIsCurrentUserLoaded]
   );
+
+  const handleLogout = useCallback(async () => {
+    await logout();
+    client.resetStore();
+
+    setIsCurrentUserLoaded(false);
+    setCurrentUser(undefined);
+
+    sessionStorage.clear();
+    localStorage.clear();
+
+    navigate('/login');
+  }, [logout, navigate, setCurrentUser, setIsCurrentUserLoaded, client]);
 
   return {
     handleLogout,
