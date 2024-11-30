@@ -12,6 +12,7 @@ export * from './hover-card';
 export * from './input';
 export * from './label';
 export * from './radio-group';
+export * from './record-table';
 export * from './scroll-area';
 export * from './separator';
 export * from './sheet';

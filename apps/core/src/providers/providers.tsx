@@ -7,7 +7,6 @@ export const Providers = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <UserProviderEffect />
-
       <Outlet />
     </ApolloProvider>
   );

@@ -3,7 +3,7 @@ import { PlusIcon, InfoIcon } from 'lucide-react';
 
 const ProductsHeader = () => {
   return (
-    <Header>
+    <Header className="p-0">
       <div className="flex flex-auto items-center justify-between">
         <Breadcrumb.Root>
           <Breadcrumb.List>
