@@ -22,7 +22,10 @@ const Login = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(submitHandler)}>
+      <form
+        onSubmit={form.handleSubmit(submitHandler)}
+        className="mx-auto grid w-[350px] gap-4"
+      >
         <FormField
           name="email"
           control={form.control}

@@ -1,6 +1,6 @@
 import { Breadcrumb, Header, Upload, Label, Input, Button } from 'erxes-ui';
 
-export const SettingsProfile = () => {
+export const SettingsProfilePage = () => {
   return (
     <section className="mx-auto max-w-2xl w-full">
       <Header>

@@ -14,7 +14,7 @@ import { UserProvider } from '@/auth/providers/UserProvider';
 
 const Inbox = lazy(() => import('plugin_inbox/Module'));
 
-const LoginPage = lazy(() => import('~/app/login/LoginPage'));
+const LoginPage = lazy(() => import('~/pages/login/LoginPage'));
 
 export const useCreateRouter = () => {
   return createBrowserRouter(

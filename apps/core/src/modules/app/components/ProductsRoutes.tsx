@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom';
 
 const ProductsIndexPage = lazy(() =>
-  import('~/app/products/ProductsIndexPage').then((module) => ({
+  import('~/pages/products/ProductsIndexPage').then((module) => ({
     default: module.ProductsIndexPage,
   }))
 );

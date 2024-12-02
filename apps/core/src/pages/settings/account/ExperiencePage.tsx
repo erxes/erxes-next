@@ -1,7 +1,7 @@
 import ChooseTheme from '@/settings/components/ChooseTheme';
 import { Breadcrumb, Header, Label, Input } from 'erxes-ui';
 
-export const SettingsExperience = () => {
+export const SettingsExperiencePage = () => {
   return (
     <section className="mx-auto max-w-2xl w-full">
       <Header>

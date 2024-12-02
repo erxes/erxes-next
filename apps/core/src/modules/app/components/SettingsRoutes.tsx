@@ -2,11 +2,11 @@ import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLo
 import { SettingsPath } from '@/types/SettingsPath';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { SettingsExperience } from '~/app/settings/account/experience';
+import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 
 const SettingsProfile = lazy(() =>
-  import('~/app/settings/account/profile').then((module) => ({
-    default: module.SettingsProfile,
+  import('~/pages/settings/account/ProfilePage').then((module) => ({
+    default: module.SettingsProfilePage,
   }))
 );
 
@@ -17,7 +17,7 @@ export function SettingsRoutes() {
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
           path={SettingsPath.Experience}
-          element={<SettingsExperience />}
+          element={<SettingsExperiencePage />}
         />
       </Routes>
     </Suspense>

@@ -13,7 +13,19 @@ const LoginPage = () => {
     }
   }, [currentUser, navigate]);
 
-  return <Login />;
+  return (
+    <div className="flex items-center justify-center my-52">
+      <div className="animate">
+        <div className="mb-3 flex flex-col items-center">
+          <h2 className="font-semibold text-2xl">Welcome!</h2>
+          <p className="text-xs text-muted-foreground">
+            Please sign in to your account to continue
+          </p>
+        </div>
+        <Login />
+      </div>
+    </div>
+  );
 };
 
 export default LoginPage;
