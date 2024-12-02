@@ -18,10 +18,14 @@ import { useEffect, useState } from 'react';
 const Login = () => {
   const { form } = useSignInUpForm();
 
-  const { submitCertencial } = useLogin();
+  const { submitCertencial, handleForgotPassword } = useLogin();
 
   const submitHandler: SubmitHandler<FormType> = (data) => {
     submitCertencial(data);
+  };
+
+  const onForgotPasswordClick = (email: string) => {
+    handleForgotPassword(email);
   };
 
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
@@ -84,6 +88,16 @@ const Login = () => {
         >
           Sign in
         </Button>
+
+        {!isEmailStepSubmitButtonDisabledCondition && (
+          <Button
+            onClick={() => onForgotPasswordClick(email)}
+            variant="link"
+            className="text-xs text-muted-foreground hover:underline text-center block hover:text-primary"
+          >
+            Forgot password?
+          </Button>
+        )}
       </form>
     </Form>
   );

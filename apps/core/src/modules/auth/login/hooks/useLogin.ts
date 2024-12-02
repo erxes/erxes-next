@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { useAuth } from '@/auth/hooks/useAuth';
 
 export const useLogin = () => {
-  const { handleCrendentialsLogin } = useAuth();
+  const { handleCrendentialsLogin, handleForgotPassword } = useAuth();
 
   const submitCertencial: SubmitHandler<FormType> = useCallback(
     async (data) => {
@@ -15,5 +15,6 @@ export const useLogin = () => {
 
   return {
     submitCertencial,
+    handleForgotPassword,
   };
 };

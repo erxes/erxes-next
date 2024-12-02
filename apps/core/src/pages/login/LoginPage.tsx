@@ -16,12 +16,12 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center my-52">
-      <div className="motion-preset-slide-down-md">
-        <div className="flex justify-center mb-8">
+      <div className="motion-preset-slide-down-md grid gap-5">
+        <div className="flex justify-center mb-5">
           <Logo />
         </div>
 
-        <div className="mb-8 flex flex-col items-center">
+        <div className="mb-5 flex flex-col items-center">
           <h2 className="font-semibold text-2xl">Welcome</h2>
           <p className="text-xs text-muted-foreground">
             Please sign in to your account to continue
