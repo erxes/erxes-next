@@ -1,18 +1,4 @@
 import { Sidebar, DropdownMenu } from 'erxes-ui';
-import {
-  AudioWaveform,
-  ChevronDown,
-  Command,
-  LogOut,
-  Plus,
-  Settings,
-  User,
-} from 'lucide-react';
-import { useState } from 'react';
-import { ThemeSelector } from './ThemeSelector';
-import { Link } from 'react-router-dom';
-import { SettingsPath } from '@/types/SettingsPath';
-import { AppPath } from '@/types/AppPath';
 
 export function Organization() {
   const organization = organizations[0];

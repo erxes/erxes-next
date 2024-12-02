@@ -1,20 +1,19 @@
 import { Sidebar, DropdownMenu, Avatar } from 'erxes-ui';
-import {
-  ChevronsUpDown,
-  Sparkles,
-  BadgeCheck,
-  CreditCard,
-  Bell,
-  LogOut,
-} from 'lucide-react';
+import { ChevronsUpDown, Bell, LogOut } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { SelectLanguages } from './SelectLanguages';
 import { useAuth } from '@/auth/hooks/useAuth';
+import { currentUserState } from '@/auth/states/currentUserState';
+import { useRecoilValue } from 'recoil';
 
 export function User() {
   const { isMobile } = Sidebar.useSidebar();
 
   const { handleLogout } = useAuth();
+
+  const currentUser = useRecoilValue(currentUserState);
+
+  const userDetail = currentUser?.details || {};
 
   return (
     <Sidebar.Menu>
@@ -26,12 +25,19 @@ export function User() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar.Root className="h-8 w-8 rounded-lg">
-                <Avatar.Image src={user.avatar} alt={user.name} />
-                <Avatar.Fallback className="rounded-lg">KH</Avatar.Fallback>
+                <Avatar.Image
+                  src={userDetail.avatar}
+                  alt={userDetail.fullName}
+                />
+                <Avatar.Fallback className="rounded-lg">
+                  {userDetail.fullName.split('')[0]}
+                </Avatar.Fallback>
               </Avatar.Root>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">
+                  {userDetail.fullName}
+                </span>
+                <span className="truncate text-xs">{currentUser.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </Sidebar.MenuButton>
@@ -45,12 +51,17 @@ export function User() {
             <DropdownMenu.Label className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar.Root className="h-8 w-8 rounded-lg">
-                  <Avatar.Image src={user.avatar} alt={user.name} />
-                  <Avatar.Fallback className="rounded-lg">KH</Avatar.Fallback>
+                  <Avatar.Image
+                    src={userDetail.avatar}
+                    alt={userDetail.fullName}
+                  />
+                  <Avatar.Fallback className="rounded-lg"></Avatar.Fallback>
                 </Avatar.Root>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">
+                    {userDetail.fullName}
+                  </span>
+                  <span className="truncate text-xs">{currentUser.email}</span>
                 </div>
               </div>
             </DropdownMenu.Label>
@@ -74,10 +85,3 @@ export function User() {
     </Sidebar.Menu>
   );
 }
-
-const user = {
-  name: 'khe.',
-  email: 'khe@erxes.io',
-  avatar:
-    'https://lh3.googleusercontent.com/ogw/AF2bZyimKgaZe7HoKYoAiQ4Rt9qIKG-KEWXXba0WFGWRXTccXUs=s64-c-mo',
-};
