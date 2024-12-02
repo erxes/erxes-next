@@ -1,4 +1,4 @@
-import { Sidebar, DropdownMenu } from 'erxes-ui';
+import { Sidebar } from 'erxes-ui';
 
 export function Organization() {
   const organization = organizations[0];
@@ -6,18 +6,14 @@ export function Organization() {
   return (
     <Sidebar.Menu>
       <Sidebar.MenuItem>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <Sidebar.MenuButton className="w-full px-1.5">
-              <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-system text-system-foreground">
-                <organization.logo className="size-3" />
-              </div>
-              <span className="truncate font-semibold">
-                {organization.name}
-              </span>
-            </Sidebar.MenuButton>
-          </DropdownMenu.Trigger>
-        </DropdownMenu.Root>
+        <Sidebar.Content>
+          <div className="flex items-center gap-2 px-2">
+            <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-system text-system-foreground">
+              <organization.logo className="size-3" />
+            </div>
+            <span className="truncate font-semibold">{organization.name}</span>
+          </div>
+        </Sidebar.Content>
       </Sidebar.MenuItem>
     </Sidebar.Menu>
   );
