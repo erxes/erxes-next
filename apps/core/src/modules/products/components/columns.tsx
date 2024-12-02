@@ -120,8 +120,7 @@ export const columns: ColumnDef<Product>[] = [
     ),
     footer: (props) => props.column.id,
     cell: (info) => {
-      const date = info.getValue() as Date;
-      return formatRelative(date, new Date());
+      return format(info.getValue() as string, 'MMM d, yyyy');
     },
     size: 180,
   },
