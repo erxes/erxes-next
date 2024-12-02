@@ -91,7 +91,11 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+      boxShadow: {
+        'command-bar':
+          'rgba(0, 0, 0, 0.12) 2px 4px 16px 0px, rgba(0, 0, 0, 0.04) 0px 2px 4px 0px',
+      },
     },
   },
-  plugins: [require('tailwindcss-motion')],
+  plugins: [require('tailwindcss-animate')],
 };

@@ -9,7 +9,7 @@ export const RecordTableRoot = React.forwardRef<
   return (
     <Table.Root
       ref={ref}
-      className="w-[--table-width] table-fixed border-spacing-0"
+      className="w-[--table-width] table-fixed border-spacing-0 text-[13px]"
       {...props}
     />
   );

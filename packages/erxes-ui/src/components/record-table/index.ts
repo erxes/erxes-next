@@ -2,7 +2,7 @@ import { RecordTableBody } from './RecordTableBody';
 import { RecordTableCell } from './RecordTableCell';
 import { RecordTableHead } from './RecordTableHead';
 import { RecordTableHeader } from './RecordTableHeader';
-import { RecordTableProvider } from './RecordTableProvider';
+import { RecordTableProvider, useRecordTable } from './RecordTableProvider';
 import { RecordTableRoot } from './RecordTableRoot';
 import { RecordTableScrollArea } from './RecordTableScrollArea';
 
@@ -14,4 +14,5 @@ export const RecordTable = {
   ScrollArea: RecordTableScrollArea,
   Body: RecordTableBody,
   Cell: RecordTableCell,
+  useRecordTable: useRecordTable,
 };
