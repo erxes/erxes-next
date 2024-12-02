@@ -1,3 +1,4 @@
+import { Logo } from '@/auth/components/Logo';
 import Login from '@/auth/login/components/Login';
 import { currentUserState } from '@/auth/states/currentUserState';
 import { useEffect } from 'react';
@@ -15,9 +16,13 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center my-52">
-      <div className="animate">
-        <div className="mb-3 flex flex-col items-center">
-          <h2 className="font-semibold text-2xl">Welcome!</h2>
+      <div className="motion-preset-slide-down-md">
+        <div className="flex justify-center mb-8">
+          <Logo />
+        </div>
+
+        <div className="mb-8 flex flex-col items-center">
+          <h2 className="font-semibold text-2xl">Welcome</h2>
           <p className="text-xs text-muted-foreground">
             Please sign in to your account to continue
           </p>

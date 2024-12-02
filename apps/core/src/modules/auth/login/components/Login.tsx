@@ -1,15 +1,19 @@
-import { FormType, useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
+import {
+  FormType,
+  useSignInUpForm,
+  validationSchema,
+} from '@/auth/login/hooks/useLoginForm';
 import {
   Button,
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
   Input,
 } from 'erxes-ui';
 import { SubmitHandler } from 'react-hook-form';
 import { useLogin } from '@/auth/login/hooks/useLogin';
+import { useEffect, useState } from 'react';
 
 const Login = () => {
   const { form } = useSignInUpForm();
@@ -19,6 +23,27 @@ const Login = () => {
   const submitHandler: SubmitHandler<FormType> = (data) => {
     submitCertencial(data);
   };
+
+  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
+
+  const email = form.watch('email');
+  const password = form.watch('password');
+
+  const isEmailStepSubmitButtonDisabledCondition =
+    !validationSchema.shape.email.safeParse(email).success;
+
+  const isPasswordStepSubmitButtonDisabledCondition =
+    !validationSchema.shape.password.safeParse(password).success;
+
+  useEffect(() => {
+    setIsSubmitButtonDisabled(
+      isPasswordStepSubmitButtonDisabledCondition ||
+        isEmailStepSubmitButtonDisabledCondition
+    );
+  }, [
+    isEmailStepSubmitButtonDisabledCondition,
+    isPasswordStepSubmitButtonDisabledCondition,
+  ]);
 
   return (
     <Form {...form}>
@@ -34,8 +59,6 @@ const Login = () => {
               <FormControl>
                 <Input type="email" placeholder="Enter email" {...field} />
               </FormControl>
-
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -51,12 +74,14 @@ const Login = () => {
                   {...field}
                 />
               </FormControl>
-
-              <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" onClick={form.handleSubmit(submitHandler)}>
+        <Button
+          type="submit"
+          onClick={form.handleSubmit(submitHandler)}
+          disabled={isSubmitButtonDisabled}
+        >
           Sign in
         </Button>
       </form>
