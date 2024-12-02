@@ -1,11 +1,20 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
+  SortingState,
   getCoreRowModel,
   type Table,
   type TableOptions,
   useReactTable,
+  VisibilityState,
 } from '@tanstack/react-table';
-import React, { useContext } from 'react';
+import {
+  createContext,
+  CSSProperties,
+  forwardRef,
+  HTMLAttributes,
+  useContext,
+} from 'react';
 import { type ReactNode, useMemo, useState } from 'react';
 import {
   DragEndEvent,
@@ -32,9 +41,7 @@ type IRecordTableContext = {
   table: Table<any>;
 };
 
-const RecordTableContext = React.createContext<IRecordTableContext | null>(
-  null
-);
+const RecordTableContext = createContext<IRecordTableContext | null>(null);
 
 export function useRecordTable() {
   const context = useContext(RecordTableContext);
@@ -47,42 +54,82 @@ export function useRecordTable() {
   return context;
 }
 
-export const RecordTableProvider = React.forwardRef<
+export const RecordTableProvider = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  HTMLAttributes<HTMLDivElement> & {
     children: ReactNode;
     columns: ColumnDef<any>[];
     data: any[];
     tableOptions?: TableOptions<any>;
   }
 >(({ children, columns, data, tableOptions, className, ...props }, ref) => {
-  const memoizedColumns = useMemo(() => columns, [columns]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
   const [columnOrder, setColumnOrder] = useState<string[]>(() =>
     columns.map((c) => c.id ?? '')
   );
 
   const sensors = useSensors(
-    useSensor(MouseSensor, {}),
-    useSensor(TouchSensor, {}),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        delay: 300,
+        tolerance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 300,
+        tolerance: 10,
+      },
+    }),
     useSensor(KeyboardSensor, {})
   );
 
   const table = useReactTable({
     data,
-    columns: memoizedColumns,
+    columns,
+    defaultColumn: {
+      minSize: 40,
+      maxSize: 800,
+    },
     getCoreRowModel: getCoreRowModel(),
     state: {
       columnOrder,
       columnPinning: {
         left: ['checkbox', 'title'],
       },
+      sorting,
+      columnFilters,
+      rowSelection,
+      columnVisibility,
     },
+    columnResizeMode: 'onChange',
     onColumnOrderChange: setColumnOrder,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
     ...tableOptions,
   });
+
+  const columnSizeVars = useMemo(() => {
+    const headers = table.getFlatHeaders();
+    const colSizes: { [key: string]: number } = {};
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i];
+      if (header) {
+        colSizes[`--header-${header.id}-size`] = header.getSize();
+        colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
+      }
+    }
+    return colSizes;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -111,7 +158,8 @@ export const RecordTableProvider = React.forwardRef<
           style={
             {
               '--table-width': table.getTotalSize() + 'px',
-            } as React.CSSProperties
+              ...columnSizeVars,
+            } as CSSProperties
           }
           className={cn(className)}
         >

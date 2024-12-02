@@ -1,5 +1,5 @@
 import { Column } from '@tanstack/react-table';
-import { Product } from '../components/makeData';
+import { Product } from './makeData';
 import { cn } from 'erxes-ui';
 import { CSSProperties } from 'react';
 
