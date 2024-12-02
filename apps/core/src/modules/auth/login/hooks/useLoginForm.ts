@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { PASSWORD_REGEX } from 'erxes-ui';
 
-export const validationSchema = z
+export const authValidationSchema = z
   .object({
     email: z.string().trim().email('Email must be a valid email'),
     password: z
@@ -13,7 +13,7 @@ export const validationSchema = z
   })
   .required();
 
-export type FormType = z.infer<typeof validationSchema>;
+export type FormType = z.infer<typeof authValidationSchema>;
 
 export const useSignInUpForm = () => {
   const form = useForm<FormType>({
@@ -22,8 +22,18 @@ export const useSignInUpForm = () => {
       email: '',
       password: '',
     },
-    resolver: zodResolver(validationSchema),
+    resolver: zodResolver(authValidationSchema),
   });
 
   return { form: form };
 };
+
+export const resedPasswordValidationSchema = z
+  .object({
+    password: authValidationSchema.shape.password,
+  })
+  .required();
+
+export type ResetPasswordFormType = z.infer<
+  typeof resedPasswordValidationSchema
+>;

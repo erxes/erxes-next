@@ -1,7 +1,7 @@
 import {
   FormType,
   useSignInUpForm,
-  validationSchema,
+  authValidationSchema,
 } from '@/auth/login/hooks/useLoginForm';
 import {
   Button,
@@ -12,17 +12,21 @@ import {
   Input,
 } from 'erxes-ui';
 import { SubmitHandler } from 'react-hook-form';
+
+import { useCallback, useEffect, useState } from 'react';
 import { useLogin } from '@/auth/login/hooks/useLogin';
-import { useEffect, useState } from 'react';
 
 const Login = () => {
   const { form } = useSignInUpForm();
 
-  const { submitCertencial, handleForgotPassword } = useLogin();
+  const { handleCrendentialsLogin, handleForgotPassword } = useLogin();
 
-  const submitHandler: SubmitHandler<FormType> = (data) => {
-    submitCertencial(data);
-  };
+  const submitHandler: SubmitHandler<FormType> = useCallback(
+    async (data) => {
+      handleCrendentialsLogin(data.email, data.password);
+    },
+    [handleCrendentialsLogin]
+  );
 
   const onForgotPasswordClick = (email: string) => {
     handleForgotPassword(email);
@@ -34,10 +38,10 @@ const Login = () => {
   const password = form.watch('password');
 
   const isEmailStepSubmitButtonDisabledCondition =
-    !validationSchema.shape.email.safeParse(email).success;
+    !authValidationSchema.shape.email.safeParse(email).success;
 
   const isPasswordStepSubmitButtonDisabledCondition =
-    !validationSchema.shape.password.safeParse(password).success;
+    !authValidationSchema.shape.password.safeParse(password).success;
 
   useEffect(() => {
     setIsSubmitButtonDisabled(

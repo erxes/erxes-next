@@ -7,11 +7,13 @@ import {
   CommandIcon,
   CreditCard,
   Settings,
+  SettingsIcon,
   Smile,
   User,
 } from 'lucide-react';
 
 import { Command, Sidebar } from 'erxes-ui';
+import { useNavigate } from 'react-router-dom';
 
 export function QuickActions() {
   const [open, setOpen] = React.useState(false);
@@ -28,13 +30,27 @@ export function QuickActions() {
     return () => document.removeEventListener('keydown', down);
   }, []);
 
+  const navigate = useNavigate();
+
   return (
     <>
-      <Sidebar.MenuButton onClick={() => setOpen(true)}>
-        <CommandIcon />
-        <span>Quick Actions</span>
-        <Command.Shortcut>⌘K</Command.Shortcut>
-      </Sidebar.MenuButton>
+      <div className="w-full ">
+        <Sidebar.MenuButton onClick={() => setOpen(true)}>
+          <CommandIcon />
+          <span>Quick Actions</span>
+          <Command.Shortcut>⌘K</Command.Shortcut>
+        </Sidebar.MenuButton>
+
+        <Sidebar.MenuButton
+          onClick={() => {
+            navigate('/settings');
+          }}
+        >
+          <SettingsIcon />
+          <span>Settings</span>
+        </Sidebar.MenuButton>
+      </div>
+
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}

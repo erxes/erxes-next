@@ -15,61 +15,22 @@ import { SettingsPath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';
 
 export function Organization() {
-  const [activeTeam, setActiveTeam] = useState(organizations[0]);
+  const organization = organizations[0];
+
   return (
     <Sidebar.Menu>
       <Sidebar.MenuItem>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <Sidebar.MenuButton className="w-fit px-1.5">
+            <Sidebar.MenuButton className="w-full px-1.5">
               <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-system text-system-foreground">
-                <activeTeam.logo className="size-3" />
+                <organization.logo className="size-3" />
               </div>
-              <span className="truncate font-semibold">{activeTeam.name}</span>
-              <ChevronDown className="opacity-50" />
+              <span className="truncate font-semibold">
+                {organization.name}
+              </span>
             </Sidebar.MenuButton>
           </DropdownMenu.Trigger>
-          <DropdownMenu.Content className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg">
-            <DropdownMenu.RadioGroup
-              value={activeTeam.name}
-              onValueChange={(value) => {
-                const org = organizations.find((org) => org.name === value);
-                if (org) {
-                  setActiveTeam(org);
-                }
-              }}
-            >
-              {organizations.map((org) => (
-                <DropdownMenu.RadioItem value={org.name} key={org.name}>
-                  <org.logo className="size-4 mr-2" />
-                  <span>{org.name}</span>
-                </DropdownMenu.RadioItem>
-              ))}
-            </DropdownMenu.RadioGroup>
-            <DropdownMenu.Item>
-              <Plus />
-              <span>Add new workspace</span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item asChild>
-              <Link to={`/${AppPath.Settings}/${SettingsPath.Profile}`}>
-                <User />
-                <span>Account settings</span>
-              </Link>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item asChild>
-              <Link to="/settings/workspace">
-                <Settings />
-                <span>Workspace settings</span>
-              </Link>
-            </DropdownMenu.Item>
-            <ThemeSelector />
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item>
-              <LogOut />
-              <span>Logout</span>
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
         </DropdownMenu.Root>
       </Sidebar.MenuItem>
     </Sidebar.Menu>
@@ -92,15 +53,5 @@ const organizations = [
       </svg>
     ),
     plan: 'Enterprise',
-  },
-  {
-    name: 'Erxes Academy',
-    logo: AudioWaveform,
-    plan: 'Startup',
-  },
-  {
-    name: 'Erxes Studio',
-    logo: Command,
-    plan: 'Free',
   },
 ];
