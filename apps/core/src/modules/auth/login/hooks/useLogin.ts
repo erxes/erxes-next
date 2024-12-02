@@ -75,7 +75,7 @@ export const useLogin = () => {
 
   const handleResetPassword = useCallback(
     async (token: string, password: string) => {
-      await resetPassword({ variables: { token, password } })
+      await resetPassword({ variables: { token, newPassword: password } })
         .then(() => {
           toast({
             title: 'Success',

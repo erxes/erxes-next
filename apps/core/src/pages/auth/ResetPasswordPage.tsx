@@ -11,8 +11,6 @@ const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token') as string;
 
-  console.log(token);
-
   const currentUser = useRecoilValue(currentUserState);
   useEffect(() => {
     if (currentUser) {

@@ -31,9 +31,25 @@ export const useSignInUpForm = () => {
 export const resedPasswordValidationSchema = z
   .object({
     password: authValidationSchema.shape.password,
+    confirmPassword: authValidationSchema.shape.password,
   })
-  .required();
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
 export type ResetPasswordFormType = z.infer<
   typeof resedPasswordValidationSchema
 >;
+
+export const useResetPasswordForm = () => {
+  const form = useForm<ResetPasswordFormType>({
+    mode: 'onBlur',
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+    resolver: zodResolver(resedPasswordValidationSchema),
+  });
+  return { form: form };
+};

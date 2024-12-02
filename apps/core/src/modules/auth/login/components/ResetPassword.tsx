@@ -1,7 +1,6 @@
 import {
-  FormType,
-  useSignInUpForm,
-  resedPasswordValidationSchema,
+  ResetPasswordFormType,
+  useResetPasswordForm,
 } from '@/auth/login/hooks/useLoginForm';
 import {
   Button,
@@ -9,31 +8,20 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormMessage,
   Input,
 } from 'erxes-ui';
 import { SubmitHandler } from 'react-hook-form';
 import { useLogin } from '@/auth/login/hooks/useLogin';
-import { useEffect, useState } from 'react';
 
 const ResetPassword = ({ token }: { token: string }) => {
-  const { form } = useSignInUpForm();
+  const { form } = useResetPasswordForm();
 
   const { handleResetPassword } = useLogin();
 
-  const submitHandler: SubmitHandler<FormType> = (data) => {
+  const submitHandler: SubmitHandler<ResetPasswordFormType> = (data) => {
     handleResetPassword(token, data.password);
   };
-
-  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
-
-  const password = form.watch('password');
-
-  const isPasswordStepSubmitButtonDisabledCondition =
-    !resedPasswordValidationSchema.shape.password.safeParse(password).success;
-
-  useEffect(() => {
-    setIsSubmitButtonDisabled(isPasswordStepSubmitButtonDisabledCondition);
-  }, [isPasswordStepSubmitButtonDisabledCondition]);
 
   return (
     <Form {...form}>
@@ -52,14 +40,27 @@ const ResetPassword = ({ token }: { token: string }) => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          onClick={form.handleSubmit(submitHandler)}
-          disabled={isSubmitButtonDisabled}
-        >
+        <FormField
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Confirm password"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" onClick={form.handleSubmit(submitHandler)}>
           Change password
         </Button>
       </form>
