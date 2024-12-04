@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Product } from '../utils/makeData';
-import { format, formatRelative } from 'date-fns';
+import { format } from 'date-fns';
 import {
   BoxIcon,
   Building2,
@@ -135,15 +135,15 @@ export const columns: ColumnDef<Product>[] = [
     ),
     cell: (info) => (
       <div className="flex items-center gap-1">
-        {(info.getValue() as Product['tags']).map((tag) => (
-          <Badge
-            key={tag}
-            variant="secondary"
-            color={badgeColors[tag.length % badgeColors.length]}
-          >
-            {tag}
-          </Badge>
-        ))}
+        {(info.getValue() as Product['tags']).map((tag) => {
+          const color =
+            badgeColors[Math.floor(Math.random() * badgeColors.length)];
+          return (
+            <Badge key={tag} color={color}>
+              {color}
+            </Badge>
+          );
+        })}
       </div>
     ),
     footer: (props) => props.column.id,
