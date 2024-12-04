@@ -1,4 +1,3 @@
-import { Logo } from '@/auth/components/Logo';
 import ResetPassword from '@/auth/login/components/ResetPassword';
 import { currentUserState } from '@/auth/states/currentUserState';
 import { useEffect } from 'react';

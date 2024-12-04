@@ -25,7 +25,7 @@ export const useSignInUpForm = () => {
     resolver: zodResolver(authValidationSchema),
   });
 
-  return { form: form };
+  return { form };
 };
 
 export const resedPasswordValidationSchema = z
@@ -51,5 +51,5 @@ export const useResetPasswordForm = () => {
     },
     resolver: zodResolver(resedPasswordValidationSchema),
   });
-  return { form: form };
+  return { form };
 };

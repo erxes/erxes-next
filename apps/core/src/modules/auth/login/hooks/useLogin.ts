@@ -1,10 +1,9 @@
 import { useApolloClient, useMutation } from '@apollo/client';
 import { useCallback } from 'react';
 
-import { Login } from '@/auth/graphql/mutations/login';
 import { Logout } from '@/auth/graphql/mutations/logout';
-import { ForgotPassword } from '@/auth/graphql/mutations/forgotPassword';
-import { ResetPassword } from '@/auth/graphql/mutations/resetPassword';
+import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';
+import { Login } from '@/auth/login/grahpql/mutations/login';
 
 import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadingState';
 import { currentUserState } from '@/auth/states/currentUserState';
@@ -12,6 +11,7 @@ import { currentUserState } from '@/auth/states/currentUserState';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from 'erxes-ui';
+import { ResetPassword } from '@/auth/login/grahpql/mutations/resetPassword';
 
 export const useLogin = () => {
   const [login] = useMutation(Login);
@@ -45,7 +45,7 @@ export const useLogin = () => {
     client.resetStore();
 
     setIsCurrentUserLoaded(false);
-    setCurrentUser(undefined);
+    setCurrentUser(null);
 
     sessionStorage.clear();
     localStorage.clear();

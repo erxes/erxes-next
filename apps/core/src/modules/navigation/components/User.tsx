@@ -13,7 +13,9 @@ export function User() {
 
   const currentUser = useRecoilValue(currentUserState);
 
-  const userDetail = currentUser?.details || {};
+  const userDetail = currentUser?.details;
+
+  if (!userDetail) return null;
 
   return (
     <Sidebar.Menu>

@@ -1,6 +1,4 @@
-import React from 'react';
 import { useRecoilValue } from 'recoil';
-// import { Navigate, useLocation } from 'react-router-dom';
 import { isDefined, RocketIcon } from 'erxes-ui';
 import { Navigate, Outlet } from 'react-router-dom';
 
@@ -12,12 +10,14 @@ export const UserProvider = () => {
 
   const currentUser = useRecoilValue(currentUserState);
 
+  console.log('currentUser', currentUser);
+
   if (!isCurrentUserLoaded) {
     return (
       <div className="flex flex-col h-screen w-screen items-center justify-center">
         <RocketIcon />
         <p className="text-sm text-muted-foreground">
-          Hang in there! We'll be right back with you
+          Hang in there! We'll be right sdback with you
         </p>
       </div>
     );

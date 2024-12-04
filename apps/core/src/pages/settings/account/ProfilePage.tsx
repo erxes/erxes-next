@@ -72,7 +72,7 @@ export const SettingsProfilePage = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col gap-3">
+        {/* <div className="flex flex-col gap-3">
           <Label>Danger zone</Label>
           <p className="text-xs text-muted-foreground">
             Delete account and all the associated data
@@ -82,7 +82,7 @@ export const SettingsProfilePage = () => {
               Delete account
             </Button>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

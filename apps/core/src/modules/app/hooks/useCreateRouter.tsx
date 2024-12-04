@@ -11,17 +11,21 @@ import { lazy, Suspense } from 'react';
 import ProductsRoutes from '../components/ProductsRoutes';
 
 import { UserProvider } from '@/auth/providers/UserProvider';
+import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 
 const Inbox = lazy(() => import('plugin_inbox/Module'));
-
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
+const CreateOwnerPage = lazy(
+  () => import('~/pages/organization/CreateOwnerPage')
+);
 
 export const useCreateRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
-        <Route>
+        <Route path="/create-owner" element={<CreateOwnerPage />} />
+        <Route element={<OrganizationProvider />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Route>

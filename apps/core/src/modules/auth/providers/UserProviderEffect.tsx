@@ -39,6 +39,8 @@ export const UserProviderEffect = () => {
     queryData?.currentUser,
     setIsCurrentUserLoaded,
     queryData,
+
+    isCurrentUserLoaded,
   ]);
 
   useEffect(() => {

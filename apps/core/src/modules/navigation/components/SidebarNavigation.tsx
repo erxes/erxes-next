@@ -19,15 +19,6 @@ export function SidebarNavigation() {
   );
 }
 
-// title: string;
-//     url: string;
-//     icon?: LucideIcon;
-//     isActive?: boolean;
-//     items?: {
-//       title: string;
-//       url: string;
-//     }[];
-
 export function SidebarNavigationItem({
   items,
   label,
@@ -52,7 +43,6 @@ export function SidebarNavigationItem({
                   </Link>
                 </Sidebar.MenuButton>
               </Sidebar.MenuItem>
-              {/* )} */}
             </React.Fragment>
           );
         })}
