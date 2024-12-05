@@ -3,7 +3,7 @@ import { ChevronsUpDown, Bell, LogOut } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { SelectLanguages } from './SelectLanguages';
 import { useAuth } from '@/auth/hooks/useAuth';
-import { currentUserState } from '@/auth/states/currentUserState';
+import { currentUserState } from 'erxes-ui/states/currentUserState';
 import { useRecoilValue } from 'recoil';
 
 export function User() {

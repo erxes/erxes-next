@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 
 import { Logout } from '@/auth/graphql/mutations/logout';
 
-import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadingState';
-import { currentUserState } from '@/auth/states/currentUserState';
-import { currentOrganizationState } from '@/organization/states/currentOrganizationSate';
-import { isCurrentOrganizationLoadedState } from '@/organization/states/currentOrganizationLoadingState';
+import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
+import { currentUserState } from 'erxes-ui/states/currentUserState';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
+import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';
 
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';

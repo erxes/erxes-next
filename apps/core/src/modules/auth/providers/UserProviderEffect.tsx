@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { currentUserState } from '@/auth/states/currentUserState';
-import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadingState';
+import { currentUserState } from 'erxes-ui/states/currentUserState';
+import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
 
 import { isDefined } from 'erxes-ui';
 import { useQuery } from '@apollo/client';
@@ -39,8 +39,6 @@ export const UserProviderEffect = () => {
     queryData?.currentUser,
     setIsCurrentUserLoaded,
     queryData,
-
-    isCurrentUserLoaded,
   ]);
 
   useEffect(() => {

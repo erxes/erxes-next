@@ -4,8 +4,8 @@ import { useRecoilValue } from 'recoil';
 import { isDefined, RocketIcon } from 'erxes-ui';
 import { Navigate } from 'react-router-dom';
 
-import { isCurrentOrganizationLoadedState } from '@/organization/states/currentOrganizationLoadingState';
-import { currentOrganizationState } from '@/organization/states/currentOrganizationSate';
+import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
 
 export const OrganizationProvider = () => {
   const isCurrentOrganizationLoaded = useRecoilValue(

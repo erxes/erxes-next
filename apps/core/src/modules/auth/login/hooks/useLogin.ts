@@ -5,8 +5,8 @@ import { Logout } from '@/auth/graphql/mutations/logout';
 import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';
 import { Login } from '@/auth/login/grahpql/mutations/login';
 
-import { isCurrentUserLoadedState } from '@/auth/states/isCurrentUserLoadingState';
-import { currentUserState } from '@/auth/states/currentUserState';
+import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
+import { currentUserState } from 'erxes-ui/states/currentUserState';
 
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';

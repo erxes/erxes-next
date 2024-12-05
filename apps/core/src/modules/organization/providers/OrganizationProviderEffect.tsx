@@ -1,8 +1,8 @@
 import { REACT_APP_API_URL } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { isCurrentOrganizationLoadedState } from '@/organization/states/currentOrganizationLoadingState';
-import { currentOrganizationState } from '@/organization/states/currentOrganizationSate';
+import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
 
 export const OrganizationProviderEffect = () => {
   const [isCurrentOrganizationLoaded, setIsCurrentOrganizationLoaded] =

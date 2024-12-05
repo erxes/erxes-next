@@ -1,4 +1,4 @@
-import { createState } from 'erxes-ui';
+import { createState } from './createState';
 
 export const isCurrentOrganizationLoadedState = createState<boolean>({
   key: 'isCurrentOrganizationLoadedState',
