@@ -1,7 +1,8 @@
 import { Outlet } from 'react-router-dom';
 
 import { useRecoilValue } from 'recoil';
-import { isDefined, RocketIcon } from 'erxes-ui';
+import { RocketIcon } from 'erxes-ui/icons';
+import { isDefined } from 'erxes-ui/utils';
 import { Navigate } from 'react-router-dom';
 
 import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';
@@ -14,8 +15,6 @@ export const OrganizationProvider = () => {
 
   const currentOrganization = useRecoilValue(currentOrganizationState);
 
-  console.log('isCurrentOrganizationLoaded', isCurrentOrganizationLoaded);
-
   if (!isCurrentOrganizationLoaded) {
     return (
       <div className="flex flex-col h-screen w-screen items-center justify-center">
@@ -26,8 +25,6 @@ export const OrganizationProvider = () => {
       </div>
     );
   }
-
-  console.log('currentOrganization', currentOrganization);
 
   if (isDefined(currentOrganization) && !currentOrganization.haveOwner) {
     return <Navigate to="/create-owner" replace />;

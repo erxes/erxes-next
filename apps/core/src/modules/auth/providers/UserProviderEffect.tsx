@@ -4,7 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { currentUserState } from 'erxes-ui/states/currentUserState';
 import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
 
-import { isDefined } from 'erxes-ui';
+import { isDefined } from 'erxes-ui/utils';
 import { useQuery } from '@apollo/client';
 import { currentUser } from '@/users/graphql/queries';
 

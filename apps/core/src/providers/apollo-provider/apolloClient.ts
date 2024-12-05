@@ -12,7 +12,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 
 import { createClient } from 'graphql-ws';
 
-import { REACT_APP_API_URL } from 'erxes-ui';
+import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
 
 // Create an http link:
 const httpLink = createHttpLink({

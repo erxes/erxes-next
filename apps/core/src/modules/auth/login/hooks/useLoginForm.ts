@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { PASSWORD_REGEX } from 'erxes-ui';
+import { PASSWORD_REGEX } from 'erxes-ui/utils';
 
 export const authValidationSchema = z
   .object({

@@ -1,4 +1,4 @@
-import { REACT_APP_API_URL } from 'erxes-ui';
+import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
 import { useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';

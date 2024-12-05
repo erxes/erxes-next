@@ -10,7 +10,7 @@ import { currentUserState } from 'erxes-ui/states/currentUserState';
 
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from 'erxes-ui';
+import { useToast } from 'erxes-ui/hooks';
 import { ResetPassword } from '@/auth/login/grahpql/mutations/resetPassword';
 
 export const useLogin = () => {
