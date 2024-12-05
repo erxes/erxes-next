@@ -15,7 +15,13 @@ import {
 } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react';
 
-import { Table, Input, Button, Checkbox, DropdownMenu } from 'erxes-ui';
+import {
+  Table,
+  Input,
+  Button,
+  Checkbox,
+  DropdownMenu,
+} from 'erxes-ui/components';
 
 const data: Payment[] = [
   {

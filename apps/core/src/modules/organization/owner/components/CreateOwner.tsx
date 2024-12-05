@@ -11,7 +11,7 @@ import {
   Checkbox,
   FormLabel,
   FormMessage,
-} from 'erxes-ui';
+} from 'erxes-ui/components';
 import { SubmitHandler } from 'react-hook-form';
 import {
   CreateOwnerFormType,

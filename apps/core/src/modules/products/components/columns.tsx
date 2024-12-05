@@ -12,7 +12,13 @@ import {
   PlusIcon,
   TagsIcon,
 } from 'lucide-react';
-import { Checkbox, Badge, badgeColors, Button, Avatar } from 'erxes-ui';
+import {
+  Checkbox,
+  Badge,
+  badgeColors,
+  Button,
+  Avatar,
+} from 'erxes-ui/components';
 
 export const columns: ColumnDef<Product>[] = [
   {

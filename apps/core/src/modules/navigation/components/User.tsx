@@ -1,4 +1,4 @@
-import { Sidebar, DropdownMenu, Avatar } from 'erxes-ui';
+import { Sidebar, DropdownMenu, Avatar } from 'erxes-ui/components';
 import { ChevronsUpDown, Bell, LogOut } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { SelectLanguages } from './SelectLanguages';

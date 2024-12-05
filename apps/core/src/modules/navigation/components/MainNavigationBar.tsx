@@ -1,7 +1,6 @@
 import { Sidebar } from 'erxes-ui';
 import { User } from './User';
 import { Organization } from './Organization';
-import { Mail, PieChart, SquareCheck, Users } from 'lucide-react';
 import { SidebarNavigation } from './SidebarNavigation';
 import { QuickActions } from '@/quickActions/components/QuickActions';
 import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
@@ -52,65 +51,3 @@ export const MainNavigationBar = ({
     </Sidebar.Provider>
   );
 };
-
-const navItems = [
-  {
-    label: 'favorites',
-    items: [
-      {
-        title: 'teamInbox',
-        url: '/inbox',
-        icon: Mail,
-        isActive: true,
-        items: [
-          {
-            title: 'inbox',
-            url: '/inbox',
-          },
-          {
-            title: 'starred',
-            url: '/inbox/starred',
-          },
-          {
-            title: 'settings',
-            url: '/inbox/settings',
-          },
-        ],
-      },
-      {
-        title: 'tasks',
-        url: '/tasks',
-        icon: SquareCheck,
-        items: [
-          {
-            title: 'teams',
-            url: '/tasks/teams',
-          },
-          {
-            title: 'projects',
-            url: '/tasks/projects',
-          },
-          {
-            title: 'views',
-            url: '/tasks/views',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'projects',
-    items: [
-      {
-        title: 'contacts',
-        url: '/contacts',
-        icon: Users,
-      },
-      {
-        title: 'insights',
-        url: '/insights',
-        icon: PieChart,
-      },
-    ],
-  },
-];

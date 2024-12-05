@@ -1,4 +1,4 @@
-import { DropdownMenu } from 'erxes-ui';
+import { DropdownMenu } from 'erxes-ui/components';
 import { useTheme, Theme } from '~/providers/theme-provider';
 import { SunIcon, MoonIcon, LaptopIcon } from 'lucide-react';
 

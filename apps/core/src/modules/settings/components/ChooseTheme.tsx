@@ -1,6 +1,6 @@
 // Dependencies: pnpm install lucide-react
 
-import { RadioGroup } from 'erxes-ui';
+import { RadioGroup } from 'erxes-ui/components';
 import { Check, Minus } from 'lucide-react';
 import { useTheme } from '~/providers/theme-provider';
 

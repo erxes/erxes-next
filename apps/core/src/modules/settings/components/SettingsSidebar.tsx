@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Sidebar } from 'erxes-ui';
+import { Sidebar } from 'erxes-ui/components';
 import {
   Bell,
   Menu,
