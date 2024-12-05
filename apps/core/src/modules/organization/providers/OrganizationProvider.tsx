@@ -21,7 +21,7 @@ export const OrganizationProvider = () => {
       <div className="flex flex-col h-screen w-screen items-center justify-center">
         <RocketIcon />
         <p className="text-sm text-muted-foreground">
-          Hang in there! We'sadssadall be right back with you
+          Hang in there! We'll be right back with you
         </p>
       </div>
     );

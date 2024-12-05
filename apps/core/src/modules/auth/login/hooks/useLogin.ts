@@ -34,10 +34,13 @@ export const useLogin = () => {
           response.data && navigate('/');
         })
         .catch((e) => {
-          console.log(e);
+          toast({
+            title: 'Email or password is incorrect',
+            description: e.message,
+          });
         });
     },
-    [login, navigate, setIsCurrentUserLoaded]
+    [login, navigate, setIsCurrentUserLoaded, toast]
   );
 
   const handleLogout = useCallback(async () => {

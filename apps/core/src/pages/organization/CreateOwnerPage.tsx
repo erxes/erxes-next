@@ -1,6 +1,20 @@
 import CreateOwner from '@/organization/owner/components/CreateOwner';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { isDefined } from 'erxes-ui/utils';
 
 const CreateOwnerPage = () => {
+  const navigate = useNavigate();
+  const currentOrganization = useRecoilValue(currentOrganizationState);
+
+  useEffect(() => {
+    if (isDefined(currentOrganization)) {
+      navigate('/');
+    }
+  }, [currentOrganization, navigate]);
+
   return (
     <div className="flex items-center justify-center my-40">
       <div className="motion-preset-slide-down-md grid gap-5">
