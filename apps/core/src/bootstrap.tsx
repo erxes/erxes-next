@@ -2,12 +2,31 @@ import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './styles.css';
 import { App } from '@/app/components/App';
+import { init } from '@module-federation/enhanced/runtime';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+// Initialize module federation before rendering
+const initFederation = async () => {
+  init({
+    name: 'core',
+    remotes: [
+      {
+        name: 'plugin_inbox',
+        entry: 'http://localhost:3002/remoteEntry.js',
+      },
+    ],
+  });
+
+  const root = ReactDOM.createRoot(
+    document.getElementById('root') as HTMLElement
+  );
+
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+};
+
+initFederation().catch((err) => {
+  console.error('Failed to initialize module federation:', err);
+});

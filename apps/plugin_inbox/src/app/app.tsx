@@ -8,7 +8,7 @@ const Starred = lazy(() => import('./starred'));
 
 const PluginInbox = () => {
   return (
-    <Suspense fallback={<></>}>
+    <Suspense fallback={<>Loading...</>}>
       <Routes>
         <Route path="/" element={<Inbox />} />
         <Route path="/starred" element={<Starred />} />
