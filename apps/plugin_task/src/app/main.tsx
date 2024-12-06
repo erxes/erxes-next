@@ -6,8 +6,6 @@ import { Breadcrumb, Header } from 'erxes-ui';
 
 import { Route, Routes } from 'react-router-dom';
 
-const PluginInbox = React.lazy(() => import('plugin_inbox/Module'));
-
 export function App() {
   return (
     <>
@@ -25,7 +23,6 @@ export function App() {
         <Routes>
           <Route path="/tasks" element={<NxWelcome title="core" />} />
           <Route path="/tasks/teams" element={<div>teams</div>} />
-          <Route path="/inbox" element={<PluginInbox />} />
         </Routes>
       </React.Suspense>
     </>
