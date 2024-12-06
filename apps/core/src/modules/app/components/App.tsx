@@ -3,7 +3,7 @@ import { useCreateRouter } from '../hooks/useCreateRouter';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from '~/providers/theme-provider';
 import { AppI18nWrapper } from '~/providers/i18next-provider';
-import { Toaster } from 'erxes-ui';
+import { Toaster } from 'erxes-ui/components';
 
 export function App() {
   return (

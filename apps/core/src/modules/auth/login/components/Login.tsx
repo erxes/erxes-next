@@ -10,7 +10,7 @@ import {
   FormField,
   FormItem,
   Input,
-} from 'erxes-ui';
+} from 'erxes-ui/components';
 import { SubmitHandler } from 'react-hook-form';
 
 import { useCallback, useEffect, useState } from 'react';

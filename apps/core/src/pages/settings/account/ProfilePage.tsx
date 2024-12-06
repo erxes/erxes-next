@@ -1,4 +1,11 @@
-import { Breadcrumb, Header, Upload, Label, Input, Button } from 'erxes-ui';
+import {
+  Breadcrumb,
+  Header,
+  Upload,
+  Label,
+  Input,
+  Button,
+} from 'erxes-ui/components';
 
 export const SettingsProfilePage = () => {
   return (

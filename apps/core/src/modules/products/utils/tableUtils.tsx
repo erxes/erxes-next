@@ -1,6 +1,6 @@
 import { Column } from '@tanstack/react-table';
 import { Product } from './makeData';
-import { cn } from 'erxes-ui';
+import { cn } from 'erxes-ui/components';
 import { CSSProperties } from 'react';
 
 export const getCommonPinningStyles = (

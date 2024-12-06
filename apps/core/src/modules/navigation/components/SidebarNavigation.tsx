@@ -1,4 +1,4 @@
-import { Sidebar } from 'erxes-ui';
+import { Sidebar } from 'erxes-ui/components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';

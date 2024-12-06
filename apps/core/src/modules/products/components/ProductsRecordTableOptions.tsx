@@ -1,4 +1,4 @@
-import { Button, DropdownMenu } from 'erxes-ui';
+import { Button, DropdownMenu } from 'erxes-ui/components';
 import { TagIcon } from 'lucide-react';
 
 export const ProductsRecordTableOptions = () => {

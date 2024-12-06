@@ -1,6 +1,8 @@
 import { useRecoilValue } from 'recoil';
-import { isDefined, RocketIcon } from 'erxes-ui';
+
 import { Navigate, Outlet } from 'react-router-dom';
+import { RocketIcon } from 'erxes-ui/icons';
+import { isDefined } from 'erxes-ui/utils';
 
 import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
 import { currentUserState } from 'erxes-ui/states/currentUserState';
@@ -9,8 +11,6 @@ export const UserProvider = () => {
   const isCurrentUserLoaded = useRecoilValue(isCurrentUserLoadedState);
 
   const currentUser = useRecoilValue(currentUserState);
-
-  console.log('currentUser', currentUser);
 
   if (!isCurrentUserLoaded) {
     return (

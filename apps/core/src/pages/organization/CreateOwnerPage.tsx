@@ -1,16 +1,18 @@
 import CreateOwner from '@/organization/owner/components/CreateOwner';
-import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationState';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
+
 import { isDefined } from 'erxes-ui/utils';
 
 const CreateOwnerPage = () => {
   const navigate = useNavigate();
   const currentOrganization = useRecoilValue(currentOrganizationState);
+  console.log('currentOrganization', currentOrganization);
 
   useEffect(() => {
-    if (isDefined(currentOrganization)) {
+    if (isDefined(currentOrganization) && currentOrganization.haveOwner) {
       navigate('/');
     }
   }, [currentOrganization, navigate]);

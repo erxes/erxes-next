@@ -10,7 +10,7 @@ import {
   FormItem,
   FormMessage,
   Input,
-} from 'erxes-ui';
+} from 'erxes-ui/components';
 import { SubmitHandler } from 'react-hook-form';
 import { useLogin } from '@/auth/login/hooks/useLogin';
 

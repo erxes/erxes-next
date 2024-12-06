@@ -1,4 +1,4 @@
-import { DropdownMenu } from 'erxes-ui';
+import { DropdownMenu } from 'erxes-ui/components';
 import { LanguagesIcon } from 'lucide-react';
 import { AvailableLanguage, useSwitchLanguage } from '~/i18n';
 

@@ -1,4 +1,4 @@
-import { CommandBar, RecordTable } from 'erxes-ui';
+import { CommandBar, RecordTable } from 'erxes-ui/components';
 import { PlusIcon, TrashIcon } from 'lucide-react';
 
 export const ProductCommandBar = () => {

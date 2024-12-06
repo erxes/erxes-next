@@ -1,5 +1,5 @@
 import { flexRender } from '@tanstack/react-table';
-import { Button, RecordTable } from 'erxes-ui';
+import { Button, RecordTable } from 'erxes-ui/components';
 import { makeData } from '../utils/makeData';
 import { ChevronDownIcon, DotIcon, ListIcon } from 'lucide-react';
 import { columns } from './columns';

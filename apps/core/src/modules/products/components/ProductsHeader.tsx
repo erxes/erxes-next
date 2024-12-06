@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Header, HoverCard } from 'erxes-ui';
+import { Breadcrumb, Button, Header, HoverCard } from 'erxes-ui/components';
 import { PlusIcon, InfoIcon } from 'lucide-react';
 
 const ProductsHeader = () => {

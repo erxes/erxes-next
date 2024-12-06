@@ -12,7 +12,7 @@ import {
   User,
 } from 'lucide-react';
 
-import { Command, Sidebar } from 'erxes-ui';
+import { Command, Sidebar } from 'erxes-ui/components';
 import { useNavigate } from 'react-router-dom';
 
 export function QuickActions() {

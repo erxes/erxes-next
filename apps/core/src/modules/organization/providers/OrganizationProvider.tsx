@@ -1,11 +1,12 @@
 import { Outlet } from 'react-router-dom';
 
 import { useRecoilValue } from 'recoil';
-import { isDefined, RocketIcon } from 'erxes-ui';
+import { RocketIcon } from 'erxes-ui/icons';
+import { isDefined } from 'erxes-ui/utils';
 import { Navigate } from 'react-router-dom';
 
 import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';
-import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationState';
 
 export const OrganizationProvider = () => {
   const isCurrentOrganizationLoaded = useRecoilValue(
@@ -13,8 +14,6 @@ export const OrganizationProvider = () => {
   );
 
   const currentOrganization = useRecoilValue(currentOrganizationState);
-
-  console.log('isCurrentOrganizationLoaded', isCurrentOrganizationLoaded);
 
   if (!isCurrentOrganizationLoaded) {
     return (
@@ -26,8 +25,6 @@ export const OrganizationProvider = () => {
       </div>
     );
   }
-
-  console.log('currentOrganization', currentOrganization);
 
   if (isDefined(currentOrganization) && !currentOrganization.haveOwner) {
     return <Navigate to="/create-owner" replace />;

@@ -1,4 +1,4 @@
-import { Sidebar } from 'erxes-ui';
+import { Sidebar } from 'erxes-ui/components';
 
 export function Organization() {
   const organization = organizations[0];
