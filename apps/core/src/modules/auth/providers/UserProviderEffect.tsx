@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-
 import { currentUserState } from 'erxes-ui/states/currentUserState';
 import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
 

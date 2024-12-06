@@ -6,7 +6,7 @@ import { columns } from './columns';
 import { ProductCommandBar } from './ProductCommandBar';
 import { ProductsRecordTableOptions } from './ProductsRecordTableOptions';
 
-const data = makeData(60);
+const data = makeData(300);
 
 export const ProductsRecordTable = () => {
   return (

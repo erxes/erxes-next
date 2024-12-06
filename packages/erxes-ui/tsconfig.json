@@ -6,8 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "paths": {
-      "@/*": ["packages/erxes-ui/src/*"],
-      "@": ["packages/erxes-ui/src"]
+      "erxes-ui/*": ["packages/erxes-ui/src/*"],
+      "erxes-ui": ["packages/erxes-ui/src"]
     }
   },
   "files": [],

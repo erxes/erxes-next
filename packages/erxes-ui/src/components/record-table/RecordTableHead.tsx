@@ -53,7 +53,11 @@ export const RecordTableHead = React.forwardRef<
       {...props}
     >
       {children}
-
+      <span
+        {...attributes}
+        {...listeners}
+        className="absolute top-0 left-0 w-full h-full"
+      />
       {isDragging && (
         <div
           className="absolute top-0 left-0 w-full h-screen bg-neutral-400 opacity-50"
@@ -61,11 +65,6 @@ export const RecordTableHead = React.forwardRef<
         />
       )}
 
-      <span
-        {...attributes}
-        {...listeners}
-        className="absolute top-0 left-0 w-[calc(100%-1rem)] h-full"
-      />
       <RecordTableHeadSize header={header} />
     </Table.Head>
   );
