@@ -5,7 +5,7 @@ import { Logout } from '@/auth/graphql/mutations/logout';
 
 import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
 import { currentUserState } from 'erxes-ui/states/currentUserState';
-import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationState';
 import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';
 
 import { useSetRecoilState } from 'recoil';
