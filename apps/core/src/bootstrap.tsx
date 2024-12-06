@@ -11,7 +11,7 @@ const initFederation = async () => {
     remotes: [
       {
         name: 'plugin_inbox',
-        entry: 'http://localhost:3002/remoteEntry.js',
+        entry: 'https://erxes-next.pages.dev/plugin_inbox/remoteEntry.js',
       },
     ],
   });
