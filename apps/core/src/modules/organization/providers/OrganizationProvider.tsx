@@ -6,7 +6,7 @@ import { isDefined } from 'erxes-ui/utils';
 import { Navigate } from 'react-router-dom';
 
 import { isCurrentOrganizationLoadedState } from 'erxes-ui/states/currentOrganizationLoadingState';
-import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationSate';
+import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationState';
 
 export const OrganizationProvider = () => {
   const isCurrentOrganizationLoaded = useRecoilValue(
