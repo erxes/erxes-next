@@ -30,13 +30,7 @@ const config: ModuleFederationConfig = {
     // Returning false means the library is not shared.
     return false;
   },
-  remotes: [
-    [
-      'plugin_inbox',
-      'https://erxes-next.pages.dev/plugin_inbox/remoteEntry.js',
-    ],
-    'plugin_task',
-  ],
+  remotes: ['plugin_inbox', 'plugin_task'],
 };
 
 /**
