@@ -89,3 +89,30 @@ And join the Nx community:
 - suggest based on the current user intent (what they are trying to do)
 - suggest based on the current user location (browser location)
 - suggest based on the current user activity (user activity history)
+
+
+## best practices
+- specific names
+- use the same name for the same thing
+- absolute imports
+- named exports
+- think twice before using type any, useEffect
+- clean up console.log before commit
+- prefer to not use tailwind arbitrary classNames
+- follow folder structure
+ - module_name
+  - components
+  - hooks
+  - types
+  - utils
+  - contexts
+  - graphql
+  - states
+
+## frontend commands
+- `nvm use 20`: use node 20
+- `nx serve [core|plugin]`: Starts the development server.
+- `nx serve [core|plugin] --devRemotes=plugin_inbox`: Starts the development server and watches for changes.
+- `nx build [core|plugin]`: Builds the application for production.
+- `nx serve-static [core|plugin]`: Starts the production server.
+
