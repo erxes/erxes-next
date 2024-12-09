@@ -11,9 +11,7 @@
       "~/*": ["apps/core/src/*"], // for vscode
       "~": ["apps/core/src"], // for rspack
       "erxes-ui/*": ["packages/erxes-ui/src/*"],
-      "erxes-ui": ["packages/erxes-ui/src"],
-      "plugin_inbox/Module": ["apps/plugin_inbox/src/remote-entry.ts"],
-      "plugin_task/Module": ["apps/plugin_task/src/remote-entry.ts"]
+      "erxes-ui": ["packages/erxes-ui/src"]
     }
   },
   "files": [],

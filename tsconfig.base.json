@@ -17,9 +17,7 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "erxes-ui": ["packages/erxes-ui/src/index.ts"],
-      "plugin_inbox/Module": ["apps/plugin_inbox/src/remote-entry.ts"],
-      "plugin_task/Module": ["apps/plugin_task/src/remote-entry.ts"]
+      "erxes-ui": ["packages/erxes-ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

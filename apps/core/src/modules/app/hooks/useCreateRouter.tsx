@@ -12,8 +12,8 @@ import ProductsRoutes from '../components/ProductsRoutes';
 
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
+import Inbox from '~/plugins/Inbox';
 
-const Inbox = lazy(() => import('plugin_inbox/Module'));
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
 const CreateOwnerPage = lazy(
