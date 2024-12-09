@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { currentUserState } from 'erxes-ui';
 
 const Inbox = lazy(() =>
   import('./inbox').then((module) => ({ default: module.Inbox }))
@@ -7,8 +9,11 @@ const Inbox = lazy(() =>
 const Starred = lazy(() => import('./starred'));
 
 const PluginInbox = () => {
+  const currentUser = useRecoilValue(currentUserState);
+  console.log(currentUser);
+
   return (
-    <Suspense fallback={<></>}>
+    <Suspense fallback={<>Loading...</>}>
       <Routes>
         <Route path="/" element={<Inbox />} />
         <Route path="/starred" element={<Starred />} />
