@@ -1,4 +1,4 @@
-import { Sidebar, DropdownMenu, Avatar } from 'erxes-ui/components';
+import { Sidebar, DropdownMenu, Avatar, useIsMobile } from 'erxes-ui';
 import { ChevronsUpDown, Bell, LogOut } from 'lucide-react';
 import { ThemeSelector } from './ThemeSelector';
 import { SelectLanguages } from './SelectLanguages';
@@ -7,7 +7,7 @@ import { currentUserState } from 'erxes-ui/states/currentUserState';
 import { useRecoilValue } from 'recoil';
 
 export function User() {
-  const { isMobile } = Sidebar.useSidebar();
+  const isMobile = useIsMobile();
 
   const { handleLogout } = useAuth();
 

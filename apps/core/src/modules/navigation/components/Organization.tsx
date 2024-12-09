@@ -8,10 +8,15 @@ export function Organization() {
       <Sidebar.MenuItem>
         <Sidebar.Content>
           <div className="flex items-center gap-2 px-2">
-            <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-system text-system-foreground">
-              <organization.logo className="size-3" />
+            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-system text-system-foreground">
+              <organization.logo className="size-6" />
             </div>
-            <span className="truncate font-semibold">{organization.name}</span>
+            <div className="text-sm flex flex-col">
+              <span className="font-medium truncate">{organization.name}</span>
+              <span className="truncate text-xs text-muted-foreground">
+                {organization.plan}
+              </span>
+            </div>
           </div>
         </Sidebar.Content>
       </Sidebar.MenuItem>

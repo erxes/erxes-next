@@ -12,13 +12,9 @@ import {
   PlusIcon,
   TagsIcon,
 } from 'lucide-react';
-import {
-  Checkbox,
-  Badge,
-  badgeColors,
-  Button,
-  Avatar,
-} from 'erxes-ui/components';
+import { Checkbox, Badge, badgeColors, Button, Avatar } from 'erxes-ui';
+import { RelativeDateDisplay } from 'erxes-ui/display';
+import { PriceCell } from './PriceCell';
 
 export const columns: ColumnDef<Product>[] = [
   {
@@ -72,7 +68,7 @@ export const columns: ColumnDef<Product>[] = [
         Price
       </div>
     ),
-    cell: (info) => <div>${(info.getValue() as number).toLocaleString()}</div>,
+    cell: (info) => <PriceCell {...info} />,
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -111,7 +107,7 @@ export const columns: ColumnDef<Product>[] = [
     ),
     footer: (props) => props.column.id,
     cell: (info) => {
-      return format(info.getValue() as string, 'MMM d, yyyy');
+      return <RelativeDateDisplay date={info.getValue() as string} />;
     },
     size: 180,
   },
@@ -126,7 +122,7 @@ export const columns: ColumnDef<Product>[] = [
     ),
     footer: (props) => props.column.id,
     cell: (info) => {
-      return format(info.getValue() as string, 'MMM d, yyyy');
+      return <RelativeDateDisplay date={info.getValue() as string} />;
     },
     size: 180,
   },

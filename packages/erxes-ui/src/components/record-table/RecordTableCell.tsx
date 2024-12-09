@@ -12,11 +12,11 @@ export const RecordTableCell = React.forwardRef<
     <Table.Cell
       ref={ref}
       className={cn(
-        'bg-background whitespace-nowrap h-8 px-2 border-r overflow-hidden [&:has([role=checkbox])]:border-r-0 group-data-[state=selected]/table-row:bg-muted',
+        'bg-background whitespace-nowrap h-8 border-r overflow-hidden [&:has([role=checkbox])]:border-r-0 group-data-[state=selected]/table-row:bg-muted p-0',
         column.getIsPinned() === 'left'
-          ? 'sticky left-10 [&:has([role=checkbox])]:left-0'
+          ? 'sticky left-10 [&:has([role=checkbox])]:left-0 z-[1]'
           : null,
-        column.getIsPinned() === 'right' ? 'sticky right-0' : null,
+        column.getIsPinned() === 'right' ? 'sticky right-0 z-[1]' : null,
         className
       )}
       style={{
