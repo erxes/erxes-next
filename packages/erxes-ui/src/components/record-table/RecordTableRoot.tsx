@@ -1,6 +1,5 @@
 import React from 'react';
 import { Table } from '../table';
-import { useRecordTable } from './RecordTableProvider';
 
 export const RecordTableRoot = React.forwardRef<
   HTMLTableElement,

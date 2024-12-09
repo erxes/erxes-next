@@ -6,6 +6,7 @@
   "tags": [
     "type:ui"
   ],
+  "depConstraints": ["type:ui"],
   "// targets": "to see all targets run: nx show project erxes-ui --web",
   "targets": {}
 }

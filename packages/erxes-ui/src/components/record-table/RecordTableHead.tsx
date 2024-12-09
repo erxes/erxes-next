@@ -1,10 +1,11 @@
 import React from 'react';
-import { Header } from '@tanstack/react-table';
+import { Column, Header } from '@tanstack/react-table';
 import { Table } from '../table';
 import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { CSS, isKeyboardEvent } from '@dnd-kit/utilities';
 import { cn } from '../../lib/utils';
 import { cva } from 'class-variance-authority';
+import { useDndContext } from '@dnd-kit/core';
 
 export const recordTableHeadVariants = cva(
   'sticky z-[2] top-0 bg-background transition-transform duration-200 whitespace-nowrap text-[13px] [&:has([role=checkbox])]:border-r-0 [&:has([role=checkbox])>span]:hidden',
@@ -21,18 +22,20 @@ export const recordTableHeadVariants = cva(
   }
 );
 
-export const RecordTableHead = React.forwardRef<
-  HTMLTableCellElement,
-  React.ComponentProps<'th'> & {
-    header: Header<any, unknown>;
-  }
->(({ header, children, ...props }, ref) => {
+export const RecordTableHead = ({
+  header,
+  children,
+  ...props
+}: React.ComponentProps<'th'> & {
+  header: Header<any, unknown>;
+}) => {
   const { column } = header;
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({
       id: column.id,
-      disabled: !!column.getIsPinned(),
+      disabled: !!column.getIsPinned() || column.getIsLastColumn(),
     });
+
   return (
     <Table.Head
       ref={setNodeRef}
@@ -66,9 +69,24 @@ export const RecordTableHead = React.forwardRef<
       )}
 
       <RecordTableHeadSize header={header} />
+      <RecordTableOverLine column={column} isDragging={isDragging} />
     </Table.Head>
   );
-});
+};
+
+const RecordTableOverLine = ({
+  column,
+  isDragging,
+}: {
+  column: Column<any, unknown>;
+  isDragging: boolean;
+}) => {
+  const { activatorEvent, over } = useDndContext();
+  const isKeyboardSorting = isKeyboardEvent(activatorEvent);
+
+  if (over?.id === column.id && !isDragging)
+    return <div className={"absolute top-0 left-0 w-0.5 bg-red-500 h-screen"} />;
+};
 
 const RecordTableHeadSize = React.forwardRef<
   HTMLTableCellElement,

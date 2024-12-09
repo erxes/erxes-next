@@ -1,12 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Product } from '../utils/makeData';
-import { format } from 'date-fns';
+import { ProductT } from '../types/productTypes';
 import {
   BoxIcon,
   Building2,
   ChartNoAxesGantt,
   CircleCheck,
-  DollarSign,
   HistoryIcon,
   LetterText,
   PlusIcon,
@@ -15,8 +13,10 @@ import {
 import { Checkbox, Badge, badgeColors, Button, Avatar } from 'erxes-ui';
 import { RelativeDateDisplay } from 'erxes-ui/display';
 import { PriceCell } from './PriceCell';
+import { IconCurrencyTugrik } from '@tabler/icons-react';
+import { CategoryCell } from './CategoryCell';
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<ProductT>[] = [
   {
     accessorKey: 'checkbox',
     id: 'checkbox',
@@ -42,12 +42,12 @@ export const columns: ColumnDef<Product>[] = [
     ),
   },
   {
-    accessorKey: 'title',
-    id: 'title',
+    accessorKey: 'name',
+    id: 'name',
     header: () => (
       <div className="flex items-center gap-1">
         <LetterText className="w-4 h-4" strokeWidth={2.5} />
-        Title
+        Name
       </div>
     ),
     cell: (info) => (
@@ -60,11 +60,18 @@ export const columns: ColumnDef<Product>[] = [
     size: 280,
   },
   {
-    accessorKey: 'price',
-    id: 'price',
+    accessorKey: 'code',
+    id: 'code',
+    header: 'Code',
+    footer: (props) => props.column.id,
+    size: 180,
+  },
+  {
+    id: 'unitPrice',
+    accessorKey: 'unitPrice',
     header: () => (
       <div className="flex items-center gap-1">
-        <DollarSign className="w-4 h-4" strokeWidth={2.5} />
+        <IconCurrencyTugrik className="w-4 h-4" strokeWidth={2.5} />
         Price
       </div>
     ),
@@ -73,7 +80,7 @@ export const columns: ColumnDef<Product>[] = [
     size: 180,
   },
   {
-    accessorKey: 'category',
+    accessorKey: 'categoryId',
     id: 'category',
     header: () => (
       <div className="flex items-center gap-1">
@@ -81,6 +88,7 @@ export const columns: ColumnDef<Product>[] = [
         Category
       </div>
     ),
+    cell: (info) => <CategoryCell {...info} />,
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -127,7 +135,7 @@ export const columns: ColumnDef<Product>[] = [
     size: 180,
   },
   {
-    accessorKey: 'tags',
+    accessorKey: 'getTags',
     id: 'tags',
     header: () => (
       <div className="flex items-center gap-1">
@@ -137,12 +145,12 @@ export const columns: ColumnDef<Product>[] = [
     ),
     cell: (info) => (
       <div className="flex items-center gap-1">
-        {(info.getValue() as Product['tags']).map((tag) => {
+        {((info.getValue() as ProductT['tagIds']) || []).map((tag) => {
           const color =
             badgeColors[Math.floor(Math.random() * badgeColors.length)];
           return (
             <Badge key={tag} color={color}>
-              {color}
+              {tag}
             </Badge>
           );
         })}
@@ -165,7 +173,7 @@ export const columns: ColumnDef<Product>[] = [
         <Avatar.Root>
           <Avatar.Image />
           <Avatar.Fallback className="bg-blue-100 text-blue-800">
-            {(info.getValue() as string).charAt(0)}
+            {((info.getValue() || '') as string).charAt(0)}
           </Avatar.Fallback>
         </Avatar.Root>
         {info.getValue() as string}
@@ -178,13 +186,6 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: 'type',
     id: 'type',
     header: 'Type',
-    footer: (props) => props.column.id,
-    size: 180,
-  },
-  {
-    accessorKey: 'code',
-    id: 'code',
-    header: 'Code',
     footer: (props) => props.column.id,
     size: 180,
   },

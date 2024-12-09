@@ -5,6 +5,7 @@ import { RecordTableHeader } from './RecordTableHeader';
 import RecordTableInlineCell from './RecordTableInlineCell';
 import { RecordTableProvider, useRecordTable } from './RecordTableProvider';
 import { RecordTableRoot } from './RecordTableRoot';
+import { RecordTableRowSkeleton } from './RecordTableRowSkeleton';
 import { RecordTableScrollArea } from './RecordTableScrollArea';
 
 export const RecordTable = {
@@ -17,4 +18,5 @@ export const RecordTable = {
   Cell: RecordTableCell,
   useRecordTable: useRecordTable,
   InlineCell: RecordTableInlineCell,
+  RowSkeleton: RecordTableRowSkeleton,
 };

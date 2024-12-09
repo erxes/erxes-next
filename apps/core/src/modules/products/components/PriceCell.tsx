@@ -1,11 +1,11 @@
 import { CellContext } from '@tanstack/react-table';
-import { Product } from '../utils/makeData';
 import { useState } from 'react';
 import { CurrencyDisplay } from 'erxes-ui/display';
 import { CurrencyCode } from 'erxes-ui/types';
 import { Button, Input, Popover } from 'erxes-ui/components';
+import { ProductT } from '@/products/types/productTypes';
 
-export const PriceCell = (info: CellContext<Product, any>) => {
+export const PriceCell = (info: CellContext<ProductT, any>) => {
   const [isInEditMode, setIsInEditMode] = useState(false);
   const [value, setValue] = useState(info.getValue());
   return (
@@ -44,8 +44,8 @@ export const PriceCell = (info: CellContext<Product, any>) => {
         >
           <CurrencyDisplay
             currencyValue={{
-              currencyCode: CurrencyCode.USD,
-              amountMicros: value * 100000000,
+              currencyCode: CurrencyCode.MNT,
+              amountMicros: value * 1000000,
             }}
           />
         </Button>

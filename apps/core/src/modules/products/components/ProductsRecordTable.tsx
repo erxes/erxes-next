@@ -1,14 +1,13 @@
 import { flexRender } from '@tanstack/react-table';
 import { Button, RecordTable } from 'erxes-ui/components';
-import { makeData } from '../utils/makeData';
 import { ChevronDownIcon, DotIcon, ListIcon } from 'lucide-react';
 import { columns } from './columns';
 import { ProductCommandBar } from './ProductCommandBar';
 import { ProductsRecordTableOptions } from './ProductsRecordTableOptions';
-
-const data = makeData(300);
+import { useProducts } from '../hooks/useProducts';
 
 export const ProductsRecordTable = () => {
+  const { products, handleFetchMore, loading, totalCount } = useProducts();
   return (
     <>
       <div className="flex items-start justify-between h-9 flex-none">
@@ -33,10 +32,11 @@ export const ProductsRecordTable = () => {
       </div>
       <RecordTable.Provider
         columns={columns}
-        data={data}
+        data={products || []}
+        handleReachedBottom={handleFetchMore}
         className="flex-grow-0 basis-full overflow-hidden"
       >
-        <RecordTable.ScrollArea className="h-full">
+        <RecordTable.ScrollArea className="h-full w-full">
           <RecordTable.Root>
             <RecordTable.Header
               renderHead={(header) => (
@@ -56,7 +56,14 @@ export const ProductsRecordTable = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </RecordTable.Cell>
               )}
-            />
+            >
+              {!loading && totalCount > products?.length && (
+                <RecordTable.RowSkeleton
+                  rows={4}
+                  handleReachedBottom={handleFetchMore}
+                />
+              )}
+            </RecordTable.Body>
           </RecordTable.Root>
         </RecordTable.ScrollArea>
         <ProductCommandBar />
