@@ -68,6 +68,33 @@ const products = gql`
   }
 `;
 
+const productCategories = gql`
+  query ProductCategories {
+    productCategories {
+      _id
+      attachment {
+        url
+      }
+      code
+      name
+      order
+    }
+  }
+`;
+
+const productTags = gql`
+  query Tags($searchValue: String, $perPage: Int) {
+    tags(type: "core:product", searchValue: $searchValue, perPage: $perPage) {
+      _id
+      colorCode
+      order
+      name
+    }
+  }
+`;
+
 export const productsQueries = {
   products,
+  productCategories,
+  productTags,
 };

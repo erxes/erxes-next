@@ -22,6 +22,7 @@ export * from './separator';
 export * from './sheet';
 export * from './sidebar';
 export * from './skeleton';
+export * from './switch';
 export * from './table';
 export * from './tooltip';
 export * from './upload';

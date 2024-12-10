@@ -2,6 +2,7 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import * as React from 'react';
 import { cn } from '../lib/utils';
 import { cva, VariantProps } from 'class-variance-authority';
+import { Color, stringToHslColor, twColorClassNames } from './colors';
 
 const avatarVariants = cva(
   'relative flex shrink-0 overflow-hidden rounded-full',
@@ -48,14 +49,27 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
+    color?: Color;
+    colorSeed?: string;
+  }
+>(({ className, color, colorSeed, style, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      'flex h-full w-full items-center justify-center rounded-full bg-muted',
+      'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] dark:bg-[--avatar-bg-dark] dark:text-[--avatar-text-dark]',
+      twColorClassNames[color as Color],
       className
     )}
+    style={
+      {
+        '--avatar-bg': stringToHslColor(colorSeed ?? '', 75, 90),
+        '--avatar-text': stringToHslColor(colorSeed ?? '', 75, 20),
+        '--avatar-bg-dark': stringToHslColor(colorSeed ?? '', 75, 20),
+        '--avatar-text-dark': stringToHslColor(colorSeed ?? '', 75, 90),
+        ...style,
+      } as React.CSSProperties
+    }
     {...props}
   />
 ));

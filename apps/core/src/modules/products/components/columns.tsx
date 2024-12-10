@@ -5,16 +5,19 @@ import {
   Building2,
   ChartNoAxesGantt,
   CircleCheck,
+  HashIcon,
   HistoryIcon,
   LetterText,
   PlusIcon,
   TagsIcon,
 } from 'lucide-react';
-import { Checkbox, Badge, badgeColors, Button, Avatar } from 'erxes-ui';
+import { Checkbox, Badge, Button, Avatar } from 'erxes-ui';
 import { RelativeDateDisplay } from 'erxes-ui/display';
 import { PriceCell } from './PriceCell';
 import { IconCurrencyTugrik } from '@tabler/icons-react';
-import { CategoryCell } from './CategoryCell';
+import { CategoryCell, CategoryCellWrapper } from './CategoryCell';
+import { TagsCell } from './TagsCell';
+import StatusCell from './Status';
 
 export const columns: ColumnDef<ProductT>[] = [
   {
@@ -62,7 +65,17 @@ export const columns: ColumnDef<ProductT>[] = [
   {
     accessorKey: 'code',
     id: 'code',
-    header: 'Code',
+    header: () => (
+      <div className="flex items-center gap-1">
+        <HashIcon className="w-4 h-4" strokeWidth={2.5} />
+        Code
+      </div>
+    ),
+    cell: (info) => (
+      <div className="flex items-center gap-1 px-2">
+        {info.getValue() as string}
+      </div>
+    ),
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -88,9 +101,13 @@ export const columns: ColumnDef<ProductT>[] = [
         Category
       </div>
     ),
-    cell: (info) => <CategoryCell {...info} />,
+    cell: (info) => (
+      <CategoryCellWrapper>
+        <CategoryCell {...info} />
+      </CategoryCellWrapper>
+    ),
     footer: (props) => props.column.id,
-    size: 180,
+    size: 280,
   },
   {
     accessorKey: 'status',
@@ -101,6 +118,7 @@ export const columns: ColumnDef<ProductT>[] = [
         Status
       </div>
     ),
+    cell: StatusCell,
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -115,27 +133,16 @@ export const columns: ColumnDef<ProductT>[] = [
     ),
     footer: (props) => props.column.id,
     cell: (info) => {
-      return <RelativeDateDisplay date={info.getValue() as string} />;
+      return (
+        <CategoryCellWrapper>
+          <RelativeDateDisplay date={info.getValue() as string} />
+        </CategoryCellWrapper>
+      );
     },
     size: 180,
   },
   {
-    accessorKey: 'updatedAt',
-    id: 'updatedAt',
-    header: (info) => (
-      <div className="flex items-center gap-1">
-        <HistoryIcon className="w-4 h-4" strokeWidth={2.5} />
-        Updated At
-      </div>
-    ),
-    footer: (props) => props.column.id,
-    cell: (info) => {
-      return <RelativeDateDisplay date={info.getValue() as string} />;
-    },
-    size: 180,
-  },
-  {
-    accessorKey: 'getTags',
+    accessorKey: 'tagIds',
     id: 'tags',
     header: () => (
       <div className="flex items-center gap-1">
@@ -143,19 +150,7 @@ export const columns: ColumnDef<ProductT>[] = [
         Tags
       </div>
     ),
-    cell: (info) => (
-      <div className="flex items-center gap-1">
-        {((info.getValue() as ProductT['tagIds']) || []).map((tag) => {
-          const color =
-            badgeColors[Math.floor(Math.random() * badgeColors.length)];
-          return (
-            <Badge key={tag} color={color}>
-              {tag}
-            </Badge>
-          );
-        })}
-      </div>
-    ),
+    cell: TagsCell,
     footer: (props) => props.column.id,
     size: 280,
   },
