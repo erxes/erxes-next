@@ -2,9 +2,11 @@ declare global {
   interface Window {
     _env_?: {
       REACT_APP_SERVER_BASE_URL?: string;
+      NODE_ENV?: string;
       [key: string]: string | undefined;
     };
     __APOLLO_CLIENT__?: undefined;
+    plugins?: any;
   }
 }
 
@@ -27,7 +29,11 @@ const getDefaultUrl = () => {
   }
 };
 
-export const REACT_APP_API_URL =
+const REACT_APP_API_URL =
   window._env_?.['REACT_APP_API_URL'] || // Use bracket notation here
   process.env['REACT_APP_API_URL'] ||
   getDefaultUrl();
+
+const NODE_ENV = window._env_?.['NODE_ENV'] || 'development';
+
+export { REACT_APP_API_URL, NODE_ENV };

@@ -13,6 +13,7 @@ const config: ModuleFederationConfig = {
   name: 'plugin_inbox',
   exposes: {
     './Module': './src/remote-entry.ts',
+    './Settings': './src/app/settings.tsx',
   },
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {
