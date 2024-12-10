@@ -28,6 +28,7 @@ export const UserProviderEffect = () => {
   useEffect(() => {
     if (!queryLoading) {
       setIsLoading(false);
+      console.log('setIsCurrentUserLoaded', true);
       setIsCurrentUserLoaded(true);
     }
 

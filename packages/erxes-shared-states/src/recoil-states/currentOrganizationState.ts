@@ -5,6 +5,7 @@ export type CurrentOrganization = {
   name: string;
   subdomain: string;
   haveOwner?: boolean;
+  logo?: any;
 };
 
 export const currentOrganizationState = createState<CurrentOrganization | null>(

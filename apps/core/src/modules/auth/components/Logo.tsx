@@ -1,12 +1,18 @@
+import { cn } from 'erxes-ui/lib';
+
 type LogoProps = {
   organizationLogo?: string | null;
+  className?: string;
 };
 
-export const Logo = ({ organizationLogo }: LogoProps) => {
+export const Logo = ({ organizationLogo, className }: LogoProps) => {
   if (!organizationLogo) {
     return (
       <svg
-        className="bg-primary text-primary-foreground rounded-xl p-1"
+        className={cn(
+          'bg-primary text-primary-foreground rounded-xl p-1',
+          className
+        )}
         width="80"
         height="80"
         viewBox="0 0 81 113"
@@ -25,6 +31,7 @@ export const Logo = ({ organizationLogo }: LogoProps) => {
       viewBox="0 0 81 113"
       fill="currentcolor"
       xmlns="http://www.w3.org/2000/svg"
+      className={cn('size-6', className)}
     >
       <path d="M45.1512 57.386C58.0443 39.1897 70.1817 19.9244 80.9291 0C68.6968 13.2829 54.277 32.6105 41.0725 51.5573C34.0734 41.8368 25.6995 31.417 16.1066 21.6561C25.6122 38.571 30.4201 47.8815 36.9976 57.4519C16.9953 86.5184 0.710876 113 0.710876 113C14.4243 97.773 28.0921 81.0082 41.0725 63.1085C46.6361 70.5005 53.8327 78.8701 65.332 91.4281C65.3092 91.4098 58.1317 76.3731 45.1512 57.386Z" />
     </svg>
