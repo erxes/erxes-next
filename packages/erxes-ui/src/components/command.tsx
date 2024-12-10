@@ -150,8 +150,7 @@ const CommandShortcut = ({
 };
 CommandShortcut.displayName = 'CommandShortcut';
 
-export const Command = {
-  Root: CommandRoot,
+const Command = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
   Input: CommandInput,
   List: CommandList,
@@ -160,4 +159,6 @@ export const Command = {
   Item: CommandItem,
   Shortcut: CommandShortcut,
   Separator: CommandSeparator,
-};
+})
+
+export { Command }
