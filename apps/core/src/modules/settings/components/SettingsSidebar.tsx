@@ -53,8 +53,6 @@ const data = {
 };
 
 export function SettingsSidebar() {
-  const location = useLocation();
-  console.log(location.pathname);
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}

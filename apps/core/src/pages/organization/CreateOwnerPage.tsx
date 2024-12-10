@@ -10,7 +10,6 @@ import { isDefined } from 'erxes-ui/utils';
 const CreateOwnerPage = () => {
   const navigate = useNavigate();
   const currentOrganization = useRecoilValue(currentOrganizationState);
-  console.log('currentOrganization', currentOrganization);
 
   useEffect(() => {
     if (isDefined(currentOrganization) && currentOrganization.haveOwner) {
