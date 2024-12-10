@@ -1,6 +1,7 @@
 import { Logo } from '@/auth/components/Logo';
 import Login from '@/auth/login/components/Login';
-import { currentUserState } from 'erxes-ui/states/currentUserState';
+import { currentUserState } from 'erxes-shared-states';
+
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';

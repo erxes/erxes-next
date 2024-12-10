@@ -1,5 +1,6 @@
 import CreateOwner from '@/organization/owner/components/CreateOwner';
-import { currentOrganizationState } from 'erxes-ui/states/currentOrganizationState';
+import { currentOrganizationState } from 'erxes-shared-states';
+
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';

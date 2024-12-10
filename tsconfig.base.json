@@ -17,8 +17,9 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "erxes-ui/*": ["packages/erxes-ui/src/*"],
-      "erxes-ui": ["packages/erxes-ui/src"]
+      "erxes-shared-states": ["packages/erxes-shared-states/src/index.ts"],
+      "erxes-ui": ["packages/erxes-ui/src"],
+      "erxes-ui/*": ["packages/erxes-ui/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

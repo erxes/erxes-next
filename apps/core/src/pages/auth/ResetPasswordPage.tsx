@@ -1,5 +1,6 @@
 import ResetPassword from '@/auth/login/components/ResetPassword';
-import { currentUserState } from 'erxes-ui/states/currentUserState';
+import { currentUserState } from 'erxes-shared-states';
+
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
