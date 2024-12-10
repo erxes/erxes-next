@@ -18,7 +18,7 @@ const Settings = () => {
         </Breadcrumb.Root>
       </Header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        Inbox settings veersion 1.0.0 EJTESt
+        Inbox veersion 1.0.1 asdjkasjdklajsdkljlksda
       </div>
     </>
   );

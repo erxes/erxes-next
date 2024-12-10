@@ -6,18 +6,6 @@ import { Route } from 'react-router-dom';
 import PluginMainPage from '~/plugins/PluginMainPage';
 import PluginSettingsPage from '~/plugins/PluginSettingsPage';
 
-const plugins = window.plugins;
-
-if (plugins) {
-  init({
-    name: 'core',
-    remotes: plugins?.map((plugin) => ({
-      name: plugin.name,
-      entry: plugin.url,
-    })),
-  });
-}
-
 export const usePluginsRouter = () => {
   return window.plugins?.map((plugin) => (
     <Route

@@ -17,7 +17,7 @@ export const Inbox = () => {
         </Breadcrumb.Root>
       </Header>
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        Inbox settings veersion 1.0.0 EJTESt123123
+        Inbox veersion 1.0.1ll
       </div>
     </>
   );
