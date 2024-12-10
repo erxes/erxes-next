@@ -5,8 +5,10 @@ import { Logout } from '@/auth/graphql/mutations/logout';
 import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';
 import { Login } from '@/auth/login/grahpql/mutations/login';
 
-import { isCurrentUserLoadedState } from 'erxes-ui/states/isCurrentUserLoadingState';
-import { currentUserState } from 'erxes-ui/states/currentUserState';
+import {
+  isCurrentUserLoadedState,
+  currentUserState,
+} from 'erxes-shared-states';
 
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
@@ -29,9 +31,9 @@ export const useLogin = () => {
   const handleCrendentialsLogin = useCallback(
     async (email: string, password: string) => {
       await login({ variables: { email, password } })
-        .then((response) => {
+        .then(() => {
           setIsCurrentUserLoaded(false);
-          response.data && navigate('/');
+          navigate('/');
         })
         .catch((e) => {
           toast({

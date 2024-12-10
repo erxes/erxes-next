@@ -2,8 +2,6 @@ import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLo
 import { SettingsPath } from '@/types/SettingsPath';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { currentUserState } from 'erxes-ui';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 
 const SettingsProfile = lazy(() =>
@@ -13,10 +11,6 @@ const SettingsProfile = lazy(() =>
 );
 
 export function SettingsRoutes() {
-  console.log('SettingsRoutes', currentUserState);
-  const currentUser = useRecoilValue(currentUserState);
-  console.log(currentUser);
-
   return (
     <Suspense fallback={<SettingsSkeletonLoader />}>
       <Routes>

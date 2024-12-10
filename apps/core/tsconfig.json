@@ -11,7 +11,8 @@
       "~/*": ["apps/core/src/*"], // for vscode
       "~": ["apps/core/src"], // for rspack
       "erxes-ui/*": ["packages/erxes-ui/src/*"],
-      "erxes-ui": ["packages/erxes-ui/src"]
+      "erxes-ui": ["packages/erxes-ui/src"],
+      "erxes-shared-states": ["packages/erxes-shared-states/src/index.ts"]
     }
   },
   "files": [],
