@@ -31,9 +31,9 @@ export const useLogin = () => {
   const handleCrendentialsLogin = useCallback(
     async (email: string, password: string) => {
       await login({ variables: { email, password } })
-        .then(() => {
+        .then((response) => {
           setIsCurrentUserLoaded(false);
-          navigate('/');
+          return response.data && navigate('/');
         })
         .catch((e) => {
           toast({

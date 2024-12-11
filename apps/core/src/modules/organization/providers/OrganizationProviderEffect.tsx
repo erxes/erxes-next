@@ -18,7 +18,7 @@ export const OrganizationProviderEffect = () => {
     }
 
     fetch(REACT_APP_API_URL + '/initial-setup')
-      .then((res) => res.text())
+      .then((res) => res.json())
       .then((data) => {
         if (data === 'no owner') {
           setIsCurrentOrganizationLoaded(true);

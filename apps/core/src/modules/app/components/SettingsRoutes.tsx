@@ -3,6 +3,7 @@ import { SettingsPath } from '@/types/SettingsPath';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
+import { usePLuginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -19,6 +20,9 @@ export function SettingsRoutes() {
           path={SettingsPath.Experience}
           element={<SettingsExperiencePage />}
         />
+        {usePLuginsSettingsRoutes()}
+
+        {/* <Route path={`/inbox`} element={<SettingsProfile />} /> */}
       </Routes>
     </Suspense>
   );
