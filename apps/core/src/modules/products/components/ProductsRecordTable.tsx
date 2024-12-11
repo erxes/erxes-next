@@ -16,7 +16,7 @@ export const ProductsRecordTable = () => {
           <span className="inline-flex items-center ">
             All
             <DotIcon className="w-4 h-4 -mx-0.5" />
-            300
+            {totalCount}
           </span>
           <ChevronDownIcon className="w-4 h-4" />
         </Button>
@@ -40,7 +40,7 @@ export const ProductsRecordTable = () => {
           <RecordTable.Root>
             <RecordTable.Header
               renderHead={(header) => (
-                <RecordTable.Head header={header}>
+                <RecordTable.Head header={header} key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -52,7 +52,7 @@ export const ProductsRecordTable = () => {
             />
             <RecordTable.Body
               renderCell={(cell) => (
-                <RecordTable.Cell cell={cell}>
+                <RecordTable.Cell cell={cell} key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </RecordTable.Cell>
               )}

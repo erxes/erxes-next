@@ -7,7 +7,9 @@ const StatusCell = (info: CellContext<ProductT, any>) => {
   return (
     <CategoryCellWrapper>
       <Switch checked={info.getValue() === 'active'} />
-      {info.getValue() === 'active' ? 'Active' : 'Inactive'}
+      <span className="text-[13px] text-muted-foreground">
+        {info.getValue() === 'active' ? 'Active' : 'Inactive'}
+      </span>
     </CategoryCellWrapper>
   );
 };
