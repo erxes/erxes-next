@@ -1,6 +1,3 @@
-import { AppPath } from '@/types/AppPath';
-import { init } from '@module-federation/enhanced/runtime';
-
 import { Route } from 'react-router-dom';
 
 import PluginMainPage from '~/plugins/PluginMainPage';
