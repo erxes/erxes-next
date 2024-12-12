@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ProductT } from '../types/productTypes';
+import { ProductT } from '@/products/types/productTypes';
 import {
-  BoxIcon,
   Building2,
   ChartNoAxesGantt,
   CircleCheck,
@@ -11,13 +10,19 @@ import {
   PlusIcon,
   TagsIcon,
 } from 'lucide-react';
-import { Checkbox, Badge, Button, Avatar } from 'erxes-ui';
+import { Checkbox, Button } from 'erxes-ui';
 import { RelativeDateDisplay } from 'erxes-ui/display';
-import { PriceCell } from './PriceCell';
-import { IconCurrencyTugrik } from '@tabler/icons-react';
-import { CategoryCell, CategoryCellWrapper } from './CategoryCell';
-import { TagsCell } from './TagsCell';
-import StatusCell from './Status';
+import { PriceCell } from '@/products/components/PriceCell';
+import { IconCurrencyTugrik, IconLayoutGrid } from '@tabler/icons-react';
+import {
+  CategoryCell,
+  CategoryCellWrapper,
+} from '@/products/components/CategoryCell';
+import { TagsCell } from '@/products/components/TagsCell';
+import StatusCell from '@/products/components/Status';
+import { VendorCell } from '@/products/components/VendorCell';
+import { ProductNameCell } from '@/products/components/ProductNameCell';
+import { ProductTypeIcon } from './ProductTypeIcon';
 
 export const columns: ColumnDef<ProductT>[] = [
   {
@@ -53,12 +58,7 @@ export const columns: ColumnDef<ProductT>[] = [
         Name
       </div>
     ),
-    cell: (info) => (
-      <Button size="sm" variant="link">
-        <BoxIcon className="w-4 h-4 text-primary" strokeWidth={1.5} />
-        {info.getValue() as string}
-      </Button>
-    ),
+    cell: ProductNameCell,
     footer: (props) => props.column.id,
     size: 280,
   },
@@ -101,11 +101,7 @@ export const columns: ColumnDef<ProductT>[] = [
         Category
       </div>
     ),
-    cell: (info) => (
-      <CategoryCellWrapper>
-        <CategoryCell {...info} />
-      </CategoryCellWrapper>
-    ),
+    cell: CategoryCell,
     footer: (props) => props.column.id,
     size: 280,
   },
@@ -163,24 +159,27 @@ export const columns: ColumnDef<ProductT>[] = [
         Vendor
       </div>
     ),
-    cell: (info) => (
-      <Button size="sm" variant="secondary">
-        <Avatar.Root>
-          <Avatar.Image />
-          <Avatar.Fallback className="bg-blue-100 text-blue-800">
-            {((info.getValue() || '') as string).charAt(0)}
-          </Avatar.Fallback>
-        </Avatar.Root>
-        {info.getValue() as string}
-      </Button>
-    ),
+    cell: VendorCell,
     footer: (props) => props.column.id,
     size: 280,
   },
   {
     accessorKey: 'type',
     id: 'type',
-    header: 'Type',
+    header: () => (
+      <div className="flex items-center gap-1">
+        <IconLayoutGrid className="w-4 h-4" strokeWidth={2.5} />
+        Type
+      </div>
+    ),
+    cell: (info) => {
+      return (
+        <CategoryCellWrapper>
+          <ProductTypeIcon {...info} />
+          {info.getValue() as string}
+        </CategoryCellWrapper>
+      );
+    },
     footer: (props) => props.column.id,
     size: 180,
   },
