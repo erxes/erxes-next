@@ -1,14 +1,30 @@
 'use client';
 import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, GripVertical, Search } from 'lucide-react';
 import { cn } from '../lib/utils';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type MenuStack = {
   label: React.ReactNode;
   content: React.ReactNode;
+  items?: string[];
 }[];
-
 
 const NestedDropdownMenuContext = React.createContext<{
   menuStack: MenuStack;
@@ -21,6 +37,8 @@ const NestedDropdownMenuContext = React.createContext<{
   searchQuery: '',
   setSearchQuery: () => {},
 });
+export const useNestedDropdownMenu = () =>
+  React.useContext(NestedDropdownMenuContext);
 
 const NestedDropdownMenuRoot = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Root>,
@@ -75,9 +93,46 @@ const NestedDropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => {
-  const { menuStack, setMenuStack } = React.useContext(
+  const { menuStack, setMenuStack, searchQuery } = React.useContext(
     NestedDropdownMenuContext
   );
+
+  const renderContent = (content: React.ReactNode) => {
+    return React.Children.map(content, (child) => {
+      if (React.isValidElement(child)) {
+        if (child.type === NestedDropdownMenuSub) {
+          if (!menuStack.some((prop)=>prop.items)) {
+            return React.cloneElement(child, {
+              ...child.props,
+              searchText: child.props.searchText || child.props.label,
+            });
+          } else {
+            return React.cloneElement(child, {
+              ...child.props,
+              searchText: child.props.searchText || child.props.label,
+            });
+          }
+        }
+        if (child.props.searchText) {
+          if (
+            searchQuery &&
+            !child.props.searchText
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          ) {
+            return null;
+          }
+        }
+        if (child.props.children) {
+          return React.cloneElement(child, {
+            ...child.props,
+            children: renderContent(child.props.children),
+          });
+        }
+      }
+      return child;
+    });
+  };
 
   return (
     <DropdownMenuPrimitive.Portal>
@@ -103,10 +158,10 @@ const NestedDropdownMenuContent = React.forwardRef<
               <span>{menuStack[menuStack.length - 1].label}</span>
             </NestedDropdownMenuItem>
             <NestedDropdownMenuSeparator />
-            {menuStack[menuStack.length - 1].content}
+            {renderContent(menuStack[menuStack.length - 1].content)}
           </>
         ) : (
-          props.children
+          renderContent(props.children)
         )}
       </DropdownMenuPrimitive.Content>
     </DropdownMenuPrimitive.Portal>
@@ -175,16 +230,19 @@ interface NestedDropdownMenuSubProps {
   label: React.ReactNode;
   children: React.ReactNode;
   searchText?: string;
+  items?: string[];
 }
 
 const NestedDropdownMenuSub: React.FC<NestedDropdownMenuSubProps> = ({
   label,
   children,
   searchText,
+  items,
 }) => {
   const { setMenuStack, searchQuery } = React.useContext(
     NestedDropdownMenuContext
   );
+
   if (
     searchText &&
     searchQuery &&
@@ -192,11 +250,15 @@ const NestedDropdownMenuSub: React.FC<NestedDropdownMenuSubProps> = ({
   ) {
     return null;
   }
+
   return (
     <NestedDropdownMenuItem
       onSelect={(event) => {
         event.preventDefault();
-        setMenuStack((prev) => [...prev, { label, content: children }]);
+        setMenuStack((prev) => {
+          const newStack = [...prev, { label, content: children, items }];
+          return newStack;
+        });
       }}
     >
       {label}
@@ -204,7 +266,103 @@ const NestedDropdownMenuSub: React.FC<NestedDropdownMenuSubProps> = ({
     </NestedDropdownMenuItem>
   );
 };
+
 NestedDropdownMenuSub.displayName = 'NestedDropdownMenuSub';
+
+interface Item {
+  id: string;
+  icon?: React.ReactNode;
+  label: string;
+}
+
+interface NestedDropdownMenuSortablesProps {
+  items: Item[]
+  onChange?: (items: Item[]) => void
+}
+
+function SortableItem({ item }: { item: Item }) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <NestedDropdownMenu.Item
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
+      <GripVertical className="mr-2 h-4 w-4 cursor-grab" />
+      {item.icon}
+      <span className="ml-2">{item.label}</span>
+    </NestedDropdownMenu.Item>
+  )
+}
+
+export function NestedDropdownMenuSortables({ items: initialItems, onChange }: NestedDropdownMenuSortablesProps) {
+  const [items, setItems] = React.useState(initialItems)
+  // const { setMenuStack } = useNestedDropdownMenu()
+  const {setMenuStack} = React.useContext(NestedDropdownMenuContext)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event
+
+    if (active.id !== over.id) {
+      setItems((prevItems) => {
+        const oldIndex = prevItems.findIndex((item) => item.id === active.id)
+        const newIndex = prevItems.findIndex((item) => item.id === over.id)
+        const newItems = arrayMove(prevItems, oldIndex, newIndex)
+        onChange?.(newItems)
+        return newItems
+      })
+    }
+  }
+
+  React.useEffect(() => {
+    setMenuStack([
+      {
+        label: 'Sortable Items',
+        content: (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={items.map((item) => item.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {items.map((item) => (
+                <SortableItem key={item.id} item={item} />
+              ))}
+            </SortableContext>
+          </DndContext>
+        ),
+      },
+    ])
+  }, [items, setMenuStack, sensors])
+
+  return (
+    <NestedDropdownMenu>
+      <NestedDropdownMenu.Trigger>Sortable Menu</NestedDropdownMenu.Trigger>
+      <NestedDropdownMenu.Content>
+        {/* Content is managed by the effect above */}
+      </NestedDropdownMenu.Content>
+    </NestedDropdownMenu>
+  )
+}
+
+
 
 const NestedDropdownMenu = Object.assign(NestedDropdownMenuRoot, {
   Trigger: NestedDropdownMenuTrigger,
