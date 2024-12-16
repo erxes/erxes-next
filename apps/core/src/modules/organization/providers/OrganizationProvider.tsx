@@ -17,7 +17,7 @@ export const OrganizationProvider = () => {
 
   const currentOrganization = useRecoilValue(currentOrganizationState);
 
-  if (!isCurrentOrganizationLoaded) {
+  if (!isCurrentOrganizationLoaded && !isDefined(currentOrganization)) {
     return (
       <div className="flex flex-col h-screen w-screen items-center justify-center">
         <RocketIcon />

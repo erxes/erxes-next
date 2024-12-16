@@ -2,9 +2,11 @@ declare global {
   interface Window {
     _env_?: {
       REACT_APP_SERVER_BASE_URL?: string;
+      NODE_ENV?: string;
       [key: string]: string | undefined;
     };
     __APOLLO_CLIENT__?: undefined;
+    plugins?: any;
   }
 }
 
@@ -16,7 +18,7 @@ const getDefaultUrl = () => {
     // In development environment front and backend usually run on separate ports
     // we set the default value to localhost:3000.
     // It dev context, we use env vars to overwrite it
-    return 'https://test.erxes.io/gateway';
+    return 'http://localhost:4000';
   } else {
     // Outside of localhost we assume that they run on the same port
     // because the backend will serve the frontend
@@ -27,7 +29,11 @@ const getDefaultUrl = () => {
   }
 };
 
-export const REACT_APP_API_URL =
+const REACT_APP_API_URL =
   window._env_?.['REACT_APP_API_URL'] || // Use bracket notation here
   process.env['REACT_APP_API_URL'] ||
   getDefaultUrl();
+
+const NODE_ENV = window._env_?.['NODE_ENV'] || 'development';
+
+export { REACT_APP_API_URL, NODE_ENV };

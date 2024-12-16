@@ -17,7 +17,7 @@ export const ProductsRecordTable = () => {
           <span className="inline-flex items-center ">
             All
             <DotIcon className="w-4 h-4 -mx-0.5" />
-            300
+            {totalCount}
           </span>
           <ChevronDownIcon className="w-4 h-4" />
         </Button>

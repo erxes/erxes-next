@@ -8,7 +8,7 @@ import baseConfig from './module-federation.config';
 
 const config: ModuleFederationConfig = {
   ...baseConfig,
-  remotes: ['plugin_inbox', 'plugin_task'],
+  // remotes: ['plugin_inbox', 'plugin_task'],
 };
 
 // Nx plugins for rspack to build config object from Nx options and context.

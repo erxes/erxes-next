@@ -9,12 +9,19 @@ import { PLUGINS } from '../constants/plugins';
 export function SidebarNavigation() {
   const plugins = useRecoilValue(pluginsState);
   const pinnedPlugins = plugins.filter((plugin) => plugin.pinned);
-  const unpinnedPlugins = plugins.filter((plugin) => !plugin.pinned);
+
+  const windowPlugins = window.plugins;
+
+  windowPlugins.map((plugin) => {
+    pinnedPlugins.push({
+      handle: plugin.name,
+      pinned: true,
+    });
+  });
 
   return (
     <>
-      <SidebarNavigationItem items={pinnedPlugins} label="favorites" />
-      <SidebarNavigationItem items={unpinnedPlugins} label="all" />
+      <SidebarNavigationItem items={pinnedPlugins} label="plugins" />
     </>
   );
 }

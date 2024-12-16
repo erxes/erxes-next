@@ -87,7 +87,6 @@ const Login = () => {
         />
         <Button
           type="submit"
-          onClick={form.handleSubmit(submitHandler)}
           disabled={isSubmitButtonDisabled}
         >
           Sign in
@@ -95,6 +94,7 @@ const Login = () => {
 
         {!isEmailStepSubmitButtonDisabledCondition && (
           <Button
+            type='button'
             onClick={() => onForgotPasswordClick(email)}
             variant="link"
             className="text-xs text-muted-foreground hover:underline text-center block hover:text-primary"
