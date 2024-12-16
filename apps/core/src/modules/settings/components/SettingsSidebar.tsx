@@ -17,8 +17,9 @@ import {
   XIcon,
   CircleUserRound,
   SwatchBook,
+  FileUp
 } from 'lucide-react';
-import { SettingsPath } from '@/types/SettingsPath';
+import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';
 import { motion } from 'framer-motion';
 
@@ -37,6 +38,7 @@ const data = {
   ],
   nav: [
     { name: 'General', icon: Settings2 },
+    { name: 'File upload', icon: FileUp, path: SettingsWorkspacePath.File },
     { name: 'Notifications', icon: Bell },
     { name: 'Navigation', icon: Menu },
     { name: 'Home', icon: Home },
@@ -53,6 +55,7 @@ const data = {
 };
 
 export function SettingsSidebar() {
+  const location = useLocation();
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -89,9 +92,16 @@ export function SettingsSidebar() {
             <Sidebar.Menu>
               {data.nav.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
-                  <Sidebar.MenuButton>
-                    <item.icon />
-                    <span>{item.name}</span>
+                  <Sidebar.MenuButton
+                    asChild
+                    isActive={
+                      location.pathname === '/' + AppPath.Settings + item.path
+                    }
+                  >
+                    <Link to={AppPath.Settings + '/' + item.path}>
+                      <item.icon />
+                      <span>{item.name}</span>
+                    </Link>
                   </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
               ))}
