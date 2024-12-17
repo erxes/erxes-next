@@ -6,6 +6,7 @@ import {
   IconChevronRight,
 } from '@tabler/icons-react';
 import { Button, DropdownMenu } from 'erxes-ui/components';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
   DndContext,
   closestCenter,
@@ -19,9 +20,9 @@ import {
 import {
   arrayMove,
   sortableKeyboardCoordinates,
-  rectSortingStrategy,
   SortableContext,
   useSortable,
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useRecoilState } from 'recoil';
@@ -48,12 +49,13 @@ const DraggableItem = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: field.id });
+  } = useSortable({ id: field.id});
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: transition || 'transform 150ms ease',
     zIndex: isDragging ? 1000 : 'auto',
+    overflow: 'auto',
   };
 
   const FieldIcon = field.icon;
@@ -82,6 +84,7 @@ const DraggableItem = ({
     </DropdownMenu.Item>
   );
 };
+
 export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
   const [fields, setFields] = useRecoilState(fieldsState);
   const sensors = useSensors(
@@ -107,6 +110,7 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
       });
     }
   };
+
   const handleFieldToggleVisibility = (
     fieldId: string,
     e: React.MouseEvent
@@ -135,11 +139,12 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
+        modifiers={[restrictToVerticalAxis]}
         onDragEnd={handleDragEnd}
       >
         <SortableContext
           items={fields.map((f) => f.id)}
-          strategy={rectSortingStrategy}
+          strategy={verticalListSortingStrategy}
         >
           {fields
             .filter((field) => !field.isHidden)
