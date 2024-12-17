@@ -3,7 +3,7 @@ import { Button, RecordTable, NestedDropdownMenu } from 'erxes-ui/components';
 import { ChevronDownIcon, DotIcon, ListIcon } from 'lucide-react';
 import { columns } from './columns';
 import { ProductCommandBar } from './ProductCommandBar';
-import { ProductsRecordTableOptions } from './ProductsRecordTableOptions';
+import { ProductsRecordTableOptions } from './RecordTableOptionsButton/ProductsRecordTableOptions';
 import { useProducts } from '../hooks/useProducts';
 import { ProductsRecordTableSkeleton } from './Skeleton/ProductsRecordTableSkeleton';
 
