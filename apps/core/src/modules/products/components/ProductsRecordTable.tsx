@@ -1,6 +1,6 @@
 import { flexRender } from '@tanstack/react-table';
-import { Button, RecordTable, NestedDropdownMenu } from 'erxes-ui/components';
-import { IconChevronDown, IconPoint, IconList  } from '@tabler/icons-react'
+import { Button, RecordTable } from 'erxes-ui/components';
+import { IconChevronDown, IconList  } from '@tabler/icons-react'
 import { columns } from './columns';
 import { ProductCommandBar } from './ProductCommandBar';
 import { ProductsRecordTableOptions } from './RecordTableOptionsButton/ProductsRecordTableOptions';
@@ -16,7 +16,7 @@ export const ProductsRecordTable = () => {
           <IconList className="w-4 h-4" />
           <span className="inline-flex items-center ">
             All
-            <IconPoint className="w-4 h-4 -mx-0.5" />
+            <span className='mx-1 pb-1'>•</span>
             {totalCount}
           </span>
           <IconChevronDown className="w-4 h-4" />
