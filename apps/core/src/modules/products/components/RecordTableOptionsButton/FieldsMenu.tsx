@@ -1,5 +1,4 @@
 import { IconEyeOff } from '@tabler/icons-react';
-
 import {
   IconGripVertical,
   IconChevronLeft,
@@ -18,7 +17,7 @@ import {
 import {
   arrayMove,
   sortableKeyboardCoordinates,
-  rectSortingStrategy,
+  verticalListSortingStrategy,
   SortableContext,
   useSortable,
 } from '@dnd-kit/sortable';
@@ -32,6 +31,8 @@ type Field = {
   icon?: React.ComponentType<{ className?: string }>;
   isHidden: boolean;
 };
+
+
 
 const DraggableItem = ({
   field,
@@ -51,8 +52,9 @@ const DraggableItem = ({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: transition || 'transform 150ms ease',
+    transition: transition,
     zIndex: isDragging ? 1000 : 'auto',
+    overflow: "auto",
   };
 
   const FieldIcon = field.icon;
@@ -81,8 +83,16 @@ const DraggableItem = ({
     </DropdownMenu.Item>
   );
 };
+import { Modifier } from '@dnd-kit/core';
+
+const lockAxis = (axis: 'x' | 'y'): Modifier => ({ transform }) => ({
+  ...transform,
+  [axis === 'x' ? 'y' : 'x']: 0,
+});
+
 export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
   const [fields, setFields] = useRecoilState(fieldsState);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -99,17 +109,15 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
 
     if (active.id !== over?.id) {
       setFields((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over?.id);
+        const activeIndex = items.findIndex((item) => item.id === active.id);
+        const overIndex = over ? items.findIndex((item) => item.id === over.id) : -1;
 
-        return arrayMove(items, oldIndex, newIndex);
+        return arrayMove(items, activeIndex, overIndex);
       });
     }
   };
-  const handleFieldToggleVisibility = (
-    fieldId: string,
-    e: React.MouseEvent
-  ) => {
+
+  const handleFieldToggleVisibility = (fieldId: string, e: React.MouseEvent) => {
     e.preventDefault();
     setFields((currentFields) =>
       currentFields.map((field) =>
@@ -117,6 +125,7 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
       )
     );
   };
+
   return (
     <>
       <DropdownMenu.Label className="flex items-center gap-2 p-0">
@@ -134,11 +143,12 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
+        modifiers={[lockAxis('y')]}
         onDragEnd={handleDragEnd}
       >
         <SortableContext
           items={fields.map((f) => f.id)}
-          strategy={rectSortingStrategy}
+          strategy={verticalListSortingStrategy}
         >
           {fields
             .filter((field) => !field.isHidden)
