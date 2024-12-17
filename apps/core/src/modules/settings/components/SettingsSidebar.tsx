@@ -30,7 +30,7 @@ export function SettingsSidebar() {
 
   const windowPlugins = window.plugins;
 
-  windowPlugins.map((plugin) => {
+  windowPlugins?.map((plugin) => {
     pinnedPlugins.push({
       handle: plugin.name,
       pinned: true,

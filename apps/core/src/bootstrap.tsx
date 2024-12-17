@@ -11,34 +11,34 @@ const initFederation = async () => {
     document.getElementById('root') as HTMLElement
   );
 
-  // if (NODE_ENV === 'development') {
-  //   root.render(
-  //     <StrictMode>
-  //       <App />
-  //     </StrictMode>
-  //   );
-  // } else {
-  fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log('data', data);
-      window.plugins = data.plugins || [];
+  if (NODE_ENV === 'development') {
+    root.render(
+      <StrictMode>
+        <App />
+      </StrictMode>
+    );
+  } else {
+    fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('data', data);
+        window.plugins = data.plugins || [];
 
-      init({
-        name: 'core',
-        remotes: data.plugins?.map((plugin) => ({
-          name: `plugin_${plugin.name}`,
-          entry: plugin.url,
-        })),
+        init({
+          name: 'core',
+          remotes: data.plugins?.map((plugin) => ({
+            name: `plugin_${plugin.name}`,
+            entry: plugin.url,
+          })),
+        });
+
+        root.render(
+          <StrictMode>
+            <App />
+          </StrictMode>
+        );
       });
-
-      root.render(
-        <StrictMode>
-          <App />
-        </StrictMode>
-      );
-    });
-  // }
+  }
 };
 
 initFederation().catch((err) => {

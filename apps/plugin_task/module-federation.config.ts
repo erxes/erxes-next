@@ -1,10 +1,28 @@
 import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 
+const coreLibraries = new Set([
+  'react',
+  'react-dom',
+  'react-router-dom',
+  'erxes-ui',
+  'recoil',
+  'erxes-shared-states',
+]);
+
 const config: ModuleFederationConfig = {
   name: 'plugin_task',
 
   exposes: {
     './Module': './src/remote-entry.ts',
+  },
+
+  shared: (libraryName, defaultConfig) => {
+    if (coreLibraries.has(libraryName)) {
+      return defaultConfig;
+    }
+
+    // Returning false means the library is not shared.
+    return false;
   },
 };
 

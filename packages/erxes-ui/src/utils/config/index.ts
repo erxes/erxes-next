@@ -18,7 +18,7 @@ const getDefaultUrl = () => {
     // In development environment front and backend usually run on separate ports
     // we set the default value to localhost:3000.
     // It dev context, we use env vars to overwrite it
-    return 'http://localhost:4000';
+    return 'https://test.erxes.io/gateway';
   } else {
     // Outside of localhost we assume that they run on the same port
     // because the backend will serve the frontend
