@@ -1,18 +1,18 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ProductT } from '../../types/productTypes';
 import {
-  BoxIcon,
-  Building2,
-  ChartNoAxesGantt,
-  CircleCheck,
-  HashIcon,
-  HistoryIcon,
-  LetterText,
-  PlusIcon,
-  TagsIcon,
-} from 'lucide-react';
+  IconBox,
+  IconBuilding,
+  IconChartBar,
+  IconCircleCheck,
+  IconHash,
+  IconHistory,
+  IconAlignLeft,
+  IconPlus,
+  IconTags,
+  IconCurrencyTugrik,
+} from '@tabler/icons-react';
 import { Checkbox, Badge, Button, Avatar } from 'erxes-ui';
-import { IconCurrencyTugrik } from '@tabler/icons-react';
 import { Skeleton } from 'erxes-ui';
 
 export const SkeletonColumns: ColumnDef<ProductT>[] = [
@@ -40,7 +40,6 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
           onCheckedChange={(value) => row.toggleSelected(!!value)}
           disabled
         />
-        {/* <Skeleton className='h-4 w-4'></Skeleton> */}
       </div>
     ),
   },
@@ -49,15 +48,16 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     id: 'name',
     header: () => (
       <div className="flex items-center gap-1">
-        <LetterText className="w-4 h-4" strokeWidth={2.5} />
+        <IconAlignLeft className="w-4 h-4" strokeWidth={2.5} />
         Name
       </div>
     ),
-    cell: (info) => (
+    cell: () => (
       <div className="w-full h-full p-2">
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 280,
   },
   {
@@ -65,7 +65,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     id: 'code',
     header: () => (
       <div className="flex items-center gap-1">
-        <HashIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconHash className="w-4 h-4" strokeWidth={2.5} />
         Code
       </div>
     ),
@@ -74,6 +74,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
@@ -90,6 +91,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
@@ -97,7 +99,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     id: 'category',
     header: () => (
       <div className="flex items-center gap-1">
-        <ChartNoAxesGantt className="w-4 h-4" strokeWidth={2.5} />
+        <IconChartBar className="w-4 h-4" strokeWidth={2.5} />
         Category
       </div>
     ),
@@ -106,6 +108,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 280,
   },
   {
@@ -113,7 +116,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     id: 'status',
     header: () => (
       <div className="flex items-center gap-1">
-        <CircleCheck className="w-4 h-4" strokeWidth={2.5} />
+        <IconCircleCheck className="w-4 h-4" strokeWidth={2.5} />
         Status
       </div>
     ),
@@ -122,6 +125,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
@@ -129,7 +133,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     id: 'createdAt',
     header: (info) => (
       <div className="flex items-center gap-1">
-        <HistoryIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconHistory className="w-4 h-4" strokeWidth={2.5} />
         Created At
       </div>
     ),
@@ -138,6 +142,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
@@ -145,7 +150,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     id: 'tags',
     header: () => (
       <div className="flex items-center gap-1">
-        <TagsIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconTags className="w-4 h-4" strokeWidth={2.5} />
         Tags
       </div>
     ),
@@ -154,6 +159,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 280,
   },
   {
@@ -161,7 +167,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     id: 'vendor',
     header: () => (
       <div className="flex items-center gap-1">
-        <Building2 className="w-4 h-4" strokeWidth={2.5} />
+        <IconBuilding className="w-4 h-4" strokeWidth={2.5} />
         Vendor
       </div>
     ),
@@ -170,6 +176,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 280,
   },
   {
@@ -181,6 +188,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
         <Skeleton className="w-full h-full" />
       </div>
     ),
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
@@ -189,7 +197,7 @@ export const SkeletonColumns: ColumnDef<ProductT>[] = [
     size: 70,
     header: () => (
       <Button variant="ghost" className="h-full w-full">
-        <PlusIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconPlus className="w-4 h-4" strokeWidth={2.5} />
       </Button>
     ),
     cell: () => (
