@@ -60,7 +60,7 @@ export const columns: ColumnDef<ProductT>[] = [
     ),
     cell: ProductNameCell,
     footer: (props) => props.column.id,
-    size: 280,
+    size: 300,
   },
   {
     accessorKey: 'code',
