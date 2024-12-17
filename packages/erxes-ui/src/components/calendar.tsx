@@ -1,10 +1,6 @@
 "use client"
-import {
-    ChevronDownIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    ChevronUpIcon,
-} from 'lucide-react'
+import { IconChevronDown, IconChevronUp, IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
+
 import * as React from "react"
 
 import { DayFlag, DayPicker, SelectionState, UI } from "react-day-picker"
@@ -71,13 +67,13 @@ export const Calendar = React.forwardRef<React.JSX.Element, CalendarProps>(({
 const Chevron = ({ orientation = 'left' }) => {
     switch (orientation) {
         case 'left':
-            return <ChevronLeftIcon className="h-4 w-4" />
+            return <IconChevronLeft className="h-4 w-4" />
         case 'right':
-            return <ChevronRightIcon className="h-4 w-4" />
+            return <IconChevronRight className="h-4 w-4" />
         case 'up':
-            return <ChevronUpIcon className="h-4 w-4" />
+            return <IconChevronUp className="h-4 w-4" />
         case 'down':
-            return <ChevronDownIcon className="h-4 w-4" />
+            return <IconChevronDown className="h-4 w-4" />
         default:
             return null
     }

@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Sidebar } from 'erxes-ui/components';
-import { Settings2, XIcon, CircleUserRound, SwatchBook } from 'lucide-react';
-import {  } from '@tabler/icons-react'
+import { IconAdjustmentsAlt, IconX, IconUserCircle, IconColorSwatch } from '@tabler/icons-react'
 import { useRecoilValue } from 'recoil';
 import { SettingsPath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';
@@ -13,16 +12,16 @@ const data = {
   account: [
     {
       name: 'Profile',
-      icon: CircleUserRound,
+      icon: IconUserCircle,
       path: SettingsPath.Profile,
     },
     {
       name: 'Experience',
-      icon: SwatchBook,
+      icon: IconColorSwatch,
       path: SettingsPath.Experience,
     },
   ],
-  nav: [{ name: 'General', icon: Settings2 }],
+  nav: [{ name: 'General', icon: IconAdjustmentsAlt }],
 };
 
 export function SettingsSidebar() {
@@ -52,7 +51,7 @@ export function SettingsSidebar() {
           <Sidebar.MenuItem>
             <Sidebar.MenuButton className="h-10" asChild>
               <Link to="/">
-                <XIcon />
+                <IconX />
                 <span>Exit Settings</span>
               </Link>
             </Sidebar.MenuButton>
