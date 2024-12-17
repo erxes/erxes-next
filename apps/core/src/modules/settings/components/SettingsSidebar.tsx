@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Sidebar } from 'erxes-ui/components';
 import { Settings2, XIcon, CircleUserRound, SwatchBook } from 'lucide-react';
+import {  } from '@tabler/icons-react'
 import { useRecoilValue } from 'recoil';
 import { SettingsPath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';

@@ -1,5 +1,5 @@
 import { DropdownMenu } from 'erxes-ui/components';
-import { LanguagesIcon } from 'lucide-react';
+import { IconLanguage } from '@tabler/icons-react';
 import { AvailableLanguage, useSwitchLanguage } from '~/i18n';
 
 export const SelectLanguages = () => {
@@ -8,7 +8,7 @@ export const SelectLanguages = () => {
   return (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger>
-        <LanguagesIcon />
+        <IconLanguage />
         <span>Language ({currentLanguage})</span>
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>

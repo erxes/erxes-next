@@ -11,8 +11,7 @@ import {
 } from 'erxes-ui/components';
 import { useRef, useState } from 'react';
 import { cn } from 'erxes-ui/lib';
-import { CheckIcon } from 'lucide-react';
-
+import { IconCheck } from '@tabler/icons-react'
 export const CategoryCell = (info: CellContext<ProductT, any>) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
   const ref = useRef<HTMLButtonElement>(null);
@@ -86,7 +85,7 @@ export const CategoryCell = (info: CellContext<ProductT, any>) => {
           </button>
         </Popover.Trigger>
         <Popover.Content className="w-[--radix-popper-anchor-width] p-0">
-          <Command.Root>
+          <Command>
             <Command.Input placeholder="Search category..." className="h-8" />
             <Command.List className="styled-scroll overflow-x-auto">
               <Command.Empty>No category found</Command.Empty>
@@ -104,7 +103,7 @@ export const CategoryCell = (info: CellContext<ProductT, any>) => {
                     </Avatar.Fallback>
                   </Avatar.Root>
                   {category.name}
-                  <CheckIcon
+                  <IconCheck
                     className={cn(
                       'ml-auto',
                       category._id === selectedCategoryId
@@ -115,7 +114,7 @@ export const CategoryCell = (info: CellContext<ProductT, any>) => {
                 </Command.Item>
               ))}
             </Command.List>
-          </Command.Root>
+          </Command>
         </Popover.Content>
       </Popover>
     );
