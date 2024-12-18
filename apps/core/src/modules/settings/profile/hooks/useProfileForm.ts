@@ -32,14 +32,12 @@ export const profileValidationSchema = z
     .required();
 
 export type FormType = z.infer<typeof profileValidationSchema>;
-const useProfileForm = (data) => {
-
-    const { username, employeeId, positions, email, details, links } = data || {}
+const useProfileForm = () => {
 
     const form = useForm<FormType>({
         mode: 'onBlur',
         defaultValues: {
-            details: details || {
+            details: {
                 avatar: "",
                 firstName: "",
                 lastName: "",
@@ -51,7 +49,7 @@ const useProfileForm = (data) => {
                 position: "",
                 location: "",
             },
-            links: links || {
+            links: {
                 facebook: "",
                 twitter: "",
                 website: "",
@@ -59,15 +57,27 @@ const useProfileForm = (data) => {
                 gitHub: "",
                 instagram: "",
             },
-            username: username || '',
-            email: email || '',
-            employeeId: employeeId || '',
-            positionIds: (positions || []).map(position => position?._id) || [],
+            username: '',
+            email: '',
+            employeeId: '',
+            positionIds: [],
         },
         resolver: zodResolver(profileValidationSchema),
     });
 
-    return { form }
+    const onCompleted = (data) => {
+
+        const { username, employeeId, positionIds, email, details, links } = data.userDetail || {}
+
+        form.setValue('username', username);
+        form.setValue('employeeId', employeeId);
+        form.setValue('positionIds', positionIds);
+        form.setValue('email', email);
+        form.setValue('details', details);
+        form.setValue('links', links);
+    }
+
+    return { form, onCompleted }
 }
 
 export {

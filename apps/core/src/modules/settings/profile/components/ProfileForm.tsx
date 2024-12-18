@@ -7,7 +7,6 @@ import {
     FormField,
     FormItem,
     FormControl,
-    Switch,
     FormDescription,
     DatePicker,
     ToggleGroup,
@@ -18,29 +17,18 @@ import {
     AccordionContent,
 } from 'erxes-ui/components';
 import { SubmitHandler } from 'react-hook-form';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useProfile } from '@/settings/profile/hooks/useProfile';
 import { FormType, useProfileForm } from '@/settings/profile/hooks/useProfileForm';
-import { PROFILE_ADVANCED_FIELDS, PROFILE_LINK_FIELDS } from '../constants/profileFields';
-import { ChevronDown } from 'lucide-react';
+import { PROFILE_ADVANCED_FIELDS, PROFILE_LINK_FIELDS } from '@/settings/profile/constants/profileFields';
 
 const ProfileForm = () => {
 
-    const [moreView, setMoreView] = useState<boolean>(false)
     const [currentLink, setCurrentLink] = useState<string>('');
 
-    const { profile, loading, refetch, profileUpdate } = useProfile()
+    const { form, onCompleted } = useProfileForm()
 
-    const { form } = useProfileForm(profile)
-
-    useEffect(() => {
-        if (!loading) {
-            form.reset(profile || {})
-        }
-    }, [
-        loading,
-        refetch,
-    ])
+    const { loading, profileUpdate } = useProfile({ onCompleted })
 
     const submitHandler: SubmitHandler<FormType> = useCallback(
         async (data) => {
@@ -49,17 +37,10 @@ const ProfileForm = () => {
         [profileUpdate]
     );
 
-    const handlePasswordChange = () => {
-
-    }
-
     const renderField = ({ field, element, attributes }) => {
         switch (element) {
             case 'input':
                 return <Input {...field} {...attributes} />
-            case 'select':
-                // <Select placeholder={`Select ${attributes.placeholder}`} {...attributes} />
-                return <></>
             case 'date':
                 return <DatePicker {...field} {...attributes} />
             default:
@@ -89,7 +70,7 @@ const ProfileForm = () => {
         )
     }
 
-    const renderDetaulFields = () => {
+    const renderDefaultFields = () => {
 
         return (
             <div className="grid grid-cols-2 gap-6 mt-0.5">
@@ -176,27 +157,6 @@ const ProfileForm = () => {
         )
     }
 
-    const renderFooter = () => {
-        return (
-            <div className='flex justify-between'>
-                <div className="mt-1">
-                    <Button size="sm" variant="outline" type='button' onClick={() => handlePasswordChange()}>
-                        Change password
-                    </Button>
-
-                </div>
-                <div className="mt-1">
-                    <Button
-                        type="submit"
-                        size="sm"
-                    >
-                        Update
-                    </Button>
-                </div>
-            </div>
-        )
-    }
-
     if (loading) {
         return <></>;
     }
@@ -227,7 +187,7 @@ const ProfileForm = () => {
                     <FormDescription>
                         This is your public display name.
                     </FormDescription>
-                    {renderDetaulFields()}
+                    {renderDefaultFields()}
                 </div>
                 <div className="flex flex-col gap-3">
                     <FormLabel>Email</FormLabel>
@@ -237,19 +197,19 @@ const ProfileForm = () => {
                     {renderFormField({ name: 'email', element: 'input', attributes: { type: "email", placeholder: "Enter email" } })}
                 </div>
                 <div className="flex flex-col gap-3">
-
                     {renderAdvancedFields()}
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col flex-1 gap-3">
                     <FormLabel>Links</FormLabel>
                     {renderLinkFields()}
                 </div>
-                <div className="flex flex-col gap-3">
-                    <FormLabel>Change Password</FormLabel>
-                    <FormDescription>
-                        Receive an email containing password update link
-                    </FormDescription>
-                    {renderFooter()}
+                <div className='w-full flex justify-end'>
+                    <Button
+                        type="submit"
+                        size="sm"
+                    >
+                        Update
+                    </Button>
                 </div>
             </form>
         </Form>

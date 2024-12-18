@@ -9,8 +9,8 @@ const PROFILE_ADVANCED_FIELDS = [
     { fieldLabel: 'Phone (Operator)', fieldName: 'operatorPhone', fieldPath: 'details', field: { element: 'input', attributes: { type: "text" } } },
     { fieldLabel: 'Join Date', fieldName: 'workStartedDate', fieldPath: 'details', field: { element: 'date' } },
     { fieldLabel: 'Birth Date', fieldName: 'birthDate', fieldPath: 'details', field: { element: 'date', attributes: { withPresent: true } } },
-    { fieldLabel: 'Positions', fieldName: 'positionIds', field: { element: 'select' } },
-    { fieldLabel: 'Location', fieldName: 'location', fieldPath: 'details', field: { element: 'select' } },
+    // { fieldLabel: 'Positions', fieldName: 'positionIds', field: { element: 'select' } },
+    // { fieldLabel: 'Location', fieldName: 'location', fieldPath: 'details', field: { element: 'select' } },
 ]
 
 const PROFILE_LINK_FIELDS = [

@@ -6,7 +6,11 @@ import { useRecoilValue } from 'recoil';
 import { currentUserState } from 'erxes-shared-states';
 import { useConfirm } from 'erxes-ui/hooks';
 
-const useProfile = () => {
+type Props = {
+    onCompleted: (userDetail) => void,
+}
+
+const useProfile = ({ onCompleted }: Props) => {
     const currentUser = useRecoilValue(currentUserState);
 
     const { confirm } = useConfirm()
@@ -17,6 +21,7 @@ const useProfile = () => {
         refetch,
     } = useQuery(userDetail, {
         variables: { _id: currentUser?._id },
+        onCompleted,
     });
 
     const [updateProfile] = useMutation(UpdateProfile);
@@ -43,10 +48,11 @@ const useProfile = () => {
         });
     }
 
+    const profile = data?.userDetail || {}
+
     return {
-        profile: data?.userDetail || {},
+        profile,
         loading,
-        refetch,
         profileUpdate
     }
 }
