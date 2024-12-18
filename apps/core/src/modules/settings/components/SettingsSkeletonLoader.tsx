@@ -1,3 +1,3 @@
 export const SettingsSkeletonLoader = () => {
-  return <div>SettingsSkeletonLoader</div>;
+  return <div />;
 };
