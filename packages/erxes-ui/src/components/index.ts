@@ -1,3 +1,4 @@
+export * from './accordion';
 export * from './alert-dialog';
 export * from './avatar';
 export * from './badge';
@@ -9,6 +10,7 @@ export * from './collapsible';
 export * from './command-bar';
 export * from './command';
 export * from './date-picker';
+export * from './date-range-picker';
 export * from './dialog';
 export * from './dropdown-menu';
 export * from './form';
