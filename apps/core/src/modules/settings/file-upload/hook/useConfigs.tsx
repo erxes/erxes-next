@@ -1,10 +1,26 @@
 import { useMutation, useQuery } from "@apollo/client"
-import { SettingsMutations, SettingsQueries } from "../graphql"
 import { useToast } from "erxes-ui/hooks";
+import { SettingsMutations, SettingsQueries } from "../graphql";
 
-const useConfigsUpdate = () => {
+type TList = {
+  onCompleted: (data) => void;
+}
+
+const useConfig = ({ onCompleted }: TList) => {
   const { toast } = useToast();
-  const [ update, { loading } ] = useMutation(SettingsMutations.configsUpdate, {
+
+  const {
+    data,
+    loading
+  } = useQuery(SettingsQueries.configsQuery, {
+    onError(error) {
+      console.log(error.message)
+    },
+    onCompleted,
+  })
+
+
+  const [update, { loading: isLoading }] = useMutation(SettingsMutations.configsUpdate, {
     onError(error) {
       console.log(error.message)
     },
@@ -27,27 +43,16 @@ const useConfigsUpdate = () => {
     })
   }
 
-  return {
-    updateConfig,
-    loading
-  }
-}
-
-const useConfigsList = () => {
-  const { data, loading } = useQuery(SettingsQueries.configsQuery, {
-    onError(error) {
-      console.log(error.message)
-    },
-  })
-
   const { configs } = data || [];
+
   return {
     configs,
-    loading
+    loading,
+    updateConfig,
+    isLoading
   }
 }
 
 export {
-  useConfigsList,
-  useConfigsUpdate
+  useConfig,
 }

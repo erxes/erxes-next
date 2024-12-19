@@ -7,8 +7,8 @@ import {
   Select,
   ScrollArea
 } from 'erxes-ui/components';
-import { FILE_SYSTEM_TYPES } from '@/settings/constants';
 import MultipleSelector from 'erxes-ui/components/multiselect';
+import { FILE_SYSTEM_TYPES } from '../constants/serviceData';
 
 export default function FileUploadMainFields({ form, modifiedArray }: { form: any, modifiedArray: any[] }) {
   return (
@@ -63,7 +63,7 @@ export default function FileUploadMainFields({ form, modifiedArray }: { form: an
           <FormItem>
             <FormLabel>Bucket file system type</FormLabel>
             <FormControl>
-              <Select onValueChange={field.onChange}>
+              <Select name={field.name} onValueChange={field.onChange} value={field.value}>
                 <Select.Trigger>
                   <Select.Value placeholder={'-'} />
                 </Select.Trigger>

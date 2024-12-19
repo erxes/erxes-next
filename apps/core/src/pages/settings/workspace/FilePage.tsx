@@ -9,14 +9,15 @@ import {
 } from 'erxes-ui/components';
 import { useMemo } from 'react';
 import { motion } from 'motion/react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UploadConfigFormT, validationSchema, serviceFields } from '@/settings/form/schema';
-import { FILE_MIME_TYPES, FILE_SYSTEM_TYPES } from '@/settings/constants';
-import { useConfigsList, useConfigsUpdate } from '@/settings/hooks/useConfigs';
-import FileUploadMainFields from '@/settings/components/FileUploadMainFields';
-import UploadServiceRadioGroup from '@/settings/components/UploadServiceRadioGroup';
-import DynamicServiceConfigFields from '@/settings/components/DynamicServiceConfigFields';
+import { FILE_MIME_TYPES } from '@/settings/file-upload/constants/serviceData';
+import FileUploadMainFields from '@/settings/file-upload/components/FileUploadMainFields';
+import UploadServiceRadioGroup from '@/settings/file-upload/components/UploadServiceRadioGroup';
+import DynamicServiceConfigFields from '@/settings/file-upload/components/DynamicServiceConfigFields';
+import { filesValidationSchema } from '@/settings/file-upload/schema';
+import { UploadConfigFormT } from '@/settings/file-upload/types';
+import { serviceFields } from '@/settings/file-upload/constants/uploadServiceFields';
+import { useConfig } from '@/settings/file-upload/hook/useConfigs';
+import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm';
 
 type Option = {
   label: string;
@@ -29,23 +30,8 @@ const modifiedArray: Option[] = FILE_MIME_TYPES.map(({ label, extension, value }
 }));
 
 export default function FilePage() {
-  const { configs } = useConfigsList()
-  const { updateConfig, loading } = useConfigsUpdate();
-
-  const existingConfigs = useMemo(() => {
-    if (configs) {
-      return configs.reduce((acc, { code, value }) => {
-        acc[code] = value;
-        return acc;
-      }, {} as Record<string, any>);
-    }
-    return {};
-  }, [configs]);
-
-  const form = useForm<UploadConfigFormT>({
-    resolver: zodResolver(validationSchema),
-    defaultValues: existingConfigs
-  });
+  const { form, onCompleted } = useFileUploadForm()
+  const {  updateConfig, isLoading, loading } = useConfig({ onCompleted })
 
   const dynamicFields = useMemo(() => {
     const selectedType = form.watch('UPLOAD_SERVICE_TYPE');
@@ -59,7 +45,7 @@ export default function FilePage() {
 
 
   const onSubmit = (data: UploadConfigFormT) => {
-    console.log(data, 'hmm')
+    console.log(data, 'onSubmit')
     updateConfig(data)
   };
 
@@ -105,9 +91,9 @@ export default function FilePage() {
                   <Button type='reset' variant={'destructive'} className='w-full'>Cancel</Button>
                 </motion.div>
                 <motion.div whileTap={{ scale: .975 }} className='w-full'>
-                  <Button type='submit' disabled={loading} variant='outline' className='w-full'>
+                  <Button type='submit' disabled={isLoading} variant='outline' className='w-full'>
                     {
-                      loading && <IconLoader2 className='animate-spin' /> || 'Update'
+                      isLoading && <IconLoader2 className='animate-spin' /> || 'Update'
                     }
                   </Button>
                 </motion.div>

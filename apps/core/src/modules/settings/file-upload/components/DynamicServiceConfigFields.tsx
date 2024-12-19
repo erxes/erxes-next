@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { uploadServiceData } from '../form/data';
 import {
   FormField,
   FormItem,
@@ -9,7 +8,8 @@ import {
   FormMessage,
   Input
 } from 'erxes-ui/components';
-import { DynamicFieldsT } from '../form/schema';
+import { uploadServiceData } from '../constants/serviceData';
+import { DynamicFieldsT } from '../types';
 
 export default function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
   return (
