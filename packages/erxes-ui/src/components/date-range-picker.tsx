@@ -6,50 +6,61 @@ import { Button } from './button';
 import { Calendar, CalendarProps } from './calendar';
 import { Popover } from './popover';
 import React from 'react';
+import { DateRange } from 'react-day-picker';
 
-type DatePickerProps = {
-  value: Date | Date[] | undefined;
-  onChange: (date: Date | Date[] | undefined) => void;
+type DateRangePickerProps = {
+  value: DateRange;
+  onChange: (dateRange: DateRange | undefined) => void;
   placeholder?: string;
   withPresent?: boolean;
-  mode?: 'single' | 'multiple';
 } & CalendarProps;
 
-export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
-  ({
-    value,
-    onChange,
-    placeholder = 'Pick a date',
-    withPresent = false,
-    disabled,
-    className,
-    mode = 'single',
-    ...props
-  }) => {
-    const renderButtonContent = () => {
-      if (value) {
-        if (mode === 'single' && typeof value === 'string') {
-          return dayjs(value).format('YYYY/MM/DD');
-        }
+export const DateRangePicker = React.forwardRef<
+  React.JSX.Element,
+  DateRangePickerProps
+>(
+  (
+    {
+      value,
+      onChange,
+      placeholder,
+      withPresent = false,
+      disabled,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const { from, to } = value || {};
 
-        if (mode === 'multiple' && Array.isArray(value)) {
-          const selectedDays = value?.length;
+    const renderButton = () => {
+      const dates: string[] = [];
 
-          if (selectedDays) {
-            return `${selectedDays} ${selectedDays > 1 ? 'Days' : 'Day'}`;
-          }
-        }
+      if (from) {
+        dates.push(dayjs(from).format('YYYY/MM/DD'));
       }
 
-      return placeholder;
+      if (to) {
+        dates.push(dayjs(to).format('YYYY/MM/DD'));
+      }
+
+      if (from && to) {
+        return <span>{dates.join(' - ')}</span>;
+      }
+
+      if (placeholder) {
+        return <span>{placeholder}</span>;
+      }
+
+      return <span>Pick a date range</span>;
     };
 
-    const handleDateChange = (selectedDate: Date | Date[] | undefined) => {
+    const handleDateChange = (selectedDate: DateRange | undefined) => {
       if (!selectedDate) {
         return;
       }
 
-      onChange && onChange(selectedDate);
+      onChange && onChange({ from: selectedDate.from, to: selectedDate.to });
     };
 
     return (
@@ -59,14 +70,13 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
             variant={'outline'}
             className={cn(
               'justify-start text-left font-normal h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-              !value && 'text-muted-foreground',
               Boolean(disabled) &&
                 'disabled:cursor-not-allowed disabled:opacity-50',
               className
             )}
             disabled={Boolean(disabled)}
           >
-            {renderButtonContent()}
+            {renderButton()}
           </Button>
         </Popover.Trigger>
         <Popover.Content className="w-auto p-0">
@@ -77,8 +87,8 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
                 ? date > new Date() || date < new Date('1900-01-01')
                 : Boolean(disabled)
             }
-            mode={mode}
-            selected={value as any}
+            mode={'range'}
+            selected={value}
             onSelect={handleDateChange}
             initialFocus
           />

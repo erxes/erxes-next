@@ -29,10 +29,9 @@ const getDefaultUrl = () => {
   }
 };
 
-const REACT_APP_API_URL =
-  window._env_?.['REACT_APP_API_URL'] || // Use bracket notation here
-  process.env['REACT_APP_API_URL'] ||
-  getDefaultUrl();
+// console.log(process.env);
+
+const REACT_APP_API_URL = 'https://test.erxes.io/gateway';
 
 const NODE_ENV = window._env_?.['NODE_ENV'] || 'development';
 
