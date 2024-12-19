@@ -31,6 +31,7 @@ const modifiedArray: Option[] = FILE_MIME_TYPES.map(({ label, extension, value }
 export default function FilePage() {
   const { configs } = useConfigsList()
   const { updateConfig, loading } = useConfigsUpdate();
+
   const existingConfigs = useMemo(() => {
     if (configs) {
       return configs.reduce((acc, { code, value }) => {
@@ -40,11 +41,12 @@ export default function FilePage() {
     }
     return {};
   }, [configs]);
+
   const form = useForm<UploadConfigFormT>({
     resolver: zodResolver(validationSchema),
     defaultValues: existingConfigs
   });
-  console.log('conf', form.getValues())
+
   const dynamicFields = useMemo(() => {
     const selectedType = form.watch('UPLOAD_SERVICE_TYPE');
     return serviceFields[selectedType]?.fields || [];
@@ -57,6 +59,7 @@ export default function FilePage() {
 
 
   const onSubmit = (data: UploadConfigFormT) => {
+    console.log(data, 'hmm')
     updateConfig(data)
   };
 
