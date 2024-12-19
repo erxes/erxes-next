@@ -14,6 +14,7 @@ import {
   forwardRef,
   HTMLAttributes,
   useContext,
+  useEffect,
 } from 'react';
 import { type ReactNode, useMemo, useState } from 'react';
 import {
@@ -33,6 +34,11 @@ import {
   restrictToHorizontalAxis,
 } from '@dnd-kit/modifiers';
 import { cn } from 'erxes-ui/lib/utils';
+import {
+  columnOrderState,
+  columnVisibilityState,
+} from '@/products/states/RecordTableFieldsState';
+import { useRecoilState } from 'recoil';
 
 type IRecordTableContext = {
   table: Table<any>;
@@ -76,13 +82,10 @@ export const RecordTableProvider = forwardRef<
   ) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-      {}
-    );
+    const [columnVisibility, setColumnVisibility] =
+      useRecoilState<VisibilityState>(columnVisibilityState);
     const [rowSelection, setRowSelection] = useState({});
-    const [columnOrder, setColumnOrder] = useState<string[]>(() =>
-      columns.map((c) => c.id ?? '')
-    );
+    const [columnOrder, setColumnOrder] = useRecoilState(columnOrderState);
 
     const sensors = useSensors(
       useSensor(MouseSensor, {

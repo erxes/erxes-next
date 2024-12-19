@@ -14,7 +14,7 @@ export const HiddenFieldsMenu = ({ handleToFields }) => {
     e.preventDefault();
     setFields((currentFields) =>
       currentFields.map((field) =>
-        field.id === fieldId ? { ...field, isHidden: !field.isHidden } : field
+        field.id === fieldId ? { ...field, isVisible: !field.isVisible } : field
       )
     );
   };
@@ -33,7 +33,7 @@ export const HiddenFieldsMenu = ({ handleToFields }) => {
       </DropdownMenu.Label>
       <DropdownMenu.Separator className="h-[0.8px]" />
       {fields
-        .filter((field) => field.isHidden)
+        .filter((field) => !field.isVisible)
         .map((field) => (
           <DropdownMenu.Item
             key={field.id}
