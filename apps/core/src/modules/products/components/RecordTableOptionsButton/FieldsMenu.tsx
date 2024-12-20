@@ -26,7 +26,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useRecoilState } from 'recoil';
-import { fieldsState } from '~/modules/products/states/RecordTableFieldsState';
+import { fieldsState } from 'erxes-ui/states/RecordTableFieldsState';
 
 type Field = {
   id: string;

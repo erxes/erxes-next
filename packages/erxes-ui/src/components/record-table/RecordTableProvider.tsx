@@ -37,7 +37,7 @@ import { cn } from 'erxes-ui/lib/utils';
 import {
   columnOrderState,
   columnVisibilityState,
-} from '@/products/states/RecordTableFieldsState';
+} from 'erxes-ui/states/RecordTableFieldsState';
 import { useRecoilState } from 'recoil';
 
 type IRecordTableContext = {

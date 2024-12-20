@@ -9,6 +9,7 @@ import {
   IconAlignLeft,
   IconTags,
   IconCurrencyTugrik,
+  IconLayoutGrid,
 } from '@tabler/icons-react';
 
 type Field = {
@@ -69,6 +70,12 @@ export const fieldsState = atom<Field[]>({
       icon: IconBuilding,
       isVisible: false,
     },
+    {
+      id: 'type',
+      name: 'Type',
+      icon: IconLayoutGrid,
+      isVisible: true,
+    },
   ],
 });
 
@@ -90,6 +97,7 @@ export const columnVisibilityState = selector({
     set(fieldsState, updatedFields);
   },
 });
+
 
 export const columnOrderState = selector({
   key: 'columnOrderState',
