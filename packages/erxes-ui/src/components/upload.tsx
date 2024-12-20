@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from './button';
-import { CircleUserRound, Trash2Icon, UploadIcon, X } from 'lucide-react';
+import { IconUserCircle, IconTrash, IconUpload } from '@tabler/icons-react'
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '../lib/utils';
 
@@ -84,7 +84,7 @@ const UploadPreview = React.forwardRef<
             />
           ) : (
             <div aria-hidden="true">
-              <CircleUserRound
+              <IconUserCircle
                 className="opacity-60"
                 size={16}
                 strokeWidth={2}
@@ -130,7 +130,7 @@ const UploadButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, ...props }, ref) => {
     return (
       <Button ref={ref} className={cn('flex', className)} {...props}>
-        <UploadIcon />
+        <IconUpload />
         Upload
       </Button>
     );
@@ -143,7 +143,7 @@ const RemoveButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, ...props }, ref) => {
     return (
       <Button ref={ref} className={cn('flex', className)} {...props}>
-        <Trash2Icon />
+        <IconTrash />
         Remove
       </Button>
     );

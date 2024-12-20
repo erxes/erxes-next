@@ -1,5 +1,5 @@
 import { Breadcrumb, Button, Header, HoverCard } from 'erxes-ui/components';
-import { PlusIcon, InfoIcon } from 'lucide-react';
+import { IconPlus, IconInfoCircle } from '@tabler/icons-react'
 
 const ProductsHeader = () => {
   return (
@@ -13,7 +13,7 @@ const ProductsHeader = () => {
                 <HoverCard.Root>
                   <HoverCard.Trigger>
                     <Button variant="ghost" size="icon" className="opacity-50">
-                      <InfoIcon className="size-3" />
+                      <IconInfoCircle className="size-3" />
                     </Button>
                   </HoverCard.Trigger>
                   <HoverCard.Content>
@@ -32,7 +32,7 @@ const ProductsHeader = () => {
         </Breadcrumb.Root>
         <div className="flex gap-2 items-center">
           <Button variant="outline" size="icon">
-            <PlusIcon className="size-3" />
+            <IconPlus className="size-3" />
           </Button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { CommandBar, RecordTable } from 'erxes-ui/components';
-import { PlusIcon, TrashIcon } from 'lucide-react';
+import { IconPlus, IconTrash } from '@tabler/icons-react'
 
 export const ProductCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
@@ -12,7 +12,7 @@ export const ProductCommandBar = () => {
         </CommandBar.Value>
         <CommandBar.Seperator />
         <CommandBar.Command shortcut="D" action={() => console.log('delete')}>
-          <TrashIcon className="w-4 h-4" />
+          <IconTrash className="w-4 h-4" />
           Delete
         </CommandBar.Command>
         <CommandBar.Seperator />
@@ -20,7 +20,7 @@ export const ProductCommandBar = () => {
           shortcut="P"
           action={() => console.log('create product')}
         >
-          <PlusIcon className="w-4 h-4" />
+          <IconPlus className="w-4 h-4" />
           Create
         </CommandBar.Command>
       </CommandBar.Bar>

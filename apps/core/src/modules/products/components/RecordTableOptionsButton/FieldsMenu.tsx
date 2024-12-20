@@ -31,7 +31,7 @@ import { fieldsState } from 'erxes-ui/states/RecordTableFieldsState';
 type Field = {
   id: string;
   name: string;
-  icon: Icon
+  icon: Icon;
   isVisible: boolean;
 };
 
@@ -88,6 +88,7 @@ const DraggableItem = ({
 
 export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
   const [fields, setFields] = useRecoilState(fieldsState);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -102,12 +103,14 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id && over?.id !== "name") {
+    if (active.id !== over?.id && over?.id !== 'name') {
       setFields((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over?.id);
+        const activeIndex = items.findIndex((item) => item.id === active.id);
+        const overIndex = over
+          ? items.findIndex((item) => item.id === over.id)
+          : -1;
 
-        return arrayMove(items, oldIndex, newIndex);
+        return arrayMove(items, activeIndex, overIndex);
       });
     }
   };
@@ -123,6 +126,7 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
       )
     );
   };
+
   return (
     <>
       <DropdownMenu.Label className="flex items-center gap-2 p-0">

@@ -1,28 +1,23 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ProductT } from '@/products/types/productTypes';
+import { ProductT } from '../types/productTypes';
 import {
-  Building2,
-  ChartNoAxesGantt,
-  CircleCheck,
-  HashIcon,
-  HistoryIcon,
-  LetterText,
-  PlusIcon,
-  TagsIcon,
-} from 'lucide-react';
-import { Checkbox, Button } from 'erxes-ui';
+  IconBox,
+  IconBuilding,
+  IconChartBar,
+  IconCircleCheck,
+  IconHash,
+  IconHistory,
+  IconAlignLeft,
+  IconPlus,
+  IconTags,
+  IconCurrencyTugrik,
+} from '@tabler/icons-react';
+import { Checkbox, Badge, Button, Avatar } from 'erxes-ui';
 import { RelativeDateDisplay } from 'erxes-ui/display';
-import { PriceCell } from '@/products/components/PriceCell';
-import { IconCurrencyTugrik, IconLayoutGrid } from '@tabler/icons-react';
-import {
-  CategoryCell,
-  CategoryCellWrapper,
-} from '@/products/components/CategoryCell';
-import { TagsCell } from '@/products/components/TagsCell';
-import StatusCell from '@/products/components/Status';
-import { VendorCell } from '@/products/components/VendorCell';
-import { ProductNameCell } from '@/products/components/ProductNameCell';
-import { ProductTypeIcon } from './ProductTypeIcon';
+import { PriceCell } from './PriceCell';
+import { CategoryCell, CategoryCellWrapper } from './CategoryCell';
+import { TagsCell } from './TagsCell';
+import StatusCell from './Status';
 
 export const columns: ColumnDef<ProductT>[] = [
   {
@@ -54,20 +49,25 @@ export const columns: ColumnDef<ProductT>[] = [
     id: 'name',
     header: () => (
       <div className="flex items-center gap-1">
-        <LetterText className="w-4 h-4" strokeWidth={2.5} />
+        <IconAlignLeft className="w-4 h-4" strokeWidth={2.5} />
         Name
       </div>
     ),
-    cell: ProductNameCell,
+    cell: (info) => (
+      <Button size="sm" variant="link">
+        <IconBox className="w-4 h-4 text-primary" strokeWidth={1.5} />
+        {info.getValue() as string}
+      </Button>
+    ),
     footer: (props) => props.column.id,
-    size: 300,
+    size: 280,
   },
   {
     accessorKey: 'code',
     id: 'code',
     header: () => (
       <div className="flex items-center gap-1">
-        <HashIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconHash className="w-4 h-4" strokeWidth={2.5} />
         Code
       </div>
     ),
@@ -97,11 +97,15 @@ export const columns: ColumnDef<ProductT>[] = [
     id: 'category',
     header: () => (
       <div className="flex items-center gap-1">
-        <ChartNoAxesGantt className="w-4 h-4" strokeWidth={2.5} />
+        <IconChartBar className="w-4 h-4" strokeWidth={2.5} />
         Category
       </div>
     ),
-    cell: CategoryCell,
+    cell: (info) => (
+      <CategoryCellWrapper>
+        <CategoryCell {...info} />
+      </CategoryCellWrapper>
+    ),
     footer: (props) => props.column.id,
     size: 280,
   },
@@ -110,7 +114,7 @@ export const columns: ColumnDef<ProductT>[] = [
     id: 'status',
     header: () => (
       <div className="flex items-center gap-1">
-        <CircleCheck className="w-4 h-4" strokeWidth={2.5} />
+        <IconCircleCheck className="w-4 h-4" strokeWidth={2.5} />
         Status
       </div>
     ),
@@ -123,7 +127,7 @@ export const columns: ColumnDef<ProductT>[] = [
     id: 'createdAt',
     header: (info) => (
       <div className="flex items-center gap-1">
-        <HistoryIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconHistory className="w-4 h-4" strokeWidth={2.5} />
         Created At
       </div>
     ),
@@ -142,7 +146,7 @@ export const columns: ColumnDef<ProductT>[] = [
     id: 'tags',
     header: () => (
       <div className="flex items-center gap-1">
-        <TagsIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconTags className="w-4 h-4" strokeWidth={2.5} />
         Tags
       </div>
     ),
@@ -155,31 +159,28 @@ export const columns: ColumnDef<ProductT>[] = [
     id: 'vendor',
     header: () => (
       <div className="flex items-center gap-1">
-        <Building2 className="w-4 h-4" strokeWidth={2.5} />
+        <IconBuilding className="w-4 h-4" strokeWidth={2.5} />
         Vendor
       </div>
     ),
-    cell: VendorCell,
+    cell: (info) => (
+      <Button size="sm" variant="secondary">
+        <Avatar.Root>
+          <Avatar.Image />
+          <Avatar.Fallback className="bg-blue-100 text-blue-800">
+            {((info.getValue() || '') as string).charAt(0)}
+          </Avatar.Fallback>
+        </Avatar.Root>
+        {info.getValue() as string}
+      </Button>
+    ),
     footer: (props) => props.column.id,
     size: 280,
   },
   {
     accessorKey: 'type',
     id: 'type',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconLayoutGrid className="w-4 h-4" strokeWidth={2.5} />
-        Type
-      </div>
-    ),
-    cell: (info) => {
-      return (
-        <CategoryCellWrapper>
-          <ProductTypeIcon {...info} />
-          {info.getValue() as string}
-        </CategoryCellWrapper>
-      );
-    },
+    header: 'Type',
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -189,7 +190,7 @@ export const columns: ColumnDef<ProductT>[] = [
     size: 70,
     header: () => (
       <Button variant="ghost" className="h-full w-full">
-        <PlusIcon className="w-4 h-4" strokeWidth={2.5} />
+        <IconPlus className="w-4 h-4" strokeWidth={2.5} />
       </Button>
     ),
   },
