@@ -1,62 +1,63 @@
-import { useMutation, useQuery } from '@apollo/client';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
-import { toast } from 'erxes-ui/hooks';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
-import { useRecoilValue } from 'recoil';
+import { useMutation, useQuery } from '@apollo/client';
 import { currentUserState } from 'erxes-shared-states';
-import { useConfirm } from 'erxes-ui/hooks';
+import { toast, useConfirm } from 'erxes-ui/hooks';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 type Props = {
-    onCompleted: (userDetail) => void,
-}
+  onCompleted: (userDetail) => void;
+};
 
 const useProfile = ({ onCompleted }: Props) => {
-    const currentUser = useRecoilValue(currentUserState);
+  const currentUser = useRecoilValue(currentUserState);
 
-    const { confirm } = useConfirm()
+  const setCurrentUser = useSetRecoilState(currentUserState);
 
-    const {
-        loading,
-        data,
-        refetch,
-    } = useQuery(userDetail, {
-        variables: { _id: currentUser?._id },
-        onCompleted,
-    });
+  const { confirm } = useConfirm();
 
-    const [updateProfile] = useMutation(UpdateProfile);
+  const { loading, data, refetch } = useQuery(userDetail, {
+    variables: { _id: currentUser?._id },
+    onCompleted,
+  });
 
-    const profileUpdate = (profile) => {
+  const [updateProfile] = useMutation(UpdateProfile);
 
-        const confirmOptions = {
-            confirmationValue: 'update'
-        }
+  const profileUpdate = (profile) => {
+    const confirmOptions = {
+      confirmationValue: 'update',
+    };
 
-        confirm({ message: 'Are you sure you want to update the profile?', options: confirmOptions }).then(async () => {
-            updateProfile({ variables: { ...profile } }).then((response) => {
-                if (response.data) {
-                    refetch();
+    confirm({
+      message: 'Are you sure you want to update the profile?',
+      options: confirmOptions,
+    }).then(async () => {
+      updateProfile({ variables: { ...profile } })
+        .then((response) => {
+          if (response.data) {
+            refetch();
 
-                    toast({ title: 'Succesfully updated profile' });
-                }
-            }).catch((e) => {
-                toast({
-                    title: 'Error',
-                    description: e.message,
-                });
-            });
+            setCurrentUser(data.userDetail);
+
+            toast({ title: 'Succesfully updated profile' });
+          }
+        })
+        .catch((e) => {
+          toast({
+            title: 'Error',
+            description: e.message,
+          });
         });
-    }
+    });
+  };
 
-    const profile = data?.userDetail || {}
+  const profile = data?.userDetail || {};
 
-    return {
-        profile,
-        loading,
-        profileUpdate
-    }
-}
+  return {
+    profile,
+    loading,
+    profileUpdate,
+  };
+};
 
-export {
-    useProfile,
-}
+export { useProfile };

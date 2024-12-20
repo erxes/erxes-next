@@ -16,20 +16,23 @@ type DatePickerProps = {
 } & CalendarProps;
 
 export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
-  ({
-    value,
-    onChange,
-    placeholder = 'Pick a date',
-    withPresent = false,
-    disabled,
-    className,
-    mode = 'single',
-    ...props
-  }) => {
+  (
+    {
+      value,
+      onChange,
+      placeholder = 'Pick a date',
+      withPresent = false,
+      disabled,
+      className,
+      mode = 'single',
+      ...props
+    },
+    ref
+  ) => {
     const renderButtonContent = () => {
       if (value) {
-        if (mode === 'single' && typeof value === 'string') {
-          return dayjs(value).format('YYYY/MM/DD');
+        if (mode === 'single') {
+          return dayjs(new Date(value as Date)).format('YYYY/MM/DD');
         }
 
         if (mode === 'multiple' && Array.isArray(value)) {

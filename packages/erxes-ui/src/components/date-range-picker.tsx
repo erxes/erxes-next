@@ -23,7 +23,7 @@ export const DateRangePicker = React.forwardRef<
     {
       value,
       onChange,
-      placeholder,
+      placeholder = 'Pick a date range',
       withPresent = false,
       disabled,
       className,
@@ -45,14 +45,10 @@ export const DateRangePicker = React.forwardRef<
       }
 
       if (from && to) {
-        return <span>{dates.join(' - ')}</span>;
+        return dates.join(' - ');
       }
 
-      if (placeholder) {
-        return <span>{placeholder}</span>;
-      }
-
-      return <span>Pick a date range</span>;
+      return placeholder;
     };
 
     const handleDateChange = (selectedDate: DateRange | undefined) => {
