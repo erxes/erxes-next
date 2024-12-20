@@ -1,10 +1,12 @@
 import { IconEyeOff } from '@tabler/icons-react';
+import type { Icon } from '@tabler/icons-react';
 import {
   IconGripVertical,
   IconChevronLeft,
   IconChevronRight,
 } from '@tabler/icons-react';
 import { Button, DropdownMenu } from 'erxes-ui/components';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
   DndContext,
   closestCenter,
@@ -14,25 +16,24 @@ import {
   useSensors,
   DragEndEvent,
 } from '@dnd-kit/core';
+
 import {
   arrayMove,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
   SortableContext,
   useSortable,
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useRecoilState } from 'recoil';
-import { fieldsState } from '~/modules/products/states/RecordTableFieldsState';
+import { fieldsState } from 'erxes-ui/states/RecordTableFieldsState';
 
 type Field = {
   id: string;
   name: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  isHidden: boolean;
+  icon: Icon;
+  isVisible: boolean;
 };
-
-
 
 const DraggableItem = ({
   field,
@@ -48,13 +49,13 @@ const DraggableItem = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: field.id });
+  } = useSortable({ id: field.id, disabled: field.id === 'name' });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: transition,
     zIndex: isDragging ? 1000 : 'auto',
-    overflow: "auto",
+    overflow: 'auto',
   };
 
   const FieldIcon = field.icon;
@@ -67,6 +68,7 @@ const DraggableItem = ({
       {...attributes}
       {...listeners}
       className="group cursor-pointer flex justify-between items-center p-1"
+      disabled={field.id === 'name'}
     >
       <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
         <IconGripVertical className="" />
@@ -83,12 +85,6 @@ const DraggableItem = ({
     </DropdownMenu.Item>
   );
 };
-import { Modifier } from '@dnd-kit/core';
-
-const lockAxis = (axis: 'x' | 'y'): Modifier => ({ transform }) => ({
-  ...transform,
-  [axis === 'x' ? 'y' : 'x']: 0,
-});
 
 export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
   const [fields, setFields] = useRecoilState(fieldsState);
@@ -107,21 +103,26 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id) {
+    if (active.id !== over?.id && over?.id !== 'name') {
       setFields((items) => {
         const activeIndex = items.findIndex((item) => item.id === active.id);
-        const overIndex = over ? items.findIndex((item) => item.id === over.id) : -1;
+        const overIndex = over
+          ? items.findIndex((item) => item.id === over.id)
+          : -1;
 
         return arrayMove(items, activeIndex, overIndex);
       });
     }
   };
 
-  const handleFieldToggleVisibility = (fieldId: string, e: React.MouseEvent) => {
+  const handleFieldToggleVisibility = (
+    fieldId: string,
+    e: React.MouseEvent
+  ) => {
     e.preventDefault();
     setFields((currentFields) =>
       currentFields.map((field) =>
-        field.id === fieldId ? { ...field, isHidden: !field.isHidden } : field
+        field.id === fieldId ? { ...field, isVisible: !field.isVisible } : field
       )
     );
   };
@@ -143,7 +144,7 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        modifiers={[lockAxis('y')]}
+        modifiers={[restrictToVerticalAxis]}
         onDragEnd={handleDragEnd}
       >
         <SortableContext
@@ -151,7 +152,7 @@ export const FieldsMenu = ({ handleToMain, handleToHiddenFields }) => {
           strategy={verticalListSortingStrategy}
         >
           {fields
-            .filter((field) => !field.isHidden)
+            .filter((field) => field.isVisible)
             .map((field) => (
               <DraggableItem
                 field={field}
