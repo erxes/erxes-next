@@ -1,7 +1,7 @@
 // Dependencies: pnpm install lucide-react
 
 import { RadioGroup } from 'erxes-ui/components';
-import { Check, Minus } from 'lucide-react';
+import { IconCheck, IconMinus } from '@tabler/icons-react'
 import { useTheme } from '~/providers/theme-provider';
 
 const items = [
@@ -52,13 +52,13 @@ export default function ChooseTheme() {
               className="relative cursor-pointer overflow-hidden rounded-lg border border-input shadow-sm shadow-black/5 ring-offset-background transition-colors peer-[:focus-visible]:ring-2 peer-[:focus-visible]:ring-ring/70 peer-[:focus-visible]:ring-offset-2 peer-data-[disabled]:cursor-not-allowed peer-data-[state=checked]:border-ring peer-data-[state=checked]:bg-accent peer-data-[disabled]:opacity-50"
             />
             <span className="group mt-2 flex items-center gap-1 peer-data-[state=unchecked]:text-muted-foreground/70">
-              <Check
+              <IconCheck
                 size={16}
                 strokeWidth={2}
                 className="peer-data-[state=unchecked]:group-[]:hidden"
                 aria-hidden="true"
               />
-              <Minus
+              <IconMinus
                 size={16}
                 strokeWidth={2}
                 className="peer-data-[state=checked]:group-[]:hidden"

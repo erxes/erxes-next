@@ -1,13 +1,12 @@
 import { DropdownMenu } from 'erxes-ui/components';
 import { useTheme, Theme } from '~/providers/theme-provider';
-import { SunIcon, MoonIcon, LaptopIcon } from 'lucide-react';
-
+import { IconSun, IconMoon, IconDevices } from '@tabler/icons-react'
 export const ThemeSelector = () => {
   const { theme, setTheme } = useTheme();
   return (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger>
-        <SunIcon />
+        <IconSun />
         <span className="flex-1 flex items-center justify-between">
           Theme <span className="text-muted-foreground">{theme}</span>
         </span>
@@ -19,15 +18,15 @@ export const ThemeSelector = () => {
             onValueChange={(value) => setTheme(value as Theme)}
           >
             <DropdownMenu.RadioItem value="light">
-              <SunIcon className="size-4 mr-2" />
+              <IconSun className="size-4 mr-2" />
               Light
             </DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="dark">
-              <MoonIcon className="size-4 mr-2" />
+              <IconMoon className="size-4 mr-2" />
               Dark
             </DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="system">
-              <LaptopIcon className="size-4 mr-2" />
+              <IconDevices className="size-4 mr-2" />
               System
             </DropdownMenu.RadioItem>
           </DropdownMenu.RadioGroup>

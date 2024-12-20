@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ProductT } from '../types/productTypes';
+import { ProductT } from '../../types/productTypes';
 import {
   IconBox,
   IconBuilding,
@@ -13,13 +13,9 @@ import {
   IconCurrencyTugrik,
 } from '@tabler/icons-react';
 import { Checkbox, Badge, Button, Avatar } from 'erxes-ui';
-import { RelativeDateDisplay } from 'erxes-ui/display';
-import { PriceCell } from './PriceCell';
-import { CategoryCell, CategoryCellWrapper } from './CategoryCell';
-import { TagsCell } from './TagsCell';
-import StatusCell from './Status';
+import { Skeleton } from 'erxes-ui';
 
-export const columns: ColumnDef<ProductT>[] = [
+export const SkeletonColumns: ColumnDef<ProductT>[] = [
   {
     accessorKey: 'checkbox',
     id: 'checkbox',
@@ -31,15 +27,18 @@ export const columns: ColumnDef<ProductT>[] = [
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          disabled
         />
       </div>
     ),
     size: 40,
-    cell: ({ row }) => (
+    cell: ({ row }) =>
+      (
       <div className="flex items-center justify-center">
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
+          disabled
         />
       </div>
     ),
@@ -53,11 +52,10 @@ export const columns: ColumnDef<ProductT>[] = [
         Name
       </div>
     ),
-    cell: (info) => (
-      <Button size="sm" variant="link">
-        <IconBox className="w-4 h-4 text-primary" strokeWidth={1.5} />
-        {info.getValue() as string}
-      </Button>
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
     ),
     footer: (props) => props.column.id,
     size: 280,
@@ -71,9 +69,9 @@ export const columns: ColumnDef<ProductT>[] = [
         Code
       </div>
     ),
-    cell: (info) => (
-      <div className="flex items-center gap-1 px-2">
-        {info.getValue() as string}
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
       </div>
     ),
     footer: (props) => props.column.id,
@@ -88,7 +86,11 @@ export const columns: ColumnDef<ProductT>[] = [
         Price
       </div>
     ),
-    cell: (info) => <PriceCell {...info} />,
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
+    ),
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -101,10 +103,10 @@ export const columns: ColumnDef<ProductT>[] = [
         Category
       </div>
     ),
-    cell: (info) => (
-      <CategoryCellWrapper>
-        <CategoryCell {...info} />
-      </CategoryCellWrapper>
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
     ),
     footer: (props) => props.column.id,
     size: 280,
@@ -118,7 +120,11 @@ export const columns: ColumnDef<ProductT>[] = [
         Status
       </div>
     ),
-    cell: StatusCell,
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
+    ),
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -131,14 +137,12 @@ export const columns: ColumnDef<ProductT>[] = [
         Created At
       </div>
     ),
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
+    ),
     footer: (props) => props.column.id,
-    cell: (info) => {
-      return (
-        <CategoryCellWrapper>
-          <RelativeDateDisplay date={info.getValue() as string} />
-        </CategoryCellWrapper>
-      );
-    },
     size: 180,
   },
   {
@@ -150,7 +154,11 @@ export const columns: ColumnDef<ProductT>[] = [
         Tags
       </div>
     ),
-    cell: TagsCell,
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
+    ),
     footer: (props) => props.column.id,
     size: 280,
   },
@@ -163,16 +171,10 @@ export const columns: ColumnDef<ProductT>[] = [
         Vendor
       </div>
     ),
-    cell: (info) => (
-      <Button size="sm" variant="secondary">
-        <Avatar.Root>
-          <Avatar.Image />
-          <Avatar.Fallback className="bg-blue-100 text-blue-800">
-            {((info.getValue() || '') as string).charAt(0)}
-          </Avatar.Fallback>
-        </Avatar.Root>
-        {info.getValue() as string}
-      </Button>
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
     ),
     footer: (props) => props.column.id,
     size: 280,
@@ -181,6 +183,11 @@ export const columns: ColumnDef<ProductT>[] = [
     accessorKey: 'type',
     id: 'type',
     header: 'Type',
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
+    ),
     footer: (props) => props.column.id,
     size: 180,
   },
@@ -192,6 +199,11 @@ export const columns: ColumnDef<ProductT>[] = [
       <Button variant="ghost" className="h-full w-full">
         <IconPlus className="w-4 h-4" strokeWidth={2.5} />
       </Button>
+    ),
+    cell: () => (
+      <div className="w-full h-full p-2">
+        <Skeleton className="w-full h-full" />
+      </div>
     ),
   },
 ];
