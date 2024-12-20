@@ -85,7 +85,7 @@ const RecordTableOverLine = ({
   const isKeyboardSorting = isKeyboardEvent(activatorEvent);
 
   if (over?.id === column.id && !isDragging)
-    return <div className={"absolute top-0 left-0 w-0.5 bg-red-500 h-screen"} />;
+    return <div className={"absolute top-0 left-0 w-0.5 bg-blue-500 h-screen"} />;
 };
 
 const RecordTableHeadSize = React.forwardRef<

@@ -1,6 +1,6 @@
+import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
 import { useUpload } from 'erxes-ui/hooks';
 import { readFile } from 'erxes-ui/utils/core';
-import { CircleUserRound, Trash2Icon, UploadIcon } from 'lucide-react';
 import React, {
   createContext,
   MutableRefObject,
@@ -132,7 +132,7 @@ const UploadPreview = React.forwardRef<
             />
           ) : (
             <div aria-hidden="true">
-              <CircleUserRound
+              <IconUserCircle
                 className="opacity-60"
                 size={16}
                 strokeWidth={2}
@@ -175,7 +175,7 @@ const UploadButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         onClick={handleThumbnailClick}
       >
-        <UploadIcon />
+        <IconUpload />
         Upload
       </Button>
     );
@@ -230,7 +230,7 @@ const RemoveButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         onClick={handleRemove}
       >
-        <Trash2Icon />
+        <IconTrash />
         Remove
       </Button>
     );
