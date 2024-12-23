@@ -8,8 +8,8 @@ import {
   FormMessage,
   Input
 } from 'erxes-ui/components';
-import { uploadServiceData } from '../constants/serviceData';
-import { DynamicFieldsT } from '../types';
+import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
+import { DynamicFieldsT } from '@/settings/file-upload/types';
 
 export default function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
   return (
