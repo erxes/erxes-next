@@ -92,9 +92,22 @@ const productTags = gql`
     }
   }
 `;
+const productBrands = gql`
+query brands($page: Int, $perPage: Int, $searchValue: String) {
+  brands(page: $page, perPage: $perPage, searchValue: $searchValue) {
+    _id
+    code
+    name
+    createdAt
+    description
+    emailConfig
+    __typename
+  }
+}`
 
 export const productsQueries = {
   products,
   productCategories,
   productTags,
+  productBrands
 };
