@@ -43,7 +43,7 @@ const useConfig = ({ onCompleted }: TList) => {
     })
   }
 
-  const { configs } = data || [];
+  const configs = data?.configs || [];
 
   return {
     configs,

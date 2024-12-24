@@ -30,7 +30,7 @@ export default function DynamicServiceConfigFields({ dynamicFields, selected, fo
                   fieldData.type === 'checkbox' ? (
                     <FormField
                       control={form.control}
-                      name={'CLOUDFLARE_USE_CDN'}
+                      name={fieldData.name}
                       key={fieldData.name}
                       render={({ field }) => (
                         <FormItem className='col-span-4 flex items-center justify-start gap-x-2'>
