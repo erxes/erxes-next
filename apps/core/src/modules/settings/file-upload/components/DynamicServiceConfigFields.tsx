@@ -11,7 +11,7 @@ import {
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
 import { DynamicFieldsT } from '@/settings/file-upload/types';
 
-export default function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
+export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
   return (
     <AnimatePresence mode='popLayout'>
       {

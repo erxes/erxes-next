@@ -10,7 +10,7 @@ import {
 import MultipleSelector from 'erxes-ui/components/multiselect';
 import { FILE_SYSTEM_TYPES } from '@/settings/file-upload/constants/serviceData';
 
-export default function FileUploadMainFields({ form, modifiedArray }: { form: any, modifiedArray: any[] }) {
+export function FileUploadMainFields({ form, modifiedArray }: { form: any, modifiedArray: any[] }) {
   return (
     <div className='grid grid-cols-1 gap-4'>
       <FormItem className='w-full'>

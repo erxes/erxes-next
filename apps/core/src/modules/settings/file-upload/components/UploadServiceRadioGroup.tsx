@@ -6,7 +6,7 @@ import { cn } from 'erxes-ui/lib';
 import { motion } from 'motion/react';
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
 
-export default function UploadServiceRadioGroup({form, selected}) {
+export function UploadServiceRadioGroup({form, selected}) {
   return (
     <div>
       <FormField
