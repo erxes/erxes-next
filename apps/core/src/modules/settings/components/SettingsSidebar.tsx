@@ -1,8 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Sidebar } from 'erxes-ui/components';
-import { IconAdjustmentsAlt, IconX, IconUserCircle, IconColorSwatch } from '@tabler/icons-react'
+import { IconAdjustmentsAlt, IconX, IconUserCircle, IconColorSwatch, IconFile } from '@tabler/icons-react'
 import { useRecoilValue } from 'recoil';
-import { SettingsPath } from '@/types/SettingsPath';
+import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';
 import { motion } from 'framer-motion';
 import { pluginsState } from '@/navigation/states/navigationStates';
@@ -21,7 +21,10 @@ const data = {
       path: SettingsPath.Experience,
     },
   ],
-  nav: [{ name: 'General', icon: IconAdjustmentsAlt }],
+  nav: [
+    { name: 'General', icon: IconAdjustmentsAlt },
+    { name: 'File upload', icon: IconFile, path: SettingsWorkspacePath.File },
+  ],
 };
 
 export function SettingsSidebar() {
@@ -75,9 +78,16 @@ export function SettingsSidebar() {
             <Sidebar.Menu>
               {data.nav.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
-                  <Sidebar.MenuButton>
-                    <item.icon />
-                    <span>{item.name}</span>
+                  <Sidebar.MenuButton
+                    asChild
+                    isActive={
+                      location.pathname === '/' + AppPath.Settings + item.path
+                    }
+                  >
+                    <Link to={AppPath.Settings + '/' + item.path}>
+                      <item.icon />
+                      <span>{item.name}</span>
+                    </Link>
                   </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
               ))}
