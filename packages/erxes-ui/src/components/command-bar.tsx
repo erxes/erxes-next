@@ -29,7 +29,9 @@ const Root = ({
     >
       <Portal.Root>
         <Popover.Anchor
-          className={cn('fixed bottom-10 left-1/2 h-px w-px -translate-x-1/2')}
+          className={cn(
+            'fixed bottom-10 left-1/2 h-px w-px -translate-x-1/2 z-10'
+          )}
         />
       </Portal.Root>
       <Popover.Portal>

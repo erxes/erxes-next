@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { IconArrowsDownUp, IconChevronDown, IconDots } from '@tabler/icons-react'
 
 import {
   Table,
@@ -102,7 +102,7 @@ export const columns: ColumnDef<Payment>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Email
-          <ArrowUpDown />
+          <IconArrowsDownUp />
         </Button>
       );
     },
@@ -134,7 +134,7 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenu.Trigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
+              <IconDots />
             </Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="end">
@@ -196,7 +196,7 @@ export function ProductsList() {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
+              Columns <IconChevronDown />
             </Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="end">

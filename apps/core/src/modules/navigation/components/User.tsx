@@ -1,11 +1,12 @@
 import { Sidebar, DropdownMenu, Avatar, useIsMobile } from 'erxes-ui';
-import { ChevronsUpDown, Bell, LogOut } from 'lucide-react';
+import { IconSelector, IconBell, IconLogout } from '@tabler/icons-react'
 import { ThemeSelector } from './ThemeSelector';
 import { SelectLanguages } from './SelectLanguages';
 import { useAuth } from '@/auth/hooks/useAuth';
 import { currentUserState } from 'erxes-shared-states';
 
 import { useRecoilValue } from 'recoil';
+import { readFile } from 'erxes-ui/utils/core';
 
 export function User() {
   const isMobile = useIsMobile();
@@ -29,7 +30,7 @@ export function User() {
             >
               <Avatar.Root className="h-8 w-8 rounded-lg">
                 <Avatar.Image
-                  src={userDetail.avatar}
+                  src={readFile(userDetail.avatar)}
                   alt={userDetail.fullName}
                 />
                 <Avatar.Fallback className="rounded-lg">
@@ -42,7 +43,7 @@ export function User() {
                 </span>
                 <span className="truncate text-xs">{currentUser.email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <IconSelector className="ml-auto size-4" />
             </Sidebar.MenuButton>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
@@ -55,7 +56,7 @@ export function User() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar.Root className="h-8 w-8 rounded-lg">
                   <Avatar.Image
-                    src={userDetail.avatar}
+                    src={readFile(userDetail.avatar)}
                     alt={userDetail.fullName}
                   />
                   <Avatar.Fallback className="rounded-lg"></Avatar.Fallback>
@@ -73,13 +74,13 @@ export function User() {
             <SelectLanguages />
             <DropdownMenu.Group>
               <DropdownMenu.Item>
-                <Bell />
+                <IconBell />
                 Notifications
               </DropdownMenu.Item>
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
             <DropdownMenu.Item onClick={() => handleLogout()}>
-              <LogOut />
+              <IconLogout />
               Log out
             </DropdownMenu.Item>
           </DropdownMenu.Content>

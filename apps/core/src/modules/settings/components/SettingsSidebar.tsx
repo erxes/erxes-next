@@ -1,61 +1,47 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Sidebar } from 'erxes-ui/components';
-import {
-  Bell,
-  Menu,
-  Home,
-  Paintbrush,
-  MessageCircle,
-  Globe,
-  Keyboard,
-  Check,
-  Video,
-  Lock,
-  Settings,
-  LinkIcon,
-  Settings2,
-  XIcon,
-  CircleUserRound,
-  SwatchBook,
-  FileUp
-} from 'lucide-react';
+import { IconAdjustmentsAlt, IconX, IconUserCircle, IconColorSwatch, IconFile } from '@tabler/icons-react'
+import { useRecoilValue } from 'recoil';
 import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';
 import { motion } from 'framer-motion';
-
+import { pluginsState } from '@/navigation/states/navigationStates';
+import { PLUGINS } from '@/navigation/constants/plugins';
+import { useTranslation } from 'react-i18next';
 const data = {
   account: [
     {
       name: 'Profile',
-      icon: CircleUserRound,
+      icon: IconUserCircle,
       path: SettingsPath.Profile,
     },
     {
       name: 'Experience',
-      icon: SwatchBook,
+      icon: IconColorSwatch,
       path: SettingsPath.Experience,
     },
   ],
   nav: [
-    { name: 'General', icon: Settings2 },
-    { name: 'File upload', icon: FileUp, path: SettingsWorkspacePath.File },
-    { name: 'Notifications', icon: Bell },
-    { name: 'Navigation', icon: Menu },
-    { name: 'Home', icon: Home },
-    { name: 'Appearance', icon: Paintbrush },
-    { name: 'Messages & media', icon: MessageCircle },
-    { name: 'Language & region', icon: Globe },
-    { name: 'Accessibility', icon: Keyboard },
-    { name: 'Mark as read', icon: Check },
-    { name: 'Audio & video', icon: Video },
-    { name: 'Connected accounts', icon: LinkIcon },
-    { name: 'Privacy & visibility', icon: Lock },
-    { name: 'Advanced', icon: Settings },
+    { name: 'General', icon: IconAdjustmentsAlt },
+    { name: 'File upload', icon: IconFile, path: SettingsWorkspacePath.File },
   ],
 };
 
 export function SettingsSidebar() {
-  const location = useLocation();
+  const plugins = useRecoilValue(pluginsState);
+  const pinnedPlugins = plugins.filter((plugin) => plugin.pinned);
+
+  const windowPlugins = window.plugins;
+
+  windowPlugins?.map((plugin) => {
+    pinnedPlugins.push({
+      handle: plugin.name,
+      pinned: true,
+    });
+  });
+
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -68,7 +54,7 @@ export function SettingsSidebar() {
           <Sidebar.MenuItem>
             <Sidebar.MenuButton className="h-10" asChild>
               <Link to="/">
-                <XIcon />
+                <IconX />
                 <span>Exit Settings</span>
               </Link>
             </Sidebar.MenuButton>
@@ -105,6 +91,27 @@ export function SettingsSidebar() {
                   </Sidebar.MenuButton>
                 </Sidebar.MenuItem>
               ))}
+            </Sidebar.Menu>
+          </Sidebar.GroupContent>
+        </Sidebar.Group>
+
+        <Sidebar.Group>
+          <Sidebar.GroupLabel>PLugins Settings</Sidebar.GroupLabel>
+          <Sidebar.GroupContent>
+            <Sidebar.Menu>
+              {pinnedPlugins.map((item) => {
+                const Icon = PLUGINS[item.handle].icon;
+                return (
+                  <Sidebar.MenuItem key={item.handle}>
+                    <Sidebar.MenuButton asChild>
+                      <Link to={AppPath.Settings + '/' + item.handle}>
+                        {Icon && <Icon />}
+                        <span>{t('nav.' + PLUGINS[item.handle].title)}</span>
+                      </Link>
+                    </Sidebar.MenuButton>
+                  </Sidebar.MenuItem>
+                );
+              })}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
         </Sidebar.Group>

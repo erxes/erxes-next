@@ -1,35 +1,28 @@
-import {
-  Mail,
-  PieChart,
-  Wallet,
-  SquareCheck,
-  Users,
-  Package,
-} from 'lucide-react';
+import { IconMail, IconChartPie, IconWallet, IconSquareCheck, IconUsers, IconPackage } from '@tabler/icons-react'
 
 export const PLUGINS = {
   contacts: {
     title: 'contacts',
-    icon: Users,
+    icon: IconUsers,
   },
   inbox: {
     title: 'teamInbox',
-    icon: Mail,
+    icon: IconMail,
   },
   insights: {
     title: 'insights',
-    icon: PieChart,
+    icon: IconChartPie,
   },
   products: {
     title: 'products',
-    icon: Package,
+    icon: IconPackage,
   },
   sales: {
     title: 'sales',
-    icon: Wallet,
+    icon: IconWallet,
   },
   tasks: {
     title: 'tasks',
-    icon: SquareCheck,
+    icon: IconSquareCheck,
   },
 };

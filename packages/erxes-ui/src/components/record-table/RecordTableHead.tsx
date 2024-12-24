@@ -6,6 +6,7 @@ import { CSS, isKeyboardEvent } from '@dnd-kit/utilities';
 import { cn } from '../../lib/utils';
 import { cva } from 'class-variance-authority';
 import { useDndContext } from '@dnd-kit/core';
+import { useRecordTable } from './RecordTableProvider';
 
 export const recordTableHeadVariants = cva(
   'sticky z-[2] top-0 bg-background transition-transform duration-200 whitespace-nowrap text-[13px] [&:has([role=checkbox])]:border-r-0 [&:has([role=checkbox])>span]:hidden',
@@ -81,11 +82,28 @@ const RecordTableOverLine = ({
   column: Column<any, unknown>;
   isDragging: boolean;
 }) => {
-  const { activatorEvent, over } = useDndContext();
-  const isKeyboardSorting = isKeyboardEvent(activatorEvent);
+  const { activatorEvent, over, active } = useDndContext();
+  // const isKeyboardSorting = isKeyboardEvent(activatorEvent);
+  const { table } = useRecordTable();
+  const columnsOrder = table.getState().columnOrder;
 
-  if (over?.id === column.id && !isDragging)
-    return <div className={"absolute top-0 left-0 w-0.5 bg-red-500 h-screen"} />;
+  if (over?.id === column.id && !isDragging && active?.id) {
+    if (over.id !== 'name' && over.id !== 'checkbox') {
+      const activeIndex = columnsOrder.indexOf(active.id as string);
+      const overIndex = columnsOrder.indexOf(over.id as string);
+      const isOnRight = activeIndex < overIndex;
+      return (
+        <div
+          className={cn(
+            'absolute top-0 w-0.5 bg-blue-500 h-screen',
+            isOnRight ? 'right-0' : 'left-0'
+          )}
+        />
+      );
+    }
+  }
+
+  return null;
 };
 
 const RecordTableHeadSize = React.forwardRef<

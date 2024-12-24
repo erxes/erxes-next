@@ -7,6 +7,8 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
+      //Might need improvement here
+      "@/*": ["../../apps/core/src/modules/*"],
       "erxes-ui/*": ["src/*"],
       "erxes-ui": ["src"]
     }

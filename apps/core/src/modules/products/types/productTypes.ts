@@ -5,6 +5,7 @@ export type ProductT = {
   code: string;
   categoryId: string;
   tagIds: string[];
+  type: 'product' | 'service' | 'unique' | 'subscription';
 };
 
 export type ProductCategoryT = {

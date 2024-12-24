@@ -1,16 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import {
-  Calculator,
-  Calendar,
-  CommandIcon,
-  CreditCard,
-  Settings,
-  SettingsIcon,
-  Smile,
-  User,
-} from 'lucide-react';
+import { IconCalculator, IconCalendarWeek, IconCommand, IconCreditCard, IconSettings, IconMoodSmile, IconUser } from '@tabler/icons-react'
 
 import { Command, Sidebar } from 'erxes-ui/components';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +27,7 @@ export function QuickActions() {
     <>
       <div className="w-full ">
         <Sidebar.MenuButton onClick={() => setOpen(true)}>
-          <CommandIcon />
+          <IconCommand />
           <span>Quick Actions</span>
           <Command.Shortcut>⌘K</Command.Shortcut>
         </Sidebar.MenuButton>
@@ -46,7 +37,7 @@ export function QuickActions() {
             navigate('/settings');
           }}
         >
-          <SettingsIcon />
+          <IconSettings />
           <span>Settings</span>
         </Sidebar.MenuButton>
       </div>
@@ -61,32 +52,32 @@ export function QuickActions() {
           <Command.Empty>No results found.</Command.Empty>
           <Command.Group heading="Suggestions">
             <Command.Item>
-              <Calendar />
+              <IconCalendarWeek />
               <span>Calendar</span>
             </Command.Item>
             <Command.Item>
-              <Smile />
+              <IconMoodSmile />
               <span>Search Emoji</span>
             </Command.Item>
             <Command.Item>
-              <Calculator />
+              <IconCalculator />
               <span>Calculator</span>
             </Command.Item>
           </Command.Group>
           <Command.Separator />
           <Command.Group heading="Settings">
             <Command.Item>
-              <User />
+              <IconUser />
               <span>Profile</span>
               <Command.Shortcut>⌘P</Command.Shortcut>
             </Command.Item>
             <Command.Item>
-              <CreditCard />
+              <IconCreditCard />
               <span>Billing</span>
               <Command.Shortcut>⌘B</Command.Shortcut>
             </Command.Item>
             <Command.Item>
-              <Settings />
+              <IconSettings />
               <span>Settings</span>
               <Command.Shortcut>⌘S</Command.Shortcut>
             </Command.Item>
