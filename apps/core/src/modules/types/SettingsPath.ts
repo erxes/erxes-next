@@ -1,5 +1,6 @@
 export enum SettingsPath {
   Profile = 'profile',
+  Privacy = 'privacy',
   Experience = 'experience',
 }
 

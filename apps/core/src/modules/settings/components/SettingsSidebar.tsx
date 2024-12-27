@@ -1,19 +1,31 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Sidebar } from 'erxes-ui/components';
-import { IconAdjustmentsAlt, IconX, IconUserCircle, IconColorSwatch, IconFile } from '@tabler/icons-react'
-import { useRecoilValue } from 'recoil';
-import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
-import { AppPath } from '@/types/AppPath';
-import { motion } from 'framer-motion';
-import { pluginsState } from '@/navigation/states/navigationStates';
 import { PLUGINS } from '@/navigation/constants/plugins';
+import { pluginsState } from '@/navigation/states/navigationStates';
+import { AppPath } from '@/types/AppPath';
+import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
+import {
+  IconAdjustmentsAlt,
+  IconColorSwatch,
+  IconFile,
+  IconLock,
+  IconUserCircle,
+  IconX,
+} from '@tabler/icons-react';
+import { Sidebar } from 'erxes-ui/components';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Link, useLocation } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 const data = {
   account: [
     {
       name: 'Profile',
       icon: IconUserCircle,
       path: SettingsPath.Profile,
+    },
+    {
+      name: 'Privacy & Security',
+      icon: IconLock,
+      path: SettingsPath.Privacy,
     },
     {
       name: 'Experience',
