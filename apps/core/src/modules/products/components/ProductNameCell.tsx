@@ -6,7 +6,7 @@ import { ProductTypeIcon } from './ProductTypeIcon';
 export const ProductNameCell = (info: CellContext<ProductT, any>) => {
   return (
     <Button size="sm" variant="link">
-      <ProductTypeIcon {...info} />
+      <ProductTypeIcon info={info} />
       {info.getValue() as string}
     </Button>
   );

@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ProductT } from '../types/productTypes';
 import {
-  IconBox,
   IconBuilding,
   IconChartBar,
   IconCircleCheck,
@@ -12,12 +11,14 @@ import {
   IconTags,
   IconCurrencyTugrik,
 } from '@tabler/icons-react';
-import { Checkbox, Badge, Button, Avatar } from 'erxes-ui';
+import { Checkbox, Button, Avatar } from 'erxes-ui';
 import { RelativeDateDisplay } from 'erxes-ui/display';
 import { PriceCell } from './PriceCell';
-import { CategoryCell, CategoryCellWrapper } from './CategoryCell';
+import { CategoryCell } from './CategoryCell';
 import { TagsCell } from './TagsCell';
 import StatusCell from './Status';
+import { ProductTypeCell } from './ProductTypeCell';
+import { ProductNameCell } from './ProductNameCell';
 
 export const columns: ColumnDef<ProductT>[] = [
   {
@@ -53,12 +54,7 @@ export const columns: ColumnDef<ProductT>[] = [
         Name
       </div>
     ),
-    cell: (info) => (
-      <Button size="sm" variant="link">
-        <IconBox className="w-4 h-4 text-primary" strokeWidth={1.5} />
-        {info.getValue() as string}
-      </Button>
-    ),
+    cell: ProductNameCell,
     footer: (props) => props.column.id,
     size: 280,
   },
@@ -101,11 +97,7 @@ export const columns: ColumnDef<ProductT>[] = [
         Category
       </div>
     ),
-    cell: (info) => (
-      <CategoryCellWrapper>
-        <CategoryCell {...info} />
-      </CategoryCellWrapper>
-    ),
+    cell: CategoryCell,
     footer: (props) => props.column.id,
     size: 280,
   },
@@ -131,14 +123,7 @@ export const columns: ColumnDef<ProductT>[] = [
         Created At
       </div>
     ),
-    footer: (props) => props.column.id,
-    cell: (info) => {
-      return (
-        <CategoryCellWrapper>
-          <RelativeDateDisplay date={info.getValue() as string} />
-        </CategoryCellWrapper>
-      );
-    },
+    cell: (info) => <RelativeDateDisplay date={info.getValue() as string} />,
     size: 180,
   },
   {
@@ -174,15 +159,14 @@ export const columns: ColumnDef<ProductT>[] = [
         {info.getValue() as string}
       </Button>
     ),
-    footer: (props) => props.column.id,
     size: 280,
   },
   {
     accessorKey: 'type',
     id: 'type',
     header: 'Type',
-    footer: (props) => props.column.id,
     size: 180,
+    cell: ProductTypeCell,
   },
   {
     accessorKey: 'add',

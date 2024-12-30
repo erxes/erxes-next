@@ -14,7 +14,6 @@ import {
   forwardRef,
   HTMLAttributes,
   useContext,
-  useEffect,
 } from 'react';
 import { type ReactNode, useMemo, useState } from 'react';
 import {
