@@ -1,5 +1,3 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { ProductT } from '../types/productTypes';
 import {
   IconBuilding,
   IconChartBar,
@@ -9,173 +7,208 @@ import {
   IconAlignLeft,
   IconPlus,
   IconTags,
-  IconCurrencyTugrik,
+  IconCurrencyDollar,
 } from '@tabler/icons-react';
-import { Checkbox, Button, Avatar } from 'erxes-ui';
-import { RelativeDateDisplay } from 'erxes-ui/display';
-import { PriceCell } from './PriceCell';
-import { CategoryCell } from './CategoryCell';
-import { TagsCell } from './TagsCell';
-import StatusCell from './Status';
-import { ProductTypeCell } from './ProductTypeCell';
-import { ProductNameCell } from './ProductNameCell';
 
-export const columns: ColumnDef<ProductT>[] = [
+export const columns = [
   {
-    accessorKey: 'checkbox',
-    id: 'checkbox',
-    header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        />
-      </div>
-    ),
-    size: 40,
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-        />
-      </div>
-    ),
-  },
-  {
-    accessorKey: 'name',
     id: 'name',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconAlignLeft className="w-4 h-4" strokeWidth={2.5} />
-        Name
-      </div>
-    ),
-    cell: ProductNameCell,
-    footer: (props) => props.column.id,
-    size: 280,
+    icon: IconAlignLeft,
+    type: 'handle',
+    readOnly: true,
   },
   {
-    accessorKey: 'code',
     id: 'code',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconHash className="w-4 h-4" strokeWidth={2.5} />
-        Code
-      </div>
-    ),
-    cell: (info) => (
-      <div className="flex items-center gap-1 px-2">
-        {info.getValue() as string}
-      </div>
-    ),
-    footer: (props) => props.column.id,
-    size: 180,
+    icon: IconHash,
+    type: 'handle',
   },
   {
     id: 'unitPrice',
-    accessorKey: 'unitPrice',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconCurrencyTugrik className="w-4 h-4" strokeWidth={2.5} />
-        Price
-      </div>
-    ),
-    cell: (info) => <PriceCell {...info} />,
-    footer: (props) => props.column.id,
-    size: 180,
+    icon: IconCurrencyDollar,
+    type: 'currency',
   },
   {
-    accessorKey: 'categoryId',
-    id: 'category',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconChartBar className="w-4 h-4" strokeWidth={2.5} />
-        Category
-      </div>
-    ),
-    cell: CategoryCell,
-    footer: (props) => props.column.id,
-    size: 280,
+    id: 'categoryId',
+    icon: IconChartBar,
+    type: 'chip',
   },
   {
-    accessorKey: 'status',
     id: 'status',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconCircleCheck className="w-4 h-4" strokeWidth={2.5} />
-        Status
-      </div>
-    ),
-    cell: StatusCell,
-    footer: (props) => props.column.id,
-    size: 180,
+    icon: IconCircleCheck,
+    type: 'handle',
   },
   {
-    accessorKey: 'createdAt',
     id: 'createdAt',
-    header: (info) => (
-      <div className="flex items-center gap-1">
-        <IconHistory className="w-4 h-4" strokeWidth={2.5} />
-        Created At
-      </div>
-    ),
-    cell: (info) => <RelativeDateDisplay date={info.getValue() as string} />,
-    size: 180,
+    icon: IconHistory,
+    type: 'date',
   },
   {
-    accessorKey: 'tagIds',
-    id: 'tags',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconTags className="w-4 h-4" strokeWidth={2.5} />
-        Tags
-      </div>
-    ),
-    cell: TagsCell,
-    footer: (props) => props.column.id,
-    size: 280,
+    id: 'tagIds',
+    icon: IconTags,
+    type: 'multiselect',
   },
   {
-    accessorKey: 'vendor',
     id: 'vendor',
-    header: () => (
-      <div className="flex items-center gap-1">
-        <IconBuilding className="w-4 h-4" strokeWidth={2.5} />
-        Vendor
-      </div>
-    ),
-    cell: (info) => (
-      <Button size="sm" variant="secondary">
-        <Avatar.Root>
-          <Avatar.Image />
-          <Avatar.Fallback className="bg-blue-100 text-blue-800">
-            {((info.getValue() || '') as string).charAt(0)}
-          </Avatar.Fallback>
-        </Avatar.Root>
-        {info.getValue() as string}
-      </Button>
-    ),
-    size: 280,
+    icon: IconBuilding,
+    type: 'handle',
   },
   {
-    accessorKey: 'type',
     id: 'type',
-    header: 'Type',
-    size: 180,
-    cell: ProductTypeCell,
-  },
-  {
-    accessorKey: 'add',
-    id: 'add',
-    size: 70,
-    header: () => (
-      <Button variant="ghost" className="h-full w-full">
-        <IconPlus className="w-4 h-4" strokeWidth={2.5} />
-      </Button>
-    ),
+    icon: IconPlus,
+    type: 'handle',
   },
 ];
+
+// export const columns: ColumnDef<ProductT>[] = [
+//   {
+//     accessorKey: 'checkbox',
+//     id: 'checkbox',
+//     header: ({ table }) => (
+//       <div className="flex items-center justify-center">
+//         <Checkbox
+//           checked={
+//             table.getIsAllPageRowsSelected() ||
+//             (table.getIsSomePageRowsSelected() && 'indeterminate')
+//           }
+//           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+//         />
+//       </div>
+//     ),
+//     size: 40,
+//     cell: ({ row }) => (
+//       <div className="flex items-center justify-center">
+//         <Checkbox
+//           checked={row.getIsSelected()}
+//           onCheckedChange={(value) => row.toggleSelected(!!value)}
+//         />
+//       </div>
+//     ),
+//   },
+//   {
+//     accessorKey: 'name',
+//     id: 'name',
+//     header: () => (
+//       <div className="flex items-center gap-1">
+//         <IconAlignLeft className="w-4 h-4" strokeWidth={2.5} />
+//         Name
+//       </div>
+//     ),
+//     cell: ProductNameCell,
+//     size: 280,
+//   },
+//   {
+//     accessorKey: 'code',
+//     id: 'code',
+//     header: () => (
+//       <div className="flex items-center gap-1">
+//         <IconHash className="w-4 h-4" strokeWidth={2.5} />
+//         Code
+//       </div>
+//     ),
+//     cell: (info) => (
+//       <div className="flex items-center gap-1 px-2">
+//         {info.getValue() as string}
+//       </div>
+//     ),
+//     size: 180,
+//   },
+//   {
+//     id: 'unitPrice',
+//     accessorKey: 'unitPrice',
+//     header: () => (
+//       <div className="flex items-center gap-1">
+//         <IconCurrencyTugrik className="w-4 h-4" strokeWidth={2.5} />
+//         Price
+//       </div>
+//     ),
+//     cell: (info) => <PriceCell {...info} />,
+//     size: 180,
+//   },
+//   {
+//     accessorKey: 'categoryId',
+//     id: 'category',
+//     header: () => (
+//       <div className="flex items-center gap-1">
+//         <IconChartBar className="w-4 h-4" strokeWidth={2.5} />
+//         Category
+//       </div>
+//     ),
+//     cell: CategoryCell,
+//     size: 280,
+//   },
+//   {
+//     accessorKey: 'status',
+//     id: 'status',
+//     header: () => (
+//       <div className="flex items-center gap-1">
+//         <IconCircleCheck className="w-4 h-4" strokeWidth={2.5} />
+//         Status
+//       </div>
+//     ),
+//     cell: StatusCell,
+//     size: 180,
+//   },
+//   {
+//     accessorKey: 'createdAt',
+//     id: 'createdAt',
+//     header: (info) => (
+//       <div className="flex items-center gap-1">
+//         <IconHistory className="w-4 h-4" strokeWidth={2.5} />
+//         Created At
+//       </div>
+//     ),
+//     cell: (info) => <RelativeDateDisplay date={info.getValue() as string} />,
+//     size: 180,
+//   },
+//   {
+//     accessorKey: 'tagIds',
+//     id: 'tags',
+//     header: () => (
+//       <div className="flex items-center gap-1">
+//         <IconTags className="w-4 h-4" strokeWidth={2.5} />
+//         Tags
+//       </div>
+//     ),
+//     cell: TagsCell,
+//     size: 280,
+//   },
+//   {
+//     accessorKey: 'vendor',
+//     id: 'vendor',
+//     header: () => (
+//       <div className="flex items-center gap-1">
+//         <IconBuilding className="w-4 h-4" strokeWidth={2.5} />
+//         Vendor
+//       </div>
+//     ),
+//     cell: (info) => (
+//       <Button size="sm" variant="secondary">
+//         <Avatar.Root>
+//           <Avatar.Image />
+//           <Avatar.Fallback className="bg-blue-100 text-blue-800">
+//             {((info.getValue() || '') as string).charAt(0)}
+//           </Avatar.Fallback>
+//         </Avatar.Root>
+//         {info.getValue() as string}
+//       </Button>
+//     ),
+//     size: 280,
+//   },
+//   {
+//     accessorKey: 'type',
+//     id: 'type',
+//     header: 'Type',
+//     size: 180,
+//     cell: ProductTypeCell,
+//   },
+//   {
+//     accessorKey: 'add',
+//     id: 'add',
+//     size: 70,
+//     header: () => (
+//       <Button variant="ghost" className="h-full w-full">
+//         <IconPlus className="w-4 h-4" strokeWidth={2.5} />
+//       </Button>
+//     ),
+//   },
+// ];

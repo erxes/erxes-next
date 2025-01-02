@@ -1,48 +1,30 @@
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   getCoreRowModel,
-  type Table,
   type TableOptions,
   useReactTable,
-  VisibilityState,
+  RowSelectionState,
+  ColumnOrderState,
+  ColumnDef,
 } from '@tanstack/react-table';
 import {
   createContext,
-  CSSProperties,
   forwardRef,
   HTMLAttributes,
   useContext,
+  type ReactNode,
+  useState,
 } from 'react';
-import { type ReactNode, useMemo, useState } from 'react';
+import { RecordTableDnDProvider } from 'erxes-ui/modules/record-table/components/RecordTableDnDProvider';
+import { checkboxColumn } from 'erxes-ui/modules/record-table/components/CheckboxColumn';
+import RecordTableContainer from 'erxes-ui/modules/record-table/components/RecordTableContainer';
 import {
-  DragEndEvent,
-  useSensors,
-  MouseSensor,
-  TouchSensor,
-  KeyboardSensor,
-  useSensor,
-  DndContext,
-  closestCenter,
-} from '@dnd-kit/core';
-
-import { arrayMove } from '@dnd-kit/sortable';
-import {
-  restrictToFirstScrollableAncestor,
-  restrictToHorizontalAxis,
-} from '@dnd-kit/modifiers';
-import { cn } from 'erxes-ui/lib/utils';
-import {
-  columnOrderState,
-  columnVisibilityState,
-} from 'erxes-ui/states/RecordTableFieldsState';
-import { useRecoilState } from 'recoil';
-
-type IRecordTableContext = {
-  table: Table<any>;
-  handleReachedBottom?: () => void;
-};
+  GetFetchValueHook,
+  IRecordTableColumn,
+  IRecordTableContext,
+} from 'erxes-ui/modules/record-table/types/recordTableTypes';
+import RecordTableInlineCell from '../record-table-cell/components/RecordTableInlineCell';
 
 const RecordTableContext = createContext<IRecordTableContext | null>(null);
 
@@ -53,19 +35,21 @@ export function useRecordTable() {
       'useRecordTable must be used within a RecordTableProvider.'
     );
   }
-
   return context;
+}
+
+interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+  columns: IRecordTableColumn[];
+  data: any[];
+  tableOptions?: TableOptions<any>;
+  handleReachedBottom?: () => void;
+  getFetchValueHook: GetFetchValueHook;
 }
 
 export const RecordTableProvider = forwardRef<
   HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & {
-    children: ReactNode;
-    columns: ColumnDef<any>[];
-    data: any[];
-    tableOptions?: TableOptions<any>;
-    handleReachedBottom?: () => void;
-  }
+  RecordTableProviderProps
 >(
   (
     {
@@ -75,36 +59,37 @@ export const RecordTableProvider = forwardRef<
       tableOptions,
       handleReachedBottom,
       className,
-      ...props
+      getFetchValueHook,
+      ...restProps
     },
     ref
   ) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] =
-      useRecoilState<VisibilityState>(columnVisibilityState);
-    const [rowSelection, setRowSelection] = useState({});
-    const [columnOrder, setColumnOrder] = useRecoilState(columnOrderState);
+    const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([]);
+    const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-    const sensors = useSensors(
-      useSensor(MouseSensor, {
-        activationConstraint: {
-          delay: 300,
-          tolerance: 10,
-        },
-      }),
-      useSensor(TouchSensor, {
-        activationConstraint: {
-          delay: 300,
-          tolerance: 10,
-        },
-      }),
-      useSensor(KeyboardSensor, {})
-    );
+    const tableColumns: ColumnDef<any>[] = columns.map((column) => ({
+      id: column.id,
+      accessorKey: column.id,
+      header: () => (
+        <div className="flex items-center gap-1">
+          <column.icon className="w-4 h-4" strokeWidth={2.5} /> {column.id}
+        </div>
+      ),
+      size: 180,
+      cell: (info) => (
+        <RecordTableInlineCell
+          type={column.type}
+          {...info}
+          readOnly={column.readOnly}
+        />
+      ),
+    }));
 
     const table = useReactTable({
       data,
-      columns,
+      columns: [checkboxColumn, ...tableColumns],
       defaultColumn: {
         minSize: 40,
         maxSize: 800,
@@ -118,72 +103,32 @@ export const RecordTableProvider = forwardRef<
         sorting,
         columnFilters,
         rowSelection,
-        columnVisibility,
       },
       columnResizeMode: 'onChange',
       onColumnOrderChange: setColumnOrder,
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,
       onRowSelectionChange: setRowSelection,
-      onColumnVisibilityChange: setColumnVisibility,
       ...tableOptions,
     });
 
-    const columnSizeVars = useMemo(() => {
-      const headers = table.getFlatHeaders();
-      const colSizes: { [key: string]: number } = {};
-      for (let i = 0; i < headers.length; i++) {
-        const header = headers[i];
-        if (header) {
-          colSizes[`--header-${header.id}-size`] = header.getSize();
-          colSizes[`--col-${header.column.id}-size`] = header.column.getSize();
-        }
-      }
-      return colSizes;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [table.getState().columnSizingInfo, table.getState().columnSizing]);
-
-    function handleDragEnd(event: DragEndEvent) {
-      const { active, over } = event;
-      if (active && over && active.id !== over.id) {
-        setColumnOrder((columnOrder) => {
-          const oldIndex = columnOrder.indexOf(active.id as string);
-          const newIndex = columnOrder.indexOf(over.id as string);
-          return arrayMove(
-            columnOrder,
-            oldIndex,
-            newIndex === columnOrder.length - 1 ? newIndex - 1 : newIndex
-          ); //this is just a splice util
-        });
-      }
-    }
-
     return (
-      <RecordTableContext.Provider value={{ table, handleReachedBottom }}>
-        <DndContext
-          collisionDetection={closestCenter}
-          modifiers={[
-            restrictToHorizontalAxis,
-            restrictToFirstScrollableAncestor,
-          ]}
-          onDragEnd={handleDragEnd}
-          sensors={sensors}
-          autoScroll={false}
-        >
-          <div
-            {...props}
-            style={
-              {
-                '--table-width': table.getTotalSize() + 'px',
-                ...columnSizeVars,
-              } as CSSProperties
-            }
-            className={cn(className)}
+      <RecordTableContext.Provider
+        value={{ table, handleReachedBottom, getFetchValueHook }}
+      >
+        <RecordTableDnDProvider setColumnOrder={setColumnOrder}>
+          <RecordTableContainer
+            table={table}
+            className={className}
+            {...restProps}
+            ref={ref}
           >
             {children}
-          </div>
-        </DndContext>
+          </RecordTableContainer>
+        </RecordTableDnDProvider>
       </RecordTableContext.Provider>
     );
   }
 );
+
+RecordTableProvider.displayName = 'RecordTableProvider';

@@ -1,14 +1,22 @@
 import { flexRender } from '@tanstack/react-table';
-import { Button, RecordTable } from 'erxes-ui/components';
+import { Button } from 'erxes-ui/components';
 import { IconChevronDown, IconList } from '@tabler/icons-react';
 import { columns } from './columns';
-import { ProductCommandBar } from './ProductCommandBar';
-import { ProductsRecordTableOptions } from './RecordTableOptionsButton/ProductsRecordTableOptions';
-import { useProducts } from '../hooks/useProducts';
+// import { ProductCommandBar } from './ProductCommandBar';
+// import { ProductsRecordTableOptions } from './RecordTableOptionsButton/ProductsRecordTableOptions';
+import { useProducts } from '@/products/hooks/useProducts';
 import { ProductsRecordTableSkeleton } from './Skeleton/ProductsRecordTableSkeleton';
+import { RecordTable } from 'erxes-ui/modules/record-table';
+import { IRecordTableColumn } from 'erxes-ui/modules/record-table/types/recordTableTypes';
+import { useProductCategories } from '@/products/hooks/useProductCategories';
+import { useProductTags } from '../hooks/useProductTags';
 
 export const ProductsRecordTable = () => {
   const { products, handleFetchMore, loading, totalCount } = useProducts();
+  const getFetchValueHook = (columnId: string) => {
+    if (columnId === 'categoryId') return useProductCategories;
+    if (columnId === 'tagIds') return useProductTags;
+  };
   return (
     <>
       <div className="flex items-start justify-between h-9 flex-none">
@@ -28,7 +36,7 @@ export const ProductsRecordTable = () => {
           <Button variant="ghost" className="text-muted-foreground">
             Sort
           </Button>
-          <ProductsRecordTableOptions />
+          {/* <ProductsRecordTableOptions /> */}
         </div>
       </div>
       {loading ? (
@@ -36,13 +44,14 @@ export const ProductsRecordTable = () => {
       ) : (
         <>
           <RecordTable.Provider
-            columns={columns}
+            columns={columns as IRecordTableColumn[]}
             data={products || []}
             handleReachedBottom={handleFetchMore}
+            getFetchValueHook={getFetchValueHook}
             className="flex-grow-0 basis-full overflow-hidden"
           >
             <RecordTable.ScrollArea className="h-full w-full">
-              <RecordTable.Root>
+              <RecordTable>
                 <RecordTable.Header
                   renderHead={(header) => (
                     <RecordTable.Head header={header}>
@@ -57,7 +66,7 @@ export const ProductsRecordTable = () => {
                 />
                 <RecordTable.Body
                   renderCell={(cell) => (
-                    <RecordTable.Cell cell={cell} className="overflow-hidden">
+                    <RecordTable.Cell cell={cell}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -72,9 +81,9 @@ export const ProductsRecordTable = () => {
                     />
                   )}
                 </RecordTable.Body>
-              </RecordTable.Root>
+              </RecordTable>
             </RecordTable.ScrollArea>
-            <ProductCommandBar />
+            {/* <ProductCommandBar /> */}
           </RecordTable.Provider>
         </>
       )}
