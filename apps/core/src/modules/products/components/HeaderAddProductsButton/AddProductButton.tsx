@@ -4,13 +4,14 @@ import '@blocknote/core/fonts/inter.css';
 import { locales } from '@blocknote/core';
 import { BlockNoteView, Theme } from '@blocknote/mantine';
 import '@blocknote/mantine/style.css';
-import { AddProductForm } from './AddProductForm';
+import { AddProductForm } from './components/AddProductForm';
 import {
   DragHandleButton,
   SideMenu,
   SideMenuController,
   useCreateBlockNote,
 } from '@blocknote/react';
+import { CategoryForm } from './components/categoryForm';
 
 export const AddProductButton = () => {
   const locale = locales['en'];
