@@ -1,15 +1,22 @@
 import React from 'react';
-import { Table } from 'erxes-ui/components';
+import { ScrollArea, Table } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
 
 export const RecordTableRoot = React.forwardRef<
   HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->((props, ref) => {
+  React.HTMLAttributes<HTMLTableElement> & { scrollAreaClassName?: string }
+>(({ scrollAreaClassName, ...props }, ref) => {
   return (
-    <Table.Root
-      ref={ref}
-      className="w-[--table-width] table-fixed border-spacing-0 text-[13px]"
-      {...props}
-    />
+    <ScrollArea.Root
+      scrollBarClassName="z-10"
+      className={cn('h-full w-full', scrollAreaClassName)}
+    >
+      <Table.Root
+        ref={ref}
+        className="w-[--table-width] table-fixed border-spacing-0 text-[13px]"
+        {...props}
+      />
+      <ScrollArea.Bar orientation="horizontal" className="z-10" />
+    </ScrollArea.Root>
   );
 });

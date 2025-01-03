@@ -9,16 +9,16 @@ import {
 } from './components/RecordTableProvider';
 import { RecordTableRoot } from './components/RecordTableRoot';
 import { RecordTableRowSkeleton } from './components/RecordTableRowSkeleton';
-import { RecordTableScrollArea } from './components/RecordTableScrollArea';
+import { RecordTableTopBar } from './components/RecordTableTopBar';
 
 export const RecordTable = Object.assign(RecordTableRoot, {
   Provider: RecordTableProvider,
   Header: RecordTableHeader,
   Head: RecordTableHead,
-  ScrollArea: RecordTableScrollArea,
   Body: RecordTableBody,
   Cell: RecordTableCell,
   useRecordTable: useRecordTable,
   InlineCell: RecordTableInlineCell,
   RowSkeleton: RecordTableRowSkeleton,
+  TopBar: RecordTableTopBar,
 });

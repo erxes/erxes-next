@@ -5,7 +5,7 @@ import { QueryHookOptions } from '@apollo/client';
 
 export type GetFetchValueHook = (
   columnId: string
-) => (options?: QueryHookOptions) => { options: any[]; loading: boolean };
+) => (options?: QueryHookOptions) => { options: any; loading: boolean };
 
 export interface IRecordTableContext {
   table: Table<any>;
@@ -16,6 +16,6 @@ export interface IRecordTableContext {
 export interface IRecordTableColumn {
   id: string;
   icon: Icon;
-  type: 'handle';
+  type: string;
   readOnly?: boolean;
 }
