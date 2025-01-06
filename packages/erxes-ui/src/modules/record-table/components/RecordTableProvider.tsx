@@ -23,6 +23,7 @@ import {
   GetFetchValueHook,
   IRecordTableColumn,
   IRecordTableContext,
+  UseMutateValueHook,
 } from 'erxes-ui/modules/record-table/types/recordTableTypes';
 import RecordTableInlineCell from '../record-table-cell/components/RecordTableInlineCell';
 
@@ -45,6 +46,7 @@ interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
   tableOptions?: TableOptions<any>;
   handleReachedBottom?: () => void;
   getFetchValueHook: GetFetchValueHook;
+  useMutateValueHook: UseMutateValueHook;
 }
 
 export const RecordTableProvider = forwardRef<
@@ -60,6 +62,7 @@ export const RecordTableProvider = forwardRef<
       handleReachedBottom,
       className,
       getFetchValueHook,
+      useMutateValueHook,
       ...restProps
     },
     ref
@@ -114,7 +117,12 @@ export const RecordTableProvider = forwardRef<
 
     return (
       <RecordTableContext.Provider
-        value={{ table, handleReachedBottom, getFetchValueHook }}
+        value={{
+          table,
+          handleReachedBottom,
+          getFetchValueHook,
+          useMutateValueHook,
+        }}
       >
         <RecordTableDnDProvider setColumnOrder={setColumnOrder}>
           <RecordTableContainer

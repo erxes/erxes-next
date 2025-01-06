@@ -20,7 +20,7 @@ export const columns = [
   {
     id: 'code',
     icon: IconHash,
-    type: 'handle',
+    type: 'text',
   },
   {
     id: 'unitPrice',
@@ -35,12 +35,13 @@ export const columns = [
   {
     id: 'status',
     icon: IconCircleCheck,
-    type: 'handle',
+    type: 'select',
   },
   {
     id: 'createdAt',
     icon: IconHistory,
     type: 'date',
+    readOnly: true,
   },
   {
     id: 'tagIds',
@@ -55,7 +56,7 @@ export const columns = [
   {
     id: 'type',
     icon: IconPlus,
-    type: 'handle',
+    type: 'select',
   },
 ];
 

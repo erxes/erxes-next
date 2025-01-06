@@ -1,9 +1,9 @@
 import { Input, Select } from 'erxes-ui/components';
+import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordTableProvider';
 import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
 
 export const CurrencyInput = () => {
-  const { getValue } = useRecordTableCellContext();
-  const value = getValue();
+  const { value, setValue } = useRecordTableCellContext();
 
   // Format number for display
   const formatValue = (val: string | number) => {

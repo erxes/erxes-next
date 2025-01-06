@@ -1,16 +1,12 @@
-import { useMutation } from '@apollo/client';
+import { OperationVariables, useMutation } from '@apollo/client';
 import { productsMutations } from '@/products/graphql';
-import { ProductT } from '@/products/types/productTypes';
 
 export const useProductsEdit = () => {
   const [productsEdit, { loading }] = useMutation(
     productsMutations.productsEdit
   );
 
-  const handleProductsEdit = ({
-    _id,
-    ...variables
-  }: Partial<Omit<ProductT, '_id'>> & { _id: string }) => {
+  const mutate = ({ _id, ...variables }: OperationVariables) => {
     productsEdit({
       variables: { _id, ...variables },
       update: (cache, { data: { productsEdit } }) => {
@@ -26,5 +22,5 @@ export const useProductsEdit = () => {
     });
   };
 
-  return { handleProductsEdit, loading };
+  return { mutate, loading };
 };

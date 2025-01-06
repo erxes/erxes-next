@@ -5,7 +5,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { Color, stringToHslColor, twColorClassNames } from './colors';
 
 const avatarVariants = cva(
-  'relative flex shrink-0 overflow-hidden rounded-full',
+  'relative flex shrink-0 overflow-hidden rounded-full border-0',
   {
     variants: {
       size: {

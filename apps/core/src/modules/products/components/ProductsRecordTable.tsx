@@ -1,15 +1,20 @@
 import { Button } from 'erxes-ui/components';
 import { IconChevronDown, IconList } from '@tabler/icons-react';
-import { columns } from './columns';
-// import { ProductCommandBar } from './ProductCommandBar';
-// import { ProductsRecordTableOptions } from './RecordTableOptionsButton/ProductsRecordTableOptions';
+import { columns } from '@/products/components/columns';
+// import { ProductCommandBar } from '@/products/components/ProductCommandBar';
+// import { ProductsRecordTableOptions } from '@/products/components/RecordTableOptionsButton/ProductsRecordTableOptions';
 import { useProducts } from '@/products/hooks/useProducts';
-import { ProductsRecordTableSkeleton } from './Skeleton/ProductsRecordTableSkeleton';
+import { ProductsRecordTableSkeleton } from '@/products/components/Skeleton/ProductsRecordTableSkeleton';
 import { RecordTable } from 'erxes-ui/modules/record-table';
 import { IRecordTableColumn } from 'erxes-ui/modules/record-table/types/recordTableTypes';
 import { useProductCategories } from '@/products/hooks/useProductCategories';
-import { useProductTags } from '../hooks/useProductTags';
-import { ProductCommandBar } from './ProductCommandBar';
+import { useProductTags } from '@/products/hooks/useProductTags';
+import { ProductCommandBar } from '@/products/components/ProductCommandBar';
+import {
+  PRODUCT_STATUS_OPTIONS,
+  PRODUCT_TYPE_OPTIONS,
+} from '@/products/constants/ProductConstants';
+import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 
 export const ProductsRecordTable = () => {
   const { products, handleFetchMore, loading, totalCount } = useProducts();
@@ -17,8 +22,21 @@ export const ProductsRecordTable = () => {
   const getFetchValueHook = (columnId: string) => {
     if (columnId === 'categoryId') return useProductCategories;
     if (columnId === 'tagIds') return useProductTags;
+    if (columnId === 'status')
+      return () => ({
+        loading: false,
+        options: PRODUCT_STATUS_OPTIONS,
+      });
+    if (columnId === 'type')
+      return () => ({
+        loading: false,
+        options: PRODUCT_TYPE_OPTIONS,
+      });
     return () => ({ loading: false, options: [] });
   };
+
+  const useMutateValueHook = (columnId: string) => useProductsEdit;
+
   return (
     <>
       <RecordTable.TopBar>
@@ -50,6 +68,7 @@ export const ProductsRecordTable = () => {
             data={products || []}
             handleReachedBottom={handleFetchMore}
             getFetchValueHook={getFetchValueHook}
+            useMutateValueHook={useMutateValueHook}
           >
             <RecordTable>
               <RecordTable.Header />

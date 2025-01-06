@@ -9,23 +9,14 @@ export const MultiSelectFieldDisplay = () => {
 
   if (loading) return <Skeleton className="h-3 w-full" />;
 
-  console.log(options);
-
   return (
     <div className="flex items-center gap-1 px-2">
       {getValue()?.map((tagId) => {
         const tagName = options?.find((t) => t._id === tagId)?.name;
 
-        if (!tagName)
-          return (
-            <Badge color="crimson" key={tagId}>
-              {tagId}
-            </Badge>
-          );
-
         return (
           <Badge color="crimson" key={tagId}>
-            {tagName}
+            {tagName || tagId}
           </Badge>
         );
       })}
