@@ -5,6 +5,7 @@ import { RecordTableCellContainer } from 'erxes-ui/modules/record-table/record-t
 import { RecordTableCellDisplayContainer } from './RecordTableCellDisplayContainer';
 import { FieldDisplay } from 'erxes-ui/modules/record-field/components/FieldDisplay';
 import { RecordTableCellContext } from '../contexts/RecordTableCellContext';
+import { FieldInput } from 'erxes-ui/modules/record-field/components/FieldInput';
 
 const RecordTableInlineCell = ({
   type,
@@ -20,15 +21,19 @@ const RecordTableInlineCell = ({
     <RecordTableCellContext.Provider
       value={{
         ...info,
+        isInEditMode,
+        setIsInEditMode,
       }}
     >
-      <RecordTableCellContainer>
+      <RecordTableCellContainer onClick={() => setIsInEditMode(true)}>
         {readOnly || !isInEditMode ? (
           <RecordTableCellDisplayContainer>
             <FieldDisplay type={type} />
           </RecordTableCellDisplayContainer>
         ) : (
-          <RecordTableInlineCellEdit />
+          <RecordTableInlineCellEdit>
+            <FieldInput type={type} />
+          </RecordTableInlineCellEdit>
         )}
       </RecordTableCellContainer>
     </RecordTableCellContext.Provider>

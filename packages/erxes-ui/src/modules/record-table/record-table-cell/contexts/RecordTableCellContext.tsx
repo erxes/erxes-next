@@ -2,7 +2,10 @@ import { createContext, useContext } from 'react';
 import type { CellContext } from '@tanstack/react-table';
 
 export const RecordTableCellContext = createContext(
-  {} as CellContext<any, any>
+  {} as CellContext<any, any> & {
+    isInEditMode: boolean;
+    setIsInEditMode: (isInEditMode: boolean) => void;
+  }
 );
 
 export const useRecordTableCellContext = () => {
