@@ -35,3 +35,5 @@ export * from './toggle-group';
 export * from './upload';
 export * from './toaster';
 export * from './multiselect';
+export * from './text-editor/TextEditor';
+export * from './card';
