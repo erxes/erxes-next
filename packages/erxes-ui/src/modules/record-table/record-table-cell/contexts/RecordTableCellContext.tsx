@@ -5,10 +5,10 @@ export const RecordTableCellContext = createContext(
   {} as CellContext<any, any> & {
     isInEditMode: boolean;
     setIsInEditMode: (isInEditMode: boolean) => void;
-    value: string;
-    setValue: (value: string) => void;
-    onCloseEditMode: () => void;
-    onSubmit: (value: string) => void;
+    value: any;
+    setValue: (value: any) => void;
+    onSelect: (value: any) => void;
+    onSubmit: () => void;
   }
 );
 

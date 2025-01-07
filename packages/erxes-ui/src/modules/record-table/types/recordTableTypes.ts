@@ -14,7 +14,7 @@ export type GetFetchValueHook = (
 export type UseMutateValueHook = (columnId: string) => (
   options?: MutationHookOptions
 ) => {
-  mutate: (variables?: OperationVariables) => void;
+  mutate: (variables: OperationVariables) => void;
   loading: boolean;
 };
 

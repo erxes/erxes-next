@@ -6,7 +6,7 @@ import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordT
 import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
 
 export const ChipFieldInput = () => {
-  const { column, value, onSubmit } = useRecordTableCellContext();
+  const { column, value, onSelect } = useRecordTableCellContext();
   const { getFetchValueHook } = useRecordTable();
   const { options, loading } = getFetchValueHook(column.id)();
 
@@ -36,7 +36,7 @@ export const ChipFieldInput = () => {
             <Command.Item
               key={option._id}
               value={option.name}
-              onSelect={() => onSubmit(option._id)}
+              onSelect={() => onSelect(option._id)}
             >
               <Avatar.Root>
                 <Avatar.Image src={option?.attachment?.url} />

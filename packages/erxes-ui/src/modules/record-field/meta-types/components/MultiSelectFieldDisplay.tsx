@@ -3,7 +3,7 @@ import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordT
 import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
 
 export const MultiSelectFieldDisplay = () => {
-  const { getValue, column } = useRecordTableCellContext();
+  const { value, column } = useRecordTableCellContext();
   const { getFetchValueHook } = useRecordTable();
   const { options, loading } = getFetchValueHook(column.id)();
 
@@ -11,7 +11,7 @@ export const MultiSelectFieldDisplay = () => {
 
   return (
     <div className="flex items-center gap-1 px-2">
-      {getValue()?.map((tagId) => {
+      {value?.map((tagId) => {
         const tagName = options?.find((t) => t._id === tagId)?.name;
 
         return (

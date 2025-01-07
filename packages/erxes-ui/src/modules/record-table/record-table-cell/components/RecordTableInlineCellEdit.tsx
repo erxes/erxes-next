@@ -8,18 +8,24 @@ import {
 export const RecordTableInlineCellEdit = ({
   children,
 }: React.PropsWithChildren) => {
-  const { isInEditMode, onCloseEditMode } = useRecordTableCellContext();
-  console.log(isInEditMode);
+  const { isInEditMode, onSubmit } = useRecordTableCellContext();
 
   return (
-    <Popover open={isInEditMode} modal onOpenChange={onCloseEditMode}>
+    <Popover open={isInEditMode} modal onOpenChange={onSubmit}>
       <PopoverTrigger className="w-full" />
       <PopoverContent
         className="min-w-[var(--radix-popper-anchor-width)] p-0 z-20 bg-background shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
         sideOffset={-1}
         align="start"
       >
-        {children}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+        >
+          {children}
+        </form>
       </PopoverContent>
     </Popover>
   );

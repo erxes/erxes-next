@@ -3,8 +3,7 @@ import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-
 import { Link } from 'react-router-dom';
 
 export default function HandlerDisplay() {
-  const { getValue, row } = useRecordTableCellContext();
-  const value = getValue();
+  const { value, row } = useRecordTableCellContext();
   return (
     <Button variant="link" asChild className="px-0">
       <Link to={`/products/${row.original._id}`}>{value}</Link>

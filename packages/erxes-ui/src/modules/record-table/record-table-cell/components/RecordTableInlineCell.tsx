@@ -18,25 +18,24 @@ const RecordTableInlineCell = ({
 } & CellContext<any, any>) => {
   const { useMutateValueHook } = useRecordTable();
   const [isInEditMode, setIsInEditMode] = useState(false);
-  const [value, setValue] = useState(info.getValue());
+  const [value, setValue] = useState<any>(info.getValue());
   const { mutate, loading } = useMutateValueHook(info.column.id)();
 
-  const onCloseEditMode = () => {
+  const handleSave = (savedValue: any) => {
     setIsInEditMode(false);
+    if (savedValue === info.getValue()) {
+      return;
+    }
+
     mutate({
       _id: info.row.original._id,
       [info.column.id]: value,
     });
   };
 
-  const onSubmit = (value: string) => {
-    setIsInEditMode(false);
-    setValue(value);
-    mutate({
-      _id: info.row.original._id,
-      [info.column.id]: value,
-    });
-  };
+  const onSubmit = () => handleSave(value);
+
+  const onSelect = (value: string) => handleSave(value);
 
   return (
     <RecordTableCellContext.Provider
@@ -46,8 +45,8 @@ const RecordTableInlineCell = ({
         setIsInEditMode,
         value,
         setValue,
-        onCloseEditMode,
         onSubmit,
+        onSelect,
       }}
     >
       <RecordTableCellContainer>

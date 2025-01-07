@@ -15,6 +15,7 @@ import {
   PRODUCT_TYPE_OPTIONS,
 } from '@/products/constants/ProductConstants';
 import { useProductsEdit } from '@/products/hooks/useProductsEdit';
+import { MutationHookOptions } from '@apollo/client';
 
 export const ProductsRecordTable = () => {
   const { products, handleFetchMore, loading, totalCount } = useProducts();
@@ -35,7 +36,12 @@ export const ProductsRecordTable = () => {
     return () => ({ loading: false, options: [] });
   };
 
-  const useMutateValueHook = (columnId: string) => useProductsEdit;
+  const getProduct = (id: string) =>
+    products?.find((product) => product._id === id);
+
+  const useMutateValueHook =
+    (columnId: string) => (options?: MutationHookOptions) =>
+      useProductsEdit(getProduct);
 
   return (
     <>

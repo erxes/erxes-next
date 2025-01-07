@@ -2,7 +2,7 @@ import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDis
 import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
 
 export const DateDisplay = () => {
-  const { getValue } = useRecordTableCellContext();
-  const value = getValue();
+  const { value } = useRecordTableCellContext();
   return <RelativeDateDisplay value={value} />;
 };
+
