@@ -9,7 +9,7 @@ import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 export const PriceCell = (info: CellContext<ProductT, any>) => {
   const [isInEditMode, setIsInEditMode] = useState(false);
   const [value, setValue] = useState(info.getValue());
-  const { handleProductsEdit } = useProductsEdit();
+  const { mutate } = useProductsEdit();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

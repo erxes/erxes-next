@@ -1,3 +1,5 @@
+import { Icon } from '@tabler/icons-react';
+
 export enum CurrencyCode {
   AED = 'AED',
   AFN = 'AFN',
@@ -152,3 +154,8 @@ export enum CurrencyCode {
   ZMW = 'ZMW',
   ZWG = 'ZWG',
 }
+
+export type Currency = {
+  label: string;
+  Icon: Icon;
+};
