@@ -9,7 +9,7 @@ import { useDndContext } from '@dnd-kit/core';
 import { useRecordTable } from './RecordTableProvider';
 
 export const recordTableHeadVariants = cva(
-  'sticky z-[2] top-0 bg-background transition-transform duration-200 whitespace-nowrap text-[13px] [&:has([role=checkbox])]:border-r-0 [&:has([role=checkbox])>span]:hidden',
+  'sticky z-[2] top-0 transition-transform duration-200 whitespace-nowrap text-[13px] [&:has([role=checkbox])]:border-r-0 [&:has([role=checkbox])>span]:hidden',
   {
     variants: {
       isDragging: {

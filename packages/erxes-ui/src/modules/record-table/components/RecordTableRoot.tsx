@@ -13,7 +13,7 @@ export const RecordTableRoot = React.forwardRef<
     >
       <Table.Root
         ref={ref}
-        className="w-[--table-width] table-fixed border-spacing-0 text-[13px]"
+        className="w-[--table-width] table-fixed border-spacing-0 text-[13px] bg-muted"
         {...props}
       />
       <ScrollArea.Bar orientation="horizontal" className="z-10" />

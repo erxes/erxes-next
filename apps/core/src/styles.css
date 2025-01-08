@@ -28,7 +28,7 @@
     --ring: 243 75% 59%;
     --radius: 0.5rem;
     --font-sans: 'Inter', sans-serif;
-
+    --font-mono: 'Roboto Mono', monospace;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;

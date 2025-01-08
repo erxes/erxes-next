@@ -9,11 +9,18 @@ const ProductsIndexPage = lazy(() =>
   }))
 );
 
+const ProductsDetailPage = lazy(() =>
+  import('~/pages/products/ProductsDetailPage').then((module) => ({
+    default: module.ProductsDetailPage,
+  }))
+);
+
 const ProductsRoutes = () => {
   return (
     <Suspense fallback={<></>}>
       <Routes>
         <Route path={ProductsPath.Index} element={<ProductsIndexPage />} />
+        <Route path={ProductsPath.Detail} element={<ProductsDetailPage />} />
       </Routes>
     </Suspense>
   );
