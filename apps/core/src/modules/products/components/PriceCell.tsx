@@ -26,8 +26,8 @@ export const PriceCell = (info: CellContext<ProductT, any>) => {
       onBlur={() => setIsInEditMode(false)}
     >
       {isInEditMode ? (
-        <Popover open={isInEditMode} onOpenChange={setIsInEditMode}>
-          <Popover.Trigger className="w-full h-px bg-red-500" />
+        <Popover open={isInEditMode} onOpenChange={setIsInEditMode} modal>
+          <Popover.Trigger className="w-full h-px" />
 
           <Popover.Content
             className="bg-background shadow-command-bar w-auto p-0"

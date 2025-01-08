@@ -11,7 +11,8 @@ import {
 } from 'erxes-ui/components';
 import { useRef, useState } from 'react';
 import { cn } from 'erxes-ui/lib';
-import { IconCheck } from '@tabler/icons-react'
+import { IconCheck } from '@tabler/icons-react';
+
 export const CategoryCell = (info: CellContext<ProductT, any>) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
   const ref = useRef<HTMLButtonElement>(null);
@@ -74,15 +75,16 @@ export const CategoryCell = (info: CellContext<ProductT, any>) => {
         }}
       >
         <Popover.Trigger asChild>
-          <button
+          <Button
+            variant="ghost"
             className={cn(
-              'flex items-center gap-2 px-2 w-full ring-1 relative h-full mt-px overflow-hidden',
-              open && 'ring-2'
+              'h-full w-full rounded-none justify-start relative',
+              open && 'ring-inset ring-2'
             )}
             ref={ref}
           >
             {renderCategoryButton()}
-          </button>
+          </Button>
         </Popover.Trigger>
         <Popover.Content className="w-[--radix-popper-anchor-width] p-0">
           <Command>
@@ -132,8 +134,4 @@ export const CategoryCell = (info: CellContext<ProductT, any>) => {
       {renderCategoryButton()}
     </Button>
   );
-};
-
-export const CategoryCellWrapper = ({ children }: React.PropsWithChildren) => {
-  return <div className="flex items-center gap-2 px-2">{children}</div>;
 };
