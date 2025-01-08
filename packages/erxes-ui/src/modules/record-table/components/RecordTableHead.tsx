@@ -9,15 +9,15 @@ import { useDndContext } from '@dnd-kit/core';
 import { useRecordTable } from './RecordTableProvider';
 
 export const recordTableHeadVariants = cva(
-  'sticky z-[2] top-0 transition-transform duration-200 whitespace-nowrap text-[13px] [&:has([role=checkbox])]:border-r-0 [&:has([role=checkbox])>span]:hidden',
+  'sticky z-[2] top-0 transition-transform duration-200 whitespace-nowrap text-[13px]',
   {
     variants: {
       isDragging: {
         true: 'z-[3]',
       },
       isPinned: {
-        left: 'z-[3] left-10 [&:has([role=checkbox])]:left-0',
-        right: 'z-[3] right-0',
+        left: 'z-[3]',
+        right: 'z-[3]',
       },
     },
   }
@@ -53,24 +53,33 @@ export const RecordTableHead = ({
       )}
       style={{
         width: `calc(var(--header-${column.id}-size) * 1px)`,
+        left:
+          column.getIsPinned() === 'left'
+            ? `${column.getStart('left')}px`
+            : undefined,
       }}
       {...props}
     >
       {children}
-      <span
-        {...attributes}
-        {...listeners}
-        className="absolute top-0 left-0 w-full h-full"
-      />
-      {isDragging && (
-        <div
-          className="absolute top-0 left-0 w-full h-screen bg-neutral-400 opacity-50"
-          style={{ transform: CSS.Translate.toString(transform) }}
-        />
-      )}
+      {header.column.id !== 'checkbox' && header.column.id !== 'more' && (
+        <>
+          <span
+            {...attributes}
+            {...listeners}
+            className="absolute top-0 left-0 w-full h-full"
+          />
 
-      <RecordTableHeadSize header={header} />
-      <RecordTableOverLine column={column} isDragging={isDragging} />
+          {isDragging && (
+            <div
+              className="absolute top-0 left-0 w-full h-screen bg-neutral-400 opacity-50"
+              style={{ transform: CSS.Translate.toString(transform) }}
+            />
+          )}
+
+          <RecordTableHeadSize header={header} />
+          <RecordTableOverLine column={column} isDragging={isDragging} />
+        </>
+      )}
     </Table.Head>
   );
 };
@@ -87,7 +96,7 @@ const RecordTableOverLine = ({
   const columnsOrder = table.getState().columnOrder;
 
   if (over?.id === column.id && !isDragging && active?.id) {
-    if (over.id !== 'name' && over.id !== 'checkbox') {
+    if (!table.getState().columnPinning?.left?.includes(over.id as string)) {
       const activeIndex = columnsOrder.indexOf(active.id as string);
       const overIndex = columnsOrder.indexOf(over.id as string);
       const isOnRight = activeIndex < overIndex;
@@ -115,9 +124,9 @@ const RecordTableHeadSize = React.forwardRef<
     <span
       ref={ref}
       className={cn(
-        'absolute bottom-0 cursor-col-resize w-4 h-full right-0 z-10 select-none touch-none',
+        'absolute bottom-0 cursor-col-resize w-4 h-full right-0 z-10 select-none touch-none after:absolute after:inset-y-2 after:w-px after:right-0 after:bg-border',
         header.column.getIsResizing() &&
-          'after:content-[""] after:absolute after:inset-y-0 after:w-0.5 after:-right-px after:bg-blue-500'
+          'after:w-0.5 after:bg-blue-500 after:inset-y-1'
       )}
       {...props}
       onMouseDown={header.getResizeHandler()}

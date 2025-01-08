@@ -26,6 +26,7 @@ import {
   UseMutateValueHook,
 } from 'erxes-ui/modules/record-table/types/recordTableTypes';
 import RecordTableInlineCell from '../record-table-cell/components/RecordTableInlineCell';
+import { moreColumn } from './MoreColumn';
 
 const RecordTableContext = createContext<IRecordTableContext | null>(null);
 
@@ -77,7 +78,7 @@ export const RecordTableProvider = forwardRef<
       accessorKey: column.id,
       header: () => (
         <div className="flex items-center gap-1">
-          <column.icon className="w-4 h-4" strokeWidth={2.5} /> {column.id}
+          <column.icon className="w-4 h-4" strokeWidth={2.5} /> {column.label}
         </div>
       ),
       size: 180,
@@ -92,16 +93,15 @@ export const RecordTableProvider = forwardRef<
 
     const table = useReactTable({
       data,
-      columns: [checkboxColumn, ...tableColumns],
+      columns: [moreColumn, checkboxColumn, ...tableColumns],
       defaultColumn: {
-        minSize: 40,
         maxSize: 800,
       },
       getCoreRowModel: getCoreRowModel(),
       state: {
         columnOrder,
         columnPinning: {
-          left: ['checkbox', 'name'],
+          left: ['more', 'checkbox', 'name'],
         },
         sorting,
         columnFilters,

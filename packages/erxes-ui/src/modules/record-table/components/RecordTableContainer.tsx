@@ -35,7 +35,10 @@ const RecordTableContainer = forwardRef<
           ...columnSizeVars,
         } as CSSProperties
       }
-      className={cn('flex-grow-0 basis-full overflow-hidden', className)}
+      className={cn(
+        'flex-grow-0 basis-full overflow-hidden rounded-lg bg-muted border-t-4 border-l-4 border-muted',
+        className
+      )}
     >
       {children}
     </div>

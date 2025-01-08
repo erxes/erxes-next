@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default function HandlerDisplay() {
   const { value, row } = useRecordTableCellContext();
   return (
-    <Button variant="ghost" asChild className="font-normal">
+    <Button variant="ghost" asChild className="px-0">
       <Link to={`/products/${row.original._id}`}>{value}</Link>
     </Button>
   );

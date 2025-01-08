@@ -26,16 +26,16 @@ const RecordTableInlineCell = ({
     if (savedValue === info.getValue()) {
       return;
     }
-
+    setValue(savedValue);
     mutate({
       _id: info.row.original._id,
-      [info.column.id]: value,
+      [info.column.id]: savedValue,
     });
   };
 
   const onSubmit = () => handleSave(value);
 
-  const onSelect = (value: string) => handleSave(value);
+  const onSelect = (selectValue: string) => handleSave(selectValue);
 
   return (
     <RecordTableCellContext.Provider

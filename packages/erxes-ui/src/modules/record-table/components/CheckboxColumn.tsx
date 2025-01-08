@@ -14,7 +14,7 @@ export const checkboxColumn = {
       />
     </div>
   ),
-  size: 40,
+  size: 33,
   cell: ({ row }) => (
     <div className="flex items-center justify-center">
       <Checkbox

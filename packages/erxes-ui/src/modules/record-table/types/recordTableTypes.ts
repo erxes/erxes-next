@@ -27,6 +27,7 @@ export interface IRecordTableContext {
 
 export interface IRecordTableColumn {
   id: string;
+  label: string;
   icon: Icon;
   type: string;
   readOnly?: boolean;
