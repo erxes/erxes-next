@@ -1,21 +1,17 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useBrands } from '@/products/hooks/useBrands';
-import { useProductCategories } from '@/products/hooks/useProductCategories';
 import { CategoryForm } from '@/products/components/HeaderAddProductsButton/components/categoryForm';
 import { TypeForm } from '@/products/components/HeaderAddProductsButton/components/typeForm';
 import { BrandForm } from '@/products/components/HeaderAddProductsButton/components/brandForm';
 import { UomForm } from '@/products/components/HeaderAddProductsButton/components/uomForm';
+import { VendorForm } from '@/products/components/HeaderAddProductsButton/components/vendorForm';
 import {
   Button,
   InputBorderless,
   ScrollArea,
-  Select,
-  Avatar,
-  Popover,
-  Command,
-  Skeleton,
+  Upload,
+  TextEditor,
 } from 'erxes-ui/components';
 import { useAddProduct } from '@/products/hooks/useAddProduct';
 import {
@@ -29,37 +25,15 @@ import {
 import {
   productFormSchema,
   ProductFormValues,
-  types,
-  vendors,
 } from '@/products/components/HeaderAddProductsButton/components/formSchema';
-import { cn } from 'erxes-ui/lib';
-import { useState, useRef, useEffect } from 'react';
-import { IconCheck } from '@tabler/icons-react';
 export function AddProductForm() {
-  const [categoryOpen, setCategoryOpen] = useState(false);
-  const { productCategories, loading: categoriesLoading } =
-    useProductCategories({
-      onCompleted({ productCategories }) {
-        if (productCategories?.length > 0) {
-          form.setValue('categoryId', productCategories[0]._id);
-        }
-      },
-    });
-  useEffect(() => {
-    console.log(categoryOpen);
-  }, [categoryOpen]);
-  const { brands, loading: brandsLoading } = useBrands({});
-  const { addProduct, loading } = useAddProduct();
+  const { addProduct } = useAddProduct();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
-      code: '',
-      name: '',
       shortName: '',
-      unitPrice: 0,
-      uom: '',
       attachment: null,
-      attachmentMore: [],
+      attachmentMore: null,
       description: '',
       pdfAttachment: {},
       subUoms: [],
@@ -67,7 +41,6 @@ export function AddProductForm() {
       variants: {},
       barcodeDescription: '',
       scopeBrandIds: [],
-      categoryId: '',
     },
   });
 
@@ -128,27 +101,6 @@ export function AddProductForm() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem className="flex gap-20 items-center">
-                    <FormLabel className="text-foreground w-24">
-                      Description
-                    </FormLabel>
-                    <div className="flex flex-col">
-                      <FormControl>
-                        <InputBorderless
-                          className="bg-background border-input"
-                          placeholder="Description"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-destructive" />
-                    </div>
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}
@@ -199,27 +151,6 @@ export function AddProductForm() {
               />
               <FormField
                 control={form.control}
-                name="uom"
-                render={({ field }) => (
-                  <FormItem className="flex gap-20 items-center">
-                    <FormLabel className="text-foreground w-24">
-                      Uom *
-                    </FormLabel>
-                    <div className="flex flex-col">
-                      <FormControl>
-                        <InputBorderless
-                          className="bg-background border-input"
-                          placeholder="Enter UOM"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-destructive" />
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="categoryId"
                 render={({ field }) => (
                   <FormItem className="flex gap-20 items-center">
@@ -227,10 +158,7 @@ export function AddProductForm() {
                       Category
                     </FormLabel>
                     <FormControl>
-                      <CategoryForm
-                        value={field.value}
-                        onChange={(value) => field.onChange(value)}
-                      />
+                      <CategoryForm {...field} />
                     </FormControl>
                     <FormMessage className="text-destructive" />
                   </FormItem>
@@ -244,31 +172,25 @@ export function AddProductForm() {
                   <FormItem className="flex gap-20 items-center">
                     <FormLabel className="text-foreground w-24">Type</FormLabel>
                     <FormControl>
-                      <TypeForm
-                        value={field.value}
-                        onChange={(value) => field.onChange(value)}
-                      />
+                      <TypeForm {...field} />
                     </FormControl>
                     <FormMessage className="text-destructive" />
                   </FormItem>
                 )}
               />
-              {/* <FormField
+              <FormField
                 control={form.control}
                 name="uom"
                 render={({ field }) => (
                   <FormItem className="flex gap-20 items-center">
                     <FormLabel className="text-foreground w-24">UOM</FormLabel>
                     <FormControl>
-                      <UomForm
-                        value={field.value}
-                        onChange={(value) => field.onChange(value)}
-                      />
+                      <UomForm {...field} />
                     </FormControl>
                     <FormMessage className="text-destructive" />
                   </FormItem>
                 )}
-              /> */}
+              />
 
               <FormField
                 control={form.control}
@@ -289,33 +211,19 @@ export function AddProductForm() {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="vendorId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-foreground">Vendor</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <Select.Trigger className="bg-background border-input">
-                          <Select.Value placeholder="Select vendor" />
-                        </Select.Trigger>
-                      </FormControl>
-                      <Select.Content className="bg-background border-input">
-                        {vendors.map((vendor) => (
-                          <Select.Item key={vendor.value} value={vendor.value}>
-                            {vendor.label}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
+                    <FormControl>
+                      <VendorForm {...field} />
+                    </FormControl>
                     <FormMessage className="text-destructive" />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 control={form.control}
@@ -323,15 +231,28 @@ export function AddProductForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-foreground">
-                      Primary Attachment
+                      Featured Attachment
                     </FormLabel>
                     <FormControl>
-                      <InputBorderless
-                        type="file"
-                        className="bg-background border-input file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                        {...field}
-                        value={field.value?.[0]}
-                      />
+                      <Upload.Root {...field}>
+                        <Upload.Preview />
+                        <div className="flex flex-col gap-2">
+                          <div className="flex gap-4">
+                            <Upload.Button
+                              size="sm"
+                              variant="outline"
+                              type="button"
+                            >
+                              Upload an attachment
+                            </Upload.Button>
+                            <Upload.RemoveButton
+                              size="sm"
+                              variant="outline"
+                              type="button"
+                            />
+                          </div>
+                        </div>
+                      </Upload.Root>
                     </FormControl>
                     <FormMessage className="text-destructive" />
                   </FormItem>
@@ -347,11 +268,79 @@ export function AddProductForm() {
                       More Attachment
                     </FormLabel>
                     <FormControl>
-                      <InputBorderless
-                        type="file"
-                        className="bg-background border-input file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                      <Upload.Root {...field} >
+                        <Upload.Preview />
+                        <div className="flex flex-col gap-2">
+                          <div className="flex gap-4">
+                            <Upload.Button
+                              size="sm"
+                              variant="outline"
+                              type="button"
+                            />
+                          </div>
+                        </div>
+                      </Upload.Root>
+                    </FormControl>
+                    <FormMessage className="text-destructive" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-foreground">
+                      Description
+                    </FormLabel>
+                    <FormControl>
+                      <TextEditor
                         {...field}
-                        value={field.value?.[0]}
+                        className="h-28 border border-foreground rounded-lg"
+                        parseTo="html"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-destructive" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="barcodes"
+                render={({ field }) => (
+                  <FormItem className="flex gap-20 items-center">
+                    <FormLabel className="text-foreground w-24">
+                      Barcodes
+                    </FormLabel>
+                    <div className="flex flex-col">
+                      <FormControl>
+                        <InputBorderless
+                          className="bg-background border-input"
+                          placeholder="Short Name"
+                          {...field}
+                          onChange={(e) => field.onChange([e.target.value])}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-destructive" />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="barcodeDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-foreground">
+                      Bar code description
+                    </FormLabel>
+                    <FormControl>
+                      <TextEditor
+                        {...field}
+                        className="h-28 border border-foreground rounded-lg"
+                        parseTo="html"
                       />
                     </FormControl>
                     <FormMessage className="text-destructive" />

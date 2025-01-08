@@ -39,4 +39,3 @@ export * from './input-borderless';
 export * from './select-with-search';
 export * from './multiselect';
 export * from './text-editor/TextEditor';
-export * from './card';

@@ -30,8 +30,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const { productCategories, loading } = useProductCategories({});
-
-  const selectedCategory = productCategories?.find(
+  const currentValue = productCategories?.find(
     (category) => category._id === value
   );
 
@@ -41,7 +40,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   };
 
   const renderCategoryButton = () => {
-    if (!selectedCategory)
+    if (loading)
       return (
         <Skeleton className="truncate justify-start h-8 mr-1">
           <div className="mx-2 w-full">
@@ -63,15 +62,29 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         }}
       >
         <div className="mx-2 ">
+
           <div className="py-2 flex gap-2">
-            <Avatar.Root>
-              <Avatar.Image src={selectedCategory?.attachment?.url} />
-              <Avatar.Fallback colorSeed={selectedCategory?._id}>
-                {selectedCategory?.name?.charAt(0)}
-              </Avatar.Fallback>
-            </Avatar.Root>
-            {selectedCategory?.name}
+
+            {currentValue ? (
+              <div className="flex items-center gap-2">
+                <Avatar.Root>
+                  <Avatar.Image src={currentValue?.attachment?.url} />
+                  <Avatar.Fallback colorSeed={currentValue?._id}>
+                    {currentValue?.name?.charAt(0)}
+                  </Avatar.Fallback>
+                </Avatar.Root>
+                {currentValue?.name}
+              </div>
+            ) : (
+              <span
+                className={cn('truncate', !currentValue && 'text-foreground')}
+              >
+                Category not selected
+              </span>
+            )}
+
           </div>
+
         </div>
       </Button>
     );

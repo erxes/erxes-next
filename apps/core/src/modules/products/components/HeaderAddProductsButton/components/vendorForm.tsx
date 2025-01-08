@@ -1,42 +1,33 @@
 'use client';
-import { useState, FC } from 'react';
-import { Button, Popover, Command, Skeleton } from 'erxes-ui/components';
-import { IconCheck } from '@tabler/icons-react';
-import {
-  IconDeviceUnknown,
-  IconHotelService,
-  IconPackage,
-  IconStar,
-} from '@tabler/icons-react';
-
+import { useState } from 'react';
 import { cn } from 'erxes-ui/lib/utils';
+import { Popover, Button, Command, Skeleton } from 'erxes-ui/components';
+import { IconCheck } from '@tabler/icons-react';
+import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
 
-const iconMap = {
-  unique: IconDeviceUnknown,
-  subscription: IconStar,
-  service: IconHotelService,
-  product: IconPackage,
-};
-
-const types = [
-  { label: 'Product', value: 'product' },
-  { label: 'Service', value: 'service' },
-  { label: 'Unique', value: 'unique' },
-  { label: 'Subscription', value: 'subscription' },
-];
-
-interface TypeFormProps {
-  value: string;
+interface VendorFormProps {
+  value: string | undefined;
   onChange: (value: string) => void;
 }
 
-export const TypeForm: FC<TypeFormProps> = ({ value, onChange }) => {
+export const VendorForm = ({ value, onChange }: VendorFormProps) => {
+  const { companies, loading } = useCompaniesLowDetail();
   const [open, setOpen] = useState<boolean>(false);
-  const currentValue = types?.find((type) => type.value === value)?.value;
-  const handleSelectType = (type: string) => {
-    onChange(type);
+  const currentValue = companies?.find((vendor) => vendor._id === value)?._id;
+  const handleSelectVendor = (vendorId: string) => {
+    onChange(vendorId);
     setOpen(false);
-  }
+  };
+  if (loading)
+    return (
+      <Skeleton className="truncate justify-start h-8 mr-1">
+        <div className="mx-2 w-full">
+          <div className="py-2 flex gap-2">
+            <div className="h-4 w-24" />
+          </div>
+        </div>
+      </Skeleton>
+    );
   return (
     <div className="space-y-2">
       <Popover open={open} onOpenChange={setOpen}>
@@ -47,6 +38,7 @@ export const TypeForm: FC<TypeFormProps> = ({ value, onChange }) => {
             asChild
             className="truncate justify-start h-8"
             onClick={(e) => {
+              setOpen(true);
               e.stopPropagation();
             }}
           >
@@ -56,8 +48,9 @@ export const TypeForm: FC<TypeFormProps> = ({ value, onChange }) => {
                   className={cn('truncate', !currentValue && 'text-foreground')}
                 >
                   {currentValue
-                    ? types.find((type) => type.value === currentValue)?.label
-                    : 'Type not selected'}
+                    ? companies.find((vendor) => vendor._id === currentValue)
+                        ?.name
+                    : 'Vendor not selected'}
                 </span>
               </div>
             </div>
@@ -68,20 +61,21 @@ export const TypeForm: FC<TypeFormProps> = ({ value, onChange }) => {
           align="start"
         >
           <Command>
+            <Command.Input placeholder="Search vendor..." className="h-9" />
             <Command.List>
-              <Command.Empty>No type found.</Command.Empty>
+              <Command.Empty>No vendor found.</Command.Empty>
               <Command.Group>
-                {types.map((type) => (
+                {companies.map((vendor) => (
                   <Command.Item
-                    key={type.value}
+                    key={vendor._id}
                     className="h-7 text-xs"
-                    value={type.value}
+                    value={vendor._id}
                     onSelect={(currentValue) => {
-                      handleSelectType(currentValue);
+                      handleSelectVendor(currentValue);
                     }}
                   >
-                    {type.label}
-                    {currentValue === type.value && (
+                    {vendor.name}
+                    {currentValue === vendor.name && (
                       <IconCheck
                         size={16}
                         strokeWidth={2}

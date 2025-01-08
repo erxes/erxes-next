@@ -5,7 +5,7 @@ import { QueryHookOptions } from '@apollo/client';
 export const useUom = (options: QueryHookOptions) => {
   const { data, loading } = useQuery(uomQuery, options);
   return {
-    uoms: data?.brands,
+    uoms: data?.uoms || [],
     loading
   };
 };

@@ -17,7 +17,9 @@ export const productFormSchema = z.object({
   barcodes: z.array(z.string()).optional(),
   variants: z.any().optional(),
   barcodeDescription: z.string().optional(),
-  unitPrice: z.number().optional(), 
+  unitPrice: z.number({
+    required_error: "Unit price is required",
+  }),
   code: z.string()
     .min(2, "Code must be at least 2 characters")
     .max(50, "Code must be less than 50 characters"),
@@ -39,17 +41,3 @@ export const productFormSchema = z.object({
 })
 
 export type ProductFormValues = z.infer<typeof productFormSchema>
-
-
-export const types = [
-  { label: "Product", value: "product" },
-  { label: "Service", value: "service" },
-  { label: "Unique", value: "unique" },
-  { label: "Subscription", value: "subscription"},
-]
-
-export const vendors = [
-  { label: "Vendor A", value: "vendor-a" },
-  { label: "Vendor B", value: "vendor-b" },
-  { label: "Vendor C", value: "vendor-c" },
-]

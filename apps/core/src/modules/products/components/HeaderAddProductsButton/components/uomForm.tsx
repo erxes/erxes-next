@@ -1,80 +1,91 @@
 'use client';
-import * as React from 'react';
-import { Button, DropdownMenu } from 'erxes-ui/components';
+import { useState, FC } from 'react';
+import { Button, Popover, Command, Skeleton } from 'erxes-ui/components';
 import { IconCheck } from '@tabler/icons-react';
-import {
-  IconDeviceUnknown,
-  IconHotelService,
-  IconPackage,
-  IconStar,
-} from '@tabler/icons-react';
 import { useUom } from '@/products/hooks/useUom';
-
-const iconMap = {
-  unique: IconDeviceUnknown,
-  subscription: IconStar,
-  service: IconHotelService,
-  product: IconPackage,
-};
+import { cn } from 'erxes-ui/lib/utils';
 
 interface UomFormProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export const UomForm: React.FC<UomFormProps> = ({ value, onChange }) => {
+export const UomForm: FC<UomFormProps> = ({ value, onChange }) => {
+  const [open, setOpen] = useState<boolean>(false);
   const { uoms, loading } = useUom({});
-  const currentValue =
-    uoms?.find((uom) => uom.value === value)?.value || 'product';
+  const currentValue = uoms?.find((uom) => uom._id === value)?._id;
+  const handleSelectUom = (uom: string) => {
+    onChange(uom);
+    setOpen(false);
+  };
+  if (loading)
+    return (
+      <Skeleton className="truncate justify-start h-8 mr-1">
+        <div className="mx-2 w-full">
+          <div className="py-2 flex gap-2">
+            <div className="h-4 w-24" />
+          </div>
+        </div>
+      </Skeleton>
+    );
   return (
     <div className="space-y-2">
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
+      <Popover open={open} onOpenChange={setOpen}>
+        <Popover.Trigger asChild>
           <Button
             variant="secondary"
             size="sm"
             asChild
             className="truncate justify-start h-8"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
             <div className="mx-2 ">
               <div className="py-2 flex gap-2">
-                {React.createElement(iconMap[currentValue], {
-                  className: 'h-4 w-4',
-                })}
-                <span>
-                  {uoms.find((uom) => uom.value === currentValue)?.label}
+                <span
+                  className={cn('truncate', !currentValue && 'text-foreground')}
+                >
+                  {currentValue
+                    ? uoms.find((uom) => uom._id === currentValue)?.name
+                    : 'Uom not selected'}
                 </span>
               </div>
             </div>
           </Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            align="start"
-            side="bottom"
-            sideOffset={8}
-            onClick={(e) => e.stopPropagation()}
-            className="w-full min-w-[var(--radix-dropdown-menu-trigger-width)]"
-          >
-            {uoms.map((uom) => (
-              <DropdownMenu.Item
-                className="h-7 text-xs"
-                key={uom._id}
-                onSelect={() => {
-                  onChange(uom._id);
-                }}
-              >
-                <div className="py-2 flex gap-2">
-                  <span>{uom.name}</span>
-                </div>
-                {currentValue === uom._id && (
-                  <IconCheck className="ml-auto h-4 w-4" />
-                )}
-              </DropdownMenu.Item>
-            ))}
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
+        </Popover.Trigger>
+        <Popover.Content
+          className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+          align="start"
+        >
+          <Command>
+            <Command.List>
+              <Command.Empty>No uom found.</Command.Empty>
+              <Command.Group>
+                {uoms.map((uom) => (
+                  <Command.Item
+                    key={uom._id}
+                    className="h-7 text-xs"
+                    value={uom._id}
+                    onSelect={(currentValue) => {
+                      handleSelectUom(currentValue);
+                    }}
+                  >
+                    {uom.name}
+                    {currentValue === uom._id && (
+                      <IconCheck
+                        size={16}
+                        strokeWidth={2}
+                        className="ml-auto"
+                      />
+                    )}
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            </Command.List>
+          </Command>
+        </Popover.Content>
+      </Popover>
     </div>
   );
 };

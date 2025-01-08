@@ -1,6 +1,7 @@
 import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
 import { useUpload } from 'erxes-ui/hooks';
 import { readFile } from 'erxes-ui/utils/core';
+import { Button, Dialog } from 'erxes-ui/components';
 import React, {
   createContext,
   MutableRefObject,
@@ -10,15 +11,18 @@ import React, {
   useState,
 } from 'react';
 import { cn } from '../lib/utils';
-import { Button, ButtonProps } from './button';
+import { ButtonProps } from './button';
 
 type IUploadContext = {
   url: string | undefined;
-  onChange: (value: string) => void;
+  onChange: (value: any) => void;
   setPreviewUrl: (previewUrl: string | undefined) => void;
   previewRef: MutableRefObject<string | null>;
   fileInputRef: MutableRefObject<HTMLInputElement | null>;
   handleThumbnailClick: () => void;
+  ImageFocus: () => void;
+  isImageFocused: boolean;
+  setIsImageFocused: (isImageFocused: boolean) => void;
 };
 
 const UploadContext = createContext<IUploadContext | null>(null);
@@ -39,8 +43,14 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
 
     const url = previewUrl || value;
 
+    const [isImageFocused, setIsImageFocused] = useState(false);
+
     const handleThumbnailClick = useCallback(() => {
       fileInputRef.current?.click();
+    }, []);
+
+    const ImageFocus = useCallback(() => {
+      setIsImageFocused(true);
     }, []);
 
     return (
@@ -52,8 +62,23 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
           previewRef,
           setPreviewUrl,
           handleThumbnailClick,
+          ImageFocus,
+          isImageFocused,
+          setIsImageFocused,
         }}
       >
+        <Dialog.Root open={isImageFocused} onOpenChange={setIsImageFocused}>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+            <Dialog.Content className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] max-w-none w-auto bg-transparent border-0 p-0">
+              <img
+                src={readFile(url)}
+                alt="Focused view"
+                className="max-h-[90vh] max-w-[90vw] object-contain"
+              />
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
         <div ref={ref} className={cn('flex gap-4', className)} {...props} />
       </UploadContext.Provider>
     );
@@ -81,6 +106,7 @@ const UploadPreview = React.forwardRef<
     fileInputRef,
     previewRef,
     handleThumbnailClick,
+    ImageFocus,
   } = uploadContext;
 
   const handleFileChange = useCallback(
@@ -94,8 +120,9 @@ const UploadPreview = React.forwardRef<
       upload({
         files: file,
 
-        afterUpload: ({ response }) => {
-          onChange && onChange(response);
+        afterUpload: ({ response, fileInfo }) => {
+          console.log(response, fileInfo);
+          onChange && onChange({ url: response, ...fileInfo });
         },
 
         afterRead: ({ result }) => {
@@ -113,7 +140,7 @@ const UploadPreview = React.forwardRef<
           type="button"
           variant="outline"
           className="relative size-16 overflow-hidden"
-          onClick={handleThumbnailClick}
+          onClick={!url ? handleThumbnailClick : ImageFocus}
           aria-label={url ? 'Change image' : 'Upload image'}
         >
           {isLoading ? (
@@ -158,84 +185,92 @@ const UploadPreview = React.forwardRef<
 
 UploadPreview.displayName = 'UploadPreview';
 
-const UploadButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, ...props }, ref) => {
-    const uploadContext = useContext(UploadContext);
+const UploadButton = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps & { children?: React.ReactNode }
+>(({ children, className, ...props }, ref) => {
+  const uploadContext = useContext(UploadContext);
 
-    if (!uploadContext) {
-      throw new Error('UploadContext must be used within an UploadRoot');
-    }
-
-    const { handleThumbnailClick } = uploadContext;
-
-    return (
-      <Button
-        ref={ref}
-        className={cn('flex', className)}
-        {...props}
-        onClick={handleThumbnailClick}
-      >
-        <IconUpload />
-        Upload
-      </Button>
-    );
+  if (!uploadContext) {
+    throw new Error('UploadContext must be used within an UploadRoot');
   }
-);
+
+  const { handleThumbnailClick } = uploadContext;
+
+  return (
+    <Button
+      ref={ref}
+      className={cn('flex', className)}
+      {...props}
+      onClick={handleThumbnailClick}
+    >
+      {children || (
+        <>
+          <IconUpload /> Upload
+        </>
+      )}
+    </Button>
+  );
+});
 
 UploadButton.displayName = 'UploadButton';
 
-const RemoveButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, ...props }, ref) => {
-    const { isLoading, remove } = useUpload();
+const RemoveButton = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps & { children?: React.ReactNode }
+>(({ children, className, ...props }, ref) => {
+  const { isLoading, remove } = useUpload();
 
-    const uploadContext = useContext(UploadContext);
+  const uploadContext = useContext(UploadContext);
 
-    if (!uploadContext) {
-      throw new Error('UploadContext must be used within an UploadRoot');
-    }
-
-    const { url, previewRef, onChange, setPreviewUrl } = uploadContext;
-
-    if (!url) {
-      return <div />;
-    }
-
-    const handleRemove = () => {
-      const urlArray = url.split('/');
-
-      const fileName =
-        urlArray.length === 1 ? url : urlArray[urlArray.length - 1];
-
-      if (previewRef.current) {
-        URL.revokeObjectURL(previewRef.current);
-        previewRef.current = null;
-      }
-
-      remove({
-        fileName,
-
-        afterRemove: ({ status }) => {
-          if (status === 'ok') {
-            setPreviewUrl(undefined);
-            onChange('');
-          }
-        },
-      });
-    };
-
-    return (
-      <Button
-        ref={ref}
-        className={cn('flex', className)}
-        {...props}
-        onClick={handleRemove}
-      >
-        <IconTrash />
-        Remove
-      </Button>
-    );
+  if (!uploadContext) {
+    throw new Error('UploadContext must be used within an UploadRoot');
   }
-);
+
+  const { url, previewRef, onChange, setPreviewUrl } = uploadContext;
+
+  if (!url) {
+    return <div />;
+  }
+
+  const handleRemove = () => {
+    const urlArray = url.split('/');
+
+    const fileName =
+      urlArray.length === 1 ? url : urlArray[urlArray.length - 1];
+
+    if (previewRef.current) {
+      URL.revokeObjectURL(previewRef.current);
+      previewRef.current = null;
+    }
+
+    remove({
+      fileName,
+
+      afterRemove: ({ status }) => {
+        if (status === 'ok') {
+          setPreviewUrl(undefined);
+          onChange('');
+        }
+      },
+    });
+  };
+
+  return (
+    <Button
+      ref={ref}
+      className={cn('flex', className)}
+      {...props}
+      onClick={handleRemove}
+    >
+      {children || (
+        <>
+          <IconTrash /> Remove
+        </>
+      )}
+    </Button>
+  );
+});
 
 RemoveButton.displayName = 'RemoveButton';
 

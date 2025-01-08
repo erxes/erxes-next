@@ -13,11 +13,13 @@ export const BrandForm = ({ values, onChange }: BrandFormProps) => {
   const { brands, loading } = useBrands({});
   const [open, setOpen] = useState<boolean>(false);
   const currentValue = brands?.find((brand) => brand._id === values?.[0])?._id;
+  const handleSelectBrand = (brandId: string) => {
+    onChange([brandId]);
+    setOpen(false);
+  };
   if (loading)
     return (
-      <Skeleton
-        className="truncate justify-start h-8 mr-1"
-      >
+      <Skeleton className="truncate justify-start h-8 mr-1">
         <div className="mx-2 w-full">
           <div className="py-2 flex gap-2">
             <div className="h-4 w-24" />
@@ -57,7 +59,7 @@ export const BrandForm = ({ values, onChange }: BrandFormProps) => {
           align="start"
         >
           <Command>
-            <Command.Input placeholder="Search brand..." className='h-9'/>
+            <Command.Input placeholder="Search brand..." className="h-9" />
             <Command.List>
               <Command.Empty>No brand found.</Command.Empty>
               <Command.Group>
@@ -67,8 +69,7 @@ export const BrandForm = ({ values, onChange }: BrandFormProps) => {
                     className="h-7 text-xs"
                     value={brand._id}
                     onSelect={(currentValue) => {
-                      onChange([currentValue]);
-                      setOpen(false);
+                      handleSelectBrand(currentValue);
                     }}
                   >
                     {brand.name}
