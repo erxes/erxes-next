@@ -33,8 +33,26 @@ export const TextEditor = ({
   className,
   parseTo = 'html',
   onChange,
+  value,
 }: TextEditorProps) => {
-  const editor = useCreateBlockNote();
+  const [blocks, setBlocks] = useState<any[]>([
+    {
+      id: "1",
+      type: "paragraph",
+      content: []
+    }
+  ]);
+
+  const editor = useCreateBlockNote({
+    initialContent: blocks
+  });
+
+  if (value && blocks.length === 1 && blocks[0].content.length === 0) {
+    editor.tryParseHTMLToBlocks(value).then((convertedBlocks) => {
+      setBlocks(convertedBlocks);
+      editor.replaceBlocks(editor.document, convertedBlocks);
+    });
+  }
 
   const handleHtmlParse = async () => {
     const htmlContent = await editor.blocksToHTMLLossy(editor.document);
