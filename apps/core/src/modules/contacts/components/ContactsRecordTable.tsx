@@ -79,7 +79,7 @@ export const ContactsRecordTable = () => {
   };
   return (
     <>
-      <RecordTable.TopBar>
+      <div>
         <Button variant="ghost" className="text-muted-foreground">
           <IconList className="w-4 h-4" />
           <span className="inline-flex items-center">
@@ -89,12 +89,13 @@ export const ContactsRecordTable = () => {
           </span>
           <IconChevronDown className="w-4 h-4" />
         </Button>
-      </RecordTable.TopBar>
+      </div>
       {loading ? (
         <>loading</>
       ) : (
         <>
           <RecordTable.Provider
+            // useMutateValueHook={getFetchValueHook}
             columns={columns as IRecordTableColumn[]}
             data={customers || []}
             handleReachedBottom={handleFetchMore}
