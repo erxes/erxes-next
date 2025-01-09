@@ -8,5 +8,5 @@ export const useProductTags = () => {
     },
   });
 
-  return { tags: data?.tags, loading };
+  return { options: data?.tags, loading };
 };

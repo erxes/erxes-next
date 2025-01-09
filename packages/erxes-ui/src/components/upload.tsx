@@ -159,11 +159,7 @@ const UploadPreview = React.forwardRef<
             />
           ) : (
             <div aria-hidden="true">
-              <IconUserCircle
-                className="opacity-60"
-                size={16}
-                strokeWidth={2}
-              />
+              <IconUserCircle className="opacity-60" size={16} />
             </div>
           )}
         </Button>

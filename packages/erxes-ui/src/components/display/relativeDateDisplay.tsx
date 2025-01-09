@@ -1,11 +1,11 @@
 import { isUndefinedOrNull } from 'erxes-ui/utils';
 import { formatDateISOStringToRelativeDate } from '../../localization/utils/formatDateISOStringToRelativeDate';
 
-export const RelativeDateDisplay = ({ date }: { date: string }) => {
-  if (isUndefinedOrNull(date)) {
+export const RelativeDateDisplay = ({ value }: { value: string }) => {
+  if (isUndefinedOrNull(value)) {
     return null;
   }
 
-  const relativeDate = formatDateISOStringToRelativeDate(date);
+  const relativeDate = formatDateISOStringToRelativeDate(value);
   return relativeDate;
 };
