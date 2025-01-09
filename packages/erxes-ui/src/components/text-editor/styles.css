@@ -26,17 +26,14 @@
   padding-inline: 36px;
   min-height: 100%;
   width: 100%;
-  border-radius: 0%;
-  /* Add these properties for better word wrapping */
+  border-radius: 0%
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
-  /* Ensure the width is properly constrained */
   max-width: 100%;
   box-sizing: border-box;
 }
 
-/* Add specific styling for paragraphs and other text containers */
 .bn-editor p, 
 .bn-editor div {
   white-space: pre-wrap;
