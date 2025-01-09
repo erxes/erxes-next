@@ -1,4 +1,4 @@
-import { Sidebar } from 'erxes-ui';
+import { Button, Collapsible, Sidebar } from 'erxes-ui';
 import { User } from './User';
 import { Organization } from './Organization';
 import { SidebarNavigation } from './SidebarNavigation';
@@ -6,6 +6,11 @@ import { QuickActions } from '@/quickActions/components/QuickActions';
 import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
 import { useIsSettings } from '../hooks/useIsSettings';
 import { AnimatePresence, motion } from 'motion/react';
+import {
+  IconCaretUpFilled,
+  IconInbox,
+  IconSettings,
+} from '@tabler/icons-react';
 
 export const MainNavigationBar = ({
   children,
@@ -24,16 +29,55 @@ export const MainNavigationBar = ({
         exit={{ opacity: 0, x: -20 }}
         className="flex h-full w-full flex-col"
       >
-        <Sidebar.Header>
+        <Sidebar.Header className="pt-4  border-input">
           <Organization />
-          <div className="flex">
-            <QuickActions />
-          </div>
         </Sidebar.Header>
-        <Sidebar.Content>
+        <Sidebar.Separator className="mx-0" />
+        <Sidebar.Content className="gap-0">
+          <Collapsible defaultOpen className="group/collapsible">
+            <Sidebar.Group>
+              <Sidebar.GroupLabel asChild className="hover:bg-zinc-200">
+                <Collapsible.Trigger>
+                  Favorites (3)
+                  <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                </Collapsible.Trigger>
+              </Sidebar.GroupLabel>
+              <Collapsible.Content>
+                <Sidebar.GroupContent className="pt-2">
+                  <Sidebar.Menu>
+                    <Sidebar.MenuItem>
+                      <Sidebar.MenuButton>
+                        <IconInbox />
+                        <span>Team Inbox</span>
+                      </Sidebar.MenuButton>
+                    </Sidebar.MenuItem>
+                  </Sidebar.Menu>
+                </Sidebar.GroupContent>
+              </Collapsible.Content>
+            </Sidebar.Group>
+          </Collapsible>
+          <Sidebar.Separator className="mx-0" />
           <SidebarNavigation />
         </Sidebar.Content>
-        <Sidebar.Footer>
+        <Sidebar.Separator className="mx-0" />
+        <Sidebar.Footer className="pb-5 pt-0">
+          <Sidebar.Group className="pt-0">
+            <Sidebar.GroupLabel>Shortcut actions</Sidebar.GroupLabel>
+            <Sidebar.GroupContent className="grid grid-cols-2 gap-2">
+              <Button variant="ghost">
+                <IconSettings />
+              </Button>
+              <Button variant="ghost">
+                <IconSettings />
+              </Button>
+              <Button variant="ghost">
+                <IconSettings />
+              </Button>
+              <Button variant="ghost">
+                <IconSettings />
+              </Button>
+            </Sidebar.GroupContent>
+          </Sidebar.Group>
           <User />
         </Sidebar.Footer>
       </motion.div>

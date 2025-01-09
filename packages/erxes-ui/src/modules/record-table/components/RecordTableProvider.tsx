@@ -78,7 +78,7 @@ export const RecordTableProvider = forwardRef<
       accessorKey: column.id,
       header: () => (
         <div className="flex items-center gap-1">
-          <column.icon className="w-4 h-4" strokeWidth={2.5} /> {column.label}
+          <column.icon className="w-4 h-4" /> {column.label}
         </div>
       ),
       size: 180,

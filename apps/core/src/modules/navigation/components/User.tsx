@@ -1,5 +1,5 @@
 import { Sidebar, DropdownMenu, Avatar, useIsMobile } from 'erxes-ui';
-import { IconSelector, IconBell, IconLogout } from '@tabler/icons-react'
+import { IconSelector, IconBell, IconLogout } from '@tabler/icons-react';
 import { ThemeSelector } from './ThemeSelector';
 import { SelectLanguages } from './SelectLanguages';
 import { useAuth } from '@/auth/hooks/useAuth';
@@ -28,7 +28,7 @@ export function User() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar.Root className="h-8 w-8 rounded-lg">
+              <Avatar.Root className="h-8 w-8 rounded">
                 <Avatar.Image
                   src={readFile(userDetail.avatar)}
                   alt={userDetail.fullName}
@@ -37,11 +37,13 @@ export function User() {
                   {userDetail.fullName.split('')[0]}
                 </Avatar.Fallback>
               </Avatar.Root>
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="grid flex-1 text-left text-[13px] leading-tight">
                 <span className="truncate font-semibold">
                   {userDetail.fullName}
                 </span>
-                <span className="truncate text-xs">{currentUser.email}</span>
+                <span className="truncate text-xs opacity-80">
+                  {currentUser.email}
+                </span>
               </div>
               <IconSelector className="ml-auto size-4" />
             </Sidebar.MenuButton>

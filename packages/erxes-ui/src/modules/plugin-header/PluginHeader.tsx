@@ -23,7 +23,7 @@ export const PluginHeader = ({
           </span>
         </div>
         <span className="h-3 w-0.5 bg-muted rounded-sm" />
-        <IconStar className="w-4 h-4 text-muted-foreground" strokeWidth={2.5} />
+        <IconStar className="w-4 h-4 text-muted-foreground" />
       </div>
       <div className="flex items-center gap-3">{children}</div>
     </header>
