@@ -21,7 +21,7 @@ export const AddProductButton = () => {
       ...locale,
       placeholders: {
         ...locale.placeholders,
-        default: 'Add desctiption...',
+        default: 'Add description...',
         heading: 'This is a custom heading',
       },
     },
