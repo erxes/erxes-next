@@ -225,7 +225,10 @@ const ProfileForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Upload.Root {...field}>
+                  <Upload.Root
+                    {...field}
+                    onChange={(fileInfo) => field.onChange(fileInfo.url)}
+                  >
                     <Upload.Preview />
                     <div className="flex flex-col gap-2">
                       <div className="flex gap-4">

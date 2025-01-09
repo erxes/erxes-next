@@ -1,0 +1,94 @@
+.bn-container[data-theming-css-variables-demo][data-color-scheme] {
+  --bn-colors-editor-text: hsl(var(--foreground));
+  --bn-colors-editor-background: hsl(var(--background));
+  --bn-colors-menu-text: hsl(var(--foreground));
+  --bn-colors-menu-background: hsl(var(--background));
+  --bn-colors-tooltip-text: hsl(var(--foreground));
+  --bn-colors-tooltip-background: hsl(var(--background));
+  --bn-colors-hovered-text: hsl(var(--accent-foreground));
+  --bn-colors-hovered-background: hsl(var(--accent));
+  --bn-colors-selected-text: hsl(var(--secondary-foreground));
+  --bn-colors-selected-background: hsl(var(--secondary));
+  --bn-colors-disabled-text: hsl(var(--muted-foreground));
+  --bn-colors-disabled-background: hsl(var(--muted));
+  --bn-colors-border: hsl(var(--border));
+  --bn-colors-side-menu: hsl(var(--muted-foreground));
+  --bn-color-highlight-colors: hsl(var(--foreground));
+}
+
+.bn-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.bn-editor {
+  padding-inline: 36px;
+  min-height: 100%;
+  width: 100%;
+  border-radius: 0%
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.bn-editor p, 
+.bn-editor div {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.bn-drag-handle-menu {
+  backdrop-filter: blur(12px) saturate(200%) contrast(50%) brightness(130%);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04),
+    2px 4px 16px rgba(0, 0, 0, 0.12);
+  min-width: 200px;
+  min-height: 96px;
+  padding: 4px;
+  border-radius: 8px;
+  left: 26px;
+  background: hsl(var(--background));
+  position: fixed;
+  z-index: 99999;
+  transform: translateZ(0);
+}
+
+.bn-container .bn-drag-handle {
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.bn-inline-content {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.bn-inline-content code {
+  font-family: monospace;
+  padding: 2px 4px;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.bn-mantine .bn-side-menu > [draggable='true'] {
+  margin-right: 5px;
+  &:hover {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+}
