@@ -73,7 +73,7 @@ export const BrandForm = ({ values, onChange }: BrandFormProps) => {
                     }}
                   >
                     {brand.name}
-                    {currentValue === brand.name && (
+                    {currentValue === brand._id && (
                       <IconCheck
                         size={16}
                         strokeWidth={2}

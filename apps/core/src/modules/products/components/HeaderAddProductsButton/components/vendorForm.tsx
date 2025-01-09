@@ -75,7 +75,7 @@ export const VendorForm = ({ value, onChange }: VendorFormProps) => {
                     }}
                   >
                     {vendor.name}
-                    {currentValue === vendor.name && (
+                    {currentValue === vendor._id && (
                       <IconCheck
                         size={16}
                         strokeWidth={2}
