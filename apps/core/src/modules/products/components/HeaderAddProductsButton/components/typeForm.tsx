@@ -11,12 +11,6 @@ import {
 
 import { cn } from 'erxes-ui/lib/utils';
 
-const iconMap = {
-  unique: IconDeviceUnknown,
-  subscription: IconStar,
-  service: IconHotelService,
-  product: IconPackage,
-};
 
 const types = [
   { label: 'Product', value: 'product' },
