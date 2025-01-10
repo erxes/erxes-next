@@ -1,3 +1,4 @@
+import { AddProductButton } from '@/products/components/HeaderAddProductsButton/AddProductButton';
 import { ProductsRecordTable } from '@/products/components/ProductsRecordTable';
 import {
   IconAdjustmentsHorizontal,
@@ -20,6 +21,7 @@ export const ProductsIndexPage = () => {
           <IconAdjustmentsHorizontal className="w-4 h-4" />
           Filter
         </Button>
+        <AddProductButton />
         <Sheet>
           <Sheet.Trigger>
             <Button>
