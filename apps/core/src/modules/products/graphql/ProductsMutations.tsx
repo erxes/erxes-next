@@ -1,5 +1,32 @@
 import { gql } from '@apollo/client';
 
+const productsAdd = gql`
+mutation productsAdd($name: String, $shortName: String, $type: String, $categoryId: String, $description: String, $barcodes: [String], $variants: JSON, $barcodeDescription: String, $unitPrice: Float, $code: String, $customFieldsData: JSON, $attachment: AttachmentInput, $attachmentMore: [AttachmentInput], $pdfAttachment: PdfAttachmentInput, $vendorId: String, $scopeBrandIds: [String], $uom: String, $subUoms: JSON) {
+  productsAdd(
+    name: $name
+    shortName: $shortName
+    type: $type
+    categoryId: $categoryId
+    description: $description
+    barcodes: $barcodes
+    variants: $variants
+    barcodeDescription: $barcodeDescription
+    unitPrice: $unitPrice
+    code: $code
+    customFieldsData: $customFieldsData
+    attachment: $attachment
+    attachmentMore: $attachmentMore
+    pdfAttachment: $pdfAttachment
+    vendorId: $vendorId
+    scopeBrandIds: $scopeBrandIds
+    uom: $uom
+    subUoms: $subUoms
+  ) {
+    _id
+    __typename
+  }
+}`
+
 const productsEdit = gql`
   mutation ProductsEdit(
     $_id: String!
@@ -31,4 +58,4 @@ const productsEdit = gql`
     }
   }
 `;
-export const productsMutations = { productsEdit };
+export const productsMutations = { productsEdit, productsAdd };

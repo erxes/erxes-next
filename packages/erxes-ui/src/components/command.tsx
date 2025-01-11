@@ -7,6 +7,7 @@ import { IconSearch } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
 import { Dialog } from './dialog';
+import { cva } from 'class-variance-authority';
 
 const CommandRoot = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -45,22 +46,48 @@ const CommandDialog = ({
   );
 };
 
+const commanInputVariants = cva(
+  'flex h-8 w-full bg-muted rounded-md p-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        primary: 'h-10 bg-transparent',
+        secondary: 'bg-muted',
+      },
+    },
+  }
+);
+
 const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
-    <IconSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-    <CommandPrimitive.Input
-      ref={ref}
-      className={cn(
-        'flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
-        className
-      )}
-      {...props}
-    />
-  </div>
-));
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+    variant?: 'primary' | 'secondary';
+  }
+>(({ className, variant = 'primary', ...props }, ref) => {
+  if (variant === 'primary') {
+    return (
+      <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+        <IconSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+        <CommandPrimitive.Input
+          ref={ref}
+          className={cn(commanInputVariants({ variant: 'primary' }), className)}
+          {...props}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center p-1 bg-white">
+      <CommandPrimitive.Input
+        ref={ref}
+        className={cn(commanInputVariants({ variant: 'secondary' }), className)}
+        {...props}
+        placeholder={props.placeholder || 'Search'}
+      />
+    </div>
+  );
+});
 
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 
@@ -159,6 +186,6 @@ const Command = Object.assign(CommandRoot, {
   Item: CommandItem,
   Shortcut: CommandShortcut,
   Separator: CommandSeparator,
-})
+});
 
-export { Command }
+export { Command };

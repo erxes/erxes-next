@@ -1,28 +1,33 @@
-import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../lib/utils';
+import * as React from 'react';
 
-export const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+import { cn } from 'erxes-ui/lib';
+
+// bg-primary text-primary-foreground shadow-sm shadow-black/5 hover:bg-primary/90
+// shadow-[0_1px_theme(colors.white/0.07)_inset,0_1px_3px_theme(colors.gray.900/0.2)]
+// inset-shadow-[0_2px_1px_-1px] inset-shadow-white/60 active:inset-shadow-none
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center gap-2 px-3 whitespace-nowrap rounded-md text-[13px] transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-medium',
   {
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground shadow hover:bg-primary/90',
+          'border-primary border relative transition duration-300 ease-[cubic-bezier(0.4,0.36,0,1)] before:duration-300 before:ease-[cubic-bezier(0.4,0.36,0,1)] before:transtion-opacity rounded-md shadow-button-primary before:pointer-events-none before:absolute before:inset-0 before:rounded-md before:bg-gradient-to-b before:from-white/20 before:opacity-50 hover:before:opacity-100 bg-primary text-primary-foreground after:pointer-events-none after:absolute after:inset-0 after:bg-white/10 after:bottom-1/2 after:rounded-sm after:mix-blend-overlay [text-shadow:_0_1px_1px_rgb(0_0_0_/_25%)]',
         destructive:
-          'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
+          'bg-destructive text-destructive-foreground shadow-sm shadow-black/5 hover:bg-destructive/90',
         outline:
-          'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
+          'ring-1 ring-input bg-background shadow-button-outline hover:bg-accent hover:text-accent-foreground',
         secondary:
-          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
+          'bg-secondary text-secondary-foreground shadow-sm shadow-black/5 hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+        link: 'ring-1 ring-input bg-background shadow-button-outline hover:bg-accent text-primary',
       },
       size: {
-        default: 'h-7 px-2 py-1',
-        sm: 'h-6 rounded-md px-2 text-xs',
-        lg: 'h-8 rounded-md px-6',
+        default: 'h-7 py-1',
+        sm: 'h-6 rounded-md text-xs after:rounded-[2px] after:absolute',
+        lg: 'h-8 rounded-md px-6 font-semibold',
         icon: 'h-7 w-7',
       },
     },
@@ -39,16 +44,20 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      />
+      >
+        {children}
+      </Comp>
     );
   }
 );
 Button.displayName = 'Button';
+
+export { Button, buttonVariants };

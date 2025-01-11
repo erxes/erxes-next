@@ -53,9 +53,9 @@ const RocketIcon = () => {
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth={2}
         variants={variants}
         animate={controls}
       >

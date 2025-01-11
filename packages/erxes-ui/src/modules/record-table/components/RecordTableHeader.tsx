@@ -4,13 +4,10 @@ import {
 } from '@dnd-kit/sortable';
 import { Table } from 'erxes-ui/components';
 import { useRecordTable } from './RecordTableProvider';
-import { Header } from '@tanstack/react-table';
+import { flexRender } from '@tanstack/react-table';
+import { RecordTableHead } from './RecordTableHead';
 
-export const RecordTableHeader = ({
-  renderHead,
-}: {
-  renderHead: (header: Header<any, unknown>, idx: number) => JSX.Element;
-}) => {
+export const RecordTableHeader = () => {
   const { table } = useRecordTable();
   return (
     <Table.Header>
@@ -20,7 +17,16 @@ export const RecordTableHeader = ({
             items={table.getState().columnOrder}
             strategy={horizontalListSortingStrategy}
           >
-            {headerGroup.headers.map(renderHead)}
+            {headerGroup.headers.map((header) => (
+              <RecordTableHead header={header}>
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+              </RecordTableHead>
+            ))}
           </SortableContext>
         </Table.Row>
       ))}

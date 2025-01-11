@@ -13,6 +13,7 @@ import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 
 import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
+import ContactsRoutes from '../components/ContactsRoutes';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
@@ -40,6 +41,10 @@ export const useCreateRouter = () => {
               <Route
                 path={AppPath.ProductsCatchAll}
                 element={<ProductsRoutes />}
+              />
+              <Route
+                path={AppPath.ContactsCatchAll}
+                element={<ContactsRoutes />}
               />
               <Route>{usePluginsRouter()}</Route>
             </Route>

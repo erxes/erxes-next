@@ -1,5 +1,6 @@
-import { CommandBar, RecordTable } from 'erxes-ui/components';
+import { CommandBar } from 'erxes-ui/components';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { RecordTable } from 'erxes-ui/modules/record-table';
 
 export const ProductCommandBar = () => {
   const { table } = RecordTable.useRecordTable();

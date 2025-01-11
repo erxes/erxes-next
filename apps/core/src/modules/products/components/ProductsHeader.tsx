@@ -1,5 +1,7 @@
 import { Breadcrumb, Button, Header, HoverCard } from 'erxes-ui/components';
-import { IconPlus, IconInfoCircle } from '@tabler/icons-react'
+import { IconPlus, IconInfoCircle } from '@tabler/icons-react';
+import { AddProductButton } from './HeaderAddProductsButton/AddProductButton';
+import { CategoryForm } from './HeaderAddProductsButton/components/categoryForm';
 
 const ProductsHeader = () => {
   return (
@@ -31,9 +33,7 @@ const ProductsHeader = () => {
           </Breadcrumb.List>
         </Breadcrumb.Root>
         <div className="flex gap-2 items-center">
-          <Button variant="outline" size="icon">
-            <IconPlus className="size-3" />
-          </Button>
+          <AddProductButton />
         </div>
       </div>
     </Header>

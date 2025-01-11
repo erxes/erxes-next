@@ -12,6 +12,10 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
+    fontFamily: {
+      sans: ['var(--font-sans)', ...fontFamily.sans],
+      mono: ['var(--font-mono)', ...fontFamily.mono],
+    },
     container: {
       center: true,
       padding: '2rem',
@@ -128,6 +132,9 @@ module.exports = {
         md: `calc(var(--radius) - 2px)`,
         sm: 'calc(var(--radius) - 4px)',
       },
+      spacing: {
+        cell: '34px',
+      },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
       },
@@ -148,6 +155,12 @@ module.exports = {
       boxShadow: {
         'command-bar':
           'rgba(0, 0, 0, 0.12) 2px 4px 16px 0px, rgba(0, 0, 0, 0.04) 0px 2px 4px 0px',
+        'button-primary':
+          'inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 4px rgba(0, 0, 0, 0.05), 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.05)',
+        'button-outline':
+          '0px 4px 4px 0px rgba(0, 0, 0, 0.05), 0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px rgba(0, 0, 0, 0.05)',
+        'sidebar-inset':
+          '0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 1px 1px rgba(0, 0, 0, 0.05), 0px 2px 2px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.05)',
       },
     },
   },
