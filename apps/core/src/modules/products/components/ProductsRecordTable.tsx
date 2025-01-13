@@ -51,7 +51,7 @@ export const ProductsRecordTable = () => {
             handleReachedBottom={handleFetchMore}
             getFetchValueHook={getFetchValueHook}
             useMutateValueHook={useMutateValueHook}
-            className="mt-3"
+            className="mt-1.5"
           >
             <RecordTable>
               <RecordTable.Header />

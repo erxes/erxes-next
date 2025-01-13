@@ -19,47 +19,55 @@ import { IRecordTableColumn } from 'erxes-ui/modules/record-table/types/recordTa
 const columns: IRecordTableColumn[] = [
   {
     id: 'firstName',
+    label: 'First Name',
     icon: IconAlignLeft,
     type: 'handle',
     readOnly: true,
   },
   {
     id: 'middleName',
+    label: 'Middle Name',
     icon: IconAlignLeft,
     type: 'handle',
     readOnly: true,
   },
   {
     id: 'lastName',
+    label: 'Last Name',
     icon: IconAlignLeft,
     type: 'handle',
     readOnly: true,
   },
   {
     id: 'email',
+    label: 'Email',
     icon: IconMail,
     type: 'handle',
     readOnly: true,
   },
   {
     id: 'phone',
+    label: 'Phone',
     icon: IconPhone,
     type: 'handle',
     readOnly: true,
   },
   {
     id: 'createdAt',
+    label: 'Created At',
     icon: IconHistory,
     type: 'date',
   },
   {
     id: 'country',
+    label: 'Country',
     icon: IconMapPin,
     type: 'handle',
     readOnly: true,
   },
   {
     id: 'sessionCount',
+    label: 'Session Count',
     icon: IconHistory,
     type: 'number',
   },
@@ -76,6 +84,10 @@ export const ContactsRecordTable = () => {
 
   const getFetchValueHook = () => {
     return () => ({ loading: false, options: [] });
+  };
+
+  const useMutateValueHook = () => {
+    return () => ({ loading: false, mutate: () => {} });
   };
   return (
     <>
@@ -95,7 +107,7 @@ export const ContactsRecordTable = () => {
       ) : (
         <>
           <RecordTable.Provider
-            // useMutateValueHook={getFetchValueHook}
+            useMutateValueHook={useMutateValueHook}
             columns={columns as IRecordTableColumn[]}
             data={customers || []}
             handleReachedBottom={handleFetchMore}

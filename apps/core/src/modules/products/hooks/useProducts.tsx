@@ -1,12 +1,19 @@
 import { useQuery } from '@apollo/client';
 import { productsQueries } from '@/products/graphql';
+import { useSearchParams } from 'react-router-dom';
 
 const PRODUCTS_PER_PAGE = 30;
 
 export const useProducts = () => {
+  const [searchParams] = useSearchParams();
+
+  // Convert searchParams to plain object
+  const searchParamsObject = Object.fromEntries(searchParams.entries());
+
   const { data, loading, fetchMore } = useQuery(productsQueries.products, {
     variables: {
       perPage: PRODUCTS_PER_PAGE,
+      ...searchParamsObject,
     },
   });
 

@@ -22,13 +22,13 @@ export function User() {
   return (
     <Sidebar.Menu>
       <Sidebar.MenuItem>
-        <DropdownMenu.Root>
+        <DropdownMenu>
           <DropdownMenu.Trigger asChild>
             <Sidebar.MenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10"
             >
-              <Avatar.Root className="h-8 w-8 rounded">
+              <Avatar.Root className="h-8 w-8 rounded-full">
                 <Avatar.Image
                   src={readFile(userDetail.avatar)}
                   alt={userDetail.fullName}
@@ -86,7 +86,7 @@ export function User() {
               Log out
             </DropdownMenu.Item>
           </DropdownMenu.Content>
-        </DropdownMenu.Root>
+        </DropdownMenu>
       </Sidebar.MenuItem>
     </Sidebar.Menu>
   );

@@ -1,4 +1,6 @@
 import { AddProductButton } from '@/products/components/HeaderAddProductsButton/AddProductButton';
+import { ProductsFilter } from '@/products/components/ProductsFilter';
+import { ProductsFilterBar } from '@/products/components/ProductsFilter/ProductsFilterBar';
 import { ProductsRecordTable } from '@/products/components/ProductsRecordTable';
 import {
   IconAdjustmentsHorizontal,
@@ -17,10 +19,7 @@ export const ProductsIndexPage = () => {
           <IconSettings className="w-4 h-4" />
           Go to settings
         </Button>
-        <Button variant="outline" className="px-2">
-          <IconAdjustmentsHorizontal className="w-4 h-4" />
-          Filter
-        </Button>
+        <ProductsFilter />
         <AddProductButton />
         <Sheet>
           <Sheet.Trigger>
@@ -32,7 +31,7 @@ export const ProductsIndexPage = () => {
           <Sheet.Content className="sm:max-w-2xl">hi</Sheet.Content>
         </Sheet>
       </PluginHeader>
-
+      <ProductsFilterBar />
       <ProductsRecordTable />
     </div>
   );

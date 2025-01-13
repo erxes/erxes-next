@@ -1,10 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { IconCalculator, IconCalendarWeek, IconCommand, IconCreditCard, IconSettings, IconMoodSmile, IconUser } from '@tabler/icons-react'
+import {
+  IconCalculator,
+  IconCalendarWeek,
+  IconCommand,
+  IconCreditCard,
+  IconSettings,
+  IconMoodSmile,
+  IconUser,
+} from '@tabler/icons-react';
 
-import { Command, Sidebar } from 'erxes-ui/components';
-import { useNavigate } from 'react-router-dom';
+import { Button, Command, Sidebar } from 'erxes-ui/components';
 
 export function QuickActions() {
   const [open, setOpen] = React.useState(false);
@@ -21,26 +28,13 @@ export function QuickActions() {
     return () => document.removeEventListener('keydown', down);
   }, []);
 
-  const navigate = useNavigate();
-
   return (
     <>
-      <div className="w-full ">
-        <Sidebar.MenuButton onClick={() => setOpen(true)}>
+      <Sidebar.MenuButton size="lg" onClick={() => setOpen(true)} asChild>
+        <Button variant="secondary">
           <IconCommand />
-          <span>Quick Actions</span>
-          <Command.Shortcut>⌘K</Command.Shortcut>
-        </Sidebar.MenuButton>
-
-        <Sidebar.MenuButton
-          onClick={() => {
-            navigate('/settings');
-          }}
-        >
-          <IconSettings />
-          <span>Settings</span>
-        </Sidebar.MenuButton>
-      </div>
+        </Button>
+      </Sidebar.MenuButton>
 
       <Command.Dialog
         open={open}
