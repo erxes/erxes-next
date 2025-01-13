@@ -22,7 +22,6 @@ const initFederation = async () => {
       .then((res) => res.json())
       .then((data) => {
         console.log('data', data);
-        window.plugins = data.plugins || [];
 
         init({
           name: 'core',

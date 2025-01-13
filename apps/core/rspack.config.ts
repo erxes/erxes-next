@@ -3,22 +3,27 @@ import {
   withModuleFederation,
   ModuleFederationConfig,
 } from '@nx/rspack/module-federation';
+import { DefinePlugin } from '@rspack/core';
 
 import baseConfig from './module-federation.config';
 
 const config: ModuleFederationConfig = {
   ...baseConfig,
-  // remotes: ['plugin_inbox', 'plugin_task'],
 };
 
-// Nx plugins for rspack to build config object from Nx options and context.
-/**
- * DTS Plugin is disabled in Nx Workspaces as Nx already provides Typing support for Module Federation
- * The DTS Plugin can be enabled by setting dts: true
- * Learn more about the DTS Plugin here: https://module-federation.io/configure/dts.html
- */
 export default composePlugins(
   withNx(),
   withReact(),
-  withModuleFederation(config, { dts: false })
+  withModuleFederation(config, { dts: false }),
+  (config) => {
+    // Define environment variables
+    config.plugins?.push(
+      new DefinePlugin({
+        'process.env.REACT_APP_API_URL': JSON.stringify(
+          process.env.REACT_APP_API_URL
+        ),
+      })
+    );
+    return config;
+  }
 );
