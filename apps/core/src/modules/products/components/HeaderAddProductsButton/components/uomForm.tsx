@@ -1,13 +1,9 @@
 'use client';
 import { useState, FC } from 'react';
 import {
-  Button,
-  Popover,
-  Command,
   Skeleton,
   Select,
 } from 'erxes-ui/components';
-import { IconCheck, IconChevronDown } from '@tabler/icons-react';
 import { useUom } from '@/products/hooks/useUom';
 import { cn } from 'erxes-ui/lib/utils';
 
