@@ -37,12 +37,6 @@ export const columns = [
     type: 'chip',
   },
   {
-    id: 'status',
-    label: 'Status',
-    icon: IconCircleCheck,
-    type: 'select',
-  },
-  {
     id: 'createdAt',
     label: 'Created At',
     icon: IconHistory,

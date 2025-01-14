@@ -83,7 +83,7 @@ const FilterBarSelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'rounded-none border-none h-7 bg-background flex w-full items-center px-3 py-1 text-[13px] focus:border-ring focus:outline-none focus:ring-ring/20 focus:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground/70',
+      'rounded-none border-none h-7 bg-background flex w-full items-center px-3 py-1 text-[13px] focus:border-ring focus:outline-none focus:ring-ring/20 focus:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground/70 font-medium',
       className
     )}
     {...props}

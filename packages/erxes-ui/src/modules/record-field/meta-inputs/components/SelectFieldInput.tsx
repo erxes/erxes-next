@@ -3,7 +3,7 @@ import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordT
 import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
 
 export const SelectFieldInput = () => {
-  const { column, value, setValue, isInEditMode, setIsInEditMode } =
+  const { column, value, onSelect, isInEditMode, setIsInEditMode } =
     useRecordTableCellContext();
   const { getFetchValueHook } = useRecordTable();
   const { options } = getFetchValueHook(column.id)();
@@ -12,7 +12,7 @@ export const SelectFieldInput = () => {
       open={isInEditMode}
       onOpenChange={setIsInEditMode}
       value={value}
-      onValueChange={(value) => setValue(value)}
+      onValueChange={(value) => onSelect(value)}
     >
       <Select.Trigger className="h-cell rounded-none">
         <Select.Value placeholder="Select" />

@@ -210,9 +210,9 @@ DropdownMenuTabs.displayName = TabsPrimitive.Root.displayName;
 const DropdownMenuTabsTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
-    value: string;
+    value?: string;
   }
->(({ className, value, ...props }, ref) => {
+>(({ className, value = 'root', ...props }, ref) => {
   const { setValue } = useDropdownMenuTabs();
   return (
     <DropdownMenuPrimitive.Sub>

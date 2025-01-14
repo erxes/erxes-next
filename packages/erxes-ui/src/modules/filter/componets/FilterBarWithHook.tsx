@@ -1,15 +1,12 @@
-import { Select } from 'erxes-ui/components/select';
-import { useAddFilter } from 'erxes-ui/modules/filter-bar/hooks/useAddFilter';
 import {
   FilterBarContainer,
   FilterBarItem,
   FilterBarField,
   FilterBarRemove,
-  FilterBarSelectTrigger,
 } from './FilterBar';
-import { Filter } from 'erxes-ui/modules/filter-bar/types/filter';
-import { Button, Input } from 'erxes-ui/components';
-import { parseAsString, useQueryState, useQueryStates } from 'nuqs';
+import { Filter } from 'erxes-ui/modules/filter/types/filter';
+import { Button } from 'erxes-ui/components';
+import { parseAsString, useQueryStates } from 'nuqs';
 
 export const FilterBarWithHook = ({ filters }: { filters: Filter[] }) => {
   const queryKeys = filters.reduce((acc, filter) => {
@@ -39,9 +36,9 @@ const FilterBarItemWithHook = ({
   accessoryKey,
   label,
   type,
-  options,
   condition,
   queryKeys,
+  bar,
   ...props
 }: Filter & { queryKeys: Record<string, any> }) => {
   const [filter, setFilter] = useQueryStates(queryKeys);
@@ -62,15 +59,7 @@ const FilterBarItemWithHook = ({
         accessoryKey={accessoryKey}
         condition={condition}
       />
-      <FilterBarValueWithHook
-        accessoryKey={accessoryKey}
-        type={type}
-        options={options}
-        value={value}
-        onValueChange={(value) =>
-          setFilter({ ...filter, [accessoryKey]: value })
-        }
-      />
+      {bar({ ...props, accessoryKey, label, type, condition })}
       <FilterBarRemove
         onClick={() => setFilter({ ...filter, [accessoryKey]: null })}
       />
@@ -87,38 +76,4 @@ const FilterBarConditionWithHook = ({
       {condition}
     </Button>
   );
-};
-
-const FilterBarValueWithHook = ({
-  accessoryKey,
-  type,
-  options,
-  value,
-  onValueChange,
-}: Pick<Filter, 'accessoryKey' | 'type' | 'options'> & {
-  value: string;
-  onValueChange: (value: string) => void;
-}) => {
-  if (type === 'input') {
-    return <Input className="w-full rounded-none h-7" />;
-  }
-
-  if (type === 'select') {
-    return (
-      <Select value={value} onValueChange={onValueChange}>
-        <FilterBarSelectTrigger>
-          <Select.Value />
-        </FilterBarSelectTrigger>
-        <Select.Content>
-          {options.map((option) => (
-            <Select.Item key={option.value} value={option.value}>
-              {option.label}
-            </Select.Item>
-          ))}
-        </Select.Content>
-      </Select>
-    );
-  }
-
-  return null;
 };
