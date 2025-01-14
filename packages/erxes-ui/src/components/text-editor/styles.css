@@ -1,37 +1,40 @@
 .bn-container[data-theming-css-variables-demo][data-color-scheme] {
-  --bn-colors-editor-text: hsl(var(--foreground));
-  --bn-colors-editor-background: hsl(var(--background));
-  --bn-colors-menu-text: hsl(var(--foreground));
-  --bn-colors-menu-background: hsl(var(--background));
-  --bn-colors-tooltip-text: hsl(var(--foreground));
-  --bn-colors-tooltip-background: hsl(var(--background));
-  --bn-colors-hovered-text: hsl(var(--accent-foreground));
-  --bn-colors-hovered-background: hsl(var(--accent));
-  --bn-colors-selected-text: hsl(var(--secondary-foreground));
-  --bn-colors-selected-background: hsl(var(--secondary));
-  --bn-colors-disabled-text: hsl(var(--muted-foreground));
-  --bn-colors-disabled-background: hsl(var(--muted));
-  --bn-colors-border: hsl(var(--border));
+  --bn-colors-editor-text: hsl(var(--background));
+  --bn-colors-editor-background: transparent;
+  --bn-colors-menu-text: hsl(var(--background));
+  --bn-colors-menu-background: hsl(var(--foreground));
+  --bn-colors-tooltip-text: hsl(var(--muted-background));
+  --bn-colors-tooltip-background: hsl(var(--muted-foreground));
+  --bn-colors-hovered-text: hsl(var(--accent));
+  --bn-colors-hovered-background: hsl(var(--accent-foreground));
+  --bn-colors-selected-text: hsl(var(--secondary));
+  --bn-colors-selected-background: hsl(var(--muted-background));
+  --bn-colors-disabled-text: hsl(var(--muted-background));
+  --bn-colors-disabled-background: hsl(var(--muted-foreground));
+  --bn-colors-border: hsl(var(--muted-background));
   --bn-colors-side-menu: hsl(var(--muted-foreground));
-  --bn-color-highlight-colors: hsl(var(--foreground));
+  --bn-color-highlight-colors: hsl(var(--muted-foreground));
 }
 
 .bn-container {
   height: 100%;
   width: 100%;
   overflow: auto;
+  border-radius: 0;
+  background: transparent;
 }
 
 .bn-editor {
   padding-inline: 36px;
   min-height: 100%;
   width: 100%;
-  border-radius: 0%;
+  border-radius: 0;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
   max-width: 100%;
   box-sizing: border-box;
+  border-bottom: 2px solid hsl(var(--muted-background));
 }
 
 .bn-editor p,
