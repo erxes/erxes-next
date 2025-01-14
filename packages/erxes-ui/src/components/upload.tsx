@@ -135,7 +135,7 @@ const UploadPreview = React.forwardRef<
 
   return (
     <>
-      <div className="relative inline-flex">
+      <div className={cn("relative inline-flex", className)}>
         <Button
           type="button"
           variant="outline"
