@@ -1,24 +1,38 @@
 import {
   IconAdjustmentsHorizontal,
+  IconBox,
   IconChevronRight,
 } from '@tabler/icons-react';
 import { Button, DropdownMenu } from 'erxes-ui/components';
-import { ProductType } from './ProductsFilter/ProductType';
+import { Filter } from 'erxes-ui/modules/filter-bar/types/filter';
+import { ProductFilterDropdown } from '@/products/components/products-filter/ProductsFilterDropdown';
 
-export const filters = {
-  type: {
+export const filters: Filter[] = [
+  {
     label: 'Type',
-    value: 'type',
+    accessoryKey: 'type',
+    icon: IconBox,
     type: 'select',
+    condition: 'is',
     options: [
-      { label: 'All', value: '' },
       { label: 'Product', value: 'product' },
       { label: 'Service', value: 'service' },
       { label: 'Subscription', value: 'subscription' },
       { label: 'Inventory', value: 'inventory' },
     ],
   },
-};
+  {
+    label: 'Status',
+    accessoryKey: 'status',
+    icon: IconBox,
+    type: 'select',
+    condition: 'is',
+    options: [
+      { label: 'Active', value: 'active' },
+      { label: 'Inactive', value: 'inactive' },
+    ],
+  },
+];
 
 export const ProductsFilter = () => {
   return (
@@ -32,12 +46,18 @@ export const ProductsFilter = () => {
       <DropdownMenu.Content>
         <DropdownMenu.Tabs>
           <DropdownMenu.TabsContent>
-            <DropdownMenu.TabsTrigger value="type">
-              Type
-              <IconChevronRight className="w-4 h-4 ml-auto" />
-            </DropdownMenu.TabsTrigger>
+            {filters.map((filter) => (
+              <DropdownMenu.TabsTrigger value={filter.accessoryKey}>
+                {filter.label}
+                <IconChevronRight className="w-4 h-4 ml-auto" />
+              </DropdownMenu.TabsTrigger>
+            ))}
           </DropdownMenu.TabsContent>
-          <ProductType />
+          {filters.map((filter) => (
+            <DropdownMenu.TabsContent value={filter.accessoryKey}>
+              <ProductFilterDropdown />
+            </DropdownMenu.TabsContent>
+          ))}
         </DropdownMenu.Tabs>
       </DropdownMenu.Content>
     </DropdownMenu>

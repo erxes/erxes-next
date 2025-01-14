@@ -11,7 +11,7 @@ import {
 } from 'erxes-shared-states';
 
 import { useSetRecoilState } from 'recoil';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useToast } from 'erxes-ui/hooks';
 import { ResetPassword } from '@/auth/login/grahpql/mutations/resetPassword';
 

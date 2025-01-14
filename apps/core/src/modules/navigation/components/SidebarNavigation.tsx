@@ -1,7 +1,7 @@
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import { pluginsState, Plugin } from '../states/navigationStates';
 import { PLUGINS } from '../constants/plugins';

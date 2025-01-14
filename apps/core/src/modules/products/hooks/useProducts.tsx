@@ -1,19 +1,21 @@
 import { useQuery } from '@apollo/client';
 import { productsQueries } from '@/products/graphql';
-import { useSearchParams } from 'react-router-dom';
+import { useQueryStates, parseAsString } from 'nuqs';
+import { Filter } from 'erxes-ui/modules/filter-bar/types/filter';
 
 const PRODUCTS_PER_PAGE = 30;
 
-export const useProducts = () => {
-  const [searchParams] = useSearchParams();
-
-  // Convert searchParams to plain object
-  const searchParamsObject = Object.fromEntries(searchParams.entries());
-
+export const useProducts = (filters: Filter[]) => {
+  const [filtersQuery] = useQueryStates(
+    filters.reduce((acc, filter) => {
+      acc[filter.accessoryKey] = parseAsString.withDefault('');
+      return acc;
+    }, {})
+  );
   const { data, loading, fetchMore } = useQuery(productsQueries.products, {
     variables: {
       perPage: PRODUCTS_PER_PAGE,
-      ...searchParamsObject,
+      ...filtersQuery,
     },
   });
 

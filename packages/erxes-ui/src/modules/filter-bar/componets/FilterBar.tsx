@@ -31,7 +31,7 @@ const FilterBarContainer = React.forwardRef<HTMLDivElement, FilterBarProps>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex items-center gap-2 h-7', className)}
+      className={cn('flex items-center gap-2 h-7 flex-shrink-0', className)}
       {...props}
     >
       <p className="text-[13px] font-semibold text-muted-foreground">
@@ -64,7 +64,10 @@ const FilterBarField = React.forwardRef<HTMLButtonElement, FilterBarFieldProps>(
     <Button
       ref={ref}
       variant="ghost"
-      className={cn('rounded-l-sm rounded-r-none bg-white px-2', className)}
+      className={cn(
+        'rounded-l-sm rounded-r-none bg-white px-2 text-[13px]',
+        className
+      )}
       {...props}
     >
       {children}
@@ -73,7 +76,7 @@ const FilterBarField = React.forwardRef<HTMLButtonElement, FilterBarFieldProps>(
 );
 FilterBarField.displayName = 'FilterBarField';
 
-const SelectTrigger = React.forwardRef<
+const FilterBarSelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, ...props }, ref) => (
@@ -92,9 +95,9 @@ const FilterBarCondition = React.forwardRef<
   FilterBarConditionProps
 >(({ className, ...props }, ref) => (
   <Select {...props}>
-    <SelectTrigger className={cn(className)}>
+    <FilterBarSelectTrigger className={cn(className)}>
       <Select.Value />
-    </SelectTrigger>
+    </FilterBarSelectTrigger>
   </Select>
 ));
 FilterBarCondition.displayName = 'FilterBarCondition';
@@ -104,7 +107,9 @@ const FilterBarValue = React.forwardRef<
   FilterBarValueProps
 >(({ className, children, ...props }, ref) => (
   <Select {...props}>
-    <SelectTrigger className={cn(className)}>{children}</SelectTrigger>
+    <FilterBarSelectTrigger className={cn(className)}>
+      {children}
+    </FilterBarSelectTrigger>
   </Select>
 ));
 FilterBarValue.displayName = 'FilterBarValue';
@@ -132,4 +137,5 @@ export {
   FilterBarCondition,
   FilterBarValue,
   FilterBarRemove,
+  FilterBarSelectTrigger,
 };

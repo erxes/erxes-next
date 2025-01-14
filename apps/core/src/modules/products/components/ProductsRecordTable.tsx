@@ -12,9 +12,11 @@ import {
 } from '@/products/constants/ProductConstants';
 import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 import { MutationHookOptions } from '@apollo/client';
+import { filters } from './ProductsFilter';
 
 export const ProductsRecordTable = () => {
-  const { products, handleFetchMore, loading, totalCount } = useProducts();
+  const { products, handleFetchMore, loading, totalCount } =
+    useProducts(filters);
 
   const getFetchValueHook = (columnId: string) => {
     if (columnId === 'categoryId') return useProductCategories;

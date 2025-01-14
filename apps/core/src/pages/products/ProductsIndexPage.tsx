@@ -1,15 +1,10 @@
 import { AddProductButton } from '@/products/components/HeaderAddProductsButton/AddProductButton';
-import { ProductsFilter } from '@/products/components/ProductsFilter';
-import { ProductsFilterBar } from '@/products/components/ProductsFilter/ProductsFilterBar';
+import { filters, ProductsFilter } from '@/products/components/ProductsFilter';
 import { ProductsRecordTable } from '@/products/components/ProductsRecordTable';
-import {
-  IconAdjustmentsHorizontal,
-  IconBox,
-  IconPlus,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconBox, IconPlus, IconSettings } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui/components';
 import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
+import { FilterBarWithHook } from 'erxes-ui/modules/filter-bar/componets/FilterBarWithHook';
 
 export const ProductsIndexPage = () => {
   return (
@@ -22,7 +17,7 @@ export const ProductsIndexPage = () => {
         <ProductsFilter />
         <AddProductButton />
         <Sheet>
-          <Sheet.Trigger>
+          <Sheet.Trigger asChild>
             <Button>
               <IconPlus className="w-4 h-4" />
               Add product
@@ -31,7 +26,7 @@ export const ProductsIndexPage = () => {
           <Sheet.Content className="sm:max-w-2xl">hi</Sheet.Content>
         </Sheet>
       </PluginHeader>
-      <ProductsFilterBar />
+      <FilterBarWithHook filters={filters} />
       <ProductsRecordTable />
     </div>
   );

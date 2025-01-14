@@ -1,6 +1,6 @@
 import { Button } from 'erxes-ui/components';
 import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export default function HandlerDisplay() {
   const { value, row } = useRecordTableCellContext();

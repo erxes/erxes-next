@@ -1,5 +1,5 @@
 import { Button } from 'erxes-ui';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const HandlerDisplay = ({
   value,

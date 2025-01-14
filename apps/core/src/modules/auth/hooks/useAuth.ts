@@ -11,7 +11,7 @@ import {
 } from 'erxes-shared-states';
 
 import { useSetRecoilState } from 'recoil';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 export const useAuth = () => {
   const [logout] = useMutation(Logout);

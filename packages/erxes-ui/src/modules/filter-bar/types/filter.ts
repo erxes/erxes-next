@@ -1,3 +1,10 @@
+import { Icon } from '@tabler/icons-react';
+
 export interface Filter {
-  hi: string;
+  accessoryKey: string;
+  label: string;
+  icon: Icon;
+  type: 'input' | 'select' | 'boolean';
+  options: { label: string; value: string }[];
+  condition;
 }
