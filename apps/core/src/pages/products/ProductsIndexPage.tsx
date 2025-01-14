@@ -1,12 +1,11 @@
-import { AddProductButton } from '@/products/components/HeaderAddProductsButton/AddProductButton';
+import { AddProductForm } from '@/products/components/HeaderAddProductsButton/AddProductForm';
 import { ProductsRecordTable } from '@/products/components/ProductsRecordTable';
 import {
   IconAdjustmentsHorizontal,
   IconBox,
-  IconPlus,
   IconSettings,
 } from '@tabler/icons-react';
-import { Button, Sheet } from 'erxes-ui/components';
+import { Button } from 'erxes-ui/components';
 import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
 
 export const ProductsIndexPage = () => {
@@ -21,18 +20,8 @@ export const ProductsIndexPage = () => {
           <IconAdjustmentsHorizontal className="w-4 h-4" />
           Filter
         </Button>
-        <AddProductButton />
-        <Sheet>
-          <Sheet.Trigger>
-            <Button>
-              <IconPlus className="w-4 h-4" />
-              Add product
-            </Button>
-          </Sheet.Trigger>
-          <Sheet.Content className="sm:max-w-2xl">hi</Sheet.Content>
-        </Sheet>
+        <AddProductForm />
       </PluginHeader>
-
       <ProductsRecordTable />
     </div>
   );
