@@ -18,7 +18,7 @@ export const ProductAddCollapsible = ({
           variant={'secondary'}
           className={`flex gap-1 bg-transparent text-xs font-semibold text-accent-foreground border-none shadow-none order-2 `}
         >
-          See more options
+          See {!isOpen ? 'more' : 'less'} options
           <IconChevronDown
             size={12}
             strokeWidth={2}
