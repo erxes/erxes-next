@@ -36,7 +36,7 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
           <Button
             variant="secondary"
             asChild
-            className="truncate justify-start h-9"
+            className="truncate h-8 hover:cursor-pointer bg-transparent border-none shadow-none "
             onClick={(e) => {
               setOpen(true);
               e.stopPropagation();
@@ -46,7 +46,7 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
               <span
                 className={cn(
                   'truncate',
-                  !currentValue && 'text-foreground font-semibold text-xs'
+                  !currentValue && 'text-foreground font-medium text-sm'
                 )}
               >
                 {currentValue
