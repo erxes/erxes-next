@@ -3,9 +3,14 @@
 import * as React from 'react';
 import * as SheetPrimitive from '@radix-ui/react-dialog';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { IconX } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
+
+const SheetRoot = ({
+  ...props
+}: React.ComponentProps<typeof SheetPrimitive.Root>) => (
+  <SheetPrimitive.Root {...props} />
+);
 
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
@@ -121,7 +126,7 @@ const SheetDescription = React.forwardRef<
 ));
 SheetDescription.displayName = SheetPrimitive.Description.displayName;
 
-export const Sheet = Object.assign(SheetPrimitive.Root, {
+export const Sheet = Object.assign(SheetRoot, {
   Trigger: SheetPrimitive.Trigger,
   Overlay: SheetOverlay,
   Content: SheetContent,

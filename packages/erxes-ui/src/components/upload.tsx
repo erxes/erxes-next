@@ -67,7 +67,7 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
           setIsImageFocused,
         }}
       >
-        <Dialog.Root open={isImageFocused} onOpenChange={setIsImageFocused}>
+        <Dialog open={isImageFocused} onOpenChange={setIsImageFocused}>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
             <Dialog.Content className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] max-w-none w-auto bg-transparent border-0 p-0">
@@ -78,7 +78,7 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
               />
             </Dialog.Content>
           </Dialog.Portal>
-        </Dialog.Root>
+        </Dialog>
         <div ref={ref} className={cn('flex gap-4', className)} {...props} />
       </UploadContext.Provider>
     );
@@ -135,7 +135,7 @@ const UploadPreview = React.forwardRef<
 
   return (
     <>
-      <div className={cn("relative inline-flex", className)}>
+      <div className={cn('relative inline-flex', className)}>
         <Button
           type="button"
           variant="outline"

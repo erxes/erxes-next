@@ -13,7 +13,7 @@ export const ContactTypeFilterDropdown = ({ onOpenChange }: any) => {
     <>
       <DropdownMenu.RadioGroup value={filter || ''} onValueChange={setFilter}>
         {options.map((option) => (
-          <DropdownMenu.RadioItem value={option.value}>
+          <DropdownMenu.RadioItem value={option.value} key={option.value}>
             {option.label}
           </DropdownMenu.RadioItem>
         ))}

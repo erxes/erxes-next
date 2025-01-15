@@ -34,7 +34,7 @@ const CommandDialog = ({
   ...props
 }: CommandDialogProps) => {
   return (
-    <Dialog.Root {...props}>
+    <Dialog {...props}>
       <Dialog.Content
         className={cn('overflow-hidden p-0', dialogContentClassName)}
       >
@@ -42,7 +42,7 @@ const CommandDialog = ({
           {children}
         </CommandRoot>
       </Dialog.Content>
-    </Dialog.Root>
+    </Dialog>
   );
 };
 
