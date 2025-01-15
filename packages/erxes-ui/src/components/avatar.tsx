@@ -57,7 +57,7 @@ const AvatarFallback = React.forwardRef<
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] dark:bg-[--avatar-bg-dark] dark:text-[--avatar-text-dark]',
+      'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] dark:bg-[--avatar-bg-dark] dark:text-[--avatar-text-dark] uppercase',
       twColorClassNames[color as Color],
       className
     )}
@@ -75,8 +75,7 @@ const AvatarFallback = React.forwardRef<
 ));
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
-export const Avatar = {
-  Root: AvatarRoot,
+export const Avatar = Object.assign(AvatarRoot, {
   Image: AvatarImage,
   Fallback: AvatarFallback,
-};
+});

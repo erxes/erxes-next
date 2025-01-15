@@ -15,10 +15,6 @@ export const ProductTypeFilterDropdown = ({ onOpenChange }: any) => {
 
   return (
     <>
-      <DropdownMenu.TabsTrigger value="root">
-        <IconChevronLeft className="w-4 h-4 mr-2" />
-        Type
-      </DropdownMenu.TabsTrigger>
       <DropdownMenu.RadioGroup value={filter || ''} onValueChange={setFilter}>
         {options.map((option) => (
           <DropdownMenu.RadioItem

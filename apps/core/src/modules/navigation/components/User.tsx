@@ -28,7 +28,7 @@ export function User() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10"
             >
-              <Avatar.Root className="h-8 w-8 rounded-full">
+              <Avatar className="h-8 w-8 rounded-full">
                 <Avatar.Image
                   src={readFile(userDetail.avatar)}
                   alt={userDetail.fullName}
@@ -36,7 +36,7 @@ export function User() {
                 <Avatar.Fallback className="rounded-lg">
                   {userDetail.fullName.split('')[0]}
                 </Avatar.Fallback>
-              </Avatar.Root>
+              </Avatar>
               <div className="grid flex-1 text-left text-[13px] leading-tight">
                 <span className="truncate font-semibold">
                   {userDetail.fullName}
@@ -56,13 +56,15 @@ export function User() {
           >
             <DropdownMenu.Label className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar.Root className="h-8 w-8 rounded-lg">
+                <Avatar className="h-8 w-8 rounded-lg">
                   <Avatar.Image
                     src={readFile(userDetail.avatar)}
                     alt={userDetail.fullName}
                   />
-                  <Avatar.Fallback className="rounded-lg"></Avatar.Fallback>
-                </Avatar.Root>
+                  <Avatar.Fallback className="rounded-lg">
+                    {userDetail.fullName.split('')[0]}
+                  </Avatar.Fallback>
+                </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
                     {userDetail.fullName}

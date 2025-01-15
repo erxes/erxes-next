@@ -34,8 +34,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 : type === 'search'
                 ? 'search'
                 : 'default',
-            className,
-          })
+          }),
+          className
         )}
         ref={ref}
         {...props}
@@ -45,4 +45,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = 'Input';
 
-export { Input, inputVariants };
+export { Input, inputVariants, InputProps };

@@ -9,6 +9,7 @@ import {
   IconSettings,
   IconMoodSmile,
   IconUser,
+  IconSearch,
 } from '@tabler/icons-react';
 
 import { Button, Command, Sidebar } from 'erxes-ui/components';
@@ -35,7 +36,11 @@ export function QuickActions() {
           <IconCommand />
         </Button>
       </Sidebar.MenuButton>
-
+      <Sidebar.MenuButton size="lg" onClick={() => setOpen(true)} asChild>
+        <Button variant="secondary">
+          <IconSearch />
+        </Button>
+      </Sidebar.MenuButton>
       <Command.Dialog
         open={open}
         onOpenChange={setOpen}

@@ -6,10 +6,13 @@ import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
 import { useIsSettings } from '../hooks/useIsSettings';
 import { AnimatePresence, motion } from 'motion/react';
 import {
+  IconBuildingStore,
   IconCaretUpFilled,
   IconInbox,
   IconSettings,
 } from '@tabler/icons-react';
+import { Link } from 'react-router';
+import { QuickActions } from '@/quickActions/components/QuickActions';
 
 export const MainNavigationBar = ({
   children,
@@ -63,18 +66,17 @@ export const MainNavigationBar = ({
           <Sidebar.Group className="pt-0">
             <Sidebar.GroupLabel>Shortcut actions</Sidebar.GroupLabel>
             <Sidebar.GroupContent className="grid grid-cols-2 gap-2">
-              <Button variant="secondary">
-                <IconSettings />
+              <Button variant="secondary" asChild>
+                <Link to="/settings">
+                  <IconSettings />
+                </Link>
               </Button>
-              <Button variant="secondary">
-                <IconSettings />
+              <Button variant="secondary" asChild>
+                <Link to="/marketplace">
+                  <IconBuildingStore />
+                </Link>
               </Button>
-              <Button variant="secondary">
-                <IconSettings />
-              </Button>
-              <Button variant="secondary">
-                <IconSettings />
-              </Button>
+              <QuickActions />
             </Sidebar.GroupContent>
           </Sidebar.Group>
           <User />

@@ -1,21 +1,20 @@
-import { OperationVariables, useMutation } from '@apollo/client';
+import { MutationHookOptions, useMutation } from '@apollo/client';
 import { productsMutations } from '@/products/graphql';
-import { ProductT } from '@/products/types/productTypes';
 
-export const useProductsEdit = (getProduct: (_id: string) => ProductT) => {
+export const useProductsEdit = () => {
   const [productsEdit, { loading }] = useMutation(
     productsMutations.productsEdit
   );
 
-  const mutate = ({ _id, ...variables }: OperationVariables) => {
-    const uom = getProduct(_id)?.uom;
+  const mutate = ({ variables, ...options }: MutationHookOptions) => {
     productsEdit({
-      variables: { _id, ...variables, uom },
+      ...options,
+      variables,
       update: (cache, { data: { productsEdit } }) => {
         cache.modify({
           id: cache.identify(productsEdit),
-          fields: Object.keys(variables).reduce((fields, field) => {
-            fields[field] = () => variables[field];
+          fields: Object.keys(variables || {}).reduce((fields, field) => {
+            fields[field] = () => (variables || {})[field];
             return fields;
           }, {}),
           optimistic: true,
@@ -24,5 +23,5 @@ export const useProductsEdit = (getProduct: (_id: string) => ProductT) => {
     });
   };
 
-  return { mutate, loading };
+  return { productsEdit: mutate, loading };
 };

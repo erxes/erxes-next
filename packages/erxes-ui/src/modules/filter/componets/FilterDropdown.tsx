@@ -1,4 +1,4 @@
-import { IconChevronRight } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
 import { DropdownMenu, Button } from 'erxes-ui/components';
@@ -18,7 +18,10 @@ export const FilterDropdown = ({ filters }: { filters: any[] }) => {
         <DropdownMenu.Tabs>
           <DropdownMenu.TabsContent>
             {filters.map((filter) => (
-              <DropdownMenu.TabsTrigger value={filter.accessoryKey}>
+              <DropdownMenu.TabsTrigger
+                value={filter.accessoryKey}
+                key={filter.accessoryKey}
+              >
                 <filter.icon />
                 {filter.label}
                 <IconChevronRight className="w-4 h-4 ml-auto" />
@@ -28,7 +31,7 @@ export const FilterDropdown = ({ filters }: { filters: any[] }) => {
           {filters.map((filter) => (
             <DropdownMenu.TabsContent value={filter.accessoryKey}>
               <DropdownMenu.TabsTrigger>
-                <IconChevronRight />
+                <IconChevronLeft className="w-4 h-4 mr-2" />
                 Back
               </DropdownMenu.TabsTrigger>
               {<filter.dropdown onOpenChange={setOpen} {...filter} />}

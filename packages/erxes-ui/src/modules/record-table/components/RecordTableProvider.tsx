@@ -19,13 +19,7 @@ import {
 import { RecordTableDnDProvider } from 'erxes-ui/modules/record-table/components/RecordTableDnDProvider';
 import { checkboxColumn } from 'erxes-ui/modules/record-table/components/CheckboxColumn';
 import RecordTableContainer from 'erxes-ui/modules/record-table/components/RecordTableContainer';
-import {
-  GetFetchValueHook,
-  IRecordTableColumn,
-  IRecordTableContext,
-  UseMutateValueHook,
-} from 'erxes-ui/modules/record-table/types/recordTableTypes';
-import RecordTableInlineCell from '../record-table-cell/components/RecordTableInlineCell';
+import { IRecordTableContext } from 'erxes-ui/modules/record-table/types/recordTableTypes';
 import { moreColumn } from './MoreColumn';
 
 const RecordTableContext = createContext<IRecordTableContext | null>(null);
@@ -42,12 +36,11 @@ export function useRecordTable() {
 
 interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
-  columns: IRecordTableColumn[];
+  columns: ColumnDef<any>[];
   data: any[];
   tableOptions?: TableOptions<any>;
   handleReachedBottom?: () => void;
-  getFetchValueHook: GetFetchValueHook;
-  useMutateValueHook: UseMutateValueHook;
+  stickyColumns?: string[];
 }
 
 export const RecordTableProvider = forwardRef<
@@ -62,38 +55,21 @@ export const RecordTableProvider = forwardRef<
       tableOptions,
       handleReachedBottom,
       className,
-      getFetchValueHook,
-      useMutateValueHook,
+      stickyColumns,
       ...restProps
     },
     ref
   ) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([]);
+    const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
+      columns.map((c) => c.id || '')
+    );
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-
-    const tableColumns: ColumnDef<any>[] = columns.map((column) => ({
-      id: column.id,
-      accessorKey: column.id,
-      header: () => (
-        <div className="flex items-center gap-1">
-          <column.icon className="w-4 h-4" /> {column.label}
-        </div>
-      ),
-      size: 180,
-      cell: (info) => (
-        <RecordTableInlineCell
-          type={column.type}
-          {...info}
-          readOnly={column.readOnly}
-        />
-      ),
-    }));
 
     const table = useReactTable({
       data,
-      columns: [moreColumn, checkboxColumn, ...tableColumns],
+      columns: [moreColumn, checkboxColumn, ...columns],
       defaultColumn: {
         maxSize: 800,
       },
@@ -101,7 +77,7 @@ export const RecordTableProvider = forwardRef<
       state: {
         columnOrder,
         columnPinning: {
-          left: ['more', 'checkbox', 'name'],
+          left: ['more', 'checkbox', ...(stickyColumns || [])],
         },
         sorting,
         columnFilters,
@@ -120,8 +96,6 @@ export const RecordTableProvider = forwardRef<
         value={{
           table,
           handleReachedBottom,
-          getFetchValueHook,
-          useMutateValueHook,
         }}
       >
         <RecordTableDnDProvider setColumnOrder={setColumnOrder}>
