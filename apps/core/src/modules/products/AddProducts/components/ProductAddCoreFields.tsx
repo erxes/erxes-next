@@ -58,7 +58,7 @@ export const ProductAddCoreFields = ({
               CATEGORY
             </FormLabel>
             <FormControl>
-              <CategoryForm {...field} className="shadow-button-outline" />
+              <CategoryForm {...field} />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>
@@ -73,7 +73,7 @@ export const ProductAddCoreFields = ({
               TYPE
             </FormLabel>
             <FormControl>
-              <TypeForm {...field} className="shadow-button-outline" />
+              <TypeForm {...field} />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>
@@ -108,7 +108,7 @@ export const ProductAddCoreFields = ({
               UNIT OF MEASUREMENTS
             </FormLabel>
             <FormControl>
-              <UomForm {...field} className="shadow-button-outline" />
+              <UomForm {...field} />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>

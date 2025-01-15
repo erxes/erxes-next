@@ -54,9 +54,9 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       );
     return (
       <Button
-        variant={'secondary'}
+        variant={'outline'}
         asChild
-        className="truncate h-8 hover:cursor-pointer bg-transparent border-none shadow-none"
+        className="truncate h-8 rounded-md hover:cursor-pointer shadow-none"
         onClick={(e) => {
           setOpen(true);
           e.stopPropagation();

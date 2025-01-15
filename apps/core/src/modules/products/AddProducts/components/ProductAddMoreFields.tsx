@@ -98,7 +98,6 @@ export const ProductAddMoreFields = ({
               </FormLabel>
               <FormControl>
                 <BrandForm
-                  className="ml-1 shadow-button-outline"
                   values={field.value || []}
                   onChange={(value) => field.onChange(value)}
                 />
@@ -117,7 +116,7 @@ export const ProductAddMoreFields = ({
                 VENDOR
               </FormLabel>
               <FormControl>
-                <VendorForm {...field} className="shadow-button-outline" />
+                <VendorForm {...field} />
               </FormControl>
               <FormMessage className="text-destructive" />
             </FormItem>

@@ -34,9 +34,9 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
       <Popover open={open} onOpenChange={setOpen} modal>
         <Popover.Trigger asChild>
           <Button
-            variant="secondary"
+            variant="outline"
             asChild
-            className="truncate h-8 hover:cursor-pointer bg-transparent border-none shadow-none "
+            className="truncate h-8 hover:cursor-pointer rounded-md shadow-none "
             onClick={(e) => {
               setOpen(true);
               e.stopPropagation();
