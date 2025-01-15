@@ -20,6 +20,7 @@ export const ContactsRecordTable = () => {
       data={customers || []}
       handleReachedBottom={handleFetchMore}
       stickyColumns={['avatar', 'firstName']}
+      className="mt-1.5"
     >
       <RecordTable>
         <RecordTable.Header />

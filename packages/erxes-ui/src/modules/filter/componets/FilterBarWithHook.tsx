@@ -35,7 +35,6 @@ export const FilterBarWithHook = ({ filters }: { filters: Filter[] }) => {
 const FilterBarItemWithHook = ({
   accessoryKey,
   label,
-  type,
   condition,
   queryKeys,
   bar,
@@ -59,7 +58,7 @@ const FilterBarItemWithHook = ({
         accessoryKey={accessoryKey}
         condition={condition}
       />
-      {bar({ ...props, accessoryKey, label, type, condition })}
+      {bar({ ...props, accessoryKey, label, condition })}
       <FilterBarRemove
         onClick={() => setFilter({ ...filter, [accessoryKey]: null })}
       />
