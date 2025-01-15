@@ -1,14 +1,17 @@
-import { Input } from 'erxes-ui/components';
-import { useRecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
+import * as React from 'react';
+import { Input, InputProps } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
 
-export const TextFieldInput = () => {
-  const { value, setValue } = useRecordTableCellContext();
+export const TextFieldInput = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Input
+        ref={ref}
+        className={cn('h-[34px] w-full rounded-none px-2', className)}
+        {...props}
+      />
+    );
+  }
+);
 
-  return (
-    <Input
-      className="rounded-none h-[34px] px-2 w-full"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
-  );
-};
+TextFieldInput.displayName = 'TextFieldInput';

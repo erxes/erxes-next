@@ -3,20 +3,19 @@ import { useState } from 'react';
 import { cn } from 'erxes-ui/lib/utils';
 import { Popover, Button, Command, Skeleton } from 'erxes-ui/components';
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
-import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
-
-interface VendorFormProps {
-  value: string | undefined;
-  onChange: (value: string) => void;
+import { useBrands } from '@/products/hooks/useBrands';
+interface BrandFormProps {
+  values: string[];
+  onChange: (value: string[]) => void;
   className?: string;
 }
 
-export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
-  const { companies, loading } = useCompaniesLowDetail();
+export const BrandForm = ({ values, onChange, className }: BrandFormProps) => {
+  const { brands, loading } = useBrands({});
   const [open, setOpen] = useState<boolean>(false);
-  const currentValue = companies?.find((vendor) => vendor._id === value)?._id;
-  const handleSelectVendor = (vendorId: string) => {
-    onChange(vendorId);
+  const currentValue = brands?.find((brand) => brand._id === values?.[0])?._id;
+  const handleSelectBrand = (brandId: string) => {
+    onChange([brandId]);
     setOpen(false);
   };
   if (loading)
@@ -36,7 +35,7 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
           <Button
             variant="secondary"
             asChild
-            className="truncate justify-start h-9"
+            className="truncate h-8 hover:cursor-pointer bg-transparent border-none shadow-none"
             onClick={(e) => {
               setOpen(true);
               e.stopPropagation();
@@ -46,13 +45,12 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
               <span
                 className={cn(
                   'truncate',
-                  !currentValue && 'text-foreground font-semibold text-xs'
+                  !currentValue && 'text-foreground font-medium text-sm'
                 )}
               >
                 {currentValue
-                  ? companies.find((vendor) => vendor._id === currentValue)
-                      ?.name
-                  : 'Select vendor'}
+                  ? brands.find((brand) => brand._id === currentValue)?.name
+                  : 'Select brand'}
               </span>
               <IconChevronDown
                 size={16}
@@ -68,21 +66,21 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
           align="start"
         >
           <Command>
-            <Command.Input placeholder="Search vendor..." className="h-9" />
+            <Command.Input placeholder="Search brand..." className="h-9" />
             <Command.List>
-              <Command.Empty>No vendor found.</Command.Empty>
+              <Command.Empty>No brand found.</Command.Empty>
               <Command.Group>
-                {companies.map((vendor) => (
+                {brands.map((brand) => (
                   <Command.Item
-                    key={vendor._id}
-                    className="h-7 text-xs text-foreground"
-                    value={vendor._id}
+                    key={brand._id}
+                    className="h-7 text-xs"
+                    value={brand._id}
                     onSelect={(currentValue) => {
-                      handleSelectVendor(currentValue);
+                      handleSelectBrand(currentValue);
                     }}
                   >
-                    {vendor.primaryName}
-                    {currentValue === vendor._id && (
+                    {brand.name}
+                    {currentValue === brand._id && (
                       <IconCheck
                         size={16}
                         strokeWidth={2}

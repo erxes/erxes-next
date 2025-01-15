@@ -41,13 +41,13 @@ export const TypeForm: FC<TypeFormProps> = ({ value, onChange, className }) => {
         onValueChange={handleSelectType}
         value={value}
       >
-        <Select.Trigger className="truncate w-full justify-between text-foreground border-none h-9">
+        <Select.Trigger className="truncate w-full justify-between text-foreground border-none h-8">
           <Select.Value
             placeholder={
               <span
                 className={cn(
                   'truncate',
-                  !currentType && 'text-foreground font-semibold text-xs'
+                  !currentType && 'text-foreground font-medium text-sm'
                 )}
               >
                 {currentType?.label || 'Choose type'}

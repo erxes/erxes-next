@@ -18,7 +18,7 @@ export const RecordTableHeader = () => {
             strategy={horizontalListSortingStrategy}
           >
             {headerGroup.headers.map((header) => (
-              <RecordTableHead header={header}>
+              <RecordTableHead header={header} key={header.id}>
                 {header.isPlaceholder
                   ? null
                   : flexRender(

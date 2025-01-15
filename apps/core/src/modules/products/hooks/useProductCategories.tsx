@@ -8,7 +8,7 @@ export const useProductCategories = (options?: QueryHookOptions) => {
   );
 
   return {
-    options: data?.productCategories,
+    productCategories: data?.productCategories,
     loading,
   };
 };

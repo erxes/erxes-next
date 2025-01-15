@@ -1,6 +1,12 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { Sidebar } from 'erxes-ui/components';
-import { IconAdjustmentsAlt, IconX, IconUserCircle, IconColorSwatch, IconFile } from '@tabler/icons-react'
+import {
+  IconAdjustmentsAlt,
+  IconX,
+  IconUserCircle,
+  IconColorSwatch,
+  IconFile,
+} from '@tabler/icons-react';
 import { useRecoilValue } from 'recoil';
 import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
 import { AppPath } from '@/types/AppPath';

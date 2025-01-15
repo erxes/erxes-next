@@ -31,8 +31,10 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   className,
 }) => {
   const [open, setOpen] = useState(false);
-  const { options, loading } = useProductCategories({});
-  const currentValue = options?.find((category) => category._id === value);
+  const { productCategories, loading } = useProductCategories({});
+  const currentValue = productCategories?.find(
+    (category) => category._id === value
+  );
 
   const handleSelectCategory = (categoryId: string) => {
     onChange(categoryId);
@@ -54,7 +56,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       <Button
         variant={'secondary'}
         asChild
-        className="truncate h-9 hover:cursor-pointer"
+        className="truncate h-8 hover:cursor-pointer bg-transparent border-none shadow-none"
         onClick={(e) => {
           setOpen(true);
           e.stopPropagation();
@@ -63,16 +65,16 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         <div className="w-full flex justify-between">
           {currentValue ? (
             <div className="flex items-center gap-2">
-              <Avatar.Root>
+              <Avatar>
                 <Avatar.Image src={currentValue?.attachment?.url} />
                 <Avatar.Fallback colorSeed={currentValue?._id}>
                   {currentValue?.name?.charAt(0)}
                 </Avatar.Fallback>
-              </Avatar.Root>
+              </Avatar>
               {currentValue?.name}
             </div>
           ) : (
-            <span className="text-foreground font-semibold text-xs">
+            <span className="text-foreground font-medium text-sm">
               Choose category
             </span>
           )}
@@ -116,19 +118,19 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
             />
             <Command.List className="max-h-[300px] overflow-y-auto">
               <Command.Empty>No category found</Command.Empty>
-              {options?.map((category: Category) => (
+              {productCategories?.map((category: Category) => (
                 <Command.Item
                   key={category._id}
                   value={category.name}
                   className="h-7 text-xs"
                   onSelect={() => handleSelectCategory(category._id)}
                 >
-                  <Avatar.Root>
+                  <Avatar>
                     <Avatar.Image src={category?.attachment?.url} />
                     <Avatar.Fallback colorSeed={category?._id}>
                       {category?.name?.charAt(0)}
                     </Avatar.Fallback>
-                  </Avatar.Root>
+                  </Avatar>
                   {category.name}
                   <IconCheck
                     className={cn(

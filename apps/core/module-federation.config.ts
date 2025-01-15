@@ -19,7 +19,6 @@ const config: ModuleFederationConfig = {
 
     return false;
   },
-  remotes: ['plugin_inbox', 'plugin_task'],
 };
 
 /**

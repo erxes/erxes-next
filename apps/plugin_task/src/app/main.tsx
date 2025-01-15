@@ -4,7 +4,7 @@ import NxWelcome from './nx-welcome';
 
 import { Breadcrumb, Header } from 'erxes-ui';
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 export function App() {
   return (

@@ -4,6 +4,7 @@ import './styles.css';
 import { App } from '@/app/components/App';
 import { REACT_APP_API_URL, NODE_ENV } from 'erxes-ui/utils';
 import { init } from '@module-federation/enhanced/runtime';
+import { NuqsAdapter } from 'nuqs/adapters/react';
 
 // Initialize module federation before rendering
 const initFederation = async () => {
@@ -14,7 +15,9 @@ const initFederation = async () => {
   if (NODE_ENV === 'development') {
     root.render(
       <StrictMode>
-        <App />
+        <NuqsAdapter>
+          <App />
+        </NuqsAdapter>
       </StrictMode>
     );
   } else {
@@ -22,7 +25,6 @@ const initFederation = async () => {
       .then((res) => res.json())
       .then((data) => {
         console.log('data', data);
-        window.plugins = data.plugins || [];
 
         init({
           name: 'core',

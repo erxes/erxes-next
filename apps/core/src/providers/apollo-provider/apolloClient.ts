@@ -46,7 +46,7 @@ const httpLinkWithMiddleware = from([errorLink, authLink, httpLink]);
 // Subscription config
 export const wsLink = new GraphQLWsLink(
   createClient({
-    url: REACT_APP_API_URL || 'ws://localhost:4000/graphql',
+    url: REACT_APP_API_URL,
     retryAttempts: 1000,
     retryWait: async () => {
       await new Promise((resolve) => setTimeout(resolve, 5000));
