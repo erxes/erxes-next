@@ -35,7 +35,7 @@ export const BrandForm = ({ values, onChange, className }: BrandFormProps) => {
           <Button
             variant="secondary"
             asChild
-            className="truncate justify-start h-9"
+            className="truncate h-8 hover:cursor-pointer bg-transparent border-none shadow-none"
             onClick={(e) => {
               setOpen(true);
               e.stopPropagation();
@@ -43,7 +43,10 @@ export const BrandForm = ({ values, onChange, className }: BrandFormProps) => {
           >
             <div className="flex justify-between w-full">
               <span
-                className={cn('truncate', !currentValue && 'text-foreground font-semibold text-xs')}
+                className={cn(
+                  'truncate',
+                  !currentValue && 'text-foreground font-medium text-sm'
+                )}
               >
                 {currentValue
                   ? brands.find((brand) => brand._id === currentValue)?.name

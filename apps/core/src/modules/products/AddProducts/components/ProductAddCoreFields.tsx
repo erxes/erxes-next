@@ -25,9 +25,8 @@ export const ProductAddCoreFields = ({
         render={({ field }) => (
           <FormItem>
             <FormLabel>NAME</FormLabel>
-
             <FormControl>
-              <Input className="rounded-md" {...field} />
+              <Input className="rounded-md h-8" {...field} />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>
@@ -41,12 +40,9 @@ export const ProductAddCoreFields = ({
             <FormLabel className="text-muted-foreground text-xs">
               CODE
             </FormLabel>
-            <div className="flex flex-col mr-1">
+            <div className="flex flex-col">
               <FormControl>
-                <Input
-                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input"
-                  {...field}
-                />
+                <Input className="rounded-md h-8" {...field} />
               </FormControl>
               <FormMessage className="text-destructive" />
             </div>
@@ -62,7 +58,7 @@ export const ProductAddCoreFields = ({
               CATEGORY
             </FormLabel>
             <FormControl>
-              <CategoryForm {...field} className="ml-1 shadow-button-outline" />
+              <CategoryForm {...field} className="shadow-button-outline" />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>
@@ -77,7 +73,7 @@ export const ProductAddCoreFields = ({
               TYPE
             </FormLabel>
             <FormControl>
-              <TypeForm {...field} className="mr-1 shadow-button-outline" />
+              <TypeForm {...field} className="shadow-button-outline" />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>
@@ -87,13 +83,13 @@ export const ProductAddCoreFields = ({
         control={form.control}
         name="unitPrice"
         render={({ field }) => (
-          <FormItem className="flex flex-col ml-1 ">
+          <FormItem className="flex flex-col">
             <FormLabel className="text-muted-foreground text-xs">
               UNIT PRICE
             </FormLabel>
             <FormControl>
               <Input
-                className=" border-0 rounded-md focus-visible:ring-0 shadow-input"
+                className="rounded-md h-8"
                 {...field}
                 onChange={(e) => field.onChange(Number(e.target.value))}
                 value={field.value || ''}
@@ -112,7 +108,7 @@ export const ProductAddCoreFields = ({
               UNIT OF MEASUREMENTS
             </FormLabel>
             <FormControl>
-              <UomForm {...field} className="mr-1 shadow-button-outline" />
+              <UomForm {...field} className="shadow-button-outline" />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>

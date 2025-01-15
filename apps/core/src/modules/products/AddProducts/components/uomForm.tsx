@@ -7,7 +7,6 @@ import {
   Skeleton,
   Select,
 } from 'erxes-ui/components';
-import { IconCheck, IconChevronDown } from '@tabler/icons-react';
 import { useUom } from '@/products/hooks/useUom';
 import { cn } from 'erxes-ui/lib/utils';
 
@@ -43,13 +42,13 @@ export const UomForm: FC<UomFormProps> = ({ value, onChange, className }) => {
         onValueChange={handleSelectUom}
         value={value}
       >
-        <Select.Trigger className="truncate w-full justify-between text-foreground border-none h-9">
+        <Select.Trigger className="truncate w-full justify-between text-foreground border-none h-8">
           <Select.Value
             placeholder={
               <span
                 className={cn(
                   'truncate',
-                  !currentValue && 'text-foreground font-semibold text-xs'
+                  !currentValue && 'text-foreground font-medium text-sm'
                 )}
               >
                 {currentValue

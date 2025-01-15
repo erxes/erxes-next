@@ -59,7 +59,7 @@ export const ProductAddMoreFields = ({
                   className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
                 >
                   <IconUpload />
-                  <span>Primary upload</span>
+                  <span className="font-medium text-sm">Primary upload</span>
                 </Upload.Button>
               </Upload.Root>
             </FormControl>
@@ -75,10 +75,10 @@ export const ProductAddMoreFields = ({
             <FormLabel className=" text-muted-foreground text-xs">
               SHORT NAME
             </FormLabel>
-            <div className="flex flex-col mx-1 ">
+            <div className="flex flex-col">
               <FormControl>
                 <Input
-                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input"
+                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input h-8"
                   {...field}
                 />
               </FormControl>
@@ -117,7 +117,7 @@ export const ProductAddMoreFields = ({
                 VENDOR
               </FormLabel>
               <FormControl>
-                <VendorForm {...field} className="mr-1 shadow-button-outline" />
+                <VendorForm {...field} className="shadow-button-outline" />
               </FormControl>
               <FormMessage className="text-destructive" />
             </FormItem>
@@ -132,10 +132,10 @@ export const ProductAddMoreFields = ({
             <FormLabel className="text-muted-foreground text-xs">
               BARCODES
             </FormLabel>
-            <div className="flex flex-col mx-1 ">
+            <div className="flex flex-col">
               <FormControl>
                 <Input
-                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input"
+                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input h-8"
                   {...field}
                   onChange={(e) => field.onChange([e.target.value])}
                 />
@@ -153,16 +153,14 @@ export const ProductAddMoreFields = ({
             <FormLabel className="text-muted-foreground text-xs">
               BARCODE DESCRIPTION
             </FormLabel>
-            <div className="mx-2">
-              <FormControl>
-                <TextEditor
-                  {...field}
-                  className=" h-28 rounded-md shadow-input"
-                  parseTo="html"
-                />
-              </FormControl>
-              <FormMessage className="text-destructive" />
-            </div>
+            <FormControl>
+              <TextEditor
+                {...field}
+                className=" h-28 rounded-md shadow-input"
+                parseTo="html"
+              />
+            </FormControl>
+            <FormMessage className="text-destructive" />
           </FormItem>
         )}
       />
@@ -184,7 +182,7 @@ export const ProductAddMoreFields = ({
                   className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
                 >
                   <IconUpload />
-                  <span>Secondary upload</span>
+                  <span className="font-medium text-sm">Secondary upload</span>
                 </Upload.Button>
               </Upload.Root>
             </FormControl>
