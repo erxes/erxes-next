@@ -1,16 +1,23 @@
 'use client';
 import { useState, FC } from 'react';
-import { Button, Popover, Command, Skeleton } from 'erxes-ui/components';
-import { IconCheck } from '@tabler/icons-react';
+import {
+  Button,
+  Popover,
+  Command,
+  Skeleton,
+  Select,
+} from 'erxes-ui/components';
+import { IconCheck, IconChevronDown } from '@tabler/icons-react';
 import { useUom } from '@/products/hooks/useUom';
 import { cn } from 'erxes-ui/lib/utils';
 
 interface UomFormProps {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 }
 
-export const UomForm: FC<UomFormProps> = ({ value, onChange }) => {
+export const UomForm: FC<UomFormProps> = ({ value, onChange, className }) => {
   const [open, setOpen] = useState<boolean>(false);
   const { uoms, loading } = useUom({});
   const currentValue = uoms?.find((uom) => uom._id === value)?._id;
@@ -29,63 +36,40 @@ export const UomForm: FC<UomFormProps> = ({ value, onChange }) => {
       </Skeleton>
     );
   return (
-    <div className="space-y-2">
-      <Popover open={open} onOpenChange={setOpen}>
-        <Popover.Trigger asChild>
-          <Button
-            variant="secondary"
-            size="sm"
-            asChild
-            className="truncate justify-start h-8"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <div className="mx-2 ">
-              <div className="py-2 flex gap-2">
-                <span
-                  className={cn('truncate', !currentValue && 'text-foreground')}
-                >
-                  {currentValue
-                    ? uoms.find((uom) => uom._id === currentValue)?.name
-                    : 'Uom not selected'}
-                </span>
-              </div>
-            </div>
-          </Button>
-        </Popover.Trigger>
-        <Popover.Content
-          className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+    <div className={className}>
+      <Select
+        open={open}
+        onOpenChange={setOpen}
+        onValueChange={handleSelectUom}
+        value={value}
+      >
+        <Select.Trigger className="truncate w-full justify-between text-foreground border-none h-9">
+          <Select.Value
+            placeholder={
+              <span
+                className={cn(
+                  'truncate',
+                  !currentValue && 'text-foreground font-semibold text-xs'
+                )}
+              >
+                {currentValue
+                  ? uoms.find((uom) => uom._id === currentValue)?.name
+                  : 'Choose UOM'}
+              </span>
+            }
+          />
+        </Select.Trigger>
+        <Select.Content
+          className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
           align="start"
         >
-          <Command>
-            <Command.List>
-              <Command.Empty>No uom found.</Command.Empty>
-              <Command.Group>
-                {uoms.map((uom) => (
-                  <Command.Item
-                    key={uom._id}
-                    className="h-7 text-xs"
-                    value={uom._id}
-                    onSelect={(currentValue) => {
-                      handleSelectUom(currentValue);
-                    }}
-                  >
-                    {uom.name}
-                    {currentValue === uom._id && (
-                      <IconCheck
-                        size={16}
-                        strokeWidth={2}
-                        className="ml-auto"
-                      />
-                    )}
-                  </Command.Item>
-                ))}
-              </Command.Group>
-            </Command.List>
-          </Command>
-        </Popover.Content>
-      </Popover>
+          {uoms.map((uom) => (
+            <Select.Item key={uom._id} className="h-7 text-xs" value={uom._id}>
+              {uom.name}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select>
     </div>
   );
 };

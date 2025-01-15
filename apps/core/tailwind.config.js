@@ -154,6 +154,8 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
       boxShadow: {
+        'input': 
+          '0px 4px 4px 0px rgba(0, 0, 0, 0.05), 0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 0px 3px 2px rgba(0, 0, 0, 0.1)',
         'command-bar':
           'rgba(0, 0, 0, 0.12) 2px 4px 16px 0px, rgba(0, 0, 0, 0.04) 0px 2px 4px 0px',
         'button-primary':

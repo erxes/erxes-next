@@ -9,7 +9,7 @@ import {
 } from 'erxes-ui/components';
 import { useState } from 'react';
 import { cn } from 'erxes-ui/lib/utils';
-import { IconCheck } from '@tabler/icons-react';
+import { IconCheck, IconChevronDown } from '@tabler/icons-react';
 
 interface Category {
   _id: string;
@@ -22,17 +22,17 @@ interface Category {
 interface CategoryFormProps {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 }
 
 export const CategoryForm: React.FC<CategoryFormProps> = ({
   value,
   onChange,
+  className,
 }) => {
   const [open, setOpen] = useState(false);
-  const { productCategories, loading } = useProductCategories({});
-  const currentValue = productCategories?.find(
-    (category) => category._id === value
-  );
+  const { options, loading } = useProductCategories({});
+  const currentValue = options?.find((category) => category._id === value);
 
   const handleSelectCategory = (categoryId: string) => {
     onChange(categoryId);
@@ -52,39 +52,36 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       );
     return (
       <Button
-        variant="secondary"
-        size="sm"
+        variant={'secondary'}
         asChild
-        className="truncate justify-start h-8"
+        className="truncate h-9 hover:cursor-pointer"
         onClick={(e) => {
           setOpen(true);
           e.stopPropagation();
         }}
       >
-        <div className="mx-2 ">
-
-          <div className="py-2 flex gap-2">
-
-            {currentValue ? (
-              <div className="flex items-center gap-2">
-                <Avatar.Root>
-                  <Avatar.Image src={currentValue?.attachment?.url} />
-                  <Avatar.Fallback colorSeed={currentValue?._id}>
-                    {currentValue?.name?.charAt(0)}
-                  </Avatar.Fallback>
-                </Avatar.Root>
-                {currentValue?.name}
-              </div>
-            ) : (
-              <span
-                className={cn('truncate', !currentValue && 'text-foreground')}
-              >
-                Category not selected
-              </span>
-            )}
-
-          </div>
-
+        <div className="w-full flex justify-between">
+          {currentValue ? (
+            <div className="flex items-center gap-2">
+              <Avatar.Root>
+                <Avatar.Image src={currentValue?.attachment?.url} />
+                <Avatar.Fallback colorSeed={currentValue?._id}>
+                  {currentValue?.name?.charAt(0)}
+                </Avatar.Fallback>
+              </Avatar.Root>
+              {currentValue?.name}
+            </div>
+          ) : (
+            <span className="text-foreground font-semibold text-xs">
+              Choose category
+            </span>
+          )}
+          <IconChevronDown
+            size={16}
+            strokeWidth={2}
+            className="shrink-0 text-foreground"
+            aria-hidden="true"
+          />
         </div>
       </Button>
     );
@@ -93,55 +90,58 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   if (loading) return <Skeleton className="h-9 w-full" />;
 
   return (
-    <Popover
-      open={open}
-      onOpenChange={(newOpen) => {
-        if (!newOpen) {
-          setOpen(false);
-        }
-      }}
-    >
-      <Popover.Trigger asChild>{renderCategoryButton()}</Popover.Trigger>
-      <Popover.Content
-        className="w-60 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
-        align="start"
-        side="bottom"
-        sideOffset={8}
-        onClick={(e) => e.stopPropagation()}
+    <div className={className}>
+      <Popover
+        modal
+        open={open}
+        onOpenChange={(newOpen) => {
+          if (!newOpen) {
+            setOpen(false);
+          }
+        }}
       >
-        <Command className="relative">
-          <Command.Input
-            placeholder="Search category..."
-            className="h-9"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <Command.List className="max-h-[300px] overflow-y-auto">
-            <Command.Empty>No category found</Command.Empty>
-            {productCategories?.map((category: Category) => (
-              <Command.Item
-                key={category._id}
-                value={category.name}
-                className="h-7 text-xs"
-                onSelect={() => handleSelectCategory(category._id)}
-              >
-                <Avatar.Root>
-                  <Avatar.Image src={category?.attachment?.url} />
-                  <Avatar.Fallback colorSeed={category?._id}>
-                    {category?.name?.charAt(0)}
-                  </Avatar.Fallback>
-                </Avatar.Root>
-                {category.name}
-                <IconCheck
-                  className={cn(
-                    'ml-auto',
-                    category._id === value ? 'opacity-100' : 'opacity-0'
-                  )}
-                />
-              </Command.Item>
-            ))}
-          </Command.List>
-        </Command>
-      </Popover.Content>
-    </Popover>
+        <Popover.Trigger asChild>{renderCategoryButton()}</Popover.Trigger>
+        <Popover.Content
+          className="w-60 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+          align="start"
+          side="bottom"
+          sideOffset={8}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Command className="relative">
+            <Command.Input
+              placeholder="Search category..."
+              className="h-9"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <Command.List className="max-h-[300px] overflow-y-auto">
+              <Command.Empty>No category found</Command.Empty>
+              {options?.map((category: Category) => (
+                <Command.Item
+                  key={category._id}
+                  value={category.name}
+                  className="h-7 text-xs"
+                  onSelect={() => handleSelectCategory(category._id)}
+                >
+                  <Avatar.Root>
+                    <Avatar.Image src={category?.attachment?.url} />
+                    <Avatar.Fallback colorSeed={category?._id}>
+                      {category?.name?.charAt(0)}
+                    </Avatar.Fallback>
+                  </Avatar.Root>
+                  {category.name}
+                  <IconCheck
+                    className={cn(
+                      'ml-auto',
+                      category._id === value ? 'opacity-100' : 'opacity-0'
+                    )}
+                  />
+                </Command.Item>
+              ))}
+            </Command.List>
+          </Command>
+        </Popover.Content>
+      </Popover>
+    </div>
   );
 };
