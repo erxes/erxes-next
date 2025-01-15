@@ -1,10 +1,10 @@
-import { IconBox, IconSettings, IconPlus } from '@tabler/icons-react';
-import { Button, Sheet } from 'erxes-ui/components';
+import { IconBox, IconSettings } from '@tabler/icons-react';
+import { Button } from 'erxes-ui/components';
 import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
-import { AddProductButton } from './HeaderAddProductsButton/AddProductButton';
 import { FilterBarWithHook } from 'erxes-ui/modules/filter/componets/FilterBarWithHook';
 import { filters } from './ProductsFilter';
 import { FilterDropdown } from 'erxes-ui/modules/filter/componets/FilterDropdown';
+import { AddProductForm } from './HeaderAddProductsButton/AddProductForm';
 
 export const ProductsHeader = () => {
   return (
@@ -15,16 +15,8 @@ export const ProductsHeader = () => {
           Go to settings
         </Button>
         <FilterDropdown filters={filters} />
-        <AddProductButton />
-        <Sheet>
-          <Sheet.Trigger asChild>
-            <Button>
-              <IconPlus className="w-4 h-4" />
-              Add product
-            </Button>
-          </Sheet.Trigger>
-          <Sheet.Content className="sm:max-w-2xl">hi</Sheet.Content>
-        </Sheet>
+
+        <AddProductForm />
       </PluginHeader>
       <FilterBarWithHook filters={filters} />
     </>
