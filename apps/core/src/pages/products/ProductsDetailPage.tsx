@@ -4,9 +4,11 @@ import { Button, cn } from 'erxes-ui';
 export const ProductsDetailPage = () => {
   return (
     <div className="flex flex-col gap-12 overflow-auto">
-      <div className="p-12 grid grid-cols-3 gap-12 grid-flow-row max-w-screen-lg mx-auto">
+      <div className="p-12 grid grid-cols-5 gap-12 grid-flow-row max-w-screen-xl mx-auto">
         <div className="flex flex-col gap-4 items-start">
-          <h2 className="text-xl font-bold">Button default</h2>
+          <h2 className="uppercase text-muted-foreground text-sm font-bold font-mono">
+            Button default
+          </h2>
           <Button size="lg">Continue</Button>
 
           <Button>Continue</Button>
@@ -18,7 +20,9 @@ export const ProductsDetailPage = () => {
           </Button>
         </div>
         <div className="flex flex-col gap-4 items-start">
-          <h2 className="text-xl font-bold">Button outline</h2>
+          <h2 className="uppercase text-muted-foreground text-sm font-bold font-sem font-mono">
+            Button outline
+          </h2>
           <Button size="lg" variant="outline">
             Continue
           </Button>
@@ -33,7 +37,9 @@ export const ProductsDetailPage = () => {
           </Button>
         </div>
         <div className="flex flex-col gap-4 items-start">
-          <h2 className="text-xl font-bold">Button link</h2>
+          <h2 className="uppercase text-muted-foreground text-sm font-bold font-sem font-mono">
+            Button link
+          </h2>
           <Button size="lg" variant="link">
             Continue
           </Button>
@@ -48,7 +54,9 @@ export const ProductsDetailPage = () => {
           </Button>
         </div>
         <div className="flex flex-col gap-4 items-start">
-          <h2 className="text-xl font-bold">Button ghost</h2>
+          <h2 className="uppercase text-muted-foreground text-sm font-bold font-sem font-mono">
+            Button ghost
+          </h2>
           <Button size="lg" variant="ghost">
             Continue
           </Button>
@@ -59,6 +67,23 @@ export const ProductsDetailPage = () => {
             Continue
           </Button>
           <Button size="icon" variant="ghost">
+            <IconPlus />
+          </Button>
+        </div>
+        <div className="flex flex-col gap-4 items-start">
+          <h2 className="uppercase text-muted-foreground text-sm font-bold font-sem font-mono">
+            Button secondary
+          </h2>
+          <Button size="lg" variant="secondary">
+            Continue
+          </Button>
+
+          <Button variant="secondary">Continue</Button>
+
+          <Button size="sm" variant="secondary">
+            Continue
+          </Button>
+          <Button size="icon" variant="secondary">
             <IconPlus />
           </Button>
         </div>

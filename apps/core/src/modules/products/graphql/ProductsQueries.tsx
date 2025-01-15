@@ -3,7 +3,6 @@ import { gql } from '@apollo/client';
 const products = gql`
   query Products(
     $type: String
-    $status: String
     $categoryId: String
     $searchValue: String
     $vendorId: String
@@ -18,7 +17,6 @@ const products = gql`
   ) {
     products(
       type: $type
-      status: $status
       categoryId: $categoryId
       searchValue: $searchValue
       vendorId: $vendorId
@@ -42,7 +40,6 @@ const products = gql`
       description
       tagIds
       name
-      status
       shortName
       taxCode
       taxType
@@ -56,7 +53,6 @@ const products = gql`
     }
     productsTotalCount(
       type: $type
-      status: $status
       categoryId: $categoryId
       searchValue: $searchValue
       vendorId: $vendorId

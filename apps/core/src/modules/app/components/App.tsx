@@ -1,4 +1,4 @@
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router';
 import { useCreateRouter } from '@/app/hooks/useCreateRouter';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from '~/providers/theme-provider';

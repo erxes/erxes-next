@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 
 import App from './app/app';
 import './styles.css';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 import { Sidebar } from 'erxes-ui';
 
 const root = ReactDOM.createRoot(

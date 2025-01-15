@@ -2,9 +2,11 @@
 
 import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { IconCheck, IconChevronRight, IconCircle } from '@tabler/icons-react'
+import { IconCheck, IconCircle } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
+import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { useState } from 'react';
 
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
@@ -22,7 +24,6 @@ const DropdownMenuSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <IconChevronRight className="ml-auto" />
   </DropdownMenuPrimitive.SubTrigger>
 ));
 DropdownMenuSubTrigger.displayName =
@@ -170,8 +171,82 @@ const DropdownMenuShortcut = ({
 };
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
-export const DropdownMenu = {
-  Root: DropdownMenuPrimitive.Root,
+type DropdownMenuTabsContextType = {
+  value: string;
+  setValue: (value: string) => void;
+};
+
+const DropdownMenuTabsContext =
+  React.createContext<DropdownMenuTabsContextType | null>(null);
+
+function useDropdownMenuTabs() {
+  const context = React.useContext(DropdownMenuTabsContext);
+  if (!context) {
+    throw new Error(
+      'useDropdownMenuTabs must be used within a DropdownMenuTabsProvider.'
+    );
+  }
+  return context;
+}
+
+const DropdownMenuTabs = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  const [value, setValue] = useState('root');
+  return (
+    <DropdownMenuTabsContext.Provider value={{ value, setValue }}>
+      <TabsPrimitive.Root
+        ref={ref}
+        className={cn(className)}
+        {...props}
+        value={value}
+        onValueChange={setValue}
+      />
+    </DropdownMenuTabsContext.Provider>
+  );
+});
+DropdownMenuTabs.displayName = TabsPrimitive.Root.displayName;
+const DropdownMenuTabsTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
+    value?: string;
+  }
+>(({ className, value = 'root', ...props }, ref) => {
+  const { setValue } = useDropdownMenuTabs();
+  return (
+    <DropdownMenuPrimitive.Sub>
+      <DropdownMenuSubTrigger
+        ref={ref}
+        className={cn(className)}
+        {...props}
+        onClick={() => setValue(value)}
+      />
+    </DropdownMenuPrimitive.Sub>
+  );
+});
+DropdownMenuTabsTrigger.displayName =
+  DropdownMenuPrimitive.SubTrigger.displayName;
+
+const DropdownMenuTabsContent = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  Omit<
+    React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>,
+    'value'
+  > & {
+    value?: string;
+  }
+>(({ className, value = 'root', ...props }, ref) => (
+  <TabsPrimitive.Content
+    value={value}
+    ref={ref}
+    className={cn(className)}
+    {...props}
+  />
+));
+DropdownMenuTabsContent.displayName = TabsPrimitive.Content.displayName;
+
+export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Group: DropdownMenuPrimitive.Group,
   Portal: DropdownMenuPrimitive.Portal,
@@ -186,4 +261,7 @@ export const DropdownMenu = {
   Label: DropdownMenuLabel,
   Shortcut: DropdownMenuShortcut,
   Separator: DropdownMenuSeparator,
-};
+  Tabs: DropdownMenuTabs,
+  TabsTrigger: DropdownMenuTabsTrigger,
+  TabsContent: DropdownMenuTabsContent,
+});

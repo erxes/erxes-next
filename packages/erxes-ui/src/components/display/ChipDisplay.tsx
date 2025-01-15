@@ -22,14 +22,16 @@ export const ChipDisplay = React.forwardRef<
       ref={ref}
     >
       <div>
-        <Avatar.Root>
+        <Avatar>
           <Avatar.Image src={attachment?.url} />
           <Avatar.Fallback colorSeed={colorSeed}>
             {children?.charAt(0)}
           </Avatar.Fallback>
-        </Avatar.Root>
+        </Avatar>
         {children}
       </div>
     </Button>
   );
 });
+
+ChipDisplay.displayName = 'ChipDisplay';

@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-} from 'react-router-dom';
+import { createRoutesFromElements, Route } from 'react-router';
 import { Providers } from '~/providers';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { AppPath } from '@/types/AppPath';
@@ -14,6 +10,7 @@ import { OrganizationProvider } from '@/organization/providers/OrganizationProvi
 
 import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
 import ContactsRoutes from '../components/ContactsRoutes';
+import { createBrowserRouter } from 'react-router';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 

@@ -17,6 +17,7 @@ export const RecordTableBody = React.forwardRef<
       {row.getVisibleCells().map((cell, cellIndex) => (
         <RecordTableCell
           cell={cell}
+          key={cell.id}
           className={cn(
             rowIndex === 0 && cellIndex === 0 && 'rounded-tl-lg',
             rowIndex === 0 &&

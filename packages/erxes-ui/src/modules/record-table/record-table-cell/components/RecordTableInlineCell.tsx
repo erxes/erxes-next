@@ -1,69 +1,165 @@
-import { useState } from 'react';
-import { RecordTableInlineCellEdit } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCellEdit';
-import { CellContext } from '@tanstack/react-table';
-import { RecordTableCellContainer } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableCellContainer';
-import { RecordTableCellDisplayContainer } from './RecordTableCellDisplayContainer';
-import { FieldDisplay } from 'erxes-ui/modules/record-field/components/FieldDisplay';
-import { RecordTableCellContext } from 'erxes-ui/modules/record-table/record-table-cell/contexts/RecordTableCellContext';
-import { FieldInput } from 'erxes-ui/modules/record-field/components/FieldInput';
-import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordTableProvider';
+import * as React from 'react';
+import * as Popover from '@radix-ui/react-popover';
 
-const RecordTableInlineCell = ({
-  type,
-  readOnly,
-  ...info
-}: {
-  readOnly?: boolean;
-  type: string;
-} & CellContext<any, any>) => {
-  const { useMutateValueHook } = useRecordTable();
-  const [isInEditMode, setIsInEditMode] = useState(false);
-  const [value, setValue] = useState<any>(info.getValue());
-  const { mutate, loading } = useMutateValueHook(info.column.id)();
+import { cn } from 'erxes-ui/lib';
 
-  const handleSave = (savedValue: any) => {
+import {
+  RecordTableCellContext,
+  useRecordTableCellContext,
+} from '../contexts/RecordTableCellContext';
+import { Cell } from '@tanstack/react-table';
+
+interface InlineCellProps extends React.HTMLAttributes<HTMLDivElement> {
+  onSave?: (value: any) => void;
+  getValue?: Cell<any, any>['getValue'];
+  value?: unknown;
+  display?: (props: InlineCellHandlers) => React.ReactNode;
+  edit?: (props: InlineCellHandlers) => React.ReactNode;
+  setValue?: (value: any) => void;
+}
+
+interface InlineCellHandlers {
+  isInEditMode: boolean;
+  setIsInEditMode: (value: boolean) => void;
+  handleSelect: (value: any) => void;
+}
+
+export function RecordTableInlineCell({
+  onSave,
+  getValue,
+  value,
+  display,
+  edit,
+  setValue,
+  ...props
+}: InlineCellProps) {
+  const [isInEditMode, setIsInEditMode] = React.useState(false);
+
+  const handleSave = () => {
     setIsInEditMode(false);
-    if (savedValue === info.getValue()) {
-      return;
-    }
-    setValue(savedValue);
-    mutate({
-      _id: info.row.original._id,
-      [info.column.id]: savedValue,
-    });
+    if (value === getValue?.()) return;
+    onSave?.(value);
   };
 
-  const onSubmit = () => handleSave(value);
-
-  const onSelect = (selectValue: string) => handleSave(selectValue);
+  const handleSelect = (selectedValue: any) => {
+    setIsInEditMode(false);
+    setValue?.(selectedValue);
+    if (selectedValue === getValue?.()) return;
+    onSave?.(selectedValue);
+  };
 
   return (
     <RecordTableCellContext.Provider
       value={{
-        ...info,
-        isInEditMode: readOnly ? false : isInEditMode,
+        isInEditMode,
         setIsInEditMode,
-        value,
-        setValue,
-        onSubmit,
-        onSelect,
+        handleSave,
+        handleSelect,
       }}
     >
-      <RecordTableCellContainer>
-        {readOnly || !isInEditMode ? (
-          <RecordTableCellDisplayContainer
-            onClick={() => setIsInEditMode(true)}
-          >
-            <FieldDisplay type={type} />
-          </RecordTableCellDisplayContainer>
-        ) : (
-          <RecordTableInlineCellEdit>
-            <FieldInput type={type} />
-          </RecordTableInlineCellEdit>
-        )}
-      </RecordTableCellContainer>
+      <RecordTableInlineCellContainer {...props}>
+        <RecordTableCellDisplayContainer readOnly={!edit}>
+          {display?.({
+            isInEditMode,
+            setIsInEditMode,
+            handleSelect,
+          })}
+        </RecordTableCellDisplayContainer>
+        <RecordTableInlineCellEditContainer>
+          {edit?.({
+            isInEditMode,
+            setIsInEditMode,
+            handleSelect,
+          })}
+        </RecordTableInlineCellEditContainer>
+      </RecordTableInlineCellContainer>
     </RecordTableCellContext.Provider>
   );
-};
+}
 
-export default RecordTableInlineCell;
+export const RecordTableInlineCellContainer = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ children, className, ...props }, ref) => {
+  const { isInEditMode } = useRecordTableCellContext();
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        'w-full flex items-center relative h-8 cursor-pointer box-border overflow-hidden',
+        isInEditMode && 'overflow-auto items-start',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+});
+
+RecordTableInlineCellContainer.displayName = 'RecordTableInlineCellContainer';
+
+export function RecordTableCellDisplayContainer({
+  className,
+  readOnly,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { readOnly?: boolean }) {
+  const { isInEditMode, setIsInEditMode } = useRecordTableCellContext();
+
+  if (isInEditMode) return null;
+
+  return (
+    <div
+      className={cn('w-full pl-2', className)}
+      {...props}
+      onClick={() => !readOnly && setIsInEditMode(true)}
+    />
+  );
+}
+
+export function RecordTableInlineCellEditContainer({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  const { isInEditMode, handleSave } = useRecordTableCellContext();
+
+  if (!isInEditMode) return null;
+
+  return (
+    <Popover.Root open={isInEditMode} modal onOpenChange={handleSave}>
+      <Popover.Trigger className="w-full" />
+      <Popover.Content
+        className={cn(
+          'z-20 min-w-[var(--radix-popper-anchor-width)] bg-background p-0 shadow-md',
+          'data-[state=open]:animate-in data-[state=closed]:animate-out',
+          'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
+        )}
+        sideOffset={-1}
+        align="start"
+        {...props}
+      >
+        {children}
+      </Popover.Content>
+    </Popover.Root>
+  );
+}
+
+export function RecordTableInlineCellEditForm({
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLFormElement>) {
+  const { handleSave } = useRecordTableCellContext();
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSave();
+      }}
+      {...props}
+    >
+      {children}
+    </form>
+  );
+}

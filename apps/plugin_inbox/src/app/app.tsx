@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 const Inbox = lazy(() =>
   import('./inbox').then((module) => ({ default: module.Inbox }))

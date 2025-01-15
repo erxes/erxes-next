@@ -1,4 +1,4 @@
-import { Route } from 'react-router-dom';
+import { Route } from 'react-router';
 
 import PluginMainPage from '~/plugins/PluginMainPage';
 import PluginSettingsPage from '~/plugins/PluginSettingsPage';

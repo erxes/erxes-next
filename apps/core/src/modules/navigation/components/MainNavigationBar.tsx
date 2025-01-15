@@ -2,15 +2,17 @@ import { Button, Collapsible, Sidebar } from 'erxes-ui';
 import { User } from './User';
 import { Organization } from './Organization';
 import { SidebarNavigation } from './SidebarNavigation';
-import { QuickActions } from '@/quickActions/components/QuickActions';
 import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
 import { useIsSettings } from '../hooks/useIsSettings';
 import { AnimatePresence, motion } from 'motion/react';
 import {
+  IconBuildingStore,
   IconCaretUpFilled,
   IconInbox,
   IconSettings,
 } from '@tabler/icons-react';
+import { Link } from 'react-router';
+import { QuickActions } from '@/quickActions/components/QuickActions';
 
 export const MainNavigationBar = ({
   children,
@@ -29,7 +31,7 @@ export const MainNavigationBar = ({
         exit={{ opacity: 0, x: -20 }}
         className="flex h-full w-full flex-col"
       >
-        <Sidebar.Header className="pt-4  border-input">
+        <Sidebar.Header className="pt-4 pb-3 border-input">
           <Organization />
         </Sidebar.Header>
         <Sidebar.Separator className="mx-0" />
@@ -64,18 +66,17 @@ export const MainNavigationBar = ({
           <Sidebar.Group className="pt-0">
             <Sidebar.GroupLabel>Shortcut actions</Sidebar.GroupLabel>
             <Sidebar.GroupContent className="grid grid-cols-2 gap-2">
-              <Button variant="ghost">
-                <IconSettings />
+              <Button variant="secondary" asChild>
+                <Link to="/settings">
+                  <IconSettings />
+                </Link>
               </Button>
-              <Button variant="ghost">
-                <IconSettings />
+              <Button variant="secondary" asChild>
+                <Link to="/marketplace">
+                  <IconBuildingStore />
+                </Link>
               </Button>
-              <Button variant="ghost">
-                <IconSettings />
-              </Button>
-              <Button variant="ghost">
-                <IconSettings />
-              </Button>
+              <QuickActions />
             </Sidebar.GroupContent>
           </Sidebar.Group>
           <User />
@@ -86,7 +87,7 @@ export const MainNavigationBar = ({
   return (
     <Sidebar.Provider>
       <Sidebar.Root collapsible="offcanvas" variant="inset">
-        <AnimatePresence>{renderSidebarContent()} </AnimatePresence>
+        <AnimatePresence>{renderSidebarContent()}</AnimatePresence>
         <Sidebar.Rail />
       </Sidebar.Root>
       <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden">

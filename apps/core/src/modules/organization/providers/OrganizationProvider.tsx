@@ -1,9 +1,9 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 
 import { useRecoilValue } from 'recoil';
 import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router';
 
 import {
   isCurrentOrganizationLoadedState,
