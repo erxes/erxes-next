@@ -13,7 +13,7 @@ export const ProductAddCollapsible = ({
       onOpenChange={setIsOpen}
       open={isOpen}
     >
-      <Collapsible.Trigger asChild className='flex'>
+      <Collapsible.Trigger asChild>
         <Button
           variant={'secondary'}
           className={`flex gap-1 bg-transparent text-xs font-semibold text-accent-foreground border-none shadow-none order-2 `}
