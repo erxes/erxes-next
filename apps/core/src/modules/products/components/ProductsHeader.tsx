@@ -4,7 +4,7 @@ import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
 import { FilterBarWithHook } from 'erxes-ui/modules/filter/componets/FilterBarWithHook';
 import { filters } from './ProductsFilter';
 import { FilterDropdown } from 'erxes-ui/modules/filter/componets/FilterDropdown';
-import { AddProductForm } from './HeaderAddProductsButton/AddProductForm';
+import { AddProductForm } from '../AddProducts/components/AddProductForm';
 
 export const ProductsHeader = () => {
   return (

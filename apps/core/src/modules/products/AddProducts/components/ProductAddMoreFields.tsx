@@ -1,0 +1,197 @@
+import {
+  FormMessage,
+  Input,
+  FormControl,
+  FormLabel,
+  FormItem,
+  FormField,
+  TextEditor,
+  Upload,
+} from 'erxes-ui/components';
+import { UseFormReturn } from 'react-hook-form';
+import { ProductFormValues } from './formSchema';
+import { BrandForm } from './brandForm';
+import { VendorForm } from './vendorForm';
+import { IconUpload } from '@tabler/icons-react';
+
+export const ProductAddMoreFields = ({
+  form,
+}: {
+  form: UseFormReturn<ProductFormValues>;
+}) => {
+  return (
+    <>
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem className="mb-5">
+            <FormLabel className="text-muted-foreground text-xs">
+              DESCRIPTION
+            </FormLabel>
+
+            <FormControl>
+              <TextEditor
+                {...field}
+                className=" h-28 rounded-md shadow-input"
+                parseTo="html"
+              />
+            </FormControl>
+            <FormMessage className="text-destructive" />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="attachment"
+        render={({ field }) => (
+          <FormItem className="mb-5">
+            <FormLabel className="text-muted-foreground text-xs">
+              UPLOAD
+            </FormLabel>
+            <FormControl>
+              <Upload.Root {...field}>
+                <Upload.Preview className="hidden" />
+                <Upload.Button
+                  size="sm"
+                  variant="secondary"
+                  type="button"
+                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                >
+                  <IconUpload />
+                  <span>Primary upload</span>
+                </Upload.Button>
+              </Upload.Root>
+            </FormControl>
+            <FormMessage className="text-destructive" />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="shortName"
+        render={({ field }) => (
+          <FormItem className="flex flex-col mb-5">
+            <FormLabel className=" text-muted-foreground text-xs">
+              SHORT NAME
+            </FormLabel>
+            <div className="flex flex-col mx-1 ">
+              <FormControl>
+                <Input
+                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage className="text-destructive" />
+            </div>
+          </FormItem>
+        )}
+      />
+      <div className="grid grid-cols-2 gap-5 mb-5">
+        <FormField
+          control={form.control}
+          name="scopeBrandIds"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel className="text-muted-foreground text-xs">
+                BRAND
+              </FormLabel>
+              <FormControl>
+                <BrandForm
+                  className="ml-1 shadow-button-outline"
+                  values={field.value || []}
+                  onChange={(value) => field.onChange(value)}
+                />
+              </FormControl>
+              <FormMessage className="text-destructive" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="vendorId"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel className=" text-muted-foreground text-xs">
+                VENDOR
+              </FormLabel>
+              <FormControl>
+                <VendorForm {...field} className="mr-1 shadow-button-outline" />
+              </FormControl>
+              <FormMessage className="text-destructive" />
+            </FormItem>
+          )}
+        />
+      </div>
+      <FormField
+        control={form.control}
+        name="barcodes"
+        render={({ field }) => (
+          <FormItem className="flex flex-col mb-5">
+            <FormLabel className="text-muted-foreground text-xs">
+              BARCODES
+            </FormLabel>
+            <div className="flex flex-col mx-1 ">
+              <FormControl>
+                <Input
+                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input"
+                  {...field}
+                  onChange={(e) => field.onChange([e.target.value])}
+                />
+              </FormControl>
+              <FormMessage className="text-destructive" />
+            </div>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="barcodeDescription"
+        render={({ field }) => (
+          <FormItem className="mb-5">
+            <FormLabel className="text-muted-foreground text-xs">
+              BARCODE DESCRIPTION
+            </FormLabel>
+            <div className="mx-2">
+              <FormControl>
+                <TextEditor
+                  {...field}
+                  className=" h-28 rounded-md shadow-input"
+                  parseTo="html"
+                />
+              </FormControl>
+              <FormMessage className="text-destructive" />
+            </div>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="attachmentMore"
+        render={({ field }) => (
+          <FormItem className="mb-5">
+            <FormLabel className="text-muted-foreground text-xs">
+              SECONDARY UPLOAD
+            </FormLabel>
+            <FormControl>
+              <Upload.Root {...field}>
+                <Upload.Preview className="hidden" />
+                <Upload.Button
+                  size="sm"
+                  variant="secondary"
+                  type="button"
+                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                >
+                  <IconUpload />
+                  <span>Secondary upload</span>
+                </Upload.Button>
+              </Upload.Root>
+            </FormControl>
+            <FormMessage className="text-destructive" />
+          </FormItem>
+        )}
+      />
+    </>
+  );
+};

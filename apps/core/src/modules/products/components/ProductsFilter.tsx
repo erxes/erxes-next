@@ -2,11 +2,11 @@ import { IconBox, IconRosetteDiscountCheck } from '@tabler/icons-react';
 import {
   ProductTypeFilterBar,
   ProductTypeFilterDropdown,
-} from '@/products/components/products-filter/components/ProductTypeFilter';
+} from '@/products/products-filter/components/ProductTypeFilter';
 import {
   ProductBrandFilterBar,
   ProductBrandFilterDropdown,
-} from '@/products/components/products-filter/components/ProductBrandFilter';
+} from '@/products/products-filter/components/ProductBrandFilter';
 import { Filter } from 'erxes-ui/modules/filter/types/filter';
 
 export const filters: Filter[] = [

@@ -24,6 +24,6 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/modules/products/components/products-filter"
+    "src/modules/products/products-filter"
   ]
 }
