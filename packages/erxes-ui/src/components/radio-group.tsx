@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
-import { IconCircle } from '@tabler/icons-react'
+import { IconCircle } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
 
@@ -39,4 +39,6 @@ const Item = React.forwardRef<
 });
 Item.displayName = RadioGroupPrimitive.Item.displayName;
 
-export const RadioGroup = { Root, Item };
+export const RadioGroup = Object.assign(RadioGroupPrimitive.Root, {
+  Item,
+});
