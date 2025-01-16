@@ -1632,7 +1632,6 @@
         "action": "Create default tax rate"
       },
       "taxRate": "Tax rate",
-      "taxCode": "Tax code",
       "targets": {
         "label": "Targets",
         "hint": "Select the targets that this tax rate will apply to.",

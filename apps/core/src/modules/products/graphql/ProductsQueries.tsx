@@ -41,7 +41,6 @@ const products = gql`
       tagIds
       name
       shortName
-      taxCode
       taxType
       uom
       unitPrice

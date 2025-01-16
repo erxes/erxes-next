@@ -1,6 +1,6 @@
 export enum AppPath {
   Index = '/',
-  Inbox = 'inbox',
+  Inbox = 'plugin_inbox',
   InboxCatchAll = `/${Inbox}/*`,
   Settings = 'settings',
   SettingsCatchAll = `/${Settings}/*`,

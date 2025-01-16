@@ -40,7 +40,7 @@ export const MainNavigationBar = ({
             <Sidebar.Group>
               <Sidebar.GroupLabel asChild className="hover:bg-zinc-200">
                 <Collapsible.Trigger>
-                  Favorites (3)
+                  Favorites
                   <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                 </Collapsible.Trigger>
               </Sidebar.GroupLabel>

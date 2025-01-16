@@ -12,10 +12,7 @@ export const PLUGINS = {
     title: 'contacts',
     icon: IconUsers,
   },
-  inbox: {
-    title: 'teamInbox',
-    icon: IconMail,
-  },
+
   insights: {
     title: 'insights',
     icon: IconChartPie,
@@ -31,5 +28,9 @@ export const PLUGINS = {
   tasks: {
     title: 'tasks',
     icon: IconSquareCheck,
+  },
+  plugin_inbox: {
+    title: 'teamInbox',
+    icon: IconMail,
   },
 };
