@@ -34,7 +34,9 @@ const initFederation = async () => {
 
         root.render(
           <StrictMode>
-            <App />
+            <NuqsAdapter>
+              <App />
+            </NuqsAdapter>
           </StrictMode>
         );
       });

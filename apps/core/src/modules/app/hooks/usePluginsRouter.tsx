@@ -1,7 +1,7 @@
 import { Route } from 'react-router';
 
-import PluginMainPage from '~/plugins/PluginMainPage';
-import PluginSettingsPage from '~/plugins/PluginSettingsPage';
+import PluginMainPage from '~/plugins/components/PluginMainPage';
+import PluginSettingsPage from '~/plugins/components/PluginSettingsPage';
 
 export const usePluginsRouter = () => {
   return window.plugins?.map((plugin) => (
