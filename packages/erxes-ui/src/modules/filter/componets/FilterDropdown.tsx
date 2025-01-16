@@ -29,7 +29,10 @@ export const FilterDropdown = ({ filters }: { filters: any[] }) => {
             ))}
           </DropdownMenu.TabsContent>
           {filters.map((filter) => (
-            <DropdownMenu.TabsContent value={filter.accessoryKey}>
+            <DropdownMenu.TabsContent
+              value={filter.accessoryKey}
+              key={filter.accessoryKey}
+            >
               <DropdownMenu.TabsTrigger>
                 <IconChevronLeft className="w-4 h-4 mr-2" />
                 Back
