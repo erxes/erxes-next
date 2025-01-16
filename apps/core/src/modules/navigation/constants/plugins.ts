@@ -1,4 +1,11 @@
-import { IconMail, IconChartPie, IconWallet, IconSquareCheck, IconUsers, IconPackage } from '@tabler/icons-react'
+import {
+  IconMail,
+  IconChartPie,
+  IconWallet,
+  IconSquareCheck,
+  IconUsers,
+  IconPackage,
+} from '@tabler/icons-react';
 
 export const PLUGINS = {
   contacts: {

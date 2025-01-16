@@ -24,8 +24,6 @@ const initFederation = async () => {
     fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
       .then((res) => res.json())
       .then((data) => {
-        console.log('data', data);
-
         init({
           name: 'core',
           remotes: data.plugins?.map((plugin) => ({
@@ -36,7 +34,9 @@ const initFederation = async () => {
 
         root.render(
           <StrictMode>
-            <App />
+            <NuqsAdapter>
+              <App />
+            </NuqsAdapter>
           </StrictMode>
         );
       });

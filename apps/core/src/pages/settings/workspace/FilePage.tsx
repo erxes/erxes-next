@@ -5,7 +5,7 @@ import {
   Label,
   Button,
   Form,
-  ScrollArea
+  ScrollArea,
 } from 'erxes-ui/components';
 import { useMemo } from 'react';
 import { motion } from 'motion/react';
@@ -21,17 +21,19 @@ import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm
 
 type Option = {
   label: string;
-  value: string
-}
+  value: string;
+};
 
-const modifiedArray: Option[] = FILE_MIME_TYPES.map(({ label, extension, value }) => ({
-  label: `${label} (${extension})`,
-  value: value
-}));
+const modifiedArray: Option[] = FILE_MIME_TYPES.map(
+  ({ label, extension, value }) => ({
+    label: `${label} (${extension})`,
+    value: value,
+  })
+);
 
 export default function FilePage() {
-  const { form, onCompleted } = useFileUploadForm()
-  const {  updateConfig, isLoading, loading } = useConfig({ onCompleted })
+  const { form, onCompleted } = useFileUploadForm();
+  const { updateConfig, isLoading } = useConfig({ onCompleted });
 
   const dynamicFields = useMemo(() => {
     const selectedType = form.watch('UPLOAD_SERVICE_TYPE');
@@ -40,19 +42,18 @@ export default function FilePage() {
 
   const selected = useMemo(() => {
     const selectedType = form.watch('UPLOAD_SERVICE_TYPE');
-    return selectedType
-  }, [form.watch('UPLOAD_SERVICE_TYPE')])
-
+    return selectedType;
+  }, [form.watch('UPLOAD_SERVICE_TYPE')]);
 
   const onSubmit = (data: UploadConfigFormT) => {
-    console.log(data, 'onSubmit')
-    updateConfig(data)
+    console.log(data, 'onSubmit');
+    updateConfig(data);
   };
 
   return (
     <ScrollArea.Root>
       <section className="mx-auto max-w-2xl w-full relative">
-        <Header className=''>
+        <Header className="">
           <Breadcrumb.Root>
             <Breadcrumb.List>
               <Breadcrumb.Item>
@@ -68,17 +69,14 @@ export default function FilePage() {
         <h2 className="font-semibold text-lg mt-4 mb-12 px-4">File Upload</h2>
         <div className="flex flex-col gap-8 px-4 w-full h-auto">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='flex flex-col gap-y-6'>
-              <FileUploadMainFields
-                form={form}
-                modifiedArray={modifiedArray}
-              />
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-y-6"
+            >
+              <FileUploadMainFields form={form} modifiedArray={modifiedArray} />
               <Label>Upload Service Type</Label>
 
-              <UploadServiceRadioGroup
-                selected={selected}
-                form={form}
-              />
+              <UploadServiceRadioGroup selected={selected} form={form} />
 
               <DynamicServiceConfigFields
                 dynamicFields={dynamicFields}
@@ -86,15 +84,28 @@ export default function FilePage() {
                 form={form}
               />
 
-              <div className='grid grid-cols-4 py-4 col-start-3 gap-2 w-full'>
-                <motion.div whileTap={{ scale: .975 }} className='w-full col-start-3'>
-                  <Button type='reset' variant={'destructive'} className='w-full'>Cancel</Button>
+              <div className="grid grid-cols-4 py-4 col-start-3 gap-2 w-full">
+                <motion.div
+                  whileTap={{ scale: 0.975 }}
+                  className="w-full col-start-3"
+                >
+                  <Button
+                    type="reset"
+                    variant={'destructive'}
+                    className="w-full"
+                  >
+                    Cancel
+                  </Button>
                 </motion.div>
-                <motion.div whileTap={{ scale: .975 }} className='w-full'>
-                  <Button type='submit' disabled={isLoading} variant='outline' className='w-full'>
-                    {
-                      isLoading && <IconLoader2 className='animate-spin' /> || 'Update'
-                    }
+                <motion.div whileTap={{ scale: 0.975 }} className="w-full">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    {(isLoading && <IconLoader2 className="animate-spin" />) ||
+                      'Update'}
                   </Button>
                 </motion.div>
               </div>
@@ -104,5 +115,5 @@ export default function FilePage() {
       </section>
       <ScrollArea.Bar />
     </ScrollArea.Root>
-  )
+  );
 }

@@ -11,7 +11,7 @@ const PluginInbox = () => {
     <Suspense fallback={<>Loading...</>}>
       <Routes>
         <Route path="/" element={<Inbox />} />
-        <Route path="/starred" element={<Starred />} />
+        {/* <Route path="/starred" element={<Starred />} /> */}
       </Routes>
     </Suspense>
   );

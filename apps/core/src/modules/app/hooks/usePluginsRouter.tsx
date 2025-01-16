@@ -1,20 +1,26 @@
 import { Route } from 'react-router';
 
-import PluginMainPage from '~/plugins/PluginMainPage';
-import PluginSettingsPage from '~/plugins/PluginSettingsPage';
-
+import PluginMainPage from '~/plugins/components/PluginMainPage';
+import PluginSettingsPage from '~/plugins/components/PluginSettingsPage';
+import { getInstance } from '@module-federation/enhanced/runtime';
 export const usePluginsRouter = () => {
-  return window.plugins?.map((plugin) => (
+  const instence = getInstance();
+  const remotes = instence?.options.remotes;
+
+  return remotes?.map((remote) => (
     <Route
-      key={plugin.name}
-      path={`/${plugin.name}/*`}
-      element={<PluginMainPage pluginName={plugin.name} />}
+      key={remote.name}
+      path={`/${remote.name}/*`}
+      element={<PluginMainPage pluginName={remote.name} />}
     />
   ));
 };
 
 export const usePLuginsSettingsRoutes = () => {
-  return window.plugins?.map((plugin) => (
+  const instence = getInstance();
+  const remotes = instence?.options.remotes;
+
+  return remotes?.map((plugin) => (
     <Route
       key={plugin.name}
       path={`/${plugin.name}/*`}

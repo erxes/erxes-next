@@ -3,12 +3,9 @@ import React, { lazy } from 'react';
 
 export default function PluginMainPage({ pluginName }: { pluginName: string }) {
   const Plugin = lazy(() => {
-    return loadRemote<{ default: typeof Plugin }>(
-      `plugin_${pluginName}/Module`,
-      {
-        from: 'runtime',
-      }
-    ) as Promise<{ default: typeof Plugin }>;
+    return loadRemote<{ default: typeof Plugin }>(`${pluginName}/Module`, {
+      from: 'runtime',
+    }) as Promise<{ default: typeof Plugin }>;
   });
 
   return (
