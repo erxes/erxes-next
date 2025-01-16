@@ -37,15 +37,6 @@ export function SettingsSidebar() {
   const plugins = useRecoilValue(pluginsState);
   const pinnedPlugins = plugins.filter((plugin) => plugin.pinned);
 
-  const windowPlugins = window.plugins;
-
-  windowPlugins?.map((plugin) => {
-    pinnedPlugins.push({
-      handle: plugin.name,
-      pinned: true,
-    });
-  });
-
   const { t } = useTranslation();
 
   return (

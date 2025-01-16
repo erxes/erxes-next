@@ -1,3 +1,9 @@
+// @ts-check
+
+/**
+ * @type {import('@module-federation/sdk').moduleFederationPlugin.ModuleFederationPluginOptions}
+ **/
+
 import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 
 const coreLibraries = new Set([

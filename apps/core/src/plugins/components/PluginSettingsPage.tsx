@@ -7,12 +7,9 @@ export default function PluginSettingsPage({
   pluginName: string;
 }) {
   const Plugin = lazy(() => {
-    return loadRemote<{ default: typeof Plugin }>(
-      `plugin_${pluginName}/Settings`,
-      {
-        from: 'runtime',
-      }
-    ) as Promise<{ default: typeof Plugin }>;
+    return loadRemote<{ default: typeof Plugin }>(`${pluginName}/Settings`, {
+      from: 'runtime',
+    }) as Promise<{ default: typeof Plugin }>;
   });
 
   return (
