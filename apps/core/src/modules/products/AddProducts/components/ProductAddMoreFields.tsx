@@ -21,14 +21,17 @@ export const ProductAddMoreFields = ({
 }) => {
   return (
     <>
+      <div className="flex items-center my-4">
+        <div className="flex-1 border-t border-dashed border-muted-foreground"></div>
+        <span className="mx-2 text-muted-foreground">Optional</span>
+        <div className="flex-1 border-t border-dashed border-muted-foreground"></div>
+      </div>
       <FormField
         control={form.control}
         name="description"
         render={({ field }) => (
           <FormItem className="mb-5">
-            <FormLabel className="text-muted-foreground text-xs">
-              DESCRIPTION
-            </FormLabel>
+            <FormLabel>DESCRIPTION</FormLabel>
 
             <FormControl>
               <TextEditor
@@ -46,9 +49,7 @@ export const ProductAddMoreFields = ({
         name="attachment"
         render={({ field }) => (
           <FormItem className="mb-5">
-            <FormLabel className="text-muted-foreground text-xs">
-              UPLOAD
-            </FormLabel>
+            <FormLabel>UPLOAD</FormLabel>
             <FormControl>
               <Upload.Root {...field}>
                 <Upload.Preview className="hidden" />
@@ -72,9 +73,7 @@ export const ProductAddMoreFields = ({
         name="shortName"
         render={({ field }) => (
           <FormItem className="flex flex-col mb-5">
-            <FormLabel className=" text-muted-foreground text-xs">
-              SHORT NAME
-            </FormLabel>
+            <FormLabel>SHORT NAME</FormLabel>
             <div className="flex flex-col">
               <FormControl>
                 <Input className="rounded-md h-8" {...field} />
@@ -90,9 +89,7 @@ export const ProductAddMoreFields = ({
           name="scopeBrandIds"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel className="text-muted-foreground text-xs">
-                BRAND
-              </FormLabel>
+              <FormLabel>BRAND</FormLabel>
               <FormControl>
                 <BrandField
                   values={field.value || []}
@@ -109,9 +106,7 @@ export const ProductAddMoreFields = ({
           name="vendorId"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel className=" text-muted-foreground text-xs">
-                VENDOR
-              </FormLabel>
+              <FormLabel>VENDOR</FormLabel>
               <FormControl>
                 <VendorField {...field} />
               </FormControl>
@@ -125,9 +120,7 @@ export const ProductAddMoreFields = ({
         name="barcodes"
         render={({ field }) => (
           <FormItem className="flex flex-col mb-5">
-            <FormLabel className="text-muted-foreground text-xs">
-              BARCODES
-            </FormLabel>
+            <FormLabel>BARCODES</FormLabel>
             <div className="flex flex-col">
               <FormControl>
                 <Input
@@ -146,9 +139,7 @@ export const ProductAddMoreFields = ({
         name="barcodeDescription"
         render={({ field }) => (
           <FormItem className="mb-5">
-            <FormLabel className="text-muted-foreground text-xs">
-              BARCODE DESCRIPTION
-            </FormLabel>
+            <FormLabel>BARCODE DESCRIPTION</FormLabel>
             <FormControl>
               <TextEditor
                 {...field}
@@ -165,9 +156,7 @@ export const ProductAddMoreFields = ({
         name="attachmentMore"
         render={({ field }) => (
           <FormItem className="mb-5">
-            <FormLabel className="text-muted-foreground text-xs">
-              SECONDARY UPLOAD
-            </FormLabel>
+            <FormLabel>SECONDARY UPLOAD</FormLabel>
             <FormControl>
               <Upload.Root {...field}>
                 <Upload.Preview className="hidden" />
