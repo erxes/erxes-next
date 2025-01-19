@@ -13,6 +13,7 @@ export const ProductAddCollapsible = ({
       onOpenChange={setIsOpen}
       open={isOpen}
     >
+      <Collapsible.Content className="order-1">{children}</Collapsible.Content>
       <Collapsible.Trigger asChild>
         <Button
           variant={'secondary'}
@@ -26,7 +27,6 @@ export const ProductAddCollapsible = ({
           />
         </Button>
       </Collapsible.Trigger>
-      <Collapsible.Content className="order-1">{children}</Collapsible.Content>
     </Collapsible>
   );
 };
