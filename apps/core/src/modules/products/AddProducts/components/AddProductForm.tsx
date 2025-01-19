@@ -1,29 +1,9 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CategoryForm } from '@/products/AddProducts/components/categoryForm';
-import { TypeForm } from '@/products/AddProducts/components/typeForm';
-import { BrandForm } from '@/products/AddProducts/components/brandForm';
-import { UomForm } from '@/products/AddProducts/components/uomForm';
-import { VendorForm } from '@/products/AddProducts/components/vendorForm';
-import { IconUpload } from '@tabler/icons-react';
-import {
-  Button,
-  Sheet,
-  Input,
-  ScrollArea,
-  Upload,
-  TextEditor,
-} from 'erxes-ui/components';
+import { Button, ScrollArea, Sheet } from 'erxes-ui/components';
 import { useAddProduct } from '@/products/hooks/useAddProduct';
-import {
-  Form,
-  FormItem,
-  FormField,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from 'erxes-ui/components/form';
+import { Form } from 'erxes-ui/components/form';
 import {
   productFormSchema,
   ProductFormValues,
