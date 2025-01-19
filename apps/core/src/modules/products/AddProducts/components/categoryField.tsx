@@ -18,13 +18,13 @@ interface Category {
   };
 }
 
-interface CategoryFormProps {
+interface CategoryFieldProps {
   value: string;
   onChange: (value: string) => void;
   className?: string;
 }
 
-export const CategoryForm: React.FC<CategoryFormProps> = ({
+export const CategoryField: React.FC<CategoryFieldProps> = ({
   value,
   onChange,
   className,

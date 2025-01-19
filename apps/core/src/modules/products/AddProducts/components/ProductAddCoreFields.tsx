@@ -9,7 +9,7 @@ import {
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from './formSchema';
 import { TypeForm } from './typeForm';
-import { CategoryForm } from './categoryForm';
+import { CategoryField } from './categoryField';
 import { UomForm } from './uomForm';
 
 export const ProductAddCoreFields = ({
@@ -58,7 +58,7 @@ export const ProductAddCoreFields = ({
               CATEGORY
             </FormLabel>
             <FormControl>
-              <CategoryForm {...field} />
+              <CategoryField {...field} />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>

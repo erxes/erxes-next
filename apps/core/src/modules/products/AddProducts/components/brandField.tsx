@@ -2,32 +2,28 @@ import { useState } from 'react';
 import { cn } from 'erxes-ui/lib/utils';
 import { Popover, Button, Command, Skeleton } from 'erxes-ui/components';
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
-import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
+import { useBrands } from '@/products/hooks/useBrands';
 
-interface VendorFormProps {
-  value: string | undefined;
-  onChange: (value: string) => void;
+interface BrandFieldProps {
+  values: string[];
+  onChange: (value: string[]) => void;
   className?: string;
 }
 
-export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
-  const { companies, loading } = useCompaniesLowDetail();
+export const BrandField = ({ values, onChange, className }: BrandFieldProps) => {
+  const { brands, loading } = useBrands({});
   const [open, setOpen] = useState<boolean>(false);
-  const currentValue = companies?.find((vendor) => vendor._id === value)?._id;
+  const currentValue = brands?.find((brand) => brand._id === values?.[0])?._id;
 
-  const handleSelectVendor = (vendorId: string) => {
-    onChange(vendorId === currentValue ? '' : vendorId);
+  const handleSelectBrand = (brandId: string) => {
+    onChange(brandId === currentValue ? [] : [brandId]);
     setOpen(false);
   };
 
   if (loading)
     return (
-      <Skeleton className="truncate justify-start h-8 mr-1">
-        <div className="mx-2 w-full">
-          <div className="py-2 flex gap-2">
-            <div className="h-4 w-24" />
-          </div>
-        </div>
+      <Skeleton className="h-8 w-full">
+        <div className="h-4 w-24" />
       </Skeleton>
     );
 
@@ -39,7 +35,7 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            aria-controls="vendor-command-menu"
+            aria-controls="brand-command-menu"
             className="truncate h-8 hover:cursor-pointer rounded-md shadow-none w-full justify-between"
           >
             <span
@@ -49,8 +45,8 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
               )}
             >
               {currentValue
-                ? companies.find((vendor) => vendor._id === currentValue)?.primaryName
-                : 'Select vendor'}
+                ? brands.find((brand) => brand._id === currentValue)?.name
+                : 'Select brand'}
             </span>
             <IconChevronDown
               size={16}
@@ -63,26 +59,26 @@ export const VendorForm = ({ value, onChange, className }: VendorFormProps) => {
         <Popover.Content
           className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
           align="start"
-          sideOffset={4}
         >
-          <Command id="vendor-command-menu">
-            <Command.Input 
-              placeholder="Search vendor..." 
-              className="h-9"
-            />
+          <Command id="brand-command-menu">
+            <Command.Input placeholder="Search brand..." className="h-9" />
             <Command.List>
-              <Command.Empty>No vendor found.</Command.Empty>
+              <Command.Empty>No brand found.</Command.Empty>
               <Command.Group>
-                {companies.map((vendor) => (
+                {brands.map((brand) => (
                   <Command.Item
-                    key={vendor._id}
+                    key={brand._id}
                     className="h-7 text-xs text-foreground"
-                    value={vendor._id}
-                    onSelect={handleSelectVendor}
+                    value={brand._id}
+                    onSelect={handleSelectBrand}
                   >
-                    {vendor.primaryName}
-                    {currentValue === vendor._id && (
-                      <IconCheck size={16} strokeWidth={2} className="ml-auto" />
+                    {brand.name}
+                    {currentValue === brand._id && (
+                      <IconCheck
+                        size={16}
+                        strokeWidth={2}
+                        className="ml-auto"
+                      />
                     )}
                   </Command.Item>
                 ))}

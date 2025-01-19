@@ -2,28 +2,32 @@ import { useState } from 'react';
 import { cn } from 'erxes-ui/lib/utils';
 import { Popover, Button, Command, Skeleton } from 'erxes-ui/components';
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
-import { useBrands } from '@/products/hooks/useBrands';
+import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
 
-interface BrandFormProps {
-  values: string[];
-  onChange: (value: string[]) => void;
+interface VendorFieldProps {
+  value: string | undefined;
+  onChange: (value: string) => void;
   className?: string;
 }
 
-export const BrandForm = ({ values, onChange, className }: BrandFormProps) => {
-  const { brands, loading } = useBrands({});
+export const VendorField = ({ value, onChange, className }: VendorFieldProps) => {
+  const { companies, loading } = useCompaniesLowDetail();
   const [open, setOpen] = useState<boolean>(false);
-  const currentValue = brands?.find((brand) => brand._id === values?.[0])?._id;
+  const currentValue = companies?.find((vendor) => vendor._id === value)?._id;
 
-  const handleSelectBrand = (brandId: string) => {
-    onChange(brandId === currentValue ? [] : [brandId]);
+  const handleSelectVendor = (vendorId: string) => {
+    onChange(vendorId === currentValue ? '' : vendorId);
     setOpen(false);
   };
 
   if (loading)
     return (
-      <Skeleton className="h-8 w-full">
-        <div className="h-4 w-24" />
+      <Skeleton className="truncate justify-start h-8 mr-1">
+        <div className="mx-2 w-full">
+          <div className="py-2 flex gap-2">
+            <div className="h-4 w-24" />
+          </div>
+        </div>
       </Skeleton>
     );
 
@@ -35,7 +39,7 @@ export const BrandForm = ({ values, onChange, className }: BrandFormProps) => {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            aria-controls="brand-command-menu"
+            aria-controls="vendor-command-menu"
             className="truncate h-8 hover:cursor-pointer rounded-md shadow-none w-full justify-between"
           >
             <span
@@ -45,8 +49,8 @@ export const BrandForm = ({ values, onChange, className }: BrandFormProps) => {
               )}
             >
               {currentValue
-                ? brands.find((brand) => brand._id === currentValue)?.name
-                : 'Select brand'}
+                ? companies.find((vendor) => vendor._id === currentValue)?.primaryName
+                : 'Select vendor'}
             </span>
             <IconChevronDown
               size={16}
@@ -59,26 +63,26 @@ export const BrandForm = ({ values, onChange, className }: BrandFormProps) => {
         <Popover.Content
           className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
           align="start"
+          sideOffset={4}
         >
-          <Command id="brand-command-menu">
-            <Command.Input placeholder="Search brand..." className="h-9" />
+          <Command id="vendor-command-menu">
+            <Command.Input 
+              placeholder="Search vendor..." 
+              className="h-9"
+            />
             <Command.List>
-              <Command.Empty>No brand found.</Command.Empty>
+              <Command.Empty>No vendor found.</Command.Empty>
               <Command.Group>
-                {brands.map((brand) => (
+                {companies.map((vendor) => (
                   <Command.Item
-                    key={brand._id}
+                    key={vendor._id}
                     className="h-7 text-xs text-foreground"
-                    value={brand._id}
-                    onSelect={handleSelectBrand}
+                    value={vendor._id}
+                    onSelect={handleSelectVendor}
                   >
-                    {brand.name}
-                    {currentValue === brand._id && (
-                      <IconCheck
-                        size={16}
-                        strokeWidth={2}
-                        className="ml-auto"
-                      />
+                    {vendor.primaryName}
+                    {currentValue === vendor._id && (
+                      <IconCheck size={16} strokeWidth={2} className="ml-auto" />
                     )}
                   </Command.Item>
                 ))}

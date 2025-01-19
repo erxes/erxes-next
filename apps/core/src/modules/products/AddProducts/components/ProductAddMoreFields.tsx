@@ -10,8 +10,8 @@ import {
 } from 'erxes-ui/components';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from './formSchema';
-import { BrandForm } from './brandForm';
-import { VendorForm } from './vendorForm';
+import { BrandField } from './brandField';
+import { VendorField } from './vendorField';
 import { IconUpload } from '@tabler/icons-react';
 
 export const ProductAddMoreFields = ({
@@ -33,7 +33,7 @@ export const ProductAddMoreFields = ({
             <FormControl>
               <TextEditor
                 {...field}
-                className=" h-28 rounded-md shadow-input"
+                className=" h-28 rounded-md border"
                 parseTo="html"
               />
             </FormControl>
@@ -77,10 +77,7 @@ export const ProductAddMoreFields = ({
             </FormLabel>
             <div className="flex flex-col">
               <FormControl>
-                <Input
-                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input h-8"
-                  {...field}
-                />
+                <Input className="rounded-md h-8" {...field} />
               </FormControl>
               <FormMessage className="text-destructive" />
             </div>
@@ -97,7 +94,7 @@ export const ProductAddMoreFields = ({
                 BRAND
               </FormLabel>
               <FormControl>
-                <BrandForm
+                <BrandField
                   values={field.value || []}
                   onChange={(value) => field.onChange(value)}
                 />
@@ -116,7 +113,7 @@ export const ProductAddMoreFields = ({
                 VENDOR
               </FormLabel>
               <FormControl>
-                <VendorForm {...field} />
+                <VendorField {...field} />
               </FormControl>
               <FormMessage className="text-destructive" />
             </FormItem>
@@ -134,7 +131,7 @@ export const ProductAddMoreFields = ({
             <div className="flex flex-col">
               <FormControl>
                 <Input
-                  className=" border-0 rounded-md focus-visible:ring-0 shadow-input h-8"
+                  className="rounded-md h-8"
                   {...field}
                   onChange={(e) => field.onChange([e.target.value])}
                 />
@@ -155,7 +152,7 @@ export const ProductAddMoreFields = ({
             <FormControl>
               <TextEditor
                 {...field}
-                className=" h-28 rounded-md shadow-input"
+                className=" h-28 rounded-md border"
                 parseTo="html"
               />
             </FormControl>
