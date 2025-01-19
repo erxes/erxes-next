@@ -12,12 +12,20 @@ import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
 import { ProductAddCollapsible } from './ProductAddCollapsible';
 import { ProductAddCoreFields } from './ProductAddCoreFields';
 import { ProductAddMoreFields } from './ProductAddMoreFields';
+import { useState } from 'react';
 
 export function AddProductForm() {
+  const [open, setOpen] = useState<boolean>(false);
   const { addProduct } = useAddProduct();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
+      name: '',
+      code: '',
+      categoryId: '',
+      vendorId: '',
+      type: '',
+      uom: '',
       shortName: '',
       attachment: null,
       attachmentMore: null,
@@ -34,13 +42,15 @@ export function AddProductForm() {
   async function onSubmit(data: ProductFormValues) {
     try {
       await addProduct(data);
+      form.reset();
+      setOpen(false)
     } catch (error) {
       console.error(error);
     }
   }
 
   return (
-    <ProductAddSheet>
+    <ProductAddSheet onOpenChange={setOpen} open={open}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
