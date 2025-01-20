@@ -1,29 +1,9 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CategoryForm } from '@/products/AddProducts/components/categoryForm';
-import { TypeForm } from '@/products/AddProducts/components/typeForm';
-import { BrandForm } from '@/products/AddProducts/components/brandForm';
-import { UomForm } from '@/products/AddProducts/components/uomForm';
-import { VendorForm } from '@/products/AddProducts/components/vendorForm';
-import { IconUpload } from '@tabler/icons-react';
-import {
-  Button,
-  Sheet,
-  Input,
-  ScrollArea,
-  Upload,
-  TextEditor,
-} from 'erxes-ui/components';
+import { Button, ScrollArea, Sheet } from 'erxes-ui/components';
 import { useAddProduct } from '@/products/hooks/useAddProduct';
-import {
-  Form,
-  FormItem,
-  FormField,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from 'erxes-ui/components/form';
+import { Form } from 'erxes-ui/components/form';
 import {
   productFormSchema,
   ProductFormValues,
@@ -32,12 +12,20 @@ import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
 import { ProductAddCollapsible } from './ProductAddCollapsible';
 import { ProductAddCoreFields } from './ProductAddCoreFields';
 import { ProductAddMoreFields } from './ProductAddMoreFields';
+import { useState } from 'react';
 
 export function AddProductForm() {
+  const [open, setOpen] = useState<boolean>(false);
   const { addProduct } = useAddProduct();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
+      name: '',
+      code: '',
+      categoryId: '',
+      vendorId: '',
+      type: '',
+      uom: '',
       shortName: '',
       attachment: null,
       attachmentMore: null,
@@ -54,13 +42,15 @@ export function AddProductForm() {
   async function onSubmit(data: ProductFormValues) {
     try {
       await addProduct(data);
+      form.reset();
+      setOpen(false)
     } catch (error) {
       console.error(error);
     }
   }
 
   return (
-    <ProductAddSheet>
+    <ProductAddSheet onOpenChange={setOpen} open={open}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

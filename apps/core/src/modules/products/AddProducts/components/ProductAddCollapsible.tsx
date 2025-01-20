@@ -9,16 +9,19 @@ export const ProductAddCollapsible = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Collapsible
-      className="flex flex-col mt-5"
+      className="flex flex-col items-center mt-5"
       onOpenChange={setIsOpen}
       open={isOpen}
     >
-      <Collapsible.Trigger asChild className='flex'>
+      <Collapsible.Content className="order-1 w-full">
+        {children}
+      </Collapsible.Content>
+      <Collapsible.Trigger asChild>
         <Button
-          variant={'secondary'}
-          className={`flex gap-1 bg-transparent text-xs font-semibold text-accent-foreground border-none shadow-none order-2 `}
+          variant={'ghost'}
+          className={`w-min text-xs font-semibold text-accent-foreground order-2 `}
         >
-          See more options
+          See {!isOpen ? 'more' : 'less'} options
           <IconChevronDown
             size={12}
             strokeWidth={2}
@@ -26,7 +29,6 @@ export const ProductAddCollapsible = ({
           />
         </Button>
       </Collapsible.Trigger>
-      <Collapsible.Content className="order-1">{children}</Collapsible.Content>
     </Collapsible>
   );
 };

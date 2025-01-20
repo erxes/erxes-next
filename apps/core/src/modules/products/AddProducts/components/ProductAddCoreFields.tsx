@@ -5,18 +5,30 @@ import {
   FormLabel,
   FormItem,
   FormField,
+  Select,
 } from 'erxes-ui/components';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from './formSchema';
-import { TypeForm } from './typeForm';
-import { CategoryForm } from './categoryForm';
-import { UomForm } from './uomForm';
-
+import { CategoryField } from './categoryField';
+import {
+  IconDeviceUnknown,
+  IconHotelService,
+  IconPackage,
+  IconStar,
+} from '@tabler/icons-react';
+import { useUom } from '@/products/hooks/useUom';
+const types = [
+  { label: 'Product', value: 'product', icon: IconPackage },
+  { label: 'Service', value: 'service', icon: IconHotelService },
+  { label: 'Unique', value: 'unique', icon: IconStar },
+  { label: 'Subscription', value: 'subscription', icon: IconDeviceUnknown },
+];
 export const ProductAddCoreFields = ({
   form,
 }: {
   form: UseFormReturn<ProductFormValues>;
 }) => {
+  const { uoms } = useUom({});
   return (
     <div className="grid grid-cols-2 gap-5 ">
       <FormField
@@ -37,9 +49,7 @@ export const ProductAddCoreFields = ({
         name="code"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-muted-foreground text-xs">
-              CODE
-            </FormLabel>
+            <FormLabel>CODE</FormLabel>
             <div className="flex flex-col">
               <FormControl>
                 <Input className="rounded-md h-8" {...field} />
@@ -54,11 +64,9 @@ export const ProductAddCoreFields = ({
         name="categoryId"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel className="text-muted-foreground text-xs">
-              CATEGORY
-            </FormLabel>
+            <FormLabel>CATEGORY</FormLabel>
             <FormControl>
-              <CategoryForm {...field} className="shadow-button-outline" />
+              <CategoryField {...field} />
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>
@@ -69,12 +77,45 @@ export const ProductAddCoreFields = ({
         name="type"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel className="text-muted-foreground text-xs">
-              TYPE
-            </FormLabel>
-            <FormControl>
-              <TypeForm {...field} className="shadow-button-outline" />
-            </FormControl>
+            <FormLabel>TYPE</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <FormControl>
+                <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
+                  <Select.Value
+                    className="text-foreground font-medium text-sm"
+                    placeholder={
+                      <span className="truncate text-foreground font-medium text-sm">
+                        {'Choose type'}
+                      </span>
+                    }
+                  />
+                </Select.Trigger>
+              </FormControl>
+              <Select.Content
+                className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
+                align="start"
+              >
+                <Select.Group>
+                  {types.map((type) => (
+                    <Select.Item
+                      key={type.value}
+                      className="h-7 text-xs"
+                      value={type.value}
+                    >
+                      <div className="flex gap-1 items-center">
+                        <type.icon
+                          size={16}
+                          strokeWidth={2}
+                          className="text-foreground"
+                          aria-hidden="true"
+                        />
+                        {type.label}
+                      </div>
+                    </Select.Item>
+                  ))}
+                </Select.Group>
+              </Select.Content>
+            </Select>
             <FormMessage className="text-destructive" />
           </FormItem>
         )}
@@ -84,9 +125,7 @@ export const ProductAddCoreFields = ({
         name="unitPrice"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel className="text-muted-foreground text-xs">
-              UNIT PRICE
-            </FormLabel>
+            <FormLabel>UNIT PRICE</FormLabel>
             <FormControl>
               <Input
                 className="rounded-md h-8"
@@ -104,12 +143,35 @@ export const ProductAddCoreFields = ({
         name="uom"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel className="text-muted-foreground text-xs">
-              UNIT OF MEASUREMENTS
-            </FormLabel>
-            <FormControl>
-              <UomForm {...field} className="shadow-button-outline" />
-            </FormControl>
+            <FormLabel>UNIT OF MEASUREMENTS</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <FormControl>
+                <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
+                  <Select.Value
+                    className="text-foreground font-medium text-sm"
+                    placeholder={
+                      <span className="truncate text-foreground font-medium text-sm">
+                        {'Choose UOM'}
+                      </span>
+                    }
+                  ></Select.Value>
+                </Select.Trigger>
+              </FormControl>
+              <Select.Content
+                className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
+                align="start"
+              >
+                {uoms.map((uom) => (
+                  <Select.Item
+                    key={uom._id}
+                    className="h-7 text-xs"
+                    value={uom._id}
+                  >
+                    {uom.name}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
             <FormMessage className="text-destructive" />
           </FormItem>
         )}

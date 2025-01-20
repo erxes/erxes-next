@@ -1,13 +1,18 @@
 import { Sheet, Button } from 'erxes-ui/components';
 import { IconPlus } from '@tabler/icons-react';
 
+interface ProductAddSheetProps {
+  children: React.ReactNode;
+  onOpenChange?: (boolean) => void;
+  open?: boolean;
+}
 export const ProductAddSheet = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+  onOpenChange,
+  open,
+}: ProductAddSheetProps) => {
   return (
-    <Sheet>
+    <Sheet onOpenChange={onOpenChange} open={open}>
       <Sheet.Trigger asChild>
         <Button>
           <IconPlus />

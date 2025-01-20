@@ -1,4 +1,3 @@
-'use client';
 import { useProductCategories } from '@/products/hooks/useProductCategories';
 import {
   Avatar,
@@ -19,13 +18,13 @@ interface Category {
   };
 }
 
-interface CategoryFormProps {
+interface CategoryFieldProps {
   value: string;
   onChange: (value: string) => void;
   className?: string;
 }
 
-export const CategoryForm: React.FC<CategoryFormProps> = ({
+export const CategoryField: React.FC<CategoryFieldProps> = ({
   value,
   onChange,
   className,
@@ -37,85 +36,54 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   );
 
   const handleSelectCategory = (categoryId: string) => {
-    onChange(categoryId);
+    onChange(categoryId === value ? '' : categoryId);
     setOpen(false);
-  };
-
-  const renderCategoryButton = () => {
-    if (loading)
-      return (
-        <Skeleton className="truncate justify-start h-8 mr-1">
-          <div className="mx-2 w-full">
-            <div className="py-2 flex gap-2">
-              <div className="h-4 w-24" />
-            </div>
-          </div>
-        </Skeleton>
-      );
-    return (
-      <Button
-        variant={'secondary'}
-        asChild
-        className="truncate h-8 hover:cursor-pointer bg-transparent border-none shadow-none"
-        onClick={(e) => {
-          setOpen(true);
-          e.stopPropagation();
-        }}
-      >
-        <div className="w-full flex justify-between">
-          {currentValue ? (
-            <div className="flex items-center gap-2">
-              <Avatar>
-                <Avatar.Image src={currentValue?.attachment?.url} />
-                <Avatar.Fallback colorSeed={currentValue?._id}>
-                  {currentValue?.name?.charAt(0)}
-                </Avatar.Fallback>
-              </Avatar>
-              {currentValue?.name}
-            </div>
-          ) : (
-            <span className="text-foreground font-medium text-sm">
-              Choose category
-            </span>
-          )}
-          <IconChevronDown
-            size={16}
-            strokeWidth={2}
-            className="shrink-0 text-foreground"
-            aria-hidden="true"
-          />
-        </div>
-      </Button>
-    );
   };
 
   if (loading) return <Skeleton className="h-9 w-full" />;
 
   return (
     <div className={className}>
-      <Popover
-        modal
-        open={open}
-        onOpenChange={(newOpen) => {
-          if (!newOpen) {
-            setOpen(false);
-          }
-        }}
-      >
-        <Popover.Trigger asChild>{renderCategoryButton()}</Popover.Trigger>
+      <Popover open={open} onOpenChange={setOpen} modal>
+        <Popover.Trigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            aria-controls="category-command-menu"
+            className="truncate h-8 rounded-md hover:cursor-pointer shadow-none w-full justify-between"
+          >
+            {currentValue ? (
+              <div className="flex items-center gap-2">
+                <Avatar>
+                  <Avatar.Image src={currentValue?.attachment?.url} />
+                  <Avatar.Fallback colorSeed={currentValue?._id}>
+                    {currentValue?.name?.charAt(0)}
+                  </Avatar.Fallback>
+                </Avatar>
+                <span className="truncate">{currentValue?.name}</span>
+              </div>
+            ) : (
+              <span className="text-foreground font-medium text-sm">
+                Choose category
+              </span>
+            )}
+            <IconChevronDown
+              size={16}
+              strokeWidth={2}
+              className="shrink-0 text-foreground"
+              aria-hidden="true"
+            />
+          </Button>
+        </Popover.Trigger>
         <Popover.Content
           className="w-60 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
           align="start"
           side="bottom"
           sideOffset={8}
-          onClick={(e) => e.stopPropagation()}
         >
-          <Command className="relative">
-            <Command.Input
-              placeholder="Search category..."
-              className="h-9"
-              onClick={(e) => e.stopPropagation()}
-            />
+          <Command id="category-command-menu" className="relative">
+            <Command.Input placeholder="Search category..." className="h-9" />
             <Command.List className="max-h-[300px] overflow-y-auto">
               <Command.Empty>No category found</Command.Empty>
               {productCategories?.map((category: Category) => (
@@ -131,8 +99,10 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                       {category?.name?.charAt(0)}
                     </Avatar.Fallback>
                   </Avatar>
-                  {category.name}
+                  <span className="ml-2">{category.name}</span>
                   <IconCheck
+                    size={16}
+                    strokeWidth={2}
                     className={cn(
                       'ml-auto',
                       category._id === value ? 'opacity-100' : 'opacity-0'
