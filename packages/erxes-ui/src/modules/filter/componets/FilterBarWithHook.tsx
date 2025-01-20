@@ -30,7 +30,6 @@ const FilterBarItemWithHook = ({
   label,
   condition,
   bar,
-  conditions,
   ...props
 }: Filter) => {
   const { value, setFilter } = useFilterState(accessoryKey);
@@ -41,7 +40,7 @@ const FilterBarItemWithHook = ({
         <props.icon />
         {label}
       </FilterBarField>
-      {conditions({ ...props, accessoryKey, label, condition })}
+      {condition({ ...props, accessoryKey, label, condition })}
       {bar({ ...props, accessoryKey, label, condition })}
       <FilterBarRemove onClick={() => setFilter(null)} />
     </FilterBarItem>
