@@ -1,12 +1,8 @@
-import { parseISO } from 'date-fns';
-import { getDateType } from './getDateType';
+import { addDays, addMilliseconds, parseISO } from 'date-fns';
+import { getDateType } from 'erxes-ui/modules/filter/date-filter/utlis/getDateType';
+import { MONTHS } from 'erxes-ui/modules/filter/date-filter/constants/dateTypes';
 
-interface DateRange {
-  from: Date;
-  to: Date;
-}
-
-export function getDateValue(value: string): DateRange | Date | null {
+export function getDateValue(value: string): { from: Date; to: Date } | null {
   const {
     isISODateString,
     year,
@@ -17,7 +13,13 @@ export function getDateValue(value: string): DateRange | Date | null {
     isYear,
   } = getDateType(value);
 
-  if (isISODateString) return parseISO(value);
+  if (isISODateString) {
+    const date = parseISO(value);
+    return {
+      from: date,
+      to: addMilliseconds(addDays(date, 1), -1),
+    };
+  }
 
   if (isQuarter) {
     const quarter = parseInt(period.replace('Q', ''));
@@ -29,7 +31,7 @@ export function getDateValue(value: string): DateRange | Date | null {
   }
 
   if (isMonth) {
-    const month = parseInt(period) - 1;
+    const month = MONTHS.indexOf(period);
     return {
       from: new Date(year, month, 1),
       to: new Date(year, month + 1, 0),

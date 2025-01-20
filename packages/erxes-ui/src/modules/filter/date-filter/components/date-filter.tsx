@@ -10,21 +10,23 @@ import { useEffect, useId, useState } from 'react';
 import {
   MONTHS,
   QUARTERS,
-} from 'erxes-ui/modules/date-filter/constants/dateTypes';
-import { getYearsArray } from 'erxes-ui/modules/date-filter/utlis/getYears';
+} from 'erxes-ui/modules/filter/date-filter/constants/dateTypes';
+import { getYearsArray } from 'erxes-ui/modules/filter/date-filter/utlis/getYears';
 import { parseISO } from 'date-fns';
-import { getDateType } from 'erxes-ui/modules/date-filter/utlis/getDateType';
+import { getDateType } from 'erxes-ui/modules/filter/date-filter/utlis/getDateType';
 
 export const DateFilter = ({
   open,
   onOpenChange,
   value,
   onValueChange,
+  label,
 }: {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   value?: string;
   onValueChange?: (value: string) => void;
+  label?: string;
 }) => {
   const [tabs, setTabs] = useState('day');
   const [loading, setLoading] = useState(true);
@@ -62,7 +64,7 @@ export const DateFilter = ({
       <Dialog.Content className="max-w-xl p-0">
         <Tabs value={tabs} onValueChange={setTabs}>
           <Dialog.Header className="p-6 space-y-3">
-            <Dialog.Title className="text-sm">Date created</Dialog.Title>
+            <Dialog.Title className="text-sm">{label}</Dialog.Title>
             <div>
               <Tabs.List>
                 <Tabs.Trigger value="day">Day</Tabs.Trigger>

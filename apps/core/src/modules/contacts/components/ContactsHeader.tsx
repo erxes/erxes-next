@@ -3,8 +3,8 @@ import { Button } from 'erxes-ui/components/button';
 import { FilterDropdown } from 'erxes-ui/modules/filter/componets/FilterDropdown';
 import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
 import { contactsFilters } from './filters';
-import { FilterBarWithHook } from 'erxes-ui/modules/filter/componets/FilterBarWithHook';
 import { ContactDateFilterDialog } from '@/contacts/contacts-filter/components/ContactDateFilter';
+import { ContactsFilter } from './ContactsFilter';
 
 const ContactsHeader = () => {
   return (
@@ -13,7 +13,7 @@ const ContactsHeader = () => {
         <FilterDropdown filters={contactsFilters} />
         <Button>Add Contact</Button>
       </PluginHeader>
-      <FilterBarWithHook filters={contactsFilters} />
+      <ContactsFilter />
       <ContactDateFilterDialog />
     </>
   );

@@ -1,7 +1,5 @@
-import { isValid } from 'date-fns';
-
-import { parseISO } from 'date-fns';
-import { MONTHS } from 'erxes-ui/modules/date-filter/constants/dateTypes';
+import { parseISO, isValid } from 'date-fns';
+import { MONTHS } from 'erxes-ui/modules/filter/date-filter/constants/dateTypes';
 
 export const getDateType = (
   value?: string

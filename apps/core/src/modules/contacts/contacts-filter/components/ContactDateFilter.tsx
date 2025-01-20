@@ -1,17 +1,25 @@
-import { Button, DropdownMenu } from 'erxes-ui/components';
-import { useQueryState } from 'nuqs';
+import { Button, DropdownMenu, Select } from 'erxes-ui/components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { contactDateFilterOpenAtom } from '@/contacts/contacts-filter/states/contactStates';
 import { IconCalendarPlus } from '@tabler/icons-react';
-import { DateFilter } from 'erxes-ui/modules/date-filter/components/date-filter';
-import { getDateLabel } from 'erxes-ui/modules/date-filter/utlis/getDateLabel';
+import { DateFilter } from 'erxes-ui/modules/filter/date-filter/components/date-filter';
+import { getDateLabel } from 'erxes-ui/modules/filter/date-filter/utlis/getDateLabel';
+import {
+  FilterBarComponentPropsBase,
+  FilterDropdownProps,
+} from 'erxes-ui/modules/filter/types/filter';
+import { contactsFilters } from '@/contacts/components/filters';
+import { FilterBar } from 'erxes-ui/modules/filter';
+import { useFilterDateState } from 'erxes-ui/modules/filter/date-filter/hooks/useFilterDateState';
 
-export const ContactDateFilterDropdown = () => {
-  const [filter, setFilter] = useQueryState('date');
+export const ContactDateFilterDropdown = ({
+  accessoryKey,
+}: FilterDropdownProps) => {
+  const { stringDate, setDate } = useFilterDateState(accessoryKey);
   const setOpen = useSetRecoilState(contactDateFilterOpenAtom);
   return (
     <>
-      <DropdownMenu.RadioGroup value={filter || ''} onValueChange={setFilter}>
+      <DropdownMenu.RadioGroup value={stringDate || ''} onValueChange={setDate}>
         <DropdownMenu.RadioItem value="today">Today</DropdownMenu.RadioItem>
         <DropdownMenu.RadioItem value="yesterday">
           Yesterday
@@ -26,7 +34,7 @@ export const ContactDateFilterDropdown = () => {
       <DropdownMenu.Separator />
       <DropdownMenu.Item
         onClick={() => {
-          setTimeout(() => setOpen(true));
+          setTimeout(() => setOpen(accessoryKey));
         }}
       >
         <IconCalendarPlus /> Custom date
@@ -35,31 +43,53 @@ export const ContactDateFilterDropdown = () => {
   );
 };
 
-export const ContactDateFilter = () => {
-  const [filter] = useQueryState('date');
+export const ContactDateFilter = ({
+  accessoryKey,
+}: FilterBarComponentPropsBase) => {
+  const { stringDate } = useFilterDateState(accessoryKey);
+  console.log('stringDate', stringDate);
+
   const setOpen = useSetRecoilState(contactDateFilterOpenAtom);
   return (
-    <>
-      <Button
-        onClick={() => setOpen(true)}
-        variant="ghost"
-        className="bg-background rounded-none"
-      >
-        {getDateLabel(filter || '')}
-      </Button>
-    </>
+    <Button
+      onClick={() => setOpen(accessoryKey)}
+      variant="ghost"
+      className="bg-background rounded-none"
+    >
+      {getDateLabel(stringDate)}
+    </Button>
   );
 };
 
 export const ContactDateFilterDialog = () => {
   const [open, setOpen] = useRecoilState(contactDateFilterOpenAtom);
-  const [date, setDate] = useQueryState('date');
+  const { stringDate, setDate } = useFilterDateState(open);
   return (
     <DateFilter
-      open={open}
-      onOpenChange={setOpen}
-      value={date || ''}
+      open={!!open}
+      onOpenChange={() => setOpen('')}
+      value={stringDate}
       onValueChange={setDate}
+      label={contactsFilters.find((f) => f.accessoryKey === open)?.label}
     />
+  );
+};
+
+export const ContactDateFilterConditions = ({
+  accessoryKey,
+}: FilterBarComponentPropsBase) => {
+  const { condition, setCondition } = useFilterDateState(accessoryKey);
+
+  return (
+    <Select value={condition} onValueChange={setCondition}>
+      <FilterBar.SelectTrigger>
+        <Select.Value />
+      </FilterBar.SelectTrigger>
+      <Select.Content>
+        <Select.Item value="in">in</Select.Item>
+        <Select.Item value="before">before</Select.Item>
+        <Select.Item value="after">after</Select.Item>
+      </Select.Content>
+    </Select>
   );
 };

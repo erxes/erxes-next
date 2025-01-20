@@ -1,30 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { productsQueries } from '@/products/graphql';
-import { useQueryStates, parseAsString } from 'nuqs';
 import { Filter } from 'erxes-ui/modules/filter/types/filter';
 
 const PRODUCTS_PER_PAGE = 30;
 
 export const useProducts = (filters: Filter[]) => {
-  const [filtersQuery] = useQueryStates(
-    filters.reduce((acc, filter) => {
-      acc[filter.accessoryKey] = parseAsString.withDefault('');
-      return acc;
-    }, {})
-  );
-
-  const variables = {};
-
-  filters.forEach((filter) => {
-    if (filtersQuery[filter.accessoryKey]) {
-      variables[filter.accessoryKey] = filtersQuery[filter.accessoryKey];
-    }
-  });
-
   const { data, loading, fetchMore } = useQuery(productsQueries.products, {
     variables: {
       perPage: PRODUCTS_PER_PAGE,
-      ...variables,
     },
   });
 

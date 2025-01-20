@@ -1,14 +1,20 @@
 import { DropdownMenu, Select } from 'erxes-ui/components';
 import { FilterBar } from 'erxes-ui/modules/filter';
+import {
+  FilterBarComponentPropsBase,
+  FilterDropdownProps,
+} from 'erxes-ui/modules/filter/types/filter';
 import { useQueryState } from 'nuqs';
 
 const options = [
-  { label: 'Person', value: 'person' },
+  { label: 'Customer', value: 'customer' },
   { label: 'Company', value: 'company' },
 ];
 
-export const ContactTypeFilterDropdown = ({ onOpenChange }: any) => {
-  const [filter, setFilter] = useQueryState('type');
+export const ContactTypeFilterDropdown = ({
+  accessoryKey,
+}: FilterDropdownProps) => {
+  const [filter, setFilter] = useQueryState(accessoryKey);
   return (
     <>
       <DropdownMenu.RadioGroup value={filter || ''} onValueChange={setFilter}>
@@ -22,8 +28,10 @@ export const ContactTypeFilterDropdown = ({ onOpenChange }: any) => {
   );
 };
 
-export const ContactTypeFilterBar = () => {
-  const [filter, setFilter] = useQueryState('type');
+export const ContactTypeFilterBar = ({
+  accessoryKey,
+}: FilterBarComponentPropsBase) => {
+  const [filter, setFilter] = useQueryState(accessoryKey);
   return (
     <Select value={filter || ''} onValueChange={setFilter}>
       <FilterBar.SelectTrigger>

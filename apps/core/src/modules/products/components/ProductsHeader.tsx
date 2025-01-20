@@ -18,7 +18,7 @@ export const ProductsHeader = () => {
 
         <AddProductForm />
       </PluginHeader>
-      <FilterBarWithHook filters={filters} />
+      {/* <FilterBarWithHook filters={filters} /> */}
     </>
   );
 };

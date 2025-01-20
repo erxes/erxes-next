@@ -5,28 +5,21 @@ import {
   FilterBarRemove,
 } from './FilterBar';
 import { Filter } from 'erxes-ui/modules/filter/types/filter';
-import { Button } from 'erxes-ui/components';
-import { parseAsString, useQueryStates } from 'nuqs';
+import { useFilterState } from '../hooks/useFilterQueryStates';
 
-export const FilterBarWithHook = ({ filters }: { filters: Filter[] }) => {
-  const queryKeys = filters.reduce((acc, filter) => {
-    acc[filter.accessoryKey] = parseAsString.withDefault('');
-    return acc;
-  }, {});
-  const [activeQueryValues] = useQueryStates(queryKeys);
-
-  if (!Object.values(activeQueryValues).some((value) => !!value)) {
+export const FilterBarWithHook = ({
+  activeFilters,
+}: {
+  activeFilters: Filter[];
+}) => {
+  if (!activeFilters.length) {
     return null;
   }
 
   return (
     <FilterBarContainer>
-      {filters.map((filter) => (
-        <FilterBarItemWithHook
-          key={filter.accessoryKey}
-          queryKeys={queryKeys}
-          {...filter}
-        />
+      {activeFilters.map((filter) => (
+        <FilterBarItemWithHook key={filter.accessoryKey} {...filter} />
       ))}
     </FilterBarContainer>
   );
@@ -36,43 +29,21 @@ const FilterBarItemWithHook = ({
   accessoryKey,
   label,
   condition,
-  queryKeys,
   bar,
+  conditions,
   ...props
-}: Filter & { queryKeys: Record<string, any> }) => {
-  const [filter, setFilter] = useQueryStates(queryKeys);
+}: Filter) => {
+  const { value, setFilter } = useFilterState(accessoryKey);
 
-  const value = filter[accessoryKey];
-
-  if (!value) {
-    return null;
-  }
-
-  return (
+  return value ? (
     <FilterBarItem>
       <FilterBarField>
         <props.icon />
         {label}
       </FilterBarField>
-      <FilterBarConditionWithHook
-        accessoryKey={accessoryKey}
-        condition={condition}
-      />
+      {conditions({ ...props, accessoryKey, label, condition })}
       {bar({ ...props, accessoryKey, label, condition })}
-      <FilterBarRemove
-        onClick={() => setFilter({ ...filter, [accessoryKey]: null })}
-      />
+      <FilterBarRemove onClick={() => setFilter(null)} />
     </FilterBarItem>
-  );
-};
-
-const FilterBarConditionWithHook = ({
-  accessoryKey,
-  condition,
-}: Pick<Filter, 'accessoryKey' | 'condition'>) => {
-  return (
-    <Button variant="ghost" className="px-2 bg-background rounded-none">
-      {condition}
-    </Button>
-  );
+  ) : null;
 };
