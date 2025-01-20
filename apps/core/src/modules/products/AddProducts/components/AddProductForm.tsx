@@ -43,7 +43,7 @@ export function AddProductForm() {
     try {
       await addProduct(data);
       form.reset();
-      setOpen(false)
+      setOpen(false);
     } catch (error) {
       console.error(error);
     }

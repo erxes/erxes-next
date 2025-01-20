@@ -12,14 +12,16 @@ export const ProductAddSheet = ({
   open,
 }: ProductAddSheetProps) => {
   return (
-    <Sheet onOpenChange={onOpenChange} open={open}>
+    <Sheet onOpenChange={onOpenChange} open={open} modal>
       <Sheet.Trigger asChild>
         <Button>
           <IconPlus />
           Add product
         </Button>
       </Sheet.Trigger>
-      <Sheet.Content className="sm:max-w-lg p-0">{children}</Sheet.Content>
+      <Sheet.Content className="sm:max-w-lg p-0" id="product-add-sheet">
+        {children}
+      </Sheet.Content>
     </Sheet>
   );
 };
