@@ -1,5 +1,5 @@
 .bn-container[data-theming-css-variables-demo][data-color-scheme] {
-  --bn-colors-editor-text: hsl(var(--background));
+  --bn-colors-editor-text: hsl(var(--foreground));
   --bn-colors-editor-background: transparent;
   --bn-colors-menu-text: hsl(var(--background));
   --bn-colors-menu-background: hsl(var(--foreground));

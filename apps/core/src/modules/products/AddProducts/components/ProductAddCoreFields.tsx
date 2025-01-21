@@ -59,7 +59,7 @@ export const ProductAddCoreFields = ({
           </FormItem>
         )}
       />
-      {/* <FormField
+      <FormField
         control={form.control}
         name="categoryId"
         render={({ field }) => (
@@ -71,7 +71,7 @@ export const ProductAddCoreFields = ({
             <FormMessage className="text-destructive" />
           </FormItem>
         )}
-      /> */}
+      />
       <FormField
         control={form.control}
         name="type"

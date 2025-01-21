@@ -9,7 +9,7 @@ export const ProductAddCollapsible = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Collapsible
-      className="flex flex-col items-center mt-5"
+      className="flex flex-col items-center my-5"
       onOpenChange={setIsOpen}
       open={isOpen}
     >
@@ -18,7 +18,7 @@ export const ProductAddCollapsible = ({
       </Collapsible.Content>
       <Collapsible.Trigger asChild>
         <Button
-          variant={'ghost'}
+          variant="secondary"
           className={`w-min text-xs font-semibold text-accent-foreground order-2 `}
         >
           See {!isOpen ? 'more' : 'less'} options
