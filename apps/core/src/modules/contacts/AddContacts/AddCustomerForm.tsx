@@ -28,7 +28,6 @@ export function AddCustomerForm() {
     resolver: zodResolver(customerFormSchema),
     defaultValues: {}
   });
-  console.log('Form errors:', form.formState.errors);
   const onSubmit = async (data: CustomerFormType) => {
     try {
       await addCustomer(data);
