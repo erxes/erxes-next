@@ -1,3 +1,4 @@
+import { SelectTags } from '@/tags/components/SelectTags';
 import { IconPlus } from '@tabler/icons-react';
 import { Button, cn } from 'erxes-ui';
 
@@ -165,6 +166,7 @@ export const ProductsDetailPage = () => {
           </div>
         ))}
       </div>
+      <SelectTags />
     </div>
   );
 };

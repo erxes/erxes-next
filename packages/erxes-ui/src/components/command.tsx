@@ -62,11 +62,15 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
     variant?: 'primary' | 'secondary';
+    wrapperClassName?: string;
   }
->(({ className, variant = 'primary', ...props }, ref) => {
+>(({ className, variant = 'primary', wrapperClassName, ...props }, ref) => {
   if (variant === 'primary') {
     return (
-      <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+      <div
+        className={cn('flex items-center border-b px-3', wrapperClassName)}
+        cmdk-input-wrapper=""
+      >
         <IconSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <CommandPrimitive.Input
           ref={ref}
@@ -78,7 +82,9 @@ const CommandInput = React.forwardRef<
   }
 
   return (
-    <div className="flex items-center p-1 bg-white">
+    <div
+      className={cn('flex items-center p-1 bg-background', wrapperClassName)}
+    >
       <CommandPrimitive.Input
         ref={ref}
         className={cn(commanInputVariants({ variant: 'secondary' }), className)}
