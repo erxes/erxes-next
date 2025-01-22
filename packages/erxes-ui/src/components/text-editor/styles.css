@@ -1,17 +1,17 @@
 .bn-container[data-theming-css-variables-demo][data-color-scheme] {
   --bn-colors-editor-text: hsl(var(--foreground));
   --bn-colors-editor-background: transparent;
-  --bn-colors-menu-text: hsl(var(--background));
-  --bn-colors-menu-background: hsl(var(--foreground));
-  --bn-colors-tooltip-text: hsl(var(--muted-background));
-  --bn-colors-tooltip-background: hsl(var(--muted-foreground));
-  --bn-colors-hovered-text: hsl(var(--accent));
-  --bn-colors-hovered-background: hsl(var(--accent-foreground));
-  --bn-colors-selected-text: hsl(var(--secondary));
-  --bn-colors-selected-background: hsl(var(--muted-background));
-  --bn-colors-disabled-text: hsl(var(--muted-background));
-  --bn-colors-disabled-background: hsl(var(--muted-foreground));
-  --bn-colors-border: hsl(var(--muted-background));
+  --bn-colors-menu-text: hsl(var(--foreground));
+  --bn-colors-menu-background: hsl(var(--background));
+  --bn-colors-tooltip-text: hsl(var(--muted-foreground));
+  --bn-colors-tooltip-background: hsl(var(--muted-background));
+  --bn-colors-hovered-text: hsl(var(--accent-foreground));
+  --bn-colors-hovered-background: hsl(var(--accent-background));
+  --bn-colors-selected-text: hsl(var(--secondary-foreground));
+  --bn-colors-selected-background: hsl(var(--secondary-background));
+  --bn-colors-disabled-text: hsl(var(--muted-foreground));
+  --bn-colors-disabled-background: hsl(var(--muted-background));
+  --bn-colors-border: hsl(var(--border));
   --bn-colors-side-menu: hsl(var(--muted-foreground));
   --bn-color-highlight-colors: hsl(var(--muted-foreground));
 }
@@ -93,4 +93,8 @@
     background-color: hsl(var(--accent));
     color: hsl(var(--accent-foreground));
   }
+}
+
+.bn-inline-content:has(> .ProseMirror-trailingBreak:only-child):before {
+  content: ' ';
 }
