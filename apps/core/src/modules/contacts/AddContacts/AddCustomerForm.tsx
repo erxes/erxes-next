@@ -26,9 +26,8 @@ export function AddCustomerForm() {
   const { addCustomer } = useAddCustomer();
   const form = useForm<CustomerFormType>({
     resolver: zodResolver(customerFormSchema),
-    defaultValues: {}
+    defaultValues: {},
   });
-  console.log('Form errors:', form.formState.errors);
   const onSubmit = async (data: CustomerFormType) => {
     try {
       await addCustomer(data);
@@ -37,7 +36,7 @@ export function AddCustomerForm() {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
     <CustomerAddSheet onOpenChange={setOpen} open={open}>
