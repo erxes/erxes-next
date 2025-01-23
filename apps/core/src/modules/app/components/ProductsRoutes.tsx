@@ -15,7 +15,7 @@ const ProductsDetailPage = lazy(() =>
   }))
 );
 
-const ProductsRoutes = () => {
+export const ProductsRoutes = () => {
   return (
     <Suspense fallback={<></>}>
       <Routes>
@@ -25,5 +25,3 @@ const ProductsRoutes = () => {
     </Suspense>
   );
 };
-
-export default ProductsRoutes;

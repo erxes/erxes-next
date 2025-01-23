@@ -1,4 +1,4 @@
-import ResetPassword from '@/auth/login/components/ResetPassword';
+import { ResetPassword } from '@/auth/login/components/ResetPassword';
 import { currentUserState } from 'erxes-shared-states';
 
 import { useEffect } from 'react';

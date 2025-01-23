@@ -7,7 +7,7 @@ const breadcrumbs = [
   { title: 'Profile', path: 'profile' },
 ];
 
-const ProfileHeader = () => {
+export const ProfileHeader = () => {
   return (
     <Header>
       <Breadcrumb.Root>
@@ -36,5 +36,3 @@ const ProfileHeader = () => {
     </Header>
   );
 };
-
-export default ProfileHeader;

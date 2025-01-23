@@ -14,7 +14,7 @@ import {
 import { SubmitHandler } from 'react-hook-form';
 import { useLogin } from '@/auth/login/hooks/useLogin';
 
-const ResetPassword = ({ token }: { token: string }) => {
+export const ResetPassword = ({ token }: { token: string }) => {
   const { form } = useResetPasswordForm();
 
   const { handleResetPassword } = useLogin();
@@ -67,5 +67,3 @@ const ResetPassword = ({ token }: { token: string }) => {
     </Form>
   );
 };
-
-export default ResetPassword;

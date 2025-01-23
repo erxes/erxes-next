@@ -9,7 +9,7 @@ const ContactsIndexPage = lazy(() =>
   }))
 );
 
-const ContactsRoutes = () => {
+export const ContactsRoutes = () => {
   return (
     <Suspense fallback={<></>}>
       <Routes>
@@ -18,5 +18,3 @@ const ContactsRoutes = () => {
     </Suspense>
   );
 };
-
-export default ContactsRoutes;
