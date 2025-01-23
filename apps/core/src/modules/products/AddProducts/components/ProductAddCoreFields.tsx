@@ -92,28 +92,19 @@ export const ProductAddCoreFields = ({
                 </Select.Trigger>
               </FormControl>
               <Select.Content
-                className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-                align="start"
+                portalContainer={document.getElementById('product-add-sheet')}
+                // className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
+                // align="start"
               >
-                <Select.Group>
-                  {types.map((type) => (
-                    <Select.Item
-                      key={type.value}
-                      className="h-7 text-xs"
-                      value={type.value}
-                    >
-                      <div className="flex gap-1 items-center">
-                        <type.icon
-                          size={16}
-                          strokeWidth={2}
-                          className="text-foreground"
-                          aria-hidden="true"
-                        />
-                        {type.label}
-                      </div>
-                    </Select.Item>
-                  ))}
-                </Select.Group>
+                {types.map((type) => (
+                  <Select.Item
+                    key={type.value}
+                    className="text-[13px]"
+                    value={type.value}
+                  >
+                    {type.label}
+                  </Select.Item>
+                ))}
               </Select.Content>
             </Select>
             <FormMessage className="text-destructive" />
@@ -158,13 +149,12 @@ export const ProductAddCoreFields = ({
                 </Select.Trigger>
               </FormControl>
               <Select.Content
-                className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-                align="start"
+                portalContainer={document.getElementById('product-add-sheet')}
               >
                 {uoms.map((uom) => (
                   <Select.Item
                     key={uom._id}
-                    className="h-7 text-xs"
+                    className="text-xs"
                     value={uom._id}
                   >
                     {uom.name}

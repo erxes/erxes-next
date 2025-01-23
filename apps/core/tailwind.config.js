@@ -16,6 +16,12 @@ module.exports = {
       sans: ['var(--font-sans)', ...fontFamily.sans],
       mono: ['var(--font-mono)', ...fontFamily.mono],
     },
+    fontSize: {
+      xs: ['0.75rem', '14px'],
+      sm: ['13px', '1rem'],
+      base: ['14px', '18px'],
+      lg: ['1rem', '1.125rem'],
+    },
     container: {
       center: true,
       padding: '2rem',
