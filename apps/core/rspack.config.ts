@@ -5,10 +5,11 @@ import {
 } from '@nx/rspack/module-federation';
 import { DefinePlugin } from '@rspack/core';
 
-import baseConfig from './module-federation.config';
+import baseConfig from './module-federation.config.prod';
 
 const config: ModuleFederationConfig = {
   ...baseConfig,
+  remotes: ['plugin_task', 'plugin_inbox'],
 };
 
 export default composePlugins(

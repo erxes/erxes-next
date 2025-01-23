@@ -10,10 +10,9 @@ import {
 import { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { FILE_MIME_TYPES } from '@/settings/file-upload/constants/serviceData';
-import FileUploadMainFields from '@/settings/file-upload/components/FileUploadMainFields';
-import UploadServiceRadioGroup from '@/settings/file-upload/components/UploadServiceRadioGroup';
-import DynamicServiceConfigFields from '@/settings/file-upload/components/DynamicServiceConfigFields';
-import { filesValidationSchema } from '@/settings/file-upload/schema';
+import { FileUploadMainFields } from '@/settings/file-upload/components/FileUploadMainFields';
+import { UploadServiceRadioGroup } from '@/settings/file-upload/components/UploadServiceRadioGroup';
+import { DynamicServiceConfigFields } from '@/settings/file-upload/components/DynamicServiceConfigFields';
 import { UploadConfigFormT } from '@/settings/file-upload/types';
 import { serviceFields } from '@/settings/file-upload/constants/uploadServiceFields';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
@@ -31,7 +30,7 @@ const modifiedArray: Option[] = FILE_MIME_TYPES.map(
   })
 );
 
-export default function FilePage() {
+export function FilePage() {
   const { form, onCompleted } = useFileUploadForm();
   const { updateConfig, isLoading } = useConfig({ onCompleted });
 

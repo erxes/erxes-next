@@ -5,17 +5,22 @@ import {
   FormControl,
   FormMessage,
   Select,
-  ScrollArea
 } from 'erxes-ui/components';
-import MultipleSelector from 'erxes-ui/components/multiselect';
+import { MultipleSelector } from 'erxes-ui/components/multiselect';
 import { FILE_SYSTEM_TYPES } from '@/settings/file-upload/constants/serviceData';
 
-export function FileUploadMainFields({ form, modifiedArray }: { form: any, modifiedArray: any[] }) {
+export function FileUploadMainFields({
+  form,
+  modifiedArray,
+}: {
+  form: any;
+  modifiedArray: any[];
+}) {
   return (
-    <div className='grid grid-cols-1 gap-4'>
-      <FormItem className='w-full'>
+    <div className="grid grid-cols-1 gap-4">
+      <FormItem className="w-full">
         <FormField
-          name='UPLOAD_FILE_TYPES'
+          name="UPLOAD_FILE_TYPES"
           key={'UPLOAD_FILE_TYPES'}
           control={form.control}
           render={({ field }) => (
@@ -27,7 +32,9 @@ export function FileUploadMainFields({ form, modifiedArray }: { form: any, modif
                 placeholder="Select option"
                 hideClearAllButton
                 hidePlaceholderWhenSelected
-                emptyIndicator={<p className="text-center text-sm">No results found</p>}
+                emptyIndicator={
+                  <p className="text-center text-sm">No results found</p>
+                }
               />
             </div>
           )}
@@ -36,7 +43,7 @@ export function FileUploadMainFields({ form, modifiedArray }: { form: any, modif
       </FormItem>
       <FormItem>
         <FormField
-          name='WIDGETS_UPLOAD_FILE_TYPES'
+          name="WIDGETS_UPLOAD_FILE_TYPES"
           key={'WIDGETS_UPLOAD_FILE_TYPES'}
           control={form.control}
           render={({ field }) => (
@@ -48,7 +55,9 @@ export function FileUploadMainFields({ form, modifiedArray }: { form: any, modif
                 placeholder="Select option"
                 hideClearAllButton
                 hidePlaceholderWhenSelected
-                emptyIndicator={<p className="text-center text-sm">No results found</p>}
+                emptyIndicator={
+                  <p className="text-center text-sm">No results found</p>
+                }
               />
             </div>
           )}
@@ -57,22 +66,26 @@ export function FileUploadMainFields({ form, modifiedArray }: { form: any, modif
       </FormItem>
       <FormField
         control={form.control}
-        name='FILE_SYSTEM_PUBLIC'
-        key='FILE_SYSTEM_PUBLIC'
+        name="FILE_SYSTEM_PUBLIC"
+        key="FILE_SYSTEM_PUBLIC"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Bucket file system type</FormLabel>
             <FormControl>
-              <Select name={field.name} onValueChange={field.onChange} value={field.value}>
+              <Select
+                name={field.name}
+                onValueChange={field.onChange}
+                value={field.value}
+              >
                 <Select.Trigger>
                   <Select.Value placeholder={'-'} />
                 </Select.Trigger>
                 <Select.Content>
-                  {
-                    FILE_SYSTEM_TYPES.map((type) => (
-                      <Select.Item key={type.value} value={type.value}>{type.label}</Select.Item>
-                    ))
-                  }
+                  {FILE_SYSTEM_TYPES.map((type) => (
+                    <Select.Item key={type.value} value={type.value}>
+                      {type.label}
+                    </Select.Item>
+                  ))}
                 </Select.Content>
               </Select>
             </FormControl>
@@ -81,5 +94,5 @@ export function FileUploadMainFields({ form, modifiedArray }: { form: any, modif
         )}
       />
     </div>
-  )
+  );
 }

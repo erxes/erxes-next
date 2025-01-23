@@ -1,5 +1,5 @@
 import { Logo } from '@/auth/components/Logo';
-import Login from '@/auth/login/components/Login';
+import { Login } from '@/auth/login/components/Login';
 import { currentUserState } from 'erxes-shared-states';
 
 import { useEffect } from 'react';

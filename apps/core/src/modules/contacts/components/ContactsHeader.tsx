@@ -5,7 +5,7 @@ import { contactsFilters } from './filters';
 import { ContactDateFilterDialog } from '@/contacts/contacts-filter/components/ContactDateFilter';
 import { ContactsFilter } from './ContactsFilter';
 import { AddCustomerForm } from '@/contacts/AddContacts/AddCustomerForm';
-const ContactsHeader = () => {
+export const ContactsHeader = () => {
   return (
     <>
       <PluginHeader title="Contacts" icon={IconUsers}>
@@ -17,5 +17,3 @@ const ContactsHeader = () => {
     </>
   );
 };
-
-export default ContactsHeader;
