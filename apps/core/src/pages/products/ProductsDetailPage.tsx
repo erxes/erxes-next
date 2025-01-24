@@ -1,10 +1,19 @@
 import { SelectTags } from '@/tags/components/SelectTags';
 import { IconPlus } from '@tabler/icons-react';
 import { Button, cn } from 'erxes-ui';
+import { useState } from 'react';
 
 export const ProductsDetailPage = () => {
+  const [tags, setTags] = useState<string[]>([]);
   return (
     <div className="flex flex-col gap-12 overflow-auto">
+      <div className="p-8">
+        <SelectTags
+          selected={tags}
+          onSelect={(tags) => setTags(tags as string[])}
+          type="core:customer"
+        />
+      </div>
       <div className="p-12 grid grid-cols-5 gap-12 grid-flow-row max-w-screen-xl mx-auto">
         <div className="flex flex-col gap-4 items-start">
           <h2 className="uppercase text-muted-foreground text-sm font-bold font-mono">
@@ -166,7 +175,6 @@ export const ProductsDetailPage = () => {
           </div>
         ))}
       </div>
-      <SelectTags />
     </div>
   );
 };
