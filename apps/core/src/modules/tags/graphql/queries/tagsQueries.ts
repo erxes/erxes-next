@@ -7,6 +7,7 @@ export const tagsQuery = gql`
     $page: Int
     $perPage: Int
     $parentId: String
+    $tagIds: [String]
   ) {
     tags(
       type: $type
@@ -14,6 +15,7 @@ export const tagsQuery = gql`
       page: $page
       perPage: $perPage
       parentId: $parentId
+      tagIds: $tagIds
     ) {
       _id
       colorCode

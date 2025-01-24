@@ -11,7 +11,7 @@ export const ProductsDetailPage = () => {
         <SelectTags
           selected={tags}
           onSelect={(tags) => setTags(tags as string[])}
-          type="core:customer"
+          tagType="core:customer"
         />
       </div>
       <div className="p-12 grid grid-cols-5 gap-12 grid-flow-row max-w-screen-xl mx-auto">

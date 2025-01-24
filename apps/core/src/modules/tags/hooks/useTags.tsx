@@ -1,6 +1,5 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { tagsQuery } from '@/tags/graphql/queries/tagsQueries';
-import { ITag } from '@/tags/types/tagTypes';
 
 const TAGS_PER_PAGE = 30;
 
@@ -20,7 +19,7 @@ export const useTags = (options: OperationVariables) => {
     fetchMore({
       variables: {
         ...options.variables,
-        page: Math.ceil(tags.length / TAGS_PER_PAGE) + 1,
+        page: Math.ceil((tags?.length || 1) / TAGS_PER_PAGE) + 1,
         perPage: TAGS_PER_PAGE,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
@@ -32,14 +31,9 @@ export const useTags = (options: OperationVariables) => {
     });
   };
 
-  const getTagByTagId = (tagId: string) => {
-    return data?.tags.find((tag: ITag) => tag._id === tagId);
-  };
-
   return {
     tags,
     totalCount,
-    getTagByTagId,
     loading,
     error,
     handleFetchMore,
