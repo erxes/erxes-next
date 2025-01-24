@@ -14,7 +14,6 @@ export const tagsAdd = gql`
       parentId: $parentId
     ) {
       _id
-      order
     }
   }
 `;

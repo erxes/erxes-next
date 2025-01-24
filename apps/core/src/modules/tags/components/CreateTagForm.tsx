@@ -14,6 +14,7 @@ import { SelectColor } from 'erxes-ui/modules/select-color/components/selectColo
 import { SelectTags } from '@/tags/components/SelectTags';
 import { useTagsAdd } from '@/tags/hooks/useTagsAdd';
 import { IconLoader } from '@tabler/icons-react';
+import { ITag } from '@/tags/types/tagTypes';
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -21,7 +22,13 @@ const formSchema = z.object({
   parentId: z.string().optional(),
 });
 
-export const CreateTagForm = ({ type }: { type?: string }) => {
+export const CreateTagForm = ({
+  tagType,
+  onCompleted,
+}: {
+  tagType?: string;
+  onCompleted?: (tag: ITag) => void;
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -31,9 +38,20 @@ export const CreateTagForm = ({ type }: { type?: string }) => {
     addTag({
       variables: {
         name: values.name,
-        type,
+        type: tagType,
         colorCode: values.color,
         parentId: values.parentId,
+      },
+      onCompleted({ tagsAdd }) {
+        if (onCompleted) {
+          onCompleted({
+            _id: tagsAdd._id,
+            colorCode: values.color,
+            name: values.name,
+            parentId: values.parentId,
+            order: '',
+          });
+        }
       },
     });
   };
@@ -58,7 +76,7 @@ export const CreateTagForm = ({ type }: { type?: string }) => {
             <FormItem>
               <FormLabel>Parent Tag</FormLabel>
               <SelectTags
-                type={type}
+                tagType={tagType}
                 single
                 sub
                 selected={field.value}
@@ -74,7 +92,10 @@ export const CreateTagForm = ({ type }: { type?: string }) => {
           name="color"
           render={({ field }) => (
             <FormItem className="mb-2">
-              <SelectColor value={field.value} onValueChange={field.onChange} />
+              <SelectColor
+                value={field.value || ''}
+                onValueChange={field.onChange}
+              />
               <FormMessage />
             </FormItem>
           )}
