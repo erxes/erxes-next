@@ -5,12 +5,11 @@ import {
   FormControl,
   FormMessage,
   Select,
-  ScrollArea
 } from 'erxes-ui/components';
 import MultipleSelector from 'erxes-ui/components/multiselect';
 import { FILE_SYSTEM_TYPES } from '@/settings/file-upload/constants/serviceData';
 
-export function FileUploadMainFields({ form, modifiedArray }: { form: any, modifiedArray: any[] }) {
+const FileUploadMainFields = ({ form, modifiedArray }: { form: any, modifiedArray: any[] }) => {
   return (
     <div className='grid grid-cols-1 gap-4'>
       <FormItem className='w-full'>
@@ -83,3 +82,5 @@ export function FileUploadMainFields({ form, modifiedArray }: { form: any, modif
     </div>
   )
 }
+
+export default FileUploadMainFields

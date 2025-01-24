@@ -13,9 +13,7 @@ const useConfig = ({ onCompleted }: TList) => {
   const { toast } = useToast();
 
   const { data, loading } = useQuery(SettingsQueries.configsQuery, {
-    onError(error) {
-      console.log(error.message);
-    },
+    fetchPolicy: 'network-only',
     onCompleted,
   });
 

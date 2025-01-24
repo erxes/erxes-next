@@ -6,7 +6,7 @@ import { cn } from 'erxes-ui/lib';
 import { motion } from 'motion/react';
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
 
-export function UploadServiceRadioGroup({form, selected}) {
+const UploadServiceRadioGroup = ({form, selected}) => {
   return (
     <div>
       <FormField
@@ -14,9 +14,9 @@ export function UploadServiceRadioGroup({form, selected}) {
         name='UPLOAD_SERVICE_TYPE'
         key={'UPLOAD_SERVICE_TYPE'}
         render={({ field }) => (
-          <RadioGroup.Root
+          <RadioGroup
             role='tablist'
-            className="grid-cols-3"
+            className="grid-cols-3 grid gap-3"
             defaultValue={field.value}
             onValueChange={field.onChange}
           >
@@ -34,16 +34,17 @@ export function UploadServiceRadioGroup({form, selected}) {
                     value={config.value}
                     className="sr-only after:absolute after:inset-0"
                   />
-                  <config.icon className={cn(selected === config.value ? 'stroke-primary' : 'stroke-primary/40', '')} />
+                  <config.icon className={cn(selected === config.value ? 'stroke-primary' : 'stroke-primary/40 dark:stroke-muted-foreground', '')} />
                   <span className={cn(selected === config.value ? 'opacity-100' : 'opacity-40', '')}>
                     {config.label}
                   </span>
                 </motion.label>
               ))
             }
-          </RadioGroup.Root>
+          </RadioGroup>
         )}
       />
     </div>
   )
 }
+export default UploadServiceRadioGroup

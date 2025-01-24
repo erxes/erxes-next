@@ -6,6 +6,7 @@ import {
   IconUserCircle,
   IconColorSwatch,
   IconFile,
+  IconMail
 } from '@tabler/icons-react';
 import { useRecoilValue } from 'recoil';
 import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
@@ -29,7 +30,8 @@ const data = {
   ],
   nav: [
     { name: 'General', icon: IconAdjustmentsAlt },
-    { name: 'File upload', icon: IconFile, path: SettingsWorkspacePath.File },
+    { name: 'File upload', icon: IconFile, path: SettingsWorkspacePath.FileUpload },
+    { name: 'Mail config', icon: IconMail, path: SettingsWorkspacePath.MailConfig },
   ],
 };
 

@@ -5,4 +5,5 @@ export enum SettingsPath {
 
 export enum SettingsWorkspacePath {
   FileUpload = 'file-upload',
+  MailConfig = 'mail-config'
 }

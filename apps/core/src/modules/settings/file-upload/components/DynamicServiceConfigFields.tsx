@@ -11,7 +11,7 @@ import {
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
 import { DynamicFieldsT } from '@/settings/file-upload/types';
 
-export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
+const DynamicServiceConfigFields = ({ dynamicFields, selected, form }) => {
   return (
     <AnimatePresence mode='popLayout'>
       {
@@ -33,7 +33,7 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
                       name={fieldData.name}
                       key={fieldData.name}
                       render={({ field }) => (
-                        <FormItem className='col-span-4 flex items-center justify-start gap-x-2'>
+                        <FormItem className='col-span-4 flex items-center justify-start gap-x-2 py-2'>
                           <FormControl>
                             <Checkbox
                               checked={field.value}
@@ -41,7 +41,7 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
                               id={fieldData.name}
                             />
                           </FormControl>
-                          <FormLabel className='text-xs'>{fieldData.label}</FormLabel>
+                          <FormLabel className='text-[10px] font-sans !mt-0'>{fieldData.label}</FormLabel>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -74,3 +74,5 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
     </AnimatePresence>
   )
 }
+
+export default DynamicServiceConfigFields
