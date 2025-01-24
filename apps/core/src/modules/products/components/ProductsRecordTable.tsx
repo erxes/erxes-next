@@ -1,17 +1,13 @@
 import { columns } from '@/products/components/columns';
 import { useProducts } from '@/products/hooks/useProducts';
 import { RecordTable } from 'erxes-ui/modules/record-table';
-import { IRecordTableColumn } from 'erxes-ui/modules/record-table/types/recordTableTypes';
 import { ProductCommandBar } from '@/products/components/ProductCommandBar';
-import { filters } from './ProductsFilter';
-
 export const ProductsRecordTable = () => {
-  const { products, handleFetchMore, loading, totalCount } =
-    useProducts(filters);
+  const { products, handleFetchMore, loading, totalCount } = useProducts();
 
   return (
     <RecordTable.Provider
-      columns={columns as IRecordTableColumn[]}
+      columns={columns}
       data={products || []}
       handleReachedBottom={handleFetchMore}
       className="mt-1.5"
