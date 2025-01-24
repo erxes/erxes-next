@@ -1,8 +1,9 @@
 import { Route } from 'react-router';
 
-import PluginMainPage from '~/plugins/components/PluginMainPage';
-import PluginSettingsPage from '~/plugins/components/PluginSettingsPage';
+import { PluginMainPage } from '~/plugins/components/PluginMainPage';
+import { PluginSettingsPage } from '~/plugins/components/PluginSettingsPage';
 import { getInstance } from '@module-federation/enhanced/runtime';
+
 export const usePluginsRouter = () => {
   const instence = getInstance();
   const remotes = instence?.options.remotes;

@@ -2,19 +2,20 @@ import { createRoutesFromElements, Route } from 'react-router';
 import { Providers } from '~/providers';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { AppPath } from '@/types/AppPath';
-import { SettingsRoutes } from '../components/SettingsRoutes';
+import { SettingsRoutes } from '@/app/components/SettingsRoutes';
 import { lazy } from 'react';
-import ProductsRoutes from '@/app/components/ProductsRoutes';
+import { ProductsRoutes } from '@/app/components/ProductsRoutes';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 
 import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
-import ContactsRoutes from '../components/ContactsRoutes';
+import { ContactsRoutes } from '@/app/components/ContactsRoutes';
 import { createBrowserRouter } from 'react-router';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
 const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
+
 const CreateOwnerPage = lazy(
   () => import('~/pages/organization/CreateOwnerPage')
 );

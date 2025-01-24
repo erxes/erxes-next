@@ -16,7 +16,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { useCallback, useEffect, useState } from 'react';
 import { useLogin } from '@/auth/login/hooks/useLogin';
 
-const Login = () => {
+export const Login = () => {
   const { form } = useSignInUpForm();
 
   const { handleCrendentialsLogin, handleForgotPassword } = useLogin();
@@ -85,16 +85,13 @@ const Login = () => {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={isSubmitButtonDisabled}
-        >
+        <Button type="submit" disabled={isSubmitButtonDisabled}>
           Sign in
         </Button>
 
         {!isEmailStepSubmitButtonDisabledCondition && (
           <Button
-            type='button'
+            type="button"
             onClick={() => onForgotPasswordClick(email)}
             variant="link"
             className="text-xs text-muted-foreground hover:underline text-center block hover:text-primary"
@@ -106,5 +103,3 @@ const Login = () => {
     </Form>
   );
 };
-
-export default Login;

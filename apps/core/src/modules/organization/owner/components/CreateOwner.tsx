@@ -19,7 +19,7 @@ import {
   useCreateOwnerForm,
 } from '@/organization/owner/hooks/useCreateOwnerForm';
 
-const CreateOwner = () => {
+export const CreateOwner = () => {
   const { form } = useCreateOwnerForm();
   const { createOwner } = useCreateOwner();
 
@@ -160,5 +160,3 @@ const CreateOwner = () => {
     </Form>
   );
 };
-
-export default CreateOwner;
