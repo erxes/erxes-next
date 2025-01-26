@@ -127,20 +127,22 @@ export function RecordTableInlineCellEditContainer({
   if (!isInEditMode) return null;
 
   return (
-    <Popover.Root open={isInEditMode} modal onOpenChange={handleSave}>
+    <Popover.Root open={isInEditMode} onOpenChange={handleSave}>
       <Popover.Trigger className="w-full" />
-      <Popover.Content
-        className={cn(
-          'z-20 min-w-[var(--radix-popper-anchor-width)] bg-background p-0 shadow-md',
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
-        )}
-        sideOffset={-1}
-        align="start"
-        {...props}
-      >
-        {children}
-      </Popover.Content>
+      <Popover.Portal>
+        <Popover.Content
+          className={cn(
+            'z-20 min-w-[var(--radix-popper-anchor-width)] bg-background p-0 shadow-md',
+            'data-[state=open]:animate-in data-[state=closed]:animate-out',
+            'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
+          )}
+          sideOffset={-1}
+          align="start"
+          {...props}
+        >
+          {children}
+        </Popover.Content>
+      </Popover.Portal>
     </Popover.Root>
   );
 }
