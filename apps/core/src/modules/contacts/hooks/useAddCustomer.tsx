@@ -8,7 +8,6 @@ export function useAddCustomer() {
 
   const addCustomer = async (customersData) => {
     try {
-      console.log(customersData);
       const response = await customersAdd({
         variables: customersData,
       });
