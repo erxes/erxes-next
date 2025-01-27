@@ -23,19 +23,15 @@ import { CustomerAddLinksFields } from '@/contacts/AddContacts/components/Custom
 
 export function AddCustomerForm() {
   const [open, setOpen] = useState<boolean>(false);
-  const { addCustomer } = useAddCustomer();
+  const { customersAdd } = useAddCustomer();
   const form = useForm<CustomerFormType>({
     resolver: zodResolver(customerFormSchema),
     defaultValues: {},
   });
-  const onSubmit = async (data: CustomerFormType) => {
-    try {
-      await addCustomer(data);
-      form.reset();
-      setOpen(false);
-    } catch (error) {
-      console.error(error);
-    }
+  const onSubmit = (data: CustomerFormType) => {
+    customersAdd({ variables: data });
+    form.reset();
+    setOpen(false);
   };
 
   return (
