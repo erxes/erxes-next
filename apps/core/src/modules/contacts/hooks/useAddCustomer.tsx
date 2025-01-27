@@ -1,22 +1,12 @@
 import { ADD_CUSTOMERS } from '@/contacts/graphql/mutations/addCustomers';
 import { useMutation } from '@apollo/client';
+import { OperationVariables } from '@apollo/client';
 
-export function useAddCustomer() {
-  const [customersAdd, { loading, error, data }] = useMutation(
-    ADD_CUSTOMERS
+export function useAddCustomer(options?: OperationVariables) {
+  const [customersAdd, { loading, error }] = useMutation(
+    ADD_CUSTOMERS,
+    options,
   );
 
-  const addCustomer = async (customersData) => {
-    try {
-      const response = await customersAdd({
-        variables: customersData,
-      });
-      return response.data.addCustomer;
-    } catch (error) {
-      console.error('Add customer error:', error);
-      throw error;
-    }
-  };
-
-  return { addCustomer, loading, error, data };
+  return { customersAdd, loading, error };
 }
