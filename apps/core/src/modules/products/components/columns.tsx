@@ -4,13 +4,13 @@ import {
   IconHistory,
   IconCurrencyDollar,
   IconLabel,
-  IconCheck,
   IconCategoryPlus,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Command, Select, Skeleton } from 'erxes-ui/components';
+import { Select, Skeleton } from 'erxes-ui/components';
 import {
   RecordTableInlineCell,
+  RecordTableInlineCellContainer,
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import { useState } from 'react';
@@ -22,7 +22,7 @@ import { CurrencyDisplay, RelativeDateDisplay } from 'erxes-ui/display';
 import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
 import { useProductCategories } from '../hooks/useProductCategories';
 import { PRODUCT_TYPE_OPTIONS } from '../constants/ProductConstants';
-import { ChipDisplay } from 'erxes-ui/components/display/ChipDisplay';
+import { SelectCategory } from '@/products/product-category/components/SelectCategory';
 
 const TableTextInput = ({ cell }) => {
   const [value, setValue] = useState(cell.getValue() as string);
@@ -124,75 +124,23 @@ export const columns: ColumnDef<any>[] = [
       const category = productCategories?.find(
         (category) => category._id === value
       );
-
       return (
-        <RecordTableInlineCell
-          onSave={(val) => {
-            productsEdit({
-              variables: {
-                _id: cell.row.original._id,
-                categoryId: val,
-                uom: cell.row.original.uom,
-              },
-            });
-          }}
-          getValue={() => cell.getValue()}
-          value={value}
-          setValue={setValue}
-          display={() => (
-            <ChipDisplay
-              attachment={category?.attachment}
-              colorSeed={category?._id}
-            >
-              {category?.name}
-            </ChipDisplay>
-          )}
-          edit={({ handleSelect }) => (
-            <>
-              <div className="h-cell border border-primary ring-[3px] ring-ring/20 relative z-10 flex items-center gap-2 p-2">
-                <ChipDisplay
-                  attachment={category?.attachment}
-                  colorSeed={category?._id}
-                >
-                  {category?.name}
-                </ChipDisplay>
-              </div>
-              <Command>
-                <Command.Input variant="secondary" />
-                <Command.List className="styled-scroll overflow-x-auto">
-                  <Command.Item
-                    value={category._id}
-                    onSelect={() => handleSelect(category._id)}
-                  >
-                    <ChipDisplay
-                      attachment={category?.attachment}
-                      colorSeed={category?._id}
-                    >
-                      {category?.name}
-                    </ChipDisplay>
-                    <IconCheck className="ml-auto" />
-                  </Command.Item>
-                  {productCategories
-                    ?.filter((c) => c._id !== category._id)
-                    .map((category) => (
-                      <Command.Item
-                        key={category._id}
-                        value={category._id}
-                        onSelect={() => handleSelect(category._id)}
-                      >
-                        <ChipDisplay
-                          attachment={category?.attachment}
-                          colorSeed={category?._id}
-                        >
-                          {category?.name}
-                        </ChipDisplay>
-                      </Command.Item>
-                    ))}
-                </Command.List>
-              </Command>
-            </>
-          )}
-        />
+        <RecordTableInlineCellContainer>
+          <SelectCategory
+            selected={category?._id}
+            onSelect={() =>
+              productsEdit({
+                variables: {
+                  _id: cell.row.original._id,
+                  categoryId: value,
+                  uom: cell.row.original.uom,
+                },
+              })
+            }
+            className="rounded-none px-2 font-normal"
+            size="lg"
+          />
+        </RecordTableInlineCellContainer>
       );
     },
   },
@@ -219,8 +167,8 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ cell }) => (
       <RecordTableInlineCell
         display={() => <>{cell.getValue()}</>}
-        edit={() => (
-          <Select>
+        edit={({ isInEditMode, setIsInEditMode }) => (
+          <Select open={isInEditMode} onOpenChange={setIsInEditMode}>
             <Select.Trigger className="w-full h-cell rounded-none">
               <Select.Value placeholder="Select type" />
             </Select.Trigger>

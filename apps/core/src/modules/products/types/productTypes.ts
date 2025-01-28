@@ -1,3 +1,5 @@
+import { IAttachment } from 'erxes-ui/types';
+
 export type ProductT = {
   _id: string;
   name: string;
@@ -12,4 +14,9 @@ export type ProductT = {
 export type ProductCategoryT = {
   _id: string;
   name: string;
+  avatar: IAttachment;
+  code: string;
+  order: string;
+  productCount: number;
+  parentId: string;
 };
