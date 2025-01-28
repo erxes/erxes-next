@@ -27,55 +27,5 @@ export const ADD_CUSTOMERS = gql`mutation customersAdd($state: String, $avatar: 
     phoneValidationStatus: $phoneValidationStatus
   ) {
     _id
-    firstName
-    middleName
-    lastName
-    avatar
-    sex
-    birthDate
-    primaryEmail
-    emails
-    primaryPhone
-    phones
-    state
-    visitorContactInfo
-    modifiedAt
-    position
-    department
-    leadStatus
-    hasAuthority
-    description
-    isSubscribed
-    code
-    emailValidationStatus
-    phoneValidationStatus
-    score
-    isOnline
-    lastSeenAt
-    sessionCount
-    links
-    ownerId
-    owner {
-      _id
-      details {
-        fullName
-        __typename
-      }
-      __typename
-    }
-    integrationId
-    createdAt
-    remoteAddress
-    location
-    customFieldsData
-    trackedData
-    tagIds
-    getTags {
-      _id
-      name
-      colorCode
-      __typename
-    }
-    __typename
   }
 }`
