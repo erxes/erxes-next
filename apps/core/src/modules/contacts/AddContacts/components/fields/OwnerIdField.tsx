@@ -25,7 +25,7 @@ export const OwnerIdField = ({
   control: Control<CustomerFormType>;
 }) => {
   const [open, setOpen] = useState(false);
-  const { users, loading } = useUsers({});
+  const { users, loading } = useUsers();
   return (
     <FormField
       control={control}
@@ -101,7 +101,7 @@ export const OwnerIdField = ({
                           <Avatar>
                             <Avatar.Image src={user.details?.avatar} />
                             <Avatar.Fallback colorSeed={user._id}>
-                              {user.details?.firstName?.charAt(0)}
+                              {user.details?.fullName?.charAt(0)}
                             </Avatar.Fallback>
                           </Avatar>
                           <span className="ml-2">{user.details?.fullName}</span>

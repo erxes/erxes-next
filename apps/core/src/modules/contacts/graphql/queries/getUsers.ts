@@ -20,31 +20,9 @@ export const GET_USERS = gql`query users($page: Int, $perPage: Int, $status: Str
     segmentData: $segmentData
   ) {
     _id
-    username
-    email
-    status
-    isActive
-    groupIds
-    brandIds
-    score
-    positionIds
     details {
       avatar
       fullName
-      shortName
-      birthDate
-      position
-      workStartedDate
-      location
-      description
-      operatorPhone
-      firstName
-      middleName
-      lastName
-      __typename
     }
-    links
-    employeeId
-    __typename
   }
 }`
