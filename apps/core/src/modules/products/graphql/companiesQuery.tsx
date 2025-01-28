@@ -45,7 +45,6 @@ export const companiesLowDetailQuery = gql`
     ) {
       _id
       primaryName
-      __typename
     }
   }
 `;

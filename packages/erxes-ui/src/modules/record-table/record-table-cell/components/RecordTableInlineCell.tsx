@@ -87,7 +87,7 @@ export const RecordTableInlineCellContainer = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'w-full flex items-center relative h-8 cursor-pointer box-border overflow-hidden',
+        'w-full flex items-stretch relative h-8 cursor-pointer box-border overflow-hidden',
         isInEditMode && 'overflow-auto items-start',
         className
       )}
@@ -111,7 +111,7 @@ export function RecordTableCellDisplayContainer({
 
   return (
     <div
-      className={cn('w-full pl-2', className)}
+      className={cn('w-full pl-2 flex items-center', className)}
       {...props}
       onClick={() => !readOnly && setIsInEditMode(true)}
     />
