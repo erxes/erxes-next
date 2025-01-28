@@ -1,6 +1,4 @@
 import { Command } from 'erxes-ui/components';
-import { IconCheck } from '@tabler/icons-react';
-import { cn } from 'erxes-ui/lib';
 import { ITag } from '@/tags/types/tagTypes';
 import { TagBadge } from './TagBadge';
 import { useSelectTags } from '@/tags/contexts/SelectTagsContext';
@@ -29,7 +27,7 @@ export function SelectTagItem(props: ITag) {
         onSelect={() => handleSelect(props)}
         className="flex-auto"
       >
-        <div
+        {/* <div
           className={cn(
             'flex size-3 items-center justify-center rounded-sm border border-primary',
             isSelected
@@ -38,7 +36,7 @@ export function SelectTagItem(props: ITag) {
           )}
         >
           <IconCheck className={cn('!size-3')} />
-        </div>
+        </div> */}
         <TagBadge {...props} />
       </Command.Item>
     </div>

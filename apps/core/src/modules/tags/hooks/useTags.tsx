@@ -16,6 +16,7 @@ export const useTags = (options: OperationVariables) => {
   const { tags, tagsQueryCount: totalCount } = data || {};
 
   const handleFetchMore = () => {
+    if (totalCount <= tags?.length) return;
     fetchMore({
       variables: {
         ...options.variables,

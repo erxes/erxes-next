@@ -54,8 +54,9 @@ export const SelectTags = React.forwardRef<
       }
       const selectedArray = selected as string[];
       if (selectedArray.includes(tag._id)) {
-        onSelect(selectedArray.filter((t) => t !== tag._id));
-        setSelectedTags(selectedTags.filter((t) => t._id !== tag._id));
+        const filteredTags = selectedTags.filter((t) => t._id !== tag._id);
+        onSelect(filteredTags.map((t) => t._id));
+        setSelectedTags(filteredTags);
         return;
       }
       onSelect([...selectedArray, tag._id]);

@@ -12,8 +12,8 @@ export const useProducts = () => {
 
   const { products, productsTotalCount } = data || {};
 
-  const handleFetchMore = () =>
-    productsTotalCount > products?.length &&
+  const handleFetchMore = () => {
+    if (productsTotalCount <= products?.length) return;
     fetchMore({
       variables: {
         page: Math.ceil(products.length / PRODUCTS_PER_PAGE) + 1,
@@ -26,6 +26,7 @@ export const useProducts = () => {
         });
       },
     });
+  };
 
   return {
     loading,

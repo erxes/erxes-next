@@ -1,3 +1,4 @@
+import { SelectCategory } from '@/products/product-category/components/SelectCategory';
 import { SelectTags } from '@/tags/components/SelectTags';
 import { IconPlus } from '@tabler/icons-react';
 import { Button, cn } from 'erxes-ui';
@@ -5,13 +6,18 @@ import { useState } from 'react';
 
 export const ProductsDetailPage = () => {
   const [tags, setTags] = useState<string[]>([]);
+  const [category, setCategory] = useState<string>('');
   return (
     <div className="flex flex-col gap-12 overflow-auto">
-      <div className="p-8">
+      <div className="p-8 flex items-center gap-4">
         <SelectTags
           selected={tags}
           onSelect={(tags) => setTags(tags as string[])}
           tagType="core:customer"
+        />
+        <SelectCategory
+          selected={category}
+          onSelect={(categoryId) => setCategory(categoryId)}
         />
       </div>
       <div className="p-12 grid grid-cols-5 gap-12 grid-flow-row max-w-screen-xl mx-auto">
