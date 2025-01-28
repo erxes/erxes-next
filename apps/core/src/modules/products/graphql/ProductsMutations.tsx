@@ -23,7 +23,6 @@ mutation productsAdd($name: String, $shortName: String, $type: String, $category
     subUoms: $subUoms
   ) {
     _id
-    __typename
   }
 }`
 
