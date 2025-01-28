@@ -28,7 +28,7 @@ import {
   PROFILE_LINK_FIELDS,
 } from '@/settings/profile/constants/profileFields';
 
-const ProfileForm = () => {
+export const ProfileForm = () => {
   const [currentLink, setCurrentLink] = useState<string>('');
 
   const { form, onCompleted } = useProfileForm();
@@ -282,5 +282,3 @@ const ProfileForm = () => {
     </Form>
   );
 };
-
-export default ProfileForm;

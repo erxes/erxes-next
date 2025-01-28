@@ -1,4 +1,4 @@
-import ContactsHeader from '@/contacts/components/ContactsHeader';
+import { ContactsHeader } from '@/contacts/components/ContactsHeader';
 import { ContactsRecordTable } from '@/contacts/components/ContactsRecordTable';
 
 export const ContactsIndexPage = () => {

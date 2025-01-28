@@ -1,10 +1,9 @@
 import { useQuery } from '@apollo/client';
 import { productsQueries } from '@/products/graphql';
-import { Filter } from 'erxes-ui/modules/filter/types/filter';
 
 const PRODUCTS_PER_PAGE = 30;
 
-export const useProducts = (filters: Filter[]) => {
+export const useProducts = () => {
   const { data, loading, fetchMore } = useQuery(productsQueries.products, {
     variables: {
       perPage: PRODUCTS_PER_PAGE,
@@ -13,8 +12,8 @@ export const useProducts = (filters: Filter[]) => {
 
   const { products, productsTotalCount } = data || {};
 
-  const handleFetchMore = () =>
-    productsTotalCount > products?.length &&
+  const handleFetchMore = () => {
+    if (productsTotalCount <= products?.length) return;
     fetchMore({
       variables: {
         page: Math.ceil(products.length / PRODUCTS_PER_PAGE) + 1,
@@ -27,6 +26,7 @@ export const useProducts = (filters: Filter[]) => {
         });
       },
     });
+  };
 
   return {
     loading,

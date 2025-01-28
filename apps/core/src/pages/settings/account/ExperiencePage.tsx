@@ -1,4 +1,4 @@
-import ChooseTheme from '@/settings/components/ChooseTheme';
+import { ChooseTheme } from '@/settings/components/ChooseTheme';
 import { Breadcrumb, Header, Label, Input } from 'erxes-ui/components';
 
 export const SettingsExperiencePage = () => {

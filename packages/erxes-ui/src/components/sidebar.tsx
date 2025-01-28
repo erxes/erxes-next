@@ -9,12 +9,7 @@ import { Button } from './button';
 import { Input } from './input';
 import { Separator } from './separator';
 import { Sheet } from './sheet';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from './tooltip';
+import { Tooltip } from './tooltip';
 import { Skeleton } from './skeleton';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
@@ -129,7 +124,7 @@ const SidebarProvider = React.forwardRef<
 
     return (
       <SidebarContext.Provider value={contextValue}>
-        <TooltipProvider delayDuration={0}>
+        <Tooltip.Provider delayDuration={0}>
           <div
             style={
               {
@@ -147,7 +142,7 @@ const SidebarProvider = React.forwardRef<
           >
             {children}
           </div>
-        </TooltipProvider>
+        </Tooltip.Provider>
       </SidebarContext.Provider>
     );
   }
@@ -536,7 +531,7 @@ const SidebarMenuButton = React.forwardRef<
   React.ComponentProps<'button'> & {
     asChild?: boolean;
     isActive?: boolean;
-    tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+    tooltip?: string | React.ComponentProps<typeof Tooltip.Content>;
   } & VariantProps<typeof sidebarMenuButtonVariants>
 >(
   (
@@ -577,8 +572,8 @@ const SidebarMenuButton = React.forwardRef<
 
     return (
       <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent
+        <Tooltip.Trigger asChild>{button}</Tooltip.Trigger>
+        <Tooltip.Content
           side="right"
           align="center"
           hidden={state !== 'collapsed' || isMobile}

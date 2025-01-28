@@ -25,18 +25,15 @@ const items = [
   },
 ];
 
-export default function ChooseTheme() {
+export function ChooseTheme() {
   const { theme, setTheme } = useTheme();
+
   return (
     <fieldset className="space-y-4">
       <legend className="text-sm font-medium leading-none text-foreground">
         Appearance
       </legend>
-      <RadioGroup.Root
-        className="flex gap-4"
-        value={theme}
-        onValueChange={setTheme}
-      >
+      <RadioGroup className="flex gap-4" value={theme} onValueChange={setTheme}>
         {items.map((item) => (
           <label key={item.id}>
             <RadioGroup.Item
@@ -66,7 +63,7 @@ export default function ChooseTheme() {
             </span>
           </label>
         ))}
-      </RadioGroup.Root>
+      </RadioGroup>
     </fieldset>
   );
 }

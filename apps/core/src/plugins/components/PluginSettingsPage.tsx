@@ -1,11 +1,7 @@
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import React, { lazy } from 'react';
 
-export default function PluginSettingsPage({
-  pluginName,
-}: {
-  pluginName: string;
-}) {
+export function PluginSettingsPage({ pluginName }: { pluginName: string }) {
   const Plugin = lazy(() => {
     return loadRemote<{ default: typeof Plugin }>(`${pluginName}/Settings`, {
       from: 'runtime',

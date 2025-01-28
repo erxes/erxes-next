@@ -1,107 +1,171 @@
-import { useTags } from '@/tags/hooks/useTags';
-import { IconChevronLeft, IconCirclePlus } from '@tabler/icons-react';
-import { Badge, Button, Command, Popover, Tabs } from 'erxes-ui/components';
-import { useState } from 'react';
+import React from 'react';
+import {
+  Button,
+  ButtonProps,
+  Command,
+  Popover,
+  Tabs,
+} from 'erxes-ui/components';
+import { useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
+import { ITag } from '@/tags/types/tagTypes';
+import { SelectTagFetchMore } from './SelectTagFetchMore';
+import { SelectTagTrigger } from './SelectTagTrigger';
+import { SelectTagItem } from './SelectTagItem';
+import { SelectTagCreateContainer } from './SelectTagCreate';
+import { useTags } from '../hooks/useTags';
+import { SelectTagsLoading } from './SelectTagsLoading';
 import { CreateTagForm } from './CreateTagForm';
+import { IconPlus } from '@tabler/icons-react';
+import {
+  SelectTagsProvider,
+  useSelectTags,
+} from '@/tags/contexts/SelectTagsContext';
+import { SelectTagsProps } from '@/tags/types/tagTypes';
 
-export const SelectTags = ({ type }: { type: string }) => {
-  const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebounce(search, 500);
-  const [activeTab, setActiveTab] = useState('tags');
-  const { tags, loading } = useTags({
-    variables: {
-      type,
-      searchValue: debouncedSearch,
+export const SelectTags = React.forwardRef<
+  React.ElementRef<typeof Button>,
+  ButtonProps & SelectTagsProps
+>(
+  (
+    {
+      tagType = '',
+      single,
+      sub,
+      selected = single ? '' : [],
+      onSelect,
+      ...buttonProps
     },
-  });
-  return (
-    <div className="flex p-8">
-      {/* {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <MultipleSelector
-          options={
-            tags?.map((tag) => ({ value: tag._id, label: tag.name })) || []
-          }
-        />
-      )} */}
-      <Popover>
-        <Popover.Trigger>
-          <div>hi</div>
-        </Popover.Trigger>
-        <Popover.Content className="p-0">
-          <Tabs
-            defaultValue="tags"
-            value={activeTab}
-            onValueChange={setActiveTab}
-          >
-            <Tabs.Content value="tags">
-              <Command className="outline-none" shouldFilter={false}>
-                <div className="flex items-center pr-1">
-                  <Command.Input
-                    placeholder="Search tags"
-                    wrapperClassName="flex-auto"
-                    variant="secondary"
-                    value={search}
-                    onValueChange={(value) => setSearch(value)}
-                  />
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    onClick={() => setActiveTab('create')}
-                    className="h-8 w-8"
-                  >
-                    <IconCirclePlus className="w-4 h-4" />
-                  </Button>
-                </div>
-                <Command.List className="h-[300px]">
-                  <Command.Empty>
-                    No results found.
-                    <Button
-                      variant="secondary"
-                      onClick={() => setActiveTab('create')}
-                    >
-                      Create new tag
-                    </Button>
-                  </Command.Empty>
+    ref
+  ) => {
+    const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
 
-                  {tags?.map((tag) => (
-                    <Command.Item
-                      key={tag._id}
-                      value={tag._id}
-                      className="p-0.5"
-                    >
-                      <Badge color={tag.color} className="gap-2">
-                        <span
-                          className="rounded-full w-2 h-2"
-                          style={{ backgroundColor: tag.colorCode }}
-                        ></span>
-                        {tag.name}
-                      </Badge>
-                    </Command.Item>
-                  ))}
-                </Command.List>
-              </Command>
-            </Tabs.Content>
-            <Tabs.Content value="create">
-              <div className="h-[340px] p-2">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    onClick={() => setActiveTab('tags')}
-                    size="icon"
-                  >
-                    <IconChevronLeft className="w-4 h-4" />
-                  </Button>
-                  <h6 className="text-sm font-medium">Create new tag</h6>
-                </div>
-                <CreateTagForm />
-              </div>
-            </Tabs.Content>
-          </Tabs>
-        </Popover.Content>
-      </Popover>
-    </div>
-  );
-};
+    const [activeTab, setActiveTab] = useState('tags');
+    const [open, setOpen] = useState(false);
+    const commandSearchRef = useRef<HTMLInputElement>(null);
+
+    const handleSelect = (tag: ITag) => {
+      if (!onSelect) return;
+      if (single) {
+        onSelect(tag._id);
+        setSelectedTags([tag]);
+        setOpen(false);
+        return;
+      }
+      const selectedArray = selected as string[];
+      if (selectedArray.includes(tag._id)) {
+        const filteredTags = selectedTags.filter((t) => t._id !== tag._id);
+        onSelect(filteredTags.map((t) => t._id));
+        setSelectedTags(filteredTags);
+        return;
+      }
+      onSelect([...selectedArray, tag._id]);
+      setSelectedTags([...selectedTags, tag]);
+    };
+
+    const focusCommandInput = () =>
+      !sub && setTimeout(() => commandSearchRef.current?.focus());
+
+    const handleBack = () => {
+      setActiveTab('tags');
+      focusCommandInput();
+    };
+
+    const handleOpenChange = (open: boolean) => {
+      setOpen(open);
+      if (activeTab === 'tags' && open) {
+        focusCommandInput();
+      }
+    };
+
+    return (
+      <SelectTagsProvider
+        value={{
+          tagType,
+          selectedTagIds: single
+            ? [selected as string]
+            : (selected as string[]),
+          selectedTags,
+          setSelectedTags,
+          handleSelect,
+          openCreateTag: () => setActiveTab('create'),
+          sub,
+        }}
+      >
+        <Popover open={open} onOpenChange={handleOpenChange}>
+          <SelectTagTrigger {...buttonProps} ref={ref} />
+          <Popover.Content className="p-0">
+            {sub ? (
+              <Tags ref={commandSearchRef} />
+            ) : (
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <Tabs.Content value="tags" asChild>
+                  <Tags ref={commandSearchRef} />
+                </Tabs.Content>
+                <SelectTagCreateContainer onBack={handleBack}>
+                  <CreateTagForm
+                    tagType={tagType}
+                    onCompleted={(tag) => {
+                      handleSelect(tag);
+                      setActiveTab('tags');
+                    }}
+                  />
+                </SelectTagCreateContainer>
+              </Tabs>
+            )}
+          </Popover.Content>
+        </Popover>
+      </SelectTagsProvider>
+    );
+  }
+);
+
+const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
+  (props, ref) => {
+    const { tagType, openCreateTag, sub } = useSelectTags();
+    const [search, setSearch] = useState('');
+    const [debouncedSearch] = useDebounce(search, 500);
+    const { tags, handleFetchMore, totalCount, loading } = useTags({
+      variables: {
+        type: tagType,
+        searchValue: debouncedSearch,
+      },
+      skip: !open,
+    });
+
+    return (
+      <Command className="outline-none" shouldFilter={false}>
+        <div className="flex items-center pr-1">
+          <Command.Input
+            value={search}
+            onValueChange={setSearch}
+            variant="secondary"
+            wrapperClassName="flex-auto"
+            ref={ref}
+          />
+          {!sub && (
+            <Button
+              variant="secondary"
+              className="shadow-none h-8 w-8"
+              size="icon"
+              onClick={openCreateTag}
+            >
+              <IconPlus />
+            </Button>
+          )}
+        </div>
+        <SelectTagsLoading loading={loading} />
+        <Command.List>
+          {tags?.map((tag: ITag) => {
+            return <SelectTagItem key={tag._id} {...tag} />;
+          })}
+          <SelectTagFetchMore
+            fetchMore={handleFetchMore}
+            tagsLength={tags?.length}
+            totalCount={totalCount}
+          />
+        </Command.List>
+      </Command>
+    );
+  }
+);
