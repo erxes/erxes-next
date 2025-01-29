@@ -37,3 +37,4 @@ export * from './toaster';
 export * from './custom-dialog';
 export * from './multiselect';
 export * from './text-editor/TextEditor';
+export * from './spinner'
