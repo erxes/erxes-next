@@ -8,7 +8,6 @@ export function useAddProduct() {
 
   const addProduct = async (productsData) => {
     try {
-      console.log(productsData);
       const response = await productsAdd({
         variables: productsData,
       });
