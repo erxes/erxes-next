@@ -28,7 +28,7 @@ export const OrganizationProvider = () => {
     );
   }
 
-  if (isDefined(currentOrganization) && !currentOrganization.haveOwner) {
+  if (isDefined(currentOrganization) && !currentOrganization.hasOwner) {
     return <Navigate to="/create-owner" replace />;
   }
 

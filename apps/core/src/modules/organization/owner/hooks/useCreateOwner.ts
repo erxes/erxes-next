@@ -4,19 +4,28 @@ import { CreateOwner } from '@/organization/owner/graphql/mutation/createOwner';
 import { CreateOwnerFormType } from '@/organization/owner/hooks/useCreateOwnerForm';
 import { useToast } from 'erxes-ui/hooks';
 
+import { useRecoilState } from 'recoil';
+import { currentOrganizationState } from 'erxes-shared-states';
+
 export const useCreateOwner = () => {
   const { toast } = useToast();
 
   const [createOwnerMutation] = useMutation(CreateOwner);
+  const [currentOrganization, setCurrentOrganization] = useRecoilState(
+    currentOrganizationState
+  );
 
   const createOwner = async (input: CreateOwnerFormType) => {
     await createOwnerMutation({ variables: input })
       .then(() => {
         toast({
           title: 'Success',
-          description:
-            'Password reset instructions have been sent to your email.',
+          description: 'Owner has been created successfully',
         });
+
+        if (currentOrganization) {
+          setCurrentOrganization({ ...currentOrganization, hasOwner: true });
+        }
       })
       .catch((e) => {
         toast({

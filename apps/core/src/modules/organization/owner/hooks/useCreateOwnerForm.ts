@@ -24,10 +24,16 @@ export const ownerValidationSchema = z
     email: z.string().trim().email('Email must be a valid email'),
     password: z
       .string()
-      .regex(PASSWORD_REGEX, 'Password must contain at least 8 characters'),
+      .regex(
+        PASSWORD_REGEX,
+        'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'
+      ),
     confirmPassword: z
       .string()
-      .regex(PASSWORD_REGEX, 'Password must contain at least 8 characters'),
+      .regex(
+        PASSWORD_REGEX,
+        'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'
+      ),
     firstName: z.string().trim(),
     lastName: z.string().trim(),
     purpose: z.string(),
