@@ -6,11 +6,18 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../lib/utils';
 
+const SheetTrigger = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Trigger>
+>(({ ...props }, ref) => <SheetPrimitive.Trigger ref={ref} {...props} />);
+SheetTrigger.displayName = SheetPrimitive.Trigger.displayName;
+
 const SheetRoot = ({
   ...props
-}: React.ComponentProps<typeof SheetPrimitive.Root>) => (
+}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Root>) => (
   <SheetPrimitive.Root {...props} />
 );
+SheetRoot.displayName = SheetPrimitive.Root.displayName;
 
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
@@ -46,6 +53,14 @@ const sheetVariants = cva(
   }
 );
 
+export const SheetPortal = ({
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Portal>) => (
+  <SheetPrimitive.Portal {...props} />
+);
+
+SheetPortal.displayName = SheetPrimitive.Portal.displayName;
+
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {}
@@ -54,7 +69,7 @@ const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
 >(({ side = 'right', className, children, ...props }, ref) => (
-  <SheetPrimitive.Portal>
+  <SheetPortal>
     <SheetOverlay />
     <SheetPrimitive.Content
       ref={ref}
@@ -67,7 +82,7 @@ const SheetContent = React.forwardRef<
       </SheetPrimitive.Close> */}
       {children}
     </SheetPrimitive.Content>
-  </SheetPrimitive.Portal>
+  </SheetPortal>
 ));
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
@@ -127,7 +142,7 @@ const SheetDescription = React.forwardRef<
 SheetDescription.displayName = SheetPrimitive.Description.displayName;
 
 export const Sheet = Object.assign(SheetRoot, {
-  Trigger: SheetPrimitive.Trigger,
+  Trigger: SheetTrigger,
   Overlay: SheetOverlay,
   Content: SheetContent,
   Header: SheetHeader,
