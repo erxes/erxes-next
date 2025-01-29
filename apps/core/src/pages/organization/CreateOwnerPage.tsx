@@ -12,7 +12,7 @@ const CreateOwnerPage = () => {
   const currentOrganization = useRecoilValue(currentOrganizationState);
 
   useEffect(() => {
-    if (isDefined(currentOrganization) && currentOrganization.haveOwner) {
+    if (isDefined(currentOrganization) && currentOrganization.hasOwner) {
       navigate('/');
     }
   }, [currentOrganization, navigate]);

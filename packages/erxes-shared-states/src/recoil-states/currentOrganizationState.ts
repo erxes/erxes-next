@@ -1,11 +1,12 @@
 import { createState } from './createState';
 
 export type CurrentOrganization = {
-  _id: string;
   name: string;
-  subdomain: string;
-  haveOwner?: boolean;
-  logo?: any;
+  hasOwner?: boolean;
+  theme?: {
+    logo?: string;
+    favicon?: string;
+  };
   plugins?: {
     name: string;
     url: string;

@@ -2,6 +2,7 @@ import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
 import { useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
+  CurrentOrganization,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
 } from 'erxes-shared-states';
@@ -17,31 +18,16 @@ export const OrganizationProviderEffect = () => {
       return;
     }
 
-    fetch(REACT_APP_API_URL + '/initial-setup')
+    fetch(REACT_APP_API_URL + '/v3/initial-setup')
       .then((res) => res.json())
-      .then((data) => {
-        if (data === 'no owner') {
+      .then((data: CurrentOrganization) => {
+        if (data.hasOwner == false) {
           setIsCurrentOrganizationLoaded(true);
-          setCurrentOrganization({
-            haveOwner: false,
-            _id: 'os',
-            name: 'OS',
-            subdomain: 'os',
-          });
+          setCurrentOrganization(data);
           return;
         }
 
-        const organization = {
-          theme: {
-            data,
-          },
-          subdomain: 'os',
-          haveOwner: true,
-          name: 'OS',
-          _id: 'os',
-        };
-
-        setCurrentOrganization(organization);
+        setCurrentOrganization(data);
         setIsCurrentOrganizationLoaded(true);
       })
       .catch(() => {
