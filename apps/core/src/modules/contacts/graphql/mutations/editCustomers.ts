@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const EDIT_CUSTOMERS =  gql`mutation customersEdit($_id: String!, $avatar: String, $firstName: String, $lastName: String, $middleName: String, $sex: Int, $birthDate: Date, $primaryEmail: String, $primaryPhone: String, $phones: [String], $emails: [String], $ownerId: String, $position: String, $department: String, $leadStatus: String, $hasAuthority: String, $description: String, $isSubscribed: String, $links: JSON, $customFieldsData: JSON, $code: String, $emailValidationStatus: String, $phoneValidationStatus: String) {
+export const EDIT_CUSTOMERS =  gql`mutation customersEdit($_id: String!, $avatar: String, $firstName: String, $lastName: String, $middleName: String, $primaryEmail: String, $primaryPhone: String, $description: String, $isSubscribed: String, $links: JSON, $code: String, $emailValidationStatus: String, $phoneValidationStatus: String) {
   customersEdit(
     _id: $_id
     avatar: $avatar
@@ -9,8 +9,6 @@ export const EDIT_CUSTOMERS =  gql`mutation customersEdit($_id: String!, $avatar
     middleName: $middleName
     primaryEmail: $primaryEmail
     primaryPhone: $primaryPhone
-    phones: $phones
-    emails: $emails
     description: $description
     isSubscribed: $isSubscribed
     links: $links
