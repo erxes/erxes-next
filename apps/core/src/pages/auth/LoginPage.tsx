@@ -1,5 +1,6 @@
 import { Logo } from '@/auth/components/Logo';
 import { Login } from '@/auth/login/components/Login';
+import { AppPath } from '@/types/AppPath';
 import { currentUserState } from 'erxes-shared-states';
 
 import { useEffect } from 'react';
@@ -11,7 +12,7 @@ const LoginPage = () => {
   const currentUser = useRecoilValue(currentUserState);
   useEffect(() => {
     if (currentUser) {
-      navigate('/');
+      navigate(AppPath.Index);
     }
   }, [currentUser, navigate]);
 

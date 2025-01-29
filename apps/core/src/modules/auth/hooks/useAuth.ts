@@ -12,6 +12,7 @@ import {
 
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router';
+import { AppPath } from '@/types/AppPath';
 
 export const useAuth = () => {
   const [logout] = useMutation(Logout);
@@ -39,7 +40,7 @@ export const useAuth = () => {
     sessionStorage.clear();
     localStorage.clear();
 
-    navigate('/login');
+    navigate(AppPath.Login);
   }, [
     logout,
     navigate,

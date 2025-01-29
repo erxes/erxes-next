@@ -1,7 +1,12 @@
 export enum AppPath {
+  //auth
+  Login = '/login',
+  ResetPassword = '/reset-password',
+  CreateOwner = '/create-owner',
+  ForgotPassword = '/forgot-password',
+
+  //main
   Index = '/',
-  Inbox = 'plugin_inbox',
-  InboxCatchAll = `/${Inbox}/*`,
   Settings = 'settings',
   SettingsCatchAll = `/${Settings}/*`,
   Products = 'products',

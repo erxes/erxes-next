@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import { useRecoilValue } from 'recoil';
 
 import { isDefined } from 'erxes-ui/utils';
+import { AppPath } from '@/types/AppPath';
 
 const CreateOwnerPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const CreateOwnerPage = () => {
 
   useEffect(() => {
     if (isDefined(currentOrganization) && currentOrganization.hasOwner) {
-      navigate('/');
+      navigate(AppPath.Index);
     }
   }, [currentOrganization, navigate]);
 

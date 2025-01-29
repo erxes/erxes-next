@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import { pluginsState } from '@/navigation/states/navigationStates';
 import { PLUGINS } from '@/navigation/constants/plugins';
 import { useTranslation } from 'react-i18next';
+import { App } from '@/app/components/App';
 const data = {
   account: [
     {
@@ -29,7 +30,11 @@ const data = {
   ],
   nav: [
     { name: 'General', icon: IconAdjustmentsAlt },
-    { name: 'File upload', icon: IconFile, path: SettingsWorkspacePath.File },
+    {
+      name: 'File upload',
+      icon: IconFile,
+      path: SettingsWorkspacePath.FileUpload,
+    },
   ],
 };
 
@@ -78,7 +83,7 @@ export function SettingsSidebar() {
                   <Sidebar.MenuButton
                     asChild
                     isActive={
-                      location.pathname === '/' + AppPath.Settings + item.path
+                      location.pathname === App + AppPath.Settings + item.path
                     }
                   >
                     <Link to={AppPath.Settings + '/' + item.path}>

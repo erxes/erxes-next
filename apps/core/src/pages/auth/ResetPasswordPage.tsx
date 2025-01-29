@@ -1,4 +1,5 @@
 import { ResetPassword } from '@/auth/login/components/ResetPassword';
+import { AppPath } from '@/types/AppPath';
 import { currentUserState } from 'erxes-shared-states';
 
 import { useEffect } from 'react';
@@ -14,7 +15,7 @@ const ResetPasswordPage = () => {
   const currentUser = useRecoilValue(currentUserState);
   useEffect(() => {
     if (currentUser) {
-      navigate('/');
+      navigate(AppPath.Index);
     }
   }, [currentUser, navigate]);
 

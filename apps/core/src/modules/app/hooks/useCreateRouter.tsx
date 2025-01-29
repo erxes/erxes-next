@@ -24,14 +24,14 @@ export const useCreateRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
-        <Route path="/create-owner" element={<CreateOwnerPage />} />
+        <Route path={AppPath.CreateOwner} element={<CreateOwnerPage />} />
         <Route element={<OrganizationProvider />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path={AppPath.Login} element={<LoginPage />} />
+          <Route path={AppPath.ResetPassword} element={<ResetPasswordPage />} />
 
           <Route element={<UserProvider />}>
             <Route element={<DefaultLayout />}>
-              <Route path="/" element={<></>} />
+              <Route path={AppPath.Index} element={<></>} />
               <Route
                 path={AppPath.SettingsCatchAll}
                 element={<SettingsRoutes />}

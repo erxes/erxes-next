@@ -9,6 +9,7 @@ import {
   isCurrentOrganizationLoadedState,
   currentOrganizationState,
 } from 'erxes-shared-states';
+import { AppPath } from '@/types/AppPath';
 
 export const OrganizationProvider = () => {
   const isCurrentOrganizationLoaded = useRecoilValue(
@@ -29,7 +30,7 @@ export const OrganizationProvider = () => {
   }
 
   if (isDefined(currentOrganization) && !currentOrganization.hasOwner) {
-    return <Navigate to="/create-owner" replace />;
+    return <Navigate to={AppPath.CreateOwner} replace />;
   }
 
   return <Outlet />;
