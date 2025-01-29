@@ -17,17 +17,23 @@ import { Avatar } from 'erxes-ui/components/avatar';
 import { useState } from 'react';
 import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-
+import { CustomerFieldEditLoadingAtom } from 'erxes-ui/modules/record-table/states/CustomerFieldEditLoadingState';
+import { useSetRecoilState } from 'recoil';
 const TableTextInput = ({ cell }) => {
+  const setLoading = useSetRecoilState(CustomerFieldEditLoadingAtom);
   const [value, setValue] = useState(cell.getValue() as string);
   const { customerEdit } = useCustomerEdit();
   return (
     <RecordTableInlineCell
       onSave={() => {
+        setLoading(true);
         customerEdit({
           variables: {
             _id: cell.row.original._id,
             [cell.column.id]: value,
+          },
+          onCompleted: () => {
+            setLoading(false);
           },
         });
       }}
