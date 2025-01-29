@@ -3,9 +3,17 @@
   "importOrder": [
     "^react",
     "<THIRD_PARTY_MODULES>",
-    "erxes-ui/(.*)$"
+    "^erxes-ui/(.*)$",
+    "^[./]"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "singleQuote": true
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "semi": true,
+  "printWidth": 80,
+  "bracketSpacing": true,
+  "endOfLine": "auto",
+  "no-multiple-empty-lines": ["error", { "max": 1 }]
 }

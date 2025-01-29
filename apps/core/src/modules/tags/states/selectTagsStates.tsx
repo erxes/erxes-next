@@ -1,6 +1,6 @@
-import { atomFamily } from 'recoil';
+import { atom } from 'recoil';
 
-export const hideChildrenAtomFamily = atomFamily<boolean, string>({
-  key: 'hideChildrenAtomFamily',
-  default: false,
+export const newTagNameAtom = atom<string>({
+  key: 'newTagNameAtom',
+  default: '',
 });

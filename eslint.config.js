@@ -29,7 +29,6 @@ module.exports = [
       ],
       '@typescript-eslint/no-explicit-any': 'off',
 
-      // Enable import sorting
       'simple-import-sort/imports': [
         'warn',
         {
@@ -49,6 +48,7 @@ module.exports = [
         },
       ],
       'simple-import-sort/exports': 'warn',
+      'no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0 }],
     },
   },
 ];

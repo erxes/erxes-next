@@ -32,7 +32,7 @@ export function SelectColor({
         className="flex flex-wrap gap-1.5"
       >
         <RadioGroup.Item
-          value=""
+          value="empty"
           id={`${id}-empty`}
           aria-label="empty"
           className="size-6 bg-radix-foreground shadow-none data-[state=checked]:bg-muted relative before:h-full before:w-px before:bg-input before:absolute before:left-1/2 before:-translate-x-1/2 before:top-0 before:rotate-45"
