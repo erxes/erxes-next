@@ -1,5 +1,10 @@
-import { useState } from 'react';
-
+import type { ColumnDef } from '@tanstack/react-table';
+import { Customer } from '@/contacts/types/contactsTypes';
+import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
+import {
+  RecordTableInlineCell,
+  RecordTableInlineCellEditForm,
+} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import {
   IconAlignLeft,
   IconHistory,
@@ -7,30 +12,28 @@ import {
   IconPhone,
   IconUser,
 } from '@tabler/icons-react';
-import type { ColumnDef } from '@tanstack/react-table';
-
 import { Avatar } from 'erxes-ui/components/avatar';
 import { RelativeDateDisplay } from 'erxes-ui/display';
-import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
-import {
-  RecordTableInlineCell,
-  RecordTableInlineCellEditForm,
-} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
-
+import { useState } from 'react';
 import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
-import { Customer } from '@/contacts/types/contactsTypes';
-
+import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
+import { CustomerFieldEditLoadingAtom } from 'erxes-ui/modules/record-table/states/CustomerFieldEditLoadingState';
+import { useSetRecoilState } from 'recoil';
 const TableTextInput = ({ cell }) => {
+  const setLoading = useSetRecoilState(CustomerFieldEditLoadingAtom);
   const [value, setValue] = useState(cell.getValue() as string);
   const { customerEdit } = useCustomerEdit();
   return (
     <RecordTableInlineCell
       onSave={() => {
+        setLoading(true);
         customerEdit({
           variables: {
             _id: cell.row.original._id,
             [cell.column.id]: value,
+          },
+          onCompleted: () => {
+            setLoading(false);
           },
         });
       }}

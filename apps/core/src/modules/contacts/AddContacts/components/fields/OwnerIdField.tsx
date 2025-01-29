@@ -1,15 +1,8 @@
+import { Avatar, Button, Command, Popover, Spinner } from 'erxes-ui/components';
+import { useUsers } from '@/contacts/hooks/useUsers';
 import { useState } from 'react';
-import { Control } from 'react-hook-form';
-
+import { cn } from 'erxes-ui/lib/utils';
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
-
-import {
-  Avatar,
-  Button,
-  Command,
-  Popover,
-  Skeleton,
-} from 'erxes-ui/components';
 import {
   FormControl,
   FormField,
@@ -17,18 +10,24 @@ import {
   FormLabel,
   FormMessage,
 } from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib/utils';
-
+import { Control } from 'react-hook-form';
 import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
-import { useUsers } from '@/contacts/hooks/useUsers';
+import { SelectUserFetchMore } from '../SelectUserFetchMore';
+import { useDebounce } from 'use-debounce';
 
 export const OwnerIdField = ({
   control,
 }: {
   control: Control<CustomerFormType>;
 }) => {
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
   const [open, setOpen] = useState(false);
-  const { users, loading } = useUsers();
+  const { users, loading, handleFetchMore, totalCount } = useUsers({
+    variables: {
+      searchValue: debouncedSearch,
+    },
+  });
   return (
     <FormField
       control={control}
@@ -40,8 +39,6 @@ export const OwnerIdField = ({
           field.onChange(userId === field.value ? '' : userId);
           setOpen(false);
         };
-
-        if (loading) return <Skeleton className="h-8 w-full" />;
 
         return (
           <FormItem>
@@ -89,11 +86,25 @@ export const OwnerIdField = ({
                 >
                   <Command id="owner-command-menu" className="relative">
                     <Command.Input
-                      placeholder="Search owner..."
-                      className="h-9"
+                      value={search}
+                      onValueChange={setSearch}
+                      variant="secondary"
+                      wrapperClassName="flex-auto"
                     />
                     <Command.List className="max-h-[300px] overflow-y-auto">
-                      <Command.Empty>No owner found</Command.Empty>
+                      <Command.Empty>
+                        {loading ? (
+                          <div className="flex items-center justify-center h-full">
+                            <Spinner size={'small'} />
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="text-muted-foreground pb-2">
+                              No results found.
+                            </p>
+                          </div>
+                        )}
+                      </Command.Empty>
                       {users.map((user) => (
                         <Command.Item
                           key={user._id}
@@ -120,6 +131,11 @@ export const OwnerIdField = ({
                           />
                         </Command.Item>
                       ))}
+                      <SelectUserFetchMore
+                        fetchMore={handleFetchMore}
+                        usersLength={users?.length}
+                        totalCount={totalCount}
+                      />
                     </Command.List>
                   </Command>
                 </Popover.Content>
