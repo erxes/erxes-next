@@ -1,6 +1,8 @@
-import { Button, Collapsible } from 'erxes-ui/components';
 import { useState } from 'react';
+
 import { IconChevronDown } from '@tabler/icons-react';
+
+import { Button, Collapsible } from 'erxes-ui/components';
 export const ProductAddCollapsible = ({
   children,
 }: {

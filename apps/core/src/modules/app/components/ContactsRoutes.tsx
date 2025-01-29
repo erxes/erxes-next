@@ -1,7 +1,8 @@
-import { ContactsPath } from '@/types/ContactsPath';
-import { Suspense, lazy } from 'react';
+import { lazy,Suspense } from 'react';
 import { Route } from 'react-router';
 import { Routes } from 'react-router';
+
+import { ContactsPath } from '@/types/ContactsPath';
 
 const ContactsIndexPage = lazy(() =>
   import('~/pages/contacts/ContactsIndexPage').then((module) => ({

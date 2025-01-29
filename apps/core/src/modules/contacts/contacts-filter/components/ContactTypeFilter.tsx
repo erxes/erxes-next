@@ -1,10 +1,11 @@
+import { useQueryState } from 'nuqs';
+
 import { DropdownMenu, Select } from 'erxes-ui/components';
 import { FilterBar } from 'erxes-ui/modules/filter';
 import {
   FilterBarComponentPropsBase,
   FilterDropdownProps,
 } from 'erxes-ui/modules/filter/types/filter';
-import { useQueryState } from 'nuqs';
 
 const options = [
   { label: 'Customer', value: 'customer' },

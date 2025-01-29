@@ -1,8 +1,9 @@
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
-
-import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
-import { DropdownMenu, Button } from 'erxes-ui/components';
 import { useState } from 'react';
+
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconAdjustmentsHorizontal } from '@tabler/icons-react';
+
+import { Button,DropdownMenu } from 'erxes-ui/components';
 
 export const FilterDropdown = ({ filters }: { filters: any[] }) => {
   const [open, setOpen] = useState(false);

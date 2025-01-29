@@ -1,5 +1,5 @@
-import { isValidURL } from 'erxes-ui/utils/urlParser';
 import { REACT_APP_API_URL } from 'erxes-ui/utils';
+import { isValidURL } from 'erxes-ui/utils/urlParser';
 
 export const readFile = (
   value: string,

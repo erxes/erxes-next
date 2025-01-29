@@ -1,27 +1,31 @@
+import { useState } from 'react';
+
 import {
+  IconCategoryPlus,
   IconChartBar,
+  IconCurrencyDollar,
   IconHash,
   IconHistory,
-  IconCurrencyDollar,
   IconLabel,
-  IconCategoryPlus,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
+
 import { Select, Skeleton } from 'erxes-ui/components';
+import { CurrencyDisplay, RelativeDateDisplay } from 'erxes-ui/display';
+import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
+import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
+import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import {
   RecordTableInlineCell,
   RecordTableInlineCellContainer,
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
-import { useState } from 'react';
-import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { useProductsEdit } from '../hooks/useProductsEdit';
-import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { CurrencyCode } from 'erxes-ui/types/CurrencyCode';
-import { CurrencyDisplay, RelativeDateDisplay } from 'erxes-ui/display';
-import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
-import { useProductCategories } from '../hooks/useProductCategories';
+
 import { PRODUCT_TYPE_OPTIONS } from '../constants/ProductConstants';
+import { useProductCategories } from '../hooks/useProductCategories';
+import { useProductsEdit } from '../hooks/useProductsEdit';
+
 import { SelectCategory } from '@/products/product-category/components/SelectCategory';
 
 const TableTextInput = ({ cell }) => {
@@ -164,24 +168,26 @@ export const columns: ColumnDef<any>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconCategoryPlus} label="Type" />
     ),
-    cell: ({ cell }) => (
-      <RecordTableInlineCell
-        display={() => <>{cell.getValue()}</>}
-        edit={({ isInEditMode, setIsInEditMode }) => (
-          <Select open={isInEditMode} onOpenChange={setIsInEditMode}>
-            <Select.Trigger className="w-full h-cell rounded-none">
-              <Select.Value placeholder="Select type" />
-            </Select.Trigger>
-            <Select.Content>
-              {PRODUCT_TYPE_OPTIONS.map((type) => (
-                <Select.Item value={type.value} key={type.value}>
-                  {type.label}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select>
-        )}
-      />
-    ),
+    cell: ({ cell }) => {
+      return (
+        <RecordTableInlineCell
+          display={() => <span>{cell.getValue() as string}</span>}
+          edit={({ isInEditMode, setIsInEditMode }) => (
+            <Select open={isInEditMode} onOpenChange={setIsInEditMode}>
+              <Select.Trigger className="w-full h-cell rounded-none">
+                <Select.Value placeholder="Select type" />
+              </Select.Trigger>
+              <Select.Content>
+                {PRODUCT_TYPE_OPTIONS.map((type) => (
+                  <Select.Item value={type.value} key={type.value}>
+                    {type.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          )}
+        />
+      );
+    },
   },
 ];

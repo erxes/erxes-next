@@ -1,7 +1,8 @@
+import { formatInTimeZone } from 'date-fns-tz';
+
 import { DATE_FORMAT_WITHOUT_YEAR } from '../constants/DateFormatWithoutYear';
 import { TimeFormat } from '../constants/TimeFormat';
 import { detectDateFormat } from '../utils/detectDateFormat';
-import { formatInTimeZone } from 'date-fns-tz';
 
 export const formatDateISOStringToDateTimeSimplified = (
   date: Date,

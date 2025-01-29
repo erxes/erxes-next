@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 export const profileValidationSchema = z
   .object({

@@ -1,13 +1,15 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { AnimatePresence,motion } from 'motion/react';
+
 import {
+  Checkbox,
+  FormControl,
   FormField,
   FormItem,
-  FormControl,
-  Checkbox,
   FormLabel,
   FormMessage,
   Input,
 } from 'erxes-ui/components';
+
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
 import { DynamicFieldsT } from '@/settings/file-upload/types';
 

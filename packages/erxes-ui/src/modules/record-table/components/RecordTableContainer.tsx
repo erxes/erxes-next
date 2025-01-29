@@ -1,6 +1,8 @@
-import { Table } from '@tanstack/react-table';
-import { cn } from 'erxes-ui/lib/utils';
 import { CSSProperties, forwardRef, useMemo } from 'react';
+
+import { Table } from '@tanstack/react-table';
+
+import { cn } from 'erxes-ui/lib/utils';
 
 interface RecordTableContainerProps {
   table: Table<any>;

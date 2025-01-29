@@ -1,10 +1,9 @@
 import * as React from 'react';
-
-import NxWelcome from './nx-welcome';
+import { Route, Routes } from 'react-router';
 
 import { Breadcrumb, Header } from 'erxes-ui';
 
-import { Route, Routes } from 'react-router';
+import NxWelcome from './nx-welcome';
 
 export function App() {
   return (

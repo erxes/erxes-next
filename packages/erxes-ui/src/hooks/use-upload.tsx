@@ -1,6 +1,7 @@
+import { useState } from 'react';
+
 import { toast } from 'erxes-ui/hooks';
 import { REACT_APP_API_URL } from 'erxes-ui/utils';
-import { useState } from 'react';
 
 type FileInfo = {
   name: string;
@@ -77,7 +78,7 @@ const useUpload = () => {
       // initiate upload file reader
       const uploadReader = new FileReader();
 
-      let fileInfo = {
+      const fileInfo = {
         name: file.name,
         size: file.size,
         type,

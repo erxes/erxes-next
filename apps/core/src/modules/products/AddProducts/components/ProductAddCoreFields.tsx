@@ -1,21 +1,25 @@
-import {
-  FormMessage,
-  Input,
-  FormControl,
-  FormLabel,
-  FormItem,
-  FormField,
-  Select,
-} from 'erxes-ui/components';
 import { UseFormReturn } from 'react-hook-form';
-import { ProductFormValues } from './formSchema';
-import { CategoryField } from './categoryField';
+
 import {
   IconDeviceUnknown,
   IconHotelService,
   IconPackage,
   IconStar,
 } from '@tabler/icons-react';
+
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Select,
+} from 'erxes-ui/components';
+
+import { CategoryField } from './categoryField';
+import { ProductFormValues } from './formSchema';
+
 import { useUom } from '@/products/hooks/useUom';
 const types = [
   { label: 'Product', value: 'product', icon: IconPackage },

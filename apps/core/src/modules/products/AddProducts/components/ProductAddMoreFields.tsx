@@ -1,18 +1,21 @@
+import { UseFormReturn } from 'react-hook-form';
+
+import { IconUpload } from '@tabler/icons-react';
+
 import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
   Input,
-  FormControl,
-  FormLabel,
-  FormItem,
-  FormField,
   TextEditor,
   Upload,
 } from 'erxes-ui/components';
-import { UseFormReturn } from 'react-hook-form';
-import { ProductFormValues } from './formSchema';
+
 import { BrandField } from './brandField';
+import { ProductFormValues } from './formSchema';
 import { VendorField } from './vendorField';
-import { IconUpload } from '@tabler/icons-react';
 
 export const ProductAddMoreFields = ({
   form,

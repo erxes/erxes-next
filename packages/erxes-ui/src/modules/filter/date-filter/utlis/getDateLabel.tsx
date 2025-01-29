@@ -1,4 +1,5 @@
 import { format, parseISO } from 'date-fns';
+
 import { getDateType } from './getDateType';
 
 export const getDateLabel = (value: string): string | number => {

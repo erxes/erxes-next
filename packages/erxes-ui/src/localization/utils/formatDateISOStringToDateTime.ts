@@ -1,6 +1,7 @@
+import { formatInTimeZone } from 'date-fns-tz';
+
 import { DateFormat } from '../constants/DateFormat';
 import { TimeFormat } from '../constants/TimeFormat';
-import { formatInTimeZone } from 'date-fns-tz';
 
 export const formatDateISOStringToDateTime = (
   date: string,

@@ -1,22 +1,25 @@
+import { useMemo } from 'react';
+
 import { IconLoader2 } from '@tabler/icons-react';
+import { motion } from 'motion/react';
+
 import {
   Breadcrumb,
-  Header,
-  Label,
   Button,
   Form,
+  Header,
+  Label,
   ScrollArea,
 } from 'erxes-ui/components';
-import { useMemo } from 'react';
-import { motion } from 'motion/react';
-import { FILE_MIME_TYPES } from '@/settings/file-upload/constants/serviceData';
+
+import { DynamicServiceConfigFields } from '@/settings/file-upload/components/DynamicServiceConfigFields';
 import { FileUploadMainFields } from '@/settings/file-upload/components/FileUploadMainFields';
 import { UploadServiceRadioGroup } from '@/settings/file-upload/components/UploadServiceRadioGroup';
-import { DynamicServiceConfigFields } from '@/settings/file-upload/components/DynamicServiceConfigFields';
-import { UploadConfigFormT } from '@/settings/file-upload/types';
+import { FILE_MIME_TYPES } from '@/settings/file-upload/constants/serviceData';
 import { serviceFields } from '@/settings/file-upload/constants/uploadServiceFields';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm';
+import { UploadConfigFormT } from '@/settings/file-upload/types';
 
 type Option = {
   label: string;

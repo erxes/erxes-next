@@ -1,6 +1,9 @@
-import { Command } from 'erxes-ui/components';
-import { IconLoader } from '@tabler/icons-react';
 import { useInView } from 'react-intersection-observer';
+
+import { IconLoader } from '@tabler/icons-react';
+
+import { Command } from 'erxes-ui/components';
+
 import { SelectTagFetchMoreProps } from '@/tags/types/tagTypes';
 
 export function SelectTagFetchMore({

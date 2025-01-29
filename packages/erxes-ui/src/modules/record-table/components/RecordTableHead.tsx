@@ -1,11 +1,14 @@
 import React from 'react';
-import { Column, Header } from '@tanstack/react-table';
-import { Table } from 'erxes-ui/components';
+
+import { useDndContext } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { cn } from 'erxes-ui/lib/utils';
+import { Column, Header } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
-import { useDndContext } from '@dnd-kit/core';
+
+import { Table } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib/utils';
+
 import { useRecordTable } from './RecordTableProvider';
 
 export const recordTableHeadVariants = cva(

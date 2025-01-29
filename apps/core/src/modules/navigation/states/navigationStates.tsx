@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+
 import { PLUGINS } from '../constants/plugins';
 
 export interface Plugin {

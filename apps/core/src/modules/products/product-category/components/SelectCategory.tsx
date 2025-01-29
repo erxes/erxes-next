@@ -1,18 +1,27 @@
+import React, { useEffect, useState } from 'react';
+
+import { ApolloError } from '@apollo/client';
+import { IconLoader } from '@tabler/icons-react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+
 import {
-  Popover,
+  Avatar,
   Button,
   ButtonProps,
   Command,
-  Avatar,
+  Popover,
   Skeleton,
   Tooltip,
 } from 'erxes-ui/components';
-import React, { useState } from 'react';
-import { useProductCategories } from '@/products/product-category/hooks/useProductCategories';
-import { ProductCategoryT } from '@/products/types/productTypes';
 import { cn } from 'erxes-ui/lib';
-import { IconCaretDownFilled, IconLoader } from '@tabler/icons-react';
-import { ApolloError } from '@apollo/client';
+import {
+  SelectTreeArrow,
+  SelectTreeIndentation,
+} from 'erxes-ui/modules/select-tree/components/SelectTree';
+
+import { useProductCategories } from '@/products/product-category/hooks/useProductCategories';
+import { hideChildrenAtomFamily } from '@/products/product-category/states/ProductCategory';
+import { ProductCategoryT } from '@/products/types/productTypes';
 
 export const SelectCategory = React.forwardRef<
   HTMLButtonElement,
@@ -21,10 +30,10 @@ export const SelectCategory = React.forwardRef<
     onSelect: (categoryId: string) => void;
     open?: boolean;
     setOpen?: (open: boolean) => void;
+    id?: string;
   }
->(({ onSelect, selected, open, setOpen, ...props }, ref) => {
+>(({ onSelect, selected, open, setOpen, id, ...props }, ref) => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategoryT>();
-  const [hideChildren, setHideChildren] = useState<string[]>([]);
   const { productCategories, error, loading } = useProductCategories({
     onCompleted: ({ productCategories }) => {
       setSelectedCategory(
@@ -51,24 +60,19 @@ export const SelectCategory = React.forwardRef<
       />
       <Popover.Content className="p-0" align="start">
         <Command className="outline-none">
-          <Command.Input variant="secondary" />
+          <Command.Input />
           <Command.List>
             <SelectCategoryEmptyHandler error={error} loading={loading} />
             {productCategories?.map((category) => (
               <SelectCategoryItem
                 key={category._id}
+                id={id}
                 category={category}
                 selected={selectedCategory?._id === category._id}
                 onSelect={handleSelect}
                 hasChildren={
                   productCategories.find((c) => c.parentId === category._id) !==
                   undefined
-                }
-                hideChildren={hideChildren}
-                setHideChildren={setHideChildren}
-                parentName={
-                  productCategories.find((c) => c._id === category.parentId)
-                    ?.name
                 }
               />
             ))}
@@ -107,53 +111,35 @@ export const SelectCategoryItem = ({
   selected,
   onSelect,
   hasChildren,
-  hideChildren,
-  setHideChildren,
-  parentName,
+  id,
 }: {
   category: ProductCategoryT;
   selected: boolean;
   onSelect: (categoryId: string) => void;
   hasChildren: boolean;
-  hideChildren: string[];
-  setHideChildren: (hideChildren: string[]) => void;
-  parentName: string;
+  id?: string;
 }) => {
   const { _id, code, name, order, parentId } = category;
-  const indentationLevel = (order?.match(/[/]/gi)?.length || 0) - 1;
 
-  if (hideChildren.includes(parentId)) return null;
+  const [hideChildren, setHideChildren] = useRecoilState(
+    hideChildrenAtomFamily(id || 'select-category')
+  );
+
+  useEffect(() => {
+    setHideChildren(isHidden);
+  }, [isHidden]);
+
+  if (isHidden) return null;
+
+  const handleHideChildren = () => {
+    setHideChildren(!hideChildren);
+  };
 
   return (
     <div className="flex items-center gap-1 px-1 max-w-full">
-      {indentationLevel > 0 && (
-        <div className="flex h-full gap-[22px] px-[13px]  ">
-          {Array.from({ length: indentationLevel }).map((_, index) => (
-            <div key={index} className="relative">
-              <div className="absolute -top-3.5 h-7 w-px bg-muted-foreground/20" />
-            </div>
-          ))}
-        </div>
-      )}
+      <SelectTreeIndentation order={order} />
       {hasChildren && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() =>
-            setHideChildren(
-              hideChildren.includes(_id)
-                ? hideChildren.filter((catId) => catId !== _id)
-                : [...hideChildren, _id]
-            )
-          }
-        >
-          <IconCaretDownFilled
-            className={cn(
-              'transition-transform',
-              hideChildren.includes(_id) && '-rotate-90'
-            )}
-          />
-        </Button>
+        <SelectTreeArrow isClosed={hideChildren} onClick={handleHideChildren} />
       )}
       <Tooltip.Provider>
         <Tooltip>

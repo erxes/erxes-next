@@ -1,6 +1,7 @@
+import { formatInTimeZone } from 'date-fns-tz';
+
 import { detectDateFormat } from '../utils/detectDateFormat';
 import { formatDateISOStringToDateTimeSimplified } from '../utils/formatDateISOStringToDateTimeSimplified';
-import { formatInTimeZone } from 'date-fns-tz';
 // Mock the imported modules
 jest.mock('../utils/detectDateFormat');
 jest.mock('date-fns-tz');

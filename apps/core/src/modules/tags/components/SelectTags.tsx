@@ -1,4 +1,8 @@
 import React from 'react';
+import { useRef, useState } from 'react';
+
+import { useDebounce } from 'use-debounce';
+
 import {
   Button,
   ButtonProps,
@@ -6,21 +10,20 @@ import {
   Popover,
   Tabs,
 } from 'erxes-ui/components';
-import { useRef, useState } from 'react';
-import { useDebounce } from 'use-debounce';
-import { ITag } from '@/tags/types/tagTypes';
-import { SelectTagFetchMore } from './SelectTagFetchMore';
-import { SelectTagTrigger } from './SelectTagTrigger';
-import { SelectTagItem } from './SelectTagItem';
-import { SelectTagCreateContainer } from './SelectTagCreate';
-import { useTags } from '../hooks/useTags';
-import { SelectTagsLoading } from './SelectTagsLoading';
+
 import { CreateTagForm } from './CreateTagForm';
-import { IconPlus } from '@tabler/icons-react';
+import { SelectTagCreateContainer } from './SelectTagCreate';
+import { SelectTagFetchMore } from './SelectTagFetchMore';
+import { SelectTagItem } from './SelectTagItem';
+import { SelectTagsEmpty } from './SelectTagsEmpty';
+import { SelectTagTrigger } from './SelectTagTrigger';
+import { useTags } from '../hooks/useTags';
+
 import {
   SelectTagsProvider,
   useSelectTags,
 } from '@/tags/contexts/SelectTagsContext';
+import { ITag } from '@/tags/types/tagTypes';
 import { SelectTagsProps } from '@/tags/types/tagTypes';
 
 export const SelectTags = React.forwardRef<
@@ -122,7 +125,7 @@ export const SelectTags = React.forwardRef<
 
 const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
   (props, ref) => {
-    const { tagType, openCreateTag, sub } = useSelectTags();
+    const { tagType } = useSelectTags();
     const [search, setSearch] = useState('');
     const [debouncedSearch] = useDebounce(search, 500);
     const { tags, handleFetchMore, totalCount, loading } = useTags({
@@ -139,25 +142,20 @@ const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
           <Command.Input
             value={search}
             onValueChange={setSearch}
-            variant="secondary"
             wrapperClassName="flex-auto"
             ref={ref}
           />
-          {!sub && (
-            <Button
-              variant="secondary"
-              className="shadow-none h-8 w-8"
-              size="icon"
-              onClick={openCreateTag}
-            >
-              <IconPlus />
-            </Button>
-          )}
         </div>
-        <SelectTagsLoading loading={loading} />
+        <SelectTagsEmpty loading={loading} />
         <Command.List>
           {tags?.map((tag: ITag) => {
-            return <SelectTagItem key={tag._id} {...tag} />;
+            return (
+              <SelectTagItem
+                key={tag._id}
+                {...tag}
+                hasChildren={!!tags?.find((t) => t.parentId === tag._id)}
+              />
+            );
           })}
           <SelectTagFetchMore
             fetchMore={handleFetchMore}

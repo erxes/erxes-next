@@ -1,6 +1,7 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
+
 import { useContactFilterValues } from '@/contacts/contacts-filter/hooks/useContactFilterValues';
+import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
 
 export const CUSTOMERS_PER_PAGE = 30;
 

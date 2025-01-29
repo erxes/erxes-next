@@ -1,20 +1,23 @@
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
-import { Sidebar } from 'erxes-ui/components';
+
 import {
   IconAdjustmentsAlt,
-  IconX,
-  IconUserCircle,
   IconColorSwatch,
   IconFile,
+  IconUserCircle,
+  IconX,
 } from '@tabler/icons-react';
-import { useRecoilValue } from 'recoil';
-import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
-import { AppPath } from '@/types/AppPath';
 import { motion } from 'framer-motion';
-import { pluginsState } from '@/navigation/states/navigationStates';
-import { PLUGINS } from '@/navigation/constants/plugins';
-import { useTranslation } from 'react-i18next';
+import { useRecoilValue } from 'recoil';
+
+import { Sidebar } from 'erxes-ui/components';
+
 import { App } from '@/app/components/App';
+import { PLUGINS } from '@/navigation/constants/plugins';
+import { pluginsState } from '@/navigation/states/navigationStates';
+import { AppPath } from '@/types/AppPath';
+import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
 const data = {
   account: [
     {

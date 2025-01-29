@@ -1,5 +1,6 @@
-import { isDefined } from '@/utils/isDefined';
 import { TimeFormat } from '../constants/TimeFormat';
+
+import { isDefined } from '@/utils/isDefined';
 
 export const detectTimeFormat = (): keyof typeof TimeFormat => {
   const isHour12 = Intl.DateTimeFormat(navigator.language, {

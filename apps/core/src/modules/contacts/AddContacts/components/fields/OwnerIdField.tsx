@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import { Control } from 'react-hook-form';
+
+import { IconCheck, IconChevronDown } from '@tabler/icons-react';
+
 import {
   Avatar,
   Button,
@@ -5,10 +10,6 @@ import {
   Popover,
   Skeleton,
 } from 'erxes-ui/components';
-import { useUsers } from '@/contacts/hooks/useUsers';
-import { useState } from 'react';
-import { cn } from 'erxes-ui/lib/utils';
-import { IconCheck, IconChevronDown } from '@tabler/icons-react';
 import {
   FormControl,
   FormField,
@@ -16,8 +17,10 @@ import {
   FormLabel,
   FormMessage,
 } from 'erxes-ui/components';
-import { Control } from 'react-hook-form';
+import { cn } from 'erxes-ui/lib/utils';
+
 import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { useUsers } from '@/contacts/hooks/useUsers';
 
 export const OwnerIdField = ({
   control,

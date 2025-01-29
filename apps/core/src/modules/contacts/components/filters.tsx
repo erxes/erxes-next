@@ -1,12 +1,14 @@
 import { IconCalendar, IconCategoryPlus } from '@tabler/icons-react';
+
 import { Filter } from 'erxes-ui/modules/filter/types/filter';
-import { ContactTypeFilterBar } from '../contacts-filter/components/ContactTypeFilter';
-import { ContactTypeFilterDropdown } from '../contacts-filter/components/ContactTypeFilter';
+
 import {
   ContactDateFilter,
   ContactDateFilterConditions,
 } from '../contacts-filter/components/ContactDateFilter';
 import { ContactDateFilterDropdown } from '../contacts-filter/components/ContactDateFilter';
+import { ContactTypeFilterBar } from '../contacts-filter/components/ContactTypeFilter';
+import { ContactTypeFilterDropdown } from '../contacts-filter/components/ContactTypeFilter';
 
 export const contactsFilters: Filter[] = [
   {

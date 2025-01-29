@@ -1,10 +1,5 @@
-import type { ColumnDef } from '@tanstack/react-table';
-import { Customer } from '@/contacts/types/contactsTypes';
-import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
-import {
-  RecordTableInlineCell,
-  RecordTableInlineCellEditForm,
-} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+import { useState } from 'react';
+
 import {
   IconAlignLeft,
   IconHistory,
@@ -12,11 +7,19 @@ import {
   IconPhone,
   IconUser,
 } from '@tabler/icons-react';
-import { RelativeDateDisplay } from 'erxes-ui/display';
+import type { ColumnDef } from '@tanstack/react-table';
+
 import { Avatar } from 'erxes-ui/components/avatar';
-import { useState } from 'react';
-import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
+import { RelativeDateDisplay } from 'erxes-ui/display';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
+import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
+import {
+  RecordTableInlineCell,
+  RecordTableInlineCellEditForm,
+} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+
+import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
+import { Customer } from '@/contacts/types/contactsTypes';
 
 const TableTextInput = ({ cell }) => {
   const [value, setValue] = useState(cell.getValue() as string);

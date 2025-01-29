@@ -1,10 +1,14 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import './styles.css';
-import { App } from '@/app/components/App';
-import { REACT_APP_API_URL, NODE_ENV } from 'erxes-ui/utils';
+
 import { init } from '@module-federation/enhanced/runtime';
 import { NuqsAdapter } from 'nuqs/adapters/react';
+
+import { NODE_ENV,REACT_APP_API_URL } from 'erxes-ui/utils';
+
+import './styles.css';
+
+import { App } from '@/app/components/App';
 
 // Initialize module federation before rendering
 const initFederation = async () => {

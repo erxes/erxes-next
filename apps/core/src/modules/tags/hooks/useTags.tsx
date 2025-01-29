@@ -1,4 +1,5 @@
 import { OperationVariables, useQuery } from '@apollo/client';
+
 import { tagsQuery } from '@/tags/graphql/queries/tagsQueries';
 
 const TAGS_PER_PAGE = 30;

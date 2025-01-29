@@ -1,25 +1,28 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import {
+  Button,
+  ScrollArea,
+  Separator,
+  Sheet,
+  Tabs,
+} from 'erxes-ui/components';
+import { Form } from 'erxes-ui/components/form';
+
+import { CustomerAddGeneralInformationFields } from '@/contacts/AddContacts/components/CustomerAddGeneralInformationFields';
+import { CustomerAddLinksFields } from '@/contacts/AddContacts/components/CustomerAddLinksFields';
 import {
   CustomerAddSheet,
   CustomerAddSheetHeader,
 } from '@/contacts/AddContacts/components/CustomerAddSheet';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   customerFormSchema,
   CustomerFormType,
 } from '@/contacts/AddContacts/components/formSchema';
-import {
-  Button,
-  Sheet,
-  ScrollArea,
-  Tabs,
-  Separator,
-} from 'erxes-ui/components';
-import { Form } from 'erxes-ui/components/form';
 import { useAddCustomer } from '@/contacts/hooks/useAddCustomer';
-import { useState } from 'react';
-import { CustomerAddGeneralInformationFields } from '@/contacts/AddContacts/components/CustomerAddGeneralInformationFields';
-import { CustomerAddLinksFields } from '@/contacts/AddContacts/components/CustomerAddLinksFields';
 
 export function AddCustomerForm() {
   const [open, setOpen] = useState<boolean>(false);

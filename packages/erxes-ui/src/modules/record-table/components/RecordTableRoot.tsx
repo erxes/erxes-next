@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ScrollArea, Table } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 

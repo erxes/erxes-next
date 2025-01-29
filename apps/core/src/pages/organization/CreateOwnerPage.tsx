@@ -1,11 +1,12 @@
-import { CreateOwner } from '@/organization/owner/components/CreateOwner';
-import { currentOrganizationState } from 'erxes-shared-states';
-
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+
+import { currentOrganizationState } from 'erxes-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { isDefined } from 'erxes-ui/utils';
+
+import { CreateOwner } from '@/organization/owner/components/CreateOwner';
 import { AppPath } from '@/types/AppPath';
 
 const CreateOwnerPage = () => {

@@ -1,8 +1,10 @@
+import React from 'react';
+
+import * as SelectPrimitive from '@radix-ui/react-select';
 import { IconX } from '@tabler/icons-react';
+
 import { Button, Select } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
-import React from 'react';
-import * as SelectPrimitive from '@radix-ui/react-select';
 
 interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -131,11 +133,11 @@ const FilterBarRemove = React.forwardRef<
 FilterBarRemove.displayName = 'FilterBarRemove';
 
 export {
-  FilterBarContainer,
-  FilterBarItem,
-  FilterBarField,
   FilterBarCondition,
-  FilterBarValue,
+  FilterBarContainer,
+  FilterBarField,
+  FilterBarItem,
   FilterBarRemove,
   FilterBarSelectTrigger,
+  FilterBarValue,
 };

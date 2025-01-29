@@ -1,10 +1,10 @@
-import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLoader';
-import { SettingsPath } from '@/types/SettingsPath';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
-import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 
 import { usePLuginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
+import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLoader';
+import { SettingsPath } from '@/types/SettingsPath';
+import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({

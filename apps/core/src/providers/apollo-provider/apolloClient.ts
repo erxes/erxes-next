@@ -1,15 +1,14 @@
 import {
+  ApolloClient,
   createHttpLink,
   from,
-  ApolloClient,
   InMemoryCache,
 } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 import { split } from '@apollo/client/link/core';
-import { getMainDefinition } from '@apollo/client/utilities';
+import { onError } from '@apollo/client/link/error';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-
+import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
 
 import { REACT_APP_API_URL } from 'erxes-ui/utils/config';

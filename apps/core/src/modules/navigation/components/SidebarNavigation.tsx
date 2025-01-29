@@ -1,11 +1,14 @@
-import { Collapsible, Sidebar } from 'erxes-ui/components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
-import { useRecoilValue } from 'recoil';
-import { pluginsState, Plugin } from '../states/navigationStates';
-import { PLUGINS } from '../constants/plugins';
+
 import { IconCaretUpFilled } from '@tabler/icons-react';
+import { useRecoilValue } from 'recoil';
+
+import { Collapsible, Sidebar } from 'erxes-ui/components';
+
+import { PLUGINS } from '../constants/plugins';
+import { Plugin,pluginsState } from '../states/navigationStates';
 
 export function SidebarNavigation() {
   const plugins = useRecoilValue(pluginsState);

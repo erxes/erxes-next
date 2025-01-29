@@ -1,12 +1,13 @@
-import { CellContext } from '@tanstack/react-table';
-import { ProductT } from '@/products/types/productTypes';
 import {
   IconDeviceUnknown,
   IconHotelService,
   IconPackage,
   IconStar,
 } from '@tabler/icons-react';
+import { CellContext } from '@tanstack/react-table';
 import { cn } from 'erxes-ui';
+
+import { ProductT } from '@/products/types/productTypes';
 const iconMap = {
   unique: IconDeviceUnknown,
   subscription: IconStar,

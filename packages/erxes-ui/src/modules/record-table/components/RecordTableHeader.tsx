@@ -2,10 +2,12 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
 } from '@dnd-kit/sortable';
-import { Table } from 'erxes-ui/components';
-import { useRecordTable } from './RecordTableProvider';
 import { flexRender } from '@tanstack/react-table';
+
+import { Table } from 'erxes-ui/components';
+
 import { RecordTableHead } from './RecordTableHead';
+import { useRecordTable } from './RecordTableProvider';
 
 export const RecordTableHeader = () => {
   const { table } = useRecordTable();

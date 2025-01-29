@@ -1,7 +1,8 @@
+import { useId } from 'react';
+
 import { colors } from 'erxes-ui/components/colors';
 import { RadioGroup } from 'erxes-ui/components/radio-group';
 import { cn } from 'erxes-ui/lib/utils';
-import { useId } from 'react';
 
 interface SelectColorProps {
   defaultValue?: string;

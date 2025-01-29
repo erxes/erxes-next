@@ -1,6 +1,8 @@
 import React from 'react'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from 'erxes-ui/components';
 import { Control } from 'react-hook-form'
+
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from 'erxes-ui/components';
+
 import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema'
 
 export const PrimaryEmailField = ({control}: {control: Control<CustomerFormType>}) => {

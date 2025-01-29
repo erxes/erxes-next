@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
+
+import { useQuery } from '@apollo/client';
+import {
+  currentUserState,
+  isCurrentUserLoadedState,
+} from 'erxes-shared-states';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { isDefined } from 'erxes-ui/utils';
-import { useQuery } from '@apollo/client';
-import { currentUser } from '@/users/graphql/queries';
 
-import {
-  isCurrentUserLoadedState,
-  currentUserState,
-} from 'erxes-shared-states';
+import { currentUser } from '@/users/graphql/queries';
 
 export const UserProviderEffect = () => {
   const [isLoading, setIsLoading] = useState(true);

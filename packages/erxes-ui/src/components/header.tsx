@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { cn } from '../lib/utils';
-import { Sidebar } from './sidebar';
+
 import { Separator } from './separator';
+import { Sidebar } from './sidebar';
+import { cn } from '../lib/utils';
 
 export type IHeaderProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 

@@ -1,18 +1,19 @@
 import { UseFormReturn } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+
 import {
   AvatarField,
-  FirstNameField,
-  LastNameField,
   CodeField,
-  OwnerIdField,
-  PrimaryEmailField,
-  EmailValidationStatusField,
-  PrimaryPhoneField,
-  PhoneValidationStatusField,
   DescriptionField,
+  EmailValidationStatusField,
+  FirstNameField,
   IsSubscribedField,
+  LastNameField,
+  OwnerIdField,
+  PhoneValidationStatusField,
+  PrimaryEmailField,
+  PrimaryPhoneField,
 } from '@/contacts/AddContacts/components/fields';
+import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
 export const CustomerAddGeneralInformationFields = ({
   form,
 }: {

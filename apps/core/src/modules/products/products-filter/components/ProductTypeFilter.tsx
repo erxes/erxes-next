@@ -1,6 +1,7 @@
 import { IconChevronLeft } from '@tabler/icons-react';
-import { DropdownMenu, Select } from 'erxes-ui/components';
 import { useQueryState } from 'nuqs';
+
+import { DropdownMenu, Select } from 'erxes-ui/components';
 import { FilterBar } from 'erxes-ui/modules/filter';
 
 const options = [

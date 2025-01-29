@@ -1,9 +1,11 @@
-import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
-import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
 import { useMutation, useQuery } from '@apollo/client';
 import { currentUserState } from 'erxes-shared-states';
-import { toast, useConfirm } from 'erxes-ui/hooks';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+
+import { toast, useConfirm } from 'erxes-ui/hooks';
+
+import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
+import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
 
 type Props = {
   onCompleted: (userDetail) => void;

@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { cn } from 'erxes-ui/lib/utils';
-import { Popover, Button, Command, Skeleton } from 'erxes-ui/components';
+
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
+
+import { Button, Command, Popover, Skeleton } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib/utils';
+
 import { useBrands } from '@/products/hooks/useBrands';
 
 interface BrandFieldProps {

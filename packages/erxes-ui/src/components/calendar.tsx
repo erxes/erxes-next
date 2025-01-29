@@ -1,17 +1,16 @@
 'use client';
-import {
-  IconChevronDown,
-  IconChevronUp,
-  IconChevronLeft,
-  IconChevronRight,
-} from '@tabler/icons-react';
-
 import * as React from 'react';
-
 import { DayFlag, DayPicker, SelectionState, UI } from 'react-day-picker';
 
-import { cn } from '../lib/utils';
+import {
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronUp,
+} from '@tabler/icons-react';
+
 import { buttonVariants } from './button';
+import { cn } from '../lib/utils';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 

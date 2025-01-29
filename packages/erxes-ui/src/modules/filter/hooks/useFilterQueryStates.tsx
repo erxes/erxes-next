@@ -1,4 +1,5 @@
 import { useQueryState } from 'nuqs';
+
 import { filterParser } from '../utils/filterParser';
 
 export const useFilterState = (accessoryKey: string, withDefault?: any) => {

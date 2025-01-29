@@ -1,14 +1,15 @@
 import { Outlet } from 'react-router';
-
-import { useRecoilValue } from 'recoil';
-import { RocketIcon } from 'erxes-ui/icons';
-import { isDefined } from 'erxes-ui/utils';
 import { Navigate } from 'react-router';
 
 import {
-  isCurrentOrganizationLoadedState,
   currentOrganizationState,
+  isCurrentOrganizationLoadedState,
 } from 'erxes-shared-states';
+import { useRecoilValue } from 'recoil';
+
+import { RocketIcon } from 'erxes-ui/icons';
+import { isDefined } from 'erxes-ui/utils';
+
 import { AppPath } from '@/types/AppPath';
 
 export const OrganizationProvider = () => {

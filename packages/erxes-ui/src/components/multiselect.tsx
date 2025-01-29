@@ -1,12 +1,13 @@
 'use client';
 
-import { Command as CommandPrimitive, useCommandState } from 'cmdk';
-import { X } from 'lucide-react';
 import * as React from 'react';
 import { forwardRef, useEffect } from 'react';
 
-import { cn } from 'erxes-ui/lib';
+import { Command as CommandPrimitive, useCommandState } from 'cmdk';
+import { X } from 'lucide-react';
+
 import { Command } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
 
 export interface Option {
   value: string;

@@ -6,7 +6,9 @@ Code Style and Structure
 - Use functional and declarative programming patterns; avoid classes.
 - Prefer iteration and modularization over code duplication.
 - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
-- Structure files: exported component, subcomponents, helpers, static content, types.
+- Structure files: exported component, utils, contexts, hooks, types.
+- Avoid console logs
+- always use absolute paths when import
 
 Naming Conventions
 
@@ -46,6 +48,3 @@ Key Conventions
   - Favor server components and Next.js SSR.
   - Use only for Web API access in small components.
   - Avoid for data fetching or state management.
-
-Follow Next.js docs for Data Fetching, Rendering, and Routing.
-,

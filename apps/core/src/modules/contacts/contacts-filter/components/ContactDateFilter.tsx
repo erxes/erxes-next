@@ -1,16 +1,18 @@
-import { Button, DropdownMenu, Select } from 'erxes-ui/components';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { contactDateFilterOpenAtom } from '@/contacts/contacts-filter/states/contactStates';
 import { IconCalendarPlus } from '@tabler/icons-react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+
+import { Button, DropdownMenu, Select } from 'erxes-ui/components';
+import { FilterBar } from 'erxes-ui/modules/filter';
 import { DateFilter } from 'erxes-ui/modules/filter/date-filter/components/date-filter';
+import { useFilterDateState } from 'erxes-ui/modules/filter/date-filter/hooks/useFilterDateState';
 import { getDateLabel } from 'erxes-ui/modules/filter/date-filter/utlis/getDateLabel';
 import {
   FilterBarComponentPropsBase,
   FilterDropdownProps,
 } from 'erxes-ui/modules/filter/types/filter';
+
 import { contactsFilters } from '@/contacts/components/filters';
-import { FilterBar } from 'erxes-ui/modules/filter';
-import { useFilterDateState } from 'erxes-ui/modules/filter/date-filter/hooks/useFilterDateState';
+import { contactDateFilterOpenAtom } from '@/contacts/contacts-filter/states/contactStates';
 
 export const ContactDateFilterDropdown = ({
   accessoryKey,

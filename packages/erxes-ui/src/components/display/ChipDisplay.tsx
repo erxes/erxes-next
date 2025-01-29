@@ -1,5 +1,7 @@
-import { Avatar, Button, ButtonProps } from 'erxes-ui';
 import React from 'react';
+
+import { Avatar, Button, ButtonProps } from 'erxes-ui';
+
 import { IAttachment } from 'erxes-ui/types';
 
 export interface ChipDisplayProps extends ButtonProps {

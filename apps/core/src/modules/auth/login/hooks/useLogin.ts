@@ -1,18 +1,18 @@
-import { useApolloClient, useMutation } from '@apollo/client';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
+
+import { useApolloClient, useMutation } from '@apollo/client';
+import {
+  currentUserState,
+  isCurrentUserLoadedState,
+} from 'erxes-shared-states';
+import { useSetRecoilState } from 'recoil';
+
+import { useToast } from 'erxes-ui/hooks';
 
 import { Logout } from '@/auth/graphql/mutations/logout';
 import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';
 import { Login } from '@/auth/login/grahpql/mutations/login';
-
-import {
-  isCurrentUserLoadedState,
-  currentUserState,
-} from 'erxes-shared-states';
-
-import { useSetRecoilState } from 'recoil';
-import { useNavigate } from 'react-router';
-import { useToast } from 'erxes-ui/hooks';
 import { ResetPassword } from '@/auth/login/grahpql/mutations/resetPassword';
 import { AppPath } from '@/types/AppPath';
 

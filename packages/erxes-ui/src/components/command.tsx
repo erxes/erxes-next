@@ -1,13 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { type DialogProps } from '@radix-ui/react-dialog';
-import { Command as CommandPrimitive } from 'cmdk';
-import { IconSearch } from '@tabler/icons-react';
 
-import { cn } from '../lib/utils';
-import { Dialog } from './dialog';
+import { type DialogProps } from '@radix-ui/react-dialog';
+import { IconSearch } from '@tabler/icons-react';
 import { cva } from 'class-variance-authority';
+import { Command as CommandPrimitive } from 'cmdk';
+
+import { Dialog } from './dialog';
+import { cn } from '../lib/utils';
 
 const CommandRoot = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -74,7 +75,11 @@ const CommandInput = React.forwardRef<
         <IconSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <CommandPrimitive.Input
           ref={ref}
-          className={cn(commanInputVariants({ variant: 'primary' }), className)}
+          className={cn(
+            commanInputVariants({ variant: 'primary' }),
+            'pl-0',
+            className
+          )}
           {...props}
         />
       </div>

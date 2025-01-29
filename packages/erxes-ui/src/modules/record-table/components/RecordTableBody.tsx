@@ -1,10 +1,13 @@
-import { flexRender } from '@tanstack/react-table';
-import { Table } from 'erxes-ui/components';
 import React, { useMemo } from 'react';
+
+import { flexRender } from '@tanstack/react-table';
+
+import { Table } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
+
 import { useRecordTable } from './RecordTableProvider';
 import { RecordTableRow } from './RecordTableRow';
 import { RecordTableCell } from '../record-table-cell/components/RecordTableCell';
-import { cn } from 'erxes-ui/lib';
 
 export const RecordTableBody = React.forwardRef<
   HTMLTableSectionElement,

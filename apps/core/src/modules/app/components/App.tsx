@@ -1,9 +1,12 @@
 import { RouterProvider } from 'react-router';
-import { useCreateRouter } from '@/app/hooks/useCreateRouter';
+
 import { RecoilRoot } from 'recoil';
-import { ThemeProvider } from '~/providers/theme-provider';
-import { AppI18nWrapper } from '~/providers/i18next-provider';
+
 import { Toaster } from 'erxes-ui/components';
+
+import { useCreateRouter } from '@/app/hooks/useCreateRouter';
+import { AppI18nWrapper } from '~/providers/i18next-provider';
+import { ThemeProvider } from '~/providers/theme-provider';
 
 export function App() {
   return (

@@ -1,4 +1,7 @@
 'use client';
+import { useState } from 'react';
+
+import { BlockNoteEditor, filterSuggestionItems } from '@blocknote/core';
 import { BlockNoteView } from '@blocknote/mantine';
 import {
   DefaultReactSuggestionItem,
@@ -6,14 +9,14 @@ import {
   SuggestionMenuController,
   useCreateBlockNote,
 } from '@blocknote/react';
-import { CustomSideMenu } from 'erxes-ui/components/text-editor/components/CustomSideMenu';
+
 import 'erxes-ui/components/text-editor/styles.css';
+import { CustomSideMenu } from 'erxes-ui/components/text-editor/components/CustomSideMenu';
+import { cn } from 'erxes-ui/lib';
+
 import '@blocknote/mantine/style.css';
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/react/style.css';
-import { cn } from 'erxes-ui/lib';
-import { useState } from 'react';
-import { BlockNoteEditor, filterSuggestionItems } from '@blocknote/core';
 
 interface TextEditorProps {
   className?: string;

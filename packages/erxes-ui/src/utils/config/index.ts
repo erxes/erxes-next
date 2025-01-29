@@ -21,4 +21,4 @@ const REACT_APP_API_URL = process.env.REACT_APP_API_URL || getDefaultUrl();
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-export { REACT_APP_API_URL, NODE_ENV };
+export { NODE_ENV,REACT_APP_API_URL };

@@ -1,7 +1,9 @@
 import React from 'react';
+
+import { Cell } from '@tanstack/react-table';
+
 import { Table } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
-import { Cell } from '@tanstack/react-table';
 
 export const RecordTableCell = React.forwardRef<
   HTMLTableCellElement,

@@ -1,19 +1,22 @@
+import { useForm } from 'react-hook-form';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IconLoader } from '@tabler/icons-react';
 import { z } from 'zod';
+
 import {
-  Form,
-  Input,
-  FormField,
   Button,
+  Form,
+  FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  Input,
 } from 'erxes-ui/components';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { SelectColor } from 'erxes-ui/modules/select-color/components/selectColor';
+
 import { SelectTags } from '@/tags/components/SelectTags';
 import { useTagsAdd } from '@/tags/hooks/useTagsAdd';
-import { IconLoader } from '@tabler/icons-react';
 import { ITag } from '@/tags/types/tagTypes';
 
 const formSchema = z.object({

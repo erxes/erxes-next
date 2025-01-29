@@ -1,7 +1,8 @@
 'use client';
 
-import * as Popover from '@radix-ui/react-popover';
 import * as React from 'react';
+
+import * as Popover from '@radix-ui/react-popover';
 
 import { Kbd } from './kbd';
 import { cn } from '../lib/utils';

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Breadcrumb, Header } from 'erxes-ui';
+import { Outlet,Route, Routes } from 'react-router';
 
-import { Route, Routes, Outlet } from 'react-router';
+import { Breadcrumb, Header } from 'erxes-ui';
 
 export function App() {
   return (

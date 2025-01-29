@@ -1,4 +1,5 @@
 import { isUndefinedOrNull } from 'erxes-ui/utils';
+
 import { formatDateISOStringToRelativeDate } from '../../localization/utils/formatDateISOStringToRelativeDate';
 
 export const RelativeDateDisplay = ({ value }: { value: string }) => {

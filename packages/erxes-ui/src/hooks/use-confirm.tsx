@@ -1,5 +1,10 @@
 import { useCallback } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { createRoot } from 'react-dom/client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,15 +16,12 @@ import {
   AlertDialogTitle,
   Form,
   FormControl,
-  FormMessage,
   FormField,
   FormItem,
-  Input,
   FormLabel,
+  FormMessage,
+  Input,
 } from 'erxes-ui/components';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 type OptionProps = {
   okLabel?: string;
@@ -94,8 +96,7 @@ const ConfirmDialog = ({
     }
 
     return (
-      <>
-        <FormField
+      <FormField
           name="confirm"
           control={form.control}
           render={({ field }) => (
@@ -116,7 +117,6 @@ const ConfirmDialog = ({
             </FormItem>
           )}
         />
-      </>
     );
   };
 

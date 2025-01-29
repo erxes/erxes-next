@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { filesValidationSchema } from "@/settings/file-upload/schema";
 
 type UploadConfigFormT = z.infer<typeof filesValidationSchema>;
@@ -21,8 +22,7 @@ interface fileMimeTypes {
 }
 
 export {
-  UploadConfigFormT,
   DynamicFieldsT,
+  fileMimeTypes,
   serviceTypeT,
-  fileMimeTypes
-}
+  UploadConfigFormT}
