@@ -7,21 +7,13 @@ export const EDIT_CUSTOMERS =  gql`mutation customersEdit($_id: String!, $avatar
     firstName: $firstName
     lastName: $lastName
     middleName: $middleName
-    sex: $sex
-    birthDate: $birthDate
     primaryEmail: $primaryEmail
     primaryPhone: $primaryPhone
     phones: $phones
     emails: $emails
-    ownerId: $ownerId
-    position: $position
-    department: $department
-    leadStatus: $leadStatus
-    hasAuthority: $hasAuthority
     description: $description
     isSubscribed: $isSubscribed
     links: $links
-    customFieldsData: $customFieldsData
     code: $code
     emailValidationStatus: $emailValidationStatus
     phoneValidationStatus: $phoneValidationStatus
