@@ -15,7 +15,7 @@
         "main": "apps/core/src/main.ts",
         "tsConfig": "apps/core/tsconfig.app.json",
         "rspackConfig": "apps/core/rspack.config.ts",
-        "assets": ["apps/core/src/favicon.ico", "apps/core/src/assets"]
+        "assets": ["apps/core/src/assets"]
       },
       "configurations": {
         "development": {

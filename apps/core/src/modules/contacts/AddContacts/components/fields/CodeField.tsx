@@ -1,8 +1,19 @@
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from 'erxes-ui/components';
-import { Control } from 'react-hook-form'
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+} from 'erxes-ui/components';
+import { Control } from 'react-hook-form';
+import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
 
-export const CodeField = ({control}: {control: Control<CustomerFormType>}) => {
+export const CodeField = ({
+  control,
+}: {
+  control: Control<CustomerFormType>;
+}) => {
   return (
     <FormField
       control={control}
