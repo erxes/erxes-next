@@ -4,7 +4,8 @@ import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
 import { contactsFilters } from './filters';
 import { ContactDateFilterDialog } from '@/contacts/contacts-filter/components/ContactDateFilter';
 import { ContactsFilter } from './ContactsFilter';
-import { AddCustomerForm } from '@/contacts/AddContacts/AddCustomerForm';
+import { AddCustomerForm } from '@/contacts/add-contacts/AddCustomerForm';
+
 export const ContactsHeader = () => {
   return (
     <>

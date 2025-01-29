@@ -1,4 +1,4 @@
-export * from './avatarField'
+export * from './AvatarField'
 export * from './CodeField'
 export * from './EmailValidationStatusField'
 export * from './FirstNameField'

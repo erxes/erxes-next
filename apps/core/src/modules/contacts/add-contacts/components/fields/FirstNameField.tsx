@@ -1,3 +1,5 @@
+import { Control } from 'react-hook-form';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 import {
   FormControl,
   FormField,
@@ -6,9 +8,8 @@ import {
   FormMessage,
   Input,
 } from 'erxes-ui/components';
-import { Control } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
-export const PrimaryPhoneField = ({
+
+export const FirstNameField = ({
   control,
 }: {
   control: Control<CustomerFormType>;
@@ -16,10 +17,10 @@ export const PrimaryPhoneField = ({
   return (
     <FormField
       control={control}
-      name="primaryPhone"
+      name="firstName"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>PHONE</FormLabel>
+          <FormLabel>FIRST NAME</FormLabel>
           <FormControl>
             <Input className="rounded-md h-8" {...field} />
           </FormControl>

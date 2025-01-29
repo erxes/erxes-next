@@ -7,7 +7,7 @@ import { Form } from 'erxes-ui/components/form';
 import {
   productFormSchema,
   ProductFormValues,
-} from '@/products/AddProducts/components/formSchema';
+} from '@/products/add-products/components/formSchema';
 import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
 import { ProductAddCollapsible } from './ProductAddCollapsible';
 import { ProductAddCoreFields } from './ProductAddCoreFields';

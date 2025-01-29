@@ -1,5 +1,5 @@
 import { Control } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 import {
   FormControl,
   FormDescription,

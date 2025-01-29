@@ -4,11 +4,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  TextEditor,
+  Input,
 } from 'erxes-ui/components';
 import { Control } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
-export const DescriptionField = ({
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
+export const PrimaryPhoneField = ({
   control,
 }: {
   control: Control<CustomerFormType>;
@@ -16,17 +16,12 @@ export const DescriptionField = ({
   return (
     <FormField
       control={control}
-      name="description"
+      name="primaryPhone"
       render={({ field }) => (
-        <FormItem className="mb-5">
-          <FormLabel>DESCRIPTION</FormLabel>
-
+        <FormItem>
+          <FormLabel>PHONE</FormLabel>
           <FormControl>
-            <TextEditor
-              {...field}
-              className=" h-28 rounded-md border"
-              parseTo="html"
-            />
+            <Input className="rounded-md h-8" {...field} />
           </FormControl>
           <FormMessage className="text-destructive" />
         </FormItem>

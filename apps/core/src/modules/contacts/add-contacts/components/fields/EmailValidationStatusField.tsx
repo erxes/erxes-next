@@ -7,16 +7,19 @@ import {
   Select,
 } from 'erxes-ui/components';
 import { Control } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
-const phoneValidationStatuses = [
+const emailValidationStatuses = [
   { label: 'Valid', value: 'valid' },
   { label: 'Invalid', value: 'invalid' },
+  { label: 'Accept all unverifiable', value: 'accept_all_unverifiable' },
   { label: 'Unknown', value: 'unknown' },
-  { label: 'Unverifiable', value: 'unverifiable' },
-  { label: 'Mobile phone', value: 'mobile_phone' },
+  { label: 'Disposable', value: 'disposable' },
+  { label: 'Catch all', value: 'catchall' },
+  { label: 'Bat syntax', value: 'bad_syntax' },
+  { label: 'Not checked', value: 'not_checked' },
 ];
-export const PhoneValidationStatusField = ({
+export const EmailValidationStatusField = ({
   control,
 }: {
   control: Control<CustomerFormType>;
@@ -24,10 +27,10 @@ export const PhoneValidationStatusField = ({
   return (
     <FormField
       control={control}
-      name="phoneValidationStatus"
+      name="emailValidationStatus"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>PHONE VERIFICATION STATUS</FormLabel>
+          <FormLabel>EMAIL VERIFICATION STATUS</FormLabel>
           <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
@@ -46,7 +49,7 @@ export const PhoneValidationStatusField = ({
               align="start"
             >
               <Select.Group>
-                {phoneValidationStatuses.map((status) => (
+                {emailValidationStatuses.map((status) => (
                   <Select.Item
                     key={status.value}
                     className="h-7 text-xs"

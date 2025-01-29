@@ -19,7 +19,9 @@ export const ProductAddSheet = ({
           Add product
         </Button>
       </Sheet.Trigger>
-      <Sheet.Content className="sm:max-w-lg p-0">{children}</Sheet.Content>
+      <Sheet.Content className="sm:max-w-lg p-0" id="product-add-sheet">
+        {children}
+      </Sheet.Content>
     </Sheet>
   );
 };
