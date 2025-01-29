@@ -92,9 +92,8 @@ export const ProductAddCoreFields = ({
                 </Select.Trigger>
               </FormControl>
               <Select.Content
-                portalContainer={document.getElementById('product-add-sheet')}
-                // className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-                // align="start"
+              // className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
+              // align="start"
               >
                 {types.map((type) => (
                   <Select.Item
@@ -148,9 +147,7 @@ export const ProductAddCoreFields = ({
                   ></Select.Value>
                 </Select.Trigger>
               </FormControl>
-              <Select.Content
-                portalContainer={document.getElementById('product-add-sheet')}
-              >
+              <Select.Content>
                 {uoms.map((uom) => (
                   <Select.Item
                     key={uom._id}
