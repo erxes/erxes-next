@@ -7,15 +7,10 @@ export function useAddProduct() {
   );
 
   const addProduct = async (productsData) => {
-    try {
-      const response = await productsAdd({
-        variables: productsData,
-      });
-      return response.data.addProduct;
-    } catch (error) {
-      console.error('Add product error:', error);
-      throw error;
-    }
+    const response = await productsAdd({
+      variables: productsData,
+    });
+    return response.data.addProduct;
   };
 
   return { addProduct, loading, error, data };
