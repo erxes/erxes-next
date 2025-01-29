@@ -14,6 +14,7 @@ import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router';
 import { useToast } from 'erxes-ui/hooks';
 import { ResetPassword } from '@/auth/login/grahpql/mutations/resetPassword';
+import { AppPath } from '@/types/AppPath';
 
 export const useLogin = () => {
   const [login] = useMutation(Login);
@@ -33,7 +34,7 @@ export const useLogin = () => {
       await login({ variables: { email, password } })
         .then((response) => {
           setIsCurrentUserLoaded(false);
-          return response.data && navigate('/');
+          return response.data && navigate(AppPath.Index);
         })
         .catch((e) => {
           toast({
@@ -55,7 +56,7 @@ export const useLogin = () => {
     sessionStorage.clear();
     localStorage.clear();
 
-    navigate('/login');
+    navigate(AppPath.Login);
   }, [logout, navigate, setCurrentUser, setIsCurrentUserLoaded, client]);
 
   const handleForgotPassword = useCallback(

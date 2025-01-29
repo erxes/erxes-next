@@ -8,6 +8,7 @@ import {
   isCurrentUserLoadedState,
   currentUserState,
 } from 'erxes-shared-states';
+import { AppPath } from '@/types/AppPath';
 
 export const UserProvider = () => {
   const isCurrentUserLoaded = useRecoilValue(isCurrentUserLoadedState);
@@ -26,7 +27,7 @@ export const UserProvider = () => {
   }
 
   if (!isDefined(currentUser)) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={AppPath.Login} replace />;
   }
 
   return <Outlet />;
