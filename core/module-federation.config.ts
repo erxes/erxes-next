@@ -26,6 +26,8 @@ const config: ModuleFederationConfig = {
     return false;
   },
 
+  remotes: ['inbox']
+
 };
 
 /**

@@ -9,6 +9,8 @@ export const usePluginsRouter = () => {
   const instence = getInstance();
   const remotes = instence?.options.remotes;
 
+  console.log(remotes);
+
   return remotes?.map((remote) => (
     <Route
       key={remote.name}

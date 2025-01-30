@@ -1,17 +1,9 @@
 
-
-
-
-
   import styled from 'tailwind';
-  
-
 
 const StyledErxesCore = styled.div`
   color: pink;
 `;
-
-
   
   export function ErxesCore() {
     return (
@@ -22,9 +14,5 @@ const StyledErxesCore = styled.div`
       </StyledErxesCore>
     );
   }
-  
 
   export default ErxesCore;
-
-
-
