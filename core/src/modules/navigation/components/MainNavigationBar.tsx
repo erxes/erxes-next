@@ -24,9 +24,11 @@ export const MainNavigationBar = ({
 }) => {
   const isSettings = useIsSettings();
   const renderSidebarContent = () => {
+    
     if (isSettings) {
       return <SettingsSidebar />;
     }
+    
     return (
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -39,7 +41,7 @@ export const MainNavigationBar = ({
         </Sidebar.Header>
         <Sidebar.Separator className="mx-0" />
         <Sidebar.Content className="gap-0">
-          <Collapsible defaultOpen className="group/collapsible">
+          {/* <Collapsible defaultOpen className="group/collapsible">
             <Sidebar.Group>
               <Sidebar.GroupLabel asChild className="hover:bg-zinc-200">
                 <Collapsible.Trigger>
@@ -60,7 +62,7 @@ export const MainNavigationBar = ({
                 </Sidebar.GroupContent>
               </Collapsible.Content>
             </Sidebar.Group>
-          </Collapsible>
+          </Collapsible> */}
           <Sidebar.Separator className="mx-0" />
           <SidebarNavigation />
         </Sidebar.Content>

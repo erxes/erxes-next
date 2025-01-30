@@ -23,7 +23,7 @@ export const OrganizationProvider = () => {
   const currentOrganization = useRecoilValue(currentOrganizationState);
 
   if (clientConfigApiStatus.isErrored) {
-    return <ClientConfigError error={clientConfigApiStatus.error} />
+    return <ClientConfigError error={clientConfigApiStatus.error} />;
   }
 
   if (!isCurrentOrganizationLoaded && !isDefined(currentOrganization)) {

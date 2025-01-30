@@ -2,21 +2,21 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 
+import { getInstance } from '@module-federation/enhanced/runtime';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-import { useRecoilValue } from 'recoil';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 
-import { PLUGINS } from '../constants/plugins';
-import { Plugin,pluginsState } from '../states/navigationStates';
-
 export function SidebarNavigation() {
-  const plugins = useRecoilValue(pluginsState);
-  const pinnedPlugins = plugins.filter((plugin) => plugin.pinned);
+  const instance = getInstance();
+  const remotes = instance?.options?.remotes;
+  const plugins = remotes || [];
+
+  console.log(plugins);
 
   return (
     <>
-      <SidebarNavigationItem items={pinnedPlugins} label="plugins" />
+      <SidebarNavigationItem items={plugins} label="plugins" />
     </>
   );
 }
@@ -26,7 +26,7 @@ export function SidebarNavigationItem({
   label,
 }: {
   label: string;
-  items: Plugin[];
+  items: any[];
 }) {
   const { t } = useTranslation();
   const pathname = useLocation().pathname;
@@ -43,17 +43,17 @@ export function SidebarNavigationItem({
           <Sidebar.GroupContent className="pt-2">
             <Sidebar.Menu>
               {items.map((item) => {
-                const Icon = PLUGINS[item.handle].icon;
+                // const Icon = PLUGINS[item.handle].icon;
                 return (
-                  <React.Fragment key={item.handle}>
-                    <Sidebar.MenuItem key={item.handle}>
+                  <React.Fragment key={item.name}>
+                    <Sidebar.MenuItem key={item.name}>
                       <Sidebar.MenuButton
                         asChild
-                        isActive={pathname.includes(item.handle)}
+                        isActive={pathname.includes(item.name)}
                       >
-                        <Link to={item.handle}>
-                          {Icon && <Icon />}
-                          <span>{t('nav.' + PLUGINS[item.handle].title)}</span>
+                        <Link to={item.name}>
+                          {/* {Icon && <Icon />} */}
+                          <span>{t('nav.' + item.name)}</span>
                         </Link>
                       </Sidebar.MenuButton>
                     </Sidebar.MenuItem>
