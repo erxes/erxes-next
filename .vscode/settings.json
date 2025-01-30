@@ -1,5 +1,5 @@
 {
-  "i18n-ally.localesPaths": ["apps/core/src/i18n"],
+  "i18n-ally.localesPaths": ["core/src/i18n"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },

@@ -6,10 +6,10 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "paths": {
-      "@/*": ["apps/core/src/modules/*"], // for vscode
-      "@": ["apps/core/src/modules"], // for rspack
-      "~/*": ["apps/core/src/*"], // for vscode
-      "~": ["apps/core/src"], // for rspack
+      "@/*": ["core/src/modules/*"], // for vscode
+      "@": ["core/src/modules"], // for rspack
+      "~/*": ["core/src/*"], // for vscode
+      "~": ["core/src"], // for rspack
       "erxes-ui/*": ["packages/erxes-ui/src/*"],
       "erxes-ui": ["packages/erxes-ui/src"],
       "erxes-shared-states": ["packages/erxes-shared-states/src/index.ts"]
@@ -25,5 +25,5 @@
       "path": "./tsconfig.spec.json"
     }
   ],
-  "extends": "../../tsconfig.base.json"
+    "extends": "../tsconfig.base.json"
 }

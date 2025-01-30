@@ -9,7 +9,6 @@ import baseConfig from './module-federation.config.prod';
 
 const config: ModuleFederationConfig = {
   ...baseConfig,
-  remotes: ['plugin_task', 'plugin_inbox'],
 };
 
 export default composePlugins(

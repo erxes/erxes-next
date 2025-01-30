@@ -1,6 +1,9 @@
 import { RecoilRoot } from 'recoil';
+
 import { Toaster } from 'erxes-ui/components';
+
 import { AppRouter } from './AppRoutes';
+
 import { AppErrorBoundary } from '@/error-handler/AppErrorBoundary';
 import { AppI18nWrapper } from '~/providers/i18next-provider';
 import { ThemeProvider } from '~/providers/theme-provider';

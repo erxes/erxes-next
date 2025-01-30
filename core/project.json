@@ -1,21 +1,25 @@
 {
   "name": "core",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/core/src",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "core/src",
   "projectType": "application",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/rspack:rspack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/apps/core",
-        "main": "apps/core/src/main.ts",
-        "tsConfig": "apps/core/tsconfig.app.json",
-        "rspackConfig": "apps/core/rspack.config.ts",
-        "assets": ["apps/core/src/assets"]
+        "outputPath": "dist/core",
+        "main": "core/src/main.ts",
+        "tsConfig": "core/tsconfig.app.json",
+        "rspackConfig": "core/rspack.config.ts",
+        "assets": [
+          "core/src/assets"
+        ]
       },
       "configurations": {
         "development": {
@@ -25,7 +29,7 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "apps/core/rspack.config.prod.ts"
+          "rspackConfig": "core/rspack.config.prod.ts"
         }
       }
     },
