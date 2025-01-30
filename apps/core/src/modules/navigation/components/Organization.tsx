@@ -1,8 +1,10 @@
-import { Button, Sidebar } from 'erxes-ui/components';
+import { IconBell, IconSelector } from '@tabler/icons-react';
 import { currentOrganizationState } from 'erxes-shared-states';
 import { useRecoilValue } from 'recoil';
+
+import { Button, Sidebar } from 'erxes-ui/components';
+
 import { Logo } from '@/auth/components/Logo';
-import { IconBell, IconSelector } from '@tabler/icons-react';
 
 export function Organization() {
   const currentOrganization = useRecoilValue(currentOrganizationState);

@@ -1,5 +1,6 @@
 import { IconChevronDown } from '@tabler/icons-react';
 import { Button, Command, Popover } from 'erxes-ui';
+
 import { Currency, CurrencyCode } from 'erxes-ui/types';
 
 export const SelectCurrency = ({
@@ -23,7 +24,7 @@ export const SelectCurrency = ({
       </Popover.Trigger>
       <Popover.Content side="bottom" align="start" className="p-0">
         <Command>
-          <Command.Input placeholder="Search currency..." variant="secondary" />
+          <Command.Input placeholder="Search currency..." />
           <Command.List>
             <Command.Empty>No currency found</Command.Empty>
             {Object.entries(currencies).map(([code, { label, Icon }]) => (

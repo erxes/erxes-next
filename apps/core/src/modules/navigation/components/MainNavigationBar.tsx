@@ -1,18 +1,21 @@
-import { Button, Collapsible, Sidebar } from 'erxes-ui';
-import { User } from './User';
-import { Organization } from './Organization';
-import { SidebarNavigation } from './SidebarNavigation';
-import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
-import { useIsSettings } from '../hooks/useIsSettings';
-import { AnimatePresence, motion } from 'motion/react';
+import { Link } from 'react-router';
+
 import {
   IconBuildingStore,
   IconCaretUpFilled,
   IconInbox,
   IconSettings,
 } from '@tabler/icons-react';
-import { Link } from 'react-router';
+import { Button, Collapsible, Sidebar } from 'erxes-ui';
+import { AnimatePresence, motion } from 'motion/react';
+
+import { Organization } from './Organization';
+import { SidebarNavigation } from './SidebarNavigation';
+import { User } from './User';
+import { useIsSettings } from '../hooks/useIsSettings';
+
 import { QuickActions } from '@/quickActions/components/QuickActions';
+import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
 
 export const MainNavigationBar = ({
   children,

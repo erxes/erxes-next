@@ -1,5 +1,7 @@
-import { DropdownMenu } from 'erxes-ui/components';
 import { IconLanguage } from '@tabler/icons-react';
+
+import { DropdownMenu } from 'erxes-ui/components';
+
 import { AvailableLanguage, useSwitchLanguage } from '~/i18n';
 
 export const SelectLanguages = () => {

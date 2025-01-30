@@ -1,12 +1,14 @@
-import { Sidebar, DropdownMenu, Avatar, useIsMobile } from 'erxes-ui';
-import { IconSelector, IconBell, IconLogout } from '@tabler/icons-react';
-import { ThemeSelector } from './ThemeSelector';
-import { SelectLanguages } from './SelectLanguages';
-import { useAuth } from '@/auth/hooks/useAuth';
+import { IconBell, IconLogout,IconSelector } from '@tabler/icons-react';
 import { currentUserState } from 'erxes-shared-states';
-
+import { Avatar, DropdownMenu, Sidebar, useIsMobile } from 'erxes-ui';
 import { useRecoilValue } from 'recoil';
+
 import { readFile } from 'erxes-ui/utils/core';
+
+import { SelectLanguages } from './SelectLanguages';
+import { ThemeSelector } from './ThemeSelector';
+
+import { useAuth } from '@/auth/hooks/useAuth';
 
 export function User() {
   const isMobile = useIsMobile();

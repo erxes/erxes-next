@@ -1,6 +1,6 @@
-import { contactsFilters } from './filters';
-
 import { FilterBarWithHook } from 'erxes-ui/modules/filter/componets/FilterBarWithHook';
+
+import { contactsFilters } from './filters';
 import { useContactFilterValues } from '../contacts-filter/hooks/useContactFilterValues';
 
 export const ContactsFilter = () => {

@@ -1,5 +1,6 @@
-import { loadRemote } from '@module-federation/enhanced/runtime';
 import React, { lazy } from 'react';
+
+import { loadRemote } from '@module-federation/enhanced/runtime';
 
 export function PluginMainPage({ pluginName }: { pluginName: string }) {
   const Plugin = lazy(() => {

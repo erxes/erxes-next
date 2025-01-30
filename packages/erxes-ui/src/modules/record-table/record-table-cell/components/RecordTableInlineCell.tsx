@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import * as Popover from '@radix-ui/react-popover';
+import { Cell } from '@tanstack/react-table';
 
 import { cn } from 'erxes-ui/lib';
 
@@ -7,7 +9,6 @@ import {
   RecordTableCellContext,
   useRecordTableCellContext,
 } from '../contexts/RecordTableCellContext';
-import { Cell } from '@tanstack/react-table';
 
 interface InlineCellProps extends React.HTMLAttributes<HTMLDivElement> {
   onSave?: (value: any) => void;

@@ -1,7 +1,7 @@
 import { composePlugins, withNx, withReact } from '@nx/rspack';
 import {
-  withModuleFederation,
   ModuleFederationConfig,
+  withModuleFederation,
 } from '@nx/rspack/module-federation';
 import { DefinePlugin } from '@rspack/core';
 

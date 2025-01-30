@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+
 import { productsQueries } from '@/products/graphql';
 
 const PRODUCTS_PER_PAGE = 30;

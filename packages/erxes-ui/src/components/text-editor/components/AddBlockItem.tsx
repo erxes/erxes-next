@@ -1,5 +1,5 @@
-import { useComponentsContext } from '@blocknote/react';
 import { BlockNoteEditor } from '@blocknote/core';
+import { useComponentsContext } from '@blocknote/react';
 
 type AddBlockItemProps = {
   editor: BlockNoteEditor;

@@ -1,8 +1,6 @@
-import {
-  FormType,
-  useSignInUpForm,
-  authValidationSchema,
-} from '@/auth/login/hooks/useLoginForm';
+import { useCallback, useEffect, useState } from 'react';
+import { SubmitHandler } from 'react-hook-form';
+
 import {
   Button,
   Form,
@@ -11,10 +9,13 @@ import {
   FormItem,
   Input,
 } from 'erxes-ui/components';
-import { SubmitHandler } from 'react-hook-form';
 
-import { useCallback, useEffect, useState } from 'react';
 import { useLogin } from '@/auth/login/hooks/useLogin';
+import {
+  authValidationSchema,
+  FormType,
+  useSignInUpForm,
+} from '@/auth/login/hooks/useLoginForm';
 
 export const Login = () => {
   const { form } = useSignInUpForm();

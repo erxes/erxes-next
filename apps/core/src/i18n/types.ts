@@ -1,4 +1,5 @@
 import type { Locale } from 'date-fns';
+
 import enUS from './translations/en.json';
 import mn from './translations/mn.json';
 

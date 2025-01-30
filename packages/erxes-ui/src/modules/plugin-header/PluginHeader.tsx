@@ -1,4 +1,5 @@
-import { IconStar, type Icon } from '@tabler/icons-react';
+import { type Icon,IconStar } from '@tabler/icons-react';
+
 import { Separator, Sidebar } from 'erxes-ui/components';
 
 export const PluginHeader = ({

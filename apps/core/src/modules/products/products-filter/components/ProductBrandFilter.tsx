@@ -1,8 +1,8 @@
-import { useBrands } from '@/products/hooks/useBrands';
-import { Button, Command, Popover } from 'erxes-ui/components';
 import { useQueryState } from 'nuqs';
-import { Item as DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
-import { IconChevronLeft } from '@tabler/icons-react';
+
+import { Button, Command, Popover } from 'erxes-ui/components';
+
+import { useBrands } from '@/products/hooks/useBrands';
 
 export const ProductBrandFilterDropdown = ({ onOpenChange }: any) => {
   const [filter, setFilter] = useQueryState('brand');
@@ -11,11 +11,11 @@ export const ProductBrandFilterDropdown = ({ onOpenChange }: any) => {
     variables: {},
   });
 
-  if (loading) return <>loading...</>;
+  if (loading) return <></>;
 
   return (
     <Command>
-      <Command.Input placeholder="Search brand" variant="secondary" />
+      <Command.Input placeholder="Search brand" />
       <Command.List>
         {brands.map((brand) => (
           <Command.Item
@@ -53,7 +53,7 @@ export const ProductBrandFilterBar = () => {
       </Popover.Trigger>
       <Popover.Content className="p-0">
         <Command>
-          <Command.Input placeholder="Search brand" variant="secondary" />
+          <Command.Input placeholder="Search brand" />
           <Command.List>
             {brands.map((brand) => (
               <Command.Item

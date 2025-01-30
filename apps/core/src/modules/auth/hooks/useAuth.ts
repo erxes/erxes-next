@@ -1,17 +1,16 @@
-import { useApolloClient, useMutation } from '@apollo/client';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router';
+
+import { useApolloClient, useMutation } from '@apollo/client';
+import {
+  currentOrganizationState,
+  currentUserState,
+  isCurrentOrganizationLoadedState,
+  isCurrentUserLoadedState,
+} from 'erxes-shared-states';
+import { useSetRecoilState } from 'recoil';
 
 import { Logout } from '@/auth/graphql/mutations/logout';
-
-import {
-  isCurrentUserLoadedState,
-  currentUserState,
-  currentOrganizationState,
-  isCurrentOrganizationLoadedState,
-} from 'erxes-shared-states';
-
-import { useSetRecoilState } from 'recoil';
-import { useNavigate } from 'react-router';
 import { AppPath } from '@/types/AppPath';
 
 export const useAuth = () => {

@@ -1,6 +1,7 @@
 import { addDays, addMilliseconds, parseISO } from 'date-fns';
-import { getDateType } from 'erxes-ui/modules/filter/date-filter/utlis/getDateType';
+
 import { MONTHS } from 'erxes-ui/modules/filter/date-filter/constants/dateTypes';
+import { getDateType } from 'erxes-ui/modules/filter/date-filter/utlis/getDateType';
 
 export function getDateValue(value: string): { from: Date; to: Date } | null {
   const {

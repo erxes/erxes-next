@@ -1,9 +1,9 @@
 import {
-  IconBrandFacebook,
-  IconBrandX,
   IconBrandDiscord,
+  IconBrandFacebook,
   IconBrandGithub,
   IconBrandInstagram,
+  IconBrandX,
   IconWorldWww,
 } from '@tabler/icons-react';
 

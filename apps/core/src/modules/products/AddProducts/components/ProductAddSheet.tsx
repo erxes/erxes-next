@@ -1,5 +1,6 @@
-import { Sheet, Button } from 'erxes-ui/components';
 import { IconPlus } from '@tabler/icons-react';
+
+import { Button,Sheet } from 'erxes-ui/components';
 
 interface ProductAddSheetProps {
   children: React.ReactNode;
@@ -19,9 +20,7 @@ export const ProductAddSheet = ({
           Add product
         </Button>
       </Sheet.Trigger>
-      <Sheet.Content className="sm:max-w-lg p-0" id="product-add-sheet">
-        {children}
-      </Sheet.Content>
+      <Sheet.Content className="sm:max-w-lg p-0">{children}</Sheet.Content>
     </Sheet>
   );
 };

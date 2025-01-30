@@ -1,6 +1,8 @@
-import { RadioGroup, FormField } from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib';
 import { motion } from 'motion/react';
+
+import { FormField,RadioGroup } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
+
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
 
 export function UploadServiceRadioGroup({ form, selected }) {

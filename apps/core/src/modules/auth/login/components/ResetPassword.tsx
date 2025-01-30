@@ -1,7 +1,5 @@
-import {
-  ResetPasswordFormType,
-  useResetPasswordForm,
-} from '@/auth/login/hooks/useLoginForm';
+import { SubmitHandler } from 'react-hook-form';
+
 import {
   Button,
   Form,
@@ -11,8 +9,12 @@ import {
   FormMessage,
   Input,
 } from 'erxes-ui/components';
-import { SubmitHandler } from 'react-hook-form';
+
 import { useLogin } from '@/auth/login/hooks/useLogin';
+import {
+  ResetPasswordFormType,
+  useResetPasswordForm,
+} from '@/auth/login/hooks/useLoginForm';
 
 export const ResetPassword = ({ token }: { token: string }) => {
   const { form } = useResetPasswordForm();

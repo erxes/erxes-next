@@ -1,5 +1,6 @@
-import { productsMutations } from '@/products/graphql/ProductsMutations';
 import { useMutation } from '@apollo/client';
+
+import { productsMutations } from '@/products/graphql/ProductsMutations';
 
 export function useAddProduct() {
   const [productsAdd, { loading, error, data }] = useMutation(

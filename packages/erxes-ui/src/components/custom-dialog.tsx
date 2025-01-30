@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Dialog, Separator } from 'erxes-ui/components';
 
 interface CustomDialogProps {

@@ -1,7 +1,8 @@
+import { initReactI18next } from 'react-i18next';
+
 import i18n, { InitOptions } from 'i18next';
 
 import translations from './translations';
-import { initReactI18next } from 'react-i18next';
 
 export const defaultI18nOptions: InitOptions = {
   debug: process.env.NODE_ENV === 'development',

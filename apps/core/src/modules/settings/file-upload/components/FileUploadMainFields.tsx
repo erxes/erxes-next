@@ -1,12 +1,13 @@
 import {
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
   Select,
 } from 'erxes-ui/components';
 import { MultipleSelector } from 'erxes-ui/components/multiselect';
+
 import { FILE_SYSTEM_TYPES } from '@/settings/file-upload/constants/serviceData';
 
 export function FileUploadMainFields({

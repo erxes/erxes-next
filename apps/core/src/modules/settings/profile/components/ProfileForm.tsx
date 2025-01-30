@@ -1,32 +1,34 @@
+import { useCallback, useState } from 'react';
+import { SubmitHandler } from 'react-hook-form';
+
 import {
-  Form,
-  Upload,
-  FormLabel,
-  Input,
-  Button,
-  FormField,
-  FormItem,
-  FormControl,
-  FormDescription,
-  DatePicker,
-  ToggleGroup,
-  ToggleGroupItem,
   Accordion,
+  AccordionContent,
   AccordionItem,
   AccordionTrigger,
-  AccordionContent,
+  Button,
+  DatePicker,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  Input,
+  ToggleGroup,
+  ToggleGroupItem,
+  Upload,
 } from 'erxes-ui/components';
-import { SubmitHandler } from 'react-hook-form';
-import { useCallback, useState } from 'react';
+
+import {
+  PROFILE_ADVANCED_FIELDS,
+  PROFILE_LINK_FIELDS,
+} from '@/settings/profile/constants/profileFields';
 import { useProfile } from '@/settings/profile/hooks/useProfile';
 import {
   FormType,
   useProfileForm,
 } from '@/settings/profile/hooks/useProfileForm';
-import {
-  PROFILE_ADVANCED_FIELDS,
-  PROFILE_LINK_FIELDS,
-} from '@/settings/profile/constants/profileFields';
 
 export const ProfileForm = () => {
   const [currentLink, setCurrentLink] = useState<string>('');

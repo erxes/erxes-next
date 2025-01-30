@@ -1,11 +1,11 @@
 import {
-  FilterBarContainer,
-  FilterBarItem,
-  FilterBarField,
   FilterBarCondition,
-  FilterBarValue,
+  FilterBarContainer,
+  FilterBarField,
+  FilterBarItem,
   FilterBarRemove,
   FilterBarSelectTrigger,
+  FilterBarValue,
 } from './componets/FilterBar';
 
 export const FilterBar = Object.assign(FilterBarItem, {

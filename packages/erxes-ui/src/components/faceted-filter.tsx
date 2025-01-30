@@ -1,10 +1,12 @@
-import { cn } from 'erxes-ui/lib';
-import { Button } from './button';
-import { Popover } from './popover';
 import { IconCheck, IconCirclePlus } from '@tabler/icons-react';
-import { Separator } from './separator';
+
+import { cn } from 'erxes-ui/lib';
+
 import { Badge } from './badge';
+import { Button } from './button';
 import { Command } from './command';
+import { Popover } from './popover';
+import { Separator } from './separator';
 
 interface IFacetedFilter {
   title?: string;

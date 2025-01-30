@@ -1,6 +1,8 @@
-import { cn } from 'erxes-ui/lib/utils';
-import { Table } from 'erxes-ui/components';
 import { useInView } from 'react-intersection-observer';
+
+import { Table } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib/utils';
+
 import { useRecordTable } from './RecordTableProvider';
 
 export const RecordTableRow = ({

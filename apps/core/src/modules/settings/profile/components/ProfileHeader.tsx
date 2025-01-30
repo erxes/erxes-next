@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
-import { Header, Breadcrumb } from 'erxes-ui/components';
 import { Link } from 'react-router';
+
+import { Breadcrumb,Header } from 'erxes-ui/components';
 
 const breadcrumbs = [
   { title: 'Settings', path: 'settings' },

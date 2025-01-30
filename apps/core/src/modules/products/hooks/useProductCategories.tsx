@@ -1,4 +1,5 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
+
 import { productsQueries } from '@/products/graphql';
 
 export const useProductCategories = (options?: QueryHookOptions) => {

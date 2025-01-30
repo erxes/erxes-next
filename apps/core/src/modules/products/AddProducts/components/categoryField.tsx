@@ -1,14 +1,17 @@
-import { useProductCategories } from '@/products/hooks/useProductCategories';
+import { useState } from 'react';
+
+import { IconCheck, IconChevronDown } from '@tabler/icons-react';
+
 import {
   Avatar,
   Button,
-  Skeleton,
   Command,
   Popover,
+  Skeleton,
 } from 'erxes-ui/components';
-import { useState } from 'react';
 import { cn } from 'erxes-ui/lib/utils';
-import { IconCheck, IconChevronDown } from '@tabler/icons-react';
+
+import { useProductCategories } from '@/products/hooks/useProductCategories';
 
 interface Category {
   _id: string;

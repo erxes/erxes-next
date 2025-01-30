@@ -1,7 +1,6 @@
 export * from './createState';
-export * from './isCurrentUserLoadingState';
-
+export * from './currentOrganizationLoadingState';
+export * from './currentOrganizationState';
 export * from './currentUserState';
 export * from './isCurrentUserLoadingState';
-export * from './currentOrganizationState';
-export * from './currentOrganizationLoadingState';
+export * from './isCurrentUserLoadingState';

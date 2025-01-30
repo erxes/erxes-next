@@ -1,6 +1,6 @@
 import { IAttachment } from 'erxes-ui/types';
 
-export type ProductT = {
+export interface ProductT {
   _id: string;
   name: string;
   unitPrice: number;
@@ -9,9 +9,9 @@ export type ProductT = {
   tagIds: string[];
   uom: string;
   type: 'product' | 'service' | 'unique' | 'subscription';
-};
+}
 
-export type ProductCategoryT = {
+export interface ProductCategoryT {
   _id: string;
   name: string;
   avatar: IAttachment;
@@ -19,4 +19,4 @@ export type ProductCategoryT = {
   order: string;
   productCount: number;
   parentId: string;
-};
+}

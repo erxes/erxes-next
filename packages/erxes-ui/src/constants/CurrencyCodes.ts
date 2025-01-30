@@ -1,10 +1,8 @@
 import {
   IconCoins,
-  TablerIcon,
   IconCurrencyAfghani,
   IconCurrencyBahraini,
   IconCurrencyBaht,
-  IconCurrencyForint,
   IconCurrencyDinar,
   IconCurrencyDirham,
   IconCurrencyDollar,
@@ -17,6 +15,7 @@ import {
   IconCurrencyDram,
   IconCurrencyEuro,
   IconCurrencyFlorin,
+  IconCurrencyForint,
   IconCurrencyFrank,
   IconCurrencyGuarani,
   IconCurrencyHryvnia,
@@ -42,15 +41,16 @@ import {
   IconCurrencyRufiyaa,
   IconCurrencyRupee,
   IconCurrencyRupeeNepalese,
+  IconCurrencyShekel,
+  IconCurrencySom,
   IconCurrencyTaka,
   IconCurrencyTenge,
   IconCurrencyTugrik,
-  IconCurrencySom,
-  IconCurrencyShekel,
   IconCurrencyWon,
   IconCurrencyYen,
   IconCurrencyYuan,
   IconCurrencyZloty,
+  TablerIcon,
 } from '@tabler/icons-react';
 
 import { CurrencyCode } from 'erxes-ui/types';

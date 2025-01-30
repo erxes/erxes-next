@@ -1,18 +1,22 @@
 'use client';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import { Button, ScrollArea, Sheet } from 'erxes-ui/components';
-import { useAddProduct } from '@/products/hooks/useAddProduct';
 import { Form } from 'erxes-ui/components/form';
+
+import { ProductAddCollapsible } from './ProductAddCollapsible';
+import { ProductAddCoreFields } from './ProductAddCoreFields';
+import { ProductAddMoreFields } from './ProductAddMoreFields';
+import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
+
 import {
   productFormSchema,
   ProductFormValues,
 } from '@/products/AddProducts/components/formSchema';
-import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
-import { ProductAddCollapsible } from './ProductAddCollapsible';
-import { ProductAddCoreFields } from './ProductAddCoreFields';
-import { ProductAddMoreFields } from './ProductAddMoreFields';
-import { useState } from 'react';
+import { useAddProduct } from '@/products/hooks/useAddProduct';
 
 export function AddProductForm() {
   const [open, setOpen] = useState<boolean>(false);

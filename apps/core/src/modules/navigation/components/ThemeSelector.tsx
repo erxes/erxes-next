@@ -1,6 +1,8 @@
+import { IconDevices,IconMoon, IconSun } from '@tabler/icons-react'
+
 import { DropdownMenu } from 'erxes-ui/components';
-import { useTheme, Theme } from '~/providers/theme-provider';
-import { IconSun, IconMoon, IconDevices } from '@tabler/icons-react'
+
+import { Theme,useTheme } from '~/providers/theme-provider';
 export const ThemeSelector = () => {
   const { theme, setTheme } = useTheme();
   return (

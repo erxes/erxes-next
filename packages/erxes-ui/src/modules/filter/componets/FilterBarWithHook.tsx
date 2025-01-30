@@ -1,10 +1,11 @@
+import { Filter } from 'erxes-ui/modules/filter/types/filter';
+
 import {
   FilterBarContainer,
-  FilterBarItem,
   FilterBarField,
+  FilterBarItem,
   FilterBarRemove,
 } from './FilterBar';
-import { Filter } from 'erxes-ui/modules/filter/types/filter';
 import { useFilterState } from '../hooks/useFilterQueryStates';
 
 export const FilterBarWithHook = ({

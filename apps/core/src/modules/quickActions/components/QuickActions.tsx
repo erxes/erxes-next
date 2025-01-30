@@ -1,15 +1,16 @@
 'use client';
 
 import * as React from 'react';
+
 import {
   IconCalculator,
   IconCalendarWeek,
   IconCommand,
   IconCreditCard,
-  IconSettings,
   IconMoodSmile,
-  IconUser,
   IconSearch,
+  IconSettings,
+  IconUser,
 } from '@tabler/icons-react';
 
 import { Button, Command, Sidebar } from 'erxes-ui/components';

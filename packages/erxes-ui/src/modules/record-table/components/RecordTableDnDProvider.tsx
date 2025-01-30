@@ -1,12 +1,12 @@
 import {
   closestCenter,
   DndContext,
-  useSensors,
+  DragEndEvent,
+  KeyboardSensor,
   MouseSensor,
   TouchSensor,
-  KeyboardSensor,
   useSensor,
-  DragEndEvent,
+  useSensors,
 } from '@dnd-kit/core';
 import { restrictToFirstScrollableAncestor } from '@dnd-kit/modifiers';
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';

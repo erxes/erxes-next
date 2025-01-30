@@ -1,10 +1,11 @@
-import { ResetPassword } from '@/auth/login/components/ResetPassword';
-import { AppPath } from '@/types/AppPath';
-import { currentUserState } from 'erxes-shared-states';
-
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
+
+import { currentUserState } from 'erxes-shared-states';
 import { useRecoilValue } from 'recoil';
+
+import { ResetPassword } from '@/auth/login/components/ResetPassword';
+import { AppPath } from '@/types/AppPath';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();

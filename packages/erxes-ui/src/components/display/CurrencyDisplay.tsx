@@ -1,9 +1,10 @@
 import React from 'react';
-import { FieldCurrencyValue } from 'erxes-ui/types/Displays';
-import { cn } from 'erxes-ui/lib';
+
 import { CURRENCY_CODES } from 'erxes-ui/constants/CurrencyCodes';
-import { formatAmount } from 'erxes-ui/utils/format';
+import { cn } from 'erxes-ui/lib';
+import { FieldCurrencyValue } from 'erxes-ui/types/Displays';
 import { isDefined, isUndefinedOrNull } from 'erxes-ui/utils';
+import { formatAmount } from 'erxes-ui/utils/format';
 
 type CurrencyDisplayProps = {
   currencyValue: FieldCurrencyValue | null | undefined;

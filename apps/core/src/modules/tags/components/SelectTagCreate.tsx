@@ -1,5 +1,6 @@
-import { Button, Tabs } from 'erxes-ui/components';
 import { IconChevronLeft } from '@tabler/icons-react';
+
+import { Button, Tabs } from 'erxes-ui/components';
 
 export function SelectTagCreateContainer({
   children,

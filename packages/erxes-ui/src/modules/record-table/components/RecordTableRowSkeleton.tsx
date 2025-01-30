@@ -1,7 +1,9 @@
 import React from 'react';
-import { Skeleton, Table } from 'erxes-ui/components';
-import { useRecordTable } from './RecordTableProvider';
 import { useInView } from 'react-intersection-observer';
+
+import { Skeleton, Table } from 'erxes-ui/components';
+
+import { useRecordTable } from './RecordTableProvider';
 
 export const RecordTableRowSkeleton = ({
   rows = 1,

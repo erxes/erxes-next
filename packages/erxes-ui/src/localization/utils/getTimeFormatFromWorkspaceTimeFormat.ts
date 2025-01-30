@@ -1,5 +1,6 @@
 import { TimeFormat } from '../constants/TimeFormat';
 import { detectTimeFormat } from '../utils/detectTimeFormat';
+
 import { WorkspaceMemberTimeFormatEnum } from '~/generated/graphql';
 
 export const getTimeFormatFromWorkspaceTimeFormat = (

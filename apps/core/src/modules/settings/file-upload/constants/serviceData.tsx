@@ -1,4 +1,5 @@
 import { IconBrandAws, IconBrandAzure, IconBrandCloudflare, IconBrandGoogle, IconDeviceLaptop } from '@tabler/icons-react';
+
 import { fileMimeTypes } from '@/settings/file-upload/types';
 
 export const uploadServiceData = [

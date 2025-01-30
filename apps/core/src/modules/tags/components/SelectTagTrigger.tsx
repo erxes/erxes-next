@@ -1,9 +1,12 @@
+import React from 'react';
+
 import { Button, ButtonProps, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
-import { useTags } from '@/tags/hooks/useTags';
+
 import { TagBadge } from './TagBadge';
+
 import { useSelectTags } from '@/tags/contexts/SelectTagsContext';
-import React from 'react';
+import { useTags } from '@/tags/hooks/useTags';
 
 export const SelectTagTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,

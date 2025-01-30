@@ -1,16 +1,16 @@
-import { createRoutesFromElements, Route } from 'react-router';
-import { Providers } from '~/providers';
-import { DefaultLayout } from '@/ui/components/DefaultLayout';
-import { AppPath } from '@/types/AppPath';
-import { SettingsRoutes } from '@/app/components/SettingsRoutes';
 import { lazy } from 'react';
+import { createRoutesFromElements, Route } from 'react-router';
+import { createBrowserRouter } from 'react-router';
+
+import { ContactsRoutes } from '@/app/components/ContactsRoutes';
 import { ProductsRoutes } from '@/app/components/ProductsRoutes';
+import { SettingsRoutes } from '@/app/components/SettingsRoutes';
+import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
-
-import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
-import { ContactsRoutes } from '@/app/components/ContactsRoutes';
-import { createBrowserRouter } from 'react-router';
+import { AppPath } from '@/types/AppPath';
+import { DefaultLayout } from '@/ui/components/DefaultLayout';
+import { Providers } from '~/providers';
 
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 

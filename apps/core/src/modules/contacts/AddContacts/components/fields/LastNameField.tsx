@@ -1,6 +1,8 @@
 import { Control } from 'react-hook-form'
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema'
+
 import { FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from 'erxes-ui/components'
+
+import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema'
 
 
 export const LastNameField = ({control}: {control: Control<CustomerFormType>}) => {

@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { cva, type VariantProps } from 'class-variance-authority';
+
+import { Color, colors, stringToHslColor,twColorClassNames } from './colors';
 import { cn } from '../lib/utils';
-import { twColorClassNames, Color, colors, stringToHslColor } from './colors';
 
 const badgeVariants = cva(
   'inline-flex items-center rounded-md border px-2 h-5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent whitespace-nowrap ',

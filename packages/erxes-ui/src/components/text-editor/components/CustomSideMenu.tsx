@@ -1,14 +1,15 @@
+import { BlockNoteEditor } from '@blocknote/core';
 import {
   BlockColorsItem,
-  RemoveBlockItem,
   DragHandleButton,
   DragHandleMenu,
+  RemoveBlockItem,
   SideMenu,
   SideMenuController,
 } from '@blocknote/react';
-import { BlockNoteEditor } from '@blocknote/core';
+import { IconColorPicker,IconPlus, IconTrash} from '@tabler/icons-react'
+
 import { AddBlockItem } from './AddBlockItem';
-import { IconPlus, IconTrash, IconColorPicker} from '@tabler/icons-react'
 interface CustomSideMenuProps{
   editor: BlockNoteEditor;
 }

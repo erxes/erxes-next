@@ -1,7 +1,9 @@
 // Dependencies: pnpm install lucide-react
 
-import { RadioGroup } from 'erxes-ui/components';
 import { IconCheck, IconMinus } from '@tabler/icons-react';
+
+import { RadioGroup } from 'erxes-ui/components';
+
 import { useTheme } from '~/providers/theme-provider';
 
 const items = [

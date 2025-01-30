@@ -1,5 +1,5 @@
 import { Control } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+
 import {
   FormControl,
   FormDescription,
@@ -7,6 +7,8 @@ import {
   FormItem,
   Upload,
 } from 'erxes-ui/components';
+
+import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
 
 export const AvatarField = ({
   control,

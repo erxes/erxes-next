@@ -1,6 +1,7 @@
 import { ScrollArea } from 'erxes-ui/components';
-import { ProfileHeader } from '@/settings/profile/components/ProfileHeader';
+
 import { ProfileForm } from '@/settings/profile/components/ProfileForm';
+import { ProfileHeader } from '@/settings/profile/components/ProfileHeader';
 
 export const SettingsProfilePage = () => {
   return (

@@ -1,7 +1,6 @@
 import { AtomEffect } from 'recoil';
 
 import { cookieStorage } from './cookie-storage';
-
 import { isDefined } from './isDefined';
 
 export const localStorageEffect =

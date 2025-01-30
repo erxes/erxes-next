@@ -1,3 +1,5 @@
+import { Control } from 'react-hook-form';
+
 import {
   FormControl,
   FormField,
@@ -6,7 +8,7 @@ import {
   FormMessage,
   Switch,
 } from 'erxes-ui/components';
-import { Control } from 'react-hook-form';
+
 import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
 
 export const IsSubscribedField = ({

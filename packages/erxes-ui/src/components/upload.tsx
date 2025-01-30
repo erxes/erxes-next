@@ -1,7 +1,3 @@
-import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
-import { useUpload } from 'erxes-ui/hooks';
-import { readFile } from 'erxes-ui/utils/core';
-import { Button, Dialog } from 'erxes-ui/components';
 import React, {
   createContext,
   MutableRefObject,
@@ -10,8 +6,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { cn } from '../lib/utils';
+
+import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
+
+import { Button, Dialog } from 'erxes-ui/components';
+import { useUpload } from 'erxes-ui/hooks';
+import { readFile } from 'erxes-ui/utils/core';
+
 import { ButtonProps } from './button';
+import { cn } from '../lib/utils';
 
 type IUploadContext = {
   url: string | undefined;

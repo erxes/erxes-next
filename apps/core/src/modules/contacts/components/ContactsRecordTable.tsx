@@ -1,9 +1,11 @@
 import { RecordTable } from 'erxes-ui/modules/record-table';
+
+import { columns } from './columns';
+
 import {
   CUSTOMERS_PER_PAGE,
   useCustomers,
 } from '@/contacts/hooks/useCustomers';
-import { columns } from './columns';
 
 export const ContactsRecordTable = () => {
   const { customers, handleFetchMore, loading, totalCount } = useCustomers({

@@ -1,8 +1,10 @@
-import { SelectCategory } from '@/products/product-category/components/SelectCategory';
-import { SelectTags } from '@/tags/components/SelectTags';
+import { useState } from 'react';
+
 import { IconPlus } from '@tabler/icons-react';
 import { Button, cn } from 'erxes-ui';
-import { useState } from 'react';
+
+import { SelectCategory } from '@/products/product-category/components/SelectCategory';
+import { SelectTags } from '@/tags/components/SelectTags';
 
 export const ProductsDetailPage = () => {
   const [tags, setTags] = useState<string[]>([]);
