@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const CustomerFieldEditLoadingAtom = atom<boolean>({
+export const FieldEditLoadingAtom = atom<boolean>({
   key: 'loadingState',
   default: false,
 });

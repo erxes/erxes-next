@@ -1,10 +1,11 @@
 import { MoreHorizontalIcon } from 'lucide-react';
-import { CustomerFieldEditLoadingAtom } from 'erxes-ui/modules/record-table/states/CustomerFieldEditLoadingState';
-import { Spinner } from 'erxes-ui/components';
 import { useRecoilValue } from 'recoil';
 
+import { Spinner } from 'erxes-ui/components';
+import { FieldEditLoadingAtom } from 'erxes-ui/modules/record-table/states/FieldEditLoadingState';
+
 const MoreColumnHeader = () => {
-  const isLoading = useRecoilValue(CustomerFieldEditLoadingAtom);
+  const isLoading = useRecoilValue(FieldEditLoadingAtom);
 
   return (
     <div className="flex items-center justify-center">

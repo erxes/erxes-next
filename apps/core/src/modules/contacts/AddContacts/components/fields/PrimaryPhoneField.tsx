@@ -9,7 +9,7 @@ import {
   Input,
 } from 'erxes-ui/components';
 
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/schemas/formSchema';
 export const PrimaryPhoneField = ({
   control,
 }: {

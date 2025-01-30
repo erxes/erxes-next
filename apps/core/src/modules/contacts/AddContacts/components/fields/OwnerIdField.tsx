@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from 'erxes-ui/components';
 import { Control } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/schemas/formSchema';
 import { SelectUserFetchMore } from '../SelectUserFetchMore';
 import { useDebounce } from 'use-debounce';
 
