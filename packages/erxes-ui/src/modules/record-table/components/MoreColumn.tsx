@@ -1,28 +1,13 @@
-import { MoreHorizontalIcon } from 'lucide-react';
-import { CustomerFieldEditLoadingAtom } from 'erxes-ui/modules/record-table/states/CustomerFieldEditLoadingState';
-import { Spinner } from 'erxes-ui/components';
-import { useRecoilValue } from 'recoil';
+import React from 'react';
 
-const MoreColumnHeader = () => {
-  const isLoading = useRecoilValue(CustomerFieldEditLoadingAtom);
+import { IconDots } from '@tabler/icons-react';
 
+import { Button, ButtonProps } from 'erxes-ui/components';
+
+export const RecordTableMoreButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   return (
-    <div className="flex items-center justify-center">
-      {isLoading && <Spinner size="small" />}
-    </div>
+    <Button ref={ref} variant="ghost" size="icon" {...props}>
+      <IconDots className="text-muted-foreground" />
+    </Button>
   );
-};
-
-export const moreColumn = {
-  accessorKey: 'more',
-  id: 'more',
-  size: 33,
-  header: MoreColumnHeader,
-  cell: () => {
-    return (
-      <div className="flex items-center justify-center">
-        <MoreHorizontalIcon className="h-4 w-4 text-muted-foreground" />
-      </div>
-    );
-  },
-};
+});

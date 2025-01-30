@@ -1,7 +1,7 @@
 import { RecordTable } from 'erxes-ui/modules/record-table';
 
-import { columns } from './columns';
-
+import { contactColumns } from '@/contacts/components/ContactColumns';
+import { contactMoreColumn } from '@/contacts/components/ContactMoreColumn';
 import {
   CUSTOMERS_PER_PAGE,
   useCustomers,
@@ -18,11 +18,12 @@ export const ContactsRecordTable = () => {
 
   return (
     <RecordTable.Provider
-      columns={columns}
+      columns={contactColumns}
       data={customers || []}
       handleReachedBottom={handleFetchMore}
       stickyColumns={['avatar', 'firstName']}
       className="mt-1.5"
+      moreColumn={contactMoreColumn}
     >
       <RecordTable>
         <RecordTable.Header />

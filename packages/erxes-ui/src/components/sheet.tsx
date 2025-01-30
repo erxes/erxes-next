@@ -3,8 +3,10 @@
 import * as React from 'react';
 
 import * as SheetPrimitive from '@radix-ui/react-dialog';
+import { IconX } from '@tabler/icons-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
+import { Button } from './button';
 import { cn } from '../lib/utils';
 
 const SheetTrigger = React.forwardRef<
@@ -45,7 +47,7 @@ const sheetVariants = cva(
           'inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
         left: 'inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm',
         right:
-          'inset-y-2 right-2 h-auto w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm',
+          'inset-y-2 right-2 h-[calc(100dvh-1rem)] w-3/4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm overflow-hidden',
       },
     },
     defaultVariants: {
@@ -87,6 +89,18 @@ const SheetContent = React.forwardRef<
 ));
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
+export const SheetClose = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Close>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close>
+>(({ ...props }, ref) => (
+  <SheetPrimitive.Close ref={ref} {...props} asChild>
+    <Button variant="ghost" size="icon" className={cn('ml-auto', props.className)}>
+      <IconX />
+    </Button>
+  </SheetPrimitive.Close>
+));
+SheetClose.displayName = SheetPrimitive.Close.displayName;
+
 const SheetHeader = ({
   className,
   ...props
@@ -122,7 +136,7 @@ const SheetTitle = React.forwardRef<
   <SheetPrimitive.Title
     ref={ref}
     className={cn(
-      'text-base font-semibold text-foreground leading-none',
+      'text-lg font-semibold text-foreground leading-none',
       className
     )}
     {...props}
@@ -150,4 +164,5 @@ export const Sheet = Object.assign(SheetRoot, {
   Footer: SheetFooter,
   Title: SheetTitle,
   Description: SheetDescription,
+  Close: SheetClose,
 });
