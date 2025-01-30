@@ -22,7 +22,7 @@ export const OrganizationProviderEffect = () => {
       return;
     }
 
-    fetch(REACT_APP_API_URL + '/v32/initial-setup')
+    fetch(REACT_APP_API_URL + '/v3/initial-setup')
       .then((res) => res.json())
       .then((data: CurrentOrganization) => {
         if (data.hasOwner == false) {
