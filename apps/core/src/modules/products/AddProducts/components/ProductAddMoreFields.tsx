@@ -26,7 +26,7 @@ export const ProductAddMoreFields = ({
     <>
       <div className="flex items-center my-4">
         <div className="flex-1 border-t border-dashed border-muted-foreground"></div>
-        <span className="mx-2 text-muted-foreground">Optional</span>
+        <FormLabel className='px-2'>MORE INFO</FormLabel>
         <div className="flex-1 border-t border-dashed border-muted-foreground"></div>
       </div>
       <FormField
@@ -47,30 +47,7 @@ export const ProductAddMoreFields = ({
           </FormItem>
         )}
       />
-      <FormField
-        control={form.control}
-        name="attachment"
-        render={({ field }) => (
-          <FormItem className="mb-5">
-            <FormLabel>UPLOAD</FormLabel>
-            <FormControl>
-              <Upload.Root {...field}>
-                <Upload.Preview className="hidden" />
-                <Upload.Button
-                  size="sm"
-                  variant="secondary"
-                  type="button"
-                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
-                >
-                  <IconUpload />
-                  <span className="font-medium text-sm">Primary upload</span>
-                </Upload.Button>
-              </Upload.Root>
-            </FormControl>
-            <FormMessage className="text-destructive" />
-          </FormItem>
-        )}
-      />
+
       <FormField
         control={form.control}
         name="shortName"
@@ -149,6 +126,30 @@ export const ProductAddMoreFields = ({
                 className=" h-28 rounded-md border"
                 parseTo="html"
               />
+            </FormControl>
+            <FormMessage className="text-destructive" />
+          </FormItem>
+        )}
+      />
+            <FormField
+        control={form.control}
+        name="attachment"
+        render={({ field }) => (
+          <FormItem className="mb-5">
+            <FormLabel>UPLOAD</FormLabel>
+            <FormControl>
+              <Upload.Root {...field}>
+                <Upload.Preview className="hidden" />
+                <Upload.Button
+                  size="sm"
+                  variant="secondary"
+                  type="button"
+                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                >
+                  <IconUpload />
+                  <span className="font-medium text-sm">Primary upload</span>
+                </Upload.Button>
+              </Upload.Root>
             </FormControl>
             <FormMessage className="text-destructive" />
           </FormItem>
