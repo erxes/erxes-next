@@ -74,10 +74,16 @@
   "generators": {
     "@nx/react": {
       "application": {
+        "babel": true,
+        "style": "tailwind",
+        "linter": "eslint",
+        "bundler": "rspack"
+      },
+      "remote": {
         "style": "tailwind",
         "linter": "eslint",
         "bundler": "rspack",
-        "babel": true
+        "e2eTestRunner": "cypress"
       },
       "component": {
         "style": "tailwind"
