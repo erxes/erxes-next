@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil';
 
 import { Logo } from '@/auth/components/Logo';
 import { Login } from '@/auth/login/components/Login';
-import { AppPath } from '@/types/AppPath';
+import { AppPath } from '@/types/paths/AppPath';
 
 const LoginPage = () => {
   const navigate = useNavigate();

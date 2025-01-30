@@ -16,8 +16,11 @@ import { Sidebar } from 'erxes-ui/components';
 import { App } from '@/app/components/App';
 import { PLUGINS } from '@/navigation/constants/plugins';
 import { pluginsState } from '@/navigation/states/navigationStates';
-import { AppPath } from '@/types/AppPath';
-import { SettingsPath, SettingsWorkspacePath } from '@/types/SettingsPath';
+import { AppPath } from '@/types/paths/AppPath';
+import {
+  SettingsPath,
+  SettingsWorkspacePath,
+} from '@/types/paths/SettingsPath';
 const data = {
   account: [
     {

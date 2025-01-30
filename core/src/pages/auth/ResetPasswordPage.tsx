@@ -5,7 +5,7 @@ import { currentUserState } from 'erxes-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { ResetPassword } from '@/auth/login/components/ResetPassword';
-import { AppPath } from '@/types/AppPath';
+import { AppPath } from '@/types/paths/AppPath';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();

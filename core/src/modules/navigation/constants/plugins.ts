@@ -29,7 +29,7 @@ export const PLUGINS = {
     title: 'tasks',
     icon: IconSquareCheck,
   },
-  plugin_inbox: {
+  inbox: {
     title: 'teamInbox',
     icon: IconMail,
   },

@@ -12,7 +12,7 @@ import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
 
 import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
-import { AppPath } from '@/types/AppPath';
+import { AppPath } from '@/types/paths/AppPath';
 
 export const OrganizationProvider = () => {
   const isCurrentOrganizationLoaded = useRecoilValue(

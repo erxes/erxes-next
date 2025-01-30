@@ -8,7 +8,7 @@ import { SettingsRoutes } from '@/app/components/SettingsRoutes';
 import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
-import { AppPath } from '@/types/AppPath';
+import { AppPath } from '@/types/paths/AppPath';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { Providers } from '~/providers';

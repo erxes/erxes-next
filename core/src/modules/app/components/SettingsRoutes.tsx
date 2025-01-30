@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router';
 
 import { usePLuginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLoader';
-import { SettingsPath } from '@/types/SettingsPath';
+import { SettingsPath } from '@/types/paths/SettingsPath';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 
 const SettingsProfile = lazy(() =>

@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { isDefined } from 'erxes-ui/utils';
 
 import { CreateOwner } from '@/organization/owner/components/CreateOwner';
-import { AppPath } from '@/types/AppPath';
+import { AppPath } from '@/types/paths/AppPath';
 
 const CreateOwnerPage = () => {
   const navigate = useNavigate();

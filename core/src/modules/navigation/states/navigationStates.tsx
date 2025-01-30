@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-import { PLUGINS } from '../constants/plugins';
+import { PLUGINS } from '@/navigation/constants/plugins';
 
 export interface Plugin {
   handle: keyof typeof PLUGINS;

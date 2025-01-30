@@ -6,13 +6,14 @@ import { getInstance } from '@module-federation/enhanced/runtime';
 import { IconCaretUpFilled } from '@tabler/icons-react';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
+import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 
 export function SidebarNavigation() {
   const instance = getInstance();
-  const remotes = instance?.options?.remotes;
-  const plugins = remotes || [];
 
-  console.log(plugins);
+  const remotes = instance?.options.remotes || [];
+
+  const plugins = [...remotes, ...CORE_PLUGINS];
 
   return (
     <>

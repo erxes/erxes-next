@@ -11,7 +11,7 @@ import {
 import { useSetRecoilState } from 'recoil';
 
 import { Logout } from '@/auth/graphql/mutations/logout';
-import { AppPath } from '@/types/AppPath';
+import { AppPath } from '@/types/paths/AppPath';
 
 export const useAuth = () => {
   const [logout] = useMutation(Logout);

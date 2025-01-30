@@ -23,12 +23,12 @@ export const MainNavigationBar = ({
   children: React.ReactNode;
 }) => {
   const isSettings = useIsSettings();
+
   const renderSidebarContent = () => {
-    
     if (isSettings) {
       return <SettingsSidebar />;
     }
-    
+
     return (
       <motion.div
         initial={{ opacity: 0, x: -20 }}

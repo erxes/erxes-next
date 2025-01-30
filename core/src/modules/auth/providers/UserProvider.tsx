@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
 
-import { AppPath } from '@/types/AppPath';
+import { AppPath } from '@/types/paths/AppPath';
 
 export const UserProvider = () => {
   const isCurrentUserLoaded = useRecoilValue(isCurrentUserLoadedState);
