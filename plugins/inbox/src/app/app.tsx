@@ -1,8 +1,6 @@
 
 import NxWelcome from "./nx-welcome";
 
-
-
 export function App() {
 
   return (
@@ -14,7 +12,4 @@ export function App() {
 
 }
 
-
 export default App;
-
-
