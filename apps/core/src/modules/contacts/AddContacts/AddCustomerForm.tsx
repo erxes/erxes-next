@@ -18,11 +18,11 @@ import {
   CustomerAddSheet,
   CustomerAddSheetHeader,
 } from '@/contacts/AddContacts/components/CustomerAddSheet';
+import { useAddCustomer } from '@/contacts/hooks/useAddCustomer';
 import {
   customerFormSchema,
   CustomerFormType,
-} from '@/contacts/AddContacts/components/formSchema';
-import { useAddCustomer } from '@/contacts/hooks/useAddCustomer';
+} from '@/contacts/schemas/formSchema';
 
 export function AddCustomerForm() {
   const [open, setOpen] = useState<boolean>(false);

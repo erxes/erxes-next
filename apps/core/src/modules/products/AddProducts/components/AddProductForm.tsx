@@ -12,35 +12,17 @@ import { ProductAddCoreFields } from './ProductAddCoreFields';
 import { ProductAddMoreFields } from './ProductAddMoreFields';
 import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
 
+import { useAddProduct } from '@/products/hooks/useAddProduct';
 import {
   productFormSchema,
   ProductFormValues,
-} from '@/products/AddProducts/components/formSchema';
-import { useAddProduct } from '@/products/hooks/useAddProduct';
+} from '@/products/schemas/formSchema';
 
 export function AddProductForm() {
   const [open, setOpen] = useState<boolean>(false);
   const { addProduct } = useAddProduct();
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      name: '',
-      code: '',
-      categoryId: '',
-      vendorId: '',
-      type: '',
-      uom: '',
-      shortName: '',
-      attachment: null,
-      attachmentMore: null,
-      description: '',
-      pdfAttachment: {},
-      subUoms: [],
-      barcodes: [],
-      variants: {},
-      barcodeDescription: '',
-      scopeBrandIds: [],
-    },
+    resolver: zodResolver(productFormSchema)
   });
 
   async function onSubmit(data: ProductFormValues) {

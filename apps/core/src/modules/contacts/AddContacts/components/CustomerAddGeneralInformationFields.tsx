@@ -13,7 +13,7 @@ import {
   PrimaryEmailField,
   PrimaryPhoneField,
 } from '@/contacts/AddContacts/components/fields';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/schemas/formSchema';
 export const CustomerAddGeneralInformationFields = ({
   form,
 }: {

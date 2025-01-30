@@ -18,7 +18,7 @@ import {
 } from 'erxes-ui/components';
 
 import { CategoryField } from './categoryField';
-import { ProductFormValues } from './formSchema';
+import { ProductFormValues } from '../../schemas/formSchema';
 
 import { useUom } from '@/products/hooks/useUom';
 const types = [
@@ -40,7 +40,7 @@ export const ProductAddCoreFields = ({
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>NAME</FormLabel>
+            <FormLabel>NAME</FormLabel> 
             <FormControl>
               <Input className="rounded-md h-8" {...field} />
             </FormControl>

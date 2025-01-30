@@ -14,8 +14,8 @@ import {
 } from 'erxes-ui/components';
 
 import { BrandField } from './brandField';
-import { ProductFormValues } from './formSchema';
 import { VendorField } from './vendorField';
+import { ProductFormValues } from '../../schemas/formSchema';
 
 export const ProductAddMoreFields = ({
   form,
