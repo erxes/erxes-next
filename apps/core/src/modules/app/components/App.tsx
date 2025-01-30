@@ -1,19 +1,21 @@
-import { RouterProvider } from 'react-router';
-import { useCreateRouter } from '@/app/hooks/useCreateRouter';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from '~/providers/theme-provider';
 import { AppI18nWrapper } from '~/providers/i18next-provider';
 import { Toaster } from 'erxes-ui/components';
+import { AppRouter } from './AppRoutes';
+import { AppErrorBoundary } from '@/error-handler/AppErrorBoundary';
 
 export function App() {
   return (
     <RecoilRoot>
-      <ThemeProvider>
-        <AppI18nWrapper>
-          <Toaster />
-          <RouterProvider router={useCreateRouter()} />
-        </AppI18nWrapper>
-      </ThemeProvider>
+      <AppErrorBoundary>
+        <ThemeProvider>
+          <AppI18nWrapper>
+            <Toaster />
+            <AppRouter />
+          </AppI18nWrapper>
+        </ThemeProvider>
+      </AppErrorBoundary>
     </RecoilRoot>
   );
 }
