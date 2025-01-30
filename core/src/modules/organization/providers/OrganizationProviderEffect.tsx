@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import {
+  clientConfigApiStatusState,
   CurrentOrganization,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
@@ -14,13 +15,14 @@ export const OrganizationProviderEffect = () => {
     useRecoilState(isCurrentOrganizationLoadedState);
 
   const setCurrentOrganization = useSetRecoilState(currentOrganizationState);
+  const setApiStatus = useSetRecoilState(clientConfigApiStatusState);
 
   useEffect(() => {
     if (isCurrentOrganizationLoaded) {
       return;
     }
 
-    fetch(REACT_APP_API_URL + '/v3/initial-setup')
+    fetch(REACT_APP_API_URL + '/v32/initial-setup')
       .then((res) => res.json())
       .then((data: CurrentOrganization) => {
         if (data.hasOwner == false) {
@@ -31,10 +33,19 @@ export const OrganizationProviderEffect = () => {
 
         setCurrentOrganization(data);
         setIsCurrentOrganizationLoaded(true);
+        setApiStatus({
+          isErrored: false,
+          isLoaded: true,
+        })
       })
-      .catch(() => {
+      .catch((e: Error) => {
         setCurrentOrganization(null);
         setIsCurrentOrganizationLoaded(false);
+        setApiStatus({
+          isErrored: true,
+          isLoaded: true,
+          error: e
+        })
       });
   }, [
     isCurrentOrganizationLoaded,

@@ -1,6 +1,7 @@
-import { ErrorBoundary } from 'react-error-boundary';
 import { ReactNode } from 'react';
-import { ErrorFallback } from '@/error-handler/ErrorFallback';
+import { ErrorBoundary } from 'react-error-boundary';
+
+import { GenericErrorFallback } from '@/error-handler/components/GenericErrorFallback';
 
 export const AppErrorBoundary = ({ children }: { children: ReactNode }) => {
   const handleReset = () => {
@@ -8,7 +9,7 @@ export const AppErrorBoundary = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>
+    <ErrorBoundary FallbackComponent={GenericErrorFallback} onReset={handleReset}>
       {children}
     </ErrorBoundary>
   );

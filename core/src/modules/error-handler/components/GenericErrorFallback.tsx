@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { FallbackProps } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
+
 import { isDeeplyEqual } from 'erxes-ui/utils';
 
 type GenericErrorFallbackProps = FallbackProps & {
   title?: string;
-  hidePageHeader?: boolean;
 };
 
-export const ErrorFallback = ({
+export const GenericErrorFallback = ({
   resetErrorBoundary,
+  error,
   title = 'Sorry, something went wrong',
 }: GenericErrorFallbackProps) => {
   const location = useLocation();
@@ -22,5 +23,5 @@ export const ErrorFallback = ({
     }
   }, [previousLocation, location, resetErrorBoundary]);
 
-  return <div>{title}</div>;
+  return <div>{title}<div>{error.message}</div></div>;
 };

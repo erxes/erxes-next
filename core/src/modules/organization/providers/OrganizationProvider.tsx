@@ -2,6 +2,7 @@ import { Outlet } from 'react-router';
 import { Navigate } from 'react-router';
 
 import {
+  clientConfigApiStatusState,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
 } from 'erxes-shared-states';
@@ -10,14 +11,20 @@ import { useRecoilValue } from 'recoil';
 import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
 
+import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 import { AppPath } from '@/types/AppPath';
 
 export const OrganizationProvider = () => {
   const isCurrentOrganizationLoaded = useRecoilValue(
     isCurrentOrganizationLoadedState
   );
+  const clientConfigApiStatus = useRecoilValue(clientConfigApiStatusState);
 
   const currentOrganization = useRecoilValue(currentOrganizationState);
+
+  if (clientConfigApiStatus.isErrored) {
+    return <ClientConfigError error={clientConfigApiStatus.error} />
+  }
 
   if (!isCurrentOrganizationLoaded && !isDefined(currentOrganization)) {
     return (

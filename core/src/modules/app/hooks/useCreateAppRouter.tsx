@@ -10,9 +10,8 @@ import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 import { AppPath } from '@/types/AppPath';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
-import { Providers } from '~/providers';
-
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
+import { Providers } from '~/providers';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 

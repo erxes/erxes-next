@@ -3,6 +3,7 @@ import { createState } from './createState';
 export type CurrentOrganization = {
   name: string;
   hasOwner?: boolean;
+  logo?: string;
   theme?: {
     logo?: string;
     favicon?: string;
