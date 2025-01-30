@@ -23,8 +23,6 @@ import RecordTableContainer from 'erxes-ui/modules/record-table/components/Recor
 import { RecordTableDnDProvider } from 'erxes-ui/modules/record-table/components/RecordTableDnDProvider';
 import { IRecordTableContext } from 'erxes-ui/modules/record-table/types/recordTableTypes';
 
-import { moreColumn } from './MoreColumn';
-
 const RecordTableContext = createContext<IRecordTableContext | null>(null);
 
 export function useRecordTable() {
@@ -44,6 +42,7 @@ interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
   tableOptions?: TableOptions<any>;
   handleReachedBottom?: () => void;
   stickyColumns?: string[];
+  moreColumn?: ColumnDef<any>;
 }
 
 export const RecordTableProvider = forwardRef<
@@ -59,6 +58,7 @@ export const RecordTableProvider = forwardRef<
       handleReachedBottom,
       className,
       stickyColumns,
+      moreColumn,
       ...restProps
     },
     ref
@@ -72,7 +72,11 @@ export const RecordTableProvider = forwardRef<
 
     const table = useReactTable({
       data,
-      columns: [moreColumn, checkboxColumn, ...columns],
+      columns: [
+        ...(moreColumn ? [moreColumn] : []),
+        checkboxColumn,
+        ...columns
+      ],
       defaultColumn: {
         maxSize: 800,
       },

@@ -25,8 +25,6 @@ module.exports = [
         },
       ],
       '@typescript-eslint/no-explicit-any': 'off',
-
-      'no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0 }],
     },
   },
 ];

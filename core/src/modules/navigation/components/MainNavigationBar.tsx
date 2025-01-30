@@ -91,10 +91,10 @@ export const MainNavigationBar = ({
   };
   return (
     <Sidebar.Provider>
-      <Sidebar.Root collapsible="offcanvas" variant="inset">
+      <Sidebar collapsible="offcanvas" variant="inset">
         <AnimatePresence>{renderSidebarContent()}</AnimatePresence>
         <Sidebar.Rail />
-      </Sidebar.Root>
+      </Sidebar>
       <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden">
         {children}
       </Sidebar.Inset>
