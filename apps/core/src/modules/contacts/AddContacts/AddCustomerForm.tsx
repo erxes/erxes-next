@@ -25,16 +25,22 @@ import {
 } from '@/contacts/schemas/formSchema';
 
 export function AddCustomerForm() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); 
   const [open, setOpen] = useState<boolean>(false);
   const { customersAdd } = useAddCustomer();
   const form = useForm<CustomerFormType>({
-    resolver: zodResolver(customerFormSchema),
-    defaultValues: {},
+    resolver: zodResolver(customerFormSchema)
   });
   const onSubmit = (data: CustomerFormType) => {
+    try {
+    setErrorMessage(null)
     customersAdd({ variables: data });
     form.reset();
     setOpen(false);
+    }catch (error) {
+      console.error(error)
+      setErrorMessage('Failed to add customer. Please try again.');
+    }
   };
 
   return (
@@ -49,7 +55,7 @@ export function AddCustomerForm() {
           <ScrollArea.Root className="flex-auto">
             <div className="px-5">
               <Tabs defaultValue="general-information">
-                <Tabs.List className="grid grid-cols-2 mb-10 h-full bg-transparent">
+                <Tabs.List className="grid grid-cols-2 mb-5 h-full bg-transparent">
                   <Tabs.Trigger
                     value="general-information"
                     className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary bg-transparent data-[state=active]:border-b rounded-none "
@@ -63,10 +69,13 @@ export function AddCustomerForm() {
                     Links
                   </Tabs.Trigger>
                 </Tabs.List>
-                <Tabs.Content value="general-information">
+                {errorMessage && (
+              <div className="text-destructive text-sm">{errorMessage}</div>
+            )}
+                <Tabs.Content value="general-information" className='mt-5'>
                   <CustomerAddGeneralInformationFields form={form} />
                 </Tabs.Content>
-                <Tabs.Content value="links">
+                <Tabs.Content value="links" className='mt-5'>
                   <CustomerAddLinksFields />
                 </Tabs.Content>
               </Tabs>

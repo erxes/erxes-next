@@ -44,7 +44,7 @@ export const ProductAddCoreFields = ({
             <FormControl>
               <Input className="rounded-md h-8" {...field} />
             </FormControl>
-            <FormMessage className="text-destructive" />
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -54,12 +54,10 @@ export const ProductAddCoreFields = ({
         render={({ field }) => (
           <FormItem>
             <FormLabel>CODE</FormLabel>
-            <div className="flex flex-col">
               <FormControl>
                 <Input className="rounded-md h-8" {...field} />
               </FormControl>
-              <FormMessage className="text-destructive" />
-            </div>
+              <FormMessage />
           </FormItem>
         )}
       />
@@ -72,7 +70,7 @@ export const ProductAddCoreFields = ({
             <FormControl>
               <CategoryField {...field} />
             </FormControl>
-            <FormMessage className="text-destructive" />
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -111,7 +109,7 @@ export const ProductAddCoreFields = ({
           ))}
         </Select.Content>
       </Select>
-      <FormMessage className="text-destructive" />
+      <FormMessage />
     </FormItem>
   )}
 />
@@ -129,7 +127,7 @@ export const ProductAddCoreFields = ({
                 value={field.value || ''}
               />
             </FormControl>
-            <FormMessage className="text-destructive" />
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -168,7 +166,7 @@ export const ProductAddCoreFields = ({
                 ))}
               </Select.Content>
             </Select>
-            <FormMessage className="text-destructive" />
+            <FormMessage />
           </FormItem>
         )}
       />

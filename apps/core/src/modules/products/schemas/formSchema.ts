@@ -28,7 +28,7 @@ export const productFormSchema = z.object({
     .min(2, "Code must be at least 2 characters")
     .max(50, "Code must be less than 50 characters")
     .default(''),
-  customFieldsData: z.any().default({}),
+  customFieldsData: z.any().default([]),
   attachment: z.any().optional().default(null),
   attachmentMore: z.any().optional().default(null),
   pdfAttachment: z.object({
