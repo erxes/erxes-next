@@ -1,29 +1,36 @@
-import { useRecoilState } from 'recoil';
-
+import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { hideChildrenAtomFamily } from 'erxes-ui/modules/select-tree/states/selectTreeStates';
+import { useSelectTreeContext } from 'erxes-ui/modules/select-tree/context/SelectTreeContext';
 
-import { useSelectTreeContext } from '../context/SelectTreeContext';
-
-export const useSelectTreeHide = () => {
+export function useSelectTreeHide(order: string) {
   const { id } = useSelectTreeContext();
-  const [hideChildren, setHideChildren] = useRecoilState(
-    hideChildrenAtomFamily(id)
+  const hideChildren = useRecoilValue(hideChildrenAtomFamily(id));
+
+  const toggleHideChildren = useRecoilCallback(
+    ({ set, snapshot }) =>
+      async (order: string) => {
+        const currentHideChildren = await snapshot.getPromise(
+          hideChildrenAtomFamily(id)
+        );
+        
+        set(
+          hideChildrenAtomFamily(id),
+          currentHideChildren.includes(order)
+            ? currentHideChildren.filter(child => child !== order)
+            : [...currentHideChildren, order]
+        );
+      },
+    [id]
   );
 
-  const toggleHideChildren = (order: string) => {
-    if (hideChildren.includes(order)) {
-      setHideChildren(hideChildren.filter((child) => child !== order));
-    } else {
-      setHideChildren([...hideChildren, order]);
-    }
-  };
+  const isHiddenByParent = hideChildren.some(e => order.startsWith(e) && order.length > e.length);
 
-  const checkIsHidden = (order: string) => {
-    const hiddenParent = hideChildren.find(
-      (e) => order.includes(e) && order.length > e.length
-    );
-    return !!hiddenParent;
-  };
+  const isHidden = hideChildren.includes(order);
 
-  return { hideChildren, toggleHideChildren, checkIsHidden };
-};
+  return {
+    hideChildren,
+    toggleHideChildren,
+    isHidden,
+    isHiddenByParent
+  } as const;
+}

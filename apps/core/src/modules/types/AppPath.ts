@@ -15,4 +15,9 @@ export enum AppPath {
   ContactsCatchAll = `/${Contacts}/*`,
   Marketplace = 'marketplace',
   MarketplaceCatchAll = `/${Marketplace}/*`,
+
+  //not found
+
+  NotFoundWildcard = '/*',
+  NotFound = '/not-found',
 }

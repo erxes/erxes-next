@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRef, useState } from 'react';
 
+import { IconPlus } from '@tabler/icons-react';
+import { useSetRecoilState } from 'recoil';
 import { useDebounce } from 'use-debounce';
 
 import {
@@ -10,14 +12,16 @@ import {
   Popover,
   Tabs,
 } from 'erxes-ui/components';
+import { SelectTree, SelectTreeItem } from 'erxes-ui/modules/select-tree/components/SelectTree';
 
 import { CreateTagForm } from './CreateTagForm';
 import { SelectTagCreateContainer } from './SelectTagCreate';
 import { SelectTagFetchMore } from './SelectTagFetchMore';
-import { SelectTagItem } from './SelectTagItem';
 import { SelectTagsEmpty } from './SelectTagsEmpty';
 import { SelectTagTrigger } from './SelectTagTrigger';
+import { TagBadge } from './TagBadge';
 import { useTags } from '../hooks/useTags';
+import { newTagNameAtom } from '../states/selectTagsStates';
 
 import {
   SelectTagsProvider,
@@ -95,7 +99,7 @@ export const SelectTags = React.forwardRef<
           sub,
         }}
       >
-        <Popover open={open} onOpenChange={handleOpenChange}>
+        <SelectTree id="tags">
           <SelectTagTrigger {...buttonProps} ref={ref} />
           <Popover.Content className="p-0">
             {sub ? (
@@ -117,7 +121,7 @@ export const SelectTags = React.forwardRef<
               </Tabs>
             )}
           </Popover.Content>
-        </Popover>
+        </SelectTree>
       </SelectTagsProvider>
     );
   }
@@ -157,6 +161,7 @@ const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
               />
             );
           })}
+          {tags?.length === 0 && <SelectTagSearchCreate search={search} />}
           <SelectTagFetchMore
             fetchMore={handleFetchMore}
             tagsLength={tags?.length}
@@ -167,3 +172,38 @@ const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
     );
   }
 );
+
+export function SelectTagItem(props: ITag & { hasChildren: boolean }) {
+  const { _id, order, hasChildren, name } = props || {};
+  const { selectedTags, handleSelect } = useSelectTags();
+  
+  const isSelected = selectedTags?.some((tag: ITag) => tag._id === _id);
+
+  return (
+    <SelectTreeItem 
+      order={order}
+      hasChildren={hasChildren}
+      name={name}
+      value={name}
+      onSelect={() => handleSelect(props)}
+      selected={isSelected}
+    >
+      <TagBadge {...props} />
+    </SelectTreeItem>
+  );
+}
+
+export const SelectTagSearchCreate = ({ search }: { search: string }) => {
+  const { openCreateTag } = useSelectTags();
+  const setName = useSetRecoilState(newTagNameAtom);
+
+  return (
+    <Command.Item onSelect={() => {
+      setName(search);
+      openCreateTag();
+    }} className='justify-start'>
+      <IconPlus />
+      Create new tag: "{search}"
+    </Command.Item>
+  );
+}

@@ -10,17 +10,32 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "erxes-shared-states": ["packages/erxes-shared-states/src/index.ts"],
-      "erxes-ui": ["packages/erxes-ui/src"],
-      "erxes-ui/*": ["packages/erxes-ui/src/*"]
+      "erxes-core": [
+        "packages/erxes-core/src/index.ts"
+      ],
+      "erxes-shared-states": [
+        "packages/erxes-shared-states/src/index.ts"
+      ],
+      "erxes-ui": [
+        "packages/erxes-ui/src"
+      ],
+      "erxes-ui/*": [
+        "packages/erxes-ui/src/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

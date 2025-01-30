@@ -12,6 +12,8 @@ import { AppPath } from '@/types/AppPath';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { Providers } from '~/providers';
 
+import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
+
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
 const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
@@ -20,7 +22,7 @@ const CreateOwnerPage = lazy(
   () => import('~/pages/organization/CreateOwnerPage')
 );
 
-export const useCreateRouter = () => {
+export const useCreateAppRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
       <Route element={<Providers />} loader={async () => Promise.resolve(null)}>
@@ -48,6 +50,7 @@ export const useCreateRouter = () => {
             </Route>
           </Route>
         </Route>
+        <Route path={AppPath.NotFoundWildcard} element={<NotFoundPage />} />
       </Route>
     )
   );

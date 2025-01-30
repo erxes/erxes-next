@@ -5,7 +5,7 @@ import { Button, Command } from 'erxes-ui/components';
 import { useSelectTags } from '@/tags/contexts/SelectTagsContext';
 
 export const SelectTagsEmpty = ({ loading }: { loading: boolean }) => {
-  const { openCreateTag, sub } = useSelectTags();
+  const { openCreateTag, sub } = useSelectTags(); 
 
   if (loading)
     return (

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { ApolloError } from '@apollo/client';
 import { IconLoader } from '@tabler/icons-react';
-import { useRecoilState, useRecoilValue } from 'recoil';
 
 import {
   Avatar,
@@ -11,16 +10,14 @@ import {
   Command,
   Popover,
   Skeleton,
-  Tooltip,
 } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import {
-  SelectTreeArrow,
-  SelectTreeIndentation,
+  SelectTree,
+  SelectTreeItem,
 } from 'erxes-ui/modules/select-tree/components/SelectTree';
 
 import { useProductCategories } from '@/products/product-category/hooks/useProductCategories';
-import { hideChildrenAtomFamily } from '@/products/product-category/states/ProductCategory';
 import { ProductCategoryT } from '@/products/types/productTypes';
 
 export const SelectCategory = React.forwardRef<
@@ -51,7 +48,7 @@ export const SelectCategory = React.forwardRef<
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <SelectTree id={id || 'select-category'}>
       <SelectCategoryTrigger
         ref={ref}
         {...props}
@@ -66,7 +63,6 @@ export const SelectCategory = React.forwardRef<
             {productCategories?.map((category) => (
               <SelectCategoryItem
                 key={category._id}
-                id={id}
                 category={category}
                 selected={selectedCategory?._id === category._id}
                 onSelect={handleSelect}
@@ -79,7 +75,7 @@ export const SelectCategory = React.forwardRef<
           </Command.List>
         </Command>
       </Popover.Content>
-    </Popover>
+   </SelectTree>
   );
 });
 
@@ -111,57 +107,18 @@ export const SelectCategoryItem = ({
   selected,
   onSelect,
   hasChildren,
-  id,
 }: {
   category: ProductCategoryT;
   selected: boolean;
   onSelect: (categoryId: string) => void;
   hasChildren: boolean;
-  id?: string;
 }) => {
-  const { _id, code, name, order, parentId } = category;
-
-  const [hideChildren, setHideChildren] = useRecoilState(
-    hideChildrenAtomFamily(id || 'select-category')
-  );
-
-  useEffect(() => {
-    setHideChildren(isHidden);
-  }, [isHidden]);
-
-  if (isHidden) return null;
-
-  const handleHideChildren = () => {
-    setHideChildren(!hideChildren);
-  };
+  const { _id, code, name, order } = category;
 
   return (
-    <div className="flex items-center gap-1 px-1 max-w-full">
-      <SelectTreeIndentation order={order} />
-      {hasChildren && (
-        <SelectTreeArrow isClosed={hideChildren} onClick={handleHideChildren} />
-      )}
-      <Tooltip.Provider>
-        <Tooltip>
-          <Tooltip.Trigger className="flex-auto">
-            <Command.Item
-              key={_id}
-              value={code + name}
-              onSelect={() => onSelect(_id)}
-              className={cn(
-                'flex-auto whitespace-nowrap',
-                selected && 'bg-muted'
-              )}
-            >
-              <SelectCategoryBadge category={category} />
-            </Command.Item>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <div>{name}</div>
-          </Tooltip.Content>
-        </Tooltip>
-      </Tooltip.Provider>
-    </div>
+    <SelectTreeItem order={order} hasChildren={hasChildren} name={name} value={code + name} onSelect={() => onSelect(_id)} selected={selected}>
+      <SelectCategoryBadge category={category} />
+    </SelectTreeItem>
   );
 };
 
@@ -180,7 +137,7 @@ export const SelectCategoryBadge = ({
         <Avatar.Fallback colorSeed={_id}>{firstLetter}</Avatar.Fallback>
       </Avatar>
       <div className="text-muted-foreground">{code}</div>
-      <div className="truncate max-w-[160px] flex-none">{name}</div>
+      <div className="truncate flex-auto text-left">{name}</div>
       {productCount > 0 && (
         <div className="text-muted-foreground ml-auto">{productCount}</div>
       )}
