@@ -31,6 +31,9 @@
       ],
       "erxes-ui/*": [
         "packages/erxes-ui/src/*"
+      ],
+      "inbox/Module": [
+        "plugins/inbox/src/remote-entry.ts"
       ]
     }
   },
