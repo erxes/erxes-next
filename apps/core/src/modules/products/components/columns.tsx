@@ -9,6 +9,7 @@ import {
   IconLabel,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
+import { useSetRecoilState} from 'recoil';
 
 import { Select, Skeleton } from 'erxes-ui/components';
 import { CurrencyDisplay, RelativeDateDisplay } from 'erxes-ui/display';
@@ -20,6 +21,7 @@ import {
   RecordTableInlineCellContainer,
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+import { FieldEditLoadingAtom } from 'erxes-ui/modules/record-table/states/FieldEditLoadingState';
 import { CurrencyCode } from 'erxes-ui/types/CurrencyCode';
 
 import { PRODUCT_TYPE_OPTIONS } from '../constants/ProductConstants';
@@ -29,17 +31,20 @@ import { useProductsEdit } from '../hooks/useProductsEdit';
 import { SelectCategory } from '@/products/product-category/components/SelectCategory';
 
 const TableTextInput = ({ cell }) => {
+  const setIsLoading = useSetRecoilState(FieldEditLoadingAtom)
   const [value, setValue] = useState(cell.getValue() as string);
   const { productsEdit } = useProductsEdit();
   return (
     <RecordTableInlineCell
       onSave={() => {
+        setIsLoading(true)
         productsEdit({
           variables: {
             _id: cell.row.original._id,
             [cell.column.id]: value,
             uom: cell.row.original.uom,
           },
+          onCompleted: ()=>{setIsLoading(false)}
         });
       }}
       getValue={() => cell.getValue()}

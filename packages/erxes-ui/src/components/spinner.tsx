@@ -1,7 +1,9 @@
 import React from 'react';
-import { cn } from 'erxes-ui/lib';
-import { VariantProps, cva } from 'class-variance-authority';
+
 import { IconLoader } from '@tabler/icons-react';
+import { cva,VariantProps } from 'class-variance-authority';
+
+import { cn } from 'erxes-ui/lib';
 
 const spinnerVariants = cva('flex-col items-center justify-center', {
   variants: {
@@ -18,9 +20,9 @@ const spinnerVariants = cva('flex-col items-center justify-center', {
 const loaderVariants = cva('animate-spin text-muted-foreground', {
   variants: {
     size: {
-      small: 'size-6',
-      medium: 'size-8',
-      large: 'size-12',
+      small: 'size-4',
+      medium: 'size-6',
+      large: 'size-10',
     },
   },
   defaultVariants: {
