@@ -12,10 +12,11 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'inbox',
   exposes: {
+    './Config': './src/app/config.ts',
     './Module': './src/remote-entry.ts',
     './Settings': './src/app/settings.tsx',
   },
-  
+
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {
       return defaultConfig;

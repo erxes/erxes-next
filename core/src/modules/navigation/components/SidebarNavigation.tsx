@@ -2,18 +2,26 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 
-import { getInstance } from '@module-federation/enhanced/runtime';
 import { IconCaretUpFilled } from '@tabler/icons-react';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
+import { pluginsConfigState, PluginsMetaData } from 'erxes-shared-states';
+
+import { useRecoilValue } from 'recoil';
 
 export function SidebarNavigation() {
-  const instance = getInstance();
+  const plugins = [...CORE_PLUGINS] as any;
 
-  const remotes = instance?.options.remotes || [];
+  const pluginsMetaData = useRecoilValue(pluginsConfigState) as PluginsMetaData;
 
-  const plugins = [...remotes, ...CORE_PLUGINS];
+  Object.keys(pluginsMetaData).forEach((key) => {
+    plugins.push({
+      path: `/${key}`,
+      name: pluginsMetaData[key].name,
+      icon: pluginsMetaData[key].icon,
+    });
+  });
 
   return (
     <>
@@ -50,10 +58,10 @@ export function SidebarNavigationItem({
                     <Sidebar.MenuItem key={item.name}>
                       <Sidebar.MenuButton
                         asChild
-                        isActive={pathname.includes(item.name)}
+                        isActive={pathname.includes(item.path)}
                       >
-                        <Link to={item.name}>
-                          {/* {Icon && <Icon />} */}
+                        <Link to={item.path}>
+                          <item.icon />
                           <span>{t('nav.' + item.name)}</span>
                         </Link>
                       </Sidebar.MenuButton>

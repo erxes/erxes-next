@@ -14,13 +14,14 @@ import { useRecoilValue } from 'recoil';
 import { Sidebar } from 'erxes-ui/components';
 
 import { App } from '@/app/components/App';
-import { PLUGINS } from '@/navigation/constants/plugins';
-import { pluginsState } from '@/navigation/states/navigationStates';
 import { AppPath } from '@/types/paths/AppPath';
 import {
   SettingsPath,
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
+import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
+import { pluginsConfigState, PluginsMetaData } from 'erxes-shared-states';
+
 const data = {
   account: [
     {
@@ -45,8 +46,17 @@ const data = {
 };
 
 export function SettingsSidebar() {
-  const plugins = useRecoilValue(pluginsState);
-  const pinnedPlugins = plugins.filter((plugin) => plugin.pinned);
+  const plugins = [...CORE_PLUGINS] as any;
+
+  const pluginsMetaData = useRecoilValue(pluginsConfigState) as PluginsMetaData;
+
+  Object.keys(pluginsMetaData).forEach((key) => {
+    plugins.push({
+      path: `/${key}`,
+      name: pluginsMetaData[key].name,
+      icon: pluginsMetaData[key].icon,
+    });
+  });
 
   const { t } = useTranslation();
 
@@ -107,14 +117,14 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>PLugins Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {pinnedPlugins.map((item) => {
-                const Icon = PLUGINS[item.handle].icon;
+              {plugins.map((item) => {
+                const Icon = item.icon;
                 return (
-                  <Sidebar.MenuItem key={item.handle}>
+                  <Sidebar.MenuItem key={item.path}>
                     <Sidebar.MenuButton asChild>
-                      <Link to={AppPath.Settings + '/' + item.handle}>
+                      <Link to={AppPath.Settings + item.path}>
                         {Icon && <Icon />}
-                        <span>{t('nav.' + PLUGINS[item.handle].title)}</span>
+                        <span>{t('nav.' + item.name)}</span>
                       </Link>
                     </Sidebar.MenuButton>
                   </Sidebar.MenuItem>

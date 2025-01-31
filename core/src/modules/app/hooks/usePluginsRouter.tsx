@@ -6,10 +6,8 @@ import { PluginMainPage } from '~/plugins/components/PluginMainPage';
 import { PluginSettingsPage } from '~/plugins/components/PluginSettingsPage';
 
 export const usePluginsRouter = () => {
-  const instence = getInstance();
-  const remotes = instence?.options.remotes;
-
-  console.log(remotes);
+  const instance = getInstance();
+  const remotes = instance?.options.remotes;
 
   return remotes?.map((remote) => (
     <Route
@@ -21,8 +19,8 @@ export const usePluginsRouter = () => {
 };
 
 export const usePLuginsSettingsRoutes = () => {
-  const instence = getInstance();
-  const remotes = instence?.options.remotes;
+  const instance = getInstance();
+  const remotes = instance?.options.remotes;
 
   return remotes?.map((plugin) => (
     <Route
