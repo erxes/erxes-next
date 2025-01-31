@@ -8,7 +8,7 @@ type RemoteConfig = {
   CONFIG: PluginsConfig;
 };
 
-export const PluginsProvidersEffect = () => {
+export const PluginConfigsProvidersEffect = () => {
   const instance = getInstance();
   const remotes = instance?.options.remotes;
   const setPluginsConfig = useSetRecoilState(pluginsConfigState);
@@ -29,10 +29,7 @@ export const PluginsProvidersEffect = () => {
               [remote.name]: pluginConfig,
             }));
           } catch (error) {
-            console.error(
-              `Failed to load metadata from ${remote.name}:`,
-              error
-            );
+            console.error(`Failed to load config from ${remote.name}:`, error);
           }
         }
       };

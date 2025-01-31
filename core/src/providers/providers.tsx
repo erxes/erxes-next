@@ -5,7 +5,7 @@ import { ApolloProvider } from '@apollo/client';
 
 import apolloClient from './apollo-provider/apolloClient';
 
-import { PluginsProvidersEffect } from '@/plugins/providers/PluginsProvidersEffect';
+import { PluginConfigsProvidersEffect } from '@/plugins/providers/PluginConfigsProvidersEffect';
 import { UserProviderEffect } from '@/auth/providers/UserProviderEffect';
 import { OrganizationProviderEffect } from '@/organization/providers/OrganizationProviderEffect';
 
@@ -14,7 +14,7 @@ export const Providers = () => {
     <ApolloProvider client={apolloClient}>
       <OrganizationProviderEffect />
       <UserProviderEffect />
-      <PluginsProvidersEffect />
+      <PluginConfigsProvidersEffect />
       <Suspense fallback={<div>Loading...</div>}>
         <Outlet />
       </Suspense>
