@@ -20,7 +20,7 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsMetaData } from 'erxes-shared-states';
+import { pluginsConfigState, PluginsConfig } from 'erxes-shared-states';
 
 const data = {
   account: [
@@ -48,7 +48,7 @@ const data = {
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS] as any;
 
-  const pluginsMetaData = useRecoilValue(pluginsConfigState) as PluginsMetaData;
+  const pluginsMetaData = useRecoilValue(pluginsConfigState) as PluginsConfig;
 
   Object.keys(pluginsMetaData).forEach((key) => {
     plugins.push({

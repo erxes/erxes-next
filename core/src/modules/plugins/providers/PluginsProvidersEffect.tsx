@@ -1,13 +1,17 @@
 import { getInstance } from '@module-federation/enhanced/runtime';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { pluginsConfigState } from 'erxes-shared-states';
+import { pluginsConfigState, PluginsConfig } from 'erxes-shared-states';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 
+type RemoteConfig = {
+  CONFIG: PluginsConfig;
+};
+
 export const PluginsProvidersEffect = () => {
-  const instance = getInstance(); // Get the instance of the module federation runtime
-  const remotes = instance?.options.remotes; // List of remotes
-  const setPluginsMetaData = useSetRecoilState(pluginsConfigState);
+  const instance = getInstance();
+  const remotes = instance?.options.remotes;
+  const setPluginsConfig = useSetRecoilState(pluginsConfigState);
 
   useEffect(() => {
     if (remotes && remotes.length > 0) {
@@ -16,11 +20,11 @@ export const PluginsProvidersEffect = () => {
           try {
             const remoteConfig = (await loadRemote(
               `${remote.name}/Config`
-            )) as any;
+            )) as RemoteConfig;
 
             const pluginConfig = remoteConfig.CONFIG;
 
-            setPluginsMetaData((prev) => ({
+            setPluginsConfig((prev) => ({
               ...prev,
               [remote.name]: pluginConfig,
             }));
@@ -35,7 +39,7 @@ export const PluginsProvidersEffect = () => {
 
       loadConfig();
     }
-  }, [remotes, setPluginsMetaData]);
+  }, [remotes, setPluginsConfig]);
 
   return null;
 };
