@@ -37,13 +37,12 @@ export const EmailValidationStatusField = ({
             <FormControl>
               <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
                 <Select.Value
-                  className="text-foreground font-medium text-sm"
                   placeholder={
                     <span className="truncate text-muted-foreground font-medium text-sm">
                       {'Choose'}
                     </span>
                   }
-                />
+                > <span className="text-foreground font-medium text-sm">{emailValidationStatuses.find((status)=> status.value === field.value)?.label}</span></Select.Value>
               </Select.Trigger>
             </FormControl>
             <Select.Content

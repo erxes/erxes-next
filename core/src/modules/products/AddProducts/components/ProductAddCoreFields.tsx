@@ -86,13 +86,14 @@ export const ProductAddCoreFields = ({
               <FormControl>
                 <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
                   <Select.Value
-                    className="text-foreground font-medium text-sm"
+                    
                     placeholder={
                       <span className="truncate text-foreground font-medium text-sm">
                         {'Choose type'}
                       </span>
                     }
-                  />
+                  ><span className="text-foreground font-medium text-sm">{types.find((type)=> type.value === field.value)?.label}</span>
+                  </Select.Value>
                 </Select.Trigger>
               </FormControl>
               <Select.Content
@@ -142,13 +143,12 @@ export const ProductAddCoreFields = ({
               <FormControl>
                 <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
                   <Select.Value
-                    className="text-foreground font-medium text-sm"
                     placeholder={
                       <span className="truncate text-foreground font-medium text-sm">
                         {'Choose UOM'}
                       </span>
                     }
-                  ></Select.Value>
+                  ><span className="text-foreground font-medium text-sm">{uoms.find((uom)=> uom._id === field.value)?.name}</span></Select.Value>
                 </Select.Trigger>
               </FormControl>
               <Select.Content>
