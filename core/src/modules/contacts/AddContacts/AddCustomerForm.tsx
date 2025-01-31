@@ -52,13 +52,13 @@ export function AddCustomerForm() {
                 <Tabs.List className="grid grid-cols-2 mb-10 h-full bg-transparent">
                   <Tabs.Trigger
                     value="general-information"
-                    className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary bg-transparent data-[state=active]:border-b rounded-none "
+                    className="text-sm h-12  data-[state=active]:border-primary bg-transparent data-[state=active]:border-b rounded-none "
                   >
                     General Information
                   </Tabs.Trigger>
                   <Tabs.Trigger
                     value="links"
-                    className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:border-b rounded-none "
+                    className="text-sm h-12 data-[state=active]:border-primary data-[state=active]:border-b rounded-none "
                   >
                     Links
                   </Tabs.Trigger>

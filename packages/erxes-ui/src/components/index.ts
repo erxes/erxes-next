@@ -5,6 +5,7 @@ export * from './badge';
 export * from './breadcrumb';
 export * from './button';
 export * from './calendar';
+export * from './card'
 export * from './checkbox';
 export * from './collapsible';
 export * from './command';
@@ -28,6 +29,7 @@ export * from './separator';
 export * from './sheet';
 export * from './sidebar';
 export * from './skeleton';
+export * from './spinner'
 export * from './switch';
 export * from './table';
 export * from './tabs';
@@ -37,4 +39,3 @@ export * from './toggle';
 export * from './toggle-group';
 export * from './tooltip';
 export * from './upload';
-export * from './spinner'

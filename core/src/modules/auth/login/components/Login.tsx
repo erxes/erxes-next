@@ -1,106 +1,57 @@
-import { useCallback, useEffect, useState } from 'react';
-import { SubmitHandler } from 'react-hook-form';
+import { Card, Tabs } from "erxes-ui/components";
 
-import {
-  Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  Input,
-} from 'erxes-ui/components';
+import { CredentialLoginForm } from "./CredentialLoginForm";
+import { MagicLinkLoginForm } from "./MagicLinkLoginForm";
 
-import { useLogin } from '@/auth/login/hooks/useLogin';
-import {
-  authValidationSchema,
-  FormType,
-  useSignInUpForm,
-} from '@/auth/login/hooks/useLoginForm';
+import { Logo } from "@/auth/components/Logo";
 
 export const Login = () => {
-  const { form } = useSignInUpForm();
-
-  const { handleCrendentialsLogin, handleForgotPassword } = useLogin();
-
-  const submitHandler: SubmitHandler<FormType> = useCallback(
-    async (data) => {
-      handleCrendentialsLogin(data.email, data.password);
-    },
-    [handleCrendentialsLogin]
-  );
-
-  const onForgotPasswordClick = (email: string) => {
-    handleForgotPassword(email);
-  };
-
-  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true);
-
-  const email = form.watch('email');
-  const password = form.watch('password');
-
-  const isEmailStepSubmitButtonDisabledCondition =
-    !authValidationSchema.shape.email.safeParse(email).success;
-
-  const isPasswordStepSubmitButtonDisabledCondition =
-    !authValidationSchema.shape.password.safeParse(password).success;
-
-  useEffect(() => {
-    setIsSubmitButtonDisabled(
-      isPasswordStepSubmitButtonDisabledCondition ||
-        isEmailStepSubmitButtonDisabledCondition
-    );
-  }, [
-    isEmailStepSubmitButtonDisabledCondition,
-    isPasswordStepSubmitButtonDisabledCondition,
-  ]);
-
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(submitHandler)}
-        className="mx-auto grid w-[350px] gap-5"
-      >
-        <FormField
-          name="email"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type="email" placeholder="Enter email" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Enter password"
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={isSubmitButtonDisabled}>
-          Sign in
-        </Button>
-
-        {!isEmailStepSubmitButtonDisabledCondition && (
-          <Button
-            type="button"
-            onClick={() => onForgotPasswordClick(email)}
-            variant="link"
-            className="text-xs text-muted-foreground hover:underline text-center block hover:text-primary"
-          >
-            Forgot password?
-          </Button>
-        )}
-      </form>
-    </Form>
+    <div className="min-h-screen flex flex-col items-center pt-16">
+      <Logo className="mb-6" />
+      <Card className="p-4 shadow-sm shadow-muted-foreground border w-full max-w-md">
+        <Card.Header className="flex items-center">
+          <Card.Title>Welcome</Card.Title>
+          <Card.Description>
+            Please sign in to your account to continue
+          </Card.Description>
+        </Card.Header>
+        <Card.Content>
+          <Tabs defaultValue="credential" className="flex flex-col gap-8">
+            <Tabs.List className="grid grid-cols-2 p-1 bg-transparent">
+              <Tabs.Trigger
+                value="magic-link"
+                className="data-[state=active]:shadow-button-outline h-7"
+              >
+                Magic link
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="credential"
+                className="data-[state=active]:shadow-button-outline h-7"
+              >
+                Email & password
+              </Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="magic-link">
+              <MagicLinkLoginForm />
+            </Tabs.Content>
+            <Tabs.Content value="credential">
+              <CredentialLoginForm />
+            </Tabs.Content>
+          </Tabs>
+        </Card.Content>
+        <Card.Footer className="flex flex-col text-muted-foreground">
+          <span className="text-sm font-medium text-center">
+            By signing in, you confirm that you accept our
+          </span>
+          <span className="text-sm font-medium text-center">
+            <a className="text-primary font-semibold" href="#">Terms of use</a>
+            {" "}and{" "}
+            <a className="text-primary font-semibold" href="#">Privacy policy</a>
+          </span>
+        </Card.Footer>
+      </Card>
+      <Card.Description className="mt-auto py-4">© 2024 erxes</Card.Description>
+    </div>
   );
 };
