@@ -14,6 +14,13 @@ export const ActivityLogs = ({
   if (error)
     return <div className="p-5 text-destructive">Error: {error.message}</div>;
 
+  if (activityLogs?.length === 0)
+    return (
+      <div className="p-12 text-muted-foreground/50 text-center">
+        No activity
+      </div>
+    );
+
   const contentTypeModule = operation?.variables?.contentType
     ? operation?.variables?.contentType.split(':')[1]
     : null;

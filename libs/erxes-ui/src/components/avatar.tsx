@@ -5,6 +5,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 import { Color, stringToHslColor, twColorClassNames } from './colors';
 import { cn } from '../lib/utils';
+import { useTheme } from 'erxes-ui/modules/theme-provider';
 
 const avatarVariants = cva(
   'relative flex shrink-0 overflow-hidden rounded-full border-0',
@@ -21,7 +22,7 @@ const avatarVariants = cva(
     defaultVariants: {
       size: 'default',
     },
-  }
+  },
 );
 
 const AvatarRoot = React.forwardRef<
@@ -55,26 +56,34 @@ const AvatarFallback = React.forwardRef<
     color?: Color;
     colorSeed?: string;
   }
->(({ className, color, colorSeed, style, ...props }, ref) => (
-  <AvatarPrimitive.Fallback
-    ref={ref}
-    className={cn(
-      'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] dark:bg-[--avatar-bg-dark] dark:text-[--avatar-text-dark] uppercase',
-      twColorClassNames[color as Color],
-      className
-    )}
-    style={
-      {
-        '--avatar-bg': stringToHslColor(colorSeed ?? '', 75, 90),
-        '--avatar-text': stringToHslColor(colorSeed ?? '', 75, 20),
-        '--avatar-bg-dark': stringToHslColor(colorSeed ?? '', 75, 20),
-        '--avatar-text-dark': stringToHslColor(colorSeed ?? '', 75, 90),
-        ...style,
-      } as React.CSSProperties
-    }
-    {...props}
-  />
-));
+>(({ className, color, colorSeed, style, ...props }, ref) => {
+  const { theme } = useTheme();
+
+  return (
+    <AvatarPrimitive.Fallback
+      ref={ref}
+      className={cn(
+        'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] uppercase',
+        twColorClassNames[color as Color],
+        className,
+      )}
+      style={
+        {
+          '--avatar-bg':
+            theme === 'dark'
+              ? stringToHslColor(colorSeed ?? '', 75, 20)
+              : stringToHslColor(colorSeed ?? '', 75, 90),
+          '--avatar-text':
+            theme === 'dark'
+              ? stringToHslColor(colorSeed ?? '', 75, 90)
+              : stringToHslColor(colorSeed ?? '', 75, 20),
+          ...style,
+        } as React.CSSProperties
+      }
+      {...props}
+    />
+  );
+});
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 export const Avatar = Object.assign(AvatarRoot, {

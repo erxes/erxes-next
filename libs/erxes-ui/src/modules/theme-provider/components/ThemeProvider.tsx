@@ -1,6 +1,10 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 
-import { ThemeContext, ThemeOption, ThemeValue } from './theme-context';
+import { ThemeContext } from 'erxes-ui/modules/theme-provider/context/ThemeContext';
+import {
+  ThemeOption,
+  ThemeValue,
+} from 'erxes-ui/modules/theme-provider/types/themeTypes';
 
 const THEME_KEY = 'erxes_theme';
 
@@ -58,8 +62,8 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
             -o-transition: none !important;
             -ms-transition: none !important;
             transition: none !important;
-          }`
-        )
+          }`,
+        ),
       );
       document.head.appendChild(css);
 

@@ -3,8 +3,7 @@
 import { IconCheck, IconMinus } from '@tabler/icons-react';
 
 import { RadioGroup } from 'erxes-ui/components';
-
-import { useTheme } from '~/providers/theme-provider';
+import { useTheme } from 'erxes-ui/modules/theme-provider';
 
 const items = [
   {

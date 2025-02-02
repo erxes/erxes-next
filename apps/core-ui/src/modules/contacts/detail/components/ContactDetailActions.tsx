@@ -1,11 +1,25 @@
-import { IconActivity, IconNote, IconX } from '@tabler/icons-react';
+import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
 import { Button, Resizable, Tabs, Tooltip } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { contactDetailActiveActionTabAtom } from '@/contacts/detail/states/contactDetailStates';
 import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
 import { useQueryState } from 'nuqs';
+import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
+
+const actionTabs = {
+  activity: {
+    title: 'Activity',
+    icon: IconActivity,
+    code: 'activity',
+  },
+  notes: {
+    title: 'Internal Notes',
+    icon: IconNote,
+    code: 'notes',
+  },
+};
 
 export const ContactDetailActions = () => {
   const [activeTab, setActiveTab] = useRecoilState(
@@ -26,16 +40,46 @@ export const ContactDetailActions = () => {
           onValueChange={(value) => setActiveTab(value)}
           className={cn('h-full')}
         >
-          <ActionTabsContent value="activity">
-            <ActivityLogs
-              operation={{
-                variables: {
-                  contentType: 'core:customers',
-                  contentId: contactId,
-                },
-                skip: !contactId,
-              }}
-            />
+          <ActionTabsContent
+            value={actionTabs.activity.code}
+            icon={actionTabs.activity.icon}
+            title={actionTabs.activity.title}
+          >
+            <div className="flex-auto overflow-y-auto">
+              <ActivityLogs
+                operation={{
+                  variables: {
+                    contentType: 'core:customers',
+                    contentId: contactId,
+                  },
+                  skip: !contactId,
+                }}
+              />
+            </div>
+          </ActionTabsContent>
+          <ActionTabsContent
+            value={actionTabs.notes.code}
+            icon={actionTabs.notes.icon}
+            title={actionTabs.notes.title}
+          >
+            <Resizable.PanelGroup direction="vertical" className="flex-auto">
+              <Resizable.Panel className="!overflow-y-auto">
+                <ActivityLogs
+                  operation={{
+                    variables: {
+                      contentType: 'core:customers',
+                      contentId: contactId,
+                      // activityType: 'core:internalNote',
+                    },
+                    skip: !contactId,
+                  }}
+                />
+              </Resizable.Panel>
+              <Resizable.Handle />
+              <Resizable.Panel minSize={25} maxSize={60}>
+                <AddInternalNotes />
+              </Resizable.Panel>
+            </Resizable.PanelGroup>
           </ActionTabsContent>
         </Tabs>
       </Resizable.Panel>
@@ -57,12 +101,14 @@ export const ContactDetailActionsTrigger = () => {
         className="h-full"
       >
         <Tabs.List className="flex-col h-full w-16 bg-sidebar p-3 justify-start rounded-none order-1 gap-3">
-          <ActionTrigger value="activity" label="Activity">
-            <IconActivity />
-          </ActionTrigger>
-          <ActionTrigger value="notes" label="Internal Notes">
-            <IconNote />
-          </ActionTrigger>
+          {Object.values(actionTabs).map((tab) => (
+            <ActionTrigger
+              key={tab.code}
+              value={tab.code}
+              label={tab.title}
+              icon={tab.icon}
+            />
+          ))}
         </Tabs.List>
       </Tabs>
     </div>
@@ -73,6 +119,7 @@ export const ActionTrigger = React.forwardRef<
   React.ElementRef<typeof Tabs.Trigger>,
   React.ComponentPropsWithoutRef<typeof Tabs.Trigger> & {
     label?: string;
+    icon?: Icon;
   }
 >(({ className, ...props }, ref) => (
   <Tooltip.Provider>
@@ -85,7 +132,9 @@ export const ActionTrigger = React.forwardRef<
             className,
           )}
           {...props}
-        />
+        >
+          {props.icon && <props.icon className="size-5" />}
+        </Tabs.Trigger>
       </Tooltip.Trigger>
       <Tooltip.Content side="left">{props.label}</Tooltip.Content>
     </Tooltip>
@@ -95,27 +144,34 @@ export const ActionTrigger = React.forwardRef<
 export const ActionTabsContent = ({
   children,
   value,
+  title,
+  icon,
 }: {
   children: React.ReactNode;
   value: string;
+  title?: string;
+  icon: Icon;
 }) => {
+  const activeTab = useRecoilValue(contactDetailActiveActionTabAtom);
   return (
     <Tabs.Content
       value={value}
-      className="flex flex-col overflow-hidden h-full"
+      className={cn('flex flex-col overflow-hidden h-full', {
+        hidden: activeTab !== value,
+      })}
     >
-      <ActionHeader />
-      <div className="flex-auto overflow-y-auto">{children}</div>
+      <ActionHeader title={title} icon={icon} />
+      {children}
     </Tabs.Content>
   );
 };
 
-export const ActionHeader = () => {
+export const ActionHeader = (props: { title?: string; icon: Icon }) => {
   const setActiveTab = useSetRecoilState(contactDetailActiveActionTabAtom);
   return (
     <div className="flex items-center h-14 border-b border-input px-6 text-primary gap-2 flex-none">
-      <IconActivity className="size-5" />
-      <h4 className="font-semibold text-base">Activity</h4>
+      <props.icon className="size-5" />
+      <h4 className="font-semibold text-base">{props.title}</h4>
       <Button
         variant="secondary"
         size="icon"

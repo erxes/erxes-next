@@ -11,7 +11,7 @@ import {
 } from '@blocknote/react';
 
 import 'erxes-ui/components/text-editor/styles.css';
-import { CustomSideMenu } from 'erxes-ui/components/text-editor/components/CustomSideMenu';
+import { CustomSideMenu } from 'erxes-ui/modules/text-editor/components/CustomSideMenu';
 import { cn } from 'erxes-ui/lib';
 
 import '@blocknote/mantine/style.css';
@@ -26,7 +26,7 @@ interface TextEditorProps {
 }
 
 const getCustomSlashMenuItems = (
-  editor: BlockNoteEditor
+  editor: BlockNoteEditor,
 ): DefaultReactSuggestionItem[] => {
   const defaultItems = getDefaultReactSlashMenuItems(editor);
   return defaultItems.filter((item) => item.title !== 'Code Block');
@@ -40,14 +40,14 @@ export const TextEditor = ({
 }: TextEditorProps) => {
   const [blocks, setBlocks] = useState<any[]>([
     {
-      id: "1",
-      type: "paragraph",
-      content: []
-    }
+      id: '1',
+      type: 'paragraph',
+      content: [],
+    },
   ]);
 
   const editor = useCreateBlockNote({
-    initialContent: blocks
+    initialContent: blocks,
   });
 
   if (value && blocks.length === 1 && blocks[0].content.length === 0) {
@@ -69,7 +69,7 @@ export const TextEditor = ({
 
   const handleChange = async () => {
     if (!onChange) return;
-    
+
     if (parseTo === 'html') {
       const html = await handleHtmlParse();
       onChange(html);

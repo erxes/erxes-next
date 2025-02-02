@@ -6,7 +6,7 @@ import { AppRouter } from './AppRoutes';
 
 import { AppErrorBoundary } from '@/error-handler/components/AppErrorBoundary';
 import { AppI18nWrapper } from '~/providers/i18next-provider';
-import { ThemeProvider } from '~/providers/theme-provider';
+import { ThemeProvider } from 'erxes-ui/modules/theme-provider';
 
 export function App() {
   return (

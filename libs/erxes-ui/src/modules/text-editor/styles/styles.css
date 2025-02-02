@@ -1,6 +1,6 @@
-.bn-container[data-theming-css-variables-demo][data-color-scheme] {
+.bn-container[data-color-scheme] {
   --bn-colors-editor-text: hsl(var(--foreground));
-  --bn-colors-editor-background: transparent;
+  --bn-colors-editor-background: hsl(var(--background));
   --bn-colors-menu-text: hsl(var(--foreground));
   --bn-colors-menu-background: hsl(var(--background));
   --bn-colors-tooltip-text: hsl(var(--muted-foreground));
@@ -9,11 +9,34 @@
   --bn-colors-hovered-background: hsl(var(--accent-background));
   --bn-colors-selected-text: hsl(var(--secondary-foreground));
   --bn-colors-selected-background: hsl(var(--secondary-background));
-  --bn-colors-disabled-text: hsl(var(--muted-foreground));
+  --bn-colors-disabled-text: hsla(var(--muted-foreground), 0.5);
   --bn-colors-disabled-background: hsl(var(--muted-background));
+
+  --bn-colors-shadow: hsl(var(--border));
   --bn-colors-border: hsl(var(--border));
-  --bn-colors-side-menu: hsl(var(--muted-foreground));
-  --bn-color-highlight-colors: hsl(var(--muted-foreground));
+  --bn-colors-side-menu: hsl(var(--border));
+
+  --bn-colors-highlights-gray-text: hsl(var(--muted-foreground));
+  --bn-colors-highlights-gray-background: hsl(var(--muted-background));
+  --bn-colors-highlights-brown-text: hsl(var(--radix-brown-foreground));
+  --bn-colors-highlights-brown-background: hsl(var(--radix-brown-background));
+  --bn-colors-highlights-red-text: hsl(var(--radix-red-foreground));
+  --bn-colors-highlights-red-background: hsl(var(--radix-red-background));
+  --bn-colors-highlights-orange-text: #d9730d;
+  --bn-colors-highlights-orange-background: #f6e9d9;
+  --bn-colors-highlights-yellow-text: #dfab01;
+  --bn-colors-highlights-yellow-background: #fbf3db;
+  --bn-colors-highlights-green-text: #4d6461;
+  --bn-colors-highlights-green-background: #ddedea;
+  --bn-colors-highlights-blue-text: #0b6e99;
+  --bn-colors-highlights-blue-background: #ddebf1;
+  --bn-colors-highlights-purple-text: #6940a5;
+  --bn-colors-highlights-purple-background: #eae4f2;
+  --bn-colors-highlights-pink-text: #ad1a72;
+  --bn-colors-highlights-pink-background: #f4dfeb;
+
+  --bn-font-family: 'Inter';
+  --bn-border-radius: 4px;
 }
 
 .bn-container {
@@ -97,4 +120,8 @@
 
 .bn-inline-content:has(> .ProseMirror-trailingBreak:only-child):before {
   content: ' ';
+}
+
+.bn-inline-content:has(> .ProseMirror-trailingBreak:only-child):before {
+  font-style: normal;
 }
