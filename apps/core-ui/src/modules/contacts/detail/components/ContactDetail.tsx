@@ -1,4 +1,4 @@
-import { ContactDetailActions } from './components/ContactDetailActions';
+import { ContactDetailActions } from '@/contacts/detail/components/ContactDetailActions';
 
 import {
   ContactDetailTabContent,

@@ -1,7 +1,12 @@
 import { Link } from 'react-router';
 
-import { IconBuildingStore, IconSettings } from '@tabler/icons-react';
-import { Button, Sidebar } from 'erxes-ui';
+import {
+  IconBuildingStore,
+  IconCaretUpFilled,
+  IconInbox,
+  IconSettings,
+} from '@tabler/icons-react';
+import { Button, Collapsible, Sidebar } from 'erxes-ui';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { Organization } from './Organization';

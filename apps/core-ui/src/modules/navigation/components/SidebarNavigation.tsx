@@ -6,24 +6,9 @@ import { IconCaretUpFilled } from '@tabler/icons-react';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
-
-import { useRecoilValue } from 'recoil';
 
 export function SidebarNavigation() {
   const plugins = [...CORE_PLUGINS] as any;
-
-  // const pluginsMetaData =
-  //   (useRecoilValue(pluginsConfigState) as PluginsConfig) || {};
-
-  // Object.keys(pluginsMetaData).forEach((key) => {
-  //   plugins.push({
-  //     path: `/${key}`,
-  //     name: pluginsMetaData[key].name,
-  //     icon: pluginsMetaData[key].icon,
-  //   });
-  // });
-
   return (
     <>
       <SidebarNavigationItem items={plugins} label="plugins" />

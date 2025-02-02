@@ -3,7 +3,7 @@ import { Tabs } from 'erxes-ui/components/tabs';
 import { Resizable } from 'erxes-ui/components';
 import { ContactDetailActionsTrigger } from './ContactDetailActions';
 import { ContactDetailSheet } from './ContactDetailSheet';
-import { ContactDetailSidebar } from './components/ContactDetailSidebar';
+import { ContactDetailSidebar } from '@/contacts/detail/components/ContactDetailSidebar';
 import { useQueryState } from 'nuqs';
 
 export const ContactDetailLayout = ({
