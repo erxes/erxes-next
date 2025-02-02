@@ -1,0 +1,58 @@
+{
+  "name": "tasks_api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/plugins/tasks_api/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/plugins/tasks_api",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/plugins/tasks_api/src/main.ts",
+        "tsConfig": "apps/plugins/tasks_api/tsconfig.app.json",
+        "assets": ["apps/plugins/tasks_api/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "tasks_api:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "tasks_api:build:development"
+        },
+        "production": {
+          "buildTarget": "tasks_api:build:production"
+        }
+      }
+    }
+  }
+}
