@@ -7,7 +7,7 @@ import {
   currentUserState,
   isCurrentOrganizationLoadedState,
   isCurrentUserLoadedState,
-} from 'erxes-shared-states';
+} from 'erxes-ui-shared-states';
 import { useSetRecoilState } from 'recoil';
 
 import { Logout } from '@/auth/graphql/mutations/logout';

@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { currentOrganizationState } from 'erxes-shared-states';
+import { currentOrganizationState } from 'erxes-ui-shared-states';
 import { useRecoilState } from 'recoil';
 
 import { useToast } from 'erxes-ui/hooks';

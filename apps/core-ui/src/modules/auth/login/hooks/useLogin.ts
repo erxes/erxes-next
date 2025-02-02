@@ -5,7 +5,7 @@ import { useApolloClient, useMutation } from '@apollo/client';
 import {
   currentUserState,
   isCurrentUserLoadedState,
-} from 'erxes-shared-states';
+} from 'erxes-ui-shared-states';
 import { useSetRecoilState } from 'recoil';
 
 import { useToast } from 'erxes-ui/hooks';

@@ -1,5 +1,5 @@
 import { IconBell, IconSelector } from '@tabler/icons-react';
-import { currentOrganizationState } from 'erxes-shared-states';
+import { currentOrganizationState } from 'erxes-ui-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { Button, Sidebar } from 'erxes-ui/components';

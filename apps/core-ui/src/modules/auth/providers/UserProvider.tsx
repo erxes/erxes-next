@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router';
 import {
   currentUserState,
   isCurrentUserLoadedState,
-} from 'erxes-shared-states';
+} from 'erxes-ui-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { RocketIcon } from 'erxes-ui/icons';

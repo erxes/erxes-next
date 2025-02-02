@@ -5,7 +5,7 @@ import {
   clientConfigApiStatusState,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
-} from 'erxes-shared-states';
+} from 'erxes-ui-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { RocketIcon } from 'erxes-ui/icons';

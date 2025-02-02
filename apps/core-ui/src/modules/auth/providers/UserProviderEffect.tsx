@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import {
   currentUserState,
   isCurrentUserLoadedState,
-} from 'erxes-shared-states';
+} from 'erxes-ui-shared-states';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { isDefined } from 'erxes-ui/utils';

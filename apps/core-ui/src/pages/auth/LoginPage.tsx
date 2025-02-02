@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { currentUserState } from 'erxes-shared-states';
+import { currentUserState } from 'erxes-ui-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { Logo } from '@/auth/components/Logo';

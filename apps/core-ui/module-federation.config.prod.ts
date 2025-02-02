@@ -12,7 +12,7 @@ const coreLibraries = new Set([
   'react-router-dom',
   'erxes-ui',
   'recoil',
-  'erxes-shared-states',
+  'erxes-ui-shared-states',
 ]);
 
 const config: ModuleFederationConfig = {

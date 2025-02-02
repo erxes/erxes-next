@@ -6,7 +6,7 @@ import { IconCaretUpFilled } from '@tabler/icons-react';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfig } from 'erxes-shared-states';
+import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
 
 import { useRecoilValue } from 'recoil';
 

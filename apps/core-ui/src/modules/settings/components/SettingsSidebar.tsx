@@ -20,7 +20,7 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfig } from 'erxes-shared-states';
+import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
 
 const data = {
   account: [

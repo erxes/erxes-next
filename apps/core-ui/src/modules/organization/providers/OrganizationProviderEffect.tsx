@@ -5,7 +5,7 @@ import {
   CurrentOrganization,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
-} from 'erxes-shared-states';
+} from 'erxes-ui-shared-states';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
@@ -36,7 +36,7 @@ export const OrganizationProviderEffect = () => {
         setApiStatus({
           isErrored: false,
           isLoaded: true,
-        })
+        });
       })
       .catch((e: Error) => {
         setCurrentOrganization(null);
@@ -44,8 +44,8 @@ export const OrganizationProviderEffect = () => {
         setApiStatus({
           isErrored: true,
           isLoaded: true,
-          error: e
-        })
+          error: e,
+        });
       });
   }, [
     isCurrentOrganizationLoaded,

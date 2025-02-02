@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { currentOrganizationState } from 'erxes-shared-states';
+import { currentOrganizationState } from 'erxes-ui-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { isDefined } from 'erxes-ui/utils';

@@ -1,7 +1,7 @@
 import { getInstance } from '@module-federation/enhanced/runtime';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
-import { pluginsConfigState, PluginsConfig } from 'erxes-shared-states';
+import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 
 type RemoteConfig = {

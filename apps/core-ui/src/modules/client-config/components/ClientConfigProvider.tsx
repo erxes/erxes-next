@@ -1,4 +1,4 @@
-import { clientConfigApiStatusState } from 'erxes-shared-states';
+import { clientConfigApiStatusState } from 'erxes-ui-shared-states';
 import { useRecoilValue } from 'recoil';
 
 import { ClientConfigError } from '@/error-handler/components/ClientConfigError';

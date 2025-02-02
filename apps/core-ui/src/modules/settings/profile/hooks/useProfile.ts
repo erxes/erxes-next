@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { currentUserState } from 'erxes-shared-states';
+import { currentUserState } from 'erxes-ui-shared-states';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { toast, useConfirm } from 'erxes-ui/hooks';
