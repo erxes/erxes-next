@@ -27,7 +27,11 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/plugins/tasks_api-e2e/**/*"]
+      "exclude": [
+        "apps/plugins/tasks_api-e2e/**/*",
+        "apps/core-api-e2e/**/*",
+        "apps/gateway-e2e/**/*"
+      ]
     }
   ],
   "targetDefaults": {
