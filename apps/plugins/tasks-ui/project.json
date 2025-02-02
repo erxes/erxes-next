@@ -1,7 +1,7 @@
 {
-  "name": "tasks_ui",
+  "name": "tasks-ui",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/plugins/tasks_ui/src",
+  "sourceRoot": "apps/plugins/tasks-ui/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,13 +11,13 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/apps/plugins/tasks_ui",
-        "main": "apps/plugins/tasks_ui/src/main.ts",
-        "tsConfig": "apps/plugins/tasks_ui/tsconfig.app.json",
-        "rspackConfig": "apps/plugins/tasks_ui/rspack.config.ts",
+        "outputPath": "dist/apps/plugins/tasks-ui",
+        "main": "apps/plugins/tasks-ui/src/main.ts",
+        "tsConfig": "apps/plugins/tasks-ui/tsconfig.app.json",
+        "rspackConfig": "apps/plugins/tasks-ui/rspack.config.ts",
         "assets": [
-          "apps/plugins/tasks_ui/src/favicon.ico",
-          "apps/plugins/tasks_ui/src/assets"
+          "apps/plugins/tasks-ui/src/favicon.ico",
+          "apps/plugins/tasks-ui/src/assets"
         ]
       },
       "configurations": {
@@ -28,20 +28,20 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "apps/plugins/tasks_ui/rspack.config.prod.ts"
+          "rspackConfig": "apps/plugins/tasks-ui/rspack.config.prod.ts"
         }
       }
     },
     "serve": {
       "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
-        "buildTarget": "tasks_ui:build:development",
+        "buildTarget": "tasks-ui:build:development",
         "port": 3002
       },
       "configurations": {
         "development": {},
         "production": {
-          "buildTarget": "tasks_ui:build:production"
+          "buildTarget": "tasks-ui:build:production"
         }
       }
     },
@@ -49,14 +49,14 @@
       "executor": "@nx/rspack:module-federation-static-server",
       "defaultConfiguration": "production",
       "options": {
-        "serveTarget": "tasks_ui:serve"
+        "serveTarget": "tasks-ui:serve"
       },
       "configurations": {
         "development": {
-          "serveTarget": "tasks_ui:serve:development"
+          "serveTarget": "tasks-ui:serve:development"
         },
         "production": {
-          "serveTarget": "tasks_ui:serve:production"
+          "serveTarget": "tasks-ui:serve:production"
         }
       }
     }

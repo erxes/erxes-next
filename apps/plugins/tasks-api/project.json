@@ -1,7 +1,7 @@
 {
-  "name": "tasks_api",
+  "name": "tasks-api",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/plugins/tasks_api/src",
+  "sourceRoot": "apps/plugins/tasks-api/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,12 +11,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/plugins/tasks_api",
+        "outputPath": "dist/apps/plugins/tasks-api",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/plugins/tasks_api/src/main.ts",
-        "tsConfig": "apps/plugins/tasks_api/tsconfig.app.json",
-        "assets": ["apps/plugins/tasks_api/src/assets"],
+        "main": "apps/plugins/tasks-api/src/main.ts",
+        "tsConfig": "apps/plugins/tasks-api/tsconfig.app.json",
+        "assets": ["apps/plugins/tasks-api/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -42,15 +42,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "tasks_api:build",
+        "buildTarget": "tasks-api:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "tasks_api:build:development"
+          "buildTarget": "tasks-api:build:development"
         },
         "production": {
-          "buildTarget": "tasks_api:build:production"
+          "buildTarget": "tasks-api:build:production"
         }
       }
     }

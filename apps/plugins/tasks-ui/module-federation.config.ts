@@ -1,7 +1,7 @@
 import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 
 const config: ModuleFederationConfig = {
-  name: 'tasks_ui',
+  name: 'tasks-ui',
 
   exposes: {
     './Module': './src/remote-entry.ts',
