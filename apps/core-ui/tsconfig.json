@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowJs": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "paths": {
+      "@/*": ["apps/core-ui/src/modules/*"], // for vscode
+      "@": ["apps/core-ui/src/modules"], // for rspack
+      "~/*": ["apps/core-ui/src/*"], // for vscode
+      "~": ["apps/core-ui/src"], // for rspack
+      "erxes-ui/*": ["libs/erxes-ui/src/*"],
+      "erxes-ui": ["libs/erxes-ui/src"],
+      "erxes-shared-states": ["libs/erxes-shared-states/src/index.ts"]
+    }
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ],
+  "extends": "../../tsconfig.base.json"
+}
