@@ -46,9 +46,10 @@ const data = {
 };
 
 export function SettingsSidebar() {
-  const plugins = [...CORE_PLUGINS] as any;
+  const plugins = [...CORE_PLUGINS];
 
-  const pluginsMetaData = useRecoilValue(pluginsConfigState) as PluginsConfig;
+  const pluginsMetaData =
+    useRecoilValue(pluginsConfigState) || ({} as PluginsConfig);
 
   Object.keys(pluginsMetaData).forEach((key) => {
     plugins.push({
