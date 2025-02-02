@@ -27,3 +27,13 @@ export const tagsQuery = gql`
     tagsQueryCount(type: $type, searchValue: $searchValue)
   }
 `;
+
+export const TAG_BY_IDS_QUERY = gql`
+  query TagsByIds($tagIds: [String]) {
+    tags(tagIds: $tagIds) {
+      _id
+      colorCode
+      name
+    }
+  }
+`;

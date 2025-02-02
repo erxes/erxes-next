@@ -24,8 +24,6 @@ export function SidebarNavigation() {
   //   });
   // });
 
-  console.log(plugins);
-
   return (
     <>
       <SidebarNavigationItem items={plugins} label="plugins" />

@@ -3,18 +3,18 @@ import { useRecoilValue } from 'recoil';
 
 import { ContactsHeader } from '@/contacts/components/ContactsHeader';
 import { ContactsRecordTable } from '@/contacts/components/ContactsRecordTable';
-import { ContactDetailSheet } from '@/contacts/detail/components/ContactDetailSheet';
 import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';
+import { ContactDetail } from '@/contacts/detail/components/ContactDetail';
 
 export const ContactsIndexPage = () => {
   const renderingContactDetail = useRecoilValue(renderingContactDetailAtom);
-  const[contactId] = useQueryState('contact_id');
-  
+  const [contactId] = useQueryState('contact_id');
+
   return (
     <div className="flex flex-col h-full p-3 pt-0">
       <ContactsHeader />
       {!(renderingContactDetail && contactId) && <ContactsRecordTable />}
-      <ContactDetailSheet />
+      <ContactDetail />
     </div>
   );
 };

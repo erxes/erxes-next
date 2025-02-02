@@ -5,12 +5,8 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from 'erxes-ui/lib';
 
-// bg-primary text-primary-foreground shadow-sm shadow-black/5 hover:bg-primary/90
-// shadow-[0_1px_theme(colors.white/0.07)_inset,0_1px_3px_theme(colors.gray.900/0.2)]
-// inset-shadow-[0_2px_1px_-1px] inset-shadow-white/60 active:inset-shadow-none
-
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 px-3 whitespace-nowrap rounded-md text-[13px] transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-medium',
+  'inline-flex items-center justify-center gap-2 px-3 whitespace-nowrap rounded-md text-sm transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 font-medium',
   {
     variants: {
       variant: {
@@ -36,7 +32,7 @@ const buttonVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  }
+  },
 );
 
 export interface ButtonProps
@@ -57,7 +53,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
       </Comp>
     );
-  }
+  },
 );
 Button.displayName = 'Button';
 

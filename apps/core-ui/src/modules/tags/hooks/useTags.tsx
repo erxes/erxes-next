@@ -1,12 +1,14 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 
-import { tagsQuery } from '@/tags/graphql/queries/tagsQueries';
+import {
+  TAG_BY_IDS_QUERY,
+  tagsQuery,
+} from '@/tags/graphql/queries/tagsQueries';
 
 const TAGS_PER_PAGE = 30;
 
 export const useTags = (options: OperationVariables) => {
   const { data, loading, error, fetchMore } = useQuery(tagsQuery, {
-    errorPolicy: 'all',
     variables: {
       perPage: TAGS_PER_PAGE,
       ...options.variables,
@@ -39,5 +41,20 @@ export const useTags = (options: OperationVariables) => {
     loading,
     error,
     handleFetchMore,
+  };
+};
+
+export const useTagsByIds = (options: OperationVariables) => {
+  const { data, loading, error } = useQuery(TAG_BY_IDS_QUERY, {
+    variables: {
+      ...options.variables,
+    },
+    ...options,
+  });
+
+  return {
+    tags: data?.tags,
+    loading,
+    error,
   };
 };

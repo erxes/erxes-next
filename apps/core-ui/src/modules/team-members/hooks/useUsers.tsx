@@ -1,5 +1,8 @@
 import { useQuery, OperationVariables } from '@apollo/client';
-import { GET_USERS } from '@/contacts/graphql/queries/getUsers';
+import {
+  GET_ASSIGNED_MEMBER,
+  GET_USERS,
+} from '@/team-members/graphql/queries/userQueries';
 
 export const useUsers = (options?: OperationVariables) => {
   const USERS_PER_PAGE = 30;
@@ -37,4 +40,9 @@ export const useUsers = (options?: OperationVariables) => {
     error,
     totalCount,
   };
+};
+
+export const useAssignedMember = (options?: OperationVariables) => {
+  const { data, loading, error } = useQuery(GET_ASSIGNED_MEMBER, options);
+  return { details: data?.userDetail?.details, loading, error };
 };

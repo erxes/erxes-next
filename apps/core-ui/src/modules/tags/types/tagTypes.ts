@@ -29,4 +29,10 @@ export interface SelectTagsProps {
   selected?: string[] | string;
   onSelect?: (tags: string[] | string) => void;
   className?: string;
+  loading?: boolean;
+}
+
+export interface TagBadgesProps {
+  tagIds?: string[];
+  tags?: ITag[];
 }

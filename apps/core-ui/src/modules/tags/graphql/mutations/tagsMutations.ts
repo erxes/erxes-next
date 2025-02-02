@@ -17,3 +17,13 @@ export const tagsAdd = gql`
     }
   }
 `;
+
+export const GIVE_TAGS = gql`
+  mutation tagsTag(
+    $type: String!
+    $targetIds: [String!]!
+    $tagIds: [String!]!
+  ) {
+    tagsTag(type: $type, targetIds: $targetIds, tagIds: $tagIds)
+  }
+`;

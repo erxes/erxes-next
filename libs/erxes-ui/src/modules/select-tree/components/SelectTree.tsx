@@ -2,17 +2,27 @@ import React, { useState } from 'react';
 
 import { IconCaretDownFilled } from '@tabler/icons-react';
 
-import { Button, ButtonProps, Command, Popover, } from 'erxes-ui/components';
+import { Button, ButtonProps, Command, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import { SelectTreeContext } from 'erxes-ui/modules/select-tree/context/SelectTreeContext';
 import { useSelectTreeHide } from 'erxes-ui/modules/select-tree/hooks/useSelectTreeHide';
 
 //TODO: continue make it work
-export const SelectTree = ({ id, children }: { id: string, children: React.ReactNode }) => {
+export const SelectTree = ({
+  id,
+  children,
+  open,
+  onOpenChange,
+}: {
+  id: string;
+  children: React.ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) => {
   const [hideChildren, setHideChildren] = useState<string[]>([]);
   return (
     <SelectTreeContext.Provider value={{ hideChildren, setHideChildren, id }}>
-      <Popover>
+      <Popover open={open} onOpenChange={onOpenChange} modal>
         {children}
       </Popover>
     </SelectTreeContext.Provider>
@@ -21,20 +31,24 @@ export const SelectTree = ({ id, children }: { id: string, children: React.React
 
 export const SelectTreeArrow = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { order: string, hasChildren: boolean }
+  ButtonProps & { order: string; hasChildren: boolean }
 >(({ order, hasChildren, ...props }, ref) => {
-  
   const { toggleHideChildren, isHidden } = useSelectTreeHide(order);
 
-  if(!hasChildren) {
+  if (!hasChildren) {
     return null;
   }
 
   return (
-    <Button ref={ref} variant="ghost" size="icon" {...props} tabIndex={-1} onClick={() => toggleHideChildren(order)}>
-      <IconCaretDownFilled
-        className={cn('transition-transform', isHidden && '-rotate-90')}
-      />
+    <Button
+      ref={ref}
+      variant="ghost"
+      size="icon"
+      {...props}
+      tabIndex={-1}
+      onClick={() => toggleHideChildren(order)}
+    >
+      <IconCaretDownFilled className={cn('transition-transform', isHidden && '-rotate-90')} />
     </Button>
   );
 });
@@ -66,14 +80,7 @@ export const SelectTreeItem = React.forwardRef<
     name: string;
     selected: boolean;
   }
->(({
-  order,
-  children,
-  hasChildren,
-  name,
-  selected,
-  ...props
-}, ref) => {
+>(({ order, children, hasChildren, name, selected, ...props }, ref) => {
   const { isHiddenByParent } = useSelectTreeHide(order);
 
   if (isHiddenByParent) {
@@ -84,9 +91,17 @@ export const SelectTreeItem = React.forwardRef<
     <div className="flex items-center gap-1 w-full">
       <SelectTreeIndentation order={order} />
       <SelectTreeArrow order={order} hasChildren={hasChildren} />
-      <Command.Item {...props} className={cn('h-7 py-0 items-center flex-1 overflow-hidden', props.className, selected && 'bg-muted')} ref={ref}>
+      <Command.Item
+        {...props}
+        className={cn(
+          'h-7 py-0 items-center flex-1 overflow-hidden',
+          props.className,
+          selected && 'bg-muted',
+        )}
+        ref={ref}
+      >
         {children}
-      </Command.Item> 
+      </Command.Item>
     </div>
   );
 });

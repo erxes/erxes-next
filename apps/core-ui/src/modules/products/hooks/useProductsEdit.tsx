@@ -4,7 +4,7 @@ import { productsMutations } from '@/products/graphql';
 
 export const useProductsEdit = () => {
   const [productsEdit, { loading }] = useMutation(
-    productsMutations.productsEdit
+    productsMutations.productsEdit,
   );
 
   const mutate = ({ variables, ...options }: MutationHookOptions) => {

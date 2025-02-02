@@ -3,10 +3,10 @@ import React from 'react';
 import { Button, ButtonProps, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 
-import { TagBadge } from './TagBadge';
+import { TagBadges } from '@/tags/components/tagBadges';
 
 import { useSelectTags } from '@/tags/contexts/SelectTagsContext';
-import { useTags } from '@/tags/hooks/useTags';
+import { useTagsByIds } from '@/tags/hooks/useTags';
 
 export const SelectTagTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
@@ -14,9 +14,9 @@ export const SelectTagTrigger = React.forwardRef<
 >(({ className, ...props }, ref) => {
   const { tagType, selectedTagIds, setSelectedTags, selectedTags } =
     useSelectTags();
-  useTags({
+  useTagsByIds({
     variables: {
-      type: tagType,
+      tagType,
       tagIds: selectedTagIds,
     },
     onCompleted: ({ tags }) => {
@@ -27,15 +27,13 @@ export const SelectTagTrigger = React.forwardRef<
 
   const buttonClasses = cn(
     'justify-start border-dashed shadow-none ring-0 border overflow-auto gap-1 px-1 min-w-60 font-normal',
-    className
+    className,
   );
 
   return (
     <Popover.Trigger asChild>
       <Button variant="outline" className={buttonClasses} {...props} ref={ref}>
-        {selectedTags?.map((tag) => (
-          <TagBadge key={tag._id} {...tag} />
-        ))}
+        <TagBadges tagIds={selectedTagIds} tags={selectedTags} />
       </Button>
     </Popover.Trigger>
   );

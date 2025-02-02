@@ -12,7 +12,10 @@ import {
   Popover,
   Tabs,
 } from 'erxes-ui/components';
-import { SelectTree, SelectTreeItem } from 'erxes-ui/modules/select-tree/components/SelectTree';
+import {
+  SelectTree,
+  SelectTreeItem,
+} from 'erxes-ui/modules/select-tree/components/SelectTree';
 
 import { CreateTagForm } from './CreateTagForm';
 import { SelectTagCreateContainer } from './SelectTagCreate';
@@ -43,7 +46,7 @@ export const SelectTags = React.forwardRef<
       onSelect,
       ...buttonProps
     },
-    ref
+    ref,
   ) => {
     const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
 
@@ -78,13 +81,6 @@ export const SelectTags = React.forwardRef<
       focusCommandInput();
     };
 
-    const handleOpenChange = (open: boolean) => {
-      setOpen(open);
-      if (activeTab === 'tags' && open) {
-        focusCommandInput();
-      }
-    };
-
     return (
       <SelectTagsProvider
         value={{
@@ -99,7 +95,7 @@ export const SelectTags = React.forwardRef<
           sub,
         }}
       >
-        <SelectTree id="tags">
+        <SelectTree id="tags" open={open} onOpenChange={setOpen}>
           <SelectTagTrigger {...buttonProps} ref={ref} />
           <Popover.Content className="p-0">
             {sub ? (
@@ -124,7 +120,7 @@ export const SelectTags = React.forwardRef<
         </SelectTree>
       </SelectTagsProvider>
     );
-  }
+  },
 );
 
 const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
@@ -170,17 +166,17 @@ const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
         </Command.List>
       </Command>
     );
-  }
+  },
 );
 
 export function SelectTagItem(props: ITag & { hasChildren: boolean }) {
   const { _id, order, hasChildren, name } = props || {};
   const { selectedTags, handleSelect } = useSelectTags();
-  
+
   const isSelected = selectedTags?.some((tag: ITag) => tag._id === _id);
 
   return (
-    <SelectTreeItem 
+    <SelectTreeItem
       order={order}
       hasChildren={hasChildren}
       name={name}
@@ -198,12 +194,15 @@ export const SelectTagSearchCreate = ({ search }: { search: string }) => {
   const setName = useSetRecoilState(newTagNameAtom);
 
   return (
-    <Command.Item onSelect={() => {
-      setName(search);
-      openCreateTag();
-    }} className='justify-start'>
+    <Command.Item
+      onSelect={() => {
+        setName(search);
+        openCreateTag();
+      }}
+      className="justify-start"
+    >
       <IconPlus />
       Create new tag: "{search}"
     </Command.Item>
   );
-}
+};

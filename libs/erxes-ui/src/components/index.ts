@@ -22,6 +22,7 @@ export * from './label';
 export * from './multiselect';
 export * from './popover';
 export * from './radio-group';
+export * from './resizable';
 export * from './scroll-area';
 export * from './select';
 export * from './separator';
@@ -37,4 +38,4 @@ export * from './toggle';
 export * from './toggle-group';
 export * from './tooltip';
 export * from './upload';
-export * from './spinner'
+export * from './spinner';

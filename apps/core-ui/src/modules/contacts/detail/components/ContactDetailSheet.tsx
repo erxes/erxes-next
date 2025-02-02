@@ -1,73 +1,40 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import { useQueryState } from 'nuqs';
 
-import { Button, Sheet, Sidebar, Tabs } from 'erxes-ui/components';
+import { Button, Sheet } from 'erxes-ui/components';
 
-import { ContactGeneral } from '@/contacts/detail/components/ContactGeneral';
-import { ContactSidebarMenuItem } from '@/contacts/detail/components/ContactSidebarMenuItem';
+import { useRecoilValue } from 'recoil';
+import { contactDetailActiveActionTabAtom } from '@/contacts/detail/states/contactDetailStates';
+import { cn } from 'erxes-ui/lib';
 
-export const ContactDetailSheet = () => {
+export const ContactDetailSheet = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [open, setOpen] = useQueryState('contact_id');
-  const [selectedTab, setSelectedTab] = useQueryState('tab', {defaultValue: 'general'});
+
+  const activeTab = useRecoilValue(contactDetailActiveActionTabAtom);
 
   return (
     <Sheet open={!!open} onOpenChange={() => setOpen(null)}>
-      <Sheet.Content className="p-0 sm:max-w-5xl w-full flex flex-col gap-0">
-        <Sheet.Header className='border-b p-3 flex-row items-center space-y-0 gap-3'>
+      <Sheet.Content
+        className={cn(
+          'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out',
+          !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
+        )}
+      >
+        <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
           <Button variant="ghost" size="icon">
             <IconLayoutSidebarLeftCollapse />
           </Button>
           <Sheet.Title>Contact Detail</Sheet.Title>
-          <Sheet.Close/>
+          <Sheet.Close />
+          <Sheet.Description className="sr-only">
+            Contact Detail
+          </Sheet.Description>
         </Sheet.Header>
-        <Sidebar.Provider className='items-start flex-1 overflow-hidden' style={{'--sidebar-width': '200px'} as React.CSSProperties}>
-          <Sidebar collapsible="none" className="hidden md:flex">
-            <Sidebar.Content>
-              <Sidebar.Group>
-                <Sidebar.GroupContent>
-                  <Sidebar.Menu>
-                    <ContactSidebarMenuItem onClick={() => setSelectedTab('general')} isActive={selectedTab === 'general'}>
-                      General Information
-                    </ContactSidebarMenuItem>
-                  </Sidebar.Menu>
-                </Sidebar.GroupContent>
-              </Sidebar.Group>
-              <Sidebar.Separator className="-my-2" />
-              <Sidebar.Group>
-                <Sidebar.GroupLabel>
-                  Personal
-                </Sidebar.GroupLabel>
-                <Sidebar.GroupContent>
-                  <Sidebar.Menu>
-                    <ContactSidebarMenuItem onClick={() => setSelectedTab('personal')} isActive={selectedTab === 'personal'}>
-                      Personal Info
-                    </ContactSidebarMenuItem>
-                  </Sidebar.Menu>
-                </Sidebar.GroupContent>
-              </Sidebar.Group>
-              <Sidebar.Separator className="-my-2" />
-              <Sidebar.Group>
-                <Sidebar.GroupLabel >
-                  Additional
-                </Sidebar.GroupLabel>
-                <Sidebar.GroupContent>
-                  <Sidebar.Menu>
-                    <ContactSidebarMenuItem onClick={() => setSelectedTab('additional')} isActive={selectedTab === 'additional'}>
-                      Additional Info
-                    </ContactSidebarMenuItem>
-                  </Sidebar.Menu>
-                </Sidebar.GroupContent>
-              </Sidebar.Group>
-            </Sidebar.Content>
-          </Sidebar>
-          <Sidebar.Inset>
-            <Tabs value={selectedTab} onValueChange={setSelectedTab} className='flex-auto flex flex-col'>
-              <Tabs.Content value="general" className='overflow-hidden flex-auto'>
-                <ContactGeneral />
-              </Tabs.Content>
-            </Tabs>
-          </Sidebar.Inset>
-        </Sidebar.Provider>
+        {children}
       </Sheet.Content>
     </Sheet>
   );

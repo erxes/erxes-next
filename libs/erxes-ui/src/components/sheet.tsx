@@ -29,7 +29,7 @@ const SheetOverlay = React.forwardRef<
   <SheetPrimitive.Overlay
     className={cn(
       'fixed inset-0 z-50 bg-black/25  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-      className
+      className,
     )}
     {...props}
     ref={ref}
@@ -47,13 +47,13 @@ const sheetVariants = cva(
           'inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
         left: 'inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm',
         right:
-          'inset-y-2 right-2 h-[calc(100dvh-1rem)] w-3/4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm overflow-hidden',
+          'inset-y-2 right-2 h-[calc(100dvh-1rem)] w-[calc(100vw-theme(spacing.4))] md:w-3/4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right md:max-w-sm overflow-hidden',
       },
     },
     defaultVariants: {
       side: 'right',
     },
-  }
+  },
 );
 
 export const SheetPortal = ({
@@ -94,7 +94,11 @@ export const SheetClose = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close>
 >(({ ...props }, ref) => (
   <SheetPrimitive.Close ref={ref} {...props} asChild>
-    <Button variant="ghost" size="icon" className={cn('ml-auto', props.className)}>
+    <Button
+      variant="ghost"
+      size="icon"
+      className={cn('ml-auto', props.className)}
+    >
       <IconX />
     </Button>
   </SheetPrimitive.Close>
@@ -108,7 +112,7 @@ const SheetHeader = ({
   <div
     className={cn(
       'flex flex-col space-y-2 text-center sm:text-left',
-      className
+      className,
     )}
     {...props}
   />
@@ -122,7 +126,7 @@ const SheetFooter = ({
   <div
     className={cn(
       'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 rounded-b-md',
-      className
+      className,
     )}
     {...props}
   />
@@ -137,7 +141,7 @@ const SheetTitle = React.forwardRef<
     ref={ref}
     className={cn(
       'text-lg font-semibold text-foreground leading-none',
-      className
+      className,
     )}
     {...props}
   />
