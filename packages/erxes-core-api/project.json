@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/erxes-core-api/src",
   "projectType": "application",
-  "tags": [],
+  "tags": ["type:api"],
   "targets": {
     "build": {
       "executor": "@nx/esbuild:esbuild",

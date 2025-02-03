@@ -13,7 +13,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
-  res.send({ message: 'Hello API' });
+  res.send({ message: 'Hello Cosadsresadsd API' });
 });
 
 app.listen(port, host, () => {
