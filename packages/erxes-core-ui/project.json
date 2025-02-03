@@ -1,7 +1,7 @@
 {
   "name": "erxes-core-ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/erxes-core-ui/src",
+  "sourceRoot": "packages/erxes-core-ui/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,11 +11,11 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/apps/erxes-core-ui",
-        "main": "apps/erxes-core-ui/src/main.ts",
-        "tsConfig": "apps/erxes-core-ui/tsconfig.app.json",
-        "rspackConfig": "apps/erxes-core-ui/rspack.config.ts",
-        "assets": ["apps/erxes-core-ui/src/assets"]
+        "outputPath": "dist/packages/erxes-core-ui",
+        "main": "packages/erxes-core-ui/src/main.ts",
+        "tsConfig": "packages/erxes-core-ui/tsconfig.app.json",
+        "rspackConfig": "packages/erxes-core-ui/rspack.config.ts",
+        "assets": ["packages/erxes-core-ui/src/assets"]
       },
       "configurations": {
         "development": {
@@ -25,7 +25,7 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "apps/erxes-core-ui/rspack.config.prod.ts"
+          "rspackConfig": "packages/erxes-core-ui/rspack.config.prod.ts"
         }
       }
     },

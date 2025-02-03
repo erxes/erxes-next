@@ -27,13 +27,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": [
-        "apps/plugins/tasks-api-e2e/**/*",
-        "apps/core-api-e2e/**/*",
-        "apps/gateway-e2e/**/*",
-        "apps/erxes-core-api-e2e/**/*",
-        "apps/erxes-api-gateway-e2e/**/*"
-      ]
+      "exclude": []
     }
   ],
   "targetDefaults": {

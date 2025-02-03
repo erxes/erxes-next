@@ -1,7 +1,7 @@
 {
   "name": "erxes-api-gateway",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/erxes-api-gateway/src",
+  "sourceRoot": "packages/erxes-api-gateway/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,12 +11,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/erxes-api-gateway",
+        "outputPath": "dist/packages/erxes-api-gateway",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/erxes-api-gateway/src/main.ts",
-        "tsConfig": "apps/erxes-api-gateway/tsconfig.app.json",
-        "assets": ["apps/erxes-api-gateway/src/assets"],
+        "main": "packages/erxes-api-gateway/src/main.ts",
+        "tsConfig": "packages/erxes-api-gateway/tsconfig.app.json",
+        "assets": ["packages/erxes-api-gateway/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
