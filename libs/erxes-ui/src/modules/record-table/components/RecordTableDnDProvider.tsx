@@ -36,7 +36,7 @@ export const RecordTableDnDProvider = ({
         tolerance: 10,
       },
     }),
-    useSensor(KeyboardSensor, {})
+    useSensor(KeyboardSensor, {}),
   );
 
   function handleDragEnd(event: DragEndEvent) {
@@ -48,7 +48,7 @@ export const RecordTableDnDProvider = ({
         return arrayMove(
           columnOrder,
           oldIndex,
-          newIndex === columnOrder.length - 1 ? newIndex - 1 : newIndex
+          newIndex === columnOrder.length - 1 ? newIndex - 1 : newIndex,
         ); //this is just a splice util
       });
     }

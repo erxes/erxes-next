@@ -3,6 +3,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {},
+  "engines": {
+    "pnpm": ">=8",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
+  },
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.11.8",
@@ -41,14 +46,17 @@
     "@sniptt/guards": "^0.2.0",
     "@tabler/icons-react": "^3.24.0",
     "@tanstack/react-table": "^8.20.5",
+    "@tanstack/table-core": "^8.20.5",
     "axios": "^1.6.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
+    "dayjs": "^1.11.13",
     "deep-equal": "^2.2.3",
     "express": "~4.18.1",
+    "framer-motion": "^12.0.6",
     "graphql": "^16.9.0",
     "graphql-ws": "^5.16.0",
     "i18next": "^23.16.4",
@@ -67,6 +75,7 @@
     "react-intersection-observer": "^9.13.1",
     "react-merge-refs": "^2.1.1",
     "react-resizable-panels": "^2.1.7",
+    "react-router": "^7.1.5",
     "react-router-dom": "^7.1.1",
     "recoil": "^0.7.7",
     "tailwind-merge": "^2.5.4",
@@ -133,7 +142,6 @@
     "type-fest": "^4.30.0",
     "typescript": "~5.5.2",
     "typescript-eslint": "^8.0.0",
-    "verdaccio": "^5.0.4",
     "webpack-cli": "^5.1.4"
   },
   "nx": {

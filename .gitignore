@@ -8,6 +8,11 @@ tmp
 # dependencies
 node_modules
 
+# pnpm is the recommended package manager across the project
+**/**/.package-lock.json
+**/**/.yarn.lock
+
+
 # IDEs and editors
 /.idea
 .project
