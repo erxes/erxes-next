@@ -10,35 +10,20 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "erxes-core": [
-        "packages/erxes-core/src/index.ts"
+      "erxes-ui": ["packages/libs/erxes-ui/src"],
+      "erxes-ui-shared-states": [
+        "packages/libs/erxes-ui-shared-states/src/index.ts"
       ],
-      "erxes-shared-states": [
-        "packages/erxes-shared-states/src/index.ts"
-      ],
-      "erxes-ui": [
-        "packages/erxes-ui/src"
-      ],
-      "erxes-ui/*": [
-        "packages/erxes-ui/src/*"
-      ],
-      "inbox/Module": [
-        "plugins/inbox/src/remote-entry.ts"
-      ]
+      "erxes-ui/*": ["packages/libs/erxes-ui/src/*"],
+      "tasks_ui/Module": ["packages/plugins/tasks_ui/src/remote-entry.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

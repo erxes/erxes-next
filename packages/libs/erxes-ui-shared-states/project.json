@@ -1,0 +1,9 @@
+{
+  "name": "erxes-ui-shared-states",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/libs/erxes-ui-shared-states/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project erxes-ui-shared-states --web",
+  "targets": {}
+}
