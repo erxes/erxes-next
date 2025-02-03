@@ -1,7 +1,7 @@
 {
-  "name": "tasks-api",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/plugins/tasks-api/src",
+  "name": "erxes-api-gateway",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/erxes-api-gateway/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,12 +11,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/plugins/tasks-api",
+        "outputPath": "dist/apps/erxes-api-gateway",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/plugins/tasks-api/src/main.ts",
-        "tsConfig": "apps/plugins/tasks-api/tsconfig.app.json",
-        "assets": ["apps/plugins/tasks-api/src/assets"],
+        "main": "apps/erxes-api-gateway/src/main.ts",
+        "tsConfig": "apps/erxes-api-gateway/tsconfig.app.json",
+        "assets": ["apps/erxes-api-gateway/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -42,16 +42,21 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "tasks-api:build",
+        "buildTarget": "erxes-api-gateway:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "tasks-api:build:development"
+          "buildTarget": "erxes-api-gateway:build:development"
         },
         "production": {
-          "buildTarget": "tasks-api:build:production"
+          "buildTarget": "erxes-api-gateway:build:production"
         }
+      }
+    },
+    "test": {
+      "options": {
+        "passWithNoTests": true
       }
     }
   }
