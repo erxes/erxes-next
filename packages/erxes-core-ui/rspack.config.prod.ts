@@ -20,10 +20,10 @@ export default composePlugins(
     config.plugins?.push(
       new DefinePlugin({
         'process.env.REACT_APP_API_URL': JSON.stringify(
-          process.env.REACT_APP_API_URL
+          process.env.REACT_APP_API_URL,
         ),
-      })
+      }),
     );
     return config;
-  }
+  },
 );

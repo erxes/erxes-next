@@ -6,7 +6,11 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
   res.send({ message: 'Hello API' });
