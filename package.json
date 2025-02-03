@@ -145,5 +145,8 @@
   },
   "nx": {
     "includedScripts": []
-  }
+  },
+  "workspaces": [
+    "apps/*"
+  ]
 }
