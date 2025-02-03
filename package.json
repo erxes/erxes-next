@@ -2,7 +2,9 @@
   "name": "erxes-next",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "npx nx run-many -t serve -p erxes-core-api erxes-core-ui"
+  },
   "engines": {
     "pnpm": ">=8",
     "npm": "please-use-pnpm",
