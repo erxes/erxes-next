@@ -18,8 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "erxes-core": ["libs/erxes-core/src/index.ts"],
-      "erxes-ui-shared-states": ["libs/erxes-ui-shared-states/src/index.ts"],
       "erxes-ui": ["libs/erxes-ui/src"],
+      "erxes-ui-shared-states": ["libs/erxes-ui-shared-states/src/index.ts"],
       "erxes-ui/*": ["libs/erxes-ui/src/*"],
       "tasks_ui/Module": ["apps/plugins/tasks_ui/src/remote-entry.ts"]
     }

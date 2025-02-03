@@ -6,10 +6,10 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "paths": {
-      "@/*": ["apps/erxes-front/src/modules/*"], // for vscode
-      "@": ["apps/erxes-front/src/modules"], // for rspack
-      "~/*": ["apps/erxes-front/src/*"], // for vscode
-      "~": ["apps/erxes-front/src"], // for rspack
+      "@/*": ["apps/erxes-core-ui/src/modules/*"], // for vscode
+      "@": ["apps/erxes-core-ui/src/modules"], // for rspack
+      "~/*": ["apps/erxes-core-ui/src/*"], // for vscode
+      "~": ["apps/erxes-core-ui/src"], // for rspack
       "erxes-ui/*": ["libs/erxes-ui/src/*"],
       "erxes-ui": ["libs/erxes-ui/src"],
       "erxes-ui-shared-states": ["libs/erxes-ui-shared-states/src/index.ts"]

@@ -1,5 +1,5 @@
 export default {
-  displayName: 'erxes-front',
+  displayName: 'erxes-core-ui',
   preset: '../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
