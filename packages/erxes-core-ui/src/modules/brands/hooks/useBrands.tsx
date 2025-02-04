@@ -28,7 +28,7 @@ export const useBrands = (options?: OperationVariables) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          users: [...(prev.users || []), ...fetchMoreResult.users],
+          brands: [...(prev.brands || []), ...fetchMoreResult.brands],
         });
       },
     });
