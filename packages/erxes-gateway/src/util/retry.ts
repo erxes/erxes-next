@@ -22,20 +22,27 @@ async function retry<T>({
   let error = new Error(retryExhaustedLog);
 
   for (let tryIdx = 0; tryIdx < maxTries; tryIdx++) {
-    tryIdx > 0 && console.log(retryLog);
+    if (tryIdx > 0 && retryLog) {
+      console.log(retryLog);
+    }
 
     try {
       const result = await fn();
-      successLog && console.log(successLog);
+      if (successLog) {
+        console.log(successLog);
+      }
+
       return result;
     } catch (e) {
-      error = e;
+      error = e as Error;
     }
 
     await sleep(intervalMs);
   }
 
-  retryExhaustedLog && console.error(retryExhaustedLog);
+  if (retryExhaustedLog) {
+    console.error(retryExhaustedLog);
+  }
 
   throw error;
 }

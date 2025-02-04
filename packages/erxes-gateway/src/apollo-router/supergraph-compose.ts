@@ -26,7 +26,7 @@ const writeSupergraphConfig = (proxyTargets: ErxesProxyTarget[]) => {
   const superGraphConfigNext = supergraphConfigPath + '.next';
   const config: SupergraphConfig = {
     federation_version: '=2.3.1',
-    subgraphs: {}
+    subgraphs: {},
   };
 
   for (const { name, address } of proxyTargets) {
@@ -34,8 +34,8 @@ const writeSupergraphConfig = (proxyTargets: ErxesProxyTarget[]) => {
     config.subgraphs[name] = {
       routing_url: endpoint,
       schema: {
-        subgraph_url: endpoint
-      }
+        subgraph_url: endpoint,
+      },
     };
   }
 
@@ -44,11 +44,11 @@ const writeSupergraphConfig = (proxyTargets: ErxesProxyTarget[]) => {
       return;
     }
     fs.writeFileSync(supergraphConfigPath, yaml.stringify(config), {
-      encoding: 'utf-8'
+      encoding: 'utf-8',
     });
   } else {
     fs.writeFileSync(superGraphConfigNext, yaml.stringify(config), {
-      encoding: 'utf-8'
+      encoding: 'utf-8',
     });
 
     if (
@@ -63,13 +63,13 @@ const writeSupergraphConfig = (proxyTargets: ErxesProxyTarget[]) => {
 const supergraphComposeOnce = async () => {
   if (NODE_ENV === 'production') {
     await execSync(
-      `rover supergraph compose --config ${supergraphConfigPath} --output ${supergraphPath} --elv2-license=accept --log=error`
+      `rover supergraph compose --config ${supergraphConfigPath} --output ${supergraphPath} --elv2-license=accept --log=error`,
     );
   } else {
     const superGraphqlNext = supergraphPath + '.next';
 
     await execSync(
-      `yarn rover supergraph compose --config ${supergraphConfigPath} --output ${superGraphqlNext} --elv2-license=accept  --client-timeout=80000`
+      `yarn rover supergraph compose --config ${supergraphConfigPath} --output ${superGraphqlNext} --elv2-license=accept  --client-timeout=80000`,
     );
 
     if (
@@ -83,7 +83,7 @@ const supergraphComposeOnce = async () => {
 };
 
 export default async function supergraphCompose(
-  proxyTargets: ErxesProxyTarget[]
+  proxyTargets: ErxesProxyTarget[],
 ) {
   await writeSupergraphConfig(proxyTargets);
   await supergraphComposeOnce();

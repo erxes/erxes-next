@@ -9,7 +9,7 @@ if (!fs.existsSync(dirTempPath)) {
 
 export const supergraphConfigPath = path.resolve(
   dirTempPath,
-  'supergraph.yaml'
+  'supergraph.yaml',
 );
 export const supergraphPath = path.resolve(dirTempPath, 'supergraph.graphql');
 export const routerConfigPath = path.resolve(dirTempPath, 'router.yaml');

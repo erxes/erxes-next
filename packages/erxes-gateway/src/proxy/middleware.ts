@@ -1,12 +1,13 @@
+import { Express } from 'express';
+
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
 
-import { apolloRouterPort } from '~/apollo-router';
-import { ErxesProxyTarget } from '~/proxy/targets';
-import { Express } from 'express';
+import { apolloRouterPort } from '../apollo-router';
+import { ErxesProxyTarget } from '../proxy/targets';
 
 const { NODE_ENV } = process.env;
 
-const onProxyReq = (proxyReq, req: any) => {
+const proxyReq = (proxyReq, req: any) => {
   proxyReq.setHeader('hostname', req.hostname);
   proxyReq.setHeader('userid', req.user ? req.user._id : '');
   fixRequestBody(proxyReq, req);
@@ -25,7 +26,9 @@ export async function applyProxiesCoreless(
     createProxyMiddleware({
       pathRewrite: { '^/graphql': '/' },
       target: `http://127.0.0.1:${apolloRouterPort}`,
-      onProxyReq,
+      on: {
+        proxyReq,
+      },
     }),
   );
 
@@ -39,7 +42,9 @@ export async function applyProxiesCoreless(
       createProxyMiddleware({
         pathRewrite: { [path]: '/' },
         target: target.address,
-        onProxyReq,
+        on: {
+          proxyReq,
+        },
       }),
     );
   }
@@ -52,13 +57,16 @@ export function applyProxyToCore(app: Express, targets: ErxesProxyTarget[]) {
   if (!core) {
     throw new Error('core service not found');
   }
+
   app.use('/rpc', forbid);
   app.use(
     '/',
     createProxyMiddleware({
       target:
         NODE_ENV === 'production' ? core.address : 'http://localhost:3300',
-      onProxyReq,
+      on: {
+        proxyReq,
+      },
     }),
   );
 }
