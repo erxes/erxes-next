@@ -89,7 +89,7 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
             <Command.Input
               variant="secondary"
               wrapperClassName="flex-auto"
-              placeholder="Search brand..."
+              placeholder="Search category..."
               className="h-9"
             />
             <Command.List className="max-h-[300px] overflow-y-auto">

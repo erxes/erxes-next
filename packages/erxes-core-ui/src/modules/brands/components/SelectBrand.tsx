@@ -7,83 +7,90 @@ import {
 } from 'erxes-ui/components';
 import { useBrands } from '@/brands/hooks/useBrands';
 import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
-import { SelectBrandFetchMoreProps } from '@/brands/types/brand';
+import { IBrand, SelectBrandFetchMoreProps } from '@/brands/types/brand';
 import { useDebounce } from 'use-debounce';
 import { useInView } from 'react-intersection-observer';
 import React from 'react';
 import { cn } from 'erxes-ui/lib';
 
-interface SelectBrandProps {
+interface SelectBrandProps extends Omit<ButtonProps, 'onChange'> {
   values: string[];
   onValueChange: (value: string[]) => void;
 }
 
-interface SelectBrandTriggerProps {
+interface SelectBrandTriggerProps extends ButtonProps {
   currentValue: string;
   currentName: string;
 }
 
 export const SelectBrand = React.forwardRef<
   HTMLButtonElement,
-  SelectBrandProps & ButtonProps
+  SelectBrandProps
 >(({ values, onValueChange, ...props }, ref) => {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
   const [debouncedSearch] = useDebounce(search, 500);
 
-  const { brands, loading, handleFetchMore, totalCount } = useBrands({
+  const {
+    brands = [],
+    loading,
+    handleFetchMore,
+    totalCount = 0,
+  } = useBrands({
     variables: {
       searchValue: debouncedSearch,
     },
   });
+
   const currentValue = brands?.find((brand) => brand._id === values?.[0])?._id;
+
   const handleSelectBrand = (brandId: string) => {
     onValueChange(brandId === currentValue ? [] : [brandId]);
     setOpen(false);
   };
+
   return (
-    <>
-      <Popover open={open} onOpenChange={setOpen} modal>
-        <SelectBrandTrigger
-          currentValue={currentValue || ''}
-          currentName={
-            brands.find((brand) => brand._id === currentValue)?.name || ''
-          }
-          ref={ref}
-          {...props}
-        />
-        <Popover.Content
-          className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
-          align="start"
-        >
-          <Command shouldFilter={false} id="brand-command-menu">
-            <Command.Input
-              value={search}
-              onValueChange={setSearch}
-              variant="secondary"
-              wrapperClassName="flex-auto"
-              placeholder="Search brand..."
-              className="h-9"
-            />
-            <Command.List>
-              <SelectBrandEmpty loading={loading} />
-              {brands?.map((brand) => (
-                <SelectBrandItem
-                  brand={brand}
-                  currentValue={currentValue}
-                  handleSelectBrand={handleSelectBrand}
-                />
-              ))}
-              <SelectBrandFetchMore
-                fetchMore={handleFetchMore}
-                totalCount={totalCount}
-                brandsLength={brands.length}
+    <Popover open={open} onOpenChange={setOpen} modal>
+      <SelectBrandTrigger
+        currentValue={currentValue || ''}
+        currentName={
+          brands.find((brand) => brand._id === currentValue)?.name || ''
+        }
+        ref={ref}
+        {...props}
+      />
+      <Popover.Content
+        className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+        align="start"
+      >
+        <Command shouldFilter={false} id="brand-command-menu">
+          <Command.Input
+            value={search}
+            onValueChange={setSearch}
+            variant="secondary"
+            wrapperClassName="flex-auto"
+            placeholder="Search brand..."
+            className="h-9"
+          />
+          <Command.List>
+            <SelectBrandEmpty loading={loading} />
+            {brands?.map((brand) => (
+              <SelectBrandItem
+                key={brand._id}
+                brand={brand}
+                currentValue={currentValue || ''}
+                handleSelectBrand={handleSelectBrand}
               />
-            </Command.List>
-          </Command>
-        </Popover.Content>
-      </Popover>
-    </>
+            ))}
+            <SelectBrandFetchMore
+              fetchMore={handleFetchMore}
+              totalCount={totalCount}
+              brandsLength={brands.length}
+            />
+          </Command.List>
+        </Command>
+      </Popover.Content>
+    </Popover>
   );
 });
 
@@ -91,7 +98,7 @@ SelectBrand.displayName = 'SelectBrand';
 
 const SelectBrandTrigger = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & SelectBrandTriggerProps
+  SelectBrandTriggerProps
 >(({ currentName, currentValue, className, ...props }, ref) => {
   return (
     <Popover.Trigger asChild>
@@ -126,16 +133,26 @@ const SelectBrandTrigger = React.forwardRef<
 
 SelectBrandTrigger.displayName = 'SelectBrandTrigger';
 
-const SelectBrandItem = ({ brand, handleSelectBrand, currentValue }) => {
+interface SelectBrandItemProps {
+  brand: IBrand;
+  handleSelectBrand: (brandId: string) => void;
+  currentValue: string;
+}
+
+const SelectBrandItem: React.FC<SelectBrandItemProps> = ({
+  brand,
+  handleSelectBrand,
+  currentValue,
+}) => {
   return (
     <Command.Item
       key={brand._id}
       className="h-7"
       value={brand._id}
-      onSelect={handleSelectBrand}
+      onSelect={() => handleSelectBrand(brand._id)}
       title={brand.name}
     >
-      <span className="text-xs text-foreground truncate ">{brand.name}</span>
+      <span className="text-xs text-foreground truncate">{brand.name}</span>
       {currentValue === brand._id && (
         <IconCheck size={16} strokeWidth={2} className="ml-auto" />
       )}
@@ -143,11 +160,11 @@ const SelectBrandItem = ({ brand, handleSelectBrand, currentValue }) => {
   );
 };
 
-const SelectBrandFetchMore = ({
+const SelectBrandFetchMore: React.FC<SelectBrandFetchMoreProps> = ({
   fetchMore,
   brandsLength,
   totalCount,
-}: SelectBrandFetchMoreProps) => {
+}) => {
   const { ref: bottomRef } = useInView({
     onChange: (inView) => inView && fetchMore(),
   });
@@ -164,7 +181,13 @@ const SelectBrandFetchMore = ({
   );
 };
 
-export const SelectBrandEmpty = ({ loading }: { loading: boolean }) => {
+interface SelectBrandEmptyProps {
+  loading: boolean;
+}
+
+export const SelectBrandEmpty: React.FC<SelectBrandEmptyProps> = ({
+  loading,
+}) => {
   return (
     <Command.Empty>
       {loading ? (
