@@ -13,7 +13,7 @@ import {
   Upload,
 } from 'erxes-ui/components';
 
-import { BrandField } from './brandField';
+import { BrandField } from '@/products/AddProducts/components/BrandField';
 import { ProductFormValues } from './formSchema';
 import { VendorField } from './vendorField';
 
@@ -96,7 +96,7 @@ export const ProductAddMoreFields = ({
               <FormControl>
                 <BrandField
                   values={field.value || []}
-                  onChange={(value) => field.onChange(value)}
+                  onChange={field.onChange}
                 />
               </FormControl>
               <FormMessage className="text-destructive" />
