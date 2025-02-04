@@ -22,7 +22,7 @@
       "erxes-ui-shared-states": [
         "packages/libs/erxes-ui-shared-states/src/index.ts"
       ],
-      "erxes-ui/*": ["packages/libs/erxes-ui/src/*"],
+      "erxes-ui/*": ["packages/libs/erxes-ui/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
