@@ -17,6 +17,7 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
+      "erxes-api-utils": ["packages/libs/erxes-api-utils/src/index.ts"],
       "erxes-ui": ["packages/libs/erxes-ui/src"],
       "erxes-ui-shared-states": [
         "packages/libs/erxes-ui-shared-states/src/index.ts"
