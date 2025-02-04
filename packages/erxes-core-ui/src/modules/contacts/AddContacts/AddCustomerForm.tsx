@@ -47,30 +47,30 @@ export function AddCustomerForm() {
           <CustomerAddSheetHeader />
           <Separator />
           <ScrollArea.Root className="flex-auto">
-            <div className="px-5">
-              <Tabs defaultValue="general-information">
-                <Tabs.List className="grid grid-cols-2 mb-10 h-full bg-transparent">
-                  <Tabs.Trigger
-                    value="general-information"
-                    className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary bg-transparent data-[state=active]:border-b rounded-none "
-                  >
-                    General Information
-                  </Tabs.Trigger>
-                  <Tabs.Trigger
-                    value="links"
-                    className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:border-b rounded-none "
-                  >
-                    Links
-                  </Tabs.Trigger>
-                </Tabs.List>
+            <Tabs defaultValue="general-information">
+              <Tabs.List className="grid grid-cols-2 mb-10 h-full bg-transparent">
+                <Tabs.Trigger
+                  value="general-information"
+                  className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:border-b rounded-none "
+                >
+                  General Information
+                </Tabs.Trigger>
+                <Tabs.Trigger
+                  value="links"
+                  className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:border-b data-[state=active]:border-t-0 rounded-none "
+                >
+                  Links
+                </Tabs.Trigger>
+              </Tabs.List>
+              <div className="px-5">
                 <Tabs.Content value="general-information">
                   <CustomerAddGeneralInformationFields form={form} />
                 </Tabs.Content>
                 <Tabs.Content value="links">
                   <CustomerAddLinksFields />
                 </Tabs.Content>
-              </Tabs>
-            </div>
+              </div>
+            </Tabs>
           </ScrollArea.Root>
           <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
             <Button

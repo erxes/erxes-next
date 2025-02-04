@@ -130,11 +130,12 @@ const SelectBrandItem = ({ brand, handleSelectBrand, currentValue }) => {
   return (
     <Command.Item
       key={brand._id}
-      className="h-7 text-xs text-foreground"
+      className="h-7"
       value={brand._id}
       onSelect={handleSelectBrand}
+      title={brand.name}
     >
-      {brand.name}
+      <span className="text-xs text-foreground truncate ">{brand.name}</span>
       {currentValue === brand._id && (
         <IconCheck size={16} strokeWidth={2} className="ml-auto" />
       )}
