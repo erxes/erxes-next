@@ -23,7 +23,6 @@
         "packages/libs/erxes-ui-shared-states/src/index.ts"
       ],
       "erxes-ui/*": ["packages/libs/erxes-ui/src/*"],
-      "tasks_ui/Module": ["packages/plugins/tasks_ui/src/remote-entry.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
