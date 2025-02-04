@@ -82,7 +82,7 @@ export const VendorField = ({
             <Command.Input
               variant="secondary"
               wrapperClassName="flex-auto"
-              placeholder="Search brand..."
+              placeholder="Search category..."
               className="h-9"
             />
             <Command.List>
