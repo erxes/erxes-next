@@ -1,13 +1,13 @@
 import * as telemetry from 'erxes-telemetry';
 import * as jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import { redis } from 'erxes-api-utils/redis';
+import { redis } from 'erxes-api-utils';
 import { IModels, generateModels } from '../connectionResolver';
 import { getSubdomain } from 'erxes-api-utils';
-import { USER_ROLES } from 'erxes-api-utils/core/users';
-import { userActionsMap } from 'erxes-api-utils/core/permissions';
+import { USER_ROLES } from 'erxes-api-utils';
+import { userActionsMap } from 'erxes-api-utils';
 import fetch from 'node-fetch';
-import { setUserHeader } from 'erxes-api-utils/headers';
+import { setUserHeader } from 'erxes-api-utils';
 
 export default async function userMiddleware(
   req: Request & { user?: any },

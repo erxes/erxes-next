@@ -63,7 +63,7 @@ export const createGenerateModels = <IModels>(
     };
   } else {
     return async function genereteModels(
-      hostnameOrSubdomain: string = '',
+      hostnameOrSubdomain = '',
     ): Promise<IModels> {
       let subdomain: string = hostnameOrSubdomain;
 
@@ -92,7 +92,6 @@ export const createGenerateModels = <IModels>(
         organization._id,
       );
 
-      // @ts-ignore
       const tenantCon = mongoose.connection.useDb(GE_MONGO_URL, {
         // so that conn.model method can use cached connection
         useCache: true,

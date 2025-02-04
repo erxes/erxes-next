@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { createGenerateModels } from 'erxes-api-utils/utils';
+import { createGenerateModels } from 'erxes-api-utils';
 
 export interface IModels {
   Users: any;

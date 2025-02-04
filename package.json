@@ -75,6 +75,7 @@
     "lucide-react": "^0.462.0",
     "mongoose": "^8.9.6",
     "motion": "^11.11.17",
+    "node-fetch": "^2.6.7",
     "nuqs": "^2.3.0",
     "react": "18.3.1",
     "react-day-picker": "^9.5.0",
