@@ -22,8 +22,10 @@
     "src/**/*.test.jsx"
   ],
   "include": [
-    "src/**/*",
-    "../libs/erxes-ui/src/utils/config/**/*",
-    "libs/erxes-ui/src/utils/config"
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/modules/products/products-filter"
   ]
 }

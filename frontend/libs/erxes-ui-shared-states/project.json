@@ -1,6 +1,6 @@
 {
   "name": "erxes-ui-shared-states",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "frontend/libs/erxes-ui-shared-states/src",
   "projectType": "library",
   "tags": [],

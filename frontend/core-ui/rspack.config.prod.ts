@@ -16,11 +16,10 @@ export default composePlugins(
   withReact(),
   withModuleFederation(prodConfig, { dts: false }),
   (config) => {
-    // Define environment variables
     config.plugins?.push(
       new DefinePlugin({
         'process.env.REACT_APP_API_URL': JSON.stringify(
-          process.env.REACT_APP_API_URL,
+          process.env.REACT_APP_API_URL || 'https://default-api.com', // Provide a fallback
         ),
       }),
     );
