@@ -9,7 +9,7 @@ import {
   Switch,
 } from 'erxes-ui/components';
 
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
 export const IsSubscribedField = ({
   control,
@@ -24,7 +24,7 @@ export const IsSubscribedField = ({
         <FormItem className="flex flex-col">
           <FormLabel>SUBSCRIBED</FormLabel>
           <FormControl>
-            <div className='p-2'>
+            <div className="p-2">
               <Switch
                 className="scale-150 w-7"
                 checked={field.value === 'Yes'}

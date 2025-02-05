@@ -2010,7 +2010,7 @@
     "products": {
       "header": "Products",
       "actions": {
-        "addProducts": "Add products",
+        "add-products": "Add products",
         "editPrices": "Edit prices"
       },
       "delete": {
@@ -2271,7 +2271,7 @@
     "enabledHint": "Specify whether the sales channel is enabled.",
     "removeProductsWarning_one": "You are about to remove {{count}} product from {{sales_channel}}.",
     "removeProductsWarning_other": "You are about to remove {{count}} products from {{sales_channel}}.",
-    "addProducts": "Add Products",
+    "add-products": "Add Products",
     "editSalesChannel": "Edit sales channel",
     "productAlreadyAdded": "The product has already been added to the sales channel.",
     "deleteSalesChannelWarning": "You are about to delete the sales channel {{name}}. This action cannot be undone.",

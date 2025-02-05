@@ -9,8 +9,9 @@ import {
   Input,
 } from 'erxes-ui/components';
 
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
-export const PrimaryPhoneField = ({
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
+
+export const FirstNameField = ({
   control,
 }: {
   control: Control<CustomerFormType>;
@@ -18,10 +19,10 @@ export const PrimaryPhoneField = ({
   return (
     <FormField
       control={control}
-      name="primaryPhone"
+      name="firstName"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>PHONE</FormLabel>
+          <FormLabel>FIRST NAME</FormLabel>
           <FormControl>
             <Input className="rounded-md h-8" {...field} />
           </FormControl>

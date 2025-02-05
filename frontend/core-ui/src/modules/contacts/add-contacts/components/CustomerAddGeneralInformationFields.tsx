@@ -12,8 +12,8 @@ import {
   PhoneValidationStatusField,
   PrimaryEmailField,
   PrimaryPhoneField,
-} from '@/contacts/AddContacts/components/fields';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+} from '@/contacts/add-contacts/components/fields';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 export const CustomerAddGeneralInformationFields = ({
   form,
 }: {

@@ -12,16 +12,16 @@ import {
 } from 'erxes-ui/components';
 import { Form } from 'erxes-ui/components/form';
 
-import { CustomerAddGeneralInformationFields } from '@/contacts/AddContacts/components/CustomerAddGeneralInformationFields';
-import { CustomerAddLinksFields } from '@/contacts/AddContacts/components/CustomerAddLinksFields';
+import { CustomerAddGeneralInformationFields } from '@/contacts/add-contacts/components/CustomerAddGeneralInformationFields';
+import { CustomerAddLinksFields } from '@/contacts/add-contacts/components/CustomerAddLinksFields';
 import {
   CustomerAddSheet,
   CustomerAddSheetHeader,
-} from '@/contacts/AddContacts/components/CustomerAddSheet';
+} from '@/contacts/add-contacts/components/CustomerAddSheet';
 import {
   customerFormSchema,
   CustomerFormType,
-} from '@/contacts/AddContacts/components/formSchema';
+} from '@/contacts/add-contacts/components/formSchema';
 import { useAddCustomer } from '@/contacts/hooks/useAddCustomer';
 
 export function AddCustomerForm() {

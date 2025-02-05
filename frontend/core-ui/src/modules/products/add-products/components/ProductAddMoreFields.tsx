@@ -9,19 +9,24 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  TextEditor,
   Upload,
 } from 'erxes-ui/components';
 
-import { BrandField } from '@/products/AddProducts/components/BrandField';
+import { BlockEditor } from 'erxes-ui/modules/blocks/components/BlockEditor';
+import { BrandField } from '@/products/add-products/components/BrandField';
 import { ProductFormValues } from './formSchema';
 import { VendorField } from './vendorField';
+import { useCreateBlockNote } from '@blocknote/react';
+import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
 
 export const ProductAddMoreFields = ({
   form,
 }: {
   form: UseFormReturn<ProductFormValues>;
 }) => {
+  const editor = useCreateBlockNote({
+    schema: BLOCK_SCHEMA,
+  });
   return (
     <>
       <div className="flex items-center my-4">
@@ -37,10 +42,10 @@ export const ProductAddMoreFields = ({
             <FormLabel>DESCRIPTION</FormLabel>
 
             <FormControl>
-              <TextEditor
+              <BlockEditor
                 {...field}
+                editor={editor}
                 className=" h-28 rounded-md border"
-                parseTo="html"
               />
             </FormControl>
             <FormMessage className="text-destructive" />
@@ -120,10 +125,10 @@ export const ProductAddMoreFields = ({
           <FormItem className="mb-5">
             <FormLabel>BARCODE DESCRIPTION</FormLabel>
             <FormControl>
-              <TextEditor
+              <BlockEditor
                 {...field}
+                editor={editor}
                 className=" h-28 rounded-md border"
-                parseTo="html"
               />
             </FormControl>
             <FormMessage className="text-destructive" />

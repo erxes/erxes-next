@@ -8,7 +8,7 @@ import {
   Upload,
 } from 'erxes-ui/components';
 
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
 export const AvatarField = ({
   control,

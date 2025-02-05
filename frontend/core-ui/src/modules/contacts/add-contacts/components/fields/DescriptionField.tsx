@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from 'erxes-ui/components';
 
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 import { BlockEditor } from 'erxes-ui/components';
 import { useCreateBlockNote } from '@blocknote/react';
 import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';

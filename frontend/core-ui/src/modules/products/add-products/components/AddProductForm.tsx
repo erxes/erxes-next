@@ -15,7 +15,7 @@ import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
 import {
   productFormSchema,
   ProductFormValues,
-} from '@/products/AddProducts/components/formSchema';
+} from '@/products/add-products/components/formSchema';
 import { useAddProduct } from '@/products/hooks/useAddProduct';
 
 export function AddProductForm() {

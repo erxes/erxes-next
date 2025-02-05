@@ -6,7 +6,7 @@ import {
   FormMessage,
 } from 'erxes-ui/components';
 import { Control } from 'react-hook-form';
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 import { AssignMember } from '@/team-members/components/AssignMember';
 
 export const OwnerIdField = ({
@@ -22,11 +22,11 @@ export const OwnerIdField = ({
         <FormItem>
           <FormLabel>CHOOSE AN OWNER</FormLabel>
           <FormControl>
-            <div className='w-full'>
+            <div className="w-full">
               <AssignMember
                 value={field.value}
                 onValueChange={field.onChange}
-                className='w-full'
+                className="w-full"
               />
             </div>
           </FormControl>

@@ -9,7 +9,7 @@ import {
   Select,
 } from 'erxes-ui/components';
 
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
 const emailValidationStatuses = [
   { label: 'Valid', value: 'valid' },
@@ -42,7 +42,16 @@ export const EmailValidationStatusField = ({
                       {'Choose'}
                     </span>
                   }
-                > <span className="text-foreground font-medium text-sm">{emailValidationStatuses.find((status)=> status.value === field.value)?.label}</span></Select.Value>
+                >
+                  {' '}
+                  <span className="text-foreground font-medium text-sm">
+                    {
+                      emailValidationStatuses.find(
+                        (status) => status.value === field.value,
+                      )?.label
+                    }
+                  </span>
+                </Select.Value>
               </Select.Trigger>
             </FormControl>
             <Select.Content

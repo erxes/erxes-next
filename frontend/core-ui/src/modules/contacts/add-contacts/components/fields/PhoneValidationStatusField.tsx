@@ -9,7 +9,7 @@ import {
   Select,
 } from 'erxes-ui/components';
 
-import { CustomerFormType } from '@/contacts/AddContacts/components/formSchema';
+import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
 const phoneValidationStatuses = [
   { label: 'Valid', value: 'valid' },
@@ -39,7 +39,15 @@ export const PhoneValidationStatusField = ({
                       {'Choose'}
                     </span>
                   }
-                ><span className="text-foreground font-medium text-sm">{phoneValidationStatuses.find((status)=> status.value === field.value)?.label}</span></Select.Value>
+                >
+                  <span className="text-foreground font-medium text-sm">
+                    {
+                      phoneValidationStatuses.find(
+                        (status) => status.value === field.value,
+                      )?.label
+                    }
+                  </span>
+                </Select.Value>
               </Select.Trigger>
             </FormControl>
             <Select.Content
