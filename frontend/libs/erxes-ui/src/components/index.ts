@@ -32,7 +32,7 @@ export * from './skeleton';
 export * from './switch';
 export * from './table';
 export * from './tabs';
-export * from '../modules/text-editor/components/TextEditor';
+export * from '../modules/blocks/components/BlockEditor';
 export * from './toaster';
 export * from './toggle';
 export * from './toggle-group';

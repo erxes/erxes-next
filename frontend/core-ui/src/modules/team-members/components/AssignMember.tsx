@@ -12,7 +12,10 @@ import { useState } from 'react';
 import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
 import { useDebounce } from 'use-debounce';
 import { useInView } from 'react-intersection-observer';
-import { AssignMemberFetchMoreProps, IAssignMember } from '../types/teamMembers';
+import {
+  AssignMemberFetchMoreProps,
+  IAssignMember,
+} from '../types/teamMembers';
 import React from 'react';
 import { cn } from 'erxes-ui/lib';
 
@@ -26,9 +29,11 @@ export const AssignMember = React.forwardRef<
   ButtonProps & AssignMemberProps
 >(({ value, onValueChange, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<IAssignMember | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IAssignMember | undefined>(
+    undefined,
+  );
 
-  const handleSelect = (user: IAssignMember | null) => {
+  const handleSelect = (user: IAssignMember | undefined) => {
     setSelectedUser(user);
     onValueChange(user?._id || '');
     setOpen(false);
@@ -46,7 +51,11 @@ export const AssignMember = React.forwardRef<
       <Popover.Content className="p-0">
         <AssignMemberList
           renderItem={(user) => (
-            <AssignMemberItem user={user} selectedUser={selectedUser} handleSelect={handleSelect} />
+            <AssignMemberItem
+              user={user}
+              selectedUser={selectedUser}
+              handleSelect={handleSelect}
+            />
           )}
         />
       </Popover.Content>
@@ -92,8 +101,8 @@ export const AssignMemberTrigger = React.forwardRef<
   React.RefObject<HTMLButtonElement>,
   ButtonProps & {
     value: string;
-    selectedUser: IAssignMember | null;
-    setSelectedUser: (user: IAssignMember | null) => void;
+    selectedUser?: IAssignMember;
+    setSelectedUser: (user?: IAssignMember) => void;
   }
 >(({ value, selectedUser, setSelectedUser, className, ...props }, ref) => {
   const { loading } = useAssignedMember({
@@ -127,7 +136,9 @@ export const AssignMemberTrigger = React.forwardRef<
         ) : loading ? (
           <Skeleton className="w-full h-8" />
         ) : (
-          <span className="text-muted-foreground font-medium text-sm">Choose</span>
+          <span className="text-muted-foreground font-medium text-sm">
+            Choose
+          </span>
         )}
         {props.variant !== 'ghost' && (
           <IconChevronDown
@@ -164,27 +175,29 @@ export const AssignMemberItem = ({
   handleSelect,
 }: {
   user: IAssignMember;
-  selectedUser: IAssignMember | null;
-  handleSelect: (user: IAssignMember | null) => void;
+  selectedUser?: IAssignMember;
+  handleSelect: (user?: IAssignMember) => void;
 }) => {
   const isSelected = selectedUser?._id === user._id;
   return (
     <Command.Item
       key={user._id}
       value={user._id}
-      onSelect={() => handleSelect(isSelected ? null : user)}
+      onSelect={() => handleSelect(isSelected ? undefined : user)}
     >
       <AssignMemberInfo user={user} />
-      {isSelected && <IconCheck className="w-4 h-4 text-muted-foreground ml-auto" />}
+      {isSelected && (
+        <IconCheck className="w-4 h-4 text-muted-foreground ml-auto" />
+      )}
     </Command.Item>
   );
 };
 
-const AssignMemberInfo = ({
+export const AssignMemberInfo = ({
   user,
   size,
 }: {
-  user: IAssignMember | null;
+  user?: IAssignMember;
   size?: React.ComponentProps<typeof Avatar>['size'];
 }) => {
   return (
@@ -216,7 +229,7 @@ export function SelectUserFetchMore({
   return (
     <Command.Item value="-" disabled ref={bottomRef}>
       <IconLoader className="w-4 h-4 animate-spin text-muted-foreground mr-1" />
-      Loading more...
+      Load more...
     </Command.Item>
   );
 }

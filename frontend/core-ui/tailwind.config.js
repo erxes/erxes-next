@@ -7,7 +7,7 @@ module.exports = {
   content: [
     join(
       __dirname,
-      '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
+      '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}',
     ),
     ...createGlobPatternsForDependencies(__dirname),
   ],
@@ -39,10 +39,6 @@ module.exports = {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
-        },
-        system: {
-          DEFAULT: 'hsl(var(--system))',
-          foreground: 'hsl(var(--system-foreground))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',

@@ -90,12 +90,12 @@ export const MainNavigationBar = ({
     );
   };
   return (
-    <Sidebar.Provider>
-      <Sidebar collapsible="offcanvas" variant="inset">
+    <Sidebar.Provider className="w-screen">
+      <Sidebar collapsible="offcanvas" variant="inset" className="p-0">
         <AnimatePresence>{renderSidebarContent()}</AnimatePresence>
         <Sidebar.Rail />
       </Sidebar>
-      <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden">
+      <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden shadow-sidebar-inset">
         {children}
       </Sidebar.Inset>
     </Sidebar.Provider>

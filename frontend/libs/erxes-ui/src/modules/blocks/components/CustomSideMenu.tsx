@@ -7,10 +7,10 @@ import {
   SideMenu,
   SideMenuController,
 } from '@blocknote/react';
-import { IconColorPicker,IconPlus, IconTrash} from '@tabler/icons-react'
+import { IconColorPicker, IconPlus, IconTrash } from '@tabler/icons-react';
 
 import { AddBlockItem } from './AddBlockItem';
-interface CustomSideMenuProps{
+interface CustomSideMenuProps {
   editor: BlockNoteEditor;
 }
 export const CustomSideMenu = ({ editor }: CustomSideMenuProps) => {
@@ -24,21 +24,21 @@ export const CustomSideMenu = ({ editor }: CustomSideMenuProps) => {
               <DragHandleMenu {...props}>
                 <AddBlockItem {...props} editor={editor}>
                   <div className="flex gap-2 text-sm items-center">
-                  <IconPlus className="w-4 h-4"/>
-                  Add
-                </div>
+                    <IconPlus className="w-4 h-4" />
+                    Add
+                  </div>
                 </AddBlockItem>
                 <BlockColorsItem {...props}>
                   <div className="flex gap-2 text-sm items-center mr-2">
-                  <IconColorPicker className="w-4 h-4"/>
-                  Colors
-                </div>
+                    <IconColorPicker className="w-4 h-4" />
+                    Colors
+                  </div>
                 </BlockColorsItem>
-                <RemoveBlockItem {...props} >
-                  <div className="flex gap-2 text-sm text-red-500 items-center">
-                  <IconTrash className="w-4 h-4"/>
-                  Remove
-                </div>
+                <RemoveBlockItem {...props}>
+                  <div className="flex gap-2 text-sm text-muted-foreground items-center">
+                    <IconTrash className="w-4 h-4" />
+                    Remove
+                  </div>
                 </RemoveBlockItem>
               </DragHandleMenu>
             )}
