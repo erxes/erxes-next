@@ -1,7 +1,7 @@
 {
-  "name": "erxes-core-api",
+  "name": "erxes-gateway",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/erxes-core-api/src",
+  "sourceRoot": "backend/gateway/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -10,12 +10,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/packages/erxes-core-api",
+        "outputPath": "dist/backend/gateway",
         "format": ["cjs"],
         "bundle": false,
-        "main": "packages/erxes-core-api/src/main.ts",
-        "tsConfig": "packages/erxes-core-api/tsconfig.app.json",
-        "assets": ["packages/erxes-core-api/src/assets"],
+        "main": "backend/gateway/src/main.ts",
+        "tsConfig": "backend/gateway/tsconfig.app.json",
+        "assets": ["backend/gateway/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -41,15 +41,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "erxes-core-api:build",
+        "buildTarget": "erxes-gateway:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "erxes-core-api:build:development"
+          "buildTarget": "erxes-gateway:build:development"
         },
         "production": {
-          "buildTarget": "erxes-core-api:build:production"
+          "buildTarget": "erxes-gateway:build:production"
         }
       }
     }

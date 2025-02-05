@@ -158,8 +158,8 @@
     "webpack-cli": "^5.1.4"
   },
   "workspaces": [
-    "packages/erxes-gateway",
-    "packages/libs/erxes-api-utils"
+    "backend/gateway",
+    "backend/libs/erxes-api-utils"
   ],
   "packageManager": "pnpm@9.12.3"
 }
