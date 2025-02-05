@@ -6,7 +6,7 @@ import {
   IconPhone,
 } from '@tabler/icons-react';
 
-import { Avatar, Button, Separator } from 'erxes-ui/components';
+import { Avatar, Button, Separator, Skeleton } from 'erxes-ui/components';
 
 import { ContactDetailSelectTag } from '@/contacts/detail/components/ContactDetailSelectTag';
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
@@ -14,7 +14,7 @@ import { ContactDetailAssignedTo } from './ContactDetailAssignedTo';
 import { ITag } from '@/tags/types/tagTypes';
 
 export const ContactGeneral = () => {
-  const { customerDetail } = useContactDetail();
+  const { customerDetail, loading } = useContactDetail();
   const {
     _id,
     firstName,
@@ -27,6 +27,11 @@ export const ContactGeneral = () => {
     code,
     score,
   } = customerDetail || {};
+
+  if (loading) {
+    return <Skeleton className="w-full h-full" />;
+  }
+
   return (
     <>
       <div className="py-8 space-y-6">

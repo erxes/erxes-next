@@ -153,7 +153,7 @@ const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
               <SelectTagItem
                 key={tag._id}
                 {...tag}
-                hasChildren={!!tags?.find((t) => t.parentId === tag._id)}
+                hasChildren={!!tags?.find((t: ITag) => t.parentId === tag._id)}
               />
             );
           })}

@@ -7,6 +7,7 @@ import { TagBadges } from '@/tags/components/tagBadges';
 
 import { useSelectTags } from '@/tags/contexts/SelectTagsContext';
 import { useTagsByIds } from '@/tags/hooks/useTags';
+import { ITag } from '@/tags/types/tagTypes';
 
 export const SelectTagTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
@@ -19,7 +20,7 @@ export const SelectTagTrigger = React.forwardRef<
       tagType,
       tagIds: selectedTagIds,
     },
-    onCompleted: ({ tags }) => {
+    onCompleted: ({ tags }: { tags: ITag[] }) => {
       setSelectedTags(tags);
     },
     skip: !selectedTagIds.length || selectedTags?.length,

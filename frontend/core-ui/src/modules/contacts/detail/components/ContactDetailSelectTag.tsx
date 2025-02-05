@@ -9,8 +9,7 @@ import { useQueryState } from 'nuqs';
 export const ContactDetailSelectTag = ({ tagIds }: { tagIds: string[] }) => {
   const [contactId] = useQueryState('contact_id');
   const { giveTags, loading } = useGiveTags();
-
-  console.log(tagIds);
+  const [selectedTags, setSelectedTags] = useState<string[]>(tagIds);
 
   const handleGiveTags = (tags: string[]) => {
     giveTags({
@@ -39,9 +38,12 @@ export const ContactDetailSelectTag = ({ tagIds }: { tagIds: string[] }) => {
       </Label>
       <SelectTags
         tagType="core:customer"
-        selected={tagIds}
+        selected={selectedTags}
         loading={loading}
-        onSelect={(tags) => handleGiveTags(tags)}
+        onSelect={(tags) => {
+          setSelectedTags(tags as string[]);
+          handleGiveTags(tags as string[]);
+        }}
       />
     </fieldset>
   );
