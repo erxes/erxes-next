@@ -19,7 +19,6 @@ import {
 
 import { CategoryField } from './categoryField';
 import { ProductFormValues } from './formSchema';
-
 import { useUom } from '@/products/hooks/useUom';
 const types = [
   { label: 'Product', value: 'product', icon: IconPackage },
@@ -65,47 +64,34 @@ export const ProductAddCoreFields = ({
       />
       <FormField
         control={form.control}
-        name="categoryId"
+        name="uom"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel>CATEGORY</FormLabel>
-            <FormControl>
-              <CategoryField {...field} />
-            </FormControl>
-            <FormMessage className="text-destructive" />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="type"
-        render={({ field }) => (
-          <FormItem className="flex flex-col">
-            <FormLabel>TYPE</FormLabel>
+            <FormLabel>UNIT OF MEASUREMENTS</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
                   <Select.Value
-                    className="text-foreground font-medium text-sm"
                     placeholder={
                       <span className="truncate text-foreground font-medium text-sm">
-                        {'Choose type'}
+                        {'Choose UOM'}
                       </span>
                     }
-                  />
+                  >
+                    <span className="text-foreground font-medium text-sm">
+                      {uoms.find((uom) => uom._id === field.value)?.name}
+                    </span>
+                  </Select.Value>
                 </Select.Trigger>
               </FormControl>
-              <Select.Content
-              // className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-              // align="start"
-              >
-                {types.map((type) => (
+              <Select.Content>
+                {uoms.map((uom) => (
                   <Select.Item
-                    key={type.value}
-                    className="text-[13px]"
-                    value={type.value}
+                    key={uom._id}
+                    className="text-xs"
+                    value={uom._id}
                   >
-                    {type.label}
+                    {uom.name}
                   </Select.Item>
                 ))}
               </Select.Content>
@@ -134,31 +120,50 @@ export const ProductAddCoreFields = ({
       />
       <FormField
         control={form.control}
-        name="uom"
+        name="categoryId"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <FormLabel>UNIT OF MEASUREMENTS</FormLabel>
+            <FormLabel>CATEGORY</FormLabel>
+            <FormControl>
+              <CategoryField {...field} />
+            </FormControl>
+            <FormMessage className="text-destructive" />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="type"
+        render={({ field }) => (
+          <FormItem className="flex flex-col">
+            <FormLabel>TYPE</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
                   <Select.Value
-                    className="text-foreground font-medium text-sm"
                     placeholder={
                       <span className="truncate text-foreground font-medium text-sm">
-                        {'Choose UOM'}
+                        {'Choose type'}
                       </span>
                     }
-                  ></Select.Value>
+                  >
+                    <span className="text-foreground font-medium text-sm">
+                      {types.find((type) => type.value === field.value)?.label}
+                    </span>
+                  </Select.Value>
                 </Select.Trigger>
               </FormControl>
-              <Select.Content>
-                {uoms.map((uom) => (
+              <Select.Content
+              // className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
+              // align="start"
+              >
+                {types.map((type) => (
                   <Select.Item
-                    key={uom._id}
-                    className="text-xs"
-                    value={uom._id}
+                    key={type.value}
+                    className="text-[13px]"
+                    value={type.value}
                   >
-                    {uom.name}
+                    {type.label}
                   </Select.Item>
                 ))}
               </Select.Content>

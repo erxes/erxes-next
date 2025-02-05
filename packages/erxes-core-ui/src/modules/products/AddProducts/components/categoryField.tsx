@@ -35,7 +35,7 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
   const [open, setOpen] = useState(false);
   const { productCategories, loading } = useProductCategories({});
   const currentValue = productCategories?.find(
-    (category) => category._id === value
+    (category) => category._id === value,
   );
 
   const handleSelectCategory = (categoryId: string) => {
@@ -86,7 +86,12 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
           sideOffset={8}
         >
           <Command id="category-command-menu" className="relative">
-            <Command.Input placeholder="Search category..." className="h-9" />
+            <Command.Input
+              variant="secondary"
+              wrapperClassName="flex-auto"
+              placeholder="Search category..."
+              className="h-9"
+            />
             <Command.List className="max-h-[300px] overflow-y-auto">
               <Command.Empty>No category found</Command.Empty>
               {productCategories?.map((category: Category) => (
@@ -95,6 +100,7 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
                   value={category.name}
                   className="h-7 text-xs"
                   onSelect={() => handleSelectCategory(category._id)}
+                  title={category.name}
                 >
                   <Avatar>
                     <Avatar.Image src={category?.attachment?.url} />
@@ -102,13 +108,13 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
                       {category?.name?.charAt(0)}
                     </Avatar.Fallback>
                   </Avatar>
-                  <span className="ml-2">{category.name}</span>
+                  <span className="ml-2 truncate">{category.name}</span>
                   <IconCheck
                     size={16}
                     strokeWidth={2}
                     className={cn(
                       'ml-auto',
-                      category._id === value ? 'opacity-100' : 'opacity-0'
+                      category._id === value ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                 </Command.Item>

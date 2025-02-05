@@ -2,7 +2,12 @@ import { useState } from 'react';
 
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
 
-import { Button, Command, Popover, Skeleton } from 'erxes-ui/components';
+import {
+  Button,
+  Command,
+  Popover,
+  Skeleton,
+} from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 
 import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
@@ -13,7 +18,11 @@ interface VendorFieldProps {
   className?: string;
 }
 
-export const VendorField = ({ value, onChange, className }: VendorFieldProps) => {
+export const VendorField = ({
+  value,
+  onChange,
+  className,
+}: VendorFieldProps) => {
   const { companies, loading } = useCompaniesLowDetail();
   const [open, setOpen] = useState<boolean>(false);
   const currentValue = companies?.find((vendor) => vendor._id === value)?._id;
@@ -48,11 +57,12 @@ export const VendorField = ({ value, onChange, className }: VendorFieldProps) =>
             <span
               className={cn(
                 'truncate',
-                !currentValue && 'text-foreground font-medium text-sm'
+                !currentValue && 'text-foreground font-medium text-sm',
               )}
             >
               {currentValue
-                ? companies.find((vendor) => vendor._id === currentValue)?.primaryName
+                ? companies.find((vendor) => vendor._id === currentValue)
+                    ?.primaryName
                 : 'Select vendor'}
             </span>
             <IconChevronDown
@@ -69,23 +79,31 @@ export const VendorField = ({ value, onChange, className }: VendorFieldProps) =>
           sideOffset={4}
         >
           <Command id="vendor-command-menu">
-            <Command.Input 
-              placeholder="Search vendor..." 
+            <Command.Input
+              variant="secondary"
+              wrapperClassName="flex-auto"
+              placeholder="Search vendor..."
               className="h-9"
             />
             <Command.List>
-              <Command.Empty>No vendor found.</Command.Empty>
               <Command.Group>
                 {companies.map((vendor) => (
                   <Command.Item
                     key={vendor._id}
-                    className="h-7 text-xs text-foreground"
+                    className=" h-7 relative flex items-center justify-between"
                     value={vendor._id}
                     onSelect={handleSelectVendor}
+                    title={vendor.primaryName}
                   >
-                    {vendor.primaryName}
+                    <span className="text-xs text-foreground truncate">
+                      {vendor.primaryName}
+                    </span>
                     {currentValue === vendor._id && (
-                      <IconCheck size={16} strokeWidth={2} className="ml-auto" />
+                      <IconCheck
+                        size={16}
+                        strokeWidth={2}
+                        className="ml-auto"
+                      />
                     )}
                   </Command.Item>
                 ))}

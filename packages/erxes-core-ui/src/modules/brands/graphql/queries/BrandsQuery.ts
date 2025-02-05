@@ -5,7 +5,7 @@ export const brandsQuery = gql`
     brands(page: $page, perPage: $perPage, searchValue: $searchValue) {
       _id
       name
-      code
     }
+    brandsTotalCount
   }
 `;
