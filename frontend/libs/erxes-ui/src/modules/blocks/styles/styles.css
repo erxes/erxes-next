@@ -46,7 +46,8 @@
 
 .bn-editor {
   padding-inline: 36px;
-  min-height: 400px;
+  min-height: 100%;
+  height: 100%;
 }
 
 .bn-default-styles {
@@ -119,4 +120,9 @@
   padding: 4px 7px;
   font-size: 13px;
   outline: none;
+}
+
+.read-only.bn-shadcn .bn-editor {
+  background-color: transparent;
+  padding-inline: 0;
 }

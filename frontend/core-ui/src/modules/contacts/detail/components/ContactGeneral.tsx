@@ -6,11 +6,12 @@ import {
   IconPhone,
 } from '@tabler/icons-react';
 
-import { Avatar, Button, Label, Separator } from 'erxes-ui/components';
+import { Avatar, Button, Separator } from 'erxes-ui/components';
 
 import { ContactDetailSelectTag } from '@/contacts/detail/components/ContactDetailSelectTag';
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
 import { ContactDetailAssignedTo } from './ContactDetailAssignedTo';
+import { ITag } from '@/tags/types/tagTypes';
 
 export const ContactGeneral = () => {
   const { customerDetail } = useContactDetail();
@@ -66,7 +67,7 @@ export const ContactGeneral = () => {
             <IconDeviceMobileMessage /> Message
           </Button>
         </div>
-        <ContactDetailSelectTag tagIds={getTags?.map((tag) => tag._id)} />
+        <ContactDetailSelectTag tagIds={getTags?.map((tag: ITag) => tag._id)} />
         <ContactDetailAssignedTo ownerId={ownerId} />
         <Separator />
         <div className="px-8 space-y-6 font-medium">

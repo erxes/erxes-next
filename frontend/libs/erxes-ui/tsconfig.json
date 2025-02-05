@@ -2,7 +2,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "allowJs": false,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "baseUrl": ".",
@@ -16,7 +16,6 @@
     }
   },
   "files": [],
-  "include": [],
   "references": [
     {
       "path": "./tsconfig.lib.json"

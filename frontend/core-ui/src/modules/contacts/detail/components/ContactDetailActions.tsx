@@ -67,9 +67,9 @@ export const ContactDetailActions = () => {
                 <ActivityLogs
                   operation={{
                     variables: {
-                      contentType: 'core:customers',
+                      contentType: 'core:customer',
                       contentId: contactId,
-                      // activityType: 'core:internalNote',
+                      activityType: 'core:internalNote',
                     },
                     skip: !contactId,
                   }}
@@ -77,7 +77,10 @@ export const ContactDetailActions = () => {
               </Resizable.Panel>
               <Resizable.Handle />
               <Resizable.Panel minSize={25} maxSize={60}>
-                <AddInternalNotes />
+                <AddInternalNotes
+                  contentTypeId={contactId || ''}
+                  contentType="core:customer"
+                />
               </Resizable.Panel>
             </Resizable.PanelGroup>
           </ActionTabsContent>

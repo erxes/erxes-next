@@ -15,6 +15,9 @@ import { cn } from 'erxes-ui/lib/utils';
 
 import { Tooltip } from './tooltip';
 import { IconLayoutSidebar } from '@tabler/icons-react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { mergeRefs } from 'react-merge-refs';
+import { Key } from 'erxes-ui/types/Key';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -94,20 +97,11 @@ const SidebarProvider = React.forwardRef<
     }, [isMobile, setOpen, setOpenMobile]);
 
     // Adds a keyboard shortcut to toggle the sidebar.
-    React.useEffect(() => {
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (
-          event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
-          (event.metaKey || event.ctrlKey)
-        ) {
-          event.preventDefault();
-          toggleSidebar();
-        }
-      };
 
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [toggleSidebar]);
+    useHotkeys([`${Key.Meta}+${SIDEBAR_KEYBOARD_SHORTCUT}`], () => {
+      console.log('toggleSidebar');
+      toggleSidebar();
+    });
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.

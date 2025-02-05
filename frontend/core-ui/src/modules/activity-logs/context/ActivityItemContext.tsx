@@ -2,7 +2,12 @@ import { createContext, useContext } from 'react';
 import { IActivityLog } from '@/activity-logs/types/activityTypes';
 
 export const ActivityItemContext = createContext<
-  (IActivityLog & { isLast: boolean; contentTypeModule: string | null }) | null
+  | (IActivityLog & {
+      isLast: boolean;
+      contentTypeModule: string | null;
+      moduleName: string | null;
+    })
+  | null
 >(null);
 
 export const useActivityItemContext = () => {

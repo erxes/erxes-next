@@ -18,9 +18,9 @@ const spinnerVariants = cva('flex-col items-center justify-center', {
 const loaderVariants = cva('animate-spin text-muted-foreground', {
   variants: {
     size: {
-      small: 'size-6',
-      medium: 'size-8',
-      large: 'size-12',
+      small: 'size-4',
+      medium: 'size-6',
+      large: 'size-8',
     },
   },
   defaultVariants: {
@@ -35,7 +35,12 @@ interface SpinnerContentProps
   children?: React.ReactNode;
 }
 
-export function Spinner({ size, show, children, className }: SpinnerContentProps) {
+export function Spinner({
+  size,
+  show,
+  children,
+  className,
+}: SpinnerContentProps) {
   return (
     <span className={spinnerVariants({ show })}>
       <IconLoader className={cn(loaderVariants({ size }), className)} />
