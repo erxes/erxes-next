@@ -1,6 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { spawn, ChildProcess, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -22,8 +19,6 @@ const {
   NODE_ENV,
   APOLLO_ROUTER_PORT,
   INTROSPECTION,
-  OTEL_EXPORTER_OTLP_ENDPOINT,
-  OTEL_EXPORTER_OTLP_PROTOCOL,
 } = process.env;
 
 let routerProcess: ChildProcess | undefined = undefined;
@@ -42,6 +37,7 @@ export const stopRouter = (_sig: NodeJS.Signals) => {
 export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 50_000;
 
 const downloadRouter = async () => {
+  console.log(NODE_ENV);
   if (NODE_ENV === 'production') {
     // router must be already inside the image
     return;
@@ -50,9 +46,10 @@ const downloadRouter = async () => {
     return routerPath;
   }
 
-  const version = 'v1.35.0';
+  const version = 'v1.59.2';
   const downloadCommand = `(export VERSION=${version}; curl -sSL https://router.apollo.dev/download/nix/${version} | sh)`;
   try {
+    console.log(`cd ${dirTempPath} && ${downloadCommand}`);
     execSync(`cd ${dirTempPath} && ${downloadCommand}`);
   } catch (e) {
     console.error(
@@ -128,39 +125,21 @@ const createRouterConfig = async () => {
     },
   };
 
-  if (OTEL_EXPORTER_OTLP_ENDPOINT) {
-    config.telemetry = {
-      instrumentation: {
-        spans: {
-          default_attribute_requirement_level: 'required',
-          mode: 'spec_compliant',
-        },
-      },
-      exporters: {
-        tracing: {
-          common: {
-            service_name: 'router',
-            service_namespace: 'apollo',
-          },
-          otlp: {
-            enabled: true,
-            endpoint: OTEL_EXPORTER_OTLP_ENDPOINT,
-            protocol: OTEL_EXPORTER_OTLP_PROTOCOL,
-          },
-        },
-      },
-    };
-  }
-
   fs.writeFileSync(routerConfigPath, yaml.stringify(config));
 };
 
 export const startRouter = async (proxyTargets: ErxesProxyTarget[]) => {
+  console.log('Starting router...');
   await supergraphCompose(proxyTargets);
+  console.log('Supergraph composed');
   await createRouterConfig();
+  console.log('Router config created');
   await downloadRouter();
+  console.log('Router downloaded');
 
   const devOptions = ['--dev', '--hot-reload'];
+
+  console.log(NODE_ENV);
 
   routerProcess = spawn(
     routerPath,

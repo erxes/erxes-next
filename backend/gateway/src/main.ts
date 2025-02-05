@@ -30,14 +30,6 @@ async function start() {
 
   const httpServer = http.createServer(app);
 
-  // httpServer.on('close', () => {
-  //   try {
-  //     pubsub.close();
-  //   } catch (e) {
-  //     console.log('PubSub client disconnected');
-  //   }
-  // });
-
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
   applyProxyToCore(app, targets);
 

@@ -25,7 +25,7 @@ type SupergraphConfig = {
 const writeSupergraphConfig = (proxyTargets: ErxesProxyTarget[]) => {
   const superGraphConfigNext = supergraphConfigPath + '.next';
   const config: SupergraphConfig = {
-    federation_version: '=2.3.1',
+    federation_version: '=2.9.3',
     subgraphs: {},
   };
 
@@ -69,7 +69,7 @@ const supergraphComposeOnce = async () => {
     const superGraphqlNext = supergraphPath + '.next';
 
     await execSync(
-      `yarn rover supergraph compose --config ${supergraphConfigPath} --output ${superGraphqlNext} --elv2-license=accept  --client-timeout=80000`,
+      `pnpm rover supergraph compose --config ${supergraphConfigPath} --output ${superGraphqlNext} --elv2-license=accept  --client-timeout=80000`,
     );
 
     if (

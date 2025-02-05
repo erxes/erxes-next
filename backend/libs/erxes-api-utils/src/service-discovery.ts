@@ -61,7 +61,7 @@ export const join = async ({
   meta,
 }: {
   name: string;
-  port: string;
+  port: number;
   hasSubscriptions?: boolean;
   importExportTypes?: any;
   meta?: any;
