@@ -1,5 +1,5 @@
 {
-  "name": "erxes-core-api",
+  "name": "core-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/core-api/src",
   "projectType": "application",
@@ -41,15 +41,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "erxes-core-api:build",
+        "buildTarget": "core-api:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "erxes-core-api:build:development"
+          "buildTarget": "core-api:build:development"
         },
         "production": {
-          "buildTarget": "erxes-core-api:build:production"
+          "buildTarget": "core-api:build:production"
         }
       }
     }

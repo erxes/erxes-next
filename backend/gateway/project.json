@@ -1,5 +1,5 @@
 {
-  "name": "erxes-gateway",
+  "name": "gateway",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/gateway/src",
   "projectType": "application",
@@ -41,15 +41,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "erxes-gateway:build",
+        "buildTarget": "gateway:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "erxes-gateway:build:development"
+          "buildTarget": "gateway:build:development"
         },
         "production": {
-          "buildTarget": "erxes-gateway:build:production"
+          "buildTarget": "gateway:build:production"
         }
       }
     }
