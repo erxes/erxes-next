@@ -1,7 +1,7 @@
 {
-  "name": "erxes-core-ui",
+  "name": "core-ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/erxes-core-ui/src",
+  "sourceRoot": "frontend/core-ui/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,11 +11,11 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/packages/erxes-core-ui",
-        "main": "packages/erxes-core-ui/src/main.ts",
-        "tsConfig": "packages/erxes-core-ui/tsconfig.app.json",
-        "rspackConfig": "packages/erxes-core-ui/rspack.config.ts",
-        "assets": ["packages/erxes-core-ui/src/assets"]
+        "outputPath": "dist/frontend/core-ui",
+        "main": "frontend/core-ui/src/main.ts",
+        "tsConfig": "frontend/core-ui/tsconfig.app.json",
+        "rspackConfig": "frontend/core-ui/rspack.config.ts",
+        "assets": ["frontend/core-ui/src/assets"]
       },
       "configurations": {
         "development": {
@@ -25,20 +25,20 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "packages/erxes-core-ui/rspack.config.prod.ts"
+          "rspackConfig": "frontend/core-ui/rspack.config.prod.ts"
         }
       }
     },
     "serve": {
       "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
-        "buildTarget": "erxes-core-ui:build:development",
+        "buildTarget": "core-ui:build:development",
         "port": 3001
       },
       "configurations": {
         "development": {},
         "production": {
-          "buildTarget": "erxes-core-ui:build:production"
+          "buildTarget": "core-ui:build:production"
         }
       }
     },
@@ -46,14 +46,14 @@
       "executor": "@nx/rspack:module-federation-static-server",
       "defaultConfiguration": "production",
       "options": {
-        "serveTarget": "erxes-core-ui:serve"
+        "serveTarget": "core-ui:serve"
       },
       "configurations": {
         "development": {
-          "serveTarget": "erxes-core-ui:serve:development"
+          "serveTarget": "core-ui:serve:development"
         },
         "production": {
-          "serveTarget": "erxes-core-ui:serve:production"
+          "serveTarget": "core-ui:serve:production"
         }
       }
     }

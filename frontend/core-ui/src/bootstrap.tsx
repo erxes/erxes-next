@@ -13,7 +13,7 @@ import { App } from '@/app/components/App';
 // Initialize module federation before rendering
 const initFederation = async () => {
   const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement,
   );
 
   if (NODE_ENV === 'development') {
@@ -22,7 +22,7 @@ const initFederation = async () => {
         <NuqsAdapter>
           <App />
         </NuqsAdapter>
-      </StrictMode>
+      </StrictMode>,
     );
   } else {
     fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
@@ -41,7 +41,7 @@ const initFederation = async () => {
             <NuqsAdapter>
               <App />
             </NuqsAdapter>
-          </StrictMode>
+          </StrictMode>,
         );
       });
   }

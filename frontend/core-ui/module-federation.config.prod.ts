@@ -16,7 +16,7 @@ const coreLibraries = new Set([
 ]);
 
 const config: ModuleFederationConfig = {
-  name: 'erxes-core-ui',
+  name: 'core-ui',
 
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {

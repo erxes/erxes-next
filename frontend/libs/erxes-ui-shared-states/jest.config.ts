@@ -1,10 +1,11 @@
 export default {
-  displayName: 'erxes-core-ui',
-  preset: '../../jest.preset.js',
+  displayName: 'erxes-ui-shared-states',
+  preset: '../../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': ['babel-jest', { presets: ['@nx/react/babel'] }],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/packages/core',
+  coverageDirectory:
+    '../../coverage/packages/frontend/libs/erxes-ui-shared-states',
 };

@@ -1,7 +1,7 @@
 {
   "name": "erxes-ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/libs/erxes-ui/src",
+  "sourceRoot": "frontend/libs/erxes-ui/src",
   "projectType": "library",
   "tags": ["type:ui"],
   "depConstraints": ["type:ui"],
