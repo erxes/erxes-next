@@ -35,7 +35,7 @@ import { SelectTagsProps } from '@/tags/types/tagTypes';
 
 export const SelectTags = React.forwardRef<
   React.ElementRef<typeof Button>,
-  ButtonProps & SelectTagsProps
+  Omit<ButtonProps, 'onSelect'> & SelectTagsProps
 >(
   (
     {

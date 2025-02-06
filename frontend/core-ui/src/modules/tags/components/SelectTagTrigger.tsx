@@ -27,13 +27,13 @@ export const SelectTagTrigger = React.forwardRef<
   });
 
   const buttonClasses = cn(
-    'justify-start border-dashed shadow-none ring-0 border overflow-auto gap-1 px-1 min-w-60 font-normal',
+    'justify-start ring-0 overflow-auto gap-1 px-1 min-w-60 font-normal',
     className,
   );
 
   return (
     <Popover.Trigger asChild>
-      <Button variant="outline" className={buttonClasses} {...props} ref={ref}>
+      <Button variant="ghost" className={buttonClasses} {...props} ref={ref}>
         <TagBadges tagIds={selectedTagIds} tags={selectedTags} />
       </Button>
     </Popover.Trigger>
