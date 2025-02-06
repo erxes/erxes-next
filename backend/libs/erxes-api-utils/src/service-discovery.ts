@@ -81,6 +81,8 @@ export const join = async ({
     LOAD_BALANCER_ADDRESS ||
     `http://${isDev ? 'localhost' : `plugin-${name}-api`}:${port}`;
 
+  console.log(address);
+
   await redis.set(`service:${name}`, address);
 
   console.log(`$service:${name} joined with ${address}`);

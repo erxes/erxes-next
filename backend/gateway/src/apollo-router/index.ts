@@ -37,7 +37,6 @@ export const stopRouter = (_sig: NodeJS.Signals) => {
 export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 50_000;
 
 const downloadRouter = async () => {
-  console.log(NODE_ENV);
   if (NODE_ENV === 'production') {
     // router must be already inside the image
     return;
@@ -49,7 +48,6 @@ const downloadRouter = async () => {
   const version = 'v1.59.2';
   const downloadCommand = `(export VERSION=${version}; curl -sSL https://router.apollo.dev/download/nix/${version} | sh)`;
   try {
-    console.log(`cd ${dirTempPath} && ${downloadCommand}`);
     execSync(`cd ${dirTempPath} && ${downloadCommand}`);
   } catch (e) {
     console.error(
@@ -129,17 +127,11 @@ const createRouterConfig = async () => {
 };
 
 export const startRouter = async (proxyTargets: ErxesProxyTarget[]) => {
-  console.log('Starting router...');
   await supergraphCompose(proxyTargets);
-  console.log('Supergraph composed');
   await createRouterConfig();
-  console.log('Router config created');
   await downloadRouter();
-  console.log('Router downloaded');
 
   const devOptions = ['--dev', '--hot-reload'];
-
-  console.log(NODE_ENV);
 
   routerProcess = spawn(
     routerPath,
