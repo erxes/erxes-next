@@ -18,16 +18,9 @@ export const SelectCurrency = ({
     ([code]) => code === value,
   );
 
-  const displayContent = () => {
-    if (!selectedCurrency) return null;
-
-    if (displayIcon) {
-      const CurrencyIcon = selectedCurrency[1].Icon;
-      return <CurrencyIcon className="w-4 h-4" />;
-    }
-
-    return value;
-  };
+  const SelectedCurrencyIcon = selectedCurrency
+    ? selectedCurrency[1].Icon
+    : null;
 
   return (
     <Popover modal>
@@ -40,7 +33,11 @@ export const SelectCurrency = ({
           )}
           onClick={(e) => e.stopPropagation()}
         >
-          {displayContent()}
+          {SelectedCurrencyIcon && displayIcon ? (
+            <SelectedCurrencyIcon className="w-4 h-4" />
+          ) : (
+            value
+          )}
           <IconChevronDown className={`w-4 h-4 ${!displayIcon && 'ml-2'}`} />
         </Button>
       </Popover.Trigger>
