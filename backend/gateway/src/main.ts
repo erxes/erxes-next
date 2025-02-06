@@ -2,11 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import * as http from 'http';
-import { spawn } from 'child_process';
 
 import { ErxesProxyTarget, retryGetProxyTargets } from './proxy/targets';
-import { startRouter, stopRouter } from './apollo-router';
-import { applyProxiesCoreless, applyProxyToCore } from './proxy/middleware';
+import { startRouter } from './apollo-router';
+import {
+  applyProxiesToGraphql,
+  applyProxyToCore,
+  proxyReq,
+} from './proxy/middleware';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 const domain = process.env.DOMAIN ?? 'http://localhost:3000';
@@ -18,21 +22,53 @@ const corsOptions = {
 
 const app = express();
 
+app.use(cors(corsOptions));
+app.use(cookieParser());
+
 app.get('/stop-test', async (req, res) => {
-  await updateProxyTargets(['core']);
+  await updateApolloRouter(['core']);
   res.sendStatus(200);
 });
 
 app.get('/restart', async (req, res) => {
-  await updateProxyTargets(['core', 'core-test']);
+  await updateApolloRouter(['core', 'core-test']);
+
   res.sendStatus(200);
+});
+
+app.use('/pl:serviceName', async (req, res) => {
+  try {
+    const services = { core: 'http://localhost:3400' };
+    const serviceName = req.params.serviceName;
+
+    // Find the target URL for the requested service
+    const targetUrl = services[serviceName.replace(':', '')];
+
+    if (targetUrl) {
+      // Proxy the request to the target service using the custom headers
+      return createProxyMiddleware({
+        target: targetUrl,
+        changeOrigin: true, // Change the origin header to the target URL's origin
+        on: {
+          proxyReq,
+        },
+        pathRewrite: {
+          [`^/pl:${serviceName}`]: '/', // Rewriting the path if needed
+        },
+      })(req, res); // Forward the request to the target service
+    } else {
+      // Service not found, return 404
+      res.status(404).send('Service not found');
+    }
+  } catch {
+    res.status(500).send('Error fetching services');
+  }
 });
 
 let currentTargets: ErxesProxyTarget[] = [];
 let httpServer: http.Server;
-let routerProcess: any; // Keeps track of the router process to stop it later
 
-async function updateProxyTargets(aa: string[] = ['core', 'core-test']) {
+async function updateApolloRouter(aa: string[] = ['core', 'core-test']) {
   try {
     const newTargets = await retryGetProxyTargets(aa);
 
@@ -43,40 +79,16 @@ async function updateProxyTargets(aa: string[] = ['core', 'core-test']) {
       // Update the targets and apply the new proxy middleware
       currentTargets = newTargets;
 
-      // Re-apply the proxy middlewares to the app
-      applyProxiesCoreless(app, currentTargets);
-
-      console.log('New proxy targets applied successfully.');
-
       // Restart the router with updated targets
-      await restartRouter();
+      await startRouter(currentTargets);
     }
   } catch (error) {
     console.error('Error updating proxy targets:', error);
   }
 }
 
-async function restartRouter() {
-  try {
-    // Stop the existing router process (if it exists)
-    if (routerProcess) {
-      console.log('Stopping existing router process...');
-      routerProcess.kill('SIGINT'); // Gracefully stop the current process
-    }
-
-    // Start the router again with the updated targets
-    console.log('Starting the router with updated targets...');
-    await startRouter(currentTargets);
-  } catch (error) {
-    console.error('Error during router restart:', error);
-  }
-}
-
 async function start() {
   try {
-    app.use(cors(corsOptions));
-    app.use(cookieParser());
-
     // Initial fetch of the proxy targets
     currentTargets = await retryGetProxyTargets();
 
@@ -84,7 +96,7 @@ async function start() {
     await startRouter(currentTargets);
 
     // Apply the initial proxy middleware
-    applyProxiesCoreless(app, currentTargets);
+    applyProxiesToGraphql(app);
     applyProxyToCore(app, currentTargets);
 
     // Start the HTTP server
@@ -102,15 +114,5 @@ async function start() {
 }
 
 // Graceful shutdown for SIGINT and SIGTERM
-(['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
-  process.on(sig, async () => {
-    console.log(`Exiting on signal ${sig}`);
-    await stopRouter(sig);
-    httpServer.close(() => {
-      console.log('Server shut down gracefully');
-      process.exit(0);
-    });
-  });
-});
 
 start();

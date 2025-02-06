@@ -22,6 +22,10 @@ app.use(
   }),
 );
 
+app.get('/', async (req, res) => {
+  res.send('12312');
+});
+
 app.use(cookieParser());
 
 const corsOptions = {
