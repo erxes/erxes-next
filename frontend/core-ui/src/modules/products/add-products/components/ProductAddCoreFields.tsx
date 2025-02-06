@@ -1,5 +1,4 @@
 import { UseFormReturn } from 'react-hook-form';
-
 import {
   IconDeviceUnknown,
   IconHotelService,
@@ -15,8 +14,11 @@ import {
   FormMessage,
   Input,
   Select,
+  Separator,
 } from 'erxes-ui/components';
-
+import { SelectCurrency } from 'erxes-ui/components/currency/select-currency';
+import { CURRENCY_CODES } from 'erxes-ui/constants';
+import { CurrencyCode } from 'erxes-ui/types';
 import { CategoryField } from './categoryField';
 import { ProductFormValues } from './formSchema';
 import { useUom } from '@/products/hooks/useUom';
@@ -107,13 +109,23 @@ export const ProductAddCoreFields = ({
           <FormItem className="flex flex-col">
             <FormLabel>UNIT PRICE</FormLabel>
             <FormControl>
-              <Input
-                className="rounded-md h-8"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                value={field.value || ''}
-              />
+              <div className="flex rounded-md border border-border">
+                <SelectCurrency
+                  currencies={CURRENCY_CODES}
+                  value={CurrencyCode.USD}
+                  displayIcon={true}
+                  className="h-full ring-0 rounded-md shadow-none"
+                />
+                <Separator orientation="vertical" />
+                <Input
+                  className="rounded-md h-8 border-none"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  value={field.value || ''}
+                />
+              </div>
             </FormControl>
+
             <FormMessage className="text-destructive" />
           </FormItem>
         )}
@@ -153,10 +165,7 @@ export const ProductAddCoreFields = ({
                   </Select.Value>
                 </Select.Trigger>
               </FormControl>
-              <Select.Content
-              // className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-              // align="start"
-              >
+              <Select.Content>
                 {types.map((type) => (
                   <Select.Item
                     key={type.value}

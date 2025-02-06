@@ -33,7 +33,7 @@ export const DescriptionField = ({
             <BlockEditor
               editor={editor}
               onChange={() => field.onChange()}
-              className=" h-28 rounded-md border min-h-28"
+              className=" h-28 rounded-md border min-h-28 overflow-auto"
             />
           </FormControl>
           <FormMessage className="text-destructive" />
