@@ -566,7 +566,7 @@ const MultipleSelector = React.forwardRef<
           >
             {open && (
               <Command.List
-                className="bg-popover text-popover-foreground shadow-lg shadow-black/5 outline-none"
+                className="bg-background shadow-lg shadow-black/5 outline-none"
                 onMouseLeave={() => {
                   setOnScrollbar(false);
                 }}
