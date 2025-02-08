@@ -6,6 +6,7 @@ import { IconCaretUpFilled } from '@tabler/icons-react';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
+import { cn } from 'erxes-ui/lib';
 
 export function SidebarNavigation() {
   const plugins = [...CORE_PLUGINS] as any;
@@ -28,7 +29,7 @@ export function SidebarNavigationItem({
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <Sidebar.Group>
-        <Sidebar.GroupLabel asChild className="hover:bg-zinc-200">
+        <Sidebar.GroupLabel asChild>
           <Collapsible.Trigger>
             {t('nav.' + label)}{' '}
             <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
@@ -39,15 +40,18 @@ export function SidebarNavigationItem({
             <Sidebar.Menu>
               {items.map((item) => {
                 // const Icon = PLUGINS[item.handle].icon;
+                const isActive = pathname.includes(item.path);
                 return (
                   <React.Fragment key={item.name}>
                     <Sidebar.MenuItem key={item.name}>
-                      <Sidebar.MenuButton
-                        asChild
-                        isActive={pathname.includes(item.path)}
-                      >
+                      <Sidebar.MenuButton asChild isActive={isActive}>
                         <Link to={item.path}>
-                          <item.icon />
+                          <item.icon
+                            className={cn(
+                              'text-accent-foreground',
+                              isActive && 'text-primary',
+                            )}
+                          />
                           <span>{t('nav.' + item.name)}</span>
                         </Link>
                       </Sidebar.MenuButton>

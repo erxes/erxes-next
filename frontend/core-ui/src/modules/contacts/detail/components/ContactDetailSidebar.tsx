@@ -1,4 +1,4 @@
-import { Sidebar } from 'erxes-ui/components/sidebar';
+import { Sidebar } from 'erxes-ui/components';
 import { ContactSidebarMenuItem } from '@/contacts/detail/components/ContactSidebarMenuItem';
 import { useQueryState } from 'nuqs';
 

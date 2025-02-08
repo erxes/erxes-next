@@ -11,7 +11,6 @@ import {
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { Avatar } from 'erxes-ui/components/avatar';
-import { RelativeDateDisplay } from 'erxes-ui/display';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import {
@@ -24,6 +23,7 @@ import { Customer } from '@/contacts/types/contactsTypes';
 import { TagBadges } from '@/tags/components/tagBadges';
 import { SelectTags } from '@/tags/components/SelectTags';
 import { ITag } from '@/tags/types/tagTypes';
+import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 
 const TableTextInput = ({ cell }: { cell: Cell<Customer, unknown> }) => {
   const [value, setValue] = useState(cell.getValue() as string);

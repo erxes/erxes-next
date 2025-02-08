@@ -26,12 +26,12 @@ export function QuickActions() {
 
   return (
     <>
-      <Sidebar.MenuButton size="lg" onClick={() => setOpen(true)} asChild>
+      <Sidebar.MenuButton onClick={() => setOpen(true)} asChild>
         <Button variant="secondary">
           <IconCommand />
         </Button>
       </Sidebar.MenuButton>
-      <Sidebar.MenuButton size="lg" onClick={() => setOpen(true)} asChild>
+      <Sidebar.MenuButton onClick={() => setOpen(true)} asChild>
         <Button variant="secondary">
           <IconSearch />
         </Button>

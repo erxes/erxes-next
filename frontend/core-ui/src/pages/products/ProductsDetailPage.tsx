@@ -110,7 +110,7 @@ export const ProductsDetailPage = () => {
       <div className="p-12 grid grid-cols-9 gap-4 mx-auto">
         {[
           'bg-border',
-          'bg-input',
+          'bg-border',
           'bg-ring',
           'bg-background',
           'bg-foreground',

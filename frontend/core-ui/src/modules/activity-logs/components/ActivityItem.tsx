@@ -1,6 +1,5 @@
 import { IconEdit } from '@tabler/icons-react';
 import { IActivityLog } from '@/activity-logs/types/activityTypes';
-import { RelativeDateDisplay } from 'erxes-ui/display';
 import { ActivityTagged } from './ActivityTagged';
 import {
   ActivityItemContext,
@@ -8,6 +7,7 @@ import {
 } from '@/activity-logs/context/ActivityItemContext';
 import { cn } from 'erxes-ui/lib';
 import { InternalNoteLog } from '@/internal-notes/components/InternalNoteLog';
+import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 
 export const ActivityItem = ({
   activity,
@@ -88,7 +88,7 @@ const ActivityItemIcon = () => {
     <div className="relative">
       <div
         className={cn(
-          'absolute h-full top-0 left-1/2 -translate-x-1/2 border-l border-input',
+          'absolute h-full top-0 left-1/2 -translate-x-1/2 border-l border',
           isLast ? 'hidden' : '',
         )}
       />

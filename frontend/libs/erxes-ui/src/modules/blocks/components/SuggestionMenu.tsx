@@ -11,7 +11,7 @@ export const SuggestionMenu = React.forwardRef<
     ref={ref}
     {...props}
     className={cn(
-      'w-72 rounded-md bg-popover text-popover-foreground shadow-md border border-input/50 p-2 outline-none overflow-hidden',
+      'w-72 rounded-md bg-popover text-popover-foreground shadow-md border border/50 p-2 outline-none overflow-hidden',
       className,
     )}
   >

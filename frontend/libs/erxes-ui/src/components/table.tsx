@@ -9,8 +9,8 @@ const TableRoot = React.forwardRef<
   <table
     ref={ref}
     className={cn(
-      'w-full caption-bottom text-sm border-separate bg-muted',
-      className
+      'w-full caption-bottom text-sm border-separate bg-sidebar',
+      className,
     )}
     {...props}
   />
@@ -33,7 +33,7 @@ const TableBody = React.forwardRef<
     ref={ref}
     className={cn(
       '[&_tr:last-child]:border-0 border rounded-lg overflow-hidden',
-      className
+      className,
     )}
     {...props}
   />
@@ -48,7 +48,7 @@ const TableFooter = React.forwardRef<
     ref={ref}
     className={cn(
       'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0',
-      className
+      className,
     )}
     {...props}
   />
@@ -63,7 +63,7 @@ const TableRow = React.forwardRef<
     ref={ref}
     className={cn(
       '[&>td]:border-b [&>td:first-child]:border-l transition-colors group/table-row hover:bg-muted/50 overflow-hidden',
-      className
+      className,
     )}
     {...props}
   />
@@ -77,8 +77,8 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-9 px-2 text-left align-middle font-semibold text-xs text-muted-foreground [&>[role=checkbox]]:translate-y-[2px] border-spacing-0 font-mono uppercase bg-muted',
-      className
+      'h-9 px-2 text-left align-middle font-semibold text-xs text-muted-foreground/90 [&>[role=checkbox]]:translate-y-[2px] border-spacing-0 font-mono uppercase bg-sidebar',
+      className,
     )}
     {...props}
   />
@@ -93,7 +93,7 @@ const TableCell = React.forwardRef<
     ref={ref}
     className={cn(
       'align-middle [&>[role=checkbox]]:translate-y-[2px] border-r border-spacing-0',
-      className
+      className,
     )}
     {...props}
   />

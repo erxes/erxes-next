@@ -31,7 +31,7 @@ export const DateRangePicker = React.forwardRef<
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     const { from, to } = value || {};
 
@@ -67,10 +67,10 @@ export const DateRangePicker = React.forwardRef<
           <Button
             variant={'outline'}
             className={cn(
-              'justify-start text-left font-normal h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+              'justify-start text-left font-normal h-9 w-full rounded-md border border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
               Boolean(disabled) &&
                 'disabled:cursor-not-allowed disabled:opacity-50',
-              className
+              className,
             )}
             disabled={Boolean(disabled)}
           >
@@ -93,5 +93,5 @@ export const DateRangePicker = React.forwardRef<
         </Popover.Content>
       </Popover>
     );
-  }
+  },
 );

@@ -35,7 +35,7 @@ export const EmailValidationStatusField = ({
           <FormLabel>EMAIL VERIFICATION STATUS</FormLabel>
           <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
-              <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
+              <Select.Trigger className="truncate w-full rounded-md justify-between text-foreground h-8">
                 <Select.Value
                   placeholder={
                     <span className="truncate text-muted-foreground font-medium text-sm">
@@ -55,7 +55,7 @@ export const EmailValidationStatusField = ({
               </Select.Trigger>
             </FormControl>
             <Select.Content
-              className="border-input p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
+              className="border p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
               align="start"
             >
               <Select.Group>

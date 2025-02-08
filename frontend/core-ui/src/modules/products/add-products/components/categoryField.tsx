@@ -80,7 +80,7 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
           </Button>
         </Popover.Trigger>
         <Popover.Content
-          className="w-60 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+          className="w-60 min-w-[var(--radix-popper-anchor-width)] border p-0"
           align="start"
           side="bottom"
           sideOffset={8}

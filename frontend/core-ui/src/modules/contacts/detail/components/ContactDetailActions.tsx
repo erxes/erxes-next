@@ -31,7 +31,7 @@ export const ContactDetailActions = () => {
     <>
       <Resizable.Handle />
       <Resizable.Panel
-        minSize={activeTab ? 25 : 0}
+        minSize={activeTab ? 30 : 0}
         maxSize={activeTab ? 60 : 0}
       >
         <Tabs
@@ -172,7 +172,7 @@ export const ActionTabsContent = ({
 export const ActionHeader = (props: { title?: string; icon: Icon }) => {
   const setActiveTab = useSetRecoilState(contactDetailActiveActionTabAtom);
   return (
-    <div className="flex items-center h-14 border-b border-input px-6 text-primary gap-2 flex-none">
+    <div className="flex items-center h-14 border-b border px-6 text-primary gap-2 flex-none">
       <props.icon className="size-5" />
       <h4 className="font-semibold text-base">{props.title}</h4>
       <Button

@@ -11,7 +11,6 @@ import {
 import { ColumnDef } from '@tanstack/react-table';
 
 import { Select, Skeleton } from 'erxes-ui/components';
-import { CurrencyDisplay, RelativeDateDisplay } from 'erxes-ui/display';
 import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
@@ -27,6 +26,8 @@ import { useProductCategories } from '../hooks/useProductCategories';
 import { useProductsEdit } from '../hooks/useProductsEdit';
 
 import { SelectCategory } from '@/products/product-category/components/SelectCategory';
+import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
+import { CurrencyDisplay } from 'erxes-ui/components/display/CurrencyDisplay';
 
 const TableTextInput = ({ cell }) => {
   const [value, setValue] = useState(cell.getValue() as string);
@@ -126,7 +127,7 @@ export const columns: ColumnDef<any>[] = [
       if (loading) return <Skeleton className="h-4 w-24 ml-2" />;
 
       const category = productCategories?.find(
-        (category) => category._id === value
+        (category) => category._id === value,
       );
       return (
         <RecordTableInlineCellContainer>
