@@ -21,6 +21,7 @@ module.exports = {
       sm: ['13px', '1rem'],
       base: ['14px', '18px'],
       lg: ['1rem', '1.125rem'],
+      xl: ['20px', '20px'],
     },
     container: {
       center: true,
