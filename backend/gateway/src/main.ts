@@ -26,12 +26,12 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.get('/stop-test', async (req, res) => {
-  await updateApolloRouter(['core']);
+  await updateApolloRouter();
   res.sendStatus(200);
 });
 
 app.get('/restart', async (req, res) => {
-  await updateApolloRouter(['core', 'core-test']);
+  await updateApolloRouter();
 
   res.sendStatus(200);
 });
@@ -68,9 +68,9 @@ app.use('/pl:serviceName', async (req, res) => {
 let currentTargets: ErxesProxyTarget[] = [];
 let httpServer: http.Server;
 
-async function updateApolloRouter(aa: string[] = ['core', 'core-test']) {
+async function updateApolloRouter() {
   try {
-    const newTargets = await retryGetProxyTargets(aa);
+    const newTargets = await retryGetProxyTargets();
 
     // Check if the targets have changed
     if (JSON.stringify(newTargets) !== JSON.stringify(currentTargets)) {

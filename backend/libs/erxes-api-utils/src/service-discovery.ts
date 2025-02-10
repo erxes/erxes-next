@@ -7,21 +7,7 @@ const { NODE_ENV, LOAD_BALANCER_ADDRESS, ENABLED_SERVICES_JSON, MONGO_URL } =
 
 const isDev = NODE_ENV === 'development';
 
-if (!ENABLED_SERVICES_JSON) {
-  throw new Error(
-    'ENABLED_SERVICES_JSON environment variable is not configured.',
-  );
-}
-
-const enabledServices = JSON.parse(ENABLED_SERVICES_JSON) || [];
-
-if (!Array.isArray(enabledServices)) {
-  throw new Error(
-    "ENABLED_SERVICES_JSON environment variable's value must be JSON array",
-  );
-}
-
-enabledServices.push('core');
+const enabledServices = ['core'];
 
 const keyForConfig = (name) => `service:config:${name}`;
 

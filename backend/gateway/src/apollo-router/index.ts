@@ -34,7 +34,7 @@ export const stopRouter = (_sig: NodeJS.Signals) => {
   }
 };
 
-export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 50_000;
+export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 1024;
 
 const downloadRouter = async () => {
   if (NODE_ENV === 'production') {
@@ -117,9 +117,7 @@ const createRouterConfig = async () => {
     },
     supergraph: {
       listen: `127.0.0.1:${apolloRouterPort}`,
-      introspection:
-        NODE_ENV === 'development' ||
-        (INTROSPECTION || '').trim().toLowerCase() === 'true',
+      introspection: true,
     },
   };
 
@@ -131,12 +129,12 @@ export const startRouter = async (proxyTargets: ErxesProxyTarget[]) => {
   await createRouterConfig();
   await downloadRouter();
 
-  const devOptions = ['--dev', '--hot-reload'];
+  const devOptions = ['--dev'];
 
   routerProcess = spawn(
     routerPath,
     [
-      ...(NODE_ENV === 'development' ? devOptions : []),
+      ...devOptions,
       '--log',
       NODE_ENV === 'development' ? 'warn' : 'error',
       `--supergraph`,

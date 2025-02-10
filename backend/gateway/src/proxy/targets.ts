@@ -19,14 +19,6 @@ async function getProxyTarget(name: string): Promise<ErxesProxyTarget> {
     throw new Error(`Plugin ${name} has no address value in service discovery`);
   }
 
-  if (name === 'core-test') {
-    return {
-      name,
-      address: 'http://localhost:3400',
-      config: service.config,
-    };
-  }
-
   return {
     name,
     address: service.address,
@@ -94,11 +86,9 @@ async function retryEnsureGraphqlEndpointIsUp(target: ErxesProxyTarget) {
   });
 }
 
-export async function retryGetProxyTargets(
-  enabledServices?: string[],
-): Promise<ErxesProxyTarget[]> {
+export async function retryGetProxyTargets(): Promise<ErxesProxyTarget[]> {
   try {
-    const serviceNames = enabledServices || (await getServices());
+    const serviceNames = (await getServices()) || [];
 
     const proxyTargets: ErxesProxyTarget[] = await Promise.all(
       serviceNames.map(retryGetProxyTarget),
