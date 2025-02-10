@@ -6,3 +6,4 @@ export * from './recoil-effects';
 export * from './regex';
 export * from './isAnObject';
 export * from './isDeeplyEqual';
+export * from './isValidEmail'

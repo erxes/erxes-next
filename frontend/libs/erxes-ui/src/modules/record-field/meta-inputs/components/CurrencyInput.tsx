@@ -1,4 +1,4 @@
-import { inputVariants } from 'erxes-ui/components';
+import { inputVariants, Separator } from 'erxes-ui/components';
 import { SelectCurrency } from 'erxes-ui/components/currency/select-currency';
 import { CURRENCY_CODES } from 'erxes-ui/constants';
 import { cn } from 'erxes-ui/lib';
@@ -13,9 +13,13 @@ export const CurrencyInput = ({
   onChange: (value: number) => void;
 }) => {
   return (
-    <div className="flex">
-      <SelectCurrency currencies={CURRENCY_CODES} value={CurrencyCode.USD} />
-
+    <div className="flex border border-border h-cell items-stretch">
+      <SelectCurrency
+        currencies={CURRENCY_CODES}
+        value={CurrencyCode.USD}
+        className="ring-0 shadow-none border-transparent h-full"
+      />
+      <Separator orientation="vertical" />
       <IMaskInput
         mask={Number}
         thousandsSeparator={','}
@@ -25,7 +29,7 @@ export const CurrencyInput = ({
         autoComplete="off"
         className={cn(
           inputVariants({ type: 'default' }),
-          'rounded-none relative h-[34px]'
+          'rounded-none relative h-full border-transparent',
         )}
         unmask
       />

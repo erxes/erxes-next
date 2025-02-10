@@ -11,7 +11,10 @@ import type { ColumnDef } from '@tanstack/react-table';
 
 import { Avatar } from 'erxes-ui/components/avatar';
 import { RelativeDateDisplay } from 'erxes-ui/display';
+import { VerificationDisplay } from 'erxes-ui/display';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
+import { VerificationInput } from 'erxes-ui/modules/record-field/meta-inputs/components/VerificationInput';
+import { EmailFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/EmailFieldInput';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import {
   RecordTableInlineCell,
@@ -20,6 +23,7 @@ import {
 
 import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
 import { Customer } from '@/contacts/types/contactsTypes';
+import { isValidEmail } from 'erxes-ui/utils';
 
 const TableTextInput = ({ cell }) => {
   const [value, setValue] = useState(cell.getValue() as string);
@@ -82,8 +86,71 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconMail} label="Primary Email" />
     ),
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => {
+      const initialValue = cell.getValue() as string;
+      const [value, setValue] = useState(initialValue);
+      const [validationStatus, setValidationStatus] = useState(
+        cell.row.original.emailValidationStatus,
+      );
+      const { customerEdit } = useCustomerEdit();
+
+      return (
+        <RecordTableInlineCell
+          onSave={() => {
+            if (isValidEmail(value)) {
+              customerEdit({
+                variables: {
+                  _id: cell.row.original._id,
+                  [cell.column.id]: value,
+                  emailValidationStatus: validationStatus,
+                },
+              });
+            } else {
+              setValue(initialValue);
+              console.log('not saved');
+            }
+          }}
+          getValue={() => cell.getValue()}
+          value={value}
+          display={() => (
+            <div className="flex items-center gap-2">
+              {value && (
+                <VerificationDisplay value={validationStatus || null} />
+              )}
+              <span>{value}</span>
+            </div>
+          )}
+          edit={() => (
+            <RecordTableInlineCellEditForm>
+              <div className="flex border border-border">
+                {value && (
+                  <VerificationInput
+                    className="ring-0 outline-none mr-1 border-transparent h-full rounded-none hover:bg-muted"
+                    value={cell.row.original.emailValidationStatus || null}
+                    onChange={(newStatus) => {
+                      setValidationStatus(newStatus);
+                      customerEdit({
+                        variables: {
+                          _id: cell.row.original._id,
+                          emailValidationStatus: newStatus,
+                        },
+                      });
+                    }}
+                  />
+                )}
+                <EmailFieldInput
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  className="h-full border-transparent"
+                />
+              </div>
+            </RecordTableInlineCellEditForm>
+          )}
+        />
+      );
+    },
   },
+
   {
     id: 'primaryPhone',
     accessorKey: 'primaryPhone',

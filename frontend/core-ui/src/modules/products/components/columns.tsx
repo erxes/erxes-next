@@ -126,7 +126,7 @@ export const columns: ColumnDef<any>[] = [
       if (loading) return <Skeleton className="h-4 w-24 ml-2" />;
 
       const category = productCategories?.find(
-        (category) => category._id === value
+        (category) => category._id === value,
       );
       return (
         <RecordTableInlineCellContainer>
@@ -141,7 +141,7 @@ export const columns: ColumnDef<any>[] = [
                 },
               })
             }
-            className="rounded-none px-2 font-normal"
+            className="rounded-none px-2 font-normal border-r-0 ring-0"
             size="lg"
           />
         </RecordTableInlineCellContainer>

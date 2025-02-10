@@ -28,7 +28,7 @@ export const SelectCurrency = ({
         <Button
           variant="outline"
           className={cn(
-            'h-cell rounded-none border-r-0 relative focus-visible:z-10',
+            'h-full rounded-none border-r-0 relative focus-visible:z-10',
             className,
           )}
           onClick={(e) => e.stopPropagation()}

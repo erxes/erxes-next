@@ -72,7 +72,7 @@ export const ProductAddCoreFields = ({
             <FormLabel>UNIT OF MEASUREMENTS</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
-                <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
+                <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8 hover:bg-muted">
                   <Select.Value
                     placeholder={
                       <span className="truncate text-foreground font-medium text-sm">
@@ -114,11 +114,11 @@ export const ProductAddCoreFields = ({
                   currencies={CURRENCY_CODES}
                   value={CurrencyCode.USD}
                   displayIcon={true}
-                  className="h-full ring-0 rounded-md shadow-none"
+                  className="h-full ring-0 rounded-l-md shadow-none border border-transparent hover:"
                 />
                 <Separator orientation="vertical" />
                 <Input
-                  className="rounded-md h-8 border-none"
+                  className="rounded-md h-8 border-transparent"
                   {...field}
                   onChange={(e) => field.onChange(Number(e.target.value))}
                   value={field.value || ''}
@@ -151,7 +151,7 @@ export const ProductAddCoreFields = ({
             <FormLabel>TYPE</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
-                <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8">
+                <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8 hover:bg-muted">
                   <Select.Value
                     placeholder={
                       <span className="truncate text-foreground font-medium text-sm">
