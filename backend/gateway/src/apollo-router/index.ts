@@ -13,9 +13,8 @@ import supergraphCompose from './supergraph-compose';
 
 const {
   DOMAIN,
-  WIDGETS_DOMAIN,
-  CLIENT_PORTAL_DOMAINS,
   ALLOWED_ORIGINS,
+  ALLOWED_DOMAINS,
   NODE_ENV,
   APOLLO_ROUTER_PORT,
   INTROSPECTION,
@@ -23,12 +22,12 @@ const {
 
 let routerProcess: ChildProcess | undefined = undefined;
 
-export const stopRouter = (_sig: NodeJS.Signals) => {
+export const stopRouter = (signal: NodeJS.Signals) => {
   if (!routerProcess) {
     return;
   }
   try {
-    routerProcess.kill('SIGKILL');
+    routerProcess.kill(signal);
   } catch (e) {
     console.error(e);
   }
@@ -98,8 +97,7 @@ const createRouterConfig = async () => {
       allow_credentials: true,
       origins: [
         DOMAIN ? DOMAIN : 'http://localhost:3000',
-        WIDGETS_DOMAIN ? WIDGETS_DOMAIN : 'http://localhost:3200',
-        ...(CLIENT_PORTAL_DOMAINS || '').split(','),
+        ...(ALLOWED_DOMAINS || '').split(','),
         'https://studio.apollographql.com',
       ].filter((x) => typeof x === 'string'),
       match_origins: (ALLOWED_ORIGINS || '').split(',').filter(Boolean),
@@ -117,7 +115,7 @@ const createRouterConfig = async () => {
     },
     supergraph: {
       listen: `127.0.0.1:${apolloRouterPort}`,
-      introspection: true,
+      introspection: (INTROSPECTION || '').trim().toLowerCase() === 'true',
     },
   };
 
