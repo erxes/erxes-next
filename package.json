@@ -85,6 +85,7 @@
     "react-dom": "18.3.1",
     "react-error-boundary": "^5.0.0",
     "react-hook-form": "^7.53.2",
+    "react-hotkeys-hook": "^4.6.1",
     "react-i18next": "^15.1.1",
     "react-imask": "^7.6.1",
     "react-intersection-observer": "^9.13.1",
@@ -95,6 +96,7 @@
     "recoil": "^0.7.7",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
+    "ts-key-enum": "^3.0.13",
     "use-debounce": "^10.0.4",
     "zod": "^3.23.8"
   },

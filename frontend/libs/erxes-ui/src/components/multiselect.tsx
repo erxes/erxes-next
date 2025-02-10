@@ -126,7 +126,7 @@ function removePickedOption(groupOption: GroupOption, picked: Option[]) {
 
   for (const [key, value] of Object.entries(cloneOption)) {
     cloneOption[key] = value.filter(
-      (val) => !picked.find((p) => p.value === val.value)
+      (val) => !picked.find((p) => p.value === val.value),
     );
   }
   return cloneOption;
@@ -200,7 +200,7 @@ const MultipleSelector = React.forwardRef<
       inputProps,
       hideClearAllButton = false,
     }: MultipleSelectorProps,
-    ref: React.Ref<MultipleSelectorRef>
+    ref: React.Ref<MultipleSelectorRef>,
   ) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [open, setOpen] = React.useState(false);
@@ -210,7 +210,7 @@ const MultipleSelector = React.forwardRef<
 
     const [selected, setSelected] = React.useState<Option[]>(value || []);
     const [options, setOptions] = React.useState<GroupOption>(
-      transToGroupOption(arrayDefaultOptions, groupBy)
+      transToGroupOption(arrayDefaultOptions, groupBy),
     );
     const [inputValue, setInputValue] = React.useState('');
     const debouncedSearchTerm = useDebounce(inputValue, delay || 500);
@@ -223,7 +223,7 @@ const MultipleSelector = React.forwardRef<
         focus: () => inputRef?.current?.focus(),
         reset: () => setSelected([]),
       }),
-      [selected]
+      [selected],
     );
 
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -244,7 +244,7 @@ const MultipleSelector = React.forwardRef<
         setSelected(newOptions);
         onChange?.(newOptions);
       },
-      [onChange, selected]
+      [onChange, selected],
     );
 
     const handleKeyDown = React.useCallback(
@@ -266,7 +266,7 @@ const MultipleSelector = React.forwardRef<
           }
         }
       },
-      [handleUnselect, selected]
+      [handleUnselect, selected],
     );
 
     useEffect(() => {
@@ -413,7 +413,7 @@ const MultipleSelector = React.forwardRef<
 
     const selectables = React.useMemo<GroupOption>(
       () => removePickedOption(options, selected),
-      [options, selected]
+      [options, selected],
     );
 
     /** Avoid Creatable Selector freezing or lagging when paste a long string. */
@@ -441,7 +441,7 @@ const MultipleSelector = React.forwardRef<
         }}
         className={cn(
           'h-auto overflow-visible bg-transparent',
-          commandProps?.className
+          commandProps?.className,
         )}
         shouldFilter={
           commandProps?.shouldFilter !== undefined
@@ -452,13 +452,13 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            'relative min-h-[38px] rounded-lg border border-input text-sm transition-shadow focus-within:border-ring focus-within:outline-none focus-within:ring-[3px] focus-within:ring-ring/20 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
+            'relative min-h-[38px] rounded-lg border border text-sm transition-shadow focus-within:border-ring focus-within:outline-none focus-within:ring-[3px] focus-within:ring-ring/20 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
             {
               'p-1': selected.length !== 0,
               'cursor-text': !disabled && selected.length !== 0,
             },
             !hideClearAllButton && 'pe-9',
-            className
+            className,
           )}
           onClick={() => {
             if (disabled) return;
@@ -472,7 +472,7 @@ const MultipleSelector = React.forwardRef<
                   key={option.value}
                   className={cn(
                     'animate-fadeIn relative inline-flex h-7 cursor-default items-center rounded-md border border-solid bg-background pe-7 pl-2 ps-2 text-xs font-medium text-secondary-foreground transition-all hover:bg-background disabled:cursor-not-allowed disabled:opacity-50 data-[fixed]:pe-2',
-                    badgeClassName
+                    badgeClassName,
                   )}
                   data-fixed={option.fixed}
                   data-disabled={disabled || undefined}
@@ -532,7 +532,7 @@ const MultipleSelector = React.forwardRef<
                   'px-3 py-2': selected.length === 0,
                   'ml-1': selected.length !== 0,
                 },
-                inputProps?.className
+                inputProps?.className,
               )}
             />
             <button
@@ -547,7 +547,7 @@ const MultipleSelector = React.forwardRef<
                   disabled ||
                   selected.length < 1 ||
                   selected.filter((s) => s.fixed).length === selected.length) &&
-                  'hidden'
+                  'hidden',
               )}
               aria-label="Clear all"
             >
@@ -558,15 +558,15 @@ const MultipleSelector = React.forwardRef<
         <div className="relative">
           <div
             className={cn(
-              'absolute top-2 z-10 w-full overflow-hidden rounded-lg border border-input',
+              'absolute top-2 z-10 w-full overflow-hidden rounded-lg border border',
               'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
-              !open && 'hidden'
+              !open && 'hidden',
             )}
             data-state={open ? 'open' : 'closed'}
           >
             {open && (
               <Command.List
-                className="bg-popover text-popover-foreground shadow-lg shadow-black/5 outline-none"
+                className="bg-background shadow-lg shadow-black/5 outline-none"
                 onMouseLeave={() => {
                   setOnScrollbar(false);
                 }}
@@ -616,7 +616,7 @@ const MultipleSelector = React.forwardRef<
                                 className={cn(
                                   'cursor-pointer',
                                   option.disable &&
-                                    'cursor-not-allowed opacity-50'
+                                    'cursor-not-allowed opacity-50',
                                 )}
                               >
                                 {option.label}
@@ -634,7 +634,7 @@ const MultipleSelector = React.forwardRef<
         </div>
       </Command>
     );
-  }
+  },
 );
 
 MultipleSelector.displayName = 'MultipleSelector';

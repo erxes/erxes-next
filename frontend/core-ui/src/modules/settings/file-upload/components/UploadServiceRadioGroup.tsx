@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 
-import { FormField,RadioGroup } from 'erxes-ui/components';
+import { FormField, RadioGroup } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
@@ -26,7 +26,7 @@ export function UploadServiceRadioGroup({ form, selected }) {
                   tabIndex={0}
                   whileTap={{ scale: 0.975 }}
                   whileHover={{ scale: 1.0175 }}
-                  className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border-input hover:bg-accent px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-primary-foreground has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
+                  className="relative flex cursor-pointer flex-col items-center gap-3 rounded-lg border border hover:bg-accent px-2 py-3 text-center shadow-sm shadow-black/5 outline-offset-2 transition-colors has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-primary-foreground has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
                 >
                   <RadioGroup.Item
                     id={config.value}
@@ -38,13 +38,13 @@ export function UploadServiceRadioGroup({ form, selected }) {
                       selected === config.value
                         ? 'stroke-primary'
                         : 'stroke-primary/40',
-                      ''
+                      '',
                     )}
                   />
                   <span
                     className={cn(
                       selected === config.value ? 'opacity-100' : 'opacity-40',
-                      ''
+                      '',
                     )}
                   >
                     {config.label}

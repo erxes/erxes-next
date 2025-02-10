@@ -60,7 +60,7 @@ export const SelectBrand = React.forwardRef<
         {...props}
       />
       <Popover.Content
-        className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+        className="w-56 min-w-[var(--radix-popper-anchor-width)] border p-0"
         align="start"
       >
         <Command shouldFilter={false} id="brand-command-menu">

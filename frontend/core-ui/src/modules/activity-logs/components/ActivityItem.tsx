@@ -1,12 +1,13 @@
 import { IconEdit } from '@tabler/icons-react';
 import { IActivityLog } from '@/activity-logs/types/activityTypes';
-import { RelativeDateDisplay } from 'erxes-ui/display';
 import { ActivityTagged } from './ActivityTagged';
 import {
   ActivityItemContext,
   useActivityItemContext,
 } from '@/activity-logs/context/ActivityItemContext';
 import { cn } from 'erxes-ui/lib';
+import { InternalNoteLog } from '@/internal-notes/components/InternalNoteLog';
+import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 
 export const ActivityItem = ({
   activity,
@@ -17,10 +18,11 @@ export const ActivityItem = ({
   isLast: boolean;
   contentTypeModule: string | null;
 }) => {
+  const moduleName = activity?.contentType?.split(':')[1];
   return (
     <div className="flex gap-2">
       <ActivityItemContext.Provider
-        value={{ ...activity, isLast, contentTypeModule }}
+        value={{ ...activity, isLast, contentTypeModule, moduleName }}
       >
         <ActivityItemIcon />
         <div className="flex-1 pb-5 text-sm">
@@ -30,7 +32,12 @@ export const ActivityItem = ({
             </span>
             {activity.action}
           </div>
-          <div className="bg-muted p-3 rounded-lg space-y-2">
+          <div
+            className={cn(
+              'bg-muted p-3 rounded-lg space-y-2',
+              moduleName === 'internalNote' && 'bg-yellow-100',
+            )}
+          >
             <ActivityItemDate />
             <div className="text-sm">
               <ActivityItemContent />
@@ -44,12 +51,16 @@ export const ActivityItem = ({
 
 export const ActivityCreator = () => {
   const { createdByDetail } = useActivityItemContext();
-  return <>{createdByDetail.content.details.fullName}</>;
+  return <>{createdByDetail?.content?.details?.fullName}</>;
 };
 
 const ActivityItemContent = () => {
-  const { contentType, action } = useActivityItemContext();
+  const { contentType, action, moduleName } = useActivityItemContext();
   const pluginName = contentType.split(':')[0];
+
+  if (moduleName === 'internalNote') {
+    return <InternalNoteLog />;
+  }
 
   if (pluginName === 'core') {
     switch (action) {
@@ -77,7 +88,7 @@ const ActivityItemIcon = () => {
     <div className="relative">
       <div
         className={cn(
-          'absolute left-5 h-full top-0 left-1/2 -translate-x-1/2 border-l border-input',
+          'absolute h-full top-0 left-1/2 -translate-x-1/2 border-l border',
           isLast ? 'hidden' : '',
         )}
       />

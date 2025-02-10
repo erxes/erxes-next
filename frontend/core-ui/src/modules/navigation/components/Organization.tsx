@@ -1,4 +1,4 @@
-import { IconBell, IconSelector } from '@tabler/icons-react';
+import { IconBell, IconBellFilled, IconSelector } from '@tabler/icons-react';
 import { currentOrganizationState } from 'erxes-ui-shared-states';
 import { useRecoilValue } from 'recoil';
 
@@ -14,22 +14,21 @@ export function Organization() {
       <Sidebar.MenuItem>
         <Sidebar.Content>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 px-2 flex-auto">
-              <div className="flex aspect-square size-5 rounded items-center justify-center overflow-hidden">
+            <div className="flex items-center gap-2 flex-auto">
+              <div className="flex aspect-square size-7 rounded items-center justify-center overflow-hidden bg-primary">
                 <Logo
                   organizationLogo={currentOrganization?.logo}
-                  className="size-8 rounded-md bg-system text-system-foreground"
+                  className="size-6 rounded-lg text-background"
                 />
               </div>
               <div className="text-[13px] flex flex-col">
                 <span className="font-medium truncate">
-                  {currentOrganization?.name || 'erxes'}
+                  {currentOrganization?.name || 'Erxes Inc'}
                 </span>
               </div>
-              <IconSelector className="ml-auto size-4 text-muted-foreground" />
             </div>
-            <Button variant="ghost" size="icon">
-              <IconBell className="h-4 w-4" />
+            <Button variant="secondary" size="icon">
+              <IconBellFilled className="h-4 w-4" />
             </Button>
           </div>
         </Sidebar.Content>

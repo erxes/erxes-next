@@ -3,9 +3,7 @@ export interface IActivityLog {
   action: string;
   contentId: string;
   contentType: string;
-  content: {
-    tagIds?: string[];
-  };
+  content: any;
   contentDetail: any;
   contentTypeDetail: any;
   createdAt: string;

@@ -1,4 +1,4 @@
-import { type Icon,IconStar } from '@tabler/icons-react';
+import { type Icon, IconStar } from '@tabler/icons-react';
 
 import { Separator, Sidebar } from 'erxes-ui/components';
 
@@ -14,7 +14,7 @@ export const PluginHeader = ({
   const Icon = icon;
   return (
     <>
-      <header className="flex items-center justify-between h-12 -mx-3 px-3 box-border flex-shrink-0">
+      <header className="flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0">
         <div className="flex items-center gap-2">
           <Sidebar.Trigger />
           <span className="h-3 w-0.5 bg-muted rounded-sm" />

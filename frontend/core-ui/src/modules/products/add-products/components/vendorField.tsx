@@ -2,12 +2,7 @@ import { useState } from 'react';
 
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
 
-import {
-  Button,
-  Command,
-  Popover,
-  Skeleton,
-} from 'erxes-ui/components';
+import { Button, Command, Popover, Skeleton } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 
 import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
@@ -74,7 +69,7 @@ export const VendorField = ({
           </Button>
         </Popover.Trigger>
         <Popover.Content
-          className="w-56 min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+          className="w-56 min-w-[var(--radix-popper-anchor-width)] border p-0"
           align="start"
           sideOffset={4}
         >

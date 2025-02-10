@@ -1,21 +1,55 @@
 import { useCreateBlockNote } from '@blocknote/react';
-import { Block } from '@blocknote/core';
-
 import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
 import { BlockEditor } from 'erxes-ui/modules/blocks/components/BlockEditor';
+import { getMentionedUserIds } from 'erxes-ui/modules/blocks/utils/getMentionedUserIds';
 import { AssignMemberInEditor } from '@/team-members/components/AssignMemberInEditor';
-import { Button } from 'erxes-ui/components';
+import { Button, Spinner } from 'erxes-ui/components';
 import { IconArrowUp } from '@tabler/icons-react';
+import { useAddInternalNote } from '@/internal-notes/hooks/useAddInternalNote';
+import { useState } from 'react';
+import { toast } from 'erxes-ui/hooks/use-toast';
 
-export function AddInternalNotes() {
-  const initialBlocks: Partial<Block>[] = [{ type: 'paragraph', content: [] }];
+export function AddInternalNotes({
+  contentTypeId,
+  contentType,
+}: {
+  contentTypeId: string;
+  contentType: string;
+}) {
   const editor = useCreateBlockNote({
     schema: BLOCK_SCHEMA,
-    initialContent: initialBlocks,
   });
+  const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const [content, setContent] = useState<string>('');
+  const { addInternalNote, loading } = useAddInternalNote();
 
   const handleChange = async () => {
-    await editor.blocksToHTMLLossy(editor.document);
+    const content = await editor?.document;
+    content.pop();
+    setContent(JSON.stringify(content));
+    const mentionedUserIds = getMentionedUserIds(content);
+    setMentionedUserIds(mentionedUserIds);
+  };
+
+  const handleSubmit = () => {
+    addInternalNote({
+      variables: {
+        mentionedUserIds,
+        content: content,
+        contentType,
+        contentTypeId,
+      },
+      onCompleted: () => {
+        editor?.removeBlocks(editor?.document);
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description: error.message,
+        });
+      },
+      refetchQueries: ['activityLogs'],
+    });
   };
 
   return (
@@ -28,8 +62,16 @@ export function AddInternalNotes() {
         <AssignMemberInEditor editor={editor} />
       </BlockEditor>
       <div className="relative">
-        <Button variant="secondary" className="absolute bottom-1 inset-x-4">
-          <IconArrowUp className="w-4 h-4" />
+        <Button
+          variant="secondary"
+          className="absolute bottom-1 inset-x-4"
+          onClick={handleSubmit}
+        >
+          {loading ? (
+            <Spinner size="small" />
+          ) : (
+            <IconArrowUp className="w-4 h-4" />
+          )}
           Post
         </Button>
       </div>

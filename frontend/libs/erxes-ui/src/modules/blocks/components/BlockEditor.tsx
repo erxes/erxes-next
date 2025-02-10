@@ -11,8 +11,11 @@ import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema
 import { SlashMenu } from './SlashMenu';
 import { Toolbar } from './Toolbar';
 import { Button, Tooltip } from 'erxes-ui/components';
+import { useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { Key } from 'erxes-ui/types/Key';
 
-interface BlockEditorProps {
+export interface BlockEditorProps {
   editor: IBlockEditor;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -36,14 +39,29 @@ export const BlockEditor = ({
   className,
 }: BlockEditorProps) => {
   const { theme } = useTheme();
+  const [focus, setFocus] = useState(false);
+  const hotkeyRef = useHotkeys(
+    Key.Escape,
+    () => {
+      setFocus(false);
+      onBlur?.();
+    },
+    { enabled: focus },
+  );
 
   return (
     <BlockNoteView
       theme={theme as 'light' | 'dark'}
       editor={editor}
       slashMenu={false}
-      onFocus={onFocus}
-      onBlur={onBlur}
+      onFocus={() => {
+        setFocus(true);
+        onFocus?.();
+      }}
+      onBlur={() => {
+        setFocus(false);
+        onBlur?.();
+      }}
       editable={!readonly}
       onChange={onChange}
       className={className}
@@ -57,6 +75,7 @@ export const BlockEditor = ({
           TooltipTrigger: Tooltip.Trigger,
         },
       }}
+      ref={hotkeyRef}
     >
       <SuggestionMenuController
         triggerCharacter="/"
