@@ -26,7 +26,7 @@ export const OwnerIdField = ({
               <AssignMember
                 value={field.value}
                 onValueChange={field.onChange}
-                className="w-full"
+                className="w-full shadow-xs"
               />
             </div>
           </FormControl>

@@ -38,8 +38,8 @@ const RecordTableContainer = forwardRef<
         } as CSSProperties
       }
       className={cn(
-        'flex-grow-0 basis-full overflow-hidden rounded-lg bg-muted border-t-4 border-l-4 border-muted',
-        className
+        'flex-grow-0 basis-full overflow-hidden rounded-lg bg-sidebar border-t-4 border-l-4 border-sidebar',
+        className,
       )}
     >
       {children}

@@ -22,13 +22,13 @@ export function User() {
   if (!userDetail) return null;
 
   return (
-    <Sidebar.Menu>
+    <Sidebar.Menu className="px-2">
       <Sidebar.MenuItem>
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
             <Sidebar.MenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-auto p-2"
             >
               <Avatar className="h-8 w-8 rounded-full">
                 <Avatar.Image
@@ -39,15 +39,15 @@ export function User() {
                   {userDetail.fullName.split('')[0]}
                 </Avatar.Fallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-[13px] leading-tight">
+              <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
                   {userDetail.fullName}
                 </span>
-                <span className="truncate text-xs opacity-80">
+                <span className="truncate text-xs text-accent-foreground font-medium">
                   {currentUser.email}
                 </span>
               </div>
-              <IconSelector className="ml-auto size-4" />
+              <IconSelector className="ml-auto size-4 text-accent-foreground" />
             </Sidebar.MenuButton>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content

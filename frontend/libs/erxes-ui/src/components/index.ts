@@ -15,7 +15,6 @@ export * from './date-range-picker';
 export * from './dialog';
 export * from './dropdown-menu';
 export * from './form';
-export * from './header';
 export * from './hover-card';
 export * from './input';
 export * from './label';
@@ -39,3 +38,4 @@ export * from './toggle-group';
 export * from './tooltip';
 export * from './upload';
 export * from './spinner';
+export * from './card'

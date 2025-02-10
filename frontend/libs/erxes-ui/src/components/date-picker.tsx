@@ -29,7 +29,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
       mode = 'single',
       ...props
     },
-    ref
+    ref,
   ) => {
     const renderButtonContent = () => {
       if (value) {
@@ -63,11 +63,11 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
           <Button
             variant={'outline'}
             className={cn(
-              'justify-start text-left font-normal h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+              'justify-start text-left font-normal h-9 w-full rounded-md border border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
               !value && 'text-muted-foreground',
               Boolean(disabled) &&
                 'disabled:cursor-not-allowed disabled:opacity-50',
-              className
+              className,
             )}
             disabled={Boolean(disabled)}
           >
@@ -90,5 +90,5 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
         </Popover.Content>
       </Popover>
     );
-  }
+  },
 );

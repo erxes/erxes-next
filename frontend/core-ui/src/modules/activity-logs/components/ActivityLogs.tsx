@@ -1,6 +1,7 @@
 import type { OperationVariables } from '@apollo/client';
-import { useActivities } from '../hooks/useActivities';
-import { ActivityItem } from './ActivityItem';
+import { useActivities } from '@/activity-logs/hooks/useActivities';
+import { ActivityItem } from '@/activity-logs/components/ActivityItem';
+import { IActivityLog } from '@/activity-logs/types/activityTypes';
 
 export const ActivityLogs = ({
   operation,
@@ -27,7 +28,7 @@ export const ActivityLogs = ({
 
   return (
     <div className="p-5">
-      {activityLogs?.map((activity, index) => (
+      {activityLogs?.map((activity: IActivityLog, index: number) => (
         <ActivityItem
           key={activity._id}
           activity={activity}

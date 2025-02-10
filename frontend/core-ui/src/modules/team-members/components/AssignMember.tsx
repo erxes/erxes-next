@@ -119,7 +119,7 @@ export const AssignMemberTrigger = React.forwardRef<
         variant="outline"
         role="combobox"
         className={cn(
-          'truncate h-8 rounded-md hover:cursor-pointer shadow-none justify-start px-2',
+          'truncate h-8 rounded-md hover:cursor-pointer shadow-none justify-start px-2  focus-visible:shadow-primary/10 focus-visible:ring-[3px] focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent',
           props.size === 'lg' && 'gap-2',
           className,
         )}

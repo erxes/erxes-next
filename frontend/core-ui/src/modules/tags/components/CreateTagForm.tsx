@@ -14,7 +14,7 @@ import {
   FormMessage,
   Input,
 } from 'erxes-ui/components';
-import { SelectColor } from 'erxes-ui/modules/select-color/components/selectColor';
+import { SelectColor } from 'erxes-ui/modules/select-color/components/SelectColor';
 
 import { SelectTags } from '@/tags/components/SelectTags';
 import { useTagsAdd } from '@/tags/hooks/useTagsAdd';
@@ -62,7 +62,7 @@ export const CreateTagForm = ({
       },
     });
   };
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">

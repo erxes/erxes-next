@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import {
   IconBuildingStore,
   IconCaretUpFilled,
-  IconInbox,
+  IconMailFilled,
   IconSettings,
 } from '@tabler/icons-react';
 import { Button, Collapsible, Sidebar } from 'erxes-ui';
@@ -36,14 +36,14 @@ export const MainNavigationBar = ({
         exit={{ opacity: 0, x: -20 }}
         className="flex h-full w-full flex-col"
       >
-        <Sidebar.Header className="pt-4 pb-3 border-input">
+        <Sidebar.Header className="px-4 h-[52px] justify-center">
           <Organization />
         </Sidebar.Header>
         <Sidebar.Separator className="mx-0" />
         <Sidebar.Content className="gap-0">
           <Collapsible defaultOpen className="group/collapsible">
             <Sidebar.Group>
-              <Sidebar.GroupLabel asChild className="hover:bg-zinc-200">
+              <Sidebar.GroupLabel asChild>
                 <Collapsible.Trigger>
                   Favorites
                   <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
@@ -54,7 +54,7 @@ export const MainNavigationBar = ({
                   <Sidebar.Menu>
                     <Sidebar.MenuItem>
                       <Sidebar.MenuButton>
-                        <IconInbox />
+                        <IconMailFilled className="text-accent-foreground" />
                         <span>Team Inbox</span>
                       </Sidebar.MenuButton>
                     </Sidebar.MenuItem>
@@ -67,7 +67,7 @@ export const MainNavigationBar = ({
           <SidebarNavigation />
         </Sidebar.Content>
         <Sidebar.Separator className="mx-0" />
-        <Sidebar.Footer className="pb-5 pt-0">
+        <Sidebar.Footer className="pb-5 px-0">
           <Sidebar.Group className="pt-0">
             <Sidebar.GroupLabel>Shortcut actions</Sidebar.GroupLabel>
             <Sidebar.GroupContent className="grid grid-cols-2 gap-2">
@@ -84,6 +84,7 @@ export const MainNavigationBar = ({
               <QuickActions />
             </Sidebar.GroupContent>
           </Sidebar.Group>
+          <Sidebar.Separator className="mx-0" />
           <User />
         </Sidebar.Footer>
       </motion.div>
@@ -91,7 +92,7 @@ export const MainNavigationBar = ({
   };
   return (
     <Sidebar.Provider className="w-screen">
-      <Sidebar collapsible="offcanvas" variant="inset" className="p-0">
+      <Sidebar collapsible="offcanvas" variant="sidebar" className="p-0">
         <AnimatePresence>{renderSidebarContent()}</AnimatePresence>
         <Sidebar.Rail />
       </Sidebar>

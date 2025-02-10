@@ -5,9 +5,10 @@ import {
   IconHistory,
   IconMail,
   IconPhone,
+  IconTag,
   IconUser,
 } from '@tabler/icons-react';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { Avatar } from 'erxes-ui/components/avatar';
 import { RelativeDateDisplay } from 'erxes-ui/display';
@@ -24,8 +25,12 @@ import {
 import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
 import { Customer } from '@/contacts/types/contactsTypes';
 import { isValidEmail } from 'erxes-ui/utils';
+import { TagBadges } from '@/tags/components/tagBadges';
+import { SelectTags } from '@/tags/components/SelectTags';
+import { ITag } from '@/tags/types/tagTypes';
+import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 
-const TableTextInput = ({ cell }) => {
+const TableTextInput = ({ cell }: { cell: Cell<Customer, unknown> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
   const { customerEdit } = useCustomerEdit();
   return (
@@ -33,7 +38,7 @@ const TableTextInput = ({ cell }) => {
       onSave={() => {
         customerEdit({
           variables: {
-            _id: cell.row.original._id,
+            id: cell.row.original._id,
             [cell.column.id]: value,
           },
         });
@@ -107,7 +112,6 @@ export const contactColumns: ColumnDef<Customer>[] = [
               });
             } else {
               setValue(initialValue);
-              console.log('not saved');
             }
           }}
           getValue={() => cell.getValue()}
@@ -158,6 +162,33 @@ export const contactColumns: ColumnDef<Customer>[] = [
       <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
     ),
     cell: ({ cell }) => <TableTextInput cell={cell} />,
+  },
+  {
+    id: 'tagIds',
+    accessorKey: 'tagIds',
+    header: () => <RecordTableInlineHead icon={IconTag} label="Tags" />,
+    cell: ({ cell }) => (
+      <RecordTableInlineCell
+        display={() => (
+          <div className="flex gap-1">
+            <TagBadges tagIds={cell.getValue() as string[]} />
+          </div>
+        )}
+        edit={() => {
+          const [selectedTags, setSelectedTags] = useState<string[]>(
+            (cell.getValue() as ITag[]).map((tag) => tag._id),
+          );
+          const handleSelect = (tags: string[] | string) => {
+            setSelectedTags(tags as string[]);
+          };
+          return (
+            <RecordTableInlineCellEditForm>
+              <SelectTags selected={selectedTags} onSelect={handleSelect} />
+            </RecordTableInlineCellEditForm>
+          );
+        }}
+      />
+    ),
   },
   {
     id: 'lastSeenAt',

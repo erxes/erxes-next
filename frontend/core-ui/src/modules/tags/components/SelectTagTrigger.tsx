@@ -7,6 +7,7 @@ import { TagBadges } from '@/tags/components/tagBadges';
 
 import { useSelectTags } from '@/tags/contexts/SelectTagsContext';
 import { useTagsByIds } from '@/tags/hooks/useTags';
+import { ITag } from '@/tags/types/tagTypes';
 
 export const SelectTagTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
@@ -19,20 +20,20 @@ export const SelectTagTrigger = React.forwardRef<
       tagType,
       tagIds: selectedTagIds,
     },
-    onCompleted: ({ tags }) => {
+    onCompleted: ({ tags }: { tags: ITag[] }) => {
       setSelectedTags(tags);
     },
     skip: !selectedTagIds.length || selectedTags?.length,
   });
 
   const buttonClasses = cn(
-    'justify-start border-dashed shadow-none ring-0 border overflow-auto gap-1 px-1 min-w-60 font-normal',
+    'justify-start ring-0 overflow-auto gap-1 px-1 min-w-60 font-normal',
     className,
   );
 
   return (
     <Popover.Trigger asChild>
-      <Button variant="outline" className={buttonClasses} {...props} ref={ref}>
+      <Button variant="ghost" className={buttonClasses} {...props} ref={ref}>
         <TagBadges tagIds={selectedTagIds} tags={selectedTags} />
       </Button>
     </Popover.Trigger>
