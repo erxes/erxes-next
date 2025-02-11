@@ -2,7 +2,7 @@ import { spawn, ChildProcess, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'yaml';
-import { ErxesProxyTarget } from '../proxy/targets';
+import { ErxesProxyTarget, retryGetProxyTargets } from '../proxy/targets';
 import {
   dirTempPath,
   routerConfigPath,
@@ -125,6 +125,7 @@ const createRouterConfig = async () => {
 export const startRouter = async (proxyTargets: ErxesProxyTarget[]) => {
   await supergraphCompose(proxyTargets);
   await createRouterConfig();
+  console.log('Downloading router...');
   await downloadRouter();
 
   const devOptions = ['--dev'];
@@ -142,4 +143,23 @@ export const startRouter = async (proxyTargets: ErxesProxyTarget[]) => {
     ],
     { stdio: 'inherit' },
   );
+};
+
+export const updateApolloRouter = async () => {
+  try {
+    const newTargets = await retryGetProxyTargets();
+
+    // Check if the targets have changed
+    if (JSON.stringify(newTargets) !== JSON.stringify(global.currentTargets)) {
+      console.log('Proxy targets updated, applying changes...');
+
+      // Update the targets and apply the new proxy middleware
+      global.currentTargets = newTargets;
+
+      // Restart the router with updated targets
+      await startRouter(global.currentTargets);
+    }
+  } catch (error) {
+    console.error('Error updating proxy targets:', error);
+  }
 };

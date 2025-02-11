@@ -3,3 +3,4 @@ export * from './headers';
 export * from './service-discovery';
 export * from './utils';
 export * from './core';
+export * from './mq-worker';

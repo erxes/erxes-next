@@ -54,7 +54,7 @@ export const getCoreConnection = async (): Promise<void> => {
   coreModelPlugins = coreConnection.model('plugins', pluginSchema);
 };
 
-export let ORGANIZATION_ID_MAPPING: { [key: string]: string } = {};
+export const ORGANIZATION_ID_MAPPING: { [key: string]: string } = {};
 
 export const getOrganizationIdBySubdomain = async (
   subdomain: string,
@@ -90,8 +90,6 @@ export const getOrgsCache = async ({
   let organizations: IOrganization[] = value ? JSON.parse(value) : [];
 
   if (organizations.length === 0) {
-    console.log('Fetching organizations from database ...');
-
     organizations = await coreModelOrganizations.find({}).lean();
 
     redis.set('core_organizations', JSON.stringify(organizations));
@@ -158,7 +156,7 @@ export const getOrganizationDetail = async ({
 
   const charge = organization.charge || {};
   let experienceName = '';
-  let bundleNames = [] as string[];
+  const bundleNames = [] as string[];
 
   const installation = await coreModelInstallations.findOne({
     organizationId: organization._id,

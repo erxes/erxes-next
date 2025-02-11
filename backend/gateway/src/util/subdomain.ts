@@ -1,5 +1,5 @@
-import { erxesSubdomainHeaderName } from 'erxes-api-utils/headers';
-import { getHostnameZeroTrust } from 'erxes-api-utils/headers';
+import { erxesSubdomainHeaderName } from 'erxes-api-utils';
+import { getHostnameZeroTrust } from 'erxes-api-utils';
 import { IncomingMessage } from 'http';
 
 export const getSubdomain = (req: IncomingMessage): string => {

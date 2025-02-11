@@ -9,7 +9,7 @@ import { join, leave } from 'erxes-api-utils';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3300;
+const port = process.env.PORT ? Number(process.env.PORT) : 3400;
 
 const app = express();
 
@@ -45,7 +45,7 @@ httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
 
   await join({
-    name: 'core',
+    name: 'core-test',
     port,
     hasSubscriptions: false,
     meta: {},
@@ -66,7 +66,7 @@ async function closeMongooose() {
 
 async function leaveServiceDiscovery() {
   try {
-    await leave('core', port);
+    await leave('core-test', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);
@@ -92,9 +92,10 @@ async function closeHttpServer() {
 // If the Node process ends, close the http-server and mongoose.connection and leave service discovery.
 (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
   process.on(sig, async () => {
+    await leaveServiceDiscovery();
     await closeHttpServer();
     await closeMongooose();
-    await leaveServiceDiscovery();
+
     process.exit(0);
   });
 });

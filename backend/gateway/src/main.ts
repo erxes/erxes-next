@@ -2,15 +2,24 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import * as http from 'http';
+import { Queue } from 'bullmq';
+import { createBullBoard } from '@bull-board/api';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { ExpressAdapter } from '@bull-board/express';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { ErxesProxyTarget, retryGetProxyTargets } from './proxy/targets';
-import { startRouter } from './apollo-router';
+import { retryGetProxyTargets } from './proxy/targets';
+import { startRouter, stopRouter } from './apollo-router';
+
+import { initMQWorkers } from './mq/workers/workers';
+
 import {
   applyProxiesToGraphql,
   applyProxyToCore,
   proxyReq,
 } from './proxy/middleware';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+
+import { redis } from 'erxes-api-utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 const domain = process.env.DOMAIN ?? 'http://localhost:3000';
@@ -20,27 +29,35 @@ const corsOptions = {
   origin: [domain],
 };
 
+const myQueue = new Queue('gateway-service-discovery', {
+  connection: redis,
+  defaultJobOptions: {
+    removeOnComplete: false,
+    removeOnFail: false,
+  },
+});
+
+const serverAdapter = new ExpressAdapter();
+
+createBullBoard({
+  queues: [new BullMQAdapter(myQueue)],
+  serverAdapter: serverAdapter,
+});
+
+serverAdapter.setBasePath('/bullmq-board');
+
 const app = express();
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-app.get('/stop-test', async (req, res) => {
-  await updateApolloRouter();
-  res.sendStatus(200);
-});
-
-app.get('/restart', async (req, res) => {
-  await updateApolloRouter();
-
-  res.sendStatus(200);
-});
+app.use('/bullmq-board', serverAdapter.getRouter());
 
 app.use('/pl:serviceName', async (req, res) => {
   try {
     const services = { core: 'http://localhost:3400' };
     const serviceName = req.params.serviceName;
-
+    initMQWorkers(redis);
     // Find the target URL for the requested service
     const targetUrl = services[serviceName.replace(':', '')];
 
@@ -65,48 +82,31 @@ app.use('/pl:serviceName', async (req, res) => {
   }
 });
 
-let currentTargets: ErxesProxyTarget[] = [];
 let httpServer: http.Server;
-
-async function updateApolloRouter() {
-  try {
-    const newTargets = await retryGetProxyTargets();
-
-    // Check if the targets have changed
-    if (JSON.stringify(newTargets) !== JSON.stringify(currentTargets)) {
-      console.log('Proxy targets updated, applying changes...');
-
-      // Update the targets and apply the new proxy middleware
-      currentTargets = newTargets;
-
-      // Restart the router with updated targets
-      await startRouter(currentTargets);
-    }
-  } catch (error) {
-    console.error('Error updating proxy targets:', error);
-  }
-}
 
 async function start() {
   try {
     // Initial fetch of the proxy targets
-    currentTargets = await retryGetProxyTargets();
+    global.currentTargets = await retryGetProxyTargets();
+
+    // Initialize MQ workers
+    console.log('Initializing MQ workers...');
+    await initMQWorkers(redis);
+    console.log('MQ workers initialized');
 
     // Start the router with the initial targets
-    await startRouter(currentTargets);
+    console.log('Starting the router...');
+    await startRouter(global.currentTargets);
+    console.log('Router started successfully');
 
     // Apply the initial proxy middleware
     applyProxiesToGraphql(app);
-    applyProxyToCore(app, currentTargets);
+    applyProxyToCore(app, global.currentTargets);
 
     // Start the HTTP server
     httpServer = http.createServer(app);
-
-    // Listen for incoming requests
     await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
     console.log(`Server is running at http://localhost:${port}/`);
-
-    // Periodically check for proxy target updates
   } catch (error) {
     console.error('Error starting the server:', error);
     process.exit(1);
@@ -114,5 +114,20 @@ async function start() {
 }
 
 // Graceful shutdown for SIGINT and SIGTERM
+(['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((signal) => {
+  process.on(signal, async () => {
+    console.log(`Exiting on signal ${signal}`);
+    try {
+      stopRouter(signal);
+      if (httpServer) {
+        await new Promise((resolve) => httpServer.close(resolve));
+      }
+      process.exit(0);
+    } catch (error) {
+      console.error('Error during shutdown:', error);
+      process.exit(1);
+    }
+  });
+});
 
 start();

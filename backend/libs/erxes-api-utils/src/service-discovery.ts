@@ -1,18 +1,39 @@
 import * as dotenv from 'dotenv';
 import { redis } from './redis';
+import { Queue } from 'bullmq';
+
 dotenv.config();
 
-const { NODE_ENV, LOAD_BALANCER_ADDRESS, ENABLED_SERVICES_JSON, MONGO_URL } =
-  process.env;
+const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL } = process.env;
 
 const isDev = NODE_ENV === 'development';
 
-const enabledServices = ['core'];
-
 const keyForConfig = (name) => `service:config:${name}`;
+const queue = new Queue('gateway-update-apollo-router', {
+  connection: redis,
+});
 
 export const getServices = async (): Promise<string[]> => {
-  return enabledServices;
+  const enabledServices = (await redis.smembers('enabled-services')) || '[]';
+
+  console.log('Enabled services:', enabledServices);
+
+  return ['core', ...enabledServices];
+};
+
+export const addService = async (serviceName: string): Promise<void> => {
+  queue.add('service-join', { serviceName });
+  try {
+    await redis.sadd('enabled-services', serviceName);
+    console.log(`Service ${serviceName} registered in Redis`);
+  } catch (error) {
+    console.error(`Failed to register service ${serviceName}:`, error);
+  }
+};
+
+export const removeService = async (serviceName: string): Promise<void> => {
+  queue.add('service-leave', { serviceName });
+  redis.srem('enabled-services', serviceName);
 };
 
 type ServiceInfo = { address: string; config: any };
@@ -67,19 +88,24 @@ export const join = async ({
     LOAD_BALANCER_ADDRESS ||
     `http://${isDev ? 'localhost' : `plugin-${name}-api`}:${port}`;
 
-  console.log(address);
-
   await redis.set(`service:${name}`, address);
+
+  await addService(name);
 
   console.log(`$service:${name} joined with ${address}`);
 };
 
-export const leave = async (name, _port) => {
-  console.log(`$service:${name} left`);
+export const leave = async (name, port) => {
+  await removeService(name);
+
+  console.log(`$service:${name} left ${port}`);
 };
 
-export const isEnabled = (name) => {
+export const isEnabled = async (name) => {
   if (name === 'core') return true;
+
+  const enabledServices = await getServices();
+
   return enabledServices.includes(name);
 };
 
@@ -90,8 +116,4 @@ export const getPluginAddress = async (name) => {
     pluginAddressCache[name] = await redis.get(`service:${name}`);
   }
   return pluginAddressCache[name];
-};
-
-export const getEnabledServices = async () => {
-  return enabledServices;
 };

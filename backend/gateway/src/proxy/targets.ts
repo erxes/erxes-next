@@ -88,7 +88,7 @@ async function retryEnsureGraphqlEndpointIsUp(target: ErxesProxyTarget) {
 
 export async function retryGetProxyTargets(): Promise<ErxesProxyTarget[]> {
   try {
-    const serviceNames = (await getServices()) || [];
+    const serviceNames = await getServices();
 
     const proxyTargets: ErxesProxyTarget[] = await Promise.all(
       serviceNames.map(retryGetProxyTarget),

@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { ErxesProxyTarget } from '../proxy/targets';
-import { supergraphConfigPath, supergraphPath } from './paths';
+import { ErxesProxyTarget } from 'src/proxy/targets';
+import { supergraphConfigPath, supergraphPath } from '../apollo-router/paths';
 import * as fs from 'fs';
 import { execSync } from 'child_process';
 import isSameFile from '../util/is-same-file';

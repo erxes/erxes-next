@@ -11,6 +11,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "paths": {
+      "src/*": ["backend/gateway/src/*"],
       "erxes-api-utils": ["backend/libs/erxes-api-utils/src/index.ts"],
       "erxes-api-utils/*": ["backend/libs/erxes-api-utils/src/*"]
     }
