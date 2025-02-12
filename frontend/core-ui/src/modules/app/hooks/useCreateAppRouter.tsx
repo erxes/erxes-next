@@ -18,7 +18,7 @@ const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
 
 const CreateOwnerPage = lazy(
-  () => import('~/pages/organization/CreateOwnerPage')
+  () => import('~/pages/organization/CreateOwnerPage'),
 );
 
 export const useCreateAppRouter = () => {
@@ -50,7 +50,7 @@ export const useCreateAppRouter = () => {
           </Route>
         </Route>
         <Route path={AppPath.NotFoundWildcard} element={<NotFoundPage />} />
-      </Route>
-    )
+      </Route>,
+    ),
   );
 };

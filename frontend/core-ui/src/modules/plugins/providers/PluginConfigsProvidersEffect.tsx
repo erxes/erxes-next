@@ -19,7 +19,7 @@ export const PluginConfigsProvidersEffect = () => {
         for (const remote of remotes) {
           try {
             const remoteConfig = (await loadRemote(
-              `${remote.name}/Config`
+              `${remote.name}/Config`,
             )) as RemoteConfig;
 
             const pluginConfig = remoteConfig.CONFIG;
