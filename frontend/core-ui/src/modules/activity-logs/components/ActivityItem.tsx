@@ -88,7 +88,7 @@ const ActivityItemIcon = () => {
     <div className="relative">
       <div
         className={cn(
-          'absolute h-full top-0 left-1/2 -translate-x-1/2 border-l border',
+          'absolute h-full top-0 left-1/2 -translate-x-1/2 border-l',
           isLast ? 'hidden' : '',
         )}
       />

@@ -8,7 +8,7 @@ import apolloClient from './apollo-provider/apolloClient';
 import { PluginConfigsProvidersEffect } from '@/plugins/providers/PluginConfigsProvidersEffect';
 import { UserProviderEffect } from '@/auth/providers/UserProviderEffect';
 import { OrganizationProviderEffect } from '@/organization/providers/OrganizationProviderEffect';
-
+import { PageChangeEffect } from '@/app/effect-components/PageChangeEffect';
 export const Providers = () => {
   return (
     <ApolloProvider client={apolloClient}>
@@ -18,6 +18,7 @@ export const Providers = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <Outlet />
       </Suspense>
+      <PageChangeEffect />
     </ApolloProvider>
   );
 };

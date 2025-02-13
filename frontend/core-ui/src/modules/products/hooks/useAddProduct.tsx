@@ -4,21 +4,17 @@ import { productsMutations } from '@/products/graphql/ProductsMutations';
 
 export function useAddProduct() {
   const [productsAdd, { loading, error, data }] = useMutation(
-    productsMutations.productsAdd
+    productsMutations.productsAdd,
+    {
+      update: (cache, { data: { productsAdd } }) => {
+        cache.modify({
+          id: cache.identify(productsAdd),
+          fields: {
+            products: (existingData) => [productsAdd, ...existingData],
+          },
+        });
+      },
+    },
   );
-
-  const addProduct = async (productsData) => {
-    try {
-      console.log(productsData);
-      const response = await productsAdd({
-        variables: productsData,
-      });
-      return response.data.addProduct;
-    } catch (error) {
-      console.error('Add product error:', error);
-      throw error;
-    }
-  };
-
-  return { addProduct, loading, error, data };
+  return { productsAdd, loading, error, data };
 }

@@ -3,7 +3,6 @@ import { Tabs } from 'erxes-ui/components/tabs';
 import { Resizable } from 'erxes-ui/components';
 import { ContactDetailActionsTrigger } from './ContactDetailActions';
 import { ContactDetailSheet } from './ContactDetailSheet';
-import { ContactDetailSidebar } from '@/contacts/detail/components/ContactDetailSidebar';
 import { useQueryState } from 'nuqs';
 
 export const ContactDetailLayout = ({
@@ -15,22 +14,20 @@ export const ContactDetailLayout = ({
 }) => {
   return (
     <ContactDetailSheet>
-      <ContactDetailSidebar>
-        <div className="flex h-full">
-          <div className="flex flex-col flex-auto min-h-full overflow-hidden">
-            <Resizable.PanelGroup
-              direction="horizontal"
-              className="flex-auto min-h-full overflow-hidden"
-            >
-              <Resizable.Panel>
-                <ContactDetailTabs>{children}</ContactDetailTabs>
-              </Resizable.Panel>
-              {actions}
-            </Resizable.PanelGroup>
-          </div>
-          <ContactDetailActionsTrigger />
+      <div className="flex h-full">
+        <div className="flex flex-col flex-auto min-h-full overflow-hidden">
+          <Resizable.PanelGroup
+            direction="horizontal"
+            className="flex-auto min-h-full overflow-hidden"
+          >
+            <Resizable.Panel>
+              <ContactDetailTabs>{children}</ContactDetailTabs>
+            </Resizable.Panel>
+            {actions}
+          </Resizable.PanelGroup>
         </div>
-      </ContactDetailSidebar>
+        <ContactDetailActionsTrigger />
+      </div>
     </ContactDetailSheet>
   );
 };
@@ -46,6 +43,12 @@ const ContactDetailTabs = ({ children }: { children: React.ReactNode }) => {
       onValueChange={setSelectedTab}
       className="flex-auto flex flex-col"
     >
+      <Tabs.List>
+        <Tabs.Trigger value="general">General</Tabs.Trigger>
+        <Tabs.Trigger value="properties">Properties</Tabs.Trigger>
+        <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+        <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+      </Tabs.List>
       {children}
     </Tabs>
   );

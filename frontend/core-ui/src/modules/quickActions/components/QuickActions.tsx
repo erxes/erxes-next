@@ -14,15 +14,20 @@ import {
 } from '@tabler/icons-react';
 
 import { Button, Command, Sidebar } from 'erxes-ui/components';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { Key } from 'erxes-ui/types/Key';
+import { AppHotkeyScope } from 'erxes-ui/modules/hotkey/types/AppHotkeyScope';
 
 export function QuickActions() {
   const [open, setOpen] = React.useState(false);
 
-  useHotkeys([`${Key.Meta}+k`], () => {
-    setOpen(true);
-  });
+  useScopedHotkeys(
+    `${Key.Meta}+k`,
+    () => {
+      setOpen(true);
+    },
+    AppHotkeyScope.CommandMenu,
+  );
 
   return (
     <>

@@ -68,12 +68,22 @@ export const DateFilter = ({
           <Dialog.Header className="p-6 space-y-3">
             <Dialog.Title className="text-sm">{label}</Dialog.Title>
             <div>
-              <Tabs.List>
-                <Tabs.Trigger value="day">Day</Tabs.Trigger>
-                <Tabs.Trigger value="month">Month</Tabs.Trigger>
-                <Tabs.Trigger value="quarter">Quarter</Tabs.Trigger>
-                <Tabs.Trigger value="halfYear">Half Year</Tabs.Trigger>
-                <Tabs.Trigger value="year">Year</Tabs.Trigger>
+              <Tabs.List size="sm">
+                <Tabs.Trigger value="day" size="sm">
+                  Day
+                </Tabs.Trigger>
+                <Tabs.Trigger value="month" size="sm">
+                  Month
+                </Tabs.Trigger>
+                <Tabs.Trigger value="quarter" size="sm">
+                  Quarter
+                </Tabs.Trigger>
+                <Tabs.Trigger value="halfYear" size="sm">
+                  Half Year
+                </Tabs.Trigger>
+                <Tabs.Trigger value="year" size="sm">
+                  Year
+                </Tabs.Trigger>
               </Tabs.List>
             </div>
           </Dialog.Header>
@@ -162,7 +172,7 @@ const DateFilterRadioGroup = ({
                   'grid gap-1',
                   items.length === 12 && 'grid-cols-3',
                   items.length === 2 && 'grid-cols-2',
-                  items.length === 4 && 'grid-cols-4'
+                  items.length === 4 && 'grid-cols-4',
                 )}
               >
                 {items.map((item) => (
@@ -180,7 +190,7 @@ const DateFilterRadioGroup = ({
             <DateFilterRadioGroupItem id={id} value={year + '-y'} key={year}>
               {year}
             </DateFilterRadioGroupItem>
-          )
+          ),
         )}
       </fieldset>
     </RadioGroup>

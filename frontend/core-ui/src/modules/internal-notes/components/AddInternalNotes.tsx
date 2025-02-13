@@ -53,28 +53,23 @@ export function AddInternalNotes({
   };
 
   return (
-    <div className="py-4 h-full overflow-hidden">
+    <div className="py-4 h-full overflow-hidden flex flex-col gap-4">
       <BlockEditor
         editor={editor}
         onChange={handleChange}
-        className="h-full overflow-auto pb-8"
+        className="h-full overflow-auto"
       >
         <AssignMemberInEditor editor={editor} />
       </BlockEditor>
-      <div className="relative">
-        <Button
-          variant="secondary"
-          className="absolute bottom-1 inset-x-4"
-          onClick={handleSubmit}
-        >
-          {loading ? (
-            <Spinner size="small" />
-          ) : (
-            <IconArrowUp className="w-4 h-4" />
-          )}
-          Post
-        </Button>
-      </div>
+
+      <Button variant="secondary" onClick={handleSubmit} className="mx-4">
+        {loading ? (
+          <Spinner size="small" />
+        ) : (
+          <IconArrowUp className="w-4 h-4" />
+        )}
+        Post
+      </Button>
     </div>
   );
 }

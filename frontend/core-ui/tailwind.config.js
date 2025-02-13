@@ -158,19 +158,19 @@ module.exports = {
       },
       boxShadow: {
         input:
-          '0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px rgba(0, 0, 0, 0.05)',
+          '0 2px 2px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 0 0 1px hsla(var(--shadow))',
         'command-bar':
-          'rgba(0, 0, 0, 0.12) 2px 4px 16px 0px, rgba(0, 0, 0, 0.04) 0px 2px 4px 0px',
+          'rgba(0, 0, 0, 0.12) 2px 4px 16px, rgba(0, 0, 0, 0.04) 0 2px 4px',
         'button-primary':
-          'inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 4px rgba(0, 0, 0, 0.05), 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.05)',
+          'inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 4px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow))',
         'button-outline':
-          '0px 4px 4px 0px rgba(0, 0, 0, 0.05), 0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px rgba(0, 0, 0, 0.05)',
+          '0 4px 4px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 0 0 1px hsla(var(--shadow))',
         'sidebar-inset':
-          '0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 1px 1px rgba(0, 0, 0, 0.05), 0px 2px 2px rgba(0, 0, 0, 0.05), 0px 4px 4px rgba(0, 0, 0, 0.05)',
-        xs: '0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 2px 2px 0px rgba(0, 0, 0, 0.05)',
-        sm: '0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 4px 4px 0px rgba(0, 0, 0, 0.05)',
-        lg: '0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 4px 4px 0px rgba(0, 0, 0, 0.05), 0px 8px 8px 0px rgba(0, 0, 0, 0.05)',
-        xl: '0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 1px 1px 0px rgba(0, 0, 0, 0.05), 0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 4px 4px 0px rgba(0, 0, 0, 0.05), 0px 8px 8px 0px rgba(0, 0, 0, 0.05), 0px 16px 16px 0px rgba(0, 0, 0, 0.05)',
+          '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow))',
+        xs: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow))',
+        sm: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow))',
+        lg: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow)), 0 8px 8px hsla(var(--shadow))',
+        xl: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow)), 0 8px 8px hsla(var(--shadow)), 0 16px 16px hsla(var(--shadow))',
       },
       ringColor: {
         DEFAULT: 'hsl(var(--ring))',

@@ -48,17 +48,11 @@ export function AddCustomerForm() {
           <Separator />
           <ScrollArea.Root className="flex-auto">
             <Tabs defaultValue="general-information">
-              <Tabs.List className="grid grid-cols-2 mb-10 h-full bg-transparent">
-                <Tabs.Trigger
-                  value="general-information"
-                  className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:border-b rounded-none "
-                >
+              <Tabs.List className="grid grid-cols-2 mb-10">
+                <Tabs.Trigger value="general-information" className="h-10">
                   General Information
                 </Tabs.Trigger>
-                <Tabs.Trigger
-                  value="links"
-                  className="text-sm h-12 data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:shadow-none data-[state=active]:border-b data-[state=active]:border-t-0 rounded-none "
-                >
+                <Tabs.Trigger value="links" className="h-10">
                   Links
                 </Tabs.Trigger>
               </Tabs.List>
