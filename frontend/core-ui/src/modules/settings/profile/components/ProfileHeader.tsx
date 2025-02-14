@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Link } from 'react-router';
 
-import { Breadcrumb,Header } from 'erxes-ui/components';
+import { Breadcrumb, } from 'erxes-ui/components';
 
 const breadcrumbs = [
   { title: 'Settings', path: 'settings' },
@@ -10,7 +10,7 @@ const breadcrumbs = [
 
 export const ProfileHeader = () => {
   return (
-    <Header>
+    <div>
       <Breadcrumb.Root>
         <Breadcrumb.List>
           {breadcrumbs.map((breadcrumb, index) => {
@@ -34,6 +34,6 @@ export const ProfileHeader = () => {
           })}
         </Breadcrumb.List>
       </Breadcrumb.Root>
-    </Header>
+    </div>
   );
 };

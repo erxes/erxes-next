@@ -17,8 +17,8 @@ const LoginPage = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="grid md:grid-cols-2 h-screen">
-      <DynamicBanner className="hidden md:block" />
+    <div className="grid lg:grid-cols-2 h-screen">
+      <DynamicBanner className="hidden lg:block" />
       <Login />
     </div>
   );

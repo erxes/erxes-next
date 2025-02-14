@@ -114,7 +114,7 @@ export const ProductAddCoreFields = ({
                   currencies={CURRENCY_CODES}
                   value={CurrencyCode.USD}
                   displayIcon={true}
-                  className="h-full ring-0 rounded-l-md shadow-none border border-transparent hover:"
+                  className="h-full focus-visible:outline-none focus-visible:ring-0 focus-visible:border-none focus-visible:ring-offset-0 rounded-l-md shadow-none "
                 />
                 <Separator orientation="vertical" />
                 <Input

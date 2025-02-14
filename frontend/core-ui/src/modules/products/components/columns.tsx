@@ -142,7 +142,7 @@ export const columns: ColumnDef<any>[] = [
                 },
               })
             }
-            className="rounded-none px-2 font-normal border-r-0 ring-0"
+            className="rounded-none px-2 font-normal border-r-0 ring-0 bg-transparent"
             size="lg"
           />
         </RecordTableInlineCellContainer>

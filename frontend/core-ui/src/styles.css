@@ -15,6 +15,7 @@
     --muted-foreground: 0 2% 45%;
     --accent: 240 3% 96%;
     --accent-foreground: 240 3% 66%;
+    --destructive: 0 84.2% 60.2%;
     --scroll: 240 5% 83%;
     --border: 240 6% 90%; /* gray/3 */
     --input: 240 6% 90%; /* gray/3 */

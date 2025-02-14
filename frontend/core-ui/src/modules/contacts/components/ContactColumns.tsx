@@ -11,11 +11,8 @@ import {
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { Avatar } from 'erxes-ui/components/avatar';
-import { RelativeDateDisplay } from 'erxes-ui/display';
-import { VerificationDisplay } from 'erxes-ui/display';
+import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { VerificationInput } from 'erxes-ui/modules/record-field/meta-inputs/components/VerificationInput';
-import { EmailFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/EmailFieldInput';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import {
   RecordTableInlineCell,
@@ -24,11 +21,11 @@ import {
 
 import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
 import { Customer } from '@/contacts/types/contactsTypes';
-import { isValidEmail } from 'erxes-ui/utils';
 import { TagBadges } from '@/tags/components/tagBadges';
 import { SelectTags } from '@/tags/components/SelectTags';
+import { ContactEmailColumnCell } from '@/contacts/components/ContactEmailColumnCell';
 import { ITag } from '@/tags/types/tagTypes';
-import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
+import { ContactPhoneColumnCell } from '@/contacts/components/ContactPhoneColumnCell';
 
 const TableTextInput = ({ cell }: { cell: Cell<Customer, unknown> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
@@ -91,68 +88,7 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconMail} label="Primary Email" />
     ),
-    cell: ({ cell }) => {
-      const initialValue = cell.getValue() as string;
-      const [value, setValue] = useState(initialValue);
-      const [validationStatus, setValidationStatus] = useState(
-        cell.row.original.emailValidationStatus,
-      );
-      const { customerEdit } = useCustomerEdit();
-
-      return (
-        <RecordTableInlineCell
-          onSave={() => {
-            if (isValidEmail(value)) {
-              customerEdit({
-                variables: {
-                  _id: cell.row.original._id,
-                  [cell.column.id]: value,
-                  emailValidationStatus: validationStatus,
-                },
-              });
-            } else {
-              setValue(initialValue);
-            }
-          }}
-          getValue={() => cell.getValue()}
-          value={value}
-          display={() => (
-            <div className="flex items-center gap-2">
-              {value && (
-                <VerificationDisplay value={validationStatus || null} />
-              )}
-              <span>{value}</span>
-            </div>
-          )}
-          edit={() => (
-            <RecordTableInlineCellEditForm>
-              <div className="flex border border-border">
-                {value && (
-                  <VerificationInput
-                    className="ring-0 outline-none mr-1 border-transparent h-full rounded-none hover:bg-muted"
-                    value={cell.row.original.emailValidationStatus || null}
-                    onChange={(newStatus) => {
-                      setValidationStatus(newStatus);
-                      customerEdit({
-                        variables: {
-                          _id: cell.row.original._id,
-                          emailValidationStatus: newStatus,
-                        },
-                      });
-                    }}
-                  />
-                )}
-                <EmailFieldInput
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  className="h-full border-transparent"
-                />
-              </div>
-            </RecordTableInlineCellEditForm>
-          )}
-        />
-      );
-    },
+    cell: ({ cell }) => <ContactEmailColumnCell cell={cell} />,
   },
 
   {
@@ -161,7 +97,7 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
     ),
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => <ContactPhoneColumnCell cell={cell} />,
   },
   {
     id: 'tagIds',
