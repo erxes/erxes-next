@@ -6,16 +6,17 @@
   :root {
     --font-sans: 'Inter', sans-serif;
     --font-mono: 'Roboto Mono', monospace;
-    --background: 0 0% 100%; /* primary/white */
-    --foreground: 240 6% 10%; /* primary/black */
-    --primary: 244 76% 59%; /* primary/purple */
-    --primary-foreground: 0 0% 100%; /* primary/white */
-    --secondary: 244 53% 85%; /* secondary/purple */
-    --muted: 0 0% 95%; /* secondary/gray */
-    --muted-foreground: 0 2% 45%; /* grey/6 */
-    --accent: 240 3% 96%; /* grey/2 */
-    --accent-foreground: 240 3% 66%; /* grey/5 */
-    --scroll: 240 5% 83%; /* grey/4 */
+    --background: 0 0% 100%;
+    --foreground: 240 6% 10%;
+    --primary: 244 76% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 244 53% 85%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 2% 45%;
+    --accent: 240 3% 96%;
+    --accent-foreground: 240 3% 66%;
+    --destructive: 0 84.2% 60.2%;
+    --scroll: 240 5% 83%;
     --border: 240 6% 90%; /* gray/3 */
     --input: 240 6% 90%; /* gray/3 */
     --ring: 244 76% 59%;

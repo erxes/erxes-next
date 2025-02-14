@@ -4,6 +4,11 @@ export interface Customer {
   middleName?: string;
   lastName?: string;
   primaryEmail?: string;
+  isSubscribed?: boolean;
+  links?: object;
+  code?: string;
+  emailValidationStatus?: string;
+  phoneValidationStatus?: string
 }
 
 export interface SelectUserFetchMoreProps {

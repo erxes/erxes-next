@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { ApolloError } from '@apollo/client';
-import { IconLoader } from '@tabler/icons-react';
+import { IconLoader, IconCheck } from '@tabler/icons-react';
 
 import {
   Avatar,
@@ -34,14 +34,14 @@ export const SelectCategory = React.forwardRef<
   const { productCategories, error, loading } = useProductCategories({
     onCompleted: ({ productCategories }) => {
       setSelectedCategory(
-        productCategories?.find((category) => category._id === selected)
+        productCategories?.find((category) => category._id === selected),
       );
     },
   });
 
   const handleSelect = (categoryId: string) => {
     const category = productCategories?.find(
-      (category) => category._id === categoryId
+      (category) => category._id === categoryId,
     );
     setSelectedCategory(category);
     onSelect(categoryId);
@@ -75,7 +75,7 @@ export const SelectCategory = React.forwardRef<
           </Command.List>
         </Command>
       </Popover.Content>
-   </SelectTree>
+    </SelectTree>
   );
 });
 
@@ -116,16 +116,25 @@ export const SelectCategoryItem = ({
   const { _id, code, name, order } = category;
 
   return (
-    <SelectTreeItem order={order} hasChildren={hasChildren} name={name} value={code + name} onSelect={() => onSelect(_id)} selected={selected}>
-      <SelectCategoryBadge category={category} />
+    <SelectTreeItem
+      order={order}
+      hasChildren={hasChildren}
+      name={name}
+      value={code + name}
+      onSelect={() => onSelect(_id)}
+      selected={selected}
+    >
+      <SelectCategoryBadge category={category} selected={selected} />
     </SelectTreeItem>
   );
 };
 
 export const SelectCategoryBadge = ({
   category,
+  selected,
 }: {
   category?: ProductCategoryT;
+  selected?: boolean;
 }) => {
   if (!category) return null;
   const { _id, avatar, code, name, productCount } = category;
@@ -138,8 +147,12 @@ export const SelectCategoryBadge = ({
       </Avatar>
       <div className="text-muted-foreground">{code}</div>
       <div className="truncate flex-auto text-left">{name}</div>
-      {productCount > 0 && (
-        <div className="text-muted-foreground ml-auto">{productCount}</div>
+      {!selected ? (
+        productCount > 0 && (
+          <div className="text-muted-foreground ml-auto">{productCount}</div>
+        )
+      ) : (
+        <IconCheck className="ml-auto" />
       )}
     </>
   );

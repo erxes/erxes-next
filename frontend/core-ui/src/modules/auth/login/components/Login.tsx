@@ -11,7 +11,7 @@ export const Login = ({ className }: { className?: string }) => {
         className,
       )}
     >
-      <div className="w-11/12 sm:w-7/12 md:w-8/12 lg:w-7/12 flex flex-col items-center pt-8 md:pt-16">
+      <div className="w-11/12 sm:w-7/12 md:w-8/12 lg:w-6/12 flex flex-col items-center pt-8 md:pt-16">
         <Logo className="mb-4 md:mb-6" />
         <Card className="w-full shadow-sixteen border-none shadow-muted-foreground flex flex-col">
           <div className="w-full h-full border-b border-border rounded-xl">

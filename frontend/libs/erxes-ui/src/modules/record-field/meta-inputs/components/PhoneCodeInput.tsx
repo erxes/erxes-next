@@ -1,63 +1,52 @@
 import { useState } from 'react';
-
 import { IconCheck, IconChevronDown } from '@tabler/icons-react';
-
-import { Button, Command, Popover, Skeleton } from 'erxes-ui/components';
+import { Button, Command, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
+import { CountryPhoneCodes } from 'erxes-ui/constants/CountryPhoneCodes';
 
-import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
-
-interface VendorFieldProps {
+interface PhoneCodeInputProps {
   value: string | undefined;
   onChange: (value: string) => void;
   className?: string;
 }
 
-export const VendorField = ({
+export const PhoneCodeInput = ({
   value,
   onChange,
   className,
-}: VendorFieldProps) => {
-  const { companies, loading } = useCompaniesLowDetail();
+}: PhoneCodeInputProps) => {
   const [open, setOpen] = useState<boolean>(false);
-  const currentValue = companies?.find((vendor) => vendor._id === value)?._id;
 
-  const handleSelectVendor = (vendorId: string) => {
-    onChange(vendorId === currentValue ? '' : vendorId);
+  const currentCountry = CountryPhoneCodes?.find(
+    (country) => country.dial_code === value,
+  );
+
+  const handleSelect = (phoneCode: string) => {
     setOpen(false);
+    onChange(phoneCode);
   };
 
-  if (loading)
-    return (
-      <Skeleton className="truncate justify-start h-8 mr-1">
-        <div className="mx-2 w-full">
-          <div className="py-2 flex gap-2">
-            <div className="h-4 w-24" />
-          </div>
-        </div>
-      </Skeleton>
-    );
-
   return (
+    <div className={className}>
       <Popover open={open} onOpenChange={setOpen} modal>
         <Popover.Trigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            aria-controls="vendor-command-menu"
-            className={cn("truncate h-8 hover:cursor-pointer rounded-md w-full justify-between", className)}
+            className="truncate rounded-none h-8 hover:cursor-pointer shadow-none w-full justify-between border-none focus:outline-none focus:ring-[3px] focus:shadow-primary/10 focus:z-50"
           >
             <span
               className={cn(
                 'truncate',
-                !currentValue && 'text-foreground font-medium text-sm',
+                !currentCountry && 'text-foreground font-medium text-sm',
               )}
             >
-              {currentValue
-                ? companies.find((vendor) => vendor._id === currentValue)
-                    ?.primaryName
-                : 'Select vendor'}
+              {currentCountry ? (
+                <span>{currentCountry.flag}</span>
+              ) : (
+                'Select country'
+              )}
             </span>
             <IconChevronDown
               size={16}
@@ -81,18 +70,19 @@ export const VendorField = ({
             />
             <Command.List>
               <Command.Group>
-                {companies.map((vendor) => (
+                {CountryPhoneCodes.map((country) => (
                   <Command.Item
-                    key={vendor._id}
-                    className=" h-7 relative flex items-center justify-between"
-                    value={vendor._id}
-                    onSelect={handleSelectVendor}
-                    title={vendor.primaryName}
+                    key={country.code}
+                    className="h-7 relative flex items-center justify-between"
+                    value={country.dial_code}
+                    onSelect={() => handleSelect(country.dial_code)}
+                    title={country.name}
                   >
                     <span className="text-xs text-foreground truncate">
-                      {vendor.primaryName}
+                      {country.flag} {country.name} 
+                      <span className='text-muted-foreground ml-2'>{country.dial_code}</span>
                     </span>
-                    {currentValue === vendor._id && (
+                    {currentCountry?.code === country.code && (
                       <IconCheck
                         size={16}
                         strokeWidth={2}
@@ -106,5 +96,6 @@ export const VendorField = ({
           </Command>
         </Popover.Content>
       </Popover>
+    </div>
   );
 };

@@ -11,6 +11,7 @@ import {
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { Avatar } from 'erxes-ui/components/avatar';
+import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import {
@@ -22,8 +23,9 @@ import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
 import { Customer } from '@/contacts/types/contactsTypes';
 import { TagBadges } from '@/tags/components/tagBadges';
 import { SelectTags } from '@/tags/components/SelectTags';
+import { ContactEmailColumnCell } from '@/contacts/components/ContactEmailColumnCell';
 import { ITag } from '@/tags/types/tagTypes';
-import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
+import { ContactPhoneColumnCell } from '@/contacts/components/ContactPhoneColumnCell';
 
 const TableTextInput = ({ cell }: { cell: Cell<Customer, unknown> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
@@ -86,15 +88,16 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconMail} label="Primary Email" />
     ),
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => <ContactEmailColumnCell cell={cell} />,
   },
+
   {
     id: 'primaryPhone',
     accessorKey: 'primaryPhone',
     header: () => (
       <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
     ),
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => <ContactPhoneColumnCell cell={cell} />,
   },
   {
     id: 'tagIds',

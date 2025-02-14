@@ -3,7 +3,7 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { useContactFilterValues } from '@/contacts/contacts-filter/hooks/useContactFilterValues';
 import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
 
-export const CUSTOMERS_PER_PAGE = 30;
+export const   CUSTOMERS_PER_PAGE = 30;
 
 export const useCustomers = (options?: QueryHookOptions) => {
   const { variables } = useContactFilterValues();
@@ -14,6 +14,7 @@ export const useCustomers = (options?: QueryHookOptions) => {
       ...variables,
     },
   });
+  
 
   const { list: customers, totalCount } = data?.customersMain || {};
 

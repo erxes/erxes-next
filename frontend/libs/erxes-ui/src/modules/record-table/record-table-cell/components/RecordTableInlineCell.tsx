@@ -90,7 +90,7 @@ export const RecordTableInlineCellContainer = React.forwardRef<
       className={cn(
         'w-full flex items-stretch relative h-8 cursor-pointer box-border overflow-hidden',
         isInEditMode && 'overflow-auto items-start',
-        className
+        className,
       )}
       {...props}
     >
@@ -135,7 +135,7 @@ export function RecordTableInlineCellEditContainer({
           className={cn(
             'z-20 min-w-[var(--radix-popper-anchor-width)] bg-background p-0 shadow-md',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
-            'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
+            'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           )}
           sideOffset={-1}
           align="start"
@@ -148,15 +148,23 @@ export function RecordTableInlineCellEditContainer({
   );
 }
 
+interface RecordTableInlineCellEditFormProps
+  extends React.HTMLAttributes<HTMLFormElement> {
+  children: React.ReactNode;
+  onSubmit?: () => void;
+}
+
 export function RecordTableInlineCellEditForm({
   children,
+  onSubmit,
   ...props
-}: React.HTMLAttributes<HTMLFormElement>) {
+}: RecordTableInlineCellEditFormProps) {
   const { handleSave } = useRecordTableCellContext();
 
   return (
     <form
       onSubmit={(e) => {
+        if (onSubmit) onSubmit();
         e.preventDefault();
         handleSave();
       }}

@@ -24,15 +24,18 @@ export const ProductAddMoreFields = ({
 }: {
   form: UseFormReturn<ProductFormValues>;
 }) => {
-  const editor = useCreateBlockNote({
+  const descriptionEditor = useCreateBlockNote({
+    schema: BLOCK_SCHEMA,
+  });
+  const barcodeDescriptionEditor = useCreateBlockNote({
     schema: BLOCK_SCHEMA,
   });
   return (
     <>
       <div className="flex items-center my-4">
-        <div className="flex-1 border-t border-dashed border-muted-foreground"></div>
-        <span className="mx-2 text-muted-foreground">Optional</span>
-        <div className="flex-1 border-t border-dashed border-muted-foreground"></div>
+        <div className="flex-1 border-t border-muted-foreground" />
+        <FormLabel className="mx-2">More Info</FormLabel>
+        <div className="flex-1 border-t border-muted-foreground" />
       </div>
       <FormField
         control={form.control}
@@ -40,12 +43,11 @@ export const ProductAddMoreFields = ({
         render={({ field }) => (
           <FormItem className="mb-5">
             <FormLabel>DESCRIPTION</FormLabel>
-
             <FormControl>
               <BlockEditor
-                {...field}
-                editor={editor}
-                className=" h-28 rounded-md border"
+                onChange={field.onChange}
+                editor={descriptionEditor}
+                className=" h-28 rounded-md border overflow-auto"
               />
             </FormControl>
             <FormMessage className="text-destructive" />
@@ -64,6 +66,43 @@ export const ProductAddMoreFields = ({
               </FormControl>
               <FormMessage className="text-destructive" />
             </div>
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="barcodes"
+        render={({ field }) => (
+          <FormItem className="flex flex-col mb-5">
+            <FormLabel>BARCODES</FormLabel>
+            <div className="flex flex-col">
+              <FormControl>
+                <Input
+                  className="rounded-md h-8"
+                  {...field}
+                  onChange={(e) => field.onChange([e.target.value])}
+                />
+              </FormControl>
+              <FormMessage className="text-destructive" />
+            </div>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="barcodeDescription"
+        render={({ field }) => (
+          <FormItem className="mb-5">
+            <FormLabel>BARCODE DESCRIPTION</FormLabel>
+            <FormControl>
+              <BlockEditor
+                onChange={field.onChange}
+                editor={barcodeDescriptionEditor}
+                className=" h-28 rounded-md border overflow-auto"
+              />
+            </FormControl>
+            <FormMessage className="text-destructive" />
           </FormItem>
         )}
       />
@@ -99,42 +138,6 @@ export const ProductAddMoreFields = ({
           )}
         />
       </div>
-      <FormField
-        control={form.control}
-        name="barcodes"
-        render={({ field }) => (
-          <FormItem className="flex flex-col mb-5">
-            <FormLabel>BARCODES</FormLabel>
-            <div className="flex flex-col">
-              <FormControl>
-                <Input
-                  className="rounded-md h-8"
-                  {...field}
-                  onChange={(e) => field.onChange([e.target.value])}
-                />
-              </FormControl>
-              <FormMessage className="text-destructive" />
-            </div>
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="barcodeDescription"
-        render={({ field }) => (
-          <FormItem className="mb-5">
-            <FormLabel>BARCODE DESCRIPTION</FormLabel>
-            <FormControl>
-              <BlockEditor
-                {...field}
-                editor={editor}
-                className=" h-28 rounded-md border"
-              />
-            </FormControl>
-            <FormMessage className="text-destructive" />
-          </FormItem>
-        )}
-      />
       <FormField
         control={form.control}
         name="attachment"

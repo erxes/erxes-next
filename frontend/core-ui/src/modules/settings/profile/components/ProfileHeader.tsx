@@ -35,5 +35,6 @@ export const ProfileHeader = () => {
         </Breadcrumb.List>
       </Breadcrumb.Root>
     </div>
+    </div>
   );
 };
