@@ -39,7 +39,6 @@ export const VendorField = ({
     );
 
   return (
-    <div className={className}>
       <Popover open={open} onOpenChange={setOpen} modal>
         <Popover.Trigger asChild>
           <Button
@@ -47,7 +46,7 @@ export const VendorField = ({
             role="combobox"
             aria-expanded={open}
             aria-controls="vendor-command-menu"
-            className="truncate h-8 hover:cursor-pointer rounded-md shadow-none w-full justify-between"
+            className={cn("truncate h-8 hover:cursor-pointer rounded-md w-full justify-between", className)}
           >
             <span
               className={cn(
@@ -107,6 +106,5 @@ export const VendorField = ({
           </Command>
         </Popover.Content>
       </Popover>
-    </div>
   );
 };

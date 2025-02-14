@@ -94,7 +94,7 @@ export const ContactEmailColumnCell = ({
               <div className="flex border border-border">
                 {emailValue && (
                   <EmailVerificationInput
-                    className="ring-0 outline-none mr-1 border-transparent h-full shadow-none rounded-none hover:bg-muted"
+                    className="ring-0 outline-none focus:z-50 border-transparent h-full shadow-none rounded-none hover:bg-muted"
                     value={validationStatus || null}
                     inputValue={emailValue}
                     onChange={(newStatus) => {

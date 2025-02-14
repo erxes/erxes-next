@@ -109,7 +109,7 @@ export const ProductAddCoreFields = ({
           <FormItem className="flex flex-col">
             <FormLabel>UNIT PRICE</FormLabel>
             <FormControl>
-              <div className="flex rounded-md border border-border">
+              <div className="flex rounded-md border border-border shadow-xs">
                 <SelectCurrency
                   currencies={CURRENCY_CODES}
                   value={CurrencyCode.USD}

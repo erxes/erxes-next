@@ -61,7 +61,7 @@ export const ContactPhoneColumnCell = ({ cell }: { cell: any }) => {
             <div className="flex border border-border">
               {phoneValue && (
                 <PhoneVerificationInput
-                  className="ring-0 outline-none mr-1  h-full border-r border-border shadow-none rounded-none hover:bg-muted"
+                  className="ring-0 focus:z-50 outline-none h-full border-r border-border shadow-none rounded-none hover:bg-muted"
                   value={validationStatus || null}
                   inputValue={phoneValue}
                   onChange={(newStatus) => {

@@ -34,7 +34,7 @@ export const PhoneCodeInput = ({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="truncate rounded-none h-8 hover:cursor-pointer shadow-none w-full justify-between"
+            className="truncate rounded-none h-8 hover:cursor-pointer shadow-none w-full justify-between border-none focus:outline-none focus:ring-[3px] focus:shadow-primary/10 focus:z-50"
           >
             <span
               className={cn(

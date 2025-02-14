@@ -106,7 +106,7 @@ const SelectBrandTrigger = React.forwardRef<
         variant="outline"
         role="combobox"
         className={cn(
-          'truncate h-8 hover:cursor-pointer rounded-md shadow-none w-full justify-between',
+          'truncate h-8 hover:cursor-pointer rounded-md w-full justify-between',
           className,
         )}
         ref={ref}
