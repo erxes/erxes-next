@@ -9,9 +9,9 @@ export const useCustomerEdit = () => {
     customerEdit({
       ...options,
       variables,
-      update: (cache, { data: { customerEdit } }) => {
+      update: (cache, { data: { customersEdit } }) => {
         cache.modify({
-          id: cache.identify(customerEdit),
+          id: cache.identify(customersEdit),
           fields: Object.keys(variables || {}).reduce(
             (fields: Record<string, () => any>, field) => {
               fields[field] = () => (variables || {})[field];

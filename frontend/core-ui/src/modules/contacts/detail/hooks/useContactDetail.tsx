@@ -5,13 +5,13 @@ import { useSetRecoilState } from 'recoil';
 import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';
 
 export const useContactDetail = (operationVariables?: OperationVariables) => {
-  const [id] = useQueryState('contact_id');
+  const [_id] = useQueryState('contact_id');
   const setRendering = useSetRecoilState(renderingContactDetailAtom);
   const { data, loading } = useQuery(CUSTOMER_DETAIL, {
     variables: {
-      id,
+      _id,
     },
-    skip: !id, 
+    skip: !_id,
     ...operationVariables,
     onCompleted: (data) => {
       setRendering(false);

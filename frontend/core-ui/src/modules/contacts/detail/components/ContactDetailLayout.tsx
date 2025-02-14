@@ -14,7 +14,7 @@ export const ContactDetailLayout = ({
 }) => {
   return (
     <ContactDetailSheet>
-      <div className="flex h-full">
+      <div className="flex h-auto flex-auto overflow-auto">
         <div className="flex flex-col flex-auto min-h-full overflow-hidden">
           <Resizable.PanelGroup
             direction="horizontal"
@@ -34,20 +34,25 @@ export const ContactDetailLayout = ({
 
 const ContactDetailTabs = ({ children }: { children: React.ReactNode }) => {
   const [selectedTab, setSelectedTab] = useQueryState('tab', {
-    defaultValue: 'general',
+    defaultValue: 'overview',
   });
 
   return (
     <Tabs
       value={selectedTab}
       onValueChange={setSelectedTab}
-      className="flex-auto flex flex-col"
+      className="flex-auto flex flex-col "
     >
-      <Tabs.List>
-        <Tabs.Trigger value="general">General</Tabs.Trigger>
-        <Tabs.Trigger value="properties">Properties</Tabs.Trigger>
-        <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-        <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+      <Tabs.List className="h-12">
+        <Tabs.Trigger value="overview" className="text-base h-full">
+          Overview
+        </Tabs.Trigger>
+        <Tabs.Trigger value="plugins" className="text-base h-full">
+          Plugins
+        </Tabs.Trigger>
+        <Tabs.Trigger value="properties" className="text-base h-full">
+          Properties
+        </Tabs.Trigger>
       </Tabs.List>
       {children}
     </Tabs>
