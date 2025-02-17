@@ -8,10 +8,9 @@ const Inbox = lazy(() =>
 const PluginInbox = () => {
   return (
     <Suspense fallback={<>Loading...</>}>
-      <BrowserRouter basename="/plugin_inbox">
+      <BrowserRouter basename="/inbox-ui">
         <Routes>
           <Route path="/" element={<Inbox />} />
-          <Route path="/starred" element={<Inbox />} />
         </Routes>
       </BrowserRouter>
     </Suspense>

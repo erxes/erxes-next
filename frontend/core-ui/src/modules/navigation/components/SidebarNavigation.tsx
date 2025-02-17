@@ -6,12 +6,27 @@ import { IconCaretUpFilled } from '@tabler/icons-react';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
+import { pluginsConfigState, PluginsConfigState } from 'erxes-ui-shared-states';
 import { cn } from 'erxes-ui/lib';
 import { MenuItem } from '@/navigation/types/MenuItemType';
+import { useRecoilValue } from 'recoil';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
   const plugins = [...CORE_PLUGINS] as any;
+
+  const pluginsMetaData = useRecoilValue(
+    pluginsConfigState,
+  ) as PluginsConfigState;
+
+  Object.keys(pluginsMetaData).forEach((key) => {
+    plugins.push({
+      path: `/${key}`,
+      name: pluginsMetaData[key].name,
+      icon: pluginsMetaData[key].icon,
+    });
+  });
+
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <Sidebar.Group>

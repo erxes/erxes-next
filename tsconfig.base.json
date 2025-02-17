@@ -22,7 +22,7 @@
         "frontend/libs/erxes-ui-shared-states/src/index.ts"
       ],
       "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
-      "inbox_ui/Module": ["frontend/plugins/inbox_ui/src/remote-entry.ts"]
+      "inbox-ui/Module": ["frontend/plugins/inbox-ui/src/remote-entry.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,7 +1,7 @@
 {
-  "name": "inbox_ui",
+  "name": "inbox-ui",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "frontend/plugins/inbox_ui/src",
+  "sourceRoot": "frontend/plugins/inbox-ui/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,11 +11,11 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/frontend/plugins/inbox_ui",
-        "main": "frontend/plugins/inbox_ui/src/main.ts",
-        "tsConfig": "frontend/plugins/inbox_ui/tsconfig.app.json",
-        "rspackConfig": "frontend/plugins/inbox_ui/rspack.config.ts",
-        "assets": ["frontend/plugins/inbox_ui/src/favicon.ico"]
+        "outputPath": "dist/frontend/plugins/inbox-ui",
+        "main": "frontend/plugins/inbox-ui/src/main.ts",
+        "tsConfig": "frontend/plugins/inbox-ui/tsconfig.app.json",
+        "rspackConfig": "frontend/plugins/inbox-ui/rspack.config.ts",
+        "assets": ["frontend/plugins/inbox-ui/src/favicon.ico"]
       },
       "configurations": {
         "development": {
@@ -25,20 +25,20 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "frontend/plugins/inbox_ui/rspack.config.prod.ts"
+          "rspackConfig": "frontend/plugins/inbox-ui/rspack.config.prod.ts"
         }
       }
     },
     "serve": {
       "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
-        "buildTarget": "inbox_ui:build:development",
+        "buildTarget": "inbox-ui:build:development",
         "port": 3002
       },
       "configurations": {
         "development": {},
         "production": {
-          "buildTarget": "inbox_ui:build:production"
+          "buildTarget": "inbox-ui:build:production"
         }
       }
     },
@@ -46,14 +46,14 @@
       "executor": "@nx/rspack:module-federation-static-server",
       "defaultConfiguration": "production",
       "options": {
-        "serveTarget": "inbox_ui:serve"
+        "serveTarget": "inbox-ui:serve"
       },
       "configurations": {
         "development": {
-          "serveTarget": "inbox_ui:serve:development"
+          "serveTarget": "inbox-ui:serve:development"
         },
         "production": {
-          "serveTarget": "inbox_ui:serve:production"
+          "serveTarget": "inbox-ui:serve:production"
         }
       }
     }
