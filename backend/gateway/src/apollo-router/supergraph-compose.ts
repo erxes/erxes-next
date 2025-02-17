@@ -1,5 +1,4 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
 
 import { ErxesProxyTarget } from 'src/proxy/targets';
 import { supergraphConfigPath, supergraphPath } from '../apollo-router/paths';
@@ -9,6 +8,8 @@ import isSameFile from '../util/is-same-file';
 import * as yaml from 'yaml';
 
 const { NODE_ENV, SUPERGRAPH_POLL_INTERVAL_MS } = process.env;
+
+dotenv.config();
 
 type SupergraphConfig = {
   federation_version: string;
