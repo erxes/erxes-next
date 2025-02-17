@@ -13,6 +13,7 @@ export const PluginConfigsProvidersEffect = () => {
   const remotes = instance?.options.remotes;
   const setPluginsConfig = useSetRecoilState(pluginsConfigState);
 
+  console.log(remotes);
   useEffect(() => {
     if (remotes && remotes.length > 0) {
       const loadConfig = async () => {

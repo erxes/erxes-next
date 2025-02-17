@@ -15,17 +15,17 @@ export function SidebarNavigation() {
   const { t } = useTranslation();
   const plugins = [...CORE_PLUGINS] as any;
 
-  const pluginsMetaData = useRecoilValue(
-    pluginsConfigState,
-  ) as PluginsConfigState;
+  // const pluginsMetaData = useRecoilValue(
+  //   pluginsConfigState,
+  // ) as PluginsConfigState;
 
-  Object.keys(pluginsMetaData).forEach((key) => {
-    plugins.push({
-      path: `/${key}`,
-      name: pluginsMetaData[key].name,
-      icon: pluginsMetaData[key].icon,
-    });
-  });
+  // Object.keys(pluginsMetaData).forEach((key) => {
+  //   plugins.push({
+  //     path: `/${key}`,
+  //     name: pluginsMetaData[key].name,
+  //     icon: pluginsMetaData[key].icon,
+  //   });
+  // });
 
   return (
     <Collapsible defaultOpen className="group/collapsible">

@@ -10,7 +10,7 @@ const coreLibraries = new Set([
 ]);
 
 const config: ModuleFederationConfig = {
-  name: 'inbox-ui',
+  name: 'inbox_ui',
   exposes: {
     './Config': './src/app/config.ts',
     './Module': './src/remote-entry.ts',
