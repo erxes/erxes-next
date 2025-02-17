@@ -1,11 +1,21 @@
-import NxWelcome from './nx-welcome';
+import { lazy, Suspense } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
-export function App() {
+const Inbox = lazy(() =>
+  import('./inbox').then((module) => ({ default: module.Inbox })),
+);
+
+const PluginInbox = () => {
   return (
-    <div>
-      <NxWelcome title="inbox_ui" />
-    </div>
+    <Suspense fallback={<>Loading...</>}>
+      <BrowserRouter basename="/plugin_inbox">
+        <Routes>
+          <Route path="/" element={<Inbox />} />
+          <Route path="/starred" element={<Inbox />} />
+        </Routes>
+      </BrowserRouter>
+    </Suspense>
   );
-}
+};
 
-export default App;
+export default PluginInbox;
