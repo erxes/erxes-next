@@ -18,7 +18,7 @@ export const PageChangeEffect = () => {
         setHotkeyScope(PageHotkeyScope.ProductsPage);
         break;
       }
-      case isMatchingLocation(AppPath.Contacts): {
+      case isMatchingLocation(AppPath.ContactsCatchAll): {
         setHotkeyScope(PageHotkeyScope.ContactsPage);
         break;
       }

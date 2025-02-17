@@ -85,7 +85,7 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
         <div ref={ref} className={cn('flex gap-4', className)} {...props} />
       </UploadContext.Provider>
     );
-  }
+  },
 );
 
 UploadRoot.displayName = 'UploadRoot';
@@ -124,7 +124,6 @@ const UploadPreview = React.forwardRef<
         files: file,
 
         afterUpload: ({ response, fileInfo }) => {
-          console.log(response, fileInfo);
           onChange && onChange({ url: response, ...fileInfo });
         },
 
@@ -133,7 +132,7 @@ const UploadPreview = React.forwardRef<
         },
       });
     },
-    [previewRef]
+    [previewRef],
   );
 
   return (

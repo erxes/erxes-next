@@ -2,6 +2,13 @@
   "$schema": "./$schema.json",
   "nav": {
     "contacts": "Contacts",
+    "contactsSub": {
+      "leads": "Leads",
+      "customers": "Customers",
+      "companies": "Companies",
+      "vendors": "Vendor portal users",
+      "clients": "Client portal users"
+    },
     "favorites": "Favorites",
     "inbox": "Team inbox",
     "insights": "Insights",

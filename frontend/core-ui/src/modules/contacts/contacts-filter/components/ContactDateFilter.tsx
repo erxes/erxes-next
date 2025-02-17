@@ -49,7 +49,6 @@ export const ContactDateFilter = ({
   accessoryKey,
 }: FilterBarComponentPropsBase) => {
   const { stringDate } = useFilterDateState(accessoryKey);
-  console.log('stringDate', stringDate);
 
   const setOpen = useSetRecoilState(contactDateFilterOpenAtom);
   return (

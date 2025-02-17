@@ -9,6 +9,8 @@ import {
   RecordTableCellContext,
   useRecordTableCellContext,
 } from '../contexts/RecordTableCellContext';
+import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
+import { RecordTableScope } from 'erxes-ui/modules/record-table/types/RecordTableScope';
 
 interface InlineCellProps extends React.HTMLAttributes<HTMLDivElement> {
   onSave?: (value: any) => void;
@@ -34,7 +36,20 @@ export function RecordTableInlineCell({
   setValue,
   ...props
 }: InlineCellProps) {
-  const [isInEditMode, setIsInEditMode] = React.useState(false);
+  const [isInEditMode, _setIsInEditMode] = React.useState(false);
+  const {
+    goBackToPreviousHotkeyScope,
+    setHotkeyScopeAndMemorizePreviousScope,
+  } = usePreviousHotkeyScope();
+
+  const setIsInEditMode = (value: boolean) => {
+    _setIsInEditMode(value);
+    if (value) {
+      setHotkeyScopeAndMemorizePreviousScope(RecordTableScope.InlineCellEdit);
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  };
 
   const handleSave = () => {
     setIsInEditMode(false);

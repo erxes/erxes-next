@@ -29,7 +29,7 @@ const modifiedArray: Option[] = FILE_MIME_TYPES.map(
   ({ label, extension, value }) => ({
     label: `${label} (${extension})`,
     value: value,
-  })
+  }),
 );
 
 export function FilePage() {
@@ -47,7 +47,6 @@ export function FilePage() {
   }, [form.watch('UPLOAD_SERVICE_TYPE')]);
 
   const onSubmit = (data: UploadConfigFormT) => {
-    console.log(data, 'onSubmit');
     updateConfig(data);
   };
 

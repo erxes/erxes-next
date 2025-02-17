@@ -1,11 +1,9 @@
-import { Button, ButtonProps, Input, Popover } from 'erxes-ui/components';
-
+import { ButtonProps, Input } from 'erxes-ui/components';
+import { InlineCell } from 'erxes-ui/modules/inline-cell/components/InlineCell';
+import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/InlineCellDisplay';
+import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
 import React, { useEffect, useState } from 'react';
-import { cn } from 'erxes-ui/lib';
-import { PopoverContent, PopoverPortal } from '@radix-ui/react-popover';
-import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
-import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
-import { IconLoader } from '@tabler/icons-react';
+import { useCustomersEdit } from '../hooks/useCustomerEdit';
 
 export const TextField = React.forwardRef<
   HTMLButtonElement,
@@ -13,76 +11,49 @@ export const TextField = React.forwardRef<
     placeholder?: string;
     value: string;
     field: string;
+    fieldId?: string;
     _id: string;
   }
->(({ className, placeholder, value, field, _id, ...props }, ref) => {
-  const {
-    setHotkeyScopeAndMemorizePreviousScope,
-    goBackToPreviousHotkeyScope,
-  } = usePreviousHotkeyScope();
-  const [open, setOpen] = useState(false);
-
+>(({ className, placeholder, value, field, fieldId, _id, ...props }, ref) => {
   const [editingValue, setEditingValue] = useState(value);
-
-  const { customersEdit, loading } = useCustomersEdit();
+  const { customersEdit } = useCustomersEdit();
 
   useEffect(() => {
     if (value) setEditingValue(value);
   }, [value]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (editingValue === value) return setOpen(false);
+  const handleAction = (closeEditMode: () => void) => {
+    closeEditMode();
+    if (editingValue === value) return;
     customersEdit(
       {
-        variables: {
-          _id,
-          [field]: editingValue,
-        },
-        onCompleted: () => {
-          setOpen(false);
-        },
+        variables: { _id, [field]: editingValue },
       },
-      field,
+      [field],
     );
   };
 
   return (
-    <Popover
-      open={open}
-      onOpenChange={(open) => {
-        setOpen(open);
-        if (open) {
-          setHotkeyScopeAndMemorizePreviousScope('customerEdit' + field);
-        } else {
-          goBackToPreviousHotkeyScope();
-        }
-      }}
-    >
-      <Popover.Trigger asChild>
-        <Button
-          variant="ghost"
-          className={cn(!editingValue && 'text-border', className)}
-          {...props}
-          ref={ref}
-        >
+    <InlineCell
+      name={field}
+      recordId={_id}
+      fieldId={fieldId}
+      onEnter={handleAction}
+      onEscape={handleAction}
+      onCancel={handleAction}
+      display={() => (
+        <InlineCellDisplay ref={ref} {...props} className={className}>
           {editingValue ?? placeholder}
-        </Button>
-      </Popover.Trigger>
-      <PopoverPortal>
-        <PopoverContent className="p-0 z-50" align="start" sideOffset={-32}>
-          <form onSubmit={handleSubmit} className="relative">
-            <Input
-              value={editingValue}
-              onChange={(e) => setEditingValue(e.target.value)}
-              placeholder={placeholder}
-            />
-            {loading && (
-              <IconLoader className="absolute right-2 top-2.5  size-3 animate-spin" />
-            )}
-          </form>
-        </PopoverContent>
-      </PopoverPortal>
-    </Popover>
+        </InlineCellDisplay>
+      )}
+      edit={() => (
+        <InlineCellEdit>
+          <Input
+            value={editingValue}
+            onChange={(e) => setEditingValue(e.target.value)}
+          />
+        </InlineCellEdit>
+      )}
+    />
   );
 });

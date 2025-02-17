@@ -6,24 +6,19 @@ import { filesValidationSchema } from '@/settings/file-upload/schema';
 import { UploadConfigFormT } from '@/settings/file-upload/types';
 
 const useFileUploadForm = () => {
-
   const form = useForm<UploadConfigFormT>({
-    mode: "onBlur",
+    mode: 'onBlur',
     defaultValues: {},
     resolver: zodResolver(filesValidationSchema),
   });
 
   const onCompleted = (data) => {
-    console.log(data, 'data on complete')
+    const { configs } = (data && data) || [];
 
-    const { configs } = data && data || [];
+    configs?.map((config) => form.setValue(config.code, config.value));
+  };
 
-    configs?.map((config) => form.setValue(config.code, config.value))
-  }
+  return { form, onCompleted };
+};
 
-  return { form, onCompleted }
-}
-
-export {
-  useFileUploadForm,
-}
+export { useFileUploadForm };

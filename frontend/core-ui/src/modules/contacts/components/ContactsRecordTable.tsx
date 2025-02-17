@@ -21,7 +21,7 @@ export const ContactsRecordTable = () => {
       columns={contactColumns}
       data={customers || []}
       handleReachedBottom={handleFetchMore}
-      stickyColumns={['avatar', 'firstName']}
+      stickyColumns={['avatar', 'name']}
       className="mt-1.5"
       moreColumn={contactMoreColumn}
     >

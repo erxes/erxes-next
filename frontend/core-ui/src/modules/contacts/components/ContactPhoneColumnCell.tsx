@@ -4,13 +4,9 @@ import { ValidationDisplay } from 'erxes-ui/components/display/ValidationDisplay
 import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
 import { PHONE_VALIDATION_STATUS_INFOS } from 'erxes-ui/constants/PhoneValidationStatusInfos';
 import { CountryPhoneCodes } from 'erxes-ui/constants/CountryPhoneCodes';
-import {
-  RecordTableInlineCell,
-  RecordTableInlineCellEditForm,
-} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
 import { PhoneCodeInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneCodeInput';
-
 
 export const ContactPhoneColumnCell = ({ cell }: { cell: any }) => {
   const initialValue = cell.getValue() as string;
@@ -45,8 +41,8 @@ export const ContactPhoneColumnCell = ({ cell }: { cell: any }) => {
         </div>
       )}
       edit={({ setIsInEditMode }) => {
-        const handlePhoneSubmit = (e:  React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault()
+        const handlePhoneSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
           const country = CountryPhoneCodes.find(
             (c) => c.dial_code === dialCode,
           );

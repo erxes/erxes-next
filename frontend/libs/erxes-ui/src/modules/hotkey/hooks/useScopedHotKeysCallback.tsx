@@ -34,7 +34,6 @@ export const useScopedHotKeysCallback = (
         },
       ) => {
         const currentHotkeyScopes = get(internalHotkeysEnabledScopesState);
-        console.log('currentHotkeyScopes', currentHotkeyScopes, scope);
 
         if (!currentHotkeyScopes.includes(scope)) {
           return;

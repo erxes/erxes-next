@@ -50,7 +50,7 @@ export const EmailVerificationInput = ({
       <Select.Trigger
         id={id}
         className={cn(
-          'flex items-center gap-2 w-min [&>svg]:hidden',
+          'flex items-center gap-2 w-min [&>svg]:hidden px-2',
           className,
         )}
       >

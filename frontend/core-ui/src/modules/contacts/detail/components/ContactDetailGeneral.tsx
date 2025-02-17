@@ -1,3 +1,4 @@
+import { FullNameField } from '@/contacts/customer-edit/components/FullNameField';
 import { TextField } from '@/contacts/customer-edit/components/TextField';
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
@@ -28,9 +29,17 @@ export const ContactDetailGeneral = () => {
           </Avatar.Fallback>
         </Avatar>
         <div className="flex flex-col items-start">
-          <Button variant="ghost" className="text-lg font-medium leading-none">
-            {firstName} {middleName} {lastName}
-          </Button>
+          <FullNameField
+            _id={_id}
+            firstName={firstName}
+            lastName={
+              middleName
+                ? `${middleName || ''} ${lastName || ''}`
+                : lastName || ''
+            }
+            fieldId="detail"
+            className="text-lg font-medium leading-none"
+          />
 
           <div className="text-muted-foreground font-medium text-sm leading-none flex gap-1 items-center">
             <TextField

@@ -18,7 +18,6 @@ export function SelectColor({
   className,
 }: SelectColorProps) {
   const id = useId();
-  console.log(value);
 
   return (
     <fieldset className={cn('space-y-2', className)}>

@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route } from 'react-router';
-import { Routes } from 'react-router';
+import { Route, Routes, Navigate } from 'react-router';
 
 import { ContactsPath } from '@/types/paths/ContactsPath';
 
@@ -20,8 +19,15 @@ export const ContactsRoutes = () => {
   return (
     <Suspense fallback={<></>}>
       <Routes>
-        <Route path={ContactsPath.Index} element={<ContactsIndexPage />} />
-        <Route path={ContactsPath.Detail} element={<ContactsDetailPage />} />
+        <Route
+          path="/"
+          element={<Navigate to={`${ContactsPath.Customers}`} replace />}
+        />
+        <Route path={ContactsPath.Customers} element={<ContactsIndexPage />} />
+        <Route path={ContactsPath.Leads} element={<ContactsDetailPage />} />
+        <Route path={ContactsPath.Companies} element={<ContactsDetailPage />} />
+        <Route path={ContactsPath.Vendors} element={<ContactsDetailPage />} />
+        <Route path={ContactsPath.Clients} element={<ContactsDetailPage />} />
       </Routes>
     </Suspense>
   );

@@ -6,18 +6,20 @@ export const useCustomersEdit = () => {
 
   const customersEdit = (
     operationVariables: OperationVariables,
-    field: string,
+    fields: string[],
   ) => {
     const variables = operationVariables?.variables || {};
+    const fieldsToUpdate: Record<string, () => any> = {};
+    fields.forEach((field) => {
+      fieldsToUpdate[field] = () => variables[field];
+    });
     return _customersEdit({
       ...operationVariables,
       variables,
       update: (cache, { data: { customersEdit } }) => {
         cache.modify({
           id: cache.identify(customersEdit),
-          fields: {
-            [field]: () => variables[field],
-          },
+          fields: fieldsToUpdate,
         });
       },
     });

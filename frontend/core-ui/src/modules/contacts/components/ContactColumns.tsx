@@ -12,48 +12,20 @@ import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { Avatar } from 'erxes-ui/components/avatar';
 import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
-import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import {
   RecordTableInlineCell,
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 
-import { useCustomerEdit } from '@/contacts/hooks/useEditCustomer';
 import { Customer } from '@/contacts/types/contactsTypes';
 import { TagBadges } from '@/tags/components/tagBadges';
 import { SelectTags } from '@/tags/components/SelectTags';
 import { ContactEmailColumnCell } from '@/contacts/components/ContactEmailColumnCell';
 import { ITag } from '@/tags/types/tagTypes';
 import { ContactPhoneColumnCell } from '@/contacts/components/ContactPhoneColumnCell';
-
-const TableTextInput = ({ cell }: { cell: Cell<Customer, unknown> }) => {
-  const [value, setValue] = useState(cell.getValue() as string);
-  const { customerEdit } = useCustomerEdit();
-  return (
-    <RecordTableInlineCell
-      onSave={() => {
-        customerEdit({
-          variables: {
-            id: cell.row.original._id,
-            [cell.column.id]: value,
-          },
-        });
-      }}
-      getValue={() => cell.getValue()}
-      value={value}
-      display={() => value}
-      edit={() => (
-        <RecordTableInlineCellEditForm>
-          <TextFieldInput
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-        </RecordTableInlineCellEditForm>
-      )}
-    />
-  );
-};
+import { FullNameField } from '../customer-edit/components/FullNameField';
+import { TextField } from '../customer-edit/components/TextField';
 
 export const contactColumns: ColumnDef<Customer>[] = [
   {
@@ -77,10 +49,24 @@ export const contactColumns: ColumnDef<Customer>[] = [
     size: 34,
   },
   {
-    id: 'firstName',
-    accessorKey: 'firstName',
+    id: 'name',
+    accessorKey: 'name',
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label="Name" />,
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => {
+      const { firstName, lastName, middleName, _id } = cell.row.original;
+
+      return (
+        <FullNameField
+          _id={_id}
+          firstName={firstName || ''}
+          lastName={
+            middleName
+              ? `${middleName || ''} ${lastName || ''}`
+              : lastName || ''
+          }
+        />
+      );
+    },
   },
   {
     id: 'primaryEmail',
@@ -99,6 +85,7 @@ export const contactColumns: ColumnDef<Customer>[] = [
     ),
     cell: ({ cell }) => <ContactPhoneColumnCell cell={cell} />,
   },
+
   {
     id: 'tagIds',
     accessorKey: 'tagIds',
@@ -160,4 +147,16 @@ export const contactColumns: ColumnDef<Customer>[] = [
       <RecordTableInlineCell display={() => <>{cell.getValue() as number}</>} />
     ),
   },
+  ...['position', 'department', 'leadStatus'].map((field) => ({
+    id: field,
+    accessorKey: field,
+    header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
+    cell: ({ cell }: { cell: Cell<Customer, unknown> }) => (
+      <TextField
+        _id={cell.row.original._id}
+        field={field}
+        value={cell.getValue() as string}
+      />
+    ),
+  })),
 ];

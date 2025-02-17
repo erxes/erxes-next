@@ -100,10 +100,7 @@ const SidebarProvider = React.forwardRef<
 
     useScopedHotkeys(
       `${Key.Meta}+${SIDEBAR_KEYBOARD_SHORTCUT}`,
-      () => {
-        console.log('toggleSidebar');
-        toggleSidebar();
-      },
+      toggleSidebar,
       AppHotkeyScope.Sidebar,
     );
 
@@ -692,7 +689,7 @@ const SidebarMenuSub = React.forwardRef<
     ref={ref}
     data-sidebar="menu-sub"
     className={cn(
-      'mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l px-2.5 py-0.5',
+      'ml-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l pl-2.5 py-0.5',
       'group-data-[collapsible=icon]:hidden',
       className,
     )}
@@ -725,7 +722,7 @@ const SidebarMenuSubButton = React.forwardRef<
       data-active={isActive}
       className={cn(
         'flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 outline-none hover:bg-accent focus-visible:ring-2 active:bg-accent disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
-        'data-[active=true]:bg-accent',
+        'data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold',
         size === 'sm' && 'text-xs',
         size === 'md' && 'text-sm',
         'group-data-[collapsible=icon]:hidden',

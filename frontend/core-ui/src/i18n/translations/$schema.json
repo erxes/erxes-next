@@ -12,6 +12,26 @@
         "contacts": {
           "type": "string"
         },
+        "contactsSub": {
+          "type": "object",
+          "properties": {
+            "leads": {
+              "type": "string"
+            },
+            "customers": {
+              "type": "string"
+            },
+            "companies": {
+              "type": "string"
+            },
+            "vendors": {
+              "type": "string"
+            },
+            "clients": {
+              "type": "string"
+            }
+          }
+        },
         "favorites": {
           "type": "string"
         },
