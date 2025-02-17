@@ -1,9 +1,5 @@
 import { nanoid } from 'nanoid';
 
-/*
- * Mongoose field options wrapper
- */
-
 export const field = (options) => {
   const { pkey, type, optional } = options;
 
