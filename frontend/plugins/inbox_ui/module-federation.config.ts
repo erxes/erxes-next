@@ -7,6 +7,7 @@ const coreLibraries = new Set([
   'erxes-ui',
   'recoil',
   'erxes-ui-shared-states',
+  'react-i18next',
 ]);
 
 const config: ModuleFederationConfig = {

@@ -13,12 +13,11 @@ const coreLibraries = new Set([
   'erxes-ui',
   'recoil',
   'erxes-ui-shared-states',
+  'react-i18next',
 ]);
 
 const config: ModuleFederationConfig = {
   name: 'core-ui',
-
-  remotes: ['inbox_ui'],
 
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {
@@ -27,6 +26,8 @@ const config: ModuleFederationConfig = {
 
     return false;
   },
+
+  remotes: ['inbox_ui'],
 };
 
 /**

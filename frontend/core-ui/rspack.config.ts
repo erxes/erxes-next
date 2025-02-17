@@ -9,6 +9,7 @@ import baseConfig from './module-federation.config';
 
 const config: ModuleFederationConfig = {
   ...baseConfig,
+  remotes: ['inbox_ui'],
 };
 
 export default composePlugins(
