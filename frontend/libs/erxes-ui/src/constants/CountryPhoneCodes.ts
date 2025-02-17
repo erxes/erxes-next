@@ -1,6 +1,6 @@
-import { TPhoneCode } from 'erxes-ui/types/PhoneCode';
+import { TCountryCode } from 'erxes-ui/types/CountryCode';
 
-export const CountryPhoneCodes: TPhoneCode[] = [
+export const CountryPhoneCodes: TCountryCode[] = [
   { name: 'Afghanistan', flag: '🇦🇫', code: 'AF', dial_code: '+93' },
   { name: 'Åland Islands', flag: '🇦🇽', code: 'AX', dial_code: '+358' },
   { name: 'Albania', flag: '🇦🇱', code: 'AL', dial_code: '+355' },

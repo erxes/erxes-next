@@ -34,7 +34,7 @@ export const ContactEmailColumnCell = ({
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = useForm<EmailFormData>({
     resolver: zodResolver(emailSchema),
     mode: 'onChange',
@@ -94,7 +94,7 @@ export const ContactEmailColumnCell = ({
               <div className="flex border border-border">
                 {emailValue && (
                   <EmailVerificationInput
-                    className="ring-0 outline-none focus:z-50 border-transparent h-full shadow-none rounded-none hover:bg-muted"
+                    className="ring-0 outline-none focus:z-50 border-none h-full shadow-none rounded-none hover:bg-muted"
                     value={validationStatus || null}
                     inputValue={emailValue}
                     onChange={(newStatus) => {
@@ -111,12 +111,7 @@ export const ContactEmailColumnCell = ({
                 <TextFieldInput
                   value={emailFieldValue}
                   onChange={handleChange}
-                  className={cn(
-                    'h-full border-transparent',
-                    errors.email
-                      ? ' focus-visible:shadow ring-destructive focus-visible:shadow-destructive focus-visible:ring-destructive/50 focus-visible:outline-none focus-visible:ring-[3px]'
-                      : '',
-                  )}
+                  className={cn('h-full border-border border-l shadow-none')}
                 />
               </div>
             </div>

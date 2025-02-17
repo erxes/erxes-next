@@ -1,4 +1,4 @@
-export type TPhoneCode = {
+export type TCountryCode = {
   name: string;
   code: string;
   flag: string;

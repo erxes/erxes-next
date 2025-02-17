@@ -44,7 +44,7 @@ export const PhoneVerificationInput = ({
       <Select.Trigger
         id={id}
         className={cn(
-          'flex items-center gap-2 w-min [&>svg]:hidden',
+          'flex items-center w-min [&>svg]:hidden',
           className,
         )}
       >
