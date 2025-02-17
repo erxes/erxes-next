@@ -12,7 +12,7 @@ export const usePluginsRouter = () => {
   return remotes?.map((remote) => (
     <Route
       key={remote.name}
-      path={`/${remote.name}/*`}
+      path={`/${remote.name.replace('_ui', '')}/*`}
       element={<PluginMainPage pluginName={remote.name} />}
     />
   ));
@@ -25,7 +25,7 @@ export const usePLuginsSettingsRoutes = () => {
   return remotes?.map((plugin) => (
     <Route
       key={plugin.name}
-      path={`/${plugin.name}/*`}
+      path={`/${plugin.name.replace('_ui', '')}/*`}
       element={<PluginSettingsPage pluginName={plugin.name} />}
     />
   ));

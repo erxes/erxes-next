@@ -4,7 +4,15 @@
     "allowJs": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
+      "erxes-ui": ["frontend/libs/erxes-ui/src"],
+      "~/*": ["frontend/plugins/inbox_ui/src/*"],
+      "~": ["frontend/plugins/inbox_ui/src"],
+      "@/*": ["frontend/plugins/inbox_ui/src/modules/*"],
+      "@": ["frontend/plugins/inbox_ui/src"]
+    }
   },
   "files": [],
   "include": [],

@@ -31,6 +31,7 @@ export const FullName = React.forwardRef<
     <InlineCell
       name="name"
       recordId={recordId}
+      fieldId={fieldId}
       onEnter={handleChange}
       onEscape={handleChange}
       onCancel={handleChange}

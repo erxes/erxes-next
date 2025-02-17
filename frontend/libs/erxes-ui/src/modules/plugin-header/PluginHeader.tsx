@@ -1,20 +1,30 @@
 import { type Icon, IconStar } from '@tabler/icons-react';
 
 import { Separator, Sidebar } from 'erxes-ui/components';
+import { cn } from 'erxes-ui/lib';
 
 export const PluginHeader = ({
   title,
   icon,
   children,
+  className,
+  separatorClassName,
 }: {
   title: string;
   icon: Icon;
   children?: React.ReactNode;
+  className?: string;
+  separatorClassName?: string;
 }) => {
   const Icon = icon;
   return (
     <>
-      <header className="flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0">
+      <header
+        className={cn(
+          'flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0',
+          className,
+        )}
+      >
         <div className="flex items-center gap-2">
           <Sidebar.Trigger />
           <span className="h-3 w-0.5 bg-muted rounded-sm" />
@@ -29,7 +39,7 @@ export const PluginHeader = ({
         </div>
         <div className="flex items-center gap-3">{children}</div>
       </header>
-      <Separator className="mb-1.5 -mx-3 w-auto" />
+      <Separator className={cn('-mx-3 w-auto mb-1.5', separatorClassName)} />
     </>
   );
 };

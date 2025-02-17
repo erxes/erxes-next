@@ -8,11 +8,7 @@
     "baseUrl": ".",
     "paths": {
       "erxes-ui/*": ["src/*"],
-      "erxes-ui": ["src"],
-      "@/*": ["src/modules/*"],
-      "@": ["src"],
-      "~/*": ["src/*"],
-      "~": ["src"]
+      "erxes-ui": ["src"]
     }
   },
   "files": [],

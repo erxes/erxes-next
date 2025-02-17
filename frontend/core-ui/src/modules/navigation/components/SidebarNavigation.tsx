@@ -57,14 +57,15 @@ export function SidebarNavigationItem({
 }: MenuItem) {
   const { t } = useTranslation();
   const pathname = useLocation().pathname;
-  const isActive = pathname.includes(path);
   const Icon = icon;
+  const pathWithoutUi = path.replace('_ui', '');
+  const isActive = pathname.includes(pathWithoutUi);
 
   return (
     <Collapsible asChild open={isActive} className="group/collapsible">
       <Sidebar.MenuItem key={name}>
         <Sidebar.MenuButton asChild isActive={isActive}>
-          <Link to={path}>
+          <Link to={pathWithoutUi}>
             <Icon
               className={cn(
                 'text-accent-foreground',

@@ -15,7 +15,7 @@
         "main": "frontend/plugins/inbox_ui/src/main.ts",
         "tsConfig": "frontend/plugins/inbox_ui/tsconfig.app.json",
         "rspackConfig": "frontend/plugins/inbox_ui/rspack.config.ts",
-        "assets": ["frontend/plugins/inbox_ui/src/favicon.ico"]
+        "assets": []
       },
       "configurations": {
         "development": {

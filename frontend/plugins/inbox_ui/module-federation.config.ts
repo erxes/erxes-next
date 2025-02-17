@@ -5,7 +5,7 @@ const coreLibraries = new Set([
   'react-dom',
   'react-router-dom',
   'erxes-ui',
-  'recoil',
+  'jotai',
   'erxes-ui-shared-states',
   'react-i18next',
 ]);
@@ -13,9 +13,9 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'inbox_ui',
   exposes: {
-    './Config': './src/app/config.ts',
+    './Config': './src/modules/constants/config.ts',
     './Module': './src/remote-entry.ts',
-    './Settings': './src/app/settings.tsx',
+    './Settings': './src/pages/SettingsPage.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {
