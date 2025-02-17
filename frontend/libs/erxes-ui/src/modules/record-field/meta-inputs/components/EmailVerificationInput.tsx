@@ -81,7 +81,7 @@ export const EmailVerificationInput = ({
         <Select.Separator />
         <Button
           variant="ghost"
-          className="flex items-center py-1.5 pl-2 pr-8 gap-2 rounded-sm w-full justify-start h-cell"
+          className="flex items-center border-transparent py-1.5 pl-2 pr-8 gap-2 rounded-sm w-full justify-start h-cell"
           onClick={onCopy}
         >
           <IconCopy size={16} />
