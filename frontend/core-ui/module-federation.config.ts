@@ -18,6 +18,8 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'core-ui',
 
+  remotes: ['inbox_ui'],
+
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {
       return defaultConfig;

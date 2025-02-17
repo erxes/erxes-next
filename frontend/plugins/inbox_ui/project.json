@@ -1,0 +1,61 @@
+{
+  "name": "inbox_ui",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "frontend/plugins/inbox_ui/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/frontend/plugins/inbox_ui",
+        "main": "frontend/plugins/inbox_ui/src/main.ts",
+        "tsConfig": "frontend/plugins/inbox_ui/tsconfig.app.json",
+        "rspackConfig": "frontend/plugins/inbox_ui/rspack.config.ts",
+        "assets": ["frontend/plugins/inbox_ui/src/favicon.ico"]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "frontend/plugins/inbox_ui/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "inbox_ui:build:development",
+        "port": 3002
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "inbox_ui:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "inbox_ui:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "inbox_ui:serve:development"
+        },
+        "production": {
+          "serveTarget": "inbox_ui:serve:production"
+        }
+      }
+    }
+  }
+}

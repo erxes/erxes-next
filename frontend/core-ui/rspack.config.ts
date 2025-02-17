@@ -5,7 +5,7 @@ import {
 } from '@nx/rspack/module-federation';
 import { DefinePlugin } from '@rspack/core';
 
-import baseConfig from './module-federation.config.prod';
+import baseConfig from './module-federation.config';
 
 const config: ModuleFederationConfig = {
   ...baseConfig,
