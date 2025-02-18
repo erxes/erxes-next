@@ -1,6 +1,5 @@
 import { IconCalendarPlus } from '@tabler/icons-react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-
+import { useAtom, useSetAtom } from 'jotai';
 import { Button, DropdownMenu, Select } from 'erxes-ui/components';
 import { FilterBar } from 'erxes-ui/modules/filter';
 import { DateFilter } from 'erxes-ui/modules/filter/date-filter/components/date-filter';
@@ -18,7 +17,7 @@ export const ContactDateFilterDropdown = ({
   accessoryKey,
 }: FilterDropdownProps) => {
   const { stringDate, setDate } = useFilterDateState(accessoryKey);
-  const setOpen = useSetRecoilState(contactDateFilterOpenAtom);
+  const setOpen = useSetAtom(contactDateFilterOpenAtom);
   return (
     <>
       <DropdownMenu.RadioGroup value={stringDate || ''} onValueChange={setDate}>
@@ -50,7 +49,7 @@ export const ContactDateFilter = ({
 }: FilterBarComponentPropsBase) => {
   const { stringDate } = useFilterDateState(accessoryKey);
 
-  const setOpen = useSetRecoilState(contactDateFilterOpenAtom);
+  const setOpen = useSetAtom(contactDateFilterOpenAtom);
   return (
     <Button
       onClick={() => setOpen(accessoryKey)}
@@ -63,7 +62,7 @@ export const ContactDateFilter = ({
 };
 
 export const ContactDateFilterDialog = () => {
-  const [open, setOpen] = useRecoilState(contactDateFilterOpenAtom);
+  const [open, setOpen] = useAtom(contactDateFilterOpenAtom);
   const { stringDate, setDate } = useFilterDateState(open);
   return (
     <DateFilter

@@ -2,7 +2,6 @@ import React from 'react';
 import { useRef, useState } from 'react';
 
 import { IconPlus } from '@tabler/icons-react';
-import { useSetRecoilState } from 'recoil';
 import { useDebounce } from 'use-debounce';
 
 import {
@@ -32,6 +31,7 @@ import {
 } from '@/tags/contexts/SelectTagsContext';
 import { ITag } from '@/tags/types/tagTypes';
 import { SelectTagsProps } from '@/tags/types/tagTypes';
+import { useSetAtom } from 'jotai';
 
 export const SelectTags = React.forwardRef<
   React.ElementRef<typeof Button>,
@@ -191,7 +191,7 @@ export function SelectTagItem(props: ITag & { hasChildren: boolean }) {
 
 export const SelectTagSearchCreate = ({ search }: { search: string }) => {
   const { openCreateTag } = useSelectTags();
-  const setName = useSetRecoilState(newTagNameAtom);
+  const setName = useSetAtom(newTagNameAtom);
 
   return (
     <Command.Item

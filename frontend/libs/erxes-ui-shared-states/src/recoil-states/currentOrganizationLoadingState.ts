@@ -1,6 +1,3 @@
-import { createState } from './createState';
+import { atom } from 'jotai';
 
-export const isCurrentOrganizationLoadedState = createState<boolean>({
-  key: 'isCurrentOrganizationLoadedState',
-  defaultValue: false,
-});
+export const isCurrentOrganizationLoadedState = atom<boolean>(false);

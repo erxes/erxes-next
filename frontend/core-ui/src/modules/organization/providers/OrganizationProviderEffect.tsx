@@ -9,13 +9,14 @@ import {
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
+import { useAtom, useSetAtom } from 'jotai';
 
 export const OrganizationProviderEffect = () => {
   const [isCurrentOrganizationLoaded, setIsCurrentOrganizationLoaded] =
-    useRecoilState(isCurrentOrganizationLoadedState);
+    useAtom(isCurrentOrganizationLoadedState);
 
-  const setCurrentOrganization = useSetRecoilState(currentOrganizationState);
-  const setApiStatus = useSetRecoilState(clientConfigApiStatusState);
+  const setCurrentOrganization = useSetAtom(currentOrganizationState);
+  const setApiStatus = useSetAtom(clientConfigApiStatusState);
 
   useEffect(() => {
     if (isCurrentOrganizationLoaded) {

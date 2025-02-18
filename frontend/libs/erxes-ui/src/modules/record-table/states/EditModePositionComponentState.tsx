@@ -1,6 +1,4 @@
-import { atomFamily } from 'recoil';
+import { atom } from 'jotai';
+import { atomFamily } from 'jotai/utils';
 
-export const EditModePositionComponentState = atomFamily({
-  key: 'EditModePositionComponentState',
-  default: false,
-});
+export const EditModePositionComponentState = atomFamily((key: string) => atom<boolean>(false));

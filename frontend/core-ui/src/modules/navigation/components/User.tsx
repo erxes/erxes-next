@@ -1,7 +1,6 @@
 import { IconBell, IconLogout, IconSelector } from '@tabler/icons-react';
 import { currentUserState } from 'erxes-ui-shared-states';
 import { Avatar, DropdownMenu, Sidebar, useIsMobile } from 'erxes-ui';
-import { useRecoilValue } from 'recoil';
 
 import { readFile } from 'erxes-ui/utils/core';
 
@@ -9,13 +8,14 @@ import { SelectLanguages } from './SelectLanguages';
 import { ThemeSelector } from './ThemeSelector';
 
 import { useAuth } from '@/auth/hooks/useAuth';
+import { useAtom } from 'jotai';
 
 export function User() {
   const isMobile = useIsMobile();
 
   const { handleLogout } = useAuth();
 
-  const currentUser = useRecoilValue(currentUserState);
+  const [currentUser] = useAtom(currentUserState);
 
   const userDetail = currentUser?.details;
 

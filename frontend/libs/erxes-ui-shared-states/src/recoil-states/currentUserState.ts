@@ -1,4 +1,4 @@
-import { createState } from './createState';
+import { atom } from 'jotai';
 
 export type CurrentUser = {
   _id: string;
@@ -10,7 +10,4 @@ export type CurrentUser = {
   };
 };
 
-export const currentUserState = createState<CurrentUser | null>({
-  key: 'currentUserState',
-  defaultValue: null,
-});
+export const currentUserState = atom<CurrentUser | null>(null);
