@@ -20,6 +20,7 @@ import { SelectTags } from '@/tags/components/SelectTags';
 import { useTagsAdd } from '@/tags/hooks/useTagsAdd';
 import { newTagNameAtom } from '@/tags/states/selectTagsStates';
 import { ITag } from '@/tags/types/tagTypes';
+import { useAtom } from 'jotai';
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -34,7 +35,7 @@ export const CreateTagForm = ({
   tagType?: string;
   onCompleted?: (tag: ITag) => void;
 }) => {
-  const name = useRecoilValue(newTagNameAtom);
+  const [name] = useAtom(newTagNameAtom);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
