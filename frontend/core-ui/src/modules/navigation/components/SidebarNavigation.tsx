@@ -11,9 +11,8 @@ import { useAtom } from 'jotai';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
-  const plugins = [...CORE_PLUGINS] as any;
+  const plugins = [...CORE_PLUGINS];
   const [pluginsMetaData] = useAtom(pluginsConfigState);
-
   if (pluginsMetaData) {
     Object.keys(pluginsMetaData).forEach((key) => {
       plugins.push({
@@ -36,8 +35,8 @@ export function SidebarNavigation() {
         <Collapsible.Content>
           <Sidebar.GroupContent className="pt-2">
             <Sidebar.Menu>
-              {plugins.map((item: MenuItem) => {
-                return <SidebarNavigationItem key={item.name} {...item} />;
+              {plugins.map((item) => {
+                return <SidebarNavigationItem key={item.name} {...item} submenus={item.submenus || []} />;
               })}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
@@ -98,3 +97,4 @@ export function SidebarNavigationItem({
     </Collapsible>
   );
 }
+

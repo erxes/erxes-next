@@ -4,20 +4,7 @@ import { toast, useConfirm } from 'erxes-ui/hooks';
 import { useAtom, useSetAtom } from 'jotai';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
-
-type Props = {
-  onCompleted: (userDetail: UserDetail) => void;
-};
-
-type UserDetail = {
-  _id: string;
-  email: string;
-  username: string;
-  details: {
-    avatar: string;
-    fullName: string;
-  };
-};
+import { UserDetail ,Props } from '../types/userDetail';
 
 const useProfile = ({ onCompleted }: Props) => {
   const [currentUser] = useAtom(currentUserState);
