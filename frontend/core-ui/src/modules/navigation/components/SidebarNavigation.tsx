@@ -1,17 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-
+import { Plugin } from '../types/plugin';
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfigState } from 'erxes-ui-shared-states';
+import { pluginsConfigState } from 'erxes-ui-shared-states';
 import { cn } from 'erxes-ui/lib';
 import { MenuItem } from '@/navigation/types/MenuItemType';
 import { useAtom } from 'jotai';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
-  const plugins = [...CORE_PLUGINS];
+  const plugins: Plugin[] = [...CORE_PLUGINS] as Plugin[];
   const [pluginsMetaData] = useAtom(pluginsConfigState);
   if (pluginsMetaData) {
     Object.keys(pluginsMetaData).forEach((key) => {
