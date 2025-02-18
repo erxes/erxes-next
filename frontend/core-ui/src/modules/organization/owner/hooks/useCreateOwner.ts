@@ -1,17 +1,17 @@
 import { useMutation } from '@apollo/client';
 import { currentOrganizationState } from 'erxes-ui-shared-states';
-import { useRecoilState } from 'recoil';
 
 import { useToast } from 'erxes-ui/hooks';
 
 import { CreateOwner } from '@/organization/owner/graphql/mutation/createOwner';
 import { CreateOwnerFormType } from '@/organization/owner/hooks/useCreateOwnerForm';
+import { useAtom } from 'jotai';
 
 export const useCreateOwner = () => {
   const { toast } = useToast();
 
   const [createOwnerMutation] = useMutation(CreateOwner);
-  const [currentOrganization, setCurrentOrganization] = useRecoilState(
+  const [currentOrganization, setCurrentOrganization] = useAtom(
     currentOrganizationState
   );
 

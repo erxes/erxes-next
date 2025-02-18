@@ -5,20 +5,20 @@ import {
   currentUserState,
   isCurrentUserLoadedState,
 } from 'erxes-ui-shared-states';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { isDefined } from 'erxes-ui/utils';
 
 import { currentUser } from '@/users/graphql/queries';
+import { useAtom } from 'jotai';
 
 export const UserProviderEffect = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const [isCurrentUserLoaded, setIsCurrentUserLoaded] = useRecoilState(
+  const [isCurrentUserLoaded, setIsCurrentUserLoaded] = useAtom(
     isCurrentUserLoadedState
   );
 
-  const setCurrentUser = useSetRecoilState(currentUserState);
+  const setCurrentUser = useAtom(currentUserState);
 
   const {
     loading: queryLoading,
@@ -34,7 +34,7 @@ export const UserProviderEffect = () => {
 
     if (!isDefined(queryData?.currentUser)) return;
 
-    setCurrentUser(queryData.currentUser);
+    setCurrentUser[1](queryData.currentUser);
   }, [
     setCurrentUser,
     isLoading,

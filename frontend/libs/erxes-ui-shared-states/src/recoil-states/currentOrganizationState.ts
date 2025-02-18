@@ -1,4 +1,4 @@
-import { createState } from './createState';
+import { atom } from 'jotai';
 
 export type CurrentOrganization = {
   name: string;
@@ -14,9 +14,4 @@ export type CurrentOrganization = {
   }[];
 };
 
-export const currentOrganizationState = createState<CurrentOrganization | null>(
-  {
-    key: 'currentOrganizationState',
-    defaultValue: null,
-  }
-);
+export const currentOrganizationState = atom<CurrentOrganization | null>(null);

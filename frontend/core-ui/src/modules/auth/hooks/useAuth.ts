@@ -8,18 +8,17 @@ import {
   isCurrentOrganizationLoadedState,
   isCurrentUserLoadedState,
 } from 'erxes-ui-shared-states';
-import { useSetRecoilState } from 'recoil';
-
 import { Logout } from '@/auth/graphql/mutations/logout';
 import { AppPath } from '@/types/paths/AppPath';
+import { useSetAtom } from 'jotai';
 
 export const useAuth = () => {
   const [logout] = useMutation(Logout);
-  const setCurrentUser = useSetRecoilState(currentUserState);
-  const setIsCurrentUserLoaded = useSetRecoilState(isCurrentUserLoadedState);
+  const setCurrentUser = useSetAtom(currentUserState);
+  const setIsCurrentUserLoaded = useSetAtom(isCurrentUserLoadedState);
 
-  const setCurrentOrganization = useSetRecoilState(currentOrganizationState);
-  const setIsCurrentOrganizationLoaded = useSetRecoilState(
+  const setCurrentOrganization = useSetAtom(currentOrganizationState);
+  const setIsCurrentOrganizationLoaded = useSetAtom(
     isCurrentOrganizationLoadedState
   );
 

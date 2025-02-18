@@ -1,4 +1,4 @@
-import { createState } from './createState'
+import { atom } from 'jotai';
 
 type ApiStatus = {
   isLoaded: boolean;
@@ -6,7 +6,8 @@ type ApiStatus = {
   error?: Error;
 };
 
-export const clientConfigApiStatusState = createState<ApiStatus>({
-  key: 'clientConfigApiStatusState',
-  defaultValue: { isLoaded: false, isErrored: false, error: undefined },
+export const clientConfigApiStatusState = atom<ApiStatus>({
+  isLoaded: false,
+  isErrored: false,
+  error: undefined,
 });

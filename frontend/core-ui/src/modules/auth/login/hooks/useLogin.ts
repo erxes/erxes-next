@@ -6,7 +6,6 @@ import {
   currentUserState,
   isCurrentUserLoadedState,
 } from 'erxes-ui-shared-states';
-import { useSetRecoilState } from 'recoil';
 
 import { useToast } from 'erxes-ui/hooks';
 
@@ -15,14 +14,15 @@ import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';
 import { Login } from '@/auth/login/grahpql/mutations/login';
 import { ResetPassword } from '@/auth/login/grahpql/mutations/resetPassword';
 import { AppPath } from '@/types/paths/AppPath';
+import { useSetAtom } from 'jotai';
 
 export const useLogin = () => {
   const [login] = useMutation(Login);
   const [logout] = useMutation(Logout);
   const [forgotPassword] = useMutation(ForgotPassword);
   const [resetPassword] = useMutation(ResetPassword);
-  const setCurrentUser = useSetRecoilState(currentUserState);
-  const setIsCurrentUserLoaded = useSetRecoilState(isCurrentUserLoadedState);
+  const setCurrentUser = useSetAtom(currentUserState);
+  const setIsCurrentUserLoaded = useSetAtom(isCurrentUserLoadedState);
   const { toast } = useToast();
 
   const navigate = useNavigate();
