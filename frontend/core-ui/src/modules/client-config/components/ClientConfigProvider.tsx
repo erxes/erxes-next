@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { clientConfigApiStatusState } from 'erxes-ui-shared-states';
+import { clientConfigApiStatusState } from 'ui-modules';
 import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 
 export const ClientConfigProvider: React.FC<React.PropsWithChildren> = ({

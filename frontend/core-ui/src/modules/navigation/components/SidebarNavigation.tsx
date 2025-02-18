@@ -4,7 +4,7 @@ import { IconCaretUpFilled } from '@tabler/icons-react';
 
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfigState } from 'erxes-ui-shared-states';
+import { pluginsConfigState, PluginsConfigState } from 'ui-modules';
 import { cn } from 'erxes-ui/lib';
 import { MenuItem } from '@/navigation/types/MenuItemType';
 import { useAtom } from 'jotai';

@@ -7,7 +7,7 @@ import {
   currentUserState,
   isCurrentOrganizationLoadedState,
   isCurrentUserLoadedState,
-} from 'erxes-ui-shared-states';
+} from 'ui-modules';
 import { Logout } from '@/auth/graphql/mutations/logout';
 import { AppPath } from '@/types/paths/AppPath';
 import { useSetAtom } from 'jotai';
@@ -19,7 +19,7 @@ export const useAuth = () => {
 
   const setCurrentOrganization = useSetAtom(currentOrganizationState);
   const setIsCurrentOrganizationLoaded = useSetAtom(
-    isCurrentOrganizationLoadedState
+    isCurrentOrganizationLoadedState,
   );
 
   const navigate = useNavigate();

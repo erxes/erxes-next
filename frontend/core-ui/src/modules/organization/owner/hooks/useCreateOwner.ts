@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { currentOrganizationState } from 'erxes-ui-shared-states';
+import { currentOrganizationState } from 'ui-modules';
 
 import { useToast } from 'erxes-ui/hooks';
 
@@ -12,7 +12,7 @@ export const useCreateOwner = () => {
 
   const [createOwnerMutation] = useMutation(CreateOwner);
   const [currentOrganization, setCurrentOrganization] = useAtom(
-    currentOrganizationState
+    currentOrganizationState,
   );
 
   const createOwner = async (input: CreateOwnerFormType) => {

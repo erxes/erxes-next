@@ -19,7 +19,7 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState } from 'erxes-ui-shared-states';
+import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 
 const data = {
@@ -48,8 +48,7 @@ const data = {
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS];
 
-  const pluginsMetaData =
-    useAtomValue(pluginsConfigState) || {}
+  const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
 
   Object.keys(pluginsMetaData || {}).forEach((configId) => {
     plugins.push({

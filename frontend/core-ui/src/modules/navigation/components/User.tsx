@@ -1,5 +1,5 @@
 import { IconBell, IconLogout, IconSelector } from '@tabler/icons-react';
-import { currentUserState } from 'erxes-ui-shared-states';
+import { currentUserState } from 'ui-modules';
 import { Avatar, DropdownMenu, Sidebar, useIsMobile } from 'erxes-ui';
 
 import { readFile } from 'erxes-ui/utils/core';

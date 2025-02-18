@@ -2,10 +2,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useApolloClient, useMutation } from '@apollo/client';
-import {
-  currentUserState,
-  isCurrentUserLoadedState,
-} from 'erxes-ui-shared-states';
+import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
 import { useToast } from 'erxes-ui/hooks';
 
@@ -43,7 +40,7 @@ export const useLogin = () => {
           });
         });
     },
-    [login, navigate, setIsCurrentUserLoaded, toast]
+    [login, navigate, setIsCurrentUserLoaded, toast],
   );
 
   const handleLogout = useCallback(async () => {
@@ -76,7 +73,7 @@ export const useLogin = () => {
           });
         });
     },
-    [forgotPassword, toast]
+    [forgotPassword, toast],
   );
 
   const handleResetPassword = useCallback(
@@ -95,7 +92,7 @@ export const useLogin = () => {
           });
         });
     },
-    [resetPassword, toast]
+    [resetPassword, toast],
   );
 
   return {

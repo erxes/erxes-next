@@ -12,9 +12,7 @@
       "~": ["frontend/core-ui/src"], // for rspack
       "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
-      "erxes-ui-shared-states": [
-        "frontend/libs/erxes-ui-shared-states/src/index.ts"
-      ]
+      "ui-modules": ["frontend/libs/ui-modules/src"]
     }
   },
   "files": [],

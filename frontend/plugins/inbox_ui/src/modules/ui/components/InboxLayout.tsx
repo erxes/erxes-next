@@ -1,5 +1,6 @@
 import { Resizable } from 'erxes-ui/components';
 import { InboxSidebar } from './InboxSidebar';
+
 export const InboxLayout = () => {
   return (
     <Resizable.PanelGroup

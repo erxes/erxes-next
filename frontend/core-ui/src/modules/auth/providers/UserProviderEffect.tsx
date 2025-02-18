@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useQuery } from '@apollo/client';
-import {
-  currentUserState,
-  isCurrentUserLoadedState,
-} from 'erxes-ui-shared-states';
+import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
 import { isDefined } from 'erxes-ui/utils';
 
@@ -15,7 +12,7 @@ export const UserProviderEffect = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isCurrentUserLoaded, setIsCurrentUserLoaded] = useAtom(
-    isCurrentUserLoadedState
+    isCurrentUserLoadedState,
   );
 
   const setCurrentUser = useAtom(currentUserState);

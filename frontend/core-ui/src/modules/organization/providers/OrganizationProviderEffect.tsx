@@ -5,7 +5,7 @@ import {
   CurrentOrganization,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
-} from 'erxes-ui-shared-states';
+} from 'ui-modules';
 
 import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
 import { useAtom, useSetAtom } from 'jotai';

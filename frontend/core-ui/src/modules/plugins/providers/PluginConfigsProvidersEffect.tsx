@@ -1,6 +1,6 @@
 import { getInstance } from '@module-federation/enhanced/runtime';
 import { useEffect } from 'react';
-import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
+import { pluginsConfigState, PluginsConfig } from 'ui-modules';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import { useSetAtom } from 'jotai';
 

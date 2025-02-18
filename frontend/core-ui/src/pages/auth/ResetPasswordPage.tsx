@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
-import { currentUserState } from 'erxes-ui-shared-states';
+import { currentUserState } from 'ui-modules';
 
 import { ResetPassword } from '@/auth/login/components/ResetPassword';
 import { AppPath } from '@/types/paths/AppPath';

@@ -1,9 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
 
-import {
-  currentUserState,
-  isCurrentUserLoadedState,
-} from 'erxes-ui-shared-states';
+import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
 import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';

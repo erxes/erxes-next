@@ -10,8 +10,10 @@ const coreLibraries = new Set([
   'react',
   'react-dom',
   'react-router-dom',
+  'jotai',
   'erxes-ui',
-  'erxes-ui-shared-states',
+  'ui-modules',
+  'react-i18next',
 ]);
 
 const config: ModuleFederationConfig = {

@@ -7,7 +7,7 @@ import { Button } from 'erxes-ui';
 import { IconInbox } from '@tabler/icons-react';
 import { PluginHeader } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-import { InboxLayout } from '~/modules/ui/components/InboxLayout';
+import { InboxLayout } from '@/ui/components/InboxLayout';
 
 export const InboxIndexPage = () => {
   return (

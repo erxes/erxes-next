@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { currentUserState } from 'erxes-ui-shared-states';
+import { currentUserState } from 'ui-modules';
 import { toast, useConfirm } from 'erxes-ui/hooks';
 import { useAtom, useSetAtom } from 'jotai';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';

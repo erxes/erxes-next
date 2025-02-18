@@ -6,7 +6,7 @@ const coreLibraries = new Set([
   'react-router-dom',
   'erxes-ui',
   'jotai',
-  'erxes-ui-shared-states',
+  'ui-modules',
   'react-i18next',
 ]);
 

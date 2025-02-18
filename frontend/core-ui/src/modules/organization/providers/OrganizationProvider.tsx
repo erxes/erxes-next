@@ -5,7 +5,7 @@ import {
   clientConfigApiStatusState,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
-} from 'erxes-ui-shared-states';
+} from 'ui-modules';
 
 import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
@@ -14,7 +14,9 @@ import { ClientConfigError } from '@/error-handler/components/ClientConfigError'
 import { AppPath } from '@/types/paths/AppPath';
 
 export const OrganizationProvider = () => {
-  const [isCurrentOrganizationLoaded] = useAtom(isCurrentOrganizationLoadedState);
+  const [isCurrentOrganizationLoaded] = useAtom(
+    isCurrentOrganizationLoadedState,
+  );
   const [clientConfigApiStatus] = useAtom(clientConfigApiStatusState);
   const [currentOrganization] = useAtom(currentOrganizationState);
 
@@ -37,7 +39,7 @@ export const OrganizationProvider = () => {
     return <Navigate to={AppPath.CreateOwner} replace />;
   }
 
-   // if (isDefined(currentOrganization)) {
+  // if (isDefined(currentOrganization)) {
   //   const link = document.createElement('link');
   //   link.id = 'favicon';
   //   link.rel = 'shortcut icon';
