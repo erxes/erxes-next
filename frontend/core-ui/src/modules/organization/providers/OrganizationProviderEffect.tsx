@@ -6,14 +6,14 @@ import {
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
 } from 'erxes-ui-shared-states';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
 import { useAtom, useSetAtom } from 'jotai';
 
 export const OrganizationProviderEffect = () => {
-  const [isCurrentOrganizationLoaded, setIsCurrentOrganizationLoaded] =
-    useAtom(isCurrentOrganizationLoadedState);
+  const [isCurrentOrganizationLoaded, setIsCurrentOrganizationLoaded] = useAtom(
+    isCurrentOrganizationLoadedState,
+  );
 
   const setCurrentOrganization = useSetAtom(currentOrganizationState);
   const setApiStatus = useSetAtom(clientConfigApiStatusState);

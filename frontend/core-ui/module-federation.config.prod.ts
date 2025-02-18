@@ -11,7 +11,6 @@ const coreLibraries = new Set([
   'react-dom',
   'react-router-dom',
   'erxes-ui',
-  'recoil',
   'erxes-ui-shared-states',
 ]);
 
