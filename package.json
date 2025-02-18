@@ -99,7 +99,6 @@
     "react-resizable-panels": "^2.1.7",
     "react-router": "^7.1.5",
     "react-router-dom": "^7.1.1",
-    "recoil": "^0.7.7",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "ts-key-enum": "^3.0.13",
