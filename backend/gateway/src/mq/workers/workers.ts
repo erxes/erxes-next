@@ -1,6 +1,5 @@
 import type { Redis } from 'ioredis';
 import { createMQWorkerWithListeners } from 'erxes-api-utils';
-
 import { updateApolloRouter } from '../../apollo-router';
 
 export const initMQWorkers = (redis: Redis) => {
