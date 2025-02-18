@@ -9,7 +9,7 @@ import { useAtom } from 'jotai';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const currentUser = useAtom(currentUserState);
+  const [currentUser] = useAtom(currentUserState);
   useEffect(() => {
     if (currentUser) {
       navigate(AppPath.Index);
