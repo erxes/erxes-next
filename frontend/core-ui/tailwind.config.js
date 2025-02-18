@@ -1,4 +1,3 @@
-const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
 const { fontFamily } = require('tailwindcss/defaultTheme');
 const { join } = require('path');
 
@@ -9,7 +8,8 @@ module.exports = {
       __dirname,
       '{src,pages,components,app,modules}/**/*!(*.stories|*.spec).{ts,tsx,html}',
     ),
-    ...createGlobPatternsForDependencies(__dirname),
+    'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).{ts,tsx,html}',
+    'frontend/plugins/**/!(*.stories|*.spec).{ts,tsx,html}',
   ],
   theme: {
     fontFamily: {

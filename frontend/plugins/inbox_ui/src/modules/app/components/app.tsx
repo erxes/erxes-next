@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import '~/styles.css';
 
 const Inbox = lazy(() =>
   import('~/pages/InboxIndexPage').then((module) => ({
