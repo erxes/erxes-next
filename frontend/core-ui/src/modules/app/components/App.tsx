@@ -1,5 +1,3 @@
-import { RecoilRoot } from 'recoil';
-
 import { Toaster } from 'erxes-ui/components';
 
 import { AppRouter } from './AppRoutes';
@@ -11,17 +9,15 @@ import { Provider as JotaiProvider } from 'jotai';
 
 export function App() {
   return (
-    <RecoilRoot>
-      <JotaiProvider>
-        <AppErrorBoundary>
-          <ThemeProvider>
-            <AppI18nWrapper>
-              <Toaster />
-              <AppRouter />
-            </AppI18nWrapper>
-          </ThemeProvider>
-        </AppErrorBoundary>
-      </JotaiProvider>
-    </RecoilRoot>
+    <JotaiProvider>
+      <AppErrorBoundary>
+        <ThemeProvider>
+          <AppI18nWrapper>
+            <Toaster />
+            <AppRouter />
+          </AppI18nWrapper>
+        </ThemeProvider>
+      </AppErrorBoundary>
+    </JotaiProvider>
   );
 }
