@@ -3,18 +3,18 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useToast } from 'erxes-ui/hooks';
 
 import {
-  SettingsMutations,
-  SettingsQueries,
+  fileSettingsMutations,
+  fileSettingsQueries,
 } from '@/settings/file-upload/graphql';
 
 type TList = {
-  onCompleted: (data) => void;
+  onCompleted: (data: any) => void;
 };
 
 const useConfig = ({ onCompleted }: TList) => {
   const { toast } = useToast();
 
-  const { data, loading } = useQuery(SettingsQueries.configsQuery, {
+  const { data, loading } = useQuery(fileSettingsQueries.configsQuery, {
     onError(error) {
       console.log(error.message);
     },
@@ -22,7 +22,7 @@ const useConfig = ({ onCompleted }: TList) => {
   });
 
   const [update, { loading: isLoading }] = useMutation(
-    SettingsMutations.configsUpdate,
+    fileSettingsMutations.configsUpdate,
     {
       onError(error) {
         console.log(error.message);
@@ -37,7 +37,7 @@ const useConfig = ({ onCompleted }: TList) => {
     }
   );
 
-  const updateConfig = (args) => {
+  const updateConfig = (args: any) => {
     update({
       variables: {
         configsMap: {

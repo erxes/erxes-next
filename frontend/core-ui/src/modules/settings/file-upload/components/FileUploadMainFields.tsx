@@ -9,14 +9,18 @@ import {
 import { MultipleSelector } from 'erxes-ui/components/multiselect';
 
 import { FILE_SYSTEM_TYPES } from '@/settings/file-upload/constants/serviceData';
+import { FormProps, UseFormReturn } from 'react-hook-form';
+import { UploadConfigFormT } from '../types';
 
 export function FileUploadMainFields({
   form,
   modifiedArray,
 }: {
-  form: any;
+  form: UseFormReturn<UploadConfigFormT>;
   modifiedArray: any[];
 }) {
+
+  console.log('form', form.watch())
   return (
     <div className="grid grid-cols-1 gap-4">
       <FormItem className="w-full">

@@ -1,4 +1,4 @@
-import { AnimatePresence,motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import {
   Checkbox,
@@ -11,9 +11,20 @@ import {
 } from 'erxes-ui/components';
 
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
-import { DynamicFieldsT } from '@/settings/file-upload/types';
+import { DynamicFieldsT, UploadConfigFormT } from '@/settings/file-upload/types';
+import { FormProps } from 'react-hook-form';
 
-export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
+interface Props {
+  dynamicFields: {
+    label: string,
+    name: string,
+    type: string
+  }[],
+  selected: string;
+  form: FormProps<UploadConfigFormT>
+}
+
+export function DynamicServiceConfigFields({ dynamicFields, selected, form }: Props) {
   return (
     <AnimatePresence mode="popLayout">
       {dynamicFields.length > 0 && (
@@ -28,7 +39,7 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
             {uploadServiceData.find((item) => item.value === selected)?.label}
           </h4>
           <div className="grid grid-cols-4 gap-1 p-4">
-            {dynamicFields.map((fieldData) =>
+            {dynamicFields.map((fieldData: any) =>
               fieldData.type === 'checkbox' ? (
                 <FormField
                   control={form.control}
