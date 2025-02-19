@@ -4,5 +4,5 @@ export interface MenuItem {
   name: string;
   icon: Icon;
   path: string;
-  submenus: { name: string; path: string }[];
+  submenus?: { name: string; path: string }[];
 }
