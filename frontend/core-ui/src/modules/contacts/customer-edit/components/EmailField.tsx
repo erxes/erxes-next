@@ -31,7 +31,7 @@ export const EmailField = ({
             onError: (e: ApolloError) => {
               toast({
                 title: 'Error',
-                description: e.message || 'Something went wrong',
+                description: e.message,
               });
             },
             onCompleted,
