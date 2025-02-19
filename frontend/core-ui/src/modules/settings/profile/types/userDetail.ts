@@ -1,4 +1,4 @@
-export type UserDetail = {
+export interface UserDetail {
     _id: string;
     email: string;
     username: string;
@@ -6,8 +6,9 @@ export type UserDetail = {
       avatar: string;
       fullName: string;
     };
-  };
-
-  export type Props = {
+  }
+  
+  export interface Props {
     onCompleted: (userDetail: UserDetail) => void;
-  };
+  }
+  

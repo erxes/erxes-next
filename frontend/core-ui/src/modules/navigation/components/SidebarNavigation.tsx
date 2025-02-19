@@ -5,12 +5,12 @@ import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { cn } from 'erxes-ui/lib';
-import { MenuItem } from '@/navigation/types/MenuItemType';
+import { PluginItem } from '@/navigation/types/MenuItemType';
 import { useAtom } from 'jotai';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
-  const plugins:MenuItem[] = [...CORE_PLUGINS] as MenuItem[];
+  const plugins:PluginItem[] = [...CORE_PLUGINS] as PluginItem[];
   const [pluginsMetaData] = useAtom(pluginsConfigState);
 
   if (pluginsMetaData) {
@@ -35,7 +35,7 @@ export function SidebarNavigation() {
         <Collapsible.Content>
           <Sidebar.GroupContent className="pt-2">
             <Sidebar.Menu>
-              {plugins.map((item: MenuItem) => {
+              {plugins.map((item: PluginItem) => {
                 return <SidebarNavigationItem key={item.name} {...item} />;
               })}
             </Sidebar.Menu>
@@ -51,7 +51,7 @@ export function SidebarNavigationItem({
   icon,
   path,
   submenus,
-}: MenuItem) {
+}: PluginItem) {
   const { t } = useTranslation();
   const pathname = useLocation().pathname;
   const Icon = icon;
