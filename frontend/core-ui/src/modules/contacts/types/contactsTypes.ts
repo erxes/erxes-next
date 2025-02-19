@@ -9,6 +9,8 @@ export interface Customer {
   code?: string;
   emailValidationStatus?: string;
   phoneValidationStatus?: string
+  emails?: string[]
+  phones?: string[] 
 }
 
 export interface SelectUserFetchMoreProps {
