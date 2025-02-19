@@ -1,4 +1,4 @@
-export interface UserDetail {
+export interface iUserDetail {
     _id: string;
     email: string;
     username: string;
@@ -9,6 +9,6 @@ export interface UserDetail {
   }
   
   export interface Props {
-    onCompleted: (userDetail: UserDetail) => void;
+    onCompleted: (userDetail: iUserDetail) => void;
   }
   

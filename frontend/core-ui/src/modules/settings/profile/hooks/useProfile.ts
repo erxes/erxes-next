@@ -4,7 +4,7 @@ import { toast, useConfirm } from 'erxes-ui/hooks';
 import { useAtom, useSetAtom } from 'jotai';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
-import { UserDetail ,Props } from '../types/userDetail';
+import { iUserDetail ,Props } from '../types/userDetail';
 
 const useProfile = ({ onCompleted }: Props) => {
   const [currentUser] = useAtom(currentUserState);
@@ -20,7 +20,7 @@ const useProfile = ({ onCompleted }: Props) => {
 
   const [updateProfile] = useMutation(UpdateProfile);
 
-  const profileUpdate = async (profile: Partial<UserDetail>) => {
+  const profileUpdate = async (profile: Partial<iUserDetail>) => {
     const confirmOptions = { confirmationValue: 'update' };
 
     confirm({
