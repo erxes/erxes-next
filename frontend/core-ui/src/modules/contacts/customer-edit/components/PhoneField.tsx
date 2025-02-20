@@ -33,7 +33,6 @@ export const PhoneField = ({
           {
             variables: { _id, primaryPhone: mainPhone, phones: restPhones },
             onError: (e: ApolloError) => {
-                console.log(e.message)
               toast({
                 title: 'Error',
                 description: e.message,
