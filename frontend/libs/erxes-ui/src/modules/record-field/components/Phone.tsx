@@ -376,7 +376,7 @@ const PhoneItems: React.FC<PhoneItemsProps> = ({
           )}
           <PhoneActionPopover
             phone={phone}
-            isPrimary={index === 1}
+            isPrimary={index === 0}
             onDelete={onDelete}
             onSetPrimary={onSetPrimary}
             onEdit={onEdit}
