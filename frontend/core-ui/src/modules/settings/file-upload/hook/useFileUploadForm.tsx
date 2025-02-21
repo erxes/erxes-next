@@ -16,30 +16,33 @@ const useFileUploadForm = () => {
   const onCompleted = (data: any) => {
     const { configs } = data || {};
 
-    if (!configs) return;
+    if (configs !== undefined) {
+      const values = configs.reduce((acc: any, config: any) => {
+        acc[config.code] = config.value;
+        return acc;
+      }, {});
 
-    const values = configs.reduce((acc: any, config: any) => {
-      acc[config.code] = config.value;
-      return acc;
-    }, {});
+      const uploadFileTypes = values['UPLOAD_FILE_TYPES']?.split(',');
+      const uploadFileTypesArray = FILE_MIME_TYPES.filter((item) => uploadFileTypes.includes(item.value)).map(item => ({
+        label: `${item.label} (${item.extension})`,
+        value: item.value,
+      }));
 
-    const uploadFileTypes = values['UPLOAD_FILE_TYPES']?.split(',');
-    const uploadFileTypesArray = FILE_MIME_TYPES.filter((item) => uploadFileTypes.includes(item.value)).map(item => ({
-      label: `${item.label} (${item.extension})`,
-      value: item.value,
-    }));
+      const widgetsUploadFileTypes = values['WIDGETS_UPLOAD_FILE_TYPES']?.split(',')
+      const widgetUploadFileTypesArray = FILE_MIME_TYPES.filter((item) => widgetsUploadFileTypes.includes(item.value)).map(item => ({
+        label: `${item.label} (${item.extension})`,
+        value: item.value,
+      }));
 
-    const widgetsUploadFileTypes = values['WIDGETS_UPLOAD_FILE_TYPES']?.split(',')
-    const widgetUploadFileTypesArray = FILE_MIME_TYPES.filter((item) => widgetsUploadFileTypes.includes(item.value)).map(item => ({
-      label: `${item.label} (${item.extension})`,
-      value: item.value,
-    }));
+      form.reset({
+        ...values,
+        UPLOAD_FILE_TYPES: uploadFileTypesArray,
+        WIDGETS_UPLOAD_FILE_TYPES: widgetUploadFileTypesArray
+      });
+    }
 
-    form.reset({
-      ...values,
-      UPLOAD_FILE_TYPES: uploadFileTypesArray,
-      WIDGETS_UPLOAD_FILE_TYPES: widgetUploadFileTypesArray
-    });
+    return;
+
   };
 
 

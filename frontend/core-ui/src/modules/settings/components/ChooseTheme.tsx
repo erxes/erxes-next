@@ -50,18 +50,17 @@ export function ChooseTheme() {
               className="relative cursor-pointer overflow-hidden rounded-lg border shadow-sm shadow-black/5 ring-offset-background transition-colors peer-[:focus-visible]:ring-2 peer-[:focus-visible]:ring-ring/70 peer-[:focus-visible]:ring-offset-2 peer-data-[disabled]:cursor-not-allowed peer-data-[state=checked]:border-ring peer-data-[state=checked]:bg-accent peer-data-[disabled]:opacity-50"
             />
             <span className="group mt-2 flex items-center gap-1 peer-data-[state=unchecked]:text-muted-foreground/70">
-              <IconCheck
-                size={16}
-                className="peer-data-[state=unchecked]:group-[]:hidden"
-                aria-hidden="true"
-              />
-              <IconMinus
-                size={16}
-                className="peer-data-[state=checked]:group-[]:hidden"
-                aria-hidden="true"
-              />
+
+              <span className={'peer-data-[state=unchecked]:group-[]:hidden'}>
+                <IconCheck size={16} aria-hidden="true" />
+              </span>
+              <span className={"peer-data-[state=checked]:group-[]:hidden"}>
+                <IconMinus size={16} aria-hidden="true" />
+              </span>
+
               <span className="text-xs font-medium">{item.label}</span>
             </span>
+
           </label>
         ))}
       </RadioGroup>

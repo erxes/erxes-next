@@ -19,8 +19,6 @@ export function FileUploadMainFields({
   form: UseFormReturn<UploadConfigFormT>;
   modifiedArray: any[];
 }) {
-
-  console.log('form', form.watch())
   return (
     <div className="grid grid-cols-1 gap-4">
       <FormItem className="w-full">

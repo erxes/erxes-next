@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { IconLoader2 } from '@tabler/icons-react';
 import { motion } from 'motion/react';
@@ -16,8 +16,8 @@ import { FILE_MIME_TYPES } from '@/settings/file-upload/constants/serviceData';
 import { serviceFields } from '@/settings/file-upload/constants/uploadServiceFields';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm';
-import { UploadConfigFormT } from '@/settings/file-upload/types';
-import { useConfigByCode } from '@/settings/hooks/useConfigByCode';
+import { TConfig, UploadConfigFormT } from '@/settings/file-upload/types';
+import { Path } from 'react-hook-form';
 
 type Option = {
   label: string;
@@ -33,8 +33,7 @@ const modifiedArray: Option[] = FILE_MIME_TYPES.map(
 
 const FileUpload = () => {
   const { form, onCompleted } = useFileUploadForm();
-  const { updateConfig, isLoading } = useConfig({ onCompleted });
-  const { } = useConfigByCode({ onCompleted });
+  const { updateConfig, isLoading, configs } = useConfig();
 
   const dynamicFields = React.useMemo(() => {
     const selectedType = form.watch('UPLOAD_SERVICE_TYPE');
@@ -47,8 +46,40 @@ const FileUpload = () => {
   }, [form.watch('UPLOAD_SERVICE_TYPE')]);
 
   const onSubmit = (data: UploadConfigFormT) => {
-    updateConfig(data);
+    const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
+      acc[config.code] = data[config.code] ?? config.value;
+      return acc;
+    }, {} as Record<string, any>);
+    updateConfig(updatedConfigs);
   };
+
+  useEffect(() => {
+    if (configs !== undefined) {
+      const values = configs.reduce((acc: any, config: any) => {
+        acc[config.code] = config.value;
+        return acc;
+      }, {});
+
+      const uploadFileTypes = values['UPLOAD_FILE_TYPES']?.split(',');
+      const uploadFileTypesArray = FILE_MIME_TYPES.filter((item) => uploadFileTypes.includes(item.value)).map(item => ({
+        label: `${item.label} (${item.extension})`,
+        value: item.value,
+      }));
+
+      const widgetsUploadFileTypes = values['WIDGETS_UPLOAD_FILE_TYPES']?.split(',')
+      const widgetUploadFileTypesArray = FILE_MIME_TYPES.filter((item) => widgetsUploadFileTypes.includes(item.value)).map(item => ({
+        label: `${item.label} (${item.extension})`,
+        value: item.value,
+      }));
+
+      form.reset({
+        ...values,
+        UPLOAD_FILE_TYPES: uploadFileTypesArray,
+        WIDGETS_UPLOAD_FILE_TYPES: widgetUploadFileTypesArray
+      });
+    }
+  }, [])
+
   return (
     <Form {...form}>
       <form

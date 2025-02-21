@@ -14,12 +14,14 @@ import { uploadServiceData } from '@/settings/file-upload/constants/serviceData'
 import { DynamicFieldsT, UploadConfigFormT } from '@/settings/file-upload/types';
 import { FormProps } from 'react-hook-form';
 
-interface Props {
-  dynamicFields: {
-    label: string,
-    name: string,
-    type: string
-  }[],
+interface TField {
+  label: string,
+  name: string,
+  type: string
+}
+
+type Props = {
+  dynamicFields: TField[],
   selected: string;
   form: FormProps<UploadConfigFormT>
 }
@@ -39,17 +41,17 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }: Pr
             {uploadServiceData.find((item) => item.value === selected)?.label}
           </h4>
           <div className="grid grid-cols-4 gap-1 p-4">
-            {dynamicFields.map((fieldData: any) =>
+            {dynamicFields.map((fieldData: TField) =>
               fieldData.type === 'checkbox' ? (
                 <FormField
                   control={form.control}
-                  name={fieldData.name}
+                  name={'CLOUDFLARE_USE_CDN'}
                   key={fieldData.name}
                   render={({ field }) => (
                     <FormItem className="col-span-4 flex items-center justify-start gap-x-2">
                       <FormControl>
                         <Checkbox
-                          checked={field.value}
+                          checked={field.value as boolean}
                           onCheckedChange={field.onChange}
                           id={fieldData.name}
                         />

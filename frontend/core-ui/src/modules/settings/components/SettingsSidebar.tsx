@@ -5,6 +5,7 @@ import {
   IconAdjustmentsAlt,
   IconColorSwatch,
   IconFile,
+  IconMail,
   IconUserCircle,
   IconX,
 } from '@tabler/icons-react';
@@ -36,11 +37,20 @@ const data = {
     },
   ],
   nav: [
-    { name: 'General', icon: IconAdjustmentsAlt },
+    {
+      name: 'General',
+      icon: IconAdjustmentsAlt,
+      path: SettingsWorkspacePath.General
+    },
     {
       name: 'File upload',
       icon: IconFile,
       path: SettingsWorkspacePath.FileUpload,
+    },
+    {
+      name: 'Mail config',
+      icon: IconMail,
+      path: SettingsWorkspacePath.MailConfig,
     },
   ],
 };
@@ -96,19 +106,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {data.nav.map((item) => (
-                <Sidebar.MenuItem key={item.name}>
-                  <Sidebar.MenuButton
-                    asChild
-                    isActive={
-                      location.pathname === App + AppPath.Settings + item.path
-                    }
-                  >
-                    <Link to={AppPath.Settings + '/' + item.path}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </Link>
-                  </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
+                <SideBarItem key={item.name} item={item} />
               ))}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
@@ -139,7 +137,7 @@ export function SettingsSidebar() {
   );
 }
 
-const SideBarItem = ({ item }: { item: (typeof data.account)[0] }) => {
+const SideBarItem = ({ item }: { item: (typeof data.account)[0] | (typeof data.nav)[0] }) => {
   const location = useLocation();
   return (
     <Sidebar.MenuItem key={item.name}>

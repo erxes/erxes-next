@@ -8,17 +8,16 @@ import {
 } from '@/settings/file-upload/graphql';
 
 type TList = {
-  onCompleted: (data: any) => void;
+  onCompleted?: (data: any) => void;
 };
 
-const useConfig = ({ onCompleted }: TList) => {
+const useConfig = () => {
   const { toast } = useToast();
 
-  const { data, loading } = useQuery(fileSettingsQueries.configsQuery, {
+  const { data, loading, client } = useQuery(fileSettingsQueries.configsQuery, {
     onError(error) {
       console.log(error.message);
     },
-    onCompleted,
   });
 
   const [update, { loading: isLoading }] = useMutation(
@@ -33,7 +32,12 @@ const useConfig = ({ onCompleted }: TList) => {
           description: 'configs updated successfully',
         });
       },
-      refetchQueries: ['configsQuery'],
+      refetchQueries: [
+        {
+          query: fileSettingsQueries.configsQuery
+        },
+      ],
+      awaitRefetchQueries: true,
     }
   );
 
