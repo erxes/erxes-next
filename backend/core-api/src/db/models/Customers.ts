@@ -26,7 +26,7 @@ export const loadCustomerClass = (models: IModels, subdomain: string) => {
     }
 
     /**
-     * Retreives customer
+     * Retrieves customer
      */
     public static async getCustomer(_id: string) {
       const customer = await models.Customers.findOne({ _id }).lean();

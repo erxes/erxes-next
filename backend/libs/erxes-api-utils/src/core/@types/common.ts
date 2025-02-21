@@ -21,16 +21,16 @@ export interface IContext {
   res: any;
   requestInfo: any;
   docModifier: <T>(doc: T) => any;
-  brandIdSelector: {};
-  userBrandIdsSelector: {};
-  commonQuerySelector: {};
-  commonQuerySelectorElk: {};
-  singleBrandIdSelector: {};
+  brandIdSelector: object;
+  userBrandIdsSelector: object;
+  commonQuerySelector: object;
+  commonQuerySelectorElk: object;
+  singleBrandIdSelector: object;
   dataSources: {
     AutomationsAPI: any;
     EngagesAPI: any;
     IntegrationsAPI: any;
-    HelpersApi: any;
+    HelpersAPI: any;
   };
   dataLoaders: any;
 }

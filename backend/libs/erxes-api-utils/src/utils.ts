@@ -133,7 +133,7 @@ export const paginate = (
     excludeIds?: boolean;
   },
 ) => {
-  const { page = 0, perPage = 0, ids, excludeIds } = params || { ids: null };
+  const { page = 1, perPage = 20, ids, excludeIds } = params || { ids: null };
 
   const _page = Number(page || '1');
   const _limit = Number(perPage || '20');

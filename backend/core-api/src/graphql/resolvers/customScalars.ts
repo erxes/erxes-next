@@ -1,11 +1,11 @@
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language'; // tslint:disable-line
 
-function jSONidentity(value: any) {
+function jsonIdentity(value: any) {
   return value;
 }
 
-function jSONparseLiteral(ast: any) {
+function jsonParseLiteral(ast: any) {
   switch (ast.kind) {
     case Kind.STRING:
     case Kind.BOOLEAN:
@@ -17,13 +17,13 @@ function jSONparseLiteral(ast: any) {
       const value = Object.create(null);
 
       ast.fields.forEach((field: any) => {
-        value[field.name.value] = jSONparseLiteral(field.value);
+        value[field.name.value] = jsonParseLiteral(field.value);
       });
 
       return value;
     }
     case Kind.LIST:
-      return ast.values.map(jSONparseLiteral);
+      return ast.values.map(jsonParseLiteral);
     default:
       return null;
   }
@@ -48,10 +48,9 @@ export default {
       return new Date(value).toISOString();
     },
 
-    // @ts-expect-error: ast type may not match expected structure
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
-        return parseInt(ast.value, 10); // ast value is always in string format
+        return new Date(parseInt(ast.value, 10)); // ast value is always in string format
       }
       return null;
     },
@@ -63,8 +62,8 @@ export default {
       'The `jSON` scalar type represents jSON values as specified by ' +
       '[ECMA-404](http://www.ecma-international.org/' +
       'publications/files/ECMA-ST/ECMA-404.pdf).',
-    serialize: jSONidentity,
-    parseValue: jSONidentity,
-    parseLiteral: jSONparseLiteral,
+    serialize: jsonIdentity,
+    parseValue: jsonIdentity,
+    parseLiteral: jsonParseLiteral,
   }),
 };
