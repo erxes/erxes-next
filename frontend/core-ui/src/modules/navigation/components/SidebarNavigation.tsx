@@ -1,17 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-
 import { Collapsible, Sidebar } from 'erxes-ui/components';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfigState } from 'ui-modules';
+import { pluginsConfigState } from 'ui-modules';
 import { cn } from 'erxes-ui/lib';
-import { MenuItem } from '@/navigation/types/MenuItemType';
+import { PluginItem } from '@/navigation/types/MenuItemType';
 import { useAtom } from 'jotai';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
-  const plugins = [...CORE_PLUGINS] as any;
+  const plugins:PluginItem[] = [...CORE_PLUGINS] as PluginItem[];
   const [pluginsMetaData] = useAtom(pluginsConfigState);
 
   if (pluginsMetaData) {
@@ -36,7 +35,7 @@ export function SidebarNavigation() {
         <Collapsible.Content>
           <Sidebar.GroupContent className="pt-2">
             <Sidebar.Menu>
-              {plugins.map((item: MenuItem) => {
+              {plugins.map((item: PluginItem) => {
                 return <SidebarNavigationItem key={item.name} {...item} />;
               })}
             </Sidebar.Menu>
@@ -52,7 +51,7 @@ export function SidebarNavigationItem({
   icon,
   path,
   submenus,
-}: MenuItem) {
+}: PluginItem) {
   const { t } = useTranslation();
   const pathname = useLocation().pathname;
   const Icon = icon;
@@ -73,7 +72,7 @@ export function SidebarNavigationItem({
             <span>{t('nav.' + name)}</span>
           </Link>
         </Sidebar.MenuButton>
-        {submenus?.length > 0 && (
+        {submenus && submenus.length > 0 && (
           <Collapsible.Content asChild>
             <Sidebar.Sub>
               {submenus.map((submenu) => {
