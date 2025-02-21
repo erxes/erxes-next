@@ -14,7 +14,7 @@ type TList = {
 const useConfig = () => {
   const { toast } = useToast();
 
-  const { data, loading, client } = useQuery(fileSettingsQueries.configsQuery, {
+  const { data, loading } = useQuery(fileSettingsQueries.configsQuery, {
     onError(error) {
       console.log(error.message);
     },

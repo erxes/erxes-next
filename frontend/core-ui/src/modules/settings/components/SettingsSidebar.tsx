@@ -2,10 +2,12 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 
 import {
+  Icon,
   IconAdjustmentsAlt,
   IconColorSwatch,
   IconFile,
   IconMail,
+  IconProps,
   IconUserCircle,
   IconX,
 } from '@tabler/icons-react';
@@ -22,8 +24,15 @@ import {
 } from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
-const data = {
+type TSettingPath = {
+  name: string;
+  icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
+  path: string;
+};
+
+const data: { [key: string]: TSettingPath[] } = {
   account: [
     {
       name: 'Profile',
@@ -40,7 +49,7 @@ const data = {
     {
       name: 'General',
       icon: IconAdjustmentsAlt,
-      path: SettingsWorkspacePath.General
+      path: SettingsWorkspacePath.General,
     },
     {
       name: 'File upload',
@@ -137,7 +146,11 @@ export function SettingsSidebar() {
   );
 }
 
-const SideBarItem = ({ item }: { item: (typeof data.account)[0] | (typeof data.nav)[0] }) => {
+const SideBarItem = ({
+  item,
+}: {
+  item: (typeof data.account)[0] | (typeof data.nav)[0];
+}) => {
   const location = useLocation();
   return (
     <Sidebar.MenuItem key={item.name}>

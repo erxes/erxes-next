@@ -11,22 +11,29 @@ import {
 } from 'erxes-ui/components';
 
 import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
-import { DynamicFieldsT, UploadConfigFormT } from '@/settings/file-upload/types';
-import { FormProps } from 'react-hook-form';
+import {
+  DynamicFieldsT,
+  UploadConfigFormT,
+} from '@/settings/file-upload/types';
+import { FormProps, Path } from 'react-hook-form';
 
 interface TField {
-  label: string,
-  name: string,
-  type: string
+  label: string;
+  name: string;
+  type: string;
 }
 
 type Props = {
-  dynamicFields: TField[],
+  dynamicFields: TField[];
   selected: string;
-  form: FormProps<UploadConfigFormT>
-}
+  form: FormProps<UploadConfigFormT>;
+};
 
-export function DynamicServiceConfigFields({ dynamicFields, selected, form }: Props) {
+export function DynamicServiceConfigFields({
+  dynamicFields,
+  selected,
+  form,
+}: Props) {
   return (
     <AnimatePresence mode="popLayout">
       {dynamicFields.length > 0 && (
@@ -45,7 +52,7 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }: Pr
               fieldData.type === 'checkbox' ? (
                 <FormField
                   control={form.control}
-                  name={'CLOUDFLARE_USE_CDN'}
+                  name={fieldData.name as Path<UploadConfigFormT>}
                   key={fieldData.name}
                   render={({ field }) => (
                     <FormItem className="col-span-4 flex items-center justify-start gap-x-2">
@@ -84,7 +91,7 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }: Pr
                     </FormItem>
                   )}
                 />
-              )
+              ),
             )}
           </div>
         </motion.div>

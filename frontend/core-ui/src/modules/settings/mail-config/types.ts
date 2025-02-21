@@ -1,10 +1,10 @@
-import { z } from "zod";
-import { mailConfigSchema } from "./schema";
+import { z } from 'zod';
+import { mailConfigSchema } from './schema';
 
 type TMailConfigForm = z.infer<typeof mailConfigSchema>;
 
 type TCustomMailConfig = {
-  DEFAULT_EMAIL_SERVICE: 'CUSTOM';
+  DEFAULT_EMAIL_SERVICE: 'custom';
   COMPANY_EMAIL_FROM: string;
   COMPANY_EMAIL_TEMPLATE_TYPE: string;
   COMPANY_EMAIL_TEMPLATE: string;
@@ -27,22 +27,22 @@ type TSESMailConfig = {
 };
 
 interface TInput {
-  name: string,
-  inputType: 'input' | 'select' | 'editor',
-  type?: string,
-  label?: string,
-  description?: string,
-  options?: string[],
+  name: string;
+  inputType: 'input' | 'select' | 'editor';
+  type?: string;
+  label?: string;
+  description?: string;
+  options?: string[];
 }
 
 type TFormData = {
-  [key: string]: TInput[]
-}
+  [key: string]: TInput[];
+};
 
 export {
   TMailConfigForm,
   TCustomMailConfig,
   TSESMailConfig,
   TInput,
-  TFormData
-}
+  TFormData,
+};

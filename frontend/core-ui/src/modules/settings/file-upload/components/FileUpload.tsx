@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 
 import { IconLoader2 } from '@tabler/icons-react';
 import { motion } from 'motion/react';
 
-import {
-  Button,
-  Form,
-  Label,
-} from 'erxes-ui/components';
+import { Button, Form, Label } from 'erxes-ui/components';
 
 import { DynamicServiceConfigFields } from '@/settings/file-upload/components/DynamicServiceConfigFields';
 import { FileUploadMainFields } from '@/settings/file-upload/components/FileUploadMainFields';
@@ -61,13 +57,18 @@ const FileUpload = () => {
       }, {});
 
       const uploadFileTypes = values['UPLOAD_FILE_TYPES']?.split(',');
-      const uploadFileTypesArray = FILE_MIME_TYPES.filter((item) => uploadFileTypes.includes(item.value)).map(item => ({
+      const uploadFileTypesArray = FILE_MIME_TYPES.filter((item) =>
+        uploadFileTypes.includes(item.value),
+      ).map((item) => ({
         label: `${item.label} (${item.extension})`,
         value: item.value,
       }));
 
-      const widgetsUploadFileTypes = values['WIDGETS_UPLOAD_FILE_TYPES']?.split(',')
-      const widgetUploadFileTypesArray = FILE_MIME_TYPES.filter((item) => widgetsUploadFileTypes.includes(item.value)).map(item => ({
+      const widgetsUploadFileTypes =
+        values['WIDGETS_UPLOAD_FILE_TYPES']?.split(',');
+      const widgetUploadFileTypesArray = FILE_MIME_TYPES.filter((item) =>
+        widgetsUploadFileTypes.includes(item.value),
+      ).map((item) => ({
         label: `${item.label} (${item.extension})`,
         value: item.value,
       }));
@@ -75,10 +76,10 @@ const FileUpload = () => {
       form.reset({
         ...values,
         UPLOAD_FILE_TYPES: uploadFileTypesArray,
-        WIDGETS_UPLOAD_FILE_TYPES: widgetUploadFileTypesArray
+        WIDGETS_UPLOAD_FILE_TYPES: widgetUploadFileTypesArray,
       });
     }
-  }, [])
+  }, [configs, form]);
 
   return (
     <Form {...form}>
@@ -98,7 +99,10 @@ const FileUpload = () => {
         />
 
         <div className="grid grid-cols-4 py-4 col-start-3 gap-2 w-full">
-          <motion.div whileTap={{ scale: 0.975 }} className="w-full col-start-4">
+          <motion.div
+            whileTap={{ scale: 0.975 }}
+            className="w-full col-start-4"
+          >
             <Button
               type="submit"
               size={'sm'}
@@ -112,7 +116,7 @@ const FileUpload = () => {
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default FileUpload
+export default FileUpload;
