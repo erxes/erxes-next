@@ -1,16 +1,21 @@
+import { CountryCode } from 'libphonenumber-js';
 export interface Customer {
   _id: string;
   firstName?: string;
   middleName?: string;
   lastName?: string;
   primaryEmail?: string;
+  primaryPhone?: string;
   isSubscribed?: boolean;
   links?: object;
   code?: string;
   emailValidationStatus?: string;
-  phoneValidationStatus?: string
-  emails?: string[]
-  phones?: string[] 
+  phoneValidationStatus?: string;
+  emails?: string[];
+  phones?: string[];
+  location?: {
+    countryCode?: CountryCode | undefined;
+  };
 }
 
 export interface SelectUserFetchMoreProps {

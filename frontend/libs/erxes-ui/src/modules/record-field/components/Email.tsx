@@ -1,12 +1,17 @@
 import React, { useRef, useState } from 'react';
-import { IconBookmarkPlus, IconPencil, IconTrash } from '@tabler/icons-react';
+import {
+  IconBookmarkPlus,
+  IconPencil,
+  IconTrash,
+  IconDotsVertical,
+  IconBookmark,
+  IconPlus,
+} from '@tabler/icons-react';
 import { Popover, Command, Button, Input } from 'erxes-ui/components';
-import { IconDotsVertical } from '@tabler/icons-react';
 import { z } from 'zod';
 import { InlineCell } from 'erxes-ui/modules/inline-cell/components/InlineCell';
 import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/InlineCellDisplay';
 import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
-import { IconBookmark, IconPlus } from '@tabler/icons-react';
 import { cn } from 'erxes-ui/lib';
 
 const emailSchema = z.object({
@@ -84,7 +89,11 @@ export const Email = React.forwardRef<
   };
 
   const handleEditSubmit = () => {
-    if (editingEmail && newEmail && !allEmails.includes(newEmail)) {
+    if (
+      editingEmail &&
+      newEmail.trim() &&
+      !allEmails.includes(newEmail.trim())
+    ) {
       const validation = emailSchema.safeParse({ email: newEmail });
       if (validation.success) {
         const updatedEmails = allEmails.map((email) =>
@@ -198,12 +207,12 @@ const EmailActionPopover: React.FC<EmailActionPopoverProps> = ({
           variant="ghost"
           size="icon"
           className={cn(
-            'absolute right-1 opacity-0 group-hover:opacity-100 hover:bg-border flex items-center justify-center transition-opacity size-5 px-0',
+            'absolute disabled:opacity-0 right-1 opacity-0 group-hover:opacity-100 hover:bg-border flex items-center justify-center transition-opacity size-5 px-0',
             open && 'opacity-100 bg-border z-20',
           )}
           disabled={isEditing}
         >
-          <IconDotsVertical className="text-muted-foreground w-4 h-4" />
+          <IconDotsVertical className="text-muted-foreground size-4" />
         </Button>
       </Popover.Trigger>
       <Popover.Content
