@@ -5,7 +5,7 @@ import { ProfileHeader } from '@/settings/profile/components/ProfileHeader';
 
 export const SettingsProfilePage = () => {
   return (
-    <ScrollArea.Root>
+    <ScrollArea>
       <section className="mx-auto max-w-2xl w-full overflow-y-auto pb-10">
         <ProfileHeader />
         <h2 className="font-semibold text-lg mt-4 mb-12 px-4">Profile</h2>
@@ -13,6 +13,6 @@ export const SettingsProfilePage = () => {
           <ProfileForm />
         </div>
       </section>
-    </ScrollArea.Root>
+    </ScrollArea>
   );
 };

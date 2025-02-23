@@ -38,4 +38,6 @@ export * from './toggle-group';
 export * from './tooltip';
 export * from './upload';
 export * from './spinner';
-export * from './card'
+export * from './card';
+
+export * from './display';

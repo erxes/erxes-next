@@ -5,9 +5,10 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 import { Color, stringToHslColor, twColorClassNames } from './colors';
 import { cn } from '../lib/utils';
-import { useTheme } from 'erxes-ui/modules/theme-provider';
+import { useAtomValue } from 'jotai';
+import { themeState } from 'erxes-ui/state';
 
-const avatarVariants = cva(
+export const avatarVariants = cva(
   'relative flex shrink-0 overflow-hidden rounded-full border-0',
   {
     variants: {
@@ -16,7 +17,7 @@ const avatarVariants = cva(
         sm: 'size-3.5 text-[10px]',
         default: 'size-4 text-xs',
         lg: 'size-6 text-sm',
-        xl: 'size-10 text-base',
+        xl: 'size-8 text-base',
       },
     },
     defaultVariants: {
@@ -57,7 +58,7 @@ const AvatarFallback = React.forwardRef<
     colorSeed?: string;
   }
 >(({ className, color, colorSeed, style, ...props }, ref) => {
-  const { theme } = useTheme();
+  const theme = useAtomValue(themeState);
 
   return (
     <AvatarPrimitive.Fallback

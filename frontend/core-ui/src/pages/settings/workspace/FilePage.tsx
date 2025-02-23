@@ -51,7 +51,7 @@ export function FilePage() {
   };
 
   return (
-    <ScrollArea.Root>
+    <ScrollArea>
       <section className="mx-auto max-w-2xl w-full relative">
         <div className="">
           <Breadcrumb.Root>
@@ -114,6 +114,6 @@ export function FilePage() {
         </div>
       </section>
       <ScrollArea.Bar />
-    </ScrollArea.Root>
+    </ScrollArea>
   );
 }

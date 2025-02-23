@@ -14,7 +14,7 @@ export const TriggerButton = React.forwardRef<
       <Button
         variant="ghost"
         size="sm"
-        className={cn('w-full justify-start text-muted-foreground', className)}
+        className={cn('w-full justify-start text-accent-foreground', className)}
         {...props}
       />
     </CollapsiblePrimitive.CollapsibleTrigger>
@@ -27,10 +27,7 @@ export const TriggerIcon = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <IconCaretDownFilled
-      className={cn(
-        'text-accent-foreground transition-transform duration-200',
-        className,
-      )}
+      className={cn('transition-transform duration-200', className)}
       ref={ref}
       {...props}
     />

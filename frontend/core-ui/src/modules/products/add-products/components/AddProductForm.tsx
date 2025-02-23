@@ -60,7 +60,7 @@ export function AddProductForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className=" flex flex-col h-full"
         >
-          <ScrollArea.Root className="flex-auto">
+          <ScrollArea className="flex-auto">
             <ProductAddSheetHeader />
             <div className="px-5">
               <ProductAddCoreFields form={form} />
@@ -68,7 +68,7 @@ export function AddProductForm() {
                 <ProductAddMoreFields form={form} />
               </ProductAddCollapsible>
             </div>
-          </ScrollArea.Root>
+          </ScrollArea>
 
           <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
             <Button

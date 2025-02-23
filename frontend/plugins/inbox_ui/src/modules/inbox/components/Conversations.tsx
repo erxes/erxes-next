@@ -1,0 +1,202 @@
+import { useConversations } from '@/inbox/hooks/useConversations';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Checkbox,
+  RelativeDateDisplay,
+  Separator,
+} from 'erxes-ui';
+import { cn } from 'erxes-ui/lib';
+import { ConversationContext } from '@/inbox/context/ConversationConxtext';
+import { IConversation } from '@/inbox/types/Conversation';
+import { useConversationContext } from '@/inbox/hooks/useConversationContext';
+import { currentUserState, CustomerInline } from 'ui-modules';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { INTEGRATION_ICONS } from '@/inbox/constants/integrationImages';
+import { IconLoader, IconMail } from '@tabler/icons-react';
+import { useInView } from 'react-intersection-observer';
+import { ConversationsHeader } from './ConversationsHeader';
+import { ConversationFilter } from './ConversationFilter';
+import { useMultiQueryState, useQueryState } from '../hooks/useQueryState';
+import { FilterTags } from './FilterTags';
+import { activeConversationState } from '../state/activeConversationState';
+
+export const Conversations = () => {
+  const [ref] = useInView({
+    onChange(inView) {
+      if (inView) {
+        handleFetchMore();
+      }
+    },
+  });
+  const [{ channelId, integrationType }] = useMultiQueryState<{
+    channelId: string;
+    integrationType: string;
+  }>(['channelId', 'integrationType']);
+  const { totalCount, conversations, handleFetchMore, loading } =
+    useConversations({
+      variables: {
+        limit: 50,
+        channelId,
+        integrationType,
+      },
+    });
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      <ConversationsHeader>
+        <ConversationFilter />
+        <FilterTags />
+      </ConversationsHeader>
+
+      <Separator />
+      <div className="h-full w-full overflow-y-auto">
+        {conversations?.map((conversation: IConversation) => (
+          <ConversationContext.Provider
+            key={conversation._id}
+            value={conversation}
+          >
+            <ConversationItem />
+          </ConversationContext.Provider>
+        ))}
+        {!loading &&
+          conversations?.length > 0 &&
+          conversations?.length < totalCount && (
+            <Button
+              variant="ghost"
+              ref={ref}
+              className="pl-6 h-8 w-full text-muted-foreground"
+              asChild
+            >
+              <div>
+                <IconLoader className="size-4 animate-spin" />
+                loading more...
+              </div>
+            </Button>
+          )}
+      </div>
+    </div>
+  );
+};
+
+export const ConversationItem = () => {
+  const [conversationId] = useQueryState<string>('conversationId');
+  const [detailView] = useQueryState<boolean>('detailView');
+
+  const { integration, createdAt, content, updatedAt, customer } =
+    useConversationContext();
+  const { brand } = integration || {};
+
+  if (conversationId || detailView) {
+    return (
+      <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start">
+        <CustomerInline.Provider customer={customer}>
+          <div className="flex w-full gap-3 leading-tight">
+            <ConversationCheckbox />
+            <div className="flex-1 space-y-1 truncate">
+              <CustomerInline.Title className="truncate" />
+              <div className="font-normal text-accent-foreground text-xs">
+                {brand?.name}
+              </div>
+            </div>
+            <div className="ml-auto text-accent-foreground font-medium">
+              <RelativeDateDisplay value={updatedAt || createdAt} />
+            </div>
+          </div>
+          <div className="truncate w-full">{content}</div>
+        </CustomerInline.Provider>
+      </ConversationContainer>
+    );
+  }
+
+  return (
+    <ConversationContainer>
+      <CustomerInline.Provider customer={customer}>
+        <ConversationCheckbox />
+        <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
+        <div className="truncate">{content}</div>
+        <div className="ml-auto font-medium text-accent-foreground w-32 truncate">
+          to {brand?.name}
+        </div>
+        <div className="w-32 text-right">
+          <RelativeDateDisplay value={updatedAt || createdAt} />
+        </div>
+      </CustomerInline.Provider>
+    </ConversationContainer>
+  );
+};
+
+const ConversationContainer = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  const [{ conversationId }, setValues] = useMultiQueryState<{
+    conversationId: string;
+    detailView: boolean;
+  }>(['conversationId', 'detailView']);
+  const setActiveConversation = useSetAtom(activeConversationState);
+  const conversation = useConversationContext();
+  const { _id, readUserIds } = conversation || {};
+  const currentUser = useAtomValue(currentUserState);
+  const isRead = readUserIds?.includes(currentUser?._id || '');
+
+  return (
+    <Button
+      key={_id}
+      variant={isRead ? 'secondary' : 'ghost'}
+      size="lg"
+      className={cn(
+        'flex rounded-none h-10 justify-start px-4 gap-3 hover:bg-primary/10 hover:text-foreground w-full',
+        className,
+        isRead && 'font-medium text-muted-foreground',
+        conversationId === _id &&
+          'bg-secondary text-foreground hover:bg-secondary',
+      )}
+      asChild
+      onClick={() => {
+        setActiveConversation(conversation);
+        setValues({
+          conversationId: _id,
+          detailView: true,
+        });
+      }}
+    >
+      <div>{children}</div>
+    </Button>
+  );
+};
+
+const ConversationCheckbox = () => {
+  const [conversationId] = useQueryState<string>('conversationId');
+  return (
+    <div className="group grid place-items-center relative">
+      <CustomerInline.Avatar
+        size={conversationId ? 'xl' : 'lg'}
+        className="transition-opacity duration-200 opacity-100 group-hover:opacity-0 peer-data-[state=checked]:opacity-0"
+      />
+      <ConversationIntegrationBadge />
+      <Checkbox
+        className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 peer"
+        onClick={(e) => e.stopPropagation()}
+      />
+    </div>
+  );
+};
+
+const ConversationIntegrationBadge = () => {
+  const { integration } = useConversationContext();
+  const { kind } = integration || {};
+
+  const Icon =
+    INTEGRATION_ICONS[kind as keyof typeof INTEGRATION_ICONS] ?? IconMail;
+
+  return (
+    <Badge className="absolute -bottom-1 -right-1 size-4 rounded-full bg-background transition-opacity duration-200 opacity-100 group-hover:opacity-0 flex justify-center items-center p-0">
+      <Icon className="size-4 flex-none text-primary" />
+    </Badge>
+  );
+};

@@ -6,7 +6,7 @@ import {
 } from '@blocknote/react';
 
 import 'erxes-ui/modules/blocks/styles/styles.css';
-import { useTheme } from 'erxes-ui/modules/theme-provider';
+import { themeState } from 'erxes-ui/state';
 import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
 import { SlashMenu } from './SlashMenu';
 import { Toolbar } from './Toolbar';
@@ -14,7 +14,7 @@ import { Button, Tooltip } from 'erxes-ui/components';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'erxes-ui/types/Key';
-
+import { useAtomValue } from 'jotai';
 export interface BlockEditorProps {
   editor: IBlockEditor;
   onFocus?: () => void;
@@ -38,7 +38,7 @@ export const BlockEditor = ({
   children,
   className,
 }: BlockEditorProps) => {
-  const { theme } = useTheme();
+  const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
   const hotkeyRef = useHotkeys(
     Key.Escape,
