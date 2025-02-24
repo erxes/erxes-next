@@ -1,14 +1,17 @@
 import { Button, Select, Skeleton } from 'erxes-ui';
-import { useChannels } from '../hooks/useChannels';
 import { useQueryState } from '../hooks/useQueryState';
+import { useIntegrations } from '../hooks/useIntegrations';
+import { IIntegration } from '../types/Integration';
 import { IconX } from '@tabler/icons-react';
-import { IChannel } from '../types/Channel';
 
-export const ChannelTag = () => {
-  const [channelId, setChannelId] = useQueryState<string>('channelId');
-  const { channels, loading } = useChannels({ skip: !channelId });
+export const IntegrationTag = () => {
+  const [integrationType, setIntegrationType] =
+    useQueryState<string>('integrationType');
+  const { integrations, loading } = useIntegrations({
+    skip: !integrationType,
+  });
 
-  if (!channelId) return null;
+  if (!integrationType) return null;
 
   return (
     <Button
@@ -18,17 +21,17 @@ export const ChannelTag = () => {
     >
       <div>
         {loading ? (
-          <Skeleton className="w-4 h-32" />
+          <Skeleton className="w-20 h-4" />
         ) : (
           <>
-            <Select value={channelId} onValueChange={setChannelId}>
+            <Select value={integrationType} onValueChange={setIntegrationType}>
               <Select.Trigger className="w-full h-full shadow-none rounded-none [&>svg]:hidden">
-                <Select.Value placeholder="Select channel" />
+                <Select.Value placeholder="Select integration" />
               </Select.Trigger>
               <Select.Content>
-                {channels?.map((c: IChannel) => (
-                  <Select.Item key={c._id} value={c._id}>
-                    {c.name}
+                {integrations?.map((integration: IIntegration) => (
+                  <Select.Item key={integration._id} value={integration._id}>
+                    {integration.name}
                   </Select.Item>
                 ))}
               </Select.Content>
@@ -37,7 +40,7 @@ export const ChannelTag = () => {
               variant="ghost"
               size="icon"
               className="size-6 hover:bg-border"
-              onClick={() => setChannelId(null)}
+              onClick={() => setIntegrationType(null)}
             >
               <IconX />
             </Button>

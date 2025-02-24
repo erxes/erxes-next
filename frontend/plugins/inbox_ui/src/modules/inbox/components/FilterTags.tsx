@@ -1,18 +1,20 @@
 import { useMultiQueryState } from '../hooks/useQueryState';
 import { ChannelTag } from './ChannelTag';
-
+import { IntegrationTag } from './IntegrationTag';
 export const FilterTags = () => {
-  const [{ channelId }] = useMultiQueryState<{ channelId: string }>([
-    'channelId',
-  ]);
+  const [{ channelId, integrationType }] = useMultiQueryState<{
+    channelId: string;
+    integrationType: string;
+  }>(['channelId', 'integrationType']);
 
-  if (!channelId) return null;
+  if (!channelId && !integrationType) return null;
 
   return (
-    <div className="flex flex-col gap-1 px-2 pt-2">
-      <span className="text-xs text-muted-foreground">Filters:</span>
+    <div className="flex flex-col gap-2 px-2 pt-4">
+      <span className="text-xs text-accent-foreground">Filters:</span>
       <div className="flex flex-wrap gap-2">
         <ChannelTag />
+        <IntegrationTag />
       </div>
     </div>
   );

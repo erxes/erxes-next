@@ -1,4 +1,4 @@
-import { IconMessageFilled } from '@tabler/icons-react';
+import { IconForms, IconMessageFilled } from '@tabler/icons-react';
 import {
   InstagramIcon,
   MessengerIcon,
@@ -7,6 +7,8 @@ import {
 
 export const INTEGRATION_ICONS = {
   'facebook-messenger': MessengerIcon,
+  'facebook-post': FacebookIcon,
+  lead: IconForms,
   instagram: InstagramIcon,
   messenger: IconMessageFilled,
 };

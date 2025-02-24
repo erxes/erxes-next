@@ -173,16 +173,24 @@ const ConversationContainer = ({
 const ConversationCheckbox = () => {
   const [conversationId] = useQueryState<string>('conversationId');
   return (
-    <div className="group grid place-items-center relative">
-      <CustomerInline.Avatar
-        size={conversationId ? 'xl' : 'lg'}
-        className="transition-opacity duration-200 opacity-100 group-hover:opacity-0 peer-data-[state=checked]:opacity-0"
-      />
-      <ConversationIntegrationBadge />
+    <div
+      className={cn(
+        'group grid place-items-center relative size-6',
+        conversationId && 'size-8',
+      )}
+    >
+      <div className="absolute size-full bg-primary/10 rounded-full" />
       <Checkbox
-        className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 peer"
+        className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 z-10"
         onClick={(e) => e.stopPropagation()}
       />
+      <div className="transition-opacity duration-200 relative opacity-100 group-hover:opacity-0 peer-data-[state=checked]:opacity-0">
+        <CustomerInline.Avatar
+          size={conversationId ? 'xl' : 'lg'}
+          className=""
+        />
+        <ConversationIntegrationBadge />
+      </div>
     </div>
   );
 };
@@ -195,7 +203,7 @@ const ConversationIntegrationBadge = () => {
     INTEGRATION_ICONS[kind as keyof typeof INTEGRATION_ICONS] ?? IconMail;
 
   return (
-    <Badge className="absolute -bottom-1 -right-1 size-4 rounded-full bg-background transition-opacity duration-200 opacity-100 group-hover:opacity-0 flex justify-center items-center p-0">
+    <Badge className="absolute -bottom-1 -right-1 size-4 rounded-full bg-background flex justify-center items-center p-0">
       <Icon className="size-4 flex-none text-primary" />
     </Badge>
   );

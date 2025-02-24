@@ -12,7 +12,7 @@ export const ConversationsHeader = ({
   if (!detailView) return <div className="pl-4 pr-4 py-3">{children}</div>;
 
   return (
-    <div className="pl-4 pr-4 py-3">
+    <div className="pl-6 pr-4 py-3">
       <Button
         variant="ghost"
         className="text-muted-foreground w-full justify-start mb-5 px-2"
