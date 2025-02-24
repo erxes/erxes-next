@@ -85,7 +85,7 @@
     "lucide-react": "^0.462.0",
     "mongoose": "^8.9.6",
     "motion": "^11.11.17",
-    "nanoid": "^5.0.9",
+    "nanoid": "^3.3.6",
     "node-fetch": "^2.6.7",
     "nuqs": "^2.3.0",
     "react": "18.3.1",
