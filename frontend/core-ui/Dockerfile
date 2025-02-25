@@ -7,7 +7,6 @@ FROM node:${NODE_VERSION}-alpine AS deps
 WORKDIR /app
 # Only copy files needed for installation
 COPY package.json pnpm-lock.yaml ./
-COPY frontend/core-ui/package.json ./frontend/core-ui/
 # Install dependencies with specific flags for faster install
 RUN npm install -g pnpm && \
     pnpm install --frozen-lockfile --prefer-offline
