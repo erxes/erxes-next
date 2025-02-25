@@ -1,2 +1,2 @@
 export * from './formatAmount';
-export * from './FormatNumber'
+export * from './formatNumber';

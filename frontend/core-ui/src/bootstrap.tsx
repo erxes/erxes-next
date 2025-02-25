@@ -9,6 +9,7 @@ import { NODE_ENV, REACT_APP_API_URL } from 'erxes-ui/utils/config';
 import './styles.css';
 
 import { App } from '@/app/components/App';
+import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 
 // Initialize module federation before rendering
 const initFederation = async () => {
@@ -16,35 +17,40 @@ const initFederation = async () => {
     document.getElementById('root') as HTMLElement,
   );
 
-  // if (NODE_ENV === 'development') {
-  root.render(
-    <StrictMode>
-      <NuqsAdapter>
-        <App />
-      </NuqsAdapter>
-    </StrictMode>,
-  );
-  // } else {
-  //   fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       init({
-  //         name: 'core',
-  //         remotes: data.plugins?.map((plugin) => ({
-  //           name: `plugin_${plugin.name}`,
-  //           entry: plugin.url,
-  //         })),
-  //       });
+  if (NODE_ENV === 'development') {
+    root.render(
+      <StrictMode>
+        <NuqsAdapter>
+          <App />
+        </NuqsAdapter>
+      </StrictMode>,
+    );
+  } else {
+    fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
+      .then((res) => res.json())
+      .then((data) => {
+        init({
+          name: 'core',
+          remotes: data.plugins?.map(
+            (plugin: { name: string; url: string }) => ({
+              name: `plugin_${plugin.name}`,
+              entry: plugin.url,
+            }),
+          ),
+        });
 
-  //       root.render(
-  //         <StrictMode>
-  //           <NuqsAdapter>
-  //             <App />
-  //           </NuqsAdapter>
-  //         </StrictMode>,
-  //       );
-  //     });
-  // }
+        root.render(
+          <StrictMode>
+            <NuqsAdapter>
+              <App />
+            </NuqsAdapter>
+          </StrictMode>,
+        );
+      })
+      .catch((error) => {
+        <ClientConfigError error={error} />;
+      });
+  }
 };
 
 initFederation().catch((err) => {

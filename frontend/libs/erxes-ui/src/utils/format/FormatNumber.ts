@@ -7,5 +7,5 @@ export const formatPhoneNumber = ({
   defaultCountry?: CountryCode;
   value: string;
 }): string => {
-  return new AsYouType({defaultCountry: defaultCountry}).input(value);
+  return new AsYouType({ defaultCountry: defaultCountry }).input(value);
 };
