@@ -1,6 +1,6 @@
 import { TFormData } from "../types";
 
-export const mailConfigFields: TFormData = {
+export const MAIL_CONFIG_FIELDS: TFormData = {
   "common": [
     {
       name: 'COMPANY_EMAIL_FROM',

@@ -1,2 +1,2 @@
-export * from './settingsMutaions';
+export * from './settingsMutations';
 export * from './settingsQueries';

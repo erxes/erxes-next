@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { FormField, RadioGroup } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 
-import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
+import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
 import { FormProps } from 'react-hook-form';
 import { UploadConfigFormT } from '../types';
 
@@ -26,8 +26,8 @@ export function UploadServiceRadioGroup({ form, selected }: Props) {
             defaultValue={field.value}
             onValueChange={field.onChange}
           >
-            {uploadServiceData &&
-              uploadServiceData.map((config, idx) => (
+            {UPLOAD_SERVICE_DATA &&
+              UPLOAD_SERVICE_DATA.map((config, idx) => (
                 <motion.label
                   key={idx}
                   tabIndex={0}

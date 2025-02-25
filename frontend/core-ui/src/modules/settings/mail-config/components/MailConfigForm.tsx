@@ -12,13 +12,17 @@ import {
   Input,
   Select,
 } from 'erxes-ui/components';
-import { mailConfigFields } from '../constants/formData';
+import { MAIL_CONFIG_FIELDS } from '../constants/formData';
 import { TMailConfigForm } from '../types';
 import { Path } from 'react-hook-form';
 import { cn } from 'erxes-ui/lib';
 import { AnimatePresence } from 'framer-motion';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
-import { IconLoader2 } from '@tabler/icons-react';
+import {
+  IconAlertTriangle,
+  IconAlertTriangleFilled,
+  IconLoader2,
+} from '@tabler/icons-react';
 
 const MailConfigForm = () => {
   const {
@@ -54,7 +58,7 @@ const MailConfigForm = () => {
         onSubmit={methods.handleSubmit(submitHandler)}
         className="grid grid-cols-4 gap-3 py-1"
       >
-        {mailConfigFields['common'].map(
+        {MAIL_CONFIG_FIELDS['common'].map(
           ({ name, inputType, type, label, description, options }, idx) => {
             if (inputType === 'select') {
               return (
@@ -92,7 +96,7 @@ const MailConfigForm = () => {
                           ))}
                         </Select.Content>
                       </Select>
-                      <FormMessage className="text-red-600" />
+                      <FormMessage className="text-destructive" />
                     </FormItem>
                   )}
                 />
@@ -114,7 +118,7 @@ const MailConfigForm = () => {
                         <div>
                           <FormLabel>{label}</FormLabel>
                         </div>
-                        <div className="w-full px-1 py-2 text-sm bg-primary-foreground/75 text-primary border border-l-4 border-primary/75">
+                        <div className="w-full flex items-center p-3 text-[13px] leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
                           {description}
                         </div>
                       </FormItem>
@@ -137,7 +141,7 @@ const MailConfigForm = () => {
                         <div>
                           <FormLabel>{label}</FormLabel>
                         </div>
-                        <div className="w-full rounded-lg bg-background text-primary">
+                        <div className="w-full flex items-center p-3 text-[13px] leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
                           {description}
                         </div>
                       </FormItem>
@@ -165,7 +169,7 @@ const MailConfigForm = () => {
                     <FormControl>
                       <Input type={type} {...field} className="h-7" />
                     </FormControl>
-                    <FormMessage className="text-red-600" />
+                    <FormMessage className="text-destructive" />
                   </FormItem>
                 )}
               />
@@ -173,7 +177,7 @@ const MailConfigForm = () => {
           },
         )}
         <AnimatePresence mode="popLayout">
-          {mailConfigFields[mailService.type]?.map(
+          {MAIL_CONFIG_FIELDS[mailService.type]?.map(
             ({ name, inputType, type, label, description, options }, idx) => (
               <FormField
                 key={name}
@@ -194,7 +198,7 @@ const MailConfigForm = () => {
                     <FormControl>
                       <Input type={type} {...field} className="h-7" />
                     </FormControl>
-                    <FormMessage className="text-red-600" />
+                    <FormMessage className="text-destructive" />
                   </FormItem>
                 )}
               />

@@ -1,4 +1,4 @@
-export const serviceFields = {
+export const SERVICE_FIELDS = {
   local: {
     name: "local",
     fields: []

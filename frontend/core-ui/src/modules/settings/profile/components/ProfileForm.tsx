@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 
 import {
@@ -33,18 +33,31 @@ import {
 export const ProfileForm = () => {
   const [currentLink, setCurrentLink] = useState<string>('');
 
-  const { form, onCompleted } = useProfileForm();
+  const { form } = useProfileForm();
 
-  const { loading, profileUpdate } = useProfile({ onCompleted });
+  const { loading, profileUpdate, profile } = useProfile();
 
   const submitHandler: SubmitHandler<FormType> = useCallback(
     async (data) => {
       profileUpdate(data);
     },
-    [profileUpdate]
+    [profileUpdate],
   );
 
-  const renderField = ({ field, element, attributes }) => {
+  useEffect(() => {
+    if (profile) {
+      form.reset({
+        username: profile.username,
+        employeeId: profile.employeeId,
+        positionIds: profile.positionIds,
+        email: profile.email,
+        details: profile.details,
+        links: profile.links,
+      });
+    }
+  }, [profile, form]);
+
+  const renderField = ({ field, element, attributes }: any) => {
     const fieldState = form.getFieldState(field.name);
 
     switch (element) {
@@ -174,7 +187,7 @@ export const ProfileForm = () => {
             const { fieldName, fieldPath, icon: Icon } = linkField;
 
             const field = form.getFieldState(
-              [fieldPath, fieldName].join('.') as keyof FormType
+              [fieldPath, fieldName].join('.') as keyof FormType,
             );
 
             return (
@@ -185,7 +198,7 @@ export const ProfileForm = () => {
                 className={`${field.error && 'border-red-500'}`}
                 onDoubleClick={() => {
                   const url = form.getValues(
-                    [fieldPath, fieldName].join('.') as keyof FormType
+                    [fieldPath, fieldName].join('.') as keyof FormType,
                   );
 
                   if (typeof url === 'string' && url) {
@@ -229,7 +242,7 @@ export const ProfileForm = () => {
                 <FormControl>
                   <Upload.Root
                     {...field}
-                    onChange={(fileInfo) => field.onChange(fileInfo.url)}
+                    onChange={(fileInfo: any) => field.onChange(fileInfo?.url)}
                   >
                     <Upload.Preview />
                     <div className="flex flex-col gap-2">

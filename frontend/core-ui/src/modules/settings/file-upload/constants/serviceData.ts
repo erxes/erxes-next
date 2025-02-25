@@ -2,7 +2,7 @@ import { IconBrandAws, IconBrandAzure, IconBrandCloudflare, IconBrandGoogle, Ico
 
 import { fileMimeTypes } from '@/settings/file-upload/types';
 
-export const uploadServiceData = [
+export const UPLOAD_SERVICE_DATA = [
   {
     label: 'Local',
     value: 'local',

@@ -1,17 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { currentUserState } from 'erxes-ui-shared-states';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { toast, useConfirm } from 'erxes-ui/hooks';
 
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
+import { currentUserState } from 'erxes-ui-shared-states';
 
-type Props = {
-  onCompleted: (userDetail) => void;
-};
-
-const useProfile = ({ onCompleted }: Props) => {
+const useProfile = () => {
   const currentUser = useRecoilValue(currentUserState);
 
   const setCurrentUser = useSetRecoilState(currentUserState);
@@ -20,12 +16,11 @@ const useProfile = ({ onCompleted }: Props) => {
 
   const { loading, data, refetch } = useQuery(userDetail, {
     variables: { _id: currentUser?._id },
-    onCompleted,
   });
 
   const [updateProfile] = useMutation(UpdateProfile);
 
-  const profileUpdate = (profile) => {
+  const profileUpdate = (profile: any) => {
     const confirmOptions = {
       confirmationValue: 'update',
     };

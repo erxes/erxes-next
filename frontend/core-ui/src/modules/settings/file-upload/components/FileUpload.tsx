@@ -9,7 +9,7 @@ import { DynamicServiceConfigFields } from '@/settings/file-upload/components/Dy
 import { FileUploadMainFields } from '@/settings/file-upload/components/FileUploadMainFields';
 import { UploadServiceRadioGroup } from '@/settings/file-upload/components/UploadServiceRadioGroup';
 import { FILE_MIME_TYPES } from '@/settings/file-upload/constants/serviceData';
-import { serviceFields } from '@/settings/file-upload/constants/uploadServiceFields';
+import { SERVICE_FIELDS } from '@/settings/file-upload/constants/uploadServiceFields';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm';
 import { TConfig, UploadConfigFormT } from '@/settings/file-upload/types';
@@ -33,7 +33,7 @@ const FileUpload = () => {
 
   const dynamicFields = React.useMemo(() => {
     const selectedType = form.watch('UPLOAD_SERVICE_TYPE');
-    return serviceFields[selectedType]?.fields || [];
+    return SERVICE_FIELDS[selectedType]?.fields || [];
   }, [form.watch('UPLOAD_SERVICE_TYPE')]);
 
   const selected = React.useMemo(() => {

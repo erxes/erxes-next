@@ -10,7 +10,7 @@ import {
   Input,
 } from 'erxes-ui/components';
 
-import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
+import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
 import {
   DynamicFieldsT,
   UploadConfigFormT,
@@ -42,10 +42,10 @@ export function DynamicServiceConfigFields({
           initial={false}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="flex flex-col bg-primary-foreground rounded-lg h-auto shadow-sm overflow-hidden mb-4"
+          className="flex flex-col bg-background rounded-lg h-auto shadow-sm overflow-hidden mb-4"
         >
           <h4 className="font-semibold text-base p-3">
-            {uploadServiceData.find((item) => item.value === selected)?.label}
+            {UPLOAD_SERVICE_DATA.find((item) => item.value === selected)?.label}
           </h4>
           <div className="grid grid-cols-4 gap-1 p-4">
             {dynamicFields.map((fieldData: TField) =>
