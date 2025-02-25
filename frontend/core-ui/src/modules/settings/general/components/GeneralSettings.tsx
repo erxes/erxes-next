@@ -1,7 +1,7 @@
 import { Form } from 'erxes-ui/components';
 import { useGeneralSettingsForms } from '../hooks/useGeneralSettingsForms';
-import { CURRENCY_CODES, LANGUAGES } from '../constants/data';
 import SelectControl from './SelectControl';
+import { LANGUAGES } from '../constants/data';
 
 const GeneralSettings = () => {
   const {

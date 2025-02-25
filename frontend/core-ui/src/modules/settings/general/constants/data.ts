@@ -33,7 +33,7 @@ const LANGUAGES: TLanguage[] = [
   { label: 'Punjabi', value: 'pa' },
   { label: 'Romanian', value: 'ro' },
   { label: 'Russian', value: 'ru' },
-  { label: 'Serbian', value: 'en_RS' },
+  { label: 'Serbian', value: 'sr_RS' },
   { label: 'Spanish', value: 'es' },
   { label: 'Tamil', value: 'ta' },
   { label: 'Telugu', value: 'te' },

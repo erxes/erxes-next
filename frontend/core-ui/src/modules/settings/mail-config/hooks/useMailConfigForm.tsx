@@ -1,20 +1,20 @@
-import { SubmitHandler, useForm } from "react-hook-form"
-import { TCustomMailConfig, TSESMailConfig } from "../types"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { mailConfigSchema } from "../schema"
-import { useCallback } from "react";
-import { useConfig } from "@/settings/file-upload/hook/useConfigs";
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { TCustomMailConfig, TSESMailConfig } from '../types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { mailConfigSchema } from '../schema';
+import { useCallback } from 'react';
+import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 
 type TProps = TCustomMailConfig | TSESMailConfig;
 
 interface TConfig {
-  _id: string,
+  _id: string;
   code: keyof TProps;
   value: any;
 }
 
 const useMailConfigForm = () => {
-  const { updateConfig, configs } = useConfig()
+  const { updateConfig, configs } = useConfig();
   const methods = useForm<TProps>({
     mode: 'onBlur',
     resolver: zodResolver(mailConfigSchema),
@@ -34,32 +34,22 @@ const useMailConfigForm = () => {
       AWS_SES_SECRET_ACCESS_KEY: '',
       AWS_REGION: '',
       AWS_SES_CONFIG_SET: '',
-    } as TProps
+    } as TProps,
   });
 
-  const submitHandler: SubmitHandler<TProps> = useCallback(
-    async (data) => {
-      console.log(data)
-      const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
-        acc[config.code] = data[config.code] ?? config.value;
-        return acc;
-      }, {} as Record<string, any>);
-      updateConfig(updatedConfigs);
-    }, []
-  )
-
-  const COMPANY_EMAIL_TEMPLATE_TYPE = methods.watch('COMPANY_EMAIL_TEMPLATE_TYPE');
-  const DEFAULT_EMAIL_SERVICE = methods.watch('DEFAULT_EMAIL_SERVICE');
+  const submitHandler: SubmitHandler<TProps> = useCallback(async (data) => {
+    console.log(data);
+    const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
+      acc[config.code] = data[config.code] ?? config.value;
+      return acc;
+    }, {} as Record<string, any>);
+    updateConfig(updatedConfigs);
+  }, []);
 
   return {
     methods,
     submitHandler,
-    COMPANY_EMAIL_TEMPLATE_TYPE,
-    DEFAULT_EMAIL_SERVICE
-  }
+  };
+};
 
-}
-
-export {
-  useMailConfigForm
-}
+export { useMailConfigForm };

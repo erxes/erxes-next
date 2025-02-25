@@ -13,7 +13,6 @@ type Props = {
   name: string;
   control: Control<TGeneralSettingsProps>;
   label: string;
-  key?: string;
   placeholder?: string;
   options?: {
     label: string;
@@ -24,7 +23,6 @@ type Props = {
 const SelectControl = ({
   name,
   control,
-  key,
   placeholder,
   options,
   label,
@@ -33,7 +31,6 @@ const SelectControl = ({
     <FormField
       name={name as Path<TGeneralSettingsProps>}
       control={control}
-      key={key}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>

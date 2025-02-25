@@ -29,6 +29,7 @@ import {
   FormType,
   useProfileForm,
 } from '@/settings/profile/hooks/useProfileForm';
+import { TFile } from '../types';
 
 export const ProfileForm = () => {
   const [currentLink, setCurrentLink] = useState<string>('');

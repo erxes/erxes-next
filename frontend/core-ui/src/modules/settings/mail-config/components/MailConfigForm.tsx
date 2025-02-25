@@ -14,7 +14,7 @@ import {
 } from 'erxes-ui/components';
 import { MAIL_CONFIG_FIELDS } from '../constants/formData';
 import { TMailConfigForm } from '../types';
-import { Path } from 'react-hook-form';
+import { Path, useWatch } from 'react-hook-form';
 import { cn } from 'erxes-ui/lib';
 import { AnimatePresence } from 'framer-motion';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
@@ -29,15 +29,13 @@ const MailConfigForm = () => {
     methods: { control },
     methods,
     submitHandler,
-    COMPANY_EMAIL_TEMPLATE_TYPE,
   } = useMailConfigForm();
   const { isLoading, configs } = useConfig();
-
-  const mailService = useMemo(() => {
-    return {
-      type: methods.watch('DEFAULT_EMAIL_SERVICE'),
-    };
-  }, [methods.watch()]);
+  const COMPANY_EMAIL_TEMPLATE_TYPE = useWatch({
+    control,
+    name: 'COMPANY_EMAIL_TEMPLATE_TYPE',
+  });
+  const MAIL_SERVICE = useWatch({ control, name: 'DEFAULT_EMAIL_SERVICE' });
 
   useEffect(() => {
     if (configs !== undefined) {
@@ -177,7 +175,7 @@ const MailConfigForm = () => {
           },
         )}
         <AnimatePresence mode="popLayout">
-          {MAIL_CONFIG_FIELDS[mailService.type]?.map(
+          {MAIL_CONFIG_FIELDS[MAIL_SERVICE]?.map(
             ({ name, inputType, type, label, description, options }, idx) => (
               <FormField
                 key={name}
