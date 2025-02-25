@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
-import { currentUserState } from 'erxes-ui-shared-states';
-import { useRecoilValue } from 'recoil';
+import { currentUserState } from 'ui-modules';
 
 import { ResetPassword } from '@/auth/login/components/ResetPassword';
 import { AppPath } from '@/types/paths/AppPath';
+import { useAtom } from 'jotai';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token') as string;
 
-  const currentUser = useRecoilValue(currentUserState);
+  const currentUser = useAtom(currentUserState);
   useEffect(() => {
     if (currentUser) {
       navigate(AppPath.Index);

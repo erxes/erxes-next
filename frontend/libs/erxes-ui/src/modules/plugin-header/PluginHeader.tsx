@@ -2,6 +2,7 @@ import { type Icon, IconStar } from '@tabler/icons-react';
 
 import { Separator, Sidebar } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
+import { Link } from 'react-router-dom';
 
 export const PluginHeader = ({
   title,
@@ -9,12 +10,14 @@ export const PluginHeader = ({
   children,
   className,
   separatorClassName,
+  to,
 }: {
   title: string;
   icon: Icon;
   children?: React.ReactNode;
   className?: string;
   separatorClassName?: string;
+  to?: string;
 }) => {
   const Icon = icon;
   return (
@@ -28,18 +31,20 @@ export const PluginHeader = ({
         <div className="flex items-center gap-2">
           <Sidebar.Trigger />
           <span className="h-3 w-0.5 bg-muted rounded-sm" />
-          <div className="flex items-center gap-2 px-2">
+          <Link to={to || '/'} className="flex items-center gap-2 px-2">
             <Icon className="w-4 h-4" />
             <span className="text-[13px] font-semibold leading-none">
               {title}
             </span>
-          </div>
+          </Link>
           <span className="h-3 w-0.5 bg-muted rounded-sm" />
           <IconStar className="w-4 h-4 text-muted-foreground" />
         </div>
         <div className="flex items-center gap-3">{children}</div>
       </header>
-      <Separator className={cn('-mx-3 w-auto mb-1.5', separatorClassName)} />
+      <Separator
+        className={cn('-mx-3 w-auto mb-1.5 flex-none', separatorClassName)}
+      />
     </>
   );
 };

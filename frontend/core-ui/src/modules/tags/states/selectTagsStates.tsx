@@ -1,6 +1,3 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-export const newTagNameAtom = atom<string>({
-  key: 'newTagNameAtom',
-  default: '',
-});
+export const newTagNameAtom = atom('');

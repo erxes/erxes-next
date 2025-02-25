@@ -132,7 +132,7 @@ const UploadPreview = React.forwardRef<
         },
       });
     },
-    [previewRef],
+    [previewRef, upload, onChange, setPreviewUrl],
   );
 
   return (
@@ -217,7 +217,7 @@ const RemoveButton = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & { children?: React.ReactNode }
 >(({ children, className, ...props }, ref) => {
-  const { isLoading, remove } = useUpload();
+  const { remove } = useUpload();
 
   const uploadContext = useContext(UploadContext);
 

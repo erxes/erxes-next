@@ -1,20 +1,17 @@
 import { Navigate, Outlet } from 'react-router';
 
-import {
-  currentUserState,
-  isCurrentUserLoadedState,
-} from 'erxes-ui-shared-states';
-import { useRecoilValue } from 'recoil';
+import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
 import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
 
 import { AppPath } from '@/types/paths/AppPath';
+import { useAtom } from 'jotai';
 
 export const UserProvider = () => {
-  const isCurrentUserLoaded = useRecoilValue(isCurrentUserLoadedState);
+  const isCurrentUserLoaded = useAtom(isCurrentUserLoadedState);
 
-  const currentUser = useRecoilValue(currentUserState);
+  const currentUser = useAtom(currentUserState);
 
   if (!isCurrentUserLoaded) {
     return (

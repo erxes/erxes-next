@@ -21,10 +21,10 @@ import {
 import { Customer } from '@/contacts/types/contactsTypes';
 import { TagBadges } from '@/tags/components/tagBadges';
 import { SelectTags } from '@/tags/components/SelectTags';
-import { ContactEmailColumnCell } from '@/contacts/components/ContactEmailColumnCell';
 import { ITag } from '@/tags/types/tagTypes';
-import { ContactPhoneColumnCell } from '@/contacts/components/ContactPhoneColumnCell';
 import { FullNameField } from '../customer-edit/components/FullNameField';
+import { EmailField } from '../customer-edit/components/EmailField';
+import { PhoneField } from '../customer-edit/components/PhoneField';
 import { TextField } from '../customer-edit/components/TextField';
 
 export const contactColumns: ColumnDef<Customer>[] = [
@@ -74,7 +74,16 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconMail} label="Primary Email" />
     ),
-    cell: ({ cell }) => <ContactEmailColumnCell cell={cell} />,
+    cell: ({ cell }) => {
+      const { primaryEmail, emails, _id } = cell.row.original;
+      return (
+        <EmailField
+          primaryEmail={primaryEmail || ''}
+          emails={emails || []}
+          _id={_id}
+        />
+      );
+    },
   },
 
   {
@@ -83,7 +92,17 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
     ),
-    cell: ({ cell }) => <ContactPhoneColumnCell cell={cell} />,
+    cell: ({ cell }) => {
+      const { primaryPhone, phones, _id, location } = cell.row.original;
+      return (
+        <PhoneField
+          primaryPhone={primaryPhone || ''}
+          phones={phones || []}
+          defaultCountryCode={location?.countryCode}
+          _id={_id}
+        />
+      );
+    },
   },
 
   {

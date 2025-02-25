@@ -1,11 +1,13 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import { gql } from 'graphql-tag';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
-import { getSubdomain } from 'erxes-api-utils';
-import { extractUserFromHeader } from 'erxes-api-utils';
+import { extractUserFromHeader, getSubdomain } from 'erxes-api-utils';
+import { gql } from 'graphql-tag';
+import { generateModels } from './connectionResolvers';
+import * as typeDefDetails from './graphql/index';
+import resolvers from './graphql/resolvers';
 
 // load environment variables
 dotenv.config();
@@ -13,17 +15,18 @@ dotenv.config();
 let apolloServer;
 
 export const initApolloServer = async (app, httpServer) => {
+  const { types, queries, mutations } = typeDefDetails;
+
   const typeDefs = async () => {
     return gql(`
-       type Lol {
-        id: String
-        name: String
-      }
-
+      ${types}
+      
       extend type Query {
-        getLol: Lol
+        ${queries}
       }
-
+      extend type Mutation {
+        ${mutations}
+      }
     `);
   };
 
@@ -31,6 +34,7 @@ export const initApolloServer = async (app, httpServer) => {
     schema: buildSubgraphSchema([
       {
         typeDefs: await typeDefs(),
+        resolvers,
       },
     ]),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -49,6 +53,8 @@ export const initApolloServer = async (app, httpServer) => {
           return {};
         }
         const subdomain = getSubdomain(req);
+        const models = await generateModels(subdomain);
+
         const user: any = extractUserFromHeader(req.headers);
 
         const requestInfo = {
@@ -61,6 +67,7 @@ export const initApolloServer = async (app, httpServer) => {
           res,
           requestInfo,
           subdomain,
+          models,
         };
       },
     }),

@@ -2,11 +2,7 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useApolloClient, useMutation } from '@apollo/client';
-import {
-  currentUserState,
-  isCurrentUserLoadedState,
-} from 'erxes-ui-shared-states';
-import { useSetRecoilState } from 'recoil';
+import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
 import { useToast } from 'erxes-ui/hooks';
 
@@ -15,14 +11,15 @@ import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';
 import { Login } from '@/auth/login/grahpql/mutations/login';
 import { ResetPassword } from '@/auth/login/grahpql/mutations/resetPassword';
 import { AppPath } from '@/types/paths/AppPath';
+import { useSetAtom } from 'jotai';
 
 export const useLogin = () => {
   const [login] = useMutation(Login);
   const [logout] = useMutation(Logout);
   const [forgotPassword] = useMutation(ForgotPassword);
   const [resetPassword] = useMutation(ResetPassword);
-  const setCurrentUser = useSetRecoilState(currentUserState);
-  const setIsCurrentUserLoaded = useSetRecoilState(isCurrentUserLoadedState);
+  const setCurrentUser = useSetAtom(currentUserState);
+  const setIsCurrentUserLoaded = useSetAtom(isCurrentUserLoadedState);
   const { toast } = useToast();
 
   const navigate = useNavigate();
@@ -43,7 +40,7 @@ export const useLogin = () => {
           });
         });
     },
-    [login, navigate, setIsCurrentUserLoaded, toast]
+    [login, navigate, setIsCurrentUserLoaded, toast],
   );
 
   const handleLogout = useCallback(async () => {
@@ -76,7 +73,7 @@ export const useLogin = () => {
           });
         });
     },
-    [forgotPassword, toast]
+    [forgotPassword, toast],
   );
 
   const handleResetPassword = useCallback(
@@ -95,7 +92,7 @@ export const useLogin = () => {
           });
         });
     },
-    [resetPassword, toast]
+    [resetPassword, toast],
   );
 
   return {

@@ -5,8 +5,9 @@ const coreLibraries = new Set([
   'react-dom',
   'react-router-dom',
   'erxes-ui',
+  '@apollo/client',
   'jotai',
-  'erxes-ui-shared-states',
+  'ui-modules',
   'react-i18next',
 ]);
 

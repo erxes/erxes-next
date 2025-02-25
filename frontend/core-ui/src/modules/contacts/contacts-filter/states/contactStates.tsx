@@ -1,6 +1,3 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-export const contactDateFilterOpenAtom = atom<string>({
-  key: 'contactDateFilterOpenAtom',
-  default: '',
-});
+export const contactDateFilterOpenAtom = atom('');

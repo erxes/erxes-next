@@ -12,7 +12,6 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { useRecoilValue } from 'recoil';
 
 import { Sidebar } from 'erxes-ui/components';
 
@@ -23,8 +22,8 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { pluginsConfigState } from 'ui-modules';
+import { useAtomValue } from 'jotai';
 
 type TSettingPath = {
   name: string;
@@ -67,14 +66,13 @@ const data: { [key: string]: TSettingPath[] } = {
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS];
 
-  const pluginsMetaData =
-    useRecoilValue(pluginsConfigState) || ({} as PluginsConfig);
+  const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
 
-  Object.keys(pluginsMetaData).forEach((key) => {
+  Object.keys(pluginsMetaData || {}).forEach((configId) => {
     plugins.push({
-      path: `/${key}`,
-      name: pluginsMetaData[key].name,
-      icon: pluginsMetaData[key].icon,
+      path: `/${configId}`,
+      name: pluginsMetaData[configId].name,
+      icon: pluginsMetaData[configId].icon,
     });
   });
 

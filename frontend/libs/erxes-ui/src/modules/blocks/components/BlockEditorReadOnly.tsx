@@ -3,14 +3,15 @@ import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema
 import { Block } from '@blocknote/core';
 import { BlockNoteView } from '@blocknote/shadcn';
 import 'erxes-ui/modules/blocks/styles/styles.css';
-import { useTheme } from 'erxes-ui/modules/theme-provider';
+import { useAtomValue } from 'jotai';
+import { themeState } from 'erxes-ui/state';
 
 export const BlockEditorReadOnly = ({ content }: { content: Block[] }) => {
   const editor = useCreateBlockNote({
     schema: BLOCK_SCHEMA,
     initialContent: content,
   });
-  const { theme } = useTheme();
+  const theme = useAtomValue(themeState);
 
   return (
     <BlockNoteView

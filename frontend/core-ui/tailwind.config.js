@@ -1,4 +1,3 @@
-const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
 const { fontFamily } = require('tailwindcss/defaultTheme');
 const { join } = require('path');
 
@@ -9,8 +8,10 @@ module.exports = {
       __dirname,
       '{src,pages,components,app,modules}/**/*!(*.stories|*.spec).{ts,tsx,html}',
     ),
-    ...createGlobPatternsForDependencies(__dirname),
+    'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).{ts,tsx,html}',
+    'frontend/plugins/**/!(*.stories|*.spec).{ts,tsx,html}',
   ],
+  darkMode: 'class',
   theme: {
     fontFamily: {
       sans: ['var(--font-sans)', ...fontFamily.sans],
@@ -86,16 +87,8 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
       boxShadow: {
-        input:
-          '0 2px 2px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 0 0 1px hsla(var(--shadow))',
-        'command-bar':
-          'rgba(0, 0, 0, 0.12) 2px 4px 16px, rgba(0, 0, 0, 0.04) 0 2px 4px',
-        'button-primary':
-          'inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 4px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow))',
-        'button-outline':
-          '0 4px 4px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 0 0 1px hsla(var(--shadow))',
-        'sidebar-inset':
-          '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow))',
+        focus:
+          '0px 0px 0px 4px rgba(79, 70, 229, 0.25), 0px 0px 0px 1px #4F46E5',
         xs: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow))',
         sm: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow))',
         lg: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow)), 0 8px 8px hsla(var(--shadow))',

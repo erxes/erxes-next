@@ -2,11 +2,11 @@ import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
 import { Button, Resizable, Tabs, Tooltip } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { contactDetailActiveActionTabAtom } from '@/contacts/detail/states/contactDetailStates';
 import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
 import { useQueryState } from 'nuqs';
 import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
+import { useAtom, useSetAtom } from 'jotai';
 
 const actionTabs = {
   activity: {
@@ -22,7 +22,7 @@ const actionTabs = {
 };
 
 export const ContactDetailActions = () => {
-  const [activeTab, setActiveTab] = useRecoilState(
+  const [activeTab, setActiveTab] = useAtom(
     contactDetailActiveActionTabAtom,
   );
   const [contactId] = useQueryState('contact_id');
@@ -91,7 +91,7 @@ export const ContactDetailActions = () => {
 };
 
 export const ContactDetailActionsTrigger = () => {
-  const [activeTab, setActiveTab] = useRecoilState(
+  const [activeTab, setActiveTab] = useAtom(
     contactDetailActiveActionTabAtom,
   );
 
@@ -155,7 +155,7 @@ export const ActionTabsContent = ({
   title?: string;
   icon: Icon;
 }) => {
-  const activeTab = useRecoilValue(contactDetailActiveActionTabAtom);
+  const [activeTab] = useAtom(contactDetailActiveActionTabAtom);
   return (
     <Tabs.Content
       value={value}
@@ -170,7 +170,7 @@ export const ActionTabsContent = ({
 };
 
 export const ActionHeader = (props: { title?: string; icon: Icon }) => {
-  const setActiveTab = useSetRecoilState(contactDetailActiveActionTabAtom);
+  const setActiveTab = useSetAtom(contactDetailActiveActionTabAtom);
   return (
     <div className="flex items-center h-12 border-b px-6 text-primary gap-2 flex-none">
       <props.icon className="size-5" />

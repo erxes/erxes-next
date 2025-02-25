@@ -1,8 +1,8 @@
 import { getInstance } from '@module-federation/enhanced/runtime';
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
+import { pluginsConfigState, PluginsConfig } from 'ui-modules';
 import { loadRemote } from '@module-federation/enhanced/runtime';
+import { useSetAtom } from 'jotai';
 
 type RemoteConfig = {
   CONFIG: PluginsConfig;
@@ -11,7 +11,7 @@ type RemoteConfig = {
 export const PluginConfigsProvidersEffect = () => {
   const instance = getInstance();
   const remotes = instance?.options.remotes;
-  const setPluginsConfig = useSetRecoilState(pluginsConfigState);
+  const setPluginsConfig = useSetAtom(pluginsConfigState);
 
   useEffect(() => {
     if (remotes && remotes.length > 0) {

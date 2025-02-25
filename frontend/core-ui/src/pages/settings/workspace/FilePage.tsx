@@ -4,7 +4,7 @@ import { ScrollArea } from "erxes-ui/components";
 
 export function FilePage() {
   return (
-    <ScrollArea.Root>
+    <ScrollArea>
       <section className="mx-auto max-w-2xl w-full relative">
         <SettingsBreadcrumbs breadcrumbs={[{ title: "Setting", path: "settings" }, { title: "File Upload", path: "file-upload" }]} />
         <h2 className="font-semibold text-lg mt-4 mb-12 px-4">File Upload</h2>
@@ -13,6 +13,6 @@ export function FilePage() {
         </div>
       </section>
       <ScrollArea.Bar />
-    </ScrollArea.Root>
+    </ScrollArea>
   );
 }

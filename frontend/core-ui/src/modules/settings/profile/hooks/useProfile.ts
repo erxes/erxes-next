@@ -1,50 +1,49 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
+import { currentUserState } from 'ui-modules';
 import { toast, useConfirm } from 'erxes-ui/hooks';
-
+import { useAtom, useSetAtom } from 'jotai';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
-import { currentUserState } from 'erxes-ui-shared-states';
 
-const useProfile = () => {
-  const currentUser = useRecoilValue(currentUserState);
+import { iUserDetail ,Props } from '../types/userDetail';
 
-  const setCurrentUser = useSetRecoilState(currentUserState);
+const useProfile = ({ onCompleted }: Props) => {
+  const [currentUser] = useAtom(currentUserState);
+  const setCurrentUser = useSetAtom(currentUserState);
 
   const { confirm } = useConfirm();
 
   const { loading, data, refetch } = useQuery(userDetail, {
     variables: { _id: currentUser?._id },
+    onCompleted,
+    skip: !currentUser?._id,
   });
 
   const [updateProfile] = useMutation(UpdateProfile);
 
-  const profileUpdate = (profile: any) => {
-    const confirmOptions = {
-      confirmationValue: 'update',
-    };
+  const profileUpdate = async (profile: Partial<iUserDetail>) => {
+    const confirmOptions = { confirmationValue: 'update' };
 
     confirm({
       message: 'Are you sure you want to update the profile?',
       options: confirmOptions,
     }).then(async () => {
-      updateProfile({ variables: { ...profile } })
-        .then((response) => {
-          if (response.data) {
-            refetch();
+      try {
+        const response = await updateProfile({ variables: { ...profile } });
 
-            setCurrentUser(data.userDetail);
+        if (response.data) {
+          refetch();
+          setCurrentUser(response.data.updateProfile);
 
-            toast({ title: 'Succesfully updated profile' });
-          }
-        })
-        .catch((e) => {
-          toast({
-            title: 'Error',
-            description: e.message,
-          });
+          toast({ title: 'Successfully updated profile' });
+        }
+      } catch (e: any) {
+        toast({
+          title: 'Error updating profile',
+          description: e.message || 'An unexpected error occurred.',
         });
+      }
     });
   };
 

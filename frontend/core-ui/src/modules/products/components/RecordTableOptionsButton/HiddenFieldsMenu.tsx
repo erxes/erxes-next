@@ -3,7 +3,6 @@
 // import { IconEye } from '@tabler/icons-react';
 // import { DropdownMenu, Button } from 'erxes-ui/components';
 
-// import { useRecoilState } from 'recoil';
 // import { fieldsState } from 'erxes-ui/states/RecordTableFieldsState';
 // export const HiddenFieldsMenu = ({ handleToFields }) => {
 //   const [fields, setFields] = useRecoilState(fieldsState);
