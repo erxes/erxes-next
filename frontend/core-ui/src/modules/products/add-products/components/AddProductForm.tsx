@@ -17,10 +17,12 @@ import {
   ProductFormValues,
 } from '@/products/add-products/components/formSchema';
 import { useAddProduct } from '@/products/hooks/useAddProduct';
+import { ApolloError } from '@apollo/client';
+import { useToast } from 'erxes-ui/hooks';
 
 export function AddProductForm() {
   const [open, setOpen] = useState<boolean>(false);
-  const { productsAdd, loading } = useAddProduct();
+  const { productsAdd } = useAddProduct();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
@@ -42,10 +44,16 @@ export function AddProductForm() {
       scopeBrandIds: [],
     },
   });
-
+  const { toast } = useToast();
   async function onSubmit(data: ProductFormValues) {
     productsAdd({
       variables: data,
+      onError: (e: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+        });
+      },
       onCompleted: () => {
         form.reset();
         setOpen(false);

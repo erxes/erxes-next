@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const customerFormSchema = z.object({
   state: z.string().default(""),
-  avatar: z.string().default(''),
+  avatar: z.string().nullable().default(null),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().default(''),
   middleName: z.string().default(''),
@@ -13,8 +13,8 @@ export const customerFormSchema = z.object({
   emails: z.array(z.string().email()).default([]),
   ownerId: z.string().default(''),
   description: z.string().default(''),
-  isSubscribed: z.string().default(''),
-  links: z.any().default(''),
+  isSubscribed: z.string().default('Yes'),
+  links: z.any().default({}),
   code: z.string().default(''),
   emailValidationStatus: z.string().default('unknown'),
   phoneValidationStatus: z.string().default('unknown'),

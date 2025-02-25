@@ -5,7 +5,6 @@ import { ProductCommandBar } from '@/products/components/ProductCommandBar';
 import { useProducts } from '@/products/hooks/useProducts';
 export const ProductsRecordTable = () => {
   const { products, handleFetchMore, loading, totalCount } = useProducts();
-
   return (
     <RecordTable.Provider
       columns={columns}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { IconCaretDownFilled } from '@tabler/icons-react';
+import { IconCaretDownFilled, IconCheck } from '@tabler/icons-react';
 
 import { Button, ButtonProps, Command, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
@@ -16,8 +16,8 @@ export const SelectTree = ({
 }: {
   id: string;
   children: React.ReactNode;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) => {
   const [hideChildren, setHideChildren] = useState<string[]>([]);
   return (
@@ -36,7 +36,7 @@ export const SelectTreeArrow = React.forwardRef<
   const { toggleHideChildren, isHidden } = useSelectTreeHide(order);
 
   if (!hasChildren) {
-    return null;
+    return;
   }
 
   return (
@@ -48,20 +48,21 @@ export const SelectTreeArrow = React.forwardRef<
       tabIndex={-1}
       onClick={() => toggleHideChildren(order)}
     >
-      <IconCaretDownFilled className={cn('transition-transform', isHidden && '-rotate-90')} />
+      <IconCaretDownFilled
+        className={cn('transition-transform', isHidden && '-rotate-90')}
+      />
     </Button>
   );
 });
 
 export const SelectTreeIndentation = ({ order }: { order: string }) => {
   const level = (order?.match(/[/]/gi)?.length || 0) - 1;
-
   if (level <= 0) {
     return null;
   }
 
   return (
-    <div className="flex h-full gap-[32px] pl-[13px] pr-[15px]">
+    <div className="flex h-full gap-[32px] pl-[13px]">
       {Array.from({ length: level }).map((_, index) => (
         <div key={index} className="relative">
           <div className="absolute -top-3.5 h-7 w-px bg-muted-foreground/20" />
@@ -94,13 +95,14 @@ export const SelectTreeItem = React.forwardRef<
       <Command.Item
         {...props}
         className={cn(
-          'h-7 py-0 items-center flex-1 overflow-hidden',
+          'h-7 py-0 items-center flex-1 overflow-hidden justify-start',
           props.className,
           selected && 'bg-muted',
         )}
         ref={ref}
       >
         {children}
+        {selected && <IconCheck className="absolute right-2" />}
       </Command.Item>
     </div>
   );

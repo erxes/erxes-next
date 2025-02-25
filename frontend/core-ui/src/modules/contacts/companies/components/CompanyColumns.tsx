@@ -13,50 +13,45 @@ import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDis
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 
-import { TCustomer } from '@/contacts/types/customerType';
-import { FullNameField } from '../customer-edit/components/FullNameField';
-import { EmailField } from '../customer-edit/components/EmailField';
-import { PhoneField } from '../customer-edit/components/PhoneField';
-import { TextField } from '../customer-edit/components/TextField';
-import { TagsField } from '@/contacts/customer-edit/components/TagsField';
+import { TCompany } from '@/contacts/types/companyType';
+import { TagsField } from '@/contacts/companies/company-edit/TagsField';
+import { EmailField } from '@/contacts/companies/company-edit/EmailField';
+import { TextField } from '@/contacts/companies/company-edit/TextField';
+import { PhoneField } from '@/contacts/companies/company-edit/PhoneField';
 
-export const contactColumns: ColumnDef<TCustomer>[] = [
+export const companyColumns: ColumnDef<TCompany>[] = [
   {
     id: 'avatar',
     accessorKey: 'avatar',
     header: () => <RecordTableInlineHead icon={IconUser} label="" />,
-    cell: ({ cell }) => (
-      <RecordTableInlineCell
-        display={() => (
-          <Avatar>
-            <Avatar.Image src={cell.getValue() as string} />
-            <Avatar.Fallback colorSeed={cell.row.original._id}>
-              {cell.row.original.firstName?.charAt(0) ||
-                cell.row.original.lastName?.charAt(0) ||
-                cell.row.original.primaryEmail?.charAt(0)}
-            </Avatar.Fallback>
-          </Avatar>
-        )}
-      />
-    ),
+    cell: ({ cell }) => {
+      return (
+        <RecordTableInlineCell
+          display={() => (
+            <Avatar>
+              <Avatar.Image src={cell.getValue() as string} />
+              <Avatar.Fallback colorSeed={cell.row.original._id}>
+                {cell.row.original.primaryName?.charAt(0)}
+              </Avatar.Fallback>
+            </Avatar>
+          )}
+        />
+      );
+    },
     size: 34,
   },
   {
-    id: 'name',
-    accessorKey: 'name',
-    header: () => <RecordTableInlineHead icon={IconAlignLeft} label="Name" />,
+    id: 'primaryName',
+    accessorKey: 'primaryName',
+    header: () => (
+      <RecordTableInlineHead icon={IconAlignLeft} label="Primary Name" />
+    ),
     cell: ({ cell }) => {
-      const { firstName, lastName, middleName, _id } = cell.row.original;
-
       return (
-        <FullNameField
-          _id={_id}
-          firstName={firstName || ''}
-          lastName={
-            middleName
-              ? `${middleName || ''} ${lastName || ''}`
-              : lastName || ''
-          }
+        <TextField
+          value={cell.getValue() as string}
+          field="primaryName"
+          _id={cell.row.original._id}
         />
       );
     },
@@ -82,11 +77,11 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
   {
     id: 'primaryPhone',
     accessorKey: 'primaryPhone',
-    header: () => (
-      <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
-    ),
+    header: () => {
+      return <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />;
+    },
     cell: ({ cell }) => {
-      const { primaryPhone, phones, _id, location } = cell.row.original;
+      const { _id, primaryPhone, phones, location } = cell.row.original;
       return (
         <PhoneField
           primaryPhone={primaryPhone || ''}
@@ -106,7 +101,7 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
       return (
         <TagsField
           _id={cell.row.original._id}
-          tagType="core:customer"
+          tagType="core:company"
           selected={cell.row.original.tagIds}
           recordId={cell.row.original._id}
         />
@@ -128,16 +123,6 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
     ),
   },
   {
-    id: 'sessionCount',
-    accessorKey: 'sessionCount',
-    header: () => (
-      <RecordTableInlineHead icon={IconUser} label="Session Count" />
-    ),
-    cell: ({ cell }) => (
-      <RecordTableInlineCell display={() => <>{cell.getValue() as number}</>} />
-    ),
-  },
-  {
     id: 'profileScore',
     accessorKey: 'score',
     header: () => (
@@ -151,7 +136,7 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
     id: field,
     accessorKey: field,
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
-    cell: ({ cell }: { cell: Cell<TCustomer, unknown> }) => (
+    cell: ({ cell }: { cell: Cell<TCompany, unknown> }) => (
       <TextField
         _id={cell.row.original._id}
         field={field}

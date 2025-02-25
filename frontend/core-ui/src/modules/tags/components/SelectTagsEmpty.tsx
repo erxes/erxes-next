@@ -4,8 +4,14 @@ import { Button, Command } from 'erxes-ui/components';
 
 import { useSelectTags } from '@/tags/contexts/SelectTagsContext';
 
-export const SelectTagsEmpty = ({ loading }: { loading: boolean }) => {
-  const { openCreateTag, sub } = useSelectTags(); 
+export const SelectTagsEmpty = ({
+  loading,
+  single,
+}: {
+  loading: boolean;
+  single: boolean;
+}) => {
+  const { openCreateTag, sub } = useSelectTags();
 
   if (loading)
     return (
@@ -19,8 +25,10 @@ export const SelectTagsEmpty = ({ loading }: { loading: boolean }) => {
   return (
     <Command.Empty>
       <div>
-        <p className="text-muted-foreground pb-2">No results found.</p>
-        {!sub && (
+        <div className="w-full justify-center items-center">
+          <p className="text-muted-foreground p-2 ">No results found.</p>
+        </div>
+        {!sub && !single && (
           <Button variant="secondary" onClick={openCreateTag}>
             <IconCirclePlus />
             Create new tag

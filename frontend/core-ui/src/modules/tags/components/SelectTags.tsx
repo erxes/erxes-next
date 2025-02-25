@@ -1,30 +1,23 @@
-import React from 'react';
-import { useRef, useState } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 import { IconPlus } from '@tabler/icons-react';
 import { useDebounce } from 'use-debounce';
 
-import {
-  Button,
-  ButtonProps,
-  Command,
-  Popover,
-  Tabs,
-} from 'erxes-ui/components';
+import { Button, ButtonProps, Command, Tabs } from 'erxes-ui/components';
 import {
   SelectTree,
   SelectTreeItem,
 } from 'erxes-ui/modules/select-tree/components/SelectTree';
+import { InlineCell } from 'erxes-ui/modules/inline-cell/components/InlineCell';
+import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/InlineCellDisplay';
+import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
 
 import { CreateTagForm } from './CreateTagForm';
 import { SelectTagCreateContainer } from './SelectTagCreate';
 import { SelectTagFetchMore } from './SelectTagFetchMore';
 import { SelectTagsEmpty } from './SelectTagsEmpty';
-import { SelectTagTrigger } from './SelectTagTrigger';
 import { TagBadge } from './TagBadge';
 import { useTags } from '../hooks/useTags';
 import { newTagNameAtom } from '../states/selectTagsStates';
-
 import {
   SelectTagsProvider,
   useSelectTags,
@@ -38,39 +31,51 @@ export const SelectTags = React.forwardRef<
   Omit<ButtonProps, 'onSelect'> & SelectTagsProps
 >(
   (
-    {
-      tagType = '',
-      single,
-      sub,
-      selected = single ? '' : [],
-      onSelect,
-      ...buttonProps
-    },
+    { tagType, single, sub, selected = [], onSelect, recordId, ...buttonProps },
     ref,
   ) => {
+    const { tags, loading } = useTags({
+      variables: {
+        type: tagType,
+      },
+    });
     const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
+    useEffect(() => {
+      if (!loading && tags && tags.length > 0) {
+        const tagMap = new Map(tags.map(tag => [tag._id, tag]));
+        const validSelectedTags = Array.isArray(selected) 
+          ? selected.map(id => tagMap.get(id)).filter(Boolean) as ITag[]
+          : selected && typeof selected === 'string' && tagMap.has(selected) 
+            ? [tagMap.get(selected) as ITag] 
+            : [];
+            
+        setSelectedTags(validSelectedTags);
+      }
+    }, [loading, selected, tags]);
 
     const [activeTab, setActiveTab] = useState('tags');
-    const [open, setOpen] = useState(false);
     const commandSearchRef = useRef<HTMLInputElement>(null);
-
     const handleSelect = (tag: ITag) => {
       if (!onSelect) return;
+
       if (single) {
-        onSelect(tag._id);
+        onSelect([tag._id]);
         setSelectedTags([tag]);
-        setOpen(false);
-        return;
+      } else {
+        const selectedIds = selectedTags.map(t => t._id);
+        const tagIndex = selectedIds.indexOf(tag._id);
+        
+        if (tagIndex >= 0) {
+          const newSelectedTags = [...selectedTags];
+          newSelectedTags.splice(tagIndex, 1);
+          setSelectedTags(newSelectedTags);
+          onSelect(newSelectedTags.map(t => t._id));
+        } else {
+          const newSelectedTags = [...selectedTags, tag];
+          setSelectedTags(newSelectedTags);
+          onSelect(newSelectedTags.map(t => t._id));
+        }
       }
-      const selectedArray = selected as string[];
-      if (selectedArray.includes(tag._id)) {
-        const filteredTags = selectedTags.filter((t) => t._id !== tag._id);
-        onSelect(filteredTags.map((t) => t._id));
-        setSelectedTags(filteredTags);
-        return;
-      }
-      onSelect([...selectedArray, tag._id]);
-      setSelectedTags([...selectedTags, tag]);
     };
 
     const focusCommandInput = () =>
@@ -81,13 +86,18 @@ export const SelectTags = React.forwardRef<
       focusCommandInput();
     };
 
+    const handleEscape = (closeEditMode: () => void) => {
+      closeEditMode();
+      setActiveTab('tags');
+    };
+
     return (
       <SelectTagsProvider
         value={{
           tagType,
           selectedTagIds: single
-            ? [selected as string]
-            : (selected as string[]),
+            ? (typeof selected === 'string' ? [selected] : selected && selected.length > 0 ? [selected[0]] : [])
+            : (Array.isArray(selected) ? selected : []),
           selectedTags,
           setSelectedTags,
           handleSelect,
@@ -95,82 +105,129 @@ export const SelectTags = React.forwardRef<
           sub,
         }}
       >
-        <SelectTree id="tags" open={open} onOpenChange={setOpen}>
-          <SelectTagTrigger {...buttonProps} ref={ref} />
-          <Popover.Content className="p-0">
-            {sub ? (
-              <Tags ref={commandSearchRef} />
-            ) : (
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <Tabs.Content value="tags" asChild>
-                  <Tags ref={commandSearchRef} />
-                </Tabs.Content>
-                <SelectTagCreateContainer onBack={handleBack}>
-                  <CreateTagForm
-                    tagType={tagType}
-                    onCompleted={(tag) => {
-                      handleSelect(tag);
-                      setActiveTab('tags');
-                    }}
-                  />
-                </SelectTagCreateContainer>
-              </Tabs>
-            )}
-          </Popover.Content>
-        </SelectTree>
+        <InlineCell
+          name="tags"
+          recordId={recordId}
+          onEscape={handleEscape}
+          display={() => (
+            <TagsDisplay
+              selectedTags={selectedTags}
+              ref={ref}
+              {...buttonProps}
+            />
+          )}
+          edit={(closeEditMode: () => void) => {
+            return (
+              <InlineCellEdit>
+                <SelectTree id="tags">
+                  {sub ? (
+                    <Tags
+                      ref={commandSearchRef}
+                      single={single}
+                      closeEditMode={closeEditMode}
+                    />
+                  ) : (
+                    <Tabs value={activeTab} onValueChange={setActiveTab}>
+                      <Tabs.Content value="tags" asChild>
+                        <Tags
+                          ref={commandSearchRef}
+                          closeEditMode={closeEditMode}
+                        />
+                      </Tabs.Content>
+                      {!single && (
+                        <SelectTagCreateContainer onBack={handleBack}>
+                          <CreateTagForm
+                            tagType={tagType}
+                            onCompleted={(tag) => {
+                              handleSelect(tag);
+                              setActiveTab('tags');
+                            }}
+                          />
+                        </SelectTagCreateContainer>
+                      )}
+                    </Tabs>
+                  )}
+                </SelectTree>
+              </InlineCellEdit>
+            );
+          }}
+        />
       </SelectTagsProvider>
     );
   },
 );
 
-const Tags = React.forwardRef<React.ElementRef<typeof Command.Input>>(
-  (props, ref) => {
-    const { tagType } = useSelectTags();
-    const [search, setSearch] = useState('');
-    const [debouncedSearch] = useDebounce(search, 500);
-    const { tags, handleFetchMore, totalCount, loading } = useTags({
-      variables: {
-        type: tagType,
-        searchValue: debouncedSearch,
-      },
-      skip: !open,
-    });
+const TagsDisplay = React.forwardRef<
+  React.ElementRef<typeof Button>,
+  React.ComponentPropsWithoutRef<typeof Button> & { selectedTags: ITag[] }
+>(({ selectedTags, ...props }, ref) => (
+  <InlineCellDisplay className="w-full h-cell" ref={ref} asChild {...props}>
+    <div className="w-full relative h-cell group">
+      {selectedTags.map((tag) => (
+        <TagBadge key={tag._id} {...tag} />
+      ))}
+      <Button
+        variant="outline"
+        size="icon"
+        className="absolute right-1 size-5 px-0 hidden items-center hover:bg-border justify-center group-hover:flex"
+      >
+        <IconPlus className="text-muted-foreground" />
+      </Button>
+    </div>
+  </InlineCellDisplay>
+));
 
-    return (
-      <Command className="outline-none" shouldFilter={false}>
-        <div className="flex items-center pr-1">
-          <Command.Input
-            value={search}
-            onValueChange={setSearch}
-            wrapperClassName="flex-auto"
-            ref={ref}
-          />
-        </div>
-        <SelectTagsEmpty loading={loading} />
-        <Command.List>
-          {tags?.map((tag: ITag) => {
-            return (
-              <SelectTagItem
-                key={tag._id}
-                {...tag}
-                hasChildren={!!tags?.find((t: ITag) => t.parentId === tag._id)}
-              />
-            );
-          })}
-          {tags?.length === 0 && <SelectTagSearchCreate search={search} />}
-          <SelectTagFetchMore
-            fetchMore={handleFetchMore}
-            tagsLength={tags?.length}
-            totalCount={totalCount}
-          />
-        </Command.List>
-      </Command>
-    );
-  },
-);
+const Tags = React.forwardRef<
+  React.ElementRef<typeof Command.Input>,
+  { single?: boolean; closeEditMode: () => void }
+>(({ single = false, closeEditMode }, ref) => {
+  const { tagType } = useSelectTags();
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
+  const { tags, handleFetchMore, totalCount, loading } = useTags({
+    variables: {
+      type: tagType,
+      searchValue: debouncedSearch,
+    },
+  });
 
-export function SelectTagItem(props: ITag & { hasChildren: boolean }) {
-  const { _id, order, hasChildren, name } = props || {};
+  return (
+    <Command className="outline-none" shouldFilter={false}>
+      <div className="flex items-center pr-1">
+        <Command.Input
+          value={search}
+          onValueChange={setSearch}
+          wrapperClassName="flex-auto"
+          ref={ref}
+        />
+      </div>
+      <SelectTagsEmpty loading={loading} single={single} />
+      <Command.List>
+        {tags?.map((tag: ITag) => (
+          <SelectTagItem
+            key={tag._id}
+            {...tag}
+            hasChildren={!!tags?.find((t: ITag) => t.parentId === tag._id)}
+            closeEditMode={single ? closeEditMode : undefined}
+          />
+        ))}
+        {tags?.length === 0 && !single && (
+          <SelectTagSearchCreate search={search} />
+        )}
+        <SelectTagFetchMore
+          fetchMore={handleFetchMore}
+          tagsLength={tags?.length}
+          totalCount={totalCount}
+        />
+      </Command.List>
+    </Command>
+  );
+});
+
+export function SelectTagItem(
+  props: ITag & { hasChildren: boolean; closeEditMode?: () => void },
+) {
+  const { _id, order, hasChildren, name, closeEditMode } = props || {};
   const { selectedTags, handleSelect } = useSelectTags();
 
   const isSelected = selectedTags?.some((tag: ITag) => tag._id === _id);
@@ -181,10 +238,15 @@ export function SelectTagItem(props: ITag & { hasChildren: boolean }) {
       hasChildren={hasChildren}
       name={name}
       value={name}
-      onSelect={() => handleSelect(props)}
+      onSelect={() => {
+        handleSelect(props);
+        if (closeEditMode) {
+          closeEditMode();
+        }
+      }}
       selected={isSelected}
     >
-      <TagBadge {...props} />
+      {props.name}
     </SelectTreeItem>
   );
 }
@@ -199,7 +261,7 @@ export const SelectTagSearchCreate = ({ search }: { search: string }) => {
         setName(search);
         openCreateTag();
       }}
-      className="justify-start"
+      className="justify-start h-cell"
     >
       <IconPlus />
       Create new tag: "{search}"

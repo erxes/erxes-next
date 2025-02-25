@@ -37,7 +37,9 @@ export const FullName = React.forwardRef<
       onCancel={handleChange}
       display={() => (
         <InlineCellDisplay ref={ref} {...props}>
-          {firstNameValue} {lastNameValue}
+          <span className="truncate">
+            {firstNameValue} {lastNameValue}
+          </span>
         </InlineCellDisplay>
       )}
       edit={() => (

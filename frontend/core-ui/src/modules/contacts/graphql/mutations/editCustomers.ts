@@ -20,6 +20,7 @@ export const EDIT_CUSTOMERS = gql`
     $description: String
     $links: JSON
     $isSubscribed: String
+    $tagIds: [String]
   ) {
     customersEdit(
       _id: $id
@@ -40,6 +41,7 @@ export const EDIT_CUSTOMERS = gql`
       description: $description
       links: $links
       isSubscribed: $isSubscribed
+      tagIds: $tagIds
     ) {
       _id
     }

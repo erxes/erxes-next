@@ -69,7 +69,11 @@ const link = split(
   httpLinkWithMiddleware,
 );
 
-const typePolicies = {};
+const typePolicies = {
+  customersMain: {
+    keyFields: ['_id'],
+  },
+};
 
 // Creating Apollo-client
 const client = new ApolloClient({

@@ -69,8 +69,6 @@ export const GET_CUSTOMERS = gql`
         emails
         primaryPhone
         phones
-        state
-        visitorContactInfo
         modifiedAt
         position
         department
@@ -84,8 +82,8 @@ export const GET_CUSTOMERS = gql`
         score
         isOnline
         lastSeenAt
-        sessionCount
         links
+        state
         ownerId
         integrationId
         createdAt

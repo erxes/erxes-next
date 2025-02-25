@@ -2,7 +2,7 @@ import { Cell } from '@tanstack/react-table';
 import { useQueryState } from 'nuqs';
 import { RecordTableMoreButton } from 'erxes-ui/modules/record-table/components/MoreColumn';
 import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';
-import { Customer } from '@/contacts/types/contactsTypes';
+import { Customer } from '@/contacts/types/customerType';
 import { useSetAtom } from 'jotai';
 export const ContactMoreColumnCell = ({
   cell,
@@ -10,9 +10,7 @@ export const ContactMoreColumnCell = ({
   cell: Cell<Customer, unknown>;
 }) => {
   const [, setOpen] = useQueryState('contact_id');
-  const setRenderingContactDetail = useSetAtom(
-    renderingContactDetailAtom,
-  );
+  const setRenderingContactDetail = useSetAtom(renderingContactDetailAtom);
   const { _id } = cell.row.original;
   return (
     <RecordTableMoreButton
