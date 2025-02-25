@@ -16,35 +16,35 @@ const initFederation = async () => {
     document.getElementById('root') as HTMLElement,
   );
 
-  if (NODE_ENV === 'development') {
-    root.render(
-      <StrictMode>
-        <NuqsAdapter>
-          <App />
-        </NuqsAdapter>
-      </StrictMode>,
-    );
-  } else {
-    fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
-      .then((res) => res.json())
-      .then((data) => {
-        init({
-          name: 'core',
-          remotes: data.plugins?.map((plugin) => ({
-            name: `plugin_${plugin.name}`,
-            entry: plugin.url,
-          })),
-        });
+  // if (NODE_ENV === 'development') {
+  root.render(
+    <StrictMode>
+      <NuqsAdapter>
+        <App />
+      </NuqsAdapter>
+    </StrictMode>,
+  );
+  // } else {
+  //   fetch(`${REACT_APP_API_URL}/get-frontend-plugins`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       init({
+  //         name: 'core',
+  //         remotes: data.plugins?.map((plugin) => ({
+  //           name: `plugin_${plugin.name}`,
+  //           entry: plugin.url,
+  //         })),
+  //       });
 
-        root.render(
-          <StrictMode>
-            <NuqsAdapter>
-              <App />
-            </NuqsAdapter>
-          </StrictMode>,
-        );
-      });
-  }
+  //       root.render(
+  //         <StrictMode>
+  //           <NuqsAdapter>
+  //             <App />
+  //           </NuqsAdapter>
+  //         </StrictMode>,
+  //       );
+  //     });
+  // }
 };
 
 initFederation().catch((err) => {
