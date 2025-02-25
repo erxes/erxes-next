@@ -34,11 +34,11 @@ const useConfig = () => {
       },
       refetchQueries: [
         {
-          query: fileSettingsQueries.configsQuery
+          query: fileSettingsQueries.configsQuery,
         },
       ],
       awaitRefetchQueries: true,
-    }
+    },
   );
 
   const updateConfig = (args: any) => {

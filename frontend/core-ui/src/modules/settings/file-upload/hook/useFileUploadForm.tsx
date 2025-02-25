@@ -22,29 +22,13 @@ const useFileUploadForm = () => {
         return acc;
       }, {});
 
-      const uploadFileTypes = values['UPLOAD_FILE_TYPES']?.split(',');
-      const uploadFileTypesArray = FILE_MIME_TYPES.filter((item) => uploadFileTypes.includes(item.value)).map(item => ({
-        label: `${item.label} (${item.extension})`,
-        value: item.value,
-      }));
-
-      const widgetsUploadFileTypes = values['WIDGETS_UPLOAD_FILE_TYPES']?.split(',')
-      const widgetUploadFileTypesArray = FILE_MIME_TYPES.filter((item) => widgetsUploadFileTypes.includes(item.value)).map(item => ({
-        label: `${item.label} (${item.extension})`,
-        value: item.value,
-      }));
-
       form.reset({
         ...values,
-        UPLOAD_FILE_TYPES: uploadFileTypesArray,
-        WIDGETS_UPLOAD_FILE_TYPES: widgetUploadFileTypesArray
       });
     }
 
     return;
-
   };
-
 
   return { form, onCompleted };
 };
