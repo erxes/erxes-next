@@ -16,7 +16,7 @@ FROM node:${NODE_VERSION}-alpine AS builder
 WORKDIR /app
 # Copy deps from previous stage
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/frontend/core-ui/node_modules ./frontend/core-ui/node_modules
+
 # Copy source files
 COPY . .
 # Build with cache mount for faster builds
