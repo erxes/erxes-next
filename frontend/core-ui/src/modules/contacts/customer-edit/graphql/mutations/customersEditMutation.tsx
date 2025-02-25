@@ -51,3 +51,13 @@ export const CUSTOMERS_EDIT = gql`
     }
   }
 `;
+
+export const CUSTOMERS_TAG = gql`
+  mutation tagsTag(
+    $type: String!
+    $targetIds: [String!]!
+    $tagIds: [String!]!
+  ) {
+    tagsTag(type: $type, targetIds: $targetIds, tagIds: $tagIds)
+  }
+`;

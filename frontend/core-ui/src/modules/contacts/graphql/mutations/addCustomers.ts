@@ -15,7 +15,6 @@ export const ADD_CUSTOMERS = gql`
     $code: String
     $emailValidationStatus: String
     $phoneValidationStatus: String
-    $tagIds: [String]
   ) {
     customersAdd(
       avatar: $avatar
@@ -31,7 +30,6 @@ export const ADD_CUSTOMERS = gql`
       code: $code
       emailValidationStatus: $emailValidationStatus
       phoneValidationStatus: $phoneValidationStatus
-      tagId: $tagIds
     ) {
       _id
       firstName
@@ -66,7 +64,6 @@ export const ADD_CUSTOMERS = gql`
       location
       customFieldsData
       trackedData
-      tagIds
     }
   }
 `;

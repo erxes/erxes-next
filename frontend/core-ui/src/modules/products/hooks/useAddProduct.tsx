@@ -33,7 +33,6 @@ export function useAddProduct(
           });
           if (!existingData || !existingData.products || !data?.productsAdd)
             return;
-          console.log('hello');
           cache.writeQuery<ProductData>({
             query: productsQueries.products,
             variables: queryVariables,
@@ -43,13 +42,6 @@ export function useAddProduct(
               productsTotalCount: existingData.productsTotalCount + 1,
             },
           });
-          console.log(
-            'cache after: ',
-            cache.readQuery<ProductData>({
-              query: productsQueries.products,
-              variables: queryVariables,
-            }),
-          );
         } catch (e) {
           console.error('error:', e);
         }

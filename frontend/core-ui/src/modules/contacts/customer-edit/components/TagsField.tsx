@@ -1,5 +1,5 @@
 import { SelectTags } from '@/tags/components/SelectTags';
-import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
+import { useCustomersTag } from '~/modules/contacts/customer-edit/hooks/useCustomersTag';
 import { toast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
 import { SelectTagsProps } from '@/tags/types/tagTypes';
@@ -7,7 +7,6 @@ import { SelectTagsProps } from '@/tags/types/tagTypes';
 interface TagsField extends SelectTagsProps {
   _id: string;
 }
-
 
 export const TagsField = ({
   _id,
@@ -17,7 +16,7 @@ export const TagsField = ({
   selected,
   recordId,
 }: TagsField) => {
-  const { customersEdit } = useCustomersEdit();
+  const { customersTag } = useCustomersTag();
   return (
     <SelectTags
       tagType={tagType}
@@ -26,9 +25,9 @@ export const TagsField = ({
       selected={selected}
       recordId={recordId}
       onSelect={(tagIds: string[] | string) => {
-        customersEdit(
+        customersTag(
           {
-            variables: { _id, tagIds },
+            variables: { targetIds: [_id], tagIds },
             onError: (e: ApolloError) => {
               toast({
                 title: 'Error',

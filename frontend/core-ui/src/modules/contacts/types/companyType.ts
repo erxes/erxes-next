@@ -1,4 +1,4 @@
-import { CountryCode } from 'libphonenumber-js'
+import { CountryCode } from 'libphonenumber-js';
 
 export interface TCompany {
   _id: string;
@@ -8,7 +8,7 @@ export interface TCompany {
   emails?: string[];
   primaryPhone?: string;
   phones?: string[];
-  tagIds?: string[]
+  tagIds?: string[];
   location?: {
     countryCode?: CountryCode | undefined;
   };

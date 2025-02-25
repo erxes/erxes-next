@@ -41,32 +41,47 @@ export const SelectTags = React.forwardRef<
     });
     const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
 
+    // Sync selected tag IDs with tag objects when tags load or selected IDs change
     useEffect(() => {
-      if (!loading && selected.length > 0) {
-        setSelectedTags(
-          tags?.filter((tag: ITag) => selected.includes(tag._id)) || [],
-        );
+      if (!loading && tags && tags.length > 0) {
+        const tagMap = new Map(tags.map(tag => [tag._id, tag]));
+        const validSelectedTags = Array.isArray(selected) 
+          ? selected.map(id => tagMap.get(id)).filter(Boolean) as ITag[]
+          : selected && typeof selected === 'string' && tagMap.has(selected) 
+            ? [tagMap.get(selected) as ITag] 
+            : [];
+            
+        setSelectedTags(validSelectedTags);
       }
     }, [loading, selected, tags]);
 
     const [activeTab, setActiveTab] = useState('tags');
     const commandSearchRef = useRef<HTMLInputElement>(null);
 
+    // Simplified and fixed handleSelect function
     const handleSelect = (tag: ITag) => {
       if (!onSelect) return;
 
       if (single) {
+        // For single selection, always replace with the new tag
         onSelect([tag._id]);
         setSelectedTags([tag]);
       } else {
-        const selectedArray = selected as string[];
-        if (selectedArray.includes(tag._id)) {
-          const filteredTags = selectedTags.filter((t) => t._id !== tag._id);
-          onSelect(filteredTags.map((t) => t._id));
-          setSelectedTags(filteredTags);
+        // For multiple selection, toggle the tag
+        const selectedIds = selectedTags.map(t => t._id);
+        const tagIndex = selectedIds.indexOf(tag._id);
+        
+        if (tagIndex >= 0) {
+          // Tag exists - remove it
+          const newSelectedTags = [...selectedTags];
+          newSelectedTags.splice(tagIndex, 1);
+          setSelectedTags(newSelectedTags);
+          onSelect(newSelectedTags.map(t => t._id));
         } else {
-          onSelect([...selectedArray, tag._id]);
-          setSelectedTags([...selectedTags, tag]);
+          // Tag doesn't exist - add it
+          const newSelectedTags = [...selectedTags, tag];
+          setSelectedTags(newSelectedTags);
+          onSelect(newSelectedTags.map(t => t._id));
         }
       }
     };
@@ -89,8 +104,8 @@ export const SelectTags = React.forwardRef<
         value={{
           tagType,
           selectedTagIds: single
-            ? [selected as string]
-            : (selected as string[]),
+            ? (typeof selected === 'string' ? [selected] : selected && selected.length > 0 ? [selected[0]] : [])
+            : (Array.isArray(selected) ? selected : []),
           selectedTags,
           setSelectedTags,
           handleSelect,

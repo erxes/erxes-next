@@ -34,7 +34,7 @@ export const SelectTagTrigger = React.forwardRef<
   return (
     <Popover.Trigger asChild>
       <Button variant="ghost" className={buttonClasses} {...props} ref={ref}>
-        <TagBadges tagIds={selectedTagIds} tags={selectedTags} /> aash
+        <TagBadges tagIds={selectedTagIds} tags={selectedTags} />
       </Button>
     </Popover.Trigger>
   );
