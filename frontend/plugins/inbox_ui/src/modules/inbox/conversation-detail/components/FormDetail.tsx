@@ -24,8 +24,11 @@ export const FormDetailMessages = () => {
       <div className="mx-auto w-[648px] p-6 flex flex-col gap-6">
         {conversationMessages.map((message: IMessage) => (
           <React.Fragment key={message._id}>
-            {message.formWidgetData && <FormDisplay {...message} />}
-            {message.internalNote && (
+            {message.formWidgetData ? (
+              <FormDisplay {...message} />
+            ) : message.internalNote ? (
+              <InternalNoteDisplay content={message.content} />
+            ) : (
               <InternalNoteDisplay content={message.content} />
             )}
           </React.Fragment>

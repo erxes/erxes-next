@@ -45,12 +45,12 @@ const httpLinkWithMiddleware = from([errorLink, authLink, httpLink]);
 // Subscription config
 export const wsLink = new GraphQLWsLink(
   createClient({
-    url: REACT_APP_API_URL,
+    url: `${REACT_APP_API_URL}/graphql`,
     retryAttempts: 1000,
     retryWait: async () => {
       await new Promise((resolve) => setTimeout(resolve, 5000));
     },
-  })
+  }),
 );
 
 type Definintion = {
@@ -66,7 +66,7 @@ const link = split(
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
-  httpLinkWithMiddleware
+  httpLinkWithMiddleware,
 );
 
 const typePolicies = {};

@@ -1,17 +1,17 @@
-import { useMessengerMessages } from '../hooks/useMessengerMessages';
-import { IMessage } from '@/inbox/types/Conversation';
-import { MessengerMessage } from './MessengerMessage';
-import { ScrollArea, Skeleton } from 'erxes-ui/components';
-import { useEffect, useRef } from 'react';
+import { ScrollArea } from 'erxes-ui';
 import { useQueryState } from '../../hooks/useQueryState';
-import React from 'react';
+import { useEffect, useRef } from 'react';
+import { ConversationMessage } from './ConverstaionMessage';
+import { IMessage } from '../../types/Conversation';
+import { MessagesSkeleton } from './ConversationSkeleton';
+import { useConversationMessages } from '../hooks/useConversationMessages';
 
-export const MessengerMessages = () => {
+export const ConversationMessages = () => {
   const [conversationId] = useQueryState<string>('conversationId');
   const viewportRef = useRef<HTMLDivElement>(null);
   const distanceFromBottomRef = useRef(0);
 
-  const { messages, loading, handleFetchMore } = useMessengerMessages({
+  const { messages, loading, handleFetchMore } = useConversationMessages({
     variables: {
       conversationId,
       limit: 5,
@@ -20,8 +20,6 @@ export const MessengerMessages = () => {
     onCompleted: () => scrollToBottom(),
   });
 
-  const messageIsDownloaded = !!messages?.length;
-
   const scrollToBottom = () => {
     setTimeout(() => {
       if (viewportRef.current) {
@@ -29,6 +27,8 @@ export const MessengerMessages = () => {
       }
     });
   };
+
+  const messageIsDownloaded = !!messages?.length;
 
   const onScroll = () => {
     if (viewportRef.current && viewportRef.current.scrollTop === 0) {
@@ -56,7 +56,7 @@ export const MessengerMessages = () => {
       <ScrollArea.Viewport ref={viewportRef} onScroll={onScroll}>
         <div className="flex flex-col w-[648px] mx-auto p-6">
           {messages?.map((message: IMessage, index: number) => (
-            <MessengerMessage
+            <ConversationMessage
               key={message._id}
               {...message}
               previousMessage={messages[index - 1]}
@@ -64,35 +64,10 @@ export const MessengerMessages = () => {
             />
           ))}
         </div>
-        {(loading || !messages?.length) && <MessagesSkeleton />}
+        <MessagesSkeleton isFetched={!loading && !!messages?.length} />
       </ScrollArea.Viewport>
       <ScrollArea.Bar orientation="vertical" />
       <ScrollArea.Bar orientation="horizontal" />
     </ScrollArea.Root>
-  );
-};
-
-const MessagesSkeleton = () => {
-  return (
-    <div className="absolute inset-0 bg-background">
-      <div className="flex flex-col max-w-[648px] mx-auto p-6">
-        <div className="flex flex-col gap-4">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <React.Fragment key={index}>
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-7 w-32" />
-                <Skeleton className="h-7 w-36" />
-              </div>
-              <Skeleton className="h-7 w-24" />
-              <Skeleton className="h-7 w-32 ml-auto" />
-              <div className="inline-flex items-center gap-2 justify-end">
-                <Skeleton className="h-7 w-32" />
-                <Skeleton className="h-7 w-36" />
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 };

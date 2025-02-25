@@ -6,24 +6,10 @@ import { useQueryState } from '../../hooks/useQueryState';
 import { activeConversationState } from '../../state/activeConversationState';
 import { useAtomValue } from 'jotai';
 import { UnderConstruction } from './UnderConstruction';
-
-const Messenger = lazy(() =>
-  import('./Messenger').then((mod) => ({
-    default: mod.Messenger,
-  })),
-);
-
-const MailDetail = lazy(() =>
-  import('./MailDetail').then((mod) => ({
-    default: mod.MailDetail,
-  })),
-);
-
-const FormDetail = lazy(() =>
-  import('./FormDetail').then((mod) => ({
-    default: mod.FormDetail,
-  })),
-);
+import { ConversationMessages } from './ConversationMessages';
+import { MessagesSkeleton } from './ConversationSkeleton';
+import { ConversationDetailLayout } from './ConversationDetailLayout';
+import { MessageInput } from './MessageInput';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -32,7 +18,7 @@ export const ConversationDetail = () => {
     activeConversationCandidate?._id === conversationId &&
     activeConversationCandidate;
 
-  const { conversationDetail } = useConversationDetail({
+  const { conversationDetail, loading } = useConversationDetail({
     variables: {
       _id: conversationId,
     },
@@ -42,24 +28,25 @@ export const ConversationDetail = () => {
   const { integration, customer, customerId } =
     currentConversation || conversationDetail || {};
 
+  if (loading) {
+    return (
+      <div className="relative h-full">
+        <MessagesSkeleton />
+      </div>
+    );
+  }
+
+  if (!['messenger', 'lead'].includes(integration?.kind)) {
+    return <UnderConstruction />;
+  }
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <ConversationHeader customerId={customerId} customer={customer} />
       <Separator />
-      <Suspense fallback={<Skeleton className="h-full" />}>
-        {(() => {
-          switch (integration?.kind) {
-            case 'messenger':
-              return <Messenger />;
-            case 'imap':
-              return <MailDetail />;
-            case 'lead':
-              return <FormDetail />;
-            case !!integration?.kind:
-              return <UnderConstruction />;
-          }
-        })()}
-      </Suspense>
+      <ConversationDetailLayout input={<MessageInput />}>
+        <ConversationMessages />
+      </ConversationDetailLayout>
     </div>
   );
 };

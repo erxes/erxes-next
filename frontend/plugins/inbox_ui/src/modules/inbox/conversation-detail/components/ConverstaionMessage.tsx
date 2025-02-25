@@ -1,23 +1,32 @@
-import { Button, cn, IAttachment, RelativeDateDisplay } from 'erxes-ui';
-import DOMPurify from 'dompurify';
-import { IMessengerMessage } from '@/inbox/types/Conversation';
-import { MessageContent } from './MessageContent';
+import { cn } from 'erxes-ui/lib/utils';
+import { IMessage } from '../../types/Conversation';
 import { HAS_ATTACHMENT } from '../../constants/messengerConstants';
+import { FormDisplay } from './FormDisplay';
+import { Button, IAttachment, RelativeDateDisplay } from 'erxes-ui';
+import { MessageContent } from './MessageContent';
 
-export const MessengerMessage = ({
-  _id,
-  userId,
-  content,
-  createdAt,
+export const ConversationMessage = ({
   previousMessage,
   nextMessage,
-  customerId,
-  attachments,
-}: IMessengerMessage & {
-  previousMessage?: IMessengerMessage;
-  nextMessage?: IMessengerMessage;
+  ...message
+}: IMessage & {
+  previousMessage?: IMessage;
+  nextMessage?: IMessage;
 }) => {
-  const checkHasSibling = (message?: IMessengerMessage) => {
+  const {
+    _id,
+    userId,
+    content,
+    createdAt,
+    customerId,
+    attachments,
+    formWidgetData,
+    internalNote,
+  } = message;
+
+  if (formWidgetData) return <FormDisplay {...message} />;
+
+  const checkHasSibling = (message?: IMessage) => {
     if (!message) {
       return false;
     }
@@ -45,13 +54,14 @@ export const MessengerMessage = ({
           className={cn(
             'mt-2 h-auto py-2 text-left [&_*]:whitespace-pre-wrap block font-normal space-y-2 overflow-x-hidden text-pretty break-words [&_a]:text-primary [&_a]:underline [&_img]:aspect-square [&_img]:object-cover [&_img]:rounded',
             userId && 'bg-primary/10 hover:bg-primary/10',
+            internalNote &&
+              'bg-yellow-50 hover:bg-yellow-50 dark:bg-yellow-950 dark:hover:bg-yellow-950',
             !hasPreviousMessage && 'mt-6',
           )}
           asChild
         >
           <div>
             <MessageContent content={content} />
-
             {!hasNextMessage && (
               <div className="text-muted-foreground mt-1">
                 <RelativeDateDisplay value={createdAt} />

@@ -1,4 +1,4 @@
-import { Toaster } from 'erxes-ui/components';
+import { Toaster } from 'erxes-ui';
 
 import { AppRouter } from './AppRoutes';
 

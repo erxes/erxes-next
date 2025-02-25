@@ -1,8 +1,14 @@
 import DOMPurify from 'dompurify';
 import { useEffect, useRef, useState } from 'react';
 import { Dialog } from 'erxes-ui';
-
-export const MessageContent = ({ content }: { content?: string }) => {
+import { InternalNoteDisplay } from 'ui-modules';
+export const MessageContent = ({
+  content,
+  internalNote,
+}: {
+  content?: string;
+  internalNote?: boolean;
+}) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const messageRef = useRef<HTMLDivElement>(null);
 
@@ -16,7 +22,11 @@ export const MessageContent = ({ content }: { content?: string }) => {
       img.onclick = () => setSelectedImage(img.src);
     });
   }, [content]);
-  console.log('content', content);
+
+  if (internalNote) {
+    return <InternalNoteDisplay content={content || ''} />;
+  }
+
   return (
     <>
       {!!content && (
