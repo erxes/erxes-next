@@ -106,19 +106,7 @@ const useProfileForm = () => {
     resolver: zodResolver(profileValidationSchema),
   });
 
-  const onCompleted = (data) => {
-    const { username, employeeId, positionIds, email, details, links } =
-      data.userDetail || {};
-
-    form.setValue('username', username);
-    form.setValue('employeeId', employeeId);
-    form.setValue('positionIds', positionIds);
-    form.setValue('email', email);
-    form.setValue('details', details);
-    form.setValue('links', links);
-  };
-
-  return { form, onCompleted };
+  return { form };
 };
 
 export { useProfileForm };

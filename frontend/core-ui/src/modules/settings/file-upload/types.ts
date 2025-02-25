@@ -21,8 +21,16 @@ interface fileMimeTypes {
   extension: string;
 }
 
+interface TConfig {
+  _id: string,
+  code: keyof UploadConfigFormT;
+  value: any;
+}
+
 export {
   DynamicFieldsT,
   fileMimeTypes,
   serviceTypeT,
-  UploadConfigFormT}
+  UploadConfigFormT,
+  TConfig
+}

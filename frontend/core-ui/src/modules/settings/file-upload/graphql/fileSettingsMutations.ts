@@ -6,6 +6,6 @@ const configsUpdate = gql`
   }
 `
 
-export const SettingsMutations = {
+export const fileSettingsMutations = {
   configsUpdate
 }

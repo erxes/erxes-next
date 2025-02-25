@@ -1,19 +1,16 @@
 import { Fragment } from 'react';
 import { Link } from 'react-router';
 
-import { Breadcrumb } from 'erxes-ui/components';
+import { Breadcrumb } from "erxes-ui/components";
 
-const breadcrumbs = [
-  { title: 'Settings', path: 'settings' },
-  { title: 'Profile', path: 'profile' },
-];
-
-export const ProfileHeader = () => {
+export function SettingsBreadcrumbs(
+  { breadcrumbs }: { breadcrumbs: { title: string, path: string }[] }
+) {
   return (
     <div className="flex items-center justify-between px-4 h-16">
       <Breadcrumb.Root>
         <Breadcrumb.List>
-          {breadcrumbs.map((breadcrumb, index) => {
+          {breadcrumbs.map(({ title, path }, index) => {
             const currentPath = breadcrumbs
               .slice(0, index + 1)
               .map((b) => b.path)
@@ -23,7 +20,7 @@ export const ProfileHeader = () => {
               <Fragment key={`breadcrumb-${index}`}>
                 <Breadcrumb.Item>
                   <Breadcrumb.Link asChild>
-                    <Link to={`/${currentPath}`}>{breadcrumb.title}</Link>
+                    <Link to={`/${currentPath}`}>{title}</Link>
                   </Breadcrumb.Link>
                 </Breadcrumb.Item>
                 {breadcrumbs.length - 1 !== index && (
@@ -35,5 +32,5 @@ export const ProfileHeader = () => {
         </Breadcrumb.List>
       </Breadcrumb.Root>
     </div>
-  );
-};
+  )
+}

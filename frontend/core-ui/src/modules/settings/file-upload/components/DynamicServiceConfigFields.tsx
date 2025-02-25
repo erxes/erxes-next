@@ -1,4 +1,4 @@
-import { AnimatePresence,motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 
 import {
   Checkbox,
@@ -10,10 +10,30 @@ import {
   Input,
 } from 'erxes-ui/components';
 
-import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
-import { DynamicFieldsT } from '@/settings/file-upload/types';
+import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
+import {
+  DynamicFieldsT,
+  UploadConfigFormT,
+} from '@/settings/file-upload/types';
+import { FormProps, Path } from 'react-hook-form';
 
-export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
+interface TField {
+  label: string;
+  name: string;
+  type: string;
+}
+
+type Props = {
+  dynamicFields: TField[];
+  selected: string;
+  form: FormProps<UploadConfigFormT>;
+};
+
+export function DynamicServiceConfigFields({
+  dynamicFields,
+  selected,
+  form,
+}: Props) {
   return (
     <AnimatePresence mode="popLayout">
       {dynamicFields.length > 0 && (
@@ -22,23 +42,23 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
           initial={false}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="flex flex-col bg-primary-foreground rounded-lg h-auto shadow-sm overflow-hidden mb-4"
+          className="flex flex-col bg-background rounded-lg h-auto shadow-sm overflow-hidden mb-4"
         >
           <h4 className="font-semibold text-base p-3">
-            {uploadServiceData.find((item) => item.value === selected)?.label}
+            {UPLOAD_SERVICE_DATA.find((item) => item.value === selected)?.label}
           </h4>
           <div className="grid grid-cols-4 gap-1 p-4">
-            {dynamicFields.map((fieldData) =>
+            {dynamicFields.map((fieldData: TField) =>
               fieldData.type === 'checkbox' ? (
                 <FormField
                   control={form.control}
-                  name={fieldData.name}
+                  name={fieldData.name as Path<UploadConfigFormT>}
                   key={fieldData.name}
                   render={({ field }) => (
                     <FormItem className="col-span-4 flex items-center justify-start gap-x-2">
                       <FormControl>
                         <Checkbox
-                          checked={field.value}
+                          checked={field.value as boolean}
                           onCheckedChange={field.onChange}
                           id={fieldData.name}
                         />
@@ -71,7 +91,7 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
                     </FormItem>
                   )}
                 />
-              )
+              ),
             )}
           </div>
         </motion.div>

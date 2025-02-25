@@ -11,6 +11,6 @@ const configsQuery = gql`
 }
 `
 
-export const SettingsQueries = {
+export const fileSettingsQueries = {
   configsQuery
 }
