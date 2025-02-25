@@ -28,8 +28,6 @@ RUN --mount=type=cache,target=/app/.nx-cache \
 FROM nginx:${NGINX_VERSION} AS runner
 # Copy only the built files
 COPY --from=builder /app/dist/frontend/core-ui /usr/share/nginx/html
-# Remove default nginx configuration
-RUN rm /etc/nginx/conf.d/default.conf
 # Use custom nginx conf for better performance
 COPY frontend/core-ui/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
