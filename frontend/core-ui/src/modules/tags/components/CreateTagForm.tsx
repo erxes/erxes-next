@@ -13,17 +13,16 @@ import {
   FormMessage,
   Input,
 } from 'erxes-ui/components';
-import { SelectColor } from 'erxes-ui/modules/select-color/components/SelectColor';
 
 import { SelectTags } from '@/tags/components/SelectTags';
 import { useTagsAdd } from '@/tags/hooks/useTagsAdd';
 import { newTagNameAtom } from '@/tags/states/selectTagsStates';
 import { ITag } from '@/tags/types/tagTypes';
 import { useAtom } from 'jotai';
+import { useId } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(1),
-  colorCode: z.string().optional(),
   parentId: z.string().optional(),
 });
 
@@ -31,15 +30,15 @@ export const CreateTagForm = ({
   tagType,
   onCompleted,
 }: {
-  tagType?: string;
+  tagType: string;
   onCompleted?: (tag: ITag) => void;
 }) => {
+  const id = useId();
   const [name] = useAtom(newTagNameAtom);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name,
-      colorCode: 'empty',
       parentId: '',
     },
   });
@@ -84,25 +83,13 @@ export const CreateTagForm = ({
             <FormItem>
               <FormLabel>Parent Tag</FormLabel>
               <SelectTags
+                recordId={id}
                 tagType={tagType}
                 single
                 sub
                 selected={field.value}
-                onSelect={(tag) => field.onChange(tag)}
+                onSelect={(tags) => field.onChange(tags[0])}
                 className="w-full h-8"
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="colorCode"
-          render={({ field }) => (
-            <FormItem className="mb-2">
-              <SelectColor
-                value={field.value || ''}
-                onValueChange={field.onChange}
               />
               <FormMessage />
             </FormItem>

@@ -23,18 +23,30 @@ import {
   CustomerFormType,
 } from '@/contacts/add-contacts/components/formSchema';
 import { useAddCustomer } from '@/contacts/hooks/useAddCustomer';
+import { useToast } from 'erxes-ui/hooks';
+import { ApolloError } from '@apollo/client';
 
 export function AddCustomerForm() {
   const [open, setOpen] = useState<boolean>(false);
   const { customersAdd } = useAddCustomer();
   const form = useForm<CustomerFormType>({
     resolver: zodResolver(customerFormSchema),
-    defaultValues: {},
   });
+  const { toast } = useToast();
   const onSubmit = (data: CustomerFormType) => {
-    customersAdd({ variables: data });
-    form.reset();
-    setOpen(false);
+    customersAdd({
+      variables: data,
+      onError: (e: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+        });
+      },
+      onCompleted: () => {
+        form.reset();
+        setOpen(false);
+      },
+    });
   };
 
   return (

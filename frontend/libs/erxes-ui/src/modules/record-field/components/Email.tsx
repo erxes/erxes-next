@@ -44,10 +44,20 @@ export const Email = React.forwardRef<
   const inputRef = useRef<React.ElementRef<typeof Input>>(null);
 
   const handleEscape = (closeEditMode: () => void) => {
-    closeEditMode();
-    setNewEmail('');
-    setIsAddingEmail(false);
-    setEditingEmail(null);
+    if (editingEmail) {
+      setEditingEmail(null);
+      setNewEmail('');
+    }
+    if (isAddingEmail) {
+      setIsAddingEmail(false);
+      setNewEmail('');
+    }
+    if (!isAddingEmail && !editingEmail) {
+      closeEditMode();
+      setNewEmail('');
+      setIsAddingEmail(false);
+      setEditingEmail(null);
+    }
   };
 
   const handleChange = (updatedEmails: string[]) => {
@@ -180,6 +190,7 @@ interface EmailActionPopoverProps {
   onSetPrimary: (email: string) => void;
   onEdit: (email: string) => void;
   isEditing: boolean;
+  isPrimary: boolean;
 }
 
 const EmailActionPopover: React.FC<EmailActionPopoverProps> = ({
@@ -188,6 +199,7 @@ const EmailActionPopover: React.FC<EmailActionPopoverProps> = ({
   onSetPrimary,
   onEdit,
   isEditing,
+  isPrimary,
 }) => {
   const triggerButtonRef = useRef<React.ElementRef<typeof Button>>(null);
   const [open, setOpen] = useState<boolean>(false);
@@ -222,19 +234,21 @@ const EmailActionPopover: React.FC<EmailActionPopoverProps> = ({
       >
         <Command>
           <Command.List>
-            <Command.Item className="h-cell" asChild>
-              <Button
-                variant="ghost"
-                className="w-full justify-start gap-2 text-muted-foreground"
-                onClick={() => {
-                  onSetPrimary(email);
-                  setOpen(false);
-                }}
-              >
-                <IconBookmarkPlus className="w-4 h-4 " />
-                Set as primary email
-              </Button>
-            </Command.Item>
+            {!isPrimary && (
+              <Command.Item className="h-cell" asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-2 text-muted-foreground"
+                  onClick={() => {
+                    onSetPrimary(email);
+                    setOpen(false);
+                  }}
+                >
+                  <IconBookmarkPlus className="w-4 h-4 " />
+                  Set as primary email
+                </Button>
+              </Command.Item>
+            )}
             <Command.Item className="h-cell" asChild>
               <Button
                 variant="ghost"
@@ -345,10 +359,11 @@ const EmailItems: React.FC<EmailItemsProps> = ({
             onSetPrimary={onSetPrimary}
             onEdit={onEdit}
             isEditing={Boolean(editingEmail)}
+            isPrimary={index === 0}
           />
         </Command.Item>
       ))}
-      <Command.Separator className="my-1" />
+      {emails.length > 0 && <Command.Separator className="my-1" />}
       {children}
     </Command.List>
   </Command>

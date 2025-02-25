@@ -50,7 +50,7 @@ export const wsLink = new GraphQLWsLink(
     retryWait: async () => {
       await new Promise((resolve) => setTimeout(resolve, 5000));
     },
-  })
+  }),
 );
 
 type Definintion = {
@@ -66,10 +66,14 @@ const link = split(
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
-  httpLinkWithMiddleware
+  httpLinkWithMiddleware,
 );
 
-const typePolicies = {};
+const typePolicies = {
+  customersMain: {
+    keyFields: ['_id'],
+  },
+};
 
 // Creating Apollo-client
 const client = new ApolloClient({

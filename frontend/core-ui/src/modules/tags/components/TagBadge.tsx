@@ -1,12 +1,11 @@
-import { Badge } from 'erxes-ui/components';
-import { Color } from 'erxes-ui/components/colors';
+import { Button } from 'erxes-ui/components';
 
 import { ITag } from '@/tags/types/tagTypes';
 
-export function TagBadge({ colorCode, _id, name }: ITag) {
+export function TagBadge({ name }: ITag) {
   return (
-    <Badge color={colorCode as Color} colorSeed={_id} className="gap-2">
+    <Button variant="outline" className="h-min hover:bg-border">
       {name}
-    </Badge>
+    </Button>
   );
 }

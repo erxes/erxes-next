@@ -1,5 +1,5 @@
 import { Text } from 'erxes-ui/modules/record-field/components/Text';
-import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
+import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
 
 interface TextFieldProps {
   placeholder?: string;
@@ -16,10 +16,10 @@ export const TextField = ({
   fieldId,
   _id,
 }: TextFieldProps) => {
-  const { customersEdit } = useCustomersEdit();
+  const { companiesEdit } = useCompaniesEdit();
   const onSave = (editingValue: string) => {
     if (editingValue === value) return;
-    customersEdit(
+    companiesEdit(
       {
         variables: { _id, [field]: editingValue },
       },
