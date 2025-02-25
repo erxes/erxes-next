@@ -28,9 +28,6 @@ export function useAddCustomer(
             query: GET_CUSTOMERS,
             variables: queryVariables,
           });
-
-          console.log('cache before: ', existingData);
-          console.log('adding:', data?.customersAdd);
           if (
             !existingData ||
             !existingData.customersMain ||
@@ -49,11 +46,6 @@ export function useAddCustomer(
               },
             },
           });
-
-          console.log('cache after:', cache.readQuery<CustomerData>({
-            query: GET_CUSTOMERS,
-            variables: queryVariables,
-          }))
         } catch (e) {
           console.error('error:', e);
         }
