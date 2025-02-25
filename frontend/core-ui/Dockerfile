@@ -1,33 +1,30 @@
-# Use ARG for versions to match CI build-args
-ARG NODE_VERSION=22
-ARG NGINX_VERSION=alpine
+# Use an official Node.js runtime as a parent image
+FROM node:22-alpine AS build
 
-# Build stage
-FROM node:${NODE_VERSION}-alpine AS deps
+# Set the working directory
 WORKDIR /app
-# Only copy files needed for installation
+
+# Copy package.json and pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
-# Install dependencies with specific flags for faster install
-RUN npm install -g pnpm && \
-    pnpm install --frozen-lockfile --prefer-offline
 
-# Build stage
-FROM node:${NODE_VERSION}-alpine AS builder
-WORKDIR /app
-# Copy deps from previous stage
-COPY --from=deps /app/node_modules ./node_modules
+# Install dependencies
+RUN npm install -g pnpm && pnpm install
 
-# Copy source files
+# Copy the rest of the application code
 COPY . .
-# Build with cache mount for faster builds
-RUN --mount=type=cache,target=/app/.nx-cache \
-    pnpm nx build core-ui --configuration=production
 
-# Production stage
-FROM nginx:${NGINX_VERSION} AS runner
-# Copy only the built files
-COPY --from=builder /app/dist/frontend/core-ui /usr/share/nginx/html
-# Use custom nginx conf for better performance
+# Build the application
+RUN pnpm nx build core-ui --configuration=production
+
+# Use a lightweight server image to serve the build
+FROM nginx:alpine
+
+# Copy the build output to the nginx html directory
+COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
 COPY frontend/core-ui/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
 EXPOSE 80
+
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
