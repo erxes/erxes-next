@@ -40,8 +40,6 @@ export const SelectTags = React.forwardRef<
       },
     });
     const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
-
-    // Sync selected tag IDs with tag objects when tags load or selected IDs change
     useEffect(() => {
       if (!loading && tags && tags.length > 0) {
         const tagMap = new Map(tags.map(tag => [tag._id, tag]));
@@ -57,28 +55,22 @@ export const SelectTags = React.forwardRef<
 
     const [activeTab, setActiveTab] = useState('tags');
     const commandSearchRef = useRef<HTMLInputElement>(null);
-
-    // Simplified and fixed handleSelect function
     const handleSelect = (tag: ITag) => {
       if (!onSelect) return;
 
       if (single) {
-        // For single selection, always replace with the new tag
         onSelect([tag._id]);
         setSelectedTags([tag]);
       } else {
-        // For multiple selection, toggle the tag
         const selectedIds = selectedTags.map(t => t._id);
         const tagIndex = selectedIds.indexOf(tag._id);
         
         if (tagIndex >= 0) {
-          // Tag exists - remove it
           const newSelectedTags = [...selectedTags];
           newSelectedTags.splice(tagIndex, 1);
           setSelectedTags(newSelectedTags);
           onSelect(newSelectedTags.map(t => t._id));
         } else {
-          // Tag doesn't exist - add it
           const newSelectedTags = [...selectedTags, tag];
           setSelectedTags(newSelectedTags);
           onSelect(newSelectedTags.map(t => t._id));
