@@ -2,19 +2,12 @@ import {
   DefaultReactSuggestionItem,
   SuggestionMenuController,
 } from '@blocknote/react';
-import { AssignMemberInfo } from '@/team-members/components/AssignMember';
-import {
-  SuggestionMenu,
-  SuggestionMenuItem,
-} from 'erxes-ui/modules/blocks/components/SuggestionMenu';
-import {
-  IAssignMember,
-  MentionMenuProps,
-} from '@/team-members/types/teamMembers';
-import { useUsers } from '@/team-members/hooks/useUsers';
+import { AssignMemberInfo } from '../components/AssignMember';
+import { SuggestionMenu, SuggestionMenuItem, IBlockEditor } from 'erxes-ui';
+import { IAssignMember, MentionMenuProps } from '../types/TeamMembers';
+import { useUsers } from '../hooks/useUsers';
 import { useState } from 'react';
 import { IconLoader } from '@tabler/icons-react';
-import { IBlockEditor } from 'erxes-ui/modules/blocks/components/BlockEditor';
 
 import { useInView } from 'react-intersection-observer';
 
@@ -43,7 +36,7 @@ export const AssignMemberInEditor = ({ editor }: { editor: IBlockEditor }) => {
   );
 };
 
-function MentionMenu({
+export function MentionMenu({
   items,
   selectedIndex,
   users,

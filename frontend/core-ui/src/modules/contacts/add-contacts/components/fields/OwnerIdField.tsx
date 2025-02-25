@@ -7,7 +7,7 @@ import {
 } from 'erxes-ui/components';
 import { Control } from 'react-hook-form';
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
-import { AssignMember } from '@/team-members/components/AssignMember';
+import { AssignMember } from 'ui-modules';
 
 export const OwnerIdField = ({
   control,

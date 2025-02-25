@@ -7,7 +7,6 @@ import {
 
 import 'erxes-ui/modules/blocks/styles/styles.css';
 import { themeState } from 'erxes-ui/state';
-import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
 import { SlashMenu } from './SlashMenu';
 import { Toolbar } from './Toolbar';
 import { Button, Tooltip } from 'erxes-ui/components';
@@ -15,18 +14,7 @@ import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'erxes-ui/types/Key';
 import { useAtomValue } from 'jotai';
-export interface BlockEditorProps {
-  editor: IBlockEditor;
-  onFocus?: () => void;
-  onBlur?: () => void;
-  onPaste?: (event: ClipboardEvent) => void;
-  onChange?: () => void;
-  readonly?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-}
-
-export type IBlockEditor = typeof BLOCK_SCHEMA.BlockNoteEditor;
+import { BlockEditorProps } from '../types';
 
 export const BlockEditor = ({
   editor,
@@ -37,6 +25,7 @@ export const BlockEditor = ({
   readonly,
   children,
   className,
+  style,
 }: BlockEditorProps) => {
   const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
@@ -76,6 +65,7 @@ export const BlockEditor = ({
         },
       }}
       ref={hotkeyRef}
+      style={style}
     >
       <SuggestionMenuController
         triggerCharacter="/"

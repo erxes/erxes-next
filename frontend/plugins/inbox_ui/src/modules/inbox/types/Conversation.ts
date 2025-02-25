@@ -1,5 +1,6 @@
 import { IAttachment } from 'erxes-ui';
 import { ICustomerInline } from 'ui-modules';
+import { IFormWidgetItem } from './FormWidget';
 
 export interface IConversation {
   _id: string;
@@ -23,7 +24,7 @@ export interface IBrand {
   name: string;
 }
 
-export interface IMessengerMessage {
+export interface IMessage {
   _id: string;
   userId?: string;
   customerId?: string;
@@ -31,4 +32,6 @@ export interface IMessengerMessage {
   createdAt: string;
   updatedAt: string;
   attachments?: IAttachment[];
+  formWidgetData?: IFormWidgetItem[];
+  internalNote?: boolean;
 }

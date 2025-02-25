@@ -1,25 +1,52 @@
 import { useCreateBlockNote } from '@blocknote/react';
-import { IconArrowUp } from '@tabler/icons-react';
-import { BlockEditor, Button } from 'erxes-ui/components';
+import { IconArrowUp, IconPaperclip } from '@tabler/icons-react';
+import { BlockEditor, Button, Toggle, cn } from 'erxes-ui';
 import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
-
+import { useState } from 'react';
+import { AssignMemberInEditor } from 'ui-modules';
 export const MessageInput = () => {
+  const [isInternalNote, setIsInternalNote] = useState(false);
   const editor = useCreateBlockNote({
     schema: BLOCK_SCHEMA,
   });
   return (
-    <div className="flex flex-col h-full">
+    <div
+      className={cn(
+        'flex flex-col h-full py-4 gap-1',
+        isInternalNote && 'bg-yellow-50 dark:bg-yellow-950',
+      )}
+    >
       <BlockEditor
         editor={editor}
         onChange={() => console.log('onChange')}
         onBlur={() => console.log('onBlur')}
         onFocus={() => console.log('onFocus')}
-        className=" h-full w-full overflow-y-auto"
-      />
-      <Button className="ml-auto mr-6" size="lg">
-        <IconArrowUp />
-        Send
-      </Button>
+        className={cn(
+          'h-full w-full overflow-y-auto',
+          isInternalNote && 'internal-note',
+        )}
+      >
+        {isInternalNote && <AssignMemberInEditor editor={editor} />}
+      </BlockEditor>
+
+      <div className="flex px-6 gap-4">
+        <Toggle
+          pressed={isInternalNote}
+          size="lg"
+          variant="outline"
+          onPressedChange={() => setIsInternalNote(!isInternalNote)}
+        >
+          Internal Note
+        </Toggle>
+        <Button size="icon" variant="outline" className="size-8">
+          <IconPaperclip />
+        </Button>
+
+        <Button size="lg" className="ml-auto">
+          <IconArrowUp />
+          Send
+        </Button>
+      </div>
     </div>
   );
 };

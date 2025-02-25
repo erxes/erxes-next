@@ -33,7 +33,7 @@ export const SlashMenu = ({
           onClick={item.onItemClick}
         >
           <span className="flex items-center gap-2">
-            {icons[item.title]}
+            {icons[item.title as keyof typeof icons]}
             {item.title}
           </span>
           <p className="text-xs font-normal text-muted-foreground">

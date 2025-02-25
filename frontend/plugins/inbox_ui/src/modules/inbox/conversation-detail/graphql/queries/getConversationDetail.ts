@@ -6,6 +6,7 @@ export const GET_CONVERSATION_DETAIL = gql`
       _id
       createdAt
       tagIds
+      content
       integration {
         name
         kind

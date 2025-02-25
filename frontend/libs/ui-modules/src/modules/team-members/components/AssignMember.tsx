@@ -6,8 +6,9 @@ import {
   Popover,
   Skeleton,
   Spinner,
-} from 'erxes-ui/components';
-import { useAssignedMember, useUsers } from '@/team-members/hooks/useUsers';
+  cn,
+} from 'erxes-ui';
+import { useAssignedMember, useUsers } from '../hooks/useUsers';
 import { useState } from 'react';
 import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
 import { useDebounce } from 'use-debounce';
@@ -15,9 +16,8 @@ import { useInView } from 'react-intersection-observer';
 import {
   AssignMemberFetchMoreProps,
   IAssignMember,
-} from '../types/teamMembers';
+} from '../types/TeamMembers';
 import React from 'react';
-import { cn } from 'erxes-ui/lib';
 
 interface AssignMemberProps {
   value: string;
@@ -86,7 +86,7 @@ export function AssignMemberList({
       />
       <Command.List className="max-h-[300px] overflow-y-auto">
         <AssignMemberEmpty loading={loading} />
-        {users?.map((user) => renderItem(user))}
+        {users?.map((user: IAssignMember) => renderItem(user))}
         <SelectUserFetchMore
           fetchMore={handleFetchMore}
           usersLength={users.length}
@@ -108,7 +108,7 @@ export const AssignMemberTrigger = React.forwardRef<
   const { loading } = useAssignedMember({
     variables: { id: value },
     skip: !value || !!selectedUser,
-    onCompleted: ({ userDetail }) => {
+    onCompleted: ({ userDetail }: { userDetail: IAssignMember }) => {
       setSelectedUser({ ...userDetail, _id: value });
     },
   });

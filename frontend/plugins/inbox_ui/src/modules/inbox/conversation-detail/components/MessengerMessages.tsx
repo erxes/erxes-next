@@ -1,5 +1,5 @@
 import { useMessengerMessages } from '../hooks/useMessengerMessages';
-import { IMessengerMessage } from '@/inbox/types/Conversation';
+import { IMessage } from '@/inbox/types/Conversation';
 import { MessengerMessage } from './MessengerMessage';
 import { ScrollArea, Skeleton } from 'erxes-ui/components';
 import { useEffect, useRef } from 'react';
@@ -55,7 +55,7 @@ export const MessengerMessages = () => {
     <ScrollArea.Root className="h-full">
       <ScrollArea.Viewport ref={viewportRef} onScroll={onScroll}>
         <div className="flex flex-col w-[648px] mx-auto p-6">
-          {messages?.map((message: IMessengerMessage, index: number) => (
+          {messages?.map((message: IMessage, index: number) => (
             <MessengerMessage
               key={message._id}
               {...message}

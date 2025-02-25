@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from 'erxes-ui/lib/utils';
 
 const inputVariants = cva(
-  'flex h-8 w-full rounded-sm bg-background px-3 py-2 text-sm text-foreground shadow-xs placeholder:text-muted-foreground/70 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:shadow-focus',
+  'flex h-8 w-full rounded-sm bg-background px-3 py-2 text-sm text-foreground font-medium shadow-xs placeholder:text-muted-foreground/70 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:shadow-focus',
   {
     variants: {
       type: {

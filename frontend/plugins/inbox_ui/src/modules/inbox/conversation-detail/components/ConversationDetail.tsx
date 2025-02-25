@@ -5,6 +5,7 @@ import { lazy, Suspense } from 'react';
 import { useQueryState } from '../../hooks/useQueryState';
 import { activeConversationState } from '../../state/activeConversationState';
 import { useAtomValue } from 'jotai';
+import { UnderConstruction } from './UnderConstruction';
 
 const Messenger = lazy(() =>
   import('./Messenger').then((mod) => ({
@@ -15,6 +16,12 @@ const Messenger = lazy(() =>
 const MailDetail = lazy(() =>
   import('./MailDetail').then((mod) => ({
     default: mod.MailDetail,
+  })),
+);
+
+const FormDetail = lazy(() =>
+  import('./FormDetail').then((mod) => ({
+    default: mod.FormDetail,
   })),
 );
 
@@ -40,8 +47,18 @@ export const ConversationDetail = () => {
       <ConversationHeader customerId={customerId} customer={customer} />
       <Separator />
       <Suspense fallback={<Skeleton className="h-full" />}>
-        {integration?.kind === 'messenger' && <Messenger />}
-        {integration?.kind === 'imap' && <MailDetail />}
+        {(() => {
+          switch (integration?.kind) {
+            case 'messenger':
+              return <Messenger />;
+            case 'imap':
+              return <MailDetail />;
+            case 'lead':
+              return <FormDetail />;
+            case !!integration?.kind:
+              return <UnderConstruction />;
+          }
+        })()}
       </Suspense>
     </div>
   );

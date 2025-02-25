@@ -1,4 +1,4 @@
-import { SlashMenuProps } from 'erxes-ui/modules/blocks/types/textEditorTypes';
+import { SlashMenuProps } from 'erxes-ui';
 
 export interface AssignMemberFetchMoreProps {
   fetchMore: () => void;

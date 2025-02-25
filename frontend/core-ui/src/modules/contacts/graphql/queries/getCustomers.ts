@@ -87,7 +87,7 @@ export const GET_CUSTOMERS = gql`
         sessionCount
         links
         ownerId
-        integrationType
+        integrationId
         createdAt
         remoteAddress
         location

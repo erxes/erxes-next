@@ -2,7 +2,7 @@ import { useCreateBlockNote } from '@blocknote/react';
 import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
 import { BlockEditor } from 'erxes-ui/modules/blocks/components/BlockEditor';
 import { getMentionedUserIds } from 'erxes-ui/modules/blocks/utils/getMentionedUserIds';
-import { AssignMemberInEditor } from '@/team-members/components/AssignMemberInEditor';
+import { AssignMemberInEditor } from 'ui-modules';
 import { Button, Spinner } from 'erxes-ui/components';
 import { IconArrowUp } from '@tabler/icons-react';
 import { useAddInternalNote } from '@/internal-notes/hooks/useAddInternalNote';
