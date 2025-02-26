@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "window._env_ = `jo \`env | grep REACT_APP_\``" > /usr/share/nginx/html/js/env.js
+echo "window._env_ = `jo \`_env_ | grep REACT_APP_\``" > /usr/share/nginx/html/js/env.js
 sed -i 's/${NGINX_HOST}/'"$NGINX_HOST"'/' /etc/nginx/conf.d/default.conf
 sed -i 's/${NGINX_PORT}/'"$NGINX_PORT"'/' /etc/nginx/conf.d/default.conf
 
