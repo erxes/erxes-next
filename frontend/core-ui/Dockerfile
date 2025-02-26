@@ -35,11 +35,19 @@ RUN sed -i 's/${NGINX_HOST}/'"$NGINX_HOST"'/' /etc/nginx/conf.d/default.conf && 
 # Create a script to generate env-config.js
 RUN printf '#!/bin/sh\n\
 \n\
-# Get all REACT_APP_ environment variables and format them for jo\n\
-ENV_VARS=$(env | grep "^REACT_APP_" | sed "s/\([^=]*\)=\(.*\)/\1=\2/")\n\
+# Create env-config.js with proper JSON formatting\n\
+echo "window._env_ = {" > /usr/share/nginx/html/env-config.js\n\
 \n\
-# Create the env-config.js file with proper JSON formatting\n\
-echo "window._env_ = $(jo $ENV_VARS)" > /usr/share/nginx/html/env-config.js\n\
+# Get all REACT_APP_ environment variables\n\
+env | grep "^REACT_APP_" | while IFS="=" read -r key value; do\n\
+    # Properly escape the value for JSON\n\
+    escaped_value=$(echo "$value" | sed "s/\"/\\\\\"/g")\n\
+    echo "  \"$key\": \"$escaped_value\"," >> /usr/share/nginx/html/env-config.js\n\
+done\n\
+\n\
+# Remove trailing comma and close the object\n\
+sed -i "$ s/,$//" /usr/share/nginx/html/env-config.js\n\
+echo "}" >> /usr/share/nginx/html/env-config.js\n\
 ' > /docker-entrypoint.d/40-env.sh
 
 RUN chmod +x /docker-entrypoint.d/40-env.sh
