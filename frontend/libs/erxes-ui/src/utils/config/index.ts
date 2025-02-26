@@ -1,6 +1,6 @@
 declare global {
   interface Window {
-    _env_?: Record<string, string>;
+    env?: Record<string, string>;
     __APOLLO_CLIENT__?: any;
   }
 }
@@ -14,7 +14,7 @@ const getDefaultUrl = () => {
 };
 
 const REACT_APP_API_URL =
-  window._env_?.REACT_APP_API_URL ||
+  window.env?.REACT_APP_API_URL ||
   process.env.REACT_APP_API_URL ||
   getDefaultUrl();
 
