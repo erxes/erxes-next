@@ -27,7 +27,7 @@ const getApi = (): string => {
     : getDefaultUrl();
 
   memoizedApiUrl = envApiUrl?.includes('<subdomain>')
-    ? envApiUrl.replace('<subdomain>', getSubdomain())
+    ? envApiUrl.replace('<subdomain>', getSubdomain()).replace('next', 'api')
     : envApiUrl;
 
   return memoizedApiUrl;
