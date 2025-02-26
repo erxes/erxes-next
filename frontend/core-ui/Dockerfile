@@ -19,23 +19,28 @@ RUN pnpm nx build core-ui --configuration=production
 # Use a lightweight server image to serve the build
 FROM nginx:alpine
 
-# Install bash and envsubst
-RUN apk add --no-cache bash
+# Install bash and jo for JSON handling
+RUN apk add --no-cache bash jo
 
 # Copy the build output to the nginx html directory
-COPY frontend/core-ui/dist /usr/share/nginx/html
+COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
 
-# Copy Nginx configuration
 COPY frontend/core-ui/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY frontend/core-ui/nginx/default.conf /etc/nginx/conf.d/default.conf
 
+# Replace nginx configuration variables
+RUN sed -i 's/${NGINX_HOST}/'"$NGINX_HOST"'/' /etc/nginx/conf.d/default.conf && \
+    sed -i 's/${NGINX_PORT}/'"$NGINX_PORT"'/' /etc/nginx/conf.d/default.conf
+
 # Create a script to generate env-config.js
 RUN printf '#!/bin/sh\n\
-cat <<EOF > /usr/share/nginx/html/env-config.js\n\
-window._env_ = {\n\
-  REACT_APP_API_URL: "${REACT_APP_API_URL}"\n\
-};\n\
-EOF\n' > /docker-entrypoint.d/40-env.sh
+\n\
+# Get all REACT_APP_ environment variables and format them for jo\n\
+ENV_VARS=$(env | grep "^REACT_APP_" | sed "s/\([^=]*\)=\(.*\)/\1=\2/")\n\
+\n\
+# Create the env-config.js file with proper JSON formatting\n\
+echo "window._env_ = $(jo $ENV_VARS)" > /usr/share/nginx/html/env-config.js\n\
+' > /docker-entrypoint.d/40-env.sh
 
 RUN chmod +x /docker-entrypoint.d/40-env.sh
 
