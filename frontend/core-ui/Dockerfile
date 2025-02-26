@@ -32,7 +32,7 @@ RUN echo '#!/bin/sh' > /docker-entrypoint.d/40-env.sh && \
     chmod +x /docker-entrypoint.d/40-env.sh
 
 # Create env-template.js
-RUN echo 'window._env_ = { REACT_APP_API_URL: "${REACT_APP_API_URL}" };' > /usr/share/nginx/html/env-config.js
+RUN echo 'window._env_ = { REACT_APP_API_URL: "${REACT_APP_API_URL}" };' > /usr/share/nginx/html/env-template.js
 
 # Add env-config.js script tag to index.html
 RUN sed -i '/<head>/a \    <script src="/env-config.js"></script>' /usr/share/nginx/html/index.html
