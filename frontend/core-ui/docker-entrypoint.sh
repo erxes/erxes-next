@@ -8,4 +8,4 @@ if ! grep -q "/js/env.js" /usr/share/nginx/html/index.html; then
     sed -i '/<head>/a \    <script src="/js/env.js"></script>' /usr/share/nginx/html/index.html
 fi
 
-exec "$@"
+exec "$@"   
