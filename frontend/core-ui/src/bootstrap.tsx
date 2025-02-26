@@ -11,7 +11,6 @@ import './styles.css';
 import { App } from '@/app/components/App';
 import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 
-// Initialize module federation before rendering
 const initFederation = async () => {
   const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement,
@@ -47,8 +46,23 @@ const initFederation = async () => {
           </StrictMode>,
         );
       })
-      .catch((error) => {
-        <ClientConfigError error={error} />;
+      .catch((error: unknown) => {
+        console.error(
+          'Failed to initialize frontend plugins:',
+          error instanceof Error ? error.message : String(error),
+        );
+
+        root.render(
+          <StrictMode>
+            <ClientConfigError
+              error={
+                error instanceof Error
+                  ? error
+                  : new Error('Failed to initialize frontend plugins')
+              }
+            />
+          </StrictMode>,
+        );
       });
   }
 };
