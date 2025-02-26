@@ -23,8 +23,11 @@ FROM nginx:alpine
 RUN apk add --no-cache bash
 
 # Copy the build output to the nginx html directory
-COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
-COPY frontend/core-ui/nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/core-ui/dist /usr/share/nginx/html
+
+# Copy Nginx configuration
+COPY frontend/core-ui/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY frontend/core-ui/nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Create a script to generate env-config.js
 RUN printf '#!/bin/sh\n\
