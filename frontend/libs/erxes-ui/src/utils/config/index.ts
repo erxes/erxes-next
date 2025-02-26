@@ -13,11 +13,27 @@ const getDefaultUrl = () => {
   }
 };
 
-const REACT_APP_API_URL =
-  window.env?.REACT_APP_API_URL ||
-  process.env.REACT_APP_API_URL ||
-  getDefaultUrl();
+const getSubdomain = () => {
+  return window.location.hostname.split('.')[0];
+};
+
+let memoizedApiUrl: string | null = null;
+
+const getApi = (): string => {
+  if (memoizedApiUrl) return memoizedApiUrl;
+
+  const envApiUrl = window.env?.REACT_APP_API_URL
+    ? process.env.REACT_APP_API_URL || getDefaultUrl()
+    : getDefaultUrl();
+
+  memoizedApiUrl = envApiUrl?.includes('<subdomain>')
+    ? envApiUrl.replace('<subdomain>', getSubdomain())
+    : envApiUrl;
+
+  return memoizedApiUrl;
+};
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
+const REACT_APP_API_URL = getApi();
 
 export { NODE_ENV, REACT_APP_API_URL };
