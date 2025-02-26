@@ -24,7 +24,7 @@ export const LastNameField = ({
         <FormItem>
           <FormLabel>LAST NAME</FormLabel>
           <FormControl>
-            <Input className="rounded-md h-8" {...field} />
+            <Input className="rounded-md h-8" {...field} value={field.value || ''} />
           </FormControl>
           <FormMessage className="text-destructive" />
         </FormItem>

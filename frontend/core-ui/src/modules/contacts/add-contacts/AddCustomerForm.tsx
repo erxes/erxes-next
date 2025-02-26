@@ -45,6 +45,7 @@ export function AddCustomerForm() {
       onCompleted: () => {
         form.reset();
         setOpen(false);
+        
       },
     });
   };
@@ -73,7 +74,8 @@ export function AddCustomerForm() {
                   <CustomerAddGeneralInformationFields form={form} />
                 </Tabs.Content>
                 <Tabs.Content value="links">
-                  <CustomerAddLinksFields />
+                  
+                  <CustomerAddLinksFields control={form.control} />
                 </Tabs.Content>
               </div>
             </Tabs>

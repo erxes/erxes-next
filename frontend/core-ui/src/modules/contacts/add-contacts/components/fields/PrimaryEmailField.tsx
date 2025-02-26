@@ -25,7 +25,7 @@ export const PrimaryEmailField = ({
         <FormItem>
           <FormLabel>EMAIL</FormLabel>
           <FormControl>
-            <Input className="rounded-md h-8" {...field} />
+            <Input className="rounded-md h-8" {...field} value={field.value || ''} />
           </FormControl>
           <FormMessage className="text-destructive" />
         </FormItem>
