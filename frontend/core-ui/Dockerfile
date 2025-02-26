@@ -24,7 +24,14 @@ RUN apk add --no-cache bash jo
 
 # Copy the build output to the nginx html directory
 COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
-COPY frontend/core-ui/nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY frontend/core-ui/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY frontend/core-ui/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Replace nginx configuration variables
+RUN sed -i 's/${NGINX_HOST}/'"$NGINX_HOST"'/' /etc/nginx/conf.d/default.conf && \
+    sed -i 's/${NGINX_PORT}/'"$NGINX_PORT"'/' /etc/nginx/conf.d/default.conf
+
 
 # Create a script to generate env-config.js
 RUN printf '#!/bin/sh\n\
