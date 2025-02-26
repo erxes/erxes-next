@@ -49,7 +49,9 @@ const CustomerInlineProvider = ({
   const customerData = customerDetail || customer || {};
 
   return (
-    <CustomerInlineContext.Provider value={{ ...customerData, loading }}>
+    <CustomerInlineContext.Provider
+      value={{ ...customerData, _id: customerId || customerData._id, loading }}
+    >
       {children}
     </CustomerInlineContext.Provider>
   );
@@ -59,8 +61,15 @@ const CustomerInlineAvatar = React.forwardRef<
   React.ElementRef<typeof Avatar>,
   React.ComponentPropsWithoutRef<typeof Avatar>
 >(({ ...props }, ref) => {
-  const { firstName, lastName, avatar, primaryEmail, primaryPhone, loading } =
-    useCustomerInlineContext();
+  const {
+    firstName,
+    lastName,
+    avatar,
+    primaryEmail,
+    primaryPhone,
+    loading,
+    _id,
+  } = useCustomerInlineContext();
 
   if (loading)
     return <Skeleton className={avatarVariants({ size: props.size })} />;
@@ -68,7 +77,7 @@ const CustomerInlineAvatar = React.forwardRef<
   return (
     <Avatar {...props} ref={ref}>
       <Avatar.Image src={avatar} />
-      <Avatar.Fallback>
+      <Avatar.Fallback colorSeed={_id}>
         {firstName?.charAt(0) ||
           lastName?.charAt(0) ||
           primaryEmail?.charAt(0) ||

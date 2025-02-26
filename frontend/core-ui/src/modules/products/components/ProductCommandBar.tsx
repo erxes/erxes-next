@@ -1,6 +1,6 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 
-import { CommandBar } from 'erxes-ui/components';
+import { Button, CommandBar, Separator } from 'erxes-ui/components';
 import { RecordTable } from 'erxes-ui/modules/record-table';
 
 export const ProductCommandBar = () => {
@@ -12,19 +12,16 @@ export const ProductCommandBar = () => {
         <CommandBar.Value>
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
-        <CommandBar.Seperator />
-        <CommandBar.Command shortcut="D" action={() => console.log('delete')}>
-          <IconTrash className="w-4 h-4" />
+        <Separator.Inline />
+        <Button variant="secondary">
+          <IconTrash />
           Delete
-        </CommandBar.Command>
-        <CommandBar.Seperator />
-        <CommandBar.Command
-          shortcut="P"
-          action={() => console.log('create product')}
-        >
-          <IconPlus className="w-4 h-4" />
+        </Button>
+        <Separator.Inline />
+        <Button variant="secondary">
+          <IconPlus />
           Create
-        </CommandBar.Command>
+        </Button>
       </CommandBar.Bar>
     </CommandBar>
   );

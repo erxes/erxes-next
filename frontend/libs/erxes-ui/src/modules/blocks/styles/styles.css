@@ -134,3 +134,14 @@
 .bn-side-menu {
   height: 26px;
 }
+
+[data-content-type='heading'] {
+  --level: 24px;
+}
+[data-content-type='heading'][data-level='2'] {
+  --level: 20px;
+}
+
+[data-content-type='heading'][data-level='3'] {
+  --level: 16px;
+}

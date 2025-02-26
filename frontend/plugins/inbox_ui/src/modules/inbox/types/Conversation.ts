@@ -33,5 +33,5 @@ export interface IMessage {
   updatedAt: string;
   attachments?: IAttachment[];
   formWidgetData?: IFormWidgetItem[];
-  internalNote?: boolean;
+  internal?: boolean;
 }

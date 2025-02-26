@@ -1,13 +1,14 @@
 import DOMPurify from 'dompurify';
 import { useEffect, useRef, useState } from 'react';
 import { Dialog } from 'erxes-ui';
-import { InternalNoteDisplay } from 'ui-modules';
+import { BlockEditorReadOnly } from 'erxes-ui';
+
 export const MessageContent = ({
   content,
-  internalNote,
+  internal,
 }: {
   content?: string;
-  internalNote?: boolean;
+  internal?: boolean;
 }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const messageRef = useRef<HTMLDivElement>(null);
@@ -23,18 +24,13 @@ export const MessageContent = ({
     });
   }, [content]);
 
-  if (internalNote) {
-    return <InternalNoteDisplay content={content || ''} />;
-  }
-
   return (
     <>
       {!!content && (
-        <div
+        <BlockEditorReadOnly
+          content={content}
+          className="read-only"
           ref={messageRef}
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(content || ''),
-          }}
         />
       )}
       <Dialog

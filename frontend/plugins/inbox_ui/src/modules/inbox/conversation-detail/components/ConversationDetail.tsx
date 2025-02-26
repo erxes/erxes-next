@@ -22,13 +22,13 @@ export const ConversationDetail = () => {
     variables: {
       _id: conversationId,
     },
-    skip: !conversationId || !!currentConversation,
+    skip: !conversationId,
   });
 
   const { integration, customer, customerId } =
     currentConversation || conversationDetail || {};
 
-  if (loading) {
+  if (loading && !currentConversation) {
     return (
       <div className="relative h-full">
         <MessagesSkeleton />

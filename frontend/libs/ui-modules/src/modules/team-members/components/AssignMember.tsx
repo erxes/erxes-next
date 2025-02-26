@@ -1,5 +1,5 @@
 import {
-  Avatar,
+  AvatarProps,
   Button,
   ButtonProps,
   Command,
@@ -13,11 +13,9 @@ import { useState } from 'react';
 import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
 import { useDebounce } from 'use-debounce';
 import { useInView } from 'react-intersection-observer';
-import {
-  AssignMemberFetchMoreProps,
-  IAssignMember,
-} from '../types/TeamMembers';
+import { AssignMemberFetchMoreProps, IMember } from '../types/TeamMembers';
 import React from 'react';
+import { MemberInline } from './MemberInline';
 
 interface AssignMemberProps {
   value: string;
@@ -29,11 +27,11 @@ export const AssignMember = React.forwardRef<
   ButtonProps & AssignMemberProps
 >(({ value, onValueChange, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<IAssignMember | undefined>(
+  const [selectedUser, setSelectedUser] = useState<IMember | undefined>(
     undefined,
   );
 
-  const handleSelect = (user: IAssignMember | undefined) => {
+  const handleSelect = (user: IMember | undefined) => {
     setSelectedUser(user);
     onValueChange(user?._id || '');
     setOpen(false);
@@ -66,7 +64,7 @@ export const AssignMember = React.forwardRef<
 export function AssignMemberList({
   renderItem,
 }: {
-  renderItem: (user: IAssignMember) => React.ReactNode;
+  renderItem: (user: IMember) => React.ReactNode;
 }) {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
@@ -86,7 +84,7 @@ export function AssignMemberList({
       />
       <Command.List className="max-h-[300px] overflow-y-auto">
         <AssignMemberEmpty loading={loading} />
-        {users?.map((user: IAssignMember) => renderItem(user))}
+        {users?.map((user: IMember) => renderItem(user))}
         <SelectUserFetchMore
           fetchMore={handleFetchMore}
           usersLength={users.length}
@@ -101,14 +99,14 @@ export const AssignMemberTrigger = React.forwardRef<
   React.RefObject<HTMLButtonElement>,
   ButtonProps & {
     value: string;
-    selectedUser?: IAssignMember;
-    setSelectedUser: (user?: IAssignMember) => void;
+    selectedUser?: IMember;
+    setSelectedUser: (user?: IMember) => void;
   }
 >(({ value, selectedUser, setSelectedUser, className, ...props }, ref) => {
   const { loading } = useAssignedMember({
-    variables: { id: value },
+    variables: { _id: value },
     skip: !value || !!selectedUser,
-    onCompleted: ({ userDetail }: { userDetail: IAssignMember }) => {
+    onCompleted: ({ userDetail }: { userDetail: IMember }) => {
       setSelectedUser({ ...userDetail, _id: value });
     },
   });
@@ -129,9 +127,11 @@ export const AssignMemberTrigger = React.forwardRef<
         ref={ref as React.RefObject<HTMLButtonElement>}
       >
         {value ? (
-          <AssignMemberInfo
-            user={selectedUser}
-            size={props.size as React.ComponentProps<typeof Avatar>['size']}
+          <MemberInline
+            member={selectedUser}
+            avatarProps={{
+              size: props.size as AvatarProps['size'],
+            }}
           />
         ) : loading ? (
           <Skeleton className="w-full h-8" />
@@ -174,9 +174,9 @@ export const AssignMemberItem = ({
   selectedUser,
   handleSelect,
 }: {
-  user: IAssignMember;
-  selectedUser?: IAssignMember;
-  handleSelect: (user?: IAssignMember) => void;
+  user: IMember;
+  selectedUser?: IMember;
+  handleSelect: (user?: IMember) => void;
 }) => {
   const isSelected = selectedUser?._id === user._id;
   return (
@@ -185,31 +185,11 @@ export const AssignMemberItem = ({
       value={user._id}
       onSelect={() => handleSelect(isSelected ? undefined : user)}
     >
-      <AssignMemberInfo user={user} />
+      <MemberInline member={user} />
       {isSelected && (
         <IconCheck className="w-4 h-4 text-muted-foreground ml-auto" />
       )}
     </Command.Item>
-  );
-};
-
-export const AssignMemberInfo = ({
-  user,
-  size,
-}: {
-  user?: IAssignMember;
-  size?: React.ComponentProps<typeof Avatar>['size'];
-}) => {
-  return (
-    <>
-      <Avatar size={size}>
-        <Avatar.Image src={user?.details?.avatar} />
-        <Avatar.Fallback colorSeed={user?._id}>
-          {user?.details?.fullName?.charAt(0)}
-        </Avatar.Fallback>
-      </Avatar>
-      <span className="truncate">{user?.details?.fullName}</span>
-    </>
   );
 };
 

@@ -1,21 +1,44 @@
 import { useCreateBlockNote } from '@blocknote/react';
 import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
-import { Block } from '@blocknote/core';
 import { BlockNoteView } from '@blocknote/shadcn';
 import 'erxes-ui/modules/blocks/styles/styles.css';
 import { useAtomValue } from 'jotai';
 import { themeState } from 'erxes-ui/state';
+import { parseBlocks } from '../utils';
+import DOMPurify from 'dompurify';
+import { cn } from 'erxes-ui/lib';
+import React from 'react';
+export const BlockEditorReadOnly = React.forwardRef<
+  HTMLDivElement,
+  {
+    content: string;
+    className?: string;
+  }
+>(({ content, className }, ref) => {
+  const contentBlocks = parseBlocks(content);
 
-export const BlockEditorReadOnly = ({ content }: { content: Block[] }) => {
   const editor = useCreateBlockNote({
     schema: BLOCK_SCHEMA,
-    initialContent: content,
+    initialContent: contentBlocks || undefined,
   });
   const theme = useAtomValue(themeState);
 
+  if (!contentBlocks) {
+    if (content) {
+      return (
+        <div
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+          className={className}
+          ref={ref}
+        />
+      );
+    }
+    return null;
+  }
+
   return (
     <BlockNoteView
-      className="read-only"
+      className={cn('read-only', className)}
       editor={editor}
       editable={false}
       formattingToolbar={false}
@@ -24,4 +47,4 @@ export const BlockEditorReadOnly = ({ content }: { content: Block[] }) => {
       theme={theme as 'light' | 'dark'}
     />
   );
-};
+});

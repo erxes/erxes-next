@@ -27,5 +27,6 @@ export const GET_CONVERSATION_MESSAGES = gql`
       userId
       customerId
     }
+    conversationMessagesTotalCount(conversationId: $conversationId)
   }
 `;
