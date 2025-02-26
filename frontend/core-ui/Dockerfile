@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm install -g pnpm && pnpm install
+RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install
 
 # Copy the rest of the application code
 COPY . .
@@ -29,17 +29,19 @@ COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
 COPY frontend/core-ui/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY frontend/core-ui/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Create startup script
+# Create startup script for environment variables
 RUN echo '#!/bin/sh' > /docker-entrypoint.d/40-env.sh && \
     echo 'cat <<EOF > /usr/share/nginx/html/env-config.js' >> /docker-entrypoint.d/40-env.sh && \
     echo 'window._env_ = {' >> /docker-entrypoint.d/40-env.sh && \
-    echo '  "REACT_APP_API_URL": "$REACT_APP_API_URL"' >> /docker-entrypoint.d/40-env.sh && \
+    echo '  "REACT_APP_API_URL": "'"$REACT_APP_API_URL"'"' >> /docker-entrypoint.d/40-env.sh && \
     echo '};' >> /docker-entrypoint.d/40-env.sh && \
     echo 'EOF' >> /docker-entrypoint.d/40-env.sh && \
     chmod +x /docker-entrypoint.d/40-env.sh
 
-# Add env-config.js script tag to index.html
-RUN sed -i '/<head>/a \    <script src="/env-config.js"></script>' /usr/share/nginx/html/index.html
+# Add env-config.js script tag to index.html dynamically
+RUN echo '#!/bin/sh' > /docker-entrypoint.d/50-fix-index.sh && \
+    echo 'sed -i "/<head>/a \\    <script src=\"/env-config.js\"></script>" /usr/share/nginx/html/index.html' >> /docker-entrypoint.d/50-fix-index.sh && \
+    chmod +x /docker-entrypoint.d/50-fix-index.sh
 
 # Expose port 80
 EXPOSE 80
