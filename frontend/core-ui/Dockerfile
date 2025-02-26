@@ -1,6 +1,5 @@
 # Stage 1: Build the application
 FROM node:22-alpine AS build
-
 # Set the working directory
 WORKDIR /app
 
@@ -37,22 +36,25 @@ RUN sed -i 's/${NGINX_HOST}/'"$NGINX_HOST"'/' /etc/nginx/conf.d/default.conf && 
 RUN printf '#!/bin/sh\n\
 set -e\n\
 \n\
-# Create env-config.js with proper JSON formatting\n\
-echo "window._env_ = {" > /usr/share/nginx/html/env-config.js\n\
+# Get all REACT_APP_ environment variables and format them for jo\n\
+env_vars=""\n\
+while IFS="=" read -r key value; do\n\
+    if [[ $key == REACT_APP_* ]]; then\n\
+        env_vars="$env_vars $key=$value"\n\
+    fi\n\
+done < <(env | sort)\n\
 \n\
-# Get all REACT_APP_ environment variables\n\
-env | grep "^REACT_APP_" | while IFS="=" read -r key value; do\n\
-    # Properly escape the value for JSON\n\
-    escaped_value=$(echo "$value" | sed "s/\"/\\\\\"/g")\n\
-    echo "  \"$key\": \"$escaped_value\"," >> /usr/share/nginx/html/env-config.js\n\
-done\n\
+# Create env-config.js with jo\n\
+echo "window._env_ = $(jo $env_vars)" > /usr/share/nginx/html/env-config.js\n\
 \n\
-# Remove trailing comma and close the object\n\
-sed -i "$ s/,$//" /usr/share/nginx/html/env-config.js\n\
-echo "}" >> /usr/share/nginx/html/env-config.js\n\
+# Inject env-config.js into index.html if not already present\n\
+if ! grep -q "env-config.js" /usr/share/nginx/html/index.html; then\n\
+    sed -i "/<head>/a \    <script src=\"\/env-config.js\"><\/script>" /usr/share/nginx/html/index.html\n\
+fi\n\
 \n\
-# Inject env-config.js into index.html\n\
-sed -i "/<head>/a \    <script src=\"\/env-config.js\"><\/script>" /usr/share/nginx/html/index.html\n\
+# Print the generated config for debugging\n\
+echo "Generated environment config:"\n\
+cat /usr/share/nginx/html/env-config.js\n\
 ' > /docker-entrypoint.d/40-env.sh && \
 chmod +x /docker-entrypoint.d/40-env.sh
 
