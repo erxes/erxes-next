@@ -50,7 +50,7 @@ const MemberInlineProvider = ({
 
   return (
     <MemberInlineContext.Provider
-      value={{ ...memberData, loading, _id: memberId || memberData._id }}
+      value={{ ...memberData, loading, _id: memberId || member?._id }}
     >
       {children}
     </MemberInlineContext.Provider>

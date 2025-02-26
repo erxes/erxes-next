@@ -7,9 +7,11 @@ export interface IConversation {
   content: string;
   createdAt: string;
   updatedAt: string;
-  customer: ICustomerInline;
+  customer?: ICustomerInline;
+  customerId?: string;
   integration: IIntegration;
   readUserIds: string[];
+  assignedUserId?: string;
 }
 
 export interface IIntegration {

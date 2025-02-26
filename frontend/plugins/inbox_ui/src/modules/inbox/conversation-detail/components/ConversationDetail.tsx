@@ -1,5 +1,5 @@
 import { Separator, Skeleton } from 'erxes-ui';
-import { ConversationHeader } from '@/inbox/components/ConversationHeader';
+import { ConversationHeader } from '~/modules/inbox/conversation-detail/components/ConversationHeader';
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';
 import { lazy, Suspense } from 'react';
 import { useQueryState } from '../../hooks/useQueryState';
@@ -10,6 +10,7 @@ import { ConversationMessages } from './ConversationMessages';
 import { MessagesSkeleton } from './ConversationSkeleton';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { MessageInput } from './MessageInput';
+import { ConversationContext } from '../../context/ConversationContext';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -25,8 +26,7 @@ export const ConversationDetail = () => {
     skip: !conversationId,
   });
 
-  const { integration, customer, customerId } =
-    currentConversation || conversationDetail || {};
+  const { integration } = currentConversation || conversationDetail || {};
 
   if (loading && !currentConversation) {
     return (
@@ -39,14 +39,21 @@ export const ConversationDetail = () => {
   if (!['messenger', 'lead'].includes(integration?.kind)) {
     return <UnderConstruction />;
   }
-
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <ConversationHeader customerId={customerId} customer={customer} />
-      <Separator />
-      <ConversationDetailLayout input={<MessageInput />}>
-        <ConversationMessages />
-      </ConversationDetailLayout>
+      <ConversationContext.Provider
+        value={{
+          ...currentConversation,
+          ...conversationDetail,
+          loading,
+        }}
+      >
+        <ConversationHeader />
+        <Separator />
+        <ConversationDetailLayout input={<MessageInput />}>
+          <ConversationMessages />
+        </ConversationDetailLayout>
+      </ConversationContext.Provider>
     </div>
   );
 };

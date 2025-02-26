@@ -8,7 +8,7 @@ import {
   Separator,
 } from 'erxes-ui';
 import { cn } from 'erxes-ui/lib';
-import { ConversationContext } from '@/inbox/context/ConversationConxtext';
+import { ConversationContext } from '~/modules/inbox/context/ConversationContext';
 import { IConversation } from '@/inbox/types/Conversation';
 import { useConversationContext } from '@/inbox/hooks/useConversationContext';
 import { currentUserState, CustomerInline } from 'ui-modules';
@@ -132,10 +132,10 @@ export const ConversationItem = () => {
         <ConversationCheckbox />
         <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
         <ConversationItemContent />
-        <div className="ml-auto font-medium text-accent-foreground w-32 truncate">
+        <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
           to {brand?.name}
         </div>
-        <div className="w-32 text-right">
+        <div className="w-32 text-right flex-none">
           <RelativeDateDisplay value={updatedAt || createdAt} />
         </div>
       </CustomerInline.Provider>
@@ -146,7 +146,7 @@ export const ConversationItem = () => {
 export const ConversationItemContent = () => {
   const { content } = useConversationContext();
   return (
-    <div className="truncate w-full h-4 [&_*]:text-sm [&_*]:leading-tight [&_*]:font-normal">
+    <div className="truncate w-full h-4 [&_*]:text-sm [&_*]:leading-tight [&_*]:font-medium">
       <BlockEditorReadOnly content={content} />
     </div>
   );

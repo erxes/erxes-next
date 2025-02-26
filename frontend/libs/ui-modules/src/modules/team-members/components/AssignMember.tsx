@@ -18,14 +18,14 @@ import React from 'react';
 import { MemberInline } from './MemberInline';
 
 interface AssignMemberProps {
-  value: string;
-  onValueChange: (value: string) => void;
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export const AssignMember = React.forwardRef<
   React.RefObject<HTMLButtonElement>,
   ButtonProps & AssignMemberProps
->(({ value, onValueChange, ...props }, ref) => {
+>(({ value, onValueChange, children, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IMember | undefined>(
     undefined,
@@ -33,19 +33,24 @@ export const AssignMember = React.forwardRef<
 
   const handleSelect = (user: IMember | undefined) => {
     setSelectedUser(user);
-    onValueChange(user?._id || '');
+    onValueChange?.(user?._id || '');
     setOpen(false);
   };
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
-      <AssignMemberTrigger
-        value={value}
-        selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
-        {...props}
-        ref={ref}
-      />
+      {children ? (
+        children
+      ) : (
+        <AssignMemberTrigger
+          value={value || ''}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          {...props}
+          ref={ref}
+        />
+      )}
+
       <Popover.Content className="p-0">
         <AssignMemberList
           renderItem={(user) => (
@@ -105,7 +110,7 @@ export const AssignMemberTrigger = React.forwardRef<
 >(({ value, selectedUser, setSelectedUser, className, ...props }, ref) => {
   const { loading } = useAssignedMember({
     variables: { _id: value },
-    skip: !value || !!selectedUser,
+    skip: !value || selectedUser?._id === value,
     onCompleted: ({ userDetail }: { userDetail: IMember }) => {
       setSelectedUser({ ...userDetail, _id: value });
     },
