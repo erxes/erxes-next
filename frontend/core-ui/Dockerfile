@@ -17,8 +17,7 @@ COPY . .
 RUN pnpm nx build core-ui --configuration=production
 
 # Final stage
-ARG BASE_IMAGE=nginx:alpine
-FROM ${BASE_IMAGE}
+FROM nginx:alpine
 
 # Copy jo from builder
 COPY --from=jo-builder /usr/local/bin/jo /usr/local/bin/jo
