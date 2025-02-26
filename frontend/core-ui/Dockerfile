@@ -19,6 +19,9 @@ RUN pnpm nx build core-ui --configuration=production
 # Use a lightweight server image to serve the build
 FROM nginx:alpine
 
+# Install gettext for envsubst
+RUN apk add --no-cache gettext
+
 # Copy the build output to the nginx html directory
 COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
 
@@ -26,13 +29,14 @@ COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
 COPY frontend/core-ui/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY frontend/core-ui/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Create env.sh script
+# Create startup script
 RUN echo '#!/bin/sh' > /docker-entrypoint.d/40-env.sh && \
-    echo 'envsubst < /usr/share/nginx/html/env-template.js > /usr/share/nginx/html/env-config.js' >> /docker-entrypoint.d/40-env.sh && \
+    echo 'cat <<EOF > /usr/share/nginx/html/env-config.js' >> /docker-entrypoint.d/40-env.sh && \
+    echo 'window._env_ = {' >> /docker-entrypoint.d/40-env.sh && \
+    echo '  "REACT_APP_API_URL": "$REACT_APP_API_URL"' >> /docker-entrypoint.d/40-env.sh && \
+    echo '};' >> /docker-entrypoint.d/40-env.sh && \
+    echo 'EOF' >> /docker-entrypoint.d/40-env.sh && \
     chmod +x /docker-entrypoint.d/40-env.sh
-
-# Create env-template.js
-RUN echo 'window._env_ = { REACT_APP_API_URL: "${REACT_APP_API_URL}" };' > /usr/share/nginx/html/env-template.js
 
 # Add env-config.js script tag to index.html
 RUN sed -i '/<head>/a \    <script src="/env-config.js"></script>' /usr/share/nginx/html/index.html
