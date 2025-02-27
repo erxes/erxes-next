@@ -334,8 +334,13 @@ const PhoneActionPopover: React.FC<{
   isPrimary: boolean;
   index: number;
 }> = ({ phone, isPrimary, index }) => {
-  const { handleDelete, handleSetPrimary, handleEdit, editingPhone } =
-    usePhoneContext();
+  const {
+    handleDelete,
+    handleSetPrimary,
+    handleEdit,
+    editingPhone,
+    phoneValidationStatus,
+  } = usePhoneContext();
 
   const triggerButtonRef = useRef<React.ElementRef<typeof Button>>(null);
   const [open, setOpen] = useState<boolean>(false);
@@ -346,7 +351,6 @@ const PhoneActionPopover: React.FC<{
       triggerButtonRef?.current?.focus();
     }, 0);
   };
-  const { phoneValidationStatus } = usePhoneContext();
   return (
     <Popover onOpenChange={handleOpenChange} open={open} modal>
       <Popover.Trigger asChild>
@@ -504,7 +508,7 @@ const PhoneItem: React.FC<{ phone: string; index: number }> = ({
           validationInfos={PHONE_VALIDATION_STATUS_INFOS}
         />
       )}
-      <span className= {cn("relative truncate max-w-[180px]")}>
+      <span className={cn('relative truncate max-w-[180px]')}>
         <span className="relative z-10 hover:cursor-pointer text-base font-medium ">
           {formatIncompletePhoneNumber(phone || '')}
         </span>
