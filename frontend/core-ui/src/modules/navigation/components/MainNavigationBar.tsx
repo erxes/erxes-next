@@ -2,11 +2,11 @@ import { Link } from 'react-router';
 
 import {
   IconBuildingStore,
-  IconCaretUpFilled,
-  IconMailFilled,
+  // IconCaretUpFilled,
+  // IconMailFilled,
   IconSettings,
 } from '@tabler/icons-react';
-import { Button, Collapsible, Sidebar } from 'erxes-ui';
+import { Button, Sidebar } from 'erxes-ui';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { Organization } from './Organization';
@@ -41,7 +41,7 @@ export const MainNavigationBar = ({
         </Sidebar.Header>
         <Sidebar.Separator className="mx-0" />
         <Sidebar.Content className="gap-0">
-          <Collapsible defaultOpen className="group/collapsible">
+          {/* <Collapsible defaultOpen className="group/collapsible">
             <Sidebar.Group>
               <Sidebar.GroupLabel asChild>
                 <Collapsible.Trigger>
@@ -63,7 +63,7 @@ export const MainNavigationBar = ({
               </Collapsible.Content>
             </Sidebar.Group>
           </Collapsible>
-          <Sidebar.Separator className="mx-0" />
+          <Sidebar.Separator className="mx-0" /> */}
           <SidebarNavigation />
         </Sidebar.Content>
         <Sidebar.Separator className="mx-0" />
