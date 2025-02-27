@@ -7,10 +7,6 @@ import {
   fileSettingsQueries,
 } from '@/settings/file-upload/graphql';
 
-type TList = {
-  onCompleted?: (data: any) => void;
-};
-
 const useConfig = () => {
   const { toast } = useToast();
 

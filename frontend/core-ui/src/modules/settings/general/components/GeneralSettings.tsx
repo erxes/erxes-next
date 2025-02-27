@@ -3,8 +3,10 @@ import { useGeneralSettingsForms } from '../hooks/useGeneralSettingsForms';
 import SelectControl from './SelectControl';
 import { LANGUAGES } from '../constants/data';
 import { IconLoader2 } from '@tabler/icons-react';
+import { useSwitchLanguage } from '~/i18n';
 
 const GeneralSettings = () => {
+  const { languages } = useSwitchLanguage();
   const {
     methods,
     methods: { control },
@@ -20,7 +22,9 @@ const GeneralSettings = () => {
         <SelectControl
           control={control}
           name="languageCode"
-          options={LANGUAGES}
+          options={LANGUAGES.filter((lang) =>
+            languages.some((lng) => lang.value === lng),
+          )}
           placeholder="Languages"
           label="Language"
         />
