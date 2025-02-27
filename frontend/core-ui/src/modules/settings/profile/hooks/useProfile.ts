@@ -2,15 +2,14 @@ import { useMutation, useQuery } from '@apollo/client';
 
 import { currentUserState } from 'ui-modules';
 import { toast, useConfirm } from 'erxes-ui/hooks';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
 
-import { iUserDetail ,Props } from '../types/userDetail';
+import { iUserDetail, Props } from '../types/userDetail';
 
 const useProfile = ({ onCompleted }: Props) => {
-  const [currentUser] = useAtom(currentUserState);
-  const setCurrentUser = useSetAtom(currentUserState);
+  const [currentUser, setCurrentUser] = useAtom(currentUserState);
 
   const { confirm } = useConfirm();
 

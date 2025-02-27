@@ -6,12 +6,14 @@ import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
 
 import { AppPath } from '@/types/paths/AppPath';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 
 export const UserProvider = () => {
-  const isCurrentUserLoaded = useAtom(isCurrentUserLoadedState);
+  const isCurrentUserLoaded = useAtomValue(isCurrentUserLoadedState);
 
-  const currentUser = useAtom(currentUserState);
+  const currentUser = useAtomValue(currentUserState);
+
+  console.log(currentUser, '---');
 
   if (!isCurrentUserLoaded) {
     return (

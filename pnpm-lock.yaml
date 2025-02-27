@@ -487,6 +487,12 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(webpack-dev-server@5.2.0)(webpack@5.97.1)
 
+  backend/libs/erxes-api-utils:
+    dependencies:
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
 packages:
 
   '@adobe/css-tools@4.3.3':

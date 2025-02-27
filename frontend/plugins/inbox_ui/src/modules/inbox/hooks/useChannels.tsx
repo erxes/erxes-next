@@ -6,6 +6,7 @@ import { currentUserState } from 'ui-modules';
 
 export const useChannels = (options?: OperationVariables) => {
   const currentUser = useAtomValue(currentUserState);
+
   const { data, loading } = useQuery(GET_CHANNELS, {
     ...options,
     variables: {
