@@ -4,6 +4,7 @@ import {
   coreModelOrganizations,
   getCoreConnection,
 } from './saas/saas-mongo-connection';
+import { getService } from './service-discovery';
 
 export const getEnv = ({
   name,
@@ -143,4 +144,15 @@ export const paginate = (
   }
 
   return collection.limit(_limit).skip((_page - 1) * _limit);
+};
+
+export const escapeRegExp = (str: string) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+export const getContentTypes = async (serviceName) => {
+  const service = await getService(serviceName);
+  const meta = service.config.meta || {};
+  const types = (meta.tags && meta.tags.types) || [];
+  return types.map((type) => `${serviceName}:${type.type}`);
 };

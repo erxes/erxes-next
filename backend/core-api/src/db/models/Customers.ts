@@ -11,7 +11,7 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
   removeCustomers(customerIds: string[]): Promise<{ n: number; ok: number }>;
 }
 
-export const loadCustomerClass = (models: IModels, subdomain: string) => {
+export const loadCustomerClass = (models: IModels) => {
   class Customer {
     public static getCustomerName(customer: ICustomer) {
       if (customer.firstName || customer.lastName) {
