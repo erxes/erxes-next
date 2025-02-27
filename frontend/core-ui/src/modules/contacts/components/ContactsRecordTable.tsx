@@ -15,7 +15,6 @@ export const ContactsRecordTable = () => {
       type: 'customer',
     },
   });
-
   return (
     <RecordTable.Provider
       columns={contactColumns}

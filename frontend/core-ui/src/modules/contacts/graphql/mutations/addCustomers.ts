@@ -64,6 +64,7 @@ export const ADD_CUSTOMERS = gql`
       location
       customFieldsData
       trackedData
+      tagIds
     }
   }
 `;

@@ -20,6 +20,7 @@ import { useAddProduct } from '@/products/hooks/useAddProduct';
 import { ApolloError } from '@apollo/client';
 import { useToast } from 'erxes-ui/hooks';
 
+// TODO: refactor
 export function AddProductForm() {
   const [open, setOpen] = useState<boolean>(false);
   const { productsAdd } = useAddProduct();

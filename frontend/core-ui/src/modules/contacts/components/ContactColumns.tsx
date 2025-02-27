@@ -71,6 +71,7 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
       const { primaryEmail, emails, _id } = cell.row.original;
       return (
         <EmailField
+          emailValidationStatus={cell.row.original.emailValidationStatus || 'unknown'}
           primaryEmail={primaryEmail || ''}
           emails={emails || []}
           _id={_id}
@@ -86,9 +87,10 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
       <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
     ),
     cell: ({ cell }) => {
-      const { primaryPhone, phones, _id, location } = cell.row.original;
+      const { primaryPhone, phones, _id, location, phoneValidationStatus } = cell.row.original;
       return (
         <PhoneField
+          phoneValidationStatus={phoneValidationStatus || 'unknown'}
           primaryPhone={primaryPhone || ''}
           phones={phones || []}
           defaultCountryCode={location?.countryCode}
