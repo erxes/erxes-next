@@ -10,7 +10,6 @@ export const ProductDetailLayout = ({
   children: React.ReactNode;
   actions?: React.ReactNode;
 }) => {
-  console.log({children})
   return (
     <ProductDetailSheet>
       <div className="flex h-auto flex-auto overflow-auto">

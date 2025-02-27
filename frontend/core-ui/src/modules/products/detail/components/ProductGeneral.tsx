@@ -2,7 +2,6 @@ import { Upload } from "lucide-react"
 import { useProductDetail } from "../hooks/useProductDetail"
 import { Skeleton, Label, Input, Select, Button } from "erxes-ui/components"
 import { useProductsEdit } from "@/products/hooks/useProductsEdit"
-import { useProductCategories } from "@/products/product-category/hooks/useProductCategories"
 import { PRODUCT_TYPE_OPTIONS } from "@/products/constants/ProductConstants"
 import { IconCurrencyDollar } from "@tabler/icons-react"
 import { CurrencyDisplay } from "erxes-ui/display"
@@ -15,13 +14,12 @@ import { SelectCategory } from "@/products/product-category/components/SelectCat
 
 export const ProductGeneral = () => {
   const { productDetail, loading: productLoading } = useProductDetail()
-  const { productCategories, loading: categoriesLoading } = useProductCategories()
   const { productsEdit } = useProductsEdit()
   const [priceValue, setPriceValue] = useState(0)
   const [isEditingPrice, setIsEditingPrice] = useState(false)
   const client = useApolloClient();
   
-  const loading = productLoading || categoriesLoading
+  const loading = productLoading
   useEffect(() => {
     if (productDetail && productDetail.unitPrice !== undefined) {
       setPriceValue(productDetail.unitPrice)

@@ -21,7 +21,7 @@ export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) 
     if (open) {
       setHotkeyScope(ContactHotKeyScope.CustomerEditSheet);
     }
-  }, [open]);
+  }, [open, setHotkeyScope]);
 
   const setOpen = (productId: string | null) => {
     navigate({
@@ -37,7 +37,6 @@ export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) 
     <Sheet
       open={!!open}
       onOpenChange={(isOpen) => {
-        console.log('Sheet open changed:', isOpen);
         if (!isOpen) {
           setOpen(null);
           setHotkeyScope(PageHotkeyScope.ProductsPage);
