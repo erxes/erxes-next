@@ -16,6 +16,7 @@ export interface BlockEditorProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  disabled?: boolean;
 }
 
 export type IBlockEditor = typeof BLOCK_SCHEMA.BlockNoteEditor;

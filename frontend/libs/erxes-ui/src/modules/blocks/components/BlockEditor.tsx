@@ -26,6 +26,7 @@ export const BlockEditor = ({
   children,
   className,
   style,
+  disabled,
 }: BlockEditorProps) => {
   const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
@@ -51,7 +52,7 @@ export const BlockEditor = ({
         setFocus(false);
         onBlur?.();
       }}
-      editable={!readonly}
+      editable={!readonly && !disabled}
       onChange={onChange}
       className={className}
       formattingToolbar={false}

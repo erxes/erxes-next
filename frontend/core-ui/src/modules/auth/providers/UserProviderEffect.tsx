@@ -6,7 +6,7 @@ import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 import { isDefined } from 'erxes-ui/utils';
 
 import { currentUser } from '@/users/graphql/queries';
-import { useAtom } from 'jotai';
+import { useSetAtom, useAtom } from 'jotai';
 
 export const UserProviderEffect = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,7 +15,7 @@ export const UserProviderEffect = () => {
     isCurrentUserLoadedState,
   );
 
-  const setCurrentUser = useAtom(currentUserState);
+  const setCurrentUser = useSetAtom(currentUserState);
 
   const {
     loading: queryLoading,
@@ -31,7 +31,7 @@ export const UserProviderEffect = () => {
 
     if (!isDefined(queryData?.currentUser)) return;
 
-    setCurrentUser[1](queryData.currentUser);
+    setCurrentUser(queryData.currentUser);
   }, [
     setCurrentUser,
     isLoading,

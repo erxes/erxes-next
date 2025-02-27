@@ -14,8 +14,8 @@ export const GET_USERS = gql`
 `;
 
 export const GET_ASSIGNED_MEMBER = gql`
-  query AssignedMember($id: String) {
-    userDetail(_id: $id) {
+  query AssignedMember($_id: String) {
+    userDetail(_id: $_id) {
       details {
         avatar
         fullName

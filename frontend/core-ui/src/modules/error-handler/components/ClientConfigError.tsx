@@ -1,5 +1,4 @@
-
-import { GenericErrorFallback } from '@/error-handler/components/GenericErrorFallback'
+import { GenericErrorFallback } from '@/error-handler/components/GenericErrorFallback';
 
 type ClientConfigErrorProps = {
   error?: Error;

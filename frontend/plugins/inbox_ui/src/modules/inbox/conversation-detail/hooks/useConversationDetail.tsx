@@ -3,10 +3,9 @@ import { GET_CONVERSATION_DETAIL } from '~/modules/inbox/conversation-detail/gra
 
 export const useConversationDetail = (options: OperationVariables) => {
   const { data, loading } = useQuery(GET_CONVERSATION_DETAIL, options);
-  const { conversationDetail } = data || {};
 
   return {
-    conversationDetail,
+    conversationDetail: data?.conversationDetail,
     loading,
   };
 };

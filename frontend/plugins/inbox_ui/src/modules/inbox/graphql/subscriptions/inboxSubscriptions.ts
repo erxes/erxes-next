@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-const conversationChanged = `
+export const CONVERSATION_CHANGED = gql`
   subscription conversationChanged($_id: String!) {
     conversationChanged(_id: $_id) {
       type
@@ -61,7 +61,6 @@ const customerConnectionChanged = `
 `;
 
 export default {
-  conversationChanged,
   conversationClientMessageInserted,
   conversationClientTypingStatusChanged,
   conversationExternalIntegrationMessageInserted,

@@ -1,4 +1,9 @@
-import { IconArrowUp, IconPaperclip } from '@tabler/icons-react';
+import {
+  IconArrowUp,
+  IconCommand,
+  IconCornerDownLeft,
+  IconPaperclip,
+} from '@tabler/icons-react';
 import {
   BlockEditor,
   Button,
@@ -7,38 +12,62 @@ import {
   cn,
   getMentionedUserIds,
   useBlockEditor,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
 } from 'erxes-ui';
 import { useState } from 'react';
 import { AssignMemberInEditor } from 'ui-modules';
 import { useConversationMessageAdd } from '../hooks/useConversationMessageAdd';
 import { useQueryState } from '../../hooks/useQueryState';
-
+import { Block } from '@blocknote/core';
+import { InboxHotkeyScope } from '../../types/InboxHotkeyScope';
+import { Kbd } from 'erxes-ui/components/kbd';
 export const MessageInput = () => {
   const [conversationId] = useQueryState('conversationId');
   const [isInternalNote, setIsInternalNote] = useState(false);
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<Block[]>();
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const editor = useBlockEditor();
   const { addConversationMessage, loading } = useConversationMessageAdd();
+  const {
+    setHotkeyScopeAndMemorizePreviousScope,
+    goBackToPreviousHotkeyScope,
+  } = usePreviousHotkeyScope();
 
   const handleChange = async () => {
     const content = await editor?.document;
     content.pop();
-    setContent(JSON.stringify(content));
+    setContent(content as Block[]);
     const mentionedUserIds = getMentionedUserIds(content);
     setMentionedUserIds(mentionedUserIds);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (content?.length === 0) {
+      return;
+    }
+
+    const sendContent = isInternalNote
+      ? JSON.stringify(content)
+      : await editor?.blocksToHTMLLossy(content);
+
     addConversationMessage({
       variables: {
         conversationId,
-        content,
+        content: sendContent,
         mentionedUserIds,
         internal: isInternalNote,
       },
+      onCompleted: () => {
+        setContent(undefined);
+        editor?.removeBlocks(content as Block[]);
+        setMentionedUserIds([]);
+        setIsInternalNote(false);
+      },
     });
   };
+
+  useScopedHotkeys('mod+enter', handleSubmit, InboxHotkeyScope.MessageInput);
 
   return (
     <div
@@ -50,10 +79,15 @@ export const MessageInput = () => {
       <BlockEditor
         editor={editor}
         onChange={handleChange}
+        disabled={loading}
         className={cn(
           'h-full w-full overflow-y-auto',
           isInternalNote && 'internal-note',
         )}
+        onFocus={() =>
+          setHotkeyScopeAndMemorizePreviousScope(InboxHotkeyScope.MessageInput)
+        }
+        onBlur={() => goBackToPreviousHotkeyScope()}
       >
         {isInternalNote && <AssignMemberInEditor editor={editor} />}
       </BlockEditor>
@@ -73,11 +107,15 @@ export const MessageInput = () => {
         <Button
           size="lg"
           className="ml-auto"
-          disabled={loading}
+          disabled={loading || content?.length === 0}
           onClick={handleSubmit}
         >
           {loading ? <Spinner size="small" /> : <IconArrowUp />}
           Send
+          <Kbd className="ml-1">
+            <IconCommand size={12} />
+            <IconCornerDownLeft size={12} />
+          </Kbd>
         </Button>
       </div>
     </div>

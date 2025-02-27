@@ -11,6 +11,7 @@ import { OrganizationProvider } from '@/organization/providers/OrganizationProvi
 import { AppPath } from '@/types/paths/AppPath';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
+import { OnBoarding } from '~/pages/onboarding/Onboarding';
 import { Providers } from '~/providers';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
@@ -32,7 +33,7 @@ export const useCreateAppRouter = () => {
 
           <Route element={<UserProvider />}>
             <Route element={<DefaultLayout />}>
-              <Route path={AppPath.Index} element={<></>} />
+              <Route path={AppPath.Index} element={<OnBoarding />} />
               <Route
                 path={AppPath.SettingsCatchAll}
                 element={<SettingsRoutes />}

@@ -9,7 +9,8 @@ export const ContactsFilter = () => {
     <FilterBarWithHook
       activeFilters={
         contactsFilters.filter(
-          (filter) => activeFilters[filter.accessoryKey]
+          (filter) =>
+            activeFilters[filter.accessoryKey as keyof typeof activeFilters],
         ) || []
       }
     />

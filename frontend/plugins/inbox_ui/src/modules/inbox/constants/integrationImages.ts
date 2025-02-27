@@ -1,4 +1,4 @@
-import { IconForms, IconMessageFilled } from '@tabler/icons-react';
+import { IconForms, IconMessageFilled, IconPhone } from '@tabler/icons-react';
 import {
   InstagramIcon,
   MessengerIcon,
@@ -11,4 +11,5 @@ export const INTEGRATION_ICONS = {
   lead: IconForms,
   instagram: InstagramIcon,
   messenger: IconMessageFilled,
+  calls: IconPhone,
 };

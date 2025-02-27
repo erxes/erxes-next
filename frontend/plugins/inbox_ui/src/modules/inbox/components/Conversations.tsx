@@ -1,18 +1,18 @@
 import { useConversations } from '@/inbox/hooks/useConversations';
 import {
-  Avatar,
   Badge,
+  BlockEditorReadOnly,
   Button,
   Checkbox,
   RelativeDateDisplay,
   Separator,
 } from 'erxes-ui';
 import { cn } from 'erxes-ui/lib';
-import { ConversationContext } from '@/inbox/context/ConversationConxtext';
+import { ConversationContext } from '~/modules/inbox/context/ConversationContext';
 import { IConversation } from '@/inbox/types/Conversation';
 import { useConversationContext } from '@/inbox/hooks/useConversationContext';
 import { currentUserState, CustomerInline } from 'ui-modules';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { INTEGRATION_ICONS } from '@/inbox/constants/integrationImages';
 import { IconLoader, IconMail } from '@tabler/icons-react';
 import { useInView } from 'react-intersection-observer';
@@ -21,6 +21,8 @@ import { ConversationFilter } from './ConversationFilter';
 import { useMultiQueryState, useQueryState } from '../hooks/useQueryState';
 import { FilterTags } from './FilterTags';
 import { activeConversationState } from '../state/activeConversationState';
+import { selectConversationsState } from '../state/selectConversationsState';
+import { ConversationListContext } from '../context/ConversationListContext';
 
 export const Conversations = () => {
   const [ref] = useInView({
@@ -30,53 +32,67 @@ export const Conversations = () => {
       }
     },
   });
-  const [{ channelId, integrationType }] = useMultiQueryState<{
-    channelId: string;
-    integrationType: string;
-  }>(['channelId', 'integrationType']);
+  const [{ channelId, integrationType, unassigned, status }] =
+    useMultiQueryState<{
+      channelId: string;
+      integrationType: string;
+      unassigned: string;
+      status: string;
+    }>(['channelId', 'integrationType', 'unassigned', 'status']);
+
   const { totalCount, conversations, handleFetchMore, loading } =
     useConversations({
       variables: {
         limit: 50,
         channelId,
         integrationType,
+        unassigned,
+        status,
       },
     });
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <ConversationsHeader>
-        <ConversationFilter />
-        <FilterTags />
-      </ConversationsHeader>
+    <ConversationListContext.Provider
+      value={{
+        conversations,
+        loading,
+        totalCount,
+      }}
+    >
+      <div className="flex flex-col h-full overflow-hidden">
+        <ConversationsHeader>
+          <ConversationFilter />
+          <FilterTags />
+        </ConversationsHeader>
 
-      <Separator />
-      <div className="h-full w-full overflow-y-auto">
-        {conversations?.map((conversation: IConversation) => (
-          <ConversationContext.Provider
-            key={conversation._id}
-            value={conversation}
-          >
-            <ConversationItem />
-          </ConversationContext.Provider>
-        ))}
-        {!loading &&
-          conversations?.length > 0 &&
-          conversations?.length < totalCount && (
-            <Button
-              variant="ghost"
-              ref={ref}
-              className="pl-6 h-8 w-full text-muted-foreground"
-              asChild
+        <Separator />
+        <div className="h-full w-full overflow-y-auto">
+          {conversations?.map((conversation: IConversation) => (
+            <ConversationContext.Provider
+              key={conversation._id}
+              value={conversation}
             >
-              <div>
-                <IconLoader className="size-4 animate-spin" />
-                loading more...
-              </div>
-            </Button>
-          )}
+              <ConversationItem />
+            </ConversationContext.Provider>
+          ))}
+          {!loading &&
+            conversations?.length > 0 &&
+            conversations?.length < totalCount && (
+              <Button
+                variant="ghost"
+                ref={ref}
+                className="pl-6 h-8 w-full text-muted-foreground"
+                asChild
+              >
+                <div>
+                  <IconLoader className="size-4 animate-spin" />
+                  loading more...
+                </div>
+              </Button>
+            )}
+        </div>
       </div>
-    </div>
+    </ConversationListContext.Provider>
   );
 };
 
@@ -104,7 +120,7 @@ export const ConversationItem = () => {
               <RelativeDateDisplay value={updatedAt || createdAt} />
             </div>
           </div>
-          <div className="truncate w-full">{content}</div>
+          <ConversationItemContent />
         </CustomerInline.Provider>
       </ConversationContainer>
     );
@@ -115,15 +131,24 @@ export const ConversationItem = () => {
       <CustomerInline.Provider customer={customer}>
         <ConversationCheckbox />
         <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
-        <div className="truncate">{content}</div>
-        <div className="ml-auto font-medium text-accent-foreground w-32 truncate">
+        <ConversationItemContent />
+        <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
           to {brand?.name}
         </div>
-        <div className="w-32 text-right">
+        <div className="w-32 text-right flex-none">
           <RelativeDateDisplay value={updatedAt || createdAt} />
         </div>
       </CustomerInline.Provider>
     </ConversationContainer>
+  );
+};
+
+export const ConversationItemContent = () => {
+  const { content } = useConversationContext();
+  return (
+    <div className="truncate w-full h-4 [&_*]:text-sm [&_*]:leading-tight [&_*]:font-medium">
+      <BlockEditorReadOnly content={content} />
+    </div>
   );
 };
 
@@ -172,6 +197,11 @@ const ConversationContainer = ({
 
 const ConversationCheckbox = () => {
   const [conversationId] = useQueryState<string>('conversationId');
+  const { _id } = useConversationContext();
+  const [selectedConversations, setSelectedConversations] = useAtom(
+    selectConversationsState,
+  );
+  const isSelected = selectedConversations.includes(_id || '');
   return (
     <div
       className={cn(
@@ -183,6 +213,16 @@ const ConversationCheckbox = () => {
       <Checkbox
         className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 z-10"
         onClick={(e) => e.stopPropagation()}
+        checked={isSelected}
+        onCheckedChange={(checked) => {
+          if (checked) {
+            setSelectedConversations([...selectedConversations, _id || '']);
+          } else {
+            setSelectedConversations(
+              selectedConversations.filter((id) => id !== _id || ''),
+            );
+          }
+        }}
       />
       <div className="transition-opacity duration-200 relative opacity-100 group-hover:opacity-0 peer-data-[state=checked]:opacity-0">
         <CustomerInline.Avatar

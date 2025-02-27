@@ -26,10 +26,14 @@ export const avatarVariants = cva(
   },
 );
 
+export type AvatarProps = React.ComponentPropsWithoutRef<
+  typeof AvatarPrimitive.Root
+> &
+  VariantProps<typeof avatarVariants>;
+
 const AvatarRoot = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> &
-    VariantProps<typeof avatarVariants>
+  AvatarProps
 >(({ className, size, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
@@ -59,7 +63,6 @@ const AvatarFallback = React.forwardRef<
   }
 >(({ className, color, colorSeed, style, ...props }, ref) => {
   const theme = useAtomValue(themeState);
-
   return (
     <AvatarPrimitive.Fallback
       ref={ref}

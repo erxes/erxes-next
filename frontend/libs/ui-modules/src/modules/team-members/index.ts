@@ -1,4 +1,3 @@
-export * from './components/AssignMember';
-export * from './components/AssigMemberInEditor';
-export * from './hooks/useUsers';
+export * from './components';
+export * from './hooks';
 export * from './types/TeamMembers';

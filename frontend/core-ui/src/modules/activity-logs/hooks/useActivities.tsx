@@ -13,7 +13,6 @@ export const useActivities = (operation?: OperationVariables) => {
     subscribeToMore({
       document: ACTIVITY_LOGS_CHANGED,
       updateQuery: (prev, { subscriptionData }) => {
-        console.log('subscriptionData', subscriptionData);
         if (!subscriptionData.data) return prev;
         return {
           activityLogs: [

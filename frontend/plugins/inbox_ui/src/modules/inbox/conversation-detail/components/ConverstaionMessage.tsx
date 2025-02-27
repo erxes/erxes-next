@@ -1,78 +1,95 @@
 import { cn } from 'erxes-ui/lib/utils';
-import { IMessage } from '../../types/Conversation';
 import { HAS_ATTACHMENT } from '../../constants/messengerConstants';
 import { FormDisplay } from './FormDisplay';
 import { Button, IAttachment, RelativeDateDisplay } from 'erxes-ui';
 import { MessageContent } from './MessageContent';
+import { useConversationMessageContext } from '../hooks/useConversationMessageContext';
+import { CustomerInline, MemberInline } from 'ui-modules';
+import { useAtomValue } from 'jotai';
+import { activeConversationState } from '../../state/activeConversationState';
 
-export const ConversationMessage = ({
-  previousMessage,
-  nextMessage,
-  ...message
-}: IMessage & {
-  previousMessage?: IMessage;
-  nextMessage?: IMessage;
-}) => {
+export const ConversationMessage = () => {
+  const { previousMessage, nextMessage, ...message } =
+    useConversationMessageContext();
   const {
     _id,
     userId,
     content,
     createdAt,
-    customerId,
     attachments,
     formWidgetData,
-    internalNote,
+    internal,
+    separatePrevious,
+    separateNext,
   } = message;
 
-  if (formWidgetData) return <FormDisplay {...message} />;
-
-  const checkHasSibling = (message?: IMessage) => {
-    if (!message) {
-      return false;
-    }
-
-    const isClient = !userId;
-
-    if (isClient) {
-      return message.customerId === customerId;
-    }
-
-    return message.userId === userId;
-  };
-
-  const hasPreviousMessage = checkHasSibling(previousMessage);
-  const hasNextMessage = checkHasSibling(nextMessage);
+  if (formWidgetData)
+    return (
+      <MessageWrapper>
+        <FormDisplay {...message} />
+      </MessageWrapper>
+    );
 
   return (
-    <div
-      className={cn('max-w-[428px]', userId ? 'ml-auto' : 'mr-auto ')}
-      key={_id}
-    >
-      {content !== HAS_ATTACHMENT ? (
-        <Button
-          variant="secondary"
-          className={cn(
-            'mt-2 h-auto py-2 text-left [&_*]:whitespace-pre-wrap block font-normal space-y-2 overflow-x-hidden text-pretty break-words [&_a]:text-primary [&_a]:underline [&_img]:aspect-square [&_img]:object-cover [&_img]:rounded',
-            userId && 'bg-primary/10 hover:bg-primary/10',
-            internalNote &&
-              'bg-yellow-50 hover:bg-yellow-50 dark:bg-yellow-950 dark:hover:bg-yellow-950',
-            !hasPreviousMessage && 'mt-6',
-          )}
-          asChild
-        >
-          <div>
-            <MessageContent content={content} />
-            {!hasNextMessage && (
-              <div className="text-muted-foreground mt-1">
-                <RelativeDateDisplay value={createdAt} />
-              </div>
+    <MessageWrapper>
+      <div className={cn('max-w-[428px]')} key={_id}>
+        {content !== HAS_ATTACHMENT ? (
+          <Button
+            variant="secondary"
+            className={cn(
+              'mt-2 h-auto py-2 text-left [&_*]:whitespace-pre-wrap block font-normal space-y-2 overflow-x-hidden text-pretty break-words [&_a]:text-primary [&_a]:underline [&_img]:aspect-square [&_img]:object-cover [&_img]:rounded',
+              userId && 'bg-primary/10 hover:bg-primary/10',
+              internal &&
+                'bg-yellow-50 hover:bg-yellow-50 dark:bg-yellow-950 dark:hover:bg-yellow-950',
+              separatePrevious && 'mt-8',
             )}
-          </div>
-        </Button>
-      ) : (
-        <div className={cn(hasPreviousMessage ? 'mt-2' : 'mt-6')} />
+            asChild
+          >
+            <div>
+              <MessageContent content={content} internal={internal} />
+              {separateNext && (
+                <div className="text-muted-foreground mt-1">
+                  <RelativeDateDisplay value={createdAt} />
+                </div>
+              )}
+            </div>
+          </Button>
+        ) : (
+          <div className={cn(separatePrevious ? 'mt-2' : 'mt-8')} />
+        )}
+        <Attachments attachments={attachments} />
+      </div>
+    </MessageWrapper>
+  );
+};
+
+export const MessageWrapper = ({ children }: { children: React.ReactNode }) => {
+  const { separateNext, customerId, userId, formWidgetData } =
+    useConversationMessageContext();
+  const { customer } = useAtomValue(activeConversationState) || {};
+  return (
+    <div
+      className={cn(
+        'flex items-end w-full gap-3',
+        userId ? 'justify-end' : 'justify-start',
+        !separateNext && 'px-11',
+        !customerId && 'pl-11',
+        !userId && 'pr-11',
+        formWidgetData && 'pb-4',
       )}
-      <Attachments attachments={attachments} />
+    >
+      {!!customerId && separateNext && (
+        <CustomerInline.Provider customerId={customerId} customer={customer}>
+          <CustomerInline.Avatar size="xl" />
+        </CustomerInline.Provider>
+      )}
+      {children}
+
+      {!!userId && separateNext && (
+        <MemberInline.Provider memberId={userId}>
+          <MemberInline.Avatar size="xl" showTooltip />
+        </MemberInline.Provider>
+      )}
     </div>
   );
 };

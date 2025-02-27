@@ -45,11 +45,13 @@ export const GET_CONVERSATIONS = gql`
         }
       }
       customer {
+        _id
         firstName
         middleName
         lastName
         primaryEmail
         avatar
+        primaryPhone
       }
       readUserIds
     }

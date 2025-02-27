@@ -8,7 +8,7 @@ export interface AssignMemberFetchMoreProps {
   children?: React.ReactNode;
 }
 
-export interface IAssignMember {
+export interface IMember {
   _id: string;
   details: {
     fullName: string;
@@ -18,7 +18,7 @@ export interface IAssignMember {
 
 export interface MentionMenuProps extends SlashMenuProps {
   loading: boolean;
-  users: IAssignMember[];
+  users: IMember[];
   handleFetchMore: () => void;
   totalCount: number;
 }
