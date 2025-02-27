@@ -35,7 +35,14 @@ export const Phone = React.forwardRef<
   }
 >(
   (
-    { recordId, primaryPhone, phones, onChange, defaultCountryCode = 'MN', ...props },
+    {
+      recordId,
+      primaryPhone,
+      phones,
+      onChange,
+      defaultCountryCode = 'MN',
+      ...props
+    },
     ref,
   ) => {
     const [newPhone, setNewPhone] = useState<string>('');

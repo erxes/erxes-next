@@ -13,8 +13,6 @@ export const UserProvider = () => {
 
   const currentUser = useAtomValue(currentUserState);
 
-  console.log(currentUser, '---');
-
   if (!isCurrentUserLoaded) {
     return (
       <div className="flex flex-col h-screen w-screen items-center justify-center">

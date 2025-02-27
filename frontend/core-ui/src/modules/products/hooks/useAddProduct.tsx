@@ -27,10 +27,6 @@ export function useAddProduct(
             variables: queryVariables,
           });
 
-          console.log({
-            newData: data?.productsAdd,
-            existingData: existingData,
-          });
           if (!existingData || !existingData.products || !data?.productsAdd)
             return;
           cache.writeQuery<ProductData>({
