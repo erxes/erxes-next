@@ -217,39 +217,6 @@ export const ProductGeneral = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="brand">BRAND</Label>
-          <Select
-            defaultValue={brand}
-            onValueChange={(value) => handleInputChange('brand', value)}
-          >
-            <Select.Trigger>
-              <Select.Value placeholder="Choose brands" />
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Item value="brand1">Brand 1</Select.Item>
-              <Select.Item value="brand2">Brand 2</Select.Item>
-            </Select.Content>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="vendor">VENDOR</Label>
-          <Select
-            defaultValue={vendor}
-            onValueChange={(value) => handleInputChange('vendor', value)}
-          >
-            <Select.Trigger>
-              <Select.Value placeholder="Choose vendor" />
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Item value={vendor}>{vendor}</Select.Item>
-              <Select.Item value="vendor1">Vendor 1</Select.Item>
-              <Select.Item value="vendor2">Vendor 2</Select.Item>
-            </Select.Content>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
           <Label>PDF</Label>
           <Button variant="outline" className="w-full justify-between">
             Upload a PDF

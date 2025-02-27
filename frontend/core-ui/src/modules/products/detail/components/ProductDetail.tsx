@@ -2,6 +2,7 @@ import { ProductDetailLayout, ProductDetailTabContent
  } from "./ProductDetailLayout";
 import { Separator } from 'erxes-ui/components';
 import { ProductGeneral } from "./ProductGeneral";
+import { ProductProperties } from "./ProductProperties";
 
 export const ProductDetail = () => {
     return (
@@ -11,8 +12,7 @@ export const ProductDetail = () => {
           <ProductGeneral />
         </ProductDetailTabContent>
         <ProductDetailTabContent value="properties">
-          hehhe
-          {/* <ContactProperties /> */}
+          <ProductProperties />
         </ProductDetailTabContent>
       </ProductDetailLayout>
     );

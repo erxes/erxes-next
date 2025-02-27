@@ -15,7 +15,7 @@ export const ProductsIndexPage = () => {
     <div className="flex flex-col h-full p-3 pt-0">
       <ProductsHeader />
       {!(renderingProductDetail && productId) && <ProductsRecordTable />}
-      {renderingProductDetail && productId && <ProductDetail />}
+      <ProductDetail />
     </div>
   );
 };
