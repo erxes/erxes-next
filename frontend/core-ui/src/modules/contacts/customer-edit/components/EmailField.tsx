@@ -8,12 +8,14 @@ export const EmailField = ({
   emails,
   className,
   fieldId,
+  emailValidationStatus,
 }: {
   _id: string;
   primaryEmail: string;
   emails: string[];
   className?: string;
   fieldId?: string;
+  emailValidationStatus: string;
 }) => {
   const { customersEdit } = useCustomersEdit();
   const { toast } = useToast();
@@ -24,6 +26,21 @@ export const EmailField = ({
       primaryEmail={primaryEmail}
       emails={emails}
       className={className}
+      emailValidationStatus={emailValidationStatus}
+      onValidationStatusSelect={(emailValidationStatus) => {
+        customersEdit(
+          {
+            variables: { _id, emailValidationStatus },
+            onError: (e: ApolloError) => {
+              toast({
+                title: 'Error',
+                description: e.message,
+              });
+            },
+          },
+          ['emailValidationStatus'],
+        );
+      }}
       onChange={(mainEmail, restEmails, onCompleted) => {
         customersEdit(
           {
