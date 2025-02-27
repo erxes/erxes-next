@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { OperationVariables, useMutation, useQuery } from '@apollo/client';
 
 import { currentUserState } from 'ui-modules';
 import { toast, useConfirm } from 'erxes-ui/hooks';
@@ -6,22 +6,22 @@ import { useAtom } from 'jotai';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
 
-import { iUserDetail, Props } from '../types/userDetail';
+import { IUserDetail } from '../types/userDetail';
 
-const useProfile = ({ onCompleted }: Props) => {
+const useProfile = (options?: OperationVariables) => {
   const [currentUser, setCurrentUser] = useAtom(currentUserState);
 
   const { confirm } = useConfirm();
 
   const { loading, data, refetch } = useQuery(userDetail, {
     variables: { _id: currentUser?._id },
-    onCompleted,
+    ...options,
     skip: !currentUser?._id,
   });
 
   const [updateProfile] = useMutation(UpdateProfile);
 
-  const profileUpdate = async (profile: Partial<iUserDetail>) => {
+  const profileUpdate = async (profile: Partial<IUserDetail>) => {
     const confirmOptions = { confirmationValue: 'update' };
 
     confirm({

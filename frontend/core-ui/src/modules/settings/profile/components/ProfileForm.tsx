@@ -29,7 +29,6 @@ import {
   FormType,
   useProfileForm,
 } from '@/settings/profile/hooks/useProfileForm';
-import { TFile } from '../types';
 
 export const ProfileForm = () => {
   const [currentLink, setCurrentLink] = useState<string>('');
@@ -40,13 +39,13 @@ export const ProfileForm = () => {
 
   const submitHandler: SubmitHandler<FormType> = useCallback(
     async (data) => {
-      profileUpdate(data);
+      profileUpdate(data as any);
     },
     [profileUpdate],
   );
 
   useEffect(() => {
-    if (profile) {
+    if (profile && Object.keys(profile).length > 0) {
       form.reset({
         username: profile.username,
         employeeId: profile.employeeId,
@@ -56,7 +55,7 @@ export const ProfileForm = () => {
         links: profile.links,
       });
     }
-  }, [profile, form]);
+  }, [profile, form.reset]);
 
   const renderField = ({ field, element, attributes }: any) => {
     const fieldState = form.getFieldState(field.name);
