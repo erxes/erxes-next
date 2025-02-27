@@ -11,7 +11,7 @@ import './styles.css';
 import { App } from '@/app/components/App';
 // import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 
-const initFederation = async () => {
+async function initFederation() {
   const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement,
   );
@@ -65,7 +65,7 @@ const initFederation = async () => {
     //   );
     // });
   }
-};
+}
 
 initFederation().catch((err) => {
   console.error('Failed to initialize module federation:', err);
