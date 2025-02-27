@@ -10,13 +10,13 @@ import { ThemeEffect } from '@/app/effect-components/ThemeEffect';
 export function App() {
   return (
     <JotaiProvider>
-      <AppErrorBoundary>
-        <AppI18nWrapper>
-          <Toaster />
+      <AppI18nWrapper>
+        <Toaster />
+        <AppErrorBoundary>
           <AppRouter />
-          <ThemeEffect />
-        </AppI18nWrapper>
-      </AppErrorBoundary>
+        </AppErrorBoundary>
+        <ThemeEffect />
+      </AppI18nWrapper>
     </JotaiProvider>
   );
 }

@@ -9,7 +9,10 @@ export const AppErrorBoundary = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ErrorBoundary FallbackComponent={GenericErrorFallback} onReset={handleReset}>
+    <ErrorBoundary
+      FallbackComponent={GenericErrorFallback}
+      onReset={handleReset}
+    >
       {children}
     </ErrorBoundary>
   );
