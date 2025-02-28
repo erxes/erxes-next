@@ -7,7 +7,7 @@ export interface ITagModel extends Model<ITagDocument> {
   getTag(_id: string): Promise<ITagDocument>;
   createTag(doc: ITag): Promise<ITagDocument>;
   updateTag(_id: string, doc: ITag): Promise<ITagDocument>;
-  removeTag(_id: string): void;
+  removeTag(_id: string): Promise<void>;
   validateUniqueness(
     selector: any,
     name: string,
@@ -108,7 +108,7 @@ export const loadTagClass = (models: IModels) => {
         }> = [];
 
         // updating child categories order
-        childTags.forEach(async (childTag) => {
+        for (const childTag of childTags) {
           let childOrder = childTag.order;
 
           childOrder = childOrder.replace(tag.order, order);
@@ -119,7 +119,7 @@ export const loadTagClass = (models: IModels) => {
               update: { $set: { order: childOrder } },
             },
           });
-        });
+        }
 
         await models.Tags.bulkWrite(bulkDoc);
       }
