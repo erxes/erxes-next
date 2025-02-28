@@ -5,8 +5,8 @@ export const tagMutations = {
   /**
    * Creates a new tag
    */
-  async tagsAdd(_root, doc: ITag, { docModifier, models }: IContext) {
-    const tag = await models.Tags.createTag(docModifier(doc));
+  async tagsAdd(_root, doc: ITag, { models }: IContext) {
+    const tag = await models.Tags.createTag(doc);
 
     return tag;
   },
