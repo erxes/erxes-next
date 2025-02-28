@@ -125,8 +125,6 @@ export const tagQueries = {
           ids = [...ids, ...childTag];
           await getChildTags(childTag);
         }
-
-        return;
       };
 
       await getChildTags(parentTag);
