@@ -23,7 +23,7 @@ export const recordTableHeadVariants = cva(
         right: 'z-[3]',
       },
     },
-  }
+  },
 );
 
 export const RecordTableHead = ({
@@ -52,7 +52,7 @@ export const RecordTableHead = ({
               : column.getIsPinned() === 'right'
               ? 'right'
               : null,
-        })
+        }),
       )}
       style={{
         width: `calc(var(--header-${column.id}-size) * 1px)`,
@@ -107,7 +107,7 @@ const RecordTableOverLine = ({
         <div
           className={cn(
             'absolute top-0 w-0.5 bg-blue-500 h-screen',
-            isOnRight ? 'right-0' : 'left-0'
+            isOnRight ? 'right-0' : 'left-0',
           )}
         />
       );
@@ -129,7 +129,7 @@ const RecordTableHeadSize = React.forwardRef<
       className={cn(
         'absolute bottom-0 cursor-col-resize w-4 h-full right-0 z-10 select-none touch-none after:absolute after:inset-y-2 after:w-px after:right-0 after:bg-border',
         header.column.getIsResizing() &&
-          'after:w-0.5 after:bg-blue-500 after:inset-y-1'
+          'after:w-0.5 after:bg-blue-500 after:inset-y-1',
       )}
       {...props}
       onMouseDown={header.getResizeHandler()}
