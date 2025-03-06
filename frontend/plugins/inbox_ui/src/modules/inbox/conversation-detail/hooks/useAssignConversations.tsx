@@ -1,8 +1,11 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { CONVERSATION_ASSIGN } from '../../graphql/mutations/conversationAssign';
 
-export const useAssignConversations = () => {
-  const [assignConversations, loading] = useMutation(CONVERSATION_ASSIGN);
+export const useAssignConversations = (options?: OperationVariables) => {
+  const [assignConversations, { loading }] = useMutation(
+    CONVERSATION_ASSIGN,
+    options,
+  );
 
   const handleAssignConversations = (options: OperationVariables) => {
     assignConversations({

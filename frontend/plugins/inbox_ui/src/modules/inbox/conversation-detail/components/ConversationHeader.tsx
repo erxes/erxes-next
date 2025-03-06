@@ -2,6 +2,8 @@ import { ScrollArea, Separator, Skeleton } from 'erxes-ui/components';
 import { AssignMember, CustomerInline } from 'ui-modules';
 import { useConversationContext } from '../../hooks/useConversationContext';
 import { useAssignConversations } from '../hooks/useAssignConversations';
+import { toast } from 'erxes-ui/hooks';
+import { useState } from 'react';
 
 export const ConversationHeader = () => {
   const { customer, customerId, loading } = useConversationContext();
@@ -33,11 +35,31 @@ export const ConversationHeader = () => {
 };
 
 const AssignConversation = () => {
-  const { assignedUserId } = useConversationContext();
-  const { assignConversations, loading } = useAssignConversations();
+  const { assignedUserId, _id } = useConversationContext();
+  const [assigningUser, setAssigningUser] = useState<string | null>(null);
+  const { assignConversations, loading } = useAssignConversations({
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'error',
+      });
+    },
+  });
+
   return (
     <AssignMember
-      value={assignedUserId}
+      value={assigningUser || assignedUserId}
+      disabled={!!loading}
+      onValueChange={(value) => {
+        setAssigningUser(value);
+        assignConversations({
+          variables: {
+            conversationIds: [_id],
+            assignedUserId: value,
+          },
+        });
+      }}
       size="lg"
       variant="secondary"
       className="min-w-32 text-foreground -ml-1"
