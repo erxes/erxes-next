@@ -1,14 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 
-import {
-  Checkbox,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-} from 'erxes-ui/components';
+import { Checkbox, Form, Input } from 'erxes-ui/components';
 
 import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
 import {
@@ -50,45 +42,45 @@ export function DynamicServiceConfigFields({
           <div className="grid grid-cols-4 gap-1 p-4">
             {dynamicFields.map((fieldData: TField) =>
               fieldData.type === 'checkbox' ? (
-                <FormField
+                <Form.Field
                   control={form.control}
                   name={fieldData.name as Path<UploadConfigFormT>}
                   key={fieldData.name}
-                  render={({ field }) => (
-                    <FormItem className="col-span-4 flex items-center justify-start gap-x-2">
-                      <FormControl>
+                  render={({ field }: { field: any }) => (
+                    <Form.Item className="col-span-4 flex items-center justify-start gap-x-2">
+                      <Form.Control>
                         <Checkbox
                           checked={field.value as boolean}
                           onCheckedChange={field.onChange}
                           id={fieldData.name}
                         />
-                      </FormControl>
-                      <FormLabel className="text-xs">
+                      </Form.Control>
+                      <Form.Label className="text-xs">
                         {fieldData.label}
-                      </FormLabel>
-                      <FormMessage />
-                    </FormItem>
+                      </Form.Label>
+                      <Form.Message />
+                    </Form.Item>
                   )}
                 />
               ) : (
-                <FormField
+                <Form.Field
                   control={form.control}
                   name={fieldData.name as keyof DynamicFieldsT}
                   key={fieldData.name}
-                  render={({ field }) => (
-                    <FormItem
+                  render={({ field }: { field: any }) => (
+                    <Form.Item
                       className={
                         selected === 'GCS' ? 'col-span-4' : 'col-span-2'
                       }
                     >
-                      <FormLabel className="text-xs">
+                      <Form.Label className="text-xs">
                         {fieldData.label}
-                      </FormLabel>
-                      <FormControl>
+                      </Form.Label>
+                      <Form.Control>
                         <Input type={'text'} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                      </Form.Control>
+                      <Form.Message />
+                    </Form.Item>
                   )}
                 />
               ),

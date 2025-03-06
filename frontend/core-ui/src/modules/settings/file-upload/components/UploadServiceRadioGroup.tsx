@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 
-import { FormField, RadioGroup } from 'erxes-ui/components';
+import { Form, RadioGroup } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 
 import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
@@ -15,7 +15,7 @@ interface Props {
 export function UploadServiceRadioGroup({ form, selected }: Props) {
   return (
     <div>
-      <FormField
+      <Form.Field
         control={form.control}
         name="UPLOAD_SERVICE_TYPE"
         key={'UPLOAD_SERVICE_TYPE'}

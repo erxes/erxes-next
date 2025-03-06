@@ -4,15 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconLoader } from '@tabler/icons-react';
 import { z } from 'zod';
 
-import {
-  Button,
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-} from 'erxes-ui/components';
+import { Button, Form, Input } from 'erxes-ui/components';
 
 import { SelectTags } from '@/tags/components/SelectTags';
 import { useTagsAdd } from '@/tags/hooks/useTagsAdd';
@@ -65,34 +57,38 @@ export const CreateTagForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
-        <FormField
-          control={form.control}
+        <Form.Field
           name="name"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <Input {...field} />
-              <FormMessage />
-            </FormItem>
+            <Form.Item>
+              <Form.Label>Name</Form.Label>
+              <Form.Control>
+                <Input {...field} />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
-        <FormField
-          control={form.control}
+        <Form.Field
           name="parentId"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Parent Tag</FormLabel>
-              <SelectTags
-                recordId={id}
-                tagType={tagType}
-                single
-                sub
-                selected={field.value}
-                onSelect={(tags) => field.onChange(tags[0])}
-                className="w-full h-8"
-              />
-              <FormMessage />
-            </FormItem>
+            <Form.Item>
+              <Form.Label>Parent Tag</Form.Label>
+              <Form.Control>
+                <SelectTags
+                  recordId={id}
+                  tagType={tagType}
+                  single
+                  sub
+                  selected={field.value}
+                  onSelect={(tags) => field.onChange(tags[0])}
+                  className="w-full h-8"
+                />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
         <Button type="submit" className="w-full !mt-4" disabled={loading}>

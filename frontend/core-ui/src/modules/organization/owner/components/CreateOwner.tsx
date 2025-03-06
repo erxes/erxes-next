@@ -1,18 +1,7 @@
 import { useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 
-import {
-  Button,
-  Checkbox,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  Select,
-} from 'erxes-ui/components';
+import { Button, Checkbox, Form, Input, Select } from 'erxes-ui/components';
 
 import { useCreateOwner } from '@/organization/owner/hooks/useCreateOwner';
 import {
@@ -29,7 +18,7 @@ export const CreateOwner = () => {
     async (data) => {
       createOwner(data);
     },
-    [createOwner]
+    [createOwner],
   );
 
   return (
@@ -38,83 +27,83 @@ export const CreateOwner = () => {
         onSubmit={form.handleSubmit(submitHandler)}
         className="mx-auto grid w-[350px] gap-5"
       >
-        <FormField
+        <Form.Field
           name="email"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input type="email" placeholder="Enter email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
 
-        <FormField
+        <Form.Field
           name="firstName"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input type="text" placeholder="Enter first name" {...field} />
-              </FormControl>
-            </FormItem>
+              </Form.Control>
+            </Form.Item>
           )}
         />
 
-        <FormField
+        <Form.Field
           name="lastName"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input type="text" placeholder="Enter last name" {...field} />
-              </FormControl>
-            </FormItem>
+              </Form.Control>
+            </Form.Item>
           )}
         />
 
-        <FormField
+        <Form.Field
           name="password"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input
                   type="password"
                   placeholder="Enter password"
                   {...field}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
 
-        <FormField
+        <Form.Field
           name="confirmPassword"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input
                   type="password"
                   placeholder="Confirm password"
                   {...field}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
 
-        <FormField
+        <Form.Field
           name="purpose"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -133,27 +122,27 @@ export const CreateOwner = () => {
                     ))}
                   </Select.Content>
                 </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
 
-        <FormField
+        <Form.Field
           name="subscribeEmail"
           control={form.control}
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
+            <Form.Item className="flex flex-row items-start space-x-3 space-y-0">
+              <Form.Control>
                 <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
-              </FormControl>
+              </Form.Control>
               <div className="space-y-1 leading-none">
-                <FormLabel>Subscribe to email updates</FormLabel>
+                <Form.Label>Subscribe to email updates</Form.Label>
               </div>
-            </FormItem>
+            </Form.Item>
           )}
         />
 
