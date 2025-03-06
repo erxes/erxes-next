@@ -1,12 +1,6 @@
 import { Control } from 'react-hook-form';
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from 'erxes-ui/components';
+import { Form } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 import { BlockEditor } from 'erxes-ui/components';
@@ -44,14 +38,14 @@ export const DescriptionField = ({
   );
 
   return (
-    <FormField
+    <Form.Field
       control={control}
       name="description"
       render={({ field }) => (
-        <FormItem className="mb-5">
-          <FormLabel>DESCRIPTION</FormLabel>
+        <Form.Item className="mb-5">
+          <Form.Label>DESCRIPTION</Form.Label>
 
-          <FormControl>
+          <Form.Control>
             <BlockEditor
               editor={editor}
               onChange={() => field.onChange()}
@@ -63,10 +57,10 @@ export const DescriptionField = ({
               }
               className=" h-28 rounded-md border min-h-28 overflow-y-auto"
             />
-          </FormControl>
-          <FormMessage className="text-destructive" />
+          </Form.Control>
+          <Form.Message className="text-destructive" />
           <div ref={ref} tabIndex={-1} />
-        </FormItem>
+        </Form.Item>
       )}
     />
   );

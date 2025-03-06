@@ -1,10 +1,4 @@
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from 'erxes-ui/components';
+import { Form } from 'erxes-ui';
 import { Control } from 'react-hook-form';
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 import { AssignMember } from 'ui-modules';
@@ -15,13 +9,13 @@ export const OwnerIdField = ({
   control: Control<CustomerFormType>;
 }) => {
   return (
-    <FormField
+    <Form.Field
       control={control}
       name="ownerId"
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>CHOOSE AN OWNER</FormLabel>
-          <FormControl>
+        <Form.Item>
+          <Form.Label>CHOOSE AN OWNER</Form.Label>
+          <Form.Control>
             <div className="w-full">
               <AssignMember
                 value={field.value}
@@ -29,9 +23,9 @@ export const OwnerIdField = ({
                 className="w-full shadow-xs"
               />
             </div>
-          </FormControl>
-          <FormMessage className="text-destructive" />
-        </FormItem>
+          </Form.Control>
+          <Form.Message className="text-destructive" />
+        </Form.Item>
       )}
     />
   );

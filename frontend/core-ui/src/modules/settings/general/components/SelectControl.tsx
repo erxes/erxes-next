@@ -1,11 +1,4 @@
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Select,
-} from 'erxes-ui/components';
+import { Select, Form } from 'erxes-ui/components';
 import { Control, Path } from 'react-hook-form';
 import { TGeneralSettingsProps } from '../types';
 
@@ -28,21 +21,21 @@ const SelectControl = ({
   label,
 }: Props) => {
   return (
-    <FormField
+    <Form.Field
       name={name as Path<TGeneralSettingsProps>}
       control={control}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
+        <Form.Item>
+          <Form.Label>{label}</Form.Label>
           <Select
             defaultValue={field.value as Path<TGeneralSettingsProps>}
             onValueChange={(value) => field.onChange(value)}
           >
-            <FormControl>
+            <Form.Control>
               <Select.Trigger>
                 <Select.Value placeholder={placeholder} />
               </Select.Trigger>
-            </FormControl>
+            </Form.Control>
             <Select.Content>
               {options?.map((opt, idx) => (
                 <Select.Item key={idx} value={opt.value}>
@@ -51,8 +44,8 @@ const SelectControl = ({
               ))}
             </Select.Content>
           </Select>
-          <FormMessage className="text-destructive" />
-        </FormItem>
+          <Form.Message className="text-destructive" />
+        </Form.Item>
       )}
     />
   );

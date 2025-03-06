@@ -1,14 +1,6 @@
-import React from 'react';
 import { Control } from 'react-hook-form';
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-} from 'erxes-ui/components';
+import { Form, Input } from 'erxes-ui/components';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
@@ -18,17 +10,17 @@ export const PrimaryEmailField = ({
   control: Control<CustomerFormType>;
 }) => {
   return (
-    <FormField
+    <Form.Field
       control={control}
       name="primaryEmail"
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>EMAIL</FormLabel>
-          <FormControl>
+        <Form.Item>
+          <Form.Label>EMAIL</Form.Label>
+          <Form.Control>
             <Input className="rounded-md h-8" {...field} />
-          </FormControl>
-          <FormMessage className="text-destructive" />
-        </FormItem>
+          </Form.Control>
+          <Form.Message className="text-destructive" />
+        </Form.Item>
       )}
     />
   );

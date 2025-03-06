@@ -1,13 +1,6 @@
 import { Control } from 'react-hook-form';
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Switch,
-} from 'erxes-ui/components';
+import { Form, Switch } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
@@ -17,13 +10,13 @@ export const IsSubscribedField = ({
   control: Control<CustomerFormType>;
 }) => {
   return (
-    <FormField
+    <Form.Field
       name="isSubscribed"
       control={control}
       render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <FormLabel>SUBSCRIBED</FormLabel>
-          <FormControl>
+        <Form.Item className="flex flex-col">
+          <Form.Label>SUBSCRIBED</Form.Label>
+          <Form.Control>
             <div className="p-2">
               <Switch
                 className="scale-150 w-7"
@@ -33,9 +26,9 @@ export const IsSubscribedField = ({
                 }
               />
             </div>
-          </FormControl>
-          <FormMessage className="text-destructive" />
-        </FormItem>
+          </Form.Control>
+          <Form.Message className="text-destructive" />
+        </Form.Item>
       )}
     />
   );
