@@ -1,28 +1,13 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useMailConfigForm } from '../hooks/useMailConfigForm';
-import {
-  Button,
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  Select,
-} from 'erxes-ui/components';
+import { Button, Form, Input, Select } from 'erxes-ui/components';
 import { MAIL_CONFIG_FIELDS } from '../constants/formData';
 import { TMailConfigForm } from '../types';
 import { Path, useWatch } from 'react-hook-form';
 import { cn } from 'erxes-ui/lib';
 import { AnimatePresence } from 'framer-motion';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
-import {
-  IconAlertTriangle,
-  IconAlertTriangleFilled,
-  IconLoader2,
-} from '@tabler/icons-react';
+import { IconLoader2 } from '@tabler/icons-react';
 
 const MailConfigForm = () => {
   const {
@@ -60,32 +45,32 @@ const MailConfigForm = () => {
           ({ name, inputType, type, label, description, options }, idx) => {
             if (inputType === 'select') {
               return (
-                <FormField
+                <Form.Field
                   key={name}
                   control={control}
                   name={name as Path<TMailConfigForm>}
                   render={({ field }) => (
-                    <FormItem
+                    <Form.Item
                       className={cn(
                         idx === 1 ? 'col-span-2' : 'col-span-4',
                         'flex flex-col justify-between',
                       )}
                     >
                       <div>
-                        <FormLabel>{label}</FormLabel>
-                        <FormDescription>{description}</FormDescription>
+                        <Form.Label>{label}</Form.Label>
+                        <Form.Description>{description}</Form.Description>
                       </div>
                       <Select
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <FormControl>
+                        <Form.Control>
                           <Select.Trigger
                             className={cn(idx === 1 && 'capitalize', 'h-7')}
                           >
                             <Select.Value placeholder={'Select type'} />
                           </Select.Trigger>
-                        </FormControl>
+                        </Form.Control>
                         <Select.Content>
                           {options?.map((opt) => (
                             <Select.Item key={opt} value={opt}>
@@ -94,81 +79,81 @@ const MailConfigForm = () => {
                           ))}
                         </Select.Content>
                       </Select>
-                      <FormMessage className="text-destructive" />
-                    </FormItem>
+                      <Form.Message className="text-destructive" />
+                    </Form.Item>
                   )}
                 />
               );
             } else if (inputType === 'editor') {
               if (COMPANY_EMAIL_TEMPLATE_TYPE === 'simple') {
                 return (
-                  <FormField
+                  <Form.Field
                     key={name}
                     control={control}
                     name={name as Path<TMailConfigForm>}
                     render={({ field }) => (
-                      <FormItem
+                      <Form.Item
                         className={cn(
                           idx === 0 ? 'col-span-2' : 'col-span-4',
                           'flex flex-col justify-between',
                         )}
                       >
                         <div>
-                          <FormLabel>{label}</FormLabel>
+                          <Form.Label>{label}</Form.Label>
                         </div>
                         <div className="w-full flex items-center p-3 text-[13px] leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
                           {description}
                         </div>
-                      </FormItem>
+                      </Form.Item>
                     )}
                   />
                 );
               } else {
                 return (
-                  <FormField
+                  <Form.Field
                     key={name}
                     control={control}
                     name={name as Path<TMailConfigForm>}
                     render={({ field }) => (
-                      <FormItem
+                      <Form.Item
                         className={cn(
                           idx === 0 ? 'col-span-2' : 'col-span-4',
                           'flex flex-col justify-between',
                         )}
                       >
                         <div>
-                          <FormLabel>{label}</FormLabel>
+                          <Form.Label>{label}</Form.Label>
                         </div>
                         <div className="w-full flex items-center p-3 text-[13px] leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
                           {description}
                         </div>
-                      </FormItem>
+                      </Form.Item>
                     )}
                   />
                 );
               }
             }
             return (
-              <FormField
+              <Form.Field
                 key={name}
                 control={control}
                 name={name as Path<TMailConfigForm>}
                 render={({ field }) => (
-                  <FormItem
+                  <Form.Item
                     className={cn(
                       idx === 0 ? 'col-span-2' : 'col-span-4',
                       'flex flex-col justify-between',
                     )}
                   >
                     <div>
-                      <FormLabel>{label}</FormLabel>
-                      <FormDescription>{description}</FormDescription>
+                      <Form.Label>{label}</Form.Label>
+                      <Form.Description>{description}</Form.Description>
                     </div>
-                    <FormControl>
+                    <Form.Control>
                       <Input type={type} {...field} className="h-7" />
-                    </FormControl>
-                    <FormMessage className="text-destructive" />
-                  </FormItem>
+                    </Form.Control>
+                    <Form.Message className="text-destructive" />
+                  </Form.Item>
                 )}
               />
             );
@@ -177,12 +162,12 @@ const MailConfigForm = () => {
         <AnimatePresence mode="popLayout">
           {MAIL_CONFIG_FIELDS[MAIL_SERVICE]?.map(
             ({ name, inputType, type, label, description, options }, idx) => (
-              <FormField
+              <Form.Field
                 key={name}
                 control={control}
                 name={name as Path<TMailConfigForm>}
                 render={({ field }) => (
-                  <FormItem
+                  <Form.Item
                     className={cn(
                       methods.watch('DEFAULT_EMAIL_SERVICE') === 'custom' &&
                         'last-of-type:col-span-4',
@@ -190,20 +175,20 @@ const MailConfigForm = () => {
                     )}
                   >
                     <div>
-                      <FormLabel>{label}</FormLabel>
-                      <FormDescription>{description}</FormDescription>
+                      <Form.Label>{label}</Form.Label>
+                      <Form.Description>{description}</Form.Description>
                     </div>
-                    <FormControl>
+                    <Form.Control>
                       <Input type={type} {...field} className="h-7" />
-                    </FormControl>
-                    <FormMessage className="text-destructive" />
-                  </FormItem>
+                    </Form.Control>
+                    <Form.Message className="text-destructive" />
+                  </Form.Item>
                 )}
               />
             ),
           )}
         </AnimatePresence>
-        <FormItem className="col-span-4 grid grid-cols-4">
+        <Form.Item className="col-span-4 grid grid-cols-4">
           <Button
             size={'sm'}
             type="submit"
@@ -211,7 +196,7 @@ const MailConfigForm = () => {
           >
             {isLoading ? <IconLoader2 className="animate-spin" /> : 'Update'}
           </Button>
-        </FormItem>
+        </Form.Item>
       </form>
     </Form>
   );
