@@ -1,8 +1,11 @@
 import {
-  mutations as CustomerMutations,
-  queries as CustomerQueries,
-  types as CustomerTypes,
-} from './schema/customer';
+  CustomerMutations,
+  CustomerQueries,
+  CustomerTypes,
+  TagMutations,
+  TagQueries,
+  TagTypes,
+} from './schema';
 
 export const types = `
   scalar JSON
@@ -20,14 +23,17 @@ export const types = `
   ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
   ${CustomerTypes}
+  ${TagTypes}
 `;
 
 export const queries = `
   ${CustomerQueries}
+  ${TagQueries}
 `;
 
 export const mutations = `
   ${CustomerMutations}
+  ${TagMutations}
 `;
 
 export default { types, queries, mutations };

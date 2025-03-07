@@ -1,5 +1,4 @@
 export const types = `
-
   type Customer {
     state: String
     createdAt: Date
