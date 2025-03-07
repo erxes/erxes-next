@@ -3,6 +3,12 @@ export const STATUSES = [
   { label: 'Deleted', value: 'Deleted' },
 ];
 
+export const STATUSES_MAP = {
+  ACTIVE: 'active',
+  DELETED: 'deleted',
+  ALL: ['active', 'deleted'],
+};
+
 export const DEFAULT_SOCIAL_LINKS = [
   { label: 'Facebook', value: 'facebook' },
   { label: 'whatsapp', value: 'whatsapp' },

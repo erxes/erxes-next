@@ -144,3 +144,7 @@ export const paginate = (
 
   return collection.limit(_limit).skip((_page - 1) * _limit);
 };
+
+export const escapeRegExp = (str: string) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
