@@ -1,11 +1,4 @@
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Select,
-} from 'erxes-ui/components';
+import { Form, Select } from 'erxes-ui/components';
 import { MultipleSelector } from 'erxes-ui/components/multiselect';
 
 import { FILE_SYSTEM_TYPES } from '@/settings/file-upload/constants/serviceData';
@@ -21,14 +14,14 @@ export function FileUploadMainFields({
 }) {
   return (
     <div className="grid grid-cols-1 gap-4">
-      <FormItem className="w-full">
-        <FormField
+      <Form.Item className="w-full">
+        <Form.Field
           name="UPLOAD_FILE_TYPES"
           key={'UPLOAD_FILE_TYPES'}
           control={form.control}
-          render={({ field }) => (
+          render={({ field }: { field: any }) => (
             <div className="space-y-2">
-              <FormLabel>Upload File Types</FormLabel>
+              <Form.Label>Upload File Types</Form.Label>
               <MultipleSelector
                 {...field}
                 options={modifiedArray}
@@ -42,16 +35,16 @@ export function FileUploadMainFields({
             </div>
           )}
         />
-        <FormMessage />
-      </FormItem>
-      <FormItem>
-        <FormField
+        <Form.Message />
+      </Form.Item>
+      <Form.Item>
+        <Form.Field
           name="WIDGETS_UPLOAD_FILE_TYPES"
           key={'WIDGETS_UPLOAD_FILE_TYPES'}
           control={form.control}
-          render={({ field }) => (
+          render={({ field }: { field: any }) => (
             <div className="space-y-2">
-              <FormLabel>Upload File Types of Widget</FormLabel>
+              <Form.Label>Upload File Types of Widget</Form.Label>
               <MultipleSelector
                 {...field}
                 options={modifiedArray}
@@ -65,16 +58,16 @@ export function FileUploadMainFields({
             </div>
           )}
         />
-        <FormMessage />
-      </FormItem>
-      <FormField
+        <Form.Message />
+      </Form.Item>
+      <Form.Field
         control={form.control}
         name="FILE_SYSTEM_PUBLIC"
         key="FILE_SYSTEM_PUBLIC"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Bucket file system type</FormLabel>
-            <FormControl>
+        render={({ field }: { field: any }) => (
+          <Form.Item>
+            <Form.Label>Bucket file system type</Form.Label>
+            <Form.Control>
               <Select
                 name={field.name}
                 onValueChange={field.onChange}
@@ -91,9 +84,9 @@ export function FileUploadMainFields({
                   ))}
                 </Select.Content>
               </Select>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
         )}
       />
     </div>

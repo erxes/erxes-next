@@ -3,15 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import {
-  Button,
-  Card,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  Input,
-} from 'erxes-ui/components';
+import { Button, Card, Form, Input } from 'erxes-ui/components';
 
 import { GoogleOAuthButton } from '@/auth/login/components/GoogleOAuthButton';
 
@@ -44,21 +36,21 @@ export const MagicLinkLoginForm = () => {
           We use magic link so you don't have to remember or type in yet another
           long password
         </Card.Description>
-        <FormField
+        <Form.Field
           name="email"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <span className="font-semibold text-sm">Email</span>
-              <FormControl>
+            <Form.Item>
+              <Form.Label>Email</Form.Label>
+              <Form.Control>
                 <Input
                   type="email"
                   placeholder="Enter your email"
                   className="h-8"
                   {...field}
                 />
-              </FormControl>
-            </FormItem>
+              </Form.Control>
+            </Form.Item>
           )}
         />
 

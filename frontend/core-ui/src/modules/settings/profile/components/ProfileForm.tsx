@@ -9,11 +9,6 @@ import {
   Button,
   DatePicker,
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
   Input,
   ToggleGroup,
   ToggleGroupItem,
@@ -86,16 +81,16 @@ export const ProfileForm = () => {
     attributes: Record<string, unknown>;
   }) => {
     return (
-      <FormField
+      <Form.Field
         key={name}
         name={name}
         control={form.control}
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
+        render={({ field }: { field: any }) => (
+          <Form.Item>
+            <Form.Control>
               {renderField({ field, element, attributes })}
-            </FormControl>
-          </FormItem>
+            </Form.Control>
+          </Form.Item>
         )}
       />
     );
@@ -105,7 +100,7 @@ export const ProfileForm = () => {
     return (
       <div className="grid grid-cols-2 gap-6 mt-0.5">
         <div className="flex flex-col gap-2">
-          <FormLabel className="text-xs">First Name</FormLabel>
+          <Form.Label className="text-xs">First Name</Form.Label>
           {renderFormField({
             name: 'details.firstName' as keyof FormType,
             element: 'input',
@@ -113,7 +108,7 @@ export const ProfileForm = () => {
           })}
         </div>
         <div className="flex flex-col gap-2">
-          <FormLabel className="text-xs">Last Name</FormLabel>
+          <Form.Label className="text-xs">Last Name</Form.Label>
           {renderFormField({
             name: 'details.lastName' as keyof FormType,
             element: 'input',
@@ -130,11 +125,11 @@ export const ProfileForm = () => {
         <AccordionItem className="py-0 border-b-0" value="advanced">
           <AccordionTrigger className="flex flex-1 items-center justify-between py-0 text-left font-normal leading-6 transition-all [&[data-state=open]>svg]:rotate-180 hover:no-underline">
             <div className="flex flex-col gap-3">
-              <FormLabel>More Information</FormLabel>
-              <FormDescription>
+              <Form.Label>More Information</Form.Label>
+              <Form.Description>
                 Provide any relevant additional personal information, if
                 applicable.
-              </FormDescription>
+              </Form.Description>
             </div>
           </AccordionTrigger>
           <AccordionContent className="py-3 gap-3">
@@ -156,7 +151,7 @@ export const ProfileForm = () => {
                     className="flex flex-col gap-2"
                     key={`advanced-field-${index}`}
                   >
-                    <FormLabel className="text-xs">{fieldLabel}</FormLabel>
+                    <Form.Label className="text-xs">{fieldLabel}</Form.Label>
                     {renderFormField({
                       name: pathName as keyof FormType,
                       element,
@@ -233,13 +228,13 @@ export const ProfileForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(submitHandler)} className="grid gap-5">
         <div className="flex flex-col gap-4">
-          <FormLabel>Profile picture</FormLabel>
-          <FormField
+          <Form.Label>Profile picture</Form.Label>
+          <Form.Field
             name="details.avatar"
             control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
+            render={({ field }: { field: any }) => (
+              <Form.Item>
+                <Form.Control>
                   <Upload.Root
                     {...field}
                     onChange={(fileInfo: any) => field.onChange(fileInfo?.url)}
@@ -258,24 +253,26 @@ export const ProfileForm = () => {
                           type="button"
                         />
                       </div>
-                      <FormDescription>
+                      <Form.Description>
                         Upload a profile picture to help identify you.
-                      </FormDescription>
+                      </Form.Description>
                     </div>
                   </Upload.Root>
-                </FormControl>
-              </FormItem>
+                </Form.Control>
+              </Form.Item>
             )}
           />
         </div>
         <div className="flex flex-col gap-3">
-          <FormLabel>Name</FormLabel>
-          <FormDescription>This is your public display name.</FormDescription>
+          <Form.Label>Name</Form.Label>
+          <Form.Description>This is your public display name.</Form.Description>
           {renderDefaultFields()}
         </div>
         <div className="flex flex-col gap-3">
-          <FormLabel>Email</FormLabel>
-          <FormDescription>This is your public email address.</FormDescription>
+          <Form.Label>Email</Form.Label>
+          <Form.Description>
+            This is your public email address.
+          </Form.Description>
           {renderFormField({
             name: 'email',
             element: 'input',
@@ -284,8 +281,8 @@ export const ProfileForm = () => {
         </div>
         <div className="flex flex-col gap-3">{renderAdvancedFields()}</div>
         <div className="flex flex-col flex-1 gap-3">
-          <FormLabel>Links</FormLabel>
-          <FormDescription>This is your social links.</FormDescription>
+          <Form.Label>Links</Form.Label>
+          <Form.Description>This is your social links.</Form.Description>
           {renderLinkFields()}
         </div>
         <div className="w-full flex justify-end">

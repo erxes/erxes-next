@@ -1,10 +1,4 @@
-import {
-  IconCheckbox,
-  IconReplaceUser,
-  IconSortDescending,
-  IconTag,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconCheckbox, IconSortDescending, IconTag } from '@tabler/icons-react';
 import { Button, Checkbox, CommandBar, Separator } from 'erxes-ui/components';
 import { FilterDropdown } from './FilterDropdown';
 import { selectConversationsState } from '../state/selectConversationsState';

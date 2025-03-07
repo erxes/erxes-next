@@ -2,14 +2,14 @@ import {
   DefaultReactSuggestionItem,
   SuggestionMenuController,
 } from '@blocknote/react';
-import { AssignMemberInfo } from '../components/AssignMember';
 import { SuggestionMenu, SuggestionMenuItem, IBlockEditor } from 'erxes-ui';
-import { IAssignMember, MentionMenuProps } from '../types/TeamMembers';
+import { IMember, MentionMenuProps } from '../types/TeamMembers';
 import { useUsers } from '../hooks/useUsers';
 import { useState } from 'react';
 import { IconLoader } from '@tabler/icons-react';
 
 import { useInView } from 'react-intersection-observer';
+import { MemberInline } from './MemberInline';
 
 export const AssignMemberInEditor = ({ editor }: { editor: IBlockEditor }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -82,7 +82,7 @@ interface MentionMenuItemProps {
   isSelected: boolean;
   index: number;
   text: string;
-  user?: IAssignMember;
+  user?: IMember;
 }
 
 function MentionMenuItem({ onClick, isSelected, user }: MentionMenuItemProps) {
@@ -99,14 +99,14 @@ function MentionMenuItem({ onClick, isSelected, user }: MentionMenuItemProps) {
       className="justify-start"
       isSelected={isSelected}
     >
-      <AssignMemberInfo user={user} />
+      <MemberInline member={user} />
     </SuggestionMenuItem>
   );
 }
 
 function getMentionMenuItems(
   editor: IBlockEditor,
-  users: IAssignMember[],
+  users: IMember[],
 ): DefaultReactSuggestionItem[] {
   return users.map((user) => ({
     title: user.details.fullName,
