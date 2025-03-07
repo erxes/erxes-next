@@ -1,6 +1,6 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui/components';
-import { productDetailSheetOpenAtom } from '../../states/productDetailStates';
+import { renderingProductDetailAtom } from '../../states/productDetailStates';
 import { cn } from 'erxes-ui/lib';
 import { useSetHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/useSetHotkeyScope';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
@@ -10,7 +10,7 @@ import { useAtom } from 'jotai';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) => {
-  const [activeTab] = useAtom(productDetailSheetOpenAtom);
+  const [activeTab] = useAtom(renderingProductDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,7 +58,6 @@ export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) 
           <Sheet.Description className="sr-only">Product Detail</Sheet.Description>
         </Sheet.Header>
         {children}
-        {/* <ProductGeneral/> */}
       </Sheet.Content>
     </Sheet>
   );

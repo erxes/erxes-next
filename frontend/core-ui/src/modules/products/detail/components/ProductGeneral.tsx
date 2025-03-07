@@ -33,7 +33,6 @@ export const ProductGeneral = () => {
   const { 
     _id, 
     name, 
-    unitPrice, 
     barcodeDescription,
     description, 
     categoryId, 
@@ -43,7 +42,6 @@ export const ProductGeneral = () => {
     attachment, 
     barcodes, 
     shortName,
-    brand,
     uom,
     vendor
   } = productDetail || {}
