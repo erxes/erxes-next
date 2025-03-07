@@ -20,7 +20,7 @@ export function CollapsibleSection({ title, defaultOpen = false, children, class
 
   return (
     <div className={cn("border-b border-gray-200", className)}>
-      <button
+      <button aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between py-4 px-4 text-left focus:outline-none"
       >
