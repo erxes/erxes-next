@@ -15,6 +15,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'erxes-ui/types/Key';
 import { useAtomValue } from 'jotai';
 import { BlockEditorProps } from '../types';
+import { cn } from 'erxes-ui/lib';
 
 export const BlockEditor = ({
   editor,
@@ -27,6 +28,7 @@ export const BlockEditor = ({
   className,
   style,
   disabled,
+  variant = 'default',
 }: BlockEditorProps) => {
   const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
@@ -54,7 +56,11 @@ export const BlockEditor = ({
       }}
       editable={!readonly && !disabled}
       onChange={onChange}
-      className={className}
+      data-state={focus ? 'focus' : 'blur'}
+      className={cn(
+        variant === 'outline' && 'shadow-xs data-[state=focus]:shadow-focus',
+        className,
+      )}
       formattingToolbar={false}
       shadCNComponents={{
         Button: { Button },

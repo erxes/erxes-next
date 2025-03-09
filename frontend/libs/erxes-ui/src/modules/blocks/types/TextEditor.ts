@@ -17,6 +17,7 @@ export interface BlockEditorProps {
   className?: string;
   style?: React.CSSProperties;
   disabled?: boolean;
+  variant?: 'default' | 'outline';
 }
 
 export type IBlockEditor = typeof BLOCK_SCHEMA.BlockNoteEditor;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { cva, VariantProps } from 'class-variance-authority';
 
-import { Color, stringToHslColor, twColorClassNames } from './colors';
+import { stringToHslColor } from '../utils/colors';
 import { cn } from '../lib/utils';
 import { useAtomValue } from 'jotai';
 import { themeState } from 'erxes-ui/state';
@@ -58,7 +58,6 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
-    color?: Color;
     colorSeed?: string;
   }
 >(({ className, color, colorSeed, style, ...props }, ref) => {
@@ -68,7 +67,6 @@ const AvatarFallback = React.forwardRef<
       ref={ref}
       className={cn(
         'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] uppercase',
-        twColorClassNames[color as Color],
         className,
       )}
       style={

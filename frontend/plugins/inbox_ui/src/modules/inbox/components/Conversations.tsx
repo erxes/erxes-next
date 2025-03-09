@@ -12,7 +12,7 @@ import { ConversationContext } from '~/modules/inbox/context/ConversationContext
 import { IConversation } from '@/inbox/types/Conversation';
 import { useConversationContext } from '@/inbox/hooks/useConversationContext';
 import { currentUserState, CustomerInline } from 'ui-modules';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { INTEGRATION_ICONS } from '@/inbox/constants/integrationImages';
 import { IconLoader, IconMail } from '@tabler/icons-react';
 import { useInView } from 'react-intersection-observer';
@@ -21,8 +21,12 @@ import { ConversationFilter } from './ConversationFilter';
 import { useMultiQueryState, useQueryState } from '../hooks/useQueryState';
 import { FilterTags } from './FilterTags';
 import { activeConversationState } from '../state/activeConversationState';
-import { selectConversationsState } from '../state/selectConversationsState';
+import {
+  selectConversationsState,
+  setSelectConversationsState,
+} from '../state/selectConversationsState';
 import { ConversationListContext } from '../context/ConversationListContext';
+import { useEffect, useState } from 'react';
 
 export const Conversations = () => {
   const [ref] = useInView({
@@ -100,7 +104,7 @@ export const ConversationItem = () => {
   const [conversationId] = useQueryState<string>('conversationId');
   const [detailView] = useQueryState<boolean>('detailView');
 
-  const { integration, createdAt, content, updatedAt, customer } =
+  const { integration, createdAt, updatedAt, customer } =
     useConversationContext();
   const { brand } = integration || {};
 
@@ -109,7 +113,7 @@ export const ConversationItem = () => {
       <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start">
         <CustomerInline.Provider customer={customer}>
           <div className="flex w-full gap-3 leading-tight">
-            <ConversationCheckbox />
+            <ConversationSelector />
             <div className="flex-1 space-y-1 truncate">
               <CustomerInline.Title className="truncate" />
               <div className="font-normal text-accent-foreground text-xs">
@@ -129,7 +133,7 @@ export const ConversationItem = () => {
   return (
     <ConversationContainer>
       <CustomerInline.Provider customer={customer}>
-        <ConversationCheckbox />
+        <ConversationSelector />
         <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
         <ConversationItemContent />
         <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
@@ -195,13 +199,9 @@ const ConversationContainer = ({
   );
 };
 
-const ConversationCheckbox = () => {
+const ConversationSelector = () => {
   const [conversationId] = useQueryState<string>('conversationId');
-  const { _id } = useConversationContext();
-  const [selectedConversations, setSelectedConversations] = useAtom(
-    selectConversationsState,
-  );
-  const isSelected = selectedConversations.includes(_id || '');
+
   return (
     <div
       className={cn(
@@ -210,20 +210,7 @@ const ConversationCheckbox = () => {
       )}
     >
       <div className="absolute size-full bg-primary/10 rounded-full" />
-      <Checkbox
-        className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 z-10"
-        onClick={(e) => e.stopPropagation()}
-        checked={isSelected}
-        onCheckedChange={(checked) => {
-          if (checked) {
-            setSelectedConversations([...selectedConversations, _id || '']);
-          } else {
-            setSelectedConversations(
-              selectedConversations.filter((id) => id !== _id || ''),
-            );
-          }
-        }}
-      />
+      <ConversationCheckbox />
       <div className="transition-opacity duration-200 relative opacity-100 group-hover:opacity-0 peer-data-[state=checked]:opacity-0">
         <CustomerInline.Avatar
           size={conversationId ? 'xl' : 'lg'}
@@ -235,6 +222,47 @@ const ConversationCheckbox = () => {
   );
 };
 
+const ConversationCheckbox = () => {
+  const { _id } = useConversationContext();
+  const [isChecked, setIsChecked] = useState(false);
+  const setSelectConversations = useSetAtom(setSelectConversationsState);
+
+  return (
+    <>
+      <Checkbox
+        checked={isChecked}
+        className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 z-10"
+        onClick={(e) => e.stopPropagation()}
+        onCheckedChange={() => setSelectConversations(_id)}
+      />
+      <ConversationCheckedEffect
+        isChecked={isChecked}
+        setIsChecked={setIsChecked}
+      />
+    </>
+  );
+};
+
+const ConversationCheckedEffect = ({
+  isChecked,
+  setIsChecked,
+}: {
+  isChecked: boolean;
+  setIsChecked: (isChecked: boolean) => void;
+}) => {
+  const { _id } = useConversationContext();
+  const selectConversations = useAtomValue(selectConversationsState);
+
+  useEffect(() => {
+    if (isChecked !== selectConversations.includes(_id)) {
+      setIsChecked(selectConversations.includes(_id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectConversations]);
+
+  return null;
+};
+
 const ConversationIntegrationBadge = () => {
   const { integration } = useConversationContext();
   const { kind } = integration || {};
@@ -243,7 +271,7 @@ const ConversationIntegrationBadge = () => {
     INTEGRATION_ICONS[kind as keyof typeof INTEGRATION_ICONS] ?? IconMail;
 
   return (
-    <Badge className="absolute -bottom-1 -right-1 size-4 rounded-full bg-background flex justify-center items-center p-0">
+    <Badge className="absolute -bottom-1 -right-1 size-4 rounded-full bg-background flex justify-center items-center p-0 text-purple-700">
       <Icon className="size-4 flex-none text-primary" />
     </Badge>
   );

@@ -5,11 +5,10 @@ import { useDebounce } from 'use-debounce';
 import { Button, ButtonProps, Command, Tabs } from 'erxes-ui/components';
 import {
   SelectTree,
-  SelectTreeItem,
-} from 'erxes-ui/modules/select-tree/components/SelectTree';
-import { InlineCell } from 'erxes-ui/modules/inline-cell/components/InlineCell';
-import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/InlineCellDisplay';
-import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
+  InlineCell,
+  InlineCellDisplay,
+  InlineCellEdit,
+} from 'erxes-ui';
 
 import { CreateTagForm } from './CreateTagForm';
 import { SelectTagCreateContainer } from './SelectTagCreate';
@@ -42,13 +41,13 @@ export const SelectTags = React.forwardRef<
     const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
     useEffect(() => {
       if (!loading && tags && tags.length > 0) {
-        const tagMap = new Map(tags.map(tag => [tag._id, tag]));
-        const validSelectedTags = Array.isArray(selected) 
-          ? selected.map(id => tagMap.get(id)).filter(Boolean) as ITag[]
-          : selected && typeof selected === 'string' && tagMap.has(selected) 
-            ? [tagMap.get(selected) as ITag] 
-            : [];
-            
+        const tagMap = new Map(tags.map((tag: ITag) => [tag._id, tag]));
+        const validSelectedTags = Array.isArray(selected)
+          ? (selected.map((id) => tagMap.get(id)).filter(Boolean) as ITag[])
+          : selected && typeof selected === 'string' && tagMap.has(selected)
+          ? [tagMap.get(selected) as ITag]
+          : [];
+
         setSelectedTags(validSelectedTags);
       }
     }, [loading, selected, tags]);
@@ -62,18 +61,18 @@ export const SelectTags = React.forwardRef<
         onSelect([tag._id]);
         setSelectedTags([tag]);
       } else {
-        const selectedIds = selectedTags.map(t => t._id);
+        const selectedIds = selectedTags.map((t) => t._id);
         const tagIndex = selectedIds.indexOf(tag._id);
-        
+
         if (tagIndex >= 0) {
           const newSelectedTags = [...selectedTags];
           newSelectedTags.splice(tagIndex, 1);
           setSelectedTags(newSelectedTags);
-          onSelect(newSelectedTags.map(t => t._id));
+          onSelect(newSelectedTags.map((t) => t._id));
         } else {
           const newSelectedTags = [...selectedTags, tag];
           setSelectedTags(newSelectedTags);
-          onSelect(newSelectedTags.map(t => t._id));
+          onSelect(newSelectedTags.map((t) => t._id));
         }
       }
     };
@@ -96,8 +95,14 @@ export const SelectTags = React.forwardRef<
         value={{
           tagType,
           selectedTagIds: single
-            ? (typeof selected === 'string' ? [selected] : selected && selected.length > 0 ? [selected[0]] : [])
-            : (Array.isArray(selected) ? selected : []),
+            ? typeof selected === 'string'
+              ? [selected]
+              : selected && selected.length > 0
+              ? [selected[0]]
+              : []
+            : Array.isArray(selected)
+            ? selected
+            : [],
           selectedTags,
           setSelectedTags,
           handleSelect,
@@ -233,7 +238,7 @@ export function SelectTagItem(
   const isSelected = selectedTags?.some((tag: ITag) => tag._id === _id);
 
   return (
-    <SelectTreeItem
+    <SelectTree.Item
       order={order}
       hasChildren={hasChildren}
       name={name}
@@ -247,7 +252,7 @@ export function SelectTagItem(
       selected={isSelected}
     >
       {props.name}
-    </SelectTreeItem>
+    </SelectTree.Item>
   );
 }
 

@@ -55,7 +55,8 @@ export const DescriptionField = ({
                   ContactHotKeyScope.CustomerAddSheetDescriptionField,
                 )
               }
-              className=" h-28 rounded-md border min-h-28 overflow-y-auto"
+              variant="outline"
+              className="h-28 rounded-md min-h-28 overflow-y-auto"
             />
           </Form.Control>
           <Form.Message className="text-destructive" />

@@ -1,5 +1,10 @@
 import { ScrollArea, Separator, Skeleton } from 'erxes-ui/components';
-import { AssignMember, CustomerInline } from 'ui-modules';
+import {
+  AssignMember,
+  CustomerInline,
+  SelectTags,
+  useGiveTags,
+} from 'ui-modules';
 import { useConversationContext } from '../../hooks/useConversationContext';
 import { useAssignConversations } from '../hooks/useAssignConversations';
 import { toast } from 'erxes-ui/hooks';
@@ -28,6 +33,9 @@ export const ConversationHeader = () => {
         ) : (
           <Skeleton className="w-32 h-4 ml-2" />
         )}
+        <Separator.Inline />
+        Tags:
+        {!loading ? <Tags /> : <Skeleton className="w-32 h-4 ml-2" />}
       </div>
       <ScrollArea.Bar orientation="horizontal" />
     </ScrollArea>
@@ -62,7 +70,42 @@ const AssignConversation = () => {
       }}
       size="lg"
       variant="secondary"
-      className="min-w-32 text-foreground -ml-1"
+      className="min-w-32 h-7 text-foreground -ml-1 flex-none shadow-none"
+    />
+  );
+};
+
+const Tags = () => {
+  const { _id, tagIds } = useConversationContext();
+  const { giveTags, loading } = useGiveTags();
+
+  return (
+    <SelectTags
+      tagType="inbox:conversation"
+      recordId={_id}
+      className="flex-none w-auto min-w-32 h-7 hover:bg-background"
+      selected={tagIds}
+      asTrigger
+      loading={loading}
+      inDetail
+      onSelect={(tags) => {
+        giveTags({
+          variables: {
+            targetIds: [_id],
+            tagIds: tags,
+            type: 'inbox:conversation',
+          },
+          update: (cache) => {
+            cache.modify({
+              id: cache.identify({
+                __typename: 'Conversation',
+                _id,
+              }),
+              fields: { tagIds: () => tags },
+            });
+          },
+        });
+      }}
     />
   );
 };
