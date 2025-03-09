@@ -94,7 +94,7 @@ export const Phone = React.forwardRef<
           setNewPhone('');
           setIsAddingPhone(false);
         } else {
-          console.log('noo');
+          // console.log('noo');
         }
       }
     };

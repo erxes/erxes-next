@@ -8,7 +8,6 @@ export const Combobox = React.forwardRef<
     hideChevron?: boolean;
   }
 >(({ className, children, hideChevron = false, ...props }, ref) => {
-  console.log(props);
   return (
     <Button
       ref={ref}

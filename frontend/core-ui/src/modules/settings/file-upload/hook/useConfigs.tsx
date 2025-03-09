@@ -16,7 +16,7 @@ const useConfig = () => {
 
   const { data, loading } = useQuery(fileSettingsQueries.configsQuery, {
     onError(error) {
-      console.log(error.message);
+      // console.log(error.message);
     },
   });
 
@@ -24,7 +24,7 @@ const useConfig = () => {
     fileSettingsMutations.configsUpdate,
     {
       onError(error) {
-        console.log(error.message);
+        // console.log(error.message);
       },
       onCompleted() {
         toast({

@@ -23,7 +23,7 @@ export const MagicLinkLoginForm = () => {
   });
 
   const submitHandler: SubmitHandler<FormType> = (data) => {
-    console.log('Submitted email:', data.email);
+    // console.log('Submitted email:', data.email);
   };
 
   return (
