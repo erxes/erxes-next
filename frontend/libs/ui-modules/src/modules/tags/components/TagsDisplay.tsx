@@ -17,20 +17,28 @@ export const TagsDisplay = memo(
 
       return (
         <InlineCellDisplay
-          className={cn('w-full h-cell relative group', className)}
+          className={cn(
+            'w-full h-cell relative group px-2 shadow-none',
+            className,
+          )}
           ref={ref}
           variant={asTrigger ? 'secondary' : 'ghost'}
           {...props}
+          asChild={asTrigger}
         >
-          {asTrigger ? <SingleTagWithTooltip /> : <TagBadgeList />}
-          {showAddButton && (
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute right-1 size-5 px-0 hidden items-center hover:bg-border justify-center group-hover:flex"
-            >
-              <IconPlus className="text-muted-foreground" />
-            </Button>
+          {asTrigger ? (
+            <SingleTagWithTooltip />
+          ) : (
+            <>
+              <TagBadgeList />
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute right-1 size-5 px-0 hidden items-center hover:bg-border justify-center group-hover:flex"
+              >
+                <IconPlus className="text-muted-foreground" />
+              </Button>
+            </>
           )}
         </InlineCellDisplay>
       );
