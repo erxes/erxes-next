@@ -11,7 +11,7 @@ export function SelectTagCreateContainer({
 }) {
   return (
     <Tabs.Content value="create" asChild>
-      <div className="h-[340px] p-2 overflow-auto">
+      <div className=" p-2 overflow-auto">
         <div className="flex items-center gap-2">
           <Button variant="ghost" onClick={onBack} size="icon">
             <IconChevronLeft className="w-4 h-4" />

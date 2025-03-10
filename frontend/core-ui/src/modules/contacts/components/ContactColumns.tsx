@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   IconAlignLeft,
   IconHistory,
@@ -13,21 +11,16 @@ import type { ColumnDef, Cell } from '@tanstack/react-table';
 import { Avatar } from 'erxes-ui/components/avatar';
 import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
-import {
-  RecordTableInlineCell,
-  RecordTableInlineCellEditForm,
-} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 
-import { Customer } from '@/contacts/types/contactsTypes';
-import { TagBadges } from '@/tags/components/tagBadges';
-import { SelectTags } from '@/tags/components/SelectTags';
-import { ContactEmailColumnCell } from '@/contacts/components/ContactEmailColumnCell';
-import { ITag } from '@/tags/types/tagTypes';
-import { ContactPhoneColumnCell } from '@/contacts/components/ContactPhoneColumnCell';
+import { TCustomer } from '@/contacts/types/customerType';
 import { FullNameField } from '../customer-edit/components/FullNameField';
+import { EmailField } from '../customer-edit/components/EmailField';
+import { PhoneField } from '../customer-edit/components/PhoneField';
 import { TextField } from '../customer-edit/components/TextField';
+import { TagsField } from '@/contacts/customer-edit/components/TagsField';
 
-export const contactColumns: ColumnDef<Customer>[] = [
+export const contactColumns: ColumnDef<TCustomer>[] = [
   {
     id: 'avatar',
     accessorKey: 'avatar',
@@ -74,7 +67,16 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconMail} label="Primary Email" />
     ),
-    cell: ({ cell }) => <ContactEmailColumnCell cell={cell} />,
+    cell: ({ cell }) => {
+      const { primaryEmail, emails, _id } = cell.row.original;
+      return (
+        <EmailField
+          primaryEmail={primaryEmail || ''}
+          emails={emails || []}
+          _id={_id}
+        />
+      );
+    },
   },
 
   {
@@ -83,35 +85,33 @@ export const contactColumns: ColumnDef<Customer>[] = [
     header: () => (
       <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
     ),
-    cell: ({ cell }) => <ContactPhoneColumnCell cell={cell} />,
+    cell: ({ cell }) => {
+      const { primaryPhone, phones, _id, location } = cell.row.original;
+      return (
+        <PhoneField
+          primaryPhone={primaryPhone || ''}
+          phones={phones || []}
+          defaultCountryCode={location?.countryCode}
+          _id={_id}
+        />
+      );
+    },
   },
 
   {
     id: 'tagIds',
     accessorKey: 'tagIds',
     header: () => <RecordTableInlineHead icon={IconTag} label="Tags" />,
-    cell: ({ cell }) => (
-      <RecordTableInlineCell
-        display={() => (
-          <div className="flex gap-1">
-            <TagBadges tagIds={cell.getValue() as string[]} />
-          </div>
-        )}
-        edit={() => {
-          const [selectedTags, setSelectedTags] = useState<string[]>(
-            (cell.getValue() as ITag[]).map((tag) => tag._id),
-          );
-          const handleSelect = (tags: string[] | string) => {
-            setSelectedTags(tags as string[]);
-          };
-          return (
-            <RecordTableInlineCellEditForm>
-              <SelectTags selected={selectedTags} onSelect={handleSelect} />
-            </RecordTableInlineCellEditForm>
-          );
-        }}
-      />
-    ),
+    cell: ({ cell }) => {
+      return (
+        <TagsField
+          _id={cell.row.original._id}
+          tagType="core:customer"
+          selected={cell.row.original.tagIds}
+          recordId={cell.row.original._id}
+        />
+      );
+    },
   },
   {
     id: 'lastSeenAt',
@@ -151,7 +151,7 @@ export const contactColumns: ColumnDef<Customer>[] = [
     id: field,
     accessorKey: field,
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
-    cell: ({ cell }: { cell: Cell<Customer, unknown> }) => (
+    cell: ({ cell }: { cell: Cell<TCustomer, unknown> }) => (
       <TextField
         _id={cell.row.original._id}
         field={field}

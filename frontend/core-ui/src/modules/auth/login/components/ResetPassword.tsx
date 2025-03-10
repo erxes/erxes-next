@@ -1,14 +1,6 @@
 import { SubmitHandler } from 'react-hook-form';
 
-import {
-  Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  Input,
-} from 'erxes-ui/components';
+import { Button, Form, Input } from 'erxes-ui/components';
 
 import { useLogin } from '@/auth/login/hooks/useLogin';
 import {
@@ -31,34 +23,34 @@ export const ResetPassword = ({ token }: { token: string }) => {
         onSubmit={form.handleSubmit(submitHandler)}
         className="mx-auto grid w-[350px] gap-5"
       >
-        <FormField
+        <Form.Field
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input
                   type="password"
                   placeholder="Enter password"
                   {...field}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
-        <FormField
+        <Form.Field
           name="confirmPassword"
           render={({ field }) => (
-            <FormItem>
-              <FormControl>
+            <Form.Item>
+              <Form.Control>
                 <Input
                   type="password"
                   placeholder="Confirm password"
                   {...field}
                 />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
 

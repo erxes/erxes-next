@@ -1,4 +1,4 @@
-import { AssignMember } from '@/team-members/components/AssignMember';
+import { AssignMember } from 'ui-modules';
 import { Label } from 'erxes-ui/components';
 import { useState } from 'react';
 

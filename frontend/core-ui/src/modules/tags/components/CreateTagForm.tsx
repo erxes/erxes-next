@@ -4,26 +4,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconLoader } from '@tabler/icons-react';
 import { z } from 'zod';
 
-import {
-  Button,
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-} from 'erxes-ui/components';
-import { SelectColor } from 'erxes-ui/modules/select-color/components/SelectColor';
+import { Button, Form, Input } from 'erxes-ui/components';
 
 import { SelectTags } from '@/tags/components/SelectTags';
 import { useTagsAdd } from '@/tags/hooks/useTagsAdd';
 import { newTagNameAtom } from '@/tags/states/selectTagsStates';
 import { ITag } from '@/tags/types/tagTypes';
 import { useAtom } from 'jotai';
+import { useId } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(1),
-  colorCode: z.string().optional(),
   parentId: z.string().optional(),
 });
 
@@ -31,15 +22,15 @@ export const CreateTagForm = ({
   tagType,
   onCompleted,
 }: {
-  tagType?: string;
+  tagType: string;
   onCompleted?: (tag: ITag) => void;
 }) => {
+  const id = useId();
   const [name] = useAtom(newTagNameAtom);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name,
-      colorCode: 'empty',
       parentId: '',
     },
   });
@@ -66,46 +57,38 @@ export const CreateTagForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
-        <FormField
-          control={form.control}
+        <Form.Field
           name="name"
+          control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <Input {...field} />
-              <FormMessage />
-            </FormItem>
+            <Form.Item>
+              <Form.Label>Name</Form.Label>
+              <Form.Control>
+                <Input {...field} />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
-        <FormField
-          control={form.control}
+        <Form.Field
           name="parentId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Parent Tag</FormLabel>
-              <SelectTags
-                tagType={tagType}
-                single
-                sub
-                selected={field.value}
-                onSelect={(tag) => field.onChange(tag)}
-                className="w-full h-8"
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
           control={form.control}
-          name="colorCode"
           render={({ field }) => (
-            <FormItem className="mb-2">
-              <SelectColor
-                value={field.value || ''}
-                onValueChange={field.onChange}
-              />
-              <FormMessage />
-            </FormItem>
+            <Form.Item>
+              <Form.Label>Parent Tag</Form.Label>
+              <Form.Control>
+                <SelectTags
+                  recordId={id}
+                  tagType={tagType}
+                  single
+                  sub
+                  selected={field.value}
+                  onSelect={(tags) => field.onChange(tags[0])}
+                  className="w-full h-8"
+                />
+              </Form.Control>
+              <Form.Message />
+            </Form.Item>
           )}
         />
         <Button type="submit" className="w-full !mt-4" disabled={loading}>

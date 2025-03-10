@@ -8,7 +8,7 @@ export const RecordTableRoot = React.forwardRef<
   React.HTMLAttributes<HTMLTableElement> & { scrollAreaClassName?: string }
 >(({ scrollAreaClassName, ...props }, ref) => {
   return (
-    <ScrollArea.Root
+    <ScrollArea
       scrollBarClassName="z-10"
       className={cn('h-full w-full', scrollAreaClassName)}
     >
@@ -18,6 +18,6 @@ export const RecordTableRoot = React.forwardRef<
         {...props}
       />
       <ScrollArea.Bar orientation="horizontal" className="z-10" />
-    </ScrollArea.Root>
+    </ScrollArea>
   );
 });

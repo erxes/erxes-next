@@ -1,4 +1,4 @@
-import { IconBell, IconBellFilled, IconSelector } from '@tabler/icons-react';
+import { IconBellFilled } from '@tabler/icons-react';
 import { currentOrganizationState } from 'ui-modules';
 
 import { Button, Sidebar } from 'erxes-ui/components';

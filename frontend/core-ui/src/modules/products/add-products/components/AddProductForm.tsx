@@ -17,10 +17,12 @@ import {
   ProductFormValues,
 } from '@/products/add-products/components/formSchema';
 import { useAddProduct } from '@/products/hooks/useAddProduct';
+import { ApolloError } from '@apollo/client';
+import { useToast } from 'erxes-ui/hooks';
 
 export function AddProductForm() {
   const [open, setOpen] = useState<boolean>(false);
-  const { productsAdd, loading } = useAddProduct();
+  const { productsAdd } = useAddProduct();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
@@ -42,10 +44,16 @@ export function AddProductForm() {
       scopeBrandIds: [],
     },
   });
-
+  const { toast } = useToast();
   async function onSubmit(data: ProductFormValues) {
     productsAdd({
       variables: data,
+      onError: (e: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+        });
+      },
       onCompleted: () => {
         form.reset();
         setOpen(false);
@@ -60,7 +68,7 @@ export function AddProductForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className=" flex flex-col h-full"
         >
-          <ScrollArea.Root className="flex-auto">
+          <ScrollArea className="flex-auto">
             <ProductAddSheetHeader />
             <div className="px-5">
               <ProductAddCoreFields form={form} />
@@ -68,7 +76,7 @@ export function AddProductForm() {
                 <ProductAddMoreFields form={form} />
               </ProductAddCollapsible>
             </div>
-          </ScrollArea.Root>
+          </ScrollArea>
 
           <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
             <Button

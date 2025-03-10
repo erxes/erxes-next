@@ -23,13 +23,15 @@ export interface SelectTagFetchMoreProps {
 }
 
 export interface SelectTagsProps {
-  tagType?: string;
+  tagType: string;
   sub?: boolean;
   single?: boolean;
   selected?: string[] | string;
-  onSelect?: (tags: string[] | string) => void;
+  onSelect?: (tags: string[]) => void;
   className?: string;
   loading?: boolean;
+  recordId: string;
+  fieldId?: string;
 }
 
 export interface TagBadgesProps {

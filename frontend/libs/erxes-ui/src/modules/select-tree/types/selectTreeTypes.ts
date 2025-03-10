@@ -1,5 +1,6 @@
 export interface ISelectTreeContext {
   id: string;
   hideChildren: string[];
-  setHideChildren: (string) => void;
+  setHideChildren: (hideChildren: string[]) => void;
+  ordered?: boolean;
 }

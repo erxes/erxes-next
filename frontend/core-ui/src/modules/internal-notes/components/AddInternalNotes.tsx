@@ -1,8 +1,6 @@
 import { useCreateBlockNote } from '@blocknote/react';
-import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
-import { BlockEditor } from 'erxes-ui/modules/blocks/components/BlockEditor';
-import { getMentionedUserIds } from 'erxes-ui/modules/blocks/utils/getMentionedUserIds';
-import { AssignMemberInEditor } from '@/team-members/components/AssignMemberInEditor';
+import { getMentionedUserIds, BlockEditor, useBlockEditor } from 'erxes-ui';
+import { AssignMemberInEditor } from 'ui-modules';
 import { Button, Spinner } from 'erxes-ui/components';
 import { IconArrowUp } from '@tabler/icons-react';
 import { useAddInternalNote } from '@/internal-notes/hooks/useAddInternalNote';
@@ -16,9 +14,7 @@ export function AddInternalNotes({
   contentTypeId: string;
   contentType: string;
 }) {
-  const editor = useCreateBlockNote({
-    schema: BLOCK_SCHEMA,
-  });
+  const editor = useBlockEditor();
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
   const [content, setContent] = useState<string>('');
   const { addInternalNote, loading } = useAddInternalNote();

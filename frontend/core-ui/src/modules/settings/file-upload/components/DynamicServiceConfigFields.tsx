@@ -1,19 +1,31 @@
-import { AnimatePresence,motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 
+import { Checkbox, Form, Input } from 'erxes-ui/components';
+
+import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
 import {
-  Checkbox,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-} from 'erxes-ui/components';
+  DynamicFieldsT,
+  UploadConfigFormT,
+} from '@/settings/file-upload/types';
+import { FormProps, Path } from 'react-hook-form';
 
-import { uploadServiceData } from '@/settings/file-upload/constants/serviceData';
-import { DynamicFieldsT } from '@/settings/file-upload/types';
+interface TField {
+  label: string;
+  name: string;
+  type: string;
+}
 
-export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
+type Props = {
+  dynamicFields: TField[];
+  selected: string;
+  form: FormProps<UploadConfigFormT>;
+};
+
+export function DynamicServiceConfigFields({
+  dynamicFields,
+  selected,
+  form,
+}: Props) {
   return (
     <AnimatePresence mode="popLayout">
       {dynamicFields.length > 0 && (
@@ -22,56 +34,56 @@ export function DynamicServiceConfigFields({ dynamicFields, selected, form }) {
           initial={false}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="flex flex-col bg-primary-foreground rounded-lg h-auto shadow-sm overflow-hidden mb-4"
+          className="flex flex-col bg-background rounded-lg h-auto shadow-sm overflow-hidden mb-4"
         >
           <h4 className="font-semibold text-base p-3">
-            {uploadServiceData.find((item) => item.value === selected)?.label}
+            {UPLOAD_SERVICE_DATA.find((item) => item.value === selected)?.label}
           </h4>
           <div className="grid grid-cols-4 gap-1 p-4">
-            {dynamicFields.map((fieldData) =>
+            {dynamicFields.map((fieldData: TField) =>
               fieldData.type === 'checkbox' ? (
-                <FormField
+                <Form.Field
                   control={form.control}
-                  name={fieldData.name}
+                  name={fieldData.name as Path<UploadConfigFormT>}
                   key={fieldData.name}
-                  render={({ field }) => (
-                    <FormItem className="col-span-4 flex items-center justify-start gap-x-2">
-                      <FormControl>
+                  render={({ field }: { field: any }) => (
+                    <Form.Item className="col-span-4 flex items-center justify-start gap-x-2">
+                      <Form.Control>
                         <Checkbox
-                          checked={field.value}
+                          checked={field.value as boolean}
                           onCheckedChange={field.onChange}
                           id={fieldData.name}
                         />
-                      </FormControl>
-                      <FormLabel className="text-xs">
+                      </Form.Control>
+                      <Form.Label className="text-xs">
                         {fieldData.label}
-                      </FormLabel>
-                      <FormMessage />
-                    </FormItem>
+                      </Form.Label>
+                      <Form.Message />
+                    </Form.Item>
                   )}
                 />
               ) : (
-                <FormField
+                <Form.Field
                   control={form.control}
                   name={fieldData.name as keyof DynamicFieldsT}
                   key={fieldData.name}
-                  render={({ field }) => (
-                    <FormItem
+                  render={({ field }: { field: any }) => (
+                    <Form.Item
                       className={
                         selected === 'GCS' ? 'col-span-4' : 'col-span-2'
                       }
                     >
-                      <FormLabel className="text-xs">
+                      <Form.Label className="text-xs">
                         {fieldData.label}
-                      </FormLabel>
-                      <FormControl>
+                      </Form.Label>
+                      <Form.Control>
                         <Input type={'text'} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                      </Form.Control>
+                      <Form.Message />
+                    </Form.Item>
                   )}
                 />
-              )
+              ),
             )}
           </div>
         </motion.div>

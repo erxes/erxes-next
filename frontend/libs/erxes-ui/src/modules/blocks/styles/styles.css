@@ -50,6 +50,10 @@
   height: 100%;
 }
 
+.bn-shadcn.internal-note .bn-editor {
+  background-color: transparent;
+}
+
 .bn-default-styles {
   font-size: inherit;
 }
@@ -125,4 +129,19 @@
 .read-only.bn-shadcn .bn-editor {
   background-color: transparent;
   padding-inline: 0;
+}
+
+.bn-side-menu {
+  height: 26px;
+}
+
+[data-content-type='heading'] {
+  --level: 24px;
+}
+[data-content-type='heading'][data-level='2'] {
+  --level: 20px;
+}
+
+[data-content-type='heading'][data-level='3'] {
+  --level: 16px;
 }

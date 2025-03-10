@@ -6,7 +6,6 @@ import { useProducts } from '@/products/hooks/useProducts';
 import { productMoreColumn } from './ProductMoreColumn';
 export const ProductsRecordTable = () => {
   const { products, handleFetchMore, loading, totalCount } = useProducts();
-
   return (
     <RecordTable.Provider
       columns={columns}

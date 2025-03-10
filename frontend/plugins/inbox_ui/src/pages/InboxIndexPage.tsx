@@ -1,13 +1,14 @@
-import { IconCaretDownFilled } from '@tabler/icons-react';
-
-import { IconSettings } from '@tabler/icons-react';
-
-import { Button } from 'erxes-ui';
-
-import { IconInbox } from '@tabler/icons-react';
-import { PluginHeader } from 'erxes-ui';
+import {
+  IconCaretDownFilled,
+  IconInbox,
+  IconSettings,
+} from '@tabler/icons-react';
+import { Button, PluginHeader } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-import { InboxLayout } from '@/ui/components/InboxLayout';
+import { InboxLayout } from '@/inbox/components/InboxLayout';
+import { ConversationDetail } from '@/inbox/conversation-detail/components/ConversationDetail';
+import { Conversations } from '@/inbox/components/Conversations';
+import { MainFilters } from '@/inbox/components/MainFilters';
 
 export const InboxIndexPage = () => {
   return (
@@ -28,7 +29,11 @@ export const InboxIndexPage = () => {
           More <IconCaretDownFilled />
         </Button>
       </PluginHeader>
-      <InboxLayout />
+      <InboxLayout
+        conversations={<Conversations />}
+        mainFilters={<MainFilters />}
+        conversationDetail={<ConversationDetail />}
+      />
     </div>
   );
 };

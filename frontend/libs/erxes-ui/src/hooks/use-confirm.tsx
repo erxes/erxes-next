@@ -15,11 +15,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
   Input,
 } from 'erxes-ui/components';
 
@@ -83,40 +78,40 @@ const ConfirmDialog = ({
       return form.setError(
         'confirm',
         { type: 'custom', message: `Enter ${confirmationValue} to confirm` },
-        { shouldFocus: true }
+        { shouldFocus: true },
       );
     }
 
     return onConfirm();
   };
 
-  const renderConfirm = (form) => {
+  const renderConfirm = (formInstance: ReturnType<typeof useForm>) => {
     if (!confirmationValue) {
       return null;
     }
 
     return (
-      <FormField
-          name="confirm"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-xs">
-                Type <strong>{confirmationValue}</strong> in the field below to
-                confirm.
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Enter confirmation"
-                  {...field}
-                  autoFocus
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Form.Field
+        name="confirm"
+        control={formInstance.control}
+        render={({ field }: { field: any }) => (
+          <Form.Item>
+            <Form.Label className="text-xs">
+              Type <strong>{confirmationValue}</strong> in the field below to
+              confirm.
+            </Form.Label>
+            <Form.Control>
+              <Input
+                type="text"
+                placeholder="Enter confirmation"
+                {...field}
+                autoFocus
+              />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
     );
   };
 
@@ -131,7 +126,7 @@ const ConfirmDialog = ({
             )}
           </AlertDialogHeader>
           <form onSubmit={form.handleSubmit(proceed)}>
-            {renderConfirm(form)}
+            {renderConfirm(form as any)}
             <br />
             <AlertDialogFooter>
               <AlertDialogCancel onClick={dismiss} type="button">
@@ -186,11 +181,11 @@ const useConfirm = () => {
             open={true}
             onConfirm={handleConfirm}
             onDismiss={handleDismiss}
-          />
+          />,
         );
       });
     },
-    []
+    [],
   );
 
   return { confirm };

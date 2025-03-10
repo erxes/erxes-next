@@ -3,6 +3,7 @@ import { cn } from 'erxes-ui/lib';
 import React, { useEffect, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { mergeRefs } from 'react-merge-refs';
+
 export const SuggestionMenu = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { children: React.ReactNode }

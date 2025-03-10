@@ -1,15 +1,34 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
-import { usePLuginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLoader';
-import { SettingsPath } from '@/types/paths/SettingsPath';
+import {
+  SettingsPath,
+  SettingsWorkspacePath,
+} from '@/types/paths/SettingsPath';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
+import { usePLuginsSettingsRoutes } from '../hooks/usePluginsRouter';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
     default: module.SettingsProfilePage,
-  }))
+  })),
+);
+
+const SettingsFileUpload = lazy(() =>
+  import('~/pages/settings/workspace/FilePage').then((module) => ({
+    default: module.FilePage,
+  })),
+);
+const SettingsMailConfig = lazy(() =>
+  import('~/pages/settings/workspace/MailConfigPage').then((module) => ({
+    default: module.MailConfigPage,
+  })),
+);
+const GeneralSettings = lazy(() =>
+  import('~/pages/settings/workspace/GeneralSettingsPage').then((module) => ({
+    default: module.GeneralSettingsPage,
+  })),
 );
 
 export function SettingsRoutes() {
@@ -20,6 +39,18 @@ export function SettingsRoutes() {
         <Route
           path={SettingsPath.Experience}
           element={<SettingsExperiencePage />}
+        />
+        <Route
+          path={SettingsWorkspacePath.FileUpload}
+          element={<SettingsFileUpload />}
+        />
+        <Route
+          path={SettingsWorkspacePath.MailConfig}
+          element={<SettingsMailConfig />}
+        />
+        <Route
+          path={SettingsWorkspacePath.General}
+          element={<GeneralSettings />}
         />
 
         {usePLuginsSettingsRoutes()}

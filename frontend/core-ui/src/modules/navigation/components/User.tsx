@@ -8,14 +8,14 @@ import { SelectLanguages } from './SelectLanguages';
 import { ThemeSelector } from './ThemeSelector';
 
 import { useAuth } from '@/auth/hooks/useAuth';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 
 export function User() {
   const isMobile = useIsMobile();
 
   const { handleLogout } = useAuth();
 
-  const [currentUser] = useAtom(currentUserState);
+  const currentUser = useAtomValue(currentUserState);
 
   const userDetail = currentUser?.details;
 

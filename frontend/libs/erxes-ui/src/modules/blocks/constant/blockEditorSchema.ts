@@ -1,5 +1,5 @@
 import { BlockNoteSchema, defaultInlineContentSpecs } from '@blocknote/core';
-import { Mention } from 'erxes-ui/modules/blocks/components/BlockEditor';
+import { Mention } from '../components/BlockEditor';
 
 export const BLOCK_SCHEMA = BlockNoteSchema.create({
   inlineContentSpecs: {

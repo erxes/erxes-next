@@ -6,12 +6,12 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "paths": {
-      "@/*": ["frontend/core-ui/src/modules/*"], // for vscode
-      "@": ["frontend/core-ui/src/modules"], // for rspack
-      "~/*": ["frontend/core-ui/src/*"], // for vscode
-      "~": ["frontend/core-ui/src"], // for rspack
       "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
+      "~/*": ["frontend/core-ui/src/*"],
+      "~": ["frontend/core-ui/src"],
+      "@/*": ["frontend/core-ui/src/modules/*"],
+      "@": ["frontend/core-ui/src/modules"],
       "ui-modules": ["frontend/libs/ui-modules/src"]
     }
   },

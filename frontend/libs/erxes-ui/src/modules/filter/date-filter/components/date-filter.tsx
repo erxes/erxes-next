@@ -197,7 +197,15 @@ const DateFilterRadioGroup = ({
   );
 };
 
-const DateFilterRadioGroupItem = ({ id, value, children }) => {
+const DateFilterRadioGroupItem = ({
+  id,
+  value,
+  children,
+}: {
+  id: string;
+  value: string;
+  children: React.ReactNode;
+}) => {
   return (
     <Button
       size="sm"

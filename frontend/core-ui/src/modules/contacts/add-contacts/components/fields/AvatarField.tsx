@@ -1,12 +1,6 @@
 import { Control } from 'react-hook-form';
 
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  Upload,
-} from 'erxes-ui/components';
+import { Form, Upload } from 'erxes-ui/components';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
@@ -16,12 +10,12 @@ export const AvatarField = ({
   control: Control<CustomerFormType>;
 }) => {
   return (
-    <FormField
+    <Form.Field
       name="avatar"
       control={control}
       render={({ field }) => (
-        <FormItem>
-          <FormControl>
+        <Form.Item>
+          <Form.Control>
             <Upload.Root
               {...field}
               value={field.value || ''}
@@ -40,13 +34,13 @@ export const AvatarField = ({
                     type="button"
                   />
                 </div>
-                <FormDescription>
+                <Form.Description>
                   Recommended size 1:1, up to 2MB
-                </FormDescription>
+                </Form.Description>
               </div>
             </Upload.Root>
-          </FormControl>
-        </FormItem>
+          </Form.Control>
+        </Form.Item>
       )}
     />
   );

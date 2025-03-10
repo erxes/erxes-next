@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { forwardRef, useEffect } from 'react';
 
-import { Command as CommandPrimitive, useCommandState } from 'cmdk';
+import { useCommandState } from 'cmdk';
 import { X } from 'lucide-react';
 
 import { Command } from 'erxes-ui/components';
@@ -72,7 +72,7 @@ interface MultipleSelectorProps {
   commandProps?: React.ComponentPropsWithoutRef<typeof Command>;
   /** Props of `CommandInput` */
   inputProps?: Omit<
-    React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>,
+    React.ComponentPropsWithoutRef<typeof Command.Input>,
     'value' | 'placeholder' | 'disabled'
   >;
   /** hide the clear all button. */
@@ -86,7 +86,7 @@ export interface MultipleSelectorRef {
   reset: () => void;
 }
 
-export function useDebounce<T>(value: T, delay?: number): T {
+function useDebounce<T>(value: T, delay?: number): T {
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
 
   useEffect(() => {
@@ -151,7 +151,7 @@ function isOptionsExist(groupOption: GroupOption, targetOption: Option[]) {
  **/
 const CommandEmpty = forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof CommandPrimitive.Empty>
+  React.ComponentProps<typeof Command.Empty>
 >(({ className, ...props }, forwardedRef) => {
   const render = useCommandState((state) => state.filtered.count === 0);
 
@@ -452,7 +452,7 @@ const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            'relative min-h-[38px] rounded-lg border border text-sm transition-shadow focus-within:border-ring focus-within:outline-none focus-within:ring-[3px] focus-within:ring-ring/20 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
+            'relative min-h-[38px] rounded-lg border text-sm transition-shadow focus-within:border-ring focus-within:outline-none focus-within:ring-[3px] focus-within:ring-ring/20 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
             {
               'p-1': selected.length !== 0,
               'cursor-text': !disabled && selected.length !== 0,
@@ -498,7 +498,7 @@ const MultipleSelector = React.forwardRef<
               );
             })}
             {/* Avoid having the "Search" Icon */}
-            <CommandPrimitive.Input
+            <Command.Input
               {...inputProps}
               ref={inputRef}
               value={inputValue}
@@ -558,7 +558,7 @@ const MultipleSelector = React.forwardRef<
         <div className="relative">
           <div
             className={cn(
-              'absolute top-2 z-10 w-full overflow-hidden rounded-lg border border',
+              'absolute top-2 z-10 w-full overflow-hidden rounded-lg border',
               'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
               !open && 'hidden',
             )}

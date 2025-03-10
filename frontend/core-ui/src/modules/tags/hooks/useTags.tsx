@@ -5,7 +5,7 @@ import {
   tagsQuery,
 } from '@/tags/graphql/queries/tagsQueries';
 
-const TAGS_PER_PAGE = 30;
+const TAGS_PER_PAGE = 20;
 
 export const useTags = (options: OperationVariables) => {
   const { data, loading, error, fetchMore } = useQuery(tagsQuery, {
@@ -15,9 +15,7 @@ export const useTags = (options: OperationVariables) => {
     },
     ...options,
   });
-
   const { tags, tagsQueryCount: totalCount } = data || {};
-
   const handleFetchMore = () => {
     if (totalCount <= tags?.length) return;
     fetchMore({

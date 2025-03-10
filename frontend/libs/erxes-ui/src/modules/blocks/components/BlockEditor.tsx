@@ -6,27 +6,16 @@ import {
 } from '@blocknote/react';
 
 import 'erxes-ui/modules/blocks/styles/styles.css';
-import { useTheme } from 'erxes-ui/modules/theme-provider';
-import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
+import { themeState } from 'erxes-ui/state';
 import { SlashMenu } from './SlashMenu';
 import { Toolbar } from './Toolbar';
 import { Button, Tooltip } from 'erxes-ui/components';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'erxes-ui/types/Key';
-
-export interface BlockEditorProps {
-  editor: IBlockEditor;
-  onFocus?: () => void;
-  onBlur?: () => void;
-  onPaste?: (event: ClipboardEvent) => void;
-  onChange?: () => void;
-  readonly?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-}
-
-export type IBlockEditor = typeof BLOCK_SCHEMA.BlockNoteEditor;
+import { useAtomValue } from 'jotai';
+import { BlockEditorProps } from '../types';
+import { cn } from 'erxes-ui/lib';
 
 export const BlockEditor = ({
   editor,
@@ -37,8 +26,11 @@ export const BlockEditor = ({
   readonly,
   children,
   className,
+  style,
+  disabled,
+  variant = 'default',
 }: BlockEditorProps) => {
-  const { theme } = useTheme();
+  const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
   const hotkeyRef = useHotkeys(
     Key.Escape,
@@ -62,9 +54,13 @@ export const BlockEditor = ({
         setFocus(false);
         onBlur?.();
       }}
-      editable={!readonly}
+      editable={!readonly && !disabled}
       onChange={onChange}
-      className={className}
+      data-state={focus ? 'focus' : 'blur'}
+      className={cn(
+        variant === 'outline' && 'shadow-xs data-[state=focus]:shadow-focus',
+        className,
+      )}
       formattingToolbar={false}
       shadCNComponents={{
         Button: { Button },
@@ -76,6 +72,7 @@ export const BlockEditor = ({
         },
       }}
       ref={hotkeyRef}
+      style={style}
     >
       <SuggestionMenuController
         triggerCharacter="/"
