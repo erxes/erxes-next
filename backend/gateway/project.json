@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/gateway/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -35,7 +36,10 @@
           "buildTarget": "gateway:build:production"
         }
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
     }
-  },
-  "tags": []
+  }
 }
