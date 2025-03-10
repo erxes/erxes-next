@@ -1,37 +1,37 @@
-import { Upload } from "lucide-react"
-import { useProductDetail } from "../hooks/useProductDetail"
-import { Skeleton, Label, Input, Select, Button } from "erxes-ui/components"
-import { useProductsEdit } from "@/products/hooks/useProductsEdit"
-import { PRODUCT_TYPE_OPTIONS } from "@/products/constants/ProductConstants"
-import { IconCurrencyDollar } from "@tabler/icons-react"
-import { CurrencyDisplay } from "erxes-ui/display"
-import { CurrencyCode } from "erxes-ui/types/CurrencyCode"
-import { CurrencyInput } from "erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput"
-import { useState, useEffect } from "react"
+import { Upload } from "lucide-react";
+import { useProductDetail } from "../hooks/useProductDetail";
+import { Skeleton, Label, Input, Select, Button } from "erxes-ui/components";
+import { useProductsEdit } from "@/products/hooks/useProductsEdit";
+import { PRODUCT_TYPE_OPTIONS } from "@/products/constants/ProductConstants";
+import { IconCurrencyDollar } from "@tabler/icons-react";
+import { CurrencyDisplay } from "erxes-ui/display";
+import { CurrencyCode } from "erxes-ui/types/CurrencyCode";
+import { CurrencyInput } from "erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput";
+import { useState, useEffect } from "react";
 import { useApolloClient } from '@apollo/client';
-import { SelectCategory } from "@/products/product-category/components/SelectCategory"
+import { SelectCategory } from "@/products/product-category/components/SelectCategory";
 import { useUom } from "@/products/hooks/useUom";
-import { BrandField } from "@/products/add-products/components/BrandField"
-import { VendorField } from "@/products/add-products/components/vendorField"
-import { ProductDetail, ProductGeneralProps } from "../types/detailTypes"
-import { DescriptionInput } from "./DescriptionInput"
+import { BrandField } from "@/products/add-products/components/BrandField";
+import { VendorField } from "@/products/add-products/components/vendorField";
+import { ProductDetail, ProductGeneralProps } from "../types/detailTypes";
+import { DescriptionInput } from "./DescriptionInput";
 
 export const ProductGeneral = ({ form }: ProductGeneralProps) => {
-  const { productDetail, loading: productLoading } = useProductDetail()
-  const { productsEdit } = useProductsEdit()
-  const [priceValue, setPriceValue] = useState<number>(0)
-  const [isEditingPrice, setIsEditingPrice] = useState<boolean>(false)
+  const { productDetail, loading: productLoading, error: productError } = useProductDetail();
+  const { productsEdit } = useProductsEdit();
+  const [priceValue, setPriceValue] = useState<number>(0);
+  const [isEditingPrice, setIsEditingPrice] = useState<boolean>(false);
   const client = useApolloClient();
-  const { uoms } = useUom({}); 
-  
-  const loading = productLoading
-  
+  const { uoms } = useUom({});
+
+  const loading = productLoading;
+
   useEffect(() => {
     if (productDetail && productDetail.unitPrice !== undefined) {
-      setPriceValue(productDetail.unitPrice)
+      setPriceValue(productDetail.unitPrice);
     }
-  }, [productDetail])
-  
+  }, [productDetail]);
+
   useEffect(() => {
     if (productDetail && form) {
       if (productDetail.scopeBrandIds && form.setValue) {
@@ -42,27 +42,35 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
       }
     }
   }, [productDetail, form]);
-  
+
   if (loading) {
-    return <Skeleton className="w-full h-full" />
+    return <Skeleton className="w-full h-full" />;
   }
-  
-  const { 
-    _id, 
-    name, 
+
+  if (productError) {
+    return (
+      <div className="error-message">
+        <p>Oops! There was an error loading the product details. Please try again later.</p>
+      </div>
+    );
+  }
+
+  const {
+    _id,
+    name,
     barcodeDescription,
-    description, 
-    categoryId, 
-    type, 
-    code, 
-    status, 
-    attachment, 
-    barcodes, 
+    description,
+    categoryId,
+    type,
+    code,
+    status,
+    attachment,
+    barcodes,
     shortName,
     uom,
     vendorId,
-    scopeBrandIds
-  } = productDetail || {} as ProductDetail
+    scopeBrandIds,
+  } = productDetail || {} as ProductDetail;
 
   const handleInputChange = (field: keyof ProductDetail, value: any) => {
     if (_id) {
@@ -72,10 +80,10 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
           [field]: value,
           uom,
         },
-      })
+      });
     }
-  }
-  
+  };
+
   const handleSavePrice = async () => {
     if (_id) {
       productsEdit({
@@ -84,28 +92,28 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
           unitPrice: priceValue,
           uom,
         },
-      })
+      });
       await client.refetchQueries({
         include: ['productDetail'],
       });
-      setIsEditingPrice(false)
+      setIsEditingPrice(false);
     }
-  }
+  };
 
   const handleCancelPriceEdit = () => {
     if (productDetail && productDetail.unitPrice !== undefined) {
-      setPriceValue(productDetail.unitPrice)
+      setPriceValue(productDetail.unitPrice);
     }
-    setIsEditingPrice(false)
-  }
-  
+    setIsEditingPrice(false);
+  };
+
   const handleSaveDescription = (value: string) => {
     handleInputChange('description', value);
-  }
-  
+  };
+
   const handleSaveBarcodeDescription = (value: string) => {
     handleInputChange('barcodeDescription', value);
-  }
+  };
 
   return (
     <div className="space-y-54 p-6 overflow-y-auto h-[900px]">
@@ -261,7 +269,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
         <div className="space-y-2">
           <Label htmlFor="brand">BRAND</Label>
           <BrandField
-            values={scopeBrandIds || ['']}
+            values={scopeBrandIds || []}
             onChange={(value) => handleInputChange('scopeBrandIds', value)}
           />
         </div>
@@ -298,7 +306,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
           <DescriptionInput 
             initialContent={description}
             onSave={handleSaveDescription}
-            placeholder={description}
+            placeholder={description || "Enter product description..."}
           />
         </div>
       </div>
@@ -309,7 +317,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
           <DescriptionInput 
             initialContent={barcodeDescription}
             onSave={handleSaveBarcodeDescription}
-            placeholder={barcodeDescription}
+            placeholder={barcodeDescription || "Enter barcode description..."}
           />
         </div>
       </div>

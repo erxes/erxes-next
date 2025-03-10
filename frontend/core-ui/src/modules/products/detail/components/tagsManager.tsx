@@ -19,6 +19,7 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
     colorCode: "#CCCCCC",
     parentId: "",
   })
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState<string | null>(null)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -30,11 +31,26 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
   }
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove))
+    setShowDeleteConfirmation(tagToRemove)
+  }
+
+  const confirmDelete = () => {
+    setTags(tags.filter((tag) => tag !== showDeleteConfirmation))
+    setShowDeleteConfirmation(null)
+  }
+
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(null)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (tags.includes(formData.name)) {
+      alert("Tag already exists!")
+      return
+    }
+
     setTags((prevTags) => [...prevTags, formData.name])
     setOpen(false) 
     setFormData({
@@ -42,7 +58,7 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
       type: "default",
       colorCode: "#CCCCCC",
       parentId: "",
-    }) 
+    })
   }
 
   return (
@@ -99,7 +115,16 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
                     onChange={handleInputChange}
                     className="w-12 h-8 p-1"
                   />
-                  <Input name="colorCode" value={formData.colorCode} onChange={handleInputChange} className="flex-1" />
+                  <Input
+                    name="colorCode"
+                    value={formData.colorCode}
+                    onChange={(e) => {
+                      if (/^#([0-9A-F]{3}){1,2}$/i.test(e.target.value)) {
+                        handleInputChange(e);
+                      }
+                    }}
+                    className="flex-1"
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -130,13 +155,37 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
         {availableTags?.map((tag) => (
           <div key={tag} className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1.5">
             <span className="text-sm font-medium">{tag}</span>
-            <button onClick={() => handleRemoveTag(tag)} className="ml-1 rounded-full p-0.5 hover:bg-gray-200">
+            <button
+              onClick={() => handleRemoveTag(tag)}
+              className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
+              title="Remove tag"
+              aria-label={`Remove tag ${tag}`}
+            >
               <X className="h-4 w-4" />
               <span className="sr-only">Remove {tag}</span>
             </button>
           </div>
         ))}
       </div>
+
+      {showDeleteConfirmation && (
+        <Dialog open={true} onOpenChange={() => setShowDeleteConfirmation(null)}>
+          <DialogContent className="sm:max-w-[300px]">
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete the tag "{showDeleteConfirmation}"?
+            </DialogDescription>
+            <div className="flex justify-end space-x-2">
+              <Button type="button" variant="outline" onClick={cancelDelete}>
+                Cancel
+              </Button>
+              <Button type="button" onClick={confirmDelete}>
+                Confirm
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }

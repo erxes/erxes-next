@@ -1,5 +1,6 @@
 import { CurrencyCode } from "erxes-ui/types/CurrencyCode";
 import { UseFormReturn } from "react-hook-form";
+import { ApolloError } from '@apollo/client';
 
 export interface ProductAttachment {
   url: string;
@@ -29,7 +30,7 @@ export interface ProductDetail {
   unitPrice?: number;
   uom?: string;
   vendorId?: string;
-  scopeBrandIds: string[];
+  scopeBrandIds?: string[];
 }
 
 export interface ProductFormValues {
@@ -68,7 +69,7 @@ export interface CurrencyValue {
 export interface UseProductDetailReturn {
   productDetail: ProductDetail | null;
   loading: boolean;
-  error?: any;
+  error?: ApolloError;
 }
 
 export interface UseProductsEditReturn {
@@ -80,7 +81,7 @@ export interface UseProductsEditReturn {
 export interface UseUomReturn {
   uoms: UomType[];
   loading?: boolean;
-  error?: any;
+  error?: ApolloError;
 }
 
 export interface BrandFieldProps {

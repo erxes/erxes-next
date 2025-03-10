@@ -1,7 +1,16 @@
-export interface TextContent {
+export interface BlockStyles {
+    fontSize?: string;
+    fontWeight?: string;
+    color?: string;
+    backgroundColor?: string;
+    textAlignment?: string;
+    [key: string]: any;
+  }
+  
+  export interface TextContent {
     type: 'text';
     text: string;
-    styles: Record<string, any>;
+    styles: BlockStyles;
   }
   
   export interface Block {
@@ -15,16 +24,17 @@ export interface TextContent {
     content: TextContent[] | string;
     children: Block[];
   }
-  
   export interface DescriptionInputProps {
     initialContent?: string;
     onSave?: (text: string) => void;
     placeholder?: string;
   }
-  
   export interface BlockEditorType {
     document: Block[];
     tryParseMarkdownToBlocks: (markdown: string) => Promise<Block[]>;
     replaceBlocks: (targetBlocks: Block[], newBlocks: Block[]) => void;
+    mergeBlocks: (targetBlock: Block, blockToMerge: Block) => void;  
+    splitBlock: (block: Block, index: number) => Block[]; 
+    reserializeBlocks: (blocks: Block[]) => string; 
   }
   

@@ -12,7 +12,6 @@ import {
   import { Kbd } from "erxes-ui/components/kbd";
   import { useEffect } from "react";
   import { Block, BlockEditorType, DescriptionInputProps } from "../types/descriptionTypes";
-
   
   export const DescriptionInput = ({
     initialContent,
@@ -31,7 +30,8 @@ import {
             try {
               const parsedContent = JSON.parse(initialContent) as Block[];
               editor.replaceBlocks(editor.document, parsedContent);
-            } catch {
+            } catch (error) {
+              console.warn("Parsing failed for both Markdown and JSON:", error);
               const fallbackBlock: Block[] = [
                 {
                   id: "initial-block",
@@ -74,10 +74,23 @@ import {
     const handleSave = () => {
       if (onSave) {
         const extractedText = extractTextFromBlocks(editor.document);
-        const plainText = extractedText.join(' ');
+        const plainText = extractedText.join('\n');
         onSave(plainText);
       }
     };
+  
+    useEffect(() => {
+      const handleKeyPress = (event: KeyboardEvent) => {
+        if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+          handleSave();
+        }
+      };
+  
+      document.addEventListener("keydown", handleKeyPress);
+      return () => {
+        document.removeEventListener("keydown", handleKeyPress);
+      };
+    }, [handleSave]);
   
     return (
       <div className={cn("flex flex-col h-full py-4 gap-1")}>
