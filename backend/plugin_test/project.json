@@ -1,7 +1,7 @@
 {
-  "name": "core-test",
+  "name": "plugin_test",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "backend/core-test/src",
+  "sourceRoot": "backend/plugin_test/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -10,12 +10,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/backend/core-test",
+        "outputPath": "dist/backend/plugin_test",
         "format": ["cjs"],
         "bundle": false,
-        "main": "backend/core-test/src/main.ts",
-        "tsConfig": "backend/core-test/tsconfig.app.json",
-        "assets": ["backend/core-test/src/assets"],
+        "main": "backend/plugin_test/src/main.ts",
+        "tsConfig": "backend/plugin_test/tsconfig.app.json",
+        "assets": ["backend/plugin_test/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -41,15 +41,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "core-test:build",
+        "buildTarget": "plugin_test:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "core-test:build:development"
+          "buildTarget": "plugin_test:build:development"
         },
         "production": {
-          "buildTarget": "core-test:build:production"
+          "buildTarget": "plugin_test:build:production"
         }
       }
     }
