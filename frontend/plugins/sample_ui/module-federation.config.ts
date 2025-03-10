@@ -1,9 +1,3 @@
-// @ts-check
-
-/**
- * @type {import('@module-federation/sdk').moduleFederationPlugin.ModuleFederationPluginOptions}
- **/
-
 import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 
 const coreLibraries = new Set([
@@ -18,17 +12,21 @@ const coreLibraries = new Set([
 ]);
 
 const config: ModuleFederationConfig = {
-  name: 'core-ui',
+  name: 'sample_ui',
+  exposes: {
+    './Config': './src/modules/constants/config.ts',
+    './Module': './src/remote-entry.ts',
+    './Settings': './src/pages/SettingsPage.tsx',
+  },
 
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {
       return defaultConfig;
     }
 
+    // Returning false means the library is not shared.
     return false;
   },
-
-  remotes: ['inbox_ui', 'sample_ui'],
 };
 
 /**

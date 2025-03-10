@@ -18,6 +18,7 @@
     "paths": {
       "erxes-api-utils": ["backend/libs/erxes-api-utils/src/index.ts"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
+      "sample_ui/Module": ["frontend/plugins/sample_ui/src/remote-entry.ts"],
       "ui-modules": ["frontend/libs/ui-modules/src"]
     }
   },
