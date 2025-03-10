@@ -28,7 +28,8 @@ export interface ProductDetail {
   shortName?: string;
   unitPrice?: number;
   uom?: string;
-  vendor?: string;
+  vendorId?: string;
+  scopeBrandIds: string[];
 }
 
 export interface ProductFormValues {

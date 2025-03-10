@@ -14,6 +14,7 @@ import { useUom } from "@/products/hooks/useUom";
 import { BrandField } from "@/products/add-products/components/BrandField"
 import { VendorField } from "@/products/add-products/components/vendorField"
 import { ProductDetail, ProductGeneralProps } from "../types/detailTypes"
+import { DescriptionInput } from "./DescriptionInput"
 
 export const ProductGeneral = ({ form }: ProductGeneralProps) => {
   const { productDetail, loading: productLoading } = useProductDetail()
@@ -63,7 +64,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
     scopeBrandIds
   } = productDetail || {} as ProductDetail
 
-  const handleInputChange = (field: keyof ProductDetail, value: string) => {
+  const handleInputChange = (field: keyof ProductDetail, value: any) => {
     if (_id) {
       productsEdit({
         variables: {
@@ -97,36 +98,17 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
     }
     setIsEditingPrice(false)
   }
+  
+  const handleSaveDescription = (value: string) => {
+    handleInputChange('description', value);
+  }
+  
+  const handleSaveBarcodeDescription = (value: string) => {
+    handleInputChange('barcodeDescription', value);
+  }
 
-  const handleBrandChange = (values: string[]) => {
-    if (_id && form && form.setValue) {
-      form.setValue("scopeBrandIds", values);
-      
-      productsEdit({
-        variables: {
-          _id,
-          scopeBrandIds: values,
-          uom,
-        },
-      });
-    }
-  };
-
-  const handleVendorChange = (value: string) => {
-    if (_id && form && form.setValue) {
-      form.setValue("vendorId", value);
-      
-      productsEdit({
-        variables: {
-          _id,
-          vendorId: value,
-          uom,
-        },
-      });
-    }
-  };
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-54 p-6 overflow-y-auto h-[900px]">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="product-name">PRODUCT NAME</Label>
@@ -190,6 +172,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
               <div className="flex space-x-1">
                 <Button 
                   size="sm" 
+                  
                   onClick={handleSavePrice}
                 >
                   Save
@@ -258,7 +241,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
         <div className="space-y-2">
           <Label htmlFor="uom">UNIT OF MEASUREMENTS</Label>
           <Select
-            defaultValue={uom}
+            value={uom}
             onValueChange={(value) => handleInputChange("uom", value)}
           >
             <Select.Trigger className="w-full border rounded-md h-8">
@@ -278,7 +261,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
         <div className="space-y-2">
           <Label htmlFor="brand">BRAND</Label>
           <BrandField
-            values={scopeBrandIds || []}
+            values={scopeBrandIds || ['']}
             onChange={(value) => handleInputChange('scopeBrandIds', value)}
           />
         </div>
@@ -287,7 +270,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
           <Label htmlFor="vendor">VENDOR</Label>
           <VendorField
             value={vendorId || ""}
-            onChange={(value) => handleInputChange('vendor', value)}
+            onChange={(value) => handleInputChange('vendorId', value)}
           />
         </div>
 
@@ -311,22 +294,24 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="description">DESCRIPTION</Label>
-        <Input 
-            id="product-description" 
-            defaultValue={description} 
-            placeholder="Enter product description"
-            onChange={(e) => handleInputChange('description', e.target.value)}
+        <div className="h-60 border rounded-md overflow-hidden">
+          <DescriptionInput 
+            initialContent={description}
+            onSave={handleSaveDescription}
+            placeholder={description}
           />
+        </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="barcode-description">BARCODE DESCRIPTION</Label>
-        <Input 
-            id="product-barcodeDescription" 
-            defaultValue={barcodeDescription} 
-            placeholder="Enter product barcodeDescription"
-            onChange={(e) => handleInputChange('barcodeDescription', e.target.value)}
+        <div className="h-60 border rounded-md overflow-hidden">
+          <DescriptionInput 
+            initialContent={barcodeDescription}
+            onSave={handleSaveBarcodeDescription}
+            placeholder={barcodeDescription}
           />
+        </div>
       </div>
 
       <div className="space-y-2">

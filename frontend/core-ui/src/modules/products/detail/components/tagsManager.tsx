@@ -1,11 +1,10 @@
-"use client"
-
 import * as React from "react"
 import { Plus, X } from "lucide-react"
 import { useProductTags } from "@/products/hooks/useProductTags"
 import { Button, Dialog, Input, Label, Select } from "erxes-ui/components"
 import { DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog"
 import { SelectTrigger, SelectValue, SelectContent, SelectItem } from "@radix-ui/react-select"
+
 interface TagsManagerProps {
   initialTags?: string[]
 }
@@ -34,6 +33,18 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
     setTags(tags.filter((tag) => tag !== tagToRemove))
   }
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setTags((prevTags) => [...prevTags, formData.name])
+    setOpen(false) 
+    setFormData({
+      name: "",
+      type: "default",
+      colorCode: "#CCCCCC",
+      parentId: "",
+    }) 
+  }
+
   return (
     <div className="space-y-4">
       <Dialog open={open} onOpenChange={setOpen}>
@@ -44,10 +55,8 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <div>
-            <DialogTitle>Add New Tag</DialogTitle>
-          </div>
-          <form>
+          <DialogTitle>Add New Tag</DialogTitle>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
@@ -107,7 +116,11 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
                 />
               </div>
             </div>
-            <div>
+            <div className="flex justify-end space-x-2">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Submit</Button>
             </div>
           </form>
         </DialogContent>
@@ -127,4 +140,3 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
     </div>
   )
 }
-
