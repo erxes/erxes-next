@@ -1,33 +1,105 @@
 "use client"
-import { CollapsibleSection } from "./collapsibleSection"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Collapsible } from "erxes-ui/components"
 import { TagsManager } from "./tagsManager"
 
-export  function ProductProperties() {
+export function ProductProperties() {
   return (
-    <div className="mx-auto w-full  bg-white">
-      <CollapsibleSection title="Hotels">
-        <div className="text-gray-600">
-          <p>...</p>
-        </div>
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Tags" defaultOpen={true}>
-        <TagsManager
-          initialTags={[
-            "UFC",
-            "Joe Rogan Podcast",
-            "Ultimate Fighter",
-            "SpaceX",
-            "Amie",
-            "Notion",
-            "ElevenLabs",
-            "Clerk",
-            "Whop",
-            "Supabase",
-          ]}
-        />
-      </CollapsibleSection>
+    <div className="mx-auto w-full bg-white">
+      <HotelSection />
+      <TagsSection />
     </div>
+  )
+}
+
+function HotelSection() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <Collapsible defaultOpen={false} open={isOpen} onOpenChange={setIsOpen}>
+      <Collapsible.Trigger className="flex items-center gap-2 w-full py-3 px-4 border-b border-gray-200">
+        <motion.svg
+          animate={{ rotate: isOpen ? 90 : 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="h-4 w-4 text-gray-500"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9 6L15 12L9 18"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </motion.svg>
+        <span className="text-gray-600 font-medium">Hotels</span>
+      </Collapsible.Trigger>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <Collapsible.Content forceMount asChild>
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="p-4 border-b border-gray-200">
+                <p>Hotel details go here...</p>
+              </div>
+            </motion.div>
+          </Collapsible.Content>
+        )}
+      </AnimatePresence>
+    </Collapsible>
+  )
+}
+
+function TagsSection() {
+  const [isOpen, setIsOpen] = useState(true)
+
+  return (
+    <Collapsible defaultOpen={true} open={isOpen} onOpenChange={setIsOpen}>
+      <Collapsible.Trigger className="flex items-center gap-2 w-full py-3 px-4 border-b border-gray-200">
+        <motion.svg
+          animate={{ rotate: isOpen ? 90 : 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="h-4 w-4 text-gray-500"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9 6L15 12L9 18"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </motion.svg>
+        <span className="text-gray-600 font-medium">Tags</span>
+      </Collapsible.Trigger>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <Collapsible.Content forceMount asChild>
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="p-4 border-b border-gray-200">
+                <TagsManager />
+              </div>
+            </motion.div>
+          </Collapsible.Content>
+        )}
+      </AnimatePresence>
+    </Collapsible>
   )
 }
 

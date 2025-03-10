@@ -10,21 +10,37 @@ import { CurrencyInput } from "erxes-ui/modules/record-field/meta-inputs/compone
 import { useState, useEffect } from "react"
 import { useApolloClient } from '@apollo/client';
 import { SelectCategory } from "@/products/product-category/components/SelectCategory"
+import { useUom } from "@/products/hooks/useUom";
+import { BrandField } from "@/products/add-products/components/BrandField"
+import { VendorField } from "@/products/add-products/components/vendorField"
+import { ProductDetail, ProductGeneralProps } from "../types/detailTypes"
 
-
-export const ProductGeneral = () => {
+export const ProductGeneral = ({ form }: ProductGeneralProps) => {
   const { productDetail, loading: productLoading } = useProductDetail()
   const { productsEdit } = useProductsEdit()
-  const [priceValue, setPriceValue] = useState(0)
-  const [isEditingPrice, setIsEditingPrice] = useState(false)
+  const [priceValue, setPriceValue] = useState<number>(0)
+  const [isEditingPrice, setIsEditingPrice] = useState<boolean>(false)
   const client = useApolloClient();
+  const { uoms } = useUom({}); 
   
   const loading = productLoading
+  
   useEffect(() => {
     if (productDetail && productDetail.unitPrice !== undefined) {
       setPriceValue(productDetail.unitPrice)
     }
   }, [productDetail])
+  
+  useEffect(() => {
+    if (productDetail && form) {
+      if (productDetail.scopeBrandIds && form.setValue) {
+        form.setValue("scopeBrandIds", productDetail.scopeBrandIds);
+      }
+      if (productDetail.vendorId && form.setValue) {
+        form.setValue("vendorId", productDetail.vendorId);
+      }
+    }
+  }, [productDetail, form]);
   
   if (loading) {
     return <Skeleton className="w-full h-full" />
@@ -43,31 +59,36 @@ export const ProductGeneral = () => {
     barcodes, 
     shortName,
     uom,
-    vendor
-  } = productDetail || {}
+    vendorId,
+    scopeBrandIds
+  } = productDetail || {} as ProductDetail
 
-  const handleInputChange = (field, value) => {
-    productsEdit({
-      variables: {
-        _id,
-        [field]: value,
-        uom,
-      },
-    })
+  const handleInputChange = (field: keyof ProductDetail, value: string) => {
+    if (_id) {
+      productsEdit({
+        variables: {
+          _id,
+          [field]: value,
+          uom,
+        },
+      })
+    }
   }
   
   const handleSavePrice = async () => {
-    productsEdit({
-      variables: {
-        _id,
-        unitPrice: priceValue,
-        uom,
-      },
-    })
-    await client.refetchQueries({
-      include: ['productDetail'],
-    });
-    setIsEditingPrice(false)
+    if (_id) {
+      productsEdit({
+        variables: {
+          _id,
+          unitPrice: priceValue,
+          uom,
+        },
+      })
+      await client.refetchQueries({
+        include: ['productDetail'],
+      });
+      setIsEditingPrice(false)
+    }
   }
 
   const handleCancelPriceEdit = () => {
@@ -77,6 +98,33 @@ export const ProductGeneral = () => {
     setIsEditingPrice(false)
   }
 
+  const handleBrandChange = (values: string[]) => {
+    if (_id && form && form.setValue) {
+      form.setValue("scopeBrandIds", values);
+      
+      productsEdit({
+        variables: {
+          _id,
+          scopeBrandIds: values,
+          uom,
+        },
+      });
+    }
+  };
+
+  const handleVendorChange = (value: string) => {
+    if (_id && form && form.setValue) {
+      form.setValue("vendorId", value);
+      
+      productsEdit({
+        variables: {
+          _id,
+          vendorId: value,
+          uom,
+        },
+      });
+    }
+  };
   return (
     <div className="space-y-8 p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -108,22 +156,24 @@ export const ProductGeneral = () => {
           />
         </div>
         <div className="space-y-2">
-  <Label htmlFor="category">CATEGORY</Label>
-  <SelectCategory
-    selected={categoryId}
-    onSelect={(value) => {
-      productsEdit({
-        variables: {
-          _id,
-          categoryId: value,
-          uom,
-        },
-      })
-    }}
-    className="w-full border border-gray-300"
-    size="lg"
-  />
-</div>
+          <Label htmlFor="category">CATEGORY</Label>
+          <SelectCategory
+            selected={categoryId}
+            onSelect={(value) => {
+              if (_id) {
+                productsEdit({
+                  variables: {
+                    _id,
+                    categoryId: value,
+                    uom,
+                  },
+                })
+              }
+            }}
+            className="w-full border border-gray-300"
+            size="lg"
+          />
+        </div>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <IconCurrencyDollar className="h-4 w-4" />
@@ -134,7 +184,7 @@ export const ProductGeneral = () => {
               <div className="flex-grow">
                 <CurrencyInput
                   value={priceValue}
-                  onChange={setPriceValue}
+                  onChange={(value: number) => setPriceValue(value)}
                 />
               </div>
               <div className="flex space-x-1">
@@ -188,10 +238,10 @@ export const ProductGeneral = () => {
             </Select.Trigger>
             <Select.Content>
               {PRODUCT_TYPE_OPTIONS.map((type) => (
-                  <Select.Item value={type.value} key={type.value}>
-                    {type.label}
-                  </Select.Item>
-                ))}
+                <Select.Item value={type.value} key={type.value}>
+                  {type.label}
+                </Select.Item>
+              ))}
             </Select.Content>
           </Select>
         </div>
@@ -202,6 +252,42 @@ export const ProductGeneral = () => {
             value={status} 
             disabled 
             className="bg-gray-50"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="uom">UNIT OF MEASUREMENTS</Label>
+          <Select
+            defaultValue={uom}
+            onValueChange={(value) => handleInputChange("uom", value)}
+          >
+            <Select.Trigger className="w-full border rounded-md h-8">
+              <Select.Value>
+                {uom || "Select UOM"}
+              </Select.Value>
+            </Select.Trigger>
+            <Select.Content>
+              {uoms.map((unit) => (
+                <Select.Item key={unit._id} value={unit._id}>
+                  {unit.name}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="brand">BRAND</Label>
+          <BrandField
+            values={scopeBrandIds || []}
+            onChange={(value) => handleInputChange('scopeBrandIds', value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="vendor">VENDOR</Label>
+          <VendorField
+            value={vendorId || ""}
+            onChange={(value) => handleInputChange('vendor', value)}
           />
         </div>
 

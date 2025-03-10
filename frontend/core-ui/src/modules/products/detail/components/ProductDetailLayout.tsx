@@ -32,7 +32,6 @@ export const ProductDetailLayout = ({
             )}
           </Resizable.PanelGroup>
         </div>
-        {/* <ProductDetailActions /> */}
       </div>
     </ProductDetailSheet>
   );

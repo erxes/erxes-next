@@ -2,23 +2,32 @@
 
 import * as React from "react"
 import { Plus, X } from "lucide-react"
-
+import { useProductTags } from "@/products/hooks/useProductTags"
+import { Button, Dialog, Input, Label, Select } from "erxes-ui/components"
+import { DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog"
+import { SelectTrigger, SelectValue, SelectContent, SelectItem } from "@radix-ui/react-select"
 interface TagsManagerProps {
   initialTags?: string[]
 }
 
 export function TagsManager({ initialTags = [] }: TagsManagerProps) {
+  const { tags: availableTags } = useProductTags()
   const [tags, setTags] = React.useState<string[]>(initialTags)
-  const [newTag, setNewTag] = React.useState("")
-  const [isInputVisible, setIsInputVisible] = React.useState(false)
-  const inputRef = React.useRef<HTMLInputElement>(null)
+  const [open, setOpen] = React.useState(false)
+  const [formData, setFormData] = React.useState({
+    name: "",
+    type: "default",
+    colorCode: "#CCCCCC",
+    parentId: "",
+  })
 
-  const handleAddTag = () => {
-    const trimmedTag = newTag.trim()
-    if (trimmedTag && !tags.includes(trimmedTag)) {
-      setTags([...tags, trimmedTag])
-      setNewTag("")
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSelectChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, type: value }))
   }
 
   const handleRemoveTag = (tagToRemove: string) => {
@@ -27,42 +36,88 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <button
-          className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm hover:bg-gray-50"
-          onClick={() => {
-            setIsInputVisible(true)
-            inputRef.current?.focus()
-          }}
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add tags</span>
-        </button>
-        {isInputVisible && (
-          <input
-            ref={inputRef}
-            type="text"
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault()
-                handleAddTag()
-              }
-            }}
-            className="ml-2 border border-gray-300 rounded-md px-2 py-1 text-sm"
-            placeholder="Add a tag"
-          />
-        )}
-      </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="flex items-center gap-2 rounded-full">
+            <Plus className="h-4 w-4" />
+            <span>Add tags</span>
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <div>
+            <DialogTitle>Add New Tag</DialogTitle>
+          </div>
+          <form>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="col-span-3"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-right">
+                  Type
+                </Label>
+                <Select value={formData.type} onValueChange={handleSelectChange}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="category">Category</SelectItem>
+                    <SelectItem value="custom">Custom</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="colorCode" className="text-right">
+                  Color
+                </Label>
+                <div className="col-span-3 flex items-center gap-2">
+                  <Input
+                    id="colorCode"
+                    name="colorCode"
+                    type="color"
+                    value={formData.colorCode}
+                    onChange={handleInputChange}
+                    className="w-12 h-8 p-1"
+                  />
+                  <Input name="colorCode" value={formData.colorCode} onChange={handleInputChange} className="flex-1" />
+                </div>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="parentId" className="text-right">
+                  Parent ID
+                </Label>
+                <Input
+                  id="parentId"
+                  name="parentId"
+                  value={formData.parentId}
+                  onChange={handleInputChange}
+                  className="col-span-3"
+                  placeholder="(Optional)"
+                />
+              </div>
+            </div>
+            <div>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <div className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
+        {availableTags?.map((tag) => (
           <div key={tag} className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1.5">
             <span className="text-sm font-medium">{tag}</span>
-            <button
-              onClick={() => handleRemoveTag(tag)}
-              className="ml-1 rounded-full p-0.5 hover:bg-gray-200"
-            >
+            <button onClick={() => handleRemoveTag(tag)} className="ml-1 rounded-full p-0.5 hover:bg-gray-200">
               <X className="h-4 w-4" />
               <span className="sr-only">Remove {tag}</span>
             </button>
@@ -72,3 +127,4 @@ export function TagsManager({ initialTags = [] }: TagsManagerProps) {
     </div>
   )
 }
+
