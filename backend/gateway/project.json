@@ -8,14 +8,11 @@
       "executor": "@nx/js:tsc",
       "dependsOn": ["erxes-api-utils:build"],
       "cache": true,
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
       "options": {
-        "platform": "node",
         "outputPath": "dist/backend/gateway",
         "main": "backend/gateway/src/main.ts",
         "tsConfig": "backend/gateway/tsconfig.app.json",
-        "assets": ["backend/gateway/src/*"],
+        "assets": ["backend/gateway/src/**"],
         "generatePackageJson": true
       },
       "configurations": {

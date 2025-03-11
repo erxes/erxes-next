@@ -12,9 +12,12 @@ export interface IContext {
   models: IModels;
 }
 
-export const loadClasses = (db: mongoose.Connection): IModels => {
+export const loadClasses = (
+  _db: mongoose.Connection,
+  _subdomain: string,
+): IModels => {
   const models = {} as IModels;
-  console.log(db);
+
   return models;
 };
 
