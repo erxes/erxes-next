@@ -3,6 +3,8 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Collapsible } from "erxes-ui/components"
 import { TagsManager } from "./tagsManager"
+import { useParams } from "react-router-dom"
+import { useProductDetail } from "../hooks/useProductDetail"
 
 export function ProductProperties() {
   return (
@@ -60,6 +62,9 @@ function HotelSection() {
 
 function TagsSection() {
   const [isOpen, setIsOpen] = useState(true)
+  const params = useParams()
+  const productId = params?.id as string
+  const { product , refetch } = useProductDetail(productId)
 
   return (
     <Collapsible defaultOpen={true} open={isOpen} onOpenChange={setIsOpen}>
@@ -93,7 +98,12 @@ function TagsSection() {
               className="overflow-hidden"
             >
               <div className="p-4 border-b border-gray-200">
-                <TagsManager />
+              <TagsManager
+                productId={product?._id} 
+                initialTags={product?.tagsId || []}
+                uom={product?.uom || ""}
+                onTagsUpdated={() => refetch()}
+/>
               </div>
             </motion.div>
           </Collapsible.Content>

@@ -10,7 +10,7 @@ import {
     useBlockEditor,
   } from "erxes-ui";
   import { Kbd } from "erxes-ui/components/kbd";
-  import { useEffect } from "react";
+  import { useCallback, useEffect } from "react";
   import { Block, BlockEditorType, DescriptionInputProps } from "../types/descriptionTypes";
   
   export const DescriptionInput = ({
@@ -71,13 +71,13 @@ import {
       return allText;
     }
   
-    const handleSave = () => {
+    const handleSave = useCallback(() => {
       if (onSave) {
         const extractedText = extractTextFromBlocks(editor.document);
         const plainText = extractedText.join('\n');
         onSave(plainText);
       }
-    };
+    }, [onSave, editor.document]);
   
     useEffect(() => {
       const handleKeyPress = (event: KeyboardEvent) => {
