@@ -9,7 +9,7 @@ import { ExpressAdapter } from '@bull-board/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { retryGetProxyTargets } from './proxy/targets';
-import { startRouter, stopRouter } from './apollo-router';
+import { startRouter, stopRouter } from '~/apollo-router';
 
 import { initMQWorkers } from './mq/workers/workers';
 
