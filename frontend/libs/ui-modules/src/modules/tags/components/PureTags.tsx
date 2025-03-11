@@ -123,7 +123,10 @@ export const TagsItem = React.forwardRef<
       {...props}
       onSelect={() => onSelect(tag)}
     >
-      <TextOverflowTooltip text={tag.name} />
+      <TextOverflowTooltip
+        text={tag.name}
+        className="flex-auto w-auto overflow-hidden"
+      />
     </SelectTree.Item>
   );
 });
