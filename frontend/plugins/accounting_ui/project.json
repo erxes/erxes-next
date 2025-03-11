@@ -1,7 +1,7 @@
 {
-  "name": "sample_ui",
+  "name": "accounting_ui",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "frontend/plugins/sample_ui/src",
+  "sourceRoot": "frontend/plugins/accounting_ui/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,10 +11,10 @@
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
-        "outputPath": "dist/frontend/plugins/sample_ui",
-        "main": "frontend/plugins/sample_ui/src/main.ts",
-        "tsConfig": "frontend/plugins/sample_ui/tsconfig.app.json",
-        "rspackConfig": "frontend/plugins/sample_ui/rspack.config.ts",
+        "outputPath": "dist/frontend/plugins/accounting_ui",
+        "main": "frontend/plugins/accounting_ui/src/main.ts",
+        "tsConfig": "frontend/plugins/accounting_ui/tsconfig.app.json",
+        "rspackConfig": "frontend/plugins/accounting_ui/rspack.config.ts",
         "assets": []
       },
       "configurations": {
@@ -25,20 +25,20 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "frontend/plugins/sample_ui/rspack.config.prod.ts"
+          "rspackConfig": "frontend/plugins/accounting_ui/rspack.config.prod.ts"
         }
       }
     },
     "serve": {
       "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
-        "buildTarget": "sample_ui:build:development",
-        "port": 3003
+        "buildTarget": "accounting_ui:build:development",
+        "port": 3004
       },
       "configurations": {
         "development": {},
         "production": {
-          "buildTarget": "sample_ui:build:production"
+          "buildTarget": "accounting_ui:build:production"
         }
       }
     },
@@ -46,14 +46,14 @@
       "executor": "@nx/rspack:module-federation-static-server",
       "defaultConfiguration": "production",
       "options": {
-        "serveTarget": "sample_ui:serve"
+        "serveTarget": "accounting_ui:serve"
       },
       "configurations": {
         "development": {
-          "serveTarget": "sample_ui:serve:development"
+          "serveTarget": "accounting_ui:serve:development"
         },
         "production": {
-          "serveTarget": "sample_ui:serve:production"
+          "serveTarget": "accounting_ui:serve:production"
         }
       }
     }
