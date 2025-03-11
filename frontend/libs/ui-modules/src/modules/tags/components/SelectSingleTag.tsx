@@ -1,4 +1,4 @@
-import { ButtonProps, Combobox, Popover } from 'erxes-ui';
+import { ButtonProps, cn, Combobox, Popover } from 'erxes-ui';
 import React, { useState } from 'react';
 import { TagBadge } from './TagBadge';
 import { PureTags, TagsItem } from './PureTags';
@@ -11,12 +11,12 @@ export const SelectSingleTag = React.forwardRef<
     onValueChange?: (value: string) => void;
     tagType: string;
   }
->(({ value, onValueChange, children, tagType, ...props }, ref) => {
+>(({ value, onValueChange, children, tagType, className, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <Combobox ref={ref} {...props} className="w-full">
+        <Combobox ref={ref} {...props} className={cn('w-full', className)}>
           {children ? (
             children
           ) : value ? (

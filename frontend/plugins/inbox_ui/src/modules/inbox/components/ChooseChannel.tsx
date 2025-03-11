@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { IChannel } from '../types/Channel';
 import { useMultiQueryState } from '../hooks/useQueryState';
 import { IconCheck } from '@tabler/icons-react';
-import { channelCollapsibleState } from '../state/channelCollapsibleState';
+import { channelCollapsibleState } from '../states/channelCollapsibleState';
 
 export const ChooseChannel = () => {
   const [open, setOpen] = useAtom(channelCollapsibleState);

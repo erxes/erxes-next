@@ -1,6 +1,6 @@
 import { ActivityCreator } from '@/activity-logs/components/ActivityItem';
 import { useActivityItemContext } from '@/activity-logs/context/ActivityItemContext';
-import { TagBadges } from '@/tags/components/tagBadges';
+import { TagBadge } from 'ui-modules';
 
 export const ActivityTagged = () => {
   const { content, contentTypeModule } = useActivityItemContext();
@@ -15,7 +15,9 @@ export const ActivityTagged = () => {
     <>
       <ActivityCreator /> assigned the {tagsText}{' '}
       <span className="inline-flex flex-wrap gap-1">
-        <TagBadges tagIds={content?.tagIds} />
+        {content?.tagIds?.map((tagId: string) => (
+          <TagBadge key={tagId} tagId={tagId} />
+        ))}
       </span>
       {contentTypeModule && <> to this {getModuleName(contentTypeModule)}</>}.
     </>

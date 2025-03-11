@@ -30,7 +30,6 @@ const SelectTagsRoot = React.forwardRef<
     showAddButton,
     display,
     asTrigger,
-    inDetail,
     ...rest
   } = props;
   return (
@@ -49,7 +48,7 @@ const SelectTagsRoot = React.forwardRef<
           <TagsDisplay
             ref={ref}
             showAddButton={showAddButton}
-            tabIndex={inDetail ? undefined : -1}
+            tabIndex={asTrigger ? undefined : -1}
           />
         )}
         edit={() => (

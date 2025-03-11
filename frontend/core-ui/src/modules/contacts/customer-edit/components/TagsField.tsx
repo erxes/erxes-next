@@ -1,7 +1,6 @@
 import { toast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
-import { SelectTagsProps } from '@/tags/types/tagTypes';
-import { SelectTags, useGiveTags } from 'ui-modules';
+import { SelectTags, useGiveTags, SelectTagsProps } from 'ui-modules';
 
 interface TagsField extends SelectTagsProps {
   _id: string;

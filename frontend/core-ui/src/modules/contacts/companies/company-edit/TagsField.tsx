@@ -1,27 +1,18 @@
-import { SelectTags } from '@/tags/components/SelectTags';
+import { SelectTags } from 'ui-modules';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
-import { SelectTagsProps } from '@/tags/types/tagTypes';
 import { toast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
+import { SelectTagsProps } from 'frontend/libs/ui-modules/src/modules/tags/types/Tag';
 
 interface TagsField extends SelectTagsProps {
   _id: string;
 }
 
-export const TagsField = ({
-  _id,
-  tagType,
-  single,
-  sub,
-  selected,
-  recordId,
-}: TagsField) => {
+export const TagsField = ({ _id, tagType, selected, recordId }: TagsField) => {
   const { companiesEdit } = useCompaniesEdit();
   return (
     <SelectTags
       tagType={tagType}
-      single={single}
-      sub={sub}
       selected={selected}
       recordId={recordId}
       onSelect={(tagIds: string[] | string) => {
