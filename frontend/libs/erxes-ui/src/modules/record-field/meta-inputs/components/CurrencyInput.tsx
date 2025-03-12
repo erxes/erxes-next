@@ -8,15 +8,17 @@ import { IMaskInput } from 'react-imask';
 export const CurrencyInput = ({
   value,
   onChange,
+  currencyCode,
 }: {
   value: number;
   onChange: (value: number) => void;
+  currencyCode?: CurrencyCode;
 }) => {
   return (
     <div className="flex border border-border h-cell items-stretch">
       <SelectCurrency
         currencies={CURRENCY_CODES}
-        value={CurrencyCode.USD}
+        value={currencyCode || CurrencyCode.USD}
         className="ring-0 shadow-none border-transparent h-full"
       />
       <Separator orientation="vertical" />
