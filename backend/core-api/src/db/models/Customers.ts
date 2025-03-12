@@ -1,4 +1,4 @@
-import { ICustomer, ICustomerDocument } from 'erxes-api-utils';
+import { ICustomer, ICustomerDocument } from '../definitions/customers';
 import { Model } from 'mongoose';
 import { IModels } from '../../connectionResolvers';
 import { customerSchema } from '../definitions/customers';
