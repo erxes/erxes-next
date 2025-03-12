@@ -90,7 +90,7 @@ const useUpload = () => {
         parseInt(
           localStorage.getItem('erxes_env_REACT_APP_FILE_UPLOAD_MAX_SIZE') ||
             '',
-          10
+          10,
         ) || 20 * 1024 * 1024;
 
       // skip file that size is more than REACT_APP_FILE_UPLOAD_MAX_SIZE
@@ -123,7 +123,7 @@ const useUpload = () => {
             body: formData,
             credentials: 'include',
             ...(userId ? { headers: { userId } } : {}),
-          }
+          },
         )
           .then((response) => {
             response[responseType]()

@@ -4,8 +4,7 @@ import { companiesLowDetailQuery } from '@/products/graphql/companiesQuery';
 
 export const useCompaniesLowDetail = () => {
   const { data, loading } = useQuery(companiesLowDetailQuery, {
-    variables: {
-    },
+    variables: {},
   });
 
   return {
