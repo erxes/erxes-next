@@ -125,9 +125,9 @@ const useUpload = () => {
             ...(userId ? { headers: { userId } } : {}),
           },
         )
-          .then((response) => {
+          .then((response: any) => {
             response[responseType]()
-              .then((text) => {
+              .then((text: unknown) => {
                 setIsLoading(false);
 
                 if (!response.ok) {
@@ -147,7 +147,7 @@ const useUpload = () => {
                   afterUpload({ status: 'ok', response: text, fileInfo });
                 }
               })
-              .catch((error) => {
+              .catch((error: Error) => {
                 setIsLoading(false);
                 setStatus(false);
                 toast({ description: error.message });

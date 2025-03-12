@@ -56,8 +56,14 @@ const SelectSingleTagContent = ({
   return (
     <PureTags
       tagType={tagType}
-      renderItem={(tag) => (
-        <TagsItem tag={tag} onSelect={onSelect} selected={tag._id === value} />
+      renderItem={({ hasChildren, ...tag }) => (
+        <TagsItem
+          tag={tag}
+          onSelect={onSelect}
+          selected={tag._id === value}
+          key={tag._id}
+          hasChildren={hasChildren}
+        />
       )}
     />
   );

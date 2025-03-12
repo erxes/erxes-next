@@ -17,9 +17,9 @@ export const TagsInSelectTags = React.forwardRef<
   return (
     <PureTags
       tagType={tagType}
-      renderItem={(tag) => (
-        <SelectTagsItem key={tag._id} {...tag} hasChildren={tag.hasChildren} />
-      )}
+      {...props}
+      ref={ref}
+      renderItem={(tag) => <SelectTagsItem key={tag._id} {...tag} />}
       renderContent={(tags, search) =>
         tags?.length === 0 && <SelectTagsSearchCreateTrigger search={search} />
       }
@@ -41,20 +41,22 @@ export const TagsInSelectTags = React.forwardRef<
   );
 });
 
-function SelectTagsItem(
-  props: ITag & { hasChildren: boolean; closeEditMode?: () => void },
-) {
-  const { _id, closeEditMode } = props || {};
+function SelectTagsItem({
+  hasChildren,
+  closeEditMode,
+  ...tag
+}: ITag & { hasChildren: boolean; closeEditMode?: () => void }) {
   const { selected, onSelect } = useSelectTagsContext();
 
-  const isSelected = selected?.some((tagId: string) => tagId === _id);
+  const isSelected = selected?.some((tagId: string) => tagId === tag._id);
 
   return (
     <TagsItem
-      tag={props}
+      tag={tag}
+      hasChildren={hasChildren}
       selected={isSelected}
       onSelect={() => {
-        onSelect(props);
+        onSelect(tag);
         if (closeEditMode) {
           closeEditMode();
         }

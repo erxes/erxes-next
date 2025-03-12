@@ -1,11 +1,9 @@
-import {
-  IconCaretDownFilled,
-  IconCurrencyDollar,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconCurrencyDollar, IconSettings } from '@tabler/icons-react';
 import { Button, PluginHeader } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { PtrRecordTable } from '@/ptr/components/PtrRecordTable';
+import { AddTransaction } from '@/ptr/components/AddTransaction';
+
 export const PtrListPage = () => {
   return (
     <div className="flex flex-col h-full">
@@ -21,9 +19,7 @@ export const PtrListPage = () => {
             Go to settings
           </Link>
         </Button>
-        <Button>
-          More <IconCaretDownFilled />
-        </Button>
+        <AddTransaction />
       </PluginHeader>
       <div className="flex-1">
         <PtrRecordTable />
