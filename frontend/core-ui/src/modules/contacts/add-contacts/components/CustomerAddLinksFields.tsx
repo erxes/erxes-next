@@ -1,10 +1,6 @@
 import { Control } from 'react-hook-form';
 import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  Form,
   Input,
   Button,
 } from 'erxes-ui/components';
@@ -75,15 +71,15 @@ export const CustomerAddLinksFields = ({
   return (
     <div className="flex flex-col gap-5">
       {socialLinks.map((socialLink) => (
-        <FormField
+        <Form.Field
           key={`links.${socialLink.key}`}
           control={control}
           name={`links.${socialLink.key}` as any}
           render={({ field }) =>{
             return  (
-            <FormItem>
-              <FormLabel>{socialLink.label}</FormLabel>
-              <FormControl>
+            <Form.Item>
+              <Form.Label>{socialLink.label}</Form.Label>
+              <Form.Control>
                 <div className="focus-within:shadow-focus rounded-sm transition-all">
                   <div className="flex shadow-xs items-center rounded-sm">
                     <Button
@@ -110,9 +106,9 @@ export const CustomerAddLinksFields = ({
                     </Button>
                   </div>
                 </div>
-              </FormControl>
-              <FormMessage className="text-destructive" />
-            </FormItem>
+              </Form.Control>
+              <Form.Message className="text-destructive" />
+            </Form.Item>
           )}}
         />
       ))}

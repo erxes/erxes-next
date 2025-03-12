@@ -1,17 +1,17 @@
 import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
 import { ADD_CUSTOMERS } from '@/contacts/graphql/mutations/addCustomers';
 import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
-import { TCustomer } from '@/contacts/types/customerType';
+import { ICustomer } from '@/contacts/types/customerType';
 
 interface CustomerData {
   customersMain: {
-    list: TCustomer[];
+    list: ICustomer[];
     totalCount: number;
   };
 }
 
 interface AddCustomerResult {
-  customersAdd: TCustomer;
+  customersAdd: ICustomer;
 }
 
 export function useAddCustomer(

@@ -84,7 +84,10 @@ export const GET_CUSTOMERS = gql`
         lastSeenAt
         links
         state
-        ownerId
+        owner {
+          _id
+          username
+        }
         integrationId
         createdAt
         remoteAddress

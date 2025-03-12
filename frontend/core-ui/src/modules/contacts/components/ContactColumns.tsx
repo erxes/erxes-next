@@ -13,14 +13,14 @@ import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDis
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 
-import { TCustomer } from '@/contacts/types/customerType';
+import { ICustomer } from '@/contacts/types/customerType';
 import { FullNameField } from '../customer-edit/components/FullNameField';
 import { EmailField } from '../customer-edit/components/EmailField';
 import { PhoneField } from '../customer-edit/components/PhoneField';
 import { TextField } from '../customer-edit/components/TextField';
 import { TagsField } from '@/contacts/customer-edit/components/TagsField';
 
-export const contactColumns: ColumnDef<TCustomer>[] = [
+export const contactColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'avatar',
     accessorKey: 'avatar',
@@ -71,7 +71,9 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
       const { primaryEmail, emails, _id } = cell.row.original;
       return (
         <EmailField
-          emailValidationStatus={cell.row.original.emailValidationStatus || 'unknown'}
+          emailValidationStatus={
+            cell.row.original.emailValidationStatus || 'unknown'
+          }
           primaryEmail={primaryEmail || ''}
           emails={emails || []}
           _id={_id}
@@ -87,7 +89,8 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
       <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />
     ),
     cell: ({ cell }) => {
-      const { primaryPhone, phones, _id, location, phoneValidationStatus } = cell.row.original;
+      const { primaryPhone, phones, _id, location, phoneValidationStatus } =
+        cell.row.original;
       return (
         <PhoneField
           phoneValidationStatus={phoneValidationStatus || 'unknown'}
@@ -153,7 +156,7 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
     id: field,
     accessorKey: field,
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
-    cell: ({ cell }: { cell: Cell<TCustomer, unknown> }) => (
+    cell: ({ cell }: { cell: Cell<ICustomer, unknown> }) => (
       <TextField
         _id={cell.row.original._id}
         field={field}
