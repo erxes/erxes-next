@@ -9,6 +9,7 @@ module.exports = {
       '{src,pages,components,app,modules}/**/*!(*.stories|*.spec).{ts,tsx,html}',
     ),
     'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).{ts,tsx,html}',
+    'frontend/libs/ui-modules/src/**/!(*.stories|*.spec).{ts,tsx,html}',
     'frontend/plugins/**/!(*.stories|*.spec).{ts,tsx,html}',
   ],
   darkMode: 'class',

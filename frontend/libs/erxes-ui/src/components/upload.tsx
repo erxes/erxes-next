@@ -32,7 +32,7 @@ const UploadContext = createContext<IUploadContext | null>(null);
 
 type UploadPreviewProps = {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: { url: string; fileInfo: any }) => void;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(

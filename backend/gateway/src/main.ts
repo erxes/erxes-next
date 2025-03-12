@@ -33,7 +33,6 @@ const myQueue = new Queue('gateway-service-discovery', {
   connection: redis,
   defaultJobOptions: {
     removeOnComplete: false,
-    removeOnFail: false,
   },
 });
 

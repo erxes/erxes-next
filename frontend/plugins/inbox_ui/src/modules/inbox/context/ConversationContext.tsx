@@ -3,6 +3,6 @@ import { IConversation } from '@/inbox/types/Conversation';
 
 export const ConversationContext = createContext<
   IConversation & {
-    loading: boolean;
+    loading?: boolean;
   }
->({} as IConversation & { loading: boolean });
+>({} as IConversation & { loading?: boolean });

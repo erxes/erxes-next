@@ -12,10 +12,7 @@ import {
   Skeleton,
 } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
-import {
-  SelectTree,
-  SelectTreeItem,
-} from 'erxes-ui/modules/select-tree/components/SelectTree';
+import { SelectTree } from 'erxes-ui/modules/select-tree/components/SelectTree';
 
 import { useProductCategories } from '@/products/product-category/hooks/useProductCategories';
 import { ProductCategoryT } from '@/products/types/productTypes';
@@ -29,19 +26,25 @@ export const SelectCategory = React.forwardRef<
     setOpen?: (open: boolean) => void;
     id?: string;
   }
->(({ onSelect, selected, open, setOpen, id, ...props }, ref) => {
+>(({ onSelect, selected, id, ...props }, ref) => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategoryT>();
   const { productCategories, error, loading } = useProductCategories({
-    onCompleted: ({ productCategories }) => {
+    onCompleted: ({
+      productCategories,
+    }: {
+      productCategories: ProductCategoryT[];
+    }) => {
       setSelectedCategory(
-        productCategories?.find((category) => category._id === selected),
+        productCategories?.find(
+          (category: ProductCategoryT) => category._id === selected,
+        ),
       );
     },
   });
 
   const handleSelect = (categoryId: string) => {
     const category = productCategories?.find(
-      (category) => category._id === categoryId,
+      (category: ProductCategoryT) => category._id === categoryId,
     );
     setSelectedCategory(category);
     onSelect(categoryId);
@@ -60,15 +63,16 @@ export const SelectCategory = React.forwardRef<
           <Command.Input />
           <Command.List>
             <SelectCategoryEmptyHandler error={error} loading={loading} />
-            {productCategories?.map((category) => (
+            {productCategories?.map((category: ProductCategoryT) => (
               <SelectCategoryItem
                 key={category._id}
                 category={category}
                 selected={selectedCategory?._id === category._id}
                 onSelect={handleSelect}
                 hasChildren={
-                  productCategories.find((c) => c.parentId === category._id) !==
-                  undefined
+                  productCategories.find(
+                    (c: ProductCategoryT) => c.parentId === category._id,
+                  ) !== undefined
                 }
               />
             ))}
@@ -116,7 +120,7 @@ export const SelectCategoryItem = ({
   const { _id, code, name, order } = category;
 
   return (
-    <SelectTreeItem
+    <SelectTree.Item
       order={order}
       hasChildren={hasChildren}
       name={name}
@@ -125,7 +129,7 @@ export const SelectCategoryItem = ({
       selected={selected}
     >
       <SelectCategoryBadge category={category} selected={selected} />
-    </SelectTreeItem>
+    </SelectTree.Item>
   );
 };
 

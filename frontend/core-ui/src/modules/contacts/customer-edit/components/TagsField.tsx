@@ -1,42 +1,38 @@
-import { SelectTags } from '@/tags/components/SelectTags';
-import { useCustomersTag } from '~/modules/contacts/customer-edit/hooks/useCustomersTag';
 import { toast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
-import { SelectTagsProps } from '@/tags/types/tagTypes';
+import { SelectTags, useGiveTags, SelectTagsProps } from 'ui-modules';
 
 interface TagsField extends SelectTagsProps {
   _id: string;
 }
 
-export const TagsField = ({
-  _id,
-  tagType,
-  single,
-  sub,
-  selected,
-  recordId,
-}: TagsField) => {
-  const { customersTag } = useCustomersTag();
+export const TagsField = ({ _id, tagType, selected, recordId }: TagsField) => {
+  const { giveTags, loading } = useGiveTags();
   return (
     <SelectTags
       tagType={tagType}
-      single={single}
-      sub={sub}
-      selected={selected}
+      selected={selected as string[]}
       recordId={recordId}
+      loading={loading}
       onSelect={(tagIds: string[] | string) => {
-        customersTag(
-          {
-            variables: { targetIds: [_id], tagIds },
-            onError: (e: ApolloError) => {
-              toast({
-                title: 'Error',
-                description: e.message,
-              });
-            },
+        giveTags({
+          variables: { type: 'core:customer', targetIds: [_id], tagIds },
+          update: (cache) => {
+            cache.modify({
+              id: cache.identify({
+                __typename: 'Customer',
+                _id,
+              }),
+              fields: { tagIds: () => tagIds },
+            });
           },
-          ['tagIds'],
-        );
+          onError: (e: ApolloError) => {
+            toast({
+              title: 'Error',
+              description: e.message,
+            });
+          },
+        });
       }}
     />
   );

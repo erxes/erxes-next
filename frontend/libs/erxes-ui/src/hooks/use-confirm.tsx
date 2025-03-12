@@ -126,7 +126,7 @@ const ConfirmDialog = ({
             )}
           </AlertDialogHeader>
           <form onSubmit={form.handleSubmit(proceed)}>
-            {renderConfirm(form)}
+            {renderConfirm(form as any)}
             <br />
             <AlertDialogFooter>
               <AlertDialogCancel onClick={dismiss} type="button">

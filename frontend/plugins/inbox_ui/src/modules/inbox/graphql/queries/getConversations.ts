@@ -54,6 +54,7 @@ export const GET_CONVERSATIONS = gql`
         primaryPhone
       }
       readUserIds
+      tagIds
     }
     conversationsTotalCount(
       limit: $limit

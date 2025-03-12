@@ -1,0 +1,20 @@
+{
+  "name": "erxes-api-modules",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "backend/libs/core-modules/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/backend/libs/core-modules",
+        "tsConfig": "backend/libs/core-modules/tsconfig.lib.json",
+        "packageJson": "backend/libs/core-modules/package.json",
+        "main": "backend/libs/core-modules/src/index.ts",
+        "assets": ["backend/libs/core-modules/*.md"]
+      }
+    }
+  }
+}

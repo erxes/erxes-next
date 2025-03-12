@@ -1,7 +1,7 @@
 import { Button, Collapsible, Skeleton } from 'erxes-ui/components';
 import { useIntegrations } from '@/inbox/hooks/useIntegrations';
 import { useAtom } from 'jotai';
-import { integrationCollapsibleState } from '../state/integrationCollapsibleState';
+import { integrationCollapsibleState } from '../states/integrationCollapsibleState';
 import { IIntegration } from '../types/Integration';
 import { IconCheck } from '@tabler/icons-react';
 import { useMultiQueryState } from '../hooks/useQueryState';

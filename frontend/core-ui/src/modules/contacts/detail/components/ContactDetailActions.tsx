@@ -22,9 +22,7 @@ const actionTabs = {
 };
 
 export const ContactDetailActions = () => {
-  const [activeTab, setActiveTab] = useAtom(
-    contactDetailActiveActionTabAtom,
-  );
+  const [activeTab, setActiveTab] = useAtom(contactDetailActiveActionTabAtom);
   const [contactId] = useQueryState('contact_id');
 
   return (
@@ -91,9 +89,7 @@ export const ContactDetailActions = () => {
 };
 
 export const ContactDetailActionsTrigger = () => {
-  const [activeTab, setActiveTab] = useAtom(
-    contactDetailActiveActionTabAtom,
-  );
+  const [activeTab, setActiveTab] = useAtom(contactDetailActiveActionTabAtom);
 
   return (
     <div className="flex flex-none overflow-hidden">
@@ -126,7 +122,7 @@ export const ActionTrigger = React.forwardRef<
   }
 >(({ className, ...props }, ref) => (
   <Tooltip.Provider>
-    <Tooltip delayDuration={100}>
+    <Tooltip>
       <Tooltip.Trigger asChild>
         <Tabs.Trigger
           ref={ref}

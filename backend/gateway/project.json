@@ -6,13 +6,14 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "dependsOn": ["erxes-api-utils:build"],
+      "dependsOn": ["erxes-api-utils:build", "erxes-api-modules:build"],
       "cache": true,
       "options": {
         "outputPath": "dist/backend/gateway",
         "main": "backend/gateway/src/main.ts",
         "tsConfig": "backend/gateway/tsconfig.app.json",
-        "assets": ["backend/gateway/src/**"]
+        "assets": ["backend/gateway/src/**"],
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},
@@ -35,6 +36,11 @@
           "buildTarget": "gateway:build:production"
         }
       }
+    },
+
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
     }
   },
   "tags": []

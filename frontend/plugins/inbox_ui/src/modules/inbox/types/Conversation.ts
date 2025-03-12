@@ -12,6 +12,7 @@ export interface IConversation {
   integration: IIntegration;
   readUserIds: string[];
   assignedUserId?: string;
+  tagIds?: string[];
 }
 
 export interface IIntegration {

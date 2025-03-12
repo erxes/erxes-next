@@ -2,13 +2,13 @@ import { IconUsers, IconUserUp } from '@tabler/icons-react';
 import { Button, Collapsible } from 'erxes-ui/components';
 import { ChooseChannel } from '@/inbox/components/ChooseChannel';
 import { ChooseIntegration } from '@/inbox/components/ChooseIntegration';
-import { Link } from 'react-router-dom';
-import { useQueryState } from '../hooks/useQueryState';
+import { useMultiQueryState } from '../hooks/useQueryState';
 
 export const MainFilters = () => {
-  const [assignedToMe, setAssignedToMe] =
-    useQueryState<boolean>('assignedToMe');
-  const [detailView, setDetailView] = useQueryState<boolean>('detailView');
+  const [, setQueryStates] = useMultiQueryState<{
+    assignedToMe: boolean;
+    detailView: boolean;
+  }>(['assignedToMe', 'detailView']);
 
   return (
     <Collapsible
@@ -23,16 +23,27 @@ export const MainFilters = () => {
         <Button
           variant="ghost"
           className="w-full justify-start"
-          onClick={() => setDetailView(true)}
+          onClick={() =>
+            setQueryStates({
+              detailView: true,
+            })
+          }
         >
           <IconUsers className="text-accent-foreground" />
           Team Inbox
         </Button>
-        <Button variant="ghost" className="w-full justify-start" asChild>
-          <Link to="/inbox?assignedToMe=true">
-            <IconUserUp className="text-accent-foreground" />
-            Assigned to me
-          </Link>
+        <Button
+          variant="ghost"
+          className="w-full justify-start"
+          onClick={() =>
+            setQueryStates({
+              assignedToMe: true,
+              detailView: true,
+            })
+          }
+        >
+          <IconUserUp className="text-accent-foreground" />
+          Assigned to me
         </Button>
         <ChooseChannel />
         <ChooseIntegration />

@@ -1,8 +1,8 @@
 import {
   createGenerateModels,
-  ICustomerDocument,
   IContext as IMainContext,
 } from 'erxes-api-utils';
+import { ICustomerDocument } from './db/models/Customers';
 import mongoose from 'mongoose';
 import { ICustomerModel, loadCustomerClass } from './db/models/Customers';
 

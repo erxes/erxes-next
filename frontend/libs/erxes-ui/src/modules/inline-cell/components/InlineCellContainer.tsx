@@ -24,7 +24,7 @@ export const InlineCellContainer = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          'w-full flex items-stretch relative h-8 cursor-pointer box-border overflow-hidden',
+          'w-full inline-flex items-stretch relative h-8 cursor-pointer box-border',
           className,
         )}
         {...props}

@@ -37,7 +37,10 @@ const SeparatorInline = React.forwardRef<
   return (
     <span
       ref={ref}
-      className={cn('inline-block bg-border w-0.5 h-3 rounded-lg', className)}
+      className={cn(
+        'inline-block bg-border w-0.5 h-3 rounded-lg flex-none',
+        className,
+      )}
       {...props}
     />
   );

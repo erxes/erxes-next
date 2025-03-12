@@ -142,16 +142,18 @@ const PhoneContextProvider: React.FC<PhoneContextProviderProps> = ({
     handleChange(updatedPhones);
   };
 
-  const handleAddNewPhone = () => {
-    if (newPhone && !allPhones.includes(newPhone)) {
-      if (validatePhoneNumber(newPhone)) {
-        const updatedPhones = [...allPhones, newPhone];
-        handleChange(updatedPhones);
-        setNewPhone('');
-        setIsAddingPhone(false);
+    const handleAddNewPhone = () => {
+      if (newPhone && !allPhones.includes(newPhone)) {
+        if (validatePhoneNumber(newPhone)) {
+          const updatedPhones = [...allPhones, newPhone];
+          handleChange(updatedPhones);
+          setNewPhone('');
+          setIsAddingPhone(false);
+        } else {
+          // console.log('noo');
+        }
       }
-    }
-  };
+    };
 
   const handleEdit = (phoneToEdit: string) => {
     setEditingPhone(phoneToEdit);

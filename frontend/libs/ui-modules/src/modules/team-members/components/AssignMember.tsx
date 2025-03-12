@@ -1,16 +1,15 @@
 import {
   AvatarProps,
-  Button,
   ButtonProps,
+  Combobox,
   Command,
   Popover,
   Skeleton,
   Spinner,
-  cn,
 } from 'erxes-ui';
 import { useAssignedMember, useUsers } from '../hooks/useUsers';
 import { useState } from 'react';
-import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
+import { IconCheck, IconLoader } from '@tabler/icons-react';
 import { useDebounce } from 'use-debounce';
 import { useInView } from 'react-intersection-observer';
 import { AssignMemberFetchMoreProps, IMember } from '../types/TeamMembers';
@@ -23,7 +22,7 @@ interface AssignMemberProps {
 }
 
 export const AssignMember = React.forwardRef<
-  React.RefObject<HTMLButtonElement>,
+  React.ElementRef<typeof Combobox>,
   ButtonProps & AssignMemberProps
 >(({ value, onValueChange, children, ...props }, ref) => {
   const [open, setOpen] = useState(false);
@@ -101,13 +100,13 @@ export function AssignMemberList({
 }
 
 export const AssignMemberTrigger = React.forwardRef<
-  React.RefObject<HTMLButtonElement>,
+  React.ElementRef<typeof Combobox>,
   ButtonProps & {
     value: string;
     selectedUser?: IMember;
     setSelectedUser: (user?: IMember) => void;
   }
->(({ value, selectedUser, setSelectedUser, className, ...props }, ref) => {
+>(({ value, selectedUser, setSelectedUser, ...props }, ref) => {
   const { loading } = useAssignedMember({
     variables: { _id: value },
     skip: !value || selectedUser?._id === value,
@@ -118,19 +117,7 @@ export const AssignMemberTrigger = React.forwardRef<
 
   return (
     <Popover.Trigger asChild>
-      <Button
-        variant="outline"
-        role="combobox"
-        className={cn(
-          'truncate h-8 rounded-md hover:cursor-pointer shadow-none justify-start px-2  focus-visible:shadow-primary/10 focus-visible:ring-[3px] focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent',
-          props.size === 'lg' && 'gap-2',
-          className,
-        )}
-        disabled={loading}
-        type="button"
-        {...props}
-        ref={ref as React.RefObject<HTMLButtonElement>}
-      >
+      <Combobox disabled={loading} {...props} ref={ref}>
         {value ? (
           <MemberInline
             member={selectedUser}
@@ -145,15 +132,7 @@ export const AssignMemberTrigger = React.forwardRef<
             Choose
           </span>
         )}
-        {props.variant !== 'ghost' && (
-          <IconChevronDown
-            size={16}
-            strokeWidth={2}
-            className="shrink-0 text-muted-foreground ml-auto"
-            aria-hidden="true"
-          />
-        )}
-      </Button>
+      </Combobox>
     </Popover.Trigger>
   );
 });
