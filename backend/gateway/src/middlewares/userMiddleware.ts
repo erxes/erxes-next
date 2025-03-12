@@ -4,8 +4,8 @@ import { NextFunction, Request, Response } from 'express';
 import { redis } from 'erxes-api-utils';
 import { IModels, generateModels } from '../connectionResolver';
 import { getSubdomain } from 'erxes-api-utils';
-import { USER_ROLES } from 'erxes-api-utils';
-import { userActionsMap } from 'erxes-api-utils';
+import { USER_ROLES } from 'erxes-api-modules';
+import { userActionsMap } from 'erxes-api-modules';
 import fetch from 'node-fetch';
 import { setUserHeader } from 'erxes-api-utils';
 

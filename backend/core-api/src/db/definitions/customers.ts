@@ -1,5 +1,7 @@
-import { CUSTOMER_SELECT_OPTIONS, stringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
+
+import { stringRandomId } from 'erxes-api-utils';
+import { CUSTOMER_SELECT_OPTIONS } from '../../modules/contacts/customers/constants';
 
 const getEnum = (fieldName: string): string[] => {
   return CUSTOMER_SELECT_OPTIONS[fieldName].map((option) => option.value);

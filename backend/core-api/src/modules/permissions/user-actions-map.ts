@@ -1,4 +1,4 @@
-import { IActionMap, IPermissionDocument } from '../@types/permissions';
+import { IActionMap, IPermissionDocument } from './@types/permissions';
 
 export const userActionsMap = async (
   userPermissions: IPermissionDocument[],
