@@ -1,4 +1,4 @@
-import { DEFAULT_SEX_CHOICES, STATUSES } from '../../../constants';
+import { DEFAULT_SEX_CHOICES, STATUSES } from 'erxes-api-utils';
 
 export const CUSTOMER_SELECT_OPTIONS = {
   SEX: [

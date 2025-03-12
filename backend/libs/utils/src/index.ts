@@ -5,3 +5,4 @@ export * from './mq-worker';
 export * from './redis';
 export * from './service-discovery';
 export * from './utils';
+export * from './constants';

@@ -6,7 +6,7 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "dependsOn": ["erxes-api-utils:build"],
+      "dependsOn": ["erxes-api-utils:build", "erxes-api-modules:build"],
       "cache": true,
       "options": {
         "outputPath": "dist/backend/gateway",

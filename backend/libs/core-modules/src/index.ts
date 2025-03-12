@@ -1,1 +1,2 @@
-export * from './lib/erxes-api-modules';
+export * from './modules/permissions';
+export * from './modules/users';
