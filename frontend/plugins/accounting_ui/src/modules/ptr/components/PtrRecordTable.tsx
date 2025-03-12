@@ -1,3 +1,4 @@
+import { dummyTransactions } from '../dummyTransactions';
 import { useTransactions } from '../hooks/useTransactions';
 import {
   transactionColumns,
@@ -12,7 +13,7 @@ export const PtrRecordTable = () => {
   return (
     <RecordTable.Provider
       columns={transactionColumns}
-      data={transactions || []}
+      data={transactions || dummyTransactions}
       handleReachedBottom={handleFetchMore}
       stickyColumns={['avatar', 'name']}
       className="mt-1.5"

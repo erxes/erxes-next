@@ -1,19 +1,22 @@
 import { Checkbox } from 'erxes-ui/components/checkbox';
-
-export const checkboxColumn = {
+import { ColumnDef } from '@tanstack/react-table';
+export const checkboxColumn: ColumnDef<any> = {
   accessorKey: 'checkbox',
   id: 'checkbox',
-  header: ({ table }) => (
-    <div className="flex items-center justify-center">
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-      />
-    </div>
-  ),
+  header: ({ table }) => {
+    const isAllSelected = table.getIsAllPageRowsSelected();
+    const isSomeSelected = table.getIsSomePageRowsSelected();
+
+    return (
+      <div className="flex items-center justify-center">
+        <Checkbox
+          checked={isAllSelected || (isSomeSelected && 'indeterminate')}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all rows"
+        />
+      </div>
+    );
+  },
   size: 33,
   cell: ({ row }) => (
     <div className="flex items-center justify-center">

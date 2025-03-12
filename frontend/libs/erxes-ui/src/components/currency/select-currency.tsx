@@ -1,5 +1,5 @@
 import { IconChevronDown } from '@tabler/icons-react';
-import { Button, Command, Popover } from 'erxes-ui';
+import { Button, Command, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import { Currency, CurrencyCode } from 'erxes-ui/types';
 

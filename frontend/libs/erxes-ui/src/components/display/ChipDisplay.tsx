@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Avatar, Button, ButtonProps } from 'erxes-ui';
+import { Avatar, Button, ButtonProps } from 'erxes-ui/components';
 
 import { IAttachment } from 'erxes-ui/types';
 
