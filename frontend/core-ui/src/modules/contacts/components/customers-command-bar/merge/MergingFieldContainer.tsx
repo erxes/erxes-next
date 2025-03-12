@@ -15,19 +15,17 @@ export const MergingFieldContainer = ({
   type = 'string',
   disabled = false,
 }: MergingFieldContainerProps) => {
-  if (type === 'links') return null;
+  if (type === 'links' || !fieldValue) return <span className="w-full" />;
 
   return (
     <ChoiceboxGroup.Item
       className="w-full p-3 gap-[6px] h-min justify-center flex-col items-start flex min-h-14 rounded-sm"
       title={fieldName}
-      value={fieldValue as string}
+      value={fieldValue}
       disabled={disabled}
     >
-      {/* <span className="text-xs font-semibold text-muted-foreground">
-        {fieldName}
-      </span> */}
       {type === 'string' && <StringField fieldValue={fieldValue} />}
+      {type === 'link' && <StringField fieldValue={fieldValue} />}
       {type === 'Array' && <ArrayField fieldValue={fieldValue} />}
       {type === 'sex' && <SexField fieldValue={fieldValue} />}
       {type === 'owner' && <Ownerfield fieldValue={fieldValue} />}

@@ -6,17 +6,28 @@ import { Button, Sheet } from 'erxes-ui/components';
 import { ReactNode } from 'react';
 import { MergeToolTip } from './MergeToolTip';
 import { cn } from 'erxes-ui/lib';
-export const MergeSheet = ({
-  children,
-  disabled,
-  className,
-}: {
+
+const noop = () => {
+  //
+};
+interface MergeSheetProps extends React.ComponentProps<typeof Sheet> {
   children?: ReactNode;
   disabled?: boolean;
   className?: string;
-}) => {
+  onDiscard?: () => void;
+  onSave?: () => void;
+}
+
+export const MergeSheet = ({
+  children,
+  disabled = false,
+  className,
+  onDiscard = noop,
+  onSave = () => noop,
+  ...props
+}: MergeSheetProps) => {
   return (
-    <Sheet>
+    <Sheet {...props}>
       <MergeToolTip>
         <Sheet.Trigger asChild>
           <Button variant={'secondary'} disabled={disabled}>
@@ -25,9 +36,14 @@ export const MergeSheet = ({
           </Button>
         </Sheet.Trigger>
       </MergeToolTip>
-      <Sheet.Content className="sm:max-w-screen-lg p-0 flex gap-0 flex-col">
+      <Sheet.Content className="sm:max-w-screen-lg flex gap-0 flex-col m-0 p-0">
         <MergeSheetHeader />
-        <div className={cn('w-full h-full', className)}>{children}</div>
+        <div className={cn('w-full h-full overflow-y-auto ', className)}>
+          {children}
+        </div>
+        {!disabled && (
+          <MergeSheetFooter onDiscard={onDiscard} onSave={onSave} />
+        )}
       </Sheet.Content>
     </Sheet>
   );
@@ -42,3 +58,30 @@ const MergeSheetHeader = () => (
     <Sheet.Close />
   </Sheet.Header>
 );
+
+interface MergeSheetFooterProps {
+  onDiscard: () => void;
+  onSave: () => void;
+}
+
+const MergeSheetFooter = ({ onDiscard, onSave }: MergeSheetFooterProps) => {
+  return (
+    <Sheet.Footer className="flex justify-end p-5">
+      <Button
+        onClick={() => {
+          onDiscard();
+        }}
+        variant="secondary"
+      >
+        Discard
+      </Button>
+      <Button
+        onClick={() => {
+          onSave();
+        }}
+      >
+        Save
+      </Button>
+    </Sheet.Footer>
+  );
+};

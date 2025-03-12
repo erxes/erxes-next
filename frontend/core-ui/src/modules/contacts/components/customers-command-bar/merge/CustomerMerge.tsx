@@ -4,6 +4,9 @@ import { ICustomer } from '@/contacts/types/customerType';
 import { MergingFieldContainer } from './MergingFieldContainer';
 import { MergeMap, FieldType } from './MergeMap';
 import { ChoiceboxGroup } from 'erxes-ui/components';
+import { useCustomersMerge } from '@/contacts/components/customers-command-bar/hooks/useCustomersMerge';
+import { useToast } from 'erxes-ui/hooks';
+import { ApolloError } from '@apollo/client';
 interface MergeProps {
   disabled?: boolean;
   customers: ICustomer[];
@@ -13,11 +16,39 @@ interface FieldMapping {
   displayName: string;
   position: number;
   type: FieldType;
+  parentKey?: string;
 }
 
 export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
-  if (disabled) return <MergeSheet disabled />;
+  const { toast } = useToast();
+  const [sheetOpen, setSheetOpen] = useState<boolean>(false);
+  const { customersMerge } = useCustomersMerge();
+  const handleSave = () => {
+    customersMerge({
+      variables: {
+        customerIds: customers.map((customer) => customer._id),
+        customerFields: value,
+      },
+      onError: (e: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+          variant: 'destructive',
+        });
+      },
+      onCompleted: () => {
+        setSheetOpen(false);
+        toast({
+          title: 'Success',
+          variant: 'default',
+        });
+      },
+    });
+  };
+
   const fieldMappings: Record<string, FieldMapping> = {};
+  const linkFields: Record<string, FieldMapping> = {};
+
   MergeMap.forEach((item, index) => {
     const key = Object.keys(item)[0];
     const config = item[key];
@@ -27,7 +58,22 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
       position: index,
       type: config.type,
     };
+
+    if (config.children && config.type === 'links') {
+      config.children.forEach((child: any) => {
+        const childKey = Object.keys(child)[0];
+        const childConfig = child[childKey];
+
+        linkFields[childKey] = {
+          displayName: childConfig.displayName || childKey,
+          position: index,
+          type: childConfig.type,
+          parentKey: key,
+        };
+      });
+    }
   });
+
   const cleanedCustomers = customers.map((customer) => {
     return Object.fromEntries(
       Object.entries(customer).filter(([key, value]) => {
@@ -40,24 +86,32 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
       }),
     );
   });
-
   const sortEntriesByMergeMap = (entries: [string, any, any][]) => {
     return [...entries].sort((a, b) => {
-      const posA = fieldMappings[a[0]]?.position ?? Number.MAX_SAFE_INTEGER;
-      const posB = fieldMappings[b[0]]?.position ?? Number.MAX_SAFE_INTEGER;
+      const keyA = a[0].startsWith('links.') ? 'links' : a[0];
+      const keyB = b[0].startsWith('links.') ? 'links' : b[0];
+      const posA = fieldMappings[keyA]?.position ?? Number.MAX_SAFE_INTEGER;
+      const posB = fieldMappings[keyB]?.position ?? Number.MAX_SAFE_INTEGER;
+      if (
+        posA === posB &&
+        a[0].startsWith('links.') &&
+        b[0].startsWith('links.')
+      ) {
+        return a[0].localeCompare(b[0]);
+      }
       return posA - posB;
     });
   };
 
   const firstCustomerEntries = Object.entries(cleanedCustomers[0] || []);
   const secondCustomerEntries = Object.entries(cleanedCustomers[1] || []);
-
   const mergeCustomerEntries = (
     firstEntries: [string, any][],
     secondEntries: [string, any][],
   ) => {
     const mergedEntries: [string, any, any][] = [];
     firstEntries.forEach(([key, value]) => {
+      if (key === 'links') return;
       const secondValue =
         secondEntries.find(([secondKey]) => secondKey === key)?.[1] ?? null;
       mergedEntries.push([
@@ -66,10 +120,27 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
         secondValue !== undefined ? secondValue : value,
       ]);
     });
+
     secondEntries.forEach(([key, value]) => {
+      if (key === 'links') return;
+
       if (!firstEntries.some(([firstKey]) => firstKey === key)) {
         const firstValue = firstEntries.find(([k]) => k === key)?.[1] ?? null;
         mergedEntries.push([key, firstValue, value]);
+      }
+    });
+    const firstLinks = firstEntries.find(([key]) => key === 'links')?.[1] || {};
+    const secondLinks =
+      secondEntries.find(([key]) => key === 'links')?.[1] || {};
+    Object.keys(linkFields).forEach((linkType) => {
+      const firstLinkValue = firstLinks[linkType] || '';
+      const secondLinkValue = secondLinks[linkType] || '';
+      if (firstLinkValue || secondLinkValue) {
+        mergedEntries.push([
+          `links.${linkType}`,
+          firstLinkValue,
+          secondLinkValue,
+        ]);
       }
     });
 
@@ -88,29 +159,84 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
 
   const [value, setValue] = useState(() => {
     const initialValues: Record<string, any> = {};
+    const linkValues: Record<string, any> = {};
+
     mergedCustomerEntries.forEach(([key, value1, value2]) => {
+      if (key.startsWith('links.')) {
+        const linkType = key.split('.')[1];
+        if (value1 && !value2) {
+          linkValues[linkType] = value1;
+        } else if (!value1 && value2) {
+          linkValues[linkType] = value2;
+        } else if (value1 === value2) {
+          linkValues[linkType] = value1;
+        } else {
+          if (value1) {
+            linkValues[linkType] = value1;
+          } else if (value2) {
+            linkValues[linkType] = value2;
+          }
+        }
+        return;
+      }
       if (value1 && !value2) {
         initialValues[key] = value1;
       } else if (!value1 && value2) {
         initialValues[key] = value2;
+      } else if (value1 === value2) {
+        initialValues[key] = value1;
       } else {
-        initialValues[key] = '';
+        if (value1) {
+          initialValues[key] = value1;
+        } else if (value2) {
+          initialValues[key] = value2;
+        }
       }
     });
+
+    if (Object.keys(linkValues).length > 0) {
+      initialValues['links'] = linkValues;
+    }
+
     return initialValues;
   });
 
   const handleValueChange = (newValue: any, key: string) => {
+    if (key.startsWith('links.')) {
+      const linkType = key.split('.')[1];
+      const currentLinks = { ...(value['links'] || {}) };
+
+      if (currentLinks[linkType] === newValue) {
+        delete currentLinks[linkType];
+      } else {
+        currentLinks[linkType] = newValue;
+      }
+
+      setValue({
+        ...value,
+        links: Object.keys(currentLinks).length > 0 ? currentLinks : undefined,
+      });
+      return;
+    }
+
     if (value[key] === newValue) {
       setValue({ ...value, [key]: '' });
     } else {
       setValue({ ...value, [key]: newValue });
     }
   };
-
+  if (disabled) return <MergeSheet disabled />;
   return (
-    <MergeSheet className="p-6 flex gap-2 h-full">
-      <div className="flex-[2] h-full flex flex-col gap-2 ">
+    <MergeSheet
+      className="p-6 pb -10 flex gap-2 h-full"
+      open={sheetOpen}
+      onOpenChange={setSheetOpen}
+      onDiscard={() => {
+        setSheetOpen(false);
+      }}
+      onSave={handleSave}
+    >
+      <div className="flex-[2] h-full flex flex-col gap-2  ">
         <div className="flex justify-between gap-2 mb-1 ">
           <span className="text-sm font-semibold text-muted-foreground w-full">
             {customers[0]?.primaryEmail}
@@ -119,56 +245,74 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
             {customers[1]?.primaryEmail}
           </span>
         </div>
+
         {mergedCustomerEntries.map(([key, value1, value2]) => {
-          if (fieldMappings[key].type === 'links' && value1 !== null && value2 !== null) {
-            console.log(Object.entries(value1), Object.entries(value2));
+          if (value1 === value2) return null;
+          if (value1 && !value2) return null;
+          if (value2 && !value1) return null;
+
+          if (key.startsWith('links.')) {
+            const linkType = key.split('.')[1];
+            const displayName = linkFields[linkType]?.displayName || linkType;
+
+            return (
+              <ChoiceboxGroup
+                key={key}
+                value={value['links']?.[linkType]}
+                onValueChange={(newValue) => handleValueChange(newValue, key)}
+                direction="row"
+                className="gap-3"
+              >
+                {value1 !== '' ? (
+                  <MergingFieldContainer
+                    key={createEntryKey(linkType, value1)}
+                    fieldName={displayName}
+                    fieldValue={value1}
+                    type="link"
+                  />
+                ) : (
+                  <span className="w-full" />
+                )}
+
+                {value2 !== '' ? (
+                  <MergingFieldContainer
+                    key={createEntryKey(linkType, value2)}
+                    fieldName={displayName}
+                    fieldValue={value2}
+                    type="link"
+                  />
+                ) : (
+                  <span className="w-full" />
+                )}
+              </ChoiceboxGroup>
+            );
           }
           return (
             <ChoiceboxGroup
+              key={key}
               value={value[key]}
               onValueChange={(newValue) => handleValueChange(newValue, key)}
               direction="row"
               className="gap-3"
             >
               {value1 !== '' ? (
-                fieldMappings[key].type === 'links' && value1 !== null ? (
-                  Object.entries(value1).map(([k, v]) => (
-                    <MergingFieldContainer
-                      key={createEntryKey(k, v)}
-                      fieldName={k.charAt(0).toUpperCase() + k.slice(1)}
-                      fieldValue={v}
-                      type={'string'}
-                    />
-                  ))
-                ) : (
-                  <MergingFieldContainer
-                    key={createEntryKey(key, value1)}
-                    fieldName={fieldMappings[key].displayName}
-                    fieldValue={value1}
-                    type={fieldMappings[key].type}
-                  />
-                )
+                <MergingFieldContainer
+                  key={createEntryKey(key, value1)}
+                  fieldName={fieldMappings[key].displayName}
+                  fieldValue={value1}
+                  type={fieldMappings[key].type}
+                />
               ) : (
                 <span className="w-full" />
               )}
+
               {value2 !== '' ? (
-                fieldMappings[key].type === 'links' && value2 !== null ? (
-                  Object.entries(value2).map(([k, v]) => (
-                    <MergingFieldContainer
-                      key={createEntryKey(k, v)}
-                      fieldName={k.charAt(0).toUpperCase() + k.slice(1)}
-                      fieldValue={v}
-                      type={'string'}
-                    />
-                  ))
-                ) : (
-                  <MergingFieldContainer
-                    key={createEntryKey(key, value2)}
-                    fieldName={fieldMappings[key].displayName}
-                    fieldValue={value2}
-                    type={fieldMappings[key].type}
-                  />
-                )
+                <MergingFieldContainer
+                  key={createEntryKey(key, value2)}
+                  fieldName={fieldMappings[key].displayName}
+                  fieldValue={value2}
+                  type={fieldMappings[key].type}
+                />
               ) : (
                 <span className="w-full" />
               )}
@@ -176,24 +320,44 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
           );
         })}
       </div>
+
       <div className="flex-[1.2] h-full ml-5 flex flex-col gap-2">
         <span className="text-sm font-semibold text-primary mb-1">Merge</span>
-        <div className="overflow-y-auto h-[90%] ">
-          <div className="flex flex-col gap-2 ">
-            {Object.entries(value).map(([key, value]) =>
-              value !== '' ? (
-                <ChoiceboxGroup className="flex flex-col gap-2" value={value}>
+        <div className="flex flex-col gap-2 ">
+          {Object.entries(value).map(([key, fieldValue]) => {
+            if (key === 'links' || fieldValue === '') return null;
+
+            return (
+              <ChoiceboxGroup key={key} className="flex flex-col gap-2">
+                <MergingFieldContainer
+                  key={createEntryKey(key, fieldValue)}
+                  fieldName={fieldMappings[key]?.displayName || key}
+                  fieldValue={fieldValue}
+                  type={fieldMappings[key]?.type || 'string'}
+                  disabled
+                />
+              </ChoiceboxGroup>
+            );
+          })}
+          {value.links &&
+            Object.entries(value.links).map(([linkType, linkValue]) => {
+              if (!linkValue) return null;
+
+              return (
+                <ChoiceboxGroup
+                  key={`links.${linkType}`}
+                  className="flex flex-col gap-2"
+                >
                   <MergingFieldContainer
-                    key={createEntryKey(key, value)}
-                    fieldName={fieldMappings[key].displayName}
-                    fieldValue={value}
-                    type={fieldMappings[key].type}
+                    key={createEntryKey(linkType, linkValue)}
+                    fieldName={linkFields[linkType]?.displayName || linkType}
+                    fieldValue={linkValue}
+                    type="link"
                     disabled
                   />
                 </ChoiceboxGroup>
-              ) : null,
-            )}
-          </div>
+              );
+            })}
         </div>
       </div>
     </MergeSheet>

@@ -4,6 +4,7 @@ export type FieldType =
   | 'owner'
   | 'avatar'
   | 'links'
+  | 'link'
   | 'sex';
 type LinkType =
   | 'website'
@@ -17,7 +18,7 @@ interface Field {
   displayName: string | null;
   type: FieldType;
   children?: Array<
-    Partial<{ [key in LinkType]: { displayName: string; type: 'string' } }>
+    Partial<{ [key in LinkType]: { displayName: string; type: FieldType } }>
   >;
 }
 
@@ -54,12 +55,12 @@ export const MergeMap: MergeMapEntry[] = [
       displayName: null,
       type: 'links',
       children: [
-        { website: { displayName: 'Website', type: 'string' } },
-        { facebook: { displayName: 'Facebook', type: 'string' } },
-        { instagram: { displayName: 'Instagram', type: 'string' } },
-        { twitter: { displayName: 'Twitter', type: 'string' } },
-        { linkedIn: { displayName: 'LinkedIn', type: 'string' } },
-        { github: { displayName: 'Github', type: 'string' } },
+        { website: { displayName: 'Website', type: 'link' } },
+        { facebook: { displayName: 'Facebook', type: 'link' } },
+        { instagram: { displayName: 'Instagram', type: 'link' } },
+        { twitter: { displayName: 'Twitter', type: 'link' } },
+        { linkedIn: { displayName: 'LinkedIn', type: 'link' } },
+        { github: { displayName: 'Github', type: 'link' } },
       ],
     },
   },
