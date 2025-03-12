@@ -7,21 +7,28 @@ import { pluginsConfigState } from 'ui-modules';
 import { cn } from 'erxes-ui/lib';
 import { PluginItem } from '@/navigation/types/MenuItemType';
 import { useAtom } from 'jotai';
+import { useMemo } from 'react';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
-  const plugins:PluginItem[] = [...CORE_PLUGINS] as PluginItem[];
   const [pluginsMetaData] = useAtom(pluginsConfigState);
 
-  if (pluginsMetaData) {
-    Object.keys(pluginsMetaData).forEach((key) => {
-      plugins.push({
-        path: `/${key}`,
-        name: pluginsMetaData[key].name,
-        icon: pluginsMetaData[key].icon,
+  // Memoize plugins array to prevent unnecessary recalculations
+  const plugins = useMemo(() => {
+    const allPlugins = [...CORE_PLUGINS] as PluginItem[];
+
+    if (pluginsMetaData) {
+      Object.entries(pluginsMetaData).forEach(([key, data]) => {
+        allPlugins.push({
+          path: `/${key}`,
+          name: data.name,
+          icon: data.icon,
+        });
       });
-    });
-  }
+    }
+
+    return allPlugins;
+  }, [pluginsMetaData]);
 
   return (
     <Collapsible defaultOpen className="group/collapsible">

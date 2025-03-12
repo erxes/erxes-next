@@ -3,7 +3,7 @@ import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
 import { IconInbox } from '@tabler/icons-react';
 
 const Settings = () => {
-  return <></>;
+  return <>hi</>;
 };
 
 export default Settings;

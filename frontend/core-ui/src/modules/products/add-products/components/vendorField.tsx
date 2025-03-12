@@ -39,72 +39,71 @@ export const VendorField = ({
     );
 
   return (
-      <Popover open={open} onOpenChange={setOpen} modal>
-        <Popover.Trigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-controls="vendor-command-menu"
-            className={cn("truncate h-8 hover:cursor-pointer rounded-md w-full justify-between", className)}
-          >
-            <span
-              className={cn(
-                'truncate',
-                !currentValue && 'text-foreground font-medium text-sm',
-              )}
-            >
-              {currentValue
-                ? companies.find((vendor) => vendor._id === currentValue)
-                    ?.primaryName
-                : 'Select vendor'}
-            </span>
-            <IconChevronDown
-              size={16}
-              strokeWidth={2}
-              className="shrink-0 text-foreground"
-              aria-hidden="true"
-            />
-          </Button>
-        </Popover.Trigger>
-        <Popover.Content
-          className="w-56 min-w-[var(--radix-popper-anchor-width)] border p-0"
-          align="start"
-          sideOffset={4}
+    <Popover open={open} onOpenChange={setOpen} modal>
+      <Popover.Trigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          aria-controls="vendor-command-menu"
+          className={cn(
+            'truncate h-8 hover:cursor-pointer rounded-md w-full justify-between',
+            className,
+          )}
         >
-          <Command id="vendor-command-menu">
-            <Command.Input
-              variant="secondary"
-              wrapperClassName="flex-auto"
-              placeholder="Search vendor..."
-              className="h-9"
-            />
-            <Command.List>
-              <Command.Group>
-                {companies.map((vendor) => (
-                  <Command.Item
-                    key={vendor._id}
-                    className=" h-7 relative flex items-center justify-between"
-                    value={vendor._id}
-                    onSelect={handleSelectVendor}
-                    title={vendor.primaryName}
-                  >
-                    <span className="text-xs text-foreground truncate">
-                      {vendor.primaryName}
-                    </span>
-                    {currentValue === vendor._id && (
-                      <IconCheck
-                        size={16}
-                        strokeWidth={2}
-                        className="ml-auto"
-                      />
-                    )}
-                  </Command.Item>
-                ))}
-              </Command.Group>
-            </Command.List>
-          </Command>
-        </Popover.Content>
-      </Popover>
+          <span
+            className={cn(
+              'truncate',
+              !currentValue && 'text-foreground font-medium text-sm',
+            )}
+          >
+            {currentValue
+              ? companies.find((vendor) => vendor._id === currentValue)
+                  ?.primaryName
+              : 'Select vendor'}
+          </span>
+          <IconChevronDown
+            size={16}
+            strokeWidth={2}
+            className="shrink-0 text-foreground"
+            aria-hidden="true"
+          />
+        </Button>
+      </Popover.Trigger>
+      <Popover.Content
+        className="w-56 min-w-[var(--radix-popper-anchor-width)] border p-0"
+        align="start"
+        sideOffset={4}
+      >
+        <Command id="vendor-command-menu">
+          <Command.Input
+            variant="secondary"
+            wrapperClassName="flex-auto"
+            placeholder="Search vendor..."
+            className="h-9"
+          />
+          <Command.List>
+            <Command.Group>
+              {companies.map((vendor) => (
+                <Command.Item
+                  key={vendor._id}
+                  className=" h-7 relative flex items-center justify-between"
+                  value={vendor._id}
+                  onSelect={handleSelectVendor}
+                  title={vendor.primaryName}
+                >
+                  <span className="text-xs text-foreground truncate">
+                    {vendor.primaryName}
+                  </span>
+                  {currentValue === vendor._id && (
+                    <IconCheck size={16} strokeWidth={2} className="ml-auto" />
+                  )}
+                </Command.Item>
+              ))}
+            </Command.Group>
+          </Command.List>
+        </Command>
+      </Popover.Content>
+    </Popover>
   );
 };
