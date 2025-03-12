@@ -54,7 +54,7 @@ const AssignConversation = () => {
       toast({
         title: 'Error',
         description: error.message,
-        variant: 'error',
+        variant: 'destructive',
       });
     },
   });

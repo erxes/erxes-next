@@ -26,7 +26,7 @@ export const FormDetailMessages = () => {
           <React.Fragment key={message._id}>
             {message.formWidgetData ? (
               <FormDisplay {...message} />
-            ) : message.internalNote ? (
+            ) : message.internal ? (
               <InternalNoteDisplay content={message.content} />
             ) : (
               <InternalNoteDisplay content={message.content} />

@@ -7,5 +7,5 @@ export const InternalNoteDisplay = ({ content }: { content: string }) => {
     return <div dangerouslySetInnerHTML={{ __html: content }} />;
   }
 
-  return <BlockEditorReadOnly content={blocks} />;
+  return <BlockEditorReadOnly content={content} />;
 };

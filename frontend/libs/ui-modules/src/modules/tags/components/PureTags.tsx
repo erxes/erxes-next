@@ -109,19 +109,25 @@ const TagsEmpty = ({ loading }: { loading: boolean }) => {
   );
 };
 
-export const TagsItem = React.forwardRef<
-  React.ElementRef<typeof SelectTree.Item>,
-  { tag: ITag; onSelect: (tag: ITag) => void } & React.ComponentPropsWithoutRef<
-    typeof SelectTree.Item
-  >
->(({ tag, onSelect, ...props }, ref) => {
+export const TagsItem = ({
+  tag,
+  onSelect,
+  selected,
+  hasChildren,
+}: {
+  tag: ITag;
+  onSelect: (tag: ITag) => void;
+  selected: boolean;
+  hasChildren: boolean;
+}) => {
   return (
     <SelectTree.Item
-      ref={ref}
       value={tag._id}
-      {...tag}
-      {...props}
       onSelect={() => onSelect(tag)}
+      name={tag.name}
+      order={tag.order}
+      selected={selected}
+      hasChildren={hasChildren}
     >
       <TextOverflowTooltip
         text={tag.name}
@@ -129,4 +135,4 @@ export const TagsItem = React.forwardRef<
       />
     </SelectTree.Item>
   );
-});
+};

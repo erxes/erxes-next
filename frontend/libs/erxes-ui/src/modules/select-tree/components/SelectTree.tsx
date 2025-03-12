@@ -108,7 +108,6 @@ const SelectTreeItem = React.forwardRef<
   React.ElementRef<typeof Command.Item>,
   React.ComponentPropsWithoutRef<typeof Command.Item> & {
     order: string;
-    children: React.ReactNode;
     hasChildren: boolean;
     name: string;
     selected: boolean;

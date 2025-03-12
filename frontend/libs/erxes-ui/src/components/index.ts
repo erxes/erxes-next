@@ -10,7 +10,6 @@ export * from './collapsible';
 export * from './command';
 export * from './combobox';
 export * from './command-bar';
-export * from './custom-dialog';
 export * from './date-picker';
 export * from './date-range-picker';
 export * from './dialog';
