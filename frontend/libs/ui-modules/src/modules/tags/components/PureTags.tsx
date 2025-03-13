@@ -87,14 +87,7 @@ const TagsEmpty = ({ loading }: { loading: boolean }) => {
   if (loading)
     return (
       <Command.Empty className="py-3 px-1">
-        <div className="flex flex-col gap-2 items-start">
-          <Skeleton className="w-2/3 h-4" />
-          <Skeleton className="w-full h-4" />
-          <Skeleton className="w-32 h-4" />
-          <Skeleton className="w-2/3 h-4" />
-          <Skeleton className="w-full h-4" />
-          <Skeleton className="w-32 h-4" />
-        </div>
+        <Command.Skeleton />
       </Command.Empty>
     );
 

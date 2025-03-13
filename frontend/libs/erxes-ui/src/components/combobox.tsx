@@ -16,7 +16,7 @@ export const Combobox = React.forwardRef<
       {...props}
       type="button"
       className={cn(
-        'truncate h-8 rounded-md px-3 shadow-xs focus-visible:shadow-focus focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden',
+        'truncate h-8 rounded px-3 shadow-xs focus-visible:shadow-focus focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden',
         props.size === 'lg' && 'gap-2',
         className,
       )}

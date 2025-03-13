@@ -20,7 +20,7 @@ export function SidebarNavigation() {
     if (pluginsMetaData) {
       Object.entries(pluginsMetaData).forEach(([key, data]) => {
         allPlugins.push({
-          path: `/${key}`,
+          path: `${key}`,
           name: data.name,
           icon: data.icon,
         });

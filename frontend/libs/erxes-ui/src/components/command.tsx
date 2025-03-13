@@ -9,6 +9,7 @@ import { Command as CommandPrimitive } from 'cmdk';
 
 import { Dialog } from './dialog';
 import { cn } from '../lib/utils';
+import { Skeleton } from './skeleton';
 
 const CommandRoot = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -188,6 +189,19 @@ const CommandShortcut = ({
 };
 CommandShortcut.displayName = 'CommandShortcut';
 
+const CommandSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Skeleton className="w-2/3 h-4" />
+      <Skeleton className="w-full h-4" />
+      <Skeleton className="w-32 h-4" />
+      <Skeleton className="w-2/3 h-4" />
+      <Skeleton className="w-full h-4" />
+      <Skeleton className="w-32 h-4" />
+    </div>
+  );
+};
+
 const Command = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
   Input: CommandInput,
@@ -197,6 +211,7 @@ const Command = Object.assign(CommandRoot, {
   Item: CommandItem,
   Shortcut: CommandShortcut,
   Separator: CommandSeparator,
+  Skeleton: CommandSkeleton,
 });
 
 export { Command };

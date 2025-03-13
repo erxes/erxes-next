@@ -8,6 +8,7 @@ import { Button } from './button';
 import { Calendar, CalendarProps } from './calendar';
 import { Popover } from './popover';
 import { cn } from '../lib/utils';
+import { Combobox } from './combobox';
 
 type DatePickerProps = {
   value: Date | Date[] | undefined;
@@ -31,6 +32,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
     },
     ref,
   ) => {
+    const [isOpen, setIsOpen] = React.useState(false);
     const renderButtonContent = () => {
       if (value) {
         if (mode === 'single') {
@@ -54,25 +56,24 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
         return;
       }
 
+      setIsOpen(false);
       onChange && onChange(selectedDate);
     };
 
     return (
-      <Popover>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild={true}>
-          <Button
+          <Combobox
             variant={'outline'}
+            disabled={Boolean(disabled)}
             className={cn(
-              'justify-start text-left font-normal h-9 w-full rounded-md border border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
               !value && 'text-muted-foreground',
-              Boolean(disabled) &&
-                'disabled:cursor-not-allowed disabled:opacity-50',
+              Boolean(disabled) && 'cursor-not-allowed opacity-50',
               className,
             )}
-            disabled={Boolean(disabled)}
           >
             {renderButtonContent()}
-          </Button>
+          </Combobox>
         </Popover.Trigger>
         <Popover.Content className="w-auto p-0">
           <Calendar
