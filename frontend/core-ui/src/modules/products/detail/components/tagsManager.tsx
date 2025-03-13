@@ -5,10 +5,9 @@ import { useProductTags } from "@/products/hooks/useProductTags"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Button } from "erxes-ui/components"
 import { useProductsEdit } from "../../hooks/useProductsEdit"
 import { TagsManagerProps } from "../types/tagsTypes"
-import { CreateTagForm } from "@/tags/components/CreateTagForm"
-import { ITag } from "@/tags/types/tagTypes"
 import { useRemoveTag } from "~/modules/tags/hooks/useRemoveTag"
 import { useToast } from "erxes-ui/hooks"
+import { CreateTagForm, ITag } from "ui-modules"
 
 export function TagsManager({ 
   productId, 

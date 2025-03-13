@@ -1,11 +1,12 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { useQueryState } from 'nuqs';
+import { useSearchParams } from 'react-router-dom';
 import { productCategoryDetail } from '../graphql/queries/productDetailQueries';
 import { useSetAtom } from 'jotai';
 import { renderingProductDetailAtom } from '../../states/productDetailStates';
 
 export const useProductDetail = (operationVariables?: OperationVariables) => {
-  const [_id] = useQueryState('product_id');
+  const [searchParams] = useSearchParams();
+  const _id = searchParams.get('product_id');
   const setRendering = useSetAtom(renderingProductDetailAtom);
   const { data, loading } = useQuery(productCategoryDetail, {
     variables: {
@@ -22,5 +23,5 @@ export const useProductDetail = (operationVariables?: OperationVariables) => {
       operationVariables?.onError?.(error);
     },
   });
-  return { productDetail: data?.productDetail ?? null, loading   };
+  return { productDetail: data?.productDetail ?? null, loading };
 };
