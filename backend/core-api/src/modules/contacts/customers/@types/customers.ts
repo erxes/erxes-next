@@ -56,5 +56,5 @@ export interface ICustomerDocument extends ICustomer, Document {
 }
 
 export interface ICustomerQueryFilterParams extends IListParams {
-  createdAt?: Date
+  createdAt?: Date;
 }

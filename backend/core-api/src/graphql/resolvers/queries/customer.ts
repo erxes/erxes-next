@@ -1,5 +1,6 @@
 import { IContext } from 'backend/core-api/src/connectionResolvers';
-import { ICustomerQueryFilterParams, paginate } from 'erxes-api-utils';
+import { paginate } from 'erxes-api-utils';
+import { ICustomerQueryFilterParams } from '../../../modules/contacts/customers/@types/customers';
 
 const generateFilter = (params: ICustomerQueryFilterParams) => {
   const { searchValue } = params;
@@ -28,11 +29,8 @@ export const customerQueries = {
   ) {
     const filter = generateFilter(params);
 
-    const list = await paginate(
-      models.Customers.find(filter),
-      params,
-    );
-    
+    const list = await paginate(models.Customers.find(filter), params);
+
     const totalCount = await models.Customers.find(filter).countDocuments();
 
     return { list, totalCount };
