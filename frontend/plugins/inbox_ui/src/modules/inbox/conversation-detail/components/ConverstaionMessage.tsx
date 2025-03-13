@@ -6,7 +6,7 @@ import { MessageContent } from './MessageContent';
 import { useConversationMessageContext } from '../hooks/useConversationMessageContext';
 import { CustomerInline, MemberInline } from 'ui-modules';
 import { useAtomValue } from 'jotai';
-import { activeConversationState } from '../../state/activeConversationState';
+import { activeConversationState } from '../../states/activeConversationState';
 
 export const ConversationMessage = () => {
   const { previousMessage, nextMessage, ...message } =

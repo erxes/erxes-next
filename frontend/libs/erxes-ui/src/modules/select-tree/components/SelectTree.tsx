@@ -108,7 +108,6 @@ const SelectTreeItem = React.forwardRef<
   React.ElementRef<typeof Command.Item>,
   React.ComponentPropsWithoutRef<typeof Command.Item> & {
     order: string;
-    children: React.ReactNode;
     hasChildren: boolean;
     name: string;
     selected: boolean;
@@ -133,14 +132,14 @@ const SelectTreeItem = React.forwardRef<
       <Command.Item
         {...props}
         className={cn(
-          'h-7 py-0 items-center flex-1 overflow-hidden justify-start',
+          'h-7 py-0 items-center flex-1 overflow-hidden justify-start gap-1',
           props.className,
           selected && 'bg-muted',
         )}
         ref={ref}
       >
         {children}
-        {selected && <IconCheck className="absolute right-2" />}
+        {selected && <IconCheck className="shrink-0" />}
       </Command.Item>
     );
   }

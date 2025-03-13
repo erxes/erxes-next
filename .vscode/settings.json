@@ -4,4 +4,5 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "nxConsole.nxWorkspacePath": ""
 }

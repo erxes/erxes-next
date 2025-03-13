@@ -87,14 +87,7 @@ const TagsEmpty = ({ loading }: { loading: boolean }) => {
   if (loading)
     return (
       <Command.Empty className="py-3 px-1">
-        <div className="flex flex-col gap-2 items-start">
-          <Skeleton className="w-2/3 h-4" />
-          <Skeleton className="w-full h-4" />
-          <Skeleton className="w-32 h-4" />
-          <Skeleton className="w-2/3 h-4" />
-          <Skeleton className="w-full h-4" />
-          <Skeleton className="w-32 h-4" />
-        </div>
+        <Command.Skeleton />
       </Command.Empty>
     );
 
@@ -109,21 +102,30 @@ const TagsEmpty = ({ loading }: { loading: boolean }) => {
   );
 };
 
-export const TagsItem = React.forwardRef<
-  React.ElementRef<typeof SelectTree.Item>,
-  { tag: ITag; onSelect: (tag: ITag) => void } & React.ComponentPropsWithoutRef<
-    typeof SelectTree.Item
-  >
->(({ tag, onSelect, ...props }, ref) => {
+export const TagsItem = ({
+  tag,
+  onSelect,
+  selected,
+  hasChildren,
+}: {
+  tag: ITag;
+  onSelect: (tag: ITag) => void;
+  selected: boolean;
+  hasChildren: boolean;
+}) => {
   return (
     <SelectTree.Item
-      ref={ref}
       value={tag._id}
-      {...tag}
-      {...props}
       onSelect={() => onSelect(tag)}
+      name={tag.name}
+      order={tag.order}
+      selected={selected}
+      hasChildren={hasChildren}
     >
-      <TextOverflowTooltip text={tag.name} />
+      <TextOverflowTooltip
+        text={tag.name}
+        className="flex-auto w-auto overflow-hidden"
+      />
     </SelectTree.Item>
   );
-});
+};

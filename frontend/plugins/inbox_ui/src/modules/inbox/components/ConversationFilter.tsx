@@ -1,12 +1,13 @@
 import { IconCheckbox, IconSortDescending, IconTag } from '@tabler/icons-react';
 import { Button, Checkbox, CommandBar, Separator } from 'erxes-ui/components';
 import { FilterDropdown } from './FilterDropdown';
-import { selectConversationsState } from '../state/selectConversationsState';
+import { selectConversationsState } from '../states/selectConversationsState';
 import { useAtom } from 'jotai';
 import { useConversationListContext } from '../hooks/useConversationListContext';
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ReplaceAssignee } from './ReplaceAssignee';
+import { AddTagToConversations } from './AddTagToConversations';
 
 export const ConversationFilter = () => {
   return (
@@ -67,10 +68,7 @@ export const ConversationsCommandBar = () => {
         </CommandBar.Value>
         <Separator.Inline />
         <ReplaceAssignee />
-        <Button variant="secondary">
-          <IconTag />
-          Add Tags
-        </Button>
+        <AddTagToConversations />
         <Button variant="secondary">
           <IconCheckbox />
           Resolve All

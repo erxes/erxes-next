@@ -1,4 +1,4 @@
-import { Combobox, Kbd, Tooltip } from 'erxes-ui';
+import { Combobox, Tooltip } from 'erxes-ui';
 import { TagBadge } from './TagBadge';
 import { useSelectTagsContext } from '../hooks/useSelectTagsContext';
 import React from 'react';
@@ -12,14 +12,21 @@ export const SingleTagWithTooltip = React.forwardRef<
   const firstTagId = selected?.[0];
   const tagCount = selectedTags?.length || selected?.length || 0;
 
-  if (!tagCount) return null;
-
   const tagsExceptFirst = selectedTags?.slice(1);
   const tagIdsExceptFirst = selected?.slice(1);
 
   return (
     <Combobox {...props} ref={ref}>
-      <TagBadge tag={firstTag} tagId={firstTagId} variant="ghost" />
+      {firstTag || firstTagId ? (
+        <TagBadge
+          tag={firstTag}
+          tagId={firstTagId}
+          variant="ghost"
+          className="flex-auto px-0 h-auto overflow-hidden"
+        />
+      ) : (
+        'Select Tags'
+      )}
       {tagCount > 1 && (
         <Tooltip.Provider delayDuration={300}>
           <Tooltip>

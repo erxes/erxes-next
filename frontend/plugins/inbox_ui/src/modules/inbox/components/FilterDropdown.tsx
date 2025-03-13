@@ -1,4 +1,4 @@
-import { IconAdjustments, IconChevronLeft } from '@tabler/icons-react';
+import { IconAdjustments } from '@tabler/icons-react';
 import { Button, DropdownMenu } from 'erxes-ui';
 import { useQueryState } from '../hooks/useQueryState';
 import { BOOLEAN_FILTERS } from '../constants/booleanFilters';

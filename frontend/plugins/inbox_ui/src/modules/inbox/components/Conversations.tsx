@@ -20,11 +20,11 @@ import { ConversationsHeader } from './ConversationsHeader';
 import { ConversationFilter } from './ConversationFilter';
 import { useMultiQueryState, useQueryState } from '../hooks/useQueryState';
 import { FilterTags } from './FilterTags';
-import { activeConversationState } from '../state/activeConversationState';
+import { activeConversationState } from '../states/activeConversationState';
 import {
   selectConversationsState,
   setSelectConversationsState,
-} from '../state/selectConversationsState';
+} from '../states/selectConversationsState';
 import { ConversationListContext } from '../context/ConversationListContext';
 import { useEffect, useState } from 'react';
 

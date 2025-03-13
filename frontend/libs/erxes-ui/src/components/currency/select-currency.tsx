@@ -1,5 +1,5 @@
 import { IconChevronDown } from '@tabler/icons-react';
-import { Button, Command, Popover } from 'erxes-ui';
+import { Button, Combobox, Command, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import { Currency, CurrencyCode } from 'erxes-ui/types';
 
@@ -25,7 +25,7 @@ export const SelectCurrency = ({
   return (
     <Popover modal>
       <Popover.Trigger asChild>
-        <Button
+        <Combobox
           variant="outline"
           className={cn(
             'h-full rounded-none border-r-0 relative focus-visible:z-10',
@@ -38,8 +38,7 @@ export const SelectCurrency = ({
           ) : (
             value
           )}
-          <IconChevronDown className={`w-4 h-4 ${!displayIcon && 'ml-2'}`} />
-        </Button>
+        </Combobox>
       </Popover.Trigger>
       <Popover.Content side="bottom" align="start" className="p-0">
         <Command>

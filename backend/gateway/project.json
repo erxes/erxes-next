@@ -6,34 +6,18 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "dependsOn": ["erxes-api-utils:build", "erxes-api-modules:build"],
+      "cache": true,
       "options": {
-        "platform": "node",
         "outputPath": "dist/backend/gateway",
-        "format": ["cjs"],
-        "bundle": false,
         "main": "backend/gateway/src/main.ts",
         "tsConfig": "backend/gateway/tsconfig.app.json",
-        "assets": ["backend/gateway/src/*"],
-        "generatePackageJson": true,
-        "esbuildOptions": {
-          "sourcemap": true,
-          "outExtension": {
-            ".js": ".js"
-          }
-        }
+        "assets": ["backend/gateway/src/**"],
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},
-        "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
-        }
+        "production": {}
       }
     },
     "serve": {

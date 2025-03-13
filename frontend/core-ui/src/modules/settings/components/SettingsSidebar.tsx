@@ -7,7 +7,6 @@ import {
   IconColorSwatch,
   IconFile,
   IconMail,
-  IconProps,
   IconUserCircle,
   IconX,
 } from '@tabler/icons-react';
@@ -15,7 +14,6 @@ import { motion } from 'framer-motion';
 
 import { Sidebar } from 'erxes-ui/components';
 
-import { App } from '@/app/components/App';
 import { AppPath } from '@/types/paths/AppPath';
 import {
   SettingsPath,
@@ -27,7 +25,7 @@ import { useAtomValue } from 'jotai';
 
 type TSettingPath = {
   name: string;
-  icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
+  icon: Icon;
   path: string;
 };
 
@@ -128,7 +126,9 @@ export function SettingsSidebar() {
                 return (
                   <Sidebar.MenuItem key={item.path}>
                     <Sidebar.MenuButton asChild>
-                      <Link to={AppPath.Settings + item.path}>
+                      <Link
+                        to={AppPath.Settings + item.path.replace('_ui', '')}
+                      >
                         {Icon && <Icon />}
                         <span>{t('nav.' + item.name)}</span>
                       </Link>

@@ -8,18 +8,24 @@ import { IMaskInput } from 'react-imask';
 export const CurrencyInput = ({
   value,
   onChange,
+  currencyCode,
+  className,
 }: {
   value: number;
   onChange: (value: number) => void;
+  currencyCode?: CurrencyCode;
+  className?: string;
 }) => {
   return (
-    <div className="flex border border-border h-cell items-stretch">
+    <div
+      className={cn('flex shadow-xs h-cell items-stretch rounded', className)}
+    >
       <SelectCurrency
         currencies={CURRENCY_CODES}
-        value={CurrencyCode.USD}
-        className="ring-0 shadow-none border-transparent h-full"
+        value={currencyCode || CurrencyCode.USD}
+        className="ring-0 shadow-none border-transparent h-full rounded-l flex-none"
       />
-      <Separator orientation="vertical" />
+      <Separator orientation="vertical" className="bg-muted" />
       <IMaskInput
         mask={Number}
         thousandsSeparator={','}
@@ -29,7 +35,7 @@ export const CurrencyInput = ({
         autoComplete="off"
         className={cn(
           inputVariants({ type: 'default' }),
-          'rounded-none relative h-full border-transparent',
+          'rounded-none relative h-full border-transparent rounded-r shadow-none',
         )}
         unmask
       />

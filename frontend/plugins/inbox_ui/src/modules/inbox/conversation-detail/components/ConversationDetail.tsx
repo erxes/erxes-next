@@ -3,7 +3,7 @@ import { ConversationHeader } from '~/modules/inbox/conversation-detail/componen
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';
 import { lazy, Suspense } from 'react';
 import { useQueryState } from '../../hooks/useQueryState';
-import { activeConversationState } from '../../state/activeConversationState';
+import { activeConversationState } from '../../states/activeConversationState';
 import { useAtomValue } from 'jotai';
 import { UnderConstruction } from './UnderConstruction';
 import { ConversationMessages } from './ConversationMessages';

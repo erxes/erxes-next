@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router';
 
 const Inbox = lazy(() =>
   import('~/pages/InboxIndexPage').then((module) => ({
@@ -10,11 +10,9 @@ const Inbox = lazy(() =>
 const PluginInbox = () => {
   return (
     <Suspense fallback={<></>}>
-      <BrowserRouter basename="/inbox">
-        <Routes>
-          <Route path="/" element={<Inbox />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Inbox />} />
+      </Routes>
     </Suspense>
   );
 };

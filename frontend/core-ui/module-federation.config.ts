@@ -9,6 +9,7 @@ import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 const coreLibraries = new Set([
   'react',
   'react-dom',
+  'react-router',
   'react-router-dom',
   'erxes-ui',
   '@apollo/client',
@@ -28,7 +29,7 @@ const config: ModuleFederationConfig = {
     return false;
   },
 
-  remotes: ['inbox_ui', 'sample_ui'],
+  remotes: ['inbox_ui', 'sample_ui', 'accounting_ui'],
 };
 
 /**

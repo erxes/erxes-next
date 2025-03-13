@@ -3,7 +3,7 @@ import { Button, Popover } from 'erxes-ui';
 import { AssignMember } from 'ui-modules';
 import { useAssignConversations } from '../conversation-detail/hooks/useAssignConversations';
 import { useAtom } from 'jotai';
-import { selectConversationsState } from '../state/selectConversationsState';
+import { selectConversationsState } from '../states/selectConversationsState';
 
 export const ReplaceAssignee = () => {
   const [selectedConversations, setSelectedConversations] = useAtom(

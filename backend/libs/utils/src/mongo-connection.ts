@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-const { MONGO_URL } = process.env;
+const { MONGO_URL = 'mongodb://localhost:27017/erxes' } = process.env;
 
 export const connectionOptions: mongoose.ConnectOptions = {
   family: 4,
@@ -25,6 +25,7 @@ export async function connect(): Promise<mongoose.Connection> {
   if (!MONGO_URL) {
     throw new Error('MONGO_URL is not defined');
   }
+
   await mongoose.connect(MONGO_URL, connectionOptions);
   return mongoose.connection;
 }
