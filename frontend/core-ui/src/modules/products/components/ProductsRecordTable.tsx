@@ -3,6 +3,7 @@ import { RecordTable } from 'erxes-ui/modules/record-table';
 import { columns } from '@/products/components/columns';
 import { ProductCommandBar } from '@/products/components/ProductCommandBar';
 import { useProducts } from '@/products/hooks/useProducts';
+import { productMoreColumn } from './ProductMoreColumn';
 export const ProductsRecordTable = () => {
   const { products, handleFetchMore, loading, totalCount } = useProducts();
   return (
@@ -12,6 +13,7 @@ export const ProductsRecordTable = () => {
       handleReachedBottom={handleFetchMore}
       className="mt-1.5"
       stickyColumns={['name']}
+      moreColumn={productMoreColumn}
     >
       <RecordTable>
         <RecordTable.Header />
