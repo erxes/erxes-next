@@ -1,6 +1,6 @@
 import { Tabs } from 'erxes-ui/components/tabs';
 import { ProductDetailSheet } from './ProductDetailSheet';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useSearchParams } from 'react-router-dom';
 import { Resizable } from 'erxes-ui/components';
 
 export const ProductDetailLayout = ({
@@ -38,13 +38,13 @@ export const ProductDetailLayout = ({
 };
 
 const ProductDetailTabs = ({ children }: { children: React.ReactNode }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
+  const [searchParams, setSearchParams] = useSearchParams();
   const selectedTab = searchParams.get('tab') || 'overview';
+  
   const handleTabChange = (tab: string) => {
-    searchParams.set('tab', tab);
-    navigate(`?${searchParams.toString()}`, { replace: true });
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('tab', tab);
+    setSearchParams(newSearchParams);
   };
 
   return (

@@ -7,35 +7,38 @@ import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { ContactHotKeyScope } from '@/contacts/types/ContactHotKeyScope';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) => {
   const [activeTab] = useAtom(renderingProductDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const open = new URLSearchParams(location.search).get('product_id');
+  const productId = searchParams.get('product_id');
 
   useEffect(() => {
-    if (open) {
+    if (productId) {
       setHotkeyScope(ContactHotKeyScope.CustomerEditSheet);
     }
-  }, [open, setHotkeyScope]);
+  }, [productId, setHotkeyScope]);
 
-  const setOpen = (productId: string | null) => {
-    navigate({
-      pathname: location.pathname,
-      search: productId ? `?product_id=${productId}` : '',
-    });
-    if (!productId) {
+  const setOpen = (newProductId: string | null) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (newProductId) {
+      newSearchParams.set('product_id', newProductId);
+    } else {
+      newSearchParams.delete('product_id');
+    }
+    setSearchParams(newSearchParams);
+    
+    if (!newProductId) {
       setHotkeyScope(PageHotkeyScope.ProductsPage);
     }
   };
 
   return (
     <Sheet
-      open={!!open}
+      open={!!productId}
       onOpenChange={(isOpen) => {
         if (!isOpen) {
           setOpen(null);
