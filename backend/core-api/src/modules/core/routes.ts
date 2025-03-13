@@ -9,7 +9,6 @@ router.get('/v3/initial-setup', async (req: Request, res: Response) => {
   const models = await generateModels(subdomain);
 
   console.log(models);
-  console.log(subdomain);
   res.send('initial setup');
 });
 
