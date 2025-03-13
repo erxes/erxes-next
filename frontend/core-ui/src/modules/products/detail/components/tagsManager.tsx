@@ -7,7 +7,7 @@ import { useProductsEdit } from "../../hooks/useProductsEdit"
 import { TagsManagerProps } from "../types/tagsTypes"
 import { useRemoveTag } from "~/modules/tags/hooks/useRemoveTag"
 import { useToast } from "erxes-ui/hooks"
-import { ITag } from "frontend/libs/ui-modules/src/modules/tags/types/Tag"
+import { CreateTagForm, ITag } from "ui-modules"
 
 export function TagsManager({ 
   productId, 
@@ -130,6 +130,10 @@ export function TagsManager({
       
       {showTagCreator && (
         <div className="mb-4">
+          <CreateTagForm
+            tagType="core:product"
+            onCompleted={handleTagCreated}
+          />
         </div>
       )}
       
