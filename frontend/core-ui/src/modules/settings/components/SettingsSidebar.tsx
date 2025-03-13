@@ -126,7 +126,9 @@ export function SettingsSidebar() {
                 return (
                   <Sidebar.MenuItem key={item.path}>
                     <Sidebar.MenuButton asChild>
-                      <Link to={AppPath.Settings + item.path}>
+                      <Link
+                        to={AppPath.Settings + item.path.replace('_ui', '')}
+                      >
                         {Icon && <Icon />}
                         <span>{t('nav.' + item.name)}</span>
                       </Link>
