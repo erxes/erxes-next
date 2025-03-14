@@ -28,49 +28,9 @@ export const TransactionForm = () => {
   const { createTransaction, loading } = useTransactionsCreate();
   console.log(form.formState.errors);
   const handleSubmit = (data: z.infer<typeof transactionSchema>) => {
-    console.log(data);
     createTransaction({
       variables: {
-        trDocs: [
-          {
-            _id: 'temp0.5636135791451535',
-            number: 'auto/new',
-            date: '2025-03-12T17:08:10.930Z',
-            description: 'TEST',
-            journal: 'bank',
-            branchId: 'MkFeQext2BwsrvCZA',
-            departmentId: 'nmoDHQS2hnBmcpfDD',
-            customerType: 'company',
-            customerId: '9DDJXW59AYglt9mCXOqv-',
-            assignedUserIds: ['a9E79lAG2AgtG7pdN38ov'],
-            details: [
-              {
-                accountId: '3PoSSHOWHiD5UHlGh8FJ8',
-                side: 'dt',
-                amount: 10000,
-              },
-            ],
-          },
-          {
-            _id: 'temp0.09476074716209149',
-            number: 'auto/new',
-            date: '2025-03-12T17:08:10.930Z',
-            description: 'tt',
-            journal: 'cash',
-            branchId: 'MkFeQext2BwsrvCZA',
-            departmentId: 'TpvMvQW8J9scAJNJ4',
-            customerType: 'company',
-            customerId: 'ifNQpBDnA7kR8yYssDFHe',
-            assignedUserIds: ['TtsdAJ2Htx-HKqLug-Z5b'],
-            details: [
-              {
-                accountId: 'Vt-oZ_78Ku6ojkCpKfvAt',
-                side: 'dt',
-                amount: 20000,
-              },
-            ],
-          },
-        ],
+        ...data,
       },
     });
   };
@@ -209,7 +169,6 @@ const CashTransactions = ({
           </Form.Item>
         )}
       />
-
       <Form.Field
         control={form.control}
         name="cash.customerType"

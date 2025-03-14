@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
-import { Command, SelectTree, Skeleton, TextOverflowTooltip } from 'erxes-ui';
+import { Combobox, Command, SelectTree, TextOverflowTooltip } from 'erxes-ui';
 import { IconLoader } from '@tabler/icons-react';
 import { useInView } from 'react-intersection-observer';
 import { ITag, SelectTagFetchMoreProps } from '../types/Tag';
@@ -49,10 +49,10 @@ export const PureTags = React.forwardRef<
           )}
           {renderContent?.(tags, search)}
         </SelectTree.Provider>
-        <TagsEmpty loading={loading} />
-        <TagsFetchMore
+        <Combobox.Empty loading={loading} />
+        <Combobox.FetchMore
           fetchMore={handleFetchMore}
-          tagsLength={tags?.length}
+          currentLength={tags?.length}
           totalCount={totalCount}
         />
       </Command.List>
@@ -61,46 +61,6 @@ export const PureTags = React.forwardRef<
 });
 
 PureTags.displayName = 'PureTags';
-
-function TagsFetchMore({
-  fetchMore,
-  tagsLength,
-  totalCount,
-}: SelectTagFetchMoreProps) {
-  const { ref: bottomRef } = useInView({
-    onChange: (inView) => inView && fetchMore(),
-  });
-
-  if (!tagsLength || tagsLength >= totalCount) {
-    return null;
-  }
-
-  return (
-    <Command.Item value="-" disabled ref={bottomRef}>
-      <IconLoader className="w-4 h-4 animate-spin text-muted-foreground mr-1" />
-      Loading more...
-    </Command.Item>
-  );
-}
-
-const TagsEmpty = ({ loading }: { loading: boolean }) => {
-  if (loading)
-    return (
-      <Command.Empty className="py-3 px-1">
-        <Command.Skeleton />
-      </Command.Empty>
-    );
-
-  return (
-    <Command.Empty>
-      <div>
-        <div className="w-full justify-center items-center">
-          <p className="text-muted-foreground p-2 ">No results found.</p>
-        </div>
-      </div>
-    </Command.Empty>
-  );
-};
 
 export const TagsItem = ({
   tag,
@@ -122,10 +82,7 @@ export const TagsItem = ({
       selected={selected}
       hasChildren={hasChildren}
     >
-      <TextOverflowTooltip
-        text={tag.name}
-        className="flex-auto w-auto overflow-hidden"
-      />
+      <TextOverflowTooltip value={tag.name} className="flex-auto w-auto " />
     </SelectTree.Item>
   );
 };

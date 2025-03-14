@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 
-import { ApolloError } from '@apollo/client';
-import { IconLoader, IconCheck } from '@tabler/icons-react';
-
 import {
   Avatar,
-  Button,
   ButtonProps,
+  Combobox,
   Command,
   Popover,
   Skeleton,
+  TextOverflowTooltip,
 } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import { SelectTree } from 'erxes-ui/modules/select-tree/components/SelectTree';
@@ -58,11 +56,11 @@ export const SelectCategory = React.forwardRef<
         selectedCategory={selectedCategory}
         loading={loading}
       />
-      <Popover.Content className="p-0" align="start">
+      <Combobox.Content align="start">
         <Command className="outline-none">
           <Command.Input />
           <Command.List>
-            <SelectCategoryEmptyHandler error={error} loading={loading} />
+            <Combobox.Empty error={error} loading={loading} />
             {productCategories?.map((category: ProductCategoryT) => (
               <SelectCategoryItem
                 key={category._id}
@@ -78,33 +76,10 @@ export const SelectCategory = React.forwardRef<
             ))}
           </Command.List>
         </Command>
-      </Popover.Content>
+      </Combobox.Content>
     </SelectTree>
   );
 });
-
-export const SelectCategoryEmptyHandler = ({
-  error,
-  loading,
-}: {
-  error?: ApolloError;
-  loading: boolean;
-}) => {
-  if (loading)
-    return (
-      <Command.Empty>
-        <div className="flex items-center justify-center h-full">
-          <IconLoader className="w-4 h-4 animate-spin text-muted-foreground" />
-        </div>
-      </Command.Empty>
-    );
-  if (error) return <Command.Empty>{error.message}</Command.Empty>;
-  return (
-    <Command.Empty>
-      <p className="text-muted-foreground pb-2">No results found.</p>
-    </Command.Empty>
-  );
-};
 
 export const SelectCategoryItem = ({
   category,
@@ -150,13 +125,13 @@ export const SelectCategoryBadge = ({
         <Avatar.Fallback colorSeed={_id}>{firstLetter}</Avatar.Fallback>
       </Avatar>
       <div className="text-muted-foreground">{code}</div>
-      <div className="truncate flex-auto text-left">{name}</div>
+      <TextOverflowTooltip value={name} />
       {!selected ? (
         productCount > 0 && (
           <div className="text-muted-foreground ml-auto">{productCount}</div>
         )
       ) : (
-        <IconCheck className="ml-auto" />
+        <Combobox.Check checked={selected} />
       )}
     </>
   );
@@ -171,10 +146,9 @@ export const SelectCategoryTrigger = React.forwardRef<
 >(({ selectedCategory, loading, className, ...props }, ref) => {
   return (
     <Popover.Trigger asChild>
-      <Button
+      <Combobox.Trigger
         ref={ref}
-        variant="outline"
-        className={cn('shadow-none min-w-56 text-xs justify-start', className)}
+        className={cn('shadow-none min-w-56 justify-start', className)}
         {...props}
       >
         <SelectCategoryBadge category={selectedCategory} />
@@ -185,7 +159,7 @@ export const SelectCategoryTrigger = React.forwardRef<
             <Skeleton className="w-16 h-4" />
           </>
         )}
-      </Button>
+      </Combobox.Trigger>
     </Popover.Trigger>
   );
 });

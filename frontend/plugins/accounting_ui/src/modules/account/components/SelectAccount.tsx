@@ -1,4 +1,10 @@
-import { Combobox, Command, Popover, Skeleton } from 'erxes-ui';
+import {
+  Combobox,
+  Command,
+  Popover,
+  Skeleton,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { useState } from 'react';
 import { useAccounts } from '../hooks/useAccounts';
 import { IAccount } from '../type/Account';
@@ -21,33 +27,37 @@ export const SelectAccount = ({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <Popover.Trigger asChild>
-        <Combobox variant="outline" className="flex w-full">
-          {!value && 'Select Account'}
-          {loading ? (
-            <Skeleton className="w-full h-8" />
-          ) : (
-            accounts?.find((account: IAccount) => account._id === value)?.name
-          )}
-        </Combobox>
-      </Popover.Trigger>
-      <Popover.Content className="p-0">
+      <Combobox.Trigger variant="outline" className="flex w-full">
+        {!value && 'Select Account'}
+        {loading ? (
+          <Skeleton className="w-full h-8" />
+        ) : (
+          <Combobox.Value
+            placeholder="Select account"
+            value={
+              accounts?.find((account: IAccount) => account._id === value)?.name
+            }
+          />
+        )}
+      </Combobox.Trigger>
+      <Combobox.Content>
         <Command>
           <Command.Input placeholder="Search account" />
           <Command.List>
-            <Command.Empty>{loading && <Command.Skeleton />}</Command.Empty>
+            <Combobox.Empty loading={loading} error={error} />
             {accounts?.map((account: IAccount) => (
               <Command.Item
                 key={account._id}
                 value={account._id}
                 onSelect={() => onChange(account._id)}
               >
-                {account.name}
+                <TextOverflowTooltip value={account.name} />
+                <Combobox.Check checked={account._id === value} />
               </Command.Item>
             ))}
           </Command.List>
         </Command>
-      </Popover.Content>
+      </Combobox.Content>
     </Popover>
   );
 };

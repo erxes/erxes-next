@@ -8,10 +8,8 @@ import {
 } from 'erxes-ui';
 import { useAssignedMember, useUsers } from '../hooks/useUsers';
 import { useState } from 'react';
-import { IconCheck, IconLoader } from '@tabler/icons-react';
 import { useDebounce } from 'use-debounce';
-import { useInView } from 'react-intersection-observer';
-import { AssignMemberFetchMoreProps, IMember } from '../types/TeamMembers';
+import { IMember } from '../types/TeamMembers';
 import React from 'react';
 import { MemberInline } from './MemberInline';
 
@@ -21,7 +19,7 @@ interface AssignMemberProps {
 }
 
 export const AssignMember = React.forwardRef<
-  React.ElementRef<typeof Combobox>,
+  React.ElementRef<typeof Combobox.Trigger>,
   ButtonProps & AssignMemberProps
 >(({ value, onValueChange, children, ...props }, ref) => {
   const [open, setOpen] = useState(false);
@@ -49,7 +47,7 @@ export const AssignMember = React.forwardRef<
         />
       )}
 
-      <Popover.Content className="p-0">
+      <Combobox.Content>
         <AssignMemberList
           renderItem={(user) => (
             <AssignMemberItem
@@ -59,7 +57,7 @@ export const AssignMember = React.forwardRef<
             />
           )}
         />
-      </Popover.Content>
+      </Combobox.Content>
     </Popover>
   );
 });
@@ -72,7 +70,7 @@ export function AssignMemberList({
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
 
-  const { users, loading, handleFetchMore, totalCount } = useUsers({
+  const { users, loading, handleFetchMore, totalCount, error } = useUsers({
     variables: {
       searchValue: debouncedSearch,
     },
@@ -86,11 +84,11 @@ export function AssignMemberList({
         wrapperClassName="flex-auto"
       />
       <Command.List className="max-h-[300px] overflow-y-auto">
-        <AssignMemberEmpty loading={loading} />
+        <Combobox.Empty loading={loading} error={error} />
         {users?.map((user: IMember) => renderItem(user))}
-        <SelectUserFetchMore
+        <Combobox.FetchMore
           fetchMore={handleFetchMore}
-          usersLength={users.length}
+          currentLength={users.length}
           totalCount={totalCount}
         />
       </Command.List>
@@ -99,7 +97,7 @@ export function AssignMemberList({
 }
 
 export const AssignMemberTrigger = React.forwardRef<
-  React.ElementRef<typeof Combobox>,
+  React.ElementRef<typeof Combobox.Trigger>,
   ButtonProps & {
     value: string;
     selectedUser?: IMember;
@@ -115,40 +113,22 @@ export const AssignMemberTrigger = React.forwardRef<
   });
 
   return (
-    <Popover.Trigger asChild>
-      <Combobox disabled={loading} {...props} ref={ref}>
-        {value ? (
-          <MemberInline
-            member={selectedUser}
-            avatarProps={{
-              size: props.size as AvatarProps['size'],
-            }}
-          />
-        ) : loading ? (
-          <Skeleton className="w-full h-8" />
-        ) : (
-          <span className="text-muted-foreground font-medium text-sm">
-            Choose
-          </span>
-        )}
-      </Combobox>
-    </Popover.Trigger>
+    <Combobox.Trigger disabled={loading} {...props} ref={ref}>
+      {value ? (
+        <MemberInline
+          member={selectedUser}
+          avatarProps={{
+            size: props.size as AvatarProps['size'],
+          }}
+        />
+      ) : loading ? (
+        <Skeleton className="w-full h-8" />
+      ) : (
+        <Combobox.Value placeholder="Select user" />
+      )}
+    </Combobox.Trigger>
   );
 });
-
-export const AssignMemberEmpty = ({ loading }: { loading: boolean }) => {
-  return (
-    <Command.Empty>
-      {loading ? (
-        <Command.Skeleton />
-      ) : (
-        <div>
-          <p className="text-muted-foreground pb-2">No results found.</p>
-        </div>
-      )}
-    </Command.Empty>
-  );
-};
 
 export const AssignMemberItem = ({
   user,
@@ -167,30 +147,7 @@ export const AssignMemberItem = ({
       onSelect={() => handleSelect(isSelected ? undefined : user)}
     >
       <MemberInline member={user} />
-      {isSelected && (
-        <IconCheck className="w-4 h-4 text-muted-foreground ml-auto" />
-      )}
+      <Combobox.Check checked={isSelected} />
     </Command.Item>
   );
 };
-
-export function SelectUserFetchMore({
-  fetchMore,
-  usersLength,
-  totalCount,
-}: AssignMemberFetchMoreProps) {
-  const { ref: bottomRef } = useInView({
-    onChange: (inView) => inView && fetchMore(),
-  });
-
-  if (!usersLength || usersLength >= totalCount) {
-    return null;
-  }
-
-  return (
-    <Command.Item value="-" disabled ref={bottomRef}>
-      <IconLoader className="w-4 h-4 animate-spin text-muted-foreground mr-1" />
-      Load more...
-    </Command.Item>
-  );
-}

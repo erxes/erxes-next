@@ -2,7 +2,7 @@ import { OperationVariables, useQuery } from '@apollo/client';
 import { GET_BRANCHES } from '../graphql/queries/getBranches';
 
 export const useBranches = (options?: OperationVariables) => {
-  const { data, loading, fetchMore } = useQuery(GET_BRANCHES, options);
+  const { data, loading, fetchMore, error } = useQuery(GET_BRANCHES, options);
 
   const handleFetchMore = () => {
     fetchMore({
@@ -15,5 +15,7 @@ export const useBranches = (options?: OperationVariables) => {
   return {
     branches: data?.branches,
     loading,
+    error,
+    handleFetchMore,
   };
 };

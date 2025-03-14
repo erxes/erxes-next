@@ -4,3 +4,8 @@ export interface IBranch {
   code: string;
   parentId: string;
 }
+
+export interface IBranchContext {
+  selectedBranch: IBranch | undefined;
+  setSelectedBranch: (branch: IBranch) => void;
+}

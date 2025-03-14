@@ -1,15 +1,7 @@
-import {
-  Button,
-  ButtonProps,
-  Command,
-  Popover,
-  Spinner,
-} from 'erxes-ui/components';
+import { ButtonProps, Combobox, Command, Popover } from 'erxes-ui';
 import { useBrands } from '@/brands/hooks/useBrands';
-import { IconCheck, IconChevronDown, IconLoader } from '@tabler/icons-react';
-import { IBrand, SelectBrandFetchMoreProps } from '@/brands/types/brand';
+import { IBrand } from '@/brands/types/brand';
 import { useDebounce } from 'use-debounce';
-import { useInView } from 'react-intersection-observer';
 import React from 'react';
 import { cn } from 'erxes-ui/lib';
 
@@ -59,8 +51,8 @@ export const SelectBrand = React.forwardRef<
         ref={ref}
         {...props}
       />
-      <Popover.Content
-        className="w-56 min-w-[var(--radix-popper-anchor-width)] border p-0"
+      <Combobox.Content
+        className="w-56 min-w-[--radix-popper-anchor-width] border"
         align="start"
       >
         <Command shouldFilter={false} id="brand-command-menu">
@@ -73,7 +65,7 @@ export const SelectBrand = React.forwardRef<
             className="h-9"
           />
           <Command.List>
-            <SelectBrandEmpty loading={loading} />
+            <Combobox.Empty loading={loading} />
             {brands?.map((brand) => (
               <SelectBrandItem
                 key={brand._id}
@@ -82,14 +74,14 @@ export const SelectBrand = React.forwardRef<
                 handleSelectBrand={handleSelectBrand}
               />
             ))}
-            <SelectBrandFetchMore
+            <Combobox.FetchMore
               fetchMore={handleFetchMore}
               totalCount={totalCount}
-              brandsLength={brands.length}
+              currentLength={brands.length}
             />
           </Command.List>
         </Command>
-      </Popover.Content>
+      </Combobox.Content>
     </Popover>
   );
 });
@@ -99,35 +91,19 @@ SelectBrand.displayName = 'SelectBrand';
 const SelectBrandTrigger = React.forwardRef<
   HTMLButtonElement,
   SelectBrandTriggerProps
->(({ currentName, currentValue, className, ...props }, ref) => {
+>(({ currentName, className, ...props }, ref) => {
   return (
-    <Popover.Trigger asChild>
-      <Button
-        variant="outline"
-        role="combobox"
-        className={cn(
-          'truncate h-8 hover:cursor-pointer rounded-md w-full justify-between',
-          className,
-        )}
-        ref={ref}
-        {...props}
-      >
-        <span
-          className={cn(
-            'truncate',
-            !currentValue && 'text-foreground font-medium text-sm',
-          )}
-        >
-          {currentValue ? currentName : 'Select brand'}
-        </span>
-        <IconChevronDown
-          size={16}
-          strokeWidth={2}
-          className="shrink-0 text-foreground"
-          aria-hidden="true"
-        />
-      </Button>
-    </Popover.Trigger>
+    <Combobox.Trigger
+      className={cn('w-full flex', className)}
+      ref={ref}
+      {...props}
+    >
+      <Combobox.Value
+        value={currentName}
+        placeholder="Select brand"
+        className="truncate"
+      />
+    </Combobox.Trigger>
   );
 });
 
@@ -153,52 +129,7 @@ const SelectBrandItem: React.FC<SelectBrandItemProps> = ({
       title={brand.name}
     >
       <span className="text-xs text-foreground truncate">{brand.name}</span>
-      {currentValue === brand._id && (
-        <IconCheck size={16} strokeWidth={2} className="ml-auto" />
-      )}
+      <Combobox.Check checked={currentValue === brand._id} />
     </Command.Item>
-  );
-};
-
-const SelectBrandFetchMore: React.FC<SelectBrandFetchMoreProps> = ({
-  fetchMore,
-  brandsLength,
-  totalCount,
-}) => {
-  const { ref: bottomRef } = useInView({
-    onChange: (inView) => inView && fetchMore(),
-  });
-
-  if (!brandsLength || brandsLength >= totalCount) {
-    return null;
-  }
-
-  return (
-    <Command.Item value="-" disabled ref={bottomRef}>
-      <IconLoader className="w-4 h-4 animate-spin text-muted-foreground mr-1" />
-      Loading more...
-    </Command.Item>
-  );
-};
-
-interface SelectBrandEmptyProps {
-  loading: boolean;
-}
-
-export const SelectBrandEmpty: React.FC<SelectBrandEmptyProps> = ({
-  loading,
-}) => {
-  return (
-    <Command.Empty>
-      {loading ? (
-        <div className="flex items-center justify-center h-full">
-          <Spinner size={'small'} />
-        </div>
-      ) : (
-        <div>
-          <p className="text-muted-foreground pb-2">No results found.</p>
-        </div>
-      )}
-    </Command.Empty>
   );
 };

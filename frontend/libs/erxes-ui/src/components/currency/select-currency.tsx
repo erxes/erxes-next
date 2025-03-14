@@ -25,7 +25,7 @@ export const SelectCurrency = ({
   return (
     <Popover modal>
       <Popover.Trigger asChild>
-        <Combobox
+        <Combobox.Trigger
           variant="outline"
           className={cn(
             'h-full rounded-none border-r-0 relative focus-visible:z-10',
@@ -38,7 +38,7 @@ export const SelectCurrency = ({
           ) : (
             value
           )}
-        </Combobox>
+        </Combobox.Trigger>
       </Popover.Trigger>
       <Popover.Content side="bottom" align="start" className="p-0">
         <Command>

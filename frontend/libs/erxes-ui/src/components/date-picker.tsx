@@ -4,7 +4,6 @@ import React from 'react';
 
 import dayjs from 'dayjs';
 
-import { Button } from './button';
 import { Calendar, CalendarProps } from './calendar';
 import { Popover } from './popover';
 import { cn } from '../lib/utils';
@@ -63,7 +62,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild={true}>
-          <Combobox
+          <Combobox.Trigger
             variant={'outline'}
             disabled={Boolean(disabled)}
             className={cn(
@@ -73,7 +72,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
             )}
           >
             {renderButtonContent()}
-          </Combobox>
+          </Combobox.Trigger>
         </Popover.Trigger>
         <Popover.Content className="w-auto p-0">
           <Calendar
