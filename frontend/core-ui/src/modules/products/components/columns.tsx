@@ -142,7 +142,8 @@ export const columns: ColumnDef<any>[] = [
                 },
               })
             }
-            className="rounded-none px-2 font-normal border-r-0 ring-0 bg-transparent"
+            hideChevron
+            className="rounded-none px-2 font-normal border-r-0 ring-0 bg-transparent w-full overflow-hidden"
             size="lg"
           />
         </RecordTableInlineCellContainer>

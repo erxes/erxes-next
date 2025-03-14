@@ -2,22 +2,19 @@ import React, { useState } from 'react';
 
 import {
   Avatar,
-  ButtonProps,
   Combobox,
   Command,
-  Popover,
   Skeleton,
   TextOverflowTooltip,
-} from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib';
-import { SelectTree } from 'erxes-ui/modules/select-tree/components/SelectTree';
+  SelectTree,
+} from 'erxes-ui';
 
 import { useProductCategories } from '@/products/product-category/hooks/useProductCategories';
 import { ProductCategoryT } from '@/products/types/productTypes';
 
 export const SelectCategory = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
+  React.ElementRef<typeof Combobox.Trigger>,
+  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
     selected?: string;
     onSelect: (categoryId: string) => void;
     open?: boolean;
@@ -120,12 +117,14 @@ export const SelectCategoryBadge = ({
   const firstLetter = name.charAt(0);
   return (
     <>
-      <Avatar>
-        <Avatar.Image src={avatar?.url} />
-        <Avatar.Fallback colorSeed={_id}>{firstLetter}</Avatar.Fallback>
-      </Avatar>
-      <div className="text-muted-foreground">{code}</div>
-      <TextOverflowTooltip value={name} />
+      <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
+        <Avatar>
+          <Avatar.Image src={avatar?.url} />
+          <Avatar.Fallback colorSeed={_id}>{firstLetter}</Avatar.Fallback>
+        </Avatar>
+        <div className="text-muted-foreground">{code}</div>
+        <TextOverflowTooltip value={name} className="flex-auto" />
+      </div>
       {!selected ? (
         productCount > 0 && (
           <div className="text-muted-foreground ml-auto">{productCount}</div>
@@ -138,28 +137,22 @@ export const SelectCategoryBadge = ({
 };
 
 export const SelectCategoryTrigger = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
+  React.ElementRef<typeof Combobox.Trigger>,
+  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
     selectedCategory: ProductCategoryT | undefined;
     loading: boolean;
   }
 >(({ selectedCategory, loading, className, ...props }, ref) => {
   return (
-    <Popover.Trigger asChild>
-      <Combobox.Trigger
-        ref={ref}
-        className={cn('shadow-none min-w-56 justify-start', className)}
-        {...props}
-      >
-        <SelectCategoryBadge category={selectedCategory} />
-        {loading && (
-          <>
-            <Skeleton className="w-4 h-4" />
-            <Skeleton className="w-8 h-4" />
-            <Skeleton className="w-16 h-4" />
-          </>
-        )}
-      </Combobox.Trigger>
-    </Popover.Trigger>
+    <Combobox.Trigger ref={ref} className={className} {...props}>
+      <SelectCategoryBadge category={selectedCategory} />
+      {loading && (
+        <>
+          <Skeleton className="w-4 h-4" />
+          <Skeleton className="w-8 h-4" />
+          <Skeleton className="w-16 h-4" />
+        </>
+      )}
+    </Combobox.Trigger>
   );
 });

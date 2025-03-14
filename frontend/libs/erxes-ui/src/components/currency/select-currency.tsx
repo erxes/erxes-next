@@ -24,23 +24,21 @@ export const SelectCurrency = ({
 
   return (
     <Popover modal>
-      <Popover.Trigger asChild>
-        <Combobox.Trigger
-          variant="outline"
-          className={cn(
-            'h-full rounded-none border-r-0 relative focus-visible:z-10',
-            className,
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {SelectedCurrencyIcon && displayIcon ? (
-            <SelectedCurrencyIcon className="w-4 h-4" />
-          ) : (
-            value
-          )}
-        </Combobox.Trigger>
-      </Popover.Trigger>
-      <Popover.Content side="bottom" align="start" className="p-0">
+      <Combobox.Trigger
+        variant="outline"
+        className={cn(
+          'h-full rounded-none border-r-0 relative focus-visible:z-10',
+          className,
+        )}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {SelectedCurrencyIcon && displayIcon ? (
+          <SelectedCurrencyIcon className="w-4 h-4" />
+        ) : (
+          value
+        )}
+      </Combobox.Trigger>
+      <Combobox.Content>
         <Command>
           <Command.Input placeholder="Search currency..." />
           <Command.List>
@@ -53,7 +51,7 @@ export const SelectCurrency = ({
             ))}
           </Command.List>
         </Command>
-      </Popover.Content>
+      </Combobox.Content>
     </Popover>
   );
 };

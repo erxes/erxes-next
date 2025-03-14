@@ -2,13 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { IconCaretDownFilled, IconCheck } from '@tabler/icons-react';
 
-import {
-  Button,
-  ButtonProps,
-  Command,
-  Popover,
-  TextOverflowTooltip,
-} from 'erxes-ui/components';
+import { Button, ButtonProps, Command, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import {
   SelectTreeContext,
@@ -144,7 +138,7 @@ const SelectTreeItem = React.forwardRef<
         )}
         ref={ref}
       >
-        <TextOverflowTooltip value={name} />
+        {children}
         {selected && <IconCheck className="shrink-0" />}
       </Command.Item>
     );
@@ -167,7 +161,7 @@ const SelectTreeItem = React.forwardRef<
         )}
         ref={ref}
       >
-        <TextOverflowTooltip value={name} />
+        {children}
         {selected && <IconCheck className="absolute right-2" />}
       </Command.Item>
     </div>

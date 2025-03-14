@@ -24,7 +24,7 @@ export const ComboboxTrigger = React.forwardRef<
         {...props}
         type="button"
         className={cn(
-          'truncate h-8 rounded px-3 shadow-xs focus-visible:shadow-focus focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden ',
+          'truncate h-8 rounded px-3 shadow-xs focus-visible:shadow-focus focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-semibold text-left',
           props.size === 'lg' && 'gap-2',
           className,
         )}
@@ -57,7 +57,7 @@ export const ComboboxValue = React.forwardRef<
       ref={ref}
       {...props}
       value={value || placeholder || ''}
-      className={className}
+      className={cn('text-left', !value && 'text-accent-foreground', className)}
     />
   );
 });

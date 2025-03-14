@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
 import { Combobox, Command, SelectTree, TextOverflowTooltip } from 'erxes-ui';
-import { IconLoader } from '@tabler/icons-react';
-import { useInView } from 'react-intersection-observer';
-import { ITag, SelectTagFetchMoreProps } from '../types/Tag';
+import { ITag } from '../types/Tag';
 
 export const PureTags = React.forwardRef<
   React.ElementRef<typeof Command.Input>,
