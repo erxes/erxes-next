@@ -8,7 +8,7 @@ export const SelectAccount = ({
   onChange,
   journal,
 }: {
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
   journal?: string;
 }) => {

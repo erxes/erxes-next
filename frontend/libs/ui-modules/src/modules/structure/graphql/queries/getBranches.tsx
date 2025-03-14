@@ -26,3 +26,14 @@ export const GET_BRANCHES = gql`
     }
   }
 `;
+
+export const GET_BRANCH_BY_ID = gql`
+  query BranchDetail($id: String!) {
+    branchDetail(_id: $id) {
+      _id
+      title
+      code
+      order
+    }
+  }
+`;

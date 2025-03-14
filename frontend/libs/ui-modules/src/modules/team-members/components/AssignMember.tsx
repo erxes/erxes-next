@@ -5,7 +5,6 @@ import {
   Command,
   Popover,
   Skeleton,
-  Spinner,
 } from 'erxes-ui';
 import { useAssignedMember, useUsers } from '../hooks/useUsers';
 import { useState } from 'react';
@@ -141,9 +140,7 @@ export const AssignMemberEmpty = ({ loading }: { loading: boolean }) => {
   return (
     <Command.Empty>
       {loading ? (
-        <div className="flex items-center justify-center h-full">
-          <Spinner size={'small'} />
-        </div>
+        <Command.Skeleton />
       ) : (
         <div>
           <p className="text-muted-foreground pb-2">No results found.</p>

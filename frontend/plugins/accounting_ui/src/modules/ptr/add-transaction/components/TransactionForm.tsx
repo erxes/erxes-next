@@ -17,7 +17,7 @@ import {
 import { AddTransaction } from '../../components/AddTransaction';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
-import { AssignMember } from 'ui-modules';
+import { AssignMember, SelectBranch } from 'ui-modules';
 import { SelectAccount } from '@/account/components/SelectAccount';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 
@@ -258,6 +258,21 @@ const CashTransactions = ({
             <Form.Label>Description</Form.Label>
             <Form.Control>
               <Input {...field} />
+            </Form.Control>
+          </Form.Item>
+        )}
+      />
+      <Form.Field
+        control={form.control}
+        name="cash.branchId"
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label>Branch</Form.Label>
+            <Form.Control>
+              <SelectBranch
+                value={field.value}
+                onValueChange={(branch) => field.onChange(branch)}
+              />
             </Form.Control>
           </Form.Item>
         )}

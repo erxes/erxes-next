@@ -20,8 +20,6 @@ const TransactionPage = lazy(() =>
 );
 
 const PluginAccounting = () => {
-  const location = useLocation();
-  console.log(location.pathname);
   return (
     <Suspense
       fallback={

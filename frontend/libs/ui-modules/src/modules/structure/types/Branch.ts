@@ -1,6 +1,6 @@
 export interface IBranch {
   _id: string;
-  name: string;
+  title: string;
   code: string;
   parentId: string;
 }
