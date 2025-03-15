@@ -10,6 +10,18 @@ export interface ICustomField {
   dateValue?: Date;
 }
 
+export interface IAttachment {
+  name: string;
+  url: string;
+  size: number;
+  type: string;
+}
+
+export interface IPdfAttachment {
+  pdf?: IAttachment;
+  pages: IAttachment[];
+}
+
 export interface IBrowserInfo {
   language?: string;
   url?: string;
@@ -20,6 +32,7 @@ export interface IBrowserInfo {
 export interface IContext {
   res: any;
   requestInfo: any;
+  user: any;
   docModifier: <T>(doc: T) => any;
   brandIdSelector: object;
   userBrandIdsSelector: object;
@@ -39,4 +52,11 @@ export interface IListParams {
   searchValue?: string;
   page?: number;
   perPage?: number;
+}
+
+export interface IRule {
+  kind: string;
+  text: string;
+  condition: string;
+  value: string;
 }

@@ -10,3 +10,21 @@ export const customFieldSchema = new Schema(
   },
   { _id: false },
 );
+
+export const ruleSchema = new Schema(
+  {
+    _id: { type: String },
+
+    // browserLanguage, currentUrl, etc ...
+    kind: { type: String, label: 'Kind' },
+
+    // Browser language, Current url etc ...
+    text: { type: String, label: 'Text' },
+
+    // is, isNot, startsWith
+    condition: { type: String, label: 'Condition' },
+
+    value: { type: String, label: 'Value', optional: true },
+  },
+  { _id: false },
+);
