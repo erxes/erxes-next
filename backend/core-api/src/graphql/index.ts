@@ -4,6 +4,12 @@ import {
   types as CustomerTypes,
 } from './schema/customer';
 
+import {
+  mutations as internalNoteMutations,
+  queries as internalNoteQueries,
+  types as internalNoteTypes,
+} from './schema/internalNote';
+
 export const types = `
   scalar JSON
   scalar Date
@@ -20,14 +26,17 @@ export const types = `
   ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
   ${CustomerTypes}
+  ${internalNoteTypes}
 `;
 
 export const queries = `
   ${CustomerQueries}
+  ${internalNoteQueries}
 `;
 
 export const mutations = `
   ${CustomerMutations}
+  ${internalNoteMutations}
 `;
 
 export default { types, queries, mutations };

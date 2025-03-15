@@ -20,6 +20,7 @@ export interface IBrowserInfo {
 export interface IContext {
   res: any;
   requestInfo: any;
+  user: any;
   docModifier: <T>(doc: T) => any;
   brandIdSelector: object;
   userBrandIdsSelector: object;

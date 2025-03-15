@@ -1,5 +1,5 @@
 import { IContext } from 'backend/core-api/src/connectionResolvers';
-import { ICustomer } from '../../../modules/contacts/customers/@types';
+import { ICustomer } from 'backend/core-api/src/modules/contacts/customers/@types/customers';
 
 export const customerMutations = {
   /**
