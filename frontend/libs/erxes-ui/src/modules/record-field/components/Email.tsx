@@ -31,7 +31,7 @@ export const Email = React.forwardRef<
       onCompleted: () => void,
     ) => void;
   }
->(({ recordId, primaryEmail, emails, onChange, ...props }, ref) => {
+>(({ recordId, primaryEmail, emails, onChange, fieldId, ...props }, ref) => {
   const [newEmail, setNewEmail] = useState<string>('');
   const [editingEmail, setEditingEmail] = useState<string | null>(null);
   const [allEmails, setAllEmails] = useState<string[]>([
@@ -123,6 +123,7 @@ export const Email = React.forwardRef<
       onEnter={editingEmail ? handleEditSubmit : handleAddNewEmail}
       onEscape={handleEscape}
       onCancel={handleEscape}
+      fieldId={fieldId}
       display={() => (
         <EmailListDisplay emails={allEmails} ref={ref} {...props} />
       )}

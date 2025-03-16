@@ -5,18 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  Form,
-  Input,
-} from 'erxes-ui/components';
+import { AlertDialog, Form, Input } from 'erxes-ui/components';
 
 type OptionProps = {
   okLabel?: string;
@@ -117,31 +106,31 @@ const ConfirmDialog = ({
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent>
+      <AlertDialog.Content>
         <Form {...form}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{message}</AlertDialogTitle>
+          <AlertDialog.Header>
+            <AlertDialog.Title>{message}</AlertDialog.Title>
             {description && (
-              <AlertDialogDescription> {description} </AlertDialogDescription>
+              <AlertDialog.Description> {description} </AlertDialog.Description>
             )}
-          </AlertDialogHeader>
+          </AlertDialog.Header>
           <form onSubmit={form.handleSubmit(proceed)}>
             {renderConfirm(form as any)}
             <br />
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={dismiss} type="button">
+            <AlertDialog.Footer>
+              <AlertDialog.Cancel onClick={dismiss} type="button">
                 {cancelLabel}
-              </AlertDialogCancel>
-              <AlertDialogAction type="submit">{okLabel}</AlertDialogAction>
-            </AlertDialogFooter>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action type="submit">{okLabel}</AlertDialog.Action>
+            </AlertDialog.Footer>
           </form>
         </Form>
-      </AlertDialogContent>
+      </AlertDialog.Content>
     </AlertDialog>
   );
 };
 
-const useConfirm = () => {
+export const useConfirm = () => {
   const confirm = useCallback(
     ({ message, options }: { message: string; options?: OptionProps }) => {
       return new Promise<void>((resolve) => {
@@ -190,5 +179,3 @@ const useConfirm = () => {
 
   return { confirm };
 };
-
-export { useConfirm };

@@ -1,10 +1,7 @@
-'use client';
-
 import * as React from 'react';
 
 import * as Popover from '@radix-ui/react-popover';
 
-import { Kbd } from './kbd';
 import { cn } from '../lib/utils';
 import { Button } from './button';
 import { IconX } from '@tabler/icons-react';
@@ -106,9 +103,7 @@ const Bar = React.forwardRef<
 });
 Bar.displayName = 'CommandBar.Bar';
 
-const CommandBar = Object.assign(Root, {
+export const CommandBar = Object.assign(Root, {
   Value,
   Bar,
 });
-
-export { CommandBar };

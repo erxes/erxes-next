@@ -9,7 +9,7 @@ const labelVariants = cva(
   'text-xs text-accent-foreground font-mono uppercase font-semibold leading-none inline-block peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
 );
 
-const Label = React.forwardRef<
+export const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
     VariantProps<typeof labelVariants>
@@ -21,5 +21,3 @@ const Label = React.forwardRef<
   />
 ));
 Label.displayName = LabelPrimitive.Root.displayName;
-
-export { Label };

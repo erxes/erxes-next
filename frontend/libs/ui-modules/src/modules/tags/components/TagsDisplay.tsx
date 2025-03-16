@@ -37,8 +37,11 @@ export const TagsDisplay = React.forwardRef<
             variant="outline"
             size="icon"
             className="absolute right-1 size-5 px-0 hidden items-center hover:bg-border justify-center group-hover:flex"
+            asChild
           >
-            <IconPlus className="text-muted-foreground" />
+            <div>
+              <IconPlus className="text-muted-foreground" />
+            </div>
           </Button>
         </>
       )}

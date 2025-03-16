@@ -1,4 +1,3 @@
-import { useCreateBlockNote } from '@blocknote/react';
 import { getMentionedUserIds, BlockEditor, useBlockEditor } from 'erxes-ui';
 import { AssignMemberInEditor } from 'ui-modules';
 import { Button, Spinner } from 'erxes-ui/components';

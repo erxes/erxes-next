@@ -41,7 +41,7 @@ type RemoveProps = {
   afterRemove: ({ status }: { status: string }) => any;
 };
 
-const useUpload = () => {
+export const useUpload = () => {
   const [status, setStatus] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -217,5 +217,3 @@ const useUpload = () => {
 
   return { isLoading, status, upload, remove };
 };
-
-export { useUpload };

@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 import { stringToHslColor } from '../utils/colors';
 
-const badgeVariants = cva(
+export const badgeVariants = cva(
   'inline-flex items-center rounded-md border px-2 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent whitespace-nowrap font-medium',
   {
     variants: {
@@ -35,7 +35,7 @@ export interface BadgeProps
   colorSeed?: string;
 }
 
-const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
+export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ className, variant, colorSeed, size, ...props }, ref) => {
     return (
       <div
@@ -55,5 +55,3 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     );
   },
 );
-
-export { Badge, badgeVariants };

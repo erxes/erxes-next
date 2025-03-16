@@ -41,6 +41,7 @@ export const Phone = React.forwardRef<
       phones,
       onChange,
       defaultCountryCode = 'MN',
+      fieldId,
       ...props
     },
     ref,
@@ -132,6 +133,7 @@ export const Phone = React.forwardRef<
       <InlineCell
         name="phone"
         recordId={recordId}
+        fieldId={fieldId}
         onEnter={editingPhone ? handleEditSubmit : handleAddNewPhone}
         onEscape={handleEscape}
         onCancel={handleEscape}
