@@ -152,9 +152,11 @@ const ComboboxEmpty = React.forwardRef<
           <Skeleton className="w-32 h-4" />
         </div>
       ) : error ? (
-        <p className="text-muted-foreground pb-2">{error.message}</p>
+        <p className="text-muted-foreground p-8 text-center">{error.message}</p>
       ) : (
-        <p className="text-muted-foreground pb-2">No results found.</p>
+        <p className="text-muted-foreground p-8 text-center">
+          No results found.
+        </p>
       )}
     </Command.Empty>
   );
