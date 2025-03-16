@@ -1,14 +1,9 @@
 import { Filter } from 'erxes-ui/modules/filter/types/filter';
 
-import {
-  FilterBarContainer,
-  FilterBarField,
-  FilterBarItem,
-  FilterBarRemove,
-} from './FilterBar';
+import { FilterBar } from './FilterBar';
 import { useFilterState } from '../hooks/useFilterQueryStates';
 
-export const FilterBarWithHook = ({
+export const FilterBarWithHookRoot = ({
   activeFilters,
 }: {
   activeFilters: Filter[];
@@ -18,11 +13,11 @@ export const FilterBarWithHook = ({
   }
 
   return (
-    <FilterBarContainer>
+    <FilterBar>
       {activeFilters.map((filter) => (
         <FilterBarItemWithHook key={filter.accessoryKey} {...filter} />
       ))}
-    </FilterBarContainer>
+    </FilterBar>
   );
 };
 
@@ -36,14 +31,18 @@ const FilterBarItemWithHook = ({
   const { value, setFilter } = useFilterState(accessoryKey);
 
   return value ? (
-    <FilterBarItem>
-      <FilterBarField>
+    <FilterBar.Item>
+      <FilterBar.Field>
         <props.icon />
         {label}
-      </FilterBarField>
+      </FilterBar.Field>
       {condition({ ...props, accessoryKey, label, condition })}
       {bar({ ...props, accessoryKey, label, condition })}
-      <FilterBarRemove onClick={() => setFilter(null)} />
-    </FilterBarItem>
+      <FilterBar.Remove onClick={() => setFilter(null)} />
+    </FilterBar.Item>
   ) : null;
 };
+
+export const FilterBarWithHook = Object.assign(FilterBarWithHookRoot, {
+  Item: FilterBarItemWithHook,
+});

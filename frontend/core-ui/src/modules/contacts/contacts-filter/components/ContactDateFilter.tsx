@@ -1,7 +1,7 @@
 import { IconCalendarPlus } from '@tabler/icons-react';
 import { useAtom, useSetAtom } from 'jotai';
 import { Button, DropdownMenu, Select } from 'erxes-ui/components';
-import { FilterBar } from 'erxes-ui/modules/filter';
+import { FilterBar } from 'erxes-ui';
 import { DateFilter } from 'erxes-ui/modules/filter/date-filter/components/date-filter';
 import { useFilterDateState } from 'erxes-ui/modules/filter/date-filter/hooks/useFilterDateState';
 import { getDateLabel } from 'erxes-ui/modules/filter/date-filter/utlis/getDateLabel';

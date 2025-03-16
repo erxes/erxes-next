@@ -29,7 +29,7 @@ interface FilterBarValueProps
   className?: string;
 }
 
-const FilterBarContainer = React.forwardRef<HTMLDivElement, FilterBarProps>(
+const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
@@ -41,9 +41,9 @@ const FilterBarContainer = React.forwardRef<HTMLDivElement, FilterBarProps>(
       </p>
       {children}
     </div>
-  )
+  ),
 );
-FilterBarContainer.displayName = 'FilterBar';
+FilterBarRoot.displayName = 'FilterBarRoot';
 
 const FilterBarItem = React.forwardRef<HTMLDivElement, FilterBarItemProps>(
   ({ className, children, ...props }, ref) => (
@@ -51,13 +51,13 @@ const FilterBarItem = React.forwardRef<HTMLDivElement, FilterBarItemProps>(
       ref={ref}
       className={cn(
         'flex items-center gap-px rounded bg-muted ring-1 ring-muted shadow [&>*:focus]:relative [&>*:focus]:z-10',
-        className
+        className,
       )}
       {...props}
     >
       {children}
     </div>
-  )
+  ),
 );
 FilterBarItem.displayName = 'FilterBarItem';
 
@@ -68,13 +68,13 @@ const FilterBarField = React.forwardRef<HTMLButtonElement, FilterBarFieldProps>(
       variant="ghost"
       className={cn(
         'rounded-l-sm rounded-r-none bg-white px-2 text-[13px]',
-        className
+        className,
       )}
       {...props}
     >
       {children}
     </Button>
-  )
+  ),
 );
 FilterBarField.displayName = 'FilterBarField';
 
@@ -86,7 +86,7 @@ const FilterBarSelectTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       'rounded-none border-none h-7 bg-background flex w-full items-center px-3 py-1 text-[13px] focus:border-ring focus:outline-none focus:ring-ring/20 focus:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground/70 font-medium',
-      className
+      className,
     )}
     {...props}
   />
@@ -132,12 +132,11 @@ const FilterBarRemove = React.forwardRef<
 ));
 FilterBarRemove.displayName = 'FilterBarRemove';
 
-export {
-  FilterBarCondition,
-  FilterBarContainer,
-  FilterBarField,
-  FilterBarItem,
-  FilterBarRemove,
-  FilterBarSelectTrigger,
-  FilterBarValue,
-};
+export const FilterBar = Object.assign(FilterBarRoot, {
+  Condition: FilterBarCondition,
+  Field: FilterBarField,
+  Item: FilterBarItem,
+  Remove: FilterBarRemove,
+  SelectTrigger: FilterBarSelectTrigger,
+  Value: FilterBarValue,
+});

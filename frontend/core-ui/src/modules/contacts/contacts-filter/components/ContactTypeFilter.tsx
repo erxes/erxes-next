@@ -1,7 +1,7 @@
 import { useQueryState } from 'nuqs';
 
 import { DropdownMenu, Select } from 'erxes-ui/components';
-import { FilterBar } from 'erxes-ui/modules/filter';
+import { FilterBar } from 'erxes-ui';
 import {
   FilterBarComponentPropsBase,
   FilterDropdownProps,

@@ -2,7 +2,7 @@ import { IconChevronLeft } from '@tabler/icons-react';
 import { useQueryState } from 'nuqs';
 
 import { DropdownMenu, Select } from 'erxes-ui/components';
-import { FilterBar } from 'erxes-ui/modules/filter';
+import { FilterBar } from 'erxes-ui';
 
 const options = [
   { label: 'Product', value: 'product' },

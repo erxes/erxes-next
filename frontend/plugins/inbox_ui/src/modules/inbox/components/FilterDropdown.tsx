@@ -27,22 +27,7 @@ export const FilterDropdown = () => {
             <ResolvedStatus />
           </DropdownMenu.TabsContent>
           <DropdownMenu.TabsContent value="date">
-            <DropdownMenu.RadioGroup>
-              <DropdownMenu.RadioItem value="today">
-                Today
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.RadioItem value="yesterday">
-                Yesterday
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.RadioItem value="thisWeek">
-                This week
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.RadioItem value="thisMonth">
-                This month
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.Separator />
-              <DropdownMenu.Item>Custom</DropdownMenu.Item>
-            </DropdownMenu.RadioGroup>
+            <DropdownFilter filterId="date" />
           </DropdownMenu.TabsContent>
         </DropdownMenu.Tabs>
       </DropdownMenu.Content>
