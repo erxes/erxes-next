@@ -1,6 +1,4 @@
-import { useEffect, useId, useState } from 'react';
-
-import { parseISO } from 'date-fns';
+import { useEffect, useId, useRef, useState } from 'react';
 
 import {
   CalendarTwoMonths,
@@ -14,8 +12,10 @@ import {
   MONTHS,
   QUARTERS,
 } from 'erxes-ui/modules/filter/date-filter/constants/dateTypes';
-import { getDateType } from 'erxes-ui/modules/filter/date-filter/utlis/getDateType';
 import { getYearsArray } from 'erxes-ui/modules/filter/date-filter/utlis/getYears';
+import { parseDateRangeFromString } from '../utlis/parseDateRangeFromString';
+import { DateRange } from 'react-day-picker';
+import { getActiveTab } from '../utlis/getActiveTab';
 
 export const DateFilter = ({
   open,
@@ -31,34 +31,33 @@ export const DateFilter = ({
   label?: string;
 }) => {
   const [tabs, setTabs] = useState('day');
-  const [loading, setLoading] = useState(true);
-  const { getFirstMatch } = getDateType(value || '');
+  const [currentDateRange, setCurrentDateRange] = useState<
+    DateRange | undefined
+  >(parseDateRangeFromString(value || ''));
+  const [currentValue, setCurrentValue] = useState<string | undefined>(value);
 
   useEffect(() => {
-    if (open) {
-      getFirstMatch({
-        year: () => setTabs('year'),
-        quarter: () => setTabs('quarter'),
-        half: () => setTabs('halfYear'),
-        month: () => setTabs('month'),
-        date: () => setTabs('day'),
-      });
-      setTimeout(() => setLoading(false));
+    if (value) {
+      setTabs(getActiveTab(value));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [value]);
 
-  const handleCalendarChange = (value: Date | undefined) => {
-    if (!value) {
-      return;
-    }
-    onValueChange?.(value.toISOString());
-    onOpenChange?.(false);
+  const handleCalendarChange = (value: DateRange | undefined) => {
+    setCurrentDateRange(value);
+    setCurrentValue(
+      value?.from?.toISOString() + ',' + value?.to?.toISOString(),
+    );
   };
 
   const handleRadioGroupChange = (value: string) => {
-    onValueChange?.(value);
-    onOpenChange?.(false);
+    setCurrentValue(value);
+  };
+
+  const handleApply = () => {
+    if (currentValue) {
+      onValueChange?.(currentValue);
+      onOpenChange?.(false);
+    }
   };
 
   return (
@@ -88,57 +87,59 @@ export const DateFilter = ({
             </div>
           </Dialog.Header>
           <div className="border-y border-muted py-6 flex justify-center h-[22rem] overflow-auto">
-            {!loading && (
-              <>
-                <Tabs.Content value="day" className="self-center outline-none">
-                  <CalendarTwoMonths
-                    mode="single"
-                    numberOfMonths={2}
-                    showOutsideDays
-                    fixedWeeks
-                    selected={value ? parseISO(value) : undefined}
-                    onSelect={handleCalendarChange}
-                  />
-                </Tabs.Content>
-                <Tabs.Content value="month" className="w-full outline-none">
-                  <DateFilterRadioGroup
-                    items={MONTHS}
-                    onValueChange={handleRadioGroupChange}
-                    value={value}
-                    className="grid grid-cols-2"
-                  />
-                </Tabs.Content>
-                <Tabs.Content value="quarter" className="w-full outline-none">
-                  <DateFilterRadioGroup
-                    items={QUARTERS}
-                    className="flex flex-col"
-                    onValueChange={handleRadioGroupChange}
-                    value={value}
-                  />
-                </Tabs.Content>
-                <Tabs.Content value="halfYear" className="w-full outline-none">
-                  <DateFilterRadioGroup
-                    items={['Half 1', 'Half 2']}
-                    className="flex flex-col"
-                    onValueChange={handleRadioGroupChange}
-                    value={value}
-                  />
-                </Tabs.Content>
-                <Tabs.Content value="year" className="w-full outline-none">
-                  <DateFilterRadioGroup
-                    className="flex flex-col"
-                    onValueChange={handleRadioGroupChange}
-                    value={value}
-                  />
-                </Tabs.Content>
-              </>
-            )}
+            <Tabs.Content value="day" className="self-center outline-none">
+              <CalendarTwoMonths
+                mode="range"
+                numberOfMonths={2}
+                showOutsideDays
+                fixedWeeks
+                autoFocus
+                defaultMonth={
+                  currentDateRange?.from ? currentDateRange.from : undefined
+                }
+                selected={currentDateRange}
+                onSelect={handleCalendarChange}
+              />
+            </Tabs.Content>
+            <Tabs.Content value="month" className="w-full outline-none">
+              <DateFilterRadioGroup
+                items={MONTHS}
+                onValueChange={handleRadioGroupChange}
+                value={currentValue}
+                className="grid grid-cols-2"
+              />
+            </Tabs.Content>
+            <Tabs.Content value="quarter" className="w-full outline-none">
+              <DateFilterRadioGroup
+                items={QUARTERS}
+                className="flex flex-col"
+                onValueChange={handleRadioGroupChange}
+                value={currentValue}
+              />
+            </Tabs.Content>
+            <Tabs.Content value="halfYear" className="w-full outline-none">
+              <DateFilterRadioGroup
+                items={['Half 1', 'Half 2']}
+                className="flex flex-col"
+                onValueChange={handleRadioGroupChange}
+                value={currentValue}
+              />
+            </Tabs.Content>
+            <Tabs.Content value="year" className="w-full outline-none">
+              <DateFilterRadioGroup
+                className="flex flex-col"
+                onValueChange={handleRadioGroupChange}
+                value={currentValue}
+              />
+            </Tabs.Content>
           </div>
           <Dialog.Footer className="p-6">
             <Button variant="ghost" size="lg">
               Cancel
             </Button>
-            <Button size="lg">Apply</Button>
+            <Button size="lg" disabled={!currentValue} onClick={handleApply}>
+              Apply
+            </Button>
           </Dialog.Footer>
         </Tabs>
       </Dialog.Content>
@@ -158,6 +159,7 @@ const DateFilterRadioGroup = ({
   onValueChange?: (value: string) => void;
 }) => {
   const id = useId();
+
   return (
     <RadioGroup asChild value={value} onValueChange={onValueChange}>
       <fieldset className={cn('gap-6 w-full px-6 pb-6', className)}>
@@ -180,6 +182,7 @@ const DateFilterRadioGroup = ({
                     id={id}
                     value={year + '-' + item}
                     key={item}
+                    currentValue={value}
                   >
                     {item}
                   </DateFilterRadioGroupItem>
@@ -201,11 +204,23 @@ const DateFilterRadioGroupItem = ({
   id,
   value,
   children,
+  currentValue,
 }: {
   id: string;
   value: string;
   children: React.ReactNode;
+  currentValue?: string;
 }) => {
+  const ref = useRef<HTMLLabelElement>(null);
+
+  useEffect(() => {
+    if (currentValue === value && ref.current) {
+      setTimeout(() => {
+        ref.current?.scrollIntoView({ behavior: 'auto', block: 'center' });
+      }, 100);
+    }
+  }, [currentValue, value]);
+
   return (
     <Button
       size="sm"
@@ -213,7 +228,7 @@ const DateFilterRadioGroupItem = ({
       className="shadow-none has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
       asChild
     >
-      <label id={`${id}-${value}`}>
+      <label ref={ref} id={`${id}-${value}`}>
         <RadioGroup.Item
           value={value}
           id={`${id}-${value}`}
