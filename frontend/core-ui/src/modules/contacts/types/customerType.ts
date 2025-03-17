@@ -1,5 +1,5 @@
 import { CountryCode } from 'libphonenumber-js';
-export interface TCustomer {
+export interface ICustomer {
   _id: string;
   firstName?: string;
   middleName?: string;
@@ -13,7 +13,7 @@ export interface TCustomer {
   phoneValidationStatus?: string;
   emails?: string[];
   phones?: string[];
-  tagIds?: string[]
+  tagIds?: string[];
   location?: {
     countryCode?: CountryCode | undefined;
   };

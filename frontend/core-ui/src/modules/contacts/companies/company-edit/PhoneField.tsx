@@ -1,6 +1,6 @@
 import { Phone } from 'erxes-ui/modules/record-field/components/Phone';
 import { useCompaniesEdit } from '../hooks/useCompaniesEdit';
-import { useToast } from 'erxes-ui/hooks';
+import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { CountryCode } from 'libphonenumber-js';
 export const PhoneField = ({

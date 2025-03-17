@@ -1,6 +1,6 @@
 import { SubmitHandler } from 'react-hook-form';
 
-import { Button, Form, Input } from 'erxes-ui/components';
+import { Button, Form, Input } from 'erxes-ui';
 
 import { useLogin } from '@/auth/login/hooks/useLogin';
 import {

@@ -1,4 +1,4 @@
-import { IAttachment } from 'erxes-ui/types';
+import { IAttachment } from 'erxes-ui';
 
 export interface ProductT {
   _id: string;

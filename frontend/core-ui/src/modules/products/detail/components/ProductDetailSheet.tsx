@@ -1,15 +1,17 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
-import { Button, Sheet } from 'erxes-ui/components';
+import { Button, cn, Sheet, useSetHotkeyScope } from 'erxes-ui';
 import { renderingProductDetailAtom } from '../../states/productDetailStates';
-import { cn } from 'erxes-ui/lib';
-import { useSetHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/useSetHotkeyScope';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { ContactHotKeyScope } from '@/contacts/types/ContactHotKeyScope';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { useSearchParams } from 'react-router-dom';
 
-export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) => {
+export const ProductDetailSheet = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [activeTab] = useAtom(renderingProductDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,7 +32,7 @@ export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) 
       newSearchParams.delete('product_id');
     }
     setSearchParams(newSearchParams);
-    
+
     if (!newProductId) {
       setHotkeyScope(PageHotkeyScope.ProductsPage);
     }
@@ -58,7 +60,9 @@ export const ProductDetailSheet = ({ children }: { children: React.ReactNode }) 
           </Button>
           <Sheet.Title>Product Detail</Sheet.Title>
           <Sheet.Close />
-          <Sheet.Description className="sr-only">Product Detail</Sheet.Description>
+          <Sheet.Description className="sr-only">
+            Product Detail
+          </Sheet.Description>
         </Sheet.Header>
         {children}
       </Sheet.Content>

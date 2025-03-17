@@ -1,9 +1,9 @@
 import { Cell } from '@tanstack/react-table';
-import { RecordTableMoreButton } from 'erxes-ui/modules/record-table/components/MoreColumn';
 import { renderingProductDetailAtom } from '../states/productDetailStates';
 import { ProductT } from '@/products/types/productTypes';
 import { useSetAtom } from 'jotai';
 import { useSearchParams } from 'react-router-dom';
+import { RecordTable } from 'erxes-ui';
 
 export const ProductMoreColumnCell = ({
   cell,
@@ -21,7 +21,7 @@ export const ProductMoreColumnCell = ({
   };
 
   return (
-    <RecordTableMoreButton
+    <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);

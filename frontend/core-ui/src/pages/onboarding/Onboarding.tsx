@@ -1,8 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Button } from 'erxes-ui/components';
-import { Card } from 'erxes-ui/components';
+import { Button, Card } from 'erxes-ui';
 import { IconSun, IconKeyboard } from '@tabler/icons-react';
 
 interface FeatureProps {

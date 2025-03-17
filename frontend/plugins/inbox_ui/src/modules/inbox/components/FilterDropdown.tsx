@@ -1,7 +1,8 @@
 import { IconAdjustments } from '@tabler/icons-react';
-import { Button, DropdownMenu } from 'erxes-ui';
+import { Button, DropdownMenu, DateFilterInDropdown } from 'erxes-ui';
 import { useQueryState } from '../hooks/useQueryState';
 import { BOOLEAN_FILTERS } from '../constants/booleanFilters';
+
 export const FilterDropdown = () => {
   return (
     <DropdownMenu>
@@ -27,7 +28,7 @@ export const FilterDropdown = () => {
             <ResolvedStatus />
           </DropdownMenu.TabsContent>
           <DropdownMenu.TabsContent value="date">
-            <DropdownFilter filterId="date" />
+            <DateFilterInDropdown filterId="date" />
           </DropdownMenu.TabsContent>
         </DropdownMenu.Tabs>
       </DropdownMenu.Content>

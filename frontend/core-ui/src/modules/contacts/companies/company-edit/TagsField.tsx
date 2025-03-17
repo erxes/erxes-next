@@ -1,6 +1,6 @@
 import { SelectTags } from 'ui-modules';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
-import { toast } from 'erxes-ui/hooks';
+import { toast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { SelectTagsProps } from 'frontend/libs/ui-modules/src/modules/tags/types/Tag';
 

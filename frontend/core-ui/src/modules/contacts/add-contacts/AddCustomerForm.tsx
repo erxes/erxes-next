@@ -9,8 +9,9 @@ import {
   Separator,
   Sheet,
   Tabs,
-} from 'erxes-ui/components';
-import { Form } from 'erxes-ui/components/form';
+  Form,
+  useToast,
+} from 'erxes-ui';
 
 import { CustomerAddGeneralInformationFields } from '@/contacts/add-contacts/components/CustomerAddGeneralInformationFields';
 import { CustomerAddLinksFields } from '@/contacts/add-contacts/components/CustomerAddLinksFields';
@@ -23,7 +24,6 @@ import {
   CustomerFormType,
 } from '@/contacts/add-contacts/components/formSchema';
 import { useAddCustomer } from '@/contacts/hooks/useAddCustomer';
-import { useToast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
 
 export function AddCustomerForm() {

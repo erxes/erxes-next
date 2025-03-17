@@ -1,7 +1,7 @@
 import { IconBellFilled } from '@tabler/icons-react';
 import { currentOrganizationState } from 'ui-modules';
 
-import { Button, Sidebar } from 'erxes-ui/components';
+import { Button, Sidebar } from 'erxes-ui';
 
 import { Logo } from '@/auth/components/Logo';
 import { useAtom } from 'jotai';

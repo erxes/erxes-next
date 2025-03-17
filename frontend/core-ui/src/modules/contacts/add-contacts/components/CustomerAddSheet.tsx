@@ -1,14 +1,16 @@
 import { ContactHotKeyScope } from '@/contacts/types/ContactHotKeyScope';
 import { IconPlus } from '@tabler/icons-react';
 
-import { Button, Sheet } from 'erxes-ui/components';
-import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
-import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
-import { currentHotkeyScopeState } from 'erxes-ui/modules/hotkey/states/internal/currentHotkeyScopeState';
+import {
+  Button,
+  Kbd,
+  Sheet,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
+  useSetHotkeyScope,
+} from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { useSetHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/useSetHotkeyScope';
-import { Kbd } from 'erxes-ui/components/kbd';
 interface CustomerAddSheetProps {
   children: React.ReactNode;
   onOpenChange?: (open: boolean) => void;
@@ -19,7 +21,6 @@ export const CustomerAddSheet = ({
   open,
   onOpenChange,
 }: CustomerAddSheetProps) => {
-  const currentHotkeyScope = useAtomValue(currentHotkeyScopeState);
   const setHotkeyScope = useSetHotkeyScope();
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
@@ -34,6 +35,7 @@ export const CustomerAddSheet = ({
   };
 
   useScopedHotkeys(`c`, () => onOpen(), PageHotkeyScope.ContactsPage);
+  useScopedHotkeys(`esc`, () => onClose(), ContactHotKeyScope.CustomerAddSheet);
 
   return (
     <Sheet open={open} onOpenChange={(open) => (open ? onOpen() : onClose())}>
@@ -48,11 +50,6 @@ export const CustomerAddSheet = ({
         className="sm:max-w-lg p-0"
         onEscapeKeyDown={(e) => {
           e.preventDefault();
-          if (
-            currentHotkeyScope.scope === ContactHotKeyScope.CustomerAddSheet
-          ) {
-            onClose();
-          }
         }}
       >
         {children}

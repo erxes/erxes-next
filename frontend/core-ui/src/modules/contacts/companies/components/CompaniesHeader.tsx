@@ -1,5 +1,5 @@
 import { IconBuildings } from '@tabler/icons-react';
-import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
+import { PluginHeader } from 'erxes-ui';
 
 export const CompaniesHeader = () => {
   return (

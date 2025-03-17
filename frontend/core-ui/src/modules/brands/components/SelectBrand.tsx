@@ -3,7 +3,7 @@ import { useBrands } from '@/brands/hooks/useBrands';
 import { IBrand } from '@/brands/types/brand';
 import { useDebounce } from 'use-debounce';
 import React from 'react';
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 
 interface SelectBrandProps extends Omit<ButtonProps, 'onChange'> {
   values: string[];

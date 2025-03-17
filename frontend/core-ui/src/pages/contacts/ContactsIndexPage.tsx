@@ -1,4 +1,4 @@
-import { useQueryState } from 'nuqs';
+import { useQueryState } from 'erxes-ui';
 import { ContactsHeader } from '@/contacts/components/ContactsHeader';
 import { ContactsRecordTable } from '@/contacts/components/ContactsRecordTable';
 import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';

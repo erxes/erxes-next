@@ -8,23 +8,22 @@ import {
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
-import { Avatar } from 'erxes-ui/components/avatar';
-import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
+import { Avatar, RecordTable, RelativeDateDisplay } from 'erxes-ui';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 
-import { TCustomer } from '@/contacts/types/customerType';
+import { ICustomer } from '@/contacts/types/customerType';
 import { FullNameField } from '../customer-edit/components/FullNameField';
 import { EmailField } from '../customer-edit/components/EmailField';
 import { PhoneField } from '../customer-edit/components/PhoneField';
 import { TextField } from '../customer-edit/components/TextField';
 import { TagsField } from '@/contacts/customer-edit/components/TagsField';
 
-export const contactColumns: ColumnDef<TCustomer>[] = [
+export const contactColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'avatar',
     accessorKey: 'avatar',
-    header: () => <RecordTableInlineHead icon={IconUser} label="" />,
+    header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => (
       <RecordTableInlineCell
         display={() => (
@@ -151,7 +150,7 @@ export const contactColumns: ColumnDef<TCustomer>[] = [
     id: field,
     accessorKey: field,
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
-    cell: ({ cell }: { cell: Cell<TCustomer, unknown> }) => (
+    cell: ({ cell }: { cell: Cell<ICustomer, unknown> }) => (
       <TextField
         _id={cell.row.original._id}
         field={field}

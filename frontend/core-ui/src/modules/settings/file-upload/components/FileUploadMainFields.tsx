@@ -1,8 +1,7 @@
-import { Form, Select } from 'erxes-ui/components';
-import { MultipleSelector } from 'erxes-ui/components/multiselect';
+import { Form, Select, MultipleSelector } from 'erxes-ui';
 
 import { FILE_SYSTEM_TYPES } from '@/settings/file-upload/constants/serviceData';
-import { FormProps, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { UploadConfigFormT } from '../types';
 
 export function FileUploadMainFields({

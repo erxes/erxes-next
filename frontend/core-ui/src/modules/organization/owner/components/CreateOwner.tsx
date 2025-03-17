@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 
-import { Button, Checkbox, Form, Input, Select } from 'erxes-ui/components';
+import { Button, Checkbox, Form, Input, Select } from 'erxes-ui';
 
 import { useCreateOwner } from '@/organization/owner/hooks/useCreateOwner';
 import {

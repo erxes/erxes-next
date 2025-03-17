@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
-import { isDefined } from 'erxes-ui/utils';
+import { isDefined } from 'erxes-ui';
 
 import { currentUser } from '@/users/graphql/queries';
 import { useSetAtom, useAtom } from 'jotai';

@@ -1,4 +1,4 @@
-import { toast } from 'erxes-ui/hooks';
+import { toast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { SelectTags, useGiveTags, SelectTagsProps } from 'ui-modules';
 

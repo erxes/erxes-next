@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from 'erxes-ui/components';
+import { Button } from 'erxes-ui';
 
 export const NotFoundPage = () => {
   const navigate = useNavigate();

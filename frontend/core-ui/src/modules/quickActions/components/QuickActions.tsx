@@ -13,10 +13,14 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 
-import { Button, Command, Sidebar } from 'erxes-ui/components';
-import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
-import { Key } from 'erxes-ui/types/Key';
-import { AppHotkeyScope } from 'erxes-ui/modules/hotkey/types/AppHotkeyScope';
+import {
+  Button,
+  Command,
+  Sidebar,
+  useScopedHotkeys,
+  Key,
+  AppHotkeyScope,
+} from 'erxes-ui';
 
 export function QuickActions() {
   const [open, setOpen] = React.useState(false);

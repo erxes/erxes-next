@@ -27,6 +27,12 @@ const getBaseClassNames = (customClassNames = {}) => ({
     'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
   [DayFlag.disabled]: 'text-muted-foreground opacity-50',
   [DayFlag.hidden]: 'invisible',
+  [UI.Day]:
+    'h-8 w-8 text-center rounded-md text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+  [UI.DayButton]: cn(
+    buttonVariants({ variant: 'ghost' }),
+    'h-8 w-8 p-0 font-normal aria-selected:opacity-100 hover:bg-primary hover:text-primary-foreground',
+  ),
   ...customClassNames,
 });
 
@@ -52,12 +58,6 @@ export const Calendar = React.forwardRef<React.JSX.Element, CalendarProps>(
           [UI.Weekday]:
             'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
           [UI.Week]: 'flex w-full mt-2 gap-1',
-          [UI.Day]:
-            'h-9 w-9 text-center rounded-md text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-          [UI.DayButton]: cn(
-            buttonVariants({ variant: 'ghost' }),
-            'h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-primary hover:text-primary-foreground',
-          ),
           ...classNames,
         })}
         components={{
@@ -94,12 +94,6 @@ export const CalendarTwoMonths = React.forwardRef<
         [UI.Weekday]:
           'text-muted-foreground rounded-md w-8 h-6 font-normal text-[0.8rem]',
         [UI.Week]: 'flex w-full mt-0.5',
-        [UI.Day]:
-          'h-8 w-8 text-center rounded-md text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-        [UI.DayButton]: cn(
-          buttonVariants({ variant: 'ghost' }),
-          'h-8 w-8 p-0 font-normal aria-selected:opacity-100 hover:bg-primary hover:text-primary-foreground',
-        ),
         ...classNames,
       })}
       components={{

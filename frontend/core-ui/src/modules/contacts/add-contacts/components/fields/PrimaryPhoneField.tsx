@@ -1,6 +1,6 @@
 import { Control } from 'react-hook-form';
 
-import { Input, Form } from 'erxes-ui/components';
+import { Input, Form } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 export const PrimaryPhoneField = ({

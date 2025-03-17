@@ -1,1 +1,2 @@
-export * from './components/date-filter';
+export * from './components/DateFilter';
+export * from './components/DateFilterInDropdown';

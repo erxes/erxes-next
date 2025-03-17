@@ -9,7 +9,7 @@ import {
   Input,
   ToggleGroup,
   Upload,
-} from 'erxes-ui/components';
+} from 'erxes-ui';
 
 import {
   PROFILE_ADVANCED_FIELDS,

@@ -2,12 +2,12 @@ import { CSSProperties } from 'react';
 
 import { Column } from '@tanstack/react-table';
 
-import { cn } from 'erxes-ui/components';
+import { cn } from 'erxes-ui';
 
 import { Product } from './makeData';
 
 export const getCommonPinningStyles = (
-  column: Column<Product>
+  column: Column<Product>,
 ): CSSProperties => {
   const isPinned = column.getIsPinned();
   const isLastLeftPinnedColumn =

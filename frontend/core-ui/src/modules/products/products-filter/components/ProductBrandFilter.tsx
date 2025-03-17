@@ -1,13 +1,8 @@
-import { useQueryState } from 'nuqs';
-
-import {
-  Combobox,
-  Command,
-  Popover,
-  TextOverflowTooltip,
-} from 'erxes-ui/components';
+import { Combobox, Command, Popover, TextOverflowTooltip } from 'erxes-ui';
 
 import { useBrands } from '@/brands/hooks/useBrands';
+
+import { useQueryState } from 'erxes-ui';
 
 export const ProductBrandFilterDropdown = ({ onOpenChange }: any) => {
   const [filter, setFilter] = useQueryState('brand');

@@ -1,5 +1,5 @@
 import { IconUsers } from '@tabler/icons-react';
-import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
+import { PluginHeader } from 'erxes-ui';
 
 import { ContactsFilter } from './ContactsFilter';
 import { contactsFilters } from './filters';

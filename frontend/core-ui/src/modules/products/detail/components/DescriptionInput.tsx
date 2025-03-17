@@ -4,9 +4,9 @@ import {
   IconCornerDownLeft,
 } from '@tabler/icons-react';
 import { BlockEditor, Button, cn, useBlockEditor } from 'erxes-ui';
-import { Kbd } from 'erxes-ui/components/kbd';
+import { Kbd } from 'erxes-ui';
 import { useCallback, useEffect } from 'react';
-import { Block, DescriptionInputProps } from '../types/descriptionTypes';
+import { DescriptionInputProps } from '../types/descriptionTypes';
 
 export const DescriptionInput = ({
   initialContent,

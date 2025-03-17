@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { Button, Card, Form, Input } from 'erxes-ui/components';
+import { Button, Card, Form, Input } from 'erxes-ui';
 
 import { GoogleOAuthButton } from '@/auth/login/components/GoogleOAuthButton';
 

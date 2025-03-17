@@ -1,6 +1,6 @@
 import { IconBox, IconRosetteDiscountCheck } from '@tabler/icons-react';
 
-import { Filter } from 'erxes-ui/modules/filter/types/filter';
+import { Filter } from 'erxes-ui';
 
 import {
   ProductBrandFilterBar,

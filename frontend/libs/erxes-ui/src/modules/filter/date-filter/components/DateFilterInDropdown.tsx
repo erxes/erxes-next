@@ -1,9 +1,13 @@
 import { IconCalendar } from '@tabler/icons-react';
 import { DropdownMenu } from 'erxes-ui/components';
+import { DateFilter } from './DateFilter';
+import { useState } from 'react';
 
-export const DropdownFilter = ({ filterId }: { filterId: string }) => {
+export const DateFilterInDropdown = ({ filterId }: { filterId: string }) => {
+  const [open, setOpen] = useState(false);
   return (
     <>
+      <DropdownMenu.Label>Date</DropdownMenu.Label>
       <DropdownMenu.RadioGroup>
         <DropdownMenu.RadioItem value="today">Today</DropdownMenu.RadioItem>
         <DropdownMenu.RadioItem value="yesterday">
@@ -17,10 +21,16 @@ export const DropdownFilter = ({ filterId }: { filterId: string }) => {
         </DropdownMenu.RadioItem>
       </DropdownMenu.RadioGroup>{' '}
       <DropdownMenu.Separator />
-      <DropdownMenu.Item>
+      <DropdownMenu.Item
+        onClick={(e) => {
+          e.preventDefault();
+          setOpen(true);
+        }}
+      >
         <IconCalendar />
         Custom
       </DropdownMenu.Item>
+      <DateFilter open={open} onOpenChange={setOpen} />
     </>
   );
 };

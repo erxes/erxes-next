@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-import { Collapsible, Sidebar } from 'erxes-ui/components';
+import { Collapsible, Sidebar, cn } from 'erxes-ui';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
-import { cn } from 'erxes-ui/lib';
 import { PluginItem } from '@/navigation/types/MenuItemType';
 import { useAtom } from 'jotai';
 import { useMemo } from 'react';

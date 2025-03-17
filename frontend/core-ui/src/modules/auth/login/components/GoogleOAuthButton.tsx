@@ -1,4 +1,4 @@
-import { Button } from 'erxes-ui/components';
+import { Button } from 'erxes-ui';
 
 import { GoogleLogo } from '@/auth/components/GoogleLogo';
 export const GoogleOAuthButton = () => {

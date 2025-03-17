@@ -2,14 +2,12 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { IconUpload } from '@tabler/icons-react';
 
-import { Form, Input, Upload } from 'erxes-ui/components';
+import { Form, Input, Upload, BlockEditor, BLOCK_SCHEMA } from 'erxes-ui';
 
-import { BlockEditor } from 'erxes-ui/modules/blocks/components/BlockEditor';
 import { BrandField } from '@/products/add-products/components/BrandField';
 import { ProductFormValues } from './formSchema';
 import { VendorField } from './vendorField';
 import { useCreateBlockNote } from '@blocknote/react';
-import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
 
 export const ProductAddMoreFields = ({
   form,

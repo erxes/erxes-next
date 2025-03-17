@@ -7,7 +7,7 @@ import {
   RelativeDateDisplay,
   Separator,
 } from 'erxes-ui';
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 import { ConversationContext } from '~/modules/inbox/context/ConversationContext';
 import { IConversation } from '@/inbox/types/Conversation';
 import { useConversationContext } from '@/inbox/hooks/useConversationContext';

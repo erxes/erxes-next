@@ -2,11 +2,10 @@ import * as React from 'react';
 import { Plus, X } from 'lucide-react';
 import { useApolloClient } from '@apollo/client';
 import { useProductTags } from '@/products/hooks/useProductTags';
-import { AlertDialog, Button } from 'erxes-ui/components';
+import { AlertDialog, Button, useToast } from 'erxes-ui';
 import { useProductsEdit } from '../../hooks/useProductsEdit';
 import { TagsManagerProps } from '../types/tagsTypes';
 import { useRemoveTag } from '~/modules/tags/hooks/useRemoveTag';
-import { useToast } from 'erxes-ui/hooks';
 import { CreateTagForm, ITag } from 'ui-modules';
 
 export function TagsManager({

@@ -1,6 +1,6 @@
 import { Control } from 'react-hook-form';
 
-import { Form, Select } from 'erxes-ui/components';
+import { Form, Select } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 

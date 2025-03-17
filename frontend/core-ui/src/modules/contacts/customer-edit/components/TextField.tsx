@@ -7,6 +7,7 @@ interface TextFieldProps {
   field: string;
   fieldId?: string;
   _id: string;
+  className?: string;
 }
 
 export const TextField = ({
@@ -15,6 +16,7 @@ export const TextField = ({
   field,
   fieldId,
   _id,
+  className,
 }: TextFieldProps) => {
   const { customersEdit } = useCustomersEdit();
   const onSave = (editingValue: string) => {
@@ -34,6 +36,7 @@ export const TextField = ({
       fieldId={fieldId}
       _id={_id}
       onSave={onSave}
+      className={className}
     />
   );
 };

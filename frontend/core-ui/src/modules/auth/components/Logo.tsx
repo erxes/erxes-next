@@ -1,4 +1,4 @@
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 
 type LogoProps = {
   organizationLogo?: string | null;

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useIsMatchingLocation } from '~/hooks/useIsMatchingLocation';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { useSetHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/useSetHotkeyScope';
+import { useSetHotkeyScope } from 'erxes-ui';
 import { AppPath } from '@/types/paths/AppPath';
 
 export const PageChangeEffect = () => {

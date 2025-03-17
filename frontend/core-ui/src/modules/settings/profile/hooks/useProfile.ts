@@ -1,7 +1,7 @@
 import { OperationVariables, useMutation, useQuery } from '@apollo/client';
 
 import { currentUserState } from 'ui-modules';
-import { toast, useConfirm } from 'erxes-ui/hooks';
+import { toast, useConfirm } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
 import { userDetail } from '@/settings/profile/graphql/queries/userDetail';

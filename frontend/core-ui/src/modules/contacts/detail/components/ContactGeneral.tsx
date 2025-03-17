@@ -1,4 +1,4 @@
-import { Skeleton } from 'erxes-ui/components';
+import { Skeleton } from 'erxes-ui';
 
 import { ContactDetailSelectTag } from '@/contacts/detail/components/ContactDetailSelectTag';
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';

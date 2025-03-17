@@ -12,7 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 
-import { Sidebar } from 'erxes-ui/components';
+import { Sidebar } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import {

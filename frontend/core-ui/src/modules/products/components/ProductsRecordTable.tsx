@@ -1,4 +1,4 @@
-import { RecordTable } from 'erxes-ui/modules/record-table';
+import { RecordTable } from 'erxes-ui';
 
 import { columns } from '@/products/components/columns';
 import { ProductCommandBar } from '@/products/components/ProductCommandBar';

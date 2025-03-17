@@ -1,7 +1,7 @@
 import { Filter } from 'erxes-ui/modules/filter/types/filter';
 
 import { FilterBar } from './FilterBar';
-import { useFilterState } from '../hooks/useFilterQueryStates';
+import { useQueryState } from 'erxes-ui/hooks';
 
 export const FilterBarWithHookRoot = ({
   activeFilters,
@@ -28,7 +28,7 @@ const FilterBarItemWithHook = ({
   bar,
   ...props
 }: Filter) => {
-  const { value, setFilter } = useFilterState(accessoryKey);
+  const [value, setFilter] = useQueryState(accessoryKey);
 
   return value ? (
     <FilterBar.Item>

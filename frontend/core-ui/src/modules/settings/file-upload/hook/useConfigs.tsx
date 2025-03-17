@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 
-import { useToast } from 'erxes-ui/hooks';
+import { useToast } from 'erxes-ui';
 
 import {
   fileSettingsMutations,

@@ -4,8 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, ScrollArea, Sheet } from 'erxes-ui/components';
-import { Form } from 'erxes-ui/components/form';
+import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
 
 import { ProductAddCollapsible } from './ProductAddCollapsible';
 import { ProductAddCoreFields } from './ProductAddCoreFields';
@@ -18,7 +17,6 @@ import {
 } from '@/products/add-products/components/formSchema';
 import { useAddProduct } from '@/products/hooks/useAddProduct';
 import { ApolloError } from '@apollo/client';
-import { useToast } from 'erxes-ui/hooks';
 
 export function AddProductForm() {
   const [open, setOpen] = useState<boolean>(false);
