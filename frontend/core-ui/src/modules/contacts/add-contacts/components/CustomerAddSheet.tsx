@@ -9,7 +9,6 @@ import {
   useScopedHotkeys,
   useSetHotkeyScope,
 } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 interface CustomerAddSheetProps {
   children: React.ReactNode;

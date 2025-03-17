@@ -7,6 +7,8 @@ import {
   FilterBar,
   DateFilter,
   FilterDropdownProps,
+  useQueryState,
+  FilterBarComponentPropsBase,
 } from 'erxes-ui';
 
 import { contactsFilters } from '@/contacts/components/filters';
@@ -15,11 +17,11 @@ import { contactDateFilterOpenAtom } from '@/contacts/contacts-filter/states/con
 export const ContactDateFilterDropdown = ({
   accessoryKey,
 }: FilterDropdownProps) => {
-  const { stringDate, setDate } = useFilterDateState(accessoryKey);
+  const [date, setDate] = useQueryState<string>(accessoryKey);
   const setOpen = useSetAtom(contactDateFilterOpenAtom);
   return (
     <>
-      <DropdownMenu.RadioGroup value={stringDate || ''} onValueChange={setDate}>
+      <DropdownMenu.RadioGroup value={date || ''} onValueChange={setDate}>
         <DropdownMenu.RadioItem value="today">Today</DropdownMenu.RadioItem>
         <DropdownMenu.RadioItem value="yesterday">
           Yesterday
@@ -46,8 +48,7 @@ export const ContactDateFilterDropdown = ({
 export const ContactDateFilter = ({
   accessoryKey,
 }: FilterBarComponentPropsBase) => {
-  const { stringDate } = useFilterDateState(accessoryKey);
-
+  const [date] = useQueryState<string>(accessoryKey);
   const setOpen = useSetAtom(contactDateFilterOpenAtom);
   return (
     <Button
@@ -55,19 +56,19 @@ export const ContactDateFilter = ({
       variant="ghost"
       className="bg-background rounded-none"
     >
-      {getDateLabel(stringDate)}
+      {/* {getDateLabel(date)} */}
     </Button>
   );
 };
 
 export const ContactDateFilterDialog = () => {
   const [open, setOpen] = useAtom(contactDateFilterOpenAtom);
-  const { stringDate, setDate } = useFilterDateState(open);
+  const [date, setDate] = useQueryState<string>(open);
   return (
     <DateFilter
       open={!!open}
       onOpenChange={() => setOpen('')}
-      value={stringDate}
+      value={date || ''}
       onValueChange={setDate}
       label={contactsFilters.find((f) => f.accessoryKey === open)?.label}
     />
@@ -77,10 +78,10 @@ export const ContactDateFilterDialog = () => {
 export const ContactDateFilterConditions = ({
   accessoryKey,
 }: FilterBarComponentPropsBase) => {
-  const { condition, setCondition } = useFilterDateState(accessoryKey);
+  const [condition, setCondition] = useQueryState<string>(accessoryKey);
 
   return (
-    <Select value={condition} onValueChange={setCondition}>
+    <Select value={condition || ''} onValueChange={setCondition}>
       <FilterBar.SelectTrigger>
         <Select.Value />
       </FilterBar.SelectTrigger>
