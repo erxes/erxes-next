@@ -20,6 +20,7 @@ export interface IBrowserInfo {
 export interface IContext {
   res: any;
   requestInfo: any;
+  user: any;
   docModifier: <T>(doc: T) => any;
   brandIdSelector: object;
   userBrandIdsSelector: object;
@@ -39,4 +40,15 @@ export interface IListParams {
   searchValue?: string;
   page?: number;
   perPage?: number;
+}
+
+export interface ILocationOption {
+  lat: number;
+  lng: number;
+  description?: string;
+}
+
+export interface IOrderInput {
+  _id: string;
+  order: number;
 }
