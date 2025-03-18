@@ -5,23 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-} from 'erxes-ui/components';
+import { AlertDialog, Form, Input } from 'erxes-ui/components';
 
 type OptionProps = {
   okLabel?: string;
@@ -83,70 +67,70 @@ const ConfirmDialog = ({
       return form.setError(
         'confirm',
         { type: 'custom', message: `Enter ${confirmationValue} to confirm` },
-        { shouldFocus: true }
+        { shouldFocus: true },
       );
     }
 
     return onConfirm();
   };
 
-  const renderConfirm = (form) => {
+  const renderConfirm = (formInstance: ReturnType<typeof useForm>) => {
     if (!confirmationValue) {
       return null;
     }
 
     return (
-      <FormField
-          name="confirm"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-xs">
-                Type <strong>{confirmationValue}</strong> in the field below to
-                confirm.
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Enter confirmation"
-                  {...field}
-                  autoFocus
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <Form.Field
+        name="confirm"
+        control={formInstance.control}
+        render={({ field }: { field: any }) => (
+          <Form.Item>
+            <Form.Label className="text-xs">
+              Type <strong>{confirmationValue}</strong> in the field below to
+              confirm.
+            </Form.Label>
+            <Form.Control>
+              <Input
+                type="text"
+                placeholder="Enter confirmation"
+                {...field}
+                autoFocus
+              />
+            </Form.Control>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
     );
   };
 
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent>
+      <AlertDialog.Content>
         <Form {...form}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{message}</AlertDialogTitle>
+          <AlertDialog.Header>
+            <AlertDialog.Title>{message}</AlertDialog.Title>
             {description && (
-              <AlertDialogDescription> {description} </AlertDialogDescription>
+              <AlertDialog.Description> {description} </AlertDialog.Description>
             )}
-          </AlertDialogHeader>
+          </AlertDialog.Header>
           <form onSubmit={form.handleSubmit(proceed)}>
-            {renderConfirm(form)}
+            {renderConfirm(form as any)}
             <br />
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={dismiss} type="button">
+            <AlertDialog.Footer>
+              <AlertDialog.Cancel onClick={dismiss} type="button">
                 {cancelLabel}
-              </AlertDialogCancel>
-              <AlertDialogAction type="submit">{okLabel}</AlertDialogAction>
-            </AlertDialogFooter>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action type="submit">{okLabel}</AlertDialog.Action>
+            </AlertDialog.Footer>
           </form>
         </Form>
-      </AlertDialogContent>
+      </AlertDialog.Content>
     </AlertDialog>
   );
 };
 
-const useConfirm = () => {
+export const useConfirm = () => {
   const confirm = useCallback(
     ({ message, options }: { message: string; options?: OptionProps }) => {
       return new Promise<void>((resolve) => {
@@ -186,14 +170,12 @@ const useConfirm = () => {
             open={true}
             onConfirm={handleConfirm}
             onDismiss={handleDismiss}
-          />
+          />,
         );
       });
     },
-    []
+    [],
   );
 
   return { confirm };
 };
-
-export { useConfirm };

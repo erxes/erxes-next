@@ -5,9 +5,8 @@ import {
   ActivityItemContext,
   useActivityItemContext,
 } from '@/activity-logs/context/ActivityItemContext';
-import { cn } from 'erxes-ui/lib';
+import { cn, RelativeDateDisplay } from 'erxes-ui';
 import { InternalNoteLog } from '@/internal-notes/components/InternalNoteLog';
-import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 
 export const ActivityItem = ({
   activity,

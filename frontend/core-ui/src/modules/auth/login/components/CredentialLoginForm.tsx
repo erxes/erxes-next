@@ -1,20 +1,10 @@
-import { useCallback} from 'react';
+import { useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 
-import {
-  Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  Input,
-} from 'erxes-ui/components';
+import { Button, Form, Input } from 'erxes-ui';
 
 import { useLogin } from '@/auth/login/hooks/useLogin';
-import {
-  FormType,
-  useSignInUpForm,
-} from '@/auth/login/hooks/useLoginForm';
+import { FormType, useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
 
 export const CredentialLoginForm = () => {
   const { form } = useSignInUpForm();
@@ -32,7 +22,6 @@ export const CredentialLoginForm = () => {
     handleForgotPassword(email);
   };
 
-
   const email = form.watch('email');
 
   return (
@@ -41,38 +30,38 @@ export const CredentialLoginForm = () => {
         onSubmit={form.handleSubmit(submitHandler)}
         className="mx-auto grid gap-5"
       >
-        <FormField
+        <Form.Field
           name="email"
           control={form.control}
           render={({ field }) => (
-            <FormItem>
-              <span className="font-semibold text-sm">Email</span>
-              <FormControl>
+            <Form.Item>
+              <Form.Label>Email</Form.Label>
+              <Form.Control>
                 <Input
                   type="email"
                   placeholder="Enter your work email"
                   className="h-8"
                   {...field}
                 />
-              </FormControl>
-            </FormItem>
+              </Form.Control>
+            </Form.Item>
           )}
         />
 
-        <FormField
+        <Form.Field
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <span className="font-semibold text-sm">Password</span>
-              <FormControl>
+            <Form.Item>
+              <Form.Label>Password</Form.Label>
+              <Form.Control>
                 <Input
                   type="password"
                   placeholder="Enter your password"
                   className="h-8"
                   {...field}
                 />
-              </FormControl>
-            </FormItem>
+              </Form.Control>
+            </Form.Item>
           )}
         />
         <Button

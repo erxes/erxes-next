@@ -1,8 +1,4 @@
-import { IconChevronLeft } from '@tabler/icons-react';
-import { useQueryState } from 'nuqs';
-
-import { DropdownMenu, Select } from 'erxes-ui/components';
-import { FilterBar } from 'erxes-ui/modules/filter';
+import { FilterBar, DropdownMenu, Select, useQueryState } from 'erxes-ui';
 
 const options = [
   { label: 'Product', value: 'product' },
@@ -12,7 +8,7 @@ const options = [
 ];
 
 export const ProductTypeFilterDropdown = ({ onOpenChange }: any) => {
-  const [filter, setFilter] = useQueryState('type');
+  const [filter, setFilter] = useQueryState<string>('type');
 
   return (
     <>
@@ -35,7 +31,7 @@ export const ProductTypeFilterDropdown = ({ onOpenChange }: any) => {
 };
 
 export const ProductTypeFilterBar = () => {
-  const [filter, setFilter] = useQueryState('type');
+  const [filter, setFilter] = useQueryState<string>('type');
 
   return (
     <Select value={filter || ''} onValueChange={setFilter}>

@@ -1,30 +1,33 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router';
-
+import { Link, useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-
-import { Collapsible, Sidebar } from 'erxes-ui/components';
+import { Collapsible, Sidebar, cn } from 'erxes-ui';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfigState } from 'erxes-ui-shared-states';
-import { cn } from 'erxes-ui/lib';
-import { MenuItem } from '@/navigation/types/MenuItemType';
-import { useRecoilValue } from 'recoil';
+import { pluginsConfigState } from 'ui-modules';
+import { PluginItem } from '@/navigation/types/MenuItemType';
+import { useAtom } from 'jotai';
+import { useMemo } from 'react';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
-  const plugins = [...CORE_PLUGINS] as any;
+  const [pluginsMetaData] = useAtom(pluginsConfigState);
 
-  const pluginsMetaData = useRecoilValue(
-    pluginsConfigState,
-  ) as PluginsConfigState;
+  // Memoize plugins array to prevent unnecessary recalculations
+  const plugins = useMemo(() => {
+    const allPlugins = [...CORE_PLUGINS] as PluginItem[];
 
-  Object.keys(pluginsMetaData).forEach((key) => {
-    plugins.push({
-      path: `/${key}`,
-      name: pluginsMetaData[key].name,
-      icon: pluginsMetaData[key].icon,
-    });
-  });
+    if (pluginsMetaData) {
+      Object.entries(pluginsMetaData).forEach(([key, data]) => {
+        allPlugins.push({
+          path: `${key}`,
+          name: data.name,
+          icon: data.icon,
+        });
+      });
+    }
+
+    return allPlugins;
+  }, [pluginsMetaData]);
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
@@ -38,7 +41,7 @@ export function SidebarNavigation() {
         <Collapsible.Content>
           <Sidebar.GroupContent className="pt-2">
             <Sidebar.Menu>
-              {plugins.map((item: MenuItem) => {
+              {plugins.map((item: PluginItem) => {
                 return <SidebarNavigationItem key={item.name} {...item} />;
               })}
             </Sidebar.Menu>
@@ -54,7 +57,7 @@ export function SidebarNavigationItem({
   icon,
   path,
   submenus,
-}: MenuItem) {
+}: PluginItem) {
   const { t } = useTranslation();
   const pathname = useLocation().pathname;
   const Icon = icon;
@@ -75,7 +78,7 @@ export function SidebarNavigationItem({
             <span>{t('nav.' + name)}</span>
           </Link>
         </Sidebar.MenuButton>
-        {submenus?.length > 0 && (
+        {submenus && submenus.length > 0 && (
           <Collapsible.Content asChild>
             <Sidebar.Sub>
               {submenus.map((submenu) => {

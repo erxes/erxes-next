@@ -16,7 +16,7 @@ export const RecordTableBody = React.forwardRef<
   const { table } = useRecordTable();
 
   const tableContent = table.getRowModel().rows.map((row, rowIndex) => (
-    <RecordTableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+    <RecordTableRow key={row.original._id} data-state={row.getIsSelected() && 'selected'}>
       {row.getVisibleCells().map((cell, cellIndex) => (
         <RecordTableCell
           cell={cell}

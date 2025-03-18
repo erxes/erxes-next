@@ -1,10 +1,6 @@
 import { IconBox, IconSettings } from '@tabler/icons-react';
 
-import { Button } from 'erxes-ui/components';
-import { FilterBarWithHook } from 'erxes-ui/modules/filter/componets/FilterBarWithHook';
-import { FilterDropdown } from 'erxes-ui/modules/filter/componets/FilterDropdown';
-import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
-
+import { Button, PluginHeader, FilterDropdown } from 'erxes-ui';
 import { filters } from './ProductsFilter';
 import { AddProductForm } from '../add-products/components/AddProductForm';
 

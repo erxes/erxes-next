@@ -1,5 +1,5 @@
-import { AssignMember } from '@/team-members/components/AssignMember';
-import { Label } from 'erxes-ui/components';
+import { AssignMember } from 'ui-modules';
+import { Label } from 'erxes-ui';
 import { useState } from 'react';
 
 export const ContactDetailAssignedTo = ({ ownerId }: { ownerId: string }) => {

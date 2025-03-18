@@ -1,29 +1,25 @@
-import { ButtonProps, Input } from 'erxes-ui/components';
-import { InlineCell } from 'erxes-ui/modules/inline-cell/components/InlineCell';
-import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/InlineCellDisplay';
-import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
-import React, { useEffect, useState } from 'react';
-import { useCustomersEdit } from '../hooks/useCustomerEdit';
+import { Text } from 'erxes-ui/modules/record-field/components/Text';
+import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
 
-export const TextField = React.forwardRef<
-  HTMLButtonElement,
-  ButtonProps & {
-    placeholder?: string;
-    value: string;
-    field: string;
-    fieldId?: string;
-    _id: string;
-  }
->(({ className, placeholder, value, field, fieldId, _id, ...props }, ref) => {
-  const [editingValue, setEditingValue] = useState(value);
+interface TextFieldProps {
+  placeholder?: string;
+  value: string;
+  field: string;
+  fieldId?: string;
+  _id: string;
+  className?: string;
+}
+
+export const TextField = ({
+  placeholder,
+  value,
+  field,
+  fieldId,
+  _id,
+  className,
+}: TextFieldProps) => {
   const { customersEdit } = useCustomersEdit();
-
-  useEffect(() => {
-    if (value) setEditingValue(value);
-  }, [value]);
-
-  const handleAction = (closeEditMode: () => void) => {
-    closeEditMode();
+  const onSave = (editingValue: string) => {
     if (editingValue === value) return;
     customersEdit(
       {
@@ -32,28 +28,15 @@ export const TextField = React.forwardRef<
       [field],
     );
   };
-
   return (
-    <InlineCell
-      name={field}
-      recordId={_id}
+    <Text
+      placeholder={placeholder}
+      value={value}
+      field={field}
       fieldId={fieldId}
-      onEnter={handleAction}
-      onEscape={handleAction}
-      onCancel={handleAction}
-      display={() => (
-        <InlineCellDisplay ref={ref} {...props} className={className}>
-          {editingValue ?? placeholder}
-        </InlineCellDisplay>
-      )}
-      edit={() => (
-        <InlineCellEdit>
-          <Input
-            value={editingValue}
-            onChange={(e) => setEditingValue(e.target.value)}
-          />
-        </InlineCellEdit>
-      )}
+      _id={_id}
+      onSave={onSave}
+      className={className}
     />
   );
-});
+};

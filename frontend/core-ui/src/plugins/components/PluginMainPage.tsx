@@ -1,6 +1,7 @@
 import React, { lazy } from 'react';
 
 import { loadRemote } from '@module-federation/enhanced/runtime';
+import { Spinner } from 'erxes-ui';
 
 export function PluginMainPage({ pluginName }: { pluginName: string }) {
   const Plugin = lazy(() => {
@@ -13,7 +14,13 @@ export function PluginMainPage({ pluginName }: { pluginName: string }) {
   });
 
   return (
-    <React.Suspense fallback={<></>}>
+    <React.Suspense
+      fallback={
+        <div className="flex justify-center items-center h-full">
+          <Spinner />
+        </div>
+      }
+    >
       <Plugin />
     </React.Suspense>
   );

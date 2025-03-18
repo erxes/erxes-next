@@ -1,4 +1,4 @@
-import { ScrollArea } from 'erxes-ui/components';
+import { ScrollArea } from 'erxes-ui';
 
 import { ProfileForm } from '@/settings/profile/components/ProfileForm';
 import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
@@ -10,7 +10,7 @@ const breadcrumbs = [
 
 export const SettingsProfilePage = () => {
   return (
-    <ScrollArea.Root>
+    <ScrollArea>
       <section className="mx-auto max-w-2xl w-full overflow-y-auto pb-10">
         <SettingsBreadcrumbs breadcrumbs={breadcrumbs} />
         <h2 className="font-semibold text-lg mt-4 mb-12 px-4">Profile</h2>
@@ -18,6 +18,6 @@ export const SettingsProfilePage = () => {
           <ProfileForm />
         </div>
       </section>
-    </ScrollArea.Root>
+    </ScrollArea>
   );
 };

@@ -1,9 +1,9 @@
-import { Skeleton } from 'erxes-ui/components';
+import { Skeleton } from 'erxes-ui';
 
 import { ContactDetailSelectTag } from '@/contacts/detail/components/ContactDetailSelectTag';
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
 import { ContactDetailAssignedTo } from './ContactDetailAssignedTo';
-import { ITag } from '@/tags/types/tagTypes';
+import { ITag } from 'ui-modules';
 import { TextField } from '@/contacts/customer-edit/components/TextField';
 
 export const ContactGeneral = () => {

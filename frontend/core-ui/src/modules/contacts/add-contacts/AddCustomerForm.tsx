@@ -9,8 +9,9 @@ import {
   Separator,
   Sheet,
   Tabs,
-} from 'erxes-ui/components';
-import { Form } from 'erxes-ui/components/form';
+  Form,
+  useToast,
+} from 'erxes-ui';
 
 import { CustomerAddGeneralInformationFields } from '@/contacts/add-contacts/components/CustomerAddGeneralInformationFields';
 import { CustomerAddLinksFields } from '@/contacts/add-contacts/components/CustomerAddLinksFields';
@@ -23,18 +24,29 @@ import {
   CustomerFormType,
 } from '@/contacts/add-contacts/components/formSchema';
 import { useAddCustomer } from '@/contacts/hooks/useAddCustomer';
+import { ApolloError } from '@apollo/client';
 
 export function AddCustomerForm() {
   const [open, setOpen] = useState<boolean>(false);
   const { customersAdd } = useAddCustomer();
   const form = useForm<CustomerFormType>({
     resolver: zodResolver(customerFormSchema),
-    defaultValues: {},
   });
+  const { toast } = useToast();
   const onSubmit = (data: CustomerFormType) => {
-    customersAdd({ variables: data });
-    form.reset();
-    setOpen(false);
+    customersAdd({
+      variables: data,
+      onError: (e: ApolloError) => {
+        toast({
+          title: 'Error',
+          description: e.message,
+        });
+      },
+      onCompleted: () => {
+        form.reset();
+        setOpen(false);
+      },
+    });
   };
 
   return (
@@ -46,7 +58,7 @@ export function AddCustomerForm() {
         >
           <CustomerAddSheetHeader />
           <Separator />
-          <ScrollArea.Root className="flex-auto">
+          <ScrollArea className="flex-auto">
             <Tabs defaultValue="general-information">
               <Tabs.List className="grid grid-cols-2 mb-10">
                 <Tabs.Trigger value="general-information" className="h-10">
@@ -65,7 +77,7 @@ export function AddCustomerForm() {
                 </Tabs.Content>
               </div>
             </Tabs>
-          </ScrollArea.Root>
+          </ScrollArea>
           <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
             <Button
               type="button"

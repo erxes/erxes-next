@@ -8,7 +8,9 @@ export const CUSTOMERS_EDIT = gql`
     $lastName: String
     $middleName: String
     $primaryEmail: String
+    $emails: [String]
     $primaryPhone: String
+    $phones: [String]
     $ownerId: String
     $position: String
     $department: String
@@ -29,7 +31,9 @@ export const CUSTOMERS_EDIT = gql`
       lastName: $lastName
       middleName: $middleName
       primaryEmail: $primaryEmail
+      emails: $emails
       primaryPhone: $primaryPhone
+      phones: $phones
       ownerId: $ownerId
       position: $position
       department: $department
@@ -45,5 +49,15 @@ export const CUSTOMERS_EDIT = gql`
     ) {
       _id
     }
+  }
+`;
+
+export const CUSTOMERS_TAG = gql`
+  mutation tagsTag(
+    $type: String!
+    $targetIds: [String!]!
+    $tagIds: [String!]!
+  ) {
+    tagsTag(type: $type, targetIds: $targetIds, tagIds: $tagIds)
   }
 `;

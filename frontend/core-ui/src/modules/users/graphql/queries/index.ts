@@ -19,8 +19,8 @@ export const currentUser = gql`
         shortName
         workStartedDate
         position
-        location
         description
+        location
       }
       links
       emailSignatures

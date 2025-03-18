@@ -1,13 +1,12 @@
 import { IconUsers } from '@tabler/icons-react';
-
-import { FilterDropdown } from 'erxes-ui/modules/filter/componets/FilterDropdown';
-import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
+import { PluginHeader } from 'erxes-ui';
 
 import { ContactsFilter } from './ContactsFilter';
 import { contactsFilters } from './filters';
 
 import { AddCustomerForm } from '@/contacts/add-contacts/AddCustomerForm';
 import { ContactDateFilterDialog } from '@/contacts/contacts-filter/components/ContactDateFilter';
+import { FilterDropdown } from 'erxes-ui';
 
 export const ContactsHeader = () => {
   return (

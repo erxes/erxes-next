@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Slot } from '@radix-ui/react-slot';
-import { IconChevronRight, IconDots } from '@tabler/icons-react'
+import { IconChevronRight, IconDots } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
 
@@ -21,7 +21,7 @@ const BreadcrumbList = React.forwardRef<
     ref={ref}
     className={cn(
       'flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5',
-      className
+      className,
     )}
     {...props}
   />
@@ -105,12 +105,11 @@ const BreadcrumbEllipsis = ({
 );
 BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis';
 
-export const Breadcrumb = {
-  Root: BreadcrumbRoot,
+export const Breadcrumb = Object.assign(BreadcrumbRoot, {
   List: BreadcrumbList,
   Item: BreadcrumbItem,
   Link: BreadcrumbLink,
   Page: BreadcrumbPage,
   Separator: BreadcrumbSeparator,
   Ellipsis: BreadcrumbEllipsis,
-};
+});

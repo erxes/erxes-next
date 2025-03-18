@@ -1,12 +1,11 @@
-import { Outlet } from 'react-router';
-import { Navigate } from 'react-router';
+import { Outlet, Navigate } from 'react-router';
+import { useAtom } from 'jotai';
 
 import {
   clientConfigApiStatusState,
   currentOrganizationState,
   isCurrentOrganizationLoadedState,
-} from 'erxes-ui-shared-states';
-import { useRecoilValue } from 'recoil';
+} from 'ui-modules';
 
 import { RocketIcon } from 'erxes-ui/icons';
 import { isDefined } from 'erxes-ui/utils';
@@ -15,12 +14,11 @@ import { ClientConfigError } from '@/error-handler/components/ClientConfigError'
 import { AppPath } from '@/types/paths/AppPath';
 
 export const OrganizationProvider = () => {
-  const isCurrentOrganizationLoaded = useRecoilValue(
-    isCurrentOrganizationLoadedState
+  const [isCurrentOrganizationLoaded] = useAtom(
+    isCurrentOrganizationLoadedState,
   );
-  const clientConfigApiStatus = useRecoilValue(clientConfigApiStatusState);
-
-  const currentOrganization = useRecoilValue(currentOrganizationState);
+  const [clientConfigApiStatus] = useAtom(clientConfigApiStatusState);
+  const [currentOrganization] = useAtom(currentOrganizationState);
 
   if (clientConfigApiStatus.isErrored) {
     return <ClientConfigError error={clientConfigApiStatus.error} />;
@@ -51,6 +49,5 @@ export const OrganizationProvider = () => {
 
   //   document.head.appendChild(link);
   // }
-
   return <Outlet />;
 };

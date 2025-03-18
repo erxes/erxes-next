@@ -1,11 +1,4 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-export const renderingContactDetailAtom = atom<boolean>({
-  key: 'renderingContactDetailAtom',
-  default: false,
-});
-
-export const contactDetailActiveActionTabAtom = atom<string>({
-  key: 'contactDetailActiveActionTabAtom',
-  default: '',
-});
+export const renderingContactDetailAtom = atom(false); 
+export const contactDetailActiveActionTabAtom = atom('');

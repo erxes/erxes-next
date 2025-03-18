@@ -7,28 +7,25 @@ import {
   IconColorSwatch,
   IconFile,
   IconMail,
-  IconProps,
   IconUserCircle,
   IconX,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { useRecoilValue } from 'recoil';
 
-import { Sidebar } from 'erxes-ui/components';
+import { Sidebar } from 'erxes-ui';
 
-import { App } from '@/app/components/App';
 import { AppPath } from '@/types/paths/AppPath';
 import {
   SettingsPath,
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState, PluginsConfig } from 'erxes-ui-shared-states';
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { pluginsConfigState } from 'ui-modules';
+import { useAtomValue } from 'jotai';
 
 type TSettingPath = {
   name: string;
-  icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
+  icon: Icon;
   path: string;
 };
 
@@ -67,14 +64,13 @@ const data: { [key: string]: TSettingPath[] } = {
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS];
 
-  const pluginsMetaData =
-    useRecoilValue(pluginsConfigState) || ({} as PluginsConfig);
+  const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
 
-  Object.keys(pluginsMetaData).forEach((key) => {
+  Object.keys(pluginsMetaData || {}).forEach((configId) => {
     plugins.push({
-      path: `/${key}`,
-      name: pluginsMetaData[key].name,
-      icon: pluginsMetaData[key].icon,
+      path: `/${configId}`,
+      name: pluginsMetaData[configId].name,
+      icon: pluginsMetaData[configId].icon,
     });
   });
 
@@ -130,7 +126,9 @@ export function SettingsSidebar() {
                 return (
                   <Sidebar.MenuItem key={item.path}>
                     <Sidebar.MenuButton asChild>
-                      <Link to={AppPath.Settings + item.path}>
+                      <Link
+                        to={AppPath.Settings + item.path.replace('_ui', '')}
+                      >
                         {Icon && <Icon />}
                         <span>{t('nav.' + item.name)}</span>
                       </Link>

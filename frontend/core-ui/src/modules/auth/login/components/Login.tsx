@@ -1,8 +1,7 @@
-import { Card, Tabs } from 'erxes-ui/components';
+import { Card, Tabs, cn } from 'erxes-ui';
 import { CredentialLoginForm } from '@/auth/login/components/CredentialLoginForm';
 import { MagicLinkLoginForm } from '@/auth/login/components/MagicLinkLoginForm';
 import { Logo } from '@/auth/components/Logo';
-import { cn } from 'erxes-ui/lib';
 export const Login = ({ className }: { className?: string }) => {
   return (
     <div

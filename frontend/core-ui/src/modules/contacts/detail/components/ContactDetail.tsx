@@ -6,7 +6,7 @@ import {
 } from './ContactDetailLayout';
 import { ContactGeneral } from './ContactGeneral';
 import { ContactDetailGeneral } from './ContactDetailGeneral';
-import { Separator } from 'erxes-ui/components';
+import { Separator } from 'erxes-ui';
 import { ContactProperties } from './ContactProperties';
 
 export const ContactDetail = () => {

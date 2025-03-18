@@ -6,16 +6,7 @@ import {
   IconStar,
 } from '@tabler/icons-react';
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  Select,
-  Separator,
-} from 'erxes-ui/components';
+import { Form, Input, Select, Separator } from 'erxes-ui';
 import { SelectCurrency } from 'erxes-ui/components/currency/select-currency';
 import { CURRENCY_CODES } from 'erxes-ui/constants';
 import { CurrencyCode } from 'erxes-ui/types';
@@ -36,42 +27,42 @@ export const ProductAddCoreFields = ({
   const { uoms } = useUom({});
   return (
     <div className="grid grid-cols-2 gap-5 ">
-      <FormField
+      <Form.Field
         control={form.control}
         name="name"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>NAME</FormLabel>
-            <FormControl>
+          <Form.Item>
+            <Form.Label>NAME</Form.Label>
+            <Form.Control>
               <Input className="rounded-md h-8" {...field} />
-            </FormControl>
-            <FormMessage className="text-destructive" />
-          </FormItem>
+            </Form.Control>
+            <Form.Message className="text-destructive" />
+          </Form.Item>
         )}
       />
-      <FormField
+      <Form.Field
         control={form.control}
         name="code"
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>CODE</FormLabel>
+          <Form.Item>
+            <Form.Label>CODE</Form.Label>
             <div className="flex flex-col">
-              <FormControl>
+              <Form.Control>
                 <Input className="rounded-md h-8" {...field} />
-              </FormControl>
-              <FormMessage className="text-destructive" />
+              </Form.Control>
+              <Form.Message className="text-destructive" />
             </div>
-          </FormItem>
+          </Form.Item>
         )}
       />
-      <FormField
+      <Form.Field
         control={form.control}
         name="uom"
         render={({ field }) => (
-          <FormItem className="flex flex-col">
-            <FormLabel>UNIT OF MEASUREMENTS</FormLabel>
+          <Form.Item className="flex flex-col">
+            <Form.Label>UNIT OF MEASUREMENTS</Form.Label>
             <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
+              <Form.Control>
                 <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8 hover:bg-muted">
                   <Select.Value
                     placeholder={
@@ -81,13 +72,13 @@ export const ProductAddCoreFields = ({
                     }
                   >
                     <span className="text-foreground font-medium text-sm">
-                      {uoms.find((uom) => uom._id === field.value)?.name}
+                      {uoms.find((uom: any) => uom._id === field.value)?.name}
                     </span>
                   </Select.Value>
                 </Select.Trigger>
-              </FormControl>
+              </Form.Control>
               <Select.Content>
-                {uoms.map((uom) => (
+                {uoms.map((uom: any) => (
                   <Select.Item
                     key={uom._id}
                     className="text-xs"
@@ -98,17 +89,17 @@ export const ProductAddCoreFields = ({
                 ))}
               </Select.Content>
             </Select>
-            <FormMessage className="text-destructive" />
-          </FormItem>
+            <Form.Message className="text-destructive" />
+          </Form.Item>
         )}
       />
-      <FormField
+      <Form.Field
         control={form.control}
         name="unitPrice"
         render={({ field }) => (
-          <FormItem className="flex flex-col">
-            <FormLabel>UNIT PRICE</FormLabel>
-            <FormControl>
+          <Form.Item className="flex flex-col">
+            <Form.Label>UNIT PRICE</Form.Label>
+            <Form.Control>
               <div className="flex rounded-md border border-border shadow-xs">
                 <SelectCurrency
                   currencies={CURRENCY_CODES}
@@ -124,33 +115,33 @@ export const ProductAddCoreFields = ({
                   value={field.value || ''}
                 />
               </div>
-            </FormControl>
+            </Form.Control>
 
-            <FormMessage className="text-destructive" />
-          </FormItem>
+            <Form.Message className="text-destructive" />
+          </Form.Item>
         )}
       />
-      <FormField
+      <Form.Field
         control={form.control}
         name="categoryId"
         render={({ field }) => (
-          <FormItem className="flex flex-col">
-            <FormLabel>CATEGORY</FormLabel>
-            <FormControl>
+          <Form.Item className="flex flex-col">
+            <Form.Label>CATEGORY</Form.Label>
+            <Form.Control>
               <CategoryField {...field} />
-            </FormControl>
-            <FormMessage className="text-destructive" />
-          </FormItem>
+            </Form.Control>
+            <Form.Message className="text-destructive" />
+          </Form.Item>
         )}
       />
-      <FormField
+      <Form.Field
         control={form.control}
         name="type"
         render={({ field }) => (
-          <FormItem className="flex flex-col">
-            <FormLabel>TYPE</FormLabel>
+          <Form.Item className="flex flex-col">
+            <Form.Label>TYPE</Form.Label>
             <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
+              <Form.Control>
                 <Select.Trigger className="truncate w-full border rounded-md justify-between text-foreground h-8 hover:bg-muted">
                   <Select.Value
                     placeholder={
@@ -164,7 +155,7 @@ export const ProductAddCoreFields = ({
                     </span>
                   </Select.Value>
                 </Select.Trigger>
-              </FormControl>
+              </Form.Control>
               <Select.Content>
                 {types.map((type) => (
                   <Select.Item
@@ -177,8 +168,8 @@ export const ProductAddCoreFields = ({
                 ))}
               </Select.Content>
             </Select>
-            <FormMessage className="text-destructive" />
-          </FormItem>
+            <Form.Message className="text-destructive" />
+          </Form.Item>
         )}
       />
     </div>

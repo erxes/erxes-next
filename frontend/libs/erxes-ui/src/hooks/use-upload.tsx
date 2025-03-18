@@ -41,7 +41,7 @@ type RemoveProps = {
   afterRemove: ({ status }: { status: string }) => any;
 };
 
-const useUpload = () => {
+export const useUpload = () => {
   const [status, setStatus] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -90,7 +90,7 @@ const useUpload = () => {
         parseInt(
           localStorage.getItem('erxes_env_REACT_APP_FILE_UPLOAD_MAX_SIZE') ||
             '',
-          10
+          10,
         ) || 20 * 1024 * 1024;
 
       // skip file that size is more than REACT_APP_FILE_UPLOAD_MAX_SIZE
@@ -123,11 +123,11 @@ const useUpload = () => {
             body: formData,
             credentials: 'include',
             ...(userId ? { headers: { userId } } : {}),
-          }
+          },
         )
-          .then((response) => {
+          .then((response: any) => {
             response[responseType]()
-              .then((text) => {
+              .then((text: unknown) => {
                 setIsLoading(false);
 
                 if (!response.ok) {
@@ -147,7 +147,7 @@ const useUpload = () => {
                   afterUpload({ status: 'ok', response: text, fileInfo });
                 }
               })
-              .catch((error) => {
+              .catch((error: Error) => {
                 setIsLoading(false);
                 setStatus(false);
                 toast({ description: error.message });
@@ -217,5 +217,3 @@ const useUpload = () => {
 
   return { isLoading, status, upload, remove };
 };
-
-export { useUpload };

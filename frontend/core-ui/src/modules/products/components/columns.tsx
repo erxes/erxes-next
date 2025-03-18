@@ -10,7 +10,7 @@ import {
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/react-table';
 
-import { Select, Skeleton } from 'erxes-ui/components';
+import { Select, Skeleton } from 'erxes-ui';
 import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
@@ -142,7 +142,8 @@ export const columns: ColumnDef<any>[] = [
                 },
               })
             }
-            className="rounded-none px-2 font-normal border-r-0 ring-0 bg-transparent"
+            hideChevron
+            className="rounded-none px-2 font-normal border-r-0 ring-0 bg-transparent w-full overflow-hidden"
             size="lg"
           />
         </RecordTableInlineCellContainer>

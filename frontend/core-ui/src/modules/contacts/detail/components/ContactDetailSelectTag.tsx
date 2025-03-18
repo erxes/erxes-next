@@ -1,13 +1,11 @@
 import { useState } from 'react';
 
-import { Label } from 'erxes-ui/components';
+import { Label, useQueryState } from 'erxes-ui';
 
-import { SelectTags } from '@/tags/components/SelectTags';
-import { useGiveTags } from '@/tags/hooks/useGiveTags';
-import { useQueryState } from 'nuqs';
+import { SelectTags, useGiveTags } from 'ui-modules';
 
 export const ContactDetailSelectTag = ({ tagIds }: { tagIds: string[] }) => {
-  const [contactId] = useQueryState('contact_id');
+  const [contactId] = useQueryState<string>('contact_id');
   const { giveTags, loading } = useGiveTags();
   const [selectedTags, setSelectedTags] = useState<string[]>(tagIds);
 
@@ -40,6 +38,7 @@ export const ContactDetailSelectTag = ({ tagIds }: { tagIds: string[] }) => {
         tagType="core:customer"
         selected={selectedTags}
         loading={loading}
+        recordId={contactId || ''}
         onSelect={(tags) => {
           setSelectedTags(tags as string[]);
           handleGiveTags(tags as string[]);

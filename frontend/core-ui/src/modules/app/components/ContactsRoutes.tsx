@@ -14,6 +14,11 @@ const ContactsDetailPage = lazy(() =>
     default: module.ContactsDetailPage,
   })),
 );
+const CompaniesIndexPage = lazy(() =>
+  import('~/pages/contacts/companies/CompaniesIndexPage').then((module) => ({
+    default: module.CompaniesIndexPage,
+  })),
+);
 
 export const ContactsRoutes = () => {
   return (
@@ -25,7 +30,7 @@ export const ContactsRoutes = () => {
         />
         <Route path={ContactsPath.Customers} element={<ContactsIndexPage />} />
         <Route path={ContactsPath.Leads} element={<ContactsDetailPage />} />
-        <Route path={ContactsPath.Companies} element={<ContactsDetailPage />} />
+        <Route path={ContactsPath.Companies} element={<CompaniesIndexPage />} />
         <Route path={ContactsPath.Vendors} element={<ContactsDetailPage />} />
         <Route path={ContactsPath.Clients} element={<ContactsDetailPage />} />
       </Routes>

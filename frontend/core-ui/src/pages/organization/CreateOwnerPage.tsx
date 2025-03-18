@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { currentOrganizationState } from 'erxes-ui-shared-states';
-import { useRecoilValue } from 'recoil';
+import { currentOrganizationState } from 'ui-modules';
 
-import { isDefined } from 'erxes-ui/utils';
+import { isDefined } from 'erxes-ui';
 
 import { CreateOwner } from '@/organization/owner/components/CreateOwner';
 import { AppPath } from '@/types/paths/AppPath';
+import { useAtom } from 'jotai';
 
 const CreateOwnerPage = () => {
   const navigate = useNavigate();
-  const currentOrganization = useRecoilValue(currentOrganizationState);
+  const [currentOrganization] = useAtom(currentOrganizationState);
 
   useEffect(() => {
     if (isDefined(currentOrganization) && currentOrganization.hasOwner) {

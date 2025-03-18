@@ -2,7 +2,8 @@ import { useState } from 'react';
 
 import { IconChevronDown } from '@tabler/icons-react';
 
-import { Button, Collapsible } from 'erxes-ui/components';
+import { Button, Collapsible } from 'erxes-ui';
+
 export const ProductAddCollapsible = ({
   children,
 }: {
@@ -22,7 +23,8 @@ export const ProductAddCollapsible = ({
         <Button
           variant="secondary"
           className={`w-min text-xs font-semibold text-muted-foreground order-2 `}
-        >{!isOpen ? 'Fill in more info' : 'See less'}
+        >
+          {!isOpen ? 'Fill in more info' : 'See less'}
           <IconChevronDown
             size={12}
             strokeWidth={2}

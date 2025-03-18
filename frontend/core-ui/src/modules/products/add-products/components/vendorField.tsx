@@ -1,12 +1,15 @@
 import { useState } from 'react';
 
-import { IconCheck, IconChevronDown } from '@tabler/icons-react';
-
-import { Button, Command, Popover, Skeleton } from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib/utils';
+import {
+  Combobox,
+  Command,
+  Popover,
+  Skeleton,
+  TextOverflowTooltip,
+  cn,
+} from 'erxes-ui';
 
 import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
-
 interface VendorFieldProps {
   value: string | undefined;
   onChange: (value: string) => void;
@@ -39,72 +42,51 @@ export const VendorField = ({
     );
 
   return (
-      <Popover open={open} onOpenChange={setOpen} modal>
-        <Popover.Trigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-controls="vendor-command-menu"
-            className={cn("truncate h-8 hover:cursor-pointer rounded-md w-full justify-between", className)}
-          >
-            <span
-              className={cn(
-                'truncate',
-                !currentValue && 'text-foreground font-medium text-sm',
-              )}
-            >
-              {currentValue
-                ? companies.find((vendor) => vendor._id === currentValue)
-                    ?.primaryName
-                : 'Select vendor'}
-            </span>
-            <IconChevronDown
-              size={16}
-              strokeWidth={2}
-              className="shrink-0 text-foreground"
-              aria-hidden="true"
-            />
-          </Button>
-        </Popover.Trigger>
-        <Popover.Content
-          className="w-56 min-w-[var(--radix-popper-anchor-width)] border p-0"
-          align="start"
-          sideOffset={4}
-        >
-          <Command id="vendor-command-menu">
-            <Command.Input
-              variant="secondary"
-              wrapperClassName="flex-auto"
-              placeholder="Search vendor..."
-              className="h-9"
-            />
-            <Command.List>
-              <Command.Group>
-                {companies.map((vendor) => (
-                  <Command.Item
-                    key={vendor._id}
-                    className=" h-7 relative flex items-center justify-between"
-                    value={vendor._id}
-                    onSelect={handleSelectVendor}
-                    title={vendor.primaryName}
-                  >
-                    <span className="text-xs text-foreground truncate">
-                      {vendor.primaryName}
-                    </span>
-                    {currentValue === vendor._id && (
-                      <IconCheck
-                        size={16}
-                        strokeWidth={2}
-                        className="ml-auto"
-                      />
-                    )}
-                  </Command.Item>
-                ))}
-              </Command.Group>
-            </Command.List>
-          </Command>
-        </Popover.Content>
-      </Popover>
+    <Popover open={open} onOpenChange={setOpen} modal>
+      <Combobox.Trigger
+        variant="outline"
+        role="combobox"
+        aria-expanded={open}
+        className={cn(
+          'truncate h-8 hover:cursor-pointer rounded-md w-full justify-between',
+          className,
+        )}
+      >
+        <Combobox.Value
+          placeholder="Select vendor"
+          value={
+            companies.find((vendor) => vendor._id === currentValue)?.primaryName
+          }
+        />
+      </Combobox.Trigger>
+      <Combobox.Content className="w-56">
+        <Command id="vendor-command-menu">
+          <Command.Input
+            variant="secondary"
+            wrapperClassName="flex-auto"
+            placeholder="Search vendor..."
+            className="h-9"
+          />
+          <Command.List>
+            <Combobox.Empty loading={loading} />
+            {companies.map((vendor) => (
+              <Command.Item
+                key={vendor._id}
+                className=" h-7 relative flex items-center justify-between"
+                value={vendor._id}
+                onSelect={handleSelectVendor}
+                title={vendor.primaryName}
+              >
+                <TextOverflowTooltip
+                  className="ml-2"
+                  value={vendor.primaryName}
+                />
+                <Combobox.Check checked={vendor._id === value} />
+              </Command.Item>
+            ))}
+          </Command.List>
+        </Command>
+      </Combobox.Content>
+    </Popover>
   );
 };

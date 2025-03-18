@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { forwardRef, useEffect } from 'react';
 
@@ -86,7 +84,7 @@ export interface MultipleSelectorRef {
   reset: () => void;
 }
 
-export function useDebounce<T>(value: T, delay?: number): T {
+function useDebounce<T>(value: T, delay?: number): T {
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
 
   useEffect(() => {
@@ -170,7 +168,7 @@ const CommandEmpty = forwardRef<
 
 CommandEmpty.displayName = 'CommandEmpty';
 
-const MultipleSelector = React.forwardRef<
+export const MultipleSelector = React.forwardRef<
   MultipleSelectorRef,
   MultipleSelectorProps
 >(
@@ -547,7 +545,7 @@ const MultipleSelector = React.forwardRef<
                   disabled ||
                   selected.length < 1 ||
                   selected.filter((s) => s.fixed).length === selected.length) &&
-                'hidden',
+                  'hidden',
               )}
               aria-label="Clear all"
             >
@@ -616,7 +614,7 @@ const MultipleSelector = React.forwardRef<
                                 className={cn(
                                   'cursor-pointer',
                                   option.disable &&
-                                  'cursor-not-allowed opacity-50',
+                                    'cursor-not-allowed opacity-50',
                                 )}
                               >
                                 {option.label}
@@ -638,4 +636,3 @@ const MultipleSelector = React.forwardRef<
 );
 
 MultipleSelector.displayName = 'MultipleSelector';
-export { MultipleSelector };

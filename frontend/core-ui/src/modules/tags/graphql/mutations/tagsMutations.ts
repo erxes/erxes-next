@@ -27,3 +27,9 @@ export const GIVE_TAGS = gql`
     tagsTag(type: $type, targetIds: $targetIds, tagIds: $tagIds)
   }
 `;
+
+export const REMOVE_TAG = gql`
+  mutation removeTag($_id: String!) {
+    tagsRemove(_id: $_id)
+  }
+`;

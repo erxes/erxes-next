@@ -1,9 +1,11 @@
 import { IconDevices, IconMoon, IconSun } from '@tabler/icons-react';
 
-import { DropdownMenu } from 'erxes-ui/components';
-import { useTheme, Theme } from 'erxes-ui/modules/theme-provider';
+import { DropdownMenu } from 'erxes-ui';
+import { ThemeOption, themeState } from 'erxes-ui';
+import { useAtom } from 'jotai';
+
 export const ThemeSelector = () => {
-  const { theme, setTheme } = useTheme();
+  const [theme, setTheme] = useAtom(themeState);
   return (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger>
@@ -16,7 +18,7 @@ export const ThemeSelector = () => {
         <DropdownMenu.SubContent className="min-w-32">
           <DropdownMenu.RadioGroup
             value={theme}
-            onValueChange={(value) => setTheme(value as Theme)}
+            onValueChange={(value) => setTheme(value as ThemeOption)}
           >
             <DropdownMenu.RadioItem value="light">
               <IconSun className="size-4 mr-2" />

@@ -11,7 +11,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
 
-import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
+import { REACT_APP_API_URL } from 'erxes-ui';
 
 // Create an http link:
 const httpLink = createHttpLink({
@@ -45,12 +45,12 @@ const httpLinkWithMiddleware = from([errorLink, authLink, httpLink]);
 // Subscription config
 export const wsLink = new GraphQLWsLink(
   createClient({
-    url: REACT_APP_API_URL,
+    url: `${REACT_APP_API_URL}/graphql`,
     retryAttempts: 1000,
     retryWait: async () => {
       await new Promise((resolve) => setTimeout(resolve, 5000));
     },
-  })
+  }),
 );
 
 type Definintion = {
@@ -66,10 +66,14 @@ const link = split(
     return kind === 'OperationDefinition' && operation === 'subscription';
   },
   wsLink,
-  httpLinkWithMiddleware
+  httpLinkWithMiddleware,
 );
 
-const typePolicies = {};
+const typePolicies = {
+  customersMain: {
+    keyFields: ['_id'],
+  },
+};
 
 // Creating Apollo-client
 const client = new ApolloClient({

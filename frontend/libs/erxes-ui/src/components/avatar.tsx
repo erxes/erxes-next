@@ -3,11 +3,12 @@ import * as React from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { cva, VariantProps } from 'class-variance-authority';
 
-import { Color, stringToHslColor, twColorClassNames } from './colors';
+import { stringToHslColor } from '../utils/colors';
 import { cn } from '../lib/utils';
-import { useTheme } from 'erxes-ui/modules/theme-provider';
+import { useAtomValue } from 'jotai';
+import { themeState } from 'erxes-ui/state';
 
-const avatarVariants = cva(
+export const avatarVariants = cva(
   'relative flex shrink-0 overflow-hidden rounded-full border-0',
   {
     variants: {
@@ -16,7 +17,7 @@ const avatarVariants = cva(
         sm: 'size-3.5 text-[10px]',
         default: 'size-4 text-xs',
         lg: 'size-6 text-sm',
-        xl: 'size-10 text-base',
+        xl: 'size-8 text-base',
       },
     },
     defaultVariants: {
@@ -25,10 +26,14 @@ const avatarVariants = cva(
   },
 );
 
+export type AvatarProps = React.ComponentPropsWithoutRef<
+  typeof AvatarPrimitive.Root
+> &
+  VariantProps<typeof avatarVariants>;
+
 const AvatarRoot = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> &
-    VariantProps<typeof avatarVariants>
+  AvatarProps
 >(({ className, size, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
@@ -53,18 +58,15 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
-    color?: Color;
     colorSeed?: string;
   }
 >(({ className, color, colorSeed, style, ...props }, ref) => {
-  const { theme } = useTheme();
-
+  const theme = useAtomValue(themeState);
   return (
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
         'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] uppercase',
-        twColorClassNames[color as Color],
         className,
       )}
       style={

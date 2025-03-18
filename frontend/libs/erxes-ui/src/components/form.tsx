@@ -14,8 +14,6 @@ import { Slot } from '@radix-ui/react-slot';
 import { Label } from './label';
 import { cn } from '../lib/utils';
 
-const Form = FormProvider;
-
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -79,7 +77,7 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn('space-y-1', className)} {...props} />
+      <div ref={ref} className={cn('space-y-2', className)} {...props} />
     </FormItemContext.Provider>
   );
 });
@@ -166,13 +164,12 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = 'FormMessage';
 
-export {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useFormField,
-};
+export const Form = Object.assign(FormProvider, {
+  Control: FormControl,
+  Description: FormDescription,
+  Field: FormField,
+  Item: FormItem,
+  Label: FormLabel,
+  Message: FormMessage,
+  useField: useFormField,
+});

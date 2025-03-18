@@ -1,15 +1,14 @@
-import { Route } from 'react-router';
-
+import { Route, Routes } from 'react-router';
 import { getInstance } from '@module-federation/enhanced/runtime';
 
 import { PluginMainPage } from '~/plugins/components/PluginMainPage';
 import { PluginSettingsPage } from '~/plugins/components/PluginSettingsPage';
 
-export const usePluginsRouter = () => {
+export const getPluginsRoutes = () => {
   const instance = getInstance();
-  const remotes = instance?.options.remotes;
+  const remotes = instance?.options.remotes ?? [];
 
-  return remotes?.map((remote) => (
+  return remotes.map((remote) => (
     <Route
       key={remote.name}
       path={`/${remote.name.replace('_ui', '')}/*`}
@@ -18,11 +17,11 @@ export const usePluginsRouter = () => {
   ));
 };
 
-export const usePLuginsSettingsRoutes = () => {
+export const getPluginsSettingsRoutes = () => {
   const instance = getInstance();
-  const remotes = instance?.options.remotes;
+  const remotes = instance?.options.remotes ?? [];
 
-  return remotes?.map((plugin) => (
+  return remotes.map((plugin) => (
     <Route
       key={plugin.name}
       path={`/${plugin.name.replace('_ui', '')}/*`}

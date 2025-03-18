@@ -1,13 +1,13 @@
-import { IconBell, IconBellFilled, IconSelector } from '@tabler/icons-react';
-import { currentOrganizationState } from 'erxes-ui-shared-states';
-import { useRecoilValue } from 'recoil';
+import { IconBellFilled } from '@tabler/icons-react';
+import { currentOrganizationState } from 'ui-modules';
 
-import { Button, Sidebar } from 'erxes-ui/components';
+import { Button, Sidebar } from 'erxes-ui';
 
 import { Logo } from '@/auth/components/Logo';
+import { useAtom } from 'jotai';
 
 export function Organization() {
-  const currentOrganization = useRecoilValue(currentOrganizationState);
+  const [currentOrganization] = useAtom(currentOrganizationState);
 
   return (
     <Sidebar.Menu>

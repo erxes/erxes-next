@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TGeneralSettingsProps } from '../types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { generalSettingsSchema } from '../schema';
 import { AvailableLanguage, useSwitchLanguage } from '~/i18n';
-import { useToast } from 'erxes-ui/hooks';
+import { useToast } from 'erxes-ui';
 
 const useGeneralSettingsForms = () => {
   const { toast } = useToast();
@@ -37,7 +37,6 @@ const useGeneralSettingsForms = () => {
             description: `Language switched to (${data.languageCode})`,
           });
         });
-        console.log(data);
       } catch (error) {
         console.error('Error occured on form submit', error);
       }

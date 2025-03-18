@@ -1,6 +1,6 @@
 import { IconLanguage } from '@tabler/icons-react';
 
-import { DropdownMenu } from 'erxes-ui/components';
+import { DropdownMenu } from 'erxes-ui';
 
 import { AvailableLanguage, useSwitchLanguage } from '~/i18n';
 

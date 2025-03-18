@@ -16,13 +16,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "erxes-api-utils": ["backend/libs/erxes-api-utils/src/index.ts"],
+      "erxes-api-modules": ["backend/libs/core-modules/src/index.ts"],
+      "erxes-api-utils": ["backend/libs/utils/src/index.ts"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
-      "erxes-ui-shared-states": [
-        "frontend/libs/erxes-ui-shared-states/src/index.ts"
-      ],
-      "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
-      "inbox_ui/Module": ["frontend/plugins/inbox_ui/src/remote-entry.ts"]
+      "ui-modules": ["frontend/libs/ui-modules/src"]
     }
   },
   "exclude": ["node_modules", "tmp"]

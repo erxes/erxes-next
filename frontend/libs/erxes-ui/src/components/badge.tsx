@@ -2,45 +2,56 @@ import * as React from 'react';
 
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { Color, colors, stringToHslColor,twColorClassNames } from './colors';
 import { cn } from '../lib/utils';
+import { stringToHslColor } from '../utils/colors';
 
-const badgeVariants = cva(
-  'inline-flex items-center rounded-md border px-2 h-5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent whitespace-nowrap ',
+export const badgeVariants = cva(
+  'inline-flex items-center rounded-md border px-2 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent whitespace-nowrap font-medium',
   {
     variants: {
-      color: twColorClassNames,
+      variant: {
+        default: 'bg-primary text-primary-foreground',
+        secondary: 'bg-secondary text-foreground',
+        destructive: 'bg-destructive text-destructive-foreground',
+        muted: 'bg-muted text-foreground',
+        ghost: 'text-inherit',
+      },
+      size: {
+        sm: 'h-6 text-xs',
+        md: 'h-7 text-sm',
+        lg: 'h-8 text-base',
+      },
     },
     defaultVariants: {
-      color: undefined,
+      variant: 'default',
+      size: 'md',
     },
-  }
+  },
 );
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
-  color?: Color;
   colorSeed?: string;
 }
 
-function Badge({ className, color, colorSeed, ...props }: BadgeProps) {
-  const seed = colors.includes(color as Color) ? color : colorSeed;
-  return (
-    <div
-      className={cn(badgeVariants({ color }), className)}
-      {...props}
-      style={
-        seed
-          ? {
-              ...props.style,
-              color: stringToHslColor(seed, 75, 20),
-              backgroundColor: stringToHslColor(seed, 75, 90),
-            }
-          : props.style
-      }
-    />
-  );
-}
-
-export { Badge, badgeVariants };
+export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
+  ({ className, variant, colorSeed, size, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(badgeVariants({ variant, size }), className)}
+        {...props}
+        style={
+          colorSeed
+            ? {
+                ...props.style,
+                color: stringToHslColor(colorSeed, 75, 20),
+                backgroundColor: stringToHslColor(colorSeed, 75, 90),
+              }
+            : props.style
+        }
+      />
+    );
+  },
+);

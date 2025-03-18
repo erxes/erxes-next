@@ -1,4 +1,4 @@
-import { FilterBarWithHook } from 'erxes-ui/modules/filter/componets/FilterBarWithHook';
+import { FilterBarWithHook } from 'erxes-ui';
 
 import { contactsFilters } from './filters';
 import { useContactFilterValues } from '../contacts-filter/hooks/useContactFilterValues';
@@ -9,7 +9,8 @@ export const ContactsFilter = () => {
     <FilterBarWithHook
       activeFilters={
         contactsFilters.filter(
-          (filter) => activeFilters[filter.accessoryKey]
+          (filter) =>
+            activeFilters[filter.accessoryKey as keyof typeof activeFilters],
         ) || []
       }
     />

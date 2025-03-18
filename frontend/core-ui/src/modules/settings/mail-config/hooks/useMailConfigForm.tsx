@@ -38,7 +38,6 @@ const useMailConfigForm = () => {
   });
 
   const submitHandler: SubmitHandler<TProps> = useCallback(async (data) => {
-    console.log(data);
     const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
       acc[config.code] = data[config.code] ?? config.value;
       return acc;

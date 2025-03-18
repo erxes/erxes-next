@@ -1,16 +1,21 @@
 import { lazy } from 'react';
-import { createRoutesFromElements, Route } from 'react-router';
-import { createBrowserRouter } from 'react-router';
+import {
+  createRoutesFromElements,
+  Route,
+  createBrowserRouter,
+  Routes,
+} from 'react-router-dom';
 
 import { ContactsRoutes } from '@/app/components/ContactsRoutes';
 import { ProductsRoutes } from '@/app/components/ProductsRoutes';
 import { SettingsRoutes } from '@/app/components/SettingsRoutes';
-import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
+import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 import { AppPath } from '@/types/paths/AppPath';
 import { DefaultLayout } from '@/ui/components/DefaultLayout';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
+import { OnBoarding } from '~/pages/onboarding/Onboarding';
 import { Providers } from '~/providers';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
@@ -32,7 +37,7 @@ export const useCreateAppRouter = () => {
 
           <Route element={<UserProvider />}>
             <Route element={<DefaultLayout />}>
-              <Route path={AppPath.Index} element={<></>} />
+              <Route path={AppPath.Index} element={<OnBoarding />} />
               <Route
                 path={AppPath.SettingsCatchAll}
                 element={<SettingsRoutes />}
@@ -45,7 +50,7 @@ export const useCreateAppRouter = () => {
                 path={AppPath.ContactsCatchAll}
                 element={<ContactsRoutes />}
               />
-              <Route>{usePluginsRouter()}</Route>
+              {...getPluginsRoutes()}
             </Route>
           </Route>
         </Route>

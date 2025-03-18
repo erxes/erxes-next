@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { PASSWORD_REGEX } from 'erxes-ui/utils';
+import { PASSWORD_REGEX } from 'erxes-ui';
 
 export const PURPOSE_OPTIONS = [
   {
@@ -27,13 +27,13 @@ export const ownerValidationSchema = z
       .string()
       .regex(
         PASSWORD_REGEX,
-        'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'
+        'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
       ),
     confirmPassword: z
       .string()
       .regex(
         PASSWORD_REGEX,
-        'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'
+        'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
       ),
     firstName: z.string().trim(),
     lastName: z.string().trim(),

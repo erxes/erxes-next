@@ -1,13 +1,12 @@
-import { useQueryState } from 'nuqs';
-import { useRecoilValue } from 'recoil';
-
+import { useQueryState } from 'erxes-ui';
 import { ContactsHeader } from '@/contacts/components/ContactsHeader';
 import { ContactsRecordTable } from '@/contacts/components/ContactsRecordTable';
 import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';
 import { ContactDetail } from '@/contacts/detail/components/ContactDetail';
+import { useAtom } from 'jotai';
 
 export const ContactsIndexPage = () => {
-  const renderingContactDetail = useRecoilValue(renderingContactDetailAtom);
+  const [renderingContactDetail] = useAtom(renderingContactDetailAtom);
   const [contactId] = useQueryState('contact_id');
 
   return (

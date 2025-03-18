@@ -1,13 +1,6 @@
 import { Control } from 'react-hook-form';
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Select,
-} from 'erxes-ui/components';
+import { Form, Select } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
@@ -27,14 +20,14 @@ export const EmailValidationStatusField = ({
   control: Control<CustomerFormType>;
 }) => {
   return (
-    <FormField
+    <Form.Field
       control={control}
       name="emailValidationStatus"
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>EMAIL VERIFICATION STATUS</FormLabel>
+        <Form.Item>
+          <Form.Label>EMAIL VERIFICATION STATUS</Form.Label>
           <Select onValueChange={field.onChange} value={field.value}>
-            <FormControl>
+            <Form.Control>
               <Select.Trigger className="truncate w-full rounded-md justify-between text-foreground h-8">
                 <Select.Value
                   placeholder={
@@ -53,7 +46,7 @@ export const EmailValidationStatusField = ({
                   </span>
                 </Select.Value>
               </Select.Trigger>
-            </FormControl>
+            </Form.Control>
             <Select.Content
               className="border p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
               align="start"
@@ -71,8 +64,8 @@ export const EmailValidationStatusField = ({
               </Select.Group>
             </Select.Content>
           </Select>
-          <FormMessage className="text-destructive" />
-        </FormItem>
+          <Form.Message className="text-destructive" />
+        </Form.Item>
       )}
     />
   );

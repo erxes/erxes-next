@@ -15,7 +15,7 @@ export const InlineCellDisplay = React.forwardRef<
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
-    handleOpenEditMode();
+    handleOpenEditMode?.();
     onClick?.(e);
   };
 
