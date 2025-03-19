@@ -1,3 +1,5 @@
+import * as express from 'express';
+import { IUserDocument } from 'erxes-api-utils';
 export interface IStringMap {
   [key: string]: string;
 }
@@ -18,8 +20,9 @@ export interface IBrowserInfo {
 }
 
 export interface IContext {
-  res: any;
+  res: express.Response;
   requestInfo: any;
+  user: IUserDocument;
   docModifier: <T>(doc: T) => any;
   brandIdSelector: object;
   userBrandIdsSelector: object;
@@ -33,6 +36,7 @@ export interface IContext {
     HelpersAPI: any;
   };
   dataLoaders: any;
+  subdomain: string;
 }
 
 export interface IListParams {

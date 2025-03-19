@@ -1,8 +1,33 @@
-import { DEFAULT_SEX_CHOICES, STATUSES } from '../../../constants';
-export const USER_MOVEMENT_STATUSES = {
-  CREATED: 'created',
-  REMOVED: 'removed',
+import { STATUSES, DEFAULT_SEX_CHOICES } from 'erxes-api-utils';
+
+export const ACTIVITY_CONTENT_TYPES = {
+  CUSTOMER: 'customer',
+  COMPANY: 'company',
+  ALL: ['customer', 'company'],
 };
+
+export { STATUSES, DEFAULT_SEX_CHOICES };
+
+export const COMPANY_SELECT_OPTIONS = {
+  BUSINESS_TYPES: [
+    { label: 'Competitor', value: 'Competitor' },
+    { label: 'Customer', value: 'Customer' },
+    { label: 'Investor', value: 'Investor' },
+    { label: 'Partner', value: 'Partner' },
+    { label: 'Press', value: 'Press' },
+    { label: 'Prospect', value: 'Prospect' },
+    { label: 'Reseller', value: 'Reseller' },
+    { label: 'Other', value: 'Other' },
+    { label: 'Unknown', value: '' },
+  ],
+  STATUSES,
+  DO_NOT_DISTURB: [
+    { label: 'Yes', value: 'Yes' },
+    { label: 'No', value: 'No' },
+    { label: 'Unknown', value: '' },
+  ],
+};
+
 export const CUSTOMER_SELECT_OPTIONS = {
   SEX: [
     ...DEFAULT_SEX_CHOICES,
@@ -61,4 +86,34 @@ export const CUSTOMER_SELECT_OPTIONS = {
     { label: 'Lead', value: 'lead' },
     { label: 'Customer', value: 'customer' },
   ],
+};
+
+export const TAG_TYPES = {
+  CUSTOMER: 'core:customer',
+  COMPANY: 'core:company',
+};
+
+export const LEAD_LOAD_TYPES = {
+  SHOUTBOX: 'shoutbox',
+  POPUP: 'popup',
+  EMBEDDED: 'embedded',
+  DROPDOWN: 'dropdown',
+  SLIDEINLEFT: 'slideInLeft',
+  SLIDEINRIGHT: 'slideInRight',
+  ALL: [
+    '',
+    'shoutbox',
+    'popup',
+    'embedded',
+    'dropdown',
+    'slideInLeft',
+    'slideInRight',
+  ],
+};
+
+export const LEAD_SUCCESS_ACTIONS = {
+  EMAIL: 'email',
+  REDIRECT: 'redirect',
+  ONPAGE: 'onPage',
+  ALL: ['', 'email', 'redirect', 'onPage'],
 };

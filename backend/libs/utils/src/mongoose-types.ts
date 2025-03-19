@@ -5,6 +5,26 @@ export const stringRandomId = {
   default: () => nanoid(),
 } as const;
 
+export const schemaWrapper = (schema) => {
+  schema.add({ scopeBrandIds: [String] });
+
+  return schema;
+};
+export const field = (options) => {
+  const { pkey, type, optional } = options;
+
+  if (type === String && !pkey && !optional) {
+    options.validate = /\S+/;
+  }
+
+  // TODO: remove
+  if (pkey) {
+    options.type = String;
+    options.default = () => nanoid();
+  }
+
+  return options;
+};
 /**
  * Allows `null | undefined`.
  * But if it's a `string`, it must contain atleast one non whitespace character.
