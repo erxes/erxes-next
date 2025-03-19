@@ -8,7 +8,6 @@ import {
   useProfileForm,
 } from '@/settings/profile/hooks/useProfileForm';
 import { AdvancedFields, DefaultFields, FormField, LinkFields } from './fields';
-import { SettingsSkeletonLoader } from '../../components/SettingsSkeletonLoader';
 import { ProfileLoading } from './ProfileLoading';
 
 export const ProfileForm = () => {
