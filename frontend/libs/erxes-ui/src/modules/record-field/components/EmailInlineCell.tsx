@@ -486,14 +486,17 @@ const EmailItem: React.FC<{ email: string; index: number }> = ({
   const { emailValidationStatus } = useEmailContext();
 
   return (
-    <Command.Item className="group relative flex items-center h-cell text-xs">
+    <Command.Item
+      className="group relative flex items-center h-cell text-xs"
+      title={email}
+    >
       {emailValidationStatus && (
         <ValidationDisplay
           value={index === 0 ? emailValidationStatus : 'unknown'}
           validationInfos={EMAIL_VALIDATION_STATUS_INFOS}
         />
       )}
-      <span className="relative truncate max-w-[180px]">
+      <span className="relative truncate max-w-[150px]">
         <span className="relative z-10 hover:cursor-pointer text-base font-medium ">
           {email}
         </span>
