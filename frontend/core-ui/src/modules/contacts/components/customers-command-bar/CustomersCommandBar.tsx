@@ -23,6 +23,7 @@ export const ContactsCommandBar = () => {
             .getFilteredSelectedRowModel()
             .rows.map((row) => row.original)}
           disabled={table.getFilteredSelectedRowModel().rows.length != 2}
+          rows={table.getFilteredSelectedRowModel().rows}
         />
       </CommandBar.Bar>
     </CommandBar>

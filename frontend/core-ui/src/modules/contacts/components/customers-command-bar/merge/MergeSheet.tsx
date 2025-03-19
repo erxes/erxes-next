@@ -23,12 +23,12 @@ export const MergeSheet = ({
   disabled = false,
   className,
   onDiscard = noop,
-  onSave = () => noop,
+  onSave = noop,
   ...props
 }: MergeSheetProps) => {
   return (
     <Sheet {...props}>
-      <MergeToolTip>
+      <MergeToolTip disabled={disabled}>
         <Sheet.Trigger asChild>
           <Button variant={'secondary'} disabled={disabled}>
             <IconArrowMerge />

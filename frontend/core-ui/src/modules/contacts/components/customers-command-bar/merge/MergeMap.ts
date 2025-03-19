@@ -34,7 +34,7 @@ export const MergeMap: MergeMapEntry[] = [
   { primaryEmail: { displayName: 'Primary Email', type: 'string' } },
   {
     emailValidationStatus: {
-      displayName: 'Email validation Status',
+      displayName: 'Email Validation Status',
       type: 'string',
     },
   },

@@ -1,5 +1,5 @@
 import { RecordTable } from 'erxes-ui/modules/record-table';
-import { ContactsCommandBar } from './customers-command-bar/CustomersCommanBar';
+import { ContactsCommandBar } from './customers-command-bar/CustomersCommandBar';
 import { contactColumns } from '@/contacts/components/ContactColumns';
 import { contactMoreColumn } from '@/contacts/components/ContactMoreColumn';
 import {

@@ -1,9 +1,9 @@
 import { Tooltip } from 'erxes-ui/components';
 import { ReactNode } from 'react';
 
-export const MergeToolTip = ({ children }: { children: ReactNode }) => {
+export const MergeToolTip = ({ children, disabled }: { children: ReactNode, disabled: boolean }) => {
   return (
-    <Tooltip delayDuration={200}>
+    <Tooltip delayDuration={200} disableHoverableContent={disabled}>
       <Tooltip.Trigger asChild>
         <div className="inline-block">{children}</div>
       </Tooltip.Trigger>

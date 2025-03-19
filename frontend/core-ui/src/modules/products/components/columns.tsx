@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { Cell } from '@tanstack/react-table';
 import {
   IconCategoryPlus,
   IconChartBar,

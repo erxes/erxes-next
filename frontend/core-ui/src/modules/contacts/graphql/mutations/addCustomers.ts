@@ -50,6 +50,10 @@ export const ADD_CUSTOMERS = gql`
       hasAuthority
       description
       isSubscribed
+      owner {
+        _id
+        username
+      }
       code
       emailValidationStatus
       phoneValidationStatus

@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MergeSheet } from './MergeSheet';
 import { ICustomer } from '@/contacts/types/customerType';
 import { MergingFieldContainer } from './MergingFieldContainer';
 import { MergeMap, FieldType } from './MergeMap';
 import { ChoiceboxGroup } from 'erxes-ui/components';
-import { useCustomersMerge } from '@/contacts/components/customers-command-bar/hooks/useCustomersMerge';
+import { useCustomersMerge } from '~/modules/contacts/hooks/useCustomersMerge';
 import { useToast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
+import { Row } from '@tanstack/table-core';
 interface MergeProps {
   disabled?: boolean;
   customers: ICustomer[];
+  rows: Row<any>[];
 }
 
 interface FieldMapping {
@@ -19,7 +21,11 @@ interface FieldMapping {
   parentKey?: string;
 }
 
-export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
+export const CustomerMerge = ({
+  disabled = false,
+  customers,
+  rows,
+}: MergeProps) => {
   const { toast } = useToast();
   const [sheetOpen, setSheetOpen] = useState<boolean>(false);
   const { customersMerge } = useCustomersMerge();
@@ -37,6 +43,7 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
         });
       },
       onCompleted: () => {
+        rows.map((row) => row.toggleSelected(false));
         setSheetOpen(false);
         toast({
           title: 'Success',
@@ -162,35 +169,20 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
     const linkValues: Record<string, any> = {};
 
     mergedCustomerEntries.forEach(([key, value1, value2]) => {
+      const targetObj = key.startsWith('links.') ? linkValues : initialValues;
       if (key.startsWith('links.')) {
-        const linkType = key.split('.')[1];
-        if (value1 && !value2) {
-          linkValues[linkType] = value1;
-        } else if (!value1 && value2) {
-          linkValues[linkType] = value2;
-        } else if (value1 === value2) {
-          linkValues[linkType] = value1;
-        } else {
-          if (value1) {
-            linkValues[linkType] = value1;
-          } else if (value2) {
-            linkValues[linkType] = value2;
-          }
-        }
-        return;
+        key = key.split('.')[1];
       }
       if (value1 && !value2) {
-        initialValues[key] = value1;
+        targetObj[key] = value1;
       } else if (!value1 && value2) {
-        initialValues[key] = value2;
+        targetObj[key] = value2;
       } else if (value1 === value2) {
-        initialValues[key] = value1;
-      } else {
-        if (value1) {
-          initialValues[key] = value1;
-        } else if (value2) {
-          initialValues[key] = value2;
-        }
+        targetObj[key] = value1;
+      } else if (value1) {
+        targetObj[key] = value1;
+      } else if (value2) {
+        targetObj[key] = value2;
       }
     });
 
@@ -201,6 +193,51 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
     return initialValues;
   });
 
+  useEffect(() => {
+    setValue(() => {
+      const initialValues: Record<string, any> = {};
+      const linkValues: Record<string, any> = {};
+
+      mergedCustomerEntries.forEach(([key, value1, value2]) => {
+        if (key.startsWith('links.')) {
+          const linkType = key.split('.')[1];
+          if (value1 && !value2) {
+            linkValues[linkType] = value1;
+          } else if (!value1 && value2) {
+            linkValues[linkType] = value2;
+          } else if (value1 === value2) {
+            linkValues[linkType] = value1;
+          } else {
+            if (value1) {
+              linkValues[linkType] = value1;
+            } else if (value2) {
+              linkValues[linkType] = value2;
+            }
+          }
+          return;
+        }
+        if (value1 && !value2) {
+          initialValues[key] = value1;
+        } else if (!value1 && value2) {
+          initialValues[key] = value2;
+        } else if (value1 === value2) {
+          initialValues[key] = value1;
+        } else {
+          if (value1) {
+            initialValues[key] = value1;
+          } else if (value2) {
+            initialValues[key] = value2;
+          }
+        }
+      });
+
+      if (Object.keys(linkValues).length > 0) {
+        initialValues['links'] = linkValues;
+      }
+
+      return initialValues;
+    });
+  }, [customers]);
   const handleValueChange = (newValue: any, key: string) => {
     if (key.startsWith('links.')) {
       const linkType = key.split('.')[1];
@@ -228,7 +265,7 @@ export const CustomerMerge = ({ disabled = false, customers }: MergeProps) => {
   if (disabled) return <MergeSheet disabled />;
   return (
     <MergeSheet
-      className="p-6 pb -10 flex gap-2 h-full"
+      className="p-6 flex gap-2 h-full"
       open={sheetOpen}
       onOpenChange={setSheetOpen}
       onDiscard={() => {

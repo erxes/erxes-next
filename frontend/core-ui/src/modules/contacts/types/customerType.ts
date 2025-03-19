@@ -38,6 +38,7 @@ export interface ICustomer {
   lastSeenAt?: number;
   sessionCount?: number;
   score?: number;
+  tagIds?: string[];
 }
 
 export interface ICustomerLinks {

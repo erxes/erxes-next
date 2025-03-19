@@ -1,9 +1,10 @@
+import { Avatar } from 'erxes-ui/components';
 import { FieldType } from './MergeMap';
 import { GENDER_CODE } from './constants';
 import { ChoiceboxGroup } from 'erxes-ui/components';
 
 interface MergingFieldContainerProps {
-  fieldName: any;
+  fieldName: string;
   fieldValue: any;
   type?: FieldType;
   disabled?: boolean;
@@ -28,7 +29,8 @@ export const MergingFieldContainer = ({
       {type === 'link' && <StringField fieldValue={fieldValue} />}
       {type === 'Array' && <ArrayField fieldValue={fieldValue} />}
       {type === 'sex' && <SexField fieldValue={fieldValue} />}
-      {type === 'owner' && <Ownerfield fieldValue={fieldValue} />}
+      {type === 'owner' && <OwnerField fieldValue={fieldValue} />}
+      {type === 'avatar' && <AvatarField fieldValue={fieldValue}></AvatarField>}
     </ChoiceboxGroup.Item>
   );
 };
@@ -56,10 +58,18 @@ const SexField = ({ fieldValue = 0 }: { fieldValue: 0 | 1 | 2 | 9 }) => {
   );
 };
 
-const Ownerfield = ({
+const OwnerField = ({
   fieldValue,
 }: {
   fieldValue: { _id: string; username: string };
 }) => {
   return <span className="font-semibold text-sm">{fieldValue?.username}</span>;
+};
+
+const AvatarField = ({ fieldValue }: { fieldValue: string }) => {
+  return (
+     <Avatar>
+      <Avatar.Image src={fieldValue} />
+    </Avatar>
+  );
 };

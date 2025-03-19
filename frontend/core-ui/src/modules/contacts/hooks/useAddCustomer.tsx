@@ -1,57 +1,37 @@
-import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
+import { useMutation, OperationVariables } from '@apollo/client';
 import { ADD_CUSTOMERS } from '@/contacts/graphql/mutations/addCustomers';
-import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
-import { ICustomer } from '@/contacts/types/customerType';
-
-interface CustomerData {
-  customersMain: {
-    list: ICustomer[];
-    totalCount: number;
-  };
-}
-
-interface AddCustomerResult {
-  customersAdd: ICustomer;
-}
-
-export function useAddCustomer(
-  options?: MutationHookOptions<AddCustomerResult, any>,
-) {
-  const [customersAdd, { loading, error }] = useMutation<AddCustomerResult>(
-    ADD_CUSTOMERS,
-    {
-      ...options,
-      update: (cache: ApolloCache<any>, { data }) => {
+import { GET_CUSTOMERS } from '../graphql/queries/getCustomers';
+export function useAddCustomer() {
+  const [_customersAdd, { loading, error }] = useMutation(ADD_CUSTOMERS);
+  const customersAdd = (operationVariables: OperationVariables) => {
+    return _customersAdd({
+      ...operationVariables,
+      update: (cache, { data }) => {
         try {
-          const queryVariables = { perPage: 30, dateFilters: null };
-          const existingData = cache.readQuery<CustomerData>({
-            query: GET_CUSTOMERS,
-            variables: queryVariables,
-          });
-          if (
-            !existingData ||
-            !existingData.customersMain ||
-            !data?.customersAdd
-          )
-            return;
-
-          cache.writeQuery<CustomerData>({
-            query: GET_CUSTOMERS,
-            variables: queryVariables,
-            data: {
-              customersMain: {
-                ...existingData.customersMain,
-                list: [data.customersAdd, ...existingData.customersMain.list],
-                totalCount: existingData.customersMain.totalCount + 1,
+          cache.updateQuery(
+            {
+              query: GET_CUSTOMERS,
+              variables: {
+                perPage: 30,
+                dateFilters: null,
               },
             },
-          });
-        } catch (e) {
-          console.error('error:', e);
+            ({ customersMain }) => {
+              return {
+                customersMain: {
+                  ...customersMain,
+                  list: [data, ...customersMain.list],
+                  totalCount: customersMain.totalCount + 1,
+                },
+              };
+            },
+          );
+        } catch {
+          // console.log(e);
         }
       },
-    },
-  );
+    });
+  };
 
   return { customersAdd, loading, error };
 }
