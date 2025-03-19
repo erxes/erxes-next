@@ -20,7 +20,7 @@ export function useAddCustomer() {
               return {
                 customersMain: {
                   ...customersMain,
-                  list: [data, ...customersMain.list],
+                  list: [data.customersAdd, ...customersMain.list],
                   totalCount: customersMain.totalCount + 1,
                 },
               };

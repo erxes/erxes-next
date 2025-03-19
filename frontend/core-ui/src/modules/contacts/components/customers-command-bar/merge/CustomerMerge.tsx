@@ -43,7 +43,7 @@ export const CustomerMerge = ({
         });
       },
       onCompleted: () => {
-        rows.map((row) => row.toggleSelected(false));
+        rows.forEach((row) => row.toggleSelected(false));
         setSheetOpen(false);
         toast({
           title: 'Success',
@@ -198,9 +198,9 @@ export const CustomerMerge = ({
       const initialValues: Record<string, any> = {};
       const linkValues: Record<string, any> = {};
 
-      mergedCustomerEntries.forEach(([key, value1, value2]) => {
-        if (key.startsWith('links.')) {
-          const linkType = key.split('.')[1];
+      mergedCustomerEntries.forEach(([originalKey, value1, value2]) => {
+        if (originalKey.startsWith('links.')) {
+          const linkType = originalKey.split('.')[1];
           if (value1 && !value2) {
             linkValues[linkType] = value1;
           } else if (!value1 && value2) {
@@ -216,17 +216,18 @@ export const CustomerMerge = ({
           }
           return;
         }
+
         if (value1 && !value2) {
-          initialValues[key] = value1;
+          initialValues[originalKey] = value1;
         } else if (!value1 && value2) {
-          initialValues[key] = value2;
+          initialValues[originalKey] = value2;
         } else if (value1 === value2) {
-          initialValues[key] = value1;
+          initialValues[originalKey] = value1;
         } else {
           if (value1) {
-            initialValues[key] = value1;
+            initialValues[originalKey] = value1;
           } else if (value2) {
-            initialValues[key] = value2;
+            initialValues[originalKey] = value2;
           }
         }
       });
@@ -238,6 +239,7 @@ export const CustomerMerge = ({
       return initialValues;
     });
   }, [customers]);
+
   const handleValueChange = (newValue: any, key: string) => {
     if (key.startsWith('links.')) {
       const linkType = key.split('.')[1];
