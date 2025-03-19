@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router';
 
 const Sample = lazy(() =>
   import('~/pages/SampleIndexPage').then((module) => ({
@@ -10,11 +10,9 @@ const Sample = lazy(() =>
 const PluginSample = () => {
   return (
     <Suspense fallback={<></>}>
-      <BrowserRouter basename="/sample">
-        <Routes>
-          <Route path="/" element={<Sample />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Sample />} />
+      </Routes>
     </Suspense>
   );
 };

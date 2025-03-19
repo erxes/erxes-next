@@ -1,6 +1,6 @@
 import { Control } from 'react-hook-form';
 
-import { Form, Upload } from 'erxes-ui/components';
+import { Form, Upload } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
 
@@ -19,7 +19,11 @@ export const AvatarField = ({
             <Upload.Root
               {...field}
               value={field.value || ''}
-              onChange={(fileInfo) => field.onChange(fileInfo.url)}
+              onChange={(fileInfo) => {
+                if ('url' in fileInfo) {
+                  field.onChange(fileInfo.url);
+                }
+              }}
             >
               <Upload.Preview className="rounded-full" />
               <div className="flex flex-col gap-2 justify-center">

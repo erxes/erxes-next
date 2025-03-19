@@ -3,17 +3,13 @@ import { SubmitHandler } from 'react-hook-form';
 
 import {
   Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
   Button,
   DatePicker,
   Form,
   Input,
   ToggleGroup,
-  ToggleGroupItem,
   Upload,
-} from 'erxes-ui/components';
+} from 'erxes-ui';
 
 import {
   PROFILE_ADVANCED_FIELDS,
@@ -122,8 +118,8 @@ export const ProfileForm = () => {
   const renderAdvancedFields = () => {
     return (
       <Accordion type="single" collapsible className="w-full">
-        <AccordionItem className="py-0 border-b-0" value="advanced">
-          <AccordionTrigger className="flex flex-1 items-center justify-between py-0 text-left font-normal leading-6 transition-all [&[data-state=open]>svg]:rotate-180 hover:no-underline">
+        <Accordion.Item className="py-0 border-b-0" value="advanced">
+          <Accordion.Trigger className="flex flex-1 items-center justify-between py-0 text-left font-normal leading-6 transition-all [&[data-state=open]>svg]:rotate-180 hover:no-underline">
             <div className="flex flex-col gap-3">
               <Form.Label>More Information</Form.Label>
               <Form.Description>
@@ -131,8 +127,8 @@ export const ProfileForm = () => {
                 applicable.
               </Form.Description>
             </div>
-          </AccordionTrigger>
-          <AccordionContent className="py-3 gap-3">
+          </Accordion.Trigger>
+          <Accordion.Content className="py-3 gap-3">
             <div className="grid grid-cols-2 gap-6 mx-0.5">
               {PROFILE_ADVANCED_FIELDS.map((advancedField, index) => {
                 const {
@@ -161,8 +157,8 @@ export const ProfileForm = () => {
                 );
               })}
             </div>
-          </AccordionContent>
-        </AccordionItem>
+          </Accordion.Content>
+        </Accordion.Item>
       </Accordion>
     );
   };
@@ -186,7 +182,7 @@ export const ProfileForm = () => {
             );
 
             return (
-              <ToggleGroupItem
+              <ToggleGroup.Item
                 value={fieldName}
                 aria-label="Toggle bold"
                 key={`toggle-item-${index}`}
@@ -202,7 +198,7 @@ export const ProfileForm = () => {
                 }}
               >
                 <Icon className={`h-4 w-4 ${field.error && 'text-rose-600'}`} />
-              </ToggleGroupItem>
+              </ToggleGroup.Item>
             );
           })}
         </ToggleGroup>

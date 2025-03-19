@@ -1,13 +1,5 @@
 import { SlashMenuProps } from 'erxes-ui';
 
-export interface AssignMemberFetchMoreProps {
-  fetchMore: () => void;
-  usersLength: number;
-  totalCount: number;
-  asChild?: boolean;
-  children?: React.ReactNode;
-}
-
 export interface IMember {
   _id: string;
   details: {

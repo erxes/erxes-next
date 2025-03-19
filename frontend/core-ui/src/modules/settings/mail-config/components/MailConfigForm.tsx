@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { useMailConfigForm } from '../hooks/useMailConfigForm';
-import { Button, Form, Input, Select } from 'erxes-ui/components';
+import { Button, Form, Input, Select, cn } from 'erxes-ui';
 import { MAIL_CONFIG_FIELDS } from '../constants/formData';
 import { TMailConfigForm } from '../types';
 import { Path, useWatch } from 'react-hook-form';
-import { cn } from 'erxes-ui/lib';
 import { AnimatePresence } from 'framer-motion';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { IconLoader2 } from '@tabler/icons-react';

@@ -1,4 +1,4 @@
-import { Select, Form } from 'erxes-ui/components';
+import { Select, Form } from 'erxes-ui';
 import { Control, Path } from 'react-hook-form';
 import { TGeneralSettingsProps } from '../types';
 

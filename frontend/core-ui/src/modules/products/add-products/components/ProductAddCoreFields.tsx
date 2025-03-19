@@ -6,7 +6,7 @@ import {
   IconStar,
 } from '@tabler/icons-react';
 
-import { Form, Input, Select, Separator } from 'erxes-ui/components';
+import { Form, Input, Select, Separator } from 'erxes-ui';
 import { SelectCurrency } from 'erxes-ui/components/currency/select-currency';
 import { CURRENCY_CODES } from 'erxes-ui/constants';
 import { CurrencyCode } from 'erxes-ui/types';

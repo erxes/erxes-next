@@ -1,20 +1,18 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
-import { useQueryState } from 'nuqs';
 
-import { Button, Sheet } from 'erxes-ui/components';
+import { Button, Sheet, useQueryState, useSetHotkeyScope, cn } from 'erxes-ui';
 import { contactDetailActiveActionTabAtom } from '@/contacts/detail/states/contactDetailStates';
-import { cn } from 'erxes-ui/lib';
-import { useSetHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/useSetHotkeyScope';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { ContactHotKeyScope } from '@/contacts/types/ContactHotKeyScope';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
+
 export const ContactDetailSheet = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [open, setOpen] = useQueryState('contact_id');
+  const [open, setOpen] = useQueryState<string>('contact_id');
   const setHotkeyScope = useSetHotkeyScope();
 
   const activeTab = useAtom(contactDetailActiveActionTabAtom);

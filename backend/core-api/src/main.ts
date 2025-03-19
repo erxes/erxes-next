@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apolloClient';
+import { router } from './routes';
 
 import { join, leave } from 'erxes-api-utils';
 
@@ -27,7 +28,7 @@ app.use(cookieParser());
 const corsOptions = {
   credentials: true,
   origin: [
-    DOMAIN ? DOMAIN : 'http://localhost:3000',
+    DOMAIN ? DOMAIN : 'http://localhost:3001',
     ALLOWED_DOMAINS ? ALLOWED_DOMAINS : 'http://localhost:3200',
     ...(CLIENT_PORTAL_DOMAINS || '').split(','),
     ...(process.env.ALLOWED_ORIGINS || '')
@@ -37,7 +38,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(router);
 // Wrap the Express server
 const httpServer = http.createServer(app);
 

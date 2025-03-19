@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
-import { useToast } from 'erxes-ui/hooks';
+import { useToast } from 'erxes-ui';
 
 import { Logout } from '@/auth/graphql/mutations/logout';
 import { ForgotPassword } from '@/auth/login/grahpql/mutations/forgotPassword';

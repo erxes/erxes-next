@@ -1,39 +1,95 @@
 import { IconPlus } from '@tabler/icons-react';
 import { DropdownMenu, Button } from 'erxes-ui';
+import { Link } from 'react-router-dom';
 
-export const AddTransaction = () => {
+export const AddTransaction = ({
+  inForm,
+  children,
+  onClick,
+}: {
+  inForm?: boolean;
+  children: React.ReactNode;
+  onClick?: (journal?: string) => void;
+}) => {
   return (
     <DropdownMenu>
-      <DropdownMenu.Trigger>
-        <Button>
-          <IconPlus />
-          Add Transaction
-        </Button>
-      </DropdownMenu.Trigger>
+      <DropdownMenu.Trigger asChild>{children}</DropdownMenu.Trigger>
       <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width]">
         <DropdownMenu.Label>Ерөнхий</DropdownMenu.Label>
-        <DropdownMenu.Item>Ерөнхий журнал</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>НӨАТ</DropdownMenu.Item>
+        <AddTransactionItem journal="general" onClick={onClick} inForm={inForm}>
+          Ерөнхий журнал
+        </AddTransactionItem>
+        <AddTransactionItem disabled>НӨАТ</AddTransactionItem>
         <DropdownMenu.Label>Мөнгөн хөрөнгө</DropdownMenu.Label>
-        <DropdownMenu.Item>Касс</DropdownMenu.Item>
-        <DropdownMenu.Item>Харилцах</DropdownMenu.Item>
+        <AddTransactionItem journal="cash" onClick={onClick} inForm={inForm}>
+          Касс
+        </AddTransactionItem>
+        <AddTransactionItem
+          journal="exchange"
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Харилцах
+        </AddTransactionItem>
         <DropdownMenu.Label>Тооцоо</DropdownMenu.Label>
-        <DropdownMenu.Item>Авлага</DropdownMenu.Item>
-        <DropdownMenu.Item>Өглөг</DropdownMenu.Item>
+        <AddTransactionItem
+          journal="exchange"
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Авлага
+        </AddTransactionItem>
+        <AddTransactionItem
+          journal="exchange"
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Өглөг
+        </AddTransactionItem>
         <DropdownMenu.Label>Бараа материал</DropdownMenu.Label>
-        <DropdownMenu.Item>Орлого</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Хангамжийн зарлага</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Борлуулалт (байнгын)</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>
+        <AddTransactionItem disabled>Орлого</AddTransactionItem>
+        <AddTransactionItem disabled>Хангамжийн зарлага</AddTransactionItem>
+        <AddTransactionItem disabled>Борлуулалт (байнгын)</AddTransactionItem>
+        <AddTransactionItem disabled>
           Борлуулалт (ажил үйлчилгээ)
-        </DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Дотоод хөдөлгөөн</DropdownMenu.Item>
+        </AddTransactionItem>
+        <AddTransactionItem disabled>Дотоод хөдөлгөөн</AddTransactionItem>
         <DropdownMenu.Label>Үндсэн хөрөнгө</DropdownMenu.Label>
-        <DropdownMenu.Item disabled>Орлого</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Акт</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Хөдөлгөөн</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Тохируулга</DropdownMenu.Item>
+        <AddTransactionItem disabled>Орлого</AddTransactionItem>
+        <AddTransactionItem disabled>Акт</AddTransactionItem>
+        <AddTransactionItem disabled>Хөдөлгөөн</AddTransactionItem>
+        <AddTransactionItem disabled>Тохируулга</AddTransactionItem>
       </DropdownMenu.Content>
     </DropdownMenu>
+  );
+};
+
+const AddTransactionItem = ({
+  children,
+  disabled,
+  journal,
+  inForm,
+  onClick,
+}: {
+  children: React.ReactNode;
+  disabled?: boolean;
+  journal?: string;
+  onClick?: (journal?: string) => void;
+  inForm?: boolean;
+}) => {
+  if (disabled) {
+    return <DropdownMenu.Item disabled>{children}</DropdownMenu.Item>;
+  }
+  if (!inForm && journal) {
+    return (
+      <DropdownMenu.Item asChild>
+        <Link to={`transaction/?defaultJournal=${journal}`}>{children}</Link>
+      </DropdownMenu.Item>
+    );
+  }
+  return (
+    <DropdownMenu.Item onClick={() => onClick && onClick(journal)}>
+      {children}
+    </DropdownMenu.Item>
   );
 };

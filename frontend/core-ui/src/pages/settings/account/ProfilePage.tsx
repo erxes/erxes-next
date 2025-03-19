@@ -1,4 +1,4 @@
-import { ScrollArea } from 'erxes-ui/components';
+import { ScrollArea } from 'erxes-ui';
 
 import { ProfileForm } from '@/settings/profile/components/ProfileForm';
 import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';

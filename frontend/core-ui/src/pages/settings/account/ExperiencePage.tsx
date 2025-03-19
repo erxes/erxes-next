@@ -1,4 +1,4 @@
-import { Breadcrumb, Input, Label } from 'erxes-ui/components';
+import { Breadcrumb, Input, Label } from 'erxes-ui';
 
 import { ChooseTheme } from '@/settings/components/ChooseTheme';
 
@@ -6,7 +6,7 @@ export const SettingsExperiencePage = () => {
   return (
     <section className="mx-auto max-w-2xl w-full">
       <div className="flex items-center justify-between px-4 h-16">
-        <Breadcrumb.Root>
+        <Breadcrumb>
           <Breadcrumb.List>
             <Breadcrumb.Item>
               <Breadcrumb.Link>Settings</Breadcrumb.Link>
@@ -16,7 +16,7 @@ export const SettingsExperiencePage = () => {
               <Breadcrumb.Page>Experience</Breadcrumb.Page>
             </Breadcrumb.Item>
           </Breadcrumb.List>
-        </Breadcrumb.Root>
+        </Breadcrumb>
       </div>
       <h2 className="font-semibold text-lg mt-4 mb-12 px-4">Experience</h2>
       <div className="flex flex-col gap-10 px-4">

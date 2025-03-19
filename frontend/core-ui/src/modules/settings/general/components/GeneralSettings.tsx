@@ -1,4 +1,4 @@
-import { Button, Form } from 'erxes-ui/components';
+import { Button, Form } from 'erxes-ui';
 import { useGeneralSettingsForms } from '../hooks/useGeneralSettingsForms';
 import SelectControl from './SelectControl';
 import { LANGUAGES } from '../constants/data';

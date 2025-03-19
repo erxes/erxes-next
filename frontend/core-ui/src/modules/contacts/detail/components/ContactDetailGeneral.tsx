@@ -4,7 +4,7 @@ import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';
-import { Avatar, Button } from 'erxes-ui/components';
+import { Avatar, Button } from 'erxes-ui';
 
 export const ContactDetailGeneral = () => {
   const { customerDetail } = useContactDetail();

@@ -1,6 +1,13 @@
 import React from 'react';
 import { IMember } from '../types/TeamMembers';
-import { Avatar, avatarVariants, cn, Skeleton, Tooltip } from 'erxes-ui';
+import {
+  Avatar,
+  avatarVariants,
+  cn,
+  Skeleton,
+  TextOverflowTooltip,
+  Tooltip,
+} from 'erxes-ui';
 import { useMemberInlineContext } from '../hooks/useMemberInline';
 import { Slot } from '@radix-ui/react-slot';
 import { useAssignedMember } from '../hooks/useUsers';
@@ -103,7 +110,7 @@ export const MemberInlineTitle = React.forwardRef<
 
   return (
     <Comp ref={ref} {...props}>
-      {fullName}
+      <TextOverflowTooltip value={fullName} />
     </Comp>
   );
 });

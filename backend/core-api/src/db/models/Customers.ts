@@ -1,4 +1,7 @@
-import { ICustomer, ICustomerDocument } from '../definitions/customers';
+import {
+  ICustomer,
+  ICustomerDocument,
+} from '../../modules/contacts/customers/@types/customers';
 import { Model } from 'mongoose';
 import { IModels } from '../../connectionResolvers';
 import { customerSchema } from '../definitions/customers';
@@ -11,7 +14,7 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
   removeCustomers(customerIds: string[]): Promise<{ n: number; ok: number }>;
 }
 
-export const loadCustomerClass = (models: IModels, subdomain: string) => {
+export const loadCustomerClass = (models: IModels) => {
   class Customer {
     public static getCustomerName(customer: ICustomer) {
       if (customer.firstName || customer.lastName) {

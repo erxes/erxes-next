@@ -1,6 +1,6 @@
 import { IconDevices, IconMoon, IconSun } from '@tabler/icons-react';
 
-import { DropdownMenu } from 'erxes-ui/components';
+import { DropdownMenu } from 'erxes-ui';
 import { ThemeOption, themeState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 

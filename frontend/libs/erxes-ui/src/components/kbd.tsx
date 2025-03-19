@@ -5,7 +5,7 @@ import { cn } from 'erxes-ui/lib';
 /**
  * This component is based on the `kbd` element and supports all of its props
  */
-const Kbd = React.forwardRef<
+export const Kbd = React.forwardRef<
   HTMLElement,
   React.ComponentPropsWithoutRef<'kbd'>
 >(({ children, className, ...props }, ref) => {
@@ -24,5 +24,3 @@ const Kbd = React.forwardRef<
   );
 });
 Kbd.displayName = 'Kbd';
-
-export { Kbd };

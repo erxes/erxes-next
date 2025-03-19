@@ -11,7 +11,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
 
-import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
+import { REACT_APP_API_URL } from 'erxes-ui';
 
 // Create an http link:
 const httpLink = createHttpLink({

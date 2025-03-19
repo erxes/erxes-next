@@ -1,8 +1,8 @@
-import { useQueryState } from 'nuqs';
-
-import { Button, Command, Popover } from 'erxes-ui/components';
+import { Combobox, Command, Popover, TextOverflowTooltip } from 'erxes-ui';
 
 import { useBrands } from '@/brands/hooks/useBrands';
+
+import { useQueryState } from 'erxes-ui';
 
 export const ProductBrandFilterDropdown = ({ onOpenChange }: any) => {
   const [filter, setFilter] = useQueryState('brand');
@@ -46,12 +46,13 @@ export const ProductBrandFilterBar = () => {
 
   return (
     <Popover>
-      <Popover.Trigger asChild>
-        <Button variant="ghost" className="px-2 bg-white rounded-none">
-          {selectedBrand?.name || 'Select brand'}
-        </Button>
-      </Popover.Trigger>
-      <Popover.Content className="p-0">
+      <Combobox.Trigger>
+        <Combobox.Value
+          value={selectedBrand?.name}
+          placeholder="Select brand"
+        />
+      </Combobox.Trigger>
+      <Combobox.Content>
         <Command>
           <Command.Input placeholder="Search brand" />
           <Command.List>
@@ -62,12 +63,12 @@ export const ProductBrandFilterBar = () => {
                   setFilter(brand._id);
                 }}
               >
-                {brand.name}
+                <TextOverflowTooltip value={brand.name} />
               </Command.Item>
             ))}
           </Command.List>
         </Command>
-      </Popover.Content>
+      </Combobox.Content>
     </Popover>
   );
 };

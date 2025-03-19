@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 
 import { type DialogProps } from '@radix-ui/react-dialog';
@@ -9,6 +7,7 @@ import { Command as CommandPrimitive } from 'cmdk';
 
 import { Dialog } from './dialog';
 import { cn } from '../lib/utils';
+import { Skeleton } from './skeleton';
 
 const CommandRoot = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -188,7 +187,7 @@ const CommandShortcut = ({
 };
 CommandShortcut.displayName = 'CommandShortcut';
 
-const Command = Object.assign(CommandRoot, {
+export const Command = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
   Input: CommandInput,
   List: CommandList,
@@ -198,5 +197,3 @@ const Command = Object.assign(CommandRoot, {
   Shortcut: CommandShortcut,
   Separator: CommandSeparator,
 });
-
-export { Command };

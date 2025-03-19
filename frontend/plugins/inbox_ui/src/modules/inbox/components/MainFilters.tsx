@@ -1,5 +1,5 @@
 import { IconUsers, IconUserUp } from '@tabler/icons-react';
-import { Button, Collapsible } from 'erxes-ui/components';
+import { Button, Collapsible } from 'erxes-ui';
 import { ChooseChannel } from '@/inbox/components/ChooseChannel';
 import { ChooseIntegration } from '@/inbox/components/ChooseIntegration';
 import { useMultiQueryState } from '../hooks/useQueryState';

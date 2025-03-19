@@ -35,7 +35,7 @@ export const TagBadge = React.forwardRef<
       ref={ref}
       {...props}
     >
-      <TextOverflowTooltip text={tagValue?.name} />
+      <TextOverflowTooltip value={tagValue?.name} />
       {renderClose && renderClose(tagValue)}
     </Badge>
   );

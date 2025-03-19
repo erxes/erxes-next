@@ -1,11 +1,11 @@
 import { useQuery, OperationVariables } from '@apollo/client';
 
-import { brandsQuery } from '@/brands/graphql/queries/BrandsQuery';
+import { BRANDS_QUERY } from '@/brands/graphql/queries/BrandsQuery';
 
 import { IBrand } from '@/brands/types/brand';
 export const useBrands = (options?: OperationVariables) => {
   const BRANDS_PER_PAGE = 13;
-  const { data, loading, fetchMore, error } = useQuery(brandsQuery, {
+  const { data, loading, fetchMore, error } = useQuery(BRANDS_QUERY, {
     ...options,
     variables: {
       perPage: BRANDS_PER_PAGE,

@@ -1,11 +1,15 @@
 import { lazy } from 'react';
-import { createRoutesFromElements, Route } from 'react-router';
-import { createBrowserRouter } from 'react-router';
+import {
+  createRoutesFromElements,
+  Route,
+  createBrowserRouter,
+  Routes,
+} from 'react-router-dom';
 
 import { ContactsRoutes } from '@/app/components/ContactsRoutes';
 import { ProductsRoutes } from '@/app/components/ProductsRoutes';
 import { SettingsRoutes } from '@/app/components/SettingsRoutes';
-import { usePluginsRouter } from '@/app/hooks/usePluginsRouter';
+import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 import { AppPath } from '@/types/paths/AppPath';
@@ -46,7 +50,7 @@ export const useCreateAppRouter = () => {
                 path={AppPath.ContactsCatchAll}
                 element={<ContactsRoutes />}
               />
-              <Route>{usePluginsRouter()}</Route>
+              {...getPluginsRoutes()}
             </Route>
           </Route>
         </Route>

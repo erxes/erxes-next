@@ -1,4 +1,3 @@
-import { dummyTransactions } from '../dummyTransactions';
 import { useTransactions } from '../hooks/useTransactions';
 import {
   transactionColumns,
@@ -7,13 +6,13 @@ import {
 import { RecordTable } from 'erxes-ui';
 
 export const PtrRecordTable = () => {
-  const { transactions, loading, error, totalCount, handleFetchMore } =
+  const { transactions, loading, totalCount, handleFetchMore } =
     useTransactions();
 
   return (
     <RecordTable.Provider
       columns={transactionColumns}
-      data={transactions || dummyTransactions}
+      data={transactions || []}
       handleReachedBottom={handleFetchMore}
       stickyColumns={['avatar', 'name']}
       className="mt-1.5"

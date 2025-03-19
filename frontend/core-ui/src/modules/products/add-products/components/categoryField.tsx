@@ -1,15 +1,14 @@
 import { useState } from 'react';
 
-import { IconCheck, IconChevronDown } from '@tabler/icons-react';
-
 import {
   Avatar,
-  Button,
+  Combobox,
   Command,
   Popover,
   Skeleton,
-} from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib/utils';
+  TextOverflowTooltip,
+  cn,
+} from 'erxes-ui';
 
 import { useProductCategories } from '@/products/hooks/useProductCategories';
 
@@ -47,46 +46,31 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
-      <Popover.Trigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          aria-controls="category-command-menu"
-          className={cn(
-            'truncate h-8 rounded-md hover:cursor-pointer w-full justify-between',
-            className,
-          )}
-        >
-          {currentValue ? (
-            <div className="flex items-center gap-2">
-              <Avatar>
-                <Avatar.Image src={currentValue?.attachment?.url} />
-                <Avatar.Fallback colorSeed={currentValue?._id}>
-                  {currentValue?.name?.charAt(0)}
-                </Avatar.Fallback>
-              </Avatar>
-              <span className="truncate">{currentValue?.name}</span>
-            </div>
-          ) : (
-            <span className="text-foreground font-medium text-sm">
-              Choose category
-            </span>
-          )}
-          <IconChevronDown
-            size={16}
-            strokeWidth={2}
-            className="shrink-0 text-foreground"
-            aria-hidden="true"
-          />
-        </Button>
-      </Popover.Trigger>
-      <Popover.Content
-        className="w-60 min-w-[var(--radix-popper-anchor-width)] border p-0"
-        align="start"
-        side="bottom"
-        sideOffset={8}
+      <Combobox.Trigger
+        variant="outline"
+        role="combobox"
+        aria-expanded={open}
+        aria-controls="category-command-menu"
+        className={cn(
+          'truncate h-8 rounded-md hover:cursor-pointer w-full justify-between',
+          className,
+        )}
       >
+        {currentValue ? (
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <Avatar.Image src={currentValue?.attachment?.url} />
+              <Avatar.Fallback colorSeed={currentValue?._id}>
+                {currentValue?.name?.charAt(0)}
+              </Avatar.Fallback>
+            </Avatar>
+            <span className="truncate">{currentValue?.name}</span>
+          </div>
+        ) : (
+          <Combobox.Value placeholder="Choose category" />
+        )}
+      </Combobox.Trigger>
+      <Combobox.Content className="w-60">
         <Command id="category-command-menu" className="relative">
           <Command.Input
             variant="secondary"
@@ -95,7 +79,7 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
             className="h-9"
           />
           <Command.List className="max-h-[300px] overflow-y-auto">
-            <Command.Empty>No category found</Command.Empty>
+            <Combobox.Empty loading={loading} />
             {productCategories?.map((category: Category) => (
               <Command.Item
                 key={category._id}
@@ -110,20 +94,13 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
                     {category?.name?.charAt(0)}
                   </Avatar.Fallback>
                 </Avatar>
-                <span className="ml-2 truncate">{category.name}</span>
-                <IconCheck
-                  size={16}
-                  strokeWidth={2}
-                  className={cn(
-                    'ml-auto',
-                    category._id === value ? 'opacity-100' : 'opacity-0',
-                  )}
-                />
+                <TextOverflowTooltip className="ml-2" value={category.name} />
+                <Combobox.Check checked={category._id === value} />
               </Command.Item>
             ))}
           </Command.List>
         </Command>
-      </Popover.Content>
+      </Combobox.Content>
     </Popover>
   );
 };

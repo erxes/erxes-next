@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from 'erxes-ui/lib';
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 px-3 whitespace-nowrap rounded text-sm transition-colors outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:opacity-50 [&>svg]:pointer-events-none [&>svg]:size-4 [&>svg]:shrink-0 font-medium',
   {
     variants: {
@@ -40,7 +40,7 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
@@ -56,5 +56,3 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 Button.displayName = 'Button';
-
-export { Button, buttonVariants };

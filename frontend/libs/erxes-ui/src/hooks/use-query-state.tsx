@@ -3,11 +3,21 @@ import { useSearchParams } from 'react-router-dom';
 // Single key types and hook
 type QueryState<T> = [T | null, (value: T | null) => void];
 
-export function useQueryState<T>(queryKey: string): QueryState<T> {
+export function useQueryState<T>(
+  queryKey: string,
+  options?: {
+    defaultValue?: T;
+  },
+): QueryState<T> {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const parseQueryValue = (value: string | null): T | null => {
-    if (!value) return null;
+    if (!value) {
+      if (options?.defaultValue !== undefined) {
+        return options.defaultValue;
+      }
+      return null;
+    }
 
     try {
       const parsed = JSON.parse(value);
@@ -32,7 +42,7 @@ export function useQueryState<T>(queryKey: string): QueryState<T> {
       return;
     }
 
-    setSearchParams(searchParams, { replace: true });
+    setSearchParams(searchParams);
   };
 
   return [query, setQuery];

@@ -3,8 +3,8 @@ import { TagBadge } from './TagBadge';
 import { useSelectTagsContext } from '../hooks/useSelectTagsContext';
 import React from 'react';
 export const SingleTagWithTooltip = React.forwardRef<
-  React.ElementRef<typeof Combobox>,
-  React.ComponentPropsWithoutRef<typeof Combobox>
+  React.ElementRef<typeof Combobox.Trigger>,
+  React.ComponentPropsWithoutRef<typeof Combobox.Trigger>
 >((props, ref) => {
   const { selected, selectedTags } = useSelectTagsContext();
 
@@ -16,7 +16,7 @@ export const SingleTagWithTooltip = React.forwardRef<
   const tagIdsExceptFirst = selected?.slice(1);
 
   return (
-    <Combobox {...props} ref={ref}>
+    <Combobox.Trigger {...props} ref={ref}>
       {firstTag || firstTagId ? (
         <TagBadge
           tag={firstTag}
@@ -46,7 +46,7 @@ export const SingleTagWithTooltip = React.forwardRef<
           </Tooltip>
         </Tooltip.Provider>
       )}
-    </Combobox>
+    </Combobox.Trigger>
   );
 });
 

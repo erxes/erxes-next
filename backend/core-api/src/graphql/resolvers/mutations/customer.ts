@@ -1,5 +1,5 @@
 import { IContext } from 'backend/core-api/src/connectionResolvers';
-import { ICustomer } from 'erxes-api-utils';
+import { ICustomer } from '../../../modules/contacts/customers/@types';
 
 export const customerMutations = {
   /**

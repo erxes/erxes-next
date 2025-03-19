@@ -1,9 +1,6 @@
-import { Tabs } from 'erxes-ui/components/tabs';
-
-import { Resizable } from 'erxes-ui/components';
+import { Resizable, Tabs, useQueryState } from 'erxes-ui';
 import { ContactDetailActionsTrigger } from './ContactDetailActions';
 import { ContactDetailSheet } from './ContactDetailSheet';
-import { useQueryState } from 'nuqs';
 
 export const ContactDetailLayout = ({
   children,
@@ -33,13 +30,11 @@ export const ContactDetailLayout = ({
 };
 
 const ContactDetailTabs = ({ children }: { children: React.ReactNode }) => {
-  const [selectedTab, setSelectedTab] = useQueryState('tab', {
-    defaultValue: 'overview',
-  });
+  const [selectedTab, setSelectedTab] = useQueryState<string>('tab');
 
   return (
     <Tabs
-      value={selectedTab}
+      value={selectedTab ?? 'overview'}
       onValueChange={setSelectedTab}
       className="flex-auto flex flex-col "
     >

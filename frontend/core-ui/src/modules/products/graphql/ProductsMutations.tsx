@@ -77,6 +77,7 @@ const productsEdit = gql`
     $customFieldsData: JSON
     $vendorId: String
     $uom: String
+    $barcodeDescription: String
   ) {
     productsEdit(
       _id: $_id
@@ -90,6 +91,7 @@ const productsEdit = gql`
       customFieldsData: $customFieldsData
       vendorId: $vendorId
       uom: $uom
+      barcodeDescription: $barcodeDescription
     ) {
       _id
     }

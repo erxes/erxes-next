@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { IconLoader2 } from '@tabler/icons-react';
 import { motion } from 'motion/react';
 
-import { Button, Form, Label } from 'erxes-ui/components';
+import { Button, Form, Label } from 'erxes-ui';
 
 import { DynamicServiceConfigFields } from '@/settings/file-upload/components/DynamicServiceConfigFields';
 import { FileUploadMainFields } from '@/settings/file-upload/components/FileUploadMainFields';

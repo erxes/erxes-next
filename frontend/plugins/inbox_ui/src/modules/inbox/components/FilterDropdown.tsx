@@ -1,10 +1,18 @@
 import { IconAdjustments } from '@tabler/icons-react';
-import { Button, DropdownMenu } from 'erxes-ui';
+import {
+  Button,
+  DropdownMenu,
+  DateFilterInDropdown,
+  DateFilter,
+} from 'erxes-ui';
 import { useQueryState } from '../hooks/useQueryState';
 import { BOOLEAN_FILTERS } from '../constants/booleanFilters';
+import { useState } from 'react';
+
 export const FilterDropdown = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>
         <Button
           variant="ghost"
@@ -27,22 +35,7 @@ export const FilterDropdown = () => {
             <ResolvedStatus />
           </DropdownMenu.TabsContent>
           <DropdownMenu.TabsContent value="date">
-            <DropdownMenu.RadioGroup>
-              <DropdownMenu.RadioItem value="today">
-                Today
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.RadioItem value="yesterday">
-                Yesterday
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.RadioItem value="thisWeek">
-                This week
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.RadioItem value="thisMonth">
-                This month
-              </DropdownMenu.RadioItem>
-              <DropdownMenu.Separator />
-              <DropdownMenu.Item>Custom</DropdownMenu.Item>
-            </DropdownMenu.RadioGroup>
+            <ConversationsDateFilter setDropdownOpen={setOpen} />
           </DropdownMenu.TabsContent>
         </DropdownMenu.Tabs>
       </DropdownMenu.Content>
@@ -50,6 +43,31 @@ export const FilterDropdown = () => {
   );
 };
 
+const ConversationsDateFilter = ({
+  setDropdownOpen,
+}: {
+  setDropdownOpen: (open: boolean) => void;
+}) => {
+  const [date, setDate] = useQueryState<string>('date');
+  return (
+    <DateFilterInDropdown
+      value={date || ''}
+      onValueChange={(value) => setDate(value)}
+      filterId="date"
+      renderDateFilter={({ open, setOpen }) => (
+        <DateFilter
+          open={open}
+          onOpenChange={setOpen}
+          value={date || ''}
+          onValueChange={(value) => {
+            setDate(value);
+            setDropdownOpen(false);
+          }}
+        />
+      )}
+    />
+  );
+};
 export const BooleanStatus = ({
   statusKey,
   label,

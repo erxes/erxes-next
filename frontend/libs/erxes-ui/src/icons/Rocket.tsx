@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect } from 'react';
 
 import type { Variants } from 'motion/react';
@@ -38,7 +36,7 @@ const fireVariants: Variants = {
   },
 };
 
-const RocketIcon = () => {
+export const RocketIcon = () => {
   const controls = useAnimation();
 
   useEffect(() => {
@@ -73,5 +71,3 @@ const RocketIcon = () => {
     </div>
   );
 };
-
-export { RocketIcon };

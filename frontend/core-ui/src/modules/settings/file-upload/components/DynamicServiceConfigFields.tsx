@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 
-import { Checkbox, Form, Input } from 'erxes-ui/components';
+import { Checkbox, Form, Input } from 'erxes-ui';
 
 import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
 import {

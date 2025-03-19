@@ -4,10 +4,11 @@ import {
   BlockEditorReadOnly,
   Button,
   Checkbox,
+  parseDateRangeFromString,
   RelativeDateDisplay,
   Separator,
 } from 'erxes-ui';
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 import { ConversationContext } from '~/modules/inbox/context/ConversationContext';
 import { IConversation } from '@/inbox/types/Conversation';
 import { useConversationContext } from '@/inbox/hooks/useConversationContext';
@@ -36,13 +37,16 @@ export const Conversations = () => {
       }
     },
   });
-  const [{ channelId, integrationType, unassigned, status }] =
+  const [{ channelId, integrationType, unassigned, status, date }] =
     useMultiQueryState<{
       channelId: string;
       integrationType: string;
       unassigned: string;
       status: string;
-    }>(['channelId', 'integrationType', 'unassigned', 'status']);
+      date: string;
+    }>(['channelId', 'integrationType', 'unassigned', 'status', 'date']);
+
+  const parsedDate = parseDateRangeFromString(date || '');
 
   const { totalCount, conversations, handleFetchMore, loading } =
     useConversations({
@@ -52,6 +56,8 @@ export const Conversations = () => {
         integrationType,
         unassigned,
         status,
+        startDate: parsedDate?.from,
+        endDate: parsedDate?.to,
       },
     });
 

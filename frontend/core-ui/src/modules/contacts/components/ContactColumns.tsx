@@ -8,8 +8,7 @@ import {
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
-import { Avatar } from 'erxes-ui/components/avatar';
-import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
+import { Avatar, RecordTable, RelativeDateDisplay } from 'erxes-ui';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 
@@ -24,7 +23,7 @@ export const contactColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'avatar',
     accessorKey: 'avatar',
-    header: () => <RecordTableInlineHead icon={IconUser} label="" />,
+    header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => (
       <RecordTableInlineCell
         display={() => (

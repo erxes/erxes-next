@@ -1,15 +1,17 @@
 import { Control } from 'react-hook-form';
 
-import { Form } from 'erxes-ui';
+import {
+  BlockEditor,
+  Form,
+  BLOCK_SCHEMA,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
+  Key,
+} from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/add-contacts/components/formSchema';
-import { BlockEditor } from 'erxes-ui/components';
 import { useCreateBlockNote } from '@blocknote/react';
-import { BLOCK_SCHEMA } from 'erxes-ui/modules/blocks/constant/blockEditorSchema';
-import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
 import { ContactHotKeyScope } from '@/contacts/types/ContactHotKeyScope';
-import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
-import { Key } from 'erxes-ui/types/Key';
 import { useRef } from 'react';
 
 export const DescriptionField = ({

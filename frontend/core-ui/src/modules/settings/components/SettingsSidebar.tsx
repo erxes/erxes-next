@@ -12,7 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 
-import { Sidebar } from 'erxes-ui/components';
+import { Sidebar } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import {
@@ -126,7 +126,9 @@ export function SettingsSidebar() {
                 return (
                   <Sidebar.MenuItem key={item.path}>
                     <Sidebar.MenuButton asChild>
-                      <Link to={AppPath.Settings + item.path}>
+                      <Link
+                        to={AppPath.Settings + item.path.replace('_ui', '')}
+                      >
                         {Icon && <Icon />}
                         <span>{t('nav.' + item.name)}</span>
                       </Link>

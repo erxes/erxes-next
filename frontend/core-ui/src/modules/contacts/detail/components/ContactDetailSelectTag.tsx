@@ -1,12 +1,11 @@
 import { useState } from 'react';
 
-import { Label } from 'erxes-ui/components';
+import { Label, useQueryState } from 'erxes-ui';
 
 import { SelectTags, useGiveTags } from 'ui-modules';
-import { useQueryState } from 'nuqs';
 
 export const ContactDetailSelectTag = ({ tagIds }: { tagIds: string[] }) => {
-  const [contactId] = useQueryState('contact_id');
+  const [contactId] = useQueryState<string>('contact_id');
   const { giveTags, loading } = useGiveTags();
   const [selectedTags, setSelectedTags] = useState<string[]>(tagIds);
 

@@ -1,10 +1,10 @@
 import { IconPlus } from '@tabler/icons-react';
 
-import { Button,Sheet } from 'erxes-ui/components';
+import { Button, Sheet } from 'erxes-ui';
 
 interface ProductAddSheetProps {
   children: React.ReactNode;
-  onOpenChange?: (boolean) => void;
+  onOpenChange?: (open: boolean) => void;
   open?: boolean;
 }
 export const ProductAddSheet = ({

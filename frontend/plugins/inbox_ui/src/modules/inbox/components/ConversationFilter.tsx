@@ -1,5 +1,5 @@
 import { IconCheckbox, IconSortDescending, IconTag } from '@tabler/icons-react';
-import { Button, Checkbox, CommandBar, Separator } from 'erxes-ui/components';
+import { Button, Checkbox, CommandBar, Separator } from 'erxes-ui';
 import { FilterDropdown } from './FilterDropdown';
 import { selectConversationsState } from '../states/selectConversationsState';
 import { useAtom } from 'jotai';

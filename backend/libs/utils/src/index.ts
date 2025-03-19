@@ -1,4 +1,3 @@
-export * from './db';
 export * from './headers';
 export * from './mongoose-types';
 export * from './mq-worker';

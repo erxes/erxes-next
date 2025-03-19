@@ -1,10 +1,8 @@
-import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
-import { Button, Resizable, Tabs, Tooltip } from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
+import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
+import { Button, Resizable, Tabs, Tooltip, cn, useQueryState } from 'erxes-ui';
 import { contactDetailActiveActionTabAtom } from '@/contacts/detail/states/contactDetailStates';
 import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
-import { useQueryState } from 'nuqs';
 import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
 import { useAtom, useSetAtom } from 'jotai';
 
@@ -23,7 +21,7 @@ const actionTabs = {
 
 export const ContactDetailActions = () => {
   const [activeTab, setActiveTab] = useAtom(contactDetailActiveActionTabAtom);
-  const [contactId] = useQueryState('contact_id');
+  const [contactId] = useQueryState<string>('contact_id');
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { currentOrganizationState } from 'ui-modules';
 
-import { useToast } from 'erxes-ui/hooks';
+import { useToast } from 'erxes-ui';
 
 import { CreateOwner } from '@/organization/owner/graphql/mutation/createOwner';
 import { CreateOwnerFormType } from '@/organization/owner/hooks/useCreateOwnerForm';

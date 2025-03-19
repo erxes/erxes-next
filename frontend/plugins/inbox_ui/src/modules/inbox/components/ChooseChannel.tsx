@@ -1,5 +1,5 @@
 import { useChannels } from '@/inbox/hooks/useChannels';
-import { Button, Collapsible, Skeleton } from 'erxes-ui/components';
+import { Button, Collapsible, Skeleton } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { IChannel } from '../types/Channel';
 import { useMultiQueryState } from '../hooks/useQueryState';

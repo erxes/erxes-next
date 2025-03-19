@@ -1,7 +1,6 @@
 import { motion } from 'motion/react';
 
-import { Form, RadioGroup } from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib';
+import { Form, RadioGroup, cn } from 'erxes-ui';
 
 import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
 import { FormProps } from 'react-hook-form';

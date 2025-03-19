@@ -7,7 +7,7 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
-import { usePLuginsSettingsRoutes } from '../hooks/usePluginsRouter';
+import { getPluginsSettingsRoutes } from '../hooks/usePluginsRouter';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -53,7 +53,7 @@ export function SettingsRoutes() {
           element={<GeneralSettings />}
         />
 
-        {usePLuginsSettingsRoutes()}
+        {getPluginsSettingsRoutes()}
       </Routes>
     </Suspense>
   );

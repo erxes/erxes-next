@@ -2,7 +2,6 @@ import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
 import { init } from '@module-federation/enhanced/runtime';
-import { NuqsAdapter } from 'nuqs/adapters/react';
 
 import { NODE_ENV } from 'erxes-ui/utils/config';
 
@@ -19,9 +18,7 @@ async function initFederation() {
   if (NODE_ENV === 'development') {
     root.render(
       <StrictMode>
-        <NuqsAdapter>
-          <App />
-        </NuqsAdapter>
+        <App />
       </StrictMode>,
     );
   } else {
@@ -40,9 +37,7 @@ async function initFederation() {
 
     root.render(
       <StrictMode>
-        <NuqsAdapter>
-          <App />
-        </NuqsAdapter>
+        <App />
       </StrictMode>,
     );
     // })

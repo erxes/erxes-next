@@ -5,7 +5,7 @@ import { PureTags, TagsItem } from './PureTags';
 import { ITag } from '../types/Tag';
 
 export const SelectSingleTag = React.forwardRef<
-  React.ElementRef<typeof Combobox>,
+  React.ElementRef<typeof Combobox.Trigger>,
   ButtonProps & {
     value?: string;
     onValueChange?: (value: string) => void;
@@ -16,7 +16,11 @@ export const SelectSingleTag = React.forwardRef<
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <Combobox ref={ref} {...props} className={cn('w-full', className)}>
+        <Combobox.Trigger
+          ref={ref}
+          {...props}
+          className={cn('w-full', className)}
+        >
           {children ? (
             children
           ) : value ? (
@@ -28,7 +32,7 @@ export const SelectSingleTag = React.forwardRef<
           ) : (
             'Select tag'
           )}
-        </Combobox>
+        </Combobox.Trigger>
       </Popover.Trigger>
       <Popover.Content className="p-0">
         <SelectSingleTagContent

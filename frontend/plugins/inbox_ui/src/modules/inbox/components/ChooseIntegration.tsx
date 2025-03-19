@@ -1,4 +1,4 @@
-import { Button, Collapsible, Skeleton } from 'erxes-ui/components';
+import { Button, Collapsible, Skeleton } from 'erxes-ui';
 import { useIntegrations } from '@/inbox/hooks/useIntegrations';
 import { useAtom } from 'jotai';
 import { integrationCollapsibleState } from '../states/integrationCollapsibleState';
