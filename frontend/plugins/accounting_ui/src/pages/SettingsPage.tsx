@@ -1,5 +1,5 @@
-const Settings = () => {
-  return <div>Settings Accounting</div>;
-};
+import { MainSettingsForm } from '@/settings/components/MainSettingsForm';
 
-export default Settings;
+export const SettingsPage = () => {
+  return <MainSettingsForm />;
+};

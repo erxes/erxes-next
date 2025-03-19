@@ -1,6 +1,6 @@
-import { IconCurrencyDollar } from '@tabler/icons-react';
+import { IconCashBanknoteFilled } from '@tabler/icons-react';
 
 export const CONFIG = {
   name: 'accounting',
-  icon: IconCurrencyDollar,
+  icon: IconCashBanknoteFilled,
 };

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router';
+import { Link } from 'react-router';
 
 import {
   Icon,
@@ -22,6 +22,7 @@ import {
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
+import { MainNavigationButton } from '@/navigation/components/MainNavigationBar';
 
 type TSettingPath = {
   name: string;
@@ -68,14 +69,11 @@ export function SettingsSidebar() {
 
   Object.keys(pluginsMetaData || {}).forEach((configId) => {
     plugins.push({
-      path: `/${configId}`,
+      path: '/' + configId.replace('_ui', ''),
       name: pluginsMetaData[configId].name,
       icon: pluginsMetaData[configId].icon,
     });
   });
-
-  const { t } = useTranslation();
-
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -101,7 +99,13 @@ export function SettingsSidebar() {
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {data.account.map((item) => (
-                <SideBarItem key={item.name} item={item} />
+                <MainNavigationButton
+                  key={item.name}
+                  pathPrefix={AppPath.Settings}
+                  pathname={'/' + item.path}
+                  name={item.name}
+                  icon={item.icon}
+                />
               ))}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
@@ -111,7 +115,14 @@ export function SettingsSidebar() {
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {data.nav.map((item) => (
-                <SideBarItem key={item.name} item={item} />
+                <Sidebar.MenuItem key={item.name}>
+                  <MainNavigationButton
+                    pathPrefix={AppPath.Settings}
+                    pathname={'/' + item.path}
+                    name={item.name}
+                    icon={item.icon}
+                  />
+                </Sidebar.MenuItem>
               ))}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
@@ -121,21 +132,16 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>PLugins Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {plugins.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Sidebar.MenuItem key={item.path}>
-                    <Sidebar.MenuButton asChild>
-                      <Link
-                        to={AppPath.Settings + item.path.replace('_ui', '')}
-                      >
-                        {Icon && <Icon />}
-                        <span>{t('nav.' + item.name)}</span>
-                      </Link>
-                    </Sidebar.MenuButton>
-                  </Sidebar.MenuItem>
-                );
-              })}
+              {plugins.map((item) => (
+                <Sidebar.MenuItem key={item.name}>
+                  <MainNavigationButton
+                    pathPrefix={AppPath.Settings}
+                    pathname={item.path}
+                    name={item.name}
+                    icon={item.icon}
+                  />
+                </Sidebar.MenuItem>
+              ))}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
         </Sidebar.Group>
@@ -143,26 +149,3 @@ export function SettingsSidebar() {
     </motion.div>
   );
 }
-
-const SideBarItem = ({
-  item,
-}: {
-  item: (typeof data.account)[0] | (typeof data.nav)[0];
-}) => {
-  const location = useLocation();
-  return (
-    <Sidebar.MenuItem key={item.name}>
-      <Sidebar.MenuButton
-        asChild
-        isActive={
-          location.pathname === '/' + AppPath.Settings + '/' + item.path
-        }
-      >
-        <Link to={AppPath.Settings + '/' + item.path}>
-          <item.icon />
-          <span>{item.name}</span>
-        </Link>
-      </Sidebar.MenuButton>
-    </Sidebar.MenuItem>
-  );
-};

@@ -34,7 +34,7 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
   const [open, setOpen] = useState(false);
   const { productCategories, loading } = useProductCategories({});
   const currentValue = productCategories?.find(
-    (category) => category._id === value,
+    (category: Category) => category._id === value,
   );
 
   const handleSelectCategory = (categoryId: string) => {
