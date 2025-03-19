@@ -164,25 +164,41 @@ export const CustomerMerge = ({
     }`;
   };
 
-  const [value, setValue] = useState(() => {
+  const initializeValues = (entries: [string, any, any][]) => {
     const initialValues: Record<string, any> = {};
     const linkValues: Record<string, any> = {};
 
-    mergedCustomerEntries.forEach(([key, value1, value2]) => {
-      const targetObj = key.startsWith('links.') ? linkValues : initialValues;
-      if (key.startsWith('links.')) {
-        key = key.split('.')[1];
+    entries.forEach(([originalKey, value1, value2]) => {
+      if (originalKey.startsWith('links.')) {
+        const linkType = originalKey.split('.')[1];
+        if (value1 && !value2) {
+          linkValues[linkType] = value1;
+        } else if (!value1 && value2) {
+          linkValues[linkType] = value2;
+        } else if (value1 === value2) {
+          linkValues[linkType] = value1;
+        } else {
+          if (value1) {
+            linkValues[linkType] = value1;
+          } else if (value2) {
+            linkValues[linkType] = value2;
+          }
+        }
+        return;
       }
+
       if (value1 && !value2) {
-        targetObj[key] = value1;
+        initialValues[originalKey] = value1;
       } else if (!value1 && value2) {
-        targetObj[key] = value2;
+        initialValues[originalKey] = value2;
       } else if (value1 === value2) {
-        targetObj[key] = value1;
-      } else if (value1) {
-        targetObj[key] = value1;
-      } else if (value2) {
-        targetObj[key] = value2;
+        initialValues[originalKey] = value1;
+      } else {
+        if (value1) {
+          initialValues[originalKey] = value1;
+        } else if (value2) {
+          initialValues[originalKey] = value2;
+        }
       }
     });
 
@@ -191,52 +207,15 @@ export const CustomerMerge = ({
     }
 
     return initialValues;
+  };
+
+  const [value, setValue] = useState(() => {
+    return initializeValues(mergedCustomerEntries);
   });
 
   useEffect(() => {
     setValue(() => {
-      const initialValues: Record<string, any> = {};
-      const linkValues: Record<string, any> = {};
-
-      mergedCustomerEntries.forEach(([originalKey, value1, value2]) => {
-        if (originalKey.startsWith('links.')) {
-          const linkType = originalKey.split('.')[1];
-          if (value1 && !value2) {
-            linkValues[linkType] = value1;
-          } else if (!value1 && value2) {
-            linkValues[linkType] = value2;
-          } else if (value1 === value2) {
-            linkValues[linkType] = value1;
-          } else {
-            if (value1) {
-              linkValues[linkType] = value1;
-            } else if (value2) {
-              linkValues[linkType] = value2;
-            }
-          }
-          return;
-        }
-
-        if (value1 && !value2) {
-          initialValues[originalKey] = value1;
-        } else if (!value1 && value2) {
-          initialValues[originalKey] = value2;
-        } else if (value1 === value2) {
-          initialValues[originalKey] = value1;
-        } else {
-          if (value1) {
-            initialValues[originalKey] = value1;
-          } else if (value2) {
-            initialValues[originalKey] = value2;
-          }
-        }
-      });
-
-      if (Object.keys(linkValues).length > 0) {
-        initialValues['links'] = linkValues;
-      }
-
-      return initialValues;
+      return initializeValues(mergedCustomerEntries);
     });
   }, [customers]);
 

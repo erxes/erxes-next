@@ -204,7 +204,7 @@ const EmailContextProvider: React.FC<EmailContextProviderProps> = ({
   );
 };
 
-export const Email = React.forwardRef<
+export const EmailInlineCell = React.forwardRef<
   React.ElementRef<typeof Button>,
   Omit<React.ComponentPropsWithoutRef<typeof Button>, 'onChange'> & {
     recordId: string;

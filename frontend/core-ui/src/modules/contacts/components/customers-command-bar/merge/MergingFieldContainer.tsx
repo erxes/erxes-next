@@ -20,7 +20,7 @@ export const MergingFieldContainer = ({
 
   return (
     <ChoiceboxGroup.Item
-      className="w-full p-3 gap-[6px] h-min justify-center flex-col items-start flex min-h-14 rounded-sm"
+      className="w-full p-3 gap-[6px] h-min justify-center flex-col items-start flex min-h-14 rounded-sm text-wrap"
       title={fieldName}
       value={fieldValue}
       disabled={disabled}
