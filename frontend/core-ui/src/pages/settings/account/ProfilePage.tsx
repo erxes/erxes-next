@@ -2,10 +2,11 @@ import { ScrollArea } from 'erxes-ui';
 
 import { ProfileForm } from '@/settings/profile/components/ProfileForm';
 import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
+import { IconBox } from '@tabler/icons-react';
 
 const breadcrumbs = [
-  { title: 'Settings', path: 'settings' },
-  { title: 'Profile', path: 'profile' },
+  { title: 'Settings', path: 'settings', Icon: IconBox },
+  { title: 'Profile', path: 'profile', Icon: IconBox },
 ];
 
 export const SettingsProfilePage = () => {

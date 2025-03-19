@@ -4,7 +4,8 @@ export enum SettingsPath {
 }
 
 export enum SettingsWorkspacePath {
-  General = "general",
+  General = 'general',
   FileUpload = 'file-upload',
   MailConfig = 'mail-config',
+  Permission = 'permission',
 }

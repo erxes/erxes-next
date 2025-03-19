@@ -30,6 +30,11 @@ const GeneralSettings = lazy(() =>
     default: module.GeneralSettingsPage,
   })),
 );
+const PermissionSettings = lazy(() =>
+  import('~/pages/settings/workspace/PermissionPage').then((module) => ({
+    default: module.PermissionPage,
+  })),
+);
 
 export function SettingsRoutes() {
   return (
@@ -51,6 +56,10 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.General}
           element={<GeneralSettings />}
+        />
+        <Route
+          path={SettingsWorkspacePath.Permission}
+          element={<PermissionSettings />}
         />
 
         {getPluginsSettingsRoutes()}

@@ -1,12 +1,18 @@
-import { SettingsBreadcrumbs } from "@/settings/components/SettingsBreadcrumbs";
-import FileUpload from "@/settings/file-upload/components/FileUpload";
-import { ScrollArea } from "erxes-ui/components";
+import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
+import FileUpload from '@/settings/file-upload/components/FileUpload';
+import { IconBox } from '@tabler/icons-react';
+import { ScrollArea } from 'erxes-ui/components';
 
 export function FilePage() {
   return (
     <ScrollArea>
       <section className="mx-auto max-w-2xl w-full relative">
-        <SettingsBreadcrumbs breadcrumbs={[{ title: "Setting", path: "settings" }, { title: "File Upload", path: "file-upload" }]} />
+        <SettingsBreadcrumbs
+          breadcrumbs={[
+            { title: 'Setting', path: 'settings', Icon: IconBox },
+            { title: 'File Upload', path: 'file-upload', Icon: IconBox },
+          ]}
+        />
         <h2 className="font-semibold text-lg mt-4 mb-12 px-4">File Upload</h2>
         <div className="flex flex-col gap-8 px-4 w-full h-auto">
           <FileUpload />

@@ -8,6 +8,8 @@ import {
   useProfileForm,
 } from '@/settings/profile/hooks/useProfileForm';
 import { AdvancedFields, DefaultFields, FormField, LinkFields } from './fields';
+import { SettingsSkeletonLoader } from '../../components/SettingsSkeletonLoader';
+import { ProfileLoading } from './ProfileLoading';
 
 export const ProfileForm = () => {
   const { form } = useProfileForm();
@@ -35,7 +37,7 @@ export const ProfileForm = () => {
   }, [profile, form.reset]);
 
   if (loading) {
-    return <></>;
+    return <ProfileLoading />;
   }
 
   return (

@@ -8,6 +8,7 @@ import {
   IconFile,
   IconMail,
   IconUserCircle,
+  IconUserShield,
   IconX,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
@@ -57,6 +58,11 @@ const data: { [key: string]: TSettingPath[] } = {
       name: 'Mail config',
       icon: IconMail,
       path: SettingsWorkspacePath.MailConfig,
+    },
+    {
+      name: 'Permission',
+      icon: IconUserShield,
+      path: SettingsWorkspacePath.Permission,
     },
   ],
 };
