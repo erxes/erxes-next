@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Link } from 'react-router';
 
-import { Breadcrumb } from 'erxes-ui/components';
+import { Breadcrumb, Separator } from 'erxes-ui';
 
 export function SettingsBreadcrumbs({
   breadcrumbs,
@@ -26,7 +26,7 @@ export function SettingsBreadcrumbs({
                   </Breadcrumb.Link>
                 </Breadcrumb.Item>
                 {breadcrumbs.length - 1 !== index && (
-                  <Breadcrumb.Separator key={`separator-${index}`} />
+                  <Separator.Inline key={`separator-${index}`} />
                 )}
               </Fragment>
             );

@@ -1,9 +1,10 @@
-import { IconCashBanknoteFilled } from '@tabler/icons-react';
-import { Button, Separator, SettingsHeader, Spinner } from 'erxes-ui';
+import { SettingsHeader, Spinner } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 import { Route } from 'react-router';
 import { Routes } from 'react-router';
 import { AccountingSidebar } from './Sidebar';
+import { AccountSettingsBreadcrumb } from './AccountSettingsBreadcrumb';
+import { AccountingTopbar } from './AccountingTopbar';
 
 export const AccountingMainConfig = lazy(() =>
   import('~/pages/SettingsPage').then((module) => ({
@@ -19,18 +20,13 @@ export const Accounts = lazy(() =>
 
 const AccountingSettings = () => {
   return (
-    <div className="flex flex-col flex-auto">
-      <SettingsHeader>
-        <Button variant="ghost" className="font-semibold">
-          <IconCashBanknoteFilled className="w-4 h-4 text-accent-foreground" />
-          Accounting
-        </Button>
-        <Separator.Inline />
-        <Button variant="ghost" className="font-semibold">
-          Main Config
-        </Button>
+    <div className="flex flex-col flex-auto overflow-hidden">
+      <SettingsHeader breadcrumbs={<AccountSettingsBreadcrumb />}>
+        <div className="flex ml-auto">
+          <AccountingTopbar />
+        </div>
       </SettingsHeader>
-      <div className="flex h-full">
+      <div className="flex flex-auto overflow-hidden">
         <AccountingSidebar />
         <Suspense
           fallback={

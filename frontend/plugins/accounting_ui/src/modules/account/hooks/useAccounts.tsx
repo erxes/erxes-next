@@ -13,6 +13,12 @@ export const useAccounts = (options?: OperationVariables) => {
           perPage: ACCOUNTS_PER_PAGE,
           page: Math.ceil(accounts?.length / ACCOUNTS_PER_PAGE) + 1,
         },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          return {
+            ...prev,
+            accounts: [...prev.accounts, ...fetchMoreResult.accounts],
+          };
+        },
       });
     }
   };
