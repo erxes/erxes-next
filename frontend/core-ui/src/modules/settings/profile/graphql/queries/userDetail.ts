@@ -15,7 +15,6 @@ export const userDetail = gql`
       positions {
         _id
         title
-        __typename
       }
       details {
         avatar
@@ -30,7 +29,6 @@ export const userDetail = gql`
         firstName
         middleName
         lastName
-        __typename
       }
       links
       emailSignatures
@@ -39,7 +37,6 @@ export const userDetail = gql`
       score
       employeeId
       brandIds
-      __typename
     }
   }
 `;

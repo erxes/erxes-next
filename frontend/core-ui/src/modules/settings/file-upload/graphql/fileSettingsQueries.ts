@@ -6,7 +6,6 @@ const configsQuery = gql`
       _id
       code
       value
-      __typename
     }
 }
 `

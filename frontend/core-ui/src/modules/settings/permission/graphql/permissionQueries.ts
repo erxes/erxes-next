@@ -59,11 +59,9 @@ const getUsersQuery = gql`
         firstName
         middleName
         lastName
-        __typename
       }
       links
       employeeId
-      __typename
     }
   }
 `;
@@ -81,13 +79,10 @@ const getUsersGroupsQuery = gql`
         details {
           fullName
           avatar
-          __typename
         }
-        __typename
       }
       departmentIds
       branchIds
-      __typename
     }
   }
 `;
@@ -144,7 +139,6 @@ const getPermissionActionsQuery = gql`
       name
       description
       module
-      __typename
     }
   }
 `;
@@ -154,7 +148,6 @@ const getPermissionModulesQuery = gql`
     permissionModules {
       name
       description
-      __typename
     }
   }
 `;
