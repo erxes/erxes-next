@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router';
-
 import { Breadcrumb } from 'erxes-ui';
 import { IconMinusVertical, IconSettings } from '@tabler/icons-react';
 import { SETTINGS_PATH_DATA } from '../constants/data';

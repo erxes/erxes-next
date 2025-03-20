@@ -7,7 +7,7 @@ import {
 } from '@tabler/icons-react';
 
 import { Form, Input, Select, Separator } from 'erxes-ui';
-import { SelectCurrency } from 'erxes-ui/components/currency/select-currency';
+import { SelectCurrency } from 'erxes-ui/components/select-currency';
 import { CURRENCY_CODES } from 'erxes-ui/constants';
 import { CurrencyCode } from 'erxes-ui/types';
 import { CategoryField } from './categoryField';

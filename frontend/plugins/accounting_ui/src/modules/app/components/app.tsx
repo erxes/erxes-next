@@ -1,12 +1,7 @@
 import { lazy, Suspense } from 'react';
-import {
-  BrowserRouter,
-  MemoryRouter,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router';
+import { Route, Routes } from 'react-router';
 import { Spinner } from 'erxes-ui';
+
 const PtrList = lazy(() =>
   import('~/pages/PtrListPage').then((module) => ({
     default: module.PtrListPage,
@@ -28,12 +23,10 @@ const PluginAccounting = () => {
         </div>
       }
     >
-      {/* <MemoryRouter basename="/accounting"> */}
       <Routes>
         <Route path="/" element={<PtrList />} />
         <Route path="/transaction" element={<TransactionPage />} />
       </Routes>
-      {/* </MemoryRouter> */}
     </Suspense>
   );
 };

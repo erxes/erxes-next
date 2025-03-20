@@ -71,5 +71,21 @@ export const GET_ACCOUNTS = gql`
         mask
       }
     }
+    accountsCount(
+      status: $accountsStatus
+      categoryId: $categoryId
+      searchValue: $searchValue
+      brand: $brand
+      ids: $ids
+      excludeIds: $excludeIds
+      isOutBalance: $isOutBalance
+      branchId: $branchId
+      currency: $currency
+      departmentId: $departmentId
+      journals: $journals
+      kind: $kind
+      code: $code
+      name: $name
+    )
   }
 `;
