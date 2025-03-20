@@ -35,3 +35,18 @@ export interface IAccount {
 
   category?: IAccountCategory;
 }
+
+export enum AccountKind {
+  ACTIVE = 'active',
+  PASSIVE = 'passive',
+}
+
+export enum Journal {
+  MAIN = 'main',
+  CASH = 'cash',
+  BANK = 'bank',
+  DEBT = 'debt',
+  INVENTORY = 'inventory',
+  FIXED_ASSET = 'fixedAsset',
+  TAX = 'tax',
+}

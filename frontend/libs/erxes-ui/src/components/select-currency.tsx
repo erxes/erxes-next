@@ -93,7 +93,7 @@ export const CurrencyDisplay = React.forwardRef<
   const CurrencyIcon = currency.Icon;
 
   if (iconOnly) {
-    return <CurrencyIcon />;
+    return <CurrencyIcon className="size-4" />;
   }
 
   return (
@@ -102,7 +102,7 @@ export const CurrencyDisplay = React.forwardRef<
       className={cn('flex items-center gap-2', className)}
       {...props}
     >
-      <CurrencyIcon />
+      <CurrencyIcon className="size-4" />
       <span className="mr-auto">{currency.label}</span>
     </div>
   );

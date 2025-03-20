@@ -2,6 +2,8 @@ import { IconCashBanknoteFilled } from '@tabler/icons-react';
 import { Button, Separator } from 'erxes-ui';
 import { useLocation } from 'react-router';
 import { SETTINGS_ROUTES } from '../constants/settingsRoutes';
+import { AccountsTotalCount } from '@/account/components/AccountsTotalCount';
+
 export const AccountSettingsBreadcrumb = () => {
   const { pathname } = useLocation();
   return (
@@ -13,6 +15,7 @@ export const AccountSettingsBreadcrumb = () => {
       <Separator.Inline />
       <Button variant="ghost" className="hover:bg-transparent font-semibold">
         {SETTINGS_ROUTES[pathname as keyof typeof SETTINGS_ROUTES]}
+        {pathname === '/settings/accounting/accounts' && <AccountsTotalCount />}
       </Button>
     </>
   );
