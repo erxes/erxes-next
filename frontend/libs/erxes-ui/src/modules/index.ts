@@ -3,5 +3,7 @@ export * from './hotkey';
 export * from './select-tree';
 export * from './inline-cell';
 export * from './record-table';
-export * from './record-field/meta-inputs/components/CurrencyInput';
+export * from './record-field';
 export * from './filter';
+export * from './plugin-header/PluginHeader';
+export * from './plugin-header/SettingsHeader';

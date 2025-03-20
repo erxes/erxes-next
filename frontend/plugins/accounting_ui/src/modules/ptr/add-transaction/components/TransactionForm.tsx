@@ -10,8 +10,8 @@ import {
   Form,
   Input,
   Select,
-  Separator,
   Tabs,
+  Textarea,
   useQueryState,
 } from 'erxes-ui';
 import { AddTransaction } from '../../components/AddTransaction';
@@ -36,12 +36,9 @@ export const TransactionForm = () => {
   };
   return (
     <Form {...form}>
-      <div className="grid grid-cols-3 gap-6">
-        <form
-          className="grid grid-cols-2 max-w-4xl w-full mx-auto gap-6 p-6 col-span-2"
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
-          <h3 className="text-lg font-bold col-span-2">Create Transaction</h3>
+      <form className="px-6" onSubmit={form.handleSubmit(handleSubmit)}>
+        <h3 className="text-lg font-bold">Create Transaction</h3>
+        <div className="grid grid-cols-5 gap-6 py-6 items-end">
           <Form.Field
             control={form.control}
             name="number"
@@ -70,25 +67,31 @@ export const TransactionForm = () => {
               </Form.Item>
             )}
           />
-
-          <TransactionsTabsList>
-            <Tabs.Content value="cash" className="py-4">
-              <CashTransactions form={form} />
-            </Tabs.Content>
-            <Tabs.Content value="bank" className="py-4">
-              <BankTransactions />
-            </Tabs.Content>
-          </TransactionsTabsList>
-          <Button type="submit" className="col-span-2">
-            Create
-          </Button>
-        </form>
-        <div className="col-span-1">
-          <div className="p-6">
-            <h3 className="text-lg font-bold">Transaction Balance</h3>
+          <div className="flex justify-end items-center col-span-3 gap-6">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-accent-foreground">Sum Debit:</span>
+              <span className="text-primary font-bold">100,000</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-accent-foreground">Sum Credit:</span>
+              <span className="text-primary font-bold">100,000</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-accent-foreground">+CT:</span>
+              <span className="text-primary font-bold">100,000</span>
+            </div>
+            <Button type="submit">Save</Button>
           </div>
         </div>
-      </div>
+        <TransactionsTabsList>
+          <Tabs.Content value="cash" className="py-4">
+            <CashTransactions form={form} />
+          </Tabs.Content>
+          <Tabs.Content value="bank" className="py-4">
+            <BankTransactions />
+          </Tabs.Content>
+        </TransactionsTabsList>
+      </form>
     </Form>
   );
 };
@@ -99,7 +102,7 @@ const CashTransactions = ({
   form: UseFormReturn<z.infer<typeof transactionSchema>>;
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6">
       <Form.Field
         control={form.control}
         name="cash.accountId"
@@ -211,18 +214,6 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.description"
-        render={({ field }) => (
-          <Form.Item className="col-span-2">
-            <Form.Label>Description</Form.Label>
-            <Form.Control>
-              <Input {...field} />
-            </Form.Control>
-          </Form.Item>
-        )}
-      />
-      <Form.Field
-        control={form.control}
         name="cash.branchId"
         render={({ field }) => (
           <Form.Item>
@@ -232,6 +223,18 @@ const CashTransactions = ({
                 value={field.value}
                 onValueChange={(branch) => field.onChange(branch)}
               />
+            </Form.Control>
+          </Form.Item>
+        )}
+      />
+      <Form.Field
+        control={form.control}
+        name="cash.description"
+        render={({ field }) => (
+          <Form.Item className="col-span-2">
+            <Form.Label>Description</Form.Label>
+            <Form.Control>
+              <Textarea {...field} />
             </Form.Control>
           </Form.Item>
         )}
@@ -254,12 +257,17 @@ const TransactionsTabsList = ({ children }: { children: React.ReactNode }) => {
       value={activeJournal}
       onValueChange={setActiveJournal}
     >
-      <Tabs.List className="w-full justify-start" defaultValue="cash">
-        <Tabs.Trigger value="cash">Cash</Tabs.Trigger>
-        <Tabs.Trigger value="bank">Bank</Tabs.Trigger>
-        <Separator.Inline className="mx-2" />
+      <div className="flex items-center gap-3">
+        <Tabs.List
+          className="w-full justify-start flex-auto"
+          defaultValue="cash"
+        >
+          <Tabs.Trigger value="cash">Cash</Tabs.Trigger>
+          <Tabs.Trigger value="bank">Bank</Tabs.Trigger>
+        </Tabs.List>
+        <Button variant="secondary">Save transaction template</Button>
         <AddTransactionButton />
-      </Tabs.List>
+      </div>
       {children}
     </Tabs>
   );
@@ -271,7 +279,7 @@ const AddTransactionButton = () => {
   };
   return (
     <AddTransaction inForm onClick={handleAddTransaction}>
-      <Button variant="ghost" className="text-muted-foreground">
+      <Button variant="outline">
         <IconPlus />
         New Transaction
       </Button>

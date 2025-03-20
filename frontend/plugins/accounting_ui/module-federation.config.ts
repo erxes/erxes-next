@@ -17,7 +17,7 @@ const config: ModuleFederationConfig = {
   exposes: {
     './Config': './src/modules/constants/config.ts',
     './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
+    './Settings': './src/modules/settings/components/AccountingSettings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

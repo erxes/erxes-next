@@ -3,7 +3,6 @@ import {
   createRoutesFromElements,
   Route,
   createBrowserRouter,
-  Routes,
 } from 'react-router-dom';
 
 import { ContactsRoutes } from '@/app/components/ContactsRoutes';

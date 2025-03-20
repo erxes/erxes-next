@@ -29,7 +29,7 @@ export const SelectAccount = ({
     <Popover open={open} onOpenChange={setOpen}>
       <Combobox.Trigger variant="outline" className="flex w-full">
         {loading ? (
-          <Skeleton className="w-full h-8" />
+          <Skeleton className="w-full h-4" />
         ) : (
           <Combobox.Value
             placeholder="Select account"

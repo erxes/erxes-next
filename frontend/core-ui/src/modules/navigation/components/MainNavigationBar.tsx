@@ -1,12 +1,13 @@
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 import {
+  Icon,
   IconBuildingStore,
   // IconCaretUpFilled,
   // IconMailFilled,
   IconSettings,
 } from '@tabler/icons-react';
-import { Button, Sidebar } from 'erxes-ui';
+import { Button, cn, Sidebar } from 'erxes-ui';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { Organization } from './Organization';
@@ -100,5 +101,34 @@ export const MainNavigationBar = ({
         {children}
       </Sidebar.Inset>
     </Sidebar.Provider>
+  );
+};
+
+export const MainNavigationButton = ({
+  pathPrefix,
+  pathname,
+  name,
+  icon,
+}: {
+  pathPrefix?: string;
+  pathname: string;
+  name: string;
+  icon: Icon;
+}) => {
+  const Icon = icon;
+  const activePathname = useLocation().pathname;
+  const isActive = activePathname.includes(
+    pathPrefix ? pathPrefix + pathname : pathname,
+  );
+
+  return (
+    <Sidebar.MenuButton asChild isActive={isActive}>
+      <Link to={pathPrefix ? pathPrefix + pathname : pathname}>
+        <Icon
+          className={cn('text-accent-foreground', isActive && 'text-primary')}
+        />
+        <span className="capitalize">{name}</span>
+      </Link>
+    </Sidebar.MenuButton>
   );
 };
