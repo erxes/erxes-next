@@ -1,71 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 
-import {
-  Icon,
-  IconAdjustmentsAlt,
-  IconColorSwatch,
-  IconFile,
-  IconMail,
-  IconUserCircle,
-  IconUserShield,
-  IconX,
-} from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 
 import { Sidebar } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
-import {
-  SettingsPath,
-  SettingsWorkspacePath,
-} from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
-
-type TSettingPath = {
-  name: string;
-  icon: Icon;
-  path: string;
-};
-
-const data: { [key: string]: TSettingPath[] } = {
-  account: [
-    {
-      name: 'Profile',
-      icon: IconUserCircle,
-      path: SettingsPath.Profile,
-    },
-    {
-      name: 'Experience',
-      icon: IconColorSwatch,
-      path: SettingsPath.Experience,
-    },
-  ],
-  nav: [
-    {
-      name: 'General',
-      icon: IconAdjustmentsAlt,
-      path: SettingsWorkspacePath.General,
-    },
-    {
-      name: 'File upload',
-      icon: IconFile,
-      path: SettingsWorkspacePath.FileUpload,
-    },
-    {
-      name: 'Mail config',
-      icon: IconMail,
-      path: SettingsWorkspacePath.MailConfig,
-    },
-    {
-      name: 'Permission',
-      icon: IconUserShield,
-      path: SettingsWorkspacePath.Permission,
-    },
-  ],
-};
+import { SETTINGS_PATH_DATA } from '../constants/data';
 
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS];
@@ -106,7 +51,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>Account Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {data.account.map((item) => (
+              {SETTINGS_PATH_DATA.account.map((item) => (
                 <SideBarItem key={item.name} item={item} />
               ))}
             </Sidebar.Menu>
@@ -116,7 +61,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>Workspace Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {data.nav.map((item) => (
+              {SETTINGS_PATH_DATA.nav.map((item) => (
                 <SideBarItem key={item.name} item={item} />
               ))}
             </Sidebar.Menu>
@@ -153,7 +98,9 @@ export function SettingsSidebar() {
 const SideBarItem = ({
   item,
 }: {
-  item: (typeof data.account)[0] | (typeof data.nav)[0];
+  item:
+    | (typeof SETTINGS_PATH_DATA.account)[0]
+    | (typeof SETTINGS_PATH_DATA.nav)[0];
 }) => {
   const location = useLocation();
   return (

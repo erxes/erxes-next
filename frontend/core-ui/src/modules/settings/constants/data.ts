@@ -1,3 +1,16 @@
+import {
+  IconAdjustmentsAlt,
+  IconColorSwatch,
+  IconFile,
+  IconMail,
+  IconUserCircle,
+  IconUserShield,
+} from '@tabler/icons-react';
+import {
+  SettingsPath,
+  SettingsWorkspacePath,
+  TSettingPath,
+} from '~/modules/types/paths/SettingsPath';
 
 export const KEY_LABELS = {
   UPLOAD_FILE_TYPES: 'Upload File Types',
@@ -83,5 +96,42 @@ export const KEY_LABELS = {
   LOG_DATA_RETENTION: 'Log data retention',
 
   MESSAGE_PRO_API_KEY: 'MessagePro api key',
-  MESSAGE_PRO_PHONE_NUMBER: 'MessagePro phone number'
+  MESSAGE_PRO_PHONE_NUMBER: 'MessagePro phone number',
+};
+
+export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
+  account: [
+    {
+      name: 'Profile',
+      icon: IconUserCircle,
+      path: SettingsPath.Profile,
+    },
+    {
+      name: 'Experience',
+      icon: IconColorSwatch,
+      path: SettingsPath.Experience,
+    },
+  ],
+  nav: [
+    {
+      name: 'General',
+      icon: IconAdjustmentsAlt,
+      path: SettingsWorkspacePath.General,
+    },
+    {
+      name: 'File upload',
+      icon: IconFile,
+      path: SettingsWorkspacePath.FileUpload,
+    },
+    {
+      name: 'Mail config',
+      icon: IconMail,
+      path: SettingsWorkspacePath.MailConfig,
+    },
+    {
+      name: 'Permission',
+      icon: IconUserShield,
+      path: SettingsWorkspacePath.Permission,
+    },
+  ],
 };

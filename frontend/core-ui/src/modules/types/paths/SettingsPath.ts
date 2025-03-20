@@ -1,3 +1,5 @@
+import { Icon } from '@tabler/icons-react';
+
 export enum SettingsPath {
   Profile = 'profile',
   Experience = 'experience',
@@ -9,3 +11,9 @@ export enum SettingsWorkspacePath {
   MailConfig = 'mail-config',
   Permission = 'permission',
 }
+
+export type TSettingPath = {
+  name: string;
+  icon: Icon;
+  path: string;
+};

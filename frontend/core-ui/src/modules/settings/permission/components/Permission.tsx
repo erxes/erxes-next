@@ -1,11 +1,11 @@
-import { usePermissions } from '../hooks/usePermission';
+import { PermissionTable } from './PermissionTable';
 
 const Permission = () => {
-  const { permissions } = usePermissions({
-    page: 1,
-    perPage: 20,
-  });
-  return <div>Permission</div>;
+  return (
+    <div className="flex flex-col h-full p-5">
+      <PermissionTable />
+    </div>
+  );
 };
 
 export { Permission };

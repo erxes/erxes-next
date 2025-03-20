@@ -94,21 +94,21 @@ const getUsersGroupsQuery = gql`
 
 const getPermissionsQuery = gql`
   query permissions(
-    $module: String
-    $action: String
-    $userId: String
-    $groupId: String
-    $allowed: Boolean
-    $page: Int
+    $module: String,
+    $action: String,
+    $userId: String,
+    $groupId: String,
+    $allowed: Boolean,
+    $page: Int,
     $perPage: Int
   ) {
     permissions(
-      module: $module
-      action: $action
-      userId: $userId
-      groupId: $groupId
-      allowed: $allowed
-      page: $page
+      module: $module,
+      action: $action,
+      userId: $userId,
+      groupId: $groupId,
+      allowed: $allowed,
+      page: $page,
       perPage: $perPage
     ) {
       _id
@@ -121,17 +121,22 @@ const getPermissionsQuery = gql`
         _id
         username
         email
-        __typename
       }
       group {
         _id
         name
-        __typename
       }
-      __typename
     }
+    permissionsTotalCount(
+      module: $module,
+      action: $action,
+      userId: $userId,
+      groupId: $groupId,
+      allowed: $allowed
+    )
   }
 `;
+
 
 const getPermissionActionsQuery = gql`
   query permissionActions {
@@ -153,6 +158,8 @@ const getPermissionModulesQuery = gql`
     }
   }
 `;
+
+
 
 const queries = {
   getUsersQuery,

@@ -1,29 +1,44 @@
-import { useQuery } from '@apollo/client';
+import { OperationVariables, useQuery } from '@apollo/client';
 import { queries } from '../graphql';
 
-type TPermissionsVars = {
-  page: number;
-  perPage: number;
-  module?: string;
-  action?: string;
-  userId?: string;
-  groupId?: string;
-  allowed?: boolean;
-};
+export const PERMISSIONS_PER_PAGE = 30;
 
-const usePermissions = (variables: TPermissionsVars) => {
-  const { data, loading, error } = useQuery(queries.getPermissionsQuery, {
-    variables,
+const usePermissions = (options: OperationVariables) => {
+  const { data, loading, fetchMore } = useQuery(queries.getPermissionsQuery, {
+    ...options,
+    variables: {
+      perPage: PERMISSIONS_PER_PAGE,
+      ...options.variables,
+    },
     onError(error) {
       console.error('An error occoured on fetch', error.message);
     },
   });
+  const { permissionsTotalCount: totalCount, permissions } = data || {};
 
-  const permissions = data?.permissions || [];
+  const handleFetchMore = () =>
+    totalCount > permissions?.length &&
+    fetchMore({
+      variables: {
+        page: Math.ceil(permissions.length / PERMISSIONS_PER_PAGE) + 1,
+        perPage: PERMISSIONS_PER_PAGE,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return Object.assign({}, prev, {
+          permissions: [
+            ...(prev.permissions || []),
+            ...fetchMoreResult.permissions,
+          ],
+        });
+      },
+    });
+
   return {
     permissions,
     loading,
-    error,
+    totalCount,
+    handleFetchMore,
   };
 };
 

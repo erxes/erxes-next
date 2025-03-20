@@ -7,12 +7,9 @@ export function GeneralSettingsPage() {
   return (
     <ScrollArea.Root>
       <section className="mx-auto max-w-2xl w-full relative">
-        <SettingsBreadcrumbs
-          breadcrumbs={[
-            { title: 'Setting', path: 'settings', Icon: IconBox },
-            { title: 'General', path: 'general', Icon: IconBox },
-          ]}
-        />
+        <div className="px-4 h-16 flex items-center">
+          <SettingsBreadcrumbs />
+        </div>
         <h2 className="font-semibold text-lg mt-4 mb-12 px-4">
           General settings
         </h2>
