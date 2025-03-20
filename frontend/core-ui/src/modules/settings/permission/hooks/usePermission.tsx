@@ -4,16 +4,19 @@ import { queries } from '../graphql';
 export const PERMISSIONS_PER_PAGE = 30;
 
 const usePermissions = (options: OperationVariables) => {
-  const { data, loading, fetchMore } = useQuery(queries.getPermissionsQuery, {
-    ...options,
-    variables: {
-      perPage: PERMISSIONS_PER_PAGE,
-      ...options.variables,
+  const { data, loading, fetchMore, error } = useQuery(
+    queries.getPermissionsQuery,
+    {
+      ...options,
+      variables: {
+        perPage: PERMISSIONS_PER_PAGE,
+        ...options.variables,
+      },
+      onError(error) {
+        console.error('An error occured on fetch', error.message);
+      },
     },
-    onError(error) {
-      console.error('An error occoured on fetch', error.message);
-    },
-  });
+  );
   const { permissionsTotalCount: totalCount, permissions } = data || {};
 
   const handleFetchMore = () =>
@@ -39,6 +42,7 @@ const usePermissions = (options: OperationVariables) => {
     loading,
     totalCount,
     handleFetchMore,
+    error,
   };
 };
 

@@ -5,12 +5,20 @@ import { permissionMoreColumn } from './PermissionMoreColumn';
 import { Skeleton } from 'erxes-ui';
 
 const PermissionTable = () => {
-  const { permissions, totalCount, handleFetchMore, loading } = usePermissions({
-    page: 1,
-    perPage: PERMISSIONS_PER_PAGE,
-  });
+  const { permissions, totalCount, handleFetchMore, loading, error } =
+    usePermissions({
+      page: 1,
+      perPage: PERMISSIONS_PER_PAGE,
+    });
   if (loading) {
     return <Skeleton className="w-full h-full" />;
+  }
+  if (error) {
+    return (
+      <div className="text-destructive">
+        Error loading permissions: {error.message}
+      </div>
+    );
   }
   return (
     <RecordTable.Provider

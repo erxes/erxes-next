@@ -50,7 +50,7 @@ const LinkFields = () => {
       {currentLink && (
         <div className="flex-grow">
           <FormField
-            name={'details.lastName' as keyof FormType}
+            name={`links.${currentLink}` as keyof FormType}
             element="input"
             attributes={{
               type: 'text',

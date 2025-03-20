@@ -89,10 +89,10 @@ export const ProfileForm = () => {
             This is your public email address.
           </Form.Description>
           <FormField
-            name={'details.lastName' as keyof FormType}
+            name={'email' as keyof FormType}
             element="input"
             attributes={{
-              type: 'text',
+              type: 'email',
               placeholder: 'Enter email',
             }}
           />

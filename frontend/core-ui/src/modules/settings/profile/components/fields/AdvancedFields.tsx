@@ -37,7 +37,7 @@ const AdvancedFields = () => {
                 >
                   <Form.Label className="text-xs">{fieldLabel}</Form.Label>
                   <FormField
-                    name={'details.lastName' as keyof FormType}
+                    name={pathName as keyof FormType}
                     element="input"
                     attributes={attributes}
                   />
