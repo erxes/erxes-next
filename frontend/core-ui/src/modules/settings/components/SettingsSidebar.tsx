@@ -99,28 +99,3 @@ export function SettingsSidebar() {
     </motion.div>
   );
 }
-
-const SideBarItem = ({
-  item,
-}: {
-  item:
-    | (typeof SETTINGS_PATH_DATA.account)[0]
-    | (typeof SETTINGS_PATH_DATA.nav)[0];
-}) => {
-  const location = useLocation();
-  return (
-    <Sidebar.MenuItem key={item.name}>
-      <Sidebar.MenuButton
-        asChild
-        isActive={
-          location.pathname === '/' + AppPath.Settings + '/' + item.path
-        }
-      >
-        <Link to={AppPath.Settings + '/' + item.path}>
-          <item.icon />
-          <span>{item.name}</span>
-        </Link>
-      </Sidebar.MenuButton>
-    </Sidebar.MenuItem>
-  );
-};

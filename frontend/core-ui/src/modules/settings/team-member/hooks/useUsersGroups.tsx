@@ -2,9 +2,9 @@ import { useQuery } from '@apollo/client';
 import { queries } from '../graphql';
 
 const useUsersGroups = () => {
-  const { data, loading, error } = useQuery(queries.getUsersGroupsQuery, {
+  const { data, loading, error } = useQuery(queries.GET_USERS_GROUPS_QUERY, {
     onError(error) {
-      console.error('An error occoured on fetch', error.message);
+      console.error(error.message);
     },
   });
   const usersGroups = data?.usersGroups || [];

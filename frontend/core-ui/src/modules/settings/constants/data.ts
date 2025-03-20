@@ -4,7 +4,7 @@ import {
   IconFile,
   IconMail,
   IconUserCircle,
-  IconUserShield,
+  IconUsersGroup,
 } from '@tabler/icons-react';
 import {
   SettingsPath,
@@ -129,9 +129,9 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       path: SettingsWorkspacePath.MailConfig,
     },
     {
-      name: 'Permission',
-      icon: IconUserShield,
-      path: SettingsWorkspacePath.Permission,
+      name: 'Team member',
+      icon: IconUsersGroup,
+      path: SettingsWorkspacePath.TeamMember,
     },
   ],
 };

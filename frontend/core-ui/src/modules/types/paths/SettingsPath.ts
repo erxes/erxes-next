@@ -10,6 +10,7 @@ export enum SettingsWorkspacePath {
   FileUpload = 'file-upload',
   MailConfig = 'mail-config',
   Permission = 'permission',
+  TeamMember = 'team-member',
 }
 
 export type TSettingPath = {

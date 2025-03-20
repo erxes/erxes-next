@@ -15,3 +15,17 @@ export interface IPermission {
     email?: string;
   };
 }
+
+export interface IUsersGroup {
+  _id: string;
+  name: string;
+  members: {
+    _id: string;
+    isActive: boolean;
+    details: {
+      avatar: string;
+      fullName: string;
+    };
+  }[];
+  description: string;
+}
