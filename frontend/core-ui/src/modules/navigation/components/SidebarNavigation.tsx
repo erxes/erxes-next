@@ -7,6 +7,7 @@ import { pluginsConfigState } from 'ui-modules';
 import { PluginItem } from '@/navigation/types/MenuItemType';
 import { useAtom } from 'jotai';
 import { useMemo } from 'react';
+import { MainNavigationButton } from './MainNavigationBar';
 
 export function SidebarNavigation() {
   const { t } = useTranslation();
@@ -67,17 +68,11 @@ export function SidebarNavigationItem({
   return (
     <Collapsible asChild open={isActive} className="group/collapsible">
       <Sidebar.MenuItem key={name}>
-        <Sidebar.MenuButton asChild isActive={isActive}>
-          <Link to={pathWithoutUi}>
-            <Icon
-              className={cn(
-                'text-accent-foreground',
-                isActive && 'text-primary',
-              )}
-            />
-            <span>{t('nav.' + name)}</span>
-          </Link>
-        </Sidebar.MenuButton>
+        <MainNavigationButton
+          pathname={pathWithoutUi}
+          name={t('nav.' + name)}
+          icon={Icon}
+        />
         {submenus && submenus.length > 0 && (
           <Collapsible.Content asChild>
             <Sidebar.Sub>

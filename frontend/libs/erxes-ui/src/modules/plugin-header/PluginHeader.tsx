@@ -24,7 +24,7 @@ export const PluginHeader = ({
     <>
       <header
         className={cn(
-          'flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0',
+          'flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0 bg-sidebar',
           className,
         )}
       >

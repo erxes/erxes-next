@@ -1,14 +1,16 @@
 import { Fragment } from 'react';
 import { Link } from 'react-router';
 
-import { Breadcrumb } from "erxes-ui/components";
+import { Breadcrumb } from 'erxes-ui/components';
 
-export function SettingsBreadcrumbs(
-  { breadcrumbs }: { breadcrumbs: { title: string, path: string }[] }
-) {
+export function SettingsBreadcrumbs({
+  breadcrumbs,
+}: {
+  breadcrumbs: { title: string; path: string }[];
+}) {
   return (
     <div className="flex items-center justify-between px-4 h-16">
-      <Breadcrumb.Root>
+      <Breadcrumb>
         <Breadcrumb.List>
           {breadcrumbs.map(({ title, path }, index) => {
             const currentPath = breadcrumbs
@@ -30,7 +32,7 @@ export function SettingsBreadcrumbs(
             );
           })}
         </Breadcrumb.List>
-      </Breadcrumb.Root>
+      </Breadcrumb>
     </div>
-  )
+  );
 }

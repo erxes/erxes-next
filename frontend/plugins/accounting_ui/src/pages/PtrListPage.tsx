@@ -15,7 +15,7 @@ export const PtrListPage = () => {
           </Button>
         </AddTransaction>
       </AccountingHeader>
-      <div className="flex-1">
+      <div className="flex-1 px-3">
         <PtrRecordTable />
       </div>
     </AccountingLayout>

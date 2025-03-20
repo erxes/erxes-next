@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router';
+import { Route } from 'react-router';
 import { getInstance } from '@module-federation/enhanced/runtime';
 
 import { PluginMainPage } from '~/plugins/components/PluginMainPage';

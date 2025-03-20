@@ -1,20 +1,13 @@
 import * as mongoose from 'mongoose';
-import { PROMO_CODE_TYPE } from './constants';
+import {
+  SAAS_ORGANIZATION_PLAN,
+  SAAS_PROMO_CODE_TYPE,
+  SAAS_PROMOCODE_STATUS,
+  SAAS_PAYMENT_STATUS,
+  SAAS_ORGANIZATION_INTERVAL,
+} from './constants';
 
-export const ORGANIZATION_PLAN = {
-  LIFETIME: 'lifetime',
-  FREE: 'free',
-  GROWTH: 'growth',
-  ALL: ['lifetime', 'free', 'growth'],
-};
-
-export const INTERVAL = {
-  MONTHLY: 'monthly',
-  YEARLY: 'yearly',
-  ALL: ['monthly', 'yearly'],
-};
-
-const cronLastExecutedDateSchema = new mongoose.Schema(
+const saasCronLastExecutedDateSchema = new mongoose.Schema(
   {
     reset: Date,
     notify: Date,
@@ -22,7 +15,7 @@ const cronLastExecutedDateSchema = new mongoose.Schema(
   { _id: false },
 );
 
-export const organizationsSchema = new mongoose.Schema({
+export const saasOrganizationsSchema = new mongoose.Schema({
   name: { type: String },
   logo: { type: String },
   icon: { type: String },
@@ -43,13 +36,17 @@ export const organizationsSchema = new mongoose.Schema({
   createdAt: { type: Date },
   plan: {
     type: String,
-    enum: ORGANIZATION_PLAN.ALL,
-    default: ORGANIZATION_PLAN.FREE,
+    enum: SAAS_ORGANIZATION_PLAN.ALL,
+    default: SAAS_ORGANIZATION_PLAN.FREE,
   },
-  interval: { type: String, enum: INTERVAL.ALL, optional: true },
+  interval: {
+    type: String,
+    enum: SAAS_ORGANIZATION_INTERVAL.ALL,
+    optional: true,
+  },
   subscriptionId: { type: String, optional: true },
   expiryDate: { type: Date, label: 'Expiry date', optional: true },
-  cronLastExecutedDate: { type: cronLastExecutedDateSchema },
+  cronLastExecutedDate: { type: saasCronLastExecutedDateSchema },
   awsSesAccountStatus: {
     type: String,
     label: 'AWS SES account status',
@@ -70,7 +67,7 @@ export const organizationsSchema = new mongoose.Schema({
   sslStatus: { type: String },
 });
 
-export const installationSchema = new mongoose.Schema({
+export const saasInstallationSchema = new mongoose.Schema({
   createdAt: { type: Date, label: 'Created at', default: new Date() },
   userId: { type: String, label: 'Owner user' },
   organizationId: { type: String, label: 'Linked organization' },
@@ -80,14 +77,14 @@ export const installationSchema = new mongoose.Schema({
   domain: { type: String, label: 'Self hosted domain' },
 });
 
-export const paymentSchema = new mongoose.Schema({
+export const saasPaymentSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   organizationId: { type: String },
   amount: { type: Number },
   invoiceId: { type: String },
 });
 
-export const userSchema = new mongoose.Schema({
+export const saasUserSchema = new mongoose.Schema({
   organizationIds: { type: [String] },
   email: { type: String },
 });
@@ -96,26 +93,19 @@ export const endPointSchema = new mongoose.Schema({
   endPointUrl: { type: String },
 });
 
-export const PROMOCODE_STATUS = {
-  REDEEMED: 'redeemed',
-  REVOKED: 'revoked',
-  UNUSED: 'unused',
-  ALL: ['redeemed', 'revoked', 'unused'],
-};
-
-export const promoCodeSchema = new mongoose.Schema({
+export const saasPromoCodeSchema = new mongoose.Schema({
   code: { type: String, unique: true },
   status: {
     type: String,
-    enum: PROMOCODE_STATUS.ALL,
-    default: PROMOCODE_STATUS.UNUSED,
+    enum: SAAS_PROMOCODE_STATUS.ALL,
+    default: SAAS_PROMOCODE_STATUS.UNUSED,
   },
   usedBy: { type: String, label: 'Used by' },
   usedAt: {
     type: Date,
     label: 'Used at',
   },
-  type: { type: String, enum: PROMO_CODE_TYPE.ALL },
+  type: { type: String, enum: SAAS_PROMO_CODE_TYPE.ALL },
   createdBy: { type: String, label: 'Created by' },
   createdAt: {
     type: Date,
@@ -124,15 +114,7 @@ export const promoCodeSchema = new mongoose.Schema({
   },
 });
 
-export const PAYMENT_STATUS = {
-  INCOMPLETE: 'incomplete',
-  ERROR: 'error',
-  COMPLETE: 'complete',
-  CANCELED: 'canceled',
-  ALL: ['canceled', 'incomplete', 'complete', 'error'],
-};
-
-export const addonSchema = new mongoose.Schema({
+export const saasAddonSchema = new mongoose.Schema({
   kind: { type: String, label: 'Add-on kind' },
   subkind: { type: String, label: 'For example: It is used for setup service' },
   quantity: { type: Number, label: 'Quantity' },
@@ -150,7 +132,7 @@ export const addonSchema = new mongoose.Schema({
   amountOff: Number,
   paymentStatus: {
     type: String,
-    enum: PAYMENT_STATUS.ALL,
+    enum: SAAS_PAYMENT_STATUS.ALL,
     label: 'Картнаас төлбөр татагдсан тохиолдолд утга нь complete болно.',
   },
   paymentStatusMessage: {
@@ -159,7 +141,7 @@ export const addonSchema = new mongoose.Schema({
   },
 });
 
-export const bundleSchema = new mongoose.Schema({
+export const saasBundleSchema = new mongoose.Schema({
   name: { type: String },
   createdAt: {
     type: Date,
@@ -204,7 +186,7 @@ export const PLUGIN_MAIN_TYPES = {
   ALL: ['addon', 'plugin', 'service', 'power-up'],
 };
 
-export const pluginSchema = new mongoose.Schema({
+export const saasPluginSchema = new mongoose.Schema({
   language: { type: String, label: 'Language' },
 
   avatar: { type: String, label: 'Avatar' },
