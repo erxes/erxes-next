@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import * as http from 'http';
-import { initApolloServer } from './apolloClient';
+import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
 
 import { join, leave } from 'erxes-api-utils';

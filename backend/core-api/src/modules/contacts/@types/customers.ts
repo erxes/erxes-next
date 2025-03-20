@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { IListParams, IStringMap } from './common';
+import { IListParams, IStringMap } from '../../../@types/common';
 
 export interface IAddress {
   id: string; // lng_lat || random

@@ -5,9 +5,9 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
 import { extractUserFromHeader, getSubdomain } from 'erxes-api-utils';
 import { gql } from 'graphql-tag';
-import { generateModels } from './connectionResolvers';
-import * as typeDefDetails from './graphql/index';
-import resolvers from './graphql/resolvers';
+import { generateModels } from '../connectionResolvers';
+import * as typeDefDetails from './schema';
+import resolvers from './resolvers';
 
 // load environment variables
 dotenv.config();

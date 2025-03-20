@@ -6,3 +6,4 @@ export * from './service-discovery';
 export * from './utils';
 export * from './constants';
 export * from './saas';
+export * from './apollo';
