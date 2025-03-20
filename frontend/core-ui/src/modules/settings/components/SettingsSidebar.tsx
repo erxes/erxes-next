@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 import { IconX } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
@@ -11,6 +10,7 @@ import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { SETTINGS_PATH_DATA } from '../constants/data';
+import { MainNavigationButton } from '~/modules/navigation/components/MainNavigationBar';
 
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS];
@@ -48,11 +48,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>Account Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-<<<<<<< HEAD
               {SETTINGS_PATH_DATA.account.map((item) => (
-                <SideBarItem key={item.name} item={item} />
-=======
-              {data.account.map((item) => (
                 <MainNavigationButton
                   key={item.name}
                   pathPrefix={AppPath.Settings}
@@ -60,7 +56,6 @@ export function SettingsSidebar() {
                   name={item.name}
                   icon={item.icon}
                 />
->>>>>>> 7630570d13e558d4535f451458543b037a9aabdf
               ))}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
@@ -69,11 +64,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>Workspace Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-<<<<<<< HEAD
               {SETTINGS_PATH_DATA.nav.map((item) => (
-                <SideBarItem key={item.name} item={item} />
-=======
-              {data.nav.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
                   <MainNavigationButton
                     pathPrefix={AppPath.Settings}
@@ -82,7 +73,6 @@ export function SettingsSidebar() {
                     icon={item.icon}
                   />
                 </Sidebar.MenuItem>
->>>>>>> 7630570d13e558d4535f451458543b037a9aabdf
               ))}
             </Sidebar.Menu>
           </Sidebar.GroupContent>
@@ -109,7 +99,6 @@ export function SettingsSidebar() {
     </motion.div>
   );
 }
-<<<<<<< HEAD
 
 const SideBarItem = ({
   item,
@@ -135,5 +124,3 @@ const SideBarItem = ({
     </Sidebar.MenuItem>
   );
 };
-=======
->>>>>>> 7630570d13e558d4535f451458543b037a9aabdf
