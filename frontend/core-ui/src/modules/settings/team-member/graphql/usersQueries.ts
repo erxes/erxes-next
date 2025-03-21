@@ -133,12 +133,61 @@ const GET_UNITS_QUERY = gql`
   }
 `;
 
+const GET_SEGMENTS_QUERY = gql`
+  query segments($contentTypes: [String]!, $config: JSON) {
+    segments(contentTypes: $contentTypes, config: $config) {
+      _id
+      contentType
+      name
+      description
+      subOf
+      color
+      conditions
+      conditionsConjunction
+      shouldWriteActivityLog
+      config
+      getSubSegments {
+        _id
+        contentType
+        name
+        description
+        subOf
+        color
+        conditions
+        conditionsConjunction
+        shouldWriteActivityLog
+        config
+      }
+    }
+  }
+`;
+
+const GET_USER_COUNT_BY_OPTION_QUERY = gql`
+  query usersTotalCount(
+    $departmentId: String
+    $unitId: String
+    $branchId: String
+    $departmentIds: [String]
+    $branchIds: [String]
+  ) {
+    usersTotalCount(
+      departmentId: $departmentId
+      unitId: $unitId
+      branchId: $branchId
+      departmentIds: $departmentIds
+      branchIds: $branchIds
+    )
+  }
+`;
+
 const queries = {
   GET_BRANCHES_QUERY,
   GET_DEPARTMENTS_QUERY,
   GET_UNITS_QUERY,
   GET_USERS_GROUPS_QUERY,
   GET_USERS_QUERY,
+  GET_SEGMENTS_QUERY,
+  GET_USER_COUNT_BY_OPTION_QUERY,
 };
 
 export default queries;

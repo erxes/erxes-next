@@ -23,6 +23,7 @@ const TeamMemberTable = () => {
     <RecordTable.Provider
       columns={teamMemberColumns}
       data={users || []}
+      stickyColumns={['avatar', 'firstName']}
       handleReachedBottom={handleFetchMore}
       className="mt-1.5"
       moreColumn={teamMemberMoreColumn}

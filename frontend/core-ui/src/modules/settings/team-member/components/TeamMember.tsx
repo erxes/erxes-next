@@ -21,9 +21,9 @@ const TeamMember = () => {
           </Button>
         </div>
       </SettingsHeader>
-      <div className="flex w-full h-full">
+      <div className="flex flex-row h-full">
         <TeamMemberSidebar />
-        <div className="flex flex-col h-[calc(100%-64px)] p-5">
+        <div className="flex overflow-x-scroll flex-col h-[calc(100%-64px)] p-5">
           <TeamMemberTable />
         </div>
       </div>

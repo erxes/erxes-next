@@ -1,7 +1,7 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { queries } from '../graphql';
 
-export const USERS_PER_PAGE = 30;
+export const USERS_PER_PAGE = 20;
 
 const useUsers = (options: OperationVariables) => {
   const { data, loading, error, fetchMore } = useQuery(

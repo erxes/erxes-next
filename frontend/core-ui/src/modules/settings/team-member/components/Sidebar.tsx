@@ -1,25 +1,23 @@
-import { Button, Sidebar } from 'erxes-ui';
-import { motion } from 'framer-motion';
-import { IconPlus } from '@tabler/icons-react';
+import { ScrollArea, Sidebar } from 'erxes-ui';
+import { BranchItem } from './sidebar/BranchItem';
+import { DepartmentItem } from './sidebar/DepartmentItem';
+import { UnitItem } from './sidebar/UnitItem';
+import { SegmentItem } from './sidebar/SegmentItem';
 
 export function TeamMemberSidebar() {
   return (
-    <Sidebar collapsible="none" className="border-r h-screen min-w-[300px]">
-      <Sidebar.Header className="py-4 px-3">
-        <div className="flex flex-row justify-between items-center px-3">
-          <div className="text-xs text-accent-foreground font-semibold">
-            User Groups
-          </div>
-          <Button type="button" variant={'ghost'}>
-            <IconPlus size={16} />
-          </Button>
-        </div>
-      </Sidebar.Header>
-      <Sidebar.Group>
-        <Sidebar.GroupContent>
-          <Sidebar.Menu></Sidebar.Menu>
-        </Sidebar.GroupContent>
-      </Sidebar.Group>
+    <Sidebar collapsible="none" className="border-r h-screen w-full max-w-[300px]">
+      <ScrollArea>
+        <Sidebar.Group className="p-0 w-[300px]">
+          <Sidebar.GroupContent>
+            <BranchItem />
+            <DepartmentItem />
+            <UnitItem />
+            {/* <SegmentItem /> */}
+          </Sidebar.GroupContent>
+        </Sidebar.Group>
+        <ScrollArea.Bar />
+      </ScrollArea>
     </Sidebar>
   );
 }

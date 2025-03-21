@@ -3,6 +3,8 @@ export interface IUsersDetails {
   fullName: string;
   firstName: string;
   lastName: string;
+  position: string;
+  workStartedDate: string;
 }
 export enum EStatus {
   Verified = 'Verified',
