@@ -1,13 +1,13 @@
 import * as telemetry from 'erxes-telemetry';
 import * as jwt from 'jsonwebtoken';
+import fetch from 'node-fetch';
 import { NextFunction, Request, Response } from 'express';
 import { redis } from 'erxes-api-utils';
-import { IModels, generateModels } from '../connectionResolver';
 import { getSubdomain } from 'erxes-api-utils';
-import { USER_ROLES } from 'erxes-api-modules';
 import { userActionsMap } from 'erxes-api-modules';
-import fetch from 'node-fetch';
+import { USER_ROLES } from 'erxes-api-modules';
 import { setUserHeader } from 'erxes-api-utils';
+import { IModels, generateModels } from '../connectionResolver';
 
 export default async function userMiddleware(
   req: Request & { user?: any },
@@ -56,8 +56,8 @@ export default async function userMiddleware(
           ],
         };
       }
-    } catch (e) {
-      return next(e);
+    } catch {
+      return next();
     }
 
     return next();
@@ -134,6 +134,51 @@ export default async function userMiddleware(
         }
       }
 
+      setUserHeader(req.headers, req.user);
+
+      return next();
+    } catch (e) {
+      console.error(e);
+
+      return next();
+    }
+  }
+
+  const clientToken = req.headers['x-app-token'];
+
+  if (clientToken) {
+    const token = String(clientToken);
+    try {
+      const decoded: any = jwt.verify(
+        token,
+        process.env.JWT_TOKEN_SECRET || '',
+      );
+
+      const client = await models.Clients.findOne({
+        clientId: decoded.clientId,
+      });
+
+      if (!client) {
+        return next();
+      }
+
+      if (
+        client.whiteListedIps?.length > 0 &&
+        !client.whiteListedIps.includes(req.ip)
+      ) {
+        return next();
+      }
+
+      const systemUser = await models.Users.findOne({
+        role: USER_ROLES.SYSTEM,
+        appId: client._id,
+      });
+
+      if (!systemUser) {
+        return next();
+      }
+
+      req.user = systemUser;
       setUserHeader(req.headers, req.user);
 
       return next();

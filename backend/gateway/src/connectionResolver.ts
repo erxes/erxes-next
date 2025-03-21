@@ -5,18 +5,21 @@ export interface IModels {
   Users: any;
   Permissions: any;
   Apps: any;
+  Clients: any;
 }
 
-export interface IContext {
+export interface IContext extends IMainContext {
   subdomain: string;
   models: IModels;
 }
 
-export const loadClasses = (
-  _db: mongoose.Connection,
-  _subdomain: string,
-): IModels => {
+export const loadClasses = (db: mongoose.Connection): IModels => {
   const models = {} as IModels;
+
+  models.Users = db.model('users', userSchema);
+  models.Permissions = db.model('permissions', permissionSchema);
+  models.Apps = db.model('apps', appSchema);
+  models.Clients = db.model('clients', appSchema);
 
   return models;
 };

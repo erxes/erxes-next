@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { connect } from './mongo-connection';
+import { connect } from './mongo/mongo-connection';
 import {
   coreModelOrganizations,
   getSaasCoreConnection,

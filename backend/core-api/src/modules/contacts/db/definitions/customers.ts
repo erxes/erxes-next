@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { stringRandomId } from 'erxes-api-utils';
+import { mongoStringRandomId } from 'erxes-api-utils';
 import { CUSTOMER_SELECT_OPTIONS } from '../../constants/customer';
 
 const getEnum = (fieldName: string): string[] => {
@@ -9,7 +9,7 @@ const getEnum = (fieldName: string): string[] => {
 
 export const customerSchema = new Schema(
   {
-    _id: stringRandomId,
+    _id: mongoStringRandomId,
 
     state: {
       type: String,
