@@ -1,7 +1,10 @@
 import { createGenerateModels } from 'erxes-api-utils';
 import mongoose from 'mongoose';
-import { ICustomerModel, loadCustomerClass } from './db/models/Customers';
-import { ICustomerDocument } from './modules/contacts/customers/@types';
+import {
+  ICustomerModel,
+  loadCustomerClass,
+} from './modules/contacts/db/models/Customers';
+import { ICustomerDocument } from './modules/contacts/@types/customers';
 
 export interface IModels {
   Customers: ICustomerModel;

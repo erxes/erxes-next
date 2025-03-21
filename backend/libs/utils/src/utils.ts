@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import { connect } from './mongo-connection';
 import {
   coreModelOrganizations,
-  getCoreConnection,
+  getSaasCoreConnection,
 } from './saas/saas-mongo-connection';
 
 export const getEnv = ({
@@ -76,7 +76,7 @@ export const createGenerateModels = <IModels>(
         subdomain = getSubdomain(hostnameOrSubdomain);
       }
 
-      await getCoreConnection();
+      await getSaasCoreConnection();
 
       const organization = await coreModelOrganizations.findOne({ subdomain });
 

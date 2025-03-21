@@ -1,4 +1,4 @@
-import { IconCalendar } from '@tabler/icons-react';
+import { IconCalendarPlus } from '@tabler/icons-react';
 import { DropdownMenu } from 'erxes-ui/components';
 import { useState } from 'react';
 
@@ -48,7 +48,7 @@ export const DateFilterInDropdown = ({
           setOpen(true);
         }}
       >
-        <IconCalendar />
+        <IconCalendarPlus />
         Custom
       </DropdownMenu.Item>
       {renderDateFilter({ open, setOpen })}

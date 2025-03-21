@@ -1,4 +1,4 @@
-export const settingsRoutes = {
+export const SETTINGS_ROUTES = {
   '/settings/accounting': 'Main settings',
   '/settings/accounting/vat': "Value-added tax's",
   '/settings/accounting/ctax': "CTAX's",
