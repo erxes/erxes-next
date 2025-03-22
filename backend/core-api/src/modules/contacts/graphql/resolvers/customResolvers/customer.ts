@@ -1,4 +1,4 @@
-import { IContext } from 'backend/core-api/src/connectionResolvers';
+import { IContext } from '../../../../../@types/common';
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {

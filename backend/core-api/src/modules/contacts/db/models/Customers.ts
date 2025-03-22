@@ -1,9 +1,6 @@
-import {
-  ICustomer,
-  ICustomerDocument,
-} from '../../modules/contacts/customers/@types/customers';
+import { ICustomer, ICustomerDocument } from '../../@types/customers';
 import { Model } from 'mongoose';
-import { IModels } from '../../connectionResolvers';
+import { IModels } from '../../../../connectionResolvers';
 import { customerSchema } from '../definitions/customers';
 
 export interface ICustomerModel extends Model<ICustomerDocument> {

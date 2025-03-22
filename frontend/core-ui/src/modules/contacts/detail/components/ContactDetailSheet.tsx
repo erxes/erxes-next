@@ -5,7 +5,7 @@ import { contactDetailActiveActionTabAtom } from '@/contacts/detail/states/conta
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { ContactHotKeyScope } from '@/contacts/types/ContactHotKeyScope';
 import { useEffect } from 'react';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 
 export const ContactDetailSheet = ({
   children,
@@ -15,7 +15,7 @@ export const ContactDetailSheet = ({
   const [open, setOpen] = useQueryState<string>('contact_id');
   const setHotkeyScope = useSetHotkeyScope();
 
-  const activeTab = useAtom(contactDetailActiveActionTabAtom);
+  const activeTab = useAtomValue(contactDetailActiveActionTabAtom);
 
   useEffect(() => {
     if (open) {

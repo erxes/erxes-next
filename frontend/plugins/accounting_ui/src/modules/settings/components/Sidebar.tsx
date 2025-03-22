@@ -1,6 +1,6 @@
 import { Sidebar } from 'erxes-ui';
 import { Link, useLocation } from 'react-router';
-import { settingsRoutes } from '../constants/settingsRoutes';
+import { SETTINGS_ROUTES } from '../constants/settingsRoutes';
 
 export const AccountingSidebar = () => {
   return (
@@ -8,7 +8,7 @@ export const AccountingSidebar = () => {
       <Sidebar.Group>
         <Sidebar.GroupContent>
           <Sidebar.Menu>
-            {Object.entries(settingsRoutes).map(([path, label]) => (
+            {Object.entries(SETTINGS_ROUTES).map(([path, label]) => (
               <AccountingSidebarItem key={path} to={path} children={label} />
             ))}
           </Sidebar.Menu>

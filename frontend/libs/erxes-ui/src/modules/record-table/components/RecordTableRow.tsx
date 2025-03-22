@@ -10,7 +10,7 @@ export const RecordTableRow = ({
 }: React.HTMLAttributes<HTMLTableRowElement>) => {
   const { ref, inView } = useInView();
   return (
-    <Table.Row {...props} ref={ref} className={cn('h-8', className)}>
+    <Table.Row {...props} ref={ref} className={cn('h-cell', className)}>
       {inView ? children : <Table.Cell className="h-8" />}
     </Table.Row>
   );

@@ -1,3 +1,5 @@
+import { IModels } from '../connectionResolvers';
+
 export interface IStringMap {
   [key: string]: string;
 }
@@ -20,6 +22,7 @@ export interface IBrowserInfo {
 export interface IContext {
   res: any;
   requestInfo: any;
+  models: IModels;
   docModifier: <T>(doc: T) => any;
   brandIdSelector: object;
   userBrandIdsSelector: object;
