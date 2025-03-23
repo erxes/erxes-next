@@ -44,13 +44,16 @@ const SelectTagsRoot = React.forwardRef<
         name="tags"
         onEnter={() => null}
         {...rest}
-        display={() => (
-          <TagsDisplay
-            ref={ref}
-            showAddButton={showAddButton}
-            tabIndex={asTrigger ? undefined : -1}
-          />
-        )}
+        display={
+          display ||
+          (() => (
+            <TagsDisplay
+              ref={ref}
+              showAddButton={showAddButton}
+              tabIndex={asTrigger ? undefined : -1}
+            />
+          ))
+        }
         edit={() => (
           <InlineCellEdit>
             <SelectTagsContent />

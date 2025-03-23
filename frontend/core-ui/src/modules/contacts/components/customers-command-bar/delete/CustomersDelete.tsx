@@ -5,7 +5,7 @@ import { useRemoveCustomers } from '@/contacts/hooks/useRemoveCustomers';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 
-export const CustomerDelete = ({ customerIds }: { customerIds: string[] }) => {
+export const CustomersDelete = ({ customerIds }: { customerIds: string[] }) => {
   const { confirm } = useConfirm();
   const { removeCustomers } = useRemoveCustomers();
   const { toast } = useToast();

@@ -1,4 +1,5 @@
-import { CustomerDelete } from '@/contacts/components/customers-command-bar/delete/CustomerDelete';
+import { CustomersDelete } from '~/modules/contacts/components/customers-command-bar/delete/CustomersDelete';
+import { CustomersTag } from '@/contacts/components/customers-command-bar/tag/CustomersTag';
 import { CommandBar, Separator } from 'erxes-ui/components';
 import { RecordTable } from 'erxes-ui/modules/record-table';
 import { CustomerMerge } from '@/contacts/components/customers-command-bar/merge/CustomerMerge';
@@ -12,7 +13,7 @@ export const ContactsCommandBar = () => {
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
         <Separator.Inline />
-        <CustomerDelete
+        <CustomersDelete
           customerIds={table
             .getFilteredSelectedRowModel()
             .rows.map((row) => row.original._id)}
@@ -24,6 +25,12 @@ export const ContactsCommandBar = () => {
             .rows.map((row) => row.original)}
           disabled={table.getFilteredSelectedRowModel().rows.length != 2}
           rows={table.getFilteredSelectedRowModel().rows}
+        />
+        <Separator.Inline />
+        <CustomersTag
+          customerIds={table
+            .getFilteredSelectedRowModel()
+            .rows.map((row) => row.original._id)}
         />
       </CommandBar.Bar>
     </CommandBar>
