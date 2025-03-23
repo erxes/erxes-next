@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const companiesLowDetailQuery = gql`
+export const companiesQuery = gql`
   query companies(
     $page: Int
     $perPage: Int
@@ -22,6 +22,7 @@ export const companiesLowDetailQuery = gql`
     $isRelated: Boolean
     $isSaved: Boolean
   ) {
+    companyCounts
     companies(
       page: $page
       perPage: $perPage

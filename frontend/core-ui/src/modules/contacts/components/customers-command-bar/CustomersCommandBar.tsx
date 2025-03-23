@@ -1,8 +1,7 @@
-import { IconTrash } from '@tabler/icons-react';
-
-import { Button, CommandBar, Separator } from 'erxes-ui/components';
+import { CustomerDelete } from '@/contacts/components/customers-command-bar/delete/CustomerDelete';
+import { CommandBar, Separator } from 'erxes-ui/components';
 import { RecordTable } from 'erxes-ui/modules/record-table';
-import { CustomerMerge } from '~/modules/contacts/components/customers-command-bar/merge/CustomerMerge';
+import { CustomerMerge } from '@/contacts/components/customers-command-bar/merge/CustomerMerge';
 export const ContactsCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
 
@@ -13,10 +12,11 @@ export const ContactsCommandBar = () => {
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
         <Separator.Inline />
-        <Button variant="secondary">
-          <IconTrash />
-          Delete
-        </Button>
+        <CustomerDelete
+          customerIds={table
+            .getFilteredSelectedRowModel()
+            .rows.map((row) => row.original._id)}
+        />
         <Separator.Inline />
         <CustomerMerge
           customers={table

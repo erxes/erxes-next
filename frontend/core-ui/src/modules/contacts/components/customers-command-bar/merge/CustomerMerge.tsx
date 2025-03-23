@@ -257,10 +257,10 @@ export const CustomerMerge = ({
       <div className="flex-[2] h-full flex flex-col gap-2  ">
         <div className="flex justify-between gap-2 mb-1 ">
           <span className="text-sm font-semibold text-muted-foreground w-full">
-            {customers[0]?.primaryEmail}
+            {customers[0]?.firstName}
           </span>
           <span className="text-sm font-semibold text-muted-foreground w-full">
-            {customers[1]?.primaryEmail}
+            {customers[1]?.firstName}
           </span>
         </div>
 
@@ -341,42 +341,47 @@ export const CustomerMerge = ({
 
       <div className="flex-[1.2] h-full ml-5 flex flex-col gap-2">
         <span className="text-sm font-semibold text-primary mb-1">Merge</span>
-        <div className="flex flex-col gap-2 ">
-          {Object.entries(value).map(([key, fieldValue]) => {
-            if (key === 'links' || fieldValue === '') return null;
 
-            return (
-              <ChoiceboxGroup key={key} className="flex flex-col gap-2">
-                <MergingFieldContainer
-                  key={createEntryKey(key, fieldValue)}
-                  fieldName={fieldMappings[key]?.displayName || key}
-                  fieldValue={fieldValue}
-                  type={fieldMappings[key]?.type || 'string'}
-                  disabled
-                />
-              </ChoiceboxGroup>
-            );
-          })}
-          {value.links &&
-            Object.entries(value.links).map(([linkType, linkValue]) => {
-              if (!linkValue) return null;
+        {value ? (
+          <div className="flex flex-col gap-2 ">
+            {Object.entries(value).map(([key, fieldValue]) => {
+              if (key === 'links' || fieldValue === '') return null;
 
               return (
-                <ChoiceboxGroup
-                  key={`links.${linkType}`}
-                  className="flex flex-col gap-2"
-                >
+                <ChoiceboxGroup key={key} className="flex flex-col gap-2">
                   <MergingFieldContainer
-                    key={createEntryKey(linkType, linkValue)}
-                    fieldName={linkFields[linkType]?.displayName || linkType}
-                    fieldValue={linkValue}
-                    type="link"
+                    key={createEntryKey(key, fieldValue)}
+                    fieldName={fieldMappings[key]?.displayName || key}  
+                    fieldValue={fieldValue}
+                    type={fieldMappings[key]?.type || 'string'}
                     disabled
                   />
                 </ChoiceboxGroup>
               );
             })}
-        </div>
+            {value.links &&
+              Object.entries(value.links).map(([linkType, linkValue]) => {
+                if (!linkValue) return null;
+
+                return (
+                  <ChoiceboxGroup
+                    key={`links.${linkType}`}
+                    className="flex flex-col gap-2"
+                  >
+                    <MergingFieldContainer
+                      key={createEntryKey(linkType, linkValue)}
+                      fieldName={linkFields[linkType]?.displayName || linkType}
+                      fieldValue={linkValue}
+                      type="link"
+                      disabled
+                    />
+                  </ChoiceboxGroup>
+                );
+              })}
+          </div>
+        ) : (
+          <div className="w-full h-full" />
+        )}
       </div>
     </MergeSheet>
   );
