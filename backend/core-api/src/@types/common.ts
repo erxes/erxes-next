@@ -23,6 +23,7 @@ export interface IContext {
   res: any;
   requestInfo: any;
   models: IModels;
+  subdomain: string;
   docModifier: <T>(doc: T) => any;
   brandIdSelector: object;
   userBrandIdsSelector: object;

@@ -22,7 +22,7 @@ import {
 import { redis } from 'erxes-api-utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
-const domain = process.env.DOMAIN ?? 'http://localhost:3000';
+const domain = process.env.DOMAIN ?? 'http://localhost:3001';
 
 const corsOptions = {
   credentials: true,

@@ -4,9 +4,9 @@ import fetch from 'node-fetch';
 import { NextFunction, Request, Response } from 'express';
 import { redis } from 'erxes-api-utils';
 import { getSubdomain } from 'erxes-api-utils';
+import { setUserHeader } from 'erxes-api-utils';
 import { userActionsMap } from 'erxes-api-modules';
 import { USER_ROLES } from 'erxes-api-modules';
-import { setUserHeader } from 'erxes-api-utils';
 import { IModels, generateModels } from '../connectionResolver';
 
 export default async function userMiddleware(

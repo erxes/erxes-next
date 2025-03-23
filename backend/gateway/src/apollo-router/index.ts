@@ -96,7 +96,7 @@ const createRouterConfig = async () => {
     cors: {
       allow_credentials: true,
       origins: [
-        DOMAIN ? DOMAIN : 'http://localhost:3000',
+        DOMAIN ? DOMAIN : 'http://localhost:3001',
         ...(ALLOWED_DOMAINS || '').split(','),
         'https://studio.apollographql.com',
       ].filter((x) => typeof x === 'string'),
