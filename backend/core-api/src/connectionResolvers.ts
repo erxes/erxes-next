@@ -6,7 +6,10 @@ import {
 } from './modules/contacts/db/models/Customers';
 import { ICustomerDocument } from './modules/contacts/@types/customers';
 import { IUserDocument } from 'erxes-api-modules';
-import { IUserModel, loadUserClass } from './modules/auth/db/models/Users';
+import {
+  IUserModel,
+  loadUserClass,
+} from './modules/organization/team-member/db/models/Users';
 
 export interface IModels {
   Customers: ICustomerModel;

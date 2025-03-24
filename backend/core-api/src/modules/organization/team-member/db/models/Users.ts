@@ -5,8 +5,9 @@ import * as crypto from 'crypto';
 
 import { redis } from 'erxes-api-utils';
 import { IUserDocument, userSchema } from 'erxes-api-modules';
-import { IModels } from '../../../../connectionResolvers';
-import { saveValidatedToken } from '../../utils';
+
+import { saveValidatedToken } from '../../../../auth/utils';
+import { IModels } from '../../../../../connectionResolvers';
 
 export interface ILoginParams {
   email: string;
