@@ -20,6 +20,7 @@ import {
 } from './proxy/middleware';
 
 import { redis } from 'erxes-api-utils';
+import { applyGraphqlLimiters } from './middlewares/graphql-limiter';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 const domain = process.env.DOMAIN ?? 'http://localhost:3001';
@@ -101,6 +102,7 @@ async function start() {
     console.log('Router started successfully');
 
     // Apply the initial proxy middleware
+    applyGraphqlLimiters(app);
     applyProxiesToGraphql(app);
     applyProxyToCore(app, global.currentTargets);
 

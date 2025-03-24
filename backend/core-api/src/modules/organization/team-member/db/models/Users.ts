@@ -4,10 +4,13 @@ import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
 import { redis } from 'erxes-api-utils';
-import { IUserDocument, userSchema } from 'erxes-api-modules';
+import { IUserDocument, USER_ROLES, userSchema } from 'erxes-api-modules';
 
 import { saveValidatedToken } from '../../../../auth/utils';
 import { IModels } from '../../../../../connectionResolvers';
+import { IUser } from 'erxes-api-modules';
+
+const SALT_WORK_FACTOR = 10;
 
 export interface ILoginParams {
   email: string;
@@ -16,15 +19,139 @@ export interface ILoginParams {
 }
 
 export interface IUserModel extends Model<IUserDocument> {
+  checkDuplication(params: {
+    email?: string;
+    idsToExclude?: string | string[];
+    emails?: string[];
+    employeeId?: string;
+    username?: string;
+  }): Promise<void>;
+  createUser(doc: IUser & { notUsePassword?: boolean }): Promise<IUserDocument>;
   login(params: ILoginParams): { token: string; refreshToken: string };
   logout(user: IUserDocument, currentToken: string): Promise<string>;
   getSecret(): string;
   comparePassword(password: string, userPassword: string): Promise<boolean>;
   createTokens(user: IUserDocument, secret: string): Promise<string[]>;
+  generatePassword(password: string): Promise<string>;
+  findUsers(query: any, options?: any): Promise<IUserDocument[]>;
 }
 
 export const loadUserClass = (models: IModels) => {
   class User {
+    /**
+     * Create new user
+     */
+    public static async createUser({
+      username,
+      email,
+      password,
+      details,
+      links,
+      groupIds,
+      isActive,
+      isOwner = false,
+      notUsePassword = false,
+    }: IUser & { notUsePassword?: boolean }) {
+      // empty string password validation
+
+      if (password === '' && !notUsePassword) {
+        throw new Error('Password can not be empty');
+      }
+
+      // Checking duplicated email
+      await this.checkDuplication({ email });
+
+      if (!notUsePassword) {
+        this.checkPassword(password);
+      }
+
+      return models.Users.create({
+        isOwner,
+        username,
+        email,
+        details,
+        links,
+        groupIds,
+        isActive: isActive !== undefined ? isActive : true,
+        // hash password
+        password: notUsePassword ? '' : await this.generatePassword(password),
+      });
+    }
+
+    /**
+     * Checking if user has duplicated properties
+     */
+    public static async checkDuplication({
+      email,
+      employeeId,
+      username,
+      idsToExclude,
+    }: {
+      email?: string;
+      employeeId?: string;
+      username?: string;
+      idsToExclude?: string;
+    }) {
+      const query: { [key: string]: any } = {};
+      let previousEntry;
+
+      // Adding exclude operator to the query
+      if (idsToExclude) {
+        query._id = { $ne: idsToExclude };
+      }
+
+      // Checking if user has email
+      if (email) {
+        previousEntry = await models.Users.findUsers({ ...query, email });
+
+        // Checking if duplicated
+        if (previousEntry.length > 0) {
+          throw new Error('Duplicated email');
+        }
+      }
+
+      // Checking employeeId
+      if (employeeId) {
+        previousEntry = await models.Users.findOne({ ...query, employeeId });
+
+        // Checking if duplicated
+        if (previousEntry) {
+          throw new Error('Duplicated Employee Id');
+        }
+      }
+
+      //Checking username
+      if (username) {
+        previousEntry = await models.Users.findOne({ ...query, username });
+
+        // Checking if duplicated
+        if (previousEntry) {
+          throw new Error('Duplicated User Name Id');
+        }
+      }
+    }
+
+    public static generatePassword(password: string) {
+      const hashPassword = crypto
+        .createHash('sha256')
+        .update(password)
+        .digest('hex');
+
+      return bcrypt.hash(hashPassword, SALT_WORK_FACTOR);
+    }
+
+    public static findUsers(query: any, options?: any) {
+      const filter = { ...query, role: { $ne: USER_ROLES.SYSTEM } };
+
+      try {
+        models.Users.find(filter, options).lean();
+      } catch (e) {
+        console.error(e);
+      }
+
+      return models.Users.find(filter, options).lean();
+    }
+
     public static async getUser(_id: string) {
       const user = await models.Users.findOne({ _id });
 

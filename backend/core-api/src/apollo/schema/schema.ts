@@ -5,7 +5,6 @@ import {
 } from '../../modules/contacts/graphql/schemas/customer';
 import {
   mutations as AuthMutations,
-  types as AuthTypes,
   queries as AuthQueries,
 } from '../../modules/auth/graphql/schemas/auth';
 
@@ -14,6 +13,12 @@ import {
   BranchTypes,
   PositionTypes,
 } from '../../modules/structure/graphql/schemas';
+
+import {
+  mutations as UserMutations,
+  types as UserTypes,
+} from '../../modules/organization/team-member/graphql/schema';
+
 import { CommonTypes } from './commonTypes';
 
 export const types = `
@@ -32,11 +37,11 @@ export const types = `
     ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
   
     ${CustomerTypes}
-    ${AuthTypes}
     ${DepartmentTypes}
     ${BranchTypes}
     ${PositionTypes}
     ${CommonTypes}
+    ${UserTypes}
   `;
 
 export const queries = `
@@ -47,6 +52,7 @@ export const queries = `
 export const mutations = `
     ${CustomerMutations}
     ${AuthMutations}
+    ${UserMutations}
   `;
 
 export default { types, queries, mutations };

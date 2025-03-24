@@ -44,6 +44,24 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@18.3.1)
+      '@envelop/core':
+        specifier: ^5.2.3
+        version: 5.2.3
+      '@escape.tech/graphql-armor':
+        specifier: ^3.1.2
+        version: 3.1.2(@apollo/server@4.11.3(encoding@0.1.13)(graphql@16.10.0))(@envelop/core@5.2.3)(@escape.tech/graphql-armor-types@0.7.0)
+      '@escape.tech/graphql-armor-character-limit':
+        specifier: ^2.3.0
+        version: 2.3.0
+      '@escape.tech/graphql-armor-max-aliases':
+        specifier: ^2.6.0
+        version: 2.6.0
+      '@escape.tech/graphql-armor-max-depth':
+        specifier: ^2.4.0
+        version: 2.4.0
+      '@graphql-tools/schema':
+        specifier: ^10.0.23
+        version: 10.0.23(graphql@16.10.0)
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.54.2(react@18.3.1))
@@ -1414,6 +1432,18 @@ packages:
   '@emoji-mart/data@1.2.1':
     resolution: {integrity: sha512-no2pQMWiBy6gpBEiqGeU77/bFejDqUTRY7KX+0+iur13op3bqUsXdnwoZs6Xb1zbv0gAj5VvS1PWoUUckSr5Dw==}
 
+  '@envelop/core@5.2.3':
+    resolution: {integrity: sha512-KfoGlYD/XXQSc3BkM1/k15+JQbkQ4ateHazeZoWl9P71FsLTDXSjGy6j7QqfhpIDSbxNISqhPMfZHYSbDFOofQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@envelop/instrumentation@1.0.0':
+    resolution: {integrity: sha512-cxgkB66RQB95H3X27jlnxCRNTmPuSTgmBAq6/4n2Dtv4hsk4yz8FadA1ggmd0uZzvKqWD6CR+WFgTjhDqg7eyw==}
+    engines: {node: '>=18.0.0'}
+
+  '@envelop/types@5.2.1':
+    resolution: {integrity: sha512-CsFmA3u3c2QoLDTfEpGr4t25fjMU31nyvse7IzWTvb0ZycuPjMjb0fjlheh+PbhBYb9YLugnT2uY6Mwcg1o+Zg==}
+    engines: {node: '>=18.0.0'}
+
   '@esbuild/aix-ppc64@0.19.12':
     resolution: {integrity: sha512-bmoCYyWdEL3wDQIVbcyzRyeKLgk2WtWLTWz1ZIAZF/EGbNOwSA6ew3PftJ1PqMiOOGu0OyFMzG53L0zqIpPeNA==}
     engines: {node: '>=12'}
@@ -1816,6 +1846,52 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@escape.tech/graphql-armor-block-field-suggestions@3.0.0':
+    resolution: {integrity: sha512-fx6o6uh9t9B96qFMdzp3TfBPW/wcGExa9F82PgHIekpKkg50K8848brv6y8Ue17VpVsleiYXHQeMtS4W4pY2AQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@escape.tech/graphql-armor-character-limit@2.3.0':
+    resolution: {integrity: sha512-k622KEnBgMXMXkwntCVmD3I9MDQjeJ0CjqeU2yV2Sh87MP9uf1QFVDeMUr9siGq9yUHTQojkHt3NN/TOh6gQWw==}
+    engines: {node: '>=18.0.0'}
+
+  '@escape.tech/graphql-armor-cost-limit@2.4.0':
+    resolution: {integrity: sha512-B1s95ZFG1Xv4RtkQxpSe/tkFP2b0Cprvt8ZDnY7NddjRoI5kHy5aQt6n3g0erB9eMKXm17e0h+TcurMhVSTaPw==}
+    engines: {node: '>=18.0.0'}
+
+  '@escape.tech/graphql-armor-max-aliases@2.6.0':
+    resolution: {integrity: sha512-9dwRC5+dl986byBD9QRYRUrLALa7awpUe4aIM1j7StZHGJgmYRj3LZaWQM3JyI8j2FXg4rqBC4FJAiVYpRyWqw==}
+    engines: {node: '>=18.0.0'}
+
+  '@escape.tech/graphql-armor-max-depth@2.4.0':
+    resolution: {integrity: sha512-4sQkvPITjkSW4mReGyBT5A4qFkBTzyK9HGOLm8Rrte/JrulVAsokK8HWDr/2Yw0KqSFBMCAmy575YMaYoTHLvQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@escape.tech/graphql-armor-max-directives@2.3.0':
+    resolution: {integrity: sha512-8tCJ5pymEOp6niKqqyWdiiuY2GDaei02FNj2Vx0dg/1uCnJbUcOZoL7YaAW6W7e3raY2kOWTK2wF4L/KY+fINw==}
+    engines: {node: '>=18.0.0'}
+
+  '@escape.tech/graphql-armor-max-tokens@2.5.0':
+    resolution: {integrity: sha512-XypQs0NELYwmz/Mx9wVjw1riI3bvZyU2Ya4BnV0AIFLd9UYYl0BzuI4BSR46t5V2Sh73ePl6Ru1jj5rb4nfVOw==}
+    engines: {node: '>=18.0.0'}
+
+  '@escape.tech/graphql-armor-types@0.7.0':
+    resolution: {integrity: sha512-RHxyyp6PDgS6NAPnnmB6JdmUJ6oqhpSHFbsglGWeCcnNzceA5AkQFpir7VIDbVyS8LNC1xhipOtk7f9ycrIemQ==}
+
+  '@escape.tech/graphql-armor@3.1.2':
+    resolution: {integrity: sha512-nrCSdBTQU2f087xQXDqCI8dbyG+YG0Rj79vNonahea0qs12pKGTpKgOkbTnEeFqY/UIWxlkl9zipKWa5VoEPgg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@apollo/server': ^4.0.0
+      '@envelop/core': ^5.0.0
+      '@escape.tech/graphql-armor-types': 0.7.0
+    peerDependenciesMeta:
+      '@apollo/server':
+        optional: true
+      '@envelop/core':
+        optional: true
+      '@escape.tech/graphql-armor-types':
+        optional: true
+
   '@eslint-community/eslint-utils@4.4.1':
     resolution: {integrity: sha512-s3O3waFUrMV8P/XaF/+ZTp1X9XBZW1a4B97ZnjQF2KYWaFD2A8KyFBsrsfSjEmjn3RGWAIuvlneuZm3CUK3jbA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -1880,8 +1956,26 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
+  '@graphql-tools/merge@9.0.24':
+    resolution: {integrity: sha512-NzWx/Afl/1qHT3Nm1bghGG2l4jub28AdvtG11PoUlmjcIjnFBJMv4vqL0qnxWe8A82peWo4/TkVdjJRLXwgGEw==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+
+  '@graphql-tools/schema@10.0.23':
+    resolution: {integrity: sha512-aEGVpd1PCuGEwqTXCStpEkmheTHNdMayiIKH1xDWqYp9i8yKv9FRDgkGrY4RD8TNxnf7iII+6KOBGaJ3ygH95A==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+
   '@graphql-tools/schema@9.0.19':
     resolution: {integrity: sha512-oBRPoNBtCkk0zbUsyP4GaIzCt8C0aCI4ycIRUL67KK5pOHljKLBBtGT+Jr6hkzA74C8Gco8bpZPe7aWFjiaK2w==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+
+  '@graphql-tools/utils@10.8.6':
+    resolution: {integrity: sha512-Alc9Vyg0oOsGhRapfL3xvqh1zV8nKoFUdtLhXX7Ki4nClaIJXckrA86j+uxEuG3ic6j4jlM1nvcWXRn/71AVLQ==}
+    engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
@@ -4584,6 +4678,10 @@ packages:
       webpack-dev-server:
         optional: true
 
+  '@whatwg-node/promise-helpers@1.3.0':
+    resolution: {integrity: sha512-486CouizxHXucj8Ky153DDragfkMcHtVEToF5Pn/fInhUUSiCmt9Q4JVBa6UK5q4RammFBtGQ4C9qhGlXU9YbA==}
+    engines: {node: '>=16.0.0'}
+
   '@wry/caches@1.0.1':
     resolution: {integrity: sha512-bXuaUNLVVkD20wcGBWRyo7j9N3TxePEWFZj2Y+r9OoUzfqmavM84+mFykRicNsBqatba5JLay1t48wxaXaWnlA==}
     engines: {node: '>=8'}
@@ -5622,6 +5720,10 @@ packages:
     resolution: {integrity: sha512-p0SaNjrHOnQeR8/VnfGbmg9te2kfyYSQ7Sc/j/6DtPL3JQvKxmjO9TSjNFpujqV3vEYYBvNNvXSxzyksBWAx1Q==}
     engines: {node: '>=12.0.0'}
 
+  cross-inspect@1.0.1:
+    resolution: {integrity: sha512-Pcw1JTvZLSJH83iiGWt6fRcT+BjZlCDRVwYLbUcHzv/CRpB7r0MlSrGbIyQvVSNyGnbt7G4AXuyCiDR3POvZ1A==}
+    engines: {node: '>=16.0.0'}
+
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -6072,6 +6174,10 @@ packages:
   dotenv@16.4.7:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
     engines: {node: '>=12'}
+
+  dset@3.1.4:
+    resolution: {integrity: sha512-2QF/g9/zTaPDc3BjNcVTGoBbXBgYfMTTceLaYcFJ/W9kggFUkhxD/hMEeuLKbugyef9SqAx8cpgwlIP/jinUTA==}
+    engines: {node: '>=4'}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -12960,6 +13066,23 @@ snapshots:
 
   '@emoji-mart/data@1.2.1': {}
 
+  '@envelop/core@5.2.3':
+    dependencies:
+      '@envelop/instrumentation': 1.0.0
+      '@envelop/types': 5.2.1
+      '@whatwg-node/promise-helpers': 1.3.0
+      tslib: 2.8.1
+
+  '@envelop/instrumentation@1.0.0':
+    dependencies:
+      '@whatwg-node/promise-helpers': 1.3.0
+      tslib: 2.8.1
+
+  '@envelop/types@5.2.1':
+    dependencies:
+      '@whatwg-node/promise-helpers': 1.3.0
+      tslib: 2.8.1
+
   '@esbuild/aix-ppc64@0.19.12':
     optional: true
 
@@ -13161,6 +13284,73 @@ snapshots:
   '@esbuild/win32-x64@0.19.12':
     optional: true
 
+  '@escape.tech/graphql-armor-block-field-suggestions@3.0.0':
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
+      '@envelop/core': 5.2.3
+
+  '@escape.tech/graphql-armor-character-limit@2.3.0':
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
+      '@envelop/core': 5.2.3
+      '@escape.tech/graphql-armor-types': 0.7.0
+
+  '@escape.tech/graphql-armor-cost-limit@2.4.0':
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
+      '@envelop/core': 5.2.3
+      '@escape.tech/graphql-armor-types': 0.7.0
+
+  '@escape.tech/graphql-armor-max-aliases@2.6.0':
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
+      '@envelop/core': 5.2.3
+      '@escape.tech/graphql-armor-types': 0.7.0
+
+  '@escape.tech/graphql-armor-max-depth@2.4.0':
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
+      '@envelop/core': 5.2.3
+      '@escape.tech/graphql-armor-types': 0.7.0
+
+  '@escape.tech/graphql-armor-max-directives@2.3.0':
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
+      '@envelop/core': 5.2.3
+      '@escape.tech/graphql-armor-types': 0.7.0
+
+  '@escape.tech/graphql-armor-max-tokens@2.5.0':
+    dependencies:
+      graphql: 16.10.0
+    optionalDependencies:
+      '@envelop/core': 5.2.3
+      '@escape.tech/graphql-armor-types': 0.7.0
+
+  '@escape.tech/graphql-armor-types@0.7.0':
+    dependencies:
+      graphql: 16.10.0
+    optional: true
+
+  '@escape.tech/graphql-armor@3.1.2(@apollo/server@4.11.3(encoding@0.1.13)(graphql@16.10.0))(@envelop/core@5.2.3)(@escape.tech/graphql-armor-types@0.7.0)':
+    dependencies:
+      '@escape.tech/graphql-armor-block-field-suggestions': 3.0.0
+      '@escape.tech/graphql-armor-cost-limit': 2.4.0
+      '@escape.tech/graphql-armor-max-aliases': 2.6.0
+      '@escape.tech/graphql-armor-max-depth': 2.4.0
+      '@escape.tech/graphql-armor-max-directives': 2.3.0
+      '@escape.tech/graphql-armor-max-tokens': 2.5.0
+      graphql: 16.10.0
+    optionalDependencies:
+      '@apollo/server': 4.11.3(encoding@0.1.13)(graphql@16.10.0)
+      '@envelop/core': 5.2.3
+      '@escape.tech/graphql-armor-types': 0.7.0
+
   '@eslint-community/eslint-utils@4.4.1(eslint@9.20.1(jiti@1.21.7))':
     dependencies:
       eslint: 9.20.1(jiti@1.21.7)
@@ -13238,6 +13428,19 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
 
+  '@graphql-tools/merge@9.0.24(graphql@16.10.0)':
+    dependencies:
+      '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
+      graphql: 16.10.0
+      tslib: 2.8.1
+
+  '@graphql-tools/schema@10.0.23(graphql@16.10.0)':
+    dependencies:
+      '@graphql-tools/merge': 9.0.24(graphql@16.10.0)
+      '@graphql-tools/utils': 10.8.6(graphql@16.10.0)
+      graphql: 16.10.0
+      tslib: 2.8.1
+
   '@graphql-tools/schema@9.0.19(graphql@16.10.0)':
     dependencies:
       '@graphql-tools/merge': 8.4.2(graphql@16.10.0)
@@ -13245,6 +13448,15 @@ snapshots:
       graphql: 16.10.0
       tslib: 2.8.1
       value-or-promise: 1.0.12
+
+  '@graphql-tools/utils@10.8.6(graphql@16.10.0)':
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.10.0)
+      '@whatwg-node/promise-helpers': 1.3.0
+      cross-inspect: 1.0.1
+      dset: 3.1.4
+      graphql: 16.10.0
+      tslib: 2.8.1
 
   '@graphql-tools/utils@9.2.1(graphql@16.10.0)':
     dependencies:
@@ -17033,6 +17245,10 @@ snapshots:
     optionalDependencies:
       webpack-dev-server: 5.2.0(webpack-cli@5.1.4)(webpack@5.97.1)
 
+  '@whatwg-node/promise-helpers@1.3.0':
+    dependencies:
+      tslib: 2.8.1
+
   '@wry/caches@1.0.1':
     dependencies:
       tslib: 2.8.1
@@ -18172,6 +18388,10 @@ snapshots:
     dependencies:
       luxon: 3.5.0
 
+  cross-inspect@1.0.1:
+    dependencies:
+      tslib: 2.8.1
+
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -18662,6 +18882,8 @@ snapshots:
       dotenv: 16.4.7
 
   dotenv@16.4.7: {}
+
+  dset@3.1.4: {}
 
   dunder-proto@1.0.1:
     dependencies:

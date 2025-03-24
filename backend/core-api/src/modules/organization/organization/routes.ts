@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getEnv, getSubdomain } from 'erxes-api-utils';
-import { generateModels } from '../../connectionResolvers';
+import { generateModels } from '../../../connectionResolvers';
 import { getSaasOrganizationDetail } from 'erxes-api-utils';
 
 const router = Router();
