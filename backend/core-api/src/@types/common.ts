@@ -1,3 +1,4 @@
+import { IUserDocument } from 'erxes-api-modules';
 import { IModels } from '../connectionResolvers';
 
 export interface IStringMap {
@@ -24,6 +25,7 @@ export interface IContext {
   requestInfo: any;
   models: IModels;
   subdomain: string;
+  user: IUserDocument;
   docModifier: <T>(doc: T) => any;
   brandIdSelector: object;
   userBrandIdsSelector: object;

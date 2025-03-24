@@ -10,7 +10,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { retryGetProxyTargets } from './proxy/targets';
 import { startRouter, stopRouter } from './apollo-router';
-
+import userMiddleware from './middlewares/userMiddleware';
 import { initMQWorkers } from './mq/workers/workers';
 
 import {
@@ -49,6 +49,8 @@ const app = express();
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+app.use(userMiddleware);
 
 app.use('/bullmq-board', serverAdapter.getRouter());
 

@@ -1,4 +1,3 @@
-import * as telemetry from 'erxes-telemetry';
 import * as jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
 import { NextFunction, Request, Response } from 'express';
@@ -77,7 +76,7 @@ export default async function userMiddleware(
     try {
       const { app }: any = jwt.verify(
         appToken,
-        process.env.JWT_TOKEN_SECRET || '',
+        process.env.JWT_TOKEN_SECRET || 'SECRET',
       );
 
       if (app && app._id) {
@@ -151,7 +150,7 @@ export default async function userMiddleware(
     try {
       const decoded: any = jwt.verify(
         token,
-        process.env.JWT_TOKEN_SECRET || '',
+        process.env.JWT_TOKEN_SECRET || 'SECRET',
       );
 
       const client = await models.Clients.findOne({
@@ -197,7 +196,10 @@ export default async function userMiddleware(
 
   try {
     // verify user token and retrieve stored user information
-    const decoded: any = jwt.verify(token, process.env.JWT_TOKEN_SECRET || '');
+    const decoded: any = jwt.verify(
+      token,
+      process.env.JWT_TOKEN_SECRET || 'SECRET',
+    );
     const user = decoded.user;
 
     const userDoc = await models.Users.findOne(
@@ -221,21 +223,10 @@ export default async function userMiddleware(
     req.user.loginToken = token;
     req.user.sessionCode = req.headers.sessioncode || '';
 
-    const currentDate = new Date();
-    const machineId: string = telemetry.getMachineId();
-
-    const lastLoginDate = new Date((await redis.get(machineId)) || '');
-
-    if (lastLoginDate.getDay() !== currentDate.getDay()) {
-      redis.set(machineId, currentDate.toJSON());
-
-      telemetry.trackCli('last_login', { updatedAt: currentDate });
-    }
-
     const hostname = await redis.get('hostname');
 
     if (!hostname) {
-      redis.set('hostname', process.env.DOMAIN || 'http://localhost:3000');
+      redis.set('hostname', process.env.DOMAIN || 'http://localhost:3001');
     }
   } catch (e) {
     if (e instanceof jwt.TokenExpiredError) {
@@ -244,7 +235,6 @@ export default async function userMiddleware(
       console.error(e);
     }
   }
-
   setUserHeader(req.headers, req.user);
 
   return next();

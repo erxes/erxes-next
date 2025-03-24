@@ -6,6 +6,7 @@ import {
 import {
   mutations as AuthMutations,
   types as AuthTypes,
+  queries as AuthQueries,
 } from '../../modules/auth/graphql/schemas/auth';
 
 import {
@@ -40,6 +41,7 @@ export const types = `
 
 export const queries = `
     ${CustomerQueries}
+    ${AuthQueries}
   `;
 
 export const mutations = `

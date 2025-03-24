@@ -1,11 +1,12 @@
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
-import * as sha256 from 'sha256';
+import * as crypto from 'crypto';
 
 import { redis } from 'erxes-api-utils';
 import { IUserDocument, userSchema } from 'erxes-api-modules';
 import { IModels } from '../../../../connectionResolvers';
+import { saveValidatedToken } from '../../utils';
 
 export interface ILoginParams {
   email: string;
@@ -79,6 +80,10 @@ export const loadUserClass = (models: IModels) => {
         this.getSecret(),
       );
 
+      if (token) {
+        await saveValidatedToken(token, user);
+      }
+
       // storing tokens in user collection.
       if (deviceToken) {
         const deviceTokens: string[] = user.deviceTokens || [];
@@ -114,7 +119,7 @@ export const loadUserClass = (models: IModels) => {
     }
 
     public static getSecret() {
-      return process.env.JWT_TOKEN_SECRET || '';
+      return process.env.JWT_TOKEN_SECRET || 'SECRET';
     }
     /*
      * Creates regular and refresh tokens using given user information
@@ -139,8 +144,14 @@ export const loadUserClass = (models: IModels) => {
      * Compare password
      */
 
-    public static comparePassword(password: string, userPassword: string) {
-      const hashPassword = sha256(password);
+    public static async comparePassword(
+      password: string,
+      userPassword: string,
+    ) {
+      const hashPassword = crypto
+        .createHash('sha256')
+        .update(password)
+        .digest('hex');
 
       return bcrypt.compare(hashPassword, userPassword);
     }

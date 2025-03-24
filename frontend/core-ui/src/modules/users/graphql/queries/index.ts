@@ -8,10 +8,6 @@ export const currentUser = gql`
       username
       email
       isOwner
-      brands {
-        _id
-        name
-      }
       details {
         avatar
         fullName
