@@ -1,15 +1,15 @@
 import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
 import { productsMutations } from '@/products/graphql/ProductsMutations';
 import { productsQueries } from '@/products/graphql';
-import { ProductT } from '@/products/types/productTypes';
+import { IProduct } from '@/products/types/productTypes';
 
 interface ProductData {
-  products: ProductT[];
+  products: IProduct[];
   productsTotalCount: number;
 }
 
 interface AddProductResult {
-  productsAdd: ProductT;
+  productsAdd: IProduct;
 }
 
 export function useAddProduct(

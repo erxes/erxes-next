@@ -24,26 +24,35 @@ export const ComboboxTrigger = React.forwardRef<
         {...props}
         type="button"
         className={cn(
-          'flex truncate h-8 rounded px-3 shadow-xs focus-visible:shadow-focus focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-semibold text-left',
+          'flex truncate h-8 rounded px-3 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-medium text-left',
+          (!props.variant || props.variant === 'outline') && 'shadow-xs',
           props.size === 'lg' && 'gap-2',
           className,
         )}
       >
         {children}
-        {!hideChevron && (
-          <IconChevronDown
-            size={16}
-            strokeWidth={2}
-            className="flex-none opacity-50"
-            aria-hidden="true"
-          />
-        )}
       </Button>
     </Popover.Trigger>
   );
 });
 
 ComboboxTrigger.displayName = 'ComboboxTrigger';
+
+export const ComboboxTriggerIcon = React.forwardRef<
+  React.ElementRef<typeof IconChevronDown>,
+  React.ComponentPropsWithoutRef<typeof IconChevronDown>
+>(({ className, ...props }, ref) => {
+  return (
+    <IconChevronDown
+      ref={ref}
+      size={16}
+      strokeWidth={2}
+      aria-hidden="true"
+      className={cn('flex-none opacity-50', className)}
+      {...props}
+    />
+  );
+});
 
 export const ComboboxValue = React.forwardRef<
   HTMLSpanElement,

@@ -4,7 +4,15 @@ import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/Inlin
 import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
 import React, { useEffect, useState } from 'react';
 
-export const Text = React.forwardRef<
+export interface ITextFieldContainerProps {
+  placeholder?: string;
+  value: string;
+  field: string;
+  fieldId?: string;
+  _id: string;
+}
+
+export const TextField = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & {
     placeholder?: string;

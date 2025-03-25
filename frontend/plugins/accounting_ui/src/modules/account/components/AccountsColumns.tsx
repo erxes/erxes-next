@@ -1,12 +1,80 @@
-import { ColumnDef } from '@tanstack/react-table';
+import { Cell, ColumnDef } from '@tanstack/react-table';
 import { IAccount } from '../type/Account';
 import {
   CurrencyCode,
-  CurrencyDisplay,
   InlineCell,
   InlineCellDisplay,
+  ITextFieldContainerProps,
   RecordTable,
+  SelectCurrency,
+  TextField,
 } from 'erxes-ui';
+import { SelectAccountCategory } from './SelectAccountCategory';
+import { useAccountEdit } from '../hooks/useAccountEdit';
+
+const AccountCategoryCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
+  const { editAccount } = useAccountEdit();
+  return (
+    <SelectAccountCategory
+      recordId={cell.row.original._id}
+      selected={cell.row.original.categoryId}
+      onSelect={(categoryId) => {
+        editAccount(
+          {
+            variables: {
+              ...cell.row.original,
+              categoryId,
+            },
+          },
+          ['categoryId'],
+        );
+      }}
+      variant="ghost"
+      hideChevron
+    />
+  );
+};
+
+const AccountTextField = ({
+  value,
+  field,
+  _id,
+  account,
+}: ITextFieldContainerProps & { account: IAccount }) => {
+  const { editAccount } = useAccountEdit();
+  return (
+    <TextField
+      value={value}
+      field={field}
+      _id={_id}
+      onSave={(value) => {
+        editAccount(
+          {
+            variables: { ...account, [field]: value },
+          },
+          [field],
+        );
+      }}
+    />
+  );
+};
+
+const AccountCurrencyCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
+  const { editAccount } = useAccountEdit();
+  return (
+    <SelectCurrency
+      value={cell.getValue() as CurrencyCode}
+      variant="ghost"
+      className="w-full focus-visible:relative focus-visible:z-10"
+      hideChevron
+      onChange={(value) => {
+        editAccount({ variables: { ...cell.row.original, currency: value } }, [
+          'currency',
+        ]);
+      }}
+    />
+  );
+};
 
 export const accountsColumns: ColumnDef<IAccount>[] = [
   {
@@ -15,16 +83,15 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     header: () => <RecordTable.InlineHead label="Name" />,
     cell: ({ cell }) => {
       return (
-        <InlineCell
-          name={cell.row.original.name}
-          recordId={cell.row.original._id}
-          display={() => (
-            <InlineCellDisplay>{cell.getValue() as string}</InlineCellDisplay>
-          )}
+        <AccountTextField
+          value={cell.getValue() as string}
+          field="name"
+          _id={cell.row.original._id}
+          account={cell.row.original}
         />
       );
     },
-    size: 320,
+    size: 300,
   },
   {
     id: 'code',
@@ -32,12 +99,11 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     header: () => <RecordTable.InlineHead label="Code" />,
     cell: ({ cell }) => {
       return (
-        <InlineCell
-          name={cell.row.original.code}
-          recordId={cell.row.original._id}
-          display={() => (
-            <InlineCellDisplay>{cell.getValue() as string}</InlineCellDisplay>
-          )}
+        <AccountTextField
+          value={cell.getValue() as string}
+          field="code"
+          _id={cell.row.original._id}
+          account={cell.row.original}
         />
       );
     },
@@ -46,37 +112,15 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     id: 'category',
     accessorKey: 'categoryId',
     header: () => <RecordTable.InlineHead label="Category" />,
-    cell: ({ cell }) => {
-      return (
-        <InlineCell
-          name={cell.column.id}
-          recordId={cell.row.original._id}
-          display={() => (
-            <InlineCellDisplay>{cell.getValue() as string}</InlineCellDisplay>
-          )}
-        />
-      );
-    },
+    cell: AccountCategoryCell,
     size: 240,
   },
   {
     id: 'currency',
     accessorKey: 'currency',
     header: () => <RecordTable.InlineHead label="Currency" />,
-    cell: ({ cell }) => {
-      return (
-        <InlineCell
-          name={cell.column.id}
-          recordId={cell.row.original._id}
-          display={() => (
-            <InlineCellDisplay className="[&_svg]:size-4">
-              <CurrencyDisplay code={cell.getValue() as CurrencyCode} />
-            </InlineCellDisplay>
-          )}
-        />
-      );
-    },
-    size: 120,
+    cell: AccountCurrencyCell,
+    size: 240,
   },
   {
     id: 'kind',

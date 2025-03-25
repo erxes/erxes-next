@@ -15,7 +15,7 @@ import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-tabl
 import { TCompany } from '@/contacts/types/companyType';
 import { TagsField } from '@/contacts/companies/company-edit/TagsField';
 import { EmailField } from '@/contacts/companies/company-edit/EmailField';
-import { TextField } from '@/contacts/companies/company-edit/TextField';
+import { CompanyTextField } from '@/contacts/companies/company-edit/TextField';
 import { PhoneField } from '@/contacts/companies/company-edit/PhoneField';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
@@ -47,7 +47,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     ),
     cell: ({ cell }) => {
       return (
-        <TextField
+        <CompanyTextField
           value={cell.getValue() as string}
           field="primaryName"
           _id={cell.row.original._id}
@@ -136,7 +136,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     accessorKey: field,
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
     cell: ({ cell }: { cell: Cell<TCompany, unknown> }) => (
-      <TextField
+      <CompanyTextField
         _id={cell.row.original._id}
         field={field}
         value={cell.getValue() as string}

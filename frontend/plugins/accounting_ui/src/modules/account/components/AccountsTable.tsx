@@ -3,17 +3,13 @@ import { RecordTable } from 'erxes-ui/modules';
 import { accountsColumns } from '@/account/components/AccountsColumns';
 
 export const AccountsTable = () => {
-  const { accounts, loading, handleFetchMore, totalCount } = useAccounts({
-    variables: {
-      page: 1,
-    },
-  });
+  const { accounts, loading, handleFetchMore, totalCount } = useAccounts();
   return (
     <RecordTable.Provider
       columns={accountsColumns}
       data={accounts || []}
       handleReachedBottom={handleFetchMore}
-      stickyColumns={[]}
+      stickyColumns={['name']}
       moreColumn={undefined}
     >
       <RecordTable>

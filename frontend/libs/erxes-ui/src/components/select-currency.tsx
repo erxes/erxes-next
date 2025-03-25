@@ -7,72 +7,85 @@ import { cn } from 'erxes-ui/lib/utils';
 import { IMaskInput } from 'react-imask';
 import { Except } from 'type-fest';
 
-export const SelectCurrency = ({
-  value,
-  currencies = CURRENCY_CODES,
-  className,
-  iconOnly = false,
-  onChange,
-  open,
-  setOpen,
-}: {
-  open?: boolean;
-  setOpen?: (open: boolean) => void;
-  value: CurrencyCode;
-  currencies?: Record<CurrencyCode, Currency>;
-  className?: string;
-  iconOnly?: boolean;
-  onChange?: (value: CurrencyCode) => void;
-}) => {
-  const [_open, _setOpen] = useState(false);
-  const selectedCurrency = currencies[value];
+export const SelectCurrency = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Except<
+    React.ComponentPropsWithoutRef<typeof Combobox.Trigger>,
+    'onChange' | 'value'
+  > & {
+    open?: boolean;
+    setOpen?: (open: boolean) => void;
+    value: CurrencyCode;
+    currencies?: Record<CurrencyCode, Currency>;
+    className?: string;
+    iconOnly?: boolean;
+    onChange?: (value: CurrencyCode) => void;
+  }
+>(
+  (
+    {
+      value,
+      currencies = CURRENCY_CODES,
+      className,
+      iconOnly = false,
+      onChange,
+      open,
+      setOpen,
+      ...props
+    },
+    ref,
+  ) => {
+    const [_open, _setOpen] = useState(false);
+    const selectedCurrency = currencies[value];
 
-  const sortedCurrencies = Object.entries(currencies).sort((a, b) => {
-    if (a[0] === value) {
-      return -1;
-    }
-    return 1;
-  });
+    const sortedCurrencies = Object.entries(currencies).sort((a, b) => {
+      if (a[0] === value) {
+        return -1;
+      }
+      return 1;
+    });
 
-  return (
-    <Popover modal open={open || _open} onOpenChange={setOpen || _setOpen}>
-      <Combobox.Trigger
-        variant="outline"
-        className={className}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {selectedCurrency ? (
-          <CurrencyDisplay code={value} iconOnly={iconOnly} />
-        ) : (
-          <Combobox.Value placeholder="Select currency" />
-        )}
-      </Combobox.Trigger>
-      <Combobox.Content>
-        <Command>
-          <Command.Input placeholder="Search currency" />
-          <Command.List>
-            <Command.Empty>No currency found</Command.Empty>
-            {sortedCurrencies.map(([code, { label, Icon }]) => (
-              <Command.Item
-                key={code}
-                value={code + ' ' + label}
-                onSelect={() => {
-                  onChange?.(code as CurrencyCode);
-                  setOpen?.(false);
-                  _setOpen(false);
-                }}
-              >
-                <Icon />
-                {label}
-                <Combobox.Check checked={value === code} />
-              </Command.Item>
-            ))}
-          </Command.List>
-        </Command>
-      </Combobox.Content>
-    </Popover>
-  );
-};
+    return (
+      <Popover modal open={open || _open} onOpenChange={setOpen || _setOpen}>
+        <Combobox.Trigger
+          className={className}
+          onClick={(e) => e.stopPropagation()}
+          ref={ref}
+          {...props}
+        >
+          {selectedCurrency ? (
+            <CurrencyDisplay code={value} iconOnly={iconOnly} />
+          ) : (
+            <Combobox.Value placeholder="Select currency" />
+          )}
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <Command>
+            <Command.Input placeholder="Search currency" />
+            <Command.List>
+              <Command.Empty>No currency found</Command.Empty>
+              {sortedCurrencies.map(([code, { label, Icon }]) => (
+                <Command.Item
+                  key={code}
+                  value={code + ' ' + label}
+                  onSelect={() => {
+                    onChange?.(code as CurrencyCode);
+                    setOpen?.(false);
+                    _setOpen(false);
+                  }}
+                >
+                  <Icon />
+                  {label}
+                  <Combobox.Check checked={value === code} />
+                </Command.Item>
+              ))}
+            </Command.List>
+          </Command>
+        </Combobox.Content>
+      </Popover>
+    );
+  },
+);
 
 export interface CurrencyDisplayProps
   extends React.HTMLAttributes<HTMLDivElement> {

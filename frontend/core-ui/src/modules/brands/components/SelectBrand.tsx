@@ -51,10 +51,7 @@ export const SelectBrand = React.forwardRef<
         ref={ref}
         {...props}
       />
-      <Combobox.Content
-        className="w-56 min-w-[--radix-popper-anchor-width] border"
-        align="start"
-      >
+      <Combobox.Content>
         <Command shouldFilter={false} id="brand-command-menu">
           <Command.Input
             value={search}

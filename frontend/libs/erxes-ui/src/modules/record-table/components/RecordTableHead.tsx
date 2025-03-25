@@ -69,7 +69,8 @@ export const RecordTableHead = ({
           <span
             {...attributes}
             {...listeners}
-            className="absolute top-0 left-0 w-full h-full"
+            tabIndex={-1}
+            className="absolute top-0 left-0 w-full h-full focus:outline-none"
           />
 
           {isDragging && (

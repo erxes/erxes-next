@@ -1,6 +1,6 @@
 import { Cell } from '@tanstack/react-table';
 import { renderingProductDetailAtom } from '../states/productDetailStates';
-import { ProductT } from '@/products/types/productTypes';
+import { IProduct } from '@/products/types/productTypes';
 import { useSetAtom } from 'jotai';
 import { useSearchParams } from 'react-router-dom';
 import { RecordTable } from 'erxes-ui';
@@ -8,7 +8,7 @@ import { RecordTable } from 'erxes-ui';
 export const ProductMoreColumnCell = ({
   cell,
 }: {
-  cell: Cell<ProductT, unknown>;
+  cell: Cell<IProduct, unknown>;
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setRenderingProductDetail = useSetAtom(renderingProductDetailAtom);

@@ -8,16 +8,23 @@ import {
   Select,
   Textarea,
   Dialog,
+  SelectCurrency,
+  Spinner,
 } from 'erxes-ui';
 import { useForm } from 'react-hook-form';
 import { TAddAccountForm } from '../type/AddAccountForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addAccountSchema } from '../constants/addAccountSchema';
 import { AccountKind, Journal } from '../type/Account';
+import { SelectAccountCategory } from './SelectAccountCategory';
+import { SelectBranch, SelectDepartment } from 'ui-modules';
+import { useState } from 'react';
+import { useAccountAdd } from '../hooks/useAccountAdd';
 
 export const AddAccount = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button>
           <IconPlus />
@@ -27,6 +34,9 @@ export const AddAccount = () => {
       <Dialog.Content className="max-w-2xl">
         <Dialog.Header>
           <Dialog.Title>Add Account</Dialog.Title>
+          <Dialog.Description className="sr-only">
+            Add a new account
+          </Dialog.Description>
           <Dialog.Close asChild>
             <Button
               variant="secondary"
@@ -37,13 +47,13 @@ export const AddAccount = () => {
             </Button>
           </Dialog.Close>
         </Dialog.Header>
-        <AddAccountForm />
+        <AddAccountForm setOpen={setOpen} />
       </Dialog.Content>
     </Dialog>
   );
 };
 
-const AddAccountForm = () => {
+const AddAccountForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const form = useForm<TAddAccountForm>({
     resolver: zodResolver(addAccountSchema),
     defaultValues: {
@@ -60,9 +70,24 @@ const AddAccountForm = () => {
       isOutBalance: false,
     },
   });
+  const { addAccount, loading } = useAccountAdd();
+
+  const handleSubmit = (data: TAddAccountForm) => {
+    addAccount({
+      variables: data,
+      onCompleted: () => {
+        setOpen(false);
+        form.reset();
+      },
+    });
+  };
+
   return (
     <Form {...form}>
-      <form className="py-4 grid grid-cols-2 gap-5">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="py-4 grid grid-cols-2 gap-5"
+      >
         <Form.Field
           control={form.control}
           name="name"
@@ -70,7 +95,11 @@ const AddAccountForm = () => {
             <Form.Item>
               <Form.Label>Name</Form.Label>
               <Form.Control>
-                <Input placeholder="Enter account name" {...field} />
+                <Input
+                  placeholder="Enter account name"
+                  {...field}
+                  autoComplete="off"
+                />
               </Form.Control>
               <Form.Message />
             </Form.Item>
@@ -98,19 +127,12 @@ const AddAccountForm = () => {
             <Form.Item>
               <Form.Label>Category</Form.Label>
               <Form.Control>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <Select.Trigger>
-                    <Select.Value placeholder="Select a category" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    {/* TODO: Add categories from API */}
-                    <Select.Item value="category1">Category 1</Select.Item>
-                    <Select.Item value="category2">Category 2</Select.Item>
-                  </Select.Content>
-                </Select>
+                <SelectAccountCategory
+                  tabIndex={0}
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  recordId={field.value}
+                />
               </Form.Control>
               <Form.Message />
             </Form.Item>
@@ -124,21 +146,11 @@ const AddAccountForm = () => {
             <Form.Item>
               <Form.Label>Currency</Form.Label>
               <Form.Control>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <Select.Trigger>
-                    <Select.Value placeholder="Select currency" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    {Object.values(CurrencyCode).map((currency) => (
-                      <Select.Item key={currency} value={currency}>
-                        {currency}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select>
+                <SelectCurrency
+                  value={field.value}
+                  onChange={field.onChange}
+                  className="w-full"
+                />
               </Form.Control>
               <Form.Message />
             </Form.Item>
@@ -164,23 +176,21 @@ const AddAccountForm = () => {
           render={({ field }) => (
             <Form.Item>
               <Form.Label>Kind</Form.Label>
-              <Form.Control>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Form.Control>
                   <Select.Trigger>
                     <Select.Value placeholder="Select kind" />
                   </Select.Trigger>
-                  <Select.Content>
-                    {Object.values(AccountKind).map((kind) => (
-                      <Select.Item key={kind} value={kind}>
-                        {kind.charAt(0).toUpperCase() + kind.slice(1)}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select>
-              </Form.Control>
+                </Form.Control>
+                <Select.Content>
+                  {Object.values(AccountKind).map((kind) => (
+                    <Select.Item key={kind} value={kind}>
+                      {kind.charAt(0).toUpperCase() + kind.slice(1)}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+
               <Form.Message />
             </Form.Item>
           )}
@@ -221,19 +231,10 @@ const AddAccountForm = () => {
             <Form.Item>
               <Form.Label>Branch</Form.Label>
               <Form.Control>
-                <Select
+                <SelectBranch
+                  value={field.value}
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <Select.Trigger>
-                    <Select.Value placeholder="Select branch" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    {/* TODO: Add branches from API */}
-                    <Select.Item value="branch1">Branch 1</Select.Item>
-                    <Select.Item value="branch2">Branch 2</Select.Item>
-                  </Select.Content>
-                </Select>
+                />
               </Form.Control>
               <Form.Message />
             </Form.Item>
@@ -247,19 +248,10 @@ const AddAccountForm = () => {
             <Form.Item>
               <Form.Label>Department</Form.Label>
               <Form.Control>
-                <Select
+                <SelectDepartment
+                  value={field.value}
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <Select.Trigger>
-                    <Select.Value placeholder="Select department" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    {/* TODO: Add departments from API */}
-                    <Select.Item value="dept1">Department 1</Select.Item>
-                    <Select.Item value="dept2">Department 2</Select.Item>
-                  </Select.Content>
-                </Select>
+                />
               </Form.Control>
               <Form.Message />
             </Form.Item>
@@ -302,8 +294,8 @@ const AddAccountForm = () => {
           <Button variant="outline" type="button" size="lg">
             Cancel
           </Button>
-          <Button type="submit" size="lg">
-            Save Account
+          <Button type="submit" size="lg" disabled={loading}>
+            {loading ? <Spinner /> : 'Save Account'}
           </Button>
         </div>
       </form>
