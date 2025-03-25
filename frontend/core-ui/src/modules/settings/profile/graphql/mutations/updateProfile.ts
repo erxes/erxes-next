@@ -16,7 +16,6 @@ export const UpdateProfile = gql`
       employeeId: $employeeId
     ) {
       _id
-      __typename
     }
   }
 `;

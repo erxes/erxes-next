@@ -1,66 +1,16 @@
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
-import {
-  Icon,
-  IconAdjustmentsAlt,
-  IconColorSwatch,
-  IconFile,
-  IconMail,
-  IconUserCircle,
-  IconX,
-} from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 
 import { Sidebar } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
-import {
-  SettingsPath,
-  SettingsWorkspacePath,
-} from '@/types/paths/SettingsPath';
 import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
-import { MainNavigationButton } from '@/navigation/components/MainNavigationBar';
-
-type TSettingPath = {
-  name: string;
-  icon: Icon;
-  path: string;
-};
-
-const data: { [key: string]: TSettingPath[] } = {
-  account: [
-    {
-      name: 'Profile',
-      icon: IconUserCircle,
-      path: SettingsPath.Profile,
-    },
-    {
-      name: 'Experience',
-      icon: IconColorSwatch,
-      path: SettingsPath.Experience,
-    },
-  ],
-  nav: [
-    {
-      name: 'General',
-      icon: IconAdjustmentsAlt,
-      path: SettingsWorkspacePath.General,
-    },
-    {
-      name: 'File upload',
-      icon: IconFile,
-      path: SettingsWorkspacePath.FileUpload,
-    },
-    {
-      name: 'Mail config',
-      icon: IconMail,
-      path: SettingsWorkspacePath.MailConfig,
-    },
-  ],
-};
+import { SETTINGS_PATH_DATA } from '../constants/data';
+import { MainNavigationButton } from '~/modules/navigation/components/MainNavigationBar';
 
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS];
@@ -98,7 +48,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>Account Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {data.account.map((item) => (
+              {SETTINGS_PATH_DATA.account.map((item) => (
                 <MainNavigationButton
                   key={item.name}
                   pathPrefix={AppPath.Settings}
@@ -114,7 +64,7 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>Workspace Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {data.nav.map((item) => (
+              {SETTINGS_PATH_DATA.nav.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
                   <MainNavigationButton
                     pathPrefix={AppPath.Settings}

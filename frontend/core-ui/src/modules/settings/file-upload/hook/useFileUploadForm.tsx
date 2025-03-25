@@ -13,24 +13,7 @@ const useFileUploadForm = () => {
     resolver: zodResolver(filesValidationSchema),
   });
 
-  const onCompleted = (data: any) => {
-    const { configs } = data || {};
-
-    if (configs !== undefined) {
-      const values = configs.reduce((acc: any, config: any) => {
-        acc[config.code] = config.value;
-        return acc;
-      }, {});
-
-      form.reset({
-        ...values,
-      });
-    }
-
-    return;
-  };
-
-  return { form, onCompleted };
+  return { form };
 };
 
 export { useFileUploadForm };
