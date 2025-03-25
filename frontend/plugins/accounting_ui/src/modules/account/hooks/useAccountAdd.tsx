@@ -3,13 +3,14 @@ import { ACCOUNTS_ADD } from '../graphql/mutations/accounts';
 import { toast } from 'erxes-ui';
 import { GET_ACCOUNTS } from '../graphql/queries/getAccounts';
 import { ACCOUNTS_PER_PAGE } from './useAccounts';
+import { IAccount } from '../type/Account';
 
 export const useAccountAdd = () => {
   const [_addAccount, { loading }] = useMutation(ACCOUNTS_ADD);
 
   const addAccount = (options: OperationVariables) => {
     return _addAccount({
-      variables: options.variables,
+      ...options,
       onError: (error) => {
         toast({
           title: 'Error',
@@ -19,20 +20,19 @@ export const useAccountAdd = () => {
         options.onError?.(error);
       },
       update: (cache, { data }) => {
+        const queryVariables = { perPage: ACCOUNTS_PER_PAGE, page: 1 };
+        const existingData = cache.readQuery<{ accounts: IAccount[] }>({
+          query: GET_ACCOUNTS,
+          variables: queryVariables,
+        });
+        if (!existingData || !existingData.accounts) return;
+
         cache.writeQuery({
           query: GET_ACCOUNTS,
-          variables: {
-            perPage: ACCOUNTS_PER_PAGE,
-            page: 1,
-          },
+          variables: queryVariables,
           data: {
-            accounts: {
-              ...data.accounts,
-              list: [
-                { ...data.accountsAdd, ...options.variables },
-                ...data.accounts.list,
-              ],
-            },
+            ...existingData,
+            accounts: [data.accountsAdd, ...existingData.accounts],
           },
         });
       },

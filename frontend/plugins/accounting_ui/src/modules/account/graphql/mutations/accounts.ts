@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { ACCOUNT_FIELDS } from '../queries/getAccounts';
 
 const accountInputParamsDefs = `
   $code: String,
@@ -35,7 +36,7 @@ const accountInputParams = `
 export const ACCOUNTS_ADD = gql`
   mutation accountsAdd(${accountInputParamsDefs}) {
     accountsAdd(${accountInputParams}) {
-      _id
+      ${ACCOUNT_FIELDS}
     }
   }
 `;
@@ -43,7 +44,7 @@ export const ACCOUNTS_ADD = gql`
 export const ACCOUNTS_EDIT = gql`
   mutation accountsEdit($_id: String!${accountInputParamsDefs}) {
     accountsEdit(_id: $_id, ${accountInputParams}) {
-      _id
+      ${ACCOUNT_FIELDS}
     }
   }
 `;

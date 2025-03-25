@@ -23,6 +23,7 @@ export const useAccounts = (options?: OperationVariables) => {
         updateQuery: (prev, { fetchMoreResult }) => {
           return {
             ...prev,
+            ...fetchMoreResult,
             accounts: [...prev.accounts, ...fetchMoreResult.accounts],
           };
         },

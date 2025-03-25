@@ -1,5 +1,26 @@
 import { gql } from '@apollo/client';
 
+export const ACCOUNT_FIELDS = `
+      _id
+      code
+      name
+      status
+      currency
+      kind
+      journal
+      description
+      categoryId
+      branchId
+      departmentId
+      isOutBalance
+      parentId
+      createdAt
+      scopeBrandIds
+      category {
+        _id
+      }
+`;
+
 export const GET_ACCOUNTS = gql`
   query accounts(
     $accountsStatus: String
@@ -41,35 +62,7 @@ export const GET_ACCOUNTS = gql`
       sortField: $sortField
       sortDirection: $sortDirection
     ) {
-      _id
-      code
-      name
-      status
-      currency
-      kind
-      journal
-      description
-      categoryId
-      branchId
-      departmentId
-      isOutBalance
-      parentId
-      createdAt
-      scopeBrandIds
-      category {
-        _id
-        name
-        description
-        parentId
-        code
-        order
-        scopeBrandIds
-        status
-        isRoot
-        accountCount
-        maskType
-        mask
-      }
+      ${ACCOUNT_FIELDS}
     }
     accountsCount(
       status: $accountsStatus

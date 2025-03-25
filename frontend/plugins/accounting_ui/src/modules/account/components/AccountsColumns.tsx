@@ -8,6 +8,7 @@ import {
   RecordTable,
   SelectCurrency,
   TextField,
+  useQueryState,
 } from 'erxes-ui';
 import { SelectAccountCategory } from './SelectAccountCategory';
 import { useAccountEdit } from '../hooks/useAccountEdit';
@@ -155,3 +156,25 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     },
   },
 ];
+
+export const AccountMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IAccount, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('account_id');
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setOpen(cell.row.original._id);
+      }}
+    />
+  );
+};
+
+export const accountMoreColumn = {
+  id: 'more',
+  cell: AccountMoreColumnCell,
+  size: 33,
+};

@@ -76,6 +76,7 @@ const Value = React.forwardRef<
         <Button
           variant="outline"
           className="shadow-none border-dashed border rounded-l-none"
+          size="icon"
           onClick={onClose}
         >
           <IconX />

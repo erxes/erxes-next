@@ -1,6 +1,10 @@
 import { useAccounts } from '@/account/hooks/useAccounts';
-import { RecordTable } from 'erxes-ui/modules';
-import { accountsColumns } from '@/account/components/AccountsColumns';
+import { RecordTable } from 'erxes-ui';
+import {
+  accountMoreColumn,
+  accountsColumns,
+} from '@/account/components/AccountsColumns';
+import { AccountsCommandbar } from './AccountsCommandbar';
 
 export const AccountsTable = () => {
   const { accounts, loading, handleFetchMore, totalCount } = useAccounts();
@@ -10,7 +14,7 @@ export const AccountsTable = () => {
       data={accounts || []}
       handleReachedBottom={handleFetchMore}
       stickyColumns={['name']}
-      moreColumn={undefined}
+      moreColumn={accountMoreColumn}
     >
       <RecordTable>
         <RecordTable.Header />
@@ -23,6 +27,7 @@ export const AccountsTable = () => {
           )}
         </RecordTable.Body>
       </RecordTable>
+      <AccountsCommandbar />
     </RecordTable.Provider>
   );
 };
