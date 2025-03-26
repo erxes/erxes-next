@@ -16,9 +16,6 @@ export const ACCOUNT_FIELDS = `
       parentId
       createdAt
       scopeBrandIds
-      category {
-        _id
-      }
 `;
 
 export const GET_ACCOUNTS = gql`
@@ -80,5 +77,13 @@ export const GET_ACCOUNTS = gql`
       code: $code
       name: $name
     )
+  }
+`;
+
+export const GET_ACCOUNT_DETAIL = gql`
+  query accountDetail($id: String) {
+    accountDetail(_id: $id) {
+      ${ACCOUNT_FIELDS}
+    }
   }
 `;

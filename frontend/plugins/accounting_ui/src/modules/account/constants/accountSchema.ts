@@ -2,16 +2,16 @@ import { CurrencyCode } from 'erxes-ui';
 import { z } from 'zod';
 import { AccountKind, Journal } from '../type/Account';
 
-export const addAccountSchema = z.object({
+export const accountSchema = z.object({
   name: z.string().min(1),
   code: z.string().min(1),
   categoryId: z.string().min(1),
-  description: z.string().min(1),
+  description: z.string().optional(),
   currency: z.nativeEnum(CurrencyCode),
   kind: z.nativeEnum(AccountKind),
   journal: z.nativeEnum(Journal),
-  branchId: z.string().min(1),
-  departmentId: z.string().min(1),
+  branchId: z.string().optional(),
+  departmentId: z.string().optional(),
   isTemp: z.boolean(),
   isOutBalance: z.boolean(),
 });

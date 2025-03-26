@@ -4,7 +4,6 @@ import {
   Collapsible,
   CurrencyCode,
   Form,
-  Input,
   SelectCurrency,
 } from 'erxes-ui';
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form';
@@ -13,7 +12,6 @@ import {
   TMainSettings,
 } from '../constants/mainSettingsSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Label } from '@radix-ui/react-label';
 import { SelectAccount } from '@/account/components/SelectAccount';
 
 export const MainSettingsForm = () => {

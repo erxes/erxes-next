@@ -7,7 +7,7 @@ import {
   SelectTree,
   TextOverflowTooltip,
 } from 'erxes-ui';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccountCategories } from '../hooks/useAccountCategories';
 import { IAccountCategory } from '../type/AccountCategory';
 
@@ -34,6 +34,15 @@ export const SelectAccountCategory = React.forwardRef<
       );
     },
   });
+
+  useEffect(() => {
+    if (accountCategories && selected) {
+      setSelectedCategory(
+        accountCategories?.find((category) => category._id === selected),
+      );
+    }
+  }, [selected, accountCategories]);
+
   return (
     <SelectTree.Provider id="select-account-category">
       <InlineCell
