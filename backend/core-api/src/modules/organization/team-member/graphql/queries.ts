@@ -103,14 +103,7 @@ const queryBuilder = async (
 
   return selector;
 };
-export const authQueries = {
-  async currentUser(_root, _args, { user, models }: IContext) {
-    const result = user
-      ? await models.Users.findOne({ _id: user._id, isActive: { $ne: false } })
-      : null;
-
-    return result;
-  },
+export const userQueries = {
   async userMovements(_root, args, { models }: IContext) {
     return await models.UserMovements.find(args).sort({ createdAt: -1 });
   },

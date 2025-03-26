@@ -5,15 +5,19 @@ import {
   loadCustomerClass,
 } from './modules/contacts/db/models/Customers';
 import { ICustomerDocument } from './modules/contacts/@types/customers';
+import { IUserMovementDocument } from './modules/contacts/@types/user';
 import { IUserDocument } from 'erxes-api-modules';
 import {
   IUserModel,
   loadUserClass,
+  IUserMovemmentModel,
+  loadUserMovemmentClass,
 } from './modules/organization/team-member/db/models/Users';
 
 export interface IModels {
   Customers: ICustomerModel;
   Users: IUserModel;
+  UserMovements: IUserMovemmentModel;
 }
 
 export interface IContext {
@@ -33,6 +37,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     'customers',
     loadCustomerClass(models),
   );
+  models.UserMovements = db.model<IUserMovementDocument, IUserMovemmentModel>(
+    'user_movements',
+    loadUserMovemmentClass(models)
+  );
+
 
   return models;
 };

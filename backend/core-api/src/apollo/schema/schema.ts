@@ -16,8 +16,11 @@ import {
 
 import {
   mutations as UserMutations,
+  queries as UserQueries,
   types as UserTypes,
 } from '../../modules/organization/team-member/graphql/schema';
+
+
 
 import { CommonTypes } from './commonTypes';
 
@@ -47,6 +50,7 @@ export const types = `
 export const queries = `
     ${CustomerQueries}
     ${AuthQueries}
+    ${UserQueries}
   `;
 
 export const mutations = `
