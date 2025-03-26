@@ -146,6 +146,12 @@ importers:
       '@tanstack/table-core':
         specifier: ^8.20.5
         version: 8.21.2
+      '@trpc/client':
+        specifier: ^11.0.0
+        version: 11.0.0(@trpc/server@11.0.0(typescript@5.7.3))(typescript@5.7.3)
+      '@trpc/server':
+        specifier: ^11.0.0
+        version: 11.0.0(typescript@5.7.3)
       axios:
         specifier: ^1.6.0
         version: 1.7.9
@@ -4245,6 +4251,17 @@ packages:
   '@tootallnate/once@2.0.0':
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
+
+  '@trpc/client@11.0.0':
+    resolution: {integrity: sha512-U2THlxsdr4ykAX5lpTU8k5WRADPQ+68Ex2gfUht3MlCxGK7njBmNSSzjpQSWNt7tMI/xsYrddFiRlmEPrh+Cbg==}
+    peerDependencies:
+      '@trpc/server': 11.0.0
+      typescript: '>=5.7.2'
+
+  '@trpc/server@11.0.0':
+    resolution: {integrity: sha512-xY9q/b/wR/tWGYTm5xmRjivkYD2EZZXmOKmHuNJRYZuLbieeNUsdfQRjJC409WB1pjKWInomhHwuA8bahZJ4lQ==}
+    peerDependencies:
+      typescript: '>=5.7.2'
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -16721,6 +16738,15 @@ snapshots:
   '@tokenizer/token@0.3.0': {}
 
   '@tootallnate/once@2.0.0': {}
+
+  '@trpc/client@11.0.0(@trpc/server@11.0.0(typescript@5.7.3))(typescript@5.7.3)':
+    dependencies:
+      '@trpc/server': 11.0.0(typescript@5.7.3)
+      typescript: 5.7.3
+
+  '@trpc/server@11.0.0(typescript@5.7.3)':
+    dependencies:
+      typescript: 5.7.3
 
   '@trysound/sax@0.2.0': {}
 
