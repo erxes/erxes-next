@@ -83,20 +83,20 @@ const SelectChannelItem = ({ channel, onValueChange }: SelectItemProps) => {
 
   const isSelected = selectedChannels && selectedChannels.includes(channel._id);
   const handleSelect = () => {
+    let newSelectedChannels: string[];
     if (isSelected) {
-      setSelectedChannels(
-        selectedChannels.filter(
+      newSelectedChannels =
+        selectedChannels?.filter(
           (selectedChannel) => selectedChannel !== channel._id,
-        ),
-      );
+        ) || [];
+      setSelectedChannels(newSelectedChannels);
     } else {
-      setSelectedChannels(
-        selectedChannels ? [...selectedChannels, channel._id] : [channel._id],
-      );
+      newSelectedChannels = selectedChannels
+        ? [...selectedChannels, channel._id]
+        : [channel._id];
+      setSelectedChannels(newSelectedChannels);
     }
-    onValueChange(
-      selectedChannels ? [...selectedChannels, channel._id] : [channel._id],
-    );
+    onValueChange(newSelectedChannels);
   };
   return (
     <Command.Item value={channel.name} onSelect={handleSelect}>
@@ -141,7 +141,7 @@ const MultipleSelectChannelsValue = ({
   if (selectedChannels && selectedChannels?.length > 1) {
     return (
       <div className="flex gap-1">
-        {selected?.splice(0, 1).map((item: IChannel) => (
+        {selected?.slice(0, 1).map((item: IChannel) => (
           <div
             key={item._id}
             className="w-auto text-xs flex items-center gap-2 max-w-24 bg-primary/10 px-2 rounded-md"
@@ -207,7 +207,7 @@ export const ChannelList = ({
   const { channels, loading } = useChannels();
   return (
     <Command>
-      <Command.Input placeholder="Search unit" />
+      <Command.Input placeholder="Search channel" />
       <Command.List>
         <Combobox.Empty loading={loading} />
         {channels?.map((channel: IChannel) => renderItem(channel))}

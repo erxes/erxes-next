@@ -23,10 +23,13 @@ export const useUnits = (options?: OperationVariables) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          unitsMain: [
-            ...(prev.unitsMain.list || []),
-            ...fetchMoreResult.unitsMain.list,
-          ],
+          unitsMain: {
+            ...fetchMoreResult.unitsMain,
+            list: [
+              ...(prev.unitsMain.list || []),
+              ...fetchMoreResult.unitsMain.list,
+            ],
+          },
         });
       },
     });
