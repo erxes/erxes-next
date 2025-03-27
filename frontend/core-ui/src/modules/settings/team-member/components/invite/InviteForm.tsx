@@ -64,21 +64,24 @@ export function InviteForm({
     setSelectedRows(new Set());
   };
 
-  const submitHandler: SubmitHandler<TUserForm> = useCallback(async (data) => {
-    try {
-      console.log('Form Data Submitted:', data);
-      handleInvitations({
-        variables: {
-          entries: data?.entries,
-        },
-        onCompleted() {
-          setIsOpen(false);
-        },
-      });
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
-  }, []);
+  const submitHandler: SubmitHandler<TUserForm> = useCallback(
+    async (data) => {
+      try {
+        console.log('Form Data Submitted:', data);
+        handleInvitations({
+          variables: {
+            entries: data?.entries,
+          },
+          onCompleted() {
+            setIsOpen(false);
+          },
+        });
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
+    },
+    [handleInvitations, setIsOpen],
+  );
 
   return (
     <FormProvider {...methods}>

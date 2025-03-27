@@ -1,4 +1,3 @@
-import { Z } from 'framer-motion/dist/types.d-6pKw1mTI';
 import { z } from 'zod';
 import { userSchema } from './schema/users';
 

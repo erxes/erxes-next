@@ -9,7 +9,7 @@ const useUsersInvite = () => {
   });
   const handleInvitations = async (options: OperationVariables) => {
     try {
-      invite({
+      await invite({
         ...options,
       });
     } catch (error) {

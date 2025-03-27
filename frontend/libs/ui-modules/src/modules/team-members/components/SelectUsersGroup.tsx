@@ -109,7 +109,7 @@ const SelectUsersGroupValue = ({ value }: { value?: string }) => {
 export const UsersGroupsList = ({
   renderItem,
 }: {
-  renderItem: (department: IMemberGroup) => React.ReactNode;
+  renderItem: (usersGroup: IMemberGroup) => React.ReactNode;
 }) => {
   const { usersGroups, loading } = useUsersGroup();
   return (
