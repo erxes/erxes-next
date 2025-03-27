@@ -1,0 +1,116 @@
+import {
+  cn,
+  Combobox,
+  Command,
+  Popover,
+  Skeleton,
+  TextOverflowTooltip,
+} from 'erxes-ui';
+import React, { useState } from 'react';
+import { useSelectUnitContext } from '../hooks/useSelectUnitContext';
+import { IUnit } from '../types/Unit';
+import { SelectUnitContext } from '../contexts/SelectUnitContext';
+import { useUnitById } from '../hooks/useUnitById';
+import { useUnits } from '../hooks/useUnits';
+
+export const SelectUnit = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
+    value?: string;
+    onValueChange: (value: string) => void;
+  }
+>(({ value, onValueChange, ...props }, ref) => {
+  const [_open, _setOpen] = useState(false);
+  return (
+    <SelectUnitProvider>
+      <Popover open={_open} onOpenChange={_setOpen}>
+        <Combobox.Trigger
+          {...props}
+          ref={ref}
+          className={cn('w-full flex text-left', props.className)}
+        >
+          <SelectUnitValue value={value} />
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <UnitList
+            renderItem={(unit) => (
+              <SelectUnitItem
+                key={unit._id}
+                unit={unit}
+                onValueChange={(value) => {
+                  onValueChange(value);
+                  _setOpen(false);
+                }}
+              />
+            )}
+          />
+        </Combobox.Content>
+      </Popover>
+    </SelectUnitProvider>
+  );
+});
+
+const SelectUnitItem = ({
+  unit,
+  onValueChange,
+}: {
+  unit: IUnit;
+  onValueChange: (value: string) => void;
+}) => {
+  const { setSelectedUnit, selectedUnit } = useSelectUnitContext();
+  return (
+    <Command.Item
+      value={unit.title}
+      onSelect={() => {
+        setSelectedUnit(unit);
+        onValueChange(unit._id);
+      }}
+    >
+      <TextOverflowTooltip value={unit.title} />
+      <Combobox.Check checked={selectedUnit?._id === unit._id} />
+    </Command.Item>
+  );
+};
+const SelectUnitProvider = ({ children }: { children: React.ReactNode }) => {
+  const [selectedUnit, setSelectedUnit] = useState<IUnit | undefined>(
+    undefined,
+  );
+  return (
+    <SelectUnitContext.Provider value={{ selectedUnit, setSelectedUnit }}>
+      {children}
+    </SelectUnitContext.Provider>
+  );
+};
+
+const SelectUnitValue = ({ value }: { value?: string }) => {
+  const { selectedUnit } = useSelectUnitContext();
+
+  const { unitDetail, loading } = useUnitById({
+    variables: { id: value },
+    skip: selectedUnit || !value,
+  });
+  if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
+  return (
+    <Combobox.Value
+      placeholder="Select Unit"
+      value={selectedUnit?.title || unitDetail?.title}
+    />
+  );
+};
+
+export const UnitList = ({
+  renderItem,
+}: {
+  renderItem: (unit: IUnit) => React.ReactNode;
+}) => {
+  const { units, loading } = useUnits();
+  return (
+    <Command>
+      <Command.Input placeholder="Search unit" />
+      <Command.List>
+        <Combobox.Empty loading={loading} />
+        {units?.map((unit: IUnit) => renderItem(unit))}
+      </Command.List>
+    </Command>
+  );
+};

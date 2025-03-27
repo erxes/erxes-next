@@ -15,7 +15,13 @@ import { TUserForm } from '../../types';
 import { useCallback, useState } from 'react';
 import { IconPlus, IconSend, IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { SelectBranch, SelectDepartment, SelectUsersGroup } from 'ui-modules';
+import {
+  SelectBranch,
+  SelectDepartment,
+  SelectUnit,
+  SelectUsersGroup,
+  MultipleSelectChannels,
+} from 'ui-modules';
 import { useUsersInvite } from '../../hooks/useUsersInvite';
 
 export function InviteForm({
@@ -28,6 +34,7 @@ export function InviteForm({
     methods: {
       control,
       handleSubmit,
+      watch,
       formState: { errors },
     },
   } = useUserForm();
@@ -42,7 +49,7 @@ export function InviteForm({
       email: '',
       password: '',
       groupId: '',
-      channelIds: '',
+      channelIds: undefined,
       unitId: '',
       branchId: '',
       departmentId: '',
@@ -109,8 +116,8 @@ export function InviteForm({
                 <Table.Head>Email</Table.Head>
                 <Table.Head>Password</Table.Head>
                 <Table.Head className="w-36">Permission</Table.Head>
-                <Table.Head>Channles</Table.Head>
-                <Table.Head>Unit</Table.Head>
+                <Table.Head className="w-36">Channles</Table.Head>
+                <Table.Head className="w-36">Unit</Table.Head>
                 <Table.Head className="w-36">Department</Table.Head>
                 <Table.Head className="w-36">Branch</Table.Head>
               </Table.Row>
@@ -230,10 +237,11 @@ export function InviteForm({
                       render={({ field }) => (
                         <Form.Item>
                           <Form.Control>
-                            <Input
-                              {...field}
-                              placeholder="Channel"
-                              className="rounded-[2px]"
+                            <MultipleSelectChannels
+                              name={field.name}
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              className="truncate w-36 rounded-[2px] h-7"
                             />
                           </Form.Control>
                         </Form.Item>
@@ -247,10 +255,11 @@ export function InviteForm({
                       render={({ field }) => (
                         <Form.Item>
                           <Form.Control>
-                            <Input
-                              {...field}
-                              placeholder="Unit"
-                              className="rounded-[2px]"
+                            <SelectUnit
+                              name={field.name}
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              className="truncate w-36 rounded-[2px] h-7"
                             />
                           </Form.Control>
                         </Form.Item>

@@ -12,7 +12,7 @@ const useUserForm = () => {
         email: undefined,
         password: undefined,
         groupId: '',
-        channelIds: '',
+        channelIds: undefined,
         unitId: undefined,
         branchId: undefined,
         departmentId: undefined,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { forwardRef, useEffect } from 'react';
 
 import { useCommandState } from 'cmdk';
-import { X } from 'lucide-react';
+import { IconX } from '@tabler/icons-react';
 
 import { Command } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
@@ -490,7 +490,7 @@ export const MultipleSelector = React.forwardRef<
                     onClick={() => handleUnselect(option)}
                     aria-label="Remove"
                   >
-                    <X size={14} strokeWidth={2} aria-hidden="true" />
+                    <IconX size={14} strokeWidth={2} aria-hidden="true" />
                   </button>
                 </div>
               );
@@ -549,7 +549,7 @@ export const MultipleSelector = React.forwardRef<
               )}
               aria-label="Clear all"
             >
-              <X size={16} strokeWidth={2} aria-hidden="true" />
+              <IconX size={16} strokeWidth={2} aria-hidden="true" />
             </button>
           </div>
         </div>

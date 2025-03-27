@@ -18,7 +18,7 @@ const userSchema = z.object({
         })
         .default(''),
       groupId: z.string({ required_error: 'Required field' }),
-      channelIds: z.string().optional(),
+      channelIds: z.string().array().optional(),
       unitId: z.string().optional(),
       departmentId: z.string().optional(),
       branchId: z.string().optional(),
