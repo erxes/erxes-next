@@ -18,7 +18,7 @@ import { IconX } from '@tabler/icons-react';
 
 type Props = {
   value?: string[];
-  onValueChange: (value: any) => void;
+  onValueChange: (value: string[]) => void;
 };
 
 type ProvideProps = {
@@ -81,7 +81,7 @@ const SelectChannelItem = ({ channel, onValueChange }: SelectItemProps) => {
   const { selectedChannels, setSelectedChannels } =
     useMultipleSelectChannelContext();
 
-  const isSelected = selectedChannels && selectedChannels.includes(channel._id);
+  const isSelected = selectedChannels?.includes(channel._id);
   const handleSelect = () => {
     let newSelectedChannels: string[];
     if (isSelected) {
@@ -119,21 +119,18 @@ const MultipleSelectChannelsValue = ({
   if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
 
   const selected =
-    (selectedChannels &&
-      channels
-        ?.slice()
-        ?.sort(
-          (a, b) =>
-            (selectedChannels ?? []).indexOf(a._id) -
-            (selectedChannels ?? []).indexOf(b._id),
-        )
-        .filter((channel) => selectedChannels?.includes(channel._id))) ||
-    [];
+    selectedChannels && channels
+      ? channels
+          .slice()
+          .filter((channel) => selectedChannels.includes(channel._id))
+          .sort(
+            (a, b) =>
+              selectedChannels.indexOf(a._id) - selectedChannels.indexOf(b._id),
+          )
+      : [];
 
   const handleRemove = (id: string) => {
-    const newList =
-      (selectedChannels && selectedChannels?.filter((item) => item !== id)) ||
-      [];
+    const newList = selectedChannels?.filter((item) => item !== id) || [];
     setSelectedChannels(newList);
     onValueChange(newList);
   };
@@ -150,7 +147,7 @@ const MultipleSelectChannelsValue = ({
             <Button
               variant={'ghost'}
               className=" h-3 w-3 p-1 rounded-full"
-              onClick={() => handleRemove(item?._id)}
+              onClick={() => handleRemove(item._id)}
             >
               <IconX size={8} />
             </Button>
@@ -163,7 +160,7 @@ const MultipleSelectChannelsValue = ({
             </div>
           </Tooltip.Trigger>
           <Tooltip.Content className="flex flex-col">
-            {selected?.splice(0, selected.length).map((item: IChannel) => (
+            {selected?.slice(0, selected.length).map((item: IChannel) => (
               <Combobox.Value
                 key={item._id}
                 className="w-auto max-w-24 bg-primary/10 px-2 rounded-md"
@@ -184,13 +181,13 @@ const MultipleSelectChannelsValue = ({
             'w-auto max-w-24 bg-primary/10 px-2 rounded-md',
         )}
         value={selected[0]?.name}
-        placeholder="Select Channels"
+        placeholder="Select channels"
       />
       {selected && selected.length > 0 && (
         <Button
           variant={'ghost'}
           className="h-3 w-3 p-1 rounded-full"
-          onClick={() => handleRemove(selected[0]?._id)}
+          onClick={() => handleRemove(selected[0]._id)}
         >
           <IconX size={8} />
         </Button>
