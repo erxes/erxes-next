@@ -13,6 +13,24 @@ export const GET_USERS = gql`
   }
 `;
 
+export const GET_USERS_GROUP = gql`
+  query usersGroups($page: Int, $perPage: Int) {
+    usersGroups(page: $page, perPage: $perPage) {
+      _id
+      name
+      description
+      members {
+        _id
+        details {
+          fullName
+          avatar
+        }
+      }
+    }
+    usersGroupsTotalCount
+  }
+`;
+
 export const GET_ASSIGNED_MEMBER = gql`
   query AssignedMember($_id: String) {
     userDetail(_id: $_id) {

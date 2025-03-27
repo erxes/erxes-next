@@ -7,6 +7,17 @@ export interface IMember {
     avatar: string;
   };
 }
+export interface IMemberGroup {
+  _id: string;
+  name: string;
+  members: IMember[];
+  description: string;
+}
+
+export interface IMemberGroupContext {
+  selectedUsersGroup: IMemberGroup | undefined;
+  setSelectedUsersGroup: (usersGroup: IMemberGroup) => void;
+}
 
 export interface MentionMenuProps extends SlashMenuProps {
   loading: boolean;
