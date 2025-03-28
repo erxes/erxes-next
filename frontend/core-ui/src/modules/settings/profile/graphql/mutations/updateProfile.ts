@@ -4,7 +4,7 @@ export const UPDATE_PROFILE = gql`
   mutation usersEditProfile(
     $username: String!
     $email: String!
-    $details: GET_USER_DETAILs
+    $details: UserDetails
     $links: JSON
     $employeeId: String
   ) {
