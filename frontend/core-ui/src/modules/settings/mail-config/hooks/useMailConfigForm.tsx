@@ -1,7 +1,10 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { TCustomMailConfig, TSESMailConfig } from '../types';
+import {
+  TCustomMailConfig,
+  TSESMailConfig,
+} from '@/settings/mail-config/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { mailConfigSchema } from '../schema';
+import { MAIL_CONFIG_SCHEMA } from '@/settings/mail-config/schema';
 import { useCallback } from 'react';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 
@@ -17,7 +20,7 @@ const useMailConfigForm = () => {
   const { updateConfig, configs } = useConfig();
   const methods = useForm<TProps>({
     mode: 'onBlur',
-    resolver: zodResolver(mailConfigSchema),
+    resolver: zodResolver(MAIL_CONFIG_SCHEMA),
     defaultValues: {
       COMPANY_EMAIL_FROM: '',
       COMPANY_EMAIL_TEMPLATE_TYPE: 'simple',

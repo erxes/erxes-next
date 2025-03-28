@@ -1,7 +1,7 @@
 import { ToggleGroup } from 'erxes-ui';
-import { PROFILE_LINK_FIELDS } from '../../constants/profileFields';
-import FormField from './FormField';
-import { FormType } from '../../hooks/useProfileForm';
+import { PROFILE_LINK_FIELDS } from '@/settings/profile/constants/profileFields';
+import FormField from '@/settings/profile/components/fields/FormField';
+import { FormType } from '@/settings/profile/hooks/useProfileForm';
 import { useFormContext } from 'react-hook-form';
 import { useState } from 'react';
 

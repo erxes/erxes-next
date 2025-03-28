@@ -1,9 +1,8 @@
-import { IconPlus, IconUsersGroup } from '@tabler/icons-react';
-import { Button, SettingsHeader } from 'erxes-ui';
-import { TeamMemberSidebar } from './Sidebar';
-import { TeamMemberTable } from './TeamMemberTable';
-import { TeamMemberSettingsBreadcrumb } from './TeamMemberSettingsBreadcrumb';
-import { TeamMemberTopbar } from './TeamMemberTopbar';
+import { SettingsHeader } from 'erxes-ui';
+import { TeamMemberSidebar } from '@/settings/team-member/components/Sidebar';
+import { TeamMemberTable } from '@/settings/team-member/components/TeamMemberTable';
+import { TeamMemberSettingsBreadcrumb } from '@/settings/team-member/components/TeamMemberSettingsBreadcrumb';
+import { TeamMemberTopbar } from '@/settings/team-member/components/TeamMemberTopbar';
 
 const TeamMember = () => {
   return (

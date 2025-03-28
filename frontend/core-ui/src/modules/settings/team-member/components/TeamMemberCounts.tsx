@@ -1,5 +1,5 @@
 import { Skeleton } from 'erxes-ui';
-import { useCountByOptions } from '../hooks/useCountByOptions';
+import { useCountByOptions } from '@/settings/team-member/hooks/useCountByOptions';
 
 export function TeamMemberCounts({
   queryKey,

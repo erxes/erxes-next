@@ -1,5 +1,5 @@
 import { ControllerRenderProps, Path, useFormContext } from 'react-hook-form';
-import { FormType } from '../../hooks/useProfileForm';
+import { FormType } from '@/settings/profile/hooks/useProfileForm';
 import { DatePicker, Form, Input } from 'erxes-ui';
 
 type RenderProps = {

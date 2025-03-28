@@ -1,5 +1,5 @@
 import { FormProvider, SubmitHandler, useFieldArray } from 'react-hook-form';
-import { useUserForm } from '../../hooks/useUserForm';
+import { useUserForm } from '@/settings/team-member/hooks/useUserForm';
 import {
   Button,
   Checkbox,
@@ -11,7 +11,7 @@ import {
   Table,
   Tooltip,
 } from 'erxes-ui';
-import { TUserForm } from '../../types';
+import { TUserForm } from '@/settings/team-member/types';
 import { useCallback, useState } from 'react';
 import { IconPlus, IconSend, IconX } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -22,7 +22,7 @@ import {
   SelectUsersGroup,
   MultipleSelectChannels,
 } from 'ui-modules';
-import { useUsersInvite } from '../../hooks/useUsersInvite';
+import { useUsersInvite } from '@/settings/team-member/hooks/useUsersInvite';
 
 export function InviteForm({
   setIsOpen,

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { userSchema } from './schema/users';
+import { USER_SCHEMA } from '@/settings/team-member/schema/users';
 
 export interface IUsersDetails {
   avatar: string;
@@ -37,4 +37,4 @@ export type TUserInviteVars = {
   entries: IUserEntry[];
 };
 
-export type TUserForm = z.infer<typeof userSchema>;
+export type TUserForm = z.infer<typeof USER_SCHEMA>;

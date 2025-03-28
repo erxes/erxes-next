@@ -2,7 +2,6 @@ import { ScrollArea, Sidebar } from 'erxes-ui';
 import { BranchItem } from './sidebar/BranchItem';
 import { DepartmentItem } from './sidebar/DepartmentItem';
 import { UnitItem } from './sidebar/UnitItem';
-import { SegmentItem } from './sidebar/SegmentItem';
 
 export function TeamMemberSidebar() {
   return (

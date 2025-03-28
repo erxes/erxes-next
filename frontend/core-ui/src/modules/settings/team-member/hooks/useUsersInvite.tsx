@@ -1,5 +1,5 @@
 import { OperationVariables, useMutation } from '@apollo/client';
-import { mutations } from '../graphql';
+import { mutations } from '@/settings/team-member/graphql';
 
 const useUsersInvite = () => {
   const [invite, { loading }] = useMutation(mutations.USERS_INVITE, {

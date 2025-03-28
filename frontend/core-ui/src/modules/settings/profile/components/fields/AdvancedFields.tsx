@@ -1,7 +1,7 @@
 import { Accordion, Form } from 'erxes-ui';
-import { PROFILE_ADVANCED_FIELDS } from '../../constants/profileFields';
-import FormField from './FormField';
-import { FormType } from '../../hooks/useProfileForm';
+import { PROFILE_ADVANCED_FIELDS } from '@/settings/profile/constants/profileFields';
+import FormField from '@/settings/profile/components/fields/FormField';
+import { FormType } from '@/settings/profile/hooks/useProfileForm';
 
 const AdvancedFields = () => {
   return (

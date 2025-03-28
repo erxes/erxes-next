@@ -3,7 +3,7 @@ import { RecordTableMoreButton } from 'erxes-ui/modules/record-table/components/
 import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';
 import { useSetAtom } from 'jotai';
 import { useQueryState } from 'erxes-ui';
-import { IUser } from '../../types';
+import { IUser } from '@/settings/team-member/types';
 
 export const TeamMemberMoreColumnCell = ({
   cell,

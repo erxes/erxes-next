@@ -1,11 +1,11 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { queries } from '../graphql';
+import { queries } from '@/settings/permission/graphql';
 
 export const PERMISSIONS_PER_PAGE = 30;
 
 const usePermissions = (options: OperationVariables) => {
   const { data, loading, fetchMore, error } = useQuery(
-    queries.getPermissionsQuery,
+    queries.GET_PERMISSIONS,
     {
       ...options,
       variables: {

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const userSchema = z.object({
+const USER_SCHEMA = z.object({
   entries: z
     .object({
       email: z
@@ -26,4 +26,4 @@ const userSchema = z.object({
     .array(),
 });
 
-export { userSchema };
+export { USER_SCHEMA };

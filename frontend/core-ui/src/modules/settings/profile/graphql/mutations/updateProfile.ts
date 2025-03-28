@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client';
 
-export const UpdateProfile = gql`
+export const UPDATE_PROFILE = gql`
   mutation usersEditProfile(
     $username: String!
     $email: String!
-    $details: UserDetails
+    $details: GET_USER_DETAILs
     $links: JSON
     $employeeId: String
   ) {

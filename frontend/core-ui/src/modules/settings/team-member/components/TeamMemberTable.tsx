@@ -1,8 +1,11 @@
 import { RecordTable } from 'erxes-ui/modules/record-table';
 import { Skeleton } from 'erxes-ui';
-import { USERS_PER_PAGE, useUsers } from '../hooks/useUsers';
-import { teamMemberColumns } from './record/TeamMemberColumns';
-import { teamMemberMoreColumn } from './record/TeamMemberMoreColumn';
+import {
+  USERS_PER_PAGE,
+  useUsers,
+} from '@/settings/team-member/hooks/useUsers';
+import { teamMemberColumns } from '@/settings/team-member/components/record/TeamMemberColumns';
+import { teamMemberMoreColumn } from '@/settings/team-member/components/record/TeamMemberMoreColumn';
 
 const TeamMemberTable = () => {
   const { users, totalCount, handleFetchMore, loading, error } = useUsers({

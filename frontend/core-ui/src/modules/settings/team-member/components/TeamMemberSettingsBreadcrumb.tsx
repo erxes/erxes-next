@@ -3,9 +3,9 @@ import { Button, Separator } from 'erxes-ui';
 import {
   SETTINGS_ROUTES,
   TEAM_MEMBER_SETTINGS,
-} from '../constants/teamMemberRoutes';
+} from '@/settings/team-member/constants/teamMemberRoutes';
 import { useLocation } from 'react-router';
-import { TeamMemberCounts } from './TeamMemberCounts';
+import { TeamMemberCounts } from '@/settings/team-member/components/TeamMemberCounts';
 
 export function TeamMemberSettingsBreadcrumb() {
   const { pathname } = useLocation();

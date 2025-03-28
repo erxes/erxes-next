@@ -1,7 +1,7 @@
 import { IconPlus, IconUsersGroup, IconX } from '@tabler/icons-react';
 import { Button, Dialog } from 'erxes-ui';
 import { useState } from 'react';
-import { InviteForm } from './InviteForm';
+import { InviteForm } from '@/settings/team-member/components/invite/InviteForm';
 
 export function InviteTeamMember() {
   const [isOpen, setIsOpen] = useState<boolean>(false);

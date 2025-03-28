@@ -1,12 +1,12 @@
 import { useForm } from 'react-hook-form';
-import { TUserForm } from '../types';
+import { TUserForm } from '@/settings/team-member/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { userSchema } from '../schema/users';
+import { USER_SCHEMA } from '@/settings/team-member/schema/users';
 
 const useUserForm = () => {
   const methods = useForm<TUserForm>({
     mode: 'onBlur',
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(USER_SCHEMA),
     defaultValues: {
       entries: Array.from({ length: 1 }, () => ({
         email: undefined,
