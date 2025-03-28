@@ -1,3 +1,4 @@
+import { Schema } from 'mongoose';
 export interface IBrowserInfo {
   language?: string;
   url?: string;
@@ -12,9 +13,7 @@ export interface IRule {
   value: string;
 }
 
-export interface ILink {
-  [key: string]: string;
-}
+
 
 export interface IRuleDocument extends IRule, Document {
   _id: string;
@@ -36,3 +35,28 @@ export interface IBrandEmailConfig {
 export interface IBrandEmailConfigDocument
   extends IBrandEmailConfig,
     Document {}
+
+
+    export const customFieldSchema = new Schema(
+      {
+        field: { type: String },
+        value: { type: Schema.Types.Mixed },
+        stringValue: { type: String, optional: true },
+        numberValue: { type: Number, optional: true },
+        dateValue: { type: Date, optional: true },
+        locationValue: {
+          type: {
+            type: String,
+            enum: ['Point'],
+            optional: true
+          },
+          coordinates: {
+            type: [Number],
+            optional: true
+          }
+        }
+      },
+      { _id: false }
+    );
+    
+    customFieldSchema.index({ locationValue: '2dsphere' });

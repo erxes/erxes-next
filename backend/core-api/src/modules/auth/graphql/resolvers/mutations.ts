@@ -1,5 +1,6 @@
 import { authCookieOptions, getEnv } from 'erxes-api-utils';
 import { IContext } from '../../../../@types';
+import { IUser,IDetail,ILink ,IEmailSignature} from 'erxes-api-modules';
 
 type LoginParams = {
   email: string;
@@ -8,6 +9,7 @@ type LoginParams = {
 };
 
 export const authMutations = {
+
   async login(
     _root,
     args: LoginParams,
@@ -29,4 +31,51 @@ export const authMutations = {
 
     return 'loggedIn';
   },
+
+  async logout(_root, _args, { res, user, requestInfo, models }: IContext) {
+    const logout = await models.Users.logout(
+      user,
+      requestInfo.cookies['auth-token']
+    );
+    res.clearCookie('auth-token');
+    return logout;
+  },
+  async forgotPassword(
+    _root,
+    { email }: { email: string },
+    { subdomain, models }: IContext
+  ) {
+    const token = await models.Users.forgotPassword(email);
+
+    // send email ==============
+    const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+
+    const link = `${DOMAIN}/reset-password?token=${token}`;
+
+    // await utils.sendEmail(
+    //   subdomain,
+    //   {
+    //     toEmails: [email],
+    //     title: 'Reset password',
+    //     template: {
+    //       name: 'resetPassword',
+    //       data: {
+    //         content: link,
+    //       },
+    //     },
+    //   },
+    //   models
+    // );
+
+    return 'sent';
+  },
+
+  async resetPassword(
+    _root,
+    args: { token: string; newPassword: string },
+    { models }: IContext
+  ) {
+    return models.Users.resetPassword(args);
+  },
+
 };

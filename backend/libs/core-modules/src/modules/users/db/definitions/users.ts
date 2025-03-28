@@ -1,14 +1,18 @@
 import { Document, Schema } from 'mongoose';
 import { mongooseField } from 'erxes-api-utils';
 import { mongooseSchemaWrapper } from 'erxes-api-utils';
-import { USER_ROLES } from '../../constants';
 import { IPermissionDocument } from '../../../permissions';
-import { ILink } from '../../../common/@types/common';
+import {ICustomField,customFieldSchema} from '../../../common/@types/common';
+import { USER_MOVEMENT_STATUSES ,USER_ROLES} from "../../../constants"
 
 export interface IEmailSignature {
   brandId?: string;
   signature?: string;
 }
+export interface ILink {
+  [key: string]: string;
+}
+
 
 export interface IEmailSignatureDocument extends IEmailSignature, Document {}
 
@@ -60,6 +64,7 @@ export interface IUser {
   positionIds?: string[];
   employeeId?: string;
   chatStatus?: IUserChatStatus;
+  customFieldsData?: ICustomField[];
 }
 
 enum IUserChatStatus {
@@ -74,6 +79,17 @@ export interface IUserDocument extends IUser, Document {
   customPermissions?: IPermissionDocument[];
   role?: string;
   appId?: string;
+}
+
+export interface IUserMovementDocument extends Document {
+  _id: string;
+  contentType: string;
+  contentTypeId: string;
+  userId: string;
+  createdAt: string;
+  createdBy: string;
+  status: string;
+  isActive: boolean;
 }
 
 // Mongoose schemas ===============================
@@ -236,5 +252,33 @@ export const userSchema = mongooseSchemaWrapper(
       optional: true,
       label: 'User chat status /used for exm/',
     }),
+    customFieldsData: mongooseField({
+      type: [customFieldSchema],
+      optional: true,
+      label: 'Custom fields data',
+    }),
   }),
 );
+
+
+
+
+
+export const userMovemmentSchema = mongooseSchemaWrapper(
+  new Schema({
+    _id: mongooseField({ pkey: true }),
+    contentType: mongooseField({ type: String, label: 'Content Type' }),
+    contentTypeId: mongooseField({ type: String, label: 'Content Type Id' }),
+    userId: mongooseField({ type: String, label: 'User Id' }),
+    createdBy: mongooseField({ type: String, label: 'Created By' }),
+    isActive: mongooseField({ type: Boolean, label: 'Is Active' }),
+    status: mongooseField({
+      type: String,
+      label: 'User Movement Status',
+      default: USER_MOVEMENT_STATUSES.CREATED
+    }),
+    createdAt: mongooseField({ type: Date, label: 'Created At', default: Date.now })
+  }),
+);
+
+
