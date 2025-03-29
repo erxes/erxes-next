@@ -2,14 +2,12 @@ import { initTRPC } from '@trpc/server';
 
 const t = initTRPC.create();
 
-// Service-specific router
 const serviceRouter = t.router({
   greet: t.procedure.query(() => {
-    return { message: `Hello, ` };
+    return { message: `Hello, dasdadsadadasds ` };
   }),
 });
 
-// Merge shared router with service-specific router
 export const appRouter = serviceRouter;
 
-export type CoreApiRouter = typeof appRouter;
+export type AppRouter = typeof appRouter;

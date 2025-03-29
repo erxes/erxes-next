@@ -8,13 +8,13 @@ import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { createTRPCUntypedClient, httpBatchStreamLink } from '@trpc/client';
+import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
 
 import { retryGetProxyTargets } from './proxy/targets';
 import { startRouter, stopRouter } from './apollo-router';
 import userMiddleware from './middlewares/userMiddleware';
 import { initMQWorkers } from './mq/workers/workers';
-
+import { CoreApiRouter } from 'erxes-api-rpc';
 import {
   applyProxiesToGraphql,
   applyProxyToCore,
@@ -54,7 +54,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.get('/users', async (req, res) => {
-  const client = createTRPCUntypedClient({
+  const client = createTRPCClient<CoreApiRouter>({
     links: [
       httpBatchStreamLink({
         url: 'http://localhost:3300/trpc', // Plugin-User серверийн URL
@@ -63,7 +63,7 @@ app.get('/users', async (req, res) => {
     transformer: undefined,
   });
 
-  const aa = await client.query('getUsers', {});
+  const aa = await client.greet.query();
 
   res.json(aa);
 });

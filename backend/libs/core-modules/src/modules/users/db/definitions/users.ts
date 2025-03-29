@@ -2,8 +2,8 @@ import { Document, Schema } from 'mongoose';
 import { mongooseField } from 'erxes-api-utils';
 import { mongooseSchemaWrapper } from 'erxes-api-utils';
 import { IPermissionDocument } from '../../../permissions';
-import {ICustomField,customFieldSchema} from '../../../common/@types/common';
-import { USER_MOVEMENT_STATUSES ,USER_ROLES} from "../../../constants"
+import { ICustomField, customFieldSchema } from '../../../common/@types/common';
+import { USER_MOVEMENT_STATUSES, USER_ROLES } from '../../constants';
 
 export interface IEmailSignature {
   brandId?: string;
@@ -12,7 +12,6 @@ export interface IEmailSignature {
 export interface ILink {
   [key: string]: string;
 }
-
 
 export interface IEmailSignatureDocument extends IEmailSignature, Document {}
 
@@ -260,10 +259,6 @@ export const userSchema = mongooseSchemaWrapper(
   }),
 );
 
-
-
-
-
 export const userMovemmentSchema = mongooseSchemaWrapper(
   new Schema({
     _id: mongooseField({ pkey: true }),
@@ -275,10 +270,12 @@ export const userMovemmentSchema = mongooseSchemaWrapper(
     status: mongooseField({
       type: String,
       label: 'User Movement Status',
-      default: USER_MOVEMENT_STATUSES.CREATED
+      default: USER_MOVEMENT_STATUSES.CREATED,
     }),
-    createdAt: mongooseField({ type: Date, label: 'Created At', default: Date.now })
+    createdAt: mongooseField({
+      type: Date,
+      label: 'Created At',
+      default: Date.now,
+    }),
   }),
 );
-
-
