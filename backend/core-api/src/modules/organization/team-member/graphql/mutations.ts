@@ -26,6 +26,7 @@ export const userMutations = {
     },
     { models }: IContext,
   ) {
+    console.log('---');
     const userCount = await models.Users.countDocuments();
 
     if (userCount > 0) {

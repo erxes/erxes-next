@@ -122,10 +122,12 @@ const createRouterConfig = async () => {
   fs.writeFileSync(routerConfigPath, yaml.stringify(config));
 };
 
-export const startRouter = async () => {
+export const startRouter = async (proxy) => {
   await createRouterConfig();
   console.log('Downloading router...');
   await downloadRouter();
+  await supergraphCompose(proxy);
+  console.log('Creating router config...');
 
   const devOptions = ['--dev'];
 
@@ -148,8 +150,6 @@ export const updateApolloRouter = async () => {
   try {
     const newTargets = await retryGetProxyTargets();
 
-    await supergraphCompose(global.currentTargets);
-
     // Check if the targets have changed
     if (JSON.stringify(newTargets) !== JSON.stringify(global.currentTargets)) {
       console.log('Proxy targets updated, applying changes...');
@@ -157,10 +157,8 @@ export const updateApolloRouter = async () => {
       // Update the targets and apply the new proxy middleware
       global.currentTargets = newTargets;
 
-      await supergraphCompose(global.currentTargets);
-
       // Restart the router with updated targets
-      await startRouter();
+      await startRouter(global.currentTargets);
     }
   } catch (error) {
     console.error('Error updating proxy targets:', error);

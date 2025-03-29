@@ -89,13 +89,13 @@ export default async function supergraphCompose(
 ) {
   await writeSupergraphConfig(proxyTargets);
   await supergraphComposeOnce();
-  // if (NODE_ENV === 'development') {
-  //   setInterval(async () => {
-  //     try {
-  //       await supergraphComposeOnce();
-  //     } catch (e) {
-  //       console.error(e.message);
-  //     }
-  //   }, Number(SUPERGRAPH_POLL_INTERVAL_MS) || 10_000);
-  // }
+  if (NODE_ENV === 'development') {
+    setInterval(async () => {
+      try {
+        await supergraphComposeOnce();
+      } catch (e) {
+        console.error(e.message);
+      }
+    }, Number(SUPERGRAPH_POLL_INTERVAL_MS) || 10_000);
+  }
 }

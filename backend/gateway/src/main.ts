@@ -115,7 +115,7 @@ async function start() {
 
     // Start the router with the initial targets
     console.log('Starting the router...');
-    await startRouter();
+    await startRouter(global.currentTargets);
     console.log('Router started successfully');
 
     // Apply the initial proxy middleware
