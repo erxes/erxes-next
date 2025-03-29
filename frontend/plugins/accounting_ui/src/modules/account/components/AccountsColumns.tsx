@@ -68,7 +68,7 @@ const AccountCurrencyCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
     <SelectCurrency
       value={cell.getValue() as CurrencyCode}
       variant="ghost"
-      className="w-full focus-visible:relative focus-visible:z-10"
+      className="w-full focus-visible:relative focus-visible:z-10 font-normal"
       hideChevron
       onChange={(value) => {
         editAccount({ variables: { ...cell.row.original, currency: value } }, [

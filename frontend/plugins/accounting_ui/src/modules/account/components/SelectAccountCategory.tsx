@@ -7,13 +7,17 @@ import {
   SelectTree,
   TextOverflowTooltip,
 } from 'erxes-ui';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAccountCategories } from '../hooks/useAccountCategories';
 import { IAccountCategory } from '../type/AccountCategory';
+import { Except } from 'type-fest';
 
 export const SelectAccountCategory = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
-  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
+  Except<
+    React.ComponentPropsWithoutRef<typeof Combobox.Trigger>,
+    'onSelect'
+  > & {
     selected?: string;
     onSelect: (categoryId: string) => void;
     recordId: string;
@@ -23,7 +27,7 @@ export const SelectAccountCategory = React.forwardRef<
     IAccountCategory | undefined
   >();
 
-  const { accountCategories, loading, error } = useAccountCategories({
+  const { accountCategories, loading } = useAccountCategories({
     onCompleted: ({
       accountCategories,
     }: {
@@ -58,35 +62,73 @@ export const SelectAccountCategory = React.forwardRef<
         )}
         edit={(closeEditMode) => (
           <InlineCellEdit>
-            <Command className="outline-none">
-              <Command.Input />
-              <Command.List>
-                <Combobox.Empty error={error} loading={loading} />
-                {accountCategories?.map((category: IAccountCategory) => (
-                  <SelectAccountCategoryItem
-                    key={category._id}
-                    category={category}
-                    selected={selectedCategory?._id === category._id}
-                    onSelect={() => {
-                      onSelect(category._id);
-                      setSelectedCategory(category);
-                      closeEditMode();
-                    }}
-                    hasChildren={
-                      accountCategories.find(
-                        (c: IAccountCategory) => c.parentId === category._id,
-                      ) !== undefined
-                    }
-                  />
-                ))}
-              </Command.List>
-            </Command>
+            <SelectAccountCommand
+              selected={selected}
+              onSelect={(categoryId) => {
+                onSelect(categoryId);
+                setSelectedCategory(
+                  accountCategories?.find(
+                    (category) => category._id === categoryId,
+                  ),
+                );
+                closeEditMode();
+              }}
+            />
           </InlineCellEdit>
         )}
       />
     </SelectTree.Provider>
   );
 });
+
+export const SelectAccountCommand = ({
+  selected,
+  onSelect,
+  focusOnMount,
+}: {
+  selected?: string;
+  onSelect: (categoryId: string) => void;
+  focusOnMount?: boolean;
+}) => {
+  const { accountCategories, loading, error } = useAccountCategories();
+  const selectedCategory = accountCategories?.find(
+    (category) => category._id === selected,
+  );
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current && focusOnMount) {
+      inputRef.current.focus();
+    }
+  }, [focusOnMount]);
+
+  return (
+    <Command>
+      <Command.Input
+        variant="secondary"
+        placeholder="Filter by category"
+        ref={inputRef}
+      />
+      <Command.Separator />
+      <Command.List className="p-1">
+        <Combobox.Empty error={error} loading={loading} />
+        {accountCategories?.map((category: IAccountCategory) => (
+          <SelectAccountCategoryItem
+            key={category._id}
+            category={category}
+            selected={selectedCategory?._id === category._id}
+            onSelect={() => onSelect(category._id)}
+            hasChildren={
+              accountCategories.find(
+                (c: IAccountCategory) => c.parentId === category._id,
+              ) !== undefined
+            }
+          />
+        ))}
+      </Command.List>
+    </Command>
+  );
+};
 
 const SelectAccountCategoryItem = ({
   category,

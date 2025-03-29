@@ -95,3 +95,25 @@ export function useMultiQueryState<T extends QueryTypes>(
 
   return [queries, setQueries];
 }
+
+export function useSetQueryStateByKey() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const setQuery = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams);
+  };
+
+  return setQuery;
+}
+
+export function useRemoveQueryStateByKey() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const removeQuery = (key: string) => {
+    searchParams.delete(key);
+    setSearchParams(searchParams);
+  };
+
+  return removeQuery;
+}

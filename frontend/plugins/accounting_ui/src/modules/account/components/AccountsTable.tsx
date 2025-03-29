@@ -4,10 +4,11 @@ import {
   accountMoreColumn,
   accountsColumns,
 } from '@/account/components/AccountsColumns';
-import { AccountsCommandbar } from './AccountsCommandbar';
+import { AccountsCommandbar } from './AccountsCommandBar';
 
 export const AccountsTable = () => {
   const { accounts, loading, handleFetchMore, totalCount } = useAccounts();
+
   return (
     <RecordTable.Provider
       columns={accountsColumns}
