@@ -4,11 +4,18 @@ import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
 import { redis } from 'erxes-api-utils';
-import { IUserDocument, IEmailSignature,USER_ROLES, userSchema,IUserMovementDocument, userMovemmentSchema } from 'erxes-api-modules';
+import {
+  IUserDocument,
+  IEmailSignature,
+  USER_ROLES,
+  userSchema,
+  IUserMovementDocument,
+  userMovemmentSchema,
+} from 'erxes-api-modules';
 
 import { saveValidatedToken } from '../../../../auth/utils';
 import { IModels } from '../../../../../connectionResolvers';
-import { IUser,IDetail, ILink } from 'erxes-api-modules';
+import { IUser, IDetail, ILink } from 'erxes-api-modules';
 import { USER_MOVEMENT_STATUSES } from 'erxes-api-modules';
 
 interface IConfirmParams {
@@ -18,7 +25,6 @@ interface IConfirmParams {
   fullName?: string;
   username?: string;
 }
-
 
 const SALT_WORK_FACTOR = 10;
 
@@ -70,11 +76,11 @@ export interface IUserModel extends Model<IUserDocument> {
   generateUserCodeField(): Promise<void>;
   configEmailSignatures(
     _id: string,
-    signatures: IEmailSignature[]
+    signatures: IEmailSignature[],
   ): Promise<IUserDocument>;
   configGetNotificationByEmail(
     _id: string,
-    isAllowed: boolean
+    isAllowed: boolean,
   ): Promise<IUserDocument>;
   setUserActiveOrInactive(_id: string): Promise<IUserDocument>;
   generatePassword(password: string): Promise<string>;
@@ -88,16 +94,16 @@ export interface IUserModel extends Model<IUserDocument> {
   }): Promise<IUserDocument>;
   resetMemberPassword(params: IPasswordParams): Promise<IUserDocument>;
   changePassword(
-    params: IPasswordParams & { currentPassword: string }
+    params: IPasswordParams & { currentPassword: string },
   ): Promise<IUserDocument>;
-  forgotPassword(email: string): string;
+  forgotPassword(email: string): Promise<string>;
   createTokens(_user: IUserDocument, secret: string): string[];
   refreshTokens(refreshToken: string): {
     token: string;
     refreshToken: string;
     user: IUserDocument;
   };
-  login(params: ILoginParams): { token: string; refreshToken: string };
+  login(params: ILoginParams): Promise<{ token: string; refreshToken: string }>;
   checkLoginAuth({
     email,
     password,
@@ -106,7 +112,7 @@ export interface IUserModel extends Model<IUserDocument> {
     password?: string;
   }): Promise<IUserDocument>;
   getTokenFields(user: IUserDocument);
-  logout(_user: IUserDocument, token: string): string;
+  logout(_user: IUserDocument, token: string): Promise<string>;
   findUsers(query: any, options?: any): Promise<IUserDocument[]>;
 }
 
@@ -407,7 +413,7 @@ export const loadUserClass = (models: IModels) => {
         {
           resetPasswordToken: token,
           resetPasswordExpires: Date.now() + 86400000,
-        }
+        },
       );
 
       return token;
@@ -475,7 +481,7 @@ export const loadUserClass = (models: IModels) => {
           password: await this.generatePassword(newPassword),
           resetPasswordToken: undefined,
           resetPasswordExpires: undefined,
-        }
+        },
       );
 
       return models.Users.findOne({ _id: user._id });
@@ -511,7 +517,7 @@ export const loadUserClass = (models: IModels) => {
         { _id: user._id },
         {
           password: await this.generatePassword(newPassword),
-        }
+        },
       );
 
       return models.Users.findOne({ _id: user._id });
@@ -567,7 +573,7 @@ export const loadUserClass = (models: IModels) => {
     }
     public static async editProfile(
       _id: string,
-      { username, email, details, links, employeeId }: IEditProfile
+      { username, email, details, links, employeeId }: IEditProfile,
     ) {
       // Checking duplicated email
       await this.checkDuplication({ email, idsToExclude: _id });
@@ -582,7 +588,7 @@ export const loadUserClass = (models: IModels) => {
 
       await models.Users.updateOne(
         { _id },
-        { $set: { username, email, details, links, employeeId } }
+        { $set: { username, email, details, links, employeeId } },
       );
 
       return models.Users.findOne({ _id });
@@ -660,7 +666,7 @@ export const loadUserClass = (models: IModels) => {
         {
           registrationToken: token,
           registrationTokenExpires: expires,
-        }
+        },
       );
 
       return token;
@@ -713,7 +719,7 @@ export const loadUserClass = (models: IModels) => {
               lastName: (fullName ?? '').split(' ')[1] || '',
             },
           },
-        }
+        },
       );
 
       return user;
@@ -721,11 +727,11 @@ export const loadUserClass = (models: IModels) => {
 
     public static async configGetNotificationByEmail(
       _id: string,
-      isAllowed: boolean
+      isAllowed: boolean,
     ) {
       await models.Users.updateOne(
         { _id },
-        { $set: { getNotificationByEmail: isAllowed } }
+        { $set: { getNotificationByEmail: isAllowed } },
       );
 
       return models.Users.findOne({ _id });
@@ -736,7 +742,6 @@ export const loadUserClass = (models: IModels) => {
 
   return userSchema;
 };
-
 
 type ICommonUserMovement = {
   userId?: string;
@@ -749,10 +754,10 @@ type ICommonUserMovement = {
 };
 export interface IUserMovemmentModel extends Model<IUserMovementDocument> {
   manageStructureUsersMovement(
-    params: ICommonUserMovement
+    params: ICommonUserMovement,
   ): Promise<IUserMovementDocument>;
   manageUserMovement(
-    params: ICommonUserMovement
+    params: ICommonUserMovement,
   ): Promise<IUserMovementDocument>;
 }
 export const loadUserMovemmentClass = (models: IModels) => {
@@ -791,7 +796,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
             },
             {
               $set: { isActive: false },
-            }
+            },
           );
           await models.UserMovements.insertMany(removed);
         }
@@ -804,7 +809,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
             isActive: true,
             status: { $ne: USER_MOVEMENT_STATUSES.REMOVED },
           },
-          { $set: { isActive: false } }
+          { $set: { isActive: false } },
         );
 
         for (const contentTypeId of contentTypeIds) {
@@ -831,7 +836,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
     }
 
     public static async manageStructureUsersMovement(
-      params: ICommonUserMovement
+      params: ICommonUserMovement,
     ) {
       const { createdBy, userIds, contentType, contentTypeId } = params;
       const fieldName = `${contentType}Ids`;
@@ -840,12 +845,12 @@ export const loadUserMovemmentClass = (models: IModels) => {
           _id: { $nin: userIds },
           [fieldName]: { $in: [contentTypeId] },
         },
-        { $pull: { [fieldName]: contentTypeId } }
+        { $pull: { [fieldName]: contentTypeId } },
       );
 
       await models.Users.updateMany(
         { _id: { $in: userIds } },
-        { $addToSet: { [fieldName]: contentTypeId } }
+        { $addToSet: { [fieldName]: contentTypeId } },
       );
 
       const userMovements = await models.UserMovements.find({
@@ -857,7 +862,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
       const removedFromContentType = userMovements
         .filter(
           (movement) =>
-            !userIds?.some((userId) => userId === movement.userId) && movement
+            !userIds?.some((userId) => userId === movement.userId) && movement,
         )
         .map(({ createdBy, contentType, contentTypeId, userId }) => ({
           createdBy,
@@ -878,7 +883,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
           status: { $ne: USER_MOVEMENT_STATUSES.REMOVED },
           isActive: true,
         },
-        { $set: { isActive: false } }
+        { $set: { isActive: false } },
       );
 
       for (const userId of userIds || []) {
@@ -906,5 +911,4 @@ export const loadUserMovemmentClass = (models: IModels) => {
   userMovemmentSchema.loadClass(UserMovemment);
 
   return userMovemmentSchema;
-
 };

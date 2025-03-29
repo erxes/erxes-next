@@ -97,10 +97,12 @@ export const types = `
     permissionActions: JSON
     configs: JSON
     configsConstants: [JSON]
-
+  
     department: Department
 
     departmentIds: [String]
+    brandIds: [String]
+    brands: [Brand]
     departments: [Department]
     branchIds: [String]
     branches: [Branch]
@@ -139,7 +141,6 @@ const commonParams = `
   employeeId: String
 `;
 
-
 const commonSelector = `
   searchValue: String,
   isActive: Boolean,
@@ -163,7 +164,6 @@ export const queries = `
   usersTotalCount(${commonSelector}): Int
   userMovements(userId: String!,contentType: String):[UserMovement]
 `;
-
 
 export const mutations = `
   usersResetMemberPassword(_id: String!, newPassword: String!): User

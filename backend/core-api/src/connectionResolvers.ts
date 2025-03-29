@@ -39,9 +39,8 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   );
   models.UserMovements = db.model<IUserMovementDocument, IUserMovemmentModel>(
     'user_movements',
-    loadUserMovemmentClass(models)
+    loadUserMovemmentClass(models),
   );
-
 
   return models;
 };

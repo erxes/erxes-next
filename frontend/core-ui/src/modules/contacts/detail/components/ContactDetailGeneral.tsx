@@ -1,5 +1,5 @@
 import { FullNameField } from '@/contacts/customer-edit/components/FullNameField';
-import { TextField } from '@/contacts/customer-edit/components/TextField';
+import { TextFieldCustomer } from '@/contacts/customer-edit/components/TextField';
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
@@ -42,7 +42,7 @@ export const ContactDetailGeneral = () => {
           />
 
           <div className="text-muted-foreground font-medium text-sm leading-none flex gap-1 items-center">
-            <TextField
+            <TextFieldCustomer
               value={position}
               placeholder="Add Position"
               className="text-sm"
@@ -50,7 +50,7 @@ export const ContactDetailGeneral = () => {
               _id={_id}
             />
             @
-            <TextField
+            <TextFieldCustomer
               value={department}
               placeholder="Add Department"
               className="text-sm"

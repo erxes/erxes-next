@@ -12,15 +12,16 @@ import {
   DepartmentTypes,
   BranchTypes,
   PositionTypes,
-} from '../../modules/structure/graphql/schemas';
+  BrandTypes,
+} from '../../modules/organization/structure/graphql/schemas';
+
+import { ConfigTypes } from '../../modules/organization/settings/graphql/schemas/configs';
 
 import {
   mutations as UserMutations,
   queries as UserQueries,
   types as UserTypes,
 } from '../../modules/organization/team-member/graphql/schema';
-
-
 
 import { CommonTypes } from './commonTypes';
 
@@ -45,6 +46,8 @@ export const types = `
     ${PositionTypes}
     ${CommonTypes}
     ${UserTypes}
+    ${BrandTypes}
+    ${ConfigTypes}
   `;
 
 export const queries = `
