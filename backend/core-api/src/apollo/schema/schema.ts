@@ -15,7 +15,11 @@ import {
   BrandTypes,
 } from '../../modules/organization/structure/graphql/schemas';
 
-import { ConfigTypes } from '../../modules/organization/settings/graphql/schemas/configs';
+import {
+  ConfigTypes,
+  mutations as ConfigsMutations,
+  queries as ConfigsQueries,
+} from '../../modules/settings/graphql/schemas';
 
 import {
   mutations as UserMutations,
@@ -54,12 +58,14 @@ export const queries = `
     ${CustomerQueries}
     ${AuthQueries}
     ${UserQueries}
+    ${ConfigsQueries}
   `;
 
 export const mutations = `
     ${CustomerMutations}
     ${AuthMutations}
     ${UserMutations}
+    ${ConfigsMutations}
   `;
 
 export default { types, queries, mutations };

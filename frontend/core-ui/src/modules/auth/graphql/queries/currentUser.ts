@@ -23,7 +23,6 @@ export const currentUser = gql`
       getNotificationByEmail
       permissionActions
       configs
-      configsConstants
       isShowNotification
     }
   }
