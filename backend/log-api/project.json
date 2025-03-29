@@ -1,0 +1,41 @@
+{
+  "name": "core-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "backend/core-api/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "dependsOn": ["erxes-api-utils:build"],
+      "cache": true,
+      "options": {
+        "outputPath": "dist/backend/core-api",
+        "main": "backend/core-api/src/main.ts",
+        "tsConfig": "backend/core-api/tsconfig.app.json",
+        "assets": ["backend/core-api/src/**"]
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "core-api:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "core-api:build:development"
+        },
+        "production": {
+          "buildTarget": "core-api:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}

@@ -111,6 +111,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-key-enum": "^3.0.13",
     "use-debounce": "^10.0.4",
+    "winston": "^3.17.0",
     "yaml": "^2.7.0",
     "zod": "^3.23.8"
   },

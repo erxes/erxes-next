@@ -59,6 +59,17 @@ export const createGenerateModels = <IModels>(
 
       models = await loadClasses(mongoose.connection, hostnameOrSubdomain);
 
+      for (const modelKey of Object.keys(models)) {
+        const model = models[modelKey];
+    
+        const changeStream = model.watch();
+    
+        changeStream.on('change', (change) => {
+          // Handle change event here
+          console.log(change);
+        });
+      }
+
       return models;
     };
   } else {
