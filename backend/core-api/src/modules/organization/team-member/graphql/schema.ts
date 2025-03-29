@@ -124,8 +124,10 @@ export const types = `
     contentTypeId:String
     contentTypeDetail:JSON
     status:String
+
   }
 `;
+
 const commonParams = `
   username: String,
   email: String,
