@@ -34,7 +34,7 @@ export const productCategorySchema = new Schema(
     mask: { type: Object, label: 'Mask', optional: true },
     isSimilarity: {
       type: Boolean,
-      label: 'is Similiraties',
+      label: 'is Similaraties',
       optional: true,
     },
     similarities: {

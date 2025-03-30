@@ -41,12 +41,12 @@ const mutationParams = `
   description: String,
   meta: String,
   parentId: String,
-  scopeBrandIds: [String]
+  scopeBrandIds: [String],
   attachment: AttachmentInput,
-  status: String
-  maskType: String
-  mask: JSON
-  isSimilarity: Boolean
+  status: String,
+  maskType: String,
+  mask: JSON,
+  isSimilarity: Boolean,
   similarities: JSON
 `;
 

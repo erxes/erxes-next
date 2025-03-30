@@ -26,7 +26,7 @@ export interface IProductCategoryModel extends Model<IProductCategoryDocument> {
 export const loadProductCategoryClass = (models: IModels) => {
   class ProductCategory {
     /**
-     * Get Product Cagegory
+     * Get Product Category
      */
     public static async getProductCategory(selector: any) {
       const productCategory = await models.ProductCategories.findOne(selector);
@@ -121,16 +121,15 @@ export const loadProductCategoryClass = (models: IModels) => {
       await models.ProductCategories.updateOne({ _id }, { $set: doc });
 
       // updating child categories order
-      childCategories.forEach(async (childCategory) => {
+      for (const childCategory of childCategories) {
         let order = childCategory.order;
-
         order = order.replace(category.order, doc.order);
 
         await models.ProductCategories.updateOne(
           { _id: childCategory._id },
           { $set: { order } },
         );
-      });
+      }
 
       return models.ProductCategories.findOne({ _id });
     }

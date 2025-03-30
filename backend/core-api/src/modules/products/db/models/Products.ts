@@ -70,8 +70,8 @@ export const loadProductClass = (models: IModels) => {
         _id: doc.categoryId,
       });
 
-      if (!(await checkCodeMask(category, doc.code))) {
-        throw new Error('Code is not validate of category mask');
+      if (!checkCodeMask(category, doc.code)) {
+        throw new Error('Code does not match the category mask');
       }
 
       doc.sameMasks = await checkSameMaskConfig(models, doc);
@@ -100,8 +100,8 @@ export const loadProductClass = (models: IModels) => {
           await this.checkCodeDuplication(doc.code);
         }
 
-        if (!(await checkCodeMask(category, doc.code))) {
-          throw new Error('Code is not validate of category mask');
+        if (!checkCodeMask(category, doc.code)) {
+          throw new Error('Code does not match the category mask');
         }
       }
 

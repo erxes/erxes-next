@@ -87,7 +87,7 @@ export const mutationParams = `
   attachment: AttachmentInput,
   attachmentMore: [AttachmentInput],
   vendorId: String,
-  scopeBrandIds: [String]
+  scopeBrandIds: [String],
   uom: String,
   subUoms: JSON,
   currency: String

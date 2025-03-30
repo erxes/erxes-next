@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 import { TIMELY_TYPES } from '../../constants';
 
 const subscriptionConfigSchema = new Schema({
-  period: { type: String, label: 'Subscription Period`' },
+  period: { type: String, label: 'Subscription Period' },
   rule: { type: String, label: 'Subscription Rule' },
   specificDay: {
     type: String,

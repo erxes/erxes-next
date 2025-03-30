@@ -126,16 +126,16 @@ export const productQueries = {
 
     const { sortField, sortDirection, page, perPage, ids, excludeIds } = params;
 
-    const pagintationArgs = { page, perPage };
+    const paginationArgs = { page, perPage };
 
     if (
       ids &&
       ids.length &&
       !excludeIds &&
-      ids.length > (pagintationArgs.perPage || 20)
+      ids.length > (paginationArgs.perPage || 20)
     ) {
-      pagintationArgs.page = 1;
-      pagintationArgs.perPage = ids.length;
+      paginationArgs.page = 1;
+      paginationArgs.perPage = ids.length;
     }
 
     let sort: { [key: string]: SortOrder } = { code: 1 };
@@ -147,13 +147,13 @@ export const productQueries = {
     if (params.groupedSimilarity) {
       return await getSimilaritiesProducts(models, filter, sort, {
         groupedSimilarity: params.groupedSimilarity,
-        ...pagintationArgs,
+        ...paginationArgs,
       });
     }
 
     return await paginate(
       models.Products.find(filter).sort(sort).lean(),
-      pagintationArgs,
+      paginationArgs,
     );
   },
 
