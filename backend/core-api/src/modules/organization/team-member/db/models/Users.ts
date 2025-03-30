@@ -194,7 +194,7 @@ export const loadUserClass = (models: IModels) => {
     }
 
     public static getSecret() {
-      return process.env.JWT_TOKEN_SECRET || '';
+      return process.env.JWT_TOKEN_SECRET || 'SECRET';
     }
 
     /**
