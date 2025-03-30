@@ -34,6 +34,12 @@ import {
   types as UserTypes,
 } from '../../modules/organization/team-member/graphql/schema';
 
+import {
+  mutations as TagMutations,
+  queries as TagQueries,
+  types as TagTypes,
+} from '../../modules/tags/graphql/schemas';
+
 import { CommonTypes } from './commonTypes';
 
 export const types = `
@@ -60,6 +66,7 @@ export const types = `
     ${UserTypes}
     ${BrandTypes}
     ${ConfigTypes}
+    ${TagTypes}
   `;
 
 export const queries = `
@@ -68,6 +75,7 @@ export const queries = `
     ${AuthQueries}
     ${UserQueries}
     ${ConfigsQueries}
+    ${TagQueries}
   `;
 
 export const mutations = `
@@ -76,6 +84,7 @@ export const mutations = `
     ${AuthMutations}
     ${UserMutations}
     ${ConfigsMutations}
+    ${TagMutations}
   `;
 
 export default { types, queries, mutations };

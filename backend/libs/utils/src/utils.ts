@@ -168,3 +168,7 @@ export const getCoreDomain = () => {
     ? 'https://erxes.io'
     : 'http://localhost:3500';
 };
+
+export const escapeRegExp = (str: string) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};

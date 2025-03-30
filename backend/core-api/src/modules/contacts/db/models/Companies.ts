@@ -67,7 +67,7 @@ export const loadCompanyClass = (models: IModels) => {
       this.fixListFields(doc, doc.trackedData, company);
 
       const searchText = this.fillSearchText(
-        Object.assign(await models.Companies.getCompany(_id), doc) as ICompany,
+        Object.assign({}, company, doc) as ICompany,
       );
 
       await models.Companies.updateOne(

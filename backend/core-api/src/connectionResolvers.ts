@@ -20,6 +20,8 @@ import {
 } from './modules/organization/team-member/db/models/Users';
 import { IConfigDocument } from './modules/settings/db/definitions/configs';
 import { IConfigModel } from './modules/settings/db/models/Configs';
+import { ITagDocument } from './modules/tags/@types';
+import { ITagModel, loadTagClass } from './modules/tags/db/models/Tags';
 
 export interface IModels {
   Customers: ICustomerModel;
@@ -27,6 +29,7 @@ export interface IModels {
   Users: IUserModel;
   UserMovements: IUserMovemmentModel;
   Configs: IConfigModel;
+  Tags: ITagModel;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {
@@ -56,6 +59,8 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     'configs',
     loadUserMovemmentClass(models),
   );
+
+  models.Tags = db.model<ITagDocument, ITagModel>('tags', loadTagClass(models));
 
   return models;
 };
