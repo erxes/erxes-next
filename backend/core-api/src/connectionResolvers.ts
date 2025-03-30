@@ -1,16 +1,21 @@
+import { IUserDocument } from 'erxes-api-modules';
 import { createGenerateModels } from 'erxes-api-utils';
 import mongoose from 'mongoose';
+import { ICompanyDocument } from './modules/contacts/@types/company';
+import { ICustomerDocument } from './modules/contacts/@types/customers';
+import { IUserMovementDocument } from './modules/contacts/@types/user';
+import {
+  ICompanyModel,
+  loadCompanyClass,
+} from './modules/contacts/db/models/Companies';
 import {
   ICustomerModel,
   loadCustomerClass,
 } from './modules/contacts/db/models/Customers';
-import { ICustomerDocument } from './modules/contacts/@types/customers';
-import { IUserMovementDocument } from './modules/contacts/@types/user';
-import { IUserDocument } from 'erxes-api-modules';
 import {
   IUserModel,
-  loadUserClass,
   IUserMovemmentModel,
+  loadUserClass,
   loadUserMovemmentClass,
 } from './modules/organization/team-member/db/models/Users';
 import { IConfigDocument } from './modules/settings/db/definitions/configs';
@@ -18,14 +23,10 @@ import { IConfigModel } from './modules/settings/db/models/Configs';
 
 export interface IModels {
   Customers: ICustomerModel;
+  Companies: ICompanyModel;
   Users: IUserModel;
   UserMovements: IUserMovemmentModel;
   Configs: IConfigModel;
-}
-
-export interface IContext {
-  subdomain: string;
-  models: IModels;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {
@@ -40,6 +41,12 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     'customers',
     loadCustomerClass(models),
   );
+
+  models.Companies = db.model<ICompanyDocument, ICompanyModel>(
+    'companies',
+    loadCompanyClass(models),
+  );
+
   models.UserMovements = db.model<IUserMovementDocument, IUserMovemmentModel>(
     'user_movements',
     loadUserMovemmentClass(models),

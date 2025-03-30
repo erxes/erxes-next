@@ -3,16 +3,23 @@ import {
   queries as CustomerQueries,
   types as CustomerTypes,
 } from '../../modules/contacts/graphql/schemas/customer';
+
+import {
+  mutations as CompanyMutations,
+  queries as CompanyQueries,
+  types as CompanyTypes,
+} from '../../modules/contacts/graphql/schemas/company';
+
 import {
   mutations as AuthMutations,
   queries as AuthQueries,
 } from '../../modules/auth/graphql/schemas/auth';
 
 import {
-  DepartmentTypes,
   BranchTypes,
-  PositionTypes,
   BrandTypes,
+  DepartmentTypes,
+  PositionTypes,
 } from '../../modules/organization/structure/graphql/schemas';
 
 import {
@@ -45,6 +52,7 @@ export const types = `
     ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
   
     ${CustomerTypes}
+    ${CompanyTypes}
     ${DepartmentTypes}
     ${BranchTypes}
     ${PositionTypes}
@@ -56,6 +64,7 @@ export const types = `
 
 export const queries = `
     ${CustomerQueries}
+    ${CompanyQueries}
     ${AuthQueries}
     ${UserQueries}
     ${ConfigsQueries}
@@ -63,6 +72,7 @@ export const queries = `
 
 export const mutations = `
     ${CustomerMutations}
+    ${CompanyMutations}
     ${AuthMutations}
     ${UserMutations}
     ${ConfigsMutations}

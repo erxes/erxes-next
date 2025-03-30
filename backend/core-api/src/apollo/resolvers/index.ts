@@ -1,8 +1,7 @@
-import { queries } from './queries';
-import { mutations } from './mutations';
 import { apolloCustomScalars } from 'erxes-api-utils';
-
-import * as customerResolvers from '../../modules/contacts/graphql/resolvers/customResolvers/customer';
+import { mutations } from './mutations';
+import { queries } from './queries';
+import { customResolvers } from './resolvers';
 
 const resolvers: any = {
   Mutation: {
@@ -12,7 +11,7 @@ const resolvers: any = {
     ...queries,
   },
   ...apolloCustomScalars,
-  ...customerResolvers,
+  ...customResolvers,
 };
 
 export default resolvers;
