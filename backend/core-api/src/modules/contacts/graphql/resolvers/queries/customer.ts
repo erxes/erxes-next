@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext } from 'core-api/@types';
 import { paginate } from 'erxes-api-utils';
 import { ICustomerQueryFilterParams } from '../../../@types/customers';
 

@@ -147,6 +147,16 @@ export const paginate = (
   return collection.limit(_limit).skip((_page - 1) * _limit);
 };
 
+export const validSearchText = (values: string[]) => {
+  const value = values.join(' ');
+
+  if (value.length < 512) {
+    return value;
+  }
+
+  return value.substring(0, 511);
+};
+
 export const resetConfigsCache = async () => {
   await redis.set('configs_erxes_api', '');
 };
