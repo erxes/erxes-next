@@ -33,12 +33,6 @@ const generateFilter = async ({ params, commonQuerySelector, models }) => {
     filter._id = { [excludeIds ? '$nin' : '$in']: ids };
   }
 
-  const pagintationArgs = { page, perPage };
-  if (ids && ids.length && !excludeIds && ids.length > (perPage || 20)) {
-    pagintationArgs.page = 1;
-    pagintationArgs.perPage = ids.length;
-  }
-
   if (parentId) {
     const parentTag = await models.Tags.find({ parentId }).distinct('_id');
     let ids = [parentId, ...parentTag];

@@ -93,8 +93,8 @@ export const loadTagClass = (models: IModels) => {
           };
         }> = [];
 
-        // updating child categories order
-        childTags.forEach(async (childTag) => {
+        // updating child tag order
+        childTags.forEach((childTag) => {
           let childOrder = childTag.order;
 
           childOrder = childOrder.replace(tag.order, order);
