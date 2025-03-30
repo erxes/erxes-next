@@ -11,4 +11,9 @@ export const CommonTypes = `
         size: Float
         duration: Float
     }
+
+    type PdfAttachment {
+        pdf: Attachment
+        pages: [Attachment]
+    }
 `;
