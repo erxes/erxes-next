@@ -25,7 +25,7 @@ export const uomMutations = {
 
   /**
    * Removes a uom
-   * @param {string} param1._id Uom id
+   * @param {string[]} uomIds Array of Uom ids
    */
   async uomsRemove(
     _root,

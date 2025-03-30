@@ -2,10 +2,7 @@ import { IModels } from 'core-api/connectionResolvers';
 import { IProductCategory } from './@types/category';
 import { IProduct } from './@types/product';
 
-export const checkCodeMask = async (
-  category?: IProductCategory,
-  code?: string,
-) => {
+export const checkCodeMask = (category?: IProductCategory, code?: string) => {
   if (!category || !code) {
     return false;
   }
@@ -40,7 +37,7 @@ export const checkCodeMask = async (
 
   const mask = new RegExp(maskStr, 'g');
 
-  if (await mask.test(code)) {
+  if (mask.test(code)) {
     return true;
   }
 

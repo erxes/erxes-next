@@ -12,7 +12,7 @@ export const productMutations = {
 
   /**
    * Edits a product
-   * @param {string} param2._id Product id
+   * @param {string} _id Product id
    * @param {Object} param2.doc Product info
    */
   async productsEdit(
