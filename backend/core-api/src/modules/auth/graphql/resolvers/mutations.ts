@@ -8,7 +8,7 @@ type LoginParams = {
 };
 
 export const authMutations = {
-   /*
+  /*
    * Login
    */
   async login(

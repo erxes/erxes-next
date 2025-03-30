@@ -26,7 +26,6 @@ export const userMutations = {
     },
     { models }: IContext,
   ) {
-    console.log('---');
     const userCount = await models.Users.countDocuments();
 
     if (userCount > 0) {
@@ -87,11 +86,7 @@ export const userMutations = {
   /*
    * Update user
    */
-  async usersEdit(
-    _root,
-    args: IUsersEdit,
-    { models,}: IContext,
-  ) {
+  async usersEdit(_root, args: IUsersEdit, { models }: IContext) {
     const { _id, ...doc } = args;
 
     // clean custom field values
