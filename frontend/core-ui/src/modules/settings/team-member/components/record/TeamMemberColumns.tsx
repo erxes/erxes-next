@@ -1,18 +1,16 @@
 import {
   IconAlignLeft,
-  IconCheckbox,
   IconChecks,
   IconMail,
   IconMailCheck,
   IconUser,
-  IconUsersGroup,
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { Avatar, cn, Switch } from 'erxes-ui';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
-import { IUser } from '../../types';
-import { TextField } from './team-member-edit/TextField';
+import { IUser } from '@/settings/team-member/types';
+import { TextField } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import dayjs from 'dayjs';
 

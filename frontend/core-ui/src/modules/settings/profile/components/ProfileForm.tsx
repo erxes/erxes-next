@@ -7,8 +7,13 @@ import {
   FormType,
   useProfileForm,
 } from '@/settings/profile/hooks/useProfileForm';
-import { AdvancedFields, DefaultFields, FormField, LinkFields } from './fields';
-import { ProfileLoading } from './ProfileLoading';
+import {
+  AdvancedFields,
+  DefaultFields,
+  FormField,
+  LinkFields,
+} from '@/settings/profile/components/fields';
+import { ProfileLoading } from '@/settings/profile/components/ProfileLoading';
 
 export const ProfileForm = () => {
   const { form } = useProfileForm();

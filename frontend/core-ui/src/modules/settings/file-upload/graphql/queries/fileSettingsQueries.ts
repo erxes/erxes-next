@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client"
 
-const configsQuery = gql`
+const GET_CONFIGS = gql`
   query configs {
     configs {
       _id
@@ -11,5 +11,5 @@ const configsQuery = gql`
 `
 
 export const fileSettingsQueries = {
-  configsQuery
+  GET_CONFIGS
 }

@@ -4,7 +4,7 @@ import { Form, RadioGroup, cn } from 'erxes-ui';
 
 import { UPLOAD_SERVICE_DATA } from '@/settings/file-upload/constants/serviceData';
 import { FormProps } from 'react-hook-form';
-import { UploadConfigFormT } from '../types';
+import { UploadConfigFormT } from '@/settings/file-upload/types';
 
 interface Props {
   form: FormProps<UploadConfigFormT>;

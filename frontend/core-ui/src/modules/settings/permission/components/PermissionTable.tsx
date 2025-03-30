@@ -1,7 +1,10 @@
-import { PERMISSIONS_PER_PAGE, usePermissions } from '../hooks/usePermission';
+import {
+  PERMISSIONS_PER_PAGE,
+  usePermissions,
+} from '@/settings/permission/hooks/usePermission';
 import { RecordTable } from 'erxes-ui/modules/record-table';
-import { permissionColumns } from './PermissionColumns';
-import { permissionMoreColumn } from './PermissionMoreColumn';
+import { permissionColumns } from '@/settings/permission/components/PermissionColumns';
+import { permissionMoreColumn } from '@/settings/permission/components/PermissionMoreColumn';
 import { Skeleton } from 'erxes-ui';
 
 const PermissionTable = () => {

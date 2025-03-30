@@ -1,25 +1,14 @@
-import { IconPlus, IconUsersGroup } from '@tabler/icons-react';
-import { Button, SettingsHeader } from 'erxes-ui';
-import { TeamMemberSidebar } from './Sidebar';
-import { TeamMemberTable } from './TeamMemberTable';
+import { SettingsHeader } from 'erxes-ui';
+import { TeamMemberSidebar } from '@/settings/team-member/components/Sidebar';
+import { TeamMemberTable } from '@/settings/team-member/components/TeamMemberTable';
+import { TeamMemberSettingsBreadcrumb } from '@/settings/team-member/components/TeamMemberSettingsBreadcrumb';
+import { TeamMemberTopbar } from '@/settings/team-member/components/TeamMemberTopbar';
 
 const TeamMember = () => {
   return (
     <div className="w-full h-full">
-      <SettingsHeader>
-        <Button variant="ghost" className="font-semibold">
-          <IconUsersGroup
-            size={16}
-            className="text-accent-foreground stroke-2"
-          />
-          Team Member
-        </Button>
-        <div className="flex items-center gap-4 ml-auto">
-          <Button type="button">
-            <IconPlus />
-            Invite team members
-          </Button>
-        </div>
+      <SettingsHeader breadcrumbs={<TeamMemberSettingsBreadcrumb />}>
+        <TeamMemberTopbar />
       </SettingsHeader>
       <div className="flex flex-row h-full">
         <TeamMemberSidebar />

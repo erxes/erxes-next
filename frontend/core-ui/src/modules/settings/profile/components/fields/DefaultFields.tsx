@@ -1,6 +1,6 @@
 import { Form } from 'erxes-ui';
-import FormField from './FormField';
-import { FormType } from '../../hooks/useProfileForm';
+import FormField from '@/settings/profile/components/fields/FormField';
+import { FormType } from '@/settings/profile/hooks/useProfileForm';
 
 const DefaultFields = () => {
   return (

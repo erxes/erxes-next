@@ -1,20 +1,22 @@
-import { TFormData } from "../types";
+import { TFormData } from '@/settings/mail-config/types';
 
 export const MAIL_CONFIG_FIELDS: TFormData = {
-  "common": [
+  common: [
     {
       name: 'COMPANY_EMAIL_FROM',
       inputType: 'input',
       type: 'email',
       label: 'Email',
-      description: 'Set an email address you wish to send your internal transactional emails from. For example, task notifications, team member mentions, etc.',
+      description:
+        'Set an email address you wish to send your internal transactional emails from. For example, task notifications, team member mentions, etc.',
     },
     {
       name: 'COMPANY_EMAIL_TEMPLATE_TYPE',
       inputType: 'select',
       label: 'Type',
-      description: 'Choose "custom" to change the template of transactional emails.',
-      options: ['simple', 'custom']
+      description:
+        'Choose "custom" to change the template of transactional emails.',
+      options: ['simple', 'custom'],
     },
     {
       name: 'COMPANY_EMAIL_TEMPLATE',
@@ -26,11 +28,12 @@ export const MAIL_CONFIG_FIELDS: TFormData = {
       name: 'DEFAULT_EMAIL_SERVICE',
       inputType: 'select',
       label: 'DEFAULT EMAIL SERVICE',
-      description: 'Choose your email service name. The default email service is SES.',
-      options: ['SES', 'custom']
+      description:
+        'Choose your email service name. The default email service is SES.',
+      options: ['SES', 'custom'],
     },
   ],
-  "custom": [
+  custom: [
     {
       name: 'MAIL_SERVICE',
       inputType: 'input',
@@ -67,7 +70,7 @@ export const MAIL_CONFIG_FIELDS: TFormData = {
       description: '',
     },
   ],
-  "SES": [
+  SES: [
     {
       name: 'AWS_SES_ACCESS_KEY_ID',
       inputType: 'input',
@@ -96,5 +99,5 @@ export const MAIL_CONFIG_FIELDS: TFormData = {
       label: 'AWS SES Config Set',
       description: '',
     },
-  ]
-}
+  ],
+};

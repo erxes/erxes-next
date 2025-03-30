@@ -3,25 +3,25 @@ import { OperationVariables, useMutation, useQuery } from '@apollo/client';
 import { currentUserState } from 'ui-modules';
 import { toast, useConfirm } from 'erxes-ui';
 import { useAtom } from 'jotai';
-import { UpdateProfile } from '@/settings/profile/graphql/mutations/updateProfile';
-import { userDetail } from '@/settings/profile/graphql/queries/userDetail';
+import { UPDATE_PROFILE } from '@/settings/profile/graphql/mutations/updateProfile';
+import { GET_USER_DETAIL } from '@/settings/profile/graphql/queries/userDetail';
 
-import { IUserDetail } from '../types/userDetail';
+import { IUsersDetail } from '@/settings/profile/types/userDetail';
 
 const useProfile = (options?: OperationVariables) => {
   const [currentUser, setCurrentUser] = useAtom(currentUserState);
 
   const { confirm } = useConfirm();
 
-  const { loading, data, refetch } = useQuery(userDetail, {
+  const { loading, data, refetch } = useQuery(GET_USER_DETAIL, {
     variables: { _id: currentUser?._id },
     ...options,
     skip: !currentUser?._id,
   });
 
-  const [updateProfile] = useMutation(UpdateProfile);
+  const [updateProfile] = useMutation(UPDATE_PROFILE);
 
-  const profileUpdate = async (profile: Partial<IUserDetail>) => {
+  const profileUpdate = async (profile: Partial<IUsersDetail>) => {
     const confirmOptions = { confirmationValue: 'update' };
 
     confirm({
@@ -33,7 +33,7 @@ const useProfile = (options?: OperationVariables) => {
 
         if (response.data) {
           refetch();
-          setCurrentUser(response.data.updateProfile);
+          setCurrentUser(response.data.UPDATE_PROFILE);
 
           toast({ title: 'Successfully updated profile' });
         }
@@ -46,7 +46,7 @@ const useProfile = (options?: OperationVariables) => {
     });
   };
 
-  const profile = data?.userDetail || {};
+  const profile = data?.GET_USER_DETAIL || {};
 
   return {
     profile,

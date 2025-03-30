@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
-const getUsersQuery = gql`
+const GET_USERS = gql`
   query users(
     $page: Int
     $perPage: Int
@@ -66,7 +66,7 @@ const getUsersQuery = gql`
   }
 `;
 
-const getUsersGroupsQuery = gql`
+const GET_USERS_GROUP = gql`
   query usersGroups($page: Int, $perPage: Int) {
     usersGroups(page: $page, perPage: $perPage) {
       _id
@@ -87,23 +87,23 @@ const getUsersGroupsQuery = gql`
   }
 `;
 
-const getPermissionsQuery = gql`
+const GET_PERMISSIONS = gql`
   query permissions(
-    $module: String,
-    $action: String,
-    $userId: String,
-    $groupId: String,
-    $allowed: Boolean,
-    $page: Int,
+    $module: String
+    $action: String
+    $userId: String
+    $groupId: String
+    $allowed: Boolean
+    $page: Int
     $perPage: Int
   ) {
     permissions(
-      module: $module,
-      action: $action,
-      userId: $userId,
-      groupId: $groupId,
-      allowed: $allowed,
-      page: $page,
+      module: $module
+      action: $action
+      userId: $userId
+      groupId: $groupId
+      allowed: $allowed
+      page: $page
       perPage: $perPage
     ) {
       _id
@@ -123,17 +123,16 @@ const getPermissionsQuery = gql`
       }
     }
     permissionsTotalCount(
-      module: $module,
-      action: $action,
-      userId: $userId,
-      groupId: $groupId,
+      module: $module
+      action: $action
+      userId: $userId
+      groupId: $groupId
       allowed: $allowed
     )
   }
 `;
 
-
-const getPermissionActionsQuery = gql`
+const GET_PERMISSION_ACTIONS = gql`
   query permissionActions {
     permissionActions {
       name
@@ -143,7 +142,7 @@ const getPermissionActionsQuery = gql`
   }
 `;
 
-const getPermissionModulesQuery = gql`
+const GET_PERMISSION_MODULES = gql`
   query permissionModules {
     permissionModules {
       name
@@ -152,14 +151,12 @@ const getPermissionModulesQuery = gql`
   }
 `;
 
-
-
 const queries = {
-  getUsersQuery,
-  getPermissionsQuery,
-  getUsersGroupsQuery,
-  getPermissionActionsQuery,
-  getPermissionModulesQuery,
+  GET_USERS,
+  GET_PERMISSIONS,
+  GET_USERS_GROUP,
+  GET_PERMISSION_ACTIONS,
+  GET_PERMISSION_MODULES,
 };
 
 export default queries;

@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { USER_SCHEMA } from '@/settings/team-member/schema/users';
+
 export interface IUsersDetails {
   avatar: string;
   fullName: string;
@@ -19,3 +22,19 @@ export interface IUser {
   employeeId: string;
   isActive: boolean;
 }
+
+export interface IUserEntry {
+  email: string;
+  password: string;
+  groupId: string;
+  channelIds?: string[];
+  unitId?: string;
+  branchId?: string;
+  departmentId?: string;
+}
+
+export type TUserInviteVars = {
+  entries: IUserEntry[];
+};
+
+export type TUserForm = z.infer<typeof USER_SCHEMA>;

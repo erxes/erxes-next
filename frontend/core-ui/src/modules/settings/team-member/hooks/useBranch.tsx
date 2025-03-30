@@ -1,5 +1,5 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { queries } from '../graphql';
+import { queries } from '@/settings/team-member/graphql';
 
 export type TBranch = {
   _id: string;

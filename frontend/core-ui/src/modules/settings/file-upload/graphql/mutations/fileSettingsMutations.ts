@@ -1,11 +1,11 @@
-import { gql } from "@apollo/client"
+import { gql } from '@apollo/client';
 
-const configsUpdate = gql`
+const UPDATE_CONFIGS = gql`
   mutation configsUpdate($configsMap: JSON!) {
     configsUpdate(configsMap: $configsMap)
   }
-`
+`;
 
 export const fileSettingsMutations = {
-  configsUpdate
-}
+  UPDATE_CONFIGS,
+};

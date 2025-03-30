@@ -8,8 +8,8 @@ import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { cn } from 'erxes-ui';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
-import { TextField } from './permission-edit/TextField';
-import { IPermission } from '../types';
+import { TextField } from '@/settings/permission/components/permission-edit/TextField';
+import { IPermission } from '@/settings/permission/types';
 
 export const permissionColumns: ColumnDef<IPermission>[] = [
   ...['module', 'action'].map((field) => ({

@@ -10,17 +10,17 @@ import {
 const useConfig = () => {
   const { toast } = useToast();
 
-  const { data, loading } = useQuery(fileSettingsQueries.configsQuery, {
+  const { data, loading, error } = useQuery(fileSettingsQueries.GET_CONFIGS, {
     onError(error) {
-      // console.log(error.message);
+      console.error(error.message);
     },
   });
 
   const [update, { loading: isLoading }] = useMutation(
-    fileSettingsMutations.configsUpdate,
+    fileSettingsMutations.UPDATE_CONFIGS,
     {
       onError(error) {
-        // console.log(error.message);
+        console.error(error.message);
       },
       onCompleted() {
         toast({
@@ -30,7 +30,7 @@ const useConfig = () => {
       },
       refetchQueries: [
         {
-          query: fileSettingsQueries.configsQuery,
+          query: fileSettingsQueries.GET_CONFIGS,
         },
       ],
       awaitRefetchQueries: true,

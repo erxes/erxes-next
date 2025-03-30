@@ -1,5 +1,5 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { queries } from '../graphql';
+import { queries } from '@/settings/team-member/graphql';
 
 const useCountByOptions = (options?: OperationVariables) => {
   const { data, loading } = useQuery(queries.GET_USER_COUNT_BY_OPTION_QUERY, {

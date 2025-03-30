@@ -1,6 +1,6 @@
 import { IconLoader, IconUserFilled } from '@tabler/icons-react';
 import { Sidebar } from 'erxes-ui';
-import { IUsersGroup } from '../types';
+import { IUsersGroup } from '@/settings/permission/types';
 
 export function PermissionSidebarItem({
   data: { name, description, members },

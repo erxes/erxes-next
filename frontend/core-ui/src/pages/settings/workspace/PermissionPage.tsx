@@ -7,7 +7,7 @@ export function PermissionPage() {
     <section className="mx-auto flex w-full h-screen relative">
       {/* <PermissionSidebar /> */}
       <div className="flex flex-col h-full w-full">
-        <SettingsHeader>
+        <SettingsHeader breadcrumbs={[]}>
           <Button variant="ghost" className="font-semibold">
             <IconUserShield className="w-4 h-4 text-accent-foreground" />
             Permission

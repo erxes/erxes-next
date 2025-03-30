@@ -13,7 +13,6 @@ import { SERVICE_FIELDS } from '@/settings/file-upload/constants/uploadServiceFi
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm';
 import { TConfig, UploadConfigFormT } from '@/settings/file-upload/types';
-import { Path } from 'react-hook-form';
 
 type Option = {
   label: string;
