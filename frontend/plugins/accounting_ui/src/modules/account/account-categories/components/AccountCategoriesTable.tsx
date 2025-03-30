@@ -11,7 +11,7 @@ import { useAccountCategoryEdit } from '../hooks/useAccountCategoryEdit';
 import { SelectAccountCategory } from './SelectAccountCategory';
 import { useSetAtom } from 'jotai';
 import { accountCategoryDetailAtom } from '../states/accountCategoryStates';
-
+import { AccountCategoriesCommandbar } from './AccountCategoriesCommandbar';
 export const AccountCategoriesTable = () => {
   const { accountCategories, loading } = useAccountCategories();
   return (
@@ -25,6 +25,7 @@ export const AccountCategoriesTable = () => {
         <RecordTable.Header />
         <RecordTable.Body />
       </RecordTable>
+      <AccountCategoriesCommandbar />
     </RecordTable.Provider>
   );
 };
