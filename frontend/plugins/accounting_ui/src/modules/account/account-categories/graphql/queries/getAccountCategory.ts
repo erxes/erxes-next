@@ -26,3 +26,11 @@ export const GET_ACCOUNT_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_ACCOUNT_CATEGORY_DETAIL = gql`
+  query accountCategoryDetail($id: String!) {
+    accountCategoryDetail(_id: $id) {
+      ${categoryFields}
+    }
+  }
+`;

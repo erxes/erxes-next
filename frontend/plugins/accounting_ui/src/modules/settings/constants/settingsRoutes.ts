@@ -3,4 +3,5 @@ export const SETTINGS_ROUTES = {
   '/settings/accounting/vat': "Value-added tax's",
   '/settings/accounting/ctax': "CTAX's",
   '/settings/accounting/accounts': 'Accounts',
+  '/settings/accounting/account-categories': 'Account categories',
 };

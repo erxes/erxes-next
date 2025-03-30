@@ -1,10 +1,10 @@
 import { FullNameField } from '@/contacts/customer-edit/components/FullNameField';
-import { TextFieldCustomer } from '@/contacts/customer-edit/components/TextField';
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';
 import { Avatar, Button } from 'erxes-ui';
+import { TextFieldCustomer } from '../../customer-edit/components/TextField';
 
 export const ContactDetailGeneral = () => {
   const { customerDetail } = useContactDetail();

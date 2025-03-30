@@ -9,8 +9,9 @@ import {
 } from 'erxes-ui';
 import React, { useEffect, useRef, useState } from 'react';
 import { useAccountCategories } from '../hooks/useAccountCategories';
-import { IAccountCategory } from '../type/AccountCategory';
+import { IAccountCategory } from '../../type/AccountCategory';
 import { Except } from 'type-fest';
+import { useDebounce } from 'use-debounce';
 
 export const SelectAccountCategory = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
@@ -19,10 +20,12 @@ export const SelectAccountCategory = React.forwardRef<
     'onSelect'
   > & {
     selected?: string;
-    onSelect: (categoryId: string) => void;
+    onSelect: (categoryId: string | null) => void;
     recordId: string;
+    nullable?: boolean;
+    exclude?: string[];
   }
->(({ onSelect, selected, recordId, ...props }, ref) => {
+>(({ onSelect, selected, recordId, nullable, exclude, ...props }, ref) => {
   const [selectedCategory, setSelectedCategory] = useState<
     IAccountCategory | undefined
   >();
@@ -48,7 +51,7 @@ export const SelectAccountCategory = React.forwardRef<
   }, [selected, accountCategories]);
 
   return (
-    <SelectTree.Provider id="select-account-category">
+    <SelectTree.Provider id="select-account-category" ordered>
       <InlineCell
         name="accountCategory"
         recordId={recordId}
@@ -63,6 +66,8 @@ export const SelectAccountCategory = React.forwardRef<
         edit={(closeEditMode) => (
           <InlineCellEdit>
             <SelectAccountCommand
+              nullable={nullable}
+              exclude={exclude}
               selected={selected}
               onSelect={(categoryId) => {
                 onSelect(categoryId);
@@ -85,12 +90,22 @@ export const SelectAccountCommand = ({
   selected,
   onSelect,
   focusOnMount,
+  nullable,
+  exclude,
 }: {
   selected?: string;
-  onSelect: (categoryId: string) => void;
+  onSelect: (categoryId: string | null) => void;
   focusOnMount?: boolean;
+  nullable?: boolean;
+  exclude?: string[];
 }) => {
-  const { accountCategories, loading, error } = useAccountCategories();
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
+  const { accountCategories, loading, error } = useAccountCategories({
+    variables: {
+      searchValue: debouncedSearch ?? undefined,
+    },
+  });
   const selectedCategory = accountCategories?.find(
     (category) => category._id === selected,
   );
@@ -103,21 +118,29 @@ export const SelectAccountCommand = ({
   }, [focusOnMount]);
 
   return (
-    <Command>
+    <Command shouldFilter={false}>
       <Command.Input
         variant="secondary"
         placeholder="Filter by category"
         ref={inputRef}
+        value={search}
+        onValueChange={(value) => setSearch(value)}
       />
       <Command.Separator />
       <Command.List className="p-1">
         <Combobox.Empty error={error} loading={loading} />
+        {nullable && (
+          <Command.Item key="null" value="null" onSelect={() => onSelect(null)}>
+            No category selected
+          </Command.Item>
+        )}
         {accountCategories?.map((category: IAccountCategory) => (
           <SelectAccountCategoryItem
             key={category._id}
             category={category}
             selected={selectedCategory?._id === category._id}
             onSelect={() => onSelect(category._id)}
+            disabled={exclude?.includes(category._id)}
             hasChildren={
               accountCategories.find(
                 (c: IAccountCategory) => c.parentId === category._id,
@@ -135,11 +158,13 @@ const SelectAccountCategoryItem = ({
   selected,
   onSelect,
   hasChildren,
+  disabled,
 }: {
   category: IAccountCategory;
   selected: boolean;
   onSelect: () => void;
   hasChildren: boolean;
+  disabled?: boolean;
 }) => {
   const { name, code, order } = category;
 
@@ -151,6 +176,7 @@ const SelectAccountCategoryItem = ({
       value={code + name}
       onSelect={onSelect}
       selected={false}
+      disabled={disabled}
     >
       <SelectAccountCategoryBadge category={category} selected={selected} />
     </SelectTree.Item>

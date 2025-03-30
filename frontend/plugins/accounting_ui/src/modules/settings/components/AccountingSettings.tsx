@@ -18,6 +18,12 @@ export const Accounts = lazy(() =>
   })),
 );
 
+export const AccountCategories = lazy(() =>
+  import('~/pages/AccountCategoriesPage').then((module) => ({
+    default: module.AccountCategoriesPage,
+  })),
+);
+
 const AccountingSettings = () => {
   return (
     <Filter id="accounting-settings">
@@ -39,6 +45,10 @@ const AccountingSettings = () => {
             <Routes>
               <Route path="/" element={<AccountingMainConfig />} />
               <Route path="/accounts" element={<Accounts />} />
+              <Route
+                path="/account-categories"
+                element={<AccountCategories />}
+              />
             </Routes>
           </Suspense>
         </div>

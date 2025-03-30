@@ -1,22 +1,20 @@
 import {
+  IconCalendarEventFilled,
   IconCoins,
   IconHash,
   IconLabelFilled,
   IconLayoutGridAdd,
   IconNotebook,
   IconToggleRightFilled,
-  IconX,
 } from '@tabler/icons-react';
 import {
-  Button,
-  Currency,
   CurrencyCode,
   Filter,
   SelectCurrency,
   useMultiQueryState,
   useQueryState,
 } from 'erxes-ui';
-import { SelectAccountCategory } from './SelectAccountCategory';
+import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
 import { SelectAccountKindCommand } from './AccountsKind';
 import { SelectAccountJournalCommand } from './AccountsJournal';
 
@@ -28,12 +26,13 @@ export const AccountsFilterBar = () => {
     currency: string;
     kind: string;
     journal: string;
-  }>(['code', 'name', 'categoryId', 'currency', 'kind', 'journal']);
+    due: string;
+  }>(['code', 'name', 'categoryId', 'currency', 'kind', 'journal', 'due']);
 
   const isFiltered = Object.values(queries).some((query) => !!query);
 
   if (!isFiltered) return null;
-  const { code, name, categoryId, currency, kind, journal } = queries;
+  const { code, name, categoryId, currency, kind, journal, due } = queries;
 
   return (
     <Filter.Bar>
@@ -43,10 +42,10 @@ export const AccountsFilterBar = () => {
             <IconHash />
             Code
           </Filter.BarName>
-          <Filter.BarButton value="code" inDialog>
+          <Filter.BarButton filterKey="code" inDialog>
             {code}
           </Filter.BarButton>
-          <Filter.BarClose />
+          <Filter.BarClose filterKey="code" />
         </Filter.BarItem>
       )}
       {!!name && (
@@ -55,16 +54,17 @@ export const AccountsFilterBar = () => {
             <IconLabelFilled />
             Name
           </Filter.BarName>
-          <Filter.BarButton value="name" inDialog>
+          <Filter.BarButton filterKey="name" inDialog>
             {name}
           </Filter.BarButton>
-          <Filter.BarClose />
+          <Filter.BarClose filterKey="name" />
         </Filter.BarItem>
       )}
       {!!categoryId && <FilterBarCategory />}
       {!!currency && <FilterBarCurrency />}
       {!!kind && <FilterBarKind />}
       {!!journal && <FilterBarJournal />}
+      {!!due && <FilterBarDue />}
     </Filter.Bar>
   );
 };
@@ -85,7 +85,7 @@ const FilterBarCategory = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose value="categoryId" />
+      <Filter.BarClose filterKey="categoryId" />
     </Filter.BarItem>
   );
 };
@@ -105,7 +105,7 @@ const FilterBarCurrency = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose value="currency" />
+      <Filter.BarClose filterKey="currency" />
     </Filter.BarItem>
   );
 };
@@ -125,7 +125,7 @@ const FilterBarKind = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose value="kind" />
+      <Filter.BarClose filterKey="kind" />
     </Filter.BarItem>
   );
 };
@@ -144,7 +144,20 @@ const FilterBarJournal = () => {
         variant="ghost"
         className="rounded-none h-7 bg-background"
       />
-      <Filter.BarClose value="journal" />
+      <Filter.BarClose filterKey="journal" />
+    </Filter.BarItem>
+  );
+};
+
+const FilterBarDue = () => {
+  return (
+    <Filter.BarItem>
+      <Filter.BarName>
+        <IconCalendarEventFilled />
+        Due date
+      </Filter.BarName>
+      <Filter.Date filterKey="due" />
+      <Filter.BarClose filterKey="due" />
     </Filter.BarItem>
   );
 };

@@ -10,7 +10,6 @@ import {
 import {
   Combobox,
   Command,
-  Dialog,
   Filter,
   SelectTree,
   useQueryState,
@@ -18,9 +17,7 @@ import {
   useFilterContext,
   CurrencyCode,
 } from 'erxes-ui';
-import { SelectAccountCommand } from './SelectAccountCategory';
-import { useEffect, useRef } from 'react';
-import { Journal } from '../type/Account';
+import { SelectAccountCommand } from '../account-categories/components/SelectAccountCategory';
 import { AccountsKindCommand } from './AccountsKind';
 import { AccountsJournalCommand } from './AccountsJournal';
 
@@ -72,35 +69,36 @@ export const AccountingFilter = () => {
             </Command>
           </Filter.View>
           <AccountingFilterCategory />
-          <Filter.View value="due">
-            <Filter.DateView value="due" />
+          <Filter.View filterKey="due">
+            <Filter.DateView filterKey="due" />
           </Filter.View>
-          <Filter.View value="created">
-            <Filter.DateView value="created" />
+          <Filter.View filterKey="created">
+            <Filter.DateView filterKey="created" />
           </Filter.View>
-          <Filter.View value="updated">
-            <Filter.DateView value="updated" />
+          <Filter.View filterKey="updated">
+            <Filter.DateView filterKey="updated" />
           </Filter.View>
-          <Filter.View value="currency">
+          <Filter.View filterKey="currency">
             <AccountingFilterCurrency />
           </Filter.View>
-          <Filter.View value="kind">
+          <Filter.View filterKey="kind">
             <AccountingFilterKind />
           </Filter.View>
-          <Filter.View value="journal">
+          <Filter.View filterKey="journal">
             <AccountingFilterJournal />
           </Filter.View>
         </Combobox.Content>
       </Filter.Popover>
       <Filter.Dialog>
-        <Dialog.Content>
-          <Filter.View value="name" inDialog>
-            <Filter.DialogStringView value="name" />
-          </Filter.View>
-          <Filter.View value="code" inDialog>
-            <Filter.DialogStringView value="code" />
-          </Filter.View>
-        </Dialog.Content>
+        <Filter.View filterKey="name" inDialog>
+          <Filter.DialogStringView filterKey="name" />
+        </Filter.View>
+        <Filter.View filterKey="code" inDialog>
+          <Filter.DialogStringView filterKey="code" />
+        </Filter.View>
+        <Filter.View filterKey="due" inDialog>
+          <Filter.DialogDateView filterKey="due" />
+        </Filter.View>
       </Filter.Dialog>
     </>
   );
@@ -111,8 +109,8 @@ export const AccountingFilterCategory = () => {
   const { resetFilterState } = useFilterContext();
 
   return (
-    <SelectTree.Provider id="account-category-filter">
-      <Filter.View value="category">
+    <SelectTree.Provider id="account-category-filter" ordered>
+      <Filter.View filterKey="category">
         <SelectAccountCommand
           focusOnMount
           selected={categoryId ?? undefined}
@@ -130,7 +128,7 @@ export const AccountingFilterCurrency = () => {
   const [currency, setCurrency] = useQueryState<CurrencyCode>('currency');
   const { resetFilterState } = useFilterContext();
   return (
-    <Filter.View value="currency">
+    <Filter.View filterKey="currency">
       <SelectCurrencyCommand
         focusOnMount
         value={currency ?? undefined}
