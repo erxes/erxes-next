@@ -7,4 +7,7 @@ export const mutations = `
   logout: String
   forgotPassword(email: String!): String!
   resetPassword(token: String!, newPassword: String!): JSON
+  loginWithGoogle: String
+  loginWithMagicLink(email: String!): String
+
  `;

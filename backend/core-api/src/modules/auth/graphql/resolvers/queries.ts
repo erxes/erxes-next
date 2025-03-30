@@ -1,6 +1,9 @@
 import { IContext } from '../../../../@types';
 
 export const authQueries = {
+  /**
+   * Current user
+   */
   async currentUser(
     _parent: undefined,
     _args: undefined,

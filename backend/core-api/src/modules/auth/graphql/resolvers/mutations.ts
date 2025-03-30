@@ -8,6 +8,9 @@ type LoginParams = {
 };
 
 export const authMutations = {
+   /*
+   * Login
+   */
   async login(
     _root,
     args: LoginParams,
@@ -29,7 +32,9 @@ export const authMutations = {
 
     return 'loggedIn';
   },
-
+  /*
+   * logout
+   */
   async logout(_root, _args, { res, user, requestInfo, models }: IContext) {
     const logout = await models.Users.logout(
       user,
@@ -39,6 +44,9 @@ export const authMutations = {
     return logout;
   },
 
+  /*
+   * Send forgot password email
+   */
   async forgotPassword(
     _root,
     { email }: { email: string },
@@ -69,11 +77,34 @@ export const authMutations = {
     return 'sent';
   },
 
+  /*
+   * Reset password
+   */
   async resetPassword(
     _root,
     args: { token: string; newPassword: string },
     { models }: IContext,
   ) {
     return models.Users.resetPassword(args);
+  },
+
+  async loginWithGoogle(_root, _params, { models, subdomain }: IContext) {
+    try {
+      return null;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  async loginWithMagicLink(
+    _root,
+    { email }: { email: string },
+    { models, subdomain }: IContext,
+  ) {
+    try {
+      return 'Invalid login';
+    } catch (e) {
+      throw new Error(e.message);
+    }
   },
 };

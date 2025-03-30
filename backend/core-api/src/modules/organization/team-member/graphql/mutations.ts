@@ -62,6 +62,9 @@ export const userMutations = {
     return 'success';
   },
 
+  /*
+   * Reset member's password
+   */
   async usersResetMemberPassword(
     _root,
     args: { _id: string; newPassword: string },
@@ -69,6 +72,10 @@ export const userMutations = {
   ) {
     return models.Users.resetMemberPassword(args);
   },
+
+  /*
+   * Change user password
+   */
   async usersChangePassword(
     _root,
     args: { currentPassword: string; newPassword: string },
@@ -77,12 +84,15 @@ export const userMutations = {
     return models.Users.changePassword({ _id: user._id, ...args });
   },
 
+  /*
+   * Update user
+   */
   async usersEdit(
     _root,
     args: IUsersEdit,
-    { user, models, subdomain }: IContext,
+    { models,}: IContext,
   ) {
-    const { _id, channelIds, ...doc } = args;
+    const { _id, ...doc } = args;
 
     // clean custom field values
     if (doc.customFieldsData) {
@@ -107,6 +117,12 @@ export const userMutations = {
     }
 
     const updatedUser = await models.Users.updateUser(_id, updatedDoc);
+
+    if (args.departmentIds || args.branchIds) {
+      await models.UserMovements.manageUserMovement({
+        user: updatedUser,
+      });
+    }
 
     return updatedUser;
   },
@@ -216,6 +232,9 @@ export const userMutations = {
     }
   },
 
+  /*
+   * Resend invitation
+   */
   async usersResendInvitation(
     _root,
     { email }: { email: string },
@@ -327,25 +346,5 @@ export const userMutations = {
     { subdomain }: IContext,
   ) {
     return;
-  },
-
-  async loginWithGoogle(_root, _params, { models, subdomain }: IContext) {
-    try {
-      return null;
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
-  async loginWithMagicLink(
-    _root,
-    { email }: { email: string },
-    { models, subdomain }: IContext,
-  ) {
-    try {
-      return 'Invalid login';
-    } catch (e) {
-      throw new Error(e.message);
-    }
   },
 };
