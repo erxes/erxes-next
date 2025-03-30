@@ -4,7 +4,7 @@ import { ContactDetailSelectTag } from '@/contacts/detail/components/ContactDeta
 import { useContactDetail } from '@/contacts/detail/hooks/useContactDetail';
 import { ContactDetailAssignedTo } from './ContactDetailAssignedTo';
 import { ITag } from 'ui-modules';
-import { TextField } from '@/contacts/customer-edit/components/TextField';
+import { TextFieldCustomer } from '@/contacts/customer-edit/components/TextField';
 
 export const ContactGeneral = () => {
   const { customerDetail, loading } = useContactDetail();
@@ -22,7 +22,7 @@ export const ContactGeneral = () => {
         <ContactDetailAssignedTo ownerId={ownerId} />
         <div className="px-8 space-y-6 font-medium">
           <DataListItem label="Code">
-            <TextField
+            <TextFieldCustomer
               value={code}
               placeholder="Add Code"
               className="text-sm"
@@ -33,7 +33,7 @@ export const ContactGeneral = () => {
           <DataListItem label="Primary Email">{primaryEmail}</DataListItem>
           <DataListItem label="Primary Phone">{primaryPhone}</DataListItem>
           <DataListItem label="Score">
-            <TextField
+            <TextFieldCustomer
               value={score}
               placeholder="Add Score"
               className="text-sm"

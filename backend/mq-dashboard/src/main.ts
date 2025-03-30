@@ -11,7 +11,7 @@ const port = process.env.PORT ? Number(process.env.PORT) : 4444;
 const myQueue = new Queue('gateway-update-apollo-router', {
   connection: redis,
   defaultJobOptions: {
-    removeOnComplete: false,
+    removeOnComplete: true,
     removeOnFail: false,
   },
 });

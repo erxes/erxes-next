@@ -1,13 +1,10 @@
 import { IContext } from '../../../../@types';
-import { IUser,IDetail,ILink ,IEmailSignature} from 'erxes-api-modules';
-
-
+import { IUser, IDetail, ILink, IEmailSignature } from 'erxes-api-modules';
 
 interface IUsersEdit extends IUser {
   channelIds?: string[];
   _id: string;
 }
-
 
 export const userMutations = {
   async usersCreateOwner(
@@ -29,6 +26,7 @@ export const userMutations = {
     },
     { models }: IContext,
   ) {
+    console.log('---');
     const userCount = await models.Users.countDocuments();
 
     if (userCount > 0) {
@@ -64,18 +62,17 @@ export const userMutations = {
     return 'success';
   },
 
-
   async usersResetMemberPassword(
     _root,
     args: { _id: string; newPassword: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     return models.Users.resetMemberPassword(args);
   },
   async usersChangePassword(
     _root,
     args: { currentPassword: string; newPassword: string },
-    { user, models }: IContext
+    { user, models }: IContext,
   ) {
     return models.Users.changePassword({ _id: user._id, ...args });
   },
@@ -83,7 +80,7 @@ export const userMutations = {
   async usersEdit(
     _root,
     args: IUsersEdit,
-    { user, models, subdomain }: IContext
+    { user, models, subdomain }: IContext,
   ) {
     const { _id, channelIds, ...doc } = args;
 
@@ -111,7 +108,6 @@ export const userMutations = {
 
     const updatedUser = await models.Users.updateUser(_id, updatedDoc);
 
-
     return updatedUser;
   },
 
@@ -133,9 +129,8 @@ export const userMutations = {
       links: ILink;
       employeeId: string;
     },
-    { user, models, subdomain }: IContext
+    { user, models }: IContext,
   ) {
-
     const doc = {
       username,
       email,
@@ -149,7 +144,6 @@ export const userMutations = {
 
     const updatedUser = await models.Users.editProfile(user._id, doc);
 
-
     return updatedUser;
   },
 
@@ -159,14 +153,14 @@ export const userMutations = {
   async usersSetActiveStatus(
     _root,
     { _id }: { _id: string },
-    { user, models }: IContext
+    { user, models }: IContext,
   ) {
     if (user._id === _id) {
       throw new Error('You can not delete yourself');
     }
 
     const updatedUser = await models.Users.setUserActiveOrInactive(_id);
- 
+
     return updatedUser;
   },
 
@@ -188,7 +182,7 @@ export const userMutations = {
         departmentId?: string;
       }>;
     },
-    { docModifier, models }: IContext
+    { docModifier, models }: IContext,
   ) {
     for (const entry of entries) {
       await models.Users.checkDuplication({ email: entry.email });
@@ -202,13 +196,12 @@ export const userMutations = {
       }
       const createdUser = await models.Users.findOne({ email: entry.email });
 
-
       if (entry.branchId) {
         await models.Users.updateOne(
           { _id: createdUser?._id },
           {
             $addToSet: { branchIds: entry.branchId },
-          }
+          },
         );
       }
 
@@ -217,24 +210,22 @@ export const userMutations = {
           { _id: createdUser?._id },
           {
             $addToSet: { departmentIds: entry.departmentId },
-          }
+          },
         );
       }
-
     }
-
   },
 
   async usersResendInvitation(
     _root,
     { email }: { email: string },
-    {  models }: IContext
+    { models }: IContext,
   ) {
     const token = await models.Users.resendInvitation({ email });
 
-
     return token;
   },
+
   async usersConfirmInvitation(
     _root,
     {
@@ -250,7 +241,7 @@ export const userMutations = {
       fullName?: string;
       username?: string;
     },
-    { models }: IContext
+    { models }: IContext,
   ) {
     const user = await models.Users.confirmInvitation({
       token,
@@ -265,7 +256,7 @@ export const userMutations = {
   async usersConfigEmailSignatures(
     _root,
     { signatures }: { signatures: IEmailSignature[] },
-    { user, models }: IContext
+    { user, models }: IContext,
   ) {
     return models.Users.configEmailSignatures(user._id, signatures);
   },
@@ -273,7 +264,7 @@ export const userMutations = {
   async usersConfigGetNotificationByEmail(
     _root,
     { isAllowed }: { isAllowed: boolean },
-    { user, models }: IContext
+    { user, models }: IContext,
   ) {
     return models.Users.configGetNotificationByEmail(user._id, isAllowed);
   },
@@ -281,7 +272,7 @@ export const userMutations = {
   async usersSetChatStatus(
     _root,
     { _id, status }: { _id: string; status: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     const getUser = await models.Users.getUser(_id);
 
@@ -319,10 +310,9 @@ export const userMutations = {
       description: string;
       backgroundColor: string;
     },
-    { subdomain, res, requestInfo }: IContext
+    { subdomain, res, requestInfo }: IContext,
   ) {
- 
-    return
+    return;
   },
 
   async editOrganizationDomain(
@@ -334,15 +324,13 @@ export const userMutations = {
       domain: string;
       type: string;
     },
-    { subdomain }: IContext
+    { subdomain }: IContext,
   ) {
- 
-    return
+    return;
   },
 
   async loginWithGoogle(_root, _params, { models, subdomain }: IContext) {
     try {
-    
       return null;
     } catch (e) {
       throw new Error(e.message);
@@ -352,15 +340,12 @@ export const userMutations = {
   async loginWithMagicLink(
     _root,
     { email }: { email: string },
-    { models, subdomain }: IContext
+    { models, subdomain }: IContext,
   ) {
     try {
-  
       return 'Invalid login';
     } catch (e) {
-   
       throw new Error(e.message);
     }
   },
-
 };

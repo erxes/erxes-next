@@ -1,6 +1,5 @@
 import { authCookieOptions, getEnv } from 'erxes-api-utils';
 import { IContext } from '../../../../@types';
-import { IUser,IDetail,ILink ,IEmailSignature} from 'erxes-api-modules';
 
 type LoginParams = {
   email: string;
@@ -9,7 +8,6 @@ type LoginParams = {
 };
 
 export const authMutations = {
-
   async login(
     _root,
     args: LoginParams,
@@ -35,15 +33,16 @@ export const authMutations = {
   async logout(_root, _args, { res, user, requestInfo, models }: IContext) {
     const logout = await models.Users.logout(
       user,
-      requestInfo.cookies['auth-token']
+      requestInfo.cookies['auth-token'],
     );
     res.clearCookie('auth-token');
     return logout;
   },
+
   async forgotPassword(
     _root,
     { email }: { email: string },
-    { subdomain, models }: IContext
+    { subdomain, models }: IContext,
   ) {
     const token = await models.Users.forgotPassword(email);
 
@@ -73,9 +72,8 @@ export const authMutations = {
   async resetPassword(
     _root,
     args: { token: string; newPassword: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     return models.Users.resetPassword(args);
   },
-
 };

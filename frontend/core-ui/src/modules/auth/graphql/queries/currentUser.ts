@@ -21,14 +21,9 @@ export const currentUser = gql`
       links
       emailSignatures
       getNotificationByEmail
-
       permissionActions
       configs
-      configsConstants
-      departmentIds
-      branchIds
       isShowNotification
-      score
     }
   }
 `;

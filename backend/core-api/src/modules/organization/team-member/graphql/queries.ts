@@ -1,5 +1,5 @@
 import { IContext } from '../../../../@types';
-import { IUserDocument, USER_ROLES} from 'erxes-api-modules';
+import { IUserDocument, USER_ROLES } from 'erxes-api-modules';
 import { IModels } from '../../../../connectionResolvers';
 
 interface IListArgs {
@@ -25,14 +25,13 @@ interface IListArgs {
   segmentData?: string;
 }
 
-
 const NORMAL_USER_SELECTOR = { role: { $ne: USER_ROLES.SYSTEM } };
 
 const queryBuilder = async (
   models: IModels,
   params: IListArgs,
   subdomain: string,
-  user: IUserDocument
+  user: IUserDocument,
 ) => {
   const {
     searchValue,
@@ -49,21 +48,20 @@ const queryBuilder = async (
     departmentIds,
     branchIds,
     segment,
-    segmentData
+    segmentData,
   } = params;
 
   const selector: any = {
-    isActive
+    isActive,
   };
-
 
   if (searchValue) {
     const fields = [
-      { email: new RegExp(`.*${params.searchValue}.*`, "i") },
-      { employeeId: new RegExp(`.*${params.searchValue}.*`, "i") },
-      { username: new RegExp(`.*${params.searchValue}.*`, "i") },
-      { "details.fullName": new RegExp(`.*${params.searchValue}.*`, "i") },
-      { "details.position": new RegExp(`.*${params.searchValue}.*`, "i") }
+      { email: new RegExp(`.*${params.searchValue}.*`, 'i') },
+      { employeeId: new RegExp(`.*${params.searchValue}.*`, 'i') },
+      { username: new RegExp(`.*${params.searchValue}.*`, 'i') },
+      { 'details.fullName': new RegExp(`.*${params.searchValue}.*`, 'i') },
+      { 'details.position': new RegExp(`.*${params.searchValue}.*`, 'i') },
     ];
 
     selector.$or = fields;
@@ -103,35 +101,41 @@ const queryBuilder = async (
 
   return selector;
 };
+
 export const userQueries = {
-  async userMovements(_root, args, { models }: IContext) {
+  async userMovements(_parent, args, { models }: IContext) {
     return await models.UserMovements.find(args).sort({ createdAt: -1 });
   },
   async usersTotalCount(
-    _root,
+    _parent: undefined,
     args: IListArgs,
-    { userBrandIdsSelector, models, subdomain, user }: IContext
+    { userBrandIdsSelector, models, subdomain, user }: IContext,
   ) {
     const selector = {
       ...userBrandIdsSelector,
       ...(await queryBuilder(models, args, subdomain, user)),
-      ...NORMAL_USER_SELECTOR
+      ...NORMAL_USER_SELECTOR,
     };
 
     return models.Users.find(selector).countDocuments();
   },
-  async userDetail(_root, { _id }: { _id: string }, { models }: IContext) {
+
+  async userDetail(
+    _parent: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     return models.Users.findOne({ _id });
   },
 
   async allUsers(
-    _root,
+    _parent: undefined,
     {
       isActive,
       ids,
-      assignedToMe
+      assignedToMe,
     }: { isActive: boolean; ids: string[]; assignedToMe: string },
-    { userBrandIdsSelector, user, models }: IContext
+    { userBrandIdsSelector, user, models }: IContext,
   ) {
     const selector: { isActive?: boolean; _id?: any } = userBrandIdsSelector;
 
@@ -141,24 +145,24 @@ export const userQueries = {
     if (ids?.length) {
       selector._id = { $in: ids };
     }
-    if (assignedToMe === "true") {
+    if (assignedToMe === 'true') {
       selector._id = user._id;
     }
 
     return models.Users.find({ ...selector, ...NORMAL_USER_SELECTOR }).sort({
-      username: 1
+      username: 1,
     });
   },
 
   async users(
-    _root,
+    _parent: undefined,
     args: IListArgs,
-    { userBrandIdsSelector, models, subdomain, user }: IContext
+    { userBrandIdsSelector, models, subdomain, user }: IContext,
   ) {
     const selector = {
       ...userBrandIdsSelector,
       ...(await queryBuilder(models, args, subdomain, user)),
-      ...NORMAL_USER_SELECTOR
+      ...NORMAL_USER_SELECTOR,
     };
 
     const { sortField, sortDirection } = args;
@@ -168,7 +172,6 @@ export const userQueries = {
         ? { [sortField]: sortDirection }
         : { username: 1 };
 
-    return (models.Users.find(selector).sort(sort as any), args);
+    return models.Users.find(selector).sort(sort as any), args;
   },
-
 };

@@ -13,11 +13,14 @@ import {
   IUserMovemmentModel,
   loadUserMovemmentClass,
 } from './modules/organization/team-member/db/models/Users';
+import { IConfigDocument } from './modules/settings/db/definitions/configs';
+import { IConfigModel } from './modules/settings/db/models/Configs';
 
 export interface IModels {
   Customers: ICustomerModel;
   Users: IUserModel;
   UserMovements: IUserMovemmentModel;
+  Configs: IConfigModel;
 }
 
 export interface IContext {
@@ -39,9 +42,13 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   );
   models.UserMovements = db.model<IUserMovementDocument, IUserMovemmentModel>(
     'user_movements',
-    loadUserMovemmentClass(models)
+    loadUserMovemmentClass(models),
   );
 
+  models.Configs = db.model<IConfigDocument, IConfigModel>(
+    'configs',
+    loadUserMovemmentClass(models),
+  );
 
   return models;
 };

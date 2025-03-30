@@ -23,7 +23,7 @@ type SupergraphConfig = {
   };
 };
 
-const writeSupergraphConfig = (proxyTargets: ErxesProxyTarget[]) => {
+const writeSupergraphConfig = async (proxyTargets: ErxesProxyTarget[]) => {
   const superGraphConfigNext = supergraphConfigPath + '.next';
   const config: SupergraphConfig = {
     federation_version: '=2.9.3',

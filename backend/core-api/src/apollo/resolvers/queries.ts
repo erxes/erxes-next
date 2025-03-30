@@ -5,5 +5,5 @@ import { userQueries } from '../../modules/organization/team-member/graphql/quer
 export const queries = {
   ...customerQueries,
   ...authQueries,
-  ...userQueries
+  ...userQueries,
 };

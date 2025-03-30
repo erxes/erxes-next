@@ -5,6 +5,8 @@ import {
   getSaasCoreConnection,
 } from './saas/saas-mongo-connection';
 
+import { redis } from './redis';
+
 export const getEnv = ({
   name,
   defaultValue,
@@ -143,4 +145,16 @@ export const paginate = (
   }
 
   return collection.limit(_limit).skip((_page - 1) * _limit);
+};
+
+export const resetConfigsCache = async () => {
+  await redis.set('configs_erxes_api', '');
+};
+
+export const getCoreDomain = () => {
+  const NODE_ENV = process.env.NODE_ENV;
+
+  return NODE_ENV === 'production'
+    ? 'https://erxes.io'
+    : 'http://localhost:3500';
 };

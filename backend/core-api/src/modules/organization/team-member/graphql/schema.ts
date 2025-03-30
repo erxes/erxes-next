@@ -97,10 +97,12 @@ export const types = `
     permissionActions: JSON
     configs: JSON
     configsConstants: [JSON]
-
+  
     department: Department
 
     departmentIds: [String]
+    brandIds: [String]
+    brands: [Brand]
     departments: [Department]
     branchIds: [String]
     branches: [Branch]
@@ -122,8 +124,10 @@ export const types = `
     contentTypeId:String
     contentTypeDetail:JSON
     status:String
+
   }
 `;
+
 const commonParams = `
   username: String,
   email: String,
@@ -138,7 +142,6 @@ const commonParams = `
   customFieldsData: JSON
   employeeId: String
 `;
-
 
 const commonSelector = `
   searchValue: String,
@@ -163,7 +166,6 @@ export const queries = `
   usersTotalCount(${commonSelector}): Int
   userMovements(userId: String!,contentType: String):[UserMovement]
 `;
-
 
 export const mutations = `
   usersResetMemberPassword(_id: String!, newPassword: String!): User
