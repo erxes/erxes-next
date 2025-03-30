@@ -187,7 +187,5 @@ export const mutations = `
   usersSetChatStatus(_id: String!, status: UserChatStatus): User
   editOrganizationInfo(icon: String, logo: String, link: String, name: String, iconColor: String, backgroundColor: String, description: String, domain: String, favicon: String, textColor: String): Organization
   editOrganizationDomain(type: String, domain: String): Organization
-  loginWithGoogle: String
-  loginWithMagicLink(email: String!): String
-   usersCreateOwner(email: String!, password: String!, firstName: String!, lastName: String, purpose: String, subscribeEmail: Boolean): String
+  usersCreateOwner(email: String!, password: String!, firstName: String!, lastName: String, purpose: String, subscribeEmail: Boolean): String
 `;

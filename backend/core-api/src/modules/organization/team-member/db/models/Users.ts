@@ -18,21 +18,8 @@ import { IModels } from '../../../../../connectionResolvers';
 import { IUser, IDetail, ILink } from 'erxes-api-modules';
 import { USER_MOVEMENT_STATUSES } from 'erxes-api-modules';
 
-interface IConfirmParams {
-  token: string;
-  password: string;
-  passwordConfirmation: string;
-  fullName?: string;
-  username?: string;
-}
-
 const SALT_WORK_FACTOR = 10;
 
-export interface ILoginParams {
-  email: string;
-  password?: string;
-  deviceToken?: string;
-}
 interface IEditProfile {
   username?: string;
   email?: string;
@@ -41,20 +28,38 @@ interface IEditProfile {
   links?: ILink;
   employeeId?: string;
 }
-interface IPasswordParams {
-  _id: string;
-  newPassword: string;
-}
+
 interface IUpdateUser extends IEditProfile {
   password?: string;
   groupIds?: string[];
   brandIds?: string[];
 }
+
+interface IConfirmParams {
+  token: string;
+  password: string;
+  passwordConfirmation: string;
+  fullName?: string;
+  username?: string;
+}
+
 interface IInviteParams {
   email: string;
   password: string;
   groupId: string;
   brandIds: string[];
+}
+
+interface ILoginParams {
+  email: string;
+  password?: string;
+  deviceToken?: string;
+  subdomain?: string;
+}
+
+interface IPasswordParams {
+  _id: string;
+  newPassword: string;
 }
 
 export interface IUserModel extends Model<IUserDocument> {
@@ -76,11 +81,11 @@ export interface IUserModel extends Model<IUserDocument> {
   generateUserCodeField(): Promise<void>;
   configEmailSignatures(
     _id: string,
-    signatures: IEmailSignature[],
+    signatures: IEmailSignature[]
   ): Promise<IUserDocument>;
   configGetNotificationByEmail(
     _id: string,
-    isAllowed: boolean,
+    isAllowed: boolean
   ): Promise<IUserDocument>;
   setUserActiveOrInactive(_id: string): Promise<IUserDocument>;
   generatePassword(password: string): Promise<string>;
@@ -94,16 +99,16 @@ export interface IUserModel extends Model<IUserDocument> {
   }): Promise<IUserDocument>;
   resetMemberPassword(params: IPasswordParams): Promise<IUserDocument>;
   changePassword(
-    params: IPasswordParams & { currentPassword: string },
+    params: IPasswordParams & { currentPassword: string }
   ): Promise<IUserDocument>;
-  forgotPassword(email: string): Promise<string>;
+  forgotPassword(email: string): string;
   createTokens(_user: IUserDocument, secret: string): string[];
   refreshTokens(refreshToken: string): {
     token: string;
     refreshToken: string;
     user: IUserDocument;
   };
-  login(params: ILoginParams): Promise<{ token: string; refreshToken: string }>;
+  login(params: ILoginParams): { token: string; refreshToken: string };
   checkLoginAuth({
     email,
     password,
@@ -112,52 +117,29 @@ export interface IUserModel extends Model<IUserDocument> {
     password?: string;
   }): Promise<IUserDocument>;
   getTokenFields(user: IUserDocument);
-  logout(_user: IUserDocument, token: string): Promise<string>;
+  logout(_user: IUserDocument, token: string): string;
   findUsers(query: any, options?: any): Promise<IUserDocument[]>;
 }
 
 export const loadUserClass = (models: IModels) => {
   class User {
-    /**
-     * Create new user
-     */
-    public static async createUser({
-      username,
-      email,
-      password,
-      details,
-      links,
-      groupIds,
-      isActive,
-      isOwner = false,
-      notUsePassword = false,
-    }: IUser & { notUsePassword?: boolean }) {
-      // empty string password validation
+    public static async getUser(_id: string) {
+      const user = await models.Users.findOne({ _id });
 
-      if (password === '' && !notUsePassword) {
-        throw new Error('Password can not be empty');
+      if (!user) {
+        throw new Error('User not found');
       }
 
-      // Checking duplicated email
-      await this.checkDuplication({ email });
-
-      if (!notUsePassword) {
-        this.checkPassword(password);
-      }
-
-      return models.Users.create({
-        isOwner,
-        username,
-        email,
-        details,
-        links,
-        groupIds,
-        isActive: isActive !== undefined ? isActive : true,
-        // hash password
-        password: notUsePassword ? '' : await this.generatePassword(password),
-      });
+      return user;
     }
 
+    public static checkPassword(password: string) {
+      if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)) {
+        throw new Error(
+          'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters'
+        );
+      }
+    }
     /**
      * Checking if user has duplicated properties
      */
@@ -211,6 +193,317 @@ export const loadUserClass = (models: IModels) => {
       }
     }
 
+    public static getSecret() {
+      return process.env.JWT_TOKEN_SECRET || '';
+    }
+
+    /**
+     * Create new user
+     */
+    public static async createUser({
+      username,
+      email,
+      password,
+      details,
+      links,
+      groupIds,
+      isActive,
+      isOwner = false,
+      notUsePassword = false,
+    }: IUser & { notUsePassword?: boolean }) {
+      // empty string password validation
+
+      if (password === '' && !notUsePassword) {
+        throw new Error('Password can not be empty');
+      }
+
+      // Checking duplicated email
+      await models.Users.checkDuplication({ email });
+
+      if (!notUsePassword) {
+        this.checkPassword(password);
+      }
+
+      return models.Users.create({
+        isOwner,
+        username,
+        email,
+        details,
+        links,
+        groupIds,
+        isActive: isActive !== undefined ? isActive : true,
+        // hash password
+        password: notUsePassword ? '' : await this.generatePassword(password),
+        code: await this.generateUserCode(),
+      });
+    }
+
+    /**
+     * Update user information
+     */
+    public static async updateUser(_id: string, doc: IUpdateUser) {
+      doc.password = (doc.password ?? '').trim();
+      doc.email = (doc.email ?? '').toLowerCase().trim();
+
+      if (doc.email) {
+        // Checking duplicated email
+        await this.checkDuplication({ email: doc.email, idsToExclude: _id });
+      } else {
+        delete doc.email;
+      }
+
+      // change password
+      if (doc.password) {
+        this.checkPassword(doc.password);
+
+        doc.password = await this.generatePassword(doc.password);
+
+        // if there is no password specified then leave password field alone
+      } else {
+        delete doc.password;
+      }
+
+      if (doc.employeeId) {
+        // Checking employeeId duplication
+        await this.checkDuplication({
+          employeeId: doc.employeeId,
+          idsToExclude: _id,
+        });
+      }
+
+      const operations: any = { $set: doc };
+
+      if (['', undefined, null].includes(doc.employeeId)) {
+        delete operations.$set.employeeId;
+        operations.$unset = { employeeId: 1 };
+      }
+
+      if (doc.username) {
+        await this.checkDuplication({
+          username: doc.username,
+          idsToExclude: _id,
+        });
+      }
+
+      await models.Users.updateOne({ _id }, operations);
+
+      return models.Users.findOne({ _id });
+    }
+
+    public static async generateToken() {
+      const buffer = await crypto.randomBytes(20);
+      const token = buffer.toString('hex');
+
+      return {
+        token,
+        expires: Date.now() + 86400000,
+      };
+    }
+
+    /**
+     * Create new user with invitation token
+     */
+    public static async invite({
+      email,
+      password,
+      groupId,
+      brandIds,
+    }: IInviteParams) {
+      email = (email || '').toLowerCase().trim();
+      password = (password || '').trim();
+
+      // Checking duplicated email
+      await models.Users.checkDuplication({ email });
+
+  
+
+      const { token, expires } = await User.generateToken();
+
+      this.checkPassword(password);
+
+      await models.Users.create({
+        email,
+        groupIds: [groupId],
+        isActive: true,
+        // hash password
+        password: await this.generatePassword(password),
+        registrationToken: token,
+        registrationTokenExpires: expires,
+        code: await this.generateUserCode(),
+        brandIds,
+      });
+
+      return token;
+    }
+
+    /**
+     * Resend invitation
+     */
+    public static async resendInvitation({ email }: { email: string }) {
+      const user = await models.Users.findOne({ email });
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      if (!user.registrationToken) {
+        throw new Error('Invalid request');
+      }
+
+      const { token, expires } = await models.Users.generateToken();
+
+      await models.Users.updateOne(
+        { email },
+        {
+          registrationToken: token,
+          registrationTokenExpires: expires,
+        }
+      );
+
+      return token;
+    }
+
+    /**
+     * Confirms user by invitation
+     */
+    public static async confirmInvitation({
+      token,
+      password,
+      passwordConfirmation,
+      fullName,
+      username,
+    }: {
+      token: string;
+      password: string;
+      passwordConfirmation: string;
+      fullName?: string;
+      username?: string;
+    }) {
+      const user = await models.Users.findOne({
+        registrationToken: token,
+        registrationTokenExpires: {
+          $gt: Date.now(),
+        },
+      });
+
+      if (!user || !token) {
+        throw new Error('Token is invalid or has expired');
+      }
+
+      if (password === '') {
+        throw new Error('Password can not be empty');
+      }
+
+      if (password !== passwordConfirmation) {
+        throw new Error('Password does not match');
+      }
+
+      this.checkPassword(password);
+
+      await models.Users.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            password: await this.generatePassword(password),
+            isActive: true,
+            registrationToken: undefined,
+            username,
+            details: {
+              fullName,
+              firstName: (fullName ?? '').split(' ')[0],
+              lastName: (fullName ?? '').split(' ')[1] || '',
+            },
+          },
+        }
+      );
+
+      return user;
+    }
+
+    /*
+     * Update user profile
+     */
+    public static async editProfile(
+      _id: string,
+      { username, email, details, links, employeeId }: IEditProfile
+    ) {
+      // Checking duplicated email
+      await this.checkDuplication({ email, idsToExclude: _id });
+
+      if (employeeId) {
+        // Checking employeeId duplication
+        await this.checkDuplication({
+          employeeId,
+          idsToExclude: _id,
+        });
+      }
+
+      await models.Users.updateOne(
+        { _id },
+        { $set: { username, email, details, links, employeeId } }
+      );
+
+      return models.Users.findOne({ _id });
+    }
+
+    /*
+     * Update email signatures
+     */
+    public static async configEmailSignatures(
+      _id: string,
+      signatures: IEmailSignature[]
+    ) {
+      await models.Users.updateOne(
+        { _id },
+        { $set: { emailSignatures: signatures } }
+      );
+
+      return models.Users.findOne({ _id });
+    }
+
+    /*
+     * Config get notifications by emmail
+     */
+    public static async configGetNotificationByEmail(
+      _id: string,
+      isAllowed: boolean
+    ) {
+      await models.Users.updateOne(
+        { _id },
+        { $set: { getNotificationByEmail: isAllowed } }
+      );
+
+      return models.Users.findOne({ _id });
+    }
+
+    /*
+     * Remove user
+     */
+    public static async setUserActiveOrInactive(_id: string) {
+      const user = await models.Users.findOne({ _id });
+
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      if (user.isActive === false) {
+        await models.Users.updateOne({ _id }, { $set: { isActive: true } });
+
+        return models.Users.findOne({ _id });
+      }
+
+      if (user.isOwner) {
+        throw new Error('Can not deactivate owner');
+      }
+
+      await models.Users.updateOne({ _id }, { $set: { isActive: false } });
+
+      return models.Users.findOne({ _id });
+    }
+
+    /*
+     * Generates new password hash using plan text password
+     */
     public static generatePassword(password: string) {
       const hashPassword = crypto
         .createHash('sha256')
@@ -220,34 +513,218 @@ export const loadUserClass = (models: IModels) => {
       return bcrypt.hash(hashPassword, SALT_WORK_FACTOR);
     }
 
-    public static findUsers(query: any, options?: any) {
-      const filter = { ...query, role: { $ne: USER_ROLES.SYSTEM } };
 
-      try {
-        models.Users.find(filter, options).lean();
-      } catch (e) {
-        console.error(e);
+    /*
+      Compare password
+    */
+      public static async comparePassword(
+        password: string,
+        userPassword: string,
+      ) {
+        const hashPassword = crypto
+          .createHash('sha256')
+          .update(password)
+          .digest('hex');
+  
+        return bcrypt.compare(hashPassword, userPassword);
       }
 
-      return models.Users.find(filter, options).lean();
-    }
-
-    public static async getUser(_id: string) {
-      const user = await models.Users.findOne({ _id });
+    /*
+     * Resets user password by given token & password
+     */
+    public static async resetPassword({
+      token,
+      newPassword,
+    }: {
+      token: string;
+      newPassword: string;
+    }) {
+      // find user by token
+      const user = await models.Users.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: {
+          $gt: Date.now(),
+        },
+      });
 
       if (!user) {
-        throw new Error('User not found');
+        throw new Error('Password reset token is invalid or has expired.');
       }
 
-      return user;
+      if (!newPassword) {
+        throw new Error('Password is required.');
+      }
+
+      this.checkPassword(newPassword);
+
+      // set new password
+      await models.Users.findByIdAndUpdate(
+        { _id: user._id },
+        {
+          password: await this.generatePassword(newPassword),
+          resetPasswordToken: undefined,
+          resetPasswordExpires: undefined,
+        }
+      );
+
+      return models.Users.findOne({ _id: user._id });
     }
 
-    public static checkPassword(password: string) {
-      if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)) {
-        throw new Error(
-          'Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters',
-        );
+    /**
+     * Reset member's password by given _id & newPassword
+     */
+    public static async resetMemberPassword({
+      _id,
+      newPassword,
+    }: {
+      _id: string;
+      newPassword: string;
+    }) {
+      const user = await models.Users.getUser(_id);
+
+      if (!newPassword) {
+        throw new Error('Password is required.');
       }
+
+      this.checkPassword(newPassword);
+
+      await models.Users.updateOne(
+        { _id },
+        { $set: { password: await this.generatePassword(newPassword) } }
+      );
+
+      return models.Users.findOne({ _id: user._id });
+    }
+
+    /*
+     * Change user password
+     */
+    public static async changePassword({
+      _id,
+      currentPassword,
+      newPassword,
+    }: {
+      _id: string;
+      currentPassword: string;
+      newPassword: string;
+    }) {
+      // Password can not be empty string
+      if (newPassword === '') {
+        throw new Error('Password can not be empty');
+      }
+
+      this.checkPassword(newPassword);
+
+      const user = await models.Users.getUser(_id);
+
+      // check current password ============
+      const valid = await this.comparePassword(currentPassword, user.password);
+
+      if (!valid) {
+        throw new Error('Incorrect current password');
+      }
+
+      // set new password
+      await models.Users.findByIdAndUpdate(
+        { _id: user._id },
+        {
+          password: await this.generatePassword(newPassword),
+        }
+      );
+
+      return models.Users.findOne({ _id: user._id });
+    }
+
+    /*
+     * Sends reset password link to found user's email
+     */
+    public static async forgotPassword(email: string) {
+      // find user
+      const user = await models.Users.findOne({
+        email: (email || '').toLowerCase().trim(),
+      });
+
+      if (!user) {
+        throw new Error('Invalid email');
+      }
+
+      // create the random token
+      const buffer = await crypto.randomBytes(20);
+      const token = buffer.toString('hex');
+
+      // save token & expiration date
+      await models.Users.findByIdAndUpdate(
+        { _id: user._id },
+        {
+          resetPasswordToken: token,
+          resetPasswordExpires: Date.now() + 86400000,
+        }
+      );
+
+      return token;
+    }
+
+    public static getTokenFields(user: IUserDocument) {
+      return {
+        _id: user._id,
+        email: user.email,
+        details: user.details,
+        isOwner: user.isOwner,
+        groupIds: user.groupIds,
+        brandIds: user.brandIds,
+        username: user.username,
+        code: user.code,
+        departmentIds: user.departmentIds,
+      };
+    }
+
+    /*
+     * Creates regular and refresh tokens using given user information
+     */
+    public static async createTokens(_user: IUserDocument, secret: string) {
+      const user = {
+        _id: _user._id,
+        isOwner: _user.isOwner,
+      };
+
+      const createToken = await jwt.sign({ user }, secret, { expiresIn: '1d' });
+
+      const createRefreshToken = await jwt.sign({ user }, secret, {
+        expiresIn: '7d',
+      });
+
+      return [createToken, createRefreshToken];
+    }
+
+    /*
+     * Renews tokens
+     */
+    public static async refreshTokens(refreshToken: string) {
+      let _id = '';
+
+      try {
+        // validate refresh token
+        const { user }: any = jwt.verify(refreshToken, this.getSecret());
+
+        _id = user._id;
+        // if refresh token is expired then force to login
+      } catch (e) {
+        return {};
+      }
+
+      const dbUser = await models.Users.getUser(_id);
+
+      // recreate tokens
+      const [newToken, newRefreshToken] = await this.createTokens(
+        dbUser,
+        this.getSecret()
+      );
+
+      return {
+        token: newToken,
+        refreshToken: newRefreshToken,
+        user: dbUser,
+      };
     }
 
     /*
@@ -314,7 +791,7 @@ export const loadUserClass = (models: IModels) => {
      */
     public static async logout(user: IUserDocument, currentToken: string) {
       const validatedToken = await redis.get(
-        `user_token_${user._id}_${currentToken}`,
+        `user_token_${user._id}_${currentToken}`
       );
 
       if (validatedToken) {
@@ -326,42 +803,69 @@ export const loadUserClass = (models: IModels) => {
       return 'token not found';
     }
 
-    public static getSecret() {
-      return process.env.JWT_TOKEN_SECRET || 'SECRET';
+    public static async generateUserCodeField() {
+      const users = await models.Users.find({ code: { $exists: false } });
+
+      if (users.length === 0) {
+        return;
+      }
+
+      const doc: Array<{
+        updateOne: {
+          filter: { _id: string };
+          update: { $set: { code: string } };
+        };
+      }> = [];
+
+      let code = parseInt((await this.generateUserCode()) || '', 10);
+
+      for (const user of users) {
+        code++;
+
+        doc.push({
+          updateOne: {
+            filter: { _id: user._id },
+            update: { $set: { code: this.getCodeString(code) } },
+          },
+        });
+      }
+
+      return models.Users.bulkWrite(doc);
     }
-    /*
-     * Creates regular and refresh tokens using given user information
-     */
 
-    public static async createTokens(_user: IUserDocument, secret: string) {
-      const user = {
-        _id: _user._id,
-        isOwner: _user.isOwner,
-      };
+    public static async generateUserCode() {
+      const users = await models.Users.find({ code: { $exists: true } })
+        .sort({ code: -1 })
+        .limit(1);
 
-      const createToken = await jwt.sign({ user }, secret, { expiresIn: '1d' });
+      if (users.length === 0) {
+        return '000';
+      }
 
-      const createRefreshToken = await jwt.sign({ user }, secret, {
-        expiresIn: '7d',
-      });
+      const [user] = users;
 
-      return [createToken, createRefreshToken];
+      let code = parseInt(user.code || '', 10);
+
+      code++;
+
+      return this.getCodeString(code);
     }
 
-    /*
-     * Compare password
-     */
+    public static getCodeString(code: number) {
+      return ('00' + code).slice(-3);
+    }
 
-    public static async comparePassword(
-      password: string,
-      userPassword: string,
-    ) {
-      const hashPassword = crypto
-        .createHash('sha256')
-        .update(password)
-        .digest('hex');
 
-      return bcrypt.compare(hashPassword, userPassword);
+    public static findUsers(query: any, options?: any) {
+      const filter = { ...query, role: { $ne: USER_ROLES.SYSTEM } };
+
+      try {
+        models.Users.find(filter, options).lean();
+      } catch (e) {
+        console.error(e);
+      }
+
+      return models.Users.find(filter, options).lean();
     }
 
     public static async checkLoginAuth({
@@ -393,349 +897,6 @@ export const loadUserClass = (models: IModels) => {
 
       return user;
     }
-    public static async forgotPassword(email: string) {
-      // find user
-      const user = await models.Users.findOne({
-        email: (email || '').toLowerCase().trim(),
-      });
-
-      if (!user) {
-        throw new Error('Invalid email');
-      }
-
-      // create the random token
-      const buffer = await crypto.randomBytes(20);
-      const token = buffer.toString('hex');
-
-      // save token & expiration date
-      await models.Users.findByIdAndUpdate(
-        { _id: user._id },
-        {
-          resetPasswordToken: token,
-          resetPasswordExpires: Date.now() + 86400000,
-        },
-      );
-
-      return token;
-    }
-    public static async generateToken() {
-      const buffer = await crypto.randomBytes(20);
-      const token = buffer.toString('hex');
-
-      return {
-        token,
-        expires: Date.now() + 86400000,
-      };
-    }
-    public static getCodeString(code: number) {
-      return ('00' + code).slice(-3);
-    }
-
-    public static async generateUserCode() {
-      const users = await models.Users.find({ code: { $exists: true } })
-        .sort({ code: -1 })
-        .limit(1);
-
-      if (users.length === 0) {
-        return '000';
-      }
-
-      const [user] = users;
-
-      let code = parseInt(user.code || '', 10);
-
-      code++;
-
-      return this.getCodeString(code);
-    }
-
-    public static async resetPassword({
-      token,
-      newPassword,
-    }: {
-      token: string;
-      newPassword: string;
-    }) {
-      // find user by token
-      const user = await models.Users.findOne({
-        resetPasswordToken: token,
-        resetPasswordExpires: {
-          $gt: Date.now(),
-        },
-      });
-
-      if (!user) {
-        throw new Error('Password reset token is invalid or has expired.');
-      }
-
-      if (!newPassword) {
-        throw new Error('Password is required.');
-      }
-
-      this.checkPassword(newPassword);
-
-      // set new password
-      await models.Users.findByIdAndUpdate(
-        { _id: user._id },
-        {
-          password: await this.generatePassword(newPassword),
-          resetPasswordToken: undefined,
-          resetPasswordExpires: undefined,
-        },
-      );
-
-      return models.Users.findOne({ _id: user._id });
-    }
-
-    public static async changePassword({
-      _id,
-      currentPassword,
-      newPassword,
-    }: {
-      _id: string;
-      currentPassword: string;
-      newPassword: string;
-    }) {
-      // Password can not be empty string
-      if (newPassword === '') {
-        throw new Error('Password can not be empty');
-      }
-
-      this.checkPassword(newPassword);
-
-      const user = await models.Users.getUser(_id);
-
-      // check current password ============
-      const valid = await this.comparePassword(currentPassword, user.password);
-
-      if (!valid) {
-        throw new Error('Incorrect current password');
-      }
-
-      // set new password
-      await models.Users.findByIdAndUpdate(
-        { _id: user._id },
-        {
-          password: await this.generatePassword(newPassword),
-        },
-      );
-
-      return models.Users.findOne({ _id: user._id });
-    }
-
-    public static async updateUser(_id: string, doc: IUpdateUser) {
-      doc.password = (doc.password ?? '').trim();
-      doc.email = (doc.email ?? '').toLowerCase().trim();
-
-      if (doc.email) {
-        // Checking duplicated email
-        await this.checkDuplication({ email: doc.email, idsToExclude: _id });
-      } else {
-        delete doc.email;
-      }
-
-      // change password
-      if (doc.password) {
-        this.checkPassword(doc.password);
-
-        doc.password = await this.generatePassword(doc.password);
-
-        // if there is no password specified then leave password field alone
-      } else {
-        delete doc.password;
-      }
-
-      if (doc.employeeId) {
-        // Checking employeeId duplication
-        await this.checkDuplication({
-          employeeId: doc.employeeId,
-          idsToExclude: _id,
-        });
-      }
-
-      const operations: any = { $set: doc };
-
-      if (['', undefined, null].includes(doc.employeeId)) {
-        delete operations.$set.employeeId;
-        operations.$unset = { employeeId: 1 };
-      }
-
-      if (doc.username) {
-        await this.checkDuplication({
-          username: doc.username,
-          idsToExclude: _id,
-        });
-      }
-
-      await models.Users.updateOne({ _id }, operations);
-
-      return models.Users.findOne({ _id });
-    }
-    public static async editProfile(
-      _id: string,
-      { username, email, details, links, employeeId }: IEditProfile,
-    ) {
-      // Checking duplicated email
-      await this.checkDuplication({ email, idsToExclude: _id });
-
-      if (employeeId) {
-        // Checking employeeId duplication
-        await this.checkDuplication({
-          employeeId,
-          idsToExclude: _id,
-        });
-      }
-
-      await models.Users.updateOne(
-        { _id },
-        { $set: { username, email, details, links, employeeId } },
-      );
-
-      return models.Users.findOne({ _id });
-    }
-    public static async setUserActiveOrInactive(_id: string) {
-      const user = await models.Users.findOne({ _id });
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      if (user.isActive === false) {
-        await models.Users.updateOne({ _id }, { $set: { isActive: true } });
-
-        return models.Users.findOne({ _id });
-      }
-
-      if (user.isOwner) {
-        throw new Error('Can not deactivate owner');
-      }
-
-      await models.Users.updateOne({ _id }, { $set: { isActive: false } });
-
-      return models.Users.findOne({ _id });
-    }
-    public static async invite({
-      email,
-      password,
-      groupId,
-      brandIds,
-    }: IInviteParams) {
-      email = (email || '').toLowerCase().trim();
-      password = (password || '').trim();
-
-      // Checking duplicated email
-      await models.Users.checkDuplication({ email });
-
-      // if (!(await models.UsersGroups.findOne({ _id: groupId }))) {
-      //   throw new Error('Invalid group');
-      // }
-
-      const { token, expires } = await User.generateToken();
-
-      this.checkPassword(password);
-
-      await models.Users.create({
-        email,
-        groupIds: [groupId],
-        isActive: true,
-        // hash password
-        password: await this.generatePassword(password),
-        registrationToken: token,
-        registrationTokenExpires: expires,
-        code: await this.generateUserCode(),
-        brandIds,
-      });
-
-      return token;
-    }
-    public static async resendInvitation({ email }: { email: string }) {
-      const user = await models.Users.findOne({ email });
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      if (!user.registrationToken) {
-        throw new Error('Invalid request');
-      }
-
-      const { token, expires } = await models.Users.generateToken();
-
-      await models.Users.updateOne(
-        { email },
-        {
-          registrationToken: token,
-          registrationTokenExpires: expires,
-        },
-      );
-
-      return token;
-    }
-    public static async confirmInvitation({
-      token,
-      password,
-      passwordConfirmation,
-      fullName,
-      username,
-    }: {
-      token: string;
-      password: string;
-      passwordConfirmation: string;
-      fullName?: string;
-      username?: string;
-    }) {
-      const user = await models.Users.findOne({
-        registrationToken: token,
-        registrationTokenExpires: {
-          $gt: Date.now(),
-        },
-      });
-
-      if (!user || !token) {
-        throw new Error('Token is invalid or has expired');
-      }
-
-      if (password === '') {
-        throw new Error('Password can not be empty');
-      }
-
-      if (password !== passwordConfirmation) {
-        throw new Error('Password does not match');
-      }
-
-      this.checkPassword(password);
-
-      await models.Users.updateOne(
-        { _id: user._id },
-        {
-          $set: {
-            password: await this.generatePassword(password),
-            isActive: true,
-            registrationToken: undefined,
-            username,
-            details: {
-              fullName,
-              firstName: (fullName ?? '').split(' ')[0],
-              lastName: (fullName ?? '').split(' ')[1] || '',
-            },
-          },
-        },
-      );
-
-      return user;
-    }
-
-    public static async configGetNotificationByEmail(
-      _id: string,
-      isAllowed: boolean,
-    ) {
-      await models.Users.updateOne(
-        { _id },
-        { $set: { getNotificationByEmail: isAllowed } },
-      );
-
-      return models.Users.findOne({ _id });
-    }
   }
 
   userSchema.loadClass(User);
@@ -752,14 +913,16 @@ type ICommonUserMovement = {
   contentTypeId?: string;
   createdBy?: string;
 };
+
 export interface IUserMovemmentModel extends Model<IUserMovementDocument> {
   manageStructureUsersMovement(
-    params: ICommonUserMovement,
+    params: ICommonUserMovement
   ): Promise<IUserMovementDocument>;
   manageUserMovement(
-    params: ICommonUserMovement,
+    params: ICommonUserMovement
   ): Promise<IUserMovementDocument>;
 }
+
 export const loadUserMovemmentClass = (models: IModels) => {
   class UserMovemment {
     public static async manageUserMovement(params: ICommonUserMovement) {
@@ -796,7 +959,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
             },
             {
               $set: { isActive: false },
-            },
+            }
           );
           await models.UserMovements.insertMany(removed);
         }
@@ -809,7 +972,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
             isActive: true,
             status: { $ne: USER_MOVEMENT_STATUSES.REMOVED },
           },
-          { $set: { isActive: false } },
+          { $set: { isActive: false } }
         );
 
         for (const contentTypeId of contentTypeIds) {
@@ -836,7 +999,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
     }
 
     public static async manageStructureUsersMovement(
-      params: ICommonUserMovement,
+      params: ICommonUserMovement
     ) {
       const { createdBy, userIds, contentType, contentTypeId } = params;
       const fieldName = `${contentType}Ids`;
@@ -845,12 +1008,12 @@ export const loadUserMovemmentClass = (models: IModels) => {
           _id: { $nin: userIds },
           [fieldName]: { $in: [contentTypeId] },
         },
-        { $pull: { [fieldName]: contentTypeId } },
+        { $pull: { [fieldName]: contentTypeId } }
       );
 
       await models.Users.updateMany(
         { _id: { $in: userIds } },
-        { $addToSet: { [fieldName]: contentTypeId } },
+        { $addToSet: { [fieldName]: contentTypeId } }
       );
 
       const userMovements = await models.UserMovements.find({
@@ -862,7 +1025,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
       const removedFromContentType = userMovements
         .filter(
           (movement) =>
-            !userIds?.some((userId) => userId === movement.userId) && movement,
+            !userIds?.some((userId) => userId === movement.userId) && movement
         )
         .map(({ createdBy, contentType, contentTypeId, userId }) => ({
           createdBy,
@@ -883,7 +1046,7 @@ export const loadUserMovemmentClass = (models: IModels) => {
           status: { $ne: USER_MOVEMENT_STATUSES.REMOVED },
           isActive: true,
         },
-        { $set: { isActive: false } },
+        { $set: { isActive: false } }
       );
 
       for (const userId of userIds || []) {
@@ -907,8 +1070,6 @@ export const loadUserMovemmentClass = (models: IModels) => {
       return 'edited';
     }
   }
-
   userMovemmentSchema.loadClass(UserMovemment);
-
   return userMovemmentSchema;
 };

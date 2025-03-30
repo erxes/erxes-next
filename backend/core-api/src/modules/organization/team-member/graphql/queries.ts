@@ -1,6 +1,7 @@
 import { IContext } from '../../../../@types';
-import { IUserDocument, USER_ROLES } from 'erxes-api-modules';
+import { IUserDocument, USER_ROLES, } from 'erxes-api-modules';
 import { IModels } from '../../../../connectionResolvers';
+import { paginate } from 'erxes-api-utils';
 
 interface IListArgs {
   page?: number;
@@ -31,7 +32,7 @@ const queryBuilder = async (
   models: IModels,
   params: IListArgs,
   subdomain: string,
-  user: IUserDocument,
+  user: IUserDocument
 ) => {
   const {
     searchValue,
@@ -48,20 +49,21 @@ const queryBuilder = async (
     departmentIds,
     branchIds,
     segment,
-    segmentData,
+    segmentData
   } = params;
 
   const selector: any = {
-    isActive,
+    isActive
   };
+
 
   if (searchValue) {
     const fields = [
-      { email: new RegExp(`.*${params.searchValue}.*`, 'i') },
-      { employeeId: new RegExp(`.*${params.searchValue}.*`, 'i') },
-      { username: new RegExp(`.*${params.searchValue}.*`, 'i') },
-      { 'details.fullName': new RegExp(`.*${params.searchValue}.*`, 'i') },
-      { 'details.position': new RegExp(`.*${params.searchValue}.*`, 'i') },
+      { email: new RegExp(`.*${params.searchValue}.*`, "i") },
+      { employeeId: new RegExp(`.*${params.searchValue}.*`, "i") },
+      { username: new RegExp(`.*${params.searchValue}.*`, "i") },
+      { "details.fullName": new RegExp(`.*${params.searchValue}.*`, "i") },
+      { "details.position": new RegExp(`.*${params.searchValue}.*`, "i") }
     ];
 
     selector.$or = fields;
@@ -164,14 +166,15 @@ export const userQueries = {
       ...(await queryBuilder(models, args, subdomain, user)),
       ...NORMAL_USER_SELECTOR,
     };
-
+  
     const { sortField, sortDirection } = args;
-
+  
     const sort =
       sortField && sortDirection
         ? { [sortField]: sortDirection }
         : { username: 1 };
-
-    return models.Users.find(selector).sort(sort as any), args;
-  },
+  
+    return paginate(models.Users.find(selector).sort(sort as any), args);
+  }
+  
 };
