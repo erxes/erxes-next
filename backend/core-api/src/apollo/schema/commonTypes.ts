@@ -4,6 +4,12 @@ export const CommonTypes = `
         latitude: String
     }
 
+
+    input CoordinateInput {
+        longitude: String
+        latitude: String
+    }
+
     type Attachment {
         url: String!
         name: String

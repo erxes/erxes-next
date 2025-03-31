@@ -22,6 +22,13 @@ export const UnitTypes = `
         userCount: Int
         userIds: [String]
     }
+
+    type UnitListQueryResponse {
+        list:[Unit]
+        totalCount: Int
+        totalUsersCount:Int
+    }
+    
 `;
 export const mutations = `
     unitsAdd(${commonUnitParams}): Unit
