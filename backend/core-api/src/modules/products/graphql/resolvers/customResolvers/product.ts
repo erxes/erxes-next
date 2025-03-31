@@ -15,7 +15,7 @@ export default {
   ) => {
     return (
       (product.categoryId &&
-        dataLoaders.productCategory.load(product.categoryId)) ||
+        dataLoaders?.productCategory.load(product.categoryId)) ||
       null
     );
   },
@@ -25,7 +25,7 @@ export default {
     { dataLoaders }: IContext,
   ) => {
     return (
-      (product.vendorId && dataLoaders.company.load(product.vendorId)) || null
+      (product.vendorId && dataLoaders?.company.load(product.vendorId)) || null
     );
   },
 };
