@@ -1,9 +1,12 @@
-import { IUserDocument } from 'erxes-api-modules';
+import { IUserDocument } from 'erxes-core-types';
 import { createGenerateModels } from 'erxes-api-utils';
 import mongoose from 'mongoose';
-import { ICompanyDocument } from './modules/contacts/@types/company';
-import { ICustomerDocument } from './modules/contacts/@types/customers';
-import { IUserMovementDocument } from './modules/contacts/@types/user';
+import {
+  ICompanyDocument,
+  IUserMovementDocument,
+  ICustomerDocument,
+} from 'erxes-core-types';
+
 import {
   ICompanyModel,
   loadCompanyClass,

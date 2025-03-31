@@ -1,4 +1,4 @@
-import { ICustomer } from '../../../@types';
+import { ICustomer } from 'erxes-core-types';
 import { IContext } from '../../../../../@types/common';
 
 export const customerMutations = {

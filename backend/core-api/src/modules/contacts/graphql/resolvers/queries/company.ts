@@ -1,8 +1,5 @@
 import { IContext } from 'core-api/@types';
-import {
-  ICompanyDocument,
-  ICompanyFilterQueryParams,
-} from 'core-api/modules/contacts/@types/company';
+import { ICompanyDocument, ICompanyFilterQueryParams } from 'erxes-core-types';
 import { paginate } from 'erxes-api-utils';
 import { FilterQuery } from 'mongoose';
 

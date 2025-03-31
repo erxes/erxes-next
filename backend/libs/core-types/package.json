@@ -1,14 +1,11 @@
 {
-  "name": "erxes-api-modules",
+  "name": "erxes-core-types",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "tslib": "^2.3.0",
-    "mongoose": "^8.9.6",
-    "erxes-api-utils": "0.0.1",
-    "erxes-core-types": "0.0.1"
+    "tslib": "^2.3.0"
   }
 }

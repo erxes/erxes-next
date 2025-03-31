@@ -1,4 +1,4 @@
-import { IUserDocument } from 'erxes-api-modules';
+import { IUserDocument } from 'erxes-core-types';
 import { IModels } from '../connectionResolvers';
 
 export interface IStringMap {
