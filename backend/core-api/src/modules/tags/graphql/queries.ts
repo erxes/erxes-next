@@ -1,6 +1,6 @@
-import { IContext } from 'core-api/@types';
 import { getService, getServices, paginate } from 'erxes-api-utils';
 import { FilterQuery } from 'mongoose';
+import { IContext } from '../../../@types';
 import { ITagFilterQueryParams } from '../@types/tag';
 
 const generateFilter = async ({ params, commonQuerySelector, models }) => {

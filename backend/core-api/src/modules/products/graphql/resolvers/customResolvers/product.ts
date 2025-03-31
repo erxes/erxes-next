@@ -1,5 +1,5 @@
-import { IContext } from 'core-api/@types';
 import { IProductDocument } from 'erxes-core-types';
+import { IContext } from '../../../../../@types';
 
 export default {
   __resolveReference: async (

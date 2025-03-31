@@ -1,9 +1,8 @@
-import { IModels } from 'core-api/connectionResolvers';
 import { IUom, IUomDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
+import { IModels } from '../../../../connectionResolvers';
 import { PRODUCT_STATUSES } from '../../constants';
 import { uomSchema } from '../definitions/uoms';
-
 export interface IUomModel extends Model<IUomDocument> {
   getUom(selector: any): Promise<IUomDocument>;
   createUom(doc: IUom): Promise<IUomDocument>;

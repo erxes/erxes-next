@@ -1,6 +1,6 @@
-import { IContext } from 'core-api/@types';
 import { escapeRegExp } from 'erxes-api-utils';
 import { IProductCategoryDocument } from 'erxes-core-types';
+import { IContext } from '../../../../../@types';
 import { PRODUCT_STATUSES } from '../../../constants';
 
 export default {

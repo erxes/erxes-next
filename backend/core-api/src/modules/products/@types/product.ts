@@ -1,4 +1,4 @@
-import { IListParams } from 'core-api/@types';
+import { IListParams } from '../../../@types';
 
 export interface IProductParams extends IListParams {
   ids?: string[];
