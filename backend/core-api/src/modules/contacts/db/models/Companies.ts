@@ -1,9 +1,9 @@
 import { ICustomField } from 'core-api/@types';
 import { IModels } from 'core-api/connectionResolvers';
-import { IUserDocument } from 'erxes-api-modules';
+import { IUserDocument } from 'erxes-core-types';
 import { validSearchText } from 'erxes-api-utils';
 import { Model } from 'mongoose';
-import { ICompany, ICompanyDocument } from '../../@types/company';
+import { ICompany, ICompanyDocument } from 'erxes-core-types';
 import { companySchema } from '../definitions/company';
 
 export interface ICompanyModel extends Model<ICompanyDocument> {
@@ -171,7 +171,7 @@ export const loadCompanyClass = (models: IModels) => {
       },
       idsToExclude?: string[] | string,
     ) {
-      const query: { status: {}; [key: string]: any } = {
+      const query: { status: object; [key: string]: any } = {
         status: { $ne: 'deleted' },
       };
       let previousEntry;

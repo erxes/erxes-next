@@ -1,9 +1,5 @@
-import { Document, Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 import { mongooseField } from 'erxes-api-utils';
-import {
-  IBrandEmailConfig,
-  IBrandEmailConfigDocument,
-} from '../../@types/common';
 
 export const customFieldSchema = new Schema(
   {
@@ -15,20 +11,6 @@ export const customFieldSchema = new Schema(
   },
   { _id: false },
 );
-
-export interface IBrand {
-  code?: string;
-  name?: string;
-  description?: string;
-  userId?: string;
-  emailConfig?: IBrandEmailConfig;
-}
-
-export interface IBrandDocument extends IBrand, Document {
-  _id: string;
-  emailConfig?: IBrandEmailConfigDocument;
-  createdAt: Date;
-}
 
 // schema for form's rules
 export const ruleSchema = new Schema(

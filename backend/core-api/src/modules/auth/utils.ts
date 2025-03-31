@@ -1,4 +1,4 @@
-import { IUserDocument } from 'erxes-api-modules';
+import { IUserDocument } from 'erxes-core-types';
 import { redis } from 'erxes-api-utils';
 
 export const saveValidatedToken = (token: string, user: IUserDocument) => {

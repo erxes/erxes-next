@@ -1,5 +1,5 @@
 import { IContext } from '../../../../@types';
-import { IUser, IDetail, ILink, IEmailSignature } from 'erxes-api-modules';
+import { IUser, IDetail, ILink, IEmailSignature } from 'erxes-core-types';
 
 interface IUsersEdit extends IUser {
   channelIds?: string[];

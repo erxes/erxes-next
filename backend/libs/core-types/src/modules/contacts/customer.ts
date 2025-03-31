@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
-import { IListParams, IStringMap } from '../../../@types/common';
-import { IAddress } from './common';
+import { IListParams, IStringMap } from '../../common';
+import { IAddress } from './contacts-common';
 
 export interface ICustomer {
   state?: 'visitor' | 'lead' | 'customer';

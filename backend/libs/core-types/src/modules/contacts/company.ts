@@ -1,7 +1,6 @@
-import { IListParams, IStringMap } from 'core-api/@types';
-import { ICustomField } from 'erxes-api-modules/modules/common/@types/common';
+import { ICustomField, IListParams, IStringMap } from '../../common';
 import { Document } from 'mongoose';
-import { IAddress } from './common';
+import { IAddress } from './contacts-common';
 
 export interface ICompany {
   scopeBrandIds?: string[];

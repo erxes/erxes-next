@@ -4,18 +4,18 @@ import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
 import { redis } from 'erxes-api-utils';
-import {
-  IUserDocument,
-  IEmailSignature,
-  USER_ROLES,
-  userSchema,
-  IUserMovementDocument,
-  userMovemmentSchema,
-} from 'erxes-api-modules';
+import { USER_ROLES, userSchema, userMovemmentSchema } from 'erxes-api-modules';
 
 import { saveValidatedToken } from '../../../../auth/utils';
 import { IModels } from '../../../../../connectionResolvers';
-import { IUser, IDetail, ILink } from 'erxes-api-modules';
+import {
+  IUser,
+  IDetail,
+  ILink,
+  IUserMovementDocument,
+  IUserDocument,
+  IEmailSignature,
+} from 'erxes-core-types';
 import { USER_MOVEMENT_STATUSES } from 'erxes-api-modules';
 
 const SALT_WORK_FACTOR = 10;
@@ -71,7 +71,7 @@ export interface IUserModel extends Model<IUserDocument> {
     emails?: string[];
     employeeId?: string;
     username?: string;
-  }): never;
+  }): Promise<never>;
   getSecret(): string;
   generateToken(): { token: string; expires: Date };
   createUser(doc: IUser & { notUsePassword?: boolean }): Promise<IUserDocument>;
@@ -210,7 +210,7 @@ export const loadUserClass = (models: IModels) => {
       isActive,
       isOwner = false,
       notUsePassword = false,
-    }: IUser & { notUsePassword?: boolean }) {
+    }: IUser & { notUsePassword?: boolean; links: ILink[] }) {
       // empty string password validation
 
       if (password === '' && !notUsePassword) {
