@@ -1,5 +1,13 @@
+export const conformityQueryFields = `
+  conformityMainType: String
+  conformityMainTypeId: String
+  conformityRelType: String
+  conformityIsRelated: Boolean
+  conformityIsSaved: Boolean
+`;
 export const types = `
   type Company {
+    _id:String
     createdAt: Date
     modifiedAt: Date
     avatar: String
@@ -34,6 +42,8 @@ export const types = `
     customFieldsDataByFieldCode: JSON
     trackedData: JSON
 
+    customers: [Customer]
+    getTags: [Tag]
     code: String
     location: String
     score: Float
@@ -63,11 +73,12 @@ const queryParams = `
   brand: String
   dateFilters: String
   segmentData: String
+  ${conformityQueryFields}
 `;
 
 export const queries = `
   companiesMain(${queryParams}): CompaniesListResponse
-  companyDetail(_id: String!): Company
+  companies(${queryParams}): [Company]
 `;
 
 const mutationParams = `
