@@ -1,6 +1,7 @@
-import { IContext } from 'core-api/@types';
-import { IPositionDocument } from 'core-api/modules/organization/structure/@types/structure';
-import { IModels } from 'core-api/connectionResolvers';
+import { IContext } from '../../../../../../@types';
+
+import { IModels } from '../../../../../../connectionResolvers';
+import { IPositionDocument } from '../../../@types/structure';
 
 const getAllChildrenIds = async (models: IModels, parentId: string) => {
   const pipeline = [
