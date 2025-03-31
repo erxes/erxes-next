@@ -8,12 +8,16 @@ const t = initTRPC.create();
 export const customerRouter = t.router({
   customer: t.router({
     list: t.procedure
-      .input(customerTRPCSchema)
+      .input(generateModels)
       .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .query(async () => {
+      .query(async ({ input }) => {
+        const { ...rest } = input;
+
+        const query = { ...rest };
+
         const models = await generateModels('os');
 
-        return models.Customers.find({});
+        return models.Customers.find(query);
       }),
 
     get: t.procedure
