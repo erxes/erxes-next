@@ -3,7 +3,7 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { useContactFilterValues } from '@/contacts/contacts-filter/hooks/useContactFilterValues';
 import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
 
-export const   CUSTOMERS_PER_PAGE = 30;
+export const CUSTOMERS_PER_PAGE = 30;
 
 export const useCustomers = (options?: QueryHookOptions) => {
   const { variables } = useContactFilterValues();
@@ -14,9 +14,8 @@ export const useCustomers = (options?: QueryHookOptions) => {
       ...variables,
     },
   });
-  
 
-  const { list: customers, totalCount } = data?.customersMain || {};
+  const { list: customers, totalCount } = data?.customers || {};
 
   const handleFetchMore = () =>
     totalCount > customers?.length &&
@@ -28,11 +27,11 @@ export const useCustomers = (options?: QueryHookOptions) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          customersMain: {
-            ...prev.customersMain,
+          customers: {
+            ...prev.customers,
             list: [
-              ...(prev.customersMain?.list || []),
-              ...(fetchMoreResult.customersMain?.list || []),
+              ...(prev.customers?.list || []),
+              ...(fetchMoreResult.customers?.list || []),
             ],
           },
         });

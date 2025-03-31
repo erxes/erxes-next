@@ -4,7 +4,7 @@ import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
 import { ICustomer } from '@/contacts/types/customerType';
 
 interface CustomerData {
-  customersMain: {
+  customers: {
     list: ICustomer[];
     totalCount: number;
   };
@@ -28,21 +28,17 @@ export function useAddCustomer(
             query: GET_CUSTOMERS,
             variables: queryVariables,
           });
-          if (
-            !existingData ||
-            !existingData.customersMain ||
-            !data?.customersAdd
-          )
+          if (!existingData || !existingData.customers || !data?.customersAdd)
             return;
 
           cache.writeQuery<CustomerData>({
             query: GET_CUSTOMERS,
             variables: queryVariables,
             data: {
-              customersMain: {
-                ...existingData.customersMain,
-                list: [data.customersAdd, ...existingData.customersMain.list],
-                totalCount: existingData.customersMain.totalCount + 1,
+              customers: {
+                ...existingData.customers,
+                list: [data.customersAdd, ...existingData.customers.list],
+                totalCount: existingData.customers.totalCount + 1,
               },
             },
           });
