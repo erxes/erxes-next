@@ -24,7 +24,7 @@ export const generateFilters = async ({
   }
 
   if (!params.withoutUserFilter) {
-    const userDetail = await models.Users.findOne({ _id: user });
+    const userDetail = await models.Users.findOne({ _id: user._id });
     if (type === 'branch') {
       const branches = await models.Branches.find({
         _id: { $in: userDetail?.branchIds },
