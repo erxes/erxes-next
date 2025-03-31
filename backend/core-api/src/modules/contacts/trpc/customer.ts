@@ -10,7 +10,8 @@ export const customerRouter = t.router({
     list: t.procedure
       .input(generateModels)
       .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .query(async ({ input }) => {
+      .query(async ({ ctx, input }) => {
+        console.log(ctx);
         const { ...rest } = input;
 
         const query = { ...rest };
