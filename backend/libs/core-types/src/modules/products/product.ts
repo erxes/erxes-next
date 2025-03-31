@@ -3,6 +3,7 @@ import {
   ICustomField,
   IPdfAttachment,
 } from 'erxes-core-types/common';
+import { Document } from 'mongoose';
 
 interface ISubUom {
   uom: string;
