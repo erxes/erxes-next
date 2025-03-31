@@ -70,7 +70,7 @@ const link = split(
 );
 
 const typePolicies = {
-  customersMain: {
+  customers: {
     keyFields: ['_id'],
   },
 };

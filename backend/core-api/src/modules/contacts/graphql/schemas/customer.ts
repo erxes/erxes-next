@@ -49,6 +49,7 @@ export const types = `
     score: Float
     links: JSON
     companies: [Company]
+    getTags: [Tag]
   }
 
   type CustomersListResponse {
@@ -95,8 +96,7 @@ const queryParams = `
 `;
 
 export const queries = `
-  customers(${queryParams}): [Customer]
-  customersMain(${queryParams}): CustomersListResponse
+  customers(${queryParams}): CustomersListResponse
   customerDetail(_id: String!): Customer
 `;
 
