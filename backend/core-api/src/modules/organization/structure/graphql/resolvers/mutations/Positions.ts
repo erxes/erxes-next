@@ -1,14 +1,14 @@
 import { IContext } from '../../../../../../@types/common';
 export const positionMutations = {
   async positionsAdd(_root, doc, { user, models }: IContext) {
-    const branch = await models.Positions.createPosition(doc, user);
-    return branch;
+    const position = await models.Positions.createPosition(doc, user);
+    return position;
   },
 
   async positionsEdit(_root, { _id, ...doc }, { user, models }: IContext) {
-    const branch = await models.Positions.updatePosition(_id, doc, user);
+    const position = await models.Positions.updatePosition(_id, doc, user);
 
-    return branch;
+    return position;
   },
 
   async positionsRemove(_root, { ids }, { models }: IContext) {
@@ -16,8 +16,8 @@ export const positionMutations = {
       throw new Error('You must specify at least one position id to remove');
     }
 
-    const branch = await models.Positions.removePositions(ids);
+    const position = await models.Positions.removePositions(ids);
 
-    return branch;
+    return position;
   },
 };
