@@ -45,7 +45,7 @@ const generateFilter = async (
   }
 
   if (categoryId) {
-    let categories = await models.ProductCategories.getChildCategories([
+    const categories = await models.ProductCategories.getChildCategories([
       categoryId,
     ]);
     const catIds = categories.map((c) => c._id);
@@ -246,7 +246,7 @@ export const productQueries = {
         };
       }
 
-      const codeRegexs: any[] = [];
+      const codeRegexes: any[] = [];
       const fieldIds: string[] = [];
       const groups: { title: string; fieldId: string }[] = [];
 
@@ -255,7 +255,7 @@ export const productQueries = {
         const filterFieldDef = matched.filterField || 'code';
 
         if (filterFieldDef.includes('customFieldsData.')) {
-          codeRegexs.push({
+          codeRegexes.push({
             $and: [
               {
                 'customFieldsData.field': filterFieldDef.replace(
@@ -271,7 +271,7 @@ export const productQueries = {
             ],
           });
         } else {
-          codeRegexs.push({
+          codeRegexes.push({
             [filterFieldDef]: { $in: [getRegex(matchedMask)] },
           });
         }
@@ -288,7 +288,7 @@ export const productQueries = {
       const filters: any = {
         $and: [
           {
-            $or: codeRegexs,
+            $or: codeRegexes,
           },
           {
             'customFieldsData.field': { $in: fieldIds },
