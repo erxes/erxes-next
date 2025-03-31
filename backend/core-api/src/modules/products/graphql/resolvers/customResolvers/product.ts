@@ -5,7 +5,11 @@ export default {
   __resolveReference: async ({ _id }, { models }: IContext) => {
     return models.Products.findOne({ _id });
   },
-  category: async (product: IProductDocument, _, { dataLoaders }: IContext) => {
+  category: async (
+    product: IProductDocument,
+    _args: undefined,
+    { dataLoaders }: IContext,
+  ) => {
     return (
       (product.categoryId &&
         dataLoaders.productCategory.load(product.categoryId)) ||

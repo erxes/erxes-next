@@ -12,7 +12,7 @@ export default {
   },
   productCount: async (
     category: IProductCategoryDocument,
-    {},
+    _args: undefined,
     { models }: IContext,
   ) => {
     const product_category_ids = await models.ProductCategories.find(

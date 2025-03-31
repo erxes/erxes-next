@@ -7,7 +7,7 @@ export const categoryMutations = {
    * @param {Object} doc Product category document
    */
   async productCategoriesAdd(
-    _root,
+    _root: undefined,
     doc: IProductCategory,
     { models }: IContext,
   ) {
@@ -31,6 +31,7 @@ export const categoryMutations = {
    * Removes a product category
    * @param {string} param1._id ProductCategory id
    */
+
   async productCategoriesRemove(
     _root,
     { _id }: { _id: string },
