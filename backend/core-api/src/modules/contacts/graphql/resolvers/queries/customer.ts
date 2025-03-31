@@ -23,19 +23,6 @@ export const customerQueries = {
    * Customers list
    */
   async customers(
-    _parent: undefined,
-    params: ICustomerQueryFilterParams,
-    { models }: IContext,
-  ) {
-    const filter = generateFilter(params);
-
-    return await paginate(models.Customers.find(filter), params);
-  },
-
-  /**
-   * Customers for only main list
-   */
-  async customersMain(
     _root,
     params: ICustomerQueryFilterParams,
     { models }: IContext,
