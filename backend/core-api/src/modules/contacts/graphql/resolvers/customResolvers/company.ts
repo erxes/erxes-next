@@ -1,4 +1,4 @@
-import { IContext } from 'core-api/@types';
+import { IContext } from 'backend/core-api/src/@types';
 import { ICompanyDocument } from 'erxes-core-types';
 
 export default {

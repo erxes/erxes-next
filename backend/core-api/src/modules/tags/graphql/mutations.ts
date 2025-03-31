@@ -1,4 +1,4 @@
-import { IContext } from 'core-api/@types';
+import { IContext } from 'backend/core-api/src/@types';
 import { ITag } from 'erxes-core-types';
 
 export const tagMutations = {

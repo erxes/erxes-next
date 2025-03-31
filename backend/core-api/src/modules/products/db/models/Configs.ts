@@ -1,7 +1,7 @@
-import { IModels } from 'core-api/connectionResolvers';
 import { Model } from 'mongoose';
 import { IProductsConfig, IProductsConfigDocument } from '../../@types/config';
 import { productsConfigSchema } from '../definitions/configs';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
 
 export interface IProductsConfigModel extends Model<IProductsConfigDocument> {
   getConfig(code: string, defaultValue?: string): Promise<any>;

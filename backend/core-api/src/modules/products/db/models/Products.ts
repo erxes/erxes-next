@@ -1,11 +1,11 @@
-import { ICustomField } from 'core-api/@types';
-import { IModels } from 'core-api/connectionResolvers';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 import { IProduct, IProductDocument } from '../../@types/product';
 import { PRODUCT_STATUSES } from '../../constants';
 import { checkCodeMask, checkSameMaskConfig } from '../../utils';
 import { productSchema } from '../definitions/products';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
+import { ICustomField } from 'erxes-core-types';
 
 export interface IProductModel extends Model<IProductDocument> {
   getProduct(selector: any): Promise<IProductDocument>;

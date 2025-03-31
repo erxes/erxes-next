@@ -1,5 +1,5 @@
-import { IContext } from 'core-api/@types';
-import { IUom } from 'core-api/modules/products/@types/uom';
+import { IContext } from 'backend/core-api/src/@types';
+import { IUom } from '../../../@types/uom';
 
 export const uomMutations = {
   /**

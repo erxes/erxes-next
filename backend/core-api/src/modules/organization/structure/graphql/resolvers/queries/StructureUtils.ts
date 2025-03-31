@@ -1,4 +1,4 @@
-import { IModels } from 'core-api/connectionResolvers';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
 import { STRUCTURE_STATUSES } from 'erxes-api-modules';
 import { IUserDocument } from 'erxes-core-types';
 

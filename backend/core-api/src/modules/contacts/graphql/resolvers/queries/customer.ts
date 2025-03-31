@@ -1,4 +1,4 @@
-import { IContext } from 'core-api/@types';
+import { IContext } from 'backend/core-api/src/@types';
 import { paginate } from 'erxes-api-utils';
 import { ICustomerQueryFilterParams } from 'erxes-core-types';
 

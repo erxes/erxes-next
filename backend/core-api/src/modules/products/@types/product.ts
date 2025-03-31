@@ -1,11 +1,11 @@
+import { Document } from 'mongoose';
+import { ISubUom } from './uom';
 import {
   IAttachment,
   ICustomField,
   IListParams,
   IPdfAttachment,
-} from 'core-api/@types';
-import { Document } from 'mongoose';
-import { ISubUom } from './uom';
+} from 'backend/core-api/src/@types';
 
 export interface IProduct {
   name: string;
@@ -50,6 +50,7 @@ export interface IProductParams extends IListParams {
   type?: string;
   status?: string;
   categoryId?: string;
+  searchValue?: string;
   vendorId?: string;
   brand?: string;
   tag: string;

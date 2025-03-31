@@ -1,5 +1,5 @@
-import { IContext } from 'core-api/@types';
-import { IStructureDocument } from 'core-api/modules/organization/structure/@types/structure';
+import { IContext } from 'backend/core-api/src/@types';
+import { IStructureDocument } from '../../../@types/structure';
 
 export default {
   async supervisor(structure: IStructureDocument, _args, { models }: IContext) {

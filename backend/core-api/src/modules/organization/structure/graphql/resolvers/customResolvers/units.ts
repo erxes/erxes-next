@@ -1,5 +1,5 @@
-import { IContext } from 'core-api/@types';
-import { IUnitDocument } from 'core-api/modules/organization/structure/@types/structure';
+import { IContext } from 'backend/core-api/src/@types';
+import { IUnitDocument } from '../../../@types/structure';
 
 export default {
   async users(unit: IUnitDocument, _args, { models }: IContext) {

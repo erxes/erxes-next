@@ -1,8 +1,8 @@
-import { IModels } from 'core-api/connectionResolvers';
 import { Model } from 'mongoose';
 import { IUom, IUomDocument } from '../../@types/uom';
 import { PRODUCT_STATUSES } from '../../constants';
 import { uomSchema } from '../definitions/uoms';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
 
 export interface IUomModel extends Model<IUomDocument> {
   getUom(selector: any): Promise<IUomDocument>;

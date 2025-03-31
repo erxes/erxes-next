@@ -1,5 +1,5 @@
-import { IContext } from 'core-api/@types';
-import { IProductDocument } from 'core-api/modules/products/@types/product';
+import { IContext } from 'backend/core-api/src/@types';
+import { IProductDocument } from '../../../@types/product';
 
 export default {
   __resolveReference: async ({ _id }, { models }: IContext) => {

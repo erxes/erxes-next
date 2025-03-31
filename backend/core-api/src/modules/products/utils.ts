@@ -1,4 +1,4 @@
-import { IModels } from 'core-api/connectionResolvers';
+import { IModels } from '../../connectionResolvers';
 import { IProductCategory } from './@types/category';
 import { IProduct } from './@types/product';
 

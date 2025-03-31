@@ -1,5 +1,5 @@
-import { IContext } from 'core-api/@types';
-import { IProductCategory } from 'core-api/modules/products/@types/category';
+import { IContext } from 'backend/core-api/src/@types';
+import { IProductCategory } from '../../../@types/category';
 
 export const categoryMutations = {
   /**

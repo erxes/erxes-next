@@ -1,9 +1,3 @@
-import { IContext } from 'core-api/@types';
-import { IModels } from 'core-api/connectionResolvers';
-import {
-  IProductDocument,
-  IProductParams,
-} from 'core-api/modules/products/@types/product';
 import { escapeRegExp, paginate } from 'erxes-api-utils';
 import { FilterQuery, SortOrder } from 'mongoose';
 import { PRODUCT_STATUSES } from '../../../constants';
@@ -11,6 +5,9 @@ import {
   getSimilaritiesProducts,
   getSimilaritiesProductsCount,
 } from '../../../utils';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
+import { IProductDocument, IProductParams } from '../../../@types/product';
+import { IContext } from 'backend/core-api/src/@types';
 
 const generateFilter = async (
   subdomain: string,
@@ -114,7 +111,7 @@ export const productQueries = {
    */
   async products(
     _root,
-    params: IProductParams,
+    params: any,
     { commonQuerySelector, models, subdomain, user }: IContext,
   ) {
     const filter = await generateFilter(

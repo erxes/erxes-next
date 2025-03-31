@@ -1,7 +1,7 @@
-import { IContext } from 'core-api/@types';
-import { IProductCategoryDocument } from 'core-api/modules/products/@types/category';
 import { escapeRegExp } from 'erxes-api-utils';
 import { PRODUCT_STATUSES } from '../../../constants';
+import { IContext } from 'backend/core-api/src/@types';
+import { IProductCategoryDocument } from '../../../@types/category';
 
 export default {
   __resolveReference: async ({ _id }, { models }: IContext) => {

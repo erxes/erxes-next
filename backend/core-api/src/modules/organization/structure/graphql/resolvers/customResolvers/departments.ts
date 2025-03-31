@@ -1,5 +1,5 @@
-import { IContext } from 'core-api/@types';
-import { IDepartmentDocument } from 'core-api/modules/organization/structure/@types/structure';
+import { IContext } from 'backend/core-api/src/@types';
+import { IDepartmentDocument } from '../../../@types/structure';
 export default {
   async __resolveReference({ _id }, { models }: IContext) {
     return models.Departments.findOne({ _id });

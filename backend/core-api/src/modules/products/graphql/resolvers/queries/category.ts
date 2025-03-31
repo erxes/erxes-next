@@ -1,8 +1,8 @@
-import { IContext } from 'core-api/@types';
-import { IModels } from 'core-api/connectionResolvers';
-import { IProductCategoryParams } from 'core-api/modules/products/@types/category';
 import { escapeRegExp } from 'erxes-api-utils';
 import { FilterQuery } from 'mongoose';
+import { IProductCategoryParams } from '../../../@types/category';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
+import { IContext } from 'backend/core-api/src/@types';
 
 const generateFilter = async (
   models,

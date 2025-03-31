@@ -1,9 +1,9 @@
-import { IModels } from 'core-api/connectionResolvers';
 import { escapeRegExp } from 'erxes-api-utils';
 import { ITag, ITagDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
 import { removeRelatedIds, setRelatedIds } from '../../utils';
 import { tagSchema } from '../definitions/tags';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
 
 export interface ITagModel extends Model<ITagDocument> {
   getTag(_id: string): Promise<ITagDocument>;

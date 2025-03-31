@@ -1,4 +1,3 @@
-import { IModels } from 'core-api/connectionResolvers';
 import { escapeRegExp } from 'erxes-api-utils';
 import { Model } from 'mongoose';
 import {
@@ -7,6 +6,7 @@ import {
 } from '../../@types/category';
 import { PRODUCT_STATUSES } from '../../constants';
 import { productCategorySchema } from '../definitions/categories';
+import { IModels } from 'backend/core-api/src/connectionResolvers';
 
 export interface IProductCategoryModel extends Model<IProductCategoryDocument> {
   getProductCategory(selector: any): Promise<IProductCategoryDocument>;

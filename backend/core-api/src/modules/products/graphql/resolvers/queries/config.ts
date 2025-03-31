@@ -1,4 +1,4 @@
-import { IContext } from 'core-api/@types';
+import { IContext } from 'backend/core-api/src/@types';
 
 export const configQueries = {
   /**
