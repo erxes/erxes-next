@@ -1,3 +1,5 @@
+import { commonParams } from './CommonTypeDefs';
+
 export const PositionTypes = `
     type Position @key(fields: "_id") @cacheControl(maxAge: 3){
         _id: String!
@@ -12,4 +14,28 @@ export const PositionTypes = `
         userIds: [String]
         userCount: Int
     }
+    type PositionListQueryResponse {
+        list:[Position]
+        totalCount: Int
+        totalUsersCount:Int
+    }
+`;
+const commonPositionParams = `
+    title: String
+    code: String
+    parentId: String
+    userIds: [String]
+    status: String
+`;
+
+export const mutations = `
+    positionsAdd(${commonPositionParams}):Position
+    positionsEdit(_id: String!, ${commonPositionParams}):Position
+    positionsRemove(ids:[String!]): JSON
+`;
+
+export const queries = `
+    positions(${commonParams},withoutUserFilter:Boolean): [Position]
+    positionsMain(${commonParams}): PositionListQueryResponse
+    positionDetail(_id: String): Position
 `;

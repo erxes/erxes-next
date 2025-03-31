@@ -1,7 +1,7 @@
-import { customFieldSchema } from 'erxes-api-modules';
 import { mongoStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 import { COMPANY_SELECT_OPTIONS } from '../../constants';
+import { customFieldSchema } from 'erxes-api-modules/modules/common/db/definitions/common';
 
 const getEnum = (fieldName: string): string[] => {
   return COMPANY_SELECT_OPTIONS[fieldName].map((option) => option.value);

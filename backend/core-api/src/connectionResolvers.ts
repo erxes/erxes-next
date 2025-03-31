@@ -41,6 +41,26 @@ import { IUomModel, loadUomClass } from './modules/products/db/models/Uoms';
 import { IConfigDocument } from './modules/settings/db/definitions/configs';
 import { IConfigModel } from './modules/settings/db/models/Configs';
 
+import {
+  IBranchDocument,
+  IDepartmentDocument,
+  IPositionDocument,
+  IStructureDocument,
+  IUnitDocument,
+} from './modules/organization/structure/@types/structure';
+import {
+  IBranchModel,
+  IDepartmentModel,
+  IPositionModel,
+  IStructureModel,
+  IUnitModel,
+  loadStructureClass,
+  loadBranchClass,
+  loadDepartmentClass,
+  loadPositionClass,
+  loadUnitClass,
+} from './modules/organization/structure/db/models/Structure';
+
 export interface IModels {
   Customers: ICustomerModel;
   Companies: ICompanyModel;
@@ -51,6 +71,11 @@ export interface IModels {
   ProductCategories: IProductCategoryModel;
   ProductsConfigs: IProductsConfigModel;
   Uoms: IUomModel;
+  Structures: IStructureModel; //
+  Departments: IDepartmentModel; //
+  Units: IUnitModel; //
+  Branches: IBranchModel; //
+  Positions: IPositionModel;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {
@@ -98,6 +123,26 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     IProductCategoryModel
   >('product_categories', loadProductCategoryClass(models));
 
+  models.Structures = db.model<IStructureDocument, IStructureModel>(
+    'structures',
+    loadStructureClass(models),
+  );
+  models.Departments = db.model<IDepartmentDocument, IDepartmentModel>(
+    'departments',
+    loadDepartmentClass(models),
+  );
+  models.Units = db.model<IUnitDocument, IUnitModel>(
+    'units',
+    loadUnitClass(models),
+  );
+  models.Branches = db.model<IBranchDocument, IBranchModel>(
+    'branches',
+    loadBranchClass(models),
+  );
+  models.Positions = db.model<IPositionDocument, IPositionModel>(
+    'positions',
+    loadPositionClass(models),
+  );
   return models;
 };
 
