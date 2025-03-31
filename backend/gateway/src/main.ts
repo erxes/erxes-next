@@ -23,7 +23,7 @@ import {
   proxyReq,
 } from './proxy/middleware';
 
-import { getServices, redis } from 'erxes-api-utils';
+import { getService, getServices, redis } from 'erxes-api-utils';
 import { applyGraphqlLimiters } from './middlewares/graphql-limiter';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -55,7 +55,11 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-app.get('/users', async (req, res) => {
+app.get('/users', async (_req, res) => {
+  // const coreService = await getService('core');
+
+  // console.log(coreService.address);
+
   try {
     const client = createTRPCClient<CoreTRPCAppRouter>({
       links: [
@@ -65,9 +69,16 @@ app.get('/users', async (req, res) => {
       ],
     });
 
-    const aa = await client.customer.list.query({});
+    console.log(client);
 
-    res.json(aa);
+    const customers = await client.customer.list.query({});
+
+    if (!customers) {
+      return res.status(404).json({
+        success: false,
+        message: 'No users found',
+      });
+    }
   } catch (error) {
     console.error('Error fetching users:', error);
 

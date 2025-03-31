@@ -56,6 +56,7 @@ export const contactRouter = t.router({
       }),
 
     get: t.procedure
+      .input(customerTRPCSchema)
       .output(z.union([customerDocumentTRPCSchema, z.null()]))
       .query(async () => {
         return null;

@@ -8,7 +8,7 @@ import {
   IPositionDocument,
 } from '../../@types/structure';
 import { IUserDocument } from 'erxes-core-types';
-import { IModels } from 'core-api/connectionResolvers';
+import { IModels } from '../../../../../connectionResolvers';
 import { escapeRegExp, checkCodeDuplication } from 'erxes-api-utils';
 import {
   departmentSchema,
