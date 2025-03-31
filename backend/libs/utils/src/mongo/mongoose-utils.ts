@@ -1,7 +1,6 @@
-import { Schema } from 'mongoose';
 import { nanoid } from 'nanoid';
 
-export const mongooseField = (options: any) => {
+export const mongooseField = (options) => {
   const { pkey, type, optional } = options;
 
   if (type === String && !pkey && !optional) {
@@ -16,7 +15,7 @@ export const mongooseField = (options: any) => {
   return options;
 };
 
-export const mongooseSchemaWrapper = (schema: Schema) => {
+export const mongooseSchemaWrapper = (schema) => {
   schema.add({ scopeBrandIds: [String] });
 
   return schema;

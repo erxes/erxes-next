@@ -1,5 +1,3 @@
-import { commonParams } from './CommonTypeDefs';
-
 const commonContactInfoTypes = `
     phoneNumber: String
     email: String
@@ -41,10 +39,4 @@ export const mutations = `
     structuresAdd(${commonStructureParams}): Structure
     structuresEdit(_id: String!,${commonStructureParams}): Structure
     structuresRemove(_id: String!): JSON
-`;
-
-export const queries = `
-    positions(${commonParams},withoutUserFilter:Boolean): [Position]
-    positionsMain(${commonParams}): PositionListQueryResponse
-    positionDetail(_id: String): Position
 `;

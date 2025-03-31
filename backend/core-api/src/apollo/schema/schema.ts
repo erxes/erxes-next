@@ -32,7 +32,6 @@ import {
 } from '../../modules/organization/structure/graphql/schemas/position';
 import {
   mutations as structuresMutations,
-  queries as structuresQueries,
   StructureTypes,
 } from '../../modules/organization/structure/graphql/schemas/structure';
 import {
@@ -60,6 +59,7 @@ import {
 } from '../../modules/products/graphql/schemas';
 
 import { CommonTypes } from './commonTypes';
+import { BrandTypes } from '../../modules/organization/structure/graphql/schemas/brand';
 
 export const types = `
     scalar JSON
@@ -78,7 +78,6 @@ export const types = `
   
     ${CustomerTypes}
     ${CompanyTypes}
-    ${PositionTypes}
     ${CommonTypes}
     ${UserTypes}
     ${ConfigTypes}
@@ -88,6 +87,7 @@ export const types = `
     ${PositionTypes}
     ${StructureTypes}
     ${UnitTypes}
+    ${BrandTypes}
   `;
 
 export const queries = `
@@ -100,7 +100,6 @@ export const queries = `
     ${branchsQueries}
     ${departmentsQueries}
     ${positionsQueries}
-    ${structuresQueries}
     ${unitsQueries}
   `;
 

@@ -7,7 +7,10 @@
     "build": {
       "executor": "@nx/js:tsc",
       "dependsOn": [
-        "erxes-api-utils:build,erxes-core-types:build,erxes-api-modules:build"
+        "erxes-api-utils:build",
+        "erxes-api-modules:build",
+        "erxes-api-rpc:build",
+        "erxes-core-types:build"
       ],
       "cache": true,
       "options": {
