@@ -1,12 +1,12 @@
 import { IContext } from 'core-api/@types';
-import { IProduct } from 'core-api/modules/products/@types/product';
+import { IProduct } from 'erxes-core-types';
 
 export const productMutations = {
   /**
    * Creates a new product
    * @param {Object} doc Product document
    */
-  async productsAdd(_root, doc: IProduct, { models }: IContext) {
+  async productsAdd(_root: undefined, doc: IProduct, { models }: IContext) {
     return await models.Products.createProduct(doc);
   },
 
@@ -16,7 +16,7 @@ export const productMutations = {
    * @param {Object} param2.doc Product info
    */
   async productsEdit(
-    _root,
+    _root: undefined,
     { _id, ...doc }: { _id: string } & IProduct,
     { models }: IContext,
   ) {
@@ -31,7 +31,7 @@ export const productMutations = {
    * @param {string} param1._id Product id
    */
   async productsRemove(
-    _root,
+    _root: undefined,
     { productIds }: { productIds: string[] },
     { models }: IContext,
   ) {
@@ -42,7 +42,7 @@ export const productMutations = {
    * Merge products
    */
   async productsMerge(
-    _root,
+    _root: undefined,
     {
       productIds,
       productFields,
@@ -56,7 +56,7 @@ export const productMutations = {
    * Duplicate a product
    */
   async productsDuplicate(
-    _root,
+    _root: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

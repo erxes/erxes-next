@@ -1,6 +1,6 @@
 import { IModels } from 'core-api/connectionResolvers';
+import { IUom, IUomDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
-import { IUom, IUomDocument } from '../../@types/uom';
 import { PRODUCT_STATUSES } from '../../constants';
 import { uomSchema } from '../definitions/uoms';
 

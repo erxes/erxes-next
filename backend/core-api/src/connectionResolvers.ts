@@ -9,6 +9,12 @@ import mongoose from 'mongoose';
 
 import { ITagDocument } from 'erxes-core-types';
 import {
+  IProductCategoryDocument,
+  IProductDocument,
+  IProductsConfigDocument,
+  IUomDocument,
+} from 'erxes-core-types';
+import {
   ICompanyModel,
   loadCompanyClass,
 } from './modules/contacts/db/models/Companies';
@@ -22,10 +28,6 @@ import {
   loadUserClass,
   loadUserMovemmentClass,
 } from './modules/organization/team-member/db/models/Users';
-import { IProductCategoryDocument } from './modules/products/@types/category';
-import { IProductsConfigDocument } from './modules/products/@types/config';
-import { IProductDocument } from './modules/products/@types/product';
-import { IUomDocument } from './modules/products/@types/uom';
 import {
   IProductCategoryModel,
   loadProductCategoryClass,

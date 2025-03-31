@@ -4,7 +4,11 @@ export const configQueries = {
   /**
    * ProductConfig object
    */
-  async productsConfigs(_root, _args, { models }: IContext) {
-    return models.ProductsConfigs.find({});
+  async productsConfigs(
+    _root: undefined,
+    _args: undefined,
+    { models }: IContext,
+  ) {
+    return await models.ProductsConfigs.find({});
   },
 };

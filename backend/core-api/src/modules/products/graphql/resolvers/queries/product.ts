@@ -1,10 +1,8 @@
 import { IContext } from 'core-api/@types';
 import { IModels } from 'core-api/connectionResolvers';
-import {
-  IProductDocument,
-  IProductParams,
-} from 'core-api/modules/products/@types/product';
+import { IProductParams } from 'core-api/modules/products/@types/product';
 import { escapeRegExp, paginate } from 'erxes-api-utils';
+import { IProductDocument } from 'erxes-core-types';
 import { FilterQuery, SortOrder } from 'mongoose';
 import { PRODUCT_STATUSES } from '../../../constants';
 import {
@@ -13,7 +11,6 @@ import {
 } from '../../../utils';
 
 const generateFilter = async (
-  subdomain: string,
   models: IModels,
   commonQuerySelector: any,
   params: IProductParams,
@@ -113,16 +110,11 @@ export const productQueries = {
    * Products list
    */
   async products(
-    _root,
+    _root: undefined,
     params: IProductParams,
-    { commonQuerySelector, models, subdomain, user }: IContext,
+    { commonQuerySelector, models }: IContext,
   ) {
-    const filter = await generateFilter(
-      subdomain,
-      models,
-      commonQuerySelector,
-      params,
-    );
+    const filter = await generateFilter(models, commonQuerySelector, params);
 
     const { sortField, sortDirection, page, perPage, ids, excludeIds } = params;
 
@@ -157,21 +149,20 @@ export const productQueries = {
     );
   },
 
-  async productDetail(_root, { _id }: { _id: string }, { models }: IContext) {
+  async productDetail(
+    _root: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     return await models.Products.findOne({ _id }).lean();
   },
 
   async productsTotalCount(
-    _root,
+    _root: undefined,
     params: IProductParams,
-    { commonQuerySelector, models, subdomain }: IContext,
+    { commonQuerySelector, models }: IContext,
   ) {
-    const filter = await generateFilter(
-      subdomain,
-      models,
-      commonQuerySelector,
-      params,
-    );
+    const filter = await generateFilter(models, commonQuerySelector, params);
 
     if (params.groupedSimilarity) {
       return await getSimilaritiesProductsCount(models, filter, {
@@ -183,7 +174,7 @@ export const productQueries = {
   },
 
   async productSimilarities(
-    _root,
+    _root: undefined,
     { _id, groupedSimilarity },
     { models }: IContext,
   ) {

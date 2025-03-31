@@ -1,6 +1,6 @@
 import { IModels } from 'core-api/connectionResolvers';
+import { IProductsConfig, IProductsConfigDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
-import { IProductsConfig, IProductsConfigDocument } from '../../@types/config';
 import { productsConfigSchema } from '../definitions/configs';
 
 export interface IProductsConfigModel extends Model<IProductsConfigDocument> {

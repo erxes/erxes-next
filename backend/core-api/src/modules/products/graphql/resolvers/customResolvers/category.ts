@@ -1,10 +1,13 @@
 import { IContext } from 'core-api/@types';
-import { IProductCategoryDocument } from 'core-api/modules/products/@types/category';
 import { escapeRegExp } from 'erxes-api-utils';
+import { IProductCategoryDocument } from 'erxes-core-types';
 import { PRODUCT_STATUSES } from '../../../constants';
 
 export default {
-  __resolveReference: async ({ _id }, { models }: IContext) => {
+  __resolveReference: async (
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) => {
     return models.ProductCategories.findOne({ _id });
   },
   isRoot: (category: IProductCategoryDocument) => {

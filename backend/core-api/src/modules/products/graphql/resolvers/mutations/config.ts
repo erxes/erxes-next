@@ -4,7 +4,11 @@ export const configMutations = {
   /**
    * Create or update config object
    */
-  async productsConfigsUpdate(_root, { configsMap }, { models }: IContext) {
+  async productsConfigsUpdate(
+    _root: undefined,
+    { configsMap },
+    { models }: IContext,
+  ) {
     const codes = Object.keys(configsMap);
 
     for (const code of codes) {

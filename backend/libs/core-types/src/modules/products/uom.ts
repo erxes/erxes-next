@@ -1,10 +1,5 @@
 import { Document } from 'mongoose';
 
-export interface ISubUom {
-  uom: string;
-  ratio: number;
-}
-
 export interface IUom {
   code: string;
   name: string;
