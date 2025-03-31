@@ -123,21 +123,35 @@ export const loadProductClass = (models: IModels) => {
       const unUsedIds: string[] = [];
       let response = 'deleted';
 
+      // Fetch existing product IDs
+      const existingProducts = await models.Products.find(
+        { _id: { $in: _ids } },
+        { _id: 1 },
+      );
+
+      const existingIds = new Set(
+        existingProducts.map((product) => product._id.toString()),
+      );
+
       for (const id of _ids) {
-        usedIds.push(id);
+        if (existingIds.has(id)) {
+          usedIds.push(id);
+        } else {
+          unUsedIds.push(id);
+        }
       }
 
       if (usedIds.length > 0) {
         await models.Products.updateMany(
           { _id: { $in: usedIds } },
-          {
-            $set: { status: PRODUCT_STATUSES.DELETED },
-          },
+          { $set: { status: PRODUCT_STATUSES.DELETED } },
         );
         response = 'updated';
       }
 
-      await models.Products.deleteMany({ _id: { $in: unUsedIds } });
+      if (unUsedIds.length > 0) {
+        await models.Products.deleteMany({ _id: { $in: unUsedIds } });
+      }
 
       return response;
     }
@@ -262,7 +276,7 @@ export const loadProductClass = (models: IModels) => {
     /**
      * Generate product code
      */
-    public static async generateCode(maxAttempts: number = 10) {
+    public static async generateCode(maxAttempts = 10) {
       let attempts = 0;
 
       while (attempts < maxAttempts) {
