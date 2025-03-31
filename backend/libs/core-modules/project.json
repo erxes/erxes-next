@@ -16,5 +16,6 @@
         "assets": ["backend/libs/core-modules/*.md"]
       }
     }
-  }
+  },
+  "implicitDependencies": ["erxes-api-utils", "erxes-core-types"]
 }

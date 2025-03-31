@@ -558,6 +558,15 @@ importers:
 
   backend/libs/core-modules:
     dependencies:
+      mongoose:
+        specifier: ^8.9.6
+        version: 8.10.0
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
+  backend/libs/core-types:
+    dependencies:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
