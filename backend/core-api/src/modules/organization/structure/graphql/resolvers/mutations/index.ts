@@ -1,6 +1,6 @@
 import { branchsMutations } from './branchs';
-import { positionMutations } from './Positions';
-import { structuresMutations } from './Structure';
+import { positionMutations } from './positions';
+import { structuresMutations } from './structure';
 import { deparmentMutations } from './deparments';
 
 export const contactMutations = {
