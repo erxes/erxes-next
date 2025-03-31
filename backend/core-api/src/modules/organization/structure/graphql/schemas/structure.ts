@@ -40,3 +40,7 @@ export const mutations = `
     structuresEdit(_id: String!,${commonStructureParams}): Structure
     structuresRemove(_id: String!): JSON
 `;
+
+export const queries = `
+  structureDetail: Structure
+`;
