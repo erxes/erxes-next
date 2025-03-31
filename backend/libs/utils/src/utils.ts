@@ -168,3 +168,21 @@ export const getCoreDomain = () => {
     ? 'https://erxes.io'
     : 'http://localhost:3500';
 };
+
+export const escapeRegExp = (str: string) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+export const checkCodeDuplication = async (collection, code: string) => {
+  if (code.includes('/')) {
+    throw new Error('The "/" character is not allowed in the code');
+  }
+
+  const category = await collection.findOne({
+    code,
+  });
+
+  if (category) {
+    throw new Error('Code must be unique');
+  }
+};

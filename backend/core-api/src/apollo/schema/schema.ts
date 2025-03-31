@@ -16,11 +16,30 @@ import {
 } from '../../modules/auth/graphql/schemas/auth';
 
 import {
+  mutations as branchsMutations,
+  queries as branchsQueries,
   BranchTypes,
-  BrandTypes,
+} from '../../modules/organization/structure/graphql/schemas/branch';
+import {
+  mutations as departmentsMutations,
+  queries as departmentsQueries,
   DepartmentTypes,
+} from '../../modules/organization/structure/graphql/schemas/department';
+import {
+  mutations as positionsMutations,
+  queries as positionsQueries,
   PositionTypes,
-} from '../../modules/organization/structure/graphql/schemas';
+} from '../../modules/organization/structure/graphql/schemas/position';
+import {
+  mutations as structuresMutations,
+  queries as structuresQueries,
+  StructureTypes,
+} from '../../modules/organization/structure/graphql/schemas/structure';
+import {
+  mutations as unitsMutations,
+  queries as unitsQueries,
+  UnitTypes,
+} from '../../modules/organization/structure/graphql/schemas/units';
 
 import {
   ConfigTypes,
@@ -33,6 +52,12 @@ import {
   queries as UserQueries,
   types as UserTypes,
 } from '../../modules/organization/team-member/graphql/schema';
+
+import {
+  mutations as ProductMutations,
+  queries as ProductQueries,
+  types as ProductTypes,
+} from '../../modules/products/graphql/schemas';
 
 import { CommonTypes } from './commonTypes';
 
@@ -53,13 +78,16 @@ export const types = `
   
     ${CustomerTypes}
     ${CompanyTypes}
-    ${DepartmentTypes}
-    ${BranchTypes}
     ${PositionTypes}
     ${CommonTypes}
     ${UserTypes}
-    ${BrandTypes}
     ${ConfigTypes}
+    ${ProductTypes}
+    ${BranchTypes}
+    ${DepartmentTypes}
+    ${PositionTypes}
+    ${StructureTypes}
+    ${UnitTypes}
   `;
 
 export const queries = `
@@ -68,6 +96,12 @@ export const queries = `
     ${AuthQueries}
     ${UserQueries}
     ${ConfigsQueries}
+    ${ProductQueries}
+    ${branchsQueries}
+    ${departmentsQueries}
+    ${positionsQueries}
+    ${structuresQueries}
+    ${unitsQueries}
   `;
 
 export const mutations = `
@@ -76,6 +110,12 @@ export const mutations = `
     ${AuthMutations}
     ${UserMutations}
     ${ConfigsMutations}
+    ${ProductMutations}
+    ${branchsMutations}
+    ${departmentsMutations}
+    ${positionsMutations}
+    ${structuresMutations}
+    ${unitsMutations}
   `;
 
 export default { types, queries, mutations };

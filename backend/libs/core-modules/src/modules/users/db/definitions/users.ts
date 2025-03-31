@@ -198,3 +198,14 @@ export const userMovemmentSchema = mongooseSchemaWrapper(
     }),
   }),
 );
+
+export const attachmentSchema = new Schema(
+  {
+    name: { type: String },
+    url: { type: String },
+    type: { type: String },
+    size: { type: Number, optional: true },
+    duration: { type: Number, optional: true }
+  },
+  { _id: false }
+);
