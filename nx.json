@@ -18,6 +18,25 @@
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
   "nxCloudId": "6729920cd7d2354eb0f6a7f5",
+  "dependencyGraph": {
+    "inputs": [
+      {
+        "project": "erxes-api-utils",
+        "target": "build",
+        "inputs": ["default", "^production"]
+      },
+      {
+        "project": "erxes-core-types",
+        "target": "build",
+        "inputs": ["default", "^production"]
+      },
+      {
+        "project": "erxes-api-modules",
+        "target": "build",
+        "inputs": ["default", "^production"]
+      }
+    ]
+  },
   "plugins": [
     {
       "plugin": "@nx/eslint/plugin",
@@ -29,8 +48,7 @@
       "plugin": "@nx/jest/plugin",
       "options": {
         "targetName": "test"
-      },
-      "exclude": ["apps/my-express-api-e2e/**/*"]
+      }
     },
     {
       "plugin": "@nx/webpack/plugin",
