@@ -1,6 +1,6 @@
-import { IModels } from 'core-api/connectionResolvers';
 import { STRUCTURE_STATUSES } from 'erxes-api-modules';
 import { IUserDocument } from 'erxes-core-types';
+import { IModels } from '../../../../../../connectionResolvers';
 
 export const generateFilters = async ({
   models,

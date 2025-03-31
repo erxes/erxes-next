@@ -1,7 +1,7 @@
-import { IContext } from 'core-api/@types';
-import { ICompanyDocument, ICompanyFilterQueryParams } from 'erxes-core-types';
 import { paginate } from 'erxes-api-utils';
+import { ICompanyDocument, ICompanyFilterQueryParams } from 'erxes-core-types';
 import { FilterQuery } from 'mongoose';
+import { IContext } from '../../../../../@types';
 
 const generateFilter = (params: ICompanyFilterQueryParams) => {
   const { searchValue } = params;

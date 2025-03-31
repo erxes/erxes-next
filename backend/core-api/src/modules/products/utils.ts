@@ -1,6 +1,5 @@
-import { IModels } from 'core-api/connectionResolvers';
 import { IProduct, IProductCategory } from 'erxes-core-types';
-
+import { IModels } from '../../connectionResolvers';
 export const checkCodeMask = (category?: IProductCategory, code?: string) => {
   if (!category || !code) {
     return false;

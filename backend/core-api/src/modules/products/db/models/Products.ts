@@ -1,8 +1,8 @@
-import { ICustomField } from 'core-api/@types';
-import { IModels } from 'core-api/connectionResolvers';
 import { IProduct, IProductDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
+import { ICustomField } from '../../../../@types';
+import { IModels } from '../../../../connectionResolvers';
 import { PRODUCT_STATUSES } from '../../constants';
 import { checkCodeMask, checkSameMaskConfig } from '../../utils';
 import { productSchema } from '../definitions/products';
