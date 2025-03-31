@@ -14,20 +14,19 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
-    "strict": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
+    // "strict": true,
+
+    "strictNullChecks": true,
     "useUnknownInCatchVariables": false,
     "baseUrl": ".",
     "paths": {
-      "core-api/*": ["backend/core-api/src/*"],
       "erxes-api-modules": ["backend/libs/core-modules/src"],
       "erxes-api-modules/*": ["backend/libs/core-modules/src/*"],
       "erxes-api-utils": ["backend/libs/utils/src"],
       "erxes-api-utils/*": ["backend/libs/utils/src/*"],
       "erxes-core-types": ["backend/libs/core-types/src"],
       "erxes-core-types/*": ["backend/libs/core-types/src/*"],
-      "erxes-rpc-client": ["backend/libs/rpc-client/src/index.ts"],
+      "erxes-api-rpc": ["backend/libs/api-rpc/src/index.ts"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
       "ui-modules": ["frontend/libs/ui-modules/src"]
     }

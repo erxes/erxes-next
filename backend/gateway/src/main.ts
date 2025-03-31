@@ -8,12 +8,14 @@ import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-// import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
+import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
 
 import { retryGetProxyTargets } from './proxy/targets';
 import { startRouter, stopRouter } from './apollo-router';
 import userMiddleware from './middlewares/userMiddleware';
 import { initMQWorkers } from './mq/workers/workers';
+
+import { CoreTRPCAppRouter } from 'erxes-api-rpc';
 
 import {
   applyProxiesToGraphql,
@@ -53,29 +55,29 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-// app.get('/users', async (req, res) => {
-//   try {
-//     const client = createTRPCClient<AppRouter>({
-//       links: [
-//         httpBatchStreamLink({
-//           url: 'http://localhost:3300/trpc', // Plugin-User серверийн URL
-//         }),
-//       ],
-//     });
+app.get('/users', async (req, res) => {
+  try {
+    const client = createTRPCClient<CoreTRPCAppRouter>({
+      links: [
+        httpBatchStreamLink({
+          url: 'http://localhost:3300/trpc', // Plugin-User серверийн URL
+        }),
+      ],
+    });
 
-//     const aa = await client.customer.list.query();
+    const aa = await client.customer.list.query({});
 
-//     res.json(aa);
-//   } catch (error) {
-//     console.error('Error fetching users:', error);
+    res.json(aa);
+  } catch (error) {
+    console.error('Error fetching users:', error);
 
-//     res.status(500).json({
-//       success: false,
-//       message: 'Failed to fetch users',
-//       error: error instanceof Error ? error.message : 'Unknown error',
-//     });
-//   }
-// });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch users',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
 
 app.use(userMiddleware);
 

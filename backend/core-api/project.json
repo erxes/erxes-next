@@ -9,7 +9,8 @@
       "dependsOn": [
         "erxes-api-utils:build",
         "erxes-api-modules:build",
-        "erxes-core-types:build"
+        "erxes-core-types:build",
+        "erxes-api-rpc:build"
       ],
       "cache": true,
       "options": {

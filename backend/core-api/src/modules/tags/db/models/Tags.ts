@@ -80,7 +80,7 @@ export const loadTagClass = (models: IModels) => {
 
       const childTags = await models.Tags.find({
         $and: [
-          { order: { $regex: new RegExp(escapeRegExp(tag.order), 'i') } },
+          { order: { $regex: new RegExp(escapeRegExp(tag.order || ''), 'i') } },
           { _id: { $ne: _id } },
         ],
       });
@@ -95,9 +95,9 @@ export const loadTagClass = (models: IModels) => {
 
         // updating child tag order
         childTags.forEach((childTag) => {
-          let childOrder = childTag.order;
+          let childOrder = childTag.order || '';
 
-          childOrder = childOrder.replace(tag.order, order);
+          childOrder = childOrder.replace(tag.order || '', order);
 
           bulkDoc.push({
             updateOne: {
@@ -192,7 +192,7 @@ export const loadTagClass = (models: IModels) => {
      * Generating order
      */
     public static async generateOrder(
-      parentTag: ITagDocument,
+      parentTag: ITagDocument | null,
       { name }: { name: string },
     ) {
       const order = parentTag ? `${parentTag.order}${name}/` : `${name}/`;

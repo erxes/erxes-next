@@ -1,5 +1,5 @@
-import { ICustomField } from 'core-api/@types';
-import { IModels } from 'core-api/connectionResolvers';
+import { ICustomField } from '../../../../@types';
+import { IModels } from '../../../../connectionResolvers';
 import { IUserDocument } from 'erxes-core-types';
 import { validSearchText } from 'erxes-api-utils';
 import { Model } from 'mongoose';
