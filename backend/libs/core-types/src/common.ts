@@ -22,3 +22,15 @@ export interface IBrowserInfo {
   city?: string;
   countryCode?: string;
 }
+
+export interface IAttachment {
+  name: string;
+  url: string;
+  size: number;
+  type: string;
+}
+
+export interface IPdfAttachment {
+  pdf?: IAttachment;
+  pages: IAttachment[];
+}

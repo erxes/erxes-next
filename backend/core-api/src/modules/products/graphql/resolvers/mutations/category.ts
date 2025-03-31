@@ -1,5 +1,5 @@
 import { IContext } from 'core-api/@types';
-import { IProductCategory } from 'core-api/modules/products/@types/category';
+import { IProductCategory } from 'erxes-core-types';
 
 export const categoryMutations = {
   /**
@@ -20,7 +20,7 @@ export const categoryMutations = {
    * @param {Object} param2.doc ProductCategory info
    */
   async productCategoriesEdit(
-    _root,
+    _root: undefined,
     { _id, ...doc }: { _id: string } & IProductCategory,
     { models }: IContext,
   ) {
@@ -33,7 +33,7 @@ export const categoryMutations = {
    */
 
   async productCategoriesRemove(
-    _root,
+    _root: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

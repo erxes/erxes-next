@@ -1,10 +1,7 @@
 import { IModels } from 'core-api/connectionResolvers';
 import { escapeRegExp } from 'erxes-api-utils';
+import { IProductCategory, IProductCategoryDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
-import {
-  IProductCategory,
-  IProductCategoryDocument,
-} from '../../@types/category';
 import { PRODUCT_STATUSES } from '../../constants';
 import { productCategorySchema } from '../definitions/categories';
 

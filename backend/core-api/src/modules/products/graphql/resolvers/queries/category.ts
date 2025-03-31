@@ -5,7 +5,7 @@ import { escapeRegExp } from 'erxes-api-utils';
 import { FilterQuery } from 'mongoose';
 
 const generateFilter = async (
-  models,
+  models: IModels,
   {
     parentId,
     withChild,
@@ -26,9 +26,7 @@ const generateFilter = async (
 
   if (parentId) {
     if (withChild) {
-      const category = await (
-        models as IModels
-      ).ProductCategories.getProductCategory({
+      const category = await models.ProductCategories.getProductCategory({
         _id: parentId,
       });
 
@@ -70,7 +68,7 @@ const generateFilter = async (
 
 export const categoryQueries = {
   async productCategories(
-    _root,
+    _root: undefined,
     params: IProductCategoryParams,
     { models }: IContext,
   ) {
@@ -82,7 +80,7 @@ export const categoryQueries = {
   },
 
   async productCategoriesTotalCount(
-    _root,
+    _root: undefined,
     params: IProductCategoryParams,
     { models }: IContext,
   ) {
@@ -92,7 +90,7 @@ export const categoryQueries = {
   },
 
   async productCategoryDetail(
-    _root,
+    _root: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

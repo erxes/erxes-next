@@ -1,8 +1,11 @@
 import { IContext } from 'core-api/@types';
-import { IProductDocument } from 'core-api/modules/products/@types/product';
+import { IProductDocument } from 'erxes-core-types';
 
 export default {
-  __resolveReference: async ({ _id }, { models }: IContext) => {
+  __resolveReference: async (
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) => {
     return models.Products.findOne({ _id });
   },
   category: async (
@@ -12,13 +15,17 @@ export default {
   ) => {
     return (
       (product.categoryId &&
-        dataLoaders.productCategory.load(product.categoryId)) ||
+        dataLoaders?.productCategory.load(product.categoryId)) ||
       null
     );
   },
-  vendor: (product: IProductDocument, _, { dataLoaders }: IContext) => {
+  vendor: (
+    product: IProductDocument,
+    _args: undefined,
+    { dataLoaders }: IContext,
+  ) => {
     return (
-      (product.vendorId && dataLoaders.company.load(product.vendorId)) || null
+      (product.vendorId && dataLoaders?.company.load(product.vendorId)) || null
     );
   },
 };

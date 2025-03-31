@@ -46,15 +46,3 @@ export interface IListParams {
   page?: number;
   perPage?: number;
 }
-
-export interface IAttachment {
-  name: string;
-  url: string;
-  size: number;
-  type: string;
-}
-
-export interface IPdfAttachment {
-  pdf?: IAttachment;
-  pages: IAttachment[];
-}
