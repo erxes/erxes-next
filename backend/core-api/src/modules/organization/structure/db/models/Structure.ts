@@ -7,7 +7,7 @@ import {
   IStructureDocument,
   IPositionDocument,
 } from '../../@types/structure';
-import { IUserDocument } from 'erxes-api-modules';
+import { IUserDocument } from 'erxes-core-types';
 import { IModels } from 'core-api/connectionResolvers';
 import { escapeRegExp, checkCodeDuplication } from 'erxes-api-utils';
 import {

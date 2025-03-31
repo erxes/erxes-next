@@ -58,8 +58,7 @@ export const mutations = `
 `;
 
 export const queries = `
-   branches(${commonParams},withoutUserFilter:Boolean): [Branch]
-   branchesMain(${commonParams},withoutUserFilter:Boolean): 
-   BranchListQueryResponse
-   branchDetail(_id: String!): Branch
+    branches(${commonParams},withoutUserFilter:Boolean): [Branch]
+    branchesMain(${commonParams},withoutUserFilter:Boolean): BranchListQueryResponse
+    branchDetail(_id: String!): Branch
 `;
