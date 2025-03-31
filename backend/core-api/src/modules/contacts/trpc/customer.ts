@@ -11,19 +11,13 @@ export const customerRouter = t.router({
       .input(generateModels)
       .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
       .query(async ({ input }) => {
-        console.log('1231');
         const { ...rest } = input;
 
         const query = { ...rest };
 
-        console.log(query);
-
         const models = await generateModels('os');
 
-        const sda = await models.Customers.find({}).lean();
-        console.log(sda);
-
-        return models.Customers.find({});
+        return models.Customers.find(query);
       }),
 
     get: t.procedure
