@@ -26,7 +26,7 @@ export const companyQueries = {
    * Get companies
    */
   companiesMain: async (
-    _root,
+    _parent: undefined,
     params: ICompanyFilterQueryParams,
     { models }: IContext,
   ) => {
@@ -49,7 +49,7 @@ export const companyQueries = {
    * Get one company
    */
   companyDetail: async (
-    _root,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) => {

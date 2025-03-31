@@ -12,7 +12,7 @@ export const authMutations = {
    * Login
    */
   async login(
-    _root,
+    _parent: undefined,
     args: LoginParams,
     { res, requestInfo, models, subdomain }: IContext,
   ) {
@@ -35,7 +35,11 @@ export const authMutations = {
   /*
    * logout
    */
-  async logout(_root, _args, { res, user, requestInfo, models }: IContext) {
+  async logout(
+    _parent: undefined,
+    _args: undefined,
+    { res, user, requestInfo, models }: IContext,
+  ) {
     const logout = await models.Users.logout(
       user,
       requestInfo.cookies['auth-token'],
@@ -48,7 +52,7 @@ export const authMutations = {
    * Send forgot password email
    */
   async forgotPassword(
-    _root,
+    _parent: undefined,
     { email }: { email: string },
     { subdomain, models }: IContext,
   ) {
@@ -81,7 +85,7 @@ export const authMutations = {
    * Reset password
    */
   async resetPassword(
-    _root,
+    _parent: undefined,
     args: { token: string; newPassword: string },
     { models }: IContext,
   ) {
@@ -97,7 +101,7 @@ export const authMutations = {
   },
 
   async loginWithMagicLink(
-    _root,
+    _parent: undefined,
     { email }: { email: string },
     { models, subdomain }: IContext,
   ) {

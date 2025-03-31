@@ -8,20 +8,22 @@ import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-// import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
+import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
 
 import { retryGetProxyTargets } from './proxy/targets';
 import { startRouter, stopRouter } from './apollo-router';
 import userMiddleware from './middlewares/userMiddleware';
 import { initMQWorkers } from './mq/workers/workers';
-// import { CoreApiRouter } from 'erxes-api-rpc';
+
+import { AppRouter } from 'erxes-api-rpc';
+
 import {
   applyProxiesToGraphql,
   applyProxyToCore,
   proxyReq,
 } from './proxy/middleware';
 
-import { redis } from 'erxes-api-utils';
+import { getServices, redis } from 'erxes-api-utils';
 import { applyGraphqlLimiters } from './middlewares/graphql-limiter';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -53,20 +55,29 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-// app.get('/users', async (req, res) => {
-//   const client = createTRPCClient<CoreApiRouter>({
-//     links: [
-//       httpBatchStreamLink({
-//         url: 'http://localhost:3300/trpc', // Plugin-User серверийн URL
-//       }),
-//     ],
-//     transformer: undefined,
-//   });
+app.get('/users', async (req, res) => {
+  try {
+    const client = createTRPCClient<AppRouter>({
+      links: [
+        httpBatchStreamLink({
+          url: 'http://localhost:3300/trpc', // Plugin-User серверийн URL
+        }),
+      ],
+    });
 
-//   const aa = await client.greet.query();
+    const aa = await client.customer.list.query();
 
-//   res.json(aa);
-// });
+    res.json(aa);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch users',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
 
 app.use(userMiddleware);
 
@@ -74,11 +85,17 @@ app.use('/bullmq-board', serverAdapter.getRouter());
 
 app.use('/pl:serviceName', async (req, res) => {
   try {
-    const services = { core: 'http://localhost:3400' };
-    const serviceName = req.params.serviceName;
+    const servicesArray: string[] = await getServices();
+
+    const services: Record<string, string> = Object.fromEntries(
+      servicesArray.map((service) => [service, service]),
+    );
+
+    const serviceName: string = req.params.serviceName.replace(':', '');
+
     initMQWorkers(redis);
     // Find the target URL for the requested service
-    const targetUrl = services[serviceName.replace(':', '')];
+    const targetUrl = services[serviceName];
 
     if (targetUrl) {
       // Proxy the request to the target service using the custom headers

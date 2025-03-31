@@ -15,7 +15,7 @@ export const customerMutations = {
    * Updates a customer
    */
   async customersEdit(
-    _root,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & ICustomer,
     { models }: IContext,
   ) {
@@ -28,7 +28,7 @@ export const customerMutations = {
    * Remove customers
    */
   async customersRemove(
-    _root,
+    _parent: undefined,
     { customerIds }: { customerIds: string[] },
     { models }: IContext,
   ) {

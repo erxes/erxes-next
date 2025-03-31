@@ -10,7 +10,7 @@ const configQueries = {
   /**
    * Config object
    */
-  async configs(_root, _args, { models }: IContext) {
+  async configs(_root, _args: undefined, { models }: IContext) {
     return models.Configs.find({});
   },
 
@@ -48,8 +48,8 @@ const configQueries = {
         body: JSON.stringify(args),
         headers: { 'Content-Type': 'application/json' },
       }).then((r) => r.json());
-    } catch (e) {
-      throw new Error(e.message);
+    } catch (e: any) {
+      throw new Error(e);
     }
   },
 
