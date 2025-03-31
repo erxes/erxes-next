@@ -29,7 +29,7 @@ export const getEnv = ({
   return value || '';
 };
 
-export const getSubdomain = (req): string => {
+export const getSubdomain = (req: any): string => {
   const hostname =
     req.headers['nginx-hostname'] || req.headers.hostname || req.hostname;
   const subdomain = hostname.replace(/(^\w+:|^)\/\//, '').split('.')[0];

@@ -1,15 +1,16 @@
 import { initTRPC } from '@trpc/server';
+import { ICustomer } from 'erxes-core-types';
 
 const t = initTRPC.create();
 
-// Service-specific router
-const serviceRouter = t.router({
-  greet: t.procedure.query(() => {
-    return { message: `Hello, ` };
+export const serviceRouter = t.router({
+  customer: t.router({
+    list: t.procedure.query(async () => {
+      return [] as ICustomer[];
+    }),
   }),
 });
 
-// Merge shared router with service-specific router
 export const appRouter = serviceRouter;
 
-export type CoreApiRouter = typeof appRouter;
+export type AppRouter = typeof appRouter;

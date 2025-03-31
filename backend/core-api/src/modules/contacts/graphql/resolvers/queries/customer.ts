@@ -23,7 +23,7 @@ export const customerQueries = {
    * Customers list
    */
   async customers(
-    _root,
+    _parent: undefined,
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {

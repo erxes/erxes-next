@@ -93,8 +93,13 @@ export default async function supergraphCompose(
     setInterval(async () => {
       try {
         await supergraphComposeOnce();
-      } catch (e) {
-        console.error(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          // Now you can safely access e.message or other Error properties
+          console.log(e.message);
+        } else {
+          console.log('Unknown error:', e);
+        }
       }
     }, Number(SUPERGRAPH_POLL_INTERVAL_MS) || 10_000);
   }

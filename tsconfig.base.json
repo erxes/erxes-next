@@ -14,6 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "useUnknownInCatchVariables": false,
     "baseUrl": ".",
     "paths": {
       "core-api/*": ["backend/core-api/src/*"],
