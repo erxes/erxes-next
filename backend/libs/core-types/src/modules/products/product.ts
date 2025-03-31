@@ -1,8 +1,4 @@
-import {
-  IAttachment,
-  ICustomField,
-  IPdfAttachment,
-} from 'erxes-core-types/common';
+import { IAttachment, ICustomField, IPdfAttachment } from 'erxes-core-types';
 import { Document } from 'mongoose';
 
 interface ISubUom {

@@ -17,8 +17,7 @@
         "outputPath": "dist/backend/gateway",
         "main": "backend/gateway/src/main.ts",
         "tsConfig": "backend/gateway/tsconfig.app.json",
-        "assets": ["backend/gateway/src/**"],
-        "generatePackageJson": true
+        "assets": ["backend/gateway/src/**"]
       },
       "configurations": {
         "development": {},
