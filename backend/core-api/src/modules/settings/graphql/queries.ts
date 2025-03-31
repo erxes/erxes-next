@@ -49,7 +49,7 @@ const configQueries = {
         headers: { 'Content-Type': 'application/json' },
       }).then((r) => r.json());
     } catch (e: any) {
-      throw new Error(e);
+      throw new Error(e.message);
     }
   },
 
