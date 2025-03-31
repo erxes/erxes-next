@@ -7,6 +7,7 @@ import {
 } from 'erxes-core-types';
 import mongoose from 'mongoose';
 
+import { ITagDocument } from 'erxes-core-types';
 import {
   ICompanyModel,
   loadCompanyClass,
@@ -40,7 +41,6 @@ import {
 import { IUomModel, loadUomClass } from './modules/products/db/models/Uoms';
 import { IConfigDocument } from './modules/settings/db/definitions/configs';
 import { IConfigModel } from './modules/settings/db/models/Configs';
-import { ITagDocument } from './modules/tags/@types';
 import { ITagModel, loadTagClass } from './modules/tags/db/models/Tags';
 
 import {

@@ -1,11 +1,11 @@
 import { IContext } from 'core-api/@types';
-import { ITag } from '../@types';
+import { ITag } from 'erxes-core-types';
 
 export const tagMutations = {
   /**
    * Creates a new tag
    */
-  async tagsAdd(_root, doc: ITag, { models }: IContext) {
+  async tagsAdd(_root: undefined, doc: ITag, { models }: IContext) {
     return await models.Tags.createTag(doc);
   },
 
@@ -13,7 +13,7 @@ export const tagMutations = {
    * Edits a tag
    */
   async tagsEdit(
-    _root,
+    _root: undefined,
     { _id, ...doc }: { _id: string } & ITag,
     { models }: IContext,
   ) {
@@ -23,7 +23,11 @@ export const tagMutations = {
   /**
    * Removes a tag
    */
-  async tagsRemove(_root, { _id }: { _id: string }, { models }: IContext) {
+  async tagsRemove(
+    _root: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     return await models.Tags.removeTag(_id);
   },
 
@@ -31,7 +35,7 @@ export const tagMutations = {
    * Merge tags
    */
   async tagsMerge(
-    _root,
+    _root: undefined,
     { sourceId, destId }: { sourceId: string; destId: string },
     { models }: IContext,
   ) {

@@ -1,19 +1,10 @@
 import { IContext } from 'core-api/@types';
 import { getService, getServices, paginate } from 'erxes-api-utils';
 import { FilterQuery } from 'mongoose';
-import { ITagFilterQueryParams } from '../@types';
+import { ITagFilterQueryParams } from '../@types/tag';
 
 const generateFilter = async ({ params, commonQuerySelector, models }) => {
-  const {
-    type,
-    searchValue,
-    tagIds,
-    parentId,
-    ids,
-    excludeIds,
-    page,
-    perPage,
-  } = params;
+  const { type, searchValue, tagIds, parentId, ids, excludeIds } = params;
 
   const filter: FilterQuery<ITagFilterQueryParams> = { ...commonQuerySelector };
 
@@ -87,7 +78,7 @@ export const tagQueries = {
    * Get tags
    */
   async tags(
-    _root,
+    _root: undefined,
     params: ITagFilterQueryParams,
     { models, commonQuerySelector }: IContext,
   ) {
@@ -108,7 +99,7 @@ export const tagQueries = {
   },
 
   async tagsQueryCount(
-    _root,
+    _root: undefined,
     {
       type,
       searchValue,
@@ -136,7 +127,11 @@ export const tagQueries = {
   /**
    * Get one tag
    */
-  async tagDetail(_root, { _id }: { _id: string }, { models }: IContext) {
+  async tagDetail(
+    _root: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     return models.Tags.findOne({ _id });
   },
 };

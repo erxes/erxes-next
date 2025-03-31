@@ -1,5 +1,5 @@
 import { IModels } from 'core-api/connectionResolvers';
-import { ITagDocument } from './@types';
+import { ITagDocument } from 'erxes-core-types';
 
 // set related tags
 export const setRelatedIds = async (models: IModels, tag: ITagDocument) => {

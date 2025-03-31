@@ -1,7 +1,7 @@
 import { IModels } from 'core-api/connectionResolvers';
 import { escapeRegExp } from 'erxes-api-utils';
+import { ITag, ITagDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
-import { ITag, ITagDocument } from '../../@types';
 import { removeRelatedIds, setRelatedIds } from '../../utils';
 import { tagSchema } from '../definitions/tags';
 
