@@ -25,8 +25,6 @@
       "erxes-core-types/*": ["backend/libs/core-types/src/*"],
       "erxes-api-modules": ["backend/libs/core-modules/src"],
       "erxes-api-modules/*": ["backend/libs/core-modules/src/*"],
-      "erxes-api-rpc": ["backend/libs/api-rpc/src"],
-      "erxes-api-rpc/*": ["backend/libs/api-rpc/src/*"],
       "erxes-api-utils": ["backend/libs/utils/src"],
       "erxes-api-utils/*": ["backend/libs/utils/src/*"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
