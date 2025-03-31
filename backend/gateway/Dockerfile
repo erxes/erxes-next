@@ -3,11 +3,11 @@
 # Build the docker image with `npx nx docker-build gateway`.
 # Tip: Modify "docker-build" options in project.json to change docker build args.
 #
-# Run the container with `docker run -p 3000:3000 -t gateway`.
+# Run the container with `docker run -p 4000:4000 -t gateway`.
 FROM docker.io/node:lts-alpine
 
 ENV HOST=0.0.0.0
-ENV PORT=3000
+ENV PORT=4000
 
 WORKDIR /app
 

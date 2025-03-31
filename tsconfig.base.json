@@ -14,8 +14,6 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
-    // "strict": true,
-
     "strictNullChecks": true,
     "useUnknownInCatchVariables": false,
     "baseUrl": ".",
