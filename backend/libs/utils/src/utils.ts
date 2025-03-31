@@ -29,7 +29,7 @@ export const getEnv = ({
   return value || '';
 };
 
-export const getSubdomain = (req): string => {
+export const getSubdomain = (req: any): string => {
   const hostname =
     req.headers['nginx-hostname'] || req.headers.hostname || req.hostname;
   const subdomain = hostname.replace(/(^\w+:|^)\/\//, '').split('.')[0];
@@ -171,4 +171,18 @@ export const getCoreDomain = () => {
 
 export const escapeRegExp = (str: string) => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+export const checkCodeDuplication = async (collection, code: string) => {
+  if (code.includes('/')) {
+    throw new Error('The "/" character is not allowed in the code');
+  }
+
+  const category = await collection.findOne({
+    code,
+  });
+
+  if (category) {
+    throw new Error('Code must be unique');
+  }
 };

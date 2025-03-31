@@ -1,8 +1,5 @@
 import { IContext } from 'core-api/@types';
-import {
-  ICompanyDocument,
-  ICompanyFilterQueryParams,
-} from 'core-api/modules/contacts/@types/company';
+import { ICompanyDocument, ICompanyFilterQueryParams } from 'erxes-core-types';
 import { paginate } from 'erxes-api-utils';
 import { FilterQuery } from 'mongoose';
 
@@ -29,7 +26,7 @@ export const companyQueries = {
    * Get companies
    */
   companiesMain: async (
-    _root,
+    _parent: undefined,
     params: ICompanyFilterQueryParams,
     { models }: IContext,
   ) => {
@@ -52,7 +49,7 @@ export const companyQueries = {
    * Get one company
    */
   companyDetail: async (
-    _root,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) => {

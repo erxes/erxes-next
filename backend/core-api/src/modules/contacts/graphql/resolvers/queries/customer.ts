@@ -1,6 +1,6 @@
 import { IContext } from 'core-api/@types';
 import { paginate } from 'erxes-api-utils';
-import { ICustomerQueryFilterParams } from '../../../@types/customers';
+import { ICustomerQueryFilterParams } from 'erxes-core-types';
 
 const generateFilter = (params: ICustomerQueryFilterParams) => {
   const { searchValue } = params;
@@ -23,7 +23,7 @@ export const customerQueries = {
    * Customers list
    */
   async customers(
-    _root,
+    _parent: undefined,
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {

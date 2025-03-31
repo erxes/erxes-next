@@ -1,4 +1,4 @@
-import { ICustomer, ICustomerDocument } from '../../@types/customers';
+import { ICustomer, ICustomerDocument } from 'erxes-core-types';
 import { Model } from 'mongoose';
 import { IModels } from '../../../../connectionResolvers';
 import { customerSchema } from '../definitions/customers';

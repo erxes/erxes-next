@@ -1,3 +1,4 @@
+import { commonParams } from './CommonTypeDefs';
 export const BranchTypes = ` 
       type Branch @key(fields: "_id") @cacheControl(maxAge: 3){
           _id: String!
@@ -24,4 +25,41 @@ export const BranchTypes = `
           coordinate: Coordinate
           image: Attachment
       }
+    type BranchListQueryResponse {
+        list:[Branch]
+        totalCount: Int
+        totalUsersCount:Int
+    }
   `;
+
+const commonContactInfoParams = `
+    phoneNumber: String
+    email: String
+    links: JSON
+    coordinate: CoordinateInput
+    image: AttachmentInput
+`;
+const commonBranchParams = `
+    title: String
+    address: String
+    supervisorId: String
+    code: String
+    parentId: String
+    userIds: [String]
+    radius: Int
+    workhours: JSON
+    ${commonContactInfoParams}
+`;
+
+export const mutations = `
+    branchesAdd(${commonBranchParams}): Branch
+    branchesEdit(_id: String!, ${commonBranchParams}): Branch
+    branchesRemove(ids:[String!]): JSON
+`;
+
+export const queries = `
+   branches(${commonParams},withoutUserFilter:Boolean): [Branch]
+   branchesMain(${commonParams},withoutUserFilter:Boolean): 
+   BranchListQueryResponse
+   branchDetail(_id: String!): Branch
+`;

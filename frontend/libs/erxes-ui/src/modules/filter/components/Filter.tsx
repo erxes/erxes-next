@@ -1,7 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FilterContext } from '../context/FilterContext';
 import { useFilterContext } from '../hooks/useFilterContext';
-import { Button, Command, Dialog, Input, Popover } from 'erxes-ui/components';
+import {
+  Button,
+  Combobox,
+  Command,
+  Dialog,
+  Input,
+  Popover,
+} from 'erxes-ui/components';
 import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react';
 import { useQueryState, useRemoveQueryStateByKey } from 'erxes-ui/hooks';
 import { Except } from 'type-fest';
@@ -13,6 +20,9 @@ import {
   openDialogState,
   openPopoverState,
 } from '../states/filterStates';
+import { FilterDialogDateView } from '../date-filter/components/DialogDateView';
+import { getDisplayValue } from '../date-filter/utlis/getDisplayValue';
+import { DateFilterCommand } from '../date-filter/components/DateFilterCommand';
 
 const FilterProvider = ({
   children,
@@ -23,14 +33,27 @@ const FilterProvider = ({
 }) => {
   const setOpen = useSetAtom(openPopoverState(id));
   const setView = useSetAtom(filterPopoverViewState(id));
+  const setDialogView = useSetAtom(filterDialogViewState(id));
+  const setOpenDialog = useSetAtom(openDialogState(id));
 
   const resetFilterState = () => {
     setOpen(false);
     setView('root');
+    setDialogView('root');
+    setOpenDialog(false);
   };
 
   return (
-    <FilterContext.Provider value={{ id, resetFilterState }}>
+    <FilterContext.Provider
+      value={{
+        id,
+        resetFilterState,
+        setOpen,
+        setView,
+        setDialogView,
+        setOpenDialog,
+      }}
+    >
       {children}
     </FilterContext.Provider>
   );
@@ -73,8 +96,9 @@ const FilterItem = React.forwardRef<
   Except<React.ComponentPropsWithoutRef<typeof Command.Item>, 'value'> & {
     value: string;
     inDialog?: boolean;
+    active?: boolean;
   }
->(({ children, value, inDialog, className, ...props }, ref) => {
+>(({ children, value, inDialog, className, active, ...props }, ref) => {
   const { id } = useFilterContext();
   const setDialogView = useSetAtom(filterDialogViewState(id));
   const setOpenDialog = useSetAtom(openDialogState(id));
@@ -96,7 +120,7 @@ const FilterItem = React.forwardRef<
       value={value}
       onSelect={onSelect}
       ref={ref}
-      className={cn('h-8', className)}
+      className={cn('h-8', active && 'text-primary', className)}
       {...props}
     >
       {children}
@@ -106,26 +130,26 @@ const FilterItem = React.forwardRef<
 
 const FilterView = ({
   children,
-  value = 'root',
+  filterKey = 'root',
   inDialog,
 }: {
   children: React.ReactNode;
-  value?: string;
+  filterKey?: string;
   inDialog?: boolean;
 }) => {
   const { id } = useFilterContext();
   const view = useAtomValue(filterPopoverViewState(id));
-  const [dialogView] = useAtom(filterDialogViewState(id));
+  const dialogView = useAtomValue(filterDialogViewState(id));
 
-  if (inDialog ? dialogView !== value : view !== value) {
+  if (inDialog ? dialogView !== filterKey : view !== filterKey) {
     return null;
   }
   return children;
 };
 
 const FilterDialog = (props: React.ComponentPropsWithoutRef<typeof Dialog>) => {
-  const { id } = useFilterContext();
-  const [openDialog, setOpenDialog] = useAtom(openDialogState(id));
+  const { id, setOpenDialog } = useFilterContext();
+  const openDialog = useAtomValue(openDialogState(id));
   return <Dialog open={openDialog} onOpenChange={setOpenDialog} {...props} />;
 };
 
@@ -181,12 +205,10 @@ const FilterBarButton = React.forwardRef<
   React.ComponentRef<typeof Button>,
   Except<React.ComponentPropsWithoutRef<typeof Button>, 'value'> & {
     inDialog?: boolean;
-    value?: string;
+    filterKey?: string;
   }
->(({ className, inDialog, value, ...props }, ref) => {
-  const { id } = useFilterContext();
-  const setDialogView = useSetAtom(filterDialogViewState(id));
-  const setOpenDialog = useSetAtom(openDialogState(id));
+>(({ className, inDialog, filterKey, ...props }, ref) => {
+  const { setDialogView, setOpenDialog } = useFilterContext();
 
   return (
     <Button
@@ -195,7 +217,7 @@ const FilterBarButton = React.forwardRef<
       className={cn('rounded-none bg-background focus-visible:z-10', className)}
       onClick={() => {
         if (inDialog) {
-          setDialogView(value ?? 'root');
+          setDialogView(filterKey ?? 'root');
           setOpenDialog(true);
         }
       }}
@@ -207,9 +229,9 @@ const FilterBarButton = React.forwardRef<
 const FilterBarCloseButton = React.forwardRef<
   React.ComponentRef<typeof Button>,
   Except<React.ComponentPropsWithoutRef<typeof Button>, 'value'> & {
-    value?: string;
+    filterKey?: string;
   }
->(({ className, value, ...props }, ref) => {
+>(({ className, filterKey, ...props }, ref) => {
   const removeQuery = useRemoveQueryStateByKey();
 
   return (
@@ -218,7 +240,7 @@ const FilterBarCloseButton = React.forwardRef<
       variant="ghost"
       size="icon"
       className={cn('rounded-l-none bg-background', className)}
-      onClick={() => removeQuery(value ?? '')}
+      onClick={() => removeQuery(filterKey ?? '')}
       {...props}
     >
       <IconX />
@@ -226,10 +248,9 @@ const FilterBarCloseButton = React.forwardRef<
   );
 });
 
-const FilterDialogStringView = ({ value }: { value: string }) => {
-  const { id } = useFilterContext();
-  const [dialogView, setDialogView] = useAtom(filterDialogViewState(id));
-  const setOpenDialog = useSetAtom(openDialogState(id));
+const FilterDialogStringView = ({ filterKey }: { filterKey: string }) => {
+  const { id, setDialogView, setOpenDialog } = useFilterContext();
+  const dialogView = useAtomValue(filterDialogViewState(id));
   const [dialogSearch, setDialogSearch] = useState('');
   const [query, setQuery] = useQueryState<string>(dialogView);
 
@@ -247,74 +268,74 @@ const FilterDialogStringView = ({ value }: { value: string }) => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <Dialog.Header>
-        <Dialog.Title className="font-medium text-lg">
-          Filter by {value}...
-        </Dialog.Title>
-      </Dialog.Header>
+    <Dialog.Content>
+      <form onSubmit={onSubmit}>
+        <Dialog.Header>
+          <Dialog.Title className="font-medium text-lg">
+            Filter by {filterKey}...
+          </Dialog.Title>
+        </Dialog.Header>
 
-      <Input
-        placeholder={value.charAt(0).toUpperCase() + value.slice(1)}
-        className="my-4"
-        value={dialogSearch}
-        onChange={(e) => setDialogSearch(e.target.value)}
-      />
-      <Dialog.Footer className="sm:space-x-3">
-        <Dialog.Close asChild>
-          <Button variant="outline" size="lg">
-            Cancel
+        <Input
+          placeholder={filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}
+          className="my-4"
+          value={dialogSearch}
+          onChange={(e) => setDialogSearch(e.target.value)}
+        />
+        <Dialog.Footer className="sm:space-x-3">
+          <Dialog.Close asChild>
+            <Button variant="outline" size="lg">
+              Cancel
+            </Button>
+          </Dialog.Close>
+          <Button size="lg" type="submit">
+            Apply
           </Button>
-        </Dialog.Close>
-        <Button size="lg" type="submit">
-          Apply
-        </Button>
-      </Dialog.Footer>
-    </form>
+        </Dialog.Footer>
+      </form>
+    </Dialog.Content>
   );
 };
 
-const FilterPopoverDateView = ({ value }: { value: string }) => {
-  const ref = useRef<HTMLInputElement>(null);
+const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
+  const { resetFilterState } = useFilterContext();
 
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.focus();
-    }
-  }, []);
+  const [query, setQuery] = useQueryState<string>(filterKey);
 
   return (
-    <Command className="outline-none">
-      <Command.Input
-        variant="secondary"
-        ref={ref}
-        placeholder={value.charAt(0).toUpperCase() + value.slice(1) + ' date'}
-      />
-      <Command.Separator />
-      <Command.List className="p-1">
-        <Command.Item className="h-8" value="in-the-past">
-          In the past
-        </Command.Item>
-        <Command.Item className="h-8" value="1-day-from-now">
-          1 day from now
-        </Command.Item>
-        <Command.Item className="h-8" value="3-days-from-now">
-          3 days from now
-        </Command.Item>
-        <Command.Item className="h-8" value="1-week-from-now">
-          1 week from now
-        </Command.Item>
-        <Command.Item className="h-8" value="3-months-from-now">
-          3 months from now
-        </Command.Item>
-        <Command.Item className="h-8" value="custom-date-or-timeframe">
-          Custom date or timeframe
-        </Command.Item>
-        <Command.Item className="h-8" value="no-due-date">
-          No due date
-        </Command.Item>
-      </Command.List>
-    </Command>
+    <DateFilterCommand
+      focusOnMount
+      value={filterKey}
+      selected={query ?? ''}
+      onSelect={(value) => {
+        setQuery(value);
+        resetFilterState();
+      }}
+    />
+  );
+};
+
+export const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
+  const [query, setQuery] = useQueryState<string>(filterKey);
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <Button variant="ghost" className="rounded-none h-7 bg-background">
+          {getDisplayValue(query ?? '')}
+        </Button>
+      </Popover.Trigger>
+      <Combobox.Content>
+        <DateFilterCommand
+          value={filterKey}
+          selected={query ?? ''}
+          onSelect={(val) => {
+            setQuery(val);
+            setOpen(false);
+          }}
+        />
+      </Combobox.Content>
+    </Popover>
   );
 };
 
@@ -325,10 +346,12 @@ export const Filter = Object.assign(FilterProvider, {
   View: FilterView,
   Dialog: FilterDialog,
   DialogStringView: FilterDialogStringView,
+  DialogDateView: FilterDialogDateView,
   DateView: FilterPopoverDateView,
   Bar: FilterBar,
   BarItem: FilterBarItem,
   BarName: FilterBarName,
   BarButton: FilterBarButton,
   BarClose: FilterBarCloseButton,
+  Date: FilterBarDate,
 });

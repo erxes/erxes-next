@@ -10,7 +10,7 @@ import {
   TextField,
   useQueryState,
 } from 'erxes-ui';
-import { SelectAccountCategory } from './SelectAccountCategory';
+import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
 import { useAccountEdit } from '../hooks/useAccountEdit';
 import { useSetAtom } from 'jotai';
 import { accountDetailAtom } from '../states/accountStates';

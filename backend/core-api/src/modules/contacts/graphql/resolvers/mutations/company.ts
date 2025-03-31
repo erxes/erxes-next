@@ -1,5 +1,5 @@
 import { IContext } from 'core-api/@types';
-import { ICompany } from 'core-api/modules/contacts/@types/company';
+import { ICompany } from 'erxes-core-types';
 
 export const companyMutations = {
   /**
@@ -13,7 +13,7 @@ export const companyMutations = {
    * Updates a company
    */
   async companiesEdit(
-    _root,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & ICompany,
     { models }: IContext,
   ) {
@@ -24,7 +24,7 @@ export const companyMutations = {
    * Removes companies
    */
   async companiesRemove(
-    _root,
+    _parent: undefined,
     { companyIds }: { companyIds: string[] },
     { models }: IContext,
   ) {
@@ -37,7 +37,7 @@ export const companyMutations = {
    * Merge companies
    */
   async companiesMerge(
-    _root,
+    _parent: undefined,
     {
       companyIds,
       companyFields,

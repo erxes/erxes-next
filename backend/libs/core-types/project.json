@@ -1,0 +1,20 @@
+{
+  "name": "erxes-core-types",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "backend/libs/core-types/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/backend/libs/core-types",
+        "tsConfig": "backend/libs/core-types/tsconfig.lib.json",
+        "packageJson": "backend/libs/core-types/package.json",
+        "main": "backend/libs/core-types/src/index.ts",
+        "assets": ["backend/libs/core-types/*.md"]
+      }
+    }
+  }
+}

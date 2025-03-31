@@ -1,10 +1,4 @@
-import {
-  CurrencyCode,
-  Dialog,
-  isDeeplyEqual,
-  Spinner,
-  useQueryState,
-} from 'erxes-ui';
+import { Dialog, isDeeplyEqual, Spinner, useQueryState } from 'erxes-ui';
 import { AccountDialog, AccountForm } from './AccountForm';
 import { TAccountForm } from '../type/accountForm';
 import { useForm } from 'react-hook-form';

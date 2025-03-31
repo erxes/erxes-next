@@ -2,9 +2,22 @@ import { initTRPC } from '@trpc/server';
 
 const t = initTRPC.create();
 
-const serviceRouter = t.router({
-  greet: t.procedure.query(() => {
-    return { message: `Hello, dasdadsadadasds ` };
+interface ICustomer {
+  firstName: string;
+}
+
+export const serviceRouter = t.router({
+  customer: t.router({
+    list: t.procedure.query(async () => {
+      return [
+        {
+          firstName: 'John Doe',
+        },
+        {
+          firstName: 'Jane Smith',
+        },
+      ] as ICustomer[];
+    }),
   }),
 });
 

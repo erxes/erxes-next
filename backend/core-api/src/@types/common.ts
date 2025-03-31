@@ -1,4 +1,4 @@
-import { IUserDocument } from 'erxes-api-modules';
+import { IUserDocument } from 'erxes-core-types';
 import { IModels } from '../connectionResolvers';
 
 export interface IStringMap {
@@ -45,4 +45,16 @@ export interface IListParams {
   searchValue?: string;
   page?: number;
   perPage?: number;
+}
+
+export interface IAttachment {
+  name: string;
+  url: string;
+  size: number;
+  type: string;
+}
+
+export interface IPdfAttachment {
+  pdf?: IAttachment;
+  pages: IAttachment[];
 }

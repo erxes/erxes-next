@@ -1,5 +1,5 @@
 import { IContext } from 'core-api/@types';
-import { ICompanyDocument } from 'core-api/modules/contacts/@types/company';
+import { ICompanyDocument } from 'erxes-core-types';
 
 export default {
   owner: async (company: ICompanyDocument, _, { models }: IContext) => {

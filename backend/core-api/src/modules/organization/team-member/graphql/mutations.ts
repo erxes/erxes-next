@@ -1,5 +1,5 @@
 import { IContext } from '../../../../@types';
-import { IUser, IDetail, ILink, IEmailSignature } from 'erxes-api-modules';
+import { IUser, IDetail, ILink, IEmailSignature } from 'erxes-core-types';
 
 interface IUsersEdit extends IUser {
   channelIds?: string[];
@@ -8,7 +8,7 @@ interface IUsersEdit extends IUser {
 
 export const userMutations = {
   async usersCreateOwner(
-    _root,
+    _parent: undefined,
     {
       email,
       password,
@@ -65,7 +65,7 @@ export const userMutations = {
    * Reset member's password
    */
   async usersResetMemberPassword(
-    _root,
+    _parent: undefined,
     args: { _id: string; newPassword: string },
     { models }: IContext,
   ) {
@@ -76,7 +76,7 @@ export const userMutations = {
    * Change user password
    */
   async usersChangePassword(
-    _root,
+    _parent: undefined,
     args: { currentPassword: string; newPassword: string },
     { user, models }: IContext,
   ) {
@@ -126,7 +126,7 @@ export const userMutations = {
    * Edit user profile
    */
   async usersEditProfile(
-    _root,
+    _parent: undefined,
     {
       username,
       email,
@@ -162,7 +162,7 @@ export const userMutations = {
    * Set Active or inactive user
    */
   async usersSetActiveStatus(
-    _root,
+    _parent: undefined,
     { _id }: { _id: string },
     { user, models }: IContext,
   ) {
@@ -179,7 +179,7 @@ export const userMutations = {
    * Invites users to team members
    */
   async usersInvite(
-    _root,
+    _parent: undefined,
     {
       entries,
     }: {
@@ -231,7 +231,7 @@ export const userMutations = {
    * Resend invitation
    */
   async usersResendInvitation(
-    _root,
+    _parent: undefined,
     { email }: { email: string },
     { models }: IContext,
   ) {
@@ -241,7 +241,7 @@ export const userMutations = {
   },
 
   async usersConfirmInvitation(
-    _root,
+    _parent: undefined,
     {
       token,
       password,
@@ -268,7 +268,7 @@ export const userMutations = {
     return user;
   },
   async usersConfigEmailSignatures(
-    _root,
+    _parent: undefined,
     { signatures }: { signatures: IEmailSignature[] },
     { user, models }: IContext,
   ) {
@@ -276,7 +276,7 @@ export const userMutations = {
   },
 
   async usersConfigGetNotificationByEmail(
-    _root,
+    _parent: undefined,
     { isAllowed }: { isAllowed: boolean },
     { user, models }: IContext,
   ) {
@@ -284,7 +284,7 @@ export const userMutations = {
   },
 
   async usersSetChatStatus(
-    _root,
+    _parent: undefined,
     { _id, status }: { _id: string; status: string },
     { models }: IContext,
   ) {
@@ -300,7 +300,7 @@ export const userMutations = {
    * Upgrade organization plan status
    */
   async editOrganizationInfo(
-    _root,
+    _parent: undefined,
     {
       icon,
       link,
@@ -330,7 +330,7 @@ export const userMutations = {
   },
 
   async editOrganizationDomain(
-    _root,
+    _parent: undefined,
     {
       domain,
       type,

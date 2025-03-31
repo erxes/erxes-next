@@ -68,8 +68,13 @@ export default async function userMiddleware(
   let models: IModels;
   try {
     models = await generateModels(subdomain);
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return res.status(500).json({ error: e.message });
+    } else {
+      // In case `e` is not an instance of Error, handle it accordingly
+      return res.status(500).json({ error: 'An unknown error occurred' });
+    }
   }
 
   if (appToken) {
