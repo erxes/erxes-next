@@ -27,7 +27,7 @@ const generateFilter = async (
     image,
   } = params;
 
-  const filter: FilterQuery<IProductParams> = commonQuerySelector;
+  const filter: FilterQuery<IProductParams> = { ...commonQuerySelector };
 
   const andFilters: any[] = [];
 
