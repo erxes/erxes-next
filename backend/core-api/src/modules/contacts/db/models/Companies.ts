@@ -171,7 +171,7 @@ export const loadCompanyClass = (models: IModels) => {
       },
       idsToExclude?: string[] | string,
     ) {
-      const query: { status: object; [key: string]: any } = {
+      const query: { status: { $ne: string }; [key: string]: any } = {
         status: { $ne: 'deleted' },
       };
       let previousEntry;

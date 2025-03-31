@@ -1,10 +1,10 @@
-import { attachmentSchema } from 'erxes-api-modules';
 import { mongoStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 import {
   PRODUCT_CATEGORY_MASK_TYPES,
   PRODUCT_CATEGORY_STATUSES,
 } from '../../constants';
+import { attachmentSchema } from 'erxes-api-modules';
 
 export const productCategorySchema = new Schema(
   {
