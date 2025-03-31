@@ -69,24 +69,12 @@ app.get('/users', async (_req, res) => {
       ],
     });
 
-    console.log(client);
-
     const customers = await client.customer.list.query({});
 
-    if (!customers) {
-      return res.status(404).json({
-        success: false,
-        message: 'No users found',
-      });
-    }
+    res.json(customers);
   } catch (error) {
     console.error('Error fetching users:', error);
-
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch users',
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
+    res.status(500).json({ error: 'Failed to fetch users' });
   }
 });
 
