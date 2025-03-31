@@ -13,14 +13,17 @@ import {
 } from '../constants/mainSettingsSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SelectAccount } from '@/account/components/SelectAccount';
+import { useMainConfigs } from '../hooks/useMainConfigs';
 
 export const MainSettingsForm = () => {
+  const { configs } = useMainConfigs();
   const form = useForm<TMainSettings>({
     resolver: zodResolver(mainSettingsSchema),
     defaultValues: {
-      mainCurrency: 'MNT',
+      MainCurrency: 'MNT',
     },
   });
+
   const onSubmit = (data: TMainSettings) => {
     console.log(data);
   };
@@ -40,7 +43,7 @@ export const MainSettingsForm = () => {
           <Collapsible.Content className="pt-4 grid grid-cols-2 gap-4">
             <Form.Field
               control={form.control}
-              name="mainCurrency"
+              name="MainCurrency"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label htmlFor="mainCurrency">MAIN CURRENCY</Form.Label>
@@ -79,12 +82,12 @@ export const VatFormFields = ({
 }: {
   form: UseFormReturn<TMainSettings>;
 }) => {
-  const { hasVat } = useWatch({ control: form.control });
+  const { HasVat } = useWatch({ control: form.control });
   return (
     <>
       <Form.Field
         control={form.control}
-        name="hasVat"
+        name="HasVat"
         render={({ field }) => (
           <Form.Item className="col-span-2 flex items-center gap-2 space-y-0">
             <Form.Control>
@@ -97,11 +100,11 @@ export const VatFormFields = ({
           </Form.Item>
         )}
       />
-      {hasVat && (
+      {HasVat && (
         <>
           <Form.Field
             control={form.control}
-            name="vatAccountPayable"
+            name="VatAccountPayable"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label htmlFor="vatAccountPayable">
@@ -117,7 +120,7 @@ export const VatFormFields = ({
           />
           <Form.Field
             control={form.control}
-            name="vatAccountReceivable"
+            name="VatAccountReceivable"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label htmlFor="vatAccountReceivable">
@@ -133,7 +136,7 @@ export const VatFormFields = ({
           />
           <Form.Field
             control={form.control}
-            name="vatAfterAccountPayable"
+            name="VatAfterAccountPayable"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label htmlFor="vatAfterAccountPayable">
@@ -149,7 +152,7 @@ export const VatFormFields = ({
           />
           <Form.Field
             control={form.control}
-            name="vatAfterAccountReceivable"
+            name="VatAfterAccountReceivable"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label htmlFor="vatAfterAccountReceivable">
@@ -174,12 +177,12 @@ export const CtaxFormFields = ({
 }: {
   form: UseFormReturn<TMainSettings>;
 }) => {
-  const { hasCtax } = useWatch({ control: form.control });
+  const { HasCtax } = useWatch({ control: form.control });
   return (
     <>
       <Form.Field
         control={form.control}
-        name="hasCtax"
+        name="HasCtax"
         render={({ field }) => (
           <Form.Item className="col-span-2 flex items-center gap-2 space-y-0 mt-7">
             <Form.Control>
@@ -192,15 +195,13 @@ export const CtaxFormFields = ({
           </Form.Item>
         )}
       />
-      {hasCtax && (
+      {HasCtax && (
         <Form.Field
           control={form.control}
-          name="ctaxAccountPayable"
+          name="CtaxAccountPayable"
           render={({ field }) => (
             <Form.Item>
-              <Form.Label htmlFor="ctaxAccountPayable">
-                Ctax account payable
-              </Form.Label>
+              <Form.Label>Ctax account payable</Form.Label>
               <SelectAccount
                 value={field.value}
                 onChange={field.onChange}
