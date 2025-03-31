@@ -1,12 +1,13 @@
-import { IUserDocument } from 'erxes-core-types';
 import { createGenerateModels } from 'erxes-api-utils';
-import mongoose from 'mongoose';
 import {
   ICompanyDocument,
-  IUserMovementDocument,
   ICustomerDocument,
+  IUserDocument,
+  IUserMovementDocument,
 } from 'erxes-core-types';
+import mongoose from 'mongoose';
 
+import { ITagDocument } from 'erxes-core-types';
 import {
   ICompanyModel,
   loadCompanyClass,
@@ -40,6 +41,7 @@ import {
 import { IUomModel, loadUomClass } from './modules/products/db/models/Uoms';
 import { IConfigDocument } from './modules/settings/db/definitions/configs';
 import { IConfigModel } from './modules/settings/db/models/Configs';
+import { ITagModel, loadTagClass } from './modules/tags/db/models/Tags';
 
 import {
   IBranchDocument,
@@ -54,10 +56,10 @@ import {
   IPositionModel,
   IStructureModel,
   IUnitModel,
-  loadStructureClass,
   loadBranchClass,
   loadDepartmentClass,
   loadPositionClass,
+  loadStructureClass,
   loadUnitClass,
 } from './modules/organization/structure/db/models/Structure';
 
@@ -67,6 +69,7 @@ export interface IModels {
   Users: IUserModel;
   UserMovements: IUserMovemmentModel;
   Configs: IConfigModel;
+  Tags: ITagModel;
   Products: IProductModel;
   ProductCategories: IProductCategoryModel;
   ProductsConfigs: IProductsConfigModel;
@@ -105,6 +108,8 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     'configs',
     loadUserMovemmentClass(models),
   );
+
+  models.Tags = db.model<ITagDocument, ITagModel>('tags', loadTagClass(models));
 
   models.Products = db.model<IProductDocument, IProductModel>(
     'products',

@@ -41,9 +41,9 @@ import {
 } from '../../modules/organization/structure/graphql/schemas/units';
 
 import {
-  ConfigTypes,
   mutations as ConfigsMutations,
   queries as ConfigsQueries,
+  ConfigTypes,
 } from '../../modules/settings/graphql/schemas';
 
 import {
@@ -51,6 +51,12 @@ import {
   queries as UserQueries,
   types as UserTypes,
 } from '../../modules/organization/team-member/graphql/schema';
+
+import {
+  mutations as TagMutations,
+  queries as TagQueries,
+  types as TagTypes,
+} from '../../modules/tags/graphql/schemas';
 
 import {
   mutations as ProductMutations,
@@ -81,6 +87,7 @@ export const types = `
     ${CommonTypes}
     ${UserTypes}
     ${ConfigTypes}
+    ${TagTypes}
     ${ProductTypes}
     ${BranchTypes}
     ${DepartmentTypes}
@@ -96,6 +103,7 @@ export const queries = `
     ${AuthQueries}
     ${UserQueries}
     ${ConfigsQueries}
+    ${TagQueries}
     ${ProductQueries}
     ${branchsQueries}
     ${departmentsQueries}
@@ -109,6 +117,7 @@ export const mutations = `
     ${AuthMutations}
     ${UserMutations}
     ${ConfigsMutations}
+    ${TagMutations}
     ${ProductMutations}
     ${branchsMutations}
     ${departmentsMutations}

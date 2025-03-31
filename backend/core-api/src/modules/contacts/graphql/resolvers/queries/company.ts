@@ -38,7 +38,7 @@ export const companyQueries = {
       params,
     );
 
-    const totalCount: number = await models.Customers.find(
+    const totalCount: number = await models.Companies.find(
       filter,
     ).countDocuments();
 
