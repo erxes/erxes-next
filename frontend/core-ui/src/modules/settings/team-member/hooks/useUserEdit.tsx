@@ -11,21 +11,16 @@ export const useUsersDetailEdit = () => {
     operationVariables: OperationVariables,
     fields: string[],
   ) => {
-    console.log('-----------------')
     const variables = operationVariables?.variables || {};
     const fieldsToUpdate: Record<string, (existing: any) => any> = {};
     fields.forEach((field) => {
       fieldsToUpdate[field] = () => variables.details?.[field];
     });
 
-    console.log(operationVariables)
-
     return _usersDetailEdit({
       ...operationVariables,
       variables,
       update: (cache, { data }) => {
-        console.log(data)
-        console.log('------')
         if (!data?.usersEdit) return;
 
         cache.modify({
@@ -63,12 +58,12 @@ export const useUserEdit = () => {
     fields.forEach((field) => {
       fieldsToUpdate[field] = () => variables[field];
     });
-    console.log(variables,fieldsToUpdate)
     return _usersEdit({
       ...operationVariables,
       variables,
-      update: (cache, { data: { usersEdit } }) => {
-        console.log(usersEdit,cache,fieldsToUpdate);
+      update: (cache, { data }) => {
+        if (!data?.usersEdit) return;
+        const { usersEdit } = data;
         cache.modify({
           id: cache.identify(usersEdit),
           fields: fieldsToUpdate,

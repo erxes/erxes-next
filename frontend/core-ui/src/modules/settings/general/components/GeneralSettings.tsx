@@ -32,7 +32,7 @@ const GeneralSettings = () => {
       },
       {} as Record<string, any>,
     );
-    updateConfig(updatedConfigs);
+    await updateConfig(updatedConfigs);
   };
 
   const submitHandler: SubmitHandler<TGeneralSettingsProps> = useCallback(
@@ -47,12 +47,12 @@ const GeneralSettings = () => {
           });
         });
       } catch (error) {
-        console.error('Error occured on form submit', error);
+        console.error('Error occurred on form submit', error);
       } finally {
         setIsLoading(false);
       }
     },
-    [],
+    [updateCurrency, handleLanguage, toast, setIsLoading],
   );
 
   useEffect(() => {
