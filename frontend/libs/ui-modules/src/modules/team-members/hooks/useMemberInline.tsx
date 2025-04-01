@@ -1,11 +1,11 @@
-import { useContext } from 'react';
-import { MemberInlineContext } from '../contexts/MemberInlineContext';
-import { IMember } from '../types/TeamMembers';
+import { OperationVariables, useQuery } from '@apollo/client';
+import { GET_USER_INLINE_DETAIL } from '../graphql/queries/userQueries';
 
-export const useMemberInlineContext = () => {
-  const memberInline = useContext(MemberInlineContext);
-  return (
-    memberInline ||
-    ({} as IMember['details'] & { loading: boolean; _id: string })
-  );
+export const useMemberInline = (options: OperationVariables) => {
+  const { data, loading } = useQuery(GET_USER_INLINE_DETAIL, options);
+
+  return {
+    loading,
+    memberDetail: data?.userDetail,
+  };
 };

@@ -31,6 +31,28 @@ export const GET_USERS_GROUP = gql`
   }
 `;
 
+export const GET_USER_INLINE_DETAIL = gql`
+  query userDetail($_id: String) {
+    userDetail(_id: $_id) {
+      _id
+      username
+      email
+      status
+      details {
+        avatar
+        fullName
+        shortName
+        position
+        workStartedDate
+        firstName
+        middleName
+        lastName
+      }
+      employeeId
+    }
+  }
+`;
+
 export const GET_ASSIGNED_MEMBER = gql`
   query AssignedMember($_id: String) {
     userDetail(_id: $_id) {

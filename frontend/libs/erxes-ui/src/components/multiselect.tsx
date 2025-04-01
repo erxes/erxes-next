@@ -7,7 +7,7 @@ import { IconX } from '@tabler/icons-react';
 import { Command } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 
-export interface Option {
+export interface MultiSelectOption {
   value: string;
   label: string;
   disable?: boolean;
@@ -17,14 +17,14 @@ export interface Option {
   [key: string]: string | boolean | undefined;
 }
 interface GroupOption {
-  [key: string]: Option[];
+  [key: string]: MultiSelectOption[];
 }
 
 interface MultipleSelectorProps {
-  value?: Option[];
-  defaultOptions?: Option[];
+  value?: MultiSelectOption[];
+  defaultOptions?: MultiSelectOption[];
   /** manually controlled options */
-  options?: Option[];
+  options?: MultiSelectOption[];
   placeholder?: string;
   /** Loading component. */
   loadingIndicator?: React.ReactNode;
@@ -38,14 +38,14 @@ interface MultipleSelectorProps {
    **/
   triggerSearchOnFocus?: boolean;
   /** async search */
-  onSearch?: (value: string) => Promise<Option[]>;
+  onSearch?: (value: string) => Promise<MultiSelectOption[]>;
   /**
    * sync search. This search will not showing loadingIndicator.
    * The rest props are the same as async search.
    * i.e.: creatable, groupBy, delay.
    **/
-  onSearchSync?: (value: string) => Option[];
-  onChange?: (options: Option[]) => void;
+  onSearchSync?: (value: string) => MultiSelectOption[];
+  onChange?: (options: MultiSelectOption[]) => void;
   /** Limit the maximum number of selected options. */
   maxSelected?: number;
   /** When the number of selected options exceeds the limit, the onMaxSelected will be called. */
@@ -78,7 +78,7 @@ interface MultipleSelectorProps {
 }
 
 export interface MultipleSelectorRef {
-  selectedValue: Option[];
+  selectedValue: MultiSelectOption[];
   input: HTMLInputElement;
   focus: () => void;
   reset: () => void;
@@ -98,7 +98,7 @@ function useDebounce<T>(value: T, delay?: number): T {
   return debouncedValue;
 }
 
-function transToGroupOption(options: Option[], groupBy?: string) {
+function transToGroupOption(options: MultiSelectOption[], groupBy?: string) {
   if (options.length === 0) {
     return {};
   }
@@ -119,7 +119,10 @@ function transToGroupOption(options: Option[], groupBy?: string) {
   return groupOption;
 }
 
-function removePickedOption(groupOption: GroupOption, picked: Option[]) {
+function removePickedOption(
+  groupOption: GroupOption,
+  picked: MultiSelectOption[],
+) {
   const cloneOption = JSON.parse(JSON.stringify(groupOption)) as GroupOption;
 
   for (const [key, value] of Object.entries(cloneOption)) {
@@ -130,7 +133,10 @@ function removePickedOption(groupOption: GroupOption, picked: Option[]) {
   return cloneOption;
 }
 
-function isOptionsExist(groupOption: GroupOption, targetOption: Option[]) {
+function isOptionsExist(
+  groupOption: GroupOption,
+  targetOption: MultiSelectOption[],
+) {
   for (const [, value] of Object.entries(groupOption)) {
     if (
       value.some((option) => targetOption.find((p) => p.value === option.value))
@@ -206,7 +212,9 @@ export const MultipleSelector = React.forwardRef<
     const [isLoading, setIsLoading] = React.useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null); // Added this
 
-    const [selected, setSelected] = React.useState<Option[]>(value || []);
+    const [selected, setSelected] = React.useState<MultiSelectOption[]>(
+      value || [],
+    );
     const [options, setOptions] = React.useState<GroupOption>(
       transToGroupOption(arrayDefaultOptions, groupBy),
     );
@@ -237,7 +245,7 @@ export const MultipleSelector = React.forwardRef<
     };
 
     const handleUnselect = React.useCallback(
-      (option: Option) => {
+      (option: MultiSelectOption) => {
         const newOptions = selected.filter((s) => s.value !== option.value);
         setSelected(newOptions);
         onChange?.(newOptions);
@@ -463,7 +471,7 @@ export const MultipleSelector = React.forwardRef<
             inputRef?.current?.focus();
           }}
         >
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1 w-full">
             {selected.map((option) => {
               return (
                 <div
@@ -524,7 +532,7 @@ export const MultipleSelector = React.forwardRef<
                   : placeholder
               }
               className={cn(
-                'flex-1 bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed',
+                'flex-1 h-7 w-full bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed',
                 {
                   'w-full': hidePlaceholderWhenSelected,
                   'px-3 py-2': selected.length === 0,
@@ -532,6 +540,7 @@ export const MultipleSelector = React.forwardRef<
                 },
                 inputProps?.className,
               )}
+              wrapperClassName="border-none rounded-sm"
             />
             <button
               type="button"

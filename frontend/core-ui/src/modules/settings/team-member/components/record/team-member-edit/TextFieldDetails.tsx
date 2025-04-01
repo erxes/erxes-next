@@ -1,17 +1,17 @@
 import { TextField } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
-import { useUserEdit } from '../../../hooks/useUserEdit';
+import { useUserEdit } from '@/settings/team-member/hooks/useUserEdit';
+import { IUsersDetails } from '@/settings/team-member/types';
 
 interface TextFieldProps {
   placeholder?: string;
   value: string;
-  field: string;
+  field: keyof IUsersDetails;
   fieldId?: string;
   _id: string;
   className?: string;
 }
 
-export const TextFieldUser = ({
+export const TextFieldUserDetails = ({
   placeholder,
   value,
   field,
@@ -24,7 +24,7 @@ export const TextFieldUser = ({
     if (editingValue === value) return;
     usersEdit(
       {
-        variables: { _id, [field]: editingValue },
+        variables: { _id, details: { [field]: editingValue } },
       },
       [field],
     );

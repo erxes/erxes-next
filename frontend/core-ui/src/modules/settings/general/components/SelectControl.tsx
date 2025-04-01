@@ -1,6 +1,6 @@
 import { Select, Form } from 'erxes-ui';
 import { Control, Path } from 'react-hook-form';
-import { TGeneralSettingsProps } from '../types';
+import { TGeneralSettingsProps } from '@/settings/general/types';
 
 type Props = {
   name: string;

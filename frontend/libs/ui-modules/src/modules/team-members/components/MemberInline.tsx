@@ -8,7 +8,7 @@ import {
   TextOverflowTooltip,
   Tooltip,
 } from 'erxes-ui';
-import { useMemberInlineContext } from '../hooks/useMemberInline';
+import { useMemberInlineContext } from '../hooks/useMemberInlineContext';
 import { Slot } from '@radix-ui/react-slot';
 import { useAssignedMember } from '../hooks/useUsers';
 import { MemberInlineContext } from '../contexts/MemberInlineContext';
