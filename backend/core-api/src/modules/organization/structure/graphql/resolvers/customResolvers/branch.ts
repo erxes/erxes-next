@@ -1,5 +1,4 @@
-import { IContext } from '../../../../../../@types';
-import { IModels } from '../../../../../../connectionResolvers';
+import { IModels, IContext } from '../../../../../../connectionResolvers';
 import { IBranchDocument } from '../../../@types/structure';
 
 const getAllChildrenIds = async (models: IModels, parentId: string) => {

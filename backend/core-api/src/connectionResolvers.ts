@@ -44,6 +44,7 @@ import { IUomModel, loadUomClass } from './modules/products/db/models/Uoms';
 import { IConfigDocument } from './modules/settings/db/definitions/configs';
 import { IConfigModel } from './modules/settings/db/models/Configs';
 import { ITagModel, loadTagClass } from './modules/tags/db/models/Tags';
+import { IMainContext } from 'erxes-core-types';
 
 import {
   IBranchDocument,
@@ -52,6 +53,7 @@ import {
   IStructureDocument,
   IUnitDocument,
 } from './modules/organization/structure/@types/structure';
+
 import {
   IBranchModel,
   IDepartmentModel,
@@ -81,6 +83,11 @@ export interface IModels {
   Units: IUnitModel; //
   Branches: IBranchModel; //
   Positions: IPositionModel;
+}
+
+export interface IContext extends IMainContext {
+  models: IModels;
+  commonQuerySelector: any;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {

@@ -14,14 +14,13 @@ import { retryGetProxyTargets } from './proxy/targets';
 import { startRouter, stopRouter } from './apollo-router';
 import userMiddleware from './middlewares/userMiddleware';
 import { initMQWorkers } from './mq/workers/workers';
-
-import { CoreTRPCAppRouter } from 'erxes-api-rpc';
-
 import {
   applyProxiesToGraphql,
   applyProxyToCore,
   proxyReq,
 } from './proxy/middleware';
+
+import { CoreTRPCAppRouter } from 'erxes-api-rpc';
 
 import { getServices, redis } from 'erxes-api-utils';
 import { applyGraphqlLimiters } from './middlewares/graphql-limiter';
@@ -56,10 +55,6 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.get('/users', async (_req, res) => {
-  // const coreService = await getService('core');
-
-  // console.log(coreService.address);
-
   try {
     const client = createTRPCClient<CoreTRPCAppRouter>({
       links: [

@@ -1,7 +1,7 @@
 import { getCoreDomain } from 'erxes-api-utils';
 
 import * as dotenv from 'dotenv';
-import { IContext } from '../../../@types';
+import { IContext } from '../../../connectionResolvers';
 import fetch from 'node-fetch';
 
 dotenv.config();

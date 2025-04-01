@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../../@types/common';
+import { IContext } from '../../../../../../connectionResolvers';
 import { paginate } from 'erxes-api-utils';
 import { generateFilters } from './structureUtils';
 

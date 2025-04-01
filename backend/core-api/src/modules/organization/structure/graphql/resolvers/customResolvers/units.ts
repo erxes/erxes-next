@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../../@types';
+import { IContext } from '../../../../../../connectionResolvers';
 import { IUnitDocument } from '../../../@types/structure';
 
 export default {

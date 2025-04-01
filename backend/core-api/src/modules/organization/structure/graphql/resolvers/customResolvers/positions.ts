@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../../@types';
+import { IContext } from '../../../../../../connectionResolvers';
 
 import { IModels } from '../../../../../../connectionResolvers';
 import { IPositionDocument } from '../../../@types/structure';

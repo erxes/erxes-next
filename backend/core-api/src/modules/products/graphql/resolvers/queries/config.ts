@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../@types';
+import { IContext } from '../../../../../connectionResolvers';
 
 export const configQueries = {
   /**

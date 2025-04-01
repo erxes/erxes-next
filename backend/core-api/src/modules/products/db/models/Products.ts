@@ -1,7 +1,7 @@
-import { IProduct, IProductDocument } from 'erxes-core-types';
+import { IProduct, IProductDocument, ICustomField } from 'erxes-core-types';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
-import { ICustomField } from '../../../../@types';
+
 import { IModels } from '../../../../connectionResolvers';
 import { PRODUCT_STATUSES } from '../../constants';
 import { checkCodeMask, checkSameMaskConfig } from '../../utils';

@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../../@types/common';
+import { IContext } from '../../../../../../connectionResolvers';
 export const positionMutations = {
   async positionsAdd(_root, doc, { user, models }: IContext) {
     const position = await models.Positions.createPosition(doc, user);

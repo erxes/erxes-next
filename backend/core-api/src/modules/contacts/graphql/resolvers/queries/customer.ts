@@ -1,6 +1,6 @@
 import { paginate } from 'erxes-api-utils';
 import { ICustomerQueryFilterParams } from 'erxes-core-types';
-import { IContext } from '../../../../../@types';
+import { IContext } from '../../../../../connectionResolvers';
 
 const generateFilter = (params: ICustomerQueryFilterParams) => {
   const { searchValue } = params;

@@ -1,5 +1,5 @@
 import { authCookieOptions, getEnv } from 'erxes-api-utils';
-import { IContext } from '../../../../@types';
+import { IContext } from '../../../../connectionResolvers';
 
 type LoginParams = {
   email: string;

@@ -1,6 +1,7 @@
 import { escapeRegExp } from 'erxes-api-utils';
 import { IProductCategoryDocument } from 'erxes-core-types';
-import { IContext } from '../../../../../@types';
+import { IContext } from '../../../../../connectionResolvers';
+
 import { PRODUCT_STATUSES } from '../../../constants';
 
 export default {

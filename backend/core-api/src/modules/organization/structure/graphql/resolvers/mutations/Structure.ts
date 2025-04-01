@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../../@types/common';
+import { IContext } from '../../../../../../connectionResolvers';
 export const structuresMutations = {
   async structuresAdd(_root, doc, { user, models }: IContext) {
     const structure = await models.Structures.createStructure(doc, user);

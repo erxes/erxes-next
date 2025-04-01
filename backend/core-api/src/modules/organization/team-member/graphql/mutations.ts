@@ -1,4 +1,4 @@
-import { IContext } from '../../../../@types';
+import { IContext } from '../../../../connectionResolvers';
 import { IUser, IDetail, ILink, IEmailSignature } from 'erxes-core-types';
 
 interface IUsersEdit extends IUser {
@@ -193,14 +193,14 @@ export const userMutations = {
         departmentId?: string;
       }>;
     },
-    { docModifier, models }: IContext,
+    { models }: IContext,
   ) {
     for (const entry of entries) {
       await models.Users.checkDuplication({ email: entry.email });
 
       const doc: any = entry;
 
-      const docModified = docModifier({});
+      const docModified = doc;
 
       if (docModified?.scopeBrandIds?.length) {
         doc.brandIds = docModified.scopeBrandIds;

@@ -1,7 +1,8 @@
 import { escapeRegExp, paginate } from 'erxes-api-utils';
 import { IProductDocument } from 'erxes-core-types';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { IContext } from '../../../../../@types';
+import { IContext } from '../../../../../connectionResolvers';
+
 import { IModels } from '../../../../../connectionResolvers';
 import { IProductParams } from '../../../@types/product';
 import { PRODUCT_STATUSES } from '../../../constants';

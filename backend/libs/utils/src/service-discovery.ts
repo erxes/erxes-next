@@ -22,7 +22,11 @@ export const getServices = async (): Promise<string[]> => {
 };
 
 export const addService = async (serviceName: string): Promise<void> => {
-  queue.add('service-join', { serviceName });
+  const isMember = await redis.sismember('enabled-services', serviceName);
+  if (!isMember) {
+    await queue.add('service-join', { serviceName });
+  }
+
   try {
     await redis.sadd('enabled-services', serviceName);
     console.log(`Service ${serviceName} registered in Redis`);

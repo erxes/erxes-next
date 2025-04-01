@@ -1,5 +1,5 @@
-import { IProductDocument } from 'erxes-core-types';
-import { IContext } from '../../../../../@types';
+// import { IProductDocument } from 'erxes-core-types';
+import { IContext } from '../../../../../connectionResolvers';
 
 export default {
   __resolveReference: async (
@@ -8,24 +8,24 @@ export default {
   ) => {
     return models.Products.findOne({ _id });
   },
-  category: async (
-    product: IProductDocument,
-    _args: undefined,
-    { dataLoaders }: IContext,
-  ) => {
-    return (
-      (product.categoryId &&
-        dataLoaders?.productCategory.load(product.categoryId)) ||
-      null
-    );
-  },
-  vendor: (
-    product: IProductDocument,
-    _args: undefined,
-    { dataLoaders }: IContext,
-  ) => {
-    return (
-      (product.vendorId && dataLoaders?.company.load(product.vendorId)) || null
-    );
-  },
+  // category: async (
+  //   product: IProductDocument,
+  //   _args: undefined,
+  //   { dataLoaders }: IContext,
+  // ) => {
+  //   return (
+  //     (product.categoryId &&
+  //       dataLoaders?.productCategory.load(product.categoryId)) ||
+  //     null
+  //   );
+  // },
+  // vendor: (
+  //   product: IProductDocument,
+  //   _args: undefined,
+  //   { dataLoaders }: IContext,
+  // ) => {
+  //   return (
+  //     (product.vendorId && dataLoaders?.company.load(product.vendorId)) || null
+  //   );
+  // },
 };

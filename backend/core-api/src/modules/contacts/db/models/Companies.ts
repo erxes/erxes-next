@@ -1,9 +1,8 @@
-import { ICustomField } from '../../../../@types';
 import { IModels } from '../../../../connectionResolvers';
 import { IUserDocument } from 'erxes-core-types';
 import { validSearchText } from 'erxes-api-utils';
 import { Model } from 'mongoose';
-import { ICompany, ICompanyDocument } from 'erxes-core-types';
+import { ICompany, ICompanyDocument, ICustomField } from 'erxes-core-types';
 import { companySchema } from '../definitions/company';
 
 export interface ICompanyModel extends Model<ICompanyDocument> {

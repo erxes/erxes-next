@@ -1,4 +1,4 @@
-import { IContext } from '../../../../@types';
+import { IContext } from '../../../../connectionResolvers';
 import { USER_ROLES } from 'erxes-api-modules';
 import { IUserDocument } from 'erxes-core-types';
 import { IModels } from '../../../../connectionResolvers';
@@ -111,10 +111,9 @@ export const userQueries = {
   async usersTotalCount(
     _parent: undefined,
     args: IListArgs,
-    { userBrandIdsSelector, models, subdomain, user }: IContext,
+    { models, subdomain, user }: IContext,
   ) {
     const selector = {
-      ...userBrandIdsSelector,
       ...(await queryBuilder(models, args, subdomain, user)),
       ...NORMAL_USER_SELECTOR,
     };
@@ -137,9 +136,9 @@ export const userQueries = {
       ids,
       assignedToMe,
     }: { isActive: boolean; ids: string[]; assignedToMe: string },
-    { userBrandIdsSelector, user, models }: IContext,
+    { user, models }: IContext,
   ) {
-    const selector: { isActive?: boolean; _id?: any } = userBrandIdsSelector;
+    const selector: { isActive?: boolean; _id?: any } = {};
 
     if (isActive) {
       selector.isActive = true;
@@ -159,10 +158,9 @@ export const userQueries = {
   async users(
     _parent: undefined,
     args: IListArgs,
-    { userBrandIdsSelector, models, subdomain, user }: IContext,
+    { models, subdomain, user }: IContext,
   ) {
     const selector = {
-      ...userBrandIdsSelector,
       ...(await queryBuilder(models, args, subdomain, user)),
       ...NORMAL_USER_SELECTOR,
     };

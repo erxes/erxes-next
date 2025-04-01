@@ -1,7 +1,7 @@
 // import { getCoreDomain, initFirebase, resetConfigsCache } from '../../utils';
 import fetch from 'node-fetch';
 import { getCoreDomain, resetConfigsCache } from 'erxes-api-utils';
-import { IContext } from '../../../@types';
+import { IContext } from '../../../connectionResolvers';
 
 export const configMutations = {
   /**

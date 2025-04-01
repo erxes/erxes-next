@@ -1,6 +1,7 @@
 import { escapeRegExp } from 'erxes-api-utils';
 import { FilterQuery } from 'mongoose';
-import { IContext } from '../../../../../@types';
+import { IContext } from '../../../../../connectionResolvers';
+
 import { IModels } from '../../../../../connectionResolvers';
 import { IProductCategoryParams } from '../../../@types/category';
 

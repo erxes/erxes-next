@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../../@types/common';
+import { IContext } from '../../../../../../connectionResolvers';
 export const deparmentMutations = {
   async departmentsAdd(_root, doc, { user, models }: IContext) {
     const department = await models.Departments.createDepartment(doc, user);
