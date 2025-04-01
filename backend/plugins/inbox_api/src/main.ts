@@ -27,9 +27,7 @@ app.get('/users', async (_req, res) => {
 
     const customers = await client.customer.list.query({});
 
-    console.log(customers);
-
-    res.json([{ firstName: '123123' }]);
+    res.json(customers);
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Failed to fetch users' });

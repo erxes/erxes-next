@@ -17,7 +17,13 @@ export const customerRouter = t.router({
 
         const models = await generateModels('os');
 
-        return models.Customers.find(query);
+        const sda = {
+          middleName: '23123',
+          sex: 1,
+          description: 1,
+        };
+
+        return sda;
       }),
 
     get: t.procedure
