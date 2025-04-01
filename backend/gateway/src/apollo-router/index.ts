@@ -2,7 +2,7 @@ import { spawn, ChildProcess, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'yaml';
-import { ErxesProxyTarget, retryGetProxyTargets } from '../proxy/targets';
+import { retryGetProxyTargets } from '../proxy/targets';
 import {
   dirTempPath,
   routerConfigPath,
@@ -96,7 +96,7 @@ const createRouterConfig = async () => {
     cors: {
       allow_credentials: true,
       origins: [
-        DOMAIN ? DOMAIN : 'http://localhost:3000',
+        DOMAIN ? DOMAIN : 'http://localhost:3001',
         ...(ALLOWED_DOMAINS || '').split(','),
         'https://studio.apollographql.com',
       ].filter((x) => typeof x === 'string'),
@@ -122,11 +122,12 @@ const createRouterConfig = async () => {
   fs.writeFileSync(routerConfigPath, yaml.stringify(config));
 };
 
-export const startRouter = async (proxyTargets: ErxesProxyTarget[]) => {
-  await supergraphCompose(proxyTargets);
+export const startRouter = async (proxy) => {
   await createRouterConfig();
   console.log('Downloading router...');
   await downloadRouter();
+  await supergraphCompose(proxy);
+  console.log('Creating router config...');
 
   const devOptions = ['--dev'];
 

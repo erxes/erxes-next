@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import { filesValidationSchema } from "@/settings/file-upload/schema";
+import { FILES_VALIDATION_SCHEMA } from "@/settings/file-upload/schema";
 
-type UploadConfigFormT = z.infer<typeof filesValidationSchema>;
+type UploadConfigFormT = z.infer<typeof FILES_VALIDATION_SCHEMA>;
 type DynamicFieldsT = Omit<UploadConfigFormT, 'UPLOAD_FILE_TYPES' | 'WIDGETS_UPLOAD_FILE_TYPES' | 'FILE_SYSTEM_PUBLIC'>
 
 type serviceTypeT = {

@@ -4,7 +4,7 @@ import { SETTINGS_ROUTES } from '../constants/settingsRoutes';
 
 export const AccountingSidebar = () => {
   return (
-    <Sidebar collapsible="none" className="border-r">
+    <Sidebar collapsible="none" className="border-r flex-none">
       <Sidebar.Group>
         <Sidebar.GroupContent>
           <Sidebar.Menu>

@@ -1,6 +1,6 @@
 import { IAttachment } from 'erxes-ui';
 
-export interface ProductT {
+export interface IProduct {
   _id: string;
   name: string;
   unitPrice: number;
@@ -11,7 +11,7 @@ export interface ProductT {
   type: 'product' | 'service' | 'unique' | 'subscription';
 }
 
-export interface ProductCategoryT {
+export interface IProductCategory {
   _id: string;
   name: string;
   avatar: IAttachment;

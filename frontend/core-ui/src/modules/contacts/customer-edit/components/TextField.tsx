@@ -1,4 +1,4 @@
-import { Text } from 'erxes-ui/modules/record-field/components/Text';
+import { TextField } from 'erxes-ui';
 import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
 
 interface TextFieldProps {
@@ -10,7 +10,7 @@ interface TextFieldProps {
   className?: string;
 }
 
-export const TextField = ({
+export const TextFieldCustomer = ({
   placeholder,
   value,
   field,
@@ -29,7 +29,7 @@ export const TextField = ({
     );
   };
   return (
-    <Text
+    <TextField
       placeholder={placeholder}
       value={value}
       field={field}

@@ -1,4 +1,4 @@
-import { Filter } from 'erxes-ui/modules/filter/types/filter';
+import { IFilter } from 'erxes-ui/modules/filter/types/filter';
 
 import { FilterBar } from './FilterBar';
 import { useQueryState } from 'erxes-ui/hooks';
@@ -6,7 +6,7 @@ import { useQueryState } from 'erxes-ui/hooks';
 export const FilterBarWithHookRoot = ({
   activeFilters,
 }: {
-  activeFilters: Filter[];
+  activeFilters: IFilter[];
 }) => {
   if (!activeFilters.length) {
     return null;
@@ -27,7 +27,7 @@ const FilterBarItemWithHook = ({
   condition,
   bar,
   ...props
-}: Filter) => {
+}: IFilter) => {
   const [value, setFilter] = useQueryState(accessoryKey);
 
   return value ? (

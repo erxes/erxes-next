@@ -10,7 +10,7 @@ import {
 } from 'erxes-ui';
 
 import { useProductCategories } from '@/products/product-category/hooks/useProductCategories';
-import { ProductCategoryT } from '@/products/types/productTypes';
+import { IProductCategory } from '@/products/types/productTypes';
 
 export const SelectCategory = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
@@ -22,16 +22,16 @@ export const SelectCategory = React.forwardRef<
     id?: string;
   }
 >(({ onSelect, selected, id, ...props }, ref) => {
-  const [selectedCategory, setSelectedCategory] = useState<ProductCategoryT>();
+  const [selectedCategory, setSelectedCategory] = useState<IProductCategory>();
   const { productCategories, error, loading } = useProductCategories({
     onCompleted: ({
       productCategories,
     }: {
-      productCategories: ProductCategoryT[];
+      productCategories: IProductCategory[];
     }) => {
       setSelectedCategory(
         productCategories?.find(
-          (category: ProductCategoryT) => category._id === selected,
+          (category: IProductCategory) => category._id === selected,
         ),
       );
     },
@@ -39,7 +39,7 @@ export const SelectCategory = React.forwardRef<
 
   const handleSelect = (categoryId: string) => {
     const category = productCategories?.find(
-      (category: ProductCategoryT) => category._id === categoryId,
+      (category: IProductCategory) => category._id === categoryId,
     );
     setSelectedCategory(category);
     onSelect(categoryId);
@@ -53,12 +53,12 @@ export const SelectCategory = React.forwardRef<
         selectedCategory={selectedCategory}
         loading={loading}
       />
-      <Combobox.Content align="start">
+      <Combobox.Content>
         <Command className="outline-none">
           <Command.Input />
           <Command.List>
             <Combobox.Empty error={error} loading={loading} />
-            {productCategories?.map((category: ProductCategoryT) => (
+            {productCategories?.map((category: IProductCategory) => (
               <SelectCategoryItem
                 key={category._id}
                 category={category}
@@ -66,7 +66,7 @@ export const SelectCategory = React.forwardRef<
                 onSelect={handleSelect}
                 hasChildren={
                   productCategories.find(
-                    (c: ProductCategoryT) => c.parentId === category._id,
+                    (c: IProductCategory) => c.parentId === category._id,
                   ) !== undefined
                 }
               />
@@ -84,7 +84,7 @@ export const SelectCategoryItem = ({
   onSelect,
   hasChildren,
 }: {
-  category: ProductCategoryT;
+  category: IProductCategory;
   selected: boolean;
   onSelect: (categoryId: string) => void;
   hasChildren: boolean;
@@ -109,7 +109,7 @@ export const SelectCategoryBadge = ({
   category,
   selected,
 }: {
-  category?: ProductCategoryT;
+  category?: IProductCategory;
   selected?: boolean;
 }) => {
   if (!category) return null;
@@ -139,7 +139,7 @@ export const SelectCategoryBadge = ({
 export const SelectCategoryTrigger = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
   React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
-    selectedCategory: ProductCategoryT | undefined;
+    selectedCategory: IProductCategory | undefined;
     loading: boolean;
   }
 >(({ selectedCategory, loading, className, ...props }, ref) => {

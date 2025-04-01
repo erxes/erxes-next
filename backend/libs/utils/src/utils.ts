@@ -1,9 +1,11 @@
 import * as mongoose from 'mongoose';
-import { connect } from './mongo-connection';
+import { connect } from './mongo/mongo-connection';
 import {
   coreModelOrganizations,
   getSaasCoreConnection,
 } from './saas/saas-mongo-connection';
+
+import { redis } from './redis';
 
 export const getEnv = ({
   name,
@@ -27,7 +29,7 @@ export const getEnv = ({
   return value || '';
 };
 
-export const getSubdomain = (req): string => {
+export const getSubdomain = (req: any): string => {
   const hostname =
     req.headers['nginx-hostname'] || req.headers.hostname || req.hostname;
   const subdomain = hostname.replace(/(^\w+:|^)\/\//, '').split('.')[0];
@@ -143,4 +145,44 @@ export const paginate = (
   }
 
   return collection.limit(_limit).skip((_page - 1) * _limit);
+};
+
+export const validSearchText = (values: string[]) => {
+  const value = values.join(' ');
+
+  if (value.length < 512) {
+    return value;
+  }
+
+  return value.substring(0, 511);
+};
+
+export const resetConfigsCache = async () => {
+  await redis.set('configs_erxes_api', '');
+};
+
+export const getCoreDomain = () => {
+  const NODE_ENV = process.env.NODE_ENV;
+
+  return NODE_ENV === 'production'
+    ? 'https://erxes.io'
+    : 'http://localhost:3500';
+};
+
+export const escapeRegExp = (str: string) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+export const checkCodeDuplication = async (collection, code: string) => {
+  if (code.includes('/')) {
+    throw new Error('The "/" character is not allowed in the code');
+  }
+
+  const category = await collection.findOne({
+    code,
+  });
+
+  if (category) {
+    throw new Error('Code must be unique');
+  }
 };

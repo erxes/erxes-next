@@ -7,7 +7,9 @@ import { Command as CommandPrimitive } from 'cmdk';
 
 import { Dialog } from './dialog';
 import { cn } from '../lib/utils';
-import { Skeleton } from './skeleton';
+import { useRef } from 'react';
+import { useEffect } from 'react';
+import { mergeRefs } from 'react-merge-refs';
 
 const CommandRoot = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -16,7 +18,7 @@ const CommandRoot = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      'flex h-full w-full flex-col overflow-hidden rounded-md bg-background',
+      'flex h-full w-full flex-col overflow-hidden rounded-md bg-background outline-none',
       className,
     )}
     {...props}
@@ -47,12 +49,12 @@ const CommandDialog = ({
 };
 
 const commanInputVariants = cva(
-  'flex h-8 w-full bg-muted rounded-md p-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+  'flex h-8 w-full rounded-md p-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
-        primary: 'h-10 bg-transparent',
-        secondary: 'bg-muted',
+        primary: 'h-9 bg-transparent',
+        secondary: '',
       },
     },
   },
@@ -63,41 +65,64 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
     variant?: 'primary' | 'secondary';
     wrapperClassName?: string;
+    focusOnMount?: boolean;
   }
->(({ className, variant = 'primary', wrapperClassName, ...props }, ref) => {
-  if (variant === 'primary') {
+>(
+  (
+    {
+      className,
+      variant = 'secondary',
+      wrapperClassName,
+      focusOnMount,
+      ...props
+    },
+    ref,
+  ) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      if (inputRef.current && focusOnMount) {
+        inputRef.current.focus();
+      }
+    }, [focusOnMount]);
+
+    if (variant === 'primary') {
+      return (
+        <div
+          className={cn('flex items-center border-b px-3', wrapperClassName)}
+          cmdk-input-wrapper=""
+        >
+          <IconSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+          <CommandPrimitive.Input
+            ref={mergeRefs([inputRef, ref])}
+            className={cn(
+              commanInputVariants({ variant: 'primary' }),
+              'pl-0',
+              className,
+            )}
+            {...props}
+          />
+        </div>
+      );
+    }
+
     return (
       <div
-        className={cn('flex items-center border-b px-3', wrapperClassName)}
-        cmdk-input-wrapper=""
+        className={cn('flex items-center p-1 bg-background', wrapperClassName)}
       >
-        <IconSearch className="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <CommandPrimitive.Input
-          ref={ref}
+          ref={mergeRefs([inputRef, ref])}
           className={cn(
-            commanInputVariants({ variant: 'primary' }),
-            'pl-0',
+            commanInputVariants({ variant: 'secondary' }),
             className,
           )}
           {...props}
+          placeholder={props.placeholder || 'Search'}
         />
       </div>
     );
-  }
-
-  return (
-    <div
-      className={cn('flex items-center p-1 bg-background', wrapperClassName)}
-    >
-      <CommandPrimitive.Input
-        ref={ref}
-        className={cn(commanInputVariants({ variant: 'secondary' }), className)}
-        {...props}
-        placeholder={props.placeholder || 'Search'}
-      />
-    </div>
-  );
-});
+  },
+);
 
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 
@@ -107,7 +132,10 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
+    className={cn(
+      'max-h-[300px] overflow-y-auto overflow-x-hidden p-1',
+      className,
+    )}
     {...props}
   />
 ));
@@ -162,7 +190,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+      'relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-8',
       className,
     )}
     {...props}

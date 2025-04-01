@@ -1,6 +1,6 @@
 import { Icon } from '@tabler/icons-react';
 
-export interface Filter {
+export interface IFilter {
   accessoryKey: string;
   label: string;
   icon: Icon;
@@ -10,9 +10,18 @@ export interface Filter {
 }
 
 export type FilterBarComponentPropsBase = Omit<
-  Filter,
+  IFilter,
   'dropdown' | 'bar' | 'conditions'
 >;
 export interface FilterDropdownProps extends FilterBarComponentPropsBase {
   onOpenChange: (open: boolean) => void;
+}
+
+export interface IFilterContext {
+  id: string;
+  resetFilterState: () => void;
+  setOpen: (open: boolean) => void;
+  setView: (view: string) => void;
+  setDialogView: (view: string) => void;
+  setOpenDialog: (open: boolean) => void;
 }

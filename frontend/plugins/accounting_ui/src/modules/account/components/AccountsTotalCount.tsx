@@ -6,7 +6,11 @@ export const AccountsTotalCount = () => {
 
   return (
     <span className="text-sm text-muted-foreground">
-      {loading ? <Skeleton className="size-4" /> : `(${totalCount})`}
+      {loading ? (
+        <Skeleton className="size-4" />
+      ) : (
+        `(${totalCount || 'No results found'})`
+      )}
     </span>
   );
 };

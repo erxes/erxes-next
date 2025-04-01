@@ -97,7 +97,7 @@ export const SelectTreeIndentation = ({ order }: { order: string }) => {
     <div className="flex h-full gap-4 px-2">
       {Array.from({ length: level }).map((_, index) => (
         <div key={index} className="relative">
-          <div className="absolute -top-3.5 h-[30px] w-px bg-muted-foreground/20 flex-none" />
+          <div className="absolute -top-4 h-8 w-px bg-muted-foreground/20 flex-none" />
         </div>
       ))}
     </div>
@@ -155,7 +155,7 @@ const SelectTreeItem = React.forwardRef<
       <Command.Item
         {...props}
         className={cn(
-          'h-7 py-0 items-center flex-1 overflow-hidden justify-start',
+          'py-0 items-center flex-1 overflow-hidden justify-start',
           props.className,
           selected && 'bg-muted',
         )}

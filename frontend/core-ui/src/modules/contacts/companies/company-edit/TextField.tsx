@@ -1,21 +1,13 @@
-import { Text } from 'erxes-ui/modules/record-field/components/Text';
+import { ITextFieldContainerProps, TextField } from 'erxes-ui';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
 
-interface TextFieldProps {
-  placeholder?: string;
-  value: string;
-  field: string;
-  fieldId?: string;
-  _id: string;
-}
-
-export const TextField = ({
+export const CompanyTextField = ({
   placeholder,
   value,
   field,
   fieldId,
   _id,
-}: TextFieldProps) => {
+}: ITextFieldContainerProps) => {
   const { companiesEdit } = useCompaniesEdit();
   const onSave = (editingValue: string) => {
     if (editingValue === value) return;
@@ -27,7 +19,7 @@ export const TextField = ({
     );
   };
   return (
-    <Text
+    <TextField
       placeholder={placeholder}
       value={value}
       field={field}

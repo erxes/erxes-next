@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { useMailConfigForm } from '../hooks/useMailConfigForm';
+import { useMailConfigForm } from '@/settings/mail-config/hooks/useMailConfigForm';
 import { Button, Form, Input, Select, cn } from 'erxes-ui';
-import { MAIL_CONFIG_FIELDS } from '../constants/formData';
-import { TMailConfigForm } from '../types';
+import { MAIL_CONFIG_FIELDS } from '@/settings/mail-config/constants/formData';
+import { TMailConfigForm } from '@/settings/mail-config/types';
 import { Path, useWatch } from 'react-hook-form';
 import { AnimatePresence } from 'framer-motion';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';

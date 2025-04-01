@@ -36,9 +36,6 @@ const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
       className={cn('flex items-center gap-2 h-7 flex-shrink-0', className)}
       {...props}
     >
-      <p className="text-[13px] font-semibold text-muted-foreground">
-        Filters:
-      </p>
       {children}
     </div>
   ),

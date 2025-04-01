@@ -4,3 +4,4 @@ export * from './products';
 export * from './structure';
 export * from './team-members';
 export * from './tags';
+export * from './team-inbox';

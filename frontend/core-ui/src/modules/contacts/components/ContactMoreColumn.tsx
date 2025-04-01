@@ -1,5 +1,5 @@
 import { Cell } from '@tanstack/react-table';
-import { RecordTableMoreButton } from 'erxes-ui/modules/record-table/components/MoreColumn';
+import { RecordTable } from 'erxes-ui';
 import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';
 import { useSetAtom } from 'jotai';
 import { ICustomer } from '../types/customerType';
@@ -13,7 +13,7 @@ export const ContactMoreColumnCell = ({
   const setRenderingContactDetail = useSetAtom(renderingContactDetailAtom);
   const { _id } = cell.row.original;
   return (
-    <RecordTableMoreButton
+    <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);

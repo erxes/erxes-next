@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_CUSTOMERS = gql`
-  query customersMain(
+  query customers(
     $page: Int
     $perPage: Int
     $segment: String
@@ -29,7 +29,7 @@ export const GET_CUSTOMERS = gql`
     $isRelated: Boolean
     $isSaved: Boolean
   ) {
-    customersMain(
+    customers(
       page: $page
       perPage: $perPage
       segment: $segment

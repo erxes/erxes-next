@@ -48,7 +48,10 @@ export const SelectAccount = ({
               <Command.Item
                 key={account._id}
                 value={account._id}
-                onSelect={() => onChange(account._id)}
+                onSelect={() => {
+                  onChange(account._id);
+                  setOpen(false);
+                }}
               >
                 <TextOverflowTooltip value={account.name} />
                 <Combobox.Check checked={account._id === value} />

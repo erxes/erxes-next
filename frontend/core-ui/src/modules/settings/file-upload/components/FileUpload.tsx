@@ -13,7 +13,6 @@ import { SERVICE_FIELDS } from '@/settings/file-upload/constants/uploadServiceFi
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm';
 import { TConfig, UploadConfigFormT } from '@/settings/file-upload/types';
-import { Path } from 'react-hook-form';
 
 type Option = {
   label: string;
@@ -28,7 +27,7 @@ const modifiedArray: Option[] = FILE_MIME_TYPES.map(
 );
 
 const FileUpload = () => {
-  const { form, onCompleted } = useFileUploadForm();
+  const { form } = useFileUploadForm();
   const { updateConfig, isLoading, configs } = useConfig();
 
   const dynamicFields = React.useMemo(() => {
@@ -55,23 +54,6 @@ const FileUpload = () => {
         acc[config.code] = config.value;
         return acc;
       }, {});
-
-      // const uploadFileTypes = values['UPLOAD_FILE_TYPES'];
-      // const uploadFileTypesArray = FILE_MIME_TYPES.filter((item) =>
-      //   uploadFileTypes.includes(item.value),
-      // ).map((item) => ({
-      //   label: `${item.label} (${item.extension})`,
-      //   value: item.value,
-      // }));
-
-      // const widgetsUploadFileTypes =
-      //   values['WIDGETS_UPLOAD_FILE_TYPES'];
-      // const widgetUploadFileTypesArray = FILE_MIME_TYPES.filter((item) =>
-      //   widgetsUploadFileTypes.includes(item.value),
-      // ).map((item) => ({
-      //   label: `${item.label} (${item.extension})`,
-      //   value: item.value,
-      // }));
 
       form.reset({
         ...values,

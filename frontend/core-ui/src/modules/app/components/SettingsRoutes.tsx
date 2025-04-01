@@ -1,13 +1,13 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
-import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLoader';
 import {
   SettingsPath,
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 import { getPluginsSettingsRoutes } from '../hooks/usePluginsRouter';
+import { Skeleton } from 'erxes-ui';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -30,10 +30,15 @@ const GeneralSettings = lazy(() =>
     default: module.GeneralSettingsPage,
   })),
 );
+const TeamMemberSettings = lazy(() =>
+  import('~/pages/settings/workspace/TeamMemberPage').then((module) => ({
+    default: module.TeamMemberPage,
+  })),
+);
 
 export function SettingsRoutes() {
   return (
-    <Suspense fallback={<SettingsSkeletonLoader />}>
+    <Suspense fallback={<Skeleton />}>
       <Routes>
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
@@ -51,6 +56,10 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.General}
           element={<GeneralSettings />}
+        />
+        <Route
+          path={SettingsWorkspacePath.TeamMember}
+          element={<TeamMemberSettings />}
         />
 
         {getPluginsSettingsRoutes()}

@@ -1,4 +1,4 @@
-export interface IUserDetail {
+export interface IUsersDetail {
   _id: string;
   email: string;
   username: string;
@@ -9,5 +9,5 @@ export interface IUserDetail {
 }
 
 export interface Props {
-  onCompleted: (userDetail: Partial<IUserDetail>) => void;
+  onCompleted: (GET_USER_DETAIL: Partial<IUsersDetail>) => void;
 }

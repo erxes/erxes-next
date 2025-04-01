@@ -1,4 +1,4 @@
-import { SettingsHeader, Spinner } from 'erxes-ui';
+import { Filter, SettingsHeader, Spinner } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 import { Route } from 'react-router';
 import { Routes } from 'react-router';
@@ -18,30 +18,42 @@ export const Accounts = lazy(() =>
   })),
 );
 
+export const AccountCategories = lazy(() =>
+  import('~/pages/AccountCategoriesPage').then((module) => ({
+    default: module.AccountCategoriesPage,
+  })),
+);
+
 const AccountingSettings = () => {
   return (
-    <div className="flex flex-col flex-auto overflow-hidden">
-      <SettingsHeader breadcrumbs={<AccountSettingsBreadcrumb />}>
-        <div className="flex ml-auto">
-          <AccountingTopbar />
+    <Filter id="accounting-settings">
+      <div className="flex flex-col flex-auto overflow-hidden">
+        <SettingsHeader breadcrumbs={<AccountSettingsBreadcrumb />}>
+          <div className="flex ml-auto">
+            <AccountingTopbar />
+          </div>
+        </SettingsHeader>
+        <div className="flex flex-auto overflow-hidden">
+          <AccountingSidebar />
+          <Suspense
+            fallback={
+              <div className="flex justify-center items-center h-full">
+                <Spinner />
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<AccountingMainConfig />} />
+              <Route path="/accounts" element={<Accounts />} />
+              <Route
+                path="/account-categories"
+                element={<AccountCategories />}
+              />
+            </Routes>
+          </Suspense>
         </div>
-      </SettingsHeader>
-      <div className="flex flex-auto overflow-hidden">
-        <AccountingSidebar />
-        <Suspense
-          fallback={
-            <div className="flex justify-center items-center h-full">
-              <Spinner />
-            </div>
-          }
-        >
-          <Routes>
-            <Route path="/" element={<AccountingMainConfig />} />
-            <Route path="/accounts" element={<Accounts />} />
-          </Routes>
-        </Suspense>
       </div>
-    </div>
+    </Filter>
   );
 };
 

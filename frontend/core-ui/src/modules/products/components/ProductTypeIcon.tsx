@@ -7,7 +7,7 @@ import {
 import { CellContext } from '@tanstack/react-table';
 import { cn } from 'erxes-ui';
 
-import { ProductT } from '@/products/types/productTypes';
+import { IProduct } from '@/products/types/productTypes';
 const iconMap = {
   unique: IconDeviceUnknown,
   subscription: IconStar,
@@ -20,8 +20,8 @@ export const ProductTypeIcon = ({
   type,
   className,
 }: {
-  info?: CellContext<ProductT, unknown>;
-  type?: ProductT['type'];
+  info?: CellContext<IProduct, unknown>;
+  type?: IProduct['type'];
   className?: string;
 }) => {
   const productType = type || info?.row.original.type; // Access the product type directly

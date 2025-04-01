@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 import { extractUserFromHeader, getSubdomain } from 'erxes-api-utils';
 import { gql } from 'graphql-tag';
 import { generateModels } from '../connectionResolvers';
-import * as typeDefDetails from './schema';
+import * as typeDefDetails from './schema/schema';
 import resolvers from './resolvers';
 
 // load environment variables

@@ -6,14 +6,11 @@ import { IconX } from '@tabler/icons-react';
 import { BOOLEAN_FILTERS } from '../constants/booleanFilters';
 
 export const FilterTags = () => {
-  const [{ channelId, integrationType, assignedTo, status, unassigned }] =
-    useMultiQueryState<{
-      channelId: string;
-      integrationType: string;
-      assignedTo: string;
-      status: string;
-      unassigned: boolean;
-    }>(['channelId', 'integrationType', 'assignedTo', 'status', 'unassigned']);
+  const [{ channelId, integrationType, status }] = useMultiQueryState<{
+    channelId: string;
+    integrationType: string;
+    status: string;
+  }>(['channelId', 'integrationType', 'status']);
 
   if (!channelId && !integrationType) return null;
 

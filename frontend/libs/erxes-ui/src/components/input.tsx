@@ -28,6 +28,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         type={type}
+        autoComplete="off"
         className={cn(
           inputVariants({
             type:

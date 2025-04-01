@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-const commonFields = z.object({
+const COMMON_FIELDS = z.object({
   COMPANY_EMAIL_FROM: z.string(),
   COMPANY_EMAIL_TEMPLATE_TYPE: z.string().default('simple'),
   COMPANY_EMAIL_TEMPLATE: z.string(),
 });
 
-const customMailServiceSchema = commonFields.extend({
+const CUSTOM_MAIL_SERVICE_SCHEMA = COMMON_FIELDS.extend({
   DEFAULT_EMAIL_SERVICE: z.literal('custom'),
   MAIL_SERVICE: z.string(),
   MAIL_PORT: z.string(),
@@ -15,7 +15,7 @@ const customMailServiceSchema = commonFields.extend({
   MAIL_HOST: z.string(),
 });
 
-const awsSESSchema = commonFields.extend({
+const AWS_SES_SCHEMA = COMMON_FIELDS.extend({
   DEFAULT_EMAIL_SERVICE: z.literal('SES'),
   AWS_SES_ACCESS_KEY_ID: z.string(),
   AWS_SES_SECRET_ACCESS_KEY: z.string(),
@@ -23,9 +23,9 @@ const awsSESSchema = commonFields.extend({
   AWS_SES_CONFIG_SET: z.string(),
 });
 
-const mailConfigSchema = z.discriminatedUnion('DEFAULT_EMAIL_SERVICE', [
-  customMailServiceSchema,
-  awsSESSchema,
+const MAIL_CONFIG_SCHEMA = z.discriminatedUnion('DEFAULT_EMAIL_SERVICE', [
+  CUSTOM_MAIL_SERVICE_SCHEMA,
+  AWS_SES_SCHEMA,
 ]);
 
-export { mailConfigSchema };
+export { MAIL_CONFIG_SCHEMA };

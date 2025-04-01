@@ -21,7 +21,6 @@ const config: ModuleFederationConfig = {
   },
 
   shared: (libraryName, defaultConfig) => {
-    console.log(libraryName, defaultConfig);
     if (coreLibraries.has(libraryName)) {
       return defaultConfig;
     }

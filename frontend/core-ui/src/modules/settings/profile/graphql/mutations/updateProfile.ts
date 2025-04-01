@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const UpdateProfile = gql`
+export const UPDATE_PROFILE = gql`
   mutation usersEditProfile(
     $username: String!
     $email: String!
@@ -16,7 +16,6 @@ export const UpdateProfile = gql`
       employeeId: $employeeId
     ) {
       _id
-      __typename
     }
   }
 `;

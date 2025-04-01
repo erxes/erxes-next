@@ -16,7 +16,7 @@ import { ICustomer } from '@/contacts/types/customerType';
 import { FullNameField } from '../customer-edit/components/FullNameField';
 import { EmailField } from '../customer-edit/components/EmailField';
 import { PhoneField } from '../customer-edit/components/PhoneField';
-import { TextField } from '../customer-edit/components/TextField';
+import { TextFieldCustomer } from '../customer-edit/components/TextField';
 import { TagsField } from '@/contacts/customer-edit/components/TagsField';
 
 export const contactColumns: ColumnDef<ICustomer>[] = [
@@ -156,7 +156,7 @@ export const contactColumns: ColumnDef<ICustomer>[] = [
     accessorKey: field,
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
     cell: ({ cell }: { cell: Cell<ICustomer, unknown> }) => (
-      <TextField
+      <TextFieldCustomer
         _id={cell.row.original._id}
         field={field}
         value={cell.getValue() as string}

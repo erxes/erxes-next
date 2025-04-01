@@ -18,26 +18,28 @@ export const SelectBranch = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
     value?: string;
     onValueChange: (value: string) => void;
-    className?: string;
   }
 >((props, ref) => {
+  const [_open, _setOpen] = useState(false);
   const { value, onValueChange, className } = props;
+
   return (
     <SelectBranchProvider>
-      <Popover>
-        <Combobox.Trigger
-          className={cn(
-            'w-full flex text-left',
-            !value && 'text-muted-foreground',
-            className,
-          )}
-        >
+      <Popover open={_open} onOpenChange={_setOpen}>
+        <Combobox.Trigger className={cn('w-full', className)} ref={ref}>
           <SelectBranchValue value={value} />
         </Combobox.Trigger>
         <Combobox.Content>
           <BranchesList
             renderItem={(branch) => (
-              <SelectBranchItem branch={branch} onValueChange={onValueChange} />
+              <SelectBranchItem
+                key={branch._id}
+                branch={branch}
+                onValueChange={(value) => {
+                  onValueChange(value);
+                  _setOpen(false);
+                }}
+              />
             )}
           />
         </Combobox.Content>
@@ -53,11 +55,10 @@ const SelectBranchItem = ({
   branch: IBranch;
   onValueChange: (value: string) => void;
 }) => {
-  const { setSelectedBranch } = useSelectBranchContext();
+  const { setSelectedBranch, selectedBranch } = useSelectBranchContext();
   return (
     <Command.Item
-      key={branch._id}
-      value={branch.title}
+      value={`${branch.title} - ${branch.code}`}
       onSelect={() => {
         setSelectedBranch(branch);
         onValueChange(branch._id);
@@ -65,6 +66,7 @@ const SelectBranchItem = ({
     >
       <span className="text-muted-foreground">{branch.code}</span>
       <TextOverflowTooltip value={branch.title} />
+      <Combobox.Check checked={selectedBranch?._id === branch._id} />
     </Command.Item>
   );
 };
@@ -73,7 +75,7 @@ const SelectBranchValue = ({ value }: { value?: string }) => {
   const { selectedBranch } = useSelectBranchContext();
   const { branchDetail, loading } = useBranchById({
     variables: { id: value },
-    skip: selectedBranch,
+    skip: selectedBranch || !value,
   });
   if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
   return (
@@ -105,6 +107,7 @@ export const BranchesList = ({
   renderItem: (branch: IBranch) => React.ReactNode;
 }) => {
   const { branches, loading } = useBranches();
+
   return (
     <Command>
       <Command.Input placeholder="Search branch" />

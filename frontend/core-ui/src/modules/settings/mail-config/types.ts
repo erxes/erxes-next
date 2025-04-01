@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { mailConfigSchema } from './schema';
+import { MAIL_CONFIG_SCHEMA } from '@/settings/mail-config/schema';
 
-type TMailConfigForm = z.infer<typeof mailConfigSchema>;
+type TMailConfigForm = z.infer<typeof MAIL_CONFIG_SCHEMA>;
 
 type TCustomMailConfig = {
   DEFAULT_EMAIL_SERVICE: 'custom';
