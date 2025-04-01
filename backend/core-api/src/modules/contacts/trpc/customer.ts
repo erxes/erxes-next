@@ -18,12 +18,25 @@ export const customerRouter = t.router({
         const models = await generateModels('os');
 
         const sda = {
-          middleName: '23123',
-          sex: 1,
-          description: 1,
+          _id: 'dHDg9dxhfWq5GpH9Y9sUM',
+          state: 'visitor',
+          avatar: null,
+          firstName: 'adsda',
+          lastName: 'sadasd',
+          middleName: '',
+          sex: 0,
+          primaryEmail: 'asdasd@gmail.com',
+          emails: ['asdasd@gmail.com'],
+          emailValidationStatus: 'valid',
+          primaryPhone: '99126730',
+          phones: ['99126730'],
+          addresses: [],
+          phoneValidationStatus: 'unknown',
+          status: 'Active',
+          description: '',
         };
 
-        return sda;
+        return null;
       }),
 
     get: t.procedure

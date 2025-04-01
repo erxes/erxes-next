@@ -1,19 +1,49 @@
 {
   "name": "erxes-api-utils",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "backend/libs/utils/src",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:backend"],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/backend/libs/utils",
-        "tsConfig": "backend/libs/utils/tsconfig.lib.json",
-        "packageJson": "backend/libs/utils/package.json",
-        "main": "backend/libs/utils/src/index.ts",
-        "assets": ["backend/libs/utils/*.md"]
+        "outputPath": "{projectRoot}/dist"
+      },
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {},
+    "lint": {
+      "options": {
+        "lintFilePatterns": [
+          "{projectRoot}/src/**/*.{ts,tsx,json}",
+          "{projectRoot}/package.json"
+        ],
+        "reportUnusedDisableDirectives": "error"
+      },
+      "configurations": {
+        "fix": {}
+      }
+    },
+    "fmt": {
+      "options": {
+        "files": "src"
+      },
+      "configurations": {
+        "fix": {}
+      }
+    },
+    "lingui:extract": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "lingui extract --overwrite"
+      }
+    },
+    "lingui:compile": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "lingui compile --typescript"
       }
     }
   }
