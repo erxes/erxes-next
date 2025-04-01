@@ -37,7 +37,10 @@ export const CustomersTag = ({ customerIds }: CustomersTagProps) => {
                     ...customersMain,
                     list: customersMain.list.map((customer: ICustomer) => {
                       if (customerIds.includes(customer._id)) {
-                        return { ...customer, tagIds };
+                        return {
+                          ...customer,
+                          tagIds: [...(customer.tagIds || []), ...tagIds],
+                        };
                       }
                       return customer;
                     }),
