@@ -14,7 +14,12 @@ module.exports = [
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
+          allow: [
+            '^.*/eslint(\\.base)?\\.config\\.[cm]?js$', // Allow ESLint config files
+            '^.*/jest\\.config\\.[cm]?js$', // Allow Jest config files
+            '^.*/babel\\.config\\.[cm]?js$',
+            'backend/core-api',
+          ],
           allowCircularSelfDependency: true,
           depConstraints: [
             {

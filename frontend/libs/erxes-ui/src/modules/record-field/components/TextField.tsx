@@ -1,4 +1,4 @@
-import { ButtonProps, Input } from 'erxes-ui/components';
+import { ButtonProps, Input, TextOverflowTooltip } from 'erxes-ui/components';
 import { InlineCell } from 'erxes-ui/modules/inline-cell/components/InlineCell';
 import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/InlineCellDisplay';
 import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
@@ -49,7 +49,7 @@ export const TextField = React.forwardRef<
         onCancel={handleAction}
         display={() => (
           <InlineCellDisplay ref={ref} {...props} className={className}>
-            <span className="truncate">{editingValue ?? placeholder}</span>
+            <TextOverflowTooltip value={editingValue ?? placeholder} />
           </InlineCellDisplay>
         )}
         edit={() => (

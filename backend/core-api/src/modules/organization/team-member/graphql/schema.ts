@@ -97,10 +97,12 @@ export const types = `
     permissionActions: JSON
     configs: JSON
     configsConstants: [JSON]
-
+  
     department: Department
 
     departmentIds: [String]
+    brandIds: [String]
+    brands: [Brand]
     departments: [Department]
     branchIds: [String]
     branches: [Branch]
@@ -122,9 +124,68 @@ export const types = `
     contentTypeId:String
     contentTypeDetail:JSON
     status:String
+
   }
 `;
 
+const commonParams = `
+  username: String,
+  email: String,
+  details: UserDetails,
+  links: JSON,
+  channelIds: [String],
+  groupIds: [String]
+  brandIds: [String]
+  branchIds: [String]
+  positionIds: [String]
+  departmentIds: [String]
+  customFieldsData: JSON
+  employeeId: String
+`;
+
+const commonSelector = `
+  searchValue: String,
+  isActive: Boolean,
+  requireUsername: Boolean,
+  ids: [String],
+  brandIds: [String]
+  departmentId: String
+  branchId: String
+  isAssignee: Boolean
+  branchIds: [String]
+  departmentIds: [String]
+  unitId: String
+  segment: String
+  segmentData: String
+`;
+
+export const queries = `
+  users(sortField: String, sortDirection: Int, page: Int, perPage: Int, status: String, excludeIds: Boolean, ${commonSelector}): [User]
+  allUsers(isActive: Boolean,ids:[String],assignedToMe:String): [User]
+  userDetail(_id: String): User
+  usersTotalCount(${commonSelector}): Int
+  userMovements(userId: String!,contentType: String):[UserMovement]
+`;
+
 export const mutations = `
-   usersCreateOwner(email: String!, password: String!, firstName: String!, lastName: String, purpose: String, subscribeEmail: Boolean): String
+  usersResetMemberPassword(_id: String!, newPassword: String!): User
+  usersEditProfile(
+    username: String!,
+    email: String!,
+    details: UserDetails,
+    links: JSON
+    employeeId: String
+  ): User
+  usersEdit(_id: String!, ${commonParams}): User
+  usersChangePassword(currentPassword: String!, newPassword: String!): User
+  usersSetActiveStatus(_id: String!): User
+  usersInvite(entries: [InvitationEntry]): Boolean
+  usersResendInvitation(email: String!): String
+  usersConfirmInvitation(token: String, password: String, passwordConfirmation: String, fullName: String, username: String): User
+  usersConfigEmailSignatures(signatures: [EmailSignature]): User
+  usersConfigGetNotificationByEmail(isAllowed: Boolean): User
+  usersSetChatStatus(_id: String!, status: UserChatStatus): User
+  editOrganizationInfo(icon: String, logo: String, link: String, name: String, iconColor: String, backgroundColor: String, description: String, domain: String, favicon: String, textColor: String): Organization
+  editOrganizationDomain(type: String, domain: String): Organization
+  usersCreateOwner(email: String!, password: String!, firstName: String!, lastName: String, purpose: String, subscribeEmail: Boolean): String
 `;

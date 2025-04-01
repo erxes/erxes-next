@@ -1,79 +1,13 @@
-import { Document, Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 import { mongooseField } from 'erxes-api-utils';
 import { mongooseSchemaWrapper } from 'erxes-api-utils';
-import { USER_ROLES } from '../../constants';
-import { IPermissionDocument } from '../../../permissions';
-import { ILink } from '../../../common/@types/common';
 
-export interface IEmailSignature {
-  brandId?: string;
-  signature?: string;
-}
-
-export interface IEmailSignatureDocument extends IEmailSignature, Document {}
-
-export interface IDetail {
-  avatar?: string;
-  coverPhoto?: string;
-  fullName?: string;
-  shortName?: string;
-  position?: string;
-  birthDate?: Date;
-  workStartedDate?: Date;
-  location?: string;
-  description?: string;
-  operatorPhone?: string;
-  firstName?: string;
-  middleName?: string;
-  lastName?: string;
-}
-
-export interface IDetailDocument extends IDetail, Document {}
-
-export interface IUser {
-  createdAt?: Date;
-  username?: string;
-  password: string;
-  resetPasswordToken?: string;
-  resetPasswordExpires?: Date;
-  registrationToken?: string;
-  registrationTokenExpires?: Date;
-  isOwner?: boolean;
-  email?: string;
-  getNotificationByEmail?: boolean;
-  emailSignatures?: IEmailSignature[];
-  starredConversationIds?: string[];
-  details?: IDetail;
-  links?: ILink;
-  isActive?: boolean;
-  brandIds?: string[];
-  groupIds?: string[];
-  deviceTokens?: string[];
-  code?: string;
-  doNotDisturb?: string;
-  isSubscribed?: string;
-  sessionCode?: string;
-  isShowNotification?: boolean;
-  score?: number;
-  departmentIds?: string[];
-  branchIds?: string[];
-  positionIds?: string[];
-  employeeId?: string;
-  chatStatus?: IUserChatStatus;
-}
+import { customFieldSchema } from '../../../common/db/definitions/common';
+import { USER_MOVEMENT_STATUSES, USER_ROLES } from '../../constants';
 
 enum IUserChatStatus {
   online = 'online',
   offline = 'offline',
-}
-
-export interface IUserDocument extends IUser, Document {
-  _id: string;
-  emailSignatures?: IEmailSignatureDocument[];
-  details?: IDetailDocument;
-  customPermissions?: IPermissionDocument[];
-  role?: string;
-  appId?: string;
 }
 
 // Mongoose schemas ===============================
@@ -235,6 +169,32 @@ export const userSchema = mongooseSchemaWrapper(
       enum: Object.values(IUserChatStatus),
       optional: true,
       label: 'User chat status /used for exm/',
+    }),
+    customFieldsData: mongooseField({
+      type: [customFieldSchema],
+      optional: true,
+      label: 'Custom fields data',
+    }),
+  }),
+);
+
+export const userMovemmentSchema = mongooseSchemaWrapper(
+  new Schema({
+    _id: mongooseField({ pkey: true }),
+    contentType: mongooseField({ type: String, label: 'Content Type' }),
+    contentTypeId: mongooseField({ type: String, label: 'Content Type Id' }),
+    userId: mongooseField({ type: String, label: 'User Id' }),
+    createdBy: mongooseField({ type: String, label: 'Created By' }),
+    isActive: mongooseField({ type: Boolean, label: 'Is Active' }),
+    status: mongooseField({
+      type: String,
+      label: 'User Movement Status',
+      default: USER_MOVEMENT_STATUSES.CREATED,
+    }),
+    createdAt: mongooseField({
+      type: Date,
+      label: 'Created At',
+      default: Date.now,
     }),
   }),
 );

@@ -23,7 +23,6 @@ export const InlineCellDisplay = React.forwardRef<
       <Combobox.Trigger
         ref={ref}
         variant="ghost"
-        tabIndex={-1}
         {...props}
         onClick={handleClick}
         hideChevron

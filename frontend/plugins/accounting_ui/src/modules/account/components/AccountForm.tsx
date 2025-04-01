@@ -10,7 +10,7 @@ import {
   Dialog,
 } from 'erxes-ui';
 import { AccountKind, Journal } from '../type/Account';
-import { SelectAccountCategory } from './SelectAccountCategory';
+import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
 import { SelectBranch, SelectDepartment } from 'ui-modules';
 import { UseFormReturn } from 'react-hook-form';
 import { TAccountForm } from '../type/accountForm';
@@ -233,14 +233,17 @@ export const AccountForm = ({
           )}
         />
 
-        <div className="flex justify-end space-x-2 pt-4 col-span-2">
-          <Button variant="outline" type="button" size="lg">
-            Cancel
-          </Button>
+        <Dialog.Footer className="col-span-2 mt-4">
+          <Dialog.Close asChild>
+            <Button variant="outline" type="button" size="lg">
+              Cancel
+            </Button>
+          </Dialog.Close>
           <Button type="submit" size="lg" disabled={loading}>
-            {loading ? <Spinner /> : 'Save Account'}
+            {loading && <Spinner />}
+            Save Account
           </Button>
-        </div>
+        </Dialog.Footer>
       </form>
     </Form>
   );

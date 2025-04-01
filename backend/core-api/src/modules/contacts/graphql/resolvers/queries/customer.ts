@@ -1,6 +1,6 @@
-import { IContext } from '../../../../../connectionResolvers';
 import { paginate } from 'erxes-api-utils';
-import { ICustomerQueryFilterParams } from '../../../@types/customers';
+import { ICustomerQueryFilterParams } from 'erxes-core-types';
+import { IContext } from '../../../../../connectionResolvers';
 
 const generateFilter = (params: ICustomerQueryFilterParams) => {
   const { searchValue } = params;
@@ -35,7 +35,6 @@ export const customerQueries = {
 
     return { list, totalCount };
   },
-
   /**
    * Get one customer
    */

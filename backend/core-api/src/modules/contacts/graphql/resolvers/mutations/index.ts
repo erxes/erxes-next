@@ -1,5 +1,7 @@
+import { companyMutations } from './company';
 import { customerMutations } from './customer';
 
-export default {
+export const contactMutations = {
   ...customerMutations,
+  ...companyMutations,
 };

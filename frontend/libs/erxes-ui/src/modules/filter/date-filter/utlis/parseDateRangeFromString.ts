@@ -1,4 +1,4 @@
-import { endOfDay, startOfDay, subDays } from 'date-fns';
+import { endOfDay, startOfDay, subDays, subMonths } from 'date-fns';
 import { MONTHS } from 'erxes-ui/modules/filter/date-filter/constants/dateTypes';
 
 export const parseDateRangeFromString = (
@@ -12,27 +12,25 @@ export const parseDateRangeFromString = (
       from: startOfDay(today),
       to: endOfDay(today),
     },
-    yesterday: {
-      from: startOfDay(subDays(today, 1)),
-      to: endOfDay(subDays(today, 1)),
+    'in-the-past': {
+      from: startOfDay(new Date(1979, 0, 1)),
+      to: endOfDay(today),
     },
-    'last-7-days': {
+    '1-day-from-now': {
+      from: startOfDay(subDays(today, 1)),
+      to: endOfDay(today),
+    },
+    '3-days-from-now': {
+      from: startOfDay(subDays(today, 3)),
+      to: endOfDay(today),
+    },
+    '1-week-from-now': {
       from: startOfDay(subDays(today, 7)),
       to: endOfDay(today),
     },
-    'last-30-days': {
-      from: startOfDay(subDays(today, 30)),
+    '3-months-from-now': {
+      from: startOfDay(subMonths(today, 3)),
       to: endOfDay(today),
-    },
-    thisWeek: {
-      from: startOfDay(
-        new Date(today.setDate(today.getDate() - today.getDay())),
-      ),
-      to: endOfDay(new Date()),
-    },
-    thisMonth: {
-      from: startOfDay(new Date(today.getFullYear(), today.getMonth(), 1)),
-      to: endOfDay(new Date()),
     },
   };
 

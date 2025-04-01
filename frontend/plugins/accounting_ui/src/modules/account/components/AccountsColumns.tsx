@@ -10,7 +10,7 @@ import {
   TextField,
   useQueryState,
 } from 'erxes-ui';
-import { SelectAccountCategory } from './SelectAccountCategory';
+import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
 import { useAccountEdit } from '../hooks/useAccountEdit';
 import { useSetAtom } from 'jotai';
 import { accountDetailAtom } from '../states/accountStates';
@@ -68,7 +68,7 @@ const AccountCurrencyCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
     <SelectCurrency
       value={cell.getValue() as CurrencyCode}
       variant="ghost"
-      className="w-full focus-visible:relative focus-visible:z-10"
+      className="w-full focus-visible:relative focus-visible:z-10 font-normal"
       hideChevron
       onChange={(value) => {
         editAccount({ variables: { ...cell.row.original, currency: value } }, [

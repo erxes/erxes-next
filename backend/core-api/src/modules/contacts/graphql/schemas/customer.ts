@@ -1,7 +1,8 @@
 export const types = `
 
   type Customer {
-    state: String
+    _id: String
+     state: String
     createdAt: Date
     modifiedAt: Date
     avatar: String
@@ -21,6 +22,18 @@ export const types = `
     primaryAddress: JSON
     addresses: [JSON]
 
+    phone: String
+    tagIds: [String]
+    remoteAddress: String
+    location: JSON
+    visitorContactInfo: JSON
+    customFieldsData: JSON
+    customFieldsDataByFieldCode: JSON
+    trackedData: JSON
+    ownerId: String
+    position: String
+    department: String
+    leadStatus: String
     hasAuthority: String
     description: String
     isSubscribed: String
@@ -28,7 +41,15 @@ export const types = `
     emailValidationStatus: String
     phoneValidationStatus: String
 
+    isOnline: Boolean
+    lastSeenAt: Date
+    sessionCount: Int
+    urlVisits: [JSON]
+    owner: User
+    score: Float
     links: JSON
+    companies: [Company]
+    getTags: [Tag]
   }
 
   type CustomersListResponse {
@@ -37,11 +58,41 @@ export const types = `
   }
 
 `;
-
+export const conformityQueryFields = `
+  conformityMainType: String
+  conformityMainTypeId: String
+  conformityRelType: String
+  conformityIsRelated: Boolean
+  conformityIsSaved: Boolean
+`;
 const queryParams = `
-  page: Int
+ page: Int
   perPage: Int
+  segment: String
+  type: String
+  tag: String
+  ids: [String]
+  excludeIds: Boolean
+  tags: [String]
+  excludeTags: [String]
+  tagWithRelated: Boolean
   searchValue: String
+  autoCompletion: Boolean
+  autoCompletionType: String
+  brand: String
+  integration: String
+  form: String
+  startDate: String
+  endDate: String
+  leadStatus: String
+  sortField: String
+  sortDirection: Int
+  sex:Int
+  birthDate: Date
+  dateFilters: String
+  segmentData: String
+  emailValidationStatus:String
+  ${conformityQueryFields}
 `;
 
 export const queries = `
@@ -60,8 +111,15 @@ const fields = `
   phones: [String]
   primaryAddress: JSON
   addresses: [JSON]
+  ownerId: String
+  position: String
+  department: String
+  leadStatus: String
+  hasAuthority: String
   description: String
+  isSubscribed: String
   links: JSON
+  customFieldsData: JSON
   code: String
   sex: Int
   birthDate: Date

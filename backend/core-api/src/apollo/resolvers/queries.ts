@@ -1,7 +1,13 @@
-import { customerQueries } from '../../modules/contacts/graphql/resolvers/queries/customer';
 import { authQueries } from '../../modules/auth/graphql/resolvers/queries';
+import { contactQueries } from '../../modules/contacts/graphql/resolvers/queries';
+import { userQueries } from '../../modules/organization/team-member/graphql/queries';
+import { productQueries } from '../../modules/products/graphql/resolvers/queries';
+import { tagQueries } from '../../modules/tags/graphql/queries';
 
 export const queries = {
-  ...customerQueries,
+  ...contactQueries,
   ...authQueries,
+  ...userQueries,
+  ...tagQueries,
+  ...productQueries,
 };

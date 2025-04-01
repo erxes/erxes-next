@@ -5,7 +5,7 @@ import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
 import { isDefined } from 'erxes-ui';
 
-import { currentUser } from '@/users/graphql/queries';
+import { currentUser } from '@/auth/graphql/queries/currentUser';
 import { useSetAtom, useAtom } from 'jotai';
 
 export const UserProviderEffect = () => {

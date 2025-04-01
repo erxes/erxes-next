@@ -1,7 +1,7 @@
 import { Combobox, Command, inputVariants, Popover } from 'erxes-ui/components';
 import { Currency, CurrencyCode } from 'erxes-ui/types';
 import { CURRENCY_CODES } from 'erxes-ui/constants';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 import { cn } from 'erxes-ui/lib/utils';
 import { IMaskInput } from 'react-imask';
@@ -15,7 +15,7 @@ export const SelectCurrency = React.forwardRef<
   > & {
     open?: boolean;
     setOpen?: (open: boolean) => void;
-    value: CurrencyCode;
+    value?: CurrencyCode;
     currencies?: Record<CurrencyCode, Currency>;
     className?: string;
     iconOnly?: boolean;
@@ -36,14 +36,7 @@ export const SelectCurrency = React.forwardRef<
     ref,
   ) => {
     const [_open, _setOpen] = useState(false);
-    const selectedCurrency = currencies[value];
-
-    const sortedCurrencies = Object.entries(currencies).sort((a, b) => {
-      if (a[0] === value) {
-        return -1;
-      }
-      return 1;
-    });
+    const selectedCurrency = value ? currencies[value] : undefined;
 
     return (
       <Popover modal open={open || _open} onOpenChange={setOpen || _setOpen}>
@@ -60,37 +53,70 @@ export const SelectCurrency = React.forwardRef<
           )}
         </Combobox.Trigger>
         <Combobox.Content>
-          <Command>
-            <Command.Input placeholder="Search currency" />
-            <Command.List>
-              <Command.Empty>No currency found</Command.Empty>
-              {sortedCurrencies.map(([code, { label, Icon }]) => (
-                <Command.Item
-                  key={code}
-                  value={code + ' ' + label}
-                  onSelect={() => {
-                    onChange?.(code as CurrencyCode);
-                    setOpen?.(false);
-                    _setOpen(false);
-                  }}
-                >
-                  <Icon />
-                  {label}
-                  <Combobox.Check checked={value === code} />
-                </Command.Item>
-              ))}
-            </Command.List>
-          </Command>
+          <SelectCurrencyCommand
+            currencies={currencies}
+            value={value}
+            onSelect={(code) => {
+              onChange?.(code as CurrencyCode);
+              setOpen?.(false);
+              _setOpen(false);
+            }}
+          />
         </Combobox.Content>
       </Popover>
     );
   },
 );
 
+export const SelectCurrencyCommand = ({
+  currencies = CURRENCY_CODES,
+  value,
+  onSelect,
+  focusOnMount,
+}: {
+  currencies?: Record<CurrencyCode, Currency>;
+  value?: CurrencyCode;
+  onSelect: (code: CurrencyCode) => void;
+  focusOnMount?: boolean;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const sortedCurrencies = Object.entries(currencies).sort((a, b) => {
+    if (a[0] === value) {
+      return -1;
+    }
+    return 1;
+  });
+  useEffect(() => {
+    if (focusOnMount) {
+      inputRef.current?.focus();
+    }
+  }, [focusOnMount]);
+  return (
+    <Command>
+      <Command.Input placeholder="Search currency" ref={inputRef} />
+      <Command.Separator />
+      <Command.List>
+        <Command.Empty>No currency found</Command.Empty>
+        {sortedCurrencies.map(([code, { label, Icon }]) => (
+          <Command.Item
+            key={code}
+            value={code + ' ' + label}
+            onSelect={() => onSelect(code as CurrencyCode)}
+          >
+            <Icon />
+            {label}
+            <Combobox.Check checked={value === code} />
+          </Command.Item>
+        ))}
+      </Command.List>
+    </Command>
+  );
+};
+
 export interface CurrencyDisplayProps
   extends React.HTMLAttributes<HTMLDivElement> {
   /** Currency code to display */
-  code: CurrencyCode;
+  code?: CurrencyCode;
   /** Whether to show only the currency icon without the label */
   iconOnly?: boolean;
 }
@@ -102,10 +128,10 @@ export const CurrencyDisplay = React.forwardRef<
   HTMLDivElement,
   CurrencyDisplayProps
 >(({ code, iconOnly = false, className, ...props }, ref) => {
-  const currency = CURRENCY_CODES[code];
-  const CurrencyIcon = currency.Icon;
+  const currency = code ? CURRENCY_CODES[code] : undefined;
+  const CurrencyIcon = currency?.Icon;
 
-  if (iconOnly) {
+  if (iconOnly && CurrencyIcon) {
     return <CurrencyIcon className="size-4" />;
   }
 
@@ -115,8 +141,8 @@ export const CurrencyDisplay = React.forwardRef<
       className={cn('flex items-center gap-2', className)}
       {...props}
     >
-      <CurrencyIcon className="size-4" />
-      <span className="mr-auto">{currency.label}</span>
+      {CurrencyIcon && <CurrencyIcon className="size-4" />}
+      <span className="mr-auto">{currency?.label}</span>
     </div>
   );
 });

@@ -221,8 +221,8 @@ export const getSaasOrganizationDetail = async ({
       }
 
       addons
-        .filter((addon) => addon.kind === plugin.type)
-        .forEach((addon) => {
+        .filter((addon: any) => addon.kind === plugin.type)
+        .forEach((addon: any) => {
           quantity += addon.quantity || 0;
         });
 

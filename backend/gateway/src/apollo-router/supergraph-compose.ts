@@ -23,7 +23,7 @@ type SupergraphConfig = {
   };
 };
 
-const writeSupergraphConfig = (proxyTargets: ErxesProxyTarget[]) => {
+const writeSupergraphConfig = async (proxyTargets: ErxesProxyTarget[]) => {
   const superGraphConfigNext = supergraphConfigPath + '.next';
   const config: SupergraphConfig = {
     federation_version: '=2.9.3',
@@ -93,8 +93,13 @@ export default async function supergraphCompose(
     setInterval(async () => {
       try {
         await supergraphComposeOnce();
-      } catch (e) {
-        console.error(e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          // Now you can safely access e.message or other Error properties
+          console.log(e.message);
+        } else {
+          console.log('Unknown error:', e);
+        }
       }
     }, Number(SUPERGRAPH_POLL_INTERVAL_MS) || 10_000);
   }

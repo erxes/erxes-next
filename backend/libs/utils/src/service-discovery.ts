@@ -8,7 +8,7 @@ const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL } = process.env;
 
 const isDev = NODE_ENV === 'development';
 
-const keyForConfig = (name) => `service:config:${name}`;
+const keyForConfig = (name: string) => `service:config:${name}`;
 const queue = new Queue('gateway-update-apollo-router', {
   connection: redis,
 });
@@ -22,7 +22,11 @@ export const getServices = async (): Promise<string[]> => {
 };
 
 export const addService = async (serviceName: string): Promise<void> => {
-  queue.add('service-join', { serviceName });
+  const isMember = await redis.sismember('enabled-services', serviceName);
+  if (!isMember) {
+    await queue.add('service-join', { serviceName });
+  }
+
   try {
     await redis.sadd('enabled-services', serviceName);
     console.log(`Service ${serviceName} registered in Redis`);
@@ -95,13 +99,13 @@ export const join = async ({
   console.log(`$service:${name} joined with ${address}`);
 };
 
-export const leave = async (name, port) => {
+export const leave = async (name: string, port: number) => {
   await removeService(name);
 
   console.log(`$service:${name} left ${port}`);
 };
 
-export const isEnabled = async (name) => {
+export const isEnabled = async (name: string) => {
   if (name === 'core') return true;
 
   const enabledServices = await getServices();
@@ -109,9 +113,9 @@ export const isEnabled = async (name) => {
   return enabledServices.includes(name);
 };
 
-const pluginAddressCache = {};
+const pluginAddressCache = {} as any;
 
-export const getPluginAddress = async (name) => {
+export const getPluginAddress = async (name: string) => {
   if (!pluginAddressCache[name]) {
     pluginAddressCache[name] = await redis.get(`service:${name}`);
   }

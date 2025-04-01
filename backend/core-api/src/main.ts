@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { appRouter } from './init-trpc';
 
 import { join, leave } from 'erxes-api-utils';
 
@@ -39,6 +41,19 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(router);
+
+app.use(
+  '/trpc',
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext: () => {
+      return {
+        subdomain: 'os',
+      };
+    },
+  }),
+);
+
 // Wrap the Express server
 const httpServer = http.createServer(app);
 

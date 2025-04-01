@@ -1,5 +1,4 @@
 import { useMultiQueryState } from 'erxes-ui/hooks';
-import { getDateValue } from 'erxes-ui/modules/filter/date-filter/utlis/getDateValue';
 
 export const useContactFilterValues = () => {
   const [dates] = useMultiQueryState([

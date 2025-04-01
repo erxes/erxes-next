@@ -3,10 +3,16 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/core-api/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "dependsOn": ["erxes-api-utils:build"],
+      "dependsOn": [
+        "erxes-api-utils:build",
+        "erxes-api-modules:build",
+        "erxes-core-types:build",
+        "erxes-api-rpc:build"
+      ],
       "cache": true,
       "options": {
         "outputPath": "dist/backend/core-api",
@@ -35,7 +41,10 @@
           "buildTarget": "core-api:build:production"
         }
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f backend/core-api/Dockerfile . -t core-api"
     }
-  },
-  "tags": []
+  }
 }
