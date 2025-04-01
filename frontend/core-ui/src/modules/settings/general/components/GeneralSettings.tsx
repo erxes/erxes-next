@@ -1,19 +1,18 @@
-import { Button, Form, Spinner, useToast } from 'erxes-ui';
-import { useGeneralSettingsForms } from '../hooks/useGeneralSettingsForms';
-import SelectControl from './SelectControl';
-import { LANGUAGES } from '../constants/data';
-import { IconLoader2 } from '@tabler/icons-react';
-import { useSwitchLanguage } from '~/i18n';
-import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { useCallback, useEffect, useState } from 'react';
-import { SelectCurrency } from '@/settings/general/components/SelectCurrency';
+import { useSwitchLanguage } from '~/i18n';
 import { SubmitHandler } from 'react-hook-form';
+import { Button, Form, Spinner, useToast } from 'erxes-ui';
+import { useConfig } from '@/settings/file-upload/hook/useConfigs';
+import { SelectCurrency } from '@/settings/general/components/SelectCurrency';
 import { TGeneralSettingsProps } from '@/settings/general/types';
 import { TConfig } from '@/settings/file-upload/types';
 import { GeneralSettingsSkeleton } from '@/settings/general/components/GeneralSettingsSkeleton';
+import { useGeneralSettingsForms } from '@/settings/general/hooks/useGeneralSettingsForms';
+import SelectControl from '@/settings/general/components/SelectControl';
+import { LANGUAGES } from '@/settings/general/constants/data';
+import { SelectMainCurrency } from '@/settings/general/components/SelectMainCurrency';
 
 const GeneralSettings = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { languages } = useSwitchLanguage();
   const { toast } = useToast();
   const {
@@ -21,9 +20,9 @@ const GeneralSettings = () => {
     methods: { control },
     handleLanguage,
   } = useGeneralSettingsForms();
-  const { configs, updateConfig, loading } = useConfig();
+  const { configs, updateConfig, loading, isLoading } = useConfig();
 
-  const updateCurrency = async (data: TGeneralSettingsProps) => {
+  const updateCurrency = (data: TGeneralSettingsProps) => {
     const updatedConfigs = configs.reduce(
       (acc: Record<string, any>, config: TConfig) => {
         const key = config.code as keyof TGeneralSettingsProps;
@@ -32,35 +31,29 @@ const GeneralSettings = () => {
       },
       {} as Record<string, any>,
     );
-    await updateConfig(updatedConfigs);
+    updateConfig(updatedConfigs);
   };
 
-  const submitHandler: SubmitHandler<TGeneralSettingsProps> = useCallback(
-    async (data) => {
-      setIsLoading(true);
-      try {
-        await updateCurrency(data);
-        await handleLanguage(data.languageCode).then(() => {
-          toast({
-            title: 'Updated successfully',
-            description: `Language switched to (${data.languageCode})`,
-          });
-        });
-      } catch (error) {
-        console.error('Error occurred on form submit', error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [updateCurrency, handleLanguage, toast, setIsLoading],
-  );
+  const submitHandler: SubmitHandler<TGeneralSettingsProps> = (data) => {
+    updateCurrency(data);
+    handleLanguage(data.languageCode).then(() => {
+      toast({
+        title: 'Updated successfully',
+        description: `Language switched to (${data.languageCode})`,
+      });
+    });
+  };
 
   useEffect(() => {
     if (configs) {
       const currencies = configs?.find(
         (data: any) => data.code === 'dealCurrency',
       );
+      const mainCurrency = configs?.find(
+        (data: any) => data.code === 'mainCurrency',
+      );
       methods.setValue('dealCurrency', currencies?.value);
+      methods.setValue('mainCurrency', mainCurrency?.value);
     }
   }, [configs, methods]);
 
@@ -83,6 +76,7 @@ const GeneralSettings = () => {
           placeholder="Languages"
           label="Language"
         />
+        <SelectMainCurrency />
         <SelectCurrency />
         <Button
           size={'sm'}
