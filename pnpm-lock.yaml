@@ -561,9 +561,105 @@ importers:
 
   backend/gateway:
     devDependencies:
+      erxes-api-modules:
+        specifier: workspace:*
+        version: link:../libs/core-modules
+      erxes-api-rpc:
+        specifier: workspace:*
+        version: link:../libs/api-rpc
+      erxes-api-utils:
+        specifier: workspace:*
+        version: link:../libs/utils
+      erxes-core-types:
+        specifier: workspace:*
+        version: link:../libs/core-types
       tsx:
         specifier: 4.19.2
         version: 4.19.2
+
+  backend/gateway/dist:
+    dependencies:
+      '@apollo/client':
+        specifier: 3.12.11
+        version: 3.12.11(@types/react@18.3.1)(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@bull-board/api':
+        specifier: 6.7.7
+        version: 6.7.7(@bull-board/ui@6.7.7)
+      '@bull-board/express':
+        specifier: 6.7.7
+        version: 6.7.7
+      '@envelop/core':
+        specifier: 5.2.3
+        version: 5.2.3
+      '@escape.tech/graphql-armor-character-limit':
+        specifier: 2.3.0
+        version: 2.3.0
+      '@escape.tech/graphql-armor-max-aliases':
+        specifier: 2.6.0
+        version: 2.6.0
+      '@escape.tech/graphql-armor-max-depth':
+        specifier: 2.4.0
+        version: 2.4.0
+      '@graphql-tools/schema':
+        specifier: 10.0.23
+        version: 10.0.23(graphql@16.10.0)
+      '@trpc/server':
+        specifier: 11.0.0
+        version: 11.0.0(typescript@5.7.3)
+      bullmq:
+        specifier: 5.40.4
+        version: 5.40.4
+      cookie-parser:
+        specifier: 1.4.7
+        version: 1.4.7
+      cors:
+        specifier: 2.8.5
+        version: 2.8.5
+      dotenv:
+        specifier: 16.4.7
+        version: 16.4.7
+      express:
+        specifier: 4.21.2
+        version: 4.21.2
+      graphql:
+        specifier: 16.10.0
+        version: 16.10.0
+      graphql-ws:
+        specifier: 5.16.2
+        version: 5.16.2(graphql@16.10.0)
+      http-proxy-middleware:
+        specifier: 3.0.3
+        version: 3.0.3
+      ioredis:
+        specifier: 5.5.0
+        version: 5.5.0
+      jsonwebtoken:
+        specifier: 9.0.2
+        version: 9.0.2
+      mongoose:
+        specifier: 8.10.0
+        version: 8.10.0
+      nanoid:
+        specifier: 3.3.8
+        version: 3.3.8
+      node-fetch:
+        specifier: 2.7.0
+        version: 2.7.0(encoding@0.1.13)
+      react:
+        specifier: 18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: 18.3.1
+        version: 18.3.1(react@18.3.1)
+      tsx:
+        specifier: 4.19.2
+        version: 4.19.2
+      yaml:
+        specifier: 2.7.0
+        version: 2.7.0
+      zod:
+        specifier: 3.24.2
+        version: 3.24.2
 
   backend/libs/api-rpc:
     dependencies:
@@ -573,6 +669,12 @@ importers:
 
   backend/libs/core-modules:
     dependencies:
+      erxes-api-utils:
+        specifier: workspace:*
+        version: link:../utils
+      erxes-core-types:
+        specifier: workspace:*
+        version: link:../core-types
       mongoose:
         specifier: ^8.9.6
         version: 8.10.0

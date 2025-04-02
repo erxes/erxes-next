@@ -12,7 +12,13 @@
         "cwd": "backend/gateway",
         "commands": ["tsc --project tsconfig.build.json"]
       },
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "erxes-api-utils:build",
+        "erxes-api-modules:build",
+        "erxes-core-types:build",
+        "erxes-api-rpc:build",
+        "build:packageJson"
+      ]
     },
     "build:packageJson": {
       "executor": "@nx/js:tsc",

@@ -6,6 +6,11 @@
   "tags": [],
   "targets": {
     "build": {
+      "dependsOn": [
+        "erxes-api-utils:build",
+        "erxes-core-types:build",
+        "erxes-api-rpc:build"
+      ],
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -16,6 +21,5 @@
         "assets": ["backend/libs/core-modules/*.md"]
       }
     }
-  },
-  "implicitDependencies": ["erxes-api-utils", "erxes-core-types"]
+  }
 }
