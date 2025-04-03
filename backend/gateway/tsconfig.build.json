@@ -1,11 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    // "rootDir": ".",
-    // "paths": {
-    //   "src/*": ["backend/gateway/src/*"]
-    // },
+    "outDir": "../../dist/out-tsc",
+    "module": "commonjs",
     "types": ["node"]
   },
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+  "include": ["src/**/*.ts"]
 }

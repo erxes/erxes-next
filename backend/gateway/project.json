@@ -3,35 +3,48 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/gateway/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
-      "executor": "nx:run-commands",
-
+      "executor": "@nx/js:tsc",
+      "dependsOn": [
+        "erxes-api-utils:build",
+        "erxes-api-modules:build",
+        "erxes-core-types:build",
+        "erxes-api-rpc:build"
+      ],
       "cache": true,
       "options": {
-        "cwd": "backend/gateway",
-        "commands": ["tsc --project tsconfig.build.json"]
+        "outputPath": "dist/backend/gateway",
+        "main": "backend/gateway/src/main.ts",
+        "tsConfig": "backend/gateway/tsconfig.app.json",
+        "assets": ["backend/gateway/src/**"]
       },
-      "dependsOn": ["^build"]
-    },
-    "build:packageJson": {
-      "executor": "@nx/js:tsc",
-      "options": {
-        "main": "backend/gateway/dist/src/main.js",
-        "tsConfig": "backend/gateway/tsconfig.json",
-        "outputPath": "backend/gateway/dist",
-        "updateBuildableProjectDepsInPackageJson": true,
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+      "configurations": {
+        "development": {},
+        "production": {}
       }
     },
     "serve": {
-      "executor": "nx:run-commands",
-
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
       "options": {
-        "cwd": "backend/gateway",
-        "command": "pnpm dev"
+        "buildTarget": "gateway:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "gateway:build:development"
+        },
+        "production": {
+          "buildTarget": "gateway:build:production"
+        }
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
     }
-  },
-  "tags": []
+  }
 }
