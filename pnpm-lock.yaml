@@ -567,6 +567,12 @@ importers:
 
   backend/libs/core-modules:
     dependencies:
+      erxes-api-utils:
+        specifier: workspace:*
+        version: link:../utils
+      erxes-core-types:
+        specifier: workspace:*
+        version: link:../core-types
       mongoose:
         specifier: ^8.9.6
         version: 8.10.0

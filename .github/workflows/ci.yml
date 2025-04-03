@@ -44,7 +44,7 @@ jobs:
         run: corepack enable && corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build Nx Gateway
         run: pnpm nx build gateway
