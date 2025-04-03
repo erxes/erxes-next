@@ -8,9 +8,9 @@
     "build": {
       "executor": "@nx/js:tsc",
       "dependsOn": [
+        "erxes-core-types:build",
         "erxes-api-utils:build",
         "erxes-api-modules:build",
-        "erxes-core-types:build",
         "erxes-api-rpc:build"
       ],
       "cache": true,

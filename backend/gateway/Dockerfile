@@ -1,14 +1,10 @@
 # Build the application
 FROM node:22-alpine AS build
-
 WORKDIR /app
-
 COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm && pnpm install
-
 COPY . .
-
-RUN pnpm nx build gateway 
+RUN pnpm nx build gateway --configuration=production
 
 # Install bash
 RUN apk add --no-cache bash
