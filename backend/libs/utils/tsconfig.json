@@ -1,24 +1,13 @@
 {
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "allowJs": false,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noEmit": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "module": "commonjs"
   },
   "files": [],
   "include": [],
   "references": [
     {
       "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
     }
-  ],
-  "extends": "../../../tsconfig.base.json"
+  ]
 }
-//
