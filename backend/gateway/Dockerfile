@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm && pnpm install
 COPY . .
+
 RUN pnpm nx build gateway --configuration=production
 
 # Install bash
@@ -17,5 +18,5 @@ COPY dist/backend/libs/api-rpc/ ./node_modules/erxes-api-rpc/
 # Expose port 80
 EXPOSE 4000
 
-CMD [ "node", "dist/backend/gateway" ]
+CMD [ "node", "dist/backend/gateway/src/main.js" ]
 
