@@ -40,6 +40,9 @@ jobs:
             type=sha,format=short
             type=semver,pattern={{version}}
 
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+
       - name: Install dependencies
         run: pnpm install
 
