@@ -1,0 +1,167 @@
+import { UseFormReturn } from 'react-hook-form';
+import { VatFormValues, VatKind, VatStatus } from '../types/Vat';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  Form,
+  Input,
+  Select,
+  Spinner,
+} from 'erxes-ui';
+
+export const VatForm = ({
+  form,
+  onSubmit,
+  loading,
+}: {
+  form: UseFormReturn<VatFormValues>;
+  onSubmit: (data: VatFormValues) => void;
+  loading: boolean;
+}) => {
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid gap-5 grid-cols-2 py-3"
+      >
+        <Form.Field
+          control={form.control}
+          name="number"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Number</Form.Label>
+              <Form.Control>
+                <Input {...field} />
+              </Form.Control>
+            </Form.Item>
+          )}
+        />
+
+        <Form.Field
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Name</Form.Label>
+              <Form.Control>
+                <Input {...field} />
+              </Form.Control>
+            </Form.Item>
+          )}
+        />
+
+        <Form.Field
+          control={form.control}
+          name="kind"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Kind</Form.Label>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Form.Control>
+                  <Select.Trigger>
+                    <Select.Value placeholder="Select a kind" />
+                  </Select.Trigger>
+                </Form.Control>
+                <Select.Content>
+                  {Object.values(VatKind).map((kind) => (
+                    <Select.Item key={kind} value={kind} className="capitalize">
+                      {kind}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+            </Form.Item>
+          )}
+        />
+        <Form.Field
+          control={form.control}
+          name="percent"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Percent</Form.Label>
+              <Form.Control>
+                <Input
+                  value={field.value}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  min={0}
+                  max={100}
+                />
+              </Form.Control>
+            </Form.Item>
+          )}
+        />
+        <Form.Field
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Status</Form.Label>
+
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Form.Control>
+                  <Select.Trigger>
+                    <Select.Value placeholder="Select a status" />
+                  </Select.Trigger>
+                </Form.Control>
+                <Select.Content>
+                  {Object.values(VatStatus).map((status) => (
+                    <Select.Item
+                      key={status}
+                      value={status}
+                      className="capitalize"
+                    >
+                      {status}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+            </Form.Item>
+          )}
+        />
+        <Form.Field
+          control={form.control}
+          name="tabCount"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Tab Count</Form.Label>
+              <Form.Control>
+                <Input
+                  type="number"
+                  value={field.value}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  min={0}
+                />
+              </Form.Control>
+            </Form.Item>
+          )}
+        />
+        <Form.Field
+          control={form.control}
+          name="isBold"
+          render={({ field }) => (
+            <Form.Item className="col-span-2 flex items-center gap-2 space-y-0 mt-2">
+              <Form.Control>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </Form.Control>
+              <Form.Label variant="peer">Is Bold</Form.Label>
+            </Form.Item>
+          )}
+        />
+        <Dialog.Footer className="col-span-2 mt-3 gap-2">
+          <Dialog.Close asChild>
+            <Button variant="outline" size="lg">
+              Cancel
+            </Button>
+          </Dialog.Close>
+          <Button type="submit" disabled={loading} size="lg">
+            {loading ? <Spinner /> : 'Submit'}
+          </Button>
+        </Dialog.Footer>
+      </form>
+    </Form>
+  );
+};

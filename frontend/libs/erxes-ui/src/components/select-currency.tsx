@@ -6,6 +6,7 @@ import React from 'react';
 import { cn } from 'erxes-ui/lib/utils';
 import { IMaskInput } from 'react-imask';
 import { Except } from 'type-fest';
+import { IconChevronDown } from '@tabler/icons-react';
 
 export const SelectCurrency = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
@@ -17,8 +18,7 @@ export const SelectCurrency = React.forwardRef<
     setOpen?: (open: boolean) => void;
     value?: CurrencyCode;
     currencies?: Record<CurrencyCode, Currency>;
-    className?: string;
-    iconOnly?: boolean;
+    display?: 'icon' | 'label' | 'code';
     onChange?: (value: CurrencyCode) => void;
   }
 >(
@@ -27,7 +27,7 @@ export const SelectCurrency = React.forwardRef<
       value,
       currencies = CURRENCY_CODES,
       className,
-      iconOnly = false,
+      display = 'label',
       onChange,
       open,
       setOpen,
@@ -47,7 +47,7 @@ export const SelectCurrency = React.forwardRef<
           {...props}
         >
           {selectedCurrency ? (
-            <CurrencyDisplay code={value} iconOnly={iconOnly} />
+            <CurrencyDisplay code={value} variant={display} />
           ) : (
             <Combobox.Value placeholder="Select currency" />
           )}
@@ -117,8 +117,7 @@ export interface CurrencyDisplayProps
   extends React.HTMLAttributes<HTMLDivElement> {
   /** Currency code to display */
   code?: CurrencyCode;
-  /** Whether to show only the currency icon without the label */
-  iconOnly?: boolean;
+  variant?: 'icon' | 'label' | 'code';
 }
 
 /**
@@ -127,12 +126,16 @@ export interface CurrencyDisplayProps
 export const CurrencyDisplay = React.forwardRef<
   HTMLDivElement,
   CurrencyDisplayProps
->(({ code, iconOnly = false, className, ...props }, ref) => {
+>(({ code, variant = 'label', className, ...props }, ref) => {
   const currency = code ? CURRENCY_CODES[code] : undefined;
   const CurrencyIcon = currency?.Icon;
 
-  if (iconOnly && CurrencyIcon) {
+  if (variant === 'icon' && CurrencyIcon) {
     return <CurrencyIcon className="size-4" />;
+  }
+
+  if (variant === 'code' || variant === 'icon') {
+    return <span className="text-muted-foreground mr-auto">{code}</span>;
   }
 
   return (

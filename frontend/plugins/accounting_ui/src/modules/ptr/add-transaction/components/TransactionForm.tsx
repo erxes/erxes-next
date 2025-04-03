@@ -150,6 +150,7 @@ const CashTransactions = ({
                 value={field.value}
                 onChange={field.onChange}
                 currencyCode={CurrencyCode.MNT}
+                displayCurrency="code"
               />
             </Form.Control>
           </Form.Item>

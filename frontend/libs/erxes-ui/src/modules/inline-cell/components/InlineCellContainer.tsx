@@ -9,16 +9,12 @@ export const InlineCellContainer = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const { id, handleCancel } = useInlineCell();
+  const { id, handleCancel, handleOpenEditMode } = useInlineCell();
   const isInEditMode = useAtomValue(InlineCellIsInEditModeFamilyState(id));
   return (
     <Popover
       open={isInEditMode}
-      onOpenChange={(open) => {
-        if (!open) {
-          handleCancel();
-        }
-      }}
+      onOpenChange={(open) => (open ? handleOpenEditMode?.() : handleCancel())}
       modal
     >
       <div

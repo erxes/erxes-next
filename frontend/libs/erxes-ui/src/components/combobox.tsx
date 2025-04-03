@@ -24,13 +24,14 @@ export const ComboboxTrigger = React.forwardRef<
         {...props}
         type="button"
         className={cn(
-          'flex truncate h-8 rounded px-3 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-medium text-left',
+          'flex truncate h-8 rounded pl-3 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-medium text-left',
           (!props.variant || props.variant === 'outline') && 'shadow-xs',
           props.size === 'lg' && 'gap-2',
           className,
         )}
       >
         {children}
+        {!hideChevron && <IconChevronDown className="size-4 opacity-50" />}
       </Button>
     </Popover.Trigger>
   );

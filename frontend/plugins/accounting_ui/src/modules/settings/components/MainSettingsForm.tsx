@@ -14,18 +14,45 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SelectAccount } from '@/account/components/SelectAccount';
 import { useMainConfigs } from '../hooks/useMainConfigs';
+import { useEffect } from 'react';
+import { useUpdateConfig } from '../hooks/useUpdateConfig';
+import deepEqual from 'deep-equal';
+
+const DEFAULT_VALUES: TMainSettings = {
+  MainCurrency: 'MNT',
+  HasVat: false,
+  HasCtax: false,
+};
 
 export const MainSettingsForm = () => {
-  const { configs } = useMainConfigs();
+  const { configs, loading } = useMainConfigs();
+  const { updateConfigs } = useUpdateConfig();
   const form = useForm<TMainSettings>({
     resolver: zodResolver(mainSettingsSchema),
     defaultValues: {
       MainCurrency: 'MNT',
+      HasVat: false,
+      HasCtax: false,
     },
   });
+  const { reset } = form;
+
+  useEffect(() => {
+    if (Object.keys(configs || {}).length > 0 && configs) {
+      // Only reset if configs are different from current form values
+      const currentValues = form.getValues();
+      const hasChanges = !deepEqual(configs, currentValues);
+
+      if (hasChanges) {
+        reset({ ...DEFAULT_VALUES, ...configs });
+      }
+    }
+  }, [configs, reset]);
 
   const onSubmit = (data: TMainSettings) => {
-    console.log(data);
+    updateConfigs({
+      ...data,
+    });
   };
   return (
     <Form {...form}>
@@ -68,7 +95,11 @@ export const MainSettingsForm = () => {
           </Collapsible.Content>
         </Collapsible>
         <div className="text-right">
-          <Button className="justify-self-end flex-none" type="submit">
+          <Button
+            className="justify-self-end flex-none"
+            type="submit"
+            disabled={loading}
+          >
             Save
           </Button>
         </div>
@@ -83,6 +114,7 @@ export const VatFormFields = ({
   form: UseFormReturn<TMainSettings>;
 }) => {
   const { HasVat } = useWatch({ control: form.control });
+
   return (
     <>
       <Form.Field
