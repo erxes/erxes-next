@@ -4,26 +4,28 @@ import { useMultiQueryState } from 'erxes-ui';
 export const ACCOUNTS_PER_PAGE = 20;
 
 export const useAccounts = (options?: OperationVariables) => {
-  const [{ code, name, categoryId, currency, kind, journal }] =
-    useMultiQueryState([
-      'code',
-      'name',
-      'categoryId',
-      'currency',
-      'kind',
-      'journal',
-    ]);
+  const [queries] = useMultiQueryState<{
+    code?: string;
+    name?: string;
+    categoryId?: string;
+    currency?: string;
+    kind?: string;
+    journal?: string;
+  }>(['code', 'name', 'categoryId', 'currency', 'kind', 'journal']);
+
+  const variables = Object.entries(queries).reduce((acc, [key, value]) => {
+    if (value) {
+      acc[key] = value + '';
+    }
+    return acc;
+  }, {} as Record<string, string>);
+
   const { data, loading, error, fetchMore } = useQuery(GET_ACCOUNTS, {
     ...options,
     variables: {
       page: 1,
       perPage: ACCOUNTS_PER_PAGE,
-      code: code ?? undefined,
-      name: name ?? undefined,
-      categoryId: categoryId ?? undefined,
-      currency: currency ?? undefined,
-      kind: kind ?? undefined,
-      journals: journal ? [journal] : undefined,
+      ...variables,
       ...options?.variables,
     },
   });

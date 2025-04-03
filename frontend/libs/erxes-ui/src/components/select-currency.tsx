@@ -6,7 +6,6 @@ import React from 'react';
 import { cn } from 'erxes-ui/lib/utils';
 import { IMaskInput } from 'react-imask';
 import { Except } from 'type-fest';
-import { IconChevronDown } from '@tabler/icons-react';
 
 export const SelectCurrency = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
@@ -40,12 +39,7 @@ export const SelectCurrency = React.forwardRef<
 
     return (
       <Popover modal open={open || _open} onOpenChange={setOpen || _setOpen}>
-        <Combobox.Trigger
-          className={className}
-          onClick={(e) => e.stopPropagation()}
-          ref={ref}
-          {...props}
-        >
+        <Combobox.Trigger className={className} ref={ref} {...props}>
           {selectedCurrency ? (
             <CurrencyDisplay code={value} variant={display} />
           ) : (
@@ -94,7 +88,6 @@ export const SelectCurrencyCommand = ({
   return (
     <Command>
       <Command.Input placeholder="Search currency" ref={inputRef} />
-      <Command.Separator />
       <Command.List>
         <Command.Empty>No currency found</Command.Empty>
         {sortedCurrencies.map(([code, { label, Icon }]) => (

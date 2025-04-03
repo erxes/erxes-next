@@ -5,7 +5,7 @@ import { useProductTags } from '@/products/hooks/useProductTags';
 import { AlertDialog, Button, useToast } from 'erxes-ui';
 import { useProductsEdit } from '../../hooks/useProductsEdit';
 import { TagsManagerProps } from '../types/tagsTypes';
-import { useRemoveTag } from '~/modules/tags/hooks/useRemoveTag';
+import { useRemoveTag } from '@/tags/hooks/useRemoveTag';
 import { CreateTagForm, ITag } from 'ui-modules';
 
 export function TagsManager({

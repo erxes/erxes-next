@@ -19,7 +19,7 @@ const CustomerInlineRoot = React.forwardRef<
       <span
         ref={ref}
         {...props}
-        className={cn('inline-flex items-center gap-1', props.className)}
+        className={cn('inline-flex items-center gap-2', props.className)}
       >
         <CustomerInlineAvatar {...avatarProps} />
         <CustomerInlineTitle />

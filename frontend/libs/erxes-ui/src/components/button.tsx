@@ -15,7 +15,7 @@ export const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline:
-          'shadow-sm bg-background shadow-button-outline hover:bg-accent ',
+          'shadow-sm bg-background shadow-button-outline hover:bg-accent',
         secondary: 'bg-accent text-foreground hover:bg-border',
         ghost: 'hover:bg-accent',
         link: 'bg-background shadow-button-outline hover:bg-accent text-primary',
@@ -23,7 +23,7 @@ export const buttonVariants = cva(
       size: {
         default: 'h-7 py-1',
         sm: 'h-6 rounded text-xs after:rounded-[2px] after:absolute px-2',
-        lg: 'h-8 rounded px-6 font-semibold',
+        lg: 'h-8 rounded font-semibold',
         icon: 'h-7 w-7',
       },
     },

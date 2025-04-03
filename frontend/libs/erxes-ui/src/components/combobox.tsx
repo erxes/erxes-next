@@ -9,6 +9,7 @@ import { useInView } from 'react-intersection-observer';
 import { mergeRefs } from 'react-merge-refs';
 import { Skeleton } from './skeleton';
 import type { ApolloError } from '@apollo/client';
+
 export const ComboboxTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button> & {

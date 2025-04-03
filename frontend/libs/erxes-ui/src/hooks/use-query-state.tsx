@@ -67,6 +67,7 @@ export function useMultiQueryState<T extends QueryTypes>(
 
     try {
       const parsed = JSON.parse(value);
+
       return parsed as T[K];
     } catch {
       if (value === 'true') return true as T[K];
