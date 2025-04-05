@@ -3,8 +3,11 @@ import { CUSTOMERS_MERGE_MUTATION } from '../graphql/mutations/mergeCustomers';
 import { GET_CUSTOMERS } from '../graphql/queries/getCustomers';
 import { ICustomer } from '../types/customerType';
 
+interface ICustomerMergeData {
+  customersMerge: ICustomer[];
+}
 export const useCustomersMerge = () => {
-  const [_customersMerge, { loading, error }] = useMutation(
+  const [_customersMerge, { loading, error }] = useMutation<ICustomerMergeData>(
     CUSTOMERS_MERGE_MUTATION,
   );
 
@@ -21,22 +24,18 @@ export const useCustomersMerge = () => {
                 dateFilters: null,
               },
             },
-            ({ customersMain }) => {
+            ({ customers }) => {
               const customerIds =
                 operationVariables?.variables.customerIds ?? [];
 
               return {
-                customersMain: {
-                  ...customersMain,
-                  list: [
-                    data.customersMerge,
-                    ...customersMain.list.filter(
-                      (customer: ICustomer) =>
-                        !customerIds.includes(customer._id),
-                    ),
-                  ],
-                  totalCount: customersMain.totalCount + 1,
-                },
+                customers: [
+                  data?.customersMerge,
+                  ...customers.filter(
+                    (customer: ICustomer) =>
+                      !customerIds.includes(customer._id),
+                  ),
+                ],
               };
             },
           );

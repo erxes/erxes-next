@@ -57,46 +57,44 @@ export const GET_CUSTOMERS = gql`
       conformityIsRelated: $isRelated
       conformityIsSaved: $isSaved
     ) {
-      list {
+      _id
+      firstName
+      middleName
+      lastName
+      avatar
+      sex
+      birthDate
+      primaryEmail
+      emails
+      primaryPhone
+      phones
+      modifiedAt
+      position
+      department
+      leadStatus
+      hasAuthority
+      description
+      isSubscribed
+      code
+      emailValidationStatus
+      phoneValidationStatus
+      score
+      isOnline
+      lastSeenAt
+      links
+      state
+      owner {
         _id
-        firstName
-        middleName
-        lastName
-        avatar
-        sex
-        birthDate
-        primaryEmail
-        emails
-        primaryPhone
-        phones
-        modifiedAt
-        position
-        department
-        leadStatus
-        hasAuthority
-        description
-        isSubscribed
-        code
-        emailValidationStatus
-        phoneValidationStatus
-        score
-        isOnline
-        lastSeenAt
-        links
-        state
-        owner {
-          _id
-          username
-        }
-        integrationId
-        createdAt
-        remoteAddress
-        location
-        customFieldsData
-        trackedData
-        tagIds
+        username
       }
-      totalCount
+      integrationId
+      createdAt
+      remoteAddress
+      location
+      customFieldsData
+      trackedData
+      tagIds
     }
+    customerCounts
   }
 `;

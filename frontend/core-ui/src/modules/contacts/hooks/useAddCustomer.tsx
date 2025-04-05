@@ -1,8 +1,14 @@
 import { useMutation, OperationVariables } from '@apollo/client';
 import { ADD_CUSTOMERS } from '@/contacts/graphql/mutations/addCustomers';
 import { GET_CUSTOMERS } from '../graphql/queries/getCustomers';
+import { ICustomer } from '../types/customerType';
+
+interface ICustomerAddData {
+  customersAdd: ICustomer[];
+}
 export function useAddCustomer() {
-  const [_customersAdd, { loading, error }] = useMutation(ADD_CUSTOMERS);
+  const [_customersAdd, { loading, error }] =
+    useMutation<ICustomerAddData>(ADD_CUSTOMERS);
   const customersAdd = (operationVariables: OperationVariables) => {
     return _customersAdd({
       ...operationVariables,
@@ -16,13 +22,9 @@ export function useAddCustomer() {
                 dateFilters: null,
               },
             },
-            ({ customersMain }) => {
+            ({ customers }) => {
               return {
-                customersMain: {
-                  ...customersMain,
-                  list: [data.customersAdd, ...customersMain.list],
-                  totalCount: customersMain.totalCount + 1,
-                },
+                customers: [data?.customersAdd, ...customers],
               };
             },
           );
