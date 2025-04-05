@@ -219,14 +219,12 @@ const SelectAccountCategoryTrigger = React.forwardRef<
   }
 >(({ selectedCategory, loading, ...props }, ref) => {
   return (
-    <InlineCellDisplay asChild>
-      <Combobox.Trigger {...props} ref={ref}>
-        {selectedCategory ? (
-          <SelectAccountCategoryBadge category={selectedCategory} />
-        ) : (
-          <Combobox.Value placeholder="Select a category" />
-        )}
-      </Combobox.Trigger>
-    </InlineCellDisplay>
+    <Combobox.Trigger {...props} ref={ref}>
+      {selectedCategory ? (
+        <SelectAccountCategoryBadge category={selectedCategory} />
+      ) : (
+        <Combobox.Value placeholder="Select a category" />
+      )}
+    </Combobox.Trigger>
   );
 });

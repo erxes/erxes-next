@@ -49,11 +49,11 @@ const CommandDialog = ({
 };
 
 const commanInputVariants = cva(
-  'flex h-8 w-full rounded-md p-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+  'flex h-9 w-full rounded-md p-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
-        primary: 'h-9 bg-transparent',
+        primary: 'bg-transparent',
         secondary: '',
       },
     },
@@ -108,7 +108,10 @@ const CommandInput = React.forwardRef<
 
     return (
       <div
-        className={cn('flex items-center p-1 bg-background', wrapperClassName)}
+        className={cn(
+          'flex items-center bg-background border-b',
+          wrapperClassName,
+        )}
       >
         <CommandPrimitive.Input
           ref={mergeRefs([inputRef, ref])}

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { transactionSchema } from '../contants/transactionSchema';
+import { transactionGroupSchema } from '../contants/transactionSchema';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import {
@@ -16,18 +16,21 @@ import {
 } from 'erxes-ui';
 import { AddTransaction } from '../../components/AddTransaction';
 import { IconPlus } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { AssignMember, SelectBranch } from 'ui-modules';
 import { SelectAccount } from '@/account/components/SelectAccount';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
+import { activeJournalState } from '../states/addTrStates';
+import { useAtom } from 'jotai';
+import { MainJournalForm } from './MainJournalForm';
+import { TAddTransactionGroup } from '../types/AddTransaction';
 
 export const TransactionForm = () => {
-  const form = useForm<z.infer<typeof transactionSchema>>({
-    resolver: zodResolver(transactionSchema),
+  const form = useForm<TAddTransactionGroup>({
+    resolver: zodResolver(transactionGroupSchema),
   });
-  const { createTransaction, loading } = useTransactionsCreate();
-  console.log(form.formState.errors);
-  const handleSubmit = (data: z.infer<typeof transactionSchema>) => {
+  const { createTransaction } = useTransactionsCreate();
+  const handleSubmit = (data: TAddTransactionGroup) => {
     createTransaction({
       variables: {
         ...data,
@@ -90,6 +93,9 @@ export const TransactionForm = () => {
           <Tabs.Content value="bank" className="py-4">
             <BankTransactions />
           </Tabs.Content>
+          <Tabs.Content value="main" className="py-4">
+            <MainJournalForm form={form} index={0} />
+          </Tabs.Content>
         </TransactionsTabsList>
       </form>
     </Form>
@@ -99,13 +105,13 @@ export const TransactionForm = () => {
 const CashTransactions = ({
   form,
 }: {
-  form: UseFormReturn<z.infer<typeof transactionSchema>>;
+  form: UseFormReturn<TAddTransactionGroup>;
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6">
       <Form.Field
         control={form.control}
-        name="cash.accountId"
+        name="details.0.accountId"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Cash Account</Form.Label>
@@ -121,7 +127,7 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.side"
+        name="details.0.side"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Side</Form.Label>
@@ -141,7 +147,7 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.amount"
+        name="details.0.amount"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Amount</Form.Label>
@@ -150,6 +156,7 @@ const CashTransactions = ({
                 value={field.value}
                 onChange={field.onChange}
                 currencyCode={CurrencyCode.MNT}
+                displayCurrency="code"
               />
             </Form.Control>
           </Form.Item>
@@ -157,7 +164,7 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.assignedTo"
+        name="details.0.assignedTo"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Assign To</Form.Label>
@@ -174,7 +181,7 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.customerType"
+        name="details.0.customerType"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Customer Type</Form.Label>
@@ -197,7 +204,7 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.customerId"
+        name="details.0.customerId"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Customer</Form.Label>
@@ -214,7 +221,7 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.branchId"
+        name="details.0.branchId"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Branch</Form.Label>
@@ -229,7 +236,7 @@ const CashTransactions = ({
       />
       <Form.Field
         control={form.control}
-        name="cash.description"
+        name="details.0.description"
         render={({ field }) => (
           <Form.Item className="col-span-2">
             <Form.Label>Description</Form.Label>
@@ -249,7 +256,13 @@ const BankTransactions = () => {
 
 const TransactionsTabsList = ({ children }: { children: React.ReactNode }) => {
   const [defaultJournal] = useQueryState<string | undefined>('defaultJournal');
-  const [activeJournal, setActiveJournal] = useState(defaultJournal || 'cash');
+  const [activeJournal, setActiveJournal] = useAtom(activeJournalState);
+
+  useEffect(() => {
+    if (defaultJournal) {
+      setActiveJournal(defaultJournal);
+    }
+  }, [defaultJournal, setActiveJournal]);
 
   return (
     <Tabs
@@ -264,6 +277,7 @@ const TransactionsTabsList = ({ children }: { children: React.ReactNode }) => {
         >
           <Tabs.Trigger value="cash">Cash</Tabs.Trigger>
           <Tabs.Trigger value="bank">Bank</Tabs.Trigger>
+          <Tabs.Trigger value="main">Main</Tabs.Trigger>
         </Tabs.List>
         <Button variant="secondary">Save transaction template</Button>
         <AddTransactionButton />

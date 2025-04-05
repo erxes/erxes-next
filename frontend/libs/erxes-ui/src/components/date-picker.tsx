@@ -33,7 +33,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
     const renderButtonContent = () => {
       if (value) {
         if (mode === 'single') {
-          return dayjs(new Date(value as Date)).format('YYYY/MM/DD');
+          return dayjs(new Date(value as Date)).format('MMM DD, YYYY');
         }
 
         if (mode === 'multiple' && Array.isArray(value)) {

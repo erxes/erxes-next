@@ -1,0 +1,22 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "tsx": "4.19.2",
+    "erxes-api-utils": "workspace:*",
+    "erxes-api-modules": "workspace:*",
+    "erxes-core-types": "workspace:*",
+    "erxes-api-rpc": "workspace:*"
+  }
+}

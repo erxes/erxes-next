@@ -1,4 +1,4 @@
-import { TransactionForm } from '~/modules/ptr/add-transaction/components/TransactionForm';
+import { TransactionForm } from '~/modules/ptr/add-transaction/components/TransactionGroupForm';
 import { AccountingLayout } from '@/layout/components/Layout';
 import { AccountingHeader } from '@/layout/components/Header';
 import { Button } from 'erxes-ui';
