@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 import {
   Combobox,
   Command,
   Popover,
-  Skeleton,
   TextOverflowTooltip,
   cn,
 } from 'erxes-ui';
 
-import { useCompaniesLowDetail } from '@/products/hooks/useCompaniesLowDetail';
+import { useCompanies } from '~/modules/products/hooks/useCompanies';
 interface VendorFieldProps {
   value: string | undefined;
   onChange: (value: string) => void;
@@ -21,25 +21,26 @@ export const VendorField = ({
   onChange,
   className,
 }: VendorFieldProps) => {
-  const { companies, loading } = useCompaniesLowDetail();
   const [open, setOpen] = useState<boolean>(false);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
+
+  const {
+    companies,
+    loading,
+    handleFetchMore,
+    totalCount = 0,
+  } = useCompanies({
+    variables: {
+      searchValue: debouncedSearch,
+    },
+  });
   const currentValue = companies?.find((vendor) => vendor._id === value)?._id;
 
   const handleSelectVendor = (vendorId: string) => {
     onChange(vendorId === currentValue ? '' : vendorId);
     setOpen(false);
   };
-
-  if (loading)
-    return (
-      <Skeleton className="truncate justify-start h-8 mr-1">
-        <div className="mx-2 w-full">
-          <div className="py-2 flex gap-2">
-            <div className="h-4 w-24" />
-          </div>
-        </div>
-      </Skeleton>
-    );
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
@@ -60,8 +61,10 @@ export const VendorField = ({
         />
       </Combobox.Trigger>
       <Combobox.Content className="w-56">
-        <Command id="vendor-command-menu">
+        <Command id="vendor-command-menu" shouldFilter={false}>
           <Command.Input
+            value={search}
+            onValueChange={setSearch}
             variant="secondary"
             wrapperClassName="flex-auto"
             placeholder="Search vendor..."
@@ -72,7 +75,7 @@ export const VendorField = ({
             {companies.map((vendor) => (
               <Command.Item
                 key={vendor._id}
-                className=" h-7 relative flex items-center justify-between"
+                className="h-7 relative flex items-center justify-between"
                 value={vendor._id}
                 onSelect={handleSelectVendor}
                 title={vendor.primaryName}
@@ -84,6 +87,11 @@ export const VendorField = ({
                 <Combobox.Check checked={vendor._id === value} />
               </Command.Item>
             ))}
+            <Combobox.FetchMore
+              fetchMore={handleFetchMore}
+              totalCount={totalCount}
+              currentLength={companies.length}
+            />
           </Command.List>
         </Command>
       </Combobox.Content>

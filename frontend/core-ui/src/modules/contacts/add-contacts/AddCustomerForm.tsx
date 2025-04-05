@@ -40,11 +40,13 @@ export function AddCustomerForm() {
         toast({
           title: 'Error',
           description: e.message,
+          variant: 'destructive',
         });
       },
       onCompleted: () => {
         form.reset();
         setOpen(false);
+        
       },
     });
   };
@@ -73,7 +75,7 @@ export function AddCustomerForm() {
                   <CustomerAddGeneralInformationFields form={form} />
                 </Tabs.Content>
                 <Tabs.Content value="links">
-                  <CustomerAddLinksFields />
+                  <CustomerAddLinksFields control={form.control} />
                 </Tabs.Content>
               </div>
             </Tabs>

@@ -1,5 +1,5 @@
 import { RecordTable } from 'erxes-ui/modules/record-table';
-
+import { ContactsCommandBar } from './customers-command-bar/CustomersCommandBar';
 import { contactColumns } from '@/contacts/components/ContactColumns';
 import { contactMoreColumn } from '@/contacts/components/ContactMoreColumn';
 import {
@@ -15,9 +15,6 @@ export const ContactsRecordTable = () => {
       type: 'customer',
     },
   });
-
-  console.log({ customers });
-
   return (
     <RecordTable.Provider
       columns={contactColumns}
@@ -38,6 +35,7 @@ export const ContactsRecordTable = () => {
           )}
         </RecordTable.Body>
       </RecordTable>
+      <ContactsCommandBar />
     </RecordTable.Provider>
   );
 };

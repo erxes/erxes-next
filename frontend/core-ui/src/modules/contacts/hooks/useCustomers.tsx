@@ -15,7 +15,7 @@ export const useCustomers = (options?: QueryHookOptions) => {
     },
   });
 
-  const { list: customers, totalCount } = data?.customers || {};
+  const { customers, customerCounts: totalCount } = data || {};
 
   const handleFetchMore = () =>
     totalCount > customers?.length &&
@@ -37,7 +37,6 @@ export const useCustomers = (options?: QueryHookOptions) => {
         });
       },
     });
-
   return {
     loading,
     customers,

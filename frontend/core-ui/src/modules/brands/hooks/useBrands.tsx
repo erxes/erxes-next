@@ -4,7 +4,7 @@ import { BRANDS_QUERY } from '@/brands/graphql/queries/BrandsQuery';
 
 import { IBrand } from '@/brands/types/brand';
 export const useBrands = (options?: OperationVariables) => {
-  const BRANDS_PER_PAGE = 13;
+  const BRANDS_PER_PAGE = 10;
   const { data, loading, fetchMore, error } = useQuery(BRANDS_QUERY, {
     ...options,
     variables: {

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+ import { useQuery } from '@apollo/client';
 
 import { productsQueries } from '@/products/graphql';
 

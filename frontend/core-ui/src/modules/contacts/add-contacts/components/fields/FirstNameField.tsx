@@ -17,7 +17,11 @@ export const FirstNameField = ({
         <Form.Item>
           <Form.Label>FIRST NAME</Form.Label>
           <Form.Control>
-            <Input className="rounded-md h-8" {...field} />
+            <Input
+              className="rounded-md h-8"
+              {...field}
+              value={field?.value || ''}
+            />
           </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
