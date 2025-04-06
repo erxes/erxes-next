@@ -1,4 +1,5 @@
 import { IUserDocument } from './modules/team-member/user';
+import { Request, Response } from 'express';
 
 export interface IListParams {
   searchValue?: string;
@@ -38,8 +39,22 @@ export interface IPdfAttachment {
 }
 
 export interface IMainContext {
-  res: any;
+  req: Request;
+  res: Response;
   requestInfo: any;
   subdomain: string;
   user: IUserDocument;
+}
+
+export interface ILogDoc {
+  source: 'webhook' | 'graphql' | 'mongo';
+  action: string;
+  payload: any;
+  userId?: string;
+  executionTime?: {
+    startDate: Date;
+    endDate: Date;
+    durationMs: number;
+  };
+  status?: 'failed' | 'success';
 }

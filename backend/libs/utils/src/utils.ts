@@ -6,6 +6,8 @@ import {
 } from './saas/saas-mongo-connection';
 
 import { redis } from './redis';
+import { sendWorkerQueue } from './mq-worker';
+import { LOG_STATUSES } from './constants';
 
 export const getEnv = ({
   name,
@@ -40,6 +42,22 @@ export const connectionOptions: mongoose.ConnectOptions = {
   family: 4,
 };
 
+const startChangeStream = (models: mongoose.Models) => {
+  for (const modelKey of Object.keys(models)) {
+    const model = models[modelKey];
+    const changeStream = model.watch([], {
+      fullDocument: 'updateLookup',
+    });
+
+    changeStream.on('change', (change) => {
+      sendWorkerQueue('logs', 'put_log').add('put_log', {
+        source: 'mongo',
+        payload: change,
+      });
+    });
+  }
+};
+
 export const createGenerateModels = <IModels>(
   loadClasses: (
     db: mongoose.Connection,
@@ -60,6 +78,8 @@ export const createGenerateModels = <IModels>(
       }
 
       models = await loadClasses(mongoose.connection, hostnameOrSubdomain);
+
+      startChangeStream(models as any);
 
       return models;
     };
@@ -100,7 +120,11 @@ export const createGenerateModels = <IModels>(
         noListener: true,
       });
 
-      return await loadClasses(tenantCon, subdomain);
+      const models = await loadClasses(tenantCon, subdomain);
+
+      startChangeStream(models as any);
+
+      return models;
     };
   }
 };

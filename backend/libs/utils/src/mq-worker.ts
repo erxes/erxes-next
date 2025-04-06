@@ -1,6 +1,7 @@
-import { Worker } from 'bullmq';
+import { Queue, Worker } from 'bullmq';
 import type { Redis } from 'ioredis';
 import type { Job, Worker as WorkerType } from 'bullmq';
+import { redis } from './redis';
 
 export const createMQWorkerWithListeners = (
   service: string,
@@ -39,3 +40,8 @@ export const createMQWorkerWithListeners = (
 
   return worker;
 };
+
+export const sendWorkerQueue = (serviceName: string, queueName: string) =>
+  new Queue(`${serviceName}-${queueName}`, {
+    connection: redis,
+  });

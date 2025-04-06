@@ -8,7 +8,7 @@ import { redis } from 'erxes-api-utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4444;
 
-const myQueue = new Queue('gateway-update-apollo-router', {
+const GATEWAY_UPDATE_APOLLO_QUEUE = new Queue('gateway-update-apollo-router', {
   connection: redis,
   defaultJobOptions: {
     removeOnComplete: true,
@@ -19,7 +19,7 @@ const myQueue = new Queue('gateway-update-apollo-router', {
 const serverAdapter = new ExpressAdapter();
 
 createBullBoard({
-  queues: [new BullMQAdapter(myQueue)],
+  queues: [new BullMQAdapter(GATEWAY_UPDATE_APOLLO_QUEUE)],
   serverAdapter: serverAdapter,
 });
 
