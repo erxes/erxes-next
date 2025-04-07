@@ -1,4 +1,4 @@
-import { TypeExtensions } from '../../modules/contacts/graphql/schemas/extensions';
+import { TypeExtensions } from '../../modules/conversations/graphql/schemas/extensions';
 
 export const types = `
     ${TypeExtensions}

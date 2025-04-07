@@ -1,4 +1,4 @@
-import contactResolvers from '../../modules/contacts/graphql/resolvers/customResolvers';
+import contactResolvers from '../../modules/conversations/graphql/resolvers/customResolvers';
 
 export const customResolvers = {
   ...contactResolvers,
