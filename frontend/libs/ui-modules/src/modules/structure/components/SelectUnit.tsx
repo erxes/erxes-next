@@ -29,7 +29,7 @@ export const SelectUnit = React.forwardRef<
           ref={ref}
           className={cn('w-full flex text-left', props.className)}
         >
-          <SelectUnitValue value={value} />
+          <SelectUnitValue value={value!} />
         </Combobox.Trigger>
         <Combobox.Content>
           <UnitList
@@ -41,6 +41,7 @@ export const SelectUnit = React.forwardRef<
                   onValueChange(value);
                   _setOpen(false);
                 }}
+                selected={unit._id === value}
               />
             )}
           />
@@ -50,12 +51,14 @@ export const SelectUnit = React.forwardRef<
   );
 });
 
-const SelectUnitItem = ({
+export const SelectUnitItem = ({
   unit,
   onValueChange,
+  selected,
 }: {
   unit: IUnit;
   onValueChange: (value: string) => void;
+  selected?: boolean | undefined;
 }) => {
   const { setSelectedUnit, selectedUnit } = useSelectUnitContext();
   return (
@@ -66,12 +69,15 @@ const SelectUnitItem = ({
         onValueChange(unit._id);
       }}
     >
-      <TextOverflowTooltip value={unit.title} />
-      <Combobox.Check checked={selectedUnit?._id === unit._id} />
+      <SelectUnitBadge unit={unit} selected={selected} />
     </Command.Item>
   );
 };
-const SelectUnitProvider = ({ children }: { children: React.ReactNode }) => {
+export const SelectUnitProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [selectedUnit, setSelectedUnit] = useState<IUnit | undefined>(
     undefined,
   );
@@ -86,14 +92,15 @@ const SelectUnitValue = ({ value }: { value?: string }) => {
   const { selectedUnit } = useSelectUnitContext();
 
   const { unitDetail, loading } = useUnitById({
-    variables: { id: value },
-    skip: selectedUnit || !value,
+    variables: { _id: value },
+    skip: !value,
   });
+  console.log(value, 'val');
   if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
   return (
     <Combobox.Value
       placeholder="Select Unit"
-      value={selectedUnit?.title || unitDetail?.title}
+      value={unitDetail?.title || selectedUnit?.title}
     />
   );
 };
@@ -112,5 +119,33 @@ export const UnitList = ({
         {units?.map((unit: IUnit) => renderItem(unit))}
       </Command.List>
     </Command>
+  );
+};
+
+const SelectUnitBadge = ({
+  unit,
+  selected,
+}: {
+  unit?: IUnit;
+  selected?: boolean;
+}) => {
+  if (!unit) return null;
+
+  const { title, code, userCount } = unit;
+
+  return (
+    <>
+      <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
+        <div className="text-muted-foreground">{code}</div>
+        <TextOverflowTooltip value={title} className="flex-auto" />
+      </div>
+      {!selected ? (
+        userCount > 0 && (
+          <div className="text-muted-foreground ml-auto">{userCount}</div>
+        )
+      ) : (
+        <Combobox.Check checked={selected} />
+      )}
+    </>
   );
 };

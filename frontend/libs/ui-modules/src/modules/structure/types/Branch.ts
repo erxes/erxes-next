@@ -3,6 +3,8 @@ export interface IBranch {
   title: string;
   code: string;
   parentId: string;
+  order: string;
+  userCount: number;
 }
 
 export interface IBranchContext {

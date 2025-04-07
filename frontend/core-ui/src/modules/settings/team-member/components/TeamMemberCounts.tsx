@@ -1,20 +1,12 @@
 import { Skeleton } from 'erxes-ui';
-import { useCountByOptions } from '@/settings/team-member/hooks/useCountByOptions';
+import { useUsers } from '@/settings/team-member/hooks/useUsers';
 
-export function TeamMemberCounts({
-  queryKey,
-  _id,
-}: {
-  queryKey: string;
-  _id?: string;
-}) {
-  const { usersTotalCount, loading } = useCountByOptions({
-    variables: { [queryKey]: _id },
-  });
+export function TeamMemberCounts() {
+  const { totalCount, loading } = useUsers();
 
   return (
     <span className="text-sm text-muted-foreground">
-      {loading ? <Skeleton className="size-4" /> : `(${usersTotalCount})`}
+      {loading ? <Skeleton className="size-4" /> : `(${totalCount})`}
     </span>
   );
 }
