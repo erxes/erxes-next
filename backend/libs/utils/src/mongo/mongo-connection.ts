@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 const { MONGO_URL = 'mongodb://127.0.0.1:27017/erxes?directConnection=true' } =
   process.env;
@@ -8,21 +8,22 @@ export const connectionOptions: mongoose.ConnectOptions = {
 };
 
 mongoose.connection
-  .on('connected', () => {
+  ?.on('connected', () => {
     console.log(`Connected to the database: ${MONGO_URL}`);
   })
-  .on('disconnected', () => {
+  ?.on('disconnected', () => {
     console.log(`Disconnected from the database: ${MONGO_URL}`);
 
     process.exit(1);
   })
-  .on('error', (error) => {
+  ?.on('error', (error) => {
     console.error(`Database connection error: ${MONGO_URL} ${error}`);
 
     process.exit(1);
   });
 
 export async function connect(): Promise<mongoose.Connection> {
+  console.log({ MONGO_URL });
   if (!MONGO_URL) {
     throw new Error('MONGO_URL is not defined');
   }

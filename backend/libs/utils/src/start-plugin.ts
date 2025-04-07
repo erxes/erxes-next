@@ -6,22 +6,27 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 // import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
-import * as cors from 'cors';
-import * as express from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
 import * as http from 'http';
-import * as path from 'path';
+
 // import * as ws from 'ws';
 // import { filterXSS } from 'xss';
 // import { debugError, debugInfo } from '../debuggers';
 
-import { ILogDoc } from '../../core-types';
+import { ILogDoc } from 'erxes-core-types';
 import { Request as ApiRequest, Response as ApiResponse } from 'express';
-import { DocumentNode } from 'graphql';
+import { DocumentNode, GraphQLScalarType } from 'graphql';
+import path from 'path';
 import { wrapMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
 import { sendWorkerQueue } from './mq-worker';
 import { getServices, join, leave } from './service-discovery';
+import { getSubdomain } from './utils';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
+
 const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
 
 type ApiHandler = {
@@ -29,11 +34,14 @@ type ApiHandler = {
   path: string;
   resolver: (req: ApiRequest, res: ApiResponse) => Promise<void> | void;
 };
-type GraphqlResolver = {
-  [key: string]: {
-    [key: string]: (...args: any[]) => any;
-  };
+type ResolverObject = {
+  [key: string]: (...args: any[]) => any;
 };
+
+type GraphqlResolver = {
+  [key: string]: ResolverObject | GraphQLScalarType;
+};
+
 type ConfigTypes = {
   name: string;
   graphql: () => Promise<{
@@ -41,6 +49,7 @@ type ConfigTypes = {
     typeDefs: DocumentNode;
   }>;
   apolloServerContext: (
+    subdomain: string,
     context: any,
     req: ApiRequest,
     res: ApiResponse,
@@ -53,6 +62,7 @@ type ConfigTypes = {
   hasSubscriptions?: boolean;
   corsOptions?: any;
   subscriptionPluginPath?: any;
+  trpcAppRouter: AnyRouter;
 };
 
 export async function startPlugin(
@@ -62,11 +72,15 @@ export async function startPlugin(
 
   const app = express();
   app.disable('x-powered-by');
+  app.use(cors(configs.corsOptions || {}));
+
+  app.use(cookieParser());
 
   // for health check
   app.get('/health', async (_req, res) => {
     res.end('ok');
   });
+
   if (configs.middlewares) {
     for (const middleware of configs.middlewares) {
       app.use(middleware);
@@ -133,15 +147,23 @@ export async function startPlugin(
     }
   }
 
-  app.use(cors(configs.corsOptions || {}));
+  // if (configs.hasSubscriptions) {
+  //   app.get('/subscriptionPlugin.js', async (req, res) => {
+  //     res.sendFile(path.join(configs.subscriptionPluginPath));
+  //   });
+  // }
 
-  app.use(cookieParser());
-
-  if (configs.hasSubscriptions) {
-    app.get('/subscriptionPlugin.js', async (req, res) => {
-      res.sendFile(path.join(configs.subscriptionPluginPath));
-    });
-  }
+  app.use(
+    '/trpc',
+    trpcExpress.createExpressMiddleware({
+      router: configs.trpcAppRouter,
+      createContext: () => {
+        return {
+          subdomain: 'os',
+        };
+      },
+    }),
+  );
 
   app.use((req: any, _res, next) => {
     req.rawBody = '';
@@ -187,7 +209,7 @@ export async function startPlugin(
   async function leaveServiceDiscovery() {
     try {
       await leave(configs.name, port);
-      console.log(`Left service discovery. name=${configs.name} port=${PORT}`);
+      console.log(`Left service discovery. name=${configs.name} port=${port}`);
     } catch (e) {
       console.error(e);
     }
@@ -214,7 +236,9 @@ export async function startPlugin(
           typeDefs,
           resolvers: {
             ...resolvers,
-            Mutation: wrapMutations(resolvers?.Mutation || {}),
+            Mutation: wrapMutations(
+              (resolvers?.Mutation || {}) as ResolverObject,
+            ),
           },
         },
       ]),
@@ -289,7 +313,15 @@ export async function startPlugin(
           };
         }
 
-        await configs.apolloServerContext(context, req, res);
+        const subdomain = getSubdomain(req);
+
+        context.subdomain = subdomain;
+        context.requestInfo = {
+          secure: req.secure,
+          cookies: req.cookies,
+        };
+
+        await configs.apolloServerContext(subdomain, context, req, res);
 
         return context;
       },
@@ -310,7 +342,7 @@ export async function startPlugin(
   //   }
 
   console.log(
-    `🚀 ${configs.name} graphql api ready at http://localhost:${PORT}/graphql`,
+    `🚀 ${configs.name} graphql api ready at http://localhost:${port}/graphql`,
   );
 
   if (configs.meta) {

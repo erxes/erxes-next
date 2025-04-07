@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { IMainContext } from '../../../core-types';
+import { IMainContext } from 'erxes-core-types';
 import { LOG_STATUSES } from '../constants';
 import { sendWorkerQueue } from '../mq-worker';
 

@@ -93,6 +93,8 @@ export interface IContext extends IMainContext {
 export const loadClasses = (db: mongoose.Connection): IModels => {
   const models = {} as IModels;
 
+  console.log('coreapi', { dbName: db.name });
+
   models.Users = db.model<IUserDocument, IUserModel>(
     'users',
     loadUserClass(models),

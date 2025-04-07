@@ -1,9 +1,9 @@
-import { ILog } from '../db/definitions/logs';
+import { ILog, ILogDocument } from '../db/definitions/logs';
 import { LOG_STATUSES } from '../constants';
-import { Collection } from 'mongoose';
+import { Collection, Model } from 'mongoose';
 
 type DBS = {
-  logs: Collection<ILog>;
+  logs: any;
 };
 
 type CommonObject = {
@@ -12,7 +12,7 @@ type CommonObject = {
 };
 
 const insert = async (
-  Logs: Collection<ILog>,
+  Logs: any,
   collectionName: string,
   docId: string,
   commonObj: CommonObject,
@@ -28,16 +28,13 @@ const insert = async (
 };
 
 const update = async (
-  Logs: Collection<ILog>,
+  Logs: any,
   collectionName: string,
   docId: string,
   commonObj: CommonObject,
   changeEvent,
 ) => {
-  const prevLog = await Logs.findOne(
-    { docId },
-    { sort: { createdAt: -1 }, limit: 1 },
-  );
+  const prevLog = await Logs.findOne({ docId }).sort({ createdAt: -1 }).lean();
 
   Logs.insertOne({
     action: 'update',
@@ -54,15 +51,12 @@ const update = async (
 };
 
 const remove = async (
-  Logs: Collection<ILog>,
+  Logs: any,
   collectionName: string,
   docId: string,
   commonObj: CommonObject,
 ) => {
-  const prevLog = await Logs.findOne(
-    { docId },
-    { sort: { createdAt: -1 }, limit: 1 },
-  );
+  const prevLog = await Logs.findOne({ docId }).sort({ createdAt: -1 }).lean();
 
   Logs.insertOne({
     action: 'remove',
@@ -80,7 +74,7 @@ const actionMap = {
 };
 
 export const handleMongoChangeEvent = async (
-  Logs: Collection<ILog>,
+  Logs: Model<ILogDocument>,
   changeEvent: any,
 ) => {
   // MongoDB client setup

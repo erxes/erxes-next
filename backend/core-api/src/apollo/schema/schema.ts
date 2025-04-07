@@ -82,6 +82,9 @@ export const types = `
       inheritMaxAge: Boolean
     ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
   
+    type SomeType {
+      visibility: CacheControlScope
+    }
     ${CustomerTypes}
     ${CompanyTypes}
     ${CommonTypes}

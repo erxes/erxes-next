@@ -1,21 +1,18 @@
+import { redis, startPlugin } from 'erxes-api-utils';
+
 import { getSubdomain } from 'erxes-api-utils';
 import { generateModels } from './db/connectionResolvers';
 import resolvers from './apollo/resolvers';
 import typeDefs from './apollo/typeDef';
+import { initMQWorkers } from './bullmq';
 
-export default {
+startPlugin({
   name: 'logs',
-  graphql: async () => {
-    return {
-      typeDefs: await typeDefs(),
-      resolvers,
-    };
-  },
-  apolloServerContext: async (context, req) => {
-    const subdomain = getSubdomain(req);
-
-    context.subdomain = subdomain;
-
+  graphql: async () => ({
+    typeDefs: await typeDefs(),
+    resolvers,
+  }),
+  apolloServerContext: async (subdomain, context, req) => {
     const models = await generateModels(subdomain);
 
     context.models = models;
@@ -25,5 +22,7 @@ export default {
 
   meta: {},
 
-  onServerInit: async () => {},
-};
+  onServerInit: async () => {
+    await initMQWorkers(redis);
+  },
+});

@@ -53,6 +53,7 @@ export const initApolloServer = async (app, httpServer) => {
           return {};
         }
         const subdomain = getSubdomain(req);
+        console.log({ subdomain }, 'graphql', 'coreapi');
         const models = await generateModels(subdomain);
 
         const user: any = extractUserFromHeader(req.headers);

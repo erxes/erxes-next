@@ -10,14 +10,16 @@ import {
 
 import { createMQWorkerWithListeners } from 'erxes-api-utils';
 import Redis from 'ioredis';
+import { handleMongoChangeEvent } from './mongo';
+import { generateModels } from '../db/connectionResolvers';
 
-let {
-  REDIS_HOST = 'localhost',
-  REDIS_PORT = 6379,
-  REDIS_PASSWORD = '',
-  DATABASE_NAME = 'erxes',
-  LOG_DATABASE_NAME = 'logs',
-} = process.env;
+// let {
+//   REDIS_HOST = 'localhost',
+//   REDIS_PORT = 6379,
+//   REDIS_PASSWORD = '',
+//   DATABASE_NAME = 'erxes',
+//   LOG_DATABASE_NAME = 'logs',
+// } = process.env;
 
 // // if (!LOG_DATABASE_NAME) {
 // //   throw new Error("The LOG_DATABASE_NAME environment variable must be set");
@@ -39,53 +41,10 @@ type JobData = {
 };
 
 // Function to initialize MongoDB databases
-const initializeDatabases = async (hostnameOrSubdomain: string) => {
-  const VERSION = getEnv({
-    name: 'VERSION',
-    defaultValue: 'os',
-  }) as 'saas' | 'os';
 
-  const client = await connect();
-
-  if (VERSION === 'saas') {
-    let subdomain: string = hostnameOrSubdomain;
-
-    if (!subdomain) {
-      throw new Error(`Subdomain is \`${subdomain}\``);
-    }
-
-    // means hostname
-    if (subdomain.includes('.')) {
-      subdomain = getSubdomain(hostnameOrSubdomain);
-    }
-
-    await getSaasCoreConnection();
-
-    const organization = await coreModelOrganizations.findOne({ subdomain });
-    if (!organization) {
-      throw new Error(
-        `Organization with subdomain = ${subdomain} is not found`,
-      );
-    }
-
-    const DB_NAME = getEnv({ name: 'DB_NAME' });
-    const GE_MONGO_URL = (DB_NAME || 'erxes_<organizationId>').replace(
-      '<organizationId>',
-      organization._id,
-    );
-    DATABASE_NAME = GE_MONGO_URL;
-    LOG_DATABASE_NAME = `${GE_MONGO_URL}_logs`;
-  }
-
-  return {
-    logs: client.useDb(LOG_DATABASE_NAME).collection<ILog>('logs'),
-    core: client.useDb(DATABASE_NAME),
-  };
-};
-
-export const initMQWorkers = (redis: Redis) => {
+export const initMQWorkers = async (redis: Redis) => {
   console.info('Starting worker ...');
-
+  const models = await generateModels('localhost');
   //   const dbs = await initializeDatabases(subdomain);
   console.info('Initialized databases');
   return new Promise<void>((resolve, reject) => {
@@ -99,17 +58,17 @@ export const initMQWorkers = (redis: Redis) => {
           try {
             switch (source) {
               case 'mongo':
-                //   await handleMongoChangeEvent(dbs, payload);
+                await handleMongoChangeEvent(models.Logs, payload);
                 break;
               default:
-                // await dbs.logs.insertOne({
-                //   source,
-                //   action,
-                //   payload,
-                //   createdAt: new Date(),
-                //   userId,
-                //   status,
-                // });
+                await models.Logs.insertOne({
+                  source,
+                  action,
+                  payload,
+                  createdAt: new Date(),
+                  userId,
+                  status,
+                });
                 break;
             }
           } catch (error: any) {
@@ -118,7 +77,9 @@ export const initMQWorkers = (redis: Redis) => {
           }
         },
         redis,
-        () => {},
+        () => {
+          resolve();
+        },
       );
     } catch (error) {
       reject(error);

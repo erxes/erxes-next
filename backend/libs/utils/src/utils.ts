@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { connect } from './mongo/mongo-connection';
 import {
   coreModelOrganizations,
@@ -43,13 +43,21 @@ export const connectionOptions: mongoose.ConnectOptions = {
 };
 
 const startChangeStream = (models: mongoose.Models) => {
+  console.log('Initializing MongoDB change streams...');
+
   for (const modelKey of Object.keys(models)) {
     const model = models[modelKey];
+
+    console.log(`Setting up change stream for ${modelKey}...`);
+
+    // No await needed here - watch() is synchronous
     const changeStream = model.watch([], {
       fullDocument: 'updateLookup',
     });
 
     changeStream.on('change', (change) => {
+      console.log(change);
+
       sendWorkerQueue('logs', 'put_log').add('put_log', {
         source: 'mongo',
         payload: change,
@@ -58,11 +66,29 @@ const startChangeStream = (models: mongoose.Models) => {
   }
 };
 
+const initializeModels = async <IModels>(
+  connection: mongoose.Connection,
+  loadClasses: (
+    db: mongoose.Connection,
+    subdomain: string,
+  ) => IModels | Promise<IModels>,
+  subdomain,
+  ignoreChangeStream?: boolean,
+) => {
+  const models = await loadClasses(connection, subdomain);
+  if (!ignoreChangeStream) {
+    startChangeStream(models as any);
+  }
+
+  return models;
+};
+
 export const createGenerateModels = <IModels>(
   loadClasses: (
     db: mongoose.Connection,
     subdomain: string,
   ) => IModels | Promise<IModels>,
+  ignoreChangeStream?: boolean,
 ): ((hostnameOrSubdomain: string) => Promise<IModels>) => {
   const VERSION = getEnv({ name: 'VERSION', defaultValue: 'os' });
 
@@ -77,11 +103,12 @@ export const createGenerateModels = <IModels>(
         return models;
       }
 
-      models = await loadClasses(mongoose.connection, hostnameOrSubdomain);
-
-      startChangeStream(models as any);
-
-      return models;
+      return initializeModels(
+        mongoose.connection,
+        loadClasses,
+        hostnameOrSubdomain,
+        ignoreChangeStream,
+      );
     };
   } else {
     return async function genereteModels(
@@ -120,11 +147,12 @@ export const createGenerateModels = <IModels>(
         noListener: true,
       });
 
-      const models = await loadClasses(tenantCon, subdomain);
-
-      startChangeStream(models as any);
-
-      return models;
+      return initializeModels(
+        tenantCon,
+        loadClasses,
+        subdomain,
+        ignoreChangeStream,
+      );
     };
   }
 };

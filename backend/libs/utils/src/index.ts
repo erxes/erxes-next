@@ -6,3 +6,5 @@ export * from './service-discovery';
 export * from './utils';
 export * from './constants';
 export * from './start-plugin';
+export * from './saas';
+export * from './apollo';

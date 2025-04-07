@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "npx nx run-many -t serve -p core-api gateway"
+    "start": "npx nx run-many -t serve -p core-api gateway logs"
   },
   "engines": {
     "pnpm": ">=8",
