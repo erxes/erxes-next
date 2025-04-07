@@ -10,7 +10,7 @@ import { mergeRefs } from 'react-merge-refs';
 import { Skeleton } from './skeleton';
 import type { ApolloError } from '@apollo/client';
 
-export const ComboboxTrigger = React.forwardRef<
+export const ComboboxTriggerBase = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button> & {
     hideChevron?: boolean;
@@ -32,9 +32,24 @@ export const ComboboxTrigger = React.forwardRef<
         )}
       >
         {children}
-        {!hideChevron && <IconChevronDown className="size-4 opacity-50" />}
       </Button>
     </Popover.Trigger>
+  );
+});
+
+export const ComboboxTrigger = React.forwardRef<
+  React.ElementRef<typeof Button>,
+  React.ComponentPropsWithoutRef<typeof Button> & {
+    hideChevron?: boolean;
+  }
+>(({ children, hideChevron = false, ...props }, ref) => {
+  return (
+    <ComboboxTriggerBase {...props} ref={ref}>
+      {children}
+      {!hideChevron && (
+        <IconChevronDown className="size-4 opacity-50 text-muted-foreground" />
+      )}
+    </ComboboxTriggerBase>
   );
 });
 
@@ -174,6 +189,7 @@ const ComboboxEmpty = React.forwardRef<
 });
 
 export const Combobox = {
+  TriggerBase: ComboboxTriggerBase,
   Trigger: ComboboxTrigger,
   Value: ComboboxValue,
   Content: ComboboxContent,
