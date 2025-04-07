@@ -10,7 +10,7 @@ export const InlineCellDisplay = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <PopoverTrigger asChild>
-      <Combobox.Trigger
+      <Combobox.TriggerBase
         ref={ref}
         variant="ghost"
         {...props}
