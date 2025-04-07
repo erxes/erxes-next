@@ -1,10 +1,6 @@
-import { ILog, ILogDocument } from '../db/definitions/logs';
+import { Model } from 'mongoose';
 import { LOG_STATUSES } from '../constants';
-import { Collection, Model } from 'mongoose';
-
-type DBS = {
-  logs: any;
-};
+import { ILogDocument } from '../db/definitions/logs';
 
 type CommonObject = {
   source: 'mongo';
@@ -61,7 +57,7 @@ const remove = async (
   Logs.insertOne({
     action: 'remove',
     docId: String(docId),
-    payload: { prevDocument: prevLog?.payload?.fullDocument },
+    payload: { collectionName, prevDocument: prevLog?.payload?.fullDocument },
     createdAt: new Date(),
     ...commonObj,
   });

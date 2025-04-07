@@ -1,31 +1,23 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-// import * as bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import * as http from 'http';
-
-// import * as ws from 'ws';
-// import { filterXSS } from 'xss';
-// import { debugError, debugInfo } from '../debuggers';
-
-import { ILogDoc } from 'erxes-core-types';
-import { Request as ApiRequest, Response as ApiResponse } from 'express';
-import { DocumentNode, GraphQLScalarType } from 'graphql';
-import path from 'path';
-import { wrapMutations } from './apollo/wrapperMutations';
-import { extractUserFromHeader } from './headers';
-import { sendWorkerQueue } from './mq-worker';
-import { getServices, join, leave } from './service-discovery';
-import { getSubdomain } from './utils';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
+import { Request as ApiRequest, Response as ApiResponse } from 'express';
+import { DocumentNode, GraphQLScalarType } from 'graphql';
+import { wrapMutations } from './apollo/wrapperMutations';
+import { extractUserFromHeader } from './headers';
+import { logHandler } from './logs';
+import { join, leave } from './service-discovery';
+import { getSubdomain } from './utils';
+
+dotenv.config();
 
 const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
 
@@ -62,13 +54,13 @@ type ConfigTypes = {
   hasSubscriptions?: boolean;
   corsOptions?: any;
   subscriptionPluginPath?: any;
-  trpcAppRouter: AnyRouter;
+  trpcAppRouter?: AnyRouter;
 };
 
 export async function startPlugin(
   configs: ConfigTypes,
 ): Promise<express.Express> {
-  const port = process.env.PORT ? Number(process.env.PORT) : 3300;
+  const port = process.env.PORT ? Number(process.env.PORT) : 3301;
 
   const app = express();
   app.disable('x-powered-by');
@@ -103,10 +95,7 @@ export async function startPlugin(
       const METHOD = METHODS[method];
 
       app[METHOD](path, async (req: ApiRequest, res: ApiResponse) => {
-        const startDate = new Date();
-        const startTime = performance.now();
-
-        const logDoc: ILogDoc = {
+        return await logHandler(async () => await resolver(req, res), {
           source: 'webhook',
           action: method,
           payload: {
@@ -115,34 +104,7 @@ export async function startPlugin(
             query: req?.query,
           },
           userId: extractUserFromHeader(req.headers)?._id,
-        };
-        try {
-          const result = await resolver(req, res);
-
-          const endTime = performance.now();
-          const durationMs = endTime - startTime;
-          logDoc.payload.result = result;
-          logDoc.executionTime = {
-            startDate,
-            endDate: new Date(),
-            durationMs: durationMs,
-          };
-          logDoc.status = 'success';
-          sendWorkerQueue('logs', 'put_log').add('put_log', logDoc);
-          return result;
-        } catch (e) {
-          const errorDetails = {
-            message: e.message || 'Unknown error',
-            stack: e.stack || 'No stack available',
-            name: e.name || 'Error',
-          };
-
-          logDoc.payload.result = errorDetails;
-          logDoc.status = 'failed';
-          // changeQueue.add("changeQueue", queueData);
-          sendWorkerQueue('logs', 'put_log').add('put_log', logDoc);
-          throw new Error(e);
-        }
+        });
       });
     }
   }
@@ -153,17 +115,19 @@ export async function startPlugin(
   //   });
   // }
 
-  app.use(
-    '/trpc',
-    trpcExpress.createExpressMiddleware({
-      router: configs.trpcAppRouter,
-      createContext: () => {
-        return {
-          subdomain: 'os',
-        };
-      },
-    }),
-  );
+  if (configs.trpcAppRouter) {
+    app.use(
+      '/trpc',
+      trpcExpress.createExpressMiddleware({
+        router: configs.trpcAppRouter,
+        createContext: () => {
+          return {
+            subdomain: 'os',
+          };
+        },
+      }),
+    );
+  }
 
   app.use((req: any, _res, next) => {
     req.rawBody = '';
@@ -225,7 +189,7 @@ export async function startPlugin(
   });
 
   const generateApolloServer = async () => {
-    const services = await getServices();
+    // const services = await getServices();
     // debugInfo(`Enabled services .... ${JSON.stringify(services)}`);
 
     const { typeDefs, resolvers } = await configs.graphql();

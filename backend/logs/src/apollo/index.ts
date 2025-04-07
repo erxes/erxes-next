@@ -4,26 +4,15 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
 import { extractUserFromHeader, getSubdomain } from 'erxes-api-utils';
-import { gql } from 'graphql-tag';
 import { generateModels } from '../db/connectionResolvers';
-import * as typeDefDetails from './schema';
 import resolvers from './resolvers';
+import typeDefs from './typeDef';
 
 // load environment variables
 dotenv.config();
 
-let apolloServer;
-
-export const initApolloServer = async (app, httpServer) => {
-  const { types } = typeDefDetails;
-
-  const typeDefs = async () => {
-    return gql(`
-      ${types}
-    `);
-  };
-
-  apolloServer = new ApolloServer({
+const generateApolloServer = async (httpServer) =>
+  new ApolloServer({
     schema: buildSubgraphSchema([
       {
         typeDefs: await typeDefs(),
@@ -32,6 +21,8 @@ export const initApolloServer = async (app, httpServer) => {
     ]),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
+export const initApolloServer = async (app, httpServer) => {
+  const apolloServer = await generateApolloServer(httpServer);
 
   await apolloServer.start();
 
@@ -69,4 +60,4 @@ export const initApolloServer = async (app, httpServer) => {
   return apolloServer;
 };
 
-export default apolloServer;
+export default initApolloServer;

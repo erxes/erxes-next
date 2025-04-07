@@ -42,19 +42,48 @@ export const connectionOptions: mongoose.ConnectOptions = {
   family: 4,
 };
 
-const startChangeStream = (models: mongoose.Models) => {
-  console.log('Initializing MongoDB change streams...');
+export const cleanActiveChangeStream = async () => {
+  const REDIS_KEY_PREFIX = getEnv({
+    name: 'REDIS_KEY_PREFIX',
+    defaultValue: 'changeStreamActive',
+  });
+  const keys = await redis.keys(`${REDIS_KEY_PREFIX}:*`);
 
+  // Check if keys is an array and contains valid keys
+  if (keys && keys.length > 0) {
+    // Make sure all keys are strings
+    const validKeys = keys.filter(
+      (key) => typeof key === 'string' && key.length > 0,
+    );
+
+    if (validKeys.length > 0) {
+      await redis.del(...validKeys);
+    }
+  }
+};
+
+const startChangeStream = async (models: mongoose.Models) => {
+  const REDIS_KEY_PREFIX = getEnv({
+    name: 'REDIS_KEY_PREFIX',
+    defaultValue: 'changeStreamActive',
+  });
   for (const modelKey of Object.keys(models)) {
+    const redisKey = `${REDIS_KEY_PREFIX}:${modelKey}`;
+
+    const isActive = await redis.get(redisKey);
+    if (isActive) {
+      continue;
+    }
+
     const model = models[modelKey];
 
     console.log(`Setting up change stream for ${modelKey}...`);
 
-    // No await needed here - watch() is synchronous
     const changeStream = model.watch([], {
       fullDocument: 'updateLookup',
     });
 
+    await redis.set(redisKey, 'active');
     changeStream.on('change', (change) => {
       console.log(change);
 

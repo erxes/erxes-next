@@ -7,7 +7,7 @@ const generateFilters = (params) => {
 };
 
 export const logQueries = {
-  async logMainList(_root, args, { models }: IContext) {
+  async logsMainList(_root, args, { models }: IContext) {
     const filter = generateFilters(args);
 
     const list = await models.Logs.find(filter).sort({ createdAt: -1 });

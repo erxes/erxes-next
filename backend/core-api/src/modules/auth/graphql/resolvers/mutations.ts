@@ -1,4 +1,4 @@
-import { authCookieOptions, getEnv } from 'erxes-api-utils';
+import { authCookieOptions, getEnv, logHandler } from 'erxes-api-utils';
 import { IContext } from '../../../../connectionResolvers';
 
 type LoginParams = {
@@ -16,21 +16,30 @@ export const authMutations = {
     args: LoginParams,
     { res, requestInfo, models, subdomain }: IContext,
   ) {
-    const response = await models.Users.login(args);
+    return await logHandler(
+      async () => {
+        const response = await models.Users.login(args);
 
-    const { token } = response;
+        const { token } = response;
 
-    const sameSite = getEnv({ name: 'SAME_SITE' });
-    const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+        const sameSite = getEnv({ name: 'SAME_SITE' });
+        const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-    const cookieOptions: any = { secure: requestInfo.secure };
-    if (sameSite && sameSite === 'none' && res.req.headers.origin !== DOMAIN) {
-      cookieOptions.sameSite = sameSite;
-    }
+        const cookieOptions: any = { secure: requestInfo.secure };
+        if (
+          sameSite &&
+          sameSite === 'none' &&
+          res.req.headers.origin !== DOMAIN
+        ) {
+          cookieOptions.sameSite = sameSite;
+        }
 
-    res.cookie('auth-token', token, authCookieOptions(cookieOptions));
+        res.cookie('auth-token', token, authCookieOptions(cookieOptions));
 
-    return 'loggedIn';
+        return 'loggedIn';
+      },
+      { source: 'auth', action: 'login', payload: { email: args?.email } },
+    );
   },
   /*
    * logout
@@ -40,12 +49,22 @@ export const authMutations = {
     _args: undefined,
     { res, user, requestInfo, models }: IContext,
   ) {
-    const logout = await models.Users.logout(
-      user,
-      requestInfo.cookies['auth-token'],
+    await logHandler(
+      async () => {
+        const logout = await models.Users.logout(
+          user,
+          requestInfo.cookies['auth-token'],
+        );
+        res.clearCookie('auth-token');
+        return logout;
+      },
+      {
+        source: 'auth',
+        action: 'logout',
+        userId: user._id,
+        payload: { email: user?.email },
+      },
     );
-    res.clearCookie('auth-token');
-    return logout;
   },
 
   /*

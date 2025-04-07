@@ -1,7 +1,7 @@
 {
-  "name": "logs_api",
+  "name": "logs",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "backend/plugins/logs_api/src",
+  "sourceRoot": "backend/logs/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -10,11 +10,11 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/backend/plugins/logs_api",
+        "outputPath": "dist/backend/logs",
         "format": ["cjs"],
         "bundle": false,
-        "main": "backend/plugins/logs_api/src/main.ts",
-        "tsConfig": "backend/plugins/logs_api/tsconfig.app.json",
+        "main": "backend/logs/src/main.ts",
+        "tsConfig": "backend/logs/tsconfig.app.json",
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -40,15 +40,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "logs_api:build",
+        "buildTarget": "logs:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "logs_api:build:development"
+          "buildTarget": "logs:build:development"
         },
         "production": {
-          "buildTarget": "logs_api:build:production"
+          "buildTarget": "logs:build:production"
         }
       }
     }

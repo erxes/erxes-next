@@ -1,7 +1,6 @@
-import { GraphQLResolveInfo } from 'graphql';
 import { IMainContext } from 'erxes-core-types';
-import { LOG_STATUSES } from '../constants';
-import { sendWorkerQueue } from '../mq-worker';
+import { GraphQLResolveInfo } from 'graphql';
+import { logHandler } from '../logs';
 
 type GraphqlLogHandler<TArgs = any, TReturn = any> = (
   root: any,
@@ -13,46 +12,21 @@ type GraphqlLogHandler<TArgs = any, TReturn = any> = (
 const withLogging = (resolver: GraphqlLogHandler): GraphqlLogHandler => {
   return async (root, args, context, info) => {
     const { user, req } = context;
-
-    const startTime = performance.now();
     const requestData = req.headers;
 
-    const queueData: any = {
-      source: 'graphql',
-      action: 'mutations',
-      payload: {
-        mutationName: info.fieldName,
-        requestData,
-        args,
+    return await logHandler(
+      async () => await resolver(root, args, context, info),
+      {
+        source: 'graphql',
+        action: 'mutations',
+        payload: {
+          mutationName: info.fieldName,
+          requestData,
+          args,
+        },
+        userId: user?._id,
       },
-      userId: user?._id,
-    };
-
-    try {
-      const result = await resolver(root, args, context, info);
-      const endTime = performance.now();
-      const durationMs = endTime - startTime;
-
-      const executionTime = { start: startTime, endTime: endTime, durationMs };
-
-      queueData.payload.result = result;
-      queueData.payload.executionTime = executionTime;
-      queueData.status = LOG_STATUSES.SUCCESS;
-
-      sendWorkerQueue('logs', 'put_log').add('put_log', queueData);
-      return result;
-    } catch (error: any) {
-      const errorDetails = {
-        message: error.message || 'Unknown error',
-        stack: error.stack || 'No stack available',
-        name: error.name || 'Error',
-      };
-
-      queueData.payload.result = errorDetails;
-      queueData.status = LOG_STATUSES.FAILED;
-      sendWorkerQueue('logs', 'put_log').add('put_log', queueData);
-      throw error;
-    }
+    );
   };
 };
 

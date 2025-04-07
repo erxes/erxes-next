@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { cleanActiveChangeStream } from '../utils';
 
 const { MONGO_URL = 'mongodb://127.0.0.1:27017/erxes?directConnection=true' } =
   process.env;
@@ -9,6 +10,7 @@ export const connectionOptions: mongoose.ConnectOptions = {
 
 mongoose.connection
   ?.on('connected', () => {
+    cleanActiveChangeStream();
     console.log(`Connected to the database: ${MONGO_URL}`);
   })
   ?.on('disconnected', () => {
@@ -23,7 +25,6 @@ mongoose.connection
   });
 
 export async function connect(): Promise<mongoose.Connection> {
-  console.log({ MONGO_URL });
   if (!MONGO_URL) {
     throw new Error('MONGO_URL is not defined');
   }

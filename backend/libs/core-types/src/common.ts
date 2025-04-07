@@ -47,7 +47,7 @@ export interface IMainContext {
 }
 
 export interface ILogDoc {
-  source: 'webhook' | 'graphql' | 'mongo';
+  source: 'webhook' | 'graphql' | 'mongo' | 'auth';
   action: string;
   payload: any;
   userId?: string;
