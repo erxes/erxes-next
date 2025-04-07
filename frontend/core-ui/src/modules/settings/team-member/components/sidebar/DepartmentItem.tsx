@@ -26,7 +26,7 @@ export function DepartmentItem() {
     );
   }
   return (
-    <SelectTreeProvider id="select-branch" ordered>
+    <SelectTreeProvider id="select-department" ordered>
       <CollapsibleItemWrapper label="Department" open>
         <Command shouldFilter={false} className="bg-transparent">
           <Command.List className="pl-9 py-0 pr-0">
