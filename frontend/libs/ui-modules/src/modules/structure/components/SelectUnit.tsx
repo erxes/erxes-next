@@ -29,7 +29,7 @@ export const SelectUnit = React.forwardRef<
           ref={ref}
           className={cn('w-full flex text-left', props.className)}
         >
-          <SelectUnitValue value={value!} />
+          {value && <SelectUnitValue value={value} />}
         </Combobox.Trigger>
         <Combobox.Content>
           <UnitList
@@ -95,7 +95,6 @@ const SelectUnitValue = ({ value }: { value?: string }) => {
     variables: { _id: value },
     skip: !value,
   });
-  console.log(value, 'val');
   if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
   return (
     <Combobox.Value

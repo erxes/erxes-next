@@ -115,7 +115,7 @@ export const SelectBranchCommand = ({
         <Combobox.Empty error={error} loading={loading} />
         {nullable && (
           <Command.Item key="null" value="null" onSelect={() => onSelect(null)}>
-            No category selected
+            No branch selected
           </Command.Item>
         )}
         {branches?.map((branch: IBranch) => (

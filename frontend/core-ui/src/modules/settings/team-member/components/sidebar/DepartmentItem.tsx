@@ -37,10 +37,7 @@ export function DepartmentItem() {
                 department={department}
                 selected={departmentId === department?._id}
                 onSelect={() => {
-                  setDepartmentId(
-                    departments?.find((b) => department?._id === b._id)?._id ??
-                      '',
-                  );
+                  setDepartmentId(department._id);
                   resetFilterState();
                 }}
                 hasChildren={

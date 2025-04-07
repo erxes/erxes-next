@@ -34,9 +34,7 @@ export function BranchItem() {
                 branch={branch}
                 selected={branchId === branch?._id}
                 onSelect={() => {
-                  setBranchId(
-                    branches?.find((b) => branch?._id === b._id)?._id ?? '',
-                  );
+                  setBranchId(branch._id);
                   resetFilterState();
                 }}
                 hasChildren={
