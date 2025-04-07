@@ -194,11 +194,12 @@ const SelectDepartmentBadge = ({
 
   const { title, code } = department;
 
+  const codeTitle = code ? code + '-' + title : title;
+
   return (
     <>
       <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
-        <div className="text-muted-foreground">{code}</div>
-        <TextOverflowTooltip value={title} className="flex-auto" />
+        <TextOverflowTooltip value={codeTitle} className="flex-auto" />
       </div>
       {!selected ? (
         totalCount > 0 && (
