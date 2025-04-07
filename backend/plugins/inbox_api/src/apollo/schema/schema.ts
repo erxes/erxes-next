@@ -1,7 +1,7 @@
-import { types as CustomerTypes } from '../../modules/contacts/graphql/schemas/customer';
+import { TypeExtensions } from '../../modules/contacts/graphql/schemas/extensions';
 
 export const types = `
-    ${CustomerTypes}
+    ${TypeExtensions}
   `;
 
 export default { types };

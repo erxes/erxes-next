@@ -120,6 +120,7 @@ const AccountCategoryParentCell = ({
       recordId={cell.row.original._id}
       selected={cell.row.original.parentId}
       exclude={[cell.row.original._id]}
+      className="w-full font-normal"
       nullable
       onSelect={(parentId) => {
         editAccountCategory({

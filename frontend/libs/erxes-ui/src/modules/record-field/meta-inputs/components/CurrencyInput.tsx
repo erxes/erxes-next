@@ -1,4 +1,3 @@
-import { Separator } from 'erxes-ui/components';
 import {
   SelectCurrency,
   CurrencyValueInput,
@@ -11,22 +10,31 @@ export const CurrencyInput = ({
   onChange,
   currencyCode,
   className,
+  displayCurrency = 'code',
 }: {
   value: number;
   onChange: (value: number) => void;
   currencyCode?: CurrencyCode;
   className?: string;
+  displayCurrency?: 'icon' | 'label' | 'code';
 }) => {
   return (
     <div
-      className={cn('flex shadow-xs h-cell items-stretch rounded', className)}
+      className={cn(
+        'flex shadow-xs h-auto items-stretch rounded gap-px bg-muted',
+        className,
+      )}
     >
       <SelectCurrency
         value={currencyCode || CurrencyCode.USD}
-        className="h-full rounded-none border-r-0 relative focus-visible:z-10 shadow-none border-transparent rounded-l flex-none"
+        className="rounded-none border-r-0 relative focus-visible:z-10 shadow-none border-transparent rounded-l flex-none pr-1 pl-2 gap-1"
+        display={displayCurrency}
       />
-      <Separator orientation="vertical" className="bg-muted" />
-      <CurrencyValueInput value={value} onChange={onChange} />
+      <CurrencyValueInput
+        value={value}
+        onChange={onChange}
+        className="shadow-none border-none rounded-l-none focus-visible:z-10 focus-visible:relative"
+      />
     </div>
   );
 };

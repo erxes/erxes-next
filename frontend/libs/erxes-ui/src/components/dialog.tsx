@@ -3,6 +3,8 @@ import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import { cn } from '../lib/utils';
+import { Button } from './button';
+import { IconX } from '@tabler/icons-react';
 
 const DialogTrigger = DialogPrimitive.Trigger;
 
@@ -50,6 +52,36 @@ const DialogContent = React.forwardRef<
   </DialogPortal>
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
+
+const DialogContentCombined = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    title: string;
+    description: string;
+    hideClose?: boolean;
+  }
+>(({ className, children, title, description, hideClose, ...props }, ref) => (
+  <DialogContent ref={ref} className={cn(className)} {...props}>
+    <Dialog.Header>
+      <Dialog.Title>{title}</Dialog.Title>
+      <Dialog.Description className="sr-only">{description}</Dialog.Description>
+      {!hideClose && (
+        <Dialog.Close asChild>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="absolute right-4 top-3"
+          >
+            <IconX />
+          </Button>
+        </Dialog.Close>
+      )}
+    </Dialog.Header>
+    {children}
+  </DialogContent>
+));
+
+DialogContentCombined.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
   className,
@@ -112,6 +144,7 @@ export const Dialog = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogTrigger,
   Close: DialogClose,
   Content: DialogContent,
+  ContentCombined: DialogContentCombined,
   Header: DialogHeader,
   Footer: DialogFooter,
   Title: DialogTitle,

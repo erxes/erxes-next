@@ -3,13 +3,14 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/gateway/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "dependsOn": [
+        "erxes-core-types:build",
         "erxes-api-utils:build",
         "erxes-api-modules:build",
-        "erxes-core-types:build",
         "erxes-api-rpc:build"
       ],
       "cache": true,
@@ -41,11 +42,9 @@
         }
       }
     },
-
     "docker-build": {
       "dependsOn": ["build"],
       "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
     }
-  },
-  "tags": []
+  }
 }

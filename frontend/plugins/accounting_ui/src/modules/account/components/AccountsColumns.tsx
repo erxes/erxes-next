@@ -21,6 +21,7 @@ const AccountCategoryCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
     <SelectAccountCategory
       recordId={cell.row.original._id}
       selected={cell.row.original.categoryId}
+      className="w-full font-normal"
       onSelect={(categoryId) => {
         editAccount(
           {

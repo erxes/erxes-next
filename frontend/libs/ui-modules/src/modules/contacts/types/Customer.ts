@@ -6,3 +6,8 @@ export interface ICustomerInline {
   primaryPhone?: string;
   avatar?: string;
 }
+export enum CustomerType {
+  CUSTOMER = 'customer',
+  COMPANY = 'company',
+  USER = 'user',
+}

@@ -17,8 +17,7 @@ export const SelectCurrency = React.forwardRef<
     setOpen?: (open: boolean) => void;
     value?: CurrencyCode;
     currencies?: Record<CurrencyCode, Currency>;
-    className?: string;
-    iconOnly?: boolean;
+    display?: 'icon' | 'label' | 'code';
     onChange?: (value: CurrencyCode) => void;
   }
 >(
@@ -27,7 +26,7 @@ export const SelectCurrency = React.forwardRef<
       value,
       currencies = CURRENCY_CODES,
       className,
-      iconOnly = false,
+      display = 'label',
       onChange,
       open,
       setOpen,
@@ -40,14 +39,9 @@ export const SelectCurrency = React.forwardRef<
 
     return (
       <Popover modal open={open || _open} onOpenChange={setOpen || _setOpen}>
-        <Combobox.Trigger
-          className={className}
-          onClick={(e) => e.stopPropagation()}
-          ref={ref}
-          {...props}
-        >
+        <Combobox.Trigger className={className} ref={ref} {...props}>
           {selectedCurrency ? (
-            <CurrencyDisplay code={value} iconOnly={iconOnly} />
+            <CurrencyDisplay code={value} variant={display} />
           ) : (
             <Combobox.Value placeholder="Select currency" />
           )}
@@ -94,7 +88,6 @@ export const SelectCurrencyCommand = ({
   return (
     <Command>
       <Command.Input placeholder="Search currency" ref={inputRef} />
-      <Command.Separator />
       <Command.List>
         <Command.Empty>No currency found</Command.Empty>
         {sortedCurrencies.map(([code, { label, Icon }]) => (
@@ -117,8 +110,7 @@ export interface CurrencyDisplayProps
   extends React.HTMLAttributes<HTMLDivElement> {
   /** Currency code to display */
   code?: CurrencyCode;
-  /** Whether to show only the currency icon without the label */
-  iconOnly?: boolean;
+  variant?: 'icon' | 'label' | 'code';
 }
 
 /**
@@ -127,12 +119,16 @@ export interface CurrencyDisplayProps
 export const CurrencyDisplay = React.forwardRef<
   HTMLDivElement,
   CurrencyDisplayProps
->(({ code, iconOnly = false, className, ...props }, ref) => {
+>(({ code, variant = 'label', className, ...props }, ref) => {
   const currency = code ? CURRENCY_CODES[code] : undefined;
   const CurrencyIcon = currency?.Icon;
 
-  if (iconOnly && CurrencyIcon) {
+  if (variant === 'icon' && CurrencyIcon) {
     return <CurrencyIcon className="size-4" />;
+  }
+
+  if (variant === 'code' || variant === 'icon') {
+    return <span className="text-muted-foreground mr-auto">{code}</span>;
   }
 
   return (

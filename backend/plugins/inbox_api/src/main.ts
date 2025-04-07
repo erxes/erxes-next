@@ -3,15 +3,36 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
+import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
+import { CoreTRPCAppRouter } from 'erxes-api-rpc';
 
-import { join, leave } from 'erxes-api-utils';
+import { getService, join, leave } from 'erxes-api-utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3301;
 
 const app = express();
 
-// don't move it above telnyx controllers
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
+
+app.get('/users', async (_req, res) => {
+  const coreService = await getService('core');
+  try {
+    const client = createTRPCClient<CoreTRPCAppRouter>({
+      links: [
+        httpBatchStreamLink({
+          url: `${coreService.address}/trpc`,
+        }),
+      ],
+    });
+
+    const customers = await client.customer.list.query({});
+
+    res.json(customers);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
 
 app.use(
   express.json({
@@ -21,19 +42,6 @@ app.use(
 
 app.use(cookieParser());
 
-// app.use(
-//   '/trpc',
-//   trpcExpress.createExpressMiddleware({
-//     router: appRouter,
-//     createContext: () => {
-//       return {
-//         subdomain: 'os',
-//       };
-//     },
-//   }),
-// );
-
-// Wrap the Express server
 const httpServer = http.createServer(app);
 
 httpServer.listen(port, async () => {

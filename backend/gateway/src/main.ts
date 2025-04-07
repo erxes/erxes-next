@@ -8,8 +8,6 @@ import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
-
 import { retryGetProxyTargets } from './proxy/targets';
 import { startRouter, stopRouter } from './apollo-router';
 import userMiddleware from './middlewares/userMiddleware';
@@ -20,9 +18,7 @@ import {
   proxyReq,
 } from './proxy/middleware';
 
-import { CoreTRPCAppRouter } from 'erxes-api-rpc';
-
-import { getServices, redis } from 'erxes-api-utils';
+import { getService, getServices, redis } from 'erxes-api-utils';
 import { applyGraphqlLimiters } from './middlewares/graphql-limiter';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -54,42 +50,17 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
-app.get('/users', async (_req, res) => {
-  try {
-    const client = createTRPCClient<CoreTRPCAppRouter>({
-      links: [
-        httpBatchStreamLink({
-          url: 'http://localhost:3300/trpc', // Plugin-User серверийн URL
-        }),
-      ],
-    });
-
-    const customers = await client.customer.list.query({});
-
-    res.json(customers);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Failed to fetch users' });
-  }
-});
-
 app.use(userMiddleware);
 
 app.use('/bullmq-board', serverAdapter.getRouter());
 
 app.use('/pl:serviceName', async (req, res) => {
   try {
-    const servicesArray: string[] = await getServices();
-
-    const services: Record<string, string> = Object.fromEntries(
-      servicesArray.map((service) => [service, service]),
-    );
-
     const serviceName: string = req.params.serviceName.replace(':', '');
 
-    initMQWorkers(redis);
-    // Find the target URL for the requested service
-    const targetUrl = services[serviceName];
+    const service = await getService(serviceName);
+
+    const targetUrl = service.address;
 
     if (targetUrl) {
       // Proxy the request to the target service using the custom headers

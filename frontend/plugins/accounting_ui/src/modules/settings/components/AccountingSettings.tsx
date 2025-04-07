@@ -24,6 +24,18 @@ export const AccountCategories = lazy(() =>
   })),
 );
 
+export const VatRows = lazy(() =>
+  import('~/pages/VatRowsPage').then((module) => ({
+    default: module.VatRowsPage,
+  })),
+);
+
+export const CTaxRows = lazy(() =>
+  import('~/pages/CTaxRowsPage').then((module) => ({
+    default: module.CTaxRowsPage,
+  })),
+);
+
 const AccountingSettings = () => {
   return (
     <Filter id="accounting-settings">
@@ -49,6 +61,8 @@ const AccountingSettings = () => {
                 path="/account-categories"
                 element={<AccountCategories />}
               />
+              <Route path="/vat" element={<VatRows />} />
+              <Route path="/ctax" element={<CTaxRows />} />
             </Routes>
           </Suspense>
         </div>

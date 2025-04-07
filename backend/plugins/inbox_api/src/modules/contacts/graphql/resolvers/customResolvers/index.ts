@@ -1,4 +1,4 @@
-import User from './customer';
+import { User } from './extenstions';
 
 export default {
   User,

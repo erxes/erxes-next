@@ -15,7 +15,7 @@ const addressSchema = z.object({
 const stringMapSchema = z.record(z.string());
 
 export const customerTRPCSchema = z.object({
-  state: z.enum(['visitor', 'lead', 'customer']).optional(),
+  state: z.string().optional(),
 
   firstName: z.string().optional(),
   lastName: z.string().optional(),
@@ -41,7 +41,7 @@ export const customerTRPCSchema = z.object({
 });
 
 export const customerDocumentTRPCSchema = customerTRPCSchema.extend({
-  _id: z.string(),
+  _id: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   modifiedAt: z.coerce.date().optional(),
 });

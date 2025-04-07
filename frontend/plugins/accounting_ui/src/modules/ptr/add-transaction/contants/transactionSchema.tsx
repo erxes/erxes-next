@@ -1,32 +1,44 @@
 import { z } from 'zod';
-
-export const transactionCashSchema = z.object({
+import { CustomerType } from 'ui-modules';
+export const baseTransactionSchema = z.object({
   accountId: z.string().optional(),
-  side: z.enum(['incoming', 'outgoing']),
   amount: z.number(),
   description: z.string(),
-  customerType: z.enum(['customer', 'company', 'user']),
+  customerType: z.nativeEnum(CustomerType),
   customerId: z.string(),
   branchId: z.string().optional(),
   departmentId: z.string().optional(),
-  assignedTo: z.string().optional(),
+  assignedUserIds: z.array(z.string()).optional(),
+});
+
+export const transactionCashSchema = z.object({
+  journal: z.literal('cash'),
+  side: z.enum(['incoming', 'outgoing']),
+  ...baseTransactionSchema.shape,
 });
 
 export const transactionBankSchema = z.object({
-  accountId: z.string().optional(),
+  journal: z.literal('bank'),
   side: z.enum(['incoming', 'outgoing']),
-  amount: z.number(),
-  description: z.string(),
-  customerType: z.enum(['customer', 'company', 'user']),
-  customerId: z.string(),
-  branchId: z.string().optional(),
-  departmentId: z.string().optional(),
-  assignedTo: z.string().optional(),
+  ...baseTransactionSchema.shape,
 });
 
-export const transactionSchema = z.object({
+export const transactionMainSchema = z.object({
+  journal: z.literal('main'),
+  side: z.enum(['dt', 'ct']),
+  ...baseTransactionSchema.shape,
+});
+
+export const transactionGroupSchema = z.object({
   number: z.string(),
   date: z.date(),
-  cash: transactionCashSchema,
-  // bank: transactionBankSchema,
+  details: z
+    .array(
+      z.discriminatedUnion('journal', [
+        transactionMainSchema,
+        transactionBankSchema,
+        transactionCashSchema,
+      ]),
+    )
+    .min(1),
 });

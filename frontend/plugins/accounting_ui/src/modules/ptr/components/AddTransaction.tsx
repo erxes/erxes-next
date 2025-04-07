@@ -1,6 +1,6 @@
-import { IconPlus } from '@tabler/icons-react';
-import { DropdownMenu, Button } from 'erxes-ui';
+import { DropdownMenu } from 'erxes-ui';
 import { Link } from 'react-router-dom';
+import { JournalType } from '../add-transaction/types/AddTransaction';
 
 export const AddTransaction = ({
   inForm,
@@ -9,43 +9,51 @@ export const AddTransaction = ({
 }: {
   inForm?: boolean;
   children: React.ReactNode;
-  onClick?: (journal?: string) => void;
+  onClick?: (journal?: JournalType) => void;
 }) => {
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>{children}</DropdownMenu.Trigger>
       <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width]">
         <DropdownMenu.Label>Ерөнхий</DropdownMenu.Label>
-        <AddTransactionItem journal="general" onClick={onClick} inForm={inForm}>
+        <AddTransactionItem
+          journal={JournalType.MAIN}
+          onClick={onClick}
+          inForm={inForm}
+        >
           Ерөнхий журнал
         </AddTransactionItem>
         <AddTransactionItem disabled>НӨАТ</AddTransactionItem>
         <DropdownMenu.Label>Мөнгөн хөрөнгө</DropdownMenu.Label>
-        <AddTransactionItem journal="cash" onClick={onClick} inForm={inForm}>
+        <AddTransactionItem
+          journal={JournalType.CASH}
+          onClick={onClick}
+          inForm={inForm}
+        >
           Касс
         </AddTransactionItem>
         <AddTransactionItem
-          journal="exchange"
+          journal={JournalType.BANK}
           onClick={onClick}
           inForm={inForm}
         >
           Харилцах
         </AddTransactionItem>
         <DropdownMenu.Label>Тооцоо</DropdownMenu.Label>
-        <AddTransactionItem
-          journal="exchange"
+        {/* <AddTransactionItem
+          journal={JournalType.EXCHANGE}
           onClick={onClick}
           inForm={inForm}
         >
           Авлага
         </AddTransactionItem>
         <AddTransactionItem
-          journal="exchange"
+          journal={JournalType.EXCHANGE}
           onClick={onClick}
           inForm={inForm}
         >
           Өглөг
-        </AddTransactionItem>
+        </AddTransactionItem> */}
         <DropdownMenu.Label>Бараа материал</DropdownMenu.Label>
         <AddTransactionItem disabled>Орлого</AddTransactionItem>
         <AddTransactionItem disabled>Хангамжийн зарлага</AddTransactionItem>
@@ -73,8 +81,8 @@ const AddTransactionItem = ({
 }: {
   children: React.ReactNode;
   disabled?: boolean;
-  journal?: string;
-  onClick?: (journal?: string) => void;
+  journal?: JournalType;
+  onClick?: (journal?: JournalType) => void;
   inForm?: boolean;
 }) => {
   if (disabled) {
