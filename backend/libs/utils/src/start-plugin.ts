@@ -18,7 +18,6 @@ import * as http from 'http';
 import { ILogDoc } from 'erxes-core-types';
 import { Request as ApiRequest, Response as ApiResponse } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
-import path from 'path';
 import { wrapMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
 import { sendWorkerQueue } from './mq-worker';
