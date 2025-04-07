@@ -1,7 +1,7 @@
 {
-  "name": "inbox_api",
+  "name": "frontline_api",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "backend/plugins/inbox_api/src",
+  "sourceRoot": "backend/plugins/frontline_api/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -10,11 +10,11 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/backend/plugins/inbox_api",
+        "outputPath": "dist/backend/plugins/frontline_api",
         "format": ["cjs"],
         "bundle": false,
-        "main": "backend/plugins/inbox_api/src/main.ts",
-        "tsConfig": "backend/plugins/inbox_api/tsconfig.app.json",
+        "main": "backend/plugins/frontline_api/src/main.ts",
+        "tsConfig": "backend/plugins/frontline_api/tsconfig.app.json",
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -40,15 +40,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "inbox_api:build",
+        "buildTarget": "frontline_api:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "inbox_api:build:development"
+          "buildTarget": "frontline_api:build:development"
         },
         "production": {
-          "buildTarget": "inbox_api:build:production"
+          "buildTarget": "frontline_api:build:production"
         }
       }
     }

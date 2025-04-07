@@ -48,7 +48,7 @@ httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
 
   await join({
-    name: 'inbox',
+    name: 'frontline',
     port,
     hasSubscriptions: false,
     meta: {},
@@ -69,7 +69,7 @@ async function closeMongooose() {
 
 async function leaveServiceDiscovery() {
   try {
-    await leave('inbox', port);
+    await leave('frontline', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);
