@@ -1,62 +1,52 @@
-# Build stage
-FROM node:20-alpine AS builder
-
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Base image for common dependencies
+FROM node:22-alpine AS build
 
 # Set working directory
 WORKDIR /app
 
-# Copy root configuration files
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
 
-# Copy the shared package
-COPY backend/erxes-shared ./backend/erxes-shared
+COPY ./backend/test/package.json /app/backend/test/
+COPY ./backend/erxes-shared/package.json /app/backend/erxes-shared/
 
-# Copy the test service with all config files
-COPY backend/test/package.json backend/test/tsconfig.json backend/test/tsconfig.build.json ./backend/test/
-COPY backend/test/src ./backend/test/src
+# Install pnpm and dependencies
+RUN npm install -g pnpm
+RUN pnpm install
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Build the test project
+FROM build as test-build
 
-# Build the application
-RUN cd backend/test && pnpm run build
+# Copy source code
+COPY ./backend/test /app/backend/test
+COPY ./backend/erxes-shared /app/backend/erxes-shared
 
-# Build shared package
-RUN cd backend/erxes-shared && pnpm run build
+# Build following exact sequence
+WORKDIR /app/backend/test
+RUN npx nx build:packageJson test
+RUN npx nx build test
 
-# Production stage
-FROM node:20-alpine
+# Final stage: Run the application
+FROM node:22-alpine as test
 
 WORKDIR /app
 
-# Copy workspace configuration
-COPY package.json pnpm-workspace.yaml ./
+# Copy built applications from previous stages
+COPY --chown=1000 --from=test-build /app /app
 
-# Copy the shared package
-COPY --from=builder /app/backend/erxes-shared/package.json ./backend/erxes-shared/package.json
-COPY --from=builder /app/backend/erxes-shared/dist ./backend/erxes-shared/dist
-
-# Copy test service
-COPY --from=builder /app/backend/test/dist ./backend/test/dist
-COPY --from=builder /app/backend/test/package.json ./backend/test/package.json
-COPY --from=builder /app/tsconfig.base.json ./
-COPY --from=builder /app/backend/test/tsconfig.json ./
-
-# Set working directory to test service
-WORKDIR /app/backend/test
+# Install pnpm for production
+RUN npm install -g pnpm
 
 # Install production dependencies
-RUN corepack enable && corepack prepare pnpm@latest --activate && \
-    pnpm install --prod --workspace-root && \
-    pnpm add tsconfig-paths
+WORKDIR /app/backend/test
+RUN pnpm install --prod
 
 # Set environment variables
 ENV NODE_ENV=production
 
-# Expose the port your app runs on
-EXPOSE 3000
+# Use non root user
+USER 1000
 
-# Start the application using the correct start command with path aliases
-CMD ["node", "-r", "tsconfig-paths/register", "dist/src/main.js"]
+# Start the application
+CMD ["node", "dist/src/main.js"]
+
+
