@@ -11,12 +11,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {
-    "tsx": "4.19.2",
-    "erxes-api-utils": "workspace:*",
-    "erxes-api-modules": "workspace:*",
-    "erxes-core-types": "workspace:*",
-    "erxes-api-rpc": "workspace:*"
+  "dependencies": {
+    "erxes-api-rpc": "workspace:^",
+    "erxes-api-utils": "workspace:^",
+    "erxes-core-modules": "workspace:^",
+    "erxes-core-types": "workspace:^"
   }
 }

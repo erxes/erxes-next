@@ -1,7 +1,11 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { IMainContext } from 'erxes-core-types';
-import { LOG_STATUSES } from '../constants';
 import { sendWorkerQueue } from '../mq-worker';
+
+const LOG_STATUSES = {
+  SUCCESS: 'success',
+  FAILED: 'failed',
+};
 
 type GraphqlLogHandler<TArgs = any, TReturn = any> = (
   root: any,
@@ -57,7 +61,9 @@ const withLogging = (resolver: GraphqlLogHandler): GraphqlLogHandler => {
 };
 
 // Apply middleware to all mutations in an object
-export const wrapMutations = (mutations: Record<string, GraphqlLogHandler>) => {
+export const wrapApolloMutations = (
+  mutations: Record<string, GraphqlLogHandler>,
+) => {
   const wrappedMutations: Record<string, GraphqlLogHandler> = {};
 
   for (const [key, resolver] of Object.entries(mutations)) {

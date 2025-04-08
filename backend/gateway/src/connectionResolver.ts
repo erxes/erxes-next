@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 import { createGenerateModels } from 'erxes-api-utils';
-import { userSchema } from 'erxes-api-modules';
-import { permissionSchema } from 'erxes-api-modules';
-import { appSchema } from 'erxes-api-modules';
+import { userSchema } from 'erxes-core-modules';
+import { permissionSchema } from 'erxes-core-modules';
+import { appSchema } from 'erxes-core-modules';
 import { IUserDocument } from 'erxes-core-types';
 export interface IMainContext {
   res: any;

@@ -13,7 +13,7 @@ RUN pnpm nx build gateway
 RUN apk add --no-cache bash
 
 COPY dist/backend/libs/utils/ ./node_modules/erxes-api-utils/
-COPY dist/backend/libs/core-modules/ ./node_modules/erxes-api-modules/
+COPY dist/backend/libs/core-modules/ ./node_modules/erxes-core-modules/
 COPY dist/backend/libs/core-types/ ./node_modules/erxes-core-types/
 COPY dist/backend/libs/api-rpc/ ./node_modules/erxes-api-rpc/
 

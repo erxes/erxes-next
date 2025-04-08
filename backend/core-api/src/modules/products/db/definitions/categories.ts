@@ -4,7 +4,7 @@ import {
   PRODUCT_CATEGORY_MASK_TYPES,
   PRODUCT_CATEGORY_STATUSES,
 } from '../../constants';
-import { attachmentSchema } from 'erxes-api-modules';
+import { attachmentSchema } from 'erxes-core-modules';
 
 export const productCategorySchema = new Schema(
   {

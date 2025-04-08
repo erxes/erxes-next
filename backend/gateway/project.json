@@ -7,12 +7,6 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "dependsOn": [
-        "erxes-core-types:build",
-        "erxes-api-utils:build",
-        "erxes-api-modules:build",
-        "erxes-api-rpc:build"
-      ],
       "cache": true,
       "options": {
         "outputPath": "dist/backend/gateway",
@@ -26,20 +20,11 @@
       }
     },
     "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "executor": "nx:run-commands",
+
       "options": {
-        "buildTarget": "gateway:build",
-        "runBuildTargetDependencies": false
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "gateway:build:development"
-        },
-        "production": {
-          "buildTarget": "gateway:build:production"
-        }
+        "cwd": "backend/gateway",
+        "command": "pnpm dev"
       }
     },
     "docker-build": {

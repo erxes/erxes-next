@@ -4,7 +4,11 @@ import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
 import { redis } from 'erxes-api-utils';
-import { USER_ROLES, userSchema, userMovemmentSchema } from 'erxes-api-modules';
+import {
+  USER_ROLES,
+  userSchema,
+  userMovemmentSchema,
+} from 'erxes-core-modules';
 
 import { saveValidatedToken } from '../../../../auth/utils';
 import { IModels } from '../../../../../connectionResolvers';
@@ -16,7 +20,7 @@ import {
   IUserDocument,
   IEmailSignature,
 } from 'erxes-core-types';
-import { USER_MOVEMENT_STATUSES } from 'erxes-api-modules';
+import { USER_MOVEMENT_STATUSES } from 'erxes-core-modules';
 
 const SALT_WORK_FACTOR = 10;
 

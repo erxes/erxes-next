@@ -1,4 +1,4 @@
-import { attachmentSchema, customFieldSchema } from 'erxes-api-modules';
+import { attachmentSchema, customFieldSchema } from 'erxes-core-modules';
 import { mongoStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 import { PRODUCT_STATUSES, PRODUCT_TYPES } from '../../constants';

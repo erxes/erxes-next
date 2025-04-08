@@ -1,4 +1,4 @@
-import { paginationParams } from 'erxes-api-utils';
+import { graphqlPaginationParams } from 'erxes-api-utils';
 
 export const types = `
   type Product {
@@ -66,7 +66,7 @@ const queryParams = `
 `;
 
 export const queries = `
-  products(${queryParams},${paginationParams}): [Product]
+  products(${queryParams},${graphqlPaginationParams}): [Product]
   productsTotalCount(${queryParams}): Int
   productDetail(_id: String): Product
   productSimilarities(_id: String!, groupedSimilarity: String): ProductSimilarity

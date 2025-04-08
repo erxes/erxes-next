@@ -18,7 +18,7 @@ import * as http from 'http';
 import { ILogDoc } from 'erxes-core-types';
 import { Request as ApiRequest, Response as ApiResponse } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
-import { wrapMutations } from './apollo/wrapperMutations';
+import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
 import { sendWorkerQueue } from './mq-worker';
 import { getServices, join, leave } from './service-discovery';
@@ -235,7 +235,7 @@ export async function startPlugin(
           typeDefs,
           resolvers: {
             ...resolvers,
-            Mutation: wrapMutations(
+            Mutation: wrapApolloMutations(
               (resolvers?.Mutation || {}) as ResolverObject,
             ),
           },

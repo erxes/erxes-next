@@ -31,7 +31,7 @@
         "inputs": ["default", "^production"]
       },
       {
-        "project": "erxes-api-modules",
+        "project": "erxes-core-modules",
         "target": "build",
         "inputs": ["default", "^production"]
       }
