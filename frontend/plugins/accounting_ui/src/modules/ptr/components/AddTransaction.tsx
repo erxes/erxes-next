@@ -55,8 +55,20 @@ export const AddTransaction = ({
           Өглөг
         </AddTransactionItem> */}
         <DropdownMenu.Label>Бараа материал</DropdownMenu.Label>
-        <AddTransactionItem disabled>Орлого</AddTransactionItem>
-        <AddTransactionItem disabled>Хангамжийн зарлага</AddTransactionItem>
+        <AddTransactionItem
+          journal={JournalType.INV_INCOME}
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Орлого
+        </AddTransactionItem>
+        <AddTransactionItem
+          journal={JournalType.INV_OUT}
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Хангамжийн зарлага
+        </AddTransactionItem>
         <AddTransactionItem disabled>Борлуулалт (байнгын)</AddTransactionItem>
         <AddTransactionItem disabled>
           Борлуулалт (ажил үйлчилгээ)

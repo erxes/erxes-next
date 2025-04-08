@@ -98,6 +98,7 @@ export const ComboboxContent = React.forwardRef<
     <Popover.Content
       ref={ref}
       align="start"
+      sideOffset={8}
       {...props}
       className={cn('p-0 min-w-[--radix-popper-anchor-width]', className)}
     />

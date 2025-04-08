@@ -126,7 +126,6 @@ export const SelectAccountCommand = ({
         value={search}
         onValueChange={(value) => setSearch(value)}
       />
-      <Command.Separator />
       <Command.List className="p-1">
         <Combobox.Empty error={error} loading={loading} />
         {nullable && (

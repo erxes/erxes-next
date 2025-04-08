@@ -1,6 +1,5 @@
 import { Form, Select } from 'erxes-ui';
-import { TAddTransactionGroup } from '../types/AddTransaction';
-import { UseFormReturn } from 'react-hook-form';
+import { ITransactionGroupForm } from '../types/AddTransaction';
 import {
   CustomerType,
   SelectCustomer,
@@ -12,7 +11,7 @@ export const CustomerFields = ({
   form,
   index,
 }: {
-  form: UseFormReturn<TAddTransactionGroup>;
+  form: ITransactionGroupForm;
   index: number;
 }) => {
   const { customerType } = form.watch(`details.${index}`);

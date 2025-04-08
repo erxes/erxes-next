@@ -46,7 +46,6 @@ export const AccountsJournalCommand = ({
   return (
     <Command>
       <Command.Input placeholder="Filter kind" focusOnMount={focusOnMount} />
-      <Command.Separator />
       <Command.List>
         {[...Object.values(Journal)].map((journal) => (
           <Command.Item

@@ -8,7 +8,7 @@ import {
   IconHistory,
   IconLabel,
 } from '@tabler/icons-react';
-import { ColumnDef } from '@tanstack/react-table';
+import { Cell, ColumnDef } from '@tanstack/react-table';
 
 import { Select, Skeleton } from 'erxes-ui';
 import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
@@ -29,7 +29,7 @@ import { SelectCategory } from '@/products/product-category/components/SelectCat
 import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
 import { CurrencyDisplay } from 'erxes-ui/components/display/CurrencyDisplay';
 
-const TableTextInput = ({ cell }) => {
+const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
   const { productsEdit } = useProductsEdit();
   return (
