@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { createGenerateModels } from 'erxes-api-utils';
 import { userSchema } from 'erxes-core-modules';
 import { permissionSchema } from 'erxes-core-modules';

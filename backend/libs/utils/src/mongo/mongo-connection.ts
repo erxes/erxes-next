@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 const { MONGO_URL = 'mongodb://127.0.0.1:27017/erxes?directConnection=true' } =
   process.env;
