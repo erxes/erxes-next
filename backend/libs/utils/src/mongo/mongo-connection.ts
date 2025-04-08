@@ -23,7 +23,6 @@ mongoose.connection
   });
 
 export async function connect(): Promise<mongoose.Connection> {
-  console.log('connect');
   if (!MONGO_URL) {
     throw new Error('MONGO_URL is not defined');
   }

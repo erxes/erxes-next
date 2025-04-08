@@ -43,9 +43,6 @@ export const createGenerateModels = <IModels>(
   ) => IModels | Promise<IModels>,
 ): ((hostnameOrSubdomain: string) => Promise<IModels>) => {
   const VERSION = getEnv({ name: 'VERSION', defaultValue: 'os' });
-  console.log('------');
-
-  console.log('VERSION', VERSION);
 
   connect();
 
