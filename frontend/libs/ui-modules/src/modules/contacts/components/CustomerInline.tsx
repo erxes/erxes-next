@@ -1,9 +1,14 @@
 import React from 'react';
 import { useCustomerInline } from '../hooks/useCustomerInline';
 import { ICustomerInline } from '../types/Customer';
-import { Avatar, avatarVariants, cn, Skeleton } from 'erxes-ui';
+import {
+  Avatar,
+  avatarVariants,
+  cn,
+  Skeleton,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { useCustomerInlineContext } from '../hooks/useCustomerInlineContext';
-import { Slot } from '@radix-ui/react-slot';
 import { CustomerInlineContext } from '../contexts/CustomerInlineContext';
 
 const CustomerInlineRoot = React.forwardRef<
@@ -19,7 +24,10 @@ const CustomerInlineRoot = React.forwardRef<
       <span
         ref={ref}
         {...props}
-        className={cn('inline-flex items-center gap-2', props.className)}
+        className={cn(
+          'inline-flex items-center gap-2 overflow-hidden',
+          props.className,
+        )}
       >
         <CustomerInlineAvatar {...avatarProps} />
         <CustomerInlineTitle />
@@ -92,23 +100,23 @@ CustomerInlineAvatar.displayName = 'CustomerInlineAvatar';
 
 export const CustomerInlineTitle = React.forwardRef<
   HTMLSpanElement,
-  Omit<React.ComponentPropsWithoutRef<'span'>, 'children'> & {
-    asChild?: boolean;
-  }
->(({ asChild, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<'span'>
+>((props, ref) => {
   const { firstName, lastName, primaryEmail, primaryPhone, loading } =
     useCustomerInlineContext();
 
   if (loading) return <Skeleton className="w-20 h-4" />;
 
-  const Comp = asChild ? Slot : 'span';
-
   return (
-    <Comp ref={ref} {...props}>
-      {firstName || lastName
-        ? `${firstName || ''} ${lastName || ''}`
-        : primaryEmail || primaryPhone}
-    </Comp>
+    <TextOverflowTooltip
+      value={
+        firstName || lastName
+          ? `${firstName || ''} ${lastName || ''}`
+          : primaryEmail || primaryPhone
+      }
+      {...props}
+      ref={ref}
+    />
   );
 });
 

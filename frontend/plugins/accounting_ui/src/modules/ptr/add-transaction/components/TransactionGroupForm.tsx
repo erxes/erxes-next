@@ -7,7 +7,7 @@ import { TAddTransactionGroup } from '../types/AddTransaction';
 import { TransactionsTabsList } from './TransactionList';
 import { Summary } from './Summary';
 import { useEffect } from 'react';
-import { MAIN_JOURNAL_DEFAULT_VALUES } from '../contants/defaultValues';
+import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
 
 export const TransactionGroupForm = () => {
   const form = useForm<TAddTransactionGroup>({
@@ -38,7 +38,11 @@ export const TransactionGroupForm = () => {
     if (defaultJournal) {
       form.reset({
         ...form.getValues(),
-        details: [MAIN_JOURNAL_DEFAULT_VALUES],
+        details: [
+          JOURNALS_BY_JOURNAL[
+            defaultJournal as keyof typeof JOURNALS_BY_JOURNAL
+          ],
+        ],
       });
     }
   }, [defaultJournal, form]);

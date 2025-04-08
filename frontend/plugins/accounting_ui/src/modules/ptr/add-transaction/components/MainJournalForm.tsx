@@ -2,7 +2,12 @@ import { CurrencyValueInput, Form, Select, Textarea } from 'erxes-ui';
 import { UseFormReturn } from 'react-hook-form';
 import { TAddTransactionGroup } from '../types/AddTransaction';
 import { SelectAccount } from '@/account/components/SelectAccount';
-import { CustomerType, SelectCustomer } from 'ui-modules';
+import {
+  AssignMultipleMembers,
+  CustomerType,
+  SelectCustomer,
+} from 'ui-modules';
+import { CustomerFields } from './CustomerFields';
 
 export const MainJournalForm = ({
   form,
@@ -64,47 +69,24 @@ export const MainJournalForm = ({
           </Form.Item>
         )}
       />
-
       <Form.Field
         control={form.control}
-        name={`details.${index}.customerType`}
+        name={`details.${index}.assignedUserIds`}
         render={({ field }) => (
           <Form.Item>
-            <Form.Label>Customer Type</Form.Label>
-
-            <Select value={field.value} onValueChange={field.onChange}>
-              <Form.Control>
-                <Select.Trigger>
-                  <Select.Value placeholder="Select Customer Type" />
-                </Select.Trigger>
-              </Form.Control>
-              <Select.Content>
-                {Object.values(CustomerType).map((type) => (
-                  <Select.Item key={type} value={type}>
-                    {type}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Form.Item>
-        )}
-      />
-      <Form.Field
-        control={form.control}
-        name={`details.${index}.customerId`}
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>Customer</Form.Label>
+            <Form.Label>Assigned Users</Form.Label>
             <Form.Control>
-              <SelectCustomer
+              <AssignMultipleMembers
                 value={field.value}
                 onValueChange={field.onChange}
-                className="w-full"
               />
             </Form.Control>
           </Form.Item>
         )}
       />
+
+      <CustomerFields form={form} index={index} />
+
       <Form.Field
         control={form.control}
         name={`details.${index}.description`}

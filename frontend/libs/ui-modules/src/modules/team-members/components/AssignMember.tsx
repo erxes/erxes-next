@@ -27,7 +27,7 @@ export const AssignMember = React.forwardRef<
     undefined,
   );
 
-  const handleSelect = (user: IMember | undefined) => {
+  const handleSelect = (user?: IMember) => {
     setSelectedUser(user);
     onValueChange?.(user?._id || '');
     setOpen(false);
@@ -52,7 +52,7 @@ export const AssignMember = React.forwardRef<
           renderItem={(user) => (
             <AssignMemberItem
               user={user}
-              selectedUser={selectedUser}
+              isSelected={selectedUser?._id === user._id}
               handleSelect={handleSelect}
             />
           )}
@@ -64,8 +64,12 @@ export const AssignMember = React.forwardRef<
 
 export function AssignMemberList({
   renderItem,
+  children,
+  sort = true,
 }: {
   renderItem: (user: IMember) => React.ReactNode;
+  children?: React.ReactNode;
+  sort?: boolean;
 }) {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
@@ -83,6 +87,7 @@ export function AssignMemberList({
         variant="secondary"
         wrapperClassName="flex-auto"
       />
+      {children}
       <Command.List className="max-h-[300px] overflow-y-auto">
         <Combobox.Empty loading={loading} error={error} />
         {users?.map((user: IMember) => renderItem(user))}
@@ -132,19 +137,18 @@ export const AssignMemberTrigger = React.forwardRef<
 
 export const AssignMemberItem = ({
   user,
-  selectedUser,
+  isSelected,
   handleSelect,
 }: {
   user: IMember;
-  selectedUser?: IMember;
+  isSelected: boolean;
   handleSelect: (user?: IMember) => void;
 }) => {
-  const isSelected = selectedUser?._id === user._id;
   return (
     <Command.Item
       key={user._id}
       value={user._id}
-      onSelect={() => handleSelect(isSelected ? undefined : user)}
+      onSelect={() => handleSelect(user)}
     >
       <MemberInline member={user} />
       <Combobox.Check checked={isSelected} />
