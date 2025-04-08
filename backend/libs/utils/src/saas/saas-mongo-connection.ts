@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { connectionOptions, getEnv } from '../utils';
+import { getEnv } from '../utils';
 import {
   saasAddonSchema,
   saasBundleSchema,
@@ -13,6 +13,7 @@ import {
 } from './definition';
 import { IOrganization } from './types';
 import { redis } from '../redis';
+import { mongooseConnectionOptions } from '../mongo';
 
 export let coreModelOrganizations;
 export let coreModelAddons;
@@ -33,7 +34,7 @@ export const getSaasCoreConnection = async (): Promise<void> => {
 
   const coreConnection = await mongoose.createConnection(
     CORE_MONGO_URL,
-    connectionOptions,
+    mongooseConnectionOptions,
   );
 
   coreModelOrganizations = coreConnection.model(

@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { connect } from './mongo/mongo-connection';
 import {
   coreModelOrganizations,
@@ -36,10 +36,6 @@ export const getSubdomain = (req: any): string => {
   return subdomain;
 };
 
-export const connectionOptions: mongoose.ConnectOptions = {
-  family: 4,
-};
-
 export const createGenerateModels = <IModels>(
   loadClasses: (
     db: mongoose.Connection,
@@ -47,6 +43,9 @@ export const createGenerateModels = <IModels>(
   ) => IModels | Promise<IModels>,
 ): ((hostnameOrSubdomain: string) => Promise<IModels>) => {
   const VERSION = getEnv({ name: 'VERSION', defaultValue: 'os' });
+  console.log('------');
+
+  console.log('VERSION', VERSION);
 
   connect();
 

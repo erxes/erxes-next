@@ -1,9 +1,9 @@
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 import { STRUCTURE_STATUSES, attachmentSchema } from 'erxes-core-modules';
 
 const commonSchemaFields = {
-  id: mongoStringRandomId,
+  id: mongooseStringRandomId,
   title: { type: String },
   code: { type: String, unique: true },
   updatedBy: { type: String },

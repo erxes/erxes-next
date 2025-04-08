@@ -18,7 +18,7 @@ import {
   proxyReq,
 } from './proxy/middleware';
 
-import { getService, getServices, redis } from 'erxes-api-utils';
+import { getService, redis } from 'erxes-api-utils';
 import { applyGraphqlLimiters } from './middlewares/graphql-limiter';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;

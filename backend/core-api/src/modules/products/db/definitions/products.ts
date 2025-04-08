@@ -1,12 +1,12 @@
 import { attachmentSchema, customFieldSchema } from 'erxes-core-modules';
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 import { PRODUCT_STATUSES, PRODUCT_TYPES } from '../../constants';
 import { subUomSchema } from './uoms';
 
 export const productSchema = new Schema(
   {
-    _id: mongoStringRandomId,
+    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     shortName: { type: String, optional: true, label: 'Short name' },
     code: { type: String, unique: true, label: 'Code' },

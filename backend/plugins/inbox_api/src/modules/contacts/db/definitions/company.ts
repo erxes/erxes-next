@@ -1,4 +1,4 @@
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 import { COMPANY_SELECT_OPTIONS } from '../../constants';
 import { customFieldSchema } from 'erxes-core-modules';
@@ -9,7 +9,7 @@ const getEnum = (fieldName: string): string[] => {
 
 export const companySchema = new Schema(
   {
-    _id: mongoStringRandomId,
+    _id: mongooseStringRandomId,
 
     primaryName: {
       type: String,

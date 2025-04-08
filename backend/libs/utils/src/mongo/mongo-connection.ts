@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 const { MONGO_URL = 'mongodb://127.0.0.1:27017/erxes?directConnection=true' } =
   process.env;
 
-export const connectionOptions: mongoose.ConnectOptions = {
+export const mongooseConnectionOptions: mongoose.ConnectOptions = {
   family: 4,
 };
 
@@ -23,11 +23,12 @@ mongoose.connection
   });
 
 export async function connect(): Promise<mongoose.Connection> {
+  console.log('connect');
   if (!MONGO_URL) {
     throw new Error('MONGO_URL is not defined');
   }
 
-  await mongoose.connect(MONGO_URL, connectionOptions);
+  await mongoose.connect(MONGO_URL, mongooseConnectionOptions);
   return mongoose.connection;
 }
 
