@@ -1,24 +1,62 @@
-# Build the application
-FROM node:22-alpine AS build
+# Build stage
+FROM node:20-alpine AS builder
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g pnpm && pnpm install
+# Copy root configuration files
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
 
-COPY . .
+# Copy the shared package
+COPY backend/erxes-shared ./backend/erxes-shared
 
-RUN pnpm nx build test 
+# Copy the test service with all config files
+COPY backend/test/package.json backend/test/tsconfig.json backend/test/tsconfig.build.json ./backend/test/
+COPY backend/test/src ./backend/test/src
 
-# Install bash
-RUN apk add --no-cache bash
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
-COPY dist/backend/libs/utils/ ./node_modules/erxes-api-utils/
-COPY dist/backend/libs/core-modules/ ./node_modules/erxes-core-modules/
-COPY dist/backend/libs/core-types/ ./node_modules/erxes-core-types/
-COPY dist/backend/libs/api-rpc/ ./node_modules/erxes-api-rpc/
+# Build the application
+RUN cd backend/test && pnpm run build
 
+# Build shared package
+RUN cd backend/erxes-shared && pnpm run build
 
-EXPOSE 4000
+# Production stage
+FROM node:20-alpine
 
-CMD [ "node", "dist/backend/test/src/main.js" ]
+WORKDIR /app
 
+# Copy workspace configuration
+COPY package.json pnpm-workspace.yaml ./
+
+# Copy the shared package
+COPY --from=builder /app/backend/erxes-shared/package.json ./backend/erxes-shared/package.json
+COPY --from=builder /app/backend/erxes-shared/dist ./backend/erxes-shared/dist
+
+# Copy test service
+COPY --from=builder /app/backend/test/dist ./backend/test/dist
+COPY --from=builder /app/backend/test/package.json ./backend/test/package.json
+COPY --from=builder /app/tsconfig.base.json ./
+COPY --from=builder /app/backend/test/tsconfig.json ./
+
+# Set working directory to test service
+WORKDIR /app/backend/test
+
+# Install production dependencies
+RUN corepack enable && corepack prepare pnpm@latest --activate && \
+    pnpm install --prod --workspace-root && \
+    pnpm add tsconfig-paths
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Expose the port your app runs on
+EXPOSE 3000
+
+# Start the application using the correct start command with path aliases
+CMD ["node", "-r", "tsconfig-paths/register", "dist/src/main.js"]

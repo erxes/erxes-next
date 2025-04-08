@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "src/*": ["backend/test/src/*"]
+      "~/*": ["./src/*"],
+      "@/*": ["./src/modules/*"]
     },
     "types": ["node"]
   },

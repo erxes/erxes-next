@@ -6,12 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/main.ts",
-    "build": "tsc"
+    "build": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "start": "node -r tsconfig-paths/register dist/src/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "erxes-shared": "workspace:^"
-  }
+  },
+  "devDependencies": {}
 }
