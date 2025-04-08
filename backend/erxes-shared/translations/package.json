@@ -1,0 +1,4 @@
+{
+  "main": "dist/erxes-shared-translations.cjs.js",
+  "module": "dist/erxes-shared-translations.esm.js"
+}

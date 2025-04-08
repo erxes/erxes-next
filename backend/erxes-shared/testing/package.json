@@ -1,0 +1,4 @@
+{
+  "main": "dist/erxes-shared-testing.cjs.js",
+  "module": "dist/erxes-shared-testing.esm.js"
+}
