@@ -74,7 +74,6 @@ export function InviteForm({
   const submitHandler: SubmitHandler<TUserForm> = useCallback(
     async (data) => {
       try {
-        console.log('Form Data Submitted:', data);
         handleInvitations({
           variables: {
             entries: data?.entries,
@@ -94,7 +93,7 @@ export function InviteForm({
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(submitHandler)} className="h-full">
         <ScrollArea className="max-h-[400px] flex flex-col">
-          <Table.Root className="rounded-lg relative h-full [&_th]:h-7 [&_th:first-child]:rounded-tl-[7px] [&_th:last-child]:rounded-tr-[7px] [&_th]:bg-[#f4f4f5] bg-[#e4e4e5] border-spacing-0 border border-[#e4e4e5] overflow-hidden">
+          <Table className="rounded-lg relative h-full [&_th]:h-7 [&_th:first-child]:rounded-tl-[7px] [&_th:last-child]:rounded-tr-[7px] [&_th]:bg-[#f4f4f5] bg-[#e4e4e5] border-spacing-0 border border-[#e4e4e5] overflow-hidden">
             <Table.Header className="sticky top-0 z-1">
               <Table.Row className="[&_th]:rounded-[2px] [&_th]:border border-[#e4e4e5]">
                 <Table.Head className="w-7 h-7 px-0">
@@ -318,7 +317,7 @@ export function InviteForm({
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
-          </Table.Root>
+          </Table>
           <ScrollArea.Bar />
         </ScrollArea>
         <div className="mt-3 w-full flex gap-3 justify-end">

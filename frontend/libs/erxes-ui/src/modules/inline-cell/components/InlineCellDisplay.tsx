@@ -15,7 +15,10 @@ export const InlineCellDisplay = React.forwardRef<
         variant="ghost"
         {...props}
         hideChevron
-        className={cn('h-full w-full justify-start font-normal', className)}
+        className={cn(
+          'h-full w-full justify-start font-normal rounded-none',
+          className,
+        )}
       />
     </PopoverTrigger>
   );

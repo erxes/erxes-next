@@ -34,7 +34,7 @@ export const AccountingFilter = () => {
                 variant="secondary"
                 className="bg-background"
               />
-              <Command.Separator />
+
               <Command.List className="p-1">
                 <Filter.Item value="name" inDialog>
                   <IconLabelFilled />

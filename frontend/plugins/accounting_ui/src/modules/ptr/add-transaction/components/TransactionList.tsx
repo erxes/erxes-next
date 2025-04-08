@@ -1,11 +1,14 @@
-import { IconPlus } from '@tabler/icons-react';
+import { IconPlus, IconX } from '@tabler/icons-react';
 
 import { useFieldArray, UseFieldArrayAppend } from 'react-hook-form';
 
-import { UseFormReturn } from 'react-hook-form';
-import { JournalType, TAddTransactionGroup } from '../types/AddTransaction';
+import {
+  JournalType,
+  ITransactionGroupForm,
+  TAddTransactionGroup,
+} from '../types/AddTransaction';
 import { useQueryState, Tabs, Button } from 'erxes-ui';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { activeJournalState } from '../states/addTrStates';
 import { AddTransaction } from '../../components/AddTransaction';
@@ -13,11 +16,13 @@ import { CashTransaction } from './CashForm';
 import { MainJournalForm } from './MainJournalForm';
 import { BankTransaction } from './BankForm';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
+import { JOURNAL_LABELS } from '../contants/journalLabel';
+import { InvIncomeForm } from './InvIncomeForm';
 
 export const TransactionsTabsList = ({
   form,
 }: {
-  form: UseFormReturn<TAddTransactionGroup>;
+  form: ITransactionGroupForm;
 }) => {
   const [defaultJournal] = useQueryState<string | undefined>('defaultJournal');
   const [activeJournal, setActiveJournal] = useAtom(activeJournalState);
@@ -55,9 +60,23 @@ export const TransactionsTabsList = ({
             <Tabs.Trigger
               key={field.id}
               value={`${index}`}
-              className="capitalize"
+              className="capitalize py-1 gap-2 pr-1"
             >
-              {field.journal}
+              {JOURNAL_LABELS[field.journal]}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  remove(index);
+                }}
+                asChild
+              >
+                <div>
+                  <IconX />
+                </div>
+              </Button>
             </Tabs.Trigger>
           ))}
         </Tabs.List>
@@ -74,6 +93,9 @@ export const TransactionsTabsList = ({
           )}
           {field.journal === 'main' && (
             <MainJournalForm form={form} index={index} />
+          )}
+          {field.journal === 'invincome' && (
+            <InvIncomeForm form={form} index={index} />
           )}
         </Tabs.Content>
       ))}

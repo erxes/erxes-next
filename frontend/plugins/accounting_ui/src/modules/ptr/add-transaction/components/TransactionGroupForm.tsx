@@ -3,7 +3,7 @@ import { transactionGroupSchema } from '../contants/transactionSchema';
 import { useForm } from 'react-hook-form';
 import { DatePicker, Form, Input, useQueryState } from 'erxes-ui';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
-import { TAddTransactionGroup } from '../types/AddTransaction';
+import { JournalType, TAddTransactionGroup } from '../types/AddTransaction';
 import { TransactionsTabsList } from './TransactionList';
 import { Summary } from './Summary';
 import { useEffect } from 'react';
@@ -16,18 +16,12 @@ export const TransactionGroupForm = () => {
       date: new Date(),
     },
   });
-
-  const [defaultJournal] = useQueryState<string>('defaultJournal');
+  const [defaultJournal] = useQueryState<JournalType>('defaultJournal');
 
   const { createTransaction } = useTransactionsCreate();
 
   const onSubmit = (data: TAddTransactionGroup) => {
-    console.log(data);
-    // createTransaction({
-    //   variables: {
-    //     ...data,
-    //   },
-    // });
+    createTransaction(data);
   };
 
   const onError = (error: any) => {
@@ -38,18 +32,17 @@ export const TransactionGroupForm = () => {
     if (defaultJournal) {
       form.reset({
         ...form.getValues(),
-        details: [
-          JOURNALS_BY_JOURNAL[
-            defaultJournal as keyof typeof JOURNALS_BY_JOURNAL
-          ],
-        ],
+        details: [JOURNALS_BY_JOURNAL[defaultJournal]],
       });
     }
   }, [defaultJournal, form]);
 
   return (
     <Form {...form}>
-      <form className="px-6" onSubmit={form.handleSubmit(onSubmit, onError)}>
+      <form
+        className="px-6 flex-auto overflow-auto"
+        onSubmit={form.handleSubmit(onSubmit, onError)}
+      >
         <h3 className="text-lg font-bold">Create Transaction</h3>
         <div className="grid grid-cols-2 xl:grid-cols-5 gap-6 py-6 items-end">
           <Form.Field

@@ -12,8 +12,6 @@ export const MemberListInlineRoot = ({
   members?: IMember[];
   memberIds?: string[];
 }) => {
-  console.log('members', members);
-  console.log('memberIds', memberIds);
   return (
     <MemberListInlineProvider members={members} memberIds={memberIds}>
       <span className="inline-flex items-center gap-2">
@@ -40,8 +38,6 @@ export const MemberListInlineProvider = ({
     skip:
       !memberIds || memberIds.length === 0 || (members && members.length > 0),
   });
-
-  console.log('users', users, 'members', members);
 
   return (
     <MemberListInlineContext.Provider
