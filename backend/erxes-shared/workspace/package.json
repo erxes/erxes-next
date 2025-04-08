@@ -1,4 +1,0 @@
-{
-  "main": "dist/erxes-shared-workspace.cjs.js",
-  "module": "dist/erxes-shared-workspace.esm.js"
-}

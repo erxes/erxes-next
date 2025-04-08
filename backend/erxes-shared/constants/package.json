@@ -1,4 +1,0 @@
-{
-  "main": "dist/erxes-shared-constants.cjs.js",
-  "module": "dist/erxes-shared-constants.esm.js"
-}

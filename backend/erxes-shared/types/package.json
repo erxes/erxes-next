@@ -1,4 +1,0 @@
-{
-  "main": "dist/erxes-shared-types.cjs.js",
-  "module": "dist/erxes-shared-types.esm.js"
-}

@@ -1,5 +1,5 @@
 {
-  "name": "gateway",
+  "name": "test",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,10 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "erxes-api-rpc": "workspace:^",
-    "erxes-api-utils": "workspace:^",
-    "erxes-core-modules": "workspace:^",
-    "erxes-core-types": "workspace:^",
     "erxes-shared": "workspace:^"
   }
 }
