@@ -1,8 +1,9 @@
 import { UseFormReturn } from 'react-hook-form';
 import { TAddTransactionGroup } from '../types/AddTransaction';
 import { SelectAccount } from '@/account/components/SelectAccount';
-import { CurrencyInput, CurrencyCode, Select, Form, Textarea } from 'erxes-ui';
-import { AssignMember, SelectBranch } from 'ui-modules';
+import { Select, Form, Textarea, CurrencyValueInput } from 'erxes-ui';
+import { AssignMultipleMembers, SelectBranch } from 'ui-modules';
+import { CustomerFields } from './CustomerFields';
 
 export const CashTransaction = ({
   form,
@@ -56,11 +57,9 @@ export const CashTransaction = ({
           <Form.Item>
             <Form.Label>Amount</Form.Label>
             <Form.Control>
-              <CurrencyInput
+              <CurrencyValueInput
                 value={field.value}
                 onChange={field.onChange}
-                currencyCode={CurrencyCode.MNT}
-                displayCurrency="code"
               />
             </Form.Control>
           </Form.Item>
@@ -73,7 +72,7 @@ export const CashTransaction = ({
           <Form.Item>
             <Form.Label>Assign To</Form.Label>
             <Form.Control>
-              <AssignMember
+              <AssignMultipleMembers
                 onValueChange={(user) => field.onChange(user)}
                 value={field.value}
                 className="w-full flex h-8"
@@ -83,46 +82,7 @@ export const CashTransaction = ({
           </Form.Item>
         )}
       />
-      <Form.Field
-        control={form.control}
-        name={`details.${index}.customerType`}
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>Customer Type</Form.Label>
-            <Form.Control>
-              <Select value={field.value} onValueChange={field.onChange}>
-                <Form.Control>
-                  <Select.Trigger className="h-8">
-                    <Select.Value />
-                  </Select.Trigger>
-                </Form.Control>
-                <Select.Content>
-                  <Select.Item value="customer">Customer</Select.Item>
-                  <Select.Item value="company">Company</Select.Item>
-                  <Select.Item value="user">Team member</Select.Item>
-                </Select.Content>
-              </Select>
-            </Form.Control>
-          </Form.Item>
-        )}
-      />
-      <Form.Field
-        control={form.control}
-        name={`details.${index}.customerId`}
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>Customer</Form.Label>
-            <Form.Control>
-              <AssignMember
-                onValueChange={(user) => field.onChange(user)}
-                value={field.value}
-                className="w-full flex h-8"
-                size="lg"
-              />
-            </Form.Control>
-          </Form.Item>
-        )}
-      />
+      <CustomerFields form={form} index={index} />
       <Form.Field
         control={form.control}
         name={`details.${index}.branchId`}
