@@ -80,3 +80,8 @@ export const USER_ROLES = {
   USER: 'user',
   ALL: ['system', 'user'],
 };
+
+export const LOG_STATUSES = {
+  FAILED: 'failed',
+  SUCCESS: 'success',
+};
