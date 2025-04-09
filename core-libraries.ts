@@ -3,7 +3,7 @@ const coreLibraries = new Set([
   'react-dom',
   'react-router-dom',
   'erxes-ui',
-  'recoil',
+  'jotai',
   'ui-modules',
   'react-i18next',
 ]);

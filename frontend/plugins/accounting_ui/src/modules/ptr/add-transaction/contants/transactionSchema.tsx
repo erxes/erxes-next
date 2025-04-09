@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import { CustomerType } from 'ui-modules';
+import { JournalEnum } from '@/account/type/Account';
+
 export const baseTransactionSchema = z.object({
-  accountId: z.string().optional(),
-  description: z.string(),
+  accountId: z.string(),
+  description: z.string().optional(),
   customerType: z.nativeEnum(CustomerType),
   customerId: z.string(),
   branchId: z.string().optional(),
@@ -32,27 +34,47 @@ export const transactionMainSchema = z.object({
 });
 
 export const productSchema = z.object({
-  productId: z.string(),
-  accountId: z.string(),
-  quantity: z.number(),
-  unitPrice: z.number(),
-  amount: z.number(),
+  productId: z.string().min(1),
+  accountId: z.string().min(1),
+  quantity: z.number().min(1),
+  unitPrice: z.number().min(1),
+  amount: z.number().min(1),
 });
 
 export const transactionInvIncomeSchema = z.object({
-  journal: z.literal('invincome'),
+  journal: z.literal(JournalEnum.INV_INCOME),
   ...baseTransactionSchema.shape,
-  products: z.array(productSchema),
+  products: z.array(productSchema).min(1),
 });
 
 export const transactionInvOutSchema = z.object({
-  journal: z.literal('invout'),
+  journal: z.literal(JournalEnum.INV_OUT),
   ...baseTransactionSchema.shape,
-  products: z.array(productSchema),
+  products: z.array(productSchema).min(1),
+});
+
+export const transactionDebtSchema = z.object({
+  journal: z.literal(JournalEnum.DEBT),
+  ...baseTransactionSchema.shape,
+});
+
+export const transactionInventorySchema = z.object({
+  journal: z.literal(JournalEnum.INVENTORY),
+  ...baseTransactionSchema.shape,
+});
+
+export const transactionFixedAssetSchema = z.object({
+  journal: z.literal(JournalEnum.FIXED_ASSET),
+  ...baseTransactionSchema.shape,
+});
+
+export const transactionTaxSchema = z.object({
+  journal: z.literal(JournalEnum.TAX),
+  ...baseTransactionSchema.shape,
 });
 
 export const transactionGroupSchema = z.object({
-  number: z.string(),
+  number: z.string().optional(),
   date: z.date(),
   details: z
     .array(
@@ -62,6 +84,10 @@ export const transactionGroupSchema = z.object({
         transactionCashSchema,
         transactionInvIncomeSchema,
         transactionInvOutSchema,
+        transactionDebtSchema,
+        transactionInventorySchema,
+        transactionFixedAssetSchema,
+        transactionTaxSchema,
       ]),
     )
     .min(1),

@@ -6,6 +6,11 @@ import {
   transactionCashSchema,
   transactionInvIncomeSchema,
   transactionInvOutSchema,
+  transactionInventorySchema,
+  transactionDebtSchema,
+  transactionFixedAssetSchema,
+  transactionTaxSchema,
+  productSchema,
 } from '../contants/transactionSchema';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -21,15 +26,17 @@ export type TInvIncomeJournal = z.infer<typeof transactionInvIncomeSchema>;
 
 export type TInvOutJournal = z.infer<typeof transactionInvOutSchema>;
 
-export enum JournalType {
-  MAIN = 'main',
-  BANK = 'bank',
-  CASH = 'cash',
-  INV_INCOME = 'invincome',
-  INV_OUT = 'invout',
-}
+export type TDebtJournal = z.infer<typeof transactionDebtSchema>;
+
+export type TInventoryJournal = z.infer<typeof transactionInventorySchema>;
+
+export type TFixedAssetJournal = z.infer<typeof transactionFixedAssetSchema>;
+
+export type TTaxJournal = z.infer<typeof transactionTaxSchema>;
 
 export type ITransactionGroupForm = UseFormReturn<TAddTransactionGroup>;
+
+export type TInventoryProduct = z.infer<typeof productSchema>;
 
 export interface ICommonFieldProps {
   form: ITransactionGroupForm;

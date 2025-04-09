@@ -1,6 +1,6 @@
 import { CurrencyCode } from 'erxes-ui';
 import { z } from 'zod';
-import { AccountKind, Journal } from '../type/Account';
+import { AccountKind, JournalEnum } from '../type/Account';
 
 export const accountSchema = z.object({
   name: z.string().min(1),
@@ -9,7 +9,7 @@ export const accountSchema = z.object({
   description: z.string().optional(),
   currency: z.nativeEnum(CurrencyCode),
   kind: z.nativeEnum(AccountKind),
-  journal: z.nativeEnum(Journal),
+  journal: z.nativeEnum(JournalEnum),
   branchId: z.string().optional(),
   departmentId: z.string().optional(),
   isTemp: z.boolean(),

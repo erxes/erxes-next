@@ -1,4 +1,4 @@
-import { ITransactionGroupForm, JournalType } from '../types/AddTransaction';
+import { ITransactionGroupForm } from '../types/AddTransaction';
 import { CustomerFields } from './CustomerFields';
 import {
   AccountField,
@@ -10,7 +10,7 @@ import {
   SideField,
 } from './GeneralFormFields';
 import { SIDES } from '../contants/journalSides';
-
+import { JournalEnum } from '@/account/type/Account';
 export const CashTransaction = ({
   form,
   index,
@@ -20,7 +20,7 @@ export const CashTransaction = ({
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6">
-      <AccountField form={form} index={index} journal={JournalType.CASH} />
+      <AccountField form={form} index={index} journal={JournalEnum.CASH} />
       <SideField form={form} index={index} sides={SIDES.INOUT} />
       <AmountField form={form} index={index} />
       <CustomerFields form={form} index={index} />

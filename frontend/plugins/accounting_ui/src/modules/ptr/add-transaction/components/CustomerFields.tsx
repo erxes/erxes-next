@@ -61,6 +61,7 @@ export const CustomerFields = ({
                 onValueChange={field.onChange}
               />
             </Form.Control>
+            <Form.Message />
           </Form.Item>
         )}
       />

@@ -1,5 +1,5 @@
 import { Separator, Skeleton } from 'erxes-ui';
-import { ConversationHeader } from '~/modules/inbox/conversation-detail/components/ConversationHeader';
+import { ConversationHeader } from '@/inbox/conversation-detail/components/ConversationHeader';
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';
 import { lazy, Suspense } from 'react';
 import { useQueryState } from '../../hooks/useQueryState';

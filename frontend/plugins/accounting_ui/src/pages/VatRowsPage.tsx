@@ -1,4 +1,4 @@
-import { VatRowsTable } from '~/modules/vat/components/VatsTable';
+import { VatRowsTable } from '@/vat/components/VatsTable';
 
 export const VatRowsPage = () => {
   return (

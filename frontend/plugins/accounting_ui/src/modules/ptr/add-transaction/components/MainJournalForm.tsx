@@ -1,4 +1,4 @@
-import { ITransactionGroupForm, JournalType } from '../types/AddTransaction';
+import { ITransactionGroupForm } from '../types/AddTransaction';
 import { CustomerFields } from './CustomerFields';
 import {
   AccountField,
@@ -10,6 +10,7 @@ import {
   DepartmentField,
 } from './GeneralFormFields';
 import { SIDES } from '../contants/journalSides';
+import { JournalEnum } from '@/account/type/Account';
 
 export const MainJournalForm = ({
   form,
@@ -20,7 +21,7 @@ export const MainJournalForm = ({
 }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
-      <AccountField form={form} index={index} journal={JournalType.MAIN} />
+      <AccountField form={form} index={index} journal={JournalEnum.MAIN} />
       <SideField form={form} index={index} sides={SIDES.DTCT} />
       <AmountField form={form} index={index} />
       <CustomerFields form={form} index={index} />
