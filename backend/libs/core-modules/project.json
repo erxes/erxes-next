@@ -1,5 +1,5 @@
 {
-  "name": "erxes-api-modules",
+  "name": "erxes-core-modules",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/libs/core-modules/src",
   "projectType": "library",

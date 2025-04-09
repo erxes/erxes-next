@@ -9,7 +9,6 @@ import {
   Tooltip,
 } from 'erxes-ui';
 import { useMemberInlineContext } from '../hooks/useMemberInline';
-import { Slot } from '@radix-ui/react-slot';
 import { useAssignedMember } from '../hooks/useUsers';
 import { MemberInlineContext } from '../contexts/MemberInlineContext';
 
@@ -24,7 +23,10 @@ export const MemberInlineRoot = React.forwardRef<
   return (
     <MemberInlineProvider memberId={memberId} member={member}>
       <span
-        className={cn('inline-flex items-center gap-1', className)}
+        className={cn(
+          'inline-flex items-center gap-1 overflow-hidden',
+          className,
+        )}
         ref={ref}
         {...props}
       >
@@ -98,21 +100,13 @@ MemberInlineAvatar.displayName = 'MemberInlineAvatar';
 
 export const MemberInlineTitle = React.forwardRef<
   HTMLSpanElement,
-  Omit<React.ComponentPropsWithoutRef<'span'>, 'children'> & {
-    asChild?: boolean;
-  }
->(({ asChild, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<'span'>
+>((props, ref) => {
   const { fullName, loading } = useMemberInlineContext();
 
   if (loading) return <Skeleton className="w-20 h-4" />;
 
-  const Comp = asChild ? Slot : 'span';
-
-  return (
-    <Comp ref={ref} {...props}>
-      <TextOverflowTooltip value={fullName} />
-    </Comp>
-  );
+  return <TextOverflowTooltip value={fullName} {...props} ref={ref} />;
 });
 
 MemberInlineTitle.displayName = 'MemberInlineTitle';

@@ -1,5 +1,5 @@
 import { IContext } from '../../../../connectionResolvers';
-import { USER_ROLES } from 'erxes-api-modules';
+import { USER_ROLES } from 'erxes-core-modules';
 import { IUserDocument } from 'erxes-core-types';
 import { IModels } from '../../../../connectionResolvers';
 import { paginate } from 'erxes-api-utils';

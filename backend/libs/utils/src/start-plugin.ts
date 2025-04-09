@@ -1,23 +1,33 @@
 import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
+// import * as bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import * as http from 'http';
-import * as trpcExpress from '@trpc/server/adapters/express';
-import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
-import { Request as ApiRequest, Response as ApiResponse } from 'express';
-import { DocumentNode, GraphQLScalarType } from 'graphql';
-import { wrapMutations } from './apollo/wrapperMutations';
-import { extractUserFromHeader } from './headers';
 import { logHandler } from './logs';
-import { join, leave } from './service-discovery';
-import { getSubdomain } from './utils';
 
 dotenv.config();
+
+// import * as ws from 'ws';
+// import { filterXSS } from 'xss';
+// import { debugError, debugInfo } from '../debuggers';
+
+import { ILogDoc } from 'erxes-core-types';
+import { Request as ApiRequest, Response as ApiResponse } from 'express';
+import { DocumentNode, GraphQLScalarType } from 'graphql';
+import { wrapApolloMutations } from './apollo/wrapperMutations';
+import { extractUserFromHeader } from './headers';
+import { sendWorkerQueue } from './mq-worker';
+import { getServices, join, leave } from './service-discovery';
+import { getSubdomain } from './utils';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
 
 const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
 
@@ -60,7 +70,7 @@ type ConfigTypes = {
 export async function startPlugin(
   configs: ConfigTypes,
 ): Promise<express.Express> {
-  const port = process.env.PORT ? Number(process.env.PORT) : 3301;
+  const port = process.env.PORT ? Number(process.env.PORT) : 3300;
 
   const app = express();
   app.disable('x-powered-by');
@@ -200,7 +210,7 @@ export async function startPlugin(
           typeDefs,
           resolvers: {
             ...resolvers,
-            Mutation: wrapMutations(
+            Mutation: wrapApolloMutations(
               (resolvers?.Mutation || {}) as ResolverObject,
             ),
           },

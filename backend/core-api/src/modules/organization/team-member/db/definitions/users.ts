@@ -1,8 +1,8 @@
 import { Schema } from 'mongoose';
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-utils';
 
 const userSchema = new Schema({
-  _id: mongoStringRandomId,
+  _id: mongooseStringRandomId,
   firstName: { type: String, label: 'First name', optional: true },
   lastName: { type: String, label: 'Last name', optional: true },
   middleName: { type: String, label: 'Middle name', optional: true },

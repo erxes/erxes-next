@@ -14,9 +14,3 @@ export const mongooseField = (options) => {
 
   return options;
 };
-
-export const mongooseSchemaWrapper = (schema) => {
-  schema.add({ scopeBrandIds: [String] });
-
-  return schema;
-};

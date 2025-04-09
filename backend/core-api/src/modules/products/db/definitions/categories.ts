@@ -1,14 +1,14 @@
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 import {
   PRODUCT_CATEGORY_MASK_TYPES,
   PRODUCT_CATEGORY_STATUSES,
 } from '../../constants';
-import { attachmentSchema } from 'erxes-api-modules';
+import { attachmentSchema } from 'erxes-core-modules';
 
 export const productCategorySchema = new Schema(
   {
-    _id: mongoStringRandomId,
+    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     code: { type: String, unique: true, label: 'Code' },
     order: { type: String, label: 'Order' },

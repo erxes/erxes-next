@@ -1,9 +1,9 @@
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-utils';
 import { Schema } from 'mongoose';
 
 export const tagSchema = new Schema(
   {
-    _id: mongoStringRandomId,
+    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     type: {
       type: String,

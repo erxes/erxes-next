@@ -1,7 +1,7 @@
-# erxes-api-modules
+# erxes-core-modules
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Building
 
-Run `nx build erxes-api-modules` to build the library.
+Run `nx build erxes-core-modules` to build the library.

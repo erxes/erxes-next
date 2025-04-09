@@ -10,7 +10,7 @@ import { mergeRefs } from 'react-merge-refs';
 import { Skeleton } from './skeleton';
 import type { ApolloError } from '@apollo/client';
 
-export const ComboboxTrigger = React.forwardRef<
+export const ComboboxTriggerBase = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button> & {
     hideChevron?: boolean;
@@ -25,16 +25,31 @@ export const ComboboxTrigger = React.forwardRef<
         {...props}
         type="button"
         className={cn(
-          'flex truncate h-8 rounded pl-3 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-medium text-left',
+          'flex truncate h-8 rounded pl-3 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-medium text-left w-full',
           (!props.variant || props.variant === 'outline') && 'shadow-xs',
           props.size === 'lg' && 'gap-2',
           className,
         )}
       >
         {children}
-        {!hideChevron && <IconChevronDown className="size-4 opacity-50" />}
       </Button>
     </Popover.Trigger>
+  );
+});
+
+export const ComboboxTrigger = React.forwardRef<
+  React.ElementRef<typeof Button>,
+  React.ComponentPropsWithoutRef<typeof Button> & {
+    hideChevron?: boolean;
+  }
+>(({ children, hideChevron = false, ...props }, ref) => {
+  return (
+    <ComboboxTriggerBase {...props} ref={ref}>
+      {children}
+      {!hideChevron && (
+        <IconChevronDown className="size-4 opacity-50 text-muted-foreground" />
+      )}
+    </ComboboxTriggerBase>
   );
 });
 
@@ -83,6 +98,7 @@ export const ComboboxContent = React.forwardRef<
     <Popover.Content
       ref={ref}
       align="start"
+      sideOffset={8}
       {...props}
       className={cn('p-0 min-w-[--radix-popper-anchor-width]', className)}
     />
@@ -126,7 +142,7 @@ export const ComboboxFetchMore = React.forwardRef<
     onChange: (inView) => inView && fetchMore(),
   });
 
-  if (currentLength >= totalCount) {
+  if (currentLength >= totalCount || !totalCount || currentLength === 0) {
     return null;
   }
 
@@ -174,6 +190,7 @@ const ComboboxEmpty = React.forwardRef<
 });
 
 export const Combobox = {
+  TriggerBase: ComboboxTriggerBase,
   Trigger: ComboboxTrigger,
   Value: ComboboxValue,
   Content: ComboboxContent,

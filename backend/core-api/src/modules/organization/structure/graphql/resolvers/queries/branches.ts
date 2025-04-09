@@ -1,6 +1,6 @@
 import { IContext } from '../../../../../../connectionResolvers';
 import { paginate } from 'erxes-api-utils';
-import { generateFilters } from './structureUtils';
+import { generateFilters } from './utils';
 
 export const branchsQueries = {
   async branches(

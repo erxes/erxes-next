@@ -1,5 +1,5 @@
-import { branchsMutations } from './branchs';
 import { deparmentMutations } from './deparments';
+import { branchsMutations } from './branches';
 import { positionMutations } from './positions';
 import { structuresMutations } from './structure';
 

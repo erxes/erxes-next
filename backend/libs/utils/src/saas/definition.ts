@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import {
   SAAS_ORGANIZATION_PLAN,
   SAAS_PROMO_CODE_TYPE,

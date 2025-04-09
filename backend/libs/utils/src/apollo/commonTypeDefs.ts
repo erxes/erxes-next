@@ -1,4 +1,4 @@
-export const attachmentType = `
+export const graphqlAttachmentType = `
   type Attachment {
     url: String!
     name: String
@@ -8,7 +8,7 @@ export const attachmentType = `
   }
 `;
 
-export const attachmentInput = `
+export const graphqlAttachmentInput = `
   input AttachmentInput {
     url: String!
     name: String!
@@ -18,21 +18,21 @@ export const attachmentInput = `
   }
 `;
 
-export const pdfAttachmentType = `
+export const graphqlPdfAttachmentType = `
   type PdfAttachment {
     pdf: Attachment
     pages: [Attachment]
   }
 `;
 
-export const pdfAttachmentInput = `
+export const graphqlPdfAttachmentInput = `
   input PdfAttachmentInput {
     pdf: AttachmentInput
     pages: [AttachmentInput]
   }
 `;
 
-export const paginationParams = `
+export const graphqlPaginationParams = `
   page: Int,
   perPage: Int,
   sortField: String

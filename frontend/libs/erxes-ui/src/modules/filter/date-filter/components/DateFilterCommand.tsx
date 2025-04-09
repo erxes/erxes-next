@@ -22,7 +22,6 @@ export const DateFilterCommand = ({
         placeholder={value.charAt(0).toUpperCase() + value.slice(1) + ' date'}
         focusOnMount={focusOnMount}
       />
-      <Command.Separator />
       <Command.List>
         {FIXED_DATES.map((date) => (
           <Command.Item

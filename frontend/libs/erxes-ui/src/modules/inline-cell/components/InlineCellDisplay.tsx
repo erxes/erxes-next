@@ -10,12 +10,15 @@ export const InlineCellDisplay = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <PopoverTrigger asChild>
-      <Combobox.Trigger
+      <Combobox.TriggerBase
         ref={ref}
         variant="ghost"
         {...props}
         hideChevron
-        className={cn('h-full w-full justify-start font-normal', className)}
+        className={cn(
+          'h-full w-full justify-start font-normal rounded-none',
+          className,
+        )}
       />
     </PopoverTrigger>
   );

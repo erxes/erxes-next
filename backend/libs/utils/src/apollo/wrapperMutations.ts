@@ -31,7 +31,9 @@ const withLogging = (resolver: GraphqlLogHandler): GraphqlLogHandler => {
 };
 
 // Apply middleware to all mutations in an object
-export const wrapMutations = (mutations: Record<string, GraphqlLogHandler>) => {
+export const wrapApolloMutations = (
+  mutations: Record<string, GraphqlLogHandler>,
+) => {
   const wrappedMutations: Record<string, GraphqlLogHandler> = {};
 
   for (const [key, resolver] of Object.entries(mutations)) {

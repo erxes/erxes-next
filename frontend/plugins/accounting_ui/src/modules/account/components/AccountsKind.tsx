@@ -46,7 +46,6 @@ export const AccountsKindCommand = ({
   return (
     <Command>
       <Command.Input placeholder="Filter kind" focusOnMount={focusOnMount} />
-      <Command.Separator />
       <Command.List>
         {[...Object.values(AccountKind)].map((kind) => (
           <Command.Item
