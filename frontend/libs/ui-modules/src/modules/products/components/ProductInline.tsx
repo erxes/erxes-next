@@ -11,7 +11,8 @@ export const ProductInlineRoot = React.forwardRef<
   }
 >(({ product, productId, className, ...props }, ref) => {
   const { product: fetchedProduct, loading } = useProductInline({
-    _id: productId,
+    variables: { _id: productId },
+    skip: !productId || !!product,
   });
 
   const productData = product || fetchedProduct;

@@ -1,6 +1,6 @@
 import { DropdownMenu } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-import { JournalType } from '../add-transaction/types/AddTransaction';
+import { JournalEnum } from '@/account/type/Account';
 
 export const AddTransaction = ({
   inForm,
@@ -9,7 +9,7 @@ export const AddTransaction = ({
 }: {
   inForm?: boolean;
   children: React.ReactNode;
-  onClick?: (journal?: JournalType) => void;
+  onClick?: (journal?: JournalEnum) => void;
 }) => {
   return (
     <DropdownMenu>
@@ -17,7 +17,7 @@ export const AddTransaction = ({
       <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width]">
         <DropdownMenu.Label>Ерөнхий</DropdownMenu.Label>
         <AddTransactionItem
-          journal={JournalType.MAIN}
+          journal={JournalEnum.MAIN}
           onClick={onClick}
           inForm={inForm}
         >
@@ -26,44 +26,31 @@ export const AddTransaction = ({
         <AddTransactionItem disabled>НӨАТ</AddTransactionItem>
         <DropdownMenu.Label>Мөнгөн хөрөнгө</DropdownMenu.Label>
         <AddTransactionItem
-          journal={JournalType.CASH}
+          journal={JournalEnum.CASH}
           onClick={onClick}
           inForm={inForm}
         >
           Касс
         </AddTransactionItem>
         <AddTransactionItem
-          journal={JournalType.BANK}
+          journal={JournalEnum.BANK}
           onClick={onClick}
           inForm={inForm}
         >
           Харилцах
         </AddTransactionItem>
         <DropdownMenu.Label>Тооцоо</DropdownMenu.Label>
-        {/* <AddTransactionItem
-          journal={JournalType.EXCHANGE}
-          onClick={onClick}
-          inForm={inForm}
-        >
-          Авлага
-        </AddTransactionItem>
-        <AddTransactionItem
-          journal={JournalType.EXCHANGE}
-          onClick={onClick}
-          inForm={inForm}
-        >
-          Өглөг
-        </AddTransactionItem> */}
+
         <DropdownMenu.Label>Бараа материал</DropdownMenu.Label>
         <AddTransactionItem
-          journal={JournalType.INV_INCOME}
+          journal={JournalEnum.INV_INCOME}
           onClick={onClick}
           inForm={inForm}
         >
           Орлого
         </AddTransactionItem>
         <AddTransactionItem
-          journal={JournalType.INV_OUT}
+          journal={JournalEnum.INV_OUT}
           onClick={onClick}
           inForm={inForm}
         >
@@ -93,8 +80,8 @@ const AddTransactionItem = ({
 }: {
   children: React.ReactNode;
   disabled?: boolean;
-  journal?: JournalType;
-  onClick?: (journal?: JournalType) => void;
+  journal?: JournalEnum;
+  onClick?: (journal?: JournalEnum) => void;
   inForm?: boolean;
 }) => {
   if (disabled) {

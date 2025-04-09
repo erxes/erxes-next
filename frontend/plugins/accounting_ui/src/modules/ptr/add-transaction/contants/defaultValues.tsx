@@ -1,45 +1,82 @@
+import { JournalEnum } from '@/account/type/Account';
 import {
-  JournalType,
   TBankJournal,
   TCashJournal,
+  TFixedAssetJournal,
+  TInventoryJournal,
+  TDebtJournal,
   TInvIncomeJournal,
   TInvOutJournal,
   TMainJournal,
+  TTaxJournal,
 } from '../types/AddTransaction';
 import { CustomerType } from 'ui-modules';
 
 export const MAIN_JOURNAL_DEFAULT_VALUES: Partial<TMainJournal> = {
-  journal: JournalType.MAIN,
+  journal: JournalEnum.MAIN,
   side: 'dt',
   customerType: CustomerType.CUSTOMER,
 };
 
 export const BANK_JOURNAL_DEFAULT_VALUES: Partial<TBankJournal> = {
-  journal: JournalType.BANK,
+  journal: JournalEnum.BANK,
   side: 'incoming',
   customerType: CustomerType.CUSTOMER,
 };
 
 export const CASH_JOURNAL_DEFAULT_VALUES: Partial<TCashJournal> = {
-  journal: JournalType.CASH,
+  journal: JournalEnum.CASH,
   side: 'incoming',
   customerType: CustomerType.CUSTOMER,
 };
 
 export const INV_INCOME_JOURNAL_DEFAULT_VALUES: Partial<TInvIncomeJournal> = {
-  journal: JournalType.INV_INCOME,
+  journal: JournalEnum.INV_INCOME,
   customerType: CustomerType.CUSTOMER,
+  products: [
+    {
+      productId: '',
+      accountId: '',
+      quantity: 0,
+      unitPrice: 0,
+      amount: 0,
+    },
+  ],
 };
 
 export const INV_OUT_JOURNAL_DEFAULT_VALUES: Partial<TInvOutJournal> = {
-  journal: JournalType.INV_OUT,
+  journal: JournalEnum.INV_OUT,
+  customerType: CustomerType.CUSTOMER,
+};
+
+export const DEBT_JOURNAL_DEFAULT_VALUES: Partial<TDebtJournal> = {
+  journal: JournalEnum.DEBT,
+  customerType: CustomerType.CUSTOMER,
+};
+
+export const INVENTORY_JOURNAL_DEFAULT_VALUES: Partial<TInventoryJournal> = {
+  journal: JournalEnum.INVENTORY,
+  customerType: CustomerType.CUSTOMER,
+};
+
+export const TAX_JOURNAL_DEFAULT_VALUES: Partial<TTaxJournal> = {
+  journal: JournalEnum.TAX,
+  customerType: CustomerType.CUSTOMER,
+};
+
+export const FIXED_ASSET_JOURNAL_DEFAULT_VALUES: Partial<TFixedAssetJournal> = {
+  journal: JournalEnum.FIXED_ASSET,
   customerType: CustomerType.CUSTOMER,
 };
 
 export const JOURNALS_BY_JOURNAL = {
-  [JournalType.MAIN]: MAIN_JOURNAL_DEFAULT_VALUES,
-  [JournalType.BANK]: BANK_JOURNAL_DEFAULT_VALUES,
-  [JournalType.CASH]: CASH_JOURNAL_DEFAULT_VALUES,
-  [JournalType.INV_INCOME]: INV_INCOME_JOURNAL_DEFAULT_VALUES,
-  [JournalType.INV_OUT]: INV_OUT_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.MAIN]: MAIN_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.BANK]: BANK_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.CASH]: CASH_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.DEBT]: DEBT_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.INVENTORY]: INVENTORY_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.FIXED_ASSET]: FIXED_ASSET_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.TAX]: TAX_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.INV_INCOME]: INV_INCOME_JOURNAL_DEFAULT_VALUES,
+  [JournalEnum.INV_OUT]: INV_OUT_JOURNAL_DEFAULT_VALUES,
 };

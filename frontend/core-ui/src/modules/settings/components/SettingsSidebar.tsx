@@ -10,7 +10,7 @@ import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { SETTINGS_PATH_DATA } from '../constants/data';
-import { MainNavigationButton } from '~/modules/navigation/components/MainNavigationBar';
+import { MainNavigationButton } from '@/navigation/components/MainNavigationBar';
 
 export function SettingsSidebar() {
   const plugins = [...CORE_PLUGINS];

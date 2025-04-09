@@ -9,25 +9,27 @@ import { useState } from 'react';
 import { useAccounts } from '../hooks/useAccounts';
 import { IAccount } from '../type/Account';
 
-export const SelectAccount = ({
-  value,
-  onChange,
-  journal,
-}: {
-  value?: string;
-  onChange: (value: string) => void;
-  journal?: string;
-}) => {
+import React from 'react';
+
+export const SelectAccount = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  React.ComponentProps<typeof Combobox.Trigger> & {
+    value?: string;
+    onValueChange: (value: string) => void;
+    journal?: string;
+  }
+>(({ value, onValueChange, journal, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const { accounts, loading, error } = useAccounts({
     variables: {
       journals: [journal],
     },
+    skip: (!value && !open) || !journal,
   });
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <Combobox.Trigger variant="outline" className="flex w-full">
+      <Combobox.Trigger ref={ref} {...props}>
         {loading ? (
           <Skeleton className="w-full h-4" />
         ) : (
@@ -49,7 +51,7 @@ export const SelectAccount = ({
                 key={account._id}
                 value={account._id}
                 onSelect={() => {
-                  onChange(account._id);
+                  onValueChange(account._id);
                   setOpen(false);
                 }}
               >
@@ -62,4 +64,6 @@ export const SelectAccount = ({
       </Combobox.Content>
     </Popover>
   );
-};
+});
+
+SelectAccount.displayName = 'SelectAccount';

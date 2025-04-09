@@ -64,7 +64,11 @@ export const MemberListInlineAvatars = () => {
   return (
     <div className="flex -space-x-1.5">
       {withAvatar.map((member) => (
-        <Avatar size="lg" className="ring-2 ring-background bg-background">
+        <Avatar
+          size="lg"
+          className="ring-2 ring-background bg-background"
+          key={member._id}
+        >
           <Avatar.Image src={member.details.avatar} />
           <Avatar.Fallback colorSeed={member._id}>
             {member.details.fullName.charAt(0)}
@@ -87,7 +91,6 @@ export const MemberListInlineTitle = React.forwardRef<
   React.ComponentPropsWithoutRef<'span'>
 >(({ className, ...props }, ref) => {
   const { members, loading } = useMemberListContext();
-  console.log('members in title', members);
 
   if (loading) {
     return <Skeleton className="w-20 h-4 rounded-md" />;

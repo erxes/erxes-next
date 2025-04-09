@@ -41,7 +41,7 @@ export enum AccountKind {
   PASSIVE = 'passive',
 }
 
-export enum Journal {
+export enum JournalEnum {
   MAIN = 'main',
   CASH = 'cash',
   BANK = 'bank',
@@ -49,4 +49,6 @@ export enum Journal {
   INVENTORY = 'inventory',
   FIXED_ASSET = 'fixedAsset',
   TAX = 'tax',
+  INV_INCOME = 'invincome',
+  INV_OUT = 'invout',
 }

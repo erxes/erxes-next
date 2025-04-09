@@ -3,7 +3,6 @@ import { InlineCellIsInEditModeFamilyState } from 'erxes-ui/modules/inline-cell/
 import React, { useEffect } from 'react';
 import { InlineCellContext } from '../context/InlineCellContext';
 import { InlineCellContainer } from './InlineCellContainer';
-import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
 import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 
 export const InlineCell = React.forwardRef<
@@ -40,19 +39,13 @@ export const InlineCell = React.forwardRef<
     const [isInEditMode, setIsInEditMode] = useAtom(
       InlineCellIsInEditModeFamilyState(id),
     );
-    const {
-      setHotkeyScopeAndMemorizePreviousScope,
-      goBackToPreviousHotkeyScope,
-    } = usePreviousHotkeyScope();
 
     const closeEditMode = () => {
       setIsInEditMode(false);
-      goBackToPreviousHotkeyScope();
     };
 
     const handleOpenEditMode = () => {
       setIsInEditMode(true);
-      setHotkeyScopeAndMemorizePreviousScope(id);
     };
 
     const handleEscape = () => {
@@ -72,11 +65,9 @@ export const InlineCell = React.forwardRef<
     };
 
     const handleEnter = () => {
-      if (onEnter) {
-        onEnter(closeEditMode);
-      } else {
-        closeEditMode();
-      }
+      !!onEnter && onEnter(closeEditMode);
+      setIsInEditMode(!isInEditMode);
+      console.log('handleEnter', isInEditMode);
     };
 
     useScopedHotkeys('Enter', handleEnter, id);

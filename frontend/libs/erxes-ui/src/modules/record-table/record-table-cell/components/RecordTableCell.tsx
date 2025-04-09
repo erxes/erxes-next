@@ -14,7 +14,7 @@ export const RecordTableCell = React.forwardRef<
     <Table.Cell
       ref={ref}
       className={cn(
-        ' group-data-[state=selected]/table-row:bg-primary/10 group-hover/table-row:bg-muted p-0 transition-colors overflow-hidden',
+        'p-0 transition-colors overflow-hidden',
         column.getIsPinned() === 'left' && 'sticky z-[1]',
         column.getIsPinned() === 'right' && 'sticky z-[1]',
         className,

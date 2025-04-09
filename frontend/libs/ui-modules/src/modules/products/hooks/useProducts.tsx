@@ -9,8 +9,10 @@ export const useProducts = (options?: OperationVariables) => {
     products: IProduct[];
     productsTotalCount: number;
   }>(GET_SELECT_PRODUCTS, {
+    ...options,
     variables: {
       perPage: PRODUCTS_PER_PAGE,
+      ...options?.variables,
     },
   });
 

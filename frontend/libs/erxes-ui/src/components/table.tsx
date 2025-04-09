@@ -85,7 +85,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'align-middle p-0 [&>[role=checkbox]]:translate-y-[2px] bg-background whitespace-nowrap h-cell border-r border-spacing-0',
+      'align-middle p-0 [&>[role=checkbox]]:translate-y-[2px] bg-background whitespace-nowrap h-cell border-r border-spacing-0 group-data-[state=selected]/table-row:bg-primary/10 group-hover/table-row:bg-muted',
       className,
     )}
     {...props}

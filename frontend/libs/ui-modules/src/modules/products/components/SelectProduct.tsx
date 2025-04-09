@@ -4,14 +4,15 @@ import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
 import { IProduct } from 'ui-modules';
 import { ProductInline } from './ProductInline';
+import React from 'react';
 
-export const SelectProduct = ({
-  value,
-  onValueChange,
-}: {
-  value?: string;
-  onValueChange?: (value: string) => void;
-}) => {
+export const SelectProduct = React.forwardRef<
+  React.ComponentRef<typeof Combobox.Trigger>,
+  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
+    value?: string;
+    onValueChange?: (value: string) => void;
+  }
+>(({ value, onValueChange, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | undefined>(
     undefined,
@@ -25,15 +26,16 @@ export const SelectProduct = ({
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
-      <Combobox.Trigger>
-        <ProductInline productId={value} product={selectedProduct} />
+      <Combobox.Trigger ref={ref} {...props}>
+        {!value && <Combobox.Value placeholder="Select product" />}
+        {value && <ProductInline productId={value} product={selectedProduct} />}
       </Combobox.Trigger>
       <Combobox.Content>
         <SelectProductList handleSelect={handleSelect} />
       </Combobox.Content>
     </Popover>
   );
-};
+});
 
 export const SelectProductList = ({
   handleSelect,

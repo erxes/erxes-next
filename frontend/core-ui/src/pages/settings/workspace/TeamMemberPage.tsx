@@ -1,4 +1,4 @@
-import { TeamMember } from '~/modules/settings/team-member/components/TeamMember';
+import { TeamMember } from '@/settings/team-member/components/TeamMember';
 
 export function TeamMemberPage() {
   return (
