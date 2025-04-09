@@ -1,6 +1,7 @@
 import {
   AvatarProps,
   ButtonProps,
+  cn,
   Combobox,
   Command,
   Popover,
@@ -119,12 +120,14 @@ export const AssignMemberTrigger = React.forwardRef<
 
   return (
     <Combobox.Trigger disabled={loading} {...props} ref={ref}>
+      hi
       {value ? (
         <MemberInline
           member={selectedUser}
           avatarProps={{
             size: props.size as AvatarProps['size'],
           }}
+          className="overflow-hidden"
         />
       ) : loading ? (
         <Skeleton className="w-full h-8" />

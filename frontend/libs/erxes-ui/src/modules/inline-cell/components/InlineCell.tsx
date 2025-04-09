@@ -67,7 +67,6 @@ export const InlineCell = React.forwardRef<
     const handleEnter = () => {
       !!onEnter && onEnter(closeEditMode);
       setIsInEditMode(!isInEditMode);
-      console.log('handleEnter', isInEditMode);
     };
 
     useScopedHotkeys('Enter', handleEnter, id);
