@@ -14,7 +14,7 @@ export const MemberListInlineRoot = ({
 }) => {
   return (
     <MemberListInlineProvider members={members} memberIds={memberIds}>
-      <span className="inline-flex items-center gap-2">
+      <span className="inline-flex items-center gap-2 overflow-hidden">
         <MemberListInlineAvatars />
         <MemberListInlineTitle />
       </span>

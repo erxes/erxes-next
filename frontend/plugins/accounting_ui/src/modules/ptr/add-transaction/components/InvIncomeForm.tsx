@@ -7,8 +7,8 @@ import {
   DescriptionField,
 } from './GeneralFormFields';
 import { CustomerFields } from './CustomerFields';
-import { ProductForm } from './ProductForm';
 import { JournalEnum } from '@/account/type/Account';
+import { InventoryForm } from '../../inventory/components/InventoryForm';
 
 export const InvIncomeForm = ({
   form,
@@ -27,7 +27,11 @@ export const InvIncomeForm = ({
         <DepartmentField form={form} index={index} />
         <DescriptionField form={form} index={index} />
       </div>
-      <ProductForm form={form} index={index} journal={JournalEnum.INV_INCOME} />
+      <InventoryForm
+        form={form}
+        journalIndex={index}
+        journal={JournalEnum.INV_INCOME}
+      />
     </>
   );
 };
