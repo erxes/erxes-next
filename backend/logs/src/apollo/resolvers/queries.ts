@@ -16,8 +16,6 @@ export const logQueries = {
     );
     const totalCount = await models.Logs.countDocuments(filter);
 
-    console.log({ list, totalCount });
-
     return { list, totalCount };
   },
 };

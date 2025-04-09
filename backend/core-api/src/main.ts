@@ -61,7 +61,6 @@ app.use(
 const httpServer = http.createServer(app);
 
 httpServer.listen(port, async () => {
-  console.log({ port }, 'core');
   await initApolloServer(app, httpServer);
 
   await join({
