@@ -7,7 +7,6 @@ import { PluginSettingsPage } from '~/plugins/components/PluginSettingsPage';
 export const getPluginsRoutes = () => {
   const instance = getInstance();
   const remotes = instance?.options.remotes ?? [];
-
   return remotes.map((remote) => (
     <Route
       key={remote.name}
