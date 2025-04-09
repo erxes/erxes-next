@@ -1,5 +1,6 @@
 import { ILogDoc } from 'erxes-core-types';
 import { sendWorkerQueue } from '../mq-worker';
+import { isEnabled } from '../service-discovery';
 
 export const logHandler = async (
   resolver: () => Promise<any> | any,
@@ -7,6 +8,10 @@ export const logHandler = async (
   onSuccess?: any,
   onError?: any,
 ) => {
+  if (!(await isEnabled('logs'))) {
+    return await resolver();
+  }
+
   const payload = { ...(logDoc?.payload || {}) };
   const startDate = new Date();
   const startTime = performance.now();

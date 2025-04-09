@@ -13,7 +13,7 @@ export const types = `
 
     type MainLogsList {
         list:[Log]
-        total: Int
+        totalCount: Int
     }
 `;
 

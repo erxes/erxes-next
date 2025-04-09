@@ -5,5 +5,5 @@
     "module": "commonjs",
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "../libs/api-rpc/src/core/user.ts"]
 }

@@ -8,7 +8,8 @@ import { router } from './routes';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { appRouter } from './init-trpc';
 
-import { join, leave } from 'erxes-api-utils';
+import { getSubdomain, join, leave } from 'erxes-api-utils';
+import { generateModels } from './connectionResolvers';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -46,9 +47,11 @@ app.use(
   '/trpc',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
-    createContext: () => {
+    createContext: async ({ req }) => {
+      const subdomain = getSubdomain(req);
       return {
-        subdomain: 'os',
+        subdomain,
+        models: await generateModels(subdomain),
       };
     },
   }),

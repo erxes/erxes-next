@@ -8,6 +8,7 @@ import {
 import { redis } from './redis';
 import { sendWorkerQueue } from './mq-worker';
 import { LOG_STATUSES } from './constants';
+import { isEnabled } from './service-discovery';
 
 export const getEnv = ({
   name,
@@ -105,7 +106,7 @@ const initializeModels = async <IModels>(
   ignoreChangeStream?: boolean,
 ) => {
   const models = await loadClasses(connection, subdomain);
-  if (!ignoreChangeStream) {
+  if (!ignoreChangeStream && (await isEnabled('logs'))) {
     startChangeStream(models as any);
   }
 
