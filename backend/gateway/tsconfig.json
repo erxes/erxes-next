@@ -26,12 +26,14 @@
     "types": ["jest", "node"],
     "paths": {
       "~/*": ["./src/*"],
-      "@/*": ["./src/modules/*"]
+      "@/*": ["./src/modules/*"],
+      "erxes-api-shared/*": ["../erxes-api-shared/src/*"]
     }
   },
   "ts-node": {
     "files": true,
     "require": ["tsconfig-paths/register"]
   },
-  "exclude": ["dist"]
+  "exclude": ["dist"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

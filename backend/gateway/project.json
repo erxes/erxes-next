@@ -41,7 +41,7 @@
 
       "options": {
         "cwd": "backend/gateway",
-        "command": "pnpm dev"
+        "command": "NODE_ENV=development  pnpm dev"
       }
     },
 

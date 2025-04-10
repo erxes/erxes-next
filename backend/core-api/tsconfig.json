@@ -34,5 +34,6 @@
     "files": true,
     "require": ["tsconfig-paths/register"]
   },
-  "exclude": ["dist"]
+  "exclude": ["dist"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

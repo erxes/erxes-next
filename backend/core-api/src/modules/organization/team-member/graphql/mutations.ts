@@ -6,7 +6,7 @@ import {
   IEmailSignature,
 } from 'erxes-api-shared/core-types';
 
-interface IUsersEdit extends IUser {
+export interface IUsersEdit extends IUser {
   channelIds?: string[];
   _id: string;
 }
