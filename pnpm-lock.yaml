@@ -573,6 +573,27 @@ importers:
       '@sniptt/guards':
         specifier: ^0.2.0
         version: 0.2.0
+      bullmq:
+        specifier: ^5.40.0
+        version: 5.40.4
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
+      graphql:
+        specifier: ^16.9.0
+        version: 16.10.0
+      ioredis:
+        specifier: ^5.4.2
+        version: 5.5.0
+      mongoose:
+        specifier: ^8.10.0
+        version: 8.10.0
+      nanoid:
+        specifier: ^3.3.6
+        version: 3.3.8
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -599,6 +620,10 @@ importers:
         specifier: ^4.19.3
         version: 4.19.3
 
+  backend/erxes-api-shared/core-modules: {}
+
+  backend/erxes-api-shared/core-types: {}
+
   backend/erxes-api-shared/utils: {}
 
   backend/gateway:
@@ -609,54 +634,9 @@ importers:
 
   backend/gateway-archive:
     dependencies:
-      erxes-api-rpc:
-        specifier: workspace:^
-        version: link:../libs/api-rpc
       erxes-api-shared:
         specifier: workspace:^
         version: link:../erxes-api-shared
-      erxes-api-utils:
-        specifier: workspace:^
-        version: link:../libs/utils
-      erxes-core-modules:
-        specifier: workspace:^
-        version: link:../libs/core-modules
-      erxes-core-types:
-        specifier: workspace:^
-        version: link:../libs/core-types
-
-  backend/libs/api-rpc:
-    dependencies:
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  backend/libs/core-modules:
-    dependencies:
-      erxes-api-utils:
-        specifier: workspace:*
-        version: link:../utils
-      erxes-core-types:
-        specifier: workspace:*
-        version: link:../core-types
-      mongoose:
-        specifier: ^8.9.6
-        version: 8.10.0
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  backend/libs/core-types:
-    dependencies:
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
-
-  backend/libs/utils:
-    dependencies:
-      tslib:
-        specifier: ^2.3.0
-        version: 2.8.1
 
   frontend/libs/erxes-ui: {}
 

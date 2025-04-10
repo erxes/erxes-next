@@ -23,20 +23,28 @@
   },
   "dependencies": {
     "@sniptt/guards": "^0.2.0",
+    "bullmq": "^5.40.0",
+    "dotenv": "^16.4.7",
+    "graphql": "^16.9.0",
+    "ioredis": "^5.4.2",
+    "mongoose": "^8.10.0",
+    "nanoid": "^3.3.6",
+    "tslib": "^2.3.0",
     "zod": "3.23.8"
   },
   "preconstruct": {
     "tsconfig": "tsconfig.lib.json",
     "entrypoints": [
       "./index.ts",
-      "./utils/index.ts"
+      "./utils/index.ts",
+      "./core-types/index.ts",
+      "./core-modules/index.ts"
     ]
   },
   "files": [
     "dist",
-    "translations",
-    "types",
+    "core-types",
     "utils",
-    "workspace"
+    "core-modules"
   ]
 }

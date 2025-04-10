@@ -10,7 +10,11 @@
       "outputs": [
         "{projectRoot}/dist",
         "{projectRoot}/utils/package.json",
-        "{projectRoot}/utils/dist"
+        "{projectRoot}/utils/dist",
+        "{projectRoot}/core-types/package.json",
+        "{projectRoot}/core-types/dist",
+        "{projectRoot}/core-modules/package.json",
+        "{projectRoot}/core-modules/dist"
       ]
     }
   }
