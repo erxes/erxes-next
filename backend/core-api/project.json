@@ -19,7 +19,7 @@
       "executor": "@nx/js:tsc",
       "options": {
         "main": "backend/core-api/dist/src/main.js",
-        "tsConfig": "backend/core-api/tsconfig.json",
+        "tsConfig": "backend/core-api/tsconfig.build.json",
         "outputPath": "backend/core-api/dist",
         "updateBuildableProjectDepsInPackageJson": true,
 

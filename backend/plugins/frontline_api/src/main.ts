@@ -3,36 +3,14 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
-import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
-import { CoreTRPCAppRouter } from 'erxes-api-rpc';
 
-import { getService, join, leave } from 'erxes-api-shared/utils';
+import { join, leave } from 'erxes-api-shared/utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3301;
 
 const app = express();
 
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
-
-app.get('/users', async (_req, res) => {
-  const coreService = await getService('core');
-  try {
-    const client = createTRPCClient<CoreTRPCAppRouter>({
-      links: [
-        httpBatchStreamLink({
-          url: `${coreService.address}/trpc`,
-        }),
-      ],
-    });
-
-    const customers = await client.customer.list.query({});
-
-    res.json(customers);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Failed to fetch users' });
-  }
-});
 
 app.use(
   express.json({
@@ -48,7 +26,7 @@ httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
 
   await join({
-    name: 'inbox',
+    name: 'frontline',
     port,
     hasSubscriptions: false,
     meta: {},
@@ -69,7 +47,7 @@ async function closeMongooose() {
 
 async function leaveServiceDiscovery() {
   try {
-    await leave('inbox', port);
+    await leave('frontline', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);

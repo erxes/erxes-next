@@ -1,5 +1,5 @@
 import { createGenerateModels } from 'erxes-api-shared/utils';
-import { ICustomerDocument, IMainContext } from 'erxes-core-types';
+import { ICustomerDocument, IMainContext } from 'erxes-api-shared/core-types';
 import mongoose from 'mongoose';
 
 import {
@@ -19,7 +19,7 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   const models = {} as IModels;
 
   models.Customers = db.model<ICustomerDocument, ICustomerModel>(
-    'inbox',
+    'frontline',
     loadCustomerClass(models),
   );
 

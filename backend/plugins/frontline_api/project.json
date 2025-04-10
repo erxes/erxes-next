@@ -1,7 +1,7 @@
 {
-  "name": "gateway",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "backend/gateway/src",
+  "name": "frontline_api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "backend/plugins/frontline_api/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -9,7 +9,7 @@
       "executor": "nx:run-commands",
       "cache": true,
       "options": {
-        "cwd": "backend/gateway",
+        "cwd": "backend/plugins/frontline_api",
         "commands": ["pnpm build"]
       },
       "dependsOn": ["^build", "build:packageJson"]
@@ -18,9 +18,9 @@
     "build:packageJson": {
       "executor": "@nx/js:tsc",
       "options": {
-        "main": "backend/gateway/dist/src/main.js",
-        "tsConfig": "backend/gateway/tsconfig.build.json",
-        "outputPath": "backend/gateway/dist",
+        "main": "backend/plugins/frontline_api/dist/src/main.js",
+        "tsConfig": "backend/plugins/frontline_api/tsconfig.build.json",
+        "outputPath": "backend/plugins/frontline_api/dist",
         "updateBuildableProjectDepsInPackageJson": true,
 
         "buildableProjectDepsInPackageJsonType": "dependencies"
@@ -31,7 +31,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["typecheck", "build"],
       "options": {
-        "cwd": "backend/gateway",
+        "cwd": "backend/plugins/frontline_api",
         "command": "NODE_ENV=development && node dist/src/main.js"
       }
     },
@@ -40,14 +40,14 @@
       "executor": "nx:run-commands",
 
       "options": {
-        "cwd": "backend/gateway",
+        "cwd": "backend/plugins/frontline_api",
         "command": "NODE_ENV=development  pnpm dev"
       }
     },
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
+      "command": "docker build -f backend/plugins/frontline_api/Dockerfile . -t frontline_api"
     }
   }
 }

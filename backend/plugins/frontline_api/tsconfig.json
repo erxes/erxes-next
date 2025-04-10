@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
     "module": "commonjs",
@@ -26,14 +26,14 @@
     "types": ["jest", "node"],
     "paths": {
       "~/*": ["./src/*"],
-      "@/*": ["./src/modules/*"]
-      // "erxes-api-shared/*": ["../erxes-api-shared/src/*"]
+      "@/*": ["./src/modules/*"],
+      "erxes-api-shared/*": ["../../erxes-api-shared/src/*"]
     }
   },
   "ts-node": {
     "files": true,
     "require": ["tsconfig-paths/register"]
   },
-  "exclude": ["dist"],
+  "exclude": ["dist", "frontend/**/*"],
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
-import { CUSTOMER_SELECT_OPTIONS } from 'erxes-core-modules';
+import { CUSTOMER_SELECT_OPTIONS } from 'erxes-api-shared/core-modules';
 
 const getEnum = (fieldName: string): string[] => {
   return CUSTOMER_SELECT_OPTIONS[fieldName].map((option) => option.value);
