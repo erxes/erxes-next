@@ -1,7 +1,7 @@
 {
-  "name": "gateway",
+  "name": "gateway-archive",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "backend/gateway/src",
+  "sourceRoot": "backend/gateway-archive/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -9,27 +9,28 @@
       "executor": "@nx/js:tsc",
       "cache": true,
       "options": {
-        "outputPath": "dist/backend/gateway",
-        "main": "backend/gateway/src/main.ts",
-        "tsConfig": "backend/gateway/tsconfig.app.json",
-        "assets": ["backend/gateway/src/**"]
+        "outputPath": "dist/backend/gateway-archive",
+        "main": "backend/gateway-archive/src/main.ts",
+        "tsConfig": "backend/gateway-archive/tsconfig.app.json",
+        "assets": ["backend/gateway-archive/src/**"]
       },
       "configurations": {
         "development": {},
         "production": {}
       }
     },
+
     "serve": {
       "executor": "nx:run-commands",
 
       "options": {
-        "cwd": "backend/gateway",
+        "cwd": "backend/gateway-archive",
         "command": "pnpm dev"
       }
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
+      "command": "docker build -f backend/gateway-archive/Dockerfile . -t gateway-archive"
     }
   }
 }
