@@ -3,7 +3,7 @@ import { Express } from 'express';
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
 
 import { apolloRouterPort } from '../apollo-router';
-import { ErxesProxyTarget } from '../proxy/targets';
+import { ErxesProxyTarget } from './targets';
 
 const { NODE_ENV } = process.env;
 

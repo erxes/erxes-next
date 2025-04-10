@@ -7,7 +7,7 @@ WORKDIR /app
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
 
 COPY ./backend/test/package.json /app/backend/test/
-COPY ./backend/erxes-shared/package.json /app/backend/erxes-shared/
+COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
 # Install pnpm and dependencies
 RUN npm install -g pnpm
@@ -18,7 +18,7 @@ FROM build as test-build
 
 # Copy source code
 COPY ./backend/test /app/backend/test
-COPY ./backend/erxes-shared /app/backend/erxes-shared
+COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
 WORKDIR /app/backend/test

@@ -1,5 +1,5 @@
 {
-  "name": "gateway",
+  "name": "gateway-archive",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,6 +16,6 @@
     "erxes-api-utils": "workspace:^",
     "erxes-core-modules": "workspace:^",
     "erxes-core-types": "workspace:^",
-    "erxes-shared": "workspace:^"
+    "erxes-api-shared": "workspace:^"
   }
 }
