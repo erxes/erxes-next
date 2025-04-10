@@ -11,7 +11,7 @@ permissions:
   packages: write
 
 jobs:
-  core-api:
+  core-ui:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,27 +33,18 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: erxes/erxes-next-api
+          images: erxes/erxes-next-ui
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=branch
             type=sha,format=short
             type=semver,pattern={{version}}
 
-      - name: Install pnpm
-        run: corepack enable && corepack prepare pnpm@latest --activate
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build Nx Gateway
-        run: pnpm nx build gateway
-
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: backend/gateway/Dockerfile
+          file: frontend/core-ui/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
