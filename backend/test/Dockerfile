@@ -37,7 +37,7 @@ COPY --chown=1000 --from=test-build /app /app
 RUN npm install -g pnpm
 
 # Install production dependencies
-WORKDIR /app/backend/test
+WORKDIR /app/backend/test/dist
 RUN pnpm install --prod
 
 # Set environment variables
@@ -47,6 +47,6 @@ ENV NODE_ENV=production
 USER 1000
 
 # Start the application
-CMD ["node", "dist/src/main.js"]
+CMD ["node", "/src/main.js"]
 
 
