@@ -32,7 +32,7 @@
       "dependsOn": ["typecheck", "build"],
       "options": {
         "cwd": "backend/core-api",
-        "command": "NODE_ENV=development && node dist/src/main.js"
+        "command": "node dist/src/main.js"
       }
     },
 
@@ -41,7 +41,7 @@
 
       "options": {
         "cwd": "backend/core-api",
-        "command": "NODE_ENV=development  pnpm dev"
+        "command": "NODE_ENV=development && pnpm dev"
       }
     },
 
