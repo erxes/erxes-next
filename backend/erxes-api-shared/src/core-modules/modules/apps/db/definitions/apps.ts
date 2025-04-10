@@ -1,6 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseField } from '@/utils';
-
+import { mongooseField } from '../../../../../utils';
 export const appSchema = new Schema({
   _id: mongooseField({ pkey: true }),
   name: mongooseField({ type: String, label: 'App name' }),

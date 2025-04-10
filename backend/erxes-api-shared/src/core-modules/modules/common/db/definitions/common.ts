@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseField } from '@/utils';
+import { mongooseField } from '../../../../../utils';
 
 export const customFieldSchema = new Schema(
   {

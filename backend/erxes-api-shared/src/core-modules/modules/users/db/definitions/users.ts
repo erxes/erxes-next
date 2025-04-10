@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseField } from '@/utils';
+import { mongooseField } from '../../../../../utils';
 
 import { customFieldSchema } from '../../../common/db/definitions/common';
 import { USER_MOVEMENT_STATUSES, USER_ROLES } from '../../constants';
