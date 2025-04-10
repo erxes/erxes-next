@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
 
-COPY ./backend/test/package.json /app/backend/test/
+COPY ./backend/gateway/package.json /app/backend/gateway/
 COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
 # Install pnpm and dependencies
@@ -14,30 +14,30 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 # Build the test project
-FROM build as test-build
+FROM build as gateway-build
 
 # Copy source code
-COPY ./backend/test /app/backend/test
+COPY ./backend/gateway /app/backend/gateway
 COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
-WORKDIR /app/backend/test
-RUN npx nx build:packageJson test
-RUN npx nx build test
+WORKDIR /app/backend/gateway
+RUN npx nx build:packageJson gateway
+RUN npx nx build gateway
 
 # Final stage: Run the application
-FROM node:22-alpine as test
+FROM node:22-alpine as gateway
 
 WORKDIR /app
 
 # Copy built applications from previous stages
-COPY --chown=1000 --from=test-build /app /app
+COPY --chown=1000 --from=gateway-build /app /app
 
 # Install pnpm for production
 RUN npm install -g pnpm
 
 # Install production dependencies
-WORKDIR /app/backend/test/dist
+WORKDIR /app/backend/gateway/dist
 RUN pnpm install --prod
 
 # Set environment variables

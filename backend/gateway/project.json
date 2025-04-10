@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "gateway",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "backend/test/src",
+  "sourceRoot": "backend/gateway/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -9,7 +9,7 @@
       "executor": "nx:run-commands",
       "cache": true,
       "options": {
-        "cwd": "backend/test",
+        "cwd": "backend/gateway",
         "commands": ["pnpm build"]
       },
       "dependsOn": ["^build", "build:packageJson"]
@@ -18,9 +18,9 @@
     "build:packageJson": {
       "executor": "@nx/js:tsc",
       "options": {
-        "main": "backend/test/dist/src/main.js",
-        "tsConfig": "backend/test/tsconfig.json",
-        "outputPath": "backend/test/dist",
+        "main": "backend/gateway/dist/src/main.js",
+        "tsConfig": "backend/gateway/tsconfig.json",
+        "outputPath": "backend/gateway/dist",
         "updateBuildableProjectDepsInPackageJson": true,
 
         "buildableProjectDepsInPackageJsonType": "dependencies"
@@ -31,7 +31,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["typecheck", "build"],
       "options": {
-        "cwd": "backend/test",
+        "cwd": "backend/gateway",
         "command": "NODE_ENV=development && node dist/src/main.js"
       }
     },
@@ -40,14 +40,14 @@
       "executor": "nx:run-commands",
 
       "options": {
-        "cwd": "backend/test",
+        "cwd": "backend/gateway",
         "command": "pnpm dev"
       }
     },
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/test/Dockerfile . -t test"
+      "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
     }
   }
 }

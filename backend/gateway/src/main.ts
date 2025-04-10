@@ -1,4 +1,4 @@
-import { isValidHostname } from 'erxes-shared/utils';
+import { isValidHostname } from 'erxes-api-shared/utils';
 import * as mongoose from 'mongoose';
 import { lol } from '~/sda/lol';
 
