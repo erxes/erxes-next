@@ -1,4 +1,4 @@
-import { STRUCTURE_STATUSES } from 'erxes-core-modules';
+import { STRUCTURE_STATUSES } from 'erxes-api-shared/core-modules';
 import { Model } from 'mongoose';
 import {
   IDepartmentDocument,
@@ -7,16 +7,16 @@ import {
   IStructureDocument,
   IPositionDocument,
 } from '../../@types/structure';
-import { IUserDocument } from 'erxes-core-types';
-import { IModels } from '../../../../../connectionResolvers';
-import { escapeRegExp, checkCodeDuplication } from 'erxes-api-utils';
+import { IUserDocument } from 'erxes-api-shared/core-types';
+import { IModels } from '~/connectionResolvers';
+import { escapeRegExp, checkCodeDuplication } from 'erxes-api-shared/utils';
 import {
   departmentSchema,
   structureSchema,
   branchSchema,
   positionSchema,
   unitSchema,
-} from '../definitions/structure';
+} from '@/organization/structure/db/definitions/structure';
 export interface IStructureModel extends Model<IStructureDocument> {
   getStructure(doc: any): Promise<IStructureDocument>;
   createStructure(doc: any, user: IUserDocument): Promise<IStructureDocument>;

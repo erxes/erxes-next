@@ -1,5 +1,5 @@
-import { ITag } from 'erxes-core-types';
-import { IContext } from '../../../connectionResolvers';
+import { ITag } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const tagMutations = {
   /**

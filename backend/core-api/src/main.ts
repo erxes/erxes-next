@@ -6,9 +6,9 @@ import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { appRouter } from './init-trpc';
+import { appRouter } from '~/init-trpc';
 
-import { join, leave } from 'erxes-api-utils';
+import { join, leave } from 'erxes-api-shared/utils';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 

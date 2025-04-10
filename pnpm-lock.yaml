@@ -568,6 +568,12 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(webpack-dev-server@5.2.0)(webpack@5.97.1)
 
+  backend/core-api:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../erxes-api-shared
+
   backend/erxes-api-shared:
     dependencies:
       '@sniptt/guards':
@@ -627,12 +633,6 @@ importers:
   backend/erxes-api-shared/utils: {}
 
   backend/gateway:
-    dependencies:
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../erxes-api-shared
-
-  backend/gateway-archive:
     dependencies:
       erxes-api-shared:
         specifier: workspace:^

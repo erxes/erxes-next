@@ -1,8 +1,8 @@
-import { escapeRegExp } from 'erxes-api-utils';
+import { escapeRegExp } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
-import { IModels } from '../../../../../connectionResolvers';
+import { IModels } from '~/connectionResolvers';
 import { IProductCategoryParams } from '../../../@types/category';
 
 const generateFilter = async (

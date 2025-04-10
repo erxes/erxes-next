@@ -1,6 +1,6 @@
 import { initTRPC } from '@trpc/server';
 
-import { customerRouter } from './modules/contacts/trpc/customer';
+import { customerRouter } from '@/contacts/trpc/customer';
 
 const t = initTRPC.create();
 

@@ -1,5 +1,10 @@
-import { IContext } from '../../../../connectionResolvers';
-import { IUser, IDetail, ILink, IEmailSignature } from 'erxes-core-types';
+import { IContext } from '~/connectionResolvers';
+import {
+  IUser,
+  IDetail,
+  ILink,
+  IEmailSignature,
+} from 'erxes-api-shared/core-types';
 
 interface IUsersEdit extends IUser {
   channelIds?: string[];

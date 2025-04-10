@@ -1,8 +1,8 @@
-import { IContext } from '../../../../connectionResolvers';
-import { USER_ROLES } from 'erxes-core-modules';
-import { IUserDocument } from 'erxes-core-types';
-import { IModels } from '../../../../connectionResolvers';
-import { paginate } from 'erxes-api-utils';
+import { IContext } from '~/connectionResolvers';
+import { USER_ROLES } from 'erxes-api-shared/core-modules';
+import { IUserDocument } from 'erxes-api-shared/core-types';
+import { IModels } from '~/connectionResolvers';
+import { paginate } from 'erxes-api-shared/utils';
 
 interface IListArgs {
   page?: number;

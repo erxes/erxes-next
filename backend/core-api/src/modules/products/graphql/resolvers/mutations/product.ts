@@ -1,5 +1,5 @@
-import { IProduct } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { IProduct } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const productMutations = {
   /**

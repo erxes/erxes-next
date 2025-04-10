@@ -1,9 +1,9 @@
-import { escapeRegExp, paginate } from 'erxes-api-utils';
-import { IProductDocument } from 'erxes-core-types';
+import { escapeRegExp, paginate } from 'erxes-api-shared/utils';
+import { IProductDocument } from 'erxes-api-shared/core-types';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
-import { IModels } from '../../../../../connectionResolvers';
+import { IModels } from '~/connectionResolvers';
 import { IProductParams } from '../../../@types/product';
 import { PRODUCT_STATUSES } from '../../../constants';
 import {

@@ -1,7 +1,7 @@
-import { ICustomer, ICustomerDocument } from 'erxes-core-types';
+import { ICustomer, ICustomerDocument } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
-import { IModels } from '../../../../connectionResolvers';
-import { customerSchema } from '../definitions/customers';
+import { IModels } from '~/connectionResolvers';
+import { customerSchema } from '@/contacts/db/definitions/customers';
 
 export interface ICustomerModel extends Model<ICustomerDocument> {
   getCustomer(_id: string): Promise<ICustomerDocument>;

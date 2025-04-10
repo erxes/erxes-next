@@ -19,7 +19,7 @@ import {
 import {
   graphqlAttachmentInput,
   graphqlPdfAttachmentInput,
-} from 'erxes-api-utils';
+} from 'erxes-api-shared/utils';
 
 import {
   mutations as UomMutations,

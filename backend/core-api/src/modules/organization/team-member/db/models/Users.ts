@@ -3,15 +3,15 @@ import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
-import { redis } from 'erxes-api-utils';
+import { redis } from 'erxes-api-shared/utils';
 import {
   USER_ROLES,
   userSchema,
   userMovemmentSchema,
-} from 'erxes-core-modules';
+} from 'erxes-api-shared/core-modules';
 
-import { saveValidatedToken } from '../../../../auth/utils';
-import { IModels } from '../../../../../connectionResolvers';
+import { saveValidatedToken } from '@/auth/utils';
+import { IModels } from '~/connectionResolvers';
 import {
   IUser,
   IDetail,
@@ -19,8 +19,9 @@ import {
   IUserMovementDocument,
   IUserDocument,
   IEmailSignature,
-} from 'erxes-core-types';
-import { USER_MOVEMENT_STATUSES } from 'erxes-core-modules';
+} from 'erxes-api-shared/core-types';
+
+import { USER_MOVEMENT_STATUSES } from 'erxes-api-shared/core-modules';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -709,7 +710,8 @@ export const loadUserClass = (models: IModels) => {
 
         _id = user._id;
         // if refresh token is expired then force to login
-      } catch (e) {
+      } catch (e: any) {
+        console.log(e);
         return {};
       }
 

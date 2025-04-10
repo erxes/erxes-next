@@ -1,4 +1,4 @@
-import { graphqlPaginationParams } from 'erxes-api-utils';
+import { graphqlPaginationParams } from 'erxes-api-shared/utils';
 
 export const types = `
   type Product {

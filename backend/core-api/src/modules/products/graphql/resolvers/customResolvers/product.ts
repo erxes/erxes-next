@@ -1,5 +1,5 @@
-// import { IProductDocument } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+// import { IProductDocument } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export default {
   __resolveReference: async (

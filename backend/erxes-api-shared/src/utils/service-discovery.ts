@@ -75,6 +75,7 @@ export const join = async ({
   importExportTypes?: any;
   meta?: any;
 }) => {
+  console.log('----');
   await redis.set(
     keyForConfig(name),
 

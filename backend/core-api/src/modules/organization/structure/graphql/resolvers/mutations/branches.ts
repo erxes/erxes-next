@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 export const branchsMutations = {
   async branchesAdd(_root, doc, { user, models }: IContext) {
     const branch = await models.Branches.createBranch(doc, user);
