@@ -37,7 +37,7 @@ COPY --chown=1000 --from=gateway-build /app /app
 RUN npm install -g pnpm
 
 # Install production dependencies
-WORKDIR /app/backend/gateway/dist
+WORKDIR /app/backend/gateway/dist/src
 RUN pnpm install --prod
 
 # Set environment variables
@@ -47,6 +47,6 @@ ENV NODE_ENV=production
 USER 1000
 
 # Start the application
-CMD ["node", "/src/main.js"]
+CMD ["node", "main.js"]
 
 
