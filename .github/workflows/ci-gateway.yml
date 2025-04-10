@@ -2,26 +2,27 @@ name: CI Gateway
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, develop ]
+    paths:
+      - 'backend/gateway/**'
+      - 'backend/erxes-api-shared/**'
+      - '.github/workflows/ci-gateway.yml'
+  pull_request:
+    branches: [ main, develop ]
     paths:
       - 'backend/gateway/**'
       - 'backend/erxes-api-shared/**'
       - '.github/workflows/ci-gateway.yml'
 
-permissions:
-  actions: read
-  contents: read
-  packages: write
-
 jobs:
-  gateway:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -33,13 +34,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build shared package
+      - name: Build gateway
         run: |
-          cd backend/erxes-api-shared
-          pnpm build
+          cd backend/gateway
+          npx nx build:packageJson gateway
+          npx nx build gateway
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - name: Run tests
+        run: |
+          cd backend/gateway
+          npx nx test gateway
+
+  build-and-push-docker:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -50,30 +63,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: erxes/erxes-next-gateway
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=branch
-            type=sha,format=short
-            type=semver,pattern={{version}}
-
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: backend/gateway/Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: |
-            type=gha,scope=pnpm
-            type=gha,scope=build
-          cache-to: |
-            type=gha,scope=pnpm,mode=max
-            type=gha,scope=build,mode=max
-          build-args: |
-            NODE_VERSION=22
+          file: ./backend/gateway/Dockerfile
+          push: true
+          tags: |
+            erxes/gateway:latest
+            erxes/gateway:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
