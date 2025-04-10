@@ -1,4 +1,4 @@
 {
-  "main": "dist/erxes-shared-utils.cjs.js",
-  "module": "dist/erxes-shared-utils.esm.js"
+  "main": "dist/erxes-api-shared-utils.cjs.js",
+  "module": "dist/erxes-api-shared-utils.esm.js"
 }
