@@ -50,25 +50,22 @@ import {
   mutations as UserMutations,
   queries as UserQueries,
   types as UserTypes,
-} from '../../modules/organization/team-member/graphql/schema';
-
+} from '@/organization/team-member/graphql/schema';
 import {
   mutations as TagMutations,
   queries as TagQueries,
   types as TagTypes,
-} from '../../modules/tags/graphql/schemas';
-
+} from '@/tags/graphql/schemas';
 import {
   mutations as ProductMutations,
   queries as ProductQueries,
   types as ProductTypes,
-} from '../../modules/products/graphql/schemas';
-
+} from '@/products/graphql/schemas';
 import {
   mutations as AppMutations,
   queries as AppQueries,
   types as AppTypes,
-} from '../../modules/apps/graphql/schemas';
+} from '@/apps/graphql/schemas';
 import { CommonTypes } from './commonTypes';
 import { BrandTypes } from '../../modules/organization/structure/graphql/schemas/brand';
 

@@ -1,10 +1,5 @@
 import { IContext } from '~/connectionResolvers';
 
-export interface IListArgs {
-  page?: number;
-  limit?: number;
-}
-
 export const appQueries = {
   async apps(_root, args, { models }: IContext) {
     const { searchValue } = args;

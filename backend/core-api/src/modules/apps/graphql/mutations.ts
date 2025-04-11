@@ -10,7 +10,7 @@ export const appMutations = {
 
       return app;
     } catch (e) {
-      throw new Error(e);
+      throw new Error('appsAdd error');
     }
   },
   async appsEdit(_root, { _id, name, userGroupId }: any, { models }: IContext) {
