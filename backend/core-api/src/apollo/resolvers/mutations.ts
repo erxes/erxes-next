@@ -4,7 +4,7 @@ import { userMutations } from '@/organization/team-member/graphql/mutations';
 import { productMutations } from '@/products/graphql/resolvers/mutations';
 import { configMutations } from '@/settings/graphql/mutations';
 import { tagMutations } from '@/tags/graphql/mutations';
-
+import { appMutations } from '@/apps/graphql/mutations';
 export const mutations = {
   ...contactMutations,
   ...authMutations,
@@ -12,4 +12,5 @@ export const mutations = {
   ...configMutations,
   ...tagMutations,
   ...productMutations,
+  ...appMutations,
 };

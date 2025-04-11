@@ -50,7 +50,8 @@ import {
   IStructureDocument,
   IUnitDocument,
 } from '@/organization/structure/@types/structure';
-
+import { IAppModel, loadAppClass } from '@/apps/db/models/Apps';
+import { IAppDocument } from '@/apps/@types/apps';
 import {
   IBranchModel,
   IDepartmentModel,
@@ -75,11 +76,12 @@ export interface IModels {
   ProductCategories: IProductCategoryModel;
   ProductsConfigs: IProductsConfigModel;
   Uoms: IUomModel;
-  Structures: IStructureModel; //
-  Departments: IDepartmentModel; //
-  Units: IUnitModel; //
-  Branches: IBranchModel; //
+  Structures: IStructureModel;
+  Departments: IDepartmentModel;
+  Units: IUnitModel;
+  Branches: IBranchModel;
   Positions: IPositionModel;
+  Apps: IAppModel;
 }
 
 export interface IContext extends IMainContext {
@@ -154,6 +156,7 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     'positions',
     loadPositionClass(models),
   );
+  models.Apps = db.model<IAppDocument, IAppModel>('apps', loadAppClass(models));
   return models;
 };
 

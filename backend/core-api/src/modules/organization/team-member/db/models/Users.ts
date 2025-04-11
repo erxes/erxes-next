@@ -19,6 +19,7 @@ import {
   IUserMovementDocument,
   IUserDocument,
   IEmailSignature,
+  IAppDocument,
 } from 'erxes-api-shared/core-types';
 
 import { USER_MOVEMENT_STATUSES } from 'erxes-api-shared/core-modules';
@@ -124,6 +125,7 @@ export interface IUserModel extends Model<IUserDocument> {
   getTokenFields(user: IUserDocument);
   logout(_user: IUserDocument, token: string): Promise<string>;
   findUsers(query: any, options?: any): Promise<IUserDocument[]>;
+  createSystemUser(doc: IAppDocument): IUserDocument;
 }
 
 export const loadUserClass = (models: IModels) => {
@@ -869,7 +871,27 @@ export const loadUserClass = (models: IModels) => {
 
       return models.Users.find(filter, options).lean();
     }
+    public static async createSystemUser(app: IAppDocument) {
+      const user = await models.Users.findOne({ appId: app._id });
 
+      if (user) {
+        return user;
+      }
+
+      return models.Users.create({
+        role: USER_ROLES.SYSTEM,
+        password: await this.generatePassword(app._id),
+        username: app.name,
+        code: await this.generateUserCode(),
+        groupIds: [app.userGroupId],
+        appId: app._id,
+        isActive: true,
+        email: `${app._id}@domain.com`,
+        details: {
+          fullName: app.name,
+        },
+      });
+    }
     public static async checkLoginAuth({
       email,
       password,

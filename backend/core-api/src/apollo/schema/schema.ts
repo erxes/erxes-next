@@ -64,6 +64,11 @@ import {
   types as ProductTypes,
 } from '../../modules/products/graphql/schemas';
 
+import {
+  mutations as AppMutations,
+  queries as AppQueries,
+  types as AppTypes,
+} from '../../modules/apps/graphql/schemas';
 import { CommonTypes } from './commonTypes';
 import { BrandTypes } from '../../modules/organization/structure/graphql/schemas/brand';
 
@@ -95,6 +100,7 @@ export const types = `
     ${StructureTypes}
     ${UnitTypes}
     ${BrandTypes}
+    ${AppTypes}
   `;
 
 export const queries = `
@@ -109,6 +115,7 @@ export const queries = `
     ${departmentsQueries}
     ${positionsQueries}
     ${unitsQueries}
+    ${AppQueries}
   `;
 
 export const mutations = `
@@ -124,6 +131,7 @@ export const mutations = `
     ${positionsMutations}
     ${structuresMutations}
     ${unitsMutations}
+    ${AppMutations}
   `;
 
 export default { types, queries, mutations };
