@@ -74,10 +74,14 @@ export const ComboboxTriggerIcon = React.forwardRef<
 export const ComboboxValue = React.forwardRef<
   HTMLSpanElement,
   React.ComponentPropsWithoutRef<typeof TextOverflowTooltip> & {
-    className?: string;
     placeholder?: string;
+    loading?: boolean;
   }
->(({ value, className, placeholder, ...props }, ref) => {
+>(({ value, className, placeholder, loading, ...props }, ref) => {
+  if (loading) {
+    return <Skeleton className="w-full flex-1 h-4" />;
+  }
+
   return (
     <TextOverflowTooltip
       ref={ref}

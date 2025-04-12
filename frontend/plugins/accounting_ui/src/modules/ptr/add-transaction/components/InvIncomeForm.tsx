@@ -9,6 +9,7 @@ import {
 import { CustomerFields } from './CustomerFields';
 import { JournalEnum } from '@/account/type/Account';
 import { InventoryForm } from '../../inventory/components/InventoryForm';
+import { VatForm } from './VatForm';
 
 export const InvIncomeForm = ({
   form,
@@ -26,7 +27,9 @@ export const InvIncomeForm = ({
         <BranchField form={form} index={index} />
         <DepartmentField form={form} index={index} />
         <DescriptionField form={form} index={index} />
+        <VatForm form={form} journalIndex={index} />
       </div>
+
       <InventoryForm
         form={form}
         journalIndex={index}

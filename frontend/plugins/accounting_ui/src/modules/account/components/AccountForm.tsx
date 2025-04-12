@@ -206,7 +206,7 @@ export const AccountForm = ({
           control={form.control}
           name="isTemp"
           render={({ field }) => (
-            <Form.Item className="flex flex-row items-center space-x-2 space-y-0 mt-4">
+            <Form.Item className="flex items-center space-x-2 space-y-0 mt-4">
               <Form.Control>
                 <Checkbox
                   checked={field.value}
@@ -222,7 +222,7 @@ export const AccountForm = ({
           control={form.control}
           name="isOutBalance"
           render={({ field }) => (
-            <Form.Item className="flex flex-row items-center space-x-2 space-y-0 mt-4">
+            <Form.Item className="flex items-center space-x-2 space-y-0 mt-4">
               <Form.Control>
                 <Checkbox
                   checked={field.value}

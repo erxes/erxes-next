@@ -11,6 +11,8 @@ import {
 } from './GeneralFormFields';
 import { SIDES } from '../contants/journalSides';
 import { JournalEnum } from '@/account/type/Account';
+import { VatForm } from './VatForm';
+
 export const CashTransaction = ({
   form,
   index,
@@ -28,6 +30,7 @@ export const CashTransaction = ({
       <BranchField form={form} index={index} />
       <DepartmentField form={form} index={index} />
       <DescriptionField form={form} index={index} />
+      <VatForm form={form} journalIndex={index} />
     </div>
   );
 };

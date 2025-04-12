@@ -1,7 +1,6 @@
 import {
   AvatarProps,
   ButtonProps,
-  cn,
   Combobox,
   Command,
   Popover,
