@@ -120,7 +120,6 @@ export const AssignMemberTrigger = React.forwardRef<
 
   return (
     <Combobox.Trigger disabled={loading} {...props} ref={ref}>
-      hi
       {value ? (
         <MemberInline
           member={selectedUser}

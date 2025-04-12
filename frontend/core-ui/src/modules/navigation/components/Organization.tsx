@@ -21,8 +21,8 @@ export function Organization() {
           </div>
 
           <TextOverflowTooltip
-            value={currentOrganization?.name || 'Erxes Inc Erxes Inc Erxes Inc'}
-            className="text-medium text-sm"
+            value={currentOrganization?.name || 'Erxes Inc'}
+            className="font-medium text-sm"
           />
         </div>
         <Button variant="secondary" size="icon">
