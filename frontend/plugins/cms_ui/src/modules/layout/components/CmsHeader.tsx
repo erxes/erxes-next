@@ -1,9 +1,12 @@
 import { IconPlus, IconSettings, IconCube } from '@tabler/icons-react';
 import { Button } from 'erxes-ui/components';
 import { PluginHeader } from 'erxes-ui';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation } from 'react-router-dom';
+import { useCmsContext } from '~/modules/app/context/CmsContext';
 
 export const CmsHeader = () => {
+  const { selectedWebsite } = useCmsContext();
+
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -13,11 +16,10 @@ export const CmsHeader = () => {
   if (pathname === '/cms') {
     addButtonLabel = 'Add website';
     addButtonLink = '/cms/create';
-  } else if (pathname.match(/^\/cms\/[^/]+\/posts$/)) {
-    // matches /cms/web1/posts, /cms/anything/posts
+  } else if (pathname.includes('/cms/')) {
     const slug = pathname.split('/')[2];
     addButtonLabel = 'Add post';
-    addButtonLink = `/cms/${slug}/create`;
+    addButtonLink = `/cms/${slug}/create-post`;
   }
 
   return (
@@ -30,16 +32,16 @@ export const CmsHeader = () => {
       <Button variant="outline" asChild>
         <Link to="/settings/inbox">
           <IconSettings />
-          Go to settings
+          Go to settings {selectedWebsite}
         </Link>
       </Button>
 
       {addButtonLabel && (
-        <Link to={addButtonLink}>
-          <Button>
+        <Button asChild>
+          <Link to={addButtonLink}>
             <IconPlus /> {addButtonLabel}
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       )}
     </PluginHeader>
   );

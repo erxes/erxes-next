@@ -218,7 +218,7 @@ const posts = [
   },
 ];
 
-export const CmsPostPage = () => {
+export const CmsTagPage = () => {
   return (
     <RecordTable.Provider columns={cmsColumns} data={posts} className="mt-1.5">
       <RecordTable>

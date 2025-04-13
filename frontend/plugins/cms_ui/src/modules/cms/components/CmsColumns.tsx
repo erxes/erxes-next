@@ -33,20 +33,6 @@ export const cmsColumns: ColumnDef<any>[] = [
     },
   },
   {
-    id: 'postName',
-    accessorKey: 'postName',
-    header: () => <RecordTableInlineHead icon={IconLabel} label="POST NAME" />,
-    cell: ({ cell }) => {
-      const { name, lastName, middleName, _id } = cell.row.original;
-
-      return (
-        <div className="p-2">
-          {name} <br />
-        </div>
-      );
-    },
-  },
-  {
     id: 'category',
     accessorKey: 'category',
     header: () => (
