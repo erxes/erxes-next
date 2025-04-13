@@ -18,16 +18,14 @@ dotenv.config();
 // import { filterXSS } from 'xss';
 // import { debugError, debugInfo } from '../debuggers';
 
-import { ILogDoc } from 'erxes-core-types';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
 import { Request as ApiRequest, Response as ApiResponse } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
-import { sendWorkerQueue } from './mq-worker';
-import { getServices, join, leave } from './service-discovery';
+import { join, leave } from './service-discovery';
 import { getSubdomain } from './utils';
-import * as trpcExpress from '@trpc/server/adapters/express';
-import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
 
 const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
 

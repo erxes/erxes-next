@@ -5,6 +5,11 @@ const types = `
   scalar JSON
   scalar Date
 
+  extend type User @key(fields: "_id") {
+    _id: String! @external
+    conversation: String
+  }
+
   ${logTypes}
 
 `;

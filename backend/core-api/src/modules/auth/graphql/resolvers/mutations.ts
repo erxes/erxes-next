@@ -14,7 +14,7 @@ export const authMutations = {
   async login(
     _parent: undefined,
     args: LoginParams,
-    { res, requestInfo, models, subdomain }: IContext,
+    { req, res, requestInfo, models, subdomain }: IContext,
   ) {
     return await logHandler(
       async () => {
@@ -38,7 +38,16 @@ export const authMutations = {
 
         return 'loggedIn';
       },
-      { source: 'auth', action: 'login', payload: { email: args?.email } },
+      {
+        source: 'auth',
+        action: 'login',
+        userId: (await models.Users.findOne({ email: args.email }).lean())?._id,
+        payload: {
+          headers: req.headers,
+          email: args?.email,
+          method: 'email/password',
+        },
+      },
     );
   },
   /*
@@ -47,7 +56,7 @@ export const authMutations = {
   async logout(
     _parent: undefined,
     _args: undefined,
-    { res, user, requestInfo, models }: IContext,
+    { req, res, user, requestInfo, models }: IContext,
   ) {
     await logHandler(
       async () => {
@@ -62,7 +71,7 @@ export const authMutations = {
         source: 'auth',
         action: 'logout',
         userId: user._id,
-        payload: { email: user?.email },
+        payload: { headers: req.headers, email: user?.email },
       },
     );
   },

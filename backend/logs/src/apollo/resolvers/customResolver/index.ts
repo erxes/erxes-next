@@ -1,7 +1,5 @@
 import Log from './log';
 
-const customResolvers = {
+export default {
   Log,
 };
-
-export default customResolvers;

@@ -1,5 +1,6 @@
 import { paginate } from 'erxes-api-utils';
 import { IContext } from '../../db/connectionResolvers';
+import { ILogDocument } from '../../db/definitions/logs';
 
 const generateFilters = (params) => {
   let filter = {};
@@ -12,11 +13,17 @@ export const logQueries = {
     const filter = generateFilters(args);
     const list = await paginate(
       models.Logs.find(filter).sort({ createdAt: -1 }),
-      { ...args, perPage: 10 },
+      { ...args },
     );
     const totalCount = await models.Logs.countDocuments(filter);
 
-    return { list, totalCount };
+    return {
+      list: list.map((log: ILogDocument) => ({
+        ...log.toObject(),
+        payload: JSON.stringify(log?.payload || {}),
+      })),
+      totalCount,
+    };
   },
 };
 

@@ -7,6 +7,7 @@ export const logHandler = async (
   logDoc: ILogDoc,
   onSuccess?: any,
   onError?: any,
+  skipSaveResult?: boolean,
 ) => {
   if (!(await isEnabled('logs'))) {
     return await resolver();
@@ -21,6 +22,10 @@ export const logHandler = async (
     const endTime = performance.now();
     const durationMs = endTime - startTime;
     logDoc.payload = { ...payload, ...onSuccess, result };
+    if (!skipSaveResult) {
+      logDoc.payload.result = result;
+      console.log({ result });
+    }
     logDoc.executionTime = {
       startDate,
       endDate: new Date(),

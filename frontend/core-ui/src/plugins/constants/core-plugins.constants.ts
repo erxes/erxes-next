@@ -33,5 +33,4 @@ export const CORE_PLUGINS = [
     ],
   },
   { name: 'products', icon: IconShoppingCartFilled, path: '/products' },
-  { name: 'logs', icon: IconLogs, path: '/logs' },
 ];

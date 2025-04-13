@@ -77,6 +77,7 @@ const SelectTagsProvider = ({
 
   const handleSelect = (tag: ITag) => {
     if (!onSelect) return;
+    console.log({ selected });
     const tagIndex = selected.indexOf(tag._id);
 
     if (tagIndex >= 0) {

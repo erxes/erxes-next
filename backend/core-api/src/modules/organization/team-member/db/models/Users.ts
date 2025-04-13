@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
-import { redis } from 'erxes-api-utils';
+import { logHandler, redis } from 'erxes-api-utils';
 import {
   USER_ROLES,
   userSchema,

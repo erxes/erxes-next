@@ -2,13 +2,14 @@ export const types = `
     type Log {
       _id: String
       createdAt: Date
-      payload:JSON,
+      payload:String,
       source:String,
       action:String,
       status:String,
       userId:String,
 
-      prevObject:JSON
+      user:User
+      prevObject:String
     }
 
     type MainLogsList {

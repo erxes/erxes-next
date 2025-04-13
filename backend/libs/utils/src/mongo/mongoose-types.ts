@@ -26,9 +26,8 @@ export const mongooseStringRequiredNonBlank = {
   required: true,
 } as const;
 
-
 export const schemaWrapper = (schema: Schema) => {
-  schema.add({ _id:mongoStringRandomId });
+  schema.add({ _id: mongooseStringRandomId });
 
   return schema;
 };

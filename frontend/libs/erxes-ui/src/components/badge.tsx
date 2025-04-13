@@ -11,6 +11,7 @@ export const badgeVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground',
+        success: 'bg-green-500 text-primary-foreground',
         secondary: 'bg-secondary text-foreground',
         destructive: 'bg-destructive text-destructive-foreground',
         muted: 'bg-muted text-foreground',

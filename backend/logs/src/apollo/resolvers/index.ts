@@ -1,11 +1,11 @@
 import { apolloCustomScalars } from 'erxes-api-utils';
 import Query from './queries';
-import Log from './shit';
+import customResolver from './customResolver';
 
 const resolvers = {
   ...apolloCustomScalars,
+  ...customResolver,
 
-  Log,
   Query,
 };
 
