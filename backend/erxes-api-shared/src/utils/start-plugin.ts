@@ -17,7 +17,7 @@
 // import { wrapApolloMutations } from './apollo/wrapperMutations';
 // import { extractUserFromHeader } from './headers';
 // import { sendWorkerQueue } from './mq-worker';
-// import { getServices, join, leave } from './service-discovery';
+// import { getPlugins, join, leave } from './service-discovery';
 // import { getSubdomain } from './utils';
 // import * as trpcExpress from '@trpc/server/adapters/express';
 // import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
@@ -220,7 +220,7 @@
 //   });
 
 //   const generateApolloServer = async () => {
-//     const services = await getServices();
+//     const services = await getPlugins();
 //     // debugInfo(`Enabled services .... ${JSON.stringify(services)}`);
 
 //     const { typeDefs, resolvers } = await configs.graphql();

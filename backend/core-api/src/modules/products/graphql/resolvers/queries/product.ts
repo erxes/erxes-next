@@ -1,4 +1,7 @@
-import { escapeRegExp, paginate } from 'erxes-api-shared/utils';
+import {
+  escapeRegExp,
+  paginateMongooseCollection,
+} from 'erxes-api-shared/utils';
 import { IProductDocument } from 'erxes-api-shared/core-types';
 import { FilterQuery, SortOrder } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
@@ -144,7 +147,7 @@ export const productQueries = {
       });
     }
 
-    return await paginate(
+    return await paginateMongooseCollection(
       models.Products.find(filter).sort(sort).lean(),
       paginationArgs,
     );

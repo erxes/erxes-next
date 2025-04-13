@@ -1,4 +1,4 @@
-import { paginate } from 'erxes-api-shared/utils';
+import { paginateMongooseCollection } from 'erxes-api-shared/utils';
 import { ICustomerQueryFilterParams } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
 
@@ -29,7 +29,10 @@ export const customerQueries = {
   ) {
     const filter = generateFilter(params);
 
-    const list = await paginate(models.Customers.find(filter), params);
+    const list = await paginateMongooseCollection(
+      models.Customers.find(filter),
+      params,
+    );
 
     const totalCount = await models.Customers.find(filter).countDocuments();
 

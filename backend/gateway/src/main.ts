@@ -18,7 +18,7 @@ import {
   proxyReq,
 } from '~/proxy/middleware';
 
-import { getService, redis } from 'erxes-api-shared/utils';
+import { getPlugin, redis } from 'erxes-api-shared/utils';
 import { applyGraphqlLimiters } from '~/middlewares/graphql-limiter';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -58,7 +58,7 @@ app.use('/pl:serviceName', async (req, res) => {
   try {
     const serviceName: string = req.params.serviceName.replace(':', '');
 
-    const service = await getService(serviceName);
+    const service = await getPlugin(serviceName);
 
     const targetUrl = service.address;
 

@@ -1,4 +1,8 @@
-import { getService, getServices, paginate } from 'erxes-api-shared/utils';
+import {
+  getPlugin,
+  getPlugins,
+  paginateMongooseCollection,
+} from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 import { ITagFilterQueryParams } from '../@types/tag';
@@ -54,10 +58,10 @@ export const tagQueries = {
    * Get tag types
    */
   async tagsGetTypes() {
-    const services = await getServices();
+    const services = await getPlugins();
     const fieldTypes: Array<{ description: string; contentType: string }> = [];
     for (const serviceName of services) {
-      const service = await getService(serviceName);
+      const service = await getPlugin(serviceName);
       const meta = service.config.meta || {};
       if (meta && meta.tags) {
         const types = meta.tags.types || [];
@@ -88,7 +92,7 @@ export const tagQueries = {
       models,
     });
 
-    const tags = await paginate(
+    const tags = await paginateMongooseCollection(
       models.Tags.find(filter).sort({
         order: 1,
       }),

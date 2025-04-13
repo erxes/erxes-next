@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { paginate } from 'erxes-api-shared/utils';
+import { paginateMongooseCollection } from 'erxes-api-shared/utils';
 import { generateFilters } from './utils';
 
 export const branchsQueries = {
@@ -42,7 +42,7 @@ export const branchsQueries = {
         withoutUserFilter: true,
       },
     });
-    const list = await paginate(
+    const list = await paginateMongooseCollection(
       models.Branches.find(filter).sort({
         order: 1,
       }),

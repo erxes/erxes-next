@@ -17,3 +17,7 @@ export const redis = new Redis({
     }
   },
 });
+
+export const resetConfigsCache = async () => {
+  await redis.set('configs_erxes_api', '');
+};

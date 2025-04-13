@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { IMainContext } from 'erxes-core-types';
+import { IMainContext } from '../../core-types';
 import { sendWorkerQueue } from '../mq-worker';
 
 const LOG_STATUSES = {
