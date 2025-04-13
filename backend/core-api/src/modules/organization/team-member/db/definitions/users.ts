@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
 const userSchema = new Schema({
   _id: mongooseStringRandomId,

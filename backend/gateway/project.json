@@ -6,27 +6,45 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "cache": true,
       "options": {
-        "outputPath": "dist/backend/gateway",
-        "main": "backend/gateway/src/main.ts",
-        "tsConfig": "backend/gateway/tsconfig.app.json",
-        "assets": ["backend/gateway/src/**"]
+        "cwd": "backend/gateway",
+        "commands": ["pnpm build"]
       },
-      "configurations": {
-        "development": {},
-        "production": {}
+      "dependsOn": ["^build", "build:packageJson"]
+    },
+
+    "build:packageJson": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "backend/gateway/dist/src/main.js",
+        "tsConfig": "backend/gateway/tsconfig.build.json",
+        "outputPath": "backend/gateway/dist",
+        "updateBuildableProjectDepsInPackageJson": true,
+
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
+
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["typecheck", "build"],
+      "options": {
+        "cwd": "backend/gateway",
+        "command": "node dist/src/main.js"
+      }
+    },
+
     "serve": {
       "executor": "nx:run-commands",
 
       "options": {
         "cwd": "backend/gateway",
-        "command": "pnpm dev"
+        "command": "NODE_ENV=development && pnpm dev"
       }
     },
+
     "docker-build": {
       "dependsOn": ["build"],
       "command": "docker build -f backend/gateway/Dockerfile . -t gateway"

@@ -1,8 +1,8 @@
-import { escapeRegExp } from 'erxes-api-utils';
-import { IProductCategoryDocument } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { escapeRegExp } from 'erxes-api-shared/utils';
+import { IProductCategoryDocument } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
-import { PRODUCT_STATUSES } from '../../../constants';
+import { PRODUCT_STATUSES } from '@/products/constants';
 
 export default {
   __resolveReference: async (

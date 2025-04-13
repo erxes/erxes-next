@@ -1,5 +1,5 @@
-import { createGenerateModels, getEnv } from 'erxes-api-utils';
-import { ICustomerDocument, IMainContext } from 'erxes-core-types';
+import { createGenerateModels, getEnv } from 'erxes-api-shared/utils';
+import { ICustomerDocument, IMainContext } from 'erxes-api-shared/core-types';
 import mongoose from 'mongoose';
 
 import { ILogModel, loadLogsClass } from './models/Logs';

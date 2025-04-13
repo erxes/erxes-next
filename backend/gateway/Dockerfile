@@ -1,24 +1,52 @@
-# Build the application
+# Base image for common dependencies
 FROM node:22-alpine AS build
+
+# Set working directory
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g pnpm && pnpm install
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
 
-COPY . .
+COPY ./backend/gateway/package.json /app/backend/gateway/
+COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
-RUN pnpm nx build gateway 
+# Install pnpm and dependencies
+RUN npm install -g pnpm
+RUN pnpm install
 
-# Install bash
-RUN apk add --no-cache bash
+# Build the test project
+FROM build as gateway-build
 
-COPY dist/backend/libs/utils/ ./node_modules/erxes-api-utils/
-COPY dist/backend/libs/core-modules/ ./node_modules/erxes-core-modules/
-COPY dist/backend/libs/core-types/ ./node_modules/erxes-core-types/
-COPY dist/backend/libs/api-rpc/ ./node_modules/erxes-api-rpc/
+# Copy source code
+COPY ./backend/gateway /app/backend/gateway
+COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
+# Build following exact sequence
+WORKDIR /app/backend/gateway
+RUN npx nx build:packageJson gateway
+RUN npx nx build gateway
 
-EXPOSE 4000
+# Final stage: Run the application
+FROM node:22-alpine as gateway
 
-CMD [ "node", "dist/backend/gateway/src/main.js" ]
+WORKDIR /app
+
+# Copy built applications from previous stages
+COPY --chown=1000 --from=gateway-build /app /app
+
+# Install pnpm for production
+RUN npm install -g pnpm
+
+# Install production dependencies
+WORKDIR /app/backend/gateway/dist
+RUN pnpm install
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Use non root user
+USER 1000
+
+# Start the application
+CMD ["node", "src/main.js"]
+
 

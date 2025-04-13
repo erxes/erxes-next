@@ -1,5 +1,5 @@
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { IAccount } from '../type/Account';
+import { IAccount, JournalEnum } from '../type/Account';
 import {
   CurrencyCode,
   InlineCell,
@@ -14,6 +14,7 @@ import { SelectAccountCategory } from '../account-categories/components/SelectAc
 import { useAccountEdit } from '../hooks/useAccountEdit';
 import { useSetAtom } from 'jotai';
 import { accountDetailAtom } from '../states/accountStates';
+import { JOURNAL_LABELS } from '../constants/journalLabel';
 
 const AccountCategoryCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
   const { editAccount } = useAccountEdit();
@@ -152,7 +153,9 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
           name={cell.column.id}
           recordId={cell.row.original._id}
           display={() => (
-            <InlineCellDisplay>{cell.getValue() as string}</InlineCellDisplay>
+            <InlineCellDisplay>
+              {JOURNAL_LABELS[cell.getValue() as JournalEnum]}
+            </InlineCellDisplay>
           )}
         />
       );

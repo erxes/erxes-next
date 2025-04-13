@@ -1,4 +1,4 @@
-import { IListParams } from 'erxes-core-types';
+import { IListParams } from 'erxes-api-shared/core-types';
 
 export interface ITagFilterQueryParams extends IListParams {
   type: string;

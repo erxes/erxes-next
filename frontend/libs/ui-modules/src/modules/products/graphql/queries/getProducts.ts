@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GET_SELECT_PRODUCTS = gql`
   query SelectProducts(
+    $type: String
     $categoryId: String
     $searchValue: String
     $vendorId: String
@@ -11,6 +12,8 @@ export const GET_SELECT_PRODUCTS = gql`
     $segmentData: String
     $page: Int
     $perPage: Int
+    $sortField: String
+    $sortDirection: Int
   ) {
     products(
       type: $type

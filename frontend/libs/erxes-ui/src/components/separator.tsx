@@ -29,14 +29,15 @@ const SeparatorRoot = React.forwardRef<
 SeparatorRoot.displayName = SeparatorPrimitive.Root.displayName;
 
 const SeparatorInline = React.forwardRef<
-  HTMLSpanElement,
-  React.ComponentPropsWithoutRef<'span'>
->(({ className, ...props }, ref) => {
+  React.ElementRef<typeof SeparatorPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
+>(({ className, orientation = 'vertical', ...props }, ref) => {
   return (
-    <span
+    <SeparatorPrimitive.Root
       ref={ref}
       className={cn(
-        'inline-block bg-border w-0.5 h-3 rounded-lg flex-none',
+        'inline-block bg-border rounded-lg flex-none',
+        orientation === 'horizontal' ? 'w-3 h-0.5' : 'w-0.5 h-3',
         className,
       )}
       {...props}

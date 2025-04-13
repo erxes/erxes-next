@@ -1,4 +1,4 @@
-import { IListParams } from 'erxes-core-types';
+import { IListParams } from 'erxes-api-shared/core-types';
 
 export interface IProductParams extends IListParams {
   ids?: string[];

@@ -1,5 +1,5 @@
-import { IContext } from '../../../../../../connectionResolvers';
-import { paginate } from 'erxes-api-utils';
+import { IContext } from '~/connectionResolvers';
+import { paginate } from 'erxes-api-shared/utils';
 import { generateFilters } from './utils';
 
 export const deparmentQueries = {

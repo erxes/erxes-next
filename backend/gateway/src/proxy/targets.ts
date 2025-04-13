@@ -1,4 +1,4 @@
-import { getService, getServices } from 'erxes-api-utils';
+import { getService, getServices } from 'erxes-api-shared/utils';
 import retry from '../util/retry';
 import fetch from 'node-fetch';
 

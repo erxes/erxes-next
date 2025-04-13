@@ -6,7 +6,7 @@ import { initApolloServer } from './apollo/apolloServer';
 import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
 import { CoreTRPCAppRouter } from 'erxes-api-rpc';
 
-import { getService, join, leave } from 'erxes-api-utils';
+import { getService, join, leave } from 'erxes-api-shared/utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3301;
 

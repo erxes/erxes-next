@@ -1,5 +1,5 @@
-import { authCookieOptions, getEnv, logHandler } from 'erxes-api-utils';
-import { IContext } from '../../../../connectionResolvers';
+import { authCookieOptions, getEnv,logHandler } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
 
 type LoginParams = {
   email: string;
@@ -91,6 +91,8 @@ export const authMutations = {
 
     const link = `${DOMAIN}/reset-password?token=${token}`;
 
+    console.log(subdomain, models, DOMAIN, link);
+
     // await utils.sendEmail(
     //   subdomain,
     //   {
@@ -120,8 +122,13 @@ export const authMutations = {
     return models.Users.resetPassword(args);
   },
 
-  async loginWithGoogle(_root, _params, { models, subdomain }: IContext) {
+  async loginWithGoogle(
+    _root: undefined,
+    _params: undefined,
+    { models, subdomain }: IContext,
+  ) {
     try {
+      console.log(models, subdomain);
       return null;
     } catch (e) {
       throw new Error(e.message);
@@ -134,6 +141,7 @@ export const authMutations = {
     { models, subdomain }: IContext,
   ) {
     try {
+      console.log(models, subdomain, email);
       return 'Invalid login';
     } catch (e) {
       throw new Error(e.message);

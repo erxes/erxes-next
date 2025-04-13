@@ -1,6 +1,6 @@
-import { IUom, IUomDocument } from 'erxes-core-types';
+import { IUom, IUomDocument } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
-import { IModels } from '../../../../connectionResolvers';
+import { IModels } from '~/connectionResolvers';
 import { PRODUCT_STATUSES } from '../../constants';
 import { uomSchema } from '../definitions/uoms';
 export interface IUomModel extends Model<IUomDocument> {

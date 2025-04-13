@@ -1,4 +1,4 @@
-import { ILink } from 'erxes-core-types';
+import { ILink } from 'erxes-api-shared/core-types';
 import { Document } from 'mongoose';
 
 interface ICommonTypes {

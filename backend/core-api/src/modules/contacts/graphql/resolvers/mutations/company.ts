@@ -1,5 +1,5 @@
-import { ICompany } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { ICompany } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const companyMutations = {
   /**

@@ -1,50 +1,47 @@
-import { createGenerateModels } from 'erxes-api-utils';
+import { createGenerateModels } from 'erxes-api-shared/utils';
 import {
   ICompanyDocument,
   ICustomerDocument,
   IUserDocument,
   IUserMovementDocument,
-} from 'erxes-core-types';
+} from 'erxes-api-shared/core-types';
 import mongoose from 'mongoose';
 
-import { ITagDocument } from 'erxes-core-types';
+import { ITagDocument } from 'erxes-api-shared/core-types';
 import {
   IProductCategoryDocument,
   IProductDocument,
   IProductsConfigDocument,
   IUomDocument,
-} from 'erxes-core-types';
+} from 'erxes-api-shared/core-types';
 import {
   ICompanyModel,
   loadCompanyClass,
-} from './modules/contacts/db/models/Companies';
+} from '@/contacts/db/models/Companies';
 import {
   ICustomerModel,
   loadCustomerClass,
-} from './modules/contacts/db/models/Customers';
+} from '@/contacts/db/models/Customers';
 import {
   IUserModel,
   IUserMovemmentModel,
   loadUserClass,
   loadUserMovemmentClass,
-} from './modules/organization/team-member/db/models/Users';
+} from '@/organization/team-member/db/models/Users';
 import {
   IProductCategoryModel,
   loadProductCategoryClass,
-} from './modules/products/db/models/Categories';
+} from '@/products/db/models/Categories';
 import {
   IProductsConfigModel,
   loadProductsConfigClass,
-} from './modules/products/db/models/Configs';
-import {
-  IProductModel,
-  loadProductClass,
-} from './modules/products/db/models/Products';
-import { IUomModel, loadUomClass } from './modules/products/db/models/Uoms';
-import { IConfigDocument } from './modules/settings/db/definitions/configs';
-import { IConfigModel } from './modules/settings/db/models/Configs';
-import { ITagModel, loadTagClass } from './modules/tags/db/models/Tags';
-import { IMainContext } from 'erxes-core-types';
+} from '@/products/db/models/Configs';
+import { IProductModel, loadProductClass } from '@/products/db/models/Products';
+import { IUomModel, loadUomClass } from '@/products/db/models/Uoms';
+import { IConfigDocument } from '@/settings/db/definitions/configs';
+import { IConfigModel } from '@/settings/db/models/Configs';
+import { ITagModel, loadTagClass } from '@/tags/db/models/Tags';
+import { IMainContext } from 'erxes-api-shared/core-types';
 
 import {
   IBranchDocument,
@@ -52,8 +49,9 @@ import {
   IPositionDocument,
   IStructureDocument,
   IUnitDocument,
-} from './modules/organization/structure/@types/structure';
-
+} from '@/organization/structure/@types/structure';
+import { IAppModel, loadAppClass } from '@/apps/db/models/Apps';
+import { IAppDocument } from '@/apps/@types/apps';
 import {
   IBranchModel,
   IDepartmentModel,
@@ -65,7 +63,7 @@ import {
   loadPositionClass,
   loadStructureClass,
   loadUnitClass,
-} from './modules/organization/structure/db/models/Structure';
+} from '@/organization/structure/db/models/Structure';
 
 export interface IModels {
   Customers: ICustomerModel;
@@ -78,11 +76,12 @@ export interface IModels {
   ProductCategories: IProductCategoryModel;
   ProductsConfigs: IProductsConfigModel;
   Uoms: IUomModel;
-  Structures: IStructureModel; //
-  Departments: IDepartmentModel; //
-  Units: IUnitModel; //
-  Branches: IBranchModel; //
+  Structures: IStructureModel;
+  Departments: IDepartmentModel;
+  Units: IUnitModel;
+  Branches: IBranchModel;
   Positions: IPositionModel;
+  Apps: IAppModel;
 }
 
 export interface IContext extends IMainContext {
@@ -157,6 +156,7 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     'positions',
     loadPositionClass(models),
   );
+  models.Apps = db.model<IAppDocument, IAppModel>('apps', loadAppClass(models));
   return models;
 };
 

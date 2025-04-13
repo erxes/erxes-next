@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { createGenerateModels } from 'erxes-api-utils';
-import { userSchema } from 'erxes-core-modules';
-import { permissionSchema } from 'erxes-core-modules';
-import { appSchema } from 'erxes-core-modules';
-import { IUserDocument } from 'erxes-core-types';
+import { createGenerateModels } from 'erxes-api-shared/utils';
+import { userSchema } from 'erxes-api-shared/core-modules';
+import { permissionSchema } from 'erxes-api-shared/core-modules';
+import { appSchema } from 'erxes-api-shared/core-modules';
+import { IUserDocument } from 'erxes-api-shared/core-types';
 export interface IMainContext {
   res: any;
   requestInfo: any;

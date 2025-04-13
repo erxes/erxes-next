@@ -1,19 +1,20 @@
-import { ICommonFieldProps, JournalType } from '../types/AddTransaction';
-import { CurrencyValueInput, Form, Input, Select, Textarea } from 'erxes-ui';
+import { ICommonFieldProps } from '../types/AddTransaction';
+import { CurrencyValueInput, Form, Input, Select } from 'erxes-ui';
 import { SelectAccount } from '@/account/components/SelectAccount';
-import { JOURNAL_LABELS } from '../contants/journalLabel';
+import { JOURNAL_LABELS } from '../../../account/constants/journalLabel';
 import {
   AssignMultipleMembers,
   SelectBranch,
   SelectDepartment,
 } from 'ui-modules';
+import { JournalEnum } from '@/account/type/Account';
 
 export const AccountField = ({
   form,
   index,
   journal,
 }: ICommonFieldProps & {
-  journal: JournalType;
+  journal: JournalEnum;
 }) => (
   <Form.Field
     control={form.control}
@@ -24,10 +25,11 @@ export const AccountField = ({
         <Form.Control>
           <SelectAccount
             value={field.value}
-            onChange={field.onChange}
+            onValueChange={field.onChange}
             journal={journal}
           />
         </Form.Control>
+        <Form.Message />
       </Form.Item>
     )}
   />
@@ -96,6 +98,7 @@ export const AssignToField = ({ form, index }: ICommonFieldProps) => (
             value={field.value}
           />
         </Form.Control>
+        <Form.Message />
       </Form.Item>
     )}
   />
@@ -114,6 +117,7 @@ export const BranchField = ({ form, index }: ICommonFieldProps) => (
             onValueChange={(branch) => field.onChange(branch)}
           />
         </Form.Control>
+        <Form.Message />
       </Form.Item>
     )}
   />
@@ -132,6 +136,7 @@ export const DepartmentField = ({ form, index }: ICommonFieldProps) => (
             onValueChange={(department) => field.onChange(department)}
           />
         </Form.Control>
+        <Form.Message />
       </Form.Item>
     )}
   />
@@ -147,6 +152,7 @@ export const DescriptionField = ({ form, index }: ICommonFieldProps) => (
         <Form.Control>
           <Input {...field} />
         </Form.Control>
+        <Form.Message />
       </Form.Item>
     )}
   />

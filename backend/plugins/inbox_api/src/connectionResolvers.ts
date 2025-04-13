@@ -1,4 +1,4 @@
-import { createGenerateModels } from 'erxes-api-utils';
+import { createGenerateModels } from 'erxes-api-shared/utils';
 import { ICustomerDocument, IMainContext } from 'erxes-core-types';
 import mongoose from 'mongoose';
 

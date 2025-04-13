@@ -1,9 +1,12 @@
-import { escapeRegExp } from 'erxes-api-utils';
-import { IProductCategory, IProductCategoryDocument } from 'erxes-core-types';
+import { escapeRegExp } from 'erxes-api-shared/utils';
+import {
+  IProductCategory,
+  IProductCategoryDocument,
+} from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
-import { IModels } from '../../../../connectionResolvers';
-import { PRODUCT_STATUSES } from '../../constants';
-import { productCategorySchema } from '../definitions/categories';
+import { IModels } from '~/connectionResolvers';
+import { PRODUCT_STATUSES } from '@/products/constants';
+import { productCategorySchema } from '@/products/db/definitions/categories';
 
 export interface IProductCategoryModel extends Model<IProductCategoryDocument> {
   getProductCategory(selector: any): Promise<IProductCategoryDocument>;

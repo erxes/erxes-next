@@ -1,8 +1,12 @@
 import { Model } from 'mongoose';
 
-import { IModels } from '../../../../connectionResolvers';
-import { getEnv } from 'erxes-api-utils';
-import { configSchema, IConfig, IConfigDocument } from '../definitions/configs';
+import { IModels } from '~/connectionResolvers';
+import { getEnv } from 'erxes-api-shared/utils';
+import {
+  configSchema,
+  IConfig,
+  IConfigDocument,
+} from '@/settings/db/definitions/configs';
 
 export interface IConfigModel extends Model<IConfigDocument> {
   getConfig(code: string): Promise<IConfigDocument>;

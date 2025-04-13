@@ -3,15 +3,15 @@ import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 import * as crypto from 'crypto';
 
-import { logHandler, redis } from 'erxes-api-utils';
+import { redis } from 'erxes-api-shared/utils';
 import {
   USER_ROLES,
   userSchema,
   userMovemmentSchema,
-} from 'erxes-core-modules';
+} from 'erxes-api-shared/core-modules';
 
-import { saveValidatedToken } from '../../../../auth/utils';
-import { IModels } from '../../../../../connectionResolvers';
+import { saveValidatedToken } from '@/auth/utils';
+import { IModels } from '~/connectionResolvers';
 import {
   IUser,
   IDetail,
@@ -19,8 +19,10 @@ import {
   IUserMovementDocument,
   IUserDocument,
   IEmailSignature,
-} from 'erxes-core-types';
-import { USER_MOVEMENT_STATUSES } from 'erxes-core-modules';
+  IAppDocument,
+} from 'erxes-api-shared/core-types';
+
+import { USER_MOVEMENT_STATUSES } from 'erxes-api-shared/core-modules';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -123,6 +125,7 @@ export interface IUserModel extends Model<IUserDocument> {
   getTokenFields(user: IUserDocument);
   logout(_user: IUserDocument, token: string): Promise<string>;
   findUsers(query: any, options?: any): Promise<IUserDocument[]>;
+  createSystemUser(doc: IAppDocument): IUserDocument;
 }
 
 export const loadUserClass = (models: IModels) => {
@@ -709,7 +712,8 @@ export const loadUserClass = (models: IModels) => {
 
         _id = user._id;
         // if refresh token is expired then force to login
-      } catch (e) {
+      } catch (e: any) {
+        console.log(e);
         return {};
       }
 
@@ -867,7 +871,27 @@ export const loadUserClass = (models: IModels) => {
 
       return models.Users.find(filter, options).lean();
     }
+    public static async createSystemUser(app: IAppDocument) {
+      const user = await models.Users.findOne({ appId: app._id });
 
+      if (user) {
+        return user;
+      }
+
+      return models.Users.create({
+        role: USER_ROLES.SYSTEM,
+        password: await this.generatePassword(app._id),
+        username: app.name,
+        code: await this.generateUserCode(),
+        groupIds: [app.userGroupId],
+        appId: app._id,
+        isActive: true,
+        email: `${app._id}@domain.com`,
+        details: {
+          fullName: app.name,
+        },
+      });
+    }
     public static async checkLoginAuth({
       email,
       password,

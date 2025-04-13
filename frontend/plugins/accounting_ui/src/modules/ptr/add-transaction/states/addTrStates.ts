@@ -1,3 +1,3 @@
 import { atom } from 'jotai';
 
-export const activeJournalState = atom<string>('cash');
+export const activeJournalState = atom<string>('0');

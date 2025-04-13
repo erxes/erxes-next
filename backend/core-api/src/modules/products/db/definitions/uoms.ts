@@ -1,6 +1,6 @@
-import { mongooseStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
-import { TIMELY_TYPES } from '../../constants';
+import { TIMELY_TYPES } from '@/products/constants';
 
 const subscriptionConfigSchema = new Schema({
   period: { type: String, label: 'Subscription Period' },

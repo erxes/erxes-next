@@ -125,6 +125,7 @@ export const AssignMemberTrigger = React.forwardRef<
           avatarProps={{
             size: props.size as AvatarProps['size'],
           }}
+          className="overflow-hidden"
         />
       ) : loading ? (
         <Skeleton className="w-full h-8" />

@@ -13,7 +13,7 @@ import { envelop, useSchema, useEngine } from '@envelop/core';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { Express, json } from 'express';
 import * as fs from 'fs';
-import { supergraphPath } from '../apollo-router/paths';
+import { supergraphPath } from '~/apollo-router/paths';
 import { gql } from '@apollo/client/core';
 import { maxAliasesPlugin } from '@escape.tech/graphql-armor-max-aliases';
 import { characterLimitPlugin } from '@escape.tech/graphql-armor-character-limit';

@@ -1,4 +1,4 @@
-import { commonParams } from './CommonTypeDefs';
+import { commonParams } from './commonTypeDefs';
 export const BranchTypes = ` 
       type Branch @key(fields: "_id") @cacheControl(maxAge: 3){
           _id: String!
