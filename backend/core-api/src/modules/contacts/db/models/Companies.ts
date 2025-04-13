@@ -216,9 +216,9 @@ export const loadCompanyClass = (models: IModels) => {
     public static fillSearchText(doc: ICompany) {
       return validSearchText([
         doc.primaryName || ' ',
-        (doc.names || []).join(' '),
-        (doc.emails || []).join(' '),
-        (doc.phones || []).join(' '),
+        (doc.names || []).joinErxesGateway(' '),
+        (doc.emails || []).joinErxesGateway(' '),
+        (doc.phones || []).joinErxesGateway(' '),
         doc.website || '',
         doc.industry || '',
         doc.plan || '',

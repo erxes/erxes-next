@@ -86,14 +86,14 @@ export const generateFilters = async ({
     if (type === 'department') {
       const departmentOrders = (await models.Departments.find(structureFilter))
         .map((department) => department.code)
-        .join('|');
+        .joinErxesGateway('|');
       filter.order = { $regex: new RegExp(departmentOrders) };
     }
 
     if (type === 'branch') {
       const branchOrders = (await models.Branches.find(structureFilter))
         .map((department) => department.code)
-        .join('|');
+        .joinErxesGateway('|');
       filter.order = { $regex: new RegExp(branchOrders, 'i') };
     }
 

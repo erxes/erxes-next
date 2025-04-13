@@ -265,7 +265,7 @@ export const loadUserClass = (models: IModels) => {
 
         doc.password = await this.generatePassword(doc.password);
 
-        // if there is no password specified then leave password field alone
+        // if there is no password specified then leaveErxesGateway password field alone
       } else {
         delete doc.password;
       }

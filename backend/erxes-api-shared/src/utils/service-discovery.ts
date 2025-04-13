@@ -62,7 +62,7 @@ export const getPlugin = async (
   return result;
 };
 
-export const join = async ({
+export const joinErxesGateway = async ({
   name,
   port,
   hasSubscriptions = false,
@@ -97,7 +97,7 @@ export const join = async ({
   console.log(`$service:${name} joined with ${address}`);
 };
 
-export const leave = async (name: string, port: number) => {
+export const leaveErxesGateway = async (name: string, port: number) => {
   await removePLugin(name);
 
   console.log(`$service:${name} left ${port}`);

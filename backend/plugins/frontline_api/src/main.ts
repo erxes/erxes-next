@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
 
-import { join, leave } from 'erxes-api-shared/utils';
+import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3301;
 
@@ -25,7 +25,7 @@ const httpServer = http.createServer(app);
 httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
 
-  await join({
+  await joinErxesGateway({
     name: 'frontline',
     port,
     hasSubscriptions: false,
@@ -47,7 +47,7 @@ async function closeMongooose() {
 
 async function leaveServiceDiscovery() {
   try {
-    await leave('frontline', port);
+    await leaveErxesGateway('frontline', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);

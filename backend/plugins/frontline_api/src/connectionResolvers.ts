@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import {
   ICustomerModel,
   loadCustomerClass,
-} from './modules/contacts/db/models/Customers';
+} from './modules/inbox/db/models/Customers';
 
 export interface IModels {
   Customers: ICustomerModel;
