@@ -1,0 +1,61 @@
+{
+  "name": "automations-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "frontend/automations-ui/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/frontend/automations",
+        "main": "frontend/automations-ui/src/main.ts",
+        "tsConfig": "frontend/automations-ui/tsconfig.app.json",
+        "rspackConfig": "frontend/automations-ui/rspack.config.ts",
+        "assets": []
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "frontend/automations-ui/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "automations-ui:build:development",
+        "port": 3013
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "automations-ui:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "automations-ui:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "automations-ui:serve:development"
+        },
+        "production": {
+          "serveTarget": "automations-ui:serve:production"
+        }
+      }
+    }
+  }
+}

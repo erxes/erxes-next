@@ -1,4 +1,4 @@
-import { authCookieOptions, getEnv,logHandler } from 'erxes-api-shared/utils';
+import { authCookieOptions, getEnv, logHandler } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 type LoginParams = {
@@ -16,6 +16,7 @@ export const authMutations = {
     args: LoginParams,
     { req, res, requestInfo, models, subdomain }: IContext,
   ) {
+    console.log({ dasds: 'dascx' });
     return await logHandler(
       async () => {
         const response = await models.Users.login(args);
@@ -48,6 +49,9 @@ export const authMutations = {
           method: 'email/password',
         },
       },
+      null,
+      null,
+      true,
     );
   },
   /*

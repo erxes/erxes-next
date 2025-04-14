@@ -4,7 +4,9 @@ import ReactJson from 'react-json-view';
 import { maskFields } from '../../utils';
 
 const graphql = ({ payload, createdAt }: ILogDoc) => {
-  const { mutationName, args, result } = payload;
+  const { mutationName, args, result, error } = payload;
+
+  const res = error ? error : result;
 
   return (
     <>
@@ -32,9 +34,7 @@ const graphql = ({ payload, createdAt }: ILogDoc) => {
           <Dialog.Description>Result</Dialog.Description>
           <ReactJson
             src={
-              typeof result === 'string'
-                ? { result }
-                : maskFields(result, ['password'])
+              typeof res === 'string' ? { res } : maskFields(res, ['password'])
             }
             collapsed={1}
             name={false}

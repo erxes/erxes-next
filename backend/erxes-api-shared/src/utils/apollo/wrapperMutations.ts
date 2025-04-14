@@ -38,9 +38,9 @@ export const wrapApolloMutations = (
   const wrappedMutations: Record<string, GraphqlLogHandler> = {};
 
   for (const [key, resolver] of Object.entries(mutations)) {
-    if (muataionsForSkip?.includes(key)) {
-      continue;
-    }
+    // if (muataionsForSkip?.includes(key)) {
+    //   return resolver;
+    // }
     wrappedMutations[key] = withLogging(resolver);
   }
 

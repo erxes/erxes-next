@@ -42,7 +42,10 @@ const columns: ColumnDef<any>[] = [
         <RecordTableInlineCell
           containerClassName="justify-center"
           display={() => (
-            <Badge variant={variant as 'success' | 'destructive'}>
+            <Badge
+              className={`text-white`}
+              variant={variant as 'success' | 'destructive'}
+            >
               <TablerIcon
                 name={icon as TablerIconNamesType}
                 size="xsm"
