@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 
-import { Button, Form, Upload } from 'erxes-ui';
+import { Button, Form, Spinner, Upload } from 'erxes-ui';
 import { useProfile } from '@/settings/profile/hooks/useProfile';
 import {
   FormType,
@@ -18,7 +18,7 @@ import { ProfileLoading } from '@/settings/profile/components/ProfileLoading';
 export const ProfileForm = () => {
   const { form } = useProfileForm();
 
-  const { loading, profileUpdate, profile } = useProfile();
+  const { loading, profileUpdate, profile, updating } = useProfile();
 
   const submitHandler: SubmitHandler<FormType> = useCallback(
     async (data) => {
@@ -31,14 +31,13 @@ export const ProfileForm = () => {
     if (profile && Object.keys(profile).length > 0) {
       form.reset({
         username: profile.username,
-        employeeId: profile.employeeId,
         positionIds: profile.positionIds,
         email: profile.email,
         details: profile.details,
         links: profile.links,
       });
     }
-  }, [profile, form.reset]);
+  }, [profile, form]);
 
   if (loading) {
     return <ProfileLoading />;
@@ -111,8 +110,9 @@ export const ProfileForm = () => {
           <LinkFields />
         </div>
         <div className="w-full flex justify-end">
-          <Button type="submit" size="sm">
-            Update
+          <Button type="submit" disabled={updating} size="sm">
+            {(updating && <Spinner size={'small'} className="text-white" />) ||
+              'Update'}
           </Button>
         </div>
       </form>

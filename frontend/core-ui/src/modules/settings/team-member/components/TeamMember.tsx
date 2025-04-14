@@ -16,7 +16,7 @@ const TeamMember = () => {
           <TeamMemberSidebar />
           <div className="flex flex-col">
             <TeamMemberFilterBar />
-            <div className="flex flex-col h-[calc(100%-64px)] p-5">
+            <div className="flex flex-col h-[calc(100%-64px)] p-5 pb-0">
               <TeamMemberTable />
             </div>
           </div>

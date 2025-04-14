@@ -7,21 +7,11 @@ import {
 } from '@tabler/icons-react';
 import {
   Filter,
-  SelectTree,
   useFilterContext,
   useMultiQueryState,
   useQueryState,
 } from 'erxes-ui';
-import { BranchFilter } from './BranchFilter';
-import { DepartmentFilter } from './DepartmentFilter';
-import { UnitFilter } from './UnitFilter';
-import {
-  SelectBranch,
-  SelectBranchCommand,
-  SelectBranchTree,
-  SelectDepartmentTree,
-  SelectUnit,
-} from 'ui-modules';
+import { SelectBranchTree, SelectDepartmentTree, SelectUnit } from 'ui-modules';
 
 export const TeamMemberFilterBar = () => {
   const [queries] = useMultiQueryState<{
