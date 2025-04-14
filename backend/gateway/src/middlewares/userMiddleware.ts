@@ -1,11 +1,11 @@
 import * as jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
 import { NextFunction, Request, Response } from 'express';
-import { redis } from 'erxes-api-utils';
-import { getSubdomain } from 'erxes-api-utils';
-import { setUserHeader } from 'erxes-api-utils';
-import { userActionsMap } from 'erxes-api-modules';
-import { USER_ROLES } from 'erxes-api-modules';
+import { redis } from 'erxes-api-shared/utils';
+import { getSubdomain } from 'erxes-api-shared/utils';
+import { setUserHeader } from 'erxes-api-shared/utils';
+import { userActionsMap } from 'erxes-api-shared/core-modules';
+import { USER_ROLES } from 'erxes-api-shared/core-modules';
 import { IModels, generateModels } from '../connectionResolver';
 
 export default async function userMiddleware(

@@ -151,8 +151,8 @@ export const CurrencyValueInput = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof IMaskInput>,
     'onChange' | 'value'
   > & {
-    onChange: (value: number) => void;
-    value: number;
+    onChange?: (value: number) => void;
+    value?: number;
   }
 >(({ value, onChange, className, ...props }, ref) => {
   return (

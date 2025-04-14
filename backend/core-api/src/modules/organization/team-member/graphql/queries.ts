@@ -1,8 +1,8 @@
-import { IContext } from '../../../../connectionResolvers';
-import { USER_ROLES } from 'erxes-api-modules';
-import { IUserDocument } from 'erxes-core-types';
-import { IModels } from '../../../../connectionResolvers';
-import { paginate } from 'erxes-api-utils';
+import { IContext } from '~/connectionResolvers';
+import { USER_ROLES } from 'erxes-api-shared/core-modules';
+import { IUserDocument } from 'erxes-api-shared/core-types';
+import { IModels } from '~/connectionResolvers';
+import { paginateMongooseCollection } from 'erxes-api-shared/utils';
 
 interface IListArgs {
   page?: number;
@@ -172,6 +172,9 @@ export const userQueries = {
         ? { [sortField]: sortDirection }
         : { username: 1 };
 
-    return paginate(models.Users.find(selector).sort(sort as any), args);
+    return paginateMongooseCollection(
+      models.Users.find(selector).sort(sort as any),
+      args,
+    );
   },
 };

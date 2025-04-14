@@ -1,6 +1,6 @@
-import { paginate } from 'erxes-api-utils';
-import { ICustomerQueryFilterParams } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { paginateMongooseCollection } from 'erxes-api-shared/utils';
+import { ICustomerQueryFilterParams } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 const generateFilter = (params: ICustomerQueryFilterParams) => {
   const { searchValue } = params;
@@ -23,13 +23,16 @@ export const customerQueries = {
    * Customers list
    */
   async customers(
-    _root,
+    _root: undefined,
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {
     const filter = generateFilter(params);
 
-    const list = await paginate(models.Customers.find(filter), params);
+    const list = await paginateMongooseCollection(
+      models.Customers.find(filter),
+      params,
+    );
 
     const totalCount = await models.Customers.find(filter).countDocuments();
 
@@ -38,7 +41,11 @@ export const customerQueries = {
   /**
    * Get one customer
    */
-  async customerDetail(_root, { _id }: { _id: string }, { models }: IContext) {
+  async customerDetail(
+    _root: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     return models.Customers.getCustomer(_id);
   },
 };

@@ -1,69 +1,30 @@
 import { initTRPC } from '@trpc/server';
-import { generateModels } from '../../../connectionResolvers';
-import { customerTRPCSchema, customerDocumentTRPCSchema } from 'erxes-api-rpc';
-import { z } from 'zod';
+import { ITRPCContext } from '~/init-trpc';
 
-const t = initTRPC.create();
+const t = initTRPC.context<ITRPCContext>().create();
 
 export const customerRouter = t.router({
   customer: t.router({
-    list: t.procedure
-      .input(generateModels)
-      .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .query(async ({ input }) => {
-        const { ...rest } = input;
+    list: t.procedure.query(async ({ ctx }) => {
+      const { models } = ctx;
 
-        const query = { ...rest };
+      return models.Customers.find({});
+    }),
 
-        const models = await generateModels('os');
+    get: t.procedure.query(async () => {
+      return null;
+    }),
 
-        const sda = {
-          _id: 'dHDg9dxhfWq5GpH9Y9sUM',
-          state: 'visitor',
-          avatar: null,
-          firstName: 'adsda',
-          lastName: 'sadasd',
-          middleName: '',
-          sex: 0,
-          primaryEmail: 'asdasd@gmail.com',
-          emails: ['asdasd@gmail.com'],
-          emailValidationStatus: 'valid',
-          primaryPhone: '99126730',
-          phones: ['99126730'],
-          addresses: [],
-          phoneValidationStatus: 'unknown',
-          status: 'Active',
-          description: '',
-        };
+    create: t.procedure.mutation(async () => {
+      return null;
+    }),
 
-        return null;
-      }),
+    update: t.procedure.mutation(async () => {
+      return null;
+    }),
 
-    get: t.procedure
-      .output(z.union([customerDocumentTRPCSchema, z.null()]))
-      .query(async () => {
-        return null;
-      }),
-
-    create: t.procedure
-      .input(customerTRPCSchema)
-      .output(z.union([customerDocumentTRPCSchema, z.null()]))
-      .mutation(async () => {
-        return null;
-      }),
-
-    update: t.procedure
-      .input(customerDocumentTRPCSchema)
-      .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .mutation(async () => {
-        return null;
-      }),
-
-    delete: t.procedure
-      .input(customerDocumentTRPCSchema)
-      .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .mutation(async () => {
-        return null;
-      }),
+    delete: t.procedure.mutation(async () => {
+      return null;
+    }),
   }),
 });

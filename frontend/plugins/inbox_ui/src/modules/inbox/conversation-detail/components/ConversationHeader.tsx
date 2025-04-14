@@ -74,7 +74,7 @@ const AssignConversation = () => {
       }}
       size="lg"
       variant="secondary"
-      className="min-w-32 h-7 text-foreground -ml-1 flex-none shadow-none"
+      className="min-w-32 h-7 text-foreground -ml-1 flex-none shadow-none w-auto"
     />
   );
 };

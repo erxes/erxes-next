@@ -1,4 +1,4 @@
-import { commonParams } from './CommonTypeDefs';
+import { commonParams } from './commonTypeDefs';
 
 export const DepartmentTypes = `
     type Department @key(fields: "_id") @cacheControl(maxAge: 3) {

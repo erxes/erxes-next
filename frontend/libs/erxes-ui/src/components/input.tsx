@@ -59,16 +59,17 @@ export const InputNumber = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof IMaskInput>,
     'onChange' | 'value'
   > & {
-    onChange: (value: number) => void;
-    value: number;
+    onChange?: (value?: number | '') => void;
+    value?: number;
   }
 >(({ value, onChange, className, ...props }, ref) => {
   return (
     <IMaskInput
       ref={ref}
       mask={Number as any}
-      radix="."
-      onAccept={(value) => onChange?.(Number(value))}
+      onAccept={(value) => {
+        onChange?.(value ? Number(value) : '');
+      }}
       value={value + ''}
       autoComplete="off"
       className={cn(inputVariants({ type: 'number' }), className)}

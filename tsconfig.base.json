@@ -18,10 +18,6 @@
     "useUnknownInCatchVariables": false,
     "baseUrl": ".",
     "paths": {
-      "erxes-api-modules": ["backend/libs/core-modules/src/index.ts"],
-      "erxes-api-rpc": ["backend/libs/api-rpc/src/index.ts"],
-      "erxes-api-utils": ["backend/libs/utils/src/index.ts"],
-      "erxes-core-types": ["backend/libs/core-types/src/index.ts"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
       "ui-modules": ["frontend/libs/ui-modules/src"]
     }

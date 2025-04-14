@@ -1,6 +1,6 @@
 import { Button, Dialog } from 'erxes-ui';
 import { useState } from 'react';
-import { VatFormValues } from '../types/Vat';
+import { VatFormValues, VatKind, VatStatus } from '../types/Vat';
 import { vatFormSchema } from '../constants/vatFormSchema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,6 +32,11 @@ export const AddVats = () => {
 export const AddVatForm = () => {
   const form = useForm<VatFormValues>({
     resolver: zodResolver(vatFormSchema),
+    defaultValues: {
+      status: VatStatus.ACTIVE,
+      isBold: false,
+      kind: VatKind.NORMAL,
+    },
   });
   const { addVat, loading } = useAddVat();
 

@@ -25,11 +25,10 @@ const config: ModuleFederationConfig = {
     if (coreLibraries.has(libraryName)) {
       return defaultConfig;
     }
-
     return false;
   },
 
-  remotes: ['inbox_ui', 'sample_ui', 'accounting_ui'],
+  remotes: [],
 };
 
 /**

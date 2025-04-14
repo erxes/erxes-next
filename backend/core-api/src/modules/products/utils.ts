@@ -1,4 +1,4 @@
-import { IProduct, IProductCategory } from 'erxes-core-types';
+import { IProduct, IProductCategory } from 'erxes-api-shared/core-types';
 import { IModels } from '../../connectionResolvers';
 export const checkCodeMask = (category?: IProductCategory, code?: string) => {
   if (!category || !code) {
@@ -28,10 +28,10 @@ export const checkCodeMask = (category?: IProductCategory, code?: string) => {
     }
 
     if (value.type === 'customField' && value.matches) {
-      maskList.push(`(${Object.values(value.matches).join('|')})`);
+      maskList.push(`(${Object.values(value.matches).joinErxesGateway('|')})`);
     }
   }
-  maskStr = `${maskList.join('')}.*`;
+  maskStr = `${maskList.joinErxesGateway('')}.*`;
 
   const mask = new RegExp(maskStr, 'g');
 

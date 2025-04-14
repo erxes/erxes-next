@@ -10,7 +10,7 @@ import {
   SettingsPath,
   SettingsWorkspacePath,
   TSettingPath,
-} from '~/modules/types/paths/SettingsPath';
+} from '@/types/paths/SettingsPath';
 
 export const KEY_LABELS = {
   UPLOAD_FILE_TYPES: 'Upload File Types',

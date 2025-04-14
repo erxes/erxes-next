@@ -1,9 +1,9 @@
-import { escapeRegExp } from 'erxes-api-utils';
-import { ITag, ITagDocument } from 'erxes-core-types';
+import { escapeRegExp } from 'erxes-api-shared/utils';
+import { ITag, ITagDocument } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
-import { IModels } from '../../../../connectionResolvers';
-import { removeRelatedIds, setRelatedIds } from '../../utils';
-import { tagSchema } from '../definitions/tags';
+import { IModels } from '~/connectionResolvers';
+import { removeRelatedIds, setRelatedIds } from '@/tags/utils';
+import { tagSchema } from '@/tags/db/definitions/tags';
 export interface ITagModel extends Model<ITagDocument> {
   getTag(_id: string): Promise<ITagDocument>;
   createTag(doc: ITag): Promise<ITagDocument>;

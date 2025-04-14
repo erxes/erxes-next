@@ -144,7 +144,7 @@ export const VatFormFields = ({
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
+                  onValueChange={field.onChange}
                   journal="tax"
                 />
               </Form.Item>
@@ -160,7 +160,7 @@ export const VatFormFields = ({
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
+                  onValueChange={field.onChange}
                   journal="tax"
                 />
               </Form.Item>
@@ -176,7 +176,7 @@ export const VatFormFields = ({
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
+                  onValueChange={field.onChange}
                   journal="tax"
                 />
               </Form.Item>
@@ -192,7 +192,7 @@ export const VatFormFields = ({
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
+                  onValueChange={field.onChange}
                   journal="tax"
                 />
               </Form.Item>
@@ -236,7 +236,7 @@ export const CtaxFormFields = ({
               <Form.Label>Ctax account payable</Form.Label>
               <SelectAccount
                 value={field.value}
-                onChange={field.onChange}
+                onValueChange={field.onChange}
                 journal="tax"
               />
             </Form.Item>

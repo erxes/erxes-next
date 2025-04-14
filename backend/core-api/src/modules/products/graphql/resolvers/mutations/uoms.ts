@@ -1,5 +1,5 @@
-import { IUom } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { IUom } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const uomMutations = {
   /**

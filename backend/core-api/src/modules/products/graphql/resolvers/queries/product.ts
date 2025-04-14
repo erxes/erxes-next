@@ -1,15 +1,18 @@
-import { escapeRegExp, paginate } from 'erxes-api-utils';
-import { IProductDocument } from 'erxes-core-types';
+import {
+  escapeRegExp,
+  paginateMongooseCollection,
+} from 'erxes-api-shared/utils';
+import { IProductDocument } from 'erxes-api-shared/core-types';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
-import { IModels } from '../../../../../connectionResolvers';
-import { IProductParams } from '../../../@types/product';
-import { PRODUCT_STATUSES } from '../../../constants';
+import { IModels } from '~/connectionResolvers';
+import { IProductParams } from '@/products/@types/product';
+import { PRODUCT_STATUSES } from '@/products/constants';
 import {
   getSimilaritiesProducts,
   getSimilaritiesProductsCount,
-} from '../../../utils';
+} from '@/products/utils';
 
 const generateFilter = async (
   models: IModels,
@@ -144,7 +147,7 @@ export const productQueries = {
       });
     }
 
-    return await paginate(
+    return await paginateMongooseCollection(
       models.Products.find(filter).sort(sort).lean(),
       paginationArgs,
     );

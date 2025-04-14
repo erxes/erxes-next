@@ -1,5 +1,5 @@
-import { IModels, IContext } from '../../../../../../connectionResolvers';
-import { IBranchDocument } from '../../../@types/structure';
+import { IModels, IContext } from '~/connectionResolvers';
+import { IBranchDocument } from '@/organization/structure/@types/structure';
 
 const getAllChildrenIds = async (models: IModels, parentId: string) => {
   const pipeline = [
@@ -28,7 +28,7 @@ export default {
     return models.Branches.findOne({ _id });
   },
 
-  async users(branch: IBranchDocument, _args, { models }: IContext) {
+  async users(branch: IBranchDocument, _args: undefined, { models }: IContext) {
     const allChildrenIds = await getAllChildrenIds(models, branch._id);
 
     return models.Users.findUsers({
@@ -37,13 +37,17 @@ export default {
     });
   },
 
-  async parent(branch: IBranchDocument, _args, { models }: IContext) {
+  async parent(
+    branch: IBranchDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     return models.Branches.findOne({ _id: branch.parentId });
   },
 
   async children(
     branch: IBranchDocument,
-    _args,
+    _args: undefined,
     { models }: IContext,
     { variableValues }: any,
   ) {
@@ -56,11 +60,19 @@ export default {
     return models.Branches.find(filter);
   },
 
-  async supervisor(branch: IBranchDocument, _args, { models }: IContext) {
+  async supervisor(
+    branch: IBranchDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     return models.Users.findOne({ _id: branch.supervisorId, isActive: true });
   },
 
-  async userIds(branch: IBranchDocument, _args, { models }: IContext) {
+  async userIds(
+    branch: IBranchDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     const allChildrenIds = await getAllChildrenIds(models, branch._id);
 
     const branchUsers = await models.Users.findUsers({
@@ -71,7 +83,11 @@ export default {
     const userIds = branchUsers.map((user) => user._id);
     return userIds;
   },
-  async userCount(branch: IBranchDocument, _args, { models }: IContext) {
+  async userCount(
+    branch: IBranchDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     const allChildrenIds = await getAllChildrenIds(models, branch._id);
 
     return await models.Users.find({
@@ -79,7 +95,11 @@ export default {
       isActive: true,
     }).countDocuments();
   },
-  async hasChildren({ _id }: IBranchDocument, _args, { models }: IContext) {
+  async hasChildren(
+    { _id }: IBranchDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     return !!(await models.Branches.exists({ parentId: _id }));
   },
 };

@@ -6,42 +6,45 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
-      "dependsOn": [
-        "erxes-core-types:build",
-        "erxes-api-utils:build",
-        "erxes-api-modules:build",
-        "erxes-api-rpc:build"
-      ],
+      "executor": "nx:run-commands",
       "cache": true,
       "options": {
-        "outputPath": "dist/backend/gateway",
-        "main": "backend/gateway/src/main.ts",
-        "tsConfig": "backend/gateway/tsconfig.app.json",
-        "assets": ["backend/gateway/src/**"]
+        "cwd": "backend/gateway",
+        "commands": ["pnpm build"]
       },
-      "configurations": {
-        "development": {},
-        "production": {}
-      }
+      "dependsOn": ["^build", "build:packageJson"]
     },
-    "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+
+    "build:packageJson": {
+      "executor": "@nx/js:tsc",
       "options": {
-        "buildTarget": "gateway:build",
-        "runBuildTargetDependencies": false
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "gateway:build:development"
-        },
-        "production": {
-          "buildTarget": "gateway:build:production"
-        }
+        "main": "backend/gateway/dist/src/main.js",
+        "tsConfig": "backend/gateway/tsconfig.build.json",
+        "outputPath": "backend/gateway/dist",
+        "updateBuildableProjectDepsInPackageJson": true,
+
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
+
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["typecheck", "build"],
+      "options": {
+        "cwd": "backend/gateway",
+        "command": "node dist/src/main.js"
+      }
+    },
+
+    "serve": {
+      "executor": "nx:run-commands",
+
+      "options": {
+        "cwd": "backend/gateway",
+        "command": "NODE_ENV=development && pnpm dev"
+      }
+    },
+
     "docker-build": {
       "dependsOn": ["build"],
       "command": "docker build -f backend/gateway/Dockerfile . -t gateway"

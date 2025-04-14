@@ -1,5 +1,5 @@
-import { ICompanyDocument } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { ICompanyDocument } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export default {
   owner: async (company: ICompanyDocument, _, { models }: IContext) => {

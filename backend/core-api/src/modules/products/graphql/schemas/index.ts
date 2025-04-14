@@ -16,7 +16,10 @@ import {
   types as ConfigTypes,
 } from './config';
 
-import { attachmentInput, pdfAttachmentInput } from 'erxes-api-utils';
+import {
+  graphqlAttachmentInput,
+  graphqlPdfAttachmentInput,
+} from 'erxes-api-shared/utils';
 
 import {
   mutations as UomMutations,
@@ -25,8 +28,8 @@ import {
 } from './uom';
 
 export const types = `
-  ${attachmentInput}
-  ${pdfAttachmentInput}
+  ${graphqlAttachmentInput}
+  ${graphqlPdfAttachmentInput}
 
   ${CategoryTypes}
   ${ProductTypes}

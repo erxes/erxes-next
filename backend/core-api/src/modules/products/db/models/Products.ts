@@ -1,11 +1,15 @@
-import { IProduct, IProductDocument, ICustomField } from 'erxes-core-types';
+import {
+  IProduct,
+  IProductDocument,
+  ICustomField,
+} from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 
-import { IModels } from '../../../../connectionResolvers';
-import { PRODUCT_STATUSES } from '../../constants';
-import { checkCodeMask, checkSameMaskConfig } from '../../utils';
-import { productSchema } from '../definitions/products';
+import { IModels } from '~/connectionResolvers';
+import { PRODUCT_STATUSES } from '@/products/constants';
+import { checkCodeMask, checkSameMaskConfig } from '@/products/utils';
+import { productSchema } from '@/products/db/definitions/products';
 
 export interface IProductModel extends Model<IProductDocument> {
   getProduct(selector: any): Promise<IProductDocument>;
@@ -183,7 +187,6 @@ export const loadProductClass = (models: IModels) => {
       const barcodeDescription: string = productFields.barcodeDescription || '';
       const categoryId: string = productFields.categoryId || '';
       const vendorId: string = productFields.vendorId || '';
-      const usedIds: string[] = [];
 
       for (const productId of productIds) {
         const productObj = await models.Products.getProduct({ _id: productId });
@@ -246,7 +249,7 @@ export const loadProductClass = (models: IModels) => {
 
       if (!product) throw new Error('Product not found');
 
-      const { _id, code, ...productData } = product;
+      const { code, ...productData } = product;
 
       const newCode = await this.generateCode();
 

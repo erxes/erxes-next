@@ -1,11 +1,10 @@
-import { UseFormReturn } from 'react-hook-form';
-import { TAddTransactionGroup } from '../types/AddTransaction';
+import { ITransactionGroupForm } from '../types/AddTransaction';
 
 export const BankTransaction = ({
   form,
   index,
 }: {
-  form: UseFormReturn<TAddTransactionGroup>;
+  form: ITransactionGroupForm;
   index: number;
 }) => {
   return <div>Bank</div>;

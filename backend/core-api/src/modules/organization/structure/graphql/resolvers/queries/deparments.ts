@@ -1,9 +1,9 @@
-import { IContext } from '../../../../../../connectionResolvers';
-import { paginate } from 'erxes-api-utils';
-import { generateFilters } from './structureUtils';
+import { IContext } from '~/connectionResolvers';
+import { paginateMongooseCollection } from 'erxes-api-shared/utils';
+import { generateFilters } from './utils';
 
 export const deparmentQueries = {
-  async departments(_root, params: any, { models, user }: IContext) {
+  async departments(_root: undefined, params: any, { models, user }: IContext) {
     const filter = await generateFilters({
       models,
       user,
@@ -24,7 +24,7 @@ export const deparmentQueries = {
   },
 
   async departmentsMain(
-    _root,
+    _root: undefined,
     params: { searchValue?: string; perPage: number; page: number },
     { models, user }: IContext,
   ) {
@@ -34,7 +34,7 @@ export const deparmentQueries = {
       type: 'department',
       params: { ...params, withoutUserFilter: true },
     });
-    const list = await paginate(
+    const list = await paginateMongooseCollection(
       models.Departments.find(filter).sort({ order: 1 }),
       params,
     );
@@ -49,7 +49,7 @@ export const deparmentQueries = {
     return { list, totalCount, totalUsersCount };
   },
 
-  async departmentDetail(_root, { _id }, { models }: IContext) {
+  async departmentDetail(_root: undefined, { _id }, { models }: IContext) {
     return models.Departments.getDepartment({ _id });
   },
 };

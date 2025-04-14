@@ -1,7 +1,7 @@
 import { Breadcrumb, Input, Label } from 'erxes-ui';
 
 import { ChooseTheme } from '@/settings/components/ChooseTheme';
-import { SettingsBreadcrumbs } from '~/modules/settings/components/SettingsBreadcrumbs';
+import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
 
 export const SettingsExperiencePage = () => {
   return (

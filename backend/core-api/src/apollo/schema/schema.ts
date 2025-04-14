@@ -50,20 +50,22 @@ import {
   mutations as UserMutations,
   queries as UserQueries,
   types as UserTypes,
-} from '../../modules/organization/team-member/graphql/schema';
-
+} from '@/organization/team-member/graphql/schema';
 import {
   mutations as TagMutations,
   queries as TagQueries,
   types as TagTypes,
-} from '../../modules/tags/graphql/schemas';
-
+} from '@/tags/graphql/schemas';
 import {
   mutations as ProductMutations,
   queries as ProductQueries,
   types as ProductTypes,
-} from '../../modules/products/graphql/schemas';
-
+} from '@/products/graphql/schemas';
+import {
+  mutations as AppMutations,
+  queries as AppQueries,
+  types as AppTypes,
+} from '@/apps/graphql/schemas';
 import { CommonTypes } from './commonTypes';
 import { BrandTypes } from '../../modules/organization/structure/graphql/schemas/brand';
 
@@ -95,6 +97,7 @@ export const types = `
     ${StructureTypes}
     ${UnitTypes}
     ${BrandTypes}
+    ${AppTypes}
   `;
 
 export const queries = `
@@ -109,6 +112,7 @@ export const queries = `
     ${departmentsQueries}
     ${positionsQueries}
     ${unitsQueries}
+    ${AppQueries}
   `;
 
 export const mutations = `
@@ -124,6 +128,7 @@ export const mutations = `
     ${positionsMutations}
     ${structuresMutations}
     ${unitsMutations}
+    ${AppMutations}
   `;
 
 export default { types, queries, mutations };

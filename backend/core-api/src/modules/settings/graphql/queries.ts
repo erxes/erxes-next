@@ -1,7 +1,7 @@
-import { getCoreDomain } from 'erxes-api-utils';
+import { getCoreDomain } from 'erxes-api-shared/utils';
 
 import * as dotenv from 'dotenv';
-import { IContext } from '../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 import fetch from 'node-fetch';
 
 dotenv.config();
@@ -10,7 +10,7 @@ const configQueries = {
   /**
    * Config object
    */
-  async configs(_root, _args: undefined, { models }: IContext) {
+  async configs(_root: undefined, _args: undefined, { models }: IContext) {
     return models.Configs.find({});
   },
 
@@ -41,7 +41,10 @@ const configQueries = {
     };
   },
 
-  async configsCheckActivateInstallation(_root, args: { hostname: string }) {
+  async configsCheckActivateInstallation(
+    _root: undefined,
+    args: { hostname: string },
+  ) {
     try {
       return await fetch(`${getCoreDomain()}/check-activate-installation`, {
         method: 'POST',
