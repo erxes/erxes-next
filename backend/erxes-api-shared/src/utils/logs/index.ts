@@ -24,7 +24,6 @@ export const logHandler = async (
     logDoc.payload = { ...payload, ...onSuccess, result };
     if (!skipSaveResult) {
       logDoc.payload.result = result;
-      console.log({ result });
     }
     logDoc.executionTime = {
       startDate,

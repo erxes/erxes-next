@@ -1,9 +1,12 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
-    "module": "commonjs",
+    "rootDir": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./src/modules/*"]
+    },
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "src/apollo/resolvers/customResolver"]
+  "exclude": ["node_modules", "dist", "**/*spec.ts"]
 }

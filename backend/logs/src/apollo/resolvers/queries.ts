@@ -1,4 +1,4 @@
-import { paginate } from 'erxes-api-utils';
+import { paginate } from 'erxes-api-shared/utils';
 import { IContext } from '../../db/connectionResolvers';
 import { ILogDocument } from '../../db/definitions/logs';
 

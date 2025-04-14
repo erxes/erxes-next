@@ -1,7 +1,7 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { getSubdomain, join, leave, redis } from 'erxes-api-utils';
+import { getSubdomain, join, leave, redis } from 'erxes-api-shared/utils';
 import express from 'express';
 import * as http from 'http';
 import mongoose from 'mongoose';

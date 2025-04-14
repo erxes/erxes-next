@@ -1,5 +1,5 @@
-import { IContext } from 'backend/logs/src/db/connectionResolvers';
-import { ILogDocument } from 'backend/logs/src/db/definitions/logs';
+import { IContext } from "~/db/connectionResolvers";
+import { ILogDocument } from "~/db/definitions/logs";
 
 export default {
   __resolveReference({ _id }: ILogDocument, { models }: IContext) {

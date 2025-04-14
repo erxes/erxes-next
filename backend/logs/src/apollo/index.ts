@@ -3,7 +3,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
-import { extractUserFromHeader, getSubdomain } from 'erxes-api-utils';
+import { extractUserFromHeader, getSubdomain } from 'erxes-api-shared/utils';
 import { generateModels } from '../db/connectionResolvers';
 import resolvers from './resolvers';
 import typeDefs from './typeDef';

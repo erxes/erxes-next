@@ -10,15 +10,18 @@ export const mongooseConnectionOptions: mongoose.ConnectOptions = {
 
 mongoose.connection
   ?.on('connected', () => {
-    cleanActiveChangeStream();
     console.log(`Connected to the database: ${MONGO_URL}`);
   })
   ?.on('disconnected', () => {
+    cleanActiveChangeStream();
+
     console.log(`Disconnected from the database: ${MONGO_URL}`);
 
     process.exit(1);
   })
   ?.on('error', (error) => {
+    cleanActiveChangeStream();
+
     console.error(`Database connection error: ${MONGO_URL} ${error}`);
 
     process.exit(1);

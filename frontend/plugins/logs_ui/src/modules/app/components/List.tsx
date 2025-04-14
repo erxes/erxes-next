@@ -45,8 +45,6 @@ const List = () => {
     });
   };
 
-  console.log({ totalCount, list: list?.length });
-
   return (
     <div className="flex flex-col h-full p-3 pt-0">
       <PluginHeader
@@ -70,6 +68,7 @@ const List = () => {
         data={list}
         handleReachedBottom={handleFetchMore}
         // stickyColumns={['avatar', 'name']}
+        disableCheckbox
         className="mt-1.5"
         moreColumn={{
           id: 'detail',

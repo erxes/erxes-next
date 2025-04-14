@@ -3,55 +3,51 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/logs/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/esbuild:esbuild",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "executor": "nx:run-commands",
+      "cache": true,
       "options": {
-        "platform": "node",
-        "outputPath": "dist/backend/logs",
-        "format": ["cjs"],
-        "bundle": false,
-        "main": "backend/logs/src/main.ts",
-        "tsConfig": "backend/logs/tsconfig.app.json",
-        "generatePackageJson": true,
-        "esbuildOptions": {
-          "sourcemap": true,
-          "outExtension": {
-            ".js": ".js"
-          }
-        }
+        "cwd": "backend/logs",
+        "commands": ["pnpm build"]
       },
-      "configurations": {
-        "development": {},
-        "production": {
-          "esbuildOptions": {
-            "sourcemap": false,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
-        }
+      "dependsOn": ["^build", "build:packageJson"]
+    },
+
+    "build:packageJson": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "main": "backend/logs/dist/src/main.js",
+        "tsConfig": "backend/logs/tsconfig.build.json",
+        "outputPath": "backend/logs/dist",
+        "updateBuildableProjectDepsInPackageJson": true,
+
+        "buildableProjectDepsInPackageJsonType": "dependencies"
       }
     },
-    "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+
+    "start": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["typecheck", "build"],
       "options": {
-        "buildTarget": "logs:build",
-        "runBuildTargetDependencies": false
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "logs:build:development"
-        },
-        "production": {
-          "buildTarget": "logs:build:production"
-        }
+        "cwd": "backend/logs",
+        "command": "NODE_ENV=development && node dist/src/main.js"
       }
+    },
+
+    "serve": {
+      "executor": "nx:run-commands",
+
+      "options": {
+        "cwd": "backend/logs",
+        "command": "NODE_ENV=development  pnpm dev"
+      }
+    },
+
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f backend/logs/Dockerfile . -t logs"
     }
-  },
-  "tags": []
+  }
 }

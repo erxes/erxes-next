@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Collection } from 'mongoose';
 import { connect } from './mongo/mongo-connection';
 import {
   coreModelOrganizations,
@@ -86,8 +86,6 @@ const startChangeStream = async (models: mongoose.Models) => {
 
     await redis.set(redisKey, 'active');
     changeStream.on('change', (change) => {
-      console.log(change);
-
       sendWorkerQueue('logs', 'put_log').add('put_log', {
         source: 'mongo',
         payload: change,
@@ -102,7 +100,7 @@ const initializeModels = async <IModels>(
     db: mongoose.Connection,
     subdomain: string,
   ) => IModels | Promise<IModels>,
-  subdomain,
+  subdomain: string,
   ignoreChangeStream?: boolean,
 ) => {
   const models = await loadClasses(connection, subdomain);
@@ -209,7 +207,7 @@ export const authCookieOptions = (options: any = {}) => {
 };
 
 export const paginate = (
-  collection,
+  collection: any,
   params: {
     ids?: string[];
     page?: number;
@@ -255,7 +253,7 @@ export const escapeRegExp = (str: string) => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
-export const checkCodeDuplication = async (collection, code: string) => {
+export const checkCodeDuplication = async (collection: any, code: string) => {
   if (code.includes('/')) {
     throw new Error('The "/" character is not allowed in the code');
   }

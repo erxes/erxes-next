@@ -44,9 +44,9 @@ async function ensureGraphqlEndpointIsUp({
 }: ErxesProxyTarget): Promise<void> {
   if (!address) return;
 
-  const endponit = `${address}/graphql`;
+  const endpoint = `${address}/graphql`;
 
-  const res = await fetch(endponit, {
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ async function ensureGraphqlEndpointIsUp({
   }
 
   throw new Error(
-    `Plugin ${name}'s graphql endpoint ${endponit} is not ready yet`,
+    `Plugin ${name}'s graphql endpoint ${endpoint} is not ready yet`,
   );
 }
 

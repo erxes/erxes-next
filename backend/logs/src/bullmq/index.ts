@@ -1,4 +1,4 @@
-import { createMQWorkerWithListeners } from 'erxes-api-utils';
+import { createMQWorkerWithListeners } from 'erxes-api-shared/utils';
 import Redis from 'ioredis';
 import { generateModels } from '../db/connectionResolvers';
 import { handleMongoChangeEvent } from './mongo';

@@ -29,7 +29,7 @@ export function useRecordTable() {
   const context = useContext(RecordTableContext);
   if (!context) {
     throw new Error(
-      'useRecordTable must be used within a RecordTableProvider.'
+      'useRecordTable must be used within a RecordTableProvider.',
     );
   }
   return context;
@@ -43,6 +43,7 @@ interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
   handleReachedBottom?: () => void;
   stickyColumns?: string[];
   moreColumn?: ColumnDef<any>;
+  disableCheckbox?: boolean;
 }
 
 export const RecordTableProvider = forwardRef<
@@ -59,14 +60,15 @@ export const RecordTableProvider = forwardRef<
       className,
       stickyColumns,
       moreColumn,
+      disableCheckbox,
       ...restProps
     },
-    ref
+    ref,
   ) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
-      columns.map((c) => c.id || '')
+      columns.map((c) => c.id || ''),
     );
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
@@ -74,8 +76,8 @@ export const RecordTableProvider = forwardRef<
       data,
       columns: [
         ...(moreColumn ? [moreColumn] : []),
-        checkboxColumn,
-        ...columns
+        ...(!disableCheckbox ? [checkboxColumn] : []),
+        ...columns,
       ],
       defaultColumn: {
         maxSize: 800,
@@ -117,7 +119,7 @@ export const RecordTableProvider = forwardRef<
         </RecordTableDnDProvider>
       </RecordTableContext.Provider>
     );
-  }
+  },
 );
 
 RecordTableProvider.displayName = 'RecordTableProvider';
