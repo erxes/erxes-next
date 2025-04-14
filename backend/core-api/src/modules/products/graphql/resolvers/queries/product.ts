@@ -7,12 +7,12 @@ import { FilterQuery, SortOrder } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
 import { IModels } from '~/connectionResolvers';
-import { IProductParams } from '../../../@types/product';
-import { PRODUCT_STATUSES } from '../../../constants';
+import { IProductParams } from '@/products/@types/product';
+import { PRODUCT_STATUSES } from '@/products/constants';
 import {
   getSimilaritiesProducts,
   getSimilaritiesProductsCount,
-} from '../../../utils';
+} from '@/products/utils';
 
 const generateFilter = async (
   models: IModels,

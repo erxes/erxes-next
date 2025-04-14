@@ -5,7 +5,7 @@ import {
 } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
-import { ITagFilterQueryParams } from '../@types/tag';
+import { ITagFilterQueryParams } from '@/tags/@types/tag';
 
 const generateFilter = async ({ params, commonQuerySelector, models }) => {
   const { type, searchValue, tagIds, parentId, ids, excludeIds } = params;
