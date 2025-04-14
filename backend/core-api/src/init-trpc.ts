@@ -1,7 +1,23 @@
 import { initTRPC } from '@trpc/server';
 
-import { customerRouter } from '@/contacts/trpc/customer';
+import { contactRouter } from '~/modules/contacts/trpc';
 
-const t = initTRPC.create();
+export const createContext = ({
+  req,
+  res,
+}: {
+  req: Request;
+  res: Response;
+}) => {
+  //   const subdomain = req.headers['x-subdomain'] as string;
 
-export const appRouter = t.mergeRouters(customerRouter);
+  return {
+    subdomain: '123123',
+  };
+};
+
+export type Context = Awaited<ReturnType<typeof createContext>>;
+
+const t = initTRPC.context<Context>().create();
+
+export const appRouter = t.mergeRouters(contactRouter);

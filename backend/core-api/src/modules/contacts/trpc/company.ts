@@ -3,14 +3,13 @@ import { generateModels } from '~/connectionResolvers';
 
 const t = initTRPC.create();
 
-export const customerRouter = t.router({
-  customer: t.router({
-    list: t.procedure.query(async ({ ctx }) => {
-      console.log(ctx);
+export const companyTrpcRouter = t.router({
+  company: t.router({
+    list: t.procedure.query(async () => {
       const subdomain = 'os';
       const models = await generateModels(subdomain);
 
-      return models.Customers.find({});
+      return models.Companies.find({});
     }),
 
     get: t.procedure.query(async () => {

@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
+import { createTRPCUntypedClient, httpBatchLink } from '@trpc/client';
 
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 
@@ -17,6 +18,15 @@ app.use(
     limit: '15mb',
   }),
 );
+
+app.get('/users', (req, res) => {
+  const client = createTRPCUntypedClient({
+    links: [httpBatchLink({ url: 'http://localhost:3001/trpc' })],
+  });
+
+  const aa = client.query('customer.list');
+  res.send(aa);
+});
 
 app.use(cookieParser());
 
