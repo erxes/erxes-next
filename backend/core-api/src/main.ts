@@ -10,6 +10,8 @@ import { appRouter } from '~/init-trpc';
 
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 
+import { createContext } from '~/init-trpc';
+
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3300;
@@ -46,11 +48,7 @@ app.use(
   '/trpc',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
-    createContext: () => {
-      return {
-        subdomain: 'os',
-      };
-    },
+    createContext,
   }),
 );
 

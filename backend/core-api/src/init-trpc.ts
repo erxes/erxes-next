@@ -1,23 +1,27 @@
 import { initTRPC } from '@trpc/server';
 
-import { contactRouter } from '~/modules/contacts/trpc';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { getSubdomain } from 'erxes-api-shared/utils';
 
-export const createContext = ({
+import { contactRouter } from '~/modules/contacts/trpc';
+import { generateModels } from './connectionResolvers';
+
+export const createContext = async ({
   req,
-  res,
-}: {
-  req: Request;
-  res: Response;
-}) => {
-  //   const subdomain = req.headers['x-subdomain'] as string;
+}: trpcExpress.CreateExpressContextOptions) => {
+  const subdomain = getSubdomain(req);
+  const models = await generateModels(subdomain);
 
   return {
-    subdomain: '123123',
+    subdomain,
+    models,
   };
 };
 
-export type Context = Awaited<ReturnType<typeof createContext>>;
+export type ITRPCContext = Awaited<ReturnType<typeof createContext>>;
 
-const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<ITRPCContext>().create();
 
 export const appRouter = t.mergeRouters(contactRouter);
+
+export type AppRouter = typeof appRouter;

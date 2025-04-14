@@ -4,7 +4,7 @@ import { generateFilters } from './utils';
 
 export const branchsQueries = {
   async branches(
-    _root,
+    _root: undefined,
     params: any & { searchValue?: string },
     { models, user }: IContext,
   ) {
@@ -29,7 +29,7 @@ export const branchsQueries = {
   },
 
   async branchesMain(
-    _root,
+    _root: undefined,
     params: { searchValue?: string; perPage: number; page: number },
     { models, user }: IContext,
   ) {
@@ -58,7 +58,7 @@ export const branchsQueries = {
     return { list, totalCount, totalUsersCount };
   },
 
-  async branchDetail(_root, { _id }, { models }: IContext) {
+  async branchDetail(_root: undefined, { _id }, { models }: IContext) {
     return models.Branches.getBranch({ _id });
   },
 };

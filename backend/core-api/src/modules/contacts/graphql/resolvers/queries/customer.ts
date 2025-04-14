@@ -23,7 +23,7 @@ export const customerQueries = {
    * Customers list
    */
   async customers(
-    _root,
+    _root: undefined,
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {
@@ -41,7 +41,11 @@ export const customerQueries = {
   /**
    * Get one customer
    */
-  async customerDetail(_root, { _id }: { _id: string }, { models }: IContext) {
+  async customerDetail(
+    _root: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     return models.Customers.getCustomer(_id);
   },
 };

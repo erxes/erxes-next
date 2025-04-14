@@ -19,12 +19,14 @@ app.use(
   }),
 );
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
   const client = createTRPCUntypedClient({
-    links: [httpBatchLink({ url: 'http://localhost:3001/trpc' })],
+    links: [httpBatchLink({ url: 'http://localhost:3300/trpc' })],
   });
 
-  const aa = client.query('customer.list');
+  console.log(client);
+
+  const aa = await client.query('customer.list');
   res.send(aa);
 });
 

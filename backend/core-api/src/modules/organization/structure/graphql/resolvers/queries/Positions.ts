@@ -3,7 +3,7 @@ import { paginateMongooseCollection } from 'erxes-api-shared/utils';
 import { generateFilters } from './utils';
 export const positionQueries = {
   async positions(
-    _root,
+    _root: undefined,
     params: any & { searchValue?: string },
     { models, user }: IContext,
   ) {
@@ -28,7 +28,7 @@ export const positionQueries = {
   },
 
   async positionsMain(
-    _root,
+    _root: undefined,
     params: { searchValue?: string; perPage: number; page: number },
     { models, user }: IContext,
   ) {
@@ -54,7 +54,7 @@ export const positionQueries = {
     return { list, totalCount, totalUsersCount };
   },
 
-  async positionDetail(_root, { _id }, { models }: IContext) {
+  async positionDetail(_root: undefined, { _id }, { models }: IContext) {
     return models.Positions.getPosition({ _id });
   },
 };
