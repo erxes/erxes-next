@@ -9,16 +9,18 @@ type TProps = {
 };
 
 const useConfigByCode = ({ onCompleted, codes, pattern }: TProps) => {
-  const { data, loading } = useQuery(SettingsQueries.queryConfigsByCodes, {
-    onError(error) {
-      // console.log(error.message);
+  const { data, loading, error } = useQuery(
+    SettingsQueries.queryConfigsByCodes,
+    {
+      skip: !codes || !pattern,
+      onCompleted,
     },
-    skip: !codes || !pattern,
-    onCompleted,
-  });
+  );
   const configs = (data && data.configsByCode) || [];
   return {
     loading,
+    configs,
+    error,
   };
 };
 

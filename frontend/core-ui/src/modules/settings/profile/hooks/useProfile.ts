@@ -19,7 +19,7 @@ const useProfile = (options?: OperationVariables) => {
     skip: !currentUser?._id,
   });
 
-  const [updateProfile] = useMutation(UPDATE_PROFILE);
+  const [updateProfile, { loading: updating }] = useMutation(UPDATE_PROFILE);
 
   const profileUpdate = async (profile: Partial<IUsersDetail>) => {
     const confirmOptions = { confirmationValue: 'update' };
@@ -33,7 +33,7 @@ const useProfile = (options?: OperationVariables) => {
 
         if (response.data) {
           refetch();
-          setCurrentUser(response.data.UPDATE_PROFILE);
+          setCurrentUser(response.data.usersEditProfile);
 
           toast({ title: 'Successfully updated profile' });
         }
@@ -46,12 +46,13 @@ const useProfile = (options?: OperationVariables) => {
     });
   };
 
-  const profile = data?.GET_USER_DETAIL || {};
+  const profile = data?.userDetail || {};
 
   return {
     profile,
     loading,
     profileUpdate,
+    updating,
   };
 };
 

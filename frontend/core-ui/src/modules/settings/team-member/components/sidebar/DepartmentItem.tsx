@@ -1,17 +1,23 @@
-import { RadioGroup, Skeleton } from 'erxes-ui';
-import { TDepartment, useDepartment } from '../../hooks/useDepartment';
-import { CollapsibleItemWrapper } from './CollapsibleItemWrapper';
-import { ExpandableNode } from './ExpandableNode';
+import {
+  Combobox,
+  Command,
+  SelectTreeProvider,
+  Skeleton,
+  useFilterContext,
+  useQueryState,
+} from 'erxes-ui';
+import { CollapsibleItemWrapper } from '@/settings/team-member/components/sidebar/CollapsibleItemWrapper';
+import {
+  IDepartment,
+  SelectDepartmentItem,
+  useDepartmentsMain,
+} from 'ui-modules';
 
 export function DepartmentItem() {
-  const { departments, loading } = useDepartment({
-    variables: {
-      withoutUserFilter: true,
-    },
-  });
-  const rootDepartments = departments?.filter(
-    (dept: TDepartment) => !dept.parentId,
-  );
+  const { loading, departments, error } = useDepartmentsMain();
+  const [departmentId, setDepartmentId] = useQueryState<string>('departmentId');
+  const { resetFilterState } = useFilterContext();
+
   if (loading) {
     return (
       <div className="py-4 px-2">
@@ -19,21 +25,31 @@ export function DepartmentItem() {
       </div>
     );
   }
-
   return (
-    <CollapsibleItemWrapper label="Departments" open>
-      <RadioGroup className="w-full pl-9 flex flex-col">
-        {rootDepartments.map((department: TDepartment, index: number) => (
-          <ExpandableNode
-            key={department._id}
-            data={department}
-            index={index}
-            list={departments}
-            parentIndex=""
-            queryKey={'departmentId'}
-          />
-        ))}
-      </RadioGroup>
-    </CollapsibleItemWrapper>
+    <SelectTreeProvider id="select-department" ordered>
+      <CollapsibleItemWrapper label="Department" open>
+        <Command shouldFilter={false} className="bg-transparent">
+          <Command.List className="pl-9 py-0 pr-0">
+            <Combobox.Empty error={error} loading={loading} />
+            {departments?.map((department: IDepartment) => (
+              <SelectDepartmentItem
+                key={department._id}
+                department={department}
+                selected={departmentId === department?._id}
+                onSelect={() => {
+                  setDepartmentId(department._id);
+                  resetFilterState();
+                }}
+                hasChildren={
+                  departments?.find(
+                    (c: IDepartment) => c.parentId === department._id,
+                  ) !== undefined
+                }
+              />
+            ))}
+          </Command.List>
+        </Command>
+      </CollapsibleItemWrapper>
+    </SelectTreeProvider>
   );
 }

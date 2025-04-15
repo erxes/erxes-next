@@ -12,6 +12,7 @@ import { useBranchById } from '../hooks/useBranchById';
 import React, { useState } from 'react';
 import { SelectBranchContext } from '../contexts/SelectBranchContext';
 import { useSelectBranchContext } from '../hooks/useSelectBranchContext';
+import { useBranchesMain } from '../hooks/useBranchesMain';
 
 export const SelectBranch = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
@@ -106,7 +107,7 @@ export const BranchesList = ({
 }: {
   renderItem: (branch: IBranch) => React.ReactNode;
 }) => {
-  const { branches, loading } = useBranches();
+  const { branches, loading } = useBranchesMain();
 
   return (
     <Command>
