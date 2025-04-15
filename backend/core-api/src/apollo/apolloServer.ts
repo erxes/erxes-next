@@ -32,13 +32,7 @@ export const initApolloServer = async (app, httpServer) => {
         endCursor: String,
       }
 
-      type Attachment {
-        url: String!
-        name: String
-        type: String
-        size: Float
-        duration: Float
-      }
+
 
       input AttachmentInput {
         url: String!
@@ -48,11 +42,7 @@ export const initApolloServer = async (app, httpServer) => {
         duration: Float
       }
 
-      type PdfAttachment {
-        pdf: Attachment
-        pages: [Attachment]
-      }
-
+  
       input PdfAttachmentInput {
         pdf: AttachmentInput
         pages: [AttachmentInput]
