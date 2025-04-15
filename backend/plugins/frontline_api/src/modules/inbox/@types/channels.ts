@@ -1,3 +1,4 @@
+import { Document } from 'mongoose';
 export interface IChannel {
   name?: string;
   description?: string;
@@ -9,6 +10,5 @@ export interface IChannel {
 }
 
 export interface IChannelDocument extends IChannel, Document {
-  _id: string;
   createdAt: Date;
 }
