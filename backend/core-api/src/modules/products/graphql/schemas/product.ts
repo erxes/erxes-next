@@ -1,5 +1,3 @@
-import { graphqlPaginationParams } from 'erxes-api-shared/utils';
-
 export const types = `
   type Product {
     _id: String!
@@ -63,10 +61,15 @@ const queryParams = `
   segmentData: String,
   groupedSimilarity: String,
   image: String,
+
+  page: Int,
+  perPage: Int,
+  sortField: String
+  sortDirection: Int
 `;
 
 export const queries = `
-  products(${queryParams},${graphqlPaginationParams}): [Product]
+  products(${queryParams}): [Product]
   productsTotalCount(${queryParams}): Int
   productDetail(_id: String): Product
   productSimilarities(_id: String!, groupedSimilarity: String): ProductSimilarity

@@ -17,20 +17,12 @@ import {
 } from './config';
 
 import {
-  graphqlAttachmentInput,
-  graphqlPdfAttachmentInput,
-} from 'erxes-api-shared/utils';
-
-import {
   mutations as UomMutations,
   queries as UomQueries,
   types as UomTypes,
 } from './uom';
 
 export const types = `
-  ${graphqlAttachmentInput}
-  ${graphqlPdfAttachmentInput}
-
   ${CategoryTypes}
   ${ProductTypes}
   ${ConfigTypes}

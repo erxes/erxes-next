@@ -19,8 +19,47 @@ export const initApolloServer = async (app, httpServer) => {
 
   const typeDefs = async () => {
     return gql(`
+
+      enum CursorDirection {
+        forward,
+        backward
+      }
+
+      type PageInfo {
+        hasNextPage: Boolean,
+        hasPreviousPage: Boolean,
+        startCursor: String,
+        endCursor: String,
+      }
+
+      type Attachment {
+        url: String!
+        name: String
+        type: String
+        size: Float
+        duration: Float
+      }
+
+      input AttachmentInput {
+        url: String!
+        name: String!
+        type: String
+        size: Float
+        duration: Float
+      }
+
+      type PdfAttachment {
+        pdf: Attachment
+        pages: [Attachment]
+      }
+
+      input PdfAttachmentInput {
+        pdf: AttachmentInput
+        pages: [AttachmentInput]
+      }
+
       ${types}
-      
+
       extend type Query {
         ${queries}
       }

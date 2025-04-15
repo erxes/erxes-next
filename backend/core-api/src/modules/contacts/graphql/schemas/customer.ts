@@ -1,17 +1,5 @@
 export const types = `
 
-  enum Direction {
-    forward,
-    backward
-  }
-
-  type PageInfo {
-    hasNextPage: Boolean,
-    hasPreviousPage: Boolean,
-    startCursor: String,
-    endCursor: String,
-  }
-
   type Customer {
     _id: String
      state: String
@@ -79,14 +67,8 @@ export const conformityQueryFields = `
   conformityIsSaved: Boolean
 `;
 
-export const paginationQueryFields = `
-  limit: Int
-  cursor: String
-  direction: Direction
-`
-
 const queryParams = `
- page: Int
+  page: Int
   perPage: Int
   segment: String
   type: String
@@ -112,8 +94,10 @@ const queryParams = `
   dateFilters: String
   segmentData: String
   emailValidationStatus:String
+  limit: Int
+  cursor: String
+  direction: CursorDirection
   ${conformityQueryFields}
-  ${paginationQueryFields}
 `;
 
 export const queries = `
