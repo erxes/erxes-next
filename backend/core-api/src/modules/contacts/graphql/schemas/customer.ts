@@ -1,5 +1,17 @@
 export const types = `
 
+  enum Direction {
+    forward,
+    backward
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean,
+    hasPreviousPage: Boolean,
+    startCursor: String,
+    endCursor: String,
+  }
+
   type Customer {
     _id: String
      state: String
@@ -54,6 +66,7 @@ export const types = `
 
   type CustomersListResponse {
     list: [Customer],
+    pageInfo: PageInfo
     totalCount: Float,
   }
 
@@ -65,6 +78,13 @@ export const conformityQueryFields = `
   conformityIsRelated: Boolean
   conformityIsSaved: Boolean
 `;
+
+export const paginationQueryFields = `
+  limit: Int
+  cursor: String
+  direction: Direction
+`
+
 const queryParams = `
  page: Int
   perPage: Int
@@ -93,6 +113,7 @@ const queryParams = `
   segmentData: String
   emailValidationStatus:String
   ${conformityQueryFields}
+  ${paginationQueryFields}
 `;
 
 export const queries = `

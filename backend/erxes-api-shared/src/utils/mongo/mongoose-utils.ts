@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import { ICursorPaginateParams } from '@/core-types';
+import mongoose, { Document, Model, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
 
 export const mongooseField = (options: any) => {
@@ -52,4 +53,73 @@ export const checkCodeDuplication = async (
   if (category) {
     throw new Error('Code must be unique');
   }
+};
+
+const PAGINATE_DIRECTION_MAP = {
+  forward: {
+    operator: '$gt',
+    order: 1,
+  },
+  backward: {
+    operator: '$lt',
+    order: -1,
+  },
+};
+
+export const paginate = async <T extends Document>({
+  model,
+  params,
+  query,
+}: {
+  model: Model<T>;
+  params: ICursorPaginateParams;
+  query: any;
+}) => {
+  const {
+    limit = 2,
+    cursor = null,
+    direction = 'forward',
+    sortField = '_id',
+  } = params || {};
+
+  const { operator, order } = PAGINATE_DIRECTION_MAP[direction];
+
+  const baseQuery = { ...query };
+
+  if (cursor) {
+    baseQuery._id = { [operator]: cursor };
+  }
+
+  const _limit = Number(limit);
+
+  let documents = await model
+    .find(baseQuery)
+    .sort({ [sortField]: order as SortOrder })
+    .limit(_limit + 1)
+    .lean();
+
+  const totalCount = await model.countDocuments(query);
+
+  const hasNextPage = documents.length > limit;
+
+  if (hasNextPage) {
+    documents.pop();
+  }
+
+  if (direction === 'backward') {
+    documents = documents.reverse();
+  }
+
+  const pageInfo = {
+    hasNextPage,
+    hasPreviousPage: Boolean(cursor),
+    startCursor: documents[0]?._id || null,
+    endCursor: documents[documents.length - 1]?._id || null,
+  };
+
+  return {
+    list: documents,
+    pageInfo,
+    totalCount,
+  };
 };
