@@ -21,15 +21,18 @@ export const createGenerateModels = <IModels>(
     return async function genereteModels(
       hostnameOrSubdomain: string,
     ): Promise<IModels> {
+  
       if (models) {
         return models;
       }
 
       models = await loadClasses(mongoose.connection, hostnameOrSubdomain);
 
+
       return models;
     };
   } else {
+
     return async function genereteModels(
       hostnameOrSubdomain = '',
     ): Promise<IModels> {

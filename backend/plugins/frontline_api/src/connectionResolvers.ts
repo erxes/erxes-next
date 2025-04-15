@@ -1,14 +1,10 @@
 import { createGenerateModels } from 'erxes-api-shared/utils';
-import { ICustomerDocument, IMainContext } from 'erxes-api-shared/core-types';
+import { IMainContext } from 'erxes-api-shared/core-types';
 import mongoose from 'mongoose';
-
-import {
-  ICustomerModel,
-  loadCustomerClass,
-} from './modules/inbox/db/models/Customers';
-
+import { IChannelDocument } from '@/inbox/@types/channels';
+import { IChannelModel, loadChannelClass } from '@/inbox/db/models/Channels';
 export interface IModels {
-  Customers: ICustomerModel;
+  Channels: IChannelModel;
 }
 
 export interface IContext extends IMainContext {
@@ -17,10 +13,9 @@ export interface IContext extends IMainContext {
 
 export const loadClasses = (db: mongoose.Connection): IModels => {
   const models = {} as IModels;
-
-  models.Customers = db.model<ICustomerDocument, ICustomerModel>(
-    'frontline',
-    loadCustomerClass(models),
+  models.Channels = db.model<IChannelDocument, IChannelModel>(
+    'channels',
+    loadChannelClass(models),
   );
 
   return models;

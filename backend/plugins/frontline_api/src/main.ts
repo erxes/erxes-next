@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import * as http from 'http';
-import { initApolloServer } from './apollo/apolloServer';
+import { initApolloServer } from '~/apollo/apolloServer';
 
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 
