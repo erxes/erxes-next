@@ -2,7 +2,7 @@ import {
   ICustomerDocument,
   ICustomerQueryFilterParams,
 } from 'erxes-api-shared/core-types';
-import { paginate } from 'erxes-api-shared/utils';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 const generateFilter = (params: ICustomerQueryFilterParams) => {
@@ -32,11 +32,12 @@ export const customerQueries = {
   ) {
     const filter = generateFilter(params);
 
-    const { list, totalCount, pageInfo } = await paginate<ICustomerDocument>({
-      model: models.Customers,
-      params,
-      query: filter,
-    });
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<ICustomerDocument>({
+        model: models.Customers,
+        params,
+        query: filter,
+      });
 
     return { list, totalCount, pageInfo };
   },

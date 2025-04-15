@@ -1,8 +1,4 @@
-import {
-  getPlugin,
-  getPlugins,
-  paginateMongooseCollection,
-} from 'erxes-api-shared/utils';
+import { getPlugin, getPlugins, defaultPaginate } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 import { ITagFilterQueryParams } from '@/tags/@types/tag';
@@ -92,7 +88,7 @@ export const tagQueries = {
       models,
     });
 
-    const tags = await paginateMongooseCollection(
+    const tags = await defaultPaginate(
       models.Tags.find(filter).sort({
         order: 1,
       }),

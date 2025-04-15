@@ -17,7 +17,7 @@ export const mongooseField = (options: any) => {
   return options;
 };
 
-export const paginateMongooseCollection = (
+export const defaultPaginate = (
   collection: mongoose.Query<any, any>,
   params: {
     ids?: string[];
@@ -55,6 +55,24 @@ export const checkCodeDuplication = async (
   }
 };
 
+interface CursorPaginateResult<T> {
+  list: T[];
+  pageInfo: {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor: string | null;
+    endCursor: string | null;
+  };
+  totalCount: number;
+}
+
+interface CursorPaginateParams {
+  limit?: number;
+  cursor?: string | null;
+  direction?: 'forward' | 'backward';
+  sortField?: string;
+}
+
 const PAGINATE_DIRECTION_MAP = {
   forward: {
     operator: '$gt',
@@ -64,62 +82,70 @@ const PAGINATE_DIRECTION_MAP = {
     operator: '$lt',
     order: -1,
   },
-};
+} as const;
 
-export const paginate = async <T extends Document>({
+export const cursorPaginate = async <T extends Document>({
   model,
   params,
   query,
 }: {
   model: Model<T>;
-  params: ICursorPaginateParams;
-  query: any;
-}) => {
+  params: CursorPaginateParams;
+  query: mongoose.FilterQuery<T>;
+}): Promise<CursorPaginateResult<T>> => {
   const {
     limit = 20,
     cursor = null,
     direction = 'forward',
     sortField = '_id',
-  } = params || {};
+  } = params;
+
+  if (limit < 1) {
+    throw new Error('Limit must be greater than 0');
+  }
 
   const { operator, order } = PAGINATE_DIRECTION_MAP[direction];
-
-  const baseQuery = { ...query };
+  const baseQuery: mongoose.FilterQuery<T> = { ...query };
 
   if (cursor) {
-    baseQuery._id = { [operator]: cursor };
+    baseQuery._id = { [operator]: cursor } as any;
   }
 
   const _limit = Number(limit);
 
-  let documents = await model
-    .find(baseQuery)
-    .sort({ [sortField]: order as SortOrder })
-    .limit(_limit + 1)
-    .lean();
+  try {
+    const [documents, totalCount] = await Promise.all([
+      model
+        .find(baseQuery)
+        .sort({ [sortField]: order as SortOrder })
+        .limit(_limit + 1)
+        .lean<T[]>(),
+      model.countDocuments(query),
+    ]);
 
-  const totalCount = await model.countDocuments(query);
+    const hasNextPage = documents.length > limit;
+    const trimmedDocuments = hasNextPage ? documents.slice(0, -1) : documents;
+    const finalDocuments =
+      direction === 'backward' ? trimmedDocuments.reverse() : trimmedDocuments;
 
-  const hasNextPage = documents.length > limit;
+    const pageInfo = {
+      hasNextPage,
+      hasPreviousPage: Boolean(cursor),
+      startCursor: finalDocuments[0]?._id?.toString() || null,
+      endCursor:
+        finalDocuments[finalDocuments.length - 1]?._id?.toString() || null,
+    };
 
-  if (hasNextPage) {
-    documents.pop();
+    return {
+      list: finalDocuments,
+      pageInfo,
+      totalCount,
+    };
+  } catch (error) {
+    throw new Error(
+      `Cursor pagination failed: ${
+        error instanceof Error ? error.message : 'Unknown error'
+      }`,
+    );
   }
-
-  if (direction === 'backward') {
-    documents = documents.reverse();
-  }
-
-  const pageInfo = {
-    hasNextPage,
-    hasPreviousPage: Boolean(cursor),
-    startCursor: documents[0]?._id || null,
-    endCursor: documents[documents.length - 1]?._id || null,
-  };
-
-  return {
-    list: documents,
-    pageInfo,
-    totalCount,
-  };
 };
