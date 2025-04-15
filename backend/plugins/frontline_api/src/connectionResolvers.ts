@@ -1,15 +1,9 @@
 import { createGenerateModels } from 'erxes-api-shared/utils';
-import { ICustomerDocument, IMainContext } from 'erxes-api-shared/core-types';
+import { IMainContext } from 'erxes-api-shared/core-types';
 import mongoose from 'mongoose';
-
-import {
-  ICustomerModel,
-  loadCustomerClass,
-} from './modules/inbox/db/models/Customers';
 import { IChannelDocument } from '@/inbox/@types/channels';
 import { IChannelModel, loadChannelClass } from '@/inbox/db/models/Channels';
 export interface IModels {
-  Customers: ICustomerModel;
   Channels: IChannelModel;
 }
 

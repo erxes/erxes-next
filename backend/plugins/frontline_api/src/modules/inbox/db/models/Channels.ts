@@ -54,14 +54,12 @@ export const loadChannelClass = (models: IModels) => {
       await models.Channels.updateMany(
         { memberIds: { $in: [userId] } },
         { $pull: { memberIds: userId } },
-        { multi: true },
       );
 
       // add to given channels
       await models.Channels.updateMany(
         { _id: { $in: channelIds } },
         { $push: { memberIds: userId } },
-        { multi: true },
       );
 
       return models.Channels.find({ _id: { $in: channelIds } });

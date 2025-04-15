@@ -1,4 +1,3 @@
-import { waitForDebugger } from 'inspector';
 import { IContext } from '~/connectionResolvers';
 
 interface IIn {

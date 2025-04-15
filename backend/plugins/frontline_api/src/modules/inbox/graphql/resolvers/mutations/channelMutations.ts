@@ -56,12 +56,7 @@ export const channelMutations = {
     { _id }: { _id: string },
     { user, models, subdomain }: IContext,
   ) {
-    const channel = await models.Channels.getChannel(_id);
-
     await models.Channels.removeChannel(_id);
-
-    await sendChannelNotifications(subdomain, channel, 'removed', user);
-
     return true;
   },
 };
