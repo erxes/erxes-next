@@ -76,7 +76,7 @@ export const paginate = async <T extends Document>({
   query: any;
 }) => {
   const {
-    limit = 2,
+    limit = 20,
     cursor = null,
     direction = 'forward',
     sortField = '_id',

@@ -68,8 +68,6 @@ export const conformityQueryFields = `
 `;
 
 const queryParams = `
-  page: Int
-  perPage: Int
   segment: String
   type: String
   tag: String
@@ -88,7 +86,6 @@ const queryParams = `
   endDate: String
   leadStatus: String
   sortField: String
-  sortDirection: Int
   sex:Int
   birthDate: Date
   dateFilters: String
@@ -96,7 +93,7 @@ const queryParams = `
   emailValidationStatus:String
   limit: Int
   cursor: String
-  direction: CursorDirection
+  direction: CURSOR_DIRECTION
   ${conformityQueryFields}
 `;
 

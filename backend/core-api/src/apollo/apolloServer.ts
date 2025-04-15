@@ -20,7 +20,7 @@ export const initApolloServer = async (app, httpServer) => {
   const typeDefs = async () => {
     return gql(`
 
-      enum CursorDirection {
+      enum CURSOR_DIRECTION {
         forward,
         backward
       }
