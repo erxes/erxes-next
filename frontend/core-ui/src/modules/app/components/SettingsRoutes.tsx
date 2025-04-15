@@ -6,7 +6,7 @@ import {
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
-import { getPluginsSettingsRoutes } from '../hooks/usePluginsRouter';
+import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
 
 const SettingsProfile = lazy(() =>
