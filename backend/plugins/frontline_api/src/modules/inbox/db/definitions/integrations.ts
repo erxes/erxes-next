@@ -275,7 +275,7 @@ export const integrationSchema = new Schema({
     type: Boolean,
     optional: true,
     default: false,
-    label: 'Is connect',
+    label: 'Is connected',
   },
   webhookData: { type: webhookDataSchema },
   // TODO: remove

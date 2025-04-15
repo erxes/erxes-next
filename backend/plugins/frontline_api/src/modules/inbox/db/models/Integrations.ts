@@ -37,12 +37,17 @@ interface IIntegrationBasicInfo {
  */
 const getHourAndMinute = (timeString: string) => {
   const normalized = timeString.toLowerCase().trim();
-  const colon = timeString.indexOf(':');
+  const colon = normalized.indexOf(':');
   let hour = parseInt(normalized.substring(0, colon), 10);
   const minute = parseInt(normalized.substring(colon + 1, colon + 3), 10);
 
-  if (normalized.indexOf('pm') !== -1) {
+  const isPM = normalized.includes('pm');
+  const isAM = normalized.includes('am');
+
+  if (isPM && hour !== 12) {
     hour += 12;
+  } else if (isAM && hour === 12) {
+    hour = 0;
   }
 
   return { hour, minute };
@@ -297,7 +302,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
       await models.Integrations.updateOne(
         { _id },
         { $set: { uiOptions: { color, wallpaper, logo, textColor } } },
-        { runValdatiors: true },
+        { runValidators: true },
       );
 
       return models.Integrations.findOne({ _id });
