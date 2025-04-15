@@ -1,5 +1,12 @@
-import { IUserDocument } from './modules/team-member/user';
 import { Request, Response } from 'express';
+import { IUserDocument } from './modules/team-member/user';
+
+export interface ICursorPaginateParams {
+  limit?: number;
+  cursor?: string;
+  direction: 'forward' | 'backward';
+  sortField?: string;
+}
 
 export interface IListParams {
   searchValue?: string;
