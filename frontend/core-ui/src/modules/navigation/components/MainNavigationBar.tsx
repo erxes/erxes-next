@@ -26,8 +26,6 @@ export const MainNavigationBar = ({
 }) => {
   const isSettings = useIsSettings();
 
-  const instance = getInstance();
-
   const renderSidebarContent = () => {
     if (isSettings) {
       return <SettingsSidebar />;
