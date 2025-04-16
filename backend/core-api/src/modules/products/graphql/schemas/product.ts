@@ -40,6 +40,12 @@ export const types = `
     products: [Product],
     groups: [ProductSimilarityGroup],
   }
+
+  type ProductsListResponse {
+    list: [Product],
+    pageInfo: PageInfo
+    totalCount: Float,
+  }
 `;
 
 const queryParams = `
@@ -62,14 +68,16 @@ const queryParams = `
   groupedSimilarity: String,
   image: String,
 
-  page: Int,
-  perPage: Int,
   sortField: String
   sortDirection: Int
+
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
 `;
 
 export const queries = `
-  products(${queryParams}): [Product]
+  products(${queryParams}): ProductsListResponse
   productsTotalCount(${queryParams}): Int
   productDetail(_id: String): Product
   productSimilarities(_id: String!, groupedSimilarity: String): ProductSimilarity
