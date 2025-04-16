@@ -1,9 +1,8 @@
-import { escapeRegExp, defaultPaginate } from 'erxes-api-shared/utils';
 import { IProductDocument } from 'erxes-api-shared/core-types';
+import { cursorPaginate, escapeRegExp } from 'erxes-api-shared/utils';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { IContext } from '~/connectionResolvers';
+import { IContext, IModels } from '~/connectionResolvers';
 
-import { IModels } from '~/connectionResolvers';
 import { IProductParams } from '@/products/@types/product';
 import { PRODUCT_STATUSES } from '@/products/constants';
 import {
@@ -117,19 +116,7 @@ export const productQueries = {
   ) {
     const filter = await generateFilter(models, commonQuerySelector, params);
 
-    const { sortField, sortDirection, page, perPage, ids, excludeIds } = params;
-
-    const paginationArgs = { page, perPage };
-
-    if (
-      ids &&
-      ids.length &&
-      !excludeIds &&
-      ids.length > (paginationArgs.perPage || 20)
-    ) {
-      paginationArgs.page = 1;
-      paginationArgs.perPage = ids.length;
-    }
+    const { sortField, sortDirection } = params;
 
     let sort: { [key: string]: SortOrder } = { code: 1 };
 
@@ -140,14 +127,16 @@ export const productQueries = {
     if (params.groupedSimilarity) {
       return await getSimilaritiesProducts(models, filter, sort, {
         groupedSimilarity: params.groupedSimilarity,
-        ...paginationArgs,
       });
     }
 
-    return await defaultPaginate(
-      models.Products.find(filter).sort(sort).lean(),
-      paginationArgs,
-    );
+    const { list, totalCount, pageInfo } = await cursorPaginate({
+      model: models.Products,
+      params,
+      query: filter,
+    });
+
+    return { list, totalCount, pageInfo };
   },
 
   async productDetail(

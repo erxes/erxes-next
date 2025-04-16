@@ -1,9 +1,9 @@
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
-import { Schema } from 'mongoose';
 import {
   STRUCTURE_STATUSES,
   attachmentSchema,
 } from 'erxes-api-shared/core-modules';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import { Schema } from 'mongoose';
 
 const commonSchemaFields = {
   id: mongooseStringRandomId,
@@ -89,3 +89,8 @@ export const positionSchema = new Schema({
     default: STRUCTURE_STATUSES.ACTIVE,
   },
 });
+
+branchSchema.index({ _id: 1, createdAt: 1, parentId: 1 });
+departmentSchema.index({ _id: 1, createdAt: 1, parentId: 1 });
+unitSchema.index({ _id: 1, createdAt: 1 });
+positionSchema.index({ _id: 1, createdAt: 1, parentId: 1 });
