@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { paginateMongooseCollection } from 'erxes-api-shared/utils';
+import { defaultPaginate } from 'erxes-api-shared/utils';
 import { generateFilters } from './utils';
 
 export const deparmentQueries = {
@@ -34,7 +34,7 @@ export const deparmentQueries = {
       type: 'department',
       params: { ...params, withoutUserFilter: true },
     });
-    const list = await paginateMongooseCollection(
+    const list = await defaultPaginate(
       models.Departments.find(filter).sort({ order: 1 }),
       params,
     );

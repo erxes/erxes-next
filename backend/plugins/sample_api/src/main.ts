@@ -3,10 +3,10 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
-import { createTRPCUntypedClient, httpBatchLink } from '@trpc/client';
-
+import * as trpcExpress from '@trpc/server/adapters/express';
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
-
+import { appRouter } from '~/trpc/init-trpc';
+import { createContext } from '~/trpc/init-trpc';
 const port = process.env.PORT ? Number(process.env.PORT) : 3301;
 
 const app = express();
@@ -19,16 +19,13 @@ app.use(
   }),
 );
 
-app.get('/users', async (req, res) => {
-  const client = createTRPCUntypedClient({
-    links: [httpBatchLink({ url: 'http://localhost:3300/trpc' })],
-  });
-
-  console.log(client);
-
-  const aa = await client.query('customer.list');
-  res.send(aa);
-});
+app.use(
+  '/trpc',
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  }),
+);
 
 app.use(cookieParser());
 

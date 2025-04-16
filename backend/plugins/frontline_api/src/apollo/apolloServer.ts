@@ -5,8 +5,8 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
 import { extractUserFromHeader, getSubdomain } from 'erxes-api-shared/utils';
 import { gql } from 'graphql-tag';
-import { generateModels } from '../connectionResolvers';
-import * as typeDefDetails from './schema/schema';
+import { generateModels } from '~/connectionResolvers';
+import * as typeDefDetails from '~/apollo/schema/schema';
 import resolvers from './resolvers';
 
 // load environment variables
@@ -15,11 +15,17 @@ dotenv.config();
 let apolloServer;
 
 export const initApolloServer = async (app, httpServer) => {
-  const { types } = typeDefDetails;
+  const { types, queries, mutations } = typeDefDetails;
 
   const typeDefs = async () => {
     return gql(`
       ${types}
+      extend type Query {
+        ${queries}
+      }
+      extend type Mutation {
+        ${mutations}
+      }
     `);
   };
 

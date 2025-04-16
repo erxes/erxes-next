@@ -1,5 +1,27 @@
-import { IUserDocument } from './modules/team-member/user';
 import { Request, Response } from 'express';
+import { IUserDocument } from './modules/team-member/user';
+
+export interface IRule {
+  kind: string;
+  text: string;
+  condition: string;
+  value: string;
+}
+
+export interface ILink {
+  [key: string]: string;
+}
+
+export interface IRuleDocument extends IRule, Document {
+  _id: string;
+}
+
+export interface ICursorPaginateParams {
+  limit?: number;
+  cursor?: string;
+  direction: 'forward' | 'backward';
+  sortField?: string;
+}
 
 export interface IListParams {
   searchValue?: string;

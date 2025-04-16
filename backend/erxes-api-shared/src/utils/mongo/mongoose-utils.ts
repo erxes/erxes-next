@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import { ICursorPaginateParams } from '@/core-types';
+import mongoose, { Document, Model, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
 
 export const mongooseField = (options: any) => {
@@ -16,7 +17,7 @@ export const mongooseField = (options: any) => {
   return options;
 };
 
-export const paginateMongooseCollection = (
+export const defaultPaginate = (
   collection: mongoose.Query<any, any>,
   params: {
     ids?: string[];
@@ -51,5 +52,100 @@ export const checkCodeDuplication = async (
 
   if (category) {
     throw new Error('Code must be unique');
+  }
+};
+
+interface CursorPaginateResult<T> {
+  list: T[];
+  pageInfo: {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor: string | null;
+    endCursor: string | null;
+  };
+  totalCount: number;
+}
+
+interface CursorPaginateParams {
+  limit?: number;
+  cursor?: string | null;
+  direction?: 'forward' | 'backward';
+  sortField?: string;
+}
+
+const PAGINATE_DIRECTION_MAP = {
+  forward: {
+    operator: '$gt',
+    order: 1,
+  },
+  backward: {
+    operator: '$lt',
+    order: -1,
+  },
+} as const;
+
+export const cursorPaginate = async <T extends Document>({
+  model,
+  params,
+  query,
+}: {
+  model: Model<T>;
+  params: CursorPaginateParams;
+  query: mongoose.FilterQuery<T>;
+}): Promise<CursorPaginateResult<T>> => {
+  const {
+    limit = 20,
+    cursor = null,
+    direction = 'forward',
+    sortField = '_id',
+  } = params;
+
+  if (limit < 1) {
+    throw new Error('Limit must be greater than 0');
+  }
+
+  const { operator, order } = PAGINATE_DIRECTION_MAP[direction];
+  const baseQuery: mongoose.FilterQuery<T> = { ...query };
+
+  if (cursor) {
+    baseQuery._id = { [operator]: cursor } as any;
+  }
+
+  const _limit = Number(limit);
+
+  try {
+    const [documents, totalCount] = await Promise.all([
+      model
+        .find(baseQuery)
+        .sort({ [sortField]: order as SortOrder })
+        .limit(_limit + 1)
+        .lean<T[]>(),
+      model.countDocuments(query),
+    ]);
+
+    const hasNextPage = documents.length > limit;
+    const trimmedDocuments = hasNextPage ? documents.slice(0, -1) : documents;
+    const finalDocuments =
+      direction === 'backward' ? trimmedDocuments.reverse() : trimmedDocuments;
+
+    const pageInfo = {
+      hasNextPage,
+      hasPreviousPage: Boolean(cursor),
+      startCursor: finalDocuments[0]?._id?.toString() || null,
+      endCursor:
+        finalDocuments[finalDocuments.length - 1]?._id?.toString() || null,
+    };
+
+    return {
+      list: finalDocuments,
+      pageInfo,
+      totalCount,
+    };
+  } catch (error) {
+    throw new Error(
+      `Cursor pagination failed: ${
+        error instanceof Error ? error.message : 'Unknown error'
+      }`,
+    );
   }
 };

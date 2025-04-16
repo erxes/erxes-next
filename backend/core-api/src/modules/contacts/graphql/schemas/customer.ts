@@ -54,6 +54,7 @@ export const types = `
 
   type CustomersListResponse {
     list: [Customer],
+    pageInfo: PageInfo
     totalCount: Float,
   }
 
@@ -65,9 +66,8 @@ export const conformityQueryFields = `
   conformityIsRelated: Boolean
   conformityIsSaved: Boolean
 `;
+
 const queryParams = `
- page: Int
-  perPage: Int
   segment: String
   type: String
   tag: String
@@ -86,12 +86,14 @@ const queryParams = `
   endDate: String
   leadStatus: String
   sortField: String
-  sortDirection: Int
   sex:Int
   birthDate: Date
   dateFilters: String
   segmentData: String
   emailValidationStatus:String
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
   ${conformityQueryFields}
 `;
 

@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { IListParams, IStringMap } from '../../common';
+import { ICursorPaginateParams, IListParams, IStringMap } from '../../common';
 import { IAddress } from './contacts-common';
 
 export interface ICustomer {
@@ -34,6 +34,8 @@ export interface ICustomerDocument extends ICustomer, Document {
   modifiedAt: Date;
 }
 
-export interface ICustomerQueryFilterParams extends IListParams {
+export interface ICustomerQueryFilterParams
+  extends ICursorPaginateParams,
+    IListParams {
   createdAt?: Date;
 }

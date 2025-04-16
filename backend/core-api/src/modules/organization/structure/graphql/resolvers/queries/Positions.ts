@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { paginateMongooseCollection } from 'erxes-api-shared/utils';
+import { defaultPaginate } from 'erxes-api-shared/utils';
 import { generateFilters } from './utils';
 export const positionQueries = {
   async positions(
@@ -39,7 +39,7 @@ export const positionQueries = {
       params: { ...params, withoutUserFilter: true },
     });
 
-    const list = await paginateMongooseCollection(
+    const list = await defaultPaginate(
       models.Positions.find(filter).sort({ order: 1 }),
       params,
     );

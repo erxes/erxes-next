@@ -1,4 +1,4 @@
-import { paginateMongooseCollection } from 'erxes-api-shared/utils';
+import { defaultPaginate } from 'erxes-api-shared/utils';
 import {
   ICompanyDocument,
   ICompanyFilterQueryParams,
@@ -36,7 +36,7 @@ export const companyQueries = {
     const filter: FilterQuery<ICompanyFilterQueryParams> =
       generateFilter(params);
 
-    const list: ICompanyDocument[] = await paginateMongooseCollection(
+    const list: ICompanyDocument[] = await defaultPaginate(
       models.Companies.find(filter),
       params,
     );

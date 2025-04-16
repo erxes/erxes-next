@@ -2,7 +2,7 @@ import { IContext } from '~/connectionResolvers';
 import { USER_ROLES } from 'erxes-api-shared/core-modules';
 import { IUserDocument } from 'erxes-api-shared/core-types';
 import { IModels } from '~/connectionResolvers';
-import { paginateMongooseCollection } from 'erxes-api-shared/utils';
+import { defaultPaginate } from 'erxes-api-shared/utils';
 
 interface IListArgs {
   page?: number;
@@ -172,9 +172,6 @@ export const userQueries = {
         ? { [sortField]: sortDirection }
         : { username: 1 };
 
-    return paginateMongooseCollection(
-      models.Users.find(selector).sort(sort as any),
-      args,
-    );
+    return defaultPaginate(models.Users.find(selector).sort(sort as any), args);
   },
 };
