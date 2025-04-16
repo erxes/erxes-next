@@ -5,8 +5,12 @@ import {
 } from '@tabler/icons-react';
 import { Button, PluginHeader } from 'erxes-ui';
 import { Link } from 'react-router-dom';
+import { useWidget } from 'ui-modules';
 
 export const SampleIndexPage = () => {
+  const { Widget } = useWidget();
+
+  console.log(Widget);
   return (
     <div className="flex flex-col h-full">
       <PluginHeader
@@ -25,8 +29,13 @@ export const SampleIndexPage = () => {
           More <IconCaretDownFilled />
         </Button>
       </PluginHeader>
-      <div className="flex-1">
-        <h1>Sample plugin</h1>
+      <div className="flex h-full overflow-hidden">
+        <div className="flex flex-col h-full overflow-hidden flex-auto">
+          <h1>Sample dasdasdplugin</h1>
+        </div>
+        {!!Widget && (
+          <Widget pluginName="sample" contentId="1" contentType="sample" />
+        )}
       </div>
     </div>
   );

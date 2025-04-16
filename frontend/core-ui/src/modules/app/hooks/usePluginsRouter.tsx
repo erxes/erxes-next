@@ -1,8 +1,7 @@
 import { Route } from 'react-router';
 import { getInstance } from '@module-federation/enhanced/runtime';
 
-import { PluginMainPage } from '~/plugins/components/PluginMainPage';
-import { PluginSettingsPage } from '~/plugins/components/PluginSettingsPage';
+import { RenderPLuginsComponent } from '~/plugins/components/RenderPLuginsComponent';
 
 export const getPluginsRoutes = () => {
   const instance = getInstance();
@@ -12,7 +11,12 @@ export const getPluginsRoutes = () => {
     <Route
       key={remote.name}
       path={`/${remote.name.replace('_ui', '')}/*`}
-      element={<PluginMainPage pluginName={remote.name} />}
+      element={
+        <RenderPLuginsComponent
+          pluginName={remote.name}
+          componentType="Module"
+        />
+      }
     />
   ));
 };
@@ -25,7 +29,12 @@ export const getPluginsSettingsRoutes = () => {
     <Route
       key={plugin.name}
       path={`/${plugin.name.replace('_ui', '')}/*`}
-      element={<PluginSettingsPage pluginName={plugin.name} />}
+      element={
+        <RenderPLuginsComponent
+          pluginName={plugin.name}
+          componentType="Settings"
+        />
+      }
     />
   ));
 };

@@ -10,7 +10,6 @@ import {
 import { Button, cn, Sidebar } from 'erxes-ui';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { WidgetsSidebar } from '@/widgets/WidgetsSidebar';
 import { Organization } from './Organization';
 import { SidebarNavigation } from './SidebarNavigation';
 import { User } from './User';
@@ -18,7 +17,6 @@ import { useIsSettings } from '../hooks/useIsSettings';
 
 import { QuickActions } from '@/quickActions/components/QuickActions';
 import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
-import { WidgetProvider } from 'ui-modules';
 
 export const MainNavigationBar = ({
   children,
@@ -95,16 +93,13 @@ export const MainNavigationBar = ({
   };
   return (
     <Sidebar.Provider className="w-screen">
-      <WidgetProvider Widget={WidgetsSidebar}>
-        <Sidebar collapsible="offcanvas" variant="sidebar" className="p-0">
-          <AnimatePresence>{renderSidebarContent()}</AnimatePresence>
-          <Sidebar.Rail />
-        </Sidebar>
-        <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden shadow-sidebar-inset">
-          {children}
-        </Sidebar.Inset>
-      </WidgetProvider>
-      {/* <WidgetsSidebar /> */}
+      <Sidebar collapsible="offcanvas" variant="sidebar" className="p-0">
+        <AnimatePresence>{renderSidebarContent()}</AnimatePresence>
+        <Sidebar.Rail />
+      </Sidebar>
+      <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden shadow-sidebar-inset">
+        {children}
+      </Sidebar.Inset>
     </Sidebar.Provider>
   );
 };

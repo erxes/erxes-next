@@ -1,10 +1,16 @@
 import { createContext, useContext } from 'react';
 
+export type WidgetProps = {
+  pluginName: string;
+  contentType: string;
+  contentId: string;
+};
+
 export const WidgetContext = createContext<{
-  Widget: () => JSX.Element | null;
+  Widget: (props: WidgetProps) => JSX.Element | null;
 }>(
   {} as {
-    Widget: () => JSX.Element | null;
+    Widget: (props: any) => JSX.Element | null;
   },
 );
 
@@ -13,7 +19,7 @@ export const WidgetProvider = ({
   Widget,
 }: {
   children: React.ReactNode;
-  Widget: () => JSX.Element | null;
+  Widget: (props: WidgetProps) => JSX.Element | null;
 }) => {
   return (
     <WidgetContext.Provider value={{ Widget }}>

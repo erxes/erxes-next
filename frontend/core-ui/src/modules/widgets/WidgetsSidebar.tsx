@@ -1,22 +1,15 @@
 import { SideMenu, Separator } from 'erxes-ui';
-import { useLocation } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { pluginsConfigState } from 'ui-modules';
-import { WidgetsComponent } from './WidgetsComponent';
+import { pluginsConfigState, WidgetProps } from 'ui-modules';
+import { RenderPLuginsComponent } from '~/plugins/components/RenderPLuginsComponent';
 
-export const WidgetsSidebar = ({ ...props }) => {
-  const { pathname } = useLocation();
+export const WidgetsSidebar = (props: WidgetProps) => {
   const [pluginsMetaData] = useAtom(pluginsConfigState);
-
-  if (!pathname?.includes('detail') && !pathname?.includes('/inbox')) {
-    return null;
-  }
 
   const plugins = Object.values(pluginsMetaData || {});
 
   const eligibleWidgets = plugins.filter(
-    (plugin) =>
-      plugin.haveWidgets && !pathname?.includes(plugin.name.toLowerCase()),
+    (plugin) => plugin.haveWidgets && plugin.name !== props.pluginName,
   );
 
   if (eligibleWidgets.length === 0) {
@@ -27,7 +20,10 @@ export const WidgetsSidebar = ({ ...props }) => {
     <SideMenu className="flex-none">
       {eligibleWidgets.map((widget) => (
         <SideMenu.Content value={widget.name} key={`content-${widget.name}`}>
-          <WidgetsComponent pluginName={widget.name} {...props} />
+          <RenderPLuginsComponent
+            pluginName={`${widget.name}`}
+            componentType="Widgets"
+          />
         </SideMenu.Content>
       ))}
 
