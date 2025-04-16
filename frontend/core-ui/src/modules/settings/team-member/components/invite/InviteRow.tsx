@@ -20,9 +20,8 @@ export const InviteRow = ({
   userIndex: number;
   user: IUserEntry & { id: string };
 }) => {
-  const { selectedUsers, setSelectedUsers, fields } = useUserInviteContext();
+  const { selectedUsers, fields } = useUserInviteContext();
   const { control } = useFormContext<TUserForm>();
-  console.log('see', fields?.length - 1 === userIndex);
   return (
     <InviteMemberRowContext.Provider
       value={{

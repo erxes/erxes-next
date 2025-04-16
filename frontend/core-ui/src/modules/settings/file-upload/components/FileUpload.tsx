@@ -61,7 +61,6 @@ const FileUpload = () => {
         ...values,
       });
     }
-    return () => {};
   }, [configs, form]);
 
   return (

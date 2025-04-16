@@ -12,10 +12,10 @@ export const MemberDetailSheet = ({
 
   const userId = searchParams.get('user_id');
 
-  const setOpen = (newProductId: string | null) => {
+  const setOpen = (newUserId: string | null) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    if (newProductId) {
-      newSearchParams.set('user_id', newProductId);
+    if (newUserId) {
+      newSearchParams.set('user_id', newUserId);
     } else {
       newSearchParams.delete('user_id');
     }

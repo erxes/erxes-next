@@ -41,7 +41,7 @@ export const Integration = React.forwardRef<HTMLButtonElement, Props>(
             </strong>
           </div>
 
-          <span className="text-sm text-muted-foreground text-left font-normal line-clamp-3  overflow-hiddenleading-[140%]">
+          <span className="text-sm text-muted-foreground text-left font-normal line-clamp-3 overflow-hidden leading-[140%]">
             {description}
           </span>
         </button>

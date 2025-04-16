@@ -34,7 +34,6 @@ const MailConfigForm = () => {
         ...values,
       });
     }
-    return () => {};
   }, [configs, methods]);
 
   return (

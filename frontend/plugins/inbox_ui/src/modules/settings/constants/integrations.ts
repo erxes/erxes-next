@@ -2,7 +2,7 @@ import {
   FacebookIcon,
   InstagramIcon,
   MessengerIcon,
-  WhatspappIcon,
+  WhatsAppIcon,
 } from '~/modules/inbox/components/Icons';
 
 export const INTEGRATIONS = {
@@ -30,7 +30,8 @@ export const INTEGRATIONS = {
   'instagram-messenger': {
     Icon: InstagramIcon,
     label: "Instagram DM's",
-    description: 'Connect to Instagram posts right from your Team Inbox',
+    description:
+      'Connect and manage Instagram direct messages right from your Team Inbox',
   },
   callpro: {
     Icon: MessengerIcon,
@@ -38,7 +39,7 @@ export const INTEGRATIONS = {
     description: 'Connect your call pro phone number',
   },
   whatsapp: {
-    Icon: WhatspappIcon,
+    Icon: WhatsAppIcon,
     label: 'Whatsapp',
     description: 'Connect and manage Whats App right from your Team Inbox',
   },

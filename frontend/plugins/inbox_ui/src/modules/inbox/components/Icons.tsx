@@ -199,7 +199,7 @@ export const MessengerIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
   );
 };
 
-export const WhatspappIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
+export const WhatsAppIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       {...props}

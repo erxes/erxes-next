@@ -88,14 +88,6 @@ export const USER_DETAIL_FIELDS: IDetailField[] = [
     description: 'Description',
   },
   {
-    label: 'Description',
-    name: 'description',
-    placeholder: 'Description',
-    attributeType: 'textfield',
-    path: 'details',
-    description: 'Description',
-  },
-  {
     label: 'Employee Id',
     name: 'employeeId',
     placeholder: 'Employee Id',
@@ -119,12 +111,12 @@ export const USER_DETAIL_FIELDS: IDetailField[] = [
     description: 'Birth date',
   },
   {
-    label: 'location',
+    label: 'Location',
     name: 'location',
-    placeholder: 'location',
+    placeholder: 'Location',
     attributeType: 'select',
     path: 'details',
-    description: 'location',
+    description: 'Location',
   },
   {
     label: 'Join date',
