@@ -21,7 +21,7 @@ export const WidgetsSidebar = (props: WidgetProps) => {
       {eligibleWidgets.map((widget) => (
         <SideMenu.Content value={widget.name} key={`content-${widget.name}`}>
           <RenderPLuginsComponent
-            pluginName={`${widget.name}`}
+            pluginName={`${widget.name}_ui`}
             componentType="Widgets"
           />
         </SideMenu.Content>
