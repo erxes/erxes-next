@@ -4,6 +4,6 @@ export interface IChannel {
 }
 
 export interface IChannelContext {
-  selectedChannels: string[] | undefined;
-  setSelectedChannels: (channels: string[]) => void;
+  selectedChannels: IChannel[] | undefined;
+  setSelectedChannels: (channels: IChannel[]) => void;
 }

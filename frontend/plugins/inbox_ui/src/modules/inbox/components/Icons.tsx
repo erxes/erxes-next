@@ -34,8 +34,7 @@ export const FacebookIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
 export const InstagramIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      width="24"
-      height="24"
+      {...props}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -163,8 +162,7 @@ export const InstagramIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
 export const MessengerIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      width="24"
-      height="24"
+      {...props}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -197,6 +195,25 @@ export const MessengerIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
           <stop offset="1" stopColor="#FF7061" />
         </radialGradient>
       </defs>
+    </svg>
+  );
+};
+
+export const WhatspappIcon = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="#25D366"
+      stroke="#E5E7EB"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
+      <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
     </svg>
   );
 };
