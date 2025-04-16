@@ -15,9 +15,10 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'sample_ui',
   exposes: {
-    './Config': './src/modules/constants/config.ts',
+    './Config': './src/config.ts',
     './Module': './src/remote-entry.ts',
     './Settings': './src/pages/SettingsPage.tsx',
+    './Widgets': './src/widgets/Widgets.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

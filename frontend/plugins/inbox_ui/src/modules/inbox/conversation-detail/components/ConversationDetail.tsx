@@ -57,17 +57,6 @@ export const ConversationDetail = () => {
           </ConversationDetailLayout>
         </ConversationContext.Provider>
       </div>
-      <SideMenu className="flex-none">
-        <SideMenu.Content value="contact">
-          <SideMenu.Header Icon={IconUser} label="Contact" />
-          <Separator />
-          <div className="flex-auto"></div>
-        </SideMenu.Content>
-        <SideMenu.Sidebar className="">
-          <SideMenu.Trigger Icon={IconUser} label="Contact" value="contact" />
-          <Separator.Inline orientation="horizontal" />
-        </SideMenu.Sidebar>
-      </SideMenu>
     </div>
   );
 };

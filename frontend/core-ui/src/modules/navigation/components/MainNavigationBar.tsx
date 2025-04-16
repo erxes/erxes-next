@@ -10,6 +10,7 @@ import {
 import { Button, cn, Sidebar } from 'erxes-ui';
 import { AnimatePresence, motion } from 'motion/react';
 
+import { WidgetsSidebar } from '@/widgets/WidgetsSidebar';
 import { Organization } from './Organization';
 import { SidebarNavigation } from './SidebarNavigation';
 import { User } from './User';
@@ -24,6 +25,8 @@ export const MainNavigationBar = ({
   children: React.ReactNode;
 }) => {
   const isSettings = useIsSettings();
+
+  const instance = getInstance();
 
   const renderSidebarContent = () => {
     if (isSettings) {
@@ -100,6 +103,7 @@ export const MainNavigationBar = ({
       <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden shadow-sidebar-inset">
         {children}
       </Sidebar.Inset>
+      <WidgetsSidebar />
     </Sidebar.Provider>
   );
 };
