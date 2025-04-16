@@ -2,26 +2,27 @@ import { commonParams } from './commonTypeDefs';
 
 export const DepartmentTypes = `
     type Department @key(fields: "_id") @cacheControl(maxAge: 3) {
-          _id: String!
-          title: String
-          description: String
-          parentId: String
-          supervisorId: String
-          supervisor: User
-          code: String
-          order:String
-          parent: Department
-          children: [Department]
-          childCount: Int
-          users: [User]
-          userCount: Int
-          userIds: [String]
-          workhours:JSON
-      }
-     type DepartmentListQueryResponse {
+        _id: String!
+        title: String
+        description: String
+        parentId: String
+        supervisorId: String
+        supervisor: User
+        code: String
+        order:String
+        parent: Department
+        children: [Department]
+        childCount: Int
+        users: [User]
+        userCount: Int
+        userIds: [String]
+        workhours:JSON
+    }
+
+    type DepartmentsListResponse {
         list:[Department]
         totalCount: Int
-        totalUsersCount:Int
+        pageInfo: PageInfo
     }
   `;
 
@@ -36,9 +37,9 @@ const commonDepartmentParams = `
 `;
 
 export const mutations = `
-     departments(${commonParams},withoutUserFilter:Boolean): [Department]
-     departmentsMain(${commonParams},withoutUserFilter:Boolean):DepartmentListQueryResponse
-     departmentDetail(_id: String!): Department
+    departments(${commonParams},withoutUserFilter:Boolean): [Department]
+    departmentsMain(${commonParams},withoutUserFilter:Boolean): DepartmentsListResponse
+    departmentDetail(_id: String!): Department
 `;
 
 export const queries = `

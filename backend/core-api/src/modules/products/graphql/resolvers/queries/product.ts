@@ -130,11 +130,13 @@ export const productQueries = {
       });
     }
 
-    return await cursorPaginate({
+    const { list, totalCount, pageInfo } = await cursorPaginate({
       model: models.Products,
       params,
       query: filter,
     });
+
+    return { list, totalCount, pageInfo };
   },
 
   async productDetail(
