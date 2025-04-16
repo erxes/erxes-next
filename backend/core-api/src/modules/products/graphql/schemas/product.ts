@@ -44,7 +44,7 @@ export const types = `
   type ProductsListResponse {
     list: [Product],
     pageInfo: PageInfo
-    totalCount: Float,
+    totalCount: Int,
   }
 `;
 

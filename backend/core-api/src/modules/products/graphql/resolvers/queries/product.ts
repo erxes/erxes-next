@@ -133,7 +133,7 @@ export const productQueries = {
     return await cursorPaginate({
       model: models.Products,
       params,
-      query: {},
+      query: filter,
     });
   },
 

@@ -53,7 +53,7 @@ export const types = `
   type CompaniesListResponse {
     list: [Company],
     pageInfo: PageInfo
-    totalCount: Float,
+    totalCount: Int,
   }
 `;
 

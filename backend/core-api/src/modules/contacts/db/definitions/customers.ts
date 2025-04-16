@@ -123,4 +123,4 @@ export const customerSchema = new Schema(
   },
 );
 
-customerSchema.index({ _id: 1, createAt: 1 });
+customerSchema.index({ _id: 1, createdAt: 1 });

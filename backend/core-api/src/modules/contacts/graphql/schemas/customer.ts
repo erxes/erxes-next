@@ -55,7 +55,7 @@ export const types = `
   type CustomersListResponse {
     list: [Customer],
     pageInfo: PageInfo
-    totalCount: Float,
+    totalCount: Int,
   }
 
 `;

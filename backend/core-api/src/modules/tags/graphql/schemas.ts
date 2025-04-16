@@ -15,7 +15,7 @@ export const types = `
   type TagsListResponse {
     list: [Tag],
     pageInfo: PageInfo,
-    totalCount: Float,
+    totalCount: Int,
   }
 `;
 
