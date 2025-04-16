@@ -2,7 +2,13 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import { Spinner } from 'erxes-ui';
 
-export function PluginMainPage({ pluginName }: { pluginName: string }) {
+export function RenderPLuginsComponent({
+  pluginName,
+  componentType,
+}: {
+  pluginName: string;
+  componentType: string;
+}) {
   const [Plugin, setPlugin] = useState<React.ComponentType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState<{ message: string } | null>(null);
@@ -12,9 +18,9 @@ export function PluginMainPage({ pluginName }: { pluginName: string }) {
       try {
         setIsLoading(true);
         setHasError(null);
-        
+
         const remoteModule = await loadRemote<{ default: React.ComponentType }>(
-          `${pluginName}/Module`,
+          `${pluginName}/${componentType}`,
           { from: 'runtime' },
         );
 
@@ -24,8 +30,9 @@ export function PluginMainPage({ pluginName }: { pluginName: string }) {
 
         setPlugin(() => remoteModule.default);
       } catch (error) {
-        setHasError({ 
-          message: error instanceof Error ? error.message : 'Failed to load plugin'
+        setHasError({
+          message:
+            error instanceof Error ? error.message : 'Failed to load plugin',
         });
         setPlugin(null);
       } finally {
@@ -46,24 +53,26 @@ export function PluginMainPage({ pluginName }: { pluginName: string }) {
 
   if (isLoading || !Plugin) {
     return (
-      <Suspense fallback={
-        <div className="flex justify-center items-center h-full">
-          <Spinner />
-        </div>
-      }>
-        <div className="flex justify-center items-center h-full">
-          <Spinner />
-        </div>
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center h-full">
+            <Spinner />
+          </div>
+        }
+      >
+        <div />
       </Suspense>
     );
   }
 
   return (
-    <Suspense fallback={
-      <div className="flex justify-center items-center h-full">
-        <Spinner />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-full">
+          <Spinner />
+        </div>
+      }
+    >
       <Plugin />
     </Suspense>
   );

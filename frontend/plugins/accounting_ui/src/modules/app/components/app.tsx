@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router';
 import { Spinner } from 'erxes-ui';
 
 const PtrList = lazy(() =>

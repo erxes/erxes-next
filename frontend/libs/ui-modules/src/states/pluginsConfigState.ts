@@ -1,9 +1,13 @@
 import { atom } from 'jotai';
-import {Icon, IconProps} from '@tabler/icons-react'
+import { Icon, IconProps } from '@tabler/icons-react';
 
 export type PluginsConfig = {
   name: string;
-  icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>  ;
+  icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
+  haveWidgets: boolean;
+  widgetsIcon: React.ForwardRefExoticComponent<
+    IconProps & React.RefAttributes<Icon>
+  >;
 };
 
 export type PluginsConfigState = {

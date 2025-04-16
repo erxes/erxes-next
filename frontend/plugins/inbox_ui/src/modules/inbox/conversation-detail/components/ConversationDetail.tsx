@@ -1,7 +1,7 @@
 import { Button, Separator, SideMenu, Skeleton } from 'erxes-ui';
 import { ConversationHeader } from '@/inbox/conversation-detail/components/ConversationHeader';
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';
-import { lazy, Suspense } from 'react';
+
 import { useQueryState } from '../../hooks/useQueryState';
 import { activeConversationState } from '../../states/activeConversationState';
 import { useAtomValue } from 'jotai';
@@ -11,11 +11,13 @@ import { MessagesSkeleton } from './ConversationSkeleton';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { MessageInput } from './MessageInput';
 import { ConversationContext } from '../../context/ConversationContext';
-import { IconMessageCircle, IconUser } from '@tabler/icons-react';
+import { useWidget } from 'ui-modules';
 
 export const ConversationDetail = () => {
+  const { Widget } = useWidget();
   const [conversationId] = useQueryState<string>('conversationId');
   const activeConversationCandidate = useAtomValue(activeConversationState);
+
   const currentConversation =
     activeConversationCandidate?._id === conversationId &&
     activeConversationCandidate;
@@ -57,17 +59,13 @@ export const ConversationDetail = () => {
           </ConversationDetailLayout>
         </ConversationContext.Provider>
       </div>
-      <SideMenu className="flex-none">
-        <SideMenu.Content value="contact">
-          <SideMenu.Header Icon={IconUser} label="Contact" />
-          <Separator />
-          <div className="flex-auto"></div>
-        </SideMenu.Content>
-        <SideMenu.Sidebar className="">
-          <SideMenu.Trigger Icon={IconUser} label="Contact" value="contact" />
-          <Separator.Inline orientation="horizontal" />
-        </SideMenu.Sidebar>
-      </SideMenu>
+      {!!Widget && conversationId && (
+        <Widget
+          pluginName="inbox"
+          contentId={conversationId}
+          contentType="conversation"
+        />
+      )}
     </div>
   );
 };
