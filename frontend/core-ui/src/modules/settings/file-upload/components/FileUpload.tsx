@@ -58,7 +58,7 @@ const FileUpload = () => {
       form.reset({
         ...values,
       });
-    }
+    } else form.reset();
   }, [configs, form]);
 
   return (

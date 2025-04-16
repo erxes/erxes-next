@@ -31,7 +31,7 @@ const MailConfigForm = () => {
       methods.reset({
         ...values,
       });
-    }
+    } else methods.reset();
   }, [configs, methods]);
 
   return (
