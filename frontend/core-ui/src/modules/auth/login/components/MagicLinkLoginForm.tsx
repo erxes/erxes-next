@@ -54,16 +54,12 @@ export const MagicLinkLoginForm = () => {
           )}
         />
 
-        <Button
-          type="submit"
-          className={`${
-            !form.formState.isValid ? 'cursor-not-allowed' : ''
-          } h-8`}
-        >
+        <Button type="submit" className={`h-8`}>
           Continue
         </Button>
-        <Card.Description className="text-center">or</Card.Description>
-        <GoogleOAuthButton />
+        {/* disabled until the backend is ready */}
+        {/* <Card.Description className="text-center">or</Card.Description>
+        <GoogleOAuthButton /> */}
       </form>
     </Form>
   );

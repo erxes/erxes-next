@@ -65,6 +65,7 @@ export const useLogin = () => {
             description:
               'Password reset instructions have been sent to your email.',
           });
+          navigate(AppPath.Login);
         })
         .catch((e) => {
           toast({
