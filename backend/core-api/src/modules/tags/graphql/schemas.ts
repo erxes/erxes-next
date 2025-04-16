@@ -13,9 +13,9 @@ export const types = `
   }
 
   type TagsListResponse {
-    list: [Tag],
-    pageInfo: PageInfo,
-    totalCount: Int,
+    list: [Tag]
+    pageInfo: PageInfo
+    totalCount: Int
   }
 `;
 
@@ -27,11 +27,11 @@ const queryParams = `
     ids: [String],
     excludeIds: Boolean,
 
-    sortField: String
+    sortField: String,
  
-    limit: Int
-    cursor: String
-    direction: CURSOR_DIRECTION
+    limit: Int,
+    cursor: String,
+    direction: CURSOR_DIRECTION,
 `;
 
 export const queries = `
