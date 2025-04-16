@@ -1,15 +1,11 @@
 import { ICustomField } from '../../common';
 import { IPermissionDocument } from '../permissions/permission';
-
+import { ILink } from '../../common';
 export interface IEmailSignature {
   brandId?: string;
   signature?: string;
 }
 export interface IEmailSignatureDocument extends IEmailSignature, Document {}
-
-export interface ILink {
-  [key: string]: string;
-}
 
 export interface IDetail {
   avatar?: string;
