@@ -1,11 +1,14 @@
 const Widgets = ({
   contentType,
   contentId,
+  message,
 }: {
   contentType: string;
   contentId: string;
+  message: string;
 }) => {
-  return <div>Widgets sample</div>;
+  console.log(message);
+  return <div>Widgets sample {message}</div>;
 };
 
 export default Widgets;

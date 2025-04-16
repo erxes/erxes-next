@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { pluginsConfigState } from 'ui-modules';
 import { WidgetsComponent } from './WidgetsComponent';
 
-export const WidgetsSidebar = () => {
+export const WidgetsSidebar = ({ ...props }) => {
   const { pathname } = useLocation();
   const [pluginsMetaData] = useAtom(pluginsConfigState);
 
@@ -27,7 +27,7 @@ export const WidgetsSidebar = () => {
     <SideMenu className="flex-none">
       {eligibleWidgets.map((widget) => (
         <SideMenu.Content value={widget.name} key={`content-${widget.name}`}>
-          <WidgetsComponent pluginName={widget.name} />
+          <WidgetsComponent pluginName={widget.name} {...props} />
         </SideMenu.Content>
       ))}
 

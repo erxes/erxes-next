@@ -12,7 +12,10 @@ interface PluginError {
   code?: string;
 }
 
-export function WidgetsComponent({ pluginName }: WidgetsComponentProps) {
+export function WidgetsComponent({
+  pluginName,
+  ...props
+}: WidgetsComponentProps) {
   const [plugin, setPlugin] = useState<React.ComponentType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<PluginError | null>(null);
@@ -69,7 +72,7 @@ export function WidgetsComponent({ pluginName }: WidgetsComponentProps) {
 
   return (
     <ErrorBoundary fallback="Failed to render plugin">
-      <PluginComponent />
+      <PluginComponent {...props} />
     </ErrorBoundary>
   );
 }

@@ -9,8 +9,9 @@ import { InboxLayout } from '@/inbox/components/InboxLayout';
 import { ConversationDetail } from '@/inbox/conversation-detail/components/ConversationDetail';
 import { Conversations } from '@/inbox/components/Conversations';
 import { MainFilters } from '@/inbox/components/MainFilters';
-
+import { useWidget } from 'ui-modules';
 export const InboxIndexPage = () => {
+  const { Widget } = useWidget();
   return (
     <div className="flex flex-col h-full">
       <PluginHeader
@@ -34,6 +35,7 @@ export const InboxIndexPage = () => {
         mainFilters={<MainFilters />}
         conversationDetail={<ConversationDetail />}
       />
+      {!!Widget && <Widget message="Hello" />}
     </div>
   );
 };
