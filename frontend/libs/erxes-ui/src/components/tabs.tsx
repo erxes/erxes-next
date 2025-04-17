@@ -36,7 +36,7 @@ const TabsTrigger = React.forwardRef<
       size === 'sm' &&
         'text-xs leading-none rounded-md h-6 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow',
       size === 'md' &&
-        'relative text-sm py-2 after:absolute after:inset-x-0 after:-bottom-px outline-offset-2 after:h-px data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:after:bg -primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70',
+        'relative text-sm py-2 after:absolute after:inset-x-0 after:-bottom-px outline-offset-2 after:h-px data-[state=active]:bg-transparent data-[state=active]:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70',
       className,
     )}
     {...props}

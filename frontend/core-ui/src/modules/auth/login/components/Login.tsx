@@ -8,7 +8,7 @@ export const Login = () => {
         <Card.Header className="flex flex-col items-center p-3">
           {' '}
           <Card.Title className="mt-2 md:mt-3 mb-1">Welcome</Card.Title>
-          <Card.Description className="text-center">
+          <Card.Description className="text-center text-accent-foreground">
             Please sign in to your account to continue
           </Card.Description>
         </Card.Header>
@@ -47,11 +47,11 @@ export const Login = () => {
           </Tabs>
         </Card.Content>
       </div>
-      <Card.Footer className="flex flex-col text-muted-foreground p-3 md:p-4 space-y-1">
-        <span className="text-xs sm:text-sm font-medium text-center">
+      <Card.Footer className="flex flex-col text-accent-foreground space-y-1 py-5 w-full m-0 px-0">
+        <span className="text-sm font-medium text-center">
           By signing in, you confirm that you accept our
         </span>
-        <span className="text-xs sm:text-sm font-medium text-center">
+        <span className="text-sm font-medium text-center">
           <a className="text-primary font-semibold hover:underline" href="#">
             Terms of use
           </a>{' '}

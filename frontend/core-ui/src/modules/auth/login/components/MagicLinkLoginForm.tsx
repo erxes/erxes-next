@@ -32,7 +32,7 @@ export const MagicLinkLoginForm = () => {
         onSubmit={form.handleSubmit(submitHandler)}
         className="mx-auto grid gap-5"
       >
-        <Card.Description className="text-center">
+        <Card.Description className="text-center text-accent-foreground font-medium">
           We use magic link so you don't have to remember or type in yet another
           long password
         </Card.Description>

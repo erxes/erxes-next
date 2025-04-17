@@ -10,7 +10,7 @@ export const AuthenticationLayout = ({
   return (
     <div className="relative overflow-hidden lg:w-1/2 lg:flex-none flex-1 flex flex-col py-12 sm:px-6 lg:px-20 xl:px-24 h-screen bg-[radial-gradient(#F0F1FE,#F7F8FA)]">
       <Polygons variant="light" />
-      <div className="mx-auto w-full sm:max-w-sm lg:w-96 mt-20 z-30">
+      <div className="px-4 sm:mx-auto w-full sm:max-w-sm lg:w-96 my-auto z-30">
         <Logo className="h-10 mx-auto" />
       {children}
       </div>
