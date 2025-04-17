@@ -3,13 +3,11 @@ import { SubmitHandler } from 'react-hook-form';
 import { Button, Form, Input } from 'erxes-ui';
 import { useLogin } from '@/auth/login/hooks/useLogin';
 import { FormType, useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
-import { useNavigate } from 'react-router';
-import { AppPath } from '~/modules/types/paths/AppPath';
+import { Link } from 'react-router';
 import { useQueryState } from 'erxes-ui';
 
 export const CredentialLoginForm = () => {
   const [, setEmail] = useQueryState('email')
-  const navigate = useNavigate();
   const { form } = useSignInUpForm();
   const { handleCrendentialsLogin } = useLogin();
 
@@ -66,11 +64,12 @@ export const CredentialLoginForm = () => {
         <div className="flex justify-center">
           <Button
             type="button"
-            onClick={() => { navigate(AppPath.ForgotPassword); setEmail(form.getValues('email')); }}
             variant="link"
             className=" hover:bg-transparent h-min w-min text-muted-foreground hover:underline text-center block hover:text-primary "
+          asChild
           >
-            Forgot password?
+            <Link to={`/forgot-password${form.getValues('email') ? `?email=${form.getValues('email')}` : ''}`}>
+            Forgot password?</Link>
           </Button>
         </div>
       </form>
