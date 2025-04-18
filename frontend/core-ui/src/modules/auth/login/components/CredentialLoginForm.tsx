@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 import { useQueryState } from 'erxes-ui';
 
 export const CredentialLoginForm = () => {
-  const [, setEmail] = useQueryState('email')
+  const [, setEmail] = useQueryState('email');
   const { form } = useSignInUpForm();
   const { handleCrendentialsLogin } = useLogin();
 
@@ -17,7 +17,6 @@ export const CredentialLoginForm = () => {
     },
     [handleCrendentialsLogin],
   );
-
 
   return (
     <Form {...form}>
@@ -41,7 +40,6 @@ export const CredentialLoginForm = () => {
             </Form.Item>
           )}
         />
-
         <Form.Field
           name="password"
           render={({ field }) => (
@@ -57,19 +55,22 @@ export const CredentialLoginForm = () => {
             </Form.Item>
           )}
         />
-        <Button type="submit" className={`h-8`}>
+        <Button type="submit" className="h-8">
           Sign in
         </Button>
-
         <div className="flex justify-center">
           <Button
             type="button"
             variant="link"
-            className=" hover:bg-transparent h-min w-min text-muted-foreground hover:underline text-center block hover:text-primary "
-          asChild
+            className="hover:bg-transparent h-min w-min text-muted-foreground hover:underline text-center block hover:text-primary"
+            asChild
           >
-            <Link to={`/forgot-password${form.getValues('email') ? `?email=${form.getValues('email')}` : ''}`}>
-            Forgot password?</Link>
+            <Link to={(() => {
+              const email = form.getValues('email');
+              return `/forgot-password${email ? `?email=${encodeURIComponent(email)}` : ''}`;
+            })()}>
+              Forgot password?
+            </Link>
           </Button>
         </div>
       </form>
