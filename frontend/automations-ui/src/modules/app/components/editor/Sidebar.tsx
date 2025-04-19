@@ -397,7 +397,7 @@ export default () => {
   };
 
   return (
-    <aside className="border-r border-[#eee] p-[15px_10px] text-[12px] bg-[#fcfcfc]">
+    <aside className="border-r text-xs bg-accent">
       <div className="w-80 border-l bg-white flex flex-col">
         <div className="p-4 border-b">
           <h3 className="font-medium mb-3">Workflow Components</h3>
@@ -457,7 +457,7 @@ export default () => {
             </Tabs.List>
           </div>
 
-          <ScrollArea className="flex-1">
+          <ScrollArea className="flex-1 h-full">
             <Tabs.Content value="triggers" className="p-4 mt-0">
               <div className="space-y-2">
                 {getFilteredTriggerTemplates().length === 0 ? (

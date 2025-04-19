@@ -11,6 +11,7 @@ module.exports = {
     'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).{ts,tsx,html}',
     'frontend/libs/ui-modules/src/**/!(*.stories|*.spec).{ts,tsx,html}',
     'frontend/plugins/**/!(*.stories|*.spec).{ts,tsx,html}',
+    'frontend/automations-ui/**/!(*.stories|*.spec).{ts,tsx,html}',
   ],
   darkMode: 'class',
   theme: {

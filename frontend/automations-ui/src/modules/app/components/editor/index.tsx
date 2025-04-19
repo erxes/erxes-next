@@ -11,6 +11,7 @@ import {
   MarkerType,
   Edge,
   Node,
+  MiniMap,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -19,6 +20,7 @@ import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './DnDProvider';
 import TriggerNode from './nodes/Trigger';
 import ActionNode from './nodes/Action';
+import { Sheet } from 'erxes-ui/components';
 
 const initialNodes: Node<any>[] = [
   {
@@ -109,6 +111,7 @@ const DnDFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<any>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<any>(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const [activeNode, setActiveNode] = useState(null);
 
   const { screenToFlowPosition } = useReactFlow();
   const [type] = useDnD();
@@ -117,45 +120,6 @@ const DnDFlow = () => {
     (params: any) => setEdges((eds: any) => addEdge(params, eds)),
     [],
   );
-
-  //   const onDragOver = useCallback((event: any) => {
-  //     event.preventDefault();
-  //     event.dataTransfer.dropEffect = 'move';
-  //   }, []);
-
-  //   const onDrop = useCallback(
-  //     (event: any) => {
-  //       event.preventDefault();
-
-  //       // check if the dropped element is valid
-  //       if (!type) {
-  //         return;
-  //       }
-
-  //       // project was renamed to screenToFlowPosition
-  //       // and you don't need to subtract the reactFlowBounds.left/top anymore
-  //       // details: https://reactflow.dev/whats-new/2023-11-10
-  //       const position = screenToFlowPosition({
-  //         x: event.clientX,
-  //         y: event.clientY,
-  //       });
-  //       const newNode = {
-  //         id: getId(),
-  //         type,
-  //         position,
-  //         data: { label: `${type} node` },
-  //       };
-
-  //       setNodes((nds) => nds.concat(newNode));
-  //     },
-  //     [screenToFlowPosition, type],
-  //   );
-
-  //   const onDragStart = (event:any, nodeType:any) => {
-  //     setType(nodeType);
-  //     event.dataTransfer.setData('text/plain', nodeType);
-  //     event.dataTransfer.effectAllowed = 'move';
-  //   };
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
@@ -208,22 +172,22 @@ const DnDFlow = () => {
   );
 
   // Handle drag start from sidebar
-  const onDragStart = (
-    event: React.DragEvent<HTMLDivElement>,
-    nodeType: string,
-    nodeModule: string,
-    nodeLabel: string,
-    nodeDescription: string,
-  ) => {
-    event.dataTransfer.setData('application/reactflow/type', nodeType);
-    event.dataTransfer.setData('application/reactflow/module', nodeModule);
-    event.dataTransfer.setData('application/reactflow/label', nodeLabel);
-    event.dataTransfer.setData(
-      'application/reactflow/description',
-      nodeDescription,
-    );
-    event.dataTransfer.effectAllowed = 'move';
-  };
+  // const onDragStart = (
+  //   event: React.DragEvent<HTMLDivElement>,
+  //   nodeType: string,
+  //   nodeModule: string,
+  //   nodeLabel: string,
+  //   nodeDescription: string,
+  // ) => {
+  //   event.dataTransfer.setData('application/reactflow/type', nodeType);
+  //   event.dataTransfer.setData('application/reactflow/module', nodeModule);
+  //   event.dataTransfer.setData('application/reactflow/label', nodeLabel);
+  //   event.dataTransfer.setData(
+  //     'application/reactflow/description',
+  //     nodeDescription,
+  //   );
+  //   event.dataTransfer.effectAllowed = 'move';
+  // };
   return (
     <div className="flex flex-column grow h-full">
       <div className="flex-grow h-full" ref={reactFlowWrapper}>
@@ -235,7 +199,9 @@ const DnDFlow = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onDrop={onDrop}
-          onDragStart={onDragStart}
+          // onDragStart={(event)=>onDragStart(event)}
+          // onDoubleClick={(event) => console.log({ event })}
+          onNodeDoubleClick={(event, node) => setActiveNode(node.data)}
           onInit={setReactFlowInstance}
           onDragOver={onDragOver}
           fitView
@@ -243,6 +209,20 @@ const DnDFlow = () => {
         >
           <Controls />
           <Background />
+          <MiniMap pannable position="top-right" />
+          <Sheet
+            open={!!activeNode}
+            onOpenChange={(open) => {
+              if (!open) {
+                setActiveNode(null);
+              }
+            }}
+          >
+            <Sheet.Content>
+              <Sheet.Title>{(activeNode as any)?.label}</Sheet.Title>
+              config
+            </Sheet.Content>
+          </Sheet>
         </ReactFlow>
       </div>
       <Sidebar />

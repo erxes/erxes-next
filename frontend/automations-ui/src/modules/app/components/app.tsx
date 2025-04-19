@@ -6,7 +6,7 @@ const List = lazy(() =>
     default: module.Page,
   })),
 );
-const Detail = lazy(() =>
+const Editor = lazy(() =>
   import('~/pages/Detail').then((module) => ({
     default: module.Page,
   })),
@@ -17,7 +17,9 @@ const App = () => {
     <Suspense fallback={<>Loading</>}>
       <Routes>
         <Route path="/" element={<List />} />
-        <Route path="/detail/:id" element={<Detail />} />
+        <Route path="/edit/:id" element={<Editor />} />
+
+        <Route path="/create" element={<Editor />} />
       </Routes>
     </Suspense>
   );

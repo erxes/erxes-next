@@ -36,9 +36,9 @@ import {
   Input,
   Switch,
   Textarea,
+  Tabs,
 } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import { Label } from '@radix-ui/react-label';
 import {
   Select,
@@ -133,7 +133,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
     <>
       <div
         className={cn(
-          'rounded-md shadow-md bg-white  w-[280px]',
+          'rounded-md shadow-md bg-white w-[280px]',
           selected ? 'ring-2 ring-primary ring-offset-2' : '',
           'transition-all duration-200',
         )}
@@ -183,7 +183,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
           </div>
 
           {data.config && Object.keys(data.config).length > 0 && (
-            <div className="mt-2 bg-slate-800 rounded p-2 text-xs border-slate-200 border">
+            <div className="mt-2 bg-muted rounded p-2 text-xs border-slate-200 border">
               <div className="font-medium mb-1 text-slate-300">
                 Configuration:
               </div>
@@ -217,13 +217,13 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
             </Dialog.Header>
 
             <Tabs defaultValue="general">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="general">General</TabsTrigger>
-                <TabsTrigger value="conditions">Conditions</TabsTrigger>
-                <TabsTrigger value="advanced">Advanced</TabsTrigger>
-              </TabsList>
+              <Tabs.List className="grid w-full grid-cols-3">
+                <Tabs.Trigger value="general">General</Tabs.Trigger>
+                <Tabs.Trigger value="conditions">Conditions</Tabs.Trigger>
+                <Tabs.Trigger value="advanced">Advanced</Tabs.Trigger>
+              </Tabs.List>
 
-              <TabsContent value="general" className="space-y-4 py-4">
+              <Tabs.Content value="general" className="space-y-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name" className="text-right">
                     Name
@@ -467,9 +467,9 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
                     <Label htmlFor="active">Enable this trigger</Label>
                   </div>
                 </div>
-              </TabsContent>
+              </Tabs.Content>
 
-              <TabsContent value="conditions" className="space-y-4 py-4">
+              <Tabs.Content value="conditions" className="space-y-4 py-4">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="text-sm font-medium">Trigger Conditions</h4>
@@ -538,9 +538,9 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
                     </Card.Content>
                   </Card>
                 </div>
-              </TabsContent>
+              </Tabs.Content>
 
-              <TabsContent value="advanced" className="space-y-4 py-4">
+              <Tabs.Content value="advanced" className="space-y-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="debounce" className="text-right">
                     Debounce (sec)
@@ -597,7 +597,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
                     defaultValue=""
                   />
                 </div>
-              </TabsContent>
+              </Tabs.Content>
             </Tabs>
 
             <div className="flex justify-end gap-2 mt-4">

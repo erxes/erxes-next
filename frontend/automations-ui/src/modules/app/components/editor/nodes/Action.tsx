@@ -35,9 +35,10 @@ import {
   Dialog,
   Input,
   Textarea,
+  Tabs,
 } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import { Label } from '@radix-ui/react-label';
 import {
   Select,
@@ -222,13 +223,13 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
             </Dialog.Header>
 
             <Tabs defaultValue="general">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="general">General</TabsTrigger>
-                <TabsTrigger value="data">Data Mapping</TabsTrigger>
-                <TabsTrigger value="advanced">Advanced</TabsTrigger>
-              </TabsList>
+              <Tabs.List className="grid w-full grid-cols-3">
+                <Tabs.Trigger value="general">General</Tabs.Trigger>
+                <Tabs.Trigger value="data">Data Mapping</Tabs.Trigger>
+                <Tabs.Trigger value="advanced">Advanced</Tabs.Trigger>
+              </Tabs.List>
 
-              <TabsContent value="general" className="space-y-4 py-4">
+              <Tabs.Content value="general" className="space-y-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name" className="text-right">
                     Name
@@ -422,9 +423,9 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
                     </SelectContent>
                   </Select>
                 </div>
-              </TabsContent>
+              </Tabs.Content>
 
-              <TabsContent value="data" className="space-y-4 py-4">
+              <Tabs.Content value="data" className="space-y-4 py-4">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="text-sm font-medium">Input Data Mapping</h4>
@@ -503,9 +504,9 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
                     </Card.Content>
                   </Card>
                 </div>
-              </TabsContent>
+              </Tabs.Content>
 
-              <TabsContent value="advanced" className="space-y-4 py-4">
+              <Tabs.Content value="advanced" className="space-y-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="timeout" className="text-right">
                     Timeout (sec)
@@ -567,7 +568,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
                     </SelectContent>
                   </Select>
                 </div>
-              </TabsContent>
+              </Tabs.Content>
             </Tabs>
 
             <div className="flex justify-end gap-2 mt-4">

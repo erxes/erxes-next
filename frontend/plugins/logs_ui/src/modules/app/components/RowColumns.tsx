@@ -1,6 +1,8 @@
 import {
   IconCalendarTime,
   IconInfoCircle,
+  IconProgressCheck,
+  IconProgressX,
   IconSettings,
   IconSourceCode,
   IconUser,
@@ -16,11 +18,11 @@ import dayjs from 'dayjs';
 const statusInfos = {
   success: {
     variant: 'success',
-    icon: 'IconProgressCheck',
+    Icon: IconProgressCheck,
   },
   failed: {
     variant: 'destructive',
-    icon: 'IconProgressX',
+    Icon: IconProgressX,
   },
 };
 
@@ -36,21 +38,17 @@ const columns: ColumnDef<any>[] = [
         status: 'failed' | 'success';
       };
 
-      const { icon, variant } = statusInfos[status] || {};
+      const { Icon, variant } = statusInfos[status] || {};
 
       return (
         <RecordTableInlineCell
           containerClassName="justify-center"
           display={() => (
             <Badge
-              className={`text-white`}
+              className={`text-white [&>svg]:size-4`}
               variant={variant as 'success' | 'destructive'}
             >
-              <TablerIcon
-                name={icon as TablerIconNamesType}
-                size="xsm"
-                className="mr-2"
-              />
+              <Icon className="size-4" />
               {status}
             </Badge>
           )}
