@@ -108,6 +108,7 @@ const GET_BRANCHES_QUERY = gql`
       title
       code
       parentId
+      userCount
     }
   }
 `;
@@ -129,6 +130,7 @@ const GET_UNITS_QUERY = gql`
       _id
       title
       code
+      userCount
     }
   }
 `;

@@ -1,31 +1,43 @@
-import { InlineCell, InlineCellDisplay } from 'erxes-ui';
+import { TextField } from 'erxes-ui';
+import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
+import { useUserEdit } from '../../../hooks/useUserEdit';
 
 interface TextFieldProps {
   placeholder?: string;
   value: string;
+  field: string;
   fieldId?: string;
   _id: string;
   className?: string;
-  name: string;
 }
 
-export const TextField = ({
+export const TextFieldUser = ({
+  placeholder,
   value,
+  field,
   fieldId,
   _id,
   className,
-  name,
 }: TextFieldProps) => {
+  const { usersEdit } = useUserEdit();
+  const onSave = (editingValue: string) => {
+    if (editingValue === value) return;
+    usersEdit(
+      {
+        variables: { _id, [field]: editingValue },
+      },
+      [field],
+    );
+  };
   return (
-    <InlineCell
-      name={name}
-      recordId={_id}
+    <TextField
+      placeholder={placeholder}
+      value={value}
+      field={field}
       fieldId={fieldId}
-      display={() => (
-        <InlineCellDisplay value={value} id={_id} className={className}>
-          <span className="truncate">{value}</span>
-        </InlineCellDisplay>
-      )}
+      _id={_id}
+      onSave={onSave}
+      className={className}
     />
   );
 };

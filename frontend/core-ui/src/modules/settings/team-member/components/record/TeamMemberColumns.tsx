@@ -10,9 +10,11 @@ import type { ColumnDef, Cell } from '@tanstack/react-table';
 import { Avatar, cn, Switch } from 'erxes-ui';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { IUser } from '@/settings/team-member/types';
-import { TextField } from '@/settings/team-member/components/record/team-member-edit/TextField';
+import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import dayjs from 'dayjs';
+import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
+import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
 
 export const teamMemberColumns: ColumnDef<IUser>[] = [
   {
@@ -47,7 +49,11 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         _id,
       } = cell.row.original;
       return (
-        <TextField _id={_id} name={'First name'} value={firstName as string} />
+        <FirstNameField
+          field="firstName"
+          _id={_id}
+          value={firstName as string}
+        />
       );
     },
   },
@@ -63,7 +69,11 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         _id,
       } = cell.row.original;
       return (
-        <TextField _id={_id} name={'lastName'} value={lastName as string} />
+        <TextFieldUserDetails
+          field="lastName"
+          _id={_id}
+          value={lastName as string}
+        />
       );
     },
   },
@@ -95,7 +105,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     header: () => <RecordTableInlineHead icon={IconMail} label="Email" />,
     cell: ({ cell }) => {
       const { email, _id } = cell.row.original;
-      return <TextField _id={_id} name={'email'} value={email as string} />;
+      return <TextFieldUser field="email" _id={_id} value={email as string} />;
     },
   },
   ...['employeeId'].map((field) => ({
@@ -103,9 +113,9 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     accessorKey: field,
     header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
     cell: ({ cell }: { cell: Cell<IUser, unknown> }) => (
-      <TextField
+      <TextFieldUser
+        field="employeeId"
         _id={cell.row.original._id}
-        name={field}
         className="text-center"
         value={(cell.getValue() as string) || '-'}
       />
@@ -123,7 +133,11 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         _id,
       } = cell.row.original;
       return (
-        <TextField _id={_id} name={'position'} value={position as string} />
+        <TextFieldUserDetails
+          field={'position'}
+          _id={_id}
+          value={cell.getValue() as string}
+        />
       );
     },
   },
@@ -139,9 +153,9 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         _id,
       } = cell.row.original;
       return (
-        <TextField
+        <TextFieldUserDetails
+          field="workStartedDate"
           _id={_id}
-          name={'workStartedDate'}
           value={
             (workStartedDate &&
               (dayjs(workStartedDate).format('YYYY/MM/DD') as string)) ||

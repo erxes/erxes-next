@@ -1,10 +1,14 @@
+import {
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { paginate } from 'erxes-api-shared/utils';
 import { generateFilters } from './utils';
 
 export const branchsQueries = {
   async branches(
-    _root,
+    _root: undefined,
     params: any & { searchValue?: string },
     { models, user }: IContext,
   ) {
@@ -29,8 +33,8 @@ export const branchsQueries = {
   },
 
   async branchesMain(
-    _root,
-    params: { searchValue?: string; perPage: number; page: number },
+    _root: undefined,
+    params: IListParams & ICursorPaginateParams,
     { models, user }: IContext,
   ) {
     const filter = await generateFilters({
@@ -42,23 +46,17 @@ export const branchsQueries = {
         withoutUserFilter: true,
       },
     });
-    const list = await paginate(
-      models.Branches.find(filter).sort({
-        order: 1,
-      }),
+
+    const { list, totalCount, pageInfo } = await cursorPaginate({
+      model: models.Branches,
       params,
-    );
-    const totalCount = await models.Branches.find(filter).countDocuments();
-    const totalUsersCount = await models.Users.countDocuments({
-      ...filter,
-      'branchIds.0': { $exists: true },
-      isActive: true,
+      query: filter,
     });
 
-    return { list, totalCount, totalUsersCount };
+    return { list, totalCount, pageInfo };
   },
 
-  async branchDetail(_root, { _id }, { models }: IContext) {
+  async branchDetail(_root: undefined, { _id }, { models }: IContext) {
     return models.Branches.getBranch({ _id });
   },
 };

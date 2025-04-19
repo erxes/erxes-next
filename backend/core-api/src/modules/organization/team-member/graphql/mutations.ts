@@ -91,7 +91,7 @@ export const userMutations = {
   /*
    * Update user
    */
-  async usersEdit(_root, args: IUsersEdit, { models }: IContext) {
+  async usersEdit(_root: undefined, args: IUsersEdit, { models }: IContext) {
     const { _id, ...doc } = args;
 
     // clean custom field values

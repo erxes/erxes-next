@@ -5,3 +5,4 @@ export * from './structure';
 export * from './team-members';
 export * from './tags';
 export * from './team-inbox';
+export * from './widget-provider/context/widgetContext';

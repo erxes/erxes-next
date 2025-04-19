@@ -51,7 +51,7 @@ import {
   IUnitDocument,
 } from '@/organization/structure/@types/structure';
 import { IAppModel, loadAppClass } from '@/apps/db/models/Apps';
-import { IAppDocument } from '@/apps/@types/apps';
+import { IAppDocument } from 'erxes-api-shared/core-types';
 import {
   IBranchModel,
   IDepartmentModel,

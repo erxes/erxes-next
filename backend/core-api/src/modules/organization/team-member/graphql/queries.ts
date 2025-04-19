@@ -1,12 +1,12 @@
-import { IContext } from '~/connectionResolvers';
 import { USER_ROLES } from 'erxes-api-shared/core-modules';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import { IModels } from '~/connectionResolvers';
-import { paginate } from 'erxes-api-shared/utils';
+import {
+  ICursorPaginateParams,
+  IUserDocument,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { IContext, IModels } from '~/connectionResolvers';
 
 interface IListArgs {
-  page?: number;
-  perPage?: number;
   sortDirection?: number;
   sortField?: string;
   searchValue?: string;
@@ -157,7 +157,7 @@ export const userQueries = {
 
   async users(
     _parent: undefined,
-    args: IListArgs,
+    args: IListArgs & ICursorPaginateParams,
     { models, subdomain, user }: IContext,
   ) {
     const selector = {
@@ -165,13 +165,12 @@ export const userQueries = {
       ...NORMAL_USER_SELECTOR,
     };
 
-    const { sortField, sortDirection } = args;
+    const { list, totalCount, pageInfo } = await cursorPaginate<IUserDocument>({
+      model: models.Users,
+      params: args,
+      query: selector,
+    });
 
-    const sort =
-      sortField && sortDirection
-        ? { [sortField]: sortDirection }
-        : { username: 1 };
-
-    return paginate(models.Users.find(selector).sort(sort as any), args);
+    return { list, totalCount, pageInfo };
   },
 };

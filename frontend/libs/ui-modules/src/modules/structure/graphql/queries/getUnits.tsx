@@ -7,6 +7,7 @@ export const GET_UNITS_MAIN = gql`
         _id
         title
         code
+        userCount
       }
       totalCount
       totalUsersCount
@@ -15,7 +16,7 @@ export const GET_UNITS_MAIN = gql`
 `;
 
 export const GET_UNIT_BT_ID = gql`
-  query unitDetail($_id: String) {
+  query unitDetail($_id: String!) {
     unitDetail(_id: $_id) {
       _id
       title

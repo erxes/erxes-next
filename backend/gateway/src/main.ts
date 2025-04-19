@@ -13,12 +13,12 @@ import { startRouter, stopRouter } from '~/apollo-router';
 import userMiddleware from '~/middlewares/userMiddleware';
 import { initMQWorkers } from '~/mq/workers/workers';
 import {
-  applyProxiesToGraphql,
+  applyProxiesCoreless,
   applyProxyToCore,
   proxyReq,
 } from '~/proxy/middleware';
 
-import { getService, redis } from 'erxes-api-shared/utils';
+import { getPlugin, redis } from 'erxes-api-shared/utils';
 import { applyGraphqlLimiters } from '~/middlewares/graphql-limiter';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -57,8 +57,16 @@ app.use('/bullmq-board', serverAdapter.getRouter());
 app.use('/pl:serviceName', async (req, res) => {
   try {
     const serviceName: string = req.params.serviceName.replace(':', '');
+    const path = req.path;
 
-    const service = await getService(serviceName);
+    // Forbid access to trpc endpoints
+    if (path.startsWith('/trpc')) {
+      return res.status(403).json({
+        error: 'Access to trpc endpoints through plugin proxy is forbidden',
+      });
+    }
+
+    const service = await getPlugin(serviceName);
 
     const targetUrl = service.address;
 
@@ -102,7 +110,7 @@ async function start() {
 
     // Apply the initial proxy middleware
     applyGraphqlLimiters(app);
-    applyProxiesToGraphql(app);
+    applyProxiesCoreless(app);
     applyProxyToCore(app, global.currentTargets);
 
     // Start the HTTP server

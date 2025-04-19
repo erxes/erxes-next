@@ -1,9 +1,3 @@
-export interface IRule {
-  kind: string;
-  text: string;
-  condition: string;
-  value: string;
-}
 
 export interface IBrand {
   code?: string;
@@ -17,10 +11,6 @@ export interface IBrandDocument extends IBrand, Document {
   _id: string;
   emailConfig?: IBrandEmailConfigDocument;
   createdAt: Date;
-}
-
-export interface IRuleDocument extends IRule, Document {
-  _id: string;
 }
 
 export interface IBrandEmailConfig {

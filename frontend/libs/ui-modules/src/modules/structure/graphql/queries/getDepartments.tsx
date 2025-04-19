@@ -1,5 +1,14 @@
 import { gql } from '@apollo/client';
 
+const DEPARTMENTS_FIELDS = `
+  _id
+  title
+  code
+  parentId
+  order
+  userCount
+`;
+
 export const GET_DEPARTMENTS = gql`
   query departments(
     $ids: [String]
@@ -19,11 +28,35 @@ export const GET_DEPARTMENTS = gql`
       status: $status
       withoutUserFilter: $withoutUserFilter
     ) {
-      _id
-      code
-      title
-      parentId
-      order
+      ${DEPARTMENTS_FIELDS}
+    }
+  }
+`;
+
+export const GET_DEPARTMENTS_MAIN = gql`
+  query departmentsMain(
+    $ids: [String]
+    $excludeIds: Boolean,
+    $perPage: Int,
+    $page: Int
+    $searchValue: String,
+    $status:String,
+    $withoutUserFilter: Boolean
+  ){
+    departmentsMain(
+      ids: $ids
+      excludeIds: $excludeIds,
+      perPage: $perPage,
+      page: $page
+      searchValue: $searchValue
+      status: $status
+      withoutUserFilter: $withoutUserFilter
+    ){
+      totalCount
+      totalUsersCount
+      list {
+        ${DEPARTMENTS_FIELDS}
+      }
     }
   }
 `;

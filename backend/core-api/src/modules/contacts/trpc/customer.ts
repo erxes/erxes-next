@@ -1,12 +1,14 @@
 import { initTRPC } from '@trpc/server';
-import { generateModels } from '~/connectionResolvers';
+import { ITRPCContext } from '~/init-trpc';
 
-const t = initTRPC.create();
+const t = initTRPC.context<ITRPCContext>().create();
 
 export const customerRouter = t.router({
   customer: t.router({
-    list: t.procedure.input(generateModels).query(async () => {
-      return null;
+    list: t.procedure.query(async ({ ctx }) => {
+      const { models } = ctx;
+
+      return models.Customers.find({});
     }),
 
     get: t.procedure.query(async () => {

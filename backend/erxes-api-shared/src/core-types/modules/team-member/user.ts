@@ -1,4 +1,5 @@
-import { ICustomField } from '../../common';
+import { Document } from 'mongoose';
+import { ICustomField, ILink } from '../../common';
 import { IPermissionDocument } from '../permissions/permission';
 
 export interface IEmailSignature {
@@ -6,10 +7,6 @@ export interface IEmailSignature {
   signature?: string;
 }
 export interface IEmailSignatureDocument extends IEmailSignature, Document {}
-
-export interface ILink {
-  [key: string]: string;
-}
 
 export interface IDetail {
   avatar?: string;

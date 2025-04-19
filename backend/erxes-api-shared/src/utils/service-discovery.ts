@@ -14,13 +14,13 @@ const queue = new Queue('gateway-update-apollo-router', {
   connection: redis,
 });
 
-export const getServices = async (): Promise<string[]> => {
+export const getPlugins = async (): Promise<string[]> => {
   const enabledServices = (await redis.smembers('enabled-services')) || '[]';
 
   return ['core', ...enabledServices];
 };
 
-export const addService = async (serviceName: string): Promise<void> => {
+export const addPlugin = async (serviceName: string): Promise<void> => {
   const isMember = await redis.sismember('enabled-services', serviceName);
   if (!isMember) {
     await queue.add('service-join', { serviceName });
@@ -34,7 +34,7 @@ export const addService = async (serviceName: string): Promise<void> => {
   }
 };
 
-export const removeService = async (serviceName: string): Promise<void> => {
+export const removePLugin = async (serviceName: string): Promise<void> => {
   queue.add('service-leave', { serviceName });
   redis.srem('enabled-services', serviceName);
 };
@@ -42,7 +42,7 @@ export const removeService = async (serviceName: string): Promise<void> => {
 type ServiceInfo = { address: string; config: any };
 const serviceInfoCache: { [name in string]: Readonly<ServiceInfo> } = {};
 
-export const getService = async (
+export const getPlugin = async (
   name: string,
 ): Promise<Readonly<ServiceInfo>> => {
   if (serviceInfoCache[name]) {
@@ -63,7 +63,7 @@ export const getService = async (
   return result;
 };
 
-export const join = async ({
+export const joinErxesGateway = async ({
   name,
   port,
   hasSubscriptions = false,
@@ -93,13 +93,13 @@ export const join = async ({
 
   await redis.set(`service:${name}`, address);
 
-  await addService(name);
+  await addPlugin(name);
 
   console.log(`$service:${name} joined with ${address}`);
 };
 
-export const leave = async (name: string, port: number) => {
-  await removeService(name);
+export const leaveErxesGateway = async (name: string, port: number) => {
+  await removePLugin(name);
 
   console.log(`$service:${name} left ${port}`);
 };
@@ -107,7 +107,7 @@ export const leave = async (name: string, port: number) => {
 export const isEnabled = async (name: string) => {
   if (name === 'core') return true;
 
-  const enabledServices = await getServices();
+  const enabledServices = await getPlugins();
 
   return enabledServices.includes(name);
 };

@@ -237,10 +237,6 @@ export const validSearchText = (values: string[]) => {
   return value.substring(0, 511);
 };
 
-export const resetConfigsCache = async () => {
-  await redis.set('configs_erxes_api', '');
-};
-
 export const getCoreDomain = () => {
   const NODE_ENV = process.env.NODE_ENV;
 

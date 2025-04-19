@@ -1,7 +1,7 @@
 import { IContext } from '~/connectionResolvers';
 
 export const appQueries = {
-  async apps(_root, args, { models }: IContext) {
+  async apps(_root: undefined, args, { models }: IContext) {
     const { searchValue } = args;
     const qry: any = {};
     if (searchValue) {
@@ -10,7 +10,7 @@ export const appQueries = {
     return models.Apps.find(qry);
   },
 
-  async appTotalCount(_root, args, { models }: IContext) {
+  async appTotalCount(_root: undefined, args, { models }: IContext) {
     const { searchValue } = args;
     const qry: any = {};
     if (searchValue) {
@@ -19,7 +19,11 @@ export const appQueries = {
     return models.Apps.find(qry).countDocuments();
   },
 
-  async appDetail(_root, { _id }: { _id: string }, { models }: IContext) {
+  async appDetail(
+    _root: undefined,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ) {
     return models.Apps.findOne({ _id });
   },
 };

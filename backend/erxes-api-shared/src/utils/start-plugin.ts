@@ -26,9 +26,10 @@ import { Request as ApiRequest, Response as ApiResponse } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
-import { join, leave } from './service-discovery';
+// import { join, leave } from './service-discovery';
 import { getSubdomain } from './utils';
 import { logHandler } from './logs';
+import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
 
 const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
 
@@ -187,7 +188,7 @@ export async function startPlugin(
 
   async function leaveServiceDiscovery() {
     try {
-      await leave(configs.name, port);
+      await leaveErxesGateway(configs.name, port);
       console.log(`Left service discovery. name=${configs.name} port=${port}`);
     } catch (e) {
       console.error(e);
@@ -327,7 +328,7 @@ export async function startPlugin(
   if (configs.meta) {
   } // end configs.meta if
 
-  await join({
+  await joinErxesGateway({
     name: configs.name,
     port,
     hasSubscriptions: configs.hasSubscriptions,
