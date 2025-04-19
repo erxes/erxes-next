@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { Login } from '@/auth/login/components/Login';
+import { ForgotPassword } from '@/auth/login/components/ForgotPassword';
 import { currentUserState } from 'ui-modules';
 import { DynamicBanner } from '@/auth/components/DynamicBanner';
 import { AuthenticationLayout } from '~/modules/auth/components/AuthenticationLayout';
 import { AppPath } from '@/types/paths/AppPath';
 import { useAtomValue } from 'jotai';
 
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
   const navigate = useNavigate();
   const currentUser = useAtomValue(currentUserState);
 
@@ -21,10 +21,10 @@ const LoginPage = () => {
     <div className="flex min-h-screen w-full z-10">
       <DynamicBanner />
       <AuthenticationLayout>
-        <Login />
+        <ForgotPassword />
       </AuthenticationLayout>
     </div>
   );
 };
 
-export default LoginPage;
+export default ForgotPasswordPage;
