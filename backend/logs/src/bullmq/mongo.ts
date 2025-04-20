@@ -72,18 +72,21 @@ const actionMap = {
 export const handleMongoChangeEvent = async (
   Logs: Model<ILogDocument>,
   changeEvent: any,
+  contentType?: string,
 ) => {
   // MongoDB client setup
   const operationType = changeEvent.operationType;
   const collectionName = changeEvent.ns.coll;
   const docId = changeEvent.documentKey._id;
+  const { processId } = changeEvent?.fullDocument || {};
 
   const action = actionMap[operationType];
   await action(
     Logs,
     collectionName,
     docId,
-    { source: 'mongo', status: LOG_STATUSES.SUCCESS },
+    { source: 'mongo', status: LOG_STATUSES.SUCCESS, processId, contentType },
     changeEvent,
+    processId,
   );
 };

@@ -16,7 +16,6 @@ export const authMutations = {
     args: LoginParams,
     { req, res, requestInfo, models, subdomain }: IContext,
   ) {
-    console.log({ dasds: 'dascx' });
     return await logHandler(
       async () => {
         const response = await models.Users.login(args);
@@ -40,6 +39,7 @@ export const authMutations = {
         return 'loggedIn';
       },
       {
+        subdomain,
         source: 'auth',
         action: 'login',
         userId: (await models.Users.findOne({ email: args.email }).lean())?._id,
@@ -60,7 +60,7 @@ export const authMutations = {
   async logout(
     _parent: undefined,
     _args: undefined,
-    { req, res, user, requestInfo, models }: IContext,
+    { req, res, user, requestInfo, models, subdomain }: IContext,
   ) {
     await logHandler(
       async () => {
@@ -72,6 +72,7 @@ export const authMutations = {
         return logout;
       },
       {
+        subdomain,
         source: 'auth',
         action: 'logout',
         userId: user._id,

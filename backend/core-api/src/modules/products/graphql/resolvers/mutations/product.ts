@@ -6,8 +6,8 @@ export const productMutations = {
    * Creates a new product
    * @param {Object} doc Product document
    */
-  async productsAdd(_root: undefined, doc: IProduct, { models }: IContext) {
-    return await models.Products.createProduct(doc);
+  async productsAdd(_root: undefined, doc: IProduct, { models, __ }: IContext) {
+    return await models.Products.createProduct(__(doc));
   },
 
   /**
@@ -18,12 +18,15 @@ export const productMutations = {
   async productsEdit(
     _root: undefined,
     { _id, ...doc }: { _id: string } & IProduct,
-    { models }: IContext,
+    { models, __ }: IContext,
   ) {
-    return await models.Products.updateProduct(_id, {
-      ...doc,
-      status: 'active',
-    });
+    return await models.Products.updateProduct(
+      _id,
+      __({
+        ...doc,
+        status: 'active',
+      }),
+    );
   },
 
   /**

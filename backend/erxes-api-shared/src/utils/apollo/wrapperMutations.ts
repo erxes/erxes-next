@@ -11,12 +11,13 @@ type GraphqlLogHandler<TArgs = any, TReturn = any> = (
 
 const withLogging = (resolver: GraphqlLogHandler): GraphqlLogHandler => {
   return async (root, args, context, info) => {
-    const { user, req } = context;
+    const { user, req, processId, subdomain } = context;
     const requestData = req.headers;
 
     return await logHandler(
       async () => await resolver(root, args, context, info),
       {
+        subdomain,
         source: 'graphql',
         action: 'mutations',
         payload: {
@@ -24,6 +25,7 @@ const withLogging = (resolver: GraphqlLogHandler): GraphqlLogHandler => {
           requestData,
           args,
         },
+        processId,
         userId: user?._id,
       },
     );
@@ -38,10 +40,11 @@ export const wrapApolloMutations = (
   const wrappedMutations: Record<string, GraphqlLogHandler> = {};
 
   for (const [key, resolver] of Object.entries(mutations)) {
-    // if (muataionsForSkip?.includes(key)) {
-    //   return resolver;
-    // }
-    wrappedMutations[key] = withLogging(resolver);
+    if (muataionsForSkip?.includes(key)) {
+      wrappedMutations[key] = resolver;
+    } else {
+      wrappedMutations[key] = withLogging(resolver);
+    }
   }
 
   return wrappedMutations;

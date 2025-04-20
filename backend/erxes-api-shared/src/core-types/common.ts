@@ -64,9 +64,12 @@ export interface IMainContext {
   requestInfo: any;
   subdomain: string;
   user: IUserDocument;
+  __: <T extends object>(doc: T) => T & { processId: string };
+  processId: string;
 }
 
 export interface ILogDoc {
+  subdomain: string;
   source: 'webhook' | 'graphql' | 'mongo' | 'auth';
   action: string;
   payload: any;
@@ -77,4 +80,5 @@ export interface ILogDoc {
     durationMs: number;
   };
   status?: 'failed' | 'success';
+  processId?: string;
 }

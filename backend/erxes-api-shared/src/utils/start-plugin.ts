@@ -5,20 +5,14 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-// import * as bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import { Application } from 'express';
 
 import * as http from 'http';
-// import { logHandler } from '../../../erxes-api-shared/src/utils/logs';
 
 dotenv.config();
-
-// import * as ws from 'ws';
-// import { filterXSS } from 'xss';
-// import { debugError, debugInfo } from '../debuggers';
 
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
@@ -26,12 +20,19 @@ import { Request as ApiRequest, Response as ApiResponse } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
-// import { join, leave } from './service-discovery';
-import { getSubdomain } from './utils';
 import { logHandler } from './logs';
 import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
+import { generateApolloContext } from './apollo';
+import { closeMongooose } from './mongo';
+import { AutomationConfigs } from '../core-modules/automations/types';
+import { startAutomations } from '../core-modules';
+import { getSubdomain } from './utils';
 
 const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
+
+type IMeta = {
+  automations?: AutomationConfigs;
+};
 
 type ApiHandler = {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -59,7 +60,6 @@ type ConfigTypes = {
     res: ApiResponse,
   ) => Promise<void>;
   onServerInit: (app: express.Express) => Promise<void>;
-  meta?: any;
   importExportTypes?: any;
   middlewares?: any;
   apiHandlers?: ApiHandler[];
@@ -67,6 +67,7 @@ type ConfigTypes = {
   corsOptions?: any;
   subscriptionPluginPath?: any;
   trpcAppRouter?: AnyRouter;
+  meta?: IMeta;
 };
 
 export async function startPlugin(
@@ -103,25 +104,29 @@ export async function startPlugin(
         PATCH: 'patch',
         DELETE: 'delete',
       } as const;
-      
+
       type Method = keyof typeof METHODS;
       type LowercaseMethod = (typeof METHODS)[Method];
-      
+
       // Ensure `method` is one of the keys
       const METHOD = METHODS[method as Method] as LowercaseMethod;
-      
-      (app as Record<LowercaseMethod, Application[LowercaseMethod]>)[METHOD](path, async (req: ApiRequest, res: ApiResponse) => {
-        return await logHandler(async () => await resolver(req, res), {
-          source: 'webhook',
-          action: method,
-          payload: {
-            headers: req.headers,
-            body: req.body,
-            query: req?.query,
-          },
-          userId: extractUserFromHeader(req.headers)?._id,
-        });
-      });
+
+      (app as Record<LowercaseMethod, Application[LowercaseMethod]>)[METHOD](
+        path,
+        async (req: ApiRequest, res: ApiResponse) => {
+          return await logHandler(async () => await resolver(req, res), {
+            subdomain: getSubdomain(req),
+            source: 'webhook',
+            action: method,
+            payload: {
+              headers: req.headers,
+              body: req.body,
+              query: req?.query,
+            },
+            userId: extractUserFromHeader(req.headers)?._id,
+          });
+        },
+      );
     }
   }
 
@@ -148,7 +153,7 @@ export async function startPlugin(
   app.use((req: any, _res, next) => {
     req.rawBody = '';
 
-    req.on('data', (chunk:any) => {
+    req.on('data', (chunk: any) => {
       req.rawBody += chunk.toString();
     });
 
@@ -156,7 +161,7 @@ export async function startPlugin(
   });
 
   // Error handling middleware
-  app.use((error:any, _req:any, res:any, _next:any) => {
+  app.use((error: any, _req: any, res: any, _next: any) => {
     // const msg = filterXSS(error.message);
     const msg = error.message;
 
@@ -198,7 +203,9 @@ export async function startPlugin(
   // If the Node process ends, close the Mongoose connection
   (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
     process.on(sig, async () => {
+      console.log('daczx');
       await closeHttpServer();
+      await closeMongooose();
       await leaveServiceDiscovery();
       process.exit(0);
     });
@@ -234,77 +241,7 @@ export async function startPlugin(
   app.use(
     '/graphql',
     expressMiddleware(apolloServer, {
-      context: async ({ req, res }) => {
-        if (
-          req.body.operationName === 'IntrospectionQuery' ||
-          req.body.operationName === 'SubgraphIntrospectQuery'
-        ) {
-          return {};
-        }
-        let user: any = extractUserFromHeader(req.headers);
-
-        let context:any;
-
-        if (USE_BRAND_RESTRICTIONS !== 'true') {
-          context = {
-            brandIdSelector: {},
-            singleBrandIdSelector: {},
-            userBrandIdsSelector: {},
-            docModifier: (doc:any) => doc,
-            commonQuerySelector: {},
-            user,
-            res,
-          };
-        } else {
-          let scopeBrandIds = JSON.parse(req.cookies.scopeBrandIds || '[]');
-          let brandIds = [];
-          let brandIdSelector = {};
-          let commonQuerySelector = {};
-          let commonQuerySelectorElk;
-          let userBrandIdsSelector = {};
-          let singleBrandIdSelector = {};
-
-          if (user) {
-            brandIds = user.brandIds || [];
-
-            if (scopeBrandIds.length === 0) {
-              scopeBrandIds = brandIds;
-            }
-
-            if (!user.isOwner && scopeBrandIds.length > 0) {
-              brandIdSelector = { _id: { $in: scopeBrandIds } };
-              commonQuerySelector = { scopeBrandIds: { $in: scopeBrandIds } };
-              commonQuerySelectorElk = { terms: { scopeBrandIds } };
-              userBrandIdsSelector = { brandIds: { $in: scopeBrandIds } };
-              singleBrandIdSelector = { brandId: { $in: scopeBrandIds } };
-            }
-          }
-
-          context = {
-            brandIdSelector,
-            singleBrandIdSelector,
-            docModifier: (doc:any) => ({ ...doc, scopeBrandIds }),
-            commonQuerySelector,
-            commonQuerySelectorElk,
-            userBrandIdsSelector,
-            user,
-            req,
-            res,
-          };
-        }
-
-        const subdomain = getSubdomain(req);
-
-        context.subdomain = subdomain;
-        context.requestInfo = {
-          secure: req.secure,
-          cookies: req.cookies,
-        };
-
-        await configs.apolloServerContext(subdomain, context, req, res);
-
-        return context;
-      },
+      context: generateApolloContext(configs.apolloServerContext),
     }),
   );
 
@@ -312,20 +249,16 @@ export async function startPlugin(
     httpServer.listen({ port: PORT }, resolve),
   );
 
-  //   if (configs.freeSubscriptions) {
-  //     const wsServer = new ws.Server({
-  //       server: httpServer,
-  //       path: '/subscriptions',
-  //     });
-
-  //     await configs.freeSubscriptions(wsServer);
-  //   }
-
   console.log(
     `🚀 ${configs.name} graphql api ready at http://localhost:${port}/graphql`,
   );
 
   if (configs.meta) {
+    const { automations } = configs.meta || {};
+
+    if (automations) {
+      startAutomations(configs.name, automations);
+    }
   } // end configs.meta if
 
   await joinErxesGateway({

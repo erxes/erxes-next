@@ -3,11 +3,16 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
-import { extractUserFromHeader, getSubdomain } from 'erxes-api-shared/utils';
+import {
+  extractUserFromHeader,
+  generateApolloContext,
+  getSubdomain,
+} from 'erxes-api-shared/utils';
 import { gql } from 'graphql-tag';
 import { generateModels } from '~/connectionResolvers';
 import * as typeDefDetails from '~/apollo/schema/schema';
 import resolvers from './resolvers';
+import { IMainContext } from 'erxes-api-shared/core-types';
 
 // load environment variables
 dotenv.config();
@@ -44,31 +49,15 @@ export const initApolloServer = async (app, httpServer) => {
   app.use(
     '/graphql',
     expressMiddleware(apolloServer, {
-      context: async ({ req, res }) => {
-        if (
-          req.body.operationName === 'IntrospectionQuery' ||
-          req.body.operationName === 'SubgraphIntrospectQuery'
-        ) {
-          return {};
-        }
-        const subdomain = getSubdomain(req);
-        const models = await generateModels(subdomain);
+      context: generateApolloContext<IMainContext>(
+        async (subdomain, context) => {
+          const models = await generateModels(subdomain);
 
-        const user: any = extractUserFromHeader(req.headers);
+          context.models = models;
 
-        const requestInfo = {
-          secure: req.secure,
-          cookies: req.cookies,
-        };
-
-        return {
-          user,
-          res,
-          requestInfo,
-          subdomain,
-          models,
-        };
-      },
+          return context;
+        },
+      ),
     }),
   );
 

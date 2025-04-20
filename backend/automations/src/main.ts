@@ -1,7 +1,13 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { getSubdomain, join, leave, redis } from 'erxes-api-shared/utils';
+import {
+  closeMongooose,
+  getSubdomain,
+  joinErxesGateway,
+  leaveErxesGateway,
+  redis,
+} from 'erxes-api-shared/utils';
 import express from 'express';
 import * as http from 'http';
 import mongoose from 'mongoose';
@@ -9,6 +15,7 @@ import { initApolloServer } from './apollo/index';
 import { generateModels } from './db/connectionResolvers';
 import { appRouter } from './trpc';
 import { initMQWorkers } from './bullmq';
+import { startAutomations } from 'erxes-api-shared/core-modules';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT } = process.env;
 
@@ -61,7 +68,7 @@ const httpServer = http.createServer(app);
 httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
 
-  await join({
+  await joinErxesGateway({
     name: 'automations-api',
     port,
     hasSubscriptions: false,
@@ -73,18 +80,9 @@ httpServer.listen(port, async () => {
 // GRACEFULL SHUTDOWN
 process.stdin.resume(); // so the program will not close instantly
 
-async function closeMongooose() {
-  try {
-    await mongoose.connection.close();
-    console.log('Mongoose connection disconnected ');
-  } catch (e) {
-    console.error(e);
-  }
-}
-
 async function leaveServiceDiscovery() {
   try {
-    await leave('automations-api', port);
+    await leaveErxesGateway('automations-api', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);

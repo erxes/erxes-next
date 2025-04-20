@@ -1,3 +1,4 @@
+import { schemaWrapper } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IExecAction {
@@ -50,27 +51,29 @@ const execActionSchema = new Schema({
   result: { type: Object },
 });
 
-export const executionSchema = new Schema({
-  createdAt: { type: Date, default: Date.now(), required: true },
-  modifiedAt: { type: Date, default: Date.now(), required: true },
-  automationId: { type: String, required: true, index: true },
-  triggerId: { type: String, required: true, index: true },
-  triggerType: { type: String },
-  triggerConfig: { type: Object },
-  nextActionId: { type: String },
-  targetId: { type: String, required: true, index: true },
-  target: { type: Object },
-  status: {
-    type: String,
-    enum: EXECUTION_STATUS.ALL,
-    default: EXECUTION_STATUS.ACTIVE,
-    label: 'Status',
-    index: true,
-  },
-  description: { type: String, required: true },
-  actions: { type: [execActionSchema] },
-  startWaitingDate: { type: Date },
-  waitingActionId: { type: String },
-  responseActionId: { type: String },
-  objToCheck: { type: Object, optional: true },
-});
+export const executionSchema = schemaWrapper(
+  new Schema({
+    createdAt: { type: Date, default: Date.now(), required: true },
+    modifiedAt: { type: Date, default: Date.now(), required: true },
+    automationId: { type: String, required: true, index: true },
+    triggerId: { type: String, required: true, index: true },
+    triggerType: { type: String },
+    triggerConfig: { type: Object },
+    nextActionId: { type: String },
+    targetId: { type: String, required: true, index: true },
+    target: { type: Object },
+    status: {
+      type: String,
+      enum: EXECUTION_STATUS.ALL,
+      default: EXECUTION_STATUS.ACTIVE,
+      label: 'Status',
+      index: true,
+    },
+    description: { type: String, required: true },
+    actions: { type: [execActionSchema] },
+    startWaitingDate: { type: Date },
+    waitingActionId: { type: String },
+    responseActionId: { type: String },
+    objToCheck: { type: Object, optional: true },
+  }),
+);

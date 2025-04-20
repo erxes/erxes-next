@@ -6,7 +6,7 @@ import {
   LEAD_SUCCESS_ACTIONS,
   MESSENGER_DATA_AVAILABILITY,
 } from './constants';
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 const messengerOnlineHoursSchema = new Schema(
   {
     day: { type: String },
@@ -250,36 +250,38 @@ const webhookDataSchema = new Schema(
 );
 
 // schema for integration document
-export const integrationSchema = new Schema({
-  _id: mongooseStringRandomId,
-  createdUserId: { type: String, label: 'Created by' },
+export const integrationSchema = schemaWrapper(
+  new Schema({
+    _id: mongooseStringRandomId,
+    createdUserId: { type: String, label: 'Created by' },
 
-  kind: {
-    type: String,
-    label: 'Kind',
-  },
-  createdAt: { type: 'Date', label: 'Created at' },
+    kind: {
+      type: String,
+      label: 'Kind',
+    },
+    createdAt: { type: 'Date', label: 'Created at' },
 
-  name: { type: String, label: 'Name' },
-  brandId: { type: String, label: 'Brand' },
+    name: { type: String, label: 'Name' },
+    brandId: { type: String, label: 'Brand' },
 
-  tagIds: { type: [String], label: 'Tags', index: true },
-  formId: { type: String, label: 'Form' },
-  isActive: {
-    type: Boolean,
-    optional: true,
-    default: true,
-    label: 'Is active',
-  },
-  isConnected: {
-    type: Boolean,
-    optional: true,
-    default: false,
-    label: 'Is connected',
-  },
-  webhookData: { type: webhookDataSchema },
-  // TODO: remove
-  formData: { type: leadDataSchema },
-  messengerData: { type: messengerDataSchema },
-  uiOptions: { type: uiOptionsSchema },
-});
+    tagIds: { type: [String], label: 'Tags', index: true },
+    formId: { type: String, label: 'Form' },
+    isActive: {
+      type: Boolean,
+      optional: true,
+      default: true,
+      label: 'Is active',
+    },
+    isConnected: {
+      type: Boolean,
+      optional: true,
+      default: false,
+      label: 'Is connected',
+    },
+    webhookData: { type: webhookDataSchema },
+    // TODO: remove
+    formData: { type: leadDataSchema },
+    messengerData: { type: messengerDataSchema },
+    uiOptions: { type: uiOptionsSchema },
+  }),
+);

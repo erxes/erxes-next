@@ -1,5 +1,6 @@
 import { Document, Schema } from 'mongoose';
 import { STATUSES } from '../../constants';
+import { schemaWrapper } from 'erxes-api-shared/utils';
 
 export type IActionsMap = { [key: string]: IAction };
 
@@ -95,18 +96,20 @@ export const actionSchema = new Schema(
   { _id: false },
 );
 
-export const automationSchema = new Schema({
-  name: { type: String, required: true },
-  status: { type: String, default: STATUSES.DRAFT },
-  triggers: { type: [triggerSchema] },
-  actions: { type: [actionSchema] },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-    label: 'Created date',
-  },
-  createdBy: { type: String },
-  updatedAt: { type: Date, default: new Date(), label: 'Updated date' },
-  updatedBy: { type: String },
-  tagIds: { type: [String], label: 'Tag Ids', optional: true },
-});
+export const automationSchema = schemaWrapper(
+  new Schema({
+    name: { type: String, required: true },
+    status: { type: String, default: STATUSES.DRAFT },
+    triggers: { type: [triggerSchema] },
+    actions: { type: [actionSchema] },
+    createdAt: {
+      type: Date,
+      default: new Date(),
+      label: 'Created date',
+    },
+    createdBy: { type: String },
+    updatedAt: { type: Date, default: new Date(), label: 'Updated date' },
+    updatedBy: { type: String },
+    tagIds: { type: [String], label: 'Tag Ids', optional: true },
+  }),
+);
