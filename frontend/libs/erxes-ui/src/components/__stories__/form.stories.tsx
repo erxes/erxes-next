@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
 import { Form } from 'erxes-ui/components/form';
 import { Input } from 'erxes-ui/components/input';
 import { Button } from 'erxes-ui/components/button';
@@ -66,7 +65,7 @@ export const Default: Story = {
                   <Form.Item>
                     <Form.Label>Username</Form.Label>
                     <Form.Control>
-                      <Input placeholder="Enter your username" />
+                      <Input placeholder="Enter your username" {...field} />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
