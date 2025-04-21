@@ -1,14 +1,15 @@
 import { useQuery } from '@apollo/client';
-import { POSTS_QUERY } from '../graphql/queries/postlist';
 import { useCmsContext } from '~/modules/app/context/CmsContext';
+import { CMS_CATEGORIES } from '../graphql/queries/getCmsCategories';
 
-export const usePostLists = () => {
+export const useGetCmsCategories = () => {
   const { selectedWebsite } = useCmsContext();
 
   const cp_id = selectedWebsite;
 
-  const { data, loading, error } = useQuery(POSTS_QUERY, {
+  const { data, loading, error } = useQuery(CMS_CATEGORIES, {
     variables: {
+      page: 1,
       perPage: 20,
       clientPortalId: cp_id,
     },

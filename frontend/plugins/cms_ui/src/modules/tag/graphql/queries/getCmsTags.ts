@@ -1,0 +1,29 @@
+import { gql } from '@apollo/client';
+
+export const CMS_TAGS = gql`
+  query CmsTags(
+    $clientPortalId: String!
+    $searchValue: String
+    $page: Int
+    $perPage: Int
+    $sortField: String
+    $sortDirection: String
+  ) {
+    cmsTags(
+      clientPortalId: $clientPortalId
+      searchValue: $searchValue
+      page: $page
+      perPage: $perPage
+      sortField: $sortField
+      sortDirection: $sortDirection
+    ) {
+      _id
+      clientPortalId
+      name
+      slug
+      colorCode
+      createdAt
+      updatedAt
+    }
+  }
+`;

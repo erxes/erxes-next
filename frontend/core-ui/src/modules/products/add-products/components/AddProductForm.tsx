@@ -42,21 +42,8 @@ export function AddProductForm() {
       scopeBrandIds: [],
     },
   });
-  const { toast } = useToast();
   async function onSubmit(data: ProductFormValues) {
-    productsAdd({
-      variables: data,
-      onError: (e: ApolloError) => {
-        toast({
-          title: 'Error',
-          description: e.message,
-        });
-      },
-      onCompleted: () => {
-        form.reset();
-        setOpen(false);
-      },
-    });
+    setOpen(false);
   }
 
   return (

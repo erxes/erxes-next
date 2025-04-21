@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Collapsible, Sidebar } from 'erxes-ui';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   IconPin,
   IconFile,
@@ -10,6 +10,8 @@ import {
   IconCaretUpFilled,
 } from '@tabler/icons-react';
 import { useCmsContext } from '~/modules/app/context/CmsContext';
+import { Sheet } from 'lucide-react';
+import { AddtagForm } from '~/modules/tag/components/AddCmsTag';
 
 const sidebarSections = [
   {
@@ -30,8 +32,8 @@ const sidebarSections = [
   {
     title: 'Content settings',
     items: [
-      { label: 'Tag', icon: IconLabelFilled, path: 'tags' },
       { label: 'Category', icon: IconCategoryFilled, path: 'categories' },
+      { label: 'Tag', icon: IconLabelFilled, path: 'tags' },
     ],
   },
 ];
@@ -39,7 +41,6 @@ const sidebarSections = [
 export function CmsSideBar() {
   const { selectedWebsite } = useCmsContext();
 
-  const { slug } = useParams();
   const location = useLocation();
 
   const [openSections, setOpenSections] = useState<Record<string, boolean>>(
@@ -58,7 +59,7 @@ export function CmsSideBar() {
     <Sidebar collapsible="none" className="border-r flex-none min-h-screen">
       <Sidebar.Group>
         <Sidebar.GroupContent>
-          <Sidebar.Menu>
+          <Sidebar.Menu className="flex flex-col gap-4">
             {sidebarSections.map((section) => {
               const isOpen = openSections[section.title];
 
@@ -70,7 +71,7 @@ export function CmsSideBar() {
                 >
                   <Sidebar.MenuItem>
                     <Collapsible.Trigger asChild>
-                      <Sidebar.MenuButton className="flex items-center gap-2">
+                      <Sidebar.MenuButton className="flex items-center gap-2 text-gray-500">
                         <IconCaretUpFilled
                           className={`transition-transform duration-200 ${
                             isOpen ? 'rotate-180' : ''
@@ -89,7 +90,7 @@ export function CmsSideBar() {
                             <Sidebar.MenuButton asChild isActive={isActive}>
                               <Link
                                 to={fullPath}
-                                className="flex items-center gap-2"
+                                className="flex items-center gap-2 text-gray-500"
                               >
                                 <Icon />
                                 <span>{label}</span>

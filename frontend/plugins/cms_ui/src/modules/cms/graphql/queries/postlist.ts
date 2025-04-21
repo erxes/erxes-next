@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const POSTS_QUERY = gql`
   query PostList(
     $clientPortalId: String!
+    $type: String
     $featured: Boolean
     $categoryId: String
     $searchValue: String
@@ -16,6 +17,7 @@ export const POSTS_QUERY = gql`
     cmsPostList(
       clientPortalId: $clientPortalId
       featured: $featured
+      type: $type
       categoryId: $categoryId
       searchValue: $searchValue
       status: $status
@@ -30,6 +32,13 @@ export const POSTS_QUERY = gql`
       totalPages
       posts {
         _id
+        type
+        customPostType {
+          _id
+          code
+          label
+          __typename
+        }
         authorKind
         author {
           ... on User {

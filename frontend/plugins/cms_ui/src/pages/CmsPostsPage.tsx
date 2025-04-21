@@ -1,6 +1,7 @@
 import { RecordTable, Resizable } from 'erxes-ui';
 
 import { cmsColumns } from '~/modules/cms/components/CmsColumns';
+import { usePostLists } from '~/modules/cms/hooks/usePostlist';
 
 const posts = [
   {
@@ -219,6 +220,8 @@ const posts = [
 ];
 
 export const CmsPostPage = () => {
+  const data = usePostLists();
+
   return (
     <RecordTable.Provider columns={cmsColumns} data={posts} className="mt-1.5">
       <RecordTable>

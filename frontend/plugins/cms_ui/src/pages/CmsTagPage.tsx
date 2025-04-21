@@ -1,226 +1,36 @@
-import { RecordTable, Resizable } from 'erxes-ui';
+import { RecordTable } from 'erxes-ui';
 
-import { cmsColumns } from '~/modules/cms/components/CmsColumns';
-
-const posts = [
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 1',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-
-  {
-    name: 'Post 2',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-  {
-    name: 'Post 3',
-    category: [
-      { name: 'Category 1', id: 1 },
-      { name: 'Category 2', id: 2 },
-      { name: 'Category 3', id: 3 },
-    ],
-    tag: [
-      { name: 'Tag 1', id: 1 },
-      { name: 'Tag 2', id: 2 },
-      { name: 'Tag 3', id: 3 },
-    ],
-    createdDate: '2023-10-01',
-    modifiedDate: '2023-10-02',
-  },
-];
+import { tagColumns } from '~/modules/tag/components/TagColumns';
+import { useGetCmsTags } from '~/modules/tag/hooks/useGetCmsTags';
 
 export const CmsTagPage = () => {
+  const { data: tagss } = useGetCmsTags();
+  const tags = [
+    {
+      id: 1,
+      name: 'tag1',
+      slug: 'tga 1 slug',
+      createdAt: '2023-10-01',
+      updatedAt: '2023-10-02',
+    },
+    {
+      id: 1,
+      name: 'tag1',
+      slug: 'tga 1 slug',
+      createdAt: '2023-10-01',
+      updatedAt: '2023-10-02',
+    },
+    {
+      id: 1,
+      name: 'tag1',
+      slug: 'tga 1 slug',
+      createdAt: '2023-10-01',
+      updatedAt: '2023-10-02',
+    },
+  ];
+
   return (
-    <RecordTable.Provider columns={cmsColumns} data={posts} className="mt-1.5">
+    <RecordTable.Provider columns={tagColumns} data={tags} className="mt-1.5">
       <RecordTable>
         <RecordTable.Header />
         <RecordTable.Body>

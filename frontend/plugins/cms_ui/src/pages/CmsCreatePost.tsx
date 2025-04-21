@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { Button, Form, Select, Resizable } from 'erxes-ui';
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  Textarea,
+  Switch,
+  Resizable,
+} from 'erxes-ui';
 import { useForm } from 'react-hook-form';
 import {
   IconChevronLeft,
@@ -9,9 +17,9 @@ import {
   IconDeviceMobile,
 } from '@tabler/icons-react';
 
-import { CmsPostForm } from '~/modules/posts/components/CmsPostForm';
 import { CmsPostSeo } from '~/modules/posts/components/CmsPostSeo';
 import { useCmsContext } from '~/modules/app/context/CmsContext';
+import { useAddPost } from '~/modules/cms/hooks/useCreatePost';
 import { Link } from 'react-router-dom';
 
 export const CmsCreatePost = () => {
@@ -37,6 +45,8 @@ export const CmsCreatePost = () => {
   const [selectedStep, setSelectedStep] = useState<'content' | 'seo'>(
     'content',
   );
+
+  const { tagAdd, loading, error } = useAddPost();
 
   const types = [
     { value: 'article', label: 'Article' },
@@ -70,8 +80,36 @@ export const CmsCreatePost = () => {
     { key: 'seo', label: 'SEO' },
   ];
 
-  const onSubmit = (data: any) => {
-    console.log('Submitted data:', data);
+  const onSubmit = async (data: any) => {
+    console.log(data);
+    const input = {
+      type: 'post',
+      clientPortalId: selectedWebsite,
+      title: data.name,
+      slug: '',
+      content: `<p>${data.description}</p>`,
+      excerpt: data.description,
+      categoryIds: [],
+      tagIds: [],
+      status: 'draft',
+      authorId: '',
+      featured: false,
+      reactions: [],
+      reactionCounts: {},
+      images: [],
+      documents: [],
+      attachments: [],
+      customFieldsData: [],
+    };
+
+    try {
+      await tagAdd({ variables: { input } });
+      alert('Post created successfully!');
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to create post');
+    }
   };
 
   return (
@@ -133,16 +171,177 @@ export const CmsCreatePost = () => {
               className="flex flex-col gap-4"
             >
               {selectedStep === 'content' ? (
-                <CmsPostForm
-                  control={form.control}
-                  register={form.register}
-                  types={types}
-                  statuses={statuses}
-                  categories={categories}
-                  tags={tags}
-                />
+                <>
+                  <div className="flex gap-3">
+                    <div className="w-1/2">
+                      <Form.Field
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <Form.Item>
+                            <Form.Label>Post</Form.Label>
+                            <Form.Control>
+                              <Input placeholder="Post title" {...field} />
+                            </Form.Control>
+                          </Form.Item>
+                        )}
+                      />
+                    </div>
+                    <div className="w-1/2">
+                      <Form.Field
+                        control={form.control}
+                        name="type"
+                        render={({ field }) => (
+                          <Form.Item>
+                            <Form.Label>Type</Form.Label>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <Form.Control>
+                                <Select.Trigger className="w-full h-8">
+                                  <Select.Value placeholder="Choose type" />
+                                </Select.Trigger>
+                              </Form.Control>
+                              <Select.Content>
+                                {types.map((t) => (
+                                  <Select.Item key={t.value} value={t.value}>
+                                    {t.label}
+                                  </Select.Item>
+                                ))}
+                              </Select.Content>
+                            </Select>
+                          </Form.Item>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <Form.Field
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control>
+                          <Textarea
+                            placeholder="Description here"
+                            className="min-h-[80px]"
+                            {...field}
+                          />
+                        </Form.Control>
+                      </Form.Item>
+                    )}
+                  />
+
+                  <Form.Field
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Status</Form.Label>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <Form.Control>
+                            <Select.Trigger className="w-full h-8">
+                              <Select.Value placeholder="Select" />
+                            </Select.Trigger>
+                          </Form.Control>
+                          <Select.Content>
+                            {statuses.map((s) => (
+                              <Select.Item key={s.value} value={s.value}>
+                                {s.label}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select>
+                      </Form.Item>
+                    )}
+                  />
+
+                  <Form.Field
+                    control={form.control}
+                    name="categoryId"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Category</Form.Label>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <Form.Control>
+                            <Select.Trigger className="w-full h-8">
+                              <Select.Value placeholder="Select" />
+                            </Select.Trigger>
+                          </Form.Control>
+                          <Select.Content>
+                            {categories.map((c) => (
+                              <Select.Item key={c.value} value={c.value}>
+                                {c.label}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select>
+                      </Form.Item>
+                    )}
+                  />
+
+                  <Form.Field
+                    control={form.control}
+                    name="tag"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Tag</Form.Label>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <Form.Control>
+                            <Select.Trigger className="w-full h-8">
+                              <Select.Value placeholder="Select" />
+                            </Select.Trigger>
+                          </Form.Control>
+                          <Select.Content>
+                            {tags.map((tag) => (
+                              <Select.Item key={tag.value} value={tag.value}>
+                                {tag.label}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select>
+                      </Form.Item>
+                    )}
+                  />
+
+                  <Form.Field
+                    control={form.control}
+                    name="featured"
+                    render={({ field }) => (
+                      <Form.Item className="flex items-center justify-between">
+                        <div className="flex flex-col gap-2">
+                          <Form.Label>Featured</Form.Label>
+                          <p className="text-sm text-gray-500">
+                            Turn this post into a featured post
+                          </p>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </div>
+                      </Form.Item>
+                    )}
+                  />
+                </>
               ) : (
                 <CmsPostSeo control={form.control} />
+              )}
+
+              {error && (
+                <p className="text-red-500 text-sm mt-2">
+                  Error: {error.message}
+                </p>
               )}
 
               <div className="flex w-full justify-between mt-6">
@@ -150,6 +349,7 @@ export const CmsCreatePost = () => {
                 <Button
                   type="submit"
                   className="bg-primary text-primary-foreground"
+                  // loading={loading}
                 >
                   Save
                 </Button>
@@ -194,6 +394,7 @@ export const CmsCreatePost = () => {
               );
             })}
           </div>
+          <div className="bg-red-500 w-full ">sdf</div>
         </div>
       </Resizable.Panel>
     </Resizable.PanelGroup>

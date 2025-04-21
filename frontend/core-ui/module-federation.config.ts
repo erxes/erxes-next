@@ -29,7 +29,8 @@ const config: ModuleFederationConfig = {
     return false;
   },
 
-  remotes: ['inbox_ui', 'sample_ui', 'accounting_ui', 'cms_ui'],
+  remotes: ['cms_ui'],
+  // 'inbox_ui', 'sample_ui', 'accounting_ui',
 };
 
 /**
