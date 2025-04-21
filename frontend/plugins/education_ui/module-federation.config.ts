@@ -1,9 +1,3 @@
-// @ts-check
-
-/**
- * @type {import('@module-federation/sdk').moduleFederationPlugin.ModuleFederationPluginOptions}
- **/
-
 import { ModuleFederationConfig } from '@nx/rspack/module-federation';
 
 const coreLibraries = new Set([
@@ -19,16 +13,22 @@ const coreLibraries = new Set([
 ]);
 
 const config: ModuleFederationConfig = {
-  name: 'core-ui',
+  name: 'education_ui',
+  exposes: {
+    './Config': './src/config.ts',
+    './Module': './src/remote-entry.ts',
+    './Settings': './src/pages/SettingsPage.tsx',
+    './Widgets': './src/widgets/Widgets.tsx',
+  },
 
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {
       return defaultConfig;
     }
+
+    // Returning false means the library is not shared.
     return false;
   },
-
-  remotes: ['sample_ui', 'inbox_ui', 'sales_ui', 'education_ui'],
 };
 
 /**
