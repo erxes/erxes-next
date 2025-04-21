@@ -9,7 +9,7 @@ const Inbox = lazy(() =>
 
 const PluginInbox = () => {
   return (
-    <Suspense fallback={<></>}>
+    <Suspense fallback={<div />}>
       <Routes>
         <Route path="/" element={<Inbox />} />
       </Routes>

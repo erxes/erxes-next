@@ -82,7 +82,7 @@ const ConfirmDialog = ({
     return (
       <Form.Field
         name="confirm"
-        control={formInstance.control}
+        control={formInstance.control as any}
         render={({ field }: { field: any }) => (
           <Form.Item>
             <Form.Label className="text-xs">
