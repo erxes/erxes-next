@@ -5,13 +5,5 @@
   "projectType": "library",
   "tags": ["type:ui"],
   "depConstraints": ["type:ui"],
-  "// targets": "to see all targets run: nx show project erxes-ui --web",
-  "targets": {
-    "build": {
-      "executor": "@nx/web:webpack",
-      "options": {
-        "postcssConfig": "frontend/libs/erxes-ui/postcss.config.js"
-      }
-    }
-  }
+  "// targets": "to see all targets run: nx show project erxes-ui --web"
 }

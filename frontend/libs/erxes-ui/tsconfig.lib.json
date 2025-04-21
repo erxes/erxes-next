@@ -9,9 +9,7 @@
     ],
     "paths": {
       "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
-      "erxes-ui": ["frontend/libs/erxes-ui/src"],
-      "core-ui/*": ["frontend/core-ui/src/*"],
-      "core-ui": ["frontend/core-ui/src"]
+      "erxes-ui": ["frontend/libs/erxes-ui/src"]
     }
   },
   "exclude": [
