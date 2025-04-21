@@ -9,7 +9,7 @@ const Sample = lazy(() =>
 
 const PluginSample = () => {
   return (
-    <Suspense fallback={<></>}>
+    <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/" element={<Sample />} />
       </Routes>

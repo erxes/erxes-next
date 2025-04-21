@@ -13,7 +13,7 @@ const coreLibraries = new Set([
 ]);
 
 const config: ModuleFederationConfig = {
-  name: 'inbox_ui',
+  name: 'frontline_ui',
   exposes: {
     './Config': './src/config.ts',
     './Module': './src/remote-entry.ts',

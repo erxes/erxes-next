@@ -85,7 +85,7 @@ const Tags = () => {
 
   return (
     <SelectTags
-      tagType="inbox:conversation"
+      tagType="frontline:conversation"
       recordId={_id}
       className="flex-none w-auto min-w-32 max-w-48 h-7 hover:bg-background"
       selected={tagIds}
@@ -96,7 +96,7 @@ const Tags = () => {
           variables: {
             targetIds: [_id],
             tagIds: tags,
-            type: 'inbox:conversation',
+            type: 'frontline:conversation',
           },
           update: (cache) => {
             cache.modify({
