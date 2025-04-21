@@ -1,7 +1,7 @@
-import { Separator, Skeleton } from 'erxes-ui';
-import { ConversationHeader } from '~/modules/inbox/conversation-detail/components/ConversationHeader';
+import { Button, Separator, SideMenu, Skeleton } from 'erxes-ui';
+import { ConversationHeader } from '@/inbox/conversation-detail/components/ConversationHeader';
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';
-import { lazy, Suspense } from 'react';
+
 import { useQueryState } from '../../hooks/useQueryState';
 import { activeConversationState } from '../../states/activeConversationState';
 import { useAtomValue } from 'jotai';
@@ -11,10 +11,13 @@ import { MessagesSkeleton } from './ConversationSkeleton';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { MessageInput } from './MessageInput';
 import { ConversationContext } from '../../context/ConversationContext';
+import { useWidget } from 'ui-modules';
 
 export const ConversationDetail = () => {
+  const { Widget } = useWidget();
   const [conversationId] = useQueryState<string>('conversationId');
   const activeConversationCandidate = useAtomValue(activeConversationState);
+
   const currentConversation =
     activeConversationCandidate?._id === conversationId &&
     activeConversationCandidate;
@@ -40,20 +43,29 @@ export const ConversationDetail = () => {
     return <UnderConstruction />;
   }
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <ConversationContext.Provider
-        value={{
-          ...currentConversation,
-          ...conversationDetail,
-          loading,
-        }}
-      >
-        <ConversationHeader />
-        <Separator />
-        <ConversationDetailLayout input={<MessageInput />}>
-          <ConversationMessages />
-        </ConversationDetailLayout>
-      </ConversationContext.Provider>
+    <div className="flex h-full overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden flex-auto">
+        <ConversationContext.Provider
+          value={{
+            ...currentConversation,
+            ...conversationDetail,
+            loading,
+          }}
+        >
+          <ConversationHeader />
+          <Separator />
+          <ConversationDetailLayout input={<MessageInput />}>
+            <ConversationMessages />
+          </ConversationDetailLayout>
+        </ConversationContext.Provider>
+      </div>
+      {!!Widget && conversationId && (
+        <Widget
+          pluginName="inbox"
+          contentId={conversationId}
+          contentType="conversation"
+        />
+      )}
     </div>
   );
 };

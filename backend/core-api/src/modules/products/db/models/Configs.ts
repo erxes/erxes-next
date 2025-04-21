@@ -1,7 +1,10 @@
-import { IProductsConfig, IProductsConfigDocument } from 'erxes-core-types';
+import {
+  IProductsConfig,
+  IProductsConfigDocument,
+} from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
-import { IModels } from '../../../../connectionResolvers';
-import { productsConfigSchema } from '../definitions/configs';
+import { IModels } from '~/connectionResolvers';
+import { productsConfigSchema } from '@/products/db/definitions/configs';
 
 export interface IProductsConfigModel extends Model<IProductsConfigDocument> {
   getConfig(code: string, defaultValue?: string): Promise<any>;

@@ -1,12 +1,15 @@
-import { attachmentSchema, customFieldSchema } from 'erxes-api-modules';
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { PRODUCT_STATUSES, PRODUCT_TYPES } from '@/products/constants';
+import {
+  attachmentSchema,
+  customFieldSchema,
+} from 'erxes-api-shared/core-modules';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
-import { PRODUCT_STATUSES, PRODUCT_TYPES } from '../../constants';
 import { subUomSchema } from './uoms';
 
 export const productSchema = new Schema(
   {
-    _id: mongoStringRandomId,
+    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     shortName: { type: String, optional: true, label: 'Short name' },
     code: { type: String, unique: true, label: 'Code' },
@@ -84,3 +87,5 @@ export const productSchema = new Schema(
     timestamps: true,
   },
 );
+
+productSchema.index({ _id: 1, createdAt: 1 });

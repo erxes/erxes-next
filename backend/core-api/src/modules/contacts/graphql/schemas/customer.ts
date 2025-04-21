@@ -2,7 +2,7 @@ export const types = `
 
   type Customer {
     _id: String
-     state: String
+    state: String
     createdAt: Date
     modifiedAt: Date
     avatar: String
@@ -54,10 +54,12 @@ export const types = `
 
   type CustomersListResponse {
     list: [Customer],
-    totalCount: Float,
+    pageInfo: PageInfo
+    totalCount: Int,
   }
 
 `;
+
 export const conformityQueryFields = `
   conformityMainType: String
   conformityMainTypeId: String
@@ -65,9 +67,8 @@ export const conformityQueryFields = `
   conformityIsRelated: Boolean
   conformityIsSaved: Boolean
 `;
+
 const queryParams = `
- page: Int
-  perPage: Int
   segment: String
   type: String
   tag: String
@@ -86,12 +87,14 @@ const queryParams = `
   endDate: String
   leadStatus: String
   sortField: String
-  sortDirection: Int
   sex:Int
   birthDate: Date
   dateFilters: String
   segmentData: String
   emailValidationStatus:String
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
   ${conformityQueryFields}
 `;
 

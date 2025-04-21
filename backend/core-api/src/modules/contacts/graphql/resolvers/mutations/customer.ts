@@ -1,11 +1,11 @@
-import { ICustomer } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { ICustomer } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const customerMutations = {
   /**
    * Create new customer also adds Customer registration log
    */
-  async customersAdd(_root, doc: ICustomer, { models }: IContext) {
+  async customersAdd(_root: undefined, doc: ICustomer, { models }: IContext) {
     const customer = await models.Customers.createCustomer(doc);
 
     return customer;

@@ -1,9 +1,9 @@
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const tagSchema = new Schema(
   {
-    _id: mongoStringRandomId,
+    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     type: {
       type: String,
@@ -31,4 +31,4 @@ export const tagSchema = new Schema(
 );
 
 // for tags query. increases search speed, avoids in-memory sorting
-tagSchema.index({ type: 1, order: 1, name: 1 });
+tagSchema.index({ _id: 1, type: 1, order: 1, name: 1, createdAt: 1 });

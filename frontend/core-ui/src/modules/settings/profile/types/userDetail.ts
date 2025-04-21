@@ -9,5 +9,5 @@ export interface IUsersDetail {
 }
 
 export interface Props {
-  onCompleted: (GET_USER_DETAIL: Partial<IUsersDetail>) => void;
+  onCompleted: (userDetail: Partial<IUsersDetail>) => void;
 }

@@ -1,7 +1,10 @@
-import { paginate } from 'erxes-api-utils';
-import { ICompanyDocument, ICompanyFilterQueryParams } from 'erxes-core-types';
+import {
+  ICompanyDocument,
+  ICompanyFilterQueryParams,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
 const generateFilter = (params: ICompanyFilterQueryParams) => {
   const { searchValue } = params;
@@ -25,7 +28,7 @@ export const companyQueries = {
   /**
    * Get companies
    */
-  companiesMain: async (
+  companies: async (
     _parent: undefined,
     params: ICompanyFilterQueryParams,
     { models }: IContext,
@@ -33,16 +36,14 @@ export const companyQueries = {
     const filter: FilterQuery<ICompanyFilterQueryParams> =
       generateFilter(params);
 
-    const list: ICompanyDocument[] = await paginate(
-      models.Companies.find(filter),
-      params,
-    );
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<ICompanyDocument>({
+        model: models.Companies,
+        params,
+        query: filter,
+      });
 
-    const totalCount: number = await models.Companies.find(
-      filter,
-    ).countDocuments();
-
-    return { list, totalCount };
+    return { list, totalCount, pageInfo };
   },
 
   /**

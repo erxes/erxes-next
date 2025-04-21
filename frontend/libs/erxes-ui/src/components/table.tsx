@@ -9,7 +9,7 @@ const TableRoot = React.forwardRef<
   <table
     ref={ref}
     className={cn(
-      'w-full caption-bottom text-sm border-separate bg-sidebar',
+      'w-full caption-bottom text-sm border-separate bg-sidebar table-fixed border-spacing-0',
       className,
     )}
     {...props}
@@ -32,7 +32,7 @@ const TableBody = React.forwardRef<
   <tbody
     ref={ref}
     className={cn(
-      '[&_tr:last-child]:border-0 border rounded-lg overflow-hidden',
+      '[&_tr:last-child]:border-0 border overflow-hidden border-collapse rounded-lg',
       className,
     )}
     {...props}
@@ -44,14 +44,7 @@ const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tfoot
-    ref={ref}
-    className={cn(
-      'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0',
-      className,
-    )}
-    {...props}
-  />
+  <tfoot ref={ref} className={className} {...props} />
 ));
 TableFooter.displayName = 'TableFooter';
 
@@ -77,7 +70,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-9 px-2 text-left align-middle font-semibold text-xs text-muted-foreground/90 [&>[role=checkbox]]:translate-y-[2px] border-spacing-0 font-mono uppercase bg-sidebar',
+      'h-9 px-2 text-left align-middle font-semibold text-xs text-accent-foreground [&>[role=checkbox]]:translate-y-[2px] border-spacing-0 font-mono uppercase bg-sidebar',
       className,
     )}
     {...props}
@@ -92,7 +85,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'align-middle [&>[role=checkbox]]:translate-y-[2px] border-r border-spacing-0',
+      'align-middle p-0 [&>[role=checkbox]]:translate-y-[2px] bg-background whitespace-nowrap h-cell border-r border-spacing-0 group-data-[state=selected]/table-row:bg-primary/10 group-hover/table-row:bg-muted',
       className,
     )}
     {...props}
@@ -112,8 +105,7 @@ const TableCaption = React.forwardRef<
 ));
 TableCaption.displayName = 'TableCaption';
 
-export const Table = {
-  Root: TableRoot,
+export const Table = Object.assign(TableRoot, {
   Header: TableHeader,
   Body: TableBody,
   Footer: TableFooter,
@@ -121,4 +113,4 @@ export const Table = {
   Row: TableRow,
   Cell: TableCell,
   Caption: TableCaption,
-};
+});

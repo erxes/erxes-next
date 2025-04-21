@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express';
-import { getEnv, getSubdomain } from 'erxes-api-utils';
-import { generateModels } from '../../../connectionResolvers';
-import { getSaasOrganizationDetail } from 'erxes-api-utils';
+import { getEnv, getSubdomain } from 'erxes-api-shared/utils';
+import { generateModels } from '~/connectionResolvers';
+import { getSaasOrganizationDetail } from 'erxes-api-shared/utils';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/v3/initial-setup', async (req: Request, res: Response) => {
   const subdomain = getSubdomain(req);

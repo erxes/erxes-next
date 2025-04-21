@@ -36,5 +36,10 @@ export interface IUserEntry {
 export type TUserInviteVars = {
   entries: IUserEntry[];
 };
-
+export interface IBranch {
+  _id: string;
+  title: string;
+  code: string;
+  parentId: string;
+}
 export type TUserForm = z.infer<typeof USER_SCHEMA>;

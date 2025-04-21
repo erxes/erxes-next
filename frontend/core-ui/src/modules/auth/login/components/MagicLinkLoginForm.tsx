@@ -32,7 +32,7 @@ export const MagicLinkLoginForm = () => {
         onSubmit={form.handleSubmit(submitHandler)}
         className="mx-auto grid gap-5"
       >
-        <Card.Description className="text-center">
+        <Card.Description className="text-center text-accent-foreground font-medium">
           We use magic link so you don't have to remember or type in yet another
           long password
         </Card.Description>
@@ -54,16 +54,12 @@ export const MagicLinkLoginForm = () => {
           )}
         />
 
-        <Button
-          type="submit"
-          className={`${
-            !form.formState.isValid ? 'cursor-not-allowed' : ''
-          } h-8`}
-        >
+        <Button type="submit" className={`h-8`}>
           Continue
         </Button>
-        <Card.Description className="text-center">or</Card.Description>
-        <GoogleOAuthButton />
+        {/* disabled until the backend is ready */}
+        {/* <Card.Description className="text-center">or</Card.Description>
+        <GoogleOAuthButton /> */}
       </form>
     </Form>
   );

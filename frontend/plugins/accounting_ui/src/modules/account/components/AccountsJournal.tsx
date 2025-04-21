@@ -1,7 +1,8 @@
 import { Combobox, Command, Popover } from 'erxes-ui';
-import { Journal } from '../type/Account';
+import { JournalEnum } from '../type/Account';
 import React from 'react';
 import { Except } from 'type-fest';
+import { JOURNAL_LABELS } from '../constants/journalLabel';
 
 export const SelectAccountJournalCommand = React.forwardRef<
   React.ComponentRef<typeof Combobox.Trigger>,
@@ -46,15 +47,14 @@ export const AccountsJournalCommand = ({
   return (
     <Command>
       <Command.Input placeholder="Filter kind" focusOnMount={focusOnMount} />
-      <Command.Separator />
       <Command.List>
-        {[...Object.values(Journal)].map((journal) => (
+        {[...Object.values(JournalEnum)].map((journal) => (
           <Command.Item
             key={journal}
             value={journal}
             onSelect={() => onSelect?.(journal)}
           >
-            {journal}
+            {JOURNAL_LABELS[journal]}
             <Combobox.Check checked={selected === journal} />
           </Command.Item>
         ))}

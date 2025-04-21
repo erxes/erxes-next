@@ -5,6 +5,7 @@ export const conformityQueryFields = `
   conformityIsRelated: Boolean
   conformityIsSaved: Boolean
 `;
+
 export const types = `
   type Company {
     _id:String
@@ -51,13 +52,12 @@ export const types = `
 
   type CompaniesListResponse {
     list: [Company],
-    totalCount: Float,
+    pageInfo: PageInfo
+    totalCount: Int,
   }
 `;
 
 const queryParams = `
-  page: Int
-  perPage: Int
   segment: String
   tag: String
   tags: [String]
@@ -73,12 +73,15 @@ const queryParams = `
   brand: String
   dateFilters: String
   segmentData: String
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
   ${conformityQueryFields}
 `;
 
 export const queries = `
-  companiesMain(${queryParams}): CompaniesListResponse
-  companies(${queryParams}): [Company]
+  companies(${queryParams}): CompaniesListResponse
+  companyDetail(_id: String!): Company
 `;
 
 const mutationParams = `

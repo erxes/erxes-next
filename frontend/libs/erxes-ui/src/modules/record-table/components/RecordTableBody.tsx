@@ -12,11 +12,14 @@ import { RecordTableCell } from '../record-table-cell/components/RecordTableCell
 export const RecordTableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ children, className, ...props }, ref) => {
+>(({ children, ...props }, ref) => {
   const { table } = useRecordTable();
 
   const tableContent = table.getRowModel().rows.map((row, rowIndex) => (
-    <RecordTableRow key={row.original._id} data-state={row.getIsSelected() && 'selected'}>
+    <RecordTableRow
+      key={row.original._id}
+      data-state={row.getIsSelected() && 'selected'}
+    >
       {row.getVisibleCells().map((cell, cellIndex) => (
         <RecordTableCell
           cell={cell}
@@ -26,7 +29,7 @@ export const RecordTableBody = React.forwardRef<
             rowIndex === 0 &&
               cellIndex === row.getVisibleCells().length - 1 &&
               'rounded-tr-lg',
-            rowIndex === 0 && 'border-t'
+            rowIndex === 0 && 'border-t',
           )}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -38,18 +41,11 @@ export const RecordTableBody = React.forwardRef<
   const memoizedTableContent = useMemo(
     () => tableContent,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [table.options.data, table.getState().columnOrder]
+    [table.options.data, table.getState().columnOrder],
   );
 
   return (
-    <Table.Body
-      ref={ref}
-      className={cn(
-        'border border-collapse rounded-2xl overflow-hidden',
-        className
-      )}
-      {...props}
-    >
+    <Table.Body ref={ref} {...props}>
       {table.getState().columnSizingInfo.isResizingColumn
         ? memoizedTableContent
         : tableContent}

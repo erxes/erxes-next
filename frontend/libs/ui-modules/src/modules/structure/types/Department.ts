@@ -3,7 +3,8 @@ export interface IDepartment {
   code: string;
   title: string;
   parentId: string;
-  order: number;
+  order: string;
+  userCount: number;
 }
 
 export interface IDepartmentContext {

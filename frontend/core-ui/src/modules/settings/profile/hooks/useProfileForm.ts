@@ -9,13 +9,14 @@ export const profileValidationSchema = z
       avatar: z.any(),
       firstName: z.string(),
       lastName: z.string(),
-      middleName: z.string(),
-      shortName: z.string(),
-      operatorPhone: z.string(),
-      birthDate: z.date().or(z.string()),
-      workStartedDate: z.date().or(z.string()),
-      position: z.string(),
-      location: z.string(),
+      middleName: z.string().optional(),
+      shortName: z.string().optional(),
+      operatorPhone: z.string().optional(),
+      birthDate: z.date().or(z.string()).optional(),
+      workStartedDate: z.date().or(z.string()).optional(),
+      position: z.string().optional(),
+      location: z.string().optional(),
+      employeeId: z.string().optional().nullable(),
     }),
     links: z
       .object({
@@ -68,8 +69,7 @@ export const profileValidationSchema = z
       .optional(),
     username: z.string(),
     email: z.string().trim().email('Email must be a valid email'),
-    employeeId: z.string(),
-    positionIds: z.array(z.string()),
+    positionIds: z.array(z.string()).optional(),
   })
   .required();
 

@@ -16,8 +16,6 @@ import {
   types as ConfigTypes,
 } from './config';
 
-import { attachmentInput, pdfAttachmentInput } from 'erxes-api-utils';
-
 import {
   mutations as UomMutations,
   queries as UomQueries,
@@ -25,9 +23,6 @@ import {
 } from './uom';
 
 export const types = `
-  ${attachmentInput}
-  ${pdfAttachmentInput}
-
   ${CategoryTypes}
   ${ProductTypes}
   ${ConfigTypes}

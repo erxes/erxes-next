@@ -1,4 +1,4 @@
-import { Collapsible, RadioGroup, Button, cn, Skeleton } from 'erxes-ui';
+import { Collapsible, RadioGroup, cn, Skeleton } from 'erxes-ui';
 import { useCountByOptions } from '../../hooks/useCountByOptions';
 import { IconCaretRightFilled } from '@tabler/icons-react';
 import { useState } from 'react';

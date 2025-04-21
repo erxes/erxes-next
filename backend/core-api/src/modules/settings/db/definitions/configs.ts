@@ -1,4 +1,4 @@
-import { mongooseField } from 'erxes-api-utils';
+import { mongooseField } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IConfig {

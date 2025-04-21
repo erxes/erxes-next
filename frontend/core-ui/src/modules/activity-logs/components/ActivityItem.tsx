@@ -1,6 +1,6 @@
 import { IconEdit } from '@tabler/icons-react';
 import { IActivityLog } from '@/activity-logs/types/activityTypes';
-import { ActivityTagged } from './ActivityTagged';
+import { ActivityTagged } from '@/activity-logs/components/ActivityTagged';
 import {
   ActivityItemContext,
   useActivityItemContext,

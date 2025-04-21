@@ -2,6 +2,7 @@ export interface IUnit {
   _id: string;
   title: string;
   code: string;
+  userCount: number;
 }
 
 export interface IUnitsMain {

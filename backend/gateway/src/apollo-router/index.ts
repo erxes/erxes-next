@@ -2,14 +2,14 @@ import { spawn, ChildProcess, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'yaml';
-import { retryGetProxyTargets } from '../proxy/targets';
+import { retryGetProxyTargets } from '~/proxy/targets';
 import {
   dirTempPath,
   routerConfigPath,
   routerPath,
   supergraphPath,
-} from './paths';
-import supergraphCompose from './supergraph-compose';
+} from '~/apollo-router/paths';
+import supergraphCompose from '~/apollo-router/supergraph-compose';
 
 const {
   DOMAIN,

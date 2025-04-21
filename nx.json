@@ -21,17 +21,7 @@
   "dependencyGraph": {
     "inputs": [
       {
-        "project": "erxes-api-utils",
-        "target": "build",
-        "inputs": ["default", "^production"]
-      },
-      {
-        "project": "erxes-core-types",
-        "target": "build",
-        "inputs": ["default", "^production"]
-      },
-      {
-        "project": "erxes-api-modules",
+        "project": "erxes-api-shared",
         "target": "build",
         "inputs": ["default", "^production"]
       }

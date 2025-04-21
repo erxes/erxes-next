@@ -9,12 +9,13 @@ import {
   Spinner,
   Dialog,
 } from 'erxes-ui';
-import { AccountKind, Journal } from '../type/Account';
+import { AccountKind, JournalEnum } from '../type/Account';
 import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
 import { SelectBranch, SelectDepartment } from 'ui-modules';
 import { UseFormReturn } from 'react-hook-form';
 import { TAccountForm } from '../type/accountForm';
 import { IconX } from '@tabler/icons-react';
+import { JOURNAL_LABELS } from '../constants/journalLabel';
 
 export const AccountForm = ({
   form,
@@ -154,9 +155,9 @@ export const AccountForm = ({
                     <Select.Value placeholder="Select journal" />
                   </Select.Trigger>
                   <Select.Content>
-                    {Object.values(Journal).map((journal) => (
+                    {Object.values(JournalEnum).map((journal) => (
                       <Select.Item key={journal} value={journal}>
-                        {journal.charAt(0).toUpperCase() + journal.slice(1)}
+                        {JOURNAL_LABELS[journal]}
                       </Select.Item>
                     ))}
                   </Select.Content>
@@ -205,7 +206,7 @@ export const AccountForm = ({
           control={form.control}
           name="isTemp"
           render={({ field }) => (
-            <Form.Item className="flex flex-row items-center space-x-2 space-y-0 mt-4">
+            <Form.Item className="flex items-center space-x-2 space-y-0 mt-4">
               <Form.Control>
                 <Checkbox
                   checked={field.value}
@@ -221,7 +222,7 @@ export const AccountForm = ({
           control={form.control}
           name="isOutBalance"
           render={({ field }) => (
-            <Form.Item className="flex flex-row items-center space-x-2 space-y-0 mt-4">
+            <Form.Item className="flex items-center space-x-2 space-y-0 mt-4">
               <Form.Control>
                 <Checkbox
                   checked={field.value}

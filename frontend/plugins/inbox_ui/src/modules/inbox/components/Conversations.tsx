@@ -9,7 +9,7 @@ import {
   Separator,
 } from 'erxes-ui';
 import { cn } from 'erxes-ui';
-import { ConversationContext } from '~/modules/inbox/context/ConversationContext';
+import { ConversationContext } from '@/inbox/context/ConversationContext';
 import { IConversation } from '@/inbox/types/Conversation';
 import { useConversationContext } from '@/inbox/hooks/useConversationContext';
 import { currentUserState, CustomerInline } from 'ui-modules';

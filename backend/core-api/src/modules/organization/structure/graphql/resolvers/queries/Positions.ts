@@ -1,9 +1,14 @@
-import { IContext } from '../../../../../../connectionResolvers';
-import { paginate } from 'erxes-api-utils';
-import { generateFilters } from './structureUtils';
+import {
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
+import { generateFilters } from './utils';
+
 export const positionQueries = {
   async positions(
-    _root,
+    _root: undefined,
     params: any & { searchValue?: string },
     { models, user }: IContext,
   ) {
@@ -28,8 +33,8 @@ export const positionQueries = {
   },
 
   async positionsMain(
-    _root,
-    params: { searchValue?: string; perPage: number; page: number },
+    _root: undefined,
+    params: IListParams & ICursorPaginateParams,
     { models, user }: IContext,
   ) {
     const filter = await generateFilters({
@@ -39,22 +44,16 @@ export const positionQueries = {
       params: { ...params, withoutUserFilter: true },
     });
 
-    const list = await paginate(
-      models.Positions.find(filter).sort({ order: 1 }),
+    const { list, totalCount, pageInfo } = await cursorPaginate({
+      model: models.Positions,
       params,
-    );
-
-    const totalCount = await models.Positions.find(filter).countDocuments();
-    const totalUsersCount = await models.Users.countDocuments({
-      ...filter,
-      'positionIds.0': { $exists: true },
-      isActive: true,
+      query: filter,
     });
 
-    return { list, totalCount, totalUsersCount };
+    return { list, totalCount, pageInfo };
   },
 
-  async positionDetail(_root, { _id }, { models }: IContext) {
+  async positionDetail(_root: undefined, { _id }, { models }: IContext) {
     return models.Positions.getPosition({ _id });
   },
 };

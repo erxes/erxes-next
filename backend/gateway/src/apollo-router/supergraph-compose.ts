@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 
-import { ErxesProxyTarget } from '../proxy/targets';
-import { supergraphConfigPath, supergraphPath } from '../apollo-router/paths';
+import { ErxesProxyTarget } from '~/proxy/targets';
+import { supergraphConfigPath, supergraphPath } from '~/apollo-router/paths';
 import * as fs from 'fs';
 import { execSync } from 'child_process';
-import isSameFile from '../util/is-same-file';
+import isSameFile from '~/util/is-same-file';
 import * as yaml from 'yaml';
 
 const { NODE_ENV, SUPERGRAPH_POLL_INTERVAL_MS } = process.env;

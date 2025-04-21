@@ -6,7 +6,13 @@
       "node",
       "@nx/react/typings/cssmodule.d.ts",
       "@nx/react/typings/image.d.ts"
-    ]
+    ],
+    "paths": {
+      "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
+      "erxes-ui": ["frontend/libs/erxes-ui/src"],
+      "core-ui/*": ["frontend/core-ui/src/*"],
+      "core-ui": ["frontend/core-ui/src"]
+    }
   },
   "exclude": [
     "jest.config.ts",

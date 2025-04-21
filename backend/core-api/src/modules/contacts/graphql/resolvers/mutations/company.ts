@@ -1,11 +1,15 @@
-import { ICompany } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { ICompany } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const companyMutations = {
   /**
    * Creates a new company
    */
-  async companiesAdd(_root, doc: ICompany, { models, user }: IContext) {
+  async companiesAdd(
+    _root: undefined,
+    doc: ICompany,
+    { models, user }: IContext,
+  ) {
     return await models.Companies.createCompany(doc, user);
   },
 

@@ -124,7 +124,12 @@ export const types = `
     contentTypeId:String
     contentTypeDetail:JSON
     status:String
+  }
 
+  type UsersListResponse {
+    list: [User]
+    totalCount: Int
+    pageInfo: PageInfo
   }
 `;
 
@@ -160,7 +165,7 @@ const commonSelector = `
 `;
 
 export const queries = `
-  users(sortField: String, sortDirection: Int, page: Int, perPage: Int, status: String, excludeIds: Boolean, ${commonSelector}): [User]
+  users(sortField: String, limit: Int, cursor: String, direction: CURSOR_DIRECTION, status: String, excludeIds: Boolean, ${commonSelector}): UsersListResponse
   allUsers(isActive: Boolean,ids:[String],assignedToMe:String): [User]
   userDetail(_id: String): User
   usersTotalCount(${commonSelector}): Int

@@ -6,9 +6,11 @@ import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { appRouter } from './init-trpc';
+import { appRouter } from '~/init-trpc';
 
-import { join, leave } from 'erxes-api-utils';
+import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
+
+import { createContext } from '~/init-trpc';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -46,11 +48,7 @@ app.use(
   '/trpc',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
-    createContext: () => {
-      return {
-        subdomain: 'os',
-      };
-    },
+    createContext,
   }),
 );
 
@@ -60,7 +58,7 @@ const httpServer = http.createServer(app);
 httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
 
-  await join({
+  await joinErxesGateway({
     name: 'core',
     port,
     hasSubscriptions: false,
@@ -82,7 +80,7 @@ async function closeMongooose() {
 
 async function leaveServiceDiscovery() {
   try {
-    await leave('core', port);
+    await leaveErxesGateway('core', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);
@@ -105,7 +103,7 @@ async function closeHttpServer() {
   }
 }
 
-// If the Node process ends, close the http-server and mongoose.connection and leave service discovery.
+// If the Node process ends, close the http-server and mongoose.connection and leaveErxesGateway service discovery.
 (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
   process.on(sig, async () => {
     await closeHttpServer();

@@ -1,5 +1,5 @@
-import { IProductCategory } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { IProductCategory } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const categoryMutations = {
   /**

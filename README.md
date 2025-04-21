@@ -317,7 +317,6 @@ backend/
 ├── core-api/           # Core API service
 ├── gateway/           # API Gateway
 ├── libs/              # Shared libraries
-└── mq-dashboard/      # Message Queue Dashboard
 ```
 
 ## Core API Service
@@ -478,8 +477,6 @@ pnpm dev:core-api
 # Start gateway
 pnpm dev:gateway
 
-# Start MQ dashboard
-pnpm dev:mq-dashboard
 ```
 
 ## Testing

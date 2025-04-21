@@ -1,6 +1,6 @@
-import { mongoStringRandomId } from 'erxes-api-utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
-import { TIMELY_TYPES } from '../../constants';
+import { TIMELY_TYPES } from '@/products/constants';
 
 const subscriptionConfigSchema = new Schema({
   period: { type: String, label: 'Subscription Period' },
@@ -20,7 +20,7 @@ const subscriptionConfigSchema = new Schema({
 
 export const uomSchema = new Schema(
   {
-    _id: mongoStringRandomId,
+    _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     code: { type: String, unique: true, label: 'Code' },
     isForSubscription: {
@@ -46,7 +46,7 @@ export const uomSchema = new Schema(
 );
 
 export const subUomSchema = new Schema({
-  _id: mongoStringRandomId,
+  _id: mongooseStringRandomId,
   uom: { type: String, label: 'Sub unit of measurement' },
   ratio: { type: Number, label: 'ratio of sub uom to main uom' },
 });

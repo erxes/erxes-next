@@ -1,24 +1,37 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { GET_VATS } from '../graphql/queries/getVats';
+import { GET_VATS, SELECT_VATS } from '../graphql/queries/getVats';
 import {
   VAT_ROW_DEFAULT_VARIABLES,
   VAT_ROW_PER_PAGE,
 } from '../constants/vatRowDefaultVariables';
+import { IVat } from '../types/Vat';
 
-export const useVatRows = (options?: OperationVariables) => {
-  const { data, loading, fetchMore } = useQuery(GET_VATS, {
+export const useVatRows = (
+  options?: OperationVariables,
+  inSelect?: boolean,
+) => {
+  const { data, loading, fetchMore, error } = useQuery<{
+    vatRows: IVat[];
+    vatRowsCount: number;
+  }>(inSelect ? SELECT_VATS : GET_VATS, {
+    onError: () => {
+      // Do nothing
+    },
     ...options,
     variables: {
       ...VAT_ROW_DEFAULT_VARIABLES,
       ...options?.variables,
     },
   });
+
   const { vatRows, vatRowsCount } = data || {};
 
   const handleFetchMore = () => {
+    if (!vatRows) return;
+
     fetchMore({
       variables: {
-        page: Math.ceil(vatRows?.length / VAT_ROW_PER_PAGE) + 1,
+        page: Math.ceil(vatRows.length / VAT_ROW_PER_PAGE) + 1,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         return {
@@ -33,6 +46,7 @@ export const useVatRows = (options?: OperationVariables) => {
     vatRows,
     totalCount: vatRowsCount,
     loading,
+    error,
     handleFetchMore,
   };
 };

@@ -1,4 +1,4 @@
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
 export const configMutations = {
   /**
