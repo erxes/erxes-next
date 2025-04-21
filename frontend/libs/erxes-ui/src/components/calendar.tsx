@@ -99,6 +99,7 @@ export const CalendarTwoMonths = React.forwardRef<
       components={{
         Chevron: ({ ...props }) => <Chevron {...props} />,
       }}
+      numberOfMonths={2}
       {...props}
     />
   );

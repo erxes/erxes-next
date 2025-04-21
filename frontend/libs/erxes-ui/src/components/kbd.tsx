@@ -7,15 +7,19 @@ import { cn } from 'erxes-ui/lib';
  */
 export const Kbd = React.forwardRef<
   HTMLElement,
-  React.ComponentPropsWithoutRef<'kbd'>
->(({ children, className, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<'kbd'> & {
+    variant?: 'background' | 'foreground';
+  }
+>(({ children, className, variant = 'background', ...props }, ref) => {
   return (
     <kbd
       {...props}
       ref={ref}
       className={cn(
-        'bg-background/10 text-inherit opacity-70 border-background/20 inline-flex h-5 w-fit min-w-[20px] items-center justify-center rounded-md border px-1',
+        'opacity-70 inline-flex h-5 w-fit min-w-[20px] items-center justify-center rounded-md border px-1',
         'text-xs',
+        variant === 'background' && 'bg-background/10 border-background/20',
+        variant === 'foreground' && 'bg-foreground/10 border-foreground/20',
         className,
       )}
     >
