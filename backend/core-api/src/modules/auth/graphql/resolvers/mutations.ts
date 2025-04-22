@@ -27,7 +27,7 @@ export const authMutations = {
     if (sameSite && sameSite === 'none' && res.req.headers.origin !== DOMAIN) {
       cookieOptions.sameSite = sameSite;
     }
-    console.log(token, 'token');
+
     res.cookie('auth-token', token, authCookieOptions(cookieOptions));
 
     return 'loggedIn';
