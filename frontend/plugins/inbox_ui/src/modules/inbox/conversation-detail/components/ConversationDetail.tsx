@@ -1,4 +1,4 @@
-import { Button, Separator, SideMenu, Skeleton } from 'erxes-ui';
+import { Separator } from 'erxes-ui';
 import { ConversationHeader } from '@/inbox/conversation-detail/components/ConversationHeader';
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';
 
@@ -42,6 +42,7 @@ export const ConversationDetail = () => {
   if (!['messenger', 'lead'].includes(integration?.kind)) {
     return <UnderConstruction />;
   }
+
   return (
     <div className="flex h-full overflow-hidden">
       <div className="flex flex-col h-full overflow-hidden flex-auto">

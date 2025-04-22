@@ -12,6 +12,7 @@
       "~": ["frontend/plugins/inbox_ui/src"],
       "@/*": ["frontend/plugins/inbox_ui/src/modules/*"],
       "@": ["frontend/plugins/inbox_ui/src/modules"],
+      "ui-modules/*": ["frontend/libs/ui-modules/src/*"],
       "ui-modules": ["frontend/libs/ui-modules/src"]
     }
   },

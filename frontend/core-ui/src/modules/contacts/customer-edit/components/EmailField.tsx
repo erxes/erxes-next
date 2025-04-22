@@ -22,7 +22,7 @@ export const EmailField = ({
       recordId={_id}
       fieldId={fieldId}
       primaryEmail={primaryEmail}
-      emails={emails}
+      emails={emails.filter((email) => !!email)}
       className={className}
       onChange={(mainEmail, restEmails, onCompleted) => {
         customersEdit(

@@ -25,7 +25,7 @@ export const PhoneField = ({
       recordId={_id}
       fieldId={fieldId}
       primaryPhone={primaryPhone}
-      phones={phones}
+      phones={phones.filter((phone) => !!phone)}
       className={className}
       defaultCountryCode={defaultCountryCode}
       onChange={(mainPhone, restPhones, onCompleted) => {
