@@ -6,7 +6,7 @@ export const conformityQueryFields = `
   conformityIsSaved: Boolean
 `;
 export const types = `
-  type Company {
+    type Company @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id:String
     createdAt: Date
     modifiedAt: Date

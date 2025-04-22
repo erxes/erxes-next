@@ -1,6 +1,5 @@
 export const types = `
-  scalar JSON
-  type Channel {
+  type  Channel {
     _id: String!
     name: String!
     description: String

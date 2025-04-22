@@ -1,6 +1,8 @@
 import { ICustomField } from '../../common';
 import { IPermissionDocument } from '../permissions/permission';
 import { ILink } from '../../common';
+import { Document } from 'mongoose';
+
 export interface IEmailSignature {
   brandId?: string;
   signature?: string;
@@ -69,7 +71,6 @@ export interface IUserDocument extends Omit<IUser, 'links'>, Document {
   role?: string;
   appId?: string;
 }
-
 export interface IUserMovementDocument extends Document {
   _id: string;
   contentType: string;
