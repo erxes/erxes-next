@@ -1,11 +1,12 @@
 import * as moment from 'moment';
 import { OPERATORS, staticPlaceholders } from './constants';
-import { sendWorkerMessage } from '../../utils';
+import { pluralFormation, sendWorkerMessage } from '../../utils';
 import {
   IPerValueProps,
   IPropertyProps,
   IReplacePlaceholdersProps,
 } from './types';
+import { sendTRPCMessage } from '@/utils/trpc';
 
 const splitType = (type: string) => {
   return type.replace('.', ':').split(':');
@@ -288,8 +289,8 @@ export const setProperty = async <TModels>({
 
   for (const relatedItem of relatedItems) {
     const setDoc: { [key: string]: any } = {};
-    const pushDoc = {};
-    const selectorDoc = {};
+    const pushDoc: any = {};
+    const selectorDoc: any = {};
 
     for (const rule of rules) {
       const { field = '' } = rule;
@@ -315,44 +316,43 @@ export const setProperty = async <TModels>({
 
       for (const complexFieldKey of complexFields) {
         if (field.includes(complexFieldKey)) {
-          // const fieldId = field.replace(`${complexFieldKey}.`, "");
-          // const field = await sendCommonMessage({
-          //   subdomain,
-          //   serviceName: "core",
-          //   action: "fields.findOne",
-          //   data: {
-          //     query: { _id: fieldId }
-          //   },
-          //   isRPC: true,
-          //   defaultValue: {}
-          // });
-          // const complexFieldData = await sendCommonMessage({
-          //   subdomain,
-          //   serviceName: "core",
-          //   action: "fields.generateTypedItem",
-          //   data: {
-          //     field: fieldId,
-          //     value,
-          //     type: field?.type
-          //   },
-          //   isRPC: true
-          // });
-          // if (
-          //   (relatedItem[complexFieldKey] || []).find(
-          //     (obj) => obj.field === fieldId
-          //   )
-          // ) {
-          //   selectorDoc[`${complexFieldKey}.field`] = fieldId;
-          //   const complexFieldDataKeys = Object.keys(complexFieldData).filter(
-          //     (key) => key !== "field"
-          //   );
-          //   for (const complexFieldDataKey of complexFieldDataKeys) {
-          //     setDoc[`${complexFieldKey}.$.${complexFieldDataKey}`] =
-          //       complexFieldData[complexFieldDataKey];
-          //   }
-          // } else {
-          //   pushDoc[complexFieldKey] = complexFieldData;
-          // }
+          const fieldId = field.replace(`${complexFieldKey}.`, '');
+
+          const fieldDetail = await sendTRPCMessage({
+            serviceName: 'core',
+            method: 'query',
+            module: 'fields',
+            action: 'findOne',
+            data: { _id: fieldId },
+          });
+
+          const complexFieldData = await sendTRPCMessage({
+            serviceName: 'core',
+            method: 'query',
+            module: 'fields',
+            action: 'generateTypedItem',
+            data: {
+              field: fieldId,
+              value,
+              type: fieldDetail?.type,
+            },
+          });
+          if (
+            (relatedItem[complexFieldKey] || []).find(
+              (obj: any) => obj.field === fieldId,
+            )
+          ) {
+            selectorDoc[`${complexFieldKey}.field`] = fieldId;
+            const complexFieldDataKeys = Object.keys(complexFieldData).filter(
+              (key) => key !== 'field',
+            );
+            for (const complexFieldDataKey of complexFieldDataKeys) {
+              setDoc[`${complexFieldKey}.$.${complexFieldDataKey}`] =
+                complexFieldData[complexFieldDataKey];
+            }
+          } else {
+            pushDoc[complexFieldKey] = complexFieldData;
+          }
         }
       }
     }
@@ -367,19 +367,18 @@ export const setProperty = async <TModels>({
       modifier.$push = pushDoc;
     }
 
-    // const response = await sendCommonMessage({
-    //   subdomain,
-    //   serviceName,
-    //   action: `${pluralFormation(collectionType)}.updateMany`,
-    //   data: { selector: { _id: relatedItem._id, ...selectorDoc }, modifier },
-    //   isRPC: true
-    // });
-    const response = null;
-
-    // if (response.error) {
-    //   result.push(response);
-    //   continue;
-    // }
+    try {
+      await sendTRPCMessage({
+        method: 'mutation',
+        serviceName,
+        module: pluralFormation(contentType),
+        action: `updateMany`,
+        data: { selector: { _id: relatedItem._id, ...selectorDoc }, modifier },
+      });
+    } catch (error) {
+      result.push(error.message);
+      continue;
+    }
 
     result.push({
       _id: relatedItem._id,
@@ -392,3 +391,6 @@ export const setProperty = async <TModels>({
 
   return { module, fields: rules.map((r) => r.field).join(', '), result };
 };
+
+export const getContentType = (type: string) => type.split(':')[1];
+export const getPluginName = (type: string) => type.split(':')[0];

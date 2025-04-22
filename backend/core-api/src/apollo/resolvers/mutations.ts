@@ -5,6 +5,8 @@ import { productMutations } from '@/products/graphql/resolvers/mutations';
 import { configMutations } from '@/settings/graphql/mutations';
 import { tagMutations } from '@/tags/graphql/mutations';
 import { appMutations } from '@/apps/graphql/mutations';
+import { segmentMutations } from '@/segments/apollo/resolvers/mutations';
+
 export const mutations = {
   ...contactMutations,
   ...authMutations,
@@ -13,4 +15,5 @@ export const mutations = {
   ...tagMutations,
   ...productMutations,
   ...appMutations,
+  ...segmentMutations,
 };

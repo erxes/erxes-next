@@ -25,13 +25,13 @@ type IActionConfig = {
   isAvailableOptionalConnect?: boolean;
 };
 
-type Constants =
+export type AutomationConstants =
   | { triggers: ITriggerConfig[]; actions?: IActionConfig }
   | { triggers?: ITriggerConfig[]; actions: IActionConfig }
   | { triggers: ITriggerConfig[]; actions: IActionConfig };
 
 export interface AutomationConfigs {
-  constants: Constants;
+  constants: AutomationConstants;
   receiveActions?: (context: IContext, args: any) => Promise<any>;
   getRecipientsEmails?: (context: IContext, args: any) => Promise<any>;
   replacePlaceHolders?: (context: IContext, args: any) => Promise<any>;

@@ -34,7 +34,7 @@ export const schemaWrapper = (
   schema: Schema,
   options?: ISchemaWrapperOptions,
 ) => {
-  // schema.add({ _id: mongooseStringRandomId });
+  schema.add({ _id: mongooseStringRandomId });
   schema.add({ processId: { type: String, optional: true } });
   // schema.add({ createdAt: { type: Date, default: new Date() } });
 

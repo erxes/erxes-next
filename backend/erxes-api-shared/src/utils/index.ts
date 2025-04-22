@@ -9,3 +9,5 @@ export * from './start-plugin';
 export * from './saas';
 export * from './apollo';
 export * from './logs';
+export * from './elasticsearch';
+export * from './trpc';

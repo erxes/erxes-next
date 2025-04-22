@@ -1,10 +1,17 @@
-import { createMQWorkerWithListeners, redis } from '../../utils';
+import {
+  createMQWorkerWithListeners,
+  initializePluginConfig,
+  keyForConfig,
+  redis,
+} from '../../utils';
 import { AutomationConfigs } from './types';
 
-export const startAutomations = (
+export const startAutomations = async (
   pluginName: string,
   config: AutomationConfigs,
 ) => {
+  await initializePluginConfig(pluginName, 'automations', config);
+
   return new Promise<void>((resolve, reject) => {
     try {
       createMQWorkerWithListeners(
@@ -12,7 +19,6 @@ export const startAutomations = (
         'automations',
         async ({ name, id, data: jobData }) => {
           try {
-            console.log('core', { jobData });
             const { subdomain, data } = jobData;
 
             if (!subdomain) {

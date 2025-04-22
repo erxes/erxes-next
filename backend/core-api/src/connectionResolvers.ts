@@ -64,6 +64,36 @@ import {
   loadStructureClass,
   loadUnitClass,
 } from '@/organization/structure/db/models/Structure';
+import {
+  IFieldGroupModel,
+  IFieldModel,
+  loadFieldClass,
+  loadGroupClass,
+} from './modules/forms/db/models/Fields';
+import {
+  IFormModel,
+  IFormSubmissionModel,
+  loadFormClass,
+  loadFormSubmissionClass,
+} from './modules/forms/db/models/Forms';
+import {
+  IFieldDocument,
+  IFieldGroupDocument,
+} from './modules/forms/db/definitions/fields';
+import {
+  IForm,
+  IFormSubmissionDocument,
+} from './modules/forms/db/definitions/forms';
+import { ISegmentDocument } from './modules/segments/db/definitions/segments';
+import {
+  ISegmentModel,
+  loadSegmentClass,
+} from './modules/segments/db/models/Segments';
+import {
+  IConformityModel,
+  loadConformityClass,
+} from './modules/conformities/db/models/Conformities';
+import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
 
 export interface IModels {
   Customers: ICustomerModel;
@@ -82,6 +112,12 @@ export interface IModels {
   Branches: IBranchModel;
   Positions: IPositionModel;
   Apps: IAppModel;
+  Fields: IFieldModel;
+  FieldsGroups: IFieldGroupModel;
+  Forms: IFormModel;
+  FormSubmissions: IFormSubmissionModel;
+  Segments: ISegmentModel;
+  Conformities: IConformityModel;
 }
 
 export interface IContext extends IMainContext {
@@ -89,12 +125,20 @@ export interface IContext extends IMainContext {
   commonQuerySelector: any;
 }
 
-export const loadClasses = (db: mongoose.Connection): IModels => {
+export const loadClasses = (
+  db: mongoose.Connection,
+  subdomain: string,
+): IModels => {
   const models = {} as IModels;
 
   models.Users = db.model<IUserDocument, IUserModel>(
     'users',
     loadUserClass(models),
+  );
+
+  models.Conformities = db.model<IConformityDocument, IConformityModel>(
+    'conformity',
+    loadConformityClass(models, subdomain),
   );
 
   models.Customers = db.model<ICustomerDocument, ICustomerModel>(
@@ -157,6 +201,26 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     loadPositionClass(models),
   );
   models.Apps = db.model<IAppDocument, IAppModel>('apps', loadAppClass(models));
+
+  models.Fields = db.model<IFieldDocument, IFieldModel>(
+    'form_fields',
+    loadFieldClass(models, subdomain),
+  );
+  models.FieldsGroups = db.model<IFieldGroupDocument, IFieldGroupModel>(
+    'fields_groups',
+    loadGroupClass(models),
+  );
+  models.Forms = db.model<IForm, IFormModel>('forms', loadFormClass(models));
+  models.FormSubmissions = db.model<
+    IFormSubmissionDocument,
+    IFormSubmissionModel
+  >('form_submissions', loadFormSubmissionClass(models));
+
+  models.Segments = db.model<ISegmentDocument, ISegmentModel>(
+    'segments',
+    loadSegmentClass(models),
+  );
+
   return models;
 };
 

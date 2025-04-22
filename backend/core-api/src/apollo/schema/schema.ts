@@ -66,6 +66,13 @@ import {
   queries as AppQueries,
   types as AppTypes,
 } from '@/apps/graphql/schemas';
+
+import {
+  mutations as SegmentMutations,
+  queries as SegmentQueries,
+  types as SegmentTypes,
+} from '@/segments/apollo/schemas';
+import { queries as FormQueries } from '@/forms/apollo/schema';
 import { CommonTypes } from './commonTypes';
 import { BrandTypes } from '../../modules/organization/structure/graphql/schemas/brand';
 
@@ -101,6 +108,7 @@ export const types = `
     ${UnitTypes}
     ${BrandTypes}
     ${AppTypes}
+    ${SegmentTypes}
   `;
 
 export const queries = `
@@ -116,6 +124,8 @@ export const queries = `
     ${positionsQueries}
     ${unitsQueries}
     ${AppQueries}
+    ${FormQueries}
+    ${SegmentQueries}
   `;
 
 export const mutations = `
@@ -132,6 +142,7 @@ export const mutations = `
     ${structuresMutations}
     ${unitsMutations}
     ${AppMutations}
+    ${SegmentMutations}
   `;
 
 export default { types, queries, mutations };

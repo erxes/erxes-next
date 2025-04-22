@@ -82,3 +82,8 @@ export interface ILogDoc {
   status?: 'failed' | 'success';
   processId?: string;
 }
+
+export interface IOrderInput {
+  _id: string;
+  order: number;
+}
