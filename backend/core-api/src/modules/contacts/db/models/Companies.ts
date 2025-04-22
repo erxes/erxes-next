@@ -1,13 +1,13 @@
-import { IModels } from '~/connectionResolvers';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import { validSearchText } from 'erxes-api-shared/utils';
-import { Model } from 'mongoose';
+import { companySchema } from '@/contacts/db/definitions/company';
 import {
   ICompany,
   ICompanyDocument,
   ICustomField,
+  IUserDocument,
 } from 'erxes-api-shared/core-types';
-import { companySchema } from '@/contacts/db/definitions/company';
+import { validSearchText } from 'erxes-api-shared/utils';
+import { Model } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
 
 export interface ICompanyModel extends Model<ICompanyDocument> {
   getCompany(_id: string): Promise<ICompanyDocument>;
@@ -216,9 +216,9 @@ export const loadCompanyClass = (models: IModels) => {
     public static fillSearchText(doc: ICompany) {
       return validSearchText([
         doc.primaryName || ' ',
-        (doc.names || []).joinErxesGateway(' '),
-        (doc.emails || []).joinErxesGateway(' '),
-        (doc.phones || []).joinErxesGateway(' '),
+        (doc.names || []).join(' '),
+        (doc.emails || []).join(' '),
+        (doc.phones || []).join(' '),
         doc.website || '',
         doc.industry || '',
         doc.plan || '',

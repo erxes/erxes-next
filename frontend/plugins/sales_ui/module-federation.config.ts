@@ -18,6 +18,7 @@ const config: ModuleFederationConfig = {
     './Config': './src/modules/constants/config.ts',
     './Module': './src/remote-entry.ts',
     './Settings': './src/pages/SettingsPage.tsx',
+    './Widgets': './src/widgets/Widgets.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

@@ -1,7 +1,7 @@
 export const types = `
     type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String
-     state: String
+    state: String
     createdAt: Date
     modifiedAt: Date
     avatar: String
@@ -54,10 +54,11 @@ export const types = `
   type CustomersListResponse {
     list: [Customer],
     pageInfo: PageInfo
-    totalCount: Float,
+    totalCount: Int,
   }
 
 `;
+
 export const conformityQueryFields = `
   conformityMainType: String
   conformityMainTypeId: String

@@ -20,13 +20,11 @@ export interface ICursorPaginateParams {
   limit?: number;
   cursor?: string;
   direction: 'forward' | 'backward';
-  sortField?: string;
 }
 
 export interface IListParams {
   searchValue?: string;
-  page?: number;
-  perPage?: number;
+  sortField?: string;
 }
 
 export interface IStringMap {

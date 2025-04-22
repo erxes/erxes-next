@@ -2,8 +2,6 @@ import { gql } from '@apollo/client';
 
 export const GET_CUSTOMERS = gql`
   query customers(
-    $page: Int
-    $perPage: Int
     $segment: String
     $tag: String
     $type: String
@@ -19,7 +17,7 @@ export const GET_CUSTOMERS = gql`
     $endDate: String
     $leadStatus: String
     $sortField: String
-    $sortDirection: Int
+    $direction: CURSOR_DIRECTION
     $dateFilters: String
     $segmentData: String
     $emailValidationStatus: String
@@ -30,8 +28,6 @@ export const GET_CUSTOMERS = gql`
     $isSaved: Boolean
   ) {
     customers(
-      page: $page
-      perPage: $perPage
       segment: $segment
       tag: $tag
       type: $type
@@ -47,7 +43,7 @@ export const GET_CUSTOMERS = gql`
       endDate: $endDate
       leadStatus: $leadStatus
       sortField: $sortField
-      sortDirection: $sortDirection
+      direction: $direction
       dateFilters: $dateFilters
       segmentData: $segmentData
       emailValidationStatus: $emailValidationStatus

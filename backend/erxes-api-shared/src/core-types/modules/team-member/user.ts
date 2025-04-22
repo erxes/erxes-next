@@ -1,7 +1,10 @@
-import { ICustomField } from '../../common';
+import { Document } from 'mongoose';
+import { ICustomField, ILink } from '../../common';
 import { IPermissionDocument } from '../permissions/permission';
+
 import { ILink } from '../../common';
 import { Document } from 'mongoose';
+
 
 export interface IEmailSignature {
   brandId?: string;

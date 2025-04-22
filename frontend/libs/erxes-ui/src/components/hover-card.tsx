@@ -21,8 +21,7 @@ const HoverCardContent = React.forwardRef<
 ));
 HoverCardContent.displayName = HoverCardPrimitive.Content.displayName;
 
-export const HoverCard = {
-  Root: HoverCardPrimitive.Root,
+export const HoverCard = Object.assign(HoverCardPrimitive.Root, {
   Trigger: HoverCardPrimitive.Trigger,
   Content: HoverCardContent,
-};
+});
