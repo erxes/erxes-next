@@ -3,36 +3,30 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 import { useContactFilterValues } from '@/contacts/contacts-filter/hooks/useContactFilterValues';
 import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
 import { ICustomer } from '../types/customerType';
-import { useEffect, useState } from 'react';
-import { useQueryState } from 'erxes-ui';
+import {
+  IRecordTableCursorPageInfo,
+  useRecordTableCursor,
+  getCursorPageInfo,
+} from 'erxes-ui';
 
 export const CUSTOMERS_PER_PAGE = 24;
 
 export const useCustomers = (options?: QueryHookOptions) => {
   const { variables } = useContactFilterValues();
-  const [cursor, setCursor] = useQueryState<string | undefined>('cursor');
-  const [defaultCursor, setDefaultCursor] = useState<string | undefined>(
-    cursor || undefined,
-  );
-  const [sessionCursor] = useState<string | undefined>(
-    sessionStorage.getItem('contacts_cursor') || undefined,
-  );
+  const { cursor, setCursor } = useRecordTableCursor({
+    sessionKey: 'contacts_cursor',
+  });
 
   const { data, loading, fetchMore } = useQuery<{
     customers: {
       list: ICustomer[];
-      pageInfo: {
-        endCursor: string;
-        hasNextPage: boolean;
-        hasPreviousPage: boolean;
-        startCursor: string;
-      };
+      pageInfo: IRecordTableCursorPageInfo;
     };
   }>(GET_CUSTOMERS, {
     ...options,
     variables: {
       limit: CUSTOMERS_PER_PAGE,
-      cursor: defaultCursor ? sessionCursor || defaultCursor : sessionCursor,
+      cursor,
       ...variables,
     },
   });
@@ -65,41 +59,25 @@ export const useCustomers = (options?: QueryHookOptions) => {
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
 
-          const { endCursor, hasNextPage, hasPreviousPage, startCursor } =
-            fetchMoreResult.customers.pageInfo;
+          const { pageInfo: fetchMorePageInfo, list: fetchMoreList = [] } =
+            fetchMoreResult.customers;
 
-          setCursor(prev.customers?.pageInfo?.endCursor);
+          const { pageInfo: prevPageInfo, list: prevList = [] } =
+            prev.customers || {};
+
+          setCursor(prevPageInfo?.endCursor);
 
           return Object.assign({}, prev, {
             customers: {
-              pageInfo: {
-                endCursor:
-                  direction === 'forward'
-                    ? endCursor
-                    : prev.customers?.pageInfo?.endCursor,
-                hasNextPage:
-                  direction === 'forward'
-                    ? hasNextPage
-                    : prev.customers?.pageInfo?.hasNextPage,
-                hasPreviousPage:
-                  direction === 'forward'
-                    ? prev.customers?.pageInfo?.hasPreviousPage
-                    : hasPreviousPage,
-                startCursor:
-                  direction === 'forward'
-                    ? prev.customers?.pageInfo?.startCursor
-                    : startCursor,
-              },
+              pageInfo: getCursorPageInfo({
+                direction,
+                fetchMorePageInfo,
+                prevPageInfo,
+              }),
               list:
                 direction === 'forward'
-                  ? [
-                      ...(prev.customers?.list || []),
-                      ...(fetchMoreResult.customers?.list || []),
-                    ]
-                  : [
-                      ...(fetchMoreResult.customers?.list || []),
-                      ...(prev.customers?.list || []),
-                    ],
+                  ? [...prevList, ...fetchMoreList]
+                  : [...fetchMoreList, ...prevList],
             },
           });
         },

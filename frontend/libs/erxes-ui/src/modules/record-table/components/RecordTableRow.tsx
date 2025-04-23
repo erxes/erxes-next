@@ -7,15 +7,22 @@ export const RecordTableRow = ({
   children,
   className,
   handleRowViewChange,
+  id,
   ...props
 }: React.HTMLAttributes<HTMLTableRowElement> & {
   handleRowViewChange?: (inView: boolean) => void;
+  id?: string;
 }) => {
   const { ref, inView } = useInView({
     onChange: handleRowViewChange,
   });
   return (
-    <Table.Row {...props} ref={ref} className={cn('h-cell', className)}>
+    <Table.Row
+      {...props}
+      ref={ref}
+      className={cn('h-cell', inView ? 'in-view' : 'out-of-view', className)}
+      id={id}
+    >
       {inView ? children : <Table.Cell className="h-8" />}
     </Table.Row>
   );

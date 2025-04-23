@@ -1,7 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollArea } from 'erxes-ui/components';
 import { useQueryState } from 'erxes-ui/hooks';
 import { RecordTable } from 'erxes-ui/modules';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { IRecordTableCursorPageInfo } from '../types/RecordTableCursorTypes';
+import { RecordTableCursorContext } from '../contexts/RecordTableCursorContext';
+import { useRecordTableCursorContext } from '../hooks/useRecordTableCursorContext';
 
 export const RecordTableCursorProvider = ({
   children,
@@ -12,15 +16,14 @@ export const RecordTableCursorProvider = ({
 }: {
   children: React.ReactNode;
   hasPreviousPage?: boolean;
+  hasNextPage?: boolean;
   loading?: boolean;
   dataLength?: number;
-  hasNextPage?: boolean;
 }) => {
-  const distanceFromBottomRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isFetchBackward, setIsFetchBackward] = useState(false);
   const [cursorItemIds, setCursorItemIds] = useState<string[]>([]);
-  console.log('cursorItemIds', cursorItemIds, distanceFromBottomRef.current);
+  const distanceFromBottomRef = useRef(0);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -34,22 +37,25 @@ export const RecordTableCursorProvider = ({
         scrollRef.current.scrollTop = 0;
       }
     }
-  }, [hasPreviousPage, loading]);
+  }, [hasPreviousPage]);
 
   useEffect(() => {
     if (scrollRef.current) {
       if (distanceFromBottomRef.current && isFetchBackward) {
-        console.log(
-          'distanceFromBottomRef.current',
-          distanceFromBottomRef.current,
-        );
         scrollRef.current.scrollTop =
           scrollRef.current.scrollHeight - distanceFromBottomRef.current;
         distanceFromBottomRef.current = 0;
         setIsFetchBackward(false);
       }
     }
-  }, [dataLength, isFetchBackward]);
+  }, [dataLength]);
+
+  const handleScroll = () => {
+    const firstVisibleRow = scrollRef.current?.querySelector('.in-view');
+    if (firstVisibleRow) {
+      sessionStorage.setItem('contacts_cursor', firstVisibleRow.id);
+    }
+  };
 
   return (
     <RecordTableCursorContext.Provider
@@ -65,7 +71,9 @@ export const RecordTableCursorProvider = ({
       }}
     >
       <ScrollArea.Root className="h-full w-full pb-3 pr-3">
-        <ScrollArea.Viewport ref={scrollRef}>{children}</ScrollArea.Viewport>
+        <ScrollArea.Viewport ref={scrollRef} onScroll={handleScroll}>
+          {children}
+        </ScrollArea.Viewport>
         <ScrollArea.Bar orientation="vertical" />
         <ScrollArea.Bar orientation="horizontal" />
       </ScrollArea.Root>
@@ -88,7 +96,7 @@ export const RecordTableBackwardSkeleton = ({
     distanceFromBottomRef,
     hasPreviousPage,
     loading,
-  } = useContext(RecordTableCursorContext);
+  } = useRecordTableCursorContext();
 
   if (!hasPreviousPage || loading) {
     return null;
@@ -97,6 +105,7 @@ export const RecordTableBackwardSkeleton = ({
   return (
     <RecordTable.RowSkeleton
       rows={3}
+      backward
       handleInView={() => {
         setIsFetchBackward(true);
         handleFetchMore({ direction: 'backward' });
@@ -117,103 +126,32 @@ export const RecordTableForwardSkeleton = ({
   handleFetchMore: (params: { direction: 'backward' | 'forward' }) => void;
   endCursor: IRecordTableCursorPageInfo['endCursor'];
 }) => {
-  const { cursorItemIds, setCursorItemIds, hasNextPage, loading } = useContext(
-    RecordTableCursorContext,
-  );
+  const { cursorItemIds, setCursorItemIds, hasNextPage, loading } =
+    useRecordTableCursorContext();
 
   if (!hasNextPage || loading) {
     return null;
   }
 
-  return (
-    <RecordTable.RowSkeleton
-      rows={1}
-      handleInView={() => {
-        handleFetchMore({ direction: 'forward' });
-        setCursorItemIds([...cursorItemIds, endCursor || '']);
-      }}
-    />
-  );
-};
+  const handleInView = () => {
+    handleFetchMore({ direction: 'forward' });
+    setCursorItemIds([...cursorItemIds, endCursor || '']);
+  };
 
-export const RecordTableCursorContext = createContext<{
-  scrollRef: React.RefObject<HTMLDivElement>;
-  isFetchBackward: boolean;
-  cursorItemIds: string[];
-  setCursorItemIds: (ids: string[]) => void;
-  setIsFetchBackward: (isFetchBackward: boolean) => void;
-  distanceFromBottomRef: React.MutableRefObject<number>;
-  hasNextPage?: boolean;
-  hasPreviousPage?: boolean;
-  loading?: boolean;
-}>({} as any);
+  return <RecordTable.RowSkeleton rows={1} handleInView={handleInView} />;
+};
 
 export const RecordTableCursorRowList = () => {
   const [, setCursor] = useQueryState<string | undefined>('cursor');
-  const { cursorItemIds } = useContext(RecordTableCursorContext);
+  const { cursorItemIds } = useRecordTableCursorContext();
 
   return (
     <RecordTable.RowList
       handleRowViewChange={(id, inView) => {
-        if (cursorItemIds.includes(id)) {
+        if (cursorItemIds.includes(id) && inView) {
           setCursor(id);
-        } else if (!inView) {
-          sessionStorage.setItem('contacts_cursor', id);
         }
       }}
     />
   );
 };
-
-export const useRecordTableCursor = ({
-  sessionKey = 'contacts_cursor',
-}: {
-  sessionKey?: string;
-}) => {
-  const [cursor, setCursor] = useQueryState<string | undefined>('cursor');
-  const [defaultCursor] = useState<string | undefined>(cursor || undefined);
-  const [sessionCursor] = useState<string | undefined>(
-    sessionStorage.getItem(sessionKey) || undefined,
-  );
-
-  return {
-    cursor: defaultCursor ? sessionCursor || defaultCursor : undefined,
-    setCursor,
-    defaultCursor,
-    sessionCursor,
-  };
-};
-
-export const getCursorPageInfo = ({
-  direction,
-  fetchMorePageInfo,
-  prevPageInfo,
-}: {
-  direction: 'forward' | 'backward';
-  fetchMorePageInfo: IRecordTableCursorPageInfo;
-  prevPageInfo: IRecordTableCursorPageInfo;
-}) => {
-  const { endCursor, hasNextPage, hasPreviousPage, startCursor } =
-    fetchMorePageInfo;
-  const {
-    endCursor: prevEndCursor,
-    hasNextPage: prevHasNextPage,
-    hasPreviousPage: prevHasPreviousPage,
-    startCursor: prevStartCursor,
-  } = prevPageInfo;
-
-  return {
-    endCursor: direction === 'forward' ? endCursor : prevEndCursor,
-    hasNextPage: direction === 'forward' ? hasNextPage : prevHasNextPage,
-    hasPreviousPage:
-      direction === 'forward' ? prevHasPreviousPage : hasPreviousPage,
-    startCursor: direction === 'forward' ? startCursor : prevStartCursor,
-  };
-};
-
-export interface IRecordTableCursorPageInfo {
-  endCursor?: string | null;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  startCursor?: string | null;
-}

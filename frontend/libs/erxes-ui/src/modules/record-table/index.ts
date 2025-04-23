@@ -12,8 +12,12 @@ import { RecordTableInlineHead } from './components/RecordTableInlineHead';
 import { Table } from 'erxes-ui/components';
 import { RecordTableRowList } from './components/RecordTableRowList';
 import { RecordTableScroll } from './components/RecordTableScroll';
-
-export * from './components/RecordTableCursor';
+import {
+  RecordTableBackwardSkeleton,
+  RecordTableCursorProvider,
+  RecordTableCursorRowList,
+  RecordTableForwardSkeleton,
+} from './components/RecordTableCursor';
 
 export const RecordTable = Object.assign(RecordTableRoot, {
   Provider: RecordTableProvider,
@@ -27,4 +31,12 @@ export const RecordTable = Object.assign(RecordTableRoot, {
   RowSkeleton: RecordTableRowSkeleton,
   MoreButton: RecordTableMoreButton,
   Scroll: RecordTableScroll,
+  CursorProvider: RecordTableCursorProvider,
+  CursorBackwardSkeleton: RecordTableBackwardSkeleton,
+  CursorForwardSkeleton: RecordTableForwardSkeleton,
+  CursorRowList: RecordTableCursorRowList,
 });
+
+export * from './types/RecordTableCursorTypes';
+export * from './hooks/useRecordTableCursor';
+export * from './utils/getCursorPageInfo';
