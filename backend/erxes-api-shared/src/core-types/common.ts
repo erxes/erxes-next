@@ -59,13 +59,23 @@ export interface IPdfAttachment {
 }
 
 export interface IMainContext {
-  req: Request;
-  res: Response;
+  res: any;
   requestInfo: any;
-  subdomain: string;
   user: IUserDocument;
+  docModifier: <T>(doc: T) => any;
+  brandIdSelector: object;
+  userBrandIdsSelector: object;
+  commonQuerySelector: object;
+  commonQuerySelectorElk: object;
+  singleBrandIdSelector: object;
+  dataSources: {
+    AutomationsAPI: any;
+    EngagesAPI: any;
+    IntegrationsAPI: any;
+    HelpersApi: any;
+  };
+  dataLoaders: any;
 }
-
 export interface ILogDoc {
   source: 'webhook' | 'graphql' | 'mongo';
   action: string;

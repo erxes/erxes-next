@@ -1,10 +1,10 @@
 export default {
-  displayName: 'inbox_ui',
+  displayName: 'frontline_ui',
   preset: '../../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': ['babel-jest', { presets: ['@nx/react/babel'] }],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/frontend/plugins/inbox_ui',
+  coverageDirectory: '../../../coverage/frontend/plugins/frontline_ui',
 };

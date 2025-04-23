@@ -11,7 +11,7 @@ export const AddTagToConversations = () => {
   const handleAddTag = (value: string) => {
     giveTags({
       variables: {
-        type: 'inbox:conversation',
+        type: 'frontline:conversation',
         tagIds: [value],
         targetIds: selectedConversations,
       },
@@ -33,7 +33,7 @@ export const AddTagToConversations = () => {
               },
             });
           } catch (error) {
-            // console.error(error);
+            console.error(error);
           }
         });
       },
@@ -45,7 +45,7 @@ export const AddTagToConversations = () => {
 
   return (
     <SelectSingleTag
-      tagType="inbox:conversation"
+      tagType="frontline:conversation"
       onValueChange={(value) => {
         handleAddTag(value);
       }}
