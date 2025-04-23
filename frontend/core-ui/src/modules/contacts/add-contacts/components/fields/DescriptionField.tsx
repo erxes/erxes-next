@@ -20,7 +20,7 @@ export const DescriptionField = ({
 
           <Form.Control>
             <Editor
-              initialContent=""
+              initialContent={field.value}
               onChange={field.onChange}
               scope={ContactHotKeyScope.CustomerAddSheetDescriptionField}
             />
