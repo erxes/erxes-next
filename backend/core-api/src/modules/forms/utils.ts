@@ -1,7 +1,12 @@
 import { IModels } from '~/connectionResolvers';
 import { ICombinedParams } from './types';
-import { getPlugin, getRealIdFromElk } from 'erxes-api-shared/utils';
+import {
+  getPlugin,
+  getRealIdFromElk,
+  sendTRPCMessage,
+} from 'erxes-api-shared/utils';
 import { httpBatchLink, createTRPCUntypedClient } from '@trpc/client';
+import { splitType } from 'erxes-api-shared/core-modules';
 
 export const getCustomFields = async (
   models: IModels,
@@ -73,17 +78,37 @@ export const fieldsCombinedByContentType = async (
     onlyDates,
   }: ICombinedParams,
 ) => {
-  let fields = await fetchServiceForms(
-    subdomain,
-    contentType,
-    'getList',
-    {
+  // let fields = await fetchServiceForms(
+  //   subdomain,
+  //   contentType,
+  //   'getList',
+  //   {
+  //     segmentId,
+  //     usageType,
+  //     config: config || {},
+  //   },
+  //   [],
+  // );
+
+  const [pluginName, moduleType] = splitType(contentType);
+
+  // console.log({ pluginName, moduleType });
+
+  let fields = await sendTRPCMessage({
+    pluginName,
+    method: 'query',
+    module: 'fields',
+    action: 'getFieldList',
+    data: {
       segmentId,
       usageType,
       config: config || {},
+      type: moduleType,
     },
-    [],
-  );
+    defaultValue: [],
+  });
+
+  // console.log({ fields });
 
   let validation;
 

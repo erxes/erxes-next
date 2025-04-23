@@ -112,7 +112,6 @@ export const conditionSchema = new Schema(
 
 export const segmentSchema = schemaWrapper(
   new Schema({
-    _id: { pkey: true },
     contentType: {
       type: String,
       label: 'Content type',

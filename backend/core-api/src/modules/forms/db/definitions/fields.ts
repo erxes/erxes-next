@@ -126,8 +126,6 @@ export interface IFieldGroupDocument extends IFieldGroup, Document {
 
 export const fieldSchema = schemaWrapper(
   new Schema({
-    _id: { pkey: true },
-
     contentType: { type: String, label: 'Content type' },
 
     contentTypeId: { type: String, label: 'Content type item' },
@@ -254,7 +252,6 @@ export const fieldSchema = schemaWrapper(
 
 export const fieldGroupSchema = schemaWrapper(
   new Schema({
-    _id: { pkey: true },
     name: { type: String, label: 'Name' },
     contentType: {
       type: String,

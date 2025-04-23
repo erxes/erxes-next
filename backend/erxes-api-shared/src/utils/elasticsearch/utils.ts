@@ -10,6 +10,16 @@ export const client = new Client({
   node: ELASTICSEARCH_URL,
 });
 
+export const isElasticsearchUp = async () => {
+  try {
+    const res = await fetch('http://localhost:9200');
+    return res.status === 200;
+  } catch (err) {
+    console.warn('Elasticsearch is not running:', err.message);
+    return false;
+  }
+};
+
 export const getRealIdFromElk = (_id: string) => {
   const VERSION = getEnv({ name: 'VERSION' });
   if (VERSION && VERSION === 'saas') {

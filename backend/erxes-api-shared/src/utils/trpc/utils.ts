@@ -9,7 +9,7 @@ import { getPlugin } from '../service-discovery';
 
 type MessageProps = {
   method: 'query' | 'mutation';
-  serviceName: string;
+  pluginName: string;
   module: string;
   action: string;
   data: any;
@@ -18,7 +18,7 @@ type MessageProps = {
 };
 
 export const sendTRPCMessage = async ({
-  serviceName,
+  pluginName,
   method,
   module,
   action,
@@ -26,17 +26,13 @@ export const sendTRPCMessage = async ({
   defaultValue,
   options,
 }: MessageProps) => {
-  const pluginInfo = await getPlugin(serviceName);
+  const pluginInfo = await getPlugin(pluginName);
 
   const client = createTRPCUntypedClient({
     links: [httpBatchLink({ url: `${pluginInfo.address}/trpc` })],
   });
 
-  const result = await client[method](
-    `${serviceName}.${module}.${action}`,
-    data,
-    options,
-  );
+  const result = await client[method](`${module}.${action}`, data, options);
 
   return result || defaultValue;
 };

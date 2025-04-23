@@ -1,4 +1,4 @@
-import { getPlugin, getPlugins } from '@/utils';
+import { getPlugin, getPlugins } from '../../utils';
 import { IDependentService, ISegmentContentType } from './types';
 
 export const getEsIndexByContentType = async (contentType: string) => {

@@ -1,16 +1,10 @@
-// import {
-//     replacePlaceHolders,
-//     setProperty
-//   } from "@erxes/api-utils/src/automations";
-//   import { generateModels, IModels } from "./connectionResolver";
-//   import { sendCommonMessage } from "./messageBroker";
-
 import {
   replacePlaceHolders,
   setProperty,
   startAutomations,
 } from 'erxes-api-shared/core-modules';
 import { generateModels, IModels } from './connectionResolvers';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 const getRelatedValue = async (
   models: IModels,
@@ -18,6 +12,49 @@ const getRelatedValue = async (
   target,
   targetKey,
 ) => {
+  if (
+    [
+      'userId',
+      'assignedUserId',
+      'closedUserId',
+      'ownerId',
+      'createdBy',
+    ].includes(targetKey)
+  ) {
+    const user = await models.Users.getUser(target[targetKey]);
+
+    return (
+      (user && ((user.details && user.details.fullName) || user.email)) || ''
+    );
+  }
+
+  if (
+    ['participatedUserIds', 'assignedUserIds', 'watchedUserIds'].includes(
+      targetKey,
+    )
+  ) {
+    const users = await models.Users.find({ _id: { $in: target[targetKey] } });
+
+    return (
+      users.map(
+        (user) => (user.details && user.details.fullName) || user.email,
+      ) || []
+    ).join(', ');
+  }
+
+  if (targetKey === 'tagIds') {
+    const tags = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'tags',
+      action: 'find',
+      data: { _id: { $in: target[targetKey] } },
+      defaultValue: [],
+    });
+
+    return (tags.map((tag) => tag.name) || []).join(', ');
+  }
+
   return false;
 };
 
@@ -48,19 +85,20 @@ const getItems = async (
     triggerContentType !== 'form_submission' &&
     moduleService === triggerService
   ) {
-    // const relTypeIds = await sendCommonMessage({
-    //   subdomain,
-    //   serviceName: "core",
-    //   action: "conformities.savedConformity",
-    //   data: {
-    //     mainType: triggerType.split(":")[1],
-    //     mainTypeId: target._id,
-    //     relTypes: [module.split(":")[1]]
-    //   },
-    //   isRPC: true
-    // });
+    const relTypeIds = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'conformities',
+      action: 'savedConformity',
+      data: {
+        mainType: triggerType.split(':')[1],
+        mainTypeId: target._id,
+        relTypes: [module.split(':')[1]],
+      },
+      defaultValue: [],
+    });
 
-    return model.find({ _id: { $in: [] } });
+    return model.find({ _id: { $in: relTypeIds } });
   }
 
   let filter;
@@ -68,19 +106,18 @@ const getItems = async (
   if (triggerContentType === 'form_submission') {
     filter = { _id: target._id };
   } else {
-    // send message to trigger service to get related value
-    // filter = await sendCommonMessage({
-    //   subdomain,
-    //   serviceName: triggerService,
-    //   action: "getModuleRelation",
-    //   data: {
-    //     module,
-    //     triggerType,
-    //     target
-    //   },
-    //   isRPC: true,
-    //   defaultValue: null
-    // });
+    filter = await sendTRPCMessage({
+      pluginName: triggerService,
+      method: 'query',
+      module: 'conformities',
+      action: 'getModuleRelation',
+      data: {
+        mainType: triggerType.split(':')[1],
+        mainTypeId: target._id,
+        relTypes: [module.split(':')[1]],
+      },
+      defaultValue: [],
+    });
   }
 
   return filter ? model.find(filter) : [];

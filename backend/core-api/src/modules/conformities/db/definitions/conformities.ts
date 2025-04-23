@@ -1,3 +1,4 @@
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IConformity {
@@ -66,7 +67,7 @@ export interface IConformityDocument extends IConformity, Document {
 }
 
 export const conformitySchema = new Schema({
-  _id: { pkey: true },
+  _id: mongooseStringRandomId,
   mainType: { type: String },
   mainTypeId: { type: String, index: true },
   relType: { type: String },

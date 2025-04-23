@@ -110,7 +110,7 @@ export default startSegments('core', {
       }
 
       ids = await sendTRPCMessage({
-        serviceName,
+        pluginName: serviceName,
         method: 'query',
         module: 'segments',
         action: 'associationFilter',

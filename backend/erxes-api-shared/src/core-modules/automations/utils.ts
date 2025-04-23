@@ -6,9 +6,9 @@ import {
   IPropertyProps,
   IReplacePlaceholdersProps,
 } from './types';
-import { sendTRPCMessage } from '@/utils/trpc';
+import { sendTRPCMessage } from '../../utils/trpc';
 
-const splitType = (type: string) => {
+export const splitType = (type: string) => {
   return type.replace('.', ':').split(':');
 };
 
@@ -319,7 +319,7 @@ export const setProperty = async <TModels>({
           const fieldId = field.replace(`${complexFieldKey}.`, '');
 
           const fieldDetail = await sendTRPCMessage({
-            serviceName: 'core',
+            pluginName: 'core',
             method: 'query',
             module: 'fields',
             action: 'findOne',
@@ -327,7 +327,7 @@ export const setProperty = async <TModels>({
           });
 
           const complexFieldData = await sendTRPCMessage({
-            serviceName: 'core',
+            pluginName: 'core',
             method: 'query',
             module: 'fields',
             action: 'generateTypedItem',
@@ -370,7 +370,7 @@ export const setProperty = async <TModels>({
     try {
       await sendTRPCMessage({
         method: 'mutation',
-        serviceName,
+        pluginName: serviceName,
         module: pluralFormation(contentType),
         action: `updateMany`,
         data: { selector: { _id: relatedItem._id, ...selectorDoc }, modifier },

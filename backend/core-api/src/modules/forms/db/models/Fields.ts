@@ -15,7 +15,7 @@ import {
 } from '../definitions/fields';
 import { IModels } from '~/connectionResolvers';
 import { IOrderInput } from 'erxes-api-shared/core-types';
-import { updateOrder } from 'erxes-api-shared/utils';
+import { sendTRPCMessage, updateOrder } from 'erxes-api-shared/utils';
 
 // import {
 //   fieldGroupSchema,
@@ -26,7 +26,6 @@ import { updateOrder } from 'erxes-api-shared/utils';
 //   IFieldGroupDocument
 // } from "./definitions/fields";
 // import { getService, getServices } from "@erxes/api-utils/src/serviceDiscovery";
-// import { sendCommonMessage } from "../../messageBroker";
 // import { IModels } from "../../connectionResolver";
 
 export interface ITypedListItem {
@@ -134,21 +133,21 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
      * Check if there are any values for given field
      */
     public static async checkHasValue(_id: string, contentType: string) {
-      const [serviceName, type] = contentType.split(':');
+      const [pluginName, type] = contentType.split(':');
 
-      //   const result = await sendCommonMessage({
-      //     subdomain,
-      //     serviceName,
-      //     action: `${type}s.find`,
-      //     data: {
-      //       'customFieldsData.field': _id,
-      //     },
-      //     isRPC: true,
-      //     defaultValue: [],
-      //   });
+      const result = await sendTRPCMessage({
+        method: 'query',
+        pluginName,
+        module: `${type}s`,
+        action: `find`,
+        data: {
+          'customFieldsData.field': _id,
+        },
 
-      //   return result.length > 0;
-      return true;
+        defaultValue: [],
+      });
+
+      return result.length > 0;
     }
 
     /*
@@ -505,51 +504,51 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
       serviceName: string,
       type: string,
     ) {
-      //   const fields = await sendCommonMessage({
-      //     subdomain,
-      //     serviceName,
-      //     action: 'systemFields',
-      //     data: {
-      //       groupId,
-      //       type,
-      //     },
-      //     isRPC: true,
-      //     defaultValue: [],
-      //   });
-      //   await models.Fields.insertMany(fields);
+      const fields = await sendTRPCMessage({
+        pluginName: serviceName,
+        method: 'query',
+        module: 'forms',
+        action: 'systemFields',
+        data: {
+          groupId,
+          type,
+        },
+        defaultValue: [],
+      });
+      await models.Fields.insertMany(fields);
     }
     public static async updateSystemFields(
       groupId: string,
       serviceName: string,
       type: string,
     ) {
-      //   const fields = await sendCommonMessage({
-      //     subdomain,
-      //     serviceName,
-      //     action: 'systemFields',
-      //     data: {
-      //       groupId,
-      //       type,
-      //     },
-      //     isRPC: true,
-      //     defaultValue: [],
-      //   });
-      //   const existingFields = await models.Fields.find({
-      //     groupId: groupId,
-      //     isDefinedByErxes: true,
-      //   });
-      //   if (fields.length > existingFields.length) {
-      //     let newFields: any[] = [];
-      //     fields.map((x) => {
-      //       const isExisted = existingFields.filter(
-      //         (d) => d.text === x.text && d.type === x.type,
-      //       );
-      //       if (isExisted.length === 0) {
-      //         newFields.push(x);
-      //       }
-      //     });
-      //     await models.Fields.insertMany(newFields);
-      //   }
+      const fields = await sendTRPCMessage({
+        pluginName: serviceName,
+        method: 'query',
+        module: 'forms',
+        action: 'systemFields',
+        data: {
+          groupId,
+          type,
+        },
+        defaultValue: [],
+      });
+      const existingFields = await models.Fields.find({
+        groupId: groupId,
+        isDefinedByErxes: true,
+      });
+      if (fields.length > existingFields.length) {
+        let newFields: any[] = [];
+        fields.map((x) => {
+          const isExisted = existingFields.filter(
+            (d) => d.text === x.text && d.type === x.type,
+          );
+          if (isExisted.length === 0) {
+            newFields.push(x);
+          }
+        });
+        await models.Fields.insertMany(newFields);
+      }
     }
     public static async generateCustomFieldsData(
       data: { [key: string]: any },

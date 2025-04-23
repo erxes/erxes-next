@@ -1,5 +1,6 @@
 import { createGenerateModels } from 'erxes-api-shared/utils';
 import {
+  IBrandDocument,
   ICompanyDocument,
   ICustomerDocument,
   IUserDocument,
@@ -94,8 +95,10 @@ import {
   loadConformityClass,
 } from './modules/conformities/db/models/Conformities';
 import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
+import { IBrandModel, loadBrandClass } from './modules/brands/db/models';
 
 export interface IModels {
+  Brands: IBrandModel;
   Customers: ICustomerModel;
   Companies: ICompanyModel;
   Users: IUserModel;
@@ -134,6 +137,11 @@ export const loadClasses = (
   models.Users = db.model<IUserDocument, IUserModel>(
     'users',
     loadUserClass(models),
+  );
+
+  models.Brands = db.model<IBrandDocument, IBrandModel>(
+    'brands',
+    loadBrandClass(models),
   );
 
   models.Conformities = db.model<IConformityDocument, IConformityModel>(

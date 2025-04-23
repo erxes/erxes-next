@@ -2,6 +2,12 @@ import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
 
 import { ITRPCContext } from '~/init-trpc';
+import {
+  generateContactsFields,
+  generateFieldsUsers,
+  generateFormFields,
+  generateProductsFields,
+} from '../fields/utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
@@ -45,6 +51,39 @@ export const fieldsRouter = t.router({
           type,
           validation,
         );
+      }),
+    getFieldList: t.procedure
+      .input(
+        z.object({
+          type: z.string(),
+          segmentId: z.string().optional(),
+          usageType: z.string().optional(),
+          config: z.record(z.any()).optional(),
+        }),
+      )
+      .query(async ({ ctx, input }) => {
+        const { subdomain } = ctx;
+        const { type } = input;
+        console.log({ type, subdomain }, { ...input });
+
+        switch (type) {
+          case 'lead':
+            return generateContactsFields({ subdomain, data: input });
+          case 'customer':
+            return generateContactsFields({ subdomain, data: input });
+
+          case 'company':
+            return generateContactsFields({ subdomain, data: input });
+
+          case 'product':
+            return generateProductsFields({ subdomain, data: input });
+
+          case 'form_submission':
+            return generateFormFields({ subdomain, data: input });
+
+          default:
+            return generateFieldsUsers({ subdomain, data: input });
+        }
       }),
   }),
 });
