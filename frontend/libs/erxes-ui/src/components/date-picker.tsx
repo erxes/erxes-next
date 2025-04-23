@@ -58,43 +58,35 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
     };
 
     return (
-      <div
-        className="w-96 h-96 px-10 rounded-2xl relative flex items-center justify-center"
-        style={{
-          background: `linear-gradient(180deg,rgba(215, 215, 215, 1) 0%, rgba(244, 211, 94, 1) 20%, rgba(238, 150, 75, 1) 38%, rgba(249, 87, 148, 1) 55%, rgba(157, 78, 221, 1) 79%, rgba(0, 187, 249, 1) 100%)`,
-        }}
-      >
-        <div className="absolute inset-0 rounded-2xl backdrop-blur bg-white/10 border border-white/20 shadow-lg -z-10" />
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-          <Popover.Trigger asChild={true}>
-            <Combobox.Trigger
-              variant={'outline'}
-              disabled={Boolean(disabled)}
-              className={cn(
-                !value && 'text-muted-foreground',
-                Boolean(disabled) && 'cursor-not-allowed opacity-50',
-                className,
-              )}
-            >
-              {renderButtonContent()}
-            </Combobox.Trigger>
-          </Popover.Trigger>
-          <Popover.Content className="w-auto p-0">
-            <Calendar
-              {...props}
-              disabled={(date: Date) =>
-                withPresent
-                  ? date > new Date() || date < new Date('1900-01-01')
-                  : Boolean(disabled)
-              }
-              mode={mode}
-              selected={value as any}
-              onSelect={handleDateChange}
-              initialFocus
-            />
-          </Popover.Content>
-        </Popover>
-      </div>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <Popover.Trigger asChild={true}>
+          <Combobox.Trigger
+            variant={'outline'}
+            disabled={Boolean(disabled)}
+            className={cn(
+              !value && 'text-muted-foreground',
+              Boolean(disabled) && 'cursor-not-allowed opacity-50',
+              className,
+            )}
+          >
+            {renderButtonContent()}
+          </Combobox.Trigger>
+        </Popover.Trigger>
+        <Popover.Content className="w-auto p-0">
+          <Calendar
+            {...props}
+            disabled={(date: Date) =>
+              withPresent
+                ? date > new Date() || date < new Date('1900-01-01')
+                : Boolean(disabled)
+            }
+            mode={mode}
+            selected={value as any}
+            onSelect={handleDateChange}
+            initialFocus
+          />
+        </Popover.Content>
+      </Popover>
     );
   },
 );
