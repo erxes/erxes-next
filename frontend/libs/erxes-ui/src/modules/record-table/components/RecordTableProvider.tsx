@@ -41,7 +41,6 @@ interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
   data: any[];
   tableOptions?: TableOptions<any>;
   stickyColumns?: string[];
-  moreColumn?: ColumnDef<any>;
 }
 
 export const RecordTableProvider = forwardRef<
@@ -56,7 +55,6 @@ export const RecordTableProvider = forwardRef<
       tableOptions,
       className,
       stickyColumns,
-      moreColumn,
       ...restProps
     },
     ref,
@@ -70,11 +68,7 @@ export const RecordTableProvider = forwardRef<
 
     const table = useReactTable({
       data,
-      columns: [
-        ...(moreColumn ? [moreColumn] : []),
-        checkboxColumn,
-        ...columns,
-      ],
+      columns,
       defaultColumn: {
         maxSize: 800,
       },
@@ -82,7 +76,7 @@ export const RecordTableProvider = forwardRef<
       state: {
         columnOrder,
         columnPinning: {
-          left: ['more', 'checkbox', ...(stickyColumns || [])],
+          left: stickyColumns,
         },
         sorting,
         columnFilters,

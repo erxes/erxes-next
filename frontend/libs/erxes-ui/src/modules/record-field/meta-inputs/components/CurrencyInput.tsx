@@ -27,7 +27,7 @@ export const CurrencyInput = ({
     >
       <SelectCurrency
         value={currencyCode || CurrencyCode.USD}
-        className="rounded-none border-r-0 relative focus-visible:z-10 shadow-none border-transparent rounded-l flex-none pr-1 pl-2 gap-1"
+        className="rounded-none border-r-0 relative focus-visible:z-10 shadow-none border-transparent rounded-l flex-none pr-1 pl-2 gap-1 max-w-14"
         display={displayCurrency}
       />
       <CurrencyValueInput

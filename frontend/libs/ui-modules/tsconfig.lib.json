@@ -6,7 +6,11 @@
       "node",
       "@nx/react/typings/cssmodule.d.ts",
       "@nx/react/typings/image.d.ts"
-    ]
+    ],
+    "paths": {
+      "ui-modules/*": ["frontend/libs/ui-modules/src/*"],
+      "ui-modules": ["frontend/libs/ui-modules/src/index.ts"]
+    }
   },
   "exclude": [
     "jest.config.ts",

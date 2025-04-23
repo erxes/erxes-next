@@ -24,16 +24,16 @@ export const PluginHeader = ({
     <>
       <header
         className={cn(
-          'flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0 bg-sidebar',
+          'flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0 bg-sidebar overflow-auto styled-scroll',
           className,
         )}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-none pr-8">
           <Sidebar.Trigger />
           <span className="h-3 w-0.5 bg-muted rounded-sm" />
           <Link to={to || '/'} className="flex items-center gap-2 px-2">
             <Icon className="w-4 h-4" />
-            <span className="text-[13px] font-semibold leading-none">
+            <span className="text-[13px] font-semibold leading-none ">
               {title}
             </span>
           </Link>

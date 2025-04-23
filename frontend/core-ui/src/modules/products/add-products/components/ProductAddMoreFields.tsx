@@ -140,7 +140,7 @@ export const ProductAddMoreFields = ({
                   size="sm"
                   variant="secondary"
                   type="button"
-                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed text-muted-foreground"
                 >
                   <IconUpload />
                   <span className="font-medium text-sm">Primary upload</span>
@@ -164,7 +164,7 @@ export const ProductAddMoreFields = ({
                   size="sm"
                   variant="secondary"
                   type="button"
-                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed text-muted-foreground"
                 >
                   <IconUpload />
                   <span className="font-medium text-sm">Secondary upload</span>
