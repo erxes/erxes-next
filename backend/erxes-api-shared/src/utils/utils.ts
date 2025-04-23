@@ -1,5 +1,6 @@
 import { IOrderInput } from '@/core-types';
 import mongoose from 'mongoose';
+import stripAnsi from 'strip-ansi';
 
 export const getEnv = ({
   name,
@@ -134,4 +135,50 @@ export const pluralFormation = (type: string) => {
   }
 
   return type + 's';
+}
+export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
+  const tempArray: T[][] = [];
+
+  for (let index = 0; index < myArray.length; index += chunkSize) {
+    const myChunk = myArray.slice(index, index + chunkSize);
+    tempArray.push(myChunk);
+  }
+
+  return tempArray;
+};
+
+export const cleanHtml = (content?: string): string =>
+  stripAnsi(content || '').substring(0, 100);
+
+/**
+ * Splits text into chunks of strings limited by the given character count.
+ *
+ * Regex explanation:
+ * .{1,100}(\\s|$)
+ * - .         → matches any character (except line terminators)
+ * - {1,100}   → matches 1 to 100 of the preceding token
+ * - (\\s|$)   → ends with a whitespace OR end of string
+ *
+ * @param str - Text to be split
+ * @param size - Character length of each chunk
+ * @returns An array of string chunks
+ */
+export const splitStr = (str: string, size: number): string[] => {
+  const cleanStr = stripAnsi(str);
+
+  const regex = new RegExp(`.{1,${size}}(\\s|$)`, 'g');
+
+  return cleanStr.match(regex) || [];
+};
+export const fixDate = (
+  value: string | number | Date,
+  defaultValue: Date = new Date(),
+): Date => {
+  const date = new Date(value);
+
+  if (!isNaN(date.getTime())) {
+    return date;
+  }
+
+  return defaultValue;
 };

@@ -126,6 +126,7 @@ export interface IModels {
 export interface IContext extends IMainContext {
   models: IModels;
   commonQuerySelector: any;
+  subdomain: string;
 }
 
 export const loadClasses = (

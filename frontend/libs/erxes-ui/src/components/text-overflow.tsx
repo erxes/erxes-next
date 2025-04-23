@@ -29,18 +29,20 @@ export const TextOverflowTooltip = forwardRef<
   }, [value, textRef]);
 
   return (
-    <Tooltip>
-      <Tooltip.Trigger asChild>
-        <span ref={textRef} className={cn('truncate w-full', className)}>
-          {value}
-        </span>
-      </Tooltip.Trigger>
-      {isOverflowing && (
-        <Tooltip.Content>
-          <span>{value}</span>
-        </Tooltip.Content>
-      )}
-    </Tooltip>
+    <Tooltip.Provider>
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <span ref={textRef} className={cn('truncate w-full', className)}>
+            {value}
+          </span>
+        </Tooltip.Trigger>
+        {isOverflowing && (
+          <Tooltip.Content>
+            <span>{value}</span>
+          </Tooltip.Content>
+        )}
+      </Tooltip>
+    </Tooltip.Provider>
   );
 });
 

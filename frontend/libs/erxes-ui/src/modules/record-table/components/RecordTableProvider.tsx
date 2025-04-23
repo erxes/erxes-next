@@ -40,7 +40,6 @@ interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<any>[];
   data: any[];
   tableOptions?: TableOptions<any>;
-  handleReachedBottom?: () => void;
   stickyColumns?: string[];
   moreColumn?: ColumnDef<any>;
   disableCheckbox?: boolean;
@@ -56,7 +55,6 @@ export const RecordTableProvider = forwardRef<
       columns,
       data,
       tableOptions,
-      handleReachedBottom,
       className,
       stickyColumns,
       moreColumn,
@@ -104,7 +102,6 @@ export const RecordTableProvider = forwardRef<
       <RecordTableContext.Provider
         value={{
           table,
-          handleReachedBottom,
         }}
       >
         <RecordTableDnDProvider setColumnOrder={setColumnOrder}>

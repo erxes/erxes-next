@@ -59,15 +59,12 @@ export interface IPdfAttachment {
 }
 
 export interface IMainContext {
-  req: Request;
-  res: Response;
+  res: any;
   requestInfo: any;
-  subdomain: string;
   user: IUserDocument;
   __: <T extends object>(doc: T) => T & { processId: string };
   processId: string;
 }
-
 export interface ILogDoc {
   subdomain: string;
   source: 'webhook' | 'graphql' | 'mongo' | 'auth';

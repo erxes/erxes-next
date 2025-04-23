@@ -28,14 +28,7 @@ const config: ModuleFederationConfig = {
     return false;
   },
 
-  remotes: [
-    'inbox_ui',
-    'sample_ui',
-    'accounting_ui',
-    'sales_ui',
-    'logs_ui',
-    'automations-ui',
-  ],
+  remotes: ['sample_ui', 'frontline_ui', 'sales_ui'],
 };
 
 /**

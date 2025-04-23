@@ -75,7 +75,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
         <Popover.Content className="w-auto p-0">
           <Calendar
             {...props}
-            disabled={(date) =>
+            disabled={(date: Date) =>
               withPresent
                 ? date > new Date() || date < new Date('1900-01-01')
                 : Boolean(disabled)
