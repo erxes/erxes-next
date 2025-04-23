@@ -1,3 +1,4 @@
+
 import { Button, Separator, SideMenu, Skeleton } from 'erxes-ui';
 import { ConversationHeader } from '@/inbox/conversation-detail/components/ConversationHeader';
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';

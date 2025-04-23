@@ -9,11 +9,6 @@ const ContactsIndexPage = lazy(() =>
   })),
 );
 
-const ContactsDetailPage = lazy(() =>
-  import('~/pages/contacts/ContactsDetailPage').then((module) => ({
-    default: module.ContactsDetailPage,
-  })),
-);
 const CompaniesIndexPage = lazy(() =>
   import('~/pages/contacts/companies/CompaniesIndexPage').then((module) => ({
     default: module.CompaniesIndexPage,
@@ -29,10 +24,7 @@ export const ContactsRoutes = () => {
           element={<Navigate to={`${ContactsPath.Customers}`} replace />}
         />
         <Route path={ContactsPath.Customers} element={<ContactsIndexPage />} />
-        <Route path={ContactsPath.Leads} element={<ContactsDetailPage />} />
         <Route path={ContactsPath.Companies} element={<CompaniesIndexPage />} />
-        <Route path={ContactsPath.Vendors} element={<ContactsDetailPage />} />
-        <Route path={ContactsPath.Clients} element={<ContactsDetailPage />} />
       </Routes>
     </Suspense>
   );

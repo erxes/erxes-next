@@ -1,5 +1,4 @@
 import { RecordTableMoreButton } from './components/MoreColumn';
-import { RecordTableBody } from './components/RecordTableBody';
 import { RecordTableHead } from './components/RecordTableHead';
 import { RecordTableHeader } from './components/RecordTableHeader';
 import {
@@ -10,14 +9,34 @@ import { RecordTableRoot } from './components/RecordTableRoot';
 import { RecordTableRowSkeleton } from './components/RecordTableRowSkeleton';
 import { RecordTableCell } from './record-table-cell/components/RecordTableCell';
 import { RecordTableInlineHead } from './components/RecordTableInlineHead';
+import { Table } from 'erxes-ui/components';
+import { RecordTableRowList } from './components/RecordTableRowList';
+import { RecordTableScroll } from './components/RecordTableScroll';
+import {
+  RecordTableBackwardSkeleton,
+  RecordTableCursorProvider,
+  RecordTableCursorRowList,
+  RecordTableForwardSkeleton,
+} from './components/RecordTableCursor';
+
 export const RecordTable = Object.assign(RecordTableRoot, {
   Provider: RecordTableProvider,
   Header: RecordTableHeader,
   Head: RecordTableHead,
   InlineHead: RecordTableInlineHead,
-  Body: RecordTableBody,
+  RowList: RecordTableRowList,
+  Body: Table.Body,
   Cell: RecordTableCell,
   useRecordTable: useRecordTable,
   RowSkeleton: RecordTableRowSkeleton,
   MoreButton: RecordTableMoreButton,
+  Scroll: RecordTableScroll,
+  CursorProvider: RecordTableCursorProvider,
+  CursorBackwardSkeleton: RecordTableBackwardSkeleton,
+  CursorForwardSkeleton: RecordTableForwardSkeleton,
+  CursorRowList: RecordTableCursorRowList,
 });
+
+export * from './types/RecordTableCursorTypes';
+export * from './hooks/useRecordTableCursor';
+export * from './utils/getCursorPageInfo';
