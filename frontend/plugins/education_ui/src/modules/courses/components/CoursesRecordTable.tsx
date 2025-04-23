@@ -4,18 +4,19 @@ import { courseMoreColumn } from '@/courses/components/CourseMoreColumn';
 import { courseColumns } from '@/courses/components/CourseColumns';
 
 export const CoursesRecordTable = () => {
-  const { customers, handleFetchMore, loading, totalCount } = useCourses({
+  const { handleFetchMore, loading, totalCount } = useCourses({
     variables: {
       perPage: COURSES_PER_PAGE,
       page: 1,
-      type: 'customer',
     },
   });
+
+  const courses = [] as any[];
 
   return (
     <RecordTable.Provider
       columns={courseColumns}
-      data={customers || []}
+      data={courses || []}
       handleReachedBottom={handleFetchMore}
       stickyColumns={['avatar', 'name']}
       className="mt-1.5"
@@ -24,7 +25,7 @@ export const CoursesRecordTable = () => {
       <RecordTable>
         <RecordTable.Header />
         <RecordTable.Body>
-          {!loading && totalCount > customers?.length && (
+          {!loading && totalCount > courses?.length && (
             <RecordTable.RowSkeleton
               rows={4}
               handleReachedBottom={handleFetchMore}

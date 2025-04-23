@@ -1,33 +1,33 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_CUSTOMERS } from '@/courses/graphql/queries/getCustomers';
+import { GET_COURSES } from '~/modules/courses/graphql/queries/getCourses';
 
 export const COURSES_PER_PAGE = 30;
 
 export const useCourses = (options?: QueryHookOptions) => {
-  const { data, loading, fetchMore } = useQuery(GET_CUSTOMERS, {
+  const { data, loading, fetchMore } = useQuery(GET_COURSES, {
     ...options,
     variables: {
       perPage: COURSES_PER_PAGE,
     },
   });
 
-  const { list: customers, totalCount } = data?.customers || {};
+  const { list: courses, totalCount } = data?.courses || {};
 
   const handleFetchMore = () =>
-    totalCount > customers?.length &&
+    totalCount > courses?.length &&
     fetchMore({
       variables: {
-        page: Math.ceil(customers.length / COURSES_PER_PAGE) + 1,
+        page: Math.ceil(courses.length / COURSES_PER_PAGE) + 1,
         perPage: COURSES_PER_PAGE,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          customers: {
-            ...prev.customers,
+          courses: {
+            ...prev.courses,
             list: [
-              ...(prev.customers?.list || []),
-              ...(fetchMoreResult.customers?.list || []),
+              ...(prev.courses?.list || []),
+              ...(fetchMoreResult.courses?.list || []),
             ],
           },
         });
@@ -36,7 +36,7 @@ export const useCourses = (options?: QueryHookOptions) => {
 
   return {
     loading,
-    customers,
+    courses,
     totalCount,
     handleFetchMore,
   };
