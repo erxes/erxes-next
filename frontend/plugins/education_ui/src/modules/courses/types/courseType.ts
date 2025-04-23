@@ -1,3 +1,5 @@
+import { IAttachment } from 'erxes-ui/types';
+
 export interface ICourse {
   name: string;
   code?: string;
@@ -11,4 +13,15 @@ export interface ICourse {
   endDate?: Date;
   deadline?: Date;
   unitPrice: number;
+}
+
+export interface ICourseCategory {
+  _id: string;
+  name: string;
+  description?: string;
+  parentId?: string;
+  code: string;
+  isRoot?: boolean;
+  activityCount?: number;
+  attachment?: IAttachment;
 }

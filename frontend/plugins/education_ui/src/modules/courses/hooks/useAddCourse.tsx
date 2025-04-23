@@ -1,17 +1,17 @@
 import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
 import { ICourse } from '@/courses/types/courseType';
 import { ADD_COURSES } from '@/courses/graphql/mutations/addCourse';
-import { GET_COURSES } from '@/courses/graphql/queries/getCourses';
+import { GET_COURSES } from '@/courses/graphql/queries/getCourse';
 
 interface CourseData {
-  course: {
+  courses: {
     list: ICourse[];
     totalCount: number;
   };
 }
 
 interface AddCourseResult {
-  coursesAdd: ICourse;
+  courseAdd: ICourse;
 }
 
 export function useAddCourse(
@@ -28,17 +28,17 @@ export function useAddCourse(
             query: GET_COURSES,
             variables: queryVariables,
           });
-          if (!existingData || !existingData.course || !data?.coursesAdd)
+          if (!existingData || !existingData.courses || !data?.courseAdd)
             return;
 
           cache.writeQuery<CourseData>({
             query: GET_COURSES,
             variables: queryVariables,
             data: {
-              course: {
-                ...existingData.course,
-                list: [data.coursesAdd, ...existingData.course.list],
-                totalCount: existingData.course.totalCount + 1,
+              courses: {
+                ...existingData.courses,
+                list: [data.courseAdd, ...existingData.courses.list],
+                totalCount: existingData.courses.totalCount + 1,
               },
             },
           });

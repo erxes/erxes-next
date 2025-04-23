@@ -27,6 +27,7 @@ export function AddCourseForm() {
     courseAdd({
       variables: data,
       onError: (e: ApolloError) => {
+        console.log(e.message);
         toast({
           title: 'Error',
           description: e.message,
@@ -58,6 +59,7 @@ export function AddCourseForm() {
               type="button"
               variant="ghost"
               className="bg-background hover:bg-background/90"
+              onClick={() => setOpen(false)}
             >
               Cancel
             </Button>

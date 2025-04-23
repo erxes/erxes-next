@@ -1,3 +1,7 @@
+import {
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
 export interface ICourseCategory {
   _id: string;
   name: string;
@@ -7,6 +11,23 @@ export interface ICourseCategory {
   isRoot?: boolean;
   activityCount?: number;
   attachment?: any;
+}
+
+export interface ICourseCategoryParams
+  extends IListParams,
+    ICursorPaginateParams {
+  name: string;
+  code?: string;
+  categoryId: string;
+  description?: string;
+  createdAt?: Date;
+  type?: string;
+  attachment?: any;
+  status?: string;
+  startDate: Date;
+  endDate?: Date;
+  deadline?: Date;
+  unitPrice: number;
 }
 
 export interface ICourseCategoryDocument extends ICourseCategory, Document {

@@ -4,14 +4,12 @@ import { courseMoreColumn } from '@/courses/components/CourseMoreColumn';
 import { courseColumns } from '@/courses/components/CourseColumns';
 
 export const CoursesRecordTable = () => {
-  const { handleFetchMore, loading, totalCount } = useCourses({
+  const { courses, handleFetchMore, loading, totalCount } = useCourses({
     variables: {
       perPage: COURSES_PER_PAGE,
       page: 1,
     },
   });
-
-  const courses = [] as any[];
 
   return (
     <RecordTable.Provider

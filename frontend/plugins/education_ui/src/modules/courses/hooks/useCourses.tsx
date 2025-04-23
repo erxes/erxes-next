@@ -1,5 +1,5 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_COURSES } from '~/modules/courses/graphql/queries/getCourses';
+import { GET_COURSES } from '@/courses/graphql/queries/getCourse';
 
 export const COURSES_PER_PAGE = 30;
 

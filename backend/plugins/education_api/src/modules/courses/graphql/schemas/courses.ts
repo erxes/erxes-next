@@ -24,6 +24,7 @@ export const types = `
   type CourseListResponse {
     list: [Course],
     totalCount: Float,
+    pageInfo: PageInfo
   }
     
   type CourseCategory {
@@ -73,7 +74,7 @@ export const queries = `
 const mutationParams = `
   name: String!,
   code: String!,
-  type: String,
+  type: String!,
   categoryId: String!,
   description: String,
   attachment: AttachmentInput,
@@ -87,7 +88,7 @@ const mutationParams = `
 export const mutations = `
   courseAdd(${mutationParams}): Course
   courseEdit(_id:String!, ${mutationParams}): Course
-  activitiesRemove(courseIds: [String]): JSON
+  courseRemove(courseIds: [String]): JSON
   changeCourseStatus(_id:String!, status : StatusType): Course
   
   courseCategoryAdd(${courseCategoryParams}): CourseCategory

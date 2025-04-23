@@ -19,6 +19,18 @@ export const initApolloServer = async (app, httpServer) => {
 
   const typeDefs = async () => {
     return gql(`
+      enum CURSOR_DIRECTION {
+        forward,
+        backward
+      }
+
+      type PageInfo {
+        hasNextPage: Boolean,
+        hasPreviousPage: Boolean,
+        startCursor: String,
+        endCursor: String,
+      }
+
       ${types}
 
       extend type Query {

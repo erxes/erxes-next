@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import {
-  IconAlignLeft,
+  IconCategoryPlus,
   IconCurrencyDollar,
   IconLabel,
-  IconMap,
   IconSchool,
 } from '@tabler/icons-react';
 import type { Cell, ColumnDef } from '@tanstack/react-table';
@@ -15,22 +14,23 @@ import {
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { CurrencyDisplay } from 'erxes-ui/components/display/CurrencyDisplay';
-import { CurrencyCode } from 'erxes-ui/types/CurrencyCode';
-import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
+import { Select } from 'erxes-ui';
+import { COURSE_TYPE_OPTIONS } from '@/courses/constants/CourseConstants';
+import { useCourseEdit } from '@/courses/hooks/useCourseEdit';
+import { PriceField, SwitchField } from '@/courses/edit-course';
 
 const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
+  const { courseEdit } = useCourseEdit();
   return (
     <RecordTableInlineCell
       onSave={() => {
-        // productsEdit({
-        //   variables: {
-        //     _id: cell.row.original._id,
-        //     [cell.column.id]: value,
-        //     uom: cell.row.original.uom,
-        //   },
-        // });
+        courseEdit({
+          variables: {
+            id: cell.row.original._id,
+            [cell.column.id]: value,
+          },
+        });
       }}
       getValue={() => cell.getValue()}
       value={value}
@@ -63,47 +63,51 @@ export const courseColumns: ColumnDef<ICourse>[] = [
     cell: ({ cell }) => <TableTextInput cell={cell} />,
   },
   {
-    id: 'unitPrice',
-    accessorKey: 'unitPrice',
+    id: 'type',
+    accessorKey: 'type',
     header: () => (
-      <RecordTableInlineHead icon={IconCurrencyDollar} label="Unit Price" />
+      <RecordTableInlineHead icon={IconCategoryPlus} label="Type" />
     ),
     cell: ({ cell }) => {
-      const [value, setValue] = useState(cell.getValue() as number);
+      const result =
+        COURSE_TYPE_OPTIONS.find((type) => type.value === cell.getValue())
+          ?.label || ' ';
 
       return (
         <RecordTableInlineCell
-          onSave={() => {
-            console.log('Record');
-          }}
-          getValue={() => cell.getValue()}
-          value={value}
-          display={() => (
-            <CurrencyDisplay
-              currencyValue={{
-                currencyCode: CurrencyCode.USD,
-                amountMicros: value * 1000000,
-              }}
-            />
-          )}
-          edit={() => (
-            <RecordTableInlineCellEditForm>
-              <CurrencyInput
-                value={value}
-                onChange={(value) => setValue(value)}
-              />
-            </RecordTableInlineCellEditForm>
+          display={() => <span>{result}</span>}
+          edit={({ isInEditMode, setIsInEditMode }) => (
+            <Select open={isInEditMode} onOpenChange={setIsInEditMode}>
+              <Select.Trigger className="w-full h-cell rounded-none">
+                <Select.Value placeholder="Select type" />
+              </Select.Trigger>
+              <Select.Content>
+                {COURSE_TYPE_OPTIONS.map((type) => (
+                  <Select.Item value={type.value} key={type.value}>
+                    {type.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
           )}
         />
       );
     },
   },
   {
-    id: 'location',
-    accessorKey: 'location',
-    header: () => <RecordTableInlineHead icon={IconMap} label="Location" />,
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    id: 'unitPrice',
+    accessorKey: 'unitPrice',
+    header: () => (
+      <RecordTableInlineHead icon={IconCurrencyDollar} label="Unit Price" />
+    ),
+    cell: ({ cell }) => <PriceField cell={cell} />,
   },
+  // {
+  //   id: 'location',
+  //   accessorKey: 'location',
+  //   header: () => <RecordTableInlineHead icon={IconMap} label="Location" />,
+  //   cell: ({ cell }) => <TableTextInput cell={cell} />,
+  // },
   {
     id: 'teacher',
     accessorKey: 'teacher',
@@ -113,7 +117,7 @@ export const courseColumns: ColumnDef<ICourse>[] = [
   {
     id: 'status',
     accessorKey: 'status',
-    header: () => <RecordTableInlineHead icon={IconAlignLeft} label="Status" />,
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    header: () => <RecordTableInlineHead label="Status" />,
+    cell: ({ cell }) => <SwitchField cell={cell} />,
   },
 ];
