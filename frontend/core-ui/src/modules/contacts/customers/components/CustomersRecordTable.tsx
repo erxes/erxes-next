@@ -32,7 +32,7 @@ export const CustomersRecordTable = () => {
         loading={loading}
         dataLength={customers?.length}
       >
-        <RecordTable className="min-h-screen">
+        <RecordTable>
           <RecordTable.Header />
           <RecordTable.Body className="rounded-lg overflow-hidden">
             <RecordTable.CursorBackwardSkeleton
