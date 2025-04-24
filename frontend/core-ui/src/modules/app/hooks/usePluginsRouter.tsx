@@ -35,7 +35,7 @@ export const getPluginsSettingsRoutes = () => {
 
   const settingsModules = plugins.flatMap((plugin) =>
     plugin.modules
-      .filter((module) => module.haveSettings)
+      .filter((module) => module.hasSettings)
       .map((module) => ({
         ...module,
         pluginName: plugin.name,

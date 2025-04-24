@@ -7,16 +7,16 @@ export const CONFIG: UIConfig = {
   icon: IconMailFilled,
   modules: [
     {
-      name: 'Inbox',
+      name: 'inbox',
       icon: IconMailFilled,
       path: 'inbox',
-      haveSettings: true,
+      hasSettings: true,
     },
     {
-      name: 'Tickets',
+      name: 'ticket',
       icon: IconTicket,
-      path: 'tickets',
-      haveSettings: true,
+      path: 'ticket',
+      hasSettings: true,
     },
   ],
 };
