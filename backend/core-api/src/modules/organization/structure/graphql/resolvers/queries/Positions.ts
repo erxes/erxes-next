@@ -1,6 +1,11 @@
+import {
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { paginateMongooseCollection } from 'erxes-api-shared/utils';
 import { generateFilters } from './utils';
+
 export const positionQueries = {
   async positions(
     _root: undefined,
@@ -29,7 +34,7 @@ export const positionQueries = {
 
   async positionsMain(
     _root: undefined,
-    params: { searchValue?: string; perPage: number; page: number },
+    params: IListParams & ICursorPaginateParams,
     { models, user }: IContext,
   ) {
     const filter = await generateFilters({
@@ -39,19 +44,13 @@ export const positionQueries = {
       params: { ...params, withoutUserFilter: true },
     });
 
-    const list = await paginateMongooseCollection(
-      models.Positions.find(filter).sort({ order: 1 }),
+    const { list, totalCount, pageInfo } = await cursorPaginate({
+      model: models.Positions,
       params,
-    );
-
-    const totalCount = await models.Positions.find(filter).countDocuments();
-    const totalUsersCount = await models.Users.countDocuments({
-      ...filter,
-      'positionIds.0': { $exists: true },
-      isActive: true,
+      query: filter,
     });
 
-    return { list, totalCount, totalUsersCount };
+    return { list, totalCount, pageInfo };
   },
 
   async positionDetail(_root: undefined, { _id }, { models }: IContext) {

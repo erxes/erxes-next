@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "erxes-api-shared": "workspace:^"
-  },
-  "devDependencies": {}
+    "erxes-api-shared": "workspace:^",
+    "moment-timezone": "^0.5.48",
+    "underscore": "^1.13.7"
+  }
 }

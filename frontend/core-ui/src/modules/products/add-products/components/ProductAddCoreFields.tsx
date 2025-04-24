@@ -6,19 +6,26 @@ import {
   IconStar,
 } from '@tabler/icons-react';
 
-import { Form, Input, Select, Separator } from 'erxes-ui';
-import { SelectCurrency } from 'erxes-ui/components/select-currency';
-import { CURRENCY_CODES } from 'erxes-ui/constants';
-import { CurrencyCode } from 'erxes-ui/types';
+import {
+  Form,
+  Input,
+  Select,
+  Separator,
+  SelectCurrency,
+  CURRENCY_CODES,
+  CurrencyCode,
+} from 'erxes-ui';
 import { CategoryField } from './categoryField';
 import { ProductFormValues } from './formSchema';
 import { useUom } from '@/products/hooks/useUom';
+
 const types = [
   { label: 'Product', value: 'product', icon: IconPackage },
   { label: 'Service', value: 'service', icon: IconHotelService },
   { label: 'Unique', value: 'unique', icon: IconStar },
   { label: 'Subscription', value: 'subscription', icon: IconDeviceUnknown },
 ];
+
 export const ProductAddCoreFields = ({
   form,
 }: {
@@ -104,7 +111,6 @@ export const ProductAddCoreFields = ({
                 <SelectCurrency
                   currencies={CURRENCY_CODES}
                   value={CurrencyCode.USD}
-                  displayIcon={true}
                   className="h-full focus-visible:outline-none focus-visible:ring-0 focus-visible:border-none focus-visible:ring-offset-0 rounded-l-md shadow-none "
                 />
                 <Separator orientation="vertical" />

@@ -1,16 +1,25 @@
-import { IModels } from '~/connectionResolvers';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import { validSearchText } from 'erxes-api-shared/utils';
-import { Model } from 'mongoose';
+import { companySchema } from '@/contacts/db/definitions/company';
 import {
   ICompany,
   ICompanyDocument,
   ICustomField,
+  IUserDocument,
 } from 'erxes-api-shared/core-types';
-import { companySchema } from '@/contacts/db/definitions/company';
+import { validSearchText } from 'erxes-api-shared/utils';
+import { Model } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
 
 export interface ICompanyModel extends Model<ICompanyDocument> {
   getCompany(_id: string): Promise<ICompanyDocument>;
+  getCompanyName(company: ICompany): string;
+
+  findActiveCompanies(
+    query,
+    fields?,
+    skip?,
+    limit?,
+  ): Promise<ICompanyDocument[]>;
+
   createCompany(doc: ICompany, user?: IUserDocument): Promise<ICompanyDocument>;
   updateCompany(_id: string, doc: ICompany): Promise<ICompanyDocument>;
   removeCompanies(_ids: string[]): Promise<{ n: number; ok: number }>;
@@ -33,6 +42,31 @@ export const loadCompanyClass = (models: IModels) => {
       }
 
       return company;
+    }
+
+    /**
+     * Retrieve company name
+     */
+    public static getCompanyName(company: ICompany) {
+      return (
+        company.primaryName ||
+        company.primaryEmail ||
+        company.primaryPhone ||
+        'Unknown'
+      );
+    }
+
+    /**
+     * Retreive active companies
+     */
+    public static async findActiveCompanies(query, fields?, skip?, limit?) {
+      return models.Companies.find(
+        { ...query, status: { $ne: 'deleted' } },
+        fields,
+      )
+        .skip(skip || 0)
+        .limit(limit || 0)
+        .lean();
     }
 
     /**
@@ -216,9 +250,9 @@ export const loadCompanyClass = (models: IModels) => {
     public static fillSearchText(doc: ICompany) {
       return validSearchText([
         doc.primaryName || ' ',
-        (doc.names || []).joinErxesGateway(' '),
-        (doc.emails || []).joinErxesGateway(' '),
-        (doc.phones || []).joinErxesGateway(' '),
+        (doc.names || []).join(' '),
+        (doc.emails || []).join(' '),
+        (doc.phones || []).join(' '),
         doc.website || '',
         doc.industry || '',
         doc.plan || '',

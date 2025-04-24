@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-
-import { currentUserState } from 'ui-modules';
-import { DynamicBanner } from '@/auth/dynamic-banner/components/DynamicBanner';
 import { Login } from '@/auth/login/components/Login';
+import { currentUserState } from 'ui-modules';
+import { DynamicBanner } from '@/auth/components/DynamicBanner';
+import { AuthenticationLayout } from '~/modules/auth/components/AuthenticationLayout';
 import { AppPath } from '@/types/paths/AppPath';
 import { useAtomValue } from 'jotai';
 
@@ -18,9 +18,11 @@ const LoginPage = () => {
   }, [currentUser, navigate]);
 
   return (
-    <div className="grid lg:grid-cols-2 h-screen">
-      <DynamicBanner className="hidden lg:block" />
-      <Login />
+    <div className="flex min-h-screen w-full z-10">
+      <DynamicBanner />
+      <AuthenticationLayout>
+        <Login />
+      </AuthenticationLayout>
     </div>
   );
 };

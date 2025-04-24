@@ -5,7 +5,10 @@ import { UnitItem } from './sidebar/UnitItem';
 
 export function TeamMemberSidebar() {
   return (
-    <Sidebar collapsible="none" className="border-r h-screen w-full max-w-[300px]">
+    <Sidebar
+      collapsible="none"
+      className="border-r h-screen w-full max-w-[300px]"
+    >
       <ScrollArea>
         <Sidebar.Group className="p-0 w-[300px]">
           <Sidebar.GroupContent>

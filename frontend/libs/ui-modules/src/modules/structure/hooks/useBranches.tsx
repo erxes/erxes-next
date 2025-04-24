@@ -4,6 +4,8 @@ import { IBranch } from '../types/Branch';
 export const useBranches = (options?: OperationVariables) => {
   const { data, loading, fetchMore, error } = useQuery<{
     branches: IBranch[];
+    totalCount?: number;
+    totalUsersCount?: number;
   }>(GET_BRANCHES, options);
 
   const handleFetchMore = () => {
@@ -19,5 +21,7 @@ export const useBranches = (options?: OperationVariables) => {
     loading,
     error,
     handleFetchMore,
+    totalCount: data?.totalCount,
+    totalUsersCount: data?.totalUsersCount,
   };
 };

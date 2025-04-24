@@ -1,5 +1,8 @@
-import { paginateMongooseCollection } from 'erxes-api-shared/utils';
-import { ICustomerQueryFilterParams } from 'erxes-api-shared/core-types';
+import {
+  ICustomerDocument,
+  ICustomerQueryFilterParams,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 const generateFilter = (params: ICustomerQueryFilterParams) => {
@@ -29,15 +32,16 @@ export const customerQueries = {
   ) {
     const filter = generateFilter(params);
 
-    const list = await paginateMongooseCollection(
-      models.Customers.find(filter),
-      params,
-    );
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<ICustomerDocument>({
+        model: models.Customers,
+        params,
+        query: filter,
+      });
 
-    const totalCount = await models.Customers.find(filter).countDocuments();
-
-    return { list, totalCount };
+    return { list, totalCount, pageInfo };
   },
+
   /**
    * Get one customer
    */

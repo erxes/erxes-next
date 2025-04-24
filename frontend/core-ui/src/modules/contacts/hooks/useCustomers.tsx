@@ -2,46 +2,93 @@ import { QueryHookOptions, useQuery } from '@apollo/client';
 
 import { useContactFilterValues } from '@/contacts/contacts-filter/hooks/useContactFilterValues';
 import { GET_CUSTOMERS } from '@/contacts/graphql/queries/getCustomers';
+import { ICustomer } from '../types/customerType';
+import {
+  IRecordTableCursorPageInfo,
+  useRecordTableCursor,
+  getCursorPageInfo,
+} from 'erxes-ui';
 
-export const CUSTOMERS_PER_PAGE = 30;
+export const CUSTOMERS_PER_PAGE = 24;
 
 export const useCustomers = (options?: QueryHookOptions) => {
   const { variables } = useContactFilterValues();
-  const { data, loading, fetchMore } = useQuery(GET_CUSTOMERS, {
+  const { cursor, setCursor } = useRecordTableCursor({
+    sessionKey: 'contacts_cursor',
+  });
+
+  const { data, loading, fetchMore } = useQuery<{
+    customers: {
+      list: ICustomer[];
+      pageInfo: IRecordTableCursorPageInfo;
+    };
+  }>(GET_CUSTOMERS, {
     ...options,
     variables: {
-      perPage: CUSTOMERS_PER_PAGE,
+      limit: CUSTOMERS_PER_PAGE,
+      cursor,
       ...variables,
     },
   });
 
-  const { list: customers, totalCount } = data?.customers || {};
+  const { list: customers, pageInfo } = data?.customers || {};
 
-  const handleFetchMore = () =>
-    totalCount > customers?.length &&
-    fetchMore({
-      variables: {
-        page: Math.ceil(customers.length / CUSTOMERS_PER_PAGE) + 1,
-        perPage: CUSTOMERS_PER_PAGE,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
-        return Object.assign({}, prev, {
-          customers: {
-            ...prev.customers,
-            list: [
-              ...(prev.customers?.list || []),
-              ...(fetchMoreResult.customers?.list || []),
-            ],
-          },
-        });
-      },
-    });
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: 'forward' | 'backward';
+    onFetchMoreCompleted?: (fetchMoreResult: {
+      customers: {
+        list: ICustomer[];
+      };
+    }) => void;
+  }) => {
+    if (
+      (direction === 'forward' && pageInfo?.hasNextPage) ||
+      (direction === 'backward' && pageInfo?.hasPreviousPage)
+    ) {
+      return fetchMore({
+        variables: {
+          cursor:
+            direction === 'forward'
+              ? pageInfo?.endCursor
+              : pageInfo?.startCursor,
+          limit: CUSTOMERS_PER_PAGE,
+          direction,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+
+          const { pageInfo: fetchMorePageInfo, list: fetchMoreList = [] } =
+            fetchMoreResult.customers;
+
+          const { pageInfo: prevPageInfo, list: prevList = [] } =
+            prev.customers || {};
+
+          setCursor(prevPageInfo?.endCursor);
+
+          return Object.assign({}, prev, {
+            customers: {
+              pageInfo: getCursorPageInfo({
+                direction,
+                fetchMorePageInfo,
+                prevPageInfo,
+              }),
+              list:
+                direction === 'forward'
+                  ? [...prevList, ...fetchMoreList]
+                  : [...fetchMoreList, ...prevList],
+            },
+          });
+        },
+      });
+    }
+  };
 
   return {
     loading,
     customers,
-    totalCount,
     handleFetchMore,
+    pageInfo,
   };
 };

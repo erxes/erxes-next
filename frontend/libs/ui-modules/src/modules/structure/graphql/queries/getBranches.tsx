@@ -23,6 +23,7 @@ export const GET_BRANCHES = gql`
       code
       title
       parentId
+      order
     }
   }
 `;
@@ -34,6 +35,38 @@ export const GET_BRANCH_BY_ID = gql`
       title
       code
       order
+    }
+  }
+`;
+
+export const GET_BRANCHES_MAIN = gql`
+  query BranchesMain(
+    $ids: [String]
+    $excludeIds: Boolean
+    $perPage: Int
+    $page: Int
+    $searchValue: String
+    $status: String
+    $withoutUserFilter: Boolean
+  ) {
+    branchesMain(
+      ids: $ids
+      excludeIds: $excludeIds
+      perPage: $perPage
+      page: $page
+      searchValue: $searchValue
+      status: $status
+      withoutUserFilter: $withoutUserFilter
+    ) {
+      list {
+        _id
+        title
+        code
+        order
+        userCount
+      }
+      totalCount
+      totalUsersCount
     }
   }
 `;

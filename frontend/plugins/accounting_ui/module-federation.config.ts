@@ -15,9 +15,10 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'accounting_ui',
   exposes: {
-    './Config': './src/modules/constants/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/modules/settings/components/AccountingSettings.tsx',
+    './Config': './src/config.ts',
+    './accounting': './src/remote-entry.ts',
+    './accountingSettings':
+      './src/modules/settings/components/AccountingSettings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

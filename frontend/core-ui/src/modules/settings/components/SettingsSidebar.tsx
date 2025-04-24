@@ -1,29 +1,42 @@
-import { Link, useLocation } from 'react-router';
+import { Link } from 'react-router';
 
-import { IconX } from '@tabler/icons-react';
+import { Icon, IconX } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 
-import { Sidebar } from 'erxes-ui';
+import { Sidebar, UIConfig } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
-import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
+import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { SETTINGS_PATH_DATA } from '../constants/data';
 import { MainNavigationButton } from '@/navigation/components/MainNavigationBar';
+import { useMemo } from 'react';
 
 export function SettingsSidebar() {
-  const plugins = [...CORE_PLUGINS];
-
   const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
 
-  Object.keys(pluginsMetaData || {}).forEach((configId) => {
-    plugins.push({
-      path: '/' + configId.replace('_ui', ''),
-      name: pluginsMetaData[configId].name,
-      icon: pluginsMetaData[configId].icon,
-    });
-  });
+  const modules = useMemo(() => {
+    const coreModules = [
+      ...CORE_MODULES.filter((module) => module.hasSettings),
+    ];
+
+    if (pluginsMetaData) {
+      const settingsModules = Object.values(pluginsMetaData || {}).flatMap(
+        (plugin) =>
+          plugin.modules
+            .filter((module) => module.hasSettings)
+            .map((module) => ({
+              ...module,
+              pluginName: plugin.name,
+            })),
+      );
+
+      return [...coreModules, ...settingsModules] as UIConfig['modules'];
+    }
+    return coreModules;
+  }, [pluginsMetaData]);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -82,13 +95,13 @@ export function SettingsSidebar() {
           <Sidebar.GroupLabel>PLugins Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
-              {plugins.map((item) => (
+              {modules.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
                   <MainNavigationButton
                     pathPrefix={AppPath.Settings}
-                    pathname={item.path}
+                    pathname={'/' + item.path}
                     name={item.name}
-                    icon={item.icon}
+                    icon={item.icon as Icon}
                   />
                 </Sidebar.MenuItem>
               ))}
