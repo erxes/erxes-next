@@ -16,7 +16,7 @@ export const IndexPage = () => {
         separatorClassName="mb-0"
       >
         <Button variant="outline" asChild>
-          <Link to="/settings/sample-first">
+          <Link to="/settings/sampleFirst">
             <IconSettings />
             Go to settings
           </Link>

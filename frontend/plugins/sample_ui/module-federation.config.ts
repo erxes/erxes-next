@@ -16,10 +16,10 @@ const config: ModuleFederationConfig = {
   name: 'sample_ui',
   exposes: {
     './Config': './src/config.ts',
-    './sample-first': './src/modules/sample-first/Main.tsx',
-    './sample-firstSettings': './src/modules/sample-first/Settings.tsx',
-    './sample-second': './src/modules/sample-second/Main.tsx',
-    './sample-secondSettings': './src/modules/sample-second/Settings.tsx',
+    './sampleFirst': './src/modules/sample-first/Main.tsx',
+    './sampleFirstSettings': './src/modules/sample-first/Settings.tsx',
+    './sampleSecond': './src/modules/sample-second/Main.tsx',
+    './sampleSecondSettings': './src/modules/sample-second/Settings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

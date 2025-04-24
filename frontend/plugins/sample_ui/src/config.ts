@@ -6,24 +6,24 @@ export const CONFIG: UIConfig = {
   icon: IconSandbox,
   modules: [
     {
-      name: 'sample-first',
+      name: 'sampleFirst',
       icon: IconSandbox,
-      path: 'sample-first',
+      path: 'sampleFirst',
       haveSettings: true,
     },
     {
-      name: 'sample-second',
+      name: 'sampleSecond',
       icon: IconSandbox,
-      path: 'sample-second',
+      path: 'sampleSecond',
       haveSettings: true,
       submenus: [
         {
           name: 'submenu1',
-          path: 'sample-second',
+          path: 'sampleSecond',
         },
         {
           name: 'submenu2',
-          path: 'sample-second/submenu2',
+          path: 'sampleSecond/submenu2',
         },
       ],
     },
