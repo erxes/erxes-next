@@ -1,17 +1,8 @@
 import { atom } from 'jotai';
-import { Icon, IconProps } from '@tabler/icons-react';
-
-export type PluginsConfig = {
-  name: string;
-  icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>;
-  haveWidgets: boolean;
-  widgetsIcon: React.ForwardRefExoticComponent<
-    IconProps & React.RefAttributes<Icon>
-  >;
-};
+import { UIConfig } from 'erxes-ui';
 
 export type PluginsConfigState = {
-  [key: string]: PluginsConfig;
+  [key: string]: UIConfig;
 };
 
 export const pluginsConfigState = atom<PluginsConfigState | null>(null);
