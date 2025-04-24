@@ -10,7 +10,7 @@ import { ConversationDetail } from '@/inbox/conversation-detail/components/Conve
 import { Conversations } from '@/inbox/components/Conversations';
 import { MainFilters } from '@/inbox/components/MainFilters';
 
-export const InboxIndexPage = () => {
+const InboxIndexPage = () => {
   return (
     <div className="flex flex-col h-full">
       <PluginHeader
@@ -37,3 +37,5 @@ export const InboxIndexPage = () => {
     </div>
   );
 };
+
+export default InboxIndexPage;
