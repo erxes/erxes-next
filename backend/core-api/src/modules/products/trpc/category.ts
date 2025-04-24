@@ -1,4 +1,5 @@
 import { initTRPC } from '@trpc/server';
+import { escapeRegExp } from 'erxes-api-shared/utils';
 import { z } from 'zod';
 import { ITRPCContext } from '~/init-trpc';
 
@@ -13,7 +14,7 @@ export const productCategoryTrpcRouter = t.router({
       if (regData) {
         return await models.ProductCategories.find({
           ...query,
-          order: { $regex: new RegExp(regData) },
+          order: { $regex: new RegExp(escapeRegExp(regData)) },
         }).sort(sort);
       }
 
