@@ -1,6 +1,6 @@
 import {
   IconBookmark,
-  IconBookmarksFilled,
+  IconBookmarkFilled,
   IconCircleDashed,
   IconCircleDashedCheck,
   IconDots,
@@ -8,7 +8,13 @@ import {
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
-import { Button, DropdownMenu, Input, Separator } from 'erxes-ui/components';
+import {
+  Button,
+  DropdownMenu,
+  Input,
+  Separator,
+  TextOverflowTooltip,
+} from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   emailsFamilyState,
@@ -134,7 +140,7 @@ const EmailList = () => {
     <div ref={mounted ? animationParent : null} className="space-y-1">
       {emails.map((email) => (
         <div
-          className="grid grid-cols-[1fr_auto] gap-1 w-full"
+          className="flex items-center overflow-hidden gap-1 w-full"
           key={email.email}
         >
           <EmailField {...email} />
@@ -150,8 +156,8 @@ const EmailField = ({ email, status, isPrimary }: IEmailField) => {
     <Button
       variant="secondary"
       className={cn(
-        'w-full font-medium text-left justify-start px-2',
-        isPrimary && 'text-primary',
+        'w-full font-medium text-left justify-start px-2 flex-auto overflow-hidden',
+        isPrimary && 'text-primary bg-primary/10 hover:bg-primary/20',
       )}
       size="lg"
     >
@@ -160,7 +166,8 @@ const EmailField = ({ email, status, isPrimary }: IEmailField) => {
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
       )}
-      {email}
+      <TextOverflowTooltip value={email} />
+      {isPrimary && <IconBookmarkFilled className="text-primary" />}
     </Button>
   );
 };
@@ -187,7 +194,7 @@ const EmailOptions = ({
       <DropdownMenu.Trigger asChild>
         <Button
           variant="secondary"
-          className="w-full font-medium size-8"
+          className="w-full font-medium size-8 flex-shrink-0"
           size="icon"
         >
           <IconDots />
@@ -202,7 +209,7 @@ const EmailOptions = ({
       >
         <DropdownMenu.Item onClick={handleSetPrimaryEmail}>
           {isPrimary ? (
-            <IconBookmarksFilled className="text-success" />
+            <IconBookmarkFilled className="text-primary" />
           ) : (
             <IconBookmark />
           )}
