@@ -1,6 +1,7 @@
 import { IconCashBanknoteFilled } from '@tabler/icons-react';
+import { UIConfig } from 'erxes-ui/types/UIConfig';
 
-export const CONFIG = {
+export const CONFIG: UIConfig = {
   name: 'accounting',
   icon: IconCashBanknoteFilled,
   modules: [
@@ -8,6 +9,7 @@ export const CONFIG = {
       name: 'Accounting',
       icon: IconCashBanknoteFilled,
       path: 'accounting',
+      haveSettings: true,
     },
   ],
 };

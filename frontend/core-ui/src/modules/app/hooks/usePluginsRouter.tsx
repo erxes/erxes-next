@@ -1,5 +1,4 @@
 import { Route } from 'react-router';
-import { getInstance } from '@module-federation/enhanced/runtime';
 
 import { RenderPLuginsComponent } from '~/plugins/components/RenderPLuginsComponent';
 import { pluginsConfigState } from 'ui-modules';
@@ -23,7 +22,7 @@ export const getPluginsRoutes = () => {
       element={
         <RenderPLuginsComponent
           pluginName={`${module.pluginName}_ui`}
-          moduleName="Inbox"
+          moduleName={module.name}
         />
       }
     />
@@ -31,17 +30,26 @@ export const getPluginsRoutes = () => {
 };
 
 export const getPluginsSettingsRoutes = () => {
-  const instance = getInstance();
-  const remotes = instance?.options.remotes ?? [];
+  const [pluginsMetaData] = useAtom(pluginsConfigState);
+  const plugins = Object.values(pluginsMetaData || {});
 
-  return remotes.map((plugin) => (
+  const settingsModules = plugins.flatMap((plugin) =>
+    plugin.modules
+      .filter((module) => module.haveSettings)
+      .map((module) => ({
+        ...module,
+        pluginName: plugin.name,
+      })),
+  );
+
+  return settingsModules.map((module) => (
     <Route
-      key={plugin.name}
-      path={`/${plugin.name.replace('_ui', '')}/*`}
+      key={module.name}
+      path={`/${module.path}/*`}
       element={
         <RenderPLuginsComponent
-          pluginName={plugin.name}
-          moduleName="Settings"
+          pluginName={`${module.pluginName}_ui`}
+          moduleName={`${module.name}Settings`}
         />
       }
     />

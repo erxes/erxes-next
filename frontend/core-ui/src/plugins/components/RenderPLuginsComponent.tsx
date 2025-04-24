@@ -13,8 +13,6 @@ export function RenderPLuginsComponent({
   pluginName: string;
   moduleName: string;
 }) {
-  console.log('pluginName', pluginName);
-  console.log('moduleName', moduleName);
   const [Plugin, setPlugin] =
     useState<React.ComponentType<RemoteComponentProps> | null>(null);
   const [isLoading, setIsLoading] = useState(true);

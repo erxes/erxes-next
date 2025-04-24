@@ -16,9 +16,10 @@ const config: ModuleFederationConfig = {
   name: 'frontline_ui',
   exposes: {
     './Config': './src/config.ts',
-    './Inbox': './src/pages/InboxIndexPage.tsx',
-    './Tickets': './src/pages/TicketsIndexPage.tsx',
-    './Settingss': './src/pages/SettingsPage.tsx',
+    './Inbox': './src/modules/inbox/Main.tsx',
+    './Ticket': './src/modules/ticket/Main.tsx',
+    './InboxSettings': './src/modules/inbox/Settings.tsx',
+    './TicketSettings': './src/modules/ticket/Settings.tsx',
     './Widgets': './src/widgets/Widgets.tsx',
   },
 
