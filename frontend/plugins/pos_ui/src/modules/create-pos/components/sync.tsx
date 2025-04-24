@@ -1,0 +1,243 @@
+"use client"
+import { Button, Input, Label, Select } from "erxes-ui"
+import { useSearchParams } from "react-router-dom"
+import { useAtom } from "jotai"
+import { PlusIcon } from "lucide-react"
+import { syncCardSettingsAtom } from "../states/posCategory"
+
+export default function SyncCardForm() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom)
+
+  const handleToggleNewConfig = () => {
+    setSyncCardSettings({
+      ...syncCardSettings,
+      showNewConfig: !syncCardSettings.showNewConfig,
+    })
+  }
+
+  const handleInputChange = (field: keyof typeof syncCardSettings.currentConfig, value: string) => {
+    setSyncCardSettings({
+      ...syncCardSettings,
+      currentConfig: {
+        ...syncCardSettings.currentConfig,
+        [field]: value,
+      },
+    })
+  }
+
+  const handleSelectChange = (field: keyof typeof syncCardSettings.currentConfig, value: string) => {
+    setSyncCardSettings({
+      ...syncCardSettings,
+      currentConfig: {
+        ...syncCardSettings.currentConfig,
+        [field]: value,
+      },
+    })
+  }
+
+  const handleAddConfig = () => {
+    const newConfigs = [...syncCardSettings.configs, { ...syncCardSettings.currentConfig }]
+    setSyncCardSettings({
+      ...syncCardSettings,
+      configs: newConfigs,
+      currentConfig: {
+        title: "",
+        brunch: "",
+        stageBoard: "",
+        pipeline: "",
+        stage: "",
+        assignedUsers: "",
+        mapField: "",
+      },
+    })
+  }
+
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault()
+    if (syncCardSettings.currentConfig.title) {
+      handleAddConfig()
+    }
+
+    console.log("Sync card form submitted:", syncCardSettings)
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set("tab", "complete")
+    setSearchParams(newParams)
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="p-3">
+      <div className="space-y-8">
+        <div>
+          <Button
+            type="button"
+            onClick={handleToggleNewConfig}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
+          >
+            <PlusIcon size={16} />
+            New config
+          </Button>
+        </div>
+        {syncCardSettings.showNewConfig && (
+          <div className="space-y-6">
+            <h2 className="text-indigo-600 text-xl font-medium">NEW CONFIG</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm text-gray-500">TITLE</Label>
+                <Input
+                  value={syncCardSettings.currentConfig.title}
+                  onChange={(e) => handleInputChange("title", e.target.value)}
+                  placeholder="Enter title"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm text-gray-500">CHOOSE BRUNCH</Label>
+                <Select
+                  value={syncCardSettings.currentConfig.brunch}
+                  onValueChange={(value) => handleSelectChange("brunch", value)}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Choose brunch" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="brunch1">Brunch 1</Select.Item>
+                    <Select.Item value="brunch2">Brunch 2</Select.Item>
+                    <Select.Item value="brunch3">Brunch 3</Select.Item>
+                  </Select.Content>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm text-gray-500">CHOOSE STAGE BOARD</Label>
+                <Select
+                  value={syncCardSettings.currentConfig.stageBoard}
+                  onValueChange={(value) => handleSelectChange("stageBoard", value)}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Choose board" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="board1">Board 1</Select.Item>
+                    <Select.Item value="board2">Board 2</Select.Item>
+                    <Select.Item value="board3">Board 3</Select.Item>
+                  </Select.Content>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm text-gray-500">CHOOSE ASSIGNED USERS</Label>
+                <Select
+                  value={syncCardSettings.currentConfig.assignedUsers}
+                  onValueChange={(value) => handleSelectChange("assignedUsers", value)}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Choose team member" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="user1">User 1</Select.Item>
+                    <Select.Item value="user2">User 2</Select.Item>
+                    <Select.Item value="user3">User 3</Select.Item>
+                  </Select.Content>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm text-gray-500">PIPELINE</Label>
+                <Select
+                  value={syncCardSettings.currentConfig.pipeline}
+                  onValueChange={(value) => handleSelectChange("pipeline", value)}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Choose pipeline" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="pipeline1">Pipeline 1</Select.Item>
+                    <Select.Item value="pipeline2">Pipeline 2</Select.Item>
+                    <Select.Item value="pipeline3">Pipeline 3</Select.Item>
+                  </Select.Content>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm text-gray-500">STAGE</Label>
+                <Select
+                  value={syncCardSettings.currentConfig.stage}
+                  onValueChange={(value) => handleSelectChange("stage", value)}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Choose a stage" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="stage1">Stage 1</Select.Item>
+                    <Select.Item value="stage2">Stage 2</Select.Item>
+                    <Select.Item value="stage3">Stage 3</Select.Item>
+                  </Select.Content>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm text-gray-500">CHOOSE MAP FIELD</Label>
+              <Select
+                value={syncCardSettings.currentConfig.mapField}
+                onValueChange={(value) => handleSelectChange("mapField", value)}
+              >
+                <Select.Trigger>
+                  <Select.Value placeholder="Select" />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="field1">Field 1</Select.Item>
+                  <Select.Item value="field2">Field 2</Select.Item>
+                  <Select.Item value="field3">Field 3</Select.Item>
+                </Select.Content>
+              </Select>
+            </div>
+
+            <div className="flex justify-end">
+              <Button type="button" onClick={handleAddConfig} className="text-white">
+                Add Config
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {syncCardSettings.configs.length > 0 && (
+          <div className="space-y-4">
+            <h3 className="font-medium">Saved Configurations</h3>
+            <div className="border border-gray-200 rounded-lg divide-y">
+              {syncCardSettings.configs.map((config, index) => (
+                <div key={index} className="p-3">
+                  <div className="font-medium">{config.title}</div>
+                  <div className="text-sm text-gray-500">
+                    Board: {config.stageBoard}, Pipeline: {config.pipeline}, Stage: {config.stage}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-between mt-12 pt-6 border-t">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            const newParams = new URLSearchParams(searchParams)
+            newParams.set("tab", "delivery")
+            setSearchParams(newParams)
+          }}
+        >
+          Cancel
+        </Button>
+        <Button type="submit">Next step</Button>
+      </div>
+    </form>
+  )
+}
