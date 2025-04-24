@@ -5,6 +5,10 @@ export type UIConfig = {
     name: string;
     icon: React.ElementType;
     path: string;
-    haveSettings: boolean;
+    hasSettings: boolean;
+    submenus?: {
+      name: string;
+      path: string;
+    }[];
   }[];
 };

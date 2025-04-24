@@ -16,11 +16,11 @@ const config: ModuleFederationConfig = {
   name: 'frontline_ui',
   exposes: {
     './Config': './src/config.ts',
-    './Inbox': './src/modules/inbox/Main.tsx',
-    './Ticket': './src/modules/ticket/Main.tsx',
-    './InboxSettings': './src/modules/inbox/Settings.tsx',
-    './TicketSettings': './src/modules/ticket/Settings.tsx',
-    './Widgets': './src/widgets/Widgets.tsx',
+    './inbox': './src/modules/inbox/Main.tsx',
+    './ticket': './src/modules/ticket/Main.tsx',
+    './inboxSettings': './src/modules/inbox/Settings.tsx',
+    './ticketSettings': './src/modules/ticket/Settings.tsx',
+    './widgets': './src/widgets/Widgets.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {
