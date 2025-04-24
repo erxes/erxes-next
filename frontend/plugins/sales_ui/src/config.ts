@@ -9,7 +9,7 @@ export const CONFIG: UIConfig = {
       name: 'deals',
       icon: IconBriefcase,
       path: 'deals',
-      haveSettings: true,
+      hasSettings: true,
     },
   ],
 };

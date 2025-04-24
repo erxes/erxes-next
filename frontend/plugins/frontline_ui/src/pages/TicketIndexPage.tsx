@@ -1,3 +1,3 @@
-export const TicketsIndexPage = () => {
+export const TicketIndexPage = () => {
   return <div>Tickets</div>;
 };

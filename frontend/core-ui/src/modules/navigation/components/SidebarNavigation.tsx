@@ -15,7 +15,7 @@ export function SidebarNavigation() {
 
   const modules = useMemo(() => {
     const coreModules = [
-      ...CORE_MODULES.filter((module) => module.haveSettings),
+      ...CORE_MODULES.filter((module) => module.hasSettings),
     ];
 
     if (pluginsMetaData) {

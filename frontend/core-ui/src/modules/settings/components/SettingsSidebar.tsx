@@ -18,14 +18,14 @@ export function SettingsSidebar() {
 
   const modules = useMemo(() => {
     const coreModules = [
-      ...CORE_MODULES.filter((module) => module.haveSettings),
+      ...CORE_MODULES.filter((module) => module.hasSettings),
     ];
 
     if (pluginsMetaData) {
       const settingsModules = Object.values(pluginsMetaData || {}).flatMap(
         (plugin) =>
           plugin.modules
-            .filter((module) => module.haveSettings)
+            .filter((module) => module.hasSettings)
             .map((module) => ({
               ...module,
               pluginName: plugin.name,
