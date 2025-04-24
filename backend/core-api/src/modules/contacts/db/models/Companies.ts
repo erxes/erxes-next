@@ -45,7 +45,7 @@ export const loadCompanyClass = (models: IModels) => {
     }
 
     /**
-     * Retreive company name
+     * Retrieve company name
      */
     public static getCompanyName(company: ICompany) {
       return (

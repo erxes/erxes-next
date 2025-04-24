@@ -50,13 +50,6 @@ export interface IVisitorContactInfoParams {
   value: string;
 }
 
-export interface IVisitorContactInfoParams {
-  customerId: string;
-  visitorId?: string;
-  type: string;
-  value: string;
-}
-
 export interface IBrowserInfo {
   language?: string;
   url?: string;

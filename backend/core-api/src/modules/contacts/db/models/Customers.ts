@@ -359,7 +359,7 @@ export const loadCustomerClass = (models: IModels) => {
     }
 
     public static async updateVerificationStatus(
-      customerIds: string,
+      customerIds: string[],
       type: string,
       status: string,
     ) {

@@ -22,7 +22,7 @@ export const createOrUpdate = async ({
         cfData.push(cf);
       }
 
-      const newDoc = doc;
+      const newDoc = { ...doc };
 
       if (doNotReplaceExistingValues) {
         for (const fieldName of Object.keys(doc)) {
