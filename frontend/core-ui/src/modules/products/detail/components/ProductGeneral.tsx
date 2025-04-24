@@ -14,9 +14,9 @@ import { useApolloClient } from '@apollo/client';
 import { SelectCategory } from '@/products/product-category/components/SelectCategory';
 import { useUom } from '@/products/hooks/useUom';
 import { BrandField } from '@/products/add-products/components/BrandField';
-import { VendorField } from '@/products/add-products/components/vendorField';
 import type { ProductDetail, ProductGeneralProps } from '../types/detailTypes';
 import { DescriptionInput } from './DescriptionInput';
+import { SelectCompany } from 'ui-modules';
 
 export const ProductGeneral = ({ form }: ProductGeneralProps) => {
   const {
@@ -338,9 +338,9 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
           >
             VENDOR
           </Label>
-          <VendorField
-            value={vendorId || ''}
-            onChange={(value) => handleInputChange('vendorId', value)}
+          <SelectCompany
+            value={vendorId}
+            onValueChange={(value) => handleInputChange('vendorId', value)}
           />
         </div>
 

@@ -2,30 +2,24 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { IconUpload } from '@tabler/icons-react';
 
-import { Form, Input, Upload, BlockEditor, BLOCK_SCHEMA } from 'erxes-ui';
+import { Form, Input, Upload, Editor } from 'erxes-ui';
 
 import { BrandField } from '@/products/add-products/components/BrandField';
 import { ProductFormValues } from './formSchema';
-import { VendorField } from './vendorField';
-import { useCreateBlockNote } from '@blocknote/react';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
+import { SelectCompany } from 'ui-modules';
 
 export const ProductAddMoreFields = ({
   form,
 }: {
   form: UseFormReturn<ProductFormValues>;
 }) => {
-  const descriptionEditor = useCreateBlockNote({
-    schema: BLOCK_SCHEMA,
-  });
-  const barcodeDescriptionEditor = useCreateBlockNote({
-    schema: BLOCK_SCHEMA,
-  });
   return (
     <>
       <div className="flex items-center my-4">
-        <div className="flex-1 border-t border-muted-foreground" />
+        <div className="flex-1 border-t" />
         <Form.Label className="mx-2">More Info</Form.Label>
-        <div className="flex-1 border-t border-muted-foreground" />
+        <div className="flex-1 border-t" />
       </div>
       <Form.Field
         control={form.control}
@@ -34,10 +28,10 @@ export const ProductAddMoreFields = ({
           <Form.Item className="mb-5">
             <Form.Label>DESCRIPTION</Form.Label>
             <Form.Control>
-              <BlockEditor
+              <Editor
+                initialContent={field.value}
                 onChange={field.onChange}
-                editor={descriptionEditor}
-                className=" h-28 rounded-md border overflow-auto"
+                scope={ProductHotKeyScope.ProductAddSheetDescriptionField}
               />
             </Form.Control>
             <Form.Message className="text-destructive" />
@@ -86,10 +80,12 @@ export const ProductAddMoreFields = ({
           <Form.Item className="mb-5">
             <Form.Label>BARCODE DESCRIPTION</Form.Label>
             <Form.Control>
-              <BlockEditor
+              <Editor
+                initialContent={field.value}
                 onChange={field.onChange}
-                editor={barcodeDescriptionEditor}
-                className=" h-28 rounded-md border overflow-auto"
+                scope={
+                  ProductHotKeyScope.ProductAddSheetBarcodeDescriptionField
+                }
               />
             </Form.Control>
             <Form.Message className="text-destructive" />
@@ -121,7 +117,10 @@ export const ProductAddMoreFields = ({
             <Form.Item className="flex flex-col">
               <Form.Label>VENDOR</Form.Label>
               <Form.Control>
-                <VendorField {...field} />
+                <SelectCompany
+                  value={field.value}
+                  onValueChange={field.onChange}
+                />
               </Form.Control>
               <Form.Message className="text-destructive" />
             </Form.Item>

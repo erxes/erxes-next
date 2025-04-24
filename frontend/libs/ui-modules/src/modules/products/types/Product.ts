@@ -20,3 +20,10 @@ export interface IProductCategory {
   productCount: number;
   parentId: string;
 }
+
+export interface IUom {
+  _id: string;
+  name: string;
+  code: string;
+  productCount: number;
+}
