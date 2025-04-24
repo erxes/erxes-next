@@ -18,7 +18,7 @@ export const CoursesRecordTable = () => {
     <RecordTable.Provider
       columns={courseColumns}
       data={courses || []}
-      stickyColumns={['avatar', 'name']}
+      stickyColumns={['name']}
       className="mt-1.5"
       moreColumn={courseMoreColumn}
     >

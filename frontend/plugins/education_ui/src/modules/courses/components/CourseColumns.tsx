@@ -1,10 +1,4 @@
 import { useState } from 'react';
-import {
-  IconCategoryPlus,
-  IconCurrencyDollar,
-  IconLabel,
-  IconSchool,
-} from '@tabler/icons-react';
 import type { Cell, ColumnDef } from '@tanstack/react-table';
 
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
@@ -17,7 +11,7 @@ import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/compon
 import { Select, Slider } from 'erxes-ui';
 import { COURSE_TYPE_OPTIONS } from '@/courses/constants/CourseConstants';
 import { useCourseEdit } from '@/courses/hooks/useCourseEdit';
-import { PriceField, SwitchField } from '@/courses/edit-course';
+import { ActionField, PriceField, SwitchField } from '@/courses/edit-course';
 
 const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
@@ -51,15 +45,13 @@ export const courseColumns: ColumnDef<ICourse>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: () => <RecordTableInlineHead icon={IconLabel} label="Name" />,
+    header: () => <RecordTableInlineHead label="Name" />,
     cell: ({ cell }) => <TableTextInput cell={cell} />,
   },
   {
     id: 'description',
     accessorKey: 'description',
-    header: () => (
-      <RecordTableInlineHead icon={IconLabel} label="Description" />
-    ),
+    header: () => <RecordTableInlineHead label="Description" />,
     cell: ({ cell }) => <TableTextInput cell={cell} />,
   },
 
@@ -73,14 +65,20 @@ export const courseColumns: ColumnDef<ICourse>[] = [
     id: 'enrollment',
     accessorKey: 'enrollment',
     header: () => <RecordTableInlineHead label="Enrollment" />,
-    cell: ({ cell }) => <Slider cell={cell} />,
+    cell: ({ cell }) => {
+      const randomNumber = Math.floor(Math.random() * 100);
+      return (
+        <div className="flex items-center gap-3 pr-3 pl-2">
+          <Slider hideThumb max={100} defaultValue={[randomNumber]} step={1} />
+          <span className="text-primary font-semibold">{randomNumber}%</span>
+        </div>
+      );
+    },
   },
   {
     id: 'type',
     accessorKey: 'type',
-    header: () => (
-      <RecordTableInlineHead icon={IconCategoryPlus} label="Type" />
-    ),
+    header: () => <RecordTableInlineHead label="Type" />,
     cell: ({ cell }) => {
       const result =
         COURSE_TYPE_OPTIONS.find((type) => type.value === cell.getValue())
@@ -110,9 +108,7 @@ export const courseColumns: ColumnDef<ICourse>[] = [
   {
     id: 'unitPrice',
     accessorKey: 'unitPrice',
-    header: () => (
-      <RecordTableInlineHead icon={IconCurrencyDollar} label="Unit Price" />
-    ),
+    header: () => <RecordTableInlineHead label="Unit Price" />,
     cell: ({ cell }) => <PriceField cell={cell} />,
   },
   // {
@@ -124,7 +120,13 @@ export const courseColumns: ColumnDef<ICourse>[] = [
   {
     id: 'teacher',
     accessorKey: 'teacher',
-    header: () => <RecordTableInlineHead icon={IconSchool} label="Teacher" />,
+    header: () => <RecordTableInlineHead label="Teacher" />,
     cell: ({ cell }) => <TableTextInput cell={cell} />,
+  },
+  {
+    id: 'actions',
+    accessorKey: 'actions',
+    header: () => <RecordTableInlineHead label="Actions" />,
+    cell: ({ cell }) => <ActionField cell={cell} />,
   },
 ];
