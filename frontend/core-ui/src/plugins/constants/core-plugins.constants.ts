@@ -8,7 +8,7 @@ export const CORE_MODULES: UIConfig['modules'] = [
   {
     name: 'contacts',
     icon: IconBookmarksFilled,
-    path: '/contacts',
+    path: 'contacts',
     hasSettings: true,
     submenus: [
       {
@@ -36,7 +36,7 @@ export const CORE_MODULES: UIConfig['modules'] = [
   {
     name: 'products',
     icon: IconShoppingCartFilled,
-    path: '/products',
+    path: 'products',
     hasSettings: true,
   },
 ];

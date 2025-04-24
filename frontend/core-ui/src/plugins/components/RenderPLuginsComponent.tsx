@@ -45,7 +45,7 @@ export function RenderPLuginsComponent({
     };
 
     loadPlugin();
-  }, [pluginName]);
+  }, [pluginName, moduleName]);
 
   if (hasError) {
     return (
@@ -77,7 +77,7 @@ export function RenderPLuginsComponent({
         </div>
       }
     >
-      <Plugin />
+      <Plugin key={`${pluginName}-${moduleName}`} />
     </Suspense>
   );
 }

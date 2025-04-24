@@ -99,7 +99,7 @@ export function SettingsSidebar() {
                 <Sidebar.MenuItem key={item.name}>
                   <MainNavigationButton
                     pathPrefix={AppPath.Settings}
-                    pathname={item.path}
+                    pathname={'/' + item.path}
                     name={item.name}
                     icon={item.icon as Icon}
                   />
