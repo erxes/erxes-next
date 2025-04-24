@@ -3,7 +3,7 @@ import { CredentialLoginForm } from '@/auth/login/components/CredentialLoginForm
 import { MagicLinkLoginForm } from '@/auth/login/components/MagicLinkLoginForm';
 export const Login = () => {
   return (
-    <Card className="shadow-xl border-none p-6 mt-10 bg-background">
+    <Card className="shadow-xl border-none p-6 mt-10 bg-background w-full">
       <div className="w-full h-full">
         <Card.Header className="flex flex-col items-center p-3">
           {' '}

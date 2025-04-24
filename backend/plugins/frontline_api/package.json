@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "erxes-api-shared": "workspace:^",
-    "moment-timezone": "^0.5.48"
+    "moment-timezone": "^0.5.48",
+    "underscore": "^1.13.7"
   }
 }

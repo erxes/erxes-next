@@ -1,4 +1,8 @@
-import { channelQueries } from './channelQueries';
+import { channelQueries } from './channels';
+import { conversationQueries } from './conversations';
+import { integrationQueries } from './integrations';
 export const frontlineQueries = {
   ...channelQueries,
+  ...conversationQueries,
+  ...integrationQueries,
 };

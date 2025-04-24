@@ -1,31 +1,144 @@
 import { initTRPC } from '@trpc/server';
-import { generateModels } from '~/connectionResolvers';
+import { z } from 'zod';
+import { ITRPCContext } from '~/init-trpc';
+import { createOrUpdate } from './utils';
 
-const t = initTRPC.create();
+const t = initTRPC.context<ITRPCContext>().create();
 
 export const companyTrpcRouter = t.router({
   company: t.router({
-    list: t.procedure.query(async () => {
-      const subdomain = 'os';
-      const models = await generateModels(subdomain);
+    find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
 
-      return models.Companies.find({});
+      return models.Companies.find(query).lean();
     }),
 
-    get: t.procedure.query(async () => {
-      return null;
+    findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
+
+      const defaultFilter = { status: { $ne: 'deleted' } };
+
+      if (query.companyPrimaryName) {
+        defaultFilter['$or'] = [
+          { names: { $in: [query.companyPrimaryName] } },
+          { primaryName: query.companyPrimaryName },
+        ];
+      }
+
+      if (query.name) {
+        defaultFilter['$or'] = [
+          { names: { $in: [query.name] } },
+          { primaryName: query.name },
+        ];
+      }
+
+      if (query.email) {
+        defaultFilter['$or'] = [
+          { emails: { $in: [query.email] } },
+          { primaryEmail: query.email },
+        ];
+      }
+
+      if (query.phone) {
+        defaultFilter['$or'] = [
+          { phones: { $in: [query.phone] } },
+          { primaryPhone: query.phone },
+        ];
+      }
+
+      if (query.companyPrimaryEmail) {
+        defaultFilter['$or'] = [
+          { emails: { $in: [query.companyPrimaryEmail] } },
+          { primaryEmail: query.companyPrimaryEmail },
+        ];
+      }
+
+      if (query.companyPrimaryPhone) {
+        defaultFilter['$or'] = [
+          { phones: { $in: [query.companyPrimaryPhone] } },
+          { primaryPhone: query.companyPrimaryPhone },
+        ];
+      }
+
+      if (query.companyCode) {
+        defaultFilter['code'] = query.companyCode;
+      }
+
+      if (query._id) {
+        defaultFilter['_id'] = query._id;
+      }
+
+      return await models.Companies.findOne(defaultFilter).lean();
     }),
 
-    create: t.procedure.mutation(async () => {
-      return null;
+    findActiveCompanies: t.procedure
+      .input(z.any())
+      .query(async ({ ctx, input }) => {
+        const { query, fields, skip, limit } = input;
+        const { models } = ctx;
+
+        return await models.Companies.findActiveCompanies(
+          query,
+          fields,
+          skip,
+          limit,
+        );
+      }),
+
+    getCompanyName: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { company } = input;
+      const { models } = ctx;
+
+      return models.Companies.getCompanyName(company);
     }),
 
-    update: t.procedure.mutation(async () => {
-      return null;
-    }),
+    createCompany: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { doc } = input;
+        const { models } = ctx;
 
-    delete: t.procedure.mutation(async () => {
-      return null;
-    }),
+        const company = await models.Companies.createCompany(doc);
+
+        return company;
+      }),
+
+    updateCompany: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { _id, doc } = input;
+        const { models } = ctx;
+
+        const company = await models.Companies.updateCompany(_id, doc);
+
+        return company;
+      }),
+
+    removeCompanies: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { _ids } = input;
+        const { models } = ctx;
+
+        const company = await models.Companies.removeCompanies(_ids);
+
+        return company;
+      }),
+
+    createOrUpdate: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { doc } = input;
+        const { models } = ctx;
+
+        const company = await createOrUpdate({
+          collection: models.Companies,
+          data: doc,
+        });
+
+        return company;
+      }),
   }),
 });
