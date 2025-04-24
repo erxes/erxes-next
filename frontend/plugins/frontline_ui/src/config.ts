@@ -13,9 +13,9 @@ export const CONFIG: UIConfig = {
       haveSettings: true,
     },
     {
-      name: 'tickets',
+      name: 'ticket',
       icon: IconTicket,
-      path: 'tickets',
+      path: 'ticket',
       haveSettings: true,
     },
   ],

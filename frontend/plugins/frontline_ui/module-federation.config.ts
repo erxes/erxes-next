@@ -17,9 +17,9 @@ const config: ModuleFederationConfig = {
   exposes: {
     './Config': './src/config.ts',
     './inbox': './src/modules/inbox/Main.tsx',
-    './tickets': './src/modules/ticket/Main.tsx',
+    './ticket': './src/modules/ticket/Main.tsx',
     './inboxSettings': './src/modules/inbox/Settings.tsx',
-    './ticketsSettings': './src/modules/ticket/Settings.tsx',
+    './ticketSettings': './src/modules/ticket/Settings.tsx',
     './Widgets': './src/widgets/Widgets.tsx',
   },
 
