@@ -7,13 +7,13 @@ export const CONFIG: UIConfig = {
   icon: IconMailFilled,
   modules: [
     {
-      name: 'Inbox',
+      name: 'inbox',
       icon: IconMailFilled,
       path: 'inbox',
       haveSettings: true,
     },
     {
-      name: 'Tickets',
+      name: 'tickets',
       icon: IconTicket,
       path: 'tickets',
       haveSettings: true,

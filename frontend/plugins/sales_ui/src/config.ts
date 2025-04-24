@@ -1,15 +1,15 @@
-import { IconBriefcase, IconSandbox } from '@tabler/icons-react';
+import { IconBriefcase } from '@tabler/icons-react';
+import { UIConfig } from 'erxes-ui';
 
-export const CONFIG = {
+export const CONFIG: UIConfig = {
   name: 'sales',
   icon: IconBriefcase,
-  haveWidgets: true,
-  widgetsIcon: IconBriefcase,
   modules: [
     {
-      name: 'Deals',
-      icon: IconSandbox,
+      name: 'deals',
+      icon: IconBriefcase,
       path: 'deals',
+      haveSettings: true,
     },
   ],
 };

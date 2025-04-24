@@ -2,12 +2,14 @@ import {
   IconShoppingCartFilled,
   IconBookmarksFilled,
 } from '@tabler/icons-react';
+import { UIConfig } from 'erxes-ui/types';
 
-export const CORE_PLUGINS = [
+export const CORE_MODULES: UIConfig['modules'] = [
   {
     name: 'contacts',
     icon: IconBookmarksFilled,
     path: '/contacts',
+    haveSettings: true,
     submenus: [
       {
         name: 'customers',
@@ -31,5 +33,10 @@ export const CORE_PLUGINS = [
       },
     ],
   },
-  { name: 'products', icon: IconShoppingCartFilled, path: '/products' },
+  {
+    name: 'products',
+    icon: IconShoppingCartFilled,
+    path: '/products',
+    haveSettings: true,
+  },
 ];

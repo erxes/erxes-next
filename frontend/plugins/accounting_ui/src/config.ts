@@ -6,7 +6,7 @@ export const CONFIG: UIConfig = {
   icon: IconCashBanknoteFilled,
   modules: [
     {
-      name: 'Accounting',
+      name: 'accounting',
       icon: IconCashBanknoteFilled,
       path: 'accounting',
       haveSettings: true,

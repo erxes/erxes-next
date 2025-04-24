@@ -1,12 +1,6 @@
 import { Link, useLocation } from 'react-router';
 
-import {
-  Icon,
-  IconBuildingStore,
-  // IconCaretUpFilled,
-  // IconMailFilled,
-  IconSettings,
-} from '@tabler/icons-react';
+import { Icon, IconBuildingStore, IconSettings } from '@tabler/icons-react';
 import { Button, cn, Sidebar } from 'erxes-ui';
 import { AnimatePresence, motion } from 'motion/react';
 

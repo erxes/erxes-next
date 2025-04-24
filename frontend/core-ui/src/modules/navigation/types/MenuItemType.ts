@@ -10,4 +10,5 @@ export interface PluginItem {
   icon: Icon;
   path: string;
   submenus?: SubmenuItem[];
+  haveSettings?: boolean;
 }

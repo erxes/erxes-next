@@ -10,7 +10,8 @@
       "clients": "Client portal users"
     },
     "favorites": "Favorites",
-    "frontline": "Frontline",
+    "inbox": "Inbox",
+    "tickets": "Tickets",
     "insights": "Insights",
     "plugins": "Plugins",
     "products": "Products & Services",
@@ -23,6 +24,7 @@
     "teams": "Teams",
     "views": "Views",
     "accounting": "Accounting",
-    "sample": "Sample"
+    "sample": "Sample",
+    "Deals": "Deals"
   }
 }

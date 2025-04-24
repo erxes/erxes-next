@@ -6,7 +6,7 @@ export const CONFIG: UIConfig = {
   icon: IconSandbox,
   modules: [
     {
-      name: 'Sample',
+      name: 'sample',
       icon: IconSandbox,
       path: 'sample',
       haveSettings: true,
