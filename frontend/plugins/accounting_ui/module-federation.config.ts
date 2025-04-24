@@ -15,8 +15,8 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'accounting_ui',
   exposes: {
-    './Config': './src/modules/constants/config.ts',
-    './Module': './src/remote-entry.ts',
+    './Config': './src/config.ts',
+    './Accounting': './src/remote-entry.ts',
     './Settings': './src/modules/settings/components/AccountingSettings.tsx',
   },
 

@@ -5,4 +5,11 @@ export const CONFIG = {
   icon: IconSandbox,
   haveWidgets: true,
   widgetsIcon: IconSandbox,
+  modules: [
+    {
+      name: 'Sample',
+      icon: IconSandbox,
+      path: 'sample',
+    },
+  ],
 };

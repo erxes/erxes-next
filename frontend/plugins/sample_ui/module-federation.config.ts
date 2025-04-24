@@ -16,7 +16,7 @@ const config: ModuleFederationConfig = {
   name: 'sample_ui',
   exposes: {
     './Config': './src/config.ts',
-    './Module': './src/remote-entry.ts',
+    './Sample': './src/remote-entry.ts',
     './Settings': './src/pages/SettingsPage.tsx',
     './Widgets': './src/widgets/Widgets.tsx',
   },

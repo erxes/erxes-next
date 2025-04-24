@@ -16,8 +16,9 @@ const config: ModuleFederationConfig = {
   name: 'frontline_ui',
   exposes: {
     './Config': './src/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
+    './Inbox': './src/pages/InboxIndexPage.tsx',
+    './Tickets': './src/pages/TicketsIndexPage.tsx',
+    './Settingss': './src/pages/SettingsPage.tsx',
     './Widgets': './src/widgets/Widgets.tsx',
   },
 

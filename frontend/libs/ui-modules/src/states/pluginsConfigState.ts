@@ -8,6 +8,13 @@ export type PluginsConfig = {
   widgetsIcon: React.ForwardRefExoticComponent<
     IconProps & React.RefAttributes<Icon>
   >;
+  modules: {
+    name: string;
+    icon: React.ForwardRefExoticComponent<
+      IconProps & React.RefAttributes<Icon>
+    >;
+    path: string;
+  }[];
 };
 
 export type PluginsConfigState = {
