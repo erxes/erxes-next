@@ -6,6 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Button } from './button';
 import { cn } from '../lib/utils';
+import { Slot } from '@radix-ui/react-slot';
 
 const SheetTrigger = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Trigger>,
@@ -90,15 +91,15 @@ SheetContent.displayName = SheetPrimitive.Content.displayName;
 export const SheetClose = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Close>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close>
->(({ ...props }, ref) => (
-  <SheetPrimitive.Close ref={ref} {...props} asChild>
-    <Button
+>(({ asChild = false, ...props }, ref) => (
+  <SheetPrimitive.Close ref={ref} asChild={!props.children} {...props} >
+   {props?.children ? props?.children : <Button
       variant="ghost"
       size="icon"
       className={cn('ml-auto', props.className)}
     >
       <IconX />
-    </Button>
+    </Button>}
   </SheetPrimitive.Close>
 ));
 SheetClose.displayName = SheetPrimitive.Close.displayName;
