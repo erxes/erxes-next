@@ -4,33 +4,46 @@ import { courseMoreColumn } from '@/courses/components/CourseMoreColumn';
 import { courseColumns } from '@/courses/components/CourseColumns';
 
 export const CoursesRecordTable = () => {
-  const { courses, handleFetchMore, loading, totalCount } = useCourses({
+  const { courses, handleFetchMore, loading, pageInfo } = useCourses({
     variables: {
       perPage: COURSES_PER_PAGE,
       page: 1,
     },
   });
 
+  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
+    pageInfo || {};
+
   return (
     <RecordTable.Provider
       columns={courseColumns}
       data={courses || []}
-      handleReachedBottom={handleFetchMore}
       stickyColumns={['avatar', 'name']}
       className="mt-1.5"
       moreColumn={courseMoreColumn}
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          {!loading && totalCount > courses?.length && (
-            <RecordTable.RowSkeleton
-              rows={4}
-              handleReachedBottom={handleFetchMore}
+      <RecordTable.CursorProvider
+        hasPreviousPage={hasPreviousPage}
+        hasNextPage={hasNextPage}
+        loading={loading}
+        dataLength={courses?.length}
+      >
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body className="rounded-lg overflow-hidden">
+            <RecordTable.CursorBackwardSkeleton
+              handleFetchMore={handleFetchMore}
+              startCursor={startCursor}
             />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
+            {loading && <RecordTable.RowSkeleton rows={40} />}
+            <RecordTable.CursorRowList />
+            <RecordTable.CursorForwardSkeleton
+              handleFetchMore={handleFetchMore}
+              endCursor={endCursor}
+            />
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.CursorProvider>
     </RecordTable.Provider>
   );
 };

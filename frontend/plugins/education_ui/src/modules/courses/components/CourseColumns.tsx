@@ -14,7 +14,7 @@ import {
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { Select } from 'erxes-ui';
+import { Select, Slider } from 'erxes-ui';
 import { COURSE_TYPE_OPTIONS } from '@/courses/constants/CourseConstants';
 import { useCourseEdit } from '@/courses/hooks/useCourseEdit';
 import { PriceField, SwitchField } from '@/courses/edit-course';

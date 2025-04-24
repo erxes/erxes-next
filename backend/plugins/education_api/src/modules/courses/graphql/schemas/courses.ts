@@ -62,6 +62,9 @@ const queryParams = `
   sortDirection: Int
   categoryId: String
   statuses : [String]
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
 `;
 
 export const queries = `
