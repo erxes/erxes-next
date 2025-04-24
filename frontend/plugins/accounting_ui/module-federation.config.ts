@@ -16,8 +16,9 @@ const config: ModuleFederationConfig = {
   name: 'accounting_ui',
   exposes: {
     './Config': './src/config.ts',
-    './Accounting': './src/remote-entry.ts',
-    './AccountingSettings': './src/modules/settings/components/AccountingSettings.tsx',
+    './accounting': './src/remote-entry.ts',
+    './accountingSettings':
+      './src/modules/settings/components/AccountingSettings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {
