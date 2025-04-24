@@ -42,7 +42,6 @@ export const getPluginsSettingsRoutes = () => {
       })),
   );
 
-  console.log(settingsModules);
   return settingsModules.map((module) => (
     <Route
       key={module.name}
