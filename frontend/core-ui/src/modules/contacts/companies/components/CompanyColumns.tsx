@@ -9,8 +9,7 @@ import {
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { Avatar, RecordTable, RelativeDateDisplay } from 'erxes-ui';
-import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
-import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+import { RecordTableInlineHead, RecordTableInlineCell } from 'erxes-ui';
 
 import { TCompany } from '@/contacts/types/companyType';
 import { TagsField } from '@/contacts/companies/company-edit/TagsField';

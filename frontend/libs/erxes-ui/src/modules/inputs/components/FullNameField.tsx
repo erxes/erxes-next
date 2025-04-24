@@ -23,7 +23,7 @@ export const FullNameInput = forwardRef<
       ref={ref}
       {...props}
       className={cn(
-        'focus-visible:z-10 max-w-36',
+        'focus-visible:z-10 max-w-36 shadow-none',
         roudedSide === 'left' && 'rounded-r-none',
         roudedSide === 'right' && 'rounded-l-none',
         className,
@@ -65,10 +65,10 @@ const LastNameInput = forwardRef<
 });
 LastNameInput.displayName = 'LastNameInput';
 
-const FullName = Object.assign(FullNameRoot, {
+const FullNameField = Object.assign(FullNameRoot, {
   Input: FullNameInput,
   FirstName: FirstNameInput,
   LastName: LastNameInput,
 });
 
-export { FullName };
+export { FullNameField };

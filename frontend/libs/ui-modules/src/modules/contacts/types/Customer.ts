@@ -9,6 +9,8 @@ export interface ICustomerInline {
 
 export interface ICustomer extends ICustomerInline {
   type: CustomerType;
+  emails?: string[];
+  emailValidationStatus?: string;
 }
 
 export enum CustomerType {

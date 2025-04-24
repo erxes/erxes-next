@@ -1,10 +1,10 @@
-import { EmailInlineCell } from 'erxes-ui/modules/record-field/components/EmailInlineCell';
+import { EmailInlineCell } from 'erxes-ui';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 export const EmailField = ({
   _id,
-  primaryEmail,
+  // primaryEmail,
   emails,
   className,
   fieldId,

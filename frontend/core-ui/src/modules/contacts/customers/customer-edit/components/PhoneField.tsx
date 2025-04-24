@@ -1,4 +1,4 @@
-import { Phone } from 'erxes-ui/modules/record-field/components/Phone';
+import { Phone } from 'erxes-ui';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';

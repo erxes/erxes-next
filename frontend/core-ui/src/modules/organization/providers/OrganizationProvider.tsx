@@ -7,8 +7,7 @@ import {
   isCurrentOrganizationLoadedState,
 } from 'ui-modules';
 
-import { RocketIcon } from 'erxes-ui/icons';
-import { isDefined } from 'erxes-ui/utils';
+import { RocketIcon, isDefined } from 'erxes-ui';
 
 import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 import { AppPath } from '@/types/paths/AppPath';

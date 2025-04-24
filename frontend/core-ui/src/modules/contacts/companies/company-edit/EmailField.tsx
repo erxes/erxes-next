@@ -1,4 +1,4 @@
-import { EmailInlineCell } from 'erxes-ui/modules/record-field/components/EmailInlineCell';
+import { EmailInlineCell } from 'erxes-ui';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';

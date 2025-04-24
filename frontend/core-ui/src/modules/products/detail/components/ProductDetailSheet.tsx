@@ -2,7 +2,7 @@ import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import { Button, cn, Sheet, useSetHotkeyScope } from 'erxes-ui';
 import { renderingProductDetailAtom } from '../../states/productDetailStates';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { ContactHotKeyScope } from '~/modules/contacts/types/CustomerHotKeyScope';
+import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { useSearchParams } from 'react-router-dom';
@@ -20,7 +20,7 @@ export const ProductDetailSheet = ({
 
   useEffect(() => {
     if (productId) {
-      setHotkeyScope(ContactHotKeyScope.CustomerEditSheet);
+      setHotkeyScope(CustomerHotKeyScope.CustomerEditSheet);
     }
   }, [productId, setHotkeyScope]);
 

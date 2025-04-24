@@ -1,8 +1,6 @@
 import { Cell } from '@tanstack/react-table';
-import { RecordTableMoreButton } from 'erxes-ui/modules/record-table/components/MoreColumn';
-
 import { useSetAtom } from 'jotai';
-import { useQueryState } from 'erxes-ui';
+import { RecordTable, useQueryState } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { renderingTeamMemberDetailAtom } from '@/settings/team-member/states/renderingTeamMemberDetail';
 
@@ -17,7 +15,7 @@ export const TeamMemberMoreColumnCell = ({
   );
   const { _id } = cell.row.original;
   return (
-    <RecordTableMoreButton
+    <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);

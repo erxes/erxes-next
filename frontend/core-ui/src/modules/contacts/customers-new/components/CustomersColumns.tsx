@@ -2,7 +2,7 @@ import { IconUser } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
   Avatar,
-  FullName,
+  FullNameField,
   Input,
   RecordTable,
   RecordTableCellContent,
@@ -10,6 +10,7 @@ import {
   RecordTableCellTrigger,
   RecordTablePopover,
   TextOverflowTooltip,
+  EmailListField,
 } from 'erxes-ui';
 import { ICustomer } from 'ui-modules';
 
@@ -18,7 +19,7 @@ const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 export const customersColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'more',
-    cell: ({ row }) => <RecordTable.MoreButton row={row} />,
+    cell: ({ row }) => <RecordTable.MoreButton />,
     size: 34,
   },
   checkBoxColumn,
@@ -57,11 +58,11 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           <RecordTableCellTrigger>
             {firstName} {lastName}
           </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <FullName>
-              <FullName.FirstName value={firstName} />
-              <FullName.LastName value={lastName} />
-            </FullName>
+          <RecordTableCellContent className="min-w-72">
+            <FullNameField>
+              <FullNameField.FirstName value={firstName} />
+              <FullNameField.LastName value={lastName} />
+            </FullNameField>
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -73,14 +74,28 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'primaryEmail',
     header: () => <RecordTable.InlineHead label="Emails" />,
     cell: ({ cell }) => {
-      const { primaryEmail } = cell.row.original;
+      const { primaryEmail, _id, emailValidationStatus, emails } =
+        cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
             <TextOverflowTooltip value={primaryEmail} />
           </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={primaryEmail} />
+          <RecordTableCellContent className="min-w-72">
+            <EmailListField
+              recordId={_id}
+              emails={[
+                {
+                  email: primaryEmail,
+                  status: emailValidationStatus as 'verified' | 'unverified',
+                  isPrimary: true,
+                },
+                ...(emails || []).map((email) => ({
+                  email,
+                  status: 'unverified' as 'verified' | 'unverified',
+                })),
+              ]}
+            />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
