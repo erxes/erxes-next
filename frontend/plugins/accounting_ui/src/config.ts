@@ -9,7 +9,7 @@ export const CONFIG: UIConfig = {
       name: 'Accounting',
       icon: IconCashBanknoteFilled,
       path: 'accounting',
-      haveSettings: true,
+      hasSettings: true,
     },
   ],
 };
