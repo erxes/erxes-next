@@ -3,11 +3,11 @@ import { Route, Routes } from 'react-router';
 
 const Inbox = lazy(() =>
   import('~/pages/InboxIndexPage').then((module) => ({
-    default: module.InboxIndexPage,
+    default: module.default,
   })),
 );
 
-const PluginInbox = () => {
+const InboxMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
@@ -17,4 +17,4 @@ const PluginInbox = () => {
   );
 };
 
-export default PluginInbox;
+export default InboxMain;

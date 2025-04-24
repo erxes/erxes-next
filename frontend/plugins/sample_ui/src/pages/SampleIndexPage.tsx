@@ -10,7 +10,6 @@ import { useWidget } from 'ui-modules';
 export const SampleIndexPage = () => {
   const { Widget } = useWidget();
 
-  console.log(Widget);
   return (
     <div className="flex flex-col h-full">
       <PluginHeader
