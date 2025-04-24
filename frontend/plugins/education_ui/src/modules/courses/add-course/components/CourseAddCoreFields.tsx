@@ -6,6 +6,7 @@ import {
   AttachmentField,
   CategoryField,
   DateField,
+  DescriptionField,
   OwnerIdField,
 } from '@/courses/add-course/components/fields';
 import { COURSE_TYPE_OPTIONS } from '@/courses/constants/CourseConstants';
@@ -118,8 +119,8 @@ export const CourseAddCoreFields = ({
         />
         <DateField name="endDate" control={form.control} label={'End Date'} />
         <DateField name="deadline" control={form.control} label={'Deadline'} />
-        {/* <DescriptionField control={form.control} /> */}
       </div>
+      <DescriptionField control={form.control} />
     </>
   );
 };

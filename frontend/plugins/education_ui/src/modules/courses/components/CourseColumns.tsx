@@ -62,6 +62,19 @@ export const courseColumns: ColumnDef<ICourse>[] = [
     ),
     cell: ({ cell }) => <TableTextInput cell={cell} />,
   },
+
+  {
+    id: 'status',
+    accessorKey: 'status',
+    header: () => <RecordTableInlineHead label="Status" />,
+    cell: ({ cell }) => <SwitchField cell={cell} />,
+  },
+  {
+    id: 'enrollment',
+    accessorKey: 'enrollment',
+    header: () => <RecordTableInlineHead label="Enrollment" />,
+    cell: ({ cell }) => <Slider cell={cell} />,
+  },
   {
     id: 'type',
     accessorKey: 'type',
@@ -113,11 +126,5 @@ export const courseColumns: ColumnDef<ICourse>[] = [
     accessorKey: 'teacher',
     header: () => <RecordTableInlineHead icon={IconSchool} label="Teacher" />,
     cell: ({ cell }) => <TableTextInput cell={cell} />,
-  },
-  {
-    id: 'status',
-    accessorKey: 'status',
-    header: () => <RecordTableInlineHead label="Status" />,
-    cell: ({ cell }) => <SwitchField cell={cell} />,
   },
 ];
