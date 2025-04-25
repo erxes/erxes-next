@@ -2,7 +2,6 @@ import { spawn, ChildProcess, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'yaml';
-import { retryGetProxyTargets } from '~/proxy/targets';
 import {
   dirTempPath,
   routerConfigPath,
