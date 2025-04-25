@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "npx nx run-many -t serve -p core-api gateway"
+    "start:api": "dotenv -e .env -- node scripts/start-api-dev.js",
+    "start:ui": "dotenv -e .env -- node scripts/start-ui-dev.js"
   },
   "engines": {
     "pnpm": ">=8",
@@ -173,6 +174,7 @@
     "babel-jest": "^29.7.0",
     "core-js": "^3.36.1",
     "cypress": "^13.13.0",
+    "dotenv-cli": "^8.0.0",
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.0.0",

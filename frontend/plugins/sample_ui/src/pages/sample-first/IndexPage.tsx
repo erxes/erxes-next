@@ -27,7 +27,7 @@ export const IndexPage = () => {
       </PluginHeader>
       <div className="flex h-full overflow-hidden">
         <div className="flex flex-col h-full overflow-hidden flex-auto">
-          <h1>Sample dasdasdplugin</h1>
+          <h1>Samplsdsadasdjakljkljklsade</h1>
         </div>
       </div>
     </div>
