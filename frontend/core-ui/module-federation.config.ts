@@ -28,7 +28,9 @@ const config: ModuleFederationConfig = {
     return false;
   },
 
-  remotes: ['sample_ui', 'frontline_ui', 'sales_ui', 'accounting_ui'],
+  remotes: process.env.PLUGINS
+    ? process.env.PLUGINS.split(',').map((plugin) => `${plugin}_ui`)
+    : [],
 };
 
 /**
