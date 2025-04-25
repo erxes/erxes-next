@@ -22,7 +22,9 @@ export default composePlugins(
         'process.env.REACT_APP_API_URL': JSON.stringify(
           process.env.REACT_APP_API_URL,
         ),
-        'process.env.PLUGINS': JSON.stringify(process.env.PLUGINS),
+        'process.env.ENABLED_PLUGINS': JSON.stringify(
+          process.env.ENABLED_PLUGINS,
+        ),
       }),
     );
     return config;
