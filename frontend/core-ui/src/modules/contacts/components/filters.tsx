@@ -1,6 +1,6 @@
 import { IconCalendar, IconCategoryPlus } from '@tabler/icons-react';
 
-import { Filter } from 'erxes-ui/modules/filter/types/filter';
+import { IFilter } from 'erxes-ui';
 
 import {
   ContactDateFilter,
@@ -10,7 +10,7 @@ import { ContactDateFilterDropdown } from '../contacts-filter/components/Contact
 import { ContactTypeFilterBar } from '../contacts-filter/components/ContactTypeFilter';
 import { ContactTypeFilterDropdown } from '../contacts-filter/components/ContactTypeFilter';
 
-export const contactsFilters: Filter[] = [
+export const contactsFilters: IFilter[] = [
   {
     label: 'Type',
     accessoryKey: 'type',

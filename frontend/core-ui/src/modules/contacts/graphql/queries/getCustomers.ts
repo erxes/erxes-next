@@ -18,6 +18,8 @@ export const GET_CUSTOMERS = gql`
     $leadStatus: String
     $sortField: String
     $direction: CURSOR_DIRECTION
+    $cursor: String
+    $limit: Int
     $dateFilters: String
     $segmentData: String
     $emailValidationStatus: String
@@ -44,6 +46,8 @@ export const GET_CUSTOMERS = gql`
       leadStatus: $leadStatus
       sortField: $sortField
       direction: $direction
+      cursor: $cursor
+      limit: $limit
       dateFilters: $dateFilters
       segmentData: $segmentData
       emailValidationStatus: $emailValidationStatus
@@ -89,7 +93,12 @@ export const GET_CUSTOMERS = gql`
         trackedData
         tagIds
       }
-      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
     }
   }
 `;

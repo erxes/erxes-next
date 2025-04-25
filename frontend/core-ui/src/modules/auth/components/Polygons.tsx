@@ -4,21 +4,18 @@ type PolygonsProps = SVGProps<SVGSVGElement> & {
   variant?: 'light' | 'dark';
 };
 
-export const Polygons = ({
-  variant = 'dark',
-  ...props
-}: PolygonsProps) => {
+export const Polygons = ({ variant = 'dark', ...props }: PolygonsProps) => {
   if (variant === 'light') {
     return (
       <svg
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        width="1134"
-        height="875"
+        width="73.75rem"
+        height="56.25rem"
         viewBox="0 0 1134 875"
         preserveAspectRatio="xMidYMid slice"
         {...props}
-        className={`h-[875px] absolute left-1/2 -translate-x-1/3 top-0 z-0 ${props.className}`}
+        className={`absolute left-1/2 -translate-x-1/3 -top-8 z-0 ${props.className}`}
       >
         <mask
           id="mask0_77_370"
