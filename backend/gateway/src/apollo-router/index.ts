@@ -145,22 +145,3 @@ export const startRouter = async (proxy) => {
     { stdio: 'inherit' },
   );
 };
-
-export const updateApolloRouter = async () => {
-  try {
-    const newTargets = await retryGetProxyTargets();
-
-    // Check if the targets have changed
-    if (JSON.stringify(newTargets) !== JSON.stringify(global.currentTargets)) {
-      console.log('Proxy targets updated, applying changes...');
-
-      // Update the targets and apply the new proxy middleware
-      global.currentTargets = newTargets;
-
-      // Restart the router with updated targets
-      await startRouter(global.currentTargets);
-    }
-  } catch (error) {
-    console.error('Error updating proxy targets:', error);
-  }
-};
