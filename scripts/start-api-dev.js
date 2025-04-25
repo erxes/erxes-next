@@ -1,13 +1,13 @@
 // scripts/start-dev.js
 require('dotenv').config();
 
-const { ENABLED_PLUGINS } = process.env;
+const { PLUGINS } = process.env;
 const { execSync } = require('child_process');
 
 let plugins = '';
-if (ENABLED_PLUGINS) {
+if (PLUGINS) {
   try {
-    plugins = ENABLED_PLUGINS.split(',')
+    plugins = PLUGINS.split(',')
       .map((plugin) => `${plugin}_api`)
       .join(' ');
   } catch (error) {

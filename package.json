@@ -3,9 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dev:core-api": "npx nx run-many -t serve -p core-api gateway",
-    "dev:apis": "dotenv -e .env -- node scripts/start-api-dev.js",
-    "dev:uis": "dotenv -e .env -- node scripts/start-ui-dev.js"
+    "start:api": "dotenv -e .env -- node scripts/start-api-dev.js",
+    "start:ui": "dotenv -e .env -- node scripts/start-ui-dev.js"
   },
   "engines": {
     "pnpm": ">=8",
@@ -175,6 +174,7 @@
     "babel-jest": "^29.7.0",
     "core-js": "^3.36.1",
     "cypress": "^13.13.0",
+    "dotenv-cli": "^8.0.0",
     "dotenv-cli": "^8.0.0",
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",

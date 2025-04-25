@@ -28,8 +28,8 @@ const config: ModuleFederationConfig = {
     return false;
   },
 
-  remotes: process.env.ENABLED_PLUGINS
-    ? process.env.ENABLED_PLUGINS.split(',').map((plugin) => `${plugin}_ui`)
+  remotes: process.env.PLUGINS
+    ? process.env.PLUGINS.split(',').map((plugin) => `${plugin}_ui`)
     : [],
 };
 
