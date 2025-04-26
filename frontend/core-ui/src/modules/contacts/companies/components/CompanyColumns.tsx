@@ -1,21 +1,21 @@
-import {
-  IconAlignLeft,
-  IconHistory,
-  IconMail,
-  IconPhone,
-  IconTag,
-  IconUser,
-} from '@tabler/icons-react';
-import type { ColumnDef, Cell } from '@tanstack/react-table';
+import { IconAlignLeft, IconUser } from '@tabler/icons-react';
+import type { ColumnDef } from '@tanstack/react-table';
 
-import { Avatar, RecordTable, RelativeDateDisplay } from 'erxes-ui';
-import { RecordTableInlineHead, RecordTableInlineCell } from 'erxes-ui';
+import {
+  Avatar,
+  EmailListField,
+  Input,
+  RecordTable,
+  RecordTableCellContent,
+  RecordTableCellDisplay,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 
 import { TCompany } from '@/contacts/types/companyType';
-import { TagsField } from '@/contacts/companies/company-edit/TagsField';
-import { EmailField } from '@/contacts/companies/company-edit/EmailField';
-import { CompanyTextField } from '@/contacts/companies/company-edit/TextField';
-import { PhoneField } from '@/contacts/companies/company-edit/PhoneField';
+import { SelectTags } from 'ui-modules';
+import { useState } from 'react';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
   {
@@ -23,17 +23,20 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => {
+      const { _id, primaryName, primaryEmail, primaryPhone } =
+        cell.row.original;
       return (
-        <RecordTableInlineCell
-          display={() => (
-            <Avatar>
-              <Avatar.Image src={cell.getValue() as string} />
-              <Avatar.Fallback colorSeed={cell.row.original._id}>
-                {cell.row.original.primaryName?.charAt(0)}
-              </Avatar.Fallback>
-            </Avatar>
-          )}
-        />
+        <div className="flex items-center justify-center h-8">
+          <Avatar>
+            <Avatar.Image src={cell.getValue() as string} />
+            <Avatar.Fallback colorSeed={_id}>
+              {primaryName?.charAt(0) ||
+                primaryEmail?.charAt(0) ||
+                primaryPhone?.charAt(0) ||
+                '-'}
+            </Avatar.Fallback>
+          </Avatar>
+        </div>
       );
     },
     size: 34,
@@ -42,51 +45,66 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     id: 'primaryName',
     accessorKey: 'primaryName',
     header: () => (
-      <RecordTableInlineHead icon={IconAlignLeft} label="Primary Name" />
+      <RecordTable.InlineHead icon={IconAlignLeft} label="Primary Name" />
     ),
     cell: ({ cell }) => {
+      const { primaryName } = cell.row.original;
       return (
-        <CompanyTextField
-          value={cell.getValue() as string}
-          field="primaryName"
-          _id={cell.row.original._id}
-        />
+        <RecordTablePopover>
+          <RecordTableCellTrigger>{primaryName}</RecordTableCellTrigger>
+          <RecordTableCellContent className="min-w-72">
+            <Input value={primaryName} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },
   {
-    id: 'primaryEmail',
+    id: 'emails',
     accessorKey: 'primaryEmail',
-    header: () => (
-      <RecordTableInlineHead icon={IconMail} label="Primary Email" />
-    ),
+    header: () => <RecordTable.InlineHead label="Emails" />,
     cell: ({ cell }) => {
-      const { primaryEmail, emails, _id } = cell.row.original;
+      const { primaryEmail, _id, emails } = cell.row.original;
       return (
-        <EmailField
-          primaryEmail={primaryEmail || ''}
-          emails={emails || []}
-          _id={_id}
-        />
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <TextOverflowTooltip value={primaryEmail} />
+          </RecordTableCellTrigger>
+          <RecordTableCellContent className="min-w-72">
+            <EmailListField
+              recordId={_id}
+              emails={[
+                {
+                  email: primaryEmail,
+                  status: 'verified',
+                  isPrimary: true,
+                },
+                ...(emails || []).map((email) => ({
+                  email,
+                  status: 'verified' as 'verified' | 'unverified',
+                })),
+              ]}
+            />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },
-
   {
-    id: 'primaryPhone',
+    id: 'phones',
     accessorKey: 'primaryPhone',
-    header: () => {
-      return <RecordTableInlineHead icon={IconPhone} label="Primary Phone" />;
-    },
+    header: () => <RecordTable.InlineHead label="Phones" />,
     cell: ({ cell }) => {
-      const { _id, primaryPhone, phones, location } = cell.row.original;
+      const { primaryPhone } = cell.row.original;
       return (
-        <PhoneField
-          primaryPhone={primaryPhone || ''}
-          phones={phones || []}
-          defaultCountryCode={location?.countryCode}
-          _id={_id}
-        />
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <TextOverflowTooltip value={primaryPhone} />
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Input value={primaryPhone} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },
@@ -94,52 +112,69 @@ export const companyColumns: ColumnDef<TCompany>[] = [
   {
     id: 'tagIds',
     accessorKey: 'tagIds',
-    header: () => <RecordTableInlineHead icon={IconTag} label="Tags" />,
+    header: () => <RecordTable.InlineHead label="Tags" />,
     cell: ({ cell }) => {
+      const [selectedTags, setSelectedTags] = useState<string[]>(
+        cell.row.original.tagIds || [],
+      );
+      const [open, setOpen] = useState(false);
+
       return (
-        <TagsField
-          _id={cell.row.original._id}
+        <SelectTags
           tagType="core:company"
-          selected={cell.row.original.tagIds}
-          recordId={cell.row.original._id}
-        />
+          mode="multiple"
+          value={selectedTags}
+          onValueChange={(tags) => {
+            if (Array.isArray(tags)) {
+              setSelectedTags(tags);
+              setOpen(false);
+            }
+          }}
+        >
+          <RecordTablePopover open={open} onOpenChange={setOpen}>
+            <RecordTableCellTrigger>
+              <SelectTags.Value />
+            </RecordTableCellTrigger>
+            <RecordTableCellContent className="w-96">
+              <SelectTags.Content />
+            </RecordTableCellContent>
+          </RecordTablePopover>
+        </SelectTags>
       );
     },
   },
   {
     id: 'lastSeenAt',
     accessorKey: 'lastSeenAt',
-    header: () => (
-      <RecordTableInlineHead icon={IconHistory} label="Last Seen" />
-    ),
-    cell: ({ cell }) => (
-      <RecordTableInlineCell
-        display={() => (
-          <RelativeDateDisplay value={cell.getValue() as string} />
-        )}
-      />
-    ),
+    header: () => <RecordTable.InlineHead label="Last Seen" />,
+    cell: ({ cell }) => {
+      return (
+        <RecordTableCellDisplay>
+          <TextOverflowTooltip value={cell.getValue() as string} />
+        </RecordTableCellDisplay>
+      );
+    },
   },
   {
     id: 'profileScore',
     accessorKey: 'score',
     header: () => (
-      <RecordTableInlineHead icon={IconUser} label="Profile Score" />
+      <RecordTable.InlineHead icon={IconUser} label="Profile Score" />
     ),
     cell: ({ cell }) => (
-      <RecordTableInlineCell display={() => <>{cell.getValue() as number}</>} />
+      <RecordTableCellDisplay>
+        <TextOverflowTooltip value={cell.getValue() as string} />
+      </RecordTableCellDisplay>
     ),
   },
   ...['position', 'department', 'leadStatus'].map((field) => ({
     id: field,
     accessorKey: field,
-    header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
-    cell: ({ cell }: { cell: Cell<TCompany, unknown> }) => (
-      <CompanyTextField
-        _id={cell.row.original._id}
-        field={field}
-        value={cell.getValue() as string}
-      />
+    header: () => <RecordTable.InlineHead icon={IconAlignLeft} label={field} />,
+    cell: ({ cell }: { cell: { getValue: () => unknown } }) => (
+      <RecordTableCellDisplay>
+        <TextOverflowTooltip value={cell.getValue() as string} />
+      </RecordTableCellDisplay>
     ),
   })),
 ];

@@ -5,13 +5,15 @@ import { ICustomer } from '@/contacts/types/customerType';
 import {
   IRecordTableCursorPageInfo,
   useRecordTableCursor,
-  getCursorPageInfo,
+  mergeCursorData,
+  validateFetchMore,
+  EnumCursorDirection,
 } from 'erxes-ui';
 import { CUSTOMERS_PER_PAGE } from '@/contacts/customers-new/constants/customersPerPage';
 
 export const useCustomers = (options?: QueryHookOptions) => {
   const { cursor, setCursor } = useRecordTableCursor({
-    sessionKey: 'contacts_cursor',
+    sessionKey: 'customers_cursor',
   });
 
   const { data, loading, fetchMore } = useQuery<{
@@ -24,6 +26,7 @@ export const useCustomers = (options?: QueryHookOptions) => {
     variables: {
       limit: CUSTOMERS_PER_PAGE,
       cursor,
+      ...options?.variables,
     },
   });
 
@@ -32,53 +35,33 @@ export const useCustomers = (options?: QueryHookOptions) => {
   const handleFetchMore = ({
     direction,
   }: {
-    direction: 'forward' | 'backward';
-    onFetchMoreCompleted?: (fetchMoreResult: {
-      customers: {
-        list: ICustomer[];
-      };
-    }) => void;
+    direction: EnumCursorDirection;
   }) => {
-    if (
-      (direction === 'forward' && pageInfo?.hasNextPage) ||
-      (direction === 'backward' && pageInfo?.hasPreviousPage)
-    ) {
-      return fetchMore({
-        variables: {
-          cursor:
-            direction === 'forward'
-              ? pageInfo?.endCursor
-              : pageInfo?.startCursor,
-          limit: CUSTOMERS_PER_PAGE,
-          direction,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
+    if (!validateFetchMore({ direction, pageInfo })) return;
 
-          const { pageInfo: fetchMorePageInfo, list: fetchMoreList = [] } =
-            fetchMoreResult.customers;
+    fetchMore({
+      variables: {
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
+        limit: CUSTOMERS_PER_PAGE,
+        direction,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
 
-          const { pageInfo: prevPageInfo, list: prevList = [] } =
-            prev.customers || {};
+        setCursor(prev?.customers?.pageInfo?.endCursor);
 
-          setCursor(prevPageInfo?.endCursor);
-
-          return Object.assign({}, prev, {
-            customers: {
-              pageInfo: getCursorPageInfo({
-                direction,
-                fetchMorePageInfo,
-                prevPageInfo,
-              }),
-              list:
-                direction === 'forward'
-                  ? [...prevList, ...fetchMoreList]
-                  : [...fetchMoreList, ...prevList],
-            },
-          });
-        },
-      });
-    }
+        return Object.assign({}, prev, {
+          customers: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.customers,
+            prevResult: prev.customers,
+          }),
+        });
+      },
+    });
   };
 
   return {

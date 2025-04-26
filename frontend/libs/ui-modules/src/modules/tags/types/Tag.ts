@@ -1,3 +1,5 @@
+import { OperationVariables } from '@apollo/client';
+
 export interface ITag {
   _id: string;
   name: string;
@@ -6,24 +8,26 @@ export interface ITag {
   order: string;
 }
 
-export type ISelectTagsContextProviderProps = {
+export type ISelectTagsProviderProps = {
   tagType: string;
-  selected?: string[];
-  onSelect?: (tags: string[]) => void;
-  loading?: boolean;
+  targetIds?: string[];
+  value?: string[] | string;
+  onValueChange?: (tag?: string[] | string) => void;
+  mode?: 'single' | 'multiple';
   children: React.ReactNode;
-  asTrigger?: boolean;
+  options?: OperationVariables;
 };
 
 export interface ISelectTagsContext {
   tagType: string;
-  selected: string[];
-  selectedTags?: ITag[];
+  targetIds: string[];
+  selectedTags: ITag[];
+  value?: string[] | string;
+  setSelectedTags: (tags: ITag[]) => void;
   onSelect: (tags: ITag) => void;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-  asTrigger?: boolean;
-  loading?: boolean;
+  newTagName: string;
+  setNewTagName: (tagName: string) => void;
+  mode: 'single' | 'multiple';
 }
 
 export interface SelectTagFetchMoreProps {

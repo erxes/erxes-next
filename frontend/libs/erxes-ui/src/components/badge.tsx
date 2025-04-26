@@ -13,7 +13,7 @@ export const badgeVariants = cva(
         default: 'bg-primary text-primary-foreground',
         secondary: 'bg-secondary text-foreground',
         destructive: 'bg-destructive text-destructive-foreground',
-        muted: 'bg-muted text-foreground',
+        muted: 'bg-border text-foreground',
         ghost: 'text-inherit',
       },
       size: {

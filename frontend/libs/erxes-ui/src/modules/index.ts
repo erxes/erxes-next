@@ -9,3 +9,4 @@ export * from './plugin-header/PluginHeader';
 export * from './plugin-header/SettingsHeader';
 export * from './side-menu/components/SideMenu';
 export * from './inputs';
+export * from './display';

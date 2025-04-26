@@ -42,6 +42,7 @@ const PopoverContent = React.forwardRef<
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
 export const Popover = Object.assign(PopoverPrimitive.Root, {
+  Root: PopoverPrimitive.Root,
   Trigger: PopoverPrimitive.Trigger,
   Content: PopoverContent,
   Anchor: PopoverPrimitive.Anchor,

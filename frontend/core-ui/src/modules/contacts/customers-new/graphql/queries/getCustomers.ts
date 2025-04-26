@@ -1,4 +1,9 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
 export const GET_CUSTOMERS = gql`
   query customers(
@@ -17,9 +22,6 @@ export const GET_CUSTOMERS = gql`
     $endDate: String
     $leadStatus: String
     $sortField: String
-    $direction: CURSOR_DIRECTION
-    $cursor: String
-    $limit: Int
     $dateFilters: String
     $segmentData: String
     $emailValidationStatus: String
@@ -28,6 +30,7 @@ export const GET_CUSTOMERS = gql`
     $relType: String
     $isRelated: Boolean
     $isSaved: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
     customers(
       segment: $segment
@@ -45,9 +48,6 @@ export const GET_CUSTOMERS = gql`
       endDate: $endDate
       leadStatus: $leadStatus
       sortField: $sortField
-      direction: $direction
-      cursor: $cursor
-      limit: $limit
       dateFilters: $dateFilters
       segmentData: $segmentData
       emailValidationStatus: $emailValidationStatus
@@ -56,6 +56,7 @@ export const GET_CUSTOMERS = gql`
       conformityRelType: $relType
       conformityIsRelated: $isRelated
       conformityIsSaved: $isSaved
+      ${GQL_CURSOR_PARAMS}
     ) {
       list {
         _id
@@ -93,12 +94,7 @@ export const GET_CUSTOMERS = gql`
         trackedData
         tagIds
       }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
+      ${GQL_PAGE_INFO}
     }
   }
 `;

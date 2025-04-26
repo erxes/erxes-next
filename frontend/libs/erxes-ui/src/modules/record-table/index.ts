@@ -19,7 +19,6 @@ import {
   RecordTableForwardSkeleton,
 } from './components/RecordTableCursor';
 import { checkboxColumn } from './components/CheckboxColumn';
-import { RecordTableCellTrigger } from './components/RecordTableCellInline';
 
 export const RecordTable = Object.assign(RecordTableRoot, {
   Provider: RecordTableProvider,
@@ -42,5 +41,5 @@ export const RecordTable = Object.assign(RecordTableRoot, {
 
 export * from './types/RecordTableCursorTypes';
 export * from './hooks/useRecordTableCursor';
-export * from './utils/getCursorPageInfo';
+export * from './utils/cursorUtils';
 export * from './components/RecordTableCellInline';
