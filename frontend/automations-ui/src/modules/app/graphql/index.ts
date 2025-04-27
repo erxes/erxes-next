@@ -1,1 +1,5 @@
-export * from './queries';
+import queries from './queries';
+
+export default {
+  queries,
+};

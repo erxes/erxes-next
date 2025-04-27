@@ -1,5 +1,5 @@
-// import { getService, getServices } from '@erxes/api-utils/src/serviceDiscovery';
-import { getServices, paginate } from 'erxes-api-shared/utils';
+// import { getService, getPlugins } from '@erxes/api-utils/src/serviceDiscovery';
+import { getPlugin, getPlugins, paginate } from 'erxes-api-shared/utils';
 import { STATUSES, UI_ACTIONS } from '~/constants';
 
 import { IContext } from '~/db/connectionResolvers';
@@ -241,7 +241,7 @@ const automationQueries = {
   },
 
   async automationConstants(_root, {}) {
-    const services = await getServices();
+    const plugins = await getPlugins();
 
     const constants: {
       triggersConst: ITrigger[];
@@ -255,46 +255,46 @@ const automationQueries = {
       propertyTypesConst: [],
     };
 
-    // for (const serviceName of services) {
-    //   const service = await getService(serviceName);
-    //   const meta = service.config?.meta || {};
+    for (const pluginName of plugins) {
+      const plugin = await getPlugin(pluginName);
+      const meta = plugin.config?.meta || {};
 
-    //   if (meta && meta.automations && meta.automations.constants) {
-    //     const pluginConstants = meta.automations.constants || {};
-    //     const { triggers = [], actions = [] } = pluginConstants;
+      if (meta && meta.automations && meta.automations.constants) {
+        const pluginConstants = meta.automations.constants || {};
+        const { triggers = [], actions = [] } = pluginConstants;
 
-    //     for (const trigger of triggers) {
-    //       constants.triggersConst.push(trigger);
-    //       constants.triggerTypesConst.push(trigger.type);
-    //       constants.propertyTypesConst.push({
-    //         value: trigger.type,
-    //         label: trigger.label
-    //       });
-    //     }
+        for (const trigger of triggers) {
+          constants.triggersConst.push(trigger);
+          constants.triggerTypesConst.push(trigger.type);
+          constants.propertyTypesConst.push({
+            value: trigger.type,
+            label: trigger.label,
+          });
+        }
 
-    //     for (const action of actions) {
-    //       constants.actionsConst.push(action);
-    //     }
+        for (const action of actions) {
+          constants.actionsConst.push(action);
+        }
 
-    //     if (!!pluginConstants?.emailRecipientTypes?.length) {
-    //       const updatedEmailRecipIentTypes =
-    //         pluginConstants.emailRecipientTypes.map((eRT) => ({
-    //           ...eRT,
-    //           serviceName
-    //         }));
-    //       constants.actionsConst = constants.actionsConst.map((actionConst) =>
-    //         actionConst.type === 'sendEmail'
-    //           ? {
-    //               ...actionConst,
-    //               emailRecipientsConst: actionConst.emailRecipientsConst.concat(
-    //                 updatedEmailRecipIentTypes
-    //               )
-    //             }
-    //           : actionConst
-    //       );
-    //     }
-    //   }
-    // }
+        if (!!pluginConstants?.emailRecipientTypes?.length) {
+          const updatedEmailRecipIentTypes =
+            pluginConstants.emailRecipientTypes.map((eRT) => ({
+              ...eRT,
+              pluginName,
+            }));
+          constants.actionsConst = constants.actionsConst.map((actionConst) =>
+            actionConst.type === 'sendEmail'
+              ? {
+                  ...actionConst,
+                  emailRecipientsConst: actionConst.emailRecipientsConst.concat(
+                    updatedEmailRecipIentTypes,
+                  ),
+                }
+              : actionConst,
+          );
+        }
+      }
+    }
 
     return constants;
   },

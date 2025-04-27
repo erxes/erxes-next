@@ -26,330 +26,108 @@ import {
   Card,
   Input,
   ScrollArea,
+  Skeleton,
   Tabs,
   // TabsContent, TabsList, TabsTrigger
 } from 'erxes-ui/components';
 import { TablerIcon } from 'erxes-ui/icons';
-const businessModules = {
-  sales: {
-    icon: <ShoppingCart className="h-4 w-4" />,
-    color: 'emerald',
-    label: 'Sales',
-  },
-  tasks: {
-    icon: <CheckSquare className="h-4 w-4" />,
-    color: 'blue',
-    label: 'Tasks',
-  },
-  tickets: {
-    icon: <Ticket className="h-4 w-4" />,
-    color: 'amber',
-    label: 'Tickets',
-  },
-  customers: {
-    icon: <User className="h-4 w-4" />,
-    color: 'indigo',
-    label: 'Customers',
-  },
-  team: {
-    icon: <Users className="h-4 w-4" />,
-    color: 'purple',
-    label: 'Team',
-  },
-  messaging: {
-    icon: <MessageCircle className="h-4 w-4" />,
-    color: 'sky',
-    label: 'Messaging',
-  },
-  social: {
-    icon: <Facebook className="h-4 w-4" />,
-    color: 'blue',
-    label: 'Social',
-  },
-  pos: {
-    icon: <ShoppingCart className="h-4 w-4" />,
-    color: 'green',
-    label: 'POS',
-  },
-  forms: {
-    icon: <FormInput className="h-4 w-4" />,
-    color: 'violet',
-    label: 'Forms',
-  },
-  company: {
-    icon: <Building className="h-4 w-4" />,
-    color: 'slate',
-    label: 'Company',
-  },
-  feed: {
-    icon: <Rss className="h-4 w-4" />,
-    color: 'orange',
-    label: 'EMX Feed',
-  },
-  bot: {
-    icon: <Bot className="h-4 w-4" />,
-    color: 'cyan',
-    label: 'Bot',
-  },
+import { gql, useQuery } from '@apollo/client';
+import { ConstantsQueryResponse } from '../../types';
+import queries from '../../graphql/queries';
+import { IconHandClick, IconSettingsBolt } from '@tabler/icons-react';
+
+const TabsContent = (
+  loading: boolean,
+  nodeType: string,
+  list: any[],
+  onDragStart: (
+    event: React.DragEvent<HTMLDivElement>,
+    nodeType: string,
+    nodeModule: string,
+    nodeLabel: string,
+    nodeDescription: string,
+  ) => void,
+  searchValue: string,
+) => {
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  if (searchValue) {
+    list = list.filter((item) => new RegExp(searchValue, 'i').test(item.label));
+  }
+
+  return list.map((item, index) => (
+    <Card
+      key={index}
+      className="cursor-grab hover:bg-slate-50 transition-colors"
+      draggable
+      onDragStart={(event) =>
+        onDragStart(
+          event,
+          nodeType,
+          item?.module,
+          item?.label,
+          item?.description,
+        )
+      }
+    >
+      <Card.Header className="p-3">
+        <Card.Title className="text-sm font-medium flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div
+              className={`h-5 w-5 rounded-full flex items-center justify-center`}
+            >
+              <TablerIcon name={`Icon${item?.icon}` as any} />
+            </div>
+            <span>{item?.label}</span>
+          </div>
+        </Card.Title>
+        <p className="text-xs text-muted-foreground mt-1">
+          {item?.description}
+        </p>
+      </Card.Header>
+    </Card>
+  ));
 };
 
-const triggerTemplates = [
-  // Sales triggers
-  {
-    type: 'trigger',
-    module: 'sales',
-    label: 'Deal Created',
-    description: 'Triggers when a new deal is created',
-  },
-  {
-    type: 'trigger',
-    module: 'sales',
-    label: 'Deal Stage Changed',
-    description: 'Triggers when a deal changes stage',
-  },
-  {
-    type: 'trigger',
-    module: 'sales',
-    label: 'Deal Closed Won',
-    description: 'Triggers when a deal is marked as won',
-  },
-  {
-    type: 'trigger',
-    module: 'sales',
-    label: 'Deal Closed Lost',
-    description: 'Triggers when a deal is marked as lost',
-  },
+const LoadingSkeleton = () => {
+  const LoadingRow = () => {
+    return (
+      <Card className="flex flex-col  gap-2 space-x-4 border rounded-xl p-3 cursor-wait">
+        <Card.Title className="flex flex-row w-full items-center gap-3">
+          <Skeleton className="h-8 w-8 rounded" />
+          <Skeleton className="h-4 w-2/3" />
+        </Card.Title>
+        <Card.Description>
+          <Skeleton className="h-4 w-4/5" />
+        </Card.Description>
+      </Card>
+    );
+  };
 
-  // Tasks triggers
-  {
-    type: 'trigger',
-    module: 'tasks',
-    label: 'Task Created',
-    description: 'Triggers when a new task is created',
-  },
-  {
-    type: 'trigger',
-    module: 'tasks',
-    label: 'Task Assigned',
-    description: 'Triggers when a task is assigned',
-  },
-  {
-    type: 'trigger',
-    module: 'tasks',
-    label: 'Task Completed',
-    description: 'Triggers when a task is marked as complete',
-  },
+  return (
+    <div className="flex flex-col gap-4">
+      {Array.from({ length: 5 }).map(() => (
+        <LoadingRow />
+      ))}
+    </div>
+  );
+};
 
-  // Tickets triggers
-  {
-    type: 'trigger',
-    module: 'tickets',
-    label: 'Ticket Created',
-    description: 'Triggers when a new support ticket is created',
-  },
-  {
-    type: 'trigger',
-    module: 'tickets',
-    label: 'Ticket Status Changed',
-    description: 'Triggers when a ticket status changes',
-  },
-  {
-    type: 'trigger',
-    module: 'tickets',
-    label: 'Ticket Resolved',
-    description: 'Triggers when a ticket is resolved',
-  },
+export default ({ constants }: any) => {
+  const { data, loading } = useQuery<ConstantsQueryResponse>(
+    gql(queries.automationConstants),
+    { fetchPolicy: 'network-only' },
+  );
 
-  // Customers triggers
-  {
-    type: 'trigger',
-    module: 'customers',
-    label: 'Customer Created',
-    description: 'Triggers when a new customer is created',
-  },
-  {
-    type: 'trigger',
-    module: 'customers',
-    label: 'Customer Updated',
-    description: 'Triggers when customer information is updated',
-  },
+  const { triggersConst, actionsConst } = data?.automationConstants || {};
 
-  // Messaging triggers
-  {
-    type: 'trigger',
-    module: 'messaging',
-    label: 'Message Received',
-    description: 'Triggers when a new message is received',
-  },
-  {
-    type: 'trigger',
-    module: 'messaging',
-    label: 'Email Opened',
-    description: 'Triggers when an email is opened',
-  },
-
-  // Social triggers
-  {
-    type: 'trigger',
-    module: 'social',
-    label: 'Facebook Comment',
-    description: 'Triggers when a new Facebook comment is received',
-  },
-
-  // Forms triggers
-  {
-    type: 'trigger',
-    module: 'forms',
-    label: 'Form Submitted',
-    description: 'Triggers when a form is submitted',
-  },
-
-  // Bot triggers
-  {
-    type: 'trigger',
-    module: 'bot',
-    label: 'Bot Conversation Started',
-    description: 'Triggers when a bot conversation begins',
-  },
-  {
-    type: 'trigger',
-    module: 'bot',
-    label: 'Bot Handoff Requested',
-    description: 'Triggers when a bot requests human handoff',
-  },
-];
-
-// Action templates organized by module
-const actionTemplates = [
-  // Email actions
-  {
-    type: 'action',
-    module: 'messaging',
-    label: 'Send Email',
-    description: 'Sends an email to specified recipients',
-  },
-  {
-    type: 'action',
-    module: 'messaging',
-    label: 'Send SMS',
-    description: 'Sends an SMS message',
-  },
-
-  // Tasks actions
-  {
-    type: 'action',
-    module: 'tasks',
-    label: 'Create Task',
-    description: 'Creates a new task',
-  },
-  {
-    type: 'action',
-    module: 'tasks',
-    label: 'Update Task',
-    description: 'Updates an existing task',
-  },
-
-  // Sales actions
-  {
-    type: 'action',
-    module: 'sales',
-    label: 'Create Deal',
-    description: 'Creates a new deal',
-  },
-  {
-    type: 'action',
-    module: 'sales',
-    label: 'Update Deal',
-    description: 'Updates an existing deal',
-  },
-  {
-    type: 'action',
-    module: 'sales',
-    label: 'Move Deal Stage',
-    description: 'Moves a deal to a different stage',
-  },
-
-  // Customer actions
-  {
-    type: 'action',
-    module: 'customers',
-    label: 'Create Customer',
-    description: 'Creates a new customer record',
-  },
-  {
-    type: 'action',
-    module: 'customers',
-    label: 'Update Customer',
-    description: 'Updates customer information',
-  },
-  {
-    type: 'action',
-    module: 'customers',
-    label: 'Add Tag to Customer',
-    description: 'Adds a tag to a customer',
-  },
-
-  // Tickets actions
-  {
-    type: 'action',
-    module: 'tickets',
-    label: 'Create Ticket',
-    description: 'Creates a new support ticket',
-  },
-  {
-    type: 'action',
-    module: 'tickets',
-    label: 'Update Ticket',
-    description: 'Updates an existing ticket',
-  },
-  {
-    type: 'action',
-    module: 'tickets',
-    label: 'Assign Ticket',
-    description: 'Assigns a ticket to a team member',
-  },
-
-  // Bot actions
-  {
-    type: 'action',
-    module: 'bot',
-    label: 'Trigger Bot Response',
-    description: 'Triggers a specific bot response',
-  },
-
-  // POS actions
-  {
-    type: 'action',
-    module: 'pos',
-    label: 'Create Order',
-    description: 'Creates a new POS order',
-  },
-
-  // Team actions
-  {
-    type: 'action',
-    module: 'team',
-    label: 'Assign to Team Member',
-    description: 'Assigns a task or record to a team member',
-  },
-  {
-    type: 'action',
-    module: 'team',
-    label: 'Send Notification',
-    description: 'Sends a notification to team members',
-  },
-];
-
-export default () => {
   const [_, setType] = useDnD();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [activeTemplates, setActiveTemplates] = useState(false);
 
-  //   const onDragStart = (event: any, nodeType: any) => {
-  //     setType && setType(nodeType);
-  //     event.dataTransfer.effectAllowed = 'move';
-  //   };
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string,
@@ -368,36 +146,9 @@ export default () => {
   };
 
   // Filter templates based on search term and active module
-  const getFilteredTriggerTemplates = () => {
-    return triggerTemplates.filter((template) => {
-      const matchesSearch =
-        searchTerm === '' ||
-        template.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        template.description.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesModule =
-        activeModule === null || template.module === activeModule;
-
-      return matchesSearch && matchesModule;
-    });
-  };
-
-  const getFilteredActionTemplates = () => {
-    return actionTemplates.filter((template) => {
-      const matchesSearch =
-        searchTerm === '' ||
-        template.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        template.description.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesModule =
-        activeModule === null || template.module === activeModule;
-
-      return matchesSearch && matchesModule;
-    });
-  };
 
   return (
-    <aside className="border-r text-xs bg-accent">
+    <aside className="border-r text-xs ">
       <div className="w-80 border-l bg-white flex flex-col">
         <div className="p-4 border-b">
           <h3 className="font-medium mb-3">Workflow Components</h3>
@@ -406,12 +157,12 @@ export default () => {
             <Input
               placeholder="Search components..."
               className="pl-8"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
             />
           </div>
         </div>
-
+        {/* 
         <div className="border-b p-2 flex flex-wrap gap-1">
           <Button
             variant={activeModule === null ? 'default' : 'outline'}
@@ -443,120 +194,34 @@ export default () => {
                 <span className="ml-1">{value.label}</span>
               </Button>
             ))}
-        </div>
+        </div> */}
 
-        <Tabs defaultValue="triggers" className="flex-1 flex flex-col">
+        <Tabs defaultValue="trigger" className="flex-1 flex flex-col">
           <div className="px-4 pt-2">
+            <Card.Title></Card.Title>
             <Tabs.List className="w-full">
-              <Tabs.Trigger value="triggers" className="flex-1">
+              <Tabs.Trigger value="trigger" className="flex-1">
+                <IconHandClick />
                 Triggers
               </Tabs.Trigger>
-              <Tabs.Trigger value="actions" className="flex-1">
+              <Tabs.Trigger value="action" className="flex-1">
+                <IconSettingsBolt />
                 Actions
               </Tabs.Trigger>
             </Tabs.List>
           </div>
 
           <ScrollArea className="flex-1 h-full">
-            <Tabs.Content value="triggers" className="p-4 mt-0">
-              <div className="space-y-2">
-                {getFilteredTriggerTemplates().length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    No triggers match your search
-                  </div>
-                ) : (
-                  getFilteredTriggerTemplates().map((template, index) => {
-                    const moduleInfo =
-                      businessModules[
-                        template.module as keyof typeof businessModules
-                      ];
-                    return (
-                      <Card
-                        key={index}
-                        className="cursor-grab hover:bg-slate-50 transition-colors"
-                        draggable
-                        onDragStart={(event) =>
-                          onDragStart(
-                            event,
-                            template.type,
-                            template.module,
-                            template.label,
-                            template.description,
-                          )
-                        }
-                      >
-                        <Card.Header className="p-3">
-                          <Card.Title className="text-sm font-medium flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`h-5 w-5 rounded-full bg-${moduleInfo.color}-100 text-${moduleInfo.color}-600 flex items-center justify-center`}
-                              >
-                                {moduleInfo.icon}
-                              </div>
-                              <span>{template.label}</span>
-                            </div>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                          </Card.Title>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {template.description}
-                          </p>
-                        </Card.Header>
-                      </Card>
-                    );
-                  })
-                )}
-              </div>
-            </Tabs.Content>
-
-            <Tabs.Content value="actions" className="p-4 mt-0">
-              <div className="space-y-2">
-                {getFilteredActionTemplates().length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    No actions match your search
-                  </div>
-                ) : (
-                  getFilteredActionTemplates().map((template, index) => {
-                    const moduleInfo =
-                      businessModules[
-                        template.module as keyof typeof businessModules
-                      ];
-                    return (
-                      <Card
-                        key={index}
-                        className="cursor-grab hover:bg-slate-50 transition-colors"
-                        draggable
-                        onDragStart={(event) =>
-                          onDragStart(
-                            event,
-                            template.type,
-                            template.module,
-                            template.label,
-                            template.description,
-                          )
-                        }
-                      >
-                        <Card.Header className="p-3">
-                          <Card.Title className="text-sm font-medium flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <div
-                                className={`h-5 w-5 rounded-full bg-${moduleInfo.color}-100 text-${moduleInfo.color}-600 flex items-center justify-center`}
-                              >
-                                {moduleInfo.icon}
-                              </div>
-                              <span>{template.label}</span>
-                            </div>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                          </Card.Title>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {template.description}
-                          </p>
-                        </Card.Header>
-                      </Card>
-                    );
-                  })
-                )}
-              </div>
-            </Tabs.Content>
+            {[
+              { type: 'trigger', list: triggersConst },
+              { type: 'action', list: actionsConst },
+            ].map(({ type, list = [] }) => (
+              <Tabs.Content value={type} className="p-4 mt-0">
+                <div className="space-y-2">
+                  {TabsContent(loading, type, list, onDragStart, searchValue)}
+                </div>
+              </Tabs.Content>
+            ))}
           </ScrollArea>
         </Tabs>
       </div>

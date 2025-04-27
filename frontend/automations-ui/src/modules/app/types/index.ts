@@ -1,31 +1,31 @@
-interface ILogDoc {
-  source: 'webhook' | 'graphql' | 'mongo' | 'auth';
-  action: string;
-  payload: any;
-  userId?: string;
-  executionTime?: {
-    startDate: Date;
-    endDate: Date;
-    durationMs: number;
-  };
-  createdAt: Date;
-  status?: 'failed' | 'success';
+export type ITrigger = {
+  id: string;
+  type: string;
+  icon?: string;
+  label?: string;
+  description?: string;
+  actionId?: string;
+  style?: any;
+  config?: any;
+  position?: any;
+  isAvailableOptionalConnect?: boolean;
+  isCustom?: boolean;
+  workflowId?: string;
+
+  count?: number;
+};
+
+export interface AutomationConstants {
+  triggersConst: ITrigger[];
+  triggerTypesConst: string[];
+  actionsConst: any[];
+  propertyTypesConst: Array<{ value: string; label: string }>;
 }
-type QueryResponse = {
-  logsMainList: {
-    list: any[];
-    totalCount: number;
-  };
-};
+export interface ConstantsQueryResponse {
+  automationConstants: AutomationConstants;
+}
 
-type AvatarSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
-
-type AvatarPopoverProps = {
-  user?: any;
-  size?: AvatarSize;
-};
-
-type NodeData = {
+export type NodeData = {
   label: string;
   nodeType: 'trigger' | 'action';
   icon?: React.ReactNode;

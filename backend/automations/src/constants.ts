@@ -52,14 +52,14 @@ export const EMAIL_RECIPIENTS_TYPES = [
 export const UI_ACTIONS = [
   {
     type: 'if',
-    icon: 'sitemap-1',
+    icon: 'Sitemap',
     label: 'Branches',
     description: 'Create simple or if/then branches',
     isAvailable: true,
   },
   {
     type: 'setProperty',
-    icon: 'flask',
+    icon: 'Flask',
     label: 'Manage properties',
     description:
       'Update existing default or custom properties for Contacts, Companies, Cards, Conversations',
@@ -67,7 +67,7 @@ export const UI_ACTIONS = [
   },
   {
     type: 'delay',
-    icon: 'hourglass',
+    icon: 'Hourglass',
     label: 'Delay',
     description:
       'Delay the next action with a timeframe, a specific event or activity',
@@ -75,7 +75,7 @@ export const UI_ACTIONS = [
   },
   {
     type: 'workflow',
-    icon: 'glass-martini-alt',
+    icon: 'JumpRope',
     label: 'Workflow',
     description:
       'Enroll in another workflow,  trigger outgoing webhook or write custom code',
@@ -83,7 +83,7 @@ export const UI_ACTIONS = [
   },
   {
     type: 'sendEmail',
-    icon: 'fast-mail',
+    icon: 'MailFast',
     label: 'Send Email',
     description: 'Send Email',
     emailRecipientsConst: EMAIL_RECIPIENTS_TYPES,

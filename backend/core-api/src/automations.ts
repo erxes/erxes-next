@@ -212,35 +212,35 @@ export default startAutomations('core', {
     triggers: [
       {
         type: 'core:user',
-        icon: 'users',
+        icon: 'Users',
         label: 'Team member',
         description:
           'Start with a blank workflow that enralls and is triggered off team members',
       },
       {
         type: 'core:customer',
-        icon: 'users-alt',
+        icon: 'UsersGroup',
         label: 'Customer',
         description:
           'Start with a blank workflow that enrolls and is triggered off Customers',
       },
       {
         type: 'core:lead',
-        icon: 'users-alt',
+        icon: 'UsersGroup',
         label: 'Lead',
         description:
           'Start with a blank workflow that enrolls and is triggered off Leads',
       },
       {
         type: 'core:company',
-        icon: 'university',
+        icon: 'Building',
         label: 'Company',
         description:
           'Start with a blank workflow that enrolls and is triggered off company',
       },
       {
         type: 'core:form_submission',
-        icon: 'university',
+        icon: 'Forms',
         label: 'Form submission',
         description:
           'Start with a blank workflow that enrolls and is triggered off form submission',

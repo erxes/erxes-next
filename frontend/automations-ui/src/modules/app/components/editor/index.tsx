@@ -21,6 +21,13 @@ import { DnDProvider, useDnD } from './DnDProvider';
 import TriggerNode from './nodes/Trigger';
 import ActionNode from './nodes/Action';
 import { Sheet } from 'erxes-ui/components';
+import { gql, useQuery } from '@apollo/client';
+import queries from '../../graphql/queries';
+import {
+  AutomationConstants,
+  ConstantsQueryResponse,
+  NodeData,
+} from '../../types';
 
 const initialNodes: Node<any>[] = [
   {
@@ -172,22 +179,22 @@ const DnDFlow = () => {
   );
 
   // Handle drag start from sidebar
-  // const onDragStart = (
-  //   event: React.DragEvent<HTMLDivElement>,
-  //   nodeType: string,
-  //   nodeModule: string,
-  //   nodeLabel: string,
-  //   nodeDescription: string,
-  // ) => {
-  //   event.dataTransfer.setData('application/reactflow/type', nodeType);
-  //   event.dataTransfer.setData('application/reactflow/module', nodeModule);
-  //   event.dataTransfer.setData('application/reactflow/label', nodeLabel);
-  //   event.dataTransfer.setData(
-  //     'application/reactflow/description',
-  //     nodeDescription,
-  //   );
-  //   event.dataTransfer.effectAllowed = 'move';
-  // };
+  const onDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    nodeType: string,
+    nodeModule: string,
+    nodeLabel: string,
+    nodeDescription: string,
+  ) => {
+    event.dataTransfer.setData('application/reactflow/type', nodeType);
+    event.dataTransfer.setData('application/reactflow/module', nodeModule);
+    event.dataTransfer.setData('application/reactflow/label', nodeLabel);
+    event.dataTransfer.setData(
+      'application/reactflow/description',
+      nodeDescription,
+    );
+    event.dataTransfer.effectAllowed = 'move';
+  };
   return (
     <div className="flex flex-column grow h-full">
       <div className="flex-grow h-full" ref={reactFlowWrapper}>
@@ -199,7 +206,6 @@ const DnDFlow = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onDrop={onDrop}
-          // onDragStart={(event)=>onDragStart(event)}
           // onDoubleClick={(event) => console.log({ event })}
           onNodeDoubleClick={(event, node) => setActiveNode(node.data)}
           onInit={setReactFlowInstance}
