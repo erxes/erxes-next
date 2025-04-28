@@ -81,7 +81,33 @@ const AccountCurrencyCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
   );
 };
 
+export const AccountMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IAccount, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('account_id');
+  const setAccountDetail = useSetAtom(accountDetailAtom);
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setAccountDetail(cell.row.original);
+        setOpen(cell.row.original._id);
+      }}
+    />
+  );
+};
+
+export const accountMoreColumn = {
+  id: 'more',
+  cell: AccountMoreColumnCell,
+  size: 33,
+};
+
 export const accountsColumns: ColumnDef<IAccount>[] = [
+  accountMoreColumn,
+  RecordTable.checkboxColumn as ColumnDef<IAccount>,
   {
     id: 'name',
     accessorKey: 'name',
@@ -162,27 +188,3 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     },
   },
 ];
-
-export const AccountMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<IAccount, unknown>;
-}) => {
-  const [, setOpen] = useQueryState('account_id');
-  const setAccountDetail = useSetAtom(accountDetailAtom);
-  return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setAccountDetail(cell.row.original);
-        setOpen(cell.row.original._id);
-      }}
-    />
-  );
-};
-
-export const accountMoreColumn = {
-  id: 'more',
-  cell: AccountMoreColumnCell,
-  size: 33,
-};

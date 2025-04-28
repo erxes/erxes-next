@@ -23,7 +23,7 @@ export const RecordTableRow = ({
       className={cn('h-cell', inView ? 'in-view' : 'out-of-view', className)}
       id={id}
     >
-      {inView ? children : <Table.Cell className="h-8" />}
+      {inView ? children : <Table.Cell />}
     </Table.Row>
   );
 };

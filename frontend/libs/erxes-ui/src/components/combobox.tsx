@@ -126,7 +126,7 @@ export const ComboboxCheck = React.forwardRef<
       ref={ref}
       size={16}
       strokeWidth={2}
-      className={cn('size-4 text-muted-foreground ml-auto', className)}
+      className={cn('size-4 text-primary ml-auto', className)}
       {...props}
     />
   );

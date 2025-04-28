@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 
 import { init } from '@module-federation/enhanced/runtime';
 
-import { NODE_ENV } from 'erxes-ui/utils/config';
+import { NODE_ENV } from 'erxes-ui';
 
 import './styles.css';
 

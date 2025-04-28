@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { cva } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 
 import { cn } from 'erxes-ui/lib/utils';
 import { Except } from 'type-fest';
 import { IMaskInput } from 'react-imask';
 
 export const inputVariants = cva(
-  'flex h-8 w-full rounded-sm bg-background px-3 py-2 text-sm text-foreground font-medium shadow-xs placeholder:text-accent-foreground/70 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:shadow-focus',
+  'flex h-8 w-full rounded-sm bg-background px-3 py-2 text-sm text-foreground shadow-xs placeholder:text-accent-foreground/70 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:shadow-focus',
   {
     variants: {
       type: {
@@ -18,17 +18,23 @@ export const inputVariants = cva(
         number:
           '[&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
       },
+      variant: {
+        default: '',
+        secondary: 'bg-muted shadow-none focus-visible:shadow-subtle',
+      },
     },
     defaultVariants: {
       type: 'default',
+      variant: 'default',
     },
   },
 );
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
+  Except<VariantProps<typeof inputVariants>, 'type'>;
 
 const InputMain = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, variant, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -41,6 +47,7 @@ const InputMain = React.forwardRef<HTMLInputElement, InputProps>(
                 : type === 'search'
                 ? 'search'
                 : 'default',
+            variant,
           }),
           className,
         )}

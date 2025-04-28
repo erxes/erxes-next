@@ -11,23 +11,22 @@ import {
 import { Cell, ColumnDef } from '@tanstack/react-table';
 
 import { Select, Skeleton } from 'erxes-ui';
-import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
-import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
+import { CurrencyInput } from 'erxes-ui';
+import { TextFieldInput } from 'erxes-ui';
+import { RecordTableInlineHead, RecordTableInlineCell } from 'erxes-ui';
 import {
-  RecordTableInlineCell,
   RecordTableInlineCellContainer,
   RecordTableInlineCellEditForm,
-} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
-import { CurrencyCode } from 'erxes-ui/types/CurrencyCode';
+} from 'erxes-ui';
+import { CurrencyCode } from 'erxes-ui';
 
 import { PRODUCT_TYPE_OPTIONS } from '../constants/ProductConstants';
 import { useProductCategories } from '../hooks/useProductCategories';
 import { useProductsEdit } from '../hooks/useProductsEdit';
 
 import { SelectCategory } from '@/products/product-category/components/SelectCategory';
-import { RelativeDateDisplay } from 'erxes-ui/components/display/relativeDateDisplay';
-import { CurrencyDisplay } from 'erxes-ui/components/display/CurrencyDisplay';
+import { RelativeDateDisplay } from 'erxes-ui';
+import { CurrencyDisplay } from 'erxes-ui';
 
 const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
