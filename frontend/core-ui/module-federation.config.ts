@@ -28,7 +28,9 @@ const config: ModuleFederationConfig = {
     return false;
   },
 
-  remotes: ['education_ui'],
+  remotes: process.env.ENABLED_PLUGINS
+    ? process.env.ENABLED_PLUGINS.split(',').map((plugin) => `${plugin}_ui`)
+    : [],
 };
 
 /**

@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
-import { IRule } from 'erxes-api-shared/core-types/common';
+import { IRule, IAttachment } from 'erxes-api-shared/core-types/common';
+
 export interface ISubmission extends Document {
   customerId: string;
   submittedAt: Date;
@@ -83,13 +84,6 @@ export interface ICallout extends Document {
   featuredImage?: string;
   skip?: boolean;
   calloutImgSize?: string;
-}
-
-export interface IAttachment {
-  name: string;
-  url: string;
-  size: number;
-  type: string;
 }
 
 export interface ILeadData {

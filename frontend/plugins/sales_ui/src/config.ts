@@ -7,9 +7,10 @@ export const CONFIG = {
   widgetsIcon: IconBriefcase,
   modules: [
     {
-      name: 'Deals',
+      name: 'deals',
       icon: IconSandbox,
       path: 'deals',
+      hasSettings: true,
     },
   ],
 };
