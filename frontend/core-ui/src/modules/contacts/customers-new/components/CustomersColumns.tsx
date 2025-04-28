@@ -14,9 +14,10 @@ import {
   toast,
   useToast,
 } from 'erxes-ui';
-import { ICustomer } from 'ui-modules';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { ApolloError } from '@apollo/client';
+import { useState } from 'react';
+import { ICustomer, ITag, SelectTags } from 'ui-modules';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -152,8 +153,32 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'tagIds',
     header: () => <RecordTable.InlineHead label="Tags" />,
     cell: ({ cell }) => {
+      const [selectedTags, setSelectedTags] = useState<string[]>(
+        cell.row.original.tagIds || [],
+      );
+      const [open, setOpen] = useState(false);
+
       return (
-        <div className="p-2 h-8">{(cell.getValue() as string[])?.join()}</div>
+        <SelectTags
+          tagType="core:customer"
+          mode="multiple"
+          value={selectedTags}
+          onValueChange={(tags) => {
+            if (Array.isArray(tags)) {
+              setSelectedTags(tags);
+              setOpen(false);
+            }
+          }}
+        >
+          <RecordTablePopover open={open} onOpenChange={setOpen}>
+            <RecordTableCellTrigger>
+              <SelectTags.Value />
+            </RecordTableCellTrigger>
+            <RecordTableCellContent className="w-96">
+              <SelectTags.Content />
+            </RecordTableCellContent>
+          </RecordTablePopover>
+        </SelectTags>
       );
     },
   },

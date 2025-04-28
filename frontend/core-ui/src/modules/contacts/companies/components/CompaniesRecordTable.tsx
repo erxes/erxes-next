@@ -5,36 +5,47 @@ import {
 } from '@/contacts/companies/hooks/useCompanies';
 
 import { companyColumns } from '@/contacts/companies/components/CompanyColumns';
-import { contactMoreColumn } from '@/contacts/components/ContactMoreColumn';
 
 export const CompaniesRecordTable = () => {
-  const { companies, handleFetchMore, loading, totalCount } = useCompanies({
+  const { companies, handleFetchMore, loading, pageInfo } = useCompanies({
     variables: {
       perPage: COMPANIES_PER_PAGE,
       page: 1,
     },
   });
 
+  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
+    pageInfo || {};
+
   return (
     <RecordTable.Provider
       columns={companyColumns}
       data={companies || []}
-      handleReachedBottom={handleFetchMore}
-      stickyColumns={['avatar', 'name']}
+      stickyColumns={['more', 'checkbox', 'avatar', 'name']}
       className="mt-1.5"
-      moreColumn={contactMoreColumn}
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          {!loading && totalCount > companies?.length && (
-            <RecordTable.RowSkeleton
-              rows={4}
-              handleReachedBottom={handleFetchMore}
+      <RecordTable.CursorProvider
+        hasPreviousPage={hasPreviousPage}
+        hasNextPage={hasNextPage}
+        loading={loading}
+        dataLength={companies?.length}
+      >
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <RecordTable.CursorBackwardSkeleton
+              handleFetchMore={handleFetchMore}
+              startCursor={startCursor}
             />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
+            {loading && <RecordTable.RowSkeleton rows={40} />}
+            <RecordTable.CursorRowList />
+            <RecordTable.CursorForwardSkeleton
+              handleFetchMore={handleFetchMore}
+              endCursor={endCursor}
+            />
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.CursorProvider>
     </RecordTable.Provider>
   );
 };

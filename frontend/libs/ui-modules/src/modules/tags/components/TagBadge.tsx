@@ -9,16 +9,20 @@ export const TagBadge = React.forwardRef<
     tag?: ITag;
     tagId?: string;
     renderClose?: (tag: ITag) => React.ReactNode;
+    onCompleted?: (tags: ITag) => void;
   }
->(({ tag, tagId, renderClose, ...props }, ref) => {
-  const { tags = [], loading } = useTagsByIds({
+>(({ tag, tagId, renderClose, onCompleted, ...props }, ref) => {
+  const { tagDetail, loading } = useTagsByIds({
     variables: {
       tagIds: [tagId],
     },
     skip: !!tag || !tagId,
+    onCompleted: ({ tagDetail }: { tagDetail: ITag }) => {
+      onCompleted?.(tagDetail);
+    },
   });
 
-  const tagValue = tag || tags[0];
+  const tagValue = tag || tagDetail;
 
   if (loading) {
     return <Skeleton className="w-8 h-4" />;
@@ -29,12 +33,7 @@ export const TagBadge = React.forwardRef<
   }
 
   return (
-    <Badge
-      variant="muted"
-      className={cn(renderClose && 'pr-0 py-0')}
-      ref={ref}
-      {...props}
-    >
+    <Badge className={cn(renderClose && 'pr-0 py-0')} ref={ref} {...props}>
       <TextOverflowTooltip value={tagValue?.name} />
       {renderClose && renderClose(tagValue)}
     </Badge>

@@ -1,28 +1,14 @@
 import React from 'react';
 
 import { CURRENCY_CODES } from 'erxes-ui/constants/CurrencyCodes';
-import { cn } from 'erxes-ui/lib';
 import { FieldCurrencyValue } from 'erxes-ui/types/Displays';
 import { isDefined, isUndefinedOrNull } from 'erxes-ui/utils';
 import { formatAmount } from 'erxes-ui/utils/format';
+import { EllipsisDisplay } from './EllipsisDisplay';
 
 type CurrencyDisplayProps = {
   currencyValue: FieldCurrencyValue | null | undefined;
 };
-
-const StyledEllipsisDisplay = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'flex items-center w-full max-w-full overflow-hidden text-ellipsis whitespace-nowrap',
-      className
-    )}
-    {...props}
-  />
-));
 
 export const CurrencyDisplay = ({ currencyValue }: CurrencyDisplayProps) => {
   const shouldDisplayCurrency = isDefined(currencyValue?.currencyCode);
@@ -36,15 +22,15 @@ export const CurrencyDisplay = ({ currencyValue }: CurrencyDisplayProps) => {
     : currencyValue?.amountMicros / 1000000;
 
   if (!shouldDisplayCurrency) {
-    return <StyledEllipsisDisplay>{0}</StyledEllipsisDisplay>;
+    return <EllipsisDisplay>{0}</EllipsisDisplay>;
   }
 
   return (
-    <StyledEllipsisDisplay>
+    <EllipsisDisplay>
       {isDefined(CurrencyIcon) && amountToDisplay !== null && (
         <CurrencyIcon className="size-4 text-muted-foreground" />
       )}
       {amountToDisplay !== null ? formatAmount(amountToDisplay) : ''}
-    </StyledEllipsisDisplay>
+    </EllipsisDisplay>
   );
 };
