@@ -11,8 +11,12 @@ import {
   RecordTablePopover,
   TextOverflowTooltip,
   EmailListField,
+  toast,
+  useToast,
 } from 'erxes-ui';
 import { ICustomer } from 'ui-modules';
+import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
+import { ApolloError } from '@apollo/client';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -76,6 +80,8 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     cell: ({ cell }) => {
       const { primaryEmail, _id, emailValidationStatus, emails } =
         cell.row.original;
+      const { customersEdit } = useCustomersEdit();
+      const { toast } = useToast();
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
@@ -84,12 +90,34 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           <RecordTableCellContent className="min-w-72">
             <EmailListField
               recordId={_id}
+              onValueChange={(emails) => {
+                console.log(emails);
+                customersEdit(
+                  {
+                    variables: {
+                      _id,
+                      primaryEmail: emails.find((email) => email.isPrimary)
+                        ?.email,
+                      emails: emails
+                        .filter((email) => !email.isPrimary)
+                        .map((email) => email.email),
+                    },
+                    onError: (e: ApolloError) => {
+                      toast({
+                        title: 'Error',
+                        description: e.message,
+                      });
+                    },
+                  },
+                  ['primaryEmail', 'emails'],
+                );
+              }}
               emails={[
-                {
+                ...(primaryEmail ?[{
                   email: primaryEmail,
                   status: emailValidationStatus as 'verified' | 'unverified',
                   isPrimary: true,
-                },
+                }]: []),
                 ...(emails || []).map((email) => ({
                   email,
                   status: 'unverified' as 'verified' | 'unverified',

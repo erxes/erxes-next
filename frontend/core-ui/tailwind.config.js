@@ -94,6 +94,7 @@ module.exports = {
         focus:
           '0px 0px 0px 4px rgba(79, 70, 229, 0.25), 0px 0px 0px 1px hsl(var(--primary))',
         subtle: '0px 0px 0px 1px hsla(var(--primary))',
+        destructive: '0px 0px 0px 1px hsla(var(--destructive))',
         xs: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow))',
         sm: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow))',
         lg: '0 0 0 1px hsla(var(--shadow)), 0 1px 1px hsla(var(--shadow)), 0 2px 2px hsla(var(--shadow)), 0 4px 4px hsla(var(--shadow)), 0 8px 8px hsla(var(--shadow))',

@@ -14,15 +14,23 @@ import {
   Input,
   Separator,
   TextOverflowTooltip,
+  Form,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   emailsFamilyState,
   showEmailInputFamilyState,
+  editingEmailFamilyState,
 } from '../states/emailFieldStates';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
+import { useEmailFields } from '../hooks/useEmailFields';
+import { EmailFieldsContext } from '../contexts/EmailFieldsContext';
+import { emailSchema } from '../validations/emailValidation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 export interface IEmailField {
   email?: string;
@@ -32,97 +40,51 @@ export interface IEmailField {
 
 export type TEmails = IEmailField[];
 
-export const EmailFieldsContext = createContext<{ recordId: string }>({
-  recordId: '',
-});
 export const EmailFieldsProvider = ({
   children,
   recordId,
+  onValueChange,
 }: {
   children: React.ReactNode;
   recordId: string;
+  onValueChange: (emails: TEmails) => void;
 }) => {
   return (
-    <EmailFieldsContext.Provider value={{ recordId }}>
+    <EmailFieldsContext.Provider value={{ recordId, onValueChange }}>
       {children}
     </EmailFieldsContext.Provider>
   );
 };
 
-export const useEmailFields = () => {
-  const { recordId } = useContext(EmailFieldsContext);
-  return { recordId };
-};
-
 export const EmailListField = ({
   recordId,
   emails,
+  onValueChange,
 }: {
   recordId: string;
   emails: TEmails;
+  onValueChange: (emails: TEmails) => void;
 }) => {
   const setEmails = useSetAtom(emailsFamilyState(recordId));
-
+  const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
   useEffect(() => {
     const filterDuplicateEmails = emails.filter(
       (email, index, self) =>
         index === self.findIndex((t) => t.email === email.email),
     );
     setEmails(filterDuplicateEmails);
+    return () => {
+      setShowEmailInput(false);
+    };
   }, [emails, setEmails]);
 
   return (
-    <EmailFieldsProvider recordId={recordId}>
+    <EmailFieldsProvider recordId={recordId} onValueChange={onValueChange}>
       <div className="p-1 space-y-1">
         <EmailList />
-        <AddEmailInput />
       </div>
-      <Separator />
-      <div className="p-1">
-        <AddEmailButton />
-      </div>
+      <EmailForm />
     </EmailFieldsProvider>
-  );
-};
-
-export const AddEmailInput = () => {
-  const { recordId } = useEmailFields();
-  const showEmailInput = useAtomValue(showEmailInputFamilyState(recordId));
-  const [email, setEmail] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (showEmailInput) {
-      setEmail('');
-      inputRef.current?.focus();
-    }
-  }, [showEmailInput]);
-
-  if (!showEmailInput) return null;
-
-  return (
-    <Input
-      placeholder="Add email"
-      variant="secondary"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      ref={inputRef}
-    />
-  );
-};
-
-export const AddEmailButton = () => {
-  const { recordId } = useEmailFields();
-  const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
-  return (
-    <Button
-      variant="secondary"
-      className="w-full"
-      onClick={() => setShowEmailInput(true)}
-    >
-      <IconPlus />
-      Add email
-    </Button>
   );
 };
 
@@ -130,23 +92,25 @@ const EmailList = () => {
   const { recordId } = useEmailFields();
   const emails = useAtomValue(emailsFamilyState(recordId));
   const [animationParent] = useAutoAnimate();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useRef(false);
 
   useEffect(() => {
-    setMounted(true);
+    mounted.current = true;
   }, []);
-
   return (
-    <div ref={mounted ? animationParent : null} className="space-y-1">
-      {emails.map((email) => (
-        <div
-          className="flex items-center overflow-hidden gap-1 w-full"
-          key={email.email}
-        >
-          <EmailField {...email} />
-          <EmailOptions {...email} />
-        </div>
-      ))}
+    <div ref={mounted.current ? animationParent : null} className="space-y-1">
+      {emails.map(
+        (email) =>
+          email.email && (
+            <div
+              className="flex items-center overflow-hidden gap-1 w-full"
+              key={email.email}
+            >
+              <EmailField {...email} />
+              <EmailOptions {...email} />
+            </div>
+          ),
+      )}
     </div>
   );
 };
@@ -177,17 +141,22 @@ const EmailOptions = ({
   status,
   isPrimary,
 }: IEmailField & { isPrimary?: boolean }) => {
-  const { recordId } = useEmailFields();
+  const { recordId, onValueChange } = useEmailFields();
   const [emails, setEmails] = useAtom(emailsFamilyState(recordId));
-
+  const setEditingEmail = useSetAtom(editingEmailFamilyState(recordId));
+  const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
   const handleSetPrimaryEmail = () => {
     if (isPrimary) return;
-    setEmails([
+    onValueChange?.([
       { email, status, isPrimary: true },
       ...(emails || [])
         .filter((e) => e.email !== email)
         .map((e) => ({ ...e, isPrimary: false })),
     ]);
+  };
+  const handleEditClick = () => {
+    setShowEmailInput(true);
+    setEditingEmail(email || null);
   };
   return (
     <DropdownMenu>
@@ -215,7 +184,7 @@ const EmailOptions = ({
           )}
           {isPrimary ? 'Primary email' : 'Set as primary email'}
         </DropdownMenu.Item>
-        <DropdownMenu.Item>
+        <DropdownMenu.Item onClick={handleEditClick}>
           <IconEdit />
           Edit
         </DropdownMenu.Item>
@@ -237,5 +206,119 @@ const EmailOptions = ({
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
+  );
+};
+
+const EmailForm = () => {
+  const { recordId } = useEmailFields();
+  const emails = useAtomValue(emailsFamilyState(recordId));
+  const [editingEmail, setEditingEmail] = useAtom(
+    editingEmailFamilyState(recordId),
+  );
+  const { onValueChange } = useEmailFields();
+  const form = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+  const [showEmailInput, setShowEmailInput] = useAtom(
+    showEmailInputFamilyState(recordId),
+  );
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!showEmailInput) return;
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 180);
+    if (editingEmail) {
+      form.setValue('email', editingEmail);
+    }
+  }, [showEmailInput, editingEmail]);
+
+  useEffect(() => {
+    if (emails.filter((email) => !!email.email).length === 0) {
+      setShowEmailInput(true);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      });
+    } else {
+      setShowEmailInput(false);
+    }
+  }, [emails, setShowEmailInput]);
+  const onEmailEdit = (newEmail: string, prevEmail: string) => {
+    onValueChange?.(
+      emails.map((emailItem) =>
+        emailItem.email === prevEmail
+          ? { ...emailItem, email: newEmail }
+          : emailItem,
+      ),
+    );
+    form.reset();
+    setEditingEmail(null);
+  };
+  const onEmailAdd = (email: string) => {
+    if (emails.length === 0) {
+      onValueChange?.([{ email, status: 'unverified', isPrimary: true }]);
+    } else {
+      onValueChange?.([...emails, { email, status: 'unverified' }]);
+    }
+    form.reset();
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(({ email }) => {
+          if (!!editingEmail) {
+            onEmailEdit(email, editingEmail);
+          } else {
+            onEmailAdd(email);
+          }
+        })}
+      >
+        {showEmailInput && (
+          <Form.Field
+            name="email"
+            control={form.control}
+            render={({ field }) => (
+              <div className="px-1 pb-1">
+                <Input
+                  placeholder={!!editingEmail ? 'Edit email' : 'Add email'}
+                  variant="secondary"
+                  className={cn(
+                    form.formState.errors.email &&
+                      'focus-visible:shadow-destructive',
+                  )}
+                  {...field}
+                  ref={(el) => {
+                    field.ref(el);
+                    inputRef.current = el;
+                  }}
+                />
+              </div>
+            )}
+          />
+        )}
+        <Separator />
+        <div className="p-1">
+          <Button
+            variant="secondary"
+            className="w-full"
+            type="submit"
+            onClick={(e) => {
+              if (!showEmailInput) {
+                e.preventDefault();
+              }
+              setShowEmailInput(true);
+            }}
+          >
+            <IconPlus />
+            {!!editingEmail ? 'Edit email' : 'Add email'}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };

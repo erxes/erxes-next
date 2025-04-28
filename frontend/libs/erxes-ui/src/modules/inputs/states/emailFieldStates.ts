@@ -9,3 +9,7 @@ export const showEmailInputFamilyState = atomFamily((recordId: string) =>
 export const emailsFamilyState = atomFamily((recordId: string) =>
   atom<TEmails>([]),
 );
+
+export const editingEmailFamilyState = atomFamily((recordId: string) =>
+  atom<string | null>(null),
+);
