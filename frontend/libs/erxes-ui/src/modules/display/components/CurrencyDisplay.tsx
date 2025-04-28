@@ -10,7 +10,9 @@ type CurrencyDisplayProps = {
   currencyValue: FieldCurrencyValue | null | undefined;
 };
 
-export const CurrencyDisplay = ({ currencyValue }: CurrencyDisplayProps) => {
+export const CurrencyFormatedDisplay = ({
+  currencyValue,
+}: CurrencyDisplayProps) => {
   const shouldDisplayCurrency = isDefined(currencyValue?.currencyCode);
 
   const CurrencyIcon = isDefined(currencyValue?.currencyCode)

@@ -2,30 +2,36 @@ import { format } from 'date-fns';
 import { Tooltip } from 'erxes-ui/components';
 import { isUndefinedOrNull } from 'erxes-ui/utils';
 import { formatDateISOStringToRelativeDate } from 'erxes-ui/utils/localization/formatDateISOStringToRelativeDate';
+import React from 'react';
 import { Except } from 'type-fest';
 
-export const RelativeDateDisplay = ({
-  value,
-  ...props
-}: Except<React.ComponentPropsWithoutRef<typeof Tooltip.Trigger>, 'value'> & {
-  value: string;
-}) => {
+const RelativeDateDisplayTooltip = React.forwardRef<
+  React.ElementRef<typeof Tooltip.Trigger>,
+  Except<React.ComponentPropsWithoutRef<typeof Tooltip.Trigger>, 'value'> & {
+    value: string;
+  }
+>(({ value, ...props }, ref) => {
   if (isUndefinedOrNull(value)) {
     return null;
   }
 
-  const relativeDate = formatDateISOStringToRelativeDate(value);
-
   return (
     <Tooltip.Provider>
       <Tooltip>
-        <Tooltip.Trigger className="truncate" {...props}>
-          {relativeDate}
-        </Tooltip.Trigger>
-        <Tooltip.Content>{format(value, 'MMM dd, yyyy')}</Tooltip.Content>
+        <Tooltip.Trigger className="truncate" {...props} ref={ref} />
+        <Tooltip.Content>{format(value, 'MMM dd, yyyy HH:mm')}</Tooltip.Content>
       </Tooltip>
     </Tooltip.Provider>
   );
+});
+
+RelativeDateDisplayTooltip.displayName = 'RelativeDateDisplayTooltip';
+
+const RelativeDateDisplayValue = ({ value }: { value: string }) => {
+  const relativeDate = formatDateISOStringToRelativeDate(value);
+  return relativeDate;
 };
 
-RelativeDateDisplay.displayName = 'RelativeDateDisplay';
+export const RelativeDateDisplay = Object.assign(RelativeDateDisplayTooltip, {
+  Value: RelativeDateDisplayValue,
+});

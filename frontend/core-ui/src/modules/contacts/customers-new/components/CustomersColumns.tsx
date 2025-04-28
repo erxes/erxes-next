@@ -11,13 +11,14 @@ import {
   RecordTablePopover,
   TextOverflowTooltip,
   EmailListField,
+  RelativeDateDisplay,
   toast,
   useToast,
 } from 'erxes-ui';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
-import { ICustomer, ITag, SelectTags } from 'ui-modules';
+import { ICustomer, SelectTags } from 'ui-modules';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -114,11 +115,17 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                 );
               }}
               emails={[
-                ...(primaryEmail ?[{
-                  email: primaryEmail,
-                  status: emailValidationStatus as 'verified' | 'unverified',
-                  isPrimary: true,
-                }]: []),
+                ...(primaryEmail
+                  ? [
+                      {
+                        email: primaryEmail,
+                        status: emailValidationStatus as
+                          | 'verified'
+                          | 'unverified',
+                        isPrimary: true,
+                      },
+                    ]
+                  : []),
                 ...(emails || []).map((email) => ({
                   email,
                   status: 'unverified' as 'verified' | 'unverified',
@@ -188,9 +195,11 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     header: () => <RecordTable.InlineHead label="Last Seen" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        <RelativeDateDisplay value={cell.getValue() as string} asChild>
+          <RecordTableCellDisplay>
+            <RelativeDateDisplay.Value value={cell.getValue() as string} />
+          </RecordTableCellDisplay>
+        </RelativeDateDisplay>
       );
     },
   },
@@ -212,9 +221,11 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     header: () => <RecordTable.InlineHead label="Created At" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
-        </RecordTableCellDisplay>
+        <RelativeDateDisplay value={cell.getValue() as string} asChild>
+          <RecordTableCellDisplay>
+            <RelativeDateDisplay.Value value={cell.getValue() as string} />
+          </RecordTableCellDisplay>
+        </RelativeDateDisplay>
       );
     },
   },

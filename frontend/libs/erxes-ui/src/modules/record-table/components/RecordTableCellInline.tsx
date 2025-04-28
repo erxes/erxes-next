@@ -65,6 +65,7 @@ export const RecordTableCellDisplay = React.forwardRef<
       )}
       ref={ref}
       asChild
+      tabIndex={-1}
       {...props}
     >
       <div>{children}</div>

@@ -24,7 +24,7 @@ export const PluginHeader = ({
     <>
       <header
         className={cn(
-          'flex items-center justify-between h-[52px] -mx-3 px-3 box-border flex-shrink-0 bg-sidebar overflow-auto styled-scroll',
+          'flex items-center justify-between h-[52px] px-3 box-border flex-shrink-0 bg-sidebar overflow-auto styled-scroll',
           className,
         )}
       >
@@ -42,9 +42,7 @@ export const PluginHeader = ({
         </div>
         <div className="flex items-center gap-3">{children}</div>
       </header>
-      <Separator
-        className={cn('-mx-3 w-auto mb-1.5 flex-none', separatorClassName)}
-      />
+      <Separator className={cn('w-auto flex-none', separatorClassName)} />
     </>
   );
 };

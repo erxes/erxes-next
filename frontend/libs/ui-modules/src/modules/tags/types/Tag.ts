@@ -12,7 +12,7 @@ export type ISelectTagsProviderProps = {
   tagType: string;
   targetIds?: string[];
   value?: string[] | string;
-  onValueChange?: (tag?: string[] | string) => void;
+  onValueChange?: (tags?: string[] | string) => void;
   mode?: 'single' | 'multiple';
   children: React.ReactNode;
   options?: OperationVariables;

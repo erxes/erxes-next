@@ -18,7 +18,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import { checkboxColumn } from 'erxes-ui/modules/record-table/components/CheckboxColumn';
 import RecordTableContainer from 'erxes-ui/modules/record-table/components/RecordTableContainer';
 import { RecordTableDnDProvider } from 'erxes-ui/modules/record-table/components/RecordTableDnDProvider';
 import { IRecordTableContext } from 'erxes-ui/modules/record-table/types/recordTableTypes';

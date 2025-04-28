@@ -19,7 +19,7 @@ export const CustomersRecordTable = () => {
       columns={customersColumns}
       data={customers || []}
       stickyColumns={['more', 'checkbox', 'avatar', 'name']}
-      className="mt-1.5"
+      className="m-3"
     >
       <RecordTable.CursorProvider
         hasPreviousPage={hasPreviousPage}

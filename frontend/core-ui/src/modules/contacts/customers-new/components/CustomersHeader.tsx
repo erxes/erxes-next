@@ -8,6 +8,6 @@ export const CustomersHeader = () => {
       title="Customers"
       icon={IconUsers}
       to={`/contacts/${ContactsPath.Customers}`}
-    ></PluginHeader>
+    />
   );
 };

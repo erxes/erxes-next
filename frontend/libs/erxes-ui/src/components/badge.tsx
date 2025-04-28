@@ -4,27 +4,23 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../lib/utils';
 import { stringToHslColor } from '../utils/colors';
+import { Button } from './button';
+import { IconX } from '@tabler/icons-react';
 
 export const badgeVariants = cva(
-  'inline-flex items-center rounded-md border px-2 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent whitespace-nowrap font-medium',
+  'inline-flex items-center rounded-sm px-2 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 whitespace-nowrap font-medium w-fit h-6 text-xs border gap-1',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground',
-        secondary: 'bg-secondary text-foreground',
-        destructive: 'bg-destructive text-destructive-foreground',
-        muted: 'bg-border text-foreground',
-        ghost: 'text-inherit',
-      },
-      size: {
-        sm: 'h-6 text-xs',
-        md: 'h-7 text-sm',
-        lg: 'h-8 text-base',
+        default: 'bg-primary/10 text-primary border-primary/10',
+        secondary: 'bg-accent',
+        success: 'bg-success/10 text-success border-success/10',
+        warning: 'bg-warning/10 text-warning border-warning/10',
+        destructive: 'bg-destructive/10 text-destructive border-destructive/10',
       },
     },
     defaultVariants: {
       variant: 'default',
-      size: 'md',
     },
   },
 );
@@ -32,26 +28,32 @@ export const badgeVariants = cva(
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
-  colorSeed?: string;
+  onClose?: () => void;
 }
 
 export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
-  ({ className, variant, colorSeed, size, ...props }, ref) => {
+  ({ className, variant, children, onClose, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={cn(badgeVariants({ variant, size }), className)}
+        className={cn(badgeVariants({ variant }), className)}
         {...props}
-        style={
-          colorSeed
-            ? {
-                ...props.style,
-                color: stringToHslColor(colorSeed, 75, 20),
-                backgroundColor: stringToHslColor(colorSeed, 75, 90),
-              }
-            : props.style
-        }
-      />
+      >
+        {children}
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="size-3.5 p-0 hover:bg-transparent"
+          >
+            <IconX className="size-3.5" />
+          </Button>
+        )}
+      </div>
     );
   },
 );

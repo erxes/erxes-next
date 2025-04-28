@@ -32,33 +32,27 @@ export const SelectTagsProvider = ({
   const { giveTags } = useGiveTags();
   const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
 
-  // const onSelectCompleted = (tagIds: string[]) => {
-  //   onValueChange?.(tagIds);
-  //   options?.onCompleted?.();
-  // };
-
   const handleSelectCallback = (tag: ITag) => {
     if (!tag) {
       return;
     }
-    let newSelectedTagIds =
-      mode === 'single' ? [tag._id] : [...(value as string[])];
+
+    let newSelectedTagIds: string[] = [];
+
     if (mode === 'single') {
       setSelectedTags([tag]);
       onValueChange?.(tag._id);
       newSelectedTagIds = [tag._id];
-    }
-
-    if (mode === 'multiple') {
-      const isSelected = value?.includes(tag._id);
-      const multipleValue = value as string[];
+    } else {
+      const multipleValue = (value as string[]) || [];
+      const isSelected = multipleValue.includes(tag._id);
 
       newSelectedTagIds = isSelected
-        ? multipleValue?.filter((t) => t !== tag._id)
-        : multipleValue?.concat(tag._id);
+        ? multipleValue.filter((t) => t !== tag._id)
+        : [...multipleValue, tag._id];
 
       const newSelectedTags = isSelected
-        ? selectedTags?.filter((t) => t._id !== tag._id)
+        ? selectedTags.filter((t) => t._id !== tag._id)
         : [...selectedTags, tag];
 
       onValueChange?.(newSelectedTagIds);
@@ -69,7 +63,7 @@ export const SelectTagsProvider = ({
       giveTags({
         variables: {
           tagIds: newSelectedTagIds,
-          targetIds: targetIds || [],
+          targetIds,
           type: tagType,
         },
         ...options,
@@ -163,7 +157,6 @@ export const SelectTagsCreate = ({
   show: boolean;
 }) => {
   const { setNewTagName } = useSelectTagsContext();
-  console.log('search', search, show);
   if (!search || !show) return null;
 
   return (
@@ -205,7 +198,14 @@ export const SelectTagsItem = ({
   );
 };
 
-export const TagList = ({ placeholder }: { placeholder?: string }) => {
+export const TagList = ({
+  placeholder,
+  onClose,
+  ...props
+}: Omit<React.ComponentProps<typeof TagBadge>, 'onClose'> & {
+  placeholder?: string;
+  onClose?: (tagId?: string) => void;
+}) => {
   const { value, selectedTags, mode } = useSelectTagsContext();
 
   const selectedTagIds = Array.isArray(value) ? value : [value];
@@ -221,14 +221,10 @@ export const TagList = ({ placeholder }: { placeholder?: string }) => {
           key={tagId}
           tagId={tagId}
           tag={selectedTags.find((t) => t._id === tagId)}
-          {...(mode === 'single'
-            ? {
-                variant: 'ghost',
-                className: 'px-0 font-normal',
-              }
-            : {
-                colorSeed: tagId,
-              })}
+          renderAsPlainText={mode === 'single'}
+          variant="secondary"
+          onClose={() => onClose?.(tagId)}
+          {...props}
         />
       ))}
     </>
