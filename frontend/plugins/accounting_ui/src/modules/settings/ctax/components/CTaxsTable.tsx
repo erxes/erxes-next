@@ -1,34 +1,65 @@
-import { useCTaxRows } from '../hooks/useCTaxRows';
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { ICtax } from '../types/CTax';
-import { RecordTable } from 'erxes-ui';
+import { ICtaxRow } from '../types/CtaxRow';
+import { RecordTable, useQueryState } from 'erxes-ui';
+import { useSetAtom } from 'jotai';
+import { useCtaxRows } from '../hooks/useCtaxRows';
+import { ctaxRowDetailAtom } from '../states/ctaxRowStates';
+
+
 
 export const CTaxRowsTable = () => {
-  const { ctaxRows, loading, handleFetchMore, totalCount } = useCTaxRows();
+  const { ctaxRows, loading, handleFetchMore, totalCount } = useCtaxRows();
 
   return (
     <RecordTable.Provider
       columns={ctaxRowsColumns}
       data={ctaxRows || []}
-      handleReachedBottom={handleFetchMore}
-      moreColumn={ctaxMoreColumn}
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          {!loading && totalCount > ctaxRows?.length && (
-            <RecordTable.RowSkeleton
-              rows={4}
-              handleReachedBottom={handleFetchMore}
-            />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
+      <RecordTable.Scroll>
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <RecordTable.RowList />
+            {!loading && totalCount > ctaxRows?.length && (
+              <RecordTable.RowSkeleton
+                rows={4}
+                handleInView={handleFetchMore}
+              />
+            )}
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.Scroll>
     </RecordTable.Provider>
   );
 };
 
-export const ctaxRowsColumns: ColumnDef<ICtax>[] = [
+export const CtaxRowMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<ICtaxRow, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('ctax_row_id');
+  const setVatRowDetail = useSetAtom(ctaxRowDetailAtom);
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setVatRowDetail(cell.row.original);
+        setOpen(cell.row.original._id);
+      }}
+    />
+  );
+};
+
+export const ctaxRowMoreColumn = {
+  id: 'more',
+  cell: CtaxRowMoreColumnCell,
+  size: 33,
+};
+
+export const ctaxRowsColumns: ColumnDef<ICtaxRow>[] = [
+  ctaxRowMoreColumn,
+  RecordTable.checkboxColumn as ColumnDef<ICtaxRow>,
   {
     id: 'number',
     accessorKey: 'number',
@@ -76,7 +107,7 @@ export const ctaxRowsColumns: ColumnDef<ICtax>[] = [
 export const CtaxMoreColumnCell = ({
   cell,
 }: {
-  cell: Cell<ICtax, unknown>;
+  cell: Cell<ICtaxRow, unknown>;
 }) => {
   return <RecordTable.MoreButton />;
 };

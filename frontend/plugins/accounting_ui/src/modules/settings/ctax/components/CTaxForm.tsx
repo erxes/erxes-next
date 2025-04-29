@@ -1,5 +1,5 @@
 import { UseFormReturn } from 'react-hook-form';
-import { CtaxFormValues, CtaxKind, CtaxStatus } from '../types/CTax';
+import { CtaxFormValues, CtaxKind, CtaxStatus } from '../types/CtaxRow';
 import {
   Button,
   CurrencyValueInput,

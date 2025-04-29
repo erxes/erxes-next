@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ctaxFormSchema } from '../constants/ctaxFormSchema';
 
-export interface ICtax {
+export interface ICtaxRow {
   _id: string;
   name: string;
   number: string;

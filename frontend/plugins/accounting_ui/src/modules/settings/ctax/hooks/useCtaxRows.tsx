@@ -3,7 +3,7 @@ import { CTAX_ROWS } from '../graphql/queries/getCTaxs';
 
 export const PER_PAGE = 20;
 
-export const useCTaxRows = (options?: OperationVariables) => {
+export const useCtaxRows = (options?: OperationVariables) => {
   const { data, loading, fetchMore } = useQuery(CTAX_ROWS, {
     ...options,
     variables: {

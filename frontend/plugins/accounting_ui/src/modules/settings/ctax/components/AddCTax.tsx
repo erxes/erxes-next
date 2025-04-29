@@ -1,6 +1,6 @@
 import { Button, Dialog } from 'erxes-ui';
 import { useState } from 'react';
-import { CtaxFormValues } from '../types/CTax';
+import { CtaxFormValues } from '../types/CtaxRow';
 import { ctaxFormSchema } from '../constants/ctaxFormSchema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

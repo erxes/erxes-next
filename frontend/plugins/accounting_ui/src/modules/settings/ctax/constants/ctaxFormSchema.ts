@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CtaxKind, CtaxStatus } from '../types/CTax';
+import { CtaxKind, CtaxStatus } from '../types/CtaxRow';
 
 export const ctaxFormSchema = z.object({
   number: z.string().min(1),
