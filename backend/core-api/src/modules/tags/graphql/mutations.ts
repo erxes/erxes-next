@@ -34,6 +34,12 @@ export const tagMutations = {
   ) {
     const [serviceName, contentType] = type.split(':');
 
+    if (!serviceName || !contentType) {
+      throw new Error(
+        `Invalid type format: expected "service:content", got "${type}"`,
+      );
+    }
+
     const existingTagsCount = await models.Tags.countDocuments({
       _id: { $in: tagIds },
       type,
@@ -52,10 +58,13 @@ export const tagMutations = {
         product: models.Products,
       };
 
-      await modelMap[contentType].updateMany(
-        { _id: { $in: targetIds } },
-        { $set: { tagIds } },
-      );
+      const model = modelMap[contentType];
+
+      if (!model) {
+        throw new Error(`Unknown content type: ${contentType}`);
+      }
+
+      await model.updateMany({ _id: { $in: targetIds } }, { $set: { tagIds } });
 
       return '';
     }
