@@ -11,7 +11,7 @@ const keyForConfig = (name: string) => `service:config:${name}`;
 
 export const getPlugins = async (): Promise<string[]> => {
   const enabledServices =
-    process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}_api`) ||
+    process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) ||
     [];
 
   return ['core', ...enabledServices];
