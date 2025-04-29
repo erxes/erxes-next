@@ -21,6 +21,49 @@ export const tagMutations = {
   },
 
   /**
+   * Attach a tag
+   */
+  async tagsTag(
+    _root: undefined,
+    {
+      type,
+      targetIds,
+      tagIds,
+    }: { type: string; targetIds: string[]; tagIds: string[] },
+    { models }: IContext,
+  ) {
+    const [serviceName, contentType] = type.split(':');
+
+    const existingTagsCount = await models.Tags.countDocuments({
+      _id: { $in: tagIds },
+      type,
+    });
+
+    if (existingTagsCount !== tagIds.length) {
+      throw new Error('Tag not found.');
+    }
+
+    if (serviceName === 'core') {
+      const modelMap = {
+        customer: models.Customers,
+        user: models.Users,
+        company: models.Companies,
+        // form: models.Forms,
+        product: models.Products,
+      };
+
+      await modelMap[contentType].updateMany(
+        { _id: { $in: targetIds } },
+        { $set: { tagIds } },
+      );
+
+      return '';
+    }
+
+    return null;
+  },
+
+  /**
    * Removes a tag
    */
   async tagsRemove(
