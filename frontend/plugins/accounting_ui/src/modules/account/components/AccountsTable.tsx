@@ -12,16 +12,21 @@ export const AccountsTable = () => {
       data={accounts || []}
       stickyColumns={['name']}
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          <RecordTable.RowList />
-          {!loading && totalCount > accounts?.length && (
-            <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
-      <AccountsCommandbar />
+      <RecordTable.Scroll>
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <RecordTable.RowList />
+            {!loading && totalCount > accounts?.length && (
+              <RecordTable.RowSkeleton
+                rows={4}
+                handleInView={handleFetchMore}
+              />
+            )}
+          </RecordTable.Body>
+        </RecordTable>
+        <AccountsCommandbar />
+      </RecordTable.Scroll>
     </RecordTable.Provider>
   );
 };
