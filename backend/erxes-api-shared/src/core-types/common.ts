@@ -20,13 +20,11 @@ export interface ICursorPaginateParams {
   limit?: number;
   cursor?: string;
   direction: 'forward' | 'backward';
-  sortField?: string;
 }
 
 export interface IListParams {
   searchValue?: string;
-  page?: number;
-  perPage?: number;
+  sortField?: string;
 }
 
 export interface IStringMap {
@@ -61,13 +59,23 @@ export interface IPdfAttachment {
 }
 
 export interface IMainContext {
-  req: Request;
-  res: Response;
+  res: any;
   requestInfo: any;
-  subdomain: string;
   user: IUserDocument;
+  docModifier: <T>(doc: T) => any;
+  brandIdSelector: object;
+  userBrandIdsSelector: object;
+  commonQuerySelector: object;
+  commonQuerySelectorElk: object;
+  singleBrandIdSelector: object;
+  dataSources: {
+    AutomationsAPI: any;
+    EngagesAPI: any;
+    IntegrationsAPI: any;
+    HelpersApi: any;
+  };
+  dataLoaders: any;
 }
-
 export interface ILogDoc {
   source: 'webhook' | 'graphql' | 'mongo';
   action: string;
@@ -79,4 +87,11 @@ export interface ILogDoc {
     durationMs: number;
   };
   status?: 'failed' | 'success';
+}
+
+export interface IAttachment {
+  name: string;
+  url: string;
+  size: number;
+  type: string;
 }

@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom/client';
 
 import { init } from '@module-federation/enhanced/runtime';
 
-import { NODE_ENV } from 'erxes-ui/utils/config';
+import { NODE_ENV } from 'erxes-ui';
 
 import './styles.css';
 
@@ -29,8 +29,8 @@ async function initFederation() {
       name: 'core',
       remotes: [
         {
-          name: 'inbox_ui',
-          entry: 'https://plugins.erxes.io/latest/inbox_ui/remoteEntry.js',
+          name: 'frontline_ui',
+          entry: 'https://plugins.erxes.io/latest/frontline_ui/remoteEntry.js',
         },
         {
           name: 'accounting_ui',

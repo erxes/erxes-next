@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "npx nx run-many -t serve -p core-api gateway"
+    "dev:core-api": "npx nx run-many -t serve -p core-api gateway",
+    "dev:apis": "dotenv -e .env -- node scripts/start-api-dev.js",
+    "dev:uis": "dotenv -e .env -- node scripts/start-ui-dev.js"
   },
   "engines": {
     "pnpm": ">=8",
@@ -29,6 +31,7 @@
     "@escape.tech/graphql-armor-character-limit": "^2.3.0",
     "@escape.tech/graphql-armor-max-aliases": "^2.6.0",
     "@escape.tech/graphql-armor-max-depth": "^2.4.0",
+    "@formkit/auto-animate": "^0.8.2",
     "@graphql-tools/schema": "^10.0.23",
     "@hookform/resolvers": "^3.9.1",
     "@module-federation/sdk": "^0.8.9",
@@ -47,6 +50,7 @@
     "@radix-ui/react-scroll-area": "^1.2.1",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-slider": "^1.3.2",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
@@ -90,7 +94,6 @@
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.11.20",
-    "lucide-react": "^0.462.0",
     "mongoose": "^8.9.6",
     "motion": "^11.11.17",
     "nanoid": "^3.3.6",
@@ -118,8 +121,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "tsconfig-paths": "^4.2.0",
-    "tsc-alias": "^1.8.8",
     "@apollo/rover": "^0.26.3",
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
@@ -174,6 +175,7 @@
     "babel-jest": "^29.7.0",
     "core-js": "^3.36.1",
     "cypress": "^13.13.0",
+    "dotenv-cli": "^8.0.0",
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.0.0",
@@ -194,6 +196,8 @@
     "tailwindcss": "^3.4.6",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
+    "tsc-alias": "^1.8.8",
+    "tsconfig-paths": "^4.2.0",
     "tslib": "^2.8.1",
     "tsx": "^4.19.3",
     "type-fest": "^4.30.0",

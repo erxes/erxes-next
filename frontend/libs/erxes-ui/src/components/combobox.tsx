@@ -126,7 +126,7 @@ export const ComboboxCheck = React.forwardRef<
       ref={ref}
       size={16}
       strokeWidth={2}
-      className={cn('size-4 text-muted-foreground ml-auto', className)}
+      className={cn('size-4 text-primary ml-auto', className)}
       {...props}
     />
   );
@@ -156,8 +156,8 @@ export const ComboboxFetchMore = React.forwardRef<
       {...props}
       className={cn(className)}
     >
-      <IconLoader className="w-4 h-4 animate-spin text-muted-foreground mr-1" />
       Load more...
+      <IconLoader className="w-4 h-4 animate-spin text-muted-foreground ml-auto" />
     </Command.Item>
   );
 });
@@ -174,7 +174,7 @@ const ComboboxEmpty = React.forwardRef<
   return (
     <Command.Empty ref={ref} {...props} className={cn(className)}>
       {loading ? (
-        <div className="flex flex-col gap-2 items-start">
+        <div className="flex flex-col gap-2 items-start p-4">
           <Skeleton className="w-2/3 h-4" />
           <Skeleton className="w-full h-4" />
           <Skeleton className="w-32 h-4" />

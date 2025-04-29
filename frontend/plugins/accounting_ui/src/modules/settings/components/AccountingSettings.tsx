@@ -61,8 +61,8 @@ const AccountingSettings = () => {
                 path="/account-categories"
                 element={<AccountCategories />}
               />
-              <Route path="/vat" element={<VatRows />} />
-              <Route path="/ctax" element={<CTaxRows />} />
+              <Route path="/vat-rows" element={<VatRows />} />
+              <Route path="/ctax-rows" element={<CTaxRows />} />
             </Routes>
           </Suspense>
         </div>

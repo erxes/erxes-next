@@ -28,10 +28,10 @@ export const checkCodeMask = (category?: IProductCategory, code?: string) => {
     }
 
     if (value.type === 'customField' && value.matches) {
-      maskList.push(`(${Object.values(value.matches).joinErxesGateway('|')})`);
+      maskList.push(`(${Object.values(value.matches).join('|')})`);
     }
   }
-  maskStr = `${maskList.joinErxesGateway('')}.*`;
+  maskStr = `${maskList.join('')}.*`;
 
   const mask = new RegExp(maskStr, 'g');
 

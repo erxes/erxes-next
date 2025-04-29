@@ -14,9 +14,9 @@ import { CashTransaction } from './CashForm';
 import { MainJournalForm } from './MainJournalForm';
 import { BankTransaction } from './BankForm';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
-import { JOURNAL_LABELS } from '../../../account/constants/journalLabel';
+import { JOURNAL_LABELS } from '@/settings/account/constants/journalLabel';
 import { InvIncomeForm } from './InvIncomeForm';
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 
 // Separate the transaction form component to prevent unnecessary re-renders
 const TransactionForm = ({

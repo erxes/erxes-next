@@ -1,5 +1,5 @@
 export const types = `
-  type Tag {
+    type Tag @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String!
     name: String
     type: String
@@ -11,6 +11,12 @@ export const types = `
     order: String
     relatedIds: [String]
   }
+
+  type TagsListResponse {
+    list: [Tag]
+    pageInfo: PageInfo
+    totalCount: Int
+  }
 `;
 
 const queryParams = `
@@ -20,13 +26,17 @@ const queryParams = `
     parentId: String,
     ids: [String],
     excludeIds: Boolean,
-    page: Int,
-    perPage: Int
+
+    sortField: String,
+ 
+    limit: Int,
+    cursor: String,
+    direction: CURSOR_DIRECTION,
 `;
 
 export const queries = `
   tagsGetTypes: [JSON]
-  tags(${queryParams}): [Tag]
+  tags(${queryParams}): TagsListResponse
   tagDetail(_id: String!): Tag
   tagsQueryCount(type: String, searchValue: String): Int
 `;

@@ -1,7 +1,7 @@
-import { getPlugin, getPlugins, defaultPaginate } from 'erxes-api-shared/utils';
+import { ITagFilterQueryParams } from '@/tags/@types/tag';
+import { cursorPaginate, getPlugin, getPlugins } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
-import { ITagFilterQueryParams } from '@/tags/@types/tag';
 
 const generateFilter = async ({ params, commonQuerySelector, models }) => {
   const { type, searchValue, tagIds, parentId, ids, excludeIds } = params;
@@ -37,8 +37,6 @@ const generateFilter = async ({ params, commonQuerySelector, models }) => {
         ids = [...ids, ...childTag];
         await getChildTags(childTag);
       }
-
-      return;
     };
 
     await getChildTags(parentTag);
@@ -59,7 +57,7 @@ export const tagQueries = {
     for (const serviceName of services) {
       const service = await getPlugin(serviceName);
       const meta = service.config.meta || {};
-      if (meta && meta.tags) {
+      if (meta.tags) {
         const types = meta.tags.types || [];
 
         for (const type of types) {
@@ -88,14 +86,13 @@ export const tagQueries = {
       models,
     });
 
-    const tags = await defaultPaginate(
-      models.Tags.find(filter).sort({
-        order: 1,
-      }),
+    const { list, totalCount, pageInfo } = await cursorPaginate({
+      model: models.Tags,
       params,
-    );
+      query: filter,
+    });
 
-    return tags;
+    return { list, totalCount, pageInfo };
   },
 
   async tagsQueryCount(

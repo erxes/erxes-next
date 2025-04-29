@@ -1,4 +1,4 @@
-import { IAccount } from '@/account/type/Account';
+import { IAccount } from '@/settings/account/types/Account';
 import { ICtaxRow } from '@/settings/types/Ctax';
 import { IVatRow } from '@/settings/types/Vat';
 import { IProduct } from 'ui-modules';

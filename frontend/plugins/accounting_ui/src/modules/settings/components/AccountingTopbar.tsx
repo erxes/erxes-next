@@ -1,9 +1,9 @@
 import { useLocation } from 'react-router';
-import { AddAccount } from '@/account/components/AddAccount';
-import { AccountingFilter } from '@/account/components/AccountsFilter';
-import { AddAccountCategory } from '@/account/account-categories/components/AddAccountCategory';
-import { AddVats } from '@/vat/components/AddVats';
-import { AddCTax } from '@/ctax/components/AddCTax';
+import { AddAccount } from '@/settings/account/components/AddAccount';
+import { AccountingFilter } from '@/settings/account/components/AccountsFilter';
+import { AddAccountCategory } from '@/settings/account/account-categories/components/AddAccountCategory';
+import { AddVats } from '@/settings/vat/components/AddVats';
+import { AddCTax } from '@/settings/ctax/components/AddCTax';
 
 export const AccountingTopbar = () => {
   const { pathname } = useLocation();
@@ -25,7 +25,7 @@ export const AccountingTopbar = () => {
     );
   }
 
-  if (pathname === '/settings/accounting/vat') {
+  if (pathname === '/settings/accounting/vat-rows') {
     return (
       <div className="flex items-center gap-3">
         <AddVats />
@@ -33,7 +33,7 @@ export const AccountingTopbar = () => {
     );
   }
 
-  if (pathname === '/settings/accounting/ctax') {
+  if (pathname === '/settings/accounting/ctax-rows') {
     return (
       <div className="flex items-center gap-3">
         <AddCTax />

@@ -1,5 +1,10 @@
-import { ICustomField, IListParams, IStringMap } from '../../common';
 import { Document } from 'mongoose';
+import {
+  ICursorPaginateParams,
+  ICustomField,
+  IListParams,
+  IStringMap,
+} from '../../common';
 import { IAddress } from './contacts-common';
 
 export interface ICompany {
@@ -46,6 +51,8 @@ export interface ICompanyDocument extends ICompany, Document {
   score?: number;
 }
 
-export interface ICompanyFilterQueryParams extends IListParams {
+export interface ICompanyFilterQueryParams
+  extends IListParams,
+    ICursorPaginateParams {
   createdAt?: Date;
 }

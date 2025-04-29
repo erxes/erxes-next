@@ -8,9 +8,9 @@ import {
   InlineCellEdit,
   Input,
   RelativeDateDisplay,
-  CurrencyDisplay,
   CurrencyCode,
   CurrencyInput,
+  CurrencyFormatedDisplay,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingTransactionDetailState } from '../states/renderingTransactionContactingDetailStates';
@@ -75,7 +75,7 @@ const SumDebitCell = ({ getValue, row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          <CurrencyDisplay
+          <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
               amountMicros: sumDt * 1000000,
@@ -106,7 +106,7 @@ const SumCreditCell = ({ getValue, row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          <CurrencyDisplay
+          <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
               amountMicros: sumCt * 1000000,
@@ -178,7 +178,35 @@ const AccountCell = ({ row }: any) => {
   );
 };
 
+export const TransactionMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<ITransaction, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('transaction_id');
+  const setRenderingContactDetail = useSetAtom(renderingTransactionDetailState);
+  const { _id } = cell.row.original;
+
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setOpen(_id);
+        setRenderingContactDetail(false);
+      }}
+    />
+  );
+};
+
+export const transactionMoreColumn = {
+  id: 'more',
+  cell: TransactionMoreColumnCell,
+  size: 33,
+};
+
 export const transactionColumns: ColumnDef<ITransaction>[] = [
+  transactionMoreColumn,
+  RecordTable.checkboxColumn as ColumnDef<ITransaction>,
   {
     id: 'account',
     header: () => (
@@ -235,29 +263,3 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     cell: ({ getValue, row }) => <BranchCell getValue={getValue} row={row} />,
   },
 ];
-
-export const TransactionMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<ITransaction, unknown>;
-}) => {
-  const [, setOpen] = useQueryState('transaction_id');
-  const setRenderingContactDetail = useSetAtom(renderingTransactionDetailState);
-  const { _id } = cell.row.original;
-
-  return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-        setRenderingContactDetail(false);
-      }}
-    />
-  );
-};
-
-export const transactionMoreColumn = {
-  id: 'more',
-  cell: TransactionMoreColumnCell,
-  size: 33,
-};

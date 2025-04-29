@@ -3,17 +3,12 @@ import { Route, Routes, Navigate } from 'react-router';
 
 import { ContactsPath } from '@/types/paths/ContactsPath';
 
-const ContactsIndexPage = lazy(() =>
-  import('~/pages/contacts/ContactsIndexPage').then((module) => ({
-    default: module.ContactsIndexPage,
+const CustomersIndexPage = lazy(() =>
+  import('~/pages/contacts/CustomersIndexPage').then((module) => ({
+    default: module.CustomersIndexPage,
   })),
 );
 
-const ContactsDetailPage = lazy(() =>
-  import('~/pages/contacts/ContactsDetailPage').then((module) => ({
-    default: module.ContactsDetailPage,
-  })),
-);
 const CompaniesIndexPage = lazy(() =>
   import('~/pages/contacts/companies/CompaniesIndexPage').then((module) => ({
     default: module.CompaniesIndexPage,
@@ -28,11 +23,8 @@ export const ContactsRoutes = () => {
           path="/"
           element={<Navigate to={`${ContactsPath.Customers}`} replace />}
         />
-        <Route path={ContactsPath.Customers} element={<ContactsIndexPage />} />
-        <Route path={ContactsPath.Leads} element={<ContactsDetailPage />} />
+        <Route path={ContactsPath.Customers} element={<CustomersIndexPage />} />
         <Route path={ContactsPath.Companies} element={<CompaniesIndexPage />} />
-        <Route path={ContactsPath.Vendors} element={<ContactsDetailPage />} />
-        <Route path={ContactsPath.Clients} element={<ContactsDetailPage />} />
       </Routes>
     </Suspense>
   );

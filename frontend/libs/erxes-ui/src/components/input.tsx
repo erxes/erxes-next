@@ -1,34 +1,40 @@
 import * as React from 'react';
 
-import { cva } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 
 import { cn } from 'erxes-ui/lib/utils';
 import { Except } from 'type-fest';
 import { IMaskInput } from 'react-imask';
 
 export const inputVariants = cva(
-  'flex h-8 w-full rounded-sm bg-background px-3 py-2 text-sm text-foreground font-medium shadow-xs placeholder:text-muted-foreground/70 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:shadow-focus',
+  'flex h-8 w-full rounded-sm bg-background px-3 py-2 text-sm text-foreground shadow-xs placeholder:text-accent-foreground/70 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:shadow-focus',
   {
     variants: {
       type: {
-        file: 'p-0 pr-3 italic text-muted-foreground/70 file:me-3 file:h-full file:border-0 file:border-r file:border-solid file:border file:bg-transparent file:px-3 file:text-sm file:font-medium file:not-italic file:text-foreground',
+        file: 'file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground',
         search:
           '[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none',
         default: '',
         number:
           '[&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
       },
+      variant: {
+        default: '',
+        secondary: 'bg-muted shadow-none focus-visible:shadow-subtle',
+      },
     },
     defaultVariants: {
       type: 'default',
+      variant: 'default',
     },
   },
 );
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
+  Except<VariantProps<typeof inputVariants>, 'type'>;
 
 const InputMain = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, variant, ...props }, ref) => {
     return (
       <input
         type={type}
@@ -41,6 +47,7 @@ const InputMain = React.forwardRef<HTMLInputElement, InputProps>(
                 : type === 'search'
                 ? 'search'
                 : 'default',
+            variant,
           }),
           className,
         )}
@@ -72,6 +79,8 @@ export const InputNumber = React.forwardRef<
       }}
       value={value + ''}
       autoComplete="off"
+      radix="."
+      thousandsSeparator={','}
       className={cn(inputVariants({ type: 'number' }), className)}
       unmask
       {...props}

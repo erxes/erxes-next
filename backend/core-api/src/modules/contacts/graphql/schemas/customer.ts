@@ -1,8 +1,7 @@
 export const types = `
-
-  type Customer {
+    type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String
-     state: String
+    state: String
     createdAt: Date
     modifiedAt: Date
     avatar: String
@@ -55,10 +54,11 @@ export const types = `
   type CustomersListResponse {
     list: [Customer],
     pageInfo: PageInfo
-    totalCount: Float,
+    totalCount: Int,
   }
 
 `;
+
 export const conformityQueryFields = `
   conformityMainType: String
   conformityMainTypeId: String
@@ -68,6 +68,8 @@ export const conformityQueryFields = `
 `;
 
 const queryParams = `
+  page: Int
+  perPage: Int
   segment: String
   type: String
   tag: String
@@ -86,6 +88,7 @@ const queryParams = `
   endDate: String
   leadStatus: String
   sortField: String
+  sortDirection: Int
   sex:Int
   birthDate: Date
   dateFilters: String

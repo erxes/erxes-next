@@ -1,29 +1,67 @@
-import { useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 
 import { productsQueries } from '@/products/graphql';
-
+import {
+  EnumCursorDirection,
+  IRecordTableCursorPageInfo,
+  mergeCursorData,
+  useRecordTableCursor,
+  validateFetchMore,
+} from 'erxes-ui';
+import { IProduct } from 'ui-modules';
 const PRODUCTS_PER_PAGE = 30;
 
-export const useProducts = () => {
-  const { data, loading, fetchMore } = useQuery(productsQueries.products, {
+export const useProducts = (options?: QueryHookOptions) => {
+  const { cursor, setCursor } = useRecordTableCursor({
+    sessionKey: 'products_cursor',
+  });
+
+  const { data, loading, fetchMore } = useQuery<{
+    products: {
+      list: IProduct[];
+      totalCount: number;
+      pageInfo: IRecordTableCursorPageInfo;
+    };
+  }>(productsQueries.products, {
+    ...options,
     variables: {
-      perPage: PRODUCTS_PER_PAGE,
+      limit: PRODUCTS_PER_PAGE,
+      cursor,
+      ...options?.variables,
     },
   });
 
-  const { products, productsTotalCount } = data || {};
+  const { list: products, totalCount, pageInfo } = data?.products || {};
 
-  const handleFetchMore = () => {
-    if (productsTotalCount <= products?.length) return;
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+  }) => {
+    if (
+      !validateFetchMore({
+        direction,
+        pageInfo,
+      })
+    ) {
+      return;
+    }
+
     fetchMore({
       variables: {
-        page: Math.ceil(products.length / PRODUCTS_PER_PAGE) + 1,
-        perPage: PRODUCTS_PER_PAGE,
+        cursor: pageInfo?.endCursor,
+        limit: PRODUCTS_PER_PAGE,
+        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
+        setCursor(prev?.products?.pageInfo?.endCursor);
         return Object.assign({}, prev, {
-          products: [...(prev.products || []), ...fetchMoreResult.products],
+          products: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.products,
+            prevResult: prev.products,
+          }),
         });
       },
     });
@@ -32,7 +70,8 @@ export const useProducts = () => {
   return {
     loading,
     products,
-    totalCount: productsTotalCount,
+    totalCount,
     handleFetchMore,
+    pageInfo,
   };
 };
