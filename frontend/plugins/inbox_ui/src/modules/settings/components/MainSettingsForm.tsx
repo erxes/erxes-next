@@ -1,11 +1,12 @@
 import { SearchIntegration } from './SearchIntegration';
 import { Label } from 'erxes-ui';
 import { Integration } from './Integration';
-import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../constants/integrations';
 import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
+import { useIntegrationContext } from '../hooks/useIntegrationContext';
 
 export const MainSettingsForm = () => {
   const { byKind, loading } = useIntegrationsCounts();
+  const { integrations, otherIntegrations } = useIntegrationContext();
   return (
     <form className="h-full w-full mx-auto max-w-2xl px-9 py-5 flex flex-col gap-8">
       <div className="flex flex-col gap-2">
@@ -18,14 +19,14 @@ export const MainSettingsForm = () => {
       <div>
         <Label>Customer experience</Label>
         <div className="grid grid-cols-3 gap-3 mt-3 auto-rows-fr">
-          {Object.entries(INTEGRATIONS).map(([key, value]) => (
+          {Object.entries(integrations).map(([key, value]) => (
             <Integration
               key={key}
               to={key}
               label={value.label}
               description={value.description}
               totalCount={byKind?.[key] || 0}
-              Icon={value.Icon}
+              img={value.img}
             />
           ))}
         </div>
@@ -33,14 +34,14 @@ export const MainSettingsForm = () => {
       <div>
         <Label>Other</Label>
         <div className="grid grid-cols-3 gap-3 mt-3 auto-rows-fr">
-          {Object.entries(OTHER_INTEGRATIONS).map(([key, value]) => (
+          {Object.entries(otherIntegrations).map(([key, value]) => (
             <Integration
               key={key}
               to={key}
               label={value.label}
               description={value.description}
               totalCount={byKind?.[key] || 0}
-              Icon={value.Icon}
+              img={value.img}
             />
           ))}
         </div>

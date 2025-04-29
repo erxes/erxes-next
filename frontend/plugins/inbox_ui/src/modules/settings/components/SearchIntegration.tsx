@@ -1,22 +1,45 @@
 import { IconArrowRight, IconSearch } from '@tabler/icons-react';
-import { Input, Label, Spinner } from 'erxes-ui';
-import React, { useId } from 'react';
+import { Input, Spinner } from 'erxes-ui';
+import React, { useId, useState, useEffect } from 'react';
+import { useIntegrationContext } from '../hooks/useIntegrationContext';
+import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../constants/integrations';
 
 export const SearchIntegration = () => {
   const id = useId();
-  const [inputValue, setInputValue] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setIntegrations, setOtherIntegrations } = useIntegrationContext();
 
-  React.useEffect(() => {
-    if (inputValue) {
+  useEffect(() => {
+    if (!setIntegrations || !setOtherIntegrations) return;
+
+    if (inputValue.trim()) {
       setIsLoading(true);
       const timer = setTimeout(() => {
+        const term = inputValue.toLowerCase();
+
+        const filteredMain = Object.entries(INTEGRATIONS).filter(([, value]) =>
+          value.label.toLowerCase().includes(term),
+        );
+
+        const filteredOther = Object.entries(OTHER_INTEGRATIONS).filter(
+          ([, value]) => value.label.toLowerCase().includes(term),
+        );
+
+        setIntegrations(Object.fromEntries(filteredMain));
+        setOtherIntegrations(Object.fromEntries(filteredOther));
+
         setIsLoading(false);
-      }, 500);
+      }, 300);
+
       return () => clearTimeout(timer);
     }
+
+    // Reset to original lists
+    setIntegrations(INTEGRATIONS);
+    setOtherIntegrations(OTHER_INTEGRATIONS);
     setIsLoading(false);
-  }, [inputValue]);
+  }, [inputValue, setIntegrations, setOtherIntegrations]);
 
   return (
     <div className="*:not-first:mt-2">
@@ -39,7 +62,7 @@ export const SearchIntegration = () => {
 
         <button
           className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label="Press to speak"
+          aria-label="Press to search"
           type="submit"
         >
           <IconArrowRight size={16} aria-hidden="true" />

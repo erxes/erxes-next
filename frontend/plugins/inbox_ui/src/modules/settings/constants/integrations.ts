@@ -7,39 +7,39 @@ import {
 
 export const INTEGRATIONS = {
   messenger: {
-    Icon: MessengerIcon,
+    img: '/assets/messenger.webp',
     label: 'Messenger',
     description: 'See and reply to Messenger messages in your Team Inbox',
   },
   'facebook-messenger': {
-    Icon: MessengerIcon,
+    img: '/assets/fb-messenger.webp',
     label: 'Facebook Messenger',
     description:
       'Connect and manage Facebook Messages right from your Team Inbox',
   },
   'facebook-post': {
-    Icon: FacebookIcon,
+    img: '/assets/facebook.webp',
     label: 'Facebook Post',
     description: 'Connect to Facebook posts right from your Team Inbox',
   },
   'instagram-post': {
-    Icon: InstagramIcon,
+    img: '/assets/instagram.webp',
     label: 'Instagram Post',
     description: 'Connect to Instagram posts right from your Team Inbox',
   },
   'instagram-messenger': {
-    Icon: InstagramIcon,
+    img: '/assets/instagram.webp',
     label: "Instagram DM's",
     description:
       'Connect and manage Instagram direct messages right from your Team Inbox',
   },
   callpro: {
-    Icon: MessengerIcon,
+    img: '/assets/callpro.webp',
     label: 'Call Pro',
     description: 'Connect your call pro phone number',
   },
   whatsapp: {
-    Icon: WhatsAppIcon,
+    img: '/assets/whatsapp.webp',
     label: 'Whatsapp',
     description: 'Connect and manage Whats App right from your Team Inbox',
   },
@@ -47,23 +47,23 @@ export const INTEGRATIONS = {
 
 export const OTHER_INTEGRATIONS = {
   webhook: {
-    Icon: MessengerIcon,
+    img: '/assets/incoming-webhook.webp',
     label: 'Incoming Webhook',
     description: 'Configure incoming webhooks',
   },
   calls: {
-    Icon: MessengerIcon,
+    img: '/assets/grandstream.webp',
     label: 'Grand stream',
     description: 'Configure Grand stream device',
   },
   imap: {
-    Icon: MessengerIcon,
+    img: '/assets/email.webp',
     label: 'IMAP',
     description:
       'Connect a company email address such as sales@mycompany.com or info@mycompany.com',
   },
   cloudflarecalls: {
-    Icon: MessengerIcon,
+    img: '/assets/email.webp',
     label: 'Web call',
     description: 'Configure Web Call',
   },

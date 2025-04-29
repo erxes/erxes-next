@@ -1,9 +1,10 @@
 import { cn } from 'erxes-ui';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useIntegrationContext } from '../hooks/useIntegrationContext';
 
 type Props = {
-  Icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  img: string;
   label: string;
   totalCount: number | undefined;
   description: string;
@@ -11,9 +12,9 @@ type Props = {
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Integration = React.forwardRef<HTMLButtonElement, Props>(
-  ({ Icon, label, totalCount, description, to, ...rest }, ref) => {
+  ({ label, totalCount, description, to, img, ...rest }, ref) => {
     return (
-      <Link to={{ pathname: '/setting/inbox/create', search: `?kind=${to}` }}>
+      <Link to={{ pathname: `/settings/inbox/details/${to}` }}>
         <button
           ref={ref}
           {...rest}
@@ -33,10 +34,14 @@ export const Integration = React.forwardRef<HTMLButtonElement, Props>(
             ({totalCount})
           </span>
           <div className="flex gap-2 items-center">
-            <span className="flex items-center justify-center p-1.5 rounded-sm shadow-sm">
-              <Icon className="w-5 h-5 text-white flex-shrink-0" />
+            <span className="flex items-center justify-center w-5 h-5 p-0.5 rounded-sm shadow-sm relative">
+              <img
+                alt={to}
+                src={`http://localhost:3002${img}`}
+                className="w-full h-full object-contain"
+              />
             </span>
-            <strong className="whitespace-break-spaces text-sm text-left line-clamp-2">
+            <strong className="whitespace-break-spaces w-4/5 text-sm text-left line-clamp-2">
               {label}
             </strong>
           </div>
