@@ -37,7 +37,7 @@ export function SidebarNavigation() {
       <Sidebar.Group>
         <Sidebar.GroupLabel asChild>
           <Collapsible.Trigger>
-            {t('nav.' + 'plugins')}{' '}
+            {t('nav.' + 'modules')}{' '}
             <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
           </Collapsible.Trigger>
         </Sidebar.GroupLabel>
