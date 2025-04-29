@@ -1,8 +1,5 @@
 import { useTransactions } from '../hooks/useTransactions';
-import {
-  transactionColumns,
-  transactionMoreColumn,
-} from './TransactionsTableColumns';
+import { transactionColumns } from './TransactionsTableColumns';
 import { RecordTable } from 'erxes-ui';
 
 export const PtrRecordTable = () => {
@@ -13,19 +10,15 @@ export const PtrRecordTable = () => {
     <RecordTable.Provider
       columns={transactionColumns}
       data={transactions || []}
-      handleReachedBottom={handleFetchMore}
       stickyColumns={['avatar', 'name']}
       className="mt-1.5"
-      moreColumn={transactionMoreColumn}
     >
       <RecordTable>
         <RecordTable.Header />
         <RecordTable.Body>
+          <RecordTable.RowList />
           {!loading && totalCount > transactions?.length && (
-            <RecordTable.RowSkeleton
-              rows={4}
-              handleReachedBottom={handleFetchMore}
-            />
+            <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
           )}
         </RecordTable.Body>
       </RecordTable>

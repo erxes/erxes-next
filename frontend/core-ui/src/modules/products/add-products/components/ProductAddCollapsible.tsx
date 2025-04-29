@@ -20,10 +20,7 @@ export const ProductAddCollapsible = ({
         {children}
       </Collapsible.Content>
       <Collapsible.Trigger asChild>
-        <Button
-          variant="secondary"
-          className={`w-min text-xs font-semibold text-muted-foreground order-2 `}
-        >
+        <Button variant="secondary" size="sm">
           {!isOpen ? 'Fill in more info' : 'See less'}
           <IconChevronDown
             size={12}

@@ -2,7 +2,6 @@ import {
   Combobox,
   Command,
   InlineCell,
-  InlineCellDisplay,
   InlineCellEdit,
   SelectTree,
   TextOverflowTooltip,
@@ -169,6 +168,7 @@ const SelectAccountCategoryItem = ({
 
   return (
     <SelectTree.Item
+      _id={category._id}
       order={order}
       hasChildren={hasChildren}
       name={name}

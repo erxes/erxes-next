@@ -2,8 +2,7 @@ import { Navigate, Outlet } from 'react-router';
 
 import { currentUserState, isCurrentUserLoadedState } from 'ui-modules';
 
-import { RocketIcon } from 'erxes-ui/icons';
-import { isDefined } from 'erxes-ui/utils';
+import { RocketIcon, isDefined } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import { useAtomValue } from 'jotai';

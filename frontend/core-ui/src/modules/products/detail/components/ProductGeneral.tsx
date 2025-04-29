@@ -2,13 +2,11 @@
 
 import { IconUpload } from '@tabler/icons-react';
 import { useProductDetail } from '../hooks/useProductDetail';
-import { Skeleton, Label, Input, Select, Button } from 'erxes-ui/components';
+import { Skeleton, Label, Input, Select, Button } from 'erxes-ui';
 import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 import { PRODUCT_TYPE_OPTIONS } from '@/products/constants/ProductConstants';
 import { IconCurrencyDollar } from '@tabler/icons-react';
-import { CurrencyDisplay } from 'erxes-ui/display';
-import { CurrencyCode } from 'erxes-ui/types/CurrencyCode';
-import { CurrencyInput } from 'erxes-ui/modules/record-field/meta-inputs/components/CurrencyInput';
+import { CurrencyDisplay, CurrencyCode, CurrencyInput } from 'erxes-ui';
 import { useState, useEffect } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { SelectCategory } from '@/products/product-category/components/SelectCategory';

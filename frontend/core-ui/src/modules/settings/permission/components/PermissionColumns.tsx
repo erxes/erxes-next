@@ -7,7 +7,7 @@ import {
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
 import { cn } from 'erxes-ui';
-import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
+import { RecordTable } from 'erxes-ui';
 import { TextField } from '@/settings/permission/components/permission-edit/TextField';
 import { IPermission } from '@/settings/permission/types';
 
@@ -15,7 +15,7 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
   ...['module', 'action'].map((field) => ({
     id: field,
     accessorKey: field,
-    header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
+    header: () => <RecordTable.InlineHead icon={IconAlignLeft} label={field} />,
     cell: ({ cell }: { cell: Cell<IPermission, unknown> }) => (
       <TextField
         _id={cell.row.original._id}
@@ -27,7 +27,7 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
   {
     id: 'email',
     accessorKey: 'user',
-    header: () => <RecordTableInlineHead icon={IconMail} label="Email" />,
+    header: () => <RecordTable.InlineHead icon={IconMail} label="Email" />,
     cell: ({ cell }) => {
       const { user, _id } = cell.row.original;
       return (
@@ -38,7 +38,9 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
   {
     id: 'group',
     accessorKey: 'group',
-    header: () => <RecordTableInlineHead icon={IconUsersGroup} label="Group" />,
+    header: () => (
+      <RecordTable.InlineHead icon={IconUsersGroup} label="Group" />
+    ),
     cell: ({ cell }) => {
       const { group, _id } = cell.row.original;
       return (
@@ -49,7 +51,7 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
   {
     id: 'allowed',
     accessorKey: 'allowed',
-    header: () => <RecordTableInlineHead label="Allow" icon={IconCheckbox} />,
+    header: () => <RecordTable.InlineHead label="Allow" icon={IconCheckbox} />,
     cell: ({ cell }) => {
       const { allowed } = cell.row.original;
       return (

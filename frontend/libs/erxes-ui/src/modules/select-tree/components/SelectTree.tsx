@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 import { IconCaretDownFilled, IconCheck } from '@tabler/icons-react';
 
-import { Button, ButtonProps, Command, Popover } from 'erxes-ui/components';
+import {
+  Button,
+  ButtonProps,
+  Combobox,
+  Command,
+  Popover,
+} from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import {
   SelectTreeContext,
@@ -11,6 +17,7 @@ import {
 import { useSelectTreeHide } from 'erxes-ui/modules/select-tree/hooks/useSelectTreeHide';
 import { hideChildrenAtomFamily } from '../states/selectTreeStates';
 import { useSetAtom } from 'jotai';
+import { ISelectTreeItem } from '../types/selectTreeTypes';
 
 export const SelectTreeRoot = ({
   id,
@@ -79,10 +86,13 @@ export const SelectTreeArrow = React.forwardRef<
       {...props}
       tabIndex={-1}
       onClick={() => toggleHideChildren(order)}
+      asChild
     >
-      <IconCaretDownFilled
-        className={cn('transition-transform', isHidden && '-rotate-90')}
-      />
+      <div>
+        <IconCaretDownFilled
+          className={cn('transition-transform', isHidden && '-rotate-90')}
+        />
+      </div>
     </Button>
   );
 });
@@ -94,10 +104,10 @@ export const SelectTreeIndentation = ({ order }: { order: string }) => {
   }
 
   return (
-    <div className="flex h-full gap-4 px-2">
+    <div className="flex h-full px-3.5 gap-8">
       {Array.from({ length: level }).map((_, index) => (
         <div key={index} className="relative">
-          <div className="absolute -top-4 h-8 w-px bg-muted-foreground/20 flex-none" />
+          <div className="absolute -top-4 h-8 -left-[0.5px] w-px bg-border flex-none" />
         </div>
       ))}
     </div>
@@ -106,13 +116,8 @@ export const SelectTreeIndentation = ({ order }: { order: string }) => {
 
 const SelectTreeItem = React.forwardRef<
   React.ElementRef<typeof Command.Item>,
-  React.ComponentPropsWithoutRef<typeof Command.Item> & {
-    order: string;
-    hasChildren: boolean;
-    name: string;
-    selected: boolean;
-  }
->(({ order, children, hasChildren, name, selected, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof Command.Item> & ISelectTreeItem
+>(({ _id, name, order, hasChildren, selected, ...props }, ref) => {
   const { ordered } = useSelectTreeContext();
   const fixOrder = () => {
     let fixedOrder = order;
@@ -129,18 +134,14 @@ const SelectTreeItem = React.forwardRef<
 
   if (!ordered) {
     return (
-      <Command.Item
+      <SelectTreeCommandItem
         {...props}
-        className={cn(
-          'h-7 py-0 items-center flex-1 overflow-hidden justify-start gap-1',
-          props.className,
-          selected && 'bg-muted',
-        )}
-        ref={ref}
-      >
-        {children}
-        {selected && <IconCheck className="shrink-0" />}
-      </Command.Item>
+        _id={_id}
+        name={name}
+        order={order}
+        hasChildren={hasChildren}
+        selected={selected}
+      />
     );
   }
 
@@ -152,19 +153,35 @@ const SelectTreeItem = React.forwardRef<
     <div className="flex items-center gap-1 w-full">
       <SelectTreeIndentation order={fixOrder()} />
       <SelectTreeArrow order={fixOrder()} hasChildren={hasChildren} />
-      <Command.Item
+      <SelectTreeCommandItem
         {...props}
-        className={cn(
-          'py-0 items-center flex-1 overflow-hidden justify-start',
-          props.className,
-          selected && 'bg-muted',
-        )}
-        ref={ref}
-      >
-        {children}
-        {selected && <IconCheck className="absolute right-2" />}
-      </Command.Item>
+        _id={_id}
+        name={name}
+        order={order}
+        hasChildren={hasChildren}
+        selected={selected}
+      />
     </div>
+  );
+});
+
+export const SelectTreeCommandItem = React.forwardRef<
+  React.ElementRef<typeof Command.Item>,
+  React.ComponentPropsWithoutRef<typeof Command.Item> & ISelectTreeItem
+>(({ _id, name, order, hasChildren, selected, children, ...props }, ref) => {
+  return (
+    <Command.Item
+      className={cn(
+        'py-0 items-center flex-1 overflow-hidden justify-start',
+        props.className,
+        selected && 'text-primary',
+      )}
+      {...props}
+      ref={ref}
+    >
+      {children}
+      <Combobox.Check checked={selected} />
+    </Command.Item>
   );
 });
 

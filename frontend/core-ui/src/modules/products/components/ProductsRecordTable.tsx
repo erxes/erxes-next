@@ -1,33 +1,43 @@
 import { RecordTable } from 'erxes-ui';
 
-import { columns } from '@/products/components/columns';
+import { productColumns } from '@/products/components/ProductColumns';
 import { ProductCommandBar } from '@/products/components/ProductCommandBar';
 import { useProducts } from '@/products/hooks/useProducts';
-import { productMoreColumn } from './ProductMoreColumn';
 export const ProductsRecordTable = () => {
-  const { products, handleFetchMore, loading, totalCount } = useProducts();
+  const { products, handleFetchMore, loading, pageInfo } = useProducts();
+
+  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
+    pageInfo || {};
+
   return (
     <RecordTable.Provider
-      columns={columns}
+      columns={productColumns}
       data={products || []}
-      handleReachedBottom={handleFetchMore}
-      className="mt-1.5"
-      stickyColumns={['name']}
-      moreColumn={productMoreColumn}
+      className="m-3"
+      stickyColumns={['more', 'checkbox', 'name']}
     >
-      <RecordTable>
-        <RecordTable.Header />
-        {!loading && (
+      <RecordTable.CursorProvider
+        hasPreviousPage={hasPreviousPage}
+        hasNextPage={hasNextPage}
+        loading={loading}
+        dataLength={products?.length}
+      >
+        <RecordTable>
+          <RecordTable.Header />
           <RecordTable.Body>
-            {totalCount > products?.length && (
-              <RecordTable.RowSkeleton
-                rows={4}
-                handleReachedBottom={handleFetchMore}
-              />
-            )}
+            <RecordTable.CursorBackwardSkeleton
+              handleFetchMore={handleFetchMore}
+              startCursor={startCursor}
+            />
+            {loading && <RecordTable.RowSkeleton rows={40} />}
+            <RecordTable.CursorRowList />
+            <RecordTable.CursorForwardSkeleton
+              handleFetchMore={handleFetchMore}
+              endCursor={endCursor}
+            />
           </RecordTable.Body>
-        )}
-      </RecordTable>
+        </RecordTable>
+      </RecordTable.CursorProvider>
       <ProductCommandBar />
     </RecordTable.Provider>
   );
