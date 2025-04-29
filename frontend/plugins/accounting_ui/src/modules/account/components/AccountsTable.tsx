@@ -15,6 +15,7 @@ export const AccountsTable = () => {
       <RecordTable>
         <RecordTable.Header />
         <RecordTable.Body>
+          <RecordTable.RowList />
           {!loading && totalCount > accounts?.length && (
             <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
           )}

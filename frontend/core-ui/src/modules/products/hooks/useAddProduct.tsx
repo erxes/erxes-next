@@ -4,8 +4,10 @@ import { productsQueries } from '@/products/graphql';
 import { IProduct } from '@/products/types/productTypes';
 
 interface ProductData {
-  products: IProduct[];
-  productsTotalCount: number;
+  products: {
+    list: IProduct[];
+    totalCount: number;
+  };
 }
 
 interface AddProductResult {
@@ -33,9 +35,11 @@ export function useAddProduct(
             query: productsQueries.products,
             variables: queryVariables,
             data: {
-              ...(existingData || []),
-              products: [data.productsAdd, ...existingData.products],
-              productsTotalCount: existingData.productsTotalCount + 1,
+              products: {
+                ...existingData.products,
+                list: [...existingData.products.list, data.productsAdd],
+                totalCount: existingData.products.totalCount + 1,
+              },
             },
           });
         } catch (e) {

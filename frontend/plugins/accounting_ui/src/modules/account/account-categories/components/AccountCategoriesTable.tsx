@@ -13,17 +13,18 @@ import { useSetAtom } from 'jotai';
 import { accountCategoryDetailAtom } from '../states/accountCategoryStates';
 import { AccountCategoriesCommandbar } from './AccountCategoriesCommandbar';
 export const AccountCategoriesTable = () => {
-  const { accountCategories, loading } = useAccountCategories();
+  const { accountCategories } = useAccountCategories();
   return (
     <RecordTable.Provider
       columns={accountCategoriesColumns}
       data={accountCategories || []}
       stickyColumns={['name']}
-      moreColumn={accountCategoryMoreColumn}
     >
       <RecordTable>
         <RecordTable.Header />
-        <RecordTable.Body />
+        <RecordTable.Body>
+          <RecordTable.RowList />
+        </RecordTable.Body>
       </RecordTable>
       <AccountCategoriesCommandbar />
     </RecordTable.Provider>
@@ -51,7 +52,33 @@ const AccountTextField = ({
   );
 };
 
+const AccountCategoryMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IAccountCategory, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('accountCategoryId');
+  const setAccountCategoryDetail = useSetAtom(accountCategoryDetailAtom);
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setAccountCategoryDetail(cell.row.original);
+        setOpen(cell.row.original._id);
+      }}
+    />
+  );
+};
+
+export const accountCategoryMoreColumn = {
+  id: 'more',
+  cell: AccountCategoryMoreColumnCell,
+  size: 33,
+};
+
 export const accountCategoriesColumns: ColumnDef<IAccountCategory>[] = [
+  accountCategoryMoreColumn,
+  RecordTable.checkboxColumn as ColumnDef<IAccountCategory>,
   {
     id: 'name',
     accessorKey: 'name',
@@ -134,28 +161,4 @@ const AccountCategoryParentCell = ({
       hideChevron
     />
   );
-};
-
-const AccountCategoryMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<IAccountCategory, unknown>;
-}) => {
-  const [, setOpen] = useQueryState('accountCategoryId');
-  const setAccountCategoryDetail = useSetAtom(accountCategoryDetailAtom);
-  return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setAccountCategoryDetail(cell.row.original);
-        setOpen(cell.row.original._id);
-      }}
-    />
-  );
-};
-
-export const accountCategoryMoreColumn = {
-  id: 'more',
-  cell: AccountCategoryMoreColumnCell,
-  size: 33,
 };

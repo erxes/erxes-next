@@ -7,12 +7,7 @@ import {
 import { companyColumns } from '@/contacts/companies/components/CompanyColumns';
 
 export const CompaniesRecordTable = () => {
-  const { companies, handleFetchMore, loading, pageInfo } = useCompanies({
-    variables: {
-      perPage: COMPANIES_PER_PAGE,
-      page: 1,
-    },
-  });
+  const { companies, handleFetchMore, loading, pageInfo } = useCompanies();
 
   const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
     pageInfo || {};

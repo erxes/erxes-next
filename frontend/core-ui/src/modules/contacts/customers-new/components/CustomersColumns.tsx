@@ -170,6 +170,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           tagType="core:customer"
           mode="multiple"
           value={selectedTags}
+          targetIds={[cell.row.original._id]}
           onValueChange={(tags) => {
             if (Array.isArray(tags)) {
               setSelectedTags(tags);

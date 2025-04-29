@@ -1,7 +1,6 @@
 import { IconBox, IconSettings } from '@tabler/icons-react';
 
-import { Button, PluginHeader, FilterDropdown } from 'erxes-ui';
-import { filters } from './ProductsFilter';
+import { Button, PluginHeader } from 'erxes-ui';
 import { AddProductForm } from '../add-products/components/AddProductForm';
 
 export const ProductsHeader = () => {
@@ -12,11 +11,8 @@ export const ProductsHeader = () => {
           <IconSettings className="w-4 h-4" />
           Go to settings
         </Button>
-        <FilterDropdown filters={filters} />
-
         <AddProductForm />
       </PluginHeader>
-      {/* <FilterBarWithHook filters={filters} /> */}
     </>
   );
 };

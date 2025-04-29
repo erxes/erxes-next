@@ -5,7 +5,7 @@ import { ContactsPath } from '@/types/paths/ContactsPath';
 
 const CustomersIndexPage = lazy(() =>
   import('~/pages/contacts/CustomersIndexPage').then((module) => ({
-    default: module.ContactsIndexPage,
+    default: module.CustomersIndexPage,
   })),
 );
 
