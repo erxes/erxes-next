@@ -1,6 +1,6 @@
-import { AccountsTable } from '@/account/components/AccountsTable';
-import { EditAccount } from '@/account/components/EditAccount';
-import { AccountsFilterBar } from '@/account/components/AccountsFilterBar';
+import { AccountsTable } from '@/settings/account/components/AccountsTable';
+import { EditAccount } from '@/settings/account/components/EditAccount';
+import { AccountsFilterBar } from '@/settings/account/components/AccountsFilterBar';
 
 export const AccountPage = () => {
   return (

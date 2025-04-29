@@ -1,13 +1,13 @@
 import { ICommonFieldProps } from '../types/AddTransaction';
 import { CurrencyValueInput, Form, Input, Select } from 'erxes-ui';
-import { SelectAccount } from '@/account/components/SelectAccount';
-import { JOURNAL_LABELS } from '../../../account/constants/journalLabel';
+import { SelectAccount } from '@/settings/account/components/SelectAccount';
+import { JOURNAL_LABELS } from '@/settings/account/constants/journalLabel';
 import {
   AssignMultipleMembers,
   SelectBranch,
   SelectDepartment,
 } from 'ui-modules';
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 
 export const AccountField = ({
   form,

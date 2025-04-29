@@ -1,5 +1,5 @@
-import { AccountCategoriesTable } from '@/account/account-categories/components/AccountCategoriesTable';
-import { EditAccountCategory } from '@/account/account-categories/components/EditAccountsCategory';
+import { AccountCategoriesTable } from '@/settings/account/account-categories/components/AccountCategoriesTable';
+import { EditAccountCategory } from '@/settings/account/account-categories/components/EditAccountsCategory';
 
 export const AccountCategoriesPage = () => {
   return (
