@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Cell, ColumnDef } from '@tanstack/table-core';
 import { useIntegrations } from '../hooks/useIntegrations';
 import { IBrand, IIntegrationColumnDef } from '../types/integration';
-import { Badge, Button, RecordTable, Table } from 'erxes-ui';
+import { Badge, Button, RecordTable } from 'erxes-ui';
+
 import {
   IconArchive,
   IconEdit,
@@ -81,9 +82,7 @@ export const integrationKindColumns: ColumnDef<IIntegrationColumnDef>[] = [
       if (status) {
         return (
           <div className="px-2 py-1 flex items-center justify-center">
-            <Badge className="text-xs" colorSeed="#0596691A">
-              {'Active'}
-            </Badge>
+            <Badge className="text-xs">{'Active'}</Badge>
           </div>
         );
       } else
@@ -108,9 +107,7 @@ export const integrationKindColumns: ColumnDef<IIntegrationColumnDef>[] = [
       if (status === 'healthy') {
         return (
           <div className="px-2 py-1">
-            <Badge className="text-xs" colorSeed="hsl(158, 94%, 31%)">
-              {'Healthy'}
-            </Badge>
+            <Badge className="text-xs">{'Healthy'}</Badge>
           </div>
         );
       } else
@@ -139,7 +136,10 @@ export const integrationKindColumns: ColumnDef<IIntegrationColumnDef>[] = [
           <Button variant={'outline'}>
             <IconEdit size={12} />
           </Button>
-          <Button variant={'outline'} className='text-destructive bg-destructive/10'>
+          <Button
+            variant={'outline'}
+            className="text-destructive bg-destructive/10"
+          >
             <IconTrash size={12} />
           </Button>
         </div>
