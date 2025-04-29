@@ -13,7 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "erxes-api-shared": "workspace:^",
+    "fbgraph": "^1.4.4",
     "moment-timezone": "^0.5.48",
+    "mongoose": "^8.14.0",
     "underscore": "^1.13.7"
   }
 }
