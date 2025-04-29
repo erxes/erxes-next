@@ -8,10 +8,13 @@ import {
   loadCourseCategoryClass,
   ICourseCategoryModel,
 } from '@/courses/db/models/Categories';
+import { IClassModel, loadClassesClass } from '@/class/db/models/Classes';
+import { IClassDocument } from '@/class/@types/classes';
 
 export interface IModels {
   Courses: ICourseModel;
   CourseCategories: ICourseCategoryModel;
+  Classes: IClassModel;
 }
 
 export interface IContext extends IMainContext {
@@ -30,6 +33,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     ICourseCategoryDocument,
     ICourseCategoryModel
   >('course_categories', loadCourseCategoryClass(models));
+
+  models.Classes = db.model<IClassDocument, IClassModel>(
+    'course_classes',
+    loadClassesClass(models),
+  );
 
   return models;
 };

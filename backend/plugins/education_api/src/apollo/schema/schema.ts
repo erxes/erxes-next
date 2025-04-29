@@ -7,6 +7,11 @@ import {
   queries as CoursesQueries,
   types as CoursesTypes,
 } from '@/courses/graphql/schemas/courses';
+import {
+  mutations as ClassMutations,
+  queries as ClassQueries,
+  types as ClassTypes,
+} from '@/class/graphql/schemas/class';
 
 export const types = `
   scalar JSON
@@ -26,14 +31,17 @@ export const types = `
   ${graphqlAttachmentType}
   ${graphqlAttachmentInput}
   ${CoursesTypes}
+  ${ClassTypes}
 `;
 
 export const queries = `
   ${CoursesQueries}
+  ${ClassQueries}
 `;
 
 export const mutations = `
   ${CoursesMutations}
+  ${ClassMutations}
 `;
 
 export default { types, queries, mutations };
