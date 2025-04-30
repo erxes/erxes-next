@@ -66,7 +66,7 @@ export const SelectTagsProvider = ({
           targetIds,
           type: tagType,
         },
-        ...options,
+        ...options?.(newSelectedTagIds),
       });
     }
   };

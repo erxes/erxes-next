@@ -38,5 +38,11 @@ export const CORE_MODULES: UIConfig['modules'] = [
     icon: IconShoppingCartFilled,
     path: 'products',
     hasSettings: true,
+    submenus: [
+      {
+        name: 'categories',
+        path: 'products/categories',
+      },
+    ],
   },
 ];

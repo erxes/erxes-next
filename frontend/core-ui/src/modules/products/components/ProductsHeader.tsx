@@ -1,18 +1,31 @@
-import { IconBox, IconSettings } from '@tabler/icons-react';
+import { IconCube } from '@tabler/icons-react';
 
-import { Button, PluginHeader } from 'erxes-ui';
+import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
 import { AddProductForm } from '../add-products/components/AddProductForm';
+import { Link } from 'react-router-dom';
 
 export const ProductsHeader = () => {
   return (
-    <>
-      <PluginHeader title="Products & services" icon={IconBox}>
-        <Button variant="outline" className="px-2">
-          <IconSettings className="w-4 h-4" />
-          Go to settings
-        </Button>
+    <PageHeader>
+      <PageHeader.Start>
+        <Breadcrumb>
+          <Breadcrumb.List className="gap-1">
+            <Breadcrumb.Item>
+              <Button variant="ghost" asChild>
+                <Link to="/products">
+                  <IconCube />
+                  Products & Services
+                </Link>
+              </Button>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb>
+        <Separator.Inline />
+        <PageHeader.LikeButton />
+      </PageHeader.Start>
+      <PageHeader.End>
         <AddProductForm />
-      </PluginHeader>
-    </>
+      </PageHeader.End>
+    </PageHeader>
   );
 };

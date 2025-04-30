@@ -2,7 +2,7 @@
   "$schema": "./$schema.json",
   "nav": {
     "contacts": "Contacts",
-    "contactsSub": {
+    "contacts.subMenu": {
       "leads": "Leads",
       "customers": "Customers",
       "companies": "Companies",
@@ -14,6 +14,9 @@
     "insights": "Insights",
     "plugins": "Plugins",
     "products": "Products & Services",
+    "products.subMenu": {
+      "categories": "Product Categories"
+    },
     "projects": "Projects",
     "sales": "Sales",
     "settings": "Settings",

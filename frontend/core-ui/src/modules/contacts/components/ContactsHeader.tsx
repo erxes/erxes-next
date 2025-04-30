@@ -1,19 +1,32 @@
 import { IconUsers } from '@tabler/icons-react';
-import { PluginHeader } from 'erxes-ui';
+import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
 
-import { AddCustomerForm } from '@/contacts/customers/components/AddCustomerForm';
+import { AddCustomerForm } from '@/contacts/customers-new/components/AddCustomerForm';
 import { ContactsPath } from '@/types/paths/ContactsPath';
+import { Link } from 'react-router-dom';
 
 export const ContactsHeader = () => {
   return (
     <>
-      <PluginHeader
-        title="Customers"
-        icon={IconUsers}
-        to={`/contacts/${ContactsPath.Customers}`}
-      >
-        <AddCustomerForm />
-      </PluginHeader>
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to={ContactsPath.Customers}>
+                    <IconUsers />
+                    Contacts
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
+          <PageHeader.LikeButton />
+        </PageHeader.Start>
+      </PageHeader>
+      <AddCustomerForm />
     </>
   );
 };
