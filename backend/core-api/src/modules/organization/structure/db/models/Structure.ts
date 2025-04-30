@@ -9,7 +9,8 @@ import {
 } from '../../@types/structure';
 import { IUserDocument } from 'erxes-api-shared/core-types';
 import { IModels } from '~/connectionResolvers';
-import { escapeRegExp, checkCodeDuplication } from 'erxes-api-shared/utils';
+import {  checkCodeDuplication } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils/string';
 import {
   departmentSchema,
   structureSchema,

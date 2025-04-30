@@ -55,7 +55,7 @@ export const notificationSettingsSchema = new Schema(
   { _id: false },
 );
 
-export const clientPortalUserSchema = new Schema({
+export const userSchema = new Schema({
   _id: { pkey: true },
   type: {
     type: String,
@@ -98,7 +98,7 @@ export const clientPortalUserSchema = new Schema({
     optional: true,
     label: 'Company registration number',
   },
-  clientPortalId: { type: String, required: true },
+  portalId: { type: String, required: true },
   erxesCompanyId: { type: String, optional: true },
   erxesCustomerId: { type: String, optional: true },
   phoneVerificationCode: { type: String, optional: true },
@@ -176,7 +176,7 @@ export const clientPortalUserSchema = new Schema({
   googleId: { type: String },
 });
 
-clientPortalUserSchema.index(
+userSchema.index(
   { createdAt: 1 },
   {
     expireAfterSeconds: 24 * 60 * 60,

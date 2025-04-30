@@ -1,5 +1,5 @@
 import { initTRPC } from '@trpc/server';
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils/string';
 import { z } from 'zod';
 import { ITRPCContext } from '~/init-trpc';
 

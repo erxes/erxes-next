@@ -1,4 +1,6 @@
 import { Schema } from 'mongoose';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+
 
 const stylesSchema = new Schema(
   {
@@ -61,8 +63,8 @@ const mailConfigSchema = new Schema(
   },
   { _id: false },
 );
-export const businessPortalSchema = new Schema({
-  _id: { pkey: true },
+export const portalSchema = new Schema({
+  _id: mongooseStringRandomId,
   name: { type: String },
   description: { type: String, optional: true },
   kind: {

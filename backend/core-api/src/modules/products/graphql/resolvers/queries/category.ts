@@ -1,4 +1,4 @@
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils/string';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 

@@ -5,7 +5,7 @@ import {
   ICustomField,
   IUserDocument,
 } from 'erxes-api-shared/core-types';
-import { validSearchText } from 'erxes-api-shared/utils';
+import { validSearchText } from 'erxes-api-shared/utils/string';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 

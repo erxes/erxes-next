@@ -1,13 +1,21 @@
+import { IMainContext, IUserDocument } from 'erxes-api-shared/core-types';
 import { createGenerateModels } from 'erxes-api-shared/utils';
-import { IMainContext } from 'erxes-api-shared/core-types';
-import { IcontentDocument } from '@/content/@types/content';
 
 import mongoose from 'mongoose';
 
-import { loadcontentClass, IcontentModel } from '@/content/db/models/content';
+import { IPortalDocument } from '@/portal/@types/portal';
+import { INotificationDocument } from '@/portal/@types/notification';
+import { IPortalModel, loadPortalClass } from '@/portal/db/models/Portals';
+import { IUserModel, loadUserClass } from '@/portal/db/models/Users';
+import {
+  INotificationModel,
+  loadNotificationClass,
+} from '@/portal/db/models/Notifications';
 
 export interface IModels {
-  contents: IcontentModel;
+  Portals: IPortalModel;
+  Notifications: INotificationModel;
+  Users: IUserModel;
 }
 
 export interface IContext extends IMainContext {
@@ -17,9 +25,19 @@ export interface IContext extends IMainContext {
 export const loadClasses = (db: mongoose.Connection): IModels => {
   const models = {} as IModels;
 
-  models.contents = db.model<IcontentDocument, IcontentModel>(
-    'content',
-    loadcontentClass(models),
+  models.Portals = db.model<IPortalDocument, IPortalModel>(
+    'client_portals',
+    loadPortalClass(models),
+  );
+
+  models.Notifications = db.model<INotificationDocument, INotificationModel>(
+    'client_portal_notifications',
+    loadNotificationClass(models),
+  );
+
+  models.Users = db.model<IUserDocument, IUserModel>(
+    'client_portal_users',
+    loadUserClass(models),
   );
 
   return models;

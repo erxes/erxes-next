@@ -27,7 +27,7 @@ export interface INotificationConfig {
     type?: string;
     deviceTokens?: string[];
     twoFactorDevices?: ITwoFactorDevice[];
-    clientPortalId: string;
+    portalId: string;
     erxesCustomerId?: string;
     erxesCompanyId?: string;
     createdAt?: Date;
@@ -72,4 +72,12 @@ export interface INotificationConfig {
     device: string;
     key: string;
     date: Date;
+  }
+
+  export interface IVerificationParams {
+    userId: string;
+    emailOtp?: string;
+    phoneOtp?: string;
+    password?: string;
+    twoFactor?: ITwoFactorDevice;
   }

@@ -44,7 +44,7 @@ export interface IPasswordVerificationConfig {
   smsContent: string;
 }
 
-export interface IBusinessPortal {
+export interface IPortal {
   _id?: string;
   name?: string;
   kind: 'client' | 'vendor';
@@ -147,7 +147,7 @@ interface IStyles {
   secondaryBtnColor?: string;
 }
 
-export interface IBusinessPortalDocument extends IBusinessPortal, Document {
+export interface IPortalDocument extends IPortal, Document {
   _id: string;
 }
 

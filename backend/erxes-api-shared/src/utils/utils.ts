@@ -1,5 +1,12 @@
-import stripAnsi from 'strip-ansi';
-
+/**
+ * Gets environment variable value
+ *
+ * @param {Object} options - an object that contains:
+ *   - {string} name - name of the environment variable
+ *   - {string} [defaultValue] - default value if the environment variable is not defined
+ *   - {string} [subdomain] - subdomain to replace if the environment variable contains `<subdomain>`
+ * @returns {string} value of the environment variable or default value if it is not defined
+ */
 export const getEnv = ({
   name,
   defaultValue,
@@ -22,6 +29,18 @@ export const getEnv = ({
   return value || '';
 };
 
+/**
+ * Extracts the subdomain from the request object.
+ *
+ * The function checks the request headers for 'nginx-hostname' or 'hostname',
+ * or defaults to req.hostname if neither are available. It then strips the
+ * protocol from the hostname and splits the remaining string by dots,
+ * returning the first segment as the subdomain.
+ *
+ * @param req - The request object containing headers and hostname information.
+ * @returns The subdomain extracted from the request.
+ */
+
 export const getSubdomain = (req: any): string => {
   const hostname =
     req.headers['nginx-hostname'] || req.headers.hostname || req.hostname;
@@ -29,6 +48,30 @@ export const getSubdomain = (req: any): string => {
   return subdomain;
 };
 
+/**
+ * Returns an object of cookie options for use with express' res.cookie
+ * suitable for authentication cookies.
+ *
+ * The function takes an optional object of options, and applies the
+ * following defaults:
+ * - `httpOnly: true`
+ * - `expires: 14 days from now`
+ * - `maxAge: 14 days from now in milliseconds`
+ * - `secure: true` unless the environment is 'test' or 'development'
+ * - `sameSite: undefined` unless the environment is 'test' or 'development',
+ *   in which case sameSite is removed from the options
+ *
+ * @param {object} [options] Optional object of options. Valid keys are:
+ *   - `expires`: number of milliseconds from now to expire the cookie
+ *   - `maxAge`: number of milliseconds from now to expire the cookie
+ *   - `secure`: boolean, whether the cookie should only be transmitted over
+ *     a secure channel
+ *   - `sameSite`: string, one of 'strict', 'lax', or 'none', indicating the
+ *     level of same-site protection to apply to the cookie
+ *
+ * @returns {object} An object of cookie options suitable for use with
+ *   express' res.cookie.
+ */
 export const authCookieOptions = (options: any = {}) => {
   const NODE_ENV = getEnv({ name: 'NODE_ENV' });
   const maxAge = options.expires || 14 * 24 * 60 * 60 * 1000;
@@ -50,26 +93,20 @@ export const authCookieOptions = (options: any = {}) => {
   return cookieOptions;
 };
 
-export const validSearchText = (values: string[]) => {
-  const value = values.join(' ');
-
-  if (value.length < 512) {
-    return value;
-  }
-
-  return value.substring(0, 511);
-};
-
+/**
+ * Returns the base URL for the core API, depending on the environment.
+ *
+ * In production, this is 'https://erxes.io', and in development, it is
+ * 'http://localhost:3500'.
+ *
+ * @returns {string} the base URL for the core API
+ */
 export const getCoreDomain = () => {
   const NODE_ENV = process.env.NODE_ENV;
 
   return NODE_ENV === 'production'
     ? 'https://erxes.io'
     : 'http://localhost:3500';
-};
-
-export const escapeRegExp = (str: string) => {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
 export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
@@ -83,29 +120,6 @@ export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
   return tempArray;
 };
 
-export const cleanHtml = (content?: string): string =>
-  stripAnsi(content || '').substring(0, 100);
-
-/**
- * Splits text into chunks of strings limited by the given character count.
- *
- * Regex explanation:
- * .{1,100}(\\s|$)
- * - .         → matches any character (except line terminators)
- * - {1,100}   → matches 1 to 100 of the preceding token
- * - (\\s|$)   → ends with a whitespace OR end of string
- *
- * @param str - Text to be split
- * @param size - Character length of each chunk
- * @returns An array of string chunks
- */
-export const splitStr = (str: string, size: number): string[] => {
-  const cleanStr = stripAnsi(str);
-
-  const regex = new RegExp(`.{1,${size}}(\\s|$)`, 'g');
-
-  return cleanStr.match(regex) || [];
-};
 export const fixDate = (
   value: string | number | Date,
   defaultValue: Date = new Date(),

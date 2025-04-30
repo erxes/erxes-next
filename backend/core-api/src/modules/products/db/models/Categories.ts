@@ -4,7 +4,7 @@ import {
   IProductCategory,
   IProductCategoryDocument,
 } from 'erxes-api-shared/core-types';
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils/string';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 

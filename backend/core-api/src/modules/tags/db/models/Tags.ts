@@ -1,4 +1,4 @@
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils/string';
 import { ITag, ITagDocument } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';

@@ -1,4 +1,4 @@
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils/string';
 import { IProductCategoryDocument } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
 

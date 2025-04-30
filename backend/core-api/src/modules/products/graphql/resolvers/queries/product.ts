@@ -1,5 +1,6 @@
 import { IProductDocument } from 'erxes-api-shared/core-types';
-import { cursorPaginate, escapeRegExp } from 'erxes-api-shared/utils';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils/string';
 import { FilterQuery, SortOrder } from 'mongoose';
 import { IContext, IModels } from '~/connectionResolvers';
 
