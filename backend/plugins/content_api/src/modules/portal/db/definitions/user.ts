@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
 import { USER_LOGIN_TYPES } from '../../constants';
 import { customFieldSchema } from 'erxes-api-shared/core-modules/common/db/definitions/common';
+import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
 
 export const notificationConfigSchema = new Schema(
   {
@@ -56,7 +57,7 @@ export const notificationSettingsSchema = new Schema(
 );
 
 export const userSchema = new Schema({
-  _id: { pkey: true },
+  _id: mongooseStringRandomId,
   type: {
     type: String,
     enum: USER_LOGIN_TYPES.ALL,

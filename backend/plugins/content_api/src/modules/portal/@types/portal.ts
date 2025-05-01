@@ -47,7 +47,7 @@ export interface IPasswordVerificationConfig {
 export interface IPortal {
   _id?: string;
   name?: string;
-  kind: 'client' | 'vendor';
+  kind: 'client' | 'vendor' | 'blog' | 'ecommerce' | 'helpdesk' | 'community';
   description?: string;
   logo?: string;
   icon?: string;

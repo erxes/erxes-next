@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { IAttachment} from 'erxes-api-shared/core-types/common';
+import { IModels } from '~/connectionResolvers';
 
 export interface INotificationConfig {
     notifType: string;
@@ -75,9 +76,17 @@ export interface INotificationConfig {
   }
 
   export interface IVerificationParams {
-    userId: string;
+    portalUserId: string;
     emailOtp?: string;
     phoneOtp?: string;
     password?: string;
     twoFactor?: ITwoFactorDevice;
+  }
+
+  export interface IContactsParams {
+    subdomain: string;
+    models: IModels;
+    portalId: string;
+    document: any;
+    password?: string;
   }

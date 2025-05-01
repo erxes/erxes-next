@@ -1,10 +1,7 @@
 import { Model } from 'mongoose';
-import { IModels } from '../connectionResolver';
-import {
-  commentSchema,
-  IComment,
-  ICommentDocument
-} from './definitions/comment';
+import { IModels } from '~/connectionResolvers';
+import { commentSchema } from '@/portal/db/definitions/comment';
+import { IComment, ICommentDocument } from '@/portal/@types/comment';
 
 export interface ICommentModel extends Model<ICommentDocument> {
   getComment(_id: string): Promise<ICommentDocument>;
@@ -31,7 +28,7 @@ export const loadCommentClass = (models: IModels) => {
     public static async createComment(doc: ICommentDocument) {
       return models.Comments.create({
         ...doc,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
     }
 

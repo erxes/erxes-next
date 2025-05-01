@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export interface ICPUserCard {
+export interface IUserCard {
   contentType: 'deal' | 'task' | 'ticket' | 'purchase';
   contentTypeId: string;
   portalUserId: string;
@@ -18,7 +18,7 @@ export interface ICPUserCard {
   hasVat?: boolean;
 }
 
-export interface ICPUserCardDocument extends ICPUserCard, Document {
+export interface IUserCardDocument extends IUserCard, Document {
   _id: string;
   createdAt: Date;
   modifiedAt: Date;

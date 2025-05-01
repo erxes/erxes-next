@@ -9,12 +9,36 @@ import {
 } from '@/settings/db/definitions/configs';
 
 export interface IConfigModel extends Model<IConfigDocument> {
+  /**
+   * Gets a config by its code.
+   *
+   * @param {string} code - The unique code identifier for the config.
+   * @returns {Promise<IConfigDocument>} - A promise that resolves to the config document.
+   * @throws {Error} - A config with the given code does not exist.
+   */
   getConfig(code: string): Promise<IConfigDocument>;
+  /**
+   * Creates a new config or updates an existing one based on the provided code and value.
+   *
+   * @param {Object} param - Object containing the config details.
+   * @param {string} param.code - The unique code identifier for the config.
+   * @param {string} param.value - The value associated with the config.
+   * @returns {Promise<IConfigDocument>} - A promise that resolves to the created or updated config document.
+   */
   createOrUpdateConfig({ code, value }: IConfig): Promise<IConfigDocument>;
   constants();
   getCloudflareConfigs(): Promise<any>;
 }
 
+/**
+ * Returns value of config entry as string
+ * If running on saas version, get value from environment variable instead of database
+ * @param models - models instance
+ * @param name - config name
+ * @param envKey - environment variable key
+ * @param defaultValue - default value to return if config entry or environment variable do not exist
+ * @returns {Promise<string>}
+ */
 export const getValueAsString = async (
   models: IModels,
   name: string,
@@ -38,9 +62,6 @@ export const getValueAsString = async (
 
 export const loadConfigClass = (models: IModels) => {
   class Config {
-    /*
-     * Get a Config
-     */
     public static async getConfig(code: string) {
       const config = await models.Configs.findOne({ code });
 
@@ -51,9 +72,6 @@ export const loadConfigClass = (models: IModels) => {
       return config;
     }
 
-    /**
-     * Create or update config
-     */
     public static async createOrUpdateConfig({
       code,
       value,

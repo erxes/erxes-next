@@ -1,19 +1,19 @@
-import { Model } from 'mongoose';
-import { IModels } from '../connectionResolver';
 import {
-  companySchema,
-  IClientCompany,
-  IClientCompanyDocument
-} from './definitions/clientPortalCompany';
+  IPortalCompany,
+  IPortalCompanyDocument,
+} from '@/portal/@types/company';
+import { portalCompanySchema } from '@/portal/db/definitions/company';
+import { Model } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
 
-export interface IClientCompanyModel extends Model<IClientCompanyDocument> {
-  getCompany(_id: string): Promise<IClientCompanyDocument>;
-  createOrUpdateCompany(doc: IClientCompany): Promise<IClientCompanyDocument>;
-  createCompany(doc: IClientCompany): Promise<IClientCompanyDocument>;
+export interface IPortalCompanyModel extends Model<IPortalCompanyDocument> {
+  getCompany(_id: string): Promise<IPortalCompanyDocument>;
+  createOrUpdateCompany(doc: IPortalCompany): Promise<IPortalCompanyDocument>;
+  createCompany(doc: IPortalCompany): Promise<IPortalCompanyDocument>;
   updateCompany(
     _id: string,
-    doc: IClientCompany
-  ): Promise<IClientCompanyDocument>;
+    doc: IPortalCompany,
+  ): Promise<IPortalCompanyDocument>;
   deleteCompany(_id: string): void;
 }
 
@@ -32,16 +32,16 @@ export const loadCompanyClass = (models: IModels) => {
       return clientPortalCompany;
     }
 
-    public static async createCompany(doc: IClientCompanyDocument) {
+    public static async createCompany(doc: IPortalCompanyDocument) {
       return models.Companies.create({
         ...doc,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
     }
 
     public static async updateCompany(
       _id: string,
-      doc: IClientCompanyDocument
+      doc: IPortalCompanyDocument,
     ) {
       await models.Companies.updateOne({ _id }, { $set: doc });
 
@@ -52,12 +52,12 @@ export const loadCompanyClass = (models: IModels) => {
       return models.Companies.deleteOne({ _id });
     }
 
-    public static async createOrUpdateCompany(doc: IClientCompanyDocument) {
-      const { erxesCompanyId, clientPortalId } = doc;
+    public static async createOrUpdateCompany(doc: IPortalCompanyDocument) {
+      const { erxesCompanyId, portalId } = doc;
 
       const company = await models.Companies.findOne({
         erxesCompanyId,
-        clientPortalId
+        portalId,
       });
 
       if (company) {
@@ -68,7 +68,7 @@ export const loadCompanyClass = (models: IModels) => {
     }
   }
 
-  companySchema.loadClass(Company);
+  portalCompanySchema.loadClass(Company);
 
-  return companySchema;
+  return portalCompanySchema;
 };
