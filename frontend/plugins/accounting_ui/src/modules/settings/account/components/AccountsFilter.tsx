@@ -13,7 +13,7 @@ import {
   Filter,
   SelectTree,
   useQueryState,
-  SelectCurrencyCommand,
+  CurrencyField,
   useFilterContext,
   CurrencyCode,
 } from 'erxes-ui';
@@ -129,7 +129,7 @@ export const AccountingFilterCurrency = () => {
   const { resetFilterState } = useFilterContext();
   return (
     <Filter.View filterKey="currency">
-      <SelectCurrencyCommand
+      <CurrencyField.SelectCurrencyCommand
         focusOnMount
         value={currency ?? undefined}
         onSelect={(code) => {

@@ -1,22 +1,23 @@
 import { UseFormReturn } from 'react-hook-form';
-import { CtaxFormValues, CtaxKind, CtaxStatus } from '../types/CtaxRow';
+import { TVatRowForm, VatKind, VatStatus } from '../types/VatRow';
 import {
   Button,
-  CurrencyValueInput,
+  Checkbox,
   Dialog,
   Form,
   Input,
   Select,
   Spinner,
 } from 'erxes-ui';
+import { IconX } from '@tabler/icons-react';
 
-export const CtaxForm = ({
+export const VatRowForm = ({
   form,
   onSubmit,
   loading,
 }: {
-  form: UseFormReturn<CtaxFormValues>;
-  onSubmit: (data: CtaxFormValues) => void;
+  form: UseFormReturn<TVatRowForm>;
+  onSubmit: (data: TVatRowForm) => void;
   loading: boolean;
 }) => {
   return (
@@ -27,10 +28,10 @@ export const CtaxForm = ({
       >
         <Form.Field
           control={form.control}
-          name="name"
+          name="number"
           render={({ field }) => (
-            <Form.Item className="col-span-2">
-              <Form.Label>Name</Form.Label>
+            <Form.Item>
+              <Form.Label>Number</Form.Label>
               <Form.Control>
                 <Input {...field} />
               </Form.Control>
@@ -40,10 +41,10 @@ export const CtaxForm = ({
 
         <Form.Field
           control={form.control}
-          name="number"
+          name="name"
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>Number</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control>
                 <Input {...field} />
               </Form.Control>
@@ -64,7 +65,7 @@ export const CtaxForm = ({
                   </Select.Trigger>
                 </Form.Control>
                 <Select.Content>
-                  {Object.values(CtaxKind).map((kind) => (
+                  {Object.values(VatKind).map((kind) => (
                     <Select.Item key={kind} value={kind} className="capitalize">
                       {kind}
                     </Select.Item>
@@ -81,9 +82,9 @@ export const CtaxForm = ({
             <Form.Item>
               <Form.Label>Percent</Form.Label>
               <Form.Control>
-                <Input.Number
+                <Input
                   value={field.value}
-                  onChange={(value) => field.onChange(Number(value))}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
                   min={0}
                   max={100}
                 />
@@ -105,7 +106,7 @@ export const CtaxForm = ({
                   </Select.Trigger>
                 </Form.Control>
                 <Select.Content>
-                  {Object.values(CtaxStatus).map((status) => (
+                  {Object.values(VatStatus).map((status) => (
                     <Select.Item
                       key={status}
                       value={status}
@@ -116,6 +117,38 @@ export const CtaxForm = ({
                   ))}
                 </Select.Content>
               </Select>
+            </Form.Item>
+          )}
+        />
+        <Form.Field
+          control={form.control}
+          name="tabCount"
+          render={({ field }) => (
+            <Form.Item>
+              <Form.Label>Tab Count</Form.Label>
+              <Form.Control>
+                <Input
+                  type="number"
+                  value={field.value}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  min={0}
+                />
+              </Form.Control>
+            </Form.Item>
+          )}
+        />
+        <Form.Field
+          control={form.control}
+          name="isBold"
+          render={({ field }) => (
+            <Form.Item className="col-span-2 flex items-center gap-2 space-y-0 mt-2">
+              <Form.Control>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </Form.Control>
+              <Form.Label variant="peer">Is Bold</Form.Label>
             </Form.Item>
           )}
         />
@@ -131,5 +164,36 @@ export const CtaxForm = ({
         </Dialog.Footer>
       </form>
     </Form>
+  );
+};
+
+export const VatRowDialog = ({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <Dialog.Content className="max-w-2xl">
+      <Dialog.Header>
+        <Dialog.Title>{title}</Dialog.Title>
+        <Dialog.Description className="sr-only">
+          {description}
+        </Dialog.Description>
+        <Dialog.Close asChild>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="absolute right-4 top-3"
+          >
+            <IconX />
+          </Button>
+        </Dialog.Close>
+      </Dialog.Header>
+      {children}
+    </Dialog.Content>
   );
 };

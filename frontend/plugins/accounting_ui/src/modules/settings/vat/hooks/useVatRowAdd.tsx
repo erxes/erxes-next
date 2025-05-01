@@ -4,7 +4,7 @@ import { IVatRow } from '../types/VatRow';
 import { VAT_ROW_DEFAULT_VARIABLES } from '../constants/vatRowDefaultVariables';
 import { GET_VATS } from '../graphql/queries/getVats';
 
-export const useAddVat = () => {
+export const useAddVatRow = () => {
   const [_addVat, { loading }] = useMutation(VAT_ROWS_ADD);
 
   const addVat = (options?: OperationVariables) => {

@@ -1,13 +1,12 @@
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { ICtaxRow } from '../types/CtaxRow';
-import { RecordTable, useQueryState } from 'erxes-ui';
+import { RecordTable, useQueryState, } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useCtaxRows } from '../hooks/useCtaxRows';
 import { ctaxRowDetailAtom } from '../states/ctaxRowStates';
+import { ICtaxRow } from '../types/CtaxRow';
+import { CtaxRowsCommandbar } from './CtaxRowsCommandbar';
 
-
-
-export const CTaxRowsTable = () => {
+export const CtaxRowsTable = () => {
   const { ctaxRows, loading, handleFetchMore, totalCount } = useCtaxRows();
 
   return (
@@ -20,7 +19,7 @@ export const CTaxRowsTable = () => {
           <RecordTable.Header />
           <RecordTable.Body>
             <RecordTable.RowList />
-            {!loading && totalCount > ctaxRows?.length && (
+            {!loading && (totalCount ?? 0) > (ctaxRows?.length ?? 0) && (
               <RecordTable.RowSkeleton
                 rows={4}
                 handleInView={handleFetchMore}
@@ -29,6 +28,7 @@ export const CTaxRowsTable = () => {
           </RecordTable.Body>
         </RecordTable>
       </RecordTable.Scroll>
+      <CtaxRowsCommandbar />
     </RecordTable.Provider>
   );
 };
@@ -39,12 +39,12 @@ export const CtaxRowMoreColumnCell = ({
   cell: Cell<ICtaxRow, unknown>;
 }) => {
   const [, setOpen] = useQueryState('ctax_row_id');
-  const setVatRowDetail = useSetAtom(ctaxRowDetailAtom);
+  const setCtaxRowDetail = useSetAtom(ctaxRowDetailAtom);
   return (
     <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
-        setVatRowDetail(cell.row.original);
+        setCtaxRowDetail(cell.row.original);
         setOpen(cell.row.original._id);
       }}
     />
@@ -104,11 +104,7 @@ export const ctaxRowsColumns: ColumnDef<ICtaxRow>[] = [
   },
 ];
 
-export const CtaxMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<ICtaxRow, unknown>;
-}) => {
+export const CtaxMoreColumnCell = ({ cell }: { cell: Cell<ICtaxRow, unknown> }) => {
   return <RecordTable.MoreButton />;
 };
 

@@ -10,7 +10,7 @@ import {
 import {
   CurrencyCode,
   Filter,
-  SelectCurrency,
+  CurrencyField,
   useMultiQueryState,
   useQueryState,
 } from 'erxes-ui';
@@ -99,7 +99,7 @@ const FilterBarCurrency = () => {
         <IconCoins />
         Currency
       </Filter.BarName>
-      <SelectCurrency
+      <CurrencyField.SelectCurrency
         value={currency ?? undefined}
         onChange={(value) => setCurrency(value)}
         variant="ghost"

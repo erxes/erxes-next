@@ -6,7 +6,7 @@ import {
   InlineCellDisplay,
   ITextFieldContainerProps,
   RecordTable,
-  SelectCurrency,
+  CurrencyField,
   TextField,
   useQueryState,
 } from 'erxes-ui';
@@ -67,7 +67,7 @@ const AccountTextField = ({
 const AccountCurrencyCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
   const { editAccount } = useAccountEdit();
   return (
-    <SelectCurrency
+    <CurrencyField.SelectCurrency
       value={cell.getValue() as CurrencyCode}
       variant="ghost"
       className="w-full focus-visible:relative focus-visible:z-10 font-normal"

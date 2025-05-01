@@ -1,6 +1,6 @@
-import { Checkbox, CurrencyValueInput, Form, Input } from 'erxes-ui';
+import { Checkbox, CurrencyField, Form, Input } from 'erxes-ui';
 import { ITransactionGroupForm } from '../types/AddTransaction';
-import { SelectVat } from '@/settings/vat/components/SelectVat';
+import { SelectVat } from '@/settings/vat/components/SelectVatRow';
 import { useWatch } from 'react-hook-form';
 
 export const VatForm = ({
@@ -101,7 +101,7 @@ export const VatAmountField = ({
       render={({ field }) => (
         <Form.Item>
           <Form.Label>VAT amount</Form.Label>
-          <CurrencyValueInput
+          <CurrencyField.ValueInput
             value={field.value}
             onChange={field.onChange}
             disabled={!handleVat}
