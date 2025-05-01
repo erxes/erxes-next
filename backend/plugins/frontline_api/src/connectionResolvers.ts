@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { IChannelDocument } from '@/inbox/@types/channels';
 import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { IConversationDocument } from '@/inbox/@types/conversations';
+import { IFacebookAccountDocument } from '@/integrations/facebook/@types/accounts';
 import { IChannelModel, loadChannelClass } from '@/inbox/db/models/Channels';
 import {
   IIntegrationModel,
@@ -13,10 +14,14 @@ import {
   IConversationModel,
   loadClass as loadConversationClass,
 } from '~/modules/inbox/db/models/Conversations';
+import { IFacebookAccountModel, loadFacebookAccountClass } from '@/integrations/facebook/db/models/Accounts';
+
+
 export interface IModels {
+  Channels: IChannelModel;
   Integrations: IIntegrationModel;
   Conversations: IConversationModel;
-  Channels: IChannelModel;
+  FacebookAccounts: IFacebookAccountModel;
 }
 
 export interface IContext extends IMainContext {
@@ -41,6 +46,10 @@ export const loadClasses = (
   models.Conversations = db.model<IConversationDocument, IConversationModel>(
     'conversations',
     loadConversationClass(models, subdomain),
+  );
+   models.FacebookAccounts = db.model<IFacebookAccountDocument, IFacebookAccountModel>(
+    'facebook_accounts',
+    loadFacebookAccountClass(models)
   );
   return models;
 };

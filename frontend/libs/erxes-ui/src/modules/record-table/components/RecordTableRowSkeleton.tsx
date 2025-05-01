@@ -43,9 +43,9 @@ const SkeletonRow = React.forwardRef<
   React.HTMLAttributes<HTMLTableRowElement> & {
     columnCount: number;
   }
->(({ columnCount, ...props }, ref) => {
+>(({ columnCount, className, ...props }, ref) => {
   return (
-    <Table.Row ref={ref} className="h-8" {...props}>
+    <Table.Row ref={ref} className={cn('h-cell', className)} {...props}>
       {Array.from({ length: columnCount }).map((_, index) => (
         <Table.Cell key={index} className={cn('border-r-0 px-2')}>
           <Skeleton className="h-4 w-full min-w-4" />

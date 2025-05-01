@@ -1,4 +1,4 @@
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 import { ITransactionGroupForm } from '../../add-transaction/types/AddTransaction';
 import { useFieldArray } from 'react-hook-form';
 import { useState } from 'react';

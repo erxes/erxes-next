@@ -93,6 +93,7 @@ export const SelectCategoryItem = ({
 
   return (
     <SelectTree.Item
+      _id={_id}
       order={order}
       hasChildren={hasChildren}
       name={name}
@@ -146,6 +147,7 @@ export const SelectCategoryTrigger = React.forwardRef<
   return (
     <Combobox.Trigger ref={ref} className={className} {...props}>
       <SelectCategoryBadge category={selectedCategory} />
+      {!selectedCategory && <Combobox.Value placeholder="Select category" />}
       {loading && (
         <>
           <Skeleton className="w-4 h-4" />

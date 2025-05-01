@@ -45,11 +45,7 @@ export const RecordTableDnDProvider = ({
       setColumnOrder((columnOrder) => {
         const oldIndex = columnOrder.indexOf(active.id as string);
         const newIndex = columnOrder.indexOf(over.id as string);
-        return arrayMove(
-          columnOrder,
-          oldIndex,
-          newIndex === columnOrder.length - 1 ? newIndex - 1 : newIndex,
-        ); //this is just a splice util
+        return arrayMove(columnOrder, oldIndex, newIndex);
       });
     }
   }

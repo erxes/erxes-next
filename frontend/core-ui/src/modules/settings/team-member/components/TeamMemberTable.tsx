@@ -1,4 +1,4 @@
-import { RecordTable } from 'erxes-ui/modules/record-table';
+import { RecordTable } from 'erxes-ui';
 import { Skeleton } from 'erxes-ui';
 import {
   USERS_PER_PAGE,

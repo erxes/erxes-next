@@ -12,7 +12,7 @@ import {
   TMainSettings,
 } from '../constants/mainSettingsSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SelectAccount } from '@/account/components/SelectAccount';
+import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { useMainConfigs } from '../hooks/useMainConfigs';
 import { useEffect } from 'react';
 import { useUpdateConfig } from '../hooks/useUpdateConfig';

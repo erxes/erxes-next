@@ -32,7 +32,7 @@ const TableBody = React.forwardRef<
   <tbody
     ref={ref}
     className={cn(
-      '[&_tr:last-child]:border-0 border overflow-hidden border-collapse rounded-lg',
+      '[&_tr:last-child]:border-0 border border-collapse rounded-lg',
       className,
     )}
     {...props}
@@ -55,7 +55,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      '[&>td]:border-b [&>td:first-child]:border-l transition-colors group/table-row hover:bg-muted overflow-hidden',
+      '[&>td]:border-b [&>td:first-child]:border-l transition-colors group/table-row hover:bg-muted',
       className,
     )}
     {...props}

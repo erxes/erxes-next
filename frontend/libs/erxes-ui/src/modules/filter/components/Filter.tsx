@@ -9,7 +9,11 @@ import {
   Input,
   Popover,
 } from 'erxes-ui/components';
-import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react';
+import {
+  IconAdjustmentsHorizontal,
+  IconChevronRight,
+  IconX,
+} from '@tabler/icons-react';
 import { useQueryState, useRemoveQueryStateByKey } from 'erxes-ui/hooks';
 import { Except } from 'type-fest';
 import { cn } from 'erxes-ui/lib';
@@ -61,13 +65,20 @@ const FilterProvider = ({
 
 const FilterTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentPropsWithoutRef<typeof Button>
->((props, ref) => {
+  React.ComponentPropsWithoutRef<typeof Button> & {
+    isFiltered?: boolean;
+  }
+>(({ isFiltered, ...props }, ref) => {
   return (
     <Popover.Trigger asChild>
-      <Button ref={ref} variant="outline" {...props}>
+      <Button
+        ref={ref}
+        variant="ghost"
+        size={isFiltered ? 'icon' : 'default'}
+        {...props}
+      >
         <IconAdjustmentsHorizontal className="w-4 h-4" />
-        Filter
+        {!isFiltered && 'Filter'}
       </Button>
     </Popover.Trigger>
   );
@@ -124,6 +135,7 @@ const FilterItem = React.forwardRef<
       {...props}
     >
       {children}
+      <IconChevronRight className="w-4 h-4 ml-auto" />
     </Command.Item>
   );
 });
@@ -161,7 +173,7 @@ const FilterBar = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'flex-none bg-sidebar p-3 border-b flex gap-3 items-center',
+        'flex-none bg-sidebar p-3 border-b flex gap-3 items-center h-11',
         className,
       )}
       {...props}

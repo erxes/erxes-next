@@ -2,7 +2,7 @@ import { IconBell, IconLogout, IconSelector } from '@tabler/icons-react';
 import { currentUserState } from 'ui-modules';
 import { Avatar, DropdownMenu, Sidebar, useIsMobile } from 'erxes-ui';
 
-import { readFile } from 'erxes-ui/utils/core';
+import { readFile } from 'erxes-ui';
 
 import { SelectLanguages } from './SelectLanguages';
 import { ThemeSelector } from './ThemeSelector';

@@ -1,27 +1,32 @@
 import { IconUsers } from '@tabler/icons-react';
-import { PluginHeader } from 'erxes-ui';
+import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
 
-import { ContactsFilter } from './ContactsFilter';
-import { contactsFilters } from './filters';
-
-import { AddCustomerForm } from '@/contacts/add-contacts/AddCustomerForm';
-import { ContactDateFilterDialog } from '@/contacts/contacts-filter/components/ContactDateFilter';
-import { FilterDropdown } from 'erxes-ui';
+import { AddCustomerForm } from '@/contacts/customers-new/components/AddCustomerForm';
 import { ContactsPath } from '@/types/paths/ContactsPath';
+import { Link } from 'react-router-dom';
 
 export const ContactsHeader = () => {
   return (
     <>
-      <PluginHeader
-        title="Contacts"
-        icon={IconUsers}
-        to={`/contacts/${ContactsPath.Customers}`}
-      >
-        <FilterDropdown filters={contactsFilters} />
-        <AddCustomerForm />
-      </PluginHeader>
-      <ContactsFilter />
-      <ContactDateFilterDialog />
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to={ContactsPath.Customers}>
+                    <IconUsers />
+                    Contacts
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
+          <PageHeader.LikeButton />
+        </PageHeader.Start>
+      </PageHeader>
+      <AddCustomerForm />
     </>
   );
 };

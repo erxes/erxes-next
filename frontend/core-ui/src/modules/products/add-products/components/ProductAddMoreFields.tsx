@@ -40,22 +40,6 @@ export const ProductAddMoreFields = ({
       />
       <Form.Field
         control={form.control}
-        name="shortName"
-        render={({ field }) => (
-          <Form.Item className="flex flex-col mb-5">
-            <Form.Label>SHORT NAME</Form.Label>
-            <div className="flex flex-col">
-              <Form.Control>
-                <Input className="rounded-md h-8" {...field} />
-              </Form.Control>
-              <Form.Message className="text-destructive" />
-            </div>
-          </Form.Item>
-        )}
-      />
-
-      <Form.Field
-        control={form.control}
         name="barcodes"
         render={({ field }) => (
           <Form.Item className="flex flex-col mb-5">
@@ -140,7 +124,7 @@ export const ProductAddMoreFields = ({
                   size="sm"
                   variant="secondary"
                   type="button"
-                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed text-muted-foreground"
                 >
                   <IconUpload />
                   <span className="font-medium text-sm">Primary upload</span>
@@ -164,7 +148,7 @@ export const ProductAddMoreFields = ({
                   size="sm"
                   variant="secondary"
                   type="button"
-                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed text-muted-foreground"
                 >
                   <IconUpload />
                   <span className="font-medium text-sm">Secondary upload</span>

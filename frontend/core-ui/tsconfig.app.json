@@ -21,5 +21,10 @@
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx"
   ],
-  "include": ["src/**/*", "public", "../libs/erxes-ui/src/**/*"]
+  "include": [
+    "src/**/*",
+    "public",
+    "../libs/erxes-ui/src/**/*",
+    "../libs/ui-modules/src/**/*"
+  ]
 }
