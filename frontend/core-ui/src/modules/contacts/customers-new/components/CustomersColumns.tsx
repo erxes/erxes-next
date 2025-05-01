@@ -12,13 +12,14 @@ import {
   TextOverflowTooltip,
   EmailListField,
   RelativeDateDisplay,
-  toast,
+  PhoneListField,
   useToast,
 } from 'erxes-ui';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
+import { EmailDisplay, PhoneDisplay } from 'erxes-ui/modules/display';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -64,7 +65,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           <RecordTableCellTrigger>
             {firstName} {lastName}
           </RecordTableCellTrigger>
-          <RecordTableCellContent className="min-w-72">
+          <RecordTableCellContent className="w-72 ">
             <FullNameField>
               <FullNameField.FirstName value={firstName} />
               <FullNameField.LastName value={lastName} />
@@ -82,27 +83,53 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     cell: ({ cell }) => {
       const { primaryEmail, _id, emailValidationStatus, emails } =
         cell.row.original;
+
       const { customersEdit } = useCustomersEdit();
       const { toast } = useToast();
+      const _emails = [
+        ...(primaryEmail
+          ? [
+              {
+                email: primaryEmail,
+                status: emailValidationStatus as 'verified' | 'unverified',
+                isPrimary: true,
+              },
+            ]
+          : []),
+        ...(emails || []).map((email) => ({
+          email,
+          status: 'unverified' as 'verified' | 'unverified',
+        })),
+      ].filter(
+        (email, index, self) =>
+          index === self.findIndex((t) => t.email === email.email),
+      );
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <TextOverflowTooltip value={primaryEmail} />
+            <EmailDisplay emails={_emails} />
           </RecordTableCellTrigger>
-          <RecordTableCellContent className="min-w-72">
+          <RecordTableCellContent className="w-72">
             <EmailListField
               recordId={_id}
-              onValueChange={(emails) => {
-                console.log(emails);
+              onValueChange={(newEmails) => {
+                const primaryEmail = newEmails.find((email) => email.isPrimary);
+                let newEmailValidationStatus = undefined;
+                if (
+                  primaryEmail?.status !==
+                  (emailValidationStatus as 'verified' | 'unverified')
+                ) {
+                  newEmailValidationStatus = primaryEmail?.status;
+                }
                 customersEdit(
                   {
                     variables: {
                       _id,
-                      primaryEmail: emails.find((email) => email.isPrimary)
-                        ?.email,
-                      emails: emails
+                      primaryEmail: primaryEmail?.email || null,
+                      emails: newEmails
                         .filter((email) => !email.isPrimary)
                         .map((email) => email.email),
+                      emailValidationStatus: newEmailValidationStatus,
                     },
                     onError: (e: ApolloError) => {
                       toast({
@@ -111,26 +138,10 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                       });
                     },
                   },
-                  ['primaryEmail', 'emails'],
+                  ['primaryEmail', 'emails', 'emailValidationStatus'],
                 );
               }}
-              emails={[
-                ...(primaryEmail
-                  ? [
-                      {
-                        email: primaryEmail,
-                        status: emailValidationStatus as
-                          | 'verified'
-                          | 'unverified',
-                        isPrimary: true,
-                      },
-                    ]
-                  : []),
-                ...(emails || []).map((email) => ({
-                  email,
-                  status: 'unverified' as 'verified' | 'unverified',
-                })),
-              ]}
+              emails={_emails}
             />
           </RecordTableCellContent>
         </RecordTablePopover>
@@ -142,14 +153,66 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'primaryPhone',
     header: () => <RecordTable.InlineHead label="Phones" />,
     cell: ({ cell }) => {
-      const { primaryPhone } = cell.row.original;
+      const {
+        _id,
+        primaryPhone,
+        phones: _phones,
+        phoneValidationStatus,
+      } = cell.row.original;
+      const { customersEdit } = useCustomersEdit();
+      const { toast } = useToast();
+      const phones = [
+        ...(primaryPhone
+          ? [
+              {
+                phone: primaryPhone,
+                status: phoneValidationStatus as 'verified' | 'unverified',
+                isPrimary: true,
+              },
+            ]
+          : []),
+        ...(_phones || []).map((_phone) => ({
+          phone: _phone,
+          status: 'unverified' as 'verified' | 'unverified',
+        })),
+      ].filter(
+        (phone, index, self) =>
+          index === self.findIndex((t) => t.phone === phone.phone),
+      );
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <TextOverflowTooltip value={primaryPhone} />
+            <PhoneDisplay phones={phones} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={primaryPhone} />
+            <PhoneListField
+              recordId={_id}
+              phones={phones}
+              onValueChange={(newPhones) => {
+                customersEdit(
+                  {
+                    variables: {
+                      _id,
+                      primaryPhone:
+                        newPhones.find((phone) => phone.isPrimary)?.phone ||
+                        null,
+                      phones: newPhones.map((phone) => ({
+                        phone: phone.phone,
+                        status: phone.status,
+                        isPrimary: phone.isPrimary,
+                      })),
+                    },
+                    onError: (e: ApolloError) => {
+                      toast({
+                        title: 'Error',
+                        description: e.message,
+                      });
+                    },
+                  },
+                  ['primaryPhone', 'phones'],
+                );
+              }}
+            />
           </RecordTableCellContent>
         </RecordTablePopover>
       );

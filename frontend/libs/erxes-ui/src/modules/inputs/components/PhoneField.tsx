@@ -8,6 +8,7 @@ import {
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
+import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 import {
   Button,
   DropdownMenu,
@@ -18,75 +19,75 @@ import {
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
-  emailsFamilyState,
-  showEmailInputFamilyState,
-  editingEmailFamilyState,
-} from '../states/emailFieldStates';
+  phonesFamilyState,
+  showPhoneInputFamilyState,
+  editingPhoneFamilyState,
+} from '../states/phoneFieldStates';
 import { useEffect, useRef } from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
-import { useEmailFields } from '../hooks/useEmailFields';
-import { EmailFieldsContext } from '../contexts/EmailFieldsContext';
-import { emailSchema } from '../validations/emailValidation';
+import { usePhoneFields } from '../hooks/usePhoneFields';
+import { PhoneFieldsContext } from '../contexts/PhoneFieldsContext';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { emailSchema } from '../validations/emailValidation';
 
-export interface IEmailField {
-  email?: string;
+export interface IPhoneField {
+  phone?: string;
   status?: 'verified' | 'unverified';
   isPrimary?: boolean;
 }
 
-export type TEmails = IEmailField[];
+export type TPhones = IPhoneField[];
 
-export const EmailFieldsProvider = ({
+export const PhoneFieldsProvider = ({
   children,
   recordId,
   onValueChange,
 }: {
   children: React.ReactNode;
   recordId: string;
-  onValueChange: (emails: TEmails) => void;
+  onValueChange: (phones: TPhones) => void;
 }) => {
   return (
-    <EmailFieldsContext.Provider value={{ recordId, onValueChange }}>
+    <PhoneFieldsContext.Provider value={{ recordId, onValueChange }}>
       {children}
-    </EmailFieldsContext.Provider>
+    </PhoneFieldsContext.Provider>
   );
 };
 
-export const EmailListField = ({
+export const PhoneListField = ({
   recordId,
-  emails,
+  phones,
   onValueChange,
 }: {
   recordId: string;
-  emails: TEmails;
-  onValueChange: (emails: TEmails) => void;
+  phones: TPhones;
+  onValueChange: (phones: TPhones) => void;
 }) => {
-  const setEmails = useSetAtom(emailsFamilyState(recordId));
-  const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
+  const setPhones = useSetAtom(phonesFamilyState(recordId));
+  const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
   useEffect(() => {
-    setEmails(emails);
+    setPhones(phones);
     return () => {
-      setShowEmailInput(false);
+      setShowPhoneInput(false);
     };
-  }, [emails, setEmails]);
+  }, [phones, setPhones]);
 
   return (
-    <EmailFieldsProvider recordId={recordId} onValueChange={onValueChange}>
+    <PhoneFieldsProvider recordId={recordId} onValueChange={onValueChange}>
       <div className="p-1 space-y-1">
-        <EmailList />
+        <PhoneList />
       </div>
-      <EmailForm />
-    </EmailFieldsProvider>
+      <PhoneForm />
+    </PhoneFieldsProvider>
   );
 };
 
-const EmailList = () => {
-  const { recordId } = useEmailFields();
-  const emails = useAtomValue(emailsFamilyState(recordId));
+const PhoneList = () => {
+  const { recordId } = usePhoneFields();
+  const phones = useAtomValue(phonesFamilyState(recordId));
   const [animationParent] = useAutoAnimate();
   const mounted = useRef(false);
 
@@ -95,15 +96,15 @@ const EmailList = () => {
   }, []);
   return (
     <div ref={mounted.current ? animationParent : null} className="space-y-1">
-      {emails.map(
-        (email) =>
-          email.email && (
+      {phones.map(
+        (phone) =>
+          phone.phone && (
             <div
               className="flex items-center overflow-hidden gap-1 w-full"
-              key={email.email}
+              key={phone.phone}
             >
-              <EmailField {...email} />
-              <EmailOptions {...email} />
+              <PhoneField {...phone} />
+              <PhoneOptions {...phone} />
             </div>
           ),
       )}
@@ -111,7 +112,7 @@ const EmailList = () => {
   );
 };
 
-const EmailField = ({ email, status, isPrimary }: IEmailField) => {
+const PhoneField = ({ phone, status, isPrimary }: IPhoneField) => {
   return (
     <Button
       variant="secondary"
@@ -126,39 +127,39 @@ const EmailField = ({ email, status, isPrimary }: IEmailField) => {
       ) : (
         <IconCircleDashed className="text-muted-foreground" />
       )}
-      <TextOverflowTooltip value={email} />
+      <TextOverflowTooltip value={phone} />
       {isPrimary && <IconBookmarkFilled className="text-primary" />}
     </Button>
   );
 };
 
-const EmailOptions = ({
-  email,
+const PhoneOptions = ({
+  phone,
   status,
   isPrimary,
-}: IEmailField & { isPrimary?: boolean }) => {
-  const { recordId, onValueChange } = useEmailFields();
-  const [emails, setEmails] = useAtom(emailsFamilyState(recordId));
-  const setEditingEmail = useSetAtom(editingEmailFamilyState(recordId));
-  const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
-  const handleSetPrimaryEmail = () => {
+}: IPhoneField & { isPrimary?: boolean }) => {
+  const { recordId, onValueChange } = usePhoneFields();
+  const [phones, setPhones] = useAtom(phonesFamilyState(recordId));
+  const setEditingPhone = useSetAtom(editingPhoneFamilyState(recordId));
+  const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+  const handleSetPrimaryPhone = () => {
     if (isPrimary) return;
     onValueChange?.([
-      { email, status, isPrimary: true },
-      ...(emails || [])
-        .filter((e) => e.email !== email)
+      { phone, status, isPrimary: true },
+      ...(phones || [])
+        .filter((e) => e.phone !== phone)
         .map((e) => ({ ...e, isPrimary: false })),
     ]);
   };
   const handleEditClick = () => {
-    setShowEmailInput(true);
-    setEditingEmail(email || null);
+    setShowPhoneInput(true);
+    setEditingPhone(phone || null);
   };
 
   const handleVerificationChange = (value: string) => {
     onValueChange?.(
-      emails.map((e) => {
-        if (e.email === email) {
+      phones.map((e) => {
+        if (e.phone === phone) {
           return { ...e, status: value as 'verified' | 'unverified' };
         }
         return e;
@@ -166,9 +167,7 @@ const EmailOptions = ({
     );
   };
   const handleDeleteClick = () => {
-    onValueChange?.(
-      emails.filter((e) => e.email !== email),
-    );
+    onValueChange?.(phones.filter((e) => e.phone !== phone));
   };
   return (
     <DropdownMenu>
@@ -188,13 +187,13 @@ const EmailOptions = ({
         alignOffset={-4}
         align="start"
       >
-        <DropdownMenu.Item onClick={handleSetPrimaryEmail}>
+        <DropdownMenu.Item onClick={handleSetPrimaryPhone}>
           {isPrimary ? (
             <IconBookmarkFilled className="text-primary" />
           ) : (
             <IconBookmark />
           )}
-          {isPrimary ? 'Primary email' : 'Set as primary email'}
+          {isPrimary ? 'Primary phone' : 'Set as primary phone'}
         </DropdownMenu.Item>
         <DropdownMenu.Item onClick={handleEditClick}>
           <IconEdit />
@@ -217,7 +216,10 @@ const EmailOptions = ({
           </>
         )}
         <DropdownMenu.Separator />
-        <DropdownMenu.Item className="text-destructive" onClick={handleDeleteClick}>
+        <DropdownMenu.Item
+          className="text-destructive"
+          onClick={handleDeleteClick}
+        >
           <IconTrash />
           Delete
         </DropdownMenu.Item>
@@ -226,60 +228,60 @@ const EmailOptions = ({
   );
 };
 
-const EmailForm = () => {
-  const { recordId } = useEmailFields();
-  const emails = useAtomValue(emailsFamilyState(recordId));
-  const [editingEmail, setEditingEmail] = useAtom(
-    editingEmailFamilyState(recordId),
+const PhoneForm = () => {
+  const { recordId } = usePhoneFields();
+  const phones = useAtomValue(phonesFamilyState(recordId));
+  const [editingPhone, setEditingPhone] = useAtom(
+    editingPhoneFamilyState(recordId),
   );
-  const { onValueChange } = useEmailFields();
+  const { onValueChange } = usePhoneFields();
   const form = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
       email: '',
     },
   });
-  const [showEmailInput, setShowEmailInput] = useAtom(
-    showEmailInputFamilyState(recordId),
+  const [showPhoneInput, setShowPhoneInput] = useAtom(
+    showPhoneInputFamilyState(recordId),
   );
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (!showEmailInput) return;
+    if (!showPhoneInput) return;
     setTimeout(() => {
       inputRef.current?.focus();
     }, 180);
-    if (editingEmail) {
-      form.setValue('email', editingEmail);
+    if (editingPhone) {
+      form.setValue('email', editingPhone);
     }
-  }, [showEmailInput, editingEmail]);
+  }, [showPhoneInput, editingPhone]);
 
   useEffect(() => {
-    if (emails.filter((email) => !!email.email).length === 0) {
-      setShowEmailInput(true);
+    if (phones.filter((phone) => !!phone.phone).length === 0) {
+      setShowPhoneInput(true);
       setTimeout(() => {
         inputRef.current?.focus();
       });
     } else {
-      setShowEmailInput(false);
+      setShowPhoneInput(false);
     }
-  }, [emails, setShowEmailInput]);
-  const onEmailEdit = (newEmail: string, prevEmail: string) => {
+  }, [phones, setShowPhoneInput]);
+  const onPhoneEdit = (newPhone: string, prevPhone: string) => {
     onValueChange?.(
-      emails.map((emailItem) =>
-        emailItem.email === prevEmail
-          ? { ...emailItem, email: newEmail }
-          : emailItem,
+      phones.map((phoneItem) =>
+        phoneItem.phone === prevPhone
+          ? { ...phoneItem, phone: newPhone }
+          : phoneItem,
       ),
     );
     form.reset();
-    setEditingEmail(null);
+    setEditingPhone(null);
   };
-  const onEmailAdd = (email: string) => {
-    if (emails.length === 0) {
-      onValueChange?.([{ email, status: 'unverified', isPrimary: true }]);
+  const onPhoneAdd = (phone: string) => {
+    if (phones.length === 0) {
+      onValueChange?.([{ phone, status: 'unverified', isPrimary: true }]);
     } else {
-      onValueChange?.([...emails, { email, status: 'unverified' }]);
+      onValueChange?.([...phones, { phone, status: 'unverified' }]);
     }
     form.reset();
   };
@@ -288,22 +290,21 @@ const EmailForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(({ email }) => {
-          if (!!editingEmail) {
-            onEmailEdit(email, editingEmail);
+          if (!!editingPhone) {
+            onPhoneEdit(email, editingPhone);
           } else {
-            onEmailAdd(email);
+            onPhoneAdd(email);
           }
         })}
       >
-        {showEmailInput && (
+        {showPhoneInput && (
           <Form.Field
             name="email"
             control={form.control}
             render={({ field }) => (
               <div className="px-1 pb-1">
-                <Input
-                  placeholder={!!editingEmail ? 'Edit email' : 'Add email'}
-                  variant="secondary"
+                <PhoneInput
+                  placeholder={!!editingPhone ? 'Edit phone' : 'Add phone'}
                   className={cn(
                     form.formState.errors.email &&
                       'focus-visible:shadow-destructive',
@@ -325,14 +326,14 @@ const EmailForm = () => {
             className="w-full"
             type="submit"
             onClick={(e) => {
-              if (!showEmailInput) {
+              if (!showPhoneInput) {
                 e.preventDefault();
               }
-              setShowEmailInput(true);
+              setShowPhoneInput(true);
             }}
           >
             <IconPlus />
-            {!!editingEmail ? 'Edit email' : 'Add email'}
+            {!!editingPhone ? 'Edit phone' : 'Add phone'}
           </Button>
         </div>
       </form>

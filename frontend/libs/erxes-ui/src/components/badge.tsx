@@ -49,6 +49,8 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
               onClose();
             }}
             className="size-3.5 p-0 hover:bg-transparent"
+            asChild
+            
           >
             <IconX className="size-3.5" />
           </Button>
