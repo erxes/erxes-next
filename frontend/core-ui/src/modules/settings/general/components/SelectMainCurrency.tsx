@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { TGeneralSettingsProps } from '../types';
-import { CurrencyCode, Form, SelectCurrency } from 'erxes-ui';
+import { CurrencyCode, Form, CurrencyField } from 'erxes-ui';
 
 export function SelectMainCurrency() {
   const form = useFormContext<TGeneralSettingsProps>();
@@ -12,7 +12,7 @@ export function SelectMainCurrency() {
         <Form.Item>
           <Form.Label>Main currency</Form.Label>
           <Form.Control>
-            <SelectCurrency
+            <CurrencyField.SelectCurrency
               value={field.value as CurrencyCode}
               onChange={(value) => field.onChange(value)}
               className="w-full"

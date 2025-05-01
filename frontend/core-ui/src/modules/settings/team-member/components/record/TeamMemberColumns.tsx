@@ -28,7 +28,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         display={() => (
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
-            <Avatar.Fallback colorSeed={cell.row.original._id}>
+            <Avatar.Fallback>
               {cell.row.original.details.firstName?.charAt(0) ||
                 cell.row.original.details.lastName?.charAt(0) ||
                 cell.row.original.email?.charAt(0)}
