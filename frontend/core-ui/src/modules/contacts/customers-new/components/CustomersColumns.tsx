@@ -30,13 +30,13 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => {
-      const { firstName, lastName, primaryEmail, _id, primaryPhone } =
+      const { firstName, lastName, primaryEmail, primaryPhone } =
         cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
-            <Avatar.Fallback colorSeed={_id}>
+            <Avatar.Fallback>
               {firstName?.charAt(0) ||
                 lastName?.charAt(0) ||
                 primaryEmail?.charAt(0) ||
