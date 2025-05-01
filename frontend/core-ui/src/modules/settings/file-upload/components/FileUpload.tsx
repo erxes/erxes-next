@@ -49,7 +49,9 @@ const FileUpload = () => {
   };
 
   useEffect(() => {
-    if (configs !== undefined) {
+    if (configs === undefined) {
+      form.reset();
+    } else {
       const values = configs.reduce((acc: any, config: any) => {
         acc[config.code] = config.value;
         return acc;

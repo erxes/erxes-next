@@ -93,6 +93,7 @@ export const SelectCategoryItem = ({
 
   return (
     <SelectTree.Item
+      _id={_id}
       order={order}
       hasChildren={hasChildren}
       name={name}

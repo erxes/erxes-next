@@ -34,7 +34,7 @@ export const Default: Story = {
         <Accordion.Content>
           Yes. It&apos;s animated by default, but you can disable it if you
           prefer.
-        </Accordion.Content>
+      </Accordion.Content>
       </Accordion.Item>
     </Accordion>
   ),

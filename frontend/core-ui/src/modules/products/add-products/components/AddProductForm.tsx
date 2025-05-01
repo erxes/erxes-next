@@ -28,7 +28,7 @@ export function AddProductForm() {
       code: '',
       categoryId: '',
       vendorId: '',
-      type: '',
+      type: 'product',
       uom: '',
       shortName: '',
       attachment: null,
@@ -76,7 +76,7 @@ export function AddProductForm() {
         >
           <ScrollArea className="flex-auto">
             <ProductAddSheetHeader />
-            <div className="px-5">
+            <div className="p-5">
               <ProductAddCoreFields form={form} />
               <ProductAddCollapsible>
                 <ProductAddMoreFields form={form} />

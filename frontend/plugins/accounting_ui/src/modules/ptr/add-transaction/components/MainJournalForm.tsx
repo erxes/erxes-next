@@ -10,7 +10,7 @@ import {
   DepartmentField,
 } from './GeneralFormFields';
 import { SIDES } from '../contants/journalSides';
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 
 export const MainJournalForm = ({
   form,

@@ -3,3 +3,4 @@ export * from './components/EllipsisDisplay';
 export * from './components/RelativeDateDisplay';
 export * from './components/PhoneDisplay';
 export * from './components/EmailDIsplay';
+export * from './components/CurrencyDisplay';

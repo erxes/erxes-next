@@ -114,6 +114,12 @@ export const customerSchema = new Schema(
     },
     links: { type: Object, default: {}, label: 'Links' },
     code: { type: String, label: 'Code', optional: true },
+    tagIds: {
+      type: [String],
+      optional: true,
+      index: true,
+      label: 'Tags',
+    },
   },
   {
     timestamps: {

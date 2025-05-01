@@ -15,33 +15,30 @@ import {
   PhoneListField,
   useToast,
 } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
+import { useCustomersEdit } from '@/contacts/customers-new/customer-edit/hooks/useCustomerEdit';
 import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
 import { EmailDisplay, PhoneDisplay } from 'erxes-ui/modules/display';
+import { customerMoreColumn } from './CustomerMoreColumn';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
 export const customersColumns: ColumnDef<ICustomer>[] = [
-  {
-    id: 'more',
-    cell: ({ row }) => <RecordTable.MoreButton />,
-    size: 34,
-  },
+  customerMoreColumn as ColumnDef<ICustomer>,
   checkBoxColumn,
   {
     id: 'avatar',
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => {
-      const { firstName, lastName, primaryEmail, _id, primaryPhone } =
+      const { firstName, lastName, primaryEmail, primaryPhone } =
         cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
-            <Avatar.Fallback colorSeed={_id}>
+            <Avatar.Fallback>
               {firstName?.charAt(0) ||
                 lastName?.charAt(0) ||
                 primaryEmail?.charAt(0) ||

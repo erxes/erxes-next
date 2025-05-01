@@ -117,12 +117,21 @@ export const MainNavigationButton = ({
 }) => {
   const Icon = icon;
   const activePathname = useLocation().pathname;
-  const isActive = activePathname.includes(
-    pathPrefix ? pathPrefix + pathname : pathname,
-  );
+
+  const isActive =
+    activePathname ===
+    (pathPrefix ? pathPrefix + '/' + pathname : '/' + pathname);
 
   return (
-    <Sidebar.MenuButton asChild isActive={isActive}>
+    <Sidebar.MenuButton
+      asChild
+      isActive={isActive}
+      className={cn(
+        activePathname.includes(
+          pathPrefix ? pathPrefix + pathname : pathname,
+        ) && 'bg-muted',
+      )}
+    >
       <Link to={pathPrefix ? pathPrefix + pathname : pathname}>
         <Icon
           className={cn('text-accent-foreground', isActive && 'text-primary')}

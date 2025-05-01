@@ -1,6 +1,6 @@
 import { Checkbox, CurrencyValueInput, Form, Input } from 'erxes-ui';
 import { ITransactionGroupForm } from '../types/AddTransaction';
-import { SelectVat } from '@/vat/components/SelectVat';
+import { SelectVat } from '@/settings/vat/components/SelectVat';
 import { useWatch } from 'react-hook-form';
 
 export const VatForm = ({

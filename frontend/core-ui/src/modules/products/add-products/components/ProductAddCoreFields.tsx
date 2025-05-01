@@ -6,7 +6,7 @@ import {
   IconStar,
 } from '@tabler/icons-react';
 
-import { Form, Input, Select, CurrencyInput, CurrencyCode } from 'erxes-ui';
+import { Form, Input, Select, CurrencyField } from 'erxes-ui';
 import { ProductFormValues } from './formSchema';
 import { useUom } from '@/products/hooks/useUom';
 import { SelectCategory } from '../../product-category/components/SelectCategory';
@@ -33,9 +33,9 @@ export const ProductAddCoreFields = ({
           <Form.Item>
             <Form.Label>NAME</Form.Label>
             <Form.Control>
-              <Input className="rounded-md h-8" {...field} />
+              <Input {...field} />
             </Form.Control>
-            <Form.Message className="text-destructive" />
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -45,12 +45,10 @@ export const ProductAddCoreFields = ({
         render={({ field }) => (
           <Form.Item>
             <Form.Label>CODE</Form.Label>
-            <div className="flex flex-col">
-              <Form.Control>
-                <Input className="rounded-md h-8" {...field} />
-              </Form.Control>
-              <Form.Message className="text-destructive" />
-            </div>
+            <Form.Control>
+              <Input {...field} />
+            </Form.Control>
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -78,7 +76,7 @@ export const ProductAddCoreFields = ({
                 ))}
               </Select.Content>
             </Select>
-            <Form.Message className="text-destructive" />
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -89,14 +87,13 @@ export const ProductAddCoreFields = ({
           <Form.Item className="flex flex-col">
             <Form.Label>UNIT PRICE</Form.Label>
             <Form.Control>
-              <CurrencyInput
-                currencyCode={CurrencyCode.USD}
+              <CurrencyField.ValueInput
                 value={field.value}
                 onChange={(value) => field.onChange(value)}
               />
             </Form.Control>
 
-            <Form.Message className="text-destructive" />
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -104,7 +101,7 @@ export const ProductAddCoreFields = ({
         control={form.control}
         name="categoryId"
         render={({ field }) => (
-          <Form.Item className="flex flex-col">
+          <Form.Item>
             <Form.Label>CATEGORY</Form.Label>
             <Form.Control>
               <SelectCategory
@@ -112,7 +109,20 @@ export const ProductAddCoreFields = ({
                 onSelect={field.onChange}
               />
             </Form.Control>
-            <Form.Message className="text-destructive" />
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+      <Form.Field
+        control={form.control}
+        name="shortName"
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label>SHORT NAME</Form.Label>
+            <Form.Control>
+              <Input {...field} />
+            </Form.Control>
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -120,7 +130,7 @@ export const ProductAddCoreFields = ({
         control={form.control}
         name="type"
         render={({ field }) => (
-          <Form.Item className="flex flex-col">
+          <Form.Item>
             <Form.Label>TYPE</Form.Label>
             <Select onValueChange={field.onChange} value={field.value}>
               <Form.Control>
@@ -138,7 +148,7 @@ export const ProductAddCoreFields = ({
                 ))}
               </Select.Content>
             </Select>
-            <Form.Message className="text-destructive" />
+            <Form.Message />
           </Form.Item>
         )}
       />

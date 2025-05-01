@@ -20,18 +20,15 @@ export const ProductAddSheet = ({
           Add product
         </Button>
       </Sheet.Trigger>
-      <Sheet.Content className="sm:max-w-lg p-0">{children}</Sheet.Content>
+      <Sheet.View className="sm:max-w-lg p-0">{children}</Sheet.View>
     </Sheet>
   );
 };
 
 export const ProductAddSheetHeader = () => {
   return (
-    <Sheet.Header className="p-5">
-      <Sheet.Title>Create new product or service</Sheet.Title>
-      <Sheet.Description>
-        Create and configure your products & services
-      </Sheet.Description>
+    <Sheet.Header className="border-b gap-3">
+      <Sheet.Title>Create product</Sheet.Title> <Sheet.Close />
     </Sheet.Header>
   );
 };

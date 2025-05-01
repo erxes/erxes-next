@@ -3,10 +3,7 @@ import * as React from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { cva, VariantProps } from 'class-variance-authority';
 
-import { stringToHslColor } from '../utils/colors';
 import { cn } from '../lib/utils';
-import { useAtomValue } from 'jotai';
-import { themeState } from 'erxes-ui/state';
 
 export const avatarVariants = cva(
   'relative flex shrink-0 overflow-hidden rounded-full border-0',
@@ -57,31 +54,15 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
-    colorSeed?: string;
-  }
->(({ className, color, colorSeed, style, ...props }, ref) => {
-  const theme = useAtomValue(themeState);
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+>(({ className, color, style, ...props }, ref) => {
   return (
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        'flex h-full w-full items-center justify-center rounded-full  bg-[--avatar-bg] text-[--avatar-text] uppercase',
+        'flex h-full w-full items-center justify-center rounded-full uppercase bg-muted text-muted',
         className,
       )}
-      style={
-        {
-          '--avatar-bg':
-            theme === 'dark'
-              ? stringToHslColor(colorSeed ?? '', 75, 20)
-              : stringToHslColor(colorSeed ?? '', 75, 90),
-          '--avatar-text':
-            theme === 'dark'
-              ? stringToHslColor(colorSeed ?? '', 75, 90)
-              : stringToHslColor(colorSeed ?? '', 75, 20),
-          ...style,
-        } as React.CSSProperties
-      }
       {...props}
     />
   );

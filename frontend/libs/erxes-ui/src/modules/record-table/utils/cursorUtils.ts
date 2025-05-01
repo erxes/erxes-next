@@ -28,6 +28,7 @@ export const mergeCursorData = ({
   const prevList = prevResult.list || [];
 
   return {
+    ...fetchMoreResult,
     list: isForward ? [...prevList, ...fetchList] : [...fetchList, ...prevList],
     pageInfo: {
       endCursor: isForward ? fetchPageInfo.endCursor : prevPageInfo.endCursor,

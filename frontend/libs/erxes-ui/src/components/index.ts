@@ -25,7 +25,6 @@ export * from './radio-group';
 export * from './resizable';
 export * from './scroll-area';
 export * from './select';
-export * from './select-currency';
 export * from './separator';
 export * from './sheet';
 export * from './sidebar';

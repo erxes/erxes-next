@@ -1,4 +1,4 @@
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 import {
   ITransactionGroupForm,
   TInventoryProduct,

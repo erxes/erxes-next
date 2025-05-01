@@ -1,6 +1,6 @@
 import { DropdownMenu } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 
 export const AddTransaction = ({
   inForm,

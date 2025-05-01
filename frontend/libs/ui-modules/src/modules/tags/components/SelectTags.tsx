@@ -1,10 +1,4 @@
-import {
-  Combobox,
-  Command,
-  Popover,
-  SelectTree,
-  TextOverflowTooltip,
-} from 'erxes-ui';
+import { Combobox, Command, SelectTree, TextOverflowTooltip } from 'erxes-ui';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
 import React, { useState } from 'react';
@@ -66,7 +60,7 @@ export const SelectTagsProvider = ({
           targetIds,
           type: tagType,
         },
-        ...options,
+        ...options?.(newSelectedTagIds),
       });
     }
   };

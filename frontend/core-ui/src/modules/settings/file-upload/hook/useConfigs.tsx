@@ -6,6 +6,7 @@ import {
   fileSettingsMutations,
   fileSettingsQueries,
 } from '@/settings/file-upload/graphql';
+import React from 'react';
 
 const useConfig = () => {
   const { toast } = useToast();
@@ -47,7 +48,7 @@ const useConfig = () => {
     });
   };
 
-  const configs = data?.configs || [];
+  const configs = data?.configs || undefined;
 
   return {
     configs,

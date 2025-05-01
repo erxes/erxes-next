@@ -1,5 +1,37 @@
 import { gql } from '@apollo/client';
 
+const GET_USER = gql`
+  query userDetail($_id: String) {
+    userDetail(_id: $_id) {
+      _id
+      username
+      email
+      status
+      isActive
+      groupIds
+      brandIds
+      score
+      positionIds
+      details {
+        avatar
+        fullName
+        shortName
+        birthDate
+        position
+        workStartedDate
+        location
+        description
+        operatorPhone
+        firstName
+        middleName
+        lastName
+      }
+      links
+      employeeId
+    }
+  }
+`;
+
 const GET_USERS_QUERY = gql`
   query users(
     $page: Int
@@ -190,6 +222,7 @@ const queries = {
   GET_USERS_QUERY,
   GET_SEGMENTS_QUERY,
   GET_USER_COUNT_BY_OPTION_QUERY,
+  GET_USER,
 };
 
 export default queries;
