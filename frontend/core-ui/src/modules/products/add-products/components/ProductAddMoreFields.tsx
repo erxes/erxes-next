@@ -40,22 +40,6 @@ export const ProductAddMoreFields = ({
       />
       <Form.Field
         control={form.control}
-        name="shortName"
-        render={({ field }) => (
-          <Form.Item className="flex flex-col mb-5">
-            <Form.Label>SHORT NAME</Form.Label>
-            <div className="flex flex-col">
-              <Form.Control>
-                <Input className="rounded-md h-8" {...field} />
-              </Form.Control>
-              <Form.Message className="text-destructive" />
-            </div>
-          </Form.Item>
-        )}
-      />
-
-      <Form.Field
-        control={form.control}
         name="barcodes"
         render={({ field }) => (
           <Form.Item className="flex flex-col mb-5">

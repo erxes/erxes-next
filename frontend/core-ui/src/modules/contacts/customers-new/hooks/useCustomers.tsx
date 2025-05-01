@@ -1,6 +1,6 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 
-import { GET_CUSTOMERS } from '@/contacts/customers/graphql/queries/getCustomers';
+import { GET_CUSTOMERS } from '@/contacts/customers-new/graphql/queries/getCustomers';
 import { ICustomer } from '@/contacts/types/customerType';
 import {
   IRecordTableCursorPageInfo,
@@ -9,7 +9,8 @@ import {
   validateFetchMore,
   EnumCursorDirection,
 } from 'erxes-ui';
-import { CUSTOMERS_PER_PAGE } from '@/contacts/customers-new/constants/customersPerPage';
+
+const CUSTOMERS_PER_PAGE = 20;
 
 export const useCustomers = (options?: QueryHookOptions) => {
   const { cursor, setCursor } = useRecordTableCursor({

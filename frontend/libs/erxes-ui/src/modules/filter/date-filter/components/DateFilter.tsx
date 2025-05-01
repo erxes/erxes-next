@@ -166,7 +166,7 @@ const DateFilterRadioGroup = ({
         {getYearsArray(7, 5).map((year) =>
           items ? (
             <div className="flex flex-col gap-3" key={year}>
-              <legend className="font-semibold text-[13px] leading-none">
+              <legend className="font-semibold text-sm leading-none">
                 {year}
               </legend>
               <div

@@ -1,16 +1,9 @@
 import { RecordTable } from 'erxes-ui';
 import { useCustomers } from '@/contacts/customers-new/hooks/useCustomers';
-import { CUSTOMERS_PER_PAGE } from '@/contacts/customers-new/constants/customersPerPage';
 import { customersColumns } from './CustomersColumns';
 
 export const CustomersRecordTable = () => {
-  const { customers, handleFetchMore, loading, pageInfo } = useCustomers({
-    variables: {
-      perPage: CUSTOMERS_PER_PAGE,
-      page: 1,
-      type: 'customer',
-    },
-  });
+  const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
   const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
     pageInfo || {};
 

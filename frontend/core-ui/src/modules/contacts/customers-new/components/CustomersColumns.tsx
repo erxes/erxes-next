@@ -12,22 +12,18 @@ import {
   TextOverflowTooltip,
   EmailListField,
   RelativeDateDisplay,
-  toast,
   useToast,
 } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
+import { useCustomersEdit } from '@/contacts/customers-new/customer-edit/hooks/useCustomerEdit';
 import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
+import { customerMoreColumn } from './CustomerMoreColumn';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
 export const customersColumns: ColumnDef<ICustomer>[] = [
-  {
-    id: 'more',
-    cell: ({ row }) => <RecordTable.MoreButton />,
-    size: 34,
-  },
+  customerMoreColumn as ColumnDef<ICustomer>,
   checkBoxColumn,
   {
     id: 'avatar',

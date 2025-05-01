@@ -1,4 +1,4 @@
-import { OperationVariables } from '@apollo/client';
+import { MutationHookOptions, OperationVariables } from '@apollo/client';
 
 export interface ITag {
   _id: string;
@@ -15,7 +15,15 @@ export type ISelectTagsProviderProps = {
   onValueChange?: (tags?: string[] | string) => void;
   mode?: 'single' | 'multiple';
   children: React.ReactNode;
-  options?: OperationVariables;
+  options?: (newSelectedTagIds: string[]) => MutationHookOptions<
+    {
+      tags: {
+        totalCount: number;
+        list: ITag[];
+      };
+    },
+    OperationVariables
+  >;
 };
 
 export interface ISelectTagsContext {

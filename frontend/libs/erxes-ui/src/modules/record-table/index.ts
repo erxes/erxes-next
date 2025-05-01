@@ -43,3 +43,4 @@ export * from './types/RecordTableCursorTypes';
 export * from './hooks/useRecordTableCursor';
 export * from './utils/cursorUtils';
 export * from './components/RecordTableCellInline';
+export * from './components/RecordTableTree';

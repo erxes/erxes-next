@@ -87,7 +87,9 @@ export function SidebarNavigationItem({
                       className="w-full"
                     >
                       <Link to={submenu.path}>
-                        <span>{t('nav.contactsSub.' + submenu.name)}</span>
+                        <span>
+                          {t(`nav.${pathWithoutUi}.subMenu.${submenu.name}`)}
+                        </span>
                       </Link>
                     </Sidebar.SubButton>
                   </Sidebar.SubItem>

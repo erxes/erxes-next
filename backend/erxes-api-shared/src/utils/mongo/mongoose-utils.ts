@@ -1,4 +1,3 @@
-import { ICursorPaginateParams } from '@/core-types';
 import mongoose, { Document, Model, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
 
@@ -60,8 +59,8 @@ interface CursorPaginateResult<T> {
   pageInfo: {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
-    startCursor: string | null;
-    endCursor: string | null;
+    startCursor: string | undefined;
+    endCursor: string | undefined;
   };
   totalCount: number;
 }
@@ -77,12 +76,37 @@ const PAGINATE_DIRECTION_MAP = {
   forward: {
     operator: '$gt',
     order: 1,
+    reverseOrder: -1,
   },
   backward: {
     operator: '$lt',
     order: -1,
+    reverseOrder: 1,
   },
 } as const;
+
+export const getPaginationInfo = (
+  direction: 'forward' | 'backward',
+  hasCursor: boolean,
+  hasMore: boolean,
+) => {
+  const hasNextPage = direction === 'backward' ? true : hasMore;
+
+  let hasPreviousPage = false;
+
+  if (hasCursor) {
+    if (direction === 'backward') {
+      hasPreviousPage = hasMore;
+    } else {
+      hasPreviousPage = true;
+    }
+  }
+
+  return {
+    hasNextPage,
+    hasPreviousPage,
+  };
+};
 
 export const cursorPaginate = async <T extends Document>({
   model,
@@ -105,10 +129,11 @@ export const cursorPaginate = async <T extends Document>({
   }
 
   const { operator, order } = PAGINATE_DIRECTION_MAP[direction];
+
   const baseQuery: mongoose.FilterQuery<T> = { ...query };
 
   if (cursor) {
-    baseQuery._id = { [operator]: cursor } as any;
+    baseQuery._id = { [operator]: cursor };
   }
 
   const _limit = Number(limit);
@@ -123,21 +148,73 @@ export const cursorPaginate = async <T extends Document>({
       model.countDocuments(query),
     ]);
 
-    const hasNextPage = documents.length > limit;
-    const trimmedDocuments = hasNextPage ? documents.slice(0, -1) : documents;
-    const finalDocuments =
-      direction === 'backward' ? trimmedDocuments.reverse() : trimmedDocuments;
+    const hasMore = documents.length > limit;
+
+    if (hasMore) {
+      documents.pop();
+    }
+
+    if (direction === 'backward') {
+      documents.reverse();
+    }
+
+    if (documents.length === 0 && cursor) {
+      const { reverseOrder } = PAGINATE_DIRECTION_MAP[direction];
+
+      const edgeDoc = await model
+        .findOne(query)
+        .sort({ [sortField]: reverseOrder as SortOrder })
+        .select({ [sortField]: 1 })
+        .lean();
+
+      if (
+        edgeDoc &&
+        edgeDoc[sortField as keyof T]?.toString() === cursor.toString()
+      ) {
+        const edgeDocs = await model
+          .find(query)
+          .sort({ [sortField]: reverseOrder as SortOrder })
+          .limit(limit)
+          .lean<T[]>();
+
+        if (direction === 'forward') {
+          edgeDocs.reverse();
+        }
+
+        const { hasNextPage, hasPreviousPage } = getPaginationInfo(
+          direction,
+          Boolean(cursor),
+          false,
+        );
+
+        return {
+          list: edgeDocs,
+          pageInfo: {
+            hasNextPage,
+            hasPreviousPage,
+            startCursor: edgeDocs[0]?._id?.toString(),
+            endCursor: edgeDocs[edgeDocs.length - 1]?._id?.toString(),
+          },
+          totalCount,
+        };
+      }
+    }
+
+    const { hasNextPage, hasPreviousPage } = getPaginationInfo(
+      direction,
+      Boolean(cursor),
+      hasMore,
+    );
 
     const pageInfo = {
       hasNextPage,
-      hasPreviousPage: Boolean(cursor),
-      startCursor: finalDocuments[0]?._id?.toString() || null,
-      endCursor:
-        finalDocuments[finalDocuments.length - 1]?._id?.toString() || null,
+      hasPreviousPage,
+      startCursor: documents[0]?._id?.toString(),
+      endCursor: documents[documents.length - 1]?._id?.toString(),
     };
 
     return {
-      list: finalDocuments,
+      list: documents,
       pageInfo,
       totalCount,
     };
