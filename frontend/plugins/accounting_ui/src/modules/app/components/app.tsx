@@ -3,13 +3,13 @@ import { Route, Routes } from 'react-router';
 import { Spinner } from 'erxes-ui';
 
 const PtrList = lazy(() =>
-  import('~/pages/PtrListPage').then((module) => ({
+  import('~/pages/TransactionListPage').then((module) => ({
     default: module.PtrListPage,
   })),
 );
 
 const TransactionPage = lazy(() =>
-  import('~/pages/TransactionPage').then((module) => ({
+  import('~/pages/TransactionFormPage').then((module) => ({
     default: module.TransactionPage,
   })),
 );

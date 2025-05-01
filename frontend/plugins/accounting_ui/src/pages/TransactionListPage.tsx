@@ -1,13 +1,17 @@
-import { PtrRecordTable } from '@/ptr/components/PtrRecordTable';
-import { AddTransaction } from '@/ptr/components/AddTransaction';
+import { PtrRecordTable } from '@/transactions/components/PtrRecordTable';
+import { AddTransaction } from '@/transactions/components/AddTransaction';
 import { AccountingHeader } from '@/layout/components/Header';
 import { AccountingLayout } from '@/layout/components/Layout';
 import { Button } from 'erxes-ui';
 import { IconPlus } from '@tabler/icons-react';
+import { TransactionsFilterBar } from '@/transactions/components/FilterBar';
+import { TransactionsFilter } from '@/transactions/components/Filter';
+
 export const PtrListPage = () => {
   return (
     <AccountingLayout>
       <AccountingHeader>
+        <TransactionsFilter />
         <AddTransaction>
           <Button>
             <IconPlus />
@@ -15,6 +19,7 @@ export const PtrListPage = () => {
           </Button>
         </AddTransaction>
       </AccountingHeader>
+      <TransactionsFilterBar />
       <div className="flex-1 px-3">
         <PtrRecordTable />
       </div>

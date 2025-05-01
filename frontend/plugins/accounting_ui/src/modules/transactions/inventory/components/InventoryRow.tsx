@@ -1,4 +1,4 @@
-import { TInventoryProduct } from '../../add-transaction/types/AddTransaction';
+import { TInventoryProduct } from '../../transactionForm/types/AddTransaction';
 import { Table, cn, Form } from 'erxes-ui';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { SelectProduct } from 'ui-modules';

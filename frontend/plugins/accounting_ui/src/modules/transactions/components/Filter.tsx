@@ -17,11 +17,12 @@ import {
   useFilterContext,
   CurrencyCode,
 } from 'erxes-ui';
-import { SelectAccountCommand } from '../account-categories/components/SelectAccountCategory';
-import { AccountsKindCommand } from './AccountsKind';
-import { AccountsJournalCommand } from './AccountsJournal';
+import { SelectAccountCommand } from '@/settings/account/account-categories/components/SelectAccountCategory';
+import { AccountsJournalCommand } from '@/settings/account/components/AccountsJournal';
+import { AccountsKindCommand } from '@/settings/account/components/AccountsKind';
 
-export const AccountsFilter = () => {
+
+export const TransactionsFilter = () => {
   return (
     <>
       <Filter.Popover>

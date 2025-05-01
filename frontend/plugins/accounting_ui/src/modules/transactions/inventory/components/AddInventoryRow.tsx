@@ -1,7 +1,7 @@
 import { IconPlus } from '@tabler/icons-react';
 
 import { useWatch } from 'react-hook-form';
-import { TInventoryProduct } from '../../add-transaction/types/AddTransaction';
+import { TInventoryProduct } from '../../transactionForm/types/AddTransaction';
 
 import { Button } from 'erxes-ui/components/button';
 import { useInventoryContext } from '../hooks/useInventoryContext';

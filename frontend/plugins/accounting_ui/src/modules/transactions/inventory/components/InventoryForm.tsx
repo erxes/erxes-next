@@ -1,5 +1,5 @@
 import { JournalEnum } from '@/settings/account/types/Account';
-import { ITransactionGroupForm } from '../../add-transaction/types/AddTransaction';
+import { ITransactionGroupForm } from '../../transactionForm/types/AddTransaction';
 import { useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
 import { Table } from 'erxes-ui';
