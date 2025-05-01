@@ -69,7 +69,7 @@ export function SettingsRoutes() {
           element={<TeamMemberSettings />}
         />
         <Route
-          path={SettingsWorkspacePath.Structure}
+          path={SettingsWorkspacePath.StructureCatchAll}
           element={<StructureSettings />}
         />
 
