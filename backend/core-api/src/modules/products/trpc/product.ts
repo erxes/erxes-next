@@ -63,7 +63,10 @@ export const productTrpcRouter = t.router({
         .limit(limit || 0)
         .lean();
 
-      return products;
+      return {
+        success: true,
+        data: products,
+      };
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -72,7 +75,10 @@ export const productTrpcRouter = t.router({
 
       const product = await models.Products.findOne(query).lean();
 
-      return product;
+      return {
+        success: true,
+        data: product,
+      };
     }),
 
     createProduct: t.procedure
@@ -83,7 +89,10 @@ export const productTrpcRouter = t.router({
 
         const product = await models.Products.createProduct(doc);
 
-        return product;
+        return {
+          success: true,
+          data: product,
+        };
       }),
 
     updateProduct: t.procedure
@@ -94,7 +103,10 @@ export const productTrpcRouter = t.router({
 
         const product = await models.Products.updateProduct(_id, doc);
 
-        return product;
+        return {
+          success: true,
+          data: product,
+        };
       }),
 
     updateProducts: t.procedure
@@ -116,7 +128,10 @@ export const productTrpcRouter = t.router({
 
         const product = await models.Products.removeProducts(_ids);
 
-        return product;
+        return {
+          success: true,
+          data: product,
+        };
       }),
 
     count: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -141,7 +156,10 @@ export const productTrpcRouter = t.router({
 
       const count = await models.Products.find(query).countDocuments();
 
-      return count;
+      return {
+        success: true,
+        data: count,
+      };
     }),
   }),
 });

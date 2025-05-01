@@ -64,7 +64,11 @@ import {
   loadStructureClass,
   loadUnitClass,
 } from '@/organization/structure/db/models/Structure';
-
+import {
+  IConformityModel,
+  loadConformityClass,
+} from '@/conformities/db/models/Conformities';
+import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
 export interface IModels {
   Customers: ICustomerModel;
   Companies: ICompanyModel;
@@ -82,6 +86,7 @@ export interface IModels {
   Branches: IBranchModel;
   Positions: IPositionModel;
   Apps: IAppModel;
+  Conformities: IConformityModel;
 }
 
 export interface IContext extends IMainContext {
@@ -158,6 +163,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     loadPositionClass(models),
   );
   models.Apps = db.model<IAppDocument, IAppModel>('apps', loadAppClass(models));
+
+  models.Conformities = db.model<IConformityDocument, IConformityModel>(
+    'conformities',
+    loadConformityClass(models),
+  );
   return models;
 };
 

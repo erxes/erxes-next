@@ -15,7 +15,10 @@ export const productConfigTrpcRouter = t.router({
         defaultValue,
       );
 
-      return productConfig;
+      return {
+        success: true,
+        data: productConfig,
+      };
     }),
   }),
 });

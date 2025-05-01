@@ -12,7 +12,10 @@ export const customerRouter = t.router({
       const { query } = input;
       const { models } = ctx;
 
-      return await models.Customers.find(query).lean();
+      return {
+        success: true,
+        data: await models.Customers.find(query).lean(),
+      };
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -43,7 +46,10 @@ export const customerRouter = t.router({
         defaultFilter['_id'] = query._id;
       }
 
-      return await models.Customers.findOne(defaultFilter).lean();
+      return {
+        success: true,
+        data: await models.Customers.findOne(defaultFilter).lean(),
+      };
     }),
 
     findActiveCustomers: t.procedure
@@ -52,12 +58,15 @@ export const customerRouter = t.router({
         const { query, fields, skip, limit } = input;
         const { models } = ctx;
 
-        return await models.Customers.findActiveCustomers(
-          query,
-          fields,
-          skip,
-          limit,
-        );
+        return {
+          success: true,
+          data: await models.Customers.findActiveCustomers(
+            query,
+            fields,
+            skip,
+            limit,
+          ),
+        };
       }),
 
     getCustomerName: t.procedure
@@ -66,7 +75,10 @@ export const customerRouter = t.router({
         const { customer } = input;
         const { models } = ctx;
 
-        return models.Customers.getCustomerName(customer);
+        return {
+          success: true,
+          data: await models.Customers.getCustomerName(customer),
+        };
       }),
 
     getWidgetCustomer: t.procedure
@@ -75,14 +87,20 @@ export const customerRouter = t.router({
         const { _id } = input;
         const { models } = ctx;
 
-        return await models.Customers.getWidgetCustomer(_id);
+        return {
+          success: true,
+          data: await models.Customers.getWidgetCustomer(_id),
+        };
       }),
 
     count: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
 
-      return await models.Customers.find(query).countDocuments();
+      return {
+        success: true,
+        data: await models.Customers.find(query).countDocuments(),
+      };
     }),
 
     createCustomer: t.procedure
@@ -91,7 +109,10 @@ export const customerRouter = t.router({
         const { doc } = input;
         const { models } = ctx;
 
-        return await models.Customers.createCustomer(doc);
+        return {
+          success: true,
+          data: await models.Customers.createCustomer(doc),
+        };
       }),
 
     updateCustomer: t.procedure
@@ -100,21 +121,30 @@ export const customerRouter = t.router({
         const { _id, doc } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateCustomer(_id, doc);
+        return {
+          success: true,
+          data: await models.Customers.updateCustomer(_id, doc),
+        };
       }),
 
     updateOne: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
       const { query, doc } = input;
       const { models } = ctx;
 
-      return await models.Customers.updateOne(query, doc);
+      return {
+        success: true,
+        data: await models.Customers.updateOne(query, doc),
+      };
     }),
 
     updateMany: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
       const { query, doc } = input;
       const { models } = ctx;
 
-      return await models.Customers.updateMany(query, doc);
+      return {
+        success: true,
+        data: await models.Customers.updateMany(query, doc),
+      };
     }),
 
     removeCustomers: t.procedure
@@ -123,7 +153,10 @@ export const customerRouter = t.router({
         const { _ids } = input;
         const { models } = ctx;
 
-        return await models.Customers.removeCustomers(_ids);
+        return {
+          success: true,
+          data: await models.Customers.removeCustomers(_ids),
+        };
       }),
 
     markCustomerAsActive: t.procedure
@@ -132,19 +165,25 @@ export const customerRouter = t.router({
         const { _id } = input;
         const { models } = ctx;
 
-        return await models.Customers.markCustomerAsActive(_id);
+        return {
+          success: true,
+          data: await models.Customers.markCustomerAsActive(_id),
+        };
       }),
 
     createMessengerCustomer: t.procedure
       .input(z.any())
       .mutation(async ({ ctx, input }) => {
-        const { _id, doc, customData } = input;
+        const { doc, customData } = input;
         const { models } = ctx;
 
-        return await models.Customers.createMessengerCustomer({
-          doc,
-          customData,
-        });
+        return {
+          success: true,
+          data: await models.Customers.createMessengerCustomer({
+            doc,
+            customData,
+          }),
+        };
       }),
 
     updateMessengerCustomer: t.procedure
@@ -153,11 +192,14 @@ export const customerRouter = t.router({
         const { _id, doc, customData } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateMessengerCustomer({
-          _id,
-          doc,
-          customData,
-        });
+        return {
+          success: true,
+          data: await models.Customers.updateMessengerCustomer({
+            _id,
+            doc,
+            customData,
+          }),
+        };
       }),
 
     saveVisitorContactInfo: t.procedure
@@ -166,7 +208,10 @@ export const customerRouter = t.router({
         const { params } = input;
         const { models } = ctx;
 
-        return await models.Customers.saveVisitorContactInfo(params);
+        return {
+          success: true,
+          data: await models.Customers.saveVisitorContactInfo(params),
+        };
       }),
 
     updateLocation: t.procedure
@@ -175,7 +220,10 @@ export const customerRouter = t.router({
         const { customerId, browserInfo } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateLocation(customerId, browserInfo);
+        return {
+          success: true,
+          data: await models.Customers.updateLocation(customerId, browserInfo),
+        };
       }),
 
     updateSession: t.procedure
@@ -184,7 +232,10 @@ export const customerRouter = t.router({
         const { customerId } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateSession(customerId);
+        return {
+          success: true,
+          data: await models.Customers.updateSession(customerId),
+        };
       }),
 
     setUnsubscribed: t.procedure
@@ -200,14 +251,20 @@ export const customerRouter = t.router({
         }
 
         if (_id && status) {
-          return await models.Customers.updateOne({ _id }, { $set: update });
+          return {
+            success: true,
+            data: await models.Customers.updateOne({ _id }, { $set: update }),
+          };
         }
 
         if (customerIds.length > 0 && !status) {
-          return await models.Customers.updateMany(
-            { _id: { $in: customerIds } },
-            { $set: update },
-          );
+          return {
+            success: true,
+            data: await models.Customers.updateMany(
+              { _id: { $in: customerIds } },
+              { $set: update },
+            ),
+          };
         }
       }),
 
@@ -222,7 +279,10 @@ export const customerRouter = t.router({
           data: doc,
         });
 
-        return customer;
+        return {
+          success: true,
+          data: customer,
+        };
       }),
   }),
 });
