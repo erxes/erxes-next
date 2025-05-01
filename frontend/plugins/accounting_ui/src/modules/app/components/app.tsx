@@ -4,7 +4,7 @@ import { Spinner } from 'erxes-ui';
 
 const PtrList = lazy(() =>
   import('~/pages/TransactionListPage').then((module) => ({
-    default: module.PtrListPage,
+    default: module.TransactionListPage,
   })),
 );
 

@@ -41,9 +41,9 @@ export const TransactionsFilter = () => {
                   <IconLabelFilled />
                   Name
                 </Filter.Item>
-                <Filter.Item value="code" inDialog>
+                <Filter.Item value="accountCode" inDialog>
                   <IconHash />
-                  Code
+                  Account Code
                 </Filter.Item>
                 <Filter.Item value="category">
                   <IconLayoutGridAdd />
@@ -94,8 +94,8 @@ export const TransactionsFilter = () => {
         <Filter.View filterKey="name" inDialog>
           <Filter.DialogStringView filterKey="name" />
         </Filter.View>
-        <Filter.View filterKey="code" inDialog>
-          <Filter.DialogStringView filterKey="code" />
+        <Filter.View filterKey="accountCode" inDialog>
+          <Filter.DialogStringView filterKey="accountCode" />
         </Filter.View>
         <Filter.View filterKey="due" inDialog>
           <Filter.DialogDateView filterKey="due" />

@@ -4,20 +4,22 @@ import { AccountingHeader } from '@/layout/components/Header';
 import { AccountingLayout } from '@/layout/components/Layout';
 import { Button } from 'erxes-ui';
 import { IconPlus } from '@tabler/icons-react';
-import { TransactionsFilterBar } from '@/transactions/components/FilterBar';
-import { TransactionsFilter } from '@/transactions/components/Filter';
+import { TransactionsFilterBar } from '@/transactions/components/TrListFilterBar';
+import { TransactionsFilter } from '@/transactions/components/TrFilters';
 
-export const PtrListPage = () => {
+export const TransactionListPage = () => {
   return (
     <AccountingLayout>
       <AccountingHeader>
-        <TransactionsFilter />
-        <AddTransaction>
-          <Button>
-            <IconPlus />
-            Add Transaction
-          </Button>
-        </AddTransaction>
+        <div className="px-3">
+          <TransactionsFilter />
+          <AddTransaction>
+            <Button>
+              <IconPlus />
+              Add Transaction
+            </Button>
+          </AddTransaction>
+        </div>
       </AccountingHeader>
       <TransactionsFilterBar />
       <div className="flex-1 px-3">
