@@ -6,6 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Button } from './button';
 import { cn } from '../lib/utils';
+import { Slot } from '@radix-ui/react-slot';
 
 const SheetTrigger = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Trigger>,
