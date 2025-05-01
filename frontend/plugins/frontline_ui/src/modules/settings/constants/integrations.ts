@@ -1,5 +1,3 @@
-import { steps } from 'motion/dist/react';
-
 export const INTEGRATIONS = {
   messenger: {
     img: '/assets/messenger.webp',

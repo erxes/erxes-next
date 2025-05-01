@@ -89,7 +89,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const { status } = cell.row.original;
       return (
         <InlineCell
-          name="avatar"
+          name="status"
           className="flex items-center justify-center"
           recordId={cell.row.original._id}
           display={() => {

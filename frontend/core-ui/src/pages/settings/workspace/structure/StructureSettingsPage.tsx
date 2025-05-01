@@ -60,9 +60,9 @@ export function StructureSettingsPage() {
             <Routes>
               <Route path="/" element={<StructureMain />} />
               <Route path="branches" element={<BranchesSettings />} />
-              <Route path="/departments" element={<DepartmentsSettings />} />
-              <Route path="/units" element={<UnitsSettings />} />
-              <Route path="/positions" element={<PositionsSettings />} />
+              <Route path="departments" element={<DepartmentsSettings />} />
+              <Route path="units" element={<UnitsSettings />} />
+              <Route path="positions" element={<PositionsSettings />} />
             </Routes>
           </Suspense>
         </div>

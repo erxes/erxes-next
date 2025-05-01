@@ -36,7 +36,7 @@ export const IntegrationHeader = () => {
       <AddIntegration>
         <Button className="px-2 w-min">
           <IconPlus size={16} />
-          Add {integration.label}
+          Add {integration.label || 'Integration'}
         </Button>
       </AddIntegration>
     </div>

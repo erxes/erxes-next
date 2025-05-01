@@ -4,7 +4,7 @@ import { StructureDetailsFormT } from '../types/structure';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { STRUCTURE_DETAILS_SCHEMA } from '../schemas/structureSchema';
 
-export const useStuctureDetailsForm = () => {
+export const useStructureDetailsForm = () => {
   const methods = useForm<StructureDetailsFormT>({
     mode: 'onBlur',
     defaultValues: {

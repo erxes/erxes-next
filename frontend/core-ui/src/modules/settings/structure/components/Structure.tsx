@@ -12,7 +12,7 @@ import {
   TextField,
 } from 'erxes-ui';
 import { useStructureDetails } from '../hooks/useStructureDetails';
-import { useStuctureDetailsForm } from '../hooks/useStuctureDetailsForm';
+import { useStructureDetailsForm } from '../hooks/useStructureDetailsForm';
 import { useEffect } from 'react';
 
 export const Structure = () => {
@@ -20,29 +20,13 @@ export const Structure = () => {
   const {
     methods,
     methods: { control },
-  } = useStuctureDetailsForm();
+  } = useStructureDetailsForm();
 
   useEffect(() => {
     if (structureDetail) {
       methods.reset(structureDetail);
     }
   }, [structureDetail, methods]);
-
-  const columnHeaders = [
-    'Name',
-    'Description',
-    'Supervisor',
-    'Code',
-    'Phone numnber',
-    'Email',
-    'Longitude',
-    'Latidute',
-    'Website',
-    'Facebook',
-    'Whatsapp',
-    'Twitter',
-    'Youtube',
-  ];
 
   return (
     <ScrollArea className="w-full min-h-svh">
