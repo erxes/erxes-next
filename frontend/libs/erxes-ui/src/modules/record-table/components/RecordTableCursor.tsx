@@ -3,7 +3,10 @@ import { ScrollArea } from 'erxes-ui/components';
 import { useQueryState } from 'erxes-ui/hooks';
 import { RecordTable } from 'erxes-ui/modules';
 import { useEffect, useRef, useState } from 'react';
-import { IRecordTableCursorPageInfo } from '../types/RecordTableCursorTypes';
+import {
+  EnumCursorDirection,
+  IRecordTableCursorPageInfo,
+} from '../types/RecordTableCursorTypes';
 import { RecordTableCursorContext } from '../contexts/RecordTableCursorContext';
 import { useRecordTableCursorContext } from '../hooks/useRecordTableCursorContext';
 
@@ -70,10 +73,11 @@ export const RecordTableCursorProvider = ({
         hasPreviousPage,
       }}
     >
-      <ScrollArea.Root className="h-full w-full pb-3 pr-3">
+      <ScrollArea.Root className="h-full w-full pb-2 pr-2 relative">
         <ScrollArea.Viewport ref={scrollRef} onScroll={handleScroll}>
           <div className="min-h-screen">{children}</div>
         </ScrollArea.Viewport>
+
         <ScrollArea.Bar orientation="vertical" />
         <ScrollArea.Bar orientation="horizontal" />
       </ScrollArea.Root>
@@ -85,7 +89,7 @@ export const RecordTableBackwardSkeleton = ({
   handleFetchMore,
   startCursor,
 }: {
-  handleFetchMore: (params: { direction: 'backward' | 'forward' }) => void;
+  handleFetchMore: (params: { direction: EnumCursorDirection }) => void;
   startCursor: IRecordTableCursorPageInfo['startCursor'];
 }) => {
   const {
@@ -108,7 +112,7 @@ export const RecordTableBackwardSkeleton = ({
       backward
       handleInView={() => {
         setIsFetchBackward(true);
-        handleFetchMore({ direction: 'backward' });
+        handleFetchMore({ direction: EnumCursorDirection.BACKWARD });
         if (scrollRef.current) {
           distanceFromBottomRef.current =
             scrollRef.current.scrollHeight - scrollRef.current.scrollTop;
@@ -123,7 +127,7 @@ export const RecordTableForwardSkeleton = ({
   handleFetchMore,
   endCursor,
 }: {
-  handleFetchMore: (params: { direction: 'backward' | 'forward' }) => void;
+  handleFetchMore: (params: { direction: EnumCursorDirection }) => void;
   endCursor: IRecordTableCursorPageInfo['endCursor'];
 }) => {
   const { cursorItemIds, setCursorItemIds, hasNextPage, loading } =
@@ -134,7 +138,7 @@ export const RecordTableForwardSkeleton = ({
   }
 
   const handleInView = () => {
-    handleFetchMore({ direction: 'forward' });
+    handleFetchMore({ direction: EnumCursorDirection.FORWARD });
     setCursorItemIds([...cursorItemIds, endCursor || '']);
   };
 

@@ -12,7 +12,11 @@ import { useIsMobile } from 'erxes-ui/hooks/use-mobile';
 import { cn } from 'erxes-ui/lib/utils';
 
 import { Tooltip } from './tooltip';
-import { IconLayoutSidebar } from '@tabler/icons-react';
+import {
+  IconLayoutSidebar,
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+} from '@tabler/icons-react';
 import { Key } from 'erxes-ui/types/Key';
 import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { AppHotkeyScope } from 'erxes-ui/modules/hotkey/types/AppHotkeyScope';
@@ -193,7 +197,7 @@ const SidebarRoot = React.forwardRef<
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-          <Sheet.Content
+          <Sheet.View
             data-sidebar="sidebar"
             data-mobile="true"
             className="w-[--sidebar-width] bg-sidebar p-0 text-foreground [&>button]:hidden"
@@ -205,7 +209,7 @@ const SidebarRoot = React.forwardRef<
             side={side}
           >
             <div className="flex h-full w-full flex-col">{children}</div>
-          </Sheet.Content>
+          </Sheet.View>
         </Sheet>
       );
     }
@@ -261,7 +265,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open } = useSidebar();
 
   return (
     <Button
@@ -276,7 +280,11 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <IconLayoutSidebar />
+      {open ? (
+        <IconLayoutSidebarLeftCollapse />
+      ) : (
+        <IconLayoutSidebarLeftExpand />
+      )}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

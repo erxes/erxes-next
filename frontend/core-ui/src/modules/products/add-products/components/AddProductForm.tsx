@@ -28,7 +28,7 @@ export function AddProductForm() {
       code: '',
       categoryId: '',
       vendorId: '',
-      type: '',
+      type: 'product',
       uom: '',
       shortName: '',
       attachment: null,
@@ -44,8 +44,16 @@ export function AddProductForm() {
   });
   const { toast } = useToast();
   async function onSubmit(data: ProductFormValues) {
+    const cleanData: Record<string, any> = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value) {
+        cleanData[key] = value;
+      }
+    });
+
     productsAdd({
-      variables: data,
+      variables: cleanData,
       onError: (e: ApolloError) => {
         toast({
           title: 'Error',
@@ -68,7 +76,7 @@ export function AddProductForm() {
         >
           <ScrollArea className="flex-auto">
             <ProductAddSheetHeader />
-            <div className="px-5">
+            <div className="p-5">
               <ProductAddCoreFields form={form} />
               <ProductAddCollapsible>
                 <ProductAddMoreFields form={form} />

@@ -1,4 +1,4 @@
-import { CTaxRowsTable } from '@/ctax/components/CTaxsTable';
+import { CTaxRowsTable } from '@/settings/ctax/components/CTaxsTable';
 
 export const CTaxRowsPage = () => {
   return (

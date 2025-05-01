@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { CustomerType } from 'ui-modules';
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 
 export const baseTransactionSchema = z.object({
   accountId: z.string(),

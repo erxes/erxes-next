@@ -7,7 +7,7 @@ import {
   DescriptionField,
 } from './GeneralFormFields';
 import { CustomerFields } from './CustomerFields';
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 import { InventoryForm } from '../../inventory/components/InventoryForm';
 import { VatForm } from './VatForm';
 

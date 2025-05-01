@@ -1,6 +1,6 @@
 import { TInventoryProduct } from '../../add-transaction/types/AddTransaction';
 import { Table, cn, Form } from 'erxes-ui';
-import { SelectAccount } from '@/account/components/SelectAccount';
+import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { SelectProduct } from 'ui-modules';
 import { InventoryRowContext } from '../context/InventoryContext';
 import { InventoryRowNumbers } from './InventoryRowNumbers';

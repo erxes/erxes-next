@@ -7,13 +7,16 @@ import { useMemo } from 'react';
 
 export const RecordTableRowList = ({
   handleRowViewChange,
+  Row,
 }: {
   handleRowViewChange?: (id: string, inView: boolean) => void;
+  Row?: React.ComponentType<React.HTMLAttributes<HTMLTableRowElement>>;
 }) => {
   const { table } = useRecordTable();
+  const RowComponent = Row || RecordTableRow;
 
   const tableContent = table.getRowModel().rows.map((row, rowIndex) => (
-    <RecordTableRow
+    <RowComponent
       key={row.original._id}
       id={row.original._id}
       data-state={row.getIsSelected() && 'selected'}
@@ -30,7 +33,7 @@ export const RecordTableRowList = ({
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </RecordTableCell>
       ))}
-    </RecordTableRow>
+    </RowComponent>
   ));
 
   const memoizedTableContent = useMemo(

@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { USER_SCHEMA } from '@/settings/team-member/schema/users';
+import {
+  USER_SUBMIT_SCHEMA,
+  USER_DETAIL_SCHEMA,
+} from '@/settings/team-member/schema/users';
 
 export interface IUsersDetails {
   avatar: string;
@@ -36,10 +39,20 @@ export interface IUserEntry {
 export type TUserInviteVars = {
   entries: IUserEntry[];
 };
+export interface IUserInviteContext {
+  selectedUsers: string[];
+  setSelectedUsers: (selectedUsers: string[]) => void;
+  fields: IUserEntry & { id: string }[];
+}
+export interface IInviteUserRowContext {
+  userIndex: number;
+  user: IUserEntry & { id: string };
+}
 export interface IBranch {
   _id: string;
   title: string;
   code: string;
   parentId: string;
 }
-export type TUserForm = z.infer<typeof USER_SCHEMA>;
+export type TUserForm = z.infer<typeof USER_SUBMIT_SCHEMA>;
+export type TUserDetailForm = z.infer<typeof USER_DETAIL_SCHEMA>;

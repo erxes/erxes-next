@@ -16,9 +16,10 @@ const config: ModuleFederationConfig = {
   name: 'sample_ui',
   exposes: {
     './Config': './src/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
-    './Widgets': './src/widgets/Widgets.tsx',
+    './sampleFirst': './src/modules/sample-first/Main.tsx',
+    './sampleFirstSettings': './src/modules/sample-first/Settings.tsx',
+    './sampleSecond': './src/modules/sample-second/Main.tsx',
+    './sampleSecondSettings': './src/modules/sample-second/Settings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

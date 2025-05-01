@@ -8,7 +8,7 @@ import { TransactionsTabsList } from './TransactionList';
 import { Summary } from './Summary';
 import { useCallback, useEffect, memo } from 'react';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
-import { JournalEnum } from '@/account/type/Account';
+import { JournalEnum } from '@/settings/account/types/Account';
 import { activeJournalState } from '../states/addTrStates';
 import { useSetAtom } from 'jotai';
 
@@ -64,7 +64,7 @@ export const TransactionGroupForm = () => {
   const { createTransaction } = useTransactionsCreate();
 
   const onSubmit = useCallback((data: TAddTransactionGroup) => {
-    // createTransaction(data);
+    createTransaction(data);
     console.log(data);
   }, []);
 

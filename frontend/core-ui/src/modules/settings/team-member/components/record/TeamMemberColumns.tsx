@@ -7,11 +7,10 @@ import {
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
-import { Avatar, cn, Switch } from 'erxes-ui';
-import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
+import { Avatar, Badge, cn, InlineCell, Switch, Table } from 'erxes-ui';
+import { RecordTable } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
-import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import dayjs from 'dayjs';
 import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
 import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
@@ -20,9 +19,12 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
   {
     id: 'avatar',
     accessorKey: 'avatar',
-    header: () => <RecordTableInlineHead icon={IconUser} label="" />,
+    header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => (
-      <RecordTableInlineCell
+      <InlineCell
+        name="avatar"
+        className="flex items-center justify-center"
+        recordId={cell.row.original._id}
         display={() => (
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
@@ -41,7 +43,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'firstName',
     accessorKey: 'firstName',
     header: () => (
-      <RecordTableInlineHead icon={IconAlignLeft} label="First name" />
+      <RecordTable.InlineHead icon={IconAlignLeft} label="First name" />
     ),
     cell: ({ cell }) => {
       const {
@@ -61,7 +63,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'lastName',
     accessorKey: 'lastName',
     header: () => (
-      <RecordTableInlineHead icon={IconAlignLeft} label="Last name" />
+      <RecordTable.InlineHead icon={IconAlignLeft} label="Last name" />
     ),
     cell: ({ cell }) => {
       const {
@@ -81,28 +83,30 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'status',
     accessorKey: 'status',
     header: () => (
-      <RecordTableInlineHead label="Invitation status	" icon={IconMailCheck} />
+      <RecordTable.InlineHead label="Invitation status	" icon={IconMailCheck} />
     ),
     cell: ({ cell }) => {
       const { status } = cell.row.original;
       return (
-        <div className="flex items-center justify-center">
-          <span
-            className={cn(
-              status === 'Verified' ? 'text-green-400' : 'text-destructive',
-              'uppercase font-semibold text-[10px]',
-            )}
-          >
-            {status}
-          </span>
-        </div>
+        <InlineCell
+          name="status"
+          className="flex items-center justify-center"
+          recordId={cell.row.original._id}
+          display={() => {
+            if (status === 'Verified') {
+              return <Badge variant={'success'}>{status}</Badge>;
+            } else {
+              return <Badge variant={'destructive'}>{status}</Badge>;
+            }
+          }}
+        />
       );
     },
   },
   {
     id: 'email',
     accessorKey: 'email',
-    header: () => <RecordTableInlineHead icon={IconMail} label="Email" />,
+    header: () => <RecordTable.InlineHead icon={IconMail} label="Email" />,
     cell: ({ cell }) => {
       const { email, _id } = cell.row.original;
       return <TextFieldUser field="email" _id={_id} value={email as string} />;
@@ -111,7 +115,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
   ...['employeeId'].map((field) => ({
     id: field,
     accessorKey: field,
-    header: () => <RecordTableInlineHead icon={IconAlignLeft} label={field} />,
+    header: () => <RecordTable.InlineHead icon={IconAlignLeft} label={field} />,
     cell: ({ cell }: { cell: Cell<IUser, unknown> }) => (
       <TextFieldUser
         field="employeeId"
@@ -125,7 +129,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'position',
     accessorKey: 'position',
     header: () => (
-      <RecordTableInlineHead icon={IconAlignLeft} label="Position" />
+      <RecordTable.InlineHead icon={IconAlignLeft} label="Position" />
     ),
     cell: ({ cell }) => {
       const {
@@ -145,7 +149,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'workStartedDate',
     accessorKey: 'workStartedDate',
     header: () => (
-      <RecordTableInlineHead icon={IconAlignLeft} label="workStartedDate" />
+      <RecordTable.InlineHead icon={IconAlignLeft} label="workStartedDate" />
     ),
     cell: ({ cell }) => {
       const {
@@ -168,9 +172,12 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
   {
     id: 'isActive',
     accessorKey: 'isActive',
-    header: () => <RecordTableInlineHead icon={IconChecks} label="Status" />,
+    header: () => <RecordTable.InlineHead icon={IconChecks} label="Status" />,
     cell: ({ cell }) => (
-      <RecordTableInlineCell
+      <InlineCell
+        name="isActive"
+        className="flex items-center justify-center"
+        recordId={cell.row.original._id}
         display={() => (
           <Switch className="mx-auto" checked={cell.row.original.isActive} />
         )}

@@ -15,9 +15,9 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'sales_ui',
   exposes: {
-    './Config': './src/modules/constants/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
+    './Config': './src/config.ts',
+    './deals': './src/modules/deals/Main.tsx',
+    './dealsSettings': './src/modules/deals/Settings.tsx',
     './Widgets': './src/widgets/Widgets.tsx',
   },
 
