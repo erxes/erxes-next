@@ -194,13 +194,11 @@ export const SelectTagsItem = ({
 
 export const TagList = ({
   placeholder,
-  onClose,
   ...props
 }: Omit<React.ComponentProps<typeof TagBadge>, 'onClose'> & {
   placeholder?: string;
-  onClose?: (tagId?: string) => void;
 }) => {
-  const { value, selectedTags, mode } = useSelectTagsContext();
+  const { value, selectedTags,setSelectedTags, mode, onSelect } = useSelectTagsContext();
 
   const selectedTagIds = Array.isArray(value) ? value : [value];
 
@@ -217,7 +215,14 @@ export const TagList = ({
           tag={selectedTags.find((t) => t._id === tagId)}
           renderAsPlainText={mode === 'single'}
           variant="secondary"
-          onClose={() => onClose?.(tagId)}
+          onCompleted={(tag) => {
+            if (selectedTagIds.includes(tag._id)) {
+              setSelectedTags([...selectedTags, tag]);
+            }
+          }}
+          onClose={() =>
+            onSelect?.(selectedTags.find((t) => t._id === tagId) as ITag)
+          }
           {...props}
         />
       ))}
