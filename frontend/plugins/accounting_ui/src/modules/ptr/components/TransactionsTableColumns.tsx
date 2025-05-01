@@ -9,7 +9,7 @@ import {
   Input,
   RelativeDateDisplay,
   CurrencyCode,
-  CurrencyInput,
+  CurrencyField,
   CurrencyFormatedDisplay,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
@@ -85,8 +85,7 @@ const SumDebitCell = ({ getValue, row }: any) => {
       )}
       edit={() => (
         <InlineCellEdit>
-          <CurrencyInput
-            currencyCode={CurrencyCode.MNT}
+          <CurrencyField.ValueInput
             value={sumDt}
             onChange={(value) => setSumDt(value)}
           />
@@ -116,8 +115,7 @@ const SumCreditCell = ({ getValue, row }: any) => {
       )}
       edit={() => (
         <InlineCellEdit>
-          <CurrencyInput
-            currencyCode={CurrencyCode.MNT}
+          <CurrencyField.ValueInput
             value={sumCt}
             onChange={(value) => setSumCt(value)}
           />

@@ -1,5 +1,5 @@
 import { ICommonFieldProps } from '../types/AddTransaction';
-import { CurrencyValueInput, Form, Input, Select } from 'erxes-ui';
+import { CurrencyField, Form, Input, Select } from 'erxes-ui';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { JOURNAL_LABELS } from '@/settings/account/constants/journalLabel';
 import {
@@ -78,7 +78,7 @@ export const AmountField = ({ form, index }: ICommonFieldProps) => (
       <Form.Item>
         <Form.Label>Amount</Form.Label>
         <Form.Control>
-          <CurrencyValueInput value={field.value} onChange={field.onChange} />
+          <CurrencyField.ValueInput value={field.value} onChange={field.onChange} />
         </Form.Control>
       </Form.Item>
     )}

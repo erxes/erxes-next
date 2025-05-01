@@ -5,7 +5,7 @@ import {
   InlineCellDisplay,
   InlineCell,
   InputNumber,
-  CurrencyValueInput,
+  CurrencyField,
   InlineCellEdit,
 } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
@@ -116,7 +116,7 @@ export const InventoryRowNumbers = () => {
                 edit={() => (
                   <InlineCellEdit>
                     <Form.Control>
-                      <CurrencyValueInput
+                      <CurrencyField.ValueInput
                         value={field.value}
                         onChange={(value) =>
                           handleUnitPriceChange(value || 0, field.onChange)
@@ -152,7 +152,7 @@ export const InventoryRowNumbers = () => {
                 )}
                 edit={() => (
                   <InlineCellEdit>
-                    <CurrencyValueInput
+                    <CurrencyField.ValueInput
                       value={field.value}
                       onChange={(value) =>
                         handleAmountChange(value || 0, field.onChange)
