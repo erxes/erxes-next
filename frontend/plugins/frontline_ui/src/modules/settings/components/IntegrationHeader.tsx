@@ -2,14 +2,16 @@ import React from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Button, useQueryState } from 'erxes-ui';
 import { IconBox, IconPlus } from '@tabler/icons-react';
-import { INTEGRATIONS } from '../constants/integrations';
+import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../constants/integrations';
+import { AddIntegration } from './add-integration/AddIntegration';
 
 export const IntegrationHeader = () => {
   // const [kind] = useQueryState<string>('kind')
   const params = useParams();
-  const integration = INTEGRATIONS[params.kind as keyof typeof INTEGRATIONS];
+  const integrations = { ...INTEGRATIONS, ...OTHER_INTEGRATIONS };
+  const integration = integrations[params.kind as keyof typeof integrations];
   return (
-    <div className="px-6 flex flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div className="flex gap-2 items-center">
         <span className="flex items-center justify-center w-8 h-8 p-1 rounded-sm shadow-sm relative">
           <img
@@ -31,10 +33,12 @@ export const IntegrationHeader = () => {
           </div>
         </div>
       </div>
-      <Button className="px-2 w-min">
-        <IconPlus size={16} />
-        Add messenger
-      </Button>
+      <AddIntegration>
+        <Button className="px-2 w-min">
+          <IconPlus size={16} />
+          Add {integration.label}
+        </Button>
+      </AddIntegration>
     </div>
   );
 };

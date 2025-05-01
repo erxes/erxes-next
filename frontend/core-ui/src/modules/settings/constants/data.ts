@@ -1,5 +1,6 @@
 import {
   IconAdjustmentsAlt,
+  IconChartPie2,
   IconColorSwatch,
   IconFile,
   IconMail,
@@ -132,6 +133,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Team member',
       icon: IconUsersGroup,
       path: SettingsWorkspacePath.TeamMember,
+    },
+    {
+      name: 'Structure',
+      icon: IconChartPie2,
+      path: SettingsWorkspacePath.Structure,
     },
   ],
 };

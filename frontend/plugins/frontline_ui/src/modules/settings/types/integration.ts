@@ -8,6 +8,16 @@ export interface IIntegrationItem {
   img: string;
   label: string;
   description: string;
+  steps: {
+    id: number;
+    name: string;
+    description: string;
+    isFinal: boolean;
+    isEmpty?: {
+      name: string;
+      description: string;
+    };
+  }[];
 }
 export interface IIntegrationContext {
   integrations: Record<string, IIntegrationItem>;

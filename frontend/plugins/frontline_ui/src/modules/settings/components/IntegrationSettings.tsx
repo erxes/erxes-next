@@ -9,11 +9,11 @@ export const IntegrationSettings = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-4xl flex flex-col gap-8 h-full w-full mx-auto">
-      <div className="px-6 py-4">
+    <div className="max-w-5xl flex flex-col gap-8 h-full w-full mx-auto">
+      <div className="py-4">
         <Button
           variant="ghost"
-          className="text-muted-foreground"
+          className="text-muted-foreground pl-0"
           onClick={() => navigate(-1)}
         >
           <IconChevronLeft />
