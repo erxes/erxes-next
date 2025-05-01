@@ -15,15 +15,15 @@ import { IOrganization } from './types';
 import { redis } from '../redis';
 import { mongooseConnectionOptions } from '../mongo';
 
-export let coreModelOrganizations;
-export let coreModelAddons;
-export let coreModelBundles;
-export let coreModelInstallations;
-export let coreModelUsers;
-export let coreModelEndpoints;
-export let coreModelPromoCodes;
-export let coreModelPlugins;
-export let coreModelExperiences;
+export let coreModelOrganizations: any;
+export let coreModelAddons: any;
+export let coreModelBundles: any;
+export let coreModelInstallations: any;
+export let coreModelUsers: any;
+export let coreModelEndpoints: any;
+export let coreModelPromoCodes: any;
+export let coreModelPlugins: any;
+export let coreModelExperiences: any;
 
 export const getSaasCoreConnection = async (): Promise<void> => {
   if (coreModelOrganizations) {
@@ -164,12 +164,11 @@ export const getSaasOrganizationDetail = async ({
   const charge = organization.charge || {};
   let experienceName = '';
   const bundleNames = [] as string[];
+  const setupService: Record<string, boolean> = {};
 
   const installation = await coreModelInstallations.findOne({
     organizationId: organization._id,
   });
-
-  const setupService = {};
 
   if (installation) {
     const plugins = await getSaasPlugins({});

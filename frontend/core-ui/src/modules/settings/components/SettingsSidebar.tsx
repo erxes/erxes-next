@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { Icon, IconX } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
 
-import { Sidebar, UIConfig } from 'erxes-ui';
+import { Sidebar, IUIConfig } from 'erxes-ui';
 
 import { AppPath } from '@/types/paths/AppPath';
 import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
@@ -32,7 +32,7 @@ export function SettingsSidebar() {
             })),
       );
 
-      return [...coreModules, ...settingsModules] as UIConfig['modules'];
+      return [...coreModules, ...settingsModules] as IUIConfig['modules'];
     }
     return coreModules;
   }, [pluginsMetaData]);

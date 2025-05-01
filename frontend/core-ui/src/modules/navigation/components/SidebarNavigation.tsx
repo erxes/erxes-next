@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-import { Collapsible, Sidebar, UIConfig } from 'erxes-ui';
+import { Collapsible, Sidebar, IUIConfig } from 'erxes-ui';
 import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtom } from 'jotai';
@@ -27,7 +27,7 @@ export function SidebarNavigation() {
           })),
       );
 
-      return [...coreModules, ...settingsModules] as UIConfig['modules'];
+      return [...coreModules, ...settingsModules] as IUIConfig['modules'];
     }
     return coreModules;
   }, [pluginsMetaData]);
@@ -60,7 +60,7 @@ export function SidebarNavigationItem({
   icon,
   path,
   submenus,
-}: UIConfig['modules'][number]) {
+}: IUIConfig['modules'][number]) {
   const { t } = useTranslation();
   const pathname = useLocation().pathname;
   const Icon = icon;

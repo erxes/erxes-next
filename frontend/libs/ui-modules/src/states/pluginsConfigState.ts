@@ -1,8 +1,8 @@
 import { atom } from 'jotai';
-import { UIConfig } from 'erxes-ui';
+import { IUIConfig } from 'erxes-ui';
 
 export type PluginsConfigState = {
-  [key: string]: UIConfig;
+  [key: string]: IUIConfig;
 };
 
 export const pluginsConfigState = atom<PluginsConfigState | null>(null);

@@ -1,4 +1,4 @@
-export type UIConfig = {
+export type IUIConfig = {
   name: string;
   icon: React.ElementType;
   modules: {

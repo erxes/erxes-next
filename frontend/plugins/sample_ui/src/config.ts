@@ -1,7 +1,7 @@
 import { IconSandbox } from '@tabler/icons-react';
-import { UIConfig } from 'erxes-ui/types';
+import { IUIConfig } from 'erxes-ui/types';
 
-export const CONFIG: UIConfig = {
+export const CONFIG: IUIConfig = {
   name: 'sample',
   icon: IconSandbox,
   modules: [

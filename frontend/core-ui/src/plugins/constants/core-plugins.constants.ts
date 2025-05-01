@@ -2,9 +2,9 @@ import {
   IconShoppingCartFilled,
   IconBookmarksFilled,
 } from '@tabler/icons-react';
-import { UIConfig } from 'erxes-ui/types';
+import { IUIConfig } from 'erxes-ui/types';
 
-export const CORE_MODULES: UIConfig['modules'] = [
+export const CORE_MODULES: IUIConfig['modules'] = [
   {
     name: 'contacts',
     icon: IconBookmarksFilled,
