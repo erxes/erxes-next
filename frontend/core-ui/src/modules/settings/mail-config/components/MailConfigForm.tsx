@@ -22,7 +22,9 @@ const MailConfigForm = () => {
   const MAIL_SERVICE = useWatch({ control, name: 'DEFAULT_EMAIL_SERVICE' });
 
   useEffect(() => {
-    if (configs !== undefined) {
+    if (configs === undefined) {
+      methods.reset();
+    } else {
       const values = configs.reduce((acc: any, config: any) => {
         acc[config.code] = config.value;
         return acc;

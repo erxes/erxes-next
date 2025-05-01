@@ -14,16 +14,16 @@ export function SettingsBreadcrumbs() {
         <Breadcrumb.List>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild className="flex items-center gap-1">
-              <Link className="text-black font-semibold" to={`/settings`}>
-                <IconSettings size={16} className="stroke-black" />
+              <Link className="text-foreground font-semibold" to={`/settings`}>
+                <IconSettings size={16} className="stroke-foreground" />
                 Settings
               </Link>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
-          <IconMinusVertical size={14} className="stroke-black" />
+          <IconMinusVertical size={14} className="stroke-foreground" />
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild className="flex items-center gap-1">
-              <Link className="text-black font-semibold" to={pathname}>
+              <Link className="text-foreground font-semibold" to={pathname}>
                 {currentPath?.name}
               </Link>
             </Breadcrumb.Link>

@@ -35,6 +35,13 @@ const TeamMemberSettings = lazy(() =>
     default: module.TeamMemberPage,
   })),
 );
+const StructureSettings = lazy(() =>
+  import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
+    (module) => ({
+      default: module.StructureSettingsPage,
+    }),
+  ),
+);
 
 export function SettingsRoutes() {
   return (
@@ -60,6 +67,10 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.TeamMember}
           element={<TeamMemberSettings />}
+        />
+        <Route
+          path={SettingsWorkspacePath.Structure}
+          element={<StructureSettings />}
         />
 
         {getPluginsSettingsRoutes()}
