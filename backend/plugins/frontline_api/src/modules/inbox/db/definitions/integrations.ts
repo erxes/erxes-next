@@ -7,6 +7,7 @@ import {
   MESSENGER_DATA_AVAILABILITY,
 } from './constants';
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+
 const messengerOnlineHoursSchema = new Schema(
   {
     day: { type: String },
