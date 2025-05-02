@@ -10,7 +10,7 @@ type MessageProps = {
   pluginName: string;
   module: string;
   action: string;
-  data: any;
+  input: any;
   defaultValue?: any;
   options?: TRPCRequestOptions;
 };
@@ -20,7 +20,7 @@ export const sendTRPCMessage = async ({
   method,
   module,
   action,
-  data,
+  input,
   defaultValue,
   options,
 }: MessageProps) => {
@@ -30,7 +30,7 @@ export const sendTRPCMessage = async ({
     links: [httpBatchLink({ url: `${pluginInfo.address}/trpc` })],
   });
 
-  const result = await client[method](`${module}.${action}`, data, options);
+  const result = await client[method](`${module}.${action}`, input, options);
 
   return result || defaultValue;
 };
