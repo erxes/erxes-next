@@ -86,7 +86,7 @@ export const AccountMoreColumnCell = ({
 }: {
   cell: Cell<IAccount, unknown>;
 }) => {
-  const [, setOpen] = useQueryState('account_id');
+  const [, setOpen] = useQueryState('accountId');
   const setAccountDetail = useSetAtom(accountDetailAtom);
   return (
     <RecordTable.MoreButton

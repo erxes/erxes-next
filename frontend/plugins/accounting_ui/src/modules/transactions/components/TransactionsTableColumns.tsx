@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import { ITransaction } from '../types/Transaction';
 import {
@@ -7,7 +8,6 @@ import {
   InlineCellDisplay,
   InlineCellEdit,
   Input,
-  RelativeDateDisplay,
   CurrencyCode,
   CurrencyField,
   CurrencyFormatedDisplay,
@@ -145,14 +145,13 @@ const BranchCell = ({ getValue, row }: any) => {
 
 const DateCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
-
   return (
     <InlineCell
       name="date"
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          <RelativeDateDisplay value={getValue() as string} />
+          {dayjs(new Date(getValue())).format("YYYY-MM-DD")}
         </InlineCellDisplay>
       )}
     />
@@ -176,7 +175,7 @@ const AccountCell = ({ row }: any) => {
   );
 };
 
-export const TransactionMoreColumnCell = ({
+const TransactionMoreColumnCell = ({
   cell,
 }: {
   cell: Cell<ITransaction, unknown>;
@@ -196,7 +195,7 @@ export const TransactionMoreColumnCell = ({
   );
 };
 
-export const transactionMoreColumn = {
+const transactionMoreColumn = {
   id: 'more',
   cell: TransactionMoreColumnCell,
   size: 33,

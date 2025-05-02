@@ -66,9 +66,19 @@ export const commonTransactionFields = `
 
   details {
     ${commonTrDetailFields}
+    account {
+      code
+      name
+      currency
+    }
   }
   shortDetail {
     ${commonTrDetailFields}
+    account {
+      code
+      name
+      currency
+    }
   }
   sumDt
   sumCt
@@ -101,6 +111,8 @@ export const commonTransactionFields = `
   ctaxRowId
   isHandleCtax
   ctaxAmount
+
+  extraData
 
   permission
 `;

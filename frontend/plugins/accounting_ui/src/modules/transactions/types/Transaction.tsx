@@ -3,6 +3,34 @@ import { IProduct } from 'ui-modules';
 import { IVatRow } from '@/settings/vat/types/VatRow';
 import { ICtaxRow } from '@/settings/ctax/types/CtaxRow';
 
+export interface ITrDetail {
+  _id?: string;
+  accountId?: string;
+  originId?: string;
+  followInfos?: any;
+  follows?: {
+    type: string;
+    id: string;
+  }[];
+
+  side?: string;
+  amount?: number;
+  currencyAmount?: number;
+  customRate?: number;
+  assignedUserId?: string;
+
+  excludeVat?: boolean;
+  excludeCtax?: boolean;
+
+  productId?: string;
+  count?: number;
+  unitPrice?: number;
+  tempAmount?: number;
+
+  account?: IAccount;
+  product?: IProduct;
+}
+
 export interface ITransaction {
   _id?: string;
   date?: Date;
@@ -49,6 +77,8 @@ export interface ITransaction {
   ctaxAmount?: number;
   ctaxRow?: ICtaxRow;
 
+  extraData?: any;
+
   sumDt: number;
   sumCt: number;
   permission?: string;
@@ -73,31 +103,4 @@ export interface ITrInput {
   accountId: string;
   side: string;
   amount: number;
-}
-
-export interface ITrDetail {
-  _id?: string;
-  accountId?: string;
-  originId?: string;
-  followInfos?: any;
-  follows?: {
-    type: string;
-    id: string;
-  }[];
-
-  side?: string;
-  amount?: number;
-  currencyAmount?: number;
-  customRate?: number;
-  assignedUserId?: string;
-
-  excludeVat?: boolean;
-  excludeCtax?: boolean;
-
-  productId?: string;
-  count?: number;
-  unitPrice?: number;
-
-  account?: IAccount;
-  product?: IProduct;
 }

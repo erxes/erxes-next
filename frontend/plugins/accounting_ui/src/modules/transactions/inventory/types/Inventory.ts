@@ -2,7 +2,7 @@ import { JournalEnum } from '@/settings/account/types/Account';
 import {
   ITransactionGroupForm,
   TInventoryProduct,
-} from '../../transactionForm/types/AddTransaction';
+} from '../../transaction-form/types/AddTransaction';
 
 export interface IInventoryContext {
   selectedProducts: string[];
