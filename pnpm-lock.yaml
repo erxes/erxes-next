@@ -690,12 +690,18 @@ importers:
         version: 0.5.48
       mongoose:
         specifier: ^8.14.0
-        version: 8.14.0
+        version: 8.14.1
       underscore:
         specifier: ^1.13.7
         version: 1.13.7
 
   backend/plugins/sample_api:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+
+  backend/plugins/tour_api:
     dependencies:
       erxes-api-shared:
         specifier: workspace:^
@@ -2269,6 +2275,26 @@ packages:
 
   '@formkit/auto-animate@0.8.2':
     resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
+
+  '@google-cloud/firestore@7.11.0':
+    resolution: {integrity: sha512-88uZ+jLsp1aVMj7gh3EKYH1aulTAMFAp8sH/v5a9w8q8iqSG27RiWLoxSAFr/XocZ9hGiWH1kEnBw+zl3xAgNA==}
+    engines: {node: '>=14.0.0'}
+
+  '@google-cloud/paginator@5.0.2':
+    resolution: {integrity: sha512-DJS3s0OVH4zFDB1PzjxAsHqJT6sKVbRwwML0ZBP9PbU7Yebtu/7SWMRzvO2J3nUi9pRNITCfu4LJeooM2w4pjg==}
+    engines: {node: '>=14.0.0'}
+
+  '@google-cloud/projectify@4.0.0':
+    resolution: {integrity: sha512-MmaX6HeSvyPbWGwFq7mXdo0uQZLGBYCwziiLIGq5JVX+/bdI3SAq6bP98trV5eTWfLuvsMcIC1YJOF2vfteLFA==}
+    engines: {node: '>=14.0.0'}
+
+  '@google-cloud/promisify@4.0.0':
+    resolution: {integrity: sha512-Orxzlfb9c67A15cq2JQEyVc7wEsmFBmHjZWZYQMUyJ1qivXyMwdyNOs9odi79hze+2zqdTtu1E19IM/FtqZ10g==}
+    engines: {node: '>=14'}
+
+  '@google-cloud/storage@7.16.0':
+    resolution: {integrity: sha512-7/5LRgykyOfQENcm6hDKP8SX/u9XxE5YOiWOkgkwcoO+cG8xT/cyOvp9wwN3IxfdYgpHs8CE7Nq2PKX2lNaEXw==}
+    engines: {node: '>=14'}
 
   '@graphql-tools/merge@8.4.2':
     resolution: {integrity: sha512-XbrHAaj8yDuINph+sAfuq3QCZ/tKblrTLOpirK0+CAgNlZUCHs0Fa+xtMUURgwCVThLle1AF7svJCxFizygLsw==}
@@ -7306,6 +7332,10 @@ packages:
     resolution: {integrity: sha512-yDYSgNMraqvnxiEXO4hi88+YZxaHC6QKzb5N84iRCTDeRO7ZALpir/lVmf/uXUhnwUr2O4HU8s/n6x+yNjQkHw==}
     engines: {node: '>= 14.17'}
 
+  form-data@2.3.3:
+    resolution: {integrity: sha512-1lLKB2Mu3aGP1Q/2eCOx0fNbRMe7XdwktwOruhfqqd0rIJWwN4Dh+E3hrPSlDCXnSR7UtZ1N38rVXm+6+MEhJQ==}
+    engines: {node: '>= 0.12'}
+
   form-data@2.5.3:
     resolution: {integrity: sha512-XHIrMD0NpDrNM/Ckf7XJiBbLl57KEhT3+i3yY+eWm+cqYZJQTZrKo8Y8AWKnuV5GT4scfuUGt9LzNoIx3dU1nQ==}
     engines: {node: '>= 0.12'}
@@ -9482,8 +9512,8 @@ packages:
     resolution: {integrity: sha512-riCBqZmNkYBWjXpM3qWLDQw7QmTKsVZDPhLXFJqC87+OjocEVpvS3dA2BPPUiLAu+m0/QmEj5pSXKhH+/DgerQ==}
     engines: {node: '>=16.20.1'}
 
-  mongoose@8.14.0:
-    resolution: {integrity: sha512-IxDxIUu42apE7oEknJK535xkQ6Gd7GKx/gNrNHY+vP4+ucVU2TOCWjVVW14Vc79y9DEEElzHDlTOuVNM8glUFA==}
+  mongoose@8.14.1:
+    resolution: {integrity: sha512-ijd12vjqUBr5Btqqflu0c/o8Oed5JpdaE0AKO9TjGxCgywYwnzt6ynR1ySjhgxGxrYVeXC0t1P11f1zlRiE93Q==}
     engines: {node: '>=16.20.1'}
 
   motion-dom@11.18.1:
@@ -14272,6 +14302,8 @@ snapshots:
       tabbable: 6.2.0
 
   '@floating-ui/utils@0.2.9': {}
+
+  '@formkit/auto-animate@0.8.2': {}
 
   '@google-cloud/firestore@7.11.0(encoding@0.1.13)':
     dependencies:
@@ -20951,6 +20983,12 @@ snapshots:
 
   form-data-encoder@2.1.4: {}
 
+  form-data@2.3.3:
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      mime-types: 2.1.35
+
   form-data@2.5.3:
     dependencies:
       asynckit: 0.4.0
@@ -23912,7 +23950,32 @@ snapshots:
       bson: 6.10.3
       mongodb-connection-string-url: 3.0.2
 
+  mongodb@6.16.0:
+    dependencies:
+      '@mongodb-js/saslprep': 1.2.2
+      bson: 6.10.3
+      mongodb-connection-string-url: 3.0.2
+
   mongoose@8.13.2:
+    dependencies:
+      bson: 6.10.3
+      kareem: 2.6.3
+      mongodb: 6.15.0
+      mpath: 0.9.0
+      mquery: 5.0.0
+      ms: 2.1.3
+      sift: 17.1.3
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@mongodb-js/zstd'
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - snappy
+      - socks
+      - supports-color
+
+  mongoose@8.14.1:
     dependencies:
       bson: 6.10.3
       kareem: 2.6.3
