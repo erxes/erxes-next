@@ -11,10 +11,7 @@ export const companyTrpcRouter = t.router({
       const { query } = input;
       const { models } = ctx;
 
-      return {
-        success: true,
-        data: await models.Companies.find(query).lean(),
-      };
+      return models.Companies.find(query).lean();
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -73,10 +70,7 @@ export const companyTrpcRouter = t.router({
         defaultFilter['_id'] = query._id;
       }
 
-      return {
-        success: true,
-        data: await models.Companies.findOne(defaultFilter).lean(),
-      };
+      return models.Companies.findOne(defaultFilter).lean();
     }),
 
     findActiveCompanies: t.procedure
@@ -85,25 +79,14 @@ export const companyTrpcRouter = t.router({
         const { query, fields, skip, limit } = input;
         const { models } = ctx;
 
-        return {
-          success: true,
-          data: await models.Companies.findActiveCompanies(
-            query,
-            fields,
-            skip,
-            limit,
-          ),
-        };
+        return models.Companies.findActiveCompanies(query, fields, skip, limit);
       }),
 
     getCompanyName: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { company } = input;
       const { models } = ctx;
 
-      return {
-        success: true,
-        data: models.Companies.getCompanyName(company),
-      };
+      return models.Companies.getCompanyName(company);
     }),
 
     createCompany: t.procedure
@@ -114,10 +97,7 @@ export const companyTrpcRouter = t.router({
 
         const company = await models.Companies.createCompany(doc);
 
-        return {
-          success: true,
-          data: company,
-        };
+        return company;
       }),
 
     updateCompany: t.procedure
@@ -128,10 +108,7 @@ export const companyTrpcRouter = t.router({
 
         const company = await models.Companies.updateCompany(_id, doc);
 
-        return {
-          success: true,
-          data: company,
-        };
+        return company;
       }),
 
     removeCompanies: t.procedure
@@ -140,12 +117,7 @@ export const companyTrpcRouter = t.router({
         const { _ids } = input;
         const { models } = ctx;
 
-        const company = await models.Companies.removeCompanies(_ids);
-
-        return {
-          success: true,
-          data: company,
-        };
+        return models.Companies.removeCompanies(_ids);
       }),
 
     createOrUpdate: t.procedure
@@ -154,15 +126,10 @@ export const companyTrpcRouter = t.router({
         const { doc } = input;
         const { models } = ctx;
 
-        const company = await createOrUpdate({
+        return createOrUpdate({
           collection: models.Companies,
           data: doc,
         });
-
-        return {
-          success: true,
-          data: company,
-        };
       }),
   }),
 });

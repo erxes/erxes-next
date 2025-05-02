@@ -9,9 +9,11 @@ interface RemoteComponentProps {
 export function RenderPLuginsComponent({
   pluginName,
   moduleName,
+  props,
 }: {
   pluginName: string;
   moduleName: string;
+  props?: any;
 }) {
   const [Plugin, setPlugin] =
     useState<React.ComponentType<RemoteComponentProps> | null>(null);
@@ -77,7 +79,7 @@ export function RenderPLuginsComponent({
         </div>
       }
     >
-      <Plugin key={`${pluginName}-${moduleName}`} />
+      <Plugin key={`${pluginName}-${moduleName}`} {...props} />
     </Suspense>
   );
 }

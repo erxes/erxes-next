@@ -1,3 +1,5 @@
+import { Widgets as InboxWidgets } from '@/inbox/widgets/Widgets';
+
 const Widgets = ({
   contentType,
   contentId,
@@ -5,7 +7,12 @@ const Widgets = ({
   contentType: string;
   contentId: string;
 }) => {
-  return <div>Conversation details</div>;
+  switch (contentType) {
+    case 'inbox':
+      return <InboxWidgets contentId={contentId} />;
+    default:
+      return null;
+  }
 };
 
 export default Widgets;

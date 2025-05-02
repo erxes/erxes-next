@@ -186,7 +186,7 @@ export const leadDataSchema = new Schema(
       label: 'Contacts gathered',
     },
     rules: {
-      type: [ruleSchema],
+      type: [new Schema(ruleSchema.obj)],
       optional: true,
       label: 'Rules',
     },

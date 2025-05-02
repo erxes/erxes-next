@@ -11,12 +11,7 @@ export const uomTrpcRouter = t.router({
 
       const { models } = ctx;
 
-      const uoms = await models.Uoms.find(query).lean();
-
-      return {
-        success: true,
-        data: uoms,
-      };
+      return models.Uoms.find(query).lean();
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -24,12 +19,7 @@ export const uomTrpcRouter = t.router({
 
       const { models } = ctx;
 
-      const uom = await models.Uoms.findOne(query).lean();
-
-      return {
-        success: true,
-        data: uom,
-      };
+      return models.Uoms.findOne(query).lean();
     }),
   }),
 });

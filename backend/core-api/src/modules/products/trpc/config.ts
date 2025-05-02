@@ -10,15 +10,7 @@ export const productConfigTrpcRouter = t.router({
       const { code, defaultValue } = input;
       const { models } = ctx;
 
-      const productConfig = await models.ProductsConfigs.getConfig(
-        code,
-        defaultValue,
-      );
-
-      return {
-        success: true,
-        data: productConfig,
-      };
+      return models.ProductsConfigs.getConfig(code, defaultValue);
     }),
   }),
 });

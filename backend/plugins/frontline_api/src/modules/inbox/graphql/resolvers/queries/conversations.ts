@@ -25,7 +25,7 @@ export const conversationQueries = {
   async conversations(
     _root,
     params: IListArgs,
-    { user, models, subdomain, serverTiming }: IContext,
+    { user, models, subdomain }: IContext,
   ) {
     // filter by ids of conversations
     if (params && params.ids) {
@@ -38,19 +38,18 @@ export const conversationQueries = {
     }
 
     // initiate query builder
-    const qb = new QueryBuilder(models, subdomain, params, {
-      _id: user._id,
-      code: user.code,
-      starredConversationIds: user.starredConversationIds,
-      role: user.role,
-    });
+    // const qb = new QueryBuilder(models, subdomain, params, {
+    //   _id: user._id,
+    //   code: user.code,
+    //   starredConversationIds: user.starredConversationIds,
+    //   role: user.role,
+    // });
 
-    await qb.buildAllQueries();
+    // await qb.buildAllQueries();
 
-    const conversations = await models.Conversations.find(qb.mainQuery())
-      .sort({ updatedAt: -1 })
-      .skip(params.skip || 0)
-      .limit(params.limit || 0);
+    // console.log('qb.mainQuery()', qb.mainQuery());
+
+    const conversations = await models.Conversations.find().limit(10);
 
     return conversations;
   },

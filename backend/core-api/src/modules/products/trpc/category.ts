@@ -18,14 +18,7 @@ export const productCategoryTrpcRouter = t.router({
         }).sort(sort);
       }
 
-      const productCategories = await models.ProductCategories.find(query)
-        .sort(sort)
-        .lean();
-
-      return {
-        success: true,
-        data: productCategories,
-      };
+      return models.ProductCategories.find(query).sort(sort).lean();
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -36,10 +29,7 @@ export const productCategoryTrpcRouter = t.router({
         query,
       ).lean();
 
-      return {
-        success: true,
-        data: productCategory,
-      };
+      return productCategory;
     }),
 
     withChilds: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -49,10 +39,7 @@ export const productCategoryTrpcRouter = t.router({
       const productCategories =
         await models.ProductCategories.getChildCategories(_ids);
 
-      return {
-        success: true,
-        data: productCategories,
-      };
+      return productCategories;
     }),
 
     createProductCategory: t.procedure
@@ -61,13 +48,7 @@ export const productCategoryTrpcRouter = t.router({
         const { doc } = input;
         const { models } = ctx;
 
-        const productCategory =
-          await models.ProductCategories.createProductCategory(doc);
-
-        return {
-          success: true,
-          data: productCategory,
-        };
+        return models.ProductCategories.createProductCategory(doc);
       }),
 
     updateProductCategory: t.procedure
@@ -76,13 +57,7 @@ export const productCategoryTrpcRouter = t.router({
         const { _id, doc } = input;
         const { models } = ctx;
 
-        const productCategory =
-          await models.ProductCategories.updateProductCategory(_id, doc);
-
-        return {
-          success: true,
-          data: productCategory,
-        };
+        return models.ProductCategories.updateProductCategory(_id, doc);
       }),
 
     removeProductCategory: t.procedure
@@ -91,25 +66,14 @@ export const productCategoryTrpcRouter = t.router({
         const { _id } = input;
         const { models } = ctx;
 
-        const productCategory =
-          await models.ProductCategories.removeProductCategory(_id);
-
-        return {
-          success: true,
-          data: productCategory,
-        };
+        return models.ProductCategories.removeProductCategory(_id);
       }),
 
     count: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
 
-      const count = await models.ProductCategories.find(query).countDocuments();
-
-      return {
-        success: true,
-        data: count,
-      };
+      return models.ProductCategories.find(query).countDocuments();
     }),
   }),
 });
