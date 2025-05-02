@@ -28,7 +28,7 @@ export const facebookMutations = {
   ) {
     const { commentId, content, attachments, conversationId } = params;
 
-    const comment = await models.FacebookCommentConversation.findOne({ commentId });
+     const comment = await models.FacebookCommentConversation.findOne({ comment_id: commentId });
 
     const post = await models.FacebookPostConversations.findOne({
       $or: [
@@ -96,7 +96,7 @@ export const facebookMutations = {
     //     },
     //   });
 
-    //   return { status: 'success' };
+      return { status: 'success' };
     } catch (e) {
       throw new Error(e.message);
     }

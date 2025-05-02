@@ -34,7 +34,7 @@ const userMiddleware = async (req, _res, next) => {
     }
   }
 
-  next();
+  return next();
 };
 
 export default userMiddleware;

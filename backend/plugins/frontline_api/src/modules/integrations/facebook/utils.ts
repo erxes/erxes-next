@@ -98,7 +98,7 @@ export const getPageAccessToken = async (
   return response.access_token;
 };
 
-export const refreshPageAccesToken = async (
+export const refreshPageAccessToken = async (
   models: IModels,
   pageId: string,
   integration: IFacebookIntegrationDocument
@@ -240,7 +240,7 @@ export const restorePost = async (
     pageAccessToken = await getPageAccessTokenFromMap(pageId, pageTokens);
   } catch (e) {
     debugError(
-      `Error ocurred while trying to get page access token with ${e.message}`
+       `Error occurred while trying to get page access token with ${e.message}`
     );
   }
 
@@ -369,40 +369,7 @@ export const checkFacebookPages = async (models: IModels, pages: any) => {
 
 
 
-export const createAWS = async (subdomain: string) => {
-  const {
-    AWS_FORCE_PATH_STYLE,
-    AWS_COMPATIBLE_SERVICE_ENDPOINT,
-    AWS_BUCKET,
-    AWS_SECRET_ACCESS_KEY,
-    AWS_ACCESS_KEY_ID
-  } = await getFileUploadConfigs(subdomain);
 
-  if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_BUCKET) {
-    throw new Error("AWS credentials are not configured");
-  }
-
-  const options: {
-    accessKeyId: string;
-    secretAccessKey: string;
-    endpoint?: string;
-    s3ForcePathStyle?: boolean;
-  } = {
-    accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY
-  };
-
-  if (AWS_FORCE_PATH_STYLE === "true") {
-    options.s3ForcePathStyle = true;
-  }
-
-  if (AWS_COMPATIBLE_SERVICE_ENDPOINT) {
-    options.endpoint = AWS_COMPATIBLE_SERVICE_ENDPOINT;
-  }
-
-  // initialize s3
-  return new AWS.S3(options);
-};
 
 export const checkIsAdsOpenThread = (entry: any[] = []) => {
   const messaging = entry[0]?.messaging || [];
