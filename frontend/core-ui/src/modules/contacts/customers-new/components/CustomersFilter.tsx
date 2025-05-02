@@ -20,6 +20,7 @@ import {
 } from 'erxes-ui';
 
 import { SelectTags } from 'ui-modules';
+import { CustomerTotalCount } from './CustomerTotalCount';
 
 export const SelectTagsFilterView = () => {
   const [tags, setTags] = useQueryState<string[]>('tags');
@@ -50,11 +51,6 @@ export const SelectTagsFilterBar = () => {
     return null;
   }
 
-  const handleClose = (tagId?: string) => {
-    const filteredTags = tags.filter((t) => t !== tagId);
-    setTags(filteredTags.length ? filteredTags : null);
-  };
-
   return (
     <Filter.BarItem>
       <Filter.BarName>
@@ -72,7 +68,7 @@ export const SelectTagsFilterBar = () => {
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
             <Filter.BarButton filterKey="tags">
-              <SelectTags.Value onClose={handleClose} />
+              <SelectTags.Value />
             </Filter.BarButton>
           </Popover.Trigger>
           <Combobox.Content>
@@ -95,64 +91,88 @@ const CustomersFilterPopover = () => {
     (value) => value !== null,
   );
 
-  const filterItems = [
-    {
-      value: 'searchValue',
-      icon: <IconSearch />,
-      label: 'Search',
-      inDialog: true,
-    },
-    { value: 'tags', icon: <IconTags />, label: 'Tags' },
-    { value: 'brand', icon: <IconLabel />, label: 'Brand' },
-    { value: 'createdAt', icon: <IconCalendarPlus />, label: 'Created At' },
-    { value: 'updatedAt', icon: <IconCalendarUp />, label: 'Updated At' },
-    { value: 'lastSeenAt', icon: <IconCalendarTime />, label: 'Last Seen At' },
-    { value: 'birthday', icon: <IconCalendar />, label: 'Birthday' },
-  ];
-
   return (
-    <Filter.Popover>
-      <Filter.Trigger isFiltered={hasFilters} />
-      <Combobox.Content>
-        <Filter.View>
-          <Command>
-            <Command.Input
-              placeholder="Filter"
-              variant="secondary"
-              className="bg-background"
-            />
-            <Command.List className="p-1">
-              {filterItems.slice(0, 3).map((item) => (
-                <Filter.Item
-                  key={item.value}
-                  value={item.value}
-                  inDialog={item.inDialog}
-                >
-                  {item.icon}
-                  {item.label}
+    <>
+      <Filter.Popover>
+        <Filter.Trigger isFiltered={hasFilters} />
+        <Combobox.Content>
+          <Filter.View>
+            <Command>
+              <Command.Input
+                placeholder="Filter"
+                variant="secondary"
+                className="bg-background"
+              />
+              <Command.List className="p-1">
+                <Filter.Item value="searchValue" inDialog>
+                  <IconSearch />
+                  Search
                 </Filter.Item>
-              ))}
-              <Command.Separator className="my-1" />
-              {filterItems.slice(3).map((item) => (
-                <Filter.Item key={item.value} value={item.value}>
-                  {item.icon}
-                  {item.label}
+                <Filter.Item value="tags">
+                  <IconTags />
+                  Tags
                 </Filter.Item>
-              ))}
-            </Command.List>
-          </Command>
+                <Filter.Item value="brand">
+                  <IconLabel />
+                  Brand
+                </Filter.Item>
+                <Command.Separator className="my-1" />
+                <Filter.Item value="createdAt">
+                  <IconCalendarPlus />
+                  Created At
+                </Filter.Item>
+                <Filter.Item value="updatedAt">
+                  <IconCalendarUp />
+                  Updated At
+                </Filter.Item>
+                <Filter.Item value="lastSeenAt">
+                  <IconCalendarTime />
+                  Last Seen At
+                </Filter.Item>
+                <Filter.Item value="birthday">
+                  <IconCalendar />
+                  Birthday
+                </Filter.Item>
+              </Command.List>
+            </Command>
+          </Filter.View>
+          <SelectTagsFilterView />
+        </Combobox.Content>
+      </Filter.Popover>
+      <Filter.Dialog>
+        <Filter.View filterKey="searchValue" inDialog>
+          <Filter.DialogStringView filterKey="searchValue" />
         </Filter.View>
-        <SelectTagsFilterView />
-      </Combobox.Content>
-    </Filter.Popover>
+      </Filter.Dialog>
+    </>
   );
 };
 
-export const CustomersFilter = () => (
-  <Filter id="customers-filter">
-    <Filter.Bar>
-      <SelectTagsFilterBar />
-      <CustomersFilterPopover />
-    </Filter.Bar>
-  </Filter>
-);
+export const CustomersFilter = () => {
+  const [queries] = useMultiQueryState<{
+    searchValue: string;
+  }>(['searchValue']);
+
+  return (
+    <Filter id="customers-filter">
+      <Filter.Bar>
+        {queries.searchValue && (
+          <Filter.BarItem>
+            <Filter.BarName>
+              <IconSearch />
+              Search
+            </Filter.BarName>
+            <Filter.BarButton filterKey="searchValue" inDialog>
+              {queries.searchValue}
+            </Filter.BarButton>
+            <Filter.BarClose filterKey="searchValue" />
+          </Filter.BarItem>
+        )}
+        <SelectTagsFilterBar />
+
+        <CustomersFilterPopover />
+        <CustomerTotalCount />
+      </Filter.Bar>
+    </Filter>
+  );
+};

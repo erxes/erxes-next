@@ -1,6 +1,6 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { CUSTOMER_DETAIL } from '@/contacts/customers-new/customer-detail/graphql/queries/customerDetailQueries';
-import { renderingCustomerDetailAtom } from '@/contacts/states/contactDetailStates';
+import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 import { useSetAtom } from 'jotai';
 import { useQueryState } from 'erxes-ui';
 

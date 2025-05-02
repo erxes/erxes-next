@@ -5,7 +5,7 @@ import { Button, Sheet, useQueryState, useSetHotkeyScope, cn } from 'erxes-ui';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
-import { contactDetailActiveActionTabAtom } from '@/contacts/states/contactDetailStates';
+import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
 import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
 
 export const CustomerDetailSheet = ({
@@ -16,7 +16,7 @@ export const CustomerDetailSheet = ({
   const [open, setOpen] = useQueryState<string>('contact_id');
   const setHotkeyScope = useSetHotkeyScope();
 
-  const activeTab = useAtomValue(contactDetailActiveActionTabAtom);
+  const activeTab = useAtomValue(customerDetailActiveActionTabAtom);
 
   useEffect(() => {
     if (open) {

@@ -1,6 +1,6 @@
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import { RecordTable } from 'erxes-ui';
-import { renderingCustomerDetailAtom } from '@/contacts/states/contactDetailStates';
+import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 import { useSetAtom } from 'jotai';
 import { ICustomer } from '@/contacts/types/customerType';
 import { useQueryState } from 'erxes-ui';

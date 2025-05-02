@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
 import { Button, Resizable, Tabs, Tooltip, cn, useQueryState } from 'erxes-ui';
-import { contactDetailActiveActionTabAtom } from '@/contacts/states/contactDetailStates';
+import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
 import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
 import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
 import { useAtom, useSetAtom } from 'jotai';
@@ -20,7 +20,7 @@ const actionTabs = {
 };
 
 export const CustomerDetailActions = () => {
-  const [activeTab, setActiveTab] = useAtom(contactDetailActiveActionTabAtom);
+  const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
   const [contactId] = useQueryState<string>('contact_id');
 
   return (
@@ -87,7 +87,7 @@ export const CustomerDetailActions = () => {
 };
 
 export const CustomerDetailActionsTrigger = () => {
-  const [activeTab, setActiveTab] = useAtom(contactDetailActiveActionTabAtom);
+  const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
 
   return (
     <div className="flex flex-none overflow-hidden">
@@ -149,7 +149,7 @@ export const ActionTabsContent = ({
   title?: string;
   icon: Icon;
 }) => {
-  const [activeTab] = useAtom(contactDetailActiveActionTabAtom);
+  const [activeTab] = useAtom(customerDetailActiveActionTabAtom);
   return (
     <Tabs.Content
       value={value}
@@ -164,7 +164,7 @@ export const ActionTabsContent = ({
 };
 
 export const ActionHeader = (props: { title?: string; icon: Icon }) => {
-  const setActiveTab = useSetAtom(contactDetailActiveActionTabAtom);
+  const setActiveTab = useSetAtom(customerDetailActiveActionTabAtom);
   return (
     <div className="flex items-center h-12 border-b px-6 text-primary gap-2 flex-none">
       <props.icon className="size-5" />

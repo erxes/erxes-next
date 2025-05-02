@@ -19,6 +19,7 @@ export const CustomersRecordTable = () => {
         hasNextPage={hasNextPage}
         loading={loading}
         dataLength={customers?.length}
+        sessionKey="customers_cursor"
       >
         <RecordTable>
           <RecordTable.Header />
@@ -28,7 +29,7 @@ export const CustomersRecordTable = () => {
               startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
-            <RecordTable.CursorRowList />
+            <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
               endCursor={endCursor}

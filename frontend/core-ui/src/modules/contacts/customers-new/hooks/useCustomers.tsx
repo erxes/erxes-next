@@ -8,12 +8,22 @@ import {
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
+  useMultiQueryState,
 } from 'erxes-ui';
+import { useSetAtom } from 'jotai';
+import { customersCountState } from '@/contacts/states/customersCountState';
 
 const CUSTOMERS_PER_PAGE = 20;
 
 export const useCustomers = (options?: QueryHookOptions) => {
-  const { cursor, setCursor } = useRecordTableCursor({
+  const setCustomersCount = useSetAtom(customersCountState);
+
+  const [queries] = useMultiQueryState<{
+    searchValue: string;
+    tags: string[];
+  }>(['searchValue', 'tags']);
+
+  const { cursor } = useRecordTableCursor({
     sessionKey: 'customers_cursor',
   });
 
@@ -21,17 +31,23 @@ export const useCustomers = (options?: QueryHookOptions) => {
     customers: {
       list: ICustomer[];
       pageInfo: IRecordTableCursorPageInfo;
+      totalCount: number;
     };
   }>(GET_CUSTOMERS, {
     ...options,
     variables: {
       limit: CUSTOMERS_PER_PAGE,
       cursor,
+      ...queries,
       ...options?.variables,
+    },
+    onCompleted(data) {
+      setCustomersCount(data?.customers?.list?.length);
+      options?.onCompleted?.(data);
     },
   });
 
-  const { list: customers, pageInfo } = data?.customers || {};
+  const { list: customers, pageInfo, totalCount } = data?.customers || {};
 
   const handleFetchMore = ({
     direction,
@@ -42,6 +58,7 @@ export const useCustomers = (options?: QueryHookOptions) => {
 
     fetchMore({
       variables: {
+        ...queries,
         cursor:
           direction === EnumCursorDirection.FORWARD
             ? pageInfo?.endCursor
@@ -51,9 +68,6 @@ export const useCustomers = (options?: QueryHookOptions) => {
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
-
-        setCursor(prev?.customers?.pageInfo?.endCursor);
-
         return Object.assign({}, prev, {
           customers: mergeCursorData({
             direction,
@@ -70,5 +84,6 @@ export const useCustomers = (options?: QueryHookOptions) => {
     customers,
     handleFetchMore,
     pageInfo,
+    totalCount,
   };
 };
