@@ -8,6 +8,11 @@
 //   requireLogin
 // } from "@erxes/api-utils/src/permissions";
 
+import {
+  gatherDependentServicesType,
+  ISegmentContentType,
+} from 'erxes-api-shared/core-modules';
+import { getPlugin, getPlugins, isEnabled } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 // import { IContext } from "../../../connectionResolver";
@@ -33,82 +38,82 @@ interface IAssociatedType {
 
 const segmentQueries = {
   async segmentsGetTypes() {
-    // const serviceNames = await getServices();
-    // let types: Array<{ name: string; description: string }> = [];
-    // for (const serviceName of serviceNames) {
-    //   const service = await getService(serviceName);
-    //   const meta = service.config.meta || {};
-    //   if (meta.segments) {
-    //     const serviceTypes = (meta.segments.contentTypes || []).flatMap(
-    //       (ct: ISegmentContentType) => {
-    //         if (ct.hideInSidebar) {
-    //           return [];
-    //         }
-    //         return {
-    //           contentType: `${serviceName}:${ct.type}`,
-    //           description: ct.description
-    //         };
-    //       }
-    //     );
-    //     types = [...types, ...serviceTypes];
-    //   }
-    // }
-    // return types;
+    const pluginNames = await getPlugins();
+    let types: Array<{ name: string; description: string }> = [];
+    for (const serviceName of pluginNames) {
+      const plugin = await getPlugin(serviceName);
+      const meta = plugin.config.meta || {};
+      if (meta.segments) {
+        const pluginTypes = (meta.segments.contentTypes || []).flatMap(
+          (ct: ISegmentContentType) => {
+            if (ct.hideInSidebar) {
+              return [];
+            }
+            return {
+              contentType: `${serviceName}:${ct.type}`,
+              description: ct.description,
+            };
+          },
+        );
+        types = [...types, ...pluginTypes];
+      }
+    }
+    return types;
   },
 
   async segmentsGetAssociationTypes(_root, { contentType }) {
-    // const [serviceName] = contentType.split(":");
-    // const service = await getService(serviceName);
-    // const meta = service.config.meta || {};
-    // if (!meta.segments) {
-    //   return [];
-    // }
-    // // get current services content types
-    // const serviceCts = meta.segments.contentTypes || [];
-    // const associatedTypes: IAssociatedType[] = serviceCts.map(
-    //   (ct: ISegmentContentType) => ({
-    //     type: `${serviceName}:${ct.type}`,
-    //     description: ct.description
-    //   })
-    // );
-    // // gather dependent services contentTypes
-    // const dependentServices = meta.segments.dependentServices || [];
-    // for (const dService of dependentServices) {
-    //   if (!(await isEnabled(dService.name))) {
-    //     continue;
-    //   }
-    //   const depService = await getService(dService.name);
-    //   const depServiceMeta = depService.config.meta || {};
-    //   if (depServiceMeta.segments) {
-    //     let contentTypes = depServiceMeta.segments.contentTypes || [];
-    //     if (!!dService?.types?.length) {
-    //       contentTypes = contentTypes.filter(({ type }) =>
-    //         (dService?.types || []).includes(type)
-    //       );
-    //     }
-    //     contentTypes = contentTypes;
-    //     contentTypes.forEach((ct: ISegmentContentType) => {
-    //       associatedTypes.push({
-    //         type: `${dService.name}:${ct.type}`,
-    //         description: ct.description
-    //       });
-    //     });
-    //   }
-    // }
-    // // gather contentTypes of services that are dependent on current service
-    // await gatherDependentServicesType(
-    //   serviceName,
-    //   (ct: ISegmentContentType, sName: string) => {
-    //     associatedTypes.push({
-    //       type: `${sName}:${ct.type}`,
-    //       description: ct.description
-    //     });
-    //   }
-    // );
-    // return associatedTypes.map(atype => ({
-    //   value: atype.type,
-    //   description: atype.description
-    // }));
+    const [pluginName] = contentType.split(':');
+    const plugin = await getPlugin(pluginName);
+    const meta = plugin.config.meta || {};
+    if (!meta.segments) {
+      return [];
+    }
+    // get current services content types
+    const serviceCts = meta.segments.contentTypes || [];
+    const associatedTypes: IAssociatedType[] = serviceCts.map(
+      (ct: ISegmentContentType) => ({
+        type: `${pluginName}:${ct.type}`,
+        description: ct.description,
+      }),
+    );
+    // gather dependent services contentTypes
+    const dependentModules = meta.segments.dependentModules || [];
+    for (const dModule of dependentModules) {
+      if (!(await isEnabled(dModule.name))) {
+        continue;
+      }
+      const depModule = await getPlugin(dModule.name);
+      const depServiceMeta = depModule.config.meta || {};
+      if (depServiceMeta.segments) {
+        let contentTypes = depServiceMeta.segments.contentTypes || [];
+        if (!!dModule?.types?.length) {
+          contentTypes = contentTypes.filter(({ type }) =>
+            (dModule?.types || []).includes(type),
+          );
+        }
+        contentTypes = contentTypes;
+        contentTypes.forEach((ct: ISegmentContentType) => {
+          associatedTypes.push({
+            type: `${dModule.name}:${ct.type}`,
+            description: ct.description,
+          });
+        });
+      }
+    }
+    // gather contentTypes of services that are dependent on current service
+    await gatherDependentServicesType(
+      pluginName,
+      (ct: ISegmentContentType, sName: string) => {
+        associatedTypes.push({
+          type: `${sName}:${ct.type}`,
+          description: ct.description,
+        });
+      },
+    );
+    return associatedTypes.map((atype) => ({
+      value: atype.type,
+      description: atype.description,
+    }));
   },
 
   /**
@@ -120,23 +125,38 @@ const segmentQueries = {
       contentTypes,
       config,
       ids,
-    }: { contentTypes: string[]; config?: any; ids: string[] },
+      searchValue,
+      excludeIds,
+    }: {
+      contentTypes: string[];
+      config?: any;
+      ids: string[];
+      searchValue: string;
+      excludeIds: string[];
+    },
     { models, commonQuerySelector }: IContext,
   ) {
-    const selector: any = {
+    let selector: any = {
       ...commonQuerySelector,
       contentType: { $in: contentTypes },
       name: { $exists: true },
     };
 
-    if (ids) {
-      selector._id = { $in: ids };
-    }
-
     if (config) {
       for (const key of Object.keys(config)) {
         selector[`config.${key}`] = config[key];
       }
+    }
+
+    if (searchValue) {
+      selector.name = new RegExp(`.*${searchValue}.*`, 'i');
+    }
+    if (excludeIds?.length) {
+      selector._id = { $nin: excludeIds };
+    }
+
+    if (ids) {
+      selector = { $or: [{ _id: { $in: ids } }, { ...selector }] };
     }
 
     return models.Segments.find(selector).sort({ name: 1 });

@@ -143,7 +143,7 @@ export const RecordTableForwardSkeleton = ({
 
 export const RecordTableCursorRowList = () => {
   const [, setCursor] = useQueryState<string | undefined>('cursor');
-  const { cursorItemIds } = useRecordTableCursorContext();
+  const { cursorItemIds = [] } = useRecordTableCursorContext();
 
   return (
     <RecordTable.RowList

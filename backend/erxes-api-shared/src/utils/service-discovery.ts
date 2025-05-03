@@ -17,7 +17,7 @@ const queue = new Queue('gateway-update-apollo-router', {
 export const getPlugins = async (): Promise<string[]> => {
   const enabledServices = (await redis.smembers('enabled-services')) || '[]';
 
-  return ['core', ...enabledServices];
+  return [...enabledServices];
 };
 
 export const addPlugin = async (serviceName: string): Promise<void> => {

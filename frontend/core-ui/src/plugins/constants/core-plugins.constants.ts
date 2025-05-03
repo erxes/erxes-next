@@ -2,6 +2,7 @@ import {
   IconShoppingCartFilled,
   IconBookmarksFilled,
   IconLogs,
+  IconChartPie,
 } from '@tabler/icons-react';
 
 export const CORE_PLUGINS = [
@@ -33,4 +34,5 @@ export const CORE_PLUGINS = [
     ],
   },
   { name: 'products', icon: IconShoppingCartFilled, path: '/products' },
+  { name: 'segments', icon: IconChartPie, path: '/segments' },
 ];

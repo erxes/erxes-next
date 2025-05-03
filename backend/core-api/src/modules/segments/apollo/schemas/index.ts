@@ -55,7 +55,7 @@ export const types = `
 export const queries = `
   segmentsGetTypes: [JSON]
   segmentsGetAssociationTypes(contentType: String!): [JSON]
-  segments(contentTypes: [String]!, config: JSON, ids: [String]): [Segment]
+  segments(contentTypes: [String]!, config: JSON, ids: [String],excludeIds:[String],searchValue:String): [Segment]
   segmentDetail(_id: String): Segment
   segmentsGetHeads(contentType:String): [Segment]
   segmentsEvents(contentType: String!): [JSON]

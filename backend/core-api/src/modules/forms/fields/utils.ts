@@ -59,6 +59,25 @@ const generateUsersOptions = async (
   };
 };
 
+const generateTestOptions = async (
+  name: string,
+  label: string,
+  type: string,
+  selectionConfig?: any,
+) => {
+  return {
+    _id: Math.random(),
+    name,
+    label,
+    type,
+    selectionConfig: {
+      ...selectionConfig,
+      queryName: 'customers',
+      labelField: 'primaryEmail',
+    },
+  };
+};
+
 const getTags = async (subdomain: string, type: string) => {
   const models = await generateModels(subdomain);
   const tags = await models.Tags.find({ type });
@@ -377,7 +396,9 @@ export const generateContactsFields = async ({ subdomain, data }) => {
     fields.push(brandsOptions);
   }
 
-  fields = [...fields, ownerOptions];
+  const testOptions = await generateTestOptions('testId', 'Test', 'user');
+
+  fields = [...fields, ownerOptions, testOptions];
 
   if (usageType === 'import') {
     for (const extendField of EXTEND_FIELDS.ALL) {
