@@ -12,12 +12,17 @@ export const client = new Client({
 
 export const isElasticsearchUp = async () => {
   try {
-    const res = await fetch('http://localhost:9200');
-    return res.status === 200;
+    const status = await fetch(ELASTICSEARCH_URL).then((res) => res.status);
+    return status === 200;
   } catch (err) {
     console.warn('Elasticsearch is not running:', err.message);
     return false;
   }
+};
+
+export const getElasticsearchInfo = async () => {
+  const info = await client.info();
+  return info;
 };
 
 export const getRealIdFromElk = (_id: string) => {
@@ -31,6 +36,21 @@ export const getRealIdFromElk = (_id: string) => {
   }
 
   return _id;
+};
+
+export const generateElkIds = async (ids: string[], subdomain: string) => {
+  const VERSION = getEnv({ name: 'VERSION' });
+
+  if (VERSION && VERSION === 'saas') {
+    if (ids && ids.length) {
+      const organizationId = await getSaasOrganizationIdBySubdomain(subdomain);
+
+      return ids.map((_id) => `${organizationId}__${_id}`);
+    }
+    return [];
+  }
+
+  return ids;
 };
 
 export function getDbNameFromConnectionString(connectionString: string) {
@@ -140,6 +160,12 @@ export const fetchEs = async ({
       params.size = size;
     }
 
+    const isUp = await isElasticsearchUp();
+
+    if (!isUp) {
+      throw new Error('Elasticsearch is not running');
+    }
+
     const response = await elasticMethodMap[action](params);
 
     return response;
@@ -203,11 +229,11 @@ export const fetchByQueryWithScroll = async ({
   while (totalCount > 0) {
     const scrollResponse = await fetchEsWithScroll(scrollId);
 
-    if (scrollResponse.hits.hits.length === 0) {
+    if (scrollResponse.body.hits.hits.length === 0) {
       break;
     }
 
-    ids = ids.concat(scrollResponse.hits.hits.map((hit: any) => hit._id));
+    ids = ids.concat(scrollResponse.body.hits.hits.map((hit: any) => hit._id));
   }
 
   return ids;
@@ -246,3 +272,11 @@ export const fetchByQuery = async ({
     .map((hit: any) => (_source === '_id' ? hit._id : hit._source[_source]))
     .filter((r: any) => r);
 };
+
+export async function getTotalDocCount() {
+  const response = await client.indices.stats({ metric: 'docs' });
+
+  const totalDocs = response.body._all.primaries.docs.count;
+
+  return totalDocs;
+}

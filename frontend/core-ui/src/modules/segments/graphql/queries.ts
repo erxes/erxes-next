@@ -70,6 +70,24 @@ const segmentDetail = gql`
   }
 `;
 
+const segmentsPreviewCount = gql`
+  query Query(
+    $contentType: String!
+    $conditions: JSON
+    $subOf: String
+    $config: JSON
+    $conditionsConjunction: String
+  ) {
+    segmentsPreviewCount(
+      contentType: $contentType
+      conditions: $conditions
+      subOf: $subOf
+      config: $config
+      conditionsConjunction: $conditionsConjunction
+    )
+  }
+`;
+
 export default {
   segments,
   fieldsCombinedByContentType,
@@ -77,4 +95,5 @@ export default {
   propertiesWithFields,
   segmentDetail,
   segmentsGetTypes,
+  segmentsPreviewCount,
 };

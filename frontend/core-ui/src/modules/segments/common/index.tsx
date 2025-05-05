@@ -3,6 +3,10 @@ import { Combobox, Command, Popover } from 'erxes-ui/components';
 import { getCursorPageInfo, useRecordTableCursor } from 'erxes-ui/modules';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
+import formSchema from '../components/form/schema';
+import { UseFormReturn } from 'react-hook-form';
+import { IConditionsForPreview } from '../types';
+import { z } from 'zod';
 
 type CommandProps = {
   query: DocumentNode;
@@ -38,7 +42,7 @@ const useList = (
   }: {
     direction: 'forward' | 'backward';
     onFetchMoreCompleted?: (fetchMoreResult: {
-      [queryName]: {
+      [queryName: string]: {
         list: any[];
       };
     }) => void;
@@ -183,4 +187,42 @@ export const SelectCommand = ({
       </Combobox.Content>
     </Popover>
   );
+};
+
+export const generateParamsPreviewCount = (
+  form: UseFormReturn<z.infer<typeof formSchema>>,
+  selectedContentType: string,
+) => {
+  const conditions = form.watch('conditions');
+  const conditionSegments = form.watch('conditionSegments');
+  const conditionsConjunction = form.watch('conditionsConjunction');
+
+  const conditionsForPreview: IConditionsForPreview[] = [];
+
+  if (conditions?.length) {
+    conditionsForPreview.push({
+      type: 'subSegment',
+      subSegmentForPreview: {
+        key: Math.random().toString(),
+        contentType: selectedContentType || '',
+        conditionsConjunction,
+        conditions: conditions,
+      },
+    });
+  }
+
+  if (conditionSegments?.length) {
+    conditionSegments.forEach((segment) => {
+      conditionsForPreview.push({
+        type: 'subSegment',
+        subSegmentForPreview: {
+          key: Math.random().toString(),
+          ...segment,
+          conditions: segment.conditions || [],
+        },
+      });
+    });
+  }
+
+  return conditionsForPreview;
 };

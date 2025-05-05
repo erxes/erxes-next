@@ -59,7 +59,7 @@ export const queries = `
   segmentDetail(_id: String): Segment
   segmentsGetHeads(contentType:String): [Segment]
   segmentsEvents(contentType: String!): [JSON]
-  segmentsPreviewCount(contentType: String!, conditions: JSON, subOf: String, config: JSON, conditionsConjunction: String): Int
+  segmentsPreviewCount(contentType: String!, conditions: JSON, subOf: String, config: JSON, conditionsConjunction: String): JSON
 `;
 
 const commonFields = `

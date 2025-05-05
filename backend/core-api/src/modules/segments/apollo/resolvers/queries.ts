@@ -12,8 +12,14 @@ import {
   gatherDependentServicesType,
   ISegmentContentType,
 } from 'erxes-api-shared/core-modules';
-import { getPlugin, getPlugins, isEnabled } from 'erxes-api-shared/utils';
+import {
+  getPlugin,
+  getPlugins,
+  getTotalDocCount,
+  isEnabled,
+} from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { fetchSegment } from '../../utils/fetchSegment';
 
 // import { IContext } from "../../../connectionResolver";
 // import { fetchSegment } from "../../modules/segments/queryBuilder";
@@ -204,21 +210,23 @@ const segmentQueries = {
     }: IPreviewParams,
     { models, subdomain }: IContext,
   ) {
-    // return fetchSegment(
-    //   models,
-    //   subdomain,
-    //   {
-    //     name: "preview",
-    //     color: "#fff",
-    //     subOf: subOf || "",
-    //     config,
-    //     contentType,
-    //     conditions,
-    //     conditionsConjunction
-    //   },
-    //   { returnCount: true }
-    // );
-    return;
+    const total = await getTotalDocCount();
+    const count = await fetchSegment(
+      models,
+      subdomain,
+      {
+        name: 'preview',
+        color: '#fff',
+        subOf: subOf || '',
+        config,
+        contentType,
+        conditions,
+        conditionsConjunction,
+      },
+      { returnCount: true },
+    );
+    console.log({ count, total });
+    return { count, total };
   },
 };
 

@@ -125,3 +125,17 @@ export type IPropertyInput<TForm extends FieldValues> = {
   operators: IOperator[];
   selectedField?: IField;
 };
+
+export interface ISegmentMap {
+  _id?: string;
+  key: string;
+  contentType: string;
+  config?: any;
+  conditions: ICondition[];
+  conditionsConjunction: string;
+}
+
+export interface IConditionsForPreview {
+  type: string;
+  subSegmentForPreview: ISegmentMap;
+}

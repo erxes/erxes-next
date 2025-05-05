@@ -1,22 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { IconPlus } from '@tabler/icons-react';
-import { Form, useQueryState, useToast } from 'erxes-ui';
-import {
-  Button,
-  Input,
-  Label,
-  MultipleSelector,
-  Sheet,
-  Spinner,
-  Textarea,
-} from 'erxes-ui/components';
-import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
-import { ISegment, ListQueryResponse } from '../types';
-import { getDefaultValues } from './form/defaultValues';
-import formSchema from './form/schema';
-import Segment from './form/Segment';
-import { Segments } from './form/Segments';
 import {
   ApolloError,
   ApolloQueryResult,
@@ -24,10 +5,28 @@ import {
   useMutation,
   useQuery,
 } from '@apollo/client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IconPlus } from '@tabler/icons-react';
+import { Form, useQueryState, useToast } from 'erxes-ui';
+import { Button, Input, Label, Sheet, Textarea } from 'erxes-ui/components';
+import { useState } from 'react';
+import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
+import { z } from 'zod';
+import { SelectSegmentCommand } from '../common/SelectSegment';
 import mutations from '../graphql/mutations';
 import queries from '../graphql/queries';
-import { useState } from 'react';
-import { SelectSegmentCommand } from '../common/SelectSegment';
+import {
+  IConditionsForPreview,
+  ISegment,
+  ISegmentMap,
+  ListQueryResponse,
+} from '../types';
+import { getDefaultValues } from './form/defaultValues';
+import formSchema from './form/schema';
+import Segment from './form/Segment';
+import { Segments } from './form/Segments';
+import { generateParamsPreviewCount } from '../common';
+import client from '~/providers/apollo-provider/apolloClient';
 
 type Props = {
   trigger?: React.ReactNode;
@@ -52,26 +51,6 @@ const renderContent = ({
   return <Segment form={form} />;
 };
 
-const renderStats = () => {
-  console.log('dasdas');
-  return (
-    <Sheet.Footer className="gap-4 sm:justify-start border-y-2 px-6 py-4">
-      <div className="flex flex-col items-center">
-        <Label>Total</Label>
-        <h4 className="text-xl text-primary">1000000</h4>
-      </div>
-      <div className="flex flex-col items-center">
-        <Label>Targeted</Label>
-        <h4 className="text-xl text-primary">52503</h4>
-      </div>
-      <div className="flex flex-col items-center">
-        <Label>Percentage</Label>
-        <h4 className="text-xl text-primary">52%</h4>
-      </div>
-    </Sheet.Footer>
-  );
-};
-
 export default function SegmentDetail({ refetch }: Props) {
   const [selectedContentType] = useQueryState<string>('contentType');
 
@@ -81,7 +60,12 @@ export default function SegmentDetail({ refetch }: Props) {
 
   const [segmentId, setOpen] = useQueryState<string>('segmentId');
   const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [isDisplayStats, setDisplayStats] = useState(false);
+  const [stats, setStats] = useState({
+    total: 0,
+    targeted: 0,
+    percentage: 0,
+    loading: false,
+  });
 
   const { toast } = useToast();
   const [segmentAdd] = useMutation(mutations.segmentsAdd);
@@ -176,6 +160,28 @@ export default function SegmentDetail({ refetch }: Props) {
         });
         refetch();
       },
+    });
+  };
+
+  const handleCalculateStats = async () => {
+    setStats({ ...stats, loading: true });
+    const { data } = await client.query({
+      query: queries.segmentsPreviewCount,
+      variables: {
+        contentType: selectedContentType,
+        conditions: generateParamsPreviewCount(form, selectedContentType || ''),
+        subOf: form.getValues('subOf'),
+        config: form.getValues('config'),
+        conditionsConjunction: form.getValues('conditionsConjunction'),
+      },
+    });
+
+    const { count = 0, total = 0 } = data?.segmentsPreviewCount || {};
+    setStats({
+      total,
+      targeted: count,
+      percentage: total > 0 ? Number(((count / total) * 100).toFixed(2)) : 0,
+      loading: false,
     });
   };
 
@@ -274,10 +280,32 @@ export default function SegmentDetail({ refetch }: Props) {
               </Button>
             </FormProvider>
           </div>
-          {isDisplayStats && renderStats()}
+
+          <Sheet.Footer className="gap-4 sm:justify-start border-y-2 px-6 py-4">
+            <div className="flex flex-col items-center">
+              <Label>Total</Label>
+              <h4 className="text-xl text-primary">
+                {stats.total.toLocaleString()}
+              </h4>
+            </div>
+            <div className="flex flex-col items-center">
+              <Label>Targeted</Label>
+              <h4 className="text-xl text-primary">
+                {stats.targeted.toLocaleString()}
+              </h4>
+            </div>
+            <div className="flex flex-col items-center">
+              <Label>Percentage</Label>
+              <h4 className="text-xl text-primary">{stats.percentage}%</h4>
+            </div>
+          </Sheet.Footer>
           <Sheet.Footer className="m-4 ">
-            <Button variant="secondary" onClick={() => setDisplayStats(true)}>
-              Calculate segment reach
+            <Button
+              variant="secondary"
+              onClick={handleCalculateStats}
+              disabled={stats.loading}
+            >
+              {stats.loading ? 'Calculating...' : 'Calculate segment reach'}
             </Button>
             <Button onClick={form.handleSubmit(handleSave)}>
               Save Segment

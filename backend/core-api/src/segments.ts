@@ -41,6 +41,7 @@ export default startSegments('core', {
     { type: 'product', description: 'Product', esIndex: 'products' },
   ],
   esTypesMap: async () => {
+    console.log({ esTypesMap: 'esTypesMap' });
     return { typesMap: {} };
   },
 
