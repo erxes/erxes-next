@@ -10,7 +10,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     icon: IconBookmarksFilled,
     path: 'contacts',
     hasSettings: true,
-    haveWidgets: true,
+    hasWidgets: true,
     submenus: [
       {
         name: 'customers',
@@ -39,7 +39,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     icon: IconShoppingCartFilled,
     path: 'products',
     hasSettings: true,
-    haveWidgets: true,
+    hasWidgets: true,
     submenus: [
       {
         name: 'categories',

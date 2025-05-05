@@ -1,6 +1,6 @@
 import { Resizable, Tabs, useQueryState } from 'erxes-ui';
-import { CustomerDetailActionsTrigger } from '../customer-detail/components/CustomerDetailActions';
 import { CustomerDetailSheet } from '../customer-detail/components/CustomerDetailSheet';
+import { useWidget } from 'ui-modules';
 
 export const CustomerDetailLayout = ({
   children,
@@ -9,6 +9,8 @@ export const CustomerDetailLayout = ({
   children: React.ReactNode;
   actions?: React.ReactNode;
 }) => {
+  const { Widget } = useWidget();
+  const [contactId] = useQueryState<string>('contact_id');
   return (
     <CustomerDetailSheet>
       <div className="flex h-auto flex-auto overflow-auto">
@@ -23,7 +25,7 @@ export const CustomerDetailLayout = ({
             {actions}
           </Resizable.PanelGroup>
         </div>
-        <CustomerDetailActionsTrigger />
+        <Widget contentType="core:customer" contentId={contactId || ''} />
       </div>
     </CustomerDetailSheet>
   );

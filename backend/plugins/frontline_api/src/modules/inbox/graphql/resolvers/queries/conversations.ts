@@ -49,7 +49,7 @@ export const conversationQueries = {
 
     // console.log('qb.mainQuery()', qb.mainQuery());
 
-    const conversations = await models.Conversations.find().limit(10);
+    const conversations = await models.Conversations.find({}).limit(10);
 
     return conversations;
   },

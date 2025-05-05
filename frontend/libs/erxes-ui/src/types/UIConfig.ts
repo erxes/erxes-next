@@ -6,7 +6,7 @@ export type IUIConfig = {
     icon: React.ElementType;
     path: string;
     hasSettings: boolean;
-    haveWidgets: boolean;
+    hasWidgets: boolean;
     submenus?: {
       name: string;
       path: string;

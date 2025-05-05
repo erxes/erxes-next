@@ -11,7 +11,7 @@ export const WidgetsSidebar = (props: WidgetProps) => {
 
   const widgetsModules = plugins.flatMap((plugin) =>
     plugin.modules
-      .filter((module) => module.haveWidgets)
+      .filter((module) => module.hasWidgets)
       .map((module) => ({
         ...module,
         pluginName: plugin.name,
@@ -28,7 +28,8 @@ export const WidgetsSidebar = (props: WidgetProps) => {
         <SideMenu.Content value={module.name} key={`content-${module.name}`}>
           <RenderPLuginsComponent
             pluginName={`${module.pluginName}_ui`}
-            moduleName="Widgets"
+            remoteModuleName="widgets"
+            moduleName={module.name}
             props={props}
           />
         </SideMenu.Content>

@@ -10,14 +10,14 @@ export const CONFIG: IUIConfig = {
       icon: IconSandbox,
       path: 'sampleFirst',
       hasSettings: true,
-      haveWidgets: true,
+      hasWidgets: true,
     },
     {
       name: 'sampleSecond',
       icon: IconSandbox,
       path: 'sampleSecond',
       hasSettings: true,
-      haveWidgets: true,
+      hasWidgets: true,
       submenus: [
         {
           name: 'submenu1',

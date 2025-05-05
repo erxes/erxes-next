@@ -1,3 +1,9 @@
-export const Widgets = ({ contentId }: { contentId: string }) => {
-  return <div>Widgets {contentId}</div>;
+export const Widgets = ({
+  contentId,
+  contentType,
+}: {
+  contentId: string;
+  contentType: string;
+}) => {
+  return <div>no relation</div>;
 };

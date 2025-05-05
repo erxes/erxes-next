@@ -29,7 +29,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         <div className="flex items-center justify-center h-8">
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
-            <Avatar.Fallback colorSeed={_id}>
+            <Avatar.Fallback>
               {primaryName?.charAt(0) ||
                 primaryEmail?.charAt(0) ||
                 primaryPhone?.charAt(0) ||
