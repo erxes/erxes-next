@@ -1,5 +1,5 @@
 import { TextField } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customers-new/customer-edit/hooks/useCustomerEdit';
+import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 
 interface TextFieldProps {
   placeholder?: string;

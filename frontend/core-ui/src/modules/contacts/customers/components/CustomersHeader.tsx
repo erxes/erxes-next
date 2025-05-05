@@ -1,8 +1,8 @@
-import { AddCustomerForm } from '@/contacts/customers-new/components/AddCustomerForm';
 import { IconUsers } from '@tabler/icons-react';
 import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { ContactsPath } from '~/modules/types/paths/ContactsPath';
+import { CustomerAddSheet } from './CustomerAddSheet';
 
 export const CustomersHeader = () => {
   return (
@@ -24,7 +24,7 @@ export const CustomersHeader = () => {
         <PageHeader.LikeButton />
       </PageHeader.Start>
       <PageHeader.End>
-        <AddCustomerForm />
+        <CustomerAddSheet />
       </PageHeader.End>
     </PageHeader>
   );

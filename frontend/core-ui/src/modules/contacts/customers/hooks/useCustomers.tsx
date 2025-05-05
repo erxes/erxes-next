@@ -1,6 +1,6 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 
-import { GET_CUSTOMERS } from '@/contacts/customers-new/graphql/queries/getCustomers';
+import { GET_CUSTOMERS } from '@/contacts/customers/graphql/queries/getCustomers';
 import { ICustomer } from '@/contacts/types/customerType';
 import {
   IRecordTableCursorPageInfo,
@@ -9,6 +9,7 @@ import {
   validateFetchMore,
   EnumCursorDirection,
   useMultiQueryState,
+  parseDateRangeFromString,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { customersCountState } from '@/contacts/states/customersCountState';
@@ -18,10 +19,14 @@ const CUSTOMERS_PER_PAGE = 20;
 export const useCustomers = (options?: QueryHookOptions) => {
   const setCustomersCount = useSetAtom(customersCountState);
 
-  const [queries] = useMultiQueryState<{
-    searchValue: string;
-    tags: string[];
-  }>(['searchValue', 'tags']);
+  const [{ searchValue, tags, created, updated, lastSeen }] =
+    useMultiQueryState<{
+      searchValue: string;
+      tags: string[];
+      created: string;
+      updated: string;
+      lastSeen: string;
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
 
   const { cursor } = useRecordTableCursor({
     sessionKey: 'customers_cursor',
@@ -38,7 +43,22 @@ export const useCustomers = (options?: QueryHookOptions) => {
     variables: {
       limit: CUSTOMERS_PER_PAGE,
       cursor,
-      ...queries,
+      searchValue,
+      tags,
+      dateFilters: JSON.stringify({
+        createdAt: {
+          gte: parseDateRangeFromString(created)?.from,
+          lte: parseDateRangeFromString(created)?.to,
+        },
+        updatedAt: {
+          gte: parseDateRangeFromString(updated)?.from,
+          lte: parseDateRangeFromString(updated)?.to,
+        },
+        lastSeenAt: {
+          gte: parseDateRangeFromString(lastSeen)?.from,
+          lte: parseDateRangeFromString(lastSeen)?.to,
+        },
+      }),
       ...options?.variables,
     },
     onCompleted(data) {
@@ -58,7 +78,6 @@ export const useCustomers = (options?: QueryHookOptions) => {
 
     fetchMore({
       variables: {
-        ...queries,
         cursor:
           direction === EnumCursorDirection.FORWARD
             ? pageInfo?.endCursor

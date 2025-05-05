@@ -3,7 +3,7 @@ import { CustomerDetailActions } from './CustomerDetailActions';
 import {
   CustomerDetailLayout,
   CustomerDetailTabContent,
-} from '@/contacts/customers-new/components/CustomerDetailLayout';
+} from '@/contacts/customers/components/CustomerDetailLayout';
 import { CustomerDetailGeneral } from './CustomerDetailGeneral';
 import { CustomerGeneral } from './CustomerGeneral';
 import { CustomerProperties } from './CustomerProperties';

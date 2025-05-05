@@ -1,5 +1,5 @@
 import { RecordTable } from 'erxes-ui';
-import { useCustomers } from '@/contacts/customers-new/hooks/useCustomers';
+import { useCustomers } from '@/contacts/customers/hooks/useCustomers';
 import { customersColumns } from './CustomersColumns';
 
 export const CustomersRecordTable = () => {

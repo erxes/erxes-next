@@ -10,21 +10,15 @@ import {
   useSetHotkeyScope,
 } from 'erxes-ui';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-interface CustomerAddSheetProps {
-  children: React.ReactNode;
-  onOpenChange?: (open: boolean) => void;
-  open?: boolean;
-}
-export const CustomerAddSheet = ({
-  children,
-  open,
-  onOpenChange,
-}: CustomerAddSheetProps) => {
-  const setHotkeyScope = useSetHotkeyScope();
-  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
+import { useState } from 'react';
+import { AddCustomerForm } from './AddCustomerForm';
 
+export const CustomerAddSheet = () => {
+  const setHotkeyScope = useSetHotkeyScope();
+  const [open, setOpen] = useState<boolean>(false);
+  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
   const onOpen = () => {
-    onOpenChange?.(true);
+    setOpen(true);
     setHotkeyScopeAndMemorizePreviousScope(
       CustomerHotKeyScope.CustomerAddSheet,
     );
@@ -32,7 +26,7 @@ export const CustomerAddSheet = ({
 
   const onClose = () => {
     setHotkeyScope(PageHotkeyScope.CustomersPage);
-    onOpenChange?.(false);
+    setOpen(false);
   };
 
   useScopedHotkeys(`c`, () => onOpen(), PageHotkeyScope.CustomersPage);
@@ -57,7 +51,7 @@ export const CustomerAddSheet = ({
           e.preventDefault();
         }}
       >
-        {children}
+        <AddCustomerForm onOpenChange={setOpen} />
       </Sheet.View>
     </Sheet>
   );

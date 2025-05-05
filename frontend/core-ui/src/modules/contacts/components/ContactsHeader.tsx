@@ -1,7 +1,7 @@
 import { IconUsers } from '@tabler/icons-react';
 import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
 
-import { AddCustomerForm } from '@/contacts/customers-new/components/AddCustomerForm';
+import { AddCustomerForm } from '@/contacts/customers/components/AddCustomerForm';
 import { ContactsPath } from '@/types/paths/ContactsPath';
 import { Link } from 'react-router-dom';
 

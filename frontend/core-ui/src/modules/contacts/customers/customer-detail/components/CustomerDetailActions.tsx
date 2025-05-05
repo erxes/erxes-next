@@ -21,7 +21,7 @@ const actionTabs = {
 
 export const CustomerDetailActions = () => {
   const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
-  const [contactId] = useQueryState<string>('contact_id');
+  const [contactId] = useQueryState<string>('contactId');
 
   return (
     <>

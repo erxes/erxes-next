@@ -1,6 +1,6 @@
 import { UseFormReturn } from 'react-hook-form';
 
-import { CustomerFormType } from '@/contacts/customers-new/constants/formSchema';
+import { CustomerFormType } from '@/contacts/customers/constants/formSchema';
 import {
   AvatarField,
   CodeField,
@@ -13,7 +13,7 @@ import {
   PhoneValidationStatusField,
   PrimaryEmailField,
   PrimaryPhoneField,
-} from '@/contacts/customers-new/components/CustomerFormFields';
+} from '@/contacts/customers/components/CustomerFormFields';
 
 export const CustomerAddGeneralInformationFields = ({
   form,

@@ -47,10 +47,10 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
               e.stopPropagation();
               onClose();
             }}
-            className="size-3.5 p-0 hover:bg-transparent"
+            className="size-3.5 p-0 hover:bg-transparent flex-none"
             asChild
           >
-            <IconX className="size-3.5" />
+            <IconX className="size-3.5 flex-none" />
           </Button>
         )}
       </div>

@@ -2,7 +2,7 @@ import { Control } from 'react-hook-form';
 
 import { Editor, Form, Input, Select, Switch, Upload } from 'erxes-ui';
 
-import { CustomerFormType } from '@/contacts/customers-new/constants/formSchema';
+import { CustomerFormType } from '@/contacts/customers/constants/formSchema';
 import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
 import { AssignMember } from 'ui-modules';
 

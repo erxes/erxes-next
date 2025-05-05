@@ -13,7 +13,7 @@ export const CustomerDetailLayout = ({
   const [contactId] = useQueryState<string>('contact_id');
   return (
     <CustomerDetailSheet>
-      <div className="flex h-auto flex-auto overflow-auto">
+      <div className="flex h-full flex-auto overflow-auto">
         <div className="flex flex-col flex-auto min-h-full overflow-hidden">
           <Resizable.PanelGroup
             direction="horizontal"

@@ -1,35 +1,25 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 
-import { Button, Sheet, useQueryState, useSetHotkeyScope, cn } from 'erxes-ui';
-
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { useEffect } from 'react';
+import { Button, Sheet, useQueryState, cn } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
-import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
-
+import { usePreviousHotkeyScope } from 'erxes-ui';
 export const CustomerDetailSheet = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [open, setOpen] = useQueryState<string>('contact_id');
-  const setHotkeyScope = useSetHotkeyScope();
+  const [open, setOpen] = useQueryState<string>('contactId');
+  const { goBackToPreviousHotkeyScope } = usePreviousHotkeyScope();
 
   const activeTab = useAtomValue(customerDetailActiveActionTabAtom);
-
-  useEffect(() => {
-    if (open) {
-      setHotkeyScope(CustomerHotKeyScope.CustomerEditSheet);
-    }
-  }, [open]);
 
   return (
     <Sheet
       open={!!open}
       onOpenChange={() => {
         setOpen(null);
-        setHotkeyScope(PageHotkeyScope.CustomersPage);
+        goBackToPreviousHotkeyScope();
       }}
     >
       <Sheet.View
@@ -48,7 +38,7 @@ export const CustomerDetailSheet = ({
             Customer Detail
           </Sheet.Description>
         </Sheet.Header>
-        <Sheet.Content>{children}</Sheet.Content>
+        <Sheet.Content className="border-b-0">{children}</Sheet.Content>
       </Sheet.View>
     </Sheet>
   );

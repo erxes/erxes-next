@@ -1,5 +1,5 @@
-import { FullNameField } from '@/contacts/customers-new/customer-edit/components/FullNameField';
-import { useCustomerDetail } from '@/contacts/customers-new/customer-detail/hooks/useCustomerDetail';
+import { FullNameField } from '@/contacts/customers/customer-edit/components/FullNameField';
+import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';

@@ -1,4 +1,13 @@
-import { IconUser } from '@tabler/icons-react';
+import {
+  IconCalendarPlus,
+  IconChartBar,
+  IconClock,
+  IconLabelFilled,
+  IconMail,
+  IconPhone,
+  IconTags,
+  IconUser,
+} from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
   Avatar,
@@ -12,13 +21,15 @@ import {
   RelativeDateDisplay,
   PhoneListField,
   useToast,
+  Button,
 } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customers-new/customer-edit/hooks/useCustomerEdit';
+import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
 import { EmailDisplay, PhoneDisplay } from 'erxes-ui/modules/display';
 import { customerMoreColumn } from './CustomerMoreColumn';
+import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -52,19 +63,63 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: () => <RecordTable.InlineHead label="Name" />,
+    header: () => (
+      <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
+    ),
     cell: ({ cell }) => {
-      const { firstName, lastName } = cell.row.original;
+      const { firstName, lastName, _id } = cell.row.original;
+      const { customersEdit } = useCustomersEdit();
+      const [_firstName, setFirstName] = useState(firstName);
+      const [_lastName, setLastName] = useState(lastName);
+      const [open, setOpen] = useState(false);
+
+      const onSave = () => {
+        if (_firstName !== firstName || _lastName !== lastName) {
+          customersEdit(
+            { variables: { _id, firstName: _firstName, lastName: _lastName } },
+            ['firstName', 'lastName'],
+          );
+        }
+      };
+
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Name'}
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
-            {firstName} {lastName}
+            {_firstName} {_lastName}
           </RecordTableCellTrigger>
-          <RecordTableCellContent className="w-72 ">
-            <FullNameField>
-              <FullNameField.FirstName value={firstName} />
-              <FullNameField.LastName value={lastName} />
-            </FullNameField>
+          <RecordTableCellContent className="w-72" asChild>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSave();
+                setOpen(false);
+              }}
+            >
+              <FullNameField>
+                <FullNameField.FirstName
+                  value={_firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                />
+                <FullNameField.LastName
+                  value={_lastName}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }}
+                />
+              </FullNameField>
+              <button type="submit" className="sr-only" />
+            </form>
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -74,7 +129,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'emails',
     accessorKey: 'primaryEmail',
-    header: () => <RecordTable.InlineHead label="Emails" />,
+    header: () => <RecordTable.InlineHead label="Emails" icon={IconMail} />,
     cell: ({ cell }) => {
       const { primaryEmail, _id, emailValidationStatus, emails } =
         cell.row.original;
@@ -100,7 +155,9 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           index === self.findIndex((t) => t.email === email.email),
       );
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Emails'}
+        >
           <RecordTableCellTrigger>
             <EmailDisplay emails={_emails} />
           </RecordTableCellTrigger>
@@ -142,11 +199,12 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         </RecordTablePopover>
       );
     },
+    size: 250,
   },
   {
     id: 'phones',
     accessorKey: 'primaryPhone',
-    header: () => <RecordTable.InlineHead label="Phones" />,
+    header: () => <RecordTable.InlineHead label="Phones" icon={IconPhone} />,
     cell: ({ cell }) => {
       const {
         _id,
@@ -175,7 +233,9 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           index === self.findIndex((t) => t.phone === phone.phone),
       );
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Phones'}
+        >
           <RecordTableCellTrigger>
             <PhoneDisplay phones={phones} />
           </RecordTableCellTrigger>
@@ -212,11 +272,12 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         </RecordTablePopover>
       );
     },
+    size: 250,
   },
   {
     id: 'tagIds',
     accessorKey: 'tagIds',
-    header: () => <RecordTable.InlineHead label="Tags" />,
+    header: () => <RecordTable.InlineHead label="Tags" icon={IconTags} />,
     cell: ({ cell }) => {
       const [selectedTags, setSelectedTags] = useState<string[]>(
         cell.row.original.tagIds || [],
@@ -247,11 +308,12 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         </SelectTags>
       );
     },
+    size: 360,
   },
   {
     id: 'lastSeenAt',
     accessorKey: 'lastSeenAt',
-    header: () => <RecordTable.InlineHead label="Last Seen" />,
+    header: () => <RecordTable.InlineHead label="Last Seen" icon={IconClock} />,
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>
@@ -265,7 +327,9 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'sessionCount',
     accessorKey: 'sessionCount',
-    header: () => <RecordTable.InlineHead label="Session Count" />,
+    header: () => (
+      <RecordTable.InlineHead label="Session Count" icon={IconChartBar} />
+    ),
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>
@@ -277,7 +341,9 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
   {
     id: 'createdAt',
     accessorKey: 'createdAt',
-    header: () => <RecordTable.InlineHead label="Created At" />,
+    header: () => (
+      <RecordTable.InlineHead label="Created At" icon={IconCalendarPlus} />
+    ),
     cell: ({ cell }) => {
       return (
         <RelativeDateDisplay value={cell.getValue() as string} asChild>

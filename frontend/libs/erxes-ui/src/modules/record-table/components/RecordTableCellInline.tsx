@@ -2,11 +2,32 @@ import { Button, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
 
-export const RecordTablePopover = (
-  props: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root>,
-) => {
-  return <PopoverPrimitive.Root modal {...props} />;
+export const RecordTablePopover = ({
+  scope,
+  onOpenChange,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> & {
+  scope?: string;
+}) => {
+  const {
+    setHotkeyScopeAndMemorizePreviousScope,
+    goBackToPreviousHotkeyScope,
+  } = usePreviousHotkeyScope();
+
+  return (
+    <PopoverPrimitive.Root
+      modal
+      {...props}
+      onOpenChange={(open) => {
+        onOpenChange?.(open);
+        open
+          ? setHotkeyScopeAndMemorizePreviousScope(scope + '.Popover')
+          : goBackToPreviousHotkeyScope();
+      }}
+    />
+  );
 };
 RecordTablePopover.displayName = 'RecordTablePopover';
 
@@ -32,8 +53,8 @@ export const RecordTableCellTrigger = React.forwardRef<
 });
 
 export const RecordTableCellContent = React.forwardRef<
-  React.ElementRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'>
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 >(({ className, ...props }, ref) => {
   return (
     <Popover.Content

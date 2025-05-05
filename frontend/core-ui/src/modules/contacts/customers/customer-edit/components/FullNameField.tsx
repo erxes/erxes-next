@@ -1,5 +1,5 @@
 import { FullName } from 'erxes-ui/modules/record-field/components/FullName';
-import { useCustomersEdit } from '@/contacts/customers-new/customer-edit/hooks/useCustomerEdit';
+import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 
 export const FullNameField = ({
   _id,

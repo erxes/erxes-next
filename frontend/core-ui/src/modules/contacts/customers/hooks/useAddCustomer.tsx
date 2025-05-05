@@ -1,6 +1,6 @@
 import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
-import { ADD_CUSTOMERS } from '@/contacts/customers-new/graphql/mutations/addCustomers';
-import { GET_CUSTOMERS } from '@/contacts/customers-new/graphql/queries/getCustomers';
+import { ADD_CUSTOMERS } from '@/contacts/customers/graphql/mutations/addCustomers';
+import { GET_CUSTOMERS } from '@/contacts/customers/graphql/queries/getCustomers';
 import { ICustomer } from '@/contacts/types/customerType';
 
 interface CustomerData {
