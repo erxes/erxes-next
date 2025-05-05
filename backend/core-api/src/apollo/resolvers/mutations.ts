@@ -6,6 +6,7 @@ import { configMutations } from '@/settings/graphql/mutations';
 import { tagMutations } from '@/tags/graphql/mutations';
 import { appMutations } from '@/apps/graphql/mutations';
 import conformityMutations from '@/conformities/graphql/mutations';
+import { relationsMutations } from '@/relations/graphql/mutations';
 
 export const mutations = {
   ...contactMutations,
@@ -16,4 +17,5 @@ export const mutations = {
   ...productMutations,
   ...appMutations,
   ...conformityMutations,
+  ...relationsMutations,
 };

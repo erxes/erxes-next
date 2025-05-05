@@ -9,8 +9,6 @@ import { router } from '~/routes';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3302;
 
-console.log('PORT', port);
-
 const app = express();
 
 app.use(express.urlencoded({ limit: '15mb', extended: true }));

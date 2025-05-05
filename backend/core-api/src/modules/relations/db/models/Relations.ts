@@ -18,18 +18,18 @@ export interface IRelationModel extends Model<IRelationDocument> {
   }) => Promise<IRelationDocument>;
   deleteRelation: ({ _id }: { _id: string }) => Promise<IRelationDocument>;
   getRelationsByEntity: ({
-    entityType,
-    entityId,
+    contentType,
+    contentId,
   }: {
-    entityType: string;
-    entityId: string;
+    contentType: string;
+    contentId: string;
   }) => Promise<IRelationDocument[]>;
   getRelationsByEntities: ({
-    entityTypes,
-    entityIds,
+    contentType,
+    contentId,
   }: {
-    entityTypes: string[];
-    entityIds: string[];
+    contentType: string;
+    contentId: string;
   }) => Promise<IRelationDocument[]>;
 }
 
@@ -54,28 +54,32 @@ export const loadRelationClass = (models: IModels) => {
     }
 
     public static async getRelationsByEntity({
-      entityType,
-      entityId,
+      contentType,
+      contentId,
     }: {
-      entityType: string;
-      entityId: string;
+      contentType: string;
+      contentId: string;
     }) {
-      return models.Relations.find({
-        'entities.contentType': entityType,
-        'entities.contentId': entityId,
+      console.log(contentType, contentId, 'contentType, contentId');
+      const sda = await models.Relations.find({
+        'entities.contentType': contentType,
+        'entities.contentId': contentId,
       });
+
+      console.log(sda, 'sda');
+      return sda;
     }
 
     public static async getRelationsByEntities({
-      entityTypes,
-      entityIds,
+      contentType,
+      contentId,
     }: {
-      entityTypes: string[];
-      entityIds: string[];
+      contentType: string;
+      contentId: string;
     }) {
       return models.Relations.find({
-        'entities.contentType': { $in: entityTypes },
-        'entities.contentId': { $in: entityIds },
+        'entities.contentType': { $in: contentType },
+        'entities.contentId': { $in: contentId },
       });
     }
   }
