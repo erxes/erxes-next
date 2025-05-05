@@ -4,7 +4,11 @@ import { IModels } from '~/connectionResolvers';
 import { relationSchema } from '@/relations/db/definitions/relations';
 
 export interface IRelationModel extends Model<IRelationDocument> {
-  createRelation: (relation: IRelation) => Promise<IRelationDocument>;
+  createRelation: ({
+    relation,
+  }: {
+    relation: IRelation;
+  }) => Promise<IRelationDocument>;
   updateRelation: ({
     _id,
     doc,
@@ -12,12 +16,26 @@ export interface IRelationModel extends Model<IRelationDocument> {
     _id: string;
     doc: IRelation;
   }) => Promise<IRelationDocument>;
-  deleteRelation: (relation: IRelationDocument) => Promise<IRelationDocument>;
+  deleteRelation: ({ _id }: { _id: string }) => Promise<IRelationDocument>;
+  getRelationsByEntity: ({
+    entityType,
+    entityId,
+  }: {
+    entityType: string;
+    entityId: string;
+  }) => Promise<IRelationDocument[]>;
+  getRelationsByEntities: ({
+    entityTypes,
+    entityIds,
+  }: {
+    entityTypes: string[];
+    entityIds: string[];
+  }) => Promise<IRelationDocument[]>;
 }
 
 export const loadRelationClass = (models: IModels) => {
   class Relation {
-    public static async createRelation(relation: IRelationDocument) {
+    public static async createRelation({ relation }: { relation: IRelation }) {
       return models.Relations.create(relation);
     }
 
@@ -35,16 +53,29 @@ export const loadRelationClass = (models: IModels) => {
       return models.Relations.deleteOne({ _id });
     }
 
-    public static async getRelationByEntity({
+    public static async getRelationsByEntity({
       entityType,
       entityId,
     }: {
       entityType: string;
       entityId: string;
     }) {
-      return models.Relations.findOne({
+      return models.Relations.find({
         'entities.contentType': entityType,
         'entities.contentId': entityId,
+      });
+    }
+
+    public static async getRelationsByEntities({
+      entityTypes,
+      entityIds,
+    }: {
+      entityTypes: string[];
+      entityIds: string[];
+    }) {
+      return models.Relations.find({
+        'entities.contentType': { $in: entityTypes },
+        'entities.contentId': { $in: entityIds },
       });
     }
   }
