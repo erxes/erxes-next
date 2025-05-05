@@ -8,7 +8,7 @@ import {
 } from '../types/AddTransaction';
 import { Tabs, Button } from 'erxes-ui';
 import { useAtom } from 'jotai';
-import { activeJournalState } from '../states/addTrStates';
+import { activeJournalState } from '../states/trStates';
 import { AddTransaction } from '../../components/AddTransaction';
 import { CashTransaction } from './CashForm';
 import { MainJournalForm } from './MainJournalForm';

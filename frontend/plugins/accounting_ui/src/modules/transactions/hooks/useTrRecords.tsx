@@ -1,9 +1,9 @@
-import { TRANSACTIONS_QUERY } from '../graphql/transactionQueries';
+import { TR_RECORDS_QUERY } from '../graphql/transactionQueries';
 import { OperationVariables, useQuery } from '@apollo/client';
 
-export const useTransactions = (options?: OperationVariables) => {
+export const useTrRecords = (options?: OperationVariables) => {
   const { data, loading, error, fetchMore } = useQuery(
-    TRANSACTIONS_QUERY,
+    TR_RECORDS_QUERY,
     options,
   );
 
@@ -16,8 +16,8 @@ export const useTransactions = (options?: OperationVariables) => {
   };
 
   return {
-    transactions: data?.accTransactions,
-    totalCount: data?.accTransactionsCount,
+    trRecords: data?.accTrRecords,
+    totalCount: data?.accTrRecordsCount,
     loading,
     error,
     handleFetchMore,

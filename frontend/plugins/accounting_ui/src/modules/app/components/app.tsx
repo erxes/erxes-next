@@ -1,10 +1,16 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { Spinner } from 'erxes-ui';
 
-const PtrList = lazy(() =>
+const TransactionList = lazy(() =>
   import('~/pages/TransactionListPage').then((module) => ({
     default: module.TransactionListPage,
+  })),
+);
+
+const TrRecordList = lazy(() =>
+  import('~/pages/TrRecordListPage').then((module) => ({
+    default: module.TrRecordListPage,
   })),
 );
 
@@ -24,8 +30,10 @@ const PluginAccounting = () => {
       }
     >
       <Routes>
-        <Route path="/" element={<PtrList />} />
-        <Route path="/transaction" element={<TransactionPage />} />
+        <Route path="/" element={<Navigate to={`/accounting/main`} replace />} />
+        <Route path="/main" element={<TransactionList />} />
+        <Route path="/records" element={<TrRecordList />} />
+        <Route path="/transaction/:parentId" element={<TransactionPage />} />
       </Routes>
     </Suspense>
   );

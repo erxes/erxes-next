@@ -1,15 +1,15 @@
-import { useTransactions } from '../hooks/useTransactions';
-import { transactionColumns } from './TransactionsTableColumns';
+import { useTrRecords } from '../hooks/useTrRecords';
+import { trRecordColumns } from './TrRecordsTableColumns';
 import { RecordTable } from 'erxes-ui';
 
-export const PtrRecordTable = () => {
-  const { transactions, loading, totalCount, handleFetchMore } =
-    useTransactions();
+export const TrRecordTable = () => {
+  const { trRecords, loading, totalCount, handleFetchMore } =
+    useTrRecords();
 
   return (
     <RecordTable.Provider
-      columns={transactionColumns}
-      data={transactions || []}
+      columns={trRecordColumns}
+      data={trRecords || []}
       stickyColumns={['avatar', 'name']}
       className="mt-1.5"
     >
@@ -17,7 +17,7 @@ export const PtrRecordTable = () => {
         <RecordTable.Header />
         <RecordTable.Body>
           <RecordTable.RowList />
-          {!loading && totalCount > transactions?.length && (
+          {!loading && totalCount > trRecords?.length && (
             <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
           )}
         </RecordTable.Body>

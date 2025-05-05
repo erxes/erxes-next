@@ -31,7 +31,7 @@ export interface ITrDetail {
   product?: IProduct;
 }
 
-export interface ITransaction {
+interface ICommontTr {
   _id?: string;
   date?: Date;
   description?: string;
@@ -54,8 +54,6 @@ export interface ITransaction {
   customerId?: string;
   assignedUserIds?: string[];
 
-  details: ITrDetail[];
-  shortDetail?: ITrDetail;
   createdBy?: string;
   modifiedBy?: string;
 
@@ -86,6 +84,18 @@ export interface ITransaction {
   branch?: any;
   department?: any;
 }
+export interface ITransaction extends ICommontTr {
+  details: ITrDetail[];
+  shortDetail?: ITrDetail;
+}
+
+export interface ITrRecord extends ICommontTr {
+  details: ITrDetail;
+  shortDetail: ITrDetail;
+  detailInd: number;
+  trId: string;
+}
+
 export interface ITrInput {
   ptrId: string;
   parentId: string;

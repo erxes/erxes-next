@@ -9,8 +9,9 @@ import { Summary } from './Summary';
 import { useCallback, useEffect, memo } from 'react';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
 import { JournalEnum } from '@/settings/account/types/Account';
-import { activeJournalState } from '../states/addTrStates';
+import { activeJournalState } from '../states/trStates';
 import { useSetAtom } from 'jotai';
+import { useParams } from 'react-router';
 
 // Memoize form fields to prevent unnecessary re-renders
 const FormFields = memo(
@@ -51,7 +52,9 @@ const FormFields = memo(
 
 FormFields.displayName = 'FormFields';
 
-export const TransactionGroupForm = () => {
+export const TransactionsGroupForm = () => {
+  const parentId = useParams().parentId;
+
   const form = useForm<TAddTransactionGroup>({
     resolver: zodResolver(transactionGroupSchema),
     defaultValues: {
@@ -59,6 +62,8 @@ export const TransactionGroupForm = () => {
     },
   });
   const [defaultJournal] = useQueryState<JournalEnum>('defaultJournal');
+  const [trId] = useQueryState<string>('trId');
+
   const setActiveJournal = useSetAtom(activeJournalState);
 
   const { createTransaction } = useTransactionsCreate();
@@ -76,13 +81,20 @@ export const TransactionGroupForm = () => {
   }, []);
 
   useEffect(() => {
-    if (defaultJournal) {
+    if (trId) {
+
+      form.reset({
+        ...form.getValues(),
+        // details: [JOURNALS_BY_JOURNAL[]],
+      });
+    } else if (defaultJournal) {
       form.reset({
         ...form.getValues(),
         details: [JOURNALS_BY_JOURNAL[defaultJournal]],
       });
     }
-  }, [defaultJournal, form]);
+
+  }, [defaultJournal, trId, form]);
 
   return (
     <Form {...form}>

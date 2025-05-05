@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { ITransaction } from '../types/Transaction';
+import { ITrRecord } from '../types/Transaction';
 import {
   useQueryState,
   RecordTable,
@@ -16,7 +16,6 @@ import { useSetAtom } from 'jotai';
 import { renderingTransactionDetailState } from '../states/renderingTransactionContactingDetailStates';
 import { IconMoneybag, IconFile, IconCalendar } from '@tabler/icons-react';
 import { useState } from 'react';
-import { Link } from 'react-router';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {
@@ -168,8 +167,7 @@ const AccountCell = ({ row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          {details.length &&
-            `${details[0].account?.code} - ${details[0].account?.name}`}
+          {`${details?.account?.code} - ${details?.account?.name}`}
         </InlineCellDisplay>
       )}
     />
@@ -179,18 +177,20 @@ const AccountCell = ({ row }: any) => {
 const TransactionMoreColumnCell = ({
   cell,
 }: {
-  cell: Cell<ITransaction, unknown>;
+  cell: Cell<ITrRecord, unknown>;
 }) => {
   const [, setOpen] = useQueryState('transaction_id');
   const setRenderingContactDetail = useSetAtom(renderingTransactionDetailState);
-  const { parentId, _id } = cell.row.original;
+  const { _id } = cell.row.original;
 
   return (
-    <Link to={`/accounting/transaction/${parentId}?trId=${_id}`}>
-      <RecordTable.MoreButton
-        className="w-full h-full"
-      />
-    </Link>
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setOpen(_id);
+        setRenderingContactDetail(false);
+      }}
+    />
   );
 };
 
@@ -200,9 +200,9 @@ const transactionMoreColumn = {
   size: 33,
 };
 
-export const transactionColumns: ColumnDef<ITransaction>[] = [
+export const trRecordColumns: ColumnDef<ITrRecord>[] = [
   transactionMoreColumn,
-  RecordTable.checkboxColumn as ColumnDef<ITransaction>,
+  RecordTable.checkboxColumn as ColumnDef<ITrRecord>,
   {
     id: 'account',
     header: () => (

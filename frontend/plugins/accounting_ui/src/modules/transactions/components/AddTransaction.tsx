@@ -90,7 +90,7 @@ const AddTransactionItem = ({
   if (!inForm && journal) {
     return (
       <DropdownMenu.Item asChild>
-        <Link to={`transaction/?defaultJournal=${journal}`}>{children}</Link>
+        <Link to={`/accounting/transaction/?defaultJournal=${journal}`}>{children}</Link>
       </DropdownMenu.Item>
     );
   }
