@@ -1,4 +1,4 @@
-import { IconPlus, IconUserFilledGroup, IconX } from '@tabler/icons-react';
+import { IconPlus, IconUsersGroup, IconX } from '@tabler/icons-react';
 import { Button, Dialog } from 'erxes-ui';
 import { useState } from 'react';
 import { InviteForm } from '@/settings/team-member/components/invite/InviteForm';
@@ -16,7 +16,7 @@ export function InviteTeamMember() {
       <Dialog.Content className="max-w-3xl xl:max-w-7xl p-0">
         <Dialog.Header className="px-3 py-[13px] border-b border-muted">
           <Dialog.Title className="flex items-center gap-2 text-sm">
-            <IconUserFilledGroup size={14} />
+            <IconUsersGroup size={14} />
             Invite team members
           </Dialog.Title>
           <Dialog.Description className="sr-only">

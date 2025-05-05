@@ -1,8 +1,4 @@
-import {
-  IconFolder,
-  IconGitBranch,
-  IconUserFilledGroup,
-} from '@tabler/icons-react';
+import { IconFolder, IconGitBranch, IconUsersGroup } from '@tabler/icons-react';
 import { Combobox, Command, Filter } from 'erxes-ui';
 import { BranchFilter } from '@/settings/team-member/components/header/BranchFilter';
 import { DepartmentFilter } from '@/settings/team-member/components/header/DepartmentFilter';
@@ -31,7 +27,7 @@ export function TeamMemberFilter() {
                 Department
               </Filter.Item>
               <Filter.Item value="unitId">
-                <IconUserFilledGroup />
+                <IconUsersGroup />
                 Unit
               </Filter.Item>
             </Command.List>

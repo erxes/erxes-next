@@ -48,7 +48,10 @@ export const useProducts = (options?: QueryHookOptions) => {
 
     fetchMore({
       variables: {
-        cursor: pageInfo?.endCursor,
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
         limit: PRODUCTS_PER_PAGE,
         direction,
       },

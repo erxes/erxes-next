@@ -2,7 +2,7 @@ import {
   IconAlignLeft,
   IconCheckbox,
   IconMail,
-  IconUserFilledGroup,
+  IconUsersGroup,
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
@@ -39,7 +39,7 @@ export const permissionColumns: ColumnDef<IPermission>[] = [
     id: 'group',
     accessorKey: 'group',
     header: () => (
-      <RecordTable.InlineHead icon={IconUserFilledGroup} label="Group" />
+      <RecordTable.InlineHead icon={IconUsersGroup} label="Group" />
     ),
     cell: ({ cell }) => {
       const { group, _id } = cell.row.original;

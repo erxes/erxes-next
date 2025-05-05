@@ -106,10 +106,7 @@ export const CustomersFilter = () => {
     lastSeen: string;
     tags: string[];
   }>(['searchValue', 'created', 'updated', 'lastSeen', 'tags']);
-  const { searchValue, created, updated, lastSeen, tags } = queries || {};
-  const hasFilters = Object.values(queries || {}).some(
-    (value) => value !== null,
-  );
+  const { searchValue, created, updated, lastSeen } = queries || {};
 
   return (
     <Filter id="customers-filter">
