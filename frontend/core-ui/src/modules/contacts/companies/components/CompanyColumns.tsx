@@ -1,4 +1,4 @@
-import { IconAlignLeft, IconUser } from '@tabler/icons-react';
+import { IconAlignLeft, IconBuilding, IconUser } from '@tabler/icons-react';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import {
@@ -21,7 +21,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
   {
     id: 'avatar',
     accessorKey: 'avatar',
-    header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
+    header: () => <RecordTable.InlineHead icon={IconBuilding} label="" />,
     cell: ({ cell }) => {
       const { _id, primaryName, primaryEmail, primaryPhone } =
         cell.row.original;
@@ -73,6 +73,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
           <RecordTableCellContent className="min-w-72">
             <EmailListField
               recordId={_id}
+              onValueChange={() => console.log('onValueChange')}
               emails={[
                 {
                   email: primaryEmail,

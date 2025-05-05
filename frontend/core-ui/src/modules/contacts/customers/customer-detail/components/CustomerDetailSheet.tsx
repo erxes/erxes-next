@@ -24,7 +24,7 @@ export const CustomerDetailSheet = ({
     >
       <Sheet.View
         className={cn(
-          'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
+          'p-0 md:w-[calc(100vw-theme(spacing.4))] flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none sm:max-w-screen-2xl',
           !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
         )}
       >
@@ -38,7 +38,7 @@ export const CustomerDetailSheet = ({
             Customer Detail
           </Sheet.Description>
         </Sheet.Header>
-        <Sheet.Content className="border-b-0">{children}</Sheet.Content>
+        {children}
       </Sheet.View>
     </Sheet>
   );

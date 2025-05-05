@@ -10,6 +10,7 @@ export type IUIConfig = {
     submenus?: {
       name: string;
       path: string;
+      icon?: React.ElementType;
     }[];
   }[];
 };

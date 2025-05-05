@@ -1,5 +1,5 @@
 import { Button, Skeleton } from 'erxes-ui';
-import { IconArrowLeft, IconUsers } from '@tabler/icons-react';
+import { IconArrowLeft, IconUserFilled } from '@tabler/icons-react';
 import { useQueryState } from '../hooks/useQueryState';
 import { useConversationListContext } from '../hooks/useConversationListContext';
 
@@ -23,7 +23,7 @@ export const ConversationsHeader = ({
         <span>Back to channels</span>
       </Button>
       <Button variant="ghost" className="w-full justify-start mb-1 px-2">
-        <IconUsers />
+        <IconUserFilled />
         <span>Team Inbox</span>
         <ConversationCount />
       </Button>

@@ -48,7 +48,7 @@ export const Default: Story = {
     return (
       <div className="flex flex-col gap-4">
         <Filter id="filter-storybook">
-          <Filter.Popover>
+          <Filter.Popover scope="filter-storybook">
             <Filter.Trigger />
             <Combobox.Content>
               <Filter.View>

@@ -3,7 +3,7 @@ import {
   IconGitBranch,
   IconHash,
   IconLabelFilled,
-  IconUsersGroup,
+  IconUserFilledGroup,
 } from '@tabler/icons-react';
 import {
   Filter,
@@ -115,7 +115,7 @@ const UnitFilterBar = () => {
   return (
     <Filter.BarItem>
       <Filter.BarName>
-        <IconUsersGroup />
+        <IconUserFilledGroup />
         Unit
       </Filter.BarName>
       <SelectUnit

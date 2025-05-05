@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-import { Collapsible, Sidebar, IUIConfig } from 'erxes-ui';
+import { Collapsible, Sidebar, IUIConfig, cn } from 'erxes-ui';
 import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtom } from 'jotai';
@@ -79,14 +79,24 @@ export function SidebarNavigationItem({
           <Collapsible.Content asChild>
             <Sidebar.Sub>
               {submenus.map((submenu) => {
+                const SubIcon = submenu.icon;
+                const isSubmenuActive = pathname.includes(submenu.path);
                 return (
                   <Sidebar.SubItem key={submenu.name}>
                     <Sidebar.SubButton
                       asChild
-                      isActive={pathname.includes(submenu.path)}
+                      isActive={isSubmenuActive}
                       className="w-full"
                     >
                       <Link to={submenu.path}>
+                        {SubIcon && (
+                          <SubIcon
+                            className={cn(
+                              'text-accent-foreground',
+                              isSubmenuActive && 'text-primary',
+                            )}
+                          />
+                        )}
                         <span>
                           {t(`nav.${pathWithoutUi}.subMenu.${submenu.name}`)}
                         </span>

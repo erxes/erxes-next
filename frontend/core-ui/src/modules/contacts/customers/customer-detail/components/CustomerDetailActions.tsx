@@ -1,10 +1,19 @@
 import React from 'react';
 import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
-import { Button, Resizable, Tabs, Tooltip, cn, useQueryState } from 'erxes-ui';
+import {
+  Button,
+  Resizable,
+  SideMenu,
+  Tabs,
+  Tooltip,
+  cn,
+  useQueryState,
+} from 'erxes-ui';
 import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
 import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
 import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
 import { useAtom, useSetAtom } from 'jotai';
+import { useWidget } from 'ui-modules';
 
 const actionTabs = {
   activity: {
@@ -20,17 +29,21 @@ const actionTabs = {
 };
 
 export const CustomerDetailActions = () => {
-  const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
+  // const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
   const [contactId] = useQueryState<string>('contactId');
+  const { Widget } = useWidget();
 
-  return (
-    <>
-      <Resizable.Handle />
-      <Resizable.Panel
-        minSize={activeTab ? 30 : 0}
-        maxSize={activeTab ? 60 : 0}
-      >
-        <Tabs
+  return <Widget contentType="core:customer" contentId={contactId || ''} />;
+
+  // return (
+  //   <>
+  //     <Resizable.Handle />
+  //     <Resizable.Panel
+  //       minSize={activeTab ? 30 : 0}
+  //       maxSize={activeTab ? 60 : 0}
+  //     >
+  {
+    /* <SideMenu
           orientation="vertical"
           value={activeTab ?? ''}
           onValueChange={(value) => setActiveTab(value)}
@@ -80,10 +93,19 @@ export const CustomerDetailActions = () => {
               </Resizable.Panel>
             </Resizable.PanelGroup>
           </ActionTabsContent>
-        </Tabs>
+        </SideMenu> */
+  }
+  {
+    /* <Widget contentType="core:customer" contentId={contactId || ''} />
       </Resizable.Panel>
-    </>
-  );
+      <CustomerDetailActionsTrigger /> */
+  }
+  {
+    /* </> */
+  }
+  {
+    /* ); */
+  }
 };
 
 export const CustomerDetailActionsTrigger = () => {
@@ -91,52 +113,26 @@ export const CustomerDetailActionsTrigger = () => {
 
   return (
     <div className="flex flex-none overflow-hidden">
-      <Tabs
+      <SideMenu
         orientation="vertical"
         value={activeTab ?? ''}
         onValueChange={(value) => setActiveTab(value)}
         className="h-full"
       >
-        <Tabs.List className="flex-col h-full w-16 bg-sidebar p-3 justify-start rounded-none order-1 gap-3">
+        <SideMenu.Sidebar className="border-l-0">
           {Object.values(actionTabs).map((tab) => (
-            <ActionTrigger
+            <SideMenu.Trigger
               key={tab.code}
               value={tab.code}
               label={tab.title}
-              icon={tab.icon}
+              Icon={tab.icon}
             />
           ))}
-        </Tabs.List>
-      </Tabs>
+        </SideMenu.Sidebar>
+      </SideMenu>
     </div>
   );
 };
-
-export const ActionTrigger = React.forwardRef<
-  React.ElementRef<typeof Tabs.Trigger>,
-  React.ComponentPropsWithoutRef<typeof Tabs.Trigger> & {
-    label?: string;
-    icon?: Icon;
-  }
->(({ className, ...props }, ref) => (
-  <Tooltip.Provider>
-    <Tooltip>
-      <Tooltip.Trigger asChild>
-        <Tabs.Trigger
-          ref={ref}
-          className={cn(
-            'h-12 w-12 bg-sidebar data-[state=active]:bg-primary/10 data-[state=active]:text-foreground data-[state=active]:shadow-none [&_svg]:size-5 [&_svg]:text-primary hover:bg-primary/10',
-            className,
-          )}
-          {...props}
-        >
-          {props.icon && <props.icon className="size-5" />}
-        </Tabs.Trigger>
-      </Tooltip.Trigger>
-      <Tooltip.Content side="left">{props.label}</Tooltip.Content>
-    </Tooltip>
-  </Tooltip.Provider>
-));
 
 export const ActionTabsContent = ({
   children,
@@ -149,17 +145,16 @@ export const ActionTabsContent = ({
   title?: string;
   icon: Icon;
 }) => {
-  const [activeTab] = useAtom(customerDetailActiveActionTabAtom);
+  // const [activeTab] = useAtom(customerDetailActiveActionTabAtom);
+
   return (
-    <Tabs.Content
+    <SideMenu.Content
       value={value}
-      className={cn('flex flex-col overflow-hidden h-full', {
-        hidden: activeTab !== value,
-      })}
+      className="border-l-0 data-[state=active]:border-l-0 bg-background"
     >
       <ActionHeader title={title} icon={icon} />
       {children}
-    </Tabs.Content>
+    </SideMenu.Content>
   );
 };
 

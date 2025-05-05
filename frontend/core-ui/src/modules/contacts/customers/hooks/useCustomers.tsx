@@ -11,13 +11,14 @@ import {
   useMultiQueryState,
   parseDateRangeFromString,
 } from 'erxes-ui';
-import { useSetAtom } from 'jotai';
-import { customersCountState } from '@/contacts/states/customersCountState';
+
+import { useLocation } from 'react-router-dom';
+import { ContactsPath } from '@/types/paths/ContactsPath';
 
 const CUSTOMERS_PER_PAGE = 20;
 
 export const useCustomers = (options?: QueryHookOptions) => {
-  const setCustomersCount = useSetAtom(customersCountState);
+  const pathname = useLocation().pathname;
 
   const [{ searchValue, tags, created, updated, lastSeen }] =
     useMultiQueryState<{
@@ -59,11 +60,8 @@ export const useCustomers = (options?: QueryHookOptions) => {
           lte: parseDateRangeFromString(lastSeen)?.to,
         },
       }),
+      type: pathname.includes(ContactsPath.Leads) ? 'lead' : 'customer',
       ...options?.variables,
-    },
-    onCompleted(data) {
-      setCustomersCount(data?.customers?.list?.length);
-      options?.onCompleted?.(data);
     },
   });
 

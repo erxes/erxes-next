@@ -23,6 +23,7 @@ export const ContactsRoutes = () => {
           path="/"
           element={<Navigate to={`${ContactsPath.Customers}`} replace />}
         />
+        <Route path={ContactsPath.Leads} element={<CustomersIndexPage />} />
         <Route path={ContactsPath.Customers} element={<CustomersIndexPage />} />
         <Route path={ContactsPath.Companies} element={<CompaniesIndexPage />} />
       </Routes>

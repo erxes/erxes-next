@@ -2,6 +2,7 @@ import {
   IconCalendarPlus,
   IconChartBar,
   IconClock,
+  IconGenderMale,
   IconLabelFilled,
   IconMail,
   IconPhone,
@@ -21,13 +22,16 @@ import {
   RelativeDateDisplay,
   PhoneListField,
   useToast,
-  Button,
+  SexCode,
+  EmailDisplay,
+  PhoneDisplay,
+  SexDisplay,
+  SexField,
 } from 'erxes-ui';
 import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
 import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
-import { EmailDisplay, PhoneDisplay } from 'erxes-ui/modules/display';
 import { customerMoreColumn } from './CustomerMoreColumn';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 
@@ -309,6 +313,43 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       );
     },
     size: 360,
+  },
+  {
+    id: 'sex',
+    accessorKey: 'sex',
+    header: () => <RecordTable.InlineHead label="Sex" icon={IconGenderMale} />,
+    cell: ({ cell }) => {
+      const { customersEdit } = useCustomersEdit();
+      const [open, setOpen] = useState(false);
+      const { _id } = cell.row.original;
+      return (
+        <RecordTablePopover
+          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Sex'}
+          open={open}
+          onOpenChange={setOpen}
+        >
+          <RecordTableCellTrigger>
+            <SexDisplay value={cell.getValue() as SexCode} />
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <SexField
+              value={cell.getValue() as SexCode}
+              onValueChange={(value) => {
+                if (value !== (cell.getValue() as SexCode)) {
+                  customersEdit(
+                    {
+                      variables: { _id, sex: value },
+                    },
+                    ['sex'],
+                  );
+                }
+                setOpen(false);
+              }}
+            />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
+    },
   },
   {
     id: 'lastSeenAt',

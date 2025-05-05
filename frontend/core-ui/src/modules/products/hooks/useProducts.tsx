@@ -12,10 +12,9 @@ import { IProduct } from 'ui-modules';
 const PRODUCTS_PER_PAGE = 30;
 
 export const useProducts = (options?: QueryHookOptions) => {
-  const { cursor, setCursor } = useRecordTableCursor({
+  const { cursor } = useRecordTableCursor({
     sessionKey: 'products_cursor',
   });
-
   const { data, loading, fetchMore } = useQuery<{
     products: {
       list: IProduct[];
@@ -55,7 +54,6 @@ export const useProducts = (options?: QueryHookOptions) => {
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
-        setCursor(prev?.products?.pageInfo?.endCursor);
         return Object.assign({}, prev, {
           products: mergeCursorData({
             direction,
