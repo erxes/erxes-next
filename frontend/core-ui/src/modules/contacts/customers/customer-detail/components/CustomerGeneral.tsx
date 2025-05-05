@@ -1,9 +1,9 @@
 import { Skeleton } from 'erxes-ui';
 
-import { useCustomerDetail } from '@/contacts/customers-new/customer-detail/hooks/useCustomerDetail';
-import { CustomerDetailSelectTag } from '@/contacts/customers-new/customer-detail/components/CustomerDetailSelectTag';
-import { TextFieldCustomer } from '@/contacts/customers-new/customer-edit/components/TextField';
-import { CustomerDetailAssignedTo } from '@/contacts/customers-new/customer-detail/components/CustomerDetailAssignedTo';
+import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
+import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
+import { TextFieldCustomer } from '@/contacts/customers/customer-edit/components/TextField';
+import { CustomerDetailAssignedTo } from '@/contacts/customers/customer-detail/components/CustomerDetailAssignedTo';
 
 export const CustomerGeneral = () => {
   const { customerDetail, loading } = useCustomerDetail();
