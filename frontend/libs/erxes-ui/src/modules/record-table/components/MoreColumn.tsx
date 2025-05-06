@@ -8,7 +8,7 @@ import { cn } from 'erxes-ui/lib/utils';
 export const RecordTableMoreButton = React.forwardRef<
   HTMLButtonElement,
   ButtonProps
->(({ className, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   return (
     <Button
       ref={ref}
@@ -20,7 +20,7 @@ export const RecordTableMoreButton = React.forwardRef<
       )}
       {...props}
     >
-      <IconDots className="text-muted-foreground" />
+      {children || <IconDots className="text-muted-foreground" />}
     </Button>
   );
 });

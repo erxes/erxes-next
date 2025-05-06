@@ -7,14 +7,13 @@ import {
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
-import { Avatar, cn, Switch } from 'erxes-ui';
+import { Avatar, Badge, cn, InlineCell, Switch, Table } from 'erxes-ui';
 import { RecordTable } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import dayjs from 'dayjs';
 import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
 import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
-import { RecordTableInlineCell } from 'erxes-ui';
 
 export const teamMemberColumns: ColumnDef<IUser>[] = [
   {
@@ -22,7 +21,10 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => (
-      <RecordTableInlineCell
+      <InlineCell
+        name="avatar"
+        className="flex items-center justify-center"
+        recordId={cell.row.original._id}
         display={() => (
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
@@ -86,16 +88,18 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     cell: ({ cell }) => {
       const { status } = cell.row.original;
       return (
-        <div className="flex items-center justify-center">
-          <span
-            className={cn(
-              status === 'Verified' ? 'text-green-400' : 'text-destructive',
-              'uppercase font-semibold text-[10px]',
-            )}
-          >
-            {status}
-          </span>
-        </div>
+        <InlineCell
+          name="status"
+          className="flex items-center justify-center"
+          recordId={cell.row.original._id}
+          display={() => {
+            if (status === 'Verified') {
+              return <Badge variant={'success'}>{status}</Badge>;
+            } else {
+              return <Badge variant={'destructive'}>{status}</Badge>;
+            }
+          }}
+        />
       );
     },
   },
@@ -170,7 +174,10 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     accessorKey: 'isActive',
     header: () => <RecordTable.InlineHead icon={IconChecks} label="Status" />,
     cell: ({ cell }) => (
-      <RecordTableInlineCell
+      <InlineCell
+        name="isActive"
+        className="flex items-center justify-center"
+        recordId={cell.row.original._id}
         display={() => (
           <Switch className="mx-auto" checked={cell.row.original.isActive} />
         )}

@@ -1,11 +1,11 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { CUSTOMER_DETAIL } from '@/contacts/customers/customer-detail/graphql/queries/customerDetailQueries';
-import { renderingCustomerDetailAtom } from '@/contacts/states/contactDetailStates';
+import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 import { useSetAtom } from 'jotai';
 import { useQueryState } from 'erxes-ui';
 
 export const useCustomerDetail = (operationVariables?: OperationVariables) => {
-  const [_id] = useQueryState('contact_id');
+  const [_id] = useQueryState('contactId');
   const setRendering = useSetAtom(renderingCustomerDetailAtom);
   const { data, loading } = useQuery(CUSTOMER_DETAIL, {
     variables: {

@@ -22,7 +22,7 @@ import {
   showEmailInputFamilyState,
   editingEmailFamilyState,
 } from '../states/emailFieldStates';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
 import { useEmailFields } from '../hooks/useEmailFields';
@@ -68,11 +68,7 @@ export const EmailListField = ({
   const setEmails = useSetAtom(emailsFamilyState(recordId));
   const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
   useEffect(() => {
-    const filterDuplicateEmails = emails.filter(
-      (email, index, self) =>
-        index === self.findIndex((t) => t.email === email.email),
-    );
-    setEmails(filterDuplicateEmails);
+    setEmails(emails);
     return () => {
       setShowEmailInput(false);
     };
@@ -158,6 +154,22 @@ const EmailOptions = ({
     setShowEmailInput(true);
     setEditingEmail(email || null);
   };
+
+  const handleVerificationChange = (value: string) => {
+    onValueChange?.(
+      emails.map((e) => {
+        if (e.email === email) {
+          return { ...e, status: value as 'verified' | 'unverified' };
+        }
+        return e;
+      }),
+    );
+  };
+  const handleDeleteClick = () => {
+    onValueChange?.(
+      emails.filter((e) => e.email !== email),
+    );
+  };
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -188,19 +200,24 @@ const EmailOptions = ({
           <IconEdit />
           Edit
         </DropdownMenu.Item>
+
+        {isPrimary && (
+          <>
+            <DropdownMenu.Separator />
+            <DropdownMenu.RadioGroup onValueChange={handleVerificationChange}>
+              <DropdownMenu.RadioItem value="verified">
+                <IconCircleDashedCheck className="text-success data-[state=active]:bg-muted " />
+                Verified
+              </DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value="unverified">
+                <IconCircleDashed className="text-muted-foreground" />
+                Unverified
+              </DropdownMenu.RadioItem>
+            </DropdownMenu.RadioGroup>
+          </>
+        )}
         <DropdownMenu.Separator />
-        <DropdownMenu.RadioGroup>
-          <DropdownMenu.RadioItem value="verified">
-            <IconCircleDashedCheck className="text-success" />
-            Verified
-          </DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem value="unverified">
-            <IconCircleDashed className="text-muted-foreground" />
-            Unverified
-          </DropdownMenu.RadioItem>
-        </DropdownMenu.RadioGroup>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item className="text-destructive">
+        <DropdownMenu.Item className="text-destructive" onClick={handleDeleteClick}>
           <IconTrash />
           Delete
         </DropdownMenu.Item>

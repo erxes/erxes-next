@@ -48,7 +48,7 @@ export const ProductDetailSheet = ({
         }
       }}
     >
-      <Sheet.Content
+      <Sheet.View
         className={cn(
           'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
           !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
@@ -65,7 +65,7 @@ export const ProductDetailSheet = ({
           </Sheet.Description>
         </Sheet.Header>
         {children}
-      </Sheet.Content>
+      </Sheet.View>
     </Sheet>
   );
 };

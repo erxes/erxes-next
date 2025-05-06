@@ -4,6 +4,7 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 import { getSubdomain } from 'erxes-api-shared/utils';
 
 import { contactRouter } from '~/modules/contacts/trpc';
+import { conformityTrpcRouter } from '~/modules/conformities/trpc/conformity';
 import { generateModels } from './connectionResolvers';
 
 export const createContext = async ({
@@ -22,6 +23,6 @@ export type ITRPCContext = Awaited<ReturnType<typeof createContext>>;
 
 const t = initTRPC.context<ITRPCContext>().create();
 
-export const appRouter = t.mergeRouters(contactRouter);
+export const appRouter = t.mergeRouters(contactRouter, conformityTrpcRouter);
 
 export type AppRouter = typeof appRouter;

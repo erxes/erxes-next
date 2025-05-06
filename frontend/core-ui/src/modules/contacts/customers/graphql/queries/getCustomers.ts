@@ -1,15 +1,16 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
 export const GET_CUSTOMERS = gql`
   query customers(
     $segment: String
-    $tag: String
+    $tags: [String]
     $type: String
-    $ids: [String]
-    $excludeIds: Boolean
     $searchValue: String
-    $autoCompletionType: String
-    $autoCompletion: Boolean
     $brand: String
     $integration: String
     $form: String
@@ -17,26 +18,15 @@ export const GET_CUSTOMERS = gql`
     $endDate: String
     $leadStatus: String
     $sortField: String
-    $direction: CURSOR_DIRECTION
-    $cursor: String
-    $limit: Int
     $dateFilters: String
     $segmentData: String
     $emailValidationStatus: String
-    $mainType: String
-    $mainTypeId: String
-    $relType: String
-    $isRelated: Boolean
-    $isSaved: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
     customers(
       segment: $segment
-      tag: $tag
+      tags: $tags
       type: $type
-      ids: $ids
-      excludeIds: $excludeIds
-      autoCompletionType: $autoCompletionType
-      autoCompletion: $autoCompletion
       searchValue: $searchValue
       brand: $brand
       integration: $integration
@@ -45,17 +35,10 @@ export const GET_CUSTOMERS = gql`
       endDate: $endDate
       leadStatus: $leadStatus
       sortField: $sortField
-      direction: $direction
-      cursor: $cursor
-      limit: $limit
       dateFilters: $dateFilters
       segmentData: $segmentData
       emailValidationStatus: $emailValidationStatus
-      conformityMainType: $mainType
-      conformityMainTypeId: $mainTypeId
-      conformityRelType: $relType
-      conformityIsRelated: $isRelated
-      conformityIsSaved: $isSaved
+      ${GQL_CURSOR_PARAMS}
     ) {
       list {
         _id
@@ -93,12 +76,7 @@ export const GET_CUSTOMERS = gql`
         trackedData
         tagIds
       }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
+      ${GQL_PAGE_INFO}
     }
   }
 `;

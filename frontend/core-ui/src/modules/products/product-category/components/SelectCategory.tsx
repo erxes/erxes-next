@@ -93,6 +93,7 @@ export const SelectCategoryItem = ({
 
   return (
     <SelectTree.Item
+      _id={_id}
       order={order}
       hasChildren={hasChildren}
       name={name}
@@ -113,14 +114,14 @@ export const SelectCategoryBadge = ({
   selected?: boolean;
 }) => {
   if (!category) return null;
-  const { _id, avatar, code, name, productCount } = category;
+  const { avatar, code, name, productCount } = category;
   const firstLetter = name.charAt(0);
   return (
     <>
       <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
         <Avatar>
           <Avatar.Image src={avatar?.url} />
-          <Avatar.Fallback colorSeed={_id}>{firstLetter}</Avatar.Fallback>
+          <Avatar.Fallback>{firstLetter}</Avatar.Fallback>
         </Avatar>
         <div className="text-muted-foreground">{code}</div>
         <TextOverflowTooltip value={name} className="flex-auto" />

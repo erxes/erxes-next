@@ -13,7 +13,7 @@ export const MONTHS = [
   'Dec',
 ];
 
-export const QUARTERS = ['Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4'];
+export const QUARTERS = ['quarter-1', 'quarter-2', 'quarter-3', 'quarter-4'];
 
 export const FIXED_DATES = [
   'today',

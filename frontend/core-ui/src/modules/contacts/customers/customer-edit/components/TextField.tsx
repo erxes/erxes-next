@@ -14,13 +14,11 @@ export const TextFieldCustomer = ({
   placeholder,
   value,
   field,
-  fieldId,
   _id,
   className,
 }: TextFieldProps) => {
   const { customersEdit } = useCustomersEdit();
   const onSave = (editingValue: string) => {
-    if (editingValue === value) return;
     customersEdit(
       {
         variables: { _id, [field]: editingValue },
@@ -32,10 +30,8 @@ export const TextFieldCustomer = ({
     <TextField
       placeholder={placeholder}
       value={value}
-      field={field}
-      fieldId={fieldId}
-      _id={_id}
-      onSave={onSave}
+      scope={`customer-${_id}-${field}`}
+      onValueChange={onSave}
       className={className}
     />
   );

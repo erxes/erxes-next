@@ -1,7 +1,7 @@
 import { IconCashBanknoteFilled } from '@tabler/icons-react';
-import { UIConfig } from 'erxes-ui/types/UIConfig';
+import { IUIConfig } from 'erxes-ui/types';
 
-export const CONFIG: UIConfig = {
+export const CONFIG: IUIConfig = {
   name: 'accounting',
   icon: IconCashBanknoteFilled,
   modules: [
@@ -10,6 +10,21 @@ export const CONFIG: UIConfig = {
       icon: IconCashBanknoteFilled,
       path: 'accounting',
       hasSettings: true,
+      hasWidgets: false,
+      submenus: [
+        {
+          name: 'main',
+          path: 'accounting/main',
+        },
+        {
+          name: 'records',
+          path: 'accounting/records',
+        },
+        {
+          name: 'odds',
+          path: 'accounting/odd-transactions',
+        },
+      ],
     },
   ],
 };

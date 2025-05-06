@@ -1,24 +1,11 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import {
-  Button,
-  ScrollArea,
-  Separator,
-  Sheet,
-  Tabs,
-  Form,
-  useToast,
-} from 'erxes-ui';
+import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
 
 import { CustomerAddGeneralInformationFields } from '@/contacts/customers/components/CustomerAddGeneralInformationFields';
-import { CustomerAddLinksFields } from '@/contacts/customers/components/CustomerAddLinksFields';
-import {
-  CustomerAddSheet,
-  CustomerAddSheetHeader,
-} from '@/contacts/customers/components/CustomerAddSheet';
+import { CustomerAddSheetHeader } from '@/contacts/customers/components/CustomerAddSheet';
 import {
   customerFormSchema,
   CustomerFormType,
@@ -26,8 +13,11 @@ import {
 import { useAddCustomer } from '@/contacts/customers/hooks/useAddCustomer';
 import { ApolloError } from '@apollo/client';
 
-export function AddCustomerForm() {
-  const [open, setOpen] = useState<boolean>(false);
+export function AddCustomerForm({
+  onOpenChange,
+}: {
+  onOpenChange?: (open: boolean) => void;
+}) {
   const { customersAdd } = useAddCustomer();
   const form = useForm<CustomerFormType>({
     resolver: zodResolver(customerFormSchema),
@@ -44,64 +34,48 @@ export function AddCustomerForm() {
       },
       onCompleted: () => {
         form.reset();
-        setOpen(false);
+        onOpenChange?.(false);
       },
     });
   };
 
   return (
-    <CustomerAddSheet onOpenChange={setOpen} open={open}>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col h-full"
-        >
-          <CustomerAddSheetHeader />
-          <Separator />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col h-full"
+      >
+        <CustomerAddSheetHeader />
+        <Sheet.Content>
           <AddCustomerFormTabs>
-            {/* <Tabs.Content value="general-information"> */}
             <CustomerAddGeneralInformationFields form={form} />
-            {/* </Tabs.Content> */}
-            {/* <Tabs.Content value="links">
-              <CustomerAddLinksFields />
-            </Tabs.Content> */}
           </AddCustomerFormTabs>
-          <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
-            <Button
-              type="button"
-              variant="ghost"
-              className="bg-background hover:bg-background/90"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Save
-            </Button>
-          </Sheet.Footer>
-        </form>
-      </Form>
-    </CustomerAddSheet>
+        </Sheet.Content>
+        <Sheet.Footer className="flex justify-end flex-shrink-0 px-5 gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            className="bg-background hover:bg-background/90"
+            onClick={() => onOpenChange?.(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Save
+          </Button>
+        </Sheet.Footer>
+      </form>
+    </Form>
   );
 }
 
 const AddCustomerFormTabs = ({ children }: { children: React.ReactNode }) => {
   return (
     <ScrollArea className="flex-auto">
-      <div className="p-5"> {children}</div>
-      {/* <Tabs defaultValue="general-information">
-        <Tabs.List className="grid grid-cols-2 mb-10">
-          <Tabs.Trigger value="general-information" className="h-10">
-            General Information
-          </Tabs.Trigger>
-          <Tabs.Trigger value="links" className="h-10">
-            Links
-          </Tabs.Trigger>
-        </Tabs.List>
-         </Tabs> */}
+      <div className="p-5">{children}</div>
     </ScrollArea>
   );
 };

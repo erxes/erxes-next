@@ -1,34 +1,16 @@
-import { useState } from 'react';
+import { Button, Combobox, Label, Popover, toast } from 'erxes-ui';
 
-import { Label, useQueryState } from 'erxes-ui';
+import { SelectTags } from 'ui-modules';
+import { IconPlus } from '@tabler/icons-react';
+import { ApolloError } from '@apollo/client';
 
-import { SelectTags, useGiveTags } from 'ui-modules';
-
-export const CustomerDetailSelectTag = ({ tagIds }: { tagIds: string[] }) => {
-  const [contactId] = useQueryState<string>('contact_id');
-  const { giveTags, loading } = useGiveTags();
-  const [selectedTags, setSelectedTags] = useState<string[]>(tagIds);
-
-  const handleGiveTags = (tags: string[]) => {
-    giveTags({
-      variables: {
-        type: 'core:customer',
-        targetIds: [contactId],
-        tagIds: tags,
-      },
-      refetchQueries: ['activityLogs'],
-      updateQueries: {
-        customerDetail: (prev) => {
-          return {
-            customerDetail: Object.assign({}, prev.customerDetail, {
-              tagIds: tags,
-            }),
-          };
-        },
-      },
-    });
-  };
-
+export const CustomerDetailSelectTag = ({
+  tagIds,
+  customerId,
+}: {
+  tagIds: string[];
+  customerId: string;
+}) => {
   return (
     <fieldset className="space-y-2 px-8">
       <Label asChild>
@@ -36,14 +18,36 @@ export const CustomerDetailSelectTag = ({ tagIds }: { tagIds: string[] }) => {
       </Label>
       <SelectTags
         tagType="core:customer"
-        selected={selectedTags}
-        loading={loading}
-        recordId={contactId || ''}
-        onSelect={(tags) => {
-          setSelectedTags(tags as string[]);
-          handleGiveTags(tags as string[]);
-        }}
-      />
+        value={tagIds}
+        options={(newSelectedTagIds) => ({
+          update: (cache) => {
+            cache.modify({
+              id: cache.identify({
+                __typename: 'Customer',
+                _id: customerId,
+              }),
+              fields: { tagIds: () => newSelectedTagIds },
+            });
+          },
+          onError: (e: ApolloError) => {
+            toast({
+              title: 'Error',
+              description: e.message,
+            });
+          },
+        })}
+      >
+        <Popover>
+          <Popover.Trigger asChild>
+            <Button variant="secondary">
+              <IconPlus /> Add tags
+            </Button>
+          </Popover.Trigger>
+          <Combobox.Content>
+            <SelectTags.Content />
+          </Combobox.Content>
+        </Popover>
+      </SelectTags>
     </fieldset>
   );
 };

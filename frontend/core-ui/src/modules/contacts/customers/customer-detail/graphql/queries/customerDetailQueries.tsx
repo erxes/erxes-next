@@ -16,9 +16,7 @@ export const CUSTOMER_DETAIL = gql`
       email
       emailValidationStatus
       emails
-      getTags {
-        _id
-      }
+      tagIds
       ownerId
       phone
       phoneValidationStatus

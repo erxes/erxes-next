@@ -151,7 +151,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           onBlur={handleBlur}
           placeholder={placeholder}
           ref={ref}
-          className="h-7 text-sm shadow-none focus:z-10"
+          variant="secondary"
         />
       </div>
     );

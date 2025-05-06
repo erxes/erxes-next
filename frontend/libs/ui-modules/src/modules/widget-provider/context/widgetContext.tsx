@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
 
 export type WidgetProps = {
-  pluginName: string;
   contentType: string;
   contentId: string;
 };

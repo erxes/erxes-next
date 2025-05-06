@@ -83,9 +83,7 @@ export const MemberInlineAvatar = React.forwardRef<
         <Tooltip.Trigger asChild>
           <Avatar {...props} ref={ref}>
             <Avatar.Image src={avatar} />
-            <Avatar.Fallback colorSeed={_id}>
-              {fullName?.charAt(0) || ''}
-            </Avatar.Fallback>
+            <Avatar.Fallback>{fullName?.charAt(0) || ''}</Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>
         <Tooltip.Content>

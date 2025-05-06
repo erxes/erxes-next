@@ -1,14 +1,13 @@
 import { Skeleton } from 'erxes-ui';
 
-import { ITag } from 'ui-modules';
-import { useCustomerDetail } from '../hooks/useCustomerDetail';
-import { CustomerDetailSelectTag } from './CustomerDetailSelectTag';
-import { TextFieldCustomer } from '../../customer-edit/components/TextField';
-import { CustomerDetailAssignedTo } from './CustomerDetailAssignedTo';
+import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
+import { CustomerDetailSelectTag } from '@/contacts/customers/customer-detail/components/CustomerDetailSelectTag';
+import { TextFieldCustomer } from '@/contacts/customers/customer-edit/components/TextField';
+import { CustomerDetailAssignedTo } from '@/contacts/customers/customer-detail/components/CustomerDetailAssignedTo';
 
 export const CustomerGeneral = () => {
   const { customerDetail, loading } = useCustomerDetail();
-  const { primaryEmail, primaryPhone, getTags, ownerId, code, score, _id } =
+  const { primaryEmail, primaryPhone, tagIds, ownerId, code, score, _id } =
     customerDetail || {};
 
   if (loading) {
@@ -18,9 +17,7 @@ export const CustomerGeneral = () => {
   return (
     <>
       <div className="py-8 space-y-6">
-        <CustomerDetailSelectTag
-          tagIds={getTags?.map((tag: ITag) => tag._id)}
-        />
+        <CustomerDetailSelectTag tagIds={tagIds} customerId={_id} />
         <CustomerDetailAssignedTo ownerId={ownerId} />
         <div className="px-8 space-y-6 font-medium">
           <DataListItem label="Code">

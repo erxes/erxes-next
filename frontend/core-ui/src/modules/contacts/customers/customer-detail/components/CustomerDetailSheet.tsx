@@ -1,40 +1,30 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 
-import { Button, Sheet, useQueryState, useSetHotkeyScope, cn } from 'erxes-ui';
-
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { useEffect } from 'react';
+import { Button, Sheet, useQueryState, cn } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
-import { contactDetailActiveActionTabAtom } from '@/contacts/states/contactDetailStates';
-import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
-
+import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
+import { usePreviousHotkeyScope } from 'erxes-ui';
 export const CustomerDetailSheet = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [open, setOpen] = useQueryState<string>('contact_id');
-  const setHotkeyScope = useSetHotkeyScope();
+  const [open, setOpen] = useQueryState<string>('contactId');
+  const { goBackToPreviousHotkeyScope } = usePreviousHotkeyScope();
 
-  const activeTab = useAtomValue(contactDetailActiveActionTabAtom);
-
-  useEffect(() => {
-    if (open) {
-      setHotkeyScope(CustomerHotKeyScope.CustomerEditSheet);
-    }
-  }, [open]);
+  const activeTab = useAtomValue(customerDetailActiveActionTabAtom);
 
   return (
     <Sheet
       open={!!open}
       onOpenChange={() => {
         setOpen(null);
-        setHotkeyScope(PageHotkeyScope.ContactsPage);
+        goBackToPreviousHotkeyScope();
       }}
     >
-      <Sheet.Content
+      <Sheet.View
         className={cn(
-          'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
+          'p-0 md:w-[calc(100vw-theme(spacing.4))] flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none sm:max-w-screen-2xl',
           !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
         )}
       >
@@ -49,7 +39,7 @@ export const CustomerDetailSheet = ({
           </Sheet.Description>
         </Sheet.Header>
         {children}
-      </Sheet.Content>
+      </Sheet.View>
     </Sheet>
   );
 };
