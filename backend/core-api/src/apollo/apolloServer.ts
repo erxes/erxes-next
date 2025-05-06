@@ -99,6 +99,7 @@ export const initApolloServer = async (app, httpServer) => {
         };
 
         return {
+          req,
           user,
           res,
           requestInfo,
