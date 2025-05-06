@@ -12,6 +12,9 @@ import { JournalEnum } from '@/settings/account/types/Account';
 import { activeJournalState } from '../states/trStates';
 import { useSetAtom } from 'jotai';
 import { useParams } from 'react-router';
+import { useTransactionDetail } from '../hooks/useTransactionDetail';
+import { ITrDetail } from '../../types/Transaction';
+import { useTransactionsUpdate } from '../hooks/useTransactionsUpdate';
 
 // Memoize form fields to prevent unnecessary re-renders
 const FormFields = memo(
@@ -54,6 +57,10 @@ FormFields.displayName = 'FormFields';
 
 export const TransactionsGroupForm = () => {
   const parentId = useParams().parentId;
+  const { transaction } = useTransactionDetail({
+    variables: { _id: parentId },
+    skip: !parentId,
+  });
 
   const form = useForm<TAddTransactionGroup>({
     resolver: zodResolver(transactionGroupSchema),
@@ -67,34 +74,45 @@ export const TransactionsGroupForm = () => {
   const setActiveJournal = useSetAtom(activeJournalState);
 
   const { createTransaction } = useTransactionsCreate();
+  const { updateTransaction } = useTransactionsUpdate();
 
-  const onSubmit = useCallback((data: TAddTransactionGroup) => {
-    createTransaction(data);
-    console.log(data);
-  }, []);
+  const onSubmit = (data: TAddTransactionGroup) => {
+    if (parentId) {
+      updateTransaction(data);
+    } else {
+      createTransaction(data);
+    }
+  };
 
-  const onError = useCallback((error: any) => {
+  const onError = (error: any) => {
     if (error?.details?.length > 0) {
       setActiveJournal(error.details.findIndex((tab: any) => !!tab).toString());
     }
     console.log(error);
-  }, []);
+  };
 
   useEffect(() => {
-    if (trId) {
-
+    if (transaction) {
+      // setting form values
       form.reset({
         ...form.getValues(),
-        // details: [JOURNALS_BY_JOURNAL[]],
+        number: transaction.number,
+        date: transaction.date,
+        details: transaction.details,
       });
+      //TODO: set active journal
+      // setActiveJournal(
+      //   transaction?.details?.find(
+      //     (detail: ITrDetail) => detail.journal === defaultJournal,
+      //   )?.journal,
+      // );
     } else if (defaultJournal) {
       form.reset({
         ...form.getValues(),
         details: [JOURNALS_BY_JOURNAL[defaultJournal]],
       });
     }
-
-  }, [defaultJournal, trId, form]);
+  }, [defaultJournal, trId, form, transaction]);
 
   return (
     <Form {...form}>

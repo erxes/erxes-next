@@ -1,15 +1,15 @@
 import { OperationVariables, useMutation } from '@apollo/client';
-import { ACC_TRANSACTIONS_CREATE } from '../graphql/mutations/accTransactionsCreate';
+import { ACC_TRANSACTIONS_UPDATE } from '../graphql/mutations/accTransactionsUpdate';
 import { TAddTransactionGroup } from '../types/AddTransaction';
 
-export const useTransactionsCreate = (options?: OperationVariables) => {
+export const useTransactionsUpdate = (options?: OperationVariables) => {
   // ????????????????//
-  const [_createTransaction, { loading }] = useMutation(
-    ACC_TRANSACTIONS_CREATE,
+  const [_updateTransaction, { loading }] = useMutation(
+    ACC_TRANSACTIONS_UPDATE,
     options,
   );
 
-  const createTransaction = (data: TAddTransactionGroup) => {
+  const updateTransaction = (data: TAddTransactionGroup) => {
     const doc = data.details.map(
       ({
         description,
@@ -34,7 +34,7 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
   };
 
   return {
-    createTransaction,
+    updateTransaction,
     loading,
   };
 };
