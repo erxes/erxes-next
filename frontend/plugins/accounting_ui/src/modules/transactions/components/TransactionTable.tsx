@@ -1,4 +1,5 @@
 import { useTransactions } from '../hooks/useTransactions';
+import { AccountingTableRow } from './AccountingTableRow';
 import { transactionColumns } from './TransactionsTableColumns';
 import { RecordTable } from 'erxes-ui';
 
@@ -16,8 +17,7 @@ export const TransactionTable = () => {
       <RecordTable>
         <RecordTable.Header />
         <RecordTable.Body>
-          <RecordTable.InlineHead label='dada' />
-          <RecordTable.RowList />
+          <AccountingTableRow />
           {!loading && totalCount > transactions?.length && (
             <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
           )}

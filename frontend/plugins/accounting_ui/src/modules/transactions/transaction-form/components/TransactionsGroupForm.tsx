@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { transactionGroupSchema } from '../contants/transactionSchema';
 import { useForm } from 'react-hook-form';
-import { DatePicker, Form, Input, toast, useQueryState } from 'erxes-ui';
+import { DatePicker, Form, Input, useQueryState } from 'erxes-ui';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 import { TAddTransactionGroup } from '../types/AddTransaction';
 import { TransactionsTabsList } from './TransactionList';

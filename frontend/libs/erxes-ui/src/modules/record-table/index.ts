@@ -18,6 +18,7 @@ import {
   RecordTableForwardSkeleton,
 } from './components/RecordTableCursor';
 import { checkboxColumn } from './components/CheckboxColumn';
+import { RecordTableRow } from './components/RecordTableRow';
 
 export const RecordTable = Object.assign(RecordTableRoot, {
   Provider: RecordTableProvider,
@@ -35,6 +36,7 @@ export const RecordTable = Object.assign(RecordTableRoot, {
   CursorProvider: RecordTableCursorProvider,
   CursorBackwardSkeleton: RecordTableBackwardSkeleton,
   CursorForwardSkeleton: RecordTableForwardSkeleton,
+  Row: RecordTableRow
 });
 
 export * from './types/RecordTableCursorTypes';
