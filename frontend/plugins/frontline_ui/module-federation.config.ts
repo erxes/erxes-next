@@ -15,10 +15,12 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'frontline_ui',
   exposes: {
-    './Config': './src/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
-    './Widgets': './src/widgets/Widgets.tsx',
+    './config': './src/config.ts',
+    './inbox': './src/modules/inbox/Main.tsx',
+    './ticket': './src/modules/ticket/Main.tsx',
+    './inboxSettings': './src/modules/inbox/Settings.tsx',
+    './ticketSettings': './src/modules/ticket/Settings.tsx',
+    './widgets': './src/widgets/Widgets.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

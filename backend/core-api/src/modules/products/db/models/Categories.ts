@@ -1,12 +1,12 @@
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { PRODUCT_STATUSES } from '@/products/constants';
+import { productCategorySchema } from '@/products/db/definitions/categories';
 import {
   IProductCategory,
   IProductCategoryDocument,
 } from 'erxes-api-shared/core-types';
+import { escapeRegExp } from 'erxes-api-shared/utils';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { PRODUCT_STATUSES } from '@/products/constants';
-import { productCategorySchema } from '@/products/db/definitions/categories';
 
 export interface IProductCategoryModel extends Model<IProductCategoryDocument> {
   getProductCategory(selector: any): Promise<IProductCategoryDocument>;
@@ -17,7 +17,7 @@ export interface IProductCategoryModel extends Model<IProductCategoryDocument> {
     _id: string,
     doc: IProductCategory,
   ): Promise<IProductCategoryDocument>;
-  removeProductCategory(_id: string): void;
+  removeProductCategory(_id: string): Promise<IProductCategoryDocument>;
   getChildCategories(
     categoryIds: string[],
   ): Promise<IProductCategoryDocument[]>;
@@ -144,6 +144,7 @@ export const loadProductCategoryClass = (models: IModels) => {
         categoryId: _id,
         status: { $ne: PRODUCT_STATUSES.DELETED },
       });
+
       count += await models.ProductCategories.find({
         parentId: _id,
       }).countDocuments();
@@ -152,7 +153,7 @@ export const loadProductCategoryClass = (models: IModels) => {
         throw new Error("Can't remove a product category");
       }
 
-      return models.ProductCategories.deleteOne({ _id });
+      return await models.ProductCategories.deleteOne({ _id });
     }
 
     /**

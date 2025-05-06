@@ -1,3 +1,4 @@
+import { Icon } from '@tabler/icons-react';
 import { SideMenu, Separator } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { pluginsConfigState, WidgetProps } from 'ui-modules';
@@ -8,33 +9,40 @@ export const WidgetsSidebar = (props: WidgetProps) => {
 
   const plugins = Object.values(pluginsMetaData || {});
 
-  const eligibleWidgets = plugins.filter(
-    (plugin) => plugin.haveWidgets && plugin.name !== props.pluginName,
+  const widgetsModules = plugins.flatMap((plugin) =>
+    plugin.modules
+      .filter((module) => module.hasWidgets)
+      .map((module) => ({
+        ...module,
+        pluginName: plugin.name,
+      })),
   );
 
-  if (eligibleWidgets.length === 0) {
+  if (widgetsModules.length === 0) {
     return null;
   }
 
   return (
     <SideMenu className="flex-none">
-      {eligibleWidgets.map((widget) => (
-        <SideMenu.Content value={widget.name} key={`content-${widget.name}`}>
+      {widgetsModules.map((module) => (
+        <SideMenu.Content value={module.name} key={`content-${module.name}`}>
           <RenderPLuginsComponent
-            pluginName={`${widget.name}_ui`}
-            componentType="Widgets"
+            pluginName={`${module.pluginName}_ui`}
+            remoteModuleName="widgets"
+            moduleName={module.name}
+            props={props}
           />
         </SideMenu.Content>
       ))}
 
       <SideMenu.Sidebar className="">
-        {eligibleWidgets.map((widget) => (
+        {widgetsModules.map((module) => (
           <>
             <SideMenu.Trigger
-              key={`trigger-${widget.name}`}
-              Icon={widget.widgetsIcon}
-              label={widget.name}
-              value={widget.name}
+              key={`trigger-${module.name}`}
+              Icon={module.icon as Icon}
+              label={module.name}
+              value={module.name}
             />
           </>
         ))}

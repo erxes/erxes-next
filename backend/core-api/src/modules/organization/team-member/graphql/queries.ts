@@ -6,7 +6,7 @@ import {
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext, IModels } from '~/connectionResolvers';
 
-interface IListArgs {
+type IListArgs = {
   sortDirection?: number;
   sortField?: string;
   searchValue?: string;
@@ -25,7 +25,7 @@ interface IListArgs {
   unitId?: string;
   segment?: string;
   segmentData?: string;
-}
+};
 
 const NORMAL_USER_SELECTOR = { role: { $ne: USER_ROLES.SYSTEM } };
 

@@ -22,7 +22,9 @@ const MailConfigForm = () => {
   const MAIL_SERVICE = useWatch({ control, name: 'DEFAULT_EMAIL_SERVICE' });
 
   useEffect(() => {
-    if (configs !== undefined) {
+    if (configs === undefined) {
+      methods.reset();
+    } else {
       const values = configs.reduce((acc: any, config: any) => {
         acc[config.code] = config.value;
         return acc;
@@ -100,7 +102,7 @@ const MailConfigForm = () => {
                         <div>
                           <Form.Label>{label}</Form.Label>
                         </div>
-                        <div className="w-full flex items-center p-3 text-[13px] leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
+                        <div className="w-full flex items-center p-3 text-sm leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
                           {description}
                         </div>
                       </Form.Item>
@@ -123,7 +125,7 @@ const MailConfigForm = () => {
                         <div>
                           <Form.Label>{label}</Form.Label>
                         </div>
-                        <div className="w-full flex items-center p-3 text-[13px] leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
+                        <div className="w-full flex items-center p-3 text-sm leading-[140%] font-normal bg-primary/[.06] text-primary rounded-lg border border-primary/30">
                           {description}
                         </div>
                       </Form.Item>

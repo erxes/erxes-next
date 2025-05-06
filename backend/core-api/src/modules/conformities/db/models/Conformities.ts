@@ -1,10 +1,12 @@
 import { Model } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
 import {
   conformityHelper,
   getMatchConformities,
   getSavedAnyConformityMatch,
   relatedConformityHelper,
-} from '../../utils';
+} from '@/conformities/utils';
+
 import {
   conformitySchema,
   IConformitiesRemove,
@@ -17,8 +19,7 @@ import {
   IConformityRemove,
   IConformitySaved,
   IGetConformityBulk,
-} from '../definitions/conformities';
-import { IModels } from '~/connectionResolvers';
+} from '@/conformities/db/definitions/conformities';
 
 export interface IConformityModel extends Model<IConformityDocument> {
   addConformity(doc: IConformityAdd): Promise<IConformityDocument>;
@@ -27,15 +28,15 @@ export interface IConformityModel extends Model<IConformityDocument> {
     doc: IConformityEdit,
   ): Promise<{ addedTypeIds: string[]; removedTypeIds: string[] }>;
   changeConformity(doc: IConformityChange): Promise<void>;
-  removeConformity(doc: IConformityRemove): void;
-  removeConformities(doc: IConformitiesRemove): void;
+  removeConformity(doc: IConformityRemove): Promise<void>;
+  removeConformities(doc: IConformitiesRemove): Promise<void>;
   savedConformity(doc: IConformitySaved): Promise<string[]>;
   relatedConformity(doc: IConformityRelated): Promise<string[]>;
   filterConformity(doc: IConformityFilter): Promise<string[]>;
   getConformities(doc: IGetConformityBulk): Promise<IConformityDocument[]>;
 }
 
-export const loadConformityClass = (models: IModels, _subdomain: string) => {
+export const loadConformityClass = (models: IModels) => {
   class Conformity {
     /**
      * Create a conformity
@@ -144,7 +145,7 @@ export const loadConformityClass = (models: IModels, _subdomain: string) => {
         { $set: { mainTypeId: doc.newTypeId } },
       );
 
-      await models.Conformities.updateMany(
+      return models.Conformities.updateMany(
         {
           $and: [{ relType: doc.type }, { relTypeId: { $in: doc.oldTypeIds } }],
         },
@@ -224,14 +225,14 @@ export const loadConformityClass = (models: IModels, _subdomain: string) => {
         mainTypeId: doc.mainTypeId,
       });
 
-      await models.Conformities.deleteMany(match);
+      return models.Conformities.deleteMany(match);
     }
 
     /**
      * Remove conformities
      */
     public static async removeConformities(doc: IConformitiesRemove) {
-      await models.Conformities.deleteMany({
+      return models.Conformities.deleteMany({
         $or: [
           {
             $and: [

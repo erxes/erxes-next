@@ -1,8 +1,16 @@
-import { IconSandbox } from '@tabler/icons-react';
+import { IconBriefcase, IconSandbox } from '@tabler/icons-react';
 
 export const CONFIG = {
   name: 'sales',
-  icon: IconSandbox,
-  haveWidgets: true,
-  widgetsIcon: IconSandbox,
+  icon: IconBriefcase,
+  hasWidgets: true,
+  widgetsIcon: IconBriefcase,
+  modules: [
+    {
+      name: 'deals',
+      icon: IconSandbox,
+      path: 'deals',
+      hasSettings: true,
+    },
+  ],
 };

@@ -3,6 +3,7 @@ import {
   IBrandDocument,
   ICompanyDocument,
   ICustomerDocument,
+  IRelationDocument,
   IUserDocument,
   IUserMovementDocument,
 } from 'erxes-api-shared/core-types';
@@ -97,6 +98,8 @@ import {
 import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
 import { IBrandModel, loadBrandClass } from './modules/brands/db/models';
 
+import { IRelationModel } from '@/relations/db/models/Relations';
+import { loadRelationClass } from '@/relations/db/models/Relations';
 export interface IModels {
   Brands: IBrandModel;
   Customers: ICustomerModel;
@@ -121,6 +124,7 @@ export interface IModels {
   FormSubmissions: IFormSubmissionModel;
   Segments: ISegmentModel;
   Conformities: IConformityModel;
+  Relations: IRelationModel;
 }
 
 export interface IContext extends IMainContext {
@@ -228,6 +232,16 @@ export const loadClasses = (
   models.Segments = db.model<ISegmentDocument, ISegmentModel>(
     'segments',
     loadSegmentClass(models),
+  );
+
+  models.Conformities = db.model<IConformityDocument, IConformityModel>(
+    'conformities',
+    loadConformityClass(models, subdomain),
+  );
+
+  models.Relations = db.model<IRelationDocument, IRelationModel>(
+    'relations',
+    loadRelationClass(models),
   );
 
   return models;

@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 import { IConformity, IConformityRelated } from './db/definitions/conformities';
+=======
+import {
+  IConformity,
+  IConformityRelated,
+} from '@/conformities/db/definitions/conformities';
+>>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
 
 interface IMainParams {
   mainType: string;

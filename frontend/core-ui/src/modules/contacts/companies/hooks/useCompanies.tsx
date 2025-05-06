@@ -1,45 +1,77 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-
+import {
+  EnumCursorDirection,
+  IRecordTableCursorPageInfo,
+  mergeCursorData,
+  useMultiQueryState,
+  useRecordTableCursor,
+  validateFetchMore,
+} from 'erxes-ui';
 import { GET_COMPANIES } from '@/contacts/companies/graphql/queries/getCompanies';
+import { ICompany } from 'ui-modules';
 
 export const COMPANIES_PER_PAGE = 30;
 
 export const useCompanies = (options?: QueryHookOptions) => {
-  const { data, loading, fetchMore } = useQuery(GET_COMPANIES, {
+  const [{ searchValue, tags, created, updated, lastSeen }] =
+    useMultiQueryState<{
+      searchValue: string;
+      tags: string[];
+      created: string;
+      updated: string;
+      lastSeen: string;
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
+
+  const { data, loading, fetchMore } = useQuery<{
+    companies: {
+      list: ICompany[];
+      totalCount: number;
+      pageInfo: IRecordTableCursorPageInfo;
+    };
+  }>(GET_COMPANIES, {
     ...options,
     variables: {
-      perPage: COMPANIES_PER_PAGE,
+      limit: COMPANIES_PER_PAGE,
+      searchValue,
+      tags,
       ...options?.variables,
     },
   });
 
-  const { list: companies, totalCount } = data?.companiesMain || {};
+  const { list: companies, totalCount, pageInfo } = data?.companies || {};
 
-  const handleFetchMore = () =>
-    totalCount > companies?.length &&
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+  }) => {
+    if (!validateFetchMore({ direction, pageInfo })) return;
+
     fetchMore({
       variables: {
-        page: Math.ceil(companies.length / COMPANIES_PER_PAGE) + 1,
-        perPage: COMPANIES_PER_PAGE,
+        cursor: pageInfo?.endCursor,
+        limit: COMPANIES_PER_PAGE,
+        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
+
         return Object.assign({}, prev, {
-          companiesMain: {
-            ...prev.companiesMain,
-            list: [
-              ...(prev.companiesMain?.list || []),
-              ...(fetchMoreResult.companiesMain?.list || []),
-            ],
-          },
+          companies: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.companies,
+            prevResult: prev.companies,
+          }),
         });
       },
     });
+  };
 
   return {
     loading,
     companies,
     totalCount,
     handleFetchMore,
+    pageInfo,
   };
 };

@@ -15,28 +15,10 @@ const queue = new Queue('gateway-update-apollo-router', {
 });
 
 export const getPlugins = async (): Promise<string[]> => {
-  const enabledServices = (await redis.smembers('enabled-services')) || '[]';
+  const enabledServices =
+    process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) || [];
 
   return [...enabledServices];
-};
-
-export const addPlugin = async (serviceName: string): Promise<void> => {
-  const isMember = await redis.sismember('enabled-services', serviceName);
-  if (!isMember) {
-    await queue.add('service-join', { serviceName });
-  }
-
-  try {
-    await redis.sadd('enabled-services', serviceName);
-    console.log(`Service ${serviceName} registered in Redis`);
-  } catch (error) {
-    console.error(`Failed to register service ${serviceName}:`, error);
-  }
-};
-
-export const removePLugin = async (serviceName: string): Promise<void> => {
-  queue.add('service-leave', { serviceName });
-  redis.srem('enabled-services', serviceName);
 };
 
 type ServiceInfo = { address: string; config: any };
@@ -91,14 +73,10 @@ export const joinErxesGateway = async ({
 
   await redis.set(`service:${name}`, address);
 
-  await addPlugin(name);
-
   console.log(`$service:${name} joined with ${address}`);
 };
 
 export const leaveErxesGateway = async (name: string, port: number) => {
-  await removePLugin(name);
-
   console.log(`$service:${name} left ${port}`);
 };
 

@@ -60,7 +60,6 @@ export const integrationQueries = {
     },
     { singleBrandIdSelector, models, subdomain, user }: IContext,
   ) {
-    console.log(user, 'user');
     if (!user) {
       throw new Error('User not authenticated');
     }

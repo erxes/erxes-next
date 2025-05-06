@@ -11,7 +11,7 @@ import {
 } from 'erxes-api-shared/utils';
 import { appRouter } from '~/trpc/init-trpc';
 import { createContext } from '~/trpc/init-trpc';
-const port = process.env.PORT ? Number(process.env.PORT) : 3301;
+const port = process.env.PORT ? Number(process.env.PORT) : 3303;
 
 const app = express();
 

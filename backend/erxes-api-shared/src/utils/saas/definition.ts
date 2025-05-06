@@ -34,6 +34,7 @@ export const saasOrganizationsSchema = new mongoose.Schema({
   partnerKey: { type: String },
   lastActiveDate: { type: Date },
   createdAt: { type: Date },
+  teamMembersLimit: { type: Number, required: true },
   plan: {
     type: String,
     enum: SAAS_ORGANIZATION_PLAN.ALL,

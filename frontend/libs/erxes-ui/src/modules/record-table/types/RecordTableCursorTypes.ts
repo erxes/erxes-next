@@ -5,11 +5,14 @@ export interface IRecordTableCursorPageInfo {
   startCursor?: string | null;
 }
 
+export enum EnumCursorDirection {
+  FORWARD = 'forward',
+  BACKWARD = 'backward',
+}
+
 export interface IRecordTableCursorContext {
   scrollRef: React.RefObject<HTMLDivElement>;
   isFetchBackward: boolean;
-  cursorItemIds: string[];
-  setCursorItemIds: (ids: string[]) => void;
   setIsFetchBackward: (isFetchBackward: boolean) => void;
   distanceFromBottomRef: React.MutableRefObject<number>;
   hasNextPage?: boolean;

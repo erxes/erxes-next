@@ -85,7 +85,7 @@ const CustomerInlineAvatar = React.forwardRef<
   return (
     <Avatar {...props} ref={ref}>
       <Avatar.Image src={avatar} />
-      <Avatar.Fallback colorSeed={_id}>
+      <Avatar.Fallback>
         {firstName?.charAt(0) ||
           lastName?.charAt(0) ||
           primaryEmail?.charAt(0) ||

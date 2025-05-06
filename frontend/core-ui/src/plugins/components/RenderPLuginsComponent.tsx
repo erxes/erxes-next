@@ -2,14 +2,23 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import { Spinner } from 'erxes-ui';
 
+interface RemoteComponentProps {
+  module?: string;
+}
+
 export function RenderPLuginsComponent({
   pluginName,
-  componentType,
+  remoteModuleName,
+  moduleName,
+  props,
 }: {
   pluginName: string;
-  componentType: string;
+  remoteModuleName: string;
+  moduleName: string;
+  props?: any;
 }) {
-  const [Plugin, setPlugin] = useState<React.ComponentType | null>(null);
+  const [Plugin, setPlugin] =
+    useState<React.ComponentType<RemoteComponentProps> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState<{ message: string } | null>(null);
 
@@ -19,10 +28,9 @@ export function RenderPLuginsComponent({
         setIsLoading(true);
         setHasError(null);
 
-        const remoteModule = await loadRemote<{ default: React.ComponentType }>(
-          `${pluginName}/${componentType}`,
-          { from: 'runtime' },
-        );
+        const remoteModule = await loadRemote<{
+          default: React.ComponentType<RemoteComponentProps>;
+        }>(`${pluginName}/${remoteModuleName}`, { from: 'runtime' });
 
         if (!remoteModule?.default) {
           throw new Error('Plugin module is empty or invalid');
@@ -41,7 +49,7 @@ export function RenderPLuginsComponent({
     };
 
     loadPlugin();
-  }, [pluginName]);
+  }, [pluginName, remoteModuleName]);
 
   if (hasError) {
     return (
@@ -73,7 +81,11 @@ export function RenderPLuginsComponent({
         </div>
       }
     >
-      <Plugin />
+      <Plugin
+        key={`${pluginName}-${remoteModuleName}`}
+        {...props}
+        moduleName={moduleName}
+      />
     </Suspense>
   );
 }

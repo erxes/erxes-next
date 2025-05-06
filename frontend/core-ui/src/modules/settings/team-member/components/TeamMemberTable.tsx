@@ -1,4 +1,4 @@
-import { RecordTable } from 'erxes-ui/modules/record-table';
+import { RecordTable } from 'erxes-ui';
 import { Skeleton } from 'erxes-ui';
 import {
   USERS_PER_PAGE,
@@ -18,30 +18,26 @@ const TeamMemberTable = () => {
   if (error) {
     return (
       <div className="text-destructive">
-        Error loading permissions: {error.message}
+        Error loading members: {error.message}
       </div>
     );
   }
   return (
-    <RecordTable.Provider
-      columns={teamMemberColumns}
-      data={users || []}
-      stickyColumns={['avatar', 'firstName']}
-      handleReachedBottom={handleFetchMore}
-      className="mt-1.5"
-      moreColumn={teamMemberMoreColumn}
-    >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          {!loading && totalCount > users?.length && (
-            <RecordTable.RowSkeleton
-              rows={4}
-              handleReachedBottom={handleFetchMore}
-            />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
+    <RecordTable.Provider columns={teamMemberColumns} data={users || []}>
+      <RecordTable.Scroll>
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <RecordTable.RowList />
+            {!loading && totalCount > users?.length && (
+              <RecordTable.RowSkeleton
+                rows={4}
+                handleInView={handleFetchMore}
+              />
+            )}
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.Scroll>
     </RecordTable.Provider>
   );
 };

@@ -1,7 +1,5 @@
 import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
 import { GeneralSettings } from '@/settings/general/components/GeneralSettings';
-import { IconBox } from '@tabler/icons-react';
-import { ScrollArea } from 'erxes-ui/components';
 
 export function GeneralSettingsPage() {
   return (
