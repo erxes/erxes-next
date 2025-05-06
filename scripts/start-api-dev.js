@@ -8,7 +8,7 @@ let plugins = '';
 if (ENABLED_PLUGINS) {
   try {
     plugins = ENABLED_PLUGINS.split(',')
-      .map((plugin) => `${plugin}_api`)
+      .map((plugin) => (plugin === 'logs' ? plugin : `${plugin}_api`))
       .join(' ');
   } catch (error) {
     console.error('Error parsing DEV_REMOTES:', error);

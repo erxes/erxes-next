@@ -69,7 +69,7 @@ httpServer.listen(port, async () => {
   await initApolloServer(app, httpServer);
 
   await joinErxesGateway({
-    name: 'automations-api',
+    name: 'automations',
     port,
     hasSubscriptions: false,
     meta: {},
@@ -82,7 +82,7 @@ process.stdin.resume(); // so the program will not close instantly
 
 async function leaveServiceDiscovery() {
   try {
-    await leaveErxesGateway('automations-api', port);
+    await leaveErxesGateway('automations', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);

@@ -24,10 +24,10 @@ export type ITRPCContext = Awaited<ReturnType<typeof createContext>>;
 
 const t = initTRPC.context<ITRPCContext>().create();
 
-<<<<<<< HEAD
-export const appRouter = t.mergeRouters(contactRouter, formsRouter);
-=======
-export const appRouter = t.mergeRouters(contactRouter, conformityTrpcRouter);
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
+export const appRouter = t.mergeRouters(
+  contactRouter,
+  formsRouter,
+  conformityTrpcRouter,
+);
 
 export type AppRouter = typeof appRouter;

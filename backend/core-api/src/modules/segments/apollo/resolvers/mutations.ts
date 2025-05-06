@@ -102,4 +102,4 @@ const segmentMutations = {
 // checkPermission(segmentMutations, "segmentsEdit", "manageSegments");
 // checkPermission(segmentMutations, "segmentsRemove", "manageSegments");
 
-export { segmentMutations };
+export default segmentMutations;

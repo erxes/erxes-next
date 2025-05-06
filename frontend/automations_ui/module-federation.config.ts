@@ -13,7 +13,7 @@ const coreLibraries = new Set([
 ]);
 
 const config: ModuleFederationConfig = {
-  name: 'automations-ui',
+  name: 'automations_ui',
   exposes: {
     './Config': './src/modules/constants/config.ts',
     './Module': './src/remote-entry.ts',

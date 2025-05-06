@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { mongooseStringRandomId } from 'erxes-api-shared/utils';
-import { Document, Schema } from 'mongoose';
-=======
 import { Document, Schema } from 'mongoose';
 import { mongooseField } from 'erxes-api-shared/utils';
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
 
 export interface IConformity {
   mainType: string;
@@ -72,19 +67,11 @@ export interface IConformityDocument extends IConformity, Document {
 }
 
 export const conformitySchema = new Schema({
-<<<<<<< HEAD
-  _id: mongooseStringRandomId,
-  mainType: { type: String },
-  mainTypeId: { type: String, index: true },
-  relType: { type: String },
-  relTypeId: { type: String, index: true },
-=======
   _id: mongooseField({ pkey: true }),
   mainType: mongooseField({ type: String }),
   mainTypeId: mongooseField({ type: String, index: true }),
   relType: mongooseField({ type: String }),
   relTypeId: mongooseField({ type: String, index: true }),
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
 });
 
 conformitySchema.index({

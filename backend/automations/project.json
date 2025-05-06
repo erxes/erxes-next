@@ -1,5 +1,5 @@
 {
-  "name": "automations-api",
+  "name": "automations_api",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/automations/src",
   "projectType": "application",
@@ -47,7 +47,7 @@
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/automations/Dockerfile . -t automations-api"
+      "command": "docker build -f backend/automations/Dockerfile . -t automations_api"
     }
   }
 }

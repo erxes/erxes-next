@@ -12,7 +12,7 @@ mongoose.connection
   .on('connected', () => {
     console.log(`Connected to the database: ${MONGO_URL}`);
   })
-  .on('disconnected', () => {
+  .on('disconnected', (...props) => {
     cleanActiveChangeStream();
 
     console.log(`Disconnected from the database: ${MONGO_URL}`);

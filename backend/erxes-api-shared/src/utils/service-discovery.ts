@@ -18,7 +18,7 @@ export const getPlugins = async (): Promise<string[]> => {
   const enabledServices =
     process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) || [];
 
-  return [...enabledServices];
+  return ['core', ...enabledServices];
 };
 
 type ServiceInfo = { address: string; config: any };

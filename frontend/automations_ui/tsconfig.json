@@ -8,10 +8,10 @@
     "paths": {
       "erxes-ui/*": ["frontend/libs/erxes-ui/src/*"],
       "erxes-ui": ["frontend/libs/erxes-ui/src"],
-      "~/*": ["frontend/automations-ui/src/*"],
-      "~": ["frontend/automations-ui/src"],
-      "@/*": ["frontend/automations-ui/src/modules/*"],
-      "@": ["frontend/automations-ui/src/modules"],
+      "~/*": ["frontend/automations_ui/src/*"],
+      "~": ["frontend/automations_ui/src"],
+      "@/*": ["frontend/automations_ui/src/modules/*"],
+      "@": ["frontend/automations_ui/src/modules"],
       "ui-modules": ["frontend/libs/ui-modules/src"]
     }
   },

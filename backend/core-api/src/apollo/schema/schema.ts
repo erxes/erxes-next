@@ -118,12 +118,9 @@ export const types = `
     ${UnitTypes}
     ${BrandTypes}
     ${AppTypes}
-<<<<<<< HEAD
     ${SegmentTypes}
-=======
     ${ConformityTypes}
     ${RelationTypes}
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
   `;
 
 export const queries = `
@@ -139,12 +136,9 @@ export const queries = `
     ${positionsQueries}
     ${unitsQueries}
     ${AppQueries}
-<<<<<<< HEAD
     ${FormQueries}
     ${SegmentQueries}
-=======
     ${RelationQueries}
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
   `;
 
 export const mutations = `
@@ -161,12 +155,9 @@ export const mutations = `
     ${structuresMutations}
     ${unitsMutations}
     ${AppMutations}
-<<<<<<< HEAD
     ${SegmentMutations}
-=======
     ${ConformityMutations}
     ${RelationMutations}
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
   `;
 
 export default { types, queries, mutations };

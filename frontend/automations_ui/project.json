@@ -1,7 +1,7 @@
 {
-  "name": "automations-ui",
+  "name": "automations_ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "frontend/automations-ui/src",
+  "sourceRoot": "frontend/automations_ui/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -12,9 +12,9 @@
       "options": {
         "target": "web",
         "outputPath": "dist/frontend/automations",
-        "main": "frontend/automations-ui/src/main.ts",
-        "tsConfig": "frontend/automations-ui/tsconfig.app.json",
-        "rspackConfig": "frontend/automations-ui/rspack.config.ts",
+        "main": "frontend/automations_ui/src/main.ts",
+        "tsConfig": "frontend/automations_ui/tsconfig.app.json",
+        "rspackConfig": "frontend/automations_ui/rspack.config.ts",
         "assets": []
       },
       "configurations": {
@@ -25,20 +25,20 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "frontend/automations-ui/rspack.config.prod.ts"
+          "rspackConfig": "frontend/automations_ui/rspack.config.prod.ts"
         }
       }
     },
     "serve": {
       "executor": "@nx/rspack:module-federation-dev-server",
       "options": {
-        "buildTarget": "automations-ui:build:development",
+        "buildTarget": "automations_ui:build:development",
         "port": 3013
       },
       "configurations": {
         "development": {},
         "production": {
-          "buildTarget": "automations-ui:build:production"
+          "buildTarget": "automations_ui:build:production"
         }
       }
     },
@@ -46,14 +46,14 @@
       "executor": "@nx/rspack:module-federation-static-server",
       "defaultConfiguration": "production",
       "options": {
-        "serveTarget": "automations-ui:serve"
+        "serveTarget": "automations_ui:serve"
       },
       "configurations": {
         "development": {
-          "serveTarget": "automations-ui:serve:development"
+          "serveTarget": "automations_ui:serve:development"
         },
         "production": {
-          "serveTarget": "automations-ui:serve:production"
+          "serveTarget": "automations_ui:serve:production"
         }
       }
     }

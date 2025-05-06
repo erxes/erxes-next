@@ -1,12 +1,8 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
 import { ITRPCContext } from '~/init-trpc';
-<<<<<<< HEAD
-import { z } from 'zod';
-=======
 import { AWS_EMAIL_STATUSES, EMAIL_VALIDATION_STATUSES } from '../constants';
 import { createOrUpdate } from './utils';
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
 
 const t = initTRPC.context<ITRPCContext>().create();
 
@@ -109,13 +105,6 @@ export const customerRouter = t.router({
       return models.Customers.updateOne(query, doc);
     }),
 
-    updateMany: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
-      const { query, doc } = input;
-      const { models } = ctx;
-
-      return models.Customers.updateMany(query, doc);
-    }),
-<<<<<<< HEAD
     updateMany: t.procedure
       .input(
         z.object({
@@ -127,7 +116,7 @@ export const customerRouter = t.router({
         const { models } = ctx;
         const { selector, modifier } = input;
         return await models.Customers.updateMany(selector, modifier);
-=======
+      }),
 
     removeCustomers: t.procedure
       .input(z.any())
@@ -233,7 +222,6 @@ export const customerRouter = t.router({
           collection: models.Customers,
           data: doc,
         });
->>>>>>> ef4e23ea5f9913af17c83d142489022de3df55d7
       }),
   }),
 });

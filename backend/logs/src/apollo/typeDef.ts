@@ -1,17 +1,16 @@
 import gql from 'graphql-tag';
+import { DocumentNode } from 'graphql';
 import { types as logTypes, queries as logQueries } from './schema';
 
 const types = `
   scalar JSON
   scalar Date
 
-  extend type User @key(fields: "_id") {
-    _id: String! @external
-    conversation: String
+  type User @key(fields: "_id") {
+    _id: String!
   }
 
   ${logTypes}
-
 `;
 
 const queries = `
@@ -20,7 +19,7 @@ const queries = `
     }
 `;
 
-const typeDefs = async () => {
+const typeDefs = async (): Promise<DocumentNode> => {
   return gql(`
       ${types} ${queries}
     `);

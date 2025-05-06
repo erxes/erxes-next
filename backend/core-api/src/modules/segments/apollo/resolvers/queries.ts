@@ -1,13 +1,3 @@
-// import { fetchEs } from "@erxes/api-utils/src/elasticsearch";
-// import {
-//   gatherDependentServicesType,
-//   ISegmentContentType
-// } from "@erxes/api-utils/src/segments";
-// import {
-//   checkPermission,
-//   requireLogin
-// } from "@erxes/api-utils/src/permissions";
-
 import {
   gatherDependentServicesType,
   ISegmentContentType,
@@ -20,22 +10,7 @@ import {
 } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { fetchSegment } from '../../utils/fetchSegment';
-
-// import { IContext } from "../../../connectionResolver";
-// import { fetchSegment } from "../../modules/segments/queryBuilder";
-// import {
-//   getService,
-//   getServices,
-//   isEnabled
-// } from "@erxes/api-utils/src/serviceDiscovery";
-
-interface IPreviewParams {
-  contentType: string;
-  conditions;
-  subOf?: string;
-  config: any;
-  conditionsConjunction?: 'and' | 'or';
-}
+import { IPreviewParams } from '../../types';
 
 interface IAssociatedType {
   type: string;
@@ -237,4 +212,4 @@ const segmentQueries = {
 
 // checkPermission(segmentQueries, "segments", "showSegments", []);
 
-export { segmentQueries };
+export default segmentQueries;

@@ -25,7 +25,7 @@ export const initApolloServer = async (app, httpServer) => {
   const apolloServer = await generateApolloServer(httpServer);
 
   await apolloServer.start();
-  console.log('automations-api');
+  console.log('shiadskjda:automations_api');
 
   app.use(
     '/graphql',

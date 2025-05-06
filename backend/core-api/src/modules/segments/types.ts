@@ -4,6 +4,15 @@ export interface ISegmentsEdit extends ISegment {
   _id: string;
   conditionSegments: ISegment[];
 }
+
+export interface IPreviewParams {
+  contentType: string;
+  conditions: any;
+  subOf?: string;
+  config: any;
+  conditionsConjunction?: 'and' | 'or';
+}
+
 export type IOptions = {
   returnAssociated?: { mainType: string; relType: string };
   returnFields?: string[];
