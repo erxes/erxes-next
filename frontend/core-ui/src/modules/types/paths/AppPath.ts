@@ -13,6 +13,8 @@ export enum AppPath {
   ProductsCatchAll = `/${Products}/*`,
   Contacts = 'contacts',
   ContactsCatchAll = `/${Contacts}/*`,
+  Segments = 'segments',
+  SegmentsCatchAll = `/${Segments}/*`,
   Marketplace = 'marketplace',
   MarketplaceCatchAll = `/${Marketplace}/*`,
 
