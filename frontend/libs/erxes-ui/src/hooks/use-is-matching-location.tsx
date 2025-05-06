@@ -1,19 +1,21 @@
 import { useCallback } from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
 
-import { AppPath } from '@/types/paths/AppPath';
-
-export const useIsMatchingLocation = () => {
+export const useIsMatchingLocation = (basePath?: string) => {
   const location = useLocation();
 
+  console.log(location.pathname);
+
   return useCallback(
-    (path: string, basePath?: AppPath) => {
+    (path: string) => {
       const constructedPath = basePath
         ? new URL(basePath + path, document.location.origin).pathname ?? ''
         : path;
 
+      console.log(constructedPath, 'location', location.pathname, 'hi');
+
       return !!matchPath(constructedPath, location.pathname);
     },
-    [location.pathname],
+    [location.pathname, basePath],
   );
 };
