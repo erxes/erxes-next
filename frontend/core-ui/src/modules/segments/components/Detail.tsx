@@ -35,6 +35,13 @@ type Props = {
   ) => Promise<ApolloQueryResult<ListQueryResponse>>;
 };
 
+type StatsType = {
+  total?: number;
+  targeted?: number;
+  percentage?: number;
+  loading?: boolean;
+};
+
 const renderContent = ({
   segment,
   form,
@@ -60,12 +67,7 @@ export default function SegmentDetail({ refetch }: Props) {
 
   const [segmentId, setOpen] = useQueryState<string>('segmentId');
   const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [stats, setStats] = useState({
-    total: 0,
-    targeted: 0,
-    percentage: 0,
-    loading: false,
-  });
+  const [stats, setStats] = useState<StatsType>();
 
   const { toast } = useToast();
   const [segmentAdd] = useMutation(mutations.segmentsAdd);
@@ -194,6 +196,7 @@ export default function SegmentDetail({ refetch }: Props) {
         } else {
           setIsCreatingNew(!isCreatingNew);
         }
+        setStats(undefined);
       }}
     >
       <Sheet.Trigger asChild>
@@ -281,31 +284,33 @@ export default function SegmentDetail({ refetch }: Props) {
             </FormProvider>
           </div>
 
-          <Sheet.Footer className="gap-4 sm:justify-start border-y-2 px-6 py-4">
-            <div className="flex flex-col items-center">
-              <Label>Total</Label>
-              <h4 className="text-xl text-primary">
-                {stats.total.toLocaleString()}
-              </h4>
-            </div>
-            <div className="flex flex-col items-center">
-              <Label>Targeted</Label>
-              <h4 className="text-xl text-primary">
-                {stats.targeted.toLocaleString()}
-              </h4>
-            </div>
-            <div className="flex flex-col items-center">
-              <Label>Percentage</Label>
-              <h4 className="text-xl text-primary">{stats.percentage}%</h4>
-            </div>
-          </Sheet.Footer>
+          {!!stats && (
+            <Sheet.Footer className="gap-4 sm:justify-start border-y-2 px-6 py-4">
+              <div className="flex flex-col items-center">
+                <Label>Total</Label>
+                <h4 className="text-xl text-primary">
+                  {stats.total?.toLocaleString()}
+                </h4>
+              </div>
+              <div className="flex flex-col items-center">
+                <Label>Targeted</Label>
+                <h4 className="text-xl text-primary">
+                  {stats.targeted?.toLocaleString()}
+                </h4>
+              </div>
+              <div className="flex flex-col items-center">
+                <Label>Percentage</Label>
+                <h4 className="text-xl text-primary">{stats.percentage}%</h4>
+              </div>
+            </Sheet.Footer>
+          )}
           <Sheet.Footer className="m-4 ">
             <Button
               variant="secondary"
               onClick={handleCalculateStats}
-              disabled={stats.loading}
+              disabled={stats?.loading}
             >
-              {stats.loading ? 'Calculating...' : 'Calculate segment reach'}
+              {stats?.loading ? 'Calculating...' : 'Calculate segment reach'}
             </Button>
             <Button onClick={form.handleSubmit(handleSave)}>
               Save Segment
