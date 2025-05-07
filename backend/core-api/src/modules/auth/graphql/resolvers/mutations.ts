@@ -1,5 +1,4 @@
-import { authCookieOptions, getEnv } from 'erxes-api-shared/utils';
-import { logHandler } from 'erxes-api-shared/utils/logs';
+import { authCookieOptions, getEnv, logHandler } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 type LoginParams = {

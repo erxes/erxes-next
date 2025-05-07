@@ -5,9 +5,9 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
 import {
   extractUserFromHeader,
+  generateApolloContext,
   getSubdomain,
   wrapApolloMutations,
-  generateApolloContext,
 } from 'erxes-api-shared/utils';
 import { gql } from 'graphql-tag';
 import { generateModels } from '../connectionResolvers';
