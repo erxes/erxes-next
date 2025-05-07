@@ -12,7 +12,7 @@ export const customerRouter = t.router({
       const { query } = input;
       const { models } = ctx;
 
-      return await models.Customers.find(query).lean();
+      return models.Customers.find(query).lean();
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -43,7 +43,7 @@ export const customerRouter = t.router({
         defaultFilter['_id'] = query._id;
       }
 
-      return await models.Customers.findOne(defaultFilter).lean();
+      return models.Customers.findOne(defaultFilter).lean();
     }),
 
     findActiveCustomers: t.procedure
@@ -52,12 +52,7 @@ export const customerRouter = t.router({
         const { query, fields, skip, limit } = input;
         const { models } = ctx;
 
-        return await models.Customers.findActiveCustomers(
-          query,
-          fields,
-          skip,
-          limit,
-        );
+        return models.Customers.findActiveCustomers(query, fields, skip, limit);
       }),
 
     getCustomerName: t.procedure
@@ -75,14 +70,14 @@ export const customerRouter = t.router({
         const { _id } = input;
         const { models } = ctx;
 
-        return await models.Customers.getWidgetCustomer(_id);
+        return models.Customers.getWidgetCustomer(_id);
       }),
 
     count: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
 
-      return await models.Customers.find(query).countDocuments();
+      return models.Customers.find(query).countDocuments();
     }),
 
     createCustomer: t.procedure
@@ -91,7 +86,7 @@ export const customerRouter = t.router({
         const { doc } = input;
         const { models } = ctx;
 
-        return await models.Customers.createCustomer(doc);
+        return models.Customers.createCustomer(doc);
       }),
 
     updateCustomer: t.procedure
@@ -100,21 +95,21 @@ export const customerRouter = t.router({
         const { _id, doc } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateCustomer(_id, doc);
+        return models.Customers.updateCustomer(_id, doc);
       }),
 
     updateOne: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
       const { query, doc } = input;
       const { models } = ctx;
 
-      return await models.Customers.updateOne(query, doc);
+      return models.Customers.updateOne(query, doc);
     }),
 
     updateMany: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
       const { query, doc } = input;
       const { models } = ctx;
 
-      return await models.Customers.updateMany(query, doc);
+      return models.Customers.updateMany(query, doc);
     }),
 
     removeCustomers: t.procedure
@@ -123,7 +118,7 @@ export const customerRouter = t.router({
         const { _ids } = input;
         const { models } = ctx;
 
-        return await models.Customers.removeCustomers(_ids);
+        return models.Customers.removeCustomers(_ids);
       }),
 
     markCustomerAsActive: t.procedure
@@ -132,16 +127,16 @@ export const customerRouter = t.router({
         const { _id } = input;
         const { models } = ctx;
 
-        return await models.Customers.markCustomerAsActive(_id);
+        return models.Customers.markCustomerAsActive(_id);
       }),
 
     createMessengerCustomer: t.procedure
       .input(z.any())
       .mutation(async ({ ctx, input }) => {
-        const { _id, doc, customData } = input;
+        const { doc, customData } = input;
         const { models } = ctx;
 
-        return await models.Customers.createMessengerCustomer({
+        return models.Customers.createMessengerCustomer({
           doc,
           customData,
         });
@@ -153,7 +148,7 @@ export const customerRouter = t.router({
         const { _id, doc, customData } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateMessengerCustomer({
+        return models.Customers.updateMessengerCustomer({
           _id,
           doc,
           customData,
@@ -166,7 +161,7 @@ export const customerRouter = t.router({
         const { params } = input;
         const { models } = ctx;
 
-        return await models.Customers.saveVisitorContactInfo(params);
+        return models.Customers.saveVisitorContactInfo(params);
       }),
 
     updateLocation: t.procedure
@@ -175,7 +170,7 @@ export const customerRouter = t.router({
         const { customerId, browserInfo } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateLocation(customerId, browserInfo);
+        return models.Customers.updateLocation(customerId, browserInfo);
       }),
 
     updateSession: t.procedure
@@ -184,7 +179,7 @@ export const customerRouter = t.router({
         const { customerId } = input;
         const { models } = ctx;
 
-        return await models.Customers.updateSession(customerId);
+        return models.Customers.updateSession(customerId);
       }),
 
     setUnsubscribed: t.procedure
@@ -200,11 +195,11 @@ export const customerRouter = t.router({
         }
 
         if (_id && status) {
-          return await models.Customers.updateOne({ _id }, { $set: update });
+          return models.Customers.updateOne({ _id }, { $set: update });
         }
 
         if (customerIds.length > 0 && !status) {
-          return await models.Customers.updateMany(
+          return models.Customers.updateMany(
             { _id: { $in: customerIds } },
             { $set: update },
           );
@@ -217,12 +212,10 @@ export const customerRouter = t.router({
         const { doc } = input;
         const { models } = ctx;
 
-        const customer = await createOrUpdate({
+        return createOrUpdate({
           collection: models.Customers,
           data: doc,
         });
-
-        return customer;
       }),
   }),
 });

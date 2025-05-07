@@ -4,6 +4,8 @@ import { userQueries } from '@/organization/team-member/graphql/queries';
 import { productQueries } from '@/products/graphql/resolvers/queries';
 import { tagQueries } from '@/tags/graphql/queries';
 import { appQueries } from '@/apps/graphql/queries';
+import { relationsQueries } from '@/relations/graphql/queries';
+
 export const queries = {
   ...contactQueries,
   ...authQueries,
@@ -11,4 +13,5 @@ export const queries = {
   ...tagQueries,
   ...productQueries,
   ...appQueries,
+  ...relationsQueries,
 };

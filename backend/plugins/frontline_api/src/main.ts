@@ -7,7 +7,7 @@ import { initApolloServer } from '~/apollo/apolloServer';
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 import { router } from '~/routes';
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3301;
+const port = process.env.PORT ? Number(process.env.PORT) : 3302;
 
 const app = express();
 

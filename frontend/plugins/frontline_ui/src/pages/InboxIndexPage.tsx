@@ -1,9 +1,5 @@
-import {
-  IconCaretDownFilled,
-  IconInbox,
-  IconSettings,
-} from '@tabler/icons-react';
-import { Button, PluginHeader } from 'erxes-ui';
+import { IconInbox, IconSettings } from '@tabler/icons-react';
+import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { InboxLayout } from '@/inbox/components/InboxLayout';
 import { ConversationDetail } from '@/inbox/conversation-detail/components/ConversationDetail';
@@ -13,22 +9,32 @@ import { MainFilters } from '@/inbox/components/MainFilters';
 const InboxIndexPage = () => {
   return (
     <div className="flex flex-col h-full">
-      <PluginHeader
-        title="Inbox"
-        icon={IconInbox}
-        className="p-3 mx-0"
-        separatorClassName="mb-0"
-      >
-        <Button variant="outline" asChild>
-          <Link to="/settings/inbox">
-            <IconSettings />
-            Go to settings
-          </Link>
-        </Button>
-        <Button>
-          More <IconCaretDownFilled />
-        </Button>
-      </PluginHeader>
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to="/inbox">
+                    <IconInbox />
+                    Inbox
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
+          <PageHeader.LikeButton />
+        </PageHeader.Start>
+        <PageHeader.End>
+          <Button variant="outline" asChild>
+            <Link to="/settings/inbox">
+              <IconSettings />
+              Go to settings
+            </Link>
+          </Button>
+        </PageHeader.End>
+      </PageHeader>
       <InboxLayout
         conversations={<Conversations />}
         mainFilters={<MainFilters />}

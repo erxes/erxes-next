@@ -1,19 +1,18 @@
 import { Cell } from '@tanstack/react-table';
-import { RecordTableMoreButton } from 'erxes-ui/modules/record-table/components/MoreColumn';
-import { renderingContactDetailAtom } from '@/contacts/detail/states/contactDetailStates';
 import { useSetAtom } from 'jotai';
-import { useQueryState } from 'erxes-ui';
+import { RecordTable, useQueryState } from 'erxes-ui';
 import { IPermission } from '@/settings/permission/types';
+import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 export const PermissionMoreColumnCell = ({
   cell,
 }: {
   cell: Cell<IPermission, unknown>;
 }) => {
   const [, setOpen] = useQueryState('permission_id');
-  const setRenderingContactDetail = useSetAtom(renderingContactDetailAtom);
+  const setRenderingContactDetail = useSetAtom(renderingCustomerDetailAtom);
   const { _id } = cell.row.original;
   return (
-    <RecordTableMoreButton
+    <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);

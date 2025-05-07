@@ -3,8 +3,7 @@ import { Link, useLocation } from 'react-router';
 import {
   Icon,
   IconBuildingStore,
-  // IconCaretUpFilled,
-  // IconMailFilled,
+  IconCaretDownFilled,
   IconSettings,
 } from '@tabler/icons-react';
 import { Button, cn, Sidebar } from 'erxes-ui';
@@ -109,24 +108,39 @@ export const MainNavigationButton = ({
   pathname,
   name,
   icon,
+  inSettings,
 }: {
   pathPrefix?: string;
   pathname: string;
   name: string;
   icon: Icon;
+  inSettings?: boolean;
 }) => {
   const Icon = icon;
   const activePathname = useLocation().pathname;
-  const isActive = activePathname.includes(
+
+  const isActive =
+    activePathname ===
+    (pathPrefix ? pathPrefix + '/' + pathname : '/' + pathname);
+
+  const isSubItemActive = activePathname.includes(
     pathPrefix ? pathPrefix + pathname : pathname,
   );
 
   return (
-    <Sidebar.MenuButton asChild isActive={isActive}>
+    <Sidebar.MenuButton
+      asChild
+      isActive={isActive}
+      className={cn(isSubItemActive && 'bg-muted')}
+    >
       <Link to={pathPrefix ? pathPrefix + pathname : pathname}>
-        <Icon
-          className={cn('text-accent-foreground', isActive && 'text-primary')}
-        />
+        {inSettings && isSubItemActive ? (
+          <IconCaretDownFilled className="text-accent-foreground" />
+        ) : (
+          <Icon
+            className={cn('text-accent-foreground', isActive && 'text-primary')}
+          />
+        )}
         <span className="capitalize">{name}</span>
       </Link>
     </Sidebar.MenuButton>

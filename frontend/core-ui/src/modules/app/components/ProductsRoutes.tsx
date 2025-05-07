@@ -7,13 +7,13 @@ import { ProductsPath } from '@/types/paths/ProductsPath';
 const ProductsIndexPage = lazy(() =>
   import('~/pages/products/ProductsIndexPage').then((module) => ({
     default: module.ProductsIndexPage,
-  }))
+  })),
 );
 
-const ProductsDetailPage = lazy(() =>
-  import('~/pages/products/ProductsDetailPage').then((module) => ({
-    default: module.ProductsDetailPage,
-  }))
+const ProductsCategoryPage = lazy(() =>
+  import('~/pages/products/ProductCategoryPage').then((module) => ({
+    default: module.ProductCategoryPage,
+  })),
 );
 
 export const ProductsRoutes = () => {
@@ -21,7 +21,10 @@ export const ProductsRoutes = () => {
     <Suspense fallback={<></>}>
       <Routes>
         <Route path={ProductsPath.Index} element={<ProductsIndexPage />} />
-        <Route path={ProductsPath.Detail} element={<ProductsDetailPage />} />
+        <Route
+          path={ProductsPath.Categories}
+          element={<ProductsCategoryPage />}
+        />
       </Routes>
     </Suspense>
   );

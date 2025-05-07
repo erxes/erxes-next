@@ -31,7 +31,7 @@ export const VatRows = lazy(() =>
 );
 
 export const CTaxRows = lazy(() =>
-  import('~/pages/CTaxRowsPage').then((module) => ({
+  import('~/pages/CtaxRowsPage').then((module) => ({
     default: module.CTaxRowsPage,
   })),
 );
@@ -61,8 +61,8 @@ const AccountingSettings = () => {
                 path="/account-categories"
                 element={<AccountCategories />}
               />
-              <Route path="/vat" element={<VatRows />} />
-              <Route path="/ctax" element={<CTaxRows />} />
+              <Route path="/vat-rows" element={<VatRows />} />
+              <Route path="/ctax-rows" element={<CTaxRows />} />
             </Routes>
           </Suspense>
         </div>

@@ -16,21 +16,31 @@ import {
   queries as IntegrationsQueries,
   types as IntegrationsTypes,
 } from '@/inbox/graphql/schemas/integration';
+
+import {
+  mutations as FacebookMutations,
+  queries as FacebookQueries,
+  types as FacebookTypes,
+} from '@/integrations/facebook/graphql/schema/facebook';
+
 export const types = `
     ${TypeExtensions}
     ${ChannelsTypes}
     ${ConversationsTypes}
     ${IntegrationsTypes}
+    ${FacebookTypes}
   `;
 export const queries = `
     ${ChannelsQueries}
     ${ConversationsQueries}
     ${IntegrationsQueries}
+    ${FacebookQueries}
   `;
 
 export const mutations = `
    ${ChannelsMutations}
    ${ConversationsMutations}
    ${IntegrationsMutations}
+   ${FacebookMutations}
 `;
 export default { types, queries, mutations };

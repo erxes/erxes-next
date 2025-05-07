@@ -11,6 +11,7 @@ export enum SettingsWorkspacePath {
   MailConfig = 'mail-config',
   Permission = 'permission',
   TeamMember = 'team-member',
+  Structure = 'structure/*',
 }
 
 export type TSettingPath = {

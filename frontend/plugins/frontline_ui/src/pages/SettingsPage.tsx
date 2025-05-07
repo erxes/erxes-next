@@ -1,9 +1,5 @@
-import { Breadcrumb } from 'erxes-ui';
-import { PluginHeader } from 'erxes-ui/modules/plugin-header/PluginHeader';
-import { IconInbox } from '@tabler/icons-react';
+import { MainSettingsForm } from '~/modules/settings/components/MainSettingsForm';
 
-const Settings = () => {
-  return <>hi</>;
+export const SettingsPage = () => {
+  return <MainSettingsForm />;
 };
-
-export default Settings;

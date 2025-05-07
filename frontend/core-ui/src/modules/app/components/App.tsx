@@ -6,8 +6,6 @@ import { AppErrorBoundary } from '@/error-handler/components/AppErrorBoundary';
 import { AppI18nWrapper } from '~/providers/i18next-provider';
 import { Provider as JotaiProvider } from 'jotai';
 import { ThemeEffect } from '@/app/effect-components/ThemeEffect';
-import { WidgetProvider } from 'ui-modules';
-import { WidgetsSidebar } from '@/widgets/WidgetsSidebar';
 
 export function App() {
   return (
@@ -15,9 +13,7 @@ export function App() {
       <AppI18nWrapper>
         <Toaster />
         <AppErrorBoundary>
-          <WidgetProvider Widget={WidgetsSidebar}>
-            <AppRouter />
-          </WidgetProvider>
+          <AppRouter />
         </AppErrorBoundary>
         <ThemeEffect />
       </AppI18nWrapper>

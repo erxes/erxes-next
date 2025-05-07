@@ -1,0 +1,39 @@
+import { IconCategoryPlus, IconCube } from '@tabler/icons-react';
+import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { Link } from 'react-router-dom';
+import { AddProductCategoryForm } from './AddProductCategoryForm';
+
+export const ProductCategoriesHeader = () => {
+  return (
+    <PageHeader>
+      <PageHeader.Start>
+        <Breadcrumb>
+          <Breadcrumb.List className="gap-1">
+            <Breadcrumb.Item>
+              <Button variant="ghost" asChild>
+                <Link to="/products">
+                  <IconCube />
+                  Products & Services
+                </Link>
+              </Button>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Page>
+              <Button variant="ghost" asChild>
+                <Link to="/products/categories">
+                  <IconCategoryPlus />
+                  Categories
+                </Link>
+              </Button>
+            </Breadcrumb.Page>
+          </Breadcrumb.List>
+        </Breadcrumb>
+        <Separator.Inline />
+        <PageHeader.LikeButton />
+      </PageHeader.Start>
+      <PageHeader.End>
+        <AddProductCategoryForm />
+      </PageHeader.End>
+    </PageHeader>
+  );
+};

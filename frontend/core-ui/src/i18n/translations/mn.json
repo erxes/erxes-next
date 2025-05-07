@@ -6,6 +6,12 @@
     "inbox": "Inbox",
     "sales": "Борлуулалт",
     "tasks": "Даалгаврууд",
+    "accounting": "Нябо бүртгэл",
+    "accounting.subMenu": {
+      "main": "Баримтууд",
+      "records": "Бичилтүүд",
+      "odds": "Зөрүүтэй баримтууд"
+    },
     "education": "Боловсрол"
   }
 }

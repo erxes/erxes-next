@@ -30,7 +30,7 @@ export const usePreviousHotkeyScope = () => {
     useCallback(
       (get, set, scope: string, customScopes?: CustomHotkeyScopes) => {
         const currentHotkeyScope = get(currentHotkeyScopeState);
-
+        console.log('currentHotkeyScope', currentHotkeyScope, scope);
         setHotKeyScope(scope, customScopes);
         set(previousHotkeyScopeState, currentHotkeyScope);
       },
