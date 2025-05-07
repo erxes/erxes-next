@@ -59,7 +59,10 @@ export interface IPdfAttachment {
 }
 
 export interface IMainContext {
+  req: Request;
   res: any;
+  subdomain: string;
+  processId: string;
   requestInfo: any;
   user: IUserDocument;
   docModifier: <T>(doc: T) => any;
@@ -77,7 +80,8 @@ export interface IMainContext {
   dataLoaders: any;
 }
 export interface ILogDoc {
-  source: 'webhook' | 'graphql' | 'mongo';
+  subdomain: string;
+  source: 'webhook' | 'graphql' | 'mongo' | 'auth';
   action: string;
   payload: any;
   userId?: string;
@@ -86,6 +90,7 @@ export interface ILogDoc {
     endDate: Date;
     durationMs: number;
   };
+  processId?: string;
   status?: 'failed' | 'success';
 }
 

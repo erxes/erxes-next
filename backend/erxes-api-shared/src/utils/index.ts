@@ -9,3 +9,4 @@ export * from './apollo';
 export * from './saas';
 export * from './random';
 export * from './trpc';
+export * from './logs';

@@ -1,16 +1,36 @@
 import mongoose from 'mongoose';
-import { getEnv, getSubdomain } from '../utils';
-import { connect } from './mongo-connection';
 import {
   coreModelOrganizations,
   getSaasCoreConnection,
 } from '../saas/saas-mongo-connection';
+import { isEnabled } from '../service-discovery';
+import { getEnv, getSubdomain } from '../utils';
+import { startChangeStreams } from './change-stream';
+import { connect } from './mongo-connection';
+
+const initializeModels = async <IModels>(
+  connection: mongoose.Connection,
+  loadClasses: (
+    db: mongoose.Connection,
+    subdomain: string,
+  ) => IModels | Promise<IModels>,
+  subdomain: string,
+  ignoreChangeStream?: boolean,
+) => {
+  const models = await loadClasses(connection, subdomain);
+  if (!ignoreChangeStream && (await isEnabled('logs'))) {
+    startChangeStreams(models as any, subdomain);
+  }
+
+  return models;
+};
 
 export const createGenerateModels = <IModels>(
   loadClasses: (
     db: mongoose.Connection,
     subdomain: string,
   ) => IModels | Promise<IModels>,
+  ignoreChangeStream?: boolean,
 ): ((hostnameOrSubdomain: string) => Promise<IModels>) => {
   const VERSION = getEnv({ name: 'VERSION', defaultValue: 'os' });
 
@@ -21,18 +41,18 @@ export const createGenerateModels = <IModels>(
     return async function genereteModels(
       hostnameOrSubdomain: string,
     ): Promise<IModels> {
-  
       if (models) {
         return models;
       }
 
-      models = await loadClasses(mongoose.connection, hostnameOrSubdomain);
-
-
-      return models;
+      return initializeModels(
+        mongoose.connection,
+        loadClasses,
+        hostnameOrSubdomain,
+        ignoreChangeStream,
+      );
     };
   } else {
-
     return async function genereteModels(
       hostnameOrSubdomain = '',
     ): Promise<IModels> {
@@ -69,7 +89,12 @@ export const createGenerateModels = <IModels>(
         noListener: true,
       });
 
-      return await loadClasses(tenantCon, subdomain);
+      return initializeModels(
+        tenantCon,
+        loadClasses,
+        subdomain,
+        ignoreChangeStream,
+      );
     };
   }
 };
