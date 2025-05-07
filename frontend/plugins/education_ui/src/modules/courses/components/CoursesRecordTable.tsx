@@ -1,15 +1,9 @@
 import { RecordTable } from 'erxes-ui/modules/record-table';
-import { COURSES_PER_PAGE, useCourses } from '@/courses/hooks/useCourses';
-import { courseMoreColumn } from '@/courses/components/CourseMoreColumn';
+import { useCourses } from '@/courses/hooks/useCourses';
 import { courseColumns } from '@/courses/components/CourseColumns';
 
 export const CoursesRecordTable = () => {
-  const { courses, handleFetchMore, loading, pageInfo } = useCourses({
-    variables: {
-      perPage: COURSES_PER_PAGE,
-      page: 1,
-    },
-  });
+  const { courses, handleFetchMore, loading, pageInfo } = useCourses({});
 
   const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
     pageInfo || {};
@@ -18,25 +12,24 @@ export const CoursesRecordTable = () => {
     <RecordTable.Provider
       columns={courseColumns}
       data={courses || []}
-      stickyColumns={['name']}
-      className="mt-1.5"
-      moreColumn={courseMoreColumn}
+      className="m-3"
     >
       <RecordTable.CursorProvider
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
         loading={loading}
         dataLength={courses?.length}
+        sessionKey="courses_cursor"
       >
         <RecordTable>
           <RecordTable.Header />
-          <RecordTable.Body className="rounded-lg overflow-hidden">
+          <RecordTable.Body>
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
               startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
-            <RecordTable.CursorRowList />
+            <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
               endCursor={endCursor}

@@ -1,4 +1,4 @@
-import { CurrencyCode, CurrencyInput, useToast } from 'erxes-ui';
+import { CurrencyCode, CurrencyField, useToast } from 'erxes-ui';
 import { CoreCell } from '@tanstack/react-table';
 import { useCourseEdit } from '@/courses/hooks/useCourseEdit';
 import { ApolloError } from '@apollo/client';
@@ -6,7 +6,6 @@ import {
   RecordTableInlineCell,
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
-import { CurrencyDisplay } from 'erxes-ui/components/display/CurrencyDisplay';
 import { useState } from 'react';
 
 export const PriceField = ({ cell }: { cell: CoreCell<any, any> }) => {
@@ -33,16 +32,23 @@ export const PriceField = ({ cell }: { cell: CoreCell<any, any> }) => {
       getValue={() => cell.getValue()}
       value={value}
       display={() => (
-        <CurrencyDisplay
-          currencyValue={{
-            currencyCode: CurrencyCode.USD,
-            amountMicros: value * 1000000,
-          }}
+        <CurrencyField.ValueInput
+          value={value}
+          onChange={(value) => setValue(value)}
         />
+        // <CurrencyDisplay
+        //   currencyValue={{
+        //     currencyCode: CurrencyCode.USD,
+        //     amountMicros: value * 1000000,
+        //   }}
+        // />
       )}
       edit={() => (
         <RecordTableInlineCellEditForm>
-          <CurrencyInput value={value} onChange={(value) => setValue(value)} />
+          <CurrencyField.ValueInput
+            value={value}
+            onChange={(value) => setValue(value)}
+          />
         </RecordTableInlineCellEditForm>
       )}
     />

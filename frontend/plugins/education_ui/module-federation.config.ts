@@ -15,10 +15,8 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'education_ui',
   exposes: {
-    './Config': './src/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
-    './Widgets': './src/widgets/Widgets.tsx',
+    './config': './src/config.ts',
+    './courses': './src/modules/courses/Main.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

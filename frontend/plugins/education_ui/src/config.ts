@@ -1,21 +1,23 @@
-import { IconBooks } from '@tabler/icons-react';
+import { IconBook, IconSchool } from '@tabler/icons-react';
+import { IUIConfig } from 'erxes-ui/types';
 
-export const CONFIG = {
+export const CONFIG: IUIConfig = {
   name: 'education',
-  icon: IconBooks,
-  path: '/educations',
-  submenus: [
+  icon: IconBook,
+  modules: [
     {
       name: 'courses',
+      icon: IconBook,
       path: 'education/courses',
+      hasSettings: false,
+      hasWidgets: false,
     },
     {
-      name: 'categories',
-      path: 'education/categories',
-    },
-    {
-      name: 'settings',
-      path: 'education/settings',
+      name: 'class',
+      icon: IconSchool,
+      path: 'education/class',
+      hasSettings: false,
+      hasWidgets: false,
     },
   ],
 };

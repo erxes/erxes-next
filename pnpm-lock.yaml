@@ -649,9 +649,6 @@ importers:
 
   backend/plugins/education_api:
     dependencies:
-      dayjs:
-        specifier: ^1.11.13
-        version: 1.11.13
       erxes-api-shared:
         specifier: workspace:^
         version: link:../../erxes-api-shared
@@ -682,6 +679,12 @@ importers:
       underscore:
         specifier: ^1.13.7
         version: 1.13.7
+
+  backend/plugins/sales_api:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
 
   backend/plugins/sample_api:
     dependencies:

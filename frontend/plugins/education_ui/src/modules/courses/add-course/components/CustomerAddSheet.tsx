@@ -9,28 +9,22 @@ import {
   useSetHotkeyScope,
 } from 'erxes-ui';
 import { CourseHotKeyScope } from '@/courses/types/CourseHotKeyScope';
+import { useState } from 'react';
+import { AddCourseForm } from '../AddCourseForm';
 
-interface CustomerAddSheetProps {
-  children: React.ReactNode;
-  onOpenChange?: (open: boolean) => void;
-  open?: boolean;
-}
-export const CourseAddSheet = ({
-  children,
-  open,
-  onOpenChange,
-}: CustomerAddSheetProps) => {
+export const CourseAddSheet = () => {
   const setHotkeyScope = useSetHotkeyScope();
+  const [open, setOpen] = useState<boolean>(false);
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
   const onOpen = () => {
-    onOpenChange?.(true);
+    setOpen(true);
     setHotkeyScopeAndMemorizePreviousScope(CourseHotKeyScope.CourseAddSheet);
   };
 
   const onClose = () => {
+    setOpen(false);
     setHotkeyScope('course-page');
-    onOpenChange?.(false);
   };
 
   useScopedHotkeys(`c`, () => onOpen(), 'course-page');
@@ -45,23 +39,23 @@ export const CourseAddSheet = ({
           <Kbd>C</Kbd>
         </Button>
       </Sheet.Trigger>
-      <Sheet.Content
+      <Sheet.View
         className="sm:max-w-lg p-0"
         onEscapeKeyDown={(e) => {
           e.preventDefault();
         }}
       >
-        {children}
-      </Sheet.Content>
+        <AddCourseForm onOpenChange={setOpen} />
+      </Sheet.View>
     </Sheet>
   );
 };
 
 export const CourseAddSheetHeader = () => {
   return (
-    <Sheet.Header className="p-5">
+    <Sheet.Header className="border-b gap-3">
       <Sheet.Title>Add course</Sheet.Title>
-      <Sheet.Description>Create and configure your courses</Sheet.Description>
+      <Sheet.Close />
     </Sheet.Header>
   );
 };

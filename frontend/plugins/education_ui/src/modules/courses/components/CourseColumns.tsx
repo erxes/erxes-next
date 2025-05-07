@@ -8,10 +8,10 @@ import {
   RecordTableInlineCellEditForm,
 } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { Select, Slider } from 'erxes-ui';
-import { COURSE_TYPE_OPTIONS } from '@/courses/constants/CourseConstants';
+import { RecordTable, Slider } from 'erxes-ui';
 import { useCourseEdit } from '@/courses/hooks/useCourseEdit';
 import { ActionField, PriceField, SwitchField } from '@/courses/edit-course';
+import { courseMoreColumn } from './CourseMoreColumn';
 
 const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
   const [value, setValue] = useState(cell.getValue() as string);
@@ -41,7 +41,11 @@ const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
   );
 };
 
+const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICourse>;
+
 export const courseColumns: ColumnDef<ICourse>[] = [
+  courseMoreColumn as ColumnDef<ICourse>,
+  checkBoxColumn,
   {
     id: 'name',
     accessorKey: 'name',
@@ -58,6 +62,7 @@ export const courseColumns: ColumnDef<ICourse>[] = [
   {
     id: 'status',
     accessorKey: 'status',
+    size: 100,
     header: () => <RecordTableInlineHead label="Status" />,
     cell: ({ cell }) => <SwitchField cell={cell} />,
   },
@@ -72,36 +77,6 @@ export const courseColumns: ColumnDef<ICourse>[] = [
           <Slider hideThumb max={100} defaultValue={[randomNumber]} step={1} />
           <span className="text-primary font-semibold">{randomNumber}%</span>
         </div>
-      );
-    },
-  },
-  {
-    id: 'type',
-    accessorKey: 'type',
-    header: () => <RecordTableInlineHead label="Type" />,
-    cell: ({ cell }) => {
-      const result =
-        COURSE_TYPE_OPTIONS.find((type) => type.value === cell.getValue())
-          ?.label || ' ';
-
-      return (
-        <RecordTableInlineCell
-          display={() => <span>{result}</span>}
-          edit={({ isInEditMode, setIsInEditMode }) => (
-            <Select open={isInEditMode} onOpenChange={setIsInEditMode}>
-              <Select.Trigger className="w-full h-cell rounded-none">
-                <Select.Value placeholder="Select type" />
-              </Select.Trigger>
-              <Select.Content>
-                {COURSE_TYPE_OPTIONS.map((type) => (
-                  <Select.Item value={type.value} key={type.value}>
-                    {type.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          )}
-        />
       );
     },
   },

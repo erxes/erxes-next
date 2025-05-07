@@ -4,13 +4,15 @@ import { ICourse } from '@/courses/types/courseType';
 import {
   useRecordTableCursor,
   IRecordTableCursorPageInfo,
-  getCursorPageInfo,
+  mergeCursorData,
+  EnumCursorDirection,
+  validateFetchMore,
 } from 'erxes-ui';
 
 export const COURSES_PER_PAGE = 30;
 
 export const useCourses = (options?: QueryHookOptions) => {
-  const { cursor, setCursor } = useRecordTableCursor({
+  const { cursor } = useRecordTableCursor({
     sessionKey: 'contacts_cursor',
   });
 
@@ -32,53 +34,29 @@ export const useCourses = (options?: QueryHookOptions) => {
   const handleFetchMore = ({
     direction,
   }: {
-    direction: 'forward' | 'backward';
-    onFetchMoreCompleted?: (fetchMoreResult: {
-      customers: {
-        list: ICourse[];
-      };
-    }) => void;
+    direction: EnumCursorDirection;
   }) => {
-    if (
-      (direction === 'forward' && pageInfo?.hasNextPage) ||
-      (direction === 'backward' && pageInfo?.hasPreviousPage)
-    ) {
-      return fetchMore({
-        variables: {
-          cursor:
-            direction === 'forward'
-              ? pageInfo?.endCursor
-              : pageInfo?.startCursor,
-          limit: COURSES_PER_PAGE,
-          direction,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-
-          const { pageInfo: fetchMorePageInfo, list: fetchMoreList = [] } =
-            fetchMoreResult.courses;
-
-          const { pageInfo: prevPageInfo, list: prevList = [] } =
-            prev.courses || {};
-
-          setCursor(prevPageInfo?.endCursor);
-
-          return Object.assign({}, prev, {
-            customers: {
-              pageInfo: getCursorPageInfo({
-                direction,
-                fetchMorePageInfo,
-                prevPageInfo,
-              }),
-              list:
-                direction === 'forward'
-                  ? [...prevList, ...fetchMoreList]
-                  : [...fetchMoreList, ...prevList],
-            },
-          });
-        },
-      });
-    }
+    if (!validateFetchMore({ direction, pageInfo })) return;
+    return fetchMore({
+      variables: {
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
+        limit: COURSES_PER_PAGE,
+        direction,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return Object.assign({}, prev, {
+          courses: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.courses,
+            prevResult: prev.courses,
+          }),
+        });
+      },
+    });
   };
 
   return {

@@ -1,9 +1,7 @@
 import { UseFormReturn } from 'react-hook-form';
-import { Form, Input, Select } from 'erxes-ui';
-import { CurrencyValueInput } from 'erxes-ui/components/select-currency';
+import { CurrencyField, Form, Input, Select } from 'erxes-ui';
 import { CourseFormType } from '@/courses/add-course/components/formSchema';
 import {
-  AttachmentField,
   CategoryField,
   DateField,
   DescriptionField,
@@ -18,7 +16,6 @@ export const CourseAddCoreFields = ({
 }) => {
   return (
     <>
-      <AttachmentField control={form.control} />
       <div className="grid grid-cols-2 gap-4 py-4">
         <Form.Field
           control={form.control}
@@ -56,7 +53,10 @@ export const CourseAddCoreFields = ({
             <Form.Item>
               <Form.Label>UNIT PRICE</Form.Label>
               <Form.Control>
-                <CurrencyValueInput className="rounded-md h-8" {...field} />
+                <CurrencyField.ValueInput
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                />
               </Form.Control>
               <Form.Message className="text-destructive" />
             </Form.Item>

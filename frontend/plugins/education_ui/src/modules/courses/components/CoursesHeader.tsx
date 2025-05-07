@@ -1,16 +1,30 @@
-import { IconUsers } from '@tabler/icons-react';
-import { PluginHeader } from 'erxes-ui';
-import { AddCourseForm } from '@/courses/add-course/AddCourseForm';
+import { IconBook } from '@tabler/icons-react';
+import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { Link } from 'react-router';
+import { CourseAddSheet } from '@/courses/add-course/components/CustomerAddSheet';
 
 export const CoursesHeader = () => {
   return (
-    <>
-      <PluginHeader title="Courses" icon={IconUsers}>
-        {/* <FilterDropdown filters={contactsFilters} /> */}
-        <AddCourseForm />
-      </PluginHeader>
-      {/* <ContactsFilter /> */}
-      {/* <ContactDateFilterDialog /> */}
-    </>
+    <PageHeader>
+      <PageHeader.Start>
+        <Breadcrumb>
+          <Breadcrumb.List className="gap-1">
+            <Breadcrumb.Item>
+              <Button variant="ghost" asChild>
+                <Link to="/course">
+                  <IconBook />
+                  Хөтөлбөрүүд
+                </Link>
+              </Button>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb>
+        <Separator.Inline />
+        <PageHeader.LikeButton />
+      </PageHeader.Start>
+      <PageHeader.End>
+        <CourseAddSheet />
+      </PageHeader.End>
+    </PageHeader>
   );
 };

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,14 +9,14 @@ import {
   CourseFormType,
   courseFormSchema,
 } from '@/courses/add-course/components/formSchema';
-import {
-  CourseAddSheet,
-  CourseAddSheetHeader,
-} from '@/courses/add-course/components/CustomerAddSheet';
+import { CourseAddSheetHeader } from '@/courses/add-course/components/CustomerAddSheet';
 import { CourseAddCoreFields } from '@/courses/add-course/components/CourseAddCoreFields';
 
-export function AddCourseForm() {
-  const [open, setOpen] = useState<boolean>(false);
+export function AddCourseForm({
+  onOpenChange,
+}: {
+  onOpenChange: (open: boolean) => void;
+}) {
   const { courseAdd } = useAddCourse();
   const form = useForm<CourseFormType>({
     resolver: zodResolver(courseFormSchema),
@@ -35,43 +34,42 @@ export function AddCourseForm() {
       },
       onCompleted: () => {
         form.reset();
-        setOpen(false);
+        onOpenChange(false);
       },
     });
   };
 
   return (
-    <CourseAddSheet onOpenChange={setOpen} open={open}>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=" flex flex-col h-full"
-        >
-          <ScrollArea className="flex-auto">
-            <CourseAddSheetHeader />
-            <div className="px-5">
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col h-full overflow-hidden"
+      >
+        <CourseAddSheetHeader />
+        <Sheet.Content className="flex-auto overflow-hidden">
+          <ScrollArea className="h-full">
+            <div className="p-5">
               <CourseAddCoreFields form={form} />
             </div>
           </ScrollArea>
+        </Sheet.Content>
 
-          <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
-            <Button
-              type="button"
-              variant="ghost"
-              className="bg-background hover:bg-background/90"
-              onClick={() => setOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Save
-            </Button>
-          </Sheet.Footer>
-        </form>
-      </Form>
-    </CourseAddSheet>
+        <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
+          <Button
+            type="button"
+            variant="ghost"
+            className="bg-background hover:bg-background/90"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Save
+          </Button>
+        </Sheet.Footer>
+      </form>
+    </Form>
   );
 }

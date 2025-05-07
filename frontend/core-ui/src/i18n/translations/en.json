@@ -33,6 +33,8 @@
     },
     "sample": "Sample",
     "modules": "Modules",
-    "education": "Education"
+    "education": "Education",
+    "courses": "Course",
+    "class": "Class"
   }
 }
