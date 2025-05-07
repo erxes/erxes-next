@@ -12,6 +12,7 @@ import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 
 import { createContext } from '~/init-trpc';
 import automations from './automations';
+import segments from './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -66,6 +67,7 @@ httpServer.listen(port, async () => {
     meta: {},
   });
   automations;
+  segments;
 });
 
 // GRACEFULL SHUTDOWN

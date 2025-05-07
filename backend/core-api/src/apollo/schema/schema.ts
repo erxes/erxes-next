@@ -66,6 +66,13 @@ import {
   queries as AppQueries,
   types as AppTypes,
 } from '@/apps/graphql/schemas';
+
+import {
+  mutations as SegmentMutations,
+  queries as SegmentQueries,
+  types as SegmentTypes,
+} from '@/segments/apollo/schemas';
+import { queries as FormQueries } from '@/forms/apollo/schema';
 import { CommonTypes } from './commonTypes';
 import { BrandTypes } from '@/organization/structure/graphql/schemas/brand';
 import {
@@ -94,6 +101,9 @@ export const types = `
       inheritMaxAge: Boolean
     ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
   
+    type SomeType {
+      visibility: CacheControlScope
+    }
     ${CustomerTypes}
     ${CompanyTypes}
     ${CommonTypes}
@@ -108,6 +118,7 @@ export const types = `
     ${UnitTypes}
     ${BrandTypes}
     ${AppTypes}
+    ${SegmentTypes}
     ${ConformityTypes}
     ${RelationTypes}
   `;
@@ -125,6 +136,8 @@ export const queries = `
     ${positionsQueries}
     ${unitsQueries}
     ${AppQueries}
+    ${FormQueries}
+    ${SegmentQueries}
     ${RelationQueries}
   `;
 
@@ -142,6 +155,7 @@ export const mutations = `
     ${structuresMutations}
     ${unitsMutations}
     ${AppMutations}
+    ${SegmentMutations}
     ${ConformityMutations}
     ${RelationMutations}
   `;

@@ -10,3 +10,4 @@ export * from './saas';
 export * from './random';
 export * from './trpc';
 export * from './logs';
+export * from './elasticsearch';
