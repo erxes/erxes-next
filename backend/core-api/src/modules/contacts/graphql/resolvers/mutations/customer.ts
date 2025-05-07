@@ -5,7 +5,11 @@ export const customerMutations = {
   /**
    * Create new customer also adds Customer registration log
    */
-  async customersAdd(_root: undefined, doc: ICustomer, { models }: IContext) {
+  async customersAdd(
+    _root: undefined,
+    doc: ICustomer,
+    { models, __ }: IContext,
+  ) {
     const customer = await models.Customers.createCustomer(doc);
 
     return customer;

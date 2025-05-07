@@ -8,7 +8,11 @@ import { router } from './routes';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { appRouter } from '~/init-trpc';
 
-import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
+import {
+  closeMongooose,
+  joinErxesGateway,
+  leaveErxesGateway,
+} from 'erxes-api-shared/utils';
 
 import { createContext } from '~/init-trpc';
 import automations from './automations';
@@ -72,15 +76,6 @@ httpServer.listen(port, async () => {
 
 // GRACEFULL SHUTDOWN
 process.stdin.resume(); // so the program will not close instantly
-
-async function closeMongooose() {
-  try {
-    await mongoose.connection.close();
-    console.log('Mongoose connection disconnected ');
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 async function leaveServiceDiscovery() {
   try {

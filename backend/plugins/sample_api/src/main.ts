@@ -4,7 +4,11 @@ import mongoose from 'mongoose';
 import * as http from 'http';
 import { initApolloServer } from './apollo/apolloServer';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
+import {
+  closeMongooose,
+  joinErxesGateway,
+  leaveErxesGateway,
+} from 'erxes-api-shared/utils';
 import { appRouter } from '~/trpc/init-trpc';
 import { createContext } from '~/trpc/init-trpc';
 const port = process.env.PORT ? Number(process.env.PORT) : 3303;
@@ -44,15 +48,6 @@ httpServer.listen(port, async () => {
 
 // GRACEFULL SHUTDOWN
 process.stdin.resume(); // so the program will not close instantly
-
-async function closeMongooose() {
-  try {
-    await mongoose.connection.close();
-    console.log('Mongoose connection disconnected ');
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 async function leaveServiceDiscovery() {
   try {

@@ -1,3 +1,4 @@
+import { Schema } from 'mongoose';
 import { nanoid } from 'nanoid';
 
 export const mongooseStringRandomId = {
@@ -24,3 +25,22 @@ export const mongooseStringRequiredNonBlank = {
   validate: /\S+?/,
   required: true,
 } as const;
+
+interface ISchemaWrapperOptions {
+  contentType: string;
+}
+
+export const schemaWrapper = (
+  schema: Schema,
+  options?: ISchemaWrapperOptions,
+) => {
+  schema.add({ _id: mongooseStringRandomId });
+  schema.add({ processId: { type: String, optional: true } });
+  // schema.add({ createdAt: { type: Date, default: new Date() } });
+
+  if (options?.contentType) {
+    (schema.statics as any)._contentType = options.contentType;
+  }
+
+  return schema;
+};

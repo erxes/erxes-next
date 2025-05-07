@@ -11,7 +11,7 @@ import {
   wrapApolloMutations,
 } from 'erxes-api-shared/utils';
 import { gql } from 'graphql-tag';
-import { generateModels } from '../connectionResolvers';
+import { generateModels, IModels } from '../connectionResolvers';
 import * as typeDefDetails from './schema/schema';
 import resolvers from './resolvers';
 import { IMainContext } from 'erxes-api-shared/core-types';
