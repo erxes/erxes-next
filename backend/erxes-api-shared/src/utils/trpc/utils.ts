@@ -1,9 +1,10 @@
-export * from './utils';
 import {
   createTRPCUntypedClient,
   httpBatchLink,
+  TRPCClientError,
   TRPCRequestOptions,
 } from '@trpc/client';
+import { TRPCSubscriptionObserver } from '@trpc/client/dist/internals/TRPCUntypedClient';
 import { getPlugin } from '../service-discovery';
 
 type MessageProps = {
@@ -11,7 +12,7 @@ type MessageProps = {
   pluginName: string;
   module: string;
   action: string;
-  input: any;
+  data: any;
   defaultValue?: any;
   options?: TRPCRequestOptions;
 };
@@ -21,7 +22,7 @@ export const sendTRPCMessage = async ({
   method,
   module,
   action,
-  input,
+  data,
   defaultValue,
   options,
 }: MessageProps) => {
@@ -31,7 +32,7 @@ export const sendTRPCMessage = async ({
     links: [httpBatchLink({ url: `${pluginInfo.address}/trpc` })],
   });
 
-  const result = await client[method](`${module}.${action}`, input, options);
+  const result = await client[method](`${module}.${action}`, data, options);
 
   return result || defaultValue;
 };
