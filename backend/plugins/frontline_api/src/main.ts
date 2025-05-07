@@ -8,9 +8,9 @@ import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 import { router } from '~/routes';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3302;
-
+export const DOMAIN = process.env.DOMAIN || 'http://localhost:3000';
 console.log('PORT', port);
-
+console.log('DOMAIN', DOMAIN);
 const app = express();
 
 app.use(express.urlencoded({ limit: '15mb', extended: true }));

@@ -1,6 +1,6 @@
 import { defaultPaginate } from 'erxes-api-shared/src/utils';
-import { IContext } from '~/connectionResolvers';
-/**
+import { IContext ,IModels} from '~/connectionResolvers';
+/**import { IContext, IModels } from '~/connectionResolvers';
  * Common helper for integrations & integrationsTotalCount
  */
 const generateFilterQuery = async (
