@@ -120,7 +120,18 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       );
     },
   },
-
+  {
+    id: 'plan',
+    accessorKey: 'plan',
+    header: () => <RecordTable.InlineHead label="Plan" />,
+    cell: ({ cell }) => {
+      return (
+        <RecordTableCellDisplay>
+          <TextOverflowTooltip value={cell.getValue() as string} />
+        </RecordTableCellDisplay>
+      );
+    },
+  },
   {
     id: 'tagIds',
     accessorKey: 'tagIds',
@@ -156,6 +167,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     },
     size: 300,
   },
+
   {
     id: 'lastSeenAt',
     accessorKey: 'lastSeenAt',
