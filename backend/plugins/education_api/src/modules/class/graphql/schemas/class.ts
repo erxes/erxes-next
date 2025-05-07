@@ -18,11 +18,12 @@ export const types = `
   type ClassesResponse {
     list: [Classes]
     totalCount: Int
+    pageInfo: PageInfo
   }
 `;
 
 export const queries = `
-  courseClasses(classId: String!, page: Int, perPage: Int): ClassesResponse
+  courseClasses(page: Int, perPage: Int, limit: Int, cursor: String, direction: CURSOR_DIRECTION): ClassesResponse
 `;
 
 const classesCommonParams = `
@@ -33,6 +34,7 @@ const classesCommonParams = `
   endTime : Date
   limit : Int
   entries : Int
+  
 `;
 
 export const mutations = `

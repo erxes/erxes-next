@@ -1,6 +1,5 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
-import { GET_COURSES } from '@/courses/graphql/queries/getCourse';
-import { ICourse } from '@/courses/types/courseType';
+import { IClass } from '@/classes/types/type';
 import {
   useRecordTableCursor,
   IRecordTableCursorPageInfo,
@@ -8,28 +7,29 @@ import {
   EnumCursorDirection,
   validateFetchMore,
 } from 'erxes-ui';
+import { GET_CLASSES } from '@/classes/graphql/queries/getClasses';
 
-export const COURSES_PER_PAGE = 30;
+export const CLASSES_PER_PAGE = 30;
 
-export const useCourses = (options?: QueryHookOptions) => {
+export const useClasses = (options?: QueryHookOptions) => {
   const { cursor } = useRecordTableCursor({
-    sessionKey: 'course_cursor',
+    sessionKey: 'class_cursor',
   });
 
   const { data, loading, fetchMore } = useQuery<{
-    courses: {
-      list: ICourse[];
+    classCourse: {
+      list: IClass[];
       pageInfo: IRecordTableCursorPageInfo;
     };
-  }>(GET_COURSES, {
+  }>(GET_CLASSES, {
     ...options,
     variables: {
-      limit: COURSES_PER_PAGE,
+      limit: CLASSES_PER_PAGE,
       cursor,
     },
   });
 
-  const { list: courses, pageInfo } = data?.courses || {};
+  const { list: classes, pageInfo } = data?.classCourse || {};
 
   const handleFetchMore = ({
     direction,
@@ -43,16 +43,16 @@ export const useCourses = (options?: QueryHookOptions) => {
           direction === EnumCursorDirection.FORWARD
             ? pageInfo?.endCursor
             : pageInfo?.startCursor,
-        limit: COURSES_PER_PAGE,
+        limit: CLASSES_PER_PAGE,
         direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          courses: mergeCursorData({
+          classCourse: mergeCursorData({
             direction,
-            fetchMoreResult: fetchMoreResult.courses,
-            prevResult: prev.courses,
+            fetchMoreResult: fetchMoreResult.classCourse,
+            prevResult: prev.classCourse,
           }),
         });
       },
@@ -61,7 +61,7 @@ export const useCourses = (options?: QueryHookOptions) => {
 
   return {
     loading,
-    courses,
+    classes,
     handleFetchMore,
     pageInfo,
   };

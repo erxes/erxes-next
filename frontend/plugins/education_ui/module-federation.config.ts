@@ -17,6 +17,7 @@ const config: ModuleFederationConfig = {
   exposes: {
     './config': './src/config.ts',
     './courses': './src/modules/courses/Main.tsx',
+    './classes': './src/modules/classes/Main.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

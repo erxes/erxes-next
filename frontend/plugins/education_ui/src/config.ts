@@ -13,9 +13,9 @@ export const CONFIG: IUIConfig = {
       hasWidgets: false,
     },
     {
-      name: 'class',
+      name: 'classes',
       icon: IconSchool,
-      path: 'education/class',
+      path: 'education/classes',
       hasSettings: false,
       hasWidgets: false,
     },
