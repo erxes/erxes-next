@@ -11,10 +11,8 @@ import { MessagesSkeleton } from './ConversationSkeleton';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { MessageInput } from './MessageInput';
 import { ConversationContext } from '../../context/ConversationContext';
-import { useWidget } from 'ui-modules';
 
 export const ConversationDetail = () => {
-  const { Widget } = useWidget();
   const [conversationId] = useQueryState<string>('conversationId');
   const activeConversationCandidate = useAtomValue(activeConversationState);
 
@@ -42,6 +40,7 @@ export const ConversationDetail = () => {
   if (!['messenger', 'lead'].includes(integration?.kind)) {
     return <UnderConstruction />;
   }
+
   return (
     <div className="flex h-full overflow-hidden">
       <div className="flex flex-col h-full overflow-hidden flex-auto">
@@ -59,13 +58,6 @@ export const ConversationDetail = () => {
           </ConversationDetailLayout>
         </ConversationContext.Provider>
       </div>
-      {!!Widget && conversationId && (
-        <Widget
-          pluginName="inbox"
-          contentId={conversationId}
-          contentType="conversation"
-        />
-      )}
     </div>
   );
 };
