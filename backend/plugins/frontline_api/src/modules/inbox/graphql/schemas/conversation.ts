@@ -46,7 +46,7 @@ export const types = `
     tagIds: [String]
     operatorStatus: String
 
-    messages: ConversationMessageRespone
+    messages: ConversationMessageResponse
     callProAudio: String
     
     tags: [Tag]
@@ -62,13 +62,13 @@ export const types = `
     customFieldsData: JSON
   }
 
-  type ConversationRespone {
+  type ConversationResponse {
     list: [Conversation],
     pageInfo: PageInfo
     totalCount: Int,
   }
 
-  type ConversationMessageRespone {
+  type ConversationMessageResponse {
     list: [ConversationMessage],
     pageInfo: PageInfo
     totalCount: Int,
@@ -215,14 +215,14 @@ const filterParams = `
 export const queries = `
   conversationMessage(_id: String!): ConversationMessage
   
-  conversations(${filterParams}, skip: Int): ConversationRespone
+  conversations(${filterParams}, skip: Int): ConversationResponse
 
   conversationMessages(
     conversationId: String!
     skip: Int
     limit: Int
     getFirst: Boolean
-  ): ConversationMessageRespone
+  ): ConversationMessageResponse
 
   conversationMessagesTotalCount(conversationId: String!): Int
   conversationCounts(${filterParams}, only: String): JSON
@@ -252,9 +252,9 @@ export const mutations = `
     contentType: String
     extraInfo: JSON
   ): ConversationMessage
-  conversationsAssign(conversationIds: [String]!, assignedUserId: String): ConversationRespone
-  conversationsUnassign(_ids: [String]!): ConversationRespone
-  conversationsChangeStatus(_ids: [String]!, status: String!):  ConversationRespone
+  conversationsAssign(conversationIds: [String]!, assignedUserId: String): ConversationResponse
+  conversationsUnassign(_ids: [String]!): ConversationResponse
+  conversationsChangeStatus(_ids: [String]!, status: String!):  ConversationResponse
   conversationMarkAsRead(_id: String): Conversation
  changeConversationOperator(_id: String!, operatorStatus: String!): JSON
   conversationResolveAll(${mutationFilterParams}): Int

@@ -140,7 +140,6 @@ if (message?.quick_reply) {
           },
         });
 
-        console.log(apiConversationResponse,'apiConversationResponse')
 
 
     // conversation.erxesApiId = apiConversationResponse._id;

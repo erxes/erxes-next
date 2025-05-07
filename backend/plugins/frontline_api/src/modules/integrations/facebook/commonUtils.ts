@@ -2,37 +2,12 @@ import { redis } from 'erxes-api-shared/utils/redis';
 import * as dotenv from 'dotenv';
 import {debugBase } from '@/integrations/facebook/debuggers';
 import { IModels } from '~/connectionResolvers';
-
+import { getEnv } from 'erxes-api-shared/utils';
 dotenv.config();
 
 const CACHE_NAME = 'configs_erxes_fb_integrations';
 
 
-export const getEnv = ({
-  name,
-  subdomain,
-  defaultValue
-}: {
-  name: string;
-  subdomain?: string;
-  defaultValue?: string;
-}): string => {
-  let value = process.env[name];
-
-  if (!value && typeof defaultValue !== 'undefined') {
-    return defaultValue;
-  }
-
-  if (value && subdomain) {
-    value = value.replace('<subdomain>', subdomain);
-  }
-
-  if (!value) {
-    debugBase(`Missing environment variable configuration for ${name}`);
-  }
-
-  return value || '';
-};
 
 /*
  * Generate url depending on given file upload publicly or not
