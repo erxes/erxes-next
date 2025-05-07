@@ -68,6 +68,7 @@ export function SettingsSidebar() {
                   pathname={'/' + item.path}
                   name={item.name}
                   icon={item.icon}
+                  inSettings
                 />
               ))}
             </Sidebar.Menu>
@@ -84,6 +85,7 @@ export function SettingsSidebar() {
                     pathname={'/' + item.path}
                     name={item.name}
                     icon={item.icon}
+                    inSettings
                   />
                 </Sidebar.MenuItem>
               ))}

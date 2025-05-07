@@ -108,11 +108,13 @@ export const MainNavigationButton = ({
   pathname,
   name,
   icon,
+  inSettings,
 }: {
   pathPrefix?: string;
   pathname: string;
   name: string;
   icon: Icon;
+  inSettings?: boolean;
 }) => {
   const Icon = icon;
   const activePathname = useLocation().pathname;
@@ -132,7 +134,7 @@ export const MainNavigationButton = ({
       className={cn(isSubItemActive && 'bg-muted')}
     >
       <Link to={pathPrefix ? pathPrefix + pathname : pathname}>
-        {isSubItemActive ? (
+        {inSettings && isSubItemActive ? (
           <IconCaretDownFilled className="text-accent-foreground" />
         ) : (
           <Icon
