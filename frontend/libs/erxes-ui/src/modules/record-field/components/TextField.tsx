@@ -1,8 +1,10 @@
 import { ButtonProps, Input, TextOverflowTooltip } from 'erxes-ui/components';
-import { InlineCell } from 'erxes-ui/modules/inline-cell/components/InlineCell';
-import { InlineCellDisplay } from 'erxes-ui/modules/inline-cell/components/InlineCellDisplay';
-import { InlineCellEdit } from 'erxes-ui/modules/inline-cell/components/InlineCellEdit';
-import React, { useEffect, useState } from 'react';
+import {
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+} from 'erxes-ui/modules/record-table';
+import React, { useState } from 'react';
 
 export interface ITextFieldContainerProps {
   placeholder?: string;
@@ -17,50 +19,47 @@ export const TextField = React.forwardRef<
   ButtonProps & {
     placeholder?: string;
     value: string;
-    field: string;
-    fieldId?: string;
-    onSave?: (value: string) => void;
-    _id: string;
+    scope: string;
+    onValueChange: (value: string) => void;
   }
->(
-  (
-    { className, placeholder, value, field, fieldId, _id, onSave, ...props },
-    ref,
-  ) => {
-    const [editingValue, setEditingValue] = useState(value);
+>(({ placeholder, value, scope, onValueChange, children, ...props }, ref) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [editingValue, setEditingValue] = useState(value);
 
-    useEffect(() => {
-      if (value) setEditingValue(value);
-    }, [value]);
+  const handleAction = () => {
+    if (editingValue === value) return;
+    onValueChange && onValueChange(editingValue);
+  };
 
-    const handleAction = (closeEditMode: () => void) => {
-      closeEditMode();
-      if (editingValue === value) return;
-      onSave && onSave(editingValue);
-    };
-
-    return (
-      <InlineCell
-        name={field}
-        recordId={_id}
-        fieldId={fieldId}
-        onEnter={handleAction}
-        onEscape={handleAction}
-        onCancel={handleAction}
-        display={() => (
-          <InlineCellDisplay ref={ref} {...props} className={className}>
-            <TextOverflowTooltip value={editingValue ?? placeholder} />
-          </InlineCellDisplay>
-        )}
-        edit={() => (
-          <InlineCellEdit>
-            <Input
-              value={editingValue}
-              onChange={(e) => setEditingValue(e.target.value)}
-            />
-          </InlineCellEdit>
-        )}
-      />
-    );
-  },
-);
+  return (
+    <RecordTablePopover
+      scope={scope}
+      open={isOpen}
+      onOpenChange={(open: boolean) => {
+        setIsOpen(open);
+        if (open) {
+          setEditingValue(value);
+        }
+      }}
+    >
+      <RecordTableCellTrigger {...props} ref={ref}>
+        {children}
+        <TextOverflowTooltip value={editingValue ?? placeholder} />
+      </RecordTableCellTrigger>
+      <RecordTableCellContent asChild>
+        <form onSubmit={handleAction}>
+          <Input
+            value={editingValue}
+            onChange={(e) => {
+              setEditingValue(e.target.value);
+              setIsOpen(true);
+            }}
+          />
+          <button type="submit" className="sr-only">
+            Save
+          </button>
+        </form>
+      </RecordTableCellContent>
+    </RecordTablePopover>
+  );
+});

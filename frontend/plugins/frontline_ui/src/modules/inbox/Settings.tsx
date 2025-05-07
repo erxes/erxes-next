@@ -1,5 +1,4 @@
 import { lazy, Suspense, useState } from 'react';
-import { MainSettingsForm } from '../settings/components/MainSettingsForm';
 import { IIntegrationItem } from '../settings/types/integration';
 import {
   INTEGRATIONS,
@@ -17,6 +16,7 @@ export const InboxMainConfig = lazy(() =>
     default: module.SettingsPage,
   })),
 );
+
 export const IntegrationDetailPage = lazy(() =>
   import('~/pages/IntegrationCreatePage').then((module) => ({
     default: module.IntegrationCreatePage,

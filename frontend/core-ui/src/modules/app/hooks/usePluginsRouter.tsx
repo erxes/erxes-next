@@ -21,8 +21,9 @@ export const getPluginsRoutes = () => {
       path={`/${module.path}/*`}
       element={
         <RenderPLuginsComponent
-          pluginName={`${module.pluginName}_ui`}
           moduleName={module.name}
+          pluginName={`${module.pluginName}_ui`}
+          remoteModuleName={module.name}
         />
       }
     />
@@ -48,8 +49,9 @@ export const getPluginsSettingsRoutes = () => {
       path={`/${module.path}/*`}
       element={
         <RenderPLuginsComponent
+          moduleName={module.name}
           pluginName={`${module.pluginName}_ui`}
-          moduleName={`${module.name}Settings`}
+          remoteModuleName={`${module.name}Settings`}
         />
       }
     />

@@ -2,7 +2,7 @@ import { Cell } from '@tanstack/react-table';
 import { useSetAtom } from 'jotai';
 import { RecordTable, useQueryState } from 'erxes-ui';
 import { IPermission } from '@/settings/permission/types';
-import { renderingCustomerDetailAtom } from '@/contacts/states/contactDetailStates';
+import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 export const PermissionMoreColumnCell = ({
   cell,
 }: {

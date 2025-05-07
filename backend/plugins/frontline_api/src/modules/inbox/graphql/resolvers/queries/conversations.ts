@@ -33,12 +33,16 @@ export const conversationQueries = {
      return { list, totalCount, pageInfo };
     }
 
+
     const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
         params,
         query: {}
       });
      return { list, totalCount, pageInfo };
+
+
+
 
   },
 

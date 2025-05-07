@@ -1,3 +1,4 @@
+import { SexCode } from 'erxes-ui';
 import { CountryCode } from 'libphonenumber-js';
 export interface ICustomerInline {
   _id: string;
@@ -19,6 +20,7 @@ export interface ICustomer extends ICustomerInline {
   location?: {
     countryCode?: CountryCode | undefined;
   };
+  sex?: SexCode;
 }
 
 export enum CustomerType {

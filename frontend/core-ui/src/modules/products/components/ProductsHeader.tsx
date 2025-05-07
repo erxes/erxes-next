@@ -1,9 +1,8 @@
 import { IconCube } from '@tabler/icons-react';
 
 import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
-import { AddProductForm } from '../add-products/components/AddProductForm';
 import { Link } from 'react-router-dom';
-
+import { ProductAddSheet } from '../add-products/components/ProductAddSheet';
 export const ProductsHeader = () => {
   return (
     <PageHeader>
@@ -24,7 +23,7 @@ export const ProductsHeader = () => {
         <PageHeader.LikeButton />
       </PageHeader.Start>
       <PageHeader.End>
-        <AddProductForm />
+        <ProductAddSheet />
       </PageHeader.End>
     </PageHeader>
   );

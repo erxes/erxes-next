@@ -68,6 +68,11 @@ import {
 } from '@/apps/graphql/schemas';
 import { CommonTypes } from './commonTypes';
 import { BrandTypes } from '@/organization/structure/graphql/schemas/brand';
+import {
+  mutations as RelationMutations,
+  queries as RelationQueries,
+  types as RelationTypes,
+} from '@/relations/graphql/schema';
 
 import {
   mutations as ConformityMutations,
@@ -104,6 +109,7 @@ export const types = `
     ${BrandTypes}
     ${AppTypes}
     ${ConformityTypes}
+    ${RelationTypes}
   `;
 
 export const queries = `
@@ -119,6 +125,7 @@ export const queries = `
     ${positionsQueries}
     ${unitsQueries}
     ${AppQueries}
+    ${RelationQueries}
   `;
 
 export const mutations = `
@@ -136,6 +143,7 @@ export const mutations = `
     ${unitsMutations}
     ${AppMutations}
     ${ConformityMutations}
+    ${RelationMutations}
   `;
 
 export default { types, queries, mutations };

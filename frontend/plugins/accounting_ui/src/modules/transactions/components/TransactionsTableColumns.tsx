@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import { ITransaction } from '../types/Transaction';
 import {
@@ -7,7 +8,6 @@ import {
   InlineCellDisplay,
   InlineCellEdit,
   Input,
-  RelativeDateDisplay,
   CurrencyCode,
   CurrencyField,
   CurrencyFormatedDisplay,
@@ -16,6 +16,7 @@ import { useSetAtom } from 'jotai';
 import { renderingTransactionDetailState } from '../states/renderingTransactionContactingDetailStates';
 import { IconMoneybag, IconFile, IconCalendar } from '@tabler/icons-react';
 import { useState } from 'react';
+import { Link } from 'react-router';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {
@@ -145,14 +146,13 @@ const BranchCell = ({ getValue, row }: any) => {
 
 const DateCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
-
   return (
     <InlineCell
       name="date"
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          <RelativeDateDisplay value={getValue() as string} />
+          {dayjs(new Date(getValue())).format("YYYY-MM-DD")}
         </InlineCellDisplay>
       )}
     />
@@ -176,27 +176,25 @@ const AccountCell = ({ row }: any) => {
   );
 };
 
-export const TransactionMoreColumnCell = ({
+const TransactionMoreColumnCell = ({
   cell,
 }: {
   cell: Cell<ITransaction, unknown>;
 }) => {
   const [, setOpen] = useQueryState('transaction_id');
   const setRenderingContactDetail = useSetAtom(renderingTransactionDetailState);
-  const { _id } = cell.row.original;
+  const { parentId, _id } = cell.row.original;
 
   return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-        setRenderingContactDetail(false);
-      }}
-    />
+    <Link to={`/accounting/transaction/${parentId}?trId=${_id}`}>
+      <RecordTable.MoreButton
+        className="w-full h-full"
+      />
+    </Link>
   );
 };
 
-export const transactionMoreColumn = {
+const transactionMoreColumn = {
   id: 'more',
   cell: TransactionMoreColumnCell,
   size: 33,

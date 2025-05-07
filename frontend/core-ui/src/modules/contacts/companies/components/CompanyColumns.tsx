@@ -1,4 +1,9 @@
-import { IconAlignLeft, IconUser } from '@tabler/icons-react';
+import {
+  IconAlignLeft,
+  IconBuilding,
+  IconLabelFilled,
+  IconUser,
+} from '@tabler/icons-react';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import {
@@ -19,17 +24,22 @@ import { useState } from 'react';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
   {
+    id: 'more',
+    cell: ({ cell }) => <RecordTable.MoreButton className="w-full h-full" />,
+    size: 33,
+  },
+  RecordTable.checkboxColumn as ColumnDef<TCompany>,
+  {
     id: 'avatar',
     accessorKey: 'avatar',
-    header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
+    header: () => <RecordTable.InlineHead icon={IconBuilding} label="" />,
     cell: ({ cell }) => {
-      const { _id, primaryName, primaryEmail, primaryPhone } =
-        cell.row.original;
+      const { primaryName, primaryEmail, primaryPhone } = cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
-            <Avatar.Fallback colorSeed={_id}>
+            <Avatar.Fallback>
               {primaryName?.charAt(0) ||
                 primaryEmail?.charAt(0) ||
                 primaryPhone?.charAt(0) ||
@@ -45,7 +55,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     id: 'primaryName',
     accessorKey: 'primaryName',
     header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="Primary Name" />
+      <RecordTable.InlineHead icon={IconLabelFilled} label="Name" />
     ),
     cell: ({ cell }) => {
       const { primaryName } = cell.row.original;
@@ -58,6 +68,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         </RecordTablePopover>
       );
     },
+    size: 250,
   },
   {
     id: 'emails',
@@ -73,6 +84,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
           <RecordTableCellContent className="min-w-72">
             <EmailListField
               recordId={_id}
+              onValueChange={() => console.log('onValueChange')}
               emails={[
                 {
                   email: primaryEmail,
@@ -142,6 +154,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         </SelectTags>
       );
     },
+    size: 300,
   },
   {
     id: 'lastSeenAt',

@@ -13,8 +13,6 @@ export enum EnumCursorDirection {
 export interface IRecordTableCursorContext {
   scrollRef: React.RefObject<HTMLDivElement>;
   isFetchBackward: boolean;
-  cursorItemIds: string[];
-  setCursorItemIds: (ids: string[]) => void;
   setIsFetchBackward: (isFetchBackward: boolean) => void;
   distanceFromBottomRef: React.MutableRefObject<number>;
   hasNextPage?: boolean;

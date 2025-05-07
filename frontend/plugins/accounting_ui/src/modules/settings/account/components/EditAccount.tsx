@@ -11,7 +11,7 @@ import { useAccountEdit } from '../hooks/useAccountEdit';
 import { ACCOUNT_DEFAULT_VALUES } from '../constants/accountDefaultValues';
 
 export const EditAccount = () => {
-  const [open, setOpen] = useQueryState<string>('account_id');
+  const [open, setOpen] = useQueryState<string>('accountId');
   return (
     <Dialog open={open !== null} onOpenChange={() => setOpen(null)}>
       <AccountingDialog title="Edit Account" description="Edit an account">

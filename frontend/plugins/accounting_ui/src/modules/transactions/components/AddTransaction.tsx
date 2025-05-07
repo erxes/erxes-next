@@ -1,6 +1,12 @@
-import { DropdownMenu } from 'erxes-ui';
+import {
+  DropdownMenu,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
+} from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { JournalEnum } from '@/settings/account/types/Account';
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
+import { useEffect, useState } from 'react';
 
 export const AddTransaction = ({
   inForm,
@@ -11,8 +17,36 @@ export const AddTransaction = ({
   children: React.ReactNode;
   onClick?: (journal?: JournalEnum) => void;
 }) => {
+  const [open, setOpen] = useState(false);
+  const {
+    setHotkeyScopeAndMemorizePreviousScope,
+    goBackToPreviousHotkeyScope,
+  } = usePreviousHotkeyScope();
+
+  useScopedHotkeys(
+    'c',
+    () => {
+      setOpen(true);
+    },
+    AccountingHotkeyScope.MainPage,
+  );
+
+  useEffect(() => {
+    if (open) {
+      setHotkeyScopeAndMemorizePreviousScope(
+        AccountingHotkeyScope.AddTransactionDropdown,
+      );
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  }, [
+    open,
+    goBackToPreviousHotkeyScope,
+    setHotkeyScopeAndMemorizePreviousScope,
+  ]);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenu.Trigger asChild>{children}</DropdownMenu.Trigger>
       <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width]">
         <DropdownMenu.Label>Ерөнхий</DropdownMenu.Label>
@@ -90,7 +124,9 @@ const AddTransactionItem = ({
   if (!inForm && journal) {
     return (
       <DropdownMenu.Item asChild>
-        <Link to={`transaction/?defaultJournal=${journal}`}>{children}</Link>
+        <Link to={`/accounting/transaction/?defaultJournal=${journal}`}>
+          {children}
+        </Link>
       </DropdownMenu.Item>
     );
   }

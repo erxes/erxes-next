@@ -1,8 +1,5 @@
 import { RecordTable } from 'erxes-ui';
-import {
-  useCompanies,
-  COMPANIES_PER_PAGE,
-} from '@/contacts/companies/hooks/useCompanies';
+import { useCompanies } from '@/contacts/companies/hooks/useCompanies';
 
 import { companyColumns } from '@/contacts/companies/components/CompanyColumns';
 
@@ -16,14 +13,15 @@ export const CompaniesRecordTable = () => {
     <RecordTable.Provider
       columns={companyColumns}
       data={companies || []}
-      stickyColumns={['more', 'checkbox', 'avatar', 'name']}
-      className="mt-1.5"
+      stickyColumns={['more', 'checkbox', 'avatar', 'primaryName']}
+      className="m-3"
     >
       <RecordTable.CursorProvider
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
         loading={loading}
         dataLength={companies?.length}
+        sessionKey="companies_cursor"
       >
         <RecordTable>
           <RecordTable.Header />
@@ -33,7 +31,7 @@ export const CompaniesRecordTable = () => {
               startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
-            <RecordTable.CursorRowList />
+            <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
               endCursor={endCursor}
