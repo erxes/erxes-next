@@ -7,7 +7,7 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 import { appRouter } from '~/trpc/init-trpc';
 import { createContext } from '~/trpc/init-trpc';
-const port = process.env.PORT ? Number(process.env.PORT) : 3304;
+const port = process.env.PORT ? Number(process.env.PORT) : 3305;
 
 const app = express();
 
@@ -56,7 +56,7 @@ async function closeMongooose() {
 
 async function leaveServiceDiscovery() {
   try {
-    await leaveErxesGateway('sample', port);
+    await leaveErxesGateway('sales', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);

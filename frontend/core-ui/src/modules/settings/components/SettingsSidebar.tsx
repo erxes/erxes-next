@@ -1,7 +1,6 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import { Icon, IconX } from '@tabler/icons-react';
-import { motion } from 'framer-motion';
 
 import { Sidebar, IUIConfig } from 'erxes-ui';
 
@@ -10,8 +9,10 @@ import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { SETTINGS_PATH_DATA } from '../constants/data';
-import { MainNavigationButton } from '@/navigation/components/MainNavigationBar';
+import { NavigationButton } from '@/navigation/components/NavigationButton';
+
 import { useMemo } from 'react';
+import { usePageTrackerStore } from 'react-page-tracker';
 
 export function SettingsSidebar() {
   const pluginsMetaData = useAtomValue(pluginsConfigState) || {};
@@ -38,37 +39,20 @@ export function SettingsSidebar() {
   }, [pluginsMetaData]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      className="flex h-full w-full flex-col"
-    >
-      <Sidebar.Header className="pb-0">
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton className="h-10" asChild>
-              <Link to="/">
-                <IconX />
-                <span>Exit Settings</span>
-              </Link>
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Sidebar.Header>
+    <>
+      <SettingsExitButton />
       <Sidebar.Content className="styled-scroll">
         <Sidebar.Group>
           <Sidebar.GroupLabel>Account Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {SETTINGS_PATH_DATA.account.map((item) => (
-                <MainNavigationButton
+                <NavigationButton
                   key={item.name}
                   pathPrefix={AppPath.Settings}
-                  pathname={'/' + item.path}
+                  pathname={item.path}
                   name={item.name}
                   icon={item.icon}
-                  inSettings
                 />
               ))}
             </Sidebar.Menu>
@@ -80,12 +64,11 @@ export function SettingsSidebar() {
             <Sidebar.Menu>
               {SETTINGS_PATH_DATA.nav.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
-                  <MainNavigationButton
+                  <NavigationButton
                     pathPrefix={AppPath.Settings}
-                    pathname={'/' + item.path}
+                    pathname={item.path}
                     name={item.name}
                     icon={item.icon}
-                    inSettings
                   />
                 </Sidebar.MenuItem>
               ))}
@@ -99,9 +82,9 @@ export function SettingsSidebar() {
             <Sidebar.Menu>
               {modules.map((item) => (
                 <Sidebar.MenuItem key={item.name}>
-                  <MainNavigationButton
+                  <NavigationButton
                     pathPrefix={AppPath.Settings}
-                    pathname={'/' + item.path}
+                    pathname={item.path}
                     name={item.name}
                     icon={item.icon as Icon}
                   />
@@ -111,6 +94,29 @@ export function SettingsSidebar() {
           </Sidebar.GroupContent>
         </Sidebar.Group>
       </Sidebar.Content>
-    </motion.div>
+    </>
   );
 }
+
+export const SettingsExitButton = () => {
+  const navigate = useNavigate();
+  const pageHistory = usePageTrackerStore((state) => state.pageHistory);
+
+  const handleExitSettings = () =>
+    navigate(
+      pageHistory.reverse().find((page) => !page.includes('settings')) || '/',
+    );
+
+  return (
+    <Sidebar.Header className="pb-0">
+      <Sidebar.Menu>
+        <Sidebar.MenuItem>
+          <Sidebar.MenuButton className="h-10" onClick={handleExitSettings}>
+            <IconX />
+            <span>Exit Settings</span>
+          </Sidebar.MenuButton>
+        </Sidebar.MenuItem>
+      </Sidebar.Menu>
+    </Sidebar.Header>
+  );
+};

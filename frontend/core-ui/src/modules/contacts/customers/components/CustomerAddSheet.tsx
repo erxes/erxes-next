@@ -12,7 +12,6 @@ import {
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { useState } from 'react';
 import { AddCustomerForm } from './AddCustomerForm';
-
 export const CustomerAddSheet = () => {
   const setHotkeyScope = useSetHotkeyScope();
   const [open, setOpen] = useState<boolean>(false);

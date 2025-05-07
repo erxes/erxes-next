@@ -1,4 +1,9 @@
-import { IconAlignLeft, IconBuilding, IconUser } from '@tabler/icons-react';
+import {
+  IconAlignLeft,
+  IconBuilding,
+  IconLabelFilled,
+  IconUser,
+} from '@tabler/icons-react';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import {
@@ -19,12 +24,17 @@ import { useState } from 'react';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
   {
+    id: 'more',
+    cell: ({ cell }) => <RecordTable.MoreButton className="w-full h-full" />,
+    size: 33,
+  },
+  RecordTable.checkboxColumn as ColumnDef<TCompany>,
+  {
     id: 'avatar',
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconBuilding} label="" />,
     cell: ({ cell }) => {
-      const { _id, primaryName, primaryEmail, primaryPhone } =
-        cell.row.original;
+      const { primaryName, primaryEmail, primaryPhone } = cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar>
@@ -45,7 +55,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     id: 'primaryName',
     accessorKey: 'primaryName',
     header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="Primary Name" />
+      <RecordTable.InlineHead icon={IconLabelFilled} label="Name" />
     ),
     cell: ({ cell }) => {
       const { primaryName } = cell.row.original;
@@ -58,6 +68,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         </RecordTablePopover>
       );
     },
+    size: 250,
   },
   {
     id: 'emails',
@@ -143,6 +154,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         </SelectTags>
       );
     },
+    size: 300,
   },
   {
     id: 'lastSeenAt',
