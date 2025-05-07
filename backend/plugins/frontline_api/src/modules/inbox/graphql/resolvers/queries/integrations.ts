@@ -1,8 +1,8 @@
 import { defaultPaginate } from 'erxes-api-shared/src/utils';
 import { IContext ,IModels} from '~/connectionResolvers';
-/**import { IContext, IModels } from '~/connectionResolvers';
- * Common helper for integrations & integrationsTotalCount
- */
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
+
 const generateFilterQuery = async (
   subdomain,
   { kind, channelId, brandId, searchValue, tag, status, formLoadType },
@@ -97,7 +97,12 @@ export const integrationQueries = {
       args,
     );
 
-    return integrations.sort({ name: 1 });
+      const { list, totalCount, pageInfo } = await cursorPaginate<IIntegrationDocument>({
+        model: models.Integrations,
+        params:args,
+         query: integrations,
+      });
+    return { list, totalCount, pageInfo };
   },
 
   /**
