@@ -67,6 +67,19 @@ export const loginMiddleware = async (req, res) => {
 
 
   return graph.authorize(config, async (_err, facebookRes) => {
+      if (_err) {
+        console.error('Facebook authorization error:', _err);
+        return res.status(500).json({ 
+          error: 'Failed to authenticate with Facebook',
+          details: process.env.NODE_ENV === 'development' ? _err.message : undefined
+        });
+      }
+
+    if (!facebookRes?.access_token) {
+      return res.status(400).json({ 
+        error: 'Invalid Facebook authorization response' 
+      });
+    }
     const { access_token } = facebookRes;
 
     const userAccount: {

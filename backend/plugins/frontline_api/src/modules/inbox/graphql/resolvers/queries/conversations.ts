@@ -41,9 +41,6 @@ export const conversationQueries = {
       });
      return { list, totalCount, pageInfo };
 
-
-
-
   },
 
   /**
