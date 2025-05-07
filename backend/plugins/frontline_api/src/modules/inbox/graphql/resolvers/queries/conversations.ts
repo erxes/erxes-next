@@ -1,16 +1,12 @@
 import { IContext, IModels } from '~/connectionResolvers';
 import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
-
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { defaultPaginate } from 'erxes-api-shared/src/utils';
+import { IConversationDocument } from '~/modules/inbox/@types/conversations';
 
-interface ICountBy {
-  [index: string]: number;
-}
 
-interface IConversationRes {
-  [index: string]: number | ICountBy;
-}
+
 
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
@@ -29,29 +25,22 @@ export const conversationQueries = {
   ) {
     // filter by ids of conversations
     if (params && params.ids) {
-      return models.Conversations.find({ _id: { $in: params.ids } })
-        .sort({
-          updatedAt: -1,
-        })
-        .skip(params.skip || 0)
-        .limit(params.limit || 0);
+       const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
+        model: models.Conversations,
+        params,
+        query: { _id: { $in: params.ids } }
+      });
+     return { list, totalCount, pageInfo };
     }
 
-    // initiate query builder
-    // const qb = new QueryBuilder(models, subdomain, params, {
-    //   _id: user._id,
-    //   code: user.code,
-    //   starredConversationIds: user.starredConversationIds,
-    //   role: user.role,
-    // });
 
-    // await qb.buildAllQueries();
+    const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
+        model: models.Conversations,
+        params,
+        query: {}
+      });
+     return { list, totalCount, pageInfo };
 
-    // console.log('qb.mainQuery()', qb.mainQuery());
-
-    const conversations = await models.Conversations.find({}).limit(10);
-
-    return conversations;
   },
 
   /**

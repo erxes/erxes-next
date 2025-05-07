@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { IChannelDocument } from '@/inbox/@types/channels';
 import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { IConversationDocument } from '@/inbox/@types/conversations';
+import { IMessageDocument } from '@/inbox/@types/conversationMessages';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import { IFacebookLogDocument } from '@/integrations/facebook/@types/logs';
 import { IFacebookAccountDocument } from '@/integrations/facebook/@types/accounts';
@@ -23,6 +24,10 @@ import {
   IConversationModel,
   loadClass as loadConversationClass,
 } from '~/modules/inbox/db/models/Conversations';
+import {
+  IMessageModel,
+  loadClass as loadMessageClass
+} from "@/inbox/db/models/conversationMessages";
 import { IFacebookIntegrationModel, loadFacebookIntegrationClass } from '@/integrations/facebook/db/models/Integrations';
 import { IFacebookAccountModel, loadFacebookAccountClass } from '@/integrations/facebook/db/models/Accounts';
 import { IFacebookCustomerModel, loadFacebookCustomerClass } from '@/integrations/facebook/db/models/Customers';
@@ -38,6 +43,7 @@ export interface IModels {
   Channels: IChannelModel;
   Integrations: IIntegrationModel;
   Conversations: IConversationModel;
+  ConversationMessages: IMessageModel;
   FacebookIntegrations: IFacebookIntegrationModel;
   FacebookAccounts: IFacebookAccountModel;
   FacebookCustomers: IFacebookCustomerModel;
@@ -48,9 +54,6 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
-
-
-
   
 }
 
@@ -76,6 +79,10 @@ export const loadClasses = (
   models.Conversations = db.model<IConversationDocument, IConversationModel>(
     'conversations',
     loadConversationClass(models, subdomain),
+  );
+  models.ConversationMessages = db.model<IMessageDocument, IMessageModel>(
+    "conversation_messages",
+    loadMessageClass(models)
   );
   models.FacebookAccounts = db.model<IFacebookAccountDocument, IFacebookAccountModel>(
     'facebook_accounts',
