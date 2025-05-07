@@ -1,7 +1,7 @@
-import { CustomersHeader } from '@/contacts/customers-new/components/CustomersHeader';
-import { CustomersRecordTable } from '@/contacts/customers-new/components/CustomersRecordTable';
-import { CustomersFilter } from '@/contacts/customers-new/components/CustomersFilter';
-import { CustomerDetail } from '@/contacts/customers-new/customer-detail/components/CustomerDetail';
+import { CustomersHeader } from '@/contacts/customers/components/CustomersHeader';
+import { CustomersRecordTable } from '@/contacts/customers/components/CustomersRecordTable';
+import { CustomersFilter } from '@/contacts/customers/components/CustomersFilter';
+import { CustomerDetail } from '@/contacts/customers/customer-detail/components/CustomerDetail';
 export const CustomersIndexPage = () => {
   return (
     <div className="flex flex-col h-full pt-0">

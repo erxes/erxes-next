@@ -17,7 +17,7 @@ export const useTransactions = (options?: OperationVariables) => {
 
   return {
     transactions: data?.accTransactions,
-    totalCount: data?.accTransactionsTotalCount,
+    totalCount: data?.accTransactionsCount,
     loading,
     error,
     handleFetchMore,

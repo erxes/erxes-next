@@ -1,4 +1,4 @@
-import { TransactionGroupForm } from '@/transactions/transactionForm/components/TransactionGroupForm';
+import { TransactionsGroupForm } from '@/transactions/transaction-form/components/TransactionsGroupForm';
 import { AccountingLayout } from '@/layout/components/Layout';
 import { AccountingHeader } from '@/layout/components/Header';
 import { Button } from 'erxes-ui';
@@ -14,7 +14,7 @@ export const TransactionPage = () => {
           Return
         </Button>
       </div>
-      <TransactionGroupForm />
+      <TransactionsGroupForm />
     </AccountingLayout>
   );
 };

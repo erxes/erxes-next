@@ -7,6 +7,7 @@ import {
   Command,
   Dialog,
   Input,
+  Kbd,
   Popover,
 } from 'erxes-ui/components';
 import {
@@ -27,6 +28,8 @@ import {
 import { FilterDialogDateView } from '../date-filter/components/DialogDateView';
 import { getDisplayValue } from '../date-filter/utlis/getDisplayValue';
 import { DateFilterCommand } from '../date-filter/components/DateFilterCommand';
+import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
+import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 
 const FilterProvider = ({
   children,
@@ -84,12 +87,30 @@ const FilterTrigger = React.forwardRef<
   );
 });
 
-const FilterPopover = (
-  props: React.ComponentPropsWithoutRef<typeof Popover>,
-) => {
+const FilterPopover = ({
+  scope,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Popover> & {
+  scope: string;
+}) => {
   const { id } = useFilterContext();
   const [open, setOpen] = useAtom(openPopoverState(id));
   const setView = useSetAtom(filterPopoverViewState(id));
+  const {
+    setHotkeyScopeAndMemorizePreviousScope,
+    goBackToPreviousHotkeyScope,
+  } = usePreviousHotkeyScope();
+
+  useScopedHotkeys(`f`, () => setOpen(true), scope);
+
+  useEffect(() => {
+    if (open) {
+      setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover');
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  }, [open]);
+
   return (
     <Popover
       open={open}
@@ -173,7 +194,7 @@ const FilterBar = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'flex-none bg-sidebar p-3 border-b flex gap-3 items-center h-11',
+        'flex-none bg-sidebar px-3 py-2 border-b flex gap-3 h-auto',
         className,
       )}
       {...props}
@@ -205,7 +226,7 @@ const FilterBarName = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'bg-background rounded-l [&>svg]:size-4 flex items-center px-2 gap-2',
+        'bg-background rounded-l [&>svg]:size-4 flex items-center px-2 gap-2 w-fit',
         className,
       )}
       {...props}
@@ -327,7 +348,7 @@ const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
   );
 };
 
-export const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
+const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
   const [query, setQuery] = useQueryState<string>(filterKey);
   const [open, setOpen] = useState(false);
   return (
@@ -351,6 +372,23 @@ export const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
   );
 };
 
+const FilterCommandInput = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentPropsWithoutRef<typeof Command.Input>
+>(({ className, ...props }, ref) => {
+  return (
+    <div className="relative">
+      <Command.Input ref={ref} className={cn('pr-8', className)} {...props} />
+      <Kbd
+        className="absolute right-2 top-1/2 -translate-y-1/2"
+        variant="foreground"
+      >
+        F
+      </Kbd>
+    </div>
+  );
+});
+
 export const Filter = Object.assign(FilterProvider, {
   Trigger: FilterTrigger,
   Popover: FilterPopover,
@@ -366,4 +404,5 @@ export const Filter = Object.assign(FilterProvider, {
   BarButton: FilterBarButton,
   BarClose: FilterBarCloseButton,
   Date: FilterBarDate,
+  CommandInput: FilterCommandInput,
 });

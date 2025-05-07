@@ -82,7 +82,7 @@ const CompanyInlineAvatar = React.forwardRef<
   return (
     <Avatar {...props} ref={ref}>
       <Avatar.Image src={avatar} />
-      <Avatar.Fallback colorSeed={_id}>
+      <Avatar.Fallback>
         {primaryName?.charAt(0) || primaryEmail?.charAt(0) || ''}
       </Avatar.Fallback>
     </Avatar>

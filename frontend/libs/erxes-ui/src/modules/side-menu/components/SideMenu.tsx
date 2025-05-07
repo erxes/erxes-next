@@ -31,7 +31,7 @@ export const SideMenuContent = forwardRef<
     <Tabs.Content
       ref={ref}
       className={cn(
-        'data-[state=active]:border-l data-[state=active]:min-w-80 transition-all',
+        'data-[state=active]:border-l data-[state=active]:min-w-80 w-full transition-all',
         className,
       )}
       {...props}
@@ -78,7 +78,7 @@ export const SideMenuSidebar = forwardRef<
       )}
       {...props}
     >
-      {props.children}
+      <Tooltip.Provider>{props.children}</Tooltip.Provider>
     </Tabs.List>
   );
 });
@@ -93,29 +93,27 @@ export const SideMenuTrigger = forwardRef<
 >(({ className, Icon, label, onClick, ...props }, ref) => {
   const { setOpen } = Sidebar.useSidebar();
   return (
-    <Tooltip.Provider>
-      <Tooltip>
-        <Tabs.Trigger
-          ref={ref}
-          className={cn(
-            'size-10 bg-sidebar data-[state=active]:bg-primary/10 data-[state=active]:text-foreground data-[state=active]:shadow-none [&_svg]:size-5 data-[state=active]:after:hidden [&_svg]:text-primary hover:bg-primary/10 rounded',
-            className,
-          )}
-          onClick={(e) => {
-            setOpen(false);
-            onClick?.(e);
-          }}
-          {...props}
-          asChild
-        >
-          <Tooltip.Trigger>
-            {!!Icon && <Icon className="size-5 flex-none" />}
-          </Tooltip.Trigger>
-        </Tabs.Trigger>
+    <Tooltip>
+      <Tabs.Trigger
+        ref={ref}
+        className={cn(
+          'size-10 bg-sidebar data-[state=active]:bg-primary/10 data-[state=active]:text-foreground data-[state=active]:shadow-none [&_svg]:size-5 data-[state=active]:after:hidden [&_svg]:text-primary hover:bg-primary/10 rounded',
+          className,
+        )}
+        onClick={(e) => {
+          setOpen(false);
+          onClick?.(e);
+        }}
+        {...props}
+        asChild
+      >
+        <Tooltip.Trigger>
+          {!!Icon && <Icon className="size-5 flex-none" />}
+        </Tooltip.Trigger>
+      </Tabs.Trigger>
 
-        <Tooltip.Content side="left">{label}</Tooltip.Content>
-      </Tooltip>
-    </Tooltip.Provider>
+      <Tooltip.Content side="left">{label}</Tooltip.Content>
+    </Tooltip>
   );
 });
 

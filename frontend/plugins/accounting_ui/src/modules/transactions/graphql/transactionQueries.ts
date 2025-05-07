@@ -66,9 +66,19 @@ export const commonTransactionFields = `
 
   details {
     ${commonTrDetailFields}
+    account {
+      code
+      name
+      currency
+    }
   }
   shortDetail {
     ${commonTrDetailFields}
+    account {
+      code
+      name
+      currency
+    }
   }
   sumDt
   sumCt
@@ -102,10 +112,12 @@ export const commonTransactionFields = `
   isHandleCtax
   ctaxAmount
 
+  extraData
+
   permission
 `;
 
-const accountsFilterParamDefs = `
+const trsFilterParamDefs = `
   $ids: [String],
   $excludeIds: Boolean,
   $status: String,
@@ -134,7 +146,13 @@ const accountsFilterParamDefs = `
   $statuses: [String],
 `;
 
-const accountsFilterParams = `
+const trRecsFilterParamDefs = `
+  ${trsFilterParamDefs},
+  $groupRule: [String],
+  $folded: Boolean,
+`;
+
+const trsFilterParams = `
   ids: $ids,
   excludeIds: $excludeIds,
   status: $status,
@@ -163,6 +181,13 @@ const accountsFilterParams = `
   statuses: $statuses,
 `;
 
+const trRecsFilterParams = `
+  ${trsFilterParams}
+
+  groupRule: $groupRule,
+  folded: $folded,
+`;
+
 const commonParamDefs = `
   $page: Int,
   $perPage: Int,
@@ -178,18 +203,19 @@ const commonParams = `
 `;
 
 export const TRANSACTIONS_QUERY = gql`
-  query accTransactions(${accountsFilterParamDefs}, ${commonParamDefs}) {
-    accTransactions(${accountsFilterParams}, ${commonParams}) {
+  query accTransactions(${trsFilterParamDefs}, ${commonParamDefs}) {
+    accTransactions(${trsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
     }
-    accTransactionsCount(${accountsFilterParams})
+    accTransactionsCount(${trsFilterParams})
   }
 `;
 
-export const TRANSACTION_DETAIL_QUERY = gql`
-  query accTransactionDetail($_id: String!) {
-    accTransactionDetail(_id: $_id) {
+export const TR_RECORDS_QUERY = gql`
+  query accTrRecords(${trRecsFilterParamDefs}, ${commonParamDefs}) {
+    accTrRecords(${trRecsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
     }
+    accTrRecordsCount(${trRecsFilterParams})
   }
 `;

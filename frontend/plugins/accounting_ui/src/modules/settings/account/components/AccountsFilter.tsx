@@ -13,9 +13,9 @@ import {
   Filter,
   SelectTree,
   useQueryState,
-  CurrencyField,
   useFilterContext,
   CurrencyCode,
+  CurrencyField,
 } from 'erxes-ui';
 import { SelectAccountCommand } from '../account-categories/components/SelectAccountCategory';
 import { AccountsKindCommand } from './AccountsKind';

@@ -11,14 +11,14 @@ export const CONFIG: IUIConfig = {
       icon: IconMailFilled,
       path: 'inbox',
       hasSettings: true,
-      haveWidgets: true,
+      hasWidgets: true,
     },
     {
       name: 'ticket',
       icon: IconTicket,
       path: 'ticket',
       hasSettings: true,
-      haveWidgets: true,
+      hasWidgets: true,
     },
   ],
 };

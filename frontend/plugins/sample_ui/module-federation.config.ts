@@ -15,7 +15,7 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'sample_ui',
   exposes: {
-    './Config': './src/config.ts',
+    './config': './src/config.ts',
     './sampleFirst': './src/modules/sample-first/Main.tsx',
     './sampleFirstSettings': './src/modules/sample-first/Settings.tsx',
     './sampleSecond': './src/modules/sample-second/Main.tsx',

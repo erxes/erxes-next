@@ -21,11 +21,10 @@ import { SelectAccountCommand } from '@/settings/account/account-categories/comp
 import { AccountsJournalCommand } from '@/settings/account/components/AccountsJournal';
 import { AccountsKindCommand } from '@/settings/account/components/AccountsKind';
 
-
 export const TransactionsFilter = () => {
   return (
     <>
-      <Filter.Popover>
+      <Filter.Popover scope="transactions-filter">
         <Filter.Trigger />
         <Combobox.Content>
           <Filter.View>
