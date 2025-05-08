@@ -1,5 +1,4 @@
 import stripAnsi from 'strip-ansi';
-import { customAlphabet } from 'nanoid';
 
 /**
  * Removes the last trailing slash from a string if it exists.
