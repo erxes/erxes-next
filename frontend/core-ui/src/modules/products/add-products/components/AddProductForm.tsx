@@ -9,7 +9,7 @@ import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
 import { ProductAddCollapsible } from './ProductAddCollapsible';
 import { ProductAddCoreFields } from './ProductAddCoreFields';
 import { ProductAddMoreFields } from './ProductAddMoreFields';
-import { ProductAddSheet, ProductAddSheetHeader } from './ProductAddSheet';
+import { ProductAddSheetHeader } from './ProductAddSheet';
 
 import {
   productFormSchema,
@@ -18,8 +18,11 @@ import {
 import { useAddProduct } from '@/products/hooks/useAddProduct';
 import { ApolloError } from '@apollo/client';
 
-export function AddProductForm() {
-  const [open, setOpen] = useState<boolean>(false);
+export function AddProductForm({
+  onOpenChange,
+}: {
+  onOpenChange: (open: boolean) => void;
+}) {
   const { productsAdd } = useAddProduct();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -62,20 +65,20 @@ export function AddProductForm() {
       },
       onCompleted: () => {
         form.reset();
-        setOpen(false);
+        onOpenChange(false);
       },
     });
   }
 
   return (
-    <ProductAddSheet onOpenChange={setOpen} open={open}>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className=" flex flex-col h-full"
-        >
-          <ScrollArea className="flex-auto">
-            <ProductAddSheetHeader />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col h-full overflow-hidden"
+      >
+        <ProductAddSheetHeader />
+        <Sheet.Content className="flex-auto overflow-hidden">
+          <ScrollArea className="h-full">
             <div className="p-5">
               <ProductAddCoreFields form={form} />
               <ProductAddCollapsible>
@@ -83,24 +86,24 @@ export function AddProductForm() {
               </ProductAddCollapsible>
             </div>
           </ScrollArea>
+        </Sheet.Content>
 
-          <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
-            <Button
-              type="button"
-              variant="ghost"
-              className="bg-background hover:bg-background/90"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Save
-            </Button>
-          </Sheet.Footer>
-        </form>
-      </Form>
-    </ProductAddSheet>
+        <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
+          <Button
+            type="button"
+            variant="ghost"
+            className="bg-background hover:bg-background/90"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Save
+          </Button>
+        </Sheet.Footer>
+      </form>
+    </Form>
   );
 }

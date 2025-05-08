@@ -10,6 +10,8 @@ import {
   RecordTable,
   TextOverflowTooltip,
   RecordTableCellDisplay,
+  CurrencyFormatedDisplay,
+  CurrencyCode,
 } from 'erxes-ui';
 import { IProduct } from 'ui-modules';
 import { productMoreColumn } from './ProductMoreColumn';
@@ -49,7 +51,12 @@ export const productColumns: ColumnDef<IProduct>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
+          <CurrencyFormatedDisplay
+            currencyValue={{
+              amountMicros: (cell.getValue() as number) * 1000000,
+              currencyCode: CurrencyCode.MNT,
+            }}
+          />
         </RecordTableCellDisplay>
       );
     },

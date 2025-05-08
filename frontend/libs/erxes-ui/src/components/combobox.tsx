@@ -104,7 +104,10 @@ export const ComboboxContent = React.forwardRef<
       align="start"
       sideOffset={8}
       {...props}
-      className={cn('p-0 min-w-[--radix-popper-anchor-width]', className)}
+      className={cn(
+        'p-0 min-w-72 w-[--radix-popper-anchor-width] max-w-96',
+        className,
+      )}
     />
   );
 });

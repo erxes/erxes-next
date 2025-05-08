@@ -7,15 +7,50 @@ import {
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
-import { Avatar, Badge, cn, InlineCell, Switch, Table } from 'erxes-ui';
+import {
+  Avatar,
+  Badge,
+  cn,
+  InlineCell,
+  Switch,
+  Table,
+  useQueryState,
+} from 'erxes-ui';
 import { RecordTable } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import dayjs from 'dayjs';
 import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
 import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
+import { Link } from 'react-router';
+import { useSetAtom } from 'jotai';
+import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
+
+export const UserMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IUser, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('user_id');
+  const setRenderingCustomerDetail = useSetAtom(renderingTeamMemberDetailAtom);
+  const { _id } = cell.row.original;
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setOpen(_id);
+        setRenderingCustomerDetail(false);
+      }}
+    />
+  );
+};
 
 export const teamMemberColumns: ColumnDef<IUser>[] = [
+  {
+    id: 'more',
+    cell: UserMoreColumnCell,
+    size: 33,
+  },
   {
     id: 'avatar',
     accessorKey: 'avatar',

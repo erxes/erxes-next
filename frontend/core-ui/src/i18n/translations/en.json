@@ -26,6 +26,11 @@
     "teams": "Teams",
     "views": "Views",
     "accounting": "Accounting",
+    "accounting.subMenu": {
+      "main": "Transactions",
+      "records": "Records",
+      "odds": "Odd Transactions"
+    },
     "sample": "Sample",
     "modules": "Modules"
   }

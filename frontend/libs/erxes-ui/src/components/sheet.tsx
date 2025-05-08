@@ -6,6 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Button } from './button';
 import { cn } from '../lib/utils';
+import { Slot } from '@radix-ui/react-slot';
 
 const SheetTrigger = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Trigger>,
@@ -109,7 +110,7 @@ const SheetHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex px-5 h-14 items-center bg-background border-b',
+      'flex px-5 h-14 items-center bg-background border-b flex-none',
       className,
     )}
     {...props}

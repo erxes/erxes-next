@@ -1,5 +1,6 @@
 import { Dialog, isDeeplyEqual, Spinner, useQueryState } from 'erxes-ui';
-import { AccountDialog, AccountForm } from './AccountForm';
+import { AccountForm } from './AccountForm';
+import { AccountingDialog } from '@/layout/components/Dialog';
 import { TAccountForm } from '../types/accountForm';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,12 +11,12 @@ import { useAccountEdit } from '../hooks/useAccountEdit';
 import { ACCOUNT_DEFAULT_VALUES } from '../constants/accountDefaultValues';
 
 export const EditAccount = () => {
-  const [open, setOpen] = useQueryState<string>('account_id');
+  const [open, setOpen] = useQueryState<string>('accountId');
   return (
     <Dialog open={open !== null} onOpenChange={() => setOpen(null)}>
-      <AccountDialog title="Edit Account" description="Edit an account">
+      <AccountingDialog title="Edit Account" description="Edit an account">
         <EditAccountForm />
-      </AccountDialog>
+      </AccountingDialog>
     </Dialog>
   );
 };

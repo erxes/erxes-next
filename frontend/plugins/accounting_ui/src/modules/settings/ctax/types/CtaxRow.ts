@@ -6,8 +6,10 @@ export interface ICtaxRow {
   name: string;
   number: string;
   kind: CtaxKind;
+  formula: string;
+  formulaText: string;
+  status: string;
   percent: number;
-  status: CtaxStatus;
 }
 
 export enum CtaxKind {
@@ -22,4 +24,4 @@ export enum CtaxStatus {
   DELETED = 'deleted',
 }
 
-export type CtaxFormValues = z.infer<typeof ctaxFormSchema>;
+export type TCtaxRowForm = z.infer<typeof ctaxFormSchema>;

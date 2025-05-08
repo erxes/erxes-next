@@ -31,7 +31,7 @@ export const VatRows = lazy(() =>
 );
 
 export const CTaxRows = lazy(() =>
-  import('~/pages/CTaxRowsPage').then((module) => ({
+  import('~/pages/CtaxRowsPage').then((module) => ({
     default: module.CTaxRowsPage,
   })),
 );

@@ -4,6 +4,7 @@ import { useSetAtom } from 'jotai';
 import { useVatRows } from '../hooks/useVatRows';
 import { vatRowDetailAtom } from '../states/vatRowStates';
 import { IVatRow } from '../types/VatRow';
+import { VatRowsCommandbar } from './VatRowsCommandbar';
 
 export const VatRowsTable = () => {
   const { vatRows, loading, handleFetchMore, totalCount } = useVatRows();
@@ -27,6 +28,7 @@ export const VatRowsTable = () => {
           </RecordTable.Body>
         </RecordTable>
       </RecordTable.Scroll>
+      <VatRowsCommandbar />
     </RecordTable.Provider>
   );
 };

@@ -1,4 +1,4 @@
-export type UIConfig = {
+export type IUIConfig = {
   name: string;
   icon: React.ElementType;
   modules: {
@@ -6,9 +6,11 @@ export type UIConfig = {
     icon: React.ElementType;
     path: string;
     hasSettings: boolean;
+    hasWidgets: boolean;
     submenus?: {
       name: string;
       path: string;
+      icon?: React.ElementType;
     }[];
   }[];
 };

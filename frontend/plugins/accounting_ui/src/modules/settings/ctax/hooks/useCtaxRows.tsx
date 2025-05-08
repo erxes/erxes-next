@@ -1,23 +1,37 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { CTAX_ROWS } from '../graphql/queries/getCTaxs';
+import { GET_CTAXS, SELECT_CTAXS } from '../graphql/queries/getCtaxs';
+import {
+  CTAX_ROW_DEFAULT_VARIABLES,
+  CTAX_ROW_PER_PAGE,
+} from '../constants/ctaxRowDefaultVariables';
+import { ICtaxRow } from '../types/CtaxRow';
 
-export const PER_PAGE = 20;
-
-export const useCtaxRows = (options?: OperationVariables) => {
-  const { data, loading, fetchMore } = useQuery(CTAX_ROWS, {
+export const useCtaxRows = (
+  options?: OperationVariables,
+  inSelect?: boolean,
+) => {
+  const { data, loading, fetchMore, error } = useQuery<{
+    ctaxRows: ICtaxRow[];
+    ctaxRowsCount: number;
+  }>(inSelect ? SELECT_CTAXS : GET_CTAXS, {
+    onError: () => {
+      // Do nothing
+    },
     ...options,
     variables: {
-      page: 1,
-      perPage: PER_PAGE,
+      ...CTAX_ROW_DEFAULT_VARIABLES,
       ...options?.variables,
     },
   });
+
   const { ctaxRows, ctaxRowsCount } = data || {};
 
   const handleFetchMore = () => {
+    if (!ctaxRows) return;
+
     fetchMore({
       variables: {
-        page: Math.ceil(ctaxRows?.length / PER_PAGE) + 1,
+        page: Math.ceil(ctaxRows.length / CTAX_ROW_PER_PAGE) + 1,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         return {
@@ -32,6 +46,7 @@ export const useCtaxRows = (options?: OperationVariables) => {
     ctaxRows,
     totalCount: ctaxRowsCount,
     loading,
+    error,
     handleFetchMore,
   };
 };

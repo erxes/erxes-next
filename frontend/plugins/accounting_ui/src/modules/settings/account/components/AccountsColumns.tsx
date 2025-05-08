@@ -6,7 +6,7 @@ import {
   InlineCellDisplay,
   ITextFieldContainerProps,
   RecordTable,
-  SelectCurrency,
+  CurrencyField,
   TextField,
   useQueryState,
 } from 'erxes-ui';
@@ -50,9 +50,8 @@ const AccountTextField = ({
   return (
     <TextField
       value={value}
-      field={field}
-      _id={_id}
-      onSave={(value) => {
+      scope={`account-${_id}-${field}`}
+      onValueChange={(value) => {
         editAccount(
           {
             variables: { ...account, [field]: value },
@@ -67,7 +66,7 @@ const AccountTextField = ({
 const AccountCurrencyCell = ({ cell }: { cell: Cell<IAccount, unknown> }) => {
   const { editAccount } = useAccountEdit();
   return (
-    <SelectCurrency
+    <CurrencyField.SelectCurrency
       value={cell.getValue() as CurrencyCode}
       variant="ghost"
       className="w-full focus-visible:relative focus-visible:z-10 font-normal"
@@ -86,7 +85,7 @@ export const AccountMoreColumnCell = ({
 }: {
   cell: Cell<IAccount, unknown>;
 }) => {
-  const [, setOpen] = useQueryState('account_id');
+  const [, setOpen] = useQueryState('accountId');
   const setAccountDetail = useSetAtom(accountDetailAtom);
   return (
     <RecordTable.MoreButton

@@ -3,10 +3,7 @@ import * as React from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { cva, VariantProps } from 'class-variance-authority';
 
-import { stringToHslColor } from '../utils/colors';
 import { cn } from '../lib/utils';
-import { useAtomValue } from 'jotai';
-import { themeState } from 'erxes-ui/state';
 
 export const avatarVariants = cva(
   'relative flex shrink-0 overflow-hidden rounded-full border-0',
@@ -63,7 +60,7 @@ const AvatarFallback = React.forwardRef<
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        'flex h-full w-full items-center justify-center rounded-full uppercase bg-primary/10 text-primary',
+        'flex h-full w-full items-center justify-center rounded-full uppercase bg-border text-border',
         className,
       )}
       {...props}

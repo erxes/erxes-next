@@ -1,5 +1,5 @@
 import { Dialog, isDeeplyEqual, Spinner, useQueryState } from 'erxes-ui';
-import { AccountDialog } from '../../components/AccountForm';
+import { AccountingDialog } from '@/layout/components/Dialog';
 import { useAccountCategoryDetail } from '../hooks/useAccountCategoryDetail';
 import { TAccountCategoryForm } from '../types/AccountCategory';
 import { useForm } from 'react-hook-form';
@@ -14,12 +14,12 @@ export const EditAccountCategory = () => {
   const [open, setOpen] = useQueryState<string>('accountCategoryId');
   return (
     <Dialog open={open !== null} onOpenChange={() => setOpen(null)}>
-      <AccountDialog
+      <AccountingDialog
         title="Edit Account Category"
         description="Edit an account category"
       >
         <EditAccountCategoryForm />
-      </AccountDialog>
+      </AccountingDialog>
     </Dialog>
   );
 };

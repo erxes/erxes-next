@@ -27,7 +27,7 @@ export const SelectBranchTree = React.forwardRef<
   }
 >(({ onSelect, selected, recordId, nullable, exclude, ...props }, ref) => {
   const [selectedBranch, setSelectedBranch] = useState<IBranch | undefined>();
-  const { branches, loading, totalCount, totalUsersCount } = useBranchesMain({
+  const { branches, loading } = useBranchesMain({
     onCompleted: ({ branches: list }: { branches: IBranch[] }) => {
       setSelectedBranch(list.find((branch) => branch._id === selected));
     },
@@ -60,7 +60,7 @@ export const SelectBranchTree = React.forwardRef<
               onSelect={(branchId) => {
                 onSelect(branchId);
                 setSelectedBranch(
-                  branches?.find((branch) => branch._id === branchId)!,
+                  branches?.find((branch) => branch._id === branchId),
                 );
                 closeEditMode();
               }}

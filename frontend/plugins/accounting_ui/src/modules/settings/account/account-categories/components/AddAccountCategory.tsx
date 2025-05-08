@@ -1,7 +1,7 @@
 import { Button, Dialog } from 'erxes-ui';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
-import { AccountDialog } from '../../components/AccountForm';
+import { AccountingDialog } from '@/layout/components/Dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TAccountCategoryForm } from '../types/AccountCategory';
 import { useForm } from 'react-hook-form';
@@ -20,17 +20,17 @@ export const AddAccountCategory = () => {
           Add account category
         </Button>
       </Dialog.Trigger>
-      <AccountDialog
+      <AccountingDialog
         title="Add account category"
         description="Add a new account category"
       >
-        <AddAccountCategoryForm />
-      </AccountDialog>
+        <AddAccountCategoryForm setOpen={setOpen} />
+      </AccountingDialog>
     </Dialog>
   );
 };
 
-const AddAccountCategoryForm = () => {
+const AddAccountCategoryForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const form = useForm<TAccountCategoryForm>({
     resolver: zodResolver(accountCategorySchema),
     defaultValues: ACCOUNT_CATEGORY_DEFAULT_VALUES,
@@ -39,7 +39,14 @@ const AddAccountCategoryForm = () => {
   const { addAccountCategory, loading } = useAccountCategoryAdd();
 
   const handleSubmit = (data: TAccountCategoryForm) => {
-    addAccountCategory({ variables: { ...data } });
+    addAccountCategory({
+      variables: { ...data },
+      onCompleted: () => {
+        setOpen(false);
+        form.reset();
+      },
+    });
+
   };
 
   return (

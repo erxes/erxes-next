@@ -13,15 +13,15 @@ import {
   Filter,
   SelectTree,
   useQueryState,
-  SelectCurrencyCommand,
   useFilterContext,
   CurrencyCode,
+  CurrencyField,
 } from 'erxes-ui';
 import { SelectAccountCommand } from '../account-categories/components/SelectAccountCategory';
 import { AccountsKindCommand } from './AccountsKind';
 import { AccountsJournalCommand } from './AccountsJournal';
 
-export const AccountingFilter = () => {
+export const AccountsFilter = () => {
   return (
     <>
       <Filter.Popover>
@@ -68,7 +68,7 @@ export const AccountingFilter = () => {
               </Command.List>
             </Command>
           </Filter.View>
-          <AccountingFilterCategory />
+          <AccountsFilterCategory />
           <Filter.View filterKey="due">
             <Filter.DateView filterKey="due" />
           </Filter.View>
@@ -79,13 +79,13 @@ export const AccountingFilter = () => {
             <Filter.DateView filterKey="updated" />
           </Filter.View>
           <Filter.View filterKey="currency">
-            <AccountingFilterCurrency />
+            <AccountsFilterCurrency />
           </Filter.View>
           <Filter.View filterKey="kind">
-            <AccountingFilterKind />
+            <AccountsFilterKind />
           </Filter.View>
           <Filter.View filterKey="journal">
-            <AccountingFilterJournal />
+            <AccountsFilterJournal />
           </Filter.View>
         </Combobox.Content>
       </Filter.Popover>
@@ -104,7 +104,7 @@ export const AccountingFilter = () => {
   );
 };
 
-export const AccountingFilterCategory = () => {
+export const AccountsFilterCategory = () => {
   const [categoryId, setCategoryId] = useQueryState<string>('categoryId');
   const { resetFilterState } = useFilterContext();
 
@@ -124,12 +124,12 @@ export const AccountingFilterCategory = () => {
   );
 };
 
-export const AccountingFilterCurrency = () => {
+export const AccountsFilterCurrency = () => {
   const [currency, setCurrency] = useQueryState<CurrencyCode>('currency');
   const { resetFilterState } = useFilterContext();
   return (
     <Filter.View filterKey="currency">
-      <SelectCurrencyCommand
+      <CurrencyField.SelectCurrencyCommand
         focusOnMount
         value={currency ?? undefined}
         onSelect={(code) => {
@@ -141,7 +141,7 @@ export const AccountingFilterCurrency = () => {
   );
 };
 
-export const AccountingFilterKind = () => {
+export const AccountsFilterKind = () => {
   const [kind, setKind] = useQueryState<string | null>('kind');
   const { resetFilterState } = useFilterContext();
 
@@ -155,7 +155,7 @@ export const AccountingFilterKind = () => {
   );
 };
 
-export const AccountingFilterJournal = () => {
+export const AccountsFilterJournal = () => {
   const [journal, setJournal] = useQueryState<string | null>('journal');
   const { resetFilterState } = useFilterContext();
 

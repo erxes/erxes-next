@@ -8,10 +8,14 @@ interface RemoteComponentProps {
 
 export function RenderPLuginsComponent({
   pluginName,
+  remoteModuleName,
   moduleName,
+  props,
 }: {
   pluginName: string;
+  remoteModuleName: string;
   moduleName: string;
+  props?: any;
 }) {
   const [Plugin, setPlugin] =
     useState<React.ComponentType<RemoteComponentProps> | null>(null);
@@ -26,7 +30,7 @@ export function RenderPLuginsComponent({
 
         const remoteModule = await loadRemote<{
           default: React.ComponentType<RemoteComponentProps>;
-        }>(`${pluginName}/${moduleName}`, { from: 'runtime' });
+        }>(`${pluginName}/${remoteModuleName}`, { from: 'runtime' });
 
         if (!remoteModule?.default) {
           throw new Error('Plugin module is empty or invalid');
@@ -45,7 +49,7 @@ export function RenderPLuginsComponent({
     };
 
     loadPlugin();
-  }, [pluginName, moduleName]);
+  }, [pluginName, remoteModuleName]);
 
   if (hasError) {
     return (
@@ -77,7 +81,11 @@ export function RenderPLuginsComponent({
         </div>
       }
     >
-      <Plugin key={`${pluginName}-${moduleName}`} />
+      <Plugin
+        key={`${pluginName}-${remoteModuleName}`}
+        {...props}
+        moduleName={moduleName}
+      />
     </Suspense>
   );
 }

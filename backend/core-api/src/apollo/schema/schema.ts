@@ -2,49 +2,49 @@ import {
   mutations as CustomerMutations,
   queries as CustomerQueries,
   types as CustomerTypes,
-} from '../../modules/contacts/graphql/schemas/customer';
+} from '@/contacts/graphql/schemas/customer';
 
 import {
   mutations as CompanyMutations,
   queries as CompanyQueries,
   types as CompanyTypes,
-} from '../../modules/contacts/graphql/schemas/company';
+} from '@/contacts/graphql/schemas/company';
 
 import {
   mutations as AuthMutations,
   queries as AuthQueries,
-} from '../../modules/auth/graphql/schemas/auth';
+} from '@/auth/graphql/schemas/auth';
 
 import {
   mutations as branchsMutations,
   queries as branchsQueries,
   BranchTypes,
-} from '../../modules/organization/structure/graphql/schemas/branch';
+} from '@/organization/structure/graphql/schemas/branch';
 import {
   mutations as departmentsMutations,
   queries as departmentsQueries,
   DepartmentTypes,
-} from '../../modules/organization/structure/graphql/schemas/department';
+} from '@/organization/structure/graphql/schemas/department';
 import {
   mutations as positionsMutations,
   queries as positionsQueries,
   PositionTypes,
-} from '../../modules/organization/structure/graphql/schemas/position';
+} from '@/organization/structure/graphql/schemas/position';
 import {
   mutations as structuresMutations,
   StructureTypes,
-} from '../../modules/organization/structure/graphql/schemas/structure';
+} from '@/organization/structure/graphql/schemas/structure';
 import {
   mutations as unitsMutations,
   queries as unitsQueries,
   UnitTypes,
-} from '../../modules/organization/structure/graphql/schemas/units';
+} from '@/organization/structure/graphql/schemas/units';
 
 import {
   mutations as ConfigsMutations,
   queries as ConfigsQueries,
   ConfigTypes,
-} from '../../modules/settings/graphql/schemas';
+} from '@/settings/graphql/schemas';
 
 import {
   mutations as UserMutations,
@@ -67,7 +67,17 @@ import {
   types as AppTypes,
 } from '@/apps/graphql/schemas';
 import { CommonTypes } from './commonTypes';
-import { BrandTypes } from '../../modules/organization/structure/graphql/schemas/brand';
+import { BrandTypes } from '@/organization/structure/graphql/schemas/brand';
+import {
+  mutations as RelationMutations,
+  queries as RelationQueries,
+  types as RelationTypes,
+} from '@/relations/graphql/schema';
+
+import {
+  mutations as ConformityMutations,
+  types as ConformityTypes,
+} from '@/conformities/graphql/schema';
 
 export const types = `
     scalar JSON
@@ -98,6 +108,8 @@ export const types = `
     ${UnitTypes}
     ${BrandTypes}
     ${AppTypes}
+    ${ConformityTypes}
+    ${RelationTypes}
   `;
 
 export const queries = `
@@ -113,6 +125,7 @@ export const queries = `
     ${positionsQueries}
     ${unitsQueries}
     ${AppQueries}
+    ${RelationQueries}
   `;
 
 export const mutations = `
@@ -129,6 +142,8 @@ export const mutations = `
     ${structuresMutations}
     ${unitsMutations}
     ${AppMutations}
+    ${ConformityMutations}
+    ${RelationMutations}
   `;
 
 export default { types, queries, mutations };

@@ -1,4 +1,4 @@
-import { IconUsers, IconUserUp } from '@tabler/icons-react';
+import { IconUserFilled, IconUserUp } from '@tabler/icons-react';
 import { Button, Collapsible } from 'erxes-ui';
 import { ChooseChannel } from '@/inbox/components/ChooseChannel';
 import { ChooseIntegration } from '@/inbox/components/ChooseIntegration';
@@ -29,7 +29,7 @@ export const MainFilters = () => {
             })
           }
         >
-          <IconUsers className="text-accent-foreground" />
+          <IconUserFilled className="text-accent-foreground" />
           Team Inbox
         </Button>
         <Button

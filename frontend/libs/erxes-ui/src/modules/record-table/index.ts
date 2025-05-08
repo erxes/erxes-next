@@ -15,10 +15,10 @@ import { RecordTableScroll } from './components/RecordTableScroll';
 import {
   RecordTableBackwardSkeleton,
   RecordTableCursorProvider,
-  RecordTableCursorRowList,
   RecordTableForwardSkeleton,
 } from './components/RecordTableCursor';
 import { checkboxColumn } from './components/CheckboxColumn';
+import { RecordTableRow } from './components/RecordTableRow';
 
 export const RecordTable = Object.assign(RecordTableRoot, {
   Provider: RecordTableProvider,
@@ -36,7 +36,7 @@ export const RecordTable = Object.assign(RecordTableRoot, {
   CursorProvider: RecordTableCursorProvider,
   CursorBackwardSkeleton: RecordTableBackwardSkeleton,
   CursorForwardSkeleton: RecordTableForwardSkeleton,
-  CursorRowList: RecordTableCursorRowList,
+  Row: RecordTableRow
 });
 
 export * from './types/RecordTableCursorTypes';

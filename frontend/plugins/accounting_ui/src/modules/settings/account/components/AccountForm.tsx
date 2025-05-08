@@ -5,7 +5,7 @@ import {
   Input,
   Select,
   Textarea,
-  SelectCurrency,
+  CurrencyField,
   Spinner,
   Dialog,
 } from 'erxes-ui';
@@ -14,7 +14,6 @@ import { SelectAccountCategory } from '../account-categories/components/SelectAc
 import { SelectBranch, SelectDepartment } from 'ui-modules';
 import { UseFormReturn } from 'react-hook-form';
 import { TAccountForm } from '../types/accountForm';
-import { IconX } from '@tabler/icons-react';
 import { JOURNAL_LABELS } from '../constants/journalLabel';
 
 export const AccountForm = ({
@@ -90,7 +89,7 @@ export const AccountForm = ({
             <Form.Item>
               <Form.Label>Currency</Form.Label>
               <Form.Control>
-                <SelectCurrency
+                <CurrencyField.SelectCurrency
                   value={field.value}
                   onChange={field.onChange}
                   className="w-full"
@@ -250,33 +249,3 @@ export const AccountForm = ({
   );
 };
 
-export const AccountDialog = ({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}) => {
-  return (
-    <Dialog.Content className="max-w-2xl">
-      <Dialog.Header>
-        <Dialog.Title>{title}</Dialog.Title>
-        <Dialog.Description className="sr-only">
-          {description}
-        </Dialog.Description>
-        <Dialog.Close asChild>
-          <Button
-            variant="secondary"
-            size="icon"
-            className="absolute right-4 top-3"
-          >
-            <IconX />
-          </Button>
-        </Dialog.Close>
-      </Dialog.Header>
-      {children}
-    </Dialog.Content>
-  );
-};

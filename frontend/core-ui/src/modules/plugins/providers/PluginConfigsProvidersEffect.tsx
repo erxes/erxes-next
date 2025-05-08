@@ -1,11 +1,12 @@
 import { getInstance } from '@module-federation/enhanced/runtime';
 import { useEffect } from 'react';
-import { pluginsConfigState, PluginsConfig } from 'ui-modules';
+import { pluginsConfigState } from 'ui-modules';
 import { loadRemote } from '@module-federation/enhanced/runtime';
 import { useSetAtom } from 'jotai';
+import { IUIConfig } from 'erxes-ui';
 
 type RemoteConfig = {
-  CONFIG: PluginsConfig;
+  CONFIG: IUIConfig;
 };
 
 export const PluginConfigsProvidersEffect = () => {
@@ -19,7 +20,7 @@ export const PluginConfigsProvidersEffect = () => {
         for (const remote of remotes) {
           try {
             const remoteConfig = (await loadRemote(
-              `${remote.name}/Config`,
+              `${remote.name}/config`,
             )) as RemoteConfig;
 
             const pluginConfig = remoteConfig.CONFIG;

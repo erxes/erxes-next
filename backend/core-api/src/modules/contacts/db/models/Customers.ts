@@ -17,7 +17,7 @@ import {
 
 export interface ICustomerModel extends Model<ICustomerDocument> {
   getCustomer(_id: string): Promise<ICustomerDocument>;
-  getCustomerName(customer: ICustomer): string;
+  getCustomerName(customer: ICustomer): Promise<string>;
 
   findActiveCustomers(
     query,
