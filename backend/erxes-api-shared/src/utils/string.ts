@@ -144,24 +144,3 @@ export const random = (pattern: string, length: number) => {
 
   return result;
 };
-
-/**
- * Generates a random alphanumeric string of a given length.
- *
- * @param {number} length the length of the resulting string
- * @returns {string} the generated string
- */
-export const randomAlphanumeric = customAlphabet(
-  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-);
-
-/**
- * Returns a function that generates a random lowercase string
- * of a given length using the characters 'a' to 'z'.
- *
- * @returns {function} A function that takes a length parameter
- * and returns a random lowercase string of that length.
- */
-export const randomLowercase = () => {
-  return customAlphabet('abcdefghijklmnopqrstuvwxyz');
-};
