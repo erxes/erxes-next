@@ -7,6 +7,7 @@ import { contactRouter } from '~/modules/contacts/trpc';
 import { relationTrpcRouter } from '~/modules/relations/trpc/relation';
 import { conformityTrpcRouter } from '~/modules/conformities/trpc/conformity';
 import { generateModels } from './connectionResolvers';
+import { formsRouter } from './modules/forms/trpc';
 
 export const createContext = async ({
   req,
@@ -25,6 +26,7 @@ export type ITRPCContext = Awaited<ReturnType<typeof createContext>>;
 const t = initTRPC.context<ITRPCContext>().create();
 
 export const appRouter = t.mergeRouters(
+  formsRouter,
   contactRouter,
   conformityTrpcRouter,
   relationTrpcRouter,

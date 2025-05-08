@@ -1,5 +1,6 @@
 import { createGenerateModels } from 'erxes-api-shared/utils';
 import {
+  IBrandDocument,
   ICompanyDocument,
   ICustomerDocument,
   IRelationDocument,
@@ -66,13 +67,41 @@ import {
   loadUnitClass,
 } from '@/organization/structure/db/models/Structure';
 import {
+  IFieldGroupModel,
+  IFieldModel,
+  loadFieldClass,
+  loadGroupClass,
+} from './modules/forms/db/models/Fields';
+import {
+  IFormModel,
+  IFormSubmissionModel,
+  loadFormClass,
+  loadFormSubmissionClass,
+} from './modules/forms/db/models/Forms';
+import {
+  IFieldDocument,
+  IFieldGroupDocument,
+} from './modules/forms/db/definitions/fields';
+import {
+  IForm,
+  IFormSubmissionDocument,
+} from './modules/forms/db/definitions/forms';
+import { ISegmentDocument } from './modules/segments/db/definitions/segments';
+import {
+  ISegmentModel,
+  loadSegmentClass,
+} from './modules/segments/db/models/Segments';
+import {
   IConformityModel,
   loadConformityClass,
-} from '@/conformities/db/models/Conformities';
+} from './modules/conformities/db/models/Conformities';
 import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
+import { IBrandModel, loadBrandClass } from './modules/brands/db/models';
+
 import { IRelationModel } from '@/relations/db/models/Relations';
 import { loadRelationClass } from '@/relations/db/models/Relations';
 export interface IModels {
+  Brands: IBrandModel;
   Customers: ICustomerModel;
   Companies: ICompanyModel;
   Users: IUserModel;
@@ -89,6 +118,11 @@ export interface IModels {
   Branches: IBranchModel;
   Positions: IPositionModel;
   Apps: IAppModel;
+  Fields: IFieldModel;
+  FieldsGroups: IFieldGroupModel;
+  Forms: IFormModel;
+  FormSubmissions: IFormSubmissionModel;
+  Segments: ISegmentModel;
   Conformities: IConformityModel;
   Relations: IRelationModel;
 }
@@ -99,12 +133,25 @@ export interface IContext extends IMainContext {
   subdomain: string;
 }
 
-export const loadClasses = (db: mongoose.Connection): IModels => {
+export const loadClasses = (
+  db: mongoose.Connection,
+  subdomain: string,
+): IModels => {
   const models = {} as IModels;
 
   models.Users = db.model<IUserDocument, IUserModel>(
     'users',
     loadUserClass(models),
+  );
+
+  models.Brands = db.model<IBrandDocument, IBrandModel>(
+    'brands',
+    loadBrandClass(models),
+  );
+
+  models.Conformities = db.model<IConformityDocument, IConformityModel>(
+    'conformity',
+    loadConformityClass(models, subdomain),
   );
 
   models.Customers = db.model<ICustomerDocument, ICustomerModel>(
@@ -168,9 +215,28 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   );
   models.Apps = db.model<IAppDocument, IAppModel>('apps', loadAppClass(models));
 
+  models.Fields = db.model<IFieldDocument, IFieldModel>(
+    'form_fields',
+    loadFieldClass(models, subdomain),
+  );
+  models.FieldsGroups = db.model<IFieldGroupDocument, IFieldGroupModel>(
+    'fields_groups',
+    loadGroupClass(models),
+  );
+  models.Forms = db.model<IForm, IFormModel>('forms', loadFormClass(models));
+  models.FormSubmissions = db.model<
+    IFormSubmissionDocument,
+    IFormSubmissionModel
+  >('form_submissions', loadFormSubmissionClass(models));
+
+  models.Segments = db.model<ISegmentDocument, ISegmentModel>(
+    'segments',
+    loadSegmentClass(models),
+  );
+
   models.Conformities = db.model<IConformityDocument, IConformityModel>(
     'conformities',
-    loadConformityClass(models),
+    loadConformityClass(models, subdomain),
   );
 
   models.Relations = db.model<IRelationDocument, IRelationModel>(

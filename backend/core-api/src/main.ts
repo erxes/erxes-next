@@ -10,6 +10,8 @@ import { router } from './routes';
 
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 
+import segments from './segments';
+
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3300;
@@ -62,6 +64,7 @@ httpServer.listen(port, async () => {
     hasSubscriptions: false,
     meta: {},
   });
+  segments;
 });
 
 // GRACEFULL SHUTDOWN
