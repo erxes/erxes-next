@@ -1,8 +1,9 @@
 import * as graph from "fbgraph";
 import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-import * as AWS from "aws-sdk";
-import { debugError, debugFacebook  } from '@/integrations/facebook/debuggers';
+import { debugError, debugFacebook,debugBase } from '@/integrations/facebook/debuggers';
+// import { FacebookAdapter } from "botbuilder-adapter-facebook-erxes";
+import { getConfig } from "@/integrations/facebook/commonUtils";
 export const graphRequest = {
   base(method: string, path?: any, accessToken?: any, ...otherParams) {
     // set access token
@@ -367,7 +368,69 @@ export const checkFacebookPages = async (models: IModels, pages: any) => {
   return pages;
 }; 
 
+export const getFacebookUserProfilePic = async (
+  pageId: string,
+  pageTokens: { [key: string]: string },
+  fbId: string,
+  subdomain: string
+): Promise<string | null> => {
+  let pageAccessToken: string;
 
+  try {
+    pageAccessToken = getPageAccessTokenFromMap(pageId, pageTokens);
+  } catch (e) {
+    debugError(`Error occurred while getting page access token: ${e.message}`);
+    throw new Error();
+  }
+
+  try {
+    const response: any = await graphRequest.get(
+      `/${fbId}/picture?height=600`,
+      pageAccessToken
+    );
+
+    // const { UPLOAD_SERVICE_TYPE } = await getFileUploadConfigs(subdomain);
+
+    // if (UPLOAD_SERVICE_TYPE === "AWS") {
+    //   const awsResponse = await uploadMedia(
+    //     subdomain,
+    //     response.location,
+    //     false
+    //   );
+
+    //   return awsResponse as string; // Ensure the return type is string
+    // }
+
+    // Return the profile picture URL directly if not uploading to AWS
+    return response.location as string; // Type assertion to ensure it's a string
+  } catch (e) {
+    debugError(
+      `Error occurred while getting facebook user profile pic: ${e.message}`
+    );
+    return null;
+  }
+};
+// export const getAdapter = async (models: IModels): Promise<any> => {
+//   const accessTokensByPageId = {};
+
+//   const FACEBOOK_VERIFY_TOKEN = await getConfig(
+//     models,
+//     "FACEBOOK_VERIFY_TOKEN"
+//   );
+//   const FACEBOOK_APP_SECRET = await getConfig(models, "FACEBOOK_APP_SECRET");
+
+//   if (!FACEBOOK_VERIFY_TOKEN || !FACEBOOK_APP_SECRET) {
+//     return debugBase("Invalid facebook config");
+//   }
+
+//   return new FacebookAdapter({
+//     verify_token: FACEBOOK_VERIFY_TOKEN,
+//     app_secret: FACEBOOK_APP_SECRET,
+//     getAccessTokenForPage: async (pageId: string) => {
+//       return accessTokensByPageId[pageId];
+//     }
+//   });
+// };
 
 
 

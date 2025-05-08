@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 
 import {
   SettingsPath,
@@ -47,6 +47,10 @@ export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
       <Routes>
+        <Route
+          path="/"
+          element={<Navigate to={`${SettingsPath.Profile}`} replace />}
+        />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
           path={SettingsPath.Experience}
