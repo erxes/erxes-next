@@ -1,16 +1,14 @@
-import express from 'express';
-import cors from 'cors';
+import * as trpcExpress from '@trpc/server/adapters/express';
 import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
+import cors from 'cors';
+import express from 'express';
 import * as http from 'http';
+import mongoose from 'mongoose';
+import { appRouter, createContext } from '~/init-trpc';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
-import * as trpcExpress from '@trpc/server/adapters/express';
-import { appRouter } from '~/init-trpc';
 
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
-
-import { createContext } from '~/init-trpc';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
