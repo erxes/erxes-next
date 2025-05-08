@@ -1,4 +1,5 @@
 import stripAnsi from 'strip-ansi';
+import { customAlphabet } from 'nanoid';
 
 /**
  * Removes the last trailing slash from a string if it exists.
@@ -126,12 +127,11 @@ export const random = (pattern: string, length: number) => {
 
   let chars = '';
 
-
   for (const char of pattern) {
     if (maskMap[char]) {
       chars += maskMap[char];
     } else {
-      chars += char; 
+      chars += char;
     }
   }
 
