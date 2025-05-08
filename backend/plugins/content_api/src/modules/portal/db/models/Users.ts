@@ -19,7 +19,6 @@ import { userSchema } from '@/portal/db/definitions/user';
 
 // import { DEFAULT_MAIL_CONFIG } from '@/portal/constants';
 import {
-  generateRandomPassword,
   handleContacts,
   handleDeviceToken,
   putActivityLog,
@@ -874,7 +873,7 @@ export const loadUserClass = (models: IModels) => {
       { password, portalId, ...doc }: IInvitiation,
     ) {
       if (!password) {
-        password = generateRandomPassword();
+        password = random('Aa0!', 8);
       }
 
       if (password) {
@@ -909,7 +908,7 @@ export const loadUserClass = (models: IModels) => {
       { password, portalId, ...doc }: IInvitiation,
     ) {
       if (!password) {
-        password = generateRandomPassword();
+        password = random('Aa0!', 8);
       }
 
       if (password) {
