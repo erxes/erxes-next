@@ -1,12 +1,12 @@
 import { Button, Dialog } from 'erxes-ui';
 import { useState } from 'react';
-import { VatFormValues, VatKind, VatStatus } from '../types/VatRow';
+import { TVatRowForm, VatKind, VatStatus } from '../types/VatRow';
 import { vatFormSchema } from '../constants/vatFormSchema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { VatForm } from './VatForm';
+import { VatRowForm } from './VatRowForm';
 import { IconPlus } from '@tabler/icons-react';
-import { useAddVat } from '../hooks/useAddVat';
+import { useAddVatRow } from '../hooks/useVatRowAdd';
 
 export const AddVats = () => {
   const [open, setOpen] = useState(false);
@@ -23,14 +23,14 @@ export const AddVats = () => {
         description="Add a new vat"
         className="sm:max-w-2xl"
       >
-        <AddVatForm />
+        <AddVatForm setOpen={setOpen} />
       </Dialog.ContentCombined>
     </Dialog>
   );
 };
 
-export const AddVatForm = () => {
-  const form = useForm<VatFormValues>({
+export const AddVatForm = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
+  const form = useForm<TVatRowForm>({
     resolver: zodResolver(vatFormSchema),
     defaultValues: {
       status: VatStatus.ACTIVE,
@@ -38,11 +38,17 @@ export const AddVatForm = () => {
       kind: VatKind.NORMAL,
     },
   });
-  const { addVat, loading } = useAddVat();
+  const { addVat, loading } = useAddVatRow();
 
-  const onSubmit = (data: VatFormValues) => {
-    addVat({ variables: { ...data } });
+  const onSubmit = (data: TVatRowForm) => {
+    addVat({
+      variables: { ...data },
+      onCompleted: () => {
+        setOpen(false);
+        form.reset();
+      },
+    });
   };
 
-  return <VatForm form={form} onSubmit={onSubmit} loading={loading} />;
+  return <VatRowForm form={form} onSubmit={onSubmit} loading={loading} />;
 };

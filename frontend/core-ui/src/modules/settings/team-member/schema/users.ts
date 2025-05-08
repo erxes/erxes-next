@@ -1,6 +1,24 @@
 import { z } from 'zod';
 
-const USER_SCHEMA = z.object({
+const USER_DETAIL_SCHEMA = z.object({
+  email: z
+    .string({ required_error: 'Required field' })
+    .email({
+      message: 'Please fill a valid email address',
+    })
+    .default(''),
+  groupId: z.string({ required_error: 'Required field' }),
+  channelIds: z.string().array().optional(),
+  unitId: z.string().optional(),
+  departmentId: z.string().optional(),
+  branchId: z.string().optional(),
+  details: z.any(),
+  links: z.any().optional(),
+  groupIds: z.string().array().optional(),
+  brandIds: z.string().array().optional(),
+});
+
+const USER_SUBMIT_SCHEMA = z.object({
   entries: z
     .object({
       email: z
@@ -26,4 +44,4 @@ const USER_SCHEMA = z.object({
     .array(),
 });
 
-export { USER_SCHEMA };
+export { USER_SUBMIT_SCHEMA, USER_DETAIL_SCHEMA };

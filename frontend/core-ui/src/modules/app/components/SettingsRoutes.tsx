@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 
 import {
   SettingsPath,
@@ -35,11 +35,22 @@ const TeamMemberSettings = lazy(() =>
     default: module.TeamMemberPage,
   })),
 );
+const StructureSettings = lazy(() =>
+  import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
+    (module) => ({
+      default: module.StructureSettingsPage,
+    }),
+  ),
+);
 
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
       <Routes>
+        <Route
+          path="/"
+          element={<Navigate to={`${SettingsPath.Profile}`} replace />}
+        />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
           path={SettingsPath.Experience}
@@ -60,6 +71,10 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.TeamMember}
           element={<TeamMemberSettings />}
+        />
+        <Route
+          path={SettingsWorkspacePath.Structure}
+          element={<StructureSettings />}
         />
 
         {getPluginsSettingsRoutes()}

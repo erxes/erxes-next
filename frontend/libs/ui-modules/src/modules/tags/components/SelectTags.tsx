@@ -1,10 +1,4 @@
-import {
-  Combobox,
-  Command,
-  Popover,
-  SelectTree,
-  TextOverflowTooltip,
-} from 'erxes-ui';
+import { Combobox, Command, SelectTree, TextOverflowTooltip } from 'erxes-ui';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
 import React, { useState } from 'react';
@@ -33,31 +27,26 @@ export const SelectTagsProvider = ({
   const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
 
   const handleSelectCallback = (tag: ITag) => {
-    if (!tag) {
-      return;
-    }
+    if (!tag) return;
 
-    let newSelectedTagIds: string[] = [];
+    const isSingleMode = mode === 'single';
+    const multipleValue = (value as string[]) || [];
+    const isSelected = !isSingleMode && multipleValue.includes(tag._id);
 
-    if (mode === 'single') {
-      setSelectedTags([tag]);
-      onValueChange?.(tag._id);
-      newSelectedTagIds = [tag._id];
-    } else {
-      const multipleValue = (value as string[]) || [];
-      const isSelected = multipleValue.includes(tag._id);
+    const newSelectedTagIds = isSingleMode
+      ? [tag._id]
+      : isSelected
+      ? multipleValue.filter((t) => t !== tag._id)
+      : [...multipleValue, tag._id];
 
-      newSelectedTagIds = isSelected
-        ? multipleValue.filter((t) => t !== tag._id)
-        : [...multipleValue, tag._id];
+    const newSelectedTags = isSingleMode
+      ? [tag]
+      : isSelected
+      ? selectedTags.filter((t) => t._id !== tag._id)
+      : [...selectedTags, tag];
 
-      const newSelectedTags = isSelected
-        ? selectedTags.filter((t) => t._id !== tag._id)
-        : [...selectedTags, tag];
-
-      onValueChange?.(newSelectedTagIds);
-      setSelectedTags(newSelectedTags);
-    }
+    setSelectedTags(newSelectedTags);
+    onValueChange?.(isSingleMode ? tag._id : newSelectedTagIds);
 
     if (targetIds) {
       giveTags({
@@ -200,13 +189,12 @@ export const SelectTagsItem = ({
 
 export const TagList = ({
   placeholder,
-  onClose,
   ...props
 }: Omit<React.ComponentProps<typeof TagBadge>, 'onClose'> & {
   placeholder?: string;
-  onClose?: (tagId?: string) => void;
 }) => {
-  const { value, selectedTags, mode } = useSelectTagsContext();
+  const { value, selectedTags, setSelectedTags, mode, onSelect } =
+    useSelectTagsContext();
 
   const selectedTagIds = Array.isArray(value) ? value : [value];
 
@@ -223,7 +211,14 @@ export const TagList = ({
           tag={selectedTags.find((t) => t._id === tagId)}
           renderAsPlainText={mode === 'single'}
           variant="secondary"
-          onClose={() => onClose?.(tagId)}
+          onCompleted={(tag) => {
+            if (selectedTagIds.includes(tag._id)) {
+              setSelectedTags([...selectedTags, tag]);
+            }
+          }}
+          onClose={() =>
+            onSelect?.(selectedTags.find((t) => t._id === tagId) as ITag)
+          }
           {...props}
         />
       ))}

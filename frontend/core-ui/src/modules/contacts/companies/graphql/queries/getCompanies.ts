@@ -4,6 +4,7 @@ import {
   GQL_CURSOR_PARAMS,
   GQL_PAGE_INFO,
 } from 'erxes-ui';
+
 export const GET_COMPANIES = gql`
   query companiesMain(
     $segment: String

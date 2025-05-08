@@ -4,7 +4,7 @@ import { Sheet, Button, Form } from 'erxes-ui';
 export const AddProductCategoryForm = () => {
   return (
     <Sheet>
-      <Sheet.Trigger>
+      <Sheet.Trigger asChild>
         <Button>
           <IconPlus />
           Add Category

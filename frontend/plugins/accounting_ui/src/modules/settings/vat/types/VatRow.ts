@@ -7,6 +7,11 @@ export interface IVatRow {
   number: string;
   kind: VatKind;
   formula: string;
+  formulaText: string;
+  tabCount: number;
+  isBold: boolean;
+  status: string;
+  percent: number;
 }
 
 export enum VatKind {
@@ -21,4 +26,4 @@ export enum VatStatus {
   DELETED = 'deleted',
 }
 
-export type VatFormValues = z.infer<typeof vatFormSchema>;
+export type TVatRowForm = z.infer<typeof vatFormSchema>;

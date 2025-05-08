@@ -24,7 +24,10 @@ router.get('/v3/initial-setup', async (req: Request, res: Response) => {
     });
   }
 
-  const userCount = await models.Users.countDocuments();
+  const userCount = await models.Users.countDocuments({
+    isOwner: true,
+  });
+
   if (userCount === 0) {
     organizationInfo.hasOwner = false;
   } else {

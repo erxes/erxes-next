@@ -108,6 +108,7 @@
     "react-imask": "^7.6.1",
     "react-intersection-observer": "^9.13.1",
     "react-merge-refs": "^2.1.1",
+    "react-page-tracker": "^0.3.1",
     "react-resizable-panels": "^2.1.7",
     "react-router": "^7.1.5",
     "react-router-dom": "^7.1.1",

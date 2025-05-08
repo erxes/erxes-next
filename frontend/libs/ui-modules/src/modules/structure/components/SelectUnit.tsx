@@ -29,7 +29,7 @@ export const SelectUnit = React.forwardRef<
           ref={ref}
           className={cn('w-full flex text-left', props.className)}
         >
-          {value && <SelectUnitValue value={value} />}
+          <SelectUnitValue value={value} />
         </Combobox.Trigger>
         <Combobox.Content>
           <UnitList

@@ -2,9 +2,7 @@ import {
   Button,
   Checkbox,
   Collapsible,
-  CurrencyCode,
   Form,
-  SelectCurrency,
 } from 'erxes-ui';
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form';
 import {
@@ -68,20 +66,7 @@ export const MainSettingsForm = () => {
           </Collapsible.TriggerButton>
 
           <Collapsible.Content className="pt-4 grid grid-cols-2 gap-4">
-            <Form.Field
-              control={form.control}
-              name="MainCurrency"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label htmlFor="mainCurrency">MAIN CURRENCY</Form.Label>
-                  <SelectCurrency
-                    value={field.value as CurrencyCode}
-                    onChange={(value) => field.onChange(value)}
-                    className="w-full"
-                  />
-                </Form.Item>
-              )}
-            />
+
           </Collapsible.Content>
         </Collapsible>
         <Collapsible defaultOpen>

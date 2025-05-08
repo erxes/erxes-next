@@ -18,7 +18,7 @@
     "useUnknownInCatchVariables": false,
     "baseUrl": ".",
     "paths": {
-      "erxes-ui": ["frontend/libs/erxes-ui/src"],
+      "erxes-ui": ["frontend/libs/erxes-ui/src/index.ts"],
       "ui-modules": ["frontend/libs/ui-modules/src"]
     }
   },

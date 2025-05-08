@@ -3,7 +3,7 @@ import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 
 import { IModels } from '~/connectionResolvers';
-import { IProductCategoryParams } from '../../../@types/category';
+import { IProductCategoryParams } from '@/products/@types';
 
 const generateFilter = async (
   models: IModels,

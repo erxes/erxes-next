@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSwitchLanguage } from '~/i18n';
 import { SubmitHandler } from 'react-hook-form';
 import { Button, Form, Spinner, useToast } from 'erxes-ui';

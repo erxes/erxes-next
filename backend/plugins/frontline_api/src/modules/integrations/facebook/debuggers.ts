@@ -1,14 +1,14 @@
-import * as debug from 'debug';
+const debug = require('debug');
 
-export const debugInitFacebook = debug('erxes-facebook:init');
-export const debugDbFacebook = debug('erxes-facebook:db');
+export const debugInit = debug('erxes-facebook:init');
+export const debugDb = debug('erxes-facebook:db');
 
-export const debugBaseFacebook = debug('erxes-facebook:base');
+export const debugBase = debug('erxes-facebook:base');
 export const debugFacebook = debug('erxes-facebook:facebook');
 
-export const debugExternalRequestsFacebook = debug('erxes-facebook:external-requests');
+export const debugExternalRequests = debug('erxes-facebook:external-requests');
 
-export const debugErrorFacebook = debug('erxes-facebook:error');
+export const debugError = debug('erxes-facebook:error');
 
 export const debugRequest = (debugInstance, req) =>
   debugInstance(`

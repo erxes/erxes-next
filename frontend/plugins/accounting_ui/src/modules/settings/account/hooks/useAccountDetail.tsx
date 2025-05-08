@@ -5,7 +5,7 @@ import { GET_ACCOUNT_DETAIL } from '../graphql/queries/getAccounts';
 import { useQuery } from '@apollo/client';
 
 export const useAccountDetail = () => {
-  const [accountId, setAccountId] = useQueryState('account_id');
+  const [accountId, setAccountId] = useQueryState('accountId');
   const accountDetail = useAtomValue(accountDetailAtom);
   const { data, loading } = useQuery(GET_ACCOUNT_DETAIL, {
     variables: { id: accountId },

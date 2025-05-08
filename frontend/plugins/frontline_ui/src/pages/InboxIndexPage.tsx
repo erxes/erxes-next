@@ -1,8 +1,4 @@
-import {
-  IconCaretDownFilled,
-  IconInbox,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconInbox, IconSettings } from '@tabler/icons-react';
 import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { InboxLayout } from '@/inbox/components/InboxLayout';

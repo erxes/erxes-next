@@ -34,8 +34,8 @@ export const AccountingHeader = ({
             Go to settings
           </Link>
         </Button>
+        {children}
       </PageHeader.End>
-      {children}
     </PageHeader>
   );
 };

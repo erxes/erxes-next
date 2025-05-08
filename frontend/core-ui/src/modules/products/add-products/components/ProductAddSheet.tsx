@@ -1,26 +1,56 @@
 import { IconPlus } from '@tabler/icons-react';
 
-import { Button, Sheet } from 'erxes-ui';
+import {
+  Button,
+  Kbd,
+  Sheet,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
+  useSetHotkeyScope,
+} from 'erxes-ui';
+import { useState } from 'react';
+import { AddProductForm } from './AddProductForm';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
+import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+export const ProductAddSheet = () => {
+  const setHotkeyScope = useSetHotkeyScope();
+  const [open, setOpen] = useState<boolean>(false);
+  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
-interface ProductAddSheetProps {
-  children: React.ReactNode;
-  onOpenChange?: (open: boolean) => void;
-  open?: boolean;
-}
-export const ProductAddSheet = ({
-  children,
-  onOpenChange,
-  open,
-}: ProductAddSheetProps) => {
+  const onOpen = () => {
+    setOpen(true);
+    setHotkeyScopeAndMemorizePreviousScope(ProductHotKeyScope.ProductAddSheet);
+  };
+
+  const onClose = () => {
+    setHotkeyScope(PageHotkeyScope.ProductsPage);
+    setOpen(false);
+  };
+
+  useScopedHotkeys(`c`, () => onOpen(), PageHotkeyScope.ProductsPage);
+  useScopedHotkeys(`esc`, () => onClose(), ProductHotKeyScope.ProductAddSheet);
+
   return (
-    <Sheet onOpenChange={onOpenChange} open={open} modal>
+    <Sheet
+      onOpenChange={(open) => (open ? onOpen() : onClose())}
+      open={open}
+      modal
+    >
       <Sheet.Trigger asChild>
         <Button>
           <IconPlus />
           Add product
+          <Kbd>C</Kbd>
         </Button>
       </Sheet.Trigger>
-      <Sheet.View className="sm:max-w-lg p-0">{children}</Sheet.View>
+      <Sheet.View
+        className="sm:max-w-lg p-0"
+        onEscapeKeyDown={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <AddProductForm onOpenChange={setOpen} />
+      </Sheet.View>
     </Sheet>
   );
 };

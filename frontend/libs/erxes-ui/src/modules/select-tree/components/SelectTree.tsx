@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { IconCaretDownFilled, IconCheck } from '@tabler/icons-react';
+import { IconCaretDownFilled } from '@tabler/icons-react';
 
 import {
   Button,
@@ -18,6 +18,7 @@ import { useSelectTreeHide } from 'erxes-ui/modules/select-tree/hooks/useSelectT
 import { hideChildrenAtomFamily } from '../states/selectTreeStates';
 import { useSetAtom } from 'jotai';
 import { ISelectTreeItem } from '../types/selectTreeTypes';
+import { fixOrder } from 'erxes-ui/utils/fixOrder';
 
 export const SelectTreeRoot = ({
   id,
@@ -52,17 +53,14 @@ export const SelectTreeProvider = ({
   length?: number;
   ordered?: boolean;
 }) => {
-  const [hideChildren, setHideChildren] = useState<string[]>([]);
   const setHideChildrenState = useSetAtom(hideChildrenAtomFamily(id));
 
   useEffect(() => {
     setHideChildrenState([]);
-  }, [length]);
+  }, [length, setHideChildrenState]);
 
   return (
-    <SelectTreeContext.Provider
-      value={{ hideChildren, setHideChildren, id, ordered }}
-    >
+    <SelectTreeContext.Provider value={{ id, ordered }}>
       {children}
     </SelectTreeContext.Provider>
   );
@@ -119,18 +117,9 @@ const SelectTreeItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Command.Item> & ISelectTreeItem
 >(({ _id, name, order, hasChildren, selected, ...props }, ref) => {
   const { ordered } = useSelectTreeContext();
-  const fixOrder = () => {
-    let fixedOrder = order;
-    if (name.includes('/')) {
-      fixedOrder = fixedOrder.replace(name, name.replace(/\//g, ''));
-    }
-    if (fixedOrder.endsWith('/')) {
-      fixedOrder = fixedOrder.slice(0, -1);
-    }
-    return fixedOrder;
-  };
+  const fixedOrder = fixOrder({ order, name });
 
-  const { isHiddenByParent } = useSelectTreeHide(fixOrder());
+  const { isHiddenByParent } = useSelectTreeHide(fixedOrder);
 
   if (!ordered) {
     return (
@@ -141,6 +130,7 @@ const SelectTreeItem = React.forwardRef<
         order={order}
         hasChildren={hasChildren}
         selected={selected}
+        ref={ref}
       />
     );
   }
@@ -151,8 +141,8 @@ const SelectTreeItem = React.forwardRef<
 
   return (
     <div className="flex items-center gap-1 w-full">
-      <SelectTreeIndentation order={fixOrder()} />
-      <SelectTreeArrow order={fixOrder()} hasChildren={hasChildren} />
+      <SelectTreeIndentation order={fixedOrder} />
+      <SelectTreeArrow order={fixedOrder} hasChildren={hasChildren} />
       <SelectTreeCommandItem
         {...props}
         _id={_id}
@@ -160,6 +150,7 @@ const SelectTreeItem = React.forwardRef<
         order={order}
         hasChildren={hasChildren}
         selected={selected}
+        ref={ref}
       />
     </div>
   );

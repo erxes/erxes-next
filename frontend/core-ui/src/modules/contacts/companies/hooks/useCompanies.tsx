@@ -3,6 +3,7 @@ import {
   EnumCursorDirection,
   IRecordTableCursorPageInfo,
   mergeCursorData,
+  useMultiQueryState,
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
@@ -12,9 +13,14 @@ import { ICompany } from 'ui-modules';
 export const COMPANIES_PER_PAGE = 30;
 
 export const useCompanies = (options?: QueryHookOptions) => {
-  const { cursor, setCursor } = useRecordTableCursor({
-    sessionKey: 'companies_cursor',
-  });
+  const [{ searchValue, tags, created, updated, lastSeen }] =
+    useMultiQueryState<{
+      searchValue: string;
+      tags: string[];
+      created: string;
+      updated: string;
+      lastSeen: string;
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
 
   const { data, loading, fetchMore } = useQuery<{
     companies: {
@@ -26,7 +32,8 @@ export const useCompanies = (options?: QueryHookOptions) => {
     ...options,
     variables: {
       limit: COMPANIES_PER_PAGE,
-      cursor,
+      searchValue,
+      tags,
       ...options?.variables,
     },
   });
@@ -38,14 +45,7 @@ export const useCompanies = (options?: QueryHookOptions) => {
   }: {
     direction: EnumCursorDirection;
   }) => {
-    if (
-      !validateFetchMore({
-        direction,
-        pageInfo,
-      })
-    ) {
-      return;
-    }
+    if (!validateFetchMore({ direction, pageInfo })) return;
 
     fetchMore({
       variables: {
@@ -56,7 +56,6 @@ export const useCompanies = (options?: QueryHookOptions) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
 
-        setCursor(prev?.companies?.pageInfo?.endCursor);
         return Object.assign({}, prev, {
           companies: mergeCursorData({
             direction,

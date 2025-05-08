@@ -70,7 +70,7 @@ export const companyTrpcRouter = t.router({
         defaultFilter['_id'] = query._id;
       }
 
-      return await models.Companies.findOne(defaultFilter).lean();
+      return models.Companies.findOne(defaultFilter).lean();
     }),
 
     findActiveCompanies: t.procedure
@@ -79,12 +79,7 @@ export const companyTrpcRouter = t.router({
         const { query, fields, skip, limit } = input;
         const { models } = ctx;
 
-        return await models.Companies.findActiveCompanies(
-          query,
-          fields,
-          skip,
-          limit,
-        );
+        return models.Companies.findActiveCompanies(query, fields, skip, limit);
       }),
 
     getCompanyName: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -122,9 +117,7 @@ export const companyTrpcRouter = t.router({
         const { _ids } = input;
         const { models } = ctx;
 
-        const company = await models.Companies.removeCompanies(_ids);
-
-        return company;
+        return models.Companies.removeCompanies(_ids);
       }),
 
     createOrUpdate: t.procedure
@@ -133,12 +126,10 @@ export const companyTrpcRouter = t.router({
         const { doc } = input;
         const { models } = ctx;
 
-        const company = await createOrUpdate({
+        return createOrUpdate({
           collection: models.Companies,
           data: doc,
         });
-
-        return company;
       }),
   }),
 });

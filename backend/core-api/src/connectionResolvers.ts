@@ -2,6 +2,7 @@ import { createGenerateModels } from 'erxes-api-shared/utils';
 import {
   ICompanyDocument,
   ICustomerDocument,
+  IRelationDocument,
   IUserDocument,
   IUserMovementDocument,
 } from 'erxes-api-shared/core-types';
@@ -64,7 +65,13 @@ import {
   loadStructureClass,
   loadUnitClass,
 } from '@/organization/structure/db/models/Structure';
-
+import {
+  IConformityModel,
+  loadConformityClass,
+} from '@/conformities/db/models/Conformities';
+import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
+import { IRelationModel } from '@/relations/db/models/Relations';
+import { loadRelationClass } from '@/relations/db/models/Relations';
 export interface IModels {
   Customers: ICustomerModel;
   Companies: ICompanyModel;
@@ -82,6 +89,8 @@ export interface IModels {
   Branches: IBranchModel;
   Positions: IPositionModel;
   Apps: IAppModel;
+  Conformities: IConformityModel;
+  Relations: IRelationModel;
 }
 
 export interface IContext extends IMainContext {
@@ -158,6 +167,17 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
     loadPositionClass(models),
   );
   models.Apps = db.model<IAppDocument, IAppModel>('apps', loadAppClass(models));
+
+  models.Conformities = db.model<IConformityDocument, IConformityModel>(
+    'conformities',
+    loadConformityClass(models),
+  );
+
+  models.Relations = db.model<IRelationDocument, IRelationModel>(
+    'relations',
+    loadRelationClass(models),
+  );
+
   return models;
 };
 

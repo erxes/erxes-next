@@ -3,4 +3,5 @@ export enum PageHotkeyScope {
   SettingsPage = 'settings-page',
   ProductsPage = 'products-page',
   CustomersPage = 'customers-page',
+  CompaniesPage = 'companies-page',
 }

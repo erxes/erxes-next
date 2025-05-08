@@ -1,9 +1,9 @@
 import { useLocation } from 'react-router';
 import { AddAccount } from '@/settings/account/components/AddAccount';
-import { AccountingFilter } from '@/settings/account/components/AccountsFilter';
+import { AccountsFilter } from '@/settings/account/components/AccountsFilter';
 import { AddAccountCategory } from '@/settings/account/account-categories/components/AddAccountCategory';
 import { AddVats } from '@/settings/vat/components/AddVats';
-import { AddCTax } from '@/settings/ctax/components/AddCTax';
+import { AddCtaxs } from '@/settings/ctax/components/AddCtaxs';
 
 export const AccountingTopbar = () => {
   const { pathname } = useLocation();
@@ -11,7 +11,7 @@ export const AccountingTopbar = () => {
   if (pathname === '/settings/accounting/accounts') {
     return (
       <div className="flex items-center gap-3">
-        <AccountingFilter />
+        <AccountsFilter />
         <AddAccount />
       </div>
     );
@@ -36,7 +36,7 @@ export const AccountingTopbar = () => {
   if (pathname === '/settings/accounting/ctax-rows') {
     return (
       <div className="flex items-center gap-3">
-        <AddCTax />
+        <AddCtaxs />
       </div>
     );
   }

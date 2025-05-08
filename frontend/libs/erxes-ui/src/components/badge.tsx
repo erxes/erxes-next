@@ -3,7 +3,6 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../lib/utils';
-import { stringToHslColor } from '../utils/colors';
 import { Button } from './button';
 import { IconX } from '@tabler/icons-react';
 
@@ -48,9 +47,10 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
               e.stopPropagation();
               onClose();
             }}
-            className="size-3.5 p-0 hover:bg-transparent"
+            className="size-3.5 p-0 hover:bg-transparent flex-none"
+            asChild
           >
-            <IconX className="size-3.5" />
+            <IconX className="size-3.5 flex-none" />
           </Button>
         )}
       </div>

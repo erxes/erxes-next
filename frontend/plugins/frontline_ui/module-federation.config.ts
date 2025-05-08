@@ -15,7 +15,7 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'frontline_ui',
   exposes: {
-    './Config': './src/config.ts',
+    './config': './src/config.ts',
     './inbox': './src/modules/inbox/Main.tsx',
     './ticket': './src/modules/ticket/Main.tsx',
     './inboxSettings': './src/modules/inbox/Settings.tsx',

@@ -53,7 +53,11 @@ export const types = `
     details: JSON
     callData: CloudflareCallsData
   }
-  
+    type IntegrationRespone {
+    list: [Integration],
+    pageInfo: PageInfo
+    totalCount: Int,
+  }
 
   type integrationsTotalCount {
     total: Int
@@ -67,6 +71,11 @@ export const types = `
   type integrationsGetUsedTypes {
     _id: String
     name: String
+  }
+  type IntegrationsGetUsedTypesRespone {
+    list: [integrationsGetUsedTypes],
+    pageInfo: PageInfo
+    totalCount: Int,
   }
   input BotPersistentMenuTypeMessenger {
     _id: String
@@ -164,11 +173,11 @@ export const queries = `
     formLoadType: String,
     sortField: String
     sortDirection: Int
-  ): [Integration]
+  ): IntegrationRespone
 
-  allLeadIntegrations: [Integration]
+  allLeadIntegrations: IntegrationRespone
 
-  integrationsGetUsedTypes: [integrationsGetUsedTypes]
+  integrationsGetUsedTypes: IntegrationsGetUsedTypesRespone
   integrationGetLineWebhookUrl(_id: String!): String
   integrationDetail(_id: String!): Integration
   integrationsTotalCount(kind: String, brandId: String, tag: String, channelId: String, status: String, formLoadType: String): integrationsTotalCount

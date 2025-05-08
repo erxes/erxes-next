@@ -13,7 +13,6 @@ interface TextFieldProps {
 export const FirstNameField = ({
   placeholder,
   value,
-  fieldId,
   field,
   _id,
   className,
@@ -32,10 +31,8 @@ export const FirstNameField = ({
     <TextField
       placeholder={placeholder}
       value={value}
-      field={field}
-      fieldId={fieldId}
-      _id={_id}
-      onSave={onSave}
+      scope={`user-${_id}-${field}`}
+      onValueChange={onSave}
       className={className}
     />
   );

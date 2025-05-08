@@ -6,7 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { accountSchema } from '../constants/accountSchema';
 import { useState } from 'react';
 import { useAccountAdd } from '../hooks/useAccountAdd';
-import { AccountDialog, AccountForm } from './AccountForm';
+import { AccountForm } from './AccountForm';
+import { AccountingDialog } from '@/layout/components/Dialog';
 import { ACCOUNT_DEFAULT_VALUES } from '../constants/accountDefaultValues';
 
 export const AddAccount = () => {
@@ -19,9 +20,9 @@ export const AddAccount = () => {
           Add Account
         </Button>
       </Dialog.Trigger>
-      <AccountDialog title="Add Account" description="Add a new account">
+      <AccountingDialog title="Add Account" description="Add a new account">
         <AddAccountForm setOpen={setOpen} />
-      </AccountDialog>
+      </AccountingDialog>
     </Dialog>
   );
 };
