@@ -103,15 +103,20 @@ const FilterPopover = ({
 
   useScopedHotkeys(`f`, () => setOpen(true), scope);
 
+  useEffect(() => {
+    if (open) {
+      setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover');
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  }, [open]);
+
   return (
     <Popover
       open={open}
       onOpenChange={(op) => {
         setOpen(op);
         op && setView('root');
-        op
-          ? setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover')
-          : goBackToPreviousHotkeyScope();
       }}
       {...props}
     />

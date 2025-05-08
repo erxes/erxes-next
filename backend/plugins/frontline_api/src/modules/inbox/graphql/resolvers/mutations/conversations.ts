@@ -4,7 +4,6 @@ import { IConversationDocument } from '@/inbox/@types/conversations';
 import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels, IContext, IModels } from '~/connectionResolvers';
-import { IIntegrationDocument } from '@/inbox/@types/integrations';
 
 /**
  *  Send conversation to integrations

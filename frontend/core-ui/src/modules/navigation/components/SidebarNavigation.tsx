@@ -6,7 +6,7 @@ import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtom } from 'jotai';
 import { useMemo } from 'react';
-import { MainNavigationButton } from './MainNavigationBar';
+import { NavigationButton } from './NavigationButton';
 import { Icon } from '@tabler/icons-react';
 
 export function SidebarNavigation() {
@@ -70,7 +70,7 @@ export function SidebarNavigationItem({
   return (
     <Collapsible asChild open={isActive} className="group/collapsible">
       <Sidebar.MenuItem key={name}>
-        <MainNavigationButton
+        <NavigationButton
           pathname={pathWithoutUi}
           name={t('nav.' + name)}
           icon={Icon as Icon}

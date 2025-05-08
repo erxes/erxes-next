@@ -13,7 +13,6 @@ import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDet
 import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
 import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
 import { useAtom, useSetAtom } from 'jotai';
-import { useWidget } from 'ui-modules';
 
 const actionTabs = {
   activity: {
@@ -31,9 +30,8 @@ const actionTabs = {
 export const CustomerDetailActions = () => {
   // const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
   const [contactId] = useQueryState<string>('contactId');
-  const { Widget } = useWidget();
 
-  return <Widget contentType="core:customer" contentId={contactId || ''} />;
+  return <div>CustomerDetailActions</div>;
 
   // return (
   //   <>

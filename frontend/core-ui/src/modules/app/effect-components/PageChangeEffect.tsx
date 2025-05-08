@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { useIsMatchingLocation, useSetHotkeyScope } from 'erxes-ui';
 import { AppPath } from '@/types/paths/AppPath';
+import { ContactsPath } from '@/types/paths/ContactsPath';
 
 export const PageChangeEffect = () => {
   const isMatchingLocation = useIsMatchingLocation(AppPath.Index);
@@ -21,6 +22,7 @@ export const PageChangeEffect = () => {
         setHotkeyScope(PageHotkeyScope.CustomersPage);
         break;
       }
+
       case isMatchingLocation(AppPath.Index): {
         setHotkeyScope(PageHotkeyScope.IndexPage);
         break;

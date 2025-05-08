@@ -23,6 +23,7 @@ export function AddCustomerForm({
     resolver: zodResolver(customerFormSchema),
   });
   const { toast } = useToast();
+
   const onSubmit = (data: CustomerFormType) => {
     customersAdd({
       variables: data,
