@@ -3,7 +3,6 @@ import { useStructureDetails } from '../hooks/useStructureDetails';
 import { useStructureDetailsForm } from '../hooks/useStructureDetailsForm';
 import { useEffect } from 'react';
 import { AssignMember } from 'ui-modules';
-import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 
 export const Structure = () => {
   const { structureDetail } = useStructureDetails();
@@ -14,10 +13,15 @@ export const Structure = () => {
   console.log('structureDetail', structureDetail);
 
   useEffect(() => {
-    if (structureDetail) {
+    const currentValues = methods.getValues();
+
+    if (
+      structureDetail &&
+      JSON.stringify(currentValues) !== JSON.stringify(structureDetail)
+    ) {
       methods.reset(structureDetail);
     }
-  }, [structureDetail, methods]);
+  }, [structureDetail]);
 
   return (
     <ScrollArea className="w-full min-h-svh">

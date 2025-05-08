@@ -15,8 +15,13 @@ import {
   Switch,
   Table,
   useQueryState,
+  RecordTable,
+  RecordTablePopover,
+  RecordTableCellTrigger,
+  RecordTableCellDisplay,
+  Input,
+  RecordTableCellContent,
 } from 'erxes-ui';
-import { RecordTable } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import dayjs from 'dayjs';
@@ -131,7 +136,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             if (status === 'Verified') {
               return <Badge variant={'success'}>{status}</Badge>;
             } else {
-              return <Badge variant={'destructive'}>{status}</Badge>;
+              return <Badge variant={'destructive'}>{'Unverified'}</Badge>;
             }
           }}
         />
@@ -144,7 +149,16 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     header: () => <RecordTable.InlineHead icon={IconMail} label="Email" />,
     cell: ({ cell }) => {
       const { email, _id } = cell.row.original;
-      return <TextFieldUser field="email" _id={_id} value={email as string} />;
+      return (
+        <RecordTablePopover>
+          <RecordTableCellTrigger asChild>
+            <RecordTableCellDisplay>{email}</RecordTableCellDisplay>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Input key={_id} value={email} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
     },
   },
   ...['employeeId'].map((field) => ({
