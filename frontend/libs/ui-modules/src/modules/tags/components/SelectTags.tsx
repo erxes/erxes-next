@@ -226,6 +226,14 @@ export const TagList = ({
   );
 };
 
+export const SelectTagsValue = () => {
+  const { selectedTags } = useSelectTagsContext();
+
+  if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
+
+  return <TagList />;
+};
+
 export const SelectTagsContent = () => {
   const { newTagName } = useSelectTagsContext();
 
@@ -240,5 +248,5 @@ export const SelectTags = Object.assign(SelectTagsProvider, {
   Content: SelectTagsContent,
   Command: SelectTagsCommand,
   Item: SelectTagsItem,
-  Value: TagList,
+  Value: SelectTagsValue,
 });
