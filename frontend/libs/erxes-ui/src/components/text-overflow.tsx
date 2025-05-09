@@ -11,7 +11,7 @@ export const TextOverflowTooltip = forwardRef<
   HTMLSpanElement,
   TextOverflowTooltipProps
 >(({ value, className }, forwardedRef) => {
-  const innerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLSpanElement>(null);
   const textRef = forwardedRef || innerRef;
   const [isOverflowing, setIsOverflowing] = useState(false);
 

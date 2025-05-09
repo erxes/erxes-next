@@ -683,12 +683,6 @@ importers:
         specifier: workspace:^
         version: link:../../erxes-api-shared
 
-  backend/plugins/sales_api:
-    dependencies:
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../../erxes-api-shared
-
   backend/plugins/sample_api:
     dependencies:
       erxes-api-shared:
@@ -876,24 +870,24 @@ packages:
     resolution: {integrity: sha512-0hKEzLhpw+ZTAfNJyRrn6s+V0nDWzXk9OjBr2TiGIu0OfMr5s2V4FpKLTAK3Ca5r5OKLbf4hkOGDPyiRjie/jA==}
     engines: {node: '>=18.0.0'}
 
-  '@azure/msal-browser@4.11.1':
-    resolution: {integrity: sha512-jPxASelqmP/0R1jZuYW8cboba95M9jpUi2ZqzgftddlAIRZA9KL/YaESuT55zu9+BIPS5Eo2kuhy3q2jjU3whg==}
+  '@azure/msal-browser@4.12.0':
+    resolution: {integrity: sha512-WD1lmVWchg7wn1mI7Tr4v7QPyTwK+8Nuyje3jRpOFENLRLEBsdK8VVdTw3C+TypZmYn4cOAdj3zREnuFXgvfIA==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@14.16.0':
     resolution: {integrity: sha512-1KOZj9IpcDSwpNiQNjt0jDYZpQvNZay7QAEi/5DLubay40iGYtLzya/jbjRPLyOTZhEKyL1MzPuw2HqBCjceYA==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.5.2':
-    resolution: {integrity: sha512-+G85T6oA6i4ubzjOw4BpWd8QCG2FunYN4jaz96gw3SUd8+89vwuiqLg6mtnm/lkPC95bayD+CwuwFn9wvhQGow==}
+  '@azure/msal-common@15.6.0':
+    resolution: {integrity: sha512-EotmBz42apYGjqiIV9rDUdptaMptpTn4TdGf3JfjLvFvinSe9BJ6ywU92K9ky+t/b0ghbeTSe9RfqlgLh8f2jA==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-node@2.16.2':
     resolution: {integrity: sha512-An7l1hEr0w1HMMh1LU+rtDtqL7/jw74ORlc9Wnh06v7TU/xpG39/Zdr1ZJu3QpjUfKJ+E0/OXMW8DRSWTlh7qQ==}
     engines: {node: '>=16'}
 
-  '@azure/msal-node@3.5.2':
-    resolution: {integrity: sha512-mt97ieL+IpD/7Hj7Q6pGTPk3dBgvhkOV1HYyH+PkOakhbOOCEb9flAteDgBfADRXBsYJZT+ZlEbPJa4IDn9HZw==}
+  '@azure/msal-node@3.5.3':
+    resolution: {integrity: sha512-c5mifzHX5mwm5JqMIlURUyp6LEEdKF1a8lmcNRLBo0lD7zpSYPHupa4jHyhJyg9ccLwszLguZJdk2h3ngnXwNw==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.26.2':
@@ -12791,8 +12785,8 @@ snapshots:
       '@azure/core-tracing': 1.2.0
       '@azure/core-util': 1.12.0
       '@azure/logger': 1.2.0
-      '@azure/msal-browser': 4.11.1
-      '@azure/msal-node': 3.5.2
+      '@azure/msal-browser': 4.12.0
+      '@azure/msal-node': 3.5.3
       open: 10.1.1
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -12805,13 +12799,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/msal-browser@4.11.1':
+  '@azure/msal-browser@4.12.0':
     dependencies:
-      '@azure/msal-common': 15.5.2
+      '@azure/msal-common': 15.6.0
 
   '@azure/msal-common@14.16.0': {}
 
-  '@azure/msal-common@15.5.2': {}
+  '@azure/msal-common@15.6.0': {}
 
   '@azure/msal-node@2.16.2':
     dependencies:
@@ -12819,9 +12813,9 @@ snapshots:
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
-  '@azure/msal-node@3.5.2':
+  '@azure/msal-node@3.5.3':
     dependencies:
-      '@azure/msal-common': 15.5.2
+      '@azure/msal-common': 15.6.0
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
@@ -18915,7 +18909,7 @@ snapshots:
       botframework-connector: 4.23.2(debug@4.4.0)(encoding@0.1.13)
       botframework-schema: 4.23.2
       uuid: 10.0.0
-      zod: 3.24.2
+      zod: 3.23.8
     transitivePeerDependencies:
       - debug
       - encoding
@@ -18942,7 +18936,7 @@ snapshots:
       fs-extra: 11.3.0
       htmlparser2: 9.1.0
       uuid: 10.0.0
-      zod: 3.24.2
+      zod: 3.23.8
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -18967,7 +18961,7 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
       openssl-wrapper: 0.3.4
       rsa-pem-from-mod-exp: 0.8.6
-      zod: 3.24.2
+      zod: 3.23.8
     transitivePeerDependencies:
       - debug
       - encoding
@@ -18977,7 +18971,7 @@ snapshots:
     dependencies:
       adaptivecards: 1.2.3
       uuid: 10.0.0
-      zod: 3.24.2
+      zod: 3.23.8
 
   botframework-streaming@4.23.2:
     dependencies:

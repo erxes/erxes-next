@@ -1,4 +1,9 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAMS,
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
 export const GET_BRANCHES = gql`
   query branches(
@@ -43,17 +48,15 @@ export const GET_BRANCHES_MAIN = gql`
   query BranchesMain(
     $ids: [String]
     $excludeIds: Boolean
-    $perPage: Int
-    $page: Int
     $searchValue: String
     $status: String
     $withoutUserFilter: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
     branchesMain(
       ids: $ids
       excludeIds: $excludeIds
-      perPage: $perPage
-      page: $page
+      ${GQL_CURSOR_PARAMS}
       searchValue: $searchValue
       status: $status
       withoutUserFilter: $withoutUserFilter
@@ -65,8 +68,7 @@ export const GET_BRANCHES_MAIN = gql`
         order
         userCount
       }
-      totalCount
-      totalUsersCount
+      ${GQL_PAGE_INFO}
     }
   }
 `;
