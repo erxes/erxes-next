@@ -58,7 +58,7 @@ interface ICommontTr {
   modifiedBy?: string;
 
   createdAt?: Date;
-  modifiedAt?: Date;
+  updatedAt?: Date;
 
   followInfos?: any;
 

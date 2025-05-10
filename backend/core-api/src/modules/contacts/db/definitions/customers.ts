@@ -22,7 +22,7 @@ export const customerSchema = new Schema(
     },
 
     createdAt: { type: Date, label: 'Created at', esType: 'date' },
-    modifiedAt: { type: Date, label: 'Modified at', esType: 'date' },
+    updatedAt: { type: Date, label: 'Modified at', esType: 'date' },
     avatar: { type: String, optional: true, label: 'Avatar' },
 
     firstName: { type: String, label: 'First name', optional: true },

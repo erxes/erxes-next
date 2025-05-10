@@ -3,7 +3,7 @@ export const types = `
     _id: String
     state: String
     createdAt: Date
-    modifiedAt: Date
+    updatedAt: Date
     avatar: String
     integrationId: String
     firstName: String

@@ -42,7 +42,7 @@ export const ADD_CUSTOMERS = gql`
       emails
       primaryPhone
       phones
-      modifiedAt
+      updatedAt
       position
       department
       leadStatus

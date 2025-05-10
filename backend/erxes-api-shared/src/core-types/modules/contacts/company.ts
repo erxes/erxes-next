@@ -46,7 +46,7 @@ export interface ICompanyDocument extends ICompany, Document {
   _id: string;
   status?: string;
   createdAt: Date;
-  modifiedAt: Date;
+  updatedAt: Date;
   searchText: string;
   score?: number;
 }
