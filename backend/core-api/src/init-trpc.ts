@@ -1,7 +1,6 @@
 import { initTRPC } from '@trpc/server';
 
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { OpenApiMeta } from 'trpc-openapi';
 
 import { getSubdomain } from 'erxes-api-shared/utils';
 
@@ -25,20 +24,7 @@ export const createContext = async ({
 
 export type ITRPCContext = Awaited<ReturnType<typeof createContext>>;
 
-const t = initTRPC
-  .meta<OpenApiMeta>()
-  .context<ITRPCContext>()
-  .create({
-    errorFormatter({ shape, error }) {
-      return {
-        ...shape,
-        data: {
-          ...shape.data,
-          customMessage: error.message,
-        },
-      };
-    },
-  });
+const t = initTRPC.context<ITRPCContext>().create({});
 
 export const appRouter = t.mergeRouters(
   contactRouter,
