@@ -1,6 +1,5 @@
 import { Document } from 'mongoose';
-import { IRule, IAttachment } from 'erxes-api-shared/core-types/common';
-
+import { IRule, IAttachment } from 'erxes-api-shared/core-types';
 export interface ISubmission extends Document {
   customerId: string;
   submittedAt: Date;
