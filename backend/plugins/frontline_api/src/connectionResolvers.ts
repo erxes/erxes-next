@@ -10,11 +10,11 @@ import { IFacebookLogDocument } from '@/integrations/facebook/@types/logs';
 import { IFacebookAccountDocument } from '@/integrations/facebook/@types/accounts';
 import { IFacebookCustomerDocument } from '@/integrations/facebook/@types/customers';
 import { IFacebookConversationDocument } from '@/integrations/facebook/@types/conversations';
-import { IFacebookConversationMessageDocument } from '@/integrations/facebook/@types/conversationMessages'
-import { IFacebookCommentConversationDocument } from '@/integrations/facebook/@types/comment_conversations'
-import { IFacebookCommentConversationReplyDocument } from '@/integrations/facebook/@types/comment_conversations_reply'
-import { IFacebookPostConversationDocument } from '@/integrations/facebook/@types/postConversations'
-import { IFacebookConfigDocument } from '@/integrations/facebook/@types/config'
+import { IFacebookConversationMessageDocument } from '@/integrations/facebook/@types/conversationMessages';
+import { IFacebookCommentConversationDocument } from '@/integrations/facebook/@types/comment_conversations';
+import { IFacebookCommentConversationReplyDocument } from '@/integrations/facebook/@types/comment_conversations_reply';
+import { IFacebookPostConversationDocument } from '@/integrations/facebook/@types/postConversations';
+import { IFacebookConfigDocument } from '@/integrations/facebook/@types/config';
 import { IChannelModel, loadChannelClass } from '@/inbox/db/models/Channels';
 import {
   IIntegrationModel,
@@ -23,21 +23,51 @@ import {
 import {
   IConversationModel,
   loadClass as loadConversationClass,
-} from '~/modules/inbox/db/models/Conversations';
+} from '@/inbox/db/models/Conversations';
 import {
   IMessageModel,
-  loadClass as loadMessageClass
-} from "@/inbox/db/models/conversationMessages";
-import { IFacebookIntegrationModel, loadFacebookIntegrationClass } from '@/integrations/facebook/db/models/Integrations';
-import { IFacebookAccountModel, loadFacebookAccountClass } from '@/integrations/facebook/db/models/Accounts';
-import { IFacebookCustomerModel, loadFacebookCustomerClass } from '@/integrations/facebook/db/models/Customers';
-import { IFacebookConversationModel, loadFacebookConversationClass } from '@/integrations/facebook/db/models/Conversations';
-import { IFacebookConversationMessageModel, loadFacebookConversationMessageClass } from '@/integrations/facebook/db/models/ConversationMessages';
-import { IFacebookCommentConversationModel, loadFacebookCommentConversationClass } from '@/integrations/facebook/db/models/Comment_conversations';
-import { IFacebookCommentConversationReplyModel, loadFacebookCommentConversationReplyClass } from '@/integrations/facebook/db/models/Comment_conversations_reply';
-import { IFacebookLogModel, loadFacebookLogClass } from '@/integrations/facebook/db/models/Logs';
-import { IFacebookPostConversationModel, loadFacebookPostConversationClass } from '@/integrations/facebook/db/models/PostConversations';
-import { IFacebookConfigModel, loadFacebookConfigClass } from '@/integrations/facebook/db/models/Config';
+  loadClass as loadMessageClass,
+} from '@/inbox/db/models/ConversationMessages';
+import {
+  IFacebookIntegrationModel,
+  loadFacebookIntegrationClass,
+} from '@/integrations/facebook/db/models/Integrations';
+import {
+  IFacebookAccountModel,
+  loadFacebookAccountClass,
+} from '@/integrations/facebook/db/models/Accounts';
+import {
+  IFacebookCustomerModel,
+  loadFacebookCustomerClass,
+} from '@/integrations/facebook/db/models/Customers';
+import {
+  IFacebookConversationModel,
+  loadFacebookConversationClass,
+} from '@/integrations/facebook/db/models/Conversations';
+import {
+  IFacebookConversationMessageModel,
+  loadFacebookConversationMessageClass,
+} from '@/integrations/facebook/db/models/ConversationMessages';
+import {
+  IFacebookCommentConversationModel,
+  loadFacebookCommentConversationClass,
+} from '@/integrations/facebook/db/models/Comment_conversations';
+import {
+  IFacebookCommentConversationReplyModel,
+  loadFacebookCommentConversationReplyClass,
+} from '@/integrations/facebook/db/models/Comment_conversations_reply';
+import {
+  IFacebookLogModel,
+  loadFacebookLogClass,
+} from '@/integrations/facebook/db/models/Logs';
+import {
+  IFacebookPostConversationModel,
+  loadFacebookPostConversationClass,
+} from '@/integrations/facebook/db/models/PostConversations';
+import {
+  IFacebookConfigModel,
+  loadFacebookConfigClass,
+} from '@/integrations/facebook/db/models/Config';
 
 export interface IModels {
   Channels: IChannelModel;
@@ -54,7 +84,6 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
-  
 }
 
 export interface IContext extends IMainContext {
@@ -81,53 +110,59 @@ export const loadClasses = (
     loadConversationClass(models, subdomain),
   );
   models.ConversationMessages = db.model<IMessageDocument, IMessageModel>(
-    "conversation_messages",
-    loadMessageClass(models)
+    'conversation_messages',
+    loadMessageClass(models),
   );
-  models.FacebookAccounts = db.model<IFacebookAccountDocument, IFacebookAccountModel>(
-    'facebook_accounts',
-    loadFacebookAccountClass(models),
-  );
-  models.FacebookCustomers = db.model<IFacebookCustomerDocument, IFacebookCustomerModel>(
-    'customers_facebooks',
-    loadFacebookCustomerClass(models),
-  );
-    models.FacebookConversations = db.model<IFacebookConversationDocument, IFacebookConversationModel>(
-    'conversations_facebooks',
-    loadFacebookConversationClass(models)
-  );
-    models.FacebookConversationMessages = db.model<
+  models.FacebookAccounts = db.model<
+    IFacebookAccountDocument,
+    IFacebookAccountModel
+  >('facebook_accounts', loadFacebookAccountClass(models));
+  models.FacebookCustomers = db.model<
+    IFacebookCustomerDocument,
+    IFacebookCustomerModel
+  >('customers_facebooks', loadFacebookCustomerClass(models));
+  models.FacebookConversations = db.model<
+    IFacebookConversationDocument,
+    IFacebookConversationModel
+  >('conversations_facebooks', loadFacebookConversationClass(models));
+  models.FacebookConversationMessages = db.model<
     IFacebookConversationMessageDocument,
     IFacebookConversationMessageModel
-  >('conversation_messages_facebooks', loadFacebookConversationMessageClass(models));
-  
-    models.FacebookCommentConversation = db.model<
+  >(
+    'conversation_messages_facebooks',
+    loadFacebookConversationMessageClass(models),
+  );
+
+  models.FacebookCommentConversation = db.model<
     IFacebookCommentConversationDocument,
     IFacebookCommentConversationModel
-  >('comment_conversations_facebook', loadFacebookCommentConversationClass(models));
+  >(
+    'comment_conversations_facebook',
+    loadFacebookCommentConversationClass(models),
+  );
   models.FacebookCommentConversationReply = db.model<
     IFacebookCommentConversationReplyDocument,
     IFacebookCommentConversationReplyModel
   >(
     'comment_conversations_reply_facebook',
-    loadFacebookCommentConversationReplyClass(models)
+    loadFacebookCommentConversationReplyClass(models),
   );
-  models.FacebookIntegrations = db.model<IFacebookIntegrationDocument, IFacebookIntegrationModel>(
-    'facebook_integrations',
-    loadFacebookIntegrationClass(models)
-  );
+  models.FacebookIntegrations = db.model<
+    IFacebookIntegrationDocument,
+    IFacebookIntegrationModel
+  >('facebook_integrations', loadFacebookIntegrationClass(models));
   models.FacebookLogs = db.model<IFacebookLogDocument, IFacebookLogModel>(
     'facebook_logs',
-    loadFacebookLogClass(models)
+    loadFacebookLogClass(models),
   );
   models.FacebookPostConversations = db.model<
     IFacebookPostConversationDocument,
     IFacebookPostConversationModel
   >('posts_conversations_facebooks', loadFacebookPostConversationClass(models));
-  models.FacebookConfigs = db.model<IFacebookConfigDocument, IFacebookConfigModel>(
-    'facebook_configs',
-    loadFacebookConfigClass(models)
-  );
+  models.FacebookConfigs = db.model<
+    IFacebookConfigDocument,
+    IFacebookConfigModel
+  >('facebook_configs', loadFacebookConfigClass(models));
   return models;
 };
 
