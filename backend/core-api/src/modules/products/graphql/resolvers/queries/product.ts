@@ -160,7 +160,7 @@ export const productQueries = {
       });
     }
 
-    return await models.Products.find(filter).countDocuments();
+    return await models.Products.countDocuments(filter);
   },
 
   async productSimilarities(

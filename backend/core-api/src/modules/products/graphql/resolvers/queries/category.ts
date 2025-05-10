@@ -87,7 +87,7 @@ export const categoryQueries = {
   ) {
     const filter = await generateFilter(models, params);
 
-    return models.ProductCategories.find(filter).countDocuments();
+    return models.ProductCategories.countDocuments(filter);
   },
 
   async productCategoryDetail(

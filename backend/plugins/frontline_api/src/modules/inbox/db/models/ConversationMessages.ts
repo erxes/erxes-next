@@ -1,8 +1,11 @@
 import * as strip from 'strip';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { messageSchema, } from '@/inbox/db/definitions/conversationMessages';
-import {  IMessage, IMessageDocument, } from '@/inbox/@types/conversationMessages';
+import { messageSchema } from '@/inbox/db/definitions/conversationMessages';
+import {
+  IMessage,
+  IMessageDocument,
+} from '@/inbox/@types/conversationMessages';
 import { MESSAGE_TYPES } from '@/inbox/db/definitions/constants';
 
 export interface IMessageModel extends Model<IMessageDocument> {
@@ -44,9 +47,9 @@ export const loadClass = (models: IModels) => {
         createdAt: doc.createdAt || new Date(),
       });
 
-      const messageCount = await models.ConversationMessages.find({
+      const messageCount = await models.ConversationMessages.countDocuments({
         conversationId: message.conversationId,
-      }).countDocuments();
+      });
 
       // update conversation ====
       const convDocModifier: {
