@@ -122,10 +122,7 @@ export const customerSchema = new Schema(
     },
   },
   {
-    timestamps: {
-      createdAt: 'createdAt',
-      updatedAt: 'modifiedAt',
-    },
+    timestamps: true,
   },
 );
 
