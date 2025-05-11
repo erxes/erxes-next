@@ -1,6 +1,10 @@
 import { DocumentNode, gql, useQuery } from '@apollo/client';
 import { Combobox, Command, Popover } from 'erxes-ui/components';
-import { getCursorPageInfo, useRecordTableCursor } from 'erxes-ui/modules';
+import {
+  mergeCursorData,
+  useRecordTableCursor,
+  EnumCursorDirection,
+} from 'erxes-ui';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import formSchema from '../components/form/schema';
@@ -16,6 +20,7 @@ type CommandProps = {
   focusOnMount: any;
   nullable: boolean;
   onSelect: (optionId: string | null) => void;
+  initialValue: string;
 };
 
 const useList = (
@@ -24,13 +29,13 @@ const useList = (
   searchValue: string,
 ) => {
   const PER_PAGE = 30;
-  const { cursor, setCursor } = useRecordTableCursor({
-    sessionKey: 'contacts_cursor',
+  const { cursor } = useRecordTableCursor({
+    sessionKey: 'property_cursor',
   });
   const { data, loading, error, fetchMore } = useQuery(query, {
     variables: {
       limit: PER_PAGE,
-      //   cursor,
+      cursor,
       searchValue: searchValue ?? undefined,
     },
   });
@@ -69,23 +74,20 @@ const useList = (
           const { pageInfo: prevPageInfo, list: prevList = [] } =
             (prev || {})[queryName] || {};
 
-          setCursor(prevPageInfo?.endCursor);
+          // setCursor(prevPageInfo?.endCursor);
 
           return Object.assign({}, prev, {
-            [queryName]: {
-              ...(prev || {})[queryName],
-              ...(fetchMoreResult || {})[queryName],
-              pageInfo: getCursorPageInfo({
-                direction,
-                fetchMorePageInfo,
-                prevPageInfo,
-              }),
-              totalCount,
-              list:
-                direction === 'forward'
-                  ? [...prevList, ...fetchMoreList]
-                  : [...fetchMoreList, ...prevList],
-            },
+            [queryName]: mergeCursorData({
+              direction: EnumCursorDirection.FORWARD,
+              fetchMoreResult: {
+                pageInfo: fetchMorePageInfo,
+                list: fetchMoreList,
+              },
+              prevResult: {
+                pageInfo: prevPageInfo,
+                list: prevList,
+              },
+            }),
           });
         },
       });
@@ -108,9 +110,10 @@ export const SelectCommand = ({
   focusOnMount,
   nullable,
   onSelect,
+  initialValue,
 }: CommandProps) => {
   const [search, setSearch] = useState('');
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(initialValue || '');
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [debouncedSearch] = useDebounce(search, 500);
@@ -152,6 +155,7 @@ export const SelectCommand = ({
   //       },
   //     });
   //   };
+  console.log({ selectedValue });
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -169,7 +173,11 @@ export const SelectCommand = ({
                 key={option.value}
                 value={option.value}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === selectedValue ? '' : currentValue);
+                  setValue(
+                    currentValue && currentValue === selectedValue
+                      ? ''
+                      : currentValue,
+                  );
                   setOpen(false);
                 }}
               >

@@ -26,18 +26,27 @@ import {
   Card,
   Input,
   ScrollArea,
+  Sheet,
   Skeleton,
   Tabs,
   // TabsContent, TabsList, TabsTrigger
 } from 'erxes-ui/components';
 import { TablerIcon } from 'erxes-ui/icons';
-import { gql, useQuery } from '@apollo/client';
+import { ApolloError, gql, useQuery } from '@apollo/client';
 import { ConstantsQueryResponse } from '../../types';
 import queries from '../../graphql/queries';
-import { IconHandClick, IconSettingsBolt } from '@tabler/icons-react';
+import {
+  IconArrowsDiagonalMinimize,
+  IconHandClick,
+  IconMinimize,
+  IconMinus,
+  IconSettingsBolt,
+} from '@tabler/icons-react';
+import ErrorState from './common/EmptyState';
+import { useFormContext } from 'react-hook-form';
+import { cn } from 'erxes-ui/lib';
 
 const TabsContent = (
-  loading: boolean,
   nodeType: string,
   list: any[],
   onDragStart: (
@@ -49,10 +58,6 @@ const TabsContent = (
   ) => void,
   searchValue: string,
 ) => {
-  if (loading) {
-    return <LoadingSkeleton />;
-  }
-
   if (searchValue) {
     list = list.filter((item) => new RegExp(searchValue, 'i').test(item.label));
   }
@@ -115,8 +120,31 @@ const LoadingSkeleton = () => {
   );
 };
 
+const TabContentWrapper = (
+  loading: boolean,
+  error: ApolloError | undefined,
+  refetch: () => void,
+  { type, list, onDragStart, searchValue }: any,
+) => {
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+  if (error) {
+    return (
+      <ErrorState
+        errorCode={error.message}
+        errorDetails={error.stack}
+        onRetry={refetch}
+      />
+    );
+  }
+  return <div>{TabsContent(type, list, onDragStart, searchValue)}</div>;
+};
+
 export default ({ constants }: any) => {
-  const { data, loading } = useQuery<ConstantsQueryResponse>(
+  const { watch, setValue } = useFormContext();
+  const isMinimized = watch('isMinimized');
+  const { data, loading, error, refetch } = useQuery<ConstantsQueryResponse>(
     gql(queries.automationConstants),
     { fetchPolicy: 'network-only' },
   );
@@ -148,11 +176,16 @@ export default ({ constants }: any) => {
   // Filter templates based on search term and active module
 
   return (
-    <aside className="border-r text-xs ">
-      <div className="w-80 border-l bg-white flex flex-col">
+    <div
+      className={cn(
+        'absolute top-0 right-0  w-80 h-full  border rounded-lg transition-transform duration-300 bg-white z-10',
+        isMinimized ? 'invisible' : 'visible',
+      )}
+    >
+      <div className="flex h-full flex-col bg-background shadow-md">
         <div className="p-4 border-b">
           <h3 className="font-medium mb-3">Workflow Components</h3>
-          <div className="relative">
+          <div className="relative flex items-center">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search components..."
@@ -162,69 +195,38 @@ export default ({ constants }: any) => {
             />
           </div>
         </div>
-        {/* 
-        <div className="border-b p-2 flex flex-wrap gap-1">
-          <Button
-            variant={activeModule === null ? 'default' : 'outline'}
-            size="sm"
-            className="text-xs h-7"
-            onClick={() => setActiveModule(null)}
-          >
-            All
-          </Button>
-          <Button
-            variant={'ghost'}
-            size={'sm'}
-            onClick={(s) => setActiveTemplates(!activeTemplates)}
-          >
-            <TablerIcon name={`IconDots`} />
-          </Button>
-          {activeTemplates &&
-            Object.entries(businessModules).map(([key, value]) => (
-              <Button
-                key={key}
-                variant={activeModule === key ? 'default' : 'outline'}
-                size="sm"
-                className="text-xs h-7"
-                onClick={() =>
-                  setActiveModule(activeModule === key ? null : key)
-                }
-              >
-                {value.icon}
-                <span className="ml-1">{value.label}</span>
-              </Button>
-            ))}
-        </div> */}
 
         <Tabs defaultValue="trigger" className="flex-1 flex flex-col">
           <div className="px-4 pt-2">
-            <Card.Title></Card.Title>
-            <Tabs.List className="w-full">
-              <Tabs.Trigger value="trigger" className="flex-1">
-                <IconHandClick />
+            <Tabs.List size="sm" className="w-full">
+              <Tabs.Trigger size="sm" value="trigger" className="flex-1">
+                {/* <IconHandClick /> */}
                 Triggers
               </Tabs.Trigger>
-              <Tabs.Trigger value="action" className="flex-1">
-                <IconSettingsBolt />
+              <Tabs.Trigger size="sm" value="action" className="flex-1">
+                {/* <IconSettingsBolt /> */}
                 Actions
               </Tabs.Trigger>
             </Tabs.List>
           </div>
 
-          <ScrollArea className="flex-1 h-full">
-            {[
-              { type: 'trigger', list: triggersConst },
-              { type: 'action', list: actionsConst },
-            ].map(({ type, list = [] }) => (
-              <Tabs.Content value={type} className="p-4 mt-0">
-                <div className="space-y-2">
-                  {TabsContent(loading, type, list, onDragStart, searchValue)}
-                </div>
-              </Tabs.Content>
-            ))}
-          </ScrollArea>
+          {[
+            { type: 'trigger', list: triggersConst },
+            { type: 'action', list: actionsConst },
+          ].map(({ type, list = [] }) => (
+            <Tabs.Content value={type} className=" flex-1 p-4 mt-0 w-full">
+              <div className="space-y-2">
+                {TabContentWrapper(loading, error, refetch, {
+                  type,
+                  list,
+                  onDragStart,
+                  searchValue,
+                })}
+              </div>
+            </Tabs.Content>
+          ))}
         </Tabs>
       </div>
-    </aside>
+    </div>
   );
 };

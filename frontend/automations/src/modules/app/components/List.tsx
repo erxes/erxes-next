@@ -5,7 +5,7 @@ const List = () => {
   return (
     <>
       <Button asChild>
-        <Link to={'/automations/create'}>Add</Link>
+        <Link to={'/automations/edit/1'}>Add</Link>
       </Button>
     </>
   );

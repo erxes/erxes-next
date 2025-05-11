@@ -1,7 +1,7 @@
 {
   "name": "automations_ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "frontend/automations_ui/src",
+  "sourceRoot": "frontend/automations/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -12,9 +12,9 @@
       "options": {
         "target": "web",
         "outputPath": "dist/frontend/automations",
-        "main": "frontend/automations_ui/src/main.ts",
-        "tsConfig": "frontend/automations_ui/tsconfig.app.json",
-        "rspackConfig": "frontend/automations_ui/rspack.config.ts",
+        "main": "frontend/automations/src/main.ts",
+        "tsConfig": "frontend/automations/tsconfig.app.json",
+        "rspackConfig": "frontend/automations/rspack.config.ts",
         "assets": []
       },
       "configurations": {
@@ -25,7 +25,7 @@
           "mode": "production",
           "optimization": true,
           "sourceMap": false,
-          "rspackConfig": "frontend/automations_ui/rspack.config.prod.ts"
+          "rspackConfig": "frontend/automations/rspack.config.prod.ts"
         }
       }
     },

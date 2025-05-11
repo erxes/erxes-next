@@ -196,6 +196,7 @@ const PropertyInput = ({
     type,
     choiceOptions = [],
   } = selectedField || {};
+  console.log({ selectedField, value });
 
   if (['is', 'ins', 'it', 'if'].indexOf(value) >= 0) {
     return null;
@@ -263,6 +264,7 @@ const PropertyInput = ({
         labelField={labelField}
         valueField={valueField}
         nullable
+        initialValue={field.value}
         onSelect={(value) => field.onChange(value)}
         focusOnMount
       />

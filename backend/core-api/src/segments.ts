@@ -115,7 +115,7 @@ export default startSegments('core', {
         method: 'query',
         module: 'segments',
         action: 'associationFilter',
-        data: {
+        input: {
           mainType,
           propertyType,
           positiveQuery,

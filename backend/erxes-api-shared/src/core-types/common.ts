@@ -59,7 +59,8 @@ export interface IPdfAttachment {
 }
 
 export interface IMainContext {
-  res: any;
+  req: Request;
+  res: Response;
   requestInfo: any;
   user: IUserDocument;
   __: <T extends object>(doc: T) => T & { processId: string };

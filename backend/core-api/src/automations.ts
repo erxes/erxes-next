@@ -48,7 +48,7 @@ const getRelatedValue = async (
       method: 'query',
       module: 'tags',
       action: 'find',
-      data: { _id: { $in: target[targetKey] } },
+      input: { _id: { $in: target[targetKey] } },
       defaultValue: [],
     });
 
@@ -90,7 +90,7 @@ const getItems = async (
       method: 'query',
       module: 'conformities',
       action: 'savedConformity',
-      data: {
+      input: {
         mainType: triggerType.split(':')[1],
         mainTypeId: target._id,
         relTypes: [module.split(':')[1]],
@@ -111,7 +111,7 @@ const getItems = async (
       method: 'query',
       module: 'conformities',
       action: 'getModuleRelation',
-      data: {
+      input: {
         mainType: triggerType.split(':')[1],
         mainTypeId: target._id,
         relTypes: [module.split(':')[1]],

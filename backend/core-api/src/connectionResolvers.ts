@@ -151,7 +151,7 @@ export const loadClasses = (
 
   models.Conformities = db.model<IConformityDocument, IConformityModel>(
     'conformity',
-    loadConformityClass(models, subdomain),
+    loadConformityClass(models),
   );
 
   models.Customers = db.model<ICustomerDocument, ICustomerModel>(
@@ -236,7 +236,7 @@ export const loadClasses = (
 
   models.Conformities = db.model<IConformityDocument, IConformityModel>(
     'conformities',
-    loadConformityClass(models, subdomain),
+    loadConformityClass(models),
   );
 
   models.Relations = db.model<IRelationDocument, IRelationModel>(

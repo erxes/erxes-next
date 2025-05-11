@@ -49,6 +49,7 @@ export interface ISegment {
   subOf?: string;
   color?: string;
   shouldWriteActivityLog: boolean;
+  count?: number;
 
   conditions: ICondition[];
   conditionsConjunction?: 'and' | 'or';

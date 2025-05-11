@@ -323,7 +323,7 @@ export const setProperty = async <TModels>({
             method: 'query',
             module: 'fields',
             action: 'findOne',
-            data: { _id: fieldId },
+            input: { _id: fieldId },
           });
 
           const complexFieldData = await sendTRPCMessage({
@@ -331,7 +331,7 @@ export const setProperty = async <TModels>({
             method: 'query',
             module: 'fields',
             action: 'generateTypedItem',
-            data: {
+            input: {
               field: fieldId,
               value,
               type: fieldDetail?.type,
@@ -373,7 +373,10 @@ export const setProperty = async <TModels>({
         pluginName: serviceName,
         module: pluralFormation(contentType),
         action: `updateMany`,
-        data: { selector: { _id: relatedItem._id, ...selectorDoc }, modifier },
+        input: {
+          selector: { _id: relatedItem._id, ...selectorDoc },
+          modifier,
+        },
       });
     } catch (error) {
       result.push(error.message);

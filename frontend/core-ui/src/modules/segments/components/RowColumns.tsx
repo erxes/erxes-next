@@ -1,15 +1,18 @@
 import { ColumnDef } from '@tanstack/table-core';
 import { useQueryState } from 'erxes-ui/hooks';
-import { RecordTable } from 'erxes-ui/modules';
+import { RecordTable } from 'erxes-ui/modules/record-table';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+import { Button } from 'erxes-ui/components';
+import { IconEdit } from '@tabler/icons-react';
+import { ISegment } from '../types';
 
-const columns: ColumnDef<any>[] = [
+const columns: ColumnDef<ISegment>[] = [
   {
     id: 'name',
     accessorKey: 'name',
     header: () => <RecordTable.InlineHead label="Name" />,
     cell: ({ cell, row }) => {
-      const { name } = cell?.row?.original || {};
+      const { name } = cell.row.original;
 
       return (
         <RecordTableInlineCell
@@ -38,7 +41,7 @@ const columns: ColumnDef<any>[] = [
     accessorKey: 'description',
     header: () => <RecordTable.InlineHead label="Description" />,
     cell: ({ cell }) => {
-      const { description } = cell?.row?.original || {};
+      const { description } = cell.row.original;
       return (
         <RecordTableInlineCell
           containerClassName="justify-center"
@@ -52,11 +55,32 @@ const columns: ColumnDef<any>[] = [
     accessorKey: 'count',
     header: () => <RecordTable.InlineHead label="Count" />,
     cell: ({ cell }) => {
-      const { count } = cell?.row?.original || {};
+      const { count } = cell.row.original;
       return (
         <RecordTableInlineCell
           containerClassName="justify-center"
           display={() => <div>{count}</div>}
+        />
+      );
+    },
+  },
+  {
+    id: 'actions',
+    header: () => <RecordTable.InlineHead label="" />,
+    cell: ({ cell }) => {
+      const [, setOpen] = useQueryState('segmentId');
+      return (
+        <RecordTableInlineCell
+          containerClassName="justify-center"
+          display={() => (
+            <Button
+              variant="ghost"
+              className="w-full h-full"
+              onClick={() => setOpen(cell.row.original._id)}
+            >
+              <IconEdit className="hover:text-accent-foreground" />
+            </Button>
+          )}
         />
       );
     },

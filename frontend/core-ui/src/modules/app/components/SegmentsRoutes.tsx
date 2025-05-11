@@ -4,17 +4,8 @@ import { Routes } from 'react-router';
 
 import { SegmentsPath } from '@/types/paths/SegmentsPath';
 
-const SegmentsIndexPage = lazy(() =>
-  import('~/pages/segments/List').then((module) => ({
-    default: module.default,
-  })),
-);
-
-const SegmentsDetailPage = lazy(() =>
-  import('~/pages/segments/Detail').then((module) => ({
-    default: module.default,
-  })),
-);
+const SegmentsIndexPage = lazy(() => import('~/pages/segments/List'));
+const SegmentsDetailPage = lazy(() => import('~/pages/segments/Detail'));
 
 export const SegmentRoutes = () => {
   return (

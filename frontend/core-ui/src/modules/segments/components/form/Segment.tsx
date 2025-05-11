@@ -4,6 +4,7 @@ import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import Property from './Property';
 import formSchema from './schema';
+import { useQueryState } from 'erxes-ui';
 
 type Props = {
   form: UseFormReturn<z.infer<typeof formSchema>>;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const Segment = ({ form, parentFieldName, onRemove }: Props) => {
+  const [selectedContentType] = useQueryState<string>('contentType');
   const {
     fields: conditionFields,
     append,
@@ -60,6 +62,7 @@ const Segment = ({ form, parentFieldName, onRemove }: Props) => {
           variant="secondary"
           onClick={() =>
             append({
+              propertyType: selectedContentType || '',
               propertyName: '',
               propertyOperator: '',
             })

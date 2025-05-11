@@ -15,9 +15,8 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'automations_ui',
   exposes: {
-    './Config': './src/modules/constants/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
+    './config': './src/modules/constants/config.ts',
+    './automations': './src/remote-entry.ts',
   },
 
   shared: (libraryName, defaultConfig) => {

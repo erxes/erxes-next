@@ -140,7 +140,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
         pluginName,
         module: `${type}s`,
         action: `find`,
-        data: {
+        input: {
           'customFieldsData.field': _id,
         },
 
@@ -509,7 +509,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
         method: 'query',
         module: 'forms',
         action: 'systemFields',
-        data: {
+        input: {
           groupId,
           type,
         },
@@ -527,7 +527,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
         method: 'query',
         module: 'forms',
         action: 'systemFields',
-        data: {
+        input: {
           groupId,
           type,
         },

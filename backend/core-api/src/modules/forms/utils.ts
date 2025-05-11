@@ -99,7 +99,7 @@ export const fieldsCombinedByContentType = async (
     method: 'query',
     module: 'fields',
     action: 'getFieldList',
-    data: {
+    input: {
       segmentId,
       usageType,
       config: config || {},

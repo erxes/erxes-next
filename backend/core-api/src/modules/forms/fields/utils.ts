@@ -474,5 +474,20 @@ export const generateProductsFields = async ({ subdomain, data }) => {
     ];
   }
 
+  fields = fields.map((field) =>
+    field.name === 'vendorId'
+      ? {
+          _id: Math.random(),
+          name: 'vendorId',
+          label: 'Vendor',
+          type: 'company',
+          selectionConfig: {
+            queryName: 'companies',
+            labelField: 'primaryName',
+          },
+        }
+      : field,
+  );
+
   return fields;
 };

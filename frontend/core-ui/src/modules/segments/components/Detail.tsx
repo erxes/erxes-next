@@ -208,116 +208,118 @@ export default function SegmentDetail({ refetch }: Props) {
         </Button>
       </Sheet.Trigger>
 
-      <Sheet.Content
+      <Sheet.View
         className="p-0 md:max-w-screen-lg"
-        onEscapeKeyDown={(e) => {
+        onEscapeKeyDown={(e: any) => {
           e.preventDefault();
         }}
       >
-        <div className="h-full flex flex-col">
-          <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
-            <Sheet.Title>{`${
-              segment ? 'Edit' : 'Create'
-            } a segment`}</Sheet.Title>
-            <Sheet.Close />
-          </Sheet.Header>
-          <div className="flex flex-col flex-1 max-h-full px-8 pt-4 pb-4 overflow-y-auto">
-            <FormProvider {...form}>
-              <div className="flex flex-row gap-4">
-                {/* Name field */}
+        <Sheet.Content className="h-full">
+          <div className="h-full flex flex-col">
+            <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
+              <Sheet.Title>{`${
+                segment ? 'Edit' : 'Create'
+              } a segment`}</Sheet.Title>
+              <Sheet.Close />
+            </Sheet.Header>
+            <div className="flex flex-col flex-1 max-h-full px-8 pt-4 pb-4 overflow-y-auto">
+              <FormProvider {...form}>
+                <div className="flex flex-row gap-4">
+                  {/* Name field */}
+                  <Form.Field
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <Form.Item className="flex-1">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control>
+                          <Input {...field} />
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
+                  <Form.Field
+                    control={form.control}
+                    name="subOf"
+                    render={({ field }) => (
+                      <Form.Item className="flex-1">
+                        <Form.Label>Parent Id</Form.Label>
+                        <Form.Control>
+                          <SelectSegmentCommand
+                            exclude={segment?._id ? [segment._id] : undefined}
+                            selected={field.value}
+                            onSelect={(value) => {
+                              field.onChange(
+                                field.value === value ? null : value,
+                              );
+                            }}
+                          />
+                        </Form.Control>
+                      </Form.Item>
+                    )}
+                  />
+                </div>
+
                 <Form.Field
                   control={form.control}
-                  name="name"
+                  name="description"
                   render={({ field }) => (
-                    <Form.Item className="flex-1">
-                      <Form.Label>Name</Form.Label>
+                    <Form.Item>
+                      <Form.Label>Description</Form.Label>
                       <Form.Control>
-                        <Input {...field} />
+                        <Textarea {...field} />
                       </Form.Control>
                       <Form.Message />
                     </Form.Item>
                   )}
                 />
-                <Form.Field
-                  control={form.control}
-                  name="subOf"
-                  render={({ field }) => (
-                    <Form.Item className="flex-1">
-                      <Form.Label>Parent Id</Form.Label>
-                      <Form.Control>
-                        <SelectSegmentCommand
-                          exclude={segment?._id ? [segment._id] : undefined}
-                          selected={field.value}
-                          onSelect={(value) => {
-                            field.onChange(
-                              field.value === value ? null : value,
-                            );
-                          }}
-                        />
-                      </Form.Control>
-                    </Form.Item>
-                  )}
-                />
-              </div>
+                <div className="py-4 ">{renderContent({ segment, form })}</div>
+                <Button
+                  variant="secondary"
+                  className="w-full"
+                  onClick={onAddSegmentGroup}
+                >
+                  <Form.Label>+ Add Group</Form.Label>
+                </Button>
+              </FormProvider>
+            </div>
 
-              <Form.Field
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control>
-                      <Textarea {...field} />
-                    </Form.Control>
-                    <Form.Message />
-                  </Form.Item>
-                )}
-              />
-              <div className="py-4 ">{renderContent({ segment, form })}</div>
+            {!!stats && (
+              <Sheet.Footer className="gap-4 sm:justify-start border-y-2 px-6 py-4">
+                <div className="flex flex-col items-center">
+                  <Label>Total</Label>
+                  <h4 className="text-xl text-primary">
+                    {stats.total?.toLocaleString()}
+                  </h4>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Label>Targeted</Label>
+                  <h4 className="text-xl text-primary">
+                    {stats.targeted?.toLocaleString()}
+                  </h4>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Label>Percentage</Label>
+                  <h4 className="text-xl text-primary">{stats.percentage}%</h4>
+                </div>
+              </Sheet.Footer>
+            )}
+            <Sheet.Footer className="m-4 ">
               <Button
                 variant="secondary"
-                className="w-full"
-                onClick={onAddSegmentGroup}
+                onClick={handleCalculateStats}
+                disabled={stats?.loading}
               >
-                <Form.Label>+ Add Group</Form.Label>
+                {stats?.loading ? 'Calculating...' : 'Calculate segment reach'}
               </Button>
-            </FormProvider>
-          </div>
-
-          {!!stats && (
-            <Sheet.Footer className="gap-4 sm:justify-start border-y-2 px-6 py-4">
-              <div className="flex flex-col items-center">
-                <Label>Total</Label>
-                <h4 className="text-xl text-primary">
-                  {stats.total?.toLocaleString()}
-                </h4>
-              </div>
-              <div className="flex flex-col items-center">
-                <Label>Targeted</Label>
-                <h4 className="text-xl text-primary">
-                  {stats.targeted?.toLocaleString()}
-                </h4>
-              </div>
-              <div className="flex flex-col items-center">
-                <Label>Percentage</Label>
-                <h4 className="text-xl text-primary">{stats.percentage}%</h4>
-              </div>
+              <Button onClick={form.handleSubmit(handleSave)}>
+                Save Segment
+              </Button>
             </Sheet.Footer>
-          )}
-          <Sheet.Footer className="m-4 ">
-            <Button
-              variant="secondary"
-              onClick={handleCalculateStats}
-              disabled={stats?.loading}
-            >
-              {stats?.loading ? 'Calculating...' : 'Calculate segment reach'}
-            </Button>
-            <Button onClick={form.handleSubmit(handleSave)}>
-              Save Segment
-            </Button>
-          </Sheet.Footer>
-        </div>
-      </Sheet.Content>
+          </div>
+        </Sheet.Content>
+      </Sheet.View>
     </Sheet>
   );
 }

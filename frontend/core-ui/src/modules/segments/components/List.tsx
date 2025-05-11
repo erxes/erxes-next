@@ -1,7 +1,9 @@
 import { useQuery } from '@apollo/client';
 import queries from '../graphql/queries';
 import { ListQueryResponse } from '../types';
-import { PluginHeader, RecordTable, useQueryState } from 'erxes-ui';
+import { useQueryState } from 'erxes-ui/hooks';
+import { RecordTable } from 'erxes-ui/modules/record-table';
+import { PageHeader } from 'erxes-ui/modules/header/PageHeader';
 import {
   IconArchive,
   IconChartPie,
@@ -21,7 +23,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 
-export default function Segments() {
+export default function List() {
   const [selectedContentType] = useQueryState('contentType');
   const [, setOpen] = useQueryState('segmentId');
   const [expanded, setExpanded] = useState({});
@@ -41,41 +43,26 @@ export default function Segments() {
 
   return (
     <div className="flex flex-col h-full p-3 pt-0">
-      <PluginHeader
-        title="Segments"
-        icon={IconChartPie}
-        className="p-3 mx-0"
-        separatorClassName="mb-0"
-      >
-        <Detail refetch={refetch} />
-      </PluginHeader>
+      <PageHeader className="p-3 mx-0" separatorClassName="mb-0">
+        <PageHeader.Start>
+          <IconChartPie className="w-5 h-5" />
+          <span className="font-medium">Segments</span>
+        </PageHeader.Start>
+        <PageHeader.End>
+          <Detail refetch={refetch} />
+        </PageHeader.End>
+      </PageHeader>
       <RecordTable.Provider
         columns={columns}
         data={segments}
-        // handleReachedBottom={handleFetchMore}
         stickyColumns={['name']}
-        disableCheckbox
         className="mt-1.5"
-        moreColumn={{
-          id: 'more',
-          cell: ({ cell }) => (
-            <Button
-              variant="ghost"
-              className="w-full h-full"
-              onClick={() => setOpen(cell.row.original._id)}
-            >
-              <IconEdit className="hover:text-accent-foreground" />
-            </Button>
-          ),
-          size: 13,
-        }}
       >
         <RecordTable className="w-full">
           <RecordTable.Header />
           <RecordTable.Body>
             {loading && <RecordTable.RowSkeleton rows={40} />}
-
-            <RecordTable.CursorRowList />
+            <RecordTable.RowList />
           </RecordTable.Body>
         </RecordTable>
       </RecordTable.Provider>
