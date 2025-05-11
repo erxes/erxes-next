@@ -94,7 +94,7 @@ export function SidebarNavigationItem({
                             )}
                           />
                         )}
-                        <span>{submenu.name}</span>
+                        <span className="capitalize">{submenu.name}</span>
                       </Link>
                     </Sidebar.SubButton>
                   </Sidebar.SubItem>
