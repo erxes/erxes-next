@@ -73,38 +73,64 @@ export interface ICommentParams {
 }
 
 export interface IChannelData {
-  sender: { id: string };
-  recipient: { id: string };
+ sender: {
+    id: string;
+  };
+  recipient: {
+    id: string;
+  };
   timestamp: number;
-  text?: string;
-  attachments?: Array<{
-    type: string;
-    payload: { url: string };
-  }>;
-  message: {
-    text?: string;
+
+  message?: {
     mid: string;
-    quick_reply?: any;
-    payload?: any;
+    text?: string;
+    attachments?: Array<{
+      type: string;
+      payload: {
+        url: string;
+      };
+    }>;
+    quick_reply?: {
+      payload: string;
+    };
     referral?: {
       source: string;
       type: string;
-      ad_id: string;
-      ads_context_data: {
-        ad_title: string;
-        post_id: string;
-        photo_url: string;
+      ad_id?: string;
+      ads_context_data?: {
+        ad_title?: string;
+        post_id?: string;
+        photo_url?: string;
       };
     };
   };
-  postback: {
-    title: string;
-    mid: string;
+  postback?: {
+    title?: string;
     payload: string;
-    quick_reply?: any;
+    referral?: {
+      source: string;
+      type: string;
+      ad_id?: string;
+      ads_context_data?: {
+        ad_title?: string;
+        post_id?: string;
+        photo_url?: string;
+      };
+    };
   };
 }
 
+
+export interface Activity {
+  channelId: string;
+  timestamp: Date;
+  conversation: { id: string };
+  from: { id: string; name: string };
+  recipient: { id: string; name: string };
+  channelData: IChannelData;
+  type: string;
+  text: string;
+}
 export interface IAttachment {
   type: string;
   url: string;

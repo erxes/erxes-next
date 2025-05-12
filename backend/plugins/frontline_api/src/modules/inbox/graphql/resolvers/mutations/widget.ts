@@ -3,11 +3,10 @@ import { generateModels,  } from '~/connectionResolvers';
 
 
 export const pConversationClientMessageInserted = async (
+  models,
   subdomain,
-  message: { _id: string;[other: string]: any }
+  message: { _id: string; [other: string]: any }
 ) => {
-    const models = await generateModels(subdomain);
-
   const conversation = await models.Conversations.findOne(
     {
       _id: message.conversationId
@@ -41,5 +40,38 @@ export const pConversationClientMessageInserted = async (
     }
   }
 
+  // graphqlPubsub.publish(`conversationMessageInserted:${conversation._id}`, {
+  //   conversationMessageInserted: message,
+  //   subdomain,
+  //   conversation,
+  //   integration
+  // });
 
+  for (const userId of channelMemberIds) {
+    // graphqlPubsub.publish(
+    //   `conversationClientMessageInserted:${subdomain}:${userId}`,
+    //   {
+    //     conversationClientMessageInserted: message,
+    //     subdomain,
+    //     conversation,
+    //     integration
+    //   }
+    // );
+  }
+
+  if (message.content) {
+    // sendCoreMessage({
+    //   subdomain,
+    //   action: "sendMobileNotification",
+    //   data: {
+    //     title: integration ? integration.name : "New message",
+    //     body: message.content,
+    //     receivers: channelMemberIds,
+    //     data: {
+    //       type: "conversation",
+    //       id: conversation._id
+    //     }
+    //   }
+    // });
+  }
 };
