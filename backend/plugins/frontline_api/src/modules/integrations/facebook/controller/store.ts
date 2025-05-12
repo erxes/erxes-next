@@ -187,7 +187,7 @@ export const getOrCreateComment = async (
       conversation.erxesApiId = apiConversationResponse.data._id;
       await conversation.save();
     } else {
-      throw new Error(`Customer creation failed: ${JSON.stringify(apiConversationResponse)}`);
+       throw new Error(`Conversation creation failed: ${JSON.stringify(apiConversationResponse)}`);
     }
   } catch (error) {
     await models.FacebookCommentConversation.deleteOne({

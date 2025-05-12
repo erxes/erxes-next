@@ -2,7 +2,7 @@ import { IModels } from '~/connectionResolvers';
 import { debugError, debugFacebook } from '@/integrations/facebook/debuggers';
 import {
   getPageAccessToken,
-  refreshPageAccesToken,
+  refreshPageAccessToken,
   subscribePage,
   unsubscribePage
 } from '@/integrations/facebook/utils';
@@ -154,7 +154,7 @@ export const repairIntegrations = async (
   }
 
   for (const pageId of integration.facebookPageIds || []) {
-    const pageTokens = await refreshPageAccesToken(models, pageId, integration);
+    const pageTokens = await refreshPageAccessToken(models, pageId, integration);
 
     await subscribePage(models,pageId, pageTokens[pageId]);
 

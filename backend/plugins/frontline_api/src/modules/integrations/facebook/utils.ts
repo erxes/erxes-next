@@ -185,28 +185,6 @@ export const unsubscribePage = async (
       throw e;
     });
 };
-export const refreshPageAccesToken = async (
-  models: IModels,
-  pageId: string,
-  integration: IFacebookIntegrationDocument
-) => {
-  const account = await models.FacebookAccounts.getAccount({
-    _id: integration.accountId
-  });
-
-  const facebookPageTokensMap = integration.facebookPageTokensMap || {};
-
-  const pageAccessToken = await getPageAccessToken(pageId, account.token);
-
-  facebookPageTokensMap[pageId] = pageAccessToken;
-
-  await models.FacebookIntegrations.updateOne(
-    { _id: integration._id },
-    { $set: { facebookPageTokensMap } }
-  );
-
-  return facebookPageTokensMap;
-};
 export const getFacebookUser = async (
   models: IModels,
   pageId: string,
