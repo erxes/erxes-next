@@ -30,6 +30,7 @@ import { FirstNameField } from '@/settings/team-member/components/record/team-me
 import { Link } from 'react-router';
 import { useSetAtom } from 'jotai';
 import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
+import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
 
 export const UserMoreColumnCell = ({
   cell,
@@ -186,11 +187,14 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         _id,
       } = cell.row.original;
       return (
-        <TextFieldUserDetails
-          field={'position'}
-          _id={_id}
-          value={cell.getValue() as string}
-        />
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <RecordTableCellDisplay>{position}</RecordTableCellDisplay>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <SelectPosition value={position} onValueChange={() => {}} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },

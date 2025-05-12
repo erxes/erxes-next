@@ -33,82 +33,93 @@ const GET_USER = gql`
 `;
 
 const GET_USERS_QUERY = gql`
-  query users(
-    $page: Int
-    $perPage: Int
-    $status: String
-    $excludeIds: Boolean
+  query Users(
+    $limit: Int
+    $cursor: String
+    $direction: CURSOR_DIRECTION
     $searchValue: String
-    $isActive: Boolean
-    $ids: [String]
     $brandIds: [String]
     $departmentId: String
-    $unitId: String
-    $isAssignee: Boolean
     $branchId: String
-    $departmentIds: [String]
     $branchIds: [String]
+    $departmentIds: [String]
+    $unitId: String
     $segment: String
-    $segmentData: String
   ) {
     users(
-      page: $page
-      perPage: $perPage
-      status: $status
-      excludeIds: $excludeIds
+      limit: $limit
+      cursor: $cursor
+      direction: $direction
       searchValue: $searchValue
-      isActive: $isActive
-      ids: $ids
       brandIds: $brandIds
       departmentId: $departmentId
-      unitId: $unitId
       branchId: $branchId
-      isAssignee: $isAssignee
-      departmentIds: $departmentIds
       branchIds: $branchIds
+      departmentIds: $departmentIds
+      unitId: $unitId
       segment: $segment
-      segmentData: $segmentData
     ) {
-      _id
-      username
-      email
-      status
-      isActive
-      groupIds
-      brandIds
-      score
-      positionIds
-      details {
-        avatar
-        fullName
-        shortName
-        birthDate
-        position
-        workStartedDate
-        location
-        description
-        operatorPhone
-        firstName
-        middleName
-        lastName
+      list {
+        _id
+        branchIds
+        branches {
+          _id
+          code
+          title
+        }
+        brandIds
+        details {
+          avatar
+          birthDate
+          coverPhoto
+          description
+          employeeId
+          firstName
+          fullName
+          lastName
+          location
+          middleName
+          operatorPhone
+          position
+          shortName
+          workStartedDate
+        }
+        department {
+          _id
+          code
+          title
+        }
+        departmentIds
+        departments {
+          _id
+          code
+          title
+        }
+        email
+        employeeId
+        isActive
+        isSubscribed
+        organizations {
+          name
+          subdomain
+        }
+        positionIds
+        positions {
+          _id
+          code
+          title
+        }
+        status
+        username
       }
-      links
-      employeeId
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+      totalCount
     }
-    usersTotalCount(
-      searchValue: $searchValue
-      isActive: $isActive
-      ids: $ids
-      brandIds: $brandIds
-      departmentId: $departmentId
-      unitId: $unitId
-      branchId: $branchId
-      isAssignee: $isAssignee
-      departmentIds: $departmentIds
-      branchIds: $branchIds
-      segment: $segment
-      segmentData: $segmentData
-    )
   }
 `;
 
