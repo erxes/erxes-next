@@ -20,6 +20,10 @@ import {
 
 import { getPlugin, redis } from 'erxes-api-shared/utils';
 import { applyGraphqlLimiters } from '~/middlewares/graphql-limiter';
+import {
+  startSubscriptionServer,
+  stopSubscriptionServer,
+} from './subscription';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 const domain = process.env.DOMAIN ?? 'http://localhost:3001';
@@ -116,6 +120,8 @@ async function start() {
     // Start the HTTP server
     httpServer = http.createServer(app);
     await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
+
+    startSubscriptionServer(httpServer);
     console.log(`Server is running at http://localhost:${port}/`);
   } catch (error) {
     console.error('Error starting the server:', error);
@@ -127,8 +133,10 @@ async function start() {
 (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((signal) => {
   process.on(signal, async () => {
     console.log(`Exiting on signal ${signal}`);
+
     try {
       stopRouter(signal);
+      stopSubscriptionServer();
       if (httpServer) {
         await new Promise((resolve) => httpServer.close(resolve));
       }
