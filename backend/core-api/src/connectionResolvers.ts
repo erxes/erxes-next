@@ -1,4 +1,3 @@
-import { createGenerateModels } from 'erxes-api-shared/utils';
 import {
   ICompanyDocument,
   ICustomerDocument,
@@ -6,15 +5,9 @@ import {
   IUserDocument,
   IUserMovementDocument,
 } from 'erxes-api-shared/core-types';
+import { createGenerateModels } from 'erxes-api-shared/utils';
 import mongoose from 'mongoose';
 
-import { ITagDocument } from 'erxes-api-shared/core-types';
-import {
-  IProductCategoryDocument,
-  IProductDocument,
-  IProductsConfigDocument,
-  IUomDocument,
-} from 'erxes-api-shared/core-types';
 import {
   ICompanyModel,
   loadCompanyClass,
@@ -42,8 +35,25 @@ import { IUomModel, loadUomClass } from '@/products/db/models/Uoms';
 import { IConfigDocument } from '~/modules/organization/settings/db/definitions/configs';
 import { IConfigModel } from '~/modules/organization/settings/db/models/Configs';
 import { ITagModel, loadTagClass } from '@/tags/db/models/Tags';
-import { IMainContext } from 'erxes-api-shared/core-types';
+import {
+  IMainContext,
+  IProductCategoryDocument,
+  IProductDocument,
+  IProductsConfigDocument,
+  ITagDocument,
+  IUomDocument,
+} from 'erxes-api-shared/core-types';
 
+import { IAppModel, loadAppClass } from '@/apps/db/models/Apps';
+import {
+  IConformityModel,
+  loadConformityClass,
+} from '@/conformities/db/models/Conformities';
+import {
+  IBrandModel,
+  loadBrandClass,
+} from '@/organization/brand/db/models/Brands';
+import { IBrandDocument } from '@/organization/brand/types';
 import {
   IBranchDocument,
   IDepartmentDocument,
@@ -51,8 +61,6 @@ import {
   IStructureDocument,
   IUnitDocument,
 } from '@/organization/structure/@types/structure';
-import { IAppModel, loadAppClass } from '@/apps/db/models/Apps';
-import { IAppDocument } from 'erxes-api-shared/core-types';
 import {
   IBranchModel,
   IDepartmentModel,
@@ -65,10 +73,7 @@ import {
   loadStructureClass,
   loadUnitClass,
 } from '@/organization/structure/db/models/Structure';
-import {
-  IConformityModel,
-  loadConformityClass,
-} from '@/conformities/db/models/Conformities';
+import { IAppDocument } from 'erxes-api-shared/core-types';
 import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
 import { IRelationModel } from '@/relations/db/models/Relations';
 import { loadRelationClass } from '@/relations/db/models/Relations';
@@ -82,6 +87,7 @@ export interface IModels {
   Customers: ICustomerModel;
   Companies: ICompanyModel;
   Users: IUserModel;
+  Brands: IBrandModel;
   UserMovements: IUserMovemmentModel;
   Configs: IConfigModel;
   Tags: ITagModel;
@@ -112,6 +118,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Users = db.model<IUserDocument, IUserModel>(
     'users',
     loadUserClass(models),
+  );
+
+  models.Brands = db.model<IBrandDocument, IBrandModel>(
+    'brands',
+    loadBrandClass(models),
   );
 
   models.Customers = db.model<ICustomerDocument, ICustomerModel>(

@@ -16,6 +16,11 @@ import {
 } from '@/auth/graphql/schemas/auth';
 
 import {
+  mutations as BrandMutations,
+  queries as BrandQueries,
+  types as BrandTypes,
+} from '@/organization/brand/graphql/schema';
+import {
   mutations as branchsMutations,
   queries as branchsQueries,
   BranchTypes,
@@ -25,11 +30,6 @@ import {
   queries as departmentsQueries,
   DepartmentTypes,
 } from '@/organization/structure/graphql/schemas/department';
-import {
-  mutations as positionsMutations,
-  queries as positionsQueries,
-  PositionTypes,
-} from '@/organization/structure/graphql/schemas/position';
 import {
   mutations as structuresMutations,
   queries as structuresQueries,
@@ -54,31 +54,35 @@ import {
 } from '~/modules/organization/settings/graphql/favorites/schemas';
 
 import {
+  mutations as AppMutations,
+  queries as AppQueries,
+  types as AppTypes,
+} from '@/apps/graphql/schemas';
+import {
+  mutations as positionsMutations,
+  queries as positionsQueries,
+  PositionTypes,
+} from '@/organization/structure/graphql/schemas/position';
+import {
   mutations as UserMutations,
   queries as UserQueries,
   types as UserTypes,
 } from '@/organization/team-member/graphql/schema';
-import {
-  mutations as TagMutations,
-  queries as TagQueries,
-  types as TagTypes,
-} from '@/tags/graphql/schemas';
 import {
   mutations as ProductMutations,
   queries as ProductQueries,
   types as ProductTypes,
 } from '@/products/graphql/schemas';
 import {
-  mutations as AppMutations,
-  queries as AppQueries,
-  types as AppTypes,
-} from '@/apps/graphql/schemas';
-import { BrandTypes } from '@/organization/structure/graphql/schemas/brand';
-import {
   mutations as RelationMutations,
   queries as RelationQueries,
   types as RelationTypes,
 } from '@/relations/graphql/schema';
+import {
+  mutations as TagMutations,
+  queries as TagQueries,
+  types as TagTypes,
+} from '@/tags/graphql/schemas';
 
 import {
   mutations as ConformityMutations,
@@ -128,6 +132,7 @@ export const queries = `
     ${positionsQueries}
     ${structuresQueries}
     ${unitsQueries}
+    ${BrandQueries}
     ${AppQueries}
     ${RelationQueries}
     ${FavoritesQueries}
@@ -146,6 +151,7 @@ export const mutations = `
     ${positionsMutations}
     ${structuresMutations}
     ${unitsMutations}
+    ${BrandMutations}
     ${AppMutations}
     ${ConformityMutations}
     ${RelationMutations}
