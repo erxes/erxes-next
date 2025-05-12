@@ -66,30 +66,45 @@ export const generateFilter = async (params: any, models: IModels) => {
       });
     }
 
+    baseTagIds = [...new Set(baseTagIds)];
+
+    if (tagIds?.length && excludeTagIds?.length) {
+      filter['tagIds'] = {
+        $in: baseTagIds.filter((id) => tagIds.includes(id)),
+        $nin: baseTagIds.filter((id) => excludeTagIds.includes(id)),
+      };
+    }
+
+    if (tagIds?.length) {
+      filter['tagIds'] = { $in: baseTagIds };
+    }
+
     if (excludeTagIds?.length) {
       filter['tagIds'] = { $nin: baseTagIds };
     }
-
-    filter['tagIds'] = filter['tagIds'] || { $in: baseTagIds };
   }
 
   if (dateFilters) {
-    const dateFilter = JSON.parse(dateFilters);
+    try {
+      const dateFilter = JSON.parse(dateFilters);
 
-    for (const [key, value] of Object.entries(dateFilter)) {
-      const { gte, lte } = (value || {}) as { gte?: string; lte?: string };
+      for (const [key, value] of Object.entries(dateFilter)) {
+        const { gte, lte } = (value || {}) as { gte?: string; lte?: string };
 
-      if (gte || lte) {
-        filter[key] = {};
+        if (gte || lte) {
+          filter[key] = {};
 
-        if (gte) {
-          filter[key]['$gte'] = gte;
-        }
+          if (gte) {
+            filter[key]['$gte'] = gte;
+          }
 
-        if (lte) {
-          filter[key]['$lte'] = lte;
+          if (lte) {
+            filter[key]['$lte'] = lte;
+          }
         }
       }
+    } catch (err) {
+      throw new Error(`Invalid dateFilters JSON: ${err}`);
     }
   }
 
