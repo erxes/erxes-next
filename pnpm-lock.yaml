@@ -600,9 +600,6 @@ importers:
       erxes-api-shared:
         specifier: workspace:^
         version: link:../erxes-api-shared
-      underscore:
-        specifier: ^1.13.7
-        version: 1.13.7
 
   backend/erxes-api-shared:
     dependencies:
@@ -627,7 +624,14 @@ importers:
       graphql-subscriptions:
         specifier: ^3.0.0
         version: 3.0.0(graphql@16.10.0)
+      graphql-redis-subscriptions:
+        specifier: ^2.7.0
+        version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
+      graphql-subscriptions:
+        specifier: ^3.0.0
+        version: 3.0.0(graphql@16.10.0)
       ioredis:
+        specifier: ^5.6.1
         specifier: ^5.6.1
         version: 5.6.1
       mongoose:
@@ -658,6 +662,12 @@ importers:
       '@types/babel__preset-env':
         specifier: ^7
         version: 7.10.0
+      '@types/graphql':
+        specifier: ^14.5.0
+        version: 14.5.0
+      '@types/ioredis':
+        specifier: ^5.0.0
+        version: 5.0.0
       '@types/graphql':
         specifier: ^14.5.0
         version: 14.5.0
@@ -4811,6 +4821,10 @@ packages:
     resolution: {integrity: sha512-MOkzsEp1Jk5bXuAsHsUi6BVv0zCO+7/2PTiZMXWDSsMXvNU6w/PLMQT2vHn8hy2i0JqojPz1Sz6rsFjHtsU0lA==}
     deprecated: This is a stub types definition. graphql provides its own type definitions, so you do not need this installed.
 
+  '@types/graphql@14.5.0':
+    resolution: {integrity: sha512-MOkzsEp1Jk5bXuAsHsUi6BVv0zCO+7/2PTiZMXWDSsMXvNU6w/PLMQT2vHn8hy2i0JqojPz1Sz6rsFjHtsU0lA==}
+    deprecated: This is a stub types definition. graphql provides its own type definitions, so you do not need this installed.
+
   '@types/hast@2.3.10':
     resolution: {integrity: sha512-McWspRw8xx8J9HurkVBfYj0xKoE25tOFlHGdx4MJ5xORQrMGZNqJhVQWaIbm6Oyla5kYOXtDiopzKRJzEOkwJw==}
 
@@ -4828,6 +4842,10 @@ packages:
 
   '@types/http-proxy@1.17.16':
     resolution: {integrity: sha512-sdWoUajOB1cd0A8cRRQ1cfyWNbmFKLAqBB89Y8x5iYyG/mkJHc0YUH8pdWBy2omi9qtCpiIgGjuwO0dQST2l5w==}
+
+  '@types/ioredis@5.0.0':
+    resolution: {integrity: sha512-zJbJ3FVE17CNl5KXzdeSPtdltc4tMT3TzC6fxQS0sQngkbFZ6h+0uTafsRqu+eSLIugf6Yb0Ea0SUuRr42Nk9g==}
+    deprecated: This is a stub types definition. ioredis provides its own type definitions, so you do not need this installed.
 
   '@types/ioredis@5.0.0':
     resolution: {integrity: sha512-zJbJ3FVE17CNl5KXzdeSPtdltc4tMT3TzC6fxQS0sQngkbFZ6h+0uTafsRqu+eSLIugf6Yb0Ea0SUuRr42Nk9g==}
@@ -7635,6 +7653,16 @@ packages:
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+
+  graphql-redis-subscriptions@2.7.0:
+    resolution: {integrity: sha512-IK4uCKx1UNhkcnG9lIqFWz9PpltSbuM8RygwGoB/e1HZMuKpAGeqqfHFeLKkQjjubvk4tAdUdx48AUkTAXJ17Q==}
+    peerDependencies:
+      graphql-subscriptions: ^1.0.0 || ^2.0.0 || ^3.0.0
+
+  graphql-subscriptions@3.0.0:
+    resolution: {integrity: sha512-kZCdevgmzDjGAOqH7GlDmQXYAkuHoKpMlJrqF40HMPhUhM5ZWSFSxCwD/nSi6AkaijmMfsFhoJRGJ27UseCvRA==}
+    peerDependencies:
+      graphql: ^15.7.2 || ^16.0.0
 
   graphql-redis-subscriptions@2.7.0:
     resolution: {integrity: sha512-IK4uCKx1UNhkcnG9lIqFWz9PpltSbuM8RygwGoB/e1HZMuKpAGeqqfHFeLKkQjjubvk4tAdUdx48AUkTAXJ17Q==}
@@ -17913,6 +17941,10 @@ snapshots:
     dependencies:
       graphql: 16.10.0
 
+  '@types/graphql@14.5.0':
+    dependencies:
+      graphql: 16.10.0
+
   '@types/hast@2.3.10':
     dependencies:
       '@types/unist': 2.0.11
@@ -17930,6 +17962,12 @@ snapshots:
   '@types/http-proxy@1.17.16':
     dependencies:
       '@types/node': 18.16.9
+
+  '@types/ioredis@5.0.0':
+    dependencies:
+      ioredis: 5.6.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@types/ioredis@5.0.0':
     dependencies:
@@ -21388,6 +21426,18 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
+
+  graphql-redis-subscriptions@2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0)):
+    dependencies:
+      graphql-subscriptions: 3.0.0(graphql@16.10.0)
+    optionalDependencies:
+      ioredis: 5.6.1
+    transitivePeerDependencies:
+      - supports-color
+
+  graphql-subscriptions@3.0.0(graphql@16.10.0):
+    dependencies:
+      graphql: 16.10.0
 
   graphql-redis-subscriptions@2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0)):
     dependencies:

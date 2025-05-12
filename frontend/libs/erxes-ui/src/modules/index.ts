@@ -9,3 +9,4 @@ export * from './side-menu/components/SideMenu';
 export * from './inputs';
 export * from './display';
 export * from './layout';
+export * from './preview/components/Preview';
