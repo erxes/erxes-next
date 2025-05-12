@@ -20,21 +20,25 @@ import {
   queries as BrandQueries,
   types as BrandTypes,
 } from '@/organization/brand/graphql/schema';
+
 import {
   mutations as branchsMutations,
   queries as branchsQueries,
   BranchTypes,
 } from '@/organization/structure/graphql/schemas/branch';
+
 import {
   mutations as departmentsMutations,
   queries as departmentsQueries,
   DepartmentTypes,
 } from '@/organization/structure/graphql/schemas/department';
+
 import {
   mutations as structuresMutations,
   queries as structuresQueries,
   StructureTypes,
 } from '@/organization/structure/graphql/schemas/structure';
+
 import {
   mutations as unitsMutations,
   queries as unitsQueries,
@@ -58,26 +62,39 @@ import {
   queries as AppQueries,
   types as AppTypes,
 } from '@/apps/graphql/schemas';
+
 import {
   mutations as positionsMutations,
   queries as positionsQueries,
   PositionTypes,
 } from '@/organization/structure/graphql/schemas/position';
+
 import {
   mutations as UserMutations,
   queries as UserQueries,
   types as UserTypes,
 } from '@/organization/team-member/graphql/schema';
+
 import {
   mutations as ProductMutations,
   queries as ProductQueries,
   types as ProductTypes,
 } from '@/products/graphql/schemas';
+
+import {
+  mutations as SegmentMutations,
+  queries as SegmentQueries,
+  types as SegmentTypes,
+} from '@/segments/apollo/schemas';
+
+import { queries as FormQueries } from '@/forms/apollo/schema';
+
 import {
   mutations as RelationMutations,
   queries as RelationQueries,
   types as RelationTypes,
 } from '@/relations/graphql/schema';
+
 import {
   mutations as TagMutations,
   queries as TagQueries,
@@ -101,6 +118,9 @@ export const types = `
       inheritMaxAge: Boolean
     ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
   
+    type SomeType {
+      visibility: CacheControlScope
+    }
     ${CustomerTypes}
     ${CompanyTypes}
     ${UserTypes}
@@ -114,6 +134,7 @@ export const types = `
     ${UnitTypes}
     ${BrandTypes}
     ${AppTypes}
+    ${SegmentTypes}
     ${ConformityTypes}
     ${RelationTypes}
     ${FavoritesTypes}
@@ -134,6 +155,8 @@ export const queries = `
     ${unitsQueries}
     ${BrandQueries}
     ${AppQueries}
+    ${FormQueries}
+    ${SegmentQueries}
     ${RelationQueries}
     ${FavoritesQueries}
   `;
@@ -153,6 +176,7 @@ export const mutations = `
     ${unitsMutations}
     ${BrandMutations}
     ${AppMutations}
+    ${SegmentMutations}
     ${ConformityMutations}
     ${RelationMutations}
     ${FavoritesMutations}

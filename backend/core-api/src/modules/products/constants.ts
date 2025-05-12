@@ -34,3 +34,12 @@ export const TIMELY_TYPES = {
   seasonally: 'seasonally',
   ALL: ['', 'daily', 'weekly', 'monthly', 'seasonally'],
 };
+
+export const PRODUCT_EXTEND_FIELDS = [
+  {
+    _id: Math.random(),
+    name: 'barcodes',
+    label: 'Barcodes',
+    type: 'string',
+  },
+];

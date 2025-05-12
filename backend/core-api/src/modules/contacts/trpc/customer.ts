@@ -105,12 +105,18 @@ export const customerRouter = t.router({
       return models.Customers.updateOne(query, doc);
     }),
 
-    updateMany: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
-      const { query, doc } = input;
-      const { models } = ctx;
-
-      return models.Customers.updateMany(query, doc);
-    }),
+    updateMany: t.procedure
+      .input(
+        z.object({
+          selector: z.record(z.any()),
+          modifier: z.record(z.any()),
+        }),
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { models } = ctx;
+        const { selector, modifier } = input;
+        return await models.Customers.updateMany(selector, modifier);
+      }),
 
     removeCustomers: t.procedure
       .input(z.any())
