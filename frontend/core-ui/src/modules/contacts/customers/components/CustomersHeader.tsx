@@ -1,5 +1,6 @@
 import { IconMagnetFilled, IconUserFilled } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { Breadcrumb, Button } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 import { ContactsPath } from '~/modules/types/paths/ContactsPath';
 import { CustomerAddSheet } from './CustomerAddSheet';
@@ -8,6 +9,7 @@ import { ContactsBreadcrumb } from '@/contacts/components/ContactsBreadcrumb';
 
 export const CustomersHeader = () => {
   const pathname = useLocation().pathname;
+
   return (
     <PageHeader>
       <PageHeader.Start>
@@ -34,7 +36,10 @@ export const CustomersHeader = () => {
             </Breadcrumb.Page>
           )}
         </ContactsBreadcrumb>
-        <PageHeader.LikeButton />
+        <PageHeader.FavoriteToggleButton
+          type="submenu"
+          item={pathname.includes(ContactsPath.Leads) ? 'leads' : 'customers'}
+        />
       </PageHeader.Start>
       <PageHeader.End>
         <CustomerAddSheet />

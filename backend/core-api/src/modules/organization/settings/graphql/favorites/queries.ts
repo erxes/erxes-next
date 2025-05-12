@@ -1,12 +1,26 @@
 import { IContext } from '~/connectionResolvers';
 
 export const favoriteQueries = {
-  getFavoritesByUserId: async (
+  getFavoritesByCurrentUser: async (
     _parent: undefined,
-    { userId }: { userId: string },
-    { models }: IContext,
+    _args: undefined,
+    { models, user }: IContext,
   ) => {
-    return models.Favorites.getFavoritesByUserId({ userId });
+    return models.Favorites.getFavoritesByCurrentUser({ userId: user._id });
+  },
+
+  isFavorite: async (
+    _parent: undefined,
+    { type, item }: { type: string; item: string },
+    { models, user }: IContext,
+  ) => {
+    const favorite = await models.Favorites.getFavorite({
+      type,
+      item,
+      userId: user._id,
+    });
+    console.log(favorite);
+    return favorite ? true : false;
   },
 };
 

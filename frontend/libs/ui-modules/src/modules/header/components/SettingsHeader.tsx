@@ -1,4 +1,4 @@
-import { Separator, Sidebar } from 'erxes-ui/components';
+import { Separator, Sidebar } from 'erxes-ui';
 
 export const SettingsHeader = ({
   children,

@@ -1,7 +1,7 @@
 import { IconBuilding } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader } from 'erxes-ui';
+import { Breadcrumb, Button } from 'erxes-ui';
 import { Link } from 'react-router-dom';
-
+import { PageHeader } from 'ui-modules';
 import { ContactsPath } from '@/types/paths/ContactsPath';
 import { ContactsBreadcrumb } from '@/contacts/components/ContactsBreadcrumb';
 
@@ -20,7 +20,7 @@ export const CompaniesHeader = () => {
               </Button>
             </Breadcrumb.Item>
           </ContactsBreadcrumb>
-          <PageHeader.LikeButton />
+          <PageHeader.FavoriteToggleButton type="submenu" item="companies" />
         </PageHeader.Start>
       </PageHeader>
     </>

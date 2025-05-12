@@ -7,9 +7,10 @@ export const types = `
 `;
 
 export const queries = `
-  getFavoritesByUserId(userId: String!): [Favorite]
+  getFavoritesByCurrentUser: [Favorite]
+  isFavorite(type: String!, item: String!): Boolean
 `;
 
 export const mutations = `
-  toggleFavorite(type: String!, item: String!, userId: String!): Favorite
+  toggleFavorite(type: String!, item: String!): Favorite
 `;

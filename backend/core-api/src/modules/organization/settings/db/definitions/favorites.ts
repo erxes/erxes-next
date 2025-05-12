@@ -18,7 +18,7 @@ export const favoritesSchema = new Schema(
     _id: mongooseStringRandomId,
     type: {
       type: String,
-      enum: ['plugin', 'view'],
+      enum: ['module', 'view', 'submenu'],
       required: true,
     },
     item: {

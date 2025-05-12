@@ -18,13 +18,16 @@ export interface IFavoritesModel extends Model<IFavoritesDocument> {
     item,
     userId,
   }: IFavorites): Promise<IFavoritesDocument[]>;
+
+  getFavorite({ type, item, userId }: IFavorites): Promise<IFavoritesDocument>;
+
   deleteFavorite({
     type,
     item,
     userId,
   }: IFavorites): Promise<IFavoritesDocument>;
 
-  getFavoritesByUserId({
+  getFavoritesByCurrentUser({
     userId,
   }: {
     userId: string;
@@ -38,7 +41,11 @@ export const loadFavoritesClass = (models: IModels) => {
       return favorite;
     }
 
-    public static async getFavoritesByUserId({ userId }: { userId: string }) {
+    public static async getFavoritesByCurrentUser({
+      userId,
+    }: {
+      userId: string;
+    }) {
       const favorites = await models.Favorites.find({ userId });
       return favorites;
     }
@@ -52,6 +59,11 @@ export const loadFavoritesClass = (models: IModels) => {
     }
 
     public static async getFavorites({ type, item, userId }: IFavorites) {
+      const favorite = await models.Favorites.findOne({ type, item, userId });
+      return favorite;
+    }
+
+    public static async getFavorite({ type, item, userId }: IFavorites) {
       const favorite = await models.Favorites.findOne({ type, item, userId });
       return favorite;
     }
