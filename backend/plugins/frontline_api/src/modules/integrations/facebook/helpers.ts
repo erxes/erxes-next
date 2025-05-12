@@ -44,7 +44,7 @@ export const removeIntegration = async (
         pageTokenResponse = await getPageAccessToken(pageId, account.token);
       } catch (e) {
         debugError(
-          `Error ocurred while trying to get page access token with ${e.message}`
+          `Error occurred while trying to get page access token with ${e.message}`
         );
       }
 
@@ -104,20 +104,19 @@ export const removeIntegration = async (
     }
   }
 
-  await models.FacebookIntegrations.deleteOne({ _id });
 
   return erxesApiId;
 };
 
 export const removeAccount = async (
-  subdomain,
+  subdomain: string,
   models: IModels,
   _id: string
-): Promise<{ erxesApiIds: string | string[] } | Error> => {
+): Promise<{ erxesApiIds: string[] }> => {
   const account = await models.FacebookAccounts.findOne({ _id });
 
   if (!account) {
-    return new Error(`Account not found: ${_id}`);
+    throw new Error(`Account not found: ${_id}`);
   }
 
   const erxesApiIds: string[] = [];
@@ -126,15 +125,15 @@ export const removeAccount = async (
     accountId: account._id
   });
 
-    if (integrations.length > 0) {
-      const results = await Promise.all(
-        integrations.map(integration => 
-          removeIntegration(subdomain, models, integration.erxesApiId)
-        )
-      );
-      
-      erxesApiIds.push(...results);
-    }
+  if (integrations.length > 0) {
+    const results = await Promise.all(
+      integrations.map(integration =>
+        removeIntegration(subdomain, models, integration.erxesApiId)
+      )
+    );
+
+    erxesApiIds.push(...results);
+  }
 
   await models.FacebookAccounts.deleteOne({ _id });
 

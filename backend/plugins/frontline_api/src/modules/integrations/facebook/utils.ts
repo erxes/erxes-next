@@ -263,7 +263,7 @@ export const sendReply = async (
     );
   } catch (e) {
     debugError(
-      `Error ocurred while trying to get page access token with ${e.message}`
+       `Error occurred while trying to get page access token with ${e.message}`
     );
     return e;
   }
