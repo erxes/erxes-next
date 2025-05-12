@@ -60,14 +60,12 @@ export const loadRelationClass = (models: IModels) => {
       contentType: string;
       contentId: string;
     }) {
-      console.log(contentType, contentId, 'contentType, contentId');
-      const sda = await models.Relations.find({
+      const relation = await models.Relations.find({
         'entities.contentType': contentType,
         'entities.contentId': contentId,
       });
 
-      console.log(sda, 'sda');
-      return sda;
+      return relation;
     }
 
     public static async getRelationsByEntities({

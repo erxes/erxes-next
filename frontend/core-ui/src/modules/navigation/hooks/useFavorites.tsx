@@ -28,7 +28,7 @@ export function useFavorites(): FavoriteModule[] {
   return favorites.reduce<FavoriteModule[]>((acc, favorite) => {
     if (favorite.type === 'module') {
       const module = modules.find(
-        (m) => m.name === favorite.path.replace('/', ''),
+        (m) => m.path === favorite.path.replace('/', ''),
       );
 
       if (module) {
@@ -37,6 +37,24 @@ export function useFavorites(): FavoriteModule[] {
           icon: module.icon,
           path: module.path,
         });
+      } else {
+        const moduleWithSubmenu = modules.find(
+          (m) => m.path === favorite.path.split('/')[1],
+        );
+
+        if (moduleWithSubmenu?.submenus) {
+          const matchingSubmenu = moduleWithSubmenu.submenus.find(
+            (sub) => sub.path === favorite.path.replace('/', ''),
+          );
+
+          if (matchingSubmenu) {
+            acc.push({
+              name: matchingSubmenu.name,
+              icon: matchingSubmenu.icon || moduleWithSubmenu.icon,
+              path: matchingSubmenu.path,
+            });
+          }
+        }
       }
     }
 
