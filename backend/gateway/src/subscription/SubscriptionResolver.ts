@@ -278,7 +278,6 @@ export default class SubscriptionResolver {
   }
 
   private async query(graphqlRequest: GraphQLRequest): Promise<FetchResult> {
-    const response = await toPromise(execute(this.apolloLink, graphqlRequest));
-    return response;
+    return toPromise(execute(this.apolloLink, graphqlRequest));
   }
 }

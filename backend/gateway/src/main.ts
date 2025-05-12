@@ -121,7 +121,7 @@ async function start() {
     httpServer = http.createServer(app);
     await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
 
-    startSubscriptionServer(httpServer);
+    await startSubscriptionServer(httpServer);
     console.log(`Server is running at http://localhost:${port}/`);
   } catch (error) {
     console.error('Error starting the server:', error);
@@ -136,7 +136,7 @@ async function start() {
 
     try {
       stopRouter(signal);
-      stopSubscriptionServer();
+      await stopSubscriptionServer();
       if (httpServer) {
         await new Promise((resolve) => httpServer.close(resolve));
       }

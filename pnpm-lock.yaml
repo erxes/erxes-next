@@ -218,6 +218,12 @@ importers:
       graphql:
         specifier: ^16.9.0
         version: 16.10.0
+      graphql-parse-resolve-info:
+        specifier: ^4.14.1
+        version: 4.14.1(graphql@16.10.0)
+      graphql-redis-subscriptions:
+        specifier: ^2.7.0
+        version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.10.0)
@@ -251,6 +257,9 @@ importers:
       libphonenumber-js:
         specifier: ^1.11.20
         version: 1.12.7
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       moment-timezone:
         specifier: ^0.5.48
         version: 0.5.48
@@ -7812,6 +7821,12 @@ packages:
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+
+  graphql-parse-resolve-info@4.14.1:
+    resolution: {integrity: sha512-WKHukfEuZamP1ZONR84b8iT+4sJgEhtXMDArm1jpXEsU2vTb5EgkCZ4Obfl+v09oNTKXm0CJjPfBUZ5jcJ2Ykg==}
+    engines: {node: '>=8.6'}
+    peerDependencies:
+      graphql: '>=0.9 <0.14 || ^14.0.2 || ^15.4.0 || ^16.3.0'
 
   graphql-redis-subscriptions@2.7.0:
     resolution: {integrity: sha512-IK4uCKx1UNhkcnG9lIqFWz9PpltSbuM8RygwGoB/e1HZMuKpAGeqqfHFeLKkQjjubvk4tAdUdx48AUkTAXJ17Q==}
@@ -21565,6 +21580,14 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
+
+  graphql-parse-resolve-info@4.14.1(graphql@16.10.0):
+    dependencies:
+      debug: 4.4.0(supports-color@8.1.1)
+      graphql: 16.10.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - supports-color
 
   graphql-redis-subscriptions@2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0)):
     dependencies:

@@ -6,21 +6,21 @@ import Redis from 'ioredis';
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env;
 
 const pubsub = new RedisPubSub({
-  connectionListener: error => {
+  connectionListener: (error) => {
     if (error) {
-      console.log(error);
+      console.error(error);
     }
   },
   publisher: new Redis({
     host: REDIS_HOST,
     port: parseInt(REDIS_PORT || '6379'),
-    password: REDIS_PASSWORD
+    password: REDIS_PASSWORD,
   }),
   subscriber: new Redis({
     host: REDIS_HOST,
     port: parseInt(REDIS_PORT || '6379'),
-    password: REDIS_PASSWORD
-  })
+    password: REDIS_PASSWORD,
+  }),
 } as any);
 
 export default pubsub;
