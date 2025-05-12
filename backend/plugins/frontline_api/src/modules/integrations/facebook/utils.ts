@@ -1,9 +1,8 @@
 import * as graph from "fbgraph";
 import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-import { debugError, debugFacebook,debugBase } from '@/integrations/facebook/debuggers';
-// import { FacebookAdapter } from "botbuilder-adapter-facebook-erxes";
-import { getConfig } from "@/integrations/facebook/commonUtils";
+import { debugError, debugFacebook } from '@/integrations/facebook/debuggers';
+
 export const graphRequest = {
   base(method: string, path?: any, accessToken?: any, ...otherParams) {
     // set access token
@@ -143,12 +142,6 @@ export const subscribePage = async (
     "messaging_handovers"
   ]
 
-  // const bot = await models.Bots.findOne({pageId})
-
-  // if(bot){
-  //   subscribed_fields = [...new Set([...subscribed_fields,...BOT_SUBSCRIBE_FIELDS])]
-  // }
-
   return graphRequest.post(`${pageId}/subscribed_apps`, pageToken, {
     subscribed_fields
   });
@@ -192,7 +185,28 @@ export const unsubscribePage = async (
       throw e;
     });
 };
+export const refreshPageAccesToken = async (
+  models: IModels,
+  pageId: string,
+  integration: IFacebookIntegrationDocument
+) => {
+  const account = await models.FacebookAccounts.getAccount({
+    _id: integration.accountId
+  });
 
+  const facebookPageTokensMap = integration.facebookPageTokensMap || {};
+
+  const pageAccessToken = await getPageAccessToken(pageId, account.token);
+
+  facebookPageTokensMap[pageId] = pageAccessToken;
+
+  await models.FacebookIntegrations.updateOne(
+    { _id: integration._id },
+    { $set: { facebookPageTokensMap } }
+  );
+
+  return facebookPageTokensMap;
+};
 export const getFacebookUser = async (
   models: IModels,
   pageId: string,
@@ -226,33 +240,6 @@ export const getFacebookUser = async (
   }
 };
 
-
-
-
-
-export const restorePost = async (
-  postId: string,
-  pageId: string,
-  pageTokens: { [key: string]: string }
-) => {
-  let pageAccessToken;
-
-  try {
-    pageAccessToken = await getPageAccessTokenFromMap(pageId, pageTokens);
-  } catch (e) {
-    debugError(
-       `Error occurred while trying to get page access token with ${e.message}`
-    );
-  }
-
-  const fields = `/${postId}?fields=caption,description,link,picture,source,message,from,created_time,comments.summary(true)`;
-
-  try {
-    return await graphRequest.get(fields, pageAccessToken);
-  } catch (e) {
-    throw new Error(e);
-  }
-};
 
 export const sendReply = async (
   models: IModels,
@@ -410,29 +397,6 @@ export const getFacebookUserProfilePic = async (
     return null;
   }
 };
-// export const getAdapter = async (models: IModels): Promise<any> => {
-//   const accessTokensByPageId = {};
-
-//   const FACEBOOK_VERIFY_TOKEN = await getConfig(
-//     models,
-//     "FACEBOOK_VERIFY_TOKEN"
-//   );
-//   const FACEBOOK_APP_SECRET = await getConfig(models, "FACEBOOK_APP_SECRET");
-
-//   if (!FACEBOOK_VERIFY_TOKEN || !FACEBOOK_APP_SECRET) {
-//     return debugBase("Invalid facebook config");
-//   }
-
-//   return new FacebookAdapter({
-//     verify_token: FACEBOOK_VERIFY_TOKEN,
-//     app_secret: FACEBOOK_APP_SECRET,
-//     getAccessTokenForPage: async (pageId: string) => {
-//       return accessTokensByPageId[pageId];
-//     }
-//   });
-// };
-
-
 
 export const checkIsAdsOpenThread = (entry: any[] = []) => {
   const messaging = entry[0]?.messaging || [];

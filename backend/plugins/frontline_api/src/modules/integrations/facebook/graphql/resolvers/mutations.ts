@@ -73,7 +73,7 @@ export const facebookMutations = {
     }
 
     try {
-      const inboxConversation =await models.Conversations.findOne({ _id: conversationId });
+      const inboxConversation =await models.FacebookConversations.findOne({ _id: conversationId });
 
       await sendReply(
         models,

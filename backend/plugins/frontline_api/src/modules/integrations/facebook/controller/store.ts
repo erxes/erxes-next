@@ -1,12 +1,12 @@
-
 import { IModels } from '~/connectionResolvers';
-import {debugError } from '@/integrations/facebook/debuggers';
-import{ICommentParams,IPostParams} from '@/integrations/facebook/@types/utils';
-import { INTEGRATION_KINDS ,} from '@/integrations/facebook/constants';
+import { debugError } from '@/integrations/facebook/debuggers';
+import { ICommentParams, IPostParams } from '@/integrations/facebook/@types/utils';
+import { INTEGRATION_KINDS } from '@/integrations/facebook/constants';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-import {IFacebookCustomer,IFacebookCustomerDocument} from '@/integrations/facebook/@types/customers';
-import {getFacebookUser} from '@/integrations/facebook/utils'
-import {receiveTrpcMessage} from '@/inbox/receiveMessage'
+import { IFacebookCustomer } from '@/integrations/facebook/@types/customers';
+import { getFacebookUser } from '@/integrations/facebook/utils'
+import { receiveTrpcMessage } from '@/inbox/receiveMessage'
+import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget'
 // import { uploadMedia, getPostLink, getFacebookUserProfilePic, getPostDetails } from '@/integrations/facebook/utils'
 import {
   getPostLink,
@@ -104,7 +104,6 @@ export const getOrCreateCustomer = async (
 export const getOrCreateComment = async (
   models: IModels,
   subdomain: string,
-  postConversation: any,
   commentParams: ICommentParams,
   pageId: string,
   userId: string,
@@ -132,8 +131,8 @@ export const getOrCreateComment = async (
       {
         name: 'Photo', // You can set a name for the attachment
         url: commentParams.photo,
-        type: 'image' // You can set the type based on your requirements
-        // You may want to include other properties like size, duration if applicable
+        type: 'image' 
+      
       }
     ];
   }
@@ -181,66 +180,43 @@ export const getOrCreateComment = async (
         }),
       };
 
-      const result = await receiveTrpcMessage(subdomain, data);
-      // return result;
-    // const apiConversationResponse = await sendInboxMessage({
-    //   subdomain,
-    //   action: 'integrations.receive',
-    //   data: {
-    //     action: 'create-or-update-conversation',
-    //     payload: JSON.stringify({
-    //       customerId: customer.erxesApiId,
-    //       integrationId: integration.erxesApiId,
-    //       content: commentParams.message,
-    //       attachments: attachment,
-    //       conversationId: conversation.erxesApiId
-    //     })
-    //   },
-    //   isRPC: true
-    // });
-    // conversation.erxesApiId = apiConversationResponse?._id;
-    // await conversation.save();
+    const apiConversationResponse = await receiveTrpcMessage(subdomain, data);
+
+
+    if (apiConversationResponse.status === 'success') {
+      conversation.erxesApiId = apiConversationResponse.data._id;
+      await conversation.save();
+    } else {
+      throw new Error(`Customer creation failed: ${JSON.stringify(apiConversationResponse)}`);
+    }
   } catch (error) {
     await models.FacebookCommentConversation.deleteOne({
       _id: conversation?._id
     });
     throw new Error(error.message);
   }
-  // try {
-  //   await sendInboxMessage({
-  //     subdomain,
-  //     action: 'conversationClientMessageInserted',
-  //     data: {
-  //       ...conversation?.toObject(),
-  //       conversationId: conversation.erxesApiId
-  //     }
-  //   });
-  //   graphqlPubsub.publish(
-  //     `conversationMessageInserted:${conversation.erxesApiId}`,
-  //     {
-  //       conversationMessageInserted: {
-  //         ...conversation?.toObject(),
-  //         conversationId: conversation.erxesApiId
-  //       }
-  //     }
-  //   );
-  // } catch {
-  //   throw new Error(
-  //     `Failed to update the database with the Erxes API response for this conversation.`
-  //   );
-  // }
+  try {
+    const doc = {
+      ...conversation?.toObject(),
+      conversationId: conversation.erxesApiId
+    };
+    await pConversationClientMessageInserted(models,subdomain, doc);
+  
+    // graphqlPubsub.publish(
+    //   `conversationMessageInserted:${conversation.erxesApiId}`,
+    //   {
+    //     conversationMessageInserted: {
+    //       ...conversation?.toObject(),
+    //       conversationId: conversation.erxesApiId
+    //     }
+    //   }
+    // );
+  } catch {
+    throw new Error(
+      `Failed to update the database with the Erxes API response for this conversation.`
+    );
+  }
 
-  // if (conversation) {
-  //   await sendAutomationsMessage({
-  //     subdomain,
-  //     action: 'trigger',
-  //     data: {
-  //       type: `facebook:comments`,
-  //       targets: [conversation?.toObject()]
-  //     },
-  //     defaultValue: null
-  //   }).catch((err) => debugError(err.message));
-  // }
 };
 export const generatePostDoc = async (
   postParams: any,
@@ -308,7 +284,6 @@ export const getOrCreatePostConversation = async (
     let postConversation = await models.FacebookPostConversations.findOne({ postId });
 
     const facebookPost = await fetchFacebookPostDetails(pageId, models, params);
-
     if (!postConversation) {
       postConversation = await models.FacebookPostConversations.create(facebookPost);
       return postConversation;  
@@ -337,7 +312,8 @@ export const getOrCreatePost = async (
   subdomain: string,
   postParams: IPostParams,
   pageId: string,
-  userId: string
+  userId: string,
+  integration:IFacebookIntegrationDocument
 ) => {
   const { post_id } = postParams;
 
@@ -352,13 +328,6 @@ export const getOrCreatePost = async (
   if (post) {
     return post;
   }
-
-  const integration = await models.FacebookIntegrations.getIntegration({
-    $and: [
-      { facebookPageIds: { $in: pageId } },
-      { kind: INTEGRATION_KINDS.POST }
-    ]
-  });
 
   const { facebookPageTokensMap = {} } = integration;
 
@@ -378,48 +347,6 @@ export const getOrCreatePost = async (
   return post;
 };
 
-
-
-
-
-function getMediaSources(postDetails: any): string[] {
-  const mediaSources: Set<string> = new Set();
-
-  if (Array.isArray(postDetails?.attachments?.data)) {
-    postDetails.attachments.data.forEach((attachment: any) => {
-      const mediaType = attachment.media_type;
-
-      if (mediaType === 'photo' && attachment.media?.image?.src) {
-        mediaSources.add(attachment.media.image.src); // No need to append 'jpg'
-      } else if (mediaType === 'video' && attachment.media?.source) {
-        mediaSources.add(attachment.media.source); // No need to append 'mp'
-      } else if (
-        mediaType === 'album' &&
-        Array.isArray(attachment.subattachments?.data)
-      ) {
-        attachment.subattachments.data.forEach((subattachment: any) => {
-          if (subattachment.media) {
-            if (
-              subattachment.type === 'photo' &&
-              subattachment.media?.image?.src
-            ) {
-              mediaSources.add(subattachment.media.image.src); // No need to append 'jpg'
-            } else if (
-              subattachment.type === 'video' &&
-              subattachment.media?.source
-            ) {
-              mediaSources.add(subattachment.media.source); // No need to append 'mp'
-            }
-          }
-        });
-      }
-    });
-  } else {
-    return [];
-  }
-
-  return Array.from(mediaSources);
-}
 
 
 export default async function fetchFacebookPostDetails(pageId: string, models: IModels, params: ICommentParams) {
