@@ -1,7 +1,7 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
 import { ITRPCContext } from '~/init-trpc';
-import { createOrUpdate } from './utils';
+import { createOrUpdate } from '../utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 

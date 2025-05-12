@@ -9,7 +9,10 @@ import {
 } from '../../@types/structure';
 import { IUserDocument } from 'erxes-api-shared/core-types';
 import { IModels } from '~/connectionResolvers';
-import { escapeRegExp, checkCodeDuplication } from 'erxes-api-shared/utils';
+import {
+  escapeRegExp,
+  checkCollectionCodeDuplication,
+} from 'erxes-api-shared/utils';
 import {
   departmentSchema,
   structureSchema,
@@ -129,7 +132,7 @@ export const loadDepartmentClass = (models: IModels) => {
      * Create an department
      */
     public static async createDepartment(doc: any, user: IUserDocument) {
-      await checkCodeDuplication(models.Departments, doc.code);
+      await checkCollectionCodeDuplication(models.Departments, doc.code);
 
       const parent = await models.Departments.findOne({
         _id: doc.parentId,
@@ -163,7 +166,7 @@ export const loadDepartmentClass = (models: IModels) => {
     ) {
       const department = await models.Departments.getDepartment({ _id });
       if (department?.code !== doc.code) {
-        await checkCodeDuplication(models.Departments, doc.code);
+        await checkCollectionCodeDuplication(models.Departments, doc.code);
       }
 
       const parent = await models.Departments.findOne({
@@ -353,7 +356,7 @@ export const loadBranchClass = (models: IModels) => {
      * Create a branch
      */
     public static async createBranch(doc: any, user: IUserDocument) {
-      await checkCodeDuplication(models.Branches, doc.code);
+      await checkCollectionCodeDuplication(models.Branches, doc.code);
 
       const parent = await models.Branches.findOne({
         _id: doc.parentId,
@@ -388,7 +391,7 @@ export const loadBranchClass = (models: IModels) => {
       const branch = await models.Branches.getBranch({ _id });
 
       if (branch?.code !== doc.code) {
-        await checkCodeDuplication(models.Branches, doc.code);
+        await checkCollectionCodeDuplication(models.Branches, doc.code);
       }
 
       const parent = await models.Branches.findOne({ _id: doc.parentId });
@@ -501,7 +504,7 @@ export const loadPositionClass = (models: IModels) => {
      * Create a position
      */
     public static async createPosition(doc: any, user: IUserDocument) {
-      await checkCodeDuplication(models.Positions, doc.code);
+      await checkCollectionCodeDuplication(models.Positions, doc.code);
 
       const parent = await models.Positions.findOne({
         _id: doc.parentId,
@@ -536,7 +539,7 @@ export const loadPositionClass = (models: IModels) => {
       const position = await models.Positions.getPosition({ _id });
 
       if (position?.code !== doc.code) {
-        await checkCodeDuplication(models.Positions, doc.code);
+        await checkCollectionCodeDuplication(models.Positions, doc.code);
       }
 
       const parent = await models.Positions.findOne({ _id: doc.parentId });

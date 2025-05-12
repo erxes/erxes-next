@@ -35,7 +35,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     return (
       <div
         ref={ref}
-        className={cn(badgeVariants({ variant }), className)}
+        className={cn(badgeVariants({ variant }), onClose && 'pr-1', className)}
         {...props}
       >
         {children}

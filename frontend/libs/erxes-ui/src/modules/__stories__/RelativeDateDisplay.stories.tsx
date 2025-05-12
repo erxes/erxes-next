@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { RelativeDateDisplay } from 'erxes-ui/modules/display/components/RelativeDateDisplay';
+import { RelativeDateDisplay } from 'erxes-ui/modules';
 
 const meta: Meta<typeof RelativeDateDisplay> = {
   title: 'Modules/Display/RelativeDate',

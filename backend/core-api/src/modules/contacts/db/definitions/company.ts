@@ -163,10 +163,7 @@ export const companySchema = schemaWrapper(
       },
     },
     {
-      timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'modifiedAt',
-      },
+      timestamps: true,
     },
   ),
 );

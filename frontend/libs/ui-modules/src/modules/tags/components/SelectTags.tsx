@@ -27,31 +27,26 @@ export const SelectTagsProvider = ({
   const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
 
   const handleSelectCallback = (tag: ITag) => {
-    if (!tag) {
-      return;
-    }
+    if (!tag) return;
 
-    let newSelectedTagIds: string[] = [];
+    const isSingleMode = mode === 'single';
+    const multipleValue = (value as string[]) || [];
+    const isSelected = !isSingleMode && multipleValue.includes(tag._id);
 
-    if (mode === 'single') {
-      setSelectedTags([tag]);
-      onValueChange?.(tag._id);
-      newSelectedTagIds = [tag._id];
-    } else {
-      const multipleValue = (value as string[]) || [];
-      const isSelected = multipleValue.includes(tag._id);
+    const newSelectedTagIds = isSingleMode
+      ? [tag._id]
+      : isSelected
+      ? multipleValue.filter((t) => t !== tag._id)
+      : [...multipleValue, tag._id];
 
-      newSelectedTagIds = isSelected
-        ? multipleValue.filter((t) => t !== tag._id)
-        : [...multipleValue, tag._id];
+    const newSelectedTags = isSingleMode
+      ? [tag]
+      : isSelected
+      ? selectedTags.filter((t) => t._id !== tag._id)
+      : [...selectedTags, tag];
 
-      const newSelectedTags = isSelected
-        ? selectedTags.filter((t) => t._id !== tag._id)
-        : [...selectedTags, tag];
-
-      onValueChange?.(newSelectedTagIds);
-      setSelectedTags(newSelectedTags);
-    }
+    setSelectedTags(newSelectedTags);
+    onValueChange?.(isSingleMode ? tag._id : newSelectedTagIds);
 
     if (targetIds) {
       giveTags({
@@ -198,7 +193,8 @@ export const TagList = ({
 }: Omit<React.ComponentProps<typeof TagBadge>, 'onClose'> & {
   placeholder?: string;
 }) => {
-  const { value, selectedTags,setSelectedTags, mode, onSelect } = useSelectTagsContext();
+  const { value, selectedTags, setSelectedTags, mode, onSelect } =
+    useSelectTagsContext();
 
   const selectedTagIds = Array.isArray(value) ? value : [value];
 
@@ -216,6 +212,7 @@ export const TagList = ({
           renderAsPlainText={mode === 'single'}
           variant="secondary"
           onCompleted={(tag) => {
+            if (!tag) return;
             if (selectedTagIds.includes(tag._id)) {
               setSelectedTags([...selectedTags, tag]);
             }
@@ -228,6 +225,14 @@ export const TagList = ({
       ))}
     </>
   );
+};
+
+export const SelectTagsValue = () => {
+  const { selectedTags } = useSelectTagsContext();
+
+  if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
+
+  return <TagList />;
 };
 
 export const SelectTagsContent = () => {
@@ -244,5 +249,6 @@ export const SelectTags = Object.assign(SelectTagsProvider, {
   Content: SelectTagsContent,
   Command: SelectTagsCommand,
   Item: SelectTagsItem,
-  Value: TagList,
+  Value: SelectTagsValue,
+  List: TagList,
 });

@@ -2,7 +2,7 @@ import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
 import { ITRPCContext } from '~/init-trpc';
 import { AWS_EMAIL_STATUSES, EMAIL_VALIDATION_STATUSES } from '../constants';
-import { createOrUpdate } from './utils';
+import { createOrUpdate } from '../utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
@@ -77,7 +77,7 @@ export const customerRouter = t.router({
       const { query } = input;
       const { models } = ctx;
 
-      return models.Customers.find(query).countDocuments();
+      return models.Customers.countDocuments(query);
     }),
 
     createCustomer: t.procedure

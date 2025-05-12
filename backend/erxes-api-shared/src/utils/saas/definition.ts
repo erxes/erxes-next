@@ -211,7 +211,7 @@ export const saasPluginSchema = new mongoose.Schema({
   support: { type: String, label: 'Resolved issues' },
 
   createdAt: { type: Date, label: 'Created at' },
-  modifiedAt: { type: Date, label: 'Modified at' },
+  updatedAt: { type: Date, label: 'Modified at' },
   createdBy: { type: String, label: 'Created by' },
   modifiedBy: { type: String, label: 'Modified by' },
 

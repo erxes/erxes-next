@@ -16,7 +16,7 @@ export const productMutations = {
    * @param {Object} param2.doc Product info
    */
   async productsEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & IProduct,
     { models, __ }: IContext,
   ) {
@@ -34,7 +34,7 @@ export const productMutations = {
    * @param {string} param1._id Product id
    */
   async productsRemove(
-    _root: undefined,
+    _parent: undefined,
     { productIds }: { productIds: string[] },
     { models }: IContext,
   ) {
@@ -45,7 +45,7 @@ export const productMutations = {
    * Merge products
    */
   async productsMerge(
-    _root: undefined,
+    _parent: undefined,
     {
       productIds,
       productFields,
@@ -59,7 +59,7 @@ export const productMutations = {
    * Duplicate a product
    */
   async productsDuplicate(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

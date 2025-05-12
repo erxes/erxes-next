@@ -8,13 +8,13 @@ import {
 export const GET_COMPANIES = gql`
   query companiesMain(
     $segment: String
-    $tag: String
+    $tagIds: [String]
     $ids: [String]
     $excludeIds: Boolean
     $searchValue: String
     $autoCompletion: Boolean
     $autoCompletionType: String
-    $brand: String
+    $brandIds: [String]
     $sortField: String
     $sortDirection: Int
     $dateFilters: String
@@ -28,13 +28,13 @@ export const GET_COMPANIES = gql`
   ) {
     companies(
       segment: $segment
-      tag: $tag
+      tagIds: $tagIds
       ids: $ids
       excludeIds: $excludeIds
       searchValue: $searchValue
       autoCompletion: $autoCompletion
       autoCompletionType: $autoCompletionType
-      brand: $brand
+      brandIds: $brandIds
       sortField: $sortField
       sortDirection: $sortDirection
       dateFilters: $dateFilters

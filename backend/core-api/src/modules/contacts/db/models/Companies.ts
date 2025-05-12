@@ -85,7 +85,7 @@ export const loadCompanyClass = (models: IModels) => {
       const company = await models.Companies.create({
         ...doc,
         createdAt: new Date(),
-        modifiedAt: new Date(),
+        updatedAt: new Date(),
         searchText: this.fillSearchText(doc),
       });
 
@@ -109,7 +109,7 @@ export const loadCompanyClass = (models: IModels) => {
 
       await models.Companies.updateOne(
         { _id },
-        { $set: { ...doc, searchText, modifiedAt: new Date() } },
+        { $set: { ...doc, searchText, updatedAt: new Date() } },
       );
 
       return models.Companies.findOne({ _id });

@@ -103,15 +103,20 @@ const FilterPopover = ({
 
   useScopedHotkeys(`f`, () => setOpen(true), scope);
 
+  useEffect(() => {
+    if (open) {
+      setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover');
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  }, [open]);
+
   return (
     <Popover
       open={open}
       onOpenChange={(op) => {
         setOpen(op);
         op && setView('root');
-        op
-          ? setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover')
-          : goBackToPreviousHotkeyScope();
       }}
       {...props}
     />
@@ -188,10 +193,7 @@ const FilterBar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn(
-        'flex-none bg-sidebar px-3 py-2 border-b flex gap-3 h-auto',
-        className,
-      )}
+      className={cn('flex flex-wrap items-center gap-2 flex-1', className)}
       {...props}
     />
   );

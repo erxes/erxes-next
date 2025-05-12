@@ -2,7 +2,7 @@ import { IContext } from '~/connectionResolvers';
 import { IApp } from 'erxes-api-shared/core-types';
 
 export const appMutations = {
-  async appsAdd(_root: undefined, params: IApp, { models }: IContext) {
+  async appsAdd(_parent: undefined, params: IApp, { models }: IContext) {
     try {
       const app = await models.Apps.createApp(params);
 
@@ -14,14 +14,14 @@ export const appMutations = {
     }
   },
   async appsEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, name, userGroupId }: any,
     { models }: IContext,
   ) {
     return models.Apps.updateApp(_id, { name, userGroupId });
   },
   async appsRemove(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

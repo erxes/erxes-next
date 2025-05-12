@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { IModels } from '~/connectionResolvers';
-import { fixDate } from 'erxes-api-shared/utils/utils';
+import { fixDate } from 'erxes-api-shared/utils';
 
 interface IIn {
   $in: string[];

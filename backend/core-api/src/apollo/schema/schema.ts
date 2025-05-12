@@ -16,6 +16,11 @@ import {
 } from '@/auth/graphql/schemas/auth';
 
 import {
+  mutations as BrandMutations,
+  queries as BrandQueries,
+  types as BrandTypes,
+} from '@/organization/brand/graphql/schema';
+import {
   mutations as branchsMutations,
   queries as branchsQueries,
   BranchTypes,
@@ -26,12 +31,8 @@ import {
   DepartmentTypes,
 } from '@/organization/structure/graphql/schemas/department';
 import {
-  mutations as positionsMutations,
-  queries as positionsQueries,
-  PositionTypes,
-} from '@/organization/structure/graphql/schemas/position';
-import {
   mutations as structuresMutations,
+  queries as structuresQueries,
   StructureTypes,
 } from '@/organization/structure/graphql/schemas/structure';
 import {
@@ -44,35 +45,44 @@ import {
   mutations as ConfigsMutations,
   queries as ConfigsQueries,
   ConfigTypes,
-} from '@/settings/graphql/schemas';
+} from '~/modules/organization/settings/graphql/configs/schemas';
 
+import {
+  mutations as FavoritesMutations,
+  queries as FavoritesQueries,
+  types as FavoritesTypes,
+} from '~/modules/organization/settings/graphql/favorites/schemas';
+
+import {
+  mutations as AppMutations,
+  queries as AppQueries,
+  types as AppTypes,
+} from '@/apps/graphql/schemas';
+import {
+  mutations as positionsMutations,
+  queries as positionsQueries,
+  PositionTypes,
+} from '@/organization/structure/graphql/schemas/position';
 import {
   mutations as UserMutations,
   queries as UserQueries,
   types as UserTypes,
 } from '@/organization/team-member/graphql/schema';
 import {
-  mutations as TagMutations,
-  queries as TagQueries,
-  types as TagTypes,
-} from '@/tags/graphql/schemas';
-import {
   mutations as ProductMutations,
   queries as ProductQueries,
   types as ProductTypes,
 } from '@/products/graphql/schemas';
 import {
-  mutations as AppMutations,
-  queries as AppQueries,
-  types as AppTypes,
-} from '@/apps/graphql/schemas';
-import { CommonTypes } from './commonTypes';
-import { BrandTypes } from '@/organization/structure/graphql/schemas/brand';
-import {
   mutations as RelationMutations,
   queries as RelationQueries,
   types as RelationTypes,
 } from '@/relations/graphql/schema';
+import {
+  mutations as TagMutations,
+  queries as TagQueries,
+  types as TagTypes,
+} from '@/tags/graphql/schemas';
 
 import {
   mutations as ConformityMutations,
@@ -80,9 +90,6 @@ import {
 } from '@/conformities/graphql/schema';
 
 export const types = `
-    scalar JSON
-    scalar Date
-  
     enum CacheControlScope {
       PUBLIC
       PRIVATE
@@ -96,7 +103,6 @@ export const types = `
   
     ${CustomerTypes}
     ${CompanyTypes}
-    ${CommonTypes}
     ${UserTypes}
     ${ConfigTypes}
     ${TagTypes}
@@ -110,6 +116,7 @@ export const types = `
     ${AppTypes}
     ${ConformityTypes}
     ${RelationTypes}
+    ${FavoritesTypes}
   `;
 
 export const queries = `
@@ -123,9 +130,12 @@ export const queries = `
     ${branchsQueries}
     ${departmentsQueries}
     ${positionsQueries}
+    ${structuresQueries}
     ${unitsQueries}
+    ${BrandQueries}
     ${AppQueries}
     ${RelationQueries}
+    ${FavoritesQueries}
   `;
 
 export const mutations = `
@@ -141,9 +151,11 @@ export const mutations = `
     ${positionsMutations}
     ${structuresMutations}
     ${unitsMutations}
+    ${BrandMutations}
     ${AppMutations}
     ${ConformityMutations}
     ${RelationMutations}
+    ${FavoritesMutations}
   `;
 
 export default { types, queries, mutations };
