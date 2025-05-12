@@ -77,7 +77,7 @@ export const customerRouter = t.router({
       const { query } = input;
       const { models } = ctx;
 
-      return models.Customers.find(query).countDocuments();
+      return models.Customers.countDocuments(query);
     }),
 
     createCustomer: t.procedure

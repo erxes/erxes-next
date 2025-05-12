@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { IUserDocument } from './modules/team-member/user';
 
 export interface IRule {
@@ -60,6 +59,7 @@ export interface IPdfAttachment {
 
 export interface IMainContext {
   res: any;
+  req: any;
   requestInfo: any;
   user: IUserDocument;
   docModifier: <T>(doc: T) => any;

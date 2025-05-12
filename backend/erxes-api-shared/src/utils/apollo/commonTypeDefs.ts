@@ -32,9 +32,36 @@ export const graphqlPdfAttachmentInput = `
   }
 `;
 
-export const graphqlPaginationParams = `
-  page: Int,
-  perPage: Int,
-  sortField: String
-  sortDirection: Int
+export const graphqlPaginationInfo = `
+  type PageInfo {
+        hasNextPage: Boolean,
+        hasPreviousPage: Boolean,
+        startCursor: String,
+        endCursor: String,
+  }
+`;
+
+export const apolloCommonTypes = `
+  scalar Date
+  scalar JSON
+  enum CURSOR_DIRECTION {
+    forward,
+    backward
+  }
+    type Coordinate {
+        longitude: String
+        latitude: String
+    }
+
+
+    input CoordinateInput {
+        longitude: String
+        latitude: String
+    }
+
+  ${graphqlAttachmentType}
+  ${graphqlAttachmentInput}
+  ${graphqlPdfAttachmentType}
+  ${graphqlPdfAttachmentInput}
+  ${graphqlPaginationInfo}
 `;

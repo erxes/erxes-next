@@ -80,7 +80,7 @@ export const tagMutations = {
     { _id }: { _id: string },
     { models }: IContext,
   ) {
-    return await models.Tags.removeTag(_id);
+    return models.Tags.removeTag(_id);
   },
 
   /**

@@ -37,8 +37,8 @@ export const defaultPaginate = (
   return collection.limit(_limit).skip((_page - 1) * _limit);
 };
 
-export const checkCodeDuplication = async (
-  collection: mongoose.Model<any>,
+export const checkCollectionCodeDuplication = async (
+  collection: any,
   code: string,
 ) => {
   if (code.includes('/')) {

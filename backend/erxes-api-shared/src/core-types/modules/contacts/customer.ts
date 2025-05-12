@@ -51,7 +51,7 @@ export interface ICustomer {
 export interface ICustomerDocument extends ICustomer, Document {
   _id: string;
   createdAt: Date;
-  modifiedAt: Date;
+  updatedAt: Date;
 }
 
 export interface ICustomerQueryFilterParams

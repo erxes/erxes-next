@@ -1,9 +1,9 @@
 export const types = `
-    type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String
     state: String
     createdAt: Date
-    modifiedAt: Date
+    updatedAt: Date
     avatar: String
     integrationId: String
     firstName: String

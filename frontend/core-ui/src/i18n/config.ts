@@ -5,7 +5,7 @@ import i18n, { InitOptions } from 'i18next';
 import translations from './translations';
 
 export const defaultI18nOptions: InitOptions = {
-  debug: process.env.NODE_ENV === 'development',
+  // debug: process.env.NODE_ENV === 'development',
   detection: {
     caches: ['cookie', 'localStorage', 'header'],
     lookupCookie: 'lng',
@@ -18,6 +18,9 @@ export const defaultI18nOptions: InitOptions = {
   },
   resources: translations,
   supportedLngs: Object.keys(translations),
+  react: {
+    useSuspense: true,
+  },
 };
 
 export const i18nInstance = i18n.createInstance();

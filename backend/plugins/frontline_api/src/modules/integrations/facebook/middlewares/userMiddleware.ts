@@ -1,24 +1,24 @@
-// import { sendInboxMessage } from '../messageBroker';
 import { getSubdomain } from 'erxes-api-shared/utils';
 
 export const userIds: string[] = [];
 
-const userMiddleware = async (req, _res, next) => {
+
+export const userMiddleware = async (req, _res, next) => {
   const { path, headers, query } = req;
   const subdomain = getSubdomain(req);
 
-  if (userIds.length === 0) {
-    // const response = await sendInboxMessage({
-    //   subdomain,
-    //   action: 'integrations.receive',
-    //   data: {
-    //     action: 'getUserIds'
-    //   },
-    //   isRPC: true
-    // });
+  // if (userIds.length === 0) {
+  //   const response = await sendInboxMessage({
+  //     subdomain,
+  //     action: 'integrations.receive',
+  //     data: {
+  //       action: 'getUserIds'
+  //     },
+  //     isRPC: true
+  //   });
 
-    // userIds = response.userIds;
-  }
+  //   userIds = response.userIds;
+  // }
 
   if (path.startsWith('/accounts')) {
     try {
@@ -34,7 +34,5 @@ const userMiddleware = async (req, _res, next) => {
     }
   }
 
-  return next();
+  next();
 };
-
-export default userMiddleware;

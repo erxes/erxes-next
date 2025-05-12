@@ -73,7 +73,7 @@ export const productCategoryTrpcRouter = t.router({
       const { query } = input;
       const { models } = ctx;
 
-      return models.ProductCategories.find(query).countDocuments();
+      return models.ProductCategories.countDocuments(query);
     }),
   }),
 });

@@ -2,13 +2,13 @@ import { escapeRegExp } from 'erxes-api-shared/utils';
 import { ITag, ITagDocument } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { removeRelatedIds, setRelatedIds } from '@/tags/utils';
+import { removeRelatedTagIds, setRelatedTagIds } from '@/tags/utils';
 import { tagSchema } from '@/tags/db/definitions/tags';
 export interface ITagModel extends Model<ITagDocument> {
   getTag(_id: string): Promise<ITagDocument>;
   createTag(doc: ITag): Promise<ITagDocument>;
   updateTag(_id: string, doc: ITag): Promise<ITagDocument>;
-  removeTag(_id: string): void;
+  removeTag(_id: string): Promise<ITagDocument>;
 }
 
 export const loadTagClass = (models: IModels) => {
@@ -47,7 +47,7 @@ export const loadTagClass = (models: IModels) => {
         createdAt: new Date(),
       });
 
-      await setRelatedIds(models, tag);
+      await setRelatedTagIds(models, tag);
 
       return tag;
     }
@@ -108,7 +108,7 @@ export const loadTagClass = (models: IModels) => {
 
         await models.Tags.bulkWrite(bulkDoc);
 
-        await removeRelatedIds(models, tag);
+        await removeRelatedTagIds(models, tag);
       }
 
       await models.Tags.updateOne({ _id }, { $set: { ...doc, order } });
@@ -116,7 +116,7 @@ export const loadTagClass = (models: IModels) => {
       const updated = await models.Tags.findOne({ _id });
 
       if (updated) {
-        await setRelatedIds(models, updated);
+        await setRelatedTagIds(models, updated);
       }
 
       return updated;
@@ -128,15 +128,15 @@ export const loadTagClass = (models: IModels) => {
     public static async removeTag(_id: string) {
       const tag = await models.Tags.getTag(_id);
 
-      const childCount = await models.Tags.find({
+      const childCount = await models.Tags.countDocuments({
         parentId: _id,
-      }).countDocuments();
+      });
 
       if (childCount > 0) {
         throw new Error('Please remove child tags first');
       }
 
-      await removeRelatedIds(models, tag);
+      await removeRelatedTagIds(models, tag);
 
       return models.Tags.deleteOne({ _id });
     }
@@ -155,7 +155,7 @@ export const loadTagClass = (models: IModels) => {
       }
 
       // can't update name & type same time more than one tags.
-      const count = await models.Tags.find(selector).countDocuments();
+      const count = await models.Tags.countDocuments(selector);
 
       if (selector && count > 1) {
         return false;

@@ -21,8 +21,6 @@ export const NavigationButton = ({
     ? '/' + pathPrefix + pathnameWithSlash
     : pathnameWithSlash;
 
-  console.log(pathnameWithPrefix, activePathname);
-
   const isActive = activePathname === pathnameWithPrefix;
 
   const isSubItemActive =

@@ -1,6 +1,6 @@
 // subdocument schema for MessengerOnlineHours
 import { Schema } from 'mongoose';
-import { ruleSchema } from 'erxes-api-shared/core-modules/common/db/definitions/common';
+import { ruleSchema } from 'erxes-api-shared/core-modules';
 import {
   LEAD_LOAD_TYPES,
   LEAD_SUCCESS_ACTIONS,

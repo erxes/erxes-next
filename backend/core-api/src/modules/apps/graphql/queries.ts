@@ -16,7 +16,7 @@ export const appQueries = {
     if (searchValue) {
       qry.name = new RegExp(`.*${searchValue}.*`, 'i');
     }
-    return models.Apps.find(qry).countDocuments();
+    return models.Apps.countDocuments(qry);
   },
 
   async appDetail(

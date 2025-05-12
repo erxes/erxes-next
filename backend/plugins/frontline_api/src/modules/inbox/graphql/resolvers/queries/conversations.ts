@@ -1,21 +1,13 @@
 import { IContext, IModels } from '~/connectionResolvers';
 import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
-
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { defaultPaginate } from 'erxes-api-shared/src/utils';
-
-interface ICountBy {
-  [index: string]: number;
-}
-
-interface IConversationRes {
-  [index: string]: number | ICountBy;
-}
+import { IConversationDocument } from '~/modules/inbox/@types/conversations';
 
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
-  const result = await models.Conversations.find(query).countDocuments();
-
+  const result = await models.Conversations.countDocuments(query);
   return Number(result);
 };
 export const conversationQueries = {
@@ -29,29 +21,22 @@ export const conversationQueries = {
   ) {
     // filter by ids of conversations
     if (params && params.ids) {
-      return models.Conversations.find({ _id: { $in: params.ids } })
-        .sort({
-          updatedAt: -1,
-        })
-        .skip(params.skip || 0)
-        .limit(params.limit || 0);
+      const { list, totalCount, pageInfo } =
+        await cursorPaginate<IConversationDocument>({
+          model: models.Conversations,
+          params,
+          query: { _id: { $in: params.ids } },
+        });
+      return { list, totalCount, pageInfo };
     }
 
-    // initiate query builder
-    // const qb = new QueryBuilder(models, subdomain, params, {
-    //   _id: user._id,
-    //   code: user.code,
-    //   starredConversationIds: user.starredConversationIds,
-    //   role: user.role,
-    // });
-
-    // await qb.buildAllQueries();
-
-    // console.log('qb.mainQuery()', qb.mainQuery());
-
-    const conversations = await models.Conversations.find({}).limit(10);
-
-    return conversations;
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IConversationDocument>({
+        model: models.Conversations,
+        params,
+        query: {},
+      });
+    return { list, totalCount, pageInfo };
   },
 
   /**
@@ -232,12 +217,12 @@ export const conversationQueries = {
 
     serverTiming.startTime('query');
 
-    const response = await models.Conversations.find({
+    const response = await models.Conversations.countDocuments({
       ...integrationsFilter,
       status: { $in: [CONVERSATION_STATUSES.NEW, CONVERSATION_STATUSES.OPEN] },
       readUserIds: { $ne: user._id },
       $and: [{ $or: qb.userRelevanceQuery() }],
-    }).countDocuments();
+    });
 
     serverTiming.endTime('query');
 
