@@ -43,7 +43,7 @@ const recheckValidDate = async (models: IModels, adjustInventory, beginDate) => 
     'details.productId': { $exists: true, $ne: '' },
     $or: [
       { createdAt: { $gte: adjustInventory.checkedDate } },
-      { modifiedAt: { $gte: adjustInventory.checkedDate } },
+      { updatedAt: { $gte: adjustInventory.checkedDate } },
     ]
   }).sort({ date: 1 }).lean();
 
@@ -58,11 +58,11 @@ const adjustInventoryMutations = {
   async adjustInventoryAdd(
     _root,
     doc: IAdjustInventory,
-    { user, docModifier, models }: IContext
+    { user, models }: IContext
   ) {
     const { beginDate } = await checkValidDate(models, doc);
 
-    const adjusting = await models.AdjustInventories.createAdjustInventory(docModifier({ ...doc, beginDate, createBy: user._id }));
+    const adjusting = await models.AdjustInventories.createAdjustInventory({ ...doc, beginDate, createdBy: user._id });
     return adjusting;
   },
 
