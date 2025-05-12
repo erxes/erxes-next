@@ -5,6 +5,7 @@ import { productQueries } from '@/products/graphql/resolvers/queries';
 import { tagQueries } from '@/tags/graphql/queries';
 import { appQueries } from '@/apps/graphql/queries';
 import { relationsQueries } from '@/relations/graphql/queries';
+import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
 
 export const queries = {
   ...contactQueries,
@@ -14,4 +15,5 @@ export const queries = {
   ...productQueries,
   ...appQueries,
   ...relationsQueries,
+  ...favoriteQueries,
 };
