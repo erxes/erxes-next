@@ -8,7 +8,7 @@ import { useFavorites } from '../hooks/useFavorites';
 export function SidebarNavigationFavorites() {
   const favorites = useFavorites();
 
-  if (!favorites) return null;
+  if (!favorites || favorites.length === 0) return null;
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
@@ -53,6 +53,7 @@ export function SidebarNavigationFavoritesItem({
     <Collapsible asChild open={isActive} className="group/collapsible">
       <Sidebar.MenuItem key={name}>
         <NavigationButton
+          isFavorite={true}
           pathname={pathWithoutUi}
           name={name}
           icon={Icon as Icon}
