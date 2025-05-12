@@ -1,18 +1,22 @@
 import * as dotenv from 'dotenv';
 import { redis } from './redis';
+import { Queue } from 'bullmq';
 
 dotenv.config();
 
-const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL } = process.env;
+const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL, LERNA_PACKAGE_NAME } =
+  process.env;
 
 const isDev = NODE_ENV === 'development';
 
-const keyForConfig = (name: string) => `service:config:${name}`;
+export const keyForConfig = (name: string) => `service:config:${name}`;
+const queue = new Queue('gateway-update-apollo-router', {
+  connection: redis,
+});
 
 export const getPlugins = async (): Promise<string[]> => {
   const enabledServices =
-    process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) ||
-    [];
+    process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) || [];
 
   return ['core', ...enabledServices];
 };
@@ -65,9 +69,7 @@ export const joinErxesGateway = async ({
     }),
   );
 
-  const address =
-    LOAD_BALANCER_ADDRESS ||
-    `http://${isDev ? 'localhost' : `plugin-${name}-api`}:${port}`;
+  const address = LOAD_BALANCER_ADDRESS || `http://localhost:${port}`;
 
   await redis.set(`service:${name}`, address);
 
@@ -93,4 +95,37 @@ export const getPluginAddress = async (name: string) => {
     pluginAddressCache[name] = await redis.get(`service:${name}`);
   }
   return pluginAddressCache[name];
+};
+
+function getNonFunctionProps<T extends object>(obj: T): Partial<T> {
+  const result: Partial<T> = {};
+
+  for (const key of Object.keys(obj) as (keyof T)[]) {
+    if (typeof obj[key] !== 'function') {
+      result[key] = obj[key];
+    }
+  }
+
+  return result;
+}
+
+export const initializePluginConfig = async <TConfig extends object>(
+  pluginName: string,
+  propertyName: string,
+  config: TConfig,
+) => {
+  const pluginConfig = await redis.get(keyForConfig(pluginName));
+  const configJSON = JSON.parse(pluginConfig || '{}');
+
+  await redis.set(
+    keyForConfig(pluginName),
+
+    JSON.stringify({
+      ...configJSON,
+      meta: {
+        ...(configJSON?.meta || {}),
+        [propertyName]: getNonFunctionProps<TConfig>(config),
+      },
+    }),
+  );
 };

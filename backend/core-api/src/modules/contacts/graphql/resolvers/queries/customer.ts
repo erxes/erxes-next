@@ -3,23 +3,9 @@ import {
   ICustomerQueryFilterParams,
 } from 'erxes-api-shared/core-types';
 import { cursorPaginate } from 'erxes-api-shared/utils';
+import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
-
-const generateFilter = (params: ICustomerQueryFilterParams) => {
-  const { searchValue } = params;
-
-  const filter = {};
-
-  if (searchValue) {
-    filter['$or'] = [
-      { firstName: { $regex: searchValue, $options: 'i' } },
-      { lastName: { $regex: searchValue, $options: 'i' } },
-      { primaryEmail: { $regex: searchValue, $options: 'i' } },
-    ];
-  }
-
-  return filter;
-};
+import { generateFilter } from '~/modules/contacts/utils';
 
 export const customerQueries = {
   /**
@@ -30,7 +16,8 @@ export const customerQueries = {
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {
-    const filter = generateFilter(params);
+    const filter: FilterQuery<ICustomerQueryFilterParams> =
+      await generateFilter(params, models);
 
     const { list, totalCount, pageInfo } =
       await cursorPaginate<ICustomerDocument>({

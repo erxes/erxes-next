@@ -303,7 +303,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         >
           <RecordTablePopover open={open} onOpenChange={setOpen}>
             <RecordTableCellTrigger>
-              <SelectTags.Value />
+              <SelectTags.List />
             </RecordTableCellTrigger>
             <RecordTableCellContent className="w-96">
               <SelectTags.Content />
