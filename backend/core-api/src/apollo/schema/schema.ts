@@ -32,6 +32,7 @@ import {
 } from '@/organization/structure/graphql/schemas/position';
 import {
   mutations as structuresMutations,
+  queries as structuresQueries,
   StructureTypes,
 } from '@/organization/structure/graphql/schemas/structure';
 import {
@@ -118,6 +119,7 @@ export const queries = `
     ${branchsQueries}
     ${departmentsQueries}
     ${positionsQueries}
+    ${structuresQueries}
     ${unitsQueries}
     ${AppQueries}
     ${RelationQueries}
