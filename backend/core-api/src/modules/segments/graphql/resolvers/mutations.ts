@@ -8,7 +8,7 @@ import { IContext } from '~/connectionResolvers';
 import { ISegment } from '../../db/definitions/segments';
 import { ISegmentsEdit } from '../../types';
 
-const segmentMutations = {
+export const segmentMutations = {
   /**
    * Create new segment
    */
@@ -63,5 +63,3 @@ const segmentMutations = {
 // checkPermission(segmentMutations, "segmentsAdd", "manageSegments");
 // checkPermission(segmentMutations, "segmentsEdit", "manageSegments");
 // checkPermission(segmentMutations, "segmentsRemove", "manageSegments");
-
-export default segmentMutations;

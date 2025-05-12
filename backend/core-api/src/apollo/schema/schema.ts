@@ -85,9 +85,9 @@ import {
   mutations as SegmentMutations,
   queries as SegmentQueries,
   types as SegmentTypes,
-} from '@/segments/apollo/schemas';
+} from '~/modules/segments/graphql/schemas';
 
-import { queries as FormQueries } from '@/forms/apollo/schema';
+import { queries as FormQueries } from '~/modules/forms/graphql/schema';
 
 import {
   mutations as RelationMutations,

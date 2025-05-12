@@ -15,7 +15,10 @@ import {
 } from '../definitions/fields';
 import { IModels } from '~/connectionResolvers';
 import { IOrderInput } from 'erxes-api-shared/core-types';
-import { sendTRPCMessage, updateOrder } from 'erxes-api-shared/utils';
+import {
+  sendTRPCMessage,
+  updateMongoDocumentOrder,
+} from 'erxes-api-shared/utils';
 
 // import {
 //   fieldGroupSchema,
@@ -140,7 +143,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
         pluginName,
         module: `${type}s`,
         action: `find`,
-        data: {
+        input: {
           'customFieldsData.field': _id,
         },
 
@@ -262,7 +265,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
      * Update given fields orders
      */
     public static async updateOrder(orders: IOrderInput[]) {
-      return updateOrder(models.Fields, orders);
+      return updateMongoDocumentOrder(models.Fields, orders);
     }
 
     /*
@@ -509,7 +512,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
         method: 'query',
         module: 'forms',
         action: 'systemFields',
-        data: {
+        input: {
           groupId,
           type,
         },
@@ -527,7 +530,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
         method: 'query',
         module: 'forms',
         action: 'systemFields',
-        data: {
+        input: {
           groupId,
           type,
         },
@@ -818,7 +821,7 @@ export const loadGroupClass = (models: IModels) => {
      * Update given fieldsGroups orders
      */
     public static async updateOrder(orders: IOrderInput[]) {
-      return updateOrder(models.FieldsGroups, orders);
+      return updateMongoDocumentOrder(models.FieldsGroups, orders);
     }
   }
 

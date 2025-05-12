@@ -17,7 +17,7 @@ interface IAssociatedType {
   description: string;
 }
 
-const segmentQueries = {
+export const segmentQueries = {
   async segmentsGetTypes() {
     const pluginNames = await getPlugins();
     let types: Array<{ name: string; description: string }> = [];
@@ -209,5 +209,3 @@ const segmentQueries = {
 // requireLogin(segmentQueries, "segmentsEvents");
 
 // checkPermission(segmentQueries, "segments", "showSegments", []);
-
-export default segmentQueries;
