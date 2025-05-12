@@ -7,6 +7,7 @@ import { appQueries } from '@/apps/graphql/queries';
 import { queries as formQueries } from '@/forms/apollo/resolvers';
 import { queries as segmentQueries } from '@/segments/apollo/resolvers';
 import { relationsQueries } from '@/relations/graphql/queries';
+import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
 
 export const queries = {
   ...contactQueries,
@@ -18,4 +19,5 @@ export const queries = {
   ...formQueries,
   ...segmentQueries,
   ...relationsQueries,
+  ...favoriteQueries,
 };

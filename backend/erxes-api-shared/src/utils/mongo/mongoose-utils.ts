@@ -1,5 +1,6 @@
-import mongoose, { Document, Model, SortOrder } from 'mongoose';
+import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
+import { mongooseStringRandomId } from './mongoose-types';
 
 export const mongooseField = (options: any) => {
   const { pkey, type, optional } = options;
@@ -37,8 +38,8 @@ export const defaultPaginate = (
   return collection.limit(_limit).skip((_page - 1) * _limit);
 };
 
-export const checkCodeDuplication = async (
-  collection: mongoose.Model<any>,
+export const checkCollectionCodeDuplication = async (
+  collection: any,
   code: string,
 ) => {
   if (code.includes('/')) {
@@ -225,4 +226,19 @@ export const cursorPaginate = async <T extends Document>({
       }`,
     );
   }
+};
+
+export const schemaWrapper = (
+  schema: Schema,
+  options?: { contentType?: string },
+) => {
+  schema.add({ _id: mongooseStringRandomId });
+  schema.add({ processId: { type: String, optional: true } });
+  // schema.add({ createdAt: { type: Date, default: new Date() } });
+
+  if (options?.contentType) {
+    (schema.statics as any)._contentType = options.contentType;
+  }
+
+  return schema;
 };

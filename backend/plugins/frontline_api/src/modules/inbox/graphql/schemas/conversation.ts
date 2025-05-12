@@ -1,21 +1,4 @@
-import {
-  graphqlAttachmentInput,
-  graphqlAttachmentType,
-} from 'erxes-api-shared/src/utils';
-
 export const types = `
-  ${graphqlAttachmentType}
-  ${graphqlAttachmentInput}
-  scalar Date
-  scalar JSON
-
-
-  type PageInfo {
-        hasNextPage: Boolean,
-        hasPreviousPage: Boolean,
-        startCursor: String,
-        endCursor: String,
-  }
   extend type Customer @key(fields: "_id") {
     _id: String @external
     conversations: [Conversation]

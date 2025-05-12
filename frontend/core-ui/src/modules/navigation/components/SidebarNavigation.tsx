@@ -1,43 +1,19 @@
-import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
 import { Collapsible, Sidebar, IUIConfig, cn } from 'erxes-ui';
-import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState } from 'ui-modules';
-import { useAtom } from 'jotai';
-import { useMemo } from 'react';
+import { usePluginsModules } from '../hooks/usePLuginsModules';
 import { NavigationButton } from './NavigationButton';
 import { Icon } from '@tabler/icons-react';
 
 export function SidebarNavigation() {
-  const { t } = useTranslation();
-  const [pluginsMetaData] = useAtom(pluginsConfigState);
-
-  const modules = useMemo(() => {
-    const coreModules = [
-      ...CORE_MODULES.filter((module) => module.hasSettings),
-    ];
-
-    if (pluginsMetaData) {
-      const settingsModules = Object.values(pluginsMetaData || {}).flatMap(
-        (plugin) =>
-          plugin.modules.map((module) => ({
-            ...module,
-            pluginName: plugin.name,
-          })),
-      );
-
-      return [...coreModules, ...settingsModules] as IUIConfig['modules'];
-    }
-    return coreModules;
-  }, [pluginsMetaData]);
+  const modules = usePluginsModules();
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <Sidebar.Group>
         <Sidebar.GroupLabel asChild>
           <Collapsible.Trigger>
-            {t('nav.' + 'modules')}{' '}
+            Modules
             <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
           </Collapsible.Trigger>
         </Sidebar.GroupLabel>
@@ -61,7 +37,6 @@ export function SidebarNavigationItem({
   path,
   submenus,
 }: IUIConfig['modules'][number]) {
-  const { t } = useTranslation();
   const pathname = useLocation().pathname;
   const Icon = icon;
   const pathWithoutUi = path.replace('_ui', '');
@@ -72,7 +47,7 @@ export function SidebarNavigationItem({
       <Sidebar.MenuItem key={name}>
         <NavigationButton
           pathname={pathWithoutUi}
-          name={t('nav.' + name)}
+          name={name}
           icon={Icon as Icon}
         />
         {submenus && submenus.length > 0 && (
@@ -97,9 +72,7 @@ export function SidebarNavigationItem({
                             )}
                           />
                         )}
-                        <span>
-                          {t(`nav.${pathWithoutUi}.subMenu.${submenu.name}`)}
-                        </span>
+                        <span className="capitalize">{submenu.name}</span>
                       </Link>
                     </Sidebar.SubButton>
                   </Sidebar.SubItem>

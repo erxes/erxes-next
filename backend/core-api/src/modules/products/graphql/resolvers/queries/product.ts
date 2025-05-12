@@ -110,7 +110,7 @@ export const productQueries = {
    * Products list
    */
   async products(
-    _root: undefined,
+    _parent: undefined,
     params: IProductParams,
     { commonQuerySelector, models }: IContext,
   ) {
@@ -140,7 +140,7 @@ export const productQueries = {
   },
 
   async productDetail(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
@@ -148,7 +148,7 @@ export const productQueries = {
   },
 
   async productsTotalCount(
-    _root: undefined,
+    _parent: undefined,
     params: IProductParams,
     { commonQuerySelector, models }: IContext,
   ) {
@@ -160,11 +160,11 @@ export const productQueries = {
       });
     }
 
-    return await models.Products.find(filter).countDocuments();
+    return await models.Products.countDocuments(filter);
   },
 
   async productSimilarities(
-    _root: undefined,
+    _parent: undefined,
     { _id, groupedSimilarity },
     { models }: IContext,
   ) {

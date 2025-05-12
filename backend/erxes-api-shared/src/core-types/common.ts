@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { IUserDocument } from './modules/team-member/user';
 
 export interface IRule {
@@ -60,24 +59,15 @@ export interface IPdfAttachment {
 
 export interface IMainContext {
   res: any;
+  req: any;
   requestInfo: any;
   user: IUserDocument;
-  docModifier: <T>(doc: T) => any;
-  brandIdSelector: object;
-  userBrandIdsSelector: object;
-  commonQuerySelector: object;
-  commonQuerySelectorElk: object;
-  singleBrandIdSelector: object;
-  dataSources: {
-    AutomationsAPI: any;
-    EngagesAPI: any;
-    IntegrationsAPI: any;
-    HelpersApi: any;
-  };
-  dataLoaders: any;
+  __: <T extends object>(doc: T) => T & { processId: string };
+  processId: string;
 }
 export interface ILogDoc {
-  source: 'webhook' | 'graphql' | 'mongo';
+  subdomain: string;
+  source: 'webhook' | 'graphql' | 'mongo' | 'auth';
   action: string;
   payload: any;
   userId?: string;
@@ -87,6 +77,12 @@ export interface ILogDoc {
     durationMs: number;
   };
   status?: 'failed' | 'success';
+  processId?: string;
+}
+
+export interface IOrderInput {
+  _id: string;
+  order: number;
 }
 
 export interface IAttachment {

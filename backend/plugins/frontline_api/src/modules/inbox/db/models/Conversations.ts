@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { stream } from 'erxes-api-shared/utils/bulkUtils';
+
 import { cleanHtml } from 'erxes-api-shared/utils';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { conversationSchema } from '@/inbox/db/definitions/conversations';
@@ -118,7 +118,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
         content: cleanHtml(doc.content),
         createdAt: doc.createdAt || now,
         updatedAt: doc.createdAt || now,
-        number: (await models.Conversations.find().countDocuments()) + 1,
+        number: (await models.Conversations.countDocuments()) + 1,
         messageCount: 0,
         ...(userRelevance ? { userRelevance } : {}),
       });

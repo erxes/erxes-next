@@ -2,7 +2,7 @@ import { ITagDocument } from 'erxes-api-shared/core-types';
 import { IModels } from '~/connectionResolvers';
 
 // set related tags
-export const setRelatedIds = async (models: IModels, tag: ITagDocument) => {
+export const setRelatedTagIds = async (models: IModels, tag: ITagDocument) => {
   if (tag.parentId) {
     const parentTag = await models.Tags.findOne({ _id: tag.parentId });
 
@@ -24,14 +24,17 @@ export const setRelatedIds = async (models: IModels, tag: ITagDocument) => {
       const updated = await models.Tags.findOne({ _id: tag.parentId });
 
       if (updated) {
-        await setRelatedIds(models, updated);
+        await setRelatedTagIds(models, updated);
       }
     }
   }
 };
 
 // remove related tags
-export const removeRelatedIds = async (models: IModels, tag: ITagDocument) => {
+export const removeRelatedTagIds = async (
+  models: IModels,
+  tag: ITagDocument,
+) => {
   const tags = await models.Tags.find({ relatedIds: { $in: tag._id } });
 
   if (tags.length === 0) {

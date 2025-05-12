@@ -1,13 +1,11 @@
-import { redis } from 'erxes-api-shared/utils/redis';
+import { redis } from 'erxes-api-shared/utils';
 import * as dotenv from 'dotenv';
-import {debugBase } from '@/integrations/facebook/debuggers';
 import { IModels } from '~/connectionResolvers';
 import { getEnv } from 'erxes-api-shared/utils';
+
 dotenv.config();
 
 const CACHE_NAME = 'configs_erxes_fb_integrations';
-
-
 
 /*
  * Generate url depending on given file upload publicly or not

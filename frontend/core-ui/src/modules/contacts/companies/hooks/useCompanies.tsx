@@ -13,14 +13,13 @@ import { ICompany } from 'ui-modules';
 export const COMPANIES_PER_PAGE = 30;
 
 export const useCompanies = (options?: QueryHookOptions) => {
-  const [{ searchValue, tags, created, updated, lastSeen }] =
-    useMultiQueryState<{
-      searchValue: string;
-      tags: string[];
-      created: string;
-      updated: string;
-      lastSeen: string;
-    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
+  const [{ searchValue, tags }] = useMultiQueryState<{
+    searchValue: string;
+    tags: string[];
+    created: string;
+    updated: string;
+    lastSeen: string;
+  }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
 
   const { data, loading, fetchMore } = useQuery<{
     companies: {

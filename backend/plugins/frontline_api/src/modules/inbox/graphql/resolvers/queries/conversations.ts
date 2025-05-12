@@ -5,13 +5,9 @@ import { cursorPaginate } from 'erxes-api-shared/utils';
 import { defaultPaginate } from 'erxes-api-shared/src/utils';
 import { IConversationDocument } from '~/modules/inbox/@types/conversations';
 
-
-
-
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
-  const result = await models.Conversations.find(query).countDocuments();
-
+  const result = await models.Conversations.countDocuments(query);
   return Number(result);
 };
 export const conversationQueries = {
@@ -25,22 +21,22 @@ export const conversationQueries = {
   ) {
     // filter by ids of conversations
     if (params && params.ids) {
-       const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
-        model: models.Conversations,
-        params,
-        query: { _id: { $in: params.ids } }
-      });
-     return { list, totalCount, pageInfo };
+      const { list, totalCount, pageInfo } =
+        await cursorPaginate<IConversationDocument>({
+          model: models.Conversations,
+          params,
+          query: { _id: { $in: params.ids } },
+        });
+      return { list, totalCount, pageInfo };
     }
 
-
-    const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
         params,
-        query: {}
+        query: {},
       });
-     return { list, totalCount, pageInfo };
-
+    return { list, totalCount, pageInfo };
   },
 
   /**
@@ -221,12 +217,12 @@ export const conversationQueries = {
 
     serverTiming.startTime('query');
 
-    const response = await models.Conversations.find({
+    const response = await models.Conversations.countDocuments({
       ...integrationsFilter,
       status: { $in: [CONVERSATION_STATUSES.NEW, CONVERSATION_STATUSES.OPEN] },
       readUserIds: { $ne: user._id },
       $and: [{ $or: qb.userRelevanceQuery() }],
-    }).countDocuments();
+    });
 
     serverTiming.endTime('query');
 

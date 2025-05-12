@@ -212,6 +212,7 @@ export const TagList = ({
           renderAsPlainText={mode === 'single'}
           variant="secondary"
           onCompleted={(tag) => {
+            if (!tag) return;
             if (selectedTagIds.includes(tag._id)) {
               setSelectedTags([...selectedTags, tag]);
             }
@@ -224,6 +225,14 @@ export const TagList = ({
       ))}
     </>
   );
+};
+
+export const SelectTagsValue = () => {
+  const { selectedTags } = useSelectTagsContext();
+
+  if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
+
+  return <TagList />;
 };
 
 export const SelectTagsContent = () => {
@@ -240,5 +249,6 @@ export const SelectTags = Object.assign(SelectTagsProvider, {
   Content: SelectTagsContent,
   Command: SelectTagsCommand,
   Item: SelectTagsItem,
-  Value: TagList,
+  Value: SelectTagsValue,
+  List: TagList,
 });

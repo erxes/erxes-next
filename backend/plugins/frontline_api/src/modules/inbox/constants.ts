@@ -1,4 +1,4 @@
-import { ruleSchema } from 'erxes-api-shared/core-modules/common/db/definitions/common';
+import { ruleSchema } from 'erxes-api-shared/core-modules';
 import { channelSchema } from '@/inbox/db/definitions/channels';
 import { integrationSchema } from '@/inbox/db/definitions/integrations';
 

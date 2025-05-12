@@ -11,7 +11,7 @@ import {
 
 const t = initTRPC.context<ITRPCContext>().create();
 
-export const fieldsRouter = t.router({
+export const fieldsTrpcRouter = t.router({
   fields: t.router({
     findOne: t.procedure
       .input(z.object({ _id: z.string() }))

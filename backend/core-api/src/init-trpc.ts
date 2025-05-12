@@ -1,13 +1,19 @@
 import { initTRPC } from '@trpc/server';
 
 import * as trpcExpress from '@trpc/server/adapters/express';
+
 import { getSubdomain } from 'erxes-api-shared/utils';
 
-import { contactRouter } from '~/modules/contacts/trpc';
-import { relationTrpcRouter } from '~/modules/relations/trpc/relation';
 import { conformityTrpcRouter } from '~/modules/conformities/trpc/conformity';
+import { contactTrpcRouter } from '~/modules/contacts/trpc';
+import { brandTrpcRouter } from '~/modules/organization/brand/trpc/brand';
+import { structureTrpcRouter } from '~/modules/organization/structure/trpc';
+import { userTrpcRouter } from '~/modules/organization/team-member/trpc/user';
+import { productTrpcRouter } from '~/modules/products/trpc';
+import { relationTrpcRouter } from '~/modules/relations/trpc/relation';
+import { tagTrpcRouter } from '~/modules/tags/trpc/tag';
 import { generateModels } from './connectionResolvers';
-import { formsRouter } from './modules/forms/trpc';
+import { formsTrpcRouter } from './modules/forms/trpc';
 
 export const createContext = async ({
   req,
@@ -23,13 +29,18 @@ export const createContext = async ({
 
 export type ITRPCContext = Awaited<ReturnType<typeof createContext>>;
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<ITRPCContext>().create({});
 
 export const appRouter = t.mergeRouters(
-  formsRouter,
-  contactRouter,
+  formsTrpcRouter,
+  contactTrpcRouter,
   conformityTrpcRouter,
   relationTrpcRouter,
+  userTrpcRouter,
+  structureTrpcRouter,
+  productTrpcRouter,
+  brandTrpcRouter,
+  tagTrpcRouter,
 );
 
 export type AppRouter = typeof appRouter;
