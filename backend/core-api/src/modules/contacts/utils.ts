@@ -73,13 +73,9 @@ export const generateFilter = async (params: any, models: IModels) => {
         $in: baseTagIds.filter((id) => tagIds.includes(id)),
         $nin: baseTagIds.filter((id) => excludeTagIds.includes(id)),
       };
-    }
-
-    if (tagIds?.length) {
+    } else if (tagIds?.length) {
       filter['tagIds'] = { $in: baseTagIds };
-    }
-
-    if (excludeTagIds?.length) {
+    } else if (excludeTagIds?.length) {
       filter['tagIds'] = { $nin: baseTagIds };
     }
   }
