@@ -5,12 +5,13 @@ import { debugFacebook,debugError } from '@/integrations/facebook/debuggers';
 import{checkIsAdsOpenThread} from '@/integrations/facebook/utils';
 import { NextFunction, Request, Response } from "express";
 import { INTEGRATION_KINDS ,FACEBOOK_POST_TYPES} from '@/integrations/facebook/constants';
-import {getPageAccessTokenFromMap} from '@/integrations/facebook/utils';
+import {getPageAccessTokenFromMap,} from '@/integrations/facebook/utils';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import {receiveMessage} from '@/integrations/facebook/controller/receiveMessage';
-import { getConfig } from '@/integrations/facebook/commonUtils';
-export const facebookGetPost = async (req, res) => {
+import { getConfig} from '@/integrations/facebook/commonUtils';
+import {Activity} from '@/integrations/facebook/@types/utils'
 
+export const facebookGetPost = async (req, res) => {
     debugFacebook(
       `Request to get post data with: ${JSON.stringify(req.query)}`
     );
@@ -74,16 +75,12 @@ export const facebookSubscription = async (req, res) => {
 export const facebookWebhook = async (req, res,next) => {
     const subdomain = getSubdomain(req);
     const models = await generateModels(subdomain);
-
     const data = req.body;
-  console.log(data,'data')
     if (data.object !== "page" && !checkIsAdsOpenThread(data?.entry)) {
       return;
     }
- 
     for (const entry of data.entry) {
       // receive chat
-
       try {
         if (entry.messaging) {
           await processMessagingEvent(
@@ -92,7 +89,6 @@ export const facebookWebhook = async (req, res,next) => {
             req,
             res,
             next,
-      
             subdomain,
             accessTokensByPageId
           );
@@ -176,15 +172,14 @@ export async function processMessagingEvent(
         debugFacebook("Skipping activity with missing recipient ID.");
         continue;
       }
-
       const pageId = activity.recipient.id;
 
       // Find the related Facebook integration
       const integration = await models.FacebookIntegrations.getIntegration({
         $and: [
           { facebookPageIds: { $in: [pageId] } },
-          { kind: INTEGRATION_KINDS.MESSENGER }
-        ]
+          { kind: INTEGRATION_KINDS.MESSENGER },
+        ],
       });
 
       if (!integration) {
@@ -192,36 +187,58 @@ export async function processMessagingEvent(
         continue;
       }
 
-      // Verify the account
-      await models.FacebookAccounts.getAccount({ _id: integration.accountId });
+      const facebookAccounts = await models.FacebookAccounts.getAccount({
+        _id: integration.accountId,
+      });
+
+      if (!facebookAccounts) {
+        debugFacebook(`No Facebook account found for accountId: ${integration.accountId}`);
+        continue;
+      }
 
       // Get page access token from integration
       const { facebookPageTokensMap = {} } = integration;
 
       try {
-        accessTokensByPageId[pageId] = getPageAccessTokenFromMap(
-          pageId,
-          facebookPageTokensMap
-        );
+        accessTokensByPageId[pageId] = getPageAccessTokenFromMap(pageId, facebookPageTokensMap);
       } catch (tokenErr) {
-        debugFacebook(
-          `Token retrieval error for pageId ${pageId}: ${tokenErr.message}`
-        );
+        debugFacebook(`Token retrieval error for pageId ${pageId}: ${(tokenErr as Error).message}`);
         continue;
       }
 
-      // Process the actual message
-      await receiveMessage(models, subdomain, integration, activity);
+      // Create activity object for processing
+      const activityData: Activity = {
+        channelId: "facebook",
+        timestamp: new Date(activity.timestamp),
+        conversation: {
+          id: activity.sender.id,
+        },
+        from: {
+          id: activity.sender.id,
+          name: activity.sender.id, // Name could be fetched via API if needed
+        },
+        recipient: {
+          id: activity.recipient.id,
+          name: activity.recipient.id,
+        },
+        channelData: activity,
+        type: "message",
+        text: activity.message?.text || "",
+      };
 
-      debugFacebook(`Processed activity: ${JSON.stringify(activity)}`);
+      debugFacebook(`Processing activity: ${JSON.stringify(activityData)}`);
+
+      // Process the message
+      await receiveMessage(models, subdomain, integration, activityData);
     }
 
     res.status(200).send("EVENT_RECEIVED");
   } catch (e) {
-    debugFacebook(`Failed to process messaging event: ${e.message}`);
-    res.status(200).send("EVENT_RECEIVED"); // Still respond with 200 for webhook
+    debugFacebook(`Failed to process messaging event: ${(e as Error).message}`);
+    res.status(200).send("EVENT_RECEIVED"); // Always respond with 200 for webhook
   }
 }
+
 
 export async function processStandbyEvents(data: any, models: IModels) {
   const activities: {

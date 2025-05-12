@@ -1,4 +1,4 @@
-// import graphqlPubsub from '@erxes/api-utils/src/graphqlPubsub';
+import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels } from '~/connectionResolvers';
 import { RPError, RPResult, RPSuccess } from 'erxes-api-shared/utils';
@@ -21,14 +21,12 @@ export const receiveTrpcMessage = async (
   data,
 ): Promise<RPResult> => {
   const { action, metaInfo, payload } = data;
-
   const { Integrations, ConversationMessages, Conversations } =
-    await generateModels(subdomain);
+  await generateModels(subdomain);
 
   const doc = JSON.parse(payload || '{}');
 
   if (action === 'get-create-update-customer') {
-    console.log('get-create-update-customer.. called');
     const integration = await Integrations.findOne({
       _id: doc.integrationId,
     });
@@ -45,27 +43,28 @@ export const receiveTrpcMessage = async (
       sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
-        module: 'customers',
+        module: 'customer',
         action: 'findOne',
         input: { selector },
       });
-
     if (primaryPhone) {
       customer = await getCustomer({ primaryPhone });
 
-      // if (customer) {
-      //   await sendCoreMessage({
-      //     subdomain,
-      //     action: 'customers.updateCustomer',
-      //     data: {
-      //       _id: customer._id,
-      //       doc,
-      //     },
-      //     isRPC: true,
-      //   });
-
-      //   return sendSuccess({ _id: customer._id });
-      // }
+      if (customer) {
+       await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'mutation', // this is a mutation, not a query
+          module: 'customer',
+          action: 'updateCustomer',
+          input: {
+            doc: {
+              _id: customer._id,
+              doc,
+            },
+          },
+        });    
+        return sendSuccess({ _id: customer._id });
+      }
     }
 
     if (primaryEmail) {
@@ -75,17 +74,18 @@ export const receiveTrpcMessage = async (
     if (customer) {
       return sendSuccess({ _id: customer._id });
     } else {
-      // customer = await sendCoreMessage({
-      //   subdomain,
-      //   action: 'customers.createCustomer',
-      //   data: {
-      //     ...doc,
-      //     scopeBrandIds: integration.brandId,
-      //   },
-      //   isRPC: true,
-      // });
-    }
-
+      customer = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'customer',
+        action: 'createCustomer',
+        input: {    
+           doc: {
+           ...doc,
+           scopeBrandIds: integration.brandId,
+          }, },
+      });
+    } 
     return sendSuccess({ _id: customer._id });
   }
 
@@ -93,17 +93,18 @@ export const receiveTrpcMessage = async (
     const { conversationId, content, owner, updatedAt } = doc;
     let user;
 
-    // if (owner) {
-    //   user = await sendCoreMessage({
-    //     subdomain,
-    //     action: 'users.findOne',
-    //     data: {
-    //       'details.operatorPhone': owner,
-    //     },
-    //     isRPC: true,
-    //     defaultValue: {},
-    //   });
-    // }
+    if (owner) {
+       user=  await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'user',
+        action: 'findOne',
+        input: {    
+           doc: {
+            'details.operatorPhone': owner,
+          }, },
+      });  
+    }
 
     let assignedUserId = user ? user._id : null;
 
@@ -186,16 +187,19 @@ export const receiveTrpcMessage = async (
     );
 
     // FIXME: Find userId and `conversationClientMessageInserted:${userId}`
-    // graphqlPubsub.publish('conversationClientMessageInserted', {
-    //   conversationClientMessageInserted: message,
-    // });
+//   graphqlPubsub.publish<{ conversationClientMessageInserted: any }>(
+//     'conversationClientMessageInserted',
+//     {
+//       conversationClientMessageInserted: message,
+//     }
+// );
 
-    // graphqlPubsub.publish(
-    //   `conversationMessageInserted:${message.conversationId}`,
-    //   {
-    //     conversationMessageInserted: message,
-    //   },
-    // );
+//     graphqlPubsub.publish(
+//       `conversationMessageInserted:${message.conversationId}`,
+//       {
+//         conversationMessageInserted: message,
+//       },
+//     );
 
     return sendSuccess({ _id: message._id });
   }
@@ -211,14 +215,17 @@ export const receiveTrpcMessage = async (
   }
 
   if (action === 'getUserIds') {
-    // const users = await sendCoreMessage({
-    //   subdomain,
-    //   action: 'users.getIds',
-    //   data: {},
-    //   isRPC: true,
-    //   defaultValue: [],
-    // });
-    // return sendSuccess({ userIds: users.map((user) => user._id) });
+    const users = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'users',
+      action: 'getIds',
+      input: {}, // empty input as per original
+      defaultValue: [],
+    });
+
+    return sendSuccess({ userIds: users.map((user) => user._id) });
+
   }
   throw new Error(`Unknown action: ${action}`);
 };

@@ -1,5 +1,6 @@
 // ButtonWithData.stories.tsx
 import { gql, useLazyQuery } from '@apollo/client';
+import { Button } from 'erxes-ui';
 
 const GET_USER = gql`
   query GetUser {
@@ -16,7 +17,11 @@ const ButtonWithData = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  return <button onClick={() => getUser()}>Hello, {data?.user?.name}</button>;
+  return (
+    <Button onClick={() => getUser()} className="bg-red-600">
+      Hello, {data?.user?.name}
+    </Button>
+  );
 };
 
 export default {

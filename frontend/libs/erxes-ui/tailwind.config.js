@@ -4,11 +4,8 @@ const { join } = require('path');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    join(
-      __dirname,
-      '{src,pages,components,app,modules}/**/*!(*.stories|*.spec).{ts,tsx,html}',
-    ),
-    'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).{ts,tsx,html}',
+    join(__dirname, '{src,pages,components,app,modules}/**/*.{ts,tsx,html}'),
+    'frontend/libs/ui-modules/src/**/*.{ts,tsx,html}',
   ],
   darkMode: 'class',
   theme: {

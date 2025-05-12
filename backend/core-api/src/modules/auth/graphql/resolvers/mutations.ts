@@ -95,12 +95,11 @@ export const authMutations = {
   },
 
   async loginWithGoogle(
-    _root: undefined,
+    _parent: undefined,
     _params: undefined,
     { models, subdomain }: IContext,
   ) {
     try {
-      console.log(models, subdomain);
       return null;
     } catch (e) {
       throw new Error(e.message);
@@ -113,7 +112,6 @@ export const authMutations = {
     { models, subdomain }: IContext,
   ) {
     try {
-      console.log(models, subdomain, email);
       return 'Invalid login';
     } catch (e) {
       throw new Error(e.message);

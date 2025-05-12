@@ -8,12 +8,12 @@ import {
 export const GET_CUSTOMERS = gql`
   query customers(
     $segment: String
-    $tags: [String]
+    $tagIds: [String]
     $type: String
     $searchValue: String
-    $brand: String
-    $integration: String
-    $form: String
+    $brandIds: [String]
+    $integrationIds: [String]
+    $formIds: [String]
     $startDate: String
     $endDate: String
     $leadStatus: String
@@ -25,12 +25,12 @@ export const GET_CUSTOMERS = gql`
   ) {
     customers(
       segment: $segment
-      tags: $tags
+      tagIds: $tagIds
       type: $type
       searchValue: $searchValue
-      brand: $brand
-      integration: $integration
-      form: $form
+      brandIds: $brandIds
+      integrationIds: $integrationIds
+      formIds: $formIds
       startDate: $startDate
       endDate: $endDate
       leadStatus: $leadStatus
