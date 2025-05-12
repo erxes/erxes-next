@@ -6,7 +6,6 @@ import {
   IconDeviceImacFilled,
   IconDeviceMobileFilled,
   IconDeviceIpadFilled,
-  IconExternalLink,
   IconWindowMaximize,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -59,21 +58,20 @@ export const PreviewToolbar = ({ path }: { path?: string }) => {
   );
 };
 
-export const View = ({
-  height,
-  iframeSrc,
-  direction = 'horizontal',
-  ...props
-}: {
-  height: number;
-  iframeSrc: string;
-} & React.ComponentProps<typeof Resizable.PanelGroup>) => {
+export const View = React.forwardRef<
+  React.ElementRef<typeof Resizable.PanelGroup>,
+  {
+    height: number;
+    iframeSrc: string;
+  } & Omit<React.ComponentProps<typeof Resizable.PanelGroup>, 'direction'>
+>(({ height, iframeSrc, ...props }, ref) => {
   const { resizablePanelRef } = usePreviewContext();
   return (
     <Resizable.PanelGroup
       className="relative z-10"
-      direction={direction}
+      direction="horizontal"
       {...props}
+      ref={ref}
     >
       <Resizable.Panel
         ref={resizablePanelRef}
@@ -92,7 +90,7 @@ export const View = ({
       <Resizable.Panel defaultSize={0} minSize={0} />
     </Resizable.PanelGroup>
   );
-};
+});
 
 export const Preview = Object.assign(PreviewProvider, {
   Toolbar: PreviewToolbar,
