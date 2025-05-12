@@ -23,7 +23,7 @@ export const types = `
     propertyValue: String,
 
     eventName: String,
-    eventOccurence: String,
+    eventOccurrence: String,
     eventOccurenceValue: Float,
     eventAttributeFilters: [EventAttributeFilter],
 

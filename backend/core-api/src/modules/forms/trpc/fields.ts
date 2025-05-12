@@ -64,7 +64,6 @@ export const fieldsTrpcRouter = t.router({
       .query(async ({ ctx, input }) => {
         const { subdomain } = ctx;
         const { type } = input;
-        console.log({ type, subdomain }, { ...input });
 
         switch (type) {
           case 'lead':

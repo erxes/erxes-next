@@ -13,7 +13,7 @@ import { fieldsCombinedByContentType } from '../../utils';
 //   import { fetchServiceForms } from "../../../messageBroker";
 //   import { IContext } from "../../../connectionResolver";
 //   import { getService, getServices } from "@erxes/api-utils/src/serviceDiscovery";
-interface IFieldsDefaultColmns {
+interface IFieldsDefaultColumns {
   [index: number]: { name: string; label: string; order: number } | {};
 }
 

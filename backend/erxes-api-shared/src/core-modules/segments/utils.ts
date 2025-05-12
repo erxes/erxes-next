@@ -130,3 +130,7 @@ const gatherServicesAssociatedTypes = async (
     associatedTypes.push(`${pluginName}:${contentType.type}`);
   }
 };
+
+export const splitType = (type: string) => {
+  return type.replace('.', ':').split(':');
+};

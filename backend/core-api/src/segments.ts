@@ -1,8 +1,6 @@
 import {
   gatherAssociatedTypes,
-  getContentType,
   getEsIndexByContentType,
-  getPluginName,
   startSegments,
 } from 'erxes-api-shared/core-modules';
 import { generateModels } from './connectionResolvers';
@@ -12,7 +10,10 @@ import {
   getRealIdFromElk,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
-import _ from 'underscore';
+import * as _ from 'underscore';
+
+export const getContentType = (type: string) => type.split(':')[1];
+export const getPluginName = (type: string) => type.split(':')[0];
 
 const changeType = (type: string) =>
   type === 'core:lead' ? 'core:customer' : type;
@@ -82,13 +83,11 @@ export default startSegments('core', {
         })
       ).map((id) => getRealIdFromElk(id));
 
-      const ids = await models.Conformities.filterConformity({
+      return await models.Conformities.filterConformity({
         mainType: getContentType(changeType(propertyType)),
         mainTypeIds,
         relType: getContentType(changeType(mainType)),
       });
-
-      return ids;
     }
 
     if (propertyType === 'core:form_submission') {
@@ -115,7 +114,7 @@ export default startSegments('core', {
         method: 'query',
         module: 'segments',
         action: 'associationFilter',
-        data: {
+        input: {
           mainType,
           propertyType,
           positiveQuery,

@@ -9,7 +9,7 @@ export const MODULE_NAMES = {
   PRODUCT: 'product',
   PRODUCT_CATEGORY: 'productCategory',
   UOM: 'uom',
-  EMAIl_TEMPLATE: 'emailTemplate',
+  EMAIL_TEMPLATE: 'emailTemplate',
 };
 
 export const SEGMENT_STRING_OPERATORS = ['e', 'dne', 'c', 'dnc'];

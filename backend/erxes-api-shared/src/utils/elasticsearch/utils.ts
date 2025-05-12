@@ -21,8 +21,7 @@ export const isElasticsearchUp = async () => {
 };
 
 export const getElasticsearchInfo = async () => {
-  const info = await client.info();
-  return info;
+  return await client.info();
 };
 
 export const getRealIdFromElk = (_id: string) => {
@@ -93,7 +92,8 @@ export const fetchEsWithScroll = async (scrollId: string) => {
 
     return response;
   } catch (e) {
-    throw new Error(e);
+    console.error('Error fetching Elasticsearch with scroll', { error: e });
+    throw e;
   }
 };
 
@@ -180,7 +180,7 @@ export const fetchEs = async ({
       return defaultValue;
     }
 
-    throw new Error(e);
+    throw e;
   }
 };
 

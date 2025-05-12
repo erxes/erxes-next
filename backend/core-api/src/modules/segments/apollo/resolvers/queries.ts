@@ -72,7 +72,6 @@ const segmentQueries = {
             (dModule?.types || []).includes(type),
           );
         }
-        contentTypes = contentTypes;
         contentTypes.forEach((ct: ISegmentContentType) => {
           associatedTypes.push({
             type: `${dModule.name}:${ct.type}`,
@@ -200,7 +199,6 @@ const segmentQueries = {
       },
       { returnCount: true },
     );
-    console.log({ count, total });
     return { count, total };
   },
 };

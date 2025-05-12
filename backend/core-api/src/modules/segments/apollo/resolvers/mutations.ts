@@ -19,29 +19,9 @@ const segmentMutations = {
   ) {
     const extendedDoc: any = __(doc);
 
-    const conditionSegments = extendedDoc.conditionSegments;
+    const { conditionSegments = [] } = extendedDoc || {};
 
-    const segment = await models.Segments.createSegment(
-      extendedDoc,
-      conditionSegments,
-    );
-
-    // if (doc.subOf) {
-    //   await registerOnboardHistory(models, "subSegmentCreate", user);
-    // }
-
-    // await putCreateLog(
-    //   models,
-    //   subdomain,
-    //   {
-    //     type: "segment",
-    //     newData: doc,
-    //     object: segment
-    //   },
-    //   user
-    // );
-
-    return segment;
+    return await models.Segments.createSegment(extendedDoc, conditionSegments);
   },
 
   /**
@@ -53,27 +33,14 @@ const segmentMutations = {
     { models, subdomain, user }: IContext,
   ) {
     const segment = await models.Segments.getSegment(_id);
-    const conditionSegments = doc.conditionSegments;
 
-    const updated = await models.Segments.updateSegment(
-      _id,
-      doc,
-      conditionSegments,
-    );
+    if (!segment) {
+      throw new Error('Segment not found');
+    }
 
-    // await putUpdateLog(
-    //   models,
-    //   subdomain,
-    //   {
-    //     type: "segment",
-    //     object: segment,
-    //     newData: doc,
-    //     updatedDocument: updated
-    //   },
-    //   user
-    // );
+    const { conditionSegments = [] } = doc || {};
 
-    return updated;
+    return await models.Segments.updateSegment(_id, doc, conditionSegments);
   },
 
   /**
@@ -85,16 +52,11 @@ const segmentMutations = {
     { models, subdomain, user }: IContext,
   ) {
     const segment = await models.Segments.getSegment(_id);
-    const removed = await models.Segments.removeSegment(_id);
 
-    // await putDeleteLog(
-    //   models,
-    //   subdomain,
-    //   { type: "segment", object: segment },
-    //   user
-    // );
-
-    return removed;
+    if (!segment) {
+      throw new Error('Segment not found');
+    }
+    return await models.Segments.removeSegment(_id);
   },
 };
 

@@ -31,8 +31,7 @@ export const startSegments = (pluginName: string, config: SegmentConfigs) => {
 
             const resolver = config[resolverName];
 
-            const result = await resolver({ subdomain }, data);
-            return result;
+            return await resolver({ subdomain }, data);
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);
             throw error;

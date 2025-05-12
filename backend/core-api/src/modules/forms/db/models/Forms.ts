@@ -203,8 +203,7 @@ export const loadFormClass = (models: IModels) => {
 
         const value = submission.value || '';
 
-        const type = field.type;
-        const validation = field.validation;
+        const { type, validation } = field || {};
 
         // required
         if (field.isRequired && !value) {

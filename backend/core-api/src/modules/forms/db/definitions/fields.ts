@@ -271,7 +271,7 @@ export const fieldGroupSchema = schemaWrapper(
       label: 'Unique code',
     },
     lastUpdatedUserId: { type: String, label: 'Last updated by' },
-    isMultiple: { type: Boolean, default: false, label: 'Is multple' },
+    isMultiple: { type: Boolean, default: false, label: 'Is multiple' },
     isVisible: { type: Boolean, default: true, label: 'Is visible' },
     isVisibleInDetail: {
       type: Boolean,

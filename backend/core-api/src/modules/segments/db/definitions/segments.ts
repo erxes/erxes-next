@@ -16,7 +16,7 @@ export interface ICondition {
   propertyValue?: string;
 
   eventName?: string;
-  eventOccurence?: 'exactly' | 'atleast' | 'atmost';
+  eventOccurrence?: 'exactly' | 'atleast' | 'atmost';
   eventOccurenceValue?: number;
   eventAttributeFilters?: IAttributeFilter[];
 
@@ -88,7 +88,7 @@ export const conditionSchema = new Schema(
       optional: true,
     },
 
-    eventOccurence: {
+    eventOccurrence: {
       type: String,
       optional: true,
     },

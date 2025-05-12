@@ -24,7 +24,7 @@ export default {
     //   returnCount: true
     // });
     // return result;
-    return;
+    return 0;
   },
 
   async subSegmentConditions(

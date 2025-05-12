@@ -7,6 +7,7 @@ import {
 } from 'erxes-api-shared/utils';
 import { httpBatchLink, createTRPCUntypedClient } from '@trpc/client';
 import { splitType } from 'erxes-api-shared/core-modules';
+import { nanoid } from 'nanoid';
 
 export const getCustomFields = async (
   models: IModels,
@@ -26,7 +27,9 @@ const getFieldGroup = async (models: IModels, _id: string) => {
   return models.FieldsGroups.findOne({ _id });
 };
 const getGroupWithCache = async (models, groupId, cache) => {
-  if (cache.has(groupId)) return cache.get(groupId);
+  if (cache.has(groupId)) {
+    return cache.get(groupId);
+  }
   const group = await getFieldGroup(models, groupId);
   if (!group) {
     return null;
@@ -36,7 +39,9 @@ const getGroupWithCache = async (models, groupId, cache) => {
 };
 
 const generateSelectOptions = (options) => {
-  if (!options || options.length === 0) return [];
+  if (!options || options.length === 0) {
+    return [];
+  }
   return options.map((option) => ({
     value: option,
     label: option,
@@ -99,7 +104,7 @@ export const fieldsCombinedByContentType = async (
     method: 'query',
     module: 'fields',
     action: 'getFieldList',
-    data: {
+    input: {
       segmentId,
       usageType,
       config: config || {},
@@ -141,7 +146,7 @@ export const fieldsCombinedByContentType = async (
   const extendedFields = customFieldsWithGroups
     .filter(({ group }) => group?.isVisible)
     .map(({ customField, group }) => ({
-      _id: Math.random(),
+      _id: nanoid().toString(),
       name: `customFieldsData.${getRealIdFromElk(customField._id)}`,
       label: customField.text,
       options: customField.options,

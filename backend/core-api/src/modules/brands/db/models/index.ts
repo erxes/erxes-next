@@ -6,7 +6,7 @@ import { IModels } from '~/connectionResolvers';
 export interface IBrandModel extends Model<IBrandDocument> {
   getBrand(doc: any): IBrandDocument;
   getBrandByCode(code: string): IBrandDocument;
-  generateCode(code: string): string;
+  generateCode(code?: string): string;
   createBrand(doc: IBrand): IBrandDocument;
   updateBrand(_id: string, fields: IBrand): Promise<IBrandDocument>;
   removeBrand(_id: string): IBrandDocument;
@@ -61,7 +61,7 @@ export const loadBrandClass = (models: IModels) => {
       return models.Brands.findOne({ _id });
     }
 
-    public static async removeBrand(_id) {
+    public static async removeBrand(_id: string) {
       const brandObj = await models.Brands.findOneAndDelete({ _id });
 
       if (!brandObj) {
