@@ -68,22 +68,25 @@ export const conformityQueryFields = `
 `;
 
 const queryParams = `
-  page: Int
-  perPage: Int
   segment: String
   type: String
-  tag: String
   ids: [String]
   excludeIds: Boolean
-  tags: [String]
-  excludeTags: [String]
+
+  tagIds: [String]
+  excludeTagIds: [String]
   tagWithRelated: Boolean
+
+  brandIds: [String]
+
+  integrationIds: [String]
+  integrationTypes: [String]
+
+  formIds: [String]
+
   searchValue: String
   autoCompletion: Boolean
   autoCompletionType: String
-  brand: String
-  integration: String
-  form: String
   startDate: String
   endDate: String
   leadStatus: String
