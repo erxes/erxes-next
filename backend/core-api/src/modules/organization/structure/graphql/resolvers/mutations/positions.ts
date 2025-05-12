@@ -1,12 +1,12 @@
 import { IContext } from '~/connectionResolvers';
 export const positionMutations = {
-  async positionsAdd(_root: undefined, doc, { user, models }: IContext) {
+  async positionsAdd(_parent: undefined, doc, { user, models }: IContext) {
     const position = await models.Positions.createPosition(doc, user);
     return position;
   },
 
   async positionsEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, ...doc },
     { user, models }: IContext,
   ) {
@@ -15,7 +15,7 @@ export const positionMutations = {
     return position;
   },
 
-  async positionsRemove(_root: undefined, { ids }, { models }: IContext) {
+  async positionsRemove(_parent: undefined, { ids }, { models }: IContext) {
     if (!ids.length) {
       throw new Error('You must specify at least one position id to remove');
     }

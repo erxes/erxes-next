@@ -4,6 +4,7 @@ import { IconBuildingStore, IconSettings } from '@tabler/icons-react';
 import { Button, Sidebar } from 'erxes-ui';
 import { Organization } from './Organization';
 import { SidebarNavigation } from './SidebarNavigation';
+import { SidebarNavigationFavorites } from './SidebarNavigationFavorites';
 import { User } from './User';
 import { QuickActions } from '@/quickActions/components/QuickActions';
 
@@ -14,7 +15,9 @@ export const MainNavigationBar = () => {
         <Organization />
       </Sidebar.Header>
       <Sidebar.Separator className="mx-0" />
+
       <Sidebar.Content className="gap-0">
+        <SidebarNavigationFavorites />
         <SidebarNavigation />
       </Sidebar.Content>
       <Sidebar.Separator className="mx-0" />

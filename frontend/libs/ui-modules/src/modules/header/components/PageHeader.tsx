@@ -1,8 +1,9 @@
 import { IconStar } from '@tabler/icons-react';
 
-import { Button, Separator, Sidebar } from 'erxes-ui/components';
-import { cn } from 'erxes-ui/lib';
+import { Button, Separator, Sidebar } from 'erxes-ui';
+import { cn } from 'erxes-ui';
 import { motion, AnimatePresence } from 'motion/react';
+import { useToggleFavorite } from '../hooks/useToggleFavorite';
 import React from 'react';
 
 export const PageHeaderRoot = React.forwardRef<
@@ -100,30 +101,39 @@ const animations = {
   },
 };
 
-export function BookmarkIconButton() {
-  const [isSaved, setIsSaved] = React.useState(false);
-
-  const handleClick = () => setIsSaved((prev) => !prev);
+export function FavoriteToggleIconButton({
+  type,
+  item,
+}: {
+  type: string;
+  item: string;
+}) {
+  const { isFavorite, toggleFavorite } = useToggleFavorite({
+    type,
+    item,
+  });
 
   return (
     <div className="relative flex items-center justify-center">
       <Button
-        variant={isSaved ? 'secondary' : 'ghost'}
+        variant={isFavorite ? 'secondary' : 'ghost'}
         size="icon"
-        onClick={handleClick}
-        aria-pressed={isSaved}
+        onClick={toggleFavorite}
+        aria-pressed={isFavorite}
       >
         <motion.div
           initial={{ scale: 1 }}
-          animate={{ scale: isSaved ? 1.1 : 1 }}
+          animate={{ scale: isFavorite ? 1.1 : 1 }}
           whileTap={
-            isSaved ? animations.icon.tapCompleted : animations.icon.tapActive
+            isFavorite
+              ? animations.icon.tapCompleted
+              : animations.icon.tapActive
           }
           transition={{ type: 'spring', stiffness: 300, damping: 15 }}
           className="relative flex items-center justify-center"
         >
           <IconStar
-            className={isSaved ? 'opacity-0' : 'opacity-60'}
+            className={isFavorite ? 'opacity-0' : 'opacity-60'}
             size={16}
             aria-hidden="true"
           />
@@ -132,11 +142,11 @@ export function BookmarkIconButton() {
             className="absolute inset-0 text-amber-500 fill-amber-500 transition-all duration-300"
             size={16}
             aria-hidden="true"
-            style={{ opacity: isSaved ? 1 : 0 }}
+            style={{ opacity: isFavorite ? 1 : 0 }}
           />
 
           <AnimatePresence>
-            {isSaved && (
+            {isFavorite && (
               <motion.div
                 className="absolute inset-0 rounded-full"
                 style={{
@@ -151,7 +161,7 @@ export function BookmarkIconButton() {
       </Button>
 
       <AnimatePresence>
-        {isSaved && (
+        {isFavorite && (
           <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             {[...Array(5)].map((_, i) => (
               <motion.div
@@ -178,5 +188,5 @@ export function BookmarkIconButton() {
 export const PageHeader = Object.assign(PageHeaderRoot, {
   Start: PageHeaderStart,
   End: PageHeaderEnd,
-  LikeButton: BookmarkIconButton,
+  FavoriteToggleButton: FavoriteToggleIconButton,
 });

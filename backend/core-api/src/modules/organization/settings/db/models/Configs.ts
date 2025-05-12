@@ -6,12 +6,12 @@ import {
   configSchema,
   IConfig,
   IConfigDocument,
-} from '@/settings/db/definitions/configs';
+} from '~/modules/organization/settings/db/definitions/configs';
 
 export interface IConfigModel extends Model<IConfigDocument> {
   getConfig(code: string): Promise<IConfigDocument>;
   createOrUpdateConfig({ code, value }: IConfig): Promise<IConfigDocument>;
-  constants();
+  constants(): Promise<any>;
   getCloudflareConfigs(): Promise<any>;
 }
 

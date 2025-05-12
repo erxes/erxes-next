@@ -3,7 +3,8 @@ import {
   IconSandbox,
   IconSettings,
 } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 
 export const SalesIndexPage = () => {
@@ -24,7 +25,7 @@ export const SalesIndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.LikeButton />
+          <PageHeader.FavoriteToggleButton type="module" item="sales" />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>

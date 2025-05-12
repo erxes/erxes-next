@@ -1,4 +1,3 @@
-// import { getCoreDomain, initFirebase, resetConfigsCache } from '../../utils';
 import fetch from 'node-fetch';
 import { getCoreDomain, resetConfigsCache } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
@@ -7,7 +6,11 @@ export const configMutations = {
   /**
    * Create or update config object
    */
-  async configsUpdate(_root: undefined, { configsMap }, { models }: IContext) {
+  async configsUpdate(
+    _parent: undefined,
+    { configsMap }: { configsMap: Record<string, string> },
+    { models }: IContext,
+  ) {
     const codes = Object.keys(configsMap);
 
     for (const code of codes) {
@@ -25,7 +28,7 @@ export const configMutations = {
   },
 
   async configsActivateInstallation(
-    _root: undefined,
+    _parent: undefined,
     args: { token: string; hostname: string },
   ) {
     try {
