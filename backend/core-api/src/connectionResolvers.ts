@@ -32,8 +32,8 @@ import {
 } from '@/products/db/models/Configs';
 import { IProductModel, loadProductClass } from '@/products/db/models/Products';
 import { IUomModel, loadUomClass } from '@/products/db/models/Uoms';
-import { IConfigDocument } from '@/settings/db/definitions/configs';
-import { IConfigModel } from '@/settings/db/models/Configs';
+import { IConfigDocument } from '~/modules/organization/settings/db/definitions/configs';
+import { IConfigModel } from '~/modules/organization/settings/db/models/Configs';
 import { ITagModel, loadTagClass } from '@/tags/db/models/Tags';
 import {
   IMainContext,
@@ -73,12 +73,15 @@ import {
   loadStructureClass,
   loadUnitClass,
 } from '@/organization/structure/db/models/Structure';
-import {
-  IRelationModel,
-  loadRelationClass,
-} from '@/relations/db/models/Relations';
 import { IAppDocument } from 'erxes-api-shared/core-types';
 import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
+import { IRelationModel } from '@/relations/db/models/Relations';
+import { loadRelationClass } from '@/relations/db/models/Relations';
+import {
+  IFavoritesModel,
+  loadFavoritesClass,
+} from '@/organization/settings/db/models/Favorites';
+import { IFavoritesDocument } from '@/organization/settings/db/definitions/favorites';
 
 export interface IModels {
   Customers: ICustomerModel;
@@ -100,6 +103,7 @@ export interface IModels {
   Apps: IAppModel;
   Conformities: IConformityModel;
   Relations: IRelationModel;
+  Favorites: IFavoritesModel;
 }
 
 export interface IContext extends IMainContext {
@@ -190,6 +194,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Relations = db.model<IRelationDocument, IRelationModel>(
     'relations',
     loadRelationClass(models),
+  );
+
+  models.Favorites = db.model<IFavoritesDocument, IFavoritesModel>(
+    'favorites',
+    loadFavoritesClass(models),
   );
 
   return models;

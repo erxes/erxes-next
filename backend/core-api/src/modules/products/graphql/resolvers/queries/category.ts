@@ -69,7 +69,7 @@ const generateFilter = async (
 
 export const categoryQueries = {
   async productCategories(
-    _root: undefined,
+    _parent: undefined,
     params: IProductCategoryParams,
     { models }: IContext,
   ) {
@@ -81,7 +81,7 @@ export const categoryQueries = {
   },
 
   async productCategoriesTotalCount(
-    _root: undefined,
+    _parent: undefined,
     params: IProductCategoryParams,
     { models }: IContext,
   ) {
@@ -91,7 +91,7 @@ export const categoryQueries = {
   },
 
   async productCategoryDetail(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

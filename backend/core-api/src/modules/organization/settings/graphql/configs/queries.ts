@@ -10,7 +10,7 @@ const configQueries = {
   /**
    * Config object
    */
-  async configs(_root: undefined, _args: undefined, { models }: IContext) {
+  async configs(_parent: undefined, _args: undefined, { models }: IContext) {
     return models.Configs.find({});
   },
 
@@ -42,7 +42,7 @@ const configQueries = {
   },
 
   async configsCheckActivateInstallation(
-    _root: undefined,
+    _parent: undefined,
     args: { hostname: string },
   ) {
     try {

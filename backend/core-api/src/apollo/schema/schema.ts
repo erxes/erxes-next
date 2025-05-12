@@ -32,6 +32,7 @@ import {
 } from '@/organization/structure/graphql/schemas/department';
 import {
   mutations as structuresMutations,
+  queries as structuresQueries,
   StructureTypes,
 } from '@/organization/structure/graphql/schemas/structure';
 import {
@@ -44,7 +45,13 @@ import {
   mutations as ConfigsMutations,
   queries as ConfigsQueries,
   ConfigTypes,
-} from '@/settings/graphql/schemas';
+} from '~/modules/organization/settings/graphql/configs/schemas';
+
+import {
+  mutations as FavoritesMutations,
+  queries as FavoritesQueries,
+  types as FavoritesTypes,
+} from '~/modules/organization/settings/graphql/favorites/schemas';
 
 import {
   mutations as AppMutations,
@@ -109,6 +116,7 @@ export const types = `
     ${AppTypes}
     ${ConformityTypes}
     ${RelationTypes}
+    ${FavoritesTypes}
   `;
 
 export const queries = `
@@ -122,10 +130,12 @@ export const queries = `
     ${branchsQueries}
     ${departmentsQueries}
     ${positionsQueries}
+    ${structuresQueries}
     ${unitsQueries}
     ${BrandQueries}
     ${AppQueries}
     ${RelationQueries}
+    ${FavoritesQueries}
   `;
 
 export const mutations = `
@@ -145,6 +155,7 @@ export const mutations = `
     ${AppMutations}
     ${ConformityMutations}
     ${RelationMutations}
+    ${FavoritesMutations}
   `;
 
 export default { types, queries, mutations };

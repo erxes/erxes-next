@@ -5,7 +5,7 @@ export const configQueries = {
    * ProductConfig object
    */
   async productsConfigs(
-    _root: undefined,
+    _parent: undefined,
     _args: undefined,
     { models }: IContext,
   ) {

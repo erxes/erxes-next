@@ -1,4 +1,4 @@
-import { mongooseField } from 'erxes-api-shared/utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IConfig {
@@ -13,7 +13,14 @@ export interface IConfigDocument extends IConfig, Document {
 // Mongoose schemas ===========
 
 export const configSchema = new Schema({
-  _id: mongooseField({ pkey: true }),
-  code: mongooseField({ type: String, unique: true, label: 'Code' }),
-  value: mongooseField({ type: Object, label: 'Value' }),
+  _id: mongooseStringRandomId,
+  code: {
+    type: String,
+    unique: true,
+    label: 'Code',
+  },
+  value: {
+    type: Object,
+    label: 'Value',
+  },
 });

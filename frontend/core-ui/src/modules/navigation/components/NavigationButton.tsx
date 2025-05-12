@@ -7,11 +7,13 @@ export const NavigationButton = ({
   pathname,
   name,
   icon,
+  isFavorite,
 }: {
   pathPrefix?: string;
   pathname: string;
   name: string;
   icon: Icon;
+  isFavorite?: boolean;
 }) => {
   const Icon = icon;
   const activePathname = useLocation().pathname;
@@ -24,7 +26,7 @@ export const NavigationButton = ({
   const isActive = activePathname === pathnameWithPrefix;
 
   const isSubItemActive =
-    !isActive && activePathname.includes(pathnameWithPrefix);
+    !isFavorite && !isActive && activePathname.includes(pathnameWithPrefix);
 
   return (
     <Sidebar.MenuButton
