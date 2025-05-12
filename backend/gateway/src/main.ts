@@ -20,6 +20,7 @@ import {
 
 import { getPlugin, redis } from 'erxes-api-shared/utils';
 import { applyGraphqlLimiters } from '~/middlewares/graphql-limiter';
+import { sanitizeHeaders } from 'erxes-api-shared/utils';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 const domain = process.env.DOMAIN ?? 'http://localhost:3001';
@@ -46,6 +47,11 @@ createBullBoard({
 serverAdapter.setBasePath('/bullmq-board');
 
 const app = express();
+
+app.use((req, _res, next) => {
+  sanitizeHeaders(req.headers);
+  next();
+});
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
