@@ -6,7 +6,7 @@ export const companyMutations = {
    * Creates a new company
    */
   async companiesAdd(
-    _root: undefined,
+    _parent: undefined,
     doc: ICompany,
     { models, user }: IContext,
   ) {

@@ -5,7 +5,7 @@ export const tagMutations = {
   /**
    * Creates a new tag
    */
-  async tagsAdd(_root: undefined, doc: ITag, { models }: IContext) {
+  async tagsAdd(_parent: undefined, doc: ITag, { models }: IContext) {
     return await models.Tags.createTag(doc);
   },
 
@@ -13,7 +13,7 @@ export const tagMutations = {
    * Edits a tag
    */
   async tagsEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & ITag,
     { models }: IContext,
   ) {
@@ -24,7 +24,7 @@ export const tagMutations = {
    * Attach a tag
    */
   async tagsTag(
-    _root: undefined,
+    _parent: undefined,
     {
       type,
       targetIds,
@@ -76,7 +76,7 @@ export const tagMutations = {
    * Removes a tag
    */
   async tagsRemove(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
@@ -87,7 +87,7 @@ export const tagMutations = {
    * Merge tags
    */
   async tagsMerge(
-    _root: undefined,
+    _parent: undefined,
     { sourceId, destId }: { sourceId: string; destId: string },
     { models }: IContext,
   ) {

@@ -2,7 +2,7 @@ import { IContext } from '~/connectionResolvers';
 
 export const favoriteMutations = {
   toggleFavorite: async (
-    _root: undefined,
+    _parent: undefined,
     { type, item, userId },
     { models }: IContext,
   ) => {

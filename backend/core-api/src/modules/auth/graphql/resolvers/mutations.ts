@@ -95,7 +95,7 @@ export const authMutations = {
   },
 
   async loginWithGoogle(
-    _root: undefined,
+    _parent: undefined,
     _params: undefined,
     { models, subdomain }: IContext,
   ) {

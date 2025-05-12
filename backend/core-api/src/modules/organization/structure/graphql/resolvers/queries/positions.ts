@@ -8,7 +8,7 @@ import { generateFilters } from './utils';
 
 export const positionQueries = {
   async positions(
-    _root: undefined,
+    _parent: undefined,
     params: any & { searchValue?: string },
     { models, user }: IContext,
   ) {
@@ -33,7 +33,7 @@ export const positionQueries = {
   },
 
   async positionsMain(
-    _root: undefined,
+    _parent: undefined,
     params: IListParams & ICursorPaginateParams,
     { models, user }: IContext,
   ) {
@@ -53,7 +53,7 @@ export const positionQueries = {
     return { list, totalCount, pageInfo };
   },
 
-  async positionDetail(_root: undefined, { _id }, { models }: IContext) {
+  async positionDetail(_parent: undefined, { _id }, { models }: IContext) {
     return models.Positions.getPosition({ _id });
   },
 };

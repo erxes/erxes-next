@@ -471,6 +471,9 @@ importers:
       '@types/node':
         specifier: 18.16.9
         version: 18.16.9
+      '@types/node-fetch':
+        specifier: ^2.6.12
+        version: 2.6.12
       '@types/react':
         specifier: 18.3.1
         version: 18.3.1
@@ -873,6 +876,8 @@ importers:
         version: link:../../erxes-api-shared
 
   frontend/libs/erxes-ui: {}
+
+  frontend/libs/ui-modules: {}
 
 packages:
 

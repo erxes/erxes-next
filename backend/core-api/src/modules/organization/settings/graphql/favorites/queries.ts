@@ -2,7 +2,7 @@ import { IContext } from '~/connectionResolvers';
 
 export const favoriteQueries = {
   getFavoritesByUserId: async (
-    _root: undefined,
+    _parent: undefined,
     { userId }: { userId: string },
     { models }: IContext,
   ) => {
