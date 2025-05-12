@@ -1,13 +1,8 @@
 // import graphqlPubsub from '@erxes/api-utils/src/graphqlPubsub';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels } from '~/connectionResolvers';
-import { IConversationDocument } from '@/inbox/@types/conversations';
-import {
-  RPError,
-  RPResult,
-  RPSuccess,
-} from 'erxes-api-shared/utils/trpc';
-import{ sendTRPCMessage } from 'erxes-api-shared/utils/trpc';
+import { RPError, RPResult, RPSuccess } from 'erxes-api-shared/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 const sendError = (message): RPError => ({
   status: 'error',
   errorMessage: message,
@@ -21,7 +16,10 @@ const sendSuccess = (data): RPSuccess => ({
 /*
  * Handle requests from integrations api
  */
-export const receiveTrpcMessage = async (subdomain, data): Promise<RPResult> => {
+export const receiveTrpcMessage = async (
+  subdomain,
+  data,
+): Promise<RPResult> => {
   const { action, metaInfo, payload } = data;
 
   const { Integrations, ConversationMessages, Conversations } =
@@ -42,7 +40,6 @@ export const receiveTrpcMessage = async (subdomain, data): Promise<RPResult> => 
     const { primaryEmail, primaryPhone } = doc;
 
     let customer;
-
 
     const getCustomer = async (selector) =>
       sendTRPCMessage({
@@ -210,7 +207,6 @@ export const receiveTrpcMessage = async (subdomain, data): Promise<RPResult> => 
     //   data: {},
     //   isRPC: true,
     // });
-
     // return sendSuccess({ configs });
   }
 
@@ -222,7 +218,6 @@ export const receiveTrpcMessage = async (subdomain, data): Promise<RPResult> => 
     //   isRPC: true,
     //   defaultValue: [],
     // });
-
     // return sendSuccess({ userIds: users.map((user) => user._id) });
   }
   throw new Error(`Unknown action: ${action}`);

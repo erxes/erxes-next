@@ -5,7 +5,7 @@ import { getSaasOrganizationDetail } from 'erxes-api-shared/utils';
 
 const router: Router = Router();
 
-router.get('/v3/initial-setup', async (req: Request, res: Response) => {
+router.get('/initial-setup', async (req: Request, res: Response) => {
   const subdomain = getSubdomain(req);
   const models = await generateModels(subdomain);
 

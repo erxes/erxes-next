@@ -15,7 +15,7 @@ const userSchema = new Schema({
   },
   emails: { type: [String], optional: true, label: 'Emails' },
   createdAt: { type: Date, label: 'Created at', esType: 'date' },
-  modifiedAt: { type: Date, label: 'Modified at', esType: 'date' },
+  updatedAt: { type: Date, label: 'Modified at', esType: 'date' },
 });
 
 export default userSchema;

@@ -162,10 +162,7 @@ export const companySchema = new Schema(
     },
   },
   {
-    timestamps: {
-      createdAt: 'createdAt',
-      updatedAt: 'modifiedAt',
-    },
+    timestamps: true,
   },
 );
 

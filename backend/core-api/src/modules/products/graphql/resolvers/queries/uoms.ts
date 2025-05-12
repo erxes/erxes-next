@@ -16,6 +16,6 @@ export const uomQueries = {
     _args: undefined,
     { models }: IContext,
   ) {
-    return models.Uoms.find({}).countDocuments();
+    return models.Uoms.countDocuments();
   },
 };

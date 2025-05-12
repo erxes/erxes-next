@@ -8,7 +8,8 @@ import { gql } from 'graphql-tag';
 import { generateModels } from '../connectionResolvers';
 import * as typeDefDetails from './schema/schema';
 import resolvers from './resolvers';
-
+import { IUser } from 'erxes-api-shared/core-types';
+import { apolloCommonTypes } from 'erxes-api-shared/utils';
 // load environment variables
 dotenv.config();
 
@@ -20,34 +21,7 @@ export const initApolloServer = async (app, httpServer) => {
   const typeDefs = async () => {
     return gql(`
 
-      enum CURSOR_DIRECTION {
-        forward,
-        backward
-      }
-
-      type PageInfo {
-        hasNextPage: Boolean,
-        hasPreviousPage: Boolean,
-        startCursor: String,
-        endCursor: String,
-      }
-
-
-
-      input AttachmentInput {
-        url: String!
-        name: String!
-        type: String
-        size: Float
-        duration: Float
-      }
-
-  
-      input PdfAttachmentInput {
-        pdf: AttachmentInput
-        pages: [AttachmentInput]
-      }
-
+      ${apolloCommonTypes}
       ${types}
 
       extend type Query {
@@ -84,7 +58,7 @@ export const initApolloServer = async (app, httpServer) => {
         const subdomain = getSubdomain(req);
         const models = await generateModels(subdomain);
 
-        const user: any = extractUserFromHeader(req.headers);
+        const user: IUser = extractUserFromHeader(req.headers);
 
         const requestInfo = {
           secure: req.secure,

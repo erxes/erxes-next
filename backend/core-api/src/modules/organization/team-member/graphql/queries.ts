@@ -118,7 +118,7 @@ export const userQueries = {
       ...NORMAL_USER_SELECTOR,
     };
 
-    return models.Users.find(selector).countDocuments();
+    return models.Users.countDocuments(selector);
   },
 
   async userDetail(

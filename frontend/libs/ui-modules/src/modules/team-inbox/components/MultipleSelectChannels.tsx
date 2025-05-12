@@ -1,20 +1,16 @@
 import {
   Avatar,
-  Button,
   cn,
   Combobox,
   Command,
   Popover,
-  Skeleton,
   TextOverflowTooltip,
-  Tooltip,
 } from 'erxes-ui';
 import React, { useState } from 'react';
 import { useMultipleSelectChannelContext } from '../hooks/useMultipleSelectChannelContext';
 import { IChannel } from '../types/Channel';
 import { MultipleSelectChannelContext } from '../contexts/MultipleSelectChannelContext';
 import { useChannels } from '../hooks/useChannels';
-import { IconX } from '@tabler/icons-react';
 
 type Props = {
   value?: string[];
@@ -165,9 +161,7 @@ const InlineAvatars = () => {
           className="ring-2 ring-background bg-background"
           key={channel._id}
         >
-          <Avatar.Fallback colorSeed={channel?._id}>
-            {channel?.name.charAt(0)}
-          </Avatar.Fallback>
+          <Avatar.Fallback>{channel?.name.charAt(0)}</Avatar.Fallback>
         </Avatar>
       ))}
       {selectedChannels?.length - withAvatar?.length > 0 && (

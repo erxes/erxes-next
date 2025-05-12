@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Editor } from 'erxes-ui/modules/blocks/components/Editor';
-import { BlockEditorReadOnly } from 'erxes-ui/modules/blocks/components/BlockEditorReadOnly';
+import { Editor, BlockEditorReadOnly } from 'erxes-ui/modules';
 import { useState } from 'react';
 
 const meta: Meta<typeof Editor> = {

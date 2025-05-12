@@ -37,7 +37,7 @@ export const commonTransactionFields = `
   number
   ptrStatus
   createdAt
-  modifiedAt
+  updatedAt
 
   date
   description

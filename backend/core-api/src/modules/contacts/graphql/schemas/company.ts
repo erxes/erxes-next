@@ -7,10 +7,10 @@ export const conformityQueryFields = `
 `;
 
 export const types = `
-    type Company @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type Company @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id:String
     createdAt: Date
-    modifiedAt: Date
+    updatedAt: Date
     avatar: String
 
     size: Int

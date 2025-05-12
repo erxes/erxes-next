@@ -66,7 +66,6 @@ import {
   queries as AppQueries,
   types as AppTypes,
 } from '@/apps/graphql/schemas';
-import { CommonTypes } from './commonTypes';
 import { BrandTypes } from '@/organization/structure/graphql/schemas/brand';
 import {
   mutations as RelationMutations,
@@ -80,9 +79,6 @@ import {
 } from '@/conformities/graphql/schema';
 
 export const types = `
-    scalar JSON
-    scalar Date
-  
     enum CacheControlScope {
       PUBLIC
       PRIVATE
@@ -96,7 +92,6 @@ export const types = `
   
     ${CustomerTypes}
     ${CompanyTypes}
-    ${CommonTypes}
     ${UserTypes}
     ${ConfigTypes}
     ${TagTypes}

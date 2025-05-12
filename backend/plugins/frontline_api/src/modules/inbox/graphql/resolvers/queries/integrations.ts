@@ -1,5 +1,5 @@
 import { defaultPaginate } from 'erxes-api-shared/src/utils';
-import { IContext ,IModels} from '~/connectionResolvers';
+import { IContext, IModels } from '~/connectionResolvers';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
 
@@ -97,10 +97,11 @@ export const integrationQueries = {
       args,
     );
 
-      const { list, totalCount, pageInfo } = await cursorPaginate<IIntegrationDocument>({
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IIntegrationDocument>({
         model: models.Integrations,
-        params:args,
-         query: integrations,
+        params: args,
+        query: integrations,
       });
     return { list, totalCount, pageInfo };
   },
@@ -171,7 +172,7 @@ export const integrationQueries = {
     };
 
     const count = async (query) => {
-      return models.Integrations.findAllIntegrations(query).countDocuments();
+      return models.Integrations.countDocuments(query);
     };
 
     // Counting integrations by tag

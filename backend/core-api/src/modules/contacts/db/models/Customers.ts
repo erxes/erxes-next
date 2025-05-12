@@ -125,7 +125,7 @@ export const loadCustomerClass = (models: IModels) => {
     public static async updateCustomer(_id: string, doc: ICustomer) {
       return await models.Customers.findOneAndUpdate(
         { _id },
-        { $set: { ...doc, modifiedAt: new Date() } },
+        { $set: { ...doc, updatedAt: new Date() } },
         { new: true },
       );
     }
@@ -267,7 +267,7 @@ export const loadCustomerClass = (models: IModels) => {
       const modifier: any = {
         ...doc,
         state: doc.isUser ? 'customer' : customer.state,
-        modifiedAt: new Date(),
+        updatedAt: new Date(),
       };
 
       if (trackedData && trackedData.length > 0) {
