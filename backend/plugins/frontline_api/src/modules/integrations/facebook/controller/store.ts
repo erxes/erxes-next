@@ -6,6 +6,7 @@ import { INTEGRATION_KINDS ,} from '@/integrations/facebook/constants';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import {IFacebookCustomer,IFacebookCustomerDocument} from '@/integrations/facebook/@types/customers';
 import {getFacebookUser} from '@/integrations/facebook/utils'
+import {receiveTrpcMessage} from '@/inbox/receiveMessage'
 // import { uploadMedia, getPostLink, getFacebookUserProfilePic, getPostDetails } from '@/integrations/facebook/utils'
 import {
   getPostLink,
@@ -13,6 +14,90 @@ import {
   getPostDetails
 
 } from '@/integrations/facebook/utils'; 
+
+
+export const getOrCreateCustomer = async (
+  models: IModels,
+  subdomain: string,
+  pageId: string,
+  userId: string,
+  kind: string
+) => {
+  const integration = await models.FacebookIntegrations.getIntegration({
+    $and: [{ facebookPageIds: { $in: pageId } }, { kind }]
+  });
+
+  const { facebookPageTokensMap = {} } = integration;
+
+  let customer = await models.FacebookCustomers.findOne({ userId });
+  if (customer) {
+    return customer;
+  }
+  // Create customer
+  let fbUser = {} as any;
+
+  try {
+    fbUser =
+      (await getFacebookUser(models, pageId, facebookPageTokensMap, userId)) || {};
+  } catch (e) {
+    debugError(`Error during get customer info: ${e.message}`);
+  }
+
+  const fbUserProfilePic: string | null = await getFacebookUserProfilePic(
+    pageId,
+    facebookPageTokensMap,
+    userId,
+    subdomain
+  );
+
+  const profile = fbUserProfilePic || fbUser.profile_pic;
+
+  // Save in integrations DB
+  try {
+    customer = await models.FacebookCustomers.create({
+      userId,
+      firstName: fbUser.first_name || fbUser.name,
+      lastName: fbUser.last_name,
+      integrationId: integration.erxesApiId,
+      profilePic: profile
+    });
+  } catch (e) {
+    throw new Error(
+      e.message.includes('duplicate')
+        ? 'Concurrent request: customer duplication'
+        : e
+    );
+  }
+
+  // Save in core API (via receiveTrpcMessage)
+  try {
+    const data = {
+      action: 'get-create-update-customer',
+      payload: JSON.stringify({
+        integrationId: integration.erxesApiId,
+        firstName: fbUser.first_name || fbUser.name,
+        lastName: fbUser.last_name,
+        avatar: profile,
+        isUser: true
+      })
+    };
+
+    const apiCustomerResponse = await receiveTrpcMessage(subdomain, data);
+
+    if (apiCustomerResponse.status === 'success') {
+      customer.erxesApiId = apiCustomerResponse.data._id;
+      await customer.save();
+    } else {
+      throw new Error(`Customer creation failed: ${JSON.stringify(apiCustomerResponse)}`);
+    }
+
+  } catch (e) {
+    await models.FacebookCustomers.deleteOne({ _id: customer._id });
+    throw new Error(`Failed to sync with API: ${e.message || e}`);
+  }
+
+  return customer;
+};
 export const getOrCreateComment = async (
   models: IModels,
   subdomain: string,
@@ -20,10 +105,10 @@ export const getOrCreateComment = async (
   commentParams: ICommentParams,
   pageId: string,
   userId: string,
-  verb: string,
   integration: IFacebookIntegrationDocument,
   customer: IFacebookCustomer
 ) => {
+  console.log(postConversation,'postConversation')
   const mainConversation = await models.FacebookCommentConversation.findOne({
     comment_id: commentParams.comment_id
   });
@@ -83,6 +168,19 @@ export const getOrCreateComment = async (
     });
   }
   try {
+      const data = {
+        action: 'create-or-update-conversation',
+        payload: JSON.stringify({
+          customerId: customer.erxesApiId,
+          integrationId: integration.erxesApiId,
+          content: commentParams.message,
+          attachments: attachment,
+          conversationId: conversation.erxesApiId,
+        }),
+      };
+
+      const result = await receiveTrpcMessage(subdomain, data);
+      // return result;
     // const apiConversationResponse = await sendInboxMessage({
     //   subdomain,
     //   action: 'integrations.receive',
@@ -201,10 +299,7 @@ export const generatePostDoc = async (
 export const getOrCreatePostConversation = async (
   models: IModels,
   pageId: string,
-  subdomain: string,
   postId: string,
-  integration: IFacebookIntegrationDocument,
-  customer: IFacebookCustomerDocument,
   params: ICommentParams
 ) => {
   try {
@@ -230,8 +325,7 @@ export const getOrCreatePostConversation = async (
       }
     }
   } catch (error) {
-    console.error('Error in getOrCreatePostConversation:', error);
-    throw new Error('Failed to get or create post conversation');
+    throw new Error(`Failed to get or create post conversation: ${error.message}`);
   }
 };
 
@@ -282,94 +376,9 @@ export const getOrCreatePost = async (
   return post;
 };
 
-export const getOrCreateCustomer = async (
-  models: IModels,
-  subdomain: string,
-  pageId: string,
-  userId: string,
-  kind: string
-) => {
-  const integration = await models.FacebookIntegrations.getIntegration({
-    $and: [{ facebookPageIds: { $in: pageId } }, { kind }]
-  });
 
-  const { facebookPageTokensMap = {} } = integration;
 
-  let customer = await models.FacebookCustomers.findOne({ userId });
 
-  if (customer) {
-    return customer;
-  }
-
-  // create customer
-  let fbUser = {} as any;
-
-  try {
-    fbUser =
-      (await getFacebookUser(models, pageId, facebookPageTokensMap, userId)) ||
-      {};
-  } catch (e) {
-    debugError(`Error during get customer info: ${e.message}`);
-  }
-
-  const fbUserProfilePic: string | null = await getFacebookUserProfilePic(
-    pageId,
-    facebookPageTokensMap,
-    userId,
-    subdomain
-  );
-
-  let profile: string; // Declare profile as a string
-
-  if (fbUserProfilePic) {
-    profile = fbUserProfilePic; // Assign fbUserProfilePic to profile
-  } else {
-    profile = fbUser.profile_pic; // Assign fbUser.profile_pic to profile
-  }
-  // save on integrations db
-  try {
-    customer = await models.FacebookCustomers.create({
-      userId,
-      firstName: fbUser.first_name || fbUser.name,
-      lastName: fbUser.last_name,
-      integrationId: integration.erxesApiId,
-      profilePic: profile
-    });
-  } catch (e) {
-    throw new Error(
-      e.message.includes('duplicate')
-        ? 'Concurrent request: customer duplication'
-        : e
-    );
-  }
-
-  // save on api
-  try {
-    // const apiCustomerResponse = await sendInboxMessage({
-    //   subdomain,
-    //   action: 'integrations.receive',
-    //   data: {
-    //     action: 'get-create-update-customer',
-    //     payload: JSON.stringify({
-    //       integrationId: integration.erxesApiId,
-    //       firstName: fbUser.first_name || fbUser.name,
-    //       lastName: fbUser.last_name,
-    //       avatar: profile,
-    //       isUser: true
-    //     })
-    //   },
-    //   isRPC: true
-    // });
-
-    // customer.erxesApiId = apiCustomerResponse._id;
-    // await customer.save();
-  } catch (e) {
-    await models.FacebookCustomers.deleteOne({ _id: customer._id });
-    throw new Error(e);
-  }
-
-  return customer;
-};
 
 function getMediaSources(postDetails: any): string[] {
   const mediaSources: Set<string> = new Set();
@@ -443,7 +452,6 @@ export default async function fetchFacebookPostDetails(pageId: string, models: I
 
     return facebookPost;
   } catch (error) {
-    console.error('Error fetching post details:', error);
-    throw new Error('Failed to fetch post details');
+    throw new Error(`Failed to fetch post details: ${error.message}`);
   }
 }
