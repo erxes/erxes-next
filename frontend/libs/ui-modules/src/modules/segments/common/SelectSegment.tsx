@@ -2,15 +2,10 @@ import { useQuery } from '@apollo/client';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import queries from '../graphql/queries';
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import { ISegment } from '../types';
-import {
-  Combobox,
-  Command,
-  Popover,
-  TextOverflowTooltip,
-} from 'erxes-ui/components';
-import { SelectTree } from 'erxes-ui/modules';
+import { Combobox, Command, Popover, TextOverflowTooltip } from 'erxes-ui';
+import { SelectTree } from 'erxes-ui';
 
 const SelectBranchBadge = ({
   segment,
@@ -141,25 +136,28 @@ export const SelectSegmentCommand = ({
                   No segment selected
                 </Command.Item>
               )}
-              {generateOrderPath(segments)?.map((segment: any) => (
-                <SelectTree.Item
-                  order={segment.order}
-                  hasChildren={segment.hasChildren}
-                  name={segment.name}
-                  value={segment._id}
-                  onSelect={onSelect}
-                  selected={false}
-                  // disabled={disabled}
-                >
-                  <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
-                    {selected === segment._id && <Combobox.Check checked />}
-                    <TextOverflowTooltip
-                      value={segment.name}
-                      className="flex-auto"
-                    />
-                  </div>
-                </SelectTree.Item>
-              ))}
+              {generateOrderPath(segments)?.map(
+                (segment: any, index: number) => (
+                  <SelectTree.Item
+                    // id={index.toString()}
+                    order={segment.order}
+                    hasChildren={segment.hasChildren}
+                    name={segment.name}
+                    value={segment._id}
+                    onSelect={onSelect}
+                    selected={false}
+                    // disabled={disabled}
+                  >
+                    <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
+                      {selected === segment._id && <Combobox.Check checked />}
+                      <TextOverflowTooltip
+                        value={segment.name}
+                        className="flex-auto"
+                      />
+                    </div>
+                  </SelectTree.Item>
+                ),
+              )}
             </Command.List>
           </Command>
         </SelectTree.Provider>

@@ -92,6 +92,7 @@ export type IProperty<TForm extends FieldValues> = {
   index: number;
   form: UseFormReturn<TForm>;
   condition: ICondition;
+  contentType: string;
   remove: () => void;
   isFirst: boolean;
   isLast: boolean;
@@ -107,6 +108,7 @@ export type IPropertyField<TForm extends FieldValues> = {
   parentFieldName: IFormFieldName;
   defaultValue?: any;
   propertyTypes: any[];
+  contentType: string;
 };
 
 export type IPropertyCondtion<TForm extends FieldValues> = {

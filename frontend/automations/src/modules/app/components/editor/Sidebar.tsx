@@ -45,6 +45,9 @@ import {
 import ErrorState from './common/EmptyState';
 import { useFormContext } from 'react-hook-form';
 import { cn } from 'erxes-ui/lib';
+import { z } from 'zod';
+import SegmentForm from 'ui-modules/modules/segments/form';
+import formSchema from './common/formSchema';
 
 const TabsContent = (
   nodeType: string,
@@ -141,20 +144,15 @@ const TabContentWrapper = (
   return <div>{TabsContent(type, list, onDragStart, searchValue)}</div>;
 };
 
-export default ({ constants }: any) => {
-  const { watch, setValue } = useFormContext();
-  const isMinimized = watch('isMinimized');
+const Default = () => {
+  const [searchValue, setSearchValue] = useState('');
+
   const { data, loading, error, refetch } = useQuery<ConstantsQueryResponse>(
     gql(queries.automationConstants),
     { fetchPolicy: 'network-only' },
   );
 
   const { triggersConst, actionsConst } = data?.automationConstants || {};
-
-  const [_, setType] = useDnD();
-  const [searchValue, setSearchValue] = useState('');
-  const [activeModule, setActiveModule] = useState<string | null>(null);
-  const [activeTemplates, setActiveTemplates] = useState(false);
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
@@ -172,60 +170,110 @@ export default ({ constants }: any) => {
     );
     event.dataTransfer.effectAllowed = 'move';
   };
+  return (
+    <>
+      <div className="p-4 border-b">
+        <h3 className="font-medium mb-3">Workflow Components</h3>
+        <div className="relative flex items-center">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search components..."
+            className="pl-8"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <Tabs defaultValue="trigger" className="flex-1 flex flex-col">
+        <div className="px-4 pt-2">
+          <Tabs.List size="sm" className="w-full">
+            <Tabs.Trigger size="sm" value="trigger" className="flex-1">
+              {/* <IconHandClick /> */}
+              Triggers
+            </Tabs.Trigger>
+            <Tabs.Trigger size="sm" value="action" className="flex-1">
+              {/* <IconSettingsBolt /> */}
+              Actions
+            </Tabs.Trigger>
+          </Tabs.List>
+        </div>
+
+        {[
+          { type: 'trigger', list: triggersConst },
+          { type: 'action', list: actionsConst },
+        ].map(({ type, list = [] }) => (
+          <Tabs.Content value={type} className=" flex-1 p-4 mt-0 w-full">
+            <div className="space-y-2">
+              {TabContentWrapper(loading, error, refetch, {
+                type,
+                list,
+                onDragStart,
+                searchValue,
+              })}
+            </div>
+          </Tabs.Content>
+        ))}
+      </Tabs>
+    </>
+  );
+};
+
+const DefaultTriggerContent = () => {
+  return (
+    <SegmentForm
+      contentType={'core:customer'}
+      // segment={segment}
+      callback={() => console.log()}
+    />
+  );
+};
+
+const renderSideBarContent = (activeNode: any) => {
+  // if (!activeNode) {
+  //   return null;
+  // }
+  const { nodeType = '' } = activeNode;
+  if (nodeType === 'trigger') {
+    return <DefaultTriggerContent />;
+  }
+
+  return <Default />;
+};
+
+const size = {
+  default: 'w-80',
+  triggerDefault: 'w-2xl',
+};
+
+const getSize = (activeNode: any, isMinimized?: boolean) => {
+  if (activeNode?.nodeType === 'trigger' && !isMinimized) {
+    return size.triggerDefault;
+  }
+  return size.default;
+};
+
+export default ({ constants }: any) => {
+  const { watch, setValue } = useFormContext<z.infer<typeof formSchema>>();
+  const isMinimized = watch('isMinimized');
+  const activeNode = watch('activeNode');
+
+  const [_, setType] = useDnD();
 
   // Filter templates based on search term and active module
 
   return (
     <div
       className={cn(
-        'absolute top-0 right-0  w-80 h-full  border rounded-lg transition-transform duration-300 bg-white z-10',
+        `absolute top-0 right-0  ${getSize(
+          activeNode,
+          isMinimized,
+        )} h-full  border rounded-lg transition-transform duration-300 bg-white z-10`,
         isMinimized ? 'invisible' : 'visible',
       )}
     >
       <div className="flex h-full flex-col bg-background shadow-md">
-        <div className="p-4 border-b">
-          <h3 className="font-medium mb-3">Workflow Components</h3>
-          <div className="relative flex items-center">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search components..."
-              className="pl-8"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <Tabs defaultValue="trigger" className="flex-1 flex flex-col">
-          <div className="px-4 pt-2">
-            <Tabs.List size="sm" className="w-full">
-              <Tabs.Trigger size="sm" value="trigger" className="flex-1">
-                {/* <IconHandClick /> */}
-                Triggers
-              </Tabs.Trigger>
-              <Tabs.Trigger size="sm" value="action" className="flex-1">
-                {/* <IconSettingsBolt /> */}
-                Actions
-              </Tabs.Trigger>
-            </Tabs.List>
-          </div>
-
-          {[
-            { type: 'trigger', list: triggersConst },
-            { type: 'action', list: actionsConst },
-          ].map(({ type, list = [] }) => (
-            <Tabs.Content value={type} className=" flex-1 p-4 mt-0 w-full">
-              <div className="space-y-2">
-                {TabContentWrapper(loading, error, refetch, {
-                  type,
-                  list,
-                  onDragStart,
-                  searchValue,
-                })}
-              </div>
-            </Tabs.Content>
-          ))}
-        </Tabs>
+        {renderSideBarContent(activeNode)}
       </div>
     </div>
   );

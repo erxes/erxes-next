@@ -4,7 +4,7 @@ import { RecordTable } from 'erxes-ui/modules/record-table';
 import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
 import { Button } from 'erxes-ui/components';
 import { IconEdit } from '@tabler/icons-react';
-import { ISegment } from '../types';
+import { ISegment } from '../../../../../libs/ui-modules/src/modules/segments/types';
 
 const columns: ColumnDef<ISegment>[] = [
   {

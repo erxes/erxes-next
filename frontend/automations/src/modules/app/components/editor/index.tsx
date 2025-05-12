@@ -1,43 +1,57 @@
-import React, { useRef, useCallback, useState } from 'react';
 import {
+  Background,
+  Controls,
+  Edge,
+  MarkerType,
+  MiniMap,
+  Node,
   ReactFlow,
   ReactFlowProvider,
   addEdge,
-  useNodesState,
   useEdgesState,
-  Controls,
+  useNodesState,
   useReactFlow,
-  Background,
-  MarkerType,
-  Edge,
-  Node,
-  MiniMap,
 } from '@xyflow/react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import '@xyflow/react/dist/style.css';
 
-import Sidebar from './Sidebar';
-import { DnDProvider, useDnD } from './DnDProvider';
-import TriggerNode from './nodes/Trigger';
-import ActionNode from './nodes/Action';
-import { Breadcrumb, Button, Separator, Sheet } from 'erxes-ui/components';
-import { gql, useQuery } from '@apollo/client';
-import queries from '../../graphql/queries';
-import {
-  AutomationConstants,
-  ConstantsQueryResponse,
-  NodeData,
-} from '../../types';
-import Header from './Header';
-import { Form, FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { z } from 'zod';
-import { IconJumpRope, IconDeviceFloppy, IconMenu } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
-import { PageHeader } from 'erxes-ui/modules';
-import ConnectionLine from './edges/connectionLine';
-import PrimaryEdge from './edges/primary';
-import ContextMenu from './nodes/ContextMenu';
+
+import { useQueryState } from 'erxes-ui/hooks';
+import {
+  DnDProvider,
+  useDnD,
+} from '~/modules/app/components/editor/DnDProvider';
+import Header from '~/modules/app/components/editor/Header';
+import Sidebar from '~/modules/app/components/editor/Sidebar';
+import formSchema from '~/modules/app/components/editor/common/formSchema';
+import ConnectionLine from '~/modules/app/components/editor/edges/connectionLine';
+import PrimaryEdge from '~/modules/app/components/editor/edges/primary';
+import ActionNode from '~/modules/app/components/editor/nodes/Action';
+import TriggerNode from '~/modules/app/components/editor/nodes/Trigger';
+import { NodeData } from '~/modules/app/types';
+
+interface Props {
+  data: NodeData;
+  selected?: boolean;
+  id: string;
+  width: number;
+  height: number;
+  sourcePosition: string;
+  targetPosition: string;
+  dragHandle?: string;
+  parentId?: string;
+  type: string;
+  dragging?: boolean;
+  zIndex?: number;
+  selectable?: boolean;
+  deletable?: boolean;
+  draggable?: boolean;
+}
+
 const initialNodes: Node<any>[] = [
   {
     id: 'trigger-1',
@@ -128,8 +142,9 @@ const edgeTypes = {
   primary: PrimaryEdge,
 };
 const DnDFlow = () => {
+  const [_, setActiveNodeId] = useQueryState('activeNodeId');
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const { watch, setValue } = useFormContext();
+  const { watch, setValue } = useFormContext<z.infer<typeof formSchema>>();
   const isMinimized = watch('isMinimized');
   const [nodes, setNodes, onNodesChange] = useNodesState<any>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<any>(initialEdges);
@@ -257,7 +272,11 @@ const DnDFlow = () => {
           onConnect={onConnect}
           onDrop={onDrop}
           // onDoubleClick={(event) => console.log({ event })}
-          // onNodeDoubleClick={(event, node) => setActiveNode(node.data)}
+          onNodeDoubleClick={(event, node) => {
+            setValue('activeNode', node.data);
+            setValue('isMinimized', false);
+            setActiveNodeId(node.id);
+          }}
           onInit={setReactFlowInstance}
           onDragOver={onDragOver}
           fitView
@@ -294,18 +313,18 @@ const DnDFlow = () => {
 };
 
 export default () => {
+  const [activeNodeId] = useQueryState('activeNodeId');
+  const activeNode = activeNodeId
+    ? initialNodes.find((node) => node.id === activeNodeId)?.data
+    : null;
+
   const form = useForm({
-    resolver: zodResolver(
-      z.object({
-        isMinimized: z.boolean(),
-        name: z.string().min(1),
-        activeTab: z.string().min(1),
-      }),
-    ),
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      isMinimized: true,
+      isMinimized: activeNode ? false : true,
       name: '',
       activeTab: 'builder',
+      activeNode: activeNode,
     },
   });
 

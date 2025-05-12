@@ -1,9 +1,13 @@
 import { FieldValues } from 'react-hook-form';
 import formSchema from './schema';
 import { z } from 'zod';
-import { ISegment } from '../../types';
+import { ISegment } from '../types';
 
-export const getDefaultValues = (propertyType: string, segment: any) => {
+export const getDefaultValues = (
+  propertyType: string,
+  segment: any,
+  isTempoaray?: boolean,
+) => {
   const {
     subSegmentConditions = [],
     conditions = [],
@@ -32,6 +36,7 @@ export const getDefaultValues = (propertyType: string, segment: any) => {
       { propertyType, propertyName: '', propertyOperator: '' },
     ];
   }
+  console.log({ values });
 
   return values;
 };

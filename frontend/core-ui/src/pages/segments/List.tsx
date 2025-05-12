@@ -4,7 +4,7 @@ import { useQueryState } from 'erxes-ui/hooks';
 import { useEffect } from 'react';
 import List from '~/modules/segments/components/List';
 import { ListSidebar } from '~/modules/segments/components/Sidebar';
-import queries from '~/modules/segments/graphql/queries';
+import queries from 'ui-modules/modules/segments/graphql/queries';
 
 export default function Segments() {
   const [contentType, setType] = useQueryState<string>('contentType');

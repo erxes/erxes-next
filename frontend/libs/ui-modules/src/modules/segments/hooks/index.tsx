@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { FieldQueryResponse, IField, IOperator } from '../types';
 import queries from '../graphql/queries';
 import { DEFAULT_OPERATORS, OPERATORS } from '../constants';
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 
 export const getFieldsProperties = (propertyType?: string) => {
   const [contentType] = useQueryState<string>('contentType');

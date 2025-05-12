@@ -1,38 +1,20 @@
+import { gql } from '@apollo/client';
+import { IconTrash } from '@tabler/icons-react';
+import { Button, DatePicker, Form, HoverCard, Input, Select } from 'erxes-ui';
+import { useQueryState } from 'erxes-ui';
+import { cn } from 'erxes-ui';
+import { ControllerRenderProps, FieldError } from 'react-hook-form';
+import { z } from 'zod';
+import { SelectCommand } from '../common';
+import { getFieldsProperties, getSelectedFieldConfig } from '../hooks';
 import {
-  ControllerRenderProps,
-  Field,
-  FieldError,
-  UseFieldArrayRemove,
-  UseFormReturn,
-} from 'react-hook-form';
-import {
-  FieldQueryResponse,
-  IField,
   IProperty,
   IPropertyCondtion,
   IPropertyField,
   IPropertyInput,
-} from '../../types';
-import { z } from 'zod';
+} from '../types';
+import { createFieldNameSafe, groupByType } from '../utils';
 import formSchema from './schema';
-import { useState } from 'react';
-import { cn } from 'erxes-ui/lib';
-import {
-  Button,
-  DatePicker,
-  Form,
-  HoverCard,
-  Input,
-  Select,
-} from 'erxes-ui/components';
-import { IconTrash } from '@tabler/icons-react';
-import { DEFAULT_OPERATORS, OPERATORS } from '../../constants';
-import { createFieldNameSafe, groupByType } from '../../utils';
-import { gql, useQuery } from '@apollo/client';
-import queries from '../../graphql/queries';
-import { getFieldsProperties, getSelectedFieldConfig } from '../../hooks';
-import { SelectCommand } from '../../common';
-import { useQueryState } from 'erxes-ui/hooks';
 type Props = {
   error?: FieldError;
   children: React.ReactNode;
@@ -61,15 +43,16 @@ const PropertyField = ({
   parentFieldName,
   defaultValue,
   propertyTypes,
+  contentType,
 }: IPropertyField<z.infer<typeof formSchema>>) => {
   const groups = groupByType(fields);
-  const [selectedContentType] = useQueryState<string>('contentType');
+  // const [selectedContentType] = useQueryState<string>('contentType');
   return (
     <div className="flex flex-row">
       <Form.Field
         control={form.control}
         name={`${parentFieldName}.propertyType`}
-        defaultValue={selectedContentType || undefined}
+        defaultValue={contentType || undefined}
         render={({ field, fieldState }) => (
           <FieldWithError error={fieldState.error}>
             <Select
@@ -319,9 +302,11 @@ const Property = ({
   isLast,
   total,
   parentFieldName,
+  contentType,
 }: IProperty<z.infer<typeof formSchema>>) => {
   const fieldName = createFieldNameSafe(parentFieldName, 'conditions', index);
   const propertyType = form.watch(`${fieldName}.propertyType` as any);
+  console.log({ fieldName, propertyType });
   const { fields, propertyTypes } = getFieldsProperties(propertyType);
 
   const { selectedField, operators } =
@@ -391,6 +376,7 @@ const Property = ({
       >
         <div className="w-2/5">
           <PropertyField
+            contentType={contentType}
             defaultValue={condition.propertyName}
             parentFieldName={fieldName}
             index={index}

@@ -27,6 +27,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "public",
-    "../libs/erxes-ui/src/**/*"
+    "../libs/erxes-ui/src/**/*",
+    "../libs/ui-modules/src/**/*"
   ]
 }

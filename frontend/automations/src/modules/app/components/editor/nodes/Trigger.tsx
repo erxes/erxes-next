@@ -49,7 +49,7 @@ import {
 } from '@radix-ui/react-select';
 import { Icon12Hours, IconSunElectricity } from '@tabler/icons-react';
 
-const TriggerNode = ({ data, selected, id }: NodeProps) => {
+const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
   return (
     <div className="flex flex-col">
       <div className="w-1/4 ml-1 bg-primary/10 text-primary text-center px-2 py-1 rounded-t-md">
@@ -70,7 +70,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps) => {
               <IconSunElectricity />
             </div>
             <div>
-              <p className="font-medium ">{`New Customer created`}</p>
+              <p className="font-medium ">{data.label}</p>
             </div>
           </div>
 
@@ -82,8 +82,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps) => {
         </div>
         <div className="p-3">
           <span className="text-xs text-accent-foreground">
-            Start with a blank workflow that enralls and is triggered off team
-            members
+            {data.description}
           </span>
         </div>
 

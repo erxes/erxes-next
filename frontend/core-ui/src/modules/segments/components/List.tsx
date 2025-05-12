@@ -1,27 +1,14 @@
 import { useQuery } from '@apollo/client';
-import queries from '../graphql/queries';
-import { ListQueryResponse } from '../types';
+import { IconChartPie } from '@tabler/icons-react';
+import { Spinner } from 'erxes-ui/components';
 import { useQueryState } from 'erxes-ui/hooks';
-import { RecordTable } from 'erxes-ui/modules/record-table';
 import { PageHeader } from 'erxes-ui/modules/header/PageHeader';
-import {
-  IconArchive,
-  IconChartPie,
-  IconEdit,
-  IconPlus,
-  IconSettings,
-} from '@tabler/icons-react';
-import { Button, Sheet, Spinner, Table } from 'erxes-ui/components';
-import { Link } from 'react-router';
-import columns from './RowColumns';
-import Detail from './Detail';
-import {
-  flexRender,
-  getCoreRowModel,
-  getExpandedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import { RecordTable } from 'erxes-ui/modules/record-table';
 import { useState } from 'react';
+import queries from 'ui-modules/modules/segments/graphql/queries';
+import { ListQueryResponse } from 'ui-modules/modules/segments/types';
+import Detail from './Detail';
+import columns from './RowColumns';
 
 export default function List() {
   const [selectedContentType] = useQueryState('contentType');

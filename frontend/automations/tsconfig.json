@@ -12,7 +12,8 @@
       "~": ["frontend/automations/src"],
       "@/*": ["frontend/automations/src/modules/*"],
       "@": ["frontend/automations/src/modules"],
-      "ui-modules": ["frontend/libs/ui-modules/src"]
+      "ui-modules": ["frontend/libs/ui-modules/src"],
+      "ui-modules/*": ["frontend/libs/ui-modules/src/*"]
     }
   },
   "files": [],

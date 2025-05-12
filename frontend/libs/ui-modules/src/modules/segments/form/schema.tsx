@@ -11,7 +11,7 @@ export const conditionsSchema = z
   )
   .optional();
 
-const formSchema = z.object({
+const segmentFormSchema = z.object({
   name: z.string(),
   subOf: z.string().optional(),
   description: z.string().optional(),
@@ -28,4 +28,19 @@ const formSchema = z.object({
   conditions: conditionsSchema,
   conditionsConjunction: z.enum(['and', 'or']),
 });
-export default formSchema;
+
+export const temporarySegmentSchema = z.object({
+  config: z.record(z.any()),
+  conditionSegments: z
+    .array(
+      z.object({
+        contentType: z.string(),
+        conditionsConjunction: z.enum(['and', 'or']),
+        conditions: conditionsSchema,
+      }),
+    )
+    .optional(),
+  conditions: conditionsSchema,
+  conditionsConjunction: z.enum(['and', 'or']),
+});
+export default segmentFormSchema;

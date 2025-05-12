@@ -1,5 +1,5 @@
 import { DocumentNode, gql, useQuery } from '@apollo/client';
-import { Combobox, Command, Popover } from 'erxes-ui/components';
+import { Combobox, Command, Popover } from 'erxes-ui';
 import {
   mergeCursorData,
   useRecordTableCursor,
@@ -7,12 +7,10 @@ import {
 } from 'erxes-ui';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-// import formSchema from '../components/form/schema';
+import segmentFormSchema from '../form/schema';
 import { UseFormReturn } from 'react-hook-form';
-// import { IConditionsForPreview } from '../../../../../../core-ui/src/modules/segments/types';
+import { IConditionsForPreview } from '../types';
 import { z } from 'zod';
-import segmentFormSchema from 'ui-modules/modules/segments/form/schema';
-import { IConditionsForPreview } from 'ui-modules';
 
 type CommandProps = {
   query: DocumentNode;

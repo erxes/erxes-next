@@ -2,11 +2,13 @@ import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import formSchema from './schema';
 import Segment from './Segment';
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 
 export const Segments = ({
   form,
+  contentType,
 }: {
+  contentType: string;
   form: UseFormReturn<z.infer<typeof formSchema>>;
 }) => {
   const { fields, remove } = useFieldArray({
@@ -75,6 +77,7 @@ export const Segments = ({
             <div className={cn('relative pt-4', { 'pl-12': total > 1 })}>
               <Segment
                 form={form}
+                contentType={contentType}
                 parentFieldName={`conditionSegments.${index}`}
                 onRemove={() => remove(index)}
               />

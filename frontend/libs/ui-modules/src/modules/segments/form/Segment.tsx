@@ -1,5 +1,5 @@
 import { IconTrash } from '@tabler/icons-react';
-import { Button, Card, Form } from 'erxes-ui/components';
+import { Button, Card, Form } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import Property from './Property';
@@ -10,10 +10,11 @@ type Props = {
   form: UseFormReturn<z.infer<typeof formSchema>>;
   parentFieldName?: `conditionSegments.${number}`;
   onRemove?: () => void;
+  contentType: string;
 };
 
-const Segment = ({ form, parentFieldName, onRemove }: Props) => {
-  const [selectedContentType] = useQueryState<string>('contentType');
+const Segment = ({ form, parentFieldName, onRemove, contentType }: Props) => {
+  // const [selectedContentType] = useQueryState<string>('contentType');
   const {
     fields: conditionFields,
     append,
@@ -49,6 +50,7 @@ const Segment = ({ form, parentFieldName, onRemove }: Props) => {
                 parentFieldName={parentFieldName}
                 condition={condition}
                 form={form}
+                contentType={contentType}
                 remove={() => remove(index)}
                 isFirst={index === 0}
                 isLast={index === conditionFields.length - 1}
@@ -62,7 +64,7 @@ const Segment = ({ form, parentFieldName, onRemove }: Props) => {
           variant="secondary"
           onClick={() =>
             append({
-              propertyType: selectedContentType || '',
+              propertyType: contentType || '',
               propertyName: '',
               propertyOperator: '',
             })
