@@ -10,7 +10,8 @@ import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/int
 import {receiveMessage} from '@/integrations/facebook/controller/receiveMessage';
 import { getConfig} from '@/integrations/facebook/commonUtils';
 import {Activity} from '@/integrations/facebook/@types/utils'
-
+import {receiveComment} from '@/integrations/facebook/controller/receiveComment'
+import {receivePost} from '@/integrations/facebook/controller/receivePost'
 export const facebookGetPost = async (req, res) => {
     debugFacebook(
       `Request to get post data with: ${JSON.stringify(req.query)}`
@@ -86,7 +87,6 @@ export const facebookWebhook = async (req, res,next) => {
           await processMessagingEvent(
             entry,
             models,
-            req,
             res,
             next,
             subdomain,
@@ -113,7 +113,7 @@ export const facebookWebhook = async (req, res,next) => {
               `Received comment data ${JSON.stringify(event.value)}`
             );
             try {
-              // await receiveComment(models, subdomain, event.value, entry.id);
+              await receiveComment(models, subdomain, event.value, entry.id);
               debugFacebook(
                 `Successfully saved  ${JSON.stringify(event.value)}`
               );
@@ -129,7 +129,7 @@ export const facebookWebhook = async (req, res,next) => {
               debugFacebook(
                 `Received post data ${JSON.stringify(event.value)}`
               );
-              // await receivePost(models, subdomain, event.value, entry.id);
+              await receivePost(models, subdomain, event.value, entry.id);
               debugFacebook(
                 `Successfully saved post ${JSON.stringify(event.value)}`
               );
@@ -151,7 +151,6 @@ export const facebookWebhook = async (req, res,next) => {
 export async function processMessagingEvent(
   entry: any,
   models: IModels,
-  req: Request,
   res: Response,
   next: NextFunction,
   subdomain: string,
@@ -193,16 +192,6 @@ export async function processMessagingEvent(
 
       if (!facebookAccounts) {
         debugFacebook(`No Facebook account found for accountId: ${integration.accountId}`);
-        continue;
-      }
-
-      // Get page access token from integration
-      const { facebookPageTokensMap = {} } = integration;
-
-      try {
-        accessTokensByPageId[pageId] = getPageAccessTokenFromMap(pageId, facebookPageTokensMap);
-      } catch (tokenErr) {
-        debugFacebook(`Token retrieval error for pageId ${pageId}: ${(tokenErr as Error).message}`);
         continue;
       }
 
