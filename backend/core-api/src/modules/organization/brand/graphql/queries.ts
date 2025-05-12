@@ -60,7 +60,7 @@ export const brandQueries = {
     _args,
     { brandIdSelector, models }: IContext,
   ) {
-    return await models.Brands.countDocuments({ brandIdSelector });
+    return await models.Brands.countDocuments(brandIdSelector);
   },
 
   /**

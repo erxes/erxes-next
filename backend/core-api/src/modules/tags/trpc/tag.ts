@@ -11,7 +11,7 @@ export const tagTrpcRouter = t.router({
       const { query } = input;
       const { models } = ctx;
 
-      return await models.Tags.find(query);
+      return await models.Tags.find(query).lean();
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -25,7 +25,7 @@ export const tagTrpcRouter = t.router({
       const { query, fields } = input;
       const { models } = ctx;
 
-      const tags = await models.Tags.find(query);
+      const tags = await models.Tags.find(query).lean();
 
       if (!tags.length) {
         return [];

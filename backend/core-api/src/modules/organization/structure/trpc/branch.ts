@@ -33,9 +33,9 @@ export const branchTrpcRouter = t.router({
 
       const orderQry: any[] = [];
 
-      for (const tag of branches) {
+      for (const branch of branches) {
         orderQry.push({
-          order: { $regex: new RegExp(`^${escapeRegExp(tag.order || '')}`) },
+          order: { $regex: new RegExp(`^${escapeRegExp(branch.order || '')}`) },
         });
       }
 

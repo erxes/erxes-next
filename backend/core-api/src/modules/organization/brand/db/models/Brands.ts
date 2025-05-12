@@ -5,9 +5,8 @@ import { nanoid } from 'nanoid';
 import { IModels } from '~/connectionResolvers';
 
 export interface IBrandModel extends Model<IBrandDocument> {
-  getBrand(doc: any): IBrandDocument;
-  getBrandByCode(code: string): IBrandDocument;
-  generateCode(code: string): string;
+  getBrand(doc: any): Promise<IBrandDocument>;
+  generateCode(code: string): Promise<string>;
   createBrand(doc: IBrand): Promise<IBrandDocument>;
   updateBrand(_id: string, fields: IBrand): Promise<IBrandDocument>;
   removeBrand(_id: string): Promise<IBrandDocument>;
@@ -46,10 +45,21 @@ export const loadBrandClass = (models: IModels) => {
     public static async createBrand(doc: IBrand) {
       // generate code automatically
       // if there is no brand code defined
+
+      let code = doc.code;
+
+      if (code) {
+        const exists = await models.Brands.findOne({ code });
+        if (exists) {
+          throw new Error('Code already exists');
+        }
+      } else {
+        code = await this.generateCode();
+      }
+
       return models.Brands.create({
         ...doc,
-        code: await this.generateCode(),
-        createdAt: new Date(),
+        code,
         emailConfig:
           Object.keys(doc.emailConfig || {}).length > 0
             ? doc.emailConfig
@@ -58,8 +68,11 @@ export const loadBrandClass = (models: IModels) => {
     }
 
     public static async updateBrand(_id: string, fields: IBrand) {
-      await models.Brands.updateOne({ _id }, { $set: { ...fields } });
-      return models.Brands.findOne({ _id });
+      return models.Brands.findOneAndUpdate(
+        { _id },
+        { $set: { ...fields } },
+        { new: true },
+      );
     }
 
     public static async removeBrand(_id) {
