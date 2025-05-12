@@ -132,6 +132,6 @@ export const receiveMessage = async (
     }
   }    
   } catch (error) {
-   throw new Error(`Error processing Facebook message: ${error.message}. Failed activity object: ${JSON.stringify(activity)}`);
+   throw new Error(`Error processing Facebook message: ${error.message}.`);
   }
 };

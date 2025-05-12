@@ -5,8 +5,8 @@ import { PubSub } from 'graphql-subscriptions';
 import Redis from 'ioredis';
 
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, SKIP_REDIS } = process.env;
-
-const pubsub = SKIP_REDIS
+const skipRedis = SKIP_REDIS === 'true';
+const pubsub = skipRedis
   ? new PubSub()
   : new RedisPubSub({
       connectionListener: (error) => {

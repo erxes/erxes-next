@@ -33,14 +33,16 @@ export const getOrCreateCustomer = async (
   if (customer) {
     return customer;
   }
+
   // Create customer
   let fbUser = {} as any;
 
   try {
     fbUser =
       (await getFacebookUser(models, pageId, facebookPageTokensMap, userId)) || {};
-  } catch (e) {
+  } catch (e: any) {
     debugError(`Error during get customer info: ${e.message}`);
+
   }
 
   const fbUserProfilePic: string | null = await getFacebookUserProfilePic(
@@ -61,12 +63,11 @@ export const getOrCreateCustomer = async (
       integrationId: integration.erxesApiId,
       profilePic: profile
     });
-  } catch (e) {
-    throw new Error(
-      e.message.includes('duplicate')
-        ? 'Concurrent request: customer duplication'
-        : e
-    );
+  } catch (e: any) {
+    if (e.message?.includes('duplicate')) {
+      throw new Error('Concurrent request: customer duplication');
+    }
+    throw e; // Preserve stack trace
   }
 
   // Save in core API (via receiveTrpcMessage)
@@ -91,13 +92,15 @@ export const getOrCreateCustomer = async (
       throw new Error(`Customer creation failed: ${JSON.stringify(apiCustomerResponse)}`);
     }
 
-  } catch (e) {
+  } catch (e: any) {
     await models.FacebookCustomers.deleteOne({ _id: customer._id });
-    throw new Error(`Failed to sync with API: ${e.message || e}`);
+    // Re-throw with added context, preserving original stack
+    throw new Error(`Failed to sync with API: ${e.stack || e.message || e}`);
   }
 
   return customer;
 };
+
 export const getOrCreateComment = async (
   models: IModels,
   subdomain: string,
@@ -108,7 +111,6 @@ export const getOrCreateComment = async (
   integration: IFacebookIntegrationDocument,
   customer: IFacebookCustomer
 ) => {
-  console.log(postConversation,'postConversation')
   const mainConversation = await models.FacebookCommentConversation.findOne({
     comment_id: commentParams.comment_id
   });
