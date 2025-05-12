@@ -4,7 +4,7 @@ import { Button, Separator, Sidebar } from 'erxes-ui';
 import { cn } from 'erxes-ui';
 import { motion, AnimatePresence } from 'motion/react';
 import { useToggleFavorite } from '../hooks/useToggleFavorite';
-import React from 'react';
+import React, { useState } from 'react';
 
 export const PageHeaderRoot = React.forwardRef<
   HTMLDivElement,
@@ -103,13 +103,21 @@ const animations = {
 
 export function FavoriteToggleIconButton() {
   const { isFavorite, toggleFavorite } = useToggleFavorite();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleToggle = () => {
+    toggleFavorite();
+    if (!isFavorite) {
+      setIsAnimating(true);
+    }
+  };
 
   return (
     <div className="relative flex items-center justify-center">
       <Button
         variant={isFavorite ? 'secondary' : 'ghost'}
         size="icon"
-        onClick={toggleFavorite}
+        onClick={handleToggle}
         aria-pressed={isFavorite}
       >
         <motion.div
@@ -137,7 +145,7 @@ export function FavoriteToggleIconButton() {
           />
 
           <AnimatePresence>
-            {isFavorite && (
+            {isAnimating && isFavorite && (
               <motion.div
                 className="absolute inset-0 rounded-full"
                 style={{
@@ -145,6 +153,7 @@ export function FavoriteToggleIconButton() {
                     'radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0) 80%)',
                 }}
                 {...animations.burst}
+                onAnimationComplete={() => setIsAnimating(false)}
               />
             )}
           </AnimatePresence>
@@ -152,7 +161,7 @@ export function FavoriteToggleIconButton() {
       </Button>
 
       <AnimatePresence>
-        {isFavorite && (
+        {isAnimating && isFavorite && (
           <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             {[...Array(5)].map((_, i) => (
               <motion.div
