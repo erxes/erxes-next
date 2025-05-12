@@ -20,7 +20,7 @@ export const CompaniesHeader = () => {
               </Button>
             </Breadcrumb.Item>
           </ContactsBreadcrumb>
-          <PageHeader.FavoriteToggleButton type="submenu" item="companies" />
+          <PageHeader.FavoriteToggleButton />
         </PageHeader.Start>
       </PageHeader>
     </>

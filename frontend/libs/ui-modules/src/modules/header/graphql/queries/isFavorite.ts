@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const IS_FAVORITE = gql`
-  query isFavorite($type: String!, $item: String!) {
-    isFavorite(type: $type, item: $item)
+  query isFavorite($type: String!, $path: String!) {
+    isFavorite(type: $type, path: $path)
   }
 `;

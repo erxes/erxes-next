@@ -101,17 +101,8 @@ const animations = {
   },
 };
 
-export function FavoriteToggleIconButton({
-  type,
-  item,
-}: {
-  type: string;
-  item: string;
-}) {
-  const { isFavorite, toggleFavorite } = useToggleFavorite({
-    type,
-    item,
-  });
+export function FavoriteToggleIconButton() {
+  const { isFavorite, toggleFavorite } = useToggleFavorite();
 
   return (
     <div className="relative flex items-center justify-center">

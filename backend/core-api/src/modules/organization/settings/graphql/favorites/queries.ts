@@ -1,4 +1,5 @@
 import { IContext } from '~/connectionResolvers';
+import { IFavorites } from '@/organization/settings/db/definitions/favorites';
 
 export const favoriteQueries = {
   getFavoritesByCurrentUser: async (
@@ -11,15 +12,15 @@ export const favoriteQueries = {
 
   isFavorite: async (
     _parent: undefined,
-    { type, item }: { type: string; item: string },
+    { type, path }: IFavorites,
     { models, user }: IContext,
   ) => {
     const favorite = await models.Favorites.getFavorite({
       type,
-      item,
+      path,
       userId: user._id,
     });
-    console.log(favorite);
+
     return favorite ? true : false;
   },
 };

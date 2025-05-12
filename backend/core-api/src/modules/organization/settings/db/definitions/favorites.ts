@@ -3,7 +3,7 @@ import { Document, Schema } from 'mongoose';
 
 export interface IFavorites {
   type: string;
-  item: string;
+  path: string;
   userId: string;
 }
 
@@ -18,10 +18,10 @@ export const favoritesSchema = new Schema(
     _id: mongooseStringRandomId,
     type: {
       type: String,
-      enum: ['module', 'view', 'submenu'],
+      enum: ['module', 'submenu'],
       required: true,
     },
-    item: {
+    path: {
       type: String,
       required: true,
     },

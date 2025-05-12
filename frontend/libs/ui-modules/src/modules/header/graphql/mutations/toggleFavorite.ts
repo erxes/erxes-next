@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const TOGGLE_FAVORITE = gql`
-  mutation toggleFavorite($type: String!, $item: String!) {
-    toggleFavorite(type: $type, item: $item) {
+  mutation toggleFavorite($type: String!, $path: String!) {
+    toggleFavorite(type: $type, path: $path) {
       _id
     }
   }

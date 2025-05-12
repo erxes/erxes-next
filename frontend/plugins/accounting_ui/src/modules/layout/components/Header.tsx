@@ -25,7 +25,7 @@ export const AccountingHeader = ({
           </Breadcrumb.List>
         </Breadcrumb>
         <Separator.Inline />
-        <PageHeader.FavoriteToggleButton type="module" item="accounting" />
+        <PageHeader.FavoriteToggleButton item="accounting" />
       </PageHeader.Start>
       <PageHeader.End>
         <Button variant="outline" asChild>

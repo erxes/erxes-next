@@ -10,22 +10,24 @@ import {
 export interface IFavoritesModel extends Model<IFavoritesDocument> {
   createFavorite({
     type,
-    item,
+    path,
     userId,
   }: IFavorites): Promise<IFavoritesDocument>;
   getFavorites({
     type,
-    item,
+    path,
+
     userId,
   }: IFavorites): Promise<IFavoritesDocument[]>;
 
-  getFavorite({ type, item, userId }: IFavorites): Promise<IFavoritesDocument>;
-
-  deleteFavorite({
+  getFavorite({
     type,
-    item,
+    path,
+
     userId,
   }: IFavorites): Promise<IFavoritesDocument>;
+
+  deleteFavorite({ type, path }: IFavorites): Promise<IFavoritesDocument>;
 
   getFavoritesByCurrentUser({
     userId,
@@ -36,8 +38,8 @@ export interface IFavoritesModel extends Model<IFavoritesDocument> {
 
 export const loadFavoritesClass = (models: IModels) => {
   class Favorites {
-    public static async createFavorite({ type, item, userId }: IFavorites) {
-      const favorite = await models.Favorites.create({ type, item, userId });
+    public static async createFavorite(doc: IFavoritesDocument) {
+      const favorite = await models.Favorites.create(doc);
       return favorite;
     }
 
@@ -50,21 +52,19 @@ export const loadFavoritesClass = (models: IModels) => {
       return favorites;
     }
 
-    public static async deleteFavorite({ type, item, userId }: IFavorites) {
-      const favorite = await models.Favorites.findOneAndDelete({
-        type,
-        item,
-        userId,
-      });
-    }
+    public static async deleteFavorite(doc: IFavorites) {
+      const favorite = await models.Favorites.findOneAndDelete(doc);
 
-    public static async getFavorites({ type, item, userId }: IFavorites) {
-      const favorite = await models.Favorites.findOne({ type, item, userId });
       return favorite;
     }
 
-    public static async getFavorite({ type, item, userId }: IFavorites) {
-      const favorite = await models.Favorites.findOne({ type, item, userId });
+    public static async getFavorites(doc: IFavorites) {
+      const favorite = await models.Favorites.findOne(doc);
+      return favorite;
+    }
+
+    public static async getFavorite(doc: IFavorites) {
+      const favorite = await models.Favorites.findOne(doc);
       return favorite;
     }
   }

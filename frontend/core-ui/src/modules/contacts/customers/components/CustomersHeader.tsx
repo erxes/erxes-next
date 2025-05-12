@@ -37,7 +37,7 @@ export const CustomersHeader = () => {
           )}
         </ContactsBreadcrumb>
         <PageHeader.FavoriteToggleButton
-          type="submenu"
+          type="module"
           item={pathname.includes(ContactsPath.Leads) ? 'leads' : 'customers'}
         />
       </PageHeader.Start>

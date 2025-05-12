@@ -21,7 +21,7 @@ export const IndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.FavoriteToggleButton type="module" item="sampleSecond" />
+          <PageHeader.FavoriteToggleButton item="sampleSecond" />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>

@@ -5,7 +5,7 @@ export const GET_FAVORITES = gql`
     getFavoritesByCurrentUser {
       _id
       type
-      item
+      path
     }
   }
 `;
