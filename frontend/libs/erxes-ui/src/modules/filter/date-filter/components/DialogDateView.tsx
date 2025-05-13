@@ -108,7 +108,7 @@ export const FilterDialogDateView = ({ filterKey }: { filterKey: string }) => {
           </Tabs.Content>
           <Tabs.Content value="halfYear" className="w-full outline-none">
             <DateFilterRadioGroup
-              items={['Half 1', 'Half 2']}
+              items={['half-1', 'half-2']}
               className="flex flex-col"
               onValueChange={handleRadioGroupChange}
               value={currentValue}
@@ -156,7 +156,7 @@ const DateFilterRadioGroup = ({
         {getYearsArray(7, 5).map((year) =>
           items ? (
             <div className="flex flex-col gap-3" key={year}>
-              <legend className="font-semibold text-[13px] leading-none">
+              <legend className="font-semibold text-sm leading-none">
                 {year}
               </legend>
               <div
@@ -174,7 +174,7 @@ const DateFilterRadioGroup = ({
                     key={item}
                     currentValue={value}
                   >
-                    {item}
+                    {item.split('-').join(' ')}
                   </DateFilterRadioGroupItem>
                 ))}
               </div>
@@ -211,16 +211,20 @@ const DateFilterRadioGroupItem = ({
   useEffect(() => {
     if (currentValue === value && ref.current) {
       setTimeout(() => {
-        ref.current?.scrollIntoView({ behavior: 'auto', block: 'center' });
+        ref.current?.scrollIntoView({ behavior: 'instant', block: 'center' });
       }, 100);
     }
-  }, [currentValue, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   return (
     <Button
       size="sm"
       variant="secondary"
-      className="shadow-none has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70"
+      className="shadow-none has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring/70 capitalize"
+      onClick={() => {
+        ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }}
       asChild
     >
       <label ref={ref} id={`${id}-${value}`}>

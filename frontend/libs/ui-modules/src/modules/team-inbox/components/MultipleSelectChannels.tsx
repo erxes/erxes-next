@@ -1,20 +1,16 @@
 import {
-  Button,
+  Avatar,
   cn,
   Combobox,
   Command,
   Popover,
-  Skeleton,
   TextOverflowTooltip,
-  Tooltip,
 } from 'erxes-ui';
 import React, { useState } from 'react';
 import { useMultipleSelectChannelContext } from '../hooks/useMultipleSelectChannelContext';
 import { IChannel } from '../types/Channel';
 import { MultipleSelectChannelContext } from '../contexts/MultipleSelectChannelContext';
-import { useChannelById } from '../hooks/useChannelById';
 import { useChannels } from '../hooks/useChannels';
-import { IconX } from '@tabler/icons-react';
 
 type Props = {
   value?: string[];
@@ -27,7 +23,7 @@ type ProvideProps = {
 
 type SelectItemProps = {
   channel: IChannel;
-  onValueChange: (value: string[]) => void;
+  onValueChange: (value: IChannel[]) => void;
 };
 
 export const MultipleSelectChannels = React.forwardRef<
@@ -43,7 +39,7 @@ export const MultipleSelectChannels = React.forwardRef<
           ref={ref}
           className={cn('w-full flex text-left', props.className)}
         >
-          <MultipleSelectChannelsValue onValueChange={onValueChange} />
+          <MultipleSelectChannelsValue />
         </Combobox.Trigger>
         <Combobox.Content>
           <ChannelList
@@ -51,8 +47,9 @@ export const MultipleSelectChannels = React.forwardRef<
               <SelectChannelItem
                 key={channel._id}
                 channel={channel}
-                onValueChange={(value) => {
-                  onValueChange(value);
+                onValueChange={(updatedChannels) => {
+                  const channelIds = updatedChannels.map((c) => c._id);
+                  onValueChange(channelIds);
                   _setOpen(false);
                 }}
               />
@@ -66,7 +63,7 @@ export const MultipleSelectChannels = React.forwardRef<
 
 const MultipleSelectChannelsProvider = ({ children }: ProvideProps) => {
   const [selectedChannels, setSelectedChannels] = useState<
-    string[] | undefined
+    IChannel[] | undefined
   >(undefined);
   return (
     <MultipleSelectChannelContext.Provider
@@ -81,23 +78,27 @@ const SelectChannelItem = ({ channel, onValueChange }: SelectItemProps) => {
   const { selectedChannels, setSelectedChannels } =
     useMultipleSelectChannelContext();
 
-  const isSelected = selectedChannels?.includes(channel._id);
+  const isSelected = selectedChannels?.some((chan) =>
+    chan._id?.includes(channel._id),
+  );
   const handleSelect = () => {
-    let newSelectedChannels: string[];
+    let newSelectedChannels: IChannel[];
+
     if (isSelected) {
       newSelectedChannels =
         selectedChannels?.filter(
-          (selectedChannel) => selectedChannel !== channel._id,
+          (selectedChannel) => selectedChannel._id !== channel._id,
         ) || [];
-      setSelectedChannels(newSelectedChannels);
     } else {
       newSelectedChannels = selectedChannels
-        ? [...selectedChannels, channel._id]
-        : [channel._id];
-      setSelectedChannels(newSelectedChannels);
+        ? [...selectedChannels, channel]
+        : [channel];
     }
+
+    setSelectedChannels(newSelectedChannels);
     onValueChange(newSelectedChannels);
   };
+
   return (
     <Command.Item value={channel.name} onSelect={handleSelect}>
       <TextOverflowTooltip value={channel.name} />
@@ -106,93 +107,21 @@ const SelectChannelItem = ({ channel, onValueChange }: SelectItemProps) => {
   );
 };
 
-const MultipleSelectChannelsValue = ({
-  onValueChange,
-}: {
-  onValueChange: (value: string[]) => void;
-}) => {
-  const { selectedChannels, setSelectedChannels } =
-    useMultipleSelectChannelContext();
+const MultipleSelectChannelsValue = () => {
+  const { selectedChannels } = useMultipleSelectChannelContext();
 
-  const { channels, loading } = useChannels();
-
-  if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
-
-  const selected =
-    selectedChannels && channels
-      ? channels
-          .slice()
-          .filter((channel) => selectedChannels.includes(channel._id))
-          .sort(
-            (a, b) =>
-              selectedChannels.indexOf(a._id) - selectedChannels.indexOf(b._id),
-          )
-      : [];
-
-  const handleRemove = (id: string) => {
-    const newList = selectedChannels?.filter((item) => item !== id) || [];
-    setSelectedChannels(newList);
-    onValueChange(newList);
-  };
-
-  if (selectedChannels && selectedChannels?.length > 1) {
-    return (
-      <div className="flex gap-1">
-        {selected?.slice(0, 1).map((item: IChannel) => (
-          <div
-            key={item._id}
-            className="w-auto text-xs flex items-center gap-2 max-w-24 bg-primary/10 px-2 rounded-md"
-          >
-            <Combobox.Value value={item.name} />
-            <Button
-              variant={'ghost'}
-              className=" h-3 w-3 p-1 rounded-full"
-              onClick={() => handleRemove(item._id)}
-            >
-              <IconX size={8} />
-            </Button>
-          </div>
-        ))}
-        <Tooltip>
-          <Tooltip.Trigger asChild>
-            <div className="w-auto px-1 h-4 text-xs flex items-center justify-center rounded-full bg-primary/10">
-              +{selectedChannels.length - 1}
-            </div>
-          </Tooltip.Trigger>
-          <Tooltip.Content className="flex flex-col">
-            {selected?.slice(0, selected.length).map((item: IChannel) => (
-              <Combobox.Value
-                key={item._id}
-                className="w-auto max-w-24 bg-primary/10 px-2 rounded-md"
-                value={item.name}
-              />
-            ))}
-          </Tooltip.Content>
-        </Tooltip>
-      </div>
-    );
-  }
+  const displayValue =
+    selectedChannels && selectedChannels?.length > 0
+      ? selectedChannels?.length === 1
+        ? selectedChannels[0]?.name
+        : `${selectedChannels?.length} channels`
+      : undefined;
 
   return (
-    <>
-      <Combobox.Value
-        className={cn(
-          selected.length > 0 &&
-            'w-auto max-w-24 bg-primary/10 px-2 rounded-md',
-        )}
-        value={selected[0]?.name}
-        placeholder="Select channels"
-      />
-      {selected && selected.length > 0 && (
-        <Button
-          variant={'ghost'}
-          className="h-3 w-3 p-1 rounded-full"
-          onClick={() => handleRemove(selected[0]._id)}
-        >
-          <IconX size={8} />
-        </Button>
-      )}
-    </>
+    <span className="inline-flex items-center gap-2 overflow-hidden">
+      <InlineAvatars />
+      <Combobox.Value value={displayValue} placeholder="Select channels" />
+    </span>
   );
 };
 
@@ -210,5 +139,38 @@ export const ChannelList = ({
         {channels?.map((channel: IChannel) => renderItem(channel))}
       </Command.List>
     </Command>
+  );
+};
+
+const InlineAvatars = () => {
+  const { selectedChannels } = useMultipleSelectChannelContext();
+
+  if (!selectedChannels || selectedChannels.length === 0) {
+    return null;
+  }
+  const withAvatar = selectedChannels?.slice(
+    0,
+    selectedChannels?.length > 2 ? 1 : 2,
+  );
+
+  return (
+    <div className="flex -space-x-1.5">
+      {withAvatar?.map((channel) => (
+        <Avatar
+          size="lg"
+          className="ring-2 ring-background bg-background"
+          key={channel._id}
+        >
+          <Avatar.Fallback>{channel?.name.charAt(0)}</Avatar.Fallback>
+        </Avatar>
+      ))}
+      {selectedChannels?.length - withAvatar?.length > 0 && (
+        <Avatar size="lg" className="ring-2 ring-background bg-background">
+          <Avatar.Fallback className="bg-primary/10 text-primary">
+            +{selectedChannels?.length - withAvatar?.length}
+          </Avatar.Fallback>
+        </Avatar>
+      )}
+    </div>
   );
 };

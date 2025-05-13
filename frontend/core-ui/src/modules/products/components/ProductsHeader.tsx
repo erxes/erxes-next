@@ -1,22 +1,31 @@
-import { IconBox, IconSettings } from '@tabler/icons-react';
+import { IconCube } from '@tabler/icons-react';
 
-import { Button, PluginHeader, FilterDropdown } from 'erxes-ui';
-import { filters } from './ProductsFilter';
-import { AddProductForm } from '../add-products/components/AddProductForm';
-
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
+import { Link } from 'react-router-dom';
+import { ProductAddSheet } from '../add-products/components/ProductAddSheet';
 export const ProductsHeader = () => {
   return (
-    <>
-      <PluginHeader title="Products & services" icon={IconBox}>
-        <Button variant="outline" className="px-2">
-          <IconSettings className="w-4 h-4" />
-          Go to settings
-        </Button>
-        <FilterDropdown filters={filters} />
-
-        <AddProductForm />
-      </PluginHeader>
-      {/* <FilterBarWithHook filters={filters} /> */}
-    </>
+    <PageHeader>
+      <PageHeader.Start>
+        <Breadcrumb>
+          <Breadcrumb.List className="gap-1">
+            <Breadcrumb.Item>
+              <Button variant="ghost" asChild>
+                <Link to="/products">
+                  <IconCube />
+                  Products & Services
+                </Link>
+              </Button>
+            </Breadcrumb.Item>
+          </Breadcrumb.List>
+        </Breadcrumb>
+        <Separator.Inline />
+        <PageHeader.FavoriteToggleButton item="products" />
+      </PageHeader.Start>
+      <PageHeader.End>
+        <ProductAddSheet />
+      </PageHeader.End>
+    </PageHeader>
   );
 };

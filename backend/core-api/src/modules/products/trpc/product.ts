@@ -5,7 +5,7 @@ import { ITRPCContext } from '~/init-trpc';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
-export const productTrpcRouter = t.router({
+export const productsTrpcRouter = t.router({
   products: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const {
@@ -57,22 +57,18 @@ export const productTrpcRouter = t.router({
         query.categoryId = { $in: categories.map((c) => c._id) };
       }
 
-      const products = await models.Products.find(query, fields || {})
+      return models.Products.find(query, fields || {})
         .sort(sort)
         .skip(skip || 0)
         .limit(limit || 0)
         .lean();
-
-      return products;
     }),
 
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
 
-      const product = await models.Products.findOne(query).lean();
-
-      return product;
+      return models.Products.findOne(query).lean();
     }),
 
     createProduct: t.procedure
@@ -81,9 +77,7 @@ export const productTrpcRouter = t.router({
         const { doc } = input;
         const { models } = ctx;
 
-        const product = await models.Products.createProduct(doc);
-
-        return product;
+        return models.Products.createProduct(doc);
       }),
 
     updateProduct: t.procedure
@@ -92,9 +86,7 @@ export const productTrpcRouter = t.router({
         const { _id, doc } = input;
         const { models } = ctx;
 
-        const product = await models.Products.updateProduct(_id, doc);
-
-        return product;
+        return models.Products.updateProduct(_id, doc);
       }),
 
     updateProducts: t.procedure
@@ -103,9 +95,7 @@ export const productTrpcRouter = t.router({
         const { query, doc } = input;
         const { models } = ctx;
 
-        const product = await models.Products.updateMany(query, doc);
-
-        return product;
+        return models.Products.updateMany(query, doc);
       }),
 
     removeProducts: t.procedure
@@ -114,9 +104,7 @@ export const productTrpcRouter = t.router({
         const { _ids } = input;
         const { models } = ctx;
 
-        const product = await models.Products.removeProducts(_ids);
-
-        return product;
+        return models.Products.removeProducts(_ids);
       }),
 
     count: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
@@ -139,9 +127,7 @@ export const productTrpcRouter = t.router({
         query.categoryId = { $in: categories.map((c) => c._id) };
       }
 
-      const count = await models.Products.find(query).countDocuments();
-
-      return count;
+      return models.Products.find(query).countDocuments();
     }),
   }),
 });

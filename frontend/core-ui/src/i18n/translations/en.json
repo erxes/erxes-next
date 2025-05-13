@@ -2,7 +2,7 @@
   "$schema": "./$schema.json",
   "nav": {
     "contacts": "Contacts",
-    "contactsSub": {
+    "contacts.subMenu": {
       "leads": "Leads",
       "customers": "Customers",
       "companies": "Companies",
@@ -15,6 +15,9 @@
     "pos": "Pos",
     "plugins": "Plugins",
     "products": "Products & Services",
+    "products.subMenu": {
+      "categories": "Product Categories"
+    },
     "projects": "Projects",
     "sales": "Sales",
     "settings": "Settings",
@@ -24,6 +27,12 @@
     "teams": "Teams",
     "views": "Views",
     "accounting": "Accounting",
-    "sample": "Sample"
+    "accounting.subMenu": {
+      "main": "Transactions",
+      "records": "Records",
+      "odds": "Odd Transactions"
+    },
+    "sample": "Sample",
+    "modules": "Modules"
   }
 }

@@ -76,7 +76,7 @@ export const tagQueries = {
    * Get tags
    */
   async tags(
-    _root: undefined,
+    _parent: undefined,
     params: ITagFilterQueryParams,
     { models, commonQuerySelector }: IContext,
   ) {
@@ -96,7 +96,7 @@ export const tagQueries = {
   },
 
   async tagsQueryCount(
-    _root: undefined,
+    _parent: undefined,
     {
       type,
       searchValue,
@@ -116,16 +116,14 @@ export const tagQueries = {
       selector.name = new RegExp(`.*${searchValue}.*`, 'i');
     }
 
-    const tagsCount = await models.Tags.find(selector).countDocuments();
-
-    return tagsCount;
+    return models.Tags.countDocuments(selector);
   },
 
   /**
    * Get one tag
    */
   async tagDetail(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

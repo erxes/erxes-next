@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Breadcrumb } from '../breadcrumb';
-import { IconHome, IconChevronRight } from '@tabler/icons-react';
 import { DropdownMenu } from '../dropdown-menu';
-import { Separator } from '../separator';
 
 const meta: Meta<typeof Breadcrumb> = {
   title: 'Components/Breadcrumb',

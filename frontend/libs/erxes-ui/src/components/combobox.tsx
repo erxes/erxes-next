@@ -104,7 +104,10 @@ export const ComboboxContent = React.forwardRef<
       align="start"
       sideOffset={8}
       {...props}
-      className={cn('p-0 min-w-[--radix-popper-anchor-width]', className)}
+      className={cn(
+        'p-0 min-w-72 w-[--radix-popper-anchor-width] max-w-96',
+        className,
+      )}
     />
   );
 });
@@ -126,7 +129,7 @@ export const ComboboxCheck = React.forwardRef<
       ref={ref}
       size={16}
       strokeWidth={2}
-      className={cn('size-4 text-muted-foreground ml-auto', className)}
+      className={cn('size-4 text-primary ml-auto', className)}
       {...props}
     />
   );

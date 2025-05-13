@@ -1,31 +1,44 @@
-import { IconBox, IconRosetteDiscountCheck } from '@tabler/icons-react';
+import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+import { IconSearch } from '@tabler/icons-react';
+import { Combobox, Command, Filter } from 'erxes-ui';
+import { TagsFilter } from 'ui-modules';
 
-import { Filter } from 'erxes-ui';
+export const ProductsFilter = () => {
+  return (
+    <Filter id="products-filter">
+      <Filter.Bar>
+        <ProductsFilterPopover />
+      </Filter.Bar>
+    </Filter>
+  );
+};
 
-import {
-  ProductBrandFilterBar,
-  ProductBrandFilterDropdown,
-} from '@/products/products-filter/components/ProductBrandFilter';
-import {
-  ProductTypeFilterBar,
-  ProductTypeFilterDropdown,
-} from '@/products/products-filter/components/ProductTypeFilter';
+export const ProductsFilterPopover = () => {
+  return (
+    <>
+      <Filter.Popover scope={PageHotkeyScope.ProductsPage}>
+        <Filter.Trigger />
+        <Combobox.Content>
+          <Filter.View>
+            <Command>
+              <Filter.CommandInput placeholder="Filter" variant="secondary" />
 
-export const filters: Filter[] = [
-  {
-    label: 'Type',
-    accessoryKey: 'type',
-    icon: IconBox,
-    condition: (prps) => <></>,
-    dropdown: (props) => <ProductTypeFilterDropdown {...props} />,
-    bar: () => <ProductTypeFilterBar />,
-  },
-  {
-    label: 'Brand',
-    accessoryKey: 'brand',
-    icon: IconRosetteDiscountCheck,
-    condition: (prps) => <></>,
-    dropdown: (props) => <ProductBrandFilterDropdown {...props} />,
-    bar: () => <ProductBrandFilterBar />,
-  },
-];
+              <Command.List className="p-1">
+                <Filter.Item value="searchValue" inDialog>
+                  <IconSearch />
+                  Search
+                </Filter.Item>
+                <TagsFilter />
+              </Command.List>
+            </Command>
+          </Filter.View>
+        </Combobox.Content>
+      </Filter.Popover>
+      <Filter.Dialog>
+        <Filter.View filterKey="searchValue" inDialog>
+          <Filter.DialogStringView filterKey="searchValue" />
+        </Filter.View>
+      </Filter.Dialog>
+    </>
+  );
+};

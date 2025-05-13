@@ -1,5 +1,4 @@
-
-import { Button, Separator, SideMenu, Skeleton } from 'erxes-ui';
+import { Separator, Sidebar, Avatar } from 'erxes-ui';
 import { ConversationHeader } from '@/inbox/conversation-detail/components/ConversationHeader';
 import { useConversationDetail } from '@/inbox/conversation-detail/hooks/useConversationDetail';
 
@@ -12,10 +11,8 @@ import { MessagesSkeleton } from './ConversationSkeleton';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { MessageInput } from './MessageInput';
 import { ConversationContext } from '../../context/ConversationContext';
-import { useWidget } from 'ui-modules';
 
 export const ConversationDetail = () => {
-  const { Widget } = useWidget();
   const [conversationId] = useQueryState<string>('conversationId');
   const activeConversationCandidate = useAtomValue(activeConversationState);
 
@@ -43,6 +40,7 @@ export const ConversationDetail = () => {
   if (!['messenger', 'lead'].includes(integration?.kind)) {
     return <UnderConstruction />;
   }
+
   return (
     <div className="flex h-full overflow-hidden">
       <div className="flex flex-col h-full overflow-hidden flex-auto">
@@ -59,14 +57,18 @@ export const ConversationDetail = () => {
             <ConversationMessages />
           </ConversationDetailLayout>
         </ConversationContext.Provider>
+        <Sidebar>
+          <Sidebar.Header>
+            <div className="flex items-center gap-2">
+              <Avatar size="sm" />
+              <div className="flex flex-col">
+                <p className="text-sm font-medium">John Doe</p>
+                <p className="text-xs text-gray-500">john.doe@example.com</p>
+              </div>
+            </div>
+          </Sidebar.Header>
+        </Sidebar>
       </div>
-      {!!Widget && conversationId && (
-        <Widget
-          pluginName="inbox"
-          contentId={conversationId}
-          contentType="conversation"
-        />
-      )}
     </div>
   );
 };

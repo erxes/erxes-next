@@ -1,4 +1,4 @@
-import { IActionMap, IPermissionDocument } from 'erxes-core-types';
+import { IActionMap, IPermissionDocument } from '../../core-types';
 
 export const userActionsMap = async (
   userPermissions: IPermissionDocument[],

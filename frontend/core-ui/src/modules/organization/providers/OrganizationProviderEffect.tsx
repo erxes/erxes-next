@@ -7,7 +7,7 @@ import {
   isCurrentOrganizationLoadedState,
 } from 'ui-modules';
 
-import { REACT_APP_API_URL } from 'erxes-ui/utils/config';
+import { REACT_APP_API_URL } from 'erxes-ui';
 import { useAtom, useSetAtom } from 'jotai';
 
 export const OrganizationProviderEffect = () => {
@@ -23,7 +23,7 @@ export const OrganizationProviderEffect = () => {
       return;
     }
 
-    fetch(REACT_APP_API_URL + '/v3/initial-setup')
+    fetch(REACT_APP_API_URL + '/initial-setup')
       .then((res) => res.json())
       .then((data: CurrentOrganization) => {
         if (data.hasOwner == false) {

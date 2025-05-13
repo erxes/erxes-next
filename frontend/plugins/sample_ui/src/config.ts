@@ -1,7 +1,7 @@
 import { IconSandbox } from '@tabler/icons-react';
-import { UIConfig } from 'erxes-ui/types';
+import { IUIConfig } from 'erxes-ui/types';
 
-export const CONFIG: UIConfig = {
+export const CONFIG: IUIConfig = {
   name: 'sample',
   icon: IconSandbox,
   modules: [
@@ -10,16 +10,18 @@ export const CONFIG: UIConfig = {
       icon: IconSandbox,
       path: 'sampleFirst',
       hasSettings: true,
+      hasWidgets: true,
     },
     {
       name: 'sampleSecond',
       icon: IconSandbox,
       path: 'sampleSecond',
       hasSettings: true,
+      hasWidgets: true,
       submenus: [
         {
           name: 'submenu1',
-          path: 'sampleSecond',
+          path: 'sampleSecond/submenu1',
         },
         {
           name: 'submenu2',

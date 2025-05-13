@@ -34,6 +34,7 @@ export const saasOrganizationsSchema = new mongoose.Schema({
   partnerKey: { type: String },
   lastActiveDate: { type: Date },
   createdAt: { type: Date },
+  teamMembersLimit: { type: Number, required: true },
   plan: {
     type: String,
     enum: SAAS_ORGANIZATION_PLAN.ALL,
@@ -210,7 +211,7 @@ export const saasPluginSchema = new mongoose.Schema({
   support: { type: String, label: 'Resolved issues' },
 
   createdAt: { type: Date, label: 'Created at' },
-  modifiedAt: { type: Date, label: 'Modified at' },
+  updatedAt: { type: Date, label: 'Modified at' },
   createdBy: { type: String, label: 'Created by' },
   modifiedBy: { type: String, label: 'Modified by' },
 

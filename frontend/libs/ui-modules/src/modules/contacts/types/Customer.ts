@@ -1,3 +1,5 @@
+import { SexCode } from 'erxes-ui';
+import { CountryCode } from 'libphonenumber-js';
 export interface ICustomerInline {
   _id: string;
   firstName?: string;
@@ -6,6 +8,21 @@ export interface ICustomerInline {
   primaryPhone?: string;
   avatar?: string;
 }
+export interface ICustomer extends ICustomerInline {
+  type: CustomerType;
+  links?: object;
+  code?: string;
+  emailValidationStatus?: string;
+  phoneValidationStatus?: string;
+  emails?: string[];
+  phones?: string[];
+  tagIds?: string[];
+  location?: {
+    countryCode?: CountryCode | undefined;
+  };
+  sex?: SexCode;
+}
+
 export enum CustomerType {
   CUSTOMER = 'customer',
   COMPANY = 'company',

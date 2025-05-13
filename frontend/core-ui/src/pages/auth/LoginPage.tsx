@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Login } from '@/auth/login/components/Login';
 import { currentUserState } from 'ui-modules';
 import { DynamicBanner } from '@/auth/components/DynamicBanner';
-import { AuthenticationLayout } from '~/modules/auth/components/AuthenticationLayout';
+import { AuthenticationLayout } from '@/auth/components/AuthenticationLayout';
 import { AppPath } from '@/types/paths/AppPath';
 import { useAtomValue } from 'jotai';
 

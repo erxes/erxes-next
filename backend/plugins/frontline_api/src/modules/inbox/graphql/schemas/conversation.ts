@@ -1,14 +1,4 @@
-import {
-  graphqlAttachmentInput,
-  graphqlAttachmentType,
-} from 'erxes-api-shared/src/utils';
-
 export const types = `
-  ${graphqlAttachmentType}
-  ${graphqlAttachmentInput}
-  scalar Date
-  scalar JSON
- 
   extend type Customer @key(fields: "_id") {
     _id: String @external
     conversations: [Conversation]
@@ -39,7 +29,7 @@ export const types = `
     tagIds: [String]
     operatorStatus: String
 
-    messages: [ConversationMessage]
+    messages: ConversationMessageResponse
     callProAudio: String
     
     tags: [Tag]
@@ -53,6 +43,18 @@ export const types = `
 
 
     customFieldsData: JSON
+  }
+
+  type ConversationResponse {
+    list: [Conversation],
+    pageInfo: PageInfo
+    totalCount: Int,
+  }
+
+  type ConversationMessageResponse {
+    list: [ConversationMessage],
+    pageInfo: PageInfo
+    totalCount: Int,
   }
   type EngageData {
     messageId: String
@@ -196,14 +198,14 @@ const filterParams = `
 export const queries = `
   conversationMessage(_id: String!): ConversationMessage
   
-  conversations(${filterParams}, skip: Int): [Conversation]
+  conversations(${filterParams}, skip: Int): ConversationResponse
 
   conversationMessages(
     conversationId: String!
     skip: Int
     limit: Int
     getFirst: Boolean
-  ): [ConversationMessage]
+  ): ConversationMessageResponse
 
   conversationMessagesTotalCount(conversationId: String!): Int
   conversationCounts(${filterParams}, only: String): JSON
@@ -233,9 +235,9 @@ export const mutations = `
     contentType: String
     extraInfo: JSON
   ): ConversationMessage
-  conversationsAssign(conversationIds: [String]!, assignedUserId: String): [Conversation]
-  conversationsUnassign(_ids: [String]!): [Conversation]
-  conversationsChangeStatus(_ids: [String]!, status: String!): [Conversation]
+  conversationsAssign(conversationIds: [String]!, assignedUserId: String): ConversationResponse
+  conversationsUnassign(_ids: [String]!): ConversationResponse
+  conversationsChangeStatus(_ids: [String]!, status: String!):  ConversationResponse
   conversationMarkAsRead(_id: String): Conversation
  changeConversationOperator(_id: String!, operatorStatus: String!): JSON
   conversationResolveAll(${mutationFilterParams}): Int

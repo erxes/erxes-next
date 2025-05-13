@@ -21,8 +21,9 @@ export const getPluginsRoutes = () => {
       path={`/${module.path}/*`}
       element={
         <RenderPLuginsComponent
-          pluginName={`${module.pluginName}_ui`}
           moduleName={module.name}
+          pluginName={`${module.pluginName}_ui`}
+          remoteModuleName={module.name}
         />
       }
     />
@@ -42,15 +43,15 @@ export const getPluginsSettingsRoutes = () => {
       })),
   );
 
-  console.log(settingsModules);
   return settingsModules.map((module) => (
     <Route
       key={module.name}
       path={`/${module.path}/*`}
       element={
         <RenderPLuginsComponent
+          moduleName={module.name}
           pluginName={`${module.pluginName}_ui`}
-          moduleName={`${module.name}Settings`}
+          remoteModuleName={`${module.name}Settings`}
         />
       }
     />

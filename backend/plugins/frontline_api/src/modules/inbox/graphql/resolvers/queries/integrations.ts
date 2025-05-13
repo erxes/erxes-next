@@ -1,8 +1,8 @@
 import { defaultPaginate } from 'erxes-api-shared/src/utils';
-import { IContext } from '~/connectionResolvers';
-/**
- * Common helper for integrations & integrationsTotalCount
- */
+import { IContext, IModels } from '~/connectionResolvers';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
+
 const generateFilterQuery = async (
   subdomain,
   { kind, channelId, brandId, searchValue, tag, status, formLoadType },
@@ -60,7 +60,6 @@ export const integrationQueries = {
     },
     { singleBrandIdSelector, models, subdomain, user }: IContext,
   ) {
-    console.log(user, 'user');
     if (!user) {
       throw new Error('User not authenticated');
     }
@@ -98,7 +97,13 @@ export const integrationQueries = {
       args,
     );
 
-    return integrations.sort({ name: 1 });
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IIntegrationDocument>({
+        model: models.Integrations,
+        params: args,
+        query: integrations,
+      });
+    return { list, totalCount, pageInfo };
   },
 
   /**
@@ -167,7 +172,7 @@ export const integrationQueries = {
     };
 
     const count = async (query) => {
-      return models.Integrations.findAllIntegrations(query).countDocuments();
+      return models.Integrations.countDocuments(query);
     };
 
     // Counting integrations by tag

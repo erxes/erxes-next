@@ -12,10 +12,14 @@ import { useIsMobile } from 'erxes-ui/hooks/use-mobile';
 import { cn } from 'erxes-ui/lib/utils';
 
 import { Tooltip } from './tooltip';
-import { IconLayoutSidebar } from '@tabler/icons-react';
+import {
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+} from '@tabler/icons-react';
 import { Key } from 'erxes-ui/types/Key';
 import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { AppHotkeyScope } from 'erxes-ui/modules/hotkey/types/AppHotkeyScope';
+import { useQueryState } from 'erxes-ui/hooks';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -67,6 +71,7 @@ const SidebarProvider = React.forwardRef<
   ) => {
     const isMobile = useIsMobile();
     const [openMobile, setOpenMobile] = React.useState(false);
+    const [hideSidebar] = useQueryState<boolean>('hideSidebar');
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
@@ -108,8 +113,8 @@ const SidebarProvider = React.forwardRef<
 
     const contextValue = React.useMemo<ISidebarContext>(
       () => ({
-        state,
-        open,
+        state: hideSidebar ? 'collapsed' : state,
+        open: hideSidebar ? false : open,
         setOpen,
         isMobile,
         openMobile,
@@ -124,6 +129,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        hideSidebar,
       ],
     );
 
@@ -193,7 +199,7 @@ const SidebarRoot = React.forwardRef<
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-          <Sheet.Content
+          <Sheet.View
             data-sidebar="sidebar"
             data-mobile="true"
             className="w-[--sidebar-width] bg-sidebar p-0 text-foreground [&>button]:hidden"
@@ -205,7 +211,7 @@ const SidebarRoot = React.forwardRef<
             side={side}
           >
             <div className="flex h-full w-full flex-col">{children}</div>
-          </Sheet.Content>
+          </Sheet.View>
         </Sheet>
       );
     }
@@ -261,7 +267,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open } = useSidebar();
 
   return (
     <Button
@@ -276,7 +282,11 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <IconLayoutSidebar />
+      {open ? (
+        <IconLayoutSidebarLeftCollapse />
+      ) : (
+        <IconLayoutSidebarLeftExpand />
+      )}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -513,7 +523,7 @@ const SidebarMenuItem = React.forwardRef<
 SidebarMenuItem.displayName = 'SidebarMenuItem';
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded p-2 text-left text-sm font-semibold outline-none transition-[width,height,padding] hover:bg-accent focus-visible:ring-2 active:bg-accent disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:[&>svg]:text-primary data-[state=open]:hover:bg-accent group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
+  'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded p-2 text-left text-sm font-semibold outline-none transition-[width,height,padding] hover:bg-accent focus-visible:ring-2 active:bg-accent disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:[&>svg]:text-primary data-[state=open]:hover:bg-accent data-[state=active]:bg-primary/10 data-[state=active]:text-primary group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -690,7 +700,7 @@ const SidebarMenuSub = React.forwardRef<
     ref={ref}
     data-sidebar="menu-sub"
     className={cn(
-      'ml-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l pl-2.5 py-0.5',
+      'ml-3.5 flex min-w-0 translate-x-px flex-col gap-1 pl-2.5 py-0.5',
       'group-data-[collapsible=icon]:hidden',
       className,
     )}
@@ -722,7 +732,7 @@ const SidebarMenuSubButton = React.forwardRef<
       data-size={size}
       data-active={isActive}
       className={cn(
-        'flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 outline-none hover:bg-accent focus-visible:ring-2 active:bg-accent disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
+        'flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 outline-none font-semibold hover:bg-accent focus-visible:ring-2 active:bg-accent disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
         'data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold',
         size === 'sm' && 'text-xs',
         size === 'md' && 'text-sm',

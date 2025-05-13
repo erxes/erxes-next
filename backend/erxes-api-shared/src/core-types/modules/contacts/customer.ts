@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+
 import {
   ICursorPaginateParams,
   ICustomField,
@@ -50,11 +51,22 @@ export interface ICustomer {
 export interface ICustomerDocument extends ICustomer, Document {
   _id: string;
   createdAt: Date;
-  modifiedAt: Date;
+  updatedAt: Date;
 }
 
 export interface ICustomerQueryFilterParams
   extends ICursorPaginateParams,
     IListParams {
   createdAt?: Date;
+  type?: string;
+  dateFilters?: string;
+
+  tagIds?: string[];
+  excludeTagIds?: string[];
+  tagWithRelated?: boolean;
+
+  integrationIds?: string[];
+  integrationTypes?: string[];
+
+  brandIds?: string[];
 }

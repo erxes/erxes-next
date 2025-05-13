@@ -11,7 +11,7 @@ export function Organization() {
 
   return (
     <Sidebar.Menu>
-      <Sidebar.MenuItem className="flex gap-2 items-center overflow-hidden">
+      <Sidebar.MenuItem className="flex gap-2 items-center overflow-hidden p-2">
         <div className="flex items-center gap-2 flex-auto overflow-hidden">
           <div className="flex aspect-square size-7 rounded items-center justify-center overflow-hidden bg-primary flex-none">
             <Logo

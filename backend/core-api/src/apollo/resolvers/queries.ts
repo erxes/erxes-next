@@ -4,6 +4,11 @@ import { userQueries } from '@/organization/team-member/graphql/queries';
 import { productQueries } from '@/products/graphql/resolvers/queries';
 import { tagQueries } from '@/tags/graphql/queries';
 import { appQueries } from '@/apps/graphql/queries';
+import { queries as formQueries } from '@/forms/graphql/resolvers';
+import { segmentQueries } from '@/segments/graphql/resolvers';
+import { relationsQueries } from '@/relations/graphql/queries';
+import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
+
 export const queries = {
   ...contactQueries,
   ...authQueries,
@@ -11,4 +16,8 @@ export const queries = {
   ...tagQueries,
   ...productQueries,
   ...appQueries,
+  ...formQueries,
+  ...segmentQueries,
+  ...relationsQueries,
+  ...favoriteQueries,
 };

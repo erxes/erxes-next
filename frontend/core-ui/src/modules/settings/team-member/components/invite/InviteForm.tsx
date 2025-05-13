@@ -1,28 +1,15 @@
 import { FormProvider, SubmitHandler, useFieldArray } from 'react-hook-form';
-import { useUserForm } from '@/settings/team-member/hooks/useUserForm';
-import {
-  Button,
-  Checkbox,
-  cn,
-  Form,
-  Input,
-  ScrollArea,
-  Spinner,
-  Table,
-  Tooltip,
-} from 'erxes-ui';
+import { Button, ScrollArea, Spinner, Table } from 'erxes-ui';
 import { TUserForm } from '@/settings/team-member/types';
 import { useCallback, useState } from 'react';
-import { IconPlus, IconSend, IconX } from '@tabler/icons-react';
-import { AnimatePresence, motion } from 'framer-motion';
-import {
-  SelectBranch,
-  SelectDepartment,
-  SelectUnit,
-  SelectUsersGroup,
-  MultipleSelectChannels,
-} from 'ui-modules';
+import { IconSend } from '@tabler/icons-react';
 import { useUsersInvite } from '@/settings/team-member/hooks/useUsersInvite';
+import { useUsersSubmitForm } from '@/settings/team-member/hooks/useUserForm';
+import { InviteRow } from './InviteRow';
+import { InviteHeaderCheckbox } from './InviteRowCheckbox';
+import { InviteMemberContext } from '../../context/InviteMemberContext';
+import { AddInviteRowButton } from './AddInviteRow';
+import { InviteRowRemoveButton } from './RemoveButton';
 
 export function InviteForm({
   setIsOpen,
@@ -31,46 +18,14 @@ export function InviteForm({
 }) {
   const {
     methods,
-    methods: {
-      control,
-      handleSubmit,
-      watch,
-      formState: { errors },
-    },
-  } = useUserForm();
+    methods: { control, handleSubmit },
+  } = useUsersSubmitForm();
   const { handleInvitations, loading } = useUsersInvite();
-  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'entries',
   });
-  const handleAddRow = () => {
-    append({
-      email: '',
-      password: '',
-      groupId: '',
-      channelIds: undefined,
-      unitId: '',
-      branchId: '',
-      departmentId: '',
-    });
-  };
-
-  const handleSelectRow = (index: number) => {
-    const newSelectedRows = new Set(selectedRows);
-    if (newSelectedRows.has(index)) {
-      newSelectedRows.delete(index);
-    } else {
-      newSelectedRows.add(index);
-    }
-    setSelectedRows(newSelectedRows);
-  };
-
-  const handleRemoveSelected = () => {
-    remove(Array.from(selectedRows));
-    setSelectedRows(new Set());
-  };
-
   const submitHandler: SubmitHandler<TUserForm> = useCallback(
     async (data) => {
       try {
@@ -93,254 +48,35 @@ export function InviteForm({
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(submitHandler)} className="h-full">
         <ScrollArea className="max-h-[400px] flex flex-col">
-          <Table className="rounded-lg relative h-full [&_th]:h-7 [&_th:first-child]:rounded-tl-[7px] [&_th:last-child]:rounded-tr-[7px] [&_th]:bg-[#f4f4f5] bg-[#e4e4e5] border-spacing-0 border border-[#e4e4e5] overflow-hidden">
-            <Table.Header className="sticky top-0 z-1">
-              <Table.Row className="[&_th]:rounded-[2px] [&_th]:border border-[#e4e4e5]">
-                <Table.Head className="w-7 h-7 px-0">
-                  <Form.Item className="flex items-center justify-center">
-                    <Checkbox
-                      checked={
-                        fields.length > 0 && selectedRows.size === fields.length
-                      }
-                      onCheckedChange={() => {
-                        if (selectedRows.size === fields.length) {
-                          setSelectedRows(new Set());
-                        } else {
-                          setSelectedRows(new Set(fields.map((_, i) => i)));
-                        }
-                      }}
-                    />
-                  </Form.Item>
-                </Table.Head>
-                <Table.Head>Email</Table.Head>
-                <Table.Head>Password</Table.Head>
-                <Table.Head className="w-36">Permission</Table.Head>
-                <Table.Head className="w-36">Channles</Table.Head>
-                <Table.Head className="w-36">Unit</Table.Head>
-                <Table.Head className="w-36">Department</Table.Head>
-                <Table.Head className="w-36">Branch</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body className="overflow-y-scroll [&_td]:border-none [&_input]:h-7">
-              {fields.map((field, index) => (
-                <Table.Row
-                  key={field.id}
-                  className="[&_input]:shadow-none [&_button]:shadow-none [&_td]:rounded-[2px] [&_th]:border border-[#e4e4e5]"
-                >
-                  <Table.Cell>
-                    <Form.Item className="flex w-7 h-7 items-center rounded-[2px] justify-center bg-white">
-                      <Checkbox
-                        checked={selectedRows.has(index)}
-                        onCheckedChange={() => handleSelectRow(index)}
-                      />
-                    </Form.Item>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Form.Field
-                      control={control}
-                      name={`entries.${index}.email`}
-                      render={({ field }) => (
-                        <Form.Item>
-                          <Form.Control>
-                            <Tooltip.Provider>
-                              <Tooltip>
-                                <Tooltip.Trigger asChild>
-                                  <Input
-                                    {...field}
-                                    placeholder="Email"
-                                    type={'email'}
-                                    autoComplete="off"
-                                    className={cn(
-                                      Array.isArray(errors?.entries) &&
-                                        errors.entries.at(index)?.email
-                                        ? 'border border-destructive'
-                                        : '',
-                                      'rounded-[2px] w-full',
-                                    )}
-                                    autoFocus={false}
-                                  />
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>
-                                  {(Array.isArray(errors?.entries) &&
-                                    errors.entries.at(index)?.email &&
-                                    errors.entries.at(index)?.email?.message) ||
-                                    'Email'}
-                                </Tooltip.Content>
-                              </Tooltip>
-                            </Tooltip.Provider>
-                          </Form.Control>
-                        </Form.Item>
-                      )}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Form.Field
-                      control={control}
-                      name={`entries.${index}.password`}
-                      render={({ field }) => (
-                        <Form.Item>
-                          <Form.Control>
-                            <Tooltip.Provider>
-                              <Tooltip>
-                                <Tooltip.Trigger asChild>
-                                  <Input
-                                    {...field}
-                                    placeholder="Password"
-                                    autoComplete={`new-password-${index}`}
-                                    type="password"
-                                    className={cn(
-                                      Array.isArray(errors?.entries) &&
-                                        errors.entries.at(index)?.password
-                                        ? 'border border-destructive'
-                                        : '',
-                                      'rounded-[2px] w-full',
-                                    )}
-                                  />
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>
-                                  {(Array.isArray(errors?.entries) &&
-                                    errors.entries.at(index)?.password &&
-                                    errors.entries.at(index)?.password
-                                      ?.message) ||
-                                    'Password'}
-                                </Tooltip.Content>
-                              </Tooltip>
-                            </Tooltip.Provider>
-                          </Form.Control>
-                        </Form.Item>
-                      )}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Form.Field
-                      control={control}
-                      name={`entries.${index}.groupId`}
-                      render={({ field }) => (
-                        <Form.Item>
-                          <Form.Control>
-                            <SelectUsersGroup
-                              name={field.name}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              className="truncate w-36 rounded-[2px] h-7"
-                            />
-                          </Form.Control>
-                        </Form.Item>
-                      )}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Form.Field
-                      control={control}
-                      name={`entries.${index}.channelIds`}
-                      render={({ field }) => (
-                        <Form.Item>
-                          <Form.Control>
-                            <MultipleSelectChannels
-                              name={field.name}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              className="truncate w-36 rounded-[2px] h-7"
-                            />
-                          </Form.Control>
-                        </Form.Item>
-                      )}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Form.Field
-                      control={control}
-                      name={`entries.${index}.unitId`}
-                      render={({ field }) => (
-                        <Form.Item>
-                          <Form.Control>
-                            <SelectUnit
-                              name={field.name}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              className="truncate w-36 rounded-[2px] h-7"
-                            />
-                          </Form.Control>
-                        </Form.Item>
-                      )}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Form.Field
-                      control={control}
-                      name={`entries.${index}.departmentId`}
-                      render={({ field }) => (
-                        <Form.Item>
-                          <Form.Control>
-                            <SelectDepartment
-                              name={field.name}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              className="truncate w-36 rounded-[2px] h-7"
-                            />
-                          </Form.Control>
-                        </Form.Item>
-                      )}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Form.Field
-                      control={control}
-                      name={`entries.${index}.branchId`}
-                      render={({ field }) => (
-                        <Form.Item>
-                          <Form.Control>
-                            <SelectBranch
-                              name={field.name}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              className="truncate w-36 rounded-[2px] h-7"
-                            />
-                          </Form.Control>
-                        </Form.Item>
-                      )}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-              <Table.Row className="sticky bottom-0 z-10">
-                <Table.Cell colSpan={8}>
-                  <Button
-                    type="button"
-                    variant={'ghost'}
-                    className="w-full rounded-t-[2px] text-muted-foreground text-sm bg-[#f4f4f5]"
-                    onClick={handleAddRow}
-                  >
-                    <IconPlus size={16} />
-                    Add Row
-                  </Button>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
+          <Table className="p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar">
+            <InviteMemberContext.Provider
+              value={{
+                selectedUsers,
+                setSelectedUsers,
+                fields: fields as any,
+              }}
+            >
+              <InviteTableHeader />
+              <Table.Body className="overflow-hidden">
+                {fields.map((field, index) => (
+                  <InviteRow userIndex={index} user={field} key={field.id} />
+                ))}
+              </Table.Body>
+              <Table.Footer>
+                <tr>
+                  <td colSpan={8} className="p-4">
+                    <div className="flex w-full justify-center gap-4">
+                      <AddInviteRowButton append={append} />
+                      <InviteRowRemoveButton remove={remove} />
+                    </div>
+                  </td>
+                </tr>
+              </Table.Footer>
+            </InviteMemberContext.Provider>
           </Table>
           <ScrollArea.Bar />
         </ScrollArea>
         <div className="mt-3 w-full flex gap-3 justify-end">
-          <AnimatePresence>
-            {selectedRows.size > 0 && (
-              <motion.div
-                className="flex"
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 20, opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 100 }}
-              >
-                <Button
-                  variant={'destructive'}
-                  className="text-white"
-                  onClick={handleRemoveSelected}
-                >
-                  <IconX size={16} />
-                  Remove ({selectedRows.size})
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
           <Button type="submit" disabled={loading} className="text-sm">
             {(loading && (
               <Spinner size={'small'} className="stroke-white" />
@@ -352,3 +88,20 @@ export function InviteForm({
     </FormProvider>
   );
 }
+
+const InviteTableHeader = () => {
+  return (
+    <Table.Header>
+      <Table.Row>
+        <InviteHeaderCheckbox />
+        <Table.Head>Email</Table.Head>
+        <Table.Head>Password</Table.Head>
+        <Table.Head>Permission</Table.Head>
+        <Table.Head>Channles</Table.Head>
+        <Table.Head>Unit</Table.Head>
+        <Table.Head>Department</Table.Head>
+        <Table.Head>Branch</Table.Head>
+      </Table.Row>
+    </Table.Header>
+  );
+};

@@ -21,7 +21,7 @@ export const GET_RATE = gql`
     exchangeGetRate(currency: $currency, date: $date) {
       _id
       createdAt
-      modifiedAt
+      updatedAt
       date
       mainCurrency
       rateCurrency

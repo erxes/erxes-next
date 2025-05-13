@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollArea } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
 import { RecordTable } from 'erxes-ui/modules';
 import { useEffect, useRef, useState } from 'react';
-import { IRecordTableCursorPageInfo } from '../types/RecordTableCursorTypes';
+import {
+  EnumCursorDirection,
+  IRecordTableCursorPageInfo,
+} from '../types/RecordTableCursorTypes';
 import { RecordTableCursorContext } from '../contexts/RecordTableCursorContext';
 import { useRecordTableCursorContext } from '../hooks/useRecordTableCursorContext';
 
@@ -13,16 +15,17 @@ export const RecordTableCursorProvider = ({
   loading,
   dataLength,
   hasNextPage,
+  sessionKey,
 }: {
   children: React.ReactNode;
   hasPreviousPage?: boolean;
   hasNextPage?: boolean;
   loading?: boolean;
   dataLength?: number;
+  sessionKey: string;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isFetchBackward, setIsFetchBackward] = useState(false);
-  const [cursorItemIds, setCursorItemIds] = useState<string[]>([]);
   const distanceFromBottomRef = useRef(0);
 
   useEffect(() => {
@@ -53,7 +56,7 @@ export const RecordTableCursorProvider = ({
   const handleScroll = () => {
     const firstVisibleRow = scrollRef.current?.querySelector('.in-view');
     if (firstVisibleRow) {
-      sessionStorage.setItem('contacts_cursor', firstVisibleRow.id);
+      sessionStorage.setItem(sessionKey, firstVisibleRow.id);
     }
   };
 
@@ -62,18 +65,17 @@ export const RecordTableCursorProvider = ({
       value={{
         scrollRef,
         isFetchBackward,
-        cursorItemIds,
-        setCursorItemIds,
         setIsFetchBackward,
         distanceFromBottomRef,
         hasNextPage,
         hasPreviousPage,
       }}
     >
-      <ScrollArea.Root className="h-full w-full pb-3 pr-3">
+      <ScrollArea.Root className="h-full w-full pb-2 pr-2 relative">
         <ScrollArea.Viewport ref={scrollRef} onScroll={handleScroll}>
           <div className="min-h-screen">{children}</div>
         </ScrollArea.Viewport>
+
         <ScrollArea.Bar orientation="vertical" />
         <ScrollArea.Bar orientation="horizontal" />
       </ScrollArea.Root>
@@ -85,13 +87,11 @@ export const RecordTableBackwardSkeleton = ({
   handleFetchMore,
   startCursor,
 }: {
-  handleFetchMore: (params: { direction: 'backward' | 'forward' }) => void;
+  handleFetchMore: (params: { direction: EnumCursorDirection }) => void;
   startCursor: IRecordTableCursorPageInfo['startCursor'];
 }) => {
   const {
     setIsFetchBackward,
-    cursorItemIds,
-    setCursorItemIds,
     scrollRef,
     distanceFromBottomRef,
     hasPreviousPage,
@@ -108,12 +108,11 @@ export const RecordTableBackwardSkeleton = ({
       backward
       handleInView={() => {
         setIsFetchBackward(true);
-        handleFetchMore({ direction: 'backward' });
+        handleFetchMore({ direction: EnumCursorDirection.BACKWARD });
         if (scrollRef.current) {
           distanceFromBottomRef.current =
             scrollRef.current.scrollHeight - scrollRef.current.scrollTop;
         }
-        setCursorItemIds([...cursorItemIds, startCursor || '']);
       }}
     />
   );
@@ -121,37 +120,19 @@ export const RecordTableBackwardSkeleton = ({
 
 export const RecordTableForwardSkeleton = ({
   handleFetchMore,
-  endCursor,
 }: {
-  handleFetchMore: (params: { direction: 'backward' | 'forward' }) => void;
+  handleFetchMore: (params: { direction: EnumCursorDirection }) => void;
   endCursor: IRecordTableCursorPageInfo['endCursor'];
 }) => {
-  const { cursorItemIds, setCursorItemIds, hasNextPage, loading } =
-    useRecordTableCursorContext();
+  const { hasNextPage, loading } = useRecordTableCursorContext();
 
   if (!hasNextPage || loading) {
     return null;
   }
 
   const handleInView = () => {
-    handleFetchMore({ direction: 'forward' });
-    setCursorItemIds([...cursorItemIds, endCursor || '']);
+    handleFetchMore({ direction: EnumCursorDirection.FORWARD });
   };
 
   return <RecordTable.RowSkeleton rows={1} handleInView={handleInView} />;
-};
-
-export const RecordTableCursorRowList = () => {
-  const [, setCursor] = useQueryState<string | undefined>('cursor');
-  const { cursorItemIds } = useRecordTableCursorContext();
-
-  return (
-    <RecordTable.RowList
-      handleRowViewChange={(id, inView) => {
-        if (cursorItemIds.includes(id) && inView) {
-          setCursor(id);
-        }
-      }}
-    />
-  );
 };

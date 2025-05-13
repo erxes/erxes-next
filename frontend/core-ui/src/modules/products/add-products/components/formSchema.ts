@@ -10,9 +10,11 @@ export const productFormSchema = z.object({
     .min(2, 'Short name must be at least 2 characters')
     .max(50, 'Short name must be less than 50 characters'),
   type: z.string().min(1, 'Please select a type'),
-  categoryId: z.string({
-    required_error: 'Please select a category',
-  }),
+  categoryId: z
+    .string({
+      required_error: 'Please select a category',
+    })
+    .min(1, 'Please select a category'),
   description: z.string().optional(),
   barcodes: z.array(z.string()).optional(),
   variants: z.any().optional(),
@@ -37,9 +39,11 @@ export const productFormSchema = z.object({
     .optional(),
   vendorId: z.string().optional(),
   scopeBrandIds: z.array(z.string()).optional(),
-  uom: z.string({
-    required_error: 'UOM is required',
-  }),
+  uom: z
+    .string({
+      required_error: 'UOM is required',
+    })
+    .min(1, 'UOM is required'),
   subUoms: z.any().optional(),
 });
 

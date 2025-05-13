@@ -1,42 +1,13 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
-const GET_USERS_QUERY = gql`
-  query users(
-    $page: Int
-    $perPage: Int
-    $status: String
-    $excludeIds: Boolean
-    $searchValue: String
-    $isActive: Boolean
-    $ids: [String]
-    $brandIds: [String]
-    $departmentId: String
-    $unitId: String
-    $isAssignee: Boolean
-    $branchId: String
-    $departmentIds: [String]
-    $branchIds: [String]
-    $segment: String
-    $segmentData: String
-  ) {
-    users(
-      page: $page
-      perPage: $perPage
-      status: $status
-      excludeIds: $excludeIds
-      searchValue: $searchValue
-      isActive: $isActive
-      ids: $ids
-      brandIds: $brandIds
-      departmentId: $departmentId
-      unitId: $unitId
-      branchId: $branchId
-      isAssignee: $isAssignee
-      departmentIds: $departmentIds
-      branchIds: $branchIds
-      segment: $segment
-      segmentData: $segmentData
-    ) {
+const GET_USER = gql`
+  query userDetail($_id: String) {
+    userDetail(_id: $_id) {
       _id
       username
       email
@@ -63,7 +34,31 @@ const GET_USERS_QUERY = gql`
       links
       employeeId
     }
-    usersTotalCount(
+  }
+`;
+
+const GET_USERS_QUERY = gql`
+  query users(
+    ${GQL_CURSOR_PARAM_DEFS}
+    $status: String
+    $excludeIds: Boolean
+    $searchValue: String
+    $isActive: Boolean
+    $ids: [String]
+    $brandIds: [String]
+    $departmentId: String
+    $unitId: String
+    $isAssignee: Boolean
+    $branchId: String
+    $departmentIds: [String]
+    $branchIds: [String]
+    $segment: String
+    $segmentData: String
+  ) {
+    users(
+      ${GQL_CURSOR_PARAMS}
+      status: $status
+      excludeIds: $excludeIds
       searchValue: $searchValue
       isActive: $isActive
       ids: $ids
@@ -76,7 +71,36 @@ const GET_USERS_QUERY = gql`
       branchIds: $branchIds
       segment: $segment
       segmentData: $segmentData
-    )
+    ) {
+      list {
+        _id
+        username
+        email
+        status
+        isActive
+        groupIds
+        brandIds
+        score
+        positionIds
+        details {
+          avatar
+          fullName
+          shortName
+          birthDate
+          position
+          workStartedDate
+          location
+          description
+          operatorPhone
+          firstName
+          middleName
+          lastName
+        }
+        links
+        employeeId
+      }
+      ${GQL_PAGE_INFO}
+    }
   }
 `;
 
@@ -104,11 +128,14 @@ const GET_USERS_GROUPS_QUERY = gql`
 const GET_BRANCHES_QUERY = gql`
   query branches($withoutUserFilter: Boolean) {
     branches(withoutUserFilter: $withoutUserFilter) {
-      _id
-      title
-      code
-      parentId
-      userCount
+      list {
+        _id
+        title
+        code
+        parentId
+        userCount
+      }
+      ${GQL_PAGE_INFO}
     }
   }
 `;
@@ -116,10 +143,13 @@ const GET_BRANCHES_QUERY = gql`
 const GET_DEPARTMENTS_QUERY = gql`
   query departments($withoutUserFilter: Boolean) {
     departments(withoutUserFilter: $withoutUserFilter) {
-      _id
-      title
-      code
-      parentId
+      list {
+        _id
+        title
+        code
+        parentId
+      }
+      ${GQL_PAGE_INFO}
     }
   }
 `;
@@ -127,10 +157,13 @@ const GET_DEPARTMENTS_QUERY = gql`
 const GET_UNITS_QUERY = gql`
   query units {
     units {
-      _id
-      title
-      code
-      userCount
+      list {
+        _id
+        title
+        code
+        userCount
+      }
+      ${GQL_PAGE_INFO}
     }
   }
 `;
@@ -190,6 +223,7 @@ const queries = {
   GET_USERS_QUERY,
   GET_SEGMENTS_QUERY,
   GET_USER_COUNT_BY_OPTION_QUERY,
+  GET_USER,
 };
 
 export default queries;

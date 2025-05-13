@@ -5,12 +5,10 @@ export const CompanyTextField = ({
   placeholder,
   value,
   field,
-  fieldId,
   _id,
 }: ITextFieldContainerProps) => {
   const { companiesEdit } = useCompaniesEdit();
   const onSave = (editingValue: string) => {
-    if (editingValue === value) return;
     companiesEdit(
       {
         variables: { _id, [field]: editingValue },
@@ -22,10 +20,8 @@ export const CompanyTextField = ({
     <TextField
       placeholder={placeholder}
       value={value}
-      field={field}
-      fieldId={fieldId}
-      _id={_id}
-      onSave={onSave}
+      scope={``}
+      onValueChange={onSave}
     />
   );
 };

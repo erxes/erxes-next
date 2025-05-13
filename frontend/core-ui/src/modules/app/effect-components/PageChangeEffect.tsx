@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { useIsMatchingLocation } from '~/hooks/useIsMatchingLocation';
 import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { useSetHotkeyScope } from 'erxes-ui';
+import { useIsMatchingLocation, useSetHotkeyScope } from 'erxes-ui';
 import { AppPath } from '@/types/paths/AppPath';
+import { ContactsPath } from '@/types/paths/ContactsPath';
 
 export const PageChangeEffect = () => {
-  const isMatchingLocation = useIsMatchingLocation();
+  const isMatchingLocation = useIsMatchingLocation(AppPath.Index);
   const setHotkeyScope = useSetHotkeyScope();
 
   useEffect(() => {
@@ -19,14 +19,11 @@ export const PageChangeEffect = () => {
         break;
       }
       case isMatchingLocation(AppPath.ContactsCatchAll): {
-        setHotkeyScope(PageHotkeyScope.ContactsPage);
+        setHotkeyScope(PageHotkeyScope.CustomersPage);
         break;
       }
+
       case isMatchingLocation(AppPath.Index): {
-        setHotkeyScope(PageHotkeyScope.IndexPage);
-        break;
-      }
-      default: {
         setHotkeyScope(PageHotkeyScope.IndexPage);
         break;
       }

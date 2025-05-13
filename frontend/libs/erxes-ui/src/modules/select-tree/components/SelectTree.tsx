@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { IconCaretDownFilled, IconCheck } from '@tabler/icons-react';
+import { IconCaretDownFilled } from '@tabler/icons-react';
 
-import { Button, ButtonProps, Command, Popover } from 'erxes-ui/components';
+import {
+  Button,
+  ButtonProps,
+  Combobox,
+  Command,
+  Popover,
+} from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import {
   SelectTreeContext,
@@ -11,6 +17,8 @@ import {
 import { useSelectTreeHide } from 'erxes-ui/modules/select-tree/hooks/useSelectTreeHide';
 import { hideChildrenAtomFamily } from '../states/selectTreeStates';
 import { useSetAtom } from 'jotai';
+import { ISelectTreeItem } from '../types/selectTreeTypes';
+import { fixOrder } from 'erxes-ui/utils/fixOrder';
 
 export const SelectTreeRoot = ({
   id,
@@ -45,17 +53,14 @@ export const SelectTreeProvider = ({
   length?: number;
   ordered?: boolean;
 }) => {
-  const [hideChildren, setHideChildren] = useState<string[]>([]);
   const setHideChildrenState = useSetAtom(hideChildrenAtomFamily(id));
 
   useEffect(() => {
     setHideChildrenState([]);
-  }, [length]);
+  }, [length, setHideChildrenState]);
 
   return (
-    <SelectTreeContext.Provider
-      value={{ hideChildren, setHideChildren, id, ordered }}
-    >
+    <SelectTreeContext.Provider value={{ id, ordered }}>
       {children}
     </SelectTreeContext.Provider>
   );
@@ -79,10 +84,13 @@ export const SelectTreeArrow = React.forwardRef<
       {...props}
       tabIndex={-1}
       onClick={() => toggleHideChildren(order)}
+      asChild
     >
-      <IconCaretDownFilled
-        className={cn('transition-transform', isHidden && '-rotate-90')}
-      />
+      <div>
+        <IconCaretDownFilled
+          className={cn('transition-transform', isHidden && '-rotate-90')}
+        />
+      </div>
     </Button>
   );
 });
@@ -94,10 +102,10 @@ export const SelectTreeIndentation = ({ order }: { order: string }) => {
   }
 
   return (
-    <div className="flex h-full gap-4 px-2">
+    <div className="flex h-full px-3.5 gap-8">
       {Array.from({ length: level }).map((_, index) => (
         <div key={index} className="relative">
-          <div className="absolute -top-4 h-8 w-px bg-muted-foreground/20 flex-none" />
+          <div className="absolute -top-4 h-8 -left-[0.5px] w-px bg-border flex-none" />
         </div>
       ))}
     </div>
@@ -106,41 +114,24 @@ export const SelectTreeIndentation = ({ order }: { order: string }) => {
 
 const SelectTreeItem = React.forwardRef<
   React.ElementRef<typeof Command.Item>,
-  React.ComponentPropsWithoutRef<typeof Command.Item> & {
-    order: string;
-    hasChildren: boolean;
-    name: string;
-    selected: boolean;
-  }
->(({ order, children, hasChildren, name, selected, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof Command.Item> & ISelectTreeItem
+>(({ _id, name, order, hasChildren, selected, ...props }, ref) => {
   const { ordered } = useSelectTreeContext();
-  const fixOrder = () => {
-    let fixedOrder = order;
-    if (name.includes('/')) {
-      fixedOrder = fixedOrder.replace(name, name.replace(/\//g, ''));
-    }
-    if (fixedOrder.endsWith('/')) {
-      fixedOrder = fixedOrder.slice(0, -1);
-    }
-    return fixedOrder;
-  };
+  const fixedOrder = fixOrder({ order, name });
 
-  const { isHiddenByParent } = useSelectTreeHide(fixOrder());
+  const { isHiddenByParent } = useSelectTreeHide(fixedOrder);
 
   if (!ordered) {
     return (
-      <Command.Item
+      <SelectTreeCommandItem
         {...props}
-        className={cn(
-          'h-7 py-0 items-center flex-1 overflow-hidden justify-start gap-1',
-          props.className,
-          selected && 'bg-muted',
-        )}
+        _id={_id}
+        name={name}
+        order={order}
+        hasChildren={hasChildren}
+        selected={selected}
         ref={ref}
-      >
-        {children}
-        {selected && <IconCheck className="shrink-0" />}
-      </Command.Item>
+      />
     );
   }
 
@@ -150,21 +141,38 @@ const SelectTreeItem = React.forwardRef<
 
   return (
     <div className="flex items-center gap-1 w-full">
-      <SelectTreeIndentation order={fixOrder()} />
-      <SelectTreeArrow order={fixOrder()} hasChildren={hasChildren} />
-      <Command.Item
+      <SelectTreeIndentation order={fixedOrder} />
+      <SelectTreeArrow order={fixedOrder} hasChildren={hasChildren} />
+      <SelectTreeCommandItem
         {...props}
-        className={cn(
-          'py-0 items-center flex-1 overflow-hidden justify-start',
-          props.className,
-          selected && 'bg-muted',
-        )}
+        _id={_id}
+        name={name}
+        order={order}
+        hasChildren={hasChildren}
+        selected={selected}
         ref={ref}
-      >
-        {children}
-        {selected && <IconCheck className="absolute right-2" />}
-      </Command.Item>
+      />
     </div>
+  );
+});
+
+export const SelectTreeCommandItem = React.forwardRef<
+  React.ElementRef<typeof Command.Item>,
+  React.ComponentPropsWithoutRef<typeof Command.Item> & ISelectTreeItem
+>(({ _id, name, order, hasChildren, selected, children, ...props }, ref) => {
+  return (
+    <Command.Item
+      className={cn(
+        'py-0 items-center flex-1 overflow-hidden justify-start',
+        props.className,
+        selected && 'text-primary',
+      )}
+      {...props}
+      ref={ref}
+    >
+      {children}
+      <Combobox.Check checked={selected} />
+    </Command.Item>
   );
 });
 

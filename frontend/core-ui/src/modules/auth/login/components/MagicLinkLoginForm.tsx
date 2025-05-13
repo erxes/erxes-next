@@ -5,8 +5,6 @@ import { z } from 'zod';
 
 import { Button, Card, Form, Input } from 'erxes-ui';
 
-import { GoogleOAuthButton } from '@/auth/login/components/GoogleOAuthButton';
-
 const emailValidationSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
 });

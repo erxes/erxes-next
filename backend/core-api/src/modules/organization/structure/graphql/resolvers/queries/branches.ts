@@ -8,7 +8,7 @@ import { generateFilters } from './utils';
 
 export const branchsQueries = {
   async branches(
-    _root: undefined,
+    _parent: undefined,
     params: any & { searchValue?: string },
     { models, user }: IContext,
   ) {
@@ -33,7 +33,7 @@ export const branchsQueries = {
   },
 
   async branchesMain(
-    _root: undefined,
+    _parent: undefined,
     params: IListParams & ICursorPaginateParams,
     { models, user }: IContext,
   ) {
@@ -56,7 +56,7 @@ export const branchsQueries = {
     return { list, totalCount, pageInfo };
   },
 
-  async branchDetail(_root: undefined, { _id }, { models }: IContext) {
+  async branchDetail(_parent: undefined, { _id }, { models }: IContext) {
     return models.Branches.getBranch({ _id });
   },
 };
