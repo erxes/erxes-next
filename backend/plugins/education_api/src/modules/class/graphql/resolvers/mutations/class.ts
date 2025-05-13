@@ -19,4 +19,14 @@ export const classMutations = {
 
     return courseClass;
   },
+  //
+  classesRemove: async (
+    _root,
+    { classIds }: { classIds: string[] },
+    { models }: IContext,
+  ) => {
+    await models.Classes.removeClasses(classIds);
+
+    return classIds;
+  },
 };

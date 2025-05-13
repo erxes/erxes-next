@@ -7,6 +7,7 @@ export const types = `
     name: String
     code: String
     categoryId: String
+    category : CourseCategory
     description: String
     createdAt: Date
     type: String

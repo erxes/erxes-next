@@ -1,20 +1,22 @@
 import { Schema } from 'mongoose';
 
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import { CLASS_LEVEL_TYPES } from '../../constants';
 
 export const classSchema = new Schema(
   {
     _id: mongooseStringRandomId,
-    name: { type: String, required: true, label: 'Class Name' },
-    courseID: { type: String, required: true, label: 'Course ID' },
-    dates: { type: Array, required: true, label: 'Dates' },
-    startTime: { type: Date, label: 'Class start time' },
-    endTime: { type: Date, label: 'Class end time' },
-    limit: { type: Number, label: 'Limit of students' },
-    entries: { type: Number, label: 'Class Entries' },
+    name: { type: String, required: true, label: 'Name' },
+    description: { type: String, required: true, label: 'Description' },
+    location: { type: String, required: true, label: 'Location' },
+    level: {
+      type: String,
+      enum: CLASS_LEVEL_TYPES.ALL,
+      default: CLASS_LEVEL_TYPES.Beginner,
+      label: 'level',
+    },
     createdAt: { type: Date, default: new Date(), label: 'Created at' },
-    modifiedAt: { type: Date, default: new Date(), label: 'Modified at' },
-    schedules: { type: Array, required: true, label: 'Schedule dates' },
+    updatedAt: { type: Date, default: new Date(), label: 'Updated at' },
   },
   {
     timestamps: true,

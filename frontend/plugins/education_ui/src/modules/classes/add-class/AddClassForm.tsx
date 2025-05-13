@@ -4,22 +4,39 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
 import {
-  CourseFormType,
-  courseFormSchema,
-} from '@/courses/add-course/components/formSchema';
+  ClassFormType,
+  classFormSchema,
+} from '@/classes/add-class/components/formSchema';
 import { ClassAddSheetHeader } from '@/classes/add-class/components/ClassAddSheet';
+import { ClassAddCoreFields } from '@/classes/add-class/components/ClassAddCoreFields';
+import { useAddClass } from '@/classes/hooks/useAddClass';
+import { ApolloError } from '@apollo/client';
 
 export function AddClassForm({
   onOpenChange,
 }: {
   onOpenChange: (open: boolean) => void;
 }) {
-  const form = useForm<CourseFormType>({
-    resolver: zodResolver(courseFormSchema),
+  const { classAdd } = useAddClass();
+  const form = useForm<ClassFormType>({
+    resolver: zodResolver(classFormSchema),
   });
   const { toast } = useToast();
-  const onSubmit = (data: CourseFormType) => {
-    console.log(data);
+  const onSubmit = (data: ClassFormType) => {
+    classAdd({
+      variables: data,
+      onError: (e: ApolloError) => {
+        console.log(e.message);
+        toast({
+          title: 'Error',
+          description: e.message,
+        });
+      },
+      onCompleted: () => {
+        form.reset();
+        onOpenChange(false);
+      },
+    });
   };
 
   return (
@@ -31,7 +48,9 @@ export function AddClassForm({
         <ClassAddSheetHeader />
         <Sheet.Content className="flex-auto overflow-hidden">
           <ScrollArea className="h-full">
-            <div className="p-5"></div>
+            <div className="p-5">
+              <ClassAddCoreFields form={form} />
+            </div>
           </ScrollArea>
         </Sheet.Content>
 

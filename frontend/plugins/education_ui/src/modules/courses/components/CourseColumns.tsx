@@ -10,7 +10,7 @@ import {
 import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
 import { RecordTable, Slider } from 'erxes-ui';
 import { useCourseEdit } from '@/courses/hooks/useCourseEdit';
-import { ActionField, PriceField, SwitchField } from '@/courses/edit-course';
+import { ActionField, SwitchField } from '@/courses/edit-course';
 import { courseMoreColumn } from './CourseMoreColumn';
 
 const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
@@ -53,6 +53,13 @@ export const courseColumns: ColumnDef<ICourse>[] = [
     cell: ({ cell }) => <TableTextInput cell={cell} />,
   },
   {
+    id: 'class',
+    accessorKey: 'class',
+    header: () => <RecordTableInlineHead label="Class" />,
+    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    size: 100,
+  },
+  {
     id: 'description',
     accessorKey: 'description',
     header: () => <RecordTableInlineHead label="Description" />,
@@ -79,12 +86,6 @@ export const courseColumns: ColumnDef<ICourse>[] = [
         </div>
       );
     },
-  },
-  {
-    id: 'unitPrice',
-    accessorKey: 'unitPrice',
-    header: () => <RecordTableInlineHead label="Unit Price" />,
-    cell: ({ cell }) => <PriceField cell={cell} />,
   },
   // {
   //   id: 'location',

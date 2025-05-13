@@ -17,7 +17,7 @@ export const useClasses = (options?: QueryHookOptions) => {
   });
 
   const { data, loading, fetchMore } = useQuery<{
-    classCourse: {
+    courseClasses: {
       list: IClass[];
       pageInfo: IRecordTableCursorPageInfo;
     };
@@ -29,7 +29,7 @@ export const useClasses = (options?: QueryHookOptions) => {
     },
   });
 
-  const { list: classes, pageInfo } = data?.classCourse || {};
+  const { list: classes, pageInfo } = data?.courseClasses || {};
 
   const handleFetchMore = ({
     direction,
@@ -51,8 +51,8 @@ export const useClasses = (options?: QueryHookOptions) => {
         return Object.assign({}, prev, {
           classCourse: mergeCursorData({
             direction,
-            fetchMoreResult: fetchMoreResult.classCourse,
-            prevResult: prev.classCourse,
+            fetchMoreResult: fetchMoreResult.courseClasses,
+            prevResult: prev.courseClasses,
           }),
         });
       },

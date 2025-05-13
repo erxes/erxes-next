@@ -7,28 +7,11 @@ export interface IClassModel extends Model<IClassDocument> {
   createClass(doc: IClass): Promise<IClassDocument>;
   getClass(_id: string): Promise<IClassDocument>;
   updateClass(_id: string, doc: IClass): Promise<IClassDocument>;
+  removeClasses(classIds: string[]): Promise<IClassDocument>;
 }
 
 export const loadClassesClass = (models: IModels) => {
   class Class {
-    static async generateClassDates(
-      startDate: string,
-      daysOfWeek: string[],
-      entries: number,
-    ) {
-      const dates: string[] = [];
-      const currentDate = moment(startDate);
-
-      while (dates.length < entries) {
-        if (daysOfWeek.includes(currentDate.format('dddd'))) {
-          dates.push(currentDate.format('YYYY-MM-DD'));
-        }
-        currentDate.add(1, 'day');
-      }
-
-      return dates;
-    }
-
     public static async getClass(_id: string) {
       const courseClass = await models.Classes.findOne({ _id });
 
@@ -40,40 +23,25 @@ export const loadClassesClass = (models: IModels) => {
     }
 
     public static async createClass(doc) {
-      const course = await models.Courses.getCourse(doc.activityId);
-
-      const startDate = moment(course.startDate).format('YYYY-MM-DD');
-
-      const schedules = await this.generateClassDates(
-        startDate,
-        doc.dates,
-        doc.entries,
-      );
-
-      return models.Classes.create({
+      const courseClass = await models.Classes.create({
         ...doc,
-        schedules,
         createdAt: new Date(),
-        modifiedAt: new Date(),
+        updatedAt: new Date(),
       });
+      return courseClass;
     }
 
     public static async updateClass(_id, doc) {
-      const course = await models.Courses.getCourse(doc.activityId);
-
-      const startDate = moment(course.startDate).format('YYYY-MM-DD');
-
-      const schedules = await this.generateClassDates(
-        startDate,
-        doc.dates,
-        doc.entries,
-      );
       await models.Classes.updateOne(
         { _id },
-        { $set: { ...doc, schedules, modifiedAt: new Date() } },
+        { $set: { ...doc, updatedAt: new Date() } },
       );
 
       return models.Classes.findOne({ _id });
+    }
+
+    public static async removeClasses(classIds) {
+      return models.Classes.deleteMany({ _id: { $in: classIds } });
     }
   }
   classSchema.loadClass(Class);

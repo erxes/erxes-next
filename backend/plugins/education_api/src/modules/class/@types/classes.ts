@@ -6,17 +6,20 @@ import { Document } from 'mongoose';
 
 export interface IClass {
   name: string;
-  activityId: string;
-  dates: string[];
-  startTime: Date;
-  endTime: Date;
-  limit: number;
-  entries: number;
+  description: string;
+  location: string;
+  level: string;
+}
+
+export interface IClassParams extends IListParams, ICursorPaginateParams {
+  name: string;
+  description: string;
+  location: string;
+  level: string;
 }
 
 export interface IClassDocument extends IClass, Document {
   _id: string;
   createdAt?: Date;
-  modifiedAt: Date;
-  schedules?: string[];
+  updatedAt: Date;
 }

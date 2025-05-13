@@ -4,13 +4,10 @@ export const types = `
   }
   type Classes {
     _id: String
-    courseId: String
-    students : [Customer]
-    dates: [String]
-    startTime : Date
-    endTime : Date
-    limit: Int
-    entries: Int
+    name: String
+    description: String
+    location: String
+    level: String
     createdAt: Date
     updatedAt: Date
   }
@@ -28,18 +25,15 @@ export const queries = `
 
 const classesCommonParams = `
   name : String
-  courseId: String!
-  dates: [String]
-  startTime: Date
-  endTime : Date
-  limit : Int
-  entries : Int
-  
+  description : String
+  location : String
+  level: String,
 `;
 
 export const mutations = `
   classAdd(${classesCommonParams}): Classes
   classEdit(_id:String!, ${classesCommonParams}): Classes
+  classesRemove(classIds: [String]): JSON
   studentAdd(studentId: String!, classId: String!): Classes
   studentRemove(studentId: String!, classId: String!): Classes
 `;

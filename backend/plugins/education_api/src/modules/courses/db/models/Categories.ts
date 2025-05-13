@@ -69,7 +69,7 @@ export const loadCourseCategoryClass = (models: IModels) => {
       // Generatingg  order
       doc.order = await this.generateOrder(parentCategory, doc);
 
-      const courseCategory = await models.CourseCategories.getActivityCategory({
+      const courseCategory = await models.CourseCategories.getCourseCategory({
         _id,
       });
 
@@ -101,7 +101,7 @@ export const loadCourseCategoryClass = (models: IModels) => {
      * Remove course category
      */
     public static async removeCourseCategory(_id) {
-      await models.CourseCategories.getActivityCategory({ _id });
+      await models.CourseCategories.getCourseCategory({ _id });
 
       let count = await models.Courses.countDocuments({ categoryId: _id });
 

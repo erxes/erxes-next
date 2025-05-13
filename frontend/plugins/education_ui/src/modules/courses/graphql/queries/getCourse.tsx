@@ -10,6 +10,8 @@ export const GET_COURSES = gql`
     $sortField: String
     $sortDirection: Int
     $statuses: [String]
+    $direction: CURSOR_DIRECTION
+    $cursor: String
   ) {
     courses(
       page: $page
@@ -20,6 +22,8 @@ export const GET_COURSES = gql`
       sortField: $sortField
       sortDirection: $sortDirection
       statuses: $statuses
+      direction: $direction
+      cursor: $cursor
     ) {
       totalCount
       list {

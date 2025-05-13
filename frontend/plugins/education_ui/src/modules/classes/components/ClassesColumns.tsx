@@ -44,4 +44,22 @@ export const classColumns: ColumnDef<IClass>[] = [
     header: () => <RecordTableInlineHead label="Name" />,
     cell: ({ cell }) => <TableTextInput cell={cell} />,
   },
+  {
+    id: 'description',
+    accessorKey: 'description',
+    header: () => <RecordTableInlineHead label="Description" />,
+    cell: ({ cell }) => <TableTextInput cell={cell} />,
+  },
+  {
+    id: 'location',
+    accessorKey: 'location',
+    header: () => <RecordTableInlineHead label="Location" />,
+    cell: ({ cell }) => <TableTextInput cell={cell} />,
+  },
+  {
+    id: 'level',
+    accessorKey: 'level',
+    header: () => <RecordTableInlineHead label="Level" />,
+    cell: ({ cell }) => <TableTextInput cell={cell} />,
+  },
 ];
