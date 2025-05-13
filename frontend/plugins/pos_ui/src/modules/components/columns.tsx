@@ -4,9 +4,9 @@ import {
   IconBuilding,
   IconChartBar,
   IconClock,
-  IconCompass,
   IconLabel,
-  IconServer,
+  IconMobiledata,
+  IconPhone
 } from '@tabler/icons-react';
 import { Cell, ColumnDef } from '@tanstack/react-table';
 
@@ -61,7 +61,7 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'isOnline',
     accessorKey: 'isOnline',
-    header: () => <RecordTableInlineHead icon={IconCompass} label="Is Online" />,
+    header: () => <RecordTableInlineHead icon={IconMobiledata} label="Is Online" />,
     cell: ({ cell }) => {
       const value = cell.getValue() as boolean;
       return (
@@ -80,13 +80,13 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'onServer',
     accessorKey: 'onServer',
-    header: () => <RecordTableInlineHead icon={IconServer} label="On Server" />,
+    header: () => <RecordTableInlineHead icon={IconPhone} label="On Server" />,
     cell: ({ cell }) => {
       const value = cell.getValue() as boolean;
       return (
         <RecordTableInlineCell
           display={() => (
-            <Badge variant="outline">
+            <Badge variant="default">
               {value ? 'On server' : 'Not on server'}
             </Badge>
           )}

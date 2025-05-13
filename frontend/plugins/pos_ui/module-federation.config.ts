@@ -15,9 +15,9 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'pos_ui',
   exposes: {
-    './Config': './src/modules/constants/config.ts',
-    './Module': './src/remote-entry.ts',
-    './Settings': './src/pages/SettingsPage.tsx',
+    './Config': './src/config.ts',
+    './pos': './src/modules/pos/Main.tsx',
+    './posSettings': './src/modules/pos/Settings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {
@@ -34,3 +34,6 @@ const config: ModuleFederationConfig = {
  * Nx requires a default export of the config to allow correct resolution of the module federation graph.
  **/
 export default config;
+
+
+

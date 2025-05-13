@@ -42,5 +42,5 @@ export * from './tooltip';
 export * from './upload';
 export * from './spinner';
 export * from './card';
-
+export * from './stepper'
 export * from './display';

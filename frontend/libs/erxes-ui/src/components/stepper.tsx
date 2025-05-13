@@ -1,13 +1,11 @@
-// stepper.tsx
 "use client"
 
 import * as React from "react"
 import { createContext, useContext } from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { CheckIcon, LoaderCircleIcon } from "lucide-react"
 import { cn } from "erxes-ui/lib"
+import { IconCheck, IconLoader2 } from "@tabler/icons-react"
 
-// Types
 type StepperContextValue = {
   activeStep: number
   setActiveStep: (step: number) => void
@@ -23,7 +21,6 @@ type StepItemContextValue = {
 
 type StepState = "active" | "completed" | "inactive" | "loading"
 
-// Contexts
 const StepperContext = createContext<StepperContextValue | undefined>(undefined)
 const StepItemContext = createContext<StepItemContextValue | undefined>(undefined)
 
@@ -43,7 +40,6 @@ const useStepItem = () => {
   return context
 }
 
-// Components
 interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultValue?: number
   value?: number
@@ -96,7 +92,6 @@ const StepperRoot = React.forwardRef<HTMLDivElement, StepperProps>(({
 })
 StepperRoot.displayName = "Stepper"
 
-// StepperItem
 interface StepperItemProps extends React.HTMLAttributes<HTMLDivElement> {
   step: number
   completed?: boolean
@@ -139,7 +134,6 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(({
 })
 StepperItem.displayName = "StepperItem"
 
-// StepperTrigger
 interface StepperTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean
 }
@@ -180,7 +174,6 @@ const StepperTrigger = React.forwardRef<HTMLButtonElement, StepperTriggerProps>(
 })
 StepperTrigger.displayName = "StepperTrigger"
 
-// StepperIndicator
 interface StepperIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   asChild?: boolean
 }
@@ -211,14 +204,14 @@ const StepperIndicator = React.forwardRef<HTMLDivElement, StepperIndicatorProps>
           <span className="transition-all group-data-loading/step:scale-0 group-data-loading/step:opacity-0 group-data-loading/step:transition-none group-data-[state=completed]/step:scale-0 group-data-[state=completed]/step:opacity-0">
             {step}
           </span>
-          <CheckIcon
+          <IconCheck
             className="absolute scale-0 opacity-0 transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100"
             size={16}
             aria-hidden="true"
           />
           {isLoading && (
             <span className="absolute transition-all">
-              <LoaderCircleIcon className="animate-spin" size={14} aria-hidden="true" />
+              <IconLoader2 className="animate-spin" size={14} aria-hidden="true" />
             </span>
           )}
         </>
@@ -228,7 +221,6 @@ const StepperIndicator = React.forwardRef<HTMLDivElement, StepperIndicatorProps>
 })
 StepperIndicator.displayName = "StepperIndicator"
 
-// StepperTitle
 const StepperTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(({
   className,
   ...props
@@ -237,7 +229,6 @@ const StepperTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<H
 })
 StepperTitle.displayName = "StepperTitle"
 
-// StepperDescription
 const StepperDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(({
   className,
   ...props
@@ -246,7 +237,6 @@ const StepperDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttr
 })
 StepperDescription.displayName = "StepperDescription"
 
-// StepperSeparator
 const StepperSeparator = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({
   className,
   ...props
@@ -265,7 +255,6 @@ const StepperSeparator = React.forwardRef<HTMLDivElement, React.HTMLAttributes<H
 })
 StepperSeparator.displayName = "StepperSeparator"
 
-// Export the compound component
 export const Stepper = Object.assign(StepperRoot, {
   Item: StepperItem,
   Trigger: StepperTrigger,

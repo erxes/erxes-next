@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-export const posCategoryAtom = atom<string>('ecommerce')
+export const posCategoryAtom = atom<string>('restaurant')
 
 export interface PermissionSettings {
     adminPrintTempBill: boolean
@@ -195,3 +195,8 @@ export const financeConfigSettingsAtom = atom<FinanceConfigSettings>({
   account: "",
   location: "",
 })
+
+export const sidebarViewAtom = atom<"list" | "detail" | "hidden">("list")
+export const isFullscreenAtom = atom(false)
+export const sidebarViewPerStepAtom = atom<{ [step: string]: string }>({})
+export const slotAtom = atom(false)
