@@ -1,4 +1,5 @@
 import { ITag } from 'erxes-api-shared/core-types';
+import { getPlugins } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 export const tagMutations = {
@@ -54,7 +55,7 @@ export const tagMutations = {
         customer: models.Customers,
         user: models.Users,
         company: models.Companies,
-        // form: models.Forms,
+        form: models.Forms,
         product: models.Products,
       };
 
@@ -65,11 +66,7 @@ export const tagMutations = {
       }
 
       await model.updateMany({ _id: { $in: targetIds } }, { $set: { tagIds } });
-
-      return '';
     }
-
-    return null;
   },
 
   /**

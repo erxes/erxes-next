@@ -26,7 +26,7 @@ const queryParams = `
   searchValue: String, 
   status: String, 
   meta: String, 
-  brand: String
+  brandIds: [String]
 `;
 
 export const queries = `

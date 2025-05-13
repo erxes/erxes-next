@@ -1,4 +1,5 @@
 import { ITagDocument } from 'erxes-api-shared/core-types';
+import { getPlugin } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 
 // set related tags
@@ -64,4 +65,11 @@ export const removeRelatedTagIds = async (
   });
 
   await models.Tags.bulkWrite(doc);
+};
+
+export const getContentTypes = async (serviceName) => {
+  const service = await getPlugin(serviceName);
+  const meta = service.config.meta || {};
+  const types = (meta.tags && meta.tags.types) || [];
+  return types.map((type) => `${serviceName}:${type.type}`);
 };
