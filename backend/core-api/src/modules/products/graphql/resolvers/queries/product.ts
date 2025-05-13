@@ -82,7 +82,7 @@ const generateFilter = async (
     const baseTagIds: Set<string> = new Set(excludeTagIds);
 
     if (tagWithRelated) {
-      const tagObjs = await models.Tags.find({ _id: { $in: tagIds } }).lean();
+      const tagObjs = await models.Tags.find({ _id: { $in: excludeTagIds } }).lean();
 
       for (const tag of tagObjs) {
         (tag.relatedIds || []).forEach((id) => baseTagIds.add(id));
