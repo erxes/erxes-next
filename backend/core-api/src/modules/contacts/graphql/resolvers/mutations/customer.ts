@@ -159,7 +159,8 @@ export const customerMutations = {
           headers: { 'Content-Type': 'application/json' },
         });
       } catch (error) {
-        throw new Error(error);
+        console.error('Verification fetch failed:', error.message);
+        throw error;
       }
     };
 
