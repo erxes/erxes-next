@@ -54,3 +54,92 @@ export interface CatProdInput {
     checkExcludeCategoryIds?: string[];
     banFractions?: boolean;
   }
+
+export interface PosListQueryResponse {
+    posList: {
+      _id: string;
+      name: string;
+      description?: string;
+      orderPassword?: string;
+      scopeBrandIds?: string[];
+      pdomain?: string;
+      createdAt: string;
+      token?: string;
+      erxesAppToken?: string;
+      adminIds?: string[];
+      cashierIds?: string[];
+      paymentIds?: string[];
+      paymentTypes?: string[];
+      user?: {
+        _id: string;
+        details?: {
+          avatar?: string;
+          fullName?: string;
+        };
+      };
+      isOnline?: boolean;
+      onServer?: boolean;
+      branchId?: string;
+      departmentId?: string;
+      allowBranchIds?: string[];
+      beginNumber?: number;
+      maxSkipNumber?: number;
+      waitingScreen?: any;
+      kitchenScreen?: any;
+      kioskMachine?: any;
+      uiOptions?: any;
+      ebarimtConfig?: any;
+      erkhetConfig?: any;
+      cardsConfig?: any;
+      catProdMappings?: {
+        _id: string;
+        categoryId: string;
+        code: string;
+        name: string;
+        productId: string;
+      }[];
+      initialCategoryIds?: string[];
+      kioskExcludeCategoryIds?: string[];
+      kioskExcludeProductIds?: string[];
+      deliveryConfig?: any;
+      checkRemainder?: boolean;
+      permissionConfig?: any;
+      allowTypes?: string[];
+      isCheckRemainder?: boolean;
+      checkExcludeCategoryIds?: string[];
+      banFractions?: boolean;
+      branchTitle?: string;
+      departmentTitle?: string;
+    }[];
+  }
+  
+export  interface RemoveMutationResponse {
+    posRemove: string;
+  }
+  
+export  interface QueryParams {
+    page?: string | number;
+    perPage?: string | number;
+    status?: string;
+    sortField?: string;
+    sortDirection?: string | number;
+    [key: string]: any;
+  }
+  
+export  interface RouterInterface {
+    generatePaginationParams: (params: QueryParams) => {
+      page?: number;
+      perPage?: number;
+      [key: string]: any;
+    };
+  }
+  
+export interface ConfirmFunction {
+    (message: string): Promise<boolean>;
+  }
+  
+export interface AlertInterface {
+    success: (message: string) => void;
+    error: (message: string) => void;
+  }
+  

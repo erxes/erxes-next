@@ -2,7 +2,6 @@ export const getAngle = (
   startVector: { x: number; y: number },
   endVector: { x: number; y: number }
 ) => {
-  // Calculate the angle between two vectors
   const dot = startVector.x * endVector.x + startVector.y * endVector.y;
   const det = startVector.x * endVector.y - startVector.y * endVector.x;
   let angle = (Math.atan2(det, dot) * 180) / Math.PI;
