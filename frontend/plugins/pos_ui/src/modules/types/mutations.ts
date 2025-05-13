@@ -8,17 +8,14 @@ export interface CatProdInput {
     name: string;
     description?: string;
     products?: string[];
-    // Add other fields as needed
   }
   
   export interface SlotInput {
     _id?: string;
     name: string;
     description?: string;
-    // Add other fields as needed
   }
   
-  // Define common fields as a TypeScript type
   export interface PosCommonFieldsInput {
     name?: string;
     description?: string;
@@ -30,7 +27,7 @@ export interface CatProdInput {
     adminIds?: string[];
     cashierIds?: string[];
     paymentIds?: string[];
-    paymentTypes?: any[]; // JSON type
+    paymentTypes?: any[]; 
     isOnline?: boolean;
     onServer?: boolean;
     branchId?: string;
@@ -38,20 +35,20 @@ export interface CatProdInput {
     allowBranchIds?: string[];
     beginNumber?: string;
     maxSkipNumber?: number;
-    kitchenScreen?: any; // JSON type
-    waitingScreen?: any; // JSON type
-    kioskMachine?: any; // JSON type
-    uiOptions?: any; // JSON type
-    ebarimtConfig?: any; // JSON type
-    erkhetConfig?: any; // JSON type
-    cardsConfig?: any; // JSON type
+    kitchenScreen?: any; 
+    waitingScreen?: any; 
+    kioskMachine?: any; 
+    uiOptions?: any; 
+    ebarimtConfig?: any; 
+    erkhetConfig?: any; 
+    cardsConfig?: any; 
     catProdMappings?: CatProdInput[];
     initialCategoryIds?: string[];
     kioskExcludeCategoryIds?: string[];
     kioskExcludeProductIds?: string[];
-    deliveryConfig?: any; // JSON type
+    deliveryConfig?: any; 
     checkRemainder?: boolean;
-    permissionConfig?: any; // JSON type
+    permissionConfig?: any; 
     allowTypes?: string[];
     isCheckRemainder?: boolean;
     checkExcludeCategoryIds?: string[];

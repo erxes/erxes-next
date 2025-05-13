@@ -2,7 +2,6 @@ import { RecordTable } from 'erxes-ui';
 import { columns } from './columns';
 import { usePosList } from '../hooks/usePosList';
 import { PosCommandBar } from './PosCommandBar';
-import { usePosEnv } from '../hooks/usePosEnv';
 
 const fakePosList = [
   {
@@ -41,7 +40,6 @@ export const PosRecordTable = () => {
       perPage: 20,
     },
   });
-  const { error, permissionError, posEnv, refetch } = usePosEnv();
   
   const posList = data?.posList || fakePosList;
 

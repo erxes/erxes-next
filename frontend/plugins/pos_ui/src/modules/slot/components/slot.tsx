@@ -9,7 +9,6 @@ import {
   useEdgesState,
   addEdge,
   ReactFlowProvider,
-  MiniMap,
   type Edge,
   type OnConnect,
   type NodeMouseHandler,
@@ -18,7 +17,7 @@ import {
 import "@xyflow/react/dist/style.css"
 import { useAtom } from "jotai"
 import { useToast } from "erxes-ui/hooks"
-import { CustomNode, SidebarViewType } from "../types/resize"
+import { CustomNode } from "../types/resize"
 import { TableNode } from "./tableNode"
 import { isFullscreenAtom, sidebarViewAtom, slotDetailAtom, syncSelectedNodeAtom } from "../states/slot"
 import NodeControls from "./nodeControl"
@@ -27,6 +26,7 @@ import { Tabs } from "erxes-ui/components"
 import SidebarList from "./sideBar"
 import SidebarDetail from "./sideBarDetail"
 import MiniMapToggle from "./miniMap"
+import { TableNodeData } from "../types"
 
 const POSSlotsManager = () => {
   const { toast } = useToast()
@@ -54,14 +54,11 @@ const POSSlotsManager = () => {
 
   const initialEdges: Edge[] = []
 
-  // Define node types
   const nodeTypes = { tableNode: TableNode }
 
-  // React Flow state
   const [nodes, setNodes, onNodesChange] = useNodesState<CustomNode>(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
-  // UI state
   const [selectedNode, setSelectedNode] = useAtom(syncSelectedNodeAtom)
   const [slotDetail, setSlotDetail] = useAtom(slotDetailAtom)
   const [sidebarView, setSidebarView] = useAtom(sidebarViewAtom)
@@ -70,18 +67,15 @@ const POSSlotsManager = () => {
   const [activeTab, setActiveTab] = useState("slots")
 
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
+  const [, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
 
-  // Set up event listeners for custom events
   useEffect(() => {
-    // Handle node resize event
     const handleNodeResize = (event: Event) => {
       const detail = (event as CustomEvent).detail
       if (detail && detail.id) {
         setNodes((nds) =>
           nds.map((node) => {
             if (node.id === detail.id) {
-              // Update both the node data, size properties, AND position
               const updatedNode = {
                 ...node,
                 data: {
@@ -93,7 +87,6 @@ const POSSlotsManager = () => {
                 height: detail.height,
               }
 
-              // If we have position correction data, update position
               if (detail.position) {
                 updatedNode.position = detail.position
                 updatedNode.data.positionX = detail.position.x
@@ -106,7 +99,6 @@ const POSSlotsManager = () => {
           }),
         )
 
-        // Update the selected node if it's the one being resized
         if (selectedNode && selectedNode.id === detail.id) {
           const updatedNode = nodes.find((node) => node.id === detail.id)
           if (updatedNode) {
@@ -125,7 +117,6 @@ const POSSlotsManager = () => {
       }
     }
 
-    // Handle node position change event
     const handleNodePosition = (event: Event) => {
       const detail = (event as CustomEvent).detail
       if (detail && detail.id && detail.position) {
@@ -146,7 +137,6 @@ const POSSlotsManager = () => {
           }),
         )
 
-        // Update the selected node if it's the one being moved
         if (selectedNode && selectedNode.id === detail.id) {
           const updatedNode = nodes.find((node) => node.id === detail.id)
           if (updatedNode) {
@@ -164,7 +154,6 @@ const POSSlotsManager = () => {
       }
     }
 
-    // Handle node rotation event
     const handleNodeRotate = (event: Event) => {
       const detail = (event as CustomEvent).detail
       if (detail && detail.id) {
@@ -183,7 +172,6 @@ const POSSlotsManager = () => {
           }),
         )
 
-        // Update the selected node if it's the one being rotated
         if (selectedNode && selectedNode.id === detail.id) {
           const updatedNode = nodes.find((node) => node.id === detail.id)
           if (updatedNode) {
@@ -199,7 +187,6 @@ const POSSlotsManager = () => {
       }
     }
 
-    // Handle node edit event (double click)
     const handleNodeEdit = (event: Event) => {
       const detail = (event as CustomEvent).detail
       if (detail && detail.id) {
@@ -212,13 +199,11 @@ const POSSlotsManager = () => {
       }
     }
 
-    // Add event listeners
     document.addEventListener("node:dimensions-change", handleNodeResize)
     document.addEventListener("node:position", handleNodePosition)
     document.addEventListener("node:rotate", handleNodeRotate)
     document.addEventListener("node:edit", handleNodeEdit)
 
-    // Cleanup
     return () => {
       document.removeEventListener("node:dimensions-change", handleNodeResize)
       document.removeEventListener("node:position", handleNodePosition)
@@ -303,7 +288,6 @@ const POSSlotsManager = () => {
             return {
               ...node,
               position: { x, y },
-              // Important: Set both the node width/height and the data width/height
               width,
               height,
               data: {
@@ -334,10 +318,8 @@ const POSSlotsManager = () => {
     }
   }
 
-  // Handle deleting a slot
   const handleDeleteSlot = (id: string) => {
     setNodes((nds) => nds.filter((node) => node.id !== id))
-    // Also remove any connected edges
     setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id))
     if (selectedNode && selectedNode.id === id) {
       setSelectedNode(null)
@@ -350,19 +332,15 @@ const POSSlotsManager = () => {
     })
   }
 
-  // Handle duplicating a slot
   const handleDuplicateSlot = (id: string) => {
     const nodeToDuplicate = nodes.find((node) => node.id === id)
     if (!nodeToDuplicate) return
 
-    // Create a new unique ID
     const newId = String(Math.max(...nodes.map((n) => Number.parseInt(n.id, 10)), 0) + 1)
 
-    // Create position offset for the duplicate
     const newPositionX = nodeToDuplicate.position.x + 30
     const newPositionY = nodeToDuplicate.position.y + 30
 
-    // Create a duplicate with slight offset
     const newNode: CustomNode = {
       ...nodeToDuplicate,
       id: newId,
@@ -414,11 +392,6 @@ const POSSlotsManager = () => {
       title: "Layout arranged",
       description: "Slots have been arranged in a grid layout",
     })
-  }
-
-  // Toggle sidebar view
-  const toggleSidebar = (view: SidebarViewType) => {
-    setSidebarView(view)
   }
 
   return (
@@ -477,8 +450,11 @@ const POSSlotsManager = () => {
                   onNodeClick={onNodeClick}
                   onAddSlot={handleAddSlot}
                   onDuplicateSlot={handleDuplicateSlot}
-                  onDeleteSlot={handleDeleteSlot}
-                />
+                  onDeleteSlot={handleDeleteSlot} onNodeSelect={function (nodeId: string): void {
+                    throw new Error("Function not implemented.")
+                  } } onAddNew={function (nodeData?: Partial<TableNodeData>): void {
+                    throw new Error("Function not implemented.")
+                  } }                />
               </Tabs.Content>
 
               <Tabs.Content value="details" className="m-0">

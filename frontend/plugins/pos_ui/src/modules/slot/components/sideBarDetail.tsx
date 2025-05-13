@@ -4,11 +4,8 @@ import { useAtom } from "jotai"
 import { slotDetailAtom } from "../states/slot"
 import { SlotDetailForm } from "../types/resize"
 import { Button, Checkbox, Input, Label } from "erxes-ui"
+import { SidebarDetailProps } from "../types"
 
-interface SidebarDetailProps {
-  onSave: () => void
-  onCancel: () => void
-}
 
 const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
   const [slotDetail, setSlotDetail] = useAtom(slotDetailAtom)

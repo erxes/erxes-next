@@ -15,7 +15,7 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'pos_ui',
   exposes: {
-    './Config': './src/config.ts',
+    './config': './src/config.ts',
     './pos': './src/modules/pos/Main.tsx',
     './posSettings': './src/modules/pos/Settings.tsx',
   },

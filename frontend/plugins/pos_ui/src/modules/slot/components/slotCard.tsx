@@ -2,15 +2,8 @@ import React from 'react';
 import { Button, Card } from 'erxes-ui';
 import { IconEdit, IconTrash, IconCopy } from "@tabler/icons-react";
 import { cn } from 'erxes-ui/lib';
-import { CustomNode } from '../types';
+import { SlotCardProps } from '../types';
 
-interface SlotCardProps {
-  node: CustomNode;
-  selected: boolean;
-  onEdit: (node: CustomNode, event?: React.MouseEvent) => void;
-  onDuplicate: (id: string) => void;
-  onDelete: (id: string) => void;
-}
 
 const SlotCard: React.FC<SlotCardProps> = ({
   node,

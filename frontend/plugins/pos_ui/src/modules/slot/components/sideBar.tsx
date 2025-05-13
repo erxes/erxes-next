@@ -1,17 +1,9 @@
 import React from 'react';
 import { Badge, Button, ScrollArea } from 'erxes-ui';
 import { IconPlus } from '@tabler/icons-react';
-import { CustomNode } from '../types';
+import { SidebarListProps } from '../types';
 import SlotCard from './slotCard';
 
-interface SidebarListProps {
-  nodes: CustomNode[];
-  selectedNode: CustomNode | null;
-  onNodeClick: (event: React.MouseEvent, node: CustomNode) => void;
-  onAddSlot: () => void;
-  onDuplicateSlot: (id: string) => void;
-  onDeleteSlot: (id: string) => void;
-}
 
 const SidebarList: React.FC<SidebarListProps> = ({
   nodes,

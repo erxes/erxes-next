@@ -69,7 +69,6 @@ export function ResizableNode({
   const [dragStart, setDragStart] = useState<Position>({ x: 0, y: 0 })
   const [resizeStart, setResizeStart] = useState<Position & Size>({ x: 0, y: 0, width: 0, height: 0 })
 
-  // Update position and size when props change
   useEffect(() => {
     setPosition(initialPosition)
   }, [initialPosition])
@@ -78,7 +77,6 @@ export function ResizableNode({
     setSize(initialSize)
   }, [initialSize])
 
-  // Handle node dragging
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.target === nodeRef.current || (e.target as HTMLElement).classList.contains("drag-handle")) {
       setIsDragging(true)
@@ -89,7 +87,6 @@ export function ResizableNode({
     }
   }
 
-  // Handle resize start
   const handleResizeStart = (e: React.MouseEvent, position: ResizeHandlePosition) => {
     e.stopPropagation()
     setIsResizing(position)
@@ -101,7 +98,6 @@ export function ResizableNode({
     })
   }
 
-  // Handle mouse move for both dragging and resizing
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) {
@@ -120,7 +116,6 @@ export function ResizableNode({
         let newX = position.x
         let newY = position.y
 
-        // Handle different resize positions
         switch (isResizing) {
           case "right":
             newWidth = Math.max(resizeStart.width + deltaX, minWidth)
@@ -220,15 +215,12 @@ export function ResizableNode({
       onMouseDown={handleMouseDown}
       data-id={id}
     >
-      {/* Header/Drag Handle */}
       <div className="drag-handle h-8 bg-gray-100 border-b border-gray-200 px-3 flex items-center justify-between">
         <div className="font-medium text-sm truncate">{title}</div>
       </div>
 
-      {/* Content */}
       <div className="p-3 h-[calc(100%-2rem)] overflow-auto">{children}</div>
 
-      {/* Resize handles - only show when selected */}
       {selected && (
         <>
           <div
@@ -248,7 +240,6 @@ export function ResizableNode({
             onMouseDown={(e) => handleResizeStart(e, "top")}
           />
 
-          {/* Corner resize handles */}
           <div
             className="absolute bottom-0 right-0 w-3 h-3 cursor-nwse-resize bg-white border border-gray-300 rounded-sm z-10"
             onMouseDown={(e) => handleResizeStart(e, "bottom-right")}

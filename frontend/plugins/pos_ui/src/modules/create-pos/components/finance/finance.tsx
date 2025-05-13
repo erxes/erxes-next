@@ -1,5 +1,5 @@
 "use client"
-import { Button, Input, Label, Select, Switch } from "erxes-ui"
+import { Input, Label, Select, Switch } from "erxes-ui"
 import { useSearchParams } from "react-router-dom"
 import { useAtom } from "jotai"
 import { financeConfigSettingsAtom } from "../../states/posCategory"

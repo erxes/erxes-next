@@ -1,15 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { MiniMap } from "@xyflow/react"
+import { MiniMap, PanelPosition } from "@xyflow/react"
 import { IconMap, IconX } from "@tabler/icons-react"
+import { MiniMapToggleProps } from "../types"
 
-interface MiniMapToggleProps {
-  nodeStrokeWidth?: number
-  zoomable?: boolean
-  pannable?: boolean
-  position?: string
-}
 
 export default function MiniMapToggle({
   nodeStrokeWidth = 3,
@@ -35,12 +30,11 @@ export default function MiniMapToggle({
 
   return (
     <div className="relative">
-      {/* Standard MiniMap component */}
       <MiniMap
         nodeStrokeWidth={nodeStrokeWidth}
         zoomable={zoomable}
         pannable={pannable}
-        position={position}
+        position={position as PanelPosition}
         style={{
           backgroundColor: "rgba(255, 255, 255, 0.9)",
           border: "1px solid #e2e8f0",
@@ -48,7 +42,6 @@ export default function MiniMapToggle({
         }}
       />
 
-      {/* X button positioned absolutely on top of the MiniMap */}
       <div className="absolute top-2 left-2 z-10">
         <button
           onClick={() => setIsVisible(false)}

@@ -1,4 +1,4 @@
-import { Node, Edge } from '@xyflow/react';
+import { Node } from '@xyflow/react';
 
 export interface TableNodeData {
   label: string;
@@ -42,13 +42,12 @@ export interface ResizeEventDetail {
 export interface NodeResizeEvent extends CustomEvent {
   detail: ResizeEventDetail;
 }
-// Type for our custom node
+
 export type CustomNode = Node<Record<string, unknown>>;
 
-// Type for tab values
+
 export type TabValue = 'slots' | 'details';
 
-// Type for sidebar view options
 export type SidebarViewType = 'list' | 'detail' | 'hidden';
 
 export interface SidebarListProps {
@@ -61,8 +60,8 @@ export interface SidebarListProps {
     selectedNode: CustomNode | null;
     setSelectedNode: React.Dispatch<React.SetStateAction<CustomNode | null>>;
     isEditMode: boolean;
-    setNodes: React.Dispatch<React.SetStateAction<CustomNode[]>>; // Added this
-    sidebarView: SidebarViewType; // Add correct type
+    setNodes: React.Dispatch<React.SetStateAction<CustomNode[]>>; 
+    sidebarView: SidebarViewType; 
     onDeleteNode: () => void;
     onSaveNode: () => void;
     onAddNode: () => void;
@@ -81,4 +80,29 @@ export interface SidebarListProps {
     onArrangeNodes: () => void;
   }
 
-  
+export interface MiniMapToggleProps {
+    nodeStrokeWidth?: number
+    zoomable?: boolean
+    pannable?: boolean
+    position?: string
+  }
+export interface SidebarListProps {
+  nodes: CustomNode[];
+  selectedNode: CustomNode | null;
+  onNodeClick: (event: React.MouseEvent, node: CustomNode) => void;
+  onAddSlot: () => void;
+  onDuplicateSlot: (id: string) => void;
+  onDeleteSlot: (id: string) => void;
+}  
+
+export interface SidebarDetailProps {
+  onSave: () => void
+  onCancel: () => void
+}
+export interface SlotCardProps {
+  node: CustomNode;
+  selected: boolean;
+  onEdit: (node: CustomNode, event?: React.MouseEvent) => void;
+  onDuplicate: (id: string) => void;
+  onDelete: (id: string) => void;
+}

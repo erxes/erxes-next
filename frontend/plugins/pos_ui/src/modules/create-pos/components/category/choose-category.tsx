@@ -5,11 +5,8 @@ import { useAtom } from "jotai"
 import { useState } from "react"
 import { posCategoryAtom } from "../../states/posCategory"
 import { Button } from "erxes-ui"
-import { usePosDetail } from "~/modules/pos-detail.tsx/hooks/useDetail"
 
 export default function ChooseCategoryPage() {
-  const posId = "URW5UemY5AKFAgdPrQEIs";
-  const { loading, error, permissionError, posDetail, refetch } = usePosDetail(posId);
   const [posCategory, setPosCategory] = useAtom(posCategoryAtom)
   const [searchParams, setSearchParams] = useSearchParams()
   const [selectedCategory, setSelectedCategory] = useState<string | null>(posCategory || null)

@@ -1,18 +1,6 @@
 import { useQuery, gql } from '@apollo/client';
 import { queries } from '../../graphql';
-
-// Define response type for the query
-interface GroupsQueryResponse {
-  productGroups: {
-    _id: string;
-    posId: string;
-    name: string;
-    description?: string;
-    categoryIds?: string[];
-    excludedCategoryIds?: string[];
-    excludedProductIds?: string[];
-  }[];
-}
+import { GroupsQueryResponse } from '../types/detail';
 
 export function useProductGroups(posId?: string) {
   const { loading, error, data, refetch } = useQuery<GroupsQueryResponse>(
