@@ -1,4 +1,4 @@
-import { IMainContext } from '@/core-types';
+import { IMainContext } from '../../core-types';
 import { extractUserFromHeader } from '../headers';
 import { getSubdomain } from '../utils';
 import { ExpressContextFunctionArgument } from '@apollo/server/dist/esm/express4';

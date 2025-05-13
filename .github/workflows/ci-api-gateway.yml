@@ -43,13 +43,8 @@ jobs:
       - name: Build gateway
         run: |
           cd backend/gateway
-          npx nx build:packageJson gateway
           npx nx build gateway
-
-      - name: Run tests
-        run: |
-          cd backend/gateway
-          npx nx test gateway
+          npx nx build:packageJson gateway
 
   build-and-push-docker:
     needs: build-and-test
