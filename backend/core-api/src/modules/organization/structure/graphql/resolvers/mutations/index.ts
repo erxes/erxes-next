@@ -3,7 +3,7 @@ import { positionMutations } from './positions';
 import { structuresMutations } from './structure';
 import { deparmentMutations } from './deparments';
 import { unitsMutations } from './units';
-export const structuretMutations = {
+export const structureMutations = {
   ...branchsMutations,
   ...positionMutations,
   ...structuresMutations,

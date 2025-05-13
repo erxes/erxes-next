@@ -9,7 +9,7 @@ import { segmentMutations } from '@/segments/graphql/resolvers/mutations';
 import conformityMutations from '@/conformities/graphql/mutations';
 import { relationsMutations } from '@/relations/graphql/mutations';
 import { favoriteMutations } from '@/organization/settings/graphql/favorites/mutations';
-import { structuretMutations } from '@/organization/structure/graphql/resolvers/mutations'
+import { structureMutations } from '@/organization/structure/graphql/resolvers/mutations'
 
 export const mutations = {
   ...contactMutations,
@@ -23,5 +23,5 @@ export const mutations = {
   ...conformityMutations,
   ...relationsMutations,
   ...favoriteMutations,
-  ...structuretMutations
+  ...structureMutations
 };

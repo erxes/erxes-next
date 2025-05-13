@@ -4,8 +4,14 @@ import {
   ICursorPaginateParams,
   IListParams,
 } from 'erxes-api-shared/core-types';
+
+// Escapes regex special characters to prevent injection
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export const unitsQueries = {
-async units(
+  async units(
     _root,
     { searchValue }: { searchValue?: string },
     { models }: IContext,
@@ -13,53 +19,51 @@ async units(
     const filter: { $or?: any[] } = {};
 
     if (searchValue) {
+      const escaped = escapeRegExp(searchValue.trim());
       const regexOption = {
-        $regex: `.*${searchValue.trim()}.*`,
+        $regex: escaped,
         $options: 'i',
       };
 
       filter.$or = [
-        {
-          title: regexOption,
-        },
-        {
-          description: regexOption,
-        },
+        { title: regexOption },
+        { description: regexOption },
       ];
     }
 
     return models.Units.find(filter).sort({ title: 1 });
   },
- async unitsMain(
+
+  async unitsMain(
     _root,
     params: IListParams & ICursorPaginateParams,
     { models }: IContext,
   ) {
-     const filter: { $or?: any[] } = {};
+    const filter: { $or?: any[] } = {};
 
-  if (params.searchValue) {
-    const regex = {
-      $regex: `.*${params.searchValue.trim()}.*`,
-      $options: 'i',
-    };
+    if (params.searchValue) {
+      const escaped = escapeRegExp(params.searchValue.trim());
+      const regex = {
+        $regex: escaped,
+        $options: 'i',
+      };
 
-    filter.$or = [
-      { title: regex },
-      { description: regex },
-    ];
-  }
+      filter.$or = [
+        { title: regex },
+        { description: regex },
+      ];
+    }
 
-  const { list, totalCount, pageInfo } = await cursorPaginate({
-    model: models.Units,
-    params,
-    query: filter,
-  });
+    const { list, totalCount, pageInfo } = await cursorPaginate({
+      model: models.Units,
+      params,
+      query: filter,
+    });
 
-  return { list, totalCount, pageInfo };
+    return { list, totalCount, pageInfo };
   },
 
   async unitDetail(_root, { _id }, { models }: IContext) {
     return models.Units.getUnit({ _id });
   },
-
 };

@@ -14,7 +14,7 @@ async unitsAdd(_parent: undefined, doc, { user, models }: IContext) {
 
   async unitsRemove(_parent: undefined, { ids }, { models }: IContext) {
     if (!ids.length) {
-      throw new Error('You must specify at least one department id to remove');
+      throw new Error('You must specify at least one unit id to remove');
     }
     const deleteResponse = await models.Units.removeUnits(ids);
 
