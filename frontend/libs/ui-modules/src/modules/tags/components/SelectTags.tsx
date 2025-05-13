@@ -107,15 +107,13 @@ export const SelectTagsCommand = ({
         value={search}
         onValueChange={setSearch}
         placeholder="Search tags"
+        focusOnMount
       />
       <Command.List>
         <SelectTree.Provider id={targetIds.join(',')} ordered={!search}>
           <SelectTagsCreate
             search={search}
-            show={
-              !disableCreateOption ||
-              (search.length > 0 && !loading && tags?.length === 0)
-            }
+            show={!disableCreateOption && !loading && !tags?.length}
           />
           <Combobox.Empty loading={loading} error={error} />
           {tags?.map((tag) => (
@@ -146,6 +144,7 @@ export const SelectTagsCreate = ({
   show: boolean;
 }) => {
   const { setNewTagName } = useSelectTagsContext();
+
   if (!search || !show) return null;
 
   return (
