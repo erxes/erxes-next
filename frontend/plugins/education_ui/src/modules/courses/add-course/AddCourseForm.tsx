@@ -2,14 +2,21 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
+import {
+  Button,
+  Sheet,
+  Form,
+  useToast,
+  Preview,
+  Separator,
+  Resizable,
+} from 'erxes-ui';
 import { useAddCourse } from '@/courses/hooks/useAddCourse';
 import { ApolloError } from '@apollo/client';
 import {
   CourseFormType,
   courseFormSchema,
 } from '@/courses/add-course/components/formSchema';
-import { CourseAddSheetHeader } from '@/courses/add-course/components/CustomerAddSheet';
 import { CourseAddCoreFields } from '@/courses/add-course/components/CourseAddCoreFields';
 
 export function AddCourseForm({
@@ -45,13 +52,31 @@ export function AddCourseForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col h-full overflow-hidden"
       >
-        <CourseAddSheetHeader />
         <Sheet.Content className="flex-auto overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="p-5">
-              <CourseAddCoreFields form={form} />
+          <div className="flex h-full flex-auto overflow-auto">
+            <div className="flex flex-col flex-auto min-h-full overflow-hidden">
+              <Resizable.PanelGroup
+                direction="horizontal"
+                className="flex-auto min-h-full overflow-hidden"
+              >
+                <Resizable.Panel>
+                  <div className="p-5">
+                    <CourseAddCoreFields form={form} />
+                    <Separator />
+                    <Preview>
+                      <Preview.Toolbar
+                        path={'/iframe.html?id=components-dialog--default'}
+                      />
+                      <Preview.View
+                        iframeSrc="/iframe.html?id=components-dialog--default"
+                        height={400}
+                      />
+                    </Preview>
+                  </div>
+                </Resizable.Panel>
+              </Resizable.PanelGroup>
             </div>
-          </ScrollArea>
+          </div>
         </Sheet.Content>
 
         <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">

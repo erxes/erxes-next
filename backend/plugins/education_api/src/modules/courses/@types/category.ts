@@ -11,6 +11,7 @@ export interface ICourseCategory {
   isRoot?: boolean;
   activityCount?: number;
   attachment?: any;
+  order: string;
 }
 
 export interface ICourseCategoryParams
@@ -32,6 +33,5 @@ export interface ICourseCategoryParams
 
 export interface ICourseCategoryDocument extends ICourseCategory, Document {
   _id: string;
-  order?: string;
   createdAt: Date;
 }

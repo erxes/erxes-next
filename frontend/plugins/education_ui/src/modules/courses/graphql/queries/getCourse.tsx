@@ -48,6 +48,12 @@ export const GET_COURSES = gql`
         type
         unitPrice
       }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
     }
   }
 `;

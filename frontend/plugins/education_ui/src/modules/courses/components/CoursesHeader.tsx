@@ -1,7 +1,7 @@
-import { IconBook } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { IconBook, IconPlus } from '@tabler/icons-react';
+import { Breadcrumb, Button, Kbd, Separator } from 'erxes-ui';
 import { Link } from 'react-router';
-import { CourseAddSheet } from '@/courses/add-course/components/CustomerAddSheet';
+import { PageHeader } from 'ui-modules';
 
 export const CoursesHeader = () => {
   return (
@@ -11,7 +11,7 @@ export const CoursesHeader = () => {
           <Breadcrumb.List className="gap-1">
             <Breadcrumb.Item>
               <Button variant="ghost" asChild>
-                <Link to="/course">
+                <Link to="/courses">
                   <IconBook />
                   Хөтөлбөрүүд
                 </Link>
@@ -20,10 +20,15 @@ export const CoursesHeader = () => {
           </Breadcrumb.List>
         </Breadcrumb>
         <Separator.Inline />
-        <PageHeader.LikeButton />
       </PageHeader.Start>
       <PageHeader.End>
-        <CourseAddSheet />
+        <Link to="/courses/add-course">
+          <Button>
+            <IconPlus />
+            Add course
+            <Kbd>C</Kbd>
+          </Button>
+        </Link>
       </PageHeader.End>
     </PageHeader>
   );

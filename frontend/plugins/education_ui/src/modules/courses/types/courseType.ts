@@ -23,5 +23,6 @@ export interface ICourseCategory {
   code: string;
   isRoot?: boolean;
   activityCount?: number;
+  order: string;
   attachment?: IAttachment;
 }

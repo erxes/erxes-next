@@ -22,6 +22,12 @@ export const GET_CLASSES = gql`
         createdAt
         updatedAt
       }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
       totalCount
     }
   }

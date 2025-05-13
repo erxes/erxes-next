@@ -23,10 +23,9 @@ export function useAddClass(
       ...options,
       update: (cache: ApolloCache<any>, { data }) => {
         try {
-          const queryVariables = { perPage: 30, dateFilters: null };
+          const queryVariables = { perPage: 30 };
           const existingData = cache.readQuery<ClassData>({
             query: GET_CLASSES,
-            variables: queryVariables,
           });
           if (!existingData || !existingData.courseClasses || !data?.classAdd)
             return;

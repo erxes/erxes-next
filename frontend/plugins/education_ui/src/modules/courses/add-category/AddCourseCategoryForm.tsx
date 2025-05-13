@@ -1,28 +1,26 @@
 import { useForm } from 'react-hook-form';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import { Button, Form, useToast, Dialog } from 'erxes-ui';
-import { useAddClass } from '@/classes/hooks/useAddClass';
-import { ApolloError } from '@apollo/client';
 import { CourseCategoryAddCoreFields } from '@/courses/add-category/components/CourseCategoryAddCoreFields';
 import {
-  CourseCategoryFormType,
   courseCategoryFormSchema,
-} from '~/modules/courses/add-category/components/formSchema';
+  CourseCategoryFormType,
+} from '@/courses/add-category/components/formSchema';
+import { useAddCourseCategory } from '@/courses/hooks/useAddCourseCategory';
+import { ApolloError } from '@apollo/client';
 
-export function AddClassForm({
+export function AddCourseCategoryForm({
   onOpenChange,
 }: {
   onOpenChange: (open: boolean) => void;
 }) {
-  const { classAdd } = useAddClass();
+  const { courseCategoryAdd } = useAddCourseCategory();
   const form = useForm<CourseCategoryFormType>({
     resolver: zodResolver(courseCategoryFormSchema),
   });
   const { toast } = useToast();
   const onSubmit = (data: CourseCategoryFormType) => {
-    classAdd({
+    courseCategoryAdd({
       variables: data,
       onError: (e: ApolloError) => {
         console.log(e.message);

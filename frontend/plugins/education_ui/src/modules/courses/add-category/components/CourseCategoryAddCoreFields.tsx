@@ -1,13 +1,17 @@
 import { UseFormReturn } from 'react-hook-form';
 import { Form, Input, Select } from 'erxes-ui';
-import { CLASS_LEVEL_OPTIONS } from '@/classes/constants/ClassConstants';
-import { ClassFormType } from '@/classes/add-class/components/formSchema';
+import { CourseCategoryFormType } from '@/courses/add-category/components/formSchema';
+import { useCourseCategories } from '@/courses/hooks/useCourseCategories';
 
-export const ClassAddCoreFields = ({
+export const CourseCategoryAddCoreFields = ({
   form,
 }: {
-  form: UseFormReturn<ClassFormType>;
+  form: UseFormReturn<CourseCategoryFormType>;
 }) => {
+  const { courseCategories = [] } = useCourseCategories();
+
+  console.log(courseCategories, '+++');
+
   return (
     <>
       <Form.Field
@@ -26,10 +30,24 @@ export const ClassAddCoreFields = ({
       />
       <Form.Field
         control={form.control}
+        name="code"
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label>Code</Form.Label>
+            <Form.Control>
+              <Input {...field} />
+            </Form.Control>
+
+            <Form.Message className="text-destructive" />
+          </Form.Item>
+        )}
+      />
+      <Form.Field
+        control={form.control}
         name="description"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label>DESCRIPTION</Form.Label>
+            <Form.Label>Description</Form.Label>
             <Form.Control>
               <Input {...field} />
             </Form.Control>
@@ -38,48 +56,35 @@ export const ClassAddCoreFields = ({
           </Form.Item>
         )}
       />
-      <Form.Field
-        control={form.control}
-        name="location"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>LOCATION</Form.Label>
-            <Form.Control>
-              <Input {...field} />
-            </Form.Control>
 
-            <Form.Message className="text-destructive" />
-          </Form.Item>
-        )}
-      />
       <Form.Field
         control={form.control}
-        name="level"
+        name="parentId"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label>LEVEL</Form.Label>
+            <Form.Label>Parent</Form.Label>
             <Select onValueChange={field.onChange} value={field.value}>
               <Form.Control>
                 <Select.Trigger className="truncate w-full rounded-md justify-between text-foreground h-8 hover:bg-muted">
                   <Select.Value placeholder={<span>{'Choose type'}</span>}>
                     <span className="text-foreground font-medium text-sm">
                       {
-                        CLASS_LEVEL_OPTIONS.find(
-                          (type) => type.value === field.value,
-                        )?.label
+                        courseCategories?.find(
+                          (type) => type._id === field.value,
+                        )?.name
                       }
                     </span>
                   </Select.Value>
                 </Select.Trigger>
               </Form.Control>
               <Select.Content>
-                {CLASS_LEVEL_OPTIONS.map((type) => (
+                {courseCategories?.map((category) => (
                   <Select.Item
-                    key={type.value}
+                    key={category._id}
                     className="text-[13px]"
-                    value={type.value}
+                    value={category._id}
                   >
-                    {type.label}
+                    {category.name}
                   </Select.Item>
                 ))}
               </Select.Content>

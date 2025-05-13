@@ -1,10 +1,10 @@
-import { IconSchool } from '@tabler/icons-react';
+import { IconBook } from '@tabler/icons-react';
 import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { Link } from 'react-router';
-import { ClassAddSheet } from '@/classes/add-class/components/ClassAddSheet';
 import { PageHeader } from 'ui-modules';
+import { CourseCategoryAddDialog } from '~/modules/courses/add-category/components/CourseCategoryAddDialog';
 
-export const ClassesHeader = () => {
+export const CourseCategoryHeader = () => {
   return (
     <PageHeader>
       <PageHeader.Start>
@@ -12,9 +12,9 @@ export const ClassesHeader = () => {
           <Breadcrumb.List className="gap-1">
             <Breadcrumb.Item>
               <Button variant="ghost" asChild>
-                <Link to="/classes">
-                  <IconSchool />
-                  Ангиуд
+                <Link to="/courses/course-category">
+                  <IconBook />
+                  Ангилалууд
                 </Link>
               </Button>
             </Breadcrumb.Item>
@@ -23,7 +23,7 @@ export const ClassesHeader = () => {
         <Separator.Inline />
       </PageHeader.Start>
       <PageHeader.End>
-        <ClassAddSheet />
+        <CourseCategoryAddDialog />
       </PageHeader.End>
     </PageHeader>
   );

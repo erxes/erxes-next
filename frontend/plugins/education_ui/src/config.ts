@@ -1,4 +1,4 @@
-import { IconBook, IconSchool } from '@tabler/icons-react';
+import { IconBook, IconCategoryFilled, IconSchool } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui/types';
 
 export const CONFIG: IUIConfig = {
@@ -8,14 +8,21 @@ export const CONFIG: IUIConfig = {
     {
       name: 'courses',
       icon: IconBook,
-      path: 'education/courses',
+      path: 'courses',
       hasSettings: false,
       hasWidgets: false,
+      submenus: [
+        {
+          name: 'category',
+          path: 'courses/course-category',
+          icon: IconCategoryFilled,
+        },
+      ],
     },
     {
       name: 'classes',
       icon: IconSchool,
-      path: 'education/classes',
+      path: 'classes',
       hasSettings: false,
       hasWidgets: false,
     },

@@ -24,7 +24,7 @@ export const useClasses = (options?: QueryHookOptions) => {
   }>(GET_CLASSES, {
     ...options,
     variables: {
-      limit: CLASSES_PER_PAGE,
+      perPage: CLASSES_PER_PAGE,
       cursor,
     },
   });

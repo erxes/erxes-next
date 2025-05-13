@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-export const classFormSchema = z.object({
+export const courseCategoryFormSchema = z.object({
   name: z
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(100, 'Name must be less than 100 characters'),
+  code: z.string(),
   description: z.string(),
-  location: z.string(),
-  level: z.enum(['Beginner', 'Intermediate', 'Advanced']),
+  parentId: z.string().optional(),
 });
 
-export type ClassFormType = z.infer<typeof classFormSchema>;
+export type CourseCategoryFormType = z.infer<typeof courseCategoryFormSchema>;

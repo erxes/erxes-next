@@ -9,6 +9,7 @@ export const courseSchema = new Schema(
     _id: mongooseStringRandomId,
     name: { type: String, label: 'Name' },
     code: { type: String, unique: true, label: 'Code' },
+    categoryId: { type: String, optional: true, label: 'Category ID' },
     category: { type: Object, optional: true, label: 'Category' },
     description: { type: String, label: 'Description' },
     createdAt: { type: Date, default: new Date(), label: 'Created At' },

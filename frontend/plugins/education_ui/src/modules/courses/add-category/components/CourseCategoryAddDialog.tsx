@@ -9,45 +9,44 @@ import {
   useSetHotkeyScope,
 } from 'erxes-ui';
 import { useState } from 'react';
-import { AddClassForm } from '@/classes/add-class/AddClassForm';
-import { ClassHotKeyScope } from '@/classes/types/ClassHotKeyScope';
+import { AddCourseCategoryForm } from '@/courses/add-category/AddCourseCategoryForm';
 
-export const ClassAddSheet = () => {
+export const CourseCategoryAddDialog = () => {
   const setHotkeyScope = useSetHotkeyScope();
   const [open, setOpen] = useState<boolean>(false);
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
   const onOpen = () => {
     setOpen(true);
-    setHotkeyScopeAndMemorizePreviousScope(ClassHotKeyScope.ClassAddSheet);
+    setHotkeyScopeAndMemorizePreviousScope('course-category-add-sheet');
   };
 
   const onClose = () => {
     setOpen(false);
-    setHotkeyScope('class-page');
+    setHotkeyScope('course-category-page');
   };
 
-  useScopedHotkeys(`c`, () => onOpen(), 'class-page');
-  useScopedHotkeys(`esc`, () => onClose(), ClassHotKeyScope.ClassAddSheet);
+  useScopedHotkeys(`c`, () => onOpen(), 'course-category-page');
+  useScopedHotkeys(`esc`, () => onClose(), 'course-category-add-sheet');
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button>
           <IconPlus />
-          Add class
+          Add category
           <Kbd>C</Kbd>
         </Button>
       </Dialog.Trigger>
       <Dialog.ContentCombined
-        title="Add class"
-        description="Add a new class"
+        title="Add course category"
+        description="Add a new course category"
         className="sm:max-w-2xl"
         onEscapeKeyDown={(e) => {
           e.preventDefault();
         }}
       >
-        <AddClassForm onOpenChange={setOpen} />
+        <AddCourseCategoryForm onOpenChange={setOpen} />
       </Dialog.ContentCombined>
     </Dialog>
   );
