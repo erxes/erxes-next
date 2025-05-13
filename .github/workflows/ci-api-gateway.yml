@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'backend/gateway/**'
+      - 'backend/erxes-api-shared/**'
+      - '.github/workflows/ci-api-gateway.yml'
+  pull_request:
+    paths:
+      - 'backend/gateway/**'
+      - 'backend/erxes-api-shared/**'
+      - '.github/workflows/ci-api-gateway.yml'
 
 jobs:
   build-and-test:
@@ -37,19 +46,28 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/dist
+            **/.nx/cache
+          key: ${{ runner.os }}-nx-build-${{ hashFiles('backend/gateway/**', 'backend/erxes-api-shared/**') }}
+          restore-keys: |
+            ${{ runner.os }}-nx-build-
+
       - name: Install dependencies
         run: pnpm install
 
       - name: Build gateway
         run: |
-          cd backend/gateway
           npx nx build gateway
           npx nx build:packageJson gateway
 
   build-and-push-docker:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout repository
@@ -64,14 +82,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: erxes/gateway
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix={{date 'YYYYMMDD'}}-
+            type=ref,event=branch
+            type=ref,event=tag
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./backend/gateway/Dockerfile
           push: true
-          tags: |
-            erxes/gateway:latest
-            erxes/gateway:${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
