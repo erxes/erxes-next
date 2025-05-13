@@ -2,17 +2,8 @@ name: CI Gateway
 
 on:
   push:
-    branches: [main, develop]
-    paths:
-      - 'backend/gateway/**'
-      - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-gateway.yml'
-  pull_request:
-    branches: [main, develop]
-    paths:
-      - 'backend/gateway/**'
-      - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-gateway.yml'
+    branches:
+      - main
 
 jobs:
   build-and-test:
