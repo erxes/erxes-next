@@ -3,8 +3,10 @@ import {
   IBrowserInfo,
   ICustomer,
   ICustomerDocument,
+  ICustomField,
+  IUserDocument,
 } from 'erxes-api-shared/core-types';
-import { validSearchText } from 'erxes-api-shared/utils';
+import { sendTRPCMessage, validSearchText } from 'erxes-api-shared/utils';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import {
@@ -27,7 +29,10 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
   ): Promise<ICustomerDocument[]>;
   calcPSS(doc: any): IPSS;
 
-  createCustomer(doc: ICustomer): Promise<ICustomerDocument>;
+  createCustomer(
+    doc: ICustomer,
+    uses?: IUserDocument,
+  ): Promise<ICustomerDocument>;
   updateCustomer(_id: string, doc: ICustomer): Promise<ICustomerDocument>;
   removeCustomers(customerIds: string[]): Promise<{ n: number; ok: number }>;
 
@@ -52,6 +57,18 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
     _id: string,
     browserInfo: IBrowserInfo,
   ): Promise<ICustomerDocument>;
+
+  changeState(_id: string, value: string): Promise<ICustomerDocument>;
+  mergeCustomers(
+    customerIds: string[],
+    customerFields: ICustomer,
+    user?: any,
+  ): Promise<ICustomerDocument>;
+  updateVerificationStatus(
+    customerIds: string[],
+    type: string,
+    status: string,
+  ): Promise<ICustomerDocument[]>;
 }
 
 export const loadCustomerClass = (models: IModels) => {
@@ -105,7 +122,18 @@ export const loadCustomerClass = (models: IModels) => {
      */
     public static async createCustomer(
       doc: ICustomer,
+      user?: IUserDocument,
     ): Promise<ICustomerDocument> {
+      try {
+        await this.checkDuplication(doc);
+      } catch (e) {
+        throw new Error(e.message);
+      }
+
+      if (!doc.ownerId && user) {
+        doc.ownerId = user._id;
+      }
+
       if (doc.primaryEmail && !doc.emails) {
         doc.emails = [doc.primaryEmail];
       }
@@ -114,7 +142,20 @@ export const loadCustomerClass = (models: IModels) => {
         doc.phones = [doc.primaryPhone];
       }
 
-      const customer = await models.Customers.create(doc);
+      doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+        doc.customFieldsData,
+      );
+
+      if (doc.integrationId) {
+        doc.relatedIntegrationIds = [doc.integrationId];
+      }
+
+      const pssDoc = models.Customers.calcPSS(doc);
+
+      const customer = await models.Customers.create({
+        ...doc,
+        ...pssDoc,
+      });
 
       return models.Customers.getCustomer(customer._id);
     }
@@ -123,9 +164,30 @@ export const loadCustomerClass = (models: IModels) => {
      * Update customer
      */
     public static async updateCustomer(_id: string, doc: ICustomer) {
+      try {
+        await this.checkDuplication(doc, _id);
+      } catch (e) {
+        throw new Error(e.message);
+      }
+
+      const oldCustomer = await models.Customers.getCustomer(_id);
+
+      if (doc.customFieldsData) {
+        // clean custom field values
+
+        doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+          doc.customFieldsData,
+        );
+      }
+
+      const pssDoc = models.Customers.calcPSS({
+        ...oldCustomer,
+        ...doc,
+      });
+
       return await models.Customers.findOneAndUpdate(
         { _id },
-        { $set: { ...doc, updatedAt: new Date() } },
+        { $set: { ...doc, ...pssDoc } },
         { new: true },
       );
     }
@@ -134,7 +196,127 @@ export const loadCustomerClass = (models: IModels) => {
      * Remove customers
      */
     public static async removeCustomers(customerIds: string[]) {
+      await sendTRPCMessage({
+        pluginName: 'frontline',
+        method: 'mutation',
+        module: 'inbox',
+        action: 'removeCustomersConversations',
+        input: {
+          customerIds,
+        },
+      });
+
       return models.Customers.deleteMany({ _id: { $in: customerIds } });
+    }
+
+    /**
+     * Merge customers
+     */
+    public static async mergeCustomers(
+      customerIds: string[],
+      customerFields: ICustomer,
+      // user?: IUserDocument
+      user?: any,
+    ) {
+      // Checking duplicated fields of customer
+      await this.checkDuplication(customerFields, customerIds);
+
+      let scopeBrandIds: string[] = [];
+      let tagIds: string[] = [];
+      let customFieldsData: ICustomField[] = [];
+      let state: any = '';
+
+      let emails: string[] = [];
+      let phones: string[] = [];
+
+      if (customerFields.primaryEmail) {
+        emails.push(customerFields.primaryEmail);
+      }
+
+      if (customerFields.primaryPhone) {
+        phones.push(customerFields.primaryPhone);
+      }
+
+      for (const customerId of customerIds) {
+        const customerObj = await models.Customers.findOne({ _id: customerId });
+
+        if (customerObj) {
+          // get last customer's integrationId
+          customerFields.integrationId = customerObj.integrationId;
+
+          // merge custom fields data
+          customFieldsData = [
+            ...customFieldsData,
+            ...(customerObj.customFieldsData || []),
+          ];
+
+          // Merging scopeBrandIds
+          scopeBrandIds = [
+            ...scopeBrandIds,
+            ...(customerObj.scopeBrandIds || []),
+          ];
+
+          const customerTags: string[] = customerObj.tagIds || [];
+
+          // Merging customer's tag and companies into 1 array
+          tagIds = tagIds.concat(customerTags);
+
+          // Merging emails, phones
+          emails = [...emails, ...(customerObj.emails || [])];
+          phones = [...phones, ...(customerObj.phones || [])];
+
+          // Merging customer`s state for new customer
+          state = customerObj.state;
+
+          await models.Customers.findByIdAndUpdate(customerId, {
+            $set: { status: 'deleted' },
+          });
+        }
+      }
+
+      // Removing Duplicates
+      scopeBrandIds = Array.from(new Set(scopeBrandIds));
+      tagIds = Array.from(new Set(tagIds));
+
+      // Removing Duplicated Emails from customer
+      emails = Array.from(new Set(emails));
+      phones = Array.from(new Set(phones));
+
+      // Creating customer with properties
+      const customer = await this.createCustomer(
+        {
+          ...customerFields,
+          scopeBrandIds,
+          customFieldsData,
+          tagIds,
+          mergedIds: customerIds,
+          emails,
+          phones,
+          state,
+        },
+        user,
+      );
+
+      // Updating every modules associated with customers
+
+      await models.Conformities.changeConformity({
+        type: 'customer',
+        newTypeId: customer._id,
+        oldTypeIds: customerIds,
+      });
+
+      await sendTRPCMessage({
+        pluginName: 'frontline',
+        method: 'mutation',
+        module: 'inbox',
+        action: 'changeCustomer',
+        input: {
+          customerId: customer._id,
+          customerIds,
+        },
+      });
+
+      return customer;
     }
 
     /**
@@ -238,7 +420,11 @@ export const loadCustomerClass = (models: IModels) => {
     }: ICreateMessengerCustomerParams) {
       this.fixListFields(doc, customData);
 
-      const { customFieldsData, trackedData } = customData || {};
+      const { customFieldsData, trackedData } =
+        await models.Fields.generateCustomFieldsData(
+          customData,
+          'core:customer',
+        );
 
       return this.createCustomer({
         ...doc,
@@ -262,7 +448,11 @@ export const loadCustomerClass = (models: IModels) => {
 
       this.fixListFields(doc, customData, customer);
 
-      const { customFieldsData, trackedData } = customData || {};
+      const { customFieldsData, trackedData } =
+        await models.Fields.generateCustomFieldsData(
+          customData,
+          'core:customer',
+        );
 
       const modifier: any = {
         ...doc,
@@ -405,6 +595,20 @@ export const loadCustomerClass = (models: IModels) => {
       await models.Customers.findByIdAndUpdate(_id, query);
 
       // updated customer
+      return models.Customers.findOne({ _id });
+    }
+
+    /*
+     * Change state
+     */
+    public static async changeState(_id: string, value: string) {
+      await models.Customers.findByIdAndUpdate(
+        { _id },
+        {
+          $set: { state: value },
+        },
+      );
+
       return models.Customers.findOne({ _id });
     }
 
@@ -556,6 +760,71 @@ export const loadCustomerClass = (models: IModels) => {
       }
 
       return { profileScore: score, searchText, state };
+    }
+
+    /**
+     * Checking if customer has duplicated unique properties
+     */
+    public static async checkDuplication(
+      customerFields: {
+        primaryEmail?: string;
+        primaryPhone?: string;
+        code?: string;
+      },
+      idsToExclude?: string[] | string,
+    ) {
+      const query: { [key: string]: any } = {
+        status: { $ne: 'deleted' },
+      };
+      let previousEntry;
+
+      // Adding exclude operator to the query
+      if (idsToExclude) {
+        query._id =
+          idsToExclude instanceof Array
+            ? { $nin: idsToExclude }
+            : { $ne: idsToExclude };
+      }
+
+      if (!customerFields) {
+        return;
+      }
+
+      if (customerFields.primaryEmail) {
+        // check duplication from primaryEmail
+        previousEntry = await models.Customers.find({
+          ...query,
+          primaryEmail: customerFields.primaryEmail,
+        });
+
+        if (previousEntry.length > 0) {
+          throw new Error('Duplicated email');
+        }
+      }
+
+      if (customerFields.primaryPhone) {
+        // check duplication from primaryPhone
+        previousEntry = await models.Customers.find({
+          ...query,
+          primaryPhone: customerFields.primaryPhone,
+        });
+
+        if (previousEntry.length > 0) {
+          throw new Error('Duplicated phone');
+        }
+      }
+
+      if (customerFields.code) {
+        // check duplication from code
+        previousEntry = await models.Customers.find({
+          ...query,
+          code: customerFields.code,
+        });
+
+        if (previousEntry.length > 0) {
+          throw new Error('Duplicated code');
+        }
+      }
     }
   }
 

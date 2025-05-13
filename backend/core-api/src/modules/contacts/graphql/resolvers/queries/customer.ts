@@ -39,4 +39,31 @@ export const customerQueries = {
   ) {
     return models.Customers.getCustomer(_id);
   },
+
+  async contactsLogs(_root, args, { models }: IContext) {
+    const { Companies, Customers } = models;
+    const { action, contentType, content } = args;
+    let result = {};
+
+    const type = contentType.split(':')[1];
+
+    if (action === 'merge') {
+      switch (type) {
+        case 'company':
+          result = await Companies.find({
+            _id: { $in: content },
+          }).lean();
+          break;
+        case 'customer':
+          result = await Customers.find({
+            _id: { $in: content },
+          }).lean();
+          break;
+      }
+
+      return result;
+    }
+
+    return result;
+  },
 };
