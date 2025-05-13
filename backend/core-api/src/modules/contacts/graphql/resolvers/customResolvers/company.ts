@@ -3,7 +3,7 @@ import { IContext } from '~/connectionResolvers';
 
 export default {
   __resolveReference: async ({ _id }, { models }: IContext) => {
-    return await models.Companies.findOne({ _id });
+    return await models.Companies.findOne({ _id }).lean();
   },
 
   owner: async (company: ICompanyDocument, _, { models }: IContext) => {
@@ -11,7 +11,7 @@ export default {
       return;
     }
 
-    return (await models.Users.findOne({ _id: company.ownerId })) || {};
+    return (await models.Users.findOne({ _id: company.ownerId }).lean()) || {};
   },
 
   parentCompany: async (
@@ -19,7 +19,7 @@ export default {
     _,
     { models }: IContext,
   ) => {
-    return await models.Companies.findOne({ _id: parentCompanyId });
+    return await models.Companies.findOne({ _id: parentCompanyId }).lean();
   },
 
   customers: async (
@@ -33,6 +33,6 @@ export default {
       relTypes: ['customer'],
     });
 
-    return models.Customers.find({ _id: { $in: customerIds || [] } });
+    return models.Customers.find({ _id: { $in: customerIds || [] } }).lean();
   },
 };

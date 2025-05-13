@@ -237,41 +237,37 @@ export const loadCustomerClass = (models: IModels) => {
         phones.push(customerFields.primaryPhone);
       }
 
-      for (const customerId of customerIds) {
-        const customerObj = await models.Customers.findOne({ _id: customerId });
+      const customers = await models.Customers.find({
+        _id: { $in: customerIds },
+      });
 
-        if (customerObj) {
-          // get last customer's integrationId
-          customerFields.integrationId = customerObj.integrationId;
+      for (const customer of customers) {
+        customerFields.integrationId = customer.integrationId;
 
-          // merge custom fields data
-          customFieldsData = [
-            ...customFieldsData,
-            ...(customerObj.customFieldsData || []),
-          ];
+        // merge custom fields data
+        customFieldsData = [
+          ...customFieldsData,
+          ...(customer.customFieldsData || []),
+        ];
 
-          // Merging scopeBrandIds
-          scopeBrandIds = [
-            ...scopeBrandIds,
-            ...(customerObj.scopeBrandIds || []),
-          ];
+        // Merging scopeBrandIds
+        scopeBrandIds = [...scopeBrandIds, ...(customer.scopeBrandIds || [])];
 
-          const customerTags: string[] = customerObj.tagIds || [];
+        const customerTags: string[] = customer.tagIds || [];
 
-          // Merging customer's tag and companies into 1 array
-          tagIds = tagIds.concat(customerTags);
+        // Merging customer's tag and companies into 1 array
+        tagIds = tagIds.concat(customerTags);
 
-          // Merging emails, phones
-          emails = [...emails, ...(customerObj.emails || [])];
-          phones = [...phones, ...(customerObj.phones || [])];
+        // Merging emails, phones
+        emails = [...emails, ...(customer.emails || [])];
+        phones = [...phones, ...(customer.phones || [])];
 
-          // Merging customer`s state for new customer
-          state = customerObj.state;
+        // Merging customer`s state for new customer
+        state = customer.state;
 
-          await models.Customers.findByIdAndUpdate(customerId, {
-            $set: { status: 'deleted' },
-          });
-        }
+        await models.Customers.findByIdAndUpdate(customer._id, {
+          $set: { status: 'deleted' },
+        });
       }
 
       // Removing Duplicates

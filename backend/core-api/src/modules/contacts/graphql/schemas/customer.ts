@@ -106,7 +106,7 @@ const queryParams = `
 export const queries = `
   customers(${queryParams}): CustomersListResponse
   customerDetail(_id: String!): Customer
-  contactsLogs(action: String, content:JSON, contentId: String, contentType: String): JSON
+  contactsLogs(action: String, content:JSON, contentType: String): JSON
 `;
 
 const fields = `

@@ -37,10 +37,9 @@ export default {
       relTypes: ['company'],
     });
 
-    const companies = await Companies.find({
+    return await Companies.find({
       _id: { $in: (companyIds || []).filter((id) => id) },
     }).limit(10);
-    return companies;
   },
 
   owner: async (

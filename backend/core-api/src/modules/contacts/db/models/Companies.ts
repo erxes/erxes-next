@@ -114,10 +114,6 @@ export const loadCompanyClass = (models: IModels) => {
         );
       }
 
-      doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
-        doc.customFieldsData,
-      );
-
       const searchText = this.fillSearchText(
         Object.assign({}, company, doc) as ICompany,
       );

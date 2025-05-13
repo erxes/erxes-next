@@ -99,7 +99,7 @@ export const customerMutations = {
    * Change state
    */
   async customersChangeState(
-    _root,
+    _parent: undefined,
     args: { _id: string; value: string },
     { models }: IContext,
   ) {
@@ -110,7 +110,7 @@ export const customerMutations = {
    * Merge customers
    */
   async customersMerge(
-    _root,
+    _parent: undefined,
     {
       customerIds,
       customerFields,
@@ -121,7 +121,7 @@ export const customerMutations = {
   },
 
   async customersVerify(
-    _root,
+    _parent: undefined,
     { verificationType }: { verificationType: string },
     { models, subdomain }: IContext,
   ) {
@@ -152,11 +152,15 @@ export const customerMutations = {
           ? { emails: filteredData, hostname: callback_url }
           : { phones: filteredData, hostname: callback_url };
 
-      await fetch(endpoint, {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      try {
+        await fetch(endpoint, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } catch (error) {
+        throw new Error(error);
+      }
     };
 
     const processBatch = async (customersCursor, type: 'email' | 'phone') => {
@@ -212,8 +216,8 @@ export const customerMutations = {
   },
 
   async customersChangeVerificationStatus(
-    _root,
-    args: { customerIds: [string]; type: string; status: string },
+    _parent: undefined,
+    args: { customerIds: string[]; type: string; status: string },
     { models }: IContext,
   ) {
     return models.Customers.updateVerificationStatus(
@@ -224,7 +228,7 @@ export const customerMutations = {
   },
 
   async customersChangeStateBulk(
-    _root,
+    _parent: undefined,
     {
       _ids,
       value,

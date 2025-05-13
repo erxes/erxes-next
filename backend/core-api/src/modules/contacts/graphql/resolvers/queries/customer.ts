@@ -40,7 +40,11 @@ export const customerQueries = {
     return models.Customers.getCustomer(_id);
   },
 
-  async contactsLogs(_root, args, { models }: IContext) {
+  async contactsLogs(
+    _parent: undefined,
+    args: { action: string; contentType: string; content: string[] },
+    { models }: IContext,
+  ) {
     const { Companies, Customers } = models;
     const { action, contentType, content } = args;
     let result = {};
