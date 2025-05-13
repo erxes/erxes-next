@@ -1,5 +1,5 @@
 import { ICustomer, ICustomerDocument } from 'erxes-api-shared/core-types';
-import { getEnv, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { getEnv, getPlugins, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { COC_LIFECYCLE_STATE_TYPES } from '~/modules/contacts/constants';
 
@@ -48,8 +48,7 @@ export const customerMutations = {
       input: { type: 'removeCustomers', customerIds },
     });
 
-    // const services = await getServices();
-    const services: string[] = [];
+    const services: string[] = await getPlugins();
     let relatedIntegrationIds: string[] = [];
     let mergedIds: string[] = [];
 
@@ -159,7 +158,10 @@ export const customerMutations = {
           headers: { 'Content-Type': 'application/json' },
         });
       } catch (error) {
-        console.error('Verification fetch failed:', error.message);
+        console.error(
+          'Verification fetch failed:',
+          error instanceof Error ? error.message : 'Unknown error',
+        );
         throw error;
       }
     };
