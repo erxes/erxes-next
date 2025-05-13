@@ -34,10 +34,10 @@ export const graphqlPdfAttachmentInput = `
 
 export const graphqlPaginationInfo = `
   type PageInfo {
-        hasNextPage: Boolean,
-        hasPreviousPage: Boolean,
-        startCursor: String,
-        endCursor: String,
+    hasNextPage: Boolean,
+    hasPreviousPage: Boolean,
+    startCursor: String,
+    endCursor: String,
   }
 `;
 
@@ -48,16 +48,16 @@ export const apolloCommonTypes = `
     forward,
     backward
   }
-    type Coordinate {
-        longitude: String
-        latitude: String
-    }
 
+  type Coordinate {
+    longitude: String
+    latitude: String
+  }
 
-    input CoordinateInput {
-        longitude: String
-        latitude: String
-    }
+  input CoordinateInput {
+    longitude: String
+    latitude: String
+  }
 
   ${graphqlAttachmentType}
   ${graphqlAttachmentInput}

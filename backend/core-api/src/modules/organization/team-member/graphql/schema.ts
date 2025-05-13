@@ -166,7 +166,7 @@ const commonSelector = `
 
 export const queries = `
   users(sortField: String, limit: Int, cursor: String, direction: CURSOR_DIRECTION, status: String, excludeIds: Boolean, ${commonSelector}): UsersListResponse
-  allUsers(isActive: Boolean,ids:[String],assignedToMe:String): [User]
+  allUsers(isActive: Boolean,ids:[String],assignedToMe:String,searchValue:String): [User]
   userDetail(_id: String): User
   usersTotalCount(${commonSelector}): Int
   userMovements(userId: String!,contentType: String):[UserMovement]

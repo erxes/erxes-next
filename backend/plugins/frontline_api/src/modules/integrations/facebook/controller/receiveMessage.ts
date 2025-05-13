@@ -1,101 +1,53 @@
 import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-import { Activity } from "botbuilder";
-import {IChannelData} from '@/integrations/facebook/@types/utils'
 import { INTEGRATION_KINDS } from '@/integrations/facebook/constants';
 import {getOrCreateCustomer} from '@/integrations/facebook/controller/store'
 import {receiveTrpcMessage} from '@/inbox/receiveMessage'
-// import {conversationClientMessageInserted} from '@/inbox/graphql/resolvers/mutations/widget'
+import { debugFacebook } from '@/integrations/facebook/debuggers';
+import {Activity} from '@/integrations/facebook/@types/utils'
+import {pConversationClientMessageInserted} from '@/inbox/graphql/resolvers/mutations/widget'
 
-// backend/plugins/frontline_api/src/modules/inbox/graphql/resolvers/mutations/widget.ts
 export const receiveMessage = async (
   models: IModels,
   subdomain: string,
   integration: IFacebookIntegrationDocument,
   activity: Activity
 ) => {
-  const {
-  recipient,
-  sender,
-  timestamp,
-  attachments = [],
-  message: originalMessage,
-  postback
-} = activity.channelData as IChannelData;
+ try {
+    debugFacebook(`Received message: ${activity.text} from ${activity.from.id}`);
+    const { recipient, from, timestamp, text, channelData } = activity;
+    const pageId = recipient.id, 
+    userId = from.id, 
+    kind = INTEGRATION_KINDS.MESSENGER, 
+    mid = channelData.message?.mid,
+    attachments= channelData.message?.attachments
 
-let adData;
-let message = originalMessage;
-let text = message?.text || "";
+    const customer = await getOrCreateCustomer(
+        models,
+        subdomain,
+        pageId,
+        userId,
+        kind
+      );
+      if(!customer){
+        throw new Error('Customer not found')
+      }
 
-if (!text && !message && !!postback) {
-  text = postback.title;
-
-  message = {
-    mid: postback.mid
-  };
-
-  if (postback.payload) {
-    message.payload = postback.payload;
-  }
-}
-
-if (message?.quick_reply) {
-  message.payload = message.quick_reply.payload;
-}
-
-  const userId = sender.id;
-  const pageId = recipient.id;
-  const kind = INTEGRATION_KINDS.MESSENGER;
-
-  // get or create customer
-  const customer = await getOrCreateCustomer(
-    models,
-    subdomain,
-    pageId,
-    userId,
-    kind
-  );
-
-  // get conversation
-  let conversation = await models.FacebookConversations.findOne({
-    senderId: userId,
-    recipientId: recipient.id
-  });
-
-//   const bot = await checkIsBot(models, message, recipient.id);
-//   const botId = bot?._id;
-
-//   if (message.referral && bot) {
-//     const referral = message.referral;
-//     adData = {
-//       type: "text",
-//       text: `<div class="ads"> 
-//               <img src="${referral.ads_context_data.photo_url}" alt="${referral.ads_context_data.ad_title}"/>
-//               <h5>${referral.ads_context_data.ad_title}</h5>
-//             </div>`,
-//       mid: message.mid,
-//       adId: referral.ad_id,
-//       postId: referral.ads_context_data.post_id,
-//       messageText: text,
-//       pageId: recipient.id
-//     };
-//   }
-
-  // <a href="${referral.ads_context_data.post_id}">See ads in facebook</a>
+    let conversation = await models.FacebookConversations.findOne({
+      senderId: userId,
+      recipientId: pageId
+    });
 
   // create conversation
   if (!conversation) {
     // save on integrations db
-
     try {
       conversation = await models.FacebookConversations.create({
         timestamp,
         senderId: userId,
-        recipientId: recipient.id,
+        recipientId: pageId,
         content: text,
         integrationId: integration._id,
-        // isBot: !!botId,
-        // botId
       });
     } catch (e) {
       throw new Error(
@@ -104,15 +56,7 @@ if (message?.quick_reply) {
           : e
       );
     }
-  } else {
-    // const bot = await models.Bots.findOne({ _id: botId });
-
-    // if (bot) {
-    //   conversation.botId = botId;
-    // }
-    // conversation.content = text || "";
   }
-
   const formattedAttachments = (attachments || [])
     .filter((att) => att.type !== "fallback")
     .map((att) => ({
@@ -121,94 +65,64 @@ if (message?.quick_reply) {
     }));
 
   // save on api
-    try {
-        const apiConversationResponse = await receiveTrpcMessage(subdomain, {
-          pluginName: 'inbox',
-          method: 'mutation',
-          module: 'integrations',
-          action: 'receive',
-          input: {
-            action: 'create-or-update-conversation',
-            payload: JSON.stringify({
-              customerId: customer.erxesApiId,
-              integrationId: integration.erxesApiId,
-              content: text || '',
-              attachments: formattedAttachments,
-              conversationId: conversation.erxesApiId,
-              updatedAt: timestamp,
-            }),
-          },
-        });
+  try {
+    const data = {
+      action: 'create-or-update-conversation',
+      payload: JSON.stringify({
+        customerId: customer.erxesApiId,
+        integrationId: integration.erxesApiId,
+        content: text || "",
+        attachments: formattedAttachments,
+        conversationId: conversation.erxesApiId,
+         updatedAt: timestamp
+      })
+    };
 
+    const apiConversationResponse = await receiveTrpcMessage(subdomain, data);
 
-
-    // conversation.erxesApiId = apiConversationResponse._id;
-
-    // await conversation.save();
+    if (apiConversationResponse.status === 'success') {
+      conversation.erxesApiId = apiConversationResponse.data._id;
+      await conversation.save();
+    } else {
+      throw new Error(`Customer creation failed: ${JSON.stringify(apiConversationResponse)}`);
+    }
   } catch (e) {
     await models.FacebookConversations.deleteOne({ _id: conversation._id });
     throw new Error(e);
   }
   // get conversation message
-  const conversationMessage = await models.FacebookConversationMessages.findOne({
-    mid: message.mid
-  });
-
-  if (!conversationMessage) {
+    let conversationMessage = await models.FacebookConversationMessages.findOne({
+      mid: mid,
+    });
+    if (!conversationMessage) {
     try {
-      // if (adData) {
-      //   const adsMessage = await models.FacebookConversationMessages.addMessage({
-      //     conversationId: conversation._id,
-      //     content: "<p>Conversation started from Facebook ads </p>",
-      //     botData: [adData],
-      //     fromBot: true,
-      //     mid: adData.mid,
-      //     createdAt: new Date(new Date(timestamp).getTime() - 500)
-      //   });
-      // await sendInboxMessage
-        // await sendInboxMessage({
-        //   subdomain,
-        //   action: "conversationClientMessageInserted",
-        //   data: {
-        //     ...adsMessage.toObject(),
-        //     conversationId: conversation.erxesApiId
-        //   }
-        // });
-      // }
       const created = await models.FacebookConversationMessages.create({
         conversationId: conversation._id,
-        mid: message.mid,
+        mid: mid,
         createdAt: timestamp,
         content: text,
         customerId: customer.erxesApiId,
         attachments: formattedAttachments,
       });
 
-    //   await sendInboxMessage({
-    //     subdomain,
-    //     action: "conversationClientMessageInserted",
-    //     data: {
-    //       ...created.toObject(),
-    //       conversationId: conversation.erxesApiId
-    //     }
-    //   });
+      const doc = {
+      ...created.toObject(),
+      conversationId: conversation.erxesApiId
+    };
 
-    //   graphqlPubsub.publish(
-    //     `conversationMessageInserted:${conversation.erxesApiId}`,
-    //     {
-    //       conversationMessageInserted: {
-    //         ...created.toObject(),
-    //         conversationId: conversation.erxesApiId
-    //       }
-    //     }
-    //   );
-    //   conversationMessage = created;
+     await pConversationClientMessageInserted(models,subdomain, doc);
+  
+      // graphqlPubsub.publish(
+      //   `conversationMessageInserted:${conversation.erxesApiId}`,
+      //   {
+      //     conversationMessageInserted: {
+      //       ...created.toObject(),
+      //       conversationId: conversation.erxesApiId
+      //     }
+      //   }
+      // );
+      conversationMessage = created;
 
-    //   await handleAutomation(subdomain, {
-    //     conversationMessage,
-    //     payload: message?.payload,
-    //     adData
-    //   });
     } catch (e) {
       throw new Error(
         e.message.includes("duplicate")
@@ -216,5 +130,8 @@ if (message?.quick_reply) {
           : e
       );
     }
+  }    
+  } catch (error) {
+   throw new Error(`Error processing Facebook message: ${error.message}.`);
   }
 };

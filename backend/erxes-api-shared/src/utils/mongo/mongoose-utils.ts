@@ -1,5 +1,11 @@
-import mongoose, { Document, Model, SortOrder } from 'mongoose';
+import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
+import { mongooseStringRandomId } from './mongoose-types';
+
+export interface IOrderInput {
+  _id: string;
+  order: number;
+}
 
 export const mongooseField = (options: any) => {
   const { pkey, type, optional } = options;
@@ -14,6 +20,40 @@ export const mongooseField = (options: any) => {
   }
 
   return options;
+};
+
+export const updateMongoDocumentOrder = async (
+  collection: any,
+  orders: IOrderInput[],
+) => {
+  if (orders.length === 0) {
+    return [];
+  }
+
+  const ids: string[] = [];
+  const bulkOps: Array<{
+    updateOne: {
+      filter: { _id: string };
+      update: { order: number };
+    };
+  }> = [];
+
+  for (const { _id, order } of orders) {
+    ids.push(_id);
+
+    const selector: { order: number } = { order };
+
+    bulkOps.push({
+      updateOne: {
+        filter: { _id },
+        update: selector,
+      },
+    });
+  }
+
+  await collection.bulkWrite(bulkOps);
+
+  return collection.find({ _id: { $in: ids } }).sort({ order: 1 });
 };
 
 export const defaultPaginate = (
@@ -225,4 +265,19 @@ export const cursorPaginate = async <T extends Document>({
       }`,
     );
   }
+};
+
+export const schemaWrapper = (
+  schema: Schema,
+  options?: { contentType?: string },
+) => {
+  schema.add({ _id: mongooseStringRandomId });
+  schema.add({ processId: { type: String, optional: true } });
+  // schema.add({ createdAt: { type: Date, default: new Date() } });
+
+  if (options?.contentType) {
+    (schema.statics as any)._contentType = options.contentType;
+  }
+
+  return schema;
 };

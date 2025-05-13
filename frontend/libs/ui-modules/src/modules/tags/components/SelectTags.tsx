@@ -212,6 +212,7 @@ export const TagList = ({
           renderAsPlainText={mode === 'single'}
           variant="secondary"
           onCompleted={(tag) => {
+            if (!tag) return;
             if (selectedTagIds.includes(tag._id)) {
               setSelectedTags([...selectedTags, tag]);
             }
@@ -249,4 +250,5 @@ export const SelectTags = Object.assign(SelectTagsProvider, {
   Command: SelectTagsCommand,
   Item: SelectTagsItem,
   Value: SelectTagsValue,
+  List: TagList,
 });

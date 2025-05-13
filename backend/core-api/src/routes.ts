@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { router as organizationRoutes } from './modules/organization/organization/routes';
+import { router as organizationRoutes } from '~/modules/organization/routes';
 
 const router: Router = Router();
 

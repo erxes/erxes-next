@@ -1,34 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
 import { Collapsible, Sidebar, IUIConfig, cn } from 'erxes-ui';
-import { CORE_MODULES } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState } from 'ui-modules';
-import { useAtom } from 'jotai';
-import { useMemo } from 'react';
+import { usePluginsModules } from '../hooks/usePLuginsModules';
 import { NavigationButton } from './NavigationButton';
 import { Icon } from '@tabler/icons-react';
 
 export function SidebarNavigation() {
-  const [pluginsMetaData] = useAtom(pluginsConfigState);
-
-  const modules = useMemo(() => {
-    const coreModules = [
-      ...CORE_MODULES.filter((module) => module.hasSettings),
-    ];
-
-    if (pluginsMetaData) {
-      const settingsModules = Object.values(pluginsMetaData || {}).flatMap(
-        (plugin) =>
-          plugin.modules.map((module) => ({
-            ...module,
-            pluginName: plugin.name,
-          })),
-      );
-
-      return [...coreModules, ...settingsModules] as IUIConfig['modules'];
-    }
-    return coreModules;
-  }, [pluginsMetaData]);
+  const modules = usePluginsModules();
 
   return (
     <Collapsible defaultOpen className="group/collapsible">

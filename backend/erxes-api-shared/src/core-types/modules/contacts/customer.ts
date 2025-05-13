@@ -58,4 +58,15 @@ export interface ICustomerQueryFilterParams
   extends ICursorPaginateParams,
     IListParams {
   createdAt?: Date;
+  type?: string;
+  dateFilters?: string;
+
+  tagIds?: string[];
+  excludeTagIds?: string[];
+  tagWithRelated?: boolean;
+
+  integrationIds?: string[];
+  integrationTypes?: string[];
+
+  brandIds?: string[];
 }

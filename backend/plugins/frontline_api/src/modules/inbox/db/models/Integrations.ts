@@ -1,4 +1,5 @@
-import * as momentTz from 'moment-timezone';
+import moment from 'moment-timezone';
+
 import { Model, Query } from 'mongoose';
 
 import { IModels } from '~/connectionResolvers';
@@ -59,21 +60,14 @@ export const isTimeInBetween = (
   startTime: string,
   closeTime: string,
 ): boolean => {
-  // date of given timezone
-  const tz = timezone || momentTz.tz.guess();
-  const now = momentTz(date).tz(tz) || momentTz(date);
+  const tz = timezone || moment.tz.guess();
+  const now = moment(date).tz(tz);
 
   const start = getHourAndMinute(startTime);
-  const startDate: any = momentTz(now);
-
-  startDate.hours(start.hour);
-  startDate.minutes(start.minute);
+  const startDate = moment(now).hours(start.hour).minutes(start.minute);
 
   const end = getHourAndMinute(closeTime);
-  const closeDate: any = momentTz(now);
-
-  closeDate.hours(end.hour);
-  closeDate.minutes(end.minute);
+  const closeDate = moment(now).hours(end.hour).minutes(end.minute);
 
   return now.isBetween(startDate, closeDate);
 };
@@ -487,8 +481,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
         onlineHours = [],
         timezone = '',
       } = messengerData;
-      const timezoneString = userTimezone || timezone || momentTz.tz.guess();
-
+       const timezoneString = userTimezone || timezone || moment.tz.guess();
       /*
        * Manual: We can determine state from isOnline field value when method is manual
        */
