@@ -11,7 +11,7 @@ export interface IProductParams extends IListParams, ICursorPaginateParams {
   categoryIds?: string[];
   vendorId?: string;
   brandIds?: string[];
-  tagIds: string[];
+  tagIds?: string[];
   excludeTagIds?: string[];
   tagWithRelated?: boolean;
   sortField?: string;

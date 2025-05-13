@@ -65,30 +65,31 @@ const generateFilter = async (
   }
 
   if (tagIds) {
-    let baseTagIds: string[] = tagIds;
+    const baseTagIds: Set<string> = new Set(tagIds);
 
     if (tagWithRelated) {
       const tagObjs = await models.Tags.find({ _id: { $in: tagIds } }).lean();
 
-      tagObjs.forEach((tag) => {
-        baseTagIds = tagIds.concat(tag.relatedIds || []);
-      });
+      for (const tag of tagObjs) {
+        (tag.relatedIds || []).forEach((id) => baseTagIds.add(id));
+      }
     }
 
-    andFilters.push({ tagIds: { $in: baseTagIds } });
+    andFilters.push({ tagIds: { $in: Array.from(baseTagIds) } });
   }
 
   if (excludeTagIds?.length) {
-    let tagIds: string[] = excludeTagIds;
+    const baseTagIds: Set<string> = new Set(excludeTagIds);
 
     if (tagWithRelated) {
       const tagObjs = await models.Tags.find({ _id: { $in: tagIds } }).lean();
-      tagObjs.forEach((tag) => {
-        tagIds = tagIds.concat(tag.relatedIds || []);
-      });
+
+      for (const tag of tagObjs) {
+        (tag.relatedIds || []).forEach((id) => baseTagIds.add(id));
+      }
     }
 
-    andFilters.push({ tagIds: { $nin: tagIds } });
+    andFilters.push({ tagIds: { $nin: Array.from(baseTagIds) } });
   }
 
   // search =========
