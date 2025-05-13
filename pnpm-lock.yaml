@@ -224,6 +224,9 @@ importers:
       graphql-redis-subscriptions:
         specifier: ^2.7.0
         version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
+      graphql-subscriptions:
+        specifier: ^3.0.0
+        version: 3.0.0(graphql@16.10.0)
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.10.0)
@@ -618,6 +621,9 @@ importers:
 
   backend/erxes-api-shared:
     dependencies:
+      '@elastic/elasticsearch':
+        specifier: '7'
+        version: 7.17.14
       '@sniptt/guards':
         specifier: ^0.2.0
         version: 0.2.0
