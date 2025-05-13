@@ -8,7 +8,7 @@ import { queries as formQueries } from '@/forms/graphql/resolvers';
 import { segmentQueries } from '@/segments/graphql/resolvers';
 import { relationsQueries } from '@/relations/graphql/queries';
 import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
-
+import { structureQueries } from '@/organization/structure/graphql/resolvers/queries'
 export const queries = {
   ...contactQueries,
   ...authQueries,
@@ -20,4 +20,5 @@ export const queries = {
   ...segmentQueries,
   ...relationsQueries,
   ...favoriteQueries,
+  ...structureQueries
 };
