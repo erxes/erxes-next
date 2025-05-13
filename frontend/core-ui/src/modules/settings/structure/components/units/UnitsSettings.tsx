@@ -1,14 +1,12 @@
-import React from 'react';
-import { useBranchesList } from '../../hooks/useBranchesList';
 import { RecordTable } from 'erxes-ui';
-import { BranchColumns } from './BranchColumns';
+import { useUnitsList } from '../../hooks/useUnitsList';
+import { UnitsColumns } from './UnitsColumns';
 
-export default function BranchesSettings() {
-  const { branches } = useBranchesList();
-  console.log('branches', branches);
+export default function UnitsSettings() {
+  const { units, error, loading } = useUnitsList();
   return (
     <section className="flex flex-col h-full w-full p-5">
-      <RecordTable.Provider data={branches || []} columns={BranchColumns}>
+      <RecordTable.Provider data={units || []} columns={UnitsColumns}>
         <RecordTable.Scroll>
           <RecordTable>
             <RecordTable.Header />

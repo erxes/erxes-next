@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-const GET_BRANCHES_LIST = gql`
-  query Branches(
+const GET_POSITIONS_LIST = gql`
+  query Positions(
     $ids: [String]
     $excludeIds: Boolean
     $searchValue: String
@@ -14,7 +14,7 @@ const GET_BRANCHES_LIST = gql`
     $direction: CURSOR_DIRECTION
     $withoutUserFilter: Boolean
   ) {
-    branches(
+    positions(
       ids: $ids
       excludeIds: $excludeIds
       searchValue: $searchValue
@@ -28,13 +28,14 @@ const GET_BRANCHES_LIST = gql`
       withoutUserFilter: $withoutUserFilter
     ) {
       _id
-      address
       code
+      title
       parentId
       userCount
-      title
+      order
+      status
     }
   }
 `;
 
-export { GET_BRANCHES_LIST };
+export { GET_POSITIONS_LIST };

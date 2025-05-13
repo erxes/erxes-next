@@ -1,5 +1,9 @@
-import { Form, Input, ScrollArea, Textarea } from 'erxes-ui';
-import { useStructureDetails } from '../hooks/useStructureDetails';
+import { Button, Form, Input, ScrollArea, Textarea } from 'erxes-ui';
+import {
+  useAddStructureDetail,
+  useEditStructureDetail,
+  useStructureDetails,
+} from '../hooks/useStructureDetails';
 import { useStructureDetailsForm } from '../hooks/useStructureDetailsForm';
 import { useEffect } from 'react';
 import { AssignMember } from 'ui-modules';
@@ -8,20 +12,49 @@ export const Structure = () => {
   const { structureDetail } = useStructureDetails();
   const {
     methods,
-    methods: { control },
+    methods: { control, handleSubmit },
   } = useStructureDetailsForm();
-  console.log('structureDetail', structureDetail);
+  const { handleEdit, loading } = useEditStructureDetail();
+  const { handleAdd, loading: isLoading } = useAddStructureDetail();
 
   useEffect(() => {
-    const currentValues = methods.getValues();
+    if (!structureDetail?._id) return;
 
-    if (
-      structureDetail &&
-      JSON.stringify(currentValues) !== JSON.stringify(structureDetail)
-    ) {
+    const isEmpty = Object.keys(structureDetail).length === 0;
+
+    if (isEmpty) {
+      methods.reset();
+    } else {
       methods.reset(structureDetail);
     }
-  }, [structureDetail]);
+  }, [structureDetail?._id]);
+
+  const onSubmit = (data: any) => {
+    const variables = {
+      title: data.title,
+      description: data.description,
+      supervisorId: data.supervisorId,
+      code: data.code,
+      phoneNumber: data?.phoneNumber || '',
+      email: data?.email || '',
+    };
+
+    if (!structureDetail?._id) {
+      handleAdd({ variables });
+      return;
+    }
+
+    handleEdit({ variables: { ...variables, _id: structureDetail._id } }, [
+      'title',
+      'description',
+      'supervisorId',
+      'code',
+      'phoneNumber',
+      'email',
+    ]);
+  };
+
+  console.log('methods.watch()', methods.watch());
 
   return (
     <ScrollArea className="w-full min-h-svh">
@@ -29,7 +62,10 @@ export const Structure = () => {
         <div className="mx-auto max-w-2xl w-full relative">
           <h2 className="font-semibold text-lg mt-4 mb-12 px-4">Structure</h2>
           <Form {...methods}>
-            <form className="grid grid-cols-2 gap-3">
+            <form
+              className="grid grid-cols-2 gap-3"
+              onSubmit={handleSubmit(onSubmit)}
+            >
               <Form.Field
                 control={control}
                 name={'title'}
@@ -84,7 +120,7 @@ export const Structure = () => {
               />
               <Form.Field
                 control={control}
-                name={'supervisor.details.operatorPhone'}
+                name={'phoneNumber'}
                 render={({ field }) => (
                   <Form.Item>
                     <Form.Label>{'Phone number'}</Form.Label>
@@ -97,7 +133,7 @@ export const Structure = () => {
               />
               <Form.Field
                 control={control}
-                name={'supervisor.email'}
+                name={'email'}
                 render={({ field }) => (
                   <Form.Item>
                     <Form.Label>{'Email'}</Form.Label>
@@ -108,7 +144,7 @@ export const Structure = () => {
                   </Form.Item>
                 )}
               />
-              <Form.Field
+              {/* <Form.Field
                 control={control}
                 name={'coordinate.longitude'}
                 render={({ field }) => (
@@ -133,7 +169,14 @@ export const Structure = () => {
                     <Form.Message />
                   </Form.Item>
                 )}
-              />
+              /> */}
+              <Button
+                disabled={loading || isLoading}
+                className="w-1/2 ml-auto col-start-2"
+                type="submit"
+              >
+                Update
+              </Button>
             </form>
           </Form>
         </div>
