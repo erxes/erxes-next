@@ -100,8 +100,7 @@
       "remote": {
         "style": "tailwind",
         "linter": "eslint",
-        "bundler": "rspack",
-        "e2eTestRunner": "cypress"
+        "bundler": "rspack"
       },
       "component": {
         "style": "tailwind"

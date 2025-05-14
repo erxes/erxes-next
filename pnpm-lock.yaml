@@ -366,9 +366,6 @@ importers:
       '@module-federation/enhanced':
         specifier: 0.6.6
         version: 0.6.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)(webpack@5.99.6)
-      '@nx/cypress':
-        specifier: 20.0.8
-        version: 20.0.8(@babel/traverse@7.27.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.21)(typescript@5.7.3))(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@18.16.9)(@zkochan/js-yaml@0.0.7)(cypress@13.17.0)(eslint@9.25.0(jiti@1.21.7))(nx@20.0.8(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.21)(typescript@5.7.3))(@swc/core@1.5.29(@swc/helpers@0.5.17)))(typescript@5.7.3)
       '@nx/esbuild':
         specifier: 20.4.0
         version: 20.4.0(@babel/traverse@7.27.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.21)(typescript@5.7.3))(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@18.16.9)(esbuild@0.19.12)(nx@20.0.8(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.21)(typescript@5.7.3))(@swc/core@1.5.29(@swc/helpers@0.5.17)))(typescript@5.7.3)
@@ -513,9 +510,6 @@ importers:
       core-js:
         specifier: ^3.36.1
         version: 3.41.0
-      cypress:
-        specifier: ^13.13.0
-        version: 13.17.0
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
@@ -528,9 +522,6 @@ importers:
       eslint-config-prettier:
         specifier: ^9.0.0
         version: 9.1.0(eslint@9.25.0(jiti@1.21.7))
-      eslint-plugin-cypress:
-        specifier: ^3.5.0
-        version: 3.6.0(eslint@9.25.0(jiti@1.21.7))
       eslint-plugin-import:
         specifier: 2.31.0
         version: 2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.25.0(jiti@1.21.7))(typescript@5.7.3))(eslint@9.25.0(jiti@1.21.7))
@@ -926,24 +917,24 @@ packages:
     resolution: {integrity: sha512-0hKEzLhpw+ZTAfNJyRrn6s+V0nDWzXk9OjBr2TiGIu0OfMr5s2V4FpKLTAK3Ca5r5OKLbf4hkOGDPyiRjie/jA==}
     engines: {node: '>=18.0.0'}
 
-  '@azure/msal-browser@4.12.0':
-    resolution: {integrity: sha512-WD1lmVWchg7wn1mI7Tr4v7QPyTwK+8Nuyje3jRpOFENLRLEBsdK8VVdTw3C+TypZmYn4cOAdj3zREnuFXgvfIA==}
+  '@azure/msal-browser@4.11.1':
+    resolution: {integrity: sha512-jPxASelqmP/0R1jZuYW8cboba95M9jpUi2ZqzgftddlAIRZA9KL/YaESuT55zu9+BIPS5Eo2kuhy3q2jjU3whg==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-common@14.16.0':
     resolution: {integrity: sha512-1KOZj9IpcDSwpNiQNjt0jDYZpQvNZay7QAEi/5DLubay40iGYtLzya/jbjRPLyOTZhEKyL1MzPuw2HqBCjceYA==}
     engines: {node: '>=0.8.0'}
 
-  '@azure/msal-common@15.6.0':
-    resolution: {integrity: sha512-EotmBz42apYGjqiIV9rDUdptaMptpTn4TdGf3JfjLvFvinSe9BJ6ywU92K9ky+t/b0ghbeTSe9RfqlgLh8f2jA==}
+  '@azure/msal-common@15.5.2':
+    resolution: {integrity: sha512-+G85T6oA6i4ubzjOw4BpWd8QCG2FunYN4jaz96gw3SUd8+89vwuiqLg6mtnm/lkPC95bayD+CwuwFn9wvhQGow==}
     engines: {node: '>=0.8.0'}
 
   '@azure/msal-node@2.16.2':
     resolution: {integrity: sha512-An7l1hEr0w1HMMh1LU+rtDtqL7/jw74ORlc9Wnh06v7TU/xpG39/Zdr1ZJu3QpjUfKJ+E0/OXMW8DRSWTlh7qQ==}
     engines: {node: '>=16'}
 
-  '@azure/msal-node@3.5.3':
-    resolution: {integrity: sha512-c5mifzHX5mwm5JqMIlURUyp6LEEdKF1a8lmcNRLBo0lD7zpSYPHupa4jHyhJyg9ccLwszLguZJdk2h3ngnXwNw==}
+  '@azure/msal-node@3.5.2':
+    resolution: {integrity: sha512-mt97ieL+IpD/7Hj7Q6pGTPk3dBgvhkOV1HYyH+PkOakhbOOCEb9flAteDgBfADRXBsYJZT+ZlEbPJa4IDn9HZw==}
     engines: {node: '>=16'}
 
   '@babel/code-frame@7.26.2':
@@ -6988,11 +6979,6 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
 
-  eslint-plugin-cypress@3.6.0:
-    resolution: {integrity: sha512-7IAMcBbTVu5LpWeZRn5a9mQ30y4hKp3AfTz+6nSD/x/7YyLMoBI6X7XjDLYI6zFvuy4Q4QVGl563AGEXGW/aSA==}
-    peerDependencies:
-      eslint: '>=7'
-
   eslint-plugin-import@2.31.0:
     resolution: {integrity: sha512-ixmkI62Rbc2/w8Vfxyh1jQRTdRTF52VxwRVHl/ykPAmqG+Nb7/kNn+byLP0LxPgI7zWA16Jt82SybJInmMia3A==}
     engines: {node: '>=4'}
@@ -7611,10 +7597,6 @@ packages:
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
     engines: {node: '>=4'}
-
-  globals@13.24.0:
-    resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
-    engines: {node: '>=8'}
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
@@ -11881,10 +11863,6 @@ packages:
     resolution: {integrity: sha512-eaBzG6MxNzEn9kiwvtre90cXaNLkmadMWa1zQMs3XORCXNbsH/OewwbxC5ia9dCxIxnTAsSxXJaa/p5y8DlvJg==}
     engines: {node: '>=10'}
 
-  type-fest@0.20.2:
-    resolution: {integrity: sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==}
-    engines: {node: '>=10'}
-
   type-fest@0.21.3:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
@@ -12883,8 +12861,8 @@ snapshots:
       '@azure/core-tracing': 1.2.0
       '@azure/core-util': 1.12.0
       '@azure/logger': 1.2.0
-      '@azure/msal-browser': 4.12.0
-      '@azure/msal-node': 3.5.3
+      '@azure/msal-browser': 4.11.1
+      '@azure/msal-node': 3.5.2
       open: 10.1.1
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -12897,13 +12875,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/msal-browser@4.12.0':
+  '@azure/msal-browser@4.11.1':
     dependencies:
-      '@azure/msal-common': 15.6.0
+      '@azure/msal-common': 15.5.2
 
   '@azure/msal-common@14.16.0': {}
 
-  '@azure/msal-common@15.6.0': {}
+  '@azure/msal-common@15.5.2': {}
 
   '@azure/msal-node@2.16.2':
     dependencies:
@@ -12911,9 +12889,9 @@ snapshots:
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
-  '@azure/msal-node@3.5.3':
+  '@azure/msal-node@3.5.2':
     dependencies:
-      '@azure/msal-common': 15.6.0
+      '@azure/msal-common': 15.5.2
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
 
@@ -13891,6 +13869,7 @@ snapshots:
       tough-cookie: 5.1.2
       tunnel-agent: 0.6.0
       uuid: 8.3.2
+    optional: true
 
   '@cypress/xvfb@1.2.4(supports-color@8.1.1)':
     dependencies:
@@ -13898,6 +13877,7 @@ snapshots:
       lodash.once: 4.1.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@date-fns/tz@1.2.0': {}
 
@@ -18108,9 +18088,11 @@ snapshots:
     dependencies:
       '@types/node': 18.16.9
 
-  '@types/sinonjs__fake-timers@8.1.1': {}
+  '@types/sinonjs__fake-timers@8.1.1':
+    optional: true
 
-  '@types/sizzle@2.3.9': {}
+  '@types/sizzle@2.3.9':
+    optional: true
 
   '@types/sockjs@0.3.36':
     dependencies:
@@ -18601,7 +18583,8 @@ snapshots:
     dependencies:
       default-require-extensions: 3.0.1
 
-  arch@2.2.0: {}
+  arch@2.2.0:
+    optional: true
 
   arch@3.0.0: {}
 
@@ -18716,7 +18699,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  astral-regex@2.0.0: {}
+  astral-regex@2.0.0:
+    optional: true
 
   async-function@1.0.0: {}
 
@@ -18991,9 +18975,11 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
 
-  blob-util@2.0.2: {}
+  blob-util@2.0.2:
+    optional: true
 
-  bluebird@3.7.2: {}
+  bluebird@3.7.2:
+    optional: true
 
   body-parser@1.20.3:
     dependencies:
@@ -19214,7 +19200,8 @@ snapshots:
       normalize-url: 2.0.1
       responselike: 1.0.2
 
-  cachedir@2.4.0: {}
+  cachedir@2.4.0:
+    optional: true
 
   caching-transform@4.0.0:
     dependencies:
@@ -19308,7 +19295,8 @@ snapshots:
 
   check-error@2.1.1: {}
 
-  check-more-types@2.24.0: {}
+  check-more-types@2.24.0:
+    optional: true
 
   chokidar@3.6.0:
     dependencies:
@@ -19334,7 +19322,8 @@ snapshots:
 
   ci-info@3.9.0: {}
 
-  ci-info@4.2.0: {}
+  ci-info@4.2.0:
+    optional: true
 
   cjs-module-lexer@1.4.3: {}
 
@@ -19363,11 +19352,13 @@ snapshots:
       string-width: 4.2.3
     optionalDependencies:
       '@colors/colors': 1.5.0
+    optional: true
 
   cli-truncate@2.1.0:
     dependencies:
       slice-ansi: 3.0.0
       string-width: 4.2.3
+    optional: true
 
   cliui@6.0.0:
     dependencies:
@@ -19462,7 +19453,8 @@ snapshots:
 
   common-path-prefix@3.0.0: {}
 
-  common-tags@1.8.2: {}
+  common-tags@1.8.2:
+    optional: true
 
   commondir@1.0.1: {}
 
@@ -19813,6 +19805,7 @@ snapshots:
       tree-kill: 1.2.2
       untildify: 4.0.0
       yauzl: 2.10.0
+    optional: true
 
   damerau-levenshtein@1.0.8: {}
 
@@ -20135,7 +20128,7 @@ snapshots:
 
   dotenv-expand@11.0.7:
     dependencies:
-      dotenv: 16.5.0
+      dotenv: 16.4.7
 
   dotenv@16.4.7: {}
 
@@ -20534,11 +20527,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-cypress@3.6.0(eslint@9.25.0(jiti@1.21.7)):
-    dependencies:
-      eslint: 9.25.0(jiti@1.21.7)
-      globals: 13.24.0
-
   eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.30.1(eslint@9.25.0(jiti@1.21.7))(typescript@5.7.3))(eslint@9.25.0(jiti@1.21.7)):
     dependencies:
       '@rtsao/scc': 1.1.0
@@ -20708,7 +20696,8 @@ snapshots:
 
   etag@1.8.1: {}
 
-  eventemitter2@6.4.7: {}
+  eventemitter2@6.4.7:
+    optional: true
 
   eventemitter3@4.0.7: {}
 
@@ -20727,6 +20716,7 @@ snapshots:
       onetime: 5.1.2
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
+    optional: true
 
   execa@5.1.1:
     dependencies:
@@ -20743,6 +20733,7 @@ snapshots:
   executable@4.1.1:
     dependencies:
       pify: 2.3.0
+    optional: true
 
   exit-hook@3.2.0: {}
 
@@ -20830,6 +20821,7 @@ snapshots:
       '@types/yauzl': 2.10.3
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   extsprintf@1.3.0: {}
 
@@ -20885,6 +20877,7 @@ snapshots:
   fd-slicer@1.1.0:
     dependencies:
       pend: 1.2.0
+    optional: true
 
   fdir@6.4.4(picomatch@4.0.2):
     optionalDependencies:
@@ -21224,6 +21217,7 @@ snapshots:
   get-stream@5.2.0:
     dependencies:
       pump: 3.0.2
+    optional: true
 
   get-stream@6.0.1: {}
 
@@ -21245,6 +21239,7 @@ snapshots:
   getos@3.2.1:
     dependencies:
       async: 3.2.6
+    optional: true
 
   getpass@0.1.7:
     dependencies:
@@ -21311,6 +21306,7 @@ snapshots:
   global-dirs@3.0.1:
     dependencies:
       ini: 2.0.0
+    optional: true
 
   global-modules@0.2.3:
     dependencies:
@@ -21339,10 +21335,6 @@ snapshots:
       which: 1.3.1
 
   globals@11.12.0: {}
-
-  globals@13.24.0:
-    dependencies:
-      type-fest: 0.20.2
 
   globals@14.0.0: {}
 
@@ -21879,6 +21871,7 @@ snapshots:
       assert-plus: 1.0.0
       jsprim: 2.0.2
       sshpk: 1.18.0
+    optional: true
 
   http2-wrapper@2.2.1:
     dependencies:
@@ -21899,7 +21892,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  human-signals@1.1.1: {}
+  human-signals@1.1.1:
+    optional: true
 
   human-signals@2.1.0: {}
 
@@ -21973,7 +21967,8 @@ snapshots:
 
   ini@1.3.8: {}
 
-  ini@2.0.0: {}
+  ini@2.0.0:
+    optional: true
 
   inspect-with-kind@1.0.5:
     dependencies:
@@ -22106,6 +22101,7 @@ snapshots:
     dependencies:
       global-dirs: 3.0.1
       is-path-inside: 3.0.3
+    optional: true
 
   is-interactive@1.0.0: {}
 
@@ -23179,6 +23175,7 @@ snapshots:
       extsprintf: 1.3.0
       json-schema: 0.4.0
       verror: 1.10.0
+    optional: true
 
   jsx-ast-utils@3.3.5:
     dependencies:
@@ -23266,12 +23263,13 @@ snapshots:
       picocolors: 1.1.1
       shell-quote: 1.8.2
 
-  lazy-ass@1.6.0: {}
+  lazy-ass@1.6.0:
+    optional: true
 
   lazy-universal-dotenv@4.0.0:
     dependencies:
       app-root-dir: 1.0.2
-      dotenv: 16.5.0
+      dotenv: 16.4.7
       dotenv-expand: 10.0.0
 
   less-loader@11.1.0(less@4.1.3)(webpack@5.99.6):
@@ -23337,6 +23335,7 @@ snapshots:
       wrap-ansi: 7.0.0
     optionalDependencies:
       enquirer: 2.4.1
+    optional: true
 
   loader-runner@4.3.0: {}
 
@@ -23408,6 +23407,7 @@ snapshots:
       cli-cursor: 3.1.0
       slice-ansi: 4.0.0
       wrap-ansi: 6.2.0
+    optional: true
 
   log4js@6.9.1:
     dependencies:
@@ -24406,7 +24406,8 @@ snapshots:
 
   os-homedir@1.0.2: {}
 
-  ospath@1.2.2: {}
+  ospath@1.2.2:
+    optional: true
 
   own-keys@1.0.1:
     dependencies:
@@ -24876,7 +24877,7 @@ snapshots:
 
   postcss@8.5.3:
     dependencies:
-      nanoid: 3.3.11
+      nanoid: 3.3.8
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -24886,7 +24887,8 @@ snapshots:
 
   prettier@2.8.8: {}
 
-  pretty-bytes@5.6.0: {}
+  pretty-bytes@5.6.0:
+    optional: true
 
   pretty-error@4.0.0:
     dependencies:
@@ -25066,7 +25068,8 @@ snapshots:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
 
-  proxy-from-env@1.0.0: {}
+  proxy-from-env@1.0.0:
+    optional: true
 
   proxy-from-env@1.1.0: {}
 
@@ -25081,6 +25084,7 @@ snapshots:
     dependencies:
       end-of-stream: 1.4.4
       once: 1.4.0
+    optional: true
 
   punycode.js@2.3.1: {}
 
@@ -25489,6 +25493,7 @@ snapshots:
   request-progress@3.0.0:
     dependencies:
       throttleit: 1.0.1
+    optional: true
 
   request@2.88.2:
     dependencies:
@@ -25883,12 +25888,14 @@ snapshots:
       ansi-styles: 4.3.0
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
+    optional: true
 
   slice-ansi@4.0.0:
     dependencies:
       ansi-styles: 4.3.0
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
+    optional: true
 
   snake-case@3.0.4:
     dependencies:
@@ -26389,7 +26396,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  throttleit@1.0.1: {}
+  throttleit@1.0.1:
+    optional: true
 
   through@2.3.8: {}
 
@@ -26412,11 +26420,13 @@ snapshots:
     dependencies:
       '@popperjs/core': 2.11.8
 
-  tldts-core@6.1.86: {}
+  tldts-core@6.1.86:
+    optional: true
 
   tldts@6.1.86:
     dependencies:
       tldts-core: 6.1.86
+    optional: true
 
   tmp@0.2.3: {}
 
@@ -26450,6 +26460,7 @@ snapshots:
   tough-cookie@5.1.2:
     dependencies:
       tldts: 6.1.86
+    optional: true
 
   tr46@0.0.3: {}
 
@@ -26624,8 +26635,6 @@ snapshots:
   type-detect@4.0.8: {}
 
   type-fest@0.16.0: {}
-
-  type-fest@0.20.2: {}
 
   type-fest@0.21.3: {}
 
@@ -26813,7 +26822,8 @@ snapshots:
       acorn: 8.14.1
       webpack-virtual-modules: 0.6.2
 
-  untildify@4.0.0: {}
+  untildify@4.0.0:
+    optional: true
 
   upath@2.0.1: {}
 
@@ -27422,6 +27432,7 @@ snapshots:
     dependencies:
       buffer-crc32: 0.2.13
       fd-slicer: 1.1.0
+    optional: true
 
   yauzl@3.2.0:
     dependencies:
