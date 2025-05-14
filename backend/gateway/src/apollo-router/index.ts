@@ -35,10 +35,10 @@ export const stopRouter = (signal: NodeJS.Signals) => {
 export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 1024;
 
 const downloadRouter = async () => {
-  if (NODE_ENV === 'production') {
-    // router must be already inside the image
-    return;
-  }
+  // if (NODE_ENV === 'production') {
+  //   // router must be already inside the image
+  //   return;
+  // }
   if (fs.existsSync(routerPath)) {
     return routerPath;
   }
@@ -56,7 +56,7 @@ const downloadRouter = async () => {
 };
 
 const createRouterConfig = async () => {
-  if (NODE_ENV === 'production' && fs.existsSync(routerConfigPath)) {
+  if (fs.existsSync(routerConfigPath)) {
     // Don't rewrite in production if it exists. Delete and restart to update the config
     return;
   }
