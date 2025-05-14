@@ -46,23 +46,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Cache build artifacts
-        uses: actions/cache@v3
-        with:
-          path: |
-            **/dist
-            **/.nx/cache
-          key: ${{ runner.os }}-nx-build-${{ hashFiles('backend/gateway/**', 'backend/erxes-api-shared/**') }}
-          restore-keys: |
-            ${{ runner.os }}-nx-build-
+      # - name: Cache build artifacts
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       **/dist
+      #       **/.nx/cache
+      #     key: ${{ runner.os }}-nx-build-${{ hashFiles('backend/gateway/**', 'backend/erxes-api-shared/**') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-nx-build-
 
-      - name: Install dependencies
-        run: pnpm install
+      # - name: Install dependencies
+      #   run: pnpm install
 
-      - name: Build gateway
-        run: |
-          npx nx build gateway
-          npx nx build:packageJson gateway
+      # - name: Build gateway
+      #   run: |
+      #     npx nx build gateway
+      #     npx nx build:packageJson gateway
 
   build-and-push-docker:
     needs: build-and-test
@@ -86,7 +86,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: erxes/gateway
+          images: erxes/erxes-next-gateway
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix={{date 'YYYYMMDD'}}-
