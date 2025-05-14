@@ -22,10 +22,8 @@ COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
 WORKDIR /app/backend/gateway
-
-RUN npx nx build gateway
 RUN npx nx build:packageJson gateway
-
+RUN npx nx build gateway
 
 # Final stage: Run the application
 FROM node:22-alpine as gateway
@@ -50,5 +48,4 @@ USER 1000
 
 # Start the application
 CMD ["node", "src/main.js"]
-
 
