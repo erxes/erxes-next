@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
 const App = () => {
-  return <div>App</div>;
+  return <div>hello</div>;
 };
 
 const root = ReactDOM.createRoot(

@@ -15,9 +15,11 @@ const coreLibraries = new Set([
 const config: ModuleFederationConfig = {
   name: 'tourism_ui',
   exposes: {
-    './Config': './src/config.ts',
+    './config': './src/config.ts',
     './pms': './src/modules/pms/Main.tsx',
     './pmsSettings': './src/modules/pms/Settings.tsx',
+    './tms': './src/modules/tms/Main.tsx',
+    './tmsSettings': './src/modules/tms/Settings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

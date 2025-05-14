@@ -28,7 +28,7 @@ export const AvatarField = ({
               }}
             >
               <Upload.Preview className="rounded-full" />
-              <div className="flex flex-col gap-2 justify-center">
+              <div className="flex flex-col justify-center gap-2">
                 <div className="flex gap-4">
                   <Upload.Button size="sm" variant="outline" type="button">
                     Upload picture
@@ -65,7 +65,7 @@ export const CodeField = ({
         <Form.Item>
           <Form.Label>CODE</Form.Label>
           <Form.Control>
-            <Input className="rounded-md h-8" {...field} />
+            <Input className="h-8 rounded-md" {...field} />
           </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
@@ -126,16 +126,16 @@ export const EmailValidationStatusField = ({
           <Form.Label>EMAIL VERIFICATION STATUS</Form.Label>
           <Select onValueChange={field.onChange} value={field.value}>
             <Form.Control>
-              <Select.Trigger className="truncate w-full rounded-md justify-between text-foreground h-8">
+              <Select.Trigger className="justify-between w-full h-8 truncate rounded-md text-foreground">
                 <Select.Value
                   placeholder={
-                    <span className="truncate text-muted-foreground font-medium text-sm">
+                    <span className="text-sm font-medium truncate text-muted-foreground">
                       {'Choose'}
                     </span>
                   }
                 >
                   {' '}
-                  <span className="text-foreground font-medium text-sm">
+                  <span className="text-sm font-medium text-foreground">
                     {
                       emailValidationStatuses.find(
                         (status) => status.value === field.value,
@@ -153,7 +153,7 @@ export const EmailValidationStatusField = ({
                 {emailValidationStatuses.map((status) => (
                   <Select.Item
                     key={status.value}
-                    className="h-7 text-xs"
+                    className="text-xs h-7"
                     value={status.value}
                   >
                     {status.label}
@@ -182,7 +182,7 @@ export const FirstNameField = ({
         <Form.Item>
           <Form.Label>FIRST NAME</Form.Label>
           <Form.Control>
-            <Input className="rounded-md h-8" {...field} />
+            <Input className="h-8 rounded-md" {...field} />
           </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
@@ -234,7 +234,7 @@ export const LastNameField = ({
         <Form.Item>
           <Form.Label>LAST NAME</Form.Label>
           <Form.Control>
-            <Input className="rounded-md h-8" {...field} />
+            <Input className="h-8 rounded-md" {...field} />
           </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
@@ -278,6 +278,7 @@ const phoneValidationStatuses = [
   { label: 'Unverifiable', value: 'unverifiable' },
   { label: 'Mobile phone', value: 'mobile_phone' },
 ];
+
 export const PhoneValidationStatusField = ({
   control,
 }: {
@@ -292,15 +293,15 @@ export const PhoneValidationStatusField = ({
           <Form.Label>PHONE VERIFICATION STATUS</Form.Label>
           <Select onValueChange={field.onChange} value={field.value}>
             <Form.Control>
-              <Select.Trigger className="truncate w-full rounded-md justify-between text-foreground h-8">
+              <Select.Trigger className="justify-between w-full h-8 truncate rounded-md text-foreground">
                 <Select.Value
                   placeholder={
-                    <span className="truncate text-muted-foreground font-medium text-sm">
+                    <span className="text-sm font-medium truncate text-muted-foreground">
                       {'Choose'}
                     </span>
                   }
                 >
-                  <span className="text-foreground font-medium text-sm">
+                  <span className="text-sm font-medium text-foreground">
                     {
                       phoneValidationStatuses.find(
                         (status) => status.value === field.value,
@@ -318,7 +319,7 @@ export const PhoneValidationStatusField = ({
                 {phoneValidationStatuses.map((status) => (
                   <Select.Item
                     key={status.value}
-                    className="h-7 text-xs"
+                    className="text-xs h-7"
                     value={status.value}
                   >
                     {status.label}
@@ -347,7 +348,7 @@ export const PrimaryEmailField = ({
         <Form.Item>
           <Form.Label>EMAIL</Form.Label>
           <Form.Control>
-            <Input className="rounded-md h-8" {...field} />
+            <Input className="h-8 rounded-md" {...field} />
           </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
@@ -369,7 +370,7 @@ export const PrimaryPhoneField = ({
         <Form.Item>
           <Form.Label>PHONE</Form.Label>
           <Form.Control>
-            <Input className="rounded-md h-8" {...field} />
+            <Input className="h-8 rounded-md" {...field} />
           </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>

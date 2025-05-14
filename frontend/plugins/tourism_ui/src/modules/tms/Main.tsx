@@ -1,20 +1,20 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
-const SampleFirst = lazy(() =>
-  import('~/pages/pms/IndexPage').then((module) => ({
+const Tms = lazy(() =>
+  import('~/pages/tms/IndexPage').then((module) => ({
     default: module.IndexPage,
   })),
 );
 
-const SampleFirstMain = () => {
+const TmsMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
-        <Route path="/" element={<SampleFirst />} />
+        <Route path="/" element={<Tms />} />
       </Routes>
     </Suspense>
   );
 };
 
-export default SampleFirstMain;
+export default TmsMain;

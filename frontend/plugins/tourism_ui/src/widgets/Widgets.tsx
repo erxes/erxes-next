@@ -7,7 +7,7 @@ const Widgets = ({
   contentId: string;
   message: string;
 }) => {
-  return <div>Widgets sample {message}</div>;
+  return <div>Widgets tourism {message}</div>;
 };
 
 export default Widgets;

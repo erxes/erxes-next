@@ -21,7 +21,7 @@ export function SelectColor({
 
   return (
     <fieldset className={cn('space-y-2', className)}>
-      <legend className="text-xs font-mono font-semibold uppercase leading-none text-muted-foreground">
+      <legend className="font-mono text-xs font-semibold leading-none uppercase text-muted-foreground">
         Choose a color
       </legend>
       <RadioGroup

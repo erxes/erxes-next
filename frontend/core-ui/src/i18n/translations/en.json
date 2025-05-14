@@ -33,6 +33,7 @@
     },
     "sample": "Sample",
     "modules": "Modules",
-    "pms": "PMS"
+    "pms": "PMS",
+    "tms": "TMS"
   }
 }

@@ -1,31 +1,33 @@
-import { IconSandbox } from '@tabler/icons-react';
-import { UIConfig } from 'erxes-ui/types';
+import { IconBox, IconSandbox } from '@tabler/icons-react';
+import { IUIConfig } from 'erxes-ui/types';
 
-export const CONFIG: UIConfig = {
-  name: 'sample',
+export const CONFIG: IUIConfig = {
+  name: 'tourism',
   icon: IconSandbox,
   modules: [
     {
-      name: 'sampleFirst',
+      name: 'pms',
       icon: IconSandbox,
-      path: 'sampleFirst',
+      path: 'pms',
       hasSettings: true,
+      hasWidgets: true,
     },
     {
-      name: 'sampleSecond',
-      icon: IconSandbox,
-      path: 'sampleSecond',
+      name: 'tms',
+      icon: IconBox,
+      path: 'tms',
       hasSettings: true,
-      submenus: [
-        {
-          name: 'submenu1',
-          path: 'sampleSecond',
-        },
-        {
-          name: 'submenu2',
-          path: 'sampleSecond/submenu2',
-        },
-      ],
+      hasWidgets: true,
+      // submenus: [
+      //   {
+      //     name: 'submenu1',
+      //     path: 'TMS',
+      //   },
+      //   {
+      //     name: 'submenu2',
+      //     path: 'TMS/submenu2',
+      //   },
+      // ],
     },
   ],
 };
