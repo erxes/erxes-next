@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { GET_FAVORITES } from '@/navigation/graphql/queries/getFavorites';
 import { usePluginsModules } from '@/navigation/hooks/usePLuginsModules';
+import { useAtomValue } from 'jotai';
+import { currentUserState } from 'ui-modules';
 
 interface Favorite {
   _id: string;
@@ -20,8 +22,11 @@ interface GetFavoritesResponse {
 
 export function useFavorites(): FavoriteModule[] {
   const modules = usePluginsModules();
+  const currentUser = useAtomValue(currentUserState);
 
-  const { data } = useQuery<GetFavoritesResponse>(GET_FAVORITES);
+  const { data } = useQuery<GetFavoritesResponse>(GET_FAVORITES, {
+    skip: !currentUser || !currentUser?._id,
+  });
 
   const favorites = data?.getFavoritesByCurrentUser ?? [];
 

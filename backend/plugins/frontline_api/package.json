@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1692.0",
-    "botbuilder": "^4.23.2",
     "debug": "^4.4.0",
     "erxes-api-shared": "workspace:^",
     "fbgraph": "^1.4.4",

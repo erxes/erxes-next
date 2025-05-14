@@ -62,6 +62,7 @@ export interface IMainContext {
   req: any;
   requestInfo: any;
   user: IUserDocument;
+  models?: any;
   __: <T extends object>(doc: T) => T & { processId: string };
   processId: string;
 }

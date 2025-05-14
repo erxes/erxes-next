@@ -1,7 +1,8 @@
 import { IconSettings } from '@tabler/icons-react';
 
 import { IconArrowsRightLeft } from '@tabler/icons-react';
-import { PageHeader, Button, Breadcrumb, Separator } from 'erxes-ui';
+import { Button, Breadcrumb, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 
 export const AccountingHeader = ({
@@ -25,7 +26,7 @@ export const AccountingHeader = ({
           </Breadcrumb.List>
         </Breadcrumb>
         <Separator.Inline />
-        <PageHeader.FavoriteToggleButton item="accounting" />
+        <PageHeader.FavoriteToggleButton />
       </PageHeader.Start>
       <PageHeader.End>
         <Button variant="outline" asChild>

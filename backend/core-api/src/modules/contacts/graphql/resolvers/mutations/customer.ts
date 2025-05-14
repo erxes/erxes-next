@@ -36,4 +36,14 @@ export const customerMutations = {
 
     return customerIds;
   },
+    async customersMerge(
+    _root,
+    {
+      customerIds,
+      customerFields
+    }: { customerIds: string[]; customerFields: ICustomer },
+    { user, models: { Customers } }: IContext
+  ) {
+    return Customers.mergeCustomers(customerIds, customerFields, user);
+  },
 };

@@ -10,18 +10,20 @@ export const TrRecordTable = () => {
     <RecordTable.Provider
       columns={trRecordColumns}
       data={trRecords || []}
-      stickyColumns={['avatar', 'name']}
-      className="mt-1.5"
+      stickyColumns={[]}
+      className='m-3'
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          <RecordTable.RowList />
-          {!loading && totalCount > trRecords?.length && (
-            <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
+      <RecordTable.Scroll>
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <RecordTable.RowList />
+            {!loading && totalCount > trRecords?.length && (
+              <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
+            )}
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.Scroll>
     </RecordTable.Provider>
   );
 };

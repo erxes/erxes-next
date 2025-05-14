@@ -6,25 +6,17 @@ export const brandQueries = {
   /**
    * All brands
    */
-  async allBrands(
-    _root: undefined,
-    _params: undefined,
-    { brandIdSelector, models }: IContext,
-  ) {
-    return await models.Brands.find(brandIdSelector).lean();
+  async allBrands(_root: undefined, _params: undefined, { models }: IContext) {
+    return await models.Brands.find().lean();
   },
 
   /**
    * Brands list
    */
-  async brands(
-    _root: undefined,
-    params,
-    { brandIdSelector, models }: IContext,
-  ) {
+  async brands(_root: undefined, params, { models }: IContext) {
     const { searchValue } = params;
 
-    const filter: any = { ...brandIdSelector };
+    const filter: any = {};
 
     if (searchValue) {
       filter.name = new RegExp(`.*${params.searchValue}.*`, 'i');
@@ -55,12 +47,8 @@ export const brandQueries = {
   /**
    * Get all brands count. We will use it in pager
    */
-  async brandsTotalCount(
-    _root: undefined,
-    _args,
-    { brandIdSelector, models }: IContext,
-  ) {
-    return await models.Brands.countDocuments(brandIdSelector);
+  async brandsTotalCount(_root: undefined, _args, { models }: IContext) {
+    return await models.Brands.countDocuments();
   },
 
   /**
