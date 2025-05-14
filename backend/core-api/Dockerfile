@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
 
-COPY ./backend/gateway/package.json /app/backend/gateway/
+COPY ./backend/core-api/package.json /app/backend/core-api/
 COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
 # Install pnpm and dependencies
@@ -14,44 +14,33 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 # Build the test project
-FROM --platform=linux/amd64 build AS gateway-build
+FROM --platform=linux/amd64 build AS core-api-build
 
 # Copy source code
-COPY ./backend/gateway /app/backend/gateway
+COPY ./backend/core-api /app/backend/core-api
 COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
-WORKDIR /app/backend/gateway
+WORKDIR /app/backend/core-api
 
 ENV NX_DAEMON=false
-RUN npx nx build:packageJson gateway
-RUN npx nx build gateway
+RUN npx nx build:packageJson core-api
+RUN npx nx build core-api
 
 # Final stage: Run the application
-FROM --platform=linux/amd64 node:22-alpine as gateway
+FROM --platform=linux/amd64 node:22-alpine as core-api
 
 WORKDIR /app
 
 # Copy built applications from previous stages
-COPY --chown=1000 --from=gateway-build /app /app
+COPY --chown=1000 --from=core-api-build /app /app
 
 # Install pnpm for production
 RUN npm install -g pnpm
 
-RUN apk add --no-cache curl ca-certificates \
-    && pnpm store prune \
-    && mkdir -p /app/backend/gateway/dist/src/apollo-router/temp \
-    && cd /app/backend/gateway/dist/src/apollo-router/temp \
-    && curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh \
-    && export PATH=$PATH:/root/.rover/bin \
-    && /root/.rover/bin/rover supergraph compose --config /app/backend/gateway/dist/src/apollo-router/dummy/supergraph.yaml --elv2-license=accept \
-    || (echo "Failed to compose supergraph" && exit 1)
-
 # Install production dependencies
-WORKDIR /app/backend/gateway/dist
+WORKDIR /app/backend/core-api/dist
 RUN pnpm install
-
-
 
 # Set environment variables
 ENV NODE_ENV=production
