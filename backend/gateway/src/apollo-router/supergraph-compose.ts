@@ -62,26 +62,26 @@ const writeSupergraphConfig = async (proxyTargets: ErxesProxyTarget[]) => {
 };
 
 const supergraphComposeOnce = async () => {
-  if (NODE_ENV === 'production') {
-    execSync(
-      `pnpm rover supergraph compose --config ${supergraphConfigPath} --output ${supergraphPath} --elv2-license=accept --log=error`,
-    );
-  } else {
-    const superGraphqlNext = supergraphPath + '.next';
+  // if (NODE_ENV === 'production') {
+  //   execSync(
+  //     `pnpm rover supergraph compose --config ${supergraphConfigPath} --output ${supergraphPath} --elv2-license=accept --log=error`,
+  //   );
+  // } else {
+  const superGraphqlNext = supergraphPath + '.next';
 
-    execSync(
-      `pnpm rover supergraph compose --config ${supergraphConfigPath} --output ${superGraphqlNext} --elv2-license=accept --client-timeout=80000`,
-      // { stdio: ['ignore', 'ignore', 'ignore'] },
-    );
+  execSync(
+    `pnpm rover supergraph compose --config ${supergraphConfigPath} --output ${superGraphqlNext} --elv2-license=accept --client-timeout=80000`,
+    // { stdio: ['ignore', 'ignore', 'ignore'] },
+  );
 
-    if (
-      !fs.existsSync(supergraphPath) ||
-      !isSameFile(supergraphPath, superGraphqlNext)
-    ) {
-      fs.cpSync(superGraphqlNext, supergraphPath, { force: true });
-      console.log(`NEW Supergraph Schema was printed to ${supergraphPath}`);
-    }
+  if (
+    !fs.existsSync(supergraphPath) ||
+    !isSameFile(supergraphPath, superGraphqlNext)
+  ) {
+    fs.cpSync(superGraphqlNext, supergraphPath, { force: true });
+    console.log(`NEW Supergraph Schema was printed to ${supergraphPath}`);
   }
+  // }
 };
 
 export default async function supergraphCompose(
