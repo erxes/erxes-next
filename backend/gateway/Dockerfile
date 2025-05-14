@@ -22,6 +22,8 @@ COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
 WORKDIR /app/backend/gateway
+
+ENV NX_DAEMON=false
 RUN npx nx build:packageJson gateway
 RUN npx nx build gateway
 
