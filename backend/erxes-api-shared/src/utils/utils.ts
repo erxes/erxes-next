@@ -1,5 +1,5 @@
 import stripAnsi from 'strip-ansi';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 export const getEnv = ({
   name,
@@ -131,7 +131,7 @@ export const getDate = (date: Date, day: number): Date => {
 };
 
 export const getToday = (date: Date): Date => {
-  return getFullDate(date)
+  return getFullDate(date);
 };
 
 export const getFullDate = (date: Date) => {
@@ -146,7 +146,7 @@ export const getPureDate = (date: Date, multiplier = 1) => {
 };
 
 export const getTomorrow = (date: Date) => {
-  return new Date(dayjs(date).add(1, 'day').format('YYYY-MM-DD'))
+  return new Date(dayjs(date).add(1, 'day').format('YYYY-MM-DD'));
 };
 
 export const getNextMonth = (date: Date): { start: number; end: number } => {
@@ -165,11 +165,11 @@ export const getNextMonth = (date: Date): { start: number; end: number } => {
 };
 
 export const fixNum = (value?: number, p = 4) => {
-  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ""));
+  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ''));
 
   if (isNaN(cleanNumber)) {
     return 0;
   }
 
-  return Number(cleanNumber.toFixed(p))
+  return Number(cleanNumber.toFixed(p));
 };
