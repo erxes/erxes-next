@@ -58,13 +58,12 @@ export const integrationQueries = {
       sortField: string;
       sortDirection: number;
     },
-    { singleBrandIdSelector, models, subdomain, user }: IContext,
+    { models, subdomain, user }: IContext,
   ) {
     if (!user) {
       throw new Error('User not authenticated');
     }
     let query = {
-      ...singleBrandIdSelector,
       ...(await generateFilterQuery(subdomain, args, models)),
     };
     if (!user.isOwner) {
@@ -112,10 +111,9 @@ export const integrationQueries = {
   async allLeadIntegrations(
     _root,
     _args,
-    { singleBrandIdSelector, models }: IContext,
+    {, models }: IContext,
   ) {
     const query = {
-      ...singleBrandIdSelector,
       kind: 'lead',
     };
 
