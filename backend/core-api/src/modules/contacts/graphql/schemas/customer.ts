@@ -139,4 +139,5 @@ export const mutations = `
   customersAdd(state: String, ${fields}): Customer
   customersEdit(_id: String!, ${fields}): Customer
   customersRemove(customerIds: [String]): [String]
+  customersMerge(customerIds: [String], customerFields: JSON): Customer
 `;
