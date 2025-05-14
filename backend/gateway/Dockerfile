@@ -36,21 +36,21 @@ RUN npm install -g pnpm
 WORKDIR /app/backend/gateway/dist
 
 # Download Apollo Router and compose supergraph
-RUN mkdir -p /src/apollo-router/temp \
-    && cd /src/apollo-router/temp \
-    && curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh \
-    && mv ./router /usr/local/bin/apollo-router \
-    && chmod +x /usr/local/bin/apollo-router \
-    && /usr/local/bin/apollo-router --version
+ENV PNPM_HOME="/root/.local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN apk update \
+    && apk add --no-cache curl ca-certificates \
+    && pnpm add -g @apollo/rover@0.22.0 \
+    && pnpm store prune
 
-# Compose supergraph
-RUN pnpm store prune \
-    && pnpm install --prod \
-    && /usr/local/bin/apollo-router supergraph compose --config /app/backend/gateway/dist/src/apollo-router/dummy/supergraph.yaml --elv2-license=accept \
-    || (echo "Failed to compose supergraph" && exit 1)
-
-ENV NODE_ENV=production
+RUN mkdir -p /app/backend/gateway/dist/src/apollo-router/temp \
+    && chown -R 1000:1000 /app/backend/gateway/dist/src/apollo-router
 
 USER 1000
+
+RUN cd /app/backend/gateway/dist/src/apollo-router/temp \
+    && (export VERSION=v1.59.2; curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh)
+
+ENV NODE_ENV=production
 
 CMD ["node", "src/main.js"]
