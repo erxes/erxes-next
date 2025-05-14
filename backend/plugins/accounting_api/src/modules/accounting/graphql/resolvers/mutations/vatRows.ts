@@ -9,10 +9,10 @@ const vatRowsMutations = {
   async vatRowsAdd(
     _root,
     doc: IVatRow,
-    { docModifier, models }: IContext,
+    { models }: IContext,
   ) {
     const vatRow =
-      await models.VatRows.createVatRow(docModifier(doc));
+      await models.VatRows.createVatRow(doc);
 
     return vatRow;
   },

@@ -9,9 +9,9 @@ const accountsMutations = {
   async accountsAdd(
     _root,
     doc: IAccount,
-    { docModifier, models }: IContext,
+    { models }: IContext,
   ) {
-    const account = await models.Accounts.createAccount(docModifier(doc));
+    const account = await models.Accounts.createAccount(doc);
     return account;
   },
 

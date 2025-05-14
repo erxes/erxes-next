@@ -9,10 +9,10 @@ const ctaxRowsMutations = {
   async ctaxRowsAdd(
     _root,
     doc: ICtaxRow,
-    { docModifier, models }: IContext,
+    { models }: IContext,
   ) {
     const ctaxRow =
-      await models.CtaxRows.createCtaxRow(docModifier(doc));
+      await models.CtaxRows.createCtaxRow(doc);
 
     return ctaxRow;
   },

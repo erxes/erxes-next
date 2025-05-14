@@ -181,12 +181,10 @@ const TransactionMoreColumnCell = ({
 }: {
   cell: Cell<ITransaction, unknown>;
 }) => {
-  const [, setOpen] = useQueryState('transaction_id');
-  const setRenderingContactDetail = useSetAtom(renderingTransactionDetailState);
   const { parentId, _id } = cell.row.original;
 
   return (
-    <Link to={`/accounting/transaction/${parentId}?trId=${_id}`}>
+    <Link to={`/accounting/transaction/edit/${parentId}?trId=${_id}`}>
       <RecordTable.MoreButton
         className="w-full h-full"
       />

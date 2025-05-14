@@ -9,10 +9,10 @@ const accountCategoriessMutations = {
   async accountCategoriesAdd(
     _root,
     doc: IAccountCategory,
-    { docModifier, models }: IContext,
+    { models }: IContext,
   ) {
     const accountCategory =
-      await models.AccountCategories.createAccountCategory(docModifier(doc));
+      await models.AccountCategories.createAccountCategory(doc);
     return accountCategory;
   },
 
