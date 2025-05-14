@@ -15,7 +15,8 @@ export interface IVisitorContact {
 
 export interface ICustomer {
   state?: 'visitor' | 'lead' | 'customer';
-
+  mergedIds?: string[];
+  tagIds?: string[];
   firstName?: string;
   lastName?: string;
   middleName?: string;
@@ -28,7 +29,7 @@ export interface ICustomer {
   phones?: string[];
   primaryAddress?: IAddress;
   addresses?: IAddress[];
-
+  scopeBrandIds?: string[];
   description?: string;
   doNotDisturb?: string;
   isSubscribed?: string;
@@ -37,8 +38,8 @@ export interface ICustomer {
   links?: IStringMap;
   status?: string;
   code?: string;
-
   relatedIntegrationIds?: string[];
+  integrationId?: string;
   deviceTokens?: string[];
   trackedData?: ICustomField[];
   customFieldsData?: ICustomField[];

@@ -111,7 +111,7 @@ export const integrationQueries = {
   async allLeadIntegrations(
     _root,
     _args,
-    {, models }: IContext,
+    { models }: IContext,
   ) {
     const query = {
       kind: 'lead',
