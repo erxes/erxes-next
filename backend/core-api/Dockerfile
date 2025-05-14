@@ -1,5 +1,5 @@
 # Base image for common dependencies
-FROM node:22-alpine AS build
+FROM --platform=linux/amd64 node:22-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 # Build the test project
-FROM build as core-api-build
+FROM --platform=linux/amd64 build AS core-api-build
 
 # Copy source code
 COPY ./backend/core-api /app/backend/core-api
@@ -28,7 +28,7 @@ RUN npx nx build:packageJson core-api
 RUN npx nx build core-api
 
 # Final stage: Run the application
-FROM node:22-alpine as core-api
+FROM --platform=linux/amd64 node:22-alpine as core-api
 
 WORKDIR /app
 
