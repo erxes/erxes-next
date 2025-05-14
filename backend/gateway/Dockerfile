@@ -38,20 +38,19 @@ COPY --chown=1000 --from=gateway-build /app /app
 # Install pnpm for production
 RUN npm install -g pnpm
 
-# RUN apk add --no-cache curl ca-certificates \
-#     && pnpm store prune \
-#     && mkdir -p /app/backend/gateway/dist/src/apollo-router/temp \
-#     && cd /app/backend/gateway/dist/src/apollo-router/temp \
-#     && curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh \
-#     && export PATH=$PATH:/root/.rover/bin \
-#     && /root/.rover/bin/rover supergraph compose --config /app/backend/gateway/dist/src/apollo-router/dummy/supergraph.yaml --elv2-license=accept \
-#     || (echo "Failed to compose supergraph" && exit 1)
-
 # Install production dependencies
 WORKDIR /app/backend/gateway/dist
+
+RUN apk add --no-cache curl ca-certificates \
+    && pnpm store prune \
+    && mkdir -p /src/apollo-router/temp \
+    && cd /dist/src/apollo-router/temp \
+    && curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh \
+    && export PATH=$PATH:/root/.rover/bin \
+    && /root/.rover/bin/rover supergraph compose --config /app/backend/gateway/dist/src/apollo-router/dummy/supergraph.yaml --elv2-license=accept \
+    || (echo "Failed to compose supergraph" && exit 1)
+
 RUN pnpm install
-
-
 
 # Set environment variables
 ENV NODE_ENV=production
