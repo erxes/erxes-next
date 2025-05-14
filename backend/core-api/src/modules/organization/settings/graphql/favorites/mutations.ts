@@ -7,11 +7,12 @@ export const favoriteMutations = {
     { type, path }: IFavorites,
     { models, user }: IContext,
   ) => {
-    let favorite = await models.Favorites.getFavorites({
+    const favorite = await models.Favorites.getFavorites({
       type,
       path,
       userId: user._id,
     });
+
     if (favorite) {
       return models.Favorites.deleteFavorite({
         type,

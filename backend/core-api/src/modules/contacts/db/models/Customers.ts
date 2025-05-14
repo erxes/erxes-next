@@ -16,8 +16,17 @@ import {
   IUpdateMessengerCustomerParams,
   IVisitorContactInfoParams,
 } from '../../@types/customer';
-
+import { ICustomField } from 'erxes-api-shared/core-types'
+interface ICustomerFieldsInput {
+  primaryEmail?: string;
+  primaryPhone?: string;
+  code?: string;
+}
 export interface ICustomerModel extends Model<ICustomerDocument> {
+    checkDuplication(
+    customerFields: ICustomerFieldsInput,
+    idsToExclude?: string[] | string
+  ): never;
   getCustomer(_id: string): Promise<ICustomerDocument>;
   getCustomerName(customer: ICustomer): Promise<string>;
 
@@ -35,7 +44,11 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
   ): Promise<ICustomerDocument>;
   updateCustomer(_id: string, doc: ICustomer): Promise<ICustomerDocument>;
   removeCustomers(customerIds: string[]): Promise<{ n: number; ok: number }>;
-
+  mergeCustomers(
+    customerIds: string[],
+    customerFields: ICustomer,
+    user?: any
+  ): Promise<ICustomerDocument>;
   markCustomerAsActive(_id: string): Promise<ICustomerDocument>;
   markCustomerAsNotActive(_id: string): Promise<ICustomerDocument>;
 
@@ -208,7 +221,97 @@ export const loadCustomerClass = (models: IModels) => {
 
       return models.Customers.deleteMany({ _id: { $in: customerIds } });
     }
+  public static async mergeCustomers(
+  customerIds: string[],
+  customerFields: ICustomer,
+  user?: any
+) {
+  // Check for duplicated fields
+  await models.Customers.checkDuplication(customerFields, customerIds);
 
+  let scopeBrandIds: string[] = [];
+  let tagIds: string[] = [];
+  let customFieldsData: ICustomField[] = [];
+  let state: any = '';
+
+  let emails: string[] = [];
+  let phones: string[] = [];
+
+  if (customerFields.primaryEmail) {
+    emails.push(customerFields.primaryEmail);
+  }
+
+  if (customerFields.primaryPhone) {
+    phones.push(customerFields.primaryPhone);
+  }
+
+  // Collect data from all customers
+  for (const customerId of customerIds) {
+    const customerObj = await models.Customers.findOne({ _id: customerId });
+
+    if (customerObj) {
+      // Get last customer's integrationId
+      customerFields.integrationId = customerObj.integrationId;
+
+      // Merge custom fields data
+      customFieldsData = [
+        ...customFieldsData,
+        ...(customerObj.customFieldsData || []),
+      ];
+
+      // Merge scopeBrandIds
+      scopeBrandIds = [
+        ...scopeBrandIds,
+        ...(customerObj.scopeBrandIds || []),
+      ];
+
+      const customerTags: string[] = customerObj.tagIds || [];
+
+      // Merge tags
+      tagIds = tagIds.concat(customerTags);
+
+      // Merge emails and phones
+      emails = [...emails, ...(customerObj.emails || [])];
+      phones = [...phones, ...(customerObj.phones || [])];
+
+      // Merge customer state
+      state = customerObj.state;
+    }
+  }
+
+  // Perform bulk update to mark customers as deleted
+  await models.Customers.updateMany(
+    { _id: { $in: customerIds } },
+    { $set: { status: 'deleted' } }
+  );
+
+  // Remove duplicates
+  scopeBrandIds = Array.from(new Set(scopeBrandIds));
+  tagIds = Array.from(new Set(tagIds));
+  emails = Array.from(new Set(emails));
+  phones = Array.from(new Set(phones));
+
+  // Create new customer with merged properties
+  const customer = await this.createCustomer({
+    ...customerFields,
+    scopeBrandIds,
+    customFieldsData,
+    tagIds,
+    mergedIds: customerIds,
+    emails,
+    phones,
+    state,
+  });
+
+  // Update associated modules
+  await models.Conformities.changeConformity({
+    type: 'customer',
+    newTypeId: customer._id,
+    oldTypeIds: customerIds,
+  });
+
+  return customer;
+}
     /**
      * Merge customers
      */
