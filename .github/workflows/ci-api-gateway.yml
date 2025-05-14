@@ -15,63 +15,14 @@ on:
       - '.github/workflows/ci-api-gateway.yml'
 
 jobs:
-  build-and-test:
+  gateway-ci:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'pnpm'
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      # - name: Cache build artifacts
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       **/dist
-      #       **/.nx/cache
-      #     key: ${{ runner.os }}-nx-build-${{ hashFiles('backend/gateway/**', 'backend/erxes-api-shared/**') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-nx-build-
-
-      # - name: Install dependencies
-      #   run: pnpm install
-
-      # - name: Build gateway
-      #   run: |
-      #     npx nx build gateway
-      #     npx nx build:packageJson gateway
-
-  build-and-push-docker:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -82,24 +33,31 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata for Docker
+      - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: erxes/erxes-next-gateway
+          images: erxes/erxes-next-gateways
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=sha,prefix={{date 'YYYYMMDD'}}-
             type=ref,event=branch
-            type=ref,event=tag
+            type=sha,format=short
+            type=semver,pattern={{version}}
 
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./backend/gateway/Dockerfile
-          push: true
+          file: backend/gateway/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: |
+            type=gha,scope=pnpm
+            type=gha,scope=build
+          cache-to: |
+            type=gha,scope=pnpm,mode=max
+            type=gha,scope=build,mode=max
+          build-args: |
+            NODE_VERSION=22
+            NGINX_VERSION=alpine
