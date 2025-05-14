@@ -42,16 +42,6 @@ RUN npm install -g pnpm
 WORKDIR /app/backend/gateway/dist
 RUN pnpm install
 
-# Install required packages and Apollo Router with proper error handling
-RUN apk add --no-cache curl ca-certificates \
-    && pnpm store prune \
-    && mkdir -p /app/backend/gateway/src/apollo-router/temp \
-    && cd /app/backend/gateway/src/apollo-router/temp \
-    && curl -sSL https://router.apollo.dev/download/nix/v1.59.2 | sh \
-    && export PATH=$PATH:/root/.rover/bin \
-    && /root/.rover/bin/rover supergraph compose --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml --elv2-license=accept \
-    || (echo "Failed to compose supergraph" && exit 1)
-
 # Set environment variables
 ENV NODE_ENV=production
 
@@ -60,4 +50,3 @@ USER 1000
 
 # Start the application
 CMD ["node", "src/main.js"]
-
