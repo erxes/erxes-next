@@ -149,101 +149,97 @@ export const loadCustomerClass = (models: IModels) => {
     public static async removeCustomers(customerIds: string[]) {
       return models.Customers.deleteMany({ _id: { $in: customerIds } });
     }
-    public static async mergeCustomers(
-      customerIds: string[],
-      customerFields: ICustomer,
-      user?: any
-    ) {
-      // Checking duplicated fields of customer
-      await models.Customers.checkDuplication(customerFields, customerIds);
+  public static async mergeCustomers(
+  customerIds: string[],
+  customerFields: ICustomer,
+  user?: any
+) {
+  // Check for duplicated fields
+  await models.Customers.checkDuplication(customerFields, customerIds);
 
-      let scopeBrandIds: string[] = [];
-      let tagIds: string[] = [];
-      let customFieldsData: ICustomField[] = [];
-      let state: any = '';
+  let scopeBrandIds: string[] = [];
+  let tagIds: string[] = [];
+  let customFieldsData: ICustomField[] = [];
+  let state: any = '';
 
-      let emails: string[] = [];
-      let phones: string[] = [];
+  let emails: string[] = [];
+  let phones: string[] = [];
 
-      if (customerFields.primaryEmail) {
-        emails.push(customerFields.primaryEmail);
-      }
+  if (customerFields.primaryEmail) {
+    emails.push(customerFields.primaryEmail);
+  }
 
-      if (customerFields.primaryPhone) {
-        phones.push(customerFields.primaryPhone);
-      }
+  if (customerFields.primaryPhone) {
+    phones.push(customerFields.primaryPhone);
+  }
 
-      for (const customerId of customerIds) {
-        const customerObj = await models.Customers.findOne({ _id: customerId });
+  // Collect data from all customers
+  for (const customerId of customerIds) {
+    const customerObj = await models.Customers.findOne({ _id: customerId });
 
-        if (customerObj) {
-          // get last customer's integrationId
-          customerFields.integrationId = customerObj.integrationId;
+    if (customerObj) {
+      // Get last customer's integrationId
+      customerFields.integrationId = customerObj.integrationId;
 
-          // merge custom fields data
-          customFieldsData = [
-            ...customFieldsData,
-            ...(customerObj.customFieldsData || []),
-          ];
+      // Merge custom fields data
+      customFieldsData = [
+        ...customFieldsData,
+        ...(customerObj.customFieldsData || []),
+      ];
 
-          // Merging scopeBrandIds
-          scopeBrandIds = [
-            ...scopeBrandIds,
-            ...(customerObj.scopeBrandIds || []),
-          ];
+      // Merge scopeBrandIds
+      scopeBrandIds = [
+        ...scopeBrandIds,
+        ...(customerObj.scopeBrandIds || []),
+      ];
 
-          const customerTags: string[] = customerObj.tagIds || [];
+      const customerTags: string[] = customerObj.tagIds || [];
 
-          // Merging customer's tag and companies into 1 array
-          tagIds = tagIds.concat(customerTags);
+      // Merge tags
+      tagIds = tagIds.concat(customerTags);
 
-          // Merging emails, phones
-          emails = [...emails, ...(customerObj.emails || [])];
-          phones = [...phones, ...(customerObj.phones || [])];
+      // Merge emails and phones
+      emails = [...emails, ...(customerObj.emails || [])];
+      phones = [...phones, ...(customerObj.phones || [])];
 
-          // Merging customer`s state for new customer
-          state = customerObj.state;
-
-          await models.Customers.findByIdAndUpdate(customerId, {
-            $set: { status: 'deleted' },
-          });
-        }
-      }
-
-      // Removing Duplicates
-      scopeBrandIds = Array.from(new Set(scopeBrandIds));
-      tagIds = Array.from(new Set(tagIds));
-
-      // Removing Duplicated Emails from customer
-      emails = Array.from(new Set(emails));
-      phones = Array.from(new Set(phones));
-
-      // Creating customer with properties
-      const customer = await this.createCustomer(
-        {
-          ...customerFields,
-          scopeBrandIds,
-          customFieldsData,
-          tagIds,
-          mergedIds: customerIds,
-          emails,
-          phones,
-          state,
-        },
-  
-      );
-
-      // Updating every modules associated with customers
-
-      await models.Conformities.changeConformity({
-        type: 'customer',
-        newTypeId: customer._id,
-        oldTypeIds: customerIds,
-      });
-
-  
-      return customer;
+      // Merge customer state
+      state = customerObj.state;
     }
+  }
+
+  // Perform bulk update to mark customers as deleted
+  await models.Customers.updateMany(
+    { _id: { $in: customerIds } },
+    { $set: { status: 'deleted' } }
+  );
+
+  // Remove duplicates
+  scopeBrandIds = Array.from(new Set(scopeBrandIds));
+  tagIds = Array.from(new Set(tagIds));
+  emails = Array.from(new Set(emails));
+  phones = Array.from(new Set(phones));
+
+  // Create new customer with merged properties
+  const customer = await this.createCustomer({
+    ...customerFields,
+    scopeBrandIds,
+    customFieldsData,
+    tagIds,
+    mergedIds: customerIds,
+    emails,
+    phones,
+    state,
+  });
+
+  // Update associated modules
+  await models.Conformities.changeConformity({
+    type: 'customer',
+    newTypeId: customer._id,
+    oldTypeIds: customerIds,
+  });
+
+  return customer;
+}
     /**
      * Mark customer as active
      */
