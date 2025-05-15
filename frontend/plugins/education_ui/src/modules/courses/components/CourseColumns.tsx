@@ -1,45 +1,15 @@
-import { useState } from 'react';
-import type { Cell, ColumnDef } from '@tanstack/react-table';
-
+import type { ColumnDef } from '@tanstack/react-table';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { ICourse } from '@/courses/types/courseType';
+
 import {
-  RecordTableInlineCell,
-  RecordTableInlineCellEditForm,
-} from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
-import { TextFieldInput } from 'erxes-ui/modules/record-field/meta-inputs/components/TextFieldInput';
-import { RecordTable, Slider } from 'erxes-ui';
-import { useCourseEdit } from '@/courses/hooks/useCourseEdit';
+  RecordTable,
+  RecordTableCellDisplay,
+  Slider,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { ActionField, SwitchField } from '@/courses/edit-course';
 import { courseMoreColumn } from './CourseMoreColumn';
-
-const TableTextInput = ({ cell }: { cell: Cell<any, any> }) => {
-  const [value, setValue] = useState(cell.getValue() as string);
-  const { courseEdit } = useCourseEdit();
-  return (
-    <RecordTableInlineCell
-      onSave={() => {
-        courseEdit({
-          variables: {
-            id: cell.row.original._id,
-            [cell.column.id]: value,
-          },
-        });
-      }}
-      getValue={() => cell.getValue()}
-      value={value}
-      display={() => value}
-      edit={() => (
-        <RecordTableInlineCellEditForm>
-          <TextFieldInput
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-        </RecordTableInlineCellEditForm>
-      )}
-    />
-  );
-};
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICourse>;
 
@@ -50,20 +20,36 @@ export const courseColumns: ColumnDef<ICourse>[] = [
     id: 'name',
     accessorKey: 'name',
     header: () => <RecordTableInlineHead label="Name" />,
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => (
+      <RecordTableCellDisplay>
+        <TextOverflowTooltip value={cell.getValue() as string} />
+      </RecordTableCellDisplay>
+    ),
   },
   {
     id: 'class',
     accessorKey: 'class',
     header: () => <RecordTableInlineHead label="Class" />,
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => {
+      const value = cell.getValue() as { name?: string } | undefined;
+      const name = value?.name || '';
+      return (
+        <RecordTableCellDisplay>
+          <TextOverflowTooltip value={name as string} />
+        </RecordTableCellDisplay>
+      );
+    },
     size: 100,
   },
   {
     id: 'description',
     accessorKey: 'description',
     header: () => <RecordTableInlineHead label="Description" />,
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => (
+      <RecordTableCellDisplay>
+        <TextOverflowTooltip value={cell.getValue() as string} />
+      </RecordTableCellDisplay>
+    ),
   },
 
   {
@@ -78,26 +64,23 @@ export const courseColumns: ColumnDef<ICourse>[] = [
     accessorKey: 'enrollment',
     header: () => <RecordTableInlineHead label="Enrollment" />,
     cell: ({ cell }) => {
-      const randomNumber = Math.floor(Math.random() * 100);
       return (
         <div className="flex items-center gap-3 pr-3 pl-2">
-          <Slider hideThumb max={100} defaultValue={[randomNumber]} step={1} />
-          <span className="text-primary font-semibold">{randomNumber}%</span>
+          <Slider hideThumb max={100} defaultValue={[80]} step={1} />
+          <span className="text-primary font-semibold">{80}%</span>
         </div>
       );
     },
   },
-  // {
-  //   id: 'location',
-  //   accessorKey: 'location',
-  //   header: () => <RecordTableInlineHead icon={IconMap} label="Location" />,
-  //   cell: ({ cell }) => <TableTextInput cell={cell} />,
-  // },
   {
     id: 'teacher',
     accessorKey: 'teacher',
     header: () => <RecordTableInlineHead label="Teacher" />,
-    cell: ({ cell }) => <TableTextInput cell={cell} />,
+    cell: ({ cell }) => (
+      <RecordTableCellDisplay>
+        <TextOverflowTooltip value={cell.getValue() as string} />
+      </RecordTableCellDisplay>
+    ),
   },
   {
     id: 'actions',

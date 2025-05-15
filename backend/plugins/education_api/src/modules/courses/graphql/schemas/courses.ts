@@ -5,9 +5,10 @@ export const types = `
   type Course {
     _id: String!
     name: String
-    code: String
     categoryId: String
+    classId: String
     category : CourseCategory
+    class: Classes
     description: String
     createdAt: Date
     type: String
@@ -20,6 +21,7 @@ export const types = `
     commentCount: Int
     primaryTeacher: User
     teachers : [User]
+    limit : Int
   }
 
   type CourseListResponse {
@@ -77,7 +79,6 @@ export const queries = `
 
 const mutationParams = `
   name: String!,
-  code: String!,
   type: String!,
   categoryId: String!,
   description: String,
@@ -87,6 +88,8 @@ const mutationParams = `
   deadline: Date,
   unitPrice: Float!,
   status: String
+  limit : Int
+  classId: String!
 `;
 
 export const mutations = `

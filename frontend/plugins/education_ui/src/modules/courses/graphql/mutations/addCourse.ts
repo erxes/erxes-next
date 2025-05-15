@@ -3,8 +3,8 @@ import { gql } from '@apollo/client';
 export const ADD_COURSES = gql`
   mutation courseAdd(
     $name: String!
-    $code: String!
     $categoryId: String!
+    $classId: String!
     $startDate: Date!
     $unitPrice: Float!
     $type: String!
@@ -13,11 +13,12 @@ export const ADD_COURSES = gql`
     $endDate: Date
     $deadline: Date
     $status: String
+    $limit: Int
   ) {
     courseAdd(
       name: $name
-      code: $code
       categoryId: $categoryId
+      classId: $classId
       startDate: $startDate
       unitPrice: $unitPrice
       type: $type
@@ -26,6 +27,7 @@ export const ADD_COURSES = gql`
       endDate: $endDate
       deadline: $deadline
       status: $status
+      limit: $limit
     ) {
       _id
       attachment {
@@ -36,16 +38,17 @@ export const ADD_COURSES = gql`
         url
       }
       categoryId
-      code
       commentCount
       createdAt
       deadline
       description
       endDate
       name
+      classId
       startDate
       status
       type
+      limit
       unitPrice
     }
   }

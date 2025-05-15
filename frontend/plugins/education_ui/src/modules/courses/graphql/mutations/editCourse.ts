@@ -4,7 +4,6 @@ export const EDIT_COURSE = gql`
   mutation CourseEdit(
     $id: String!
     $name: String!
-    $code: String!
     $categoryId: String!
     $startDate: Date!
     $unitPrice: Float!
@@ -14,7 +13,6 @@ export const EDIT_COURSE = gql`
     courseEdit(
       _id: $id
       name: $name
-      code: $code
       categoryId: $categoryId
       startDate: $startDate
       unitPrice: $unitPrice
@@ -30,7 +28,6 @@ export const EDIT_COURSE = gql`
         url
       }
       categoryId
-      code
       commentCount
       createdAt
       deadline

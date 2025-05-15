@@ -1,11 +1,9 @@
 import { UseFormReturn } from 'react-hook-form';
-import { CurrencyField, Form, Input, Select } from 'erxes-ui';
+import { Form, Input, Select } from 'erxes-ui';
 import { CourseFormType } from '@/courses/add-course/components/formSchema';
 import {
   CategoryField,
-  DateField,
   DescriptionField,
-  OwnerIdField,
 } from '@/courses/add-course/components/fields';
 import { COURSE_TYPE_OPTIONS } from '@/courses/constants/CourseConstants';
 
@@ -16,52 +14,21 @@ export const CourseAddCoreFields = ({
 }) => {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 py-4">
-        <Form.Field
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Label>NAME</Form.Label>
-              <Form.Control>
-                <Input className="rounded-md h-8" {...field} />
-              </Form.Control>
+      <Form.Field
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <Form.Item>
+            <Form.Label>NAME</Form.Label>
+            <Form.Control>
+              <Input className="rounded-md h-8" {...field} />
+            </Form.Control>
 
-              <Form.Message className="text-destructive" />
-            </Form.Item>
-          )}
-        />
-        <Form.Field
-          control={form.control}
-          name="code"
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Label>CODE</Form.Label>
-              <div className="flex flex-col">
-                <Form.Control>
-                  <Input className="rounded-md h-8" {...field} />
-                </Form.Control>
-                <Form.Message className="text-destructive" />
-              </div>
-            </Form.Item>
-          )}
-        />
-        <Form.Field
-          control={form.control}
-          name="unitPrice"
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Label>UNIT PRICE</Form.Label>
-              <Form.Control>
-                <CurrencyField.ValueInput
-                  value={field.value}
-                  onChange={(value) => field.onChange(value)}
-                />
-              </Form.Control>
-              <Form.Message className="text-destructive" />
-            </Form.Item>
-          )}
-        />
+            <Form.Message className="text-destructive" />
+          </Form.Item>
+        )}
+      />
+      <div className="grid grid-cols-2 gap-4 mt-4 mb-4">
         <Form.Field
           control={form.control}
           name="categoryId"
@@ -75,7 +42,6 @@ export const CourseAddCoreFields = ({
             </Form.Item>
           )}
         />
-        <OwnerIdField control={form.control} />
         <Form.Field
           control={form.control}
           name="type"
@@ -112,13 +78,6 @@ export const CourseAddCoreFields = ({
             </Form.Item>
           )}
         />
-        <DateField
-          name="startDate"
-          control={form.control}
-          label={'Start Date'}
-        />
-        <DateField name="endDate" control={form.control} label={'End Date'} />
-        <DateField name="deadline" control={form.control} label={'Deadline'} />
       </div>
       <DescriptionField control={form.control} />
     </>

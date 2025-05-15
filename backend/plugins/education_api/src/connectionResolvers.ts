@@ -18,6 +18,7 @@ export interface IModels {
 }
 
 export interface IContext extends IMainContext {
+  commonQuerySelector: any;
   models: IModels;
 }
 

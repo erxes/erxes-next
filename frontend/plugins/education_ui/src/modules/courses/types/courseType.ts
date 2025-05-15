@@ -2,7 +2,6 @@ import { IAttachment } from 'erxes-ui/types';
 
 export interface ICourse {
   name: string;
-  code?: string;
   categoryId: string;
   description?: string;
   createdAt?: Date;
@@ -13,6 +12,7 @@ export interface ICourse {
   endDate?: Date;
   deadline?: Date;
   unitPrice: number;
+  limit: number;
 }
 
 export interface ICourseCategory {

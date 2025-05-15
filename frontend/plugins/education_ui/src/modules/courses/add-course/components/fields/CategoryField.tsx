@@ -1,7 +1,5 @@
 import { useState } from 'react';
-
 import {
-  Avatar,
   Combobox,
   Command,
   Popover,
@@ -57,12 +55,6 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
       >
         {currentValue ? (
           <div className="flex items-center gap-2">
-            <Avatar>
-              <Avatar.Image src={currentValue?.attachment?.url} />
-              <Avatar.Fallback colorSeed={currentValue?._id}>
-                {currentValue?.name?.charAt(0)}
-              </Avatar.Fallback>
-            </Avatar>
             <span className="truncate">{currentValue?.name}</span>
           </div>
         ) : (
@@ -87,12 +79,6 @@ export const CategoryField: React.FC<CategoryFieldProps> = ({
                 onSelect={() => handleSelectCategory(category._id)}
                 title={category.name}
               >
-                <Avatar>
-                  <Avatar.Image src={category?.attachment?.url} />
-                  <Avatar.Fallback colorSeed={category?._id}>
-                    {category?.name?.charAt(0)}
-                  </Avatar.Fallback>
-                </Avatar>
                 <TextOverflowTooltip className="ml-2" value={category.name} />
                 <Combobox.Check checked={category._id === value} />
               </Command.Item>

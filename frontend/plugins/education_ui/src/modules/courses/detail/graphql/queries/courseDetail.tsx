@@ -5,7 +5,6 @@ export const COURSE_DETAIL = gql`
     courseDetail(_id: $_id) {
       _id
       name
-      code
       categoryId
       category {
         _id

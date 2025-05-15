@@ -5,7 +5,6 @@ export const CHANGE_COURSE_STATUS = gql`
     changeCourseStatus(_id: $id, status: $status) {
       _id
       name
-      code
       categoryId
       description
       createdAt

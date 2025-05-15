@@ -6,7 +6,6 @@ import { Document } from 'mongoose';
 
 export interface ICourse {
   name: string;
-  code?: string;
   categoryId: string;
   description?: string;
   createdAt?: Date;
@@ -17,11 +16,12 @@ export interface ICourse {
   endDate?: Date;
   deadline?: Date;
   unitPrice: number;
+  limit: number;
+  classId: string;
 }
 
 export interface ICourseParams extends IListParams, ICursorPaginateParams {
   name: string;
-  code?: string;
   categoryId: string;
   description?: string;
   createdAt?: Date;
@@ -32,6 +32,7 @@ export interface ICourseParams extends IListParams, ICursorPaginateParams {
   endDate?: Date;
   deadline?: Date;
   unitPrice: number;
+  classId: string;
 }
 
 export interface ICourseDocument extends ICourse, Document {

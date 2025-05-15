@@ -36,7 +36,6 @@ export const GET_COURSES = gql`
           url
         }
         categoryId
-        code
         commentCount
         createdAt
         deadline
@@ -47,6 +46,11 @@ export const GET_COURSES = gql`
         status
         type
         unitPrice
+        classId
+        class {
+          _id
+          name
+        }
       }
       pageInfo {
         hasNextPage

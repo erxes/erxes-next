@@ -7,4 +7,9 @@ export default {
       _id: course?.categoryId,
     });
   },
+  class: async (course: ICourseDocument, _, { models }: IContext) => {
+    return models.Classes.findOne({
+      _id: course?.classId,
+    });
+  },
 };

@@ -10,8 +10,6 @@ export const CourseCategoryAddCoreFields = ({
 }) => {
   const { courseCategories = [] } = useCourseCategories();
 
-  console.log(courseCategories, '+++');
-
   return (
     <>
       <Form.Field

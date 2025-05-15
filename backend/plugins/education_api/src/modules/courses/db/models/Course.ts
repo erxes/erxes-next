@@ -13,22 +13,8 @@ export interface ICourseModel extends Model<ICourseDocument> {
 
 export const loadCourseClass = (models: IModels) => {
   class Course {
-    static async checkCodeDuplication(code: string) {
-      const course = await models.Courses.findOne({
-        code,
-      });
-
-      if (course) {
-        throw new Error('Code must be unique');
-      }
-    }
-
     public static fillSearchText(doc: ICourse) {
-      return validSearchText([
-        doc.name || '',
-        doc.description || '',
-        doc.code || '',
-      ]);
+      return validSearchText([doc.name || '', doc.description || '']);
     }
     /**
      * Retreives course
@@ -47,11 +33,6 @@ export const loadCourseClass = (models: IModels) => {
      * Create a course
      */
     public static async createCourse(doc) {
-      doc.code = doc.code
-        .replace(/\*/g, '')
-        .replace(/_/g, '')
-        .replace(/ /g, '');
-      await this.checkCodeDuplication(doc.code);
       const course = await models.Courses.create({
         ...doc,
         createdAt: new Date(),
