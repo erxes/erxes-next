@@ -137,7 +137,7 @@ export const types = `
 
   type UserConversationListResponse {
     list: [Conversation],
-    pageInfo: PageInfo
+    pageInfo: PageInfo,
     totalCount: Int,
   }
 
@@ -194,7 +194,7 @@ const filterParams = `
 export const queries = `
   conversationMessage(_id: String!): ConversationMessage
   
-  conversations(${filterParams}, skip: Int): ConversationResponse
+  conversations(${filterParams}, skip: Int): [Conversation]
 
   conversationMessages(
     conversationId: String!
