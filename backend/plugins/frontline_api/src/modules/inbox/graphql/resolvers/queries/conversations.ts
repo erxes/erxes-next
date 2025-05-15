@@ -288,14 +288,17 @@ export const conversationQueries = {
     { _id, perPage, ...args }: { _id: string; perPage: number },
     { models }: IContext,
   ) {
-    const query = { participatedUserIds: { $in: [_id] } };
+      const query = { participatedUserIds: { $in: [_id] } };
 
-  
     const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
-      model: models.Conversations,
-      params: args ,
-      query: query,
-    });
-    return { list, totalCount, pageInfo };
+        model: models.Conversations,
+        params: { 
+          ...args,          
+          limit: perPage    
+        },
+        query: query,
+      });
+
+      return { list, totalCount, pageInfo };
   },
 };
