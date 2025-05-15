@@ -308,16 +308,6 @@ export const loadCustomerClass = (models: IModels) => {
         oldTypeIds: customerIds,
       });
 
-    //  await sendTRPCMessage({
-    //     pluginName: 'frontline',
-    //     method: 'mutation',
-    //     module: 'inbox',
-    //     action: 'changeCustomer',
-    //     input: {
-    //       customerId: customer._id,
-    //       customerIds,
-    //     },
-    //   });
 
       return customer;
     }
