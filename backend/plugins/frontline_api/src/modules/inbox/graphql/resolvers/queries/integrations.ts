@@ -95,7 +95,7 @@ export const integrationQueries = {
       await cursorPaginate<IIntegrationDocument>({
         model: models.Integrations,
         params: args,
-        query: args,
+        query: query,
       });
     return { list, totalCount, pageInfo };
   },
