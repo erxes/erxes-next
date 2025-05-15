@@ -54,8 +54,7 @@ RUN apt-get update -y \
     && rover supergraph compose --config /app/backend/gateway/src/apollo-router/dummy/supergraph.yaml --elv2-license=accept
 
 # Create Apollo Router folder
-RUN mkdir -p /app/backend/gateway/dist/src/apollo-router/temp \
-    && chown -R 1000:1000 /app/backend/gateway/dist/src/apollo-router
+RUN mkdir -p /app/backend/gateway/dist/src/apollo-router/temp 
 
 # Download Apollo Router binary safely
 RUN cd /app/backend/gateway/dist/src/apollo-router/temp \
