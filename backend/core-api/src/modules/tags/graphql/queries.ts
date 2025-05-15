@@ -2,6 +2,7 @@ import { ITagFilterQueryParams } from '@/tags/@types/tag';
 import { cursorPaginate, getPlugin, getPlugins } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
+import { getContentTypes } from '../utils';
 
 const generateFilter = async ({ params, commonQuerySelector, models }) => {
   const { type, searchValue, tagIds, parentId, ids, excludeIds } = params;
@@ -9,7 +10,14 @@ const generateFilter = async ({ params, commonQuerySelector, models }) => {
   const filter: FilterQuery<ITagFilterQueryParams> = { ...commonQuerySelector };
 
   if (type) {
-    filter.type = type;
+    const [serviceName, contentType] = type.split(':');
+
+    if (contentType === 'all') {
+      const contentTypes: string[] = await getContentTypes(serviceName);
+      filter.type = { $in: contentTypes };
+    } else {
+      filter.type = type;
+    }
   }
 
   if (searchValue) {
@@ -53,10 +61,13 @@ export const tagQueries = {
    */
   async tagsGetTypes() {
     const services = await getPlugins();
+
     const fieldTypes: Array<{ description: string; contentType: string }> = [];
+
     for (const serviceName of services) {
       const service = await getPlugin(serviceName);
       const meta = service.config.meta || {};
+
       if (meta.tags) {
         const types = meta.tags.types || [];
 

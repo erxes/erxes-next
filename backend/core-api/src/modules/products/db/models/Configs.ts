@@ -1,17 +1,20 @@
+import { productsConfigSchema } from '@/products/db/definitions/configs';
 import {
   IProductsConfig,
   IProductsConfigDocument,
 } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { productsConfigSchema } from '@/products/db/definitions/configs';
 
 export interface IProductsConfigModel extends Model<IProductsConfigDocument> {
-  getConfig(code: string, defaultValue?: string): Promise<any>;
+  getConfig(
+    code: string,
+    defaultValue?: string,
+  ): Promise<IProductsConfigDocument>;
   createOrUpdateConfig({
     code,
     value,
-  }: IProductsConfig): IProductsConfigDocument;
+  }: IProductsConfig): Promise<IProductsConfigDocument>;
 }
 
 export const loadProductsConfigClass = (models: IModels) => {
@@ -47,10 +50,10 @@ export const loadProductsConfigClass = (models: IModels) => {
           { $set: { value } },
         );
 
-        return models.ProductsConfigs.findOne({ _id: obj._id });
+        return await models.ProductsConfigs.findOne({ _id: obj._id });
       }
 
-      return models.ProductsConfigs.create({ code, value });
+      return await models.ProductsConfigs.create({ code, value });
     }
   }
 

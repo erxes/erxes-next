@@ -8,11 +8,11 @@ import {
 const products = gql`
   query Products(
     $type: String
-    $categoryId: String
+    $categoryIds: [String]
     $searchValue: String
     $vendorId: String
-    $brand: String
-    $tag: String
+    $brandIds: [String]
+    $tagIds: [String]
     $segment: String
     $segmentData: String
     $sortField: String
@@ -21,11 +21,11 @@ const products = gql`
   ) {
     products(
       type: $type
-      categoryId: $categoryId
+      categoryIds: $categoryIds
       searchValue: $searchValue
       vendorId: $vendorId
-      brand: $brand
-      tag: $tag
+      brandIds: $brandIds
+      tagIds: $tagIds
       segment: $segment
       segmentData: $segmentData
       sortField: $sortField

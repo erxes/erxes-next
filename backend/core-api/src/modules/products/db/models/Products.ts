@@ -1,15 +1,19 @@
 import {
+  ICustomField,
   IProduct,
   IProductDocument,
-  ICustomField,
 } from 'erxes-api-shared/core-types';
 import { Model } from 'mongoose';
 import { nanoid } from 'nanoid';
 
-import { IModels } from '~/connectionResolvers';
 import { PRODUCT_STATUSES } from '@/products/constants';
-import { checkCodeMask, checkSameMaskConfig } from '@/products/utils';
 import { productSchema } from '@/products/db/definitions/products';
+import {
+  checkCodeMask,
+  checkSameMaskConfig,
+  initCustomField,
+} from '@/products/utils';
+import { IModels } from '~/connectionResolvers';
 
 export interface IProductModel extends Model<IProductDocument> {
   getProduct(selector: any): Promise<IProductDocument>;
@@ -82,6 +86,14 @@ export const loadProductClass = (models: IModels) => {
 
       doc.uom = await models.Uoms.checkUOM(doc);
 
+      doc.customFieldsData = await initCustomField(
+        models,
+        category,
+        doc.code,
+        [],
+        doc.customFieldsData,
+      );
+
       return models.Products.create({ ...doc, createdAt: new Date() });
     }
 
@@ -108,6 +120,14 @@ export const loadProductClass = (models: IModels) => {
           throw new Error('Code does not match the category mask');
         }
       }
+
+      doc.customFieldsData = await initCustomField(
+        models,
+        category,
+        doc.code || product.code,
+        product.customFieldsData,
+        doc.customFieldsData,
+      );
 
       doc.sameMasks = await checkSameMaskConfig(models, {
         ...product,
