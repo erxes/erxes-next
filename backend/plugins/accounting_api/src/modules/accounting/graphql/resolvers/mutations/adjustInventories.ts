@@ -1,7 +1,7 @@
 import { getTomorrow } from 'erxes-api-shared/utils';
 import { IModels, IContext } from '~/connectionResolvers';
-import { IAdjustInventory, ADJ_INV_STATUSES } from '~/modules/accounting/@types/adjustInventory';
-import { TR_STATUSES } from '~/modules/accounting/@types/constants';
+import { IAdjustInventory, ADJ_INV_STATUSES } from '@/accounting/@types/adjustInventory';
+import { TR_STATUSES } from '@/accounting/@types/constants';
 import { calcInvTrs, fixInvTrs } from '../../../utils/inventories';
 
 const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory) => {

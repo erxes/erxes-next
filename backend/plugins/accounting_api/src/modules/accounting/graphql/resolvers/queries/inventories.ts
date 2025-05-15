@@ -1,5 +1,5 @@
 import { IContext } from "~/connectionResolvers";
-import { JOURNALS } from "~/modules/accounting/@types/constants";
+import { JOURNALS } from "@/accounting/@types/constants";
 
 
 const configQueries = {

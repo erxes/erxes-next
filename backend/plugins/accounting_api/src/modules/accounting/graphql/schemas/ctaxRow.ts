@@ -1,5 +1,5 @@
 export const types = () => `
-  type CtaxRow @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type CtaxRow {
     _id: String!
     name: String
     number: String

@@ -1,15 +1,15 @@
-import { IContext } from '../../connectionResolver';
-import { IAccountDocument } from '../../models/definitions/account';
+import { IContext } from "~/connectionResolvers";
+import { IAccountDocument } from "~/modules/accounting/@types/account";
 
 export default {
   __resolveReference({ _id }, { models }: IContext) {
     return models.Accounts.findOne({ _id });
   },
 
-  category(account: IAccountDocument, _, { dataLoaders }: IContext) {
+  async category(account: IAccountDocument, _, { models }: IContext) {
     return (
       (account.categoryId &&
-        dataLoaders.accountCategory.load(account.categoryId)) ||
+        await models.AccountCategories.findOne({ _id: account.categoryId })) ||
       null
     );
   },

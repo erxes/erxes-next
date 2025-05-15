@@ -1,5 +1,5 @@
 import { IContext } from "~/connectionResolvers";
-import { CTAX_ROW_STATUS } from "~/modules/accounting/@types/ctaxRow";
+import { CTAX_ROW_STATUS } from "@/accounting/@types/ctaxRow";
 
 const generateFilterCat = async ({
   kinds,

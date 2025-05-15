@@ -1,17 +1,19 @@
-import { IContext } from '../../connectionResolver';
-import { sendCoreMessage } from '../../messageBroker';
-import { ITransactionDocument } from '../../models/definitions/transaction';
+import { ITransactionDocument } from "@/accounting/@types/transaction";
+import { IContext } from "~/connectionResolvers";
+import { sendCoreMessage } from "~/trpc/trpc-clients";
+
 
 export default {
   __resolveReference({ _id }, { models }: IContext) {
     return models.Transactions.findOne({ _id });
   },
 
-  async followTrs(transaction: ITransactionDocument, _, { dataLoaders }: IContext) {
+  async followTrs(transaction: ITransactionDocument, _, { models }: IContext) {
     if (!transaction.follows?.length)
       return;
 
-    return transaction.follows.map(f => dataLoaders.transaction.load(f.id))
+    // return transaction.follows.map(f => dataLoaders.transaction.load(f.id))
+    return await models.Transactions.find({ _id: { $in: transaction.follows.map(f => f.id) } }).lean();
   },
 
   async vatRow(transaction: ITransactionDocument, _, { models }: IContext) {
@@ -30,33 +32,33 @@ export default {
     return await models.CtaxRows.findOne({ _id: transaction.ctaxRowId });
   },
 
-  async branch(transaction: ITransactionDocument, _, { subdomain }: IContext) {
-    if (!transaction.branchId) {
-      return;
-    }
+  // async branch(transaction: ITransactionDocument, _, { subdomain }: IContext) {
+  //   if (!transaction.branchId) {
+  //     return;
+  //   }
 
-    return await sendCoreMessage({
-      subdomain,
-      action: 'branches.findOne',
-      data: { _id: transaction.branchId },
-      isRPC: true,
-      defaultValue: {}
-    });
-  },
+  //   return await sendCoreMessage({
+  //     subdomain,
+  //     action: 'branches.findOne',
+  //     data: { _id: transaction.branchId },
+  //     isRPC: true,
+  //     defaultValue: {}
+  //   });
+  // },
 
-  async department(transaction: ITransactionDocument, _, { subdomain }: IContext) {
-    if (!transaction.departmentId) {
-      return;
-    }
+  // async department(transaction: ITransactionDocument, _, { subdomain }: IContext) {
+  //   if (!transaction.departmentId) {
+  //     return;
+  //   }
 
-    return await sendCoreMessage({
-      subdomain,
-      action: 'departments.findOne',
-      data: { _id: transaction.departmentId },
-      isRPC: true,
-      defaultValue: {}
-    });
-  },
+  //   return await sendCoreMessage({
+  //     subdomain,
+  //     action: 'departments.findOne',
+  //     data: { _id: transaction.departmentId },
+  //     isRPC: true,
+  //     defaultValue: {}
+  //   });
+  // },
 
   async customer(transaction: ITransactionDocument, _params, { subdomain }: IContext) {
     if (!transaction.customerId) {
