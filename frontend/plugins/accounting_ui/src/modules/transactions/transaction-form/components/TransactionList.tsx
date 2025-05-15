@@ -4,19 +4,19 @@ import { useFieldArray } from 'react-hook-form';
 
 import {
   ITransactionGroupForm,
-  TAddTransactionGroup,
+  TTrDoc,
 } from '../types/AddTransaction';
 import { Tabs, Button } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { activeJournalState } from '../states/trStates';
 import { AddTransaction } from '../../components/AddTransaction';
-import { CashTransaction } from './CashForm';
-import { MainJournalForm } from './MainJournalForm';
-import { BankTransaction } from './BankForm';
+import { CashTransaction } from './forms/CashForm';
+import { MainJournalForm } from './forms/MainJournalForm';
+import { BankTransaction } from './forms/BankForm';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
-import { JOURNAL_LABELS } from '@/settings/account/constants/journalLabel';
-import { InvIncomeForm } from './InvIncomeForm';
-import { JournalEnum } from '@/settings/account/types/Account';
+import { InvIncomeForm } from './forms/InvIncomeForm';
+import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
+
 
 // Separate the transaction form component to prevent unnecessary re-renders
 const TransactionForm = ({
@@ -28,13 +28,13 @@ const TransactionForm = ({
   field: any;
   index: number;
 }) => {
-  if (field.journal === JournalEnum.CASH)
-    return <CashTransaction form={form} index={index} />;
-  if (field.journal === JournalEnum.BANK)
-    return <BankTransaction form={form} index={index} />;
-  if (field.journal === JournalEnum.MAIN)
+  if (field.journal === TrJournalEnum.MAIN)
     return <MainJournalForm form={form} index={index} />;
-  if (field.journal === JournalEnum.INV_INCOME)
+  if (field.journal === TrJournalEnum.CASH)
+    return <CashTransaction form={form} index={index} />;
+  if (field.journal === TrJournalEnum.BANK)
+    return <BankTransaction form={form} index={index} />;
+  if (field.journal === TrJournalEnum.INV_INCOME)
     return <InvIncomeForm form={form} index={index} />;
   return null;
 };
@@ -49,7 +49,7 @@ export const TransactionsTabsList = ({
   // Use useFieldArray with keyName for better performance
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: 'details',
+    name: 'trDocs',
     keyName: 'fieldId',
     rules: {
       minLength: 1,
@@ -62,11 +62,9 @@ export const TransactionsTabsList = ({
     index.toString() === activeJournal && setActiveJournal('0');
   };
 
-  const handleAddTransaction = (journal?: JournalEnum) => {
-    const selectedJournal = journal || JournalEnum.MAIN;
-    const newJournal = JOURNALS_BY_JOURNAL[
-      selectedJournal
-    ] as TAddTransactionGroup['details'][0];
+  const handleAddTransaction = (journal?: TrJournalEnum) => {
+    const selectedJournal = journal || TrJournalEnum.MAIN;
+    const newJournal = JOURNALS_BY_JOURNAL(selectedJournal) as TTrDoc;
     append(newJournal);
     setActiveJournal(fields.length.toString());
   };
@@ -87,7 +85,7 @@ export const TransactionsTabsList = ({
               asChild
             >
               <div>
-                {JOURNAL_LABELS[field.journal]}
+                {TR_JOURNAL_LABELS[field.journal]}
 
                 <Button
                   variant="ghost"
