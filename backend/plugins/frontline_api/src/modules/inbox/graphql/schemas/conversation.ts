@@ -29,7 +29,7 @@ export const types = `
     tagIds: [String]
     operatorStatus: String
 
-    messages: ConversationMessageResponse
+    messages: [ConversationMessage]
     callProAudio: String
     
     tags: [Tag]
@@ -51,11 +51,6 @@ export const types = `
     totalCount: Int,
   }
 
-  type ConversationMessageResponse {
-    list: [ConversationMessage],
-    pageInfo: PageInfo
-    totalCount: Int,
-  }
   type EngageData {
     messageId: String
     brandId: String
@@ -142,7 +137,8 @@ export const types = `
 
   type UserConversationListResponse {
     list: [Conversation],
-    totalCount: Float,
+    pageInfo: PageInfo
+    totalCount: Int,
   }
 
   input ConversationMessageParams {
@@ -205,7 +201,7 @@ export const queries = `
     skip: Int
     limit: Int
     getFirst: Boolean
-  ): ConversationMessageResponse
+  ): [ConversationMessage]
 
   conversationMessagesTotalCount(conversationId: String!): Int
   conversationCounts(${filterParams}, only: String): JSON
