@@ -57,9 +57,6 @@ RUN apt-get update -y \
 RUN mkdir -p /app/backend/gateway/dist/src/apollo-router/temp \
     && chown -R 1000:1000 /app/backend/gateway/dist/src/apollo-router
 
-# Switch to non-root user
-USER 1000
-
 # Download Apollo Router binary safely
 RUN cd /app/backend/gateway/dist/src/apollo-router/temp \
     && export VERSION=v1.59.2 \
