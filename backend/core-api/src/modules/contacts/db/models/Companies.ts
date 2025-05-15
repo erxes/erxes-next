@@ -82,6 +82,10 @@ export const loadCompanyClass = (models: IModels) => {
 
       this.fixListFields(doc, doc.trackedData);
 
+      doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+        doc.customFieldsData,
+      );
+
       const company = await models.Companies.create({
         ...doc,
         createdAt: new Date(),
@@ -102,6 +106,13 @@ export const loadCompanyClass = (models: IModels) => {
       const company = await models.Companies.getCompany(_id);
 
       this.fixListFields(doc, doc.trackedData, company);
+
+      // clean custom field values
+      if (doc.customFieldsData) {
+        doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+          doc.customFieldsData,
+        );
+      }
 
       const searchText = this.fillSearchText(
         Object.assign({}, company, doc) as ICompany,
