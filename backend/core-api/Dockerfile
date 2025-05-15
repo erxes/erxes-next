@@ -1,52 +1,59 @@
-# Base image for common dependencies
-FROM --platform=linux/amd64 node:22-alpine AS build
+# Syntax
+FROM --platform=linux/amd64 node:22-alpine AS deps
 
 # Set working directory
 WORKDIR /app
 
-COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
-
-COPY ./backend/core-api/package.json /app/backend/core-api/
-COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
-
-# Install pnpm and dependencies
+# Install pnpm globally in a separate layer
 RUN npm install -g pnpm
-RUN pnpm install
 
-# Build the test project
-FROM --platform=linux/amd64 build AS core-api-build
+# Copy only package files for better caching
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY backend/core-api/package.json ./backend/core-api/
+COPY backend/erxes-api-shared/package.json ./backend/erxes-api-shared/
 
-# Copy source code
-COPY ./backend/core-api /app/backend/core-api
-COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
+# Install dependencies with frozen lockfile and production only
+RUN pnpm install --frozen-lockfile --prod
 
-# Build following exact sequence
-WORKDIR /app/backend/core-api
-
-ENV NX_DAEMON=false
-RUN npx nx build:packageJson core-api
-RUN npx nx build core-api
-
-# Final stage: Run the application
-FROM --platform=linux/amd64 node:22-alpine as core-api
+# Builder stage
+FROM --platform=linux/amd64 node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy built applications from previous stages
-COPY --chown=1000 --from=core-api-build /app /app
+# Copy pnpm and node_modules from deps stage
+COPY --from=deps /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=deps /usr/local/bin/pnpm /usr/local/bin/pnpm
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/backend/core-api/node_modules ./backend/core-api/node_modules
+COPY --from=deps /app/backend/erxes-api-shared/node_modules ./backend/erxes-api-shared/node_modules
 
-# Install pnpm for production
-RUN npm install -g pnpm
+# Copy source files
+COPY . .
 
-# Install production dependencies
-WORKDIR /app/backend/core-api/dist
-RUN pnpm install
+# Build the project
+ENV NX_DAEMON=false
+RUN pnpm nx build:packageJson core-api && \
+    pnpm nx build core-api
 
-# Set environment variables
+# Production stage
+FROM --platform=linux/amd64 node:22-alpine AS runner
+
+WORKDIR /app
+
+# Copy only the necessary files from builder
+COPY --from=builder /app/backend/core-api/dist ./
+COPY --from=builder /app/backend/core-api/package.json ./
+
+# Install production dependencies only
+RUN npm install -g pnpm && \
+    pnpm install --prod --frozen-lockfile && \
+    pnpm store prune
+
+# Set production environment
 ENV NODE_ENV=production
 
-# Use non root user
-USER 1000
+# Use non-root user for security
+USER node
 
 # Start the application
 CMD ["node", "src/main.js"]
