@@ -13,50 +13,31 @@ export const conversationQueries = {
   /**
    * Conversations list
    */
-  async conversations(
-    _root,
-    params: IListArgs,
-    { user, models, subdomain,serverTiming }: IContext,
-  ) {
-      serverTiming.startTime('conversations');
+ async conversations(
+  _root,
+  params: IListArgs,
+  { user, models, subdomain, serverTiming }: IContext,
+) {
+  serverTiming.startTime('conversations');
 
-        // filter by ids of conversations
-        if (params && params.ids) {
-          return models.Conversations.find({ _id: { $in: params.ids } })
-            .sort({
-              updatedAt: -1,
-            })
-            .skip(params.skip || 0)
-            .limit(params.limit || 0);
-        }
-
-        serverTiming.startTime('buildQuery');
-
-    // initiate query builder
-      const qb = new QueryBuilder(models, subdomain, params, {
-        _id: user._id,
-        code: user.code,
-        starredConversationIds: user.starredConversationIds,
-        role: user.role,
-      });
+   const qb = new QueryBuilder(models, subdomain, params, {
+      _id: user._id,
+      code: user.code,
+      starredConversationIds: user.starredConversationIds,
+      role: user.role,
+    });
 
     await qb.buildAllQueries();
+    const query = qb.mainQuery();
+    const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
+    model: models.Conversations,
+    params: params,
+    query: query,
+  });
 
-    serverTiming.endTime('buildQuery');
+  return { list, totalCount, pageInfo };
+},
 
-    serverTiming.startTime('conversationsQuery');
-
-    const conversations = await models.Conversations.find(qb.mainQuery())
-      .sort({ updatedAt: -1 })
-      .skip(params.skip || 0)
-      .limit(params.limit || 0);
-
-    serverTiming.endTime('conversationsQuery');
-
-    serverTiming.endTime('conversations');
-
-    return conversations;
-  },
 
   /**
    * Get conversation messages

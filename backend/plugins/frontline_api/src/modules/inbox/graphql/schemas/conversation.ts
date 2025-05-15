@@ -123,6 +123,12 @@ export const types = `
     text: String
   }
 
+type ConversationListResponse {
+  list: [Conversation]
+  totalCount: Int
+  pageInfo: PageInfo
+}
+
   type ConversationAdminMessageInsertedResponse {
     customerId: String
     unreadCount: Int
@@ -189,7 +195,7 @@ const filterParams = `
 export const queries = `
   conversationMessage(_id: String!): ConversationMessage
   
-  conversations(${filterParams}, skip: Int): [Conversation]
+  conversations(${filterParams}, skip: Int): ConversationListResponse
 
   conversationMessages(
     conversationId: String!
