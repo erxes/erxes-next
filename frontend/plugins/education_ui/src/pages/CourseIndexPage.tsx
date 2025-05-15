@@ -1,6 +1,6 @@
 import { CoursesHeader } from '@/courses/components/CoursesHeader';
 import { CoursesRecordTable } from '@/courses/components/CoursesRecordTable';
-import { CourseDetail } from '~/modules/courses/detail/CourseDetail';
+import { CourseDetail } from '~/modules/courses/detail/components/CourseDetail';
 
 const CourseIndexPage = () => {
   return (
