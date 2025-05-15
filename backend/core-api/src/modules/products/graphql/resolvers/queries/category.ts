@@ -1,8 +1,7 @@
 import { escapeRegExp } from 'erxes-api-shared/utils';
 import { FilterQuery } from 'mongoose';
-import { IContext } from '~/connectionResolvers';
+import { IContext, IModels } from '~/connectionResolvers';
 
-import { IModels } from '~/connectionResolvers';
 import { IProductCategoryParams } from '@/products/@types';
 
 const generateFilter = async (
@@ -12,7 +11,7 @@ const generateFilter = async (
     withChild,
     searchValue,
     meta,
-    brand,
+    brandIds,
     status,
     ids,
   }: IProductCategoryParams,
@@ -44,8 +43,8 @@ const generateFilter = async (
     }
   }
 
-  if (brand) {
-    filter.scopeBrandIds = { $in: [brand] };
+  if (brandIds) {
+    filter.scopeBrandIds = { $in: brandIds };
   }
 
   if (meta) {

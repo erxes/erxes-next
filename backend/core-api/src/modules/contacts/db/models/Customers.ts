@@ -3,8 +3,10 @@ import {
   IBrowserInfo,
   ICustomer,
   ICustomerDocument,
+  ICustomField,
+  IUserDocument,
 } from 'erxes-api-shared/core-types';
-import { validSearchText } from 'erxes-api-shared/utils';
+import { sendTRPCMessage, validSearchText } from 'erxes-api-shared/utils';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import {
@@ -14,16 +16,16 @@ import {
   IUpdateMessengerCustomerParams,
   IVisitorContactInfoParams,
 } from '../../@types/customer';
-import { ICustomField } from 'erxes-api-shared/core-types'
+
 interface ICustomerFieldsInput {
   primaryEmail?: string;
   primaryPhone?: string;
   code?: string;
 }
 export interface ICustomerModel extends Model<ICustomerDocument> {
-    checkDuplication(
+  checkDuplication(
     customerFields: ICustomerFieldsInput,
-    idsToExclude?: string[] | string
+    idsToExclude?: string[] | string,
   ): never;
   getCustomer(_id: string): Promise<ICustomerDocument>;
   getCustomerName(customer: ICustomer): Promise<string>;
@@ -36,13 +38,16 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
   ): Promise<ICustomerDocument[]>;
   calcPSS(doc: any): IPSS;
 
-  createCustomer(doc: ICustomer): Promise<ICustomerDocument>;
+  createCustomer(
+    doc: ICustomer,
+    uses?: IUserDocument,
+  ): Promise<ICustomerDocument>;
   updateCustomer(_id: string, doc: ICustomer): Promise<ICustomerDocument>;
   removeCustomers(customerIds: string[]): Promise<{ n: number; ok: number }>;
   mergeCustomers(
     customerIds: string[],
     customerFields: ICustomer,
-    user?: any
+    user?: any,
   ): Promise<ICustomerDocument>;
   markCustomerAsActive(_id: string): Promise<ICustomerDocument>;
   markCustomerAsNotActive(_id: string): Promise<ICustomerDocument>;
@@ -65,6 +70,18 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
     _id: string,
     browserInfo: IBrowserInfo,
   ): Promise<ICustomerDocument>;
+
+  changeState(_id: string, value: string): Promise<ICustomerDocument>;
+  mergeCustomers(
+    customerIds: string[],
+    customerFields: ICustomer,
+    user?: any,
+  ): Promise<ICustomerDocument>;
+  updateVerificationStatus(
+    customerIds: string[],
+    type: string,
+    status: string,
+  ): Promise<ICustomerDocument[]>;
 }
 
 export const loadCustomerClass = (models: IModels) => {
@@ -118,7 +135,18 @@ export const loadCustomerClass = (models: IModels) => {
      */
     public static async createCustomer(
       doc: ICustomer,
+      user?: IUserDocument,
     ): Promise<ICustomerDocument> {
+      try {
+        await this.checkDuplication(doc);
+      } catch (e) {
+        throw new Error(e.message);
+      }
+
+      if (!doc.ownerId && user) {
+        doc.ownerId = user._id;
+      }
+
       if (doc.primaryEmail && !doc.emails) {
         doc.emails = [doc.primaryEmail];
       }
@@ -127,7 +155,20 @@ export const loadCustomerClass = (models: IModels) => {
         doc.phones = [doc.primaryPhone];
       }
 
-      const customer = await models.Customers.create(doc);
+      doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+        doc.customFieldsData,
+      );
+
+      if (doc.integrationId) {
+        doc.relatedIntegrationIds = [doc.integrationId];
+      }
+
+      const pssDoc = models.Customers.calcPSS(doc);
+
+      const customer = await models.Customers.create({
+        ...doc,
+        ...pssDoc,
+      });
 
       return models.Customers.getCustomer(customer._id);
     }
@@ -136,9 +177,30 @@ export const loadCustomerClass = (models: IModels) => {
      * Update customer
      */
     public static async updateCustomer(_id: string, doc: ICustomer) {
+      try {
+        await this.checkDuplication(doc, _id);
+      } catch (e) {
+        throw new Error(e.message);
+      }
+
+      const oldCustomer = await models.Customers.getCustomer(_id);
+
+      if (doc.customFieldsData) {
+        // clean custom field values
+
+        doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+          doc.customFieldsData,
+        );
+      }
+
+      const pssDoc = models.Customers.calcPSS({
+        ...oldCustomer,
+        ...doc,
+      });
+
       return await models.Customers.findOneAndUpdate(
         { _id },
-        { $set: { ...doc, updatedAt: new Date() } },
+        { $set: { ...doc, ...pssDoc } },
         { new: true },
       );
     }
@@ -147,99 +209,123 @@ export const loadCustomerClass = (models: IModels) => {
      * Remove customers
      */
     public static async removeCustomers(customerIds: string[]) {
+      await sendTRPCMessage({
+        pluginName: 'frontline',
+        method: 'mutation',
+        module: 'inbox',
+        action: 'removeCustomersConversations',
+        input: {
+          customerIds,
+        },
+      });
+
       return models.Customers.deleteMany({ _id: { $in: customerIds } });
     }
-  public static async mergeCustomers(
-  customerIds: string[],
-  customerFields: ICustomer,
-  user?: any
-) {
-  // Check for duplicated fields
-  await models.Customers.checkDuplication(customerFields, customerIds);
 
-  let scopeBrandIds: string[] = [];
-  let tagIds: string[] = [];
-  let customFieldsData: ICustomField[] = [];
-  let state: any = '';
+    /**
+     * Merge customers
+     */
+    public static async mergeCustomers(
+      customerIds: string[],
+      customerFields: ICustomer,
+      // user?: IUserDocument
+      user?: any,
+    ) {
+      // Checking duplicated fields of customer
+      await this.checkDuplication(customerFields, customerIds);
 
-  let emails: string[] = [];
-  let phones: string[] = [];
+      let scopeBrandIds: string[] = [];
+      let tagIds: string[] = [];
+      let customFieldsData: ICustomField[] = [];
+      let state: any = '';
 
-  if (customerFields.primaryEmail) {
-    emails.push(customerFields.primaryEmail);
-  }
+      let emails: string[] = [];
+      let phones: string[] = [];
 
-  if (customerFields.primaryPhone) {
-    phones.push(customerFields.primaryPhone);
-  }
+      if (customerFields.primaryEmail) {
+        emails.push(customerFields.primaryEmail);
+      }
 
-  // Collect data from all customers
-  for (const customerId of customerIds) {
-    const customerObj = await models.Customers.findOne({ _id: customerId });
+      if (customerFields.primaryPhone) {
+        phones.push(customerFields.primaryPhone);
+      }
 
-    if (customerObj) {
-      // Get last customer's integrationId
-      customerFields.integrationId = customerObj.integrationId;
+      const customers = await models.Customers.find({
+        _id: { $in: customerIds },
+      });
 
-      // Merge custom fields data
-      customFieldsData = [
-        ...customFieldsData,
-        ...(customerObj.customFieldsData || []),
-      ];
+      for (const customer of customers) {
+        customerFields.integrationId = customer.integrationId;
 
-      // Merge scopeBrandIds
-      scopeBrandIds = [
-        ...scopeBrandIds,
-        ...(customerObj.scopeBrandIds || []),
-      ];
+        // merge custom fields data
+        customFieldsData = [
+          ...customFieldsData,
+          ...(customer.customFieldsData || []),
+        ];
 
-      const customerTags: string[] = customerObj.tagIds || [];
+        // Merging scopeBrandIds
+        scopeBrandIds = [...scopeBrandIds, ...(customer.scopeBrandIds || [])];
 
-      // Merge tags
-      tagIds = tagIds.concat(customerTags);
+        const customerTags: string[] = customer.tagIds || [];
 
-      // Merge emails and phones
-      emails = [...emails, ...(customerObj.emails || [])];
-      phones = [...phones, ...(customerObj.phones || [])];
+        // Merging customer's tag and companies into 1 array
+        tagIds = tagIds.concat(customerTags);
 
-      // Merge customer state
-      state = customerObj.state;
+        // Merging emails, phones
+        emails = [...emails, ...(customer.emails || [])];
+        phones = [...phones, ...(customer.phones || [])];
+
+        // Merging customer`s state for new customer
+        state = customer.state;
+
+        await models.Customers.findByIdAndUpdate(customer._id, {
+          $set: { status: 'deleted' },
+        });
+      }
+
+      // Removing Duplicates
+      scopeBrandIds = Array.from(new Set(scopeBrandIds));
+      tagIds = Array.from(new Set(tagIds));
+
+      // Removing Duplicated Emails from customer
+      emails = Array.from(new Set(emails));
+      phones = Array.from(new Set(phones));
+
+      // Creating customer with properties
+      const customer = await this.createCustomer(
+        {
+          ...customerFields,
+          scopeBrandIds,
+          customFieldsData,
+          tagIds,
+          mergedIds: customerIds,
+          emails,
+          phones,
+          state,
+        },
+        user,
+      );
+
+      await models.Conformities.changeConformity({
+        type: 'customer',
+        newTypeId: customer._id,
+        oldTypeIds: customerIds,
+      });
+
+      // await sendTRPCMessage({
+      //   pluginName: 'frontline',
+      //   method: 'mutation',
+      //   module: 'inbox',
+      //   action: 'changeCustomer',
+      //   input: {
+      //     customerId: customer._id,
+      //     customerIds,
+      //   },
+      // });
+
+      return customer;
     }
-  }
 
-  // Perform bulk update to mark customers as deleted
-  await models.Customers.updateMany(
-    { _id: { $in: customerIds } },
-    { $set: { status: 'deleted' } }
-  );
-
-  // Remove duplicates
-  scopeBrandIds = Array.from(new Set(scopeBrandIds));
-  tagIds = Array.from(new Set(tagIds));
-  emails = Array.from(new Set(emails));
-  phones = Array.from(new Set(phones));
-
-  // Create new customer with merged properties
-  const customer = await this.createCustomer({
-    ...customerFields,
-    scopeBrandIds,
-    customFieldsData,
-    tagIds,
-    mergedIds: customerIds,
-    emails,
-    phones,
-    state,
-  });
-
-  // Update associated modules
-  await models.Conformities.changeConformity({
-    type: 'customer',
-    newTypeId: customer._id,
-    oldTypeIds: customerIds,
-  });
-
-  return customer;
-}
     /**
      * Mark customer as active
      */
@@ -341,7 +427,11 @@ export const loadCustomerClass = (models: IModels) => {
     }: ICreateMessengerCustomerParams) {
       this.fixListFields(doc, customData);
 
-      const { customFieldsData, trackedData } = customData || {};
+      const { customFieldsData, trackedData } =
+        await models.Fields.generateCustomFieldsData(
+          customData,
+          'core:customer',
+        );
 
       return this.createCustomer({
         ...doc,
@@ -365,7 +455,11 @@ export const loadCustomerClass = (models: IModels) => {
 
       this.fixListFields(doc, customData, customer);
 
-      const { customFieldsData, trackedData } = customData || {};
+      const { customFieldsData, trackedData } =
+        await models.Fields.generateCustomFieldsData(
+          customData,
+          'core:customer',
+        );
 
       const modifier: any = {
         ...doc,
@@ -508,6 +602,20 @@ export const loadCustomerClass = (models: IModels) => {
       await models.Customers.findByIdAndUpdate(_id, query);
 
       // updated customer
+      return models.Customers.findOne({ _id });
+    }
+
+    /*
+     * Change state
+     */
+    public static async changeState(_id: string, value: string) {
+      await models.Customers.findByIdAndUpdate(
+        { _id },
+        {
+          $set: { state: value },
+        },
+      );
+
       return models.Customers.findOne({ _id });
     }
 
@@ -659,6 +767,71 @@ export const loadCustomerClass = (models: IModels) => {
       }
 
       return { profileScore: score, searchText, state };
+    }
+
+    /**
+     * Checking if customer has duplicated unique properties
+     */
+    public static async checkDuplication(
+      customerFields: {
+        primaryEmail?: string;
+        primaryPhone?: string;
+        code?: string;
+      },
+      idsToExclude?: string[] | string,
+    ) {
+      const query: { [key: string]: any } = {
+        status: { $ne: 'deleted' },
+      };
+      let previousEntry;
+
+      // Adding exclude operator to the query
+      if (idsToExclude) {
+        query._id =
+          idsToExclude instanceof Array
+            ? { $nin: idsToExclude }
+            : { $ne: idsToExclude };
+      }
+
+      if (!customerFields) {
+        return;
+      }
+
+      if (customerFields.primaryEmail) {
+        // check duplication from primaryEmail
+        previousEntry = await models.Customers.find({
+          ...query,
+          primaryEmail: customerFields.primaryEmail,
+        });
+
+        if (previousEntry.length > 0) {
+          throw new Error('Duplicated email');
+        }
+      }
+
+      if (customerFields.primaryPhone) {
+        // check duplication from primaryPhone
+        previousEntry = await models.Customers.find({
+          ...query,
+          primaryPhone: customerFields.primaryPhone,
+        });
+
+        if (previousEntry.length > 0) {
+          throw new Error('Duplicated phone');
+        }
+      }
+
+      if (customerFields.code) {
+        // check duplication from code
+        previousEntry = await models.Customers.find({
+          ...query,
+          code: customerFields.code,
+        });
+
+        if (previousEntry.length > 0) {
+          throw new Error('Duplicated code');
+        }
+      }
     }
   }
 

@@ -106,6 +106,7 @@ const queryParams = `
 export const queries = `
   customers(${queryParams}): CustomersListResponse
   customerDetail(_id: String!): Customer
+  contactsLogs(action: String, content:JSON, contentType: String): JSON
 `;
 
 const fields = `
@@ -139,5 +140,11 @@ export const mutations = `
   customersAdd(state: String, ${fields}): Customer
   customersEdit(_id: String!, ${fields}): Customer
   customersRemove(customerIds: [String]): [String]
+
   customersMerge(customerIds: [String], customerFields: JSON): Customer
+  customersVerify(verificationType:String!): String
+
+  customersChangeState(_id: String!, value: String!): Customer
+  customersChangeVerificationStatus(customerIds: [String], type: String!, status: String!): [Customer]
+  customersChangeStateBulk(_ids: [String]!, value: String!): JSON
 `;

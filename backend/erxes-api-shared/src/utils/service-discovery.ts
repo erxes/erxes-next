@@ -1,18 +1,21 @@
 import * as dotenv from 'dotenv';
 import { redis } from './redis';
-import { Queue } from 'bullmq';
 
 dotenv.config();
 
-const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL, LERNA_PACKAGE_NAME } =
-  process.env;
+const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL } = process.env;
 
 const isDev = NODE_ENV === 'development';
 
+interface PluginConfig {
+  name: string;
+  port: number;
+  hasSubscriptions?: boolean;
+  importExportTypes?: any;
+  meta?: any;
+}
+
 export const keyForConfig = (name: string) => `service:config:${name}`;
-const queue = new Queue('gateway-update-apollo-router', {
-  connection: redis,
-});
 
 export const getPlugins = async (): Promise<string[]> => {
   const enabledServices =
@@ -51,13 +54,7 @@ export const joinErxesGateway = async ({
   hasSubscriptions = false,
   importExportTypes,
   meta,
-}: {
-  name: string;
-  port: number;
-  hasSubscriptions?: boolean;
-  importExportTypes?: any;
-  meta?: any;
-}) => {
+}: PluginConfig) => {
   await redis.set(
     keyForConfig(name),
 
@@ -69,7 +66,9 @@ export const joinErxesGateway = async ({
     }),
   );
 
-  const address = LOAD_BALANCER_ADDRESS || `http://localhost:${port}`;
+  const address =
+    LOAD_BALANCER_ADDRESS ||
+    `http://${isDev ? 'localhost' : `plugin-${name}-api`}:${port}`;
 
   await redis.set(`service:${name}`, address);
 

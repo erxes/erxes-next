@@ -4,7 +4,7 @@ import { ITRPCContext } from '~/init-trpc';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
-export const integrationRouter = t.router({
+export const integrationTrpcRouter = t.router({
   integration: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;

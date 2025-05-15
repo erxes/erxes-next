@@ -41,3 +41,15 @@ export const COMPANY_SELECT_OPTIONS = {
     { label: 'Unknown', value: '' },
   ],
 };
+
+export const COC_LIFECYCLE_STATE_TYPES = [
+  '',
+  'subscriber',
+  'lead',
+  'marketingQualifiedLead',
+  'salesQualifiedLead',
+  'opportunity',
+  'customer',
+  'evangelist',
+  'other',
+];
