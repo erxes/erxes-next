@@ -40,7 +40,7 @@ export const VatAmountField = ({
   );
 };
 
-export const VatForm = ({
+export const TaxForm = ({
   form,
   journalIndex,
   isWithTax,
