@@ -1,5 +1,5 @@
 export const types = () => `
-  type AccountCategory {
+  type AccountCategory @key(fields: "_id") @cacheControl(maxAge: 3){
     _id: String!
     name: String
     description: String
@@ -16,7 +16,7 @@ export const types = () => `
     parent: AccountCategory
   }
 
-  type Account {
+  type Account @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String!
     code: String
     name: String

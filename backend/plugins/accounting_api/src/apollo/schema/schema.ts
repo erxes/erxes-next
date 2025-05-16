@@ -10,6 +10,20 @@ import { mutations as transactionMutations, queries as transactionQueries, types
 import { mutations as vatRowMutations, queries as vatRowQueries, types as vatRowTypes } from '../../modules/accounting/graphql/schemas/vatRow';
 
 export const types = `
+  enum CacheControlScope {
+    PUBLIC
+    PRIVATE
+  }
+  
+  directive @cacheControl(
+    maxAge: Int
+    scope: CacheControlScope
+    inheritMaxAge: Boolean
+  ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+  type SomeType {
+    visibility: CacheControlScope
+  }
   ${extendTypes}
   ${accountTypes()}
   ${vatRowTypes()}

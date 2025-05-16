@@ -17,6 +17,7 @@ import { renderingTransactionDetailState } from '../states/renderingTransactionC
 import { IconMoneybag, IconFile, IconCalendar } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { IBranch } from 'ui-modules';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {
@@ -126,19 +127,33 @@ const SumCreditCell = ({ getValue, row }: any) => {
   );
 };
 
-const BranchCell = ({ getValue, row }: any) => {
-  const [branch, setBranch] = useState(getValue() as string);
-  const { _id } = row.original;
+const BranchCell = ({ row }: any) => {
+  const { _id, branch } = row.original;
 
   return (
     <InlineCell
-      name="branchId"
+      name="branch"
       recordId={_id || ''}
-      display={() => <InlineCellDisplay>{getValue() as any}</InlineCellDisplay>}
-      edit={() => (
-        <InlineCellEdit>
-          <Input value={branch} onChange={(e) => setBranch(e.target.value)} />
-        </InlineCellEdit>
+      display={() => (
+        <InlineCellDisplay>
+          {`${branch?.code ? `${branch.code} - ` : ''}${branch?.title ?? ''}`}
+        </InlineCellDisplay>
+      )}
+    />
+  );
+};
+
+const DepartmentCell = ({ row }: any) => {
+  const { _id, department } = row.original;
+
+  return (
+    <InlineCell
+      name="department"
+      recordId={_id || ''}
+      display={() => (
+        <InlineCellDisplay>
+          {`${department?.code ? `${department.code} - ` : ''}${department?.title ?? ''}`}
+        </InlineCellDisplay>
       )}
     />
   );
@@ -251,9 +266,15 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     ),
   },
   {
-    id: 'branchId',
+    id: 'branch',
     header: () => <RecordTable.InlineHead icon={IconFile} label="Branch" />,
-    accessorKey: 'branchId',
+    accessorKey: 'branch',
     cell: ({ getValue, row }) => <BranchCell getValue={getValue} row={row} />,
+  },
+  {
+    id: 'department',
+    header: () => <RecordTable.InlineHead icon={IconFile} label="Department" />,
+    accessorKey: 'department',
+    cell: ({ getValue, row }) => <DepartmentCell getValue={getValue} row={row} />,
   },
 ];
