@@ -14,7 +14,7 @@ import {
   IPropertyInput,
 } from '../types';
 import { createFieldNameSafe, groupByType } from '../utils';
-import formSchema from './schema';
+import { segmentFormSchema } from './schema';
 type Props = {
   error?: FieldError;
   children: React.ReactNode;
@@ -24,7 +24,9 @@ const FieldWithError = ({ error, children }: Props) => {
   if (error) {
     return (
       <HoverCard>
-        <HoverCard.Trigger asChild>{children}</HoverCard.Trigger>
+        <HoverCard.Trigger asChild className="ring-2 ring-red-300 rounded">
+          <div>{children}</div>
+        </HoverCard.Trigger>
         <HoverCard.Content className="w-80">
           <Form.Message />
         </HoverCard.Content>
@@ -44,7 +46,7 @@ const PropertyField = ({
   defaultValue,
   propertyTypes,
   contentType,
-}: IPropertyField<z.infer<typeof formSchema>>) => {
+}: IPropertyField<z.infer<typeof segmentFormSchema>>) => {
   const groups = groupByType(fields);
   // const [selectedContentType] = useQueryState<string>('contentType');
   return (
@@ -63,9 +65,13 @@ const PropertyField = ({
                 <Select.Value placeholder="Select an field" />
               </Select.Trigger>
               <Select.Content>
-                {propertyTypes.map(({ value, description }: any) => (
-                  <Select.Item value={value}>{description}</Select.Item>
-                ))}
+                {propertyTypes.map(
+                  ({ value, description }: any, index: number) => (
+                    <Select.Item key={index} value={value}>
+                      {description}
+                    </Select.Item>
+                  ),
+                )}
               </Select.Content>
             </Select>
           </FieldWithError>
@@ -85,7 +91,7 @@ const PropertyField = ({
                 <Select.Value placeholder="Select an field" />
               </Select.Trigger>
               <Select.Content>
-                {Object.keys(groups).map((key) => {
+                {Object.keys(groups).map((key, index) => {
                   let groupName = key;
                   const groupDetail = (groups[key] || []).find(
                     ({ group }: any) => group === key,
@@ -95,15 +101,19 @@ const PropertyField = ({
                     groupName = groupDetail?.name || key;
                   }
                   return (
-                    <>
+                    <div key={index}>
                       <Select.Group>
                         <Select.Label>{groupName}</Select.Label>
-                        {groups[key].map(({ name, label }: any) => (
-                          <Select.Item value={name}>{label}</Select.Item>
-                        ))}
+                        {groups[key].map(
+                          ({ name, label }: any, index: number) => (
+                            <Select.Item key={index} value={name}>
+                              {label}
+                            </Select.Item>
+                          ),
+                        )}
                       </Select.Group>
                       <Select.Separator />
-                    </>
+                    </div>
                   );
                 })}
               </Select.Content>
@@ -122,7 +132,7 @@ const PropertyOperator = ({
   operators,
   parentFieldName,
   defaultValue,
-}: IPropertyCondtion<z.infer<typeof formSchema>>) => {
+}: IPropertyCondtion<z.infer<typeof segmentFormSchema>>) => {
   return (
     <Form.Field
       control={form.control}
@@ -159,7 +169,7 @@ const PropertyInput = ({
   parentFieldName,
   operators,
   selectedField,
-}: IPropertyInput<z.infer<typeof formSchema>>) => {
+}: IPropertyInput<z.infer<typeof segmentFormSchema>>) => {
   const propertyOperator = form.watch(`${parentFieldName}.propertyOperator`);
   const propertyName = form.getValues(`${parentFieldName}.propertyName`);
 
@@ -179,13 +189,14 @@ const PropertyInput = ({
     type,
     choiceOptions = [],
   } = selectedField || {};
-  console.log({ selectedField, value });
 
   if (['is', 'ins', 'it', 'if'].indexOf(value) >= 0) {
     return null;
   }
 
-  let Component = (_: ControllerRenderProps<any, any>) => <Input disabled />;
+  let Component = (field: ControllerRenderProps<any, any>) => (
+    <Input {...field} disabled={!value} />
+  );
 
   if (['dateigt', 'dateilt', 'drlt', 'drgt'].includes(value)) {
     Component = (field: ControllerRenderProps<any, any>) => (
@@ -285,7 +296,7 @@ const PropertyInput = ({
         <FieldWithError error={fieldState.error}>
           <Form.Item className="flex-1">
             <Form.Control>{Component(field)}</Form.Control>
-            <Form.Message />
+            {/* <Form.Message /> */}
           </Form.Item>
         </FieldWithError>
       )}
@@ -303,10 +314,9 @@ const Property = ({
   total,
   parentFieldName,
   contentType,
-}: IProperty<z.infer<typeof formSchema>>) => {
+}: IProperty<z.infer<typeof segmentFormSchema>>) => {
   const fieldName = createFieldNameSafe(parentFieldName, 'conditions', index);
   const propertyType = form.watch(`${fieldName}.propertyType` as any);
-  console.log({ fieldName, propertyType });
   const { fields, propertyTypes } = getFieldsProperties(propertyType);
 
   const { selectedField, operators } =
@@ -326,7 +336,7 @@ const Property = ({
         | 'conditionsConjunction' = parentFieldName
         ? `${parentFieldName}.conditionsConjunction`
         : `conditionsConjunction`;
-      const value = form.getValues(field);
+      const value = form.watch(field);
       const handleClick = () => {
         form.setValue(field, value === 'or' ? 'and' : 'or');
       };
@@ -349,7 +359,7 @@ const Property = ({
   };
 
   return (
-    <div className="flex items-center relative">
+    <div className="flex items-center relative" key={index}>
       {/* Tree line connector */}
       {total > 1 && (
         <div className="absolute left-0 flex items-center h-full">

@@ -106,6 +106,8 @@ function getNonFunctionProps<T extends object>(obj: T): Partial<T> {
     }
   }
 
+  console.log({ result });
+
   return result;
 }
 
@@ -115,6 +117,7 @@ export const initializePluginConfig = async <TConfig extends object>(
   config: TConfig,
 ) => {
   const pluginConfig = await redis.get(keyForConfig(pluginName));
+  console.log({ propertyName, pluginConfig });
   const configJSON = JSON.parse(pluginConfig || '{}');
 
   await redis.set(

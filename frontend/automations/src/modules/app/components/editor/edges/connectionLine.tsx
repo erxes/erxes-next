@@ -17,8 +17,7 @@ const ConnectionLine = ({
   toY,
   ...props
 }: ConnectionLineComponentProps) => {
-  const { fromHandle = {}, fromNode, toNode, connectionStatus } = props;
-  console.log({ props });
+  const { fromHandle, fromNode, toNode, connectionStatus } = props;
 
   //   const isOptionalConnect = checkIsOptionalConnect(fromHandle?.id);
 
@@ -28,9 +27,12 @@ const ConnectionLine = ({
     <g>
       <path
         fill="none"
-        className={
-          fromNode.type === 'action' ? 'stroke-success' : 'stroke-primary'
-        }
+        className={cn({
+          'stroke-success': fromNode.type === 'action',
+          'stroke-primary': fromNode.type === 'trigger',
+          'stroke-red-300':
+            fromNode?.data?.type === 'if' && fromHandle.id === 'no-right',
+        })}
         strokeWidth={2}
         d={`M${fromX},${fromY} C${fromX + 50},${fromY} ${
           toX - 50
@@ -42,8 +44,10 @@ const ConnectionLine = ({
         cy={toY}
         fill="#fff"
         r={10}
-        // stroke="rgb(93, 207, 44)"
-        className="fill-white stroke-success stroke-2"
+        className={cn('fill-white stroke-success stroke-2', {
+          'stroke-red-300':
+            fromNode?.data?.type === 'if' && fromHandle.id === 'no-right',
+        })}
         strokeWidth={4}
       />
     </g>

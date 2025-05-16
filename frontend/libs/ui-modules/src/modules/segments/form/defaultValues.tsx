@@ -1,7 +1,4 @@
-import { FieldValues } from 'react-hook-form';
-import formSchema from './schema';
-import { z } from 'zod';
-import { ISegment } from '../types';
+import { SegmentFormProps } from './schema';
 
 export const getDefaultValues = (
   propertyType: string,
@@ -19,12 +16,12 @@ export const getDefaultValues = (
     getSubSegments,
   } = segment;
 
-  const values: z.infer<typeof formSchema> = {
+  const values: SegmentFormProps = {
     name: name || '',
     description: description || '',
     config: config || {},
     conditionsConjunction: conditionsConjunction || 'or',
-    subOf: subOf,
+    subOf: subOf || '',
   };
 
   if (subSegmentConditions.length) {
@@ -36,7 +33,6 @@ export const getDefaultValues = (
       { propertyType, propertyName: '', propertyOperator: '' },
     ];
   }
-  console.log({ values });
 
   return values;
 };

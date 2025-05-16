@@ -15,8 +15,8 @@ import {
 } from 'erxes-api-shared/utils';
 
 import { createContext } from '~/init-trpc';
-import automations from './automations';
-import segments from './segments';
+import './automations';
+import './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -70,8 +70,6 @@ httpServer.listen(port, async () => {
     hasSubscriptions: false,
     meta: {},
   });
-  automations;
-  segments;
 });
 
 // GRACEFULL SHUTDOWN

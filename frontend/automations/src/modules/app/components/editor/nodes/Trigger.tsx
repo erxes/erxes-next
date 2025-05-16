@@ -1,55 +1,15 @@
 import { Handle, NodeProps, Position } from '@xyflow/react';
-import {
-  ChevronDown,
-  Settings,
-  Trash2,
-  ChevronRight,
-  Play,
-  X,
-  Save,
-  Plus,
-  ShoppingCart,
-  Users,
-  User,
-  Ticket,
-  CheckSquare,
-  MessageCircle,
-  Facebook,
-  FormInput,
-  Building,
-  Rss,
-  Bot,
-  Search,
-} from 'lucide-react';
-import { memo, useState } from 'react';
-// import {
-//     type NodeProps,
-//     Handle,
-//     Position
-// } from "reactflow"
-import '@xyflow/react/dist/style.css';
-import {
-  Badge,
-  Button,
-  Card,
-  Dialog,
-  Input,
-  Switch,
-  Textarea,
-  Tabs,
-} from 'erxes-ui/components';
+import { memo } from 'react';
+import { IconSunElectricity } from '@tabler/icons-react';
 import { cn } from 'erxes-ui/lib';
-import { Label } from '@radix-ui/react-label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@radix-ui/react-select';
-import { Icon12Hours, IconSunElectricity } from '@tabler/icons-react';
+import { useFormContext } from 'react-hook-form';
+import ErrorState from '../common/EmptyState';
+import { TAutomationProps } from '../common/formSchema';
+import { NodeDropdownActions } from './NodeActions';
 
 const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
+  const { setValue } = useFormContext<TAutomationProps>();
+
   return (
     <div className="flex flex-col">
       <div className="w-1/4 ml-1 bg-primary/10 text-primary text-center px-2 py-1 rounded-t-md">
@@ -60,6 +20,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
           'rounded-md shadow-md bg-background w-[280px] relative',
           selected ? 'ring-2 ring-primary ring-offset-2' : '',
           'transition-all duration-200',
+          data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
         )}
       >
         <div className="p-3 flex items-center justify-between border-b border-slate-200 gap-8">
@@ -75,19 +36,26 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
           </div>
 
           <div className="flex items-center gap-1">
-            <button className="p-1 rounded-md hover:bg-slate-100 transition-colors">
-              <Trash2 className="h-4 w-4 text-red-500" />
-            </button>
+            <NodeDropdownActions id={id} data={data} setValue={setValue} />
           </div>
         </div>
         <div className="p-3">
           <span className="text-xs text-accent-foreground">
             {data.description}
           </span>
+
+          {data?.error && (
+            <ErrorState
+              errorCode={'Invalid trigger'}
+              errorDetails={data?.error}
+            />
+          )}
         </div>
 
         {/* Output handle */}
         <Handle
+          key="right"
+          id="right"
           type="source"
           position={Position.Right}
           className="!w-4 !h-4 -z-10 !bg-primary !border-white border-2 rounded-full"

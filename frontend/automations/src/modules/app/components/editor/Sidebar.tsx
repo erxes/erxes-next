@@ -1,53 +1,20 @@
-import {
-  Bot,
-  Building,
-  CheckSquare,
-  ChevronRight,
-  Facebook,
-  FormInput,
-  MessageCircle,
-  Rss,
-  Search,
-  ShoppingCart,
-  Ticket,
-  User,
-  Users,
-} from 'lucide-react';
-import React, { useState } from 'react';
-import { useDnD } from './DnDProvider';
-// import {
-//     type NodeProps,
-//     Handle,
-//     Position
-// } from "reactflow"
-import '@xyflow/react/dist/style.css';
-import {
-  Button,
-  Card,
-  Input,
-  ScrollArea,
-  Sheet,
-  Skeleton,
-  Tabs,
-  // TabsContent, TabsList, TabsTrigger
-} from 'erxes-ui/components';
-import { TablerIcon } from 'erxes-ui/icons';
 import { ApolloError, gql, useQuery } from '@apollo/client';
-import { ConstantsQueryResponse } from '../../types';
-import queries from '../../graphql/queries';
-import {
-  IconArrowsDiagonalMinimize,
-  IconHandClick,
-  IconMinimize,
-  IconMinus,
-  IconSettingsBolt,
-} from '@tabler/icons-react';
-import ErrorState from './common/EmptyState';
-import { useFormContext } from 'react-hook-form';
+import { IconX } from '@tabler/icons-react';
+import { useReactFlow } from '@xyflow/react';
+import { Button, Card, Input, Skeleton, Tabs } from 'erxes-ui/components';
+import { useQueryState } from 'erxes-ui/hooks';
+import { TablerIcon } from 'erxes-ui/icons';
 import { cn } from 'erxes-ui/lib';
-import { z } from 'zod';
-import SegmentForm from 'ui-modules/modules/segments/form';
-import formSchema from './common/formSchema';
+import { Search } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import queries from '../../graphql/queries';
+import { ConstantsQueryResponse } from '../../types';
+import { ActionDetail } from './actions';
+import ErrorState from './common/EmptyState';
+import { TAutomationProps } from './common/formSchema';
+import { useDnD } from './DnDProvider';
+import { TriggerDetail } from './triggers';
 
 const TabsContent = (
   nodeType: string,
@@ -55,9 +22,7 @@ const TabsContent = (
   onDragStart: (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string,
-    nodeModule: string,
-    nodeLabel: string,
-    nodeDescription: string,
+    node: any,
   ) => void,
   searchValue: string,
 ) => {
@@ -68,17 +33,9 @@ const TabsContent = (
   return list.map((item, index) => (
     <Card
       key={index}
-      className="cursor-grab hover:bg-slate-50 transition-colors"
+      className="cursor-grab hover:bg-slate-50 transition-colors pb-2"
       draggable
-      onDragStart={(event) =>
-        onDragStart(
-          event,
-          nodeType,
-          item?.module,
-          item?.label,
-          item?.description,
-        )
-      }
+      onDragStart={(event) => onDragStart(event, nodeType, item)}
     >
       <Card.Header className="p-3">
         <Card.Title className="text-sm font-medium flex items-center justify-between">
@@ -116,8 +73,8 @@ const LoadingSkeleton = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {Array.from({ length: 5 }).map(() => (
-        <LoadingRow />
+      {Array.from({ length: 5 }).map((_, index) => (
+        <LoadingRow key={index} />
       ))}
     </div>
   );
@@ -157,21 +114,20 @@ const Default = () => {
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string,
-    nodeModule: string,
-    nodeLabel: string,
-    nodeDescription: string,
+    { type, label, description, icon }: any,
   ) => {
     event.dataTransfer.setData('application/reactflow/type', nodeType);
-    event.dataTransfer.setData('application/reactflow/module', nodeModule);
-    event.dataTransfer.setData('application/reactflow/label', nodeLabel);
+    event.dataTransfer.setData('application/reactflow/module', type);
+    event.dataTransfer.setData('application/reactflow/label', label);
     event.dataTransfer.setData(
       'application/reactflow/description',
-      nodeDescription,
+      description,
     );
+    event.dataTransfer.setData('application/reactflow/icon', icon);
     event.dataTransfer.effectAllowed = 'move';
   };
   return (
-    <>
+    <div className="w-80">
       <div className="p-4 border-b">
         <h3 className="font-medium mb-3">Workflow Components</h3>
         <div className="relative flex items-center">
@@ -202,8 +158,12 @@ const Default = () => {
         {[
           { type: 'trigger', list: triggersConst },
           { type: 'action', list: actionsConst },
-        ].map(({ type, list = [] }) => (
-          <Tabs.Content value={type} className=" flex-1 p-4 mt-0 w-full">
+        ].map(({ type, list = [] }, index) => (
+          <Tabs.Content
+            key={index}
+            value={type}
+            className=" flex-1 p-4 mt-0 w-full"
+          >
             <div className="space-y-2">
               {TabContentWrapper(loading, error, refetch, {
                 type,
@@ -215,66 +175,74 @@ const Default = () => {
           </Tabs.Content>
         ))}
       </Tabs>
-    </>
+    </div>
   );
 };
 
-const DefaultTriggerContent = () => {
-  return (
-    <SegmentForm
-      contentType={'core:customer'}
-      // segment={segment}
-      callback={() => console.log()}
-    />
-  );
-};
-
-const renderSideBarContent = (activeNode: any) => {
-  // if (!activeNode) {
-  //   return null;
-  // }
-  const { nodeType = '' } = activeNode;
-  if (nodeType === 'trigger') {
-    return <DefaultTriggerContent />;
-  }
-
-  return <Default />;
-};
-
-const size = {
-  default: 'w-80',
-  triggerDefault: 'w-2xl',
-};
-
-const getSize = (activeNode: any, isMinimized?: boolean) => {
-  if (activeNode?.nodeType === 'trigger' && !isMinimized) {
-    return size.triggerDefault;
-  }
-  return size.default;
-};
-
-export default ({ constants }: any) => {
-  const { watch, setValue } = useFormContext<z.infer<typeof formSchema>>();
+export default () => {
+  const { watch, setValue } = useFormContext<TAutomationProps>();
+  const [activeNodeId, setActiveNode] = useQueryState('activeNodeId');
+  const { getNodes } = useReactFlow();
   const isMinimized = watch('isMinimized');
   const activeNode = watch('activeNode');
 
   const [_, setType] = useDnD();
 
+  useEffect(() => {
+    if (!!activeNodeId && !activeNode) {
+      const nodes = getNodes();
+      const node = nodes.find((node) => node.id === activeNodeId);
+      if (node) {
+        setValue('activeNode', { ...node.data, id: node.id });
+      }
+    }
+  }, [activeNode, activeNodeId]);
+
   // Filter templates based on search term and active module
 
+  const handleClose = () => {
+    setActiveNode(null);
+    setValue('activeNode', null);
+    setValue('isMinimized', true);
+  };
+
+  const renderSideBarContent = () => {
+    // if (!activeNode) {
+    //   return null;
+    // }
+    const { nodeType = '' } = activeNode || {};
+    if (nodeType === 'trigger') {
+      return <TriggerDetail activeNode={activeNode} />;
+    }
+
+    if (nodeType === 'action') {
+      return <ActionDetail />;
+    }
+
+    return <Default />;
+  };
+
   return (
-    <div
+    <Card
       className={cn(
-        `absolute top-0 right-0  ${getSize(
-          activeNode,
-          isMinimized,
-        )} h-full  border rounded-lg transition-transform duration-300 bg-white z-10`,
+        `absolute top-0 right-0 h-full  border rounded-l-lg flex flex-col  transition-transform duration-300 bg-white z-10`,
         isMinimized ? 'invisible' : 'visible',
       )}
     >
-      <div className="flex h-full flex-col bg-background shadow-md">
-        {renderSideBarContent(activeNode)}
+      {activeNode && (
+        <Card.Header className="flex flex-row justify-between w-full">
+          <div className="max-w-64">
+            <Card.Title>{activeNode?.label || ''}</Card.Title>
+            <Card.Description>{activeNode?.description || ''}</Card.Description>
+          </div>
+          <Button size="icon" variant="outline" onClick={handleClose}>
+            <IconX />
+          </Button>
+        </Card.Header>
+      )}
+      <div className=" flex-1 flex flex-col min-w-80 max-w-2xl w-fit">
+        {renderSideBarContent()}
       </div>
-    </div>
+    </Card>
   );
 };

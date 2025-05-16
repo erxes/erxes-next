@@ -3,11 +3,11 @@ import { Button, Card, Form } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import Property from './Property';
-import formSchema from './schema';
+import { segmentFormSchema } from './schema';
 import { useQueryState } from 'erxes-ui';
 
 type Props = {
-  form: UseFormReturn<z.infer<typeof formSchema>>;
+  form: UseFormReturn<z.infer<typeof segmentFormSchema>>;
   parentFieldName?: `conditionSegments.${number}`;
   onRemove?: () => void;
   contentType: string;

@@ -23,7 +23,7 @@ export default function ErrorState({
   description,
   errorCode = 'ERR_WORKFLOW_EXECUTION',
   errorDetails = 'The workflow execution failed because one of the required parameters is missing or invalid. Please check your configuration and try again.',
-  onRetry = () => console.log('Retry clicked'),
+  onRetry,
   onDismiss,
 }: ErrorStateProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,6 +67,7 @@ export default function ErrorState({
                 variant="ghost"
                 size="sm"
                 className="p-0 h-auto text-gray-500 hover:text-gray-700 hover:bg-transparent"
+                data-collapsible-trigger="true"
               >
                 <span className="text-xs underline underline-offset-2">
                   {isOpen ? 'Hide details' : 'Show details'}
@@ -87,17 +88,19 @@ export default function ErrorState({
         </Collapsible>
       </div>
 
-      <div className="mt-4 flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-sm border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
-          onClick={onRetry}
-        >
-          <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
-          Try again
-        </Button>
-      </div>
+      {onRetry && (
+        <div className="mt-4 flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-sm border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+            onClick={onRetry}
+          >
+            <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+            Try again
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

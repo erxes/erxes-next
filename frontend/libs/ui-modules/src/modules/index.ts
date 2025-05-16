@@ -8,3 +8,4 @@ export * from './team-inbox';
 export * from './widget-provider/context/widgetContext';
 export * from './types/PageInfo';
 export * from './segments';
+export * from './automations';

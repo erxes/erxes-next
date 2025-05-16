@@ -21,6 +21,7 @@ const automationMutations = {
     { user, models, subdomain }: IContext,
   ) {
     const automation = await models.Automations.create({
+      ...doc,
       createdAt: new Date(),
       createdBy: user._id,
       updatedBy: user._id,

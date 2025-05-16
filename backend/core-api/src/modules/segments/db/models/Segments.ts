@@ -83,7 +83,9 @@ export const loadSegmentClass = (models: IModels) => {
         conditionSegments || [],
       );
 
-      doc.conditions = conditions;
+      console.log({ doc, conditions });
+
+      doc.conditions = conditions.length ? conditions : doc.conditions;
 
       return models.Segments.create(doc);
     }
@@ -101,7 +103,9 @@ export const loadSegmentClass = (models: IModels) => {
         conditionSegments || [],
       );
 
-      doc.conditions = conditions;
+      console.log({ doc, conditions });
+
+      doc.conditions = conditions.length ? conditions : doc.conditions;
 
       await models.Segments.updateOne({ _id }, { $set: doc });
 

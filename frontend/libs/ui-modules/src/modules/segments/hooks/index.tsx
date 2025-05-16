@@ -10,7 +10,7 @@ export const getFieldsProperties = (propertyType?: string) => {
     queries.propertiesWithFields,
     {
       variables: { contentType: propertyType || contentType },
-      skip: !contentType,
+      skip: !contentType && !propertyType,
     },
   );
 

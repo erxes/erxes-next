@@ -40,5 +40,7 @@ export function createFieldNameSafe<T>(
   basePath?: string,
   ...pathParts: FieldPath[]
 ): Path<T> {
-  return [basePath || '', ...pathParts].join('.') as Path<T>;
+  return [basePath || '', ...pathParts]
+    .filter((path) => ![undefined, null, ''].includes(String(path)))
+    .join('.') as Path<T>;
 }

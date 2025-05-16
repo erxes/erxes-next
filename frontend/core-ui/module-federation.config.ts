@@ -20,9 +20,6 @@ const coreLibraries = new Set([
 
 const config: ModuleFederationConfig = {
   name: 'core-ui',
-  exposes: {
-    './TemporarySegment': './src/modules/segments/components/form/index.tsx',
-  },
 
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {

@@ -10,6 +10,7 @@ import { useState } from 'react';
 import queries from 'ui-modules/modules/segments/graphql/queries';
 import { ISegment, ListQueryResponse } from 'ui-modules/modules/segments/types';
 import SegmentForm from 'ui-modules/modules/segments/form';
+import client from '~/providers/apollo-provider/apolloClient';
 // import {SegmentForm} from 'ui-modules';
 
 type Props = {
@@ -28,15 +29,6 @@ export default function SegmentDetail({ refetch }: Props) {
   const [segmentId, setOpen] = useQueryState<string>('segmentId');
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   let segment: ISegment | undefined;
-
-  const { data } = useQuery(queries.segmentDetail, {
-    variables: { _id: segmentId },
-    skip: !segmentId || !selectedContentType,
-  });
-
-  if (data?.segmentDetail) {
-    segment = data.segmentDetail;
-  }
 
   return (
     <Sheet
@@ -74,7 +66,7 @@ export default function SegmentDetail({ refetch }: Props) {
             </Sheet.Header>
             <SegmentForm
               contentType={selectedContentType}
-              segment={segment}
+              segmentId={segmentId || ''}
               callback={() => refetch()}
             />
           </div>

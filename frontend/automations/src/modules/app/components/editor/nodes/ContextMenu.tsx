@@ -1,7 +1,5 @@
 import React, { useCallback } from 'react';
 import { useReactFlow } from '@xyflow/react';
-import { Button, Card } from 'erxes-ui/components';
-import { IconCopy, IconTrash } from '@tabler/icons-react';
 
 export default function ContextMenu({
   id,
@@ -34,20 +32,17 @@ export default function ContextMenu({
     setEdges((edges) => edges.filter((edge) => edge.source !== id));
   }, [id, setNodes, setEdges]);
 
-  console.log({ top, left, right, bottom, props });
-
   return (
-    <Card
+    <div
       style={{ top, left, right, bottom }}
-      className="bg-background absolute z-10"
+      className="context-menu"
       {...props}
     >
-      <Button variant="ghost" onClick={duplicateNode}>
-        <IconCopy /> Duplicate
-      </Button>
-      <Button variant="ghost" onClick={deleteNode}>
-        <IconTrash /> Delete
-      </Button>
-    </Card>
+      <p style={{ margin: '0.5em' }}>
+        <small>node: {id}</small>
+      </p>
+      <button onClick={duplicateNode}>duplicate</button>
+      <button onClick={deleteNode}>delete</button>
+    </div>
   );
 }

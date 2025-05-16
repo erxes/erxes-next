@@ -13,7 +13,6 @@ const Detail = lazy(() =>
 );
 
 const App = () => {
-  console.log({ shit: 'automations' });
   return (
     <Suspense fallback={<>Loading</>}>
       <Routes>

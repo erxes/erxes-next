@@ -1,17 +1,46 @@
 import { z } from 'zod';
 
-export const conditionsSchema = z
-  .array(
-    z.object({
-      propertyType: z.string(),
-      propertyName: z.string(),
-      propertyOperator: z.string(),
-      propertyValue: z.any(),
-    }),
-  )
-  .optional();
+const checkPropertValue = (val: any) => {
+  const isArrayEmpty = val && Array.isArray(val) && !val?.length;
+  const isValueEmpty = !val;
 
-const segmentFormSchema = z.object({
+  return isArrayEmpty || isValueEmpty;
+};
+
+export const conditionsSchema = z.array(
+  z
+    .object({
+      propertyType: z
+        .string({ required_error: 'Property type is required' })
+        .min(1, 'Property type is required'),
+      propertyName: z
+        .string({
+          required_error: 'Property name is required',
+          invalid_type_error: 'Property name must be a provided',
+        })
+        .min(1, 'Property name is required'),
+      propertyOperator: z
+        .string({
+          required_error: 'Property operator is required',
+          invalid_type_error: 'Property operator must be a provided',
+        })
+        .min(1, 'Property operator is required'),
+      propertyValue: z.any().optional(),
+    })
+    .superRefine((data, ctx) => {
+      const optionalOperators = ['is', 'ins', 'it', 'if'];
+      if (!optionalOperators.includes(data?.propertyOperator)) {
+        if (checkPropertValue(data.propertyValue)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['propertyValue'],
+            message: 'Property value is required',
+          });
+        }
+      }
+    }),
+);
+export const segmentFormSchema = z.object({
   name: z.string(),
   subOf: z.string().optional(),
   description: z.string().optional(),
@@ -21,26 +50,12 @@ const segmentFormSchema = z.object({
       z.object({
         contentType: z.string(),
         conditionsConjunction: z.enum(['and', 'or']),
-        conditions: conditionsSchema,
+        conditions: conditionsSchema.optional(),
       }),
     )
     .optional(),
-  conditions: conditionsSchema,
+  conditions: conditionsSchema.optional(),
   conditionsConjunction: z.enum(['and', 'or']),
 });
 
-export const temporarySegmentSchema = z.object({
-  config: z.record(z.any()),
-  conditionSegments: z
-    .array(
-      z.object({
-        contentType: z.string(),
-        conditionsConjunction: z.enum(['and', 'or']),
-        conditions: conditionsSchema,
-      }),
-    )
-    .optional(),
-  conditions: conditionsSchema,
-  conditionsConjunction: z.enum(['and', 'or']),
-});
-export default segmentFormSchema;
+export type SegmentFormProps = z.infer<typeof segmentFormSchema>;

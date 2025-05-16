@@ -1,57 +1,88 @@
 import { Handle, NodeProps, Position } from '@xyflow/react';
-import {
-  ChevronDown,
-  Settings,
-  Trash2,
-  ChevronRight,
-  Play,
-  X,
-  Save,
-  Plus,
-  ShoppingCart,
-  Users,
-  User,
-  Ticket,
-  CheckSquare,
-  MessageCircle,
-  Facebook,
-  FormInput,
-  Building,
-  Rss,
-  Bot,
-  Search,
-} from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 // import {
 //     type NodeProps,
 //     Handle,
 //     Position
 // } from "reactflow"
-import '@xyflow/react/dist/style.css';
-import {
-  Badge,
-  Button,
-  Card,
-  Dialog,
-  Input,
-  Textarea,
-  Tabs,
-} from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
-import { Label } from '@radix-ui/react-label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@radix-ui/react-select';
 import { IconAdjustmentsAlt, IconMessage } from '@tabler/icons-react';
+import { useFormContext } from 'react-hook-form';
+import { NodeData } from '~/modules/app/types';
+import ErrorState from '../common/EmptyState';
+import { TAutomationProps } from '../common/formSchema';
+import { NodeDropdownActions } from './NodeActions';
+import { ActionNodeContent } from './ActionContent';
+
+const renderContent = (data: NodeData) => {
+  if (data?.error) {
+    return (
+      <ErrorState errorCode={'Invalid action'} errorDetails={data?.error} />
+    );
+  }
+
+  if (!Object.keys(data?.config || {}).length) {
+    return null;
+  }
+
+  console.log(`config`, data?.config);
+
+  return (
+    <div className="p-3">
+      <div className="flex items-center gap-2 text-success/90 pb-2">
+        <IconAdjustmentsAlt className="w-4 h-4" />
+        <p className="text-sm font-semibold">Configuration</p>
+      </div>
+      <div className="rounded border bg-muted">
+        <ActionNodeContent type={data.type || ''} config={data.config} />
+      </div>
+    </div>
+  );
+};
+
+const renderSourceHandler = (type: string) => {
+  if (type === 'if') {
+    return (
+      <>
+        <Handle
+          key="yes-right"
+          id="yes-right"
+          type="source"
+          position={Position.Right}
+          className={`!w-4 !h-4 -z-10 !bg-success`}
+          style={{ top: '50%' }}
+        >
+          <div className="ml-4 text-xs text-muted-foreground ">True</div>
+        </Handle>
+        <Handle
+          key="no-right"
+          id="no-right"
+          type="source"
+          position={Position.Right}
+          className={`!w-4 !h-4 -z-10 !bg-red-300`}
+          style={{ top: '70%' }}
+        >
+          <div className="ml-4 text-xs text-muted-foreground ">False</div>
+        </Handle>
+      </>
+    );
+  }
+  return (
+    <Handle
+      key="right"
+      id="right"
+      type="source"
+      position={Position.Right}
+      className={`!w-4 !h-4 -z-10 !bg-success `}
+    />
+  );
+};
 
 const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
+  const { setValue } = useFormContext<TAutomationProps>();
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" key={id}>
       <div className="w-1/4 ml-1 bg-success/10 text-success text-center px-2 py-1 rounded-t-md">
         <p className="font-medium font-bold">Action</p>
       </div>
@@ -59,9 +90,20 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
         className={cn(
           'rounded-md shadow-md bg-white border border-muted w-[280px]',
           selected ? 'ring-2 ring-success ring-offset-2' : '',
+          data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
           'transition-all duration-200',
         )}
       >
+        {/* <NodeToolbar isVisible={selected} position={data.toolbarPosition}>
+          <Dialog>
+            <Dialog.Trigger>
+              <Button variant="ghost">
+                <IconEdit className="w-4 h-4" />
+              </Button>
+            </Dialog.Trigger>
+            <EditForm fieldName="actions" data={data} setValue={setValue} />
+          </Dialog>
+        </NodeToolbar> */}
         <div className="p-3 flex items-center justify-between border-b border-muted">
           <div className="flex items-center gap-2 text-success/90">
             <div
@@ -71,10 +113,17 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
             </div>
             <span className="font-medium">{data.label}</span>
           </div>
+          {/* <Dialog>
+            <Dialog.Trigger>
+              <Button variant="ghost">
+                <IconEdit className="w-4 h-4" />
+              </Button>
+            </Dialog.Trigger>
+            <EditForm fieldName="actions" data={data} setValue={setValue} />
+          </Dialog> */}
+
           <div className="flex items-center gap-1">
-            <Button variant={'ghost'}>
-              <Trash2 className="h-4 w-4 text-red-500" />
-            </Button>
+            <NodeDropdownActions id={id} data={data} setValue={setValue} />
           </div>
         </div>
 
@@ -83,27 +132,18 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
             {data.description}
           </span>
         </div>
-        <div className="p-3">
-          <div className="flex items-center gap-2 text-success/90">
-            <IconAdjustmentsAlt className="w-4 h-4" />
-            <p className="text-sm font-semibold">Configuration</p>
-          </div>
-          <div className="rounded border bg-muted">dasds</div>
-        </div>
+        {renderContent(data)}
 
         {/* Input handle */}
         <Handle
+          key="left"
+          id="left"
           type="target"
           position={Position.Left}
           className={`!w-4 !h-4 -z-10 !bg-success `}
         />
 
-        {/* Output handle */}
-        <Handle
-          type="source"
-          position={Position.Right}
-          className={`!w-4 !h-4 -z-10 !bg-success `}
-        />
+        {renderSourceHandler(data.type)}
       </div>
     </div>
   );
