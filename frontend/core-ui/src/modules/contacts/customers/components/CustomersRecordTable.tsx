@@ -1,6 +1,7 @@
 import { RecordTable } from 'erxes-ui';
 import { useCustomers } from '@/contacts/customers/hooks/useCustomers';
 import { customersColumns } from './CustomersColumns';
+import { ContactsCommandBar } from '@/contacts/customers/components/customers-command-bar';
 
 export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
@@ -37,6 +38,7 @@ export const CustomersRecordTable = () => {
           </RecordTable.Body>
         </RecordTable>
       </RecordTable.CursorProvider>
+      <ContactsCommandBar />
     </RecordTable.Provider>
   );
 };
