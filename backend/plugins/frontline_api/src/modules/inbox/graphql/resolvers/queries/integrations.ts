@@ -1,5 +1,5 @@
-import { defaultPaginate } from 'erxes-api-shared/src/utils';
-import { IContext, IModels } from '~/connectionResolvers';
+import { getIntegrationsKinds } from '@/inbox/utils';
+import { IContext, } from '~/connectionResolvers';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
 
@@ -91,16 +91,11 @@ export const integrationQueries = {
       return models.Integrations.findLeadIntegrations(query, args);
     }
 
-    const integrations = defaultPaginate(
-      models.Integrations.findAllIntegrations(query),
-      args,
-    );
-
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IIntegrationDocument>({
         model: models.Integrations,
         params: args,
-        query: integrations,
+        query: query,
       });
     return { list, totalCount, pageInfo };
   },
@@ -123,9 +118,19 @@ export const integrationQueries = {
   /**
    * Get used integration types
    */
-  async integrationsGetUsedTypes(_root, { object }, { models }: IContext) {
+  async integrationsGetUsedTypes(_root, { models }: IContext) {
     const usedTypes: Array<{ _id: string; name: string }> = [];
+    const kindMap = await getIntegrationsKinds();
 
+    for (const kind of Object.keys(kindMap)) {
+      if (
+        (await models.Integrations.findIntegrations({
+          kind,
+        }).countDocuments()) > 0
+      ) {
+        usedTypes.push({ _id: kind, name: kindMap[kind] });
+      }
+    }
     return usedTypes;
   },
 
@@ -173,9 +178,7 @@ export const integrationQueries = {
       return models.Integrations.countDocuments(query);
     };
 
-    // Counting integrations by tag
 
-    // Counting integrations by kind
 
     // Counting integrations by channel
 

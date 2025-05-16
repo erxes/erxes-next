@@ -1,4 +1,4 @@
-import { ITransactionGroupForm } from '../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/AddTransaction';
 
 export const BankTransaction = ({
   form,

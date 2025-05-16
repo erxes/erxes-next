@@ -72,11 +72,7 @@ export const types = `
     _id: String
     name: String
   }
-  type IntegrationsGetUsedTypesRespone {
-    list: [integrationsGetUsedTypes],
-    pageInfo: PageInfo
-    totalCount: Int,
-  }
+
   input BotPersistentMenuTypeMessenger {
     _id: String
     type: String
@@ -175,9 +171,8 @@ export const queries = `
     sortDirection: Int
   ): IntegrationRespone
 
-  allLeadIntegrations: IntegrationRespone
-
-  integrationsGetUsedTypes: IntegrationsGetUsedTypesRespone
+  allLeadIntegrations: [Integration]
+  integrationsGetUsedTypes: [integrationsGetUsedTypes]
   integrationGetLineWebhookUrl(_id: String!): String
   integrationDetail(_id: String!): Integration
   integrationsTotalCount(kind: String, brandId: String, tag: String, channelId: String, status: String, formLoadType: String): integrationsTotalCount

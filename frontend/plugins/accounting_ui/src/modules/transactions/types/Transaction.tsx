@@ -1,5 +1,5 @@
 import { IAccount } from '@/settings/account/types/Account';
-import { IProduct } from 'ui-modules';
+import { CustomerType, IProduct } from 'ui-modules';
 import { IVatRow } from '@/settings/vat/types/VatRow';
 import { ICtaxRow } from '@/settings/ctax/types/CtaxRow';
 
@@ -50,7 +50,7 @@ interface ICommontTr {
 
   branchId?: string;
   departmentId?: string;
-  customerType?: string;
+  customerType?: CustomerType;
   customerId?: string;
   assignedUserIds?: string[];
 
@@ -84,6 +84,7 @@ interface ICommontTr {
   branch?: any;
   department?: any;
 }
+
 export interface ITransaction extends ICommontTr {
   details: ITrDetail[];
   shortDetail?: ITrDetail;

@@ -1,7 +1,7 @@
+import { ACCOUNT_STATUSES } from '@/accounting/@types/constants';
 import { IUserDocument } from 'erxes-api-shared/core-types';
 import { defaultPaginate, escapeRegExp } from 'erxes-api-shared/utils';
-import { IModels, IContext } from '~/connectionResolvers';
-import { ACCOUNT_STATUSES } from '~/modules/accounting/@types/constants';
+import { IContext, IModels } from '~/connectionResolvers';
 
 interface IQueryParams {
   type: string;
@@ -29,7 +29,6 @@ interface IQueryParams {
 
 export const generateFilter = async (
   models: IModels,
-  commonQuerySelector: any,
   params: IQueryParams,
   user: IUserDocument
 ) => {
@@ -51,7 +50,7 @@ export const generateFilter = async (
     code,
     name,
   } = params;
-  const filter: any = commonQuerySelector;
+  const filter: any = {};
 
   filter.status = { $ne: ACCOUNT_STATUSES.DELETED };
 
@@ -183,11 +182,10 @@ const accountQueries = {
   async accounts(
     _root,
     params: IQueryParams,
-    { commonQuerySelector, models, user }: IContext,
+    { models, user }: IContext,
   ) {
     const filter = await generateFilter(
       models,
-      commonQuerySelector,
       params,
       user,
     );
@@ -218,11 +216,10 @@ const accountQueries = {
   async accountsCount(
     _root,
     params: IQueryParams,
-    { commonQuerySelector, models, user }: IContext,
+    { models, user }: IContext,
   ) {
     const filter = await generateFilter(
       models,
-      commonQuerySelector,
       params,
       user,
     );

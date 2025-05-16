@@ -1,5 +1,5 @@
 import { IContext } from "~/connectionResolvers";
-import { ITransaction } from "~/modules/accounting/@types/transaction";
+import { ITransaction } from "@/accounting/@types/transaction";
 
 const transactionsMutations = {
   async accTransactionsLink(_root, doc: { ids: string[], ptrId: string }, { user, models }) {

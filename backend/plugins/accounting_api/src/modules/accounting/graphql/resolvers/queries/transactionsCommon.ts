@@ -1,8 +1,8 @@
 import { IUserDocument } from 'erxes-api-shared/core-types';
 import { defaultPaginate, escapeRegExp } from 'erxes-api-shared/utils';
 import { IModels, IContext } from '~/connectionResolvers';
-import { TR_STATUSES } from '~/modules/accounting/@types/constants';
-import { ITransactionDocument } from '~/modules/accounting/@types/transaction';
+import { TR_STATUSES } from '@/accounting/@types/constants';
+import { ITransactionDocument } from '@/accounting/@types/transaction';
 import { generateFilter as accountGenerateFilter } from './accounts';
 import { checkPermissionTrs } from '../../../utils/trPermissions';
 
@@ -47,7 +47,7 @@ interface IRecordsParams extends IQueryParams {
   folded: boolean;
 }
 
-const getAccountIds = async (models: IModels, commonQuerySelector, params: IQueryParams, user: IUserDocument): Promise<string[]> => {
+const getAccountIds = async (models: IModels, params: IQueryParams, user: IUserDocument): Promise<string[]> => {
   const {
     accountIds,
     accountType,
@@ -64,7 +64,7 @@ const getAccountIds = async (models: IModels, commonQuerySelector, params: IQuer
     accountJournal,
   } = params;
 
-  const accountFilter: any = await accountGenerateFilter(models, commonQuerySelector, {
+  const accountFilter: any = await accountGenerateFilter(models, {
     ids: accountIds,
     type: accountType,
     excludeIds: accountExcludeIds,
@@ -86,7 +86,6 @@ const getAccountIds = async (models: IModels, commonQuerySelector, params: IQuer
 
 const generateFilter = async (
   models: IModels,
-  commonQuerySelector: any,
   params: IQueryParams,
   user: IUserDocument,
 ) => {
@@ -104,9 +103,9 @@ const generateFilter = async (
     ptrStatus,
     status
   } = params;
-  const filter = commonQuerySelector;
+  const filter: any = {};
 
-  filter['details.accountId'] = { $in: await getAccountIds(models, commonQuerySelector, params, user) }
+  filter['details.accountId'] = { $in: await getAccountIds(models, params, user) }
 
   if (journal) {
     filter.journal = journal
@@ -180,11 +179,10 @@ const transactionCommon = {
   async accTransactions(
     _root,
     params: IQueryParams & { page: number, perPage: number },
-    { commonQuerySelector, models, user }: IContext,
+    { models, user }: IContext,
   ) {
     const filter = await generateFilter(
       models,
-      commonQuerySelector,
       params,
       user
     );
@@ -216,12 +214,11 @@ const transactionCommon = {
   async accTransactionsCount(
     _root,
     params: IQueryParams,
-    { commonQuerySelector, models, user }: IContext,
+    { models, user }: IContext,
   ) {
 
     const filter = await generateFilter(
       models,
-      commonQuerySelector,
       params,
       user,
     );
@@ -232,11 +229,10 @@ const transactionCommon = {
   async accTrRecords(
     _root,
     params: IRecordsParams & { page: number, perPage: number },
-    { commonQuerySelector, models, user }: IContext,
+    { models, user }: IContext,
   ) {
     const filter = await generateFilter(
       models,
-      commonQuerySelector,
       params,
       user,
     );
@@ -275,11 +271,10 @@ const transactionCommon = {
   async accTrRecordsCount(
     _root,
     params: IRecordsParams,
-    { commonQuerySelector, models, user }: IContext,
+    { models, user }: IContext,
   ) {
     const filter = await generateFilter(
       models,
-      commonQuerySelector,
       params,
       user,
     );

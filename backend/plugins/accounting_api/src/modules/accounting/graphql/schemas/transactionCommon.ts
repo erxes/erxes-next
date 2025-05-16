@@ -52,13 +52,13 @@ export const types = () => `
     id: String
   }
 
-  type AccTrDetail @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type AccTrDetail {
     ${trDetailFields}
     follows: [FollowTrType]
     account: Account
   }
 
-  type AccCommonTransaction @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type AccCommonTransaction {
     _id: String
 
     ${transactionFields}
@@ -91,7 +91,7 @@ export const types = () => `
     extraData: JSON
   }
 
-  type AccCommonTrRecord @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type AccCommonTrRecord {
     _id: String
     trId: String
     detailInd: Int

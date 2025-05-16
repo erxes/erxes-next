@@ -1,30 +1,29 @@
 import { ICommonFieldProps } from '../types/AddTransaction';
 import { CurrencyField, Form, Input, Select } from 'erxes-ui';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
-import { JOURNAL_LABELS } from '@/settings/account/constants/journalLabel';
 import {
   AssignMultipleMembers,
   SelectBranch,
   SelectDepartment,
 } from 'ui-modules';
-import { JournalEnum } from '@/settings/account/types/Account';
+import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
 
 export const AccountField = ({
   form,
   index,
   journal,
 }: ICommonFieldProps & {
-  journal: JournalEnum;
+  journal: TrJournalEnum;
 }) => (
   <Form.Field
     control={form.control}
-    name={`details.${index}.accountId`}
+    name={`trDocs.${index}.details.0.accountId`}
     render={({ field }) => (
       <Form.Item>
-        <Form.Label>{JOURNAL_LABELS[journal]} account</Form.Label>
+        <Form.Label>{TR_JOURNAL_LABELS[journal]} account</Form.Label>
         <Form.Control>
           <SelectAccount
-            value={field.value}
+            value={field.value || ''}
             onValueChange={field.onChange}
             journal={journal}
           />
@@ -47,7 +46,7 @@ export const SideField = ({
 }) => (
   <Form.Field
     control={form.control}
-    name={`details.${index}.side`}
+    name={`trDocs.${index}.details.0.side`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Side</Form.Label>
@@ -73,7 +72,7 @@ export const SideField = ({
 export const AmountField = ({ form, index }: ICommonFieldProps) => (
   <Form.Field
     control={form.control}
-    name={`details.${index}.amount`}
+    name={`trDocs.${index}.details.0.amount`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Amount</Form.Label>
@@ -88,7 +87,7 @@ export const AmountField = ({ form, index }: ICommonFieldProps) => (
 export const AssignToField = ({ form, index }: ICommonFieldProps) => (
   <Form.Field
     control={form.control}
-    name={`details.${index}.assignedUserIds`}
+    name={`trDocs.${index}.assignedUserIds`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Assign To</Form.Label>
@@ -107,13 +106,13 @@ export const AssignToField = ({ form, index }: ICommonFieldProps) => (
 export const BranchField = ({ form, index }: ICommonFieldProps) => (
   <Form.Field
     control={form.control}
-    name={`details.${index}.branchId`}
+    name={`trDocs.${index}.branchId`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Branch</Form.Label>
         <Form.Control>
           <SelectBranch
-            value={field.value}
+            value={field.value ?? ''}
             onValueChange={(branch) => field.onChange(branch)}
           />
         </Form.Control>
@@ -126,13 +125,13 @@ export const BranchField = ({ form, index }: ICommonFieldProps) => (
 export const DepartmentField = ({ form, index }: ICommonFieldProps) => (
   <Form.Field
     control={form.control}
-    name={`details.${index}.departmentId`}
+    name={`trDocs.${index}.departmentId`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Department</Form.Label>
         <Form.Control>
           <SelectDepartment
-            value={field.value}
+            value={field.value ?? ''}
             onValueChange={(department) => field.onChange(department)}
           />
         </Form.Control>
@@ -145,12 +144,12 @@ export const DepartmentField = ({ form, index }: ICommonFieldProps) => (
 export const DescriptionField = ({ form, index }: ICommonFieldProps) => (
   <Form.Field
     control={form.control}
-    name={`details.${index}.description`}
+    name={`trDocs.${index}.description`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Description</Form.Label>
         <Form.Control>
-          <Input {...field} />
+          <Input {...field} value={field.value ?? ''} />
         </Form.Control>
         <Form.Message />
       </Form.Item>

@@ -1,5 +1,5 @@
 import { IContext } from "~/connectionResolvers";
-import { IVatRow } from "~/modules/accounting/@types/vatRow";
+import { IVatRow } from "@/accounting/@types/vatRow";
 
 const vatRowsMutations = {
   /**

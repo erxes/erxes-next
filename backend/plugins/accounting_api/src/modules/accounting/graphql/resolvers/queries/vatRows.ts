@@ -1,5 +1,5 @@
 import { IContext } from "~/connectionResolvers";
-import { VAT_ROW_STATUS } from "~/modules/accounting/@types/vatRow";
+import { VAT_ROW_STATUS } from "@/accounting/@types/vatRow";
 
 const generateFilterCat = async ({
   kinds,
