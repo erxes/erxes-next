@@ -16,7 +16,7 @@ export const types = () => `
     parent: AccountCategory
   }
 
-  type Account @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type Account @key(fields: "_id") @cacheControl(maxAge: 3){
     _id: String!
     code: String
     name: String

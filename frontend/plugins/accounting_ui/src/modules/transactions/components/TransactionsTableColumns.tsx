@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import { ITransaction } from '../types/Transaction';
 import {
-  useQueryState,
   RecordTable,
   InlineCell,
   InlineCellDisplay,
@@ -12,12 +11,9 @@ import {
   CurrencyField,
   CurrencyFormatedDisplay,
 } from 'erxes-ui';
-import { useSetAtom } from 'jotai';
-import { renderingTransactionDetailState } from '../states/renderingTransactionContactingDetailStates';
 import { IconMoneybag, IconFile, IconCalendar } from '@tabler/icons-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { IBranch } from 'ui-modules';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {
