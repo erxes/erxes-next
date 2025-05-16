@@ -5,11 +5,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, useToast, Dialog } from 'erxes-ui';
 import { useAddClass } from '@/classes/hooks/useAddClass';
 import { ApolloError } from '@apollo/client';
-import { CourseCategoryAddCoreFields } from '@/courses/add-category/components/CourseCategoryAddCoreFields';
+import { ClassAddCoreFields } from '@/classes/add-class/components/ClassAddCoreFields';
 import {
-  CourseCategoryFormType,
-  courseCategoryFormSchema,
-} from '~/modules/courses/add-category/components/formSchema';
+  classFormSchema,
+  ClassFormType,
+} from '@/classes/add-class/components/formSchema';
 
 export function AddClassForm({
   onOpenChange,
@@ -17,11 +17,11 @@ export function AddClassForm({
   onOpenChange: (open: boolean) => void;
 }) {
   const { classAdd } = useAddClass();
-  const form = useForm<CourseCategoryFormType>({
-    resolver: zodResolver(courseCategoryFormSchema),
+  const form = useForm<ClassFormType>({
+    resolver: zodResolver(classFormSchema),
   });
   const { toast } = useToast();
-  const onSubmit = (data: CourseCategoryFormType) => {
+  const onSubmit = (data: ClassFormType) => {
     classAdd({
       variables: data,
       onError: (e: ApolloError) => {
@@ -44,7 +44,7 @@ export function AddClassForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid gap-5 grid-cols-2 py-3"
       >
-        <CourseCategoryAddCoreFields form={form} />
+        <ClassAddCoreFields form={form} />
         <Dialog.Footer className="col-span-2 mt-3 gap-2">
           <Dialog.Close asChild>
             <Button variant="outline" size="lg">

@@ -14,7 +14,7 @@ import {
 } from '@/courses/add-course/components/formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import {
   CourseAddCoreFields,
   CourseAddScheduleFields,
@@ -25,7 +25,7 @@ import { ApolloError } from '@apollo/client';
 
 type CourseStep = {
   label: string;
-  component?: React.ComponentType<any>;
+  component: React.ComponentType<any>;
 };
 
 const courseSteps: CourseStep[] = [
@@ -41,6 +41,8 @@ const AddCourseForm = () => {
   const [currentStep, setStep] = useState(0);
   const { courseAdd } = useAddCourse();
   const { toast } = useToast();
+  const navigate = useNavigate();
+
   const form = useForm<CourseFormType>({
     resolver: zodResolver(courseFormSchema),
   });
@@ -57,6 +59,7 @@ const AddCourseForm = () => {
       },
       onCompleted: () => {
         form.reset();
+        navigate(-1);
       },
     });
   };

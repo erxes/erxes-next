@@ -24,7 +24,7 @@ export const useCourses = (options?: QueryHookOptions) => {
   }>(GET_COURSES, {
     ...options,
     variables: {
-      limit: COURSES_PER_PAGE,
+      perPage: COURSES_PER_PAGE,
       cursor,
     },
   });

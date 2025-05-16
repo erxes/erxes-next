@@ -2,6 +2,7 @@ import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
 import { IClass } from '@/classes/types/type';
 import { ADD_CLASS } from '@/classes/graphql/mutations/addClass';
 import { GET_CLASSES } from '@/classes/graphql/queries/getClasses';
+import { useRecordTableCursor } from 'erxes-ui/modules';
 
 interface ClassData {
   courseClasses: {
@@ -17,15 +18,20 @@ interface AddClassResult {
 export function useAddClass(
   options?: MutationHookOptions<AddClassResult, any>,
 ) {
+  const { cursor } = useRecordTableCursor({
+    sessionKey: 'class_cursor',
+  });
+
   const [classAdd, { loading, error }] = useMutation<AddClassResult>(
     ADD_CLASS,
     {
       ...options,
       update: (cache: ApolloCache<any>, { data }) => {
         try {
-          const queryVariables = { perPage: 30 };
+          const queryVariables = { perPage: 30, cursor };
           const existingData = cache.readQuery<ClassData>({
             query: GET_CLASSES,
+            variables: queryVariables,
           });
           if (!existingData || !existingData.courseClasses || !data?.classAdd)
             return;
