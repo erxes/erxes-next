@@ -19,6 +19,7 @@ interface InlineCellProps extends React.HTMLAttributes<HTMLDivElement> {
   display?: (props: InlineCellHandlers) => React.ReactNode;
   edit?: (props: InlineCellHandlers) => React.ReactNode;
   setValue?: (value: any) => void;
+  containerClassName?: string;
 }
 
 interface InlineCellHandlers {
@@ -34,6 +35,7 @@ export function RecordTableInlineCell({
   display,
   edit,
   setValue,
+  containerClassName,
   ...props
 }: InlineCellProps) {
   const [isInEditMode, _setIsInEditMode] = React.useState(false);
@@ -74,7 +76,10 @@ export function RecordTableInlineCell({
       }}
     >
       <RecordTableInlineCellContainer {...props}>
-        <RecordTableCellDisplayContainer readOnly={!edit}>
+        <RecordTableCellDisplayContainer
+          className={containerClassName || ''}
+          readOnly={!edit}
+        >
           {display?.({
             isInEditMode,
             setIsInEditMode,
