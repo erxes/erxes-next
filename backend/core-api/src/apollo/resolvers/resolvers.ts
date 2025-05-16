@@ -6,5 +6,5 @@ export const customResolvers = {
   ...contactResolvers,
   ...productResolvers,
   ...segmentResolvers,
-  ...structureResolvers
+  ...structureResolvers,
 };

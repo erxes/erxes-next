@@ -2,14 +2,14 @@ import { Document } from 'mongoose';
 import { ICommonAdjusting } from './commonAdjusting';
 
 export interface IAdjustInvDetailParams {
-  productId: string,
-  accountId: string,
-  departmentId: string,
-  branchId: string,
+  productId: string;
+  accountId: string;
+  departmentId: string;
+  branchId: string;
 }
 
 export interface IAdjustInvDetailParamsId extends IAdjustInvDetailParams {
-  adjustId: string
+  adjustId: string;
 }
 
 export interface IAdjustInvDetail extends IAdjustInvDetailParamsId {
@@ -58,5 +58,5 @@ export const ADJ_INV_STATUSES = {
   DRAFT: 'draft',
   CANCEL: 'cancel',
   PUBLISH: 'publish',
-  all: ['draft', 'cancel', 'publish']
-}
+  all: ['draft', 'cancel', 'publish'],
+};

@@ -1,5 +1,5 @@
 import { IContext } from "~/connectionResolvers";
-import { ICtaxRow } from "~/modules/accounting/@types/ctaxRow";
+import { ICtaxRow } from "@/accounting/@types/ctaxRow";
 
 const ctaxRowsMutations = {
   /**

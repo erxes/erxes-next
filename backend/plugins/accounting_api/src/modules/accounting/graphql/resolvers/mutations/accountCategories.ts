@@ -1,5 +1,5 @@
 import { IContext } from "~/connectionResolvers";
-import { IAccountCategory } from "~/modules/accounting/@types/accountCategory";
+import { IAccountCategory } from "@/accounting/@types/accountCategory";
 
 const accountCategoriessMutations = {
   /**

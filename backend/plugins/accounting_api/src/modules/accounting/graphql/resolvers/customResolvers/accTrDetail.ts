@@ -1,5 +1,5 @@
-import { IContext } from '../../connectionResolver';
-import { ITrDetail } from '../../models/definitions/transaction';
+import { IContext } from "~/connectionResolvers";
+import { ITrDetail } from "~/modules/accounting/@types/transaction";
 
 export default {
   __resolveReference({ _id }, { models }: IContext) {

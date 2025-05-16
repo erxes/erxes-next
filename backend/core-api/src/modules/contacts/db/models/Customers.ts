@@ -72,11 +72,7 @@ export interface ICustomerModel extends Model<ICustomerDocument> {
   ): Promise<ICustomerDocument>;
 
   changeState(_id: string, value: string): Promise<ICustomerDocument>;
-  mergeCustomers(
-    customerIds: string[],
-    customerFields: ICustomer,
-    user?: any,
-  ): Promise<ICustomerDocument>;
+
   updateVerificationStatus(
     customerIds: string[],
     type: string,
@@ -312,16 +308,16 @@ export const loadCustomerClass = (models: IModels) => {
         oldTypeIds: customerIds,
       });
 
-      // await sendTRPCMessage({
-      //   pluginName: 'frontline',
-      //   method: 'mutation',
-      //   module: 'inbox',
-      //   action: 'changeCustomer',
-      //   input: {
-      //     customerId: customer._id,
-      //     customerIds,
-      //   },
-      // });
+    //  await sendTRPCMessage({
+    //     pluginName: 'frontline',
+    //     method: 'mutation',
+    //     module: 'inbox',
+    //     action: 'changeCustomer',
+    //     input: {
+    //       customerId: customer._id,
+    //       customerIds,
+    //     },
+    //   });
 
       return customer;
     }

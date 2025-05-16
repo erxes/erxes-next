@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 
 dotenv.config();
 
-const configQueries = {
+export const organizationConfigQueries = {
   /**
    * Config object
    */
@@ -64,5 +64,3 @@ const configQueries = {
     return models.Configs.findOne({ code });
   },
 };
-
-export default configQueries;

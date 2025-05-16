@@ -1,5 +1,5 @@
 export const types = () => `
-  type VatRow @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type VatRow {
     _id: String!
     name: String
     number: String
