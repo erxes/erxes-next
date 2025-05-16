@@ -19,9 +19,7 @@ export const TransactionListPage = () => {
         </AddTransaction>
       </AccountingHeader>
       <TransactionsFilterBar />
-      <div className="flex-1 px-3">
-        <TransactionTable />
-      </div>
+      <TransactionTable />
     </AccountingLayout>
   );
 };

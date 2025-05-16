@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { CurrencyDisplay } from 'erxes-ui/modules/display/components/CurrencyDisplay';
-import { CurrencyFormatedDisplay } from 'erxes-ui/modules/display/components/CurrencyDisplay';
+import { CurrencyDisplay, CurrencyFormatedDisplay } from 'erxes-ui/modules';
 import { CurrencyCode } from 'erxes-ui/types';
 
 const meta: Meta<typeof CurrencyDisplay> = {

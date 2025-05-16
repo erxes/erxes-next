@@ -7,5 +7,5 @@ export interface ISample {
 
 export interface ISampleDocument extends ISample, Document {
   createdAt: Date;
-  modifiedAt: Date;
+  updatedAt: Date;
 }

@@ -3,34 +3,21 @@ import {
   ICustomerQueryFilterParams,
 } from 'erxes-api-shared/core-types';
 import { cursorPaginate } from 'erxes-api-shared/utils';
+import { FilterQuery } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
-
-const generateFilter = (params: ICustomerQueryFilterParams) => {
-  const { searchValue } = params;
-
-  const filter = {};
-
-  if (searchValue) {
-    filter['$or'] = [
-      { firstName: { $regex: searchValue, $options: 'i' } },
-      { lastName: { $regex: searchValue, $options: 'i' } },
-      { primaryEmail: { $regex: searchValue, $options: 'i' } },
-    ];
-  }
-
-  return filter;
-};
+import { generateFilter } from '~/modules/contacts/utils';
 
 export const customerQueries = {
   /**
    * Customers list
    */
   async customers(
-    _root: undefined,
+    _parent: undefined,
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {
-    const filter = generateFilter(params);
+    const filter: FilterQuery<ICustomerQueryFilterParams> =
+      await generateFilter(params, models);
 
     const { list, totalCount, pageInfo } =
       await cursorPaginate<ICustomerDocument>({
@@ -46,10 +33,41 @@ export const customerQueries = {
    * Get one customer
    */
   async customerDetail(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
     return models.Customers.getCustomer(_id);
+  },
+
+  async contactsLogs(
+    _parent: undefined,
+    args: { action: string; contentType: string; content: string[] },
+    { models }: IContext,
+  ) {
+    const { Companies, Customers } = models;
+    const { action, contentType, content } = args;
+    let result = {};
+
+    const type = contentType.split(':')[1];
+
+    if (action === 'merge') {
+      switch (type) {
+        case 'company':
+          result = await Companies.find({
+            _id: { $in: content },
+          }).lean();
+          break;
+        case 'customer':
+          result = await Customers.find({
+            _id: { $in: content },
+          }).lean();
+          break;
+      }
+
+      return result;
+    }
+
+    return result;
   },
 };

@@ -1,5 +1,6 @@
 import { IconCategoryPlus, IconCube } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 import { AddProductCategoryForm } from './AddProductCategoryForm';
 
@@ -29,7 +30,7 @@ export const ProductCategoriesHeader = () => {
           </Breadcrumb.List>
         </Breadcrumb>
         <Separator.Inline />
-        <PageHeader.LikeButton />
+        <PageHeader.FavoriteToggleButton item="categories" />
       </PageHeader.Start>
       <PageHeader.End>
         <AddProductCategoryForm />

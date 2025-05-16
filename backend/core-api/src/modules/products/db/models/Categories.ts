@@ -145,9 +145,9 @@ export const loadProductCategoryClass = (models: IModels) => {
         status: { $ne: PRODUCT_STATUSES.DELETED },
       });
 
-      count += await models.ProductCategories.find({
+      count += await models.ProductCategories.countDocuments({
         parentId: _id,
-      }).countDocuments();
+      });
 
       if (count > 0) {
         throw new Error("Can't remove a product category");

@@ -57,9 +57,7 @@ export const integrationMutations = {
     doc: any,
     { user, models, subdomain }: IContext,
   ) {
-    const integrationsCount = await models.Integrations.find(
-      {},
-    ).countDocuments();
+    const integrationsCount = await models.Integrations.countDocuments();
 
     if (integrationsCount > 0) {
       return models.Integrations.findOne();

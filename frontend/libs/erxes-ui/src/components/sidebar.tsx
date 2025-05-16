@@ -13,13 +13,13 @@ import { cn } from 'erxes-ui/lib/utils';
 
 import { Tooltip } from './tooltip';
 import {
-  IconLayoutSidebar,
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
 } from '@tabler/icons-react';
 import { Key } from 'erxes-ui/types/Key';
 import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
 import { AppHotkeyScope } from 'erxes-ui/modules/hotkey/types/AppHotkeyScope';
+import { useQueryState } from 'erxes-ui/hooks';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -71,6 +71,7 @@ const SidebarProvider = React.forwardRef<
   ) => {
     const isMobile = useIsMobile();
     const [openMobile, setOpenMobile] = React.useState(false);
+    const [hideSidebar] = useQueryState<boolean>('hideSidebar');
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
@@ -112,8 +113,8 @@ const SidebarProvider = React.forwardRef<
 
     const contextValue = React.useMemo<ISidebarContext>(
       () => ({
-        state,
-        open,
+        state: hideSidebar ? 'collapsed' : state,
+        open: hideSidebar ? false : open,
         setOpen,
         isMobile,
         openMobile,
@@ -128,6 +129,7 @@ const SidebarProvider = React.forwardRef<
         openMobile,
         setOpenMobile,
         toggleSidebar,
+        hideSidebar,
       ],
     );
 

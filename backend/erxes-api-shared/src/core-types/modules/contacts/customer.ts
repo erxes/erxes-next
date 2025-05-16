@@ -16,6 +16,7 @@ export interface IVisitorContact {
 export interface ICustomer {
   state?: 'visitor' | 'lead' | 'customer';
 
+  scopeBrandIds?: string[];
   firstName?: string;
   lastName?: string;
   middleName?: string;
@@ -29,6 +30,11 @@ export interface ICustomer {
   primaryAddress?: IAddress;
   addresses?: IAddress[];
 
+  ownerId?: string;
+  position?: string;
+  department?: string;
+  leadStatus?: string;
+  hasAuthority?: string;
   description?: string;
   doNotDisturb?: string;
   isSubscribed?: string;
@@ -37,7 +43,10 @@ export interface ICustomer {
   links?: IStringMap;
   status?: string;
   code?: string;
+  integrationId?: string;
+  tagIds?: string[];
 
+  mergedIds?: string[];
   relatedIntegrationIds?: string[];
   deviceTokens?: string[];
   trackedData?: ICustomField[];
@@ -51,11 +60,22 @@ export interface ICustomer {
 export interface ICustomerDocument extends ICustomer, Document {
   _id: string;
   createdAt: Date;
-  modifiedAt: Date;
+  updatedAt: Date;
 }
 
 export interface ICustomerQueryFilterParams
   extends ICursorPaginateParams,
     IListParams {
   createdAt?: Date;
+  type?: string;
+  dateFilters?: string;
+
+  tagIds?: string[];
+  excludeTagIds?: string[];
+  tagWithRelated?: boolean;
+
+  integrationIds?: string[];
+  integrationTypes?: string[];
+
+  brandIds?: string[];
 }

@@ -1,4 +1,5 @@
 import stripAnsi from 'strip-ansi';
+import dayjs from 'dayjs';
 
 export const getEnv = ({
   name,
@@ -106,6 +107,7 @@ export const splitStr = (str: string, size: number): string[] => {
 
   return cleanStr.match(regex) || [];
 };
+
 export const fixDate = (
   value: string | number | Date,
   defaultValue: Date = new Date(),
@@ -117,4 +119,57 @@ export const fixDate = (
   }
 
   return defaultValue;
+};
+
+export const getDate = (date: Date, day: number): Date => {
+  const currentDate = new Date();
+
+  date.setDate(currentDate.getDate() + day + 1);
+  date.setHours(0, 0, 0, 0);
+
+  return date;
+};
+
+export const getToday = (date: Date): Date => {
+  return getFullDate(date);
+};
+
+export const getFullDate = (date: Date) => {
+  return new Date(dayjs(date).format('YYYY-MM-DD'));
+};
+
+export const getPureDate = (date: Date, multiplier = 1) => {
+  const ndate = new Date(date);
+  const diffTimeZone =
+    multiplier * Number(process.env.TIMEZONE || 0) * 1000 * 60 * 60;
+  return new Date(ndate.getTime() - diffTimeZone);
+};
+
+export const getTomorrow = (date: Date) => {
+  return new Date(dayjs(date).add(1, 'day').format('YYYY-MM-DD'));
+};
+
+export const getNextMonth = (date: Date): { start: number; end: number } => {
+  const today = getToday(date);
+  const currentMonth = new Date().getMonth();
+
+  if (currentMonth === 11) {
+    today.setFullYear(today.getFullYear() + 1);
+  }
+
+  const month = (currentMonth + 1) % 12;
+  const start = today.setMonth(month, 1);
+  const end = today.setMonth(month + 1, 0);
+
+  return { start, end };
+};
+
+export const fixNum = (value?: number, p = 4) => {
+  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ''));
+
+  if (isNaN(cleanNumber)) {
+    return 0;
+  }
+
+  return Number(cleanNumber.toFixed(p));
 };

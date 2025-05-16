@@ -63,7 +63,7 @@ const writeSupergraphConfig = async (proxyTargets: ErxesProxyTarget[]) => {
 
 const supergraphComposeOnce = async () => {
   if (NODE_ENV === 'production') {
-    await execSync(
+    execSync(
       `rover supergraph compose --config ${supergraphConfigPath} --output ${supergraphPath} --elv2-license=accept --log=error`,
     );
   } else {

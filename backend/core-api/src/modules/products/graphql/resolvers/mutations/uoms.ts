@@ -6,7 +6,7 @@ export const uomMutations = {
    * Creates a new uom
    * @param {Object} doc uom document
    */
-  async uomsAdd(_root: undefined, doc: IUom, { models }: IContext) {
+  async uomsAdd(_parent: undefined, doc: IUom, { models }: IContext) {
     return await models.Uoms.createUom(doc);
   },
 
@@ -16,7 +16,7 @@ export const uomMutations = {
    * @param {Object} param2.doc uom info
    */
   async uomsEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & IUom,
     { models }: IContext,
   ) {
@@ -28,7 +28,7 @@ export const uomMutations = {
    * @param {string[]} uomIds Array of Uom ids
    */
   async uomsRemove(
-    _root: undefined,
+    _parent: undefined,
     { uomIds }: { uomIds: string[] },
     { models }: IContext,
   ) {

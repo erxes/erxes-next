@@ -6,10 +6,8 @@ import { TagsFilter } from 'ui-modules';
 export const ProductsFilter = () => {
   return (
     <Filter id="products-filter">
-      <Filter.Bar className="overflow-auto styled-scroll">
-        <div className="flex flex-wrap items-center gap-2 flex-1">
-          <ProductsFilterPopover />
-        </div>
+      <Filter.Bar>
+        <ProductsFilterPopover />
       </Filter.Bar>
     </Filter>
   );

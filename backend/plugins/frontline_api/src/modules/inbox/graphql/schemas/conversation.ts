@@ -1,21 +1,4 @@
-import {
-  graphqlAttachmentInput,
-  graphqlAttachmentType,
-} from 'erxes-api-shared/src/utils';
-
 export const types = `
-  ${graphqlAttachmentType}
-  ${graphqlAttachmentInput}
-  scalar Date
-  scalar JSON
-
-
-  type PageInfo {
-        hasNextPage: Boolean,
-        hasPreviousPage: Boolean,
-        startCursor: String,
-        endCursor: String,
-  }
   extend type Customer @key(fields: "_id") {
     _id: String @external
     conversations: [Conversation]
@@ -46,7 +29,7 @@ export const types = `
     tagIds: [String]
     operatorStatus: String
 
-    messages: ConversationMessageResponse
+    messages: [ConversationMessage]
     callProAudio: String
     
     tags: [Tag]
@@ -62,17 +45,7 @@ export const types = `
     customFieldsData: JSON
   }
 
-  type ConversationResponse {
-    list: [Conversation],
-    pageInfo: PageInfo
-    totalCount: Int,
-  }
 
-  type ConversationMessageResponse {
-    list: [ConversationMessage],
-    pageInfo: PageInfo
-    totalCount: Int,
-  }
   type EngageData {
     messageId: String
     brandId: String
@@ -150,6 +123,12 @@ export const types = `
     text: String
   }
 
+type ConversationListResponse {
+  list: [Conversation]
+  totalCount: Int
+  pageInfo: PageInfo
+}
+
   type ConversationAdminMessageInsertedResponse {
     customerId: String
     unreadCount: Int
@@ -159,7 +138,8 @@ export const types = `
 
   type UserConversationListResponse {
     list: [Conversation],
-    totalCount: Float,
+    pageInfo: PageInfo,
+    totalCount: Int,
   }
 
   input ConversationMessageParams {
@@ -215,14 +195,14 @@ const filterParams = `
 export const queries = `
   conversationMessage(_id: String!): ConversationMessage
   
-  conversations(${filterParams}, skip: Int): ConversationResponse
+  conversations(${filterParams}, skip: Int): ConversationListResponse
 
   conversationMessages(
     conversationId: String!
     skip: Int
     limit: Int
     getFirst: Boolean
-  ): ConversationMessageResponse
+  ): [ConversationMessage]
 
   conversationMessagesTotalCount(conversationId: String!): Int
   conversationCounts(${filterParams}, only: String): JSON
@@ -252,11 +232,11 @@ export const mutations = `
     contentType: String
     extraInfo: JSON
   ): ConversationMessage
-  conversationsAssign(conversationIds: [String]!, assignedUserId: String): ConversationResponse
-  conversationsUnassign(_ids: [String]!): ConversationResponse
-  conversationsChangeStatus(_ids: [String]!, status: String!):  ConversationResponse
+  conversationsAssign(conversationIds: [String]!, assignedUserId: String): [Conversation]
+  conversationsUnassign(_ids: [String]!): [Conversation]
+  conversationsChangeStatus(_ids: [String]!, status: String!): [Conversation]
   conversationMarkAsRead(_id: String): Conversation
- changeConversationOperator(_id: String!, operatorStatus: String!): JSON
+  changeConversationOperator(_id: String!, operatorStatus: String!): JSON
   conversationResolveAll(${mutationFilterParams}): Int
   conversationConvertToCard(${convertParams}): String
   conversationEditCustomFields(_id: String!, customFieldsData: JSON): Conversation

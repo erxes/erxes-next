@@ -2,46 +2,42 @@ import { IContext, IModels } from '~/connectionResolvers';
 import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { defaultPaginate } from 'erxes-api-shared/src/utils';
-import { IConversationDocument } from '~/modules/inbox/@types/conversations';
-
-
-
-
+import { IConversationDocument} from '@/inbox/@types/conversations'
+import { IMessageDocument} from '@/inbox/@types/conversationMessages'
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
-  const result = await models.Conversations.find(query).countDocuments();
-
+  const result = await models.Conversations.countDocuments(query);
   return Number(result);
 };
 export const conversationQueries = {
   /**
    * Conversations list
    */
-  async conversations(
-    _root,
-    params: IListArgs,
-    { user, models, subdomain }: IContext,
-  ) {
-    // filter by ids of conversations
-    if (params && params.ids) {
-       const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
-        model: models.Conversations,
-        params,
-        query: { _id: { $in: params.ids } }
-      });
-     return { list, totalCount, pageInfo };
-    }
+ async conversations(
+  _root,
+  params: IListArgs,
+  { user, models, subdomain, serverTiming }: IContext,
+) {
+  serverTiming.startTime('conversations');
 
+   const qb = new QueryBuilder(models, subdomain, params, {
+      _id: user._id,
+      code: user.code,
+      starredConversationIds: user.starredConversationIds,
+      role: user.role,
+    });
 
+    await qb.buildAllQueries();
+    const query = qb.mainQuery();
     const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
-        model: models.Conversations,
-        params,
-        query: {}
-      });
-     return { list, totalCount, pageInfo };
+    model: models.Conversations,
+    params: params,
+    query: query,
+  });
 
-  },
+  return { list, totalCount, pageInfo };
+},
+
 
   /**
    * Get conversation messages
@@ -61,8 +57,26 @@ export const conversationQueries = {
     },
     { models }: IContext,
   ) {
-    //incomplete
-    return 'success';
+    const query = { conversationId };
+
+    let messages: IMessageDocument[] = [];
+
+    if (limit) {
+      const sort: any = getFirst ? { createdAt: 1 } : { createdAt: -1 };
+
+      messages = await models.ConversationMessages.find(query)
+        .sort(sort)
+        .skip(skip || 0)
+        .limit(limit);
+
+      return getFirst ? messages : messages.reverse();
+    }
+
+    messages = await models.ConversationMessages.find(query)
+      .sort({ createdAt: -1 })
+      .limit(50);
+
+    return messages.reverse();
   },
 
   /**
@@ -73,7 +87,7 @@ export const conversationQueries = {
     { conversationId }: { conversationId: string },
     { models }: IContext,
   ) {
-    //incomplete
+    return models.ConversationMessages.countDocuments({ conversationId });
   },
 
   /**
@@ -221,12 +235,12 @@ export const conversationQueries = {
 
     serverTiming.startTime('query');
 
-    const response = await models.Conversations.find({
+    const response = await models.Conversations.countDocuments({
       ...integrationsFilter,
       status: { $in: [CONVERSATION_STATUSES.NEW, CONVERSATION_STATUSES.OPEN] },
       readUserIds: { $ne: user._id },
       $and: [{ $or: qb.userRelevanceQuery() }],
-    }).countDocuments();
+    });
 
     serverTiming.endTime('query');
 
@@ -252,16 +266,20 @@ export const conversationQueries = {
    */
   async userConversations(
     _root,
-    { _id, perPage }: { _id: string; perPage: number },
+    { _id, perPage, ...args }: { _id: string; perPage: number },
     { models }: IContext,
   ) {
-    const selector = { participatedUserIds: { $in: [_id] } };
+      const query = { participatedUserIds: { $in: [_id] } };
 
-    const list = defaultPaginate(models.Conversations.find(selector), {
-      perPage,
-    });
-    const totalCount = models.Conversations.find(selector).countDocuments();
+    const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
+        model: models.Conversations,
+        params: { 
+          ...args,          
+          limit: perPage    
+        },
+        query: query,
+      });
 
-    return { list, totalCount };
+      return { list, totalCount, pageInfo };
   },
 };

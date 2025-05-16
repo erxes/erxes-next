@@ -45,7 +45,7 @@ export const useCustomers = (options?: QueryHookOptions) => {
       limit: CUSTOMERS_PER_PAGE,
       cursor,
       searchValue,
-      tags,
+      tagIds: tags,
       dateFilters: JSON.stringify({
         createdAt: {
           gte: parseDateRangeFromString(created)?.from,

@@ -1,5 +1,6 @@
 import { IconCaretDownFilled, IconSettings } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 
 export const IndexPage = () => {
@@ -20,7 +21,7 @@ export const IndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.LikeButton />
+          <PageHeader.FavoriteToggleButton item="sampleSecond" />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>

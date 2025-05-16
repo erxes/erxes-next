@@ -1,5 +1,5 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { GET_DEPARTMENTS_MAIN } from '../graphql/queries/getDepartments';
+import { GET_DEPARTMENTS } from '../graphql/queries/getDepartments';
 import { IDepartment } from '../types/Department';
 export const useDepartmentsMain = (options?: OperationVariables) => {
   const { data, loading, fetchMore, error } = useQuery<{
@@ -8,7 +8,7 @@ export const useDepartmentsMain = (options?: OperationVariables) => {
       totalCount?: number;
       totalUsersCount?: number;
     };
-  }>(GET_DEPARTMENTS_MAIN, options);
+  }>(GET_DEPARTMENTS, options);
 
   const handleFetchMore = () => {
     fetchMore({

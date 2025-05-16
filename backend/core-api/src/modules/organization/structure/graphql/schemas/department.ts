@@ -37,13 +37,13 @@ const commonDepartmentParams = `
 `;
 
 export const mutations = `
-    departments(${commonParams},withoutUserFilter:Boolean): [Department]
-    departmentsMain(${commonParams},withoutUserFilter:Boolean): DepartmentsListResponse
-    departmentDetail(_id: String!): Department
-`;
-
-export const queries = `
     departmentsAdd(${commonDepartmentParams}): Department
     departmentsEdit(_id: String!,${commonDepartmentParams}): Department
     departmentsRemove(ids: [String!]): JSON
+`;
+
+export const queries = `
+    departments(${commonParams},withoutUserFilter:Boolean): [Department]
+    departmentsMain(${commonParams},withoutUserFilter:Boolean): DepartmentsListResponse
+    departmentDetail(_id: String!): Department
 `;

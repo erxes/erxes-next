@@ -1,12 +1,12 @@
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import {
   DropdownMenu,
   usePreviousHotkeyScope,
   useScopedHotkeys,
 } from 'erxes-ui';
-import { Link } from 'react-router-dom';
-import { JournalEnum } from '@/settings/account/types/Account';
-import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { TrJournalEnum } from '../types/constants';
 
 export const AddTransaction = ({
   inForm,
@@ -15,7 +15,7 @@ export const AddTransaction = ({
 }: {
   inForm?: boolean;
   children: React.ReactNode;
-  onClick?: (journal?: JournalEnum) => void;
+  onClick?: (journal?: TrJournalEnum) => void;
 }) => {
   const [open, setOpen] = useState(false);
   const {
@@ -51,7 +51,7 @@ export const AddTransaction = ({
       <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width]">
         <DropdownMenu.Label>Ерөнхий</DropdownMenu.Label>
         <AddTransactionItem
-          journal={JournalEnum.MAIN}
+          journal={TrJournalEnum.MAIN}
           onClick={onClick}
           inForm={inForm}
         >
@@ -60,14 +60,14 @@ export const AddTransaction = ({
         <AddTransactionItem disabled>НӨАТ</AddTransactionItem>
         <DropdownMenu.Label>Мөнгөн хөрөнгө</DropdownMenu.Label>
         <AddTransactionItem
-          journal={JournalEnum.CASH}
+          journal={TrJournalEnum.CASH}
           onClick={onClick}
           inForm={inForm}
         >
           Касс
         </AddTransactionItem>
         <AddTransactionItem
-          journal={JournalEnum.BANK}
+          journal={TrJournalEnum.BANK}
           onClick={onClick}
           inForm={inForm}
         >
@@ -77,14 +77,14 @@ export const AddTransaction = ({
 
         <DropdownMenu.Label>Бараа материал</DropdownMenu.Label>
         <AddTransactionItem
-          journal={JournalEnum.INV_INCOME}
+          journal={TrJournalEnum.INV_INCOME}
           onClick={onClick}
           inForm={inForm}
         >
           Орлого
         </AddTransactionItem>
         <AddTransactionItem
-          journal={JournalEnum.INV_OUT}
+          journal={TrJournalEnum.INV_OUT}
           onClick={onClick}
           inForm={inForm}
         >
@@ -114,8 +114,8 @@ const AddTransactionItem = ({
 }: {
   children: React.ReactNode;
   disabled?: boolean;
-  journal?: JournalEnum;
-  onClick?: (journal?: JournalEnum) => void;
+  journal?: TrJournalEnum;
+  onClick?: (journal?: TrJournalEnum) => void;
   inForm?: boolean;
 }) => {
   if (disabled) {
@@ -124,7 +124,7 @@ const AddTransactionItem = ({
   if (!inForm && journal) {
     return (
       <DropdownMenu.Item asChild>
-        <Link to={`/accounting/transaction/?defaultJournal=${journal}`}>
+        <Link to={`/accounting/transaction/create?defaultJournal=${journal}`}>
           {children}
         </Link>
       </DropdownMenu.Item>
