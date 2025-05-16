@@ -6,6 +6,7 @@ import { tagQueries } from '@/tags/graphql/queries';
 import { appQueries } from '@/apps/graphql/queries';
 import { queries as formQueries } from '@/forms/graphql/resolvers';
 import { segmentQueries } from '@/segments/graphql/resolvers';
+import { exchangeRateQueries } from '@/exchangeRates/graphql/resolvers';
 import { relationsQueries } from '@/relations/graphql/queries';
 import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
 import { structureQueries } from '@/organization/structure/graphql/resolvers/queries';
@@ -24,4 +25,5 @@ export const queries = {
   ...favoriteQueries,
   ...structureQueries,
   ...organizationConfigQueries,
+  ...exchangeRateQueries,
 };
