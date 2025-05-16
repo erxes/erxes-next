@@ -3,7 +3,7 @@ import { CommandBar, Separator } from 'erxes-ui/components';
 import { RecordTable } from 'erxes-ui/modules/record-table';
 import { CustomersMerge } from '@/contacts/customers/components/customers-command-bar/merge/CustomersMerge';
 import { CustomersTag } from '@/contacts/customers/components/customers-command-bar/tag/CustomersTag';
-export const ContactsCommandBar = () => {
+export const CustomersCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
   return (
     <CommandBar open={table.getFilteredSelectedRowModel().rows.length > 0}>

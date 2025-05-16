@@ -42,7 +42,7 @@ export const MergeMap: MergeMapEntry[] = [
   { primaryPhone: { displayName: 'Primary Phone', type: 'string' } },
   {
     phoneValidationStatus: {
-      displayName: 'Phone validation Status',
+      displayName: 'Phone Validation Status',
       type: 'string',
     },
   },

@@ -4,7 +4,7 @@ import {
 } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui/components';
 import { ReactNode } from 'react';
-import { MergeToolTip } from '@/contacts/customers/components/customers-command-bar/merge/MergeTooltip';
+import { MergeTooltip } from '@/contacts/customers/components/customers-command-bar/merge/MergeTooltip';
 import { cn } from 'erxes-ui/lib';
 
 const noop = () => {};
@@ -26,14 +26,14 @@ export const MergeSheet = ({
 }: MergeSheetProps) => {
   return (
     <Sheet {...props}>
-      <MergeToolTip disabled={!disabled}>
+      <MergeTooltip disabled={!disabled}>
         <Sheet.Trigger asChild>
           <Button variant={'secondary'} disabled={disabled}>
             <IconArrowMerge />
             Merge
           </Button>
         </Sheet.Trigger>
-      </MergeToolTip>
+      </MergeTooltip>
       <Sheet.View className="sm:max-w-screen-lg flex gap-0 flex-col m-0 p-0">
         <MergeSheetHeader />
         <Sheet.Content>
@@ -41,9 +41,9 @@ export const MergeSheet = ({
             {children}
           </div>
         </Sheet.Content>
-          {!disabled && (
-            <MergeSheetFooter onDiscard={onDiscard} onSave={onSave} />
-          )}
+        {!disabled && (
+          <MergeSheetFooter onDiscard={onDiscard} onSave={onSave} />
+        )}
       </Sheet.View>
     </Sheet>
   );
