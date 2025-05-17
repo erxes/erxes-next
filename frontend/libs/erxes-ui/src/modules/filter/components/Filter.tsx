@@ -244,7 +244,10 @@ const FilterBarButton = React.forwardRef<
     <Button
       ref={ref}
       variant="ghost"
-      className={cn('rounded-none bg-background focus-visible:z-10', className)}
+      className={cn(
+        'rounded-none bg-background focus-visible:z-10 max-w-72 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent',
+        className,
+      )}
       onClick={() => {
         if (inDialog) {
           setDialogView(filterKey ?? 'root');

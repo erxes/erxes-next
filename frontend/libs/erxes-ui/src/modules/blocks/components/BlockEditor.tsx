@@ -32,14 +32,6 @@ export const BlockEditor = ({
 }: BlockEditorProps) => {
   const theme = useAtomValue(themeState);
   const [focus, setFocus] = useState(false);
-  const hotkeyRef = useHotkeys(
-    Key.Escape,
-    () => {
-      setFocus(false);
-      onBlur?.();
-    },
-    { enabled: focus },
-  );
 
   return (
     <BlockNoteView
@@ -71,7 +63,6 @@ export const BlockEditor = ({
           TooltipTrigger: Tooltip.Trigger,
         },
       }}
-      ref={hotkeyRef}
       style={style}
     >
       <SuggestionMenuController

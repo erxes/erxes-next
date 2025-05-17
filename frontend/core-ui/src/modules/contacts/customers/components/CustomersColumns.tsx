@@ -49,7 +49,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
-          <Avatar>
+          <Avatar size="lg">
             <Avatar.Image src={cell.getValue() as string} />
             <Avatar.Fallback>
               {firstName?.charAt(0) ||

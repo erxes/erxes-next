@@ -60,6 +60,9 @@ export const CustomerAddSheetHeader = () => {
   return (
     <Sheet.Header className="p-5">
       <Sheet.Title>Add contact</Sheet.Title>
+      <Sheet.Description className="sr-only">
+        Add a new contact to your organization.
+      </Sheet.Description>
       <Sheet.Close />
     </Sheet.Header>
   );

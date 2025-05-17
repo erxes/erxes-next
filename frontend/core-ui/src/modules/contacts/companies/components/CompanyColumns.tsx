@@ -22,7 +22,7 @@ import {
 } from 'erxes-ui';
 
 import { TCompany } from '@/contacts/types/companyType';
-import { SelectTags } from 'ui-modules';
+import { MemberInline, SelectMember, SelectTags } from 'ui-modules';
 import { useState } from 'react';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
 import { ApolloError } from '@apollo/client';
@@ -227,6 +227,21 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         </RecordTablePopover>
       );
     },
+  },
+  {
+    id: 'owner',
+    accessorKey: 'ownerId',
+    header: () => <RecordTable.InlineHead label="Owner" />,
+    cell: ({ cell }) => {
+      const [ownerId, setOwnerId] = useState<string>(cell.getValue() as string);
+      return (
+        <SelectMember.InlineCell
+          value={ownerId}
+          onValueChange={(value) => setOwnerId(value as string)}
+        />
+      );
+    },
+    size: 200,
   },
   {
     id: 'plan',

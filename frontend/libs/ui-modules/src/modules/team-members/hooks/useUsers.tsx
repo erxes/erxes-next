@@ -1,37 +1,52 @@
-import { useQuery, OperationVariables } from '@apollo/client';
+import { useQuery, OperationVariables, QueryHookOptions } from '@apollo/client';
 import { GET_ASSIGNED_MEMBER, GET_USERS } from '../graphql/queries/userQueries';
+import { IMember } from '../types/TeamMembers';
+import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
-export const useUsers = (options?: OperationVariables) => {
-  const USERS_PER_PAGE = 30;
-  const { data, loading, fetchMore, error } = useQuery(GET_USERS, {
+const USERS_LIMIT = 30;
+
+export const useUsers = (
+  options?: QueryHookOptions<{ users: ICursorListResponse<IMember> }>,
+) => {
+  const { data, loading, fetchMore, error } = useQuery<{
+    users: ICursorListResponse<IMember>;
+  }>(GET_USERS, {
     ...options,
     variables: {
-      perPage: USERS_PER_PAGE,
+      limit: USERS_LIMIT,
       ...options?.variables,
     },
   });
-  const users = data?.users || [];
-  const totalCount = data?.usersTotalCount;
+
+  const { list = [], totalCount = 0, pageInfo } = data?.users || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= users?.length) return;
+    if (totalCount <= list.length) return;
+
     fetchMore({
       variables: {
         ...options?.variables,
-        page: Math.ceil((users?.length || 1) / USERS_PER_PAGE) + 1,
-        perPage: USERS_PER_PAGE,
+        direction: EnumCursorDirection.FORWARD,
+        cursor: pageInfo?.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
-        return Object.assign({}, prev, {
-          users: [...(prev.users || []), ...fetchMoreResult.users],
-        });
+
+        return {
+          ...prev,
+          users: {
+            ...prev.users,
+            list: [...(prev.users.list || []), ...fetchMoreResult.users.list],
+            totalCount: fetchMoreResult.users.totalCount,
+            pageInfo: fetchMoreResult.users.pageInfo,
+          },
+        };
       },
     });
   };
 
   return {
-    users,
+    users: list,
     loading,
     handleFetchMore,
     error,
@@ -42,4 +57,19 @@ export const useUsers = (options?: OperationVariables) => {
 export const useAssignedMember = (options?: OperationVariables) => {
   const { data, loading, error } = useQuery(GET_ASSIGNED_MEMBER, options);
   return { details: data?.userDetail?.details, loading, error };
+};
+
+export interface IMemberInlineData {
+  userDetail: IMember;
+}
+
+export const useMemberInline = (
+  options?: QueryHookOptions<IMemberInlineData>,
+) => {
+  const { data, loading, error } = useQuery<IMemberInlineData>(
+    GET_ASSIGNED_MEMBER,
+    options,
+  );
+  const { userDetail } = data || {};
+  return { userDetail, loading, error };
 };
