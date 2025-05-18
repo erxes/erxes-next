@@ -2,6 +2,7 @@ import { RecordTable } from 'erxes-ui';
 import { useCustomers } from '@/contacts/customers/hooks/useCustomers';
 import { customersColumns } from './CustomersColumns';
 import { CustomersCommandBar } from '@/contacts/customers/components/customers-command-bar';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/cursorSessionKey';
 
 export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
@@ -20,7 +21,7 @@ export const CustomersRecordTable = () => {
         hasNextPage={hasNextPage}
         loading={loading}
         dataLength={customers?.length}
-        sessionKey="customers_cursor"
+        sessionKey={CUSTOMERS_CURSOR_SESSION_KEY}
       >
         <RecordTable>
           <RecordTable.Header />

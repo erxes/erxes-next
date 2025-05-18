@@ -1,15 +1,21 @@
-import { useState } from 'react';
-
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
+import { recordTableCursorAtomFamily } from '../states/RecordTableCursorState';
 export const useRecordTableCursor = ({
   sessionKey,
 }: {
   sessionKey?: string;
 }) => {
-  const [sessionCursor] = useState<string | undefined>(
-    (sessionKey && sessionStorage.getItem(sessionKey)) || undefined,
+  const [cursor, setCursor] = useAtom(
+    recordTableCursorAtomFamily(sessionKey || ''),
   );
 
+  useEffect(() => {
+    setCursor(sessionKey ? sessionStorage.getItem(sessionKey) : null);
+  }, [sessionKey, setCursor]);
+
   return {
-    cursor: sessionCursor,
+    cursor,
+    setCursor,
   };
 };

@@ -2,6 +2,7 @@ import { Icon } from '@tabler/icons-react';
 
 export interface IFilter {
   accessoryKey: string;
+  sessionKey: string;
   label: string;
   icon: Icon;
   dropdown: (filter: FilterDropdownProps) => React.ReactNode;
@@ -19,6 +20,7 @@ export interface FilterDropdownProps extends FilterBarComponentPropsBase {
 
 export interface IFilterContext {
   id: string;
+  sessionKey: string;
   resetFilterState: () => void;
   setOpen: (open: boolean) => void;
   setView: (view: string) => void;
