@@ -1,22 +1,23 @@
-import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
-import formSchema from './schema';
-import Segment from './Segment';
 import { cn } from 'erxes-ui';
+import { useFieldArray, UseFormReturn } from 'react-hook-form';
+import { SegmentFormProps } from './schema';
+import Segment from './Segment';
 
 export const Segments = ({
   form,
   contentType,
 }: {
+  form: UseFormReturn<SegmentFormProps>;
   contentType: string;
-  form: UseFormReturn<z.infer<typeof formSchema>>;
 }) => {
+  const { watch, control, setValue } = form;
   const { fields, remove } = useFieldArray({
-    control: form.control,
+    control,
     name: 'conditionSegments',
   });
 
-  const total = form.watch(`conditionSegments`)?.length || 0;
+  const total = watch(`conditionSegments`)?.length || 0;
+  console.log({ fields, total });
 
   return (
     <>
@@ -30,12 +31,9 @@ export const Segments = ({
           const middleIndex = Math.round(total / 2) + (isOdd ? 1 : 0);
 
           if (middleIndex === index + 1 || (hasTwoElement && index === 1)) {
-            const value = form.watch('conditionsConjunction');
+            const value = watch('conditionsConjunction');
             const handleClick = () => {
-              form.setValue(
-                'conditionsConjunction',
-                value === 'or' ? 'and' : 'or',
-              );
+              setValue('conditionsConjunction', value === 'or' ? 'and' : 'or');
             };
             return (
               <div

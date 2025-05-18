@@ -5,19 +5,25 @@ import {
   useQuery,
 } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, Spinner, useToast } from 'erxes-ui';
-import { Button, Input, Label, Sheet, Textarea } from 'erxes-ui';
+import {
+  Button,
+  Form,
+  Input,
+  Label,
+  Sheet,
+  Spinner,
+  Textarea,
+  useToast,
+} from 'erxes-ui';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
-// import client from '~/providers/apollo-provider/apolloClient';
 import { generateParamsPreviewCount } from '../common';
 import { SelectSegmentCommand } from '../common/SelectSegment';
 import mutations from '../graphql/mutations';
 import queries from '../graphql/queries';
 import { ISegment } from '../types';
 import { getDefaultValues } from './defaultValues';
-import { segmentFormSchema } from './schema';
+import { SegmentFormProps, segmentFormSchema } from './schema';
 import Segment from './Segment';
 import { Segments } from './Segments';
 
@@ -35,24 +41,8 @@ type StatsType = {
   loading?: boolean;
 };
 
-const renderContent = ({
-  form,
-  contentType,
-}: {
-  contentType: string;
-  form: UseFormReturn<z.infer<typeof segmentFormSchema>>;
-}) => {
-  const conditionSegments = form.watch('conditionSegments');
-
-  if (conditionSegments?.length) {
-    return <Segments form={form} contentType={contentType} />;
-  }
-
-  return <Segment form={form} contentType={contentType} />;
-};
-
 interface SegmentMetadataFormProps {
-  form: UseFormReturn<z.infer<typeof segmentFormSchema>>;
+  form: UseFormReturn<SegmentFormProps>;
   segment?: ISegment;
   isTemporary?: boolean;
 }
@@ -119,16 +109,35 @@ const SegmentMetadataForm = ({
   );
 };
 
+const renderContent = ({
+  form,
+  contentType,
+}: {
+  form: UseFormReturn<SegmentFormProps>;
+  contentType: string;
+}) => {
+  const conditionSegments = form.watch('conditionSegments');
+
+  if (conditionSegments?.length) {
+    return <Segments form={form} contentType={contentType} />;
+  }
+
+  return <Segment form={form} contentType={contentType} />;
+};
+
 export default function SegmentForm({
   contentType,
   isTempoaray,
   callback,
   segmentId,
 }: Props) {
+  console.log({ segmentId });
   const [stats, setStats] = useState<StatsType>();
+
   const [countSegment, { called, loading }] = useLazyQuery(
     queries.segmentsPreviewCount,
   );
+
   const [segmentAdd] = useMutation(mutations.segmentsAdd);
   const [segmentsEdit] = useMutation(mutations.segmentsEdit);
   const { toast } = useToast();
@@ -146,7 +155,7 @@ export default function SegmentForm({
 
   const segment = data?.segmentDetail;
 
-  const form = useForm<z.infer<typeof segmentFormSchema>>({
+  const form = useForm<SegmentFormProps>({
     resolver: zodResolver(segmentFormSchema),
     defaultValues: getDefaultValues(contentType, segment || {}, isTempoaray),
     values: getDefaultValues(contentType, segment || {}, isTempoaray),
@@ -206,7 +215,7 @@ export default function SegmentForm({
     ]);
   };
 
-  const handleSave = (data: z.infer<typeof segmentFormSchema>) => {
+  const handleSave = (data: SegmentFormProps) => {
     const mutation = segment ? segmentsEdit : segmentAdd;
     mutation({
       variables: {
@@ -260,24 +269,21 @@ export default function SegmentForm({
   }
 
   return (
-    <>
+    <FormProvider {...form}>
       <div className="flex flex-col flex-1 max-h-full px-8 pt-4 pb-4 overflow-y-auto w-2xl">
-        <FormProvider {...form}>
-          <SegmentMetadataForm
-            form={form}
-            segment={segment}
-            isTemporary={isTempoaray}
-          />
-          <div className="py-4">{renderContent({ form, contentType })}</div>
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={onAddSegmentGroup}
-          >
-            <Form.Label>+ Add Group</Form.Label>
-          </Button>
-          <Form.Message />
-        </FormProvider>
+        <SegmentMetadataForm
+          form={form}
+          segment={segment}
+          isTemporary={isTempoaray}
+        />
+        <div className="py-4">{renderContent({ form, contentType })}</div>
+        <Button
+          variant="secondary"
+          className="w-full"
+          onClick={onAddSegmentGroup}
+        >
+          <Label>+ Add Group</Label>
+        </Button>
       </div>
 
       {!!stats && (
@@ -309,17 +315,11 @@ export default function SegmentForm({
           {loading && called ? 'Calculating...' : 'Calculate segment reach'}
         </Button>
         <Button
-          onClick={form.handleSubmit(handleSave, (error) =>
-            // alert({
-            //   title: 'Something went wrong',
-            //   description: Object.values(error)[0].message?.toString(),
-            // }),
-            console.log(error),
-          )}
+          onClick={form.handleSubmit(handleSave, (error) => console.log(error))}
         >
           Save Segment
         </Button>
       </Sheet.Footer>
-    </>
+    </FormProvider>
   );
 }

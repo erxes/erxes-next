@@ -6,6 +6,7 @@ import { useQueryState } from 'erxes-ui';
 
 export const getFieldsProperties = (propertyType?: string) => {
   const [contentType] = useQueryState<string>('contentType');
+
   const { data, loading } = useQuery<FieldQueryResponse>(
     queries.propertiesWithFields,
     {

@@ -1,8 +1,5 @@
-import {
-  FieldValues,
-  UseFieldArrayRemove,
-  UseFormReturn,
-} from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
+import { SegmentFormProps } from '../form/schema';
 
 export interface ListQueryResponse {
   segments: ISegment[];
@@ -88,9 +85,8 @@ export type IFormFieldName =
   | `conditions.${number}`
   | `conditionSegments.${number}.conditions.${number}`;
 
-export type IProperty<TForm extends FieldValues> = {
+export type IProperty = {
   index: number;
-  form: UseFormReturn<TForm>;
   condition: ICondition;
   contentType: string;
   remove: () => void;
@@ -98,11 +94,12 @@ export type IProperty<TForm extends FieldValues> = {
   isLast: boolean;
   total: number;
   parentFieldName?: `conditionSegments.${number}`;
+  form: UseFormReturn<SegmentFormProps>;
 };
 
-export type IPropertyField<TForm extends FieldValues> = {
+export type IPropertyField = {
   index: number;
-  form: UseFormReturn<TForm>;
+  form: UseFormReturn<SegmentFormProps>;
   fields: IField[];
   currentField?: IField;
   parentFieldName: IFormFieldName;
@@ -111,18 +108,18 @@ export type IPropertyField<TForm extends FieldValues> = {
   contentType: string;
 };
 
-export type IPropertyCondtion<TForm extends FieldValues> = {
+export type IPropertyCondtion = {
   index: number;
-  form: UseFormReturn<TForm>;
+  form: UseFormReturn<SegmentFormProps>;
   currentField?: IField;
   operators: IOperator[];
   parentFieldName: IFormFieldName;
   defaultValue?: any;
 };
 
-export type IPropertyInput<TForm extends FieldValues> = {
+export type IPropertyInput = {
   index: number;
-  form: UseFormReturn<TForm>;
+  form: UseFormReturn<SegmentFormProps>;
   parentFieldName: IFormFieldName;
   defaultValue?: any;
   operators: IOperator[];

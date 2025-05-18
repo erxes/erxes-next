@@ -341,3 +341,24 @@ export const deepCleanNulls = (input: any): any => {
   }
   return input;
 };
+
+export const getContentType = (
+  currentAction: IAction,
+  actions: IAction[],
+  triggers: ITrigger[],
+): string => {
+  const trigger = triggers.find((t) => t.actionId === currentAction.id);
+  if (trigger) {
+    return trigger.type;
+  }
+
+  // Find the parent action that leads to this current action
+  const parentAction = actions.find((a) => a.nextActionId === currentAction.id);
+  if (parentAction) {
+    // Recursively call the function with the parent action
+    return getContentType(parentAction, actions, triggers);
+  }
+
+  // Fallback if nothing found in the chain
+  return triggers[0]?.type;
+};

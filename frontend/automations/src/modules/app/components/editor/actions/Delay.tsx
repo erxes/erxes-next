@@ -1,14 +1,15 @@
 import { Card, Form, Input, Select } from 'erxes-ui/components';
 import { useFormContext } from 'react-hook-form';
-import { TAutomationProps } from '../common/formSchema';
-import { useQueryState } from 'erxes-ui/hooks';
 import { IActionProps } from 'ui-modules';
+import { TAutomationProps } from '../common/formSchema';
 
 export const Delay = ({ currentActionIndex }: IActionProps) => {
+  const { control } = useFormContext<TAutomationProps>();
   return (
-    <div className="flex flex-row gap-4 w-96">
+    <Card.Content className="flex flex-row gap-4 w-96">
       <Form.Field
         name={`detail.actions.${currentActionIndex}.config.value`}
+        control={control}
         render={({ field }) => (
           <Form.Item className="flex-1">
             <Form.Label>Wait for</Form.Label>
@@ -19,6 +20,7 @@ export const Delay = ({ currentActionIndex }: IActionProps) => {
 
       <Form.Field
         name={`detail.actions.${currentActionIndex}.config.type`}
+        control={control}
         render={({ field }) => (
           <Form.Item className="flex-1">
             <Form.Label>Time unit</Form.Label>
@@ -36,7 +38,7 @@ export const Delay = ({ currentActionIndex }: IActionProps) => {
           </Form.Item>
         )}
       />
-    </div>
+    </Card.Content>
   );
 };
 

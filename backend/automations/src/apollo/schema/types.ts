@@ -64,6 +64,7 @@ const types = `
   type AutomationsListResponse {
     list: [Automation],
     totalCount: Float,
+     pageInfo: PageInfo
   }
 
   type automationsTotalCountResponse {

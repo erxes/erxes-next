@@ -38,6 +38,7 @@ export interface IAutomationDoc {
   updatedUser?: any;
   createdUser?: any;
   tags?: any[];
+  tagIds?: string[];
 }
 
 export interface IAutomationNoteDoc {

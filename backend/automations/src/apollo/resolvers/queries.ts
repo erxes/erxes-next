@@ -1,9 +1,14 @@
 // import { getService, getPlugins } from '@erxes/api-utils/src/serviceDiscovery';
-import { getPlugin, getPlugins, paginate } from 'erxes-api-shared/utils';
+import {
+  cursorPaginate,
+  getPlugin,
+  getPlugins,
+  paginate,
+} from 'erxes-api-shared/utils';
 import { STATUSES, UI_ACTIONS } from '~/constants';
 
 import { IContext } from '~/db/connectionResolvers';
-import { ITrigger } from '~/db/definitions/automations';
+import { IAutomationDocument, ITrigger } from '~/db/definitions/automations';
 
 interface IListArgs {
   status: string;
@@ -114,20 +119,19 @@ const automationQueries = {
    * Automations for only main list
    */
   async automationsMain(_root, params: IListArgs, { models }: IContext) {
-    const { page, perPage } = params;
-
     const filter = generateFilter(params);
 
-    const automations = await paginate(
-      models.Automations.find(filter).sort({ createdAt: -1 }).lean(),
-      { perPage, page },
-    );
-
-    const totalCount = await models.Automations.find(filter).countDocuments();
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IAutomationDocument>({
+        model: models.Automations,
+        params,
+        query: filter,
+      });
 
     return {
-      list: automations,
+      list,
       totalCount,
+      pageInfo,
     };
   },
 

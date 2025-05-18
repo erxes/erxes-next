@@ -33,7 +33,7 @@ const TabsContent = (
   return list.map((item, index) => (
     <Card
       key={index}
-      className="cursor-grab hover:bg-slate-50 transition-colors pb-2"
+      className="cursor-grab hover:bg-slate-50 transition-colors mb-2"
       draggable
       onDragStart={(event) => onDragStart(event, nodeType, item)}
     >
@@ -225,12 +225,12 @@ export default () => {
   return (
     <Card
       className={cn(
-        `absolute top-0 right-0 h-full  border rounded-l-lg flex flex-col  transition-transform duration-300 bg-white z-10`,
+        `absolute top-0 right-0 h-full border rounded-l-lg flex flex-col transition-[width] duration-300 ease-in-out bg-white z-10`,
         isMinimized ? 'invisible' : 'visible',
       )}
     >
       {activeNode && (
-        <Card.Header className="flex flex-row justify-between w-full">
+        <Card.Header className="flex flex-row justify-between w-full font-mono">
           <div className="max-w-64">
             <Card.Title>{activeNode?.label || ''}</Card.Title>
             <Card.Description>{activeNode?.description || ''}</Card.Description>
@@ -240,7 +240,7 @@ export default () => {
           </Button>
         </Card.Header>
       )}
-      <div className=" flex-1 flex flex-col min-w-80 max-w-2xl w-fit">
+      <div className=" flex-1 flex flex-col min-w-80 max-w-2xl ">
         {renderSideBarContent()}
       </div>
     </Card>

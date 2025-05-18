@@ -9,6 +9,19 @@ import { DocumentNode } from 'graphql';
 const types = `
   scalar JSON
   scalar Date
+
+  enum CURSOR_DIRECTION {
+    forward,
+    backward
+  }
+
+  type PageInfo {
+    hasNextPage: Boolean,
+    hasPreviousPage: Boolean,
+    startCursor: String,
+    endCursor: String,
+  }
+
   ${mainTypes}
 
 `;

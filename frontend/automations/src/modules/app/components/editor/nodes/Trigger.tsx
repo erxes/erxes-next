@@ -11,13 +11,13 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
   const { setValue } = useFormContext<TAutomationProps>();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col ">
       <div className="w-1/4 ml-1 bg-primary/10 text-primary text-center px-2 py-1 rounded-t-md">
         <p className="font-medium font-bold">Trigger</p>
       </div>
       <div
         className={cn(
-          'rounded-md shadow-md bg-background w-[280px] relative',
+          'rounded-md shadow-md bg-background w-[280px] relative font-mono',
           selected ? 'ring-2 ring-primary ring-offset-2' : '',
           'transition-all duration-200',
           data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
@@ -40,7 +40,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
           </div>
         </div>
         <div className="p-3">
-          <span className="text-xs text-accent-foreground">
+          <span className="text-xs text-accent-foreground ">
             {data.description}
           </span>
 

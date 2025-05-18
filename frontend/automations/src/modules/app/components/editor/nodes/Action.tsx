@@ -21,11 +21,13 @@ const renderContent = (data: NodeData) => {
     );
   }
 
-  if (!Object.keys(data?.config || {}).length) {
+  if (data.type === 'if') {
     return null;
   }
 
-  console.log(`config`, data?.config);
+  if (!Object.keys(data?.config || {}).length) {
+    return null;
+  }
 
   return (
     <div className="p-3">
@@ -88,22 +90,12 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
       </div>
       <div
         className={cn(
-          'rounded-md shadow-md bg-white border border-muted w-[280px]',
+          'rounded-md shadow-md bg-white border border-muted w-[280px] font-mono',
           selected ? 'ring-2 ring-success ring-offset-2' : '',
           data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
           'transition-all duration-200',
         )}
       >
-        {/* <NodeToolbar isVisible={selected} position={data.toolbarPosition}>
-          <Dialog>
-            <Dialog.Trigger>
-              <Button variant="ghost">
-                <IconEdit className="w-4 h-4" />
-              </Button>
-            </Dialog.Trigger>
-            <EditForm fieldName="actions" data={data} setValue={setValue} />
-          </Dialog>
-        </NodeToolbar> */}
         <div className="p-3 flex items-center justify-between border-b border-muted">
           <div className="flex items-center gap-2 text-success/90">
             <div
@@ -113,21 +105,13 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
             </div>
             <span className="font-medium">{data.label}</span>
           </div>
-          {/* <Dialog>
-            <Dialog.Trigger>
-              <Button variant="ghost">
-                <IconEdit className="w-4 h-4" />
-              </Button>
-            </Dialog.Trigger>
-            <EditForm fieldName="actions" data={data} setValue={setValue} />
-          </Dialog> */}
 
           <div className="flex items-center gap-1">
             <NodeDropdownActions id={id} data={data} setValue={setValue} />
           </div>
         </div>
 
-        <div className="p-3 border-b border-muted">
+        <div className="p-3 border-b border-muted ">
           <span className="text-xs text-accent-foreground font-medium">
             {data.description}
           </span>

@@ -4,6 +4,9 @@ import { lazy, Suspense } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { TAutomationProps } from '../common/formSchema';
 import { IActionProps } from 'ui-modules';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorState from '../common/EmptyState';
+import { Form, Input, Select } from 'erxes-ui/components';
 
 const Delay = lazy(() =>
   import('./Delay').then((module) => ({
@@ -17,20 +20,24 @@ const IF = lazy(() =>
   })),
 );
 
+const ManageProperties = lazy(() =>
+  import('./ManageProperties').then((module) => ({
+    default: module.ManageProperties,
+  })),
+);
+
 const Actions: Record<
   string,
   React.LazyExoticComponent<React.ComponentType<any>>
 > = {
   delay: Delay,
   if: IF,
-};
-type Props = {
-  //   type: string;
+  setProperty: ManageProperties,
 };
 
-export const ActionDetail = ({}: Props) => {
+export const ActionDetail = () => {
   const [activeNodeId] = useQueryState('activeNodeId');
-  const { watch, setValue } = useFormContext<TAutomationProps>();
+  const { watch, control } = useFormContext<TAutomationProps>();
 
   const actions = watch(`detail.actions`) || [];
   const currentIndex = actions.findIndex(
@@ -50,24 +57,28 @@ export const ActionDetail = ({}: Props) => {
     );
   }
 
-  const handleSave = (config: any) => {
-    setValue(`detail.actions.${currentIndex}.config`, {
-      ...(currentAction?.config || {}),
-      ...config,
-    });
-  };
-
-  const updatedProps: IActionProps = {
-    currentActionIndex: currentIndex,
-    currentAction,
-    handleSave,
-  };
-
   return (
     <Suspense fallback={<Spinner />}>
-      <Card.Content>
-        <Component {...updatedProps} />
-      </Card.Content>
+      <ErrorBoundary FallbackComponent={() => <ErrorState />}>
+        {/* <Card.Content> */}
+        <Form.Field
+          name={`detail.actions.${currentIndex}.config`}
+          control={control}
+          render={({ field }) => (
+            <Component
+              currentActionIndex={currentIndex}
+              currentAction={currentAction}
+              handleSave={(config: any) =>
+                field.onChange({
+                  ...(currentAction?.config || {}),
+                  ...config,
+                })
+              }
+            />
+          )}
+        />
+        {/* </Card.Content> */}
+      </ErrorBoundary>
     </Suspense>
   );
 };

@@ -66,4 +66,33 @@ query AutomationDetail($id: String!) {
 }
 `;
 
-export default { automationConstants, detail };
+const mainList = gql`
+query AutomationsMain($page: Int, $perPage: Int, $ids: [String], $excludeIds: Boolean, $searchValue: String, $sortField: String, $sortDirection: Int, $status: String, $tagIds: [String]) {
+  automationsMain(page: $page, perPage: $perPage, ids: $ids, excludeIds: $excludeIds, searchValue: $searchValue, sortField: $sortField, sortDirection: $sortDirection, status: $status, tagIds: $tagIds) {
+    list {
+      _id
+      name
+      status
+      createdAt
+      updatedAt
+      createdBy
+      updatedBy
+      createdUser {
+        ${COMMON_USER_FIELDS}
+      }
+      updatedUser {
+        ${COMMON_USER_FIELDS}
+      }
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+`;
+
+export default { automationConstants, detail, mainList };

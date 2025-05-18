@@ -51,7 +51,7 @@ const segmentsGetTypes = gql`
 const propertiesWithFields = gql(`
     query Query($contentType: String!) {
       fieldsCombinedByContentType(contentType: $contentType)
-       segmentsGetAssociationTypes(contentType: $contentType)
+      segmentsGetAssociationTypes(contentType: $contentType)
     }
 `);
 

@@ -6,6 +6,11 @@ const actions: any = {
       default: module.NodeContent,
     })),
   ),
+  setProperty: lazy(() =>
+    import('../actions/ManageProperties').then((module) => ({
+      default: module.NodeContent,
+    })),
+  ),
 };
 
 export const ActionNodeContent = ({
@@ -15,7 +20,6 @@ export const ActionNodeContent = ({
   type: string;
   config: any;
 }) => {
-  console.log({ type });
   const Action = actions[type];
 
   if (!Action) {

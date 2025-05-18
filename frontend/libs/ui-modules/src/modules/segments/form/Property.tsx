@@ -1,10 +1,16 @@
 import { gql } from '@apollo/client';
 import { IconTrash } from '@tabler/icons-react';
-import { Button, DatePicker, Form, HoverCard, Input, Select } from 'erxes-ui';
-import { useQueryState } from 'erxes-ui';
-import { cn } from 'erxes-ui';
+import {
+  Button,
+  cn,
+  DatePicker,
+  Form,
+  HoverCard,
+  Input,
+  Select,
+  Spinner,
+} from 'erxes-ui';
 import { ControllerRenderProps, FieldError } from 'react-hook-form';
-import { z } from 'zod';
 import { SelectCommand } from '../common';
 import { getFieldsProperties, getSelectedFieldConfig } from '../hooks';
 import {
@@ -14,28 +20,8 @@ import {
   IPropertyInput,
 } from '../types';
 import { createFieldNameSafe, groupByType } from '../utils';
-import { segmentFormSchema } from './schema';
-type Props = {
-  error?: FieldError;
-  children: React.ReactNode;
-};
-
-const FieldWithError = ({ error, children }: Props) => {
-  if (error) {
-    return (
-      <HoverCard>
-        <HoverCard.Trigger asChild className="ring-2 ring-red-300 rounded">
-          <div>{children}</div>
-        </HoverCard.Trigger>
-        <HoverCard.Content className="w-80">
-          <Form.Message />
-        </HoverCard.Content>
-      </HoverCard>
-    );
-  }
-
-  return children;
-};
+import { SegmentFormProps } from './schema';
+import { FieldWithError } from '../common/FieldWithError';
 
 const PropertyField = ({
   index,
@@ -46,13 +32,14 @@ const PropertyField = ({
   defaultValue,
   propertyTypes,
   contentType,
-}: IPropertyField<z.infer<typeof segmentFormSchema>>) => {
+}: IPropertyField) => {
+  const { control } = form;
   const groups = groupByType(fields);
   // const [selectedContentType] = useQueryState<string>('contentType');
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row w-full">
       <Form.Field
-        control={form.control}
+        control={control}
         name={`${parentFieldName}.propertyType`}
         defaultValue={contentType || undefined}
         render={({ field, fieldState }) => (
@@ -78,7 +65,7 @@ const PropertyField = ({
         )}
       />
       <Form.Field
-        control={form.control}
+        control={control}
         name={`${parentFieldName}.propertyName`}
         defaultValue={defaultValue}
         render={({ field, fieldState }) => (
@@ -132,10 +119,12 @@ const PropertyOperator = ({
   operators,
   parentFieldName,
   defaultValue,
-}: IPropertyCondtion<z.infer<typeof segmentFormSchema>>) => {
+}: IPropertyCondtion) => {
+  const { control } = form;
+
   return (
     <Form.Field
-      control={form.control}
+      control={control}
       name={`${parentFieldName}.propertyOperator`}
       defaultValue={defaultValue}
       render={({ field, fieldState }) => (
@@ -169,9 +158,10 @@ const PropertyInput = ({
   parentFieldName,
   operators,
   selectedField,
-}: IPropertyInput<z.infer<typeof segmentFormSchema>>) => {
-  const propertyOperator = form.watch(`${parentFieldName}.propertyOperator`);
-  const propertyName = form.getValues(`${parentFieldName}.propertyName`);
+}: IPropertyInput) => {
+  const { control, watch, getValues } = form;
+  const propertyOperator = watch(`${parentFieldName}.propertyOperator`);
+  const propertyName = getValues(`${parentFieldName}.propertyName`);
 
   const selectedOperator = operators.find(
     (operator) => operator.value === propertyOperator,
@@ -289,15 +279,12 @@ const PropertyInput = ({
 
   return (
     <Form.Field
-      control={form.control}
+      control={control}
       name={`${parentFieldName}.propertyValue`}
       defaultValue={defaultValue}
       render={({ field, fieldState }) => (
         <FieldWithError error={fieldState.error}>
-          <Form.Item className="flex-1">
-            <Form.Control>{Component(field)}</Form.Control>
-            {/* <Form.Message /> */}
-          </Form.Item>
+          {Component(field)}
         </FieldWithError>
       )}
     />
@@ -305,8 +292,8 @@ const PropertyInput = ({
 };
 
 const Property = ({
-  index,
   form,
+  index,
   condition,
   remove,
   isFirst,
@@ -314,17 +301,25 @@ const Property = ({
   total,
   parentFieldName,
   contentType,
-}: IProperty<z.infer<typeof segmentFormSchema>>) => {
+}: IProperty) => {
+  const { watch, setValue } = form;
+
   const fieldName = createFieldNameSafe(parentFieldName, 'conditions', index);
-  const propertyType = form.watch(`${fieldName}.propertyType` as any);
-  const { fields, propertyTypes } = getFieldsProperties(propertyType);
+  const propertyType = watch(`${fieldName}.propertyType` as any);
+  console.log({ propertyType, fieldName });
+  const { fields, propertyTypes, loading } = getFieldsProperties(propertyType);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  console.log({ fields, propertyTypes });
 
   const { selectedField, operators } =
-    getSelectedFieldConfig(
-      form.watch(`${fieldName}.propertyName` as any),
-      fields,
-    ) || {};
+    getSelectedFieldConfig(watch(`${fieldName}.propertyName` as any), fields) ||
+    {};
 
+  console.log({ selectedField, operators });
   const renderAndOrBtn = () => {
     const hasTwoElement = total === 2;
     const isOdd = Math.round(total) % 2 === 0;
@@ -336,9 +331,9 @@ const Property = ({
         | 'conditionsConjunction' = parentFieldName
         ? `${parentFieldName}.conditionsConjunction`
         : `conditionsConjunction`;
-      const value = form.watch(field);
+      const value = watch(field);
       const handleClick = () => {
-        form.setValue(field, value === 'or' ? 'and' : 'or');
+        setValue(field, value === 'or' ? 'and' : 'or');
       };
       return (
         <div
@@ -386,11 +381,11 @@ const Property = ({
       >
         <div className="w-2/5">
           <PropertyField
+            form={form}
             contentType={contentType}
             defaultValue={condition.propertyName}
             parentFieldName={fieldName}
             index={index}
-            form={form}
             fields={fields}
             currentField={selectedField}
             propertyTypes={propertyTypes}
@@ -398,20 +393,20 @@ const Property = ({
         </div>
         <div className="w-1/5">
           <PropertyOperator
+            form={form}
             defaultValue={condition.propertyOperator}
             parentFieldName={fieldName}
             index={index}
-            form={form}
             currentField={selectedField}
             operators={operators || []}
           />
         </div>
         <div className="w-2/5 flex items-center gap-2">
           <PropertyInput
+            form={form}
             defaultValue={condition.propertyValue}
             parentFieldName={fieldName}
             index={index}
-            form={form}
             operators={operators || []}
             selectedField={selectedField}
           />

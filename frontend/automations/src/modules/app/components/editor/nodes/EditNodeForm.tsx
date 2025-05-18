@@ -35,7 +35,6 @@ export const EditForm = ({
   const handleSave = () => {
     setValue(`detail.${fieldName}.${nodeIndex}.label`, doc.label);
     setValue(`detail.${fieldName}.${nodeIndex}.description`, doc.description);
-    console.log({ data });
     setValue('activeNode', { ...data, id, ...doc });
     callback();
   };
