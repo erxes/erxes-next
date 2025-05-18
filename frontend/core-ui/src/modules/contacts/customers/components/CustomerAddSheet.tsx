@@ -1,4 +1,4 @@
-import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { IconPlus } from '@tabler/icons-react';
 
 import {
@@ -9,7 +9,6 @@ import {
   useScopedHotkeys,
   useSetHotkeyScope,
 } from 'erxes-ui';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
 import { useState } from 'react';
 import { AddCustomerForm } from './AddCustomerForm';
 export const CustomerAddSheet = () => {
@@ -19,20 +18,20 @@ export const CustomerAddSheet = () => {
   const onOpen = () => {
     setOpen(true);
     setHotkeyScopeAndMemorizePreviousScope(
-      CustomerHotKeyScope.CustomerAddSheet,
+      ContactsHotKeyScope.CustomerAddSheet,
     );
   };
 
   const onClose = () => {
-    setHotkeyScope(PageHotkeyScope.CustomersPage);
+    setHotkeyScope(ContactsHotKeyScope.CustomerAddSheet);
     setOpen(false);
   };
 
-  useScopedHotkeys(`c`, () => onOpen(), PageHotkeyScope.CustomersPage);
+  useScopedHotkeys(`c`, () => onOpen(), ContactsHotKeyScope.CustomersPage);
   useScopedHotkeys(
     `esc`,
     () => onClose(),
-    CustomerHotKeyScope.CustomerAddSheet,
+    ContactsHotKeyScope.CustomerAddSheet,
   );
 
   return (

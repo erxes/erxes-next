@@ -1,5 +1,5 @@
 import { ClientsHeader } from '@/contacts/clients/components/ClientsHeader';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Command } from 'cmdk';
 import {
@@ -33,9 +33,12 @@ export const ClientsIndexPage = () => {
     <PageContainer>
       <ClientsHeader />
       <PageSubHeader>
-        <Filter id="clients-filter">
+        <Filter
+          id="clients-filter"
+          sessionKey={ContactsHotKeyScope.ClientsPage}
+        >
           <Filter.Bar>
-            <Filter.Popover scope={PageHotkeyScope.ClientsPage}>
+            <Filter.Popover scope={ContactsHotKeyScope.ClientsPage}>
               <Filter.Trigger />
               <Combobox.Content>
                 <Filter.View>

@@ -10,6 +10,8 @@ export const useIsMatchingLocation = (basePath?: string) => {
         ? new URL(basePath + path, document.location.origin).pathname ?? ''
         : path;
 
+      console.log(constructedPath, location);
+
       return !!matchPath(constructedPath, location.pathname);
     },
     [location.pathname, basePath],

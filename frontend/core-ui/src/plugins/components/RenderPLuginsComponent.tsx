@@ -6,7 +6,7 @@ interface RemoteComponentProps {
   module?: string;
 }
 
-export function RenderPLuginsComponent({
+export function RenderPluginsComponent({
   pluginName,
   remoteModuleName,
   moduleName,

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes, Navigate } from 'react-router';
 
 import { ContactsPath } from '@/types/paths/ContactsPath';
+import { ContactsPageEffect } from '@/contacts/components/ContactsPageEffect';
 
 const CustomersIndexPage = lazy(() =>
   import('~/pages/contacts/CustomersIndexPage').then((module) => ({
@@ -34,6 +35,7 @@ export const ContactsRoutes = () => {
         <Route path={ContactsPath.Companies} element={<CompaniesIndexPage />} />
         <Route path={ContactsPath.Clients} element={<ClientsIndexPage />} />
       </Routes>
+      <ContactsPageEffect />
     </Suspense>
   );
 };

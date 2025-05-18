@@ -11,8 +11,8 @@ import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 
 import { TagsFilter } from 'ui-modules';
 import { CustomerTotalCount } from './CustomerTotalCount';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { CUSTOMERS_CURSOR_SESSION_KEY } from '../constants/cursorSessionKey';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '../constants/customersCursorSessionKey';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 const CustomersFilterPopover = () => {
   const [queries] = useMultiQueryState<{
@@ -29,7 +29,7 @@ const CustomersFilterPopover = () => {
 
   return (
     <>
-      <Filter.Popover scope={PageHotkeyScope.CustomersPage}>
+      <Filter.Popover scope={ContactsHotKeyScope.CustomersPage}>
         <Filter.Trigger isFiltered={hasFilters} />
         <Combobox.Content>
           <Filter.View>

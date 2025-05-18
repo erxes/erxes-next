@@ -3,7 +3,7 @@ import { Control } from 'react-hook-form';
 import { Editor, Form, Input, Select, Switch, Upload } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/customers/constants/formSchema';
-import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { SelectMember } from 'ui-modules';
 
 export const AvatarField = ({
@@ -91,7 +91,7 @@ export const DescriptionField = ({
             <Editor
               initialContent={field.value}
               onChange={field.onChange}
-              scope={CustomerHotKeyScope.CustomerAddSheetDescriptionField}
+              scope={ContactsHotKeyScope.CustomerAddSheetDescriptionField}
             />
           </Form.Control>
           <Form.Message className="text-destructive" />

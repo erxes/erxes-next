@@ -2,7 +2,7 @@ import { RecordTable } from 'erxes-ui';
 import { useCustomers } from '@/contacts/customers/hooks/useCustomers';
 import { customersColumns } from './CustomersColumns';
 import { CustomersCommandBar } from '@/contacts/customers/components/customers-command-bar';
-import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/cursorSessionKey';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/customersCursorSessionKey';
 
 export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
