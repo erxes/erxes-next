@@ -40,7 +40,7 @@ export const types = `
   
     leadData: JSON
     messengerData: JSON
-    ticketData :JSON
+    ticketData: JSON
     uiOptions: JSON
     isActive: Boolean
     isConnected: Boolean
