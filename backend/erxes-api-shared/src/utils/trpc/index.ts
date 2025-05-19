@@ -5,7 +5,7 @@ import {
 } from '@trpc/client';
 import { getPlugin } from '../service-discovery';
 
-type MessageProps = {
+export type MessageProps = {
   method: 'query' | 'mutation';
   pluginName: string;
   module: string;

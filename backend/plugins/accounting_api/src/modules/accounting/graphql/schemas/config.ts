@@ -1,6 +1,6 @@
 export const types = `
 
-  type AccountingsConfig {
+  type AccountingsConfig @key(fields: "_id") @cacheControl(maxAge: 3){
     _id: String!
     code: String!
     value: JSON

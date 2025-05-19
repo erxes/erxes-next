@@ -8,7 +8,6 @@ export const CompaniesRecordTable = () => {
 
   const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
     pageInfo || {};
-
   return (
     <RecordTable.Provider
       columns={companyColumns}

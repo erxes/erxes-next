@@ -12,8 +12,8 @@ export interface ICustomer extends ICustomerInline {
   type: CustomerType;
   links?: object;
   code?: string;
-  emailValidationStatus?: string;
-  phoneValidationStatus?: string;
+  emailValidationStatus?: 'valid' | 'invalid';
+  phoneValidationStatus?: 'valid' | 'invalid';
   emails?: string[];
   phones?: string[];
   tagIds?: string[];

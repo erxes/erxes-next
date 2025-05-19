@@ -6,6 +6,7 @@ import { organizationConfigMutations } from '@/organization/settings/graphql/con
 import { tagMutations } from '@/tags/graphql/mutations';
 import { appMutations } from '@/apps/graphql/mutations';
 import { segmentMutations } from '@/segments/graphql/resolvers/mutations';
+import { exchangeRateMutations } from '@/exchangeRates/graphql/resolvers/mutations';
 import conformityMutations from '@/conformities/graphql/mutations';
 import { relationsMutations } from '@/relations/graphql/mutations';
 import { favoriteMutations } from '@/organization/settings/graphql/favorites/mutations';
@@ -24,4 +25,5 @@ export const mutations = {
   ...relationsMutations,
   ...favoriteMutations,
   ...structureMutations,
+  ...exchangeRateMutations,
 };

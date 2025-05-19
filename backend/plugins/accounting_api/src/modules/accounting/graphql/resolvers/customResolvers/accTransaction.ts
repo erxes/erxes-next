@@ -1,11 +1,10 @@
 import { ITransactionDocument } from "@/accounting/@types/transaction";
+import { sendTRPCMessage } from "erxes-api-shared/utils";
 import { IContext } from "~/connectionResolvers";
-import { sendCoreMessage } from "~/trpc/trpc-clients";
-
 
 export default {
-  __resolveReference({ _id }, { models }: IContext) {
-    return models.Transactions.findOne({ _id });
+  __resolveReference: async ({ _id }, { models }: IContext) => {
+    return await models.Transactions.findOne({ _id });
   },
 
   async followTrs(transaction: ITransactionDocument, _, { models }: IContext) {
@@ -32,35 +31,27 @@ export default {
     return await models.CtaxRows.findOne({ _id: transaction.ctaxRowId });
   },
 
-  // async branch(transaction: ITransactionDocument, _, { subdomain }: IContext) {
-  //   if (!transaction.branchId) {
-  //     return;
-  //   }
+  async branch(transaction: ITransactionDocument) {
+    if (!transaction.branchId) {
+      return;
+    }
 
-  //   return await sendCoreMessage({
-  //     subdomain,
-  //     action: 'branches.findOne',
-  //     data: { _id: transaction.branchId },
-  //     isRPC: true,
-  //     defaultValue: {}
-  //   });
-  // },
+    return {
+      __typename: 'Branch', _id: transaction.branchId
+    };
+  },
 
-  // async department(transaction: ITransactionDocument, _, { subdomain }: IContext) {
-  //   if (!transaction.departmentId) {
-  //     return;
-  //   }
+  async department(transaction: ITransactionDocument) {
+    if (!transaction.departmentId) {
+      return;
+    }
 
-  //   return await sendCoreMessage({
-  //     subdomain,
-  //     action: 'departments.findOne',
-  //     data: { _id: transaction.departmentId },
-  //     isRPC: true,
-  //     defaultValue: {}
-  //   });
-  // },
+    return {
+      __typename: 'Department', _id: transaction.departmentId
+    };
+  },
 
-  async customer(transaction: ITransactionDocument, _params, { subdomain }: IContext) {
+  async customer(transaction: ITransactionDocument) {
     if (!transaction.customerId) {
       return null;
     }
@@ -70,11 +61,12 @@ export default {
     }
 
     if (transaction.customerType === "company") {
-      const company = await sendCoreMessage({
-        subdomain,
-        action: "companies.findOne",
-        data: { _id: transaction.customerId },
-        isRPC: true,
+      const company = await sendTRPCMessage({
+        method: 'query',
+        pluginName: 'core',
+        module: 'company',
+        action: 'findOne',
+        input: { query: { _id: transaction.customerId } },
         defaultValue: {}
       });
 
@@ -93,11 +85,12 @@ export default {
     }
 
     if (transaction.customerType === "user") {
-      const user = await sendCoreMessage({
-        subdomain,
-        action: "users.findOne",
-        data: { _id: transaction.customerId },
-        isRPC: true,
+      const user = await sendTRPCMessage({
+        method: 'query',
+        pluginName: 'core',
+        module: 'users',
+        action: 'findOne',
+        input: { query: { _id: transaction.customerId } },
         defaultValue: {}
       });
 
@@ -115,11 +108,12 @@ export default {
       };
     }
 
-    const customer = await sendCoreMessage({
-      subdomain,
-      action: "customers.findOne",
-      data: { _id: transaction.customerId },
-      isRPC: true,
+    const customer = await sendTRPCMessage({
+      method: 'query',
+      pluginName: 'core',
+      module: 'customer',
+      action: 'findOne',
+      input: { query: { _id: transaction.customerId } },
       defaultValue: {}
     });
 
@@ -135,5 +129,19 @@ export default {
       firstName: customer.firstName,
       lastName: customer.lastName
     };
+  },
+
+  assignedUsers(transaction: ITransactionDocument) {
+    if (!transaction.assignedUserIds?.length) {
+      return;
+    };
+
+    return (
+      transaction.assignedUserIds.map(
+        aui => ({
+          __typename: 'User', _id: aui
+        })
+      )
+    );
   },
 };

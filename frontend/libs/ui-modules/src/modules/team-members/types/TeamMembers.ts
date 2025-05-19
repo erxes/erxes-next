@@ -2,6 +2,8 @@ import { SlashMenuProps } from 'erxes-ui';
 
 export interface IMember {
   _id: string;
+  email?: string;
+  username?: string;
   details: {
     fullName: string;
     avatar: string;

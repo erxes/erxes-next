@@ -7,3 +7,4 @@ export * from './Key';
 export * from './UIConfig';
 export * from './SexCode';
 export * from './Relations';
+export * from './Gql';

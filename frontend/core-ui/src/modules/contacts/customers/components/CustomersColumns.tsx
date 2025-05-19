@@ -33,7 +33,7 @@ import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
 import { customerMoreColumn } from './CustomerMoreColumn';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -49,7 +49,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
-          <Avatar>
+          <Avatar size="lg">
             <Avatar.Image src={cell.getValue() as string} />
             <Avatar.Fallback>
               {firstName?.charAt(0) ||
@@ -88,7 +88,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
 
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Name'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Name'}
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -110,13 +110,13 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
             >
               <FullNameField>
                 <FullNameField.FirstName
-                  value={_firstName}
+                  value={_firstName || ''}
                   onChange={(e) => {
                     setFirstName(e.target.value);
                   }}
                 />
                 <FullNameField.LastName
-                  value={_lastName}
+                  value={_lastName || ''}
                   onChange={(e) => {
                     setLastName(e.target.value);
                   }}
@@ -135,8 +135,14 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'primaryEmail',
     header: () => <RecordTable.InlineHead label="Emails" icon={IconMail} />,
     cell: ({ cell }) => {
-      const { primaryEmail, _id, emailValidationStatus, emails } =
-        cell.row.original;
+      const {
+        primaryEmail,
+        _id,
+        emailValidationStatus: _emailValidationStatus,
+        emails,
+      } = cell.row.original;
+      const emailValidationStatus =
+        _emailValidationStatus === 'valid' ? 'verified' : 'unverified';
 
       const { customersEdit } = useCustomersEdit();
       const { toast } = useToast();
@@ -152,7 +158,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           : []),
         ...(emails || []).map((email) => ({
           email,
-          status: 'unverified' as 'verified' | 'unverified',
+          status: emailValidationStatus as 'verified' | 'unverified',
         })),
       ].filter(
         (email, index, self) =>
@@ -160,7 +166,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       );
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Emails'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Emails'}
         >
           <RecordTableCellTrigger>
             <EmailDisplay emails={_emails} />
@@ -170,12 +176,10 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
               recordId={_id}
               onValueChange={(newEmails) => {
                 const primaryEmail = newEmails.find((email) => email.isPrimary);
-                let newEmailValidationStatus = undefined;
-                if (
-                  primaryEmail?.status !==
-                  (emailValidationStatus as 'verified' | 'unverified')
-                ) {
-                  newEmailValidationStatus = primaryEmail?.status;
+                let newEmailValidationStatus;
+                if (primaryEmail?.status !== emailValidationStatus) {
+                  newEmailValidationStatus =
+                    primaryEmail?.status === 'verified' ? 'valid' : 'invalid';
                 }
                 customersEdit(
                   {
@@ -214,8 +218,10 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         _id,
         primaryPhone,
         phones: _phones,
-        phoneValidationStatus,
+        phoneValidationStatus: _phoneValidationStatus,
       } = cell.row.original;
+      const phoneValidationStatus =
+        _phoneValidationStatus === 'valid' ? 'verified' : 'unverified';
       const { customersEdit } = useCustomersEdit();
       const { toast } = useToast();
       const phones = [
@@ -238,7 +244,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       );
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Phones'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Phones'}
         >
           <RecordTableCellTrigger>
             <PhoneDisplay phones={phones} />
@@ -248,18 +254,21 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
               recordId={_id}
               phones={phones}
               onValueChange={(newPhones) => {
+                const primaryPhone = newPhones.find((phone) => phone.isPrimary);
+                let newPhoneValidationStatus;
+                if (primaryPhone?.status !== phoneValidationStatus) {
+                  newPhoneValidationStatus =
+                    primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
+                }
                 customersEdit(
                   {
                     variables: {
                       _id,
-                      primaryPhone:
-                        newPhones.find((phone) => phone.isPrimary)?.phone ||
-                        null,
-                      phones: newPhones.map((phone) => ({
-                        phone: phone.phone,
-                        status: phone.status,
-                        isPrimary: phone.isPrimary,
-                      })),
+                      primaryPhone: primaryPhone?.phone || null,
+                      phones: newPhones
+                        .filter((phone) => !phone.isPrimary)
+                        .map((phone) => phone.phone),
+                      phoneValidationStatus: newPhoneValidationStatus,
                     },
                     onError: (e: ApolloError) => {
                       toast({
@@ -268,7 +277,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                       });
                     },
                   },
-                  ['primaryPhone', 'phones'],
+                  ['primaryPhone', 'phones', 'emailValidationStatus'],
                 );
               }}
             />
@@ -324,7 +333,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       const { _id } = cell.row.original;
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Sex'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Sex'}
           open={open}
           onOpenChange={setOpen}
         >

@@ -10,6 +10,8 @@ import {
 
 export interface IConfigModel extends Model<IConfigDocument> {
   getConfig(code: string): Promise<IConfigDocument>;
+  getConfigs(codes?: string[]): Promise<{ [code: string]: any }>;
+  getConfigValue(code: string, defaultValue: any): Promise<any>;
   createOrUpdateConfig({ code, value }: IConfig): Promise<IConfigDocument>;
   constants(): Promise<any>;
   getCloudflareConfigs(): Promise<any>;
@@ -49,6 +51,31 @@ export const loadConfigClass = (models: IModels) => {
       }
 
       return config;
+    }
+
+    public static async getConfigs(codes?: string[]) {
+      const configsMap = {};
+      const filter: any = {};
+      if (codes?.length) {
+        filter.code = { $in: codes }
+      }
+      const configs = await models.Configs.find(filter).lean();
+
+      for (const config of configs) {
+        configsMap[config.code] = config.value;
+      }
+
+      return configsMap;
+    }
+
+    public static async getConfigValue(code: string, defaultValue: any) {
+      const config = await models.Configs.findOne({ code });
+
+      if (!config) {
+        return defaultValue;
+      }
+
+      return config.value ?? defaultValue;
     }
 
     /**

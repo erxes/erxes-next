@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
-import { getFullDate } from 'erxes-api-shared/utils';
+import { getFullDate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { nanoid } from 'nanoid';
 import { IModels } from '~/connectionResolvers';
-import { getConfig, sendCoreMessage } from '~/trpc/trpc-clients';
+import { getConfig } from '~/init-trpc';
 import { JOURNALS, TR_SIDES } from '../@types/constants';
 import { ITransaction, ITransactionDocument } from '../@types/transaction';
 
@@ -29,7 +29,7 @@ export default class CurrencyTr {
       throw new Error('has not detail')
     }
 
-    const mainCurrency = await getConfig(this.subdomain, 'mainCurrency', '')
+    const mainCurrency = await getConfig('mainCurrency', '')
 
     const account = await this.models.Accounts.getAccount({ _id: detail.accountId });
     if (mainCurrency === account.currency) {
@@ -40,16 +40,17 @@ export default class CurrencyTr {
       throw new Error('must fill Currency Amount')
     }
 
-    this.spotRate = await sendCoreMessage({
-      subdomain: this.subdomain,
-      action: 'exchangeRates.getActiveRate',
-      data: {
+    this.spotRate = await sendTRPCMessage({
+      method: 'query',
+      pluginName: 'core',
+      module: 'exchangeRates',
+      action: 'getActiveRate',
+      input: {
         date: dayjs(this.doc.date).format('YYYY-MM-DD'),
         rateCurrency: account.currency, mainCurrency
       },
-      isRPC: true,
       defaultValue: {}
-    });
+    })
 
     if (!this.spotRate?.rate) {
       throw new Error('not found spot rate')

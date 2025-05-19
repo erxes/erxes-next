@@ -14,7 +14,7 @@ import {
 
 import { useLocation } from 'react-router-dom';
 import { ContactsPath } from '@/types/paths/ContactsPath';
-
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/customersCursorSessionKey';
 const CUSTOMERS_PER_PAGE = 20;
 
 export const useCustomers = (options?: QueryHookOptions) => {
@@ -30,7 +30,7 @@ export const useCustomers = (options?: QueryHookOptions) => {
     }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
 
   const { cursor } = useRecordTableCursor({
-    sessionKey: 'customers_cursor',
+    sessionKey: CUSTOMERS_CURSOR_SESSION_KEY,
   });
 
   const { data, loading, fetchMore } = useQuery<{
