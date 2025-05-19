@@ -17,10 +17,10 @@ import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-tabl
 // import { TextFieldCustomer } from '../customer-edit/components/TextField';
 // import { TagsField } from '@/contacts/customer-edit/components/TagsField';
 
-export const cmsColumns: ColumnDef<any>[] = [
+export const fieldsColumns: ColumnDef<any>[] = [
   {
-    id: 'postName',
-    accessorKey: 'postName',
+    id: 'label',
+    accessorKey: 'label',
     header: () => <RecordTableInlineHead icon={IconLabel} label="LABEL" />,
     cell: ({ cell }) => {
       const { name, lastName, middleName, _id } = cell.row.original;
@@ -32,25 +32,10 @@ export const cmsColumns: ColumnDef<any>[] = [
       );
     },
   },
-  {
-    id: 'category',
-    accessorKey: 'category',
-    header: () => (
-      <RecordTableInlineHead icon={IconCategoryFilled} label="DESCRIPTION" />
-    ),
-    cell: ({ cell }) => {
-      const { category, lastName, middleName, _id } = cell.row.original;
 
-      return (
-        <div className="p-2">
-          {category[0].name} <br />
-        </div>
-      );
-    },
-  },
   {
-    id: 'tag',
-    accessorKey: 'tag',
+    id: 'key',
+    accessorKey: 'key',
     header: () => <RecordTableInlineHead icon={IconLabelFilled} label="KEY" />,
     cell: ({ cell }) => {
       const { tag, lastName, middleName, _id } = cell.row.original;
@@ -63,17 +48,17 @@ export const cmsColumns: ColumnDef<any>[] = [
     },
   },
   {
-    id: 'createdDate',
-    accessorKey: 'createdDate',
+    id: 'type',
+    accessorKey: 'type',
     header: () => (
-      <RecordTableInlineHead icon={IconCalendarPlus} label="CREATED DATE" />
+      <RecordTableInlineHead icon={IconCalendarPlus} label="TYPE" />
     ),
     cell: ({ cell }) => {
-      const { createdDate, lastName, middleName, _id } = cell.row.original;
+      const { type, lastName, middleName, _id } = cell.row.original;
 
       return (
         <div className="p-2">
-          {createdDate} <br />
+          {type} <br />
         </div>
       );
     },

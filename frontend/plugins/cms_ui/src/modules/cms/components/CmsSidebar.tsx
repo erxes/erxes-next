@@ -10,7 +10,6 @@ import {
   IconCaretUpFilled,
 } from '@tabler/icons-react';
 import { useCmsContext } from '~/modules/app/context/CmsContext';
-import { Sheet } from 'lucide-react';
 import { AddtagForm } from '~/modules/tag/components/AddCmsTag';
 
 const sidebarSections = [
@@ -24,10 +23,12 @@ const sidebarSections = [
   {
     title: 'Custom post type',
     items: [
-      { label: 'Add custom post type', icon: IconCube, path: 'custom-post' },
-      { label: 'Дотоод ажлын зар', icon: IconCube, path: 'internal-job' },
-      { label: 'Гадаад ажлын зар', icon: IconCube, path: 'external-job' },
+      { label: 'Custom post type', icon: IconCube, path: 'custom-types' },
     ],
+  },
+  {
+    title: 'Custom fields',
+    items: [{ label: 'Custom field', icon: IconCube, path: 'custom-fields' }],
   },
   {
     title: 'Content settings',

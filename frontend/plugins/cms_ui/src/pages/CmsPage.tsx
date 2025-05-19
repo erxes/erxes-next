@@ -14,7 +14,7 @@ import { Button } from 'erxes-ui/components';
 export const CmsPage = () => {
   const { data: configs } = useCpConfigs();
   const { setSelectedWebsite } = useCmsContext();
-  const [view, setView] = useState<'list' | 'grid'>('list');
+  const [view, setView] = useState<'list' | 'grid'>('grid');
 
   const webs = configs?.clientPortalGetConfigs || [];
 

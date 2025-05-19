@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Spinner } from 'erxes-ui';
 import { CmsLayout } from '~/modules/layout/components/CmsLayout';
 import { CmsProvider } from '~/modules/app/context/CmsContext';
-import { PostPreviewProvider } from '../context/PostPreviewContext';
+import { PostPreviewProvider } from './app/context/PostPreviewContext';
 
 const CmsPage = lazy(() =>
   import('~/pages/CmsPage').then((module) => ({

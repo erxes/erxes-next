@@ -7,6 +7,7 @@ import {
   Textarea,
   Switch,
   Resizable,
+  Editor,
 } from 'erxes-ui';
 import { useForm } from 'react-hook-form';
 import {
@@ -25,17 +26,26 @@ import { Link } from 'react-router-dom';
 export const CmsCreatePost = () => {
   const { selectedWebsite } = useCmsContext();
 
+  const CmsHotKeyScope = {
+    CmsAddSheetContentField: 'CmsAddSheetContentField',
+  };
+
   const form = useForm({
     defaultValues: {
       name: '',
       type: '',
       description: '',
+      content: '',
       status: '',
       categoryId: '',
       tag: '',
       featured: false,
       seoTitle: '',
       seoDescription: '',
+      publishDate: '',
+      scheduledDate: '',
+      archivedDate: '',
+      customFieldInput: '',
     },
   });
 
@@ -45,12 +55,14 @@ export const CmsCreatePost = () => {
   const [selectedStep, setSelectedStep] = useState<'content' | 'seo'>(
     'content',
   );
-
   const { tagAdd, loading, error } = useAddPost();
 
   const types = [
-    { value: 'article', label: 'Article' },
-    { value: 'video', label: 'Video' },
+    { value: 'category', label: 'category' },
+    { value: 'page', label: 'page' },
+    { value: 'post', label: 'post' },
+    { value: 'custom-field 1', label: 'custom-field 1' },
+    { value: 'custom-field 2', label: 'custom-field 2' },
   ];
 
   const statuses = [
@@ -80,8 +92,20 @@ export const CmsCreatePost = () => {
     { key: 'seo', label: 'SEO' },
   ];
 
+  const getPreviewStyle = () => {
+    switch (selectedDevice) {
+      case 'mobile':
+        return 'w-[250px] h-[500px] rounded-[40px] border-[10px]';
+      case 'tablet':
+        return 'w-[300px] h-[400px] rounded-[20px] border-[8px]';
+      case 'desktop':
+        return 'w-[500px] h-[400px] rounded-[10px] border-[6px]';
+      default:
+        return '';
+    }
+  };
+
   const onSubmit = async (data: any) => {
-    console.log(data);
     const input = {
       type: 'post',
       clientPortalId: selectedWebsite,
@@ -91,25 +115,19 @@ export const CmsCreatePost = () => {
       excerpt: data.description,
       categoryIds: [],
       tagIds: [],
-      status: 'draft',
+      status: data.status,
       authorId: '',
-      featured: false,
+      featured: data.featured,
       reactions: [],
       reactionCounts: {},
       images: [],
       documents: [],
       attachments: [],
       customFieldsData: [],
+      publishDate: data.publishDate || null,
+      scheduledDate: data.scheduledDate || null,
+      archivedDate: data.archivedDate || null,
     };
-
-    try {
-      await tagAdd({ variables: { input } });
-      alert('Post created successfully!');
-      form.reset();
-    } catch (err) {
-      console.error(err);
-      alert('Failed to create post');
-    }
   };
 
   return (
@@ -234,6 +252,26 @@ export const CmsCreatePost = () => {
                     )}
                   />
 
+                  {(form.watch('type') === 'custom-field 1' ||
+                    form.watch('type') === 'custom-field 2') && (
+                    <Form.Field
+                      control={form.control}
+                      name="customFieldInput"
+                      render={({ field }) => (
+                        <Form.Item>
+                          <Form.Label>{types[0].value}</Form.Label>
+                          <Form.Control>
+                            <Input placeholder="write here" {...field} />
+                          </Form.Control>
+                        </Form.Item>
+                      )}
+                    />
+                  )}
+
+                  {/* Continue with other form fields... */}
+                  {/* status, category, tag, featured, content, etc. */}
+                  {/* These remain unchanged from your original code */}
+
                   <Form.Field
                     control={form.control}
                     name="status"
@@ -260,6 +298,36 @@ export const CmsCreatePost = () => {
                       </Form.Item>
                     )}
                   />
+
+                  {form.watch('status') === 'published' && (
+                    <Form.Field
+                      control={form.control}
+                      name="publishDate"
+                      render={({ field }) => (
+                        <Form.Item>
+                          <Form.Label>Published Date</Form.Label>
+                          <Form.Control>
+                            <Input type="date" {...field} />
+                          </Form.Control>
+                        </Form.Item>
+                      )}
+                    />
+                  )}
+
+                  {form.watch('status') === 'scheduled' && (
+                    <Form.Field
+                      control={form.control}
+                      name="scheduledDate"
+                      render={({ field }) => (
+                        <Form.Item>
+                          <Form.Label>Scheduled Date</Form.Label>
+                          <Form.Control>
+                            <Input type="date" {...field} />
+                          </Form.Control>
+                        </Form.Item>
+                      )}
+                    />
+                  )}
 
                   <Form.Field
                     control={form.control}
@@ -333,6 +401,23 @@ export const CmsCreatePost = () => {
                       </Form.Item>
                     )}
                   />
+
+                  <Form.Field
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <Form.Item className="mb-5">
+                        <Form.Label>CONTENT</Form.Label>
+                        <Form.Control>
+                          <Editor
+                            initialContent={field.value}
+                            onChange={field.onChange}
+                            scope={CmsHotKeyScope.CmsAddSheetContentField}
+                          />
+                        </Form.Control>
+                      </Form.Item>
+                    )}
+                  />
                 </>
               ) : (
                 <CmsPostSeo control={form.control} />
@@ -349,7 +434,6 @@ export const CmsCreatePost = () => {
                 <Button
                   type="submit"
                   className="bg-primary text-primary-foreground"
-                  // loading={loading}
                 >
                   Save
                 </Button>
@@ -394,7 +478,25 @@ export const CmsCreatePost = () => {
               );
             })}
           </div>
-          <div className="bg-red-500 w-full ">sdf</div>
+          <div
+            className={`${getPreviewStyle()} border-primary bg-white relative overflow-hidden shadow-lg transition-all duration-300`}
+          >
+            <div className="bg-primary text-white text-sm py-2 px-4 text-center font-medium">
+              <h1 className="text-xl font-bold">
+                {form.watch('name') || 'Post Title Preview'}
+              </h1>
+            </div>
+            <div className="p-4 flex flex-col gap-4 text-center">
+              <p className="text-gray-700 text-sm">
+                {form.watch('description') ||
+                  'Write a short description for your post.'}
+              </p>
+              <p>
+                {form.watch('content') ||
+                  'Write a short description for your post.'}
+              </p>
+            </div>
+          </div>
         </div>
       </Resizable.Panel>
     </Resizable.PanelGroup>

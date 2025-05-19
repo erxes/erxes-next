@@ -6,6 +6,8 @@ import { useCmsContext } from '~/modules/app/context/CmsContext';
 import { AddtagForm } from '~/modules/tag/components/AddCmsTag';
 import { AddCategoryForm } from '~/modules/category/components/AddCmsCategory';
 import { AddWebsiteForm } from '~/modules/cms/components/AddCmsWebsite';
+import { AddCustomTypeForm } from '~/modules/custom-type/components/AddCmsCustomType';
+import { AddCustomFieldForm } from '~/modules/custom-fields/components/AddCmsCustomFields';
 
 export const CmsHeader = () => {
   const { selectedWebsite } = useCmsContext();
@@ -14,6 +16,8 @@ export const CmsHeader = () => {
 
   const isTagsPage = pathname.endsWith('/tags');
   const isCategoryPage = pathname.endsWith('/categories');
+  const isCustomTypePage = pathname.endsWith('/custom-types');
+  const isCustomFieldPage = pathname.endsWith('/custom-fields');
   const isWebsitePage = pathname === '/cms';
 
   let addButtonLabel: string | null = null;
@@ -47,10 +51,14 @@ export const CmsHeader = () => {
       {isTagsPage && <AddtagForm />}
       {isCategoryPage && <AddCategoryForm />}
       {isWebsitePage && <AddWebsiteForm />}
+      {isCustomTypePage && <AddCustomTypeForm />}
+      {isCustomFieldPage && <AddCustomFieldForm />}
 
       {!isTagsPage &&
         !isCategoryPage &&
         !isWebsitePage &&
+        !isCustomTypePage &&
+        !isCustomFieldPage &&
         addButtonLabel &&
         addButtonLink && (
           <Button asChild>

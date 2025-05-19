@@ -17,11 +17,13 @@ import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-tabl
 // import { TextFieldCustomer } from '../customer-edit/components/TextField';
 // import { TagsField } from '@/contacts/customer-edit/components/TagsField';
 
-export const cmsColumns: ColumnDef<any>[] = [
+export const typesColumns: ColumnDef<any>[] = [
   {
-    id: 'postName',
-    accessorKey: 'postName',
-    header: () => <RecordTableInlineHead icon={IconLabel} label="LABEL" />,
+    id: 'label',
+    accessorKey: 'label',
+    header: () => (
+      <RecordTableInlineHead icon={IconLabel} label="LABsdfsdfsdfEL" />
+    ),
     cell: ({ cell }) => {
       const { name, lastName, middleName, _id } = cell.row.original;
 
@@ -33,10 +35,13 @@ export const cmsColumns: ColumnDef<any>[] = [
     },
   },
   {
-    id: 'category',
-    accessorKey: 'category',
+    id: 'description',
+    accessorKey: 'description',
     header: () => (
-      <RecordTableInlineHead icon={IconCategoryFilled} label="DESCRIPTION" />
+      <RecordTableInlineHead
+        icon={IconCategoryFilled}
+        label="DESCRsdfsfsdIPTION"
+      />
     ),
     cell: ({ cell }) => {
       const { category, lastName, middleName, _id } = cell.row.original;
@@ -49,8 +54,8 @@ export const cmsColumns: ColumnDef<any>[] = [
     },
   },
   {
-    id: 'tag',
-    accessorKey: 'tag',
+    id: 'key',
+    accessorKey: 'key',
     header: () => <RecordTableInlineHead icon={IconLabelFilled} label="KEY" />,
     cell: ({ cell }) => {
       const { tag, lastName, middleName, _id } = cell.row.original;
