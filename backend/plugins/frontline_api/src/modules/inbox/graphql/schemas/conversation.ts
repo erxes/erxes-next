@@ -185,10 +185,14 @@ const convertParams = `
   attachments: [AttachmentInput]
   description: String
 `;
-
+ export const cursorParams = `
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
+`
 const filterParams = `
-  limit: Int,
   ids: [String]
+  ${cursorParams}
   ${mutationFilterParams}
 `;
 
@@ -210,7 +214,7 @@ export const queries = `
   conversationDetail(_id: String!): Conversation
   conversationsGetLast(${filterParams}): Conversation
   conversationsTotalUnreadCount: Int
-  userConversations(_id: String, perPage: Int): UserConversationListResponse
+  userConversations(_id: String, ${cursorParams}, perPage: Int): UserConversationListResponse
 `;
 
 export const mutations = `

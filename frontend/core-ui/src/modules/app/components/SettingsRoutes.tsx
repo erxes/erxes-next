@@ -8,6 +8,7 @@ import {
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
+import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -86,6 +87,7 @@ export function SettingsRoutes() {
 
         {getPluginsSettingsRoutes()}
       </Routes>
+      <SettingsPageEffect />
     </Suspense>
   );
 }

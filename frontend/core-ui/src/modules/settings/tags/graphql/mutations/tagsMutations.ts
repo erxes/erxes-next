@@ -18,6 +18,26 @@ export const tagsAdd = gql`
   }
 `;
 
+export const EDIT_TAG = gql`
+  mutation TagsEdit(
+    $id: String!
+    $name: String!
+    $type: String!
+    $colorCode: String
+    $parentId: String
+  ) {
+    tagsEdit(
+      _id: $id
+      name: $name
+      type: $type
+      colorCode: $colorCode
+      parentId: $parentId
+    ) {
+      _id
+    }
+  }
+`;
+
 export const GIVE_TAGS = gql`
   mutation tagsTag(
     $type: String!

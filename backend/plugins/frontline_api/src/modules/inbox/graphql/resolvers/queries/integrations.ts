@@ -48,7 +48,6 @@ export const integrationQueries = {
       page: number;
       perPage: number;
       kind: string;
-
       searchValue: string;
       channelId: string;
       brandId: string;
@@ -95,7 +94,7 @@ export const integrationQueries = {
       await cursorPaginate<IIntegrationDocument>({
         model: models.Integrations,
         params: args,
-        query: query,
+        query,
       });
     return { list, totalCount, pageInfo };
   },
@@ -118,21 +117,32 @@ export const integrationQueries = {
   /**
    * Get used integration types
    */
-  async integrationsGetUsedTypes(_root, { models }: IContext) {
+  async integrationsGetUsedTypes(_root, _args, { models }: IContext) {
     const usedTypes: Array<{ _id: string; name: string }> = [];
-    const kindMap = await getIntegrationsKinds();
 
-    for (const kind of Object.keys(kindMap)) {
-      if (
-        (await models.Integrations.findIntegrations({
-          kind,
-        }).countDocuments()) > 0
-      ) {
-        usedTypes.push({ _id: kind, name: kindMap[kind] });
+    try {
+      const kindMap = await getIntegrationsKinds();
+
+      const distinctKinds = await models.Integrations.find({}).distinct('kind');
+
+      for (const kind of distinctKinds) {
+        const count = await models.Integrations.find({ kind }).countDocuments();
+
+        if (count > 0) {
+          usedTypes.push({
+            _id: kind,
+            name: kindMap[kind] || kind.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+          });
+        }
       }
+
+      return usedTypes;
+    } catch (error) {
+      console.error('Error in integrationsGetUsedTypes:', error);
+      throw new Error('Failed to fetch used integration types');
     }
-    return usedTypes;
   },
+
 
   /**
    * Get one integration

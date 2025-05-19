@@ -4,13 +4,13 @@ import { useSetAtom } from 'jotai';
 
 export function useFilterQueryState<T>(
   queryKey: string,
-  cursorKey: string,
+  cursorKey?: string,
   options?: {
     defaultValue?: T;
   },
 ): QueryState<T> {
   const [query, setQuery] = useQueryState<T>(queryKey, options);
-  const setCursor = useSetAtom(recordTableCursorAtomFamily(cursorKey));
+  const setCursor = useSetAtom(recordTableCursorAtomFamily(cursorKey ?? ''));
 
   return [
     query,
