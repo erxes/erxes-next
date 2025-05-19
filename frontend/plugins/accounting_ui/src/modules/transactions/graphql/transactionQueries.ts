@@ -37,7 +37,7 @@ export const commonTransactionFields = `
   number
   ptrStatus
   createdAt
-  modifiedAt
+  updatedAt
 
   date
   description
@@ -56,11 +56,13 @@ export const commonTransactionFields = `
 
   branch {
     _id
+    code
     title
   }
 
   department {
     _id
+    code
     title
   }
 
@@ -75,6 +77,7 @@ export const commonTransactionFields = `
   shortDetail {
     ${commonTrDetailFields}
     account {
+      _id
       code
       name
       currency
@@ -106,11 +109,23 @@ export const commonTransactionFields = `
   afterVat
   isHandleVat
   vatAmount
+  vatRow {
+    _id
+    number
+    name
+    percent
+  }
 
   hasCtax
   ctaxRowId
   isHandleCtax
   ctaxAmount
+  ctaxRow {
+    _id
+    number
+    name
+    percent
+  }
 
   extraData
 

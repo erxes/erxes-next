@@ -3,19 +3,17 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as dotenv from 'dotenv';
-
 import {
-  extractUserFromHeader,
   generateApolloContext,
-  getSubdomain,
+  apolloCommonTypes,
   wrapApolloMutations,
 } from 'erxes-api-shared/utils';
 import { gql } from 'graphql-tag';
-import { generateModels, IModels } from '../connectionResolvers';
-import * as typeDefDetails from './schema/schema';
+import { generateModels } from '../connectionResolvers';
 import resolvers from './resolvers';
 import { IMainContext } from 'erxes-api-shared/core-types';
 
+import * as typeDefDetails from './schema/schema';
 // load environment variables
 dotenv.config();
 
@@ -27,39 +25,13 @@ export const initApolloServer = async (app, httpServer) => {
   const typeDefs = async () => {
     return gql(`
 
-      enum CURSOR_DIRECTION {
-        forward,
-        backward
-      }
-
-      type PageInfo {
-        hasNextPage: Boolean,
-        hasPreviousPage: Boolean,
-        startCursor: String,
-        endCursor: String,
-      }
-
-
-
-      input AttachmentInput {
-        url: String!
-        name: String!
-        type: String
-        size: Float
-        duration: Float
-      }
-
-  
-      input PdfAttachmentInput {
-        pdf: AttachmentInput
-        pages: [AttachmentInput]
-      }
-
+      ${apolloCommonTypes}
       ${types}
 
       extend type Query {
         ${queries}
       }
+      
       extend type Mutation {
         ${mutations}
       }

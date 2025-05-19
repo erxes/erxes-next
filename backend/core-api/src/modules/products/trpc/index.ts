@@ -2,13 +2,14 @@ import { initTRPC } from '@trpc/server';
 
 import { productCategoryTrpcRouter } from '@/products/trpc/category';
 import { productConfigTrpcRouter } from '@/products/trpc/config';
-import { productTrpcRouter } from '@/products/trpc/product';
+import { productsTrpcRouter } from '@/products/trpc/product';
 import { uomTrpcRouter } from '@/products/trpc/uom';
+import { ITRPCContext } from '~/init-trpc';
 
-const t = initTRPC.create();
+const t = initTRPC.context<ITRPCContext>().create();
 
-export const productRouter = t.mergeRouters(
-  productTrpcRouter,
+export const productTrpcRouter = t.mergeRouters(
+  productsTrpcRouter,
   uomTrpcRouter,
   productCategoryTrpcRouter,
   productConfigTrpcRouter,

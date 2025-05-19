@@ -52,6 +52,6 @@ export const mutations = `
   tagsAdd(${mutationParams}): Tag
   tagsEdit(_id: String!, ${mutationParams}): Tag
   tagsRemove(_id: String!): JSON
-  tagsTag(type: String!, targetIds: [String!]!, tagIds: [String!]!): String
+  tagsTag(type: String!, targetIds: [String!]!, tagIds: [String!]!): JSON
   tagsMerge(sourceId: String!, destId: String!): Tag
 `;

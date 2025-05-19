@@ -1,9 +1,6 @@
-import {
-  IconCaretDownFilled,
-  IconInbox,
-  IconSettings,
-} from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { IconInbox, IconSettings } from '@tabler/icons-react';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 import { InboxLayout } from '@/inbox/components/InboxLayout';
 import { ConversationDetail } from '@/inbox/conversation-detail/components/ConversationDetail';
@@ -28,7 +25,7 @@ const InboxIndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.LikeButton />
+          <PageHeader.FavoriteToggleButton item="inbox" />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>

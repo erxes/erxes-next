@@ -59,8 +59,11 @@ export const ActionDetail = () => {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <ErrorBoundary FallbackComponent={() => <ErrorState />}>
-        {/* <Card.Content> */}
+      <ErrorBoundary
+        FallbackComponent={({ resetErrorBoundary }) => (
+          <ErrorState onRetry={resetErrorBoundary} />
+        )}
+      >
         <Form.Field
           name={`detail.actions.${currentIndex}.config`}
           control={control}
@@ -77,7 +80,6 @@ export const ActionDetail = () => {
             />
           )}
         />
-        {/* </Card.Content> */}
       </ErrorBoundary>
     </Suspense>
   );

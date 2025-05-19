@@ -6,7 +6,7 @@ import { memo } from 'react';
 //     Position
 // } from "reactflow"
 import { cn } from 'erxes-ui/lib';
-import { IconAdjustmentsAlt, IconMessage } from '@tabler/icons-react';
+import { IconAdjustmentsAlt, IconMessage, IconPlus } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
 import { NodeData } from '~/modules/app/types';
 import ErrorState from '../common/EmptyState';
@@ -35,7 +35,7 @@ const renderContent = (data: NodeData) => {
         <IconAdjustmentsAlt className="w-4 h-4" />
         <p className="text-sm font-semibold">Configuration</p>
       </div>
-      <div className="rounded border bg-muted">
+      <div className="rounded border bg-muted overflow-x-auto">
         <ActionNodeContent type={data.type || ''} config={data.config} />
       </div>
     </div>
@@ -43,6 +43,7 @@ const renderContent = (data: NodeData) => {
 };
 
 const renderSourceHandler = (type: string) => {
+  const position = Position.Right;
   if (type === 'if') {
     return (
       <>
@@ -50,7 +51,7 @@ const renderSourceHandler = (type: string) => {
           key="yes-right"
           id="yes-right"
           type="source"
-          position={Position.Right}
+          position={position}
           className={`!w-4 !h-4 -z-10 !bg-success`}
           style={{ top: '50%' }}
         >
@@ -60,7 +61,7 @@ const renderSourceHandler = (type: string) => {
           key="no-right"
           id="no-right"
           type="source"
-          position={Position.Right}
+          position={position}
           className={`!w-4 !h-4 -z-10 !bg-red-300`}
           style={{ top: '70%' }}
         >
@@ -70,13 +71,15 @@ const renderSourceHandler = (type: string) => {
     );
   }
   return (
-    <Handle
-      key="right"
-      id="right"
-      type="source"
-      position={Position.Right}
-      className={`!w-4 !h-4 -z-10 !bg-success `}
-    />
+    <>
+      <Handle
+        key="right"
+        id="right"
+        type="source"
+        position={position}
+        className={`!w-4 !h-4 -z-10 !bg-success `}
+      />
+    </>
   );
 };
 

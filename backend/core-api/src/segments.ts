@@ -82,13 +82,11 @@ export default startSegments('core', {
         })
       ).map((id) => getRealIdFromElk(id));
 
-      const ids = await models.Conformities.filterConformity({
+      return await models.Conformities.filterConformity({
         mainType: getContentType(changeType(propertyType)),
         mainTypeIds,
         relType: getContentType(changeType(mainType)),
       });
-
-      return ids;
     }
 
     if (propertyType === 'core:form_submission') {

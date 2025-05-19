@@ -6,7 +6,7 @@ import {
 } from '@trpc/client';
 import { getPlugin } from '../service-discovery';
 
-type MessageProps = {
+export type MessageProps = {
   method: 'query' | 'mutation';
   pluginName: string;
   module: string;
@@ -15,7 +15,24 @@ type MessageProps = {
   defaultValue?: any;
   options?: TRPCRequestOptions;
 };
+export interface InterMessage {
+  subdomain: string;
+  data?: any;
+  timeout?: number;
+  defaultValue?: any;
+  thirdService?: boolean;
+}
 
+export interface RPSuccess {
+  status: 'success';
+  data?: any;
+}
+export interface RPError {
+  status: 'error';
+  errorMessage: string;
+}
+export type RPResult = RPSuccess | RPError;
+export type RP = (params: InterMessage) => RPResult | Promise<RPResult>;
 export const sendTRPCMessage = async ({
   pluginName,
   method,

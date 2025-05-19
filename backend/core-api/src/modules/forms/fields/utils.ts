@@ -109,7 +109,9 @@ const getCategories = async (models: IModels) => {
 
   for (const category of categories) {
     let step = (category.order || '/').split('/').length - 2;
-    if (step < 0) step = 0;
+    if (step < 0) {
+      step = 0;
+    }
 
     selectOptions.push({
       value: category._id,
@@ -302,46 +304,44 @@ export const generateContactsFields = async ({ subdomain, data }) => {
 
   console.time('trackData');
 
-  if (!usageType || usageType === 'export') {
-    if (await isElasticsearchUp()) {
-      const aggre = await fetchEs({
-        subdomain,
-        action: 'search',
-        index: type === 'company' ? 'companies' : 'customers',
-        body: {
-          size: 0,
-          _source: false,
-          aggs: {
-            trackedDataKeys: {
-              nested: {
-                path: 'trackedData',
-              },
-              aggs: {
-                fieldKeys: {
-                  terms: {
-                    field: 'trackedData.field',
-                    size: 10000,
-                  },
+  if ((!usageType || usageType === 'export') && (await isElasticsearchUp())) {
+    const aggre = await fetchEs({
+      subdomain,
+      action: 'search',
+      index: type === 'company' ? 'companies' : 'customers',
+      body: {
+        size: 0,
+        _source: false,
+        aggs: {
+          trackedDataKeys: {
+            nested: {
+              path: 'trackedData',
+            },
+            aggs: {
+              fieldKeys: {
+                terms: {
+                  field: 'trackedData.field',
+                  size: 10000,
                 },
               },
             },
           },
         },
-        defaultValue: { aggregations: { trackedDataKeys: {} } },
+      },
+      defaultValue: { aggregations: { trackedDataKeys: {} } },
+    });
+
+    const aggregations = aggre.aggregations || { trackedDataKeys: {} };
+    const { buckets = [] } = aggregations.trackedDataKeys.fieldKeys || {
+      buckets: [],
+    };
+
+    for (const bucket of buckets) {
+      fields.push({
+        _id: Math.random(),
+        name: `trackedData.${bucket.key}`,
+        label: bucket.key,
       });
-
-      const aggregations = aggre.aggregations || { trackedDataKeys: {} };
-      const buckets = (
-        aggregations.trackedDataKeys.fieldKeys || { buckets: [] }
-      ).buckets;
-
-      for (const bucket of buckets) {
-        fields.push({
-          _id: Math.random(),
-          name: `trackedData.${bucket.key}`,
-          label: bucket.key,
-        });
-      }
     }
   }
   console.timeEnd('trackData');
@@ -473,21 +473,6 @@ export const generateProductsFields = async ({ subdomain, data }) => {
       },
     ];
   }
-
-  fields = fields.map((field) =>
-    field.name === 'vendorId'
-      ? {
-          _id: Math.random(),
-          name: 'vendorId',
-          label: 'Vendor',
-          type: 'company',
-          selectionConfig: {
-            queryName: 'companies',
-            labelField: 'primaryName',
-          },
-        }
-      : field,
-  );
 
   return fields;
 };

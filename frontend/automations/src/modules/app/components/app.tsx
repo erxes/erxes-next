@@ -1,3 +1,4 @@
+import { Spinner } from 'erxes-ui/components';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
@@ -14,7 +15,7 @@ const Detail = lazy(() =>
 
 const App = () => {
   return (
-    <Suspense fallback={<>Loading</>}>
+    <Suspense fallback={<Spinner />}>
       <Routes>
         <Route path="/" element={<List />} />
         <Route path="/edit/:id" element={<Detail />} />

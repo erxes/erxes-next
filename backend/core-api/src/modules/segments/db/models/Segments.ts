@@ -10,16 +10,16 @@ const createOrUpdateSubSegments = async (
   models: IModels,
   segments: ISegment[],
 ) => {
-  const updatedSubSugments: Array<{
+  const updatedSubSegments: Array<{
     subSegmentId: string;
     type: 'subSegment';
   }> = [];
 
   for (const segment of segments) {
-    const _id = segment._id;
+    const { _id } = segment || {};
 
     if (_id) {
-      updatedSubSugments.push({
+      updatedSubSegments.push({
         subSegmentId: _id,
         type: 'subSegment',
       });
@@ -31,14 +31,14 @@ const createOrUpdateSubSegments = async (
     } else {
       const item = await models.Segments.create(segment);
 
-      updatedSubSugments.push({
+      updatedSubSegments.push({
         subSegmentId: item._id,
         type: 'subSegment',
       });
     }
   }
 
-  return updatedSubSugments;
+  return updatedSubSegments;
 };
 export interface ISegmentModel extends Model<ISegmentDocument> {
   getSegment(_id: string): Promise<ISegmentDocument>;
@@ -83,9 +83,7 @@ export const loadSegmentClass = (models: IModels) => {
         conditionSegments || [],
       );
 
-      console.log({ doc, conditions });
-
-      doc.conditions = conditions.length ? conditions : doc.conditions;
+      doc.conditions = conditions;
 
       return models.Segments.create(doc);
     }
@@ -103,9 +101,7 @@ export const loadSegmentClass = (models: IModels) => {
         conditionSegments || [],
       );
 
-      console.log({ doc, conditions });
-
-      doc.conditions = conditions.length ? conditions : doc.conditions;
+      doc.conditions = conditions;
 
       await models.Segments.updateOne({ _id }, { $set: doc });
 

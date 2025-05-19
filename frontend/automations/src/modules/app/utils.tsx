@@ -22,7 +22,7 @@ export const maskFields = (data: any, keysToMask: string[]): any => {
   return data;
 };
 
-export function AvatarPopover({ user, size }: AvatarPopoverProps) {
+export function AvatarPopover({ user, size }: any) {
   if (!user) {
     return '-';
   }

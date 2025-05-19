@@ -1,4 +1,4 @@
-import { IAction, ITrigger, OptionalConnect } from '~/modules/app/types';
+import { IAction, ITrigger, OptionalConnect } from 'ui-modules';
 
 export const connectionHandler = (
   triggers: ITrigger[],

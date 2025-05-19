@@ -1,11 +1,12 @@
-import { deparmentMutations } from './deparments';
 import { branchsMutations } from './branches';
 import { positionMutations } from './positions';
 import { structuresMutations } from './structure';
-
-export const contactMutations = {
+import { deparmentMutations } from './deparments';
+import { unitsMutations } from './units';
+export const structureMutations = {
   ...branchsMutations,
   ...positionMutations,
   ...structuresMutations,
   ...deparmentMutations,
+  ...unitsMutations,
 };

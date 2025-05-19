@@ -17,11 +17,13 @@ const generateFilter = async (
 ) => {
   const {
     type,
-    categoryId,
+    categoryIds,
     searchValue,
     vendorId,
-    brand,
-    tag,
+    brandIds,
+    tagIds,
+    excludeTagIds,
+    tagWithRelated,
     ids,
     excludeIds,
     image,
@@ -41,10 +43,11 @@ const generateFilter = async (
     filter.type = type;
   }
 
-  if (categoryId) {
-    const categories = await models.ProductCategories.getChildCategories([
-      categoryId,
-    ]);
+  if (categoryIds) {
+    const categories = await models.ProductCategories.getChildCategories(
+      categoryIds,
+    );
+
     const catIds = categories.map((c) => c._id);
     andFilters.push({ categoryId: { $in: catIds } });
   } else {
@@ -61,8 +64,32 @@ const generateFilter = async (
     filter._id = { [excludeIds ? '$nin' : '$in']: ids };
   }
 
-  if (tag) {
-    filter.tagIds = { $in: [tag] };
+  if (tagIds) {
+    const baseTagIds: Set<string> = new Set(tagIds);
+
+    if (tagWithRelated) {
+      const tagObjs = await models.Tags.find({ _id: { $in: tagIds } }).lean();
+
+      for (const tag of tagObjs) {
+        (tag.relatedIds || []).forEach((id) => baseTagIds.add(id));
+      }
+    }
+
+    andFilters.push({ tagIds: { $in: Array.from(baseTagIds) } });
+  }
+
+  if (excludeTagIds?.length) {
+    const baseTagIds: Set<string> = new Set(excludeTagIds);
+
+    if (tagWithRelated) {
+      const tagObjs = await models.Tags.find({ _id: { $in: excludeTagIds } }).lean();
+
+      for (const tag of tagObjs) {
+        (tag.relatedIds || []).forEach((id) => baseTagIds.add(id));
+      }
+    }
+
+    andFilters.push({ tagIds: { $nin: Array.from(baseTagIds) } });
   }
 
   // search =========
@@ -93,8 +120,8 @@ const generateFilter = async (
     filter.vendorId = vendorId;
   }
 
-  if (brand) {
-    filter.scopeBrandIds = { $in: [brand] };
+  if (brandIds) {
+    filter.scopeBrandIds = { $in: brandIds };
   }
 
   if (image) {
@@ -110,7 +137,7 @@ export const productQueries = {
    * Products list
    */
   async products(
-    _root: undefined,
+    _parent: undefined,
     params: IProductParams,
     { commonQuerySelector, models }: IContext,
   ) {
@@ -140,7 +167,7 @@ export const productQueries = {
   },
 
   async productDetail(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
@@ -148,7 +175,7 @@ export const productQueries = {
   },
 
   async productsTotalCount(
-    _root: undefined,
+    _parent: undefined,
     params: IProductParams,
     { commonQuerySelector, models }: IContext,
   ) {
@@ -160,11 +187,11 @@ export const productQueries = {
       });
     }
 
-    return await models.Products.find(filter).countDocuments();
+    return await models.Products.countDocuments(filter);
   },
 
   async productSimilarities(
-    _root: undefined,
+    _parent: undefined,
     { _id, groupedSimilarity },
     { models }: IContext,
   ) {
@@ -321,5 +348,20 @@ export const productQueries = {
       products: await models.Products.find(filters).sort({ code: 1 }),
       groups,
     };
+  },
+
+  async productCountByTags(_root, _params, { models }: IContext) {
+    const counts = {};
+
+    const tags = await models.Tags.find({ type: 'core:product' }).lean();
+
+    for (const tag of tags) {
+      counts[tag._id] = await models.Products.find({
+        tagIds: tag._id,
+        status: { $ne: PRODUCT_STATUSES.DELETED },
+      }).countDocuments();
+    }
+
+    return counts;
   },
 };

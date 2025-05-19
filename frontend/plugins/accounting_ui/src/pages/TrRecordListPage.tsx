@@ -22,9 +22,7 @@ export const TrRecordListPage = () => {
         </div>
       </AccountingHeader>
       <TransactionsFilterBar />
-      <div className="flex-1 px-3">
-        <TrRecordTable />
-      </div>
+      <TrRecordTable />
     </AccountingLayout>
   );
 };

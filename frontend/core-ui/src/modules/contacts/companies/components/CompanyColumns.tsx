@@ -1,10 +1,18 @@
-import { IconAlignLeft, IconBuilding, IconUser } from '@tabler/icons-react';
+import {
+  IconAlignLeft,
+  IconBuilding,
+  IconLabelFilled,
+  IconUser,
+} from '@tabler/icons-react';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import {
   Avatar,
+  EmailDisplay,
   EmailListField,
   Input,
+  PhoneDisplay,
+  PhoneListField,
   RecordTable,
   RecordTableCellContent,
   RecordTableCellDisplay,
@@ -14,17 +22,26 @@ import {
 } from 'erxes-ui';
 
 import { TCompany } from '@/contacts/types/companyType';
-import { SelectTags } from 'ui-modules';
+import { SelectMember, SelectTags } from 'ui-modules';
 import { useState } from 'react';
+import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
+import { ApolloError } from '@apollo/client';
+import { useToast } from 'erxes-ui';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
+  {
+    id: 'more',
+    cell: ({ cell }) => <RecordTable.MoreButton className="w-full h-full" />,
+    size: 33,
+  },
+  RecordTable.checkboxColumn as ColumnDef<TCompany>,
   {
     id: 'avatar',
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconBuilding} label="" />,
     cell: ({ cell }) => {
-      const { _id, primaryName, primaryEmail, primaryPhone } =
-        cell.row.original;
+      const { primaryName, primaryEmail, primaryPhone } = cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar>
@@ -45,7 +62,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     id: 'primaryName',
     accessorKey: 'primaryName',
     header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="Primary Name" />
+      <RecordTable.InlineHead icon={IconLabelFilled} label="Name" />
     ),
     cell: ({ cell }) => {
       const { primaryName } = cell.row.original;
@@ -53,38 +70,84 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         <RecordTablePopover>
           <RecordTableCellTrigger>{primaryName}</RecordTableCellTrigger>
           <RecordTableCellContent className="min-w-72">
-            <Input value={primaryName} />
+            <Input value={primaryName || ''} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
     },
+    size: 250,
   },
   {
     id: 'emails',
     accessorKey: 'primaryEmail',
     header: () => <RecordTable.InlineHead label="Emails" />,
     cell: ({ cell }) => {
-      const { primaryEmail, _id, emails } = cell.row.original;
+      const {
+        primaryEmail,
+        _id,
+        emails,
+        emailValidationStatus: _emailValidationStatus,
+      } = cell.row.original;
+      const emailValidationStatus =
+        _emailValidationStatus === 'valid' ? 'verified' : 'unverified';
+      const { companiesEdit } = useCompaniesEdit();
+      const { toast } = useToast();
+      const _emails = [
+        ...(primaryEmail
+          ? [
+              {
+                email: primaryEmail,
+                status: emailValidationStatus as 'verified' | 'unverified',
+                isPrimary: true,
+              },
+            ]
+          : []),
+        ...(emails || []).map((email) => ({
+          email,
+          status: emailValidationStatus as 'verified' | 'unverified',
+          isPrimary: false,
+        })),
+      ].filter(
+        (email, index, self) =>
+          index === self.findIndex((t) => t.email === email.email),
+      );
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <TextOverflowTooltip value={primaryEmail} />
+            <EmailDisplay emails={_emails} />
           </RecordTableCellTrigger>
           <RecordTableCellContent className="min-w-72">
             <EmailListField
+              noValidation
               recordId={_id}
-              onValueChange={() => console.log('onValueChange')}
-              emails={[
-                {
-                  email: primaryEmail,
-                  status: 'verified',
-                  isPrimary: true,
-                },
-                ...(emails || []).map((email) => ({
-                  email,
-                  status: 'verified' as 'verified' | 'unverified',
-                })),
-              ]}
+              onValueChange={(newEmails) => {
+                const primaryEmail = newEmails.find((email) => email.isPrimary);
+                let newEmailValidationStatus = undefined;
+                if (primaryEmail?.status !== emailValidationStatus) {
+                  newEmailValidationStatus =
+                    primaryEmail?.status === 'verified' ? 'valid' : 'invalid';
+                }
+                companiesEdit(
+                  {
+                    variables: {
+                      _id,
+                      primaryEmail: primaryEmail?.email || null,
+                      emails: newEmails
+                        .filter((email) => !email.isPrimary)
+                        .map((email) => email.email),
+                      emailValidationStatus: newEmailValidationStatus,
+                    },
+                    onError: (e: ApolloError) => {
+                      toast({
+                        title: 'Error',
+                        description: e.message,
+                      });
+                    },
+                  },
+                  ['primaryEmail', 'emails', 'emailValidationStatus'],
+                );
+              }}
+              emails={_emails}
             />
           </RecordTableCellContent>
         </RecordTablePopover>
@@ -96,20 +159,116 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     accessorKey: 'primaryPhone',
     header: () => <RecordTable.InlineHead label="Phones" />,
     cell: ({ cell }) => {
-      const { primaryPhone } = cell.row.original;
+      const {
+        _id,
+        primaryPhone,
+        phones: _phones,
+        phoneValidationStatus: _phoneValidationStatus,
+      } = cell.row.original;
+      const phoneValidationStatus =
+        _phoneValidationStatus === 'valid' ? 'verified' : 'unverified';
+      const { companiesEdit } = useCompaniesEdit();
+      const { toast } = useToast();
+      const phones = [
+        ...(primaryPhone
+          ? [
+              {
+                phone: primaryPhone,
+                status: phoneValidationStatus as 'verified' | 'unverified',
+                isPrimary: true,
+              },
+            ]
+          : []),
+        ...(_phones || []).map((_phone) => ({
+          phone: _phone,
+          status: 'unverified' as 'verified' | 'unverified',
+        })),
+      ].filter(
+        (phone, index, self) =>
+          index === self.findIndex((t) => t.phone === phone.phone),
+      );
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <TextOverflowTooltip value={primaryPhone} />
+            <PhoneDisplay phones={phones} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={primaryPhone} />
+            <PhoneListField
+              recordId={_id}
+              phones={phones}
+              onValueChange={(newPhones) => {
+                const primaryPhone = newPhones.find((phone) => phone.isPrimary);
+                let newPhoneValidationStatus = undefined;
+                if (primaryPhone?.status !== phoneValidationStatus) {
+                  newPhoneValidationStatus =
+                    primaryPhone?.status === 'verified' ? 'valid' : 'invalid';
+                }
+                companiesEdit(
+                  {
+                    variables: {
+                      _id,
+                      primaryPhone: primaryPhone?.phone || null,
+                      phones: newPhones
+                        .filter((phone) => !phone.isPrimary)
+                        .map((phone) => phone.phone),
+                      phoneValidationStatus: newPhoneValidationStatus,
+                    },
+                    onError: (e: ApolloError) => {
+                      toast({
+                        title: 'Error',
+                        description: e.message,
+                      });
+                    },
+                  },
+                  ['primaryPhone', 'phones', 'emailValidationStatus'],
+                );
+              }}
+            />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
     },
   },
-
+  {
+    id: 'owner',
+    accessorKey: 'ownerId',
+    header: () => <RecordTable.InlineHead label="Owner" />,
+    cell: ({ cell }) => {
+      const { companiesEdit } = useCompaniesEdit();
+      return (
+        <SelectMember.InlineCell
+          scope={
+            ContactsHotKeyScope.CompaniesPage +
+            '.' +
+            cell.row.original._id +
+            '.Owner'
+          }
+          value={cell.getValue() as string}
+          onValueChange={(value) =>
+            companiesEdit(
+              {
+                variables: { _id: cell.row.original._id, ownerId: value },
+              },
+              ['ownerId'],
+            )
+          }
+        />
+      );
+    },
+    size: 200,
+  },
+  {
+    id: 'plan',
+    accessorKey: 'plan',
+    header: () => <RecordTable.InlineHead label="Plan" />,
+    cell: ({ cell }) => {
+      return (
+        <RecordTableCellDisplay>
+          <TextOverflowTooltip value={cell.getValue() as string} />
+        </RecordTableCellDisplay>
+      );
+    },
+  },
   {
     id: 'tagIds',
     accessorKey: 'tagIds',
@@ -143,7 +302,9 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         </SelectTags>
       );
     },
+    size: 300,
   },
+
   {
     id: 'lastSeenAt',
     accessorKey: 'lastSeenAt',

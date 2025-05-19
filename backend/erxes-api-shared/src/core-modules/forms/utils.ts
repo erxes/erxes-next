@@ -5,14 +5,12 @@ export const generateFieldsFromSchema = async (
   const fields: any = [];
 
   // field definitions
-  const paths = queSchema.paths;
+  const { paths = [] } = queSchema || {};
 
   for (const name of Object.keys(paths)) {
     const path = paths[name];
-    const label = path.options.label;
+    const { label, selectOptions } = path?.options || {};
     const type = path.instance;
-
-    const selectOptions = path.options.selectOptions;
 
     if (['String', 'Number', 'Date', 'Boolean'].includes(type) && label) {
       // add to fields list

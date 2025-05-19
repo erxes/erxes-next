@@ -1,9 +1,9 @@
 export const types = `
-    type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String
     state: String
     createdAt: Date
-    modifiedAt: Date
+    updatedAt: Date
     avatar: String
     integrationId: String
     firstName: String
@@ -68,22 +68,25 @@ export const conformityQueryFields = `
 `;
 
 const queryParams = `
-  page: Int
-  perPage: Int
   segment: String
   type: String
-  tag: String
   ids: [String]
   excludeIds: Boolean
-  tags: [String]
-  excludeTags: [String]
+
+  tagIds: [String]
+  excludeTagIds: [String]
   tagWithRelated: Boolean
+
+  brandIds: [String]
+
+  integrationIds: [String]
+  integrationTypes: [String]
+
+  formIds: [String]
+
   searchValue: String
   autoCompletion: Boolean
   autoCompletionType: String
-  brand: String
-  integration: String
-  form: String
   startDate: String
   endDate: String
   leadStatus: String
@@ -103,6 +106,7 @@ const queryParams = `
 export const queries = `
   customers(${queryParams}): CustomersListResponse
   customerDetail(_id: String!): Customer
+  contactsLogs(action: String, content:JSON, contentType: String): JSON
 `;
 
 const fields = `
@@ -136,4 +140,11 @@ export const mutations = `
   customersAdd(state: String, ${fields}): Customer
   customersEdit(_id: String!, ${fields}): Customer
   customersRemove(customerIds: [String]): [String]
+
+  customersMerge(customerIds: [String], customerFields: JSON): Customer
+  customersVerify(verificationType:String!): String
+
+  customersChangeState(_id: String!, value: String!): Customer
+  customersChangeVerificationStatus(customerIds: [String], type: String!, status: String!): [Customer]
+  customersChangeStateBulk(_ids: [String]!, value: String!): JSON
 `;

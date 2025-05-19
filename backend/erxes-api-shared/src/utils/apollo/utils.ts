@@ -1,4 +1,4 @@
-import { IMainContext } from '@/core-types';
+import { IMainContext } from '../../core-types';
 import { extractUserFromHeader } from '../headers';
 import { getSubdomain } from '../utils';
 import { ExpressContextFunctionArgument } from '@apollo/server/dist/esm/express4';
@@ -21,7 +21,7 @@ export const generateApolloContext =
     ) {
       return {};
     }
-    let user: any = extractUserFromHeader(req.headers);
+    const user: any = extractUserFromHeader(req.headers);
 
     const subdomain = getSubdomain(req);
 
@@ -29,7 +29,7 @@ export const generateApolloContext =
 
     const __ = (doc: any) => ({ processId, ...doc });
 
-    let context = {
+    const context = {
       user,
       req,
       res,

@@ -1,4 +1,12 @@
-import { Combobox, Command, SelectTree, TextOverflowTooltip } from 'erxes-ui';
+import {
+  Combobox,
+  Command,
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+  SelectTree,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
 import React, { useState } from 'react';
@@ -10,7 +18,7 @@ import {
 import { SelectTagsContext } from '../contexts/SelectTagsContext';
 import { useSelectTagsContext } from '../hooks/useSelectTagsContext';
 import { IconPlus } from '@tabler/icons-react';
-import { CreateTagForm } from './CreateTagForm';
+import { CreateTagForm, SelectTagCreateContainer } from './CreateTagForm';
 import { TagBadge } from './TagBadge';
 
 export const SelectTagsProvider = ({
@@ -27,31 +35,26 @@ export const SelectTagsProvider = ({
   const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
 
   const handleSelectCallback = (tag: ITag) => {
-    if (!tag) {
-      return;
-    }
+    if (!tag) return;
 
-    let newSelectedTagIds: string[] = [];
+    const isSingleMode = mode === 'single';
+    const multipleValue = (value as string[]) || [];
+    const isSelected = !isSingleMode && multipleValue.includes(tag._id);
 
-    if (mode === 'single') {
-      setSelectedTags([tag]);
-      onValueChange?.(tag._id);
-      newSelectedTagIds = [tag._id];
-    } else {
-      const multipleValue = (value as string[]) || [];
-      const isSelected = multipleValue.includes(tag._id);
+    const newSelectedTagIds = isSingleMode
+      ? [tag._id]
+      : isSelected
+      ? multipleValue.filter((t) => t !== tag._id)
+      : [...multipleValue, tag._id];
 
-      newSelectedTagIds = isSelected
-        ? multipleValue.filter((t) => t !== tag._id)
-        : [...multipleValue, tag._id];
+    const newSelectedTags = isSingleMode
+      ? [tag]
+      : isSelected
+      ? selectedTags.filter((t) => t._id !== tag._id)
+      : [...selectedTags, tag];
 
-      const newSelectedTags = isSelected
-        ? selectedTags.filter((t) => t._id !== tag._id)
-        : [...selectedTags, tag];
-
-      onValueChange?.(newSelectedTagIds);
-      setSelectedTags(newSelectedTags);
-    }
+    setSelectedTags(newSelectedTags);
+    onValueChange?.(isSingleMode ? tag._id : newSelectedTagIds);
 
     if (targetIds) {
       giveTags({
@@ -91,7 +94,7 @@ export const SelectTagsCommand = ({
 }) => {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { tagType, targetIds } = useSelectTagsContext();
+  const { tagType, targetIds, selectedTags } = useSelectTagsContext();
   const [noTagsSearchValue, setNoTagsSearchValue] = useState('');
 
   const { tags, loading, error, handleFetchMore, totalCount } = useTags({
@@ -100,7 +103,7 @@ export const SelectTagsCommand = ({
       searchValue: debouncedSearch,
     },
     skip: !!noTagsSearchValue && debouncedSearch.includes(noTagsSearchValue),
-    onCompleted(data: { tags: { totalCount: number; list: ITag[] } }) {
+    onCompleted(data) {
       const { totalCount } = data?.tags || {};
       setNoTagsSearchValue(totalCount === 0 ? debouncedSearch : '');
     },
@@ -112,15 +115,22 @@ export const SelectTagsCommand = ({
         value={search}
         onValueChange={setSearch}
         placeholder="Search tags"
+        focusOnMount
       />
+      {selectedTags && (
+        <>
+          <div className="flex flex-wrap p-2 gap-2">
+            <TagList />
+          </div>
+          <Command.Separator />
+        </>
+      )}
+
       <Command.List>
         <SelectTree.Provider id={targetIds.join(',')} ordered={!search}>
           <SelectTagsCreate
             search={search}
-            show={
-              !disableCreateOption ||
-              (search.length > 0 && !loading && tags?.length === 0)
-            }
+            show={!disableCreateOption && !loading && !tags?.length}
           />
           <Combobox.Empty loading={loading} error={error} />
           {tags?.map((tag) => (
@@ -151,6 +161,7 @@ export const SelectTagsCreate = ({
   show: boolean;
 }) => {
   const { setNewTagName } = useSelectTagsContext();
+
   if (!search || !show) return null;
 
   return (
@@ -186,7 +197,7 @@ export const SelectTagsItem = ({
     >
       <TextOverflowTooltip
         value={tag.name}
-        className="flex-auto w-auto font-medium text-base"
+        className="flex-auto w-auto font-medium"
       />
     </SelectTree.Item>
   );
@@ -194,11 +205,14 @@ export const SelectTagsItem = ({
 
 export const TagList = ({
   placeholder,
+  renderAsPlainText,
   ...props
 }: Omit<React.ComponentProps<typeof TagBadge>, 'onClose'> & {
   placeholder?: string;
+  renderAsPlainText?: boolean;
 }) => {
-  const { value, selectedTags,setSelectedTags, mode, onSelect } = useSelectTagsContext();
+  const { value, selectedTags, setSelectedTags, onSelect } =
+    useSelectTagsContext();
 
   const selectedTagIds = Array.isArray(value) ? value : [value];
 
@@ -213,9 +227,10 @@ export const TagList = ({
           key={tagId}
           tagId={tagId}
           tag={selectedTags.find((t) => t._id === tagId)}
-          renderAsPlainText={mode === 'single'}
+          renderAsPlainText={renderAsPlainText}
           variant="secondary"
           onCompleted={(tag) => {
+            if (!tag) return;
             if (selectedTagIds.includes(tag._id)) {
               setSelectedTags([...selectedTags, tag]);
             }
@@ -230,19 +245,62 @@ export const TagList = ({
   );
 };
 
+export const SelectTagsValue = () => {
+  const { selectedTags, mode } = useSelectTagsContext();
+
+  if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
+
+  return <TagList renderAsPlainText={mode === 'single'} />;
+};
+
 export const SelectTagsContent = () => {
   const { newTagName } = useSelectTagsContext();
 
   if (newTagName) {
-    return <CreateTagForm />;
+    return (
+      <SelectTagCreateContainer>
+        <CreateTagForm />
+      </SelectTagCreateContainer>
+    );
   }
 
   return <SelectTagsCommand />;
+};
+
+export const SelectTagsInlineCell = ({
+  onValueChange,
+  scope,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'> & {
+  scope?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <SelectTagsProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableCellTrigger>
+          <SelectTagsValue />
+        </RecordTableCellTrigger>
+        <RecordTableCellContent className="min-w-72">
+          <SelectTagsContent />
+        </RecordTableCellContent>
+      </RecordTablePopover>
+    </SelectTagsProvider>
+  );
 };
 
 export const SelectTags = Object.assign(SelectTagsProvider, {
   Content: SelectTagsContent,
   Command: SelectTagsCommand,
   Item: SelectTagsItem,
-  Value: TagList,
+  Value: SelectTagsValue,
+  List: TagList,
+  InlineCell: SelectTagsInlineCell,
 });

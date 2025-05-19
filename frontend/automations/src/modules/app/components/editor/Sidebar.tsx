@@ -207,9 +207,6 @@ export default () => {
   };
 
   const renderSideBarContent = () => {
-    // if (!activeNode) {
-    //   return null;
-    // }
     const { nodeType = '' } = activeNode || {};
     if (nodeType === 'trigger') {
       return <TriggerDetail activeNode={activeNode} />;
@@ -240,7 +237,7 @@ export default () => {
           </Button>
         </Card.Header>
       )}
-      <div className=" flex-1 flex flex-col min-w-80 max-w-2xl ">
+      <div className=" flex-1 flex flex-col min-w-80 max-w-2xl w-fit">
         {renderSideBarContent()}
       </div>
     </Card>

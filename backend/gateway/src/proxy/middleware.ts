@@ -31,25 +31,6 @@ export async function applyProxiesCoreless(
       },
     }),
   );
-
-  // // console.log(targets);
-
-  // for (const target of targets) {
-  //   const path = `^/pl(-|:)${target.name}`;
-
-  //   app.use(`${path}/trpc`, forbid);
-
-  //   app.use(
-  //     path,
-  //     createProxyMiddleware({
-  //       pathRewrite: { [path]: '/' },
-  //       target: target.address,
-  //       on: {
-  //         proxyReq,
-  //       },
-  //     }),
-  //   );
-  // }
 }
 
 export function applyProxyToCore(app: Express, targets: ErxesProxyTarget[]) {

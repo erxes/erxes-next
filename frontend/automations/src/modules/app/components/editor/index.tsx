@@ -6,9 +6,12 @@ import {
   ReactFlow,
   ReactFlowProvider,
   addEdge,
+  getOutgoers,
   useEdgesState,
   useNodesState,
   useReactFlow,
+  Connection,
+  Edge,
 } from '@xyflow/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -49,6 +52,7 @@ const edgeTypes = {
 };
 const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
   const [activeNodeId, setActiveNodeId] = useQueryState('activeNodeId');
+  const edgeUpdateSuccessful = useRef(true);
 
   const { watch, setValue } = useFormContext<TAutomationProps>();
 
@@ -62,7 +66,6 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
       triggers,
       actions,
       workFlowActions: [],
-      onDisconnect: (edge) => console.log({ nodes, edge, setEdges, onConnect }),
     }),
   );
 
@@ -95,8 +98,6 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
         triggers,
         actions,
         workFlowActions: [],
-        onDisconnect: (edge) =>
-          console.log({ nodes, edge, setEdges, onConnect }),
       }),
     );
   };
@@ -198,6 +199,30 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     [reactFlowInstance, setNodes],
   );
 
+  const onDisconnection = ({
+    nodes,
+    edge,
+    setEdges,
+  }: {
+    nodes: Node<NodeData>[];
+    edge: any;
+    setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
+  }) => {
+    setEdges((eds: Edge[]) => eds.filter((e) => e.id !== edge.id));
+    let info: any = { source: edge.source, target: undefined };
+
+    const sourceNode = nodes.find((n) => n.id === edge.source);
+
+    if (edge.sourceHandle.includes(sourceNode?.id || '')) {
+      const [_action, _sourceId, optionalConnectId] = (edge.id || '').split(
+        '-',
+      );
+      info.optionalConnectId = optionalConnectId;
+      info.connectType = 'optional';
+    }
+
+    onConnection(info);
+  };
   // Handle drag start from sidebar
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
@@ -233,26 +258,48 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     );
   };
 
-  const onNodeContextMenu = useCallback(
-    (event: React.MouseEvent, node: Node<NodeData>) => {
-      event.preventDefault();
+  const isValidConnection = useCallback(
+    (connection: Connection) => {
+      const target = nodes.find((node) => node.id === connection.target);
+      const hasCycle = (node: Node<NodeData>, visited = new Set()) => {
+        if (node?.data?.nodeType === 'trigger') return true;
+        if (visited.has(node.id)) return false;
 
-      const pane = editorWrapper?.current?.getBoundingClientRect();
-      if (pane) {
-        setMenu({
-          id: node.id,
-          top: event.clientY < pane.height - 200 && event.clientY,
-          left: event.clientX < pane.width - 200 && event.clientX,
-          right:
-            event.clientX >= pane.width - 200 && pane.width - event.clientX,
-          bottom:
-            event.clientY >= pane.height - 200 && pane.height - event.clientY,
-        } as any);
+        visited.add(node.id);
+
+        for (const outgoer of getOutgoers(node, nodes, edges)) {
+          if (outgoer.id === connection.source) return true;
+          if (hasCycle(outgoer, visited)) return true;
+        }
+      };
+
+      if (target?.parentId && connection?.source && target.id) {
       }
+
+      return !hasCycle(target);
     },
-    [setMenu],
+    [nodes, edges],
   );
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
+
+  const onEdgeUpdateEnd = useCallback((_: any, edge: Edge) => {
+    if (!edgeUpdateSuccessful.current) {
+      onDisconnection({ nodes, edge, setEdges });
+    }
+
+    edgeUpdateSuccessful.current = true;
+  }, []);
+
+  const onNodeDoubleClick = (event: any, node: Node<NodeData>) => {
+    const isCollapsibleTrigger = (event.target as HTMLElement).closest(
+      '[data-collapsible-trigger]',
+    );
+    if (!isCollapsibleTrigger) {
+      setValue('activeNode', { ...node.data, id: node.id });
+      setValue('isMinimized', false);
+      setActiveNodeId(node.id);
+    }
+  };
 
   return (
     <div className="flex flex-column grow h-full relative">
@@ -267,44 +314,19 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onDrop={onDrop}
-          // onDoubleClick={(event) => console.log({ event })}
-          onNodeDoubleClick={(event, node) => {
-            const isCollapsibleTrigger = (event.target as HTMLElement).closest(
-              '[data-collapsible-trigger]',
-            );
-            if (!isCollapsibleTrigger) {
-              setValue('activeNode', { ...node.data, id: node.id });
-              setValue('isMinimized', false);
-              setActiveNodeId(node.id);
-            }
-          }}
+          isValidConnection={isValidConnection}
+          onNodeDoubleClick={onNodeDoubleClick}
           onInit={setReactFlowInstance}
           onDragOver={onDragOver}
           fitView
           style={{ backgroundColor: '#F7F9FB' }}
           connectionLineComponent={ConnectionLine}
           onNodeDragStop={onNodeDragStop}
-
-          // onNodeContextMenu={onNodeContextMenu}
+          // onEdgeUpdate={onEdgeUpdate}
         >
-          {/* {menu && <ContextMenu onClick={onPaneClick} {...menu} />} */}
           <Controls />
           <Background />
           <MiniMap pannable position="top-left" />
-
-          {/* <Sheet
-            open={!!activeNode}
-            onOpenChange={(open) => {
-              if (!open) {
-                setActiveNode(null);
-              }
-            }}
-          >
-            <Sheet.Content>
-              <Sheet.Title>{(activeNode as any)?.label}</Sheet.Title>
-              config
-            </Sheet.Content>
-          </Sheet> */}
         </ReactFlow>
       </div>
       <Sidebar />

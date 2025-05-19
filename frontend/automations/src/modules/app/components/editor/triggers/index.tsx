@@ -12,7 +12,6 @@ const DefaultTriggerContent = ({ activeNode }: Props) => {
     (trigger) => trigger.id === activeNode.id,
   );
   const contentId = watch(`detail.triggers.${currentIndex}`)?.config?.contentId;
-  console.log({ contentId, shdiasd: 'dasd' });
   const handleCallback = (contentId: string) => {
     const triggers = watch('detail.triggers');
     const updatedTriggers = triggers.map((trigger) =>

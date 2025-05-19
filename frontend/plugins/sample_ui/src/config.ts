@@ -21,7 +21,7 @@ export const CONFIG: IUIConfig = {
       submenus: [
         {
           name: 'submenu1',
-          path: 'sampleSecond',
+          path: 'sampleSecond/submenu1',
         },
         {
           name: 'submenu2',

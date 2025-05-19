@@ -58,6 +58,7 @@ export interface ISegment {
 }
 
 export type IField = {
+  _id: string;
   name: string;
   selectOptions?: Array<{ label: string; value: string | number }>;
   type?: string;

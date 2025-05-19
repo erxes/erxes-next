@@ -56,64 +56,61 @@ export const CreateTagForm = () => {
   };
 
   return (
-    <SelectTagCreateContainer>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-3 p-3 pb-10">
-            <Form.Field
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Name</Form.Label>
-                  <Input {...field} />
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
-            <Form.Field
-              control={form.control}
-              name="parentId"
-              render={({ field }) => (
-                <Form.Item className="mb-2">
-                  <Form.Label>Parent Tag</Form.Label>
-                  <SelectTags
-                    tagType={tagType}
-                    value={field.value}
-                    onValueChange={(tag) => {
-                      field.onChange(tag);
-                      setOpen(false);
-                    }}
-                  >
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <Form.Control>
-                        <Combobox.Trigger ref={selectParentRef}>
-                          <SelectTags.Value />
-                        </Combobox.Trigger>
-                      </Form.Control>
-                      <Combobox.Content>
-                        <SelectTags.Command disableCreateOption />
-                      </Combobox.Content>
-                    </Popover>
-                  </SelectTags>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
-          </div>
-          <Separator />
-          <div className="p-3">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (
-                <IconLoader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                'Create'
-              )}
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </SelectTagCreateContainer>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-3 p-3 pb-10">
+          <Form.Field
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Name</Form.Label>
+                <Input {...field} />
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+          <Form.Field
+            control={form.control}
+            name="parentId"
+            render={({ field }) => (
+              <Form.Item className="mb-2">
+                <Form.Label>Parent Tag</Form.Label>
+                <SelectTags
+                  tagType={tagType}
+                  value={field.value}
+                  onValueChange={(tag) => {
+                    field.onChange(tag);
+                    setOpen(false);
+                  }}
+                >
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <Form.Control>
+                      <Combobox.Trigger ref={selectParentRef}>
+                        <SelectTags.Value />
+                      </Combobox.Trigger>
+                    </Form.Control>
+                    <Combobox.Content>
+                      <SelectTags.Command disableCreateOption />
+                    </Combobox.Content>
+                  </Popover>
+                </SelectTags>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+        </div>
+        <div className="p-3">
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <IconLoader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              'Create'
+            )}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 

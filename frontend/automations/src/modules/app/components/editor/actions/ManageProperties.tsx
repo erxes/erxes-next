@@ -24,24 +24,12 @@ import { IField as UIModuleField } from 'ui-modules/modules/segments/types';
 import { SelectTrigger } from '@radix-ui/react-select';
 import { Attributes } from 'ui-modules/modules/automations/common/Attributes';
 import { useEffect } from 'react';
+import { PlaceHolderInput } from 'ui-modules/modules/automations/common/PlaceHolderInput';
 
 type OperatorType = 'String' | 'Date' | 'Number' | 'Default';
 
 // Types
 interface IField extends Partial<UIModuleField> {
-  name: string;
-  label: string;
-  type?: string;
-  validation?: string;
-  selectOptions?: Array<{ value: string | number; label: string }>;
-  selectionConfig?: {
-    queryName: string;
-    selectionName: string;
-    labelField: string;
-    valueField: string;
-    multi?: boolean;
-  };
-  choiceOptions?: string[];
   group?: string;
   groupDetail?: {
     name: string;
@@ -69,6 +57,8 @@ type IFieldName = `detail.actions.${number}.config`;
 
 // Component Props
 interface RuleInputProps {
+  propertyType: string;
+
   selectedOperator?: IOperator;
   selectedField?: IField;
   value: any;
@@ -77,6 +67,7 @@ interface RuleInputProps {
 
 interface RuleProps {
   rule: IRule;
+  propertyType: string;
   selectedField?: IField;
   remove: () => void;
   handleChange: (name: string, value: any) => void;
@@ -88,190 +79,6 @@ function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Components
-const RuleInput = ({
-  selectedOperator,
-  selectedField,
-  value,
-  onChange,
-}: RuleInputProps) => {
-  const { value: operatorValue = '', noInput } = selectedOperator || {};
-
-  if (noInput) {
-    return null;
-  }
-
-  const {
-    selectOptions = [],
-    selectionConfig,
-    type,
-    choiceOptions = [],
-  } = selectedField || {};
-
-  console.log({ selectOptions, selectionConfig });
-
-  const renderOptions = () => {
-    if (!!selectionConfig) {
-      const { queryName, labelField, valueField = '_id' } = selectionConfig;
-
-      const query = gql`
-      query ${queryName}($searchValue: String,$direction: CURSOR_DIRECTION,$cursor: String,$limit:Int) {
-        ${queryName}(searchValue: $searchValue,direction:$direction,cursor:$cursor,limit:$limit) {
-          list{${labelField},${valueField}}
-          totalCount,
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-            startCursor
-            endCursor
-          }
-        }
-      }
-    `;
-
-      return (
-        <SelectCommand
-          query={query}
-          queryName={queryName}
-          labelField={labelField}
-          valueField={valueField}
-          nullable
-          initialValue={value}
-          onSelect={onChange}
-          focusOnMount
-        />
-      );
-    }
-
-    if (!!selectOptions?.length) {
-      return (
-        <Select>
-          <Select.Trigger>
-            <Button variant="link">
-              Options <IconChevronDown />
-            </Button>
-          </Select.Trigger>
-          <Select.Content>
-            {selectOptions.map((option) => (
-              <Select.Item
-                key={String(option.value)}
-                value={String(option.value)}
-              >
-                {option.label || '-'}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select>
-      );
-    }
-  };
-
-  // if (['is', 'ins', 'it', 'if'].indexOf(operatorValue) >= 0) {
-  //   return null;
-  // }
-
-  // if (['dateigt', 'dateilt', 'drlt', 'drgt'].includes(operatorValue)) {
-  //   return (
-  //     <DatePicker
-  //       className="w-full"
-  //       value={value}
-  //       onChange={(date) => onChange(date as Date)}
-  //       placeholder="Select date"
-  //     />
-  //   );
-  // }
-
-  // if (selectOptions.length > 0) {
-  //   return (
-  //     <Select value={value} onValueChange={onChange}>
-  //       <Select.Trigger>
-  //         <Select.Value className="w-full" />
-  //       </Select.Trigger>
-  //       <Select.Content>
-  //         {selectOptions.map((option) => (
-  //           <Select.Item
-  //             key={String(option.value)}
-  //             value={String(option.value)}
-  //           >
-  //             {option.label || '-'}
-  //           </Select.Item>
-  //         ))}
-  //       </Select.Content>
-  //     </Select>
-  //   );
-  // }
-
-  // if (selectionConfig) {
-  //   const { queryName, labelField, valueField = '_id' } = selectionConfig;
-
-  //   const query = gql`
-  //     query ${queryName}($searchValue: String,$direction: CURSOR_DIRECTION,$cursor: String,$limit:Int) {
-  //       ${queryName}(searchValue: $searchValue,direction:$direction,cursor:$cursor,limit:$limit) {
-  //         list{${labelField},${valueField}}
-  //         totalCount,
-  //         pageInfo {
-  //           hasNextPage
-  //           hasPreviousPage
-  //           startCursor
-  //           endCursor
-  //         }
-  //       }
-  //     }
-  //   `;
-
-  //   return (
-  //     <SelectCommand
-  //       query={query}
-  //       queryName={queryName}
-  //       labelField={labelField}
-  //       valueField={valueField}
-  //       nullable
-  //       initialValue={value}
-  //       onSelect={onChange}
-  //       focusOnMount
-  //     />
-  //   );
-  // }
-
-  // if (type === 'radio' && choiceOptions.length > 0) {
-  //   const options = choiceOptions.map((opt) => ({
-  //     value: opt,
-  //     label: opt,
-  //   }));
-
-  //   return (
-  //     <Select value={value} onValueChange={onChange}>
-  //       <Select.Trigger>
-  //         <Select.Value className="w-full" />
-  //       </Select.Trigger>
-  //       <Select.Content>
-  //         {options.map((option) => (
-  //           <Select.Item key={option.value} value={option.value}>
-  //             {option.label || '-'}
-  //           </Select.Item>
-  //         ))}
-  //       </Select.Content>
-  //     </Select>
-  //   );
-  // }
-
-  return (
-    <div className="flex flex-col items-end">
-      {renderOptions()}
-      <Attributes
-        contentType={type || ''}
-        onSelect={(value) => console.log(value)}
-      />
-      <Input
-        value={value}
-        placeholder="Value"
-        onChange={(e) => onChange(e.target.value)}
-        disabled={!operatorValue}
-      />
-    </div>
-  );
-};
-
 const Rule = ({
   rule,
   remove,
@@ -279,74 +86,88 @@ const Rule = ({
   groups,
   selectedField,
   operatorOptions,
+  propertyType,
 }: RuleProps) => {
   return (
-    <div className="flex flex-row gap-4 mb-4 group items-end">
-      <Select
-        value={rule.field}
-        onValueChange={(value) => handleChange('field', value)}
-      >
-        <Select.Trigger className="w-2/5">
-          <Select.Value placeholder="Select an field" />
-        </Select.Trigger>
-        <Select.Content>
-          {Object.entries(groups).map(([key, fields]) => {
-            const groupName =
-              fields.find(({ group }) => group === key)?.groupDetail?.name ||
-              key;
+    <div className="border rounded p-4  mb-2 relative group">
+      <div className="flex flex-row gap-4 mb-4  items-end">
+        <Form.Item className="w-3/5">
+          <Form.Label>Field</Form.Label>
 
-            return (
-              <div key={key}>
-                <Select.Group>
-                  <Select.Label>{groupName}</Select.Label>
-                  {fields.map(({ name, label }) => (
-                    <Select.Item key={name} value={name}>
-                      {label}
-                    </Select.Item>
-                  ))}
-                </Select.Group>
-                <Select.Separator />
-              </div>
-            );
-          })}
-        </Select.Content>
-      </Select>
+          <Select
+            value={rule.field}
+            onValueChange={(value) => handleChange('field', value)}
+          >
+            <Select.Trigger>
+              <Select.Value placeholder="Select an field" />
+            </Select.Trigger>
+            <Select.Content>
+              {Object.entries(groups).map(([key, fields], index) => {
+                const groupName =
+                  fields.find(({ group }) => group === key)?.groupDetail
+                    ?.name || key;
 
-      <Select
-        value={rule.operator}
-        onValueChange={(value) => handleChange('operator', value)}
-      >
-        <Select.Trigger className="w-1/5 ">
-          <Select.Value placeholder="Select an operator" />
-        </Select.Trigger>
-        <Select.Content>
-          {operatorOptions.map(({ value, label }) => (
-            <Select.Item key={value} value={value}>
-              {label}
-            </Select.Item>
-          ))}
-        </Select.Content>
-      </Select>
+                return (
+                  <div key={index}>
+                    <Select.Group>
+                      <Select.Label>{groupName}</Select.Label>
+                      {fields.map(({ _id, name, label }) => (
+                        <Select.Item key={_id} value={name || ''}>
+                          {label}
+                        </Select.Item>
+                      ))}
+                    </Select.Group>
+                    <Select.Separator />
+                  </div>
+                );
+              })}
+            </Select.Content>
+          </Select>
+        </Form.Item>
 
-      <div className="w-2/5">
-        <RuleInput
-          selectedOperator={operatorOptions.find(
-            (op) => op.value === rule.operator,
-          )}
-          selectedField={selectedField}
-          value={rule.value}
-          onChange={(value) => handleChange('value', value)}
-        />
+        <Form.Item className="w-2/5 ">
+          <Form.Label>Operator</Form.Label>
+
+          <Select
+            value={rule.operator}
+            onValueChange={(value) => handleChange('operator', value)}
+          >
+            <Select.Trigger>
+              <Select.Value placeholder="Select an operator" />
+            </Select.Trigger>
+            <Select.Content>
+              {operatorOptions.map(({ value, label }) => (
+                <Select.Item key={value} value={value}>
+                  {label}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select>
+        </Form.Item>
+        <Button
+          variant="destructive"
+          size="icon"
+          className="flex-shrink-0 opacity-0 absolute -top-6 right-1 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-in-out"
+          onClick={remove}
+        >
+          <IconTrash size={16} />
+        </Button>
       </div>
+      <div className="mb-4">
+        <Form.Item>
+          <Form.Label>Value</Form.Label>
 
-      <Button
-        variant="destructive"
-        size="icon"
-        className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={remove}
-      >
-        <IconTrash size={16} />
-      </Button>
+          <PlaceHolderInput
+            propertyType={propertyType}
+            selectedOperator={operatorOptions.find(
+              (op) => op.value === rule.operator,
+            )}
+            selectedField={selectedField}
+            value={rule.value}
+            onChange={(value) => handleChange('value', value)}
+          />
+        </Form.Item>
+      </div>
     </div>
   );
 };
@@ -359,10 +180,12 @@ export const ManageProperties = ({
   const fieldName: IFieldName = `detail.actions.${currentActionIndex}.config`;
   const { setValue, watch, control } = useFormContext<TAutomationProps>();
   const { actions = [], triggers = [] } = watch('detail');
-  const propertyType = getContentType(currentAction, actions, triggers);
+  const module = watch(`${fieldName}.module`);
+  const propertyType =
+    module || getContentType(currentAction, actions, triggers);
 
   useEffect(() => {
-    if (watch(fieldName)?.module !== propertyType) {
+    if (module !== propertyType) {
       setValue(`${fieldName}.module`, propertyType);
     }
   }, [propertyType]);
@@ -380,7 +203,7 @@ export const ManageProperties = ({
   };
 
   return (
-    <Card.Content className="!w-2xl">
+    <Card.Content className="w-[500px]">
       <Form.Field
         control={control}
         name={`${fieldName}.module`}
@@ -446,6 +269,7 @@ export const ManageProperties = ({
               handleChange={handleChange}
               remove={handleRemove}
               groups={groups}
+              propertyType={propertyType}
               selectedField={selectedField}
               operatorOptions={operators}
             />
@@ -461,24 +285,26 @@ export const ManageProperties = ({
 };
 
 export const NodeContent = ({ config }: any) => {
-  const { module, rules } = config || {};
+  const { module, rules = [] } = config || {};
   return (
     <>
-      <div className="flex justify-between text-slate-600 text-xs">
-        <span className="font-mono">Content Type:</span>
+      <div className="flex text-slate-600 text-xs ">
+        <span className="font-mono">Content Type: </span>
         <span className="font-mono capitalize">{`${
           (module || '').split(':')[1]
         }`}</span>
       </div>
-      {rules.map(({ field, value }: any, index: number) => (
-        <div
-          key={index}
-          className="flex justify-between text-slate-600 text-xs"
-        >
-          <span className="font-mono">{field}:</span>
-          <span className="font-mono">{value}</span>
-        </div>
-      ))}
+      {rules
+        .filter(({ field, value }: any) => field && value)
+        .map(({ field, value }: any, index: number) => (
+          <div
+            key={index}
+            className="flex justify-between text-slate-600 text-xs w-max"
+          >
+            <span className="font-mono">{field}:</span>
+            <span className="font-mono">{value}</span>
+          </div>
+        ))}
     </>
   );
 };

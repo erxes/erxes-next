@@ -7,6 +7,12 @@ import { cn } from 'erxes-ui/lib/utils';
 export const popoverClassName =
   'z-50 w-72 rounded-md bg-background p-4 shadow-lg outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0';
 
+const PopoverPortal = ({
+  ...props
+}: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Portal>) => (
+  <PopoverPrimitive.Portal {...props} />
+);
+
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> & {
@@ -23,7 +29,7 @@ const PopoverContent = React.forwardRef<
     },
     ref,
   ) => (
-    <PopoverPrimitive.Portal>
+    <PopoverPortal>
       <PopoverPrimitive.Content
         ref={ref}
         align={align}
@@ -36,7 +42,7 @@ const PopoverContent = React.forwardRef<
         )}
         {...props}
       />
-    </PopoverPrimitive.Portal>
+    </PopoverPortal>
   ),
 );
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;

@@ -7,7 +7,7 @@ import {
 } from 'erxes-ui';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import segmentFormSchema from '../form/schema';
+import { segmentFormSchema } from '../form/schema';
 import { UseFormReturn } from 'react-hook-form';
 import { IConditionsForPreview } from '../types';
 import { z } from 'zod';
@@ -23,21 +23,23 @@ type CommandProps = {
   initialValue: string;
 };
 
-const useList = (
+export const useFieldSelectionList = (
   query: DocumentNode,
   queryName: string,
   searchValue: string,
+  skip?: boolean,
 ) => {
   const PER_PAGE = 30;
   const { cursor } = useRecordTableCursor({
     sessionKey: 'property_cursor',
   });
-  const { data, loading, error, fetchMore } = useQuery(query, {
+  const { data, loading, fetchMore } = useQuery(query, {
     variables: {
       limit: PER_PAGE,
       cursor,
       searchValue: searchValue ?? undefined,
     },
+    skip,
   });
 
   const { list, totalCount, pageInfo } = (data || {})[queryName] || {};
@@ -121,7 +123,7 @@ export const SelectCommand = ({
     list = [],
     totalCount = 0,
     handleFetchMore,
-  } = useList(query, queryName, search);
+  } = useFieldSelectionList(query, queryName, search);
   const items = list.map((option: any) => ({
     label: option[labelField],
     value: option[valueField],

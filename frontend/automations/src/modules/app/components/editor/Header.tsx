@@ -10,7 +10,7 @@ import {
   Switch,
   Tabs,
 } from 'erxes-ui/components';
-import { useFormContext } from 'react-hook-form';
+import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useParams } from 'react-router';
 import mutations from '../../graphql/mutations';
 import { TAutomationProps } from './common/formSchema';
@@ -31,61 +31,97 @@ export default ({ reactFlowInstance }: any) => {
     status = 'draft',
   } = detail || {};
 
-  // const inActive = watch('inActive');
-  // const triggers = watch('triggers');
-  // const actions = watch('actions');
-  // const name = watch('name');
   const { id } = useParams();
   const [save, { loading }] = useMutation(
     id ? mutations.edit : mutations.create,
   );
 
-  const handleSave = () =>
-    // { detail }: TAutomationProps
-    {
-      // const {
-      //   triggers = [],
-      //   actions = [],
-      //   name = '',
-      //   status = 'draft',
-      // } = detail || {};
-      const generateValues = () => {
-        const finalValues = {
-          id,
-          name,
-          status: status,
-          triggers: triggers.map((t: any) => ({
-            id: t.id,
-            type: t.type,
-            config: t.config,
-            icon: t.icon,
-            label: t.label,
-            description: t.description,
-            actionId: t.actionId,
-            position: t.position,
-            isCustom: t.isCustom,
-            workflowId: t.workflowId,
-          })),
-          actions: actions.map((a: any) => ({
-            id: a.id,
-            type: a.type,
-            nextActionId: a.nextActionId,
-            config: a.config,
-            icon: a.icon,
-            label: a.label,
-            description: a.description,
-            position: a.position,
-            workflowId: a.workflowId,
-          })),
-        };
-
-        return finalValues;
+  const handleSave = (values: TAutomationProps) => {
+    const generateValues = () => {
+      const finalValues = {
+        id,
+        name,
+        status: status,
+        triggers: triggers.map((t: any) => ({
+          id: t.id,
+          type: t.type,
+          config: t.config,
+          icon: t.icon,
+          label: t.label,
+          description: t.description,
+          actionId: t.actionId,
+          position: t.position,
+          isCustom: t.isCustom,
+          workflowId: t.workflowId,
+        })),
+        actions: actions.map((a: any) => ({
+          id: a.id,
+          type: a.type,
+          nextActionId: a.nextActionId,
+          config: a.config,
+          icon: a.icon,
+          label: a.label,
+          description: a.description,
+          position: a.position,
+          workflowId: a.workflowId,
+        })),
       };
 
-      return save({ variables: generateValues() }).then(() => {
-        clearErrors();
-      });
+      return finalValues;
     };
+
+    return save({ variables: generateValues() }).then(() => {
+      clearErrors();
+    });
+  };
+
+  const handleError: SubmitErrorHandler<TAutomationProps> = (errors) => {
+    const { triggers = [], actions = [] } = watch('detail');
+    const nodes = getNodes();
+    const { triggers: triggersErrors, actions: actionsErrors } =
+      errors?.detail || {};
+
+    const nodeErrorMap: Record<string, string> = {};
+
+    for (const { errors, list = [] } of [
+      { errors: triggersErrors, list: triggers },
+      { errors: actionsErrors, list: actions },
+    ]) {
+      if (Array.isArray(errors)) {
+        errors.forEach((err, i) => {
+          if (err && list[i]?.id) {
+            const nodeId = list[i].id;
+            const errorKeys = Object.keys(err);
+            nodeErrorMap[nodeId] =
+              errorKeys.length === 1
+                ? err[errorKeys[0]]?.message
+                : JSON.stringify(err);
+          }
+        });
+      }
+    }
+
+    if (Object.keys(nodeErrorMap).length > 0) {
+      const updatedNodes = nodes.map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          error: nodeErrorMap[node.id],
+        },
+      }));
+
+      setNodes(updatedNodes);
+
+      // Focus on first error node
+      const firstErrorNode = updatedNodes.find((n) => nodeErrorMap[n.id]);
+      if (firstErrorNode && reactFlowInstance) {
+        reactFlowInstance.fitView({
+          nodes: [firstErrorNode],
+          duration: 800,
+        });
+      }
+    }
+  };
 
   return (
     <div className="h-12 border-b px-4">
@@ -129,10 +165,24 @@ export default ({ reactFlowInstance }: any) => {
         </div>
         {activeTab === 'builder' && (
           <div className="flex flex-row items-center space-x-2 gap-4">
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="mode">InActive</Label>
-              <Switch id="mode" />
-            </div>
+            <Form.Field
+              control={control}
+              name="activeTab"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Control>
+                    <div className="flex items-center space-x-2">
+                      <Label htmlFor="mode">InActive</Label>
+                      <Switch
+                        id="mode"
+                        onCheckedChange={field.onChange}
+                        checked={!!field.value}
+                      />
+                    </div>
+                  </Form.Control>
+                </Form.Item>
+              )}
+            />
             {/* <Button className="w-24">Save</Button> */}
 
             <Button
@@ -146,56 +196,7 @@ export default ({ reactFlowInstance }: any) => {
         )}
         <Button
           disabled={loading}
-          onClick={handleSubmit(handleSave, (errors) => {
-            const { triggers = [], actions = [] } = watch('detail');
-            const nodes = getNodes();
-            const { triggers: triggersErrors, actions: actionsErrors } =
-              errors?.detail || {};
-
-            console.log({ errors });
-            const nodeErrorMap: Record<string, string> = {};
-
-            for (const { errors, list = [] } of [
-              { errors: triggersErrors, list: triggers },
-              { errors: actionsErrors, list: actions },
-            ]) {
-              if (Array.isArray(errors)) {
-                errors.forEach((err, i) => {
-                  if (err && list[i]?.id) {
-                    const nodeId = list[i].id;
-                    const errorKeys = Object.keys(err);
-                    nodeErrorMap[nodeId] =
-                      errorKeys.length === 1
-                        ? err[errorKeys[0]]?.message
-                        : JSON.stringify(err);
-                  }
-                });
-              }
-            }
-
-            if (Object.keys(nodeErrorMap)) {
-              const updatedNodes = nodes.map((node) => ({
-                ...node,
-                data: {
-                  ...node.data,
-                  error: nodeErrorMap[node.id],
-                },
-              }));
-
-              setNodes(updatedNodes);
-
-              // Focus on first error node
-              const firstErrorNode = updatedNodes.find(
-                (n) => nodeErrorMap[n.id],
-              );
-              if (firstErrorNode && reactFlowInstance) {
-                reactFlowInstance.fitView({
-                  nodes: [firstErrorNode],
-                  duration: 800,
-                });
-              }
-            }
-          })}
+          onClick={handleSubmit(handleSave, handleError)}
         >
           {loading ? <Spinner /> : `Save`}
         </Button>

@@ -11,18 +11,20 @@ export const TransactionTable = () => {
     <RecordTable.Provider
       columns={transactionColumns}
       data={transactions || []}
-      stickyColumns={['avatar', 'name']}
-      className="mt-1.5"
+      stickyColumns={[]}
+      className='m-3'
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          <AccountingTableRow />
-          {!loading && totalCount > transactions?.length && (
-            <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
+      <RecordTable.Scroll>
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <AccountingTableRow />
+            {!loading && totalCount > transactions?.length && (
+              <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
+            )}
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.Scroll>
     </RecordTable.Provider>
   );
 };

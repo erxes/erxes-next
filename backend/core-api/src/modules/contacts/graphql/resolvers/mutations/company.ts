@@ -1,3 +1,4 @@
+import { checkPermission } from 'erxes-api-shared/core-modules';
 import { ICompany } from 'erxes-api-shared/core-types';
 import { IContext } from '~/connectionResolvers';
 
@@ -6,7 +7,7 @@ export const companyMutations = {
    * Creates a new company
    */
   async companiesAdd(
-    _root: undefined,
+    _parent: undefined,
     doc: ICompany,
     { models, user }: IContext,
   ) {
@@ -51,3 +52,9 @@ export const companyMutations = {
     return models.Companies.mergeCompanies(companyIds, companyFields);
   },
 };
+
+checkPermission(companyMutations, 'companiesAdd', 'companiesAdd');
+checkPermission(companyMutations, 'companiesEdit', 'companiesEdit');
+checkPermission(companyMutations, 'companiesEditByField', 'companiesEdit');
+checkPermission(companyMutations, 'companiesRemove', 'companiesRemove');
+checkPermission(companyMutations, 'companiesMerge', 'companiesMerge');

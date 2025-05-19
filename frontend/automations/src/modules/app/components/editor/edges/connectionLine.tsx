@@ -1,6 +1,8 @@
 import { ConnectionLineComponentProps } from '@xyflow/react';
 import { cn } from 'erxes-ui/lib';
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { TAutomationProps } from '../common/formSchema';
 
 // const checkIsOptionalConnect = (id = '') => {
 //   const hasTwoHyphens = id.split('-').length - 1 === 2;
@@ -18,7 +20,6 @@ const ConnectionLine = ({
   ...props
 }: ConnectionLineComponentProps) => {
   const { fromHandle, fromNode, toNode, connectionStatus } = props;
-
   //   const isOptionalConnect = checkIsOptionalConnect(fromHandle?.id);
 
   //   const isNear = Math.abs(toX - handleX) < 20 && Math.abs(toY - handleY) < 20;

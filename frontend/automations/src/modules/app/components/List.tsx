@@ -1,10 +1,11 @@
 import { gql, useQuery } from '@apollo/client';
-import { Button } from 'erxes-ui/components';
+import { Breadcrumb, Button, Separator, Spinner } from 'erxes-ui/components';
 import { Link } from 'react-router-dom';
 import queries from '../graphql/queries';
 import { IAutomationDoc } from '../types';
 import { IPageInfo, SelectTags } from 'ui-modules';
 import {
+  PageHeader,
   RecordTable,
   RecordTableCellContent,
   RecordTableCellTrigger,
@@ -12,6 +13,7 @@ import {
 } from 'erxes-ui/modules';
 import { useState } from 'react';
 import { columns } from './Columns';
+import { IconCaretDownFilled, IconSettings } from '@tabler/icons-react';
 
 type QueryResponse = {
   automationsMain: {
@@ -28,7 +30,9 @@ const List = () => {
   );
 
   if (loading) {
-    return <>Loading...</>;
+    return (
+      <Spinner className="h-full w-full flex justify-center items-center" />
+    );
   }
 
   const { list = [], totalCount = 0, pageInfo } = data?.automationsMain || {};
@@ -61,9 +65,35 @@ const List = () => {
 
   return (
     <>
-      <Button asChild>
-        <Link to={'/automations/edit/1'}>Add</Link>
-      </Button>
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to="/settings/automations">
+                    <IconSettings />
+                    Go to settings
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
+          <PageHeader.LikeButton />
+        </PageHeader.Start>
+        <PageHeader.End>
+          <Button variant="outline" asChild>
+            <Link to="/settings/automations">
+              <IconSettings />
+              Go to settings
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link to={'/automations/create'}>Add</Link>
+          </Button>
+        </PageHeader.End>
+      </PageHeader>
       <RecordTable.Provider
         columns={columns}
         data={list}

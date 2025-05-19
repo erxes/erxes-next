@@ -1,22 +1,23 @@
 import { lazy, Suspense, useState } from 'react';
-import { MainSettingsForm } from '../settings/components/MainSettingsForm';
 import { IIntegrationItem } from '../settings/types/integration';
 import {
   INTEGRATIONS,
   OTHER_INTEGRATIONS,
 } from '../settings/constants/integrations';
 import { IntegrationContext } from '../settings/context/IntegrationContext';
-import { Filter, SettingsHeader, Spinner } from 'erxes-ui';
+import { Filter, Spinner } from 'erxes-ui';
 import { InboxSettingsBreadcrumb } from '../settings/components/InboxSettingsBreadcrumb';
 import { InboxSettingsTopbar } from '../settings/components/InboxSettingsTopbar';
 import { InboxSettingsSidebar } from '../settings/components/Sidebar';
 import { Route, Routes } from 'react-router-dom';
+import { SettingsHeader } from 'ui-modules';
 
 export const InboxMainConfig = lazy(() =>
   import('~/pages/SettingsPage').then((module) => ({
     default: module.SettingsPage,
   })),
 );
+
 export const IntegrationDetailPage = lazy(() =>
   import('~/pages/IntegrationCreatePage').then((module) => ({
     default: module.IntegrationCreatePage,

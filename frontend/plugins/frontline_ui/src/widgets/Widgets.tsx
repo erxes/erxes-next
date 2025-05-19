@@ -2,12 +2,12 @@ import { Widgets as InboxWidgets } from '@/inbox/widgets/Widgets';
 
 const Widgets = ({
   contentType,
-  moduleName,
   contentId,
+  moduleName,
 }: {
-  moduleName: string;
   contentType: string;
   contentId: string;
+  moduleName: string;
 }) => {
   switch (moduleName) {
     case 'inbox':

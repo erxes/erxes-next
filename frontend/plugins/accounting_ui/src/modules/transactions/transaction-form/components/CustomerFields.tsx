@@ -14,20 +14,20 @@ export const CustomerFields = ({
   form: ITransactionGroupForm;
   index: number;
 }) => {
-  const { customerType } = form.watch(`details.${index}`);
+  const { customerType } = form.watch(`trDocs.${index}`);
 
   const SelectComponent =
     customerType === CustomerType.CUSTOMER
       ? SelectCustomer
       : customerType === CustomerType.COMPANY
-      ? SelectCompany
-      : AssignMember;
+        ? SelectCompany
+        : AssignMember;
 
   return (
     <>
       <Form.Field
         control={form.control}
-        name={`details.${index}.customerType`}
+        name={`trDocs.${index}.customerType`}
         render={({ field }) => (
           <Form.Item>
             <Form.Label>Customer Type</Form.Label>
@@ -51,13 +51,13 @@ export const CustomerFields = ({
       />
       <Form.Field
         control={form.control}
-        name={`details.${index}.customerId`}
+        name={`trDocs.${index}.customerId`}
         render={({ field }) => (
           <Form.Item>
             <Form.Label>{customerType}</Form.Label>
             <Form.Control>
               <SelectComponent
-                value={field.value}
+                value={field.value ?? ''}
                 onValueChange={field.onChange}
               />
             </Form.Control>

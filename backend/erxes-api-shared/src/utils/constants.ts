@@ -85,3 +85,8 @@ export const LOG_STATUSES = {
   FAILED: 'failed',
   SUCCESS: 'success',
 };
+
+export const CONFORMITY_TYPE = {
+  customers: 'customer',
+  companies: 'company',
+};

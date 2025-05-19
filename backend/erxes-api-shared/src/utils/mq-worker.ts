@@ -3,6 +3,9 @@ import type { Redis } from 'ioredis';
 import type { Job, Worker as WorkerType } from 'bullmq';
 import { redis } from './redis';
 
+const queueMap = new Map<string, Queue>();
+const queueEventsMap = new Map<string, QueueEvents>();
+
 export const createMQWorkerWithListeners = (
   service: string,
   queueName: string,
@@ -53,6 +56,7 @@ export const sendWorkerMessage = async ({
   subdomain,
   data,
   defaultValue,
+  timeout = 3000,
 }: {
   serviceName: string;
   queueName: string;
@@ -60,21 +64,39 @@ export const sendWorkerMessage = async ({
   subdomain: string;
   data: any;
   defaultValue?: any;
+  timeout?: number;
 }) => {
   const queueKey = `${serviceName}-${queueName}`;
 
-  const queue = new Queue(queueKey, {
-    connection: redis,
+  // Get or create the Queue instance
+  let queue = queueMap.get(queueKey);
+  if (!queue) {
+    queue = new Queue(queueKey, { connection: redis });
+    queueMap.set(queueKey, queue);
+  }
+
+  // Get or create the QueueEvents instance
+  let queueEvents = queueEventsMap.get(queueKey);
+  if (!queueEvents) {
+    queueEvents = new QueueEvents(queueKey, { connection: redis });
+    await queueEvents.waitUntilReady(); // Only need to wait on first init
+    queueEventsMap.set(queueKey, queueEvents);
+  }
+
+  const job = await queue.add(
+    jobName,
+    { subdomain, data },
+    { attempts: 3, backoff: timeout },
+  );
+  const result = await Promise.race([
+    job.waitUntilFinished(queueEvents),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Worker timeout')), timeout),
+    ),
+  ]).catch((err) => {
+    console.error(`[Worker Error] ${queueKey}:${jobName}: ${err.message}`);
+    return defaultValue;
   });
 
-  const queueEvents = new QueueEvents(queueKey, {
-    connection: redis,
-  });
-
-  await queueEvents.waitUntilReady(); // Ensures the events are ready before waiting for job completion
-
-  const job = await queue.add(jobName, { subdomain, data });
-
-  const result = await job.waitUntilFinished(queueEvents);
   return result || defaultValue;
 };

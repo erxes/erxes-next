@@ -215,8 +215,6 @@ export const generateQueryBySegment = async (
         value: condition.propertyValue || '',
       });
 
-      negativeQuery = negativeQuery;
-
       for (const serviceConfig of pluginConfigs) {
         const { contentTypes, propertyConditionExtenderAvailable } =
           serviceConfig;
@@ -285,7 +283,7 @@ export const generateQueryBySegment = async (
 
   for (const condition of eventConditions) {
     const {
-      eventOccurence,
+      eventOccurrence,
       eventName,
       eventOccurenceValue,
       eventAttributeFilters = [],
@@ -297,7 +295,7 @@ export const generateQueryBySegment = async (
       },
     });
 
-    if (eventOccurence === 'exactly') {
+    if (eventOccurrence === 'exactly') {
       eventPositive.push({
         term: {
           count: eventOccurenceValue,
@@ -305,7 +303,7 @@ export const generateQueryBySegment = async (
       });
     }
 
-    if (eventOccurence === 'atleast') {
+    if (eventOccurrence === 'atleast') {
       eventPositive.push({
         range: {
           count: {
@@ -315,7 +313,7 @@ export const generateQueryBySegment = async (
       });
     }
 
-    if (eventOccurence === 'atmost') {
+    if (eventOccurrence === 'atmost') {
       eventPositive.push({
         range: {
           count: {
@@ -639,7 +637,7 @@ export const generateNestedQuery = (
   );
   updatedQuery = JSON.parse(updatedQuery);
 
-  const er = {
+  return {
     nested: {
       path: kind,
       query: {
@@ -656,6 +654,4 @@ export const generateNestedQuery = (
       },
     },
   };
-
-  return er;
 };

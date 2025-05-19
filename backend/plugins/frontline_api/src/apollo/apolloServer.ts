@@ -12,8 +12,8 @@ import { gql } from 'graphql-tag';
 import { generateModels } from '~/connectionResolvers';
 import * as typeDefDetails from '~/apollo/schema/schema';
 import resolvers from './resolvers';
+import { apolloCommonTypes } from 'erxes-api-shared/utils';
 import { IMainContext } from 'erxes-api-shared/core-types';
-
 // load environment variables
 dotenv.config();
 
@@ -24,6 +24,7 @@ export const initApolloServer = async (app, httpServer) => {
 
   const typeDefs = async () => {
     return gql(`
+      ${apolloCommonTypes}
       ${types}
       extend type Query {
         ${queries}

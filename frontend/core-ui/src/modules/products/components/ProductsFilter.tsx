@@ -1,15 +1,14 @@
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 import { IconSearch } from '@tabler/icons-react';
 import { Combobox, Command, Filter } from 'erxes-ui';
 import { TagsFilter } from 'ui-modules';
+import { PRODUCTS_CURSOR_SESSION_KEY } from '../constants/productsCursorSessionKey';
 
 export const ProductsFilter = () => {
   return (
-    <Filter id="products-filter">
-      <Filter.Bar className="overflow-auto styled-scroll">
-        <div className="flex flex-wrap items-center gap-2 flex-1">
-          <ProductsFilterPopover />
-        </div>
+    <Filter id="products-filter" sessionKey={PRODUCTS_CURSOR_SESSION_KEY}>
+      <Filter.Bar>
+        <ProductsFilterPopover />
       </Filter.Bar>
     </Filter>
   );
@@ -18,7 +17,7 @@ export const ProductsFilter = () => {
 export const ProductsFilterPopover = () => {
   return (
     <>
-      <Filter.Popover scope={PageHotkeyScope.ProductsPage}>
+      <Filter.Popover scope={ProductHotKeyScope.ProductsPage}>
         <Filter.Trigger />
         <Combobox.Content>
           <Filter.View>

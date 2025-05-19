@@ -5,7 +5,7 @@ import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
 
 export const SettingsProfilePage = () => {
   return (
-    <ScrollArea>
+    <section className="mx-auto flex w-full h-screen relative">
       <section className="mx-auto max-w-2xl w-full overflow-y-auto pb-10">
         <div className="px-4 h-16 flex items-center">
           <SettingsBreadcrumbs />
@@ -15,6 +15,6 @@ export const SettingsProfilePage = () => {
           <ProfileForm />
         </div>
       </section>
-    </ScrollArea>
+    </section>
   );
 };

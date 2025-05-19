@@ -1,3 +1,4 @@
+import { cursorParams } from '@/inbox/graphql/schemas/conversation';
 export const types = `
   input InputRule {
     _id : String!,
@@ -53,7 +54,11 @@ export const types = `
     details: JSON
     callData: CloudflareCallsData
   }
-  
+    type IntegrationRespone {
+    list: [Integration],
+    pageInfo: PageInfo
+    totalCount: Int,
+  }
 
   type integrationsTotalCount {
     total: Int
@@ -68,6 +73,7 @@ export const types = `
     _id: String
     name: String
   }
+
   input BotPersistentMenuTypeMessenger {
     _id: String
     type: String
@@ -153,6 +159,7 @@ export const types = `
 
 export const queries = `
   integrations(
+    ${cursorParams},
     page: Int,
     perPage: Int,
     kind: String,
@@ -164,10 +171,9 @@ export const queries = `
     formLoadType: String,
     sortField: String
     sortDirection: Int
-  ): [Integration]
+  ): IntegrationRespone
 
   allLeadIntegrations: [Integration]
-
   integrationsGetUsedTypes: [integrationsGetUsedTypes]
   integrationGetLineWebhookUrl(_id: String!): String
   integrationDetail(_id: String!): Integration

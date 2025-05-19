@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import { IUserDocument } from './modules/team-member/user';
 
 export interface IRule {
@@ -59,10 +58,11 @@ export interface IPdfAttachment {
 }
 
 export interface IMainContext {
-  req: Request;
-  res: Response;
+  res: any;
+  req: any;
   requestInfo: any;
   user: IUserDocument;
+  models?: any;
   __: <T extends object>(doc: T) => T & { processId: string };
   processId: string;
 }

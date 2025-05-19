@@ -7,6 +7,16 @@ import {
 } from '@xyflow/react';
 import { Button } from 'erxes-ui/components';
 import { IconScissors } from '@tabler/icons-react';
+import { useFormContext } from 'react-hook-form';
+import { TAutomationProps } from '../common/formSchema';
+import { NodeData } from '~/modules/app/types';
+import { IAction, ITrigger } from 'ui-modules';
+
+type T = {
+  name: 'actions' | 'triggers';
+  field: 'nexActionId' | 'actionID';
+  list: any[];
+};
 
 const Edge: FC<EdgeProps> = ({
   id,
@@ -30,7 +40,16 @@ const Edge: FC<EdgeProps> = ({
     targetPosition,
   });
 
-  const { onDisconnect } = data || ({} as any);
+  const type = (data || {}).type as 'action' | 'trigger';
+  const { watch, setValue } = useFormContext<TAutomationProps>();
+  const { actions = [], triggers = [] } = watch('detail');
+
+  const types = {
+    action: { list: actions, name: 'actions', field: 'nextActionId' },
+    trigger: { list: triggers, name: 'triggers', field: 'actionId' },
+  };
+
+  const { name, list = [], field } = types[type] as T;
 
   return (
     <>
@@ -48,12 +67,12 @@ const Edge: FC<EdgeProps> = ({
               className="rounded-full"
               size="icon"
               onClick={() => {
-                onDisconnect &&
-                  onDisconnect({
-                    id,
-                    source,
-                    sourceHandle: sourceHandleId,
-                  });
+                setValue(
+                  `detail.${name}`,
+                  list.map((item) =>
+                    item.id === source ? { ...item, [field]: undefined } : item,
+                  ),
+                );
               }}
             >
               <IconScissors className="w-4 h-4 text-red-500" />

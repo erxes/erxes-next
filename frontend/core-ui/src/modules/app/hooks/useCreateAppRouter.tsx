@@ -12,7 +12,7 @@ import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 import { AppPath } from '@/types/paths/AppPath';
-import { DefaultLayout } from '@/ui/components/DefaultLayout';
+import { DefaultLayout } from '@/app/components/MainLayout';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { OnBoarding } from '~/pages/onboarding/Onboarding';
 import { Providers } from '~/providers';

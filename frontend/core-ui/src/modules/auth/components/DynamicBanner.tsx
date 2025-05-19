@@ -4,9 +4,9 @@ export const DynamicBanner = () => {
   return (
     <div className="hidden lg:block lg:w-1/2 h-screen relative bg-foreground overflow-hidden z-10">
       <Polygons />
-      <div className="w-full h-full flex flex-col items-center justify-center text-white">
+      <div className="w-full h-full flex flex-col items-center justify-center text-primary-foreground">
         <div className="absolute top-7 ">
-          <Logo fill="white" />
+          <Logo />
         </div>
         <div className="max-w-[500px] flex-col flex justify-center gap-2">
           <h1 className="text-2xl font-semibold leading-7 text-background">

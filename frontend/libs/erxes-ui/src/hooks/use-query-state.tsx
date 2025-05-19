@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 
 // Single key types and hook
-type QueryState<T> = [T | null, (value: T | null) => void];
+export type QueryState<T> = [T | null, (value: T | null) => void];
 
 export function useQueryState<T>(
   queryKey: string,

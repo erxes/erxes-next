@@ -8,12 +8,11 @@ export const CompaniesRecordTable = () => {
 
   const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
     pageInfo || {};
-
   return (
     <RecordTable.Provider
       columns={companyColumns}
       data={companies || []}
-      stickyColumns={['more', 'checkbox', 'avatar', 'name']}
+      stickyColumns={['more', 'checkbox', 'avatar', 'primaryName']}
       className="m-3"
     >
       <RecordTable.CursorProvider
@@ -28,13 +27,11 @@ export const CompaniesRecordTable = () => {
           <RecordTable.Body>
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
-              startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
             <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
-              endCursor={endCursor}
             />
           </RecordTable.Body>
         </RecordTable>

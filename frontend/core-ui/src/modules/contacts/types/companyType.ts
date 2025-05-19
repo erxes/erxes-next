@@ -12,4 +12,6 @@ export interface TCompany {
   location?: {
     countryCode?: CountryCode | undefined;
   };
+  emailValidationStatus?: 'valid' | 'invalid';
+  phoneValidationStatus?: 'valid' | 'invalid';
 }

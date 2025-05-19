@@ -7,10 +7,10 @@ export const conformityQueryFields = `
 `;
 
 export const types = `
-    type Company @key(fields: "_id") @cacheControl(maxAge: 3) {
+  type Company @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id:String
     createdAt: Date
-    modifiedAt: Date
+    updatedAt: Date
     avatar: String
 
     size: Int
@@ -59,10 +59,13 @@ export const types = `
 
 const queryParams = `
   segment: String
-  tag: String
-  tags: [String]
-  excludeTags: [String]
+
+  tagIds: [String]
+  excludeTagIds: [String]
   tagWithRelated: Boolean
+
+  brandIds: [String]
+
   ids: [String]
   excludeIds: Boolean
   searchValue: String
@@ -70,7 +73,6 @@ const queryParams = `
   autoCompletionType: String
   sortField: String
   sortDirection: Int
-  brand: String
   dateFilters: String
   segmentData: String
   limit: Int
