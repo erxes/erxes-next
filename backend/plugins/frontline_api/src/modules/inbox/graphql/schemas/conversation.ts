@@ -191,7 +191,6 @@ const convertParams = `
   direction: CURSOR_DIRECTION
 `
 const filterParams = `
-  limit: Int,
   ids: [String]
   ${cursorParams}
   ${mutationFilterParams}
