@@ -12,10 +12,8 @@ import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components
 import {
   Button,
   DropdownMenu,
-  Input,
   Separator,
   TextOverflowTooltip,
-  Form,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
@@ -28,10 +26,6 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
 import { usePhoneFields } from '../hooks/usePhoneFields';
 import { PhoneFieldsContext } from '../contexts/PhoneFieldsContext';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { emailSchema } from '../validations/emailValidation';
 
 export interface IPhoneField {
   phone?: string;
@@ -68,6 +62,7 @@ export const PhoneListField = ({
 }) => {
   const setPhones = useSetAtom(phonesFamilyState(recordId));
   const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+
   useEffect(() => {
     setPhones(phones);
     return () => {
@@ -284,7 +279,7 @@ const PhoneForm = () => {
       {showPhoneInput && (
         <div className="px-1 pb-1">
           <PhoneInput
-            placeholder={!!editingPhone ? 'Edit phone' : 'Add phone'}
+            placeholder={editingPhone ? 'Edit phone' : 'Add phone'}
             defaultCountry="MN"
             value={newPhone}
             onChange={(phone) => {
@@ -320,7 +315,7 @@ const PhoneForm = () => {
           }}
         >
           <IconPlus />
-          {!!editingPhone ? 'Edit phone' : 'Add phone'}
+          {editingPhone ? 'Edit phone' : 'Add phone'}
         </Button>
       </div>
     </>

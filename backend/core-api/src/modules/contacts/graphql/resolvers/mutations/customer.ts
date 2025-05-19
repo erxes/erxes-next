@@ -1,3 +1,4 @@
+import { checkPermission } from 'erxes-api-shared/core-modules';
 import { ICustomer, ICustomerDocument } from 'erxes-api-shared/core-types';
 import { getEnv, getPlugins, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
@@ -254,3 +255,14 @@ export const customerMutations = {
     );
   },
 };
+
+checkPermission(customerMutations, 'customersAdd', 'customersAdd');
+checkPermission(customerMutations, 'customersEdit', 'customersEdit');
+checkPermission(customerMutations, 'customersEditByField', 'customersEdit');
+checkPermission(customerMutations, 'customersMerge', 'customersMerge');
+checkPermission(customerMutations, 'customersRemove', 'customersRemove');
+checkPermission(
+  customerMutations,
+  'customersChangeState',
+  'customersChangeState',
+);

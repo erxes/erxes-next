@@ -216,11 +216,11 @@ export const facebookQueries = {
   ) {
     const { conversationId, limit, skip, getFirst } = args;
 
-    const conversation = await models.Conversations.findOne({
+    const conversation = await models.FacebookConversations.findOne({
       erxesApiId: conversationId,
     });
     let messages: IFacebookConversationMessageDocument[] = [];
-    const query = await buildSelector(conversationId, models.Conversations);
+    const query = await buildSelector(conversationId, models.FacebookConversations);
     if (conversation) {
       if (limit) {
         const sort: any = getFirst ? { createdAt: 1 } : { createdAt: -1 };
@@ -273,7 +273,7 @@ export const facebookQueries = {
     { conversationId }: { conversationId: string },
     { models }: IContext,
   ) {
-    const selector = await buildSelector(conversationId, models.Conversations);
+    const selector = await buildSelector(conversationId, models.FacebookConversations);
 
     return models.FacebookConversationMessages.countDocuments(selector);
   },
@@ -325,7 +325,7 @@ export const facebookQueries = {
         const splitBrandIds = BrandId.split(',');
         for (const brandId of splitBrandIds) {
           try {
-            response = await models.Integrations.find({
+            response = await models.FacebookIntegrations.find({
               kind: 'facebook-post',
               brandId: brandId,
             });
@@ -342,7 +342,7 @@ export const facebookQueries = {
       filteredBrandIds.length === 0
     ) {
       try {
-        const response = await models.Integrations.find({
+        const response = await models.FacebookIntegrations.find({
           kind: 'facebook-post',
         });
 
@@ -444,14 +444,14 @@ export const facebookQueries = {
     { conversationId }: IConversationId,
     { models, subdomain }: IContext,
   ) {
-    const inboxConversation = await models.Conversations.findOne({
+    const inboxConversation = await models.FacebookConversations.findOne({
       _id: conversationId,
     });
 
     let integration;
 
     if (inboxConversation) {
-      integration = await models.Integrations.findOne({
+      integration = await models.FacebookIntegrations.findOne({
         _id: inboxConversation.integrationId,
       });
     }
@@ -460,7 +460,7 @@ export const facebookQueries = {
       return false;
     }
 
-    const query = await buildSelector(conversationId, models.Conversations);
+    const query = await buildSelector(conversationId, models.FacebookConversations);
 
     const messages = await models.FacebookConversationMessages.find({
       ...query,
