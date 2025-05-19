@@ -1,8 +1,12 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
 export const GET_CONVERSATIONS = gql`
   query Conversations(
-    $limit: Int
     $channelId: String
     $status: String
     $unassigned: String
@@ -13,12 +17,11 @@ export const GET_CONVERSATIONS = gql`
     $startDate: String
     $endDate: String
     $segment: String
-    $skip: Int
     $awaitingResponse: String
     $participating: String
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
     conversations(
-      limit: $limit
       channelId: $channelId
       status: $status
       unassigned: $unassigned
@@ -29,47 +32,35 @@ export const GET_CONVERSATIONS = gql`
       startDate: $startDate
       endDate: $endDate
       segment: $segment
-      skip: $skip
       awaitingResponse: $awaitingResponse
       participating: $participating
+      ${GQL_CURSOR_PARAMS}
     ) {
-      _id
-      content
-      createdAt
-      updatedAt
-      integration {
-        name
-        kind
-        brand {
-          name
-        }
-      }
-      customer {
+      list {
         _id
-        firstName
-        middleName
-        lastName
-        primaryEmail
-        avatar
-        primaryPhone
+        content
+        createdAt
+        updatedAt
+        integration {
+          name
+          kind
+          brand {
+            name
+          }
+        }
+        customer {
+          _id
+          firstName
+          middleName
+          lastName
+          primaryEmail
+          avatar
+          primaryPhone
+        }
+        readUserIds
+        tagIds
       }
-      readUserIds
-      tagIds
+      ${GQL_PAGE_INFO}
     }
-    conversationsTotalCount(
-      limit: $limit
-      channelId: $channelId
-      status: $status
-      unassigned: $unassigned
-      brandId: $brandId
-      tag: $tag
-      integrationType: $integrationType
-      starred: $starred
-      startDate: $startDate
-      endDate: $endDate
-      segment: $segment
-      participating: $participating
-      awaitingResponse: $awaitingResponse
-    )
   }
 `;
