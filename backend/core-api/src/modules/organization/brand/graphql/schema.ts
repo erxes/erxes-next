@@ -9,11 +9,24 @@ export const types = `
     emailConfig: JSON
     memberIds: [String]
   }
+
+  type BrandListResponse {
+    list: [Brand]
+    totalCount: Int
+    pageInfo: PageInfo
+  }
+`;
+
+const queryParams = `
+  searchValue: String
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
 `;
 
 export const queries = `
   allBrands: [Brand]
-  brands(page: Int, perPage: Int, searchValue: String): [Brand]
+  brands(${queryParams}): BrandListResponse
   brandDetail(_id: String!): Brand
   brandsTotalCount: Int
   brandsGetLast: Brand

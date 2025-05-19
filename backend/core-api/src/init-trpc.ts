@@ -6,6 +6,7 @@ import { getSubdomain } from 'erxes-api-shared/utils';
 
 import { conformityTrpcRouter } from '~/modules/conformities/trpc/conformity';
 import { contactTrpcRouter } from '~/modules/contacts/trpc';
+import { exchangeRateTrpcRouter } from '~/modules/exchangeRates/trpc/exchangeRate';
 import { brandTrpcRouter } from '~/modules/organization/brand/trpc/brand';
 import { configTrpcRouter } from '~/modules/organization/settings/trpc/config';
 import { structureTrpcRouter } from '~/modules/organization/structure/trpc';
@@ -14,8 +15,8 @@ import { productTrpcRouter } from '~/modules/products/trpc';
 import { relationTrpcRouter } from '~/modules/relations/trpc/relation';
 import { tagTrpcRouter } from '~/modules/tags/trpc/tag';
 import { generateModels } from './connectionResolvers';
-import { exchangeRateTrpcRouter } from '~/modules/exchangeRates/trpc/exchangeRate';
 import { formsTrpcRouter } from './modules/forms/trpc';
+import { permissionTrpcRouter } from './modules/permissions/trpc';
 
 export const createContext = async ({
   req,
@@ -44,7 +45,8 @@ export const appRouter = t.mergeRouters(
   productTrpcRouter,
   brandTrpcRouter,
   tagTrpcRouter,
-  exchangeRateTrpcRouter
+  exchangeRateTrpcRouter,
+  permissionTrpcRouter,
 );
 
 export type AppRouter = typeof appRouter;
