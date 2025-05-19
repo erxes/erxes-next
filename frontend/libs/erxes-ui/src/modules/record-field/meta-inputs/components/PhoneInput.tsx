@@ -13,10 +13,14 @@ interface PhoneInputProps {
   className?: string;
   defaultCountry?: CountryCode;
   placeholder?: string;
+  onEnter?: (phone: string) => void;
 }
 
 export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
-  ({ value, onChange, className, defaultCountry, placeholder }, ref) => {
+  (
+    { value, onChange, className, defaultCountry, placeholder, onEnter },
+    ref,
+  ) => {
     const defaultCountryCode =
       defaultCountry || (CountryPhoneCodes[0].code as CountryCode);
 
@@ -104,14 +108,19 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     };
 
     return (
-      <div className={cn('flex items-center justify-start', className)}>
+      <div
+        className={cn(
+          'flex items-center justify-start bg-muted rounded-md',
+          className,
+        )}
+      >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               aria-expanded={open}
-              className="rounded-l-md shadow-none size-7 focus-visible:ring-none focus:ring-none focus:shadow-focus focus:border-none focus:z-10"
+              className="rounded-l-md size-cell focus-visible:ring-0 border-0 bg-transparent"
             >
               <span>{selectedCountry.flag}</span>
             </Button>
@@ -152,6 +161,14 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           placeholder={placeholder}
           ref={ref}
           variant="secondary"
+          className="bg-transparent"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              const target = e.target as HTMLInputElement;
+              onEnter?.(target.value);
+              e.preventDefault();
+            }
+          }}
         />
       </div>
     );

@@ -82,6 +82,12 @@ import {
 } from '@/products/graphql/schemas';
 
 import {
+  mutations as ExchangeRateMutations,
+  queries as ExchangeRateQueries,
+  types as ExchangeRateTypes,
+} from '~/modules/exchangeRates/graphql/schemas';
+
+import {
   mutations as SegmentMutations,
   queries as SegmentQueries,
   types as SegmentTypes,
@@ -138,6 +144,7 @@ export const types = `
     ${ConformityTypes}
     ${RelationTypes}
     ${FavoritesTypes}
+    ${ExchangeRateTypes}
   `;
 
 export const queries = `
@@ -159,6 +166,7 @@ export const queries = `
     ${SegmentQueries}
     ${RelationQueries}
     ${FavoritesQueries}
+    ${ExchangeRateQueries}
   `;
 
 export const mutations = `
@@ -180,6 +188,7 @@ export const mutations = `
     ${ConformityMutations}
     ${RelationMutations}
     ${FavoritesMutations}
+    ${ExchangeRateMutations}
   `;
 
 export default { types, queries, mutations };

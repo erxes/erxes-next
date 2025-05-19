@@ -22,7 +22,7 @@ export const receiveTrpcMessage = async (
 ): Promise<RPResult> => {
   const { action, metaInfo, payload } = data;
   const { Integrations, ConversationMessages, Conversations } =
-  await generateModels(subdomain);
+    await generateModels(subdomain);
 
   const doc = JSON.parse(payload || '{}');
 
@@ -40,7 +40,7 @@ export const receiveTrpcMessage = async (
     let customer;
 
     const getCustomer = async (selector) =>
-      sendTRPCMessage({
+      await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
         module: 'customer',
@@ -51,7 +51,7 @@ export const receiveTrpcMessage = async (
       customer = await getCustomer({ primaryPhone });
 
       if (customer) {
-       await sendTRPCMessage({
+        await sendTRPCMessage({
           pluginName: 'core',
           method: 'mutation', // this is a mutation, not a query
           module: 'customer',
@@ -62,7 +62,7 @@ export const receiveTrpcMessage = async (
               doc,
             },
           },
-        });    
+        });
         return sendSuccess({ _id: customer._id });
       }
     }
@@ -79,13 +79,14 @@ export const receiveTrpcMessage = async (
         method: 'mutation',
         module: 'customer',
         action: 'createCustomer',
-        input: {    
-           doc: {
-           ...doc,
-           scopeBrandIds: integration.brandId,
-          }, },
+        input: {
+          doc: {
+            ...doc,
+            scopeBrandIds: integration.brandId,
+          },
+        },
       });
-    } 
+    }
     return sendSuccess({ _id: customer._id });
   }
 
@@ -94,16 +95,17 @@ export const receiveTrpcMessage = async (
     let user;
 
     if (owner) {
-       user=  await sendTRPCMessage({
+      user = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
         module: 'user',
         action: 'findOne',
-        input: {    
-           doc: {
+        input: {
+          doc: {
             'details.operatorPhone': owner,
-          }, },
-      });  
+          },
+        },
+      });
     }
 
     let assignedUserId = user ? user._id : null;
@@ -187,19 +189,19 @@ export const receiveTrpcMessage = async (
     );
 
     // FIXME: Find userId and `conversationClientMessageInserted:${userId}`
-//   graphqlPubsub.publish<{ conversationClientMessageInserted: any }>(
-//     'conversationClientMessageInserted',
-//     {
-//       conversationClientMessageInserted: message,
-//     }
-// );
+    //   graphqlPubsub.publish<{ conversationClientMessageInserted: any }>(
+    //     'conversationClientMessageInserted',
+    //     {
+    //       conversationClientMessageInserted: message,
+    //     }
+    // );
 
-//     graphqlPubsub.publish(
-//       `conversationMessageInserted:${message.conversationId}`,
-//       {
-//         conversationMessageInserted: message,
-//       },
-//     );
+    //     graphqlPubsub.publish(
+    //       `conversationMessageInserted:${message.conversationId}`,
+    //       {
+    //         conversationMessageInserted: message,
+    //       },
+    //     );
 
     return sendSuccess({ _id: message._id });
   }

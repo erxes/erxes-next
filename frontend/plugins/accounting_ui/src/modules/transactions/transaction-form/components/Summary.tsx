@@ -1,22 +1,25 @@
 import { Button } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
+import { TR_SIDES } from '../../types/constants';
 import { ITransactionGroupForm } from '../types/AddTransaction';
 
 export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
-  const { details } = useWatch({ control: form.control });
+  const { trDocs } = useWatch({ control: form.control });
   const sumDebit =
-    details?.reduce((acc, curr) => {
+    trDocs?.reduce((acc, curr) => {
       return (
-        acc +
-        (['dt', 'incoming'].includes(curr?.side || '') ? curr?.amount ?? 0 : 0)
+        acc + (
+          curr && curr.details && curr?.details[0]?.side === TR_SIDES.DEBIT ? (curr?.details[0]?.amount ?? 0) : 0
+        )
       );
     }, 0) ?? 0;
 
   const sumCredit =
-    details?.reduce((acc, curr) => {
+    trDocs?.reduce((acc, curr) => {
       return (
-        acc +
-        (['ct', 'outgoing'].includes(curr?.side || '') ? curr?.amount ?? 0 : 0)
+        acc + (
+          curr && curr.details && curr?.details[0]?.side === TR_SIDES.CREDIT ? (curr?.details[0]?.amount ?? 0) : 0
+        )
       );
     }, 0) ?? 0;
 

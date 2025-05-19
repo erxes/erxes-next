@@ -8,6 +8,4 @@ export const JOURNAL_LABELS = {
   [JournalEnum.INVENTORY]: 'Inventory',
   [JournalEnum.FIXED_ASSET]: 'Fixed Asset',
   [JournalEnum.TAX]: 'Tax',
-  [JournalEnum.INV_INCOME]: 'Inventory Income',
-  [JournalEnum.INV_OUT]: 'Inventory Out',
 };

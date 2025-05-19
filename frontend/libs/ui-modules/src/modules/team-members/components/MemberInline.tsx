@@ -72,7 +72,7 @@ export const MemberInlineAvatar = React.forwardRef<
     showTooltip?: boolean;
   }
 >(({ showTooltip, ...props }, ref) => {
-  const { avatar, fullName, loading, _id } = useMemberInlineContext();
+  const { avatar, fullName, loading } = useMemberInlineContext();
 
   if (loading)
     return <Skeleton className={avatarVariants({ size: props.size })} />;

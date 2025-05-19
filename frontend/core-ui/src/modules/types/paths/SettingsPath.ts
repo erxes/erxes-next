@@ -12,7 +12,8 @@ export enum SettingsWorkspacePath {
   Permission = 'permission',
   TeamMember = 'team-member',
   Structure = 'structure',
-  StructureCatchAll= 'structure/*'
+  StructureCatchAll = 'structure/*',
+  Tags = 'tags',
 }
 
 export type TSettingPath = {

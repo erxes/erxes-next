@@ -5,7 +5,6 @@ import {
   RadioGroup,
   Tabs,
 } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
 import { useEffect, useId, useRef, useState } from 'react';
 import { getActiveTab } from '../utlis/getActiveTab';
 import { parseDateRangeFromString } from '../utlis/parseDateRangeFromString';
@@ -14,10 +13,12 @@ import { useFilterContext } from 'erxes-ui/modules';
 import { getYearsArray } from '../utlis/getYears';
 import { cn } from 'erxes-ui/lib';
 import { MONTHS, QUARTERS } from '../constants/dateTypes';
+import { useFilterQueryState } from '../../hooks/useFilterQueryState';
 
 export const FilterDialogDateView = ({ filterKey }: { filterKey: string }) => {
+  const { sessionKey } = useFilterContext();
   const [tabs, setTabs] = useState('day');
-  const [value, setValue] = useQueryState<string>(filterKey);
+  const [value, setValue] = useFilterQueryState<string>(filterKey, sessionKey);
   const { resetFilterState } = useFilterContext();
   const [currentDateRange, setCurrentDateRange] = useState<
     DateRange | undefined

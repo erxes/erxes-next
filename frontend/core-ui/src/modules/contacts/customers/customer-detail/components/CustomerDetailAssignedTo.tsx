@@ -1,4 +1,4 @@
-import { AssignMember } from 'ui-modules';
+import { SelectMember } from 'ui-modules';
 import { Label } from 'erxes-ui';
 import { useState } from 'react';
 
@@ -8,12 +8,10 @@ export const CustomerDetailAssignedTo = ({ ownerId }: { ownerId: string }) => {
     <div className="px-8 space-y-2">
       <Label>Assigned To</Label>
       <div>
-        <AssignMember
+        <SelectMember.Detail
           value={_ownerId}
-          onValueChange={setOwnerId}
+          onValueChange={(value) => setOwnerId(value as string)}
           className="min-w-60"
-          variant="ghost"
-          size="lg"
         />
       </div>
     </div>

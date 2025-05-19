@@ -4,4 +4,9 @@ export interface ICompany {
   primaryName?: string;
   names?: string[];
   primaryEmail?: string;
+  emails?: string[];
+  emailValidationStatus?: 'valid' | 'invalid';
+  primaryPhone?: string;
+  phones?: string[];
+  phoneValidationStatus?: 'valid' | 'invalid';
 }

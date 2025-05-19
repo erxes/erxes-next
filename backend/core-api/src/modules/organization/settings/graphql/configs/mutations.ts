@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import { getCoreDomain, resetConfigsCache } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
-export const configMutations = {
+export const organizationConfigMutations = {
   /**
    * Create or update config object
    */

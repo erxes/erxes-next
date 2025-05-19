@@ -1,20 +1,32 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_PAGE_INFO,
+  GQL_CURSOR_PARAMS,
+} from 'erxes-ui';
 
 export const GET_USERS = gql`
-  query Users($page: Int, $perPage: Int, $searchValue: String, $ids: [String]) {
+  query Users(
+    $searchValue: String
+    $ids: [String]
+    $excludeIds: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
+  ) {
     users(
-      page: $page
-      perPage: $perPage
       searchValue: $searchValue
       ids: $ids
+      excludeIds: $excludeIds
+      ${GQL_CURSOR_PARAMS}
     ) {
-      _id
-      details {
-        avatar
-        fullName
+      list {
+        _id
+        details {
+          avatar
+          fullName
+        }
       }
+      ${GQL_PAGE_INFO}
     }
-    usersTotalCount(searchValue: $searchValue, ids: $ids)
   }
 `;
 

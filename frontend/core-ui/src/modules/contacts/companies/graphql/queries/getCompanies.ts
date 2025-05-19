@@ -6,7 +6,7 @@ import {
 } from 'erxes-ui';
 
 export const GET_COMPANIES = gql`
-  query companiesMain(
+  query companies(
     $segment: String
     $tagIds: [String]
     $ids: [String]
@@ -63,12 +63,7 @@ export const GET_COMPANIES = gql`
         primaryPhone
         businessType
         links
-        owner {
-          _id
-          details {
-            fullName
-          }
-        }
+        ownerId
         tagIds
         score
       }

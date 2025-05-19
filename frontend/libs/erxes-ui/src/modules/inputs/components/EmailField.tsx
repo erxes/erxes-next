@@ -17,6 +17,7 @@ import {
   Form,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+
 import {
   emailsFamilyState,
   showEmailInputFamilyState,
@@ -44,13 +45,15 @@ export const EmailFieldsProvider = ({
   children,
   recordId,
   onValueChange,
+  noValidation,
 }: {
   children: React.ReactNode;
   recordId: string;
   onValueChange: (emails: TEmails) => void;
+  noValidation?: boolean;
 }) => {
   return (
-    <EmailFieldsContext.Provider value={{ recordId, onValueChange }}>
+    <EmailFieldsContext.Provider value={{ recordId, onValueChange, noValidation }}>
       {children}
     </EmailFieldsContext.Provider>
   );
@@ -60,10 +63,12 @@ export const EmailListField = ({
   recordId,
   emails,
   onValueChange,
+  noValidation,
 }: {
   recordId: string;
   emails: TEmails;
   onValueChange: (emails: TEmails) => void;
+  noValidation?: boolean;
 }) => {
   const setEmails = useSetAtom(emailsFamilyState(recordId));
   const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
@@ -73,9 +78,8 @@ export const EmailListField = ({
       setShowEmailInput(false);
     };
   }, [emails, setEmails]);
-
   return (
-    <EmailFieldsProvider recordId={recordId} onValueChange={onValueChange}>
+    <EmailFieldsProvider recordId={recordId} onValueChange={onValueChange} noValidation={noValidation}>
       <div className="p-1 space-y-1">
         <EmailList />
       </div>
@@ -137,7 +141,7 @@ const EmailOptions = ({
   status,
   isPrimary,
 }: IEmailField & { isPrimary?: boolean }) => {
-  const { recordId, onValueChange } = useEmailFields();
+  const { recordId, onValueChange, noValidation } = useEmailFields();
   const [emails, setEmails] = useAtom(emailsFamilyState(recordId));
   const setEditingEmail = useSetAtom(editingEmailFamilyState(recordId));
   const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
@@ -166,9 +170,7 @@ const EmailOptions = ({
     );
   };
   const handleDeleteClick = () => {
-    onValueChange?.(
-      emails.filter((e) => e.email !== email),
-    );
+    onValueChange?.(emails.filter((e) => e.email !== email));
   };
   return (
     <DropdownMenu>
@@ -201,7 +203,7 @@ const EmailOptions = ({
           Edit
         </DropdownMenu.Item>
 
-        {isPrimary && (
+        {isPrimary && !noValidation && (
           <>
             <DropdownMenu.Separator />
             <DropdownMenu.RadioGroup onValueChange={handleVerificationChange}>
@@ -217,7 +219,10 @@ const EmailOptions = ({
           </>
         )}
         <DropdownMenu.Separator />
-        <DropdownMenu.Item className="text-destructive" onClick={handleDeleteClick}>
+        <DropdownMenu.Item
+          className="text-destructive"
+          onClick={handleDeleteClick}
+        >
           <IconTrash />
           Delete
         </DropdownMenu.Item>

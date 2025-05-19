@@ -9,9 +9,10 @@ import {
 
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 
-import { TagsFilter } from 'ui-modules';
+import { SelectMember, TagsFilter } from 'ui-modules';
 import { CustomerTotalCount } from './CustomerTotalCount';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '../constants/customersCursorSessionKey';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 const CustomersFilterPopover = () => {
   const [queries] = useMultiQueryState<{
@@ -28,7 +29,7 @@ const CustomersFilterPopover = () => {
 
   return (
     <>
-      <Filter.Popover scope={PageHotkeyScope.CustomersPage}>
+      <Filter.Popover scope={ContactsHotKeyScope.CustomersPage}>
         <Filter.Trigger isFiltered={hasFilters} />
         <Combobox.Content>
           <Filter.View>
@@ -48,6 +49,7 @@ const CustomersFilterPopover = () => {
                   <IconLabel />
                   Brand
                 </Filter.Item>
+                <SelectMember.FilterItem />
                 <Command.Separator className="my-1" />
                 <Filter.Item value="created">
                   <IconCalendarPlus />
@@ -68,6 +70,7 @@ const CustomersFilterPopover = () => {
               </Command.List>
             </Command>
           </Filter.View>
+          <SelectMember.FilterView />
           <TagsFilter.View tagType="core:customer" />
           <Filter.View filterKey="created">
             <Filter.DateView filterKey="created" />
@@ -109,7 +112,7 @@ export const CustomersFilter = () => {
   const { searchValue, created, updated, lastSeen } = queries || {};
 
   return (
-    <Filter id="customers-filter">
+    <Filter id="customers-filter" sessionKey={CUSTOMERS_CURSOR_SESSION_KEY}>
       <Filter.Bar>
         {searchValue && (
           <Filter.BarItem>
@@ -154,6 +157,7 @@ export const CustomersFilter = () => {
             <Filter.BarClose filterKey="lastSeen" />
           </Filter.BarItem>
         )}
+        <SelectMember.FilterBar />
         <CustomersFilterPopover />
         <CustomerTotalCount />
       </Filter.Bar>
