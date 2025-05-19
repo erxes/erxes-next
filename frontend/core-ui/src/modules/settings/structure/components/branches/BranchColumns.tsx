@@ -22,13 +22,13 @@ export const BranchEditColumnCell = ({
   cell: Cell<IBranchListItem, unknown>;
 }) => {
   const [, setOpen] = useQueryState('branch_id');
-  const setRenderingCustomerDetail = useSetAtom(renderingBranchDetailAtom);
+  const setRenderingBranchDetail = useSetAtom(renderingBranchDetailAtom);
   const { _id } = cell.row.original;
   return (
     <Button
       onClick={() => {
         setOpen(_id);
-        setRenderingCustomerDetail(false);
+        setRenderingBranchDetail(false);
       }}
       variant={'outline'}
     >

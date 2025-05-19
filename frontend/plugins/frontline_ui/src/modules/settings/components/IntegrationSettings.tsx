@@ -9,7 +9,7 @@ export const IntegrationSettings = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-5xl flex flex-col gap-8 h-full w-full mx-aut px-5">
+    <div className="max-w-5xl flex flex-col gap-8 h-full w-full mx-auto px-5">
       <div className="py-4">
         <Button
           variant="ghost"

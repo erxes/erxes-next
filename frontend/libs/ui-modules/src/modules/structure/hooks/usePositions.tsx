@@ -15,10 +15,12 @@ export const usePositions = (options?: OperationVariables) => {
     });
   };
 
-  const positions = data ? data.positions : [];
+  const positions = data ? data.positionsMain?.list : [];
 
   return {
     positions,
+    totalCount: data ? data.positionsMain?.totalCount : 0,
+    pageInfo: data ? data.positionsMain?.pageInfo : undefined,
     loading,
     error,
     handleFetchMore,

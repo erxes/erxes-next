@@ -13,7 +13,7 @@ export default function BranchesSettings() {
       <RecordTable.Provider
         data={branches || []}
         columns={BranchColumns}
-        stickyColumns={['checkbox', 'code', ' title']}
+        stickyColumns={['checkbox', 'code', 'title']}
       >
         <RecordTable.Scroll>
           <RecordTable>

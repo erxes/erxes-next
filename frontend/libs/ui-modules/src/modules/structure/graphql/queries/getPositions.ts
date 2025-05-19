@@ -1,4 +1,9 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
 export const GET_POSITIONS_QUERY = gql`
   query Positions(
@@ -8,34 +13,33 @@ export const GET_POSITIONS_QUERY = gql`
     $onlyFirstLevel: Boolean
     $parentId: String
     $sortField: String
-    $limit: Int
-    $direction: CURSOR_DIRECTION
-    $cursor: String
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
-    positions(
+    positionsMain(
       ids: $ids
       searchValue: $searchValue
       status: $status
       onlyFirstLevel: $onlyFirstLevel
       parentId: $parentId
       sortField: $sortField
-      limit: $limit
-      direction: $direction
-      cursor: $cursor
+      ${GQL_CURSOR_PARAMS}
     ) {
-      _id
-      children {
+      lsit {
         _id
+        children {
+          _id
+          code
+          title
+          userCount
+        }
         code
+        order
+        parentId
+        status
         title
         userCount
       }
-      code
-      order
-      parentId
-      status
-      title
-      userCount
+      ${GQL_PAGE_INFO}
     }
   }
 `;

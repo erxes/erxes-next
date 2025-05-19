@@ -2,7 +2,6 @@ import { IconChartPie2 } from '@tabler/icons-react';
 import { Button, Separator } from 'erxes-ui';
 import { useLocation } from 'react-router';
 import { SETTINGS_ROUTES } from '../constants/structure-routes';
-import { useBranchesList } from '../hooks/useBranchesList';
 import { BranchesTotalCount } from './branches/BranchesTotalCount';
 import { DepartmentsTotalCount } from './departments/DepartmentsTotalCount';
 import { UnitsTotalCount } from './units/UnitsTotalCount';
@@ -10,7 +9,6 @@ import { PositionsTotalCount } from './positions/PositionsTotalCount';
 
 export function StructureSettingsBreadcrumb() {
   const { pathname } = useLocation();
-  const { totalCount: branchescount } = useBranchesList();
   return (
     <>
       <Button variant="ghost" className="font-semibold">

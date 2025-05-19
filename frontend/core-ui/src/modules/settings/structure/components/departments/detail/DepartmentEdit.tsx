@@ -7,7 +7,7 @@ import { useDepartmentDetailsById } from '@/settings/structure/hooks/useDepartme
 import { useDepartmentEdit } from '@/settings/structure/hooks/useDepartmentActions';
 import { useDepartmentForm } from '@/settings/structure/hooks/useDepartmentForm';
 import { TDepartmentForm } from '@/settings/structure/types/department';
-import { DeparmentForm } from '../DeparmentForm';
+import { DepartmentForm } from '../DepartmentForm';
 
 export const DepartmentEdit = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -88,7 +88,7 @@ export const DepartmentEdit = () => {
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <DeparmentForm />
+              <DepartmentForm />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(null)}>

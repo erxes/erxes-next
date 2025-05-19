@@ -23,7 +23,7 @@ export const SelectPosition = React.forwardRef<
   const [_open, _setOpen] = useState(false);
   const { value, onValueChange, className } = props;
   return (
-    <SelectBranchProvider>
+    <SelectPositionProvider>
       <Popover open={_open} onOpenChange={_setOpen}>
         <Combobox.Trigger className={cn('w-full', className)} ref={ref}>
           <SelectPositionValue value={value} />
@@ -43,11 +43,11 @@ export const SelectPosition = React.forwardRef<
           />
         </Combobox.Content>
       </Popover>
-    </SelectBranchProvider>
+    </SelectPositionProvider>
   );
 });
 
-export const SelectBranchProvider = ({
+export const SelectPositionProvider = ({
   children,
 }: {
   children: React.ReactNode;

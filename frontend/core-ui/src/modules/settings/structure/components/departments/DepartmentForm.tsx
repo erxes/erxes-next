@@ -7,7 +7,7 @@ import {
 } from 'ui-modules';
 import { TDepartmentForm } from '../../types/department';
 
-export const DeparmentForm = () => {
+export const DepartmentForm = () => {
   const { control } = useFormContext<TDepartmentForm>();
 
   return (
