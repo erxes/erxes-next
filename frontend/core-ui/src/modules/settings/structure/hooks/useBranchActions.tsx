@@ -1,5 +1,10 @@
 import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
-import { ADD_BRANCH, GET_BRANCHES_LIST, REMOVE_BRANCHES } from '../graphql';
+import {
+  ADD_BRANCH,
+  EDIT_BRANCH,
+  GET_BRANCHES_LIST,
+  REMOVE_BRANCHES,
+} from '../graphql';
 import { IBranchListItem, TBranchForm } from '../types/branch';
 import { useToast } from 'erxes-ui';
 
@@ -45,6 +50,43 @@ export function useBranchAdd(
 
   return {
     handleAdd,
+    loading,
+    error,
+  };
+}
+
+export function useBranchEdit(
+  options?: MutationHookOptions<AddBranchResult, any>,
+) {
+  const { toast } = useToast();
+  const [handleEdit, { loading, error }] = useMutation(EDIT_BRANCH, {
+    ...options,
+    update: (cache: ApolloCache<any>, { data }) => {
+      try {
+        const existingData = cache.readQuery<BranchData>({
+          query: GET_BRANCHES_LIST,
+        });
+        if (!existingData || !existingData.branchesMain || !data?.branchesEdit)
+          return;
+
+        cache.writeQuery<BranchData>({
+          query: GET_BRANCHES_LIST,
+          data: {
+            branchesMain: {
+              ...existingData.branchesMain,
+              list: [data.branchesEdit, ...existingData.branchesMain.list],
+              totalCount: existingData.branchesMain.totalCount + 1,
+            },
+          },
+        });
+      } catch (e) {
+        console.log('error', e);
+      }
+    },
+  });
+
+  return {
+    handleEdit,
     loading,
     error,
   };

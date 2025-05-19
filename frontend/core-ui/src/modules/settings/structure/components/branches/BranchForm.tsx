@@ -1,28 +1,14 @@
-import React, { useId } from 'react';
-import { useBranchForm } from '../../hooks/useBranchForm';
+import { useId } from 'react';
 import { TBranchForm } from '../../types/branch';
-import {
-  ControllerRenderProps,
-  Path,
-  SubmitHandler,
-  useFormContext,
-} from 'react-hook-form';
-import {
-  Accordion,
-  Collapsible,
-  Form,
-  Input,
-  ScrollArea,
-  Textarea,
-  Upload,
-} from 'erxes-ui';
+import { ControllerRenderProps, Path, useFormContext } from 'react-hook-form';
+import { Collapsible, Form, Input, Textarea } from 'erxes-ui';
 import { AssignMember, AssignMultipleMembers, SelectBranch } from 'ui-modules';
 import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 import { IconChevronDown } from '@tabler/icons-react';
 
-export const CreateBranchForm = () => {
-  const { control, watch } = useFormContext<TBranchForm>();
-  console.log('watch()', watch());
+export const BranchForm = () => {
+  const { control } = useFormContext<TBranchForm>();
+
   return (
     <div className="grid grid-cols-2 gap-2">
       <Form.Field

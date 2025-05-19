@@ -1,4 +1,4 @@
-import { IconGitBranch, IconPlus } from '@tabler/icons-react';
+import { IconPlus, IconUsersGroup } from '@tabler/icons-react';
 import {
   Button,
   Form,
@@ -11,40 +11,38 @@ import {
   useToast,
 } from 'erxes-ui';
 import React, { useState } from 'react';
-import { BranchHotKeyScope, TBranchForm } from '../../types/branch';
-import { BranchForm } from './BranchForm';
-import { useBranchForm } from '../../hooks/useBranchForm';
 import { SubmitHandler } from 'react-hook-form';
-import { useBranchAdd } from '../../hooks/useBranchActions';
-import { ApolloError } from '@apollo/client';
+import { useUnitForm } from '../../hooks/useUnitForm';
+import { useUnitAdd } from '../../hooks/useUnitActions';
+import { TUnitForm, UnitHotKeyScope } from '../../types/unit';
+import { UnitForm } from './UnitForm';
 
-export const CreateBranch = () => {
+export const CreateUnit = () => {
   const {
     methods,
     methods: { handleSubmit },
-  } = useBranchForm();
+  } = useUnitForm();
   const [open, setOpen] = useState<boolean>(false);
-  const { handleAdd, loading } = useBranchAdd();
+  const { handleAdd, loading } = useUnitAdd();
   const { toast } = useToast();
   const setHotkeyScope = useSetHotkeyScope();
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
   const onOpen = () => {
     setOpen(true);
-    setHotkeyScopeAndMemorizePreviousScope(BranchHotKeyScope.BranchAddSheet);
+    setHotkeyScopeAndMemorizePreviousScope(UnitHotKeyScope.UnitAddSheet);
   };
 
   const onClose = () => {
-    setHotkeyScope(BranchHotKeyScope.BranchSettingsPage);
+    setHotkeyScope(UnitHotKeyScope.UnitSettingsPage);
     setOpen(false);
   };
 
-  useScopedHotkeys(`c`, () => onOpen(), BranchHotKeyScope.BranchSettingsPage);
-  useScopedHotkeys(`esc`, () => onClose(), BranchHotKeyScope.BranchAddSheet);
+  useScopedHotkeys(`c`, () => onOpen(), UnitHotKeyScope.UnitSettingsPage);
+  useScopedHotkeys(`esc`, () => onClose(), UnitHotKeyScope.UnitAddSheet);
 
-  const submitHandler: SubmitHandler<TBranchForm> = React.useCallback(
+  const submitHandler: SubmitHandler<TUnitForm> = React.useCallback(
     async (data) => {
-      console.log('data', data);
       handleAdd({
         variables: data,
         onCompleted: () => {
@@ -66,7 +64,7 @@ export const CreateBranch = () => {
     <Sheet onOpenChange={(open) => (open ? onOpen() : onClose())} open={open}>
       <Sheet.Trigger asChild>
         <Button>
-          <IconPlus /> Create Branch
+          <IconPlus /> Create Unit
           <Kbd>C</Kbd>
         </Button>
       </Sheet.Trigger>
@@ -83,13 +81,13 @@ export const CreateBranch = () => {
           >
             <Sheet.Header>
               <Sheet.Title className="text-lg text-foreground flex items-center gap-1">
-                <IconGitBranch size={16} />
-                Create branch
+                <IconUsersGroup size={16} />
+                Create unit
               </Sheet.Title>
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <BranchForm />
+              <UnitForm />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(false)}>

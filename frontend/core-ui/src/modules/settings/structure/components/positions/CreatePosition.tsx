@@ -1,4 +1,4 @@
-import { IconGitBranch, IconPlus } from '@tabler/icons-react';
+import { IconBriefcase, IconPlus } from '@tabler/icons-react';
 import {
   Button,
   Form,
@@ -11,40 +11,48 @@ import {
   useToast,
 } from 'erxes-ui';
 import React, { useState } from 'react';
-import { BranchHotKeyScope, TBranchForm } from '../../types/branch';
-import { BranchForm } from './BranchForm';
-import { useBranchForm } from '../../hooks/useBranchForm';
 import { SubmitHandler } from 'react-hook-form';
-import { useBranchAdd } from '../../hooks/useBranchActions';
-import { ApolloError } from '@apollo/client';
+import { usePositionForm } from '../../hooks/usePositionForm';
+import { usePositionAdd } from '../../hooks/usePositionActions';
+import { PositionHotKeyScope, TPositionForm } from '../../types/position';
+import { PositionForm } from './PositionForm';
 
-export const CreateBranch = () => {
+export const CreatePosition = () => {
   const {
     methods,
     methods: { handleSubmit },
-  } = useBranchForm();
+  } = usePositionForm();
   const [open, setOpen] = useState<boolean>(false);
-  const { handleAdd, loading } = useBranchAdd();
+  const { handleAdd, loading } = usePositionAdd();
   const { toast } = useToast();
   const setHotkeyScope = useSetHotkeyScope();
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
 
   const onOpen = () => {
     setOpen(true);
-    setHotkeyScopeAndMemorizePreviousScope(BranchHotKeyScope.BranchAddSheet);
+    setHotkeyScopeAndMemorizePreviousScope(
+      PositionHotKeyScope.PositionAddSheet,
+    );
   };
 
   const onClose = () => {
-    setHotkeyScope(BranchHotKeyScope.BranchSettingsPage);
+    setHotkeyScope(PositionHotKeyScope.PositionSettingsPage);
     setOpen(false);
   };
 
-  useScopedHotkeys(`c`, () => onOpen(), BranchHotKeyScope.BranchSettingsPage);
-  useScopedHotkeys(`esc`, () => onClose(), BranchHotKeyScope.BranchAddSheet);
+  useScopedHotkeys(
+    `c`,
+    () => onOpen(),
+    PositionHotKeyScope.PositionSettingsPage,
+  );
+  useScopedHotkeys(
+    `esc`,
+    () => onClose(),
+    PositionHotKeyScope.PositionAddSheet,
+  );
 
-  const submitHandler: SubmitHandler<TBranchForm> = React.useCallback(
+  const submitHandler: SubmitHandler<TPositionForm> = React.useCallback(
     async (data) => {
-      console.log('data', data);
       handleAdd({
         variables: data,
         onCompleted: () => {
@@ -66,7 +74,7 @@ export const CreateBranch = () => {
     <Sheet onOpenChange={(open) => (open ? onOpen() : onClose())} open={open}>
       <Sheet.Trigger asChild>
         <Button>
-          <IconPlus /> Create Branch
+          <IconPlus /> Create Position
           <Kbd>C</Kbd>
         </Button>
       </Sheet.Trigger>
@@ -83,13 +91,13 @@ export const CreateBranch = () => {
           >
             <Sheet.Header>
               <Sheet.Title className="text-lg text-foreground flex items-center gap-1">
-                <IconGitBranch size={16} />
-                Create branch
+                <IconBriefcase size={16} />
+                Create position
               </Sheet.Title>
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <BranchForm />
+              <PositionForm />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(false)}>

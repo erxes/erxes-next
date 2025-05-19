@@ -9,13 +9,6 @@ const GET_UNITS_LIST = gql`
         departmentId
         description
         supervisorId
-        supervisor {
-          _id
-          details {
-            fullName
-            avatar
-          }
-        }
         title
         userCount
       }
@@ -24,4 +17,19 @@ const GET_UNITS_LIST = gql`
   }
 `;
 
-export { GET_UNITS_LIST };
+const GET_UNIT_DETAILS_BY_ID = gql`
+  query UnitDetail($id: String!) {
+    unitDetail(_id: $id) {
+      _id
+      code
+      departmentId
+      description
+      supervisorId
+      title
+      userCount
+      userIds
+    }
+  }
+`;
+
+export { GET_UNITS_LIST, GET_UNIT_DETAILS_BY_ID };

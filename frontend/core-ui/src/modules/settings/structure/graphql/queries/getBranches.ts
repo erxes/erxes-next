@@ -46,4 +46,32 @@ const GET_BRANCHES_LIST = gql`
   }
 `;
 
-export { GET_BRANCHES_LIST };
+const GET_BRANCH_DETAILS_BY_ID = gql`
+  query BranchDetail($id: String!) {
+    branchDetail(_id: $id) {
+      _id
+      address
+      code
+      parentId
+      userCount
+      title
+      supervisorId
+      userIds
+      email
+      phoneNumber
+      radius
+      links
+      image {
+        name
+        type
+        url
+      }
+      coordinate {
+        latitude
+        longitude
+      }
+    }
+  }
+`;
+
+export { GET_BRANCHES_LIST, GET_BRANCH_DETAILS_BY_ID };

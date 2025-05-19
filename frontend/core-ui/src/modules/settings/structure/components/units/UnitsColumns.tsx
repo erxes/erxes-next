@@ -19,6 +19,7 @@ import {
   AssignMemberTrigger,
   SelectDepartment,
 } from 'ui-modules';
+import { useRemoveUnit } from '../../hooks/useUnitActions';
 
 export const UnitEditColumnCell = ({
   cell,
@@ -37,6 +38,32 @@ export const UnitEditColumnCell = ({
       variant={'outline'}
     >
       <IconEdit size={12} />
+    </Button>
+  );
+};
+
+export const UnitRemoveCell = ({
+  cell,
+}: {
+  cell: Cell<IUnitListItem, unknown>;
+}) => {
+  const { _id } = cell.row.original;
+  const { handleRemove, loading } = useRemoveUnit();
+  const onRemove = () => {
+    handleRemove({
+      variables: {
+        ids: [_id],
+      },
+    });
+  };
+  return (
+    <Button
+      variant={'outline'}
+      disabled={loading}
+      onClick={onRemove}
+      className="text-destructive bg-destructive/10"
+    >
+      <IconTrash size={12} />
     </Button>
   );
 };
@@ -84,7 +111,7 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'supervisorId',
     header: () => <RecordTable.InlineHead label="supervisor" />,
     cell: ({ cell }) => {
-      const { supervisorId, supervisor } = cell.row.original;
+      const { supervisorId } = cell.row.original;
       return (
         <div>
           <AssignMember className="shadow-none" value={supervisorId} />
@@ -138,12 +165,7 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
             <IconClock size={12} />
           </Button>
           <UnitEditColumnCell cell={cell} />
-          <Button
-            variant={'outline'}
-            className="text-destructive bg-destructive/10"
-          >
-            <IconTrash size={12} />
-          </Button>
+          <UnitRemoveCell cell={cell} />
         </div>
       );
     },

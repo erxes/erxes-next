@@ -5,3 +5,6 @@ export * from './queries/getUnits';
 export * from './queries/getPositions';
 export * from './mutations/structureMutations';
 export * from './mutations/branchMutations';
+export * from './mutations/departmentMutations';
+export * from './mutations/unitMutations';
+export * from './mutations/positionMutations';

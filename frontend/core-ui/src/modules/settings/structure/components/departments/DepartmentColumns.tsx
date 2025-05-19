@@ -14,6 +14,7 @@ import { IDepartmentListItem } from '../../types/department';
 import { useSetAtom } from 'jotai';
 import { renderingDepartmentDetailAtom } from '../../states/renderingDepartmentDetail';
 import { AssignMember, AssignMemberTrigger } from 'ui-modules';
+import { useRemoveDepartment } from '../../hooks/useDepartmentActions';
 
 export const UserMoreColumnCell = ({
   cell,
@@ -32,6 +33,32 @@ export const UserMoreColumnCell = ({
       variant={'outline'}
     >
       <IconEdit size={12} />
+    </Button>
+  );
+};
+
+export const DepartmentRemoveCell = ({
+  cell,
+}: {
+  cell: Cell<IDepartmentListItem, unknown>;
+}) => {
+  const { _id } = cell.row.original;
+  const { handleRemove, loading } = useRemoveDepartment();
+  const onRemove = () => {
+    handleRemove({
+      variables: {
+        ids: [_id],
+      },
+    });
+  };
+  return (
+    <Button
+      variant={'outline'}
+      disabled={loading}
+      onClick={onRemove}
+      className="text-destructive bg-destructive/10"
+    >
+      <IconTrash size={12} />
     </Button>
   );
 };
@@ -79,7 +106,7 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     accessorKey: 'supervisorId',
     header: () => <RecordTable.InlineHead label="supervisor" />,
     cell: ({ cell }) => {
-      const { supervisorId, supervisor } = cell.row.original;
+      const { supervisorId } = cell.row.original;
       return (
         <div>
           <AssignMember className="shadow-none" value={supervisorId} />
@@ -115,12 +142,7 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
             <IconClock size={12} />
           </Button>
           <UserMoreColumnCell cell={cell} />
-          <Button
-            variant={'outline'}
-            className="text-destructive bg-destructive/10"
-          >
-            <IconTrash size={12} />
-          </Button>
+          <DepartmentRemoveCell cell={cell} />
         </div>
       );
     },

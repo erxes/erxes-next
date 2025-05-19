@@ -10,6 +10,7 @@ export interface IBranchListItem {
   title: string;
 }
 export enum BranchHotKeyScope {
+  BranchSettingsPage = 'branch-settings-page',
   BranchAddSheet = 'branch-add-sheet',
 }
 

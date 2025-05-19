@@ -32,13 +32,6 @@ const GET_DEPARTMENTS_LIST = gql`
         code
         title
         supervisorId
-        supervisor {
-          _id
-          details {
-            fullName
-            avatar
-          }
-        }
         userCount
       }
       pageInfo {
@@ -52,4 +45,19 @@ const GET_DEPARTMENTS_LIST = gql`
   }
 `;
 
-export { GET_DEPARTMENTS_LIST };
+const GET_DEPARTMENT_DETAIL_BY_ID = gql`
+  query DepartmentDetail($id: String!) {
+    departmentDetail(_id: $id) {
+      _id
+      code
+      description
+      parentId
+      supervisorId
+      title
+      userIds
+      userCount
+    }
+  }
+`;
+
+export { GET_DEPARTMENTS_LIST, GET_DEPARTMENT_DETAIL_BY_ID };
