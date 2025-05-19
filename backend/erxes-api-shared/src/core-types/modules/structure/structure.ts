@@ -1,3 +1,5 @@
+import { Document } from 'mongoose';
+
 export interface IStructureCommonTypes {
   title: string;
   description?: string;

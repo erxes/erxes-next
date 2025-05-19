@@ -103,7 +103,7 @@ export const moduleObjects = {
       },
       {
         name: 'usersSetActiveStatus',
-        description: 'Set active/deactive team member',
+        description: 'Set active/inactive team member',
       },
       {
         name: 'usersEdit',
