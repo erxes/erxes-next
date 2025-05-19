@@ -62,11 +62,14 @@ const TagsFilterBar = ({ tagType }: { tagType: string }) => {
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
-            <Filter.BarButton filterKey="tags">
-              <SelectTags.Value />
+            <Filter.BarButton
+              filterKey="tags"
+              className="max-w-72 overflow-hidden justify-start"
+            >
+              <SelectTags.List />
             </Filter.BarButton>
           </Popover.Trigger>
-          <Combobox.Content>
+          <Combobox.Content className="w-72">
             <SelectTags.Content />
           </Combobox.Content>
         </Popover>

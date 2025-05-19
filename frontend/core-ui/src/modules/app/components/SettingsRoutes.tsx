@@ -43,6 +43,12 @@ const StructureSettings = lazy(() =>
   ),
 );
 
+const TagsSettings = lazy(() =>
+  import('~/pages/settings/workspace/tags/TagsSettingPage').then((module) => ({
+    default: module.TagsSettingPage,
+  })),
+);
+
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
@@ -76,6 +82,7 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.Structure}
           element={<StructureSettings />}
         />
+        <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
 
         {getPluginsSettingsRoutes()}
       </Routes>

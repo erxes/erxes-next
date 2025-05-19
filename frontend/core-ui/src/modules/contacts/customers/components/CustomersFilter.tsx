@@ -9,7 +9,7 @@ import {
 
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 
-import { TagsFilter } from 'ui-modules';
+import { SelectMember, TagsFilter } from 'ui-modules';
 import { CustomerTotalCount } from './CustomerTotalCount';
 import { CUSTOMERS_CURSOR_SESSION_KEY } from '../constants/customersCursorSessionKey';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
@@ -49,6 +49,7 @@ const CustomersFilterPopover = () => {
                   <IconLabel />
                   Brand
                 </Filter.Item>
+                <SelectMember.FilterItem />
                 <Command.Separator className="my-1" />
                 <Filter.Item value="created">
                   <IconCalendarPlus />
@@ -69,6 +70,7 @@ const CustomersFilterPopover = () => {
               </Command.List>
             </Command>
           </Filter.View>
+          <SelectMember.FilterView />
           <TagsFilter.View tagType="core:customer" />
           <Filter.View filterKey="created">
             <Filter.DateView filterKey="created" />
@@ -155,6 +157,7 @@ export const CustomersFilter = () => {
             <Filter.BarClose filterKey="lastSeen" />
           </Filter.BarItem>
         )}
+        <SelectMember.FilterBar />
         <CustomersFilterPopover />
         <CustomerTotalCount />
       </Filter.Bar>

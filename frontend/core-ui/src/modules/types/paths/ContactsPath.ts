@@ -1,5 +1,5 @@
 export enum ContactsPath {
-  Index = 'contacts',
+  Index = '/contacts',
   Customers = '/customers',
   Leads = '/leads',
   Companies = '/companies',

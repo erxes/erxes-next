@@ -39,7 +39,7 @@ const FilterProvider = ({
 }: {
   children: React.ReactNode;
   id: string;
-  sessionKey: string;
+  sessionKey?: string;
 }) => {
   const setOpen = useSetAtom(openPopoverState(id));
   const setView = useSetAtom(filterPopoverViewState(id));
@@ -289,7 +289,10 @@ const FilterDialogStringView = ({ filterKey }: { filterKey: string }) => {
   const { id, setDialogView, setOpenDialog, sessionKey } = useFilterContext();
   const dialogView = useAtomValue(filterDialogViewState(id));
   const [dialogSearch, setDialogSearch] = useState('');
-  const [query, setQuery] = useFilterQueryState<string>(filterKey, sessionKey);
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
 
   useEffect(() => {
     if (query) {
@@ -354,7 +357,10 @@ const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
 
 const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
   const { sessionKey } = useFilterContext();
-  const [query, setQuery] = useFilterQueryState<string>(filterKey, sessionKey);
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
   const [open, setOpen] = useState(false);
 
   return (

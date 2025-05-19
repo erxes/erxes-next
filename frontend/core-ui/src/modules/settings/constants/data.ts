@@ -4,6 +4,7 @@ import {
   IconColorSwatch,
   IconFile,
   IconMail,
+  IconTagFilled,
   IconUserCircle,
   IconUsersGroup,
 } from '@tabler/icons-react';
@@ -138,6 +139,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Structure',
       icon: IconChartPie2,
       path: SettingsWorkspacePath.Structure,
+    },
+    {
+      name: 'Tags',
+      icon: IconTagFilled,
+      path: SettingsWorkspacePath.Tags,
     },
   ],
 };

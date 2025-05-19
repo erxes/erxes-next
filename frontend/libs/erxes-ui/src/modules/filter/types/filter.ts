@@ -20,7 +20,7 @@ export interface FilterDropdownProps extends FilterBarComponentPropsBase {
 
 export interface IFilterContext {
   id: string;
-  sessionKey: string;
+  sessionKey?: string;
   resetFilterState: () => void;
   setOpen: (open: boolean) => void;
   setView: (view: string) => void;
