@@ -1,24 +1,24 @@
 import { Schema } from 'mongoose';
-import { field, schemaWrapper } from './utils';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils/mongo';
 import { VAT_ROW_STATUS, VatRowKinds } from '../../@types/vatRow';
 
 export const vatRowSchema = schemaWrapper(
   new Schema({
-    _id: field({ pkey: true }),
-    name: field({ type: String }),
-    number: field({ type: String }),
-    kind: field({ type: String, enum: VatRowKinds.ALL }),
-    formula: field({ type: String, optional: true }),
-    formula_text: field({ type: String, optional: true }),
-    tabCount: field({ type: Number, default: 0 }),
-    isBold: field({ type: Boolean, default: false }),
-    status: field({
+    _id: mongooseStringRandomId,
+    name: { type: String },
+    number: { type: String },
+    kind: { type: String, enum: VatRowKinds.ALL },
+    formula: { type: String, optional: true },
+    formula_text: { type: String, optional: true },
+    tabCount: { type: Number, default: 0 },
+    isBold: { type: Boolean, default: false },
+    status: {
       type: String,
       enum: VAT_ROW_STATUS.ALL,
       label: 'Status',
       default: 'active',
       index: true,
-    }),
-    percent: field({ type: Number, default: 0 }),
-  }),
+    },
+    percent: { type: Number, default: 0 },
+  })
 );
