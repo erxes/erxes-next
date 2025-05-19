@@ -1,3 +1,4 @@
+import { cursorParams } from '@/inbox/graphql/schemas/conversation';
 export const types = `
   input InputRule {
     _id : String!,
@@ -158,6 +159,7 @@ export const types = `
 
 export const queries = `
   integrations(
+    ${cursorParams},
     page: Int,
     perPage: Int,
     kind: String,
