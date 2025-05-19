@@ -1,6 +1,7 @@
 import { Icon } from '@tabler/icons-react';
 
 export enum SettingsPath {
+  Index = 'settings/',
   Profile = 'profile',
   Experience = 'experience',
 }
