@@ -87,7 +87,11 @@ export const ComboboxValue = React.forwardRef<
       ref={ref}
       {...props}
       value={value || placeholder || ''}
-      className={cn('text-left', !value && 'text-accent-foreground', className)}
+      className={cn(
+        'text-left',
+        !value && 'text-accent-foreground/70',
+        className,
+      )}
     />
   );
 });

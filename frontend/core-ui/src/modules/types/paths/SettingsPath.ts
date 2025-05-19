@@ -1,6 +1,7 @@
 import { Icon } from '@tabler/icons-react';
 
 export enum SettingsPath {
+  Index = 'settings/',
   Profile = 'profile',
   Experience = 'experience',
 }
@@ -12,6 +13,7 @@ export enum SettingsWorkspacePath {
   Permission = 'permission',
   TeamMember = 'team-member',
   Structure = 'structure/*',
+  Tags = 'tags',
 }
 
 export type TSettingPath = {

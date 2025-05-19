@@ -36,7 +36,7 @@ export const RecordTable = Object.assign(RecordTableRoot, {
   CursorProvider: RecordTableCursorProvider,
   CursorBackwardSkeleton: RecordTableBackwardSkeleton,
   CursorForwardSkeleton: RecordTableForwardSkeleton,
-  Row: RecordTableRow
+  Row: RecordTableRow,
 });
 
 export * from './types/RecordTableCursorTypes';

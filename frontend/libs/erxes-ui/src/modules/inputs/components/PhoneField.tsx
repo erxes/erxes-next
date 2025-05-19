@@ -12,10 +12,8 @@ import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components
 import {
   Button,
   DropdownMenu,
-  Input,
   Separator,
   TextOverflowTooltip,
-  Form,
 } from 'erxes-ui/components';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
@@ -23,15 +21,11 @@ import {
   showPhoneInputFamilyState,
   editingPhoneFamilyState,
 } from '../states/phoneFieldStates';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { cn } from 'erxes-ui/lib';
 import { usePhoneFields } from '../hooks/usePhoneFields';
 import { PhoneFieldsContext } from '../contexts/PhoneFieldsContext';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { emailSchema } from '../validations/emailValidation';
 
 export interface IPhoneField {
   phone?: string;
@@ -68,6 +62,7 @@ export const PhoneListField = ({
 }) => {
   const setPhones = useSetAtom(phonesFamilyState(recordId));
   const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
+
   useEffect(() => {
     setPhones(phones);
     return () => {
@@ -155,7 +150,6 @@ const PhoneOptions = ({
     setShowPhoneInput(true);
     setEditingPhone(phone || null);
   };
-
   const handleVerificationChange = (value: string) => {
     onValueChange?.(
       phones.map((e) => {
@@ -231,16 +225,11 @@ const PhoneOptions = ({
 const PhoneForm = () => {
   const { recordId } = usePhoneFields();
   const phones = useAtomValue(phonesFamilyState(recordId));
+  const [newPhone, setNewPhone] = useState<string>('');
   const [editingPhone, setEditingPhone] = useAtom(
     editingPhoneFamilyState(recordId),
   );
   const { onValueChange } = usePhoneFields();
-  const form = useForm<z.infer<typeof emailSchema>>({
-    resolver: zodResolver(emailSchema),
-    defaultValues: {
-      email: '',
-    },
-  });
   const [showPhoneInput, setShowPhoneInput] = useAtom(
     showPhoneInputFamilyState(recordId),
   );
@@ -252,10 +241,9 @@ const PhoneForm = () => {
       inputRef.current?.focus();
     }, 180);
     if (editingPhone) {
-      form.setValue('email', editingPhone);
+      setNewPhone(editingPhone);
     }
   }, [showPhoneInput, editingPhone]);
-
   useEffect(() => {
     if (phones.filter((phone) => !!phone.phone).length === 0) {
       setShowPhoneInput(true);
@@ -266,6 +254,7 @@ const PhoneForm = () => {
       setShowPhoneInput(false);
     }
   }, [phones, setShowPhoneInput]);
+
   const onPhoneEdit = (newPhone: string, prevPhone: string) => {
     onValueChange?.(
       phones.map((phoneItem) =>
@@ -274,7 +263,7 @@ const PhoneForm = () => {
           : phoneItem,
       ),
     );
-    form.reset();
+    setNewPhone('');
     setEditingPhone(null);
   };
   const onPhoneAdd = (phone: string) => {
@@ -283,60 +272,52 @@ const PhoneForm = () => {
     } else {
       onValueChange?.([...phones, { phone, status: 'unverified' }]);
     }
-    form.reset();
+    setNewPhone('');
   };
-
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(({ email }) => {
-          if (!!editingPhone) {
-            onPhoneEdit(email, editingPhone);
-          } else {
-            onPhoneAdd(email);
-          }
-        })}
-      >
-        {showPhoneInput && (
-          <Form.Field
-            name="email"
-            control={form.control}
-            render={({ field }) => (
-              <div className="px-1 pb-1">
-                <PhoneInput
-                  placeholder={!!editingPhone ? 'Edit phone' : 'Add phone'}
-                  className={cn(
-                    form.formState.errors.email &&
-                      'focus-visible:shadow-destructive',
-                  )}
-                  {...field}
-                  ref={(el) => {
-                    field.ref(el);
-                    inputRef.current = el;
-                  }}
-                />
-              </div>
-            )}
-          />
-        )}
-        <Separator />
-        <div className="p-1">
-          <Button
-            variant="secondary"
-            className="w-full"
-            type="submit"
-            onClick={(e) => {
-              if (!showPhoneInput) {
-                e.preventDefault();
-              }
-              setShowPhoneInput(true);
+    <>
+      {showPhoneInput && (
+        <div className="px-1 pb-1">
+          <PhoneInput
+            placeholder={editingPhone ? 'Edit phone' : 'Add phone'}
+            defaultCountry="MN"
+            value={newPhone}
+            onChange={(phone) => {
+              setNewPhone(phone);
             }}
-          >
-            <IconPlus />
-            {!!editingPhone ? 'Edit phone' : 'Add phone'}
-          </Button>
+            onEnter={(phone) => {
+              if (editingPhone) {
+                onPhoneEdit(phone, editingPhone);
+              } else {
+                onPhoneAdd(phone);
+              }
+            }}
+            ref={(el) => {
+              inputRef.current = el;
+            }}
+          />
         </div>
-      </form>
-    </Form>
+      )}
+      <Separator />
+      <div className="p-1">
+        <Button
+          variant="secondary"
+          className="w-full"
+          onClick={(e) => {
+            if (!showPhoneInput) setShowPhoneInput(true);
+            else {
+              if (editingPhone) {
+                onPhoneEdit(newPhone, editingPhone);
+              } else {
+                onPhoneAdd(newPhone);
+              }
+            }
+          }}
+        >
+          <IconPlus />
+          {editingPhone ? 'Edit phone' : 'Add phone'}
+        </Button>
+      </div>
+    </>
   );
 };

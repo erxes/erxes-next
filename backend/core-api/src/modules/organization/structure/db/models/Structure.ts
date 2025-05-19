@@ -369,14 +369,13 @@ export const loadBranchClass = (models: IModels) => {
         createdAt: new Date(),
         createdBy: user._id,
       });
-
-      await models.UserMovements.manageStructureUsersMovement({
+        await models.UserMovements.manageStructureUsersMovement({
         userIds: doc.userIds || branch.userIds || [],
         contentType: 'branch',
         contentTypeId: branch._id,
         createdBy: user._id,
       });
-
+      
       return branch;
     }
 

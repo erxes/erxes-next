@@ -54,7 +54,7 @@ export const tagMutations = {
         customer: models.Customers,
         user: models.Users,
         company: models.Companies,
-        // form: models.Forms,
+        form: models.Forms,
         product: models.Products,
       };
 
@@ -64,12 +64,11 @@ export const tagMutations = {
         throw new Error(`Unknown content type: ${contentType}`);
       }
 
-      await model.updateMany({ _id: { $in: targetIds } }, { $set: { tagIds } });
-
-      return '';
+      return await model.updateMany(
+        { _id: { $in: targetIds } },
+        { $set: { tagIds } },
+      );
     }
-
-    return null;
   },
 
   /**

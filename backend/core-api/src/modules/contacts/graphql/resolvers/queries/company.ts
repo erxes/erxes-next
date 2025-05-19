@@ -1,4 +1,8 @@
 import {
+  checkPermission,
+  moduleRequireLogin,
+} from 'erxes-api-shared/core-modules';
+import {
   ICompanyDocument,
   ICompanyFilterQueryParams,
 } from 'erxes-api-shared/core-types';
@@ -42,3 +46,6 @@ export const companyQueries = {
     return await models.Companies.findOne({ $or: [{ _id }, { code: _id }] });
   },
 };
+
+moduleRequireLogin(companyQueries);
+checkPermission(companyQueries, 'companies', 'showCompanies');

@@ -1,5 +1,10 @@
-import { IProduct, IProductCategory } from 'erxes-api-shared/core-types';
+import {
+  ICustomField,
+  IProduct,
+  IProductCategory,
+} from 'erxes-api-shared/core-types';
 import { IModels } from '../../connectionResolvers';
+
 export const checkCodeMask = (category?: IProductCategory, code?: string) => {
   if (!category || !code) {
     return false;
@@ -40,6 +45,71 @@ export const checkCodeMask = (category?: IProductCategory, code?: string) => {
   }
 
   return false;
+};
+
+export const initCustomField = async (
+  models: IModels,
+  category: IProductCategory,
+  code: string,
+  productCustomFieldsData?: ICustomField[],
+  docCustomFieldsData?: ICustomField[],
+) => {
+  if (
+    !category ||
+    !category.maskType ||
+    !category.mask ||
+    !category.mask.values
+  ) {
+    if (docCustomFieldsData && docCustomFieldsData.length) {
+      const docFieldsIds = docCustomFieldsData.map((d) => d.field);
+      const allCustomFieldsData = docCustomFieldsData.concat(
+        (productCustomFieldsData || []).filter(
+          (d) => !docFieldsIds.includes(d.field),
+        ),
+      );
+
+      return models.Fields.prepareCustomFieldsData(allCustomFieldsData);
+    }
+
+    return productCustomFieldsData;
+  }
+
+  let strInd = 0;
+  let customFieldsData: ICustomField[] = [];
+
+  for (const value of category.mask.values || []) {
+    const len = Number(value.len);
+    if (value.static || value.type === 'char') {
+      strInd += len;
+      continue;
+    }
+
+    if (value.type === 'customField' && value.matches) {
+      const subCode = code.substring(strInd, strInd + len);
+
+      const subCodeInd = Object.values(value.matches).indexOf(subCode);
+
+      customFieldsData.push({
+        field: value.fieldId,
+        value: (Object.keys(value.matches) || [])[subCodeInd],
+      });
+      strInd += len;
+    }
+  }
+
+  const codeFieldIds = customFieldsData.map((d) => d.field);
+  customFieldsData = customFieldsData.concat(
+    (docCustomFieldsData || []).filter((d) => !codeFieldIds.includes(d.field)),
+  );
+
+  const withDocFieldIds = customFieldsData.map((d) => d.field);
+  customFieldsData = customFieldsData.concat(
+    (productCustomFieldsData || []).filter(
+      (d) => !withDocFieldIds.includes(d.field),
+    ),
+  );
+
+  return models.Fields.prepareCustomFieldsData(customFieldsData);
 };
 
 export const checkSameMaskConfig = async (models: IModels, doc: IProduct) => {

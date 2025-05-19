@@ -1,7 +1,8 @@
-import { defaultPaginate } from 'erxes-api-shared/src/utils';
-import { IContext, IModels } from '~/connectionResolvers';
+import { getIntegrationsKinds } from '@/inbox/utils';
+import { IContext, } from '~/connectionResolvers';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
+import { userActionsMap } from 'erxes-api-shared/core-modules';
 
 const generateFilterQuery = async (
   subdomain,
@@ -58,13 +59,12 @@ export const integrationQueries = {
       sortField: string;
       sortDirection: number;
     },
-    { singleBrandIdSelector, models, subdomain, user }: IContext,
+    { models, subdomain, user }: IContext,
   ) {
     if (!user) {
       throw new Error('User not authenticated');
     }
     let query = {
-      ...singleBrandIdSelector,
       ...(await generateFilterQuery(subdomain, args, models)),
     };
     if (!user.isOwner) {
@@ -92,16 +92,11 @@ export const integrationQueries = {
       return models.Integrations.findLeadIntegrations(query, args);
     }
 
-    const integrations = defaultPaginate(
-      models.Integrations.findAllIntegrations(query),
-      args,
-    );
-
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IIntegrationDocument>({
         model: models.Integrations,
         params: args,
-        query: integrations,
+        query: query,
       });
     return { list, totalCount, pageInfo };
   },
@@ -112,10 +107,9 @@ export const integrationQueries = {
   async allLeadIntegrations(
     _root,
     _args,
-    { singleBrandIdSelector, models }: IContext,
+    { models }: IContext,
   ) {
     const query = {
-      ...singleBrandIdSelector,
       kind: 'lead',
     };
 
@@ -125,11 +119,35 @@ export const integrationQueries = {
   /**
    * Get used integration types
    */
-  async integrationsGetUsedTypes(_root, { object }, { models }: IContext) {
+  async integrationsGetUsedTypes(_root, _args, { models }: IContext) {
     const usedTypes: Array<{ _id: string; name: string }> = [];
 
-    return usedTypes;
+    try {
+      const kindMap = await getIntegrationsKinds();
+      console.log('kindMap:', kindMap);
+
+      const distinctKinds = await models.Integrations.find({}).distinct('kind');
+      console.log('distinctKinds:', distinctKinds);
+
+      for (const kind of distinctKinds) {
+        const count = await models.Integrations.find({ kind }).countDocuments();
+        console.log(`Kind: ${kind}, Count: ${count}`);
+
+        if (count > 0) {
+          usedTypes.push({
+            _id: kind,
+            name: kindMap[kind] || kind.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+          });
+        }
+      }
+
+      return usedTypes;
+    } catch (error) {
+      console.error('Error in integrationsGetUsedTypes:', error);
+      throw new Error('Failed to fetch used integration types');
+    }
   },
+
 
   /**
    * Get one integration
@@ -175,9 +193,7 @@ export const integrationQueries = {
       return models.Integrations.countDocuments(query);
     };
 
-    // Counting integrations by tag
 
-    // Counting integrations by kind
 
     // Counting integrations by channel
 

@@ -5,6 +5,7 @@ import { cn } from 'erxes-ui/lib/utils';
 
 import React from 'react';
 import { mergeRefs } from 'react-merge-refs';
+import { useRecordTable } from './RecordTableProvider';
 
 export const RecordTableRow = React.forwardRef<
   HTMLTableRowElement,
@@ -13,6 +14,7 @@ export const RecordTableRow = React.forwardRef<
     id?: string;
   }
 >(({ children, className, handleRowViewChange, id, ...props }, ref) => {
+  const { table } = useRecordTable();
   const { ref: inViewRef, inView } = useInView({
     onChange: handleRowViewChange,
   });
@@ -24,7 +26,14 @@ export const RecordTableRow = React.forwardRef<
       className={cn('h-cell', inView ? 'in-view' : 'out-of-view', className)}
       id={id}
     >
-      {children}
+      {table.getRowModel().rows.length > 200 && !inView ? (
+        <td
+          className="h-cell bg-background"
+          colSpan={table.getAllColumns().length}
+        />
+      ) : (
+        children
+      )}
     </Table.Row>
   );
 });

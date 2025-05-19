@@ -1,7 +1,11 @@
 import { Document } from 'mongoose';
 import { ICustomField } from 'erxes-api-shared/core-types';
+import {
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
 
-export interface IConversation {
+export interface IConversation  extends IListParams, ICursorPaginateParams {
   skillId?: string;
   operatorStatus?: string;
   content?: string;

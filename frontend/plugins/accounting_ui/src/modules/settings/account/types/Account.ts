@@ -35,6 +35,4 @@ export enum JournalEnum {
   INVENTORY = 'inventory',
   FIXED_ASSET = 'fixedAsset',
   TAX = 'tax',
-  INV_INCOME = 'invincome',
-  INV_OUT = 'invout',
 }

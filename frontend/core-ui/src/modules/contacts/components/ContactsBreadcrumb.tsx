@@ -15,7 +15,7 @@ export const ContactsBreadcrumb = ({
         <Breadcrumb.List className="gap-1">
           <Breadcrumb.Item>
             <Button variant="ghost" asChild>
-              <Link to={`/contacts/${ContactsPath.Customers}`}>
+              <Link to={ContactsPath.Index}>
                 <IconBookmarksFilled className="text-accent-foreground" />
                 Contacts
               </Link>
