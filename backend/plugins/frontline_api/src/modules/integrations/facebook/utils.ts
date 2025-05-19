@@ -2,7 +2,8 @@ import * as graph from 'fbgraph';
 import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import { debugError, debugFacebook } from '@/integrations/facebook/debuggers';
-// import { FacebookAdapter } from "botbuilder-adapter-facebook-erxes";
+
+
 export const graphRequest = {
   base(method: string, path?: any, accessToken?: any, ...otherParams) {
     // set access token
@@ -140,12 +141,6 @@ export const subscribePage = async (
     'messaging_handovers',
   ];
 
-  // const bot = await models.Bots.findOne({pageId})
-
-  // if(bot){
-  //   subscribed_fields = [...new Set([...subscribed_fields,...BOT_SUBSCRIBE_FIELDS])]
-  // }
-
   return graphRequest.post(`${pageId}/subscribed_apps`, pageToken, {
     subscribed_fields,
   });
@@ -189,7 +184,6 @@ export const unsubscribePage = async (
       throw e;
     });
 };
-
 export const getFacebookUser = async (
   models: IModels,
   pageId: string,
@@ -223,6 +217,7 @@ export const getFacebookUser = async (
   }
 };
 
+
 export const restorePost = async (
   postId: string,
   pageId: string,
@@ -247,6 +242,7 @@ export const restorePost = async (
   }
 };
 
+
 export const sendReply = async (
   models: IModels,
   url: string,
@@ -269,7 +265,8 @@ export const sendReply = async (
     );
   } catch (e) {
     debugError(
-      `Error ocurred while trying to get page access token with ${e.message}`,
+       `Error occurred while trying to get page access token with ${e.message}`
+
     );
     return e;
   }
@@ -403,27 +400,8 @@ export const getFacebookUserProfilePic = async (
     return null;
   }
 };
-// export const getAdapter = async (models: IModels): Promise<any> => {
-//   const accessTokensByPageId = {};
 
-//   const FACEBOOK_VERIFY_TOKEN = await getConfig(
-//     models,
-//     "FACEBOOK_VERIFY_TOKEN"
-//   );
-//   const FACEBOOK_APP_SECRET = await getConfig(models, "FACEBOOK_APP_SECRET");
 
-//   if (!FACEBOOK_VERIFY_TOKEN || !FACEBOOK_APP_SECRET) {
-//     return debugBase("Invalid facebook config");
-//   }
-
-//   return new FacebookAdapter({
-//     verify_token: FACEBOOK_VERIFY_TOKEN,
-//     app_secret: FACEBOOK_APP_SECRET,
-//     getAccessTokenForPage: async (pageId: string) => {
-//       return accessTokensByPageId[pageId];
-//     }
-//   });
-// };
 
 export const checkIsAdsOpenThread = (entry: any[] = []) => {
   const messaging = entry[0]?.messaging || [];
