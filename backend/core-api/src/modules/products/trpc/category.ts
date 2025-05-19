@@ -6,7 +6,7 @@ import { ITRPCContext } from '~/init-trpc';
 const t = initTRPC.context<ITRPCContext>().create();
 
 export const productCategoryTrpcRouter = t.router({
-  categories: t.router({
+  productCategories: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query, sort, regData } = input;
       const { models } = ctx;
