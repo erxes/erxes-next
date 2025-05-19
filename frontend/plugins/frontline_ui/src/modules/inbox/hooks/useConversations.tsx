@@ -4,13 +4,14 @@ import { OperationVariables, useQuery } from '@apollo/client';
 export const useConversations = (options?: OperationVariables) => {
   const { data, loading, fetchMore } = useQuery(GET_CONVERSATIONS, options);
 
-  const { conversations, conversationsTotalCount } = data || {};
+  const { conversations } = data || {};
+  const { list = [], totalCount = 0 } = conversations || {};
 
   const handleFetchMore = () => {
-    if (conversations?.length >= conversationsTotalCount) return;
+    if (list?.length >= totalCount) return;
     fetchMore({
       variables: {
-        skip: conversations?.length,
+        skip: list?.length,
         limit: 50,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
@@ -26,8 +27,8 @@ export const useConversations = (options?: OperationVariables) => {
   };
 
   return {
-    totalCount: conversationsTotalCount,
-    conversations,
+    totalCount,
+    conversations: list,
     loading,
     handleFetchMore,
   };
