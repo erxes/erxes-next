@@ -2,8 +2,9 @@ import { IContext, IModels } from '~/connectionResolvers';
 import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { IConversationDocument} from '@/inbox/@types/conversations'
+import { IConversationDocument,IConversation} from '@/inbox/@types/conversations'
 import { IMessageDocument} from '@/inbox/@types/conversationMessages'
+import { debugBase } from '~/modules/integrations/facebook/debuggers';
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
   const result = await models.Conversations.countDocuments(query);
@@ -14,11 +15,10 @@ export const conversationQueries = {
    * Conversations list
    */
  async conversations(
-  _root,
-  params: IListArgs,
-  { user, models, subdomain, serverTiming }: IContext,
+  _parent: undefined,
+  params: IConversation,
+  { user, models, subdomain }: IContext,
 ) {
-  serverTiming.startTime('conversations');
 
    const qb = new QueryBuilder(models, subdomain, params, {
       _id: user._id,
@@ -31,7 +31,7 @@ export const conversationQueries = {
     const query = qb.mainQuery();
     const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
     model: models.Conversations,
-    params: params,
+    params,
     query: query,
   });
 
@@ -107,7 +107,6 @@ export const conversationQueries = {
     };
 
     const qb = new QueryBuilder(models, subdomain, params, _user);
-
     await qb.buildAllQueries();
 
     const queries = qb.queries;
@@ -147,7 +146,6 @@ export const conversationQueries = {
       ...mainQuery,
       ...qb.awaitingResponse(),
     });
-
     return response;
   },
 

@@ -2,6 +2,7 @@ import { getIntegrationsKinds } from '@/inbox/utils';
 import { IContext, } from '~/connectionResolvers';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
+import { userActionsMap } from 'erxes-api-shared/core-modules';
 
 const generateFilterQuery = async (
   subdomain,
@@ -118,21 +119,35 @@ export const integrationQueries = {
   /**
    * Get used integration types
    */
-  async integrationsGetUsedTypes(_root, { models }: IContext) {
+  async integrationsGetUsedTypes(_root, _args, { models }: IContext) {
     const usedTypes: Array<{ _id: string; name: string }> = [];
-    const kindMap = await getIntegrationsKinds();
 
-    for (const kind of Object.keys(kindMap)) {
-      if (
-        (await models.Integrations.findIntegrations({
-          kind,
-        }).countDocuments()) > 0
-      ) {
-        usedTypes.push({ _id: kind, name: kindMap[kind] });
+    try {
+      const kindMap = await getIntegrationsKinds();
+      console.log('kindMap:', kindMap);
+
+      const distinctKinds = await models.Integrations.find({}).distinct('kind');
+      console.log('distinctKinds:', distinctKinds);
+
+      for (const kind of distinctKinds) {
+        const count = await models.Integrations.find({ kind }).countDocuments();
+        console.log(`Kind: ${kind}, Count: ${count}`);
+
+        if (count > 0) {
+          usedTypes.push({
+            _id: kind,
+            name: kindMap[kind] || kind.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+          });
+        }
       }
+
+      return usedTypes;
+    } catch (error) {
+      console.error('Error in integrationsGetUsedTypes:', error);
+      throw new Error('Failed to fetch used integration types');
     }
-    return usedTypes;
   },
+
 
   /**
    * Get one integration
