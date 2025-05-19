@@ -14,7 +14,7 @@ const GET_DEPARTMENTS_LIST = gql`
     $direction: CURSOR_DIRECTION
     $withoutUserFilter: Boolean
   ) {
-    departments(
+    departmentsMain(
       ids: $ids
       excludeIds: $excludeIds
       searchValue: $searchValue
@@ -27,11 +27,27 @@ const GET_DEPARTMENTS_LIST = gql`
       direction: $direction
       withoutUserFilter: $withoutUserFilter
     ) {
-      _id
-      code
-      title
-      supervisorId
-      userCount
+      list {
+        _id
+        code
+        title
+        supervisorId
+        supervisor {
+          _id
+          details {
+            fullName
+            avatar
+          }
+        }
+        userCount
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+      totalCount
     }
   }
 `;

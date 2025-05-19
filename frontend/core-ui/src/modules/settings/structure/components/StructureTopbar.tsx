@@ -1,15 +1,14 @@
 import { useLocation } from 'react-router';
 import { SETTINGS_ROUTES } from '../constants/structure-routes';
+import { BranchesTopbar } from './branches/BranchesTopbar';
 
 export function StructureTopbar() {
   const { pathname } = useLocation();
-  if (pathname.includes(SETTINGS_ROUTES['/settings/structure'])) {
-    return (
-      <div className="ml-auto flex items-center gap-3">
-        filter
-        add
-      </div>
-    );
+  if (pathname === '/settings/structure') {
+    return null;
   }
-  return null;
+  return (
+    SETTINGS_ROUTES[pathname as keyof typeof SETTINGS_ROUTES] ===
+      'Branches' && <BranchesTopbar />
+  );
 }

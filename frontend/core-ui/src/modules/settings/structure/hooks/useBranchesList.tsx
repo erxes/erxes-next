@@ -7,7 +7,8 @@ export const useBranchesList = (operationVariables?: OperationVariables) => {
     operationVariables,
   );
   return {
-    branches: data ? data?.branches : [],
+    branches: data ? data?.branchesMain?.list : [],
+    totalCount: data ? data?.branchesMain?.totalCount : 0,
     loading,
     error,
   };

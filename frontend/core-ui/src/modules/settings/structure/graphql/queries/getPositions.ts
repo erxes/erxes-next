@@ -12,9 +12,8 @@ const GET_POSITIONS_LIST = gql`
     $limit: Int
     $cursor: String
     $direction: CURSOR_DIRECTION
-    $withoutUserFilter: Boolean
   ) {
-    positions(
+    positionsMain(
       ids: $ids
       excludeIds: $excludeIds
       searchValue: $searchValue
@@ -25,15 +24,17 @@ const GET_POSITIONS_LIST = gql`
       limit: $limit
       cursor: $cursor
       direction: $direction
-      withoutUserFilter: $withoutUserFilter
     ) {
-      _id
-      code
-      title
-      parentId
-      userCount
-      order
-      status
+      list {
+        _id
+        code
+        title
+        parentId
+        userCount
+        order
+        status
+      }
+      totalCount
     }
   }
 `;

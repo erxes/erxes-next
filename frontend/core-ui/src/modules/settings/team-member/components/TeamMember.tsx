@@ -13,11 +13,11 @@ export const TeamMember = () => {
         <SettingsHeader breadcrumbs={<TeamMemberSettingsBreadcrumb />}>
           <TeamMemberTopbar />
         </SettingsHeader>
-        <div className="flex flex-row h-full">
+        <div className="flex flex-row h-full w-full">
           <TeamMemberSidebar />
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full h-full px-5">
             <TeamMemberFilterBar />
-            <div className="flex flex-col h-[calc(100%-64px)] p-5 pb-0">
+            <div className="flex w-full h-full">
               <TeamMemberTable />
             </div>
           </div>

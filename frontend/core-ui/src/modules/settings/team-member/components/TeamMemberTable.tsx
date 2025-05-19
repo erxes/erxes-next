@@ -22,7 +22,12 @@ const TeamMemberTable = () => {
     );
   }
   return (
-    <RecordTable.Provider columns={teamMemberColumns} data={users || []}>
+    <RecordTable.Provider
+      columns={teamMemberColumns}
+      data={users || []}
+      stickyColumns={['more', 'avatar', 'firstName', 'lastName']}
+      className="mt-3"
+    >
       <RecordTable.Scroll>
         <RecordTable>
           <RecordTable.Header />

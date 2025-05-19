@@ -14,7 +14,7 @@ const GET_BRANCHES_LIST = gql`
     $direction: CURSOR_DIRECTION
     $withoutUserFilter: Boolean
   ) {
-    branches(
+    branchesMain(
       ids: $ids
       excludeIds: $excludeIds
       searchValue: $searchValue
@@ -27,12 +27,21 @@ const GET_BRANCHES_LIST = gql`
       direction: $direction
       withoutUserFilter: $withoutUserFilter
     ) {
-      _id
-      address
-      code
-      parentId
-      userCount
-      title
+      list {
+        _id
+        address
+        code
+        parentId
+        userCount
+        title
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+      totalCount
     }
   }
 `;
