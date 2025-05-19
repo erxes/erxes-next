@@ -24,7 +24,7 @@ export const GET_POSITIONS_QUERY = gql`
       sortField: $sortField
       ${GQL_CURSOR_PARAMS}
     ) {
-      lsit {
+      list {
         _id
         children {
           _id
