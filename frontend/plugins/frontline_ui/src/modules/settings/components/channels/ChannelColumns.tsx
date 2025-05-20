@@ -19,9 +19,13 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
-import { AssignMember, AssignMultipleMembers } from 'ui-modules/modules';
-import { type TChannel } from '~/modules/settings/types/channel';
+import { AssignMember, SelectMember } from 'ui-modules/modules';
+import {
+  ChannelHotKeyScope,
+  type TChannel,
+} from '~/modules/settings/types/channel';
 import { renderingChannelDetailAtom } from '../../states/renderingChannelDetail';
+import { useChannelsEdit } from '../../hooks/useChannelsEdit';
 
 export const MoreColumnCell = ({ cell }: { cell: Cell<TChannel, unknown> }) => {
   const [, setOpen] = useQueryState('channel_id');
@@ -49,18 +53,34 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
     id: 'name',
     accessorKey: 'name',
     header: () => <RecordTable.InlineHead label="name" icon={IconLabel} />,
-    cell: ({ cell }) => (
-      <RecordTablePopover>
-        <RecordTableCellTrigger>
-          <RecordTableCellDisplay>
-            <TextOverflowTooltip value={cell.row.original.name} />
-          </RecordTableCellDisplay>
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
-          <Input value={cell.getValue() as string} />
-        </RecordTableCellContent>
-      </RecordTablePopover>
-    ),
+    cell: ({ cell }) => {
+      const { channelsEdit } = useChannelsEdit();
+      return (
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <RecordTableCellDisplay>
+              <TextOverflowTooltip value={cell.row.original.name} />
+            </RecordTableCellDisplay>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Input
+              value={cell.getValue() as string}
+              onChange={(e) =>
+                channelsEdit(
+                  {
+                    variables: {
+                      id: cell.row.original._id,
+                      name: cell.row.original.name,
+                    },
+                  },
+                  ['name'],
+                )
+              }
+            />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
+    },
     size: 250,
   },
   {
@@ -69,32 +89,35 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
     header: () => (
       <RecordTable.InlineHead label="description" icon={IconAlignJustified} />
     ),
-    cell: ({ cell }) => (
-      <RecordTablePopover>
-        <RecordTableCellTrigger>
-          <RecordTableCellDisplay>
-            <TextOverflowTooltip value={cell.row.original.description} />
-          </RecordTableCellDisplay>
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
-          <Textarea value={cell.getValue() as string} />
-        </RecordTableCellContent>
-      </RecordTablePopover>
-    ),
-    size: 250,
-  },
-  {
-    id: 'userId',
-    accessorKey: 'userId',
-    header: () => <RecordTable.InlineHead label="user" icon={IconUser} />,
-    cell: ({ cell }) => (
-      <RecordTableCellDisplay className="justify-center">
-        <AssignMember
-          className="shadow-none bg-transparent"
-          value={cell.getValue() as string}
-        />
-      </RecordTableCellDisplay>
-    ),
+    cell: ({ cell }) => {
+      const { channelsEdit } = useChannelsEdit();
+      return (
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <RecordTableCellDisplay>
+              <TextOverflowTooltip value={cell.row.original.description} />
+            </RecordTableCellDisplay>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Textarea
+              value={cell.getValue() as string}
+              onChange={(e) =>
+                channelsEdit(
+                  {
+                    variables: {
+                      id: cell.row.original._id,
+                      name: cell.row.original.name,
+                      description: e.currentTarget.value,
+                    },
+                  },
+                  ['description'],
+                )
+              }
+            />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
+    },
     size: 250,
   },
   {
@@ -103,14 +126,31 @@ export const ChannelColumns: ColumnDef<TChannel>[] = [
     header: () => (
       <RecordTable.InlineHead label="users" icon={IconUsersGroup} />
     ),
-    cell: ({ cell }) => (
-      <RecordTableCellDisplay className="justify-center">
-        <AssignMultipleMembers
-          className="shadow-none bg-transparent"
-          value={cell.getValue() as string[]}
-        />
-      </RecordTableCellDisplay>
-    ),
+    cell: ({ cell }) => {
+      const { channelsEdit } = useChannelsEdit();
+      return (
+        <RecordTableCellDisplay className="justify-center">
+          -
+        </RecordTableCellDisplay>
+        // <SelectMember.InlineCell
+        //   scope={
+        //     ChannelHotKeyScope.ChannelSettingsPage +
+        //     '.' +
+        //     cell.row.original._id +
+        //     '.users'
+        //   }
+        //   value={cell.getValue() as string[]}
+        //   onValueChange={(value) =>
+        //     channelsEdit(
+        //       {
+        //         variables: { _id: cell.row.original._id, memberIds: value },
+        //       },
+        //       ['memberIds'],
+        //     )
+        //   }
+        // />
+      );
+    },
     size: 250,
   },
   {

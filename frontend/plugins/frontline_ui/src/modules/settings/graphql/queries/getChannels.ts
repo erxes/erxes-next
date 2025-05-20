@@ -6,14 +6,29 @@ const GET_CHANNELS = gql`
       _id
       conversationCount
       description
+      integrationIds
       memberIds
       name
       openConversationCount
       userId
-      integrationIds
     }
     channelsTotalCount
   }
 `;
 
-export { GET_CHANNELS };
+const GET_CHANNEL_DETAIL_BY_ID = gql`
+  query ChannelDetail($id: String!) {
+    channelDetail(_id: $id) {
+      _id
+      conversationCount
+      description
+      integrationIds
+      memberIds
+      name
+      openConversationCount
+      userId
+    }
+  }
+`;
+
+export { GET_CHANNELS, GET_CHANNEL_DETAIL_BY_ID };

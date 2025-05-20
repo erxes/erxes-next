@@ -2,6 +2,7 @@ import React from 'react';
 import { useChannels } from '../../hooks/useChannels';
 import { RecordTable } from 'erxes-ui/modules';
 import { ChannelColumns } from './ChannelColumns';
+import { ChannelCommandBar } from './ChannelCommandBar';
 
 const ChannelsTable = () => {
   const { channels, loading } = useChannels({
@@ -17,6 +18,7 @@ const ChannelsTable = () => {
       stickyColumns={['more', 'checkbox', 'name']}
       className="m-3"
     >
+      <ChannelCommandBar />
       <RecordTable.Scroll>
         <RecordTable>
           <RecordTable.Header />
