@@ -64,6 +64,28 @@ const productsAdd = gql`
   }
 `;
 
+const categoryEdit = gql`
+  mutation productCategoriesEdit($_id: String!, $name: String!, $code: String!, $parentId: String, $scopeBrandIds: [String], $description: String, $attachment: AttachmentInput, $status: String, $meta: String, $maskType: String, $mask: JSON, $isSimilarity: Boolean, $similarities: JSON) {
+    productCategoriesEdit(
+      _id: $_id
+      ame: $name
+      code: $code
+      parentId: $parentId
+      scopeBrandIds: $scopeBrandIds
+      description: $description
+      attachment: $attachment
+      status: $status
+      meta: $meta
+      maskType: $maskType
+      mask: $mask
+      isSimilarity: $isSimilarity
+      similarities: $similarities
+    ) {
+      _id
+      __typename
+  }
+}
+`
 const productsEdit = gql`
   mutation ProductsEdit(
     $_id: String!
@@ -97,4 +119,5 @@ const productsEdit = gql`
     }
   }
 `;
-export const productsMutations = { productsEdit, productsAdd };
+
+export const productsMutations = { productsEdit, productsAdd , categoryEdit };

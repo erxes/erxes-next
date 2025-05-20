@@ -18,6 +18,7 @@ import {
   IconPackage,
 } from '@tabler/icons-react';
 import { useMemo } from 'react';
+import { categoryMoreColumn } from './ProductCategoryMoreColumn';
 
 export const ProductCategoriesRecordTable = () => {
   const { productCategories, loading } = useProductCategories();
@@ -73,6 +74,7 @@ export const productCategoryColumns: (
 ) => ColumnDef<IProductCategory & { hasChildren: boolean }>[] = (
   categoryObject,
 ) => [
+  categoryMoreColumn,
   RecordTable.checkboxColumn as ColumnDef<
     IProductCategory & { hasChildren: boolean }
   >,
