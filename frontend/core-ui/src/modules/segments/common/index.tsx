@@ -7,11 +7,9 @@ import {
 } from 'erxes-ui';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-// import formSchema from '../components/form/schema';
 import { UseFormReturn } from 'react-hook-form';
-// import { IConditionsForPreview } from '../../../../../../core-ui/src/modules/segments/types';
 import { z } from 'zod';
-import segmentFormSchema from 'ui-modules/modules/segments/form/schema';
+import { SegmentFormProps } from 'ui-modules/modules/segments/form/schema';
 import { IConditionsForPreview } from 'ui-modules';
 
 type CommandProps = {
@@ -179,7 +177,7 @@ export const SelectCommand = ({
 };
 
 export const generateParamsPreviewCount = (
-  form: UseFormReturn<z.infer<typeof segmentFormSchema>>,
+  form: UseFormReturn<SegmentFormProps>,
   selectedContentType: string,
 ) => {
   const conditions = form.watch('conditions');

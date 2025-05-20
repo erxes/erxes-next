@@ -16,7 +16,7 @@ export const ListSidebar = ({ types }: Props) => {
         <Sidebar.GroupContent>
           <Sidebar.Menu>
             {types.map(({ description, contentType }) => (
-              <Sidebar.MenuItem>
+              <Sidebar.MenuItem key={contentType}>
                 <Sidebar.MenuButton
                   isActive={contentType === selectedContentType}
                 >

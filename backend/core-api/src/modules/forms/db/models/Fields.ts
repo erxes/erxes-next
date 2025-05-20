@@ -821,11 +821,7 @@ export const loadGroupClass = (models: IModels) => {
      * Update given fieldsGroups orders
      */
     public static async updateOrder(orders: IOrderInput[]) {
-<<<<<<< HEAD
-      return updateOrder(models.FieldsGroups, orders);
-=======
       return updateMongoDocumentOrder(models.FieldsGroups, orders);
->>>>>>> e2d20bfcd766052fed41223777ab75e859ce8c58
     }
   }
 

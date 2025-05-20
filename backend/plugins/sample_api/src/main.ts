@@ -1,16 +1,16 @@
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
-import * as http from 'http';
-import { initApolloServer } from './apollo/apolloServer';
 import * as trpcExpress from '@trpc/server/adapters/express';
+import cookieParser from 'cookie-parser';
 import {
   closeMongooose,
+  createTRPCContext,
   joinErxesGateway,
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
+import express from 'express';
+import * as http from 'http';
 import { appRouter } from '~/trpc/init-trpc';
-import { createContext } from '~/trpc/init-trpc';
+import { initApolloServer } from './apollo/apolloServer';
+import { generateModels } from './connectionResolvers';
 const port = process.env.PORT ? Number(process.env.PORT) : 3303;
 
 const app = express();
@@ -27,7 +27,13 @@ app.use(
   '/trpc',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
-    createContext,
+    createContext: createTRPCContext(async (subdomain, context) => {
+      const models = await generateModels(subdomain);
+
+      context.models = models;
+
+      return context;
+    }),
   }),
 );
 

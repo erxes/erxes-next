@@ -27,6 +27,7 @@ import { closeMongooose } from './mongo';
 import { AutomationConfigs } from '../core-modules/automations/types';
 import { startAutomations } from '../core-modules';
 import { getSubdomain } from './utils';
+import { createTRPCContext } from './trpc';
 
 const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
 
@@ -66,7 +67,13 @@ type ConfigTypes = {
   hasSubscriptions?: boolean;
   corsOptions?: any;
   subscriptionPluginPath?: any;
-  trpcAppRouter?: AnyRouter;
+  trpcAppRouter?: {
+    router: AnyRouter;
+    createContext: <TContext>(
+      subdomain: string,
+      context: any,
+    ) => Promise<TContext>;
+  };
   meta?: IMeta;
 };
 
@@ -140,12 +147,8 @@ export async function startPlugin(
     app.use(
       '/trpc',
       trpcExpress.createExpressMiddleware({
-        router: configs.trpcAppRouter,
-        createContext: () => {
-          return {
-            subdomain: 'os',
-          };
-        },
+        router: configs.trpcAppRouter.router,
+        createContext: createTRPCContext(configs.trpcAppRouter.createContext),
       }),
     );
   }

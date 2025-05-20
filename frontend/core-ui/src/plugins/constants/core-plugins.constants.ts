@@ -63,7 +63,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
   {
     name: 'segments',
     icon: IconChartPie,
-    path: '/segments',
+    path: 'segments',
     hasSettings: true,
     hasWidgets: true,
   },

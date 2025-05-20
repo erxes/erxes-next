@@ -36,7 +36,6 @@ export const schemaWrapper = (
 ) => {
   schema.add({ _id: mongooseStringRandomId });
   schema.add({ processId: { type: String, optional: true } });
-  // schema.add({ createdAt: { type: Date, default: new Date() } });
 
   if (options?.contentType) {
     (schema.statics as any)._contentType = options.contentType;
