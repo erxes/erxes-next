@@ -47,7 +47,7 @@
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/plugins/logs_api/Dockerfile . -t logs"
+      "command": "docker build -f backend/plugins/logs_api/Dockerfile . -t logs_api"
     }
   }
 }

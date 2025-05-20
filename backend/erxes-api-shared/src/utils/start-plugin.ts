@@ -84,7 +84,11 @@ export async function startPlugin(
   const app = express();
   app.disable('x-powered-by');
   app.use(cors(configs.corsOptions || {}));
-
+  app.use(
+    express.json({
+      limit: '15mb',
+    }),
+  );
   app.use(cookieParser());
 
   // for health check
