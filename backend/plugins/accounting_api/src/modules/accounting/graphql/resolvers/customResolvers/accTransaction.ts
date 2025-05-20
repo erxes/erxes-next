@@ -1,6 +1,6 @@
-import { ITransactionDocument } from "@/accounting/@types/transaction";
-import { sendTRPCMessage } from "erxes-api-shared/utils";
-import { IContext } from "~/connectionResolvers";
+import { ITransactionDocument } from '@/accounting/@types/transaction';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
 
 export default {
   __resolveReference: async ({ _id }, { models }: IContext) => {
@@ -8,11 +8,12 @@ export default {
   },
 
   async followTrs(transaction: ITransactionDocument, _, { models }: IContext) {
-    if (!transaction.follows?.length)
-      return;
+    if (!transaction.follows?.length) return;
 
     // return transaction.follows.map(f => dataLoaders.transaction.load(f.id))
-    return await models.Transactions.find({ _id: { $in: transaction.follows.map(f => f.id) } }).lean();
+    return await models.Transactions.find({
+      _id: { $in: transaction.follows.map((f) => f.id) },
+    }).lean();
   },
 
   async vatRow(transaction: ITransactionDocument, _, { models }: IContext) {
@@ -37,7 +38,8 @@ export default {
     }
 
     return {
-      __typename: 'Branch', _id: transaction.branchId
+      __typename: 'Branch',
+      _id: transaction.branchId,
     };
   },
 
@@ -47,7 +49,8 @@ export default {
     }
 
     return {
-      __typename: 'Department', _id: transaction.departmentId
+      __typename: 'Department',
+      _id: transaction.departmentId,
     };
   },
 
@@ -56,18 +59,18 @@ export default {
       return null;
     }
 
-    if (transaction.customerType === "visitor") {
+    if (transaction.customerType === 'visitor') {
       return null;
     }
 
-    if (transaction.customerType === "company") {
+    if (transaction.customerType === 'company') {
       const company = await sendTRPCMessage({
         method: 'query',
         pluginName: 'core',
         module: 'company',
         action: 'findOne',
         input: { query: { _id: transaction.customerId } },
-        defaultValue: {}
+        defaultValue: {},
       });
 
       if (!company?._id) {
@@ -80,18 +83,18 @@ export default {
         primaryPhone: company.primaryPhone,
         primaryEmail: company.primaryEmail,
         firstName: company.primaryName,
-        lastName: ""
+        lastName: '',
       };
     }
 
-    if (transaction.customerType === "user") {
+    if (transaction.customerType === 'user') {
       const user = await sendTRPCMessage({
         method: 'query',
         pluginName: 'core',
         module: 'users',
         action: 'findOne',
         input: { query: { _id: transaction.customerId } },
-        defaultValue: {}
+        defaultValue: {},
       });
 
       if (!user?._id) {
@@ -101,10 +104,10 @@ export default {
       return {
         _id: user._id,
         code: user.code,
-        primaryPhone: (user.details && user.details.operatorPhone) || "",
+        primaryPhone: (user.details && user.details.operatorPhone) || '',
         primaryEmail: user.email,
-        firstName: `${user.firstName || ""} ${user.lastName || ""}`,
-        lastName: user.username
+        firstName: `${user.firstName || ''} ${user.lastName || ''}`,
+        lastName: user.username,
       };
     }
 
@@ -114,7 +117,7 @@ export default {
       module: 'customer',
       action: 'findOne',
       input: { query: { _id: transaction.customerId } },
-      defaultValue: {}
+      defaultValue: {},
     });
 
     if (!customer?._id) {
@@ -127,21 +130,18 @@ export default {
       primaryPhone: customer.primaryPhone,
       primaryEmail: customer.primaryEmail,
       firstName: customer.firstName,
-      lastName: customer.lastName
+      lastName: customer.lastName,
     };
   },
 
   assignedUsers(transaction: ITransactionDocument) {
     if (!transaction.assignedUserIds?.length) {
       return;
-    };
+    }
 
-    return (
-      transaction.assignedUserIds.map(
-        aui => ({
-          __typename: 'User', _id: aui
-        })
-      )
-    );
+    return transaction.assignedUserIds.map((aui) => ({
+      __typename: 'User',
+      _id: aui,
+    }));
   },
 };

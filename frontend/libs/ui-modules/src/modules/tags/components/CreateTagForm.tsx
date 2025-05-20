@@ -100,6 +100,7 @@ export const CreateTagForm = () => {
             )}
           />
         </div>
+        <Separator />
         <div className="p-3">
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? (

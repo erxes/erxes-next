@@ -4,7 +4,7 @@ import { cleanHtml } from 'erxes-api-shared/utils';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { conversationSchema } from '@/inbox/db/definitions/conversations';
 import { IModels } from '~/connectionResolvers';
-import { MODULE_NAMES } from '@/inbox/constants';
+
 import {
   IConversationDocument,
   IConversation,
@@ -74,7 +74,7 @@ export interface IConversationModel extends Model<IConversationDocument> {
   ): Promise<{ n: number; nModified: number; ok: number }>;
 }
 
-export const loadClass = (models: IModels, subdomain: string) => {
+export const loadClass = (models: IModels) => {
   class Conversation {
     /**
      * Retreives conversation
@@ -152,8 +152,8 @@ export const loadClass = (models: IModels, subdomain: string) => {
         // if closed, reopen
         status: CONVERSATION_STATUSES.OPEN,
 
-        closedAt: null,
-        closedUserId: null,
+        closedAt: undefined,
+        closedUserId: undefined,
       });
 
       return models.Conversations.findOne({ _id });

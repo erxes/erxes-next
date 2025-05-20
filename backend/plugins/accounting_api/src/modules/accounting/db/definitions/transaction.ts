@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils/mongo';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { JOURNALS, PTR_STATUSES, TR_SIDES, TR_STATUSES } from '../../@types/constants';
 
 export const followDetailSchema = schemaWrapper(

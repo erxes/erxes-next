@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongoStringRequired, schemaWrapper } from 'erxes-api-shared/utils/mongo';
+import { mongoStringRequired, schemaWrapper } from 'erxes-api-shared/utils';
 
 export const posSchema = schemaWrapper(
   new Schema({

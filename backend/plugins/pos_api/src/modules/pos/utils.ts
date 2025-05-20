@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import { redis, isEnabled } from 'erxes-api-shared/utils';
-import { sendTRPCMessage } from 'erxes-api-shared/utils/trpc';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels, generateModels } from '~/connectionResolvers';
 import { sendCoreMessage } from '~/init-trpc';
 import { IPosOrder, IPosOrderDocument } from './@types/orders';

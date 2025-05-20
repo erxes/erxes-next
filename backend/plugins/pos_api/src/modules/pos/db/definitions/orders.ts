@@ -1,4 +1,4 @@
-import { mongoStringRequired, schemaWrapper } from 'erxes-api-shared/utils/mongo';
+import { mongoStringRequired, schemaWrapper } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 import { SUBSCRIPTION_INFO_STATUS } from './constants';
 

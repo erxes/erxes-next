@@ -1,8 +1,8 @@
-import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels } from '~/connectionResolvers';
 import { RPError, RPResult, RPSuccess } from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
+
 const sendError = (message): RPError => ({
   status: 'error',
   errorMessage: message,
@@ -127,10 +127,9 @@ export const receiveTrpcMessage = async (
           content,
           assignedUserId,
           updatedAt,
-          // mark this conversation as unread
+
           readUserIds: [],
 
-          // reopen this conversation if it's closed
           status: CONVERSATION_STATUSES.OPEN,
         });
       } else {
@@ -227,7 +226,6 @@ export const receiveTrpcMessage = async (
     });
 
     return sendSuccess({ userIds: users.map((user) => user._id) });
-
   }
   throw new Error(`Unknown action: ${action}`);
 };

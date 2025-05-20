@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils/mongo';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { ADJ_INV_STATUSES } from '../../@types/adjustInventory';
 
 export const adjustInvDetailsSchema = schemaWrapper(

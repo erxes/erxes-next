@@ -38,8 +38,16 @@ export const useTags = (
     });
   };
 
+  const tagsWithHasChildren = tags?.map((tag) => ({
+    ...tag,
+    hasChildren: tags?.some((t) => t.parentId === tag._id),
+  }));
+
   return {
-    tags,
+    tags: tagsWithHasChildren,
+    sortedTags: [...(tagsWithHasChildren || [])].sort((a, b) =>
+      a.order?.localeCompare(b.order),
+    ),
     pageInfo,
     totalCount,
     loading,

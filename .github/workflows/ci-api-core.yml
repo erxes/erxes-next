@@ -7,7 +7,7 @@ on:
     paths:
       - 'backend/core-api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-core-api.yml'
+      - '.github/workflows/ci-api-core.yml'
   pull_request:
     paths:
       - 'backend/core-api/**'

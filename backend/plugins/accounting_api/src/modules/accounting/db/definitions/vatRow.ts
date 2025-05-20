@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils/mongo';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { VAT_ROW_STATUS, VatRowKinds } from '../../@types/vatRow';
 
 export const vatRowSchema = schemaWrapper(

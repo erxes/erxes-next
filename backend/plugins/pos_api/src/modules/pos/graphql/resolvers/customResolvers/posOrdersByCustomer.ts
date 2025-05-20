@@ -1,4 +1,4 @@
-import { sendTRPCMessage } from "erxes-api-shared/utils/trpc";
+import { sendTRPCMessage } from "erxes-api-shared/utils";
 
 const resolver = {
   customerDetail: async ({ _id, customerType }) => {
