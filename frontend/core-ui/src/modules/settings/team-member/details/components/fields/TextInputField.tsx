@@ -53,20 +53,20 @@ export const TextInputField = <T extends FieldValues>({
         )}
       />
     );
-  } else
-    return (
-      <Form.Field
-        control={control}
-        name={name}
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>{label}</Form.Label>
-            <Form.Description>{description}</Form.Description>
-            <Form.Control>
-              <Input {...field} {...rest} />
-            </Form.Control>
-          </Form.Item>
-        )}
-      />
-    );
+  }
+  return (
+    <Form.Field
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <Form.Item>
+          <Form.Label>{label}</Form.Label>
+          <Form.Description>{description}</Form.Description>
+          <Form.Control>
+            <Input {...field} {...rest} />
+          </Form.Control>
+        </Form.Item>
+      )}
+    />
+  );
 };

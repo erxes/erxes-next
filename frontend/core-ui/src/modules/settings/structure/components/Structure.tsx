@@ -58,7 +58,7 @@ export const Structure = () => {
 
   return (
     <ScrollArea className="w-full min-h-svh">
-      <div className="flex h-full w-full flex-col">
+      <div className="w-full overflow-hidden flex flex-col">
         <div className="mx-auto max-w-2xl w-full relative">
           <h2 className="font-semibold text-lg mt-4 mb-12 px-4">Structure</h2>
           <Form {...methods}>
