@@ -1,6 +1,7 @@
 import { IconPlus, IconTool, IconUserShield } from '@tabler/icons-react';
-import { Button, SettingsHeader } from 'erxes-ui';
+import { Button } from 'erxes-ui';
 import { Permission } from '@/settings/permission/components/Permission';
+import { SettingsHeader } from 'ui-modules';
 
 export function PermissionPage() {
   return (

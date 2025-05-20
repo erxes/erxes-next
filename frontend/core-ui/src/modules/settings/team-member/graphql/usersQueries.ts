@@ -43,34 +43,26 @@ const GET_USERS_QUERY = gql`
     $status: String
     $excludeIds: Boolean
     $searchValue: String
-    $isActive: Boolean
-    $ids: [String]
     $brandIds: [String]
     $departmentId: String
-    $unitId: String
-    $isAssignee: Boolean
     $branchId: String
-    $departmentIds: [String]
     $branchIds: [String]
+    $departmentIds: [String]
+    $unitId: String
     $segment: String
-    $segmentData: String
   ) {
     users(
       ${GQL_CURSOR_PARAMS}
       status: $status
       excludeIds: $excludeIds
       searchValue: $searchValue
-      isActive: $isActive
-      ids: $ids
       brandIds: $brandIds
       departmentId: $departmentId
-      unitId: $unitId
       branchId: $branchId
-      isAssignee: $isAssignee
-      departmentIds: $departmentIds
       branchIds: $branchIds
+      departmentIds: $departmentIds
+      unitId: $unitId
       segment: $segment
-      segmentData: $segmentData
     ) {
       list {
         _id

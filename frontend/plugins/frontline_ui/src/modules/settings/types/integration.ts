@@ -1,3 +1,5 @@
+import { TablerIcon } from '@tabler/icons-react';
+
 export interface IIntegration {
   _id: string;
   kind: string;
@@ -17,6 +19,7 @@ export interface IIntegrationItem {
       name: string;
       description: string;
     };
+    Icon?: TablerIcon;
   }[];
 }
 export interface IIntegrationContext {

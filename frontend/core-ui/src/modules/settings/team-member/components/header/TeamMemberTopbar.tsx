@@ -12,6 +12,5 @@ export function TeamMemberTopbar() {
         <InviteTeamMember />
       </div>
     );
-  }
-  return null;
+  } else return null;
 }

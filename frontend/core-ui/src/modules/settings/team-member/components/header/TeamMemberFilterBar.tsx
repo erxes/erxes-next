@@ -28,7 +28,7 @@ export const TeamMemberFilterBar = () => {
   const { code, name, branchId, departmentId, unitId } = queries;
 
   return (
-    <Filter.Bar>
+    <Filter.Bar className="mt-5">
       {!!code && (
         <Filter.BarItem>
           <Filter.BarName>
