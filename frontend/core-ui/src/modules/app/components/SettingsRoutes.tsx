@@ -50,10 +50,12 @@ const TagsSettings = lazy(() =>
   })),
 );
 
-const ProductsSettings = lazy(() =>
-  import('~/pages/settings/modules/ProductsSettingPage').then((module) => ({
-    default: module.ProductsSettingPage,
-  })),
+const ProductsSettingsRoutes = lazy(() =>
+  import('@/products/settings/components/ProductSettingsRoutes').then(
+    (module) => ({
+      default: module.ProductsSettingRoutes,
+    }),
+  ),
 );
 
 export function SettingsRoutes() {
@@ -91,8 +93,8 @@ export function SettingsRoutes() {
         />
         <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
         <Route
-          path={SettingsWorkspacePath.Products}
-          element={<ProductsSettings />}
+          path={SettingsWorkspacePath.ProductsCatchAll}
+          element={<ProductsSettingsRoutes />}
         />
         {getPluginsSettingsRoutes()}
       </Routes>
