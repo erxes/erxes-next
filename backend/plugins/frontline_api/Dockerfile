@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
 
-COPY ./backend/plugin/frontline_api/package.json /app/backend/plugin/frontline_api/
+COPY ./backend/plugins/frontline_api/package.json /app/backend/plugins/frontline_api/
 COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
 # Install pnpm and dependencies
@@ -17,11 +17,11 @@ RUN pnpm install
 FROM --platform=linux/amd64 build AS frontline_api-build
 
 # Copy source code
-COPY ./backend/plugin/frontline_api /app/backend/plugin/frontline_api
+COPY ./backend/plugins/frontline_api /app/backend/plugins/frontline_api
 COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
-WORKDIR /app/backend/plugin/frontline_api
+WORKDIR /app/backend/plugins/frontline_api
 
 ENV NX_DAEMON=false
 RUN npx nx build:packageJson frontline_api
@@ -39,7 +39,7 @@ COPY --chown=1000 --from=frontline_api-build /app /app
 RUN npm install -g pnpm
 
 # Install production dependencies
-WORKDIR /app/backend/plugin/frontline_api/dist
+WORKDIR /app/backend/plugins/frontline_api/dist
 RUN pnpm install
 
 # Set environment variables

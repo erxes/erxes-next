@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'backend/plugin/frontline_api/**'
+      - 'backend/plugins/frontline_api/**'
       - 'backend/erxes-api-shared/**'
       - '.github/workflows/ci-api-core.yml'
   pull_request:
     paths:
-      - 'backend/plugin/frontline_api/**'
+      - 'backend/plugins/frontline_api/**'
       - 'backend/erxes-api-shared/**'
       - '.github/workflows/ci-api-frontline_api.yml'
 
