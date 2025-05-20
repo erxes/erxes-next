@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { OPERATORS, staticPlaceholders } from './constants';
 import { pluralFormation, sendWorkerMessage } from '../../utils';
 import {
