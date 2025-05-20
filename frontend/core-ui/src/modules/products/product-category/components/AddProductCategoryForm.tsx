@@ -9,8 +9,8 @@ import {
   useSetHotkeyScope,
 } from 'erxes-ui';
 import { useState } from 'react';
-import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 import { AddCategoryForm } from '../add-category/components/AddProductCategory';
+import { CategoryHotKeyScope } from '../types/CategoryHotKeyScope';
 
 export const ProductCategoryAddSheet = () => {
   const setHotkeyScope = useSetHotkeyScope();
@@ -19,16 +19,16 @@ export const ProductCategoryAddSheet = () => {
 
   const onOpen = () => {
     setOpen(true);
-    setHotkeyScopeAndMemorizePreviousScope(ProductHotKeyScope.ProductAddSheet);
+    setHotkeyScopeAndMemorizePreviousScope(CategoryHotKeyScope.CategoryAddSheet);
   };
 
   const onClose = () => {
-    setHotkeyScope(ProductHotKeyScope.ProductsPage);
+    setHotkeyScope(CategoryHotKeyScope.CategoriesPage);
     setOpen(false);
   };
 
-  useScopedHotkeys(`c`, () => onOpen(), ProductHotKeyScope.ProductsPage);
-  useScopedHotkeys(`esc`, () => onClose(), ProductHotKeyScope.ProductAddSheet);
+  useScopedHotkeys(`c`, () => onOpen(), CategoryHotKeyScope.CategoriesPage);
+  useScopedHotkeys(`esc`, () => onClose(), CategoryHotKeyScope.CategoryAddSheet);
 
   return (
     <Sheet

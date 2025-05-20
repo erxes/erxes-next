@@ -1,12 +1,11 @@
-import { PRODUCTS_CURSOR_SESSION_KEY } from '@/products/constants/productsCursorSessionKey';
-import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 import { IconSearch } from '@tabler/icons-react';
 import { Combobox, Command, Filter } from 'erxes-ui';
 import { TagsFilter } from 'ui-modules';
+import { CategoryHotKeyScope } from '../types/CategoryHotKeyScope';
 
 export const CategoryFilter = () => {
   return (
-    <Filter id="products-filter" sessionKey={PRODUCTS_CURSOR_SESSION_KEY}>
+    <Filter id="products-filter">
       <Filter.Bar>
         <CategoriesFilterPopover />
       </Filter.Bar>
@@ -17,7 +16,7 @@ export const CategoryFilter = () => {
 export const CategoriesFilterPopover = () => {
   return (
     <>
-      <Filter.Popover scope={ProductHotKeyScope.ProductsPage}>
+      <Filter.Popover scope={CategoryHotKeyScope.CategoriesPage}>
         <Filter.Trigger />
         <Combobox.Content>
           <Filter.View>
