@@ -7,7 +7,7 @@ import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { productFormSchema, ProductFormValues } from './formSchema';
 import { CategoryAddSheetHeader } from '../../components/AddProductCategoryForm';
-import { CategoryAddCollapsible } from './CategoryAddCollapse';
+import { CategoryAddCollapsible } from './CategoryAddCollapsible';
 import { ProductCategoriesAddCoreFields } from './CategoryAddCoreFields';
 import { ProductCategoryAddMoreFields } from './CategoryAddMoreFields';
 import { useAddCategory } from '../hooks/useAddCategory';

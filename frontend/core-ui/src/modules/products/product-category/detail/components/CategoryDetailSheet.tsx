@@ -8,9 +8,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, cn, Sheet, ScrollArea, Form, useToast, useSetHotkeyScope } from 'erxes-ui';
 import { renderingCategoryDetailAtom } from '../../states/ProductCategory';
 import { CategoryHotKeyScope } from '../../types/CategoryHotKeyScope';
-import { productFormSchema, ProductFormValues } from '@/products/add-products/components/formSchema';
 import { CategoriesUpdateCoreFields } from './CategoryUpdateCoreFields';
 import { useProductCategoriesEdit } from '../hooks/useUpdateCategory';
+import { productFormSchema, ProductFormValues } from '../../add-category/components/formSchema';
+import { CategoryUpdateCollapsible } from './CategoryUpdateCollapsible';
+import { CategoryUpdateMoreFields } from './CategoryUpdateMoreFields';
 
 export const CategoryDetailSheet = () => {
   const [activeTab] = useAtom(renderingCategoryDetailAtom);
@@ -57,16 +59,11 @@ export const CategoryDetailSheet = () => {
   };
 
   async function onSubmit(data: ProductFormValues) {
-    // Filter out empty values
     const cleanData: Record<string, any> = {};
     Object.entries(data).forEach(([key, value]) => {
       if (value) cleanData[key] = value;
     });
-
-    // Fields to update in the cache
     const fieldsToUpdate = ['name', 'code', 'categoryId'];
-
-    // Call mutation with filtered data
     productCategoriesEdit(
       {
         variables: { 
@@ -124,7 +121,10 @@ export const CategoryDetailSheet = () => {
             <Sheet.Content className="flex-auto overflow-hidden">
               <ScrollArea className="h-full">
                 <div className="p-5">
-                  <CategoriesUpdateCoreFields form={form} />
+                  <CategoriesUpdateCoreFields form={form}/>
+                  <CategoryUpdateCollapsible>
+                    <CategoryUpdateMoreFields form={form} />
+                  </CategoryUpdateCollapsible>
                 </div>
               </ScrollArea>
             </Sheet.Content>

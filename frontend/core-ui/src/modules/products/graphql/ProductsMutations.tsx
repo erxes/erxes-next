@@ -68,7 +68,7 @@ const categoryEdit = gql`
   mutation productCategoriesEdit($_id: String!, $name: String!, $code: String!, $parentId: String, $scopeBrandIds: [String], $description: String, $attachment: AttachmentInput, $status: String, $meta: String, $maskType: String, $mask: JSON, $isSimilarity: Boolean, $similarities: JSON) {
     productCategoriesEdit(
       _id: $_id
-      ame: $name
+      name: $name
       code: $code
       parentId: $parentId
       scopeBrandIds: $scopeBrandIds

@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Form, Input } from 'erxes-ui';
 import { SelectCategory } from '../../components/SelectCategory';
-import { ProductFormValues } from '@/products/add-products/components/formSchema';
 import { useProductCategoryDetail } from '../hooks/useCategoryDetail';
+import { ProductFormValues } from '../../add-category/components/formSchema';
 
 interface CategoriesUpdateCoreFieldsProps {
   form: UseFormReturn<ProductFormValues>;
@@ -25,13 +25,6 @@ export const CategoriesUpdateCoreFields: React.FC<CategoriesUpdateCoreFieldsProp
 
   return (
     <div className="flex flex-col gap-5">
-      {categoryDetail && (
-        <div className="text-sm text-gray-600">
-          <p><strong>Selected Category:</strong> {categoryDetail.name}</p>
-          <p><strong>Products Count:</strong> {categoryDetail.productCount}</p>
-        </div>
-      )}
-
       <Form.Field
         control={form.control}
         name="categoryId"

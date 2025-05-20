@@ -1,18 +1,16 @@
-import { Cell } from '@tanstack/react-table';
-import { IProduct } from '@/products/types/productTypes';
+import { CellContext } from '@tanstack/react-table';
+import { IProductCategory } from '@/products/types/productTypes';
 import { useSetAtom } from 'jotai';
 import { useSearchParams } from 'react-router-dom';
 import { RecordTable } from 'erxes-ui';
 import { renderingCategoryDetailAtom } from '../states/ProductCategory';
 
-export const CategoryMoreColumnCell = ({
-  cell,
-}: {
-  cell: Cell<IProduct, unknown>;
-}) => {
+export const CategoryMoreColumnCell = (
+  props: CellContext<IProductCategory & { hasChildren: boolean }, unknown>
+) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setRenderingProductDetail = useSetAtom(renderingCategoryDetailAtom);
-  const { _id } = cell.row.original;
+  const { _id } = props.row.original;
 
   const setOpen = (categoryId: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -35,4 +33,4 @@ export const categoryMoreColumn = {
   id: 'more',
   cell: CategoryMoreColumnCell,
   size: 33,
-};
+} as const;
