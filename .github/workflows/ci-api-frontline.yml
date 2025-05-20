@@ -1,4 +1,4 @@
-name: CI frontline_api
+name: CI plugin-frontline_api
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
     paths:
       - 'backend/plugins/frontline_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-core.yml'
+      - '.github/workflows/ci-api-frontline.yml'
   pull_request:
     paths:
       - 'backend/plugins/frontline_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-frontline_api.yml'
+      - '.github/workflows/ci-api-frontline.yml'
 
 jobs:
   frontline_api-ci:
