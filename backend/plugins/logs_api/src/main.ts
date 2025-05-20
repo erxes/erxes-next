@@ -4,7 +4,6 @@ import cors from 'cors';
 import {
   closeMongooose,
   createTRPCContext,
-  getSubdomain,
   joinErxesGateway,
   leaveErxesGateway,
   redis,

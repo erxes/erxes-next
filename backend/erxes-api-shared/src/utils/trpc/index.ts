@@ -1,4 +1,3 @@
-export * from './utils';
 import {
   createTRPCUntypedClient,
   httpBatchLink,
@@ -7,7 +6,6 @@ import {
 import { getPlugin } from '../service-discovery';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { getSubdomain } from '../utils';
-import { IMainContext } from '@/core-types';
 
 export type MessageProps = {
   method?: 'query' | 'mutation';
@@ -52,7 +50,7 @@ export const sendTRPCMessage = async ({
   options,
 }: MessageProps) => {
   if (!method) {
-    method = 'query'
+    method = 'query';
   }
 
   const pluginInfo = await getPlugin(pluginName);
