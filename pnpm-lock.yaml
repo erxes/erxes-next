@@ -151,6 +151,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-virtual':
+        specifier: ^3.13.8
+        version: 3.13.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/table-core':
         specifier: ^8.20.5
         version: 8.21.3
@@ -697,147 +700,6 @@ importers:
         specifier: workspace:^
         version: link:../erxes-api-shared
 
-  backend/gateway/dist:
-    dependencies:
-      '@apollo/client':
-        specifier: 3.13.8
-        version: 3.13.8(@types/react@18.3.1)(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@apollo/server':
-        specifier: 4.12.0
-        version: 4.12.0(encoding@0.1.13)(graphql@16.10.0)
-      '@babel/preset-env':
-        specifier: 7.26.9
-        version: 7.26.9(@babel/core@7.26.10)
-      '@bull-board/api':
-        specifier: 6.9.2
-        version: 6.9.2(@bull-board/ui@6.9.2)
-      '@bull-board/express':
-        specifier: 6.9.2
-        version: 6.9.2
-      '@elastic/elasticsearch':
-        specifier: 7.17.14
-        version: 7.17.14
-      '@envelop/core':
-        specifier: 5.2.3
-        version: 5.2.3
-      '@escape.tech/graphql-armor-character-limit':
-        specifier: 2.3.0
-        version: 2.3.0
-      '@escape.tech/graphql-armor-max-aliases':
-        specifier: 2.6.1
-        version: 2.6.1
-      '@escape.tech/graphql-armor-max-depth':
-        specifier: 2.4.0
-        version: 2.4.0
-      '@graphql-tools/schema':
-        specifier: 10.0.23
-        version: 10.0.23(graphql@16.10.0)
-      '@preconstruct/cli':
-        specifier: 2.8.12
-        version: 2.8.12
-      '@prettier/sync':
-        specifier: 0.5.5
-        version: 0.5.5(prettier@2.8.8)
-      '@sniptt/guards':
-        specifier: 0.2.0
-        version: 0.2.0
-      '@trpc/client':
-        specifier: 11.1.0
-        version: 11.1.0(@trpc/server@11.1.0(typescript@5.7.3))(typescript@5.7.3)
-      '@trpc/server':
-        specifier: 11.1.0
-        version: 11.1.0(typescript@5.7.3)
-      '@types/babel__preset-env':
-        specifier: 7.10.0
-        version: 7.10.0
-      '@types/graphql':
-        specifier: 14.5.0
-        version: 14.5.0
-      '@types/ioredis':
-        specifier: 5.0.0
-        version: 5.0.0
-      babel-plugin-module-resolver:
-        specifier: 5.0.2
-        version: 5.0.2
-      bullmq:
-        specifier: 5.49.1
-        version: 5.49.1
-      cookie-parser:
-        specifier: 1.4.7
-        version: 1.4.7
-      cors:
-        specifier: 2.8.5
-        version: 2.8.5
-      dayjs:
-        specifier: 1.11.13
-        version: 1.11.13
-      dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../../erxes-api-shared
-      express:
-        specifier: 4.21.2
-        version: 4.21.2
-      glob:
-        specifier: 11.0.1
-        version: 11.0.1
-      graphql:
-        specifier: 16.10.0
-        version: 16.10.0
-      graphql-parse-resolve-info:
-        specifier: 4.14.1
-        version: 4.14.1(graphql@16.10.0)
-      graphql-redis-subscriptions:
-        specifier: 2.7.0
-        version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
-      graphql-subscriptions:
-        specifier: 3.0.0
-        version: 3.0.0(graphql@16.10.0)
-      graphql-ws:
-        specifier: 5.16.2
-        version: 5.16.2(graphql@16.10.0)
-      http-proxy-middleware:
-        specifier: 3.0.5
-        version: 3.0.5
-      ioredis:
-        specifier: 5.6.1
-        version: 5.6.1
-      jsonwebtoken:
-        specifier: 9.0.2
-        version: 9.0.2
-      lodash:
-        specifier: 4.17.21
-        version: 4.17.21
-      mongoose:
-        specifier: 8.13.2
-        version: 8.13.2
-      nanoid:
-        specifier: 3.3.8
-        version: 3.3.8
-      node-fetch:
-        specifier: 2.7.0
-        version: 2.7.0(encoding@0.1.13)
-      react:
-        specifier: 18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: 18.3.1
-        version: 18.3.1(react@18.3.1)
-      strip-ansi:
-        specifier: 7.1.0
-        version: 7.1.0
-      ws:
-        specifier: 8.18.2
-        version: 8.18.2
-      yaml:
-        specifier: 2.7.1
-        version: 2.7.1
-      zod:
-        specifier: 3.23.8
-        version: 3.23.8
-
   backend/plugins/accounting_api:
     dependencies:
       erxes-api-shared:
@@ -1090,69 +952,117 @@ packages:
     engines: { node: '>=14' }
 
   '@azure/abort-controller@1.1.0':
-    resolution: {integrity: sha512-TrRLIoSQVzfAJX9H1JeFjzAoDGcoK1IYX1UImfceTZpsyYfWr09Ss1aHW1y5TrrR3iq6RZLBwJ3E24uwPhwahw==}
-    engines: {node: '>=12.0.0'}
+    resolution:
+      {
+        integrity: sha512-TrRLIoSQVzfAJX9H1JeFjzAoDGcoK1IYX1UImfceTZpsyYfWr09Ss1aHW1y5TrrR3iq6RZLBwJ3E24uwPhwahw==,
+      }
+    engines: { node: '>=12.0.0' }
 
   '@azure/abort-controller@2.1.2':
-    resolution: {integrity: sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/core-auth@1.9.0':
-    resolution: {integrity: sha512-FPwHpZywuyasDSLMqJ6fhbOK3TqUdviZNF8OqRGA4W5Ewib2lEEZ+pBsYcBa88B2NGO/SEnYPGhyBqNlE8ilSw==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-FPwHpZywuyasDSLMqJ6fhbOK3TqUdviZNF8OqRGA4W5Ewib2lEEZ+pBsYcBa88B2NGO/SEnYPGhyBqNlE8ilSw==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/core-client@1.9.4':
-    resolution: {integrity: sha512-f7IxTD15Qdux30s2qFARH+JxgwxWLG2Rlr4oSkPGuLWm+1p5y1+C04XGLA0vmX6EtqfutmjvpNmAfgwVIS5hpw==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-f7IxTD15Qdux30s2qFARH+JxgwxWLG2Rlr4oSkPGuLWm+1p5y1+C04XGLA0vmX6EtqfutmjvpNmAfgwVIS5hpw==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/core-http@3.0.5':
-    resolution: {integrity: sha512-T8r2q/c3DxNu6mEJfPuJtptUVqwchxzjj32gKcnMi06rdiVONS9rar7kT9T2Am+XvER7uOzpsP79WsqNbdgdWg==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-T8r2q/c3DxNu6mEJfPuJtptUVqwchxzjj32gKcnMi06rdiVONS9rar7kT9T2Am+XvER7uOzpsP79WsqNbdgdWg==,
+      }
+    engines: { node: '>=18.0.0' }
     deprecated: This package is no longer supported. Please refer to https://github.com/Azure/azure-sdk-for-js/blob/490ce4dfc5b98ba290dee3b33a6d0876c5f138e2/sdk/core/README.md
 
   '@azure/core-rest-pipeline@1.20.0':
-    resolution: {integrity: sha512-ASoP8uqZBS3H/8N8at/XwFr6vYrRP3syTK0EUjDXQy0Y1/AUS+QeIRThKmTNJO2RggvBBxaXDPM7YoIwDGeA0g==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-ASoP8uqZBS3H/8N8at/XwFr6vYrRP3syTK0EUjDXQy0Y1/AUS+QeIRThKmTNJO2RggvBBxaXDPM7YoIwDGeA0g==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/core-tracing@1.0.0-preview.13':
-    resolution: {integrity: sha512-KxDlhXyMlh2Jhj2ykX6vNEU0Vou4nHr025KoSEiz7cS3BNiHNaZcdECk/DmLkEB0as5T7b/TpRcehJ5yV6NeXQ==}
-    engines: {node: '>=12.0.0'}
+    resolution:
+      {
+        integrity: sha512-KxDlhXyMlh2Jhj2ykX6vNEU0Vou4nHr025KoSEiz7cS3BNiHNaZcdECk/DmLkEB0as5T7b/TpRcehJ5yV6NeXQ==,
+      }
+    engines: { node: '>=12.0.0' }
 
   '@azure/core-tracing@1.2.0':
-    resolution: {integrity: sha512-UKTiEJPkWcESPYJz3X5uKRYyOcJD+4nYph+KpfdPRnQJVrZfk0KJgdnaAWKfhsBBtAf/D58Az4AvCJEmWgIBAg==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-UKTiEJPkWcESPYJz3X5uKRYyOcJD+4nYph+KpfdPRnQJVrZfk0KJgdnaAWKfhsBBtAf/D58Az4AvCJEmWgIBAg==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/core-util@1.12.0':
-    resolution: {integrity: sha512-13IyjTQgABPARvG90+N2dXpC+hwp466XCdQXPCRlbWHgd3SJd5Q1VvaBGv6k1BIa4MQm6hAF1UBU1m8QUxV8sQ==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-13IyjTQgABPARvG90+N2dXpC+hwp466XCdQXPCRlbWHgd3SJd5Q1VvaBGv6k1BIa4MQm6hAF1UBU1m8QUxV8sQ==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/identity@4.9.1':
-    resolution: {integrity: sha512-986D7Cf1AOwYqSDtO/FnMAyk/Jc8qpftkGsxuehoh4F85MhQ4fICBGX/44+X1y78lN4Sqib3Bsoaoh/FvOGgmg==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-986D7Cf1AOwYqSDtO/FnMAyk/Jc8qpftkGsxuehoh4F85MhQ4fICBGX/44+X1y78lN4Sqib3Bsoaoh/FvOGgmg==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/logger@1.2.0':
-    resolution: {integrity: sha512-0hKEzLhpw+ZTAfNJyRrn6s+V0nDWzXk9OjBr2TiGIu0OfMr5s2V4FpKLTAK3Ca5r5OKLbf4hkOGDPyiRjie/jA==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-0hKEzLhpw+ZTAfNJyRrn6s+V0nDWzXk9OjBr2TiGIu0OfMr5s2V4FpKLTAK3Ca5r5OKLbf4hkOGDPyiRjie/jA==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@azure/msal-browser@4.12.0':
-    resolution: {integrity: sha512-WD1lmVWchg7wn1mI7Tr4v7QPyTwK+8Nuyje3jRpOFENLRLEBsdK8VVdTw3C+TypZmYn4cOAdj3zREnuFXgvfIA==}
-    engines: {node: '>=0.8.0'}
+    resolution:
+      {
+        integrity: sha512-WD1lmVWchg7wn1mI7Tr4v7QPyTwK+8Nuyje3jRpOFENLRLEBsdK8VVdTw3C+TypZmYn4cOAdj3zREnuFXgvfIA==,
+      }
+    engines: { node: '>=0.8.0' }
 
   '@azure/msal-common@14.16.0':
-    resolution: {integrity: sha512-1KOZj9IpcDSwpNiQNjt0jDYZpQvNZay7QAEi/5DLubay40iGYtLzya/jbjRPLyOTZhEKyL1MzPuw2HqBCjceYA==}
-    engines: {node: '>=0.8.0'}
+    resolution:
+      {
+        integrity: sha512-1KOZj9IpcDSwpNiQNjt0jDYZpQvNZay7QAEi/5DLubay40iGYtLzya/jbjRPLyOTZhEKyL1MzPuw2HqBCjceYA==,
+      }
+    engines: { node: '>=0.8.0' }
 
   '@azure/msal-common@15.6.0':
-    resolution: {integrity: sha512-EotmBz42apYGjqiIV9rDUdptaMptpTn4TdGf3JfjLvFvinSe9BJ6ywU92K9ky+t/b0ghbeTSe9RfqlgLh8f2jA==}
-    engines: {node: '>=0.8.0'}
+    resolution:
+      {
+        integrity: sha512-EotmBz42apYGjqiIV9rDUdptaMptpTn4TdGf3JfjLvFvinSe9BJ6ywU92K9ky+t/b0ghbeTSe9RfqlgLh8f2jA==,
+      }
+    engines: { node: '>=0.8.0' }
 
   '@azure/msal-node@2.16.2':
-    resolution: {integrity: sha512-An7l1hEr0w1HMMh1LU+rtDtqL7/jw74ORlc9Wnh06v7TU/xpG39/Zdr1ZJu3QpjUfKJ+E0/OXMW8DRSWTlh7qQ==}
-    engines: {node: '>=16'}
+    resolution:
+      {
+        integrity: sha512-An7l1hEr0w1HMMh1LU+rtDtqL7/jw74ORlc9Wnh06v7TU/xpG39/Zdr1ZJu3QpjUfKJ+E0/OXMW8DRSWTlh7qQ==,
+      }
+    engines: { node: '>=16' }
 
   '@azure/msal-node@3.5.3':
-    resolution: {integrity: sha512-c5mifzHX5mwm5JqMIlURUyp6LEEdKF1a8lmcNRLBo0lD7zpSYPHupa4jHyhJyg9ccLwszLguZJdk2h3ngnXwNw==}
-    engines: {node: '>=16'}
+    resolution:
+      {
+        integrity: sha512-c5mifzHX5mwm5JqMIlURUyp6LEEdKF1a8lmcNRLBo0lD7zpSYPHupa4jHyhJyg9ccLwszLguZJdk2h3ngnXwNw==,
+      }
+    engines: { node: '>=16' }
 
   '@babel/code-frame@7.26.2':
     resolution:
@@ -4661,8 +4571,11 @@ packages:
       }
 
   '@opentelemetry/api@1.9.0':
-    resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
-    engines: {node: '>=8.0.0'}
+    resolution:
+      {
+        integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==,
+      }
+    engines: { node: '>=8.0.0' }
 
   '@parcel/watcher-android-arm64@2.5.1':
     resolution:
@@ -6637,6 +6550,15 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
+  '@tanstack/react-virtual@3.13.8':
+    resolution:
+      {
+        integrity: sha512-meS2AanUg50f3FBSNoAdBSRAh8uS0ue01qm7zrw65KGJtiXB9QXfybqZwkh4uFpRv2iX/eu5tjcH5wqUpwYLPg==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   '@tanstack/table-core@8.21.3':
     resolution:
       {
@@ -7214,7 +7136,10 @@ packages:
       }
 
   '@types/jsonwebtoken@9.0.6':
-    resolution: {integrity: sha512-/5hndP5dCjloafCXns6SZyESp3Ldq7YjH3zwzwczYnjxIT0Fqzk5ROSYVGfFyczIue7IUEj8hkvLbPoLQ18vQw==}
+    resolution:
+      {
+        integrity: sha512-/5hndP5dCjloafCXns6SZyESp3Ldq7YjH3zwzwczYnjxIT0Fqzk5ROSYVGfFyczIue7IUEj8hkvLbPoLQ18vQw==,
+      }
 
   '@types/jsonwebtoken@9.0.9':
     resolution:
@@ -7301,7 +7226,10 @@ packages:
       }
 
   '@types/node@18.19.47':
-    resolution: {integrity: sha512-1f7dB3BL/bpd9tnDJrrHb66Y+cVrhxSOTGorRNdHwYTUlTay3HuTDPKo9a/4vX9pMQkhYBcAbL4jQdNlhCFP9A==}
+    resolution:
+      {
+        integrity: sha512-1f7dB3BL/bpd9tnDJrrHb66Y+cVrhxSOTGorRNdHwYTUlTay3HuTDPKo9a/4vX9pMQkhYBcAbL4jQdNlhCFP9A==,
+      }
 
   '@types/normalize-package-data@2.4.4':
     resolution:
@@ -7466,7 +7394,10 @@ packages:
       }
 
   '@types/tunnel@0.0.3':
-    resolution: {integrity: sha512-sOUTGn6h1SfQ+gbgqC364jLFBw2lnFqkgF3q0WovEHRLMrVD1sd5aufqi/aJObLekJO+Aq5z646U4Oxy6shXMA==}
+    resolution:
+      {
+        integrity: sha512-sOUTGn6h1SfQ+gbgqC364jLFBw2lnFqkgF3q0WovEHRLMrVD1sd5aufqi/aJObLekJO+Aq5z646U4Oxy6shXMA==,
+      }
 
   '@types/unist@2.0.11':
     resolution:
@@ -7511,7 +7442,10 @@ packages:
       }
 
   '@types/ws@6.0.4':
-    resolution: {integrity: sha512-PpPrX7SZW9re6+Ha8ojZG4Se8AZXgf0GK6zmfqEuCsY49LFDNXO3SByp44X3dFEqtB73lkCDAdUazhAjVPiNwg==}
+    resolution:
+      {
+        integrity: sha512-PpPrX7SZW9re6+Ha8ojZG4Se8AZXgf0GK6zmfqEuCsY49LFDNXO3SByp44X3dFEqtB73lkCDAdUazhAjVPiNwg==,
+      }
 
   '@types/ws@8.18.1':
     resolution:
@@ -7615,8 +7549,11 @@ packages:
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
 
   '@typespec/ts-http-runtime@0.2.2':
-    resolution: {integrity: sha512-Gz/Sm64+Sq/vklJu1tt9t+4R2lvnud8NbTD/ZfpZtMiUX7YeVpCA8j6NSW8ptwcoLL+NmYANwqP8DV0q/bwl2w==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-Gz/Sm64+Sq/vklJu1tt9t+4R2lvnud8NbTD/ZfpZtMiUX7YeVpCA8j6NSW8ptwcoLL+NmYANwqP8DV0q/bwl2w==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@ungap/structured-clone@1.3.0':
     resolution:
@@ -7971,9 +7908,6 @@ packages:
     engines: { node: '>=0.4.0' }
     hasBin: true
 
-  adaptivecards@1.2.3:
-    resolution: {integrity: sha512-amQ5OSW3OpIkrxVKLjxVBPk/T49yuOtnqs1z5ZPfZr0+OpTovzmiHbyoAGDIsu5SNYHwOZFp/3LGOnRaALFa/g==}
-
   address@1.2.2:
     resolution:
       {
@@ -7996,8 +7930,11 @@ packages:
     engines: { node: '>= 6.0.0' }
 
   agent-base@7.1.3:
-    resolution: {integrity: sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==}
-    engines: {node: '>= 14'}
+    resolution:
+      {
+        integrity: sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==,
+      }
+    engines: { node: '>= 14' }
 
   aggregate-error@3.1.0:
     resolution:
@@ -8619,8 +8556,11 @@ packages:
       }
 
   base64url@3.0.1:
-    resolution: {integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==}
-    engines: {node: '>=6.0.0'}
+    resolution:
+      {
+        integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==,
+      }
+    engines: { node: '>=6.0.0' }
 
   basic-auth@2.0.1:
     resolution:
@@ -8720,25 +8660,46 @@ packages:
       }
 
   botbuilder-core@4.23.2:
-    resolution: {integrity: sha512-GwrfkfbEJqCLnhDVc6uKlzKtrptfYTxQxHYfF22s1AxTKdTiA9vsDN9rXq8We7QUPXFOF1ylF1e87k0fQ3Sf+A==}
+    resolution:
+      {
+        integrity: sha512-GwrfkfbEJqCLnhDVc6uKlzKtrptfYTxQxHYfF22s1AxTKdTiA9vsDN9rXq8We7QUPXFOF1ylF1e87k0fQ3Sf+A==,
+      }
 
   botbuilder-dialogs-adaptive-runtime-core@4.23.2-preview:
-    resolution: {integrity: sha512-+b5oHSDNodYXPnQbub+hTNmQLtBB4hj/ZW73g4Sqv5oAdqHoK/dX181UpiFAvDpHGe8Kx3SNYtRHJIj71u4t0Q==}
+    resolution:
+      {
+        integrity: sha512-+b5oHSDNodYXPnQbub+hTNmQLtBB4hj/ZW73g4Sqv5oAdqHoK/dX181UpiFAvDpHGe8Kx3SNYtRHJIj71u4t0Q==,
+      }
 
   botbuilder-stdlib@4.23.2-internal:
-    resolution: {integrity: sha512-5WAu59gCZX3lz2NNw28q+IlAAFIQjXij0wXmN8qh+Tg4PQOCl+5P3hoYqcHIWtGd5Kgn+dpaHtBIewl2LaOXKQ==}
+    resolution:
+      {
+        integrity: sha512-5WAu59gCZX3lz2NNw28q+IlAAFIQjXij0wXmN8qh+Tg4PQOCl+5P3hoYqcHIWtGd5Kgn+dpaHtBIewl2LaOXKQ==,
+      }
 
   botbuilder@4.23.2:
-    resolution: {integrity: sha512-E3UjkPlAmT8TidZIAW1ucVRejz0KBbWEn0wNxJ37GncPl8txhmWvs21xn3hBrifSR4++Y6q/hp/A5cHFQcFGJw==}
+    resolution:
+      {
+        integrity: sha512-E3UjkPlAmT8TidZIAW1ucVRejz0KBbWEn0wNxJ37GncPl8txhmWvs21xn3hBrifSR4++Y6q/hp/A5cHFQcFGJw==,
+      }
 
   botframework-connector@4.23.2:
-    resolution: {integrity: sha512-G4gDpEHhA8AUKbgHMJ1LUjsuDlRPFEcXnH8ouxLI0opT2p1LcUSAAgS4hoOrkaylr04zxrUI0nEWkuWDiWDwzw==}
+    resolution:
+      {
+        integrity: sha512-G4gDpEHhA8AUKbgHMJ1LUjsuDlRPFEcXnH8ouxLI0opT2p1LcUSAAgS4hoOrkaylr04zxrUI0nEWkuWDiWDwzw==,
+      }
 
   botframework-schema@4.23.2:
-    resolution: {integrity: sha512-eO1fmvfCEVJfnqNNAerQU8CHp0FMYTyE459ztNx2k1QJYMl/ds+LNNkGIUlQQFsdVbi2umadK+6hL2a9kqXMqQ==}
+    resolution:
+      {
+        integrity: sha512-eO1fmvfCEVJfnqNNAerQU8CHp0FMYTyE459ztNx2k1QJYMl/ds+LNNkGIUlQQFsdVbi2umadK+6hL2a9kqXMqQ==,
+      }
 
   botframework-streaming@4.23.2:
-    resolution: {integrity: sha512-UBF0puC2RX8Z0dkN/ag9BuSNWdB5MUtobZLzeaH1h5t7QAYAVNk/SrsUgkBwUsqWpwaZqU+vrGOeByLShDcvaQ==}
+    resolution:
+      {
+        integrity: sha512-UBF0puC2RX8Z0dkN/ag9BuSNWdB5MUtobZLzeaH1h5t7QAYAVNk/SrsUgkBwUsqWpwaZqU+vrGOeByLShDcvaQ==,
+      }
 
   boxen@4.2.0:
     resolution:
@@ -8839,7 +8800,10 @@ packages:
       }
 
   buffer@6.0.3:
-    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
+    resolution:
+      {
+        integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==,
+      }
 
   builtin-modules@3.3.0:
     resolution:
@@ -9668,7 +9632,10 @@ packages:
     engines: { node: '>=12.0.0' }
 
   cross-fetch@4.1.0:
-    resolution: {integrity: sha512-uKm5PU+MHTootlWEY+mZ4vvXoCn4fLQxT9dSc1sXVMSFkINTJVN8cAQROpwcKm8bJ/c7rgZVIBWzH5T78sNZZw==}
+    resolution:
+      {
+        integrity: sha512-uKm5PU+MHTootlWEY+mZ4vvXoCn4fLQxT9dSc1sXVMSFkINTJVN8cAQROpwcKm8bJ/c7rgZVIBWzH5T78sNZZw==,
+      }
 
   cross-inspect@1.0.1:
     resolution:
@@ -10186,8 +10153,11 @@ packages:
     engines: { node: '>= 0.8' }
 
   dependency-graph@1.0.0:
-    resolution: {integrity: sha512-cW3gggJ28HZ/LExwxP2B++aiKxhJXMSIt9K48FOXQkm+vuG5gyatXnLsONRJdzO/7VfjDIiaOOa/bs4l464Lwg==}
-    engines: {node: '>=4'}
+    resolution:
+      {
+        integrity: sha512-cW3gggJ28HZ/LExwxP2B++aiKxhJXMSIt9K48FOXQkm+vuG5gyatXnLsONRJdzO/7VfjDIiaOOa/bs4l464Lwg==,
+      }
+    engines: { node: '>=4' }
 
   dequal@2.0.3:
     resolution:
@@ -12475,7 +12445,10 @@ packages:
       }
 
   htmlparser2@9.1.0:
-    resolution: {integrity: sha512-5zfg6mHUoaer/97TxnGpxmbR7zJtPwIYFMZ/H5ucTlPZhKvtum05yiPK3Mgai3a0DyVxv7qYqoweaEd2nrYQzQ==}
+    resolution:
+      {
+        integrity: sha512-5zfg6mHUoaer/97TxnGpxmbR7zJtPwIYFMZ/H5ucTlPZhKvtum05yiPK3Mgai3a0DyVxv7qYqoweaEd2nrYQzQ==,
+      }
 
   http-assert@1.5.0:
     resolution:
@@ -12537,8 +12510,11 @@ packages:
     engines: { node: '>= 6' }
 
   http-proxy-agent@7.0.2:
-    resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
-    engines: {node: '>= 14'}
+    resolution:
+      {
+        integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==,
+      }
+    engines: { node: '>= 14' }
 
   http-proxy-middleware@2.0.9:
     resolution:
@@ -12603,8 +12579,11 @@ packages:
     engines: { node: '>= 6' }
 
   https-proxy-agent@7.0.6:
-    resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
-    engines: {node: '>= 14'}
+    resolution:
+      {
+        integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==,
+      }
+    engines: { node: '>= 14' }
 
   human-signals@1.1.1:
     resolution:
@@ -15817,9 +15796,6 @@ packages:
       }
     hasBin: true
 
-  openssl-wrapper@0.3.4:
-    resolution: {integrity: sha512-iITsrx6Ho8V3/2OVtmZzzX8wQaKAaFXEJQdzoPUZDtyf5jWFlqo+h+OhGT4TATQ47f9ACKHua8nw7Qoy85aeKQ==}
-
   optimism@0.18.1:
     resolution:
       {
@@ -17846,7 +17822,10 @@ packages:
       }
 
   rsa-pem-from-mod-exp@0.8.6:
-    resolution: {integrity: sha512-c5ouQkOvGHF1qomUUDJGFcXsomeSO2gbEs6hVhMAtlkE1CuaZase/WzoaKFG/EZQuNmq6pw/EMCeEnDvOgCJYQ==}
+    resolution:
+      {
+        integrity: sha512-c5ouQkOvGHF1qomUUDJGFcXsomeSO2gbEs6hVhMAtlkE1CuaZase/WzoaKFG/EZQuNmq6pw/EMCeEnDvOgCJYQ==,
+      }
 
   run-applescript@7.0.0:
     resolution:
@@ -19501,7 +19480,10 @@ packages:
       }
 
   undici-types@5.26.5:
-    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    resolution:
+      {
+        integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==,
+      }
 
   unicode-canonical-property-names-ecmascript@2.0.1:
     resolution:
@@ -19795,7 +19777,10 @@ packages:
     engines: { node: '>= 0.4.0' }
 
   uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    resolution:
+      {
+        integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==,
+      }
     hasBin: true
 
   uuid@3.4.0:
@@ -20386,8 +20371,11 @@ packages:
     engines: { node: '>=12' }
 
   xml2js@0.5.0:
-    resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
-    engines: {node: '>=4.0.0'}
+    resolution:
+      {
+        integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==,
+      }
+    engines: { node: '>=4.0.0' }
 
   xml2js@0.6.2:
     resolution:
@@ -20760,126 +20748,6 @@ snapshots:
       graphql: 16.10.0
 
   '@apollo/utils.withrequired@2.0.1': {}
-
-  '@azure/abort-controller@1.1.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@azure/abort-controller@2.1.2':
-    dependencies:
-      tslib: 2.8.1
-
-  '@azure/core-auth@1.9.0':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@azure/core-util': 1.12.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@azure/core-client@1.9.4':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.9.0
-      '@azure/core-rest-pipeline': 1.20.0
-      '@azure/core-tracing': 1.2.0
-      '@azure/core-util': 1.12.0
-      '@azure/logger': 1.2.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@azure/core-http@3.0.5(encoding@0.1.13)':
-    dependencies:
-      '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.9.0
-      '@azure/core-tracing': 1.0.0-preview.13
-      '@azure/core-util': 1.12.0
-      '@azure/logger': 1.2.0
-      '@types/node-fetch': 2.6.12
-      '@types/tunnel': 0.0.3
-      form-data: 4.0.2
-      node-fetch: 2.7.0(encoding@0.1.13)
-      process: 0.11.10
-      tslib: 2.8.1
-      tunnel: 0.0.6
-      uuid: 8.3.2
-      xml2js: 0.5.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-
-  '@azure/core-rest-pipeline@1.20.0':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.9.0
-      '@azure/core-tracing': 1.2.0
-      '@azure/core-util': 1.12.0
-      '@azure/logger': 1.2.0
-      '@typespec/ts-http-runtime': 0.2.2
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@azure/core-tracing@1.0.0-preview.13':
-    dependencies:
-      '@opentelemetry/api': 1.9.0
-      tslib: 2.8.1
-
-  '@azure/core-tracing@1.2.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@azure/core-util@1.12.0':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@typespec/ts-http-runtime': 0.2.2
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@azure/identity@4.9.1':
-    dependencies:
-      '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.9.0
-      '@azure/core-client': 1.9.4
-      '@azure/core-rest-pipeline': 1.20.0
-      '@azure/core-tracing': 1.2.0
-      '@azure/core-util': 1.12.0
-      '@azure/logger': 1.2.0
-      '@azure/msal-browser': 4.12.0
-      '@azure/msal-node': 3.5.3
-      open: 10.1.1
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@azure/logger@1.2.0':
-    dependencies:
-      '@typespec/ts-http-runtime': 0.2.2
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@azure/msal-browser@4.12.0':
-    dependencies:
-      '@azure/msal-common': 15.6.0
-
-  '@azure/msal-common@14.16.0': {}
-
-  '@azure/msal-common@15.6.0': {}
-
-  '@azure/msal-node@2.16.2':
-    dependencies:
-      '@azure/msal-common': 14.16.0
-      jsonwebtoken: 9.0.2
-      uuid: 8.3.2
-
-  '@azure/msal-node@3.5.3':
-    dependencies:
-      '@azure/msal-common': 15.6.0
-      jsonwebtoken: 9.0.2
-      uuid: 8.3.2
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -23944,8 +23812,6 @@ snapshots:
       - '@swc/core'
       - debug
 
-  '@opentelemetry/api@1.9.0': {}
-
   '@parcel/watcher-android-arm64@2.5.1':
     optional: true
 
@@ -25583,7 +25449,15 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  '@tanstack/react-virtual@3.13.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/virtual-core': 3.13.8
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   '@tanstack/table-core@8.21.3': {}
+
+  '@tanstack/virtual-core@3.13.8': {}
 
   '@testing-library/dom@10.4.0':
     dependencies:
@@ -25959,10 +25833,6 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/jsonwebtoken@9.0.6':
-    dependencies:
-      '@types/node': 18.16.9
-
   '@types/jsonwebtoken@9.0.9':
     dependencies:
       '@types/ms': 2.1.0
@@ -26007,10 +25877,6 @@ snapshots:
       '@types/node': 18.16.9
 
   '@types/node@18.16.9': {}
-
-  '@types/node@18.19.47':
-    dependencies:
-      undici-types: 5.26.5
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -26091,10 +25957,6 @@ snapshots:
   '@types/trusted-types@2.0.7':
     optional: true
 
-  '@types/tunnel@0.0.3':
-    dependencies:
-      '@types/node': 18.16.9
-
   '@types/unist@2.0.11': {}
 
   '@types/unist@3.0.3': {}
@@ -26112,10 +25974,6 @@ snapshots:
   '@types/whatwg-url@11.0.5':
     dependencies:
       '@types/webidl-conversions': 7.0.3
-
-  '@types/ws@6.0.4':
-    dependencies:
-      '@types/node': 18.16.9
 
   '@types/ws@8.18.1':
     dependencies:
@@ -26212,14 +26070,6 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.30.1
       eslint-visitor-keys: 4.2.0
-
-  '@typespec/ts-http-runtime@0.2.2':
-    dependencies:
-      http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
 
   '@ungap/structured-clone@1.3.0': {}
 
@@ -26478,8 +26328,6 @@ snapshots:
 
   acorn@8.14.1: {}
 
-  adaptivecards@1.2.3: {}
-
   address@1.2.2: {}
 
   adm-zip@0.5.16: {}
@@ -26489,8 +26337,6 @@ snapshots:
       debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
-
-  agent-base@7.1.3: {}
 
   aggregate-error@3.1.0:
     dependencies:
@@ -26922,8 +26768,6 @@ snapshots:
 
   base64-js@1.5.1: {}
 
-  base64url@3.0.1: {}
-
   basic-auth@2.0.1:
     dependencies:
       safe-buffer: 5.1.2
@@ -26991,87 +26835,6 @@ snapshots:
 
   boolbase@1.0.0: {}
 
-  botbuilder-core@4.23.2(debug@4.4.0)(encoding@0.1.13):
-    dependencies:
-      botbuilder-dialogs-adaptive-runtime-core: 4.23.2-preview
-      botbuilder-stdlib: 4.23.2-internal
-      botframework-connector: 4.23.2(debug@4.4.0)(encoding@0.1.13)
-      botframework-schema: 4.23.2
-      uuid: 10.0.0
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - debug
-      - encoding
-      - supports-color
-
-  botbuilder-dialogs-adaptive-runtime-core@4.23.2-preview:
-    dependencies:
-      dependency-graph: 1.0.0
-
-  botbuilder-stdlib@4.23.2-internal: {}
-
-  botbuilder@4.23.2(debug@4.4.0)(encoding@0.1.13):
-    dependencies:
-      '@azure/core-http': 3.0.5(encoding@0.1.13)
-      '@azure/msal-node': 2.16.2
-      axios: 1.8.4(debug@4.4.0)
-      botbuilder-core: 4.23.2(debug@4.4.0)(encoding@0.1.13)
-      botbuilder-stdlib: 4.23.2-internal
-      botframework-connector: 4.23.2(debug@4.4.0)(encoding@0.1.13)
-      botframework-schema: 4.23.2
-      botframework-streaming: 4.23.2
-      dayjs: 1.11.13
-      filenamify: 6.0.0
-      fs-extra: 11.3.0
-      htmlparser2: 9.1.0
-      uuid: 10.0.0
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - encoding
-      - supports-color
-      - utf-8-validate
-
-  botframework-connector@4.23.2(debug@4.4.0)(encoding@0.1.13):
-    dependencies:
-      '@azure/core-http': 3.0.5(encoding@0.1.13)
-      '@azure/identity': 4.9.1
-      '@azure/msal-node': 2.16.2
-      '@types/jsonwebtoken': 9.0.6
-      axios: 1.8.4(debug@4.4.0)
-      base64url: 3.0.1
-      botbuilder-stdlib: 4.23.2-internal
-      botframework-schema: 4.23.2
-      buffer: 6.0.3
-      cross-fetch: 4.1.0(encoding@0.1.13)
-      https-proxy-agent: 7.0.6
-      jsonwebtoken: 9.0.2
-      node-fetch: 2.7.0(encoding@0.1.13)
-      openssl-wrapper: 0.3.4
-      rsa-pem-from-mod-exp: 0.8.6
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - debug
-      - encoding
-      - supports-color
-
-  botframework-schema@4.23.2:
-    dependencies:
-      adaptivecards: 1.2.3
-      uuid: 10.0.0
-      zod: 3.23.8
-
-  botframework-streaming@4.23.2:
-    dependencies:
-      '@types/node': 18.19.47
-      '@types/ws': 6.0.4
-      uuid: 10.0.0
-      ws: 7.5.10
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
   boxen@4.2.0:
     dependencies:
       ansi-align: 3.0.1
@@ -27130,11 +26893,6 @@ snapshots:
       isarray: 1.0.0
 
   buffer@5.7.1:
-    dependencies:
-      base64-js: 1.5.1
-      ieee754: 1.2.1
-
-  buffer@6.0.3:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
@@ -27603,12 +27361,6 @@ snapshots:
     dependencies:
       luxon: 3.6.1
 
-  cross-fetch@4.1.0(encoding@0.1.13):
-    dependencies:
-      node-fetch: 2.7.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
-
   cross-inspect@1.0.1:
     dependencies:
       tslib: 2.8.1
@@ -27965,8 +27717,6 @@ snapshots:
   depd@1.1.2: {}
 
   depd@2.0.0: {}
-
-  dependency-graph@1.0.0: {}
 
   dequal@2.0.3: {}
 
@@ -29738,13 +29488,6 @@ snapshots:
       domutils: 2.8.0
       entities: 2.2.0
 
-  htmlparser2@9.1.0:
-    dependencies:
-      domelementtype: 2.3.0
-      domhandler: 5.0.3
-      domutils: 3.2.2
-      entities: 4.5.0
-
   http-assert@1.5.0:
     dependencies:
       deep-equal: 1.0.1
@@ -29785,13 +29528,6 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.4.0(supports-color@8.1.1)
-    transitivePeerDependencies:
-      - supports-color
-
-  http-proxy-agent@7.0.2:
-    dependencies:
-      agent-base: 7.1.3
       debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -29867,13 +29603,6 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.4.0(supports-color@8.1.1)
-    transitivePeerDependencies:
-      - supports-color
-
-  https-proxy-agent@7.0.6:
-    dependencies:
-      agent-base: 7.1.3
       debug: 4.4.0(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -32359,8 +32088,6 @@ snapshots:
 
   opener@1.5.2: {}
 
-  openssl-wrapper@0.3.4: {}
-
   optimism@0.18.1:
     dependencies:
       '@wry/caches': 1.0.1
@@ -33600,8 +33327,6 @@ snapshots:
 
   rope-sequence@1.3.4: {}
 
-  rsa-pem-from-mod-exp@0.8.6: {}
-
   run-applescript@7.0.0: {}
 
   run-parallel@1.2.0:
@@ -34711,8 +34436,6 @@ snapshots:
 
   underscore@1.13.7: {}
 
-  undici-types@5.26.5: {}
-
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
   unicode-match-property-ecmascript@2.0.0:
@@ -34882,8 +34605,6 @@ snapshots:
   utila@0.4.0: {}
 
   utils-merge@1.0.1: {}
-
-  uuid@10.0.0: {}
 
   uuid@3.4.0: {}
 
@@ -35330,11 +35051,6 @@ snapshots:
   xdg-basedir@4.0.0: {}
 
   xml-name-validator@4.0.0: {}
-
-  xml2js@0.5.0:
-    dependencies:
-      sax: 1.4.1
-      xmlbuilder: 11.0.1
 
   xml2js@0.6.2:
     dependencies:

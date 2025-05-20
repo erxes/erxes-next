@@ -5,8 +5,8 @@ import {
 } from '@trpc/client';
 import { getPlugin } from '../service-discovery';
 
-type MessageProps = {
-  method: 'query' | 'mutation';
+export type MessageProps = {
+  method?: 'query' | 'mutation';
   pluginName: string;
   module: string;
   action: string;
@@ -41,6 +41,10 @@ export const sendTRPCMessage = async ({
   defaultValue,
   options,
 }: MessageProps) => {
+  if (!method) {
+    method = 'query'
+  }
+
   const pluginInfo = await getPlugin(pluginName);
 
   const client = createTRPCUntypedClient({

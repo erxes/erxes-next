@@ -22,11 +22,12 @@ import {
 } from 'erxes-ui';
 
 import { TCompany } from '@/contacts/types/companyType';
-import { SelectTags } from 'ui-modules';
+import { SelectMember, SelectTags } from 'ui-modules';
 import { useState } from 'react';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
 import { ApolloError } from '@apollo/client';
 import { useToast } from 'erxes-ui';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
   {
@@ -227,6 +228,34 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         </RecordTablePopover>
       );
     },
+  },
+  {
+    id: 'owner',
+    accessorKey: 'ownerId',
+    header: () => <RecordTable.InlineHead label="Owner" />,
+    cell: ({ cell }) => {
+      const { companiesEdit } = useCompaniesEdit();
+      return (
+        <SelectMember.InlineCell
+          scope={
+            ContactsHotKeyScope.CompaniesPage +
+            '.' +
+            cell.row.original._id +
+            '.Owner'
+          }
+          value={cell.getValue() as string}
+          onValueChange={(value) =>
+            companiesEdit(
+              {
+                variables: { _id: cell.row.original._id, ownerId: value },
+              },
+              ['ownerId'],
+            )
+          }
+        />
+      );
+    },
+    size: 200,
   },
   {
     id: 'plan',

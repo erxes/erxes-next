@@ -4,8 +4,8 @@ export const SettingsHeader = ({
   children,
   breadcrumbs,
 }: {
-  children: React.ReactNode;
-  breadcrumbs: React.ReactNode;
+  children?: React.ReactNode;
+  breadcrumbs?: React.ReactNode;
 }) => {
   return (
     <div className="flex flex-col h-[52px] box-border flex-shrink-0 bg-sidebar w-full">

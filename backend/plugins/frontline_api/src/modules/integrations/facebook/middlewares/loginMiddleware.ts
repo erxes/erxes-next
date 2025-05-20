@@ -1,6 +1,6 @@
 import * as graph from 'fbgraph';
 import { getSubdomain } from 'erxes-api-shared/utils';
-import {getConfig, } from '@/integrations/facebook/commonUtils';
+import { getConfig, } from '@/integrations/facebook/commonUtils';
 import { generateModels } from '~/connectionResolvers';
 import { graphRequest } from '@/integrations/facebook/utils';
 import { debugFacebook, debugRequest, debugResponse } from '@/integrations/facebook/debuggers';
@@ -45,7 +45,6 @@ export const loginMiddleware = async (req, res) => {
       scope: conf.scope,
       state: `${DOMAIN}/gateway/pl:facebook`
     });
-    console.log(DOMAIN, 'DOMAIN');
     // checks whether a user denied the app facebook login/permissions
     if (!req.query.error) {
       debugResponse(debugFacebook, req, authUrl);
@@ -104,10 +103,9 @@ export const loginMiddleware = async (req, res) => {
       const integrations = await models.FacebookIntegrations.find({
         accountId: account._id,
       });
-
-      // for (const integration of integrations) {
-      //   await repairIntegrations(models, integration.erxesApiId);
-      // }
+      for (const integration of integrations) {
+        await repairIntegrations(subdomain, models, integration.erxesApiId);
+      }
     } else {
       await models.FacebookAccounts.create({
         token: access_token,

@@ -11,18 +11,6 @@ const extendTypes = `
     _id: String! @external
   }
 
-  extend type Product @key(fields: "_id") {
-    _id: String! @external
-  }
-
-  extend type ProductCategory @key(fields: "_id") {
-    _id: String! @external
-  }
-
-  extend type Uom @key(fields: "_id") {
-    _id: String! @external
-  }
-
   type AccCustomer {
     _id: String!
     code: String
@@ -34,3 +22,15 @@ const extendTypes = `
 `;
 
 export default extendTypes;
+
+// extend type Product @key(fields: "_id") {
+//   _id: String! @external
+// }
+
+// extend type ProductCategory @key(fields: "_id") {
+//   _id: String! @external
+// }
+
+// extend type Uom @key(fields: "_id") {
+//   _id: String! @external
+// }

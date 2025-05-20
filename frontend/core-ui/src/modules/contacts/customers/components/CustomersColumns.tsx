@@ -33,7 +33,7 @@ import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
 import { customerMoreColumn } from './CustomerMoreColumn';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -49,7 +49,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
         cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
-          <Avatar>
+          <Avatar size="lg">
             <Avatar.Image src={cell.getValue() as string} />
             <Avatar.Fallback>
               {firstName?.charAt(0) ||
@@ -88,7 +88,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
 
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Name'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Name'}
           open={open}
           onOpenChange={(open) => {
             setOpen(open);
@@ -166,7 +166,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       );
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Emails'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Emails'}
         >
           <RecordTableCellTrigger>
             <EmailDisplay emails={_emails} />
@@ -244,7 +244,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       );
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Phones'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Phones'}
         >
           <RecordTableCellTrigger>
             <PhoneDisplay phones={phones} />
@@ -333,7 +333,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       const { _id } = cell.row.original;
       return (
         <RecordTablePopover
-          scope={PageHotkeyScope.CustomersPage + '.' + _id + '.Sex'}
+          scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Sex'}
           open={open}
           onOpenChange={setOpen}
         >

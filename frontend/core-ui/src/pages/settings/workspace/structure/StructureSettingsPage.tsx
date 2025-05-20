@@ -1,9 +1,10 @@
 import { StructureSettingsBreadcrumb } from '@/settings/structure/components/StructureSettingsBreadcrumb';
 import { StructureSidebar } from '@/settings/structure/components/StructureSidebar';
 import { StructureTopbar } from '@/settings/structure/components/StructureTopbar';
-import { SettingsHeader, Spinner } from 'erxes-ui';
+import { Spinner } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { SettingsHeader } from 'ui-modules';
 
 export const StructureMain = lazy(() =>
   import('~/modules/settings/structure/components/Structure').then(
@@ -20,30 +21,30 @@ export const BranchesSettings = lazy(() =>
   })),
 );
 export const DepartmentsSettings = lazy(() =>
-  import('~/pages/settings/workspace/structure/DepartmentsSettingsPage').then(
-    (module) => ({
-      default: module.DepartmentsSettingsPage,
-    }),
-  ),
+  import(
+    '~/modules/settings/structure/components/departments/DepartmentSettings'
+  ).then((module) => ({
+    default: module.default,
+  })),
 );
 export const UnitsSettings = lazy(() =>
-  import('~/pages/settings/workspace/structure/UnitsSettingsPage').then(
+  import('~/modules/settings/structure/components/units/UnitsSettings').then(
     (module) => ({
-      default: module.UnitsSettingsPage,
+      default: module.default,
     }),
   ),
 );
 export const PositionsSettings = lazy(() =>
-  import('~/pages/settings/workspace/structure/PositionsSettingsPage').then(
-    (module) => ({
-      default: module.PositionsSettingsPage,
-    }),
-  ),
+  import(
+    '~/modules/settings/structure/components/positions/PositionsSettings'
+  ).then((module) => ({
+    default: module.default,
+  })),
 );
 
 export function StructureSettingsPage() {
   return (
-    <section className="mx-auto flex w-full h-screen relative">
+    <section className="mx-auto flex w-full h-svh relative">
       <div className="flex flex-col flex-auto overflow-hidden">
         <SettingsHeader breadcrumbs={<StructureSettingsBreadcrumb />}>
           <StructureTopbar />

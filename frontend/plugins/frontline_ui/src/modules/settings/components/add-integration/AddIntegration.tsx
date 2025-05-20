@@ -26,7 +26,7 @@ export const AddIntegration = ({ children }: TProps) => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <Sheet.Trigger asChild>{children}</Sheet.Trigger>
-      <Sheet.Content className="p-0 flex flex-col gap-0">
+      <Sheet.View className="p-0 flex flex-col gap-0">
         <Sheet.Header className="flex-row items-center py-4 px-5 relative flex-none">
           <Sheet.Title className="text-base">Add integration</Sheet.Title>
           <div className="absolute right-5 m-0 p-0 flex items-center justify-center">
@@ -40,31 +40,31 @@ export const AddIntegration = ({ children }: TProps) => {
             </Button>
           </div>
         </Sheet.Header>
-        <Separator />
-        <div className="grow size-full h-auto flex flex-col">
-          <IntegrationSteps step={step} integration={integration} isEmpty={false} />
-        </div>
-        <Separator />
-        <Sheet.Footer className="w-full flex-none">
-          <div className="flex justify-between items-center w-full px-5 py-4">
-            <Button variant={'ghost'} onClick={() => setOpen(!open)}>
-              Cancel
+        <Sheet.Content className="grow size-full h-auto flex flex-col">
+          <IntegrationSteps
+            step={step}
+            integration={integration}
+            isEmpty={false}
+          />
+        </Sheet.Content>
+        <Sheet.Footer className="sm:justify-between">
+          <Button variant={'ghost'} onClick={() => setOpen(!open)}>
+            Cancel
+          </Button>
+          <div className="flex gap-2 items-center">
+            <Button
+              variant={'ghost'}
+              onClick={handlePrevStep}
+              className="bg-accent"
+            >
+              Previous step
             </Button>
-            <div className="flex gap-2 items-center">
-              <Button
-                variant={'ghost'}
-                onClick={handlePrevStep}
-                className="bg-accent"
-              >
-                Previous step
-              </Button>
-              <Button onClick={handleNextStep}>
-                {integration.steps[step].isFinal ? 'Save' : 'Next step'}
-              </Button>
-            </div>
+            <Button onClick={handleNextStep}>
+              {integration.steps[step].isFinal ? 'Save' : 'Next step'}
+            </Button>
           </div>
         </Sheet.Footer>
-      </Sheet.Content>
+      </Sheet.View>
     </Sheet>
   );
 };

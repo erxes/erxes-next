@@ -1,130 +1,132 @@
 import { Schema } from 'mongoose';
-import { field, schemaWrapper } from './utils';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils/mongo';
 import { JOURNALS, PTR_STATUSES, TR_SIDES, TR_STATUSES } from '../../@types/constants';
 
 export const followDetailSchema = schemaWrapper(
   new Schema({
-    id: field({ type: String, index: true, label: 'follow tr id' }),
-    type: field({
+    _id: mongooseStringRandomId,
+    id: { type: String, index: true, label: 'follow tr id' },
+    type: {
       type: String, label: 'follow tr type', enum: [
         'currencyDiff',
       ]
-    }),
+    },
   })
 )
 
 export const transactionDetailSchema = schemaWrapper(
   new Schema({
-    _id: field({ pkey: true }),
-    accountId: field({ type: String, label: 'Account', index: true }),
-    followInfos: field({
+    _id: mongooseStringRandomId,
+    accountId: { type: String, label: 'Account', index: true },
+    followInfos: {
       type: Object, label: 'Follower tr detail input'
-    }),
-    follows: field({
+    },
+    follows: {
       type: [followDetailSchema], label: 'Follower tr detail'
-    }),
+    },
 
-    side: field({
+    side: {
       type: String,
       enum: TR_SIDES.ALL,
       label: 'Side',
       default: 'new',
       index: true,
-    }),
-    amount: field({ type: Number, label: 'Amount' }),
-    currency: field({ type: String, optional: true, label: 'Currency' }),
-    currencyAmount: field({ type: Number, optional: true, label: 'CurrencyAmount' }),
-    customRate: field({ type: Number, optional: true, label: 'CustomRate' }),
+    },
+    amount: { type: Number, label: 'Amount' },
+    currency: { type: String, optional: true, label: 'Currency' },
+    currencyAmount: { type: Number, optional: true, label: 'CurrencyAmount' },
+    customRate: { type: Number, optional: true, label: 'CustomRate' },
 
-    assignUserId: field({ type: String, optional: true, esType: 'keyword' }), // AssignUserId
+    assignUserId: { type: String, optional: true, esType: 'keyword' }, // AssignUserId
 
-    productId: field({ type: String, optional: true, label: 'Product' }),
-    count: field({ type: Number, optional: true, label: 'Count' }),
-    unitPrice: field({ type: Number, optional: true, label: 'unitPrice' }),
+    productId: { type: String, optional: true, label: 'Product' },
+    count: { type: Number, optional: true, label: 'Count' },
+    unitPrice: { type: Number, optional: true, label: 'unitPrice' },
   })
 );
 
 export const followSchema = schemaWrapper(
   new Schema({
-    id: field({ type: String, index: true, label: 'follow tr id' }),
-    type: field({
+    _id: mongooseStringRandomId,
+    id: { type: String, index: true, label: 'follow tr id' },
+    type: {
       type: String, label: 'follow tr type', enum: [
         'vat', 'ctax'
       ]
-    }),
+    },
   })
 )
 
 export const transactionSchema = schemaWrapper(
   new Schema({
-    _id: field({ pkey: true }),
-    date: field({ type: Date, label: 'Date' }),
-    fullDate: field({ type: Date, index: true, label: 'Date' }),
-    description: field({ type: String, optional: true, label: 'Description' }),
-    status: field({
+    _id: mongooseStringRandomId,
+    date: { type: Date, label: 'Date' },
+    fullDate: { type: Date, index: true, label: 'Date' },
+    description: { type: String, optional: true, label: 'Description' },
+    status: {
       type: String,
       enum: TR_STATUSES.ALL,
       label: 'Status',
       default: 'real',
       index: true,
-    }),
-    ptrId: field({ type: String, label: 'Group' }),
-    parentId: field({ type: String, optional: true, label: 'Parent ID', index: true }),
-    number: field({ type: String, optional: true, label: 'Number', index: true }),
-    journal: field({
+    },
+    ptrId: { type: String, label: 'Group' },
+    parentId: { type: String, optional: true, label: 'Parent ID', index: true },
+    number: { type: String, optional: true, label: 'Number', index: true },
+    journal: {
       type: String,
       enum: JOURNALS.ALL,
       default: 'zero',
       label: 'Journal',
       index: true
-    }),
-    ptrStatus: field({
+    },
+    ptrStatus: {
       type: String,
       enum: PTR_STATUSES.ALL,
       default: 'zero',
       label: 'PTR Status',
       optional: true,
       index: true,
-    }),
-    originId: field({ type: String, label: 'Source Transaction' }),
-    followInfos: field({
+    },
+    originId: { type: String, label: 'Source Transaction' },
+    followInfos: {
       type: Object, label: 'Follower transactions'
-    }),
-    follows: field({
+    },
+    follows: {
       type: [followSchema], label: 'Follower transactions'
-    }),
-    preTrId: field({ type: String, optional: true, label: 'previous transaction', index: true }),
+    },
+    preTrId: { type: String, optional: true, label: 'previous transaction', index: true },
 
-    branchId: field({ type: String, optional: true, label: 'Branch' }),
-    departmentId: field({ type: String, optional: true, label: 'Department' }),
-    customerType: field({ type: String, optional: true, label: 'Customer type' }),
-    customerId: field({ type: String, optional: true, label: 'Customer' }),
-    assignedUserIds: field({ type: [String], label: 'Assign Users' }),
+    branchId: { type: String, optional: true, label: 'Branch' },
+    departmentId: { type: String, optional: true, label: 'Department' },
+    customerType: { type: String, optional: true, label: 'Customer type' },
+    customerId: { type: String, optional: true, label: 'Customer' },
+    assignedUserIds: { type: [String], label: 'Assign Users' },
 
-    details: field({ type: [transactionDetailSchema], label: 'details' }),
-    shortDetail: field({ type: transactionDetailSchema, label: 'short detail' }),
-    sumDt: field({ type: Number, label: 'sumDt' }),
-    sumCt: field({ type: Number, label: 'sumCt' }),
+    details: { type: [transactionDetailSchema], label: 'details' },
+    shortDetail: { type: transactionDetailSchema, label: 'short detail' },
+    sumDt: { type: Number, label: 'sumDt' },
+    sumCt: { type: Number, label: 'sumCt' },
 
-    createdBy: field({ type: String, label: 'Created user' }),
-    modifiedBy: field({ type: String, optional: true, label: 'Modified user' }),
-    createdAt: field({ type: Date, default: new Date(), label: 'Created at' }),
-    updatedAt: field({ type: Date, optional: true, label: 'Modified at' }),
+    createdBy: { type: String, label: 'Created user' },
+    modifiedBy: { type: String, optional: true, label: 'Modified user' },
+    createdAt: { type: Date, default: new Date(), label: 'Created at' },
+    updatedAt: { type: Date, optional: true, label: 'Modified at' },
 
     // vat 
-    hasVat: field({ type: Boolean, optional: true, label: 'hasVat' }),
-    vatRowId: field({ type: String, optional: true, label: 'vatRowId' }),
-    afterVat: field({ type: Boolean, optional: true, label: 'afterVat' }),
-    afterVatAccountId: field({ type: String, optional: true, label: 'afterVatAccountId' }),
-    isHandleVat: field({ type: Boolean, optional: true, label: 'isHandleVat' }),
-    vatAmount: field({ type: Number, optional: true, label: 'vatAmount' }),
+    hasVat: { type: Boolean, optional: true, label: 'hasVat' },
+    vatRowId: { type: String, optional: true, label: 'vatRowId' },
+    afterVat: { type: Boolean, optional: true, label: 'afterVat' },
+    afterVatAccountId: { type: String, optional: true, label: 'afterVatAccountId' },
+    isHandleVat: { type: Boolean, optional: true, label: 'isHandleVat' },
+    vatAmount: { type: Number, optional: true, label: 'vatAmount' },
 
     // ctax
-    hasCtax: field({ type: Boolean, optional: true, label: 'hasCtax' }),
-    ctaxRowId: field({ type: String, optional: true, label: 'ctaxRowId' }),
-    isHandleCtax: field({ type: Boolean, optional: true, label: 'isHandleCtax' }),
-    ctaxAmount: field({ type: Number, optional: true, label: 'ctaxAmount' }),
+    hasCtax: { type: Boolean, optional: true, label: 'hasCtax' },
+    ctaxRowId: { type: String, optional: true, label: 'ctaxRowId' },
+    isHandleCtax: { type: Boolean, optional: true, label: 'isHandleCtax' },
+    ctaxAmount: { type: Number, optional: true, label: 'ctaxAmount' },
 
-    extraData: field({ type: Object, optional: true })
-  }),
+    extraData: { type: Object, optional: true }
+  })
 );

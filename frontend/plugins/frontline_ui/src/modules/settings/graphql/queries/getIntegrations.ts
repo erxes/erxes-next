@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
-
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 export const GET_INTEGRATIONS_COUNTS = gql`
   query totalIntegrationsCount {
     integrationsTotalCount {
@@ -19,6 +23,7 @@ export const GET_INTEGRATIONS_BY_KIND = gql`
     $page: Int
     $searchValue: String
     $status: String
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
     integrations(
       channelId: $channelId
@@ -28,39 +33,48 @@ export const GET_INTEGRATIONS_BY_KIND = gql`
       page: $page
       searchValue: $searchValue
       status: $status
+      ${GQL_CURSOR_PARAMS}
     ) {
-      _id
-      name
-      brandId
-      languageCode
-      isActive
-      channels {
+      list {
         _id
         name
+        brandId
+        languageCode
+        isActive
+        kind
+        createdAt
+        healthStatus
+        details
+        webhookData
+        leadData
+        formId
+        tagIds
+
+        channels {
+          _id
+          name
+        }
+
+        brand {
+          _id
+          name
+          code
+        }
+
+        tags {
+          _id
+          name
+          colorCode
+        }
+
+        form {
+          _id
+          title
+          code
+        }
       }
-      kind
-      brand {
-        _id
-        name
-        code
-      }
-      createdAt
-      webhookData
-      leadData
-      formId
-      tagIds
-      tags {
-        _id
-        colorCode
-        name
-      }
-      form {
-        _id
-        title
-        code
-      }
-      details
-      healthStatus
+
+      ${GQL_PAGE_INFO}
     }
   }
 `;

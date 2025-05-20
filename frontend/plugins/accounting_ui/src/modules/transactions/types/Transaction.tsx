@@ -1,5 +1,5 @@
 import { IAccount } from '@/settings/account/types/Account';
-import { CustomerType, IProduct } from 'ui-modules';
+import { CustomerType, IBranch, IDepartment, IProduct } from 'ui-modules';
 import { IVatRow } from '@/settings/vat/types/VatRow';
 import { ICtaxRow } from '@/settings/ctax/types/CtaxRow';
 
@@ -81,8 +81,8 @@ interface ICommontTr {
   sumCt: number;
   permission?: string;
 
-  branch?: any;
-  department?: any;
+  branch?: IBranch;
+  department?: IDepartment;
 }
 
 export interface ITransaction extends ICommontTr {

@@ -63,12 +63,7 @@ export const GET_COMPANIES = gql`
         primaryPhone
         businessType
         links
-        owner {
-          _id
-          details {
-            fullName
-          }
-        }
+        ownerId
         tagIds
         score
       }
