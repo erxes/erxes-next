@@ -663,6 +663,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      express:
+        specifier: ^4.21.2
+        version: 4.21.2
       graphql:
         specifier: ^16.9.0
         version: 16.10.0
