@@ -1,10 +1,14 @@
-import { OperationVariables, useQuery } from '@apollo/client';
-import { IUnitsMain } from '../types/Unit';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_UNITS_MAIN } from '../graphql/queries/getUnits';
+import { IUnit } from '../types/Unit';
 
-export const useUnits = (options?: OperationVariables) => {
+export const useUnits = (
+  options?: QueryHookOptions<{
+    units: IUnit[];
+  }>,
+) => {
   const { data, loading, error } = useQuery<{
-    units: IUnitsMain[];
+    units: IUnit[];
   }>(GET_UNITS_MAIN, options);
 
   const units = data?.units || [];
