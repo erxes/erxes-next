@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 import { redis } from './redis';
-import { Queue } from 'bullmq';
 
 dotenv.config();
 

@@ -4,101 +4,37 @@ import {
   createTRPCContext,
   joinErxesGateway,
   leaveErxesGateway,
+  startPlugin,
 } from 'erxes-api-shared/utils';
 import express from 'express';
 import * as http from 'http';
 import mongoose from 'mongoose';
 import { appRouter } from '~/trpc/init-trpc';
-import { initApolloServer } from './apollo/apolloServer';
+import { typeDefs } from './apollo/typeDefs';
 import { generateModels } from './connectionResolvers';
-const port = process.env.PORT ? Number(process.env.PORT) : 3305;
-
-const app = express();
-
-app.use(express.urlencoded({ limit: '15mb', extended: true }));
-
-app.use(
-  express.json({
-    limit: '15mb',
+import resolvers from './apollo/resolvers';
+startPlugin({
+  name: 'sales',
+  port: 3305,
+  graphql: async () => ({
+    typeDefs: await typeDefs(),
+    resolvers: resolvers,
   }),
-);
+  apolloServerContext: async (subdomain, context) => {
+    const models = await generateModels(subdomain);
 
-app.use(
-  '/trpc',
-  trpcExpress.createExpressMiddleware({
+    context.models = models;
+
+    return context;
+  },
+  trpcAppRouter: {
     router: appRouter,
-    createContext: createTRPCContext(async (subdomain, context) => {
+    createContext: async (subdomain, context) => {
       const models = await generateModels(subdomain);
 
       context.models = models;
 
       return context;
-    }),
-  }),
-);
-
-app.use(cookieParser());
-
-const httpServer = http.createServer(app);
-
-httpServer.listen(port, async () => {
-  await initApolloServer(app, httpServer);
-
-  await joinErxesGateway({
-    name: 'sales',
-    port,
-    hasSubscriptions: false,
-    meta: {},
-  });
-});
-
-// GRACEFULL SHUTDOWN
-process.stdin.resume(); // so the program will not close instantly
-
-async function closeMongooose() {
-  try {
-    await mongoose.connection.close();
-    console.log('Mongoose connection disconnected ');
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-async function leaveServiceDiscovery() {
-  try {
-    await leaveErxesGateway('sales', port);
-    console.log('Left from service discovery');
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-async function closeHttpServer() {
-  try {
-    await new Promise<void>((resolve, reject) => {
-      // Stops the server from accepting new connections and finishes existing connections.
-      httpServer.close((error: Error | undefined) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve();
-      });
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-// If the Node process ends, close the http-server and mongoose.connection and leave service discovery.
-(['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
-  process.on(sig, async () => {
-    console.log(`Received ${sig}, shutting down...`);
-    await closeHttpServer();
-    await closeMongooose();
-    await leaveServiceDiscovery();
-
-    setTimeout(() => {
-      process.exit(0);
-    }, 500); // 500ms хүлээх
-  });
+    },
+  },
 });

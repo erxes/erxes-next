@@ -1,38 +1,36 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import express from 'express';
-import { Application } from 'express';
-
-import * as http from 'http';
-
-dotenv.config();
-
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
-import { Request as ApiRequest, Response as ApiResponse } from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express, {
+  Request as ApiRequest,
+  Response as ApiResponse,
+  Application,
+} from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
+import * as http from 'http';
+import {
+  SegmentConfigs,
+  startAutomations,
+  startSegments,
+} from '../core-modules';
+import { AutomationConfigs } from '../core-modules/automations/types';
+import { generateApolloContext } from './apollo';
 import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
 import { logHandler } from './logs';
-import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
-import { generateApolloContext } from './apollo';
 import { closeMongooose } from './mongo';
-import { AutomationConfigs } from '../core-modules/automations/types';
-import { startAutomations } from '../core-modules';
-import { getSubdomain } from './utils';
+import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
 import { createTRPCContext } from './trpc';
-
-const { PORT, USE_BRAND_RESTRICTIONS } = process.env;
+import { getSubdomain } from './utils';
 
 type IMeta = {
   automations?: AutomationConfigs;
+  segments?: SegmentConfigs;
 };
 
 type ApiHandler = {
@@ -50,6 +48,7 @@ type GraphqlResolver = {
 
 type ConfigTypes = {
   name: string;
+  port: number;
   graphql: () => Promise<{
     resolvers: GraphqlResolver;
     typeDefs: DocumentNode;
@@ -60,7 +59,7 @@ type ConfigTypes = {
     req: ApiRequest,
     res: ApiResponse,
   ) => Promise<void>;
-  onServerInit: (app: express.Express) => Promise<void>;
+  onServerInit?: (app: express.Express) => Promise<void>;
   importExportTypes?: any;
   middlewares?: any;
   apiHandlers?: ApiHandler[];
@@ -80,7 +79,7 @@ type ConfigTypes = {
 export async function startPlugin(
   configs: ConfigTypes,
 ): Promise<express.Express> {
-  const port = process.env.PORT ? Number(process.env.PORT) : 3300;
+  const PORT = configs.port;
 
   const app = express();
   app.disable('x-powered-by');
@@ -196,8 +195,8 @@ export async function startPlugin(
 
   async function leaveServiceDiscovery() {
     try {
-      await leaveErxesGateway(configs.name, port);
-      console.log(`Left service discovery. name=${configs.name} port=${port}`);
+      await leaveErxesGateway(configs.name, PORT);
+      console.log(`Left service discovery. name=${configs.name} port=${PORT}`);
     } catch (e) {
       console.error(e);
     }
@@ -253,26 +252,32 @@ export async function startPlugin(
   );
 
   console.log(
-    `🚀 ${configs.name} graphql api ready at http://localhost:${port}/graphql`,
+    `🚀 ${configs.name} graphql api ready at http://localhost:${PORT}/graphql`,
   );
 
   if (configs.meta) {
-    const { automations } = configs.meta || {};
+    const { automations, segments } = configs.meta || {};
 
     if (automations) {
       startAutomations(configs.name, automations);
+    }
+
+    if (segments) {
+      startSegments(configs.name, segments);
     }
   } // end configs.meta if
 
   await joinErxesGateway({
     name: configs.name,
-    port,
+    port: PORT,
     hasSubscriptions: configs.hasSubscriptions,
     importExportTypes: configs.importExportTypes,
     meta: configs.meta,
   });
 
-  configs.onServerInit(app);
+  if (configs.onServerInit) {
+    configs.onServerInit(app);
+  }
 
   //   applyInspectorEndpoints(configs.name);
 
