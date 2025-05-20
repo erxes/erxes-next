@@ -14,7 +14,7 @@ const ChannelsTable = () => {
     <RecordTable.Provider
       data={channels || []}
       columns={ChannelColumns}
-      stickyColumns={['checkbox', 'name']}
+      stickyColumns={['more', 'checkbox', 'name']}
       className="m-3"
     >
       <RecordTable.Scroll>

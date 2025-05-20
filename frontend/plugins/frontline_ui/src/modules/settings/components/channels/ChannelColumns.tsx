@@ -6,7 +6,7 @@ import {
   IconUser,
   IconUsersGroup,
 } from '@tabler/icons-react';
-import { ColumnDef } from '@tanstack/table-core';
+import { Cell, ColumnDef } from '@tanstack/table-core';
 import {
   RecordTable,
   RecordTableCellContent,
@@ -16,11 +16,34 @@ import {
   Input,
   Textarea,
   TextOverflowTooltip,
+  useQueryState,
 } from 'erxes-ui';
+import { useSetAtom } from 'jotai';
 import { AssignMember, AssignMultipleMembers } from 'ui-modules/modules';
 import { type TChannel } from '~/modules/settings/types/channel';
+import { renderingChannelDetailAtom } from '../../states/renderingChannelDetail';
+
+export const MoreColumnCell = ({ cell }: { cell: Cell<TChannel, unknown> }) => {
+  const [, setOpen] = useQueryState('channel_id');
+  const setRenderingCustomerDetail = useSetAtom(renderingChannelDetailAtom);
+  const { _id } = cell.row.original;
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setOpen(_id);
+        setRenderingCustomerDetail(false);
+      }}
+    />
+  );
+};
 
 export const ChannelColumns: ColumnDef<TChannel>[] = [
+  {
+    id: 'more',
+    cell: MoreColumnCell,
+    size: 33,
+  },
   RecordTable.checkboxColumn as ColumnDef<TChannel>,
   {
     id: 'name',

@@ -8,6 +8,7 @@ import {
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
+  TextOverflowTooltip,
   useQueryState,
 } from 'erxes-ui';
 import { IDepartmentListItem } from '../../types/department';
@@ -70,14 +71,13 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     accessorKey: 'code',
     header: () => <RecordTable.InlineHead icon={IconHash} label="code" />,
     cell: ({ cell }) => {
-      const { code } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{code}</RecordTableCellDisplay>
+            {cell.getValue() as string}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={code} />
+            <Input value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -88,29 +88,31 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     accessorKey: 'title',
     header: () => <RecordTable.InlineHead label="title" />,
     cell: ({ cell }) => {
-      const { title } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{title}</RecordTableCellDisplay>
+            <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={title} />
+            <Input value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
     },
+    size: 300,
   },
   {
     id: 'supervisorId',
     accessorKey: 'supervisorId',
     header: () => <RecordTable.InlineHead label="supervisor" />,
     cell: ({ cell }) => {
-      const { supervisorId } = cell.row.original;
       return (
-        <div>
-          <AssignMember className="shadow-none" value={supervisorId} />
-        </div>
+        <RecordTableCellDisplay>
+          <AssignMember
+            className="shadow-none bg-transparent"
+            value={cell.getValue() as string}
+          />
+        </RecordTableCellDisplay>
       );
     },
   },
@@ -119,14 +121,13 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     accessorKey: 'userCount',
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
-      const { userCount } = cell.row.original;
       return (
         <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{userCount}</RecordTableCellDisplay>
+          <RecordTableCellTrigger className="justify-center">
+            {cell.getValue() as number}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={userCount} />
+            <Input value={cell.getValue() as number} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -137,13 +138,13 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       return (
-        <div className="flex items-center justify-center gap-1 [&>button]:px-2">
+        <RecordTableCellDisplay className="gap-1 [&>button]:px-2 justify-center">
           <Button variant={'outline'}>
             <IconClock size={12} />
           </Button>
           <UserMoreColumnCell cell={cell} />
           <DepartmentRemoveCell cell={cell} />
-        </div>
+        </RecordTableCellDisplay>
       );
     },
   },

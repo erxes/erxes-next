@@ -53,7 +53,7 @@ const InboxSettings = () => {
             <InboxSettingsTopbar />
           </PageHeaderEnd>
         </PageHeader>
-        <div className="flex flex-auto overflow-hidden">
+        <div className="flex flex-auto w-full overflow-hidden">
           <InboxSettingsSidebar />
           <Suspense
             fallback={

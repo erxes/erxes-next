@@ -1,5 +1,11 @@
 import { IconChalkboard } from '@tabler/icons-react';
-import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
+import {
+  Combobox,
+  Command,
+  Filter,
+  PageSubHeader,
+  useMultiQueryState,
+} from 'erxes-ui';
 import React from 'react';
 
 const ChannelsFilterPopover = () => {
@@ -42,19 +48,21 @@ export const ChannelsFilter = () => {
   const { channelId } = queries || {};
   return (
     <Filter id="channels-filter" sessionKey="">
-      <Filter.Bar>
-        {channelId && (
-          <Filter.BarItem>
-            <Filter.BarName>
-              <IconChalkboard />
-              Channel
-            </Filter.BarName>
-            <span>Select channel</span>
-            <Filter.BarClose filterKey="channelId" />
-          </Filter.BarItem>
-        )}
-        <ChannelsFilterPopover />
-      </Filter.Bar>
+      <PageSubHeader>
+        <Filter.Bar>
+          {channelId && (
+            <Filter.BarItem>
+              <Filter.BarName>
+                <IconChalkboard />
+                Channel
+              </Filter.BarName>
+              <span>Select channel</span>
+              <Filter.BarClose filterKey="channelId" />
+            </Filter.BarItem>
+          )}
+          <ChannelsFilterPopover />
+        </Filter.Bar>
+      </PageSubHeader>
     </Filter>
   );
 };

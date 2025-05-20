@@ -9,16 +9,12 @@ import {
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
-  Table,
+  TextOverflowTooltip,
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingUnitDetailAtom } from '../../states/renderingUnitDetail';
-import {
-  AssignMember,
-  AssignMemberTrigger,
-  SelectDepartment,
-} from 'ui-modules';
+import { AssignMember, SelectDepartment } from 'ui-modules';
 import { useRemoveUnit } from '../../hooks/useUnitActions';
 
 export const UnitEditColumnCell = ({
@@ -75,14 +71,13 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'code',
     header: () => <RecordTable.InlineHead icon={IconHash} label="code" />,
     cell: ({ cell }) => {
-      const { code } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{code}</RecordTableCellDisplay>
+            <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={code} />
+            <Input value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -93,29 +88,31 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'title',
     header: () => <RecordTable.InlineHead label="title" />,
     cell: ({ cell }) => {
-      const { title } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{title}</RecordTableCellDisplay>
+            <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={title} />
+            <Input value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
     },
+    size: 300,
   },
   {
     id: 'supervisorId',
     accessorKey: 'supervisorId',
     header: () => <RecordTable.InlineHead label="supervisor" />,
     cell: ({ cell }) => {
-      const { supervisorId } = cell.row.original;
       return (
-        <div>
-          <AssignMember className="shadow-none" value={supervisorId} />
-        </div>
+        <RecordTableCellDisplay>
+          <AssignMember
+            className="shadow-none bg-transparent"
+            value={cell.getValue() as string}
+          />
+        </RecordTableCellDisplay>
       );
     },
   },
@@ -124,32 +121,29 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     accessorKey: 'departmentId',
     header: () => <RecordTable.InlineHead label="department" />,
     cell: ({ cell }) => {
-      const { departmentId } = cell.row.original;
       return (
-        <div>
+        <RecordTableCellDisplay>
           <SelectDepartment
-            value={departmentId}
+            value={cell.getValue() as string}
             onValueChange={() => {}}
-            className="shadow-none"
+            className="shadow-none bg-transparent"
           />
-        </div>
+        </RecordTableCellDisplay>
       );
     },
-    size: 200,
   },
   {
     id: 'userCount',
     accessorKey: 'userCount',
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
-      const { userCount } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{userCount}</RecordTableCellDisplay>
+            <RecordTableCellDisplay value={cell.getValue() as number} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={userCount} />
+            <Input value={cell.getValue() as number} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -160,13 +154,13 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       return (
-        <div className="flex items-center justify-center gap-1 [&>button]:px-2">
+        <RecordTableCellDisplay className="justify-center gap-1 [&>button]:px-2">
           <Button variant={'outline'}>
             <IconClock size={12} />
           </Button>
           <UnitEditColumnCell cell={cell} />
           <UnitRemoveCell cell={cell} />
-        </div>
+        </RecordTableCellDisplay>
       );
     },
   },

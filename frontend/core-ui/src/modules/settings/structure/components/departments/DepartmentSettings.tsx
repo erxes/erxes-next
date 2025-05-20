@@ -7,11 +7,12 @@ import { DepartmentEdit } from './detail/DepartmentEdit';
 export function DepartmentSettings() {
   const { departments, loading } = useDepartmentsList();
   return (
-    <section className="flex flex-col h-full w-full p-5">
+    <div className="w-full overflow-hidden flex flex-col">
       <DepartmentEdit />
       <RecordTable.Provider
         data={departments || []}
         columns={DepartmentColumns}
+        className="m-3"
       >
         <RecordTable.Scroll>
           <RecordTable>
@@ -23,6 +24,6 @@ export function DepartmentSettings() {
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTable.Provider>
-    </section>
+    </div>
   );
 }
