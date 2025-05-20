@@ -1,18 +1,18 @@
-name: CI core-api
+name: CI plugin-accounting_api
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'backend/core-api/**'
+      - 'backend/plugins/accounting_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-core.yml'
+      - '.github/workflows/ci-api-pos.yml'
   pull_request:
     paths:
-      - 'backend/core-api/**'
+      - 'backend/plugins/accounting_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-core-api.yml'
+      - '.github/workflows/ci-api-pos.yml'
 
 jobs:
   core-api-ci:
@@ -48,9 +48,9 @@ jobs:
       - name: Build and push Docker image
         run: |
           export NX_DAEMON=false
-          pnpm nx docker-build core-api
-          docker tag erxes/erxes-next-core-api erxes/erxes-next-core-api:latest
-          docker tag erxes/erxes-next-core-api erxes/erxes-next-core-api:${{ github.sha }}
-          docker push erxes/erxes-next-core-api:latest
-          docker push erxes/erxes-next-core-api:${{ github.sha }}
+          pnpm nx docker-build accounting_api
+          docker tag erxes/erxes-next-accounting_api erxes/erxes-next-accounting_api:latest
+          docker tag erxes/erxes-next-accounting_api erxes/erxes-next-accounting_api:${{ github.sha }}
+          docker push erxes/erxes-next-accounting_api:latest
+          docker push erxes/erxes-next-accounting_api:${{ github.sha }}
         if: github.event_name != 'pull_request'
