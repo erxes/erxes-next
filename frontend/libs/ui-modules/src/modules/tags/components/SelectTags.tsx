@@ -117,7 +117,7 @@ export const SelectTagsCommand = ({
         placeholder="Search tags"
         focusOnMount
       />
-      {selectedTags && (
+      {selectedTags?.length > 0 && (
         <>
           <div className="flex flex-wrap p-2 gap-2">
             <TagList />

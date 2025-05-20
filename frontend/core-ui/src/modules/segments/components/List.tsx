@@ -104,7 +104,6 @@ export default function List() {
                   )}
                 />
                 {loading && <RecordTable.RowSkeleton rows={40} />}
-                <RecordTable.RowList />
               </RecordTable.Body>
             </RecordTable>
           </RecordTable.Scroll>

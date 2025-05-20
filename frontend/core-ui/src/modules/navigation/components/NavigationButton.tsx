@@ -1,3 +1,4 @@
+import { SettingsPath } from '@/types/paths/SettingsPath';
 import { Icon, IconCaretDownFilled } from '@tabler/icons-react';
 import { cn, Sidebar } from 'erxes-ui';
 import { Link, useLocation } from 'react-router';
@@ -26,7 +27,10 @@ export const NavigationButton = ({
   const isActive = activePathname === pathnameWithPrefix;
 
   const isSubItemActive =
-    !isFavorite && !isActive && activePathname.includes(pathnameWithPrefix);
+    !isFavorite &&
+    !isActive &&
+    activePathname.includes(pathnameWithPrefix) &&
+    !activePathname.includes(SettingsPath.Index);
 
   return (
     <Sidebar.MenuButton

@@ -78,12 +78,7 @@ const GeneralSettings = () => {
         />
         <SelectMainCurrency />
         <SelectCurrency />
-        <Button
-          size={'sm'}
-          disabled={isLoading}
-          type="submit"
-          className="w-1/4 ml-auto"
-        >
+        <Button disabled={isLoading} type="submit" className="w-1/4 ml-auto">
           {isLoading ? (
             <Spinner className="stroke-white/90 w-4 h-4" />
           ) : (

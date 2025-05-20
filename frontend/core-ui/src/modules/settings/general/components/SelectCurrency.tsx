@@ -22,7 +22,7 @@ const Selector = (
     field.onChange(formattedOptions);
   };
   return (
-    <Form.Item>
+    <Form.Item className="pb-4">
       <Form.Label>Currency</Form.Label>
       <Form.Control>
         <MultipleSelector
