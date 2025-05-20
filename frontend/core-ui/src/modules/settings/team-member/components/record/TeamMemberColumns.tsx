@@ -137,7 +137,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             if (status === 'Verified') {
               return <Badge variant={'success'}>{status}</Badge>;
             } else {
-              return <Badge variant={'destructive'}>{'Unverified'}</Badge>;
+              return <Badge variant={'destructive'}>Unverified</Badge>;
             }
           }}
         />
@@ -152,9 +152,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const { email, _id } = cell.row.original;
       return (
         <RecordTablePopover>
-          <RecordTableCellTrigger asChild>
-            <RecordTableCellDisplay>{email}</RecordTableCellDisplay>
-          </RecordTableCellTrigger>
+          <RecordTableCellTrigger asChild>{email}</RecordTableCellTrigger>
           <RecordTableCellContent>
             <Input key={_id} value={email} />
           </RecordTableCellContent>
@@ -188,9 +186,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       } = cell.row.original;
       return (
         <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{position}</RecordTableCellDisplay>
-          </RecordTableCellTrigger>
+          <RecordTableCellTrigger>{position}</RecordTableCellTrigger>
           <RecordTableCellContent>
             <SelectPosition value={position} onValueChange={() => {}} />
           </RecordTableCellContent>

@@ -54,8 +54,6 @@ export const Structure = () => {
     ]);
   };
 
-  console.log('methods.watch()', methods.watch());
-
   return (
     <ScrollArea className="w-full min-h-svh">
       <div className="flex h-full w-full flex-col">

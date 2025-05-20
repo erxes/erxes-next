@@ -4,7 +4,7 @@ import { useDepartmentsList } from '../../hooks/useDepartmentsList';
 import { DepartmentsRemove } from './DepartmentsRemove';
 import { DepartmentEdit } from './detail/DepartmentEdit';
 
-export default function DepartmentSettings() {
+export function DepartmentSettings() {
   const { departments, loading } = useDepartmentsList();
   return (
     <section className="flex flex-col h-full w-full p-5">

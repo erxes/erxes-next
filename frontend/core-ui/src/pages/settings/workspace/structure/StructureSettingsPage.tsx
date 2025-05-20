@@ -17,20 +17,20 @@ export const BranchesSettings = lazy(() =>
   import(
     '~/modules/settings/structure/components/branches/BranchesSettings'
   ).then((module) => ({
-    default: module.default,
+    default: module.BranchesSettings,
   })),
 );
 export const DepartmentsSettings = lazy(() =>
   import(
     '~/modules/settings/structure/components/departments/DepartmentSettings'
   ).then((module) => ({
-    default: module.default,
+    default: module.DepartmentSettings,
   })),
 );
 export const UnitsSettings = lazy(() =>
   import('~/modules/settings/structure/components/units/UnitsSettings').then(
     (module) => ({
-      default: module.default,
+      default: module.UnitsSettings,
     }),
   ),
 );
@@ -38,7 +38,7 @@ export const PositionsSettings = lazy(() =>
   import(
     '~/modules/settings/structure/components/positions/PositionsSettings'
   ).then((module) => ({
-    default: module.default,
+    default: module.PositionsSettings,
   })),
 );
 

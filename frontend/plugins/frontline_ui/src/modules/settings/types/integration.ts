@@ -43,7 +43,7 @@ export interface IIntegrationColumnDef {
   _id: string;
   name: string;
   kind: string;
-  brand: IBrand;
+  brandId: string;
   isActive: boolean;
   healthStatus: {
     status: 'healthy' | 'page-token' | 'account-token';

@@ -4,7 +4,7 @@ import { PositionsColumns } from './PositionsColumns';
 import { PositionEdit } from './detail/PositionEdit';
 import { PositionsRemove } from './PositionsRemove';
 
-export default function PositionsSettings() {
+export function PositionsSettings() {
   const { positions } = usePositionsList();
   return (
     <section className="flex flex-col h-full w-full p-5">

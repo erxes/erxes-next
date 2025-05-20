@@ -4,7 +4,7 @@ import { BranchColumns } from './BranchColumns';
 import { BranchesRemove } from './BranchesRemove';
 import { BranchEdit } from './details/BranchEdit';
 
-export default function BranchesSettings() {
+export function BranchesSettings() {
   const { branches } = useBranchesList();
 
   return (
