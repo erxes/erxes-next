@@ -7,12 +7,12 @@ on:
     paths:
       - 'backend/plugins/accounting_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-pos.yml'
+      - '.github/workflows/ci-api-accounting.yml'
   pull_request:
     paths:
       - 'backend/plugins/accounting_api/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-pos.yml'
+      - '.github/workflows/ci-api-accounting.yml'
 
 jobs:
   core-api-ci:
