@@ -65,9 +65,10 @@ export default {
     return (conv.participatedUserIds && conv.participatedUserIds.length) || 0;
   },
 
-  async messages(conv: IConversationDocument, _, { dataLoaders }: IContext) {
-    const messages =
-      await dataLoaders.conversationMessagesByConversationId.load(conv._id);
+  async messages(conv: IConversationDocument, _, { models }: IContext) {
+    const messages = await models.ConversationMessages.find({
+      conversationId: conv._id,
+    });
     return messages.filter((message) => message);
   },
 

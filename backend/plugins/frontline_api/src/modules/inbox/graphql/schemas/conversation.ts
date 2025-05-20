@@ -185,11 +185,13 @@ const convertParams = `
   attachments: [AttachmentInput]
   description: String
 `;
- export const cursorParams = `
+
+export const cursorParams = `
   limit: Int
   cursor: String
   direction: CURSOR_DIRECTION
-`
+`;
+
 const filterParams = `
   ids: [String]
   ${cursorParams}
@@ -198,9 +200,8 @@ const filterParams = `
 
 export const queries = `
   conversationMessage(_id: String!): ConversationMessage
-  
-  conversations(${filterParams}, skip: Int): ConversationListResponse
 
+  conversations(${filterParams}, skip: Int): ConversationListResponse
   conversationMessages(
     conversationId: String!
     skip: Int
