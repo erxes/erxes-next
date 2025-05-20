@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IconCheck } from '@tabler/icons-react';
-import { Button, Command, Input, Popover } from 'erxes-ui/components';
+import { Button, Combobox, Command, Input, Popover } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib';
 import parsePhoneNumberFromString, { CountryCode } from 'libphonenumber-js';
 import { CountryPhoneCodes } from 'erxes-ui/constants/CountryPhoneCodes';
@@ -110,21 +110,18 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     return (
       <div
         className={cn(
-          'flex items-center justify-start bg-muted rounded-md',
+          'flex items-center justify-start rounded gap-1',
           className,
         )}
       >
         <Popover open={open} onOpenChange={setOpen}>
-          <Popover.Trigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-expanded={open}
-              className="rounded-l-md size-cell focus-visible:ring-0 border-0 bg-transparent"
-            >
-              <span>{selectedCountry.flag}</span>
-            </Button>
-          </Popover.Trigger>
+          <Combobox.TriggerBase
+            variant="secondary"
+            aria-expanded={open}
+            className="h-8 text-xl w-auto pl-2 pr-2.5"
+          >
+            {selectedCountry.flag}
+          </Combobox.TriggerBase>
           <Popover.Content className="w-56 p-0" align="start">
             <Command>
               <Command.Input placeholder="Search country..." className="h-9" />
@@ -161,7 +158,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           placeholder={placeholder}
           ref={ref}
           variant="secondary"
-          className="bg-transparent"
+          className="bg-accent"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               const target = e.target as HTMLInputElement;

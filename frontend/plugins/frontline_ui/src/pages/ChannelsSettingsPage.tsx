@@ -4,7 +4,7 @@ import { ChannelsSettings } from '~/modules/settings/components/ChannelsSettings
 
 const ChannelsSettingsPage = () => {
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex flex-col h-full overflow-auto">
       <PageSubHeader>
         <ChannelsFilter />
       </PageSubHeader>

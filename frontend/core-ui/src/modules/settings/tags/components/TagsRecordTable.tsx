@@ -41,7 +41,13 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
           onValueChange={(value) => {
             console.log(value);
           }}
-        />
+        >
+          <RecordTableTree.Trigger
+            order={cell.row.original.order}
+            name={cell.getValue() as string}
+            hasChildren={cell.row.original.hasChildren}
+          />
+        </TextField>
       );
     },
     size: 300,
@@ -76,7 +82,7 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
 
 export const TagsRecordTable = () => {
   const [searchValue] = useQueryState('searchValue');
-  const { tags, pageInfo, loading, handleFetchMore } = useTags({
+  const { tags, pageInfo, loading, handleFetchMore, sortedTags } = useTags({
     variables: {
       type: 'core:customer',
       searchValue: searchValue ?? undefined,
@@ -86,7 +92,7 @@ export const TagsRecordTable = () => {
   return (
     <RecordTable.Provider
       columns={tagsColumns}
-      data={tags || []}
+      data={sortedTags || []}
       className="m-3"
       stickyColumns={['more', 'name']}
     >
@@ -95,7 +101,7 @@ export const TagsRecordTable = () => {
           <RecordTable>
             <RecordTable.Header />
             <RecordTable.Body>
-              <RecordTable.RowList />
+              <RecordTable.RowList Row={RecordTableTree.Row} />
               {loading && <RecordTable.RowSkeleton rows={30} />}
               {!loading && pageInfo?.hasNextPage && (
                 <RecordTable.RowSkeleton

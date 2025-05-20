@@ -57,9 +57,9 @@ const RecordTableTreeIndentation = ({
 };
 const RecordTableTreeRow = React.forwardRef<
   HTMLTableRowElement,
-  React.ComponentProps<typeof RecordTableRow> & { order: string; name: string }
->(({ order, ...props }, ref) => {
-  const { ordered, isHiddenByParent } = useRecordTableTree(order);
+  React.ComponentProps<typeof RecordTableRow>
+>(({ original, ...props }, ref) => {
+  const { ordered, isHiddenByParent } = useRecordTableTree(original?.order);
 
   if (ordered && isHiddenByParent) {
     return null;
@@ -106,10 +106,11 @@ RecordTableTreeArrow.displayName = 'RecordTableTreeArrow';
 
 const RecordTableTreeTrigger = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> & {
     order: string;
     name: string;
     hasChildren: boolean;
+    children?: React.ReactNode;
   }
 >(({ order, name, hasChildren, className, children, ...props }, ref) => {
   return (

@@ -10,24 +10,21 @@ import type { ColumnDef, Cell } from '@tanstack/react-table';
 import {
   Avatar,
   Badge,
-  cn,
   InlineCell,
   Switch,
-  Table,
   useQueryState,
   RecordTable,
   RecordTablePopover,
   RecordTableCellTrigger,
-  RecordTableCellDisplay,
   Input,
   RecordTableCellContent,
+  TextOverflowTooltip,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import dayjs from 'dayjs';
 import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
 import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
-import { Link } from 'react-router';
 import { useSetAtom } from 'jotai';
 import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
 import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
@@ -186,7 +183,9 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       } = cell.row.original;
       return (
         <RecordTablePopover>
-          <RecordTableCellTrigger>{position}</RecordTableCellTrigger>
+          <RecordTableCellTrigger>
+            <TextOverflowTooltip value={position} />
+          </RecordTableCellTrigger>
           <RecordTableCellContent>
             <SelectPosition value={position} onValueChange={() => {}} />
           </RecordTableCellContent>

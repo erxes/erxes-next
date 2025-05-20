@@ -141,8 +141,8 @@ const SelectTreeItem = React.forwardRef<
 
   return (
     <div className="flex items-center gap-1 w-full">
-      <SelectTreeIndentation order={fixedOrder} />
-      <SelectTreeArrow order={fixedOrder} hasChildren={hasChildren} />
+      <SelectTreeIndentation order={fixedOrder ?? ''} />
+      <SelectTreeArrow order={fixedOrder ?? ''} hasChildren={hasChildren} />
       <SelectTreeCommandItem
         {...props}
         _id={_id}

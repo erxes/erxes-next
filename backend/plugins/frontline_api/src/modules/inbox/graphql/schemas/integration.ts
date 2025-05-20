@@ -21,9 +21,13 @@ export const types = `
     departments: [CloudflareCallDataDepartment]
     isReceiveWebCall: Boolean
   }
-
+    type Form {
+      _id: String
+      title: String
+      code: String
+    }
   type Integration @key(fields: "_id") {
-    _id: String!
+   _id: String!
     kind: String!
     name: String!
     brandId: String!
@@ -32,29 +36,31 @@ export const types = `
     formId: String
     tagIds: [String]
     createdAt: Date
-
     tags: [Tag]
   
     leadData: JSON
     messengerData: JSON
+    ticketData: JSON
     uiOptions: JSON
     isActive: Boolean
     isConnected: Boolean
     webhookData: JSON
+
     brand: Brand
-    healthStatus: JSON
 
     channels: [Channel]
 
 
-
+    healthStatus: JSON
+    form : Form
+       
     visibility: String
     departmentIds: [String]
 
     details: JSON
     callData: CloudflareCallsData
   }
-    type IntegrationRespone {
+  type IntegrationRespone {
     list: [Integration],
     pageInfo: PageInfo
     totalCount: Int,

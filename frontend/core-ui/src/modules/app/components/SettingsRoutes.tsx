@@ -50,6 +50,14 @@ const TagsSettings = lazy(() =>
   })),
 );
 
+const ProductsSettingsRoutes = lazy(() =>
+  import('@/products/settings/components/ProductSettingsRoutes').then(
+    (module) => ({
+      default: module.ProductsSettingRoutes,
+    }),
+  ),
+);
+
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
@@ -84,7 +92,10 @@ export function SettingsRoutes() {
           element={<StructureSettings />}
         />
         <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
-
+        <Route
+          path={SettingsWorkspacePath.ProductsCatchAll}
+          element={<ProductsSettingsRoutes />}
+        />
         {getPluginsSettingsRoutes()}
       </Routes>
       <SettingsPageEffect />

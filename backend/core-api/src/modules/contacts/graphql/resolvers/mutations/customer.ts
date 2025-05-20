@@ -197,8 +197,7 @@ export const customerMutations = {
             { emailValidationStatus: { $exists: false } },
           ],
         },
-        { primaryEmail: 1, _id: 0 },
-      ).cursor();
+      ).select('primaryEmail -_id').cursor();
 
       await processBatch(customersCursor, 'email');
     } else {
@@ -209,9 +208,8 @@ export const customerMutations = {
             { phoneValidationStatus: 'unknown' },
             { phoneValidationStatus: { $exists: false } },
           ],
-        },
-        { primaryPhone: 1, _id: 0 },
-      ).cursor();
+        }
+      ).select('primaryPhone -_id').cursor();
 
       await processBatch(customersCursor, 'phone');
     }

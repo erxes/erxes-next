@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import {
   generateApolloContext,
   apolloCommonTypes,
+  wrapApolloMutations,
 } from 'erxes-api-shared/utils';
 import { gql } from 'graphql-tag';
 import { generateModels } from '../connectionResolvers';
@@ -41,7 +42,10 @@ export const initApolloServer = async (app, httpServer) => {
     schema: buildSubgraphSchema([
       {
         typeDefs: await typeDefs(),
-        resolvers,
+        resolvers: {
+          ...resolvers,
+          Mutation: wrapApolloMutations(resolvers?.Mutation || {}, ['login']),
+        },
       },
     ]),
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
