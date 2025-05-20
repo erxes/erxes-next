@@ -29,14 +29,14 @@ import { useChannelsEdit } from '../../hooks/useChannelsEdit';
 
 export const MoreColumnCell = ({ cell }: { cell: Cell<TChannel, unknown> }) => {
   const [, setOpen] = useQueryState('channel_id');
-  const setRenderingCustomerDetail = useSetAtom(renderingChannelDetailAtom);
+  const setRenderingChannelDetail = useSetAtom(renderingChannelDetailAtom);
   const { _id } = cell.row.original;
   return (
     <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);
-        setRenderingCustomerDetail(false);
+        setRenderingChannelDetail(false);
       }}
     />
   );

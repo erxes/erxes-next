@@ -43,8 +43,7 @@ export const Integration = React.forwardRef<HTMLButtonElement, Props>(
             <span className="flex items-center justify-center w-5 h-5 p-0.5 rounded-sm shadow-sm relative">
               <img
                 alt={to}
-                // src={img}
-                src={`http://localhost:3302${img}`}
+                src={img}
                 className="w-full h-full object-contain"
               />
             </span>

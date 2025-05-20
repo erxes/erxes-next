@@ -51,7 +51,6 @@ const SelectBrandValue = ({
       id: value || selectedBrand?._id,
     },
   });
-  console.log('brand', brand);
   return <Combobox.Value placeholder={placeholder} value={brand.name} />;
 };
 
