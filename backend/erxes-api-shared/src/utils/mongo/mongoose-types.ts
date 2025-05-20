@@ -29,17 +29,3 @@ export const mongooseStringRequiredNonBlank = {
 interface ISchemaWrapperOptions {
   contentType: string;
 }
-
-export const schemaWrapper = (
-  schema: Schema,
-  options?: ISchemaWrapperOptions,
-) => {
-  schema.add({ _id: mongooseStringRandomId });
-  schema.add({ processId: { type: String, optional: true } });
-
-  if (options?.contentType) {
-    (schema.statics as any)._contentType = options.contentType;
-  }
-
-  return schema;
-};
