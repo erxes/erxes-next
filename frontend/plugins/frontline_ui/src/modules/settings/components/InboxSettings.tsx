@@ -1,4 +1,4 @@
-import { Filter, SettingsHeader, Spinner } from 'erxes-ui';
+import { Spinner } from 'erxes-ui';
 import { lazy, Suspense, useState } from 'react';
 import { InboxSettingsBreadcrumb } from './InboxSettingsBreadcrumb';
 import { InboxSettingsTopbar } from './InboxSettingsTopbar';
@@ -7,10 +7,11 @@ import { Route, Routes } from 'react-router';
 import { IntegrationContext } from '../context/IntegrationContext';
 import { IIntegrationItem } from '../types/integration';
 import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../constants/integrations';
+import { SettingsHeader } from 'ui-modules/modules';
 
 export const InboxMainConfig = lazy(() =>
   import('~/pages/SettingsPage').then((module) => ({
-    default: module.SettingsPage,
+    default: module?.SettingsPage,
   })),
 );
 export const IntegrationDetailPage = lazy(() =>
@@ -33,33 +34,31 @@ const InboxSettings = () => {
         setOtherIntegrations,
       }}
     >
-      <Filter id="inbox-settings">
-        <div className="flex flex-col flex-auto overflow-hidden">
-          <SettingsHeader breadcrumbs={<InboxSettingsBreadcrumb />}>
-            <div className="flex ml-auto">
-              <InboxSettingsTopbar />
-            </div>
-          </SettingsHeader>
-          <div className="flex flex-auto overflow-hidden">
-            <InboxSettingsSidebar />
-            <Suspense
-              fallback={
-                <div className="flex justify-center items-center h-full">
-                  <Spinner />
-                </div>
-              }
-            >
-              <Routes>
-                <Route path="/" element={<InboxMainConfig />} />
-                <Route
-                  path="/details/:kind"
-                  element={<IntegrationDetailPage />}
-                />
-              </Routes>
-            </Suspense>
+      <div className="flex flex-col flex-auto overflow-hidden">
+        <SettingsHeader breadcrumbs={<InboxSettingsBreadcrumb />}>
+          <div className="flex ml-auto">
+            <InboxSettingsTopbar />
           </div>
+        </SettingsHeader>
+        <div className="flex flex-auto overflow-hidden">
+          <InboxSettingsSidebar />
+          <Suspense
+            fallback={
+              <div className="flex justify-center items-center h-full">
+                <Spinner />
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<InboxMainConfig />} />
+              <Route
+                path="/details/:kind"
+                element={<IntegrationDetailPage />}
+              />
+            </Routes>
+          </Suspense>
         </div>
-      </Filter>
+      </div>
     </IntegrationContext.Provider>
   );
 };

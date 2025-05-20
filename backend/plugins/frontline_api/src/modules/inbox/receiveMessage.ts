@@ -98,7 +98,7 @@ export const receiveTrpcMessage = async (
       user = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
-        module: 'user',
+        module: 'users',
         action: 'findOne',
         input: {
           doc: {

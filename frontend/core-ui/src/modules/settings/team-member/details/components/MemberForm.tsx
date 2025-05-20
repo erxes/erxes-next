@@ -14,6 +14,7 @@ export const MemberForm = () => {
         return (
           <TextInputField
             control={control}
+            key={field.name}
             name={name as FieldPath<TUserDetailForm>}
             label={field.label}
             description={field.description ?? field.label}

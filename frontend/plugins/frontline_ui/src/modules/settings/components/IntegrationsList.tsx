@@ -53,7 +53,7 @@ export const IntegrationsList = () => {
   }
   if (integrations.length) {
     return (
-      <div className="w-full h-full flex flex-col gap-3">
+      <div className="w-full h-auto flex flex-col gap-3">
         <strong className="text-base font-semibold tracking-normal">
           {byKind?.[params?.kind as string] || 0} {integration.label}{' '}
           integrations

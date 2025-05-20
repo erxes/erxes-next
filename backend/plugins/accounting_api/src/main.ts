@@ -7,7 +7,7 @@ import { initApolloServer } from '~/apollo/apolloServer';
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 import { router } from '~/routes';
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3333;
+const port = process.env.PORT ? Number(process.env.PORT) : 3307;
 
 export const DOMAIN = process.env.DOMAIN || 'http://localhost:3000';
 

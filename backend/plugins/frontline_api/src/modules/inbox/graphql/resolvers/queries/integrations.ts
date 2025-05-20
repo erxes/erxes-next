@@ -2,7 +2,6 @@ import { getIntegrationsKinds } from '@/inbox/utils';
 import { IContext, } from '~/connectionResolvers';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
-import { userActionsMap } from 'erxes-api-shared/core-modules';
 
 const generateFilterQuery = async (
   subdomain,
@@ -49,7 +48,6 @@ export const integrationQueries = {
       page: number;
       perPage: number;
       kind: string;
-
       searchValue: string;
       channelId: string;
       brandId: string;
@@ -96,7 +94,7 @@ export const integrationQueries = {
       await cursorPaginate<IIntegrationDocument>({
         model: models.Integrations,
         params: args,
-        query: query,
+        query,
       });
     return { list, totalCount, pageInfo };
   },
@@ -124,14 +122,11 @@ export const integrationQueries = {
 
     try {
       const kindMap = await getIntegrationsKinds();
-      console.log('kindMap:', kindMap);
 
       const distinctKinds = await models.Integrations.find({}).distinct('kind');
-      console.log('distinctKinds:', distinctKinds);
 
       for (const kind of distinctKinds) {
         const count = await models.Integrations.find({ kind }).countDocuments();
-        console.log(`Kind: ${kind}, Count: ${count}`);
 
         if (count > 0) {
           usedTypes.push({

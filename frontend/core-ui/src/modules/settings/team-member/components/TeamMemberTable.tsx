@@ -5,7 +5,6 @@ import {
   useUsers,
 } from '@/settings/team-member/hooks/useUsers';
 import { teamMemberColumns } from '@/settings/team-member/components/record/TeamMemberColumns';
-import { teamMemberMoreColumn } from '@/settings/team-member/components/record/TeamMemberMoreColumn';
 
 const TeamMemberTable = () => {
   const { users, totalCount, handleFetchMore, loading, error } = useUsers({
@@ -23,7 +22,12 @@ const TeamMemberTable = () => {
     );
   }
   return (
-    <RecordTable.Provider columns={teamMemberColumns} data={users || []}>
+    <RecordTable.Provider
+      columns={teamMemberColumns}
+      data={users || []}
+      stickyColumns={['more', 'avatar', 'firstName', 'lastName']}
+      className="mt-3"
+    >
       <RecordTable.Scroll>
         <RecordTable>
           <RecordTable.Header />

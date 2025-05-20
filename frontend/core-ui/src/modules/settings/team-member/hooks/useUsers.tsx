@@ -27,7 +27,12 @@ const useUsers = (options?: OperationVariables) => {
     },
   );
 
-  const { users, usersTotalCount: totalCount } = data || {};
+  const {
+    list: users,
+    usersTotalCount: totalCount,
+    pageInfo,
+  } = data?.users || {};
+  console.log('users', users);
 
   const handleFetchMore = () =>
     totalCount > users?.length &&

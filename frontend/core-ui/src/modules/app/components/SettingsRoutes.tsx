@@ -80,7 +80,7 @@ export function SettingsRoutes() {
           element={<TeamMemberSettings />}
         />
         <Route
-          path={SettingsWorkspacePath.Structure}
+          path={SettingsWorkspacePath.StructureCatchAll}
           element={<StructureSettings />}
         />
         <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
