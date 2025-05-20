@@ -84,6 +84,11 @@ import {
 } from 'erxes-api-shared/core-types';
 import { createGenerateModels } from 'erxes-api-shared/utils';
 import mongoose from 'mongoose';
+import {
+  IDocumentModel,
+  loadDocumentClass,
+} from '~/modules/documents/db/models/Documents';
+import { IDocumentDocument } from '~/modules/documents/types';
 import { IConfigDocument } from '~/modules/organization/settings/db/definitions/configs';
 import { IConfigModel } from '~/modules/organization/settings/db/models/Configs';
 import {
@@ -150,6 +155,7 @@ export interface IModels {
   Relations: IRelationModel;
   Favorites: IFavoritesModel;
   ExchangeRates: IExchangeRateModel;
+  Documents: IDocumentModel;
 }
 
 export interface IContext extends IMainContext {
@@ -282,6 +288,11 @@ export const loadClasses = (
   models.ExchangeRates = db.model<IExchangeRateDocument, IExchangeRateModel>(
     'exchange_rates',
     loadExchangeRateClass(models, subdomain),
+  );
+
+  models.Documents = db.model<IDocumentDocument, IDocumentModel>(
+    'documents',
+    loadDocumentClass(models),
   );
 
   return models;

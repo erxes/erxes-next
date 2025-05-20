@@ -11,7 +11,8 @@ import { router } from './routes';
 import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
 
 import { createContext } from '~/init-trpc';
-import { moduleObjects } from './permission';
+import { moduleObjects } from './meta/permission';
+import { tags } from './meta/tags';
 import './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
@@ -66,6 +67,7 @@ httpServer.listen(port, async () => {
     hasSubscriptions: false,
     meta: {
       permissions: moduleObjects,
+      tags,
     },
   });
 });
