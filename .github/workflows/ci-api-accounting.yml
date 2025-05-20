@@ -49,8 +49,8 @@ jobs:
         run: |
           export NX_DAEMON=false
           pnpm nx docker-build accounting_api
-          docker tag erxes/erxes-next-accounting_api erxes/erxes-next-accounting_api:latest
-          docker tag erxes/erxes-next-accounting_api erxes/erxes-next-accounting_api:${{ github.sha }}
-          docker push erxes/erxes-next-accounting_api:latest
-          docker push erxes/erxes-next-accounting_api:${{ github.sha }}
+          docker tag erxes/erxes-next-accounting-api erxes/erxes-next-accounting-api:latest
+          docker tag erxes/erxes-next-accounting-api erxes/erxes-next-accounting-api:${{ github.sha }}
+          docker push erxes/erxes-next-accounting-api:latest
+          docker push erxes/erxes-next-accounting-api:${{ github.sha }}
         if: github.event_name != 'pull_request'
