@@ -1,6 +1,6 @@
 export const types = `
   extend type Customer @key(fields: "_id") {
-    _id: String @external
+    _id: String! @external
     conversations: [Conversation]
   }
   extend type Brand @key(fields: "_id") {
@@ -8,8 +8,8 @@ export const types = `
   }
 
   extend type Tag @key(fields: "_id") {
-        _id: String! @external
-  }
+  _id: String! @external
+}
 
   type Conversation {
     _id: String!

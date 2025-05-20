@@ -8,5 +8,5 @@ export const structureMutations = {
   ...positionMutations,
   ...structuresMutations,
   ...deparmentMutations,
-  ...unitsMutations
+  ...unitsMutations,
 };

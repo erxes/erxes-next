@@ -26,6 +26,8 @@
     "teams": "Teams",
     "views": "Views",
     "accounting": "Accounting",
+    "automations": "Automations",
+    "segments": "Segments",
     "accounting.subMenu": {
       "main": "Transactions",
       "records": "Records",

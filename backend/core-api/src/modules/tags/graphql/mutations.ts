@@ -15,9 +15,9 @@ export const tagMutations = {
   async tagsEdit(
     _parent: undefined,
     { _id, ...doc }: { _id: string } & ITag,
-    { models }: IContext,
+    { models, __ }: IContext,
   ) {
-    return await models.Tags.updateTag(_id, doc);
+    return await models.Tags.updateTag(_id, __(doc));
   },
 
   /**

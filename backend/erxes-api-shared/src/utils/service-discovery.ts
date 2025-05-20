@@ -3,7 +3,8 @@ import { redis } from './redis';
 
 dotenv.config();
 
-const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL } = process.env;
+const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL, LERNA_PACKAGE_NAME } =
+  process.env;
 
 const isDev = NODE_ENV === 'development';
 
@@ -66,9 +67,7 @@ export const joinErxesGateway = async ({
     }),
   );
 
-  const address =
-    LOAD_BALANCER_ADDRESS ||
-    `http://${isDev ? 'localhost' : `plugin-${name}-api`}:${port}`;
+  const address = LOAD_BALANCER_ADDRESS || `http://localhost:${port}`;
 
   await redis.set(`service:${name}`, address);
 

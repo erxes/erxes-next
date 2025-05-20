@@ -1,3 +1,5 @@
+import { IOrderInput } from '@/core-types';
+import mongoose from 'mongoose';
 import stripAnsi from 'strip-ansi';
 import dayjs from 'dayjs';
 
@@ -30,6 +32,10 @@ export const getSubdomain = (req: any): string => {
   return subdomain;
 };
 
+export const connectionOptions: mongoose.ConnectOptions = {
+  family: 4,
+};
+
 export const authCookieOptions = (options: any = {}) => {
   const NODE_ENV = getEnv({ name: 'NODE_ENV' });
   const maxAge = options.expires || 14 * 24 * 60 * 60 * 1000;
@@ -49,6 +55,27 @@ export const authCookieOptions = (options: any = {}) => {
   };
 
   return cookieOptions;
+};
+
+export const paginate = (
+  collection: any,
+  params: {
+    ids?: string[];
+    page?: number;
+    perPage?: number;
+    excludeIds?: boolean;
+  },
+) => {
+  const { page = 1, perPage = 20, ids, excludeIds } = params || { ids: null };
+
+  const _page = Number(page || '1');
+  const _limit = Number(perPage || '20');
+
+  if (ids && ids.length > 0) {
+    return excludeIds ? collection.limit(_limit) : collection;
+  }
+
+  return collection.limit(_limit).skip((_page - 1) * _limit);
 };
 
 export const validSearchText = (values: string[]) => {
@@ -72,7 +99,44 @@ export const getCoreDomain = () => {
 export const escapeRegExp = (str: string) => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
+export const updateOrder = async (collection: any, orders: IOrderInput[]) => {
+  if (orders.length === 0) {
+    return [];
+  }
 
+  const ids: string[] = [];
+  const bulkOps: Array<{
+    updateOne: {
+      filter: { _id: string };
+      update: { order: number };
+    };
+  }> = [];
+
+  for (const { _id, order } of orders) {
+    ids.push(_id);
+
+    const selector: { order: number } = { order };
+
+    bulkOps.push({
+      updateOne: {
+        filter: { _id },
+        update: selector,
+      },
+    });
+  }
+
+  await collection.bulkWrite(bulkOps);
+
+  return collection.find({ _id: { $in: ids } }).sort({ order: 1 });
+};
+
+export const pluralFormation = (type: string) => {
+  if (type[type.length - 1] === 'y') {
+    return type.slice(0, -1) + 'ies';
+  }
+
+  return type + 's';
+}
 export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
   const tempArray: T[][] = [];
 

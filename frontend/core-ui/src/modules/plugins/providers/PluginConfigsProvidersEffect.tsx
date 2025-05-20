@@ -22,7 +22,6 @@ export const PluginConfigsProvidersEffect = () => {
             const remoteConfig = (await loadRemote(
               `${remote.name}/config`,
             )) as RemoteConfig;
-
             const pluginConfig = remoteConfig.CONFIG;
 
             setPluginsConfig((prev) => ({
