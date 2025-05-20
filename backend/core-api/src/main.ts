@@ -15,10 +15,11 @@ import {
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
 
-import './automations';
-import { moduleObjects } from './permission';
-import './segments';
+import { moduleObjects } from './meta/permission';
+import { tags } from './meta/tags';
 import { generateModels, IModels } from './connectionResolvers';
+import './automations';
+import './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -78,6 +79,7 @@ httpServer.listen(port, async () => {
     hasSubscriptions: false,
     meta: {
       permissions: moduleObjects,
+      tags,
     },
   });
 });
