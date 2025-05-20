@@ -15,7 +15,7 @@ export const GET_BRANCHES = gql`
     $status: String
     $withoutUserFilter: Boolean
   ) {
-    branches(
+    branchesMain(
       ids: $ids
       excludeIds: $excludeIds
       perPage: $perPage
