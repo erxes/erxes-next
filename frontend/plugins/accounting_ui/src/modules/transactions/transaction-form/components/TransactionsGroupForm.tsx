@@ -97,7 +97,6 @@ export const TransactionsGroupForm = () => {
   };
 
   useEffect(() => {
-
     if (activeTrs?.length) {
       const currentTr = trId ? activeTrs.find(tr => tr._id === trId) : activeTrs[0];
       // setTransactionGroups({})
