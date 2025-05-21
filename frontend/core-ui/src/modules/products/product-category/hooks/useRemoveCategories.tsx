@@ -1,0 +1,42 @@
+import { OperationVariables, useMutation } from '@apollo/client';
+import { IProductCategory } from 'ui-modules'; 
+import { productsMutations } from '@/products/graphql';
+import { productsQueries } from '@/products/graphql';
+
+export const useRemoveCategory = () => {
+    const [_removeCategory, { loading }] = useMutation(productsMutations.categoryRemove);
+  
+    const removeCategory = async (
+      categoryIds: string | string[],
+      options?: OperationVariables,
+    ) => {
+      await _removeCategory({
+        ...options,
+        variables: {
+           _id: categoryIds, ...options?.variables },
+        update: (cache) => {
+          try {
+            cache.updateQuery(
+              {
+                query: productsQueries.productCategories,
+                variables: { perPage: 30, dateFilters: null },
+              },
+              ({ productCategoriesMain }) => ({
+                productCategoriesMain: {
+                  ...productCategoriesMain,
+                  list: productCategoriesMain.list.filter(
+                    (category: IProductCategory) => category._id !== categoryIds,
+                  ),
+                  totalCount: productCategoriesMain.totalCount - 1,
+                },
+              }),
+            );
+          } catch (e) {
+            console.log(e);
+          }
+        },
+      });
+    };
+  
+    return { removeCategory, loading }
+}

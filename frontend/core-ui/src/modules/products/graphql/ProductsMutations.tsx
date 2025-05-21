@@ -64,6 +64,11 @@ const productsAdd = gql`
   }
 `;
 
+const categoryRemove = gql`
+  mutation productCategoriesRemove($_id: String!) {
+    productCategoriesRemove(_id: $_id)
+}`
+
 const categoryEdit = gql`
   mutation productCategoriesEdit($_id: String!, $name: String!, $code: String!, $parentId: String, $scopeBrandIds: [String], $description: String, $attachment: AttachmentInput, $status: String, $meta: String, $maskType: String, $mask: JSON, $isSimilarity: Boolean, $similarities: JSON) {
     productCategoriesEdit(
@@ -120,4 +125,4 @@ const productsEdit = gql`
   }
 `;
 
-export const productsMutations = { productsEdit, productsAdd , categoryEdit };
+export const productsMutations = { productsEdit, productsAdd , categoryEdit , categoryRemove };

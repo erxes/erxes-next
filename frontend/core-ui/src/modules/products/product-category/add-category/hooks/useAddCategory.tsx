@@ -1,57 +1,48 @@
 import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
-
-interface AddCategoryResult {
-  productCategoriesAdd: {
-    _id: string;
-    __typename: string;
-  };
-}
-
-interface CategoryData {
-  productCategories: {
-    list: AddCategoryResult['productCategoriesAdd'][];
-    totalCount: number;
-  };
-}
-
 import { categoryAdd } from '../graphql/mutations';
 import { productsQueries } from '@/products/graphql';
+import { AddCategoryResult, AddCategoryVariables, CategoryData } from '../../types/CategoryType';
 
 export function useAddCategory(
-  options?: MutationHookOptions<AddCategoryResult, any>,
+  options?: MutationHookOptions<AddCategoryResult, AddCategoryVariables>,
 ) {
-  const [productCategoriesAdd, { loading, error }] = useMutation<AddCategoryResult>(
-    categoryAdd,
-    {
-      ...options,
-      update: (cache: ApolloCache<any>, { data }) => {
-        try {
-          const queryVariables = { perPage: 30 };
-          const existingData = cache.readQuery<CategoryData>({
-            query: productsQueries.productCategories,
-            variables: queryVariables,
-          });
+  const [productCategoriesAdd, { loading, error }] = useMutation<
+    AddCategoryResult,
+    AddCategoryVariables
+  >(categoryAdd, {
+    ...options,
+    update: (cache: ApolloCache<AddCategoryVariables>, { data }) => {
+      try {
+        const queryVariables = { perPage: 30 };
 
-          if (!existingData || !existingData.productCategories || !data?.productCategoriesAdd)
-            return;
+        const existingData = cache.readQuery<CategoryData>({
+          query: productsQueries.productCategories,
+          variables: queryVariables,
+        });
 
-          cache.writeQuery<CategoryData>({
-            query: productsQueries.productCategories,
-            variables: queryVariables,
-            data: {
-              productCategories: {
-                ...existingData.productCategories,
-                list: [...existingData.productCategories.list, data.productCategoriesAdd],
-                totalCount: existingData.productCategories.totalCount + 1,
-              },
+        if (
+          !existingData ||
+          !existingData.productCategories ||
+          !data?.productCategoriesAdd
+        )
+          return;
+
+        cache.writeQuery<CategoryData>({
+          query: productsQueries.productCategories,
+          variables: queryVariables,
+          data: {
+            productCategories: {
+              ...existingData.productCategories,
+              list: [...existingData.productCategories.list, data.productCategoriesAdd],
+              totalCount: existingData.productCategories.totalCount + 1,
             },
-          });
-        } catch (e) {
-          console.error('Cache update error:', e);
-        }
-      },
+          },
+        });
+      } catch (e) {
+        console.error('Cache update error:', e);
+      }
     },
-  );
+  });
 
   return { productCategoriesAdd, loading, error };
 }

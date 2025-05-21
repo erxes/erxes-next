@@ -1,23 +1,21 @@
 'use client';
 import { useForm } from 'react-hook-form';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { productFormSchema, ProductFormValues } from './formSchema';
 import { CategoryAddSheetHeader } from '../../components/AddProductCategoryForm';
-import { CategoryAddCollapsible } from './CategoryAddCollapsible';
 import { ProductCategoriesAddCoreFields } from './CategoryAddCoreFields';
 import { ProductCategoryAddMoreFields } from './CategoryAddMoreFields';
 import { useAddCategory } from '../hooks/useAddCategory';
+import { ProductAddCollapsible } from '@/products/add-products/components/ProductAddCollapsible';
 
 export function AddCategoryForm({
   onOpenChange,
 }: {
   onOpenChange: (open: boolean) => void;
 }) {
-  const { productCategoriesAdd } = useAddCategory();
+  const { productCategoriesAdd , loading: editLoading } = useAddCategory();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
@@ -43,7 +41,11 @@ export function AddCategoryForm({
     });
 
     productCategoriesAdd({
-      variables: cleanData,
+      variables: {
+        ...cleanData,
+        name: cleanData.name ?? '',
+        code: cleanData.code ?? '',
+      },
       onError: (e: ApolloError) => {
         toast({
           title: 'Error',
@@ -68,9 +70,9 @@ export function AddCategoryForm({
           <ScrollArea className="h-full">
             <div className="p-5">
               <ProductCategoriesAddCoreFields form={form} />
-              <CategoryAddCollapsible>
+              <ProductAddCollapsible>
                 <ProductCategoryAddMoreFields form={form} />
-              </CategoryAddCollapsible>
+              </ProductAddCollapsible>
             </div>
           </ScrollArea>
         </Sheet.Content>
@@ -86,8 +88,9 @@ export function AddCategoryForm({
           <Button
             type="submit"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
+            disabled={editLoading}
           >
-            Save
+            {editLoading ? 'Saving...' : 'Save'}
           </Button>
         </Sheet.Footer>
       </form>

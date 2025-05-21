@@ -4,7 +4,7 @@ import { IconUpload } from '@tabler/icons-react';
 
 import { Form, Input, Upload, Editor, Select } from 'erxes-ui';
 
-import { BrandField } from '@/products/add-products/components/BrandField';
+import { SelectBrand } from 'ui-modules';
 import { ProductFormValues } from './formSchema';
 import { CategoryHotKeyScope } from '../../types/CategoryHotKeyScope';
 
@@ -37,7 +37,7 @@ export const ProductCategoryAddMoreFields = ({
         control={form.control}
         name="meta"
         render={({ field }) => (
-          <Form.Item>
+          <Form.Item className='mb-5'>
             <Form.Label>META</Form.Label>
             <Form.Control>
               <Input {...field} />
@@ -50,13 +50,15 @@ export const ProductCategoryAddMoreFields = ({
           control={form.control}
           name="scopeBrandIds"
           render={({ field }) => (
-            <Form.Item className="flex flex-col">
+            <Form.Item className="flex flex-col mb-5">
               <Form.Label>BRAND</Form.Label>
               <Form.Control>
-                <BrandField
-                  values={field.value || []}
-                  onChange={field.onChange}
-                />
+              <SelectBrand
+                value={Array.isArray(field.value) && field.value.length > 0 ? field.value[0] : undefined}
+                onValueChange={(brandId) => {
+                  field.onChange([brandId]);
+                }}
+              />
               </Form.Control>
               <Form.Message className="text-destructive" />
             </Form.Item>
@@ -107,7 +109,7 @@ export const ProductCategoryAddMoreFields = ({
         control={form.control}
         name="accountMaskType"
         render={({ field }) => (
-          <Form.Item>
+          <Form.Item className='mb-5'>
             <Form.Label>MASK TYPE</Form.Label>
             <Select onValueChange={field.onChange} value={field.value}>
             <Form.Control>

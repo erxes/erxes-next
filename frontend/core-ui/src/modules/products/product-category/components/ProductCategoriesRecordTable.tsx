@@ -19,6 +19,7 @@ import {
 } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { categoryMoreColumn } from './ProductCategoryMoreColumn';
+import { CategoryCommandBar } from './product-command-bar/CategoryCommandBar';
 
 export const ProductCategoriesRecordTable = () => {
   const { productCategories, loading } = useProductCategories();
@@ -57,6 +58,7 @@ export const ProductCategoriesRecordTable = () => {
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTableTree>
+      <CategoryCommandBar/>
     </RecordTable.Provider>
   );
 };

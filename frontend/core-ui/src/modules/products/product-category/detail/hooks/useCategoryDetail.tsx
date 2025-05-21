@@ -1,12 +1,11 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { useSearchParams } from 'react-router-dom';
 import { useSetAtom } from 'jotai';
 import { renderingCategoryDetailAtom } from '../../states/ProductCategory';
 import { productsQueries } from '@/products/graphql';
+import { useQueryState } from 'erxes-ui';
 
 export const useProductCategoryDetail = (operationVariables?: OperationVariables) => {
-  const [searchParams] = useSearchParams();
-  const _id = searchParams.get('category_id'); 
+  const [_id] = useQueryState('category_id');
   const setRendering = useSetAtom(renderingCategoryDetailAtom);
 
   const { data, loading, error } = useQuery(productsQueries.productCategoryDetail, {

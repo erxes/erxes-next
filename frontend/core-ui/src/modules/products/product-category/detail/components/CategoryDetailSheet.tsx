@@ -2,23 +2,21 @@
 
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, cn, Sheet, ScrollArea, Form, useToast, useSetHotkeyScope } from 'erxes-ui';
+import { Button, cn, Sheet, ScrollArea, Form, useToast, useSetHotkeyScope, useQueryState } from 'erxes-ui';
 import { renderingCategoryDetailAtom } from '../../states/ProductCategory';
 import { CategoryHotKeyScope } from '../../types/CategoryHotKeyScope';
 import { CategoriesUpdateCoreFields } from './CategoryUpdateCoreFields';
 import { useProductCategoriesEdit } from '../hooks/useUpdateCategory';
 import { productFormSchema, ProductFormValues } from '../../add-category/components/formSchema';
-import { CategoryUpdateCollapsible } from './CategoryUpdateCollapsible';
 import { CategoryUpdateMoreFields } from './CategoryUpdateMoreFields';
+import { ProductAddCollapsible } from '@/products/add-products/components/ProductAddCollapsible';
 
 export const CategoryDetailSheet = () => {
   const [activeTab] = useAtom(renderingCategoryDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const categoryId = searchParams.get('category_id');
+  const [categoryId, setCategoryId] = useQueryState<string>('category_id');
 
   const { toast } = useToast();
   const { productCategoriesEdit, loading: editLoading } = useProductCategoriesEdit();
@@ -45,14 +43,8 @@ export const CategoryDetailSheet = () => {
   }, [categoryId, setHotkeyScope]);
 
   const setOpen = (newCategoryId: string | null) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    if (newCategoryId) {
-      newSearchParams.set('category_id', newCategoryId);
-    } else {
-      newSearchParams.delete('category_id');
-    }
-    setSearchParams(newSearchParams);
-
+    setCategoryId(newCategoryId);
+    
     if (!newCategoryId) {
       setHotkeyScope(CategoryHotKeyScope.CategoriesPage);
     }
@@ -122,9 +114,9 @@ export const CategoryDetailSheet = () => {
               <ScrollArea className="h-full">
                 <div className="p-5">
                   <CategoriesUpdateCoreFields form={form}/>
-                  <CategoryUpdateCollapsible>
+                  <ProductAddCollapsible>
                     <CategoryUpdateMoreFields form={form} />
-                  </CategoryUpdateCollapsible>
+                  </ProductAddCollapsible>
                 </div>
               </ScrollArea>
             </Sheet.Content>

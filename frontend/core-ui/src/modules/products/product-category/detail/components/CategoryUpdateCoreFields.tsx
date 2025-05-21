@@ -14,9 +14,11 @@ export const CategoriesUpdateCoreFields: React.FC<CategoriesUpdateCoreFieldsProp
 
   useEffect(() => {
     if (categoryDetail) {
-      form.setValue('code', categoryDetail.code);
-      form.setValue('name', categoryDetail.name);
-      form.setValue('categoryId', categoryDetail._id);
+      form.reset({
+        code: categoryDetail.code,
+        name: categoryDetail.name,
+        categoryId: categoryDetail._id,
+      });
     }
   }, [categoryDetail, form]);
 
