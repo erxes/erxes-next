@@ -13,7 +13,6 @@ export interface IConfigModel extends Model<IConfigDocument> {
   getConfigs(codes?: string[]): Promise<{ [code: string]: any }>;
   getConfigValue(code: string, defaultValue: any): Promise<any>;
   createOrUpdateConfig({ code, value }: IConfig): Promise<IConfigDocument>;
-  constants(): Promise<any>;
   getCloudflareConfigs(): Promise<any>;
 }
 

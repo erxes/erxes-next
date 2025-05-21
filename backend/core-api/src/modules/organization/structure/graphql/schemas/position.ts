@@ -16,8 +16,8 @@ export const PositionTypes = `
     }
     type PositionListQueryResponse {
         list:[Position]
+        pageInfo: PageInfo
         totalCount: Int
-        totalUsersCount:Int
     }
 `;
 const commonPositionParams = `
