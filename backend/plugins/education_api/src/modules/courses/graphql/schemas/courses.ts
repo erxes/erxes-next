@@ -22,6 +22,7 @@ export const types = `
     primaryTeacher: User
     teachers : [User]
     limit : Int
+    location: String
   }
 
   type CourseListResponse {
@@ -90,6 +91,7 @@ const mutationParams = `
   status: String
   limit : Int
   classId: String!
+  location: String
 `;
 
 export const mutations = `

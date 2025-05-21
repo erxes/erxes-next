@@ -36,6 +36,7 @@ export const courseSchema = new Schema(
     deadline: { type: Date, label: 'Use Finsh Date' },
     unitPrice: { type: Number, optional: true, label: 'Unit price' },
     limit: { type: Number, label: 'Limit of students' },
+    location: { type: Date, label: 'Location' },
   },
   {
     timestamps: true,

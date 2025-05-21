@@ -18,6 +18,7 @@ export interface ICourse {
   unitPrice: number;
   limit: number;
   classId: string;
+  location?: string;
 }
 
 export interface ICourseParams extends IListParams, ICursorPaginateParams {
@@ -33,6 +34,7 @@ export interface ICourseParams extends IListParams, ICursorPaginateParams {
   deadline?: Date;
   unitPrice: number;
   classId: string;
+  location?: string;
 }
 
 export interface ICourseDocument extends ICourse, Document {

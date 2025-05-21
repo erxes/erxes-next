@@ -1,8 +1,4 @@
 import {
-  graphqlAttachmentInput,
-  graphqlAttachmentType,
-} from 'erxes-api-shared/utils';
-import {
   mutations as CoursesMutations,
   queries as CoursesQueries,
   types as CoursesTypes,
@@ -12,11 +8,13 @@ import {
   queries as ClassQueries,
   types as ClassTypes,
 } from '@/class/graphql/schemas/class';
+import {
+  mutations as CommentMutations,
+  queries as CommentQueries,
+  types as CommentTypes,
+} from '@/comments/graphql/schemas/comments';
 
 export const types = `
-  scalar JSON
-  scalar Date
-
   enum CacheControlScope {
     PUBLIC
     PRIVATE
@@ -27,21 +25,21 @@ export const types = `
     scope: CacheControlScope
     inheritMaxAge: Boolean
   ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
-   
-  ${graphqlAttachmentType}
-  ${graphqlAttachmentInput}
   ${CoursesTypes}
   ${ClassTypes}
+  ${CommentTypes}
 `;
 
 export const queries = `
   ${CoursesQueries}
   ${ClassQueries}
+  ${CommentQueries}
 `;
 
 export const mutations = `
   ${CoursesMutations}
   ${ClassMutations}
+  ${CommentMutations}
 `;
 
 export default { types, queries, mutations };

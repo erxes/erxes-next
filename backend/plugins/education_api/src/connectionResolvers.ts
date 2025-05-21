@@ -1,20 +1,24 @@
 import mongoose from 'mongoose';
 import { createGenerateModels } from 'erxes-api-shared/utils';
 import { IMainContext } from 'erxes-api-shared/core-types';
-import { ICourseDocument } from '@/courses/@types/course';
-import { ICourseCategoryDocument } from '@/courses/@types/category';
 import { loadCourseClass, ICourseModel } from '@/courses/db/models/Course';
 import {
   loadCourseCategoryClass,
   ICourseCategoryModel,
 } from '@/courses/db/models/Categories';
 import { IClassModel, loadClassesClass } from '@/class/db/models/Classes';
+import { ICommentModel, loadCommentClass } from '@/comments/db/models/Comments';
+//
+import { ICourseDocument } from '@/courses/@types/course';
 import { IClassDocument } from '@/class/@types/classes';
+import { ICourseCategoryDocument } from '@/courses/@types/category';
+import { ICommentDocument } from '@/comments/@types/comments';
 
 export interface IModels {
   Courses: ICourseModel;
   CourseCategories: ICourseCategoryModel;
   Classes: IClassModel;
+  Comments: ICommentModel;
 }
 
 export interface IContext extends IMainContext {
@@ -38,6 +42,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Classes = db.model<IClassDocument, IClassModel>(
     'course_classes',
     loadClassesClass(models),
+  );
+
+  models.Comments = db.model<ICommentDocument, ICommentModel>(
+    'course_comments',
+    loadCommentClass(models),
   );
 
   return models;

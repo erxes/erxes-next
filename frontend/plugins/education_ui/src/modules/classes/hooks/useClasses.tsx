@@ -16,7 +16,7 @@ export const useClasses = (options?: QueryHookOptions) => {
     sessionKey: 'class_cursor',
   });
 
-  const { data, loading, fetchMore } = useQuery<{
+  const { data, loading, error, fetchMore } = useQuery<{
     courseClasses: {
       list: IClass[];
       pageInfo: IRecordTableCursorPageInfo;
@@ -64,5 +64,6 @@ export const useClasses = (options?: QueryHookOptions) => {
     classes,
     handleFetchMore,
     pageInfo,
+    error,
   };
 };

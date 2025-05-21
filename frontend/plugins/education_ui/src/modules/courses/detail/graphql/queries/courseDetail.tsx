@@ -31,6 +31,17 @@ export const COURSE_DETAIL = gql`
       deadline
       unitPrice
       commentCount
+      location
+      class {
+        _id
+        name
+        description
+        location
+        level
+        createdAt
+        updatedAt
+      }
+      classId
     }
   }
 `;
