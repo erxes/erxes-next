@@ -4,12 +4,16 @@ import { UnitsColumns } from './UnitsColumns';
 import { UnitEdit } from './detail/UnitEdit';
 import { UnitsRemove } from './UnitsRemove';
 
-export default function UnitsSettings() {
+export function UnitsSettings() {
   const { units, loading } = useUnitsList();
   return (
-    <section className="flex flex-col h-full w-full p-5">
+    <div className="w-full overflow-hidden flex flex-col">
       <UnitEdit />
-      <RecordTable.Provider data={units || []} columns={UnitsColumns}>
+      <RecordTable.Provider
+        data={units || []}
+        columns={UnitsColumns}
+        className="m-3"
+      >
         <RecordTable.Scroll>
           <RecordTable>
             <RecordTable.Header />
@@ -20,6 +24,6 @@ export default function UnitsSettings() {
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTable.Provider>
-    </section>
+    </div>
   );
 }

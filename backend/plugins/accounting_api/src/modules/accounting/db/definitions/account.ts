@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 import { ACCOUNT_JOURNALS, ACCOUNT_KINDS, ACCOUNT_STATUSES } from '../../@types/constants';
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils/mongo';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
 export const accountSchema = schemaWrapper(
   new Schema({

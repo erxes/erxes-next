@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils/mongo';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { ACCOUNT_CATEGORY_MASK_TYPES, ACCOUNT_CATEGORY_STATUSES } from '../../@types/constants';
 
 export const accountCategorySchema = schemaWrapper(

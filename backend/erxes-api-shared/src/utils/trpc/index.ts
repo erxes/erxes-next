@@ -4,6 +4,8 @@ import {
   TRPCRequestOptions,
 } from '@trpc/client';
 import { getPlugin } from '../service-discovery';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { getSubdomain } from '../utils';
 
 export type MessageProps = {
   method?: 'query' | 'mutation';
@@ -32,6 +34,12 @@ export interface RPError {
 }
 export type RPResult = RPSuccess | RPError;
 export type RP = (params: InterMessage) => RPResult | Promise<RPResult>;
+
+export type IContext = {
+  subdomain: string;
+  models?: any;
+};
+
 export const sendTRPCMessage = async ({
   pluginName,
   method,
@@ -42,7 +50,7 @@ export const sendTRPCMessage = async ({
   options,
 }: MessageProps) => {
   if (!method) {
-    method = 'query'
+    method = 'query';
   }
 
   const pluginInfo = await getPlugin(pluginName);
@@ -55,3 +63,26 @@ export const sendTRPCMessage = async ({
 
   return result || defaultValue;
 };
+
+export const createTRPCContext =
+  <TContext>(
+    trpcContext: (
+      subdomain: string,
+      context: IContext,
+    ) => Promise<TContext & IContext>,
+  ) =>
+  async ({ req }: trpcExpress.CreateExpressContextOptions) => {
+    const subdomain = getSubdomain(req);
+
+    const context: IContext = {
+      subdomain,
+    };
+
+    if (trpcContext) {
+      return await trpcContext(subdomain, context);
+    }
+
+    return context;
+  };
+
+export type ITRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;

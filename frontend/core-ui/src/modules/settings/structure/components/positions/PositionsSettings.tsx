@@ -4,12 +4,16 @@ import { PositionsColumns } from './PositionsColumns';
 import { PositionEdit } from './detail/PositionEdit';
 import { PositionsRemove } from './PositionsRemove';
 
-export default function PositionsSettings() {
+export function PositionsSettings() {
   const { positions } = usePositionsList();
   return (
-    <section className="flex flex-col h-full w-full p-5">
+    <div className="w-full overflow-hidden flex flex-col">
       <PositionEdit />
-      <RecordTable.Provider data={positions || []} columns={PositionsColumns}>
+      <RecordTable.Provider
+        data={positions || []}
+        columns={PositionsColumns}
+        className="m-3"
+      >
         <RecordTable.Scroll>
           <RecordTable>
             <RecordTable.Header />
@@ -20,6 +24,6 @@ export default function PositionsSettings() {
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTable.Provider>
-    </section>
+    </div>
   );
 }

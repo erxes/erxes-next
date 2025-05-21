@@ -7,6 +7,8 @@ import {
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
+  Textarea,
+  TextOverflowTooltip,
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
@@ -70,14 +72,13 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'code',
     header: () => <RecordTable.InlineHead icon={IconHash} label="code" />,
     cell: ({ cell }) => {
-      const { code } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{code}</RecordTableCellDisplay>
+            {cell.getValue() as string}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={code} />
+            <Input value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -88,14 +89,13 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'title',
     header: () => <RecordTable.InlineHead label="title" />,
     cell: ({ cell }) => {
-      const { title } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{title}</RecordTableCellDisplay>
+            <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={title} />
+            <Input value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -107,12 +107,11 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'parentId',
     header: () => <RecordTable.InlineHead label="parent" />,
     cell: ({ cell }) => {
-      const { parentId } = cell.row.original;
       return (
         <div>
           <SelectBranch
             className="shadow-none bg-transparent"
-            value={parentId}
+            value={cell.getValue() as string}
             onValueChange={() => {}}
           />
         </div>
@@ -124,14 +123,13 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'address',
     header: () => <RecordTable.InlineHead label="address" />,
     cell: ({ cell }) => {
-      const { address } = cell.row.original;
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{address}</RecordTableCellDisplay>
+            <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={address} />
+            <Textarea value={cell.getValue() as string} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -143,16 +141,13 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'userCount',
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
-      const { userCount } = cell.row.original;
       return (
         <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableCellDisplay className="text-center flex w-full">
-              {userCount}
-            </RecordTableCellDisplay>
+          <RecordTableCellTrigger className="text-center flex w-full justify-center">
+            {cell.getValue() as number}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={userCount} />
+            <Input value={cell.getValue() as number} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -163,13 +158,13 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       return (
-        <div className="flex items-center justify-center gap-1 [&>button]:px-2">
+        <RecordTableCellDisplay className="flex justify-center gap-1 [&>button]:px-2">
           <Button variant={'outline'}>
             <IconClock size={12} />
           </Button>
           <BranchEditColumnCell cell={cell} />
           <BranchRemoveCell cell={cell} />
-        </div>
+        </RecordTableCellDisplay>
       );
     },
   },

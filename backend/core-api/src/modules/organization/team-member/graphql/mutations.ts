@@ -29,7 +29,7 @@ export const userMutations = {
       lastName?: string;
       subscribeEmail?: boolean;
     },
-    { models }: IContext,
+    { models, __ }: IContext,
   ) {
     const userCount = await models.Users.countDocuments();
 

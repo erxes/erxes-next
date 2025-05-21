@@ -10,24 +10,21 @@ import type { ColumnDef, Cell } from '@tanstack/react-table';
 import {
   Avatar,
   Badge,
-  cn,
   InlineCell,
   Switch,
-  Table,
   useQueryState,
   RecordTable,
   RecordTablePopover,
   RecordTableCellTrigger,
-  RecordTableCellDisplay,
   Input,
   RecordTableCellContent,
+  TextOverflowTooltip,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import dayjs from 'dayjs';
 import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
 import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
-import { Link } from 'react-router';
 import { useSetAtom } from 'jotai';
 import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
 import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
@@ -137,7 +134,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             if (status === 'Verified') {
               return <Badge variant={'success'}>{status}</Badge>;
             } else {
-              return <Badge variant={'destructive'}>{'Unverified'}</Badge>;
+              return <Badge variant={'destructive'}>Unverified</Badge>;
             }
           }}
         />
@@ -152,9 +149,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const { email, _id } = cell.row.original;
       return (
         <RecordTablePopover>
-          <RecordTableCellTrigger asChild>
-            <RecordTableCellDisplay>{email}</RecordTableCellDisplay>
-          </RecordTableCellTrigger>
+          <RecordTableCellTrigger asChild>{email}</RecordTableCellTrigger>
           <RecordTableCellContent>
             <Input key={_id} value={email} />
           </RecordTableCellContent>
@@ -189,7 +184,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <RecordTableCellDisplay>{position}</RecordTableCellDisplay>
+            <TextOverflowTooltip value={position} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
             <SelectPosition value={position} onValueChange={() => {}} />
