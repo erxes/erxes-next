@@ -1,8 +1,6 @@
 import { initTRPC } from '@trpc/server';
-import * as trpcExpress from '@trpc/server/adapters/express';
 
-import { getSubdomain, ITRPCContext } from 'erxes-api-shared/utils';
-import { generateModels } from '~/connectionResolvers';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
