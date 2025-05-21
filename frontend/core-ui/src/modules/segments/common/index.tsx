@@ -1,6 +1,9 @@
-import { DocumentNode, gql, useQuery } from '@apollo/client';
-import { Combobox, Command, Popover } from 'erxes-ui/components';
+import { DocumentNode, useQuery } from '@apollo/client';
+
 import {
+  Combobox,
+  Command,
+  Popover,
   mergeCursorData,
   useRecordTableCursor,
   EnumCursorDirection,
@@ -8,7 +11,6 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
 import { SegmentFormProps } from 'ui-modules/modules/segments/form/schema';
 import { IConditionsForPreview } from 'ui-modules';
 
