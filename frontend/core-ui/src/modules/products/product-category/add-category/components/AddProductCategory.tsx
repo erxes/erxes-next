@@ -59,6 +59,11 @@ export function AddCategoryForm({
     });
   }
 
+  const handleCancel = () => {
+    form.reset();
+    onOpenChange(false);
+  };
+
   return (
     <Form {...form}>
       <form
@@ -82,6 +87,7 @@ export function AddCategoryForm({
             type="button"
             variant="ghost"
             className="bg-background hover:bg-background/90"
+            onClick={handleCancel}
           >
             Cancel
           </Button>

@@ -3,7 +3,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { useConfirm } from 'erxes-ui/hooks';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
-import { useRemoveCategory } from '@/products/product-category/hooks/useRemoveCategories';
+import { useRemoveCategories } from '@/products/product-category/hooks/useRemoveCategories';
 
 interface CategoriesDeleteProps {
   categoryIds: string;
@@ -12,7 +12,7 @@ interface CategoriesDeleteProps {
 
 export const CategoriesDelete = ({ categoryIds, onDeleteSuccess }: CategoriesDeleteProps) => {
   const { confirm } = useConfirm();
-  const { removeCategory } = useRemoveCategory();
+  const { removeCategory } = useRemoveCategories();
   const { toast } = useToast();
   
   const categoryCount = categoryIds.includes(',') 

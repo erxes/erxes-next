@@ -9,7 +9,7 @@ export const CategoryMoreColumnCell = (
   props: CellContext<IProductCategory & { hasChildren: boolean }, unknown>
 ) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setRenderingProductDetail = useSetAtom(renderingCategoryDetailAtom);
+  const setRenderingCategoryDetail = useSetAtom(renderingCategoryDetailAtom);
   const { _id } = props.row.original;
 
   const setOpen = (categoryId: string) => {
@@ -23,7 +23,7 @@ export const CategoryMoreColumnCell = (
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);
-        setRenderingProductDetail(false);
+        setRenderingCategoryDetail(false);
       }}
     />
   );

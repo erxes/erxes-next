@@ -3,7 +3,7 @@ import { IProductCategory } from 'ui-modules';
 import { productsMutations } from '@/products/graphql';
 import { productsQueries } from '@/products/graphql';
 
-export const useRemoveCategory = () => {
+export const useRemoveCategories = () => {
     const [_removeCategory, { loading }] = useMutation(productsMutations.categoryRemove);
   
     const removeCategory = async (
