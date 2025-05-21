@@ -10,7 +10,6 @@ import { MemberOther } from '@/settings/team-member/details/components/MemberOth
 export function MemberDetail() {
   return (
     <MemberDetailLayout>
-      <Separator />
       <MemberDetailTabContent value="general">
         <MemberForm />
       </MemberDetailTabContent>

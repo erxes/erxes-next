@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
   SelectMemberContext,
   useSelectMemberContext,
@@ -239,8 +239,11 @@ export const SelectMemberFilterBar = () => {
 
 export const SelectMemberInlineCell = ({
   onValueChange,
+  scope,
   ...props
-}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'>) => {
+}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
+  scope?: string;
+}) => {
   const [open, setOpen] = useState(false);
   return (
     <SelectMemberProvider
@@ -250,7 +253,7 @@ export const SelectMemberInlineCell = ({
       }}
       {...props}
     >
-      <RecordTablePopover open={open} onOpenChange={setOpen}>
+      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
           <SelectMember.Value placeholder={''} />
         </RecordTableCellTrigger>

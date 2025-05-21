@@ -13,6 +13,7 @@ import {
 import {
   IconAdjustmentsHorizontal,
   IconChevronRight,
+  IconSearch,
   IconX,
 } from '@tabler/icons-react';
 import { useRemoveQueryStateByKey } from 'erxes-ui/hooks';
@@ -39,7 +40,7 @@ const FilterProvider = ({
 }: {
   children: React.ReactNode;
   id: string;
-  sessionKey: string;
+  sessionKey?: string;
 }) => {
   const setOpen = useSetAtom(openPopoverState(id));
   const setView = useSetAtom(filterPopoverViewState(id));
@@ -289,7 +290,10 @@ const FilterDialogStringView = ({ filterKey }: { filterKey: string }) => {
   const { id, setDialogView, setOpenDialog, sessionKey } = useFilterContext();
   const dialogView = useAtomValue(filterDialogViewState(id));
   const [dialogSearch, setDialogSearch] = useState('');
-  const [query, setQuery] = useFilterQueryState<string>(filterKey, sessionKey);
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
 
   useEffect(() => {
     if (query) {
@@ -354,7 +358,10 @@ const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
 
 const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
   const { sessionKey } = useFilterContext();
-  const [query, setQuery] = useFilterQueryState<string>(filterKey, sessionKey);
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
   const [open, setOpen] = useState(false);
 
   return (
@@ -395,11 +402,42 @@ const FilterCommandInput = React.forwardRef<
   );
 });
 
+const FilterSearchValueTrigger = () => (
+  <Filter.Item value="searchValue" inDialog>
+    <IconSearch />
+    Search
+  </Filter.Item>
+);
+const FilterSearchValueBarItem = () => {
+  const [searchValue] = useFilterQueryState<string>('searchValue');
+
+  if (!searchValue) {
+    return null;
+  }
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarItem>
+        <Filter.BarName>
+          <IconSearch />
+          Search
+        </Filter.BarName>
+        <Filter.BarButton filterKey="searchValue" inDialog>
+          {searchValue}
+        </Filter.BarButton>
+        <Filter.BarClose filterKey="searchValue" />
+      </Filter.BarItem>
+    </Filter.BarItem>
+  );
+};
+
 export const Filter = Object.assign(FilterProvider, {
   Trigger: FilterTrigger,
   Popover: FilterPopover,
   Item: FilterItem,
   View: FilterView,
+  SearchValueTrigger: FilterSearchValueTrigger,
+  SearchValueBarItem: FilterSearchValueBarItem,
   Dialog: FilterDialog,
   DialogStringView: FilterDialogStringView,
   DialogDateView: FilterDialogDateView,

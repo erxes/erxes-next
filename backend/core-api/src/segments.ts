@@ -1,6 +1,8 @@
 import {
   gatherAssociatedTypes,
+  getContentType,
   getEsIndexByContentType,
+  getPluginName,
   startSegments,
 } from 'erxes-api-shared/core-modules';
 import { generateModels } from './connectionResolvers';
@@ -10,10 +12,7 @@ import {
   getRealIdFromElk,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
-import * as _ from 'underscore';
-
-export const getContentType = (type: string) => type.split(':')[1];
-export const getPluginName = (type: string) => type.split(':')[0];
+import _ from 'underscore';
 
 const changeType = (type: string) =>
   type === 'core:lead' ? 'core:customer' : type;

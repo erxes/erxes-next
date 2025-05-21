@@ -6,11 +6,11 @@ import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 const USERS_LIMIT = 30;
 
 export const useUsers = (
-  options?: QueryHookOptions<{ users: ICursorListResponse<IMember> }>,
+  options?: QueryHookOptions<ICursorListResponse<IMember>>,
 ) => {
-  const { data, loading, fetchMore, error } = useQuery<{
-    users: ICursorListResponse<IMember>;
-  }>(GET_USERS, {
+  const { data, loading, fetchMore, error } = useQuery<
+    ICursorListResponse<IMember>
+  >(GET_USERS, {
     ...options,
     variables: {
       limit: USERS_LIMIT,

@@ -115,7 +115,7 @@ export const UnitList = ({
       <Command.Input placeholder="Search unit" />
       <Command.List>
         <Combobox.Empty loading={loading} />
-        {units?.map((unit: IUnit) => renderItem(unit))}
+        {units?.map((unit) => renderItem(unit))}
       </Command.List>
     </Command>
   );

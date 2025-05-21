@@ -7,15 +7,53 @@ import {
 } from '@tabler/icons-react';
 import type { ColumnDef, Cell } from '@tanstack/react-table';
 
-import { Avatar, Badge, cn, InlineCell, Switch, Table } from 'erxes-ui';
-import { RecordTable } from 'erxes-ui';
+import {
+  Avatar,
+  Badge,
+  InlineCell,
+  Switch,
+  useQueryState,
+  RecordTable,
+  RecordTablePopover,
+  RecordTableCellTrigger,
+  Input,
+  RecordTableCellContent,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
 import dayjs from 'dayjs';
 import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
 import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
+import { useSetAtom } from 'jotai';
+import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
+import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+
+export const UserMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IUser, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('user_id');
+  const setRenderingCustomerDetail = useSetAtom(renderingTeamMemberDetailAtom);
+  const { _id } = cell.row.original;
+  return (
+    <RecordTable.MoreButton
+      className="w-full h-full"
+      onClick={() => {
+        setOpen(_id);
+        setRenderingCustomerDetail(false);
+      }}
+    />
+  );
+};
 
 export const teamMemberColumns: ColumnDef<IUser>[] = [
+  {
+    id: 'more',
+    cell: UserMoreColumnCell,
+    size: 33,
+  },
   {
     id: 'avatar',
     accessorKey: 'avatar',
@@ -28,7 +66,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         display={() => (
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
-            <Avatar.Fallback colorSeed={cell.row.original._id}>
+            <Avatar.Fallback>
               {cell.row.original.details.firstName?.charAt(0) ||
                 cell.row.original.details.lastName?.charAt(0) ||
                 cell.row.original.email?.charAt(0)}
@@ -96,7 +134,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             if (status === 'Verified') {
               return <Badge variant={'success'}>{status}</Badge>;
             } else {
-              return <Badge variant={'destructive'}>{status}</Badge>;
+              return <Badge variant={'destructive'}>Unverified</Badge>;
             }
           }}
         />
@@ -109,7 +147,14 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     header: () => <RecordTable.InlineHead icon={IconMail} label="Email" />,
     cell: ({ cell }) => {
       const { email, _id } = cell.row.original;
-      return <TextFieldUser field="email" _id={_id} value={email as string} />;
+      return (
+        <RecordTablePopover>
+          <RecordTableCellTrigger asChild>{email}</RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Input key={_id} value={email} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
     },
   },
   ...['employeeId'].map((field) => ({
@@ -137,11 +182,14 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
         _id,
       } = cell.row.original;
       return (
-        <TextFieldUserDetails
-          field={'position'}
-          _id={_id}
-          value={cell.getValue() as string}
-        />
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <TextOverflowTooltip value={position} />
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <SelectPosition value={position} onValueChange={() => {}} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },

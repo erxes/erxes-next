@@ -112,6 +112,24 @@ import {
   types as ConformityTypes,
 } from '@/conformities/graphql/schema';
 
+import {
+  mutations as PermissionMutations,
+  queries as PermissionQueries,
+  types as PermissionTypes,
+} from '@/permissions/graphql/schemas/permission';
+
+import {
+  mutations as UsersGroupMutations,
+  queries as UsersGroupQueries,
+  types as UsersGroupTypes,
+} from '@/permissions/graphql/schemas/userGroup';
+
+import {
+  mutations as DocumentMutations,
+  queries as DocumentQueries,
+  types as DocumentTypes,
+} from '@/documents/graphql/schema';
+
 export const types = `
     enum CacheControlScope {
       PUBLIC
@@ -145,6 +163,9 @@ export const types = `
     ${RelationTypes}
     ${FavoritesTypes}
     ${ExchangeRateTypes}
+    ${PermissionTypes}
+    ${UsersGroupTypes}
+    ${DocumentTypes}
   `;
 
 export const queries = `
@@ -167,6 +188,9 @@ export const queries = `
     ${RelationQueries}
     ${FavoritesQueries}
     ${ExchangeRateQueries}
+    ${PermissionQueries}
+    ${UsersGroupQueries}
+    ${DocumentQueries}
   `;
 
 export const mutations = `
@@ -189,6 +213,9 @@ export const mutations = `
     ${RelationMutations}
     ${FavoritesMutations}
     ${ExchangeRateMutations}
+    ${PermissionMutations}
+    ${UsersGroupMutations}
+    ${DocumentMutations}
   `;
 
 export default { types, queries, mutations };

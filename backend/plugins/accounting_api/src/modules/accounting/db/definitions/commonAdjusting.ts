@@ -1,9 +1,9 @@
 import { Schema } from 'mongoose';
-import { field, schemaWrapper } from './utils';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 
 export const accountSchema = schemaWrapper(
   new Schema({
-    _id: field({ pkey: true }),
+    _id: mongooseStringRandomId,
 
   }),
 );

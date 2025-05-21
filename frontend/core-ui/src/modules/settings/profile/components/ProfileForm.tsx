@@ -49,8 +49,8 @@ export const ProfileForm = () => {
         <div className="flex flex-col gap-4">
           <Form.Label>Profile picture</Form.Label>
           <Form.Field
-            name="details.avatar"
             control={form.control}
+            name="details.avatar"
             render={({ field }: { field: any }) => (
               <Form.Item>
                 <Form.Control>

@@ -1,12 +1,12 @@
 import { initTRPC } from '@trpc/server';
 import { escapeRegExp } from 'erxes-api-shared/utils';
 import { z } from 'zod';
-import { ITRPCContext } from '~/init-trpc';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
 export const productCategoryTrpcRouter = t.router({
-  categories: t.router({
+  productCategories: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query, sort, regData } = input;
       const { models } = ctx;

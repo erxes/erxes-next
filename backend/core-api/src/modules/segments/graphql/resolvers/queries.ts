@@ -119,7 +119,7 @@ export const segmentQueries = {
     let selector: any = {
       ...commonQuerySelector,
       contentType: { $in: contentTypes },
-      name: { $exists: true },
+      name: { $exists: true, $nin: [null, '', undefined] },
     };
 
     if (config) {

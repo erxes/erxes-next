@@ -6,8 +6,7 @@ import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/cus
 
 export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   return (
     <RecordTable.Provider
@@ -28,13 +27,11 @@ export const CustomersRecordTable = () => {
           <RecordTable.Body>
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
-              startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
             <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
-              endCursor={endCursor}
             />
           </RecordTable.Body>
         </RecordTable>

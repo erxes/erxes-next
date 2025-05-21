@@ -7,11 +7,13 @@ import {
 } from '@tabler/icons-react';
 import {
   Filter,
+  PageSubHeader,
   useFilterContext,
   useMultiQueryState,
   useQueryState,
 } from 'erxes-ui';
 import { SelectBranchTree, SelectDepartmentTree, SelectUnit } from 'ui-modules';
+import { TeamMemberFilter } from './TeamMemberFilter';
 
 export const TeamMemberFilterBar = () => {
   const [queries] = useMultiQueryState<{
@@ -24,39 +26,43 @@ export const TeamMemberFilterBar = () => {
 
   const isFiltered = Object.values(queries).some((query) => !!query);
 
-  if (!isFiltered) return null;
   const { code, name, branchId, departmentId, unitId } = queries;
 
   return (
-    <Filter.Bar>
-      {!!code && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconHash />
-            Code
-          </Filter.BarName>
-          <Filter.BarButton filterKey="code" inDialog>
-            {code}
-          </Filter.BarButton>
-          <Filter.BarClose filterKey="code" />
-        </Filter.BarItem>
-      )}
-      {!!name && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconLabelFilled />
-            Name
-          </Filter.BarName>
-          <Filter.BarButton filterKey="name" inDialog>
-            {name}
-          </Filter.BarButton>
-          <Filter.BarClose filterKey="name" />
-        </Filter.BarItem>
-      )}
-      {!!branchId && <BranchFilterBar />}
-      {!!departmentId && <DepartmentFilterBar />}
-      {!!unitId && <UnitFilterBar />}
-    </Filter.Bar>
+    <Filter id="team-member">
+      <PageSubHeader>
+        <Filter.Bar>
+          <TeamMemberFilter />
+          {!!code && (
+            <Filter.BarItem>
+              <Filter.BarName>
+                <IconHash />
+                Code
+              </Filter.BarName>
+              <Filter.BarButton filterKey="code" inDialog>
+                {code}
+              </Filter.BarButton>
+              <Filter.BarClose filterKey="code" />
+            </Filter.BarItem>
+          )}
+          {!!name && (
+            <Filter.BarItem>
+              <Filter.BarName>
+                <IconLabelFilled />
+                Name
+              </Filter.BarName>
+              <Filter.BarButton filterKey="name" inDialog>
+                {name}
+              </Filter.BarButton>
+              <Filter.BarClose filterKey="name" />
+            </Filter.BarItem>
+          )}
+          {!!branchId && <BranchFilterBar />}
+          {!!departmentId && <DepartmentFilterBar />}
+          {!!unitId && <UnitFilterBar />}
+        </Filter.Bar>
+      </PageSubHeader>
+    </Filter>
   );
 };
 

@@ -1,6 +1,6 @@
-import { IconCheckbox, IconSortDescending, IconTag } from '@tabler/icons-react';
+import { IconCheckbox, IconSortDescending } from '@tabler/icons-react';
 import { Button, Checkbox, CommandBar, Separator } from 'erxes-ui';
-import { FilterDropdown } from './FilterDropdown';
+import { FilterConversations } from './Filter';
 import { selectConversationsState } from '../states/selectConversationsState';
 import { useAtom } from 'jotai';
 import { useConversationListContext } from '../hooks/useConversationListContext';
@@ -16,7 +16,7 @@ export const ConversationFilter = () => {
       <Button variant="ghost" size="icon" className="ml-auto">
         <IconSortDescending />
       </Button>
-      <FilterDropdown />
+      <FilterConversations />
       <ConversationsCommandBar />
     </div>
   );

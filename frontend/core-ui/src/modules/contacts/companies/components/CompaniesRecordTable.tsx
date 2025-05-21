@@ -27,13 +27,11 @@ export const CompaniesRecordTable = () => {
           <RecordTable.Body>
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
-              startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
             <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
-              endCursor={endCursor}
             />
           </RecordTable.Body>
         </RecordTable>

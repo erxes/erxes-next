@@ -51,7 +51,7 @@
       "dependsOn": [
         "build"
       ],
-      "command": "docker build -f backend/plugins/accounting_api/Dockerfile . -t accounting_api"
+      "command": "docker build -f backend/plugins/accounting_api/Dockerfile . -t erxes/erxes-next-accounting_api"
     }
   }
 }

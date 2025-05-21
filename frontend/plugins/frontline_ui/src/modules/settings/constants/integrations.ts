@@ -1,3 +1,13 @@
+import {
+  IconChartBar,
+  IconChartPie,
+  IconChessKnight,
+  IconMailOpened,
+  IconMessageCog,
+  IconNews,
+  IconPuzzle,
+} from '@tabler/icons-react';
+
 export const INTEGRATIONS = {
   messenger: {
     img: '/assets/messenger.webp',
@@ -6,28 +16,52 @@ export const INTEGRATIONS = {
     steps: [
       {
         id: 0,
-        name: 'Connect accounts',
-        description:
-          'Select the accounts where you want to integrate its pages with.',
+        name: 'Appearance',
+        description: 'Appearance',
         isFinal: false,
+        Icon: IconPuzzle,
       },
       {
         id: 1,
-        name: 'Select page',
-        isEmpty: {
-          name: 'Connect pages',
-          description:
-            'Connect pages from the linked pages listed below. If your page is not there, try adding it from x.',
-        },
-        description:
-          'Select the accounts where you want to integrate its pages with.',
+        name: 'Greeting',
+        description: 'Greeting',
         isFinal: false,
+        Icon: IconMailOpened,
       },
       {
         id: 2,
-        name: 'Integration setup',
-        description: 'Setup your integration.',
+        name: 'Intro',
+        description: 'Intro',
+        isFinal: false,
+        Icon: IconNews,
+      },
+      {
+        id: 3,
+        name: 'Hours & Availability',
+        description: 'Hours & Availability',
+        isFinal: false,
+        Icon: IconChessKnight,
+      },
+      {
+        id: 4,
+        name: 'Default Settings',
+        description: 'Default Settings',
+        isFinal: false,
+        Icon: IconChartBar,
+      },
+      {
+        id: 5,
+        name: 'Config Setup',
+        description: 'Config Setup',
+        isFinal: false,
+        Icon: IconMessageCog,
+      },
+      {
+        id: 6,
+        name: 'Add Ons',
+        description: 'Add Ons',
         isFinal: true,
+        Icon: IconChartPie,
       },
     ],
   },

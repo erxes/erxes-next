@@ -27,6 +27,7 @@ import {
 import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../constants/integrations';
 import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 import { AddIntegration } from './add-integration/AddIntegration';
+import { SelectBrand } from 'ui-modules';
 
 const INTEGRATION_PER_PAGE = 30;
 
@@ -39,11 +40,9 @@ export const IntegrationsList = () => {
   const integration =
     integrationsList[params.kind as keyof typeof integrationsList];
 
-  const { byKind } = useIntegrationsCounts();
-  const { integrations, loading } = useIntegrations({
+  const { totalCount } = useIntegrationsCounts();
+  const { integrations, loading, error } = useIntegrations({
     variables: {
-      page: 1,
-      perPage: INTEGRATION_PER_PAGE,
       kind: params?.kind,
     },
     skip: !params?.kind,
@@ -51,17 +50,18 @@ export const IntegrationsList = () => {
   if (loading) {
     return <Skeleton className="w-full h-auto aspect-[9/2]" />;
   }
+  if (error) {
+    return <code>{error.message}</code>;
+  }
   if (integrations.length) {
     return (
-      <div className="w-full h-full flex flex-col gap-3">
+      <div className="w-full h-auto flex flex-col gap-3">
         <strong className="text-base font-semibold tracking-normal">
-          {byKind?.[params?.kind as string] || 0} {integration.label}{' '}
-          integrations
+          {totalCount || 0} {integration.label} integrations
         </strong>
         <RecordTable.Provider
           columns={integrationKindColumns}
           data={integrations || []}
-          stickyColumns={['name']}
         >
           <RecordTable.Scroll>
             <RecordTable>
@@ -127,17 +127,17 @@ export const integrationKindColumns: ColumnDef<IIntegrationColumnDef>[] = [
     },
   },
   {
-    id: 'brand',
-    accessorKey: 'brand',
+    id: 'brandId',
+    accessorKey: 'brandId',
     header: () => <RecordTable.InlineHead label="Brand" />,
     cell: ({ cell }) => {
-      const { name } = cell.getValue() as IBrand;
       return (
-        <InlineCell
-          name={cell.column.id}
-          recordId={cell.row.original._id}
-          display={() => <InlineCellDisplay>{name}</InlineCellDisplay>}
-        />
+        <div>
+          <SelectBrand
+            className="shadow-none"
+            value={cell.row.original.brandId}
+          />
+        </div>
       );
     },
     size: 235,

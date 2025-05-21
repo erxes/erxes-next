@@ -19,7 +19,6 @@ import { useMainConfigs } from '~/modules/settings/hooks/useMainConfigs';
 // Memoize form fields to prevent unnecessary re-renders
 const FormFields = memo(
   ({ form }: { form: ReturnType<typeof useForm<TAddTransactionGroup>> }) => {
-    console.log(form, 'fffffffffffffff')
     return (
       <div className="grid grid-cols-2 xl:grid-cols-5 gap-6 py-6 items-end">
         <Form.Field

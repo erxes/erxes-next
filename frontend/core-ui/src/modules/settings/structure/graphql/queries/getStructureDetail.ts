@@ -1,49 +1,36 @@
 import { gql } from '@apollo/client';
 
 const GET_STRUCTURE_DETAILS = gql`
-  query structureDetail {
+  query StructureDetail {
     structureDetail {
       _id
-      title
-      description
       code
-      supervisorId
+      coordinate {
+        latitude
+        longitude
+      }
+      description
+      email
+      image {
+        name
+        size
+        type
+        url
+      }
+      links
+      phoneNumber
       supervisor {
         _id
         email
         details {
           avatar
           fullName
-          shortName
-          birthDate
           position
-          workStartedDate
-          location
-          description
           operatorPhone
-          firstName
-          middleName
-          lastName
-          __typename
         }
-        __typename
       }
-      phoneNumber
-      email
-      links
-      coordinate {
-        longitude
-        latitude
-        __typename
-      }
-      image {
-        url
-        name
-        type
-        size
-        __typename
-      }
-      __typename
+      supervisorId
+      title
     }
   }
 `;

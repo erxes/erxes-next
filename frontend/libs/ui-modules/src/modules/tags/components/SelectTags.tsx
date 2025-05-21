@@ -1,4 +1,12 @@
-import { Combobox, Command, SelectTree, TextOverflowTooltip } from 'erxes-ui';
+import {
+  Combobox,
+  Command,
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+  SelectTree,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
 import React, { useState } from 'react';
@@ -10,7 +18,7 @@ import {
 import { SelectTagsContext } from '../contexts/SelectTagsContext';
 import { useSelectTagsContext } from '../hooks/useSelectTagsContext';
 import { IconPlus } from '@tabler/icons-react';
-import { CreateTagForm } from './CreateTagForm';
+import { CreateTagForm, SelectTagCreateContainer } from './CreateTagForm';
 import { TagBadge } from './TagBadge';
 
 export const SelectTagsProvider = ({
@@ -86,7 +94,7 @@ export const SelectTagsCommand = ({
 }) => {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { tagType, targetIds } = useSelectTagsContext();
+  const { tagType, targetIds, selectedTags } = useSelectTagsContext();
   const [noTagsSearchValue, setNoTagsSearchValue] = useState('');
 
   const { tags, loading, error, handleFetchMore, totalCount } = useTags({
@@ -95,7 +103,7 @@ export const SelectTagsCommand = ({
       searchValue: debouncedSearch,
     },
     skip: !!noTagsSearchValue && debouncedSearch.includes(noTagsSearchValue),
-    onCompleted(data: { tags: { totalCount: number; list: ITag[] } }) {
+    onCompleted(data) {
       const { totalCount } = data?.tags || {};
       setNoTagsSearchValue(totalCount === 0 ? debouncedSearch : '');
     },
@@ -109,6 +117,15 @@ export const SelectTagsCommand = ({
         placeholder="Search tags"
         focusOnMount
       />
+      {selectedTags?.length > 0 && (
+        <>
+          <div className="flex flex-wrap p-2 gap-2">
+            <TagList />
+          </div>
+          <Command.Separator />
+        </>
+      )}
+
       <Command.List>
         <SelectTree.Provider id={targetIds.join(',')} ordered={!search}>
           <SelectTagsCreate
@@ -180,7 +197,7 @@ export const SelectTagsItem = ({
     >
       <TextOverflowTooltip
         value={tag.name}
-        className="flex-auto w-auto font-medium text-base"
+        className="flex-auto w-auto font-medium"
       />
     </SelectTree.Item>
   );
@@ -188,11 +205,13 @@ export const SelectTagsItem = ({
 
 export const TagList = ({
   placeholder,
+  renderAsPlainText,
   ...props
 }: Omit<React.ComponentProps<typeof TagBadge>, 'onClose'> & {
   placeholder?: string;
+  renderAsPlainText?: boolean;
 }) => {
-  const { value, selectedTags, setSelectedTags, mode, onSelect } =
+  const { value, selectedTags, setSelectedTags, onSelect } =
     useSelectTagsContext();
 
   const selectedTagIds = Array.isArray(value) ? value : [value];
@@ -208,7 +227,7 @@ export const TagList = ({
           key={tagId}
           tagId={tagId}
           tag={selectedTags.find((t) => t._id === tagId)}
-          renderAsPlainText={mode === 'single'}
+          renderAsPlainText={renderAsPlainText}
           variant="secondary"
           onCompleted={(tag) => {
             if (!tag) return;
@@ -227,21 +246,54 @@ export const TagList = ({
 };
 
 export const SelectTagsValue = () => {
-  const { selectedTags } = useSelectTagsContext();
+  const { selectedTags, mode } = useSelectTagsContext();
 
   if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
 
-  return <TagList />;
+  return <TagList renderAsPlainText={mode === 'single'} />;
 };
 
 export const SelectTagsContent = () => {
   const { newTagName } = useSelectTagsContext();
 
   if (newTagName) {
-    return <CreateTagForm />;
+    return (
+      <SelectTagCreateContainer>
+        <CreateTagForm />
+      </SelectTagCreateContainer>
+    );
   }
 
   return <SelectTagsCommand />;
+};
+
+export const SelectTagsInlineCell = ({
+  onValueChange,
+  scope,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'> & {
+  scope?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <SelectTagsProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableCellTrigger>
+          <SelectTagsValue />
+        </RecordTableCellTrigger>
+        <RecordTableCellContent className="min-w-72">
+          <SelectTagsContent />
+        </RecordTableCellContent>
+      </RecordTablePopover>
+    </SelectTagsProvider>
+  );
 };
 
 export const SelectTags = Object.assign(SelectTagsProvider, {
@@ -250,4 +302,5 @@ export const SelectTags = Object.assign(SelectTagsProvider, {
   Item: SelectTagsItem,
   Value: SelectTagsValue,
   List: TagList,
+  InlineCell: SelectTagsInlineCell,
 });

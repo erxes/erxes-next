@@ -93,7 +93,7 @@ export const MemberDetailTabContent = ({
   value: string;
 }) => {
   return (
-    <Tabs.Content value={value} className="flex-auto overflow-auto">
+    <Tabs.Content value={value} className="grow h-full overflow-auto">
       {children}
     </Tabs.Content>
   );

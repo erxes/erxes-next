@@ -1,11 +1,11 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
-import { ITRPCContext } from '~/init-trpc';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
 export const uomTrpcRouter = t.router({
-  uoms: t.router({
+  productUoms: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
 
