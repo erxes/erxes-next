@@ -1,11 +1,15 @@
 import { Document } from 'mongoose';
-import { ICustomField } from 'erxes-api-shared/core-types';
+import {
+  ICursorPaginateParams,
+  ICustomField,
+  IListParams,
+} from 'erxes-api-shared/core-types';
 
 export interface IConversation {
   skillId?: string;
   operatorStatus?: string;
   content?: string;
-  integrationId: string;
+  integrationId?: string;
   customerId?: string;
   visitorId?: string;
   userId?: string;
@@ -38,6 +42,16 @@ export interface IConversation {
 // Conversation schema
 export interface IConversationDocument extends IConversation, Document {
   _id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | undefined;
+  updatedAt: Date | undefined;
+}
+
+export interface IConversationListParams
+  extends IListParams,
+    ICursorPaginateParams,
+    IConversation {
+  status?: string;
+  tagIds?: string[];
+  skillId?: string;
+  operatorStatus?: string;
 }

@@ -1,3 +1,4 @@
+import { checkPermission } from 'erxes-api-shared/core-modules';
 import { ICustomer, ICustomerDocument } from 'erxes-api-shared/core-types';
 import { getEnv, getPlugins, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
@@ -196,8 +197,7 @@ export const customerMutations = {
             { emailValidationStatus: { $exists: false } },
           ],
         },
-        { primaryEmail: 1, _id: 0 },
-      ).cursor();
+      ).select('primaryEmail -_id').cursor();
 
       await processBatch(customersCursor, 'email');
     } else {
@@ -208,9 +208,8 @@ export const customerMutations = {
             { phoneValidationStatus: 'unknown' },
             { phoneValidationStatus: { $exists: false } },
           ],
-        },
-        { primaryPhone: 1, _id: 0 },
-      ).cursor();
+        }
+      ).select('primaryPhone -_id').cursor();
 
       await processBatch(customersCursor, 'phone');
     }
@@ -254,3 +253,14 @@ export const customerMutations = {
     );
   },
 };
+
+checkPermission(customerMutations, 'customersAdd', 'customersAdd');
+checkPermission(customerMutations, 'customersEdit', 'customersEdit');
+checkPermission(customerMutations, 'customersEditByField', 'customersEdit');
+checkPermission(customerMutations, 'customersMerge', 'customersMerge');
+checkPermission(customerMutations, 'customersRemove', 'customersRemove');
+checkPermission(
+  customerMutations,
+  'customersChangeState',
+  'customersChangeState',
+);

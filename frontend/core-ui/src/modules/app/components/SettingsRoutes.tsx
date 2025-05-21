@@ -8,6 +8,7 @@ import {
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
+import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -49,6 +50,14 @@ const TagsSettings = lazy(() =>
   })),
 );
 
+const ProductsSettingsRoutes = lazy(() =>
+  import('@/products/settings/components/ProductSettingsRoutes').then(
+    (module) => ({
+      default: module.ProductsSettingRoutes,
+    }),
+  ),
+);
+
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
@@ -79,13 +88,17 @@ export function SettingsRoutes() {
           element={<TeamMemberSettings />}
         />
         <Route
-          path={SettingsWorkspacePath.Structure}
+          path={SettingsWorkspacePath.StructureCatchAll}
           element={<StructureSettings />}
         />
         <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
-
+        <Route
+          path={SettingsWorkspacePath.ProductsCatchAll}
+          element={<ProductsSettingsRoutes />}
+        />
         {getPluginsSettingsRoutes()}
       </Routes>
+      <SettingsPageEffect />
     </Suspense>
   );
 }

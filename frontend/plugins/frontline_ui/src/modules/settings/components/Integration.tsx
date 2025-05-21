@@ -2,17 +2,23 @@ import { cn } from 'erxes-ui';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useIntegrationContext } from '../hooks/useIntegrationContext';
+import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 
 type Props = {
   img: string;
   label: string;
-  totalCount: number | undefined;
   description: string;
   to: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Integration = React.forwardRef<HTMLButtonElement, Props>(
-  ({ label, totalCount, description, to, img, ...rest }, ref) => {
+  ({ label, description, to, img, ...rest }, ref) => {
+    const { totalCount, loading } = useIntegrationsCounts({
+      variables: {
+        kind: to,
+      },
+      skip: !to,
+    });
     return (
       <Link to={{ pathname: `/settings/inbox/details/${to}` }}>
         <button
@@ -38,7 +44,6 @@ export const Integration = React.forwardRef<HTMLButtonElement, Props>(
               <img
                 alt={to}
                 src={img}
-                // src={`http://localhost:3002${img}`}
                 className="w-full h-full object-contain"
               />
             </span>

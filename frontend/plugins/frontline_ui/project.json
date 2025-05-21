@@ -15,7 +15,7 @@
         "main": "frontend/plugins/frontline_ui/src/main.ts",
         "tsConfig": "frontend/plugins/frontline_ui/tsconfig.app.json",
         "rspackConfig": "frontend/plugins/frontline_ui/rspack.config.ts",
-        "assets": []
+        "assets": ["frontend/plugins/frontline_ui/src/assets"]
       },
       "configurations": {
         "development": {

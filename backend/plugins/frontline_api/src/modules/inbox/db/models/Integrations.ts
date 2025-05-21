@@ -73,7 +73,7 @@ export const isTimeInBetween = (
 };
 
 export interface IIntegrationModel extends Model<IIntegrationDocument> {
-  getIntegration(doc: { [key: string]: any }): IIntegrationDocument;
+  getIntegration(doc: { [key: string]: any }): Promise<IIntegrationDocument>;
   findIntegrations(
     query: any,
     options?: any,
@@ -481,7 +481,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
         onlineHours = [],
         timezone = '',
       } = messengerData;
-       const timezoneString = userTimezone || timezone || moment.tz.guess();
+      const timezoneString = userTimezone || timezone || moment.tz.guess();
       /*
        * Manual: We can determine state from isOnline field value when method is manual
        */

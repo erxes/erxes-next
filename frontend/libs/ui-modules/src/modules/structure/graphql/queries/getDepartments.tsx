@@ -23,7 +23,7 @@ export const GET_DEPARTMENTS = gql`
     $withoutUserFilter: Boolean
     ${GQL_CURSOR_PARAM_DEFS}
   ) {
-    departments(
+    departmentsMain(
       ids: $ids
       excludeIds: $excludeIds
       ${GQL_CURSOR_PARAMS}

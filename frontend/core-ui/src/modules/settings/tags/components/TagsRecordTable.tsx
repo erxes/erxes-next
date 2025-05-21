@@ -1,11 +1,8 @@
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import {
-  Input,
   RecordTable,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
   RecordTableTree,
+  TextField,
   useQueryState,
 } from 'erxes-ui';
 import { ITag, SelectTags, useTags } from 'ui-modules';
@@ -38,20 +35,19 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
     accessorKey: 'name',
     cell: ({ cell }) => {
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableTree.Trigger
-              order={cell.row.original.order}
-              name={cell.row.original.name}
-              hasChildren={cell.row.original.hasChildren}
-            >
-              {cell.getValue() as string}
-            </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+        <TextField
+          scope="tag"
+          value={cell.getValue() as string}
+          onValueChange={(value) => {
+            console.log(value);
+          }}
+        >
+          <RecordTableTree.Trigger
+            order={cell.row.original.order}
+            name={cell.getValue() as string}
+            hasChildren={cell.row.original.hasChildren}
+          />
+        </TextField>
       );
     },
     size: 300,
@@ -66,6 +62,9 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
           scope="tag"
           mode="single"
           value={cell.getValue() as string}
+          onValueChange={(value) => {
+            console.log(value);
+          }}
           tagType=""
         />
       );
@@ -82,24 +81,27 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
 ];
 
 export const TagsRecordTable = () => {
-  const { tags, pageInfo, loading, handleFetchMore } = useTags({
+  const [searchValue] = useQueryState('searchValue');
+  const { tags, pageInfo, loading, handleFetchMore, sortedTags } = useTags({
     variables: {
       type: 'core:customer',
+      searchValue: searchValue ?? undefined,
     },
   });
 
   return (
     <RecordTable.Provider
       columns={tagsColumns}
-      data={tags || []}
+      data={sortedTags || []}
       className="m-3"
+      stickyColumns={['more', 'name']}
     >
       <RecordTableTree id="product-categories" ordered>
         <RecordTable.Scroll>
           <RecordTable>
             <RecordTable.Header />
             <RecordTable.Body>
-              <RecordTable.RowList />
+              <RecordTable.RowList Row={RecordTableTree.Row} />
               {loading && <RecordTable.RowSkeleton rows={30} />}
               {!loading && pageInfo?.hasNextPage && (
                 <RecordTable.RowSkeleton

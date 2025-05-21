@@ -1,11 +1,9 @@
 import { SearchIntegration } from './SearchIntegration';
 import { Label } from 'erxes-ui';
 import { Integration } from './Integration';
-import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 import { useIntegrationContext } from '../hooks/useIntegrationContext';
 
 export const MainSettingsForm = () => {
-  const { byKind, loading } = useIntegrationsCounts();
   const { integrations, otherIntegrations } = useIntegrationContext();
   return (
     <form className="h-full w-full mx-auto max-w-2xl px-9 py-5 flex flex-col gap-8">
@@ -25,7 +23,6 @@ export const MainSettingsForm = () => {
               to={key}
               label={value.label}
               description={value.description}
-              totalCount={byKind?.[key] || 0}
               img={value.img}
             />
           ))}
@@ -40,7 +37,6 @@ export const MainSettingsForm = () => {
               to={key}
               label={value.label}
               description={value.description}
-              totalCount={byKind?.[key] || 0}
               img={value.img}
             />
           ))}

@@ -1,20 +1,18 @@
 import { initTRPC } from '@trpc/server';
 import { escapeRegExp } from 'erxes-api-shared/utils';
 import { z } from 'zod';
-import { ITRPCContext } from '~/init-trpc';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
 export const accountTrpcRouter = t.router({
   accountingAccount: t.router({
-    getAccount: t.procedure
-      .input(z.any())
-      .query(async ({ ctx, input }) => {
-        const { query } = input;
-        const { models } = ctx;
+    getAccount: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
 
-        return await models.Accounts.findOne(query).lean();
-      }),
+      return await models.Accounts.findOne(query).lean();
+    }),
     getAccountCategory: t.procedure
       .input(z.any())
       .query(async ({ ctx, input }) => {
@@ -31,15 +29,15 @@ export const accountTrpcRouter = t.router({
 
         return regData
           ? await models.AccountCategories.find({
-            ...query,
-            order: { $regex: new RegExp(regData) },
-          }).sort(sort)
+              ...query,
+              order: { $regex: new RegExp(regData) },
+            }).sort(sort)
           : await models.AccountCategories.find(query).sort(sort).lean();
       }),
     getAccountCategoriesWithChilds: t.procedure
       .input(z.any())
       .query(async ({ ctx, input }) => {
-        const { models } = ctx
+        const { models } = ctx;
         const { _id, ids } = input;
         const categoryIds = _id ? [_id] : ids || [];
         if (!categoryIds.length) {

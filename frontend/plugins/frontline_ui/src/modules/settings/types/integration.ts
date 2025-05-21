@@ -1,3 +1,5 @@
+import { TablerIcon } from '@tabler/icons-react';
+
 export interface IIntegration {
   _id: string;
   kind: string;
@@ -17,6 +19,7 @@ export interface IIntegrationItem {
       name: string;
       description: string;
     };
+    Icon?: TablerIcon;
   }[];
 }
 export interface IIntegrationContext {
@@ -40,7 +43,7 @@ export interface IIntegrationColumnDef {
   _id: string;
   name: string;
   kind: string;
-  brand: IBrand;
+  brandId: string;
   isActive: boolean;
   healthStatus: {
     status: 'healthy' | 'page-token' | 'account-token';

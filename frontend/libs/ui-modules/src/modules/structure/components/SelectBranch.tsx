@@ -7,7 +7,6 @@ import {
   TextOverflowTooltip,
 } from 'erxes-ui';
 import { IBranch } from '../types/Branch';
-import { useBranches } from '../hooks/useBranches';
 import { useBranchById } from '../hooks/useBranchById';
 import React, { useState } from 'react';
 import { SelectBranchContext } from '../contexts/SelectBranchContext';

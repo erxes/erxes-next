@@ -18,7 +18,7 @@ import {
 import { SelectTagsContext } from '../contexts/SelectTagsContext';
 import { useSelectTagsContext } from '../hooks/useSelectTagsContext';
 import { IconPlus } from '@tabler/icons-react';
-import { CreateTagForm } from './CreateTagForm';
+import { CreateTagForm, SelectTagCreateContainer } from './CreateTagForm';
 import { TagBadge } from './TagBadge';
 
 export const SelectTagsProvider = ({
@@ -117,7 +117,7 @@ export const SelectTagsCommand = ({
         placeholder="Search tags"
         focusOnMount
       />
-      {selectedTags && (
+      {selectedTags?.length > 0 && (
         <>
           <div className="flex flex-wrap p-2 gap-2">
             <TagList />
@@ -257,7 +257,11 @@ export const SelectTagsContent = () => {
   const { newTagName } = useSelectTagsContext();
 
   if (newTagName) {
-    return <CreateTagForm />;
+    return (
+      <SelectTagCreateContainer>
+        <CreateTagForm />
+      </SelectTagCreateContainer>
+    );
   }
 
   return <SelectTagsCommand />;

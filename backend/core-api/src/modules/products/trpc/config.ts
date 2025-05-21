@@ -1,11 +1,11 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
-import { ITRPCContext } from '~/init-trpc';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
 export const productConfigTrpcRouter = t.router({
-  productsConfigs: t.router({
+  productConfigs: t.router({
     getConfig: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { code, defaultValue } = input;
       const { models } = ctx;

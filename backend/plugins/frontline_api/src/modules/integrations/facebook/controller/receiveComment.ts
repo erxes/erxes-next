@@ -7,7 +7,7 @@ import {
 import {ICommentParams} from '@/integrations/facebook/@types/utils'
 import { INTEGRATION_KINDS } from '@/integrations/facebook/constants';
 
-const receiveComment = async (
+export const receiveComment = async (
   models: IModels,
   subdomain: string,
   params: ICommentParams,
@@ -21,7 +21,7 @@ const receiveComment = async (
       { kind: INTEGRATION_KINDS.POST }
     ]
   });
-
+  
   if (userId === pageId) {
     return;
   }
@@ -36,6 +36,7 @@ const receiveComment = async (
     userId,
     INTEGRATION_KINDS.POST
   );
+
   if (!customer){
     throw new Error('Customer not found');
   }
@@ -51,7 +52,6 @@ const receiveComment = async (
   await getOrCreateComment(
     models,
     subdomain,
-    postConversation,
     params,
     pageId,
     userId,
@@ -59,5 +59,3 @@ const receiveComment = async (
     customer
   );
 };
-
-export default receiveComment;

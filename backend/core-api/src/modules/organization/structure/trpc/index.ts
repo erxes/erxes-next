@@ -1,5 +1,5 @@
 import { initTRPC } from '@trpc/server';
-import { ITRPCContext } from '~/init-trpc';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 import { branchTrpcRouter } from './branch';
 import { departmentTrpcRouter } from './department';
 import { unitTrpcRouter } from './unit';

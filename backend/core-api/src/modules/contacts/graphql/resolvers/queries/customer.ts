@@ -1,4 +1,8 @@
 import {
+  checkPermission,
+  moduleRequireLogin,
+} from 'erxes-api-shared/core-modules';
+import {
   ICustomerDocument,
   ICustomerQueryFilterParams,
 } from 'erxes-api-shared/core-types';
@@ -71,3 +75,6 @@ export const customerQueries = {
     return result;
   },
 };
+
+moduleRequireLogin(customerQueries);
+checkPermission(customerQueries, 'customers', 'showCustomers');
