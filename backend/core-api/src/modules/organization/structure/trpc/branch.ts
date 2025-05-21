@@ -1,7 +1,6 @@
 import { initTRPC } from '@trpc/server';
-import { escapeRegExp } from 'erxes-api-shared/utils';
+import { escapeRegExp, ITRPCContext } from 'erxes-api-shared/utils';
 import { z } from 'zod';
-import { ITRPCContext } from '~/init-trpc';
 
 const t = initTRPC.context<ITRPCContext>().create();
 

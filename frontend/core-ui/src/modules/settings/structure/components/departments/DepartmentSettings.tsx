@@ -4,14 +4,15 @@ import { useDepartmentsList } from '../../hooks/useDepartmentsList';
 import { DepartmentsRemove } from './DepartmentsRemove';
 import { DepartmentEdit } from './detail/DepartmentEdit';
 
-export default function DepartmentSettings() {
+export function DepartmentSettings() {
   const { departments, loading } = useDepartmentsList();
   return (
-    <section className="flex flex-col h-full w-full p-5">
+    <div className="w-full overflow-hidden flex flex-col">
       <DepartmentEdit />
       <RecordTable.Provider
         data={departments || []}
         columns={DepartmentColumns}
+        className="m-3"
       >
         <RecordTable.Scroll>
           <RecordTable>
@@ -23,6 +24,6 @@ export default function DepartmentSettings() {
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTable.Provider>
-    </section>
+    </div>
   );
 }

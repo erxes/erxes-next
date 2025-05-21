@@ -8,10 +8,17 @@ import { appRouter } from '~/init-trpc';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
 
-import { joinErxesGateway, leaveErxesGateway } from 'erxes-api-shared/utils';
+import {
+  closeMongooose,
+  createTRPCContext,
+  joinErxesGateway,
+  leaveErxesGateway,
+} from 'erxes-api-shared/utils';
 
-import { createContext } from '~/init-trpc';
-import { moduleObjects } from './permission';
+import { moduleObjects } from './meta/permission';
+import { tags } from './meta/tags';
+import { generateModels, IModels } from './connectionResolvers';
+import './automations';
 import './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
@@ -50,7 +57,13 @@ app.use(
   '/trpc',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
-    createContext,
+    createContext: createTRPCContext(async (subdomain, context) => {
+      const models = await generateModels(subdomain);
+
+      context.models = models;
+
+      return context;
+    }),
   }),
 );
 
@@ -66,21 +79,13 @@ httpServer.listen(port, async () => {
     hasSubscriptions: false,
     meta: {
       permissions: moduleObjects,
+      tags,
     },
   });
 });
 
 // GRACEFULL SHUTDOWN
 process.stdin.resume(); // so the program will not close instantly
-
-async function closeMongooose() {
-  try {
-    await mongoose.connection.close();
-    console.log('Mongoose connection disconnected ');
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 async function leaveServiceDiscovery() {
   try {

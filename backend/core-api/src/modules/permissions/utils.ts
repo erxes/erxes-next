@@ -6,7 +6,7 @@ import {
 } from 'erxes-api-shared/core-types';
 import { getPlugin, getPlugins, redis } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
-import { moduleObjects } from '~/permission';
+import { moduleObjects } from '~/meta/permission';
 
 export const resetPermissionsCache = async (models: IModels) => {
   const users = await models.Users.find({});

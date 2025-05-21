@@ -1,6 +1,7 @@
 import { appQueries } from '@/apps/graphql/queries';
 import { authQueries } from '@/auth/graphql/resolvers/queries';
 import { contactQueries } from '@/contacts/graphql/resolvers/queries';
+import { documentQueries } from '@/documents/graphql/queries';
 import { exchangeRateQueries } from '@/exchangeRates/graphql/resolvers';
 import { queries as formQueries } from '@/forms/graphql/resolvers';
 import { organizationConfigQueries } from '@/organization/settings/graphql/configs/queries';
@@ -30,4 +31,5 @@ export const queries = {
   ...exchangeRateQueries,
   ...permissionQueries,
   ...usersGroupQueries,
+  ...documentQueries,
 };

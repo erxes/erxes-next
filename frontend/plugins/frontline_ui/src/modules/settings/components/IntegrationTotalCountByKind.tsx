@@ -1,8 +1,16 @@
 import { Skeleton } from 'erxes-ui/components/skeleton';
 import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 
-export const IntegrationTotalCountByKind = () => {
-  const { totalCount, loading } = useIntegrationsCounts();
+export const IntegrationTotalCountByKind = ({
+  kind = undefined,
+}: {
+  kind?: string;
+}) => {
+  const { totalCount, loading } = useIntegrationsCounts({
+    variables: {
+      kind,
+    },
+  });
 
   return (
     <span className="text-sm text-muted-foreground">

@@ -51,15 +51,7 @@ export const ProductCategoriesRecordTable = () => {
           <RecordTable>
             <RecordTable.Header />
             <RecordTable.Body>
-              <RecordTable.RowList
-                Row={(props) => (
-                  <RecordTableTree.Row
-                    {...props}
-                    order={categoryObject[props.id as string]?.order}
-                    name={categoryObject[props.id as string]?.name}
-                  />
-                )}
-              />
+              <RecordTable.RowList Row={RecordTableTree.Row} />
               {loading && <RecordTable.RowSkeleton rows={30} />}
             </RecordTable.Body>
           </RecordTable>

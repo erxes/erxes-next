@@ -4,16 +4,17 @@ import { BranchColumns } from './BranchColumns';
 import { BranchesRemove } from './BranchesRemove';
 import { BranchEdit } from './details/BranchEdit';
 
-export default function BranchesSettings() {
+export function BranchesSettings() {
   const { branches } = useBranchesList();
 
   return (
-    <section className="flex flex-col h-full w-full p-5">
+    <div className="w-full overflow-hidden flex flex-col">
       <BranchEdit />
       <RecordTable.Provider
         data={branches || []}
         columns={BranchColumns}
         stickyColumns={['checkbox', 'code', 'title']}
+        className="m-3"
       >
         <RecordTable.Scroll>
           <RecordTable>
@@ -25,6 +26,6 @@ export default function BranchesSettings() {
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTable.Provider>
-    </section>
+    </div>
   );
 }

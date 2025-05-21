@@ -2,9 +2,12 @@ import { IContext, IModels } from '~/connectionResolvers';
 import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { IConversationDocument,IConversation} from '@/inbox/@types/conversations'
-import { IMessageDocument} from '@/inbox/@types/conversationMessages'
-import { debugBase } from '~/modules/integrations/facebook/debuggers';
+import {
+  IConversationDocument,
+  IConversationListParams,
+} from '@/inbox/@types/conversations';
+import { IMessageDocument } from '@/inbox/@types/conversationMessages';
+
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
   const result = await models.Conversations.countDocuments(query);
@@ -14,13 +17,12 @@ export const conversationQueries = {
   /**
    * Conversations list
    */
- async conversations(
-  _parent: undefined,
-  params: IConversation,
-  { user, models, subdomain }: IContext,
-) {
-
-   const qb = new QueryBuilder(models, subdomain, params, {
+  async conversations(
+    _parent: undefined,
+    params: IConversationListParams,
+    { user, models, subdomain }: IContext,
+  ) {
+    const qb = new QueryBuilder(models, subdomain, params, {
       _id: user._id,
       code: user.code,
       starredConversationIds: user.starredConversationIds,
@@ -29,15 +31,15 @@ export const conversationQueries = {
 
     await qb.buildAllQueries();
     const query = qb.mainQuery();
-    const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
-    model: models.Conversations,
-    params,
-    query: query,
-  });
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IConversationDocument>({
+        model: models.Conversations,
+        params,
+        query: query,
+      });
 
-  return { list, totalCount, pageInfo };
-},
-
+    return { list, totalCount, pageInfo };
+  },
 
   /**
    * Get conversation messages
@@ -267,17 +269,18 @@ export const conversationQueries = {
     { _id, perPage, ...args }: { _id: string; perPage: number },
     { models }: IContext,
   ) {
-      const query = { participatedUserIds: { $in: [_id] } };
+    const query = { participatedUserIds: { $in: [_id] } };
 
-    const { list, totalCount, pageInfo } = await cursorPaginate<IConversationDocument>({
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
-        params: { 
-          ...args,          
-          limit: perPage    
+        params: {
+          ...args,
+          limit: perPage,
         },
         query: query,
       });
 
-      return { list, totalCount, pageInfo };
+    return { list, totalCount, pageInfo };
   },
 };
