@@ -34,7 +34,7 @@ export const organizationConfigQueries = {
       query.$or.push({ code: { $regex: pattern, $options: 'i' } });
     }
 
-    return models.Configs.find(query).lean
+    return models.Configs.find(query).lean()
   },
 
   async configsGetEnv() {
