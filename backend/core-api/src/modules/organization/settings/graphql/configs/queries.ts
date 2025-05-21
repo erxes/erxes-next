@@ -4,7 +4,6 @@ import { IContext } from '~/connectionResolvers';
 import fetch from 'node-fetch';
 import {DEFAULT_CONSTANT_VALUES} from 'erxes-api-shared/core-modules'
 dotenv.config();
-import { SEX_OPTIONS, SOCIAL_LINKS, COMPANY_INDUSTRY_TYPES} from 'erxes-api-shared/core-modules'
 export const organizationConfigQueries = {
   /**
    * Config object
@@ -12,16 +11,9 @@ export const organizationConfigQueries = {
   async configs(_parent: undefined, _args: undefined, { models }: IContext) {
     return models.Configs.find({}).lean()
   },
-  async configsConstants() {
+    async configsConstants(_root, _args, { models }: IContext) {
     return {
-      allValues: {
-        sexChoices: SEX_OPTIONS,
-        companyIndustryTypes: COMPANY_INDUSTRY_TYPES.map(type => ({
-          label: type,
-          value: type
-        })),
-        socialLinks: SOCIAL_LINKS
-      },
+      allValues: models.Configs.constants(),
       defaultValues: DEFAULT_CONSTANT_VALUES
     };
   },

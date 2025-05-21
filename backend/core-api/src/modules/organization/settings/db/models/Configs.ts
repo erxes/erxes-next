@@ -7,12 +7,14 @@ import {
   IConfig,
   IConfigDocument,
 } from '~/modules/organization/settings/db/definitions/configs';
+import { SEX_OPTIONS, SOCIAL_LINKS, COMPANY_INDUSTRY_TYPES} from 'erxes-api-shared/core-modules'
 
 export interface IConfigModel extends Model<IConfigDocument> {
   getConfig(code: string): Promise<IConfigDocument>;
   getConfigs(codes?: string[]): Promise<{ [code: string]: any }>;
   getConfigValue(code: string, defaultValue: any): Promise<any>;
   createOrUpdateConfig({ code, value }: IConfig): Promise<IConfigDocument>;
+  constants(): Promise<any>;
   getCloudflareConfigs(): Promise<any>;
 }
 
@@ -97,7 +99,16 @@ export const loadConfigClass = (models: IModels) => {
 
       return models.Configs.create({ code, value });
     }
-
+      public static constants() {
+      return {
+        sex_choices: SEX_OPTIONS,
+        company_industry_types: COMPANY_INDUSTRY_TYPES.map(v => ({
+          label: v,
+          value: v
+        })),
+        social_links: SOCIAL_LINKS
+      };
+    }
     public static async getCloudflareConfigs() {
       const accountId = await getValueAsString(
         models,

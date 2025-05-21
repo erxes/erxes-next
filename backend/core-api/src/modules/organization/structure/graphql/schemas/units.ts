@@ -25,8 +25,8 @@ export const UnitTypes = `
 
     type UnitListQueryResponse {
         list:[Unit]
+        pageInfo: PageInfo
         totalCount: Int
-        totalUsersCount:Int
     }
     
 `;
