@@ -95,10 +95,9 @@ export const generateParamsSegmentPreviewCount = (
   return conditionsForPreview;
 };
 
-export const getDefaultValues = (
+export const getSegmentFormDefaultValues = (
   propertyType: string,
   segment: any,
-  isTempoaray?: boolean,
 ) => {
   const {
     subSegmentConditions = [],

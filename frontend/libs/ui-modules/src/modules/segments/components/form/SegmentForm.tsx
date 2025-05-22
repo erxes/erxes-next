@@ -22,7 +22,7 @@ import { segmentFormSchema } from '../../states/segmentFormSchema';
 import { SegmentGroup } from './SegmentGroup';
 import {
   generateParamsSegmentPreviewCount,
-  getDefaultValues,
+  getSegmentFormDefaultValues,
 } from '../../utils';
 import { ISegment, SegmentFormProps } from '../../types';
 import { SegmentGroups } from './SegmentGroups';
@@ -158,8 +158,8 @@ export function SegmentForm({
 
   const form = useForm<SegmentFormProps>({
     resolver: zodResolver(segmentFormSchema),
-    defaultValues: getDefaultValues(contentType, segment || {}, isTempoaray),
-    values: getDefaultValues(contentType, segment || {}, isTempoaray),
+    defaultValues: getSegmentFormDefaultValues(contentType, segment || {}),
+    values: getSegmentFormDefaultValues(contentType, segment || {}),
   });
 
   useEffect(() => {
