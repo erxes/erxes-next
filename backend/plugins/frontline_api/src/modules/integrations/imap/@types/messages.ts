@@ -25,4 +25,21 @@ export interface IIMapMessage {
   createdAt: Date;
 }
 
+export interface ISendMailArgs {
+  integrationId: string;
+  conversationId?: string;
+  subject: string;
+  body: string;
+  from: string;
+  customerId?: string;
+  to: string[];
+  attachments?: IIMapAttachmentParams[];
+  replyToMessageId?: string;
+  shouldOpen?: boolean;
+  shouldResolve?: boolean;
+  cc?: string[];
+  bcc?: string[];
+  replyTo?: string;
+}
+
 export interface IIMapMessageDocument extends IIMapMessage, Document {}

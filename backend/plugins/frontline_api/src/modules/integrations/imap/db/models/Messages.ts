@@ -4,9 +4,11 @@ import {IIMapMessageDocument } from '@/integrations/imap/@types/messages';
 import * as nodemailer from 'nodemailer';
 import { messageSchema} from '@/integrations/imap/db/definitions/messages'
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import {ISendMailArgs} from '@/integrations/imap/@types/messages'
+
 export interface IIMapMessageModel extends Model<IIMapMessageDocument> {
   createSendMail(
-    args: any,
+    args: ISendMailArgs,
     subdomain: string,
     models: IModels
   ): Promise<IIMapMessageDocument>;
@@ -43,8 +45,8 @@ export const loadImapMessageClass = (models) => {
           pluginName: 'core',
           method: 'query', 
           module: 'customers',
-          action: 'updateCustomer',
-          input: { selector  },
+          action: 'findOne',
+          input: { selector },
         });
       if (!customer) {
         const [primaryEmail] = to;

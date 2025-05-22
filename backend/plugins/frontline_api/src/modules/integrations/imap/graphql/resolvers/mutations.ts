@@ -16,12 +16,11 @@ export const imapMutations = {
       throw new Error('Unauthorized access');
     }
     
-    const sendMail = await models.ImapMessages.createSendMail(
+    return  await models.ImapMessages.createSendMail(
       args,
       subdomain,
       models,
     );
-    return sendMail;
     
   } catch (error) {
     console.error('Error sending mail:', error);
