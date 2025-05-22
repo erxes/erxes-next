@@ -36,7 +36,7 @@ export const QuerySelectInput = ({
     list = [],
     totalCount = 0,
     handleFetchMore,
-  } = useQuerySelectInputList(query, queryName, search);
+  } = useQuerySelectInputList(query, queryName, debouncedSearch);
   const items = list.map((option: any) => ({
     label: option[labelField],
     value: option[valueField],
@@ -67,7 +67,9 @@ export const QuerySelectInput = ({
     }
     setValue(updatedValue);
     onSelect(updatedValue);
-    setOpen(false);
+    if (!multi) {
+      setOpen(false);
+    }
   };
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -76,7 +78,11 @@ export const QuerySelectInput = ({
       </Combobox.Trigger>
       <Combobox.Content>
         <Command>
-          <Command.Input placeholder={`Search ${labelField}...`} />
+          <Command.Input
+            placeholder={`Search ${labelField}...`}
+            value={search}
+            onValueChange={(searchValue) => setSearch(searchValue)}
+          />
 
           <Command.List>
             <Command.Empty>No {labelField}.</Command.Empty>

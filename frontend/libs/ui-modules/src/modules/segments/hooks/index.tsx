@@ -74,7 +74,9 @@ export const useQuerySelectInputList = (
           direction,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
+          if (!fetchMoreResult) {
+            return prev;
+          }
 
           const { pageInfo: fetchMorePageInfo, list: fetchMoreList = [] } =
             (fetchMoreResult || {})[queryName];

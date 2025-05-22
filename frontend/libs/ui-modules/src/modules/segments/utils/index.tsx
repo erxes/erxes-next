@@ -21,17 +21,16 @@ export function startCase(str: string) {
 }
 
 export const groupFieldsByType = (fields: any[]) => {
-  return fields.reduce((acc, field) => {
-    const value = field.value;
+  return fields.reduce((acc: any, field) => {
+    const { value } = field || {};
     let key;
 
     if (field.group) {
       key = field.group;
     } else {
-      key =
-        value && value.includes('.')
-          ? value.substr(0, value.indexOf('.'))
-          : 'general';
+      key = value?.includes('.')
+        ? value.substr(0, value.indexOf('.'))
+        : 'general';
 
       key = startCase(key);
     }
