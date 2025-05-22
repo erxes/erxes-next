@@ -1,7 +1,7 @@
 {
-  "name": "devsummit-api",
+  "name": "test-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/devsummit_api/src",
+  "sourceRoot": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/test_api/src",
   "projectType": "library",
   "targets": {
     "build": {
@@ -10,9 +10,9 @@
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/plugins/devsummit_api",
-        "main": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/devsummit_api/src/index.ts",
-        "tsConfig": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/devsummit_api/tsconfig.build.json",
+        "outputPath": "dist/plugins/test_api",
+        "main": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/test_api/src/index.ts",
+        "tsConfig": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/test_api/tsconfig.build.json",
         "assets": [
           "${backendPluginDir}/src/**/*.json"
         ]
@@ -30,7 +30,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/devsummit_api/jest.config.ts"
+        "jestConfig": "/Users/enkhtuvshin/Documents/work/erxes/new-ui/erxes-next/backend/plugins/test_api/jest.config.ts"
       }
     }
   },

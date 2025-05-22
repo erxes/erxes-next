@@ -1,5 +1,5 @@
 {
-  "name": "@erxes/plugin-devsummit-api",
+  "name": "@erxes/plugin-test-api",
   "version": "0.0.1",
   "private": true,
   "main": "./src/index.ts",

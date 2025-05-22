@@ -4,7 +4,7 @@ import resolvers from './resolvers';
 import typeDefs from './typeDefs';
 
 export default {
-  name: 'devsummit',
+  name: 'test',
   graphql: async () => {
     return {
       typeDefs: await typeDefs(),
