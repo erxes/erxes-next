@@ -8,7 +8,7 @@ export const imapMutations = {
 
   try {
     // Basic validation
-    if (!args.to || !args.subject || !args.text) {
+    if (!args.to || !args.subject || !args.body) {
       throw new Error('Missing required fields: to, subject or text');
     }
     

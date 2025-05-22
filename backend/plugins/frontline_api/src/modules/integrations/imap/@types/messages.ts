@@ -28,6 +28,7 @@ export interface IIMapMessage {
 export interface ImapSendMailInput {
   to: string | string[];
   subject: string;
+  body:string;
   text: string;
   html?: string;
   from?: string;
