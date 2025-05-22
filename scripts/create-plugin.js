@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { prompt } = require('enquirer');
+const { createBackendPlugin } = require('./create-backend-plugin');
 
 async function createPlugin() {
   const answers = await prompt([
@@ -514,6 +515,8 @@ root.render(
   </StrictMode>,
 );
 `;
+
+  createBackendPlugin(pluginName, moduleName);
 
   fs.writeFileSync(
     path.join(frontendPluginDir, 'src', 'bootstrap.tsx'),
