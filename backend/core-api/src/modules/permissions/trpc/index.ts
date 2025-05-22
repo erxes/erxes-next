@@ -1,5 +1,5 @@
 import { initTRPC } from '@trpc/server';
-import { ITRPCContext } from '~/init-trpc';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 import { permissionTrpcRouter as permissionRouter } from './permission';
 import { userGroupTrpcRouter } from './userGroup';
 

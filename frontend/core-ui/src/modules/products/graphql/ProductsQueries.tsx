@@ -85,8 +85,21 @@ const productTags = gql`
   }
 `;
 
+const productCategoryDetail = gql`
+  query productCategoryDetail($_id: String) {
+    productCategoryDetail(_id: $_id) {
+      _id
+      code
+      name
+      productCount
+      __typename
+  }
+}
+`
+
 export const productsQueries = {
   products,
   productCategories,
   productTags,
+  productCategoryDetail,
 };

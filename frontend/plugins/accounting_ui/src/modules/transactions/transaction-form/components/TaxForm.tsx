@@ -1,25 +1,49 @@
 import { useMainConfigs } from '@/settings/hooks/useMainConfigs';
 import { SelectVat } from '@/settings/vat/components/SelectVatRow';
-import { useVatValue } from '@/settings/vat/hooks/useVatValue';
 import { Checkbox, CurrencyField, Form } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 import { TR_SIDES } from '../../types/constants';
-import { followTrDocsState } from '../states/trStates';
+import { followTrDocsState, taxPercentsState } from '../states/trStates';
 import { ITransactionGroupForm } from '../types/AddTransaction';
+import { IVatRow } from '~/modules/settings/vat/types/VatRow';
 
 export const VatAmountField = ({
   form,
   journalIndex,
+  isWithTax,
 }: {
   form: ITransactionGroupForm;
   journalIndex: number;
+  isWithTax?: boolean;
 }) => {
   const handleVat = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}.handleVat`,
   });
+
+  const details = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}.details`
+  });
+
+  const [taxPercents] = useAtom(taxPercentsState);
+
+  const { vat: vatPercent = 0, sum: sumPercent } = taxPercents;
+
+  const calcedAmount = useMemo(() => {
+    if (handleVat) {
+      return 0;
+    }
+    const sumAmount = details.filter(d => !d.excludeVat).reduce((sum, cur) => sum + (cur.amount ?? 0), 0);
+    if (isWithTax) {
+      return sumAmount / (100 + sumPercent) * vatPercent;
+    }
+
+    return sumAmount / 100 * vatPercent;
+
+  }, [details, handleVat, vatPercent, sumPercent, isWithTax]);
 
   return (
     <Form.Field
@@ -29,7 +53,7 @@ export const VatAmountField = ({
         <Form.Item>
           <Form.Label>VAT amount</Form.Label>
           <CurrencyField.ValueInput
-            value={field.value ?? 0}
+            value={handleVat ? field.value ?? 0 : calcedAmount}
             onChange={field.onChange}
             disabled={!handleVat}
           />
@@ -77,6 +101,7 @@ export const TaxForm = ({
 
   const { configs } = useMainConfigs();
   const [followTrDocs, setFollowTrDocs] = useAtom(followTrDocsState);
+  const [taxPercents, setTaxPercents] = useAtom(taxPercentsState);
 
   const vatFollowTrDoc = useMemo(() => {
 
@@ -101,13 +126,18 @@ export const TaxForm = ({
 
   //   }, [hasVat, hasCtax, side]);
 
+  const changeVatRow = (vatRow: IVatRow) => {
+    const vatPercent = vatRow.percent ?? 0;
+    setTaxPercents({
+      vat: vatPercent,
+      sum: (taxPercents.ctax ?? 0) + vatPercent
+    });
+  }
 
-  const { vatRowDetail, loading } = useVatValue({
-    variables: {
-      id: trDoc.vatRowId,
-    },
-    skip: !trDoc.vatRowId,
-  });
+  // Тухайн баримт нь өмнө нь НӨАТтай гээгүй бөгөөд байгууллагын тохиргоонд НӨАТгүй гэсэн бол НӨАТ байх ёсгүй
+  if (!trDoc.hasVat && !configs?.HasVat) {
+    return null;
+  }
 
   return (
     <>
@@ -165,12 +195,12 @@ export const TaxForm = ({
             render={({ field }) => (
               <Form.Item>
                 <Form.Label>VAT row</Form.Label>
-                <SelectVat value={field.value || ''} onValueChange={field.onChange} />
+                <SelectVat value={field.value || ''} onValueChange={field.onChange} onCallback={changeVatRow} />
                 <Form.Message />
               </Form.Item>
             )}
           />
-          <VatAmountField form={form} journalIndex={journalIndex} />
+          <VatAmountField form={form} journalIndex={journalIndex} isWithTax={isWithTax} />
         </>
       )}
     </>

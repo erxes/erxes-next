@@ -94,15 +94,7 @@ export default function List() {
             <RecordTable className="w-full">
               <RecordTable.Header />
               <RecordTable.Body>
-                <RecordTable.RowList
-                  Row={(props) => (
-                    <RecordTableTree.Row
-                      {...props}
-                      order={segmentsObject[props.id as string]?.order}
-                      name={segmentsObject[props.id as string]?.name}
-                    />
-                  )}
-                />
+                <RecordTable.RowList Row={RecordTableTree.Row} />
                 {loading && <RecordTable.RowSkeleton rows={40} />}
               </RecordTable.Body>
             </RecordTable>

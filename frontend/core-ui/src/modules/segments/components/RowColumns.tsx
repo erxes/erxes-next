@@ -1,10 +1,13 @@
 import { ColumnDef } from '@tanstack/table-core';
-import { useQueryState } from 'erxes-ui/hooks';
-import { RecordTable, RecordTableTree } from 'erxes-ui/modules/record-table';
-import { RecordTableInlineCell } from 'erxes-ui/modules/record-table/record-table-cell/components/RecordTableInlineCell';
+import {
+  RecordTable,
+  RecordTableCellDisplay,
+  RecordTableTree,
+  useQueryState,
+} from 'erxes-ui';
 import { Button } from 'erxes-ui/components';
 import { IconEdit } from '@tabler/icons-react';
-import { ISegment } from '../../../../../libs/ui-modules/src/modules/segments/types';
+import { ISegment } from 'ui-modules';
 
 const columns: ColumnDef<{ order: string; hasChildren: boolean } & ISegment>[] =
   [
@@ -32,12 +35,10 @@ const columns: ColumnDef<{ order: string; hasChildren: boolean } & ISegment>[] =
       accessorKey: 'description',
       header: () => <RecordTable.InlineHead label="Description" />,
       cell: ({ cell }) => {
-        const { description } = cell.row.original;
         return (
-          <RecordTableInlineCell
-            containerClassName="justify-center"
-            display={() => <div>{description}</div>}
-          />
+          <RecordTableCellDisplay>
+            {cell.getValue() as string}
+          </RecordTableCellDisplay>
         );
       },
     },
@@ -48,10 +49,9 @@ const columns: ColumnDef<{ order: string; hasChildren: boolean } & ISegment>[] =
       cell: ({ cell }) => {
         const { count } = cell.row.original;
         return (
-          <RecordTableInlineCell
-            containerClassName="justify-center"
-            display={() => <div>{count}</div>}
-          />
+          <RecordTableCellDisplay>
+            {cell.getValue() as string}
+          </RecordTableCellDisplay>
         );
       },
     },
@@ -61,18 +61,15 @@ const columns: ColumnDef<{ order: string; hasChildren: boolean } & ISegment>[] =
       cell: ({ cell }) => {
         const [, setOpen] = useQueryState('segmentId');
         return (
-          <RecordTableInlineCell
-            containerClassName="justify-center"
-            display={() => (
-              <Button
-                variant="ghost"
-                className="w-full h-full"
-                onClick={() => setOpen(cell.row.original._id)}
-              >
-                <IconEdit className="hover:text-accent-foreground" />
-              </Button>
-            )}
-          />
+          <RecordTableCellDisplay>
+            <Button
+              variant="ghost"
+              className="w-full h-full"
+              onClick={() => setOpen(cell.row.original._id)}
+            >
+              <IconEdit className="hover:text-accent-foreground" />
+            </Button>
+          </RecordTableCellDisplay>
         );
       },
     },

@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
@@ -27,6 +28,8 @@ import { closeMongooose } from './mongo';
 import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
 import { createTRPCContext } from './trpc';
 import { getSubdomain } from './utils';
+
+dotenv.config();
 
 type IMeta = {
   automations?: AutomationConfigs;
@@ -79,7 +82,7 @@ type ConfigTypes = {
 export async function startPlugin(
   configs: ConfigTypes,
 ): Promise<express.Express> {
-  const PORT = configs.port;
+  const PORT = process.env.PORT ? Number(process.env.PORT) : configs.port;
 
   const app = express();
   app.disable('x-powered-by');

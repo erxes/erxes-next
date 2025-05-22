@@ -4,13 +4,10 @@ import {
   useQuery,
 } from '@apollo/client';
 import { IconPlus } from '@tabler/icons-react';
-import { useQueryState } from 'erxes-ui';
-import { Button, Sheet } from 'erxes-ui/components';
+import { Button, Sheet, useQueryState } from 'erxes-ui';
 import { useState } from 'react';
-import queries from 'ui-modules/modules/segments/graphql/queries';
 import { ISegment, ListQueryResponse } from 'ui-modules/modules/segments/types';
 import SegmentForm from 'ui-modules/modules/segments/form';
-import client from '~/providers/apollo-provider/apolloClient';
 // import {SegmentForm} from 'ui-modules';
 
 type Props = {
@@ -34,7 +31,7 @@ export default function SegmentDetail({ refetch }: Props) {
     <Sheet
       open={!!segmentId || isCreatingNew}
       onOpenChange={() => {
-        if (!!segmentId) {
+        if (segmentId) {
           setOpen(null);
         } else {
           setIsCreatingNew(!isCreatingNew);

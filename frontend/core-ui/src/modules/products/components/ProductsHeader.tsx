@@ -21,7 +21,7 @@ export const ProductsHeader = () => {
           </Breadcrumb.List>
         </Breadcrumb>
         <Separator.Inline />
-        <PageHeader.FavoriteToggleButton item="products" />
+        <PageHeader.FavoriteToggleButton />
       </PageHeader.Start>
       <PageHeader.End>
         <ProductAddSheet />

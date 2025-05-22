@@ -40,7 +40,7 @@ const RecordTableTreeIndentation = ({
   name: string;
 }) => {
   const fixedOrder = fixOrder({ order, name });
-  const { ordered } = useRecordTableTree(fixedOrder);
+  const { ordered } = useRecordTableTree(fixedOrder || '');
 
   const level = fixedOrder?.match(/[/]/gi)?.length || 0;
   if (level <= 0 || !ordered) {
