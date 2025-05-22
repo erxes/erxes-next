@@ -30,8 +30,6 @@ function createBackendPlugin(pluginName, moduleName) {
     'src',
     'src/apollo',
     'src/apollo/resolvers',
-    'src/apollo/resolvers/queries',
-    'src/apollo/resolvers/mutations',
     'src/apollo/schema',
     'src/trpc',
     'src/modules',
@@ -39,6 +37,9 @@ function createBackendPlugin(pluginName, moduleName) {
     `src/modules/${moduleName}/graphql`,
     `src/modules/${moduleName}/graphql/schemas`,
     `src/modules/${moduleName}/graphql/resolvers`,
+    `src/modules/${moduleName}/graphql/resolvers/queries`,
+    `src/modules/${moduleName}/graphql/resolvers/mutations`,
+    `src/modules/${moduleName}/graphql/resolvers/customResolvers`,
     `src/modules/${moduleName}/db`,
     `src/modules/${moduleName}/db/models`,
     `src/modules/${moduleName}/db/definitions`,
@@ -277,39 +278,109 @@ export const generateModels = createGenerateModels<IModels>(loadClasses);
   );
 
   // Create apollo/apolloServer.ts
-  const apolloServerContent = `import { ApolloServer } from 'apollo-server-express';
-import { IModels } from '../modules/${moduleName}/types';
-import { typeDefs } from './schema/schema';
-import { resolvers } from './resolvers';
+  const apolloTypeDefs = `import { apolloCommonTypes } from 'erxes-api-shared/utils';
+import { DocumentNode } from 'graphql';
+import { gql } from 'graphql-tag';
+import { mutations, queries, types } from '~/apollo/schema/schema';
 
-export const loadApolloServer = async (models: IModels) => {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: ({ req }) => ({
-      models,
-      subdomain: req.headers.subdomain,
-      user: req.user,
-    }),
-  });
-
-  return server;
+export const typeDefs = async (): Promise<DocumentNode> => {
+  return gql\`
+    \${apolloCommonTypes}
+    \${types}
+    extend type Query {
+      \${queries}
+    }
+    extend type Mutation {
+      \${mutations}
+    }
+  \`;
 };
 `;
 
   fs.writeFileSync(
-    path.join(backendPluginDir, 'src', 'apollo', 'apolloServer.ts'),
-    apolloServerContent,
+    path.join(backendPluginDir, 'src', 'apollo', 'apolloTypeDefs.ts'),
+    apolloTypeDefs,
+  );
+
+  const apolloResolvers = `import { apolloCustomScalars } from 'erxes-api-shared/utils';
+import { customResolvers } from './resolvers';
+import { mutations } from './mutations';
+import { queries } from './queries';
+const resolvers: any = {
+  Mutation: {
+    ...mutations,
+  },
+  Query: {
+    ...queries,
+  },
+  ...apolloCustomScalars,
+  ...customResolvers,
+};
+
+export default resolvers;
+`;
+
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'src', 'apollo', 'resolvers', 'index.ts'),
+    apolloResolvers,
+  );
+
+  const apolloMutations = `import { ${moduleName}Mutations } from '@/${moduleName}/graphql/resolvers/mutations/${moduleName}';
+
+export const mutations = {
+  ...${moduleName}Mutations,
+};
+`;
+
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'src', 'apollo', 'resolvers', 'mutations.ts'),
+    apolloMutations,
+  );
+
+  const apolloQueries = `import { ${moduleName}Queries } from '@/${moduleName}/graphql/resolvers/queries/${moduleName}';
+
+export const queries = {
+  ...${moduleName}Queries,
+};
+`;
+
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'src', 'apollo', 'resolvers', 'queries.ts'),
+    apolloQueries,
+  );
+
+  const apolloCustomResolvers = `import { ${capitalizedModuleName} } from '@/${moduleName}/graphql/resolvers/customResolvers/${moduleName}';
+
+export const customResolvers = {
+  ${capitalizedModuleName},
+};
+`;
+
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'src', 'apollo', 'resolvers', 'resolvers.ts'),
+    apolloCustomResolvers,
   );
 
   // Create apollo/schema/schema.ts
-  const schemaContent = `import { TypeExtensions } from '../../modules/${moduleName}/graphql/schemas/extensions';
+  const schemaContent = `import {
+  mutations as ${capitalizedModuleName}Mutations,
+  queries as ${capitalizedModuleName}Queries,
+  types as ${capitalizedModuleName}Types,
+} from '@/${moduleName}/graphql/schemas/${moduleName}';
 
 export const types = \`
-  \${TypeExtensions}
+  \${${capitalizedModuleName}Types}
 \`;
 
-export default { types };
+export const queries = \`
+  \${${capitalizedModuleName}Queries}
+\`;
+
+export const mutations = \`
+  \${${capitalizedModuleName}Mutations}
+\`;
+
+export default { types, queries, mutations };
 `;
 
   fs.writeFileSync(
@@ -499,6 +570,7 @@ export const load${capitalizedModuleName}Class = (models: IModels) => {
   type ${capitalizedModuleName} {
     _id: String
     name: String
+    description: String
   }
 \`;
 
@@ -513,6 +585,84 @@ export const mutations = \`
   remove${capitalizedModuleName}(_id: String!): ${capitalizedModuleName}
 \`;
 `;
+
+  const queriesContent = `
+  import { IContext } from '~/connectionResolvers';
+
+   export const ${moduleName}Queries = {
+    get${capitalizedModuleName}: async (_parent: undefined, { _id }, { models }: IContext) => {
+      return models.${capitalizedModuleName}.get${capitalizedModuleName}(_id);
+    },
+  };
+`;
+
+  fs.writeFileSync(
+    path.join(
+      backendPluginDir,
+      'src',
+      'modules',
+      moduleName,
+      'graphql',
+      'resolvers',
+      'queries',
+      `${moduleName}.ts`,
+    ),
+    queriesContent,
+  );
+
+  const mutationsContent = `
+  import { IContext } from '~/connectionResolvers';
+
+  export const ${moduleName}Mutations = {
+    create${capitalizedModuleName}: async (_parent: undefined, { name }, { models }: IContext) => {
+      return models.${capitalizedModuleName}.create${capitalizedModuleName}(name);
+    },
+
+    update${capitalizedModuleName}: async (_parent: undefined, { _id, name }, { models }: IContext) => {
+      return models.${capitalizedModuleName}.update${capitalizedModuleName}(_id, name);
+    },
+
+    remove${capitalizedModuleName}: async (_parent: undefined, { _id }, { models }: IContext) => {
+      return models.${capitalizedModuleName}.remove${capitalizedModuleName}(_id);
+    },
+  };
+
+`;
+
+  fs.writeFileSync(
+    path.join(
+      backendPluginDir,
+      'src',
+      'modules',
+      moduleName,
+      'graphql',
+      'resolvers',
+      'mutations',
+      `${moduleName}.ts`,
+    ),
+    mutationsContent,
+  );
+
+  const resolverContent = `export const ${capitalizedModuleName} = {
+    async description() {
+      return '${capitalizedModuleName} description';
+    },
+  };
+  `;
+
+  fs.writeFileSync(
+    path.join(
+      backendPluginDir,
+      'src',
+      'modules',
+      moduleName,
+      'graphql',
+      'resolvers',
+      'customResolvers',
+      `${moduleName}.ts`,
+    ),
+    resolverContent,
+  );
 
   fs.writeFileSync(
     path.join(
