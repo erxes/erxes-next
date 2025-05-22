@@ -143,7 +143,7 @@ export const loadImapMessageClass = (models) => {
 
       const info = await transporter.sendMail(mailData);
 
-      await models.ImapMessages.create({
+      const messageDoc = await models.ImapMessages.create({
         inboxIntegrationId: integration.inboxId,
         inboxConversationId: conversationId,
         createdAt: new Date(),
@@ -164,7 +164,8 @@ export const loadImapMessageClass = (models) => {
         type: 'SENT'
       });
       return {
-        info: info
+        info,
+        messageDoc,
       };
     }
   }
