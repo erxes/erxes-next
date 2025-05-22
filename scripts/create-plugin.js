@@ -73,8 +73,86 @@ async function createPlugin() {
     fs.mkdirSync(path.join(frontendPluginDir, dir), { recursive: true });
   });
 
+  // Create example assets
+  const exampleIconSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+  const exampleImageSvg = `<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#F3F4F6"/>
+  <path d="M100 70C88.9543 70 80 78.9543 80 90C80 101.046 88.9543 110 100 110C111.046 110 120 101.046 120 90C120 78.9543 111.046 70 100 70Z" fill="#9CA3AF"/>
+  <path d="M140 130C140 116.745 128.255 105 115 105H85C71.7452 105 60 116.745 60 130V130H140V130Z" fill="#9CA3AF"/>
+</svg>`;
+
+  const assetsReadme = `# Assets Directory
+
+This directory contains static assets used by the plugin.
+
+## Contents
+
+- \`example-icon.svg\`: Example icon in SVG format
+- \`example-image.svg\`: Example placeholder image in SVG format
+
+## Usage
+
+Import assets in your components like this:
+
+\`\`\`tsx
+import exampleIcon from '~/assets/example-icon.svg';
+import exampleImage from '~/assets/example-image.svg';
+\`\`\`
+
+## Best Practices
+
+1. Use SVG format for icons and simple graphics
+2. Optimize images before adding them to the assets folder
+3. Keep file names descriptive and in kebab-case
+4. Document any new assets added to this directory
+`;
+
+  // Write assets
+  fs.writeFileSync(
+    path.join(frontendPluginDir, 'src', 'assets', 'example-icon.svg'),
+    exampleIconSvg,
+  );
+
+  fs.writeFileSync(
+    path.join(frontendPluginDir, 'src', 'assets', 'example-image.svg'),
+    exampleImageSvg,
+  );
+
+  fs.writeFileSync(
+    path.join(frontendPluginDir, 'src', 'assets', 'README.md'),
+    assetsReadme,
+  );
+
+  const indexHtml = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>${pluginName}</title>
+    <base href="/" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`;
+
+  fs.writeFileSync(
+    path.join(frontendPluginDir, 'src', 'index.html'),
+    indexHtml,
+  );
+
   // Create config.ts
   const configContent = `import { IconSandbox } from '@tabler/icons-react';
+
+
 import { IUIConfig } from 'erxes-ui/types';
 
 export const CONFIG: IUIConfig = {

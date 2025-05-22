@@ -298,7 +298,7 @@ export const typeDefs = async (): Promise<DocumentNode> => {
 `;
 
   fs.writeFileSync(
-    path.join(backendPluginDir, 'src', 'apollo', 'apolloTypeDefs.ts'),
+    path.join(backendPluginDir, 'src', 'apollo', 'typeDefs.ts'),
     apolloTypeDefs,
   );
 
