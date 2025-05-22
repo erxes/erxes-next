@@ -25,7 +25,7 @@ const InboxIndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.FavoriteToggleButton item="inbox" />
+          <PageHeader.FavoriteToggleButton >
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>

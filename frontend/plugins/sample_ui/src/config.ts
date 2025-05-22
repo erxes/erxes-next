@@ -6,28 +6,11 @@ export const CONFIG: IUIConfig = {
   icon: IconSandbox,
   modules: [
     {
-      name: 'sampleFirst',
+      name: 'sampleModule',
       icon: IconSandbox,
-      path: 'sampleFirst',
+      path: 'sampleModule',
       hasSettings: true,
       hasWidgets: true,
-    },
-    {
-      name: 'sampleSecond',
-      icon: IconSandbox,
-      path: 'sampleSecond',
-      hasSettings: true,
-      hasWidgets: true,
-      submenus: [
-        {
-          name: 'submenu1',
-          path: 'sampleSecond/submenu1',
-        },
-        {
-          name: 'submenu2',
-          path: 'sampleSecond/submenu2',
-        },
-      ],
     },
   ],
 };

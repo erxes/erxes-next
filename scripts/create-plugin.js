@@ -427,9 +427,12 @@ module.exports = [
   );
 
   // Create main.ts
-  const mainContent = `import('./bootstrap');`;
+  const mainTsContent = `import('./bootstrap');`;
 
-  fs.writeFileSync(path.join(frontendPluginDir, 'src', 'main.ts'), mainContent);
+  fs.writeFileSync(
+    path.join(frontendPluginDir, 'src', 'main.ts'),
+    mainTsContent,
+  );
 
   // Create bootstrap.tsx
   const bootstrapContent = `import { StrictMode } from 'react';
