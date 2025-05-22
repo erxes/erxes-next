@@ -33,7 +33,7 @@ const createConversationAndMessage = async (
   });
 
   // create message
-  return await models.ConversationMessages.createMessage({
+  const message= await models.ConversationMessages.createMessage({
     engageData,
     formWidgetData,
     conversationId: conversation._id,
@@ -42,6 +42,7 @@ const createConversationAndMessage = async (
     visitorId,
     content
   });
+  return { conversation, message };
 };
 const t = initTRPC.context<ITRPCContext>().create();
 
@@ -293,50 +294,71 @@ export const inboxTrpcRouter = t.router({
         }
       }),
 
-      removeConversation: t.procedure
-      .input(z.any())
-      .mutation(async ({ ctx, input }) => {
-        const { _id } = input;
-        const { models } = ctx;
-        
-     try {
-          const session = await mongoose.startSession();
-          let result;
+ removeConversation: t.procedure
+  .input(z.object({
+    _id: z.string().min(1, "Conversation ID is required"),
+    force: z.boolean().optional().default(false)
+  }))
+  .mutation(async ({ ctx, input }) => {
+    const { models } = ctx;
+    const { _id, force } = input;
+    const session = await models.startSession();
 
-          await session.withTransaction(async () => {
-            const messagesResult = await models.ConversationMessages.deleteMany(
-              { conversationId: _id },
-              { session }
-            );
-            const conversationResult = await models.Conversations.deleteOne(
-              { _id },
-              { session }
-            );
+    try {
+      const transactionResult = await session.withTransaction(async () => {
+        // Delete all related messages first
+        const messagesResult = await models.ConversationMessages.deleteMany(
+          { conversationId: _id },
+          { session }
+        );
 
-            result = {
-              conversationDeletedCount: conversationResult.deletedCount || 0,
-              messagesDeletedCount: messagesResult.deletedCount || 0,
-            };
-          });
-
-          await session.endSession();
-
-          return {
-            status: 'success',
-            data: result,
-          };
-        } catch (error) {
-          console.error('Error removing conversation:', {
-            error: error instanceof Error ? error.message : String(error),
-            _id,
-          });
-          return {
-            status: 'error',
-            message: 'Failed to remove conversation',
-            error: error instanceof Error ? error.message : String(error),
-          };
+        if (!force && messagesResult.deletedCount === 0) {
+          console.warn(`No messages found for conversation ${_id}`);
         }
-      }),
+
+        // Then delete the conversation
+        const conversationResult = await models.Conversations.deleteOne(
+          { _id },
+          { session }
+        );
+
+        if (!force && conversationResult.deletedCount === 0) {
+          throw new Error(`Conversation ${_id} not found`);
+        }
+
+        return {
+          conversationDeletedCount: conversationResult.deletedCount,
+          messagesDeletedCount: messagesResult.deletedCount
+        };
+      });
+
+      return {
+        success: true,
+        data: transactionResult,
+        timestamp: new Date().toISOString(),
+        message: `Deleted conversation and ${transactionResult.messagesDeletedCount} messages`
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      console.error('Transaction failed:', {
+        conversationId: _id,
+        error: error instanceof Error ? error.stack : error
+      });
+
+      return {
+        success: false,
+        error: {
+          code: 'DELETION_FAILED',
+          message: 'Failed to delete conversation',
+          details: error instanceof Error ? error.message : 'Database error',
+          conversationId: _id
+        },
+        timestamp: new Date().toISOString()
+      };
+    } finally {
+      await session.endSession();
+    }
+  }),
 
       updateUserChannels: t.procedure
       .input(z.object({
