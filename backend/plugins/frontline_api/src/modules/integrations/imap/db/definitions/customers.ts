@@ -1,9 +1,9 @@
 
 import { Schema } from 'mongoose';
 export const customerSchema = new Schema({
-  inboxIntegrationId: String,
-  contactsId: String,
+  inboxIntegrationId:  { type: String, required: true },
+  contactsId:{ type: String},
   email: { type: String, unique: true },
-  firstName: String,
-  lastName: String
+  firstName: { type: String },
+  lastName: { type: String },
 });
