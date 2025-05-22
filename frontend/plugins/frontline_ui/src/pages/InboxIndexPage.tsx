@@ -9,7 +9,7 @@ import { PageHeader } from 'ui-modules';
 
 const InboxIndexPage = () => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-dvh">
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>

@@ -11,6 +11,7 @@ import { MessagesSkeleton } from './ConversationSkeleton';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { MessageInput } from './MessageInput';
 import { ConversationContext } from '../../context/ConversationContext';
+import { ConversationIntegrationDetail } from './ConversationIntegrationDetail';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -37,9 +38,9 @@ export const ConversationDetail = () => {
     );
   }
 
-  if (!['messenger', 'lead'].includes(integration?.kind)) {
-    return <UnderConstruction />;
-  }
+  // if (!['messenger', 'lead'].includes(integration?.kind)) {
+  //   return <UnderConstruction />;
+  // }
 
   return (
     <div className="flex h-full overflow-hidden">
@@ -54,20 +55,12 @@ export const ConversationDetail = () => {
           <ConversationHeader />
           <Separator />
           <ConversationDetailLayout input={<MessageInput />}>
-            <ConversationMessages />
+            {['messenger', 'lead'].includes(integration?.kind) && (
+              <ConversationMessages />
+            )}
+            <ConversationIntegrationDetail />
           </ConversationDetailLayout>
         </ConversationContext.Provider>
-        <Sidebar>
-          <Sidebar.Header>
-            <div className="flex items-center gap-2">
-              <Avatar size="sm" />
-              <div className="flex flex-col">
-                <p className="text-sm font-medium">John Doe</p>
-                <p className="text-xs text-gray-500">john.doe@example.com</p>
-              </div>
-            </div>
-          </Sidebar.Header>
-        </Sidebar>
       </div>
     </div>
   );

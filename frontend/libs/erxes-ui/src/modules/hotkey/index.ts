@@ -1,6 +1,8 @@
 export * from './constants/defaultHotkeysScopeCustomScopes';
 export * from './constants/initialHotkeysScope';
 
+export * from './components/PopoverScoped';
+
 export * from './hooks/usePreviousHotkeyScope';
 export * from './hooks/useScopedHotKeysCallback';
 export * from './hooks/useScopedHotkeys';

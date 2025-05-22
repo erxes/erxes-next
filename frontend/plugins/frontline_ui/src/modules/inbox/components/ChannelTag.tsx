@@ -18,7 +18,7 @@ export const ChannelTag = () => {
     >
       <div>
         {loading ? (
-          <Skeleton className="w-4 h-32" />
+          <Skeleton className="w-32 h-4" />
         ) : (
           <>
             <Select value={channelId} onValueChange={setChannelId}>

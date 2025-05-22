@@ -1,6 +1,8 @@
 import {
   Combobox,
   Command,
+  Popover,
+  PopoverScoped,
   RecordTableCellContent,
   RecordTableCellTrigger,
   RecordTablePopover,
@@ -292,6 +294,34 @@ export const SelectTagsInlineCell = ({
           <SelectTagsContent />
         </RecordTableCellContent>
       </RecordTablePopover>
+    </SelectTagsProvider>
+  );
+};
+
+export const SelectTagsDetail = ({
+  onValueChange,
+  scope,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'> & {
+  scope?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectTagsProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+        <Combobox.Trigger>
+          <SelectTagsValue />
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <SelectTagsContent />
+        </Combobox.Content>
+      </PopoverScoped>
     </SelectTagsProvider>
   );
 };

@@ -1,5 +1,5 @@
 import { useChannels } from '@/inbox/hooks/useChannels';
-import { Button, Collapsible, Skeleton } from 'erxes-ui';
+import { Button, Collapsible, Skeleton, TextOverflowTooltip } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { IChannel } from '../types/Channel';
 import { useMultiQueryState } from '../hooks/useQueryState';
@@ -66,11 +66,11 @@ const ChannelItem = ({ _id, name }: IChannel) => {
     <Button
       key={_id}
       variant={isActive ? 'secondary' : 'ghost'}
-      className="w-full justify-start pl-7 relative"
+      className="w-full justify-start pl-7 relative text-left"
       onClick={handleClick}
     >
       {isActive && <IconCheck className="absolute left-1.5" />}
-      <span className="overflow-hidden truncate">{name}</span>
+      <TextOverflowTooltip value={name} />
       <span className="ml-auto text-xs text-accent-foreground">0</span>
     </Button>
   );

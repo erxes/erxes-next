@@ -86,29 +86,12 @@ const Tags = () => {
   return (
     <SelectTags
       tagType="frontline:conversation"
-      recordId={_id}
-      className="flex-none w-auto min-w-32 max-w-48 h-7 hover:bg-background"
-      selected={tagIds}
-      asTrigger
-      loading={loading}
-      onSelect={(tags) => {
-        giveTags({
-          variables: {
-            targetIds: [_id],
-            tagIds: tags,
-            type: 'frontline:conversation',
-          },
-          update: (cache) => {
-            cache.modify({
-              id: cache.identify({
-                __typename: 'Conversation',
-                _id,
-              }),
-              fields: { tagIds: () => tags },
-            });
-          },
-        });
+      value={tagIds}
+      onValueChange={(value) => {
+        giveTags({ variables: { conversationId: _id, tagIds: value } });
       }}
-    />
+    >
+      <SelectTags.Value />
+    </SelectTags>
   );
 };

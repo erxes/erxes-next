@@ -4,6 +4,7 @@ import {
   BlockEditorReadOnly,
   Button,
   Checkbox,
+  EnumCursorDirection,
   parseDateRangeFromString,
   RelativeDateDisplay,
   Separator,
@@ -33,18 +34,31 @@ export const Conversations = () => {
   const [ref] = useInView({
     onChange(inView) {
       if (inView) {
-        handleFetchMore();
+        handleFetchMore({
+          direction: EnumCursorDirection.FORWARD,
+        });
       }
     },
   });
-  const [{ channelId, integrationType, unassigned, status, date }] =
-    useMultiQueryState<{
-      channelId: string;
-      integrationType: string;
-      unassigned: string;
-      status: string;
-      date: string;
-    }>(['channelId', 'integrationType', 'unassigned', 'status', 'date']);
+  const [
+    { channelId, integrationType, unassigned, status, date, conversationId },
+  ] = useMultiQueryState<{
+    channelId: string;
+    integrationType: string;
+    unassigned: string;
+    status: string;
+    date: string;
+    conversationId: string;
+  }>([
+    'channelId',
+    'integrationType',
+    'unassigned',
+    'status',
+    'date',
+    'conversationId',
+  ]);
+
+  const [defaultCursor] = useState(conversationId);
 
   const parsedDate = parseDateRangeFromString(date || '');
 
@@ -55,6 +69,7 @@ export const Conversations = () => {
         channelId,
         integrationType,
         unassigned,
+        cursor: defaultCursor,
         status,
         startDate: parsedDate?.from,
         endDate: parsedDate?.to,
@@ -127,7 +142,7 @@ export const ConversationItem = () => {
               </div>
             </div>
             <div className="ml-auto text-accent-foreground font-medium">
-              <RelativeDateDisplay value={updatedAt || createdAt} />
+              <RelativeDateDisplay.Value value={updatedAt || createdAt} />
             </div>
           </div>
           <ConversationItemContent />
@@ -146,7 +161,9 @@ export const ConversationItem = () => {
           to {brand?.name}
         </div>
         <div className="w-32 text-right flex-none">
-          <RelativeDateDisplay value={updatedAt || createdAt} />
+          <RelativeDateDisplay value={updatedAt || createdAt}>
+            <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+          </RelativeDateDisplay>
         </div>
       </CustomerInline.Provider>
     </ConversationContainer>
@@ -185,11 +202,11 @@ const ConversationContainer = ({
       variant={isRead ? 'secondary' : 'ghost'}
       size="lg"
       className={cn(
-        'flex rounded-none h-10 justify-start px-4 gap-3 hover:bg-primary/10 hover:text-foreground w-full',
+        'flex rounded-none h-10 justify-start px-4 gap-3 hover:bg-primary/5 hover:text-foreground w-full',
         className,
         isRead && 'font-medium text-muted-foreground',
         conversationId === _id &&
-          'bg-secondary text-foreground hover:bg-secondary',
+          'bg-primary/10 text-foreground hover:bg-primary/10',
       )}
       asChild
       onClick={() => {

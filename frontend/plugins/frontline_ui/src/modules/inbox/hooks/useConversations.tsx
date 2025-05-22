@@ -1,27 +1,46 @@
 import { GET_CONVERSATIONS } from '@/inbox/graphql/queries/getConversations';
-import { OperationVariables, useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
+import { IConversation } from '../types/Conversation';
+import {
+  EnumCursorDirection,
+  ICursorListResponse,
+  mergeCursorData,
+} from 'erxes-ui';
 
-export const useConversations = (options?: OperationVariables) => {
-  const { data, loading, fetchMore } = useQuery(GET_CONVERSATIONS, options);
+export const useConversations = (
+  options?: QueryHookOptions<ICursorListResponse<IConversation>>,
+) => {
+  const { data, loading, fetchMore } = useQuery<
+    ICursorListResponse<IConversation>
+  >(GET_CONVERSATIONS, options);
 
   const { conversations } = data || {};
-  const { list = [], totalCount = 0 } = conversations || {};
+  const { list = [], totalCount = 0, pageInfo } = conversations || {};
 
-  const handleFetchMore = () => {
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+  }) => {
     if (list?.length >= totalCount) return;
     fetchMore({
       variables: {
-        skip: list?.length,
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
         limit: 50,
+        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
-        return {
-          conversations: [
-            ...prev.conversations,
-            ...fetchMoreResult.conversations,
-          ],
-        };
+        return Object.assign({}, prev, {
+          conversations: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.conversations,
+            prevResult: prev.conversations,
+          }),
+        });
       },
     });
   };
