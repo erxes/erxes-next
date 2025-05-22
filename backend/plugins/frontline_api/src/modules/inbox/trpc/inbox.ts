@@ -137,7 +137,7 @@ export const inboxTrpcRouter = t.router({
       });
 
       return {
-        success: true,
+        status: 'success',
         data: message,
         timestamp: new Date().toISOString(),
         message: "Message created successfully"
@@ -146,7 +146,7 @@ export const inboxTrpcRouter = t.router({
       console.error('Message creation failed:', error);
 
       return {
-        success: false,
+        status: 'error',
         error: {
           code: 'MESSAGE_CREATION_FAILED',
           message: 'Failed to create message',
@@ -161,7 +161,12 @@ export const inboxTrpcRouter = t.router({
   }),
 
    integrationsNotification: t.procedure
-  .input(z.any())
+  .input(
+    z.object({
+      payload: z.record(z.unknown()),
+      signature: z.string().optional(),
+    })
+  )
   .mutation(async ({ ctx, input }) => {
     const { subdomain } = ctx;
 
@@ -169,7 +174,7 @@ export const inboxTrpcRouter = t.router({
       const result = await receiveIntegrationsNotification(subdomain, input);
 
       return {
-        success: true,
+        status: 'success',
         data: result,
         timestamp: new Date().toISOString(),
         message: "Notification processed successfully"
@@ -178,7 +183,7 @@ export const inboxTrpcRouter = t.router({
       console.error('Integration notification failed:', error);
 
       return {
-        success: false,
+        status: 'error',
         error: {
           code: 'NOTIFICATION_PROCESSING_FAILED',
           message: 'Failed to process integration notification',
@@ -216,9 +221,9 @@ export const inboxTrpcRouter = t.router({
             message: 'Failed to fetch conversations',
             error: error instanceof Error ? error.message : String(error),
           };
-
-        };
+        }
       }),
+
     removeCustomersConversations: t.procedure
       .input(z.any())
       .mutation(async ({ ctx, input }) => {
@@ -510,7 +515,7 @@ export const inboxTrpcRouter = t.router({
       );
 
       return {
-        success: true,
+        status: 'success',
         data: {
           conversationId,
           unreadCount,
@@ -525,7 +530,8 @@ export const inboxTrpcRouter = t.router({
       });
 
       return {
-        success: false,
+        status: 'error',
+        message: 'Failed to create message',
         error: {
           code: 'UNREAD_COUNT_FAILED',
           message: 'Failed to retrieve unread messages count',
