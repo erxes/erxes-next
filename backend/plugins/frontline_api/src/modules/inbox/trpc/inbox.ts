@@ -48,17 +48,18 @@ const t = initTRPC.context<ITRPCContext>().create();
 
 export const inboxTrpcRouter = t.router({
   inbox: t.router({
+    
      createConversationAndMessage: t.procedure
-    .input(z.object({
-      userId: z.string().min(1, "User ID is required"),
-      status: z.string().optional().default('new'),
-      customerId: z.string().optional(),
-      visitorId: z.string().optional(),
-      integrationId: z.string().min(1, "Integration ID is required"),
-      content: z.string().min(1, "Message content cannot be empty"),
-      engageData: z.record(z.unknown()).optional(),
-      formWidgetData: z.record(z.unknown()).optional()
-    }))
+  .input(z.object({
+    userId: z.string().min(1, "User ID is required"),
+    status: z.string().optional().default('new'),
+    customerId: z.string().optional(),
+    visitorId: z.string().optional(),
+    integrationId: z.string().min(1, "Integration ID is required"),
+    content: z.string().min(1, "Message content cannot be empty"),
+    engageData: z.record(z.unknown()).optional(),
+    formWidgetData: z.record(z.unknown()).optional()
+  }))
   .mutation(async ({ ctx, input }) => {
     const { models } = ctx;
     try {
@@ -86,7 +87,7 @@ export const inboxTrpcRouter = t.router({
       );
 
       return {
-        success: true,
+        status: 'success',
         data: response,
         timestamp: new Date().toISOString(),
         message: "Conversation created successfully"
@@ -102,7 +103,7 @@ export const inboxTrpcRouter = t.router({
       };
 
       return {
-        success: false,
+        status: 'error',
         error: {
           code: 'CONVERSATION_CREATION_FAILED',
           ...errorDetails,
@@ -333,7 +334,7 @@ export const inboxTrpcRouter = t.router({
       });
 
       return {
-        success: true,
+        status: 'success',
         data: transactionResult,
         timestamp: new Date().toISOString(),
         message: `Deleted conversation and ${transactionResult.messagesDeletedCount} messages`
@@ -346,12 +347,13 @@ export const inboxTrpcRouter = t.router({
       });
 
       return {
-        success: false,
+        status: 'error',
         error: {
           code: 'DELETION_FAILED',
           message: 'Failed to delete conversation',
           details: error instanceof Error ? error.message : 'Database error',
-          conversationId: _id
+          conversationId: _id,
+          ...(process.env.NODE_ENV === 'development' && error instanceof Error ? { stack: error.stack } : {})
         },
         timestamp: new Date().toISOString()
       };
@@ -359,7 +361,6 @@ export const inboxTrpcRouter = t.router({
       await session.endSession();
     }
   }),
-
       updateUserChannels: t.procedure
       .input(z.object({
         channelIds: z.array(z.string()),
