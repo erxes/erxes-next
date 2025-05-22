@@ -54,6 +54,7 @@ export interface ICompanyDocument extends ICompany, Document {
 export interface ICompanyFilterQueryParams
   extends IListParams,
     ICursorPaginateParams {
+  status?: string;
   createdAt?: Date;
   dateFilters?: string;
 
