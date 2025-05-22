@@ -62,10 +62,10 @@ async function createPlugin() {
     'src/assets',
     'src/modules',
     `src/modules/${kebabCaseModuleName}`,
-    'src/types',
-    'src/constants',
-    'src/store',
-    'src/styles',
+    'src/pages',
+    `src/pages/${kebabCaseModuleName}`,
+    'src/widgets',
+    `src/widgets/${kebabCaseModuleName}Widget`,
   ];
 
   frontendDirectories.forEach((dir) => {
@@ -97,19 +97,26 @@ export const CONFIG: IUIConfig = {
   );
 
   // Create Main.tsx for the module
-  const mainContent = `'use client';
+  const mainContent = `import { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router';
 
-import { FC } from 'react';
+const IndexPage = lazy(() =>
+  import('~/pages/${kebabCaseModuleName}/IndexPage').then((module) => ({
+    default: module.IndexPage,
+  })),
+);
 
-const ${moduleName}Main: FC = () => {
+const ${kebabCaseModuleName}Main = () => {
   return (
-    <div className="flex flex-col h-full">
-      <h1>${moduleName}</h1>
-    </div>
+    <Suspense fallback={<div />}>
+      <Routes>
+        <Route path="/" element={<IndexPage />} />
+      </Routes>
+    </Suspense>
   );
 };
 
-export default ${moduleName}Main;
+export default ${kebabCaseModuleName}Main;
 `;
 
   fs.writeFileSync(
@@ -124,19 +131,15 @@ export default ${moduleName}Main;
   );
 
   // Create Settings.tsx for the module
-  const settingsContent = `'use client';
-
-import { FC } from 'react';
-
-const Settings: FC = () => {
+  const settingsContent = `const ${kebabCaseModuleName}Settings = () => {
   return (
     <div>
-      <h1>Settings</h1>
+      <h1>${moduleName} Settings</h1>
     </div>
   );
 };
 
-export default Settings;
+export default ${kebabCaseModuleName}Settings;
 `;
 
   fs.writeFileSync(
@@ -148,6 +151,68 @@ export default Settings;
       'Settings.tsx',
     ),
     settingsContent,
+  );
+
+  const moduleIndexPageContent = `import {
+  IconCaretDownFilled,
+  IconSandbox,
+  IconSettings,
+} from '@tabler/icons-react';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
+import { Link } from 'react-router-dom';
+
+export const IndexPage = () => {
+  return (
+    <div className="flex flex-col h-full">
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to="/settings/${kebabCaseModuleName}">
+                    <IconSandbox />
+                    ${moduleName}
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
+          <PageHeader.FavoriteToggleButton />
+        </PageHeader.Start>
+        <PageHeader.End>
+          <Button variant="outline" asChild>
+            <Link to="/settings/${kebabCaseModuleName}">
+              <IconSettings />
+              Go to settings
+            </Link>
+          </Button>
+          <Button>
+            More <IconCaretDownFilled />
+          </Button>
+        </PageHeader.End>
+      </PageHeader>
+      <div className="flex h-full overflow-hidden">
+        <div className="flex flex-col h-full overflow-hidden flex-auto">
+          <h1>Samplsdsadasdjakljkljklsade</h1>
+        </div>
+      </div>
+    </div>
+  );
+};
+`;
+
+  fs.writeFileSync(
+    path.join(
+      frontendPluginDir,
+      'src',
+      'pages',
+      kebabCaseModuleName,
+      'IndexPage.tsx',
+    ),
+    moduleIndexPageContent,
   );
 
   // Create module-federation.config.ts
@@ -264,34 +329,6 @@ export default config;
 
   // Create tsconfig.json
   const tsConfig = {
-    extends: '../../tsconfig.base.json',
-    compilerOptions: {
-      module: 'commonjs',
-      forceConsistentCasingInFileNames: true,
-      strict: true,
-      noImplicitOverride: true,
-      noPropertyAccessFromIndexSignature: true,
-      noImplicitReturns: true,
-      noFallthroughCasesInSwitch: true,
-      outDir: '../../dist/plugins/' + kebabCaseName + '_ui',
-    },
-    include: ['src/**/*.ts', 'src/**/*.tsx'],
-    exclude: [
-      'node_modules',
-      'dist',
-      'jest.config.ts',
-      'src/**/*.spec.ts',
-      'src/**/*.test.ts',
-    ],
-  };
-
-  fs.writeFileSync(
-    path.join(frontendPluginDir, 'tsconfig.json'),
-    JSON.stringify(tsConfig, null, 2),
-  );
-
-  // Create tsconfig.app.json
-  const tsConfigApp = {
     compilerOptions: {
       jsx: 'react-jsx',
       allowJs: false,
@@ -320,6 +357,36 @@ export default config;
       },
     ],
     extends: '../../../tsconfig.base.json',
+  };
+
+  fs.writeFileSync(
+    path.join(frontendPluginDir, 'tsconfig.json'),
+    JSON.stringify(tsConfig, null, 2),
+  );
+
+  // Create tsconfig.app.json
+  const tsConfigApp = {
+    extends: './tsconfig.json',
+    compilerOptions: {
+      outDir: '../../../dist/out-tsc',
+      types: [
+        'node',
+        '@nx/react/typings/cssmodule.d.ts',
+        '@nx/react/typings/image.d.ts',
+      ],
+    },
+    exclude: [
+      'jest.config.ts',
+      'src/**/*.spec.ts',
+      'src/**/*.test.ts',
+      'src/**/*.spec.tsx',
+      'src/**/*.test.tsx',
+      'src/**/*.spec.js',
+      'src/**/*.test.js',
+      'src/**/*.spec.jsx',
+      'src/**/*.test.jsx',
+    ],
+    include: ['src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx'],
   };
 
   fs.writeFileSync(
@@ -438,13 +505,12 @@ module.exports = [
   const bootstrapContent = `import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
-const App = () => {
-  return <div>App</div>;
-};
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement,
+);
+root.render(
   <StrictMode>
-    <App />
+    <div>App</div>
   </StrictMode>,
 );
 `;
