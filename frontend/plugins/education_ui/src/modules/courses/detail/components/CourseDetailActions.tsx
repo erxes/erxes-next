@@ -7,11 +7,12 @@ import {
   IconMessage,
   IconX,
 } from '@tabler/icons-react';
-import { Button, Resizable, SideMenu, cn, useQueryState } from 'erxes-ui';
+import { Button, Resizable, SideMenu, cn } from 'erxes-ui';
 import { useAtom, useSetAtom } from 'jotai';
 import { courseDetailActiveActionTabAtom } from '@/courses/detail/states/courseDetailStates';
 import { CourseDetailGeneral } from '@/courses/detail/components/CourseDetailGeneral';
 import { CourseAttendances } from '@/courses/detail/components/CourseAttendances';
+import { CourseComments } from '@/courses/detail/components/CourseComments';
 
 const actionTabs = {
   detail: {
@@ -38,7 +39,6 @@ const actionTabs = {
 
 export const CourseDetailActions = () => {
   const [activeTab, setActiveTab] = useAtom(courseDetailActiveActionTabAtom);
-  const [courseId] = useQueryState<string>('courseId');
 
   return (
     <>
@@ -71,7 +71,7 @@ export const CourseDetailActions = () => {
             icon={actionTabs.comments.icon}
             title={actionTabs.comments.title}
           >
-            <div className="flex-auto overflow-y-auto">Comments</div>
+            <CourseComments />
           </ActionTabsContent>
           <ActionTabsContent
             value={actionTabs.attendances.code}

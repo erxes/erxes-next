@@ -1,6 +1,7 @@
 import { IAttachment } from 'erxes-ui/types';
 
 export interface ICourse {
+  _id: string;
   name: string;
   categoryId: string;
   description?: string;

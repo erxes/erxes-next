@@ -6,6 +6,7 @@ import { Document } from 'mongoose';
 
 export interface IComment {
   type: string;
+  courseId: string;
   content: string;
   parentId?: string;
 }

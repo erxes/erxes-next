@@ -5,8 +5,7 @@ import { courseColumns } from '@/courses/components/CourseColumns';
 export const CoursesRecordTable = () => {
   const { courses, handleFetchMore, loading, pageInfo } = useCourses({});
 
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   return (
     <RecordTable.Provider
@@ -26,13 +25,11 @@ export const CoursesRecordTable = () => {
           <RecordTable.Body>
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
-              startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
             <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
-              endCursor={endCursor}
             />
           </RecordTable.Body>
         </RecordTable>

@@ -12,6 +12,7 @@ export const types = `
   type CommentResponse {
     list: [Comment]
     totalCount: Int
+    pageInfo: PageInfo
   }
 `;
 
