@@ -8,11 +8,6 @@ export const vatSchema = z.object({
   afterVat: z.boolean().optional().nullish(),
   vatRowId: z.string().optional().nullish(),
   vatAmount: z.number().optional().nullish(),
-  vatRow: z.object({
-    _id: z.string(),
-    name: z.string(),
-    percent: z.number()
-  }).nullish(),
 });
 
 export const ctaxSchema = z.object({
@@ -23,7 +18,9 @@ export const ctaxSchema = z.object({
 });
 
 export const baseTrDetailSchema = z.object({
-  // nullish() busad
+  _id: z.string(),
+  transactionId: z.string(),
+
   accountId: z.string().nullish().refine((val) =>
     val?.length,
     { message: 'Must fill account' }
@@ -33,10 +30,29 @@ export const baseTrDetailSchema = z.object({
     TR_SIDES.ALL.includes(val),
     { message: 'wrong side aaaa' }
   ),
+
+  originId: z.string().nullish(),
+  followInfos: z.object({}).nullish(),
+
+  excludeVat: z.boolean().nullish(),
+  excludeCtax: z.boolean().nullish(),
+
+  currencyAmount: z.number().nullish(),
+  customRate: z.number().nullish(),
+  assignedUserId: z.string().nullish(),
+
+  productId: z.string().nullish(),
+  count: z.number().nullish(),
+  unitPrice: z.number().nullish(),
 });
 
 export const baseTransactionSchema = z.object({
   _id: z.string(),
+  ptrId: z.string(),
+  parentId: z.string(),
+  followInfos: z.object({}).nullish(),
+  follows: z.object({}).nullish(),
+
   description: z.string().nullish(),
   customerType: z.nativeEnum(CustomerType),
   customerId: z.string().nullish(),
@@ -44,19 +60,19 @@ export const baseTransactionSchema = z.object({
   departmentId: z.string().nullish(),
   assignedUserIds: z.array(z.string()).optional(),
   details: z.array(baseTrDetailSchema).min(1),
-  followInfos: z.object({}).nullish(),
-  follows: z.object({}).nullish(),
+
   ...vatSchema.shape,
   ...ctaxSchema.shape,
 
+  extraData: z.object({}).nullish()
 });
 
-export const inventorySchema = z.object({
-  productId: z.string().optional(),
-  quantity: z.number().min(1),
-  unitPrice: z.number().min(1),
-  ...baseTrDetailSchema.shape
-});
+// export const inventorySchema = z.object({
+//   productId: z.string().optional(),
+//   quantity: z.number().min(1),
+//   unitPrice: z.number().min(1),
+//   ...baseTrDetailSchema.shape
+// });
 
 export const transactionMainSchema = z.object({
   journal: z.literal(TrJournalEnum.MAIN),

@@ -43,7 +43,7 @@ const transactionFields = `
   isHandleCtax: Boolean
   ctaxAmount: Float
 
-  data: JSON
+  extraData: JSON
 `;
 
 export const types = () => `
@@ -87,8 +87,6 @@ export const types = () => `
     branch: Branch
     department: Department
     customer: AccCustomer
-
-    extraData: JSON
   }
 
   type AccCommonTrRecord {
@@ -122,14 +120,9 @@ export const types = () => `
     branch: Branch
     department: Department
     customer: AccCustomer
-
-    extraData: JSON
   }
 
   input CommonTrDetailInput {
-    ${trDetailFields}
-  }
-  type CommonTrDetailInputs {
     ${trDetailFields}
   }
 
