@@ -6,7 +6,13 @@ import { AlertDialog, Button, useToast } from 'erxes-ui';
 import { useProductsEdit } from '../../hooks/useProductsEdit';
 import { TagsManagerProps } from '../types/tagsTypes';
 import { useRemoveTag } from '@/settings/tags/hooks/useRemoveTag';
-import { CreateTagForm, ITag } from 'ui-modules';
+import { CreateTagForm, SelectTagCreateContainer, useTags } from 'ui-modules';
+
+interface ITag {
+  _id: string;
+  name: string;
+  order?: number;
+}
 
 export function TagsManager({
   productId,
@@ -17,7 +23,7 @@ export function TagsManager({
   const client = useApolloClient();
   const { toast } = useToast();
   const { tags: availableTags = [], refetch: refetchTags } =
-    useProductTags() || {};
+  useTags() || {};
   const [tags, setTags] = React.useState<string[]>(() =>
     initialTags.map((tag) => (typeof tag === 'string' ? tag : tag._id)),
   );
@@ -28,11 +34,14 @@ export function TagsManager({
     id: string;
     name: string;
   } | null>(null);
+
   const { productsEdit } = useProductsEdit();
   const { removeTag, loading: removeLoading } = useRemoveTag();
+
   const confirmTagDeletion = (tagId: string, tagName: string) => {
     setTagToDelete({ id: tagId, name: tagName });
   };
+
   const refreshData = async () => {
     try {
       if (refetchTags) {
@@ -74,6 +83,7 @@ export function TagsManager({
       setTagToDelete(null);
     }
   };
+
   const handleSaveTags = async (selectedTags: string[]) => {
     if (!productId) return;
 
@@ -106,6 +116,7 @@ export function TagsManager({
       setIsEditingTags(false);
     }
   };
+
   const handleTagCreated = (newTag: ITag) => {
     const updatedTags = [...tags, newTag._id];
     setTags(updatedTags);
@@ -117,6 +128,14 @@ export function TagsManager({
       description: `New tag "${newTag.name}" has been created and added to the product.`,
       variant: 'default',
     });
+  };
+
+  // Context provider for the CreateTagForm
+  const contextValue = {
+    newTagName: '',
+    tagType: 'core:product',
+    onSelect: handleTagCreated,
+    setNewTagName: () => {},
   };
 
   return (
@@ -133,10 +152,9 @@ export function TagsManager({
 
       {showTagCreator && (
         <div className="mb-4">
-          <CreateTagForm
-            tagType="core:product"
-            onCompleted={handleTagCreated}
-          />
+          <SelectTagCreateContainer>
+            <CreateTagForm />
+          </SelectTagCreateContainer>
         </div>
       )}
 
@@ -166,6 +184,7 @@ export function TagsManager({
           );
         })}
       </div>
+
       <AlertDialog
         open={!!tagToDelete}
         onOpenChange={() => setTagToDelete(null)}

@@ -3,7 +3,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { ApolloError } from '@apollo/client';
 
 export interface ProductAttachment {
-  url: string;
+  url?: string;
   name?: string;
   type?: string;
   size?: number;
@@ -33,7 +33,7 @@ export interface ProductDetail {
   scopeBrandIds?: string[];
 }
 
-export interface ProductFormValues {
+export interface ProductEntity {
   _id?: string;
   name?: string;
   barcodeDescription?: string;
@@ -43,7 +43,7 @@ export interface ProductFormValues {
   code?: string;
   status?: string;
   attachment?: ProductAttachment;
-  barcodes?: string;
+  barcodes?: string[];
   shortName?: string;
   unitPrice?: number;
   uom?: string;
@@ -53,7 +53,7 @@ export interface ProductFormValues {
 }
 
 export interface ProductGeneralProps {
-  form: UseFormReturn<ProductFormValues>;
+  form: UseFormReturn<ProductEntity>;
 }
 
 export interface ProductTypeOption {
@@ -100,3 +100,23 @@ export interface SelectCategoryProps {
   className?: string;
   size?: string;
 }
+
+export interface BlockNoteContent {
+  type: "text";
+  text: string;
+  styles: Record<string, unknown>;
+}
+
+export interface BlockNoteBlock {
+  id: string;
+  type: "paragraph";
+  props: {
+    textColor: string;
+    backgroundColor: string;
+    textAlignment: string;
+  };
+  content: BlockNoteContent[];
+  children: BlockNoteBlock[];
+}
+
+export type BlockNoteDocument = BlockNoteBlock[];

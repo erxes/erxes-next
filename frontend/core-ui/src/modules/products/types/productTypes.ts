@@ -20,3 +20,4 @@ export interface IProductCategory {
   productCount: number;
   parentId: string;
 }
+
