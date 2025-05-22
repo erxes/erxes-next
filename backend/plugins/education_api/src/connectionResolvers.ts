@@ -8,17 +8,20 @@ import {
 } from '@/courses/db/models/Categories';
 import { IClassModel, loadClassesClass } from '@/class/db/models/Classes';
 import { ICommentModel, loadCommentClass } from '@/comments/db/models/Comments';
+import { ITeacherModel, loadTeacherClass } from '@/teachers/db/models/Teachers';
 //
 import { ICourseDocument } from '@/courses/@types/course';
 import { IClassDocument } from '@/class/@types/classes';
 import { ICourseCategoryDocument } from '@/courses/@types/category';
 import { ICommentDocument } from '@/comments/@types/comments';
+import { ITeacherDocument } from '@/teachers/@types/teachers';
 
 export interface IModels {
   Courses: ICourseModel;
   CourseCategories: ICourseCategoryModel;
   Classes: IClassModel;
   Comments: ICommentModel;
+  Teachers: ITeacherModel;
 }
 
 export interface IContext extends IMainContext {
@@ -47,6 +50,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Comments = db.model<ICommentDocument, ICommentModel>(
     'course_comments',
     loadCommentClass(models),
+  );
+
+  models.Teachers = db.model<ITeacherDocument, ITeacherModel>(
+    'course_teachers',
+    loadTeacherClass(models),
   );
 
   return models;

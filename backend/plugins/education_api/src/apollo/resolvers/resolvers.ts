@@ -1,15 +1,9 @@
 import courseResolvers from '@/courses/graphql/resolvers/customResolvers';
 import commentResolvers from '@/comments/graphql/resolvers/customResolvers';
-import { mutations } from './mutations';
-import { queries } from './queries';
+import teacherResolvers from '@/teachers/graphql/resolvers/customResolvers';
 
 export const customResolvers = {
-  Mutation: {
-    ...mutations,
-  },
-  Query: {
-    ...queries,
-  },
+  ...teacherResolvers,
   ...courseResolvers,
   ...commentResolvers,
 };

@@ -18,6 +18,7 @@ const config: ModuleFederationConfig = {
     './config': './src/config.ts',
     './courses': './src/modules/courses/Main.tsx',
     './classes': './src/modules/classes/Main.tsx',
+    './teachers': './src/modules/teachers/Main.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

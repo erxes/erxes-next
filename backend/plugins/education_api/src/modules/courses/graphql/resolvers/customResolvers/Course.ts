@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { ICourseDocument } from '~/modules/courses/@types/course';
+import { ICourseDocument } from '@/courses/@types/course';
 
 export default {
   category: async (course: ICourseDocument, _, { models }: IContext) => {

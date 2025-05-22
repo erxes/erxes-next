@@ -1,5 +1,5 @@
-import Comments from './comments';
+import Comment from './comments';
 
 export default {
-  Comments,
+  Comment,
 };
