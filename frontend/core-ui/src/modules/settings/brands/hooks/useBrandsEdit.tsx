@@ -1,34 +1,29 @@
-import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
-import { EDIT_BRANDS, GET_BRANDS } from '../grapqhl';
-import { IBrandData, TAddBrandResult } from '../types';
+import { OperationVariables, useMutation } from '@apollo/client';
+import { EDIT_BRANDS } from '../graphql';
 
-export function useBrandsEdit(
-  options?: MutationHookOptions<TAddBrandResult, any>,
-) {
-  const [handleEdit, { loading, error }] = useMutation(EDIT_BRANDS, {
-    ...options,
-    update: (cache: ApolloCache<any>, { data }) => {
-      try {
-        const existingData = cache.readQuery<IBrandData>({
-          query: GET_BRANDS,
-        });
-        if (!existingData || !existingData.brands || !data?.brandsEdit) return;
+export function useBrandsEdit() {
+  const [_brandsEdit, { loading, error }] = useMutation(EDIT_BRANDS);
 
-        cache.writeQuery<IBrandData>({
-          query: GET_BRANDS,
-          data: {
-            brands: {
-              ...existingData.brands,
-              list: [data.brandsEdit, ...existingData.brands.list],
-              totalCount: existingData.brands.totalCount + 1,
-            },
-          },
+  const handleEdit = (
+    operationVariables: OperationVariables,
+    fields: string[],
+  ) => {
+    const variables = operationVariables?.variables || {};
+    const fieldsToUpdate: Record<string, () => any> = {};
+    fields.forEach((field) => {
+      fieldsToUpdate[field] = () => variables[field];
+    });
+    return _brandsEdit({
+      ...operationVariables,
+      variables,
+      update: (cache, { data: { brandsEdit } }) => {
+        cache.modify({
+          id: cache.identify(brandsEdit),
+          fields: fieldsToUpdate,
         });
-      } catch (e) {
-        console.log('error', e);
-      }
-    },
-  });
+      },
+    });
+  };
 
   return {
     handleEdit,

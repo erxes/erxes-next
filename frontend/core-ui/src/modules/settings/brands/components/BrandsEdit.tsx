@@ -2,7 +2,14 @@ import {
   IconChessKnight,
   IconLayoutSidebarLeftCollapse,
 } from '@tabler/icons-react';
-import { Button, Form, Sheet, useQueryState, useToast } from 'erxes-ui';
+import {
+  Button,
+  Form,
+  Sheet,
+  Spinner,
+  useQueryState,
+  useToast,
+} from 'erxes-ui';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useBrandsForm } from '../hooks/useBrandsForm';
@@ -10,6 +17,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { BrandsForm } from './BrandsForm';
 import { useBrandsEdit } from '../hooks/useBrandsEdit';
 import { TBrandsForm } from '../types';
+import { ApolloError } from '@apollo/client';
 
 export const BrandsEdit = () => {
   const {
@@ -33,26 +41,28 @@ export const BrandsEdit = () => {
   };
   const submitHandler: SubmitHandler<TBrandsForm> = React.useCallback(
     async (data) => {
-      console.log('data', data);
-      handleEdit({
-        variables: {
-          id: brandId,
-          ...data,
+      handleEdit(
+        {
+          variables: {
+            id: brandId,
+            ...data,
+          },
+          onCompleted: () => {
+            toast({ title: 'Success!' });
+            methods.reset();
+            setOpen(null);
+          },
+          onError: (error: ApolloError) =>
+            toast({
+              title: 'Error',
+              description: error.message,
+              variant: 'destructive',
+            }),
         },
-        onCompleted: () => {
-          toast({ title: 'Success!' });
-          methods.reset();
-          setOpen(null);
-        },
-        onError: (error) =>
-          toast({
-            title: 'Error',
-            description: error.message,
-            variant: 'destructive',
-          }),
-      });
+        ['name', 'description'],
+      );
     },
-    [handleEdit],
+    [handleEdit, methods, toast, brandId, setOpen],
   );
 
   return (
@@ -73,15 +83,25 @@ export const BrandsEdit = () => {
           >
             <Sheet.Header>
               <IconChessKnight />
-              <Sheet.Title>Create brand</Sheet.Title>
+              <Sheet.Title>Edit brand</Sheet.Title>
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full flex flex-col px-5 py-4">
               <BrandsForm />
             </Sheet.Content>
             <Sheet.Footer>
-              <Button variant={'secondary'}>Cancel</Button>
-              <Button type="submit">Update</Button>
+              <Button
+                variant={'secondary'}
+                onClick={() => {
+                  reset();
+                  setOpen(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? <Spinner /> : 'Update'}
+              </Button>
             </Sheet.Footer>
           </form>
         </Form>

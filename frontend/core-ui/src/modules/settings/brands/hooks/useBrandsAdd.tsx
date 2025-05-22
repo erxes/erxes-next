@@ -1,6 +1,6 @@
 import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
-import { ADD_BRANDS, GET_BRANDS } from '../grapqhl';
-import { IBrand, IBrandData, TAddBrandResult, TBrandsForm } from '../types';
+import { ADD_BRANDS, GET_BRANDS } from '../graphql';
+import { IBrandData, TAddBrandResult } from '../types';
 
 export function useBrandsAdd(
   options?: MutationHookOptions<TAddBrandResult, any>,
@@ -12,8 +12,9 @@ export function useBrandsAdd(
         const existingData = cache.readQuery<IBrandData>({
           query: GET_BRANDS,
         });
-        if (!existingData || !existingData.brands.list || !data?.brandsAdd)
+        if (!existingData || !existingData.brands.list || !data?.brandsAdd) {
           return;
+        }
 
         cache.writeQuery<IBrandData>({
           query: GET_BRANDS,

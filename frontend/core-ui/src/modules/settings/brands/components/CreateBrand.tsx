@@ -3,6 +3,7 @@ import {
   Button,
   Form,
   Sheet,
+  Spinner,
   usePreviousHotkeyScope,
   useScopedHotkeys,
   useSetHotkeyScope,
@@ -57,7 +58,7 @@ export const CreateBrand = () => {
           }),
       });
     },
-    [brandsAdd],
+    [brandsAdd, toast, reset, _setOpen],
   );
 
   return (
@@ -84,8 +85,12 @@ export const CreateBrand = () => {
               <BrandsForm />
             </Sheet.Content>
             <Sheet.Footer>
-              <Button variant={'secondary'}>Cancel</Button>
-              <Button type="submit">Create</Button>
+              <Button variant={'secondary'} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? <Spinner /> : 'Update'}
+              </Button>
             </Sheet.Footer>
           </form>
         </Form>

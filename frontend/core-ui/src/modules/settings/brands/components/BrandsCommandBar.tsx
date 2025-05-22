@@ -23,7 +23,7 @@ export const BrandsCommandBar = () => {
       try {
         brandsRemove({
           variables: {
-            ids,
+            id: ids,
           },
         });
       } catch (e) {
@@ -39,7 +39,7 @@ export const BrandsCommandBar = () => {
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
         <Separator.Inline />
-        <Button variant="secondary">
+        <Button variant="secondary" onClick={onRemove}>
           <IconTrash />
           Delete
         </Button>
