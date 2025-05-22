@@ -1,12 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function createBackendPlugin(pluginName, moduleName) {
   // Convert plugin name to kebab case
   const kebabCaseName = pluginName
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')
     .toLowerCase();
+
+  // Capitalize first letter of moduleName
+  const capitalizedModuleName = capitalizeFirstLetter(moduleName);
 
   // Create backend plugin directory
   const backendPluginDir = path.join(
@@ -42,30 +49,21 @@ function createBackendPlugin(pluginName, moduleName) {
   const packageJson = {
     name: kebabCaseName + '_api',
     version: '1.0.0',
-    description: `${pluginName} API Plugin`,
-    main: 'src/main.ts',
+    description: '',
+    main: 'index.js',
     scripts: {
-      build: 'tsc',
-      dev: 'ts-node-dev --respawn src/main.ts',
-      test: 'jest',
+      dev: 'tsx watch src/main.ts',
+      build:
+        'tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json',
+      start: 'node -r tsconfig-paths/register dist/src/main.js',
     },
+    keywords: [],
+    author: '',
+    license: 'ISC',
     dependencies: {
-      '@erxes/api-utils': '^1.0.0',
-      '@trpc/server': '^10.0.0',
-      'apollo-server-express': '^3.0.0',
-      graphql: '^16.8.1',
-      'graphql-tools': '^9.0.0',
-      mongoose: '^7.0.0',
-      zod: '^3.0.0',
+      'erxes-api-shared': 'workspace:^',
     },
-    devDependencies: {
-      '@types/node': '^18.0.0',
-      'ts-node-dev': '^2.0.0',
-      typescript: '^5.0.0',
-      '@types/jest': '^29.0.0',
-      jest: '^29.0.0',
-      'ts-jest': '^29.0.0',
-    },
+    devDependencies: {},
   };
 
   fs.writeFileSync(
@@ -73,37 +71,63 @@ function createBackendPlugin(pluginName, moduleName) {
     JSON.stringify(packageJson, null, 2),
   );
 
+  const tsConfigBuild = {
+    extends: './tsconfig.json',
+    compilerOptions: {
+      rootDir: '.',
+      paths: {
+        '~/*': ['./src/*'],
+        '@/*': ['./src/modules/*'],
+      },
+      types: ['node'],
+    },
+    exclude: ['node_modules', 'dist', '**/*spec.ts'],
+  };
+
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'tsconfig.build.json'),
+    JSON.stringify(tsConfigBuild, null, 2),
+  );
+
   // Create tsconfig.json
   const tsConfig = {
+    extends: '../../../tsconfig.base.json',
     compilerOptions: {
-      target: 'es2018',
+      baseUrl: '.',
       module: 'commonjs',
-      lib: ['es2018', 'esnext.asynciterable'],
-      skipLibCheck: true,
-      sourceMap: true,
-      outDir: './dist',
-      moduleResolution: 'node',
+      declaration: true,
       removeComments: true,
-      noImplicitAny: true,
-      strictNullChecks: true,
-      strictFunctionTypes: true,
-      noImplicitThis: true,
-      noUnusedLocals: true,
-      noUnusedParameters: true,
-      noImplicitReturns: true,
-      noFallthroughCasesInSwitch: true,
-      allowSyntheticDefaultImports: true,
-      esModuleInterop: true,
       emitDecoratorMetadata: true,
       experimentalDecorators: true,
+      allowSyntheticDefaultImports: true,
+      allowUnreachableCode: false,
+      esModuleInterop: true,
+      target: 'es2017',
+      sourceMap: true,
+      inlineSources: true,
+      outDir: './dist',
+      incremental: true,
+      skipLibCheck: true,
+      strictNullChecks: true,
+      alwaysStrict: true,
+      noImplicitAny: false,
+      strictBindCallApply: false,
+      forceConsistentCasingInFileNames: false,
+      noFallthroughCasesInSwitch: false,
       resolveJsonModule: true,
-      baseUrl: '.',
+      types: ['jest', 'node'],
       paths: {
-        '@/*': ['src/*'],
+        '~/*': ['./src/*'],
+        '@/*': ['./src/modules/*'],
+        'erxes-api-shared/*': ['../../erxes-api-shared/src/*'],
       },
     },
-    exclude: ['node_modules'],
-    include: ['./src/**/*.ts'],
+    'ts-node': {
+      files: true,
+      require: ['tsconfig-paths/register'],
+    },
+    exclude: ['dist', 'frontend/**/*'],
+    include: ['src/**/*.ts', 'src/**/*.tsx'],
   };
 
   fs.writeFileSync(
@@ -111,34 +135,142 @@ function createBackendPlugin(pluginName, moduleName) {
     JSON.stringify(tsConfig, null, 2),
   );
 
-  // Create main.ts
-  const mainContent = `import { generateModels } from '@erxes/api-utils/src/core';
-import { IModels } from './modules/${moduleName}/types';
-import { loadApolloServer } from './apollo/apolloServer';
-import { initTRPC } from './trpc/init-trpc';
+  const projectJson = {
+    name: kebabCaseName + '_api',
+    $schema: '../../../node_modules/nx/schemas/project-schema.json',
+    sourceRoot: 'backend/plugins/' + kebabCaseName + '_api/src',
+    projectType: 'application',
+    tags: [],
+    targets: {
+      build: {
+        executor: 'nx:run-commands',
+        cache: true,
+        options: {
+          cwd: 'backend/plugins/' + kebabCaseName + '_api',
+          commands: ['pnpm build'],
+        },
+        dependsOn: ['^build', 'build:packageJson'],
+      },
 
-export const loadPlugin = async (models: IModels) => {
-  const apolloServer = await loadApolloServer(models);
-  const trpc = initTRPC(models);
+      'build:packageJson': {
+        executor: '@nx/js:tsc',
+        options: {
+          main: 'backend/plugins/' + kebabCaseName + '_api/dist/src/main.js',
+          tsConfig:
+            'backend/plugins/' + kebabCaseName + '_api/tsconfig.build.json',
+          outputPath: 'backend/plugins/' + kebabCaseName + '_api/dist',
+          updateBuildableProjectDepsInPackageJson: true,
 
-  return {
-    apolloServer,
-    trpc,
+          buildableProjectDepsInPackageJsonType: 'dependencies',
+        },
+      },
+
+      start: {
+        executor: 'nx:run-commands',
+        dependsOn: ['typecheck', 'build'],
+        options: {
+          cwd: 'backend/plugins/' + kebabCaseName + '_api',
+          command: 'NODE_ENV=development node dist/src/main.js',
+        },
+      },
+
+      serve: {
+        executor: 'nx:run-commands',
+
+        options: {
+          cwd: 'backend/plugins/' + kebabCaseName + '_api',
+          command: 'NODE_ENV=development pnpm dev',
+        },
+      },
+
+      'docker-build': {
+        dependsOn: ['build'],
+        command:
+          'docker build -f backend/plugins/' +
+          kebabCaseName +
+          '_api/Dockerfile . -t erxes/erxes-next-' +
+          kebabCaseName +
+          '_api',
+      },
+    },
   };
-};
 
-export const generateAllModels = async (subdomain: string) => {
-  const models = await generateModels(subdomain, '${kebabCaseName}_api');
-  return models;
-};
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'project.json'),
+    JSON.stringify(projectJson, null, 2),
+  );
 
-export default {
-  loadPlugin,
-  generateAllModels,
-};
+  // Create main.ts
+  const mainContent = `import { startPlugin } from 'erxes-api-shared/utils';
+import { typeDefs } from '~/apollo/typeDefs';
+import { appRouter } from '~/init-trpc';
+import resolvers from './apollo/resolvers';
+import { generateModels } from './connectionResolvers';
+
+startPlugin({
+  name: '${kebabCaseName}',
+  port: 33010,
+  graphql: async () => ({
+    typeDefs: await typeDefs(),
+    resolvers,
+  }),
+  apolloServerContext: async (subdomain, context) => {
+    const models = await generateModels(subdomain);
+
+    context.models = models;
+
+    return context;
+  },
+  trpcAppRouter: {
+    router: appRouter,
+    createContext: async (subdomain, context) => {
+      const models = await generateModels(subdomain);
+
+      context.models = models;
+
+      return context;
+    },
+  },
+});
+
 `;
 
   fs.writeFileSync(path.join(backendPluginDir, 'src', 'main.ts'), mainContent);
+
+  const connectionResolversContent = `import { createGenerateModels } from 'erxes-api-shared/utils';
+import { IMainContext } from 'erxes-api-shared/core-types';
+import { I${capitalizedModuleName}Document } from '@/${moduleName}/@types/${moduleName}';
+
+import mongoose from 'mongoose';
+
+import { load${capitalizedModuleName}Class, I${capitalizedModuleName}Model } from '@/${moduleName}/db/models/${moduleName}';
+
+export interface IModels {
+  ${capitalizedModuleName}: I${capitalizedModuleName}Model;
+}
+
+export interface IContext extends IMainContext {
+  models: IModels;
+}
+
+export const loadClasses = (db: mongoose.Connection): IModels => {
+  const models = {} as IModels;
+
+  models.${capitalizedModuleName} = db.model<I${capitalizedModuleName}Document, I${capitalizedModuleName}Model>(
+    '${moduleName}',
+    load${capitalizedModuleName}Class(models),
+  );
+
+  return models;
+};
+
+export const generateModels = createGenerateModels<IModels>(loadClasses);
+`;
+
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'src', 'connectionResolvers.ts'),
+    connectionResolversContent,
+  );
 
   // Create apollo/apolloServer.ts
   const apolloServerContent = `import { ApolloServer } from 'apollo-server-express';
