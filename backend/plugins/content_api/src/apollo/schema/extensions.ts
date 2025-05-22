@@ -14,8 +14,10 @@ export const TypeExtensions = `
     _id: String! @external
   }
 
-  ${graphqlAttachmentType}
-  ${graphqlAttachmentInput}
-  ${graphqlPdfAttachmentType}
-  ${graphqlPdfAttachmentInput}
+
 `;
+
+  // ${graphqlAttachmentType}
+  // ${graphqlAttachmentInput}
+  // ${graphqlPdfAttachmentType}
+  // ${graphqlPdfAttachmentInput}

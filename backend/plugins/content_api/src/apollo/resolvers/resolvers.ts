@@ -1,5 +1,5 @@
-import contactResolvers from '~/modules/content/graphql/resolvers/customResolvers';
+import kbResolvers from '~/modules/knowledgebase/graphql/resolvers/customResolvers';
 
 export const customResolvers = {
-  ...contactResolvers,
+  ...kbResolvers,
 };

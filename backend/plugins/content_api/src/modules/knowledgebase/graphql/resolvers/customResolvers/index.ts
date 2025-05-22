@@ -1,5 +1,11 @@
-import { User } from './extenstions';
+import { KnowledgeBaseCategory, KnowledgeBaseParentCategory } from './category';
+import KnowledgeBaseTopic from './topic';
+import KnowledgeBaseArticle from './article';
+
 
 export default {
-  User,
+  KnowledgeBaseTopic,
+  KnowledgeBaseCategory,
+  KnowledgeBaseParentCategory,
+  KnowledgeBaseArticle,
 };

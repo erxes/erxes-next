@@ -1,3 +1,4 @@
+import { checkPermission } from 'erxes-api-shared/core-modules';
 import { ITopic } from '@/knowledgebase/@types/knowledgebase';
 import { IContext } from '~/connectionResolvers';
 import {
@@ -12,7 +13,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseTopicsAdd(
     _root,
     { doc }: { doc: ITopic },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const topic = await models.KnowledgeBaseTopics.createDoc(doc, user._id);
 
@@ -41,13 +42,13 @@ const knowledgeBaseMutations = {
   async knowledgeBaseTopicsEdit(
     _root,
     { _id, doc }: { _id: string; doc: ITopic },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const topic = await models.KnowledgeBaseTopics.getTopic(_id);
     const updated = await models.KnowledgeBaseTopics.updateDoc(
       _id,
       doc,
-      user._id,
+      user._id
     );
 
     // TODO: implement logs
@@ -76,7 +77,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseTopicsRemove(
     _root,
     { _id }: { _id: string },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const topic = await models.KnowledgeBaseTopics.getTopic(_id);
     const removed = await models.KnowledgeBaseTopics.removeDoc(_id);
@@ -98,11 +99,11 @@ const knowledgeBaseMutations = {
   async knowledgeBaseCategoriesAdd(
     _root,
     { doc }: { doc: ICategoryCreate },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const kbCategory = await models.KnowledgeBaseCategories.createDoc(
       doc,
-      user._id,
+      user._id
     );
 
     // await putCreateLog(
@@ -129,13 +130,13 @@ const knowledgeBaseMutations = {
   async knowledgeBaseCategoriesEdit(
     _root,
     { _id, doc }: { _id: string; doc: ICategoryCreate },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const kbCategory = await models.KnowledgeBaseCategories.getCategory(_id);
     const updated = await models.KnowledgeBaseCategories.updateDoc(
       _id,
       doc,
-      user._id,
+      user._id
     );
 
     // TODO: implement logs
@@ -164,13 +165,13 @@ const knowledgeBaseMutations = {
   async knowledgeBaseCategoriesRemove(
     _root,
     { _id }: { _id: string },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const kbCategory = await models.KnowledgeBaseCategories.getCategory(_id);
 
     await models.KnowledgeBaseCategories.updateMany(
       { parentCategoryId: { $in: [kbCategory._id] } },
-      { $unset: { parentCategoryId: 1 } },
+      { $unset: { parentCategoryId: 1 } }
     );
 
     const removed = await models.KnowledgeBaseCategories.removeDoc(_id);
@@ -192,7 +193,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseArticlesAdd(
     _root,
     { doc }: { doc: IArticleCreate },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     if (doc.status === 'scheduled' && !doc.scheduledDate) {
       throw new Error('Scheduled Date must be supplied');
@@ -208,7 +209,7 @@ const knowledgeBaseMutations = {
 
     const kbArticle = await models.KnowledgeBaseArticles.createDoc(
       doc,
-      user._id,
+      user._id
     );
 
     // TODO: implement logs
@@ -273,7 +274,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseArticlesEdit(
     _root,
     { _id, doc }: { _id: string; doc: IArticleCreate },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const kbArticle = await models.KnowledgeBaseArticles.getArticle(_id);
 
@@ -292,7 +293,7 @@ const knowledgeBaseMutations = {
     const updated = await models.KnowledgeBaseArticles.updateDoc(
       _id,
       doc,
-      user._id,
+      user._id
     );
 
     // TODO: implement logs
@@ -321,7 +322,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseArticlesRemove(
     _root,
     { _id }: { _id: string },
-    { user, models }: IContext,
+    { user, models }: IContext
   ) {
     const kbArticle = await models.KnowledgeBaseArticles.getArticle(_id);
     const removed = await models.KnowledgeBaseArticles.removeDoc(_id);
@@ -340,58 +341,58 @@ const knowledgeBaseMutations = {
   async knowledgeBaseArticlesIncrementViewCount(
     _root,
     { _id }: { _id: string },
-    { models }: IContext,
+    { models }: IContext
   ) {
     return await models.KnowledgeBaseArticles.incrementViewCount(_id);
   },
 };
 
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseTopicsAdd',
-//   'manageKnowledgeBase',
-// );
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseTopicsEdit',
-//   'manageKnowledgeBase',
-// );
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseTopicsRemove',
-//   'manageKnowledgeBase',
-// );
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseTopicsAdd',
+  'manageKnowledgeBase'
+);
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseTopicsEdit',
+  'manageKnowledgeBase'
+);
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseTopicsRemove',
+  'manageKnowledgeBase'
+);
 
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseCategoriesAdd',
-//   'manageKnowledgeBase',
-// );
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseCategoriesEdit',
-//   'manageKnowledgeBase',
-// );
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseCategoriesRemove',
-//   'manageKnowledgeBase',
-// );
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseCategoriesAdd',
+  'manageKnowledgeBase'
+);
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseCategoriesEdit',
+  'manageKnowledgeBase'
+);
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseCategoriesRemove',
+  'manageKnowledgeBase'
+);
 
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseArticlesAdd',
-//   'manageKnowledgeBase',
-// );
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseArticlesEdit',
-//   'manageKnowledgeBase',
-// );
-// checkPermission(
-//   knowledgeBaseMutations,
-//   'knowledgeBaseArticlesRemove',
-//   'manageKnowledgeBase',
-// );
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseArticlesAdd',
+  'manageKnowledgeBase'
+);
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseArticlesEdit',
+  'manageKnowledgeBase'
+);
+checkPermission(
+  knowledgeBaseMutations,
+  'knowledgeBaseArticlesRemove',
+  'manageKnowledgeBase'
+);
 
 export default knowledgeBaseMutations;
