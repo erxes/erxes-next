@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { BRANDS_FORM_SCHEMA } from './schema';
+
 export interface IBrand {
   _id: string;
   code: string;
@@ -14,9 +17,4 @@ export enum BrandsHotKeyScope {
   BrandsCreateSheet = 'add-brand',
 }
 
-export interface IBrandSelectContext {
-  selectedBrandId: string | undefined;
-  selectedBrand: IBrand | undefined;
-  setSelectedBrandId?: (id: string) => void;
-  onSelect?: (brand: IBrand) => void;
-}
+export type TBrandsForm = z.infer<typeof BRANDS_FORM_SCHEMA>;

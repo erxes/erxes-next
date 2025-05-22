@@ -1,8 +1,6 @@
 import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
-import { IBrand } from 'ui-modules/modules/brands/types';
-import { TBrandsForm } from './useBrandsForm';
-import { ADD_BRANDS } from '../grapqhl';
-import { GET_BRANDS } from 'ui-modules';
+import { ADD_BRANDS, GET_BRANDS } from '../grapqhl';
+import { IBrand, TBrandsForm } from '../types';
 
 interface BrandData {
   brands: {

@@ -19,8 +19,8 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
-import { IBrand } from 'ui-modules/modules/brands/types';
 import { renderingBrandDetailAtom } from '../state';
+import { IBrand } from '../types';
 
 const MoreCell = ({ cell }: { cell: Cell<IBrand, unknown> }) => {
   const [, setOpen] = useQueryState('brand_id');

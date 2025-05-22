@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { TBrandsForm } from '../hooks/useBrandsForm';
 import { Form, Input, Textarea } from 'erxes-ui';
+import { TBrandsForm } from '../types';
 
 export const BrandsForm = () => {
   const form = useFormContext<TBrandsForm>();

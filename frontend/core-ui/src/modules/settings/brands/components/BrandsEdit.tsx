@@ -5,10 +5,11 @@ import {
 import { Button, Form, Sheet, useQueryState, useToast } from 'erxes-ui';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { TBrandsForm, useBrandsForm } from '../hooks/useBrandsForm';
+import { useBrandsForm } from '../hooks/useBrandsForm';
 import { SubmitHandler } from 'react-hook-form';
 import { BrandsForm } from './BrandsForm';
 import { useBrandsEdit } from '../hooks/useBrandsEdit';
+import { TBrandsForm } from '../types';
 
 export const BrandsEdit = () => {
   const {

@@ -9,11 +9,11 @@ import {
   useToast,
 } from 'erxes-ui';
 import React, { useState } from 'react';
-import { BrandsHotKeyScope } from 'ui-modules/modules/brands/types';
-import { TBrandsForm, useBrandsForm } from '../hooks/useBrandsForm';
+import { useBrandsForm } from '../hooks/useBrandsForm';
 import { useBrandsAdd } from '../hooks/useBrandsAdd';
 import { SubmitHandler } from 'react-hook-form';
 import { BrandsForm } from './BrandsForm';
+import { BrandsHotKeyScope, TBrandsForm } from '../types';
 
 export const CreateBrand = () => {
   const { toast } = useToast();

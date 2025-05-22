@@ -1,7 +1,7 @@
 import { RecordTable } from 'erxes-ui';
-import { useBrands } from 'ui-modules/modules/brands/hooks/useBrands';
 import { brandsColumns } from './BrandsColumns';
 import { BrandsCommandBar } from './BrandsCommandBar';
+import { useBrands } from '../hooks/useBrands';
 
 export function BrandsRecordTable() {
   const { brands, loading } = useBrands();
