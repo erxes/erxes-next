@@ -30,7 +30,7 @@ export const ProductCategoriesHeader = () => {
           </Breadcrumb.List>
         </Breadcrumb>
         <Separator.Inline />
-        <PageHeader.FavoriteToggleButton item="categories" />
+        <PageHeader.FavoriteToggleButton />
       </PageHeader.Start>
       <PageHeader.End>
         <ProductCategoryAddSheet />

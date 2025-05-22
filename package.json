@@ -5,7 +5,8 @@
   "scripts": {
     "dev:core-api": "npx nx run-many -t serve -p core-api gateway",
     "dev:apis": "dotenv -e .env -- node scripts/start-api-dev.js",
-    "dev:uis": "dotenv -e .env -- node scripts/start-ui-dev.js"
+    "dev:uis": "dotenv -e .env -- node scripts/start-ui-dev.js",
+    "create-plugin": "node scripts/create-plugin.js"
   },
   "engines": {
     "pnpm": ">=8",
@@ -100,9 +101,9 @@
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.11.20",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.462.0",
     "moment": "^2.30.1",
-    "lodash": "^4.17.21",
     "moment-timezone": "^0.5.48",
     "mongoose": "^8.9.6",
     "motion": "^11.11.17",
@@ -191,6 +192,7 @@
     "babel-jest": "^29.7.0",
     "core-js": "^3.36.1",
     "dotenv-cli": "^8.0.0",
+    "enquirer": "^2.4.1",
     "esbuild": "^0.19.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.0.0",
