@@ -73,8 +73,6 @@ export const uploadToCFImages = async (
 
   const data = await response.json();
 
-  console.log('data', data);
-
   if (!data.success) {
     throw new Error('Error uploading file to Cloudflare Images 1');
   }
@@ -190,7 +188,7 @@ export const uploadFileAWS = async (
   const fileName = `${AWS_PREFIX}${randomAlphanumeric()}${sanitizedFilename}`;
 
   // read file
-  const buffer = await fs.readFileSync(file.filepath);
+  const buffer = await fs.promises.readFile(file.filepath);
 
   // upload to s3
   const response: any = await new Promise((resolve, reject) => {
@@ -279,24 +277,18 @@ export const uploadFileCloudflare = async (
   forcePrivate = false,
   models?: IModels,
 ): Promise<string> => {
-  const fileObj = file;
   const IS_PUBLIC = forcePrivate
     ? false
     : await getConfig('FILE_SYSTEM_PUBLIC', 'false');
-  const sanitizedFilename = sanitizeFilename(fileObj.originalFilename);
+  const sanitizedFilename = sanitizeFilename(file.originalFilename);
 
   const { CLOUDFLARE_BUCKET_NAME, CLOUDFLARE_USE_CDN } =
     await getFileUploadConfigs(models);
 
-  const detectedType = await fileTypeFromBuffer(
-    fs.readFileSync(fileObj.filepath),
-  );
+  const detectedType = await fileTypeFromBuffer(fs.readFileSync(file.filepath));
 
-  if (path.extname(fileObj.originalFilename).toLowerCase() === `.jfif`) {
-    fileObj.originalFilename = fileObj.originalFilename.replace(
-      '.jfif',
-      '.jpeg',
-    );
+  if (path.extname(file.originalFilename).toLowerCase() === `.jfif`) {
+    file.originalFilename = file.originalFilename.replace('.jfif', '.jpeg');
   }
 
   if (
@@ -311,7 +303,7 @@ export const uploadFileCloudflare = async (
     ].includes(detectedType.mime)
   ) {
     console.debug('uploading to cf images');
-    return uploadToCFImages(fileObj, forcePrivate, models);
+    return uploadToCFImages(file, forcePrivate, models);
   }
 
   if (
@@ -319,14 +311,14 @@ export const uploadFileCloudflare = async (
     detectedType &&
     isVideo(detectedType.mime)
   ) {
-    return uploadToCFStream(fileObj, models);
+    return uploadToCFStream(file, models);
   }
 
   // generate unique name
   const fileName = `${randomAlphanumeric()}${sanitizedFilename}`;
 
-  // read fileObj
-  const buffer = await fs.readFileSync(fileObj.filepath);
+  // read file
+  const buffer = await fs.promises.readFile(file.filepath);
 
   // initialize r2
   const r2 = await createCFR2(models);
@@ -336,7 +328,7 @@ export const uploadFileCloudflare = async (
   const response: any = await new Promise((resolve, reject) => {
     r2.upload(
       {
-        ContentType: fileObj.mimetype,
+        ContentType: file.mimetype,
         Bucket: CLOUDFLARE_BUCKET_NAME,
         Key: fileName,
         Body: buffer,
@@ -416,7 +408,7 @@ export const uploadFile = async (
   if (UPLOAD_SERVICE_TYPE === 'CLOUDFLARE') {
     nameOrLink = await uploadFileCloudflare(
       file,
-      VERSION === 'saas' ? true : false,
+      !!(VERSION === 'saas'),
       models,
     );
   }

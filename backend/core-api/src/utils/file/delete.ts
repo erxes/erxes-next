@@ -51,12 +51,11 @@ const deleteFileGCS = async (fileName: string, models?: IModels) => {
     bucket
       .file(fileName)
       .delete()
-      .then((err) => {
-        if (err) {
-          return reject(err);
-        }
-
+      .then(() => {
         return resolve('ok');
+      })
+      .catch((err) => {
+        return reject(err);
       });
   });
 };
@@ -95,18 +94,16 @@ export const deleteFileAzure = async (fileName: string, models?: IModels) => {
   // Get the blob client for the specified file key
   const blobClient = containerClient.getBlobClient(fileName);
 
-  // Check if the blob exists
-  const exists = await blobClient.exists();
-  if (!exists) {
-    console.error(`File with key ${fileName} does not exist.`);
-    return;
-  }
-
-  // Delete the blob
-  await blobClient.delete();
-  console.debug(
-    `File with key ${fileName} successfully deleted from Azure Blob Storage.`,
-  );
+  return new Promise((resolve, reject) => {
+    blobClient
+      .delete()
+      .then(() => {
+        return resolve('ok');
+      })
+      .catch((err) => {
+        return reject(err);
+      });
+  });
 };
 
 /*
@@ -119,7 +116,7 @@ const deleteFileLocal = async (fileName: string) => {
         return reject(error);
       }
 
-      return resolve('deleted');
+      return resolve('ok');
     });
   });
 };
@@ -137,19 +134,19 @@ export const deleteFile = async (
   );
 
   if (UPLOAD_SERVICE_TYPE === 'AWS') {
-    return deleteFileAWS(fileName, models);
+    return deleteFileAWS(sanitizedFilename, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'GCS') {
-    return deleteFileGCS(fileName, models);
+    return deleteFileGCS(sanitizedFilename, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'CLOUDFLARE') {
-    return deleteFileCloudflare(fileName, models);
+    return deleteFileCloudflare(sanitizedFilename, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'AZURE') {
-    return deleteFileAzure(fileName, models);
+    return deleteFileAzure(sanitizedFilename, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'local') {

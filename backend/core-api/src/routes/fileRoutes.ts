@@ -71,7 +71,13 @@ router.post('/upload-file', async (req: Request, res: Response) => {
 
   const form = new formidable.IncomingForm();
 
-  form.parse(req, async (_error, _fields, files) => {
+  form.parse(req, async (error, _fields, files) => {
+    if (error) {
+      return res
+        .status(400)
+        .send(`File upload parsing error: ${error.message}`);
+    }
+
     const uploaded = files.file || files.upload;
 
     const file = Array.isArray(uploaded) ? uploaded[0] : uploaded;
@@ -100,7 +106,7 @@ router.post('/upload-file', async (req: Request, res: Response) => {
       const result = await uploadFile(
         `${domain}/gateway`,
         fileResult,
-        files.upload ? true : false,
+        !!files.upload,
         models,
       );
 

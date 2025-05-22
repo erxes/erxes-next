@@ -20,7 +20,7 @@ export function AddCustomerForm({
 }: {
   onOpenChange?: (open: boolean) => void;
 }) {
-  const pathname = useLocation().pathname;
+  const { pathname } = useLocation();
 
   const { customersAdd } = useAddCustomer();
   const form = useForm<CustomerFormType>({

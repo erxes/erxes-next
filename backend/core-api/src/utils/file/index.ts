@@ -57,7 +57,7 @@ export const checkFile = async (
   }
 
   // read file
-  const buffer = await fs.readFileSync(file.filepath);
+  const buffer = await fs.promises.readFile(file.filepath);
 
   // determine file type using magic numbers
   const ft = await fileTypeFromBuffer(buffer);
@@ -129,10 +129,11 @@ export const checkFile = async (
     models,
   );
 
-  if (!(UPLOAD_FILE_TYPES && UPLOAD_FILE_TYPES.includes(mime))) {
-    if (!defaultMimeTypes.includes(mime)) {
-      return 'Invalid configured file type';
-    }
+  if (
+    !(UPLOAD_FILE_TYPES && UPLOAD_FILE_TYPES.includes(mime)) &&
+    !defaultMimeTypes.includes(mime)
+  ) {
+    return 'Invalid configured file type';
   }
 
   return 'ok';

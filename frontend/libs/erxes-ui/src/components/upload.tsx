@@ -13,8 +13,8 @@ import { Button, Dialog } from 'erxes-ui/components';
 import { useUpload } from 'erxes-ui/hooks';
 import { readFile } from 'erxes-ui/utils/core';
 
-import { ButtonProps } from './button';
 import { cn } from '../lib/utils';
+import { ButtonProps } from './button';
 
 type IUploadContext = {
   url: string | undefined;
@@ -118,7 +118,7 @@ const UploadPreview = React.forwardRef<
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
+      const { files } = event.target;
 
       if (previewRef.current) {
         URL.revokeObjectURL(previewRef.current);

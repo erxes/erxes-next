@@ -1,11 +1,9 @@
-
 const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
 
 const truncate = (input: string, length: number): string => {
   const segItr = segmenter.segment(input);
   const segArr = Array.from(segItr, ({ segment }) => segment);
-  const choppedEmoji = segArr.slice(0, length).join('');
-  return choppedEmoji;
+  return segArr.slice(0, length).join('');
 };
 
 const illegalRe = /[/?<>\\:*|"]/g;

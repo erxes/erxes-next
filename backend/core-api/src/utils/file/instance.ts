@@ -6,7 +6,9 @@ import {
   getFileUploadConfigs,
 } from '~/modules/organization/settings/utils/configs';
 
-export const uploadsFolderPath = path.join(__dirname, '../private/uploads');
+const privateUploadsPath = path.join(__dirname, '../private/uploads');
+
+export const uploadsFolderPath = path.resolve(privateUploadsPath);
 
 /**
  * Create Azure Blob Storage instance
@@ -27,7 +29,7 @@ export const createAzureBlobStorage = async (models?: IModels) => {
     throw new Error('Azure Blob Storage credentials are not configured');
   }
 
-  const BlobServiceClient = require('@azure/storage-blob').BlobServiceClient;
+  const { BlobServiceClient } = require('@azure/storage-blob');
 
   // Initialize Azure Blob Storage
   const blobServiceClient = BlobServiceClient.fromConnectionString(
@@ -69,6 +71,7 @@ export const createAWS = async (models?: IModels) => {
     secretAccessKey: string;
     endpoint?: string;
     s3ForcePathStyle?: boolean;
+    region?: string;
   } = {
     accessKeyId: AWS_ACCESS_KEY_ID,
     secretAccessKey: AWS_SECRET_ACCESS_KEY,
@@ -80,6 +83,12 @@ export const createAWS = async (models?: IModels) => {
 
   if (AWS_COMPATIBLE_SERVICE_ENDPOINT) {
     options.endpoint = AWS_COMPATIBLE_SERVICE_ENDPOINT;
+  }
+
+  const AWS_REGION = await getConfig('AWS_REGION', '', models);
+
+  if (AWS_REGION) {
+    options.region = AWS_REGION;
   }
 
   // initialize s3
@@ -102,7 +111,7 @@ export const createGCS = async (models?: IModels) => {
     throw new Error('Google Cloud Storage credentials are not configured');
   }
 
-  const Storage = require('@google-cloud/storage').Storage;
+  const { Storage } = require('@google-cloud/storage');
 
   // initializing Google Cloud Storage
   return new Storage({
@@ -112,7 +121,7 @@ export const createGCS = async (models?: IModels) => {
 };
 
 /*
- * Create Google Cloud Storage instance
+ * Create Cloud Flare Storage instance
  */
 export const createCFR2 = async (models?: IModels) => {
   const {

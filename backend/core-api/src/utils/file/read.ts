@@ -4,6 +4,7 @@ import {
   getPlugins,
   isImage,
   sanitizeFilename,
+  sanitizeKey,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
 import * as fs from 'fs';
@@ -35,19 +36,24 @@ const readFromCFImages = async (
   const { CLOUDFLARE_BUCKET_NAME, CLOUDFLARE_ACCOUNT_HASH } =
     await getFileUploadConfigs(models);
 
-  let fileName = key;
+  const sanitizedKey = sanitizeKey(key);
 
-  if (!VERSION || VERSION !== 'saas') {
-    if (!key.startsWith(CLOUDFLARE_BUCKET_NAME)) {
-      fileName = `${CLOUDFLARE_BUCKET_NAME}/${key}`;
-    }
+  let fileName = sanitizedKey;
+
+  if (
+    (!VERSION || VERSION !== 'saas') &&
+    !sanitizedKey.startsWith(CLOUDFLARE_BUCKET_NAME)
+  ) {
+    fileName = `${CLOUDFLARE_BUCKET_NAME}/${sanitizedKey}`;
   }
 
   if (!CLOUDFLARE_ACCOUNT_HASH) {
     throw new Error('Cloudflare Account Hash is not configured');
   }
 
-  let url = `https://imagedelivery.net/${CLOUDFLARE_ACCOUNT_HASH}/${fileName}/public`;
+  let url = `https://imagedelivery.net/${CLOUDFLARE_ACCOUNT_HASH}/${encodeURIComponent(
+    fileName,
+  )}/public`;
 
   if (width) {
     url = `https://imagedelivery.net/${CLOUDFLARE_ACCOUNT_HASH}/${fileName}/w=${width}`;
