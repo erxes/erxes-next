@@ -501,6 +501,7 @@ import { I${capitalizedModuleName}, I${capitalizedModuleName}Document } from '@/
 
 export interface I${capitalizedModuleName}Model extends Model<I${capitalizedModuleName}Document> {
   get${capitalizedModuleName}(_id: string): Promise<I${capitalizedModuleName}Document>;
+  get${capitalizedModuleName}s(): Promise<I${capitalizedModuleName}Document[]>;
   create${capitalizedModuleName}(doc: I${capitalizedModuleName}): Promise<I${capitalizedModuleName}Document>;
   update${capitalizedModuleName}(_id: string, doc: I${capitalizedModuleName}): Promise<I${capitalizedModuleName}Document>;
   remove${capitalizedModuleName}(${capitalizedModuleName}Id: string): Promise<{  ok: number }>;
@@ -519,6 +520,13 @@ export const load${capitalizedModuleName}Class = (models: IModels) => {
       }
 
       return ${capitalizedModuleName};
+    }
+
+    /**
+     * Retrieves all ${kebabCaseName}s
+     */
+    public static async get${capitalizedModuleName}s(): Promise<I${capitalizedModuleName}Document[]> {
+      return models.${capitalizedModuleName}.find().lean();
     }
 
     /**
@@ -575,7 +583,7 @@ export const load${capitalizedModuleName}Class = (models: IModels) => {
 \`;
 
 export const queries = \`
-  get${capitalizedModuleName}: ${capitalizedModuleName}
+  get${capitalizedModuleName}(_id: String!): ${capitalizedModuleName}
   get${capitalizedModuleName}s: [${capitalizedModuleName}]
 \`;
 
@@ -592,6 +600,10 @@ export const mutations = \`
    export const ${moduleName}Queries = {
     get${capitalizedModuleName}: async (_parent: undefined, { _id }, { models }: IContext) => {
       return models.${capitalizedModuleName}.get${capitalizedModuleName}(_id);
+    },
+    
+    get${capitalizedModuleName}s: async (_parent: undefined, { models }: IContext) => {
+      return models.${capitalizedModuleName}.get${capitalizedModuleName}s();
     },
   };
 `;
@@ -615,11 +627,11 @@ export const mutations = \`
 
   export const ${moduleName}Mutations = {
     create${capitalizedModuleName}: async (_parent: undefined, { name }, { models }: IContext) => {
-      return models.${capitalizedModuleName}.create${capitalizedModuleName}(name);
+      return models.${capitalizedModuleName}.create${capitalizedModuleName}({name});
     },
 
     update${capitalizedModuleName}: async (_parent: undefined, { _id, name }, { models }: IContext) => {
-      return models.${capitalizedModuleName}.update${capitalizedModuleName}(_id, name);
+      return models.${capitalizedModuleName}.update${capitalizedModuleName}(_id, {name});
     },
 
     remove${capitalizedModuleName}: async (_parent: undefined, { _id }, { models }: IContext) => {
