@@ -36,15 +36,13 @@ const readFromCFImages = async (
   const { CLOUDFLARE_BUCKET_NAME, CLOUDFLARE_ACCOUNT_HASH } =
     await getFileUploadConfigs(models);
 
-  const sanitizedKey = sanitizeKey(key);
-
-  let fileName = sanitizedKey;
+  let fileName = key;
 
   if (
     (!VERSION || VERSION !== 'saas') &&
-    !sanitizedKey.startsWith(CLOUDFLARE_BUCKET_NAME)
+    !key.startsWith(CLOUDFLARE_BUCKET_NAME)
   ) {
-    fileName = `${CLOUDFLARE_BUCKET_NAME}/${sanitizedKey}`;
+    fileName = `${CLOUDFLARE_BUCKET_NAME}/${key}`;
   }
 
   if (!CLOUDFLARE_ACCOUNT_HASH) {

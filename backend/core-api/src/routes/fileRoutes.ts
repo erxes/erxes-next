@@ -1,4 +1,9 @@
-import { getEnv, getSubdomain, isImage } from 'erxes-api-shared/utils';
+import {
+  getEnv,
+  getSubdomain,
+  isImage,
+  sanitizeKey,
+} from 'erxes-api-shared/utils';
 import { NextFunction, Request, Response, Router } from 'express';
 import * as formidable from 'formidable';
 import { filterXSS } from 'xss';
@@ -19,32 +24,32 @@ router.get(
     try {
       const { key, inline, name, width = 0 } = req.query || {};
 
-      const stringKey = String(key);
+      const sanitizedKey = sanitizeKey(String(key));
 
-      if (!stringKey) {
+      if (!sanitizedKey) {
         return res.send('Invalid key');
       }
 
       const response = await readFileRequest({
-        key: stringKey,
+        key: sanitizedKey,
         models,
         userId: String(req.headers.userid),
         width: Number(width),
       });
 
       if (inline && inline === 'true') {
-        const extension = stringKey.split('.').pop();
+        const extension = sanitizedKey.split('.').pop();
 
         res.setHeader(
           'Content-disposition',
-          'inline; filename="' + stringKey + '"',
+          'inline; filename="' + sanitizedKey + '"',
         );
         res.setHeader('Content-type', `application/${extension}`);
 
         return res.send(response);
       }
 
-      const attachment = String(name) || stringKey;
+      const attachment = String(name) || sanitizedKey;
 
       res.attachment(attachment);
 
