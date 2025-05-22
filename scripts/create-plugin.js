@@ -197,7 +197,7 @@ export const IndexPage = () => {
       </PageHeader>
       <div className="flex h-full overflow-hidden">
         <div className="flex flex-col h-full overflow-hidden flex-auto">
-          <h1>Samplsdsadasdjakljkljklsade</h1>
+          <h1>${kebabCaseModuleName}</h1>
         </div>
       </div>
     </div>

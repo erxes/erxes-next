@@ -30,6 +30,8 @@ function createBackendPlugin(pluginName, moduleName) {
     'src',
     'src/apollo',
     'src/apollo/resolvers',
+    'src/apollo/resolvers/queries',
+    'src/apollo/resolvers/mutations',
     'src/apollo/schema',
     'src/trpc',
     'src/modules',
@@ -493,15 +495,24 @@ export const load${capitalizedModuleName}Class = (models: IModels) => {
   );
 
   // Create modules/${moduleName}/graphql/schemas/extensions.ts
-  const extensionsContent = `export const TypeExtensions = \`
-  type Query {
-    hello: String
+  const apolloSchemaContent = `export const types = \`
+  type ${capitalizedModuleName} {
+    _id: String
+    name: String
   }
+\`;
 
-  type Mutation {
-    hello: String
-  }
-\`;`;
+export const queries = \`
+  get${capitalizedModuleName}: ${capitalizedModuleName}
+  get${capitalizedModuleName}s: [${capitalizedModuleName}]
+\`;
+
+export const mutations = \`
+  create${capitalizedModuleName}(name: String!): ${capitalizedModuleName}
+  update${capitalizedModuleName}(_id: String!, name: String!): ${capitalizedModuleName}
+  remove${capitalizedModuleName}(_id: String!): ${capitalizedModuleName}
+\`;
+`;
 
   fs.writeFileSync(
     path.join(
@@ -511,9 +522,9 @@ export const load${capitalizedModuleName}Class = (models: IModels) => {
       moduleName,
       'graphql',
       'schemas',
-      'extensions.ts',
+      `${moduleName}.ts`,
     ),
-    extensionsContent,
+    apolloSchemaContent,
   );
 
   // Create .gitignore
