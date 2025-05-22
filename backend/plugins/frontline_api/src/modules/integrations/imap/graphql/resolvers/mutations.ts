@@ -1,10 +1,11 @@
 import { IContext } from '~/connectionResolvers';
-
+import {ImapSendMailInput} from '@/integrations/imap/@types/messages'
 export const imapMutations = {
   /**
    * Send mail
    */
-  async imapSendMail(_root, args: any, { subdomain, models, user }: IContext) {
+  async imapSendMail(_root, args: ImapSendMailInput, { subdomain, models, user }: IContext) {
+
   try {
     // Basic validation
     if (!args.to || !args.subject || !args.text) {

@@ -25,15 +25,16 @@ export interface IIMapMessage {
   createdAt: Date;
 }
 
-export interface ISendMailArgs {
-  integrationId: string;
-  conversationId?: string;
+export interface ImapSendMailInput {
+  to: string | string[];
   subject: string;
-  body: string;
-  from: string;
+  text: string;
+  html?: string;
+  from?: string;
+  conversationId?: string;
+  integrationId?: string;
   customerId?: string;
-  to: string[];
-  attachments?: IIMapAttachmentParams[];
+  attachments?: Array<{name: string; url: string; type?: string; size?: number}>;
   replyToMessageId?: string;
   shouldOpen?: boolean;
   shouldResolve?: boolean;

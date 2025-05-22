@@ -4,11 +4,11 @@ import {IIMapMessageDocument } from '@/integrations/imap/@types/messages';
 import * as nodemailer from 'nodemailer';
 import { messageSchema} from '@/integrations/imap/db/definitions/messages'
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
-import {ISendMailArgs} from '@/integrations/imap/@types/messages'
+import {ImapSendMailInput} from '@/integrations/imap/@types/messages'
 
 export interface IIMapMessageModel extends Model<IIMapMessageDocument> {
   createSendMail(
-    args: ISendMailArgs,
+    args: ImapSendMailInput,
     subdomain: string,
     models: IModels
   ): Promise<IIMapMessageDocument>;
