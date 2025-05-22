@@ -130,7 +130,7 @@ export const loadImapMessageClass = (models) => {
         subject: replyToMessageId ? `Re: ${subject}` : subject,
         html: body,
         inReplyTo: replyToMessageId,
-        references: [replyToMessageId],
+        references: replyToMessageId ? [replyToMessageId] : undefined,
         attachments: attachments
           ? attachments.map((attach) => ({
               filename: attach.name,

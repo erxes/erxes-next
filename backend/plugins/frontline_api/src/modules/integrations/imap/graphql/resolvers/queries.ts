@@ -20,11 +20,10 @@ export const imapQueries = {
         const endIndex = html.indexOf('</div><br>', startIndex);
 
         if (endIndex !== -1) {
-          const extractedContent = html.substring(
+          return  html.substring(
             startIndex,
             endIndex + '</div><br>'.length
-          );
-          return extractedContent;
+          )
         }
       }
     };
@@ -36,19 +35,19 @@ export const imapQueries = {
         const endIndex = html.lastIndexOf('</div>');
 
         if (endIndex !== -1) {
-          const extractedContent = html.substring(startIndex, endIndex);
-          return extractedContent;
+         return html.substring(startIndex, endIndex);
         }
       }
     };
 
-    return messages.map((message) => {
+   return messages.map((message): { _id: string, mailData: any, createdAt: Date } => {
       const msgBody =
-        message.body === '<div dir="ltr">false</div>\n'
+        message.body === '<div dir="ltr">false</div>\n' || !message.body
           ? '<div dir="ltr"></div>\n'
           : message.body;
+
       return {
-        _id: message._id,
+        _id: String(message._id),
         mailData: {
           messageId: message.messageId,
           from: convertEmails(message.from),
@@ -59,7 +58,7 @@ export const imapQueries = {
           body: msgBody,
           newContent: getNewContentFromMessageBody(msgBody),
           replies: getRepliesFromMessageBody(msgBody),
-          attachments: message.attachments
+          attachments: message.attachments || []
         },
         createdAt: message.createdAt
       };
@@ -70,5 +69,4 @@ export const imapQueries = {
     return models.ImapIntegrations.find();
   },
 
-  
 };
