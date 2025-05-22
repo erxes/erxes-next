@@ -3,7 +3,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import * as http from 'http';
-import mongoose from 'mongoose';
 import { appRouter } from '~/init-trpc';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
@@ -17,7 +16,7 @@ import {
 
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
-import { generateModels, IModels } from './connectionResolvers';
+import { generateModels } from './connectionResolvers';
 import './automations';
 import './segments';
 

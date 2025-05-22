@@ -38,7 +38,7 @@ function createBackendPlugin(pluginName, moduleName) {
     `src/modules/${moduleName}/graphql/schemas`,
     `src/modules/${moduleName}/graphql/resolvers`,
     `src/modules/${moduleName}/models`,
-    `src/modules/${moduleName}/types`,
+    `src/modules/${moduleName}/@types`,
   ];
 
   backendDirectories.forEach((dir) => {
@@ -203,7 +203,7 @@ function createBackendPlugin(pluginName, moduleName) {
   // Create main.ts
   const mainContent = `import { startPlugin } from 'erxes-api-shared/utils';
 import { typeDefs } from '~/apollo/typeDefs';
-import { appRouter } from '~/init-trpc';
+import { appRouter } from '~/trpc/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
 
@@ -315,20 +315,20 @@ export default { types };
 
   // Create trpc/init-trpc.ts
   const initTrpcContent = `import { initTRPC } from '@trpc/server';
-import { IModels } from '../modules/${moduleName}/types';
 
-export const initTRPC = (models: IModels) => {
-  const t = initTRPC.create();
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
-  const router = t.router;
-  const publicProcedure = t.procedure;
+const t = initTRPC.context<ITRPCContext>().create();
 
-  return {
-    router,
-    publicProcedure,
-    models,
-  };
-};
+export const appRouter = t.router({
+  sample: {
+    hello: t.procedure.query(() => {
+      return 'Hello Sample';
+    }),
+  },
+});
+
+export type AppRouter = typeof appRouter;
 `;
 
   fs.writeFileSync(
@@ -336,17 +336,44 @@ export const initTRPC = (models: IModels) => {
     initTrpcContent,
   );
 
+  const trpcClientsContent = `import { httpBatchLink, createTRPCUntypedClient } from '@trpc/client';
+import { getPlugin, isEnabled } from 'erxes-api-shared/utils';
+
+export const coreTRPCClient = async (): Promise<
+  ReturnType<typeof createTRPCUntypedClient>
+> => {
+  const isCoreEnabled = await isEnabled('core');
+
+  if (!isCoreEnabled) {
+    throw new Error('Core plugin is not enabled');
+  }
+
+  const core = await getPlugin('core');
+
+  const client = createTRPCUntypedClient({
+    links: [httpBatchLink({ url: core.address + '/trpc' })],
+  });
+
+  return client;
+};
+`;
+
+  fs.writeFileSync(
+    path.join(backendPluginDir, 'src', 'trpc', 'trpcClients.ts'),
+    trpcClientsContent,
+  );
+
   // Create modules/${moduleName}/types/index.ts
   const moduleTypesContent = `import { Document } from 'mongoose';
-
-export interface IModels {
-  // Add your model interfaces here
+  
+export interface I${capitalizedModuleName} {
+  name?: string;
 }
 
-export interface IContext {
-  subdomain: string;
-  models: IModels;
-  user: any;
+export interface I${capitalizedModuleName}Document extends I${capitalizedModuleName}, Document {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 `;
 
@@ -356,8 +383,8 @@ export interface IContext {
       'src',
       'modules',
       moduleName,
-      'types',
-      'index.ts',
+      '@types',
+      `${moduleName}.ts`,
     ),
     moduleTypesContent,
   );
