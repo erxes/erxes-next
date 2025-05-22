@@ -35,14 +35,16 @@ export const UserMoreColumnCell = ({
   cell: Cell<IUser, unknown>;
 }) => {
   const [, setOpen] = useQueryState('user_id');
-  const setRenderingCustomerDetail = useSetAtom(renderingTeamMemberDetailAtom);
+  const setRenderingTeamMemberDetail = useSetAtom(
+    renderingTeamMemberDetailAtom,
+  );
   const { _id } = cell.row.original;
   return (
     <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);
-        setRenderingCustomerDetail(false);
+        setRenderingTeamMemberDetail(false);
       }}
     />
   );

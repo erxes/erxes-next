@@ -9,6 +9,11 @@ export interface IBrand {
   emailConfig: any;
 }
 
+export enum BrandsHotKeyScope {
+  BrandsSettingsPage = 'brands-page',
+  BrandsCreateSheet = 'add-brand',
+}
+
 export interface IBrandSelectContext {
   selectedBrandId: string | undefined;
   selectedBrand: IBrand | undefined;

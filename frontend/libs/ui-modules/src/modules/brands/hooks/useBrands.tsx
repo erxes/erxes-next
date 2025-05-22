@@ -1,13 +1,17 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { GET_BRANDS } from '../graphql';
+const BRANDS_PER_PAGE = 30;
 
 export const useBrands = (options?: OperationVariables) => {
-  const { data, error, loading } = useQuery(GET_BRANDS, options);
+  const { data, error, loading, fetchMore } = useQuery(GET_BRANDS, options);
+  const brands = data?.brands?.list || [];
+  const totalCount = data?.brands?.totalCount || 0;
+  const pageInfo = data?.brands?.pageInfo || undefined;
 
   return {
-    brands: data?.brands?.list || [],
-    totalCount: data?.brands?.totalCount || 0,
-    pageInfo: data?.brands?.pageInfo || undefined,
+    brands,
+    totalCount,
+    pageInfo,
     error,
     loading,
   };
