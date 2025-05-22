@@ -89,7 +89,7 @@ export const CreateBrand = () => {
                 Cancel
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? <Spinner /> : 'Update'}
+                {loading ? <Spinner /> : 'Create'}
               </Button>
             </Sheet.Footer>
           </form>
