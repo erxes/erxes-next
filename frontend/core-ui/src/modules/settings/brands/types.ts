@@ -18,3 +18,13 @@ export enum BrandsHotKeyScope {
 }
 
 export type TBrandsForm = z.infer<typeof BRANDS_FORM_SCHEMA>;
+
+export interface IBrandData {
+  brands: {
+    list: IBrand[];
+    totalCount: number;
+  };
+}
+export type TAddBrandResult = {
+  brandsAdd: TBrandsForm;
+};
