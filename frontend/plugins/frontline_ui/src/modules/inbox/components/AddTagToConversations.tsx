@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { SelectSingleTag, useGiveTags } from 'ui-modules';
+import { useGiveTags, SelectTags } from 'ui-modules';
 import { selectConversationsState } from '../states/selectConversationsState';
 
 export const AddTagToConversations = () => {
@@ -44,13 +44,13 @@ export const AddTagToConversations = () => {
   };
 
   return (
-    <SelectSingleTag
+    <SelectTags
       tagType="frontline:conversation"
       onValueChange={(value) => {
-        handleAddTag(value);
+        if (typeof value === 'string') {
+          handleAddTag(value);
+        }
       }}
-      className="h-7 shadow-none rounded"
-      variant="secondary"
-    />
+    ></SelectTags>
   );
 };

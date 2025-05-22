@@ -4,7 +4,7 @@ import { FormDisplay } from './FormDisplay';
 import { Button, IAttachment, RelativeDateDisplay } from 'erxes-ui';
 import { MessageContent } from './MessageContent';
 import { useConversationMessageContext } from '../hooks/useConversationMessageContext';
-import { CustomerInline, MemberInline, MembersInline } from 'ui-modules';
+import { CustomerInline, MembersInline } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { activeConversationState } from '../../states/activeConversationState';
 
