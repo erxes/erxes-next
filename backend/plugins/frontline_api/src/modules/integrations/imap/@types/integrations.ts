@@ -1,4 +1,5 @@
-export interface IMapIntegration {
+import { Document } from 'mongoose';
+export interface IIMapIntegration {
   inboxId: string;
   host: string;
   smtpHost: string;
@@ -11,4 +12,4 @@ export interface IMapIntegration {
   lastFetchDate?: Date;
 }
 
-export interface IMapIntegrationDocument extends IMapIntegration, Document {}
+export interface IIMapIntegrationDocument extends IIMapIntegration, Document {}

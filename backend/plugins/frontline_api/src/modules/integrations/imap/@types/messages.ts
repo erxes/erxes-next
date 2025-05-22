@@ -1,28 +1,28 @@
 import { Document } from 'mongoose';
 
-interface IMapMail {
+interface IIMapMail {
   name: string;
   address: string;
 }
-export interface IMapAttachmentParams {
+export interface IIMapAttachmentParams {
   filename: string;
   size: number;
   mimeType: string;
   data?: string;
   attachmentId?: string;
 }
-export interface IMapMessage {
+export interface IIMapMessage {
   inboxIntegrationId: string;
   inboxConversationId: string;
   messageId: string;
   subject: string;
   body: string;
-  to: IMapMail[];
-  cc: IMapMail[];
-  bcc: IMapMail[];
-  from: IMapMail[];
-  attachments?: IMapAttachmentParams[];
+  to: IIMapMail[];
+  cc: IIMapMail[];
+  bcc: IIMapMail[];
+  from: IIMapMail[];
+  attachments?: IIMapAttachmentParams[];
   createdAt: Date;
 }
 
-export interface IMapMessageDocument extends IMapMessage, Document {}
+export interface IIMapMessageDocument extends IIMapMessage, Document {}

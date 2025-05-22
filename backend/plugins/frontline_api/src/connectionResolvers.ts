@@ -6,9 +6,9 @@ import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { IConversationDocument } from '@/inbox/@types/conversations';
 import { IMessageDocument } from '@/inbox/@types/conversationMessages';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-import { IMapIntegrationDocument } from '@/integrations/imap/@types/integrations';
-import { IMapCustomerDocument } from '@/integrations/imap/@types/customers';
-import { IMapMessageDocument } from '@/integrations/imap/@types/messages';
+import { IIMapIntegrationDocument } from '@/integrations/imap/@types/integrations';
+import { IIMapCustomerDocument } from '@/integrations/imap/@types/customers';
+import { IIMapMessageDocument } from '@/integrations/imap/@types/messages';
 import { IFacebookLogDocument } from '@/integrations/facebook/@types/logs';
 import { IFacebookAccountDocument } from '@/integrations/facebook/@types/accounts';
 import { IFacebookCustomerDocument } from '@/integrations/facebook/@types/customers';
@@ -72,15 +72,15 @@ import {
   loadFacebookConfigClass,
 } from '@/integrations/facebook/db/models/Config';
 import {
-  IMapCustomerModel,
+  IIMapCustomerModel,
   loadImapCustomerClass,
 } from '@/integrations/imap/db/models/Customers';
 import {
-  IMapIntegrationModel,
+  IIMapIntegrationModel,
   loadImapIntegrationClass,
 } from '@/integrations/imap/db/models/Integrations';
 import {
-  IMapMessageModel,
+  IIMapMessageModel,
   loadImapMessageClass,
 } from '@/integrations/imap/db/models/Messages';
 export interface IModels {
@@ -98,9 +98,9 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
-  ImapCustomers: IMapCustomerModel;
-  ImapIntegrations: IMapIntegrationModel;
-  ImapMessages: IMapMessageModel;
+  ImapCustomers: IIMapCustomerModel;
+  ImapIntegrations: IIMapIntegrationModel;
+  ImapMessages: IIMapMessageModel;
 }
 
 export interface IContext extends IMainContext {
@@ -181,16 +181,16 @@ export const loadClasses = (
     IFacebookConfigModel
   >('facebook_configs', loadFacebookConfigClass(models));
 
-  models.ImapCustomers = db.model<IMapCustomerDocument, IMapCustomerModel>(
+  models.ImapCustomers = db.model<IIMapCustomerDocument, IIMapCustomerModel>(
     'imap_customers',
     loadImapCustomerClass(models),
   );
-  models.ImapIntegrations = db.model<IMapIntegrationDocument, IMapIntegrationModel>(
+  models.ImapIntegrations = db.model<IIMapIntegrationDocument, IIMapIntegrationModel>(
     'imap_integrations',
     loadImapIntegrationClass(models),
   );
 
-  models.ImapMessages = db.model<IMapMessageDocument, IMapMessageModel>(
+  models.ImapMessages = db.model<IIMapMessageDocument, IIMapMessageModel>(
     'imap_messages',
     loadImapMessageClass(models),
   );

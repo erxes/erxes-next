@@ -1,5 +1,5 @@
-
-export interface IMapCustomer {
+import { Document } from 'mongoose';
+export interface IIMapCustomer {
   inboxIntegrationId: string;
   contactsId: string;
   email: string;
@@ -8,4 +8,4 @@ export interface IMapCustomer {
   integrationId?: string;
 }
 
-export interface IMapCustomerDocument extends IMapCustomer, Document {}
+export interface IIMapCustomerDocument extends IIMapCustomer, Document {}

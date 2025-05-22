@@ -1,15 +1,15 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import {IMapMessageDocument } from '@/integrations/imap/@types/messages';
+import {IIMapMessageDocument } from '@/integrations/imap/@types/messages';
 import * as nodemailer from 'nodemailer';
 import { messageSchema} from '@/integrations/imap/db/definitions/messages'
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
-export interface IMapMessageModel extends Model<IMapMessageDocument> {
+export interface IIMapMessageModel extends Model<IIMapMessageDocument> {
   createSendMail(
     args: any,
     subdomain: string,
     models: IModels
-  ): Promise<IMapMessageDocument>;
+  ): Promise<IIMapMessageDocument>;
 }
 
 export const loadImapMessageClass = (models) => {
@@ -39,16 +39,9 @@ export const loadImapMessageClass = (models) => {
         ? { _id: customerId }
         : { status: { $ne: 'deleted' }, emails: { $in: to } };
 
-    //   customer = await sendCoreMessage({
-    //     subdomain,
-    //     action: 'customers.findOne',
-    //     data: selector,
-    //     isRPC: true
-    //   });
-
         customer = await sendTRPCMessage({
           pluginName: 'core',
-          method: 'query', // this is a mutation, not a query
+          method: 'query', 
           module: 'customers',
           action: 'updateCustomer',
           input: { selector  },
@@ -57,7 +50,7 @@ export const loadImapMessageClass = (models) => {
         const [primaryEmail] = to;
         customer = await sendTRPCMessage({
           pluginName: 'core',
-          method: 'mutation', // this is a mutation, not a query
+          method: 'mutation', 
           module: 'customers',
           action: 'createCustomer',
           input: {
@@ -148,7 +141,7 @@ export const loadImapMessageClass = (models) => {
 
       const info = await transporter.sendMail(mailData);
 
-      models.ImapMessages.create({
+      await models.ImapMessages.create({
         inboxIntegrationId: integration.inboxId,
         inboxConversationId: conversationId,
         createdAt: new Date(),

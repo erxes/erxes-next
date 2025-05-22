@@ -31,6 +31,6 @@ export const messageSchema = new Schema({
   bcc: [emailSchema],
   from: [emailSchema],
   attachments: [attachmentSchema],
-  createdAt: { type: Date, index: true, default: new Date() },
+  createdAt: { type: Date, index: true, default: Date.now },
   type: { type: String, enum: ['SENT', 'INBOX'] }
 });
