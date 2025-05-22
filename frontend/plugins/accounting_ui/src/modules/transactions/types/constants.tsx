@@ -1,4 +1,3 @@
-
 export enum TrJournalEnum {
   MAIN = 'main',
   CASH = 'cash',
