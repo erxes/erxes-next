@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
-import SegmentForm from 'ui-modules/modules/segments/form';
 import { TAutomationProps } from '../common/formSchema';
 import { NodeData } from '~/modules/app/types';
+import { SegmentForm } from 'ui-modules';
 
 type Props = { activeNode: NodeData };
 

@@ -1,9 +1,10 @@
 import { gql, useQuery } from '@apollo/client';
 import { IconChevronDown } from '@tabler/icons-react';
-import { Button, Combobox, Command, Popover, Select, Skeleton } from 'erxes-ui';
-import { useState } from 'react';
-import { useFieldSelectionList } from 'ui-modules/modules/segments';
-import queries from 'ui-modules/modules/segments/graphql/queries';
+import { Button, Collapsible, Combobox, Command, Popover } from 'erxes-ui';
+import {
+  FIELDS_COMBINED_BY_CONTENT_TYPE,
+  useQuerySelectInputList,
+} from 'ui-modules/modules/segments';
 
 type Props = {
   contentType: string;
@@ -46,7 +47,7 @@ const renderSelection = ({ selectionConfig, onSelect }: SelectionProps) => {
     totalCount = 0,
     handleFetchMore,
     loading,
-  } = useFieldSelectionList(query, queryName, '', !selectionConfig);
+  } = useQuerySelectInputList(query, queryName, '', !selectionConfig);
   const items = list.map((option: any) => ({
     label: option[labelField],
     value: option[valueField],
@@ -57,23 +58,34 @@ const renderSelection = ({ selectionConfig, onSelect }: SelectionProps) => {
   }
 
   return (
-    <Command.Group heading="Options" value="options">
-      <Combobox.Empty loading={loading} />
-      {items.map((option: any) => (
-        <Command.Item
-          key={option.value}
-          value={option.value}
-          onSelect={onSelect}
-        >
-          {option.label}
-        </Command.Item>
-      ))}
-      <Combobox.FetchMore
-        currentLength={items?.length}
-        totalCount={totalCount}
-        fetchMore={() => handleFetchMore({ direction: 'forward' })}
-      />
-    </Command.Group>
+    <Collapsible className="space-y-2">
+      <Collapsible.TriggerButton className="px-4">
+        <div className="flex items-center gap-2">
+          <span>Options</span>
+          <Collapsible.TriggerIcon className="h-4 w-4" />
+        </div>
+      </Collapsible.TriggerButton>
+      <Collapsible.Content className="px-4 m-0">
+        <Command.Empty>Not found.</Command.Empty>
+        <Command.Group value="queryOptions">
+          <Combobox.Empty loading={loading} />
+          {items.map((option: any) => (
+            <Command.Item
+              key={option.value}
+              value={option.value}
+              onSelect={onSelect}
+            >
+              {option.label}
+            </Command.Item>
+          ))}
+          <Combobox.FetchMore
+            currentLength={items?.length}
+            totalCount={totalCount}
+            fetchMore={() => handleFetchMore({ direction: 'forward' })}
+          />
+        </Command.Group>
+      </Collapsible.Content>
+    </Collapsible>
   );
 };
 
@@ -88,7 +100,7 @@ export const Attributes = ({
 }: Props) => {
   const { selectOptions = [], selectionConfig } = selectedField || {};
   const { data, loading } = useQuery<QueryResponse>(
-    queries.fieldsCombinedByContentType,
+    FIELDS_COMBINED_BY_CONTENT_TYPE,
     {
       variables: {
         contentType,
@@ -105,14 +117,29 @@ export const Attributes = ({
     if (!selectOptions?.length) {
       return null;
     }
+
     return (
-      <Command.Group heading="Options" value="options">
-        {selectOptions.map((option: any) => (
-          <Command.Item key={String(option.value)} value={String(option.value)}>
-            {option.label || '-'}
-          </Command.Item>
-        ))}
-      </Command.Group>
+      <Collapsible className="space-y-2">
+        <Collapsible.TriggerButton className="px-4">
+          <div className="flex items-center gap-2">
+            <span>Options</span>
+            <Collapsible.TriggerIcon className="h-4 w-4" />
+          </div>
+        </Collapsible.TriggerButton>
+        <Collapsible.Content className="px-4 m-0">
+          <Command.Empty>Not found.</Command.Empty>
+          <Command.Group value="options">
+            {selectOptions.map((option: any) => (
+              <Command.Item
+                key={String(option.value)}
+                value={String(option.value)}
+              >
+                {option.label || '-'}
+              </Command.Item>
+            ))}
+          </Command.Group>
+        </Collapsible.Content>
+      </Collapsible>
     );
   };
 
@@ -134,16 +161,28 @@ export const Attributes = ({
       <Combobox.Content>
         <Command>
           <Command.Input placeholder="Search ..." />
-          <Command.Empty>Not found.</Command.Empty>
+
           <Command.List>
-            <Command.Group heading="Attributes" value="attributes">
-              {attributions.map(({ name, label }) => (
-                <Command.Item key={name} value={name} onSelect={onSelect}>
-                  {label}
-                </Command.Item>
-              ))}
-              <Combobox.Empty loading={loading} />
-            </Command.Group>
+            <Collapsible className="space-y-2">
+              <Collapsible.TriggerButton className="px-4">
+                <div className="flex items-center gap-2">
+                  <span>Attributes</span>
+                  <Collapsible.TriggerIcon className="h-4 w-4" />
+                </div>
+              </Collapsible.TriggerButton>
+              <Collapsible.Content className="px-4 m-0">
+                <Command.Empty>Not found.</Command.Empty>
+                <Command.Group value="attributes">
+                  {attributions.map(({ name, label }) => (
+                    <Command.Item key={name} value={name} onSelect={onSelect}>
+                      {label}
+                    </Command.Item>
+                  ))}
+                  <Combobox.Empty loading={loading} />
+                </Command.Group>
+              </Collapsible.Content>
+            </Collapsible>
+
             {renderOptions()}
             {renderSelection({ selectionConfig, onSelect })}
           </Command.List>

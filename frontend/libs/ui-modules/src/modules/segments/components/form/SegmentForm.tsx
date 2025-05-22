@@ -17,15 +17,17 @@ import {
 } from 'erxes-ui';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
-import { generateParamsPreviewCount } from '../common';
-import { SelectSegmentCommand } from '../common/SelectSegment';
-import mutations from '../graphql/mutations';
-import queries from '../graphql/queries';
-import { ISegment } from '../types';
-import { getDefaultValues } from './defaultValues';
-import { SegmentFormProps, segmentFormSchema } from './schema';
-import Segment from './Segment';
-import { Segments } from './Segments';
+import { SelectSegment } from '../SelectSegment';
+import { segmentFormSchema } from '../../states/segmentFormSchema';
+import { SegmentGroup } from './SegmentGroup';
+import {
+  generateParamsSegmentPreviewCount,
+  getDefaultValues,
+} from '../../utils';
+import { ISegment, SegmentFormProps } from '../../types';
+import { SegmentGroups } from './SegmentGroups';
+import { SEGMENT_ADD, SEGMENT_EDIT } from '../../graphql/mutations';
+import { SEGMENTS_PREVIEW_COUNT, SEGMENT_DETAIL } from '../../graphql/queries';
 
 type Props = {
   contentType: string;
@@ -79,7 +81,7 @@ const SegmentMetadataForm = ({
             <Form.Item className="flex-1">
               <Form.Label>Parent Segment</Form.Label>
               <Form.Control>
-                <SelectSegmentCommand
+                <SelectSegment
                   exclude={segment?._id ? [segment._id] : undefined}
                   selected={field.value}
                   onSelect={(value) => {
@@ -119,13 +121,13 @@ const renderContent = ({
   const conditionSegments = form.watch('conditionSegments');
 
   if (conditionSegments?.length) {
-    return <Segments form={form} contentType={contentType} />;
+    return <SegmentGroups form={form} contentType={contentType} />;
   }
 
-  return <Segment form={form} contentType={contentType} />;
+  return <SegmentGroup form={form} contentType={contentType} />;
 };
 
-export default function SegmentForm({
+export function SegmentForm({
   contentType,
   isTempoaray,
   callback,
@@ -135,11 +137,11 @@ export default function SegmentForm({
   const [stats, setStats] = useState<StatsType>();
 
   const [countSegment, { called, loading }] = useLazyQuery(
-    queries.segmentsPreviewCount,
+    SEGMENTS_PREVIEW_COUNT,
   );
 
-  const [segmentAdd] = useMutation(mutations.segmentsAdd);
-  const [segmentsEdit] = useMutation(mutations.segmentsEdit);
+  const [segmentAdd] = useMutation(SEGMENT_ADD);
+  const [segmentsEdit] = useMutation(SEGMENT_EDIT);
   const { toast } = useToast();
 
   const {
@@ -148,7 +150,7 @@ export default function SegmentForm({
     refetch,
   } = useQuery<{
     segmentDetail: ISegment;
-  }>(queries.segmentDetail, {
+  }>(SEGMENT_DETAIL, {
     variables: { _id: segmentId },
     skip: !segmentId || !contentType,
   });
@@ -246,10 +248,10 @@ export default function SegmentForm({
 
   const handleCalculateStats = async () => {
     const { data } = await countSegment({
-      query: queries.segmentsPreviewCount,
+      query: SEGMENTS_PREVIEW_COUNT,
       variables: {
         contentType: contentType,
-        conditions: generateParamsPreviewCount(form, contentType || ''),
+        conditions: generateParamsSegmentPreviewCount(form, contentType || ''),
         subOf: form.getValues('subOf'),
         config: form.getValues('config'),
         conditionsConjunction: form.getValues('conditionsConjunction'),

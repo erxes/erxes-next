@@ -6,7 +6,7 @@ type Props = {
   types: { contentType: string; description: string }[];
 };
 
-export const ListSidebar = ({ types }: Props) => {
+export const SegmentListSidebar = ({ types }: Props) => {
   const [selectedContentType] = useQueryState<string>('contentType');
 
   return (

@@ -16,13 +16,12 @@ const columns: ColumnDef<{ order: string; hasChildren: boolean } & ISegment>[] =
       accessorKey: 'name',
       header: () => <RecordTable.InlineHead label="Name" />,
       cell: ({ cell, row }) => {
-        const { name } = cell.row.original;
-
         return (
           <RecordTableTree.Trigger
             order={cell.row.original.order}
             name={cell.getValue() as string}
             hasChildren={cell.row.original.hasChildren}
+            className="pl-2"
           >
             {cell.getValue() as string}
           </RecordTableTree.Trigger>
@@ -72,6 +71,7 @@ const columns: ColumnDef<{ order: string; hasChildren: boolean } & ISegment>[] =
           </RecordTableCellDisplay>
         );
       },
+      size: 40,
     },
   ];
 

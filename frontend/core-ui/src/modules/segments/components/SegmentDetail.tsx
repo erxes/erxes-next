@@ -1,14 +1,8 @@
-import {
-  ApolloQueryResult,
-  OperationVariables,
-  useQuery,
-} from '@apollo/client';
+import { ApolloQueryResult, OperationVariables } from '@apollo/client';
 import { IconPlus } from '@tabler/icons-react';
 import { Button, Sheet, useQueryState } from 'erxes-ui';
 import { useState } from 'react';
-import { ISegment, ListQueryResponse } from 'ui-modules/modules/segments/types';
-import SegmentForm from 'ui-modules/modules/segments/form';
-// import {SegmentForm} from 'ui-modules';
+import { ISegment, ListQueryResponse, SegmentForm } from 'ui-modules';
 
 type Props = {
   refetch: (
@@ -16,7 +10,7 @@ type Props = {
   ) => Promise<ApolloQueryResult<ListQueryResponse>>;
 };
 
-export default function SegmentDetail({ refetch }: Props) {
+export function SegmentDetail({ refetch }: Props) {
   const [selectedContentType] = useQueryState<string>('contentType');
 
   if (!selectedContentType) {

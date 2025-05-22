@@ -1,8 +1,6 @@
-import { useQueryState } from 'erxes-ui/hooks';
 import { useFormContext } from 'react-hook-form';
-import SegmentForm from 'ui-modules/modules/segments/form';
+import { IActionProps, SegmentForm } from 'ui-modules';
 import { TAutomationProps } from '../common/formSchema';
-import { IAction, IActionProps, ITrigger } from 'ui-modules';
 import { getContentType } from '../common/utils';
 
 export const IF = ({ currentAction, handleSave }: IActionProps) => {

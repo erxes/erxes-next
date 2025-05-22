@@ -1,30 +1,18 @@
+import { IconTrash } from '@tabler/icons-react';
+import { Button, Card, Form, Label, Select } from 'erxes-ui/components';
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import {
-  Control,
-  ControllerRenderProps,
-  useFormContext,
-} from 'react-hook-form';
-import { getFieldsProperties, IActionProps, SelectCommand } from 'ui-modules';
+  FieldWithError,
+  getFieldsProperties,
+  IActionProps,
+  PlaceHolderInput,
+  IField as UIModuleField,
+  groupFieldsByType,
+} from 'ui-modules';
+import { PROPERTY_OPERATOR } from '~/modules/constants';
 import { TAutomationProps } from '../common/formSchema';
 import { getContentType } from '../common/utils';
-import {
-  Button,
-  Card,
-  DatePicker,
-  Form,
-  Input,
-  Label,
-  Select,
-} from 'erxes-ui/components';
-import { FieldWithError } from 'ui-modules/modules/segments/common/FieldWithError';
-import { groupByType } from 'ui-modules/modules/segments/utils';
-import { PROPERTY_OPERATOR } from '~/modules/constants';
-import gql from 'graphql-tag';
-import { IconChevronDown, IconTrash } from '@tabler/icons-react';
-import { IField as UIModuleField } from 'ui-modules/modules/segments/types';
-import { SelectTrigger } from '@radix-ui/react-select';
-import { Attributes } from 'ui-modules/modules/automations/common/Attributes';
-import { useEffect } from 'react';
-import { PlaceHolderInput } from 'ui-modules/modules/automations/common/PlaceHolderInput';
 
 type OperatorType = 'String' | 'Date' | 'Number' | 'Default';
 
@@ -191,7 +179,7 @@ export const ManageProperties = ({
   }, [propertyType]);
   const { propertyTypes, fields } = getFieldsProperties(propertyType);
 
-  const groups = groupByType(fields);
+  const groups = groupFieldsByType(fields);
   const config = watch(fieldName) as IConfig;
   const { rules = [{ field: '', operator: '' }] } = config || {};
 
