@@ -1,0 +1,49 @@
+import {
+  IconCaretDownFilled,
+  IconSandbox,
+  IconSettings,
+} from '@tabler/icons-react';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
+import { Link } from 'react-router-dom';
+
+export const IndexPage = () => {
+  return (
+    <div className="flex flex-col h-full">
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <Button variant="ghost" asChild>
+                  <Link to="/settings/content">
+                    <IconSandbox />
+                    Content
+                  </Link>
+                </Button>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
+          <PageHeader.FavoriteToggleButton item="contentFirst" />
+        </PageHeader.Start>
+        <PageHeader.End>
+          <Button variant="outline" asChild>
+            <Link to="/settings/content">
+              <IconSettings />
+              Go to settings
+            </Link>
+          </Button>
+          <Button>
+            More <IconCaretDownFilled />
+          </Button>
+        </PageHeader.End>
+      </PageHeader>
+      <div className="flex h-full overflow-hidden">
+        <div className="flex flex-col h-full overflow-hidden flex-auto">
+          <h1>Samplsdsadasdjakljkljklsade</h1>
+        </div>
+      </div>
+    </div>
+  );
+};

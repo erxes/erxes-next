@@ -108,7 +108,7 @@ export const inputs = `
     formId: String
   }
 
-input KnowledgeBaseArticleDoc {
+input KnowledgeBaseArticleInput {
     code: String
     title: String!
     summary: String
@@ -126,7 +126,7 @@ input KnowledgeBaseArticleDoc {
     forms: [FormCodeInput]
   }
 
-input KnowledgeBaseCategoryDoc {
+input KnowledgeBaseCategoryInput {
     code: String
     title: String!
     description: String
@@ -137,7 +137,7 @@ input KnowledgeBaseCategoryDoc {
     parentCategoryId: String
   }
 
-input KnowledgeBaseTopicDoc {
+input KnowledgeBaseTopicInput {
     code: String
     title: String!
     description: String
@@ -168,16 +168,16 @@ export const queries = `
 `;
 
 export const mutations = `
-  knowledgeBaseTopicsAdd(doc: KnowledgeBaseTopicDoc!): KnowledgeBaseTopic
-  knowledgeBaseTopicsEdit(_id: String!, doc: KnowledgeBaseTopicDoc!): KnowledgeBaseTopic
+  knowledgeBaseTopicsAdd(input: KnowledgeBaseTopicInput!): KnowledgeBaseTopic
+  knowledgeBaseTopicsEdit(_id: String!, input: KnowledgeBaseTopicInput!): KnowledgeBaseTopic
   knowledgeBaseTopicsRemove(_id: String!): JSON
 
-  knowledgeBaseCategoriesAdd(doc: KnowledgeBaseCategoryDoc!): KnowledgeBaseCategory
-  knowledgeBaseCategoriesEdit(_id: String!, doc: KnowledgeBaseCategoryDoc!): KnowledgeBaseCategory
+  knowledgeBaseCategoriesAdd(input: KnowledgeBaseCategoryInput!): KnowledgeBaseCategory
+  knowledgeBaseCategoriesEdit(_id: String!, input: KnowledgeBaseCategoryInput!): KnowledgeBaseCategory
   knowledgeBaseCategoriesRemove(_id: String!): JSON
 
-  knowledgeBaseArticlesAdd(doc: KnowledgeBaseArticleDoc!): KnowledgeBaseArticle
-  knowledgeBaseArticlesEdit(_id: String!, doc: KnowledgeBaseArticleDoc!): KnowledgeBaseArticle
+  knowledgeBaseArticlesAdd(input: KnowledgeBaseArticleInput!): KnowledgeBaseArticle
+  knowledgeBaseArticlesEdit(_id: String!, input: KnowledgeBaseArticleInput!): KnowledgeBaseArticle
   knowledgeBaseArticlesRemove(_id: String!): JSON
   knowledgeBaseArticlesIncrementViewCount(_id: String!): JSON
 `;
