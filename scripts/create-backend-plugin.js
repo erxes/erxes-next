@@ -323,9 +323,9 @@ import { ITRPCContext } from 'erxes-api-shared/utils';
 const t = initTRPC.context<ITRPCContext>().create();
 
 export const appRouter = t.router({
-  sample: {
+  ${kebabCaseName}: {
     hello: t.procedure.query(() => {
-      return 'Hello Sample';
+      return 'Hello ${kebabCaseName}';
     }),
   },
 });
@@ -389,6 +389,107 @@ export interface I${capitalizedModuleName}Document extends I${capitalizedModuleN
       `${moduleName}.ts`,
     ),
     moduleTypesContent,
+  );
+
+  const modelsDefinitionContent = `import { Schema } from 'mongoose';
+
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
+
+export const ${moduleName}Schema = schemaWrapper(
+  new Schema(
+    {
+      _id: mongooseStringRandomId,
+      name: { type: String, label: 'Name' },
+    },
+    {
+      timestamps: true,
+    },
+  ),
+);
+`;
+
+  fs.writeFileSync(
+    path.join(
+      backendPluginDir,
+      'src',
+      'modules',
+      moduleName,
+      'db',
+      'definitions',
+      `${moduleName}.ts`,
+    ),
+    modelsDefinitionContent,
+  );
+
+  const modelsContent = `import { Model } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
+import { ${moduleName}Schema } from '@/${moduleName}/db/definitions/${moduleName}';
+import { I${capitalizedModuleName}, I${capitalizedModuleName}Document } from '@/${moduleName}/@types/${moduleName}';
+
+export interface I${capitalizedModuleName}Model extends Model<I${capitalizedModuleName}Document> {
+  get${capitalizedModuleName}(_id: string): Promise<I${capitalizedModuleName}Document>;
+  create${capitalizedModuleName}(doc: I${capitalizedModuleName}): Promise<I${capitalizedModuleName}Document>;
+  update${capitalizedModuleName}(_id: string, doc: I${capitalizedModuleName}): Promise<I${capitalizedModuleName}Document>;
+  remove${capitalizedModuleName}(${capitalizedModuleName}Id: string): Promise<{  ok: number }>;
+}
+
+export const load${capitalizedModuleName}Class = (models: IModels) => {
+  class ${capitalizedModuleName} {
+    /**
+     * Retrieves ${kebabCaseName}
+     */
+    public static async get${capitalizedModuleName}(_id: string) {
+      const ${capitalizedModuleName} = await models.${capitalizedModuleName}.findOne({ _id }).lean();
+
+      if (!${capitalizedModuleName}) {
+        throw new Error('${capitalizedModuleName} not found');
+      }
+
+      return ${capitalizedModuleName};
+    }
+
+    /**
+     * Create a ${kebabCaseName}
+     */
+    public static async create${capitalizedModuleName}(doc: I${capitalizedModuleName}): Promise<I${capitalizedModuleName}Document> {
+      return models.${capitalizedModuleName}.create(doc);
+    }
+
+    /*
+     * Update ${kebabCaseName}
+     */
+    public static async update${capitalizedModuleName}(_id: string, doc: I${capitalizedModuleName}) {
+      return await models.${capitalizedModuleName}.findOneAndUpdate(
+        { _id },
+        { $set: { ...doc } },
+      );
+    }
+
+    /**
+     * Remove ${kebabCaseName}
+     */
+    public static async remove${capitalizedModuleName}(${capitalizedModuleName}Id: string[]) {
+      return models.${capitalizedModuleName}.deleteOne({ _id: { $in: ${capitalizedModuleName}Id } });
+    }
+  }
+
+  ${moduleName}Schema.loadClass(${capitalizedModuleName});
+
+  return ${moduleName}Schema;
+};
+`;
+
+  fs.writeFileSync(
+    path.join(
+      backendPluginDir,
+      'src',
+      'modules',
+      moduleName,
+      'db',
+      'models',
+      `${capitalizedModuleName}.ts`,
+    ),
+    modelsContent,
   );
 
   // Create modules/${moduleName}/graphql/schemas/extensions.ts
