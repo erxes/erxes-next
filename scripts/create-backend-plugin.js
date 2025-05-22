@@ -37,7 +37,9 @@ function createBackendPlugin(pluginName, moduleName) {
     `src/modules/${moduleName}/graphql`,
     `src/modules/${moduleName}/graphql/schemas`,
     `src/modules/${moduleName}/graphql/resolvers`,
-    `src/modules/${moduleName}/models`,
+    `src/modules/${moduleName}/db`,
+    `src/modules/${moduleName}/db/models`,
+    `src/modules/${moduleName}/db/definitions`,
     `src/modules/${moduleName}/@types`,
   ];
 
@@ -365,7 +367,7 @@ export const coreTRPCClient = async (): Promise<
 
   // Create modules/${moduleName}/types/index.ts
   const moduleTypesContent = `import { Document } from 'mongoose';
-  
+
 export interface I${capitalizedModuleName} {
   name?: string;
 }
