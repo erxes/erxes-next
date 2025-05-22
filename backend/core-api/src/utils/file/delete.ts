@@ -1,4 +1,3 @@
-import { sanitizeFilename } from 'erxes-api-shared/utils';
 import * as fs from 'fs';
 import { IModels } from '~/connectionResolvers';
 import {
@@ -125,8 +124,6 @@ export const deleteFile = async (
   models: IModels,
   fileName: string,
 ): Promise<any> => {
-  const sanitizedFilename = sanitizeFilename(fileName);
-
   const UPLOAD_SERVICE_TYPE = await getConfig(
     'UPLOAD_SERVICE_TYPE',
     'AWS',
@@ -134,22 +131,22 @@ export const deleteFile = async (
   );
 
   if (UPLOAD_SERVICE_TYPE === 'AWS') {
-    return deleteFileAWS(sanitizedFilename, models);
+    return deleteFileAWS(fileName, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'GCS') {
-    return deleteFileGCS(sanitizedFilename, models);
+    return deleteFileGCS(fileName, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'CLOUDFLARE') {
-    return deleteFileCloudflare(sanitizedFilename, models);
+    return deleteFileCloudflare(fileName, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'AZURE') {
-    return deleteFileAzure(sanitizedFilename, models);
+    return deleteFileAzure(fileName, models);
   }
 
   if (UPLOAD_SERVICE_TYPE === 'local') {
-    return deleteFileLocal(sanitizedFilename);
+    return deleteFileLocal(fileName);
   }
 };

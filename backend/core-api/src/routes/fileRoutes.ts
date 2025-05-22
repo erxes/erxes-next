@@ -2,7 +2,7 @@ import {
   getEnv,
   getSubdomain,
   isImage,
-  sanitizeKey,
+  sanitizeFilename,
 } from 'erxes-api-shared/utils';
 import { NextFunction, Request, Response, Router } from 'express';
 import * as formidable from 'formidable';
@@ -24,7 +24,7 @@ router.get(
     try {
       const { key, inline, name, width = 0 } = req.query || {};
 
-      const sanitizedKey = sanitizeKey(String(key));
+      const sanitizedKey = sanitizeFilename(String(key));
 
       if (!sanitizedKey) {
         return res.send('Invalid key');
@@ -131,7 +131,9 @@ router.post('/delete-file', async (req: Request, res: Response) => {
   const subdomain = getSubdomain(req);
   const models = await generateModels(subdomain);
 
-  const status = await deleteFile(models, req.body.fileName);
+  const sanitizedFilename = sanitizeFilename(req.body.fileName);
+
+  const status = await deleteFile(models, sanitizedFilename);
 
   if (status === 'ok') {
     return res.send(status);

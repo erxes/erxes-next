@@ -3,8 +3,6 @@ import {
   getPlugin,
   getPlugins,
   isImage,
-  sanitizeFilename,
-  sanitizeKey,
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
 import * as fs from 'fs';
@@ -49,9 +47,7 @@ const readFromCFImages = async (
     throw new Error('Cloudflare Account Hash is not configured');
   }
 
-  let url = `https://imagedelivery.net/${CLOUDFLARE_ACCOUNT_HASH}/${encodeURIComponent(
-    fileName,
-  )}/public`;
+  let url = `https://imagedelivery.net/${CLOUDFLARE_ACCOUNT_HASH}/${fileName}/public`;
 
   if (width) {
     url = `https://imagedelivery.net/${CLOUDFLARE_ACCOUNT_HASH}/${fileName}/w=${width}`;
@@ -132,13 +128,12 @@ export const readFileRequest = async ({
   width?: number;
 }): Promise<any> => {
   const services = await getPlugins();
-  const sanitizedFileKey = sanitizeFilename(key);
 
   for (const serviceName of services) {
     const service = await getPlugin(serviceName);
     const meta = service.config?.meta || {};
 
-    if (meta && meta.readFileHook) {
+    if (meta?.readFileHook) {
       await sendTRPCMessage({
         pluginName: serviceName,
         method: 'query',
@@ -229,16 +224,13 @@ export const readFileRequest = async ({
 
   if (UPLOAD_SERVICE_TYPE === 'local') {
     return new Promise((resolve, reject) => {
-      fs.readFile(
-        `${uploadsFolderPath}/${sanitizedFileKey}`,
-        (error, response) => {
-          if (error) {
-            return reject(error);
-          }
+      fs.readFile(`${uploadsFolderPath}/${key}`, (error, response) => {
+        if (error) {
+          return reject(error);
+        }
 
-          return resolve(response);
-        },
-      );
+        return resolve(response);
+      });
     });
   }
 };

@@ -121,7 +121,7 @@ export const createGCS = async (models?: IModels) => {
 };
 
 /*
- * Create Cloud Flare Storage instance
+ * Create Cloudflare R2 instance
  */
 export const createCFR2 = async (models?: IModels) => {
   const {
