@@ -4,7 +4,7 @@ import { SelectCategory } from "@/products/product-category/components/SelectCat
 import { PRODUCT_TYPE_OPTIONS } from "@/products/constants/ProductConstants";
 import { SelectBrand, SelectCompany } from "ui-modules";
 import { Control } from "react-hook-form";
-import { IconUpload } from "@tabler/icons-react";
+import { IconPlus, IconUpload, IconX } from "@tabler/icons-react";
 import { ProductFormValues } from "@/products/constants/formSchema";
 
 
@@ -43,17 +43,63 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
       <Form.Field
         control={control}
         name="barcodes"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              BARCODES
-            </Form.Label>
-            <Form.Control>
-              <Input {...field} placeholder="Enter barcodes" />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-        )}
+        render={({ field }) => {
+          const barcodes = Array.isArray(field.value) && field.value.length > 0 
+            ? field.value 
+            : [""];
+
+          return (
+            <Form.Item>
+              <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
+                BARCODES
+              </Form.Label>
+              <div className="space-y-2">
+                {barcodes.map((barcode: string, index: number) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Input
+                      value={barcode}
+                      onChange={(e) => {
+                        const newBarcodes = [...barcodes];
+                        newBarcodes[index] = e.target.value;
+                        const filteredBarcodes = newBarcodes.filter(b => b.trim() !== "");
+                        field.onChange(filteredBarcodes);
+                      }}
+                      placeholder="Enter barcode"
+                      className="flex-1"
+                    />
+                    {barcodes.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const newBarcodes = barcodes.filter((_: string, i: number) => i !== index);
+                          field.onChange(newBarcodes.length > 0 ? newBarcodes : []);
+                        }}
+                      >
+                        <IconX className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const currentBarcodes = Array.isArray(field.value) ? field.value : [];
+                    field.onChange([...currentBarcodes, ""]);
+                  }}
+                  className="w-full"
+                >
+                  <IconPlus className="h-4 w-4 mr-2" />
+                  Add Barcode
+                </Button>
+              </div>
+              <Form.Message />
+            </Form.Item>
+          );
+        }}
       />
 
       <Form.Field

@@ -22,13 +22,15 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
   const { toast } = useToast();
 
   const handleSubmit = async (data: ProductFormValues) => {
-    if (!productDetail?._id) return;
+    if (!productDetail?._id) {
+      return
+    };
 
     try {
       await productsEdit({
         variables: {
-          _id: productDetail._id,
           ...data,
+          _id: productDetail._id,
         },
       });
 
@@ -46,6 +48,9 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
   };
 
   const handleCancel = () => {
+    if (form && typeof form.reset === 'function') {
+      form.reset();
+    }
     if (onCancel) {
       onCancel();
     }

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { useApolloClient } from '@apollo/client';
-import { useProductTags } from '@/products/hooks/useProductTags';
 import { AlertDialog, Button, useToast } from 'erxes-ui';
 import { useProductsEdit } from '../../hooks/useProductsEdit';
 import { TagsManagerProps } from '../types/tagsTypes';
@@ -22,12 +21,11 @@ export function TagsManager({
 }: TagsManagerProps) {
   const client = useApolloClient();
   const { toast } = useToast();
-  const { tags: availableTags = [], refetch: refetchTags } =
-  useTags() || {};
-  const [tags, setTags] = React.useState<string[]>(() =>
-    initialTags.map((tag) => (typeof tag === 'string' ? tag : tag._id)),
-  );
+  const { tags: availableTags = [], refetch: refetchTags } = useTags() || {};
 
+  const [tags, setTags] = React.useState<string[]>(() =>
+    initialTags.map((tag) => (typeof tag === 'string' ? tag : tag._id))
+  );
   const [isEditingTags, setIsEditingTags] = React.useState(false);
   const [showTagCreator, setShowTagCreator] = React.useState(false);
   const [tagToDelete, setTagToDelete] = React.useState<{
@@ -44,16 +42,9 @@ export function TagsManager({
 
   const refreshData = async () => {
     try {
-      if (refetchTags) {
-        await refetchTags();
-      }
-      await client.refetchQueries({
-        include: ['Tags'],
-      });
-
-      if (onTagsUpdated) {
-        onTagsUpdated();
-      }
+      if (refetchTags) await refetchTags();
+      await client.refetchQueries({ include: ['Tags'] });
+      if (onTagsUpdated) onTagsUpdated();
     } catch (error) {
       console.error('Error refreshing data:', error);
     }
@@ -61,11 +52,9 @@ export function TagsManager({
 
   const handleRemoveTag = async () => {
     if (!tagToDelete) return;
-
     try {
       await removeTag(tagToDelete.id);
       setTags((prevTags) => prevTags.filter((tag) => tag !== tagToDelete.id));
-
       toast({
         title: 'Tag removed',
         description: `Successfully removed tag: ${tagToDelete.name}`,
@@ -86,7 +75,6 @@ export function TagsManager({
 
   const handleSaveTags = async (selectedTags: string[]) => {
     if (!productId) return;
-
     setIsEditingTags(true);
 
     try {
@@ -130,14 +118,6 @@ export function TagsManager({
     });
   };
 
-  // Context provider for the CreateTagForm
-  const contextValue = {
-    newTagName: '',
-    tagType: 'core:product',
-    onSelect: handleTagCreated,
-    setNewTagName: () => {},
-  };
-
   return (
     <div className="space-y-4">
       <Button
@@ -152,7 +132,10 @@ export function TagsManager({
 
       {showTagCreator && (
         <div className="mb-4">
-          <SelectTagCreateContainer>
+          <SelectTagCreateContainer
+            tagType="core:product"
+            onSelect={handleTagCreated}
+          >
             <CreateTagForm />
           </SelectTagCreateContainer>
         </div>

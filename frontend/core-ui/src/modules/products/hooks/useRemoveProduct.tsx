@@ -3,6 +3,8 @@ import { IProduct } from 'ui-modules';
 import { productRemove } from '../detail/graphql/mutations/productEditMutations';
 import { productsQueries } from '@/products/graphql';
 
+const PRODUCTS_PAGE_SIZE = 30;
+
 export const useRemoveProducts = () => {
   const [_removeProducts, { loading }] = useMutation(productRemove);
 
@@ -18,7 +20,7 @@ export const useRemoveProducts = () => {
           cache.updateQuery(
             {
               query: productsQueries.products,
-              variables: { perPage: 30, dateFilters: null },
+              variables: { perPage: PRODUCTS_PAGE_SIZE, dateFilters: null },
             },
             ({ productsMain }) => ({
               productsMain: {

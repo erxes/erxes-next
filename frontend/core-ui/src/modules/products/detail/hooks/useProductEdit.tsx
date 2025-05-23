@@ -20,7 +20,9 @@ export const useProductEdit = () => {
       variables,
       update: (cache, { data }) => {
         const editedProduct = data?.productsEdit;
-        if (!editedProduct) return;
+        if (!editedProduct) {
+          return
+        };
 
         cache.modify({
           id: cache.identify(editedProduct),

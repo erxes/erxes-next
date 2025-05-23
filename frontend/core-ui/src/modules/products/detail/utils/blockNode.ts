@@ -39,19 +39,38 @@ export class BlockNoteUtils {
     };
   }
 
+  // Secure HTML sanitization without external libraries
+  static sanitizeHtml(htmlContent: string): string {
+    if (!htmlContent || typeof htmlContent !== 'string') {
+      return '';
+    }
+
+    // Create a temporary DOM element to safely parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    
+    // Extract only the text content, completely removing all HTML
+    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+    
+    // Additional cleanup to remove any remaining dangerous patterns
+    return textContent
+      .replace(/[<>]/g, '') // Remove any remaining angle brackets
+      .trim();
+  }
+
   static convertHtmlToBlockNote(htmlContent: string): string {
     if (!htmlContent || htmlContent.trim() === "") {
       return JSON.stringify([this.createEmptyBlock()]);
     }
 
-    // Remove HTML tags and extract text content
-    const textContent = htmlContent.replace(/<[^>]*>/g, "").trim();
+    // Use secure sanitization instead of regex
+    const sanitizedText = this.sanitizeHtml(htmlContent);
     
-    if (!textContent) {
+    if (!sanitizedText) {
       return JSON.stringify([this.createEmptyBlock()]);
     }
 
-    return JSON.stringify([this.createTextBlock(textContent)]);
+    return JSON.stringify([this.createTextBlock(sanitizedText)]);
   }
 
   static formatEditorContent(value: unknown): string {
@@ -62,11 +81,23 @@ export class BlockNoteUtils {
     
     // If it's a string
     if (typeof value === "string") {
-      // If it's already BlockNote JSON format, return as is
-      if (value.startsWith("[") && value.includes('"type":"paragraph"')) {
+      // More robust check for BlockNote JSON format
+      if (value.startsWith("[")) {
         try {
-          JSON.parse(value); // Validate JSON
-          return value;
+          const parsed = JSON.parse(value);
+          // Verify it's actually BlockNote format by checking structure
+          if (Array.isArray(parsed) && 
+              parsed.length > 0 && 
+              parsed.every(block => 
+                typeof block === 'object' && 
+                block !== null && 
+                'type' in block && 
+                block.type === "paragraph" && 
+                'content' in block
+              )) {
+            return value;
+          }
+          // Not valid BlockNote format, fall through to other handlers
         } catch (e) {
           // Invalid JSON, treat as HTML below
         }

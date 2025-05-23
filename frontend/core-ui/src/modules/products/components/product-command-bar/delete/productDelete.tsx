@@ -16,7 +16,7 @@ export const ProductsDelete = ({ productIds }: { productIds: string[] }) => {
       className="text-destructive"
       onClick={() =>
         confirm({
-          message: `Are you sure you want to delete the ${productIds.length} selected product?`,
+          message: `Are you sure you want to delete the ${productIds.length} selected product${productIds.length === 1 ? '' : 's'}?`,
         }).then(() => {
             removeProducts(productIds, {
             onError: (e: ApolloError) => {
