@@ -1,30 +1,17 @@
+import { IconTrash } from '@tabler/icons-react';
+import { Button, Card, Form, Label, Select } from 'erxes-ui';
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import {
-  Control,
-  ControllerRenderProps,
-  useFormContext,
-} from 'react-hook-form';
-import { getFieldsProperties, IActionProps, SelectCommand } from 'ui-modules';
+  getFieldsProperties,
+  groupFieldsByType,
+  IActionProps,
+  PlaceHolderInput,
+  IField as UIModuleField,
+} from 'ui-modules';
+import { PROPERTY_OPERATOR } from '~/modules/constants';
 import { TAutomationProps } from '../common/formSchema';
 import { getContentType } from '../common/utils';
-import {
-  Button,
-  Card,
-  DatePicker,
-  Form,
-  Input,
-  Label,
-  Select,
-} from 'erxes-ui/components';
-import { FieldWithError } from 'ui-modules/modules/segments/common/FieldWithError';
-import { groupByType } from 'ui-modules/modules/segments/utils';
-import { PROPERTY_OPERATOR } from '~/modules/constants';
-import gql from 'graphql-tag';
-import { IconChevronDown, IconTrash } from '@tabler/icons-react';
-import { IField as UIModuleField } from 'ui-modules/modules/segments/types';
-import { SelectTrigger } from '@radix-ui/react-select';
-import { Attributes } from 'ui-modules/modules/automations/common/Attributes';
-import { useEffect } from 'react';
-import { PlaceHolderInput } from 'ui-modules/modules/automations/common/PlaceHolderInput';
 
 type OperatorType = 'String' | 'Date' | 'Number' | 'Default';
 
@@ -91,8 +78,8 @@ const Rule = ({
   return (
     <div className="border rounded p-4  mb-2 relative group">
       <div className="flex flex-row gap-4 mb-4  items-end">
-        <Form.Item className="w-3/5">
-          <Form.Label>Field</Form.Label>
+        <div className="w-3/5">
+          <Label>Field</Label>
 
           <Select
             value={rule.field}
@@ -123,10 +110,10 @@ const Rule = ({
               })}
             </Select.Content>
           </Select>
-        </Form.Item>
+        </div>
 
-        <Form.Item className="w-2/5 ">
-          <Form.Label>Operator</Form.Label>
+        <div className="w-2/5 ">
+          <Label>Operator</Label>
 
           <Select
             value={rule.operator}
@@ -143,7 +130,7 @@ const Rule = ({
               ))}
             </Select.Content>
           </Select>
-        </Form.Item>
+        </div>
         <Button
           variant="destructive"
           size="icon"
@@ -154,8 +141,8 @@ const Rule = ({
         </Button>
       </div>
       <div className="mb-4">
-        <Form.Item>
-          <Form.Label>Value</Form.Label>
+        <div>
+          <Label>Value</Label>
 
           <PlaceHolderInput
             propertyType={propertyType}
@@ -166,7 +153,7 @@ const Rule = ({
             value={rule.value}
             onChange={(value) => handleChange('value', value)}
           />
-        </Form.Item>
+        </div>
       </div>
     </div>
   );
@@ -175,7 +162,6 @@ const Rule = ({
 export const ManageProperties = ({
   currentActionIndex,
   currentAction,
-  handleSave,
 }: IActionProps) => {
   const fieldName: IFieldName = `detail.actions.${currentActionIndex}.config`;
   const { setValue, watch, control } = useFormContext<TAutomationProps>();
@@ -189,9 +175,9 @@ export const ManageProperties = ({
       setValue(`${fieldName}.module`, propertyType);
     }
   }, [propertyType]);
-  const { propertyTypes, fields } = getFieldsProperties(propertyType);
+  const { propertyTypes, fields, loading } = getFieldsProperties(propertyType);
 
-  const groups = groupByType(fields);
+  const groups = groupFieldsByType(fields || []);
   const config = watch(fieldName) as IConfig;
   const { rules = [{ field: '', operator: '' }] } = config || {};
 
@@ -208,28 +194,24 @@ export const ManageProperties = ({
         control={control}
         name={`${fieldName}.module`}
         render={({ field }) => (
-          <FieldWithError>
-            <Form.Item>
-              <Form.Label>Property Type</Form.Label>
-              <Form.Control>
-                <Select
-                  value={field.value || propertyType}
-                  onValueChange={field.onChange}
-                >
-                  <Select.Trigger>
-                    <Select.Value placeholder="Select a property type" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    {propertyTypes.map(({ value, description }) => (
-                      <Select.Item key={value} value={value}>
-                        {description}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select>
-              </Form.Control>
-            </Form.Item>
-          </FieldWithError>
+          <Form.Item>
+            <Label>Property Type</Label>
+            <Select
+              value={field.value || propertyType}
+              onValueChange={field.onChange}
+            >
+              <Select.Trigger>
+                <Select.Value placeholder="Select a property type" />
+              </Select.Trigger>
+              <Select.Content>
+                {propertyTypes.map(({ value, description }) => (
+                  <Select.Item key={value} value={value}>
+                    {description}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </Form.Item>
         )}
       />
 

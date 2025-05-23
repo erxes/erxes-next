@@ -1,13 +1,9 @@
 import { useQuery } from '@apollo/client';
 import { IconChartPie } from '@tabler/icons-react';
-import { Spinner } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
-import { RecordTable, RecordTableTree } from 'erxes-ui/modules/record-table';
-import { PageHeader } from 'ui-modules';
-import queries from 'ui-modules/modules/segments/graphql/queries';
-import { ISegment, ListQueryResponse } from 'ui-modules/modules/segments/types';
-import Detail from './Detail';
-import columns from './RowColumns';
+import { Spinner, useQueryState, RecordTable, RecordTableTree } from 'erxes-ui';
+import { SEGMENTS, ISegment, ListQueryResponse, PageHeader } from 'ui-modules';
+import { SegmentDetail } from './SegmentDetail';
+import columns from './SegmentsColumns';
 import { useMemo } from 'react';
 
 const generateOrderPath = (items: ISegment[]) => {
@@ -38,15 +34,12 @@ const generateOrderPath = (items: ISegment[]) => {
   }));
 };
 
-export default function List() {
+export function SegmentsRecordTable() {
   const [selectedContentType] = useQueryState('contentType');
 
-  const { data, loading, refetch } = useQuery<ListQueryResponse>(
-    queries.segments,
-    {
-      variables: { contentTypes: [selectedContentType] },
-    },
-  );
+  const { data, loading, refetch } = useQuery<ListQueryResponse>(SEGMENTS, {
+    variables: { contentTypes: [selectedContentType] },
+  });
 
   const { segments = [] } = data || {};
 
@@ -55,23 +48,9 @@ export default function List() {
     [segments],
   );
 
-  const segmentsObject = useMemo(() => {
-    return orderedSegments.reduce(
-      (
-        acc: Record<string, { order: string } & ISegment>,
-        segment: { order: string } & ISegment,
-      ) => {
-        acc[segment._id] = segment;
-        return acc;
-      },
-      {},
-    );
-  }, [segments]);
-
   if (loading) {
     return <Spinner />;
   }
-  console.log({ segmentsObject, orderedSegments });
   return (
     <div className="flex flex-col h-full p-3 pt-0">
       <PageHeader className="p-3 mx-0" separatorClassName="mb-0">
@@ -80,7 +59,7 @@ export default function List() {
           <span className="font-medium">Segments</span>
         </PageHeader.Start>
         <PageHeader.End>
-          <Detail refetch={refetch} />
+          <SegmentDetail refetch={refetch} />
         </PageHeader.End>
       </PageHeader>
       <RecordTable.Provider

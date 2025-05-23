@@ -126,12 +126,10 @@ export default ({ reactFlowInstance }: any) => {
       }
     } else {
       const errorKeys = Object.keys(errors || {});
-      console.log({ errorKeys });
       if (errorKeys?.length > 0) {
         const errorMessage = (errors as Record<string, { message?: string }>)[
           errorKeys[0]
         ]?.message;
-        console.log({ errorMessage });
         toast({
           title: 'Error',
           description: errorMessage,
