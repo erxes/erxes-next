@@ -41,9 +41,11 @@ router.get(
     const models = await generateModels(subdomain);
 
     try {
-      const { key = '', inline, name, width = 0 } = req.query || {};
+      const { key, inline, name, width = 0 } = req.query || {};
 
-      const sanitizedKey = sanitizeKey(key);
+      const stringKey = Array.isArray(key) ? key[0] : key;
+
+      const sanitizedKey: string = sanitizeKey(stringKey);
 
       if (!sanitizedKey) {
         return res.status(400).send('Invalid key');
