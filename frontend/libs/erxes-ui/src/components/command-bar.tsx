@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as Popover from '@radix-ui/react-popover';
+import * as PopoverPrimitive from '@radix-ui/react-popover';
 
 import { cn } from '../lib/utils';
 import { Button } from './button';
@@ -21,18 +21,18 @@ const Root = ({
   children,
 }: CommandBarProps) => {
   return (
-    <Popover.Root
+    <PopoverPrimitive.Root
       open={open}
       onOpenChange={onOpenChange}
       defaultOpen={defaultOpen}
     >
-      <Popover.Trigger
+      <PopoverPrimitive.Trigger
         className={cn(
           'fixed bottom-10 left-1/2 h-px w-px -translate-x-1/2 z-50',
         )}
       />
 
-      <Popover.Content
+      <PopoverPrimitive.Content
         side="top"
         sideOffset={0}
         onOpenAutoFocus={(e) => {
@@ -45,8 +45,8 @@ const Root = ({
         )}
       >
         {children}
-      </Popover.Content>
-    </Popover.Root>
+      </PopoverPrimitive.Content>
+    </PopoverPrimitive.Root>
   );
 };
 Root.displayName = 'CommandBar';

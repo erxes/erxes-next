@@ -20,7 +20,6 @@ export const PositionEdit = () => {
     },
   });
 
-  console.log('positionDetail', positionDetail);
   const { handleEdit, loading: isLoading } = usePositionEdit();
 
   const {

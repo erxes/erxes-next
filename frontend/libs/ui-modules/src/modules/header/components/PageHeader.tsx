@@ -33,9 +33,7 @@ PageHeaderRoot.displayName = 'PageHeaderRoot';
 
 export const PageHeaderStart = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    children: React.ReactNode;
-  }
+  React.HTMLAttributes<HTMLDivElement>
 >(({ children, className, ...props }, ref) => {
   return (
     <div

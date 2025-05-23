@@ -38,7 +38,6 @@ export const BranchEdit = ({ children }: { children?: React.ReactNode }) => {
   };
   const submitHandler: SubmitHandler<TBranchForm> = React.useCallback(
     async (data) => {
-      console.log('data', data);
       handleEdit({
         variables: {
           id,

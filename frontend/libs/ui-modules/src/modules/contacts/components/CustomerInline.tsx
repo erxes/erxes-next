@@ -18,7 +18,7 @@ const CustomerInlineRoot = React.forwardRef<
     customerId?: string;
     avatarProps?: React.ComponentPropsWithoutRef<typeof Avatar>;
   }
->(({ customer, customerId, avatarProps, ...props }, ref) => {
+>(({ customer, customerId, avatarProps, className, ...props }, ref) => {
   return (
     <CustomerInlineProvider customerId={customerId} customer={customer}>
       <span
@@ -26,7 +26,7 @@ const CustomerInlineRoot = React.forwardRef<
         {...props}
         className={cn(
           'inline-flex items-center gap-2 overflow-hidden',
-          props.className,
+          className,
         )}
       >
         <CustomerInlineAvatar {...avatarProps} />

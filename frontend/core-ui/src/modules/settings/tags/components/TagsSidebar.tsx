@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { Sidebar, Skeleton } from 'erxes-ui';
+import { Sidebar, Skeleton, useQueryState } from 'erxes-ui';
 
 export const TagsSidebar = () => {
   const { data, loading } = useQuery(gql`
@@ -7,6 +7,7 @@ export const TagsSidebar = () => {
       tagsGetTypes
     }
   `);
+  const [tag, setTag] = useQueryState('tag');
 
   return (
     <Sidebar collapsible="none" className="border-r flex-none">
@@ -15,7 +16,9 @@ export const TagsSidebar = () => {
         <Sidebar.GroupContent>
           <Sidebar.Menu>
             {data?.tagsGetTypes.map((tag: any) => (
-              <Sidebar.MenuItem key={tag._id}>{tag.name}</Sidebar.MenuItem>
+              <Sidebar.MenuItem key={tag._id}>
+                <Sidebar.MenuButton>{tag.description}</Sidebar.MenuButton>
+              </Sidebar.MenuItem>
             ))}
             {loading &&
               Array.from({ length: 10 }).map((_, index) => (

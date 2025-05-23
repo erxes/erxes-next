@@ -41,7 +41,6 @@ export function ChannelDetailSheet() {
 
   const submitHandler: SubmitHandler<TChannelForm> = React.useCallback(
     async (data) => {
-      console.log('data', data);
       channelsEdit(
         {
           variables: {
