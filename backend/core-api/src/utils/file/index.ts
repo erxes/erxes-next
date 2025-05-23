@@ -55,6 +55,10 @@ export const checkFile = async (
     throw new Error('Invalid file');
   }
 
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Invalid or unsafe file path');
+  }
+
   const { size } = file;
 
   // 20mb

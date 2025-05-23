@@ -3,6 +3,7 @@ import {
   getSubdomain,
   isImage,
   sanitizeFilename,
+  sanitizeKey,
 } from 'erxes-api-shared/utils';
 import { NextFunction, Request, Response, Router } from 'express';
 import * as formidable from 'formidable';
@@ -40,20 +41,22 @@ router.get(
     const models = await generateModels(subdomain);
 
     try {
-      const { key, inline, name, width = 0 } = req.query || {};
+      const { key = '', inline, name, width = 0 } = req.query || {};
 
-      if (!key) {
+      const sanitizedKey = sanitizeKey(key);
+
+      if (!sanitizedKey) {
         return res.status(400).send('Invalid key');
       }
 
       const response = await readFileRequest({
-        key,
+        key: sanitizedKey,
         models,
         width,
       });
 
       if (inline && inline === 'true') {
-        const extension = key.split('.').pop();
+        const extension = sanitizedKey.split('.').pop();
 
         res.setHeader('Content-disposition', 'inline; filename="' + key + '"');
         res.setHeader('Content-type', `application/${extension}`);

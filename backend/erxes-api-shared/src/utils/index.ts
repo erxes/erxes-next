@@ -9,7 +9,7 @@ export * from './mq-worker';
 export * from './random';
 export * from './redis';
 export * from './saas';
-export * from './sanitize-filename';
+export * from './sanitize';
 export * from './service-discovery';
 export * from './start-plugin';
 export * from './trpc';
