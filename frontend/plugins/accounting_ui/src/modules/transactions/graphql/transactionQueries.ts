@@ -14,6 +14,7 @@ export const commonTrDetailFields = `
   accountId
   transactionId
   originId
+  followType
   followInfos
   follows {
     ${followTrType}
@@ -44,6 +45,7 @@ export const commonTransactionFields = `
   status
   journal
   originId
+  followType
   follows {
     ${followTrType}
   }
