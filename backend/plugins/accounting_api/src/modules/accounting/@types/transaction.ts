@@ -8,6 +8,7 @@ export interface ITrDetail {
   _id?: string;
   accountId: string;
   originId?: string;
+  followType?: string;
   followInfos?: any;
   follows?: IFollowsForTr[];
 
@@ -39,6 +40,7 @@ export interface ITransaction {
   journal: string;
   ptrStatus?: string;
   originId?: string;
+  followType?: string;
   followInfos?: any;
   follows?: IFollowsForTr[];
   preTrId?: string;
@@ -92,10 +94,12 @@ export interface IHiddenTransaction extends Document {
   ptrId: string,
   ptrStatus: string;
   originId?: string,
+  followType?: string,
   follows?: IFollowsForTr[]
   details: {
     _id: string;
     originId?: string;
+    followType?: string;
     follows?: IFollowsForTr[];
 
     side: string;
