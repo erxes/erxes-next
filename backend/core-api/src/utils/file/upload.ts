@@ -15,6 +15,7 @@ import {
   getConfig,
   getFileUploadConfigs,
 } from '~/modules/organization/settings/utils/configs';
+import { isValidPath } from '.';
 import {
   createAWS,
   createAzureBlobStorage,
@@ -33,6 +34,10 @@ export const uploadToCFImages = async (
   models?: IModels,
 ) => {
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
+
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Unsafe file path');
+  }
 
   const {
     CLOUDFLARE_ACCOUNT_ID,
@@ -94,6 +99,10 @@ export const uploadToCFImages = async (
 const uploadToCFStream = async (file: any, models?: IModels) => {
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
 
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Unsafe file path');
+  }
+
   const { CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN } =
     await getFileUploadConfigs(models);
 
@@ -136,6 +145,10 @@ export const uploadFileAzure = async (
 ): Promise<string> => {
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
 
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Unsafe file path');
+  }
+
   const IS_PUBLIC = await getConfig('FILE_SYSTEM_PUBLIC', 'true', models);
 
   // initialize Azure Blob Storage
@@ -173,6 +186,10 @@ export const uploadFileAWS = async (
   models?: IModels,
 ): Promise<string> => {
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
+
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Unsafe file path');
+  }
 
   const IS_PUBLIC = forcePrivate
     ? false
@@ -225,6 +242,10 @@ export const uploadFileGCS = async (
   models: IModels,
 ): Promise<string> => {
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
+
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Unsafe file path');
+  }
 
   const BUCKET = await getConfig('GOOGLE_CLOUD_STORAGE_BUCKET', '', models);
   const IS_PUBLIC = await getConfig('FILE_SYSTEM_PUBLIC', '', models);
@@ -280,7 +301,12 @@ export const uploadFileCloudflare = async (
   const IS_PUBLIC = forcePrivate
     ? false
     : await getConfig('FILE_SYSTEM_PUBLIC', 'false');
+
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
+
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Unsafe file path');
+  }
 
   const { CLOUDFLARE_BUCKET_NAME, CLOUDFLARE_USE_CDN } =
     await getFileUploadConfigs(models);
@@ -355,6 +381,10 @@ export const uploadFileLocal = async (file: {
   mimetype: string;
 }): Promise<string> => {
   const sanitizedFilename = sanitizeFilename(file.originalFilename);
+
+  if (!isValidPath(file.filepath)) {
+    throw new Error('Unsafe file path');
+  }
 
   const oldPath = file.filepath;
 

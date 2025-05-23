@@ -112,13 +112,13 @@ router.post('/upload-file', async (req: Request, res: Response) => {
         .send('One or more files have unrecognized MIME type');
     }
 
-    let fileResult = file;
+    let processedFile = file;
 
     if (isImage(mimetype) && maxHeight && maxWidth) {
-      fileResult = await resizeImage(file, maxWidth, maxHeight);
+      processedFile = await resizeImage(file, maxWidth, maxHeight);
     }
 
-    const status = await checkFile(models, fileResult, req.headers.source);
+    const status = await checkFile(models, processedFile, req.headers.source);
 
     if (status !== 'ok') {
       return res.status(400).send(status);
@@ -127,7 +127,7 @@ router.post('/upload-file', async (req: Request, res: Response) => {
     try {
       const result = await uploadFile(
         `${domain}/gateway`,
-        fileResult,
+        processedFile,
         !!files.upload,
         models,
       );

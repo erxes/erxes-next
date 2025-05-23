@@ -16,6 +16,10 @@ export const resizeImage = async (
   maxHeight?: number,
 ) => {
   try {
+    if (!file?.filepath || !isValidPath(file.filepath)) {
+      throw new Error('Invalid or unsafe file path');
+    }
+
     let image: typeof Jimp.prototype = await Jimp.read(`${file.filepath}`);
 
     if (!image) {
