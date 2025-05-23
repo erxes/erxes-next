@@ -25,7 +25,7 @@ export const SalesIndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.FavoriteToggleButton item="sales" />
+          <PageHeader.FavoriteToggleButton />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>
