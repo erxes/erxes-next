@@ -1,19 +1,22 @@
-import { getCoreDomain } from 'erxes-api-shared/utils';
-
+import { getCoreDomain ,checkPremiumService} from 'erxes-api-shared/utils';
 import * as dotenv from 'dotenv';
 import { IContext } from '~/connectionResolvers';
 import fetch from 'node-fetch';
-
+import {DEFAULT_CONSTANT_VALUES} from 'erxes-api-shared/core-modules'
 dotenv.config();
-
 export const organizationConfigQueries = {
   /**
    * Config object
    */
   async configs(_parent: undefined, _args: undefined, { models }: IContext) {
-    return models.Configs.find({});
+    return models.Configs.find({}).lean()
   },
-
+    async configsConstants(_root, _args, { models }: IContext) {
+    return {
+      allValues: models.Configs.constants(),
+      defaultValues: DEFAULT_CONSTANT_VALUES
+    };
+  },
   async configsByCode(
     _parent: undefined,
     { codes, pattern }: { codes: string[]; pattern: string },
@@ -31,7 +34,7 @@ export const organizationConfigQueries = {
       query.$or.push({ code: { $regex: pattern, $options: 'i' } });
     }
 
-    return models.Configs.find(query);
+    return models.Configs.find(query).lean()
   },
 
   async configsGetEnv() {
@@ -63,4 +66,8 @@ export const organizationConfigQueries = {
   ) {
     return models.Configs.findOne({ code });
   },
+  async configsCheckPremiumService(_root, args: { type: string }) {
+    return checkPremiumService(args.type);
+  },
+
 };

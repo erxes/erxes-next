@@ -314,3 +314,20 @@ export const shortStrToDate = (
 
   return intgr;
 };
+
+export const checkPremiumService = async (type:string) => {
+  try {
+    const domain = getEnv({ name: "DOMAIN" })
+      .replace("https://", "")
+      .replace("http://", "");
+
+    const response = await fetch(
+      `${getCoreDomain()}/check-premium-service?` +
+        new URLSearchParams({ domain, type }),
+    ).then((r) => r.text());
+
+    return response === "yes";
+  } catch (e) {
+    return false;
+  }
+};

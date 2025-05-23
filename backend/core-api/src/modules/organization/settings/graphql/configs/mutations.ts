@@ -12,7 +12,6 @@ export const organizationConfigMutations = {
     { models }: IContext,
   ) {
     const codes = Object.keys(configsMap);
-
     for (const code of codes) {
       if (!code) {
         continue;
