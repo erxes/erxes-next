@@ -1,6 +1,8 @@
 import { fileTypeFromBuffer } from 'file-type/core';
 import * as fs from 'fs';
 import { Jimp } from 'jimp';
+import { tmpdir } from 'os';
+import * as path from 'path';
 import { IModels } from '~/connectionResolvers';
 import { getConfig } from '~/modules/organization/settings/utils/configs';
 
@@ -137,4 +139,10 @@ export const checkFile = async (
   }
 
   return 'ok';
+};
+
+export const isValidPath = (filepath: string): boolean => {
+  const resolved = path.resolve(filepath);
+  const tempDir = path.resolve(tmpdir());
+  return resolved.startsWith(tempDir);
 };

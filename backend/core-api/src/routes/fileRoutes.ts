@@ -6,52 +6,62 @@ import {
 } from 'erxes-api-shared/utils';
 import { NextFunction, Request, Response, Router } from 'express';
 import * as formidable from 'formidable';
+import * as os from 'os';
 import { filterXSS } from 'xss';
 import { generateModels } from '~/connectionResolvers';
-import { checkFile, deleteFile, resizeImage, uploadFile } from '~/utils/file';
+import {
+  checkFile,
+  deleteFile,
+  isValidPath,
+  resizeImage,
+  uploadFile,
+} from '~/utils/file';
 import { readFileRequest } from '~/utils/file/read';
 
 const router: Router = Router();
 
 const DOMAIN = getEnv({ name: 'DOMAIN' });
 
+interface ReadFileQuery {
+  key?: string;
+  inline?: string;
+  name?: string;
+  width?: number;
+}
+
 router.get(
   '/read-file',
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request<never, never, never, ReadFileQuery>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     const subdomain = getSubdomain(req);
     const models = await generateModels(subdomain);
 
     try {
       const { key, inline, name, width = 0 } = req.query || {};
 
-      const sanitizedKey = sanitizeFilename(String(key));
-
-      if (!sanitizedKey) {
-        return res.send('Invalid key');
+      if (!key) {
+        return res.status(400).send('Invalid key');
       }
 
       const response = await readFileRequest({
-        key: sanitizedKey,
+        key,
         models,
-        userId: String(req.headers.userid),
-        width: Number(width),
+        width,
       });
 
       if (inline && inline === 'true') {
-        const extension = sanitizedKey.split('.').pop();
+        const extension = key.split('.').pop();
 
-        res.setHeader(
-          'Content-disposition',
-          'inline; filename="' + sanitizedKey + '"',
-        );
+        res.setHeader('Content-disposition', 'inline; filename="' + key + '"');
         res.setHeader('Content-type', `application/${extension}`);
 
         return res.send(response);
       }
 
-      const attachment = String(name) || sanitizedKey;
-
-      res.attachment(attachment);
+      res.attachment(name || key);
 
       return res.send(response);
     } catch (e) {
@@ -74,7 +84,10 @@ router.post('/upload-file', async (req: Request, res: Response) => {
   const maxHeight = Number(req.query.maxHeight);
   const maxWidth = Number(req.query.maxWidth);
 
-  const form = new formidable.IncomingForm();
+  const form = new formidable.IncomingForm({
+    uploadDir: os.tmpdir(),
+    keepExtensions: true,
+  });
 
   form.parse(req, async (error, _fields, files) => {
     if (error) {
@@ -86,6 +99,10 @@ router.post('/upload-file', async (req: Request, res: Response) => {
     const uploaded = files.file || files.upload;
 
     const file = Array.isArray(uploaded) ? uploaded[0] : uploaded;
+
+    if (!file?.filepath || !isValidPath(file.filepath)) {
+      return res.status(400).send('Invalid or unsafe file path');
+    }
 
     const mimetype = file?.mimetype;
 

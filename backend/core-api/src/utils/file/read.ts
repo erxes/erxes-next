@@ -1,10 +1,4 @@
-import {
-  getEnv,
-  getPlugin,
-  getPlugins,
-  isImage,
-  sendTRPCMessage,
-} from 'erxes-api-shared/utils';
+import { getEnv, isImage } from 'erxes-api-shared/utils';
 import * as fs from 'fs';
 import fetch from 'node-fetch';
 import { IModels } from '~/connectionResolvers';
@@ -119,31 +113,12 @@ const azureStreamToBuffer = (
 export const readFileRequest = async ({
   key,
   models,
-  userId,
   width,
 }: {
   key: string;
   models?: IModels;
-  userId: string;
   width?: number;
 }): Promise<any> => {
-  const services = await getPlugins();
-
-  for (const serviceName of services) {
-    const service = await getPlugin(serviceName);
-    const meta = service.config?.meta || {};
-
-    if (meta?.readFileHook) {
-      await sendTRPCMessage({
-        pluginName: serviceName,
-        method: 'query',
-        module: 'file',
-        action: 'readFileHook',
-        input: { key, userId },
-      });
-    }
-  }
-
   const { UPLOAD_SERVICE_TYPE } = await getFileUploadConfigs(models);
 
   if (UPLOAD_SERVICE_TYPE === 'GCS') {
