@@ -135,7 +135,13 @@
     "validator": "^13.15.0",
     "ws": "^8.18.2",
     "yaml": "^2.7.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "xss": "^1.0.15",
+    "formidable": "^3.5.4",
+    "jimp": "^1.6.0",
+    "file-type": "^20.5.0",
+    "aws-sdk": "^2.1692.0",
+    "form-data": "^4.0.2"
   },
   "devDependencies": {
     "@apollo/rover": "^0.26.3",

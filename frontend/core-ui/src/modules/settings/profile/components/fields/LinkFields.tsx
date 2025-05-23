@@ -13,7 +13,7 @@ const LinkFields = () => {
       <ToggleGroup
         type="single"
         variant="outline"
-        size={'sm'}
+        size={'lg'}
         onValueChange={(selectedItem) => {
           setCurrentLink(selectedItem);
         }}
@@ -30,7 +30,7 @@ const LinkFields = () => {
               value={fieldName}
               aria-label="Toggle bold"
               key={`toggle-item-${index}`}
-              className={`${field.error && 'border-red-500'}`}
+              className={`${field.error && 'border-red-500'} w-10`}
               onDoubleClick={() => {
                 const url = form.getValues(
                   [fieldPath, fieldName].join('.') as keyof FormType,

@@ -14,10 +14,10 @@ import {
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
 
+import './automations';
+import { generateModels } from './connectionResolvers';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
-import { generateModels } from './connectionResolvers';
-import './automations';
 import './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
