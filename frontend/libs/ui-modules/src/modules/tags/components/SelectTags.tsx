@@ -298,33 +298,52 @@ export const SelectTagsInlineCell = ({
   );
 };
 
-export const SelectTagsDetail = ({
-  onValueChange,
-  scope,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'> & {
-  scope?: string;
-}) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectTagsProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      {...props}
-    >
-      <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-        <Combobox.Trigger>
-          <SelectTagsValue />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectTagsContent />
-        </Combobox.Content>
-      </PopoverScoped>
-    </SelectTagsProvider>
-  );
-};
+export const SelectTagsDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'> &
+    Omit<
+      React.ComponentPropsWithoutRef<typeof Combobox.Trigger>,
+      'children'
+    > & {
+      scope?: string;
+    }
+>(
+  (
+    {
+      onValueChange,
+      scope,
+      targetIds,
+      tagType,
+      value,
+      mode,
+      options,
+      ...props
+    },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <SelectTagsProvider
+        onValueChange={(value) => {
+          onValueChange?.(value);
+          setOpen(false);
+        }}
+        {...{ targetIds, tagType, value, mode, options }}
+      >
+        <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+          <Combobox.Trigger ref={ref} {...props}>
+            <SelectTagsValue />
+          </Combobox.Trigger>
+          <Combobox.Content>
+            <SelectTagsContent />
+          </Combobox.Content>
+        </PopoverScoped>
+      </SelectTagsProvider>
+    );
+  },
+);
+
+SelectTagsDetail.displayName = 'SelectTagsDetail';
 
 export const SelectTags = Object.assign(SelectTagsProvider, {
   Content: SelectTagsContent,
@@ -333,4 +352,5 @@ export const SelectTags = Object.assign(SelectTagsProvider, {
   Value: SelectTagsValue,
   List: TagList,
   InlineCell: SelectTagsInlineCell,
+  Detail: SelectTagsDetail,
 });
