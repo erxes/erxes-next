@@ -23,7 +23,7 @@ export const BrandsCommandBar = () => {
       try {
         brandsRemove({
           variables: {
-            id: ids,
+            ids,
           },
         });
       } catch (e) {
