@@ -47,6 +47,7 @@ export const receiveTrpcMessage = async (
         action: 'findOne',
         input: { selector },
       });
+      
     if (primaryPhone) {
       customer = await getCustomer({ primaryPhone });
 
