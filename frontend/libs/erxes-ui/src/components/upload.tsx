@@ -13,11 +13,12 @@ import { Button, Dialog } from 'erxes-ui/components';
 import { useUpload } from 'erxes-ui/hooks';
 import { readFile } from 'erxes-ui/utils/core';
 
-import { ButtonProps } from './button';
 import { cn } from '../lib/utils';
+import { ButtonProps } from './button';
 
 type IUploadContext = {
   url: string | undefined;
+  multiple?: boolean;
   onChange: (value: any) => void;
   setPreviewUrl: (previewUrl: string | undefined) => void;
   previewRef: MutableRefObject<string | null>;
@@ -33,11 +34,12 @@ const UploadContext = createContext<IUploadContext | null>(null);
 type UploadPreviewProps = {
   value: string;
   onChange: (value: { url: string; fileInfo: any }) => void;
+  multiple?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
   ({ className, ...props }, ref) => {
-    const { value, onChange } = props;
+    const { value, onChange, multiple } = props;
 
     const previewRef = useRef<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +62,7 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
       <UploadContext.Provider
         value={{
           url,
+          multiple,
           onChange,
           fileInputRef,
           previewRef,
@@ -104,6 +107,7 @@ const UploadPreview = React.forwardRef<
 
   const {
     url,
+    multiple,
     onChange,
     setPreviewUrl,
     fileInputRef,
@@ -114,14 +118,14 @@ const UploadPreview = React.forwardRef<
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files;
+      const { files } = event.target;
 
       if (previewRef.current) {
         URL.revokeObjectURL(previewRef.current);
       }
 
       upload({
-        files: file,
+        files,
 
         afterUpload: ({ response, fileInfo }) => {
           onChange && onChange({ url: response, ...fileInfo });
@@ -172,6 +176,7 @@ const UploadPreview = React.forwardRef<
           className="hidden"
           accept="image/*"
           aria-label="Upload image file"
+          multiple={multiple}
         />
       </div>
       <div className="sr-only" aria-live="polite" role="status">

@@ -103,12 +103,12 @@ The main settings are validated using Zod schema:
 {
   MainCurrency: string;
   HasVat: boolean;
-  VatAccountPayable?: string;
-  VatAccountReceivable?: string;
-  VatAfterAccountPayable?: string;
-  VatAfterAccountReceivable?: string;
+  VatPayableAccount?: string;
+  VatReceivableAccount?: string;
+  VatAfterPayableAccount?: string;
+  VatAfterReceivableAccount?: string;
   HasCtax: boolean;
-  CtaxAccountPayable?: string;
+  CtaxPayableAccount?: string;
 }
 ```
 
