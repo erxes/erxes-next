@@ -26,6 +26,8 @@ export const TAGS_QUERY = gql`
         order
         parentId
         totalObjectCount
+        objectCount
+        type
       }
       totalCount
       pageInfo {
@@ -44,5 +46,11 @@ export const TAG_BADGE_QUERY = gql`
       _id
       name
     }
+  }
+`;
+
+export const TAGS_TYPES = gql`
+  query TagsTypes {
+    tagsGetTypes
   }
 `;

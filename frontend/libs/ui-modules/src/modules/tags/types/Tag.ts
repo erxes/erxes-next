@@ -61,3 +61,8 @@ export interface TagBadgesProps {
   tagIds?: string[];
   tags?: ITag[];
 }
+
+export interface ITagType {
+  description: string;
+  contentType: string;
+}
