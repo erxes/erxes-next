@@ -70,7 +70,9 @@ const TagsTypeFilterBar = () => {
     'contentType',
   );
   const { resetFilterState } = useFilterContext();
-  if (!contentType) return;
+  if (!contentType) {
+    return;
+  }
   return (
     <Filter.BarItem>
       <Filter.BarName className="whitespace-nowrap">

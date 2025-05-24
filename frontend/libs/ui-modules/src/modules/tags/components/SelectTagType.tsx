@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ITagType } from '../types/Tag';
 import { ButtonProps, cn, Combobox, Command, Popover } from 'erxes-ui';
 import { useTagsTypes } from '../hooks/useTagsTypes';
-import { useDebounce } from 'use-debounce';
 
 interface SelectTagTypeProps extends Omit<ButtonProps, 'onChange'> {
   value: string;
@@ -63,7 +62,6 @@ export const SelectTagTypeCommand = ({
 }) => {
   const { types, loading, error } = useTagsTypes();
   const [search, setSearch] = React.useState('');
-  const [debouncedSearch] = useDebounce(search, 500);
 
   const inputRef = useRef<HTMLInputElement>(null);
 

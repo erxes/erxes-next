@@ -41,20 +41,6 @@ export const TagsForm = () => {
           </Form.Item>
         )}
       />
-      {/* <Form.Field
-        control={control}
-        name="colorCode"
-        render={({ field }) => (
-          <Form.Item>
-            <Form.Label>color</Form.Label>
-            <Form.Description className="sr-only">tag color</Form.Description>
-            <Form.Control>
-              <SelectColor value={field.value} onValueChange={field.onChange} />
-            </Form.Control>
-            <Form.Message />
-          </Form.Item>
-        )}
-      /> */}
       <Form.Field
         control={control}
         name="parentId"

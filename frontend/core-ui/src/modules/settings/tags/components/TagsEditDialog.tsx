@@ -2,19 +2,16 @@ import {
   Button,
   Dialog,
   Form,
-  Kbd,
   Spinner,
   useQueryState,
   useToast,
 } from 'erxes-ui';
-import { IconPlus } from '@tabler/icons-react';
 import { TTagsForm, useTagsForm } from '../hooks/useTagsForm';
 import { TagsForm } from './TagsForm';
 import { useTagsEdit } from '../hooks/useTagsEdit';
 import { useSearchParams } from 'react-router-dom';
 import { useTagDetail } from '../hooks/useTagDetail';
 import { useEffect } from 'react';
-import { error } from 'console';
 
 export const TagsEditDialog = () => {
   const [tagId] = useQueryState('tagId');
@@ -29,7 +26,6 @@ export const TagsEditDialog = () => {
     variables: {
       id: tagId,
     },
-    skip: !tagId,
   });
 
   const setOpen = (newTagId: string | null) => {
@@ -50,7 +46,12 @@ export const TagsEditDialog = () => {
         reset();
         setOpen(null);
       },
-      onError: (error) => console.log(error.message),
+      onError: (error) =>
+        toast({
+          title: 'Failed to update tag',
+          description: error.message,
+          variant: 'destructive',
+        }),
     });
   };
 

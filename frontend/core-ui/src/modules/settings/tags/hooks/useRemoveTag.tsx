@@ -11,6 +11,8 @@ export function useRemoveTag() {
       await removeTagMutation({
         variables: { _id: tagId },
         onCompleted: () => toast({ title: 'Tag has been removed' }),
+        onError: () =>
+          toast({ title: 'Failed to remove tag', variant: 'destructive' }),
         refetchQueries: ['Tags'],
       });
       return true;
