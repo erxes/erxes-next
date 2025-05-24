@@ -1,17 +1,17 @@
 import React from 'react';
-import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
+import { Icon, IconX } from '@tabler/icons-react';
 import {
   Button,
   Resizable,
   SideMenu,
-  Tabs,
-  Tooltip,
+  // Tabs,
+  // Tooltip,
   cn,
-  useQueryState,
+  // useQueryState,
 } from 'erxes-ui';
 import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
-import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
-import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
+// import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
+// import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
 import { useAtom, useSetAtom } from 'jotai';
 import { useWidget } from 'ui-modules';
 import { useWidgetsModules } from '@/widgets/hooks/useWidgetsModules';
@@ -21,9 +21,8 @@ export const CustomerDetailActions = () => {
   const { customerDetail } = useCustomerDetail();
   const contactId = customerDetail?._id;
   const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
-  const aa = useWidgetsModules();
+  const widgetsModules = useWidgetsModules();
   const { Widget } = useWidget();
-  console.log(aa);
 
   // return (
   //   <Widget
@@ -63,7 +62,7 @@ export const CustomerDetailActions = () => {
               />
             </div>
           </ActionTabsContent> */}
-          {aa.map((item) => (
+          {widgetsModules.map((item) => (
             <ActionTabsContent
               key={item.name}
               value={item.name}
@@ -105,11 +104,6 @@ export const CustomerDetailActions = () => {
             </Resizable.PanelGroup>
           </ActionTabsContent> */}
         </SideMenu>
-        {/* <Widget
-          module={aa[0]}
-          contentType="core:customer"
-          contentId={contactId || ''}
-        /> */}
       </Resizable.Panel>
       <CustomerDetailActionsTrigger />
     </>
@@ -118,7 +112,7 @@ export const CustomerDetailActions = () => {
 
 export const CustomerDetailActionsTrigger = () => {
   const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
-  const aa = useWidgetsModules();
+  const widgetsModules = useWidgetsModules();
 
   return (
     <div className="flex flex-none overflow-hidden">
@@ -129,7 +123,7 @@ export const CustomerDetailActionsTrigger = () => {
         className="h-full"
       >
         <SideMenu.Sidebar className="border-l-0">
-          {aa.map((item) => (
+          {widgetsModules.map((item) => (
             <SideMenu.Trigger
               key={item.name}
               value={item.name}
