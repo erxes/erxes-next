@@ -25,9 +25,9 @@ export const brandMutations = {
    */
   async brandsRemove(
     _root: undefined,
-    { _id }: { _id: string },
+    { _ids }: { _ids: string[] },
     { models }: IContext,
   ) {
-    return await models.Brands.removeBrand(_id);
+    return await models.Brands.removeBrands(_ids);
   },
 };
