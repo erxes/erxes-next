@@ -1076,12 +1076,6 @@ importers:
         specifier: workspace:^
         version: link:../../erxes-api-shared
 
-  backend/plugins/workshop_api:
-    dependencies:
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../../erxes-api-shared
-
   frontend/libs/erxes-ui: {}
 
   frontend/libs/ui-modules: {}

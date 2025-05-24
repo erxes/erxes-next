@@ -3,14 +3,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import { PASSWORD_REGEX } from 'erxes-ui';
+// import { PASSWORD_REGEX } from 'erxes-ui';
 
 export const authValidationSchema = z
   .object({
     email: z.string().trim().email('Email must be a valid email'),
-    password: z
-      .string()
-      .regex(PASSWORD_REGEX, 'Password must contain at least 8 characters'),
+    password: z.string(),
   })
   .required();
 
