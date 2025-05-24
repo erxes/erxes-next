@@ -6,6 +6,9 @@ import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { IConversationDocument } from '@/inbox/@types/conversations';
 import { IMessageDocument } from '@/inbox/@types/conversationMessages';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
+import { IIMapIntegrationDocument } from '@/integrations/imap/@types/integrations';
+import { IIMapCustomerDocument } from '@/integrations/imap/@types/customers';
+import { IIMapMessageDocument } from '@/integrations/imap/@types/messages';
 import { IFacebookLogDocument } from '@/integrations/facebook/@types/logs';
 import { IFacebookAccountDocument } from '@/integrations/facebook/@types/accounts';
 import { IFacebookCustomerDocument } from '@/integrations/facebook/@types/customers';
@@ -68,7 +71,18 @@ import {
   IFacebookConfigModel,
   loadFacebookConfigClass,
 } from '@/integrations/facebook/db/models/Config';
-
+import {
+  IIMapCustomerModel,
+  loadImapCustomerClass,
+} from '@/integrations/imap/db/models/Customers';
+import {
+  IIMapIntegrationModel,
+  loadImapIntegrationClass,
+} from '@/integrations/imap/db/models/Integrations';
+import {
+  IIMapMessageModel,
+  loadImapMessageClass,
+} from '@/integrations/imap/db/models/Messages';
 export interface IModels {
   Channels: IChannelModel;
   Integrations: IIntegrationModel;
@@ -84,6 +98,9 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
+  ImapCustomers: IIMapCustomerModel;
+  ImapIntegrations: IIMapIntegrationModel;
+  ImapMessages: IIMapMessageModel;
 }
 
 export interface IContext extends IMainContext {
@@ -163,6 +180,20 @@ export const loadClasses = (
     IFacebookConfigDocument,
     IFacebookConfigModel
   >('facebook_configs', loadFacebookConfigClass(models));
+
+  models.ImapCustomers = db.model<IIMapCustomerDocument, IIMapCustomerModel>(
+    'imap_customers',
+    loadImapCustomerClass(models),
+  );
+  models.ImapIntegrations = db.model<IIMapIntegrationDocument, IIMapIntegrationModel>(
+    'imap_integrations',
+    loadImapIntegrationClass(models),
+  );
+
+  models.ImapMessages = db.model<IIMapMessageDocument, IIMapMessageModel>(
+    'imap_messages',
+    loadImapMessageClass(models),
+  );
   return models;
 };
 
