@@ -9,40 +9,6 @@ import { handleAfterProcess } from './afterProccess';
 import { IJobData } from '~/types';
 import { ILogDocument } from '~/db/definitions/logs';
 
-const plugins = [
-  {
-    name: 'frontline',
-    configs: [
-      {
-        type: 'afterMutation',
-        mutationNames: ['userEdit'],
-      },
-      {
-        type: 'updateDocument',
-        contentTypes: ['core:user', 'frontline:ticket'],
-        when: {
-          fieldsUpdated: ['assignedUserIds', 'branchIds'],
-        },
-      },
-      {
-        type: 'createDocument',
-        contentTypes: ['core:user'],
-        when: {
-          fieldsWith: ['brandIds'],
-        },
-      },
-      {
-        type: 'afteAPIRequest',
-        paths: ['/callback/khanbank'],
-      },
-      {
-        type: 'afteAuth',
-        types: ['login'],
-      },
-    ],
-  },
-];
-
 export const initMQWorkers = async (redis: any) => {
   console.info('Starting worker ...');
 
