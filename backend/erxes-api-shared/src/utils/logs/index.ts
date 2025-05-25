@@ -77,7 +77,7 @@ type CreateDocument = {
 };
 
 type AfterAPIRequest = {
-  type: 'afteAPIRequest';
+  type: 'afterAPIRequest';
   paths: string[];
 };
 

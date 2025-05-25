@@ -159,7 +159,7 @@ const handleAfterAPIRequest = ({
   rules,
   payload,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'afteAPIRequest');
+  const rule = rules.find((rule) => rule.type === 'afterAPIRequest');
 
   if (rule) {
     const { paths = [] } = rule;
