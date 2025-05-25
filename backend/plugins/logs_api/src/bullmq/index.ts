@@ -30,6 +30,8 @@ export const initMQWorkers = async (redis: any) => {
             processId,
           } = (data ?? {}) as IJobData;
 
+          console.log({ data });
+
           try {
             const models = await generateModels(subdomain);
 

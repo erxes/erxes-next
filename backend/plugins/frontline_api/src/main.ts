@@ -37,13 +37,13 @@ startPlugin({
         { type: 'afterMutation', mutationNames: ['usersEdit'] },
       ],
       onDocumentUpdated: async ({ subdomain, ...props }, data) => {
-        console.log(data, { props, subdomain });
+        // do logic
       },
       onAfterAuth: async (context, data) => {
-        console.log({ context, data });
+        // do logic
       },
       onAfterMutation: (context, args) => {
-        console.log('afterMutation', { args });
+        // do logic
       },
     },
   },
