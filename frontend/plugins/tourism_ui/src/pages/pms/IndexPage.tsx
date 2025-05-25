@@ -1,6 +1,12 @@
-import { IconCaretDownFilled, IconSettings } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import {
+  IconBox,
+  IconCaretDownFilled,
+  IconSettings,
+} from '@tabler/icons-react';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
+import { PmsCreateSheet } from '~/modules/pms/components/CreatePmsSheet';
 
 export const IndexPage = () => {
   return (
@@ -11,27 +17,25 @@ export const IndexPage = () => {
             <Breadcrumb.List className="gap-1">
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
-                  <Link to="/settings/pms">
-                    <IconSettings />
-                    Go to settings pms
+                  <Link to="/pms">
+                    <IconBox />
+                    Property management system
                   </Link>
                 </Button>
               </Breadcrumb.Item>
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.LikeButton />
+          <PageHeader.FavoriteToggleButton />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>
             <Link to="/settings/pms">
-              pms <IconSettings />
-              Go to settings pms
+              <IconSettings />
+              Go to settings
             </Link>
           </Button>
-          <Button>
-            More pms <IconCaretDownFilled />
-          </Button>
+          <PmsCreateSheet />
         </PageHeader.End>
       </PageHeader>
     </div>

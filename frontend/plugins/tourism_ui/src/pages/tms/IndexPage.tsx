@@ -1,5 +1,6 @@
 import { IconBox, IconSettings } from '@tabler/icons-react';
-import { Breadcrumb, Button, PageHeader, Separator } from 'erxes-ui';
+import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 import { TmsCreateSheet } from '~/modules/tms/components/CreateTmsSheet';
 import { BranchList } from '@/tms/components/BranchList';
@@ -13,7 +14,7 @@ export const IndexPage = () => {
             <Breadcrumb.List className="gap-1">
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
-                  <Link to="/settings/tms">
+                  <Link to="/tms">
                     <IconBox />
                     Tour management system
                   </Link>
@@ -22,7 +23,7 @@ export const IndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.LikeButton />
+          <PageHeader.FavoriteToggleButton />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>
