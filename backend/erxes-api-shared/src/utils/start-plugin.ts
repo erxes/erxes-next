@@ -267,15 +267,15 @@ export async function startPlugin(
     const { automations, segments, afterProcess } = configs.meta || {};
 
     if (automations) {
-      startAutomations(configs.name, automations);
+      await startAutomations(configs.name, automations);
     }
 
     if (segments) {
-      startSegments(configs.name, segments);
+      await startSegments(configs.name, segments);
     }
 
     if (afterProcess) {
-      startAfterProcess(configs.name, afterProcess);
+      await startAfterProcess(configs.name, afterProcess);
     }
   } // end configs.meta if
 

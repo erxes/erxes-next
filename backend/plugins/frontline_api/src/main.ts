@@ -32,8 +32,8 @@ startPlugin({
   meta: {
     afterProcess: {
       rules: [
-        { type: 'updateDocument', contentTypes: ['core:user'] },
-        { type: 'afteAuth', types: ['login'] },
+        { type: 'updatedDocument', contentTypes: ['core:user'] },
+        { type: 'afterAuth', types: ['login'] },
         { type: 'afterMutation', mutationNames: ['usersEdit'] },
       ],
       onDocumentUpdated: async ({ subdomain, ...props }, data) => {

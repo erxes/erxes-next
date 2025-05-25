@@ -66,7 +66,10 @@ export const initMQWorkers = async (redis: any) => {
                 action: result.action || action,
                 contentType,
                 payload: { ...result?.payload, userId },
-              });
+              }).catch(
+                (err) =>
+                  `Error occured during afterProcess job ${id}: ${err.message}`,
+              );
             }
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);

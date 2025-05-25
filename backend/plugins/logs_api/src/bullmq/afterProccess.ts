@@ -39,7 +39,7 @@ function getAllKeys(obj, prefix = '') {
   return keys;
 }
 
-const sendProcessMessage = (message: WorkerMessage): void => {
+const sendProcessMessage = async (message: WorkerMessage): Promise<void> => {
   try {
     sendWorkerMessage(message);
   } catch (error) {
@@ -60,8 +60,8 @@ const handleAfterMutation = ({
   const rule = rules.find((rule) => rule.type === 'afterMutation');
 
   if (rule) {
-    const mutationNames = rule.mutationNames;
-    const mutationName = payload.mutationName;
+    const { mutationNames = [] } = rule || {};
+    const { mutationName } = payload || {};
 
     if (mutationNames.includes(mutationName)) {
       sendProcessMessage({
@@ -82,7 +82,7 @@ const handleUpdatedDocument = ({
   payload,
   contentType,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'updateDocument');
+  const rule = rules.find((rule) => rule.type === 'updatedDocument');
   if (rule) {
     const { contentTypes = [], when } = rule;
 
@@ -123,7 +123,7 @@ const handleCreateDocument = ({
   payload,
   contentType,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'createDocument');
+  const rule = rules.find((rule) => rule.type === 'createdDocument');
 
   if (rule) {
     const document = payload?.fullDocument;
@@ -183,7 +183,7 @@ const handleAfterAuth = ({
   payload,
   action,
 }: ProcessHandlerProps): void => {
-  const rule = rules.find((rule) => rule.type === 'afteAuth');
+  const rule = rules.find((rule) => rule.type === 'afterAuth');
 
   if (rule && (rule?.types || []).includes(action)) {
     sendProcessMessage({
@@ -225,14 +225,12 @@ export const handleAfterProcess = async (
       };
 
       if (source === 'mongo') {
-        const actions = {
-          update: handleUpdatedDocument,
-          create: handleCreateDocument,
-        };
-
-        const handler = actions[action];
-        if (handler) {
-          handler({ ...props, contentType });
+        if (action === 'update') {
+          handleUpdatedDocument({ ...props, contentType });
+          continue;
+        }
+        if (action === 'create') {
+          handleCreateDocument({ ...props, contentType });
           continue;
         }
       }

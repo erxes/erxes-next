@@ -46,7 +46,7 @@ export const logHandler = async (
     logDoc.status = 'failed';
     sendWorkerQueue('logs', 'put_log').add('put_log', logDoc);
 
-    throw new Error(error);
+    throw error;
   }
 };
 type IContext = {
@@ -60,7 +60,7 @@ type AfterMutation = {
 };
 
 type UpdatedDocument = {
-  type: 'updateDocument';
+  type: 'updatedDocument';
   contentTypes: string[];
   when?: {
     fieldsUpdated?: string[];
@@ -69,7 +69,7 @@ type UpdatedDocument = {
 };
 
 type CreateDocument = {
-  type: 'createDocument';
+  type: 'createdDocument';
   contentTypes: string[];
   when?: {
     fieldsWith?: string[];
@@ -82,7 +82,7 @@ type AfterAPIRequest = {
 };
 
 type AfterAuth = {
-  type: 'afteAuth';
+  type: 'afterAuth';
   types: string[];
 };
 

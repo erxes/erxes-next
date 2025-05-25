@@ -8,7 +8,14 @@ const activeStreams = new Map<string, any>();
 export const cleanupChangeStreams = () => {
   activeStreams.forEach((stream, modelName) => {
     console.log(`Closing change stream for model: ${modelName}`);
-    stream.close();
+    try {
+      stream.close();
+    } catch (error) {
+      console.error(
+        `Failed to close change stream for model ${modelName}:`,
+        error,
+      );
+    }
   });
   activeStreams.clear();
 };
