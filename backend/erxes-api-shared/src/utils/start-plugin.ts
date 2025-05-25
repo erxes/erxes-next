@@ -23,7 +23,7 @@ import { AutomationConfigs } from '../core-modules/automations/types';
 import { generateApolloContext } from './apollo';
 import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
-import { logHandler } from './logs';
+import { AfterProcessConfigs, logHandler, startAfterProcess } from './logs';
 import { closeMongooose } from './mongo';
 import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
 import { createTRPCContext } from './trpc';
@@ -34,6 +34,7 @@ dotenv.config();
 type IMeta = {
   automations?: AutomationConfigs;
   segments?: SegmentConfigs;
+  afterProcess?: AfterProcessConfigs;
 };
 
 type ApiHandler = {
@@ -132,6 +133,7 @@ export async function startPlugin(
             source: 'webhook',
             action: method,
             payload: {
+              path,
               headers: req.headers,
               body: req.body,
               query: req?.query,
@@ -212,7 +214,6 @@ export async function startPlugin(
   // If the Node process ends, close the Mongoose connection
   (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
     process.on(sig, async () => {
-      console.log('daczx');
       await closeHttpServer();
       await closeMongooose();
       await leaveServiceDiscovery();
@@ -263,7 +264,7 @@ export async function startPlugin(
   );
 
   if (configs.meta) {
-    const { automations, segments } = configs.meta || {};
+    const { automations, segments, afterProcess } = configs.meta || {};
 
     if (automations) {
       startAutomations(configs.name, automations);
@@ -271,6 +272,10 @@ export async function startPlugin(
 
     if (segments) {
       startSegments(configs.name, segments);
+    }
+
+    if (afterProcess) {
+      startAfterProcess(configs.name, afterProcess);
     }
   } // end configs.meta if
 

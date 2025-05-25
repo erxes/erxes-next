@@ -1,6 +1,7 @@
-import { ILogDoc }  from '../../core-types';
-import { sendWorkerQueue } from '../mq-worker';
-import { isEnabled } from '../service-discovery';
+import { ILogDoc } from '../../core-types';
+import { createMQWorkerWithListeners, sendWorkerQueue } from '../mq-worker';
+import { redis } from '../redis';
+import { initializePluginConfig, isEnabled } from '../service-discovery';
 
 export const logHandler = async (
   resolver: () => Promise<any> | any,
@@ -47,4 +48,119 @@ export const logHandler = async (
 
     throw new Error(error);
   }
+};
+type IContext = {
+  subdomain: string;
+  processId?: string;
+};
+
+type AfterMutation = {
+  type: 'afterMutation';
+  mutationNames: string[];
+};
+
+type UpdatedDocument = {
+  type: 'updateDocument';
+  contentTypes: string[];
+  when?: {
+    fieldsUpdated?: string[];
+    fieldsRemoved?: string[];
+  };
+};
+
+type CreateDocument = {
+  type: 'createDocument';
+  contentTypes: string[];
+  when?: {
+    fieldsWith?: string[];
+  };
+};
+
+type AfterAPIRequest = {
+  type: 'afteAPIRequest';
+  paths: string[];
+};
+
+type AfterAuth = {
+  type: 'afteAuth';
+  types: string[];
+};
+
+export type IAfterProcessRule =
+  | AfterMutation
+  | CreateDocument
+  | UpdatedDocument
+  | AfterAPIRequest
+  | AfterAuth;
+
+export interface AfterProcessConfigs {
+  rules: IAfterProcessRule[];
+  onAfterMutation?: (
+    context: IContext,
+    args: { mutationName: string; args: { [key: string]: any }; result: any },
+  ) => void;
+  onAfterAuth?: (
+    context: IContext,
+    args: { userId: string; email: string; result: string },
+  ) => void;
+  onAfterApiRequest?: (context: IContext, args: any) => void;
+  onDocumentUpdated?: (
+    context: IContext,
+    args: {
+      fullDocument: any;
+      prevDocument: any;
+      updateDescription: {
+        updatedFields: { [key: string]: any };
+        removedFields: string[];
+      };
+    },
+  ) => void;
+  onDocumentCreated?: (context: IContext, args: any) => void;
+}
+
+export const startAfterProcess = async (
+  pluginName: string,
+  config: AfterProcessConfigs,
+) => {
+  await initializePluginConfig(pluginName, 'afterProcess', config);
+
+  return new Promise<void>((resolve, reject) => {
+    try {
+      createMQWorkerWithListeners(
+        pluginName,
+        'afterProcess',
+        async ({ name, id, data: jobData }) => {
+          try {
+            const { subdomain, processId, data } = jobData;
+
+            if (!subdomain) {
+              throw new Error('You should provide subdomain on message');
+            }
+
+            const resolverName = name as keyof AfterProcessConfigs;
+
+            if (
+              !(name in config) ||
+              typeof config[resolverName] !== 'function'
+            ) {
+              throw new Error(`Automations method ${name} not registered`);
+            }
+
+            const resolver = config[resolverName];
+
+            resolver({ subdomain, processId }, data);
+          } catch (error: any) {
+            console.error(`Error processing job ${id}: ${error.message}`);
+            throw error;
+          }
+        },
+        redis,
+        () => {
+          resolve();
+        },
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
