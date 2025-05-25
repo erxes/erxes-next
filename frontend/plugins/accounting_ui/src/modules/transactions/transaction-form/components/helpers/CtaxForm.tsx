@@ -119,8 +119,9 @@ export const CtaxForm = ({
   const changeCtaxRow = (ctaxRow: ICtaxRow) => {
     const ctaxPercent = ctaxRow.percent ?? 0;
     setTaxPercents({
+      ...taxPercents,
       ctax: ctaxPercent,
-      sum: (taxPercents.ctax ?? 0) + ctaxPercent
+      sum: (taxPercents.vat ?? 0) + ctaxPercent
     });
   }
 
@@ -143,7 +144,7 @@ export const CtaxForm = ({
                 onCheckedChange={field.onChange}
               />
             </Form.Control>
-            <Form.Label variant="peer">Has VAT</Form.Label>
+            <Form.Label variant="peer">Has CTAX</Form.Label>
           </Form.Item>
         )}
       />
@@ -160,7 +161,7 @@ export const CtaxForm = ({
                     onCheckedChange={field.onChange}
                   />
                 </Form.Control>
-                <Form.Label variant="peer">Handle VAT</Form.Label>
+                <Form.Label variant="peer">Handle CTAX</Form.Label>
               </Form.Item>
             )}
           />
@@ -169,7 +170,7 @@ export const CtaxForm = ({
             name={`trDocs.${journalIndex}.ctaxRowId`}
             render={({ field }) => (
               <Form.Item>
-                <Form.Label>VAT row</Form.Label>
+                <Form.Label>CTAX row</Form.Label>
                 <SelectCtax value={field.value || ''} onValueChange={field.onChange} onCallback={changeCtaxRow} />
                 <Form.Message />
               </Form.Item>
@@ -180,7 +181,7 @@ export const CtaxForm = ({
             name={`trDocs.${journalIndex}.ctaxAmount`}
             render={({ field }) => (
               <Form.Item>
-                <Form.Label>VAT amount</Form.Label>
+                <Form.Label>CTAX amount</Form.Label>
                 <CurrencyField.ValueInput
                   value={handleCtax ? field.value ?? 0 : calcedAmount}
                   onChange={field.onChange}

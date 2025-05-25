@@ -114,6 +114,7 @@ export const VatForm = ({
   const changeVatRow = (vatRow: IVatRow) => {
     const vatPercent = vatRow.percent ?? 0;
     setTaxPercents({
+      ...taxPercents,
       vat: vatPercent,
       sum: (taxPercents.ctax ?? 0) + vatPercent
     });
