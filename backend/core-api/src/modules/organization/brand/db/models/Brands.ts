@@ -9,7 +9,7 @@ export interface IBrandModel extends Model<IBrandDocument> {
   generateCode(code: string): Promise<string>;
   createBrand(doc: IBrand): Promise<IBrandDocument>;
   updateBrand(_id: string, fields: IBrand): Promise<IBrandDocument>;
-  removeBrand(_id: string): Promise<IBrandDocument>;
+  removeBrands(_ids: string[]): Promise<{ n: number; ok: number }>;
 }
 
 export const loadBrandClass = (models: IModels) => {
@@ -75,14 +75,8 @@ export const loadBrandClass = (models: IModels) => {
       );
     }
 
-    public static async removeBrand(_id) {
-      const brandObj = await models.Brands.findOneAndDelete({ _id });
-
-      if (!brandObj) {
-        throw new Error(`Brand not found with id ${_id}`);
-      }
-
-      return brandObj;
+    public static async removeBrands(_ids: string[]) {
+      return await models.Brands.deleteMany({ _id: _ids });
     }
   }
 

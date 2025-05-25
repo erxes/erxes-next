@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Combobox, Command, Popover, TextOverflowTooltip } from 'erxes-ui';
 import { useCtaxRows } from '../hooks/useCtaxRows';
 import { useCtaxValue } from '../hooks/useCtaxValue';
@@ -9,14 +9,15 @@ export const SelectCtax = React.forwardRef<
   React.ComponentProps<typeof Combobox.Trigger> & {
     value?: string;
     onValueChange: (value: string) => void;
+    onCallback?: (row: ICtaxRow) => void;
   }
->(({ value, onValueChange, ...props }, ref) => {
+>(({ value, onValueChange, onCallback, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const [selectedCtax, setSelectedCtax] = useState<ICtaxRow | undefined>(undefined);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Combobox.Trigger ref={ref} {...props}>
-        <SelectCtaxValue ctaxRowId={value} ctaxRow={selectedCtax} />
+        <SelectCtaxValue ctaxRowId={value} ctaxRow={selectedCtax} onCallback={onCallback} />
       </Combobox.Trigger>
       <Combobox.Content>
         <SelectCtaxList
@@ -77,9 +78,11 @@ export const SelectCtaxList = ({
 export const SelectCtaxValue = ({
   ctaxRowId,
   ctaxRow,
+  onCallback,
 }: {
   ctaxRowId?: string;
   ctaxRow?: ICtaxRow;
+  onCallback?: (row: ICtaxRow) => void;
 }) => {
   const { ctaxRowDetail, loading } = useCtaxValue({
     variables: {
@@ -88,10 +91,18 @@ export const SelectCtaxValue = ({
     skip: !ctaxRowId || !!ctaxRow,
   });
 
-  if (!ctaxRow?.name || !ctaxRowDetail?.name) {
+  const lastCtaxRow = ctaxRow?._id ? ctaxRow : ctaxRowDetail;
+
+  useEffect(() => {
+    if (onCallback && lastCtaxRow) {
+      onCallback(lastCtaxRow)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastCtaxRow, loading])
+
+  if (!lastCtaxRow?._id) {
     return (
       <Combobox.Value
-        value={ctaxRow?.name || ctaxRowDetail?.name}
         placeholder="Select Ctax"
         loading={loading}
       />
@@ -100,8 +111,8 @@ export const SelectCtaxValue = ({
 
   return (
     <div className="inline-flex gap-2">
-      <span className="text-muted-foreground">{ctaxRow?.number}</span>
-      <Combobox.Value value={ctaxRow?.name || ctaxRowDetail?.name} />
+      <span className="text-muted-foreground">{lastCtaxRow?.number}</span>
+      <Combobox.Value value={lastCtaxRow?.name} />
     </div>
   );
 };

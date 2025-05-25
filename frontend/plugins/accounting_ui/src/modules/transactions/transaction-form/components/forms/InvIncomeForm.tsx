@@ -8,7 +8,7 @@ import {
 } from './../GeneralFormFields';
 import { CustomerFields } from './../CustomerFields';
 // import { InventoryForm } from '../../../inventory/components/InventoryForm';
-import { TaxForm } from '../TaxForm';
+import { VatForm } from '../helpers/VatForm';
 import { TrJournalEnum } from '@/transactions/types/constants';
 
 export const InvIncomeForm = ({
@@ -27,7 +27,7 @@ export const InvIncomeForm = ({
         <BranchField form={form} index={index} />
         <DepartmentField form={form} index={index} />
         <DescriptionField form={form} index={index} />
-        <TaxForm form={form} journalIndex={index} isSameSide={true} isWithTax={false} />
+        <VatForm form={form} journalIndex={index} isSameSide={true} isWithTax={false} />
       </div>
 
       {/* <InventoryForm

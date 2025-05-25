@@ -14,10 +14,11 @@ export const PositionTypes = `
         userIds: [String]
         userCount: Int
     }
+
     type PositionListQueryResponse {
         list:[Position]
         totalCount: Int
-        totalUsersCount:Int
+        pageInfo: PageInfo
     }
 `;
 const commonPositionParams = `
