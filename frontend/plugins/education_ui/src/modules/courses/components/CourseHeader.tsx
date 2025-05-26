@@ -3,7 +3,7 @@ import { Breadcrumb, Button, Kbd, Separator } from 'erxes-ui';
 import { Link } from 'react-router';
 import { PageHeader } from 'ui-modules';
 
-export const CoursesHeader = () => {
+export const CourseHeader = () => {
   return (
     <PageHeader>
       <PageHeader.Start>

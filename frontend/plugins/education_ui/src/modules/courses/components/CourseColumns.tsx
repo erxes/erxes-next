@@ -1,7 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { RecordTableInlineHead } from 'erxes-ui/modules/record-table/components/RecordTableInlineHead';
 import { ICourse } from '@/courses/types/courseType';
-
 import {
   RecordTable,
   RecordTableCellDisplay,
@@ -11,11 +10,9 @@ import {
 import { ActionField, SwitchField } from '@/courses/edit-course';
 import { courseMoreColumn } from './CourseMoreColumn';
 
-const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICourse>;
-
 export const courseColumns: ColumnDef<ICourse>[] = [
   courseMoreColumn as ColumnDef<ICourse>,
-  checkBoxColumn,
+  RecordTable.checkboxColumn as ColumnDef<ICourse>,
   {
     id: 'name',
     accessorKey: 'name',

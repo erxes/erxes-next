@@ -1,8 +1,9 @@
-import { RecordTable } from 'erxes-ui/modules/record-table';
+import { RecordTable } from 'erxes-ui';
 import { useCourses } from '@/courses/hooks/useCourses';
 import { courseColumns } from '@/courses/components/CourseColumns';
+import { CourseCommandBar } from '@/courses/components/CourseCommandBar';
 
-export const CoursesRecordTable = () => {
+export const CourseRecordTable = () => {
   const { courses, handleFetchMore, loading, pageInfo } = useCourses({});
 
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
@@ -34,6 +35,7 @@ export const CoursesRecordTable = () => {
           </RecordTable.Body>
         </RecordTable>
       </RecordTable.CursorProvider>
+      <CourseCommandBar />
     </RecordTable.Provider>
   );
 };

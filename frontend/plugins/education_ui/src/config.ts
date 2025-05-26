@@ -2,7 +2,9 @@ import {
   IconBook,
   IconBooks,
   IconCategoryFilled,
+  IconMan,
   IconSchool,
+  IconUser,
 } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui/types';
 
@@ -21,6 +23,16 @@ export const CONFIG: IUIConfig = {
           name: 'category',
           path: 'courses/course-category',
           icon: IconCategoryFilled,
+        },
+        {
+          name: 'students',
+          path: 'courses/students',
+          icon: IconMan,
+        },
+        {
+          name: 'parents',
+          path: 'courses/parents',
+          icon: IconUser,
         },
       ],
     },
