@@ -121,6 +121,7 @@ export const customerSchema = schemaWrapper(
         index: true,
         label: 'Tags',
       },
+      searchText: { type: String, optional: true },
     },
     {
       timestamps: true,
@@ -129,4 +130,4 @@ export const customerSchema = schemaWrapper(
   { contentType: 'core:customer' },
 );
 
-customerSchema.index({ _id: 1, createdAt: 1 });
+customerSchema.index({ _id: 1, createdAt: 1, searchText: 1 });

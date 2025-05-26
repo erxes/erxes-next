@@ -41,5 +41,5 @@ const mutationParams = `
 export const mutations = `
   brandsAdd(${mutationParams}): Brand
   brandsEdit(_id: String!, ${mutationParams}): Brand
-  brandsRemove(_id: String!): JSON
+  brandsRemove(_ids: [String!]): JSON
 `;

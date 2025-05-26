@@ -1,3 +1,6 @@
+import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+import { ApolloError } from '@apollo/client';
 import {
   IconCalendarPlus,
   IconChartBar,
@@ -12,28 +15,26 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import {
   Avatar,
+  EmailDisplay,
+  EmailListField,
   FullNameField,
+  PhoneDisplay,
+  PhoneListField,
   RecordTable,
   RecordTableCellContent,
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
-  EmailListField,
   RelativeDateDisplay,
-  PhoneListField,
-  useToast,
   SexCode,
-  EmailDisplay,
-  PhoneDisplay,
   SexDisplay,
   SexField,
+  readFile,
+  useToast,
 } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customers/customer-edit/hooks/useCustomerEdit';
-import { ApolloError } from '@apollo/client';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
 import { customerMoreColumn } from './CustomerMoreColumn';
-import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
@@ -50,7 +51,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar size="lg">
-            <Avatar.Image src={cell.getValue() as string} />
+            <Avatar.Image src={readFile(cell.getValue() as string)} />
             <Avatar.Fallback>
               {firstName?.charAt(0) ||
                 lastName?.charAt(0) ||

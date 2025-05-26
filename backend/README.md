@@ -37,12 +37,12 @@ query GetMainConfigs {
   getMainConfigs {
     MainCurrency
     HasVat
-    VatAccountPayable
-    VatAccountReceivable
-    VatAfterAccountPayable
-    VatAfterAccountReceivable
+    VatPayableAccount
+    VatReceivableAccount
+    VatAfterPayableAccount
+    VatAfterReceivableAccount
     HasCtax
-    CtaxAccountPayable
+    CtaxPayableAccount
   }
 }
 
@@ -63,12 +63,12 @@ mutation UpdateMainConfigs($input: MainConfigsInput!) {
   updateMainConfigs(input: $input) {
     MainCurrency
     HasVat
-    VatAccountPayable
-    VatAccountReceivable
-    VatAfterAccountPayable
-    VatAfterAccountReceivable
+    VatPayableAccount
+    VatReceivableAccount
+    VatAfterPayableAccount
+    VatAfterReceivableAccount
     HasCtax
-    CtaxAccountPayable
+    CtaxPayableAccount
   }
 }
 ```
@@ -81,12 +81,12 @@ mutation UpdateMainConfigs($input: MainConfigsInput!) {
 interface MainConfigs {
   MainCurrency: string;
   HasVat: boolean;
-  VatAccountPayable?: string;
-  VatAccountReceivable?: string;
-  VatAfterAccountPayable?: string;
-  VatAfterAccountReceivable?: string;
+  VatPayableAccount?: string;
+  VatReceivableAccount?: string;
+  VatAfterPayableAccount?: string;
+  VatAfterReceivableAccount?: string;
   HasCtax: boolean;
-  CtaxAccountPayable?: string;
+  CtaxPayableAccount?: string;
 }
 ```
 
