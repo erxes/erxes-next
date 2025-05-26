@@ -23,7 +23,7 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
 
   const handleSubmit = async (data: ProductFormValues) => {
     if (!productDetail?._id) {
-      return
+      return;
     };
 
     try {
