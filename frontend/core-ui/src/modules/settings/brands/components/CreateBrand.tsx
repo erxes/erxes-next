@@ -2,6 +2,7 @@ import { IconChessKnight, IconPlus } from '@tabler/icons-react';
 import {
   Button,
   Form,
+  Kbd,
   Sheet,
   Spinner,
   usePreviousHotkeyScope,
@@ -67,7 +68,7 @@ export const CreateBrand = () => {
         <Button>
           <IconPlus />
           Create brand
-          <kbd>C</kbd>
+          <Kbd>C</Kbd>
         </Button>
       </Sheet.Trigger>
       <Sheet.View className="p-0">
