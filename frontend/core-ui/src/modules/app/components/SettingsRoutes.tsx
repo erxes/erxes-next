@@ -57,6 +57,11 @@ const ProductsSettingsRoutes = lazy(() =>
     }),
   ),
 );
+const BrandsSettingsRoutes = lazy(() =>
+  import('~/pages/settings/workspace/BrandsPage').then((module) => ({
+    default: module.BrandsPage,
+  })),
+);
 
 export function SettingsRoutes() {
   return (
@@ -92,6 +97,10 @@ export function SettingsRoutes() {
           element={<StructureSettings />}
         />
         <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
+        <Route
+          path={SettingsWorkspacePath.Brands}
+          element={<BrandsSettingsRoutes />}
+        />
         <Route
           path={SettingsWorkspacePath.ProductsCatchAll}
           element={<ProductsSettingsRoutes />}

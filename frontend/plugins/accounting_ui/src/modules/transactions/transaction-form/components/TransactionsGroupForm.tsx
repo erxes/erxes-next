@@ -129,7 +129,7 @@ export const TransactionsGroupForm = () => {
         className="px-6 flex-auto overflow-auto"
         onSubmit={form.handleSubmit(onSubmit, onError)}
       >
-        <h3 className="text-lg font-bold">Create Transaction</h3>
+        <h3 className="text-lg font-bold">{parentId ? `Edit` : `Create`} Transaction</h3>
         <FormFields form={form} />
         <TransactionsTabsList form={form} />
       </form>

@@ -1,7 +1,7 @@
 import { IOrderInput } from '@/core-types';
+import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import stripAnsi from 'strip-ansi';
-import dayjs from 'dayjs';
 
 export const getEnv = ({
   name,
@@ -136,7 +136,8 @@ export const pluralFormation = (type: string) => {
   }
 
   return type + 's';
-}
+};
+
 export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
   const tempArray: T[][] = [];
 
@@ -313,4 +314,20 @@ export const shortStrToDate = (
   if (resultType === 'd') return new Date(intgr);
 
   return intgr;
+};
+
+export const isImage = (mimetypeOrName: string) => {
+  const extensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
+
+  // extract extension from file name
+  const extension = mimetypeOrName.split('.').pop();
+  if (extensions.includes(extension || '')) {
+    return true;
+  }
+
+  return mimetypeOrName.includes('image');
+};
+
+export const isVideo = (mimeType: string) => {
+  return mimeType.includes('video');
 };

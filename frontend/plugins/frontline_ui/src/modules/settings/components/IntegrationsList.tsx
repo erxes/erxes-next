@@ -13,6 +13,7 @@ import {
   InlineCell,
   InlineCellDisplay,
   RecordTable,
+  RecordTableCellDisplay,
   Skeleton,
   Spinner,
 } from 'erxes-ui';
@@ -27,7 +28,6 @@ import {
 import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../constants/integrations';
 import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 import { AddIntegration } from './add-integration/AddIntegration';
-import { SelectBrand } from 'ui-modules';
 
 const INTEGRATION_PER_PAGE = 30;
 
@@ -132,12 +132,9 @@ export const integrationKindColumns: ColumnDef<IIntegrationColumnDef>[] = [
     header: () => <RecordTable.InlineHead label="Brand" />,
     cell: ({ cell }) => {
       return (
-        <div>
-          <SelectBrand
-            className="shadow-none"
-            value={cell.row.original.brandId}
-          />
-        </div>
+        <RecordTableCellDisplay>
+          {cell.getValue() as string}
+        </RecordTableCellDisplay>
       );
     },
     size: 235,

@@ -31,6 +31,9 @@ export const TBalance = (
   const data: ITransaction[] = [];
   trDocs.forEach((activeTr) => {
     data.push({ ...activeTr, date, number, sumDt: 0, sumCt: 0 } as ITransaction)
+    followTrDocs.filter(ftr => ftr.originId === activeTr._id).forEach((ftr) => {
+      data.push(ftr)
+    })
   })
 
   return (

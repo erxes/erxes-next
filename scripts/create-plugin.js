@@ -66,7 +66,6 @@ async function createPlugin() {
     'src/pages',
     `src/pages/${kebabCaseModuleName}`,
     'src/widgets',
-    `src/widgets/${kebabCaseModuleName}Widget`,
   ];
 
   frontendDirectories.forEach((dir) => {
@@ -315,6 +314,7 @@ const config: ModuleFederationConfig = {
     './config': './src/config.ts',
     './${kebabCaseModuleName}': './src/modules/${kebabCaseModuleName}/Main.tsx',
     './${kebabCaseModuleName}Settings': './src/modules/${kebabCaseModuleName}/Settings.tsx',
+    './widgets': './src/widgets/Widgets.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {
@@ -599,6 +599,26 @@ root.render(
   fs.writeFileSync(
     path.join(frontendPluginDir, 'src', 'bootstrap.tsx'),
     bootstrapContent,
+  );
+
+  const widgetsContent = `export const Widgets = ({
+  module,
+  contentId,
+  contentType,
+}: {
+  module: any;
+  contentId: string;
+  contentType: string;
+}) => {
+  return <div>${moduleName} Widget</div>;
+};
+
+export default Widgets;
+`;
+
+  fs.writeFileSync(
+    path.join(frontendPluginDir, 'src', 'widgets', 'Widgets.tsx'),
+    widgetsContent,
   );
 
   console.log(`Plugin "${kebabCaseName}" created successfully!`);

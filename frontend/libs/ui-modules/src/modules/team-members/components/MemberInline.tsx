@@ -4,6 +4,7 @@ import {
   Avatar,
   avatarVariants,
   cn,
+  readFile,
   Skeleton,
   TextOverflowTooltip,
   Tooltip,
@@ -82,7 +83,7 @@ export const MemberInlineAvatar = React.forwardRef<
       <Tooltip delayDuration={100}>
         <Tooltip.Trigger asChild>
           <Avatar {...props} ref={ref}>
-            <Avatar.Image src={avatar} />
+            <Avatar.Image src={readFile(avatar)} />
             <Avatar.Fallback>{fullName?.charAt(0) || ''}</Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>

@@ -3,6 +3,7 @@ const trDetailFields = `
   accountId: String
   transactionId: String
   originId: String
+  followType: String
   followInfos: JSON
 
   side: String
@@ -24,6 +25,7 @@ const transactionFields = `
   date: Date
   description: String
   journal: String
+  followType: String
   followInfos: JSON
 
   branchId: String

@@ -29,7 +29,7 @@ export const types = `
     primaryPhone: String
     primaryAddress: JSON
     addresses: [JSON]
-
+    status: String
     businessType: String
     description: String
     isSubscribed: String
@@ -78,6 +78,8 @@ const queryParams = `
   limit: Int
   cursor: String
   direction: CURSOR_DIRECTION
+
+  status: CONTACT_STATUS
   ${conformityQueryFields}
 `;
 

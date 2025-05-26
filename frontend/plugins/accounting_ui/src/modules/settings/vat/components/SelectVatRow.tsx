@@ -90,7 +90,9 @@ export const SelectVatValue = ({
     },
     skip: !vatRowId || !!vatRow,
   });
+
   const lastVatRow = vatRow?._id ? vatRow : vatRowDetail;
+
   useEffect(() => {
     if (onCallback && lastVatRow) {
       onCallback(lastVatRow)
