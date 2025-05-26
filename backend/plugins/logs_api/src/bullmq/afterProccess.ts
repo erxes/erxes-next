@@ -192,6 +192,7 @@ const handleAfterAuth = ({
       jobName: 'onAfterAuth',
       subdomain,
       data: {
+        processId: payload.processId,
         userId: payload.userId,
         email: payload.email,
         result: payload.result,

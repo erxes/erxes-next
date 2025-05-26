@@ -8,6 +8,7 @@ import { handleMongoChangeEvent } from './mongo';
 import { handleAfterProcess } from './afterProccess';
 import { IJobData } from '~/types';
 import { ILogDocument } from '~/db/definitions/logs';
+import { AFTER_PROCESS_CONSTANTS, LOG_STATUSES } from '~/constants';
 
 export const initMQWorkers = async (redis: any) => {
   console.info('Starting worker ...');
@@ -65,11 +66,21 @@ export const initMQWorkers = async (redis: any) => {
                 source,
                 action: result.action || action,
                 contentType,
-                payload: { ...result?.payload, userId },
-              }).catch(
-                (err) =>
+                payload: { ...result?.payload, userId, processId },
+              }).catch((err) => {
+                models.Logs.insertOne({
+                  source: 'afterProcess',
+                  action: AFTER_PROCESS_CONSTANTS[`${source}.${action}`],
+                  payload: { ...result?.payload, userId },
+                  createdAt: new Date(),
+                  userId,
+                  status: LOG_STATUSES.FAILED,
+                  processId,
+                });
+                console.error(
                   `Error occured during afterProcess job ${id}: ${err.message}`,
-              );
+                );
+              });
             }
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);

@@ -36,7 +36,7 @@ startPlugin({
         { type: 'afterAuth', types: ['login'] },
         { type: 'afterMutation', mutationNames: ['usersEdit'] },
       ],
-      onDocumentUpdated: async ({ subdomain, ...props }, data) => {
+      onDocumentUpdated: async ({ subdomain }, data) => {
         // do logic
       },
       onAfterAuth: async (context, data) => {

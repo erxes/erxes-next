@@ -131,7 +131,10 @@ export const startAfterProcess = async (
         'afterProcess',
         async ({ name, id, data: jobData }) => {
           try {
-            const { subdomain, processId, data } = jobData;
+            const {
+              subdomain,
+              data: { processId, ...data },
+            } = jobData;
 
             if (!subdomain) {
               throw new Error('You should provide subdomain on message');
