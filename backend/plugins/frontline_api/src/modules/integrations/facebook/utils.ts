@@ -2,7 +2,8 @@ import * as graph from 'fbgraph';
 import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import { debugError, debugFacebook } from '@/integrations/facebook/debuggers';
-
+import { generateAttachmentUrl } from "@/integrations/facebook/commonUtils";
+import { IAttachment, IAttachmentMessage } from "@/integrations/facebook/@types/utils";
 
 export const graphRequest = {
   base(method: string, path?: any, accessToken?: any, ...otherParams) {
@@ -248,8 +249,12 @@ export const sendReply = async (
   url: string,
   data: any,
   recipientId: string,
-  integrationId: string,
+  integrationId: string | undefined,
 ) => {
+
+  if (!integrationId) {
+    throw new Error('integrationId is required');
+  }
   const integration = await models.FacebookIntegrations.getIntegration({
     erxesApiId: integrationId,
   });
@@ -302,6 +307,34 @@ export const sendReply = async (
 
     throw new Error(e.message);
   }
+};
+
+export const generateAttachmentMessages = (
+  subdomain: string,
+  attachments: IAttachment[]
+) => {
+  const messages: IAttachmentMessage[] = [];
+
+  for (const attachment of attachments || []) {
+    let type = "file";
+
+    if (attachment.type.startsWith("image")) {
+      type = "image";
+    }
+
+    const url = generateAttachmentUrl(subdomain, attachment.url);
+
+    messages.push({
+      attachment: {
+        type,
+        payload: {
+          url
+        }
+      }
+    });
+  }
+
+  return messages;
 };
 
 export const fetchPagePost = async (postId: string, accessToken: string) => {

@@ -89,6 +89,8 @@ export interface IModels {
 export interface IContext extends IMainContext {
   subdomain: string;
   models: IModels;
+  docModifier: <T>(doc: T) => any;
+  singleBrandIdSelector: object;
   serverTiming: any;
 }
 

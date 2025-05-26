@@ -1,14 +1,13 @@
 import { getIntegrationsKinds } from '@/inbox/utils';
 import { IContext, } from '~/connectionResolvers';
-import { cursorPaginate } from 'erxes-api-shared/utils';
+import { cursorPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
-
+import {IChannelDocument} from '@/inbox/@types/channels'
 const generateFilterQuery = async (
-  subdomain,
-  { kind, channelId, brandId, searchValue, tag, status, formLoadType },
+  { kind, channelId, brandId, searchValue, tag, status },
   models,
 ) => {
-  const query: any = {};
+ const query: any = {};
 
   if (kind) {
     query.kind = kind;
@@ -30,6 +29,19 @@ const generateFilterQuery = async (
   }
 
   // filtering integrations by tag
+  if (tag) {
+       const object = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'tags',
+        action: 'findOne',
+        input: {
+         type: 'inbox:integration'
+        },
+      });
+
+    query.tagIds = { $in: [tag, ...(object?.relatedIds || [])] };
+  }
 
   if (status) {
     query.isActive = status === 'active' ? true : false;
@@ -57,13 +69,13 @@ export const integrationQueries = {
       sortField: string;
       sortDirection: number;
     },
-    { models, subdomain, user }: IContext,
+    { models, user }: IContext,
   ) {
     if (!user) {
       throw new Error('User not authenticated');
     }
     let query = {
-      ...(await generateFilterQuery(subdomain, args, models)),
+      ...(await generateFilterQuery(args, models)),
     };
     if (!user.isOwner) {
       query = {
@@ -105,9 +117,10 @@ export const integrationQueries = {
   async allLeadIntegrations(
     _root,
     _args,
-    { models }: IContext,
+    { models , singleBrandIdSelector}: IContext,
   ) {
-    const query = {
+     const query = {
+      ...singleBrandIdSelector,
       kind: 'lead',
     };
 
@@ -123,20 +136,17 @@ export const integrationQueries = {
     try {
       const kindMap = await getIntegrationsKinds();
 
-      const distinctKinds = await models.Integrations.find({}).distinct('kind');
-
-      for (const kind of distinctKinds) {
-        const count = await models.Integrations.find({ kind }).countDocuments();
-
-        if (count > 0) {
-          usedTypes.push({
-            _id: kind,
-            name: kindMap[kind] || kind.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-          });
+      for (const kind of Object.keys(kindMap)) {
+          if (
+            (await models.Integrations.findIntegrations({
+              kind,
+            }).countDocuments()) > 0
+          ) {
+            usedTypes.push({ _id: kind, name: kindMap[kind] });
+          }
         }
-      }
 
-      return usedTypes;
+        return usedTypes;
     } catch (error) {
       console.error('Error in integrationsGetUsedTypes:', error);
       throw new Error('Failed to fetch used integration types');
@@ -169,7 +179,7 @@ export const integrationQueries = {
       status: string;
       formLoadType: string;
     },
-    { models, subdomain }: IContext,
+    { models,  }: IContext,
   ) {
     const counts = {
       total: 0,
@@ -181,16 +191,81 @@ export const integrationQueries = {
     };
 
     const qry = {
-      ...(await generateFilterQuery(subdomain, args, models)),
+      ...(await generateFilterQuery( args, models)),
     };
 
     const count = async (query) => {
       return models.Integrations.countDocuments(query);
     };
 
+     const tags = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'tags',
+        action: 'find',
+        input: {
+         type: 'inbox:integration'
+        },
+      });
 
+  for (const tag of tags) {
+      const countQueryResult = await count({ tagIds: tag._id, ...qry });
+
+      counts.byTag[tag._id] = !args.tag
+        ? countQueryResult
+        : args.tag === tag._id
+          ? countQueryResult
+          : 0;
+    }
+
+    // Counting integrations by kind
+    const kindMap = await getIntegrationsKinds();
+
+    for (const kind of Object.keys(kindMap)) {
+      const countQueryResult = await count({ kind, ...qry });
+      counts.byKind[kind] = !args.kind
+        ? countQueryResult
+        : args.kind === kind
+          ? countQueryResult
+          : 0;
+    }
 
     // Counting integrations by channel
+  const channels = await models.Channels.find({}); // No need for 'as IChannelDocument[]' if models.Channels is typed
+  if (channels) {
+    for (const channel of channels as IChannelDocument[]) {
+      const countQueryResult = await count({
+        _id: { $in: channel.integrationIds },
+        ...qry,
+      });
+
+      counts.byChannel[channel._id as string] = !args.channelId
+        ? countQueryResult
+        : args.channelId === channel._id
+          ? countQueryResult
+          : 0;
+    }
+  }
+ 
+    // Counting integrations by brand
+ 
+     const brands = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'brands',
+        action: 'find',
+        input: {
+         query: {}
+        },
+      });
+    for (const brand of brands) {
+      const countQueryResult = await count({ brandId: brand._id, ...qry });
+      counts.byBrand[brand._id] = !args.brandId
+        ? countQueryResult
+        : args.brandId === brand._id
+          ? countQueryResult
+          : 0;
+    }
 
     counts.byStatus.active = await count({ isActive: true, ...qry });
     counts.byStatus.archived = await count({ isActive: false, ...qry });
@@ -207,13 +282,5 @@ export const integrationQueries = {
     counts.total = await count(qry);
 
     return counts;
-  },
-
-  async integrationGetLineWebhookUrl(
-    _root,
-    { _id }: { _id: string },
-    { subdomain }: IContext,
-  ) {
-    return 'success';
   },
 };

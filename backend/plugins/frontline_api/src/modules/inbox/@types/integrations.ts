@@ -12,6 +12,29 @@ export interface ILink {
   youtube?: string;
 }
 
+export interface ITicketData {
+  ticketLabel?: string;
+  ticketToggle?: boolean;
+  ticketStageId?: string;
+  ticketPipelineId?: string;
+  ticketBoardId?: string;
+}
+interface IOnboardingPrams {
+  brandName: string;
+  logo?: string;
+  color?: string;
+  name: string;
+}
+export interface IArchiveParams {
+  _id: string;
+  status: boolean;
+}
+
+export interface IOnboardingPramsEdit extends IOnboardingPrams {
+  _id: string;
+  brandId: string;
+}
+
 export interface IMessengerOnlineHours {
   day?: string;
   from?: string;

@@ -2,7 +2,7 @@ import { IOrderInput } from '@/core-types';
 import mongoose from 'mongoose';
 import stripAnsi from 'strip-ansi';
 import dayjs from 'dayjs';
-
+import { randomAlphanumeric } from '@/utils/random';
 export const getEnv = ({
   name,
   defaultValue,
@@ -183,6 +183,46 @@ export const fixDate = (
   }
 
   return defaultValue;
+};
+
+export const checkUserIds = (
+  oldUserIds: string[] = [],
+  newUserIds: string[] = [],
+) => {
+  const removedUserIds = oldUserIds.filter((e) => !newUserIds.includes(e));
+
+  const addedUserIds = newUserIds.filter((e) => !oldUserIds.includes(e));
+
+  return { addedUserIds, removedUserIds };
+};
+const generateRandomEmail = () => {
+  const chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
+  let string = '';
+  for (let ii = 0; ii < 15; ii++) {
+    string += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return string + '@gmail.com';
+};
+export const getUniqueValue = async (
+  collection: any,
+  fieldName = 'code',
+  defaultValue?: string,
+) => {
+  const getRandomValue = (type: string) =>
+    type === 'email' ? generateRandomEmail() : randomAlphanumeric();
+
+  let uniqueValue = defaultValue || getRandomValue(fieldName);
+
+  let duplicated = await collection.findOne({ [fieldName]: uniqueValue });
+
+  while (duplicated) {
+    uniqueValue = getRandomValue(fieldName);
+
+    duplicated = await collection.findOne({ [fieldName]: uniqueValue });
+  }
+
+  return uniqueValue;
 };
 
 export const getDate = (date: Date, day: number): Date => {

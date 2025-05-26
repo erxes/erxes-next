@@ -3,17 +3,175 @@ import {
   IIntegration,
   IMessengerData,
   IUiOptions,
+  ITicketData,
+  IOnboardingPramsEdit,
+  IArchiveParams
 } from '@/inbox/@types/integrations';
 import { IContext, IModels } from '~/connectionResolvers';
 import { IExternalIntegrationParams } from '@/inbox/db/models/Integrations';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import { getUniqueValue } from 'erxes-api-shared/utils'
+import {IChannelDocument} from '@/inbox/@types/channels'
+import { facebookUpdateIntegrations ,facebookRemoveIntegrations,facebookRemoveAccount,facebookRepairIntegrations,facebookCreateIntegrations} from '@/integrations/facebook/messageBroker'
+
+
+export const sendCreateIntegration = async (
+  subdomain: string,
+  integration: IIntegrationDocument,
+  serviceName: string,
+  payload: object
+) => {
+  try {
+    const data = {
+        action: `reply-${integration.kind.split("-")[1]}`,
+        type: serviceName,
+        payload: JSON.stringify(payload),
+        integrationId: integration._id
+    }
+    switch (serviceName) {
+      case 'facebook':
+      return await facebookCreateIntegrations({ subdomain, data }); 
+
+      case 'instagram':
+      
+        break;
+
+      case 'mobinetSms':
+  
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
+  } catch (e) {
+    throw new Error(
+      `Your message not sent. Error: ${e.message}. Go to integrations list and fix it.`
+    );
+  }
+};
+
+export const sendUpdateIntergration = async (
+  subdomain: string,
+  serviceName: string,
+  data: any
+) => {
+  try {
+
+    switch (serviceName) {
+      case 'facebook':
+      return await facebookUpdateIntegrations({ subdomain, data:data });
+
+      case 'instagram':
+    
+        break;
+
+      case 'mobinetSms':
+    
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
+  } catch (e) {
+    throw new Error(
+      `Your message not sent. Error: ${e.message}. Go to integrations list and fix it.`
+    );
+  }
+};
+
+export const sendRemoveIntergration = async (
+  subdomain:string,
+  serviceName: string,
+  data: any
+) => {
+  try {
+
+    switch (serviceName) {
+      case 'facebook':
+      return await facebookRemoveIntegrations({ subdomain, data:data });
+
+      case 'instagram':
+    
+        break;
+
+      case 'mobinetSms':
+    
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
+  } catch (e) {
+    throw new Error(
+      `Your message not sent. Error: ${e.message}. Go to integrations list and fix it.`
+    );
+  }
+};
+
+
+export const sendRemoveAccount = async (
+  subdomain:string,
+  serviceName: string,
+  params: any
+) => {
+  try {
+
+    switch (serviceName) {
+      case 'facebook':
+      return await facebookRemoveAccount({ subdomain, data:params});
+
+      case 'instagram':
+    
+        break;
+
+      case 'mobinetSms':
+    
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
+  } catch (e) {
+    throw new Error(
+      `Your message not sent. Error: ${e.message}. Go to Account list and fix it.`
+    );
+  }
+};
+
+export const sendRepairIntegration = async (
+  subdomain:string,
+  serviceName: string,
+  params: any
+) => {
+  try {
+
+    switch (serviceName) {
+      case 'facebook':
+      return await facebookRepairIntegrations({ subdomain, data:params});
+
+      case 'instagram':
+    
+        break;
+
+      case 'mobinetSms':
+    
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
+  } catch (e) {
+    throw new Error(
+      `Your message not sent. Error: ${e.message}. Go to Account list and fix it.`
+    );
+  }
+};
 
 const createIntegration = async (
   models: IModels,
-  subdomain: string,
   doc: IIntegration,
   integration: IIntegrationDocument,
-  user: any,
-  type: string,
+
 ) => {
   if (doc.channelIds) {
     await models.Channels.updateMany(
@@ -21,15 +179,12 @@ const createIntegration = async (
       { $push: { integrationIds: integration._id } },
     );
   }
-
   return integration;
 };
 
 const editIntegration = async (
-  subdomain: string,
   fields: IIntegration,
   integration: IIntegrationDocument,
-  user,
   updated: IIntegrationDocument,
   models: IModels,
 ) => {
@@ -54,85 +209,102 @@ export const integrationMutations = {
    */
   async integrationsCreateMessengerOnboarding(
     _root,
-    doc: any,
-    { user, models, subdomain }: IContext,
+      doc: IOnboardingPramsEdit,
+    { user, models, }: IContext,
   ) {
-    const integrationsCount = await models.Integrations.countDocuments();
+
+    const integrationsCount = await models.Integrations.find(
+      {}
+    ).countDocuments();
 
     if (integrationsCount > 0) {
       return models.Integrations.findOne();
     }
+     const brand = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'brands',
+        action: 'create',
+        input: {name: doc.brandName },
+      });
 
-    const channel = await models.Channels.findOne({ name: 'Default channel' });
+      let channel = await models.Channels.findOne({
+        name: "Default channel"
+      }) as IChannelDocument;
 
     if (!channel) {
-      await models.Channels.createChannel(
-        { name: 'Default channel', memberIds: [user._id] },
-        user._id,
+      channel = await models.Channels.createChannel(
+        { name: "Default channel", memberIds: [user._id] },
+        user._id
       );
     }
+
     const integrationDocs = {
-      name: 'Default brand',
-      channelIds: [channel!._id],
-      messengerData: {},
+      name: "Default brand",
+      channelIds: [channel._id],
+      brandId: brand._id,
+      messengerData: {}
     } as IIntegration;
 
     const integration = await models.Integrations.createMessengerIntegration(
       integrationDocs,
-      user._id,
+      user._id
     );
 
     const uiOptions = { ...doc };
 
     await models.Integrations.saveMessengerAppearanceData(
       integration._id,
-      uiOptions,
+      uiOptions
     );
 
     return createIntegration(
       models,
-      subdomain,
       integrationDocs,
       integration,
-      user,
-      'messenger',
     );
   },
 
   async integrationsEditMessengerOnboarding(
     _root,
     { _id, brandId, ...fields }: any,
-    { user, models, subdomain }: IContext,
+    { models }: IContext,
   ) {
+      const brand = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'brands',
+        action: 'updateOne',
+        input: {_id: brandId, fields: { name: fields.brandName }},
+      });
     const integration = await models.Integrations.getIntegration({ _id });
     const channel = await models.Channels.findOne({
-      name: 'Default channel',
+      name: "Default channel"
     });
 
     const integrationDocs = {
-      name: 'Default brand',
-      channelIds: [channel?._id],
+      name: "Default brand",
+      brandId: brand._id,
+      channelIds: [channel?._id]
     } as IIntegration;
 
     const updated = await models.Integrations.updateMessengerIntegration(
       _id,
-      integrationDocs,
+      integrationDocs
     );
 
     const uiOptions = { logo: fields.logo, color: fields.color };
 
     await models.Integrations.saveMessengerAppearanceData(
       updated._id,
-      uiOptions,
+      uiOptions
     );
 
     return editIntegration(
-      subdomain,
       integrationDocs,
       integration,
-      user,
       updated,
-      models,
+      models
     );
   },
 
@@ -143,7 +315,7 @@ export const integrationMutations = {
   async integrationsCreateMessengerIntegration(
     _root,
     doc: IIntegration,
-    { user, models, subdomain }: IContext,
+    { user, models, }: IContext,
   ) {
     const integration = await models.Integrations.createMessengerIntegration(
       doc,
@@ -152,11 +324,8 @@ export const integrationMutations = {
 
     return createIntegration(
       models,
-      subdomain,
       doc,
       integration,
-      user,
-      'messenger',
     );
   },
 
@@ -166,7 +335,7 @@ export const integrationMutations = {
   async integrationsEditMessengerIntegration(
     _root,
     { _id, ...fields }: any,
-    { user, models, subdomain }: IContext,
+    {  models }: IContext,
   ) {
     const integration = await models.Integrations.getIntegration({ _id });
     const updated = await models.Integrations.updateMessengerIntegration(
@@ -175,10 +344,8 @@ export const integrationMutations = {
     );
 
     return editIntegration(
-      subdomain,
       fields,
       integration,
-      user,
       updated,
       models,
     );
@@ -203,9 +370,8 @@ export const integrationMutations = {
     {
       _id,
       messengerData,
-      callData,
     }: { _id: string; messengerData: IMessengerData; callData: any },
-    { models, subdomain }: IContext,
+    { models, }: IContext,
   ) {
     return models.Integrations.saveMessengerConfigs(_id, messengerData);
   },
@@ -216,14 +382,14 @@ export const integrationMutations = {
   async integrationsCreateLeadIntegration(
     _root,
     doc: IIntegration,
-    { user, models, subdomain }: IContext,
+    { user, models }: IContext,
   ) {
     const integration = await models.Integrations.createLeadIntegration(
       doc,
       user._id,
     );
 
-    return createIntegration(models, subdomain, doc, integration, user, 'lead');
+    return createIntegration(models, doc, integration,);
   },
 
   /**
@@ -232,13 +398,13 @@ export const integrationMutations = {
   async integrationsEditLeadIntegration(
     _root,
     { _id, ...doc }: any,
-    { user, models, subdomain }: IContext,
+    { models }: IContext,
   ) {
     const integration = await models.Integrations.getIntegration({ _id });
 
     const updated = await models.Integrations.updateLeadIntegration(_id, doc);
 
-    return editIntegration(subdomain, doc, integration, user, updated, models);
+    return editIntegration(doc, integration,updated, models);
   },
 
   /**
@@ -251,29 +417,63 @@ export const integrationMutations = {
   ) {
     const modifiedDoc: any = { ...doc };
 
-    if (modifiedDoc.kind === 'webhook') {
+    if (modifiedDoc.kind === "webhook") {
       modifiedDoc.webhookData = { ...data };
+
+      if (
+        !modifiedDoc.webhookData.token ||
+        modifiedDoc.webhookData.token === ""
+      ) {
+        modifiedDoc.webhookData.token = await getUniqueValue(
+          models.Integrations,
+          "token"
+        );
+      }
     }
 
     if (doc.channelIds && doc.channelIds.length === 0) {
-      throw new Error('Channel must be chosen');
+      throw new Error("Channel must be chosen");
     }
 
     const integration = await models.Integrations.createExternalIntegration(
       modifiedDoc,
-      user._id,
+      user._id
     );
 
     if (doc.channelIds) {
       await models.Channels.updateMany(
         { _id: { $in: doc.channelIds } },
-        { $push: { integrationIds: integration._id } },
+        { $push: { integrationIds: integration._id } }
       );
     }
 
-    const kind = doc.kind.split('-')[0];
-    if (kind === 'cloudflarecalls') {
+    const kind = doc.kind.split("-")[0];
+    if (kind === "cloudflarecalls") {
       data = { ...data, name: doc.name };
+    }
+
+    try {
+      if ("webhook" !== kind) {
+          const payload =  {
+                action: "createIntegration",
+                accountId: doc.accountId,
+                kind: doc.kind,
+                integrationId: integration._id,
+                data: data ? JSON.stringify(data) : ""
+          }
+           await sendCreateIntegration(
+            subdomain,
+            integration,
+            kind,
+        
+            payload
+          );
+
+      }
+
+    } catch (e) {
+      await models.Integrations.deleteOne({ _id: integration._id });
+      throw new Error(e);
     }
 
     return integration;
@@ -282,18 +482,18 @@ export const integrationMutations = {
   async integrationsEditCommonFields(
     _root,
     { _id, name, brandId, channelIds, details },
-    { user, models, subdomain }: IContext,
+    { models, subdomain}: IContext,
   ) {
     const integration = await models.Integrations.getIntegration({ _id });
 
     const doc: any = { name, brandId, details };
 
     let { kind } = integration;
-    if (kind === 'facebook-messenger' || kind === 'facebook-post') {
-      kind = 'facebook';
+    if (kind === "facebook-messenger" || kind === "facebook-post") {
+      kind = "facebook";
     }
-    if (kind === 'instagram-messenger' || kind === 'instagram-post') {
-      kind = 'instagram';
+    if (kind === "instagram-messenger" || kind === "instagram-post") {
+      kind = "instagram";
     }
     await models.Integrations.updateOne({ _id }, { $set: doc });
 
@@ -301,16 +501,32 @@ export const integrationMutations = {
 
     await models.Channels.updateMany(
       { integrationIds: integration._id },
-      { $pull: { integrationIds: integration._id } },
+      { $pull: { integrationIds: integration._id } }
     );
 
     if (channelIds) {
       await models.Channels.updateMany(
         { _id: { $in: channelIds } },
-        { $push: { integrationIds: integration._id } },
+        { $push: { integrationIds: integration._id } }
       );
     }
-
+        const data = {
+            kind,
+            integrationId: integration._id,
+            doc: {
+              accountId: doc.accountId,
+              kind: kind,
+              integrationId: integration._id,
+              data: details ? JSON.stringify(details) : ""
+            }
+          }
+    
+       await sendUpdateIntergration(
+        subdomain,
+        kind,
+        data
+      );
+ 
     return updated;
   },
 
@@ -320,8 +536,31 @@ export const integrationMutations = {
   async integrationsRemove(
     _root,
     { _id }: { _id: string },
-    { user, models, subdomain }: IContext,
+    { models ,subdomain,}: IContext,
   ) {
+
+    const integration = await models.Integrations.getIntegration({ _id });
+    const kind = integration.kind.split("-")[0];
+
+    if (!["lead", "messenger"].includes(kind)) {
+      try {
+          const commonParams = {
+            subdomain,
+            data: { integrationId: _id },
+            action: "removeIntegrations"
+          };
+          await sendRemoveIntergration(
+            subdomain,
+            kind,
+            commonParams
+          );
+      } catch (e) {
+        if (e.message !== "Integration not found") {
+          throw e;
+        }
+      }
+    }
+  
     return models.Integrations.removeIntegration(_id);
   },
 
@@ -331,13 +570,34 @@ export const integrationMutations = {
   async integrationsRemoveAccount(
     _root,
     { _id, kind }: { _id: string; kind?: string },
-    { models, subdomain }: IContext,
+    { subdomain }: IContext,
   ) {
-    for (const id of _id) {
-      await models.Integrations.removeIntegration(id);
-    }
+      try {
+          if(kind){
+            const commonParams = {
+              subdomain,
+              data: { integrationId: _id },
+              action: "removeIntegrations"
+            };
+            try {
+               await sendRemoveAccount(
+                subdomain,
+                kind, // kind should be explicitly set
+                commonParams  
+              );
 
-    return 'success';
+          } catch (error) {
+            console.error('Error during account removal process:', error);
+            throw error;
+          }
+          }
+      return "success";
+     } catch (error) {
+       console.error(`Failed to remove ${kind} integration ${_id}:`, error);
+        throw new Error(
+          `Failed to remove ${kind} integration. ${error.message}`
+        );
+    }
   },
 
   async integrationsRepair(
@@ -345,41 +605,88 @@ export const integrationMutations = {
     { _id, kind }: { _id: string; kind: string },
     { subdomain }: IContext,
   ) {
-    return 'success';
-  },
+   try {
+    if (!_id) {
+      throw new Error('Integration ID is required for repair');
+    }
+    if (!kind) {
+      throw new Error('Integration kind is required for repair');
+    }
 
-  async integrationsArchive(
+    const commonParams = {
+      subdomain,
+      data: { integrationId: _id },
+      action: "repair-integrations"
+    };
+
+    const repairResult = await sendRepairIntegration(
+      subdomain,
+      kind,
+      commonParams
+    );
+
+    return repairResult;
+
+  } catch (error) {
+    console.error(`Failed to repair ${kind} integration ${_id}:`, error);
+    // Convert to a more user-friendly error if needed
+    throw new Error(
+      `Failed to repair ${kind} integration. ${error.message}`
+    );
+  }
+  },
+   async integrationsArchive(
     _root,
-    { _id, status }: any,
-    { user, models, subdomain }: IContext,
+    { _id, status }: IArchiveParams,
+    { models }: IContext
   ) {
     await models.Integrations.updateOne(
       { _id },
-      { $set: { isActive: !status } },
+      { $set: { isActive: !status } }
     );
-
     const updated = await models.Integrations.findOne({ _id });
 
     return updated;
   },
 
-  async integrationsSendSms(_root, args: any, { user, subdomain }: IContext) {
-    return 'success';
-  },
+
 
   async integrationsCopyLeadIntegration(
     _root,
     { _id }: { _id },
-    { user, models, subdomain }: IContext,
+    {models, docModifier, user }: IContext,
   ) {
-    const sourceIntegration = await models.Integrations.getIntegration({
-      _id,
-    });
+    const sourceIntegration = await models.Integrations.getIntegration({ _id });
 
     if (!sourceIntegration.formId) {
-      throw new Error('Integration kind is not form');
+      throw new Error("Integration kind is not form");
     }
-
-    return sourceIntegration;
+     const leadData = sourceIntegration.leadData;
+     const doc = docModifier({
+      ...sourceIntegration.toObject(),
+      name: `${sourceIntegration.name}-copied`,
+      leadData: leadData && {
+        ...leadData.toObject(),
+        viewCount: 0,
+        contactsGathered: 0
+      }
+    });
+      const copiedIntegration = await models.Integrations.createLeadIntegration(
+      doc,
+      user._id
+    );
+    return copiedIntegration;
   },
+
+
+    async integrationsSaveMessengerTicketData(
+    _root,
+    { _id, ticketData }: { _id: string; ticketData: ITicketData },
+    { models }: IContext
+  ) {
+    return models.Integrations.integrationsSaveMessengerTicketData(
+      _id,
+      ticketData
+    );
+  }
 };

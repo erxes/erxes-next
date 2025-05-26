@@ -5,42 +5,51 @@ import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels, IContext, IModels } from '~/connectionResolvers';
 import {IConversationMessageAdd} from '@/inbox/@types/conversationMessages'
-import { isServiceRunning } from '@/inbox/utils'
 import {IIntegrationDocument} from '@/inbox/@types/integrations'
 import { AUTO_BOT_MESSAGES} from '@/inbox/db/definitions/constants'
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
-// import {sendToWebhook} from 'erxes-api-shared/utils'
+import { facebookIntegrations } from '@/integrations/facebook/messageBroker'
 
 
 /**
  * conversation notrification receiver ids
  */
-const sendConversationToServices = async (
+export const sendConversationToServices = async (
   subdomain: string,
   integration: IIntegrationDocument,
   serviceName: string,
   payload: object
 ) => {
   try {
-      const integration   
-    // return sendCommonMessage({
-    //   subdomain,
-    //   isRPC: true,
-    //   serviceName,
-    //   action: "api_to_integrations",
-    //   data: {
-    //     action: `reply-${integration.kind.split("-")[1]}`,
-    //     type: serviceName,
-    //     payload: JSON.stringify(payload),
-    //     integrationId: integration._id
-    //   }
-    // });
+    const data = {
+        action: `reply-${integration.kind.split("-")[1]}`,
+        type: serviceName,
+        payload: JSON.stringify(payload),
+        integrationId: integration._id
+    }
+    switch (serviceName) {
+      case 'facebook':
+      return await facebookIntegrations({ subdomain, data }); 
+
+      case 'instagram':
+      
+        break;
+
+      case 'mobinetSms':
+  
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
   } catch (e) {
     throw new Error(
-      `Your message not sent Error: ${e.message}. Go to integrations list and fix it`
+      `Your message not sent. Error: ${e.message}. Go to integrations list and fix it.`
     );
   }
 };
+
+
 export const conversationNotifReceivers = (
   conversation: IConversationDocument,
   currentUserId: string,
@@ -95,9 +104,11 @@ export const publishMessage = async (
   message: any,
   customerId?: string,
 ) => {
-  // widget is listening for this subscription to show notification
-  // customerId available means trying to notify to client
-  //incomplete
+    if (customerId) {
+      await models.ConversationMessages.widgetsGetUnreadMessagesCount(
+        message.conversationId
+      );
+  }
 };
 
 export const sendNotifications = async (
@@ -116,6 +127,7 @@ export const sendNotifications = async (
     messageContent?: string;
   },
 ) => {
+
   for (const conversation of conversations) {
     if (!conversation || !conversation._id) {
       throw new Error('Error: Conversation or Conversation ID is undefined');
@@ -210,18 +222,7 @@ export const conversationMutations = {
     const email = customer ? customer.primaryEmail : "";
 
     if (!doc.internal && kind === "lead" && email) {
-      // await sendCoreMessage({
-      //   subdomain,
-      //   action: "sendEmail",
-      //   data: {
-      //     toEmails: [email],
-      //     title: "Reply",
-      //     template: {
-      //       data: doc.content
-      //     }
-      //   }
-      // });
-
+ 
      await sendTRPCMessage({
         pluginName: 'core',
         method: 'mutation',
@@ -238,9 +239,8 @@ export const conversationMutations = {
     }
 
     const serviceName = integration.kind.split("-")[0];
-    const serviceRunning = await isServiceRunning(serviceName);
 
-    if (serviceRunning) {
+ 
       const payload = {
         integrationId: integration._id,
         conversationId: conversation._id,
@@ -270,7 +270,7 @@ export const conversationMutations = {
         }
         return { ...response.data };
       }
-    }
+  
 
     // do not send internal message to third service integrations
     if (doc.internal) {
@@ -289,14 +289,7 @@ export const conversationMutations = {
 
     const dbMessage = await models.ConversationMessages.getMessage(message._id);
 
-    // await sendToWebhook({
-    //   subdomain,
-    //   data: {
-    //     action: "create",
-    //     type: "inbox:userMessages",
-    //     params: dbMessage
-    //   }
-    // });
+  
 
     // Publishing both admin & client
     publishMessage(models, dbMessage, conversation.customerId);
@@ -463,7 +456,6 @@ export const conversationMutations = {
           }
         ]
       });
-
       return models.Conversations.updateOne(
         { _id },
         { $set: { operatorStatus } }
