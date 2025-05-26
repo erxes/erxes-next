@@ -16,6 +16,7 @@ import {
   RecordTablePopover,
   RelativeDateDisplay,
   Textarea,
+  TextOverflowTooltip,
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
@@ -44,23 +45,6 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
     size: 33,
   },
   RecordTable.checkboxColumn as ColumnDef<IBrand>,
-  {
-    id: 'code',
-    accessorKey: 'code',
-    header: () => <RecordTable.InlineHead label="code" icon={IconHash} />,
-    cell: ({ cell }) => {
-      return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            {cell.getValue() as string}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      );
-    },
-  },
   {
     id: 'name',
     accessorKey: 'name',
@@ -91,7 +75,7 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            {cell.getValue() as string}
+            <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
             <Textarea value={cell.getValue() as string} />
@@ -100,6 +84,23 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
       );
     },
     size: 350,
+  },
+  {
+    id: 'code',
+    accessorKey: 'code',
+    header: () => <RecordTable.InlineHead label="code" icon={IconHash} />,
+    cell: ({ cell }) => {
+      return (
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            {cell.getValue() as string}
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Input value={cell.getValue() as string} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
+    },
   },
   {
     id: 'createdAt',
