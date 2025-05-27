@@ -125,7 +125,6 @@ export default {
     _args,
     { subdomain }: IContext,
   ) {
-    const inboxId: string = integration._id;
 
     const serviceName = integration.kind.includes('facebook')
       ? 'facebook'
@@ -134,37 +133,8 @@ export default {
     if (integration.kind === 'messenger') {
       return null;
     }
-
-    if (
-      integration.kind === 'callpro' 
-    ) {
-      // return await sendIntegrationsMessage({
-      //   subdomain,
-      //   action: 'api_to_integrations',
-      //   data: { inboxId, action: 'getDetails', integrationId: inboxId },
-      //   isRPC: true,
-      // });
-    }
-
-
-
-      try {
-        // const a = await sendCommonMessage({
-        //   serviceName,
-        //   subdomain,
-        //   action: 'api_to_integrations',
-        //   data: { inboxId, integrationId: inboxId, action: 'getDetails' },
-        //   isRPC: true,
-        //   defaultValue: null,
-        // });
-
-        // return a;
-      } catch (e) {
-        console.error('error', e);
-
-        return null;
-      }
-    
+    return serviceName
+ 
   },
 
 

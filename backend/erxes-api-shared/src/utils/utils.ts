@@ -2,7 +2,6 @@ import { IOrderInput } from '@/core-types';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import stripAnsi from 'strip-ansi';
-import dayjs from 'dayjs';
 import { randomAlphanumeric } from '@/utils/random';
 
 export const getEnv = ({
@@ -199,13 +198,7 @@ export const checkUserIds = (
   return { addedUserIds, removedUserIds };
 };
 const generateRandomEmail = () => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
-  let string = '';
-  for (let ii = 0; ii < 15; ii++) {
-    string += chars[Math.floor(Math.random() * chars.length)];
-  }
-
-  return string + '@gmail.com';
+ return randomAlphanumeric(15) + '@gmail.com';
 };
 export const getUniqueValue = async (
    collection: any,
