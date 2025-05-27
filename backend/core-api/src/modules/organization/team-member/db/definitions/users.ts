@@ -18,6 +18,7 @@ const userSchema = schemaWrapper(
     createdAt: { type: Date, label: 'Created at', esType: 'date' },
     modifiedAt: { type: Date, label: 'Modified at', esType: 'date' },
   }),
+  { contentType: 'core:user' },
 );
 
 export default userSchema;

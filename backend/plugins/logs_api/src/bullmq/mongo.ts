@@ -1,20 +1,21 @@
 import { Model } from 'mongoose';
 import { LOG_STATUSES } from '../constants';
 import { ILogDocument } from '../db/definitions/logs';
+import { StatusType } from '~/types';
 
 type CommonObject = {
   source: 'mongo';
-  status: 'sucess' | 'failed';
+  status: StatusType;
 };
 
 const insert = async (
-  Logs: any,
+  Logs: Model<ILogDocument>,
   collectionName: string,
   docId: string,
   commonObj: CommonObject,
   changeEvent,
 ) => {
-  Logs.insertOne({
+  return await Logs.insertOne({
     action: 'create',
     docId,
     payload: { collectionName, fullDocument: changeEvent.fullDocument },
@@ -24,7 +25,7 @@ const insert = async (
 };
 
 const update = async (
-  Logs: any,
+  Logs: Model<ILogDocument>,
   collectionName: string,
   docId: string,
   commonObj: CommonObject,
@@ -32,7 +33,7 @@ const update = async (
 ) => {
   const prevLog = await Logs.findOne({ docId }).sort({ createdAt: -1 }).lean();
 
-  Logs.insertOne({
+  return await Logs.insertOne({
     action: 'update',
     docId: String(docId),
     payload: {
@@ -47,14 +48,14 @@ const update = async (
 };
 
 const remove = async (
-  Logs: any,
+  Logs: Model<ILogDocument>,
   collectionName: string,
   docId: string,
   commonObj: CommonObject,
 ) => {
   const prevLog = await Logs.findOne({ docId }).sort({ createdAt: -1 }).lean();
 
-  Logs.insertOne({
+  return await Logs.insertOne({
     action: 'remove',
     docId: String(docId),
     payload: { collectionName, prevDocument: prevLog?.payload?.fullDocument },
@@ -81,7 +82,7 @@ export const handleMongoChangeEvent = async (
   const { processId } = changeEvent?.fullDocument || {};
 
   const action = actionMap[operationType];
-  await action(
+  return await action(
     Logs,
     collectionName,
     docId,
