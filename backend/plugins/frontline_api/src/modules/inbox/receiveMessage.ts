@@ -3,8 +3,8 @@ import { generateModels } from '~/connectionResolvers';
 import { RPError, RPResult, RPSuccess } from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
-import { model } from 'mongoose';
 import { pConversationClientMessageInserted } from './graphql/resolvers/mutations/widget';
+import { IConversationDocument } from './@types/conversations';
 
 const sendError = (message): RPError => ({
   status: 'error',
@@ -207,13 +207,15 @@ export const receiveTrpcMessage = async (
   }
 
   if (action === 'get-configs') {
-    // const configs = await sendCoreMessage({
-    //   subdomain,
-    //   action: 'getConfigs',
-    //   data: {},
-    //   isRPC: true,
-    // });
-    // return sendSuccess({ configs });
+     const configs = await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'query', // this is a mutation, not a query
+          module: 'config',
+          action: 'getConfig',
+          input: {},
+        });
+    return sendSuccess({ configs });
+  
   }
 
   if (action === 'getUserIds') {
@@ -273,52 +275,28 @@ export const collectConversations = async (
   subdomain: string,
   { contentId }: { contentId: string },
 ) => {
-  const models = await generateModels(subdomain);
+const models = await generateModels(subdomain);
   const results: any[] = [];
+  let conversations: IConversationDocument[] = [];
 
-  // const activities = await sendCoreMessage({
-  //   subdomain,
-  //   action: 'activityLogs.findMany',
-  //   data: {
-  //     query: {
-  //       contentId,
-  //       action: 'convert',
-  //     },
-  //     options: {
-  //       content: 1,
-  //     },
-  //   },
-  //   isRPC: true,
-  //   defaultValue: [],
-  // });
+    conversations = await models.Conversations.find({
+      $or: [{ customerId: contentId }, { participatedUserIds: contentId }],
+    }).lean();
+    
 
-  // const contentIds = activities.map((activity) => activity.content);
-
-  // let conversations: IConversationDocument[] = [];
-
-  // if (!contentIds.length) {
-  //   conversations = await models.Conversations.find({
-  //     $or: [{ customerId: contentId }, { participatedUserIds: contentId }],
-  //   }).lean();
-  // } else {
-  //   conversations = await models.Conversations.find({
-  //     _id: { $in: contentIds },
-  //   }).lean();
-  // }
-
-  // for (const c of conversations) {
-  //   results.push({
-  //     _id: c._id,
-  //     contentType: 'inbox:conversation',
-  //     contentId,
-  //     createdAt: c.createdAt,
-  //     contentTypeDetail: {
-  //       integration: await models.Integrations.findOne({
-  //         _id: c.integrationId,
-  //       }),
-  //     },
-  //   });
-  // }
+  for (const c of conversations) {
+    results.push({
+      _id: c._id,
+      contentType: 'inbox:conversation',
+      contentId,
+      createdAt: c.createdAt,
+      contentTypeDetail: {
+        integration: await models.Integrations.findOne({
+          _id: c.integrationId,
+        }),
+      },
+    });
+  }
 
   return results;
 };

@@ -515,13 +515,6 @@ findOne: t.procedure
 })
 
 export const visitorRouter = t.router({
-
-  // convertResponse: t.procedure
-  //     .input(z.any())
-  //     .query(async ({ ctx, input }) => {
-  //         await receiveVisitorDetail(subdomain, data)
-
-  //     })
 })
 export const channelsRouter = t.router({
   find: t.procedure
