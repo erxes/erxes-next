@@ -122,10 +122,9 @@ export const integrationQueries = {
   async allLeadIntegrations(
     _root,
     _args,
-    { models , singleBrandIdSelector}: IContext,
+    { models }: IContext,
   ) {
      const query = {
-      ...singleBrandIdSelector,
       kind: 'lead',
     };
 

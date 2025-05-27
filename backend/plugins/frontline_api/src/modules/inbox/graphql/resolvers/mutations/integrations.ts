@@ -658,7 +658,7 @@ export const integrationMutations = {
   async integrationsCopyLeadIntegration(
     _root,
     { _id }: { _id },
-    {models, docModifier, user }: IContext,
+    {models, user }: IContext,
   ) {
     const sourceIntegration = await models.Integrations.getIntegration({ _id });
 
@@ -666,7 +666,7 @@ export const integrationMutations = {
       throw new Error("Integration kind is not form");
     }
      const leadData = sourceIntegration.leadData;
-     const doc = docModifier({
+     const doc = ({
       ...sourceIntegration.toObject(),
       name: `${sourceIntegration.name}-copied`,
       leadData: leadData && {
