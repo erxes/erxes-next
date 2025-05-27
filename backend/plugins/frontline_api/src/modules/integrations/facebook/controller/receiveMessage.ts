@@ -115,8 +115,8 @@ export const receiveMessage = async (
   
     const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
 
-      await publish(`conversationMessageInserted:${conversation.erxesApiId}`, {
-        conversationMessageInserted: {
+      await publish(`conversationClientMessageInserted:${conversation.erxesApiId}`, {
+        conversationClientMessageInserted: {
           ...created.toObject(),
           conversationId: conversation.erxesApiId,
         },

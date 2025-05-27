@@ -198,8 +198,8 @@ export const receiveTrpcMessage = async (
       conversationClientMessageInserted: message,
     });
 
-    await publish(`conversationMessageInserted:${message.conversationId}`, {
-      conversationMessageInserted: message,
+    await publish(`conversationClientMessageInserted:${message.conversationId}`, {
+      conversationClientMessageInserted: message,
     });
 
 

@@ -112,9 +112,9 @@ export const publishMessage = async (
   customerId?: string,
 ) => {
   (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-      `conversationMessageInserted:${message.conversationId}`,
+      `conversationClientMessageInserted:${message.conversationId}`,
       {
-        conversationMessageInserted: message,
+        conversationClientMessageInserted: message,
       }
     );
 
@@ -483,9 +483,9 @@ export const conversationMutations = {
         ]
       });
       (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-        `conversationMessageInserted:${message.conversationId}`,
+        `conversationClientMessageInserted:${message.conversationId}`,
         {
-          conversationMessageInserted: message,
+          conversationClientMessageInserted: message,
         }
       );
 
