@@ -28,7 +28,7 @@ export const configTrpcRouter = t.router({
       return await models.Configs.find(query).distinct('value');
     }),
     getFileUploadConfigs: t.procedure.input(z.any()).query(async () => {
-      return await getFileUploadConfigs;
+       return await getFileUploadConfigs();
     }),
     createOrUpdateConfig: t.procedure
       .input(z.any())
