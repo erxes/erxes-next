@@ -255,7 +255,7 @@ export const loadClass = (models: IModels) => {
       }
     const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
 
-    publish(`conversationChanged:${_id}`, {
+    await publish(`conversationChanged:${_id}`, {
       conversationChanged: { conversationId: _id, type: 'inbox:conversation' },
     });
 

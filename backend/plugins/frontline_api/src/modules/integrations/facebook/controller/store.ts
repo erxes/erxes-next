@@ -205,7 +205,7 @@ export const getOrCreateComment = async (
   
     const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
 
-    publish(`conversationMessageInserted:${conversation.erxesApiId}`, {
+   await publish(`conversationMessageInserted:${conversation.erxesApiId}`, {
       conversationMessageInserted: {
         ...conversation?.toObject(),
         conversationId: conversation.erxesApiId,
