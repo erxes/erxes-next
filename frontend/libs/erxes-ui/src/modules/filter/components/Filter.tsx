@@ -250,7 +250,8 @@ const FilterBarButton = React.forwardRef<
       ref={ref}
       variant="ghost"
       className={cn(
-        'rounded-none bg-background focus-visible:z-10 max-w-72 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent',
+        'rounded-none focus-visible:z-10 max-w-72 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent',
+        !props.variant && 'bg-background',
         className,
       )}
       onClick={() => {
@@ -271,13 +272,16 @@ const FilterBarCloseButton = React.forwardRef<
   }
 >(({ className, filterKey, ...props }, ref) => {
   const removeQuery = useRemoveQueryStateByKey();
-
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      className={cn('rounded-l-none bg-background', className)}
+      className={cn(
+        'rounded-l-none',
+        !props.variant && 'bg-background',
+        className,
+      )}
       onClick={() => removeQuery(filterKey ?? '')}
       {...props}
     >

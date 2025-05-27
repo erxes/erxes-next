@@ -3,20 +3,20 @@ import {
   EnumCursorDirection,
 } from '../types/RecordTableCursorTypes';
 
-export interface ICursorResult {
+interface ICursorResult<T> {
   pageInfo?: IRecordTableCursorPageInfo;
-  list?: any[];
+  list?: T[];
   totalCount?: number;
 }
 
-export const mergeCursorData = ({
+export const mergeCursorData = <T>({
   direction,
   fetchMoreResult,
   prevResult,
 }: {
   direction: EnumCursorDirection;
-  fetchMoreResult: ICursorResult;
-  prevResult: ICursorResult;
+  fetchMoreResult: ICursorResult<T>;
+  prevResult: ICursorResult<T>;
 }) => {
   const isForward = direction === EnumCursorDirection.FORWARD;
   const fetchPageInfo =
