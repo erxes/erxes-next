@@ -1,13 +1,17 @@
 import {
-  IconCaretDownFilled,
-  IconSandbox,
-  IconSettings,
-} from '@tabler/icons-react';
-import { Breadcrumb, Button, Separator } from 'erxes-ui';
-import { PageHeader } from 'ui-modules';
-import { Link } from 'react-router-dom';
+  Breadcrumb,
+  Button,
+  PageContainer,
+  PageSubHeader,
+  Separator,
+} from 'erxes-ui';
+import { IconSandbox, IconSettings } from '@tabler/icons-react';
 
-export const SalesIndexPage = () => {
+import { Link } from 'react-router-dom';
+import { PageHeader } from 'ui-modules';
+import { SalesList } from '~/modules/deals/List';
+
+export const SalesIndexPage = (...props: any) => {
   return (
     <div className="flex flex-col h-full">
       <PageHeader>
@@ -36,9 +40,10 @@ export const SalesIndexPage = () => {
           </Button>
         </PageHeader.End>
       </PageHeader>
-      <div className="flex-1">
-        <h1>Sales plugin</h1>
-      </div>
+      <PageContainer>
+        <PageSubHeader>haha</PageSubHeader>
+        <SalesList />
+      </PageContainer>
     </div>
   );
 };
