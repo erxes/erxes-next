@@ -38,9 +38,9 @@ export const pConversationClientMessageInserted = async (
   }
 
   (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-    `conversationClientMessageInserted:${conversation._id}`,
+    `conversationMessageInserted:${conversation._id}`,
     {
-      conversationClientMessageInserted: message,
+      conversationMessageInserted: message,
       subdomain,
       conversation,
       integration
