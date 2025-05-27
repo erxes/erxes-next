@@ -106,8 +106,11 @@ const Attachments = ({ attachments }: { attachments?: IAttachment[] }) => {
         attachments.length === 1 && 'grid-cols-2',
       )}
     >
-      {attachments.map((attachment) => (
-        <Attachment key={attachment.url} attachment={attachment} />
+      {attachments.map((attachment, index) => (
+        <Attachment
+          key={`${attachment.url}-${index}`}
+          attachment={attachment}
+        />
       ))}
     </div>
   );

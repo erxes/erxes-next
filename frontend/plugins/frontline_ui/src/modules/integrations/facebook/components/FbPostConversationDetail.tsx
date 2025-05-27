@@ -1,5 +1,5 @@
 import { useFbComments } from '../hooks/useFbComments';
-import { useFbPosts } from '../hooks/useFbPosts';
+import { useFbPost } from '../hooks/useFbPost';
 import { Card, Skeleton, ScrollArea, Avatar } from 'erxes-ui';
 import { format } from 'date-fns';
 import { useConversationContext } from '~/modules/inbox/conversations/hooks/useConversationContext';

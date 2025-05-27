@@ -5,7 +5,7 @@ interface UseFbPostsProps {
   erxesApiId?: string;
 }
 
-export function useFbPosts({ erxesApiId }: UseFbPostsProps = {}) {
+export function useFbPost({ erxesApiId }: UseFbPostsProps = {}) {
   const { data, loading } = useQuery(GET_POST, {
     variables: { erxesApiId },
     skip: !erxesApiId,

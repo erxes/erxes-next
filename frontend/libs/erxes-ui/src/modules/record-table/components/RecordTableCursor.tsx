@@ -12,6 +12,7 @@ export const RecordTableCursorProvider = ({
   dataLength,
   hasNextPage,
   sessionKey,
+  offset = 102,
 }: {
   children: React.ReactNode;
   hasPreviousPage?: boolean;
@@ -30,7 +31,7 @@ export const RecordTableCursorProvider = ({
     dataLength,
     hasPreviousPage,
     loading,
-    offset: 102,
+    offset,
   });
 
   const handleScroll = () => {
