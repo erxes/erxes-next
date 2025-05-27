@@ -4,9 +4,6 @@ import { IModels } from '~/connectionResolvers';
 import { sendReply, generateAttachmentMessages } from '@/integrations/facebook/utils'
 import DOMPurify from 'dompurify';
 import {sendNotifications} from '@/inbox/graphql/resolvers/mutations/conversations'
-// import { generateAttachmentMessages, sendReply } from './utils';
-// import { sendInboxMessage } from './messageBroker';
-// import { sendCoreMessage } from './messageBroker';
 
 /**
  * Handle requests from erxes api
