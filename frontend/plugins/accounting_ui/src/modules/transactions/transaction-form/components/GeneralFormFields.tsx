@@ -6,15 +6,14 @@ import {
   SelectBranch,
   SelectDepartment,
 } from 'ui-modules';
-import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
 import { IAccount } from '~/modules/settings/account/types/Account';
 
 export const AccountField = ({
   form,
   index,
-  journal,
+  filter,
 }: ICommonFieldProps & {
-  journal: TrJournalEnum;
+  filter?: any;
 }) => {
   const onChangeAccount = (account: IAccount) => {
     form.setValue(`trDocs.${index}.details.0.account`, account as any);
@@ -25,13 +24,13 @@ export const AccountField = ({
       name={`trDocs.${index}.details.0.accountId`}
       render={({ field }) => (
         <Form.Item>
-          <Form.Label>{TR_JOURNAL_LABELS[journal]} account</Form.Label>
+          <Form.Label>Account</Form.Label>
           <Form.Control>
             <SelectAccount
               value={field.value || ''}
               onValueChange={field.onChange}
               onCallback={onChangeAccount}
-              defaultFilter={{ journals: [journal] }}
+              defaultFilter={{ ...filter }}
             />
           </Form.Control>
           <Form.Message />

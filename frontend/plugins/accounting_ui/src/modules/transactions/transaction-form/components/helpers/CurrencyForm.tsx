@@ -173,9 +173,8 @@ export const CurrencyForm = ({
           name={`trDocs.${journalIndex}.details.0.followInfos.currencyDiffAccountId`}
           render={({ field }) => (
             <Form.Item>
-              <Form.Label>{`${
-                diffAmount > 0 ? 'Loss' : 'Gain'
-              } account`}</Form.Label>
+              <Form.Label>{`${diffAmount > 0 ? 'Loss' : 'Gain'
+                } account`}</Form.Label>
               <Form.Control>
                 <SelectAccount
                   value={field.value || ''}

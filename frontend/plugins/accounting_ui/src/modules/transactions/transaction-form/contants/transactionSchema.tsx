@@ -53,10 +53,10 @@ export const baseTrDetailSchema = z.object({
     name: z.string(),
     currency: z.string(),
     kind: z.string(),
-    branchId: z.string(),
-    departmentId: z.string(),
+    branchId: z.string().optional(),
+    departmentId: z.string().optional(),
     journal: z.string(),
-  }).optional()
+  }).nullish()
 });
 
 export const currencyDetailSchema = z.object({
@@ -131,8 +131,17 @@ export const transactionBankSchema = z.object({
   hasCtax: z.boolean(),
 });
 
-export const transactionDebtSchema = z.object({
-  journal: z.literal(TrJournalEnum.DEBT),
+export const transactionReceivableSchema = z.object({
+  journal: z.literal(TrJournalEnum.RECEIVABLE),
+  ...baseTransactionSchema.shape,
+}).extend({
+  customerId: z.string(),
+  hasVat: z.boolean(),
+  hasCtax: z.boolean(),
+});
+
+export const transactionPayableSchema = z.object({
+  journal: z.literal(TrJournalEnum.PAYABLE),
   ...baseTransactionSchema.shape,
 }).extend({
   customerId: z.string(),
@@ -176,11 +185,12 @@ export const transactionTaxSchema = z.object({
 export const trDocSchema = z
   .discriminatedUnion('journal', [
     transactionMainSchema,
-    transactionBankSchema,
     transactionCashSchema,
+    transactionBankSchema,
+    transactionReceivableSchema,
+    transactionPayableSchema,
     // transactionInvIncomeSchema,
     // transactionInvOutSchema,
-    transactionDebtSchema,
     // transactionInventorySchema,
     // transactionFixedAssetSchema,
     transactionTaxSchema,

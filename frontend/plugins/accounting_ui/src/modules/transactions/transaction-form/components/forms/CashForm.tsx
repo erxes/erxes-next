@@ -1,4 +1,9 @@
+import { JournalEnum } from '@/settings/account/types/Account';
+import { TR_SIDES } from '../../../types/constants';
 import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { CtaxForm } from '../helpers/CtaxForm';
+import { CurrencyForm } from '../helpers/CurrencyForm';
+import { VatForm } from '../helpers/VatForm';
 import { CustomerFields } from './../CustomerFields';
 import {
   AccountField,
@@ -9,10 +14,6 @@ import {
   DescriptionField,
   SideField,
 } from './../GeneralFormFields';
-import { VatForm } from '../helpers/VatForm';
-import { CtaxForm } from '../helpers/CtaxForm';
-import { CurrencyForm } from '../helpers/CurrencyForm';
-import { TR_SIDES, TrJournalEnum } from '../../../types/constants';
 
 export const CashTransaction = ({
   form,
@@ -23,7 +24,7 @@ export const CashTransaction = ({
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6">
-      <AccountField form={form} index={index} journal={TrJournalEnum.CASH} />
+      <AccountField form={form} index={index} filter={{ journals: [JournalEnum.CASH] }} />
       <SideField form={form} index={index} sides={TR_SIDES.FUND_OPTIONS} />
       <AmountField form={form} index={index} />
       <CustomerFields form={form} index={index} />

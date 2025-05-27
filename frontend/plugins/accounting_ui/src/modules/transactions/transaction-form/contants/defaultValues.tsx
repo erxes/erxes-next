@@ -5,7 +5,8 @@ import { getTempId } from '../components/utils';
 import {
   TBankJournal,
   TCashJournal,
-  TDebtJournal,
+  TReceivableJournal,
+  TPayableJournal,
   // TFixedAssetJournal,
   // TInventoryJournal,
   // TInvIncomeJournal,
@@ -26,7 +27,7 @@ const trDetailWrapper = (detail?: ITrDetail) => {
   return {
     ...(detail || {}),
     _id: detail?._id ?? getTempId(),
-    account: detail?.account ?? {},
+    account: detail?.account,
     accountId: detail?.accountId ?? '',
     side: (detail?.side || TR_SIDES.DEBIT),
     amount: detail?.amount ?? 0,
@@ -84,10 +85,22 @@ export const BANK_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TBankJo
   }
 };
 
-export const DEBT_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TDebtJournal> => {
+export const RECEIVABLE_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TReceivableJournal> => {
   return {
     ...trDataWrapper(doc),
-    journal: TrJournalEnum.DEBT,
+    journal: TrJournalEnum.RECEIVABLE,
+    ...DEFAULT_VAT_VALUES(doc),
+    ...DEFAULT_CTAX_VALUES(doc),
+    details: [{
+      ...trDetailWrapper(doc?.details[0]),
+    }]
+  };
+}
+
+export const PAYABLE_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TPayableJournal> => {
+  return {
+    ...trDataWrapper(doc),
+    journal: TrJournalEnum.PAYABLE,
     details: [{
       ...trDetailWrapper(doc?.details[0]),
     }]
@@ -158,8 +171,11 @@ export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction) => {
     case TrJournalEnum.BANK:
       return BANK_JOURNAL_DEFAULT_VALUES(doc);
 
-    case TrJournalEnum.DEBT:
-      return DEBT_JOURNAL_DEFAULT_VALUES(doc);
+    case TrJournalEnum.RECEIVABLE:
+      return RECEIVABLE_JOURNAL_DEFAULT_VALUES(doc);
+
+    case TrJournalEnum.PAYABLE:
+      return PAYABLE_JOURNAL_DEFAULT_VALUES(doc);
 
     default:
       return MAIN_JOURNAL_DEFAULT_VALUES(doc);
