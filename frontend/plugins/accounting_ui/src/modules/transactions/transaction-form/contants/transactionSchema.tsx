@@ -19,7 +19,7 @@ export const ctaxSchema = z.object({
 
 export const baseTrDetailSchema = z.object({
   _id: z.string(),
-  transactionId: z.string(),
+  transactionId: z.string().nullish(),
 
   accountId: z.string().nullish().refine((val) =>
     val?.length,
@@ -46,7 +46,28 @@ export const baseTrDetailSchema = z.object({
   productId: z.string().nullish(),
   count: z.number().nullish(),
   unitPrice: z.number().nullish(),
+
+  account: z.object({
+    _id: z.string(),
+    code: z.string(),
+    name: z.string(),
+    currency: z.string(),
+    kind: z.string(),
+    branchId: z.string(),
+    departmentId: z.string(),
+    journal: z.string(),
+  }).optional()
 });
+
+export const currencyDetailSchema = z.object({
+  currency: z.string().nullish(),
+  currencyAmount: z.number().nullish(),
+  customRate: z.number().nullish(),
+  spotRate: z.number().nullish(),
+  followInfos: z.object({
+    currencyDiffAccountId: z.string(),
+  }).nullish(),
+})
 
 export const baseTransactionSchema = z.object({
   _id: z.string(),
@@ -90,6 +111,11 @@ export const transactionMainSchema = z.object({
 export const transactionCashSchema = z.object({
   journal: z.literal(TrJournalEnum.CASH),
   ...baseTransactionSchema.shape,
+}).extend({
+  details: z.array(z.object({
+    ...baseTrDetailSchema.shape,
+    ...currencyDetailSchema.shape,
+  })),
 }).extend({
   customerId: z.string(),
   hasVat: z.boolean(),

@@ -5,7 +5,7 @@ import {
   Skeleton,
   TextOverflowTooltip,
 } from 'erxes-ui';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccounts } from '../hooks/useAccounts';
 import { IAccount } from '../types/Account';
 
@@ -16,16 +16,25 @@ export const SelectAccount = React.forwardRef<
   React.ComponentProps<typeof Combobox.Trigger> & {
     value?: string;
     onValueChange: (value: string) => void;
-    journal?: string;
+    onCallback?: (account: IAccount) => void;
+    defaultFilter: { [key: string]: string | boolean | string[] };
   }
->(({ value, onValueChange, journal, ...props }, ref) => {
+>(({ value, onValueChange, onCallback, defaultFilter, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const { accounts, loading, error } = useAccounts({
     variables: {
-      journals: [journal],
+      ...defaultFilter,
     },
-    skip: (!value && !open) || !journal,
+    skip: (!value && !open),
   });
+
+  // useEffect(() => {
+  //   const account = accounts?.find((account: IAccount) => account._id === value)
+  //   if (onCallback && account) {
+  //     onCallback(account)
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [accounts])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -52,10 +61,11 @@ export const SelectAccount = React.forwardRef<
                 value={account._id}
                 onSelect={() => {
                   onValueChange(account._id);
+                  onCallback && onCallback(account)
                   setOpen(false);
                 }}
               >
-                <TextOverflowTooltip value={account.name} />
+                <TextOverflowTooltip value={`${account.code} - ${account.name}`} />
                 <Combobox.Check checked={account._id === value} />
               </Command.Item>
             ))}
