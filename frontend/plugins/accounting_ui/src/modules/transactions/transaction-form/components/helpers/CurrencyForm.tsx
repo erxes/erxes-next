@@ -33,14 +33,14 @@ export const CurrencyForm = ({
     control: form.control,
     name: `trDocs.${journalIndex}.details.0.amount`,
   });
-  const [changingAmount, setChangingAmount] = useState(false);
+  const [changingAmount, setChangingAmount] = useState(true);
 
-  const vatFollowData = (trDoc.follows || []).find((f) => f.type === 'vat');
+  const diffFollowData = (trDoc.follows || []).find((f) => f.type === 'currencyDiff');
 
+  const { configs } = useMainConfigs();
   const mainCurrency = 'MNT';
-  const dealCurrency = ['MNT', 'USD'];
 
-  const { spotRate, loading: exchangeRateLoading } = useGetExchangeRate({
+  const { spotRate } = useGetExchangeRate({
     variables: { date, currency: detail.account?.currency },
     skip:
       !detail?.account?.currency || detail?.account?.currency === mainCurrency,
@@ -67,7 +67,6 @@ export const CurrencyForm = ({
     return mainSide;
   }, [mainSide, diffAmount]);
 
-  const { configs } = useMainConfigs();
   const [followTrDocs, setFollowTrDocs] = useAtom(followTrDocsState);
 
   const handleCurrencyAmount = (
@@ -92,8 +91,6 @@ export const CurrencyForm = ({
         `trDocs.${journalIndex}.details.0.currencyAmount`,
         amount / spotRate,
       );
-
-      // detail.amount = (detail.amount) / spotRate;
     }
   }, [amount, form, journalIndex, spotRate, detail.currencyAmount]);
 
@@ -112,9 +109,30 @@ export const CurrencyForm = ({
       return;
     }
 
-    // form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'currencyDiff'), { type: 'currencyDiff', id: currencyDiffFtr._id }])
-    // setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'currencyDiff')), currencyDiffFtr]);
-  }, [side, configs]);
+    const { sumDt, sumCt } = side === TR_SIDES.DEBIT ? { sumDt: diffAmount, sumCt: 0 } : { sumDt: 0, sumCt: diffAmount };
+
+    const curr = followTrDocs.find(ftr => ftr._id === diffFollowData?.id);
+
+    const currencyDiffFtr = {
+      ...curr || (trDoc as ITransaction),
+      _id: curr?._id || getTempId(),
+      journal: TrJournalEnum.TAX,
+      originId: trDoc._id,
+      followType: 'currencyDiff',
+      details: [{
+        ...(curr?.details || [{}])[0],
+        accountId: (detail?.followInfos as any).currencyDiffAccountId ?? '',
+        side,
+        amount: diffAmount
+      }],
+
+      sumDt,
+      sumCt,
+    };
+
+    form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'currencyDiff'), { type: 'currencyDiff', id: currencyDiffFtr._id }])
+    setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'currencyDiff')), currencyDiffFtr]);
+  }, [detail, diffAmount, diffFollowData?.id, followTrDocs, form, journalIndex, setFollowTrDocs, side, trDoc]);
 
   if (
     !detail?.account?.currency ||

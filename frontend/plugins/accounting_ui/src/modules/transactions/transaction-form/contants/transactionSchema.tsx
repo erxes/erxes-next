@@ -71,8 +71,8 @@ export const currencyDetailSchema = z.object({
 
 export const baseTransactionSchema = z.object({
   _id: z.string(),
-  ptrId: z.string(),
-  parentId: z.string(),
+  ptrId: z.string().optional(),
+  parentId: z.string().optional(),
 
   originId: z.string().nullish(),
   followType: z.string().nullish(),
@@ -90,10 +90,9 @@ export const baseTransactionSchema = z.object({
   ...vatSchema.shape,
   ...ctaxSchema.shape,
 
-  sumDt: z.number(),
-  sumCt: z.number(),
+  sumDt: z.number().optional(),
+  sumCt: z.number().optional(),
   extraData: z.object({}).nullish(),
-
 });
 
 // export const inventorySchema = z.object({
@@ -117,7 +116,7 @@ export const transactionCashSchema = z.object({
     ...currencyDetailSchema.shape,
   })),
 }).extend({
-  customerId: z.string(),
+  customerId: z.string().nullish(),
   hasVat: z.boolean(),
   hasCtax: z.boolean(),
 });

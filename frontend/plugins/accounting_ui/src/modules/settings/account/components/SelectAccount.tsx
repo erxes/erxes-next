@@ -5,7 +5,7 @@ import {
   Skeleton,
   TextOverflowTooltip,
 } from 'erxes-ui';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAccounts } from '../hooks/useAccounts';
 import { IAccount } from '../types/Account';
 
