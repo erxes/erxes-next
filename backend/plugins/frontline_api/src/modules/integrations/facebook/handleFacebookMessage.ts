@@ -3,6 +3,7 @@ import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import { sendReply, generateAttachmentMessages } from '@/integrations/facebook/utils'
 import DOMPurify from 'dompurify';
+import {sendNotifications} from '@/inbox/graphql/resolvers/mutations/conversations'
 // import { generateAttachmentMessages, sendReply } from './utils';
 // import { sendInboxMessage } from './messageBroker';
 // import { sendCoreMessage } from './messageBroker';
@@ -125,7 +126,16 @@ export const handleFacebookMessage = async (
       });
 
       if (user) {
-  
+         sendNotifications(
+          subdomain,
+          {
+            user,
+            conversations: [inboxConversation],
+            type: 'conversationStateChange',
+            mobile: true,
+            messageContent: content
+         }
+        );
         return { status: 'success' };
       } else {
         throw new Error('User not found');

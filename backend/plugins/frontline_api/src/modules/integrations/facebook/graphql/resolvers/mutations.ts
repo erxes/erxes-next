@@ -2,6 +2,7 @@ import { IContext } from '~/connectionResolvers';
 import { repairIntegrations, updateConfigs } from '@/integrations/facebook/helpers';
 import { IReplyParams } from '@/integrations/facebook/@types/utils';
 import {sendReply} from '@/integrations/facebook/utils';
+import {sendNotifications} from '@/inbox/graphql/resolvers/mutations/conversations'
 export const facebookMutations = {
   async facebookUpdateConfigs(_root, { configsMap }, { models }: IContext) {
     await updateConfigs(models, configsMap);
@@ -24,7 +25,7 @@ export const facebookMutations = {
   async facebookReplyToComment(
     _root,
     params: IReplyParams,
-    { models }: IContext,
+    { models ,user, subdomain}: IContext,
   ) {
     const { commentId, content, attachments, conversationId } = params;
 
@@ -73,8 +74,12 @@ export const facebookMutations = {
     }
 
     try {
-      const inboxConversation =await models.FacebookConversations.findOne({ _id: conversationId });
-
+      const inboxConversation =await models.Conversations.findOne({ _id: conversationId });
+      
+       if(!inboxConversation){
+          throw new Error('conversation not found');
+        }
+        
       await sendReply(
         models,
         `${id}/comments`,
@@ -83,18 +88,17 @@ export const facebookMutations = {
         inboxConversation && inboxConversation.integrationId || ''
       );
 
-    //   sendInboxMessage({
-    //     action: 'sendNotifications',
-    //     isRPC: false,
-    //     subdomain,
-    //     data: {
-    //       user,
-    //       conversations: [inboxConversation],
-    //       type: 'conversationStateChange',
-    //       mobile: true,
-    //       messageContent: content,
-    //     },
-    //   });
+         sendNotifications(
+          subdomain,
+          {
+            user,
+            conversations: [inboxConversation],
+            type: 'conversationStateChange',
+            mobile: true,
+            messageContent: content
+        }
+        );
+
 
       return { status: 'success' };
     } catch (e) {
