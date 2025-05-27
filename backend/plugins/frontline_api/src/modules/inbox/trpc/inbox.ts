@@ -6,22 +6,40 @@ import {receiveTrpcMessage ,receiveIntegrationsNotification} from '@/inbox/recei
 import { getIntegrationsKinds} from '@/inbox/utils'
 import { sendNotifications} from '@/inbox/graphql/resolvers/mutations/conversations'
 import {pConversationClientMessageInserted} from '@/inbox/graphql/resolvers/mutations/widget'
-import {
-  IConversationDocument,
-} from '@/inbox/@types/conversations';
-import { cursorPaginate } from 'erxes-api-shared/utils';
-import mongoose from 'mongoose';
+import { IEngageData,  } from '@/inbox/@types/conversationMessages';
+interface CreateConversationAndMessageParams {
+  userId?: string;
+  status?: string;
+  customerId?: string;
+  visitorId?: string;
+  integrationId: string;
+  content: string;
+  engageData?: IEngageData;
+  formWidgetData?: Record<string, unknown>;
+}
+const EngageDataSchema = z.object({
+  messageId: z.string(),
+  brandId: z.string(),
+  content: z.string(),
+  fromUserId: z.string(),
+  kind: z.string(),
+  sentAs: z.string(),
+});
+
 const createConversationAndMessage = async (
-  models: IModels,
-  userId,
-  status,
-  customerId,
-  visitorId,
-  integrationId,
-  content,
-  engageData,
-  formWidgetData
+ models: IModels,
+ params: CreateConversationAndMessageParams
 ) => {
+    const {
+    userId,
+    status,
+    customerId,
+    visitorId,
+    integrationId,
+    content,
+    engageData,
+    formWidgetData,
+  } = params;
   // create conversation
   const conversation = await models.Conversations.createConversation({
     userId,
@@ -554,33 +572,15 @@ createConversationAndMessage: t.procedure
     visitorId: z.string().optional(),
     integrationId: z.string().min(1, "Integration ID is required"),
     content: z.string().min(1, "Message content cannot be empty"),
-    engageData: z.record(z.unknown()).optional(),
+     engageData: EngageDataSchema.optional(),
     formWidgetData: z.record(z.unknown()).optional()
   }))
   .mutation(async ({ ctx, input }) => {
     const { models } = ctx;
     try {
-      const {
-        userId,
-        status,
-        customerId,
-        visitorId,
-        integrationId,
-        content,
-        engageData,
-        formWidgetData
-      } = input;
-
       const response = await createConversationAndMessage(
         models,
-        userId,
-        status,
-        customerId,
-        visitorId,
-        integrationId,
-        content,
-        engageData,
-        formWidgetData
+        input,
       );
 
       return {
@@ -918,6 +918,7 @@ getConversationsList: t.procedure
 
         return {
           status: 'success',
+          data:[]
           // data: await cursorPaginate<IConversationDocument>({
           //   model: models.Conversations,
           //   params: listParams,
@@ -985,9 +986,9 @@ sendNotifications: t.procedure
 conversationClientMessageInserted: t.procedure
       .input(z.any())
       .mutation(async ({ ctx, input }) => {
-     const { subdomain ,models} = ctx;
+     const {models} = ctx;
       try {
-      const result = await pConversationClientMessageInserted(models, subdomain, input);
+      const result = await pConversationClientMessageInserted(models, input);
       
       return {
         status: 'success',

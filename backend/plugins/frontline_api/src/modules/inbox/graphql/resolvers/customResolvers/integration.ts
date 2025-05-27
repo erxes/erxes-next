@@ -12,11 +12,11 @@ try {
       return await facebookStatus({ subdomain, data });
 
       case 'instagram':
- 
+       // TODO: Implement Instagram status check
         break;
 
       case 'mobinetSms':
-
+      //  TODO: Implement mobinetSms status check
         break;
 
       default:

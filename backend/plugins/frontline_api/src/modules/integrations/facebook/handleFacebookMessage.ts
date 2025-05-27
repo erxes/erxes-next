@@ -1,4 +1,4 @@
-import * as strip from 'strip';
+import { stripHtml } from 'strip-html';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import { sendReply, generateAttachmentMessages } from '@/integrations/facebook/utils'
@@ -57,7 +57,7 @@ export const handleFacebookMessage = async (
     if (!post) {
       throw new Error('Post not found');
     }
-    let strippedContent = strip(content);
+    let strippedContent = stripHtml(content).result;
 
     strippedContent = strippedContent.replace(/&amp;/g, '&');
 
