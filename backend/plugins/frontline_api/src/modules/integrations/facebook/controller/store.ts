@@ -344,7 +344,7 @@ export const getOrCreatePost = async (
   );
   const doc = await generatePostDoc(postParams, pageId, userId, subdomain);
   if (!doc.attachments && doc.content === '...') {
-    throw new Error();
+   throw new Error('Invalid post document: missing attachments and content');
   }
 
   doc.permalink_url = postUrl;

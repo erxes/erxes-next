@@ -90,7 +90,7 @@ export const createAWS = async () => {
     secretAccessKey: AWS_SECRET_ACCESS_KEY
   };
 
-  if (AWS_FORCE_PATH_STYLE === "true") {
+  if (String(AWS_FORCE_PATH_STYLE) === "true") {
     options.s3ForcePathStyle = true;
   }
 
@@ -102,6 +102,9 @@ export const createAWS = async () => {
   return new AWS.S3(options);
 };
 
+// Define a simple in-memory cache (outside the function scope)
+let cachedUploadConfig: { AWS_BUCKET: string } | null = null;
+
 export const uploadMedia = async (
   subdomain: string,
   url: string,
@@ -109,25 +112,38 @@ export const uploadMedia = async (
 ) => {
   const mediaFile = `${randomAlphanumeric()}.${video ? "mp4" : "jpg"}`;
 
-     const { AWS_BUCKET } = await sendTRPCMessage({
+  if (!cachedUploadConfig) {
+    try {
+      cachedUploadConfig = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
         module: 'users',
         action: 'getFileUploadConfigs',
         input: {},
       });
+    } catch (err) {
+      debugError(`Failed to get file upload configs: ${err.message}`);
+      return null;
+    }
+  }
+
+  // Ensure cachedUploadConfig is not null before accessing its properties
+  if (!cachedUploadConfig) {
+    debugError(`uploadMedia: cachedUploadConfig is null after fetch`);
+    return null;
+  }
+
+  const { AWS_BUCKET } = cachedUploadConfig;
 
   const s3 = await createAWS();
 
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(
-        `uploadMedia: unexpected response ${response.statusText}`
-      );
+      throw new Error(`uploadMedia: unexpected response ${response.statusText}`);
     }
 
-   const arrayBuffer = await response.arrayBuffer();
+    const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     const uploadParams = {
@@ -141,12 +157,14 @@ export const uploadMedia = async (
 
     const data = await s3.upload(uploadParams).promise();
 
-    return data.Location; // Return the public URL of the uploaded file
+    return data.Location;
   } catch (e) {
     debugError(`Error occurred while uploading media: ${e.message}`);
     return null;
   }
 };
+
+
 export const getPageList = async (
   models: IModels,
   accessToken?: string,
