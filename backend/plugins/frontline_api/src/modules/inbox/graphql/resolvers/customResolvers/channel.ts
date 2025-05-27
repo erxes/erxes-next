@@ -9,17 +9,23 @@ export default {
   },
 
   async members(channel: IChannelDocument) {
-      return await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'query',
-        module: 'users',
-        action: 'find',
-        input: {
-          query: {
-          _id: { $in: channel.memberIds },
-          isActive: { $ne: false }
-        }
-        },
-      });
+   try {
+     return await sendTRPCMessage({
+       pluginName: 'core',
+       method: 'query',
+       module: 'users',
+       action: 'find',
+       input: {
+         query: {
+         _id: { $in: channel.memberIds },
+         isActive: { $ne: false }
+       }
+       },
+      defaultValue: [],
+     });
+  } catch (error) {
+    console.error('Failed to fetch channel members:', error);
+    return [];
+  }
   },
 };

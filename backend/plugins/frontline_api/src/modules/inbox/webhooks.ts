@@ -18,28 +18,34 @@ export default {
     }
   ],
   getInfo: ({ data: { data, contentType } }) => {
+    if (!data || !contentType) {
+     return {
+       url: '/inbox/index',
+       content: 'Invalid webhook data'
+     };
+   }
     let url: string;
     let content: string;
 
     switch (contentType) {
       case 'userMessages':
-        url = `/inbox/index?_id=${data.conversationId}`;
+        url = `/inbox/index?_id=${data.conversationId || ''}`;
         content = 'Admin has replied to a conversation';
 
         break;
       case 'customerMessages':
-        url = `/inbox/index?_id=${data.conversationId}`;
-        content = 'Customer has send a conversation message';
+         url = `/inbox/index?_id=${data.conversationId || ''}`;
+        content = 'Customer has sent a conversation message';
 
         break;
       case 'conversation':
-        url = `/inbox/index?_id=${data._id}`;
+        url = `/inbox/index?_id=${data._id || ''}`;
         content = 'Customer has started new conversation';
 
         break;
       // if contentType equal to popupSubmitted, default will work
       default:
-        url = `/inbox/index?_id=${data.conversationId}`;
+        url = `/inbox/index?_id=${data.conversationId || ''}`;
         content = 'Customer has submitted a form';
     }
 

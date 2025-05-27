@@ -1,5 +1,3 @@
-;
-
 import { generateModels } from '~/connectionResolvers';
 import {
   removeAccount,
@@ -54,7 +52,7 @@ export interface StatusResponse {
   } catch (e) {
     return {
       status: "error",
-      errorMessage: `Failed to created integration: ${e.message}`,
+      errorMessage: `Failed to create integration: ${e.message}`,
     };
   }
 }
@@ -126,7 +124,7 @@ export async function facebookUpdateIntegrations({ subdomain, data: { integratio
   } catch (e) {
     return {
       status: "error",
-      errorMessage: `Failed to remove integration: ${e.message}`,
+      errorMessage: `Failed to remove account: ${e.message}`,
     };
   }
 }
@@ -141,7 +139,7 @@ export async function facebookUpdateIntegrations({ subdomain, data: { integratio
   } catch (e) {
     return {
       status: "error",
-      errorMessage: `Failed to remove integration: ${e.message}`,
+      errorMessage: `Failed to repair integration: ${e.message}`,
     };
   }
 }

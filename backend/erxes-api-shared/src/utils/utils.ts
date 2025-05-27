@@ -205,25 +205,32 @@ const generateRandomEmail = () => {
   return string + '@gmail.com';
 };
 export const getUniqueValue = async (
-  collection: any,
-  fieldName = 'code',
-  defaultValue?: string,
-) => {
-  const getRandomValue = (type: string) =>
-    type === 'email' ? generateRandomEmail() : randomAlphanumeric();
+   collection: any,
+   fieldName = 'code',
+   defaultValue?: string,
+ ) => {
+ const getRandomValue = (type: string) =>
+     type === 'email' ? generateRandomEmail() : randomAlphanumeric();
 
   let uniqueValue = defaultValue || getRandomValue(fieldName);
+  let retryCount = 0;
+  const maxRetries = 100;
 
   let duplicated = await collection.findOne({ [fieldName]: uniqueValue });
 
-  while (duplicated) {
-    uniqueValue = getRandomValue(fieldName);
+ while (duplicated && retryCount < maxRetries) {
+     uniqueValue = getRandomValue(fieldName);
+     retryCount ++;
 
-    duplicated = await collection.findOne({ [fieldName]: uniqueValue });
+     duplicated = await collection.findOne({ [fieldName]: uniqueValue });
+   }
+
+  if (retryCount >= maxRetries) {
+    throw new Error(`Unable to generate unique value for field ${fieldName} after ${maxRetries} attempts`);
   }
 
-  return uniqueValue;
-};
+   return uniqueValue;
+ };
 
 export const getDate = (date: Date, day: number): Date => {
   const currentDate = new Date();

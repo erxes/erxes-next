@@ -2,6 +2,7 @@ import * as strip from 'strip';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import { sendReply, generateAttachmentMessages } from '@/integrations/facebook/utils'
+import DOMPurify from 'dompurify';
 // import { generateAttachmentMessages, sendReply } from './utils';
 // import { sendInboxMessage } from './messageBroker';
 // import { sendCoreMessage } from './messageBroker';
@@ -95,7 +96,7 @@ export const handleFacebookMessage = async (
     if (commentConversationResult && commentConversationResult.comment_id) {
       data = {
         message: ` @[${commentConversationResult.senderId}] ${strippedContent}`,
-        attachment_url: attachment.url
+        attachment_url: attachment.payload ? attachment.payload.url : undefined
       };
     }
     try {
@@ -152,13 +153,17 @@ export const handleFacebookMessage = async (
     images.forEach((img) => attachments.push({ type: 'image', url: img }));
 
     // Strip HTML tags and format the content
-    function stripAndFormat(html) {
-      return html
+
+    function sanitizeAndFormat(html: string): string {
+      // Remove all tags and any malicious content
+      const clean = DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
+      // Preserve paragraph breaks, then trim whitespace
+      return clean
         .replace(/<\/p>/g, '\n')
-        .replace(/<[^>]+>/g, '')
         .trim();
-    }
-    const strippedContent = stripAndFormat(content);
+     }
+
+   const strippedContent = sanitizeAndFormat(content);
 
     const conversation = await models.FacebookConversations.getConversation({
       erxesApiId: conversationId

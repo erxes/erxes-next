@@ -301,7 +301,7 @@ export const loadClass = (models: IModels, subdomain: string) => {
         ticketBoardId
       }: ITicketData
     ) {
-      await models.Integrations.updateOne(
+        const result = await models.Integrations.updateOne(
         { _id },
         {
           $set: {
@@ -314,11 +314,15 @@ export const loadClass = (models: IModels, subdomain: string) => {
             }
           }
         },
-        { runValdatiors: true }
+        { runValidators: true }
       );
     
+        if (!result.acknowledged) {
+        throw new Error('Failed to update ticket data');
+        }
 
       return models.Integrations.findOne({ _id });
+
     }
 
 

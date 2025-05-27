@@ -81,7 +81,7 @@ export const channelMutations = {
   ) {
     const channel = await models.Channels.getChannel(_id);
     await sendChannelNotifications(subdomain, channel, 'removed', user);
-
+    await models.Channels.removeChannel(_id);
     return true;
   },
 };

@@ -4,7 +4,7 @@ import {
   IMessengerData,
   IUiOptions,
   ITicketData,
-  IOnboardingPramsEdit,
+  IOnboardingParamsEdit,
   IArchiveParams
 } from '@/inbox/@types/integrations';
 import { IContext, IModels } from '~/connectionResolvers';
@@ -22,8 +22,12 @@ export const sendCreateIntegration = async (
   payload: object
 ) => {
   try {
+    const kindParts = integration.kind.split("-");
+    if (kindParts.length < 2) {
+      throw new Error(`Invalid integration kind format: ${integration.kind}`);
+      }
     const data = {
-        action: `reply-${integration.kind.split("-")[1]}`,
+        action: `reply-${kindParts[1]}`,
         type: serviceName,
         payload: JSON.stringify(payload),
         integrationId: integration._id
@@ -33,11 +37,11 @@ export const sendCreateIntegration = async (
       return await facebookCreateIntegrations({ subdomain, data }); 
 
       case 'instagram':
-      
+       // TODO: Implement Instagram integration
         break;
 
       case 'mobinetSms':
-  
+      // TODO: Implement MobinetSms integration
         break;
 
       default:
@@ -50,7 +54,7 @@ export const sendCreateIntegration = async (
   }
 };
 
-export const sendUpdateIntergration = async (
+export const sendUpdateIntegration = async (
   subdomain: string,
   serviceName: string,
   data: any
@@ -79,7 +83,7 @@ export const sendUpdateIntergration = async (
   }
 };
 
-export const sendRemoveIntergration = async (
+export const sendRemoveIntegration = async (
   subdomain:string,
   serviceName: string,
   data: any
@@ -209,7 +213,7 @@ export const integrationMutations = {
    */
   async integrationsCreateMessengerOnboarding(
     _root,
-      doc: IOnboardingPramsEdit,
+      doc: IOnboardingParamsEdit,
     { user, models, }: IContext,
   ) {
 
@@ -521,7 +525,7 @@ export const integrationMutations = {
             }
           }
     
-       await sendUpdateIntergration(
+       await sendUpdateIntegration(
         subdomain,
         kind,
         data
@@ -549,7 +553,7 @@ export const integrationMutations = {
             data: { integrationId: _id },
             action: "removeIntegrations"
           };
-          await sendRemoveIntergration(
+          await sendRemoveIntegration(
             subdomain,
             kind,
             commonParams

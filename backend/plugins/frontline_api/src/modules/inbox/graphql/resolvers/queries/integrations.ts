@@ -30,7 +30,8 @@ const generateFilterQuery = async (
 
   // filtering integrations by tag
   if (tag) {
-       const object = await sendTRPCMessage({
+    try{
+     const object = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
         module: 'tags',
@@ -40,7 +41,11 @@ const generateFilterQuery = async (
         },
       });
 
-    query.tagIds = { $in: [tag, ...(object?.relatedIds || [])] };
+     query.tagIds = { $in: [tag, ...(object?.relatedIds || [])] };
+    } catch (error) {
+      console.warn('Failed to fetch related tags, using original tag only:', error);
+      query.tagIds = { $in: [tag] };
+    }
   }
 
   if (status) {

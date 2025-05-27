@@ -19,7 +19,7 @@ export interface ITicketData {
   ticketPipelineId?: string;
   ticketBoardId?: string;
 }
-interface IOnboardingPrams {
+interface IOnboardingParams {
   brandName: string;
   logo?: string;
   color?: string;
@@ -30,7 +30,7 @@ export interface IArchiveParams {
   status: boolean;
 }
 
-export interface IOnboardingPramsEdit extends IOnboardingPrams {
+export interface IOnboardingParamsEdit extends IOnboardingParams {
   _id: string;
   brandId: string;
 }

@@ -309,7 +309,7 @@ export const conversationMutations = {
         fields
       );
     }
-    throw new Error(`You cannot edit`);
+   throw new Error(`You cannot edit this message. Only the author of an internal message can edit it.`);
   },
 
   /**
