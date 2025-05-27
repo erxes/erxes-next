@@ -1,4 +1,4 @@
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 
 import { Button, CommandBar, Separator, useConfirm } from 'erxes-ui';
 import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordTableProvider';
@@ -6,7 +6,7 @@ import { useBrandsRemove } from '../hooks/useBrandsRemove';
 
 export const BrandsCommandBar = () => {
   const { table } = useRecordTable();
-  const { brandsRemove, loading } = useBrandsRemove();
+  const { brandsRemove } = useBrandsRemove();
   const { confirm } = useConfirm();
 
   const confirmOptions = { confirmationValue: 'delete' };
@@ -23,7 +23,7 @@ export const BrandsCommandBar = () => {
       try {
         brandsRemove({
           variables: {
-            id: ids,
+            ids,
           },
         });
       } catch (e) {

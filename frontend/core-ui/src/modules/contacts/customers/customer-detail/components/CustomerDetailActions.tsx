@@ -1,53 +1,52 @@
 import React from 'react';
-import { Icon, IconActivity, IconNote, IconX } from '@tabler/icons-react';
+import { Icon, IconX } from '@tabler/icons-react';
 import {
   Button,
   Resizable,
   SideMenu,
-  Tabs,
-  Tooltip,
+  // Tabs,
+  // Tooltip,
   cn,
-  useQueryState,
+  // useQueryState,
 } from 'erxes-ui';
 import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
-import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
-import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
+// import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
+// import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
 import { useAtom, useSetAtom } from 'jotai';
-
-const actionTabs = {
-  activity: {
-    title: 'Activity',
-    icon: IconActivity,
-    code: 'activity',
-  },
-  notes: {
-    title: 'Internal Notes',
-    icon: IconNote,
-    code: 'notes',
-  },
-};
+import { useWidget } from 'ui-modules';
+import { useWidgetsModules } from '@/widgets/hooks/useWidgetsModules';
+import { useCustomerDetail } from '../hooks/useCustomerDetail';
 
 export const CustomerDetailActions = () => {
-  // const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
-  const [contactId] = useQueryState<string>('contactId');
+  const { customerDetail } = useCustomerDetail();
+  const contactId = customerDetail?._id;
+  const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
+  const widgetsModules = useWidgetsModules();
+  const { Widget } = useWidget();
 
-  return null;
 
   // return (
-  //   <>
-  //     <Resizable.Handle />
-  //     <Resizable.Panel
-  //       minSize={activeTab ? 30 : 0}
-  //       maxSize={activeTab ? 60 : 0}
-  //     >
-  {
-    /* <SideMenu
+  //   <Widget
+  //     module={aa[0]}
+  //     contentId={customerDetail?._id || ''}
+  //     contentType="core:customer"
+  //   />
+  // );
+
+  return (
+    <>
+      <Resizable.Handle />
+      <Resizable.Panel
+        minSize={activeTab ? 30 : 0}
+        maxSize={activeTab ? 60 : 0}
+      >
+        <SideMenu
           orientation="vertical"
           value={activeTab ?? ''}
           onValueChange={(value) => setActiveTab(value)}
           className={cn('h-full')}
         >
-          <ActionTabsContent
+          {/* <ActionTabsContent
             value={actionTabs.activity.code}
             icon={actionTabs.activity.icon}
             title={actionTabs.activity.title}
@@ -63,8 +62,22 @@ export const CustomerDetailActions = () => {
                 }}
               />
             </div>
-          </ActionTabsContent>
-          <ActionTabsContent
+          </ActionTabsContent> */}
+          {widgetsModules.map((item) => (
+            <ActionTabsContent
+              key={item.name}
+              value={item.name}
+              icon={item.icon as any}
+              title={item.name}
+            >
+              <Widget
+                module={item}
+                contentId={contactId || ''}
+                contentType="core:customer"
+              />
+            </ActionTabsContent>
+          ))}
+          {/* <ActionTabsContent
             value={actionTabs.notes.code}
             icon={actionTabs.notes.icon}
             title={actionTabs.notes.title}
@@ -90,24 +103,17 @@ export const CustomerDetailActions = () => {
                 />
               </Resizable.Panel>
             </Resizable.PanelGroup>
-          </ActionTabsContent>
-        </SideMenu> */
-  }
-  {
-    /* <Widget contentType="core:customer" contentId={contactId || ''} />
+          </ActionTabsContent> */}
+        </SideMenu>
       </Resizable.Panel>
-      <CustomerDetailActionsTrigger /> */
-  }
-  {
-    /* </> */
-  }
-  {
-    /* ); */
-  }
+      <CustomerDetailActionsTrigger />
+    </>
+  );
 };
 
 export const CustomerDetailActionsTrigger = () => {
   const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
+  const widgetsModules = useWidgetsModules();
 
   return (
     <div className="flex flex-none overflow-hidden">
@@ -118,12 +124,12 @@ export const CustomerDetailActionsTrigger = () => {
         className="h-full"
       >
         <SideMenu.Sidebar className="border-l-0">
-          {Object.values(actionTabs).map((tab) => (
+          {widgetsModules.map((item) => (
             <SideMenu.Trigger
-              key={tab.code}
-              value={tab.code}
-              label={tab.title}
-              Icon={tab.icon}
+              key={item.name}
+              value={item.name}
+              label={item.name}
+              Icon={item.icon as any}
             />
           ))}
         </SideMenu.Sidebar>

@@ -3,8 +3,8 @@ import {
   httpBatchLink,
   TRPCRequestOptions,
 } from '@trpc/client';
-import { getPlugin } from '../service-discovery';
 import * as trpcExpress from '@trpc/server/adapters/express';
+import { getPlugin, isEnabled } from '../service-discovery';
 import { getSubdomain } from '../utils';
 
 export type MessageProps = {
@@ -51,6 +51,10 @@ export const sendTRPCMessage = async ({
 }: MessageProps) => {
   if (!method) {
     method = 'query';
+  }
+
+  if (pluginName && !(await isEnabled(pluginName))) {
+    return defaultValue;
   }
 
   const pluginInfo = await getPlugin(pluginName);

@@ -1,13 +1,12 @@
-import { gql, useQuery } from '@apollo/client';
+
 import { Sidebar, Skeleton, useQueryState } from 'erxes-ui';
+import { useTagsTypes } from '../hooks/useTagsTypes';
+import { IconTag } from '@tabler/icons-react';
+import { Link } from 'react-router';
+import { ITagType } from 'ui-modules';
 
 export const TagsSidebar = () => {
-  const { data, loading } = useQuery(gql`
-    query TagsGetTypes {
-      tagsGetTypes
-    }
-  `);
-  const [tag, setTag] = useQueryState('tag');
+  const { tagsGetTypes, loading } = useTagsTypes();
 
   return (
     <Sidebar collapsible="none" className="border-r flex-none">
@@ -15,11 +14,12 @@ export const TagsSidebar = () => {
         <Sidebar.GroupLabel>Tags</Sidebar.GroupLabel>
         <Sidebar.GroupContent>
           <Sidebar.Menu>
-            {data?.tagsGetTypes.map((tag: any) => (
-              <Sidebar.MenuItem key={tag._id}>
-                <Sidebar.MenuButton>{tag.description}</Sidebar.MenuButton>
-              </Sidebar.MenuItem>
-            ))}
+            {tagsGetTypes &&
+              tagsGetTypes.map((tag: ITagType) => (
+                <Sidebar.MenuItem key={tag.contentType}>
+                  <TagMenuItem tag={tag} />
+                </Sidebar.MenuItem>
+              ))}
             {loading &&
               Array.from({ length: 10 }).map((_, index) => (
                 <Sidebar.MenuItem key={index}>
@@ -30,5 +30,17 @@ export const TagsSidebar = () => {
         </Sidebar.GroupContent>
       </Sidebar.Group>
     </Sidebar>
+  );
+};
+
+const TagMenuItem = ({ tag }: { tag: ITagType }) => {
+  const [contentType] = useQueryState('contentType');
+  const isActive = tag.contentType === contentType;
+  return (
+    <Sidebar.MenuButton isActive={isActive}>
+      <Link to={`/settings/tags?contentType=${tag.contentType}`}>
+        {tag.description}
+      </Link>
+    </Sidebar.MenuButton>
   );
 };

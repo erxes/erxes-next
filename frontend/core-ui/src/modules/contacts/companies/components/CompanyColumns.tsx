@@ -13,6 +13,7 @@ import {
   Input,
   PhoneDisplay,
   PhoneListField,
+  readFile,
   RecordTable,
   RecordTableCellContent,
   RecordTableCellDisplay,
@@ -21,13 +22,13 @@ import {
   TextOverflowTooltip,
 } from 'erxes-ui';
 
-import { TCompany } from '@/contacts/types/companyType';
-import { SelectMember, SelectTags } from 'ui-modules';
-import { useState } from 'react';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
+import { TCompany } from '@/contacts/types/companyType';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { ApolloError } from '@apollo/client';
 import { useToast } from 'erxes-ui';
-import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+import { useState } from 'react';
+import { SelectMember, SelectTags } from 'ui-modules';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
   {
@@ -45,7 +46,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar>
-            <Avatar.Image src={cell.getValue() as string} />
+            <Avatar.Image src={readFile(cell.getValue() as string)} />
             <Avatar.Fallback>
               {primaryName?.charAt(0) ||
                 primaryEmail?.charAt(0) ||

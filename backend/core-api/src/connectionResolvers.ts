@@ -90,7 +90,7 @@ import {
 } from '~/modules/documents/db/models/Documents';
 import { IDocumentDocument } from '~/modules/documents/types';
 import { IConfigDocument } from '~/modules/organization/settings/db/definitions/configs';
-import { IConfigModel } from '~/modules/organization/settings/db/models/Configs';
+import { IConfigModel, loadConfigClass } from '~/modules/organization/settings/db/models/Configs';
 import {
   IPermissionModel,
   loadPermissionClass,
@@ -202,7 +202,7 @@ export const loadClasses = (
 
   models.Configs = db.model<IConfigDocument, IConfigModel>(
     'configs',
-    loadUserMovemmentClass(models),
+    loadConfigClass(models),
   );
 
   models.Permissions = db.model<IPermissionDocument, IPermissionModel>(

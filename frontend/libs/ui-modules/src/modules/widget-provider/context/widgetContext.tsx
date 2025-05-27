@@ -5,6 +5,8 @@ export type WidgetProps = {
   module: IUIConfig['modules'][number] & {
     pluginName: string;
   };
+  contentId: string;
+  contentType: string;
 };
 
 export const WidgetContext = createContext<{

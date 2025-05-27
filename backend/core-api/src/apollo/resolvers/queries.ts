@@ -4,6 +4,7 @@ import { contactQueries } from '@/contacts/graphql/resolvers/queries';
 import { documentQueries } from '@/documents/graphql/queries';
 import { exchangeRateQueries } from '@/exchangeRates/graphql/resolvers';
 import { queries as formQueries } from '@/forms/graphql/resolvers';
+import { brandQueries } from '@/organization/brand/graphql/queries';
 import { organizationConfigQueries } from '@/organization/settings/graphql/configs/queries';
 import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
 import { structureQueries } from '@/organization/structure/graphql/resolvers/queries';
@@ -27,6 +28,7 @@ export const queries = {
   ...relationsQueries,
   ...favoriteQueries,
   ...structureQueries,
+  ...brandQueries,
   ...organizationConfigQueries,
   ...exchangeRateQueries,
   ...permissionQueries,

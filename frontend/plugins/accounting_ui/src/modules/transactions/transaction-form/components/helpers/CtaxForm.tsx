@@ -1,17 +1,17 @@
 import { useMainConfigs } from '@/settings/hooks/useMainConfigs';
-import { SelectVat } from '@/settings/vat/components/SelectVatRow';
+import { SelectCtax } from '@/settings/ctax/components/SelectCtaxRow';
 import { Checkbox, CurrencyField, Form } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useEffect, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
-import { TR_JOURNAL_LABELS, TrJournalEnum, TR_SIDES } from '../../types/constants';
-import { followTrDocsState, taxPercentsState } from '../states/trStates';
-import { ITransactionGroupForm } from '../types/AddTransaction';
-import { IVatRow } from '~/modules/settings/vat/types/VatRow';
-import { getTempId } from './utils';
-import { ITransaction } from '../../types/Transaction';
+import { TrJournalEnum, TR_SIDES } from '../../../types/constants';
+import { followTrDocsState, taxPercentsState } from '../../states/trStates';
+import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ICtaxRow } from '~/modules/settings/ctax/types/CtaxRow';
+import { getTempId } from '../utils';
+import { ITransaction } from '../../../types/Transaction';
 
-export const TaxForm = ({
+export const CtaxForm = ({
   form,
   journalIndex,
   isWithTax,
@@ -27,11 +27,11 @@ export const TaxForm = ({
     control: form.control,
     name: `trDocs.${journalIndex}`
   })
-  const vatFollowData = (trDoc.follows || []).find(f => f.type === 'vat');
+  const ctaxFollowData = (trDoc.follows || []).find(f => f.type === 'ctax');
 
-  const hasVat = useWatch({
+  const hasCtax = useWatch({
     control: form.control,
-    name: `trDocs.${journalIndex}.hasVat`
+    name: `trDocs.${journalIndex}.hasCtax`
   });
 
   const mainSide = useWatch({
@@ -47,9 +47,9 @@ export const TaxForm = ({
     return mainSide === TR_SIDES.DEBIT ? TR_SIDES.CREDIT : TR_SIDES.DEBIT;
   }, [mainSide, isSameSide]);
 
-  const handleVat = useWatch({
+  const handleCtax = useWatch({
     control: form.control,
-    name: `trDocs.${journalIndex}.handleVat`,
+    name: `trDocs.${journalIndex}.handleCtax`,
   });
 
   const details = useWatch({
@@ -57,46 +57,51 @@ export const TaxForm = ({
     name: `trDocs.${journalIndex}.details`
   });
 
-  const { vat: vatPercent = 0, sum: sumPercent } = taxPercents;
+  const { ctax: ctaxPercent = 0, sum: sumPercent } = taxPercents;
 
   const calcedAmount = useMemo(() => {
-    if (handleVat) {
-      return trDoc.vatAmount ?? 0;
+    if (handleCtax) {
+      return trDoc.ctaxAmount ?? 0;
     }
-    const sumAmount = details.filter(d => !d.excludeVat).reduce((sum, cur) => sum + (cur.amount ?? 0), 0);
+    const sumAmount = details.filter(d => !d.excludeCtax).reduce((sum, cur) => sum + (cur.amount ?? 0), 0);
     if (isWithTax) {
-      return sumAmount / (100 + sumPercent) * vatPercent;
+      return sumAmount / (100 + sumPercent) * ctaxPercent;
     }
 
-    return sumAmount / 100 * vatPercent;
+    return sumAmount / 100 * ctaxPercent;
 
-  }, [details, handleVat, vatPercent, sumPercent, isWithTax, trDoc.vatAmount]);
+  }, [details, handleCtax, ctaxPercent, sumPercent, isWithTax, trDoc.ctaxAmount]);
 
 
   const { configs } = useMainConfigs();
   const [followTrDocs, setFollowTrDocs] = useAtom(followTrDocsState);
 
   useEffect(() => {
-    if (!trDoc.hasVat) {
-      form.setValue(`trDocs.${journalIndex}.follows`, trDoc.follows?.filter(f => f.type !== 'vat'));
+    if (!trDoc.hasCtax) {
+      form.setValue(`trDocs.${journalIndex}.follows`, trDoc.follows?.filter(f => f.type !== 'ctax'));
+      setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'ctax')));
+      return;
+    }
+
+    if (side === TR_SIDES.DEBIT) {
+      form.setValue(`trDocs.${journalIndex}.follows`, trDoc.follows?.filter(f => f.type !== 'ctax'));
+      setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'ctax')));
       return;
     }
 
     const { sumDt, sumCt } = side === TR_SIDES.DEBIT ? { sumDt: calcedAmount, sumCt: 0 } : { sumDt: 0, sumCt: calcedAmount };
 
-    const curr = followTrDocs.find(ftr => ftr._id === vatFollowData?.id);
+    const curr = followTrDocs.find(ftr => ftr._id === ctaxFollowData?.id);
 
-    const vatFtr = {
+    const ctaxFtr = {
       ...curr || (trDoc as ITransaction),
       _id: curr?._id || getTempId(),
       journal: TrJournalEnum.TAX,
       originId: trDoc._id,
-      followType: 'vat',
+      followType: 'ctax',
       details: [{
         ...(curr?.details || [{}])[0],
-        accountId: trDoc.afterVat ?
-          side === 'dt' ? configs?.VatAfterReceivableAccount ?? '' : (configs?.VatAfterPayableAccount ?? '') :
-          side === 'dt' ? configs?.VatReceivableAccount : configs?.VatPayableAccount,
+        accountId: configs?.CtaxPayableAccount,
         side,
         amount: calcedAmount
       }],
@@ -104,31 +109,33 @@ export const TaxForm = ({
       sumDt,
       sumCt,
     };
-    form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'vat'), { type: 'vat', id: vatFtr._id }])
-    setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'vat')), vatFtr]);
+
+    form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'ctax'), { type: 'ctax', id: ctaxFtr._id }])
+    setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'ctax')), ctaxFtr]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasVat, side, calcedAmount, configs]);
+  }, [hasCtax, side, calcedAmount, configs]);
 
-  const changeVatRow = (vatRow: IVatRow) => {
-    const vatPercent = vatRow.percent ?? 0;
+  const changeCtaxRow = (ctaxRow: ICtaxRow) => {
+    const ctaxPercent = ctaxRow.percent ?? 0;
     setTaxPercents({
-      vat: vatPercent,
-      sum: (taxPercents.ctax ?? 0) + vatPercent
+      ...taxPercents,
+      ctax: ctaxPercent,
+      sum: (taxPercents.vat ?? 0) + ctaxPercent
     });
   }
 
   // Тухайн баримт нь өмнө нь НӨАТтай гээгүй бөгөөд байгууллагын тохиргоонд НӨАТгүй гэсэн бол НӨАТ байх ёсгүй
-  if (!trDoc.hasVat && !configs?.HasVat) {
+  if (!trDoc.hasCtax && !configs?.HasCtax) {
     return null;
   }
 
   return (
     <>
-      {/* <VatEffects form={form} /> */}
+      {/* <CtaxEffects form={form} /> */}
       <Form.Field
         control={form.control}
-        name={`trDocs.${journalIndex}.hasVat`}
+        name={`trDocs.${journalIndex}.hasCtax`}
         render={({ field }) => (
           <Form.Item className="flex items-center space-x-2 space-y-0 col-start-1 pt-5">
             <Form.Control>
@@ -137,15 +144,15 @@ export const TaxForm = ({
                 onCheckedChange={field.onChange}
               />
             </Form.Control>
-            <Form.Label variant="peer">Has VAT</Form.Label>
+            <Form.Label variant="peer">Has CTAX</Form.Label>
           </Form.Item>
         )}
       />
-      {hasVat && (
+      {hasCtax && (
         <>
           <Form.Field
             control={form.control}
-            name={`trDocs.${journalIndex}.handleVat`}
+            name={`trDocs.${journalIndex}.handleCtax`}
             render={({ field }) => (
               <Form.Item className="flex items-center space-x-2 space-y-0 pt-5">
                 <Form.Control>
@@ -154,46 +161,31 @@ export const TaxForm = ({
                     onCheckedChange={field.onChange}
                   />
                 </Form.Control>
-                <Form.Label variant="peer">Handle VAT</Form.Label>
+                <Form.Label variant="peer">Handle CTAX</Form.Label>
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name={`trDocs.${journalIndex}.afterVat`}
-            render={({ field }) => (
-              <Form.Item className="flex items-center space-x-2 space-y-0 pt-5">
-                <Form.Control>
-                  <Checkbox
-                    checked={field.value ?? false}
-                    onCheckedChange={field.onChange}
-                  />
-                </Form.Control>
-                <Form.Label variant="peer">After VAT</Form.Label>
-              </Form.Item>
-            )}
-          />
-          <Form.Field
-            control={form.control}
-            name={`trDocs.${journalIndex}.vatRowId`}
+            name={`trDocs.${journalIndex}.ctaxRowId`}
             render={({ field }) => (
               <Form.Item>
-                <Form.Label>VAT row</Form.Label>
-                <SelectVat value={field.value || ''} onValueChange={field.onChange} onCallback={changeVatRow} />
+                <Form.Label>CTAX row</Form.Label>
+                <SelectCtax value={field.value || ''} onValueChange={field.onChange} onCallback={changeCtaxRow} />
                 <Form.Message />
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name={`trDocs.${journalIndex}.vatAmount`}
+            name={`trDocs.${journalIndex}.ctaxAmount`}
             render={({ field }) => (
               <Form.Item>
-                <Form.Label>VAT amount</Form.Label>
+                <Form.Label>CTAX amount</Form.Label>
                 <CurrencyField.ValueInput
-                  value={handleVat ? field.value ?? 0 : calcedAmount}
+                  value={handleCtax ? field.value ?? 0 : calcedAmount}
                   onChange={field.onChange}
-                  disabled={!handleVat}
+                  disabled={!handleCtax}
                 />
                 <Form.Message />
               </Form.Item>
