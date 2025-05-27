@@ -6,6 +6,7 @@ import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/int
 import { IFacebookCustomer } from '@/integrations/facebook/@types/customers';
 import { getFacebookUser } from '@/integrations/facebook/utils'
 import { receiveTrpcMessage } from '@/inbox/receiveMessage'
+import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget'
 // import { uploadMedia, getPostLink, getFacebookUserProfilePic, getPostDetails } from '@/integrations/facebook/utils'
 import {
@@ -202,15 +203,15 @@ export const getOrCreateComment = async (
     };
     await pConversationClientMessageInserted(models,subdomain, doc);
   
-    // graphqlPubsub.publish(
-    //   `conversationMessageInserted:${conversation.erxesApiId}`,
-    //   {
-    //     conversationMessageInserted: {
-    //       ...conversation?.toObject(),
-    //       conversationId: conversation.erxesApiId
-    //     }
-    //   }
-    // );
+    const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+
+    publish(`conversationMessageInserted:${conversation.erxesApiId}`, {
+      conversationMessageInserted: {
+        ...conversation?.toObject(),
+        conversationId: conversation.erxesApiId,
+      },
+    });
+
   } catch {
     throw new Error(
       `Failed to update the database with the Erxes API response for this conversation.`

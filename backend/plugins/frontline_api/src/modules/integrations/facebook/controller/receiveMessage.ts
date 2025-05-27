@@ -6,6 +6,7 @@ import {receiveTrpcMessage} from '@/inbox/receiveMessage'
 import { debugFacebook } from '@/integrations/facebook/debuggers';
 import {Activity} from '@/integrations/facebook/@types/utils'
 import {pConversationClientMessageInserted} from '@/inbox/graphql/resolvers/mutations/widget'
+import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
 
 export const receiveMessage = async (
   models: IModels,
@@ -112,15 +113,15 @@ export const receiveMessage = async (
 
      await pConversationClientMessageInserted(models,subdomain, doc);
   
-      // graphqlPubsub.publish(
-      //   `conversationMessageInserted:${conversation.erxesApiId}`,
-      //   {
-      //     conversationMessageInserted: {
-      //       ...created.toObject(),
-      //       conversationId: conversation.erxesApiId
-      //     }
-      //   }
-      // );
+    const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+
+      publish(`conversationMessageInserted:${conversation.erxesApiId}`, {
+        conversationMessageInserted: {
+          ...created.toObject(),
+          conversationId: conversation.erxesApiId,
+        },
+      });
+
       conversationMessage = created;
 
     } catch (e) {

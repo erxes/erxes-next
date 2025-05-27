@@ -986,10 +986,10 @@ sendNotifications: t.procedure
 conversationClientMessageInserted: t.procedure
       .input(z.any())
       .mutation(async ({ ctx, input }) => {
-     const {models} = ctx;
+     const {models ,subdomain} = ctx;
       try {
-      const result = await pConversationClientMessageInserted(models, input);
-      
+      const result = await pConversationClientMessageInserted(models, subdomain, input);
+   
       return {
         status: 'success',
         data: result,

@@ -4,7 +4,7 @@ import { cleanHtml } from 'erxes-api-shared/utils';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { conversationSchema } from '@/inbox/db/definitions/conversations';
 import { IModels } from '~/connectionResolvers';
-
+import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
 import {
   IConversationDocument,
   IConversation,
@@ -253,6 +253,11 @@ export const loadClass = (models: IModels) => {
         readUserIds.push(userId);
         await models.Conversations.updateConversation(_id, { readUserIds });
       }
+    const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+
+    publish(`conversationChanged:${_id}`, {
+      conversationChanged: { conversationId: _id, type: 'inbox:conversation' },
+    });
 
       return models.Conversations.findOne({ _id });
     }

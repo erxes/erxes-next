@@ -9,6 +9,7 @@ import {IIntegrationDocument} from '@/inbox/@types/integrations'
 import { AUTO_BOT_MESSAGES} from '@/inbox/db/definitions/constants'
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { facebookIntegrations } from '@/integrations/facebook/messageBroker'
+import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
 
 
 /**
@@ -90,6 +91,12 @@ export const publishConversationsChanged = async (
   const models = await generateModels(subdomain);
 
   for (const _id of _ids) {
+    (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
+  `conversationChanged:${_id}`,
+    {
+      conversationChanged: { conversationId: _id, type },
+    }
+   );
     await models.Conversations.findOne({ _id });
   }
 
@@ -104,10 +111,29 @@ export const publishMessage = async (
   message: any,
   customerId?: string,
 ) => {
+  (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
+      `conversationMessageInserted:${message.conversationId}`,
+      {
+        conversationMessageInserted: message,
+      }
+    );
+
     if (customerId) {
-      await models.ConversationMessages.widgetsGetUnreadMessagesCount(
+     const unreadCount =await models.ConversationMessages.widgetsGetUnreadMessagesCount(
         message.conversationId
       );
+
+      (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
+      `conversationAdminMessageInserted:${customerId}`,
+      {
+        conversationAdminMessageInserted: {
+          customerId,
+          unreadCount,
+        },
+      }
+    );
+
+   
   }
 };
 
@@ -447,7 +473,7 @@ export const conversationMutations = {
     { _id, operatorStatus }: { _id: string; operatorStatus: string },
     { models }: IContext,
   ) {
-      await models.ConversationMessages.createMessage({
+      const message =await models.ConversationMessages.createMessage({
         conversationId: _id,
         botData: [
           {
@@ -456,6 +482,13 @@ export const conversationMutations = {
           }
         ]
       });
+      (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
+        `conversationMessageInserted:${message.conversationId}`,
+        {
+          conversationMessageInserted: message,
+        }
+      );
+
       return models.Conversations.updateOne(
         { _id },
         { $set: { operatorStatus } }

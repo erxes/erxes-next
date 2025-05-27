@@ -2,6 +2,9 @@ import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels } from '~/connectionResolvers';
 import { RPError, RPResult, RPSuccess } from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
+import { model } from 'mongoose';
+import { pConversationClientMessageInserted } from './graphql/resolvers/mutations/widget';
 
 const sendError = (message): RPError => ({
   status: 'error',
@@ -189,19 +192,16 @@ export const receiveTrpcMessage = async (
     );
 
     // FIXME: Find userId and `conversationClientMessageInserted:${userId}`
-    //   graphqlPubsub.publish<{ conversationClientMessageInserted: any }>(
-    //     'conversationClientMessageInserted',
-    //     {
-    //       conversationClientMessageInserted: message,
-    //     }
-    // );
+    const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
 
-    //     graphqlPubsub.publish(
-    //       `conversationMessageInserted:${message.conversationId}`,
-    //       {
-    //         conversationMessageInserted: message,
-    //       },
-    //     );
+    await publish('conversationClientMessageInserted', {
+      conversationClientMessageInserted: message,
+    });
+
+    await publish(`conversationMessageInserted:${message.conversationId}`, {
+      conversationMessageInserted: message,
+    });
+
 
     return sendSuccess({ _id: message._id });
   }
@@ -239,22 +239,24 @@ export const receiveIntegrationsNotification = async (subdomain, msg) => {
 
   const models = await generateModels(subdomain);
 
+  const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+
   if (action === 'external-integration-entry-added') {
-    // graphqlPubsub.publish('conversationExternalIntegrationMessageInserted', {});
+    await publish('conversationExternalIntegrationMessageInserted', {});
 
     if (conversationId) {
       await models.Conversations.reopen(conversationId);
       // FIXME: It must have _id
-      // await pConversationClientMessageInserted(models, subdomain, {
-      //   conversationId,
-      // });
+      await pConversationClientMessageInserted(models, subdomain, {
+        _id: conversationId,
+      });
     }
 
     return sendSuccess({ status: 'ok' });
   }
 
   if (action === 'sync-calendar-event') {
-    // graphqlPubsub.publish('calendarEventUpdated', {});
+    await publish('calendarEventUpdated', {});
 
     return sendSuccess({ status: 'ok' });
   }
