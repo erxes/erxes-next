@@ -5,7 +5,7 @@ module.exports = {
   name: 'inbox',
   typeDefs: `
 			conversationChanged(_id: String!): ConversationChangedResponse
-			conversationClientMessageInserted(_id: String!): ConversationMessage
+			conversationMessageInserted(_id: String!): ConversationMessage
 			conversationClientMessageInserted(userId: String!): ConversationMessage
 			conversationClientTypingStatusChanged(_id: String!): ConversationClientTypingStatusChangedResponse
 			conversationAdminMessageInserted(customerId: String): ConversationAdminMessageInsertedResponse
@@ -25,30 +25,30 @@ module.exports = {
       /*
        * Listen for new message insertion
        */
-      conversationClientMessageInserted: {
+      conversationMessageInserted: {
         resolve(payload, args, { dataSources: { gatewayDataSource } }, info) {
           if (!payload) {
             console.error(
-              `Subscription resolver error: conversationClientMessageInserted: payload is ${JSON.stringify(payload)}`,
+              `Subscription resolver error: conversationMessageInserted: payload is ${payload}`,
             );
             return;
           }
-          if (!payload.conversationClientMessageInserted) {
+          if (!payload.conversationMessageInserted) {
             console.error(
-              `Subscription resolver error: conversationClientMessageInserted: payload.conversationClientMessageInserted is ${payload.conversationClientMessageInserted}`,
+              `Subscription resolver error: conversationMessageInserted: payload.conversationMessageInserted is ${payload.conversationMessageInserted}`,
             );
             return;
           }
-          if (!payload.conversationClientMessageInserted._id) {
+          if (!payload.conversationMessageInserted._id) {
             console.error(
-              `Subscription resolver error: conversationClientMessageInserted: payload.conversationClientMessageInserted._id is ${payload.conversationClientMessageInserted._id}`,
+              `Subscription resolver error: conversationMessageInserted: payload.conversationMessageInserted._id is ${payload.conversationMessageInserted._id}`,
             );
             return;
           }
           return gatewayDataSource.queryAndMergeMissingData({
             payload,
             info,
-            queryVariables: { _id: payload.conversationClientMessageInserted._id },
+            queryVariables: { _id: payload.conversationMessageInserted._id },
             buildQueryUsingSelections: (selections) => `
                   query Subscription_GetMessage($_id: String!) {
                     conversationMessage(_id: $_id) {
@@ -59,7 +59,7 @@ module.exports = {
           });
         },
         subscribe: (_, { _id }) =>
-          graphqlPubsub.asyncIterator(`conversationClientMessageInserted:${_id}`),
+          graphqlPubsub.asyncIterator(`conversationMessageInserted:${_id}`),
       },
 
       /*
