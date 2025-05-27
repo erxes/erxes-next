@@ -116,7 +116,7 @@ export const transactionCashSchema = z.object({
     ...currencyDetailSchema.shape,
   })),
 }).extend({
-  customerId: z.string().nullish(),
+  customerId: z.string(),
   hasVat: z.boolean(),
   hasCtax: z.boolean(),
 });
