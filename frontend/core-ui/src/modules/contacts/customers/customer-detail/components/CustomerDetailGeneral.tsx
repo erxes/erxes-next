@@ -3,7 +3,7 @@ import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/us
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';
-import { Avatar, Button } from 'erxes-ui';
+import { Avatar, Button, readFile } from 'erxes-ui';
 import { TextFieldCustomer } from '../../customer-edit/components/TextField';
 
 export const CustomerDetailGeneral = () => {
@@ -23,7 +23,7 @@ export const CustomerDetailGeneral = () => {
     <div className="py-5 px-8">
       <div className="flex gap-3 items-center flex-col lg:flex-row">
         <Avatar size="lg" className="h-12 w-12">
-          <Avatar.Image src={avatar} />
+          <Avatar.Image src={readFile(avatar)} />
           <Avatar.Fallback>
             {(firstName || lastName || primaryEmail || primaryPhone)?.charAt(0)}
           </Avatar.Fallback>

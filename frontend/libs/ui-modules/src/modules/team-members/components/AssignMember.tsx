@@ -51,6 +51,7 @@ export const AssignMember = React.forwardRef<
         <AssignMemberList
           renderItem={(user) => (
             <AssignMemberItem
+              key={user._id}
               user={user}
               isSelected={selectedUser?._id === user._id}
               handleSelect={handleSelect}

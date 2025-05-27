@@ -39,7 +39,7 @@ export const types = `
     code: String
     emailValidationStatus: String
     phoneValidationStatus: String
-
+    status: String
     isOnline: Boolean
     lastSeenAt: Date
     sessionCount: Int
@@ -100,6 +100,7 @@ const queryParams = `
   limit: Int
   cursor: String
   direction: CURSOR_DIRECTION
+  status: CONTACT_STATUS
   ${conformityQueryFields}
 `;
 

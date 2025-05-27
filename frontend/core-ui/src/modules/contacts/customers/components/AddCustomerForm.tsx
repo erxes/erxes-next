@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, ScrollArea, Sheet, Form, useToast } from 'erxes-ui';
+import { Button, Form, ScrollArea, Sheet, useToast } from 'erxes-ui';
 
 import { CustomerAddGeneralInformationFields } from '@/contacts/customers/components/CustomerAddGeneralInformationFields';
 import { CustomerAddSheetHeader } from '@/contacts/customers/components/CustomerAddSheet';
@@ -11,13 +11,17 @@ import {
   CustomerFormType,
 } from '@/contacts/customers/constants/formSchema';
 import { useAddCustomer } from '@/contacts/customers/hooks/useAddCustomer';
+import { ContactsPath } from '@/types/paths/ContactsPath';
 import { ApolloError } from '@apollo/client';
+import { useLocation } from 'react-router-dom';
 
 export function AddCustomerForm({
   onOpenChange,
 }: {
   onOpenChange?: (open: boolean) => void;
 }) {
+  const { pathname } = useLocation();
+
   const { customersAdd } = useAddCustomer();
   const form = useForm<CustomerFormType>({
     resolver: zodResolver(customerFormSchema),
@@ -25,8 +29,13 @@ export function AddCustomerForm({
   const { toast } = useToast();
 
   const onSubmit = (data: CustomerFormType) => {
+    const state = pathname.includes(ContactsPath.Leads) ? 'lead' : 'customer';
+
     customersAdd({
-      variables: data,
+      variables: {
+        ...data,
+        state,
+      },
       onError: (e: ApolloError) => {
         toast({
           title: 'Error',

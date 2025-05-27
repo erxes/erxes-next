@@ -32,7 +32,9 @@ export const baseTrDetailSchema = z.object({
   ),
 
   originId: z.string().nullish(),
+  followType: z.string().nullish(),
   followInfos: z.object({}).nullish(),
+  follows: z.array(z.object({ id: z.string(), type: z.string() })).nullish(),
 
   excludeVat: z.boolean().nullish(),
   excludeCtax: z.boolean().nullish(),
@@ -50,8 +52,11 @@ export const baseTransactionSchema = z.object({
   _id: z.string(),
   ptrId: z.string(),
   parentId: z.string(),
+
+  originId: z.string().nullish(),
+  followType: z.string().nullish(),
   followInfos: z.object({}).nullish(),
-  follows: z.object({}).nullish(),
+  follows: z.array(z.object({ id: z.string(), type: z.string() })).nullish(),
 
   description: z.string().nullish(),
   customerType: z.nativeEnum(CustomerType),
@@ -64,7 +69,10 @@ export const baseTransactionSchema = z.object({
   ...vatSchema.shape,
   ...ctaxSchema.shape,
 
-  extraData: z.object({}).nullish()
+  sumDt: z.number(),
+  sumCt: z.number(),
+  extraData: z.object({}).nullish(),
+
 });
 
 // export const inventorySchema = z.object({

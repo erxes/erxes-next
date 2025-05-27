@@ -19,6 +19,8 @@ export const GET_USER_DETAIL = gql`
         employeeId
         position
         operatorPhone
+        birthDate
+        workStartedDate
       }
       positionIds
       links
