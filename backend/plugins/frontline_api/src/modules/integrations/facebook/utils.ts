@@ -103,7 +103,12 @@ export const createAWS = async () => {
 };
 
 // Define a simple in-memory cache (outside the function scope)
-let cachedUploadConfig: { AWS_BUCKET: string } | null = null;
+
+type UploadConfig = { AWS_BUCKET: string };
+let cachedUploadConfig: UploadConfig | null = null;
+let isFetchingConfig = false; // Concurrency control
+let lastFetchTime = 0; // Time-based cache invalidation
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 export const uploadMedia = async (
   subdomain: string,
@@ -112,8 +117,13 @@ export const uploadMedia = async (
 ) => {
   const mediaFile = `${randomAlphanumeric()}.${video ? "mp4" : "jpg"}`;
 
-  if (!cachedUploadConfig) {
+  // 1. Cache Handling (with concurrency + TTL)
+  if (
+    !cachedUploadConfig ||
+    (Date.now() - lastFetchTime > CACHE_TTL_MS && !isFetchingConfig)
+  ) {
     try {
+      isFetchingConfig = true;
       cachedUploadConfig = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
@@ -121,49 +131,49 @@ export const uploadMedia = async (
         action: 'getFileUploadConfigs',
         input: {},
       });
+      lastFetchTime = Date.now();
     } catch (err) {
-      debugError(`Failed to get file upload configs: ${err.message}`);
+      debugError(`Failed to fetch upload config: ${err.message}`);
       return null;
+    } finally {
+      isFetchingConfig = false;
     }
   }
 
-  // Ensure cachedUploadConfig is not null before accessing its properties
+  // 2. Null check after potential fetch
   if (!cachedUploadConfig) {
-    debugError(`uploadMedia: cachedUploadConfig is null after fetch`);
+    debugError(`Upload config unavailable after retry`);
     return null;
   }
 
+  // 3. Upload to S3 (unchanged)
   const { AWS_BUCKET } = cachedUploadConfig;
-
-  const s3 = await createAWS();
-
   try {
+    const s3 = await createAWS();
     const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`uploadMedia: unexpected response ${response.statusText}`);
-    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    const uploadParams = {
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const data = await s3.upload({
       Bucket: AWS_BUCKET,
       Key: mediaFile,
       Body: buffer,
       ACL: "public-read",
-      ContentDisposition: "inline",
       ContentType: video ? "video/mp4" : "image/jpeg",
-    };
-
-    const data = await s3.upload(uploadParams).promise();
+    }).promise();
 
     return data.Location;
   } catch (e) {
-    debugError(`Error occurred while uploading media: ${e.message}`);
+    debugError(`Upload failed: ${e.message}`);
     return null;
   }
 };
 
+// 4. Manual cache invalidation (call this when configs change)
+export const invalidateUploadConfigCache = () => {
+  cachedUploadConfig = null;
+  lastFetchTime = 0;
+};
 
 export const getPageList = async (
   models: IModels,
