@@ -49,6 +49,8 @@ export const types = `
     links: JSON
     companies: [Company]
     getTags: [Tag]
+
+    cursor: String
   }
 
   type CustomersListResponse {
@@ -102,6 +104,8 @@ const queryParams = `
   direction: CURSOR_DIRECTION
   status: CONTACT_STATUS
   ${conformityQueryFields}
+
+  orderBy: JSON
 `;
 
 export const queries = `
