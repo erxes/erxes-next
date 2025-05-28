@@ -11,6 +11,7 @@ import {
 } from './../GeneralFormFields';
 import { VatForm } from '../helpers/VatForm';
 import { CtaxForm } from '../helpers/CtaxForm';
+import { CurrencyForm } from '../helpers/CurrencyForm';
 import { TR_SIDES, TrJournalEnum } from '../../../types/constants';
 
 export const CashTransaction = ({
@@ -30,6 +31,7 @@ export const CashTransaction = ({
       <BranchField form={form} index={index} />
       <DepartmentField form={form} index={index} />
       <DescriptionField form={form} index={index} />
+      <CurrencyForm form={form} journalIndex={index} />
       <VatForm form={form} journalIndex={index} isWithTax={true} isSameSide={false} />
       <CtaxForm form={form} journalIndex={index} isWithTax={true} isSameSide={false} />
     </div>

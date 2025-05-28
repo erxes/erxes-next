@@ -14,6 +14,25 @@ import {
   TTaxJournal,
 } from '../types/AddTransaction';
 
+const trDataWrapper = (doc?: ITransaction) => {
+  return {
+    ...doc,
+    _id: doc?._id ?? getTempId(),
+    customerType: doc?.customerType || CustomerType.CUSTOMER,
+  }
+}
+
+const trDetailWrapper = (detail?: ITrDetail) => {
+  return {
+    ...(detail || {}),
+    _id: detail?._id ?? getTempId(),
+    account: detail?.account ?? {},
+    accountId: detail?.accountId ?? '',
+    side: (detail?.side || TR_SIDES.DEBIT),
+    amount: detail?.amount ?? 0,
+  }
+}
+
 export const DEFAULT_VAT_VALUES = (doc?: ITransaction) => {
   return {
     hasVat: doc?.hasVat ?? false,
@@ -33,73 +52,54 @@ export const DEFAULT_CTAX_VALUES = (doc?: ITransaction) => {
 
 export const MAIN_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TMainJournal> => {
   return {
-    ...doc,
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.MAIN,
-    _id: doc?._id ?? getTempId(),
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0])
     }]
   };
 }
 
 export const CASH_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TCashJournal> => {
   return {
-    ...doc,
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.CASH,
-    _id: doc?._id ?? getTempId(),
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     ...DEFAULT_VAT_VALUES(doc),
     ...DEFAULT_CTAX_VALUES(doc),
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
     }]
   };
 };
 
 export const BANK_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TBankJournal> => {
   return {
-    ...doc,
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.BANK,
-    _id: doc?._id ?? getTempId(),
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     ...DEFAULT_VAT_VALUES(doc),
     ...DEFAULT_CTAX_VALUES(doc),
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
     }]
   }
 };
 
 export const DEBT_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TDebtJournal> => {
   return {
-    ...doc,
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.DEBT,
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
-    ...DEFAULT_VAT_VALUES(doc),
-    ...DEFAULT_CTAX_VALUES(doc),
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
     }]
   };
 }
 
 export const TAX_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TTaxJournal> => {
   return {
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.TAX,
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
     }]
   }
 };
