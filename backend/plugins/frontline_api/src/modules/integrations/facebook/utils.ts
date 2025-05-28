@@ -115,8 +115,7 @@ export const uploadMedia = async (
   url: string,
   video: boolean
 ) => {
-  const mediaFile = `${randomAlphanumeric()}.${video ? "mp4" : "jpg"}`;
-
+ const mediaFile = `uploads/${randomAlphanumeric(16)}.${video ? 'mp4' : 'jpg'}`
   // 1. Cache Handling (with concurrency + TTL)
   if (
     !cachedUploadConfig ||
