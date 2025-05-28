@@ -46,7 +46,7 @@ export const receiveTrpcMessage = async (
       await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
-        module: 'customer',
+        module: 'customers',
         action: 'findOne',
         input: { selector },
       });
@@ -58,7 +58,7 @@ export const receiveTrpcMessage = async (
         await sendTRPCMessage({
           pluginName: 'core',
           method: 'mutation', // this is a mutation, not a query
-          module: 'customer',
+          module: 'customers',
           action: 'updateCustomer',
           input: {
             doc: {
@@ -81,7 +81,7 @@ export const receiveTrpcMessage = async (
       customer = await sendTRPCMessage({
         pluginName: 'core',
         method: 'mutation',
-        module: 'customer',
+        module: 'customers',
         action: 'createCustomer',
         input: {
           doc: {
