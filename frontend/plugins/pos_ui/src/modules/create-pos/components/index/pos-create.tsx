@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import { posCategoryAtom } from '../../states/posCategory';
-import { PosCreateTabContent, PosDetailLayout } from './pos-create-layout';
+import { PosCreateTabContent, PosCreateLayout } from './pos-create-layout';
 
 import ChooseCategoryPage from '../category/choose-category';
 import EcommercePaymentsForm from '../payments/ecommerce-payment';
@@ -24,14 +24,13 @@ import {
   PermissionFormValues,
   basicInfoSchema,
   permissionSchema,
-  combineFormData,
   FormStepData,
 } from '../formSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSubmitPosForm } from '~/modules/hooks/usePosAdd';
 
 
-export const PosDetail = () => {
+export const PosCreate = () => {
   const [posCategory] = useAtom(posCategoryAtom);
   const { submitForm, loading, error } = useSubmitPosForm();
   
@@ -52,13 +51,12 @@ export const PosDetail = () => {
       cashierPrintTempBill: false,
       cashierDirectSales: false,
       cashierDirectDiscountLimit: '',
-      adminIds: ["WQ3tsgnDdDu3jhbQj"],
-      cashierIds: ["WQ3tsgnDdDu3jhbQj"],
+      adminIds: [],
+      cashierIds: [],
       permissionConfig: {},
     }
   });
 
-  // Form for basic info step
   const basicInfoForm = useForm<BasicInfoFormValues>({
     resolver: zodResolver(basicInfoSchema),
     defaultValues: {
@@ -70,7 +68,6 @@ export const PosDetail = () => {
     },
   });
 
-  // Form for permission step
   const permissionForm = useForm<PermissionFormValues>({
     resolver: zodResolver(permissionSchema),
     defaultValues: {
@@ -82,8 +79,8 @@ export const PosDetail = () => {
       cashierPrintTempBill: false,
       cashierDirectSales: false,
       cashierDirectDiscountLimit: '',
-      adminIds: ["WQ3tsgnDdDu3jhbQj"],
-      cashierIds: ["WQ3tsgnDdDu3jhbQj"],
+      adminIds: [],
+      cashierIds: [],
       permissionConfig: {},
     },
   });
@@ -106,40 +103,24 @@ export const PosDetail = () => {
 
   const handleFinalSubmit = async () => {
     try {
-      // Capture current form data from all forms
       const currentBasicInfo = basicInfoForm.getValues();
       const currentPermission = permissionForm.getValues();
       
-      // Update formStepData with current form values
       const finalFormStepData = {
         ...formStepData,
         basicInfo: currentBasicInfo,
         permission: {
           ...currentPermission,
-          // Ensure adminIds and cashierIds are populated
           adminIds: currentPermission.adminTeamMember ? [currentPermission.adminTeamMember] : [],
           cashierIds: currentPermission.cashierTeamMember ? [currentPermission.cashierTeamMember] : [],
         },
       };
-      
-      console.log('Current formStepData:', finalFormStepData);
-      
-      // Submit the form data using the custom hook
       const result = await submitForm(finalFormStepData);
-      
-      if (result.data) {
-        console.log('POS created successfully:', result.data.posAdd);
-        // Handle success (e.g., redirect, show success message, etc.)
-        // Example: navigate('/pos-list') or showSuccessToast()
-      }
-      
-      // Update the state for consistency
+
       setFormStepData(finalFormStepData);
       
     } catch (error) {
       console.error('Failed to create POS:', error);
-      // Handle error (e.g., show error message)
-      // Example: showErrorToast('Failed to create POS')
     }
   };
 
@@ -156,7 +137,7 @@ export const PosDetail = () => {
   };
 
   return (
-    <PosDetailLayout
+    <PosCreateLayout
       form={basicInfoForm}
       onFormSubmit={handleBasicInfoSubmit}
       onFinalSubmit={handleFinalSubmit}
@@ -176,7 +157,7 @@ export const PosDetail = () => {
 
       {posCategory === 'restaurant' && (
         <PosCreateTabContent value="slot">
-          <POSSlotsManager />
+          <POSSlotsManager posId={''} />
         </PosCreateTabContent>
       )}
 
@@ -221,6 +202,6 @@ export const PosDetail = () => {
       <PosCreateTabContent value="sync">
         <SyncCardForm />
       </PosCreateTabContent>
-    </PosDetailLayout>
+    </PosCreateLayout>
   );
 };

@@ -17,7 +17,6 @@ export default function DeliveryConfigForm() {
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    console.log("Delivery config form submitted:", deliveryConfig)
 
     const newParams = new URLSearchParams(searchParams)
     newParams.set("tab", "sync")

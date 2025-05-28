@@ -11,15 +11,15 @@ import {
 import { Button, cn, Sheet, Tooltip } from 'erxes-ui';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { renderingPosDetailAtom } from '~/modules/create-pos/states/renderingPosDetailAtom';
 import { isFullscreenAtom, sidebarViewAtom } from '~/modules/slot/states/slot';
 import { posCategoryAtom } from '../../states/posCategory';
+import { renderingPosCreateAtom } from '../../states/renderingPosCreateAtom';
 
 export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [renderingPosDetail, setRenderingPosDetail] = useAtom(
-    renderingPosDetailAtom,
+  const [renderingPosCreate, setRenderingPosCreate] = useAtom(
+    renderingPosCreateAtom,
   );
   const isOpen = searchParams.get('create') === 'true';
   const [posCategory] = useAtom(posCategoryAtom);
@@ -49,14 +49,14 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
       newSearchParams.delete('create');
     }
     setSearchParams(newSearchParams);
-    setRenderingPosDetail(false);
+    setRenderingPosCreate(false);
     if (!isOpen) {
       navigate('/pos');
     }
   };
 
   const handleToggleSidebar = () => {
-    setRenderingPosDetail(!renderingPosDetail);
+    setRenderingPosCreate(!renderingPosCreate);
   };
 
   return (
@@ -69,7 +69,7 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
       <Sheet.View
         className={cn(
           'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
-          renderingPosDetail
+          renderingPosCreate
             ? 'md:w-[calc(100vw-theme(spacing.4))]'
             : 'md:w-[600px]',
         )}

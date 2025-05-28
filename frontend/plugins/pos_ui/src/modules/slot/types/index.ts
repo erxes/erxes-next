@@ -9,7 +9,7 @@ export interface TableNodeData {
   rotateAngle: number;
   zIndex: number;
   disabled: boolean;
-  code: string
+  code: string;
 }
 
 export interface CustomNode {
@@ -40,11 +40,11 @@ export interface SlotDetailForm {
   name: string;
   code: string;
   rounded: boolean;
-  width: number;
-  height: number;
+  width: string;
+  height: string;
   top: string;
   left: string;
-  rotateAngle: number;
+  rotateAngle: string;
   zIndex: string;
   color: string;
   disabled: boolean;

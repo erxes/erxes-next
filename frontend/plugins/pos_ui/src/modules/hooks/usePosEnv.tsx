@@ -7,7 +7,7 @@ interface PosEnvQueryResponse {
 
 export function usePosEnv() {
   const { loading, error, data, refetch } = useQuery<PosEnvQueryResponse>(
-    gql(queries.posEnv),
+    (queries.posEnv),
     {
       fetchPolicy: "cache-and-network",
       errorPolicy: "all",

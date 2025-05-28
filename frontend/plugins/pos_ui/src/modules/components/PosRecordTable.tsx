@@ -1,5 +1,5 @@
 import { RecordTable } from 'erxes-ui';
-import { PosCommandBar } from './PosCommandBar';
+import { PosCommandBar } from './pos-command-bar/PosCommandBar';
 import { usePosList } from '../hooks/usePosList';
 import { posColumns } from './columns';
 

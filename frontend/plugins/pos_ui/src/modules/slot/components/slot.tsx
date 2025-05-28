@@ -28,7 +28,7 @@ import MiniMapToggle from "./miniMap"
 import { CustomNode, TableNodeData } from "../types"
 import { useUpdatePosSlots } from "~/modules/hooks/useSlotAdd"
 
-const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
+const POSSlotsManager = ({ posId }: { posId: string }) => {
   const { toast } = useToast()
   const { updatePosSlots, loading: mutationLoading, error: mutationError } = useUpdatePosSlots()
 
@@ -81,7 +81,18 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
     selectedNodeRef.current = selectedNode;
   }, [selectedNode]);
 
-  // Transform nodes data to mutation format
+  const generateNextId = useCallback((currentNodes: CustomNode[]): string => {
+    if (currentNodes.length === 0) return "1"
+    
+    const numericIds = currentNodes
+      .map(node => parseInt(node.id, 10))
+      .filter(id => !isNaN(id))
+    
+    if (numericIds.length === 0) return "1"
+    
+    return String(Math.max(...numericIds) + 1)
+  }, [])
+
   const transformNodesToSlots = useCallback((nodesToTransform: CustomNode[]) => {
     return nodesToTransform.map((node) => ({
       _id: node.id,
@@ -94,7 +105,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
         top: node.data.positionY,
         left: node.data.positionX,
         rotateAngle: node.data.rotateAngle,
-        borderRadius: node.data.rounded ? 8 : 0, // Convert boolean to radius
+        borderRadius: node.data.rounded ? 8 : 0, 
         color: node.data.color,
         zIndex: node.data.zIndex,
         isShape: false,
@@ -102,7 +113,6 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
     }))
   }, [posId])
 
-  // Save all slots to backend
   const saveAllSlots = useCallback(async () => {
     try {
       const slotsData = transformNodesToSlots(nodesRef.current)
@@ -252,7 +262,6 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
         const node = nodesRef.current.find((n) => n.id === detail.id)
         if (node) {
           setSelectedNode(node as CustomNode)
-          // Populate slot detail form with node data
           setSlotDetail({
             name: node.data.label,
             code: node.data.code,
@@ -265,6 +274,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
             zIndex: node.data.zIndex.toString(),
             color: node.data.color,
             disabled: node.data.disabled,
+            label: node.data.label,
           })
           setSidebarView("detail")
           setActiveTab("details")
@@ -299,7 +309,6 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
   const onNodeClick: NodeMouseHandler = useCallback(
     (event, node) => {
       setSelectedNode(node as CustomNode)
-      // Populate slot detail form with selected node data
       const nodeData = node as CustomNode
       setSlotDetail({
         name: nodeData.data.label,
@@ -313,6 +322,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
         zIndex: nodeData.data.zIndex.toString(),
         color: nodeData.data.color,
         disabled: nodeData.data.disabled,
+        label: nodeData.data.label,
       })
       setSidebarView("detail")
       setActiveTab("details")
@@ -329,7 +339,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
   }, [sidebarView, setSidebarView, setSelectedNode])
 
   const handleAddSlot = useCallback(() => {
-    const newId = String(nodesRef.current.length + 1)
+    const newId = generateNextId(nodesRef.current)
     const newPositionX = 250 + (nodesRef.current.length % 2) * 200
     const newPositionY = 100 + Math.floor(nodesRef.current.length / 2) * 150
 
@@ -359,7 +369,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
       title: "Slot added",
       description: `Added new slot: TABLE ${newId}`,
     })
-  }, [setNodes, toast])
+  }, [setNodes, toast, generateNextId])
 
   const handleSaveSlotDetail = useCallback(async () => {
     if (selectedNodeRef.current) {
@@ -370,7 +380,6 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
       const rotateAngle = Number.parseInt(slotDetail.rotateAngle, 10) || 0
       const zIndex = Number.parseInt(slotDetail.zIndex, 10) || 0
 
-      // Update the node in local state
       setNodes((nds) =>
         nds.map((node) => {
           if (node.id === selectedNodeRef.current?.id) {
@@ -493,7 +502,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
       return
     }
 
-    const newId = String(Math.max(...nodesRef.current.map((n) => Number.parseInt(n.id, 10)), 0) + 1)
+    const newId = generateNextId(nodesRef.current)
 
     const newPositionX = nodeToDuplicate.position.x + 30
     const newPositionY = nodeToDuplicate.position.y + 30
@@ -519,7 +528,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
       title: "Slot duplicated",
       description: `Duplicated slot: ${nodeToDuplicate.data.label}`,
     })
-  }, [setNodes, toast])
+  }, [setNodes, toast, generateNextId])
 
   const arrangeNodesInGrid = useCallback(() => {
     const GRID_SPACING_X = 200
@@ -555,7 +564,6 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
     const node = nodesRef.current.find((n) => n.id === nodeId)
     if (node) {
       setSelectedNode(node as CustomNode)
-      // Populate slot detail form
       setSlotDetail({
         name: node.data.label,
         code: node.data.code,
@@ -568,6 +576,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
         zIndex: node.data.zIndex.toString(),
         color: node.data.color,
         disabled: node.data.disabled,
+        label: node.data.label,
       })
       setSidebarView("detail")
       setActiveTab("details")
@@ -575,7 +584,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
   }, [setSelectedNode, setSidebarView, setActiveTab, setSlotDetail])
 
   const handleAddNew = useCallback((nodeData?: Partial<TableNodeData>) => {
-    const newId = String(Math.max(...nodesRef.current.map((n) => Number.parseInt(n.id, 10)), 0) + 1)
+    const newId = generateNextId(nodesRef.current)
     const newPositionX = 250 + (nodesRef.current.length % 2) * 200
     const newPositionY = 100 + Math.floor(nodesRef.current.length / 2) * 150
 
@@ -605,7 +614,7 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
       title: "Slot added",
       description: `Added new slot: ${newNode.data.label}`,
     })
-  }, [setNodes, toast])
+  }, [setNodes, toast, generateNextId])
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
@@ -643,8 +652,8 @@ const POSSlotsManager = ({ posId }: { posId: string }) => { // Add posId prop
                 selectedNode={selectedNode}
                 onSave={handleSaveSlotDetail}
                 onDelete={handleDeleteSlot}
-                onSaveAll={saveAllSlots} // Add save all functionality
-                isSaving={mutationLoading} // Pass loading state
+                onSaveAll={saveAllSlots} 
+                isSaving={mutationLoading}
               />
             </ReactFlow>
           </ReactFlowProvider>

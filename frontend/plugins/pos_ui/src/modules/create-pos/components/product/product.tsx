@@ -4,7 +4,8 @@ import { useSearchParams } from "react-router-dom"
 import { useAtom } from "jotai"
 import { IconPlus } from "@tabler/icons-react"
 import { useState } from "react"
-import { ProductGroup, productServiceSettingsAtom } from "../../states/posCategory"
+import { productServiceSettingsAtom } from "../../states/posCategory"
+import { ProductGroup } from "../../types"
 
 export default function ProductServiceForm() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -220,7 +221,7 @@ export default function ProductServiceForm() {
               onValueChange={(value) => handleSettingChange("initialProductCategory", value)}
             >
               <Select.Trigger>
-                <Select.Value placeholder="Choose product catergory" />
+                <Select.Value placeholder="Choose product category" />
               </Select.Trigger>
               <Select.Content>
                 <Select.Item value="category1">Category 1</Select.Item>
@@ -272,8 +273,8 @@ export default function ProductServiceForm() {
         <div className="space-y-4">
           <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT & CATEGORY MAPPING</h2>
           <p className="text-sm text-gray-500">
-            MAP A PRODUCT TO CATEGORY.WHEN A PRODUCT WHITHIN THAT CATEGORY IS SOLD IN POS SYSTEM WITH TAKE OPTION,THEN
-            THE MAPPED PRODUCT WILL BE ADDED TO TE PRICE
+            MAP A PRODUCT TO CATEGORY.WHEN A PRODUCT WITHIN THAT CATEGORY IS SOLD IN POS SYSTEM WITH TAKE OPTION,THEN
+            THE MAPPED PRODUCT WILL BE ADDED TO THE PRICE
           </p>
 
           <Button

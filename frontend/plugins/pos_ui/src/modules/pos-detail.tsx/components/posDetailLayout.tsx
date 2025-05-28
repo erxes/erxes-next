@@ -4,11 +4,11 @@ import React, { useMemo, useState } from "react"
 import { Stepper, Resizable, Button } from "erxes-ui"
 import { useSearchParams } from "react-router-dom"
 import { useAtom } from "jotai"
-import { posCategoryAtom } from "../../states/posCategory"
-import { IconCheck, IconLoader2, IconAlertCircle } from "@tabler/icons-react"
+import { IconCheck, IconLoader2, IconAlertCircle, IconEdit } from "@tabler/icons-react"
 import { PosDetailSheet } from "./posDetailSheet"
 import { UseFormReturn } from 'react-hook-form'
-import { BasicInfoFormValues , PermissionFormValues } from '../formSchema'
+import { posCategoryAtom } from "~/modules/create-pos/states/posCategory"
+import { BasicInfoFormValues, PermissionFormValues } from "~/modules/create-pos/components/formSchema"
 
 const LAYOUT = {
   STEPPER_WIDTH: "w-44",
@@ -117,12 +117,9 @@ const VerticalStepper = React.memo(({
   setSearchParams 
 }: VerticalStepperProps) => {
   const handleStepChange = (stepId: number): void => {
-    if ((stepId === currentStepId + 1 || stepId === currentStepId - 1) && 
-        (stepId === 1 || hasCategorySelected)) {
-      const targetStep = steps.find((step) => step.id === stepId)
-      if (targetStep) {
-        navigateToTab(setSearchParams, searchParams, targetStep.value)
-      }
+    const targetStep = steps.find((step) => step.id === stepId)
+    if (targetStep && hasCategorySelected) {
+      navigateToTab(setSearchParams, searchParams, targetStep.value)
     }
   }
 
@@ -137,6 +134,10 @@ const VerticalStepper = React.memo(({
 
   return (
     <div className={`${isMobile ? 'w-full' : LAYOUT.STEPPER_WIDTH} border-r bg-gray-50 p-5 overflow-y-auto`}>
+      <div className="mb-4 flex items-center gap-2 text-sm text-blue-600 font-medium">
+        <IconEdit className="h-4 w-4" />
+        Edit Mode
+      </div>
       <Stepper 
         value={currentStepId} 
         onValueChange={handleStepChange} 
@@ -144,7 +145,7 @@ const VerticalStepper = React.memo(({
         className="w-full"
       >
         {steps.map((step) => {
-          const isClickable = step.id === currentStepId + 1 || step.id === currentStepId - 1
+          const isClickable = hasCategorySelected
           return (
             <StepperItem 
               key={step.id}
@@ -204,30 +205,42 @@ const NavigationFooter = React.memo(({
       >
         Previous
       </Button>
-      <Button 
-        type="button" 
-        onClick={handleNextStep} 
-        disabled={(!nextStep && !isLastStep) || isLoading || isSubmitting}
-      >
-        {isLoading || isSubmitting ? (
-          <span className="flex items-center gap-2">
-            <IconLoader2 className="h-4 w-4 animate-spin" />
-            {isLastStep ? "Saving..." : "Loading..."}
-          </span>
-        ) : (
-          isLastStep ? "Save POS" : "Next step"
+      <div className="flex gap-2">
+        <Button 
+          type="button" 
+          variant="outline"
+          onClick={handleNextStep} 
+          disabled={(!nextStep && !isLastStep) || isLoading || isSubmitting}
+        >
+          {isLastStep ? "Save & Close" : "Next step"}
+        </Button>
+        {isLastStep && (
+          <Button 
+            type="button" 
+            onClick={handleNextStep}
+            disabled={isLoading || isSubmitting}
+          >
+            {isLoading || isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <IconLoader2 className="h-4 w-4 animate-spin" />
+                Updating...
+              </span>
+            ) : (
+              "Update POS"
+            )}
+          </Button>
         )}
-      </Button>
+      </div>
     </div>
   </div>
 ))
 
-interface PosCreateTabContentProps {
+interface PosEditTabContentProps {
   children: React.ReactNode
   value: string
 }
 
-export const PosCreateTabContent: React.FC<PosCreateTabContentProps> = ({ children, value }) => {
+export const PosEditTabContent: React.FC<PosEditTabContentProps> = ({ children, value }) => {
   const [searchParams] = useSearchParams()
   const [posCategory] = useAtom(posCategoryAtom)
   const selectedStep = searchParams.get("tab") || "overview"
@@ -251,11 +264,11 @@ export const PosCreateTabContent: React.FC<PosCreateTabContentProps> = ({ childr
   return <div className="flex-auto overflow-auto">{children}</div>
 }
 
-interface PosCreateStepperProps {
+interface PosEditStepperProps {
   children: React.ReactNode
 }
 
-const PosCreateStepper: React.FC<PosCreateStepperProps> = ({ children }) => {
+const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [posCategory] = useAtom(posCategoryAtom)
   const selectedStep = searchParams.get("tab") || "overview"
@@ -292,24 +305,28 @@ const PosCreateStepper: React.FC<PosCreateStepperProps> = ({ children }) => {
   )
 }
 
-interface PosCreateLayoutProps {
+interface PosEditLayoutProps {
   children: React.ReactNode
   actions?: React.ReactNode
   form?: UseFormReturn<BasicInfoFormValues , PermissionFormValues>
   onFormSubmit?: (data: BasicInfoFormValues) => void
   onFinalSubmit?: () => void
   isSubmitting?: boolean
-  loading: boolean,
-  error : any,
+  loading: boolean
+  error: any
+  posDetail: any
 }
 
-export const PosCreateLayout: React.FC<PosCreateLayoutProps> = ({ 
+export const PosEditLayout: React.FC<PosEditLayoutProps> = ({ 
   children, 
   actions, 
   form,
   onFormSubmit,
   onFinalSubmit,
-  isSubmitting = false
+  isSubmitting = false,
+  loading,
+  error,
+  posDetail
 }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [posCategory] = useAtom(posCategoryAtom)
@@ -362,7 +379,6 @@ export const PosCreateLayout: React.FC<PosCreateLayoutProps> = ({
       return
     }
 
-
     if (selectedStep === "properties" && form && onFormSubmit) {
       try {
         setIsLoading(true)
@@ -391,8 +407,8 @@ export const PosCreateLayout: React.FC<PosCreateLayoutProps> = ({
           await onFinalSubmit()
         }
       } catch (error) {
-        console.error("Error saving:", error)
-        setValidationError("Failed to save. Please try again.")
+        console.error("Error updating:", error)
+        setValidationError("Failed to update. Please try again.")
       } finally {
         setIsLoading(false)
       }
@@ -412,7 +428,7 @@ export const PosCreateLayout: React.FC<PosCreateLayoutProps> = ({
             <Resizable.Panel defaultSize={75} minSize={30}>
               <div className="flex flex-col h-full">
                 <div className="flex-1 overflow-auto min-h-0">
-                  <PosCreateStepper>{children}</PosCreateStepper>
+                  <PosEditStepper>{children}</PosEditStepper>
                 </div>
 
                 <NavigationFooter 
@@ -421,7 +437,7 @@ export const PosCreateLayout: React.FC<PosCreateLayoutProps> = ({
                   handlePrevStep={handlePrevStep}
                   handleNextStep={handleNextStep}
                   isLastStep={isLastStep}
-                  isLoading={isLoading}
+                  isLoading={isLoading || loading}
                   validationError={validationError}
                   isSubmitting={isSubmitting}
                 />

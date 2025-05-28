@@ -2,25 +2,64 @@
 
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { Form, Input, Select } from "erxes-ui";
-import { ALLOW_TYPES } from "~/modules/constants";
+import { Form, Input, Label, Select } from "erxes-ui";
+import { useSearchParams } from "react-router-dom";
+import { useSetAtom } from "jotai";
+import { slotAtom } from "../../states/posCategory";
 import { BasicInfoFormValues } from '../formSchema';
+import { ALLOW_TYPES } from '~/modules/constants';
+import { Branch, Department } from '../../types';
+
+type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
 
 interface EcommerceFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
+  posDetail?: any;
+  isReadOnly?: boolean;
+  branches?: Branch[]; 
+  departments?: Department[]; 
 }
 
-export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
-  const handleTypeToggle = (typeValue: string) => {
-    const currentTypes = form.watch('allowTypes') || [];
-    const newTypes = currentTypes.includes(typeValue)
-      ? currentTypes.filter(t => t !== typeValue)
+export const EcommerceForm: React.FC<EcommerceFormProps> = ({ 
+  form, 
+  posDetail,
+  isReadOnly = false,
+  branches = [], 
+  departments = []
+}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const setSlot = useSetAtom(slotAtom);
+  const isEditMode = !!posDetail;
+  const defaultBranches: Branch[] = [
+    { id: "branch1", name: "Main Branch" },
+    { id: "branch2", name: "Downtown Branch" },
+    { id: "branch3", name: "Mall Branch" },
+  ];
+
+  const defaultDepartments: Department[] = [
+    { id: "kitchen", name: "Kitchen" },
+    { id: "bar", name: "Bar" },
+    { id: "service", name: "Service" },
+  ];
+
+  const availableBranches = branches.length > 0 ? branches : defaultBranches;
+  const availableDepartments = departments.length > 0 ? departments : defaultDepartments;
+
+
+  const handleTypeChange = (typeValue: AllowedType) => {
+    if (isReadOnly) return;
+    
+    const currentTypes = (form.watch('allowTypes') || []) as string[];
+    const newTypes: string[] = currentTypes.includes(typeValue)
+      ? currentTypes.filter((t: string) => t !== typeValue)
       : [...currentTypes, typeValue];
     
-    form.setValue('allowTypes', newTypes);
+    form.setValue('allowTypes', newTypes as any);
   };
 
   const handleBrandChange = (brandId: string) => {
+    if (isReadOnly) return;
+    
     const currentBrands = form.watch('scopeBrandIds') || [];
     const newBrands = currentBrands.includes(brandId)
       ? currentBrands.filter(id => id !== brandId)
@@ -30,6 +69,8 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
   };
 
   const handleBranchChange = (branchId: string) => {
+    if (isReadOnly) return;
+    
     const currentBranches = form.watch('allowBranchIds') || [];
     const newBranches = currentBranches.includes(branchId)
       ? currentBranches.filter(id => id !== branchId)
@@ -38,11 +79,24 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
     form.setValue('allowBranchIds', newBranches);
   };
 
+  const handleDepartmentChange = (departmentId: string) => {
+    if (isReadOnly) return;
+    // form.setValue('departmentId', departmentId);
+  };
+
+  const getFormTitle = () => {
+    if (isReadOnly) return 'View Ecommerce Details';
+    return isEditMode ? 'Edit Ecommerce' : 'Create New Ecommerce';
+  };
+
   return (
     <Form {...form}>
       <div className="p-3">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">{getFormTitle()}</h2>
+        </div>
+
         <div className="space-y-6">
-          {/* Name Field */}
           <Form.Field
             control={form.control}
             name="name"
@@ -56,6 +110,8 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
                     {...field}
                     placeholder="Write here"
                     className="border border-gray-300 h-10"
+                    disabled={isReadOnly}
+                    readOnly={isReadOnly}
                   />
                 </Form.Control>
                 <Form.Message />
@@ -64,7 +120,6 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
           />
 
           <div className="grid grid-cols-2 gap-6">
-            {/* Description Field */}
             <Form.Field
               control={form.control}
               name="description"
@@ -79,14 +134,14 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
                       {...field}
                       className="border border-gray-300 h-10"
                       value={field.value || ''}
+                      disabled={isReadOnly}
+                      readOnly={isReadOnly}
                     />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
             />
-
-            {/* Brands Field */}
             <Form.Field
               control={form.control}
               name="scopeBrandIds"
@@ -101,14 +156,15 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
                       <Select 
                         onValueChange={(value) => handleBrandChange(value)}
                         value={field.value?.[0] || ""}
+                        disabled={isReadOnly}
                       >
                         <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                           <Select.Value placeholder="Choose brands" />
                         </Select.Trigger>
                         <Select.Content>
-                          <Select.Item value="brand1">Brand 1</Select.Item>
-                          <Select.Item value="brand2">Brand 2</Select.Item>
-                          <Select.Item value="brand3">Brand 3</Select.Item>
+                          <Select.Item value="restaurant_brand1">Restaurant Brand 1</Select.Item>
+                          <Select.Item value="restaurant_brand2">Restaurant Brand 2</Select.Item>
+                          <Select.Item value="restaurant_brand3">Restaurant Brand 3</Select.Item>
                         </Select.Content>
                       </Select>
                     </div>
@@ -119,7 +175,6 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
             />
           </div>
 
-          {/* Allow Types Field */}
           <Form.Field
             control={form.control}
             name="allowTypes"
@@ -130,22 +185,27 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
                 </Form.Label>
                 <p className="text-sm text-gray-500">How use types ?</p>
                 <Form.Control>
-                  <div className="grid grid-cols-3 gap-2">
-                    {ALLOW_TYPES.map((type) => (
-                      <div key={type.value} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id={type.value}
-                          checked={(field.value || []).includes(type.value)}
-                          onChange={() => handleTypeToggle(type.value)}
-                          className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                        />
-                        <label 
-                          htmlFor={type.value}
-                          className="text-sm text-gray-700"
+                  <div className="grid grid-cols-3 gap-3">
+                    {Array.from({ length: 6 }, (_, index) => (
+                      <div key={index} className="flex flex-col">
+                        <Select 
+                          onValueChange={(value) => {
+                            handleTypeChange(value as AllowedType);
+                          }}
+                          value=""
+                          disabled={isReadOnly}
                         >
-                          {type.label}
-                        </label>
+                          <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                            <Select.Value placeholder={`Select Type ${index + 1}`} />
+                          </Select.Trigger>
+                          <Select.Content>
+                            {ALLOW_TYPES.map((type) => (
+                              <Select.Item key={type.value} value={type.value}>
+                                {type.label}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select>
                       </div>
                     ))}
                   </div>
@@ -156,7 +216,6 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
           />
 
           <div className="grid grid-cols-2 gap-6">
-            {/* Branches Field */}
             <Form.Field
               control={form.control}
               name="allowBranchIds"
@@ -169,14 +228,17 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
                     <Select 
                       onValueChange={(value) => handleBranchChange(value)}
                       value={field.value?.[0] || ""}
+                      disabled={isReadOnly}
                     >
                       <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                         <Select.Value placeholder="Choose branch" />
                       </Select.Trigger>
                       <Select.Content>
-                        <Select.Item value="branch1">Branch 1</Select.Item>
-                        <Select.Item value="branch2">Branch 2</Select.Item>
-                        <Select.Item value="branch3">Branch 3</Select.Item>
+                        {availableBranches.map((branch) => (
+                          <Select.Item key={branch.id} value={branch.id}>
+                            {branch.name}
+                          </Select.Item>
+                        ))}
                       </Select.Content>
                     </Select>
                   </Form.Control>
@@ -184,6 +246,37 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({ form }) => {
                 </Form.Item>
               )}
             />
+
+            {/* <Form.Field
+              control={form.control}
+              name="departmentId"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                    CHOOSE DEPARTMENT
+                  </Form.Label>
+                  <Form.Control>
+                    <Select 
+                      onValueChange={(value) => handleDepartmentChange(value)}
+                      value={field.value || ""}
+                      disabled={isReadOnly}
+                    >
+                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                        <Select.Value placeholder="Choose department" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        {availableDepartments.map((department) => (
+                          <Select.Item key={department.id} value={department.id}>
+                            {department.name}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            /> */}
           </div>
         </div>
       </div>

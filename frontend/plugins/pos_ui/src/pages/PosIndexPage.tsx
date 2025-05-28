@@ -3,17 +3,17 @@ import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link, useSearchParams } from 'react-router-dom';
 import { PosRecordTable } from '~/modules/components/PosRecordTable';
-import { renderingPosDetailAtom } from '~/modules/create-pos/states/renderingPosDetailAtom';
 import { useAtom } from 'jotai';
-import { PosDetail } from '~/modules/create-pos/components/index/pos-create';
-import { PosDetailSheet } from '~/modules/pos-detail.tsx/components/posDetailSheet';
+import { PosCreate } from '~/modules/create-pos/components/index/pos-create';
+import { PosEdit } from '~/modules/pos-detail.tsx/components/posDetail';
+import { renderingPosCreateAtom } from '~/modules/create-pos/states/renderingPosCreateAtom';
 
 export const PosIndexPage = () => {
   const [, setSearchParams] = useSearchParams();
-  const [, setRenderingPosDetail] = useAtom(renderingPosDetailAtom);
+  const [, setRenderingPosCreate] = useAtom(renderingPosCreateAtom);
 
   const onCreatePos = () => {
-    setRenderingPosDetail(true);
+    setRenderingPosCreate(true);
     setSearchParams({ create: 'true' });
   };
   return (
@@ -48,9 +48,9 @@ export const PosIndexPage = () => {
           </Button>
         </PageHeader.End>
       </PageHeader>
-      <PosDetail />
+      <PosCreate />
       <PosRecordTable />
-      <PosDetailSheet/>
+      <PosEdit />
     </div>
   );
 };

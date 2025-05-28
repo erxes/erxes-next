@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// UI Options Schema
 const uiOptionsSchema = z.object({
   colors: z.object({
     bodyColor: z.string().default('#FFFFFF'),
@@ -16,34 +15,27 @@ const uiOptionsSchema = z.object({
   qrCodeImage: z.string().default(''),
 });
 
-// Product Details Schema
 const productDetailSchema = z.object({
   productId: z.string(),
   categoryId: z.string().optional(),
   isRequired: z.boolean().default(false),
 });
 
-// Category Product Mapping Schema
 const catProdMappingSchema = z.object({
   categoryId: z.string(),
   productIds: z.array(z.string()).default([]),
 });
 
-// Payment Types Schema
 const paymentTypeSchema = z.object({
   type: z.string(),
   config: z.record(z.any()).optional(),
 });
 
-// Main POS Detail Schema
 export const posDetailSchema = z.object({
-  // Required fields
   name: z.string().min(1, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
   adminIds: z.array(z.string()).min(1, 'At least one admin is required'),
   cashierIds: z.array(z.string()).min(1, 'At least one cashier is required'),
-
-  // Optional fields with defaults
   productDetails: z.array(productDetailSchema).default([]),
   paymentIds: z.array(z.string()).default([]),
   paymentTypes: z.array(paymentTypeSchema).default([]),
@@ -90,19 +82,16 @@ export const basicInfoSchema = z.object({
 });
 
 export const permissionSchema = z.object({
-  // Admin settings
   adminTeamMember: z.string().min(1, 'Admin team member is required'),
   adminPrintTempBill: z.boolean().default(false),
   adminDirectSales: z.boolean().default(false),
   adminDirectDiscountLimit: z.string().default(''),
 
-  // Cashier settings
   cashierTeamMember: z.string().min(1, 'Cashier team member is required'),
   cashierPrintTempBill: z.boolean().default(false),
   cashierDirectSales: z.boolean().default(false),
   cashierDirectDiscountLimit: z.string().default(''),
 
-  // Legacy fields for backward compatibility
   adminIds: z.array(z.string()).default([]),
   cashierIds: z.array(z.string()).default([]),
   permissionConfig: z.record(z.any()).default({}),
@@ -135,7 +124,6 @@ export type ProductFormValues = z.infer<typeof productSchema>;
 export type PaymentFormValues = z.infer<typeof paymentSchema>;
 export type UiConfigFormValues = z.infer<typeof uiConfigSchema>;
 
-// Form state management helper
 export interface FormStepData {
   basicInfo?: BasicInfoFormValues;
   permission?: PermissionFormValues;

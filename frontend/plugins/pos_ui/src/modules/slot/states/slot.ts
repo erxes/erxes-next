@@ -14,6 +14,7 @@ export const slotDetailAtom = atom<SlotDetailForm>({
   zIndex: "0",
   color: "#5E5CFF",
   disabled: false,
+  label: "",
 });
 
 export const sidebarViewAtom = atom<"list" | "detail" | "hidden">("list");
@@ -38,6 +39,7 @@ export const syncSelectedNodeAtom = atom(
         zIndex: node.data.zIndex ? String(node.data.zIndex) : "0",
         color: node.data.color || "#5E5CFF",
         disabled: node.data.disabled || false,
+        label: "",
       });
     }
   }

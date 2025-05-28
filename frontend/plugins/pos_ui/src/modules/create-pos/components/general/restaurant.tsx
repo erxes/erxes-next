@@ -7,34 +7,48 @@ import { Button, Form, Input, Label, Select } from "erxes-ui";
 import { useSearchParams } from "react-router-dom";
 import { useSetAtom } from "jotai";
 import { slotAtom } from "../../states/posCategory";
-import { ALLOW_TYPES } from "~/modules/constants";
 import { BasicInfoFormValues } from '../formSchema';
+import { ALLOW_TYPES } from '~/modules/constants';
+
+type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
+  posDetail?: any;
+  isReadOnly?: boolean;
 }
 
-export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
+export const RestaurantForm: React.FC<RestaurantFormProps> = ({ 
+  form, 
+  posDetail,
+  isReadOnly = false 
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setSlot = useSetAtom(slotAtom);
+  const isEditMode = !!posDetail;
 
   const handleAddSlot = () => {
+    if (isReadOnly) return;
     setSlot(true);
     const newParams = new URLSearchParams(searchParams);
     newParams.set("tab", "slot");
     setSearchParams(newParams);
   };
 
-  const handleTypeToggle = (typeValue: string) => {
-    const currentTypes = form.watch('allowTypes') || [];
-    const newTypes = currentTypes.includes(typeValue)
-      ? currentTypes.filter(t => t !== typeValue)
+  const handleTypeChange = (typeValue: AllowedType) => {
+    if (isReadOnly) return;
+    
+    const currentTypes = (form.watch('allowTypes') || []) as string[];
+    const newTypes: string[] = currentTypes.includes(typeValue)
+      ? currentTypes.filter((t: string) => t !== typeValue)
       : [...currentTypes, typeValue];
     
-    form.setValue('allowTypes', newTypes);
+    form.setValue('allowTypes', newTypes as any);
   };
 
   const handleBrandChange = (brandId: string) => {
+    if (isReadOnly) return;
+    
     const currentBrands = form.watch('scopeBrandIds') || [];
     const newBrands = currentBrands.includes(brandId)
       ? currentBrands.filter(id => id !== brandId)
@@ -44,6 +58,8 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
   };
 
   const handleBranchChange = (branchId: string) => {
+    if (isReadOnly) return;
+    
     const currentBranches = form.watch('allowBranchIds') || [];
     const newBranches = currentBranches.includes(branchId)
       ? currentBranches.filter(id => id !== branchId)
@@ -52,11 +68,19 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
     form.setValue('allowBranchIds', newBranches);
   };
 
+  const getFormTitle = () => {
+    if (isReadOnly) return 'View Restaurant Details';
+    return isEditMode ? 'Edit Restaurant' : 'Create New Restaurant';
+  };
+
   return (
     <Form {...form}>
       <div className="p-3">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">{getFormTitle()}</h2>
+        </div>
+
         <div className="space-y-6">
-          {/* Name Field */}
           <Form.Field
             control={form.control}
             name="name"
@@ -70,6 +94,8 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
                     {...field}
                     placeholder="Write here"
                     className="border border-gray-300 h-10"
+                    disabled={isReadOnly}
+                    readOnly={isReadOnly}
                   />
                 </Form.Control>
                 <Form.Message />
@@ -78,7 +104,6 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
           />
 
           <div className="grid grid-cols-2 gap-6">
-            {/* Description Field */}
             <Form.Field
               control={form.control}
               name="description"
@@ -93,14 +118,14 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
                       {...field}
                       className="border border-gray-300 h-10"
                       value={field.value || ''}
+                      disabled={isReadOnly}
+                      readOnly={isReadOnly}
                     />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
             />
-
-            {/* Brands Field */}
             <Form.Field
               control={form.control}
               name="scopeBrandIds"
@@ -115,6 +140,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
                       <Select 
                         onValueChange={(value) => handleBrandChange(value)}
                         value={field.value?.[0] || ""}
+                        disabled={isReadOnly}
                       >
                         <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                           <Select.Value placeholder="Choose brands" />
@@ -133,7 +159,6 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
             />
           </div>
 
-          {/* Slots Section */}
           <div className="space-y-2">
             <div className="flex items-center">
               <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">SLOTS</Label>
@@ -143,15 +168,14 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
                 variant="outline"
                 className="ml-2 h-6 w-6 p-0 bg-indigo-500 hover:bg-indigo-600"
                 onClick={handleAddSlot}
+                disabled={isReadOnly}
               >
                 <IconPlus size={16} className="text-white" />
                 <span className="sr-only">Add slot</span>
               </Button>
             </div>
-            <p className="text-sm text-gray-500">Configure time slots for restaurant operations</p>
           </div>
 
-          {/* Allow Types Field */}
           <Form.Field
             control={form.control}
             name="allowTypes"
@@ -162,22 +186,27 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
                 </Form.Label>
                 <p className="text-sm text-gray-500">How use types ?</p>
                 <Form.Control>
-                  <div className="grid grid-cols-3 gap-2">
-                    {ALLOW_TYPES.map((type) => (
-                      <div key={type.value} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id={type.value}
-                          checked={(field.value || []).includes(type.value)}
-                          onChange={() => handleTypeToggle(type.value)}
-                          className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                        />
-                        <label 
-                          htmlFor={type.value}
-                          className="text-sm text-gray-700"
+                  <div className="grid grid-cols-3 gap-3">
+                    {Array.from({ length: 6 }, (_, index) => (
+                      <div key={index} className="flex flex-col">
+                        <Select 
+                          onValueChange={(value) => {
+                            handleTypeChange(value as AllowedType);
+                          }}
+                          value=""
+                          disabled={isReadOnly}
                         >
-                          {type.label}
-                        </label>
+                          <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                            <Select.Value placeholder={`Select Type ${index + 1}`} />
+                          </Select.Trigger>
+                          <Select.Content>
+                            {ALLOW_TYPES.map((type) => (
+                              <Select.Item key={type.value} value={type.value}>
+                                {type.label}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select>
                       </div>
                     ))}
                   </div>
@@ -188,7 +217,6 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
           />
 
           <div className="grid grid-cols-2 gap-6">
-            {/* Branches Field */}
             <Form.Field
               control={form.control}
               name="allowBranchIds"
@@ -201,6 +229,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
                     <Select 
                       onValueChange={(value) => handleBranchChange(value)}
                       value={field.value?.[0] || ""}
+                      disabled={isReadOnly}
                     >
                       <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                         <Select.Value placeholder="Choose branch" />
@@ -217,10 +246,9 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({ form }) => {
               )}
             />
 
-            {/* Additional Branch/Department Field */}
             <div className="space-y-1">
               <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">CHOOSE DEPARTMENT</Label>
-              <Select>
+              <Select disabled={isReadOnly}>
                 <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                   <Select.Value placeholder="Choose department" />
                 </Select.Trigger>

@@ -94,16 +94,6 @@ export default function ChooseCategoryPage() {
           </div>
         </div>
       </div>
-
-      <div className="flex justify-end mt-6">
-        <Button
-          onClick={handleNextStep}
-          disabled={!selectedCategory}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white"
-        >
-          Next step
-        </Button>
-      </div>
     </div>
   )
 }

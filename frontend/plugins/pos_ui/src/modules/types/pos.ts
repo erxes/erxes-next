@@ -6,4 +6,6 @@ export interface IPos {
     branchTitle: string;
     departmentTitle: string;
     createdAt: string;
+    createdBy: string;
+    user:any,
   }

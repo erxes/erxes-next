@@ -83,7 +83,7 @@ export default function EcommercePaymentsForm() {
           <p className="text-sm text-gray-500">
             Type is must latin, some default types: golomtCard, khaanCard, TDBCard
             <br />
-            Харав тухайн талбэрт ебаримт хавлагүй бол: "skipEbarimt: true", Харилцагч сонгосон үед л харагдах бол:
+            Хэрэв тухайн талбэрт ебаримт хавлагүй бол: "skipEbarimt: true", Харилцагч сонгосон үед л харагдах бол:
             "mustCustomer: true", Харав хуваах боломжгүй бол: "notSplit: true" Үрэдчилж төлсөн төлбөрөөр
             <br />
             (Татвар тооцсон) бол: "preTax: true

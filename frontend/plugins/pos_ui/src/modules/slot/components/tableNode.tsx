@@ -4,10 +4,29 @@ import { useCallback, useEffect, useRef } from "react"
 import { Handle, Position, type NodeProps } from "@xyflow/react"
 import { useAtom } from "jotai"
 import { slotDetailAtom } from "../states/slot"
+import { TableNodeData } from "../types"
+
+function isTableNodeData(data: any): data is TableNodeData {
+  return typeof data.label === 'string';
+}
 
 export function TableNode({ id, data, selected }: NodeProps) {
   const nodeRef = useRef<HTMLDivElement>(null)
   const [, setSlotDetail] = useAtom(slotDetailAtom)
+
+  const nodeData: TableNodeData = isTableNodeData(data) ? data : {
+    label: '',
+    color: '#5E5CFF',
+    width: 100,
+    height: 80,
+    rounded: false,
+    rotateAngle: 0,
+    zIndex: 0,
+    disabled: false,
+    code: '',
+    positionX: 0,
+    positionY: 0,
+  };
 
   const resizeRefs = {
     topLeft: useRef<HTMLDivElement>(null),
@@ -39,12 +58,17 @@ export function TableNode({ id, data, selected }: NodeProps) {
         const startHeight = nodeElement.offsetHeight
         const startX = e.clientX
         const startY = e.clientY
+        
+        let deltaX = 0
+        let deltaY = 0
+        
         const onMouseMove = (moveEvent: MouseEvent) => {
           moveEvent.preventDefault()
           moveEvent.stopPropagation()
 
           let newWidth = startWidth
           let newHeight = startHeight
+          
           if (direction.includes("right")) {
             newWidth = Math.max(60, startWidth + (moveEvent.clientX - startX))
           }
@@ -52,7 +76,8 @@ export function TableNode({ id, data, selected }: NodeProps) {
             newWidth = Math.max(60, startWidth - (moveEvent.clientX - startX))
             if (newWidth !== startWidth) {
               const widthDiff = startWidth - newWidth
-              nodeElement.style.transform = `translateX(${widthDiff}px) rotate(${data.rotateAngle || 0}deg)`
+              deltaX = widthDiff
+              nodeElement.style.transform = `translateX(${widthDiff}px) rotate(${nodeData.rotateAngle || 0}deg)`
             }
           }
           if (direction.includes("bottom")) {
@@ -62,11 +87,18 @@ export function TableNode({ id, data, selected }: NodeProps) {
             newHeight = Math.max(40, startHeight - (moveEvent.clientY - startY))
             if (newHeight !== startHeight) {
               const heightDiff = startHeight - newHeight
-              nodeElement.style.transform = `translateY(${heightDiff}px) rotate(${data.rotateAngle || 0}deg)`
+              deltaY = heightDiff
+              nodeElement.style.transform = `translateY(${heightDiff}px) rotate(${nodeData.rotateAngle || 0}deg)`
             }
           }
+          
+          if (direction.includes("left") && direction.includes("top")) {
+            nodeElement.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${nodeData.rotateAngle || 0}deg)`
+          }
+          
           nodeElement.style.width = `${newWidth}px`
           nodeElement.style.height = `${newHeight}px`
+          
           if (selected) {
             setSlotDetail((prev) => ({
               ...prev,
@@ -74,27 +106,42 @@ export function TableNode({ id, data, selected }: NodeProps) {
               height: String(newHeight),
             }))
           }
+          
+          const eventDetail: any = { 
+            id, 
+            width: newWidth, 
+            height: newHeight 
+          }
+
+          if (deltaX !== 0 || deltaY !== 0) {
+            eventDetail.x = (nodeData.positionX ?? 0) + deltaX
+            eventDetail.y = (nodeData.positionY ?? 0) + deltaY
+          }
+          
           const event = new CustomEvent("node:dimensions-change", {
-            detail: { id, width: newWidth, height: newHeight },
+            detail: eventDetail,
           })
           document.dispatchEvent(event)
         }
+        
         const onMouseUp = () => {
-          nodeElement.style.transform = `rotate(${data.rotateAngle || 0}deg)`
-
+          nodeElement.style.transform = `rotate(${nodeData.rotateAngle || 0}deg)`
           document.removeEventListener("mousemove", onMouseMove)
           document.removeEventListener("mouseup", onMouseUp)
         }
+        
         document.addEventListener("mousemove", onMouseMove)
         document.addEventListener("mouseup", onMouseUp)
       }
+      
       resizeHandle.addEventListener("mousedown", onMouseDown)
       return () => {
         resizeHandle.removeEventListener("mousedown", onMouseDown)
       }
     },
-    [id, data.rotateAngle, selected, setSlotDetail],
+    [id, nodeData.rotateAngle, nodeData.positionX ?? 0, nodeData.positionY ?? 0, selected, setSlotDetail],
   )
+
   useEffect(() => {
     if (selected) {
       const cleanups = [
@@ -128,17 +175,17 @@ export function TableNode({ id, data, selected }: NodeProps) {
         ref={nodeRef}
         className={`flex items-center justify-center font-medium text-center ${selected ? "ring-2 ring-white ring-opacity-80" : ""}`}
         style={{
-          backgroundColor: data.color || "#5E5CFF",
-          width: data.width || 100,
-          height: data.height || 80,
-          borderRadius: data.rounded ? "9999px" : "6px",
-          transform: `rotate(${data.rotateAngle || 0}deg)`,
-          zIndex: data.zIndex || 0,
+          backgroundColor: nodeData.color || "#5E5CFF",
+          width: nodeData.width || 100,
+          height: nodeData.height || 80,
+          borderRadius: nodeData.rounded ? "9999px" : "6px",
+          transform: `rotate(${nodeData.rotateAngle || 0}deg)`,
+          zIndex: nodeData.zIndex || 0,
           color: "#ffffff",
-          opacity: data.disabled ? 0.5 : 1,
+          opacity: nodeData.disabled ? 0.5 : 1,
         }}
       >
-        {data.label}
+        {nodeData.label}
         {selected && (
           <>
             <div

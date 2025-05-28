@@ -4,7 +4,7 @@ import { GroupsQueryResponse } from '../types/detail';
 
 export function useProductGroups(posId?: string) {
   const { loading, error, data, refetch } = useQuery<GroupsQueryResponse>(
-    gql(queries.productGroups),
+    (queries.productGroups),
     {
       skip: !posId,
       fetchPolicy: "cache-and-network",

@@ -5,7 +5,7 @@ import {
   IconMobiledata,
   IconPhone,
   IconClock,
-  IconFileDescription
+  IconUser
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
@@ -91,17 +91,20 @@ export const posColumns: ColumnDef<IPos>[] = [
     accessorKey: 'createdAt',
     header: () => <RecordTable.InlineHead icon={IconClock} label="Created at" />,
     cell: ({ cell }) => {
+      const rawDate = cell.getValue() as string;
+      const formattedDate = new Date(rawDate).toLocaleString();
+      
       return (
         <RecordTableCellDisplay>
-          <TextOverflowTooltip value={cell.getValue() as string} />
+          <TextOverflowTooltip value={formattedDate} />
         </RecordTableCellDisplay>
       );
     },
   },
   {
-    id: 'description',
-    accessorKey: 'description',
-    header: () => <RecordTable.InlineHead icon={IconFileDescription} label="description" />,
+    id: 'createdBy',
+    accessorKey: 'createdBy',
+    header: () => <RecordTable.InlineHead icon={IconUser} label="Created by" />,
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>

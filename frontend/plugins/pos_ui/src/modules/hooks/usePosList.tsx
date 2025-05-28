@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { gql } from '@apollo/client';
 import queries from '../graphql/queries';
+import { IPos } from '../types/pos';
 
 const POS_PER_PAGE = 30;
 
@@ -16,7 +16,7 @@ export const usePosList = (options = {}) => {
   );
 
   const transformedPosList =
-    data?.posList?.map((pos) => ({
+    data?.posList?.map((pos:IPos) => ({
       _id: pos._id,
       name: pos.name,
       isOnline: pos.isOnline || false,
@@ -24,11 +24,13 @@ export const usePosList = (options = {}) => {
       branchTitle: pos.branchTitle || '',
       departmentTitle: pos.departmentTitle || '',
       createdAt: pos.createdAt,
-      description: pos.description || '',
+      createdBy: pos?.user?.details?.fullName || 'Admin'
     })) || [];
 
   const handleFetchMore = () => {
-    if (!data?.posList) return;
+    if (!data?.posList) {
+      return
+    };
 
     fetchMore({
       variables: {
@@ -36,7 +38,9 @@ export const usePosList = (options = {}) => {
         perPage: POS_PER_PAGE,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
+        if (!fetchMoreResult) {
+          return prev
+        };
         return Object.assign({}, prev, {
           posList: [...(prev.posList || []), ...fetchMoreResult.posList],
         });

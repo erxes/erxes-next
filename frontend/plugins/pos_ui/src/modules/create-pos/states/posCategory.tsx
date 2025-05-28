@@ -1,50 +1,19 @@
 import { atom } from "jotai";
+import { CashierSettings, DeliveryConfigSettings, EbarimtConfigSettings, FinanceConfigSettings, PermissionSettings, ProductServiceSettings, ScreenConfigSettings, SyncCardSettings } from "../types";
 
 export const posCategoryAtom = atom<string>('restaurant')
-
-export interface PermissionSettings {
-    adminPrintTempBill: boolean
-    adminDirectSales: boolean
-    adminDirectDiscountLimit: string
-    adminTeamMember: string
-  }
-  export interface cashierSettings{
-    cashierPrintTempBill: boolean
-    cashierDirectSales: boolean
-    cashierDirectDiscountLimit: string
-    cashierTeamMember: string
-  }
-  
   export const permissionSettingsAtom = atom<PermissionSettings>({
     adminPrintTempBill: false,
     adminDirectSales: false,
     adminDirectDiscountLimit: "",
     adminTeamMember: "",
   })
-  export const cashierSettingsAtom = atom<cashierSettings>({
+  export const cashierSettingsAtom = atom<CashierSettings>({
     cashierPrintTempBill: false,
     cashierDirectSales: false,
     cashierDirectDiscountLimit: "",
     cashierTeamMember: "",
   })
-
-  export interface ProductGroup {
-    name: string
-    description: string
-    productCategory: string
-    excludeProductCategory: string
-    excludeProducts: string
-  }
-  
-  export interface ProductServiceSettings {
-    productGroups: ProductGroup[]
-    initialProductCategory: string
-    kioskExcludeCategories: string
-    kioskExcludeProducts: string
-    remainderConfigEnabled: boolean
-    excludeCategories: string
-    banFractions: boolean
-  }
   
   export const productServiceSettingsAtom = atom<ProductServiceSettings>({
     productGroups: [],
@@ -64,17 +33,6 @@ export interface PermissionSettings {
   }>
 >([])
 
-export interface ScreenConfigSettings {
-  kitchenScreenEnabled: boolean
-  showTypes: string
-  statusChange: string
-  watchingScreenEnabled: boolean
-  changeType: string
-  changeCount: string
-  contentUrl: string
-  printEnabled: boolean
-}
-
 export const screenConfigSettingsAtom = atom<ScreenConfigSettings>({
   kitchenScreenEnabled: false,
   showTypes: "defined",
@@ -86,54 +44,25 @@ export const screenConfigSettingsAtom = atom<ScreenConfigSettings>({
   printEnabled: false,
 })
 
-export interface EbarimtConfigSettings {
-  companyName: string
-  ebarimtUrl: string
-  checkTaxpayerUrl: string
-  companyRd: string
-  merchantin: string
-  posno: string
-  districtCode: string
-  branchNo: string
-  defaultGsCode: string
-  hasVat: boolean
-  vatPercent: string
-  hasUbCityTax: boolean
-  ubCityTaxPercent: string
-  anotherRuleOfProductsOnCityTax: string
-  headerText: string
-  footerText: string
-  hasCopy: boolean
-}
-
 export const ebarimtConfigSettingsAtom = atom<EbarimtConfigSettings>({
-  companyName: "Kiosk",
-  ebarimtUrl: "Kiosk",
-  checkTaxpayerUrl: "Kiosk",
-  companyRd: "Kiosk",
-  merchantin: "Kiosk",
-  posno: "Kiosk",
-  districtCode: "Kiosk",
-  branchNo: "Kiosk",
-  defaultGsCode: "Kiosk",
+  companyName: "",
+  ebarimtUrl: "",
+  checkTaxpayerUrl: "",
+  companyRd: "",
+  merchantin: "",
+  posno: "",
+  districtCode: "",
+  branchNo: "",
+  defaultGsCode: "",
   hasVat: true,
   vatPercent: "0",
   hasUbCityTax: true,
   ubCityTaxPercent: "0",
-  anotherRuleOfProductsOnCityTax: "reserveCtaxRules",
+  anotherRuleOfProductsOnCityTax: "",
   headerText: "0",
   footerText: "0",
   hasCopy: true,
 })
-
-export interface DeliveryConfigSettings {
-  board: string
-  pipeline: string
-  stage: string
-  watchedUsers: string
-  assignedUsers: string
-  deliveryProduct: string
-}
 
 export const deliveryConfigSettingsAtom = atom<DeliveryConfigSettings>({
   board: "",
@@ -143,22 +72,6 @@ export const deliveryConfigSettingsAtom = atom<DeliveryConfigSettings>({
   assignedUsers: "",
   deliveryProduct: "",
 })
-
-export interface SyncCardConfig {
-  title: string
-  brunch: string
-  stageBoard: string
-  pipeline: string
-  stage: string
-  assignedUsers: string
-  mapField: string
-}
-
-export interface SyncCardSettings {
-  showNewConfig: boolean
-  configs: SyncCardConfig[]
-  currentConfig: SyncCardConfig
-}
 
 export const syncCardSettingsAtom = atom<SyncCardSettings>({
   showNewConfig: false,
@@ -174,17 +87,6 @@ export const syncCardSettingsAtom = atom<SyncCardSettings>({
   },
 })
 
-export interface FinanceConfigSettings {
-  isSyncErkhet: boolean
-  checkErkhet: boolean
-  checkInventories: boolean
-  userEmail: string
-  beginBillNumber: string
-  defaultPay: string
-  account: string
-  location: string
-}
-
 export const financeConfigSettingsAtom = atom<FinanceConfigSettings>({
   isSyncErkhet: false,
   checkErkhet: false,
@@ -196,7 +98,5 @@ export const financeConfigSettingsAtom = atom<FinanceConfigSettings>({
   location: "",
 })
 
-export const sidebarViewAtom = atom<"list" | "detail" | "hidden">("list")
-export const isFullscreenAtom = atom(false)
 export const sidebarViewPerStepAtom = atom<{ [step: string]: string }>({})
 export const slotAtom = atom(false)

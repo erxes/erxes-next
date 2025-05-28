@@ -15,14 +15,6 @@ export const PosDetailSheet = ({
   const [activeTab] = useAtom(renderingPosDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { posDetail, loading, error } = usePosDetail({
-    onCompleted: (data) => {
-      // Custom completion logic
-    },
-    onError: (error) => {
-      // Custom error handling
-    }
-  });
 
   const posId = searchParams.get('pos_id');
 
@@ -72,8 +64,7 @@ export const PosDetailSheet = ({
             Pos Detail
           </Sheet.Description>
         </Sheet.Header>
-        {/* {children} */}
-        ehhehe
+        {children}
       </Sheet.View>
     </Sheet>
   );

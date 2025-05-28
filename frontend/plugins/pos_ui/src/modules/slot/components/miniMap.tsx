@@ -21,7 +21,7 @@ export default function MiniMapToggle({
           onClick={() => setIsVisible(true)}
           className="bg-white dark:bg-gray-800 rounded-full p-2 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           aria-label="Show minimap"
-        >CategoryHotKeyScope
+        >
           <IconMap className="h-4 w-4 text-gray-500 dark:text-gray-400" />
         </button>
       </div>
