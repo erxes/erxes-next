@@ -28,14 +28,6 @@ export const SelectAccount = React.forwardRef<
     skip: (!value && !open),
   });
 
-  // useEffect(() => {
-  //   const account = accounts?.find((account: IAccount) => account._id === value)
-  //   if (onCallback && account) {
-  //     onCallback(account)
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [accounts])
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Combobox.Trigger ref={ref} {...props}>
