@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollArea } from 'erxes-ui/components';
 import { RecordTable } from 'erxes-ui/modules';
-import { useEffect, useRef, useState } from 'react';
 import { EnumCursorDirection } from '../types/RecordTableCursorTypes';
 import { RecordTableCursorContext } from '../contexts/RecordTableCursorContext';
 import { useRecordTableCursorContext } from '../hooks/useRecordTableCursorContext';
+import { useCursorScroll } from 'erxes-ui/hooks/use-cursor-pagination';
 
 export const RecordTableCursorProvider = ({
   children,
@@ -13,6 +12,7 @@ export const RecordTableCursorProvider = ({
   dataLength,
   hasNextPage,
   sessionKey,
+  offset = 102,
 }: {
   children: React.ReactNode;
   hasPreviousPage?: boolean;
@@ -20,42 +20,24 @@ export const RecordTableCursorProvider = ({
   loading?: boolean;
   dataLength?: number;
   sessionKey?: string;
+  offset?: number;
 }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isFetchBackward, setIsFetchBackward] = useState(false);
-  const distanceFromBottomRef = useRef(0);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 102;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      if (!hasPreviousPage && !loading) {
-        scrollRef.current.scrollTop = 0;
-      }
-    }
-  }, [hasPreviousPage]);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      if (distanceFromBottomRef.current && isFetchBackward) {
-        scrollRef.current.scrollTop =
-          scrollRef.current.scrollHeight - distanceFromBottomRef.current;
-        distanceFromBottomRef.current = 0;
-        setIsFetchBackward(false);
-      }
-    }
-  }, [dataLength]);
+  const {
+    scrollRef,
+    isFetchBackward,
+    setIsFetchBackward,
+    distanceFromBottomRef,
+  } = useCursorScroll({
+    dataLength,
+    hasPreviousPage,
+    loading,
+    offset,
+  });
 
   const handleScroll = () => {
     const firstVisibleRow = scrollRef.current?.querySelector('.in-view');
-    if (firstVisibleRow) {
-      if (sessionKey) {
-        sessionStorage.setItem(sessionKey, firstVisibleRow.id);
-      }
+    if (firstVisibleRow && sessionKey) {
+      sessionStorage.setItem(sessionKey, firstVisibleRow.id);
     }
   };
 

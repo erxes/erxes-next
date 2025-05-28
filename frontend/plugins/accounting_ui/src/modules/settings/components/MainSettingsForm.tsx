@@ -130,7 +130,7 @@ export const VatFormFields = ({
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
@@ -146,7 +146,7 @@ export const VatFormFields = ({
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
@@ -162,7 +162,7 @@ export const VatFormFields = ({
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
@@ -178,7 +178,7 @@ export const VatFormFields = ({
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
@@ -222,7 +222,7 @@ export const CtaxFormFields = ({
               <SelectAccount
                 value={field.value}
                 onValueChange={field.onChange}
-                journal="tax"
+                defaultFilter={{ journals: ["tax"] }}
               />
             </Form.Item>
           )}

@@ -89,10 +89,12 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         emails,
         emailValidationStatus: _emailValidationStatus,
       } = cell.row.original;
+
       const emailValidationStatus =
         _emailValidationStatus === 'valid' ? 'verified' : 'unverified';
       const { companiesEdit } = useCompaniesEdit();
       const { toast } = useToast();
+
       const _emails = [
         ...(primaryEmail
           ? [
@@ -279,7 +281,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
         cell.row.original.tagIds || [],
       );
       const [open, setOpen] = useState(false);
-
+      // TODO: USE TAGS INLINE CELL
       return (
         <SelectTags
           tagType="core:company"
