@@ -131,7 +131,6 @@ export default function SegmentForm({
   callback,
   segmentId,
 }: Props) {
-  console.log({ segmentId });
   const [stats, setStats] = useState<StatsType>();
 
   const [countSegment, { called, loading }] = useLazyQuery(

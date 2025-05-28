@@ -15,7 +15,7 @@ export const configTrpcRouter = t.router({
     getConfig: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { code, defaultValue } = input;
       const { models } = ctx;
-      await models.Configs.getConfigValue(code, defaultValue);
+      return await models.Configs.getConfigValue(code, defaultValue);
     }),
     getConfigs: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { codes } = input;

@@ -21,16 +21,14 @@ export const exchangeRateTrpcRouter = t.router({
       const { models } = ctx;
       return await models.ExchangeRates.updateOne(selector, modifier);
     }),
-    getActiveRate: t.procedure
-      .input(z.any())
-      .mutation(async ({ ctx, input }) => {
-        const { date, rateCurrency, mainCurrency } = input;
-        const { models } = ctx;
-        return await models.ExchangeRates.getActiveRate({
-          date,
-          rateCurrency,
-          mainCurrency,
-        });
-      }),
+    getActiveRate: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { date, rateCurrency, mainCurrency } = input;
+      const { models } = ctx;
+      return await models.ExchangeRates.getActiveRate({
+        date,
+        rateCurrency,
+        mainCurrency,
+      });
+    }),
   }),
 });

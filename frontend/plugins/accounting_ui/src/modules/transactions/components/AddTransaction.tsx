@@ -74,6 +74,20 @@ export const AddTransaction = ({
           Харилцах
         </AddTransactionItem>
         <DropdownMenu.Label>Тооцоо</DropdownMenu.Label>
+        <AddTransactionItem
+          journal={TrJournalEnum.RECEIVABLE}
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Авлага
+        </AddTransactionItem>
+        <AddTransactionItem
+          journal={TrJournalEnum.PAYABLE}
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Өглөг
+        </AddTransactionItem>
 
         <DropdownMenu.Label>Бараа материал</DropdownMenu.Label>
         <AddTransactionItem
