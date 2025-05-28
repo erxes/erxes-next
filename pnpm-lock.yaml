@@ -764,12 +764,6 @@ importers:
         specifier: workspace:^
         version: link:../../erxes-api-shared
 
-  backend/plugins/automations_api:
-    dependencies:
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../../erxes-api-shared
-
   backend/plugins/frontline_api:
     dependencies:
       aws-sdk:
@@ -790,12 +784,6 @@ importers:
       strip:
         specifier: ^3.0.0
         version: 3.0.0
-
-  backend/plugins/logs_api:
-    dependencies:
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../../erxes-api-shared
 
   backend/plugins/pos_api:
     dependencies:
@@ -819,6 +807,18 @@ importers:
         version: 3.0.0
 
   backend/plugins/sales_api:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+
+  backend/services/automations:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+
+  backend/services/logs:
     dependencies:
       erxes-api-shared:
         specifier: workspace:^
