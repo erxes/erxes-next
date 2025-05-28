@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { Accordion, DropdownMenu, Spinner } from 'erxes-ui';
+import { Accordion, DropdownMenu, Spinner, useConfirm } from 'erxes-ui';
 import { Ellipsis } from 'lucide-react';
+import { useState } from 'react';
 import { NewCategoryDrawer } from './NewCategoryDrawer';
-import { EditTopicDrawer } from './EditTopicDrawer';
 
 interface Topic {
   _id: string;
@@ -23,6 +22,8 @@ interface TopicListProps {
   selectedTopic: string | null;
   onTopicSelect: (topicId: string) => void;
   onCategorySelect: (categoryId: string) => void;
+  removeTopic: (topicId: string) => void;
+  onEditTopic: (topic: Topic) => void;
 }
 
 export function TopicList({
@@ -31,14 +32,15 @@ export function TopicList({
   selectedTopic,
   onTopicSelect,
   onCategorySelect,
+  removeTopic,
+  onEditTopic,
 }: TopicListProps) {
-  console.log('topics', topics);
-
-  const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
   const [isNewCategoryDrawerOpen, setIsNewCategoryDrawerOpen] = useState(false);
   const [selectedTopicForCategory, setSelectedTopicForCategory] = useState<
     string | null
   >(null);
+
+  const { confirm } = useConfirm();
 
   if (loading) {
     return (
@@ -48,13 +50,34 @@ export function TopicList({
     );
   }
 
+  const handleDeleteTopic = async (topic: Topic) => {
+    const categoryCount = topic.categories.length;
+    const message = `Are you sure you want to delete "${topic.title}"? This will also delete ${categoryCount} categories and all their associated articles. This action cannot be undone.`;
+
+    const confirmOptions = {
+      confirmationValue: 'delete',
+      description: 'This action is permanent and cannot be undone.',
+    };
+
+    try {
+      await confirm({
+        message,
+        options: confirmOptions,
+      });
+
+      removeTopic(topic._id);
+    } catch (error) {
+      console.error('Error deleting topic:', error);
+    }
+  };
+
   const renderTopicActions = (topic: Topic) => (
     <DropdownMenu>
-      <DropdownMenu.Trigger className="ml-2">
+      <DropdownMenu.Trigger className="ml-2 p-2">
         <Ellipsis className="w-4 h-4" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onClick={() => setEditingTopic(topic)}>
+        <DropdownMenu.Item onClick={() => onEditTopic(topic)}>
           Edit Topic
         </DropdownMenu.Item>
         <DropdownMenu.Item
@@ -64,6 +87,13 @@ export function TopicList({
           }}
         >
           Add Category
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item
+          onClick={() => handleDeleteTopic(topic)}
+          className="text-red-600"
+        >
+          Delete Topic
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
@@ -78,7 +108,7 @@ export function TopicList({
             value={topic._id}
             className="border-b"
           >
-            <Accordion.Trigger className="flex items-center justify-between w-full p-4 hover:bg-gray-50">
+            <Accordion.Trigger className="flex items-center justify-between w-full p-4">
               <div className="flex items-center justify-between w-full">
                 <span>{topic.title}</span>
                 {renderTopicActions(topic)}
@@ -106,14 +136,6 @@ export function TopicList({
           </Accordion.Item>
         ))}
       </Accordion>
-
-      {editingTopic && (
-        <EditTopicDrawer
-          topic={editingTopic}
-          isOpen={!!editingTopic}
-          onClose={() => setEditingTopic(null)}
-        />
-      )}
 
       <NewCategoryDrawer
         topicId={selectedTopicForCategory}

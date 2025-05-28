@@ -21,9 +21,7 @@ export const EDIT_TOPIC = gql`
 
 export const REMOVE_TOPIC = gql`
   mutation knowledgeBaseTopicsRemove($_id: String!) {
-    knowledgeBaseTopicsRemove(_id: $_id) {
-      _id
-    }
+    knowledgeBaseTopicsRemove(_id: $_id)
   }
 `;
 

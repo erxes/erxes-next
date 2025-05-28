@@ -79,8 +79,19 @@ const knowledgeBaseMutations = {
     { _id }: { _id: string },
     { user, models }: IContext,
   ) {
-    const topic = await models.KnowledgeBaseTopics.getTopic(_id);
+    // const topic = await models.KnowledgeBaseTopics.getTopic(_id);
     const removed = await models.KnowledgeBaseTopics.removeDoc(_id);
+    const categories = await models.KnowledgeBaseCategories.find({
+      topicId: _id,
+    });
+
+    for (const category of categories) {
+      await models.KnowledgeBaseArticles.deleteMany({
+        categoryId: category._id,
+      });
+
+      await models.KnowledgeBaseCategories.removeDoc(category._id);
+    }
 
     // TODO: implement logs
     // await putDeleteLog(

@@ -1,26 +1,39 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { TOPICS } from '../graphql/queries';
+import { REMOVE_TOPIC } from '../graphql/mutations';
 import { Button, Sidebar } from 'erxes-ui';
 import { TopicList } from './TopicList';
 import { ArticleList } from './ArticleList';
-import { NewTopicDrawer } from './NewTopicDrawer';
+import { TopicDrawer } from './TopicDrawer';
 
 export function KnowledgeBase() {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isNewTopicDrawerOpen, setIsNewTopicDrawerOpen] = useState(false);
+  const [isTopicDrawerOpen, setIsTopicDrawerOpen] = useState(false);
+  const [editingTopic, setEditingTopic] = useState<any>(null);
 
-  const { data: topicsData, loading: topicsLoading } = useQuery(TOPICS, {
+  const {
+    data: topicsData,
+    loading: topicsLoading,
+    refetch,
+  } = useQuery(TOPICS, {
     variables: {
       page: 1,
       perPage: 20,
     },
   });
 
+  const [removeTopic] = useMutation(REMOVE_TOPIC);
+
   const topics = topicsData?.knowledgeBaseTopics.list || [];
+
+  const handleCloseTopicDrawer = () => {
+    setIsTopicDrawerOpen(false);
+    setEditingTopic(null);
+  };
 
   return (
     <div className="flex h-full">
@@ -30,7 +43,7 @@ export function KnowledgeBase() {
           <Sidebar.GroupContent>
             <div className="p-4">
               <Button
-                onClick={() => setIsNewTopicDrawerOpen(true)}
+                onClick={() => setIsTopicDrawerOpen(true)}
                 className="w-full"
               >
                 New Topic
@@ -42,6 +55,19 @@ export function KnowledgeBase() {
               selectedTopic={selectedTopic}
               onTopicSelect={setSelectedTopic}
               onCategorySelect={setSelectedCategory}
+              removeTopic={(_id) =>
+                removeTopic({
+                  variables: {
+                    _id,
+                  },
+                }).then(() => {
+                  refetch();
+                })
+              }
+              onEditTopic={(topic) => {
+                setEditingTopic(topic);
+                setIsTopicDrawerOpen(true);
+              }}
             />
           </Sidebar.GroupContent>
         </Sidebar.Group>
@@ -60,9 +86,10 @@ export function KnowledgeBase() {
         {selectedCategory && <ArticleList categoryId={selectedCategory} />}
       </div>
 
-      <NewTopicDrawer
-        isOpen={isNewTopicDrawerOpen}
-        onClose={() => setIsNewTopicDrawerOpen(false)}
+      <TopicDrawer
+        topic={editingTopic}
+        isOpen={isTopicDrawerOpen}
+        onClose={handleCloseTopicDrawer}
       />
     </div>
   );

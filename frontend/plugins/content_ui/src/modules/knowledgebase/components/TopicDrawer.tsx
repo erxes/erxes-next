@@ -1,15 +1,26 @@
 'use client';
 
-import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
-import { ADD_TOPIC } from '../graphql/mutations';
+import { ADD_TOPIC, EDIT_TOPIC } from '../graphql/mutations';
 import { TOPICS } from '../graphql/queries';
 import { Form, Input, Upload, Editor, Sheet, Button, Textarea } from 'erxes-ui';
 import { IconUpload } from '@tabler/icons-react';
-// import { SelectSegment } from 'ui-modules';
 
-interface NewTopicDrawerProps {
+interface Topic {
+  _id: string;
+  title: string;
+  description: string;
+  code: string;
+  brandId: string;
+  color: string;
+  backgroundImage: string;
+  languageCode: string;
+  notificationSegmentId: string;
+}
+
+interface TopicDrawerProps {
+  topic?: Topic;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -25,21 +36,31 @@ interface TopicFormData {
   notificationSegmentId: string;
 }
 
-export function NewTopicDrawer({ isOpen, onClose }: NewTopicDrawerProps) {
+export function TopicDrawer({ topic, isOpen, onClose }: TopicDrawerProps) {
+  const isEditing = !!topic;
+
   const form = useForm<TopicFormData>({
     defaultValues: {
-      code: '',
-      title: '',
-      description: '',
-      brandId: '',
-      color: '',
-      backgroundImage: '',
-      languageCode: '',
-      notificationSegmentId: '',
+      code: topic?.code || '',
+      title: topic?.title || '',
+      description: topic?.description || '',
+      brandId: topic?.brandId || '',
+      color: topic?.color || '',
+      backgroundImage: topic?.backgroundImage || '',
+      languageCode: topic?.languageCode || '',
+      notificationSegmentId: topic?.notificationSegmentId || '',
     },
   });
 
-  const [addTopic, { loading }] = useMutation(ADD_TOPIC, {
+  const [addTopic, { loading: adding }] = useMutation(ADD_TOPIC, {
+    refetchQueries: [{ query: TOPICS }],
+    onCompleted: () => {
+      onClose();
+      form.reset();
+    },
+  });
+
+  const [editTopic, { loading: editing }] = useMutation(EDIT_TOPIC, {
     refetchQueries: [{ query: TOPICS }],
     onCompleted: () => {
       onClose();
@@ -48,18 +69,27 @@ export function NewTopicDrawer({ isOpen, onClose }: NewTopicDrawerProps) {
   });
 
   const onSubmit = (data: TopicFormData) => {
-    addTopic({
-      variables: {
-        input: data,
-      },
-    });
+    if (isEditing && topic) {
+      editTopic({
+        variables: {
+          _id: topic._id,
+          input: data,
+        },
+      });
+    } else {
+      addTopic({
+        variables: {
+          input: data,
+        },
+      });
+    }
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <Sheet.View className="sm:max-w-lg p-0">
         <Sheet.Header className="border-b gap-3">
-          <Sheet.Title>New Topic</Sheet.Title>
+          <Sheet.Title>{isEditing ? 'Edit Topic' : 'New Topic'}</Sheet.Title>
           <Sheet.Close />
         </Sheet.Header>
 
@@ -183,30 +213,18 @@ export function NewTopicDrawer({ isOpen, onClose }: NewTopicDrawerProps) {
               )}
             />
 
-            {/* <Form.Field
-              control={form.control}
-              name="notificationSegmentId"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Notification Segment</Form.Label>
-                  <Form.Control>
-                    <SelectSegment
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      nullable
-                    />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            /> */}
-
             <div className="flex justify-end space-x-2">
               <Button onClick={onClose} variant="outline">
                 Cancel
               </Button>
-              <Button type="submit" disabled={loading}>
-                {loading ? 'Creating...' : 'Create Topic'}
+              <Button type="submit" disabled={adding || editing}>
+                {adding || editing
+                  ? isEditing
+                    ? 'Saving...'
+                    : 'Creating...'
+                  : isEditing
+                  ? 'Save Changes'
+                  : 'Create Topic'}
               </Button>
             </div>
           </form>
