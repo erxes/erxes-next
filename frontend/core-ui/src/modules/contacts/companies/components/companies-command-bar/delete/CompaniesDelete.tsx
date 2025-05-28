@@ -1,21 +1,21 @@
 import { Button } from 'erxes-ui/components';
 import { IconTrash } from '@tabler/icons-react';
 import { useConfirm } from 'erxes-ui/hooks';
-import { useRemoveCustomers } from '@/contacts/customers/hooks/useRemoveCustomers';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
+import { useRemoveCompanies } from '@/contacts/companies/hooks/useRemoveCompanies';
 import { Row } from '@tanstack/table-core';
-import { ICustomer } from '@/contacts/types/customerType';
+import { TCompany } from '@/contacts/types/companyType';
 
-export const CustomersDelete = ({
-  customerIds,
+export const CompaniesDelete = ({
+  companyIds,
   rows,
 }: {
-  customerIds: string[];
-  rows: Row<ICustomer>[];
+  companyIds: string[];
+  rows: Row<TCompany>[];
 }) => {
   const { confirm } = useConfirm();
-  const { removeCustomers } = useRemoveCustomers();
+  const { removeCompanies } = useRemoveCompanies();
   const { toast } = useToast();
   return (
     <Button
@@ -23,9 +23,12 @@ export const CustomersDelete = ({
       className="text-destructive"
       onClick={() =>
         confirm({
-          message: `Are you sure you want to delete the ${customerIds.length} selected customers?`,
+          message: `Are you sure you want to delete the ${companyIds.length} selected companies?`,
         }).then(() => {
-          removeCustomers(customerIds, {
+          removeCompanies({
+            variables: {
+              companyIds,
+            },
             onError: (e: ApolloError) => {
               toast({
                 title: 'Error',
