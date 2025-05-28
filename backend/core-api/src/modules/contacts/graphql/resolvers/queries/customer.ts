@@ -26,12 +26,7 @@ export const customerQueries = {
     const { list, totalCount, pageInfo } =
       await cursorPaginate<ICustomerDocument>({
         model: models.Customers,
-        params: {
-          ...params,
-          orderBy: {
-            createdAt: -1,
-          }
-        },
+        params,
         query: filter,
       });
 

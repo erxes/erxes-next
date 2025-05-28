@@ -99,12 +99,7 @@ export const tagQueries = {
 
     const { list, totalCount, pageInfo } = await cursorPaginate({
       model: models.Tags,
-      params: {
-        ...params,
-        orderBy: {
-          order: 1,
-        },
-      },
+      params,
       query: filter,
     });
 
