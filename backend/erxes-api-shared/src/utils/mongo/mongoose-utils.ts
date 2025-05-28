@@ -121,17 +121,18 @@ export const cursorPaginate = async <T extends Document>({
     throw new Error('Limit must be greater than 0');
   }
 
+  if (!('_id' in orderBy)) {
+    orderBy['_id'] = 1;
+  }
+
   const baseQuery: mongoose.FilterQuery<T> = { ...query };
 
   const baseSort: Record<string, SortOrder> = { ...orderBy };
 
-  for (const [field, sortOrder] of Object.entries(orderBy)) {
-    baseSort[field] =
-      direction === 'backward' ? (sortOrder === 1 ? -1 : 1) : sortOrder;
-  }
-
-  if (!('_id' in baseSort)) {
-    baseSort['_id'] = 1;
+  if (direction === 'backward') {
+    for (const key in baseSort) {
+      baseSort[key] = baseSort[key] === 1 ? -1 : 1;
+    }
   }
 
   const cursor = getCursor(params);
@@ -139,16 +140,13 @@ export const cursorPaginate = async <T extends Document>({
   if (cursor) {
     const conditions: Record<string, any> = {};
 
-    const sortKeys = Object.keys(orderBy);
-
-    if (!sortKeys.includes('_id')) {
-      sortKeys.push('_id');
-    }
+    const sortKeys = Object.keys(baseSort);
 
     const orConditions: Record<string, any>[] = [];
 
     for (let i = 0; i < sortKeys.length; i++) {
       const field = sortKeys[i];
+
       const andCondition: Record<string, any> = {};
 
       for (let j = 0; j < i; j++) {
@@ -161,6 +159,7 @@ export const cursorPaginate = async <T extends Document>({
         direction === 'forward',
         cursorMode,
       );
+
       andCondition[field] = { [fieldOperator]: cursor[field] };
 
       orConditions.push(andCondition);

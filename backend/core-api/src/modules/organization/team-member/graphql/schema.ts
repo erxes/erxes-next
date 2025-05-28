@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 const commonDetailFields = `
   avatar: String
   coverPhoto: String
@@ -111,6 +113,8 @@ export const types = `
     score: Float
     leaderBoardPosition: Int
     employeeId: String
+
+    cursor: String
   }
 
   type UserMovement {
@@ -165,7 +169,7 @@ const commonSelector = `
 `;
 
 export const queries = `
-  users(sortField: String, limit: Int, cursor: String, direction: CURSOR_DIRECTION, status: String, excludeIds: Boolean, ${commonSelector}): UsersListResponse
+  users(sortField: String, status: String, excludeIds: Boolean, ${commonSelector} ${GQL_CURSOR_PARAM_DEFS}): UsersListResponse
   allUsers(isActive: Boolean,ids:[String],assignedToMe:String,searchValue:String): [User]
   userDetail(_id: String): User
   usersTotalCount(${commonSelector}): Int
