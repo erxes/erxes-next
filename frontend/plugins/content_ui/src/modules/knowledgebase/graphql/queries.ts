@@ -185,7 +185,6 @@ export const CATEGORY_LAST = gql`
 
 export const ARTICLES = gql`
   ${USER_FRAGMENT}
-  ${CATEGORY_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
   query knowledgeBaseArticles(
     $page: Int

@@ -1,11 +1,12 @@
 'use client';
 
 import { useMutation } from '@apollo/client';
+import { IconUpload } from '@tabler/icons-react';
+import { Button, Form, Input, Sheet, Textarea, Upload } from 'erxes-ui';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ADD_TOPIC, EDIT_TOPIC } from '../graphql/mutations';
 import { TOPICS } from '../graphql/queries';
-import { Form, Input, Upload, Editor, Sheet, Button, Textarea } from 'erxes-ui';
-import { IconUpload } from '@tabler/icons-react';
 
 interface Topic {
   _id: string;
@@ -41,16 +42,42 @@ export function TopicDrawer({ topic, isOpen, onClose }: TopicDrawerProps) {
 
   const form = useForm<TopicFormData>({
     defaultValues: {
-      code: topic?.code || '',
-      title: topic?.title || '',
-      description: topic?.description || '',
-      brandId: topic?.brandId || '',
-      color: topic?.color || '',
-      backgroundImage: topic?.backgroundImage || '',
-      languageCode: topic?.languageCode || '',
-      notificationSegmentId: topic?.notificationSegmentId || '',
+      code: '',
+      title: '',
+      description: '',
+      brandId: '',
+      color: '',
+      backgroundImage: '',
+      languageCode: '',
+      notificationSegmentId: '',
     },
   });
+
+  useEffect(() => {
+    if (topic) {
+      form.reset({
+        code: topic.code || '',
+        title: topic.title || '',
+        description: topic.description || '',
+        brandId: topic.brandId || '',
+        color: topic.color || '',
+        backgroundImage: topic.backgroundImage || '',
+        languageCode: topic.languageCode || '',
+        notificationSegmentId: topic.notificationSegmentId || '',
+      });
+    } else {
+      form.reset({
+        code: '',
+        title: '',
+        description: '',
+        brandId: '',
+        color: '',
+        backgroundImage: '',
+        languageCode: '',
+        notificationSegmentId: '',
+      });
+    }
+  }, [topic, form]);
 
   const [addTopic, { loading: adding }] = useMutation(ADD_TOPIC, {
     refetchQueries: [{ query: TOPICS }],

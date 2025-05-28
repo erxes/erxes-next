@@ -100,6 +100,18 @@ type KnowledgeBaseLoader {
     pageInfo: PageInfo
     totalCount: Int,
   }
+
+  type KnowledgeBaseCategoriesListResponse {
+    list: [KnowledgeBaseCategory],
+    pageInfo: PageInfo
+    totalCount: Int,
+  }
+
+  type KnowledgeBaseArticlesListResponse {
+    list: [KnowledgeBaseArticle],
+    pageInfo: PageInfo
+    totalCount: Int,
+  }
 `;
 
 export const inputs = `
@@ -150,7 +162,6 @@ input KnowledgeBaseTopicInput {
   }
 `;
 
-
 export const queries = `
   knowledgeBaseTopics(page: Int, perPage: Int, brandId: String, codes: [String]): KnowledgeBaseTopicsListResponse
   knowledgeBaseTopicDetail(_id: String!): KnowledgeBaseTopic
@@ -161,7 +172,7 @@ export const queries = `
   knowledgeBaseCategoriesTotalCount(topicIds: [String], codes: [String]): Int
   knowledgeBaseCategoriesGetLast: KnowledgeBaseCategory
 
-  knowledgeBaseArticles(searchValue: String, page: Int, perPage: Int, categoryIds: [String],articleIds:[String], codes: [String], topicIds: [String], sortField:String, sortDirection: Int, status: String): [KnowledgeBaseArticle]
+  knowledgeBaseArticles(searchValue: String, page: Int, perPage: Int, categoryIds: [String],articleIds:[String], codes: [String], topicIds: [String], sortField:String, sortDirection: Int, status: String): KnowledgeBaseArticlesListResponse
   knowledgeBaseArticleDetail(_id: String!): KnowledgeBaseArticle
   knowledgeBaseArticleDetailAndIncViewCount(_id: String!): KnowledgeBaseArticle
   knowledgeBaseArticlesTotalCount(categoryIds: [String], codes: [String], articleIds:[String], topicIds: [String], status: String): Int

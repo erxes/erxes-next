@@ -2,36 +2,35 @@
 
 import { useQuery } from '@apollo/client';
 import { ARTICLES } from '../graphql/queries';
-import { Spinner, Table } from 'erxes-ui';
-import dayjs from 'dayjs';
+import { Button, Spinner, DropdownMenu } from 'erxes-ui';
+import { Ellipsis } from 'lucide-react';
 
 interface Article {
   _id: string;
   title: string;
-  createdUser?: {
-    details?: {
-      fullName?: string;
+  summary: string;
+  status: string;
+  createdBy: {
+    details: {
+      fullName: string;
     };
-    email?: string;
   };
   createdDate: string;
-  status: string;
 }
 
 interface ArticleListProps {
   categoryId: string;
+  onEditArticle: (article: Article) => void;
 }
 
-export function ArticleList({ categoryId }: ArticleListProps) {
+export function ArticleList({ categoryId, onEditArticle }: ArticleListProps) {
   const { data, loading } = useQuery(ARTICLES, {
     variables: {
-      categoryIds: [categoryId],
+      categoryId,
       page: 1,
       perPage: 20,
     },
   });
-
-  const articles = data?.knowledgeBaseArticles?.list || [];
 
   if (loading) {
     return (
@@ -41,44 +40,44 @@ export function ArticleList({ categoryId }: ArticleListProps) {
     );
   }
 
-  if (articles.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-gray-500">
-        <img
-          src="/images/empty.svg"
-          alt="No articles"
-          className="w-32 h-32 mb-4"
-        />
-        <p>No articles found</p>
-      </div>
-    );
-  }
+  const articles = data?.knowledgeBaseArticles.list || [];
 
   return (
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.Head>Title</Table.Head>
-          <Table.Head>Created By</Table.Head>
-          <Table.Head>Created Date</Table.Head>
-          <Table.Head>Status</Table.Head>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {articles.map((article: Article) => (
-          <Table.Row key={article._id}>
-            <Table.Cell>{article.title}</Table.Cell>
-            <Table.Cell>
-              {article.createdUser?.details?.fullName ||
-                article.createdUser?.email}
-            </Table.Cell>
-            <Table.Cell>
-              {dayjs(article.createdDate).format('DD/MM/YYYY')}
-            </Table.Cell>
-            <Table.Cell>{article.status}</Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
+    <div className="space-y-4">
+      {articles.map((article: Article) => (
+        <div
+          key={article._id}
+          className="flex items-center justify-between p-4 border rounded-lg"
+        >
+          <div>
+            <h3 className="text-lg font-medium">{article.title}</h3>
+            <p className="text-sm text-gray-500">{article.summary}</p>
+            <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+              <span>Status: {article.status}</span>
+              <span>By: {article.createdBy.details.fullName}</span>
+              <span>
+                Created: {new Date(article.createdDate).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+          <DropdownMenu>
+            <DropdownMenu.Trigger asChild>
+              <Button variant="ghost" size="icon">
+                <Ellipsis className="w-4 h-4" />
+              </Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+              <DropdownMenu.Item onClick={() => onEditArticle(article)}>
+                Edit Article
+              </DropdownMenu.Item>
+              <DropdownMenu.Separator />
+              <DropdownMenu.Item className="text-red-600">
+                Delete Article
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu>
+        </div>
+      ))}
+    </div>
   );
 }
