@@ -6,33 +6,39 @@ import {
   SelectBranch,
   SelectDepartment,
 } from 'ui-modules';
-import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
+import { IAccount } from '~/modules/settings/account/types/Account';
 
 export const AccountField = ({
   form,
   index,
-  journal,
+  filter,
 }: ICommonFieldProps & {
-  journal: TrJournalEnum;
-}) => (
-  <Form.Field
-    control={form.control}
-    name={`trDocs.${index}.details.0.accountId`}
-    render={({ field }) => (
-      <Form.Item>
-        <Form.Label>{TR_JOURNAL_LABELS[journal]} account</Form.Label>
-        <Form.Control>
-          <SelectAccount
-            value={field.value || ''}
-            onValueChange={field.onChange}
-            journal={journal}
-          />
-        </Form.Control>
-        <Form.Message />
-      </Form.Item>
-    )}
-  />
-);
+  filter?: any;
+}) => {
+  const onChangeAccount = (account: IAccount) => {
+    form.setValue(`trDocs.${index}.details.0.account`, account as any);
+  }
+  return (
+    <Form.Field
+      control={form.control}
+      name={`trDocs.${index}.details.0.accountId`}
+      render={({ field }) => (
+        <Form.Item>
+          <Form.Label>Account</Form.Label>
+          <Form.Control>
+            <SelectAccount
+              value={field.value || ''}
+              onValueChange={field.onChange}
+              onCallback={onChangeAccount}
+              defaultFilter={{ ...filter }}
+            />
+          </Form.Control>
+          <Form.Message />
+        </Form.Item>
+      )}
+    />
+  )
+};
 
 export const SideField = ({
   form,

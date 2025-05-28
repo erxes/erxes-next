@@ -19,7 +19,7 @@ export const ctaxSchema = z.object({
 
 export const baseTrDetailSchema = z.object({
   _id: z.string(),
-  transactionId: z.string(),
+  transactionId: z.string().nullish(),
 
   accountId: z.string().nullish().refine((val) =>
     val?.length,
@@ -46,12 +46,33 @@ export const baseTrDetailSchema = z.object({
   productId: z.string().nullish(),
   count: z.number().nullish(),
   unitPrice: z.number().nullish(),
+
+  account: z.object({
+    _id: z.string(),
+    code: z.string(),
+    name: z.string(),
+    currency: z.string(),
+    kind: z.string(),
+    branchId: z.string().optional(),
+    departmentId: z.string().optional(),
+    journal: z.string(),
+  }).nullish()
 });
+
+export const currencyDetailSchema = z.object({
+  currency: z.string().nullish(),
+  currencyAmount: z.number().nullish(),
+  customRate: z.number().nullish(),
+  spotRate: z.number().nullish(),
+  followInfos: z.object({
+    currencyDiffAccountId: z.string(),
+  }).nullish(),
+})
 
 export const baseTransactionSchema = z.object({
   _id: z.string(),
-  ptrId: z.string(),
-  parentId: z.string(),
+  ptrId: z.string().optional(),
+  parentId: z.string().optional(),
 
   originId: z.string().nullish(),
   followType: z.string().nullish(),
@@ -69,10 +90,9 @@ export const baseTransactionSchema = z.object({
   ...vatSchema.shape,
   ...ctaxSchema.shape,
 
-  sumDt: z.number(),
-  sumCt: z.number(),
+  sumDt: z.number().optional(),
+  sumCt: z.number().optional(),
   extraData: z.object({}).nullish(),
-
 });
 
 // export const inventorySchema = z.object({
@@ -91,6 +111,11 @@ export const transactionCashSchema = z.object({
   journal: z.literal(TrJournalEnum.CASH),
   ...baseTransactionSchema.shape,
 }).extend({
+  details: z.array(z.object({
+    ...baseTrDetailSchema.shape,
+    ...currencyDetailSchema.shape,
+  })),
+}).extend({
   customerId: z.string(),
   hasVat: z.boolean(),
   hasCtax: z.boolean(),
@@ -105,8 +130,17 @@ export const transactionBankSchema = z.object({
   hasCtax: z.boolean(),
 });
 
-export const transactionDebtSchema = z.object({
-  journal: z.literal(TrJournalEnum.DEBT),
+export const transactionReceivableSchema = z.object({
+  journal: z.literal(TrJournalEnum.RECEIVABLE),
+  ...baseTransactionSchema.shape,
+}).extend({
+  customerId: z.string(),
+  hasVat: z.boolean(),
+  hasCtax: z.boolean(),
+});
+
+export const transactionPayableSchema = z.object({
+  journal: z.literal(TrJournalEnum.PAYABLE),
   ...baseTransactionSchema.shape,
 }).extend({
   customerId: z.string(),
@@ -150,11 +184,12 @@ export const transactionTaxSchema = z.object({
 export const trDocSchema = z
   .discriminatedUnion('journal', [
     transactionMainSchema,
-    transactionBankSchema,
     transactionCashSchema,
+    transactionBankSchema,
+    transactionReceivableSchema,
+    transactionPayableSchema,
     // transactionInvIncomeSchema,
     // transactionInvOutSchema,
-    transactionDebtSchema,
     // transactionInventorySchema,
     // transactionFixedAssetSchema,
     transactionTaxSchema,
