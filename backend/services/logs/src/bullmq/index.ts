@@ -1,14 +1,13 @@
+import { ILogDocument } from 'erxes-api-shared/core-types';
 import {
   createMQWorkerWithListeners,
   sendWorkerQueue,
 } from 'erxes-api-shared/utils';
-import Redis from 'ioredis';
-import { handleMongoChangeEvent } from './mongo';
-import { handleAfterProcess } from './afterProccess';
-import { IJobData } from '~/types';
-import { AFTER_PROCESS_CONSTANTS, LOG_STATUSES } from '~/constants';
 import { generateModels } from '~/connectionResolvers';
-import { ILogDocument } from 'erxes-api-shared/core-types';
+import { AFTER_PROCESS_CONSTANTS, LOG_STATUSES } from '~/constants';
+import { IJobData } from '~/types';
+import { handleAfterProcess } from './afterProcess';
+import { handleMongoChangeEvent } from './mongo';
 
 export const initMQWorkers = async (redis: any) => {
   console.info('Starting worker ...');

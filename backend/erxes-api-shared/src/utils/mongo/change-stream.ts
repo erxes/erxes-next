@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 import { sendWorkerQueue } from '../mq-worker';
-import { redis } from '../redis';
-import { getEnv } from '../utils';
 const activeStreams = new Map<string, any>();
 
 // Add a cleanup function to properly close all streams when needed
 export const cleanupChangeStreams = () => {
+  if (!activeStreams.size) {
+    return;
+  }
+
   activeStreams.forEach((stream, modelName) => {
     console.log(`Closing change stream for model: ${modelName}`);
     try {

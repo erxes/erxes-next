@@ -12,12 +12,11 @@ export const automationsRouter = t.router({
       .query(async ({ input, ctx }) => {
         const { query } = input;
         const { models } = ctx;
-        const result = await models.Automations.find({
+        return await models.Automations.find({
           'triggers.type': query.triggerType,
           'triggers.config.botId': query.botId,
           status: 'active',
         }).lean();
-        return result;
       }),
 
     count: t.procedure

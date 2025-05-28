@@ -11,7 +11,7 @@ import { sendTRPCMessage, sendWorkerMessage } from 'erxes-api-shared/utils';
 import { ACTIONS } from '~/constants';
 import { setActionWait } from './actions/wait';
 import { IModels } from '~/connectionResolver';
-import { isInSegment } from './segments/uitls';
+import { isInSegment } from './segments/utils';
 import { handleEmail } from './actions/email';
 
 export const getActionsMap = async (actions: IAction[]) => {
@@ -166,7 +166,7 @@ export const executeActions = async (
           execution,
         });
       } catch (err) {
-        actionResponse = err.messsage;
+        actionResponse = err.message;
       }
     }
 
@@ -373,7 +373,7 @@ export const calculateExecution = async ({
     targetId: target._id,
     target,
     status: AUTOMATION_EXECUTION_STATUS.ACTIVE,
-    description: `Met enrollement criteria`,
+    description: `Met enrollment criteria`,
     createdAt: new Date(),
   });
 };

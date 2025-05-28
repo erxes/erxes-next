@@ -126,7 +126,7 @@ export const doWaitingResponseAction = async (
     throw new Error('There are no optional connections');
   }
 
-  const optionalConnects = config.optionalConnects;
+  const { optionalConnects = [] } = config || {};
   const { propertyName, general } = objToCheck;
 
   for (const target of targets) {

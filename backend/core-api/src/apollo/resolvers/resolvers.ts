@@ -2,7 +2,7 @@ import contactResolvers from '../../modules/contacts/graphql/resolvers/customRes
 import productResolvers from '../../modules/products/graphql/resolvers/customResolvers';
 import segmentResolvers from '../../modules/segments/graphql/resolvers/customResolvers';
 import structureResolvers from '~/modules/organization/structure/graphql/resolvers/customResolvers';
-import logResolvers from '../../modules/logs/graphql/resolvers/customResolver';
+import logResolvers from '../../modules/logs/graphql/resolvers/customResolvers';
 
 export const customResolvers = {
   ...contactResolvers,
