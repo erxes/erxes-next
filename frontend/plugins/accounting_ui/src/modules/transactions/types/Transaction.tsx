@@ -42,6 +42,7 @@ interface ICommontTr {
   journal: string;
   ptrStatus?: string;
   originId?: string;
+  followType?: string;
   follows?: {
     type: string;
     id: string;

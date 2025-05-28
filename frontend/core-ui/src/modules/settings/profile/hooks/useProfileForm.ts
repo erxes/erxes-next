@@ -6,7 +6,7 @@ import { z } from 'zod';
 export const profileValidationSchema = z
   .object({
     details: z.object({
-      avatar: z.any(),
+      avatar: z.string().optional().nullable(),
       firstName: z.string(),
       lastName: z.string(),
       middleName: z.string().optional(),
@@ -23,7 +23,7 @@ export const profileValidationSchema = z
         facebook: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?facebook\.com\/[A-Za-z0-9._-]+$/, {
+          .regex(/^https:\/\/(www\.)?facebook\.com\/((profile\.php\?id=\d+)|([A-Za-z0-9._-]+))\/?$/, {
             message: 'Invalid Facebook URL',
           })
           .optional()
@@ -31,8 +31,8 @@ export const profileValidationSchema = z
         twitter: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?twitter\.com\/[A-Za-z0-9._-]+$/, {
-            message: 'Invalid Twitter URL',
+          .regex(/^https:\/\/(www\.)?(twitter\.com|x\.com)\/[A-Za-z0-9._-]+\/?$/, {
+            message: 'Invalid Twitter/X URL',
           })
           .optional()
           .or(z.literal('')),
@@ -44,7 +44,7 @@ export const profileValidationSchema = z
         discord: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?discord\.(com|gg)\/[A-Za-z0-9]+$/, {
+          .regex(/^https:\/\/(www\.)?discord\.(com|gg)\/[A-Za-z0-9-]+\/?$/, {
             message: 'Invalid Discord URL',
           })
           .optional()
@@ -52,7 +52,7 @@ export const profileValidationSchema = z
         gitHub: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?github\.com\/[A-Za-z0-9._-]+$/, {
+          .regex(/^https:\/\/(www\.)?github\.com\/[A-Za-z0-9._-]+\/?$/, {
             message: 'Invalid GitHub URL',
           })
           .optional()
@@ -60,7 +60,7 @@ export const profileValidationSchema = z
         instagram: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._-]+$/, {
+          .regex(/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._-]+\/?$/, {
             message: 'Invalid Instagram URL',
           })
           .optional()
@@ -89,6 +89,7 @@ const useProfileForm = () => {
         workStartedDate: undefined,
         position: '',
         location: '',
+        employeeId: '',
       },
       links: {
         facebook: '',
@@ -100,7 +101,6 @@ const useProfileForm = () => {
       },
       username: '',
       email: '',
-      employeeId: '',
       positionIds: [],
     },
     resolver: zodResolver(profileValidationSchema),

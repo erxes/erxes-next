@@ -9,7 +9,8 @@ import {
   DescriptionField,
   SideField,
 } from './../GeneralFormFields';
-import { TaxForm } from '../TaxForm';
+import { VatForm } from '../helpers/VatForm';
+import { CtaxForm } from '../helpers/CtaxForm';
 import { TR_SIDES, TrJournalEnum } from '../../../types/constants';
 
 export const CashTransaction = ({
@@ -29,7 +30,8 @@ export const CashTransaction = ({
       <BranchField form={form} index={index} />
       <DepartmentField form={form} index={index} />
       <DescriptionField form={form} index={index} />
-      <TaxForm form={form} journalIndex={index} isWithTax={true} isSameSide={false} />
+      <VatForm form={form} journalIndex={index} isWithTax={true} isSameSide={false} />
+      <CtaxForm form={form} journalIndex={index} isWithTax={true} isSameSide={false} />
     </div>
   );
 };

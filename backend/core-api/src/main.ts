@@ -3,7 +3,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import * as http from 'http';
-import mongoose from 'mongoose';
 import { appRouter } from '~/init-trpc';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
@@ -15,10 +14,10 @@ import {
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
 
+import './automations';
+import { generateModels } from './connectionResolvers';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
-import { generateModels, IModels } from './connectionResolvers';
-import './automations';
 import './segments';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;

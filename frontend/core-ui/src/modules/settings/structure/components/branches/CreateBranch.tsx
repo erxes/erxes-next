@@ -44,7 +44,6 @@ export const CreateBranch = () => {
 
   const submitHandler: SubmitHandler<TBranchForm> = React.useCallback(
     async (data) => {
-      console.log('data', data);
       handleAdd({
         variables: data,
         onCompleted: () => {
