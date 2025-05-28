@@ -1,5 +1,5 @@
-import { IUserDocument } from './modules/team-member/user';
 import { SortOrder } from 'mongoose';
+import { IUserDocument } from './modules/team-member/user';
 
 export interface IRule {
   kind: string;
@@ -19,8 +19,8 @@ export interface ICursorPaginateParams {
   limit?: number;
   cursor?: string | null;
   direction?: 'forward' | 'backward';
-  sortField?: string;
-  orderBy? : Record<string, SortOrder>;
+  cursorMode?: 'inclusive' | 'exclusive';
+  orderBy?: Record<string, SortOrder>;
 }
 
 export interface ICursorPaginateResult<T> {
@@ -28,8 +28,8 @@ export interface ICursorPaginateResult<T> {
   pageInfo: {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
-    startCursor: string | undefined;
-    endCursor: string | undefined;
+    startCursor: string | null;
+    endCursor: string | null;
   };
   totalCount: number;
 }

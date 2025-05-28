@@ -20,7 +20,7 @@ export const customerQueries = {
     params: ICustomerQueryFilterParams,
     { models }: IContext,
   ) {
-    const filter: FilterQuery<ICustomerQueryFilterParams> =
+    const filter: FilterQuery<ICustomerDocument> =
       await generateFilter(params, models);
 
     const { list, totalCount, pageInfo } =

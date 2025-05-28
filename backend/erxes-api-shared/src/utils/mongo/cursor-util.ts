@@ -5,49 +5,55 @@ export interface CursorData {
   [key: string]: any;
 }
 
-export interface ObjectRecord {
-  _id: string;
-  [key: string]: any;
-  createdAt: string;
-  updatedAt: string;
-}
+export type PaginationInfo = {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+};
 
 export const computeOperator = (
   isAscending: boolean,
   isForwardPagination: boolean,
+  cursorMode: 'inclusive' | 'exclusive',
 ): string => {
-  return isAscending
-    ? isForwardPagination
-      ? '$gte'
-      : '$lte'
-    : isForwardPagination
-    ? '$lte'
-    : '$gte';
+  const operatorMap: Record<'inclusive' | 'exclusive', string[][]> = {
+    inclusive: [
+      ['$gte', '$lte'], // isAscending = true
+      ['$lte', '$gte'], // isAscending = false
+    ],
+    exclusive: [
+      ['$gt', '$lt'], // isAscending = true
+      ['$lt', '$gt'], // isAscending = false
+    ],
+  };
+
+  return operatorMap[cursorMode][isAscending ? 0 : 1][
+    isForwardPagination ? 0 : 1
+  ];
 };
 
 export const decodeCursor = (cursor: string): CursorData => {
   try {
     return JSON.parse(Buffer.from(cursor, 'base64').toString());
-  } catch (err) {
+  } catch {
     throw new Error(`Invalid cursor: ${cursor}`);
   }
 };
 
-export const encodeCursor = <T extends ObjectRecord = ObjectRecord>(
-  objectRecord: T,
+export const encodeCursor = <T extends { [key: string]: any }>(
+  document: T,
   order: Record<string, SortOrder> | undefined,
 ): string => {
   const orderByValues: Record<string, any> = {};
 
-  const orderByKeys = Object.keys(order ?? {});
+  const orderByKeys: string[] = Object.keys(order ?? {});
 
   for (const key of orderByKeys) {
-    orderByValues[key] = objectRecord[key];
+    orderByValues[key] = document[key];
   }
 
   const cursorData: CursorData = {
     ...orderByValues,
-    _id: objectRecord._id,
+    _id: document._id,
   };
 
   return Buffer.from(JSON.stringify(cursorData)).toString('base64');
@@ -65,10 +71,7 @@ export const getPaginationInfo = (
   direction: 'forward' | 'backward',
   hasCursor: boolean,
   hasMore: boolean,
-): {
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-} => {
+): PaginationInfo => {
   if (direction === 'backward') {
     return {
       hasNextPage: hasCursor,

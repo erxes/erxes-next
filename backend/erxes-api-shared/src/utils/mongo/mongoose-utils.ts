@@ -3,7 +3,6 @@ import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
 import {
   computeOperator,
-  decodeCursor,
   encodeCursor,
   getCursor,
   getPaginationInfo,
@@ -111,7 +110,12 @@ export const cursorPaginate = async <T extends Document>({
   params: ICursorPaginateParams;
   query: mongoose.FilterQuery<T>;
 }): Promise<ICursorPaginateResult<T>> => {
-  const { limit = 20, direction = 'forward', orderBy = {} } = params;
+  const {
+    limit = 20,
+    direction = 'forward',
+    orderBy = {},
+    cursorMode = 'exclusive',
+  } = params;
 
   if (limit < 1) {
     throw new Error('Limit must be greater than 0');
@@ -132,12 +136,8 @@ export const cursorPaginate = async <T extends Document>({
 
   const cursor = getCursor(params);
 
-  console.log('baseSort', baseSort);
-
   if (cursor) {
-    console.log('cursor', cursor);
-
-    const conditions: mongoose.FilterQuery<any> = {};
+    const conditions: Record<string, any> = {};
 
     const sortKeys = Object.keys(orderBy);
 
@@ -145,22 +145,21 @@ export const cursorPaginate = async <T extends Document>({
       sortKeys.push('_id');
     }
 
-    const orConditions: mongoose.FilterQuery<any>[] = [];
+    const orConditions: Record<string, any>[] = [];
 
     for (let i = 0; i < sortKeys.length; i++) {
       const field = sortKeys[i];
-      const andCondition: mongoose.FilterQuery<any> = {};
+      const andCondition: Record<string, any> = {};
 
-      // Add equality conditions for all previous fields
       for (let j = 0; j < i; j++) {
         const prevField = sortKeys[j];
         andCondition[prevField] = cursor[prevField];
       }
 
-      // Add comparison condition for current field with correct operator
       const fieldOperator = computeOperator(
         orderBy[field] === 1,
         direction === 'forward',
+        cursorMode,
       );
       andCondition[field] = { [fieldOperator]: cursor[field] };
 
@@ -172,9 +171,7 @@ export const cursorPaginate = async <T extends Document>({
     Object.assign(baseQuery, conditions);
   }
 
-  console.log('baseQuery', JSON.stringify(baseQuery, null, 2));
-
-  const _limit = Number(limit);
+  const _limit = Math.min(Number(limit), 50);
 
   try {
     const [documents, totalCount] = await Promise.all([
@@ -186,10 +183,7 @@ export const cursorPaginate = async <T extends Document>({
       model.countDocuments(query),
     ]);
 
-    const hasMore = documents.length > limit;
-
-    console.log('documents.length', documents.length)
-    console.log('hasMore', hasMore)
+    const hasMore = documents.length > _limit;
 
     if (hasMore) {
       documents.pop();
@@ -199,15 +193,21 @@ export const cursorPaginate = async <T extends Document>({
       documents.reverse();
     }
 
-    console.log('documents.length', documents.length)
+    if (documents.length === 0) {
+      return {
+        list: [],
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: Boolean(cursor),
+          startCursor: null,
+          endCursor: null,
+        },
+        totalCount,
+      };
+    }
 
-    const startCursor = encodeCursor(documents[0] as any, orderBy);
-    const endCursor = encodeCursor(
-      documents[documents.length - 1] as any,
-      orderBy,
-    );
-
-    console.log('endCursor', decodeCursor(endCursor));
+    const startCursor = encodeCursor<T>(documents[0], orderBy);
+    const endCursor = encodeCursor<T>(documents[documents.length - 1], orderBy);
 
     const { hasNextPage, hasPreviousPage } = getPaginationInfo(
       direction,
@@ -223,9 +223,11 @@ export const cursorPaginate = async <T extends Document>({
     };
 
     return {
-      list: documents.map((doc) => ({
-        ...doc,
-        cursor: encodeCursor(doc as any, orderBy),
+      // Currently adds cursor directly to data items;
+      // Can be replaced with a proper Relay-style `edges`/`node` structure.
+      list: documents.map((document) => ({
+        ...document,
+        cursor: encodeCursor(document, orderBy),
       })),
       pageInfo,
       totalCount,

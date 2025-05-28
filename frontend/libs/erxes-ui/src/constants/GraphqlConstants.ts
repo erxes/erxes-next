@@ -9,13 +9,15 @@ export const GQL_PAGE_INFO = `
 `;
 
 export const GQL_CURSOR_PARAM_DEFS = `
-  $direction: CURSOR_DIRECTION
   $cursor: String
+  $cursorMode: CURSOR_MODE
+  $direction: CURSOR_DIRECTION
   $limit: Int
 `;
 
 export const GQL_CURSOR_PARAMS = `
-  direction: $direction
   cursor: $cursor
+  cursorMode: $cursorMode
+  direction: $direction
   limit: $limit
 `;
