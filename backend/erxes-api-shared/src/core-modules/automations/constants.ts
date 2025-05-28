@@ -1,4 +1,4 @@
-export const AUTOMATION_PROPERTY_AUTOMATION_PROPERTY_OPERATORS = {
+export const AUTOMATION_PROPERTY_OPERATORS = {
   SET: 'set',
   CONCAT: 'concat',
   ADD: 'add',
