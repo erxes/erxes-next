@@ -147,9 +147,21 @@ export const uploadMedia = async (
 
   // 3. Upload to S3 (unchanged)
   const { AWS_BUCKET } = cachedUploadConfig;
-  try {
+try {
     const s3 = await createAWS();
-    const response = await fetch(url);
+
+   
+  // Additional security: Set timeout for fetch request
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    const response = await fetch(url, { 
+      signal: controller.signal,
+      redirect: 'error' // Prevent redirects that could bypass our validation
+    });
+    
+    clearTimeout(timeout);
+
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const buffer = Buffer.from(await response.arrayBuffer());
