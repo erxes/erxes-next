@@ -1,6 +1,6 @@
 import {
-    checkPermission,
-    moduleRequireLogin,
+  checkPermission,
+  moduleRequireLogin,
 } from 'erxes-api-shared/core-modules';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
@@ -67,12 +67,10 @@ const knowledgeBaseQueries = {
       sortDirection?: number;
       status?: string;
     },
-    { models }: IContext
+    { models }: IContext,
   ) {
     const selector: any = buildQuery(args);
     let sort: any = { createdDate: -1 };
-
-    const pageArgs = { page: args.page, perPage: args.perPage };
 
     if (args.topicIds && args.topicIds.length > 0) {
       const categoryIds = await models.KnowledgeBaseCategories.find({
@@ -88,10 +86,15 @@ const knowledgeBaseQueries = {
       sort = { [args.sortField]: args.sortDirection };
     }
 
-    const articles = models.KnowledgeBaseArticles.find(selector).sort(sort);
+    const { list, totalCount, pageInfo } = await cursorPaginate<ITopicDocument>(
+      {
+        model: models.KnowledgeBaseArticles,
+        params: args,
+        query: selector,
+      },
+    );
 
-    // return paginate(articles, pageArgs);
-    return []
+    return { list, totalCount, pageInfo };
   },
 
   /**
@@ -100,7 +103,7 @@ const knowledgeBaseQueries = {
   async knowledgeBaseArticleDetail(
     _root,
     { _id }: { _id: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     return findDetail(models.KnowledgeBaseArticles, _id);
   },
@@ -111,12 +114,12 @@ const knowledgeBaseQueries = {
   async knowledgeBaseArticleDetailAndIncViewCount(
     _root,
     { _id }: { _id: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     return models.KnowledgeBaseArticles.findOneAndUpdate(
       { _id },
       { $inc: { viewCount: 1 } },
-      { new: true }
+      { new: true },
     );
   },
 
@@ -142,7 +145,7 @@ const knowledgeBaseQueries = {
       codes: string[];
       icon: string;
     },
-    { models }: IContext
+    { models }: IContext,
   ) {
     const qry: any = buildQuery(args);
 
@@ -157,7 +160,7 @@ const knowledgeBaseQueries = {
     }
 
     // return paginate(categories, { page, perPage });
-    return []
+    return [];
   },
 
   /**
@@ -166,7 +169,7 @@ const knowledgeBaseQueries = {
   async knowledgeBaseCategoryDetail(
     _root,
     { _id }: { _id: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     return findDetail(models.KnowledgeBaseCategories, _id);
   },
@@ -177,7 +180,7 @@ const knowledgeBaseQueries = {
   async knowledgeBaseCategoriesTotalCount(
     _root,
     args: { topicIds: string[]; codes: string[] },
-    { models }: IContext
+    { models }: IContext,
   ) {
     const qry: any = buildQuery(args);
 
@@ -190,7 +193,7 @@ const knowledgeBaseQueries = {
   async knowledgeBaseCategoriesGetLast(
     _root,
     _args,
-    { commonQuerySelector, models }: IContext
+    { commonQuerySelector, models }: IContext,
   ) {
     return models.KnowledgeBaseCategories.findOne(commonQuerySelector).sort({
       createdDate: -1,
@@ -208,7 +211,7 @@ const knowledgeBaseQueries = {
         model: models.KnowledgeBaseTopics,
         params,
         query,
-      }
+      },
     );
 
     return { list, totalCount, pageInfo };
@@ -220,7 +223,7 @@ const knowledgeBaseQueries = {
   async knowledgeBaseTopicDetail(
     _root,
     { _id }: { _id: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     return findDetail(models.KnowledgeBaseTopics, _id);
   },
@@ -231,10 +234,10 @@ const knowledgeBaseQueries = {
   async knowledgeBaseTopicsTotalCount(
     _root,
     _args,
-    { commonQuerySelector, models }: IContext
+    { commonQuerySelector, models }: IContext,
   ) {
     return models.KnowledgeBaseTopics.find(
-      commonQuerySelector
+      commonQuerySelector,
     ).countDocuments();
   },
 };
@@ -245,19 +248,19 @@ checkPermission(
   knowledgeBaseQueries,
   'knowledgeBaseArticles',
   'showKnowledgeBase',
-  []
+  [],
 );
 checkPermission(
   knowledgeBaseQueries,
   'knowledgeBaseTopics',
   'showKnowledgeBase',
-  []
+  [],
 );
 checkPermission(
   knowledgeBaseQueries,
   'knowledgeBaseCategories',
   'showKnowledgeBase',
-  []
+  [],
 );
 
 export default knowledgeBaseQueries;

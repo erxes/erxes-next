@@ -297,8 +297,6 @@ export const loadTopicClass = (models: IModels) => {
         throw new Error('userId must be supplied');
       }
 
-      console.log(docFields);
-
       return models.KnowledgeBaseTopics.create({
         ...docFields,
         createdDate: new Date(),

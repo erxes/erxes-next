@@ -11,7 +11,6 @@ const resolvers: any = {
     ...queries,
   },
 
-
   ...apolloCustomScalars,
   ...customResolvers,
 };

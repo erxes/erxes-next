@@ -2,23 +2,26 @@
 
 import { useMutation } from '@apollo/client';
 import { IconUpload } from '@tabler/icons-react';
-import { Button, Form, Input, Sheet, Textarea, Upload, Select } from 'erxes-ui';
+import {
+  Button,
+  Editor,
+  Form,
+  IAttachment,
+  Input,
+  IPdfAttachment,
+  MultipleSelector,
+  ScrollArea,
+  Select,
+  Sheet,
+  Switch,
+  Textarea,
+  Upload,
+} from 'erxes-ui';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { REACTIONS } from '../constants';
 import { ADD_ARTICLE, EDIT_ARTICLE } from '../graphql/mutations';
 import { ARTICLES } from '../graphql/queries';
-
-interface ReactionChoice {
-  value: string;
-  label: string;
-}
-
-const REACTION_CHOICES: ReactionChoice[] = [
-  { value: 'like', label: 'Like' },
-  { value: 'dislike', label: 'Dislike' },
-  { value: 'helpful', label: 'Helpful' },
-  { value: 'not_helpful', label: 'Not Helpful' },
-];
 
 interface Article {
   _id: string;
@@ -27,11 +30,11 @@ interface Article {
   summary: string;
   content: string;
   status: string;
-  isPrivate: boolean;
-  reactionChoices: string[];
-  image: string;
-  attachments: string[];
-  pdfAttachment: string;
+  isPrivate?: boolean;
+  reactionChoices?: string[];
+  image?: IAttachment;
+  attachments?: IAttachment[];
+  pdfAttachment?: IPdfAttachment;
   categoryId: string;
 }
 
@@ -50,9 +53,9 @@ interface ArticleFormData {
   status: string;
   isPrivate: boolean;
   reactionChoices: string[];
-  image: string;
-  attachments: string[];
-  pdfAttachment: string;
+  image?: IAttachment;
+  attachments: IAttachment[];
+  pdfAttachment?: IPdfAttachment;
 }
 
 export function ArticleDrawer({
@@ -72,9 +75,9 @@ export function ArticleDrawer({
       status: 'draft',
       isPrivate: false,
       reactionChoices: [],
-      image: '',
+      image: undefined,
       attachments: [],
-      pdfAttachment: '',
+      pdfAttachment: undefined,
     },
   });
 
@@ -88,9 +91,9 @@ export function ArticleDrawer({
         status: article.status || 'draft',
         isPrivate: article.isPrivate || false,
         reactionChoices: article.reactionChoices || [],
-        image: article.image || '',
+        image: article.image,
         attachments: article.attachments || [],
-        pdfAttachment: article.pdfAttachment || '',
+        pdfAttachment: article.pdfAttachment,
       });
     } else {
       form.reset({
@@ -101,9 +104,9 @@ export function ArticleDrawer({
         status: 'draft',
         isPrivate: false,
         reactionChoices: [],
-        image: '',
+        image: undefined,
         attachments: [],
-        pdfAttachment: '',
+        pdfAttachment: undefined,
       });
     }
   }, [article, form]);
@@ -149,267 +152,320 @@ export function ArticleDrawer({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <Sheet.View className="sm:max-w-lg p-0">
-        <Sheet.Header className="border-b gap-3">
-          <Sheet.Title>
-            {isEditing ? 'Edit Article' : 'New Article'}
-          </Sheet.Title>
-          <Sheet.Close />
-        </Sheet.Header>
-
+      <Sheet.View
+        className="sm:max-w-lg p-0"
+        onEscapeKeyDown={(e) => {
+          e.preventDefault();
+        }}
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="p-4 space-y-4"
+            className="flex flex-col h-full overflow-hidden"
           >
-            <Form.Field
-              control={form.control}
-              name="code"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Code</Form.Label>
-                  <Form.Control>
-                    <Input {...field} placeholder="Enter article code" />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+            <Sheet.Header className="border-b gap-3">
+              <Sheet.Title>
+                {isEditing ? 'Edit Article' : 'New Article'}
+              </Sheet.Title>
+              <Sheet.Close />
+            </Sheet.Header>
+            <Sheet.Content className="flex-auto overflow-hidden">
+              <ScrollArea className="h-full">
+                <div className="p-4 space-y-4">
+                  <Form.Field
+                    control={form.control}
+                    name="code"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Code</Form.Label>
+                        <Form.Control>
+                          <Input {...field} placeholder="Enter article code" />
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control>
-                    <Input
-                      {...field}
-                      placeholder="Enter article title"
-                      required
-                    />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control>
+                          <Input
+                            {...field}
+                            placeholder="Enter article title"
+                            required
+                          />
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="summary"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Summary</Form.Label>
-                  <Form.Control>
-                    <Textarea {...field} placeholder="Enter article summary" />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="summary"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Summary</Form.Label>
+                        <Form.Control>
+                          <Textarea
+                            {...field}
+                            placeholder="Enter article summary"
+                          />
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Content</Form.Label>
-                  <Form.Control>
-                    <Textarea {...field} placeholder="Enter article content" />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Content</Form.Label>
+                        <Form.Control>
+                          <Editor
+                            initialContent={field.value}
+                            onChange={field.onChange}
+                            scope={'ArticleDrawerContentField'}
+                          />
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Status</Form.Label>
-                  <Form.Control>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <Select.Item value="draft">Draft</Select.Item>
-                      <Select.Item value="published">Published</Select.Item>
-                      <Select.Item value="archived">Archived</Select.Item>
-                    </Select>
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Status</Form.Label>
+                        <Form.Control>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <Select.Trigger>
+                              <Select.Value placeholder="Select Status" />
+                            </Select.Trigger>
+                            <Select.Content>
+                              <Select.Item value="draft">Draft</Select.Item>
+                              <Select.Item value="publish">
+                                Published
+                              </Select.Item>
+                              <Select.Item value="archived">
+                                Archived
+                              </Select.Item>
+                              <Select.Item value="scheduled">
+                                Scheduled
+                              </Select.Item>
+                            </Select.Content>
+                          </Select>
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="isPrivate"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Is Private</Form.Label>
-                  <Form.Control>
-                    <Input
-                      type="checkbox"
-                      checked={field.value}
-                      onChange={(e) => field.onChange(e.target.checked)}
-                    />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="isPrivate"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Is Private</Form.Label>
+                        <Form.Control>
+                          <Switch
+                            id="isPrivate"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="reactionChoices"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Reaction Choices</Form.Label>
-                  <Form.Control>
-                    <Select
-                      value={field.value[0]}
-                      onValueChange={(value) => field.onChange([value])}
-                    >
-                      {REACTION_CHOICES.map((choice) => (
-                        <Select.Item key={choice.value} value={choice.value}>
-                          {choice.label}
-                        </Select.Item>
-                      ))}
-                    </Select>
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="reactionChoices"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Reaction Choices</Form.Label>
+                        <Form.Control>
+                          <MultipleSelector
+                            options={REACTIONS}
+                            value={
+                              field.value?.map((choice) => ({
+                                value: choice,
+                                label:
+                                  REACTIONS.find(
+                                    (reaction) => reaction.value === choice,
+                                  )?.label || '',
+                              })) || []
+                            }
+                            onChange={(value) => {
+                              field.onChange(value.map((item) => item.value));
+                            }}
+                          />
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Image</Form.Label>
-                  <Form.Control>
-                    <Upload.Root
-                      value={field.value}
-                      onChange={(fileInfo) => {
-                        if ('url' in fileInfo) {
-                          field.onChange(fileInfo.url);
-                        }
-                      }}
-                    >
-                      <Upload.Preview />
-                      <div className="flex flex-col gap-2">
-                        <Upload.Button
-                          size="sm"
-                          variant="outline"
-                          type="button"
-                        >
-                          <IconUpload className="h-4 w-4 mr-2" />
-                          Upload image
-                        </Upload.Button>
-                        <Upload.RemoveButton
-                          size="sm"
-                          variant="outline"
-                          type="button"
-                        />
-                      </div>
-                    </Upload.Root>
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Image</Form.Label>
+                        <Form.Control>
+                          <Upload.Root
+                            value={field.value?.url || ''}
+                            onChange={(value) => {
+                              if ('url' in value) {
+                                field.onChange({
+                                  url: value.url,
+                                  name: value.fileInfo?.name || '',
+                                });
+                              }
+                            }}
+                          >
+                            <Upload.Preview />
+                            <div className="flex flex-col gap-2">
+                              <Upload.Button
+                                size="sm"
+                                variant="outline"
+                                type="button"
+                              >
+                                <IconUpload className="h-4 w-4 mr-2" />
+                                Upload image
+                              </Upload.Button>
+                              <Upload.RemoveButton
+                                size="sm"
+                                variant="outline"
+                                type="button"
+                              />
+                            </div>
+                          </Upload.Root>
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="attachments"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>Attachments</Form.Label>
-                  <Form.Control>
-                    <Upload.Root
-                      value={field.value[0]}
-                      onChange={(fileInfo) => {
-                        if ('url' in fileInfo) {
-                          field.onChange([...field.value, fileInfo.url]);
-                        }
-                      }}
-                      multiple
-                    >
-                      <Upload.Preview />
-                      <div className="flex flex-col gap-2">
-                        <Upload.Button
-                          size="sm"
-                          variant="outline"
-                          type="button"
-                        >
-                          <IconUpload className="h-4 w-4 mr-2" />
-                          Upload files
-                        </Upload.Button>
-                        <Upload.RemoveButton
-                          size="sm"
-                          variant="outline"
-                          type="button"
-                        />
-                      </div>
-                    </Upload.Root>
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="attachments"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>Attachments</Form.Label>
+                        <Form.Control>
+                          <Upload.Root
+                            value={field.value?.[0]?.url || ''}
+                            onChange={(value) => {
+                              if ('url' in value) {
+                                const newAttachment = {
+                                  url: value.url,
+                                  name: value.fileInfo?.name || '',
+                                };
+                                field.onChange([
+                                  ...(field.value || []),
+                                  newAttachment,
+                                ]);
+                              }
+                            }}
+                            multiple
+                          >
+                            <Upload.Preview />
+                            <div className="flex flex-col gap-2">
+                              <Upload.Button
+                                size="sm"
+                                variant="outline"
+                                type="button"
+                              >
+                                <IconUpload className="h-4 w-4 mr-2" />
+                                Upload files
+                              </Upload.Button>
+                              <Upload.RemoveButton
+                                size="sm"
+                                variant="outline"
+                                type="button"
+                              />
+                            </div>
+                          </Upload.Root>
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
 
-            <Form.Field
-              control={form.control}
-              name="pdfAttachment"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label>PDF Attachment</Form.Label>
-                  <Form.Control>
-                    <Upload.Root
-                      value={field.value}
-                      onChange={(fileInfo) => {
-                        if ('url' in fileInfo) {
-                          field.onChange(fileInfo.url);
-                        }
-                      }}
-                    >
-                      <Upload.Preview />
-                      <div className="flex flex-col gap-2">
-                        <Upload.Button
-                          size="sm"
-                          variant="outline"
-                          type="button"
-                        >
-                          <IconUpload className="h-4 w-4 mr-2" />
-                          Upload PDF
-                        </Upload.Button>
-                        <Upload.RemoveButton
-                          size="sm"
-                          variant="outline"
-                          type="button"
-                        />
-                      </div>
-                    </Upload.Root>
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+                  <Form.Field
+                    control={form.control}
+                    name="pdfAttachment"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <Form.Label>PDF Attachment</Form.Label>
+                        <Form.Control>
+                          <Upload.Root
+                            value={field.value?.pdf?.url || ''}
+                            onChange={(value) => {
+                              if ('url' in value) {
+                                field.onChange({
+                                  pdf: {
+                                    url: value.url,
+                                    name: value.fileInfo?.name || '',
+                                  },
+                                });
+                              }
+                            }}
+                          >
+                            <Upload.Preview />
+                            <div className="flex flex-col gap-2">
+                              <Upload.Button
+                                size="sm"
+                                variant="outline"
+                                type="button"
+                              >
+                                <IconUpload className="h-4 w-4 mr-2" />
+                                Upload PDF
+                              </Upload.Button>
+                              <Upload.RemoveButton
+                                size="sm"
+                                variant="outline"
+                                type="button"
+                              />
+                            </div>
+                          </Upload.Root>
+                        </Form.Control>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
+                </div>
+              </ScrollArea>
+            </Sheet.Content>
 
-            <div className="flex justify-end space-x-2">
-              <Button onClick={onClose} variant="outline">
+            <Sheet.Footer className="flex justify-end flex-shrink-0 p-2.5 gap-1 bg-muted">
+              <Button
+                type="button"
+                variant="ghost"
+                className="bg-background hover:bg-background/90"
+              >
                 Cancel
               </Button>
-              <Button type="submit" disabled={adding || editing}>
-                {adding || editing
-                  ? isEditing
-                    ? 'Saving...'
-                    : 'Creating...'
-                  : isEditing
-                  ? 'Save Changes'
-                  : 'Create Article'}
+              <Button
+                type="submit"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Save
               </Button>
-            </div>
+            </Sheet.Footer>
           </form>
         </Form>
       </Sheet.View>

@@ -197,11 +197,7 @@ export function TopicList({
     return parentCategories.map((category) => (
       <div key={category._id} className="ml-4">
         <div
-          className={`flex items-center justify-between p-2 cursor-pointer rounded ${
-            selectedCategoryId === category._id
-              ? 'bg-gray-100'
-              : 'hover:bg-gray-50'
-          }`}
+          className={`flex items-center justify-between p-2 cursor-pointer rounded`}
         >
           <div
             className="flex-1"

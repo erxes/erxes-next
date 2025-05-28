@@ -5,22 +5,9 @@ import { ARTICLES } from '../graphql/queries';
 import { Button, Spinner, DropdownMenu } from 'erxes-ui';
 import { Ellipsis } from 'lucide-react';
 
-interface Article {
-  _id: string;
-  title: string;
-  summary: string;
-  status: string;
-  createdBy: {
-    details: {
-      fullName: string;
-    };
-  };
-  createdDate: string;
-}
-
 interface ArticleListProps {
   categoryId: string;
-  onEditArticle: (article: Article) => void;
+  onEditArticle: (article: any) => void;
 }
 
 export function ArticleList({ categoryId, onEditArticle }: ArticleListProps) {
@@ -44,7 +31,7 @@ export function ArticleList({ categoryId, onEditArticle }: ArticleListProps) {
 
   return (
     <div className="space-y-4">
-      {articles.map((article: Article) => (
+      {articles.map((article: any) => (
         <div
           key={article._id}
           className="flex items-center justify-between p-4 border rounded-lg"
@@ -54,7 +41,7 @@ export function ArticleList({ categoryId, onEditArticle }: ArticleListProps) {
             <p className="text-sm text-gray-500">{article.summary}</p>
             <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
               <span>Status: {article.status}</span>
-              <span>By: {article.createdBy.details.fullName}</span>
+              <span>By: {article.createdUser?.details?.fullName}</span>
               <span>
                 Created: {new Date(article.createdDate).toLocaleDateString()}
               </span>

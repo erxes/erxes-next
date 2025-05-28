@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { useSearchParams } from 'react-router-dom';
 import { TOPICS } from '../graphql/queries';
@@ -10,14 +10,37 @@ import { TopicList } from './TopicList';
 import { ArticleList } from './ArticleList';
 import { TopicDrawer } from './TopicDrawer';
 import { ArticleDrawer } from './ArticleDrawer';
+import { Category, Topic, TopicResponse } from '../types';
+
+function convertToTopic(response: TopicResponse): Topic {
+  return {
+    _id: response._id,
+    title: response.title,
+    code: response.code || '',
+    description: response.description || '',
+    brandId: '', // Default value since it's not in the response
+    color: response.color || '',
+    backgroundImage: response.backgroundImage || '',
+    languageCode: response.languageCode || '',
+    notificationSegmentId: response.notificationSegmentId || '',
+    categories: response.categories,
+    createdBy: response.createdBy,
+    createdDate: response.createdDate,
+    modifiedBy: response.modifiedBy,
+    parentCategories: response.parentCategories,
+  };
+}
 
 export function KnowledgeBase() {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [isTopicDrawerOpen, setIsTopicDrawerOpen] = useState(false);
   const [isArticleDrawerOpen, setIsArticleDrawerOpen] = useState(false);
-  const [editingTopic, setEditingTopic] = useState<any>(null);
+  const [editingTopic, setEditingTopic] = useState<Topic | undefined>(
+    undefined,
+  );
   const [editingArticle, setEditingArticle] = useState<any>(null);
   const [searchParams] = useSearchParams();
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
 
   const {
     data: topicsData,
@@ -32,12 +55,26 @@ export function KnowledgeBase() {
 
   const [removeTopic] = useMutation(REMOVE_TOPIC);
 
-  const topics = topicsData?.knowledgeBaseTopics.list || [];
+  const topics = (topicsData?.knowledgeBaseTopics.list || []).map(
+    convertToTopic,
+  );
   const selectedCategoryId = searchParams.get('categoryId');
+
+  useEffect(() => {
+    if (selectedCategoryId && topics.length > 0) {
+      const category = topics
+        .flatMap((topic: Topic) => topic.categories || [])
+        .find((cat: Category) => cat._id === selectedCategoryId);
+
+      if (category) {
+        setCurrentCategory(category);
+      }
+    }
+  }, [selectedCategoryId, topics]);
 
   const handleCloseTopicDrawer = () => {
     setIsTopicDrawerOpen(false);
-    setEditingTopic(null);
+    setEditingTopic(undefined);
   };
 
   const handleCloseArticleDrawer = () => {
@@ -86,7 +123,7 @@ export function KnowledgeBase() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">
             {selectedCategoryId
-              ? 'Articles'
+              ? 'Articles in ' + currentCategory?.title
               : 'Select a category to view articles'}
           </h2>
           {selectedCategoryId && (
@@ -115,7 +152,7 @@ export function KnowledgeBase() {
 
       <ArticleDrawer
         article={editingArticle}
-        categoryId={selectedCategoryId || undefined}
+        categoryId={selectedCategoryId || ''}
         isOpen={isArticleDrawerOpen}
         onClose={handleCloseArticleDrawer}
       />

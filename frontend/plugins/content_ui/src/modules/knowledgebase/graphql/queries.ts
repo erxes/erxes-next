@@ -200,8 +200,11 @@ export const ARTICLES = gql`
         _id
         title
         createdDate
+        status
         createdUser {
-          ...UserFragment
+          _id
+          username
+          email
         }
         publishedUser {
           ...UserFragment

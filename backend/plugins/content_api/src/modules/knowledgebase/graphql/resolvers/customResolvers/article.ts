@@ -1,23 +1,34 @@
 import { IContext } from '~/connectionResolvers';
 import { IArticleDocument } from '@/knowledgebase/@types/knowledgebase';
+import { sendTRPCMessage } from 'erxes-api-shared/src/utils/trpc';
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {
     return models.KnowledgeBaseArticles.findOne({ _id });
   },
 
-  createdUser(article: IArticleDocument) {
-    return {
-      __typename: 'User',
-      _id: article.createdBy,
-    };
+  async createdUser(article: IArticleDocument) {
+    if (!article.createdBy) {
+      return null;
+    }
+    const user = await sendTRPCMessage({
+      pluginName: 'core',
+      module: 'users',
+      action: 'findOne',
+      input: { query: { _id: article.createdBy } },
+    });
+
+    return user;
   },
   publishedUser(article: IArticleDocument) {
-    return article?.publishedUserId
-      ? {
-          __typename: 'User',
-          _id: article?.publishedUserId,
-        }
-      : null;
+    if (!article.publishedUserId) {
+      return null;
+    }
+    return sendTRPCMessage({
+      pluginName: 'core',
+      module: 'users',
+      action: 'findOne',
+      input: { query: { _id: article.publishedUserId } },
+    });
   },
 };
