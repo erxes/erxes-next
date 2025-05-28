@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Accordion, DropdownMenu, Spinner } from 'erxes-ui';
-
+import { Ellipsis } from 'lucide-react';
 import { NewCategoryDrawer } from './NewCategoryDrawer';
 import { EditTopicDrawer } from './EditTopicDrawer';
 
@@ -32,6 +32,8 @@ export function TopicList({
   onTopicSelect,
   onCategorySelect,
 }: TopicListProps) {
+  console.log('topics', topics);
+
   const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
   const [isNewCategoryDrawerOpen, setIsNewCategoryDrawerOpen] = useState(false);
   const [selectedTopicForCategory, setSelectedTopicForCategory] = useState<
@@ -49,7 +51,7 @@ export function TopicList({
   const renderTopicActions = (topic: Topic) => (
     <DropdownMenu>
       <DropdownMenu.Trigger className="ml-2">
-        <span className="material-icons">more_vert</span>
+        <Ellipsis className="w-4 h-4" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item onClick={() => setEditingTopic(topic)}>

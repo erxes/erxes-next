@@ -20,7 +20,7 @@ export function KnowledgeBase() {
     },
   });
 
-  const topics = topicsData?.knowledgeBaseTopics || [];
+  const topics = topicsData?.knowledgeBaseTopics.list || [];
 
   return (
     <div className="flex h-full">

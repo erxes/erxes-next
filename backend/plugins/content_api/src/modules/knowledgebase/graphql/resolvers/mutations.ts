@@ -12,10 +12,10 @@ const knowledgeBaseMutations = {
    */
   async knowledgeBaseTopicsAdd(
     _root,
-    { doc }: { doc: ITopic },
-    { user, models }: IContext
+    { input }: { input: ITopic },
+    { user, models }: IContext,
   ) {
-    const topic = await models.KnowledgeBaseTopics.createDoc(doc, user._id);
+    const topic = await models.KnowledgeBaseTopics.createDoc(input, user._id);
 
     // TODO: implement logs
     // await putCreateLog(
@@ -41,14 +41,14 @@ const knowledgeBaseMutations = {
    */
   async knowledgeBaseTopicsEdit(
     _root,
-    { _id, doc }: { _id: string; doc: ITopic },
-    { user, models }: IContext
+    { _id, input }: { _id: string; input: ITopic },
+    { user, models }: IContext,
   ) {
     const topic = await models.KnowledgeBaseTopics.getTopic(_id);
     const updated = await models.KnowledgeBaseTopics.updateDoc(
       _id,
-      doc,
-      user._id
+      input,
+      user._id,
     );
 
     // TODO: implement logs
@@ -77,7 +77,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseTopicsRemove(
     _root,
     { _id }: { _id: string },
-    { user, models }: IContext
+    { user, models }: IContext,
   ) {
     const topic = await models.KnowledgeBaseTopics.getTopic(_id);
     const removed = await models.KnowledgeBaseTopics.removeDoc(_id);
@@ -98,12 +98,12 @@ const knowledgeBaseMutations = {
    */
   async knowledgeBaseCategoriesAdd(
     _root,
-    { doc }: { doc: ICategoryCreate },
-    { user, models }: IContext
+    { input }: { input: ICategoryCreate },
+    { user, models }: IContext,
   ) {
     const kbCategory = await models.KnowledgeBaseCategories.createDoc(
-      doc,
-      user._id
+      input,
+      user._id,
     );
 
     // await putCreateLog(
@@ -129,14 +129,14 @@ const knowledgeBaseMutations = {
    */
   async knowledgeBaseCategoriesEdit(
     _root,
-    { _id, doc }: { _id: string; doc: ICategoryCreate },
-    { user, models }: IContext
+    { _id, input }: { _id: string; input: ICategoryCreate },
+    { user, models }: IContext,
   ) {
     const kbCategory = await models.KnowledgeBaseCategories.getCategory(_id);
     const updated = await models.KnowledgeBaseCategories.updateDoc(
       _id,
-      doc,
-      user._id
+      input,
+      user._id,
     );
 
     // TODO: implement logs
@@ -165,13 +165,13 @@ const knowledgeBaseMutations = {
   async knowledgeBaseCategoriesRemove(
     _root,
     { _id }: { _id: string },
-    { user, models }: IContext
+    { user, models }: IContext,
   ) {
     const kbCategory = await models.KnowledgeBaseCategories.getCategory(_id);
 
     await models.KnowledgeBaseCategories.updateMany(
       { parentCategoryId: { $in: [kbCategory._id] } },
-      { $unset: { parentCategoryId: 1 } }
+      { $unset: { parentCategoryId: 1 } },
     );
 
     const removed = await models.KnowledgeBaseCategories.removeDoc(_id);
@@ -192,24 +192,24 @@ const knowledgeBaseMutations = {
    */
   async knowledgeBaseArticlesAdd(
     _root,
-    { doc }: { doc: IArticleCreate },
-    { user, models }: IContext
+    { input }: { input: IArticleCreate },
+    { user, models }: IContext,
   ) {
-    if (doc.status === 'scheduled' && !doc.scheduledDate) {
+    if (input.status === 'scheduled' && !input.scheduledDate) {
       throw new Error('Scheduled Date must be supplied');
     }
 
     if (
-      doc.status === 'scheduled' &&
-      doc.scheduledDate &&
-      doc.scheduledDate < new Date()
+      input.status === 'scheduled' &&
+      input.scheduledDate &&
+      input.scheduledDate < new Date()
     ) {
       throw new Error('Scheduled Date can not be in the past !');
     }
 
     const kbArticle = await models.KnowledgeBaseArticles.createDoc(
-      doc,
-      user._id
+      input,
+      user._id,
     );
 
     // TODO: implement logs
@@ -273,27 +273,27 @@ const knowledgeBaseMutations = {
    */
   async knowledgeBaseArticlesEdit(
     _root,
-    { _id, doc }: { _id: string; doc: IArticleCreate },
-    { user, models }: IContext
+    { _id, input }: { _id: string; input: IArticleCreate },
+    { user, models }: IContext,
   ) {
     const kbArticle = await models.KnowledgeBaseArticles.getArticle(_id);
 
-    if (doc.status === 'scheduled' && !doc.scheduledDate) {
+    if (input.status === 'scheduled' && !input.scheduledDate) {
       throw new Error('Scheduled Date must be supplied');
     }
 
     if (
-      doc.status === 'scheduled' &&
-      doc.scheduledDate &&
-      doc.scheduledDate < new Date()
+      input.status === 'scheduled' &&
+      input.scheduledDate &&
+      input.scheduledDate < new Date()
     ) {
       throw new Error('Scheduled Date can not be in the past !');
     }
 
     const updated = await models.KnowledgeBaseArticles.updateDoc(
       _id,
-      doc,
-      user._id
+      input,
+      user._id,
     );
 
     // TODO: implement logs
@@ -322,7 +322,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseArticlesRemove(
     _root,
     { _id }: { _id: string },
-    { user, models }: IContext
+    { user, models }: IContext,
   ) {
     const kbArticle = await models.KnowledgeBaseArticles.getArticle(_id);
     const removed = await models.KnowledgeBaseArticles.removeDoc(_id);
@@ -341,7 +341,7 @@ const knowledgeBaseMutations = {
   async knowledgeBaseArticlesIncrementViewCount(
     _root,
     { _id }: { _id: string },
-    { models }: IContext
+    { models }: IContext,
   ) {
     return await models.KnowledgeBaseArticles.incrementViewCount(_id);
   },
@@ -350,49 +350,49 @@ const knowledgeBaseMutations = {
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseTopicsAdd',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseTopicsEdit',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseTopicsRemove',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseCategoriesAdd',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseCategoriesEdit',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseCategoriesRemove',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseArticlesAdd',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseArticlesEdit',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 checkPermission(
   knowledgeBaseMutations,
   'knowledgeBaseArticlesRemove',
-  'manageKnowledgeBase'
+  'manageKnowledgeBase',
 );
 
 export default knowledgeBaseMutations;

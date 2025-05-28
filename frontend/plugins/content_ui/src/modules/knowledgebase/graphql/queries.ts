@@ -66,33 +66,38 @@ export const TOPICS_SHORT = gql`
 `;
 
 export const TOPICS = gql`
+  ${PAGE_INFO_FRAGMENT}
   ${CATEGORY_FRAGMENT}
   ${PARENT_CATEGORY_FRAGMENT}
   query knowledgeBaseTopics($page: Int, $perPage: Int) {
     knowledgeBaseTopics(page: $page, perPage: $perPage) {
-      _id
-      title
-      code
-      description
-      brand {
+      list {
         _id
-        name
+        title
+        code
+        description
+        brand {
+          _id
+          name
+        }
+        categories {
+          ...CategoryFragment
+        }
+        color
+        backgroundImage
+        languageCode
+        createdBy
+        createdDate
+        modifiedBy
+        notificationSegmentId
+        parentCategories {
+          ...ParentCategoryFragment
+        }
       }
-      categories {
-        ...CategoryFragment
+      pageInfo {
+        ...PageInfoFragment
       }
-      color
-      backgroundImage
-      languageCode
-      createdBy
-      createdDate
-      modifiedBy
-      modifiedDate
-      notificationSegmentId
-
-      parentCategories {
-        ...ParentCategoryFragment
-      }
+      totalCount
     }
   }
 `;

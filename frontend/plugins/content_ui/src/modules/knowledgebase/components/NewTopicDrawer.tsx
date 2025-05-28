@@ -2,62 +2,57 @@
 
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
+import { useForm } from 'react-hook-form';
 import { ADD_TOPIC } from '../graphql/mutations';
 import { TOPICS } from '../graphql/queries';
-import { Button, Input, Textarea, Sheet, SelectBrand } from 'erxes-ui';
+import { Form, Input, Upload, Editor, Sheet, Button } from 'erxes-ui';
+import { IconUpload } from '@tabler/icons-react';
+// import { SelectSegment } from 'ui-modules';
 
 interface NewTopicDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface TopicFormData {
+  code: string;
+  title: string;
+  description: string;
+  brandId: string;
+  color: string;
+  backgroundImage: string;
+  languageCode: string;
+  notificationSegmentId: string;
+}
+
 export function NewTopicDrawer({ isOpen, onClose }: NewTopicDrawerProps) {
-  const [formData, setFormData] = useState({
-    code: '',
-    title: '',
-    description: '',
-    brandId: '',
-    color: '',
-    backgroundImage: '',
-    languageCode: '',
-    notificationSegmentId: '',
+  const form = useForm<TopicFormData>({
+    defaultValues: {
+      code: '',
+      title: '',
+      description: '',
+      brandId: '',
+      color: '',
+      backgroundImage: '',
+      languageCode: '',
+      notificationSegmentId: '',
+    },
   });
 
   const [addTopic, { loading }] = useMutation(ADD_TOPIC, {
     refetchQueries: [{ query: TOPICS }],
     onCompleted: () => {
       onClose();
-      setFormData({
-        code: '',
-        title: '',
-        description: '',
-        brandId: '',
-        color: '',
-        backgroundImage: '',
-        languageCode: '',
-        notificationSegmentId: '',
-      });
+      form.reset();
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: TopicFormData) => {
     addTopic({
       variables: {
-        input: formData,
+        input: data,
       },
     });
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleBrandChange = (brandIds: string[]) => {
-    setFormData((prev) => ({ ...prev, brandId: brandIds[0] || '' }));
   };
 
   return (
@@ -68,102 +63,155 @@ export function NewTopicDrawer({ isOpen, onClose }: NewTopicDrawerProps) {
           <Sheet.Close />
         </Sheet.Header>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Code</label>
-            <Input
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="p-4 space-y-4"
+          >
+            <Form.Field
+              control={form.control}
               name="code"
-              value={formData.code}
-              onChange={handleChange}
-              placeholder="Enter topic code"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Code</Form.Label>
+                  <Form.Control>
+                    <Input {...field} placeholder="Enter topic code" />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Title <span className="text-red-500">*</span>
-            </label>
-            <Input
+            <Form.Field
+              control={form.control}
               name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Enter topic title"
-              required
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control>
+                    <Input
+                      {...field}
+                      placeholder="Enter topic title"
+                      required
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Description</label>
-            <Textarea
+            <Form.Field
+              control={form.control}
               name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Enter topic description"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control>
+                    <Editor
+                      initialContent={field.value}
+                      onChange={field.onChange}
+                      scope="topic-description"
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Brand <span className="text-red-500">*</span>
-            </label>
-            <SelectBrand
-              values={formData.brandId ? [formData.brandId] : []}
-              onValueChange={handleBrandChange}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Color</label>
-            <Input
+            <Form.Field
+              control={form.control}
               name="color"
-              value={formData.color}
-              onChange={handleChange}
-              placeholder="Enter color code"
-              type="color"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Color</Form.Label>
+                  <Form.Control>
+                    <Input {...field} type="color" />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Background Image</label>
-            <Input
+            <Form.Field
+              control={form.control}
               name="backgroundImage"
-              value={formData.backgroundImage}
-              onChange={handleChange}
-              placeholder="Enter background image URL"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Background Image</Form.Label>
+                  <Form.Control>
+                    <Upload.Root
+                      value={field.value}
+                      onChange={(fileInfo) => {
+                        if ('url' in fileInfo) {
+                          field.onChange(fileInfo.url);
+                        }
+                      }}
+                    >
+                      <Upload.Preview />
+                      <div className="flex flex-col gap-2">
+                        <Upload.Button
+                          size="sm"
+                          variant="outline"
+                          type="button"
+                        >
+                          <IconUpload className="h-4 w-4 mr-2" />
+                          Upload image
+                        </Upload.Button>
+                        <Upload.RemoveButton
+                          size="sm"
+                          variant="outline"
+                          type="button"
+                        />
+                      </div>
+                    </Upload.Root>
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Language Code</label>
-            <Input
+            <Form.Field
+              control={form.control}
               name="languageCode"
-              value={formData.languageCode}
-              onChange={handleChange}
-              placeholder="Enter language code"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Language Code</Form.Label>
+                  <Form.Control>
+                    <Input {...field} placeholder="Enter language code" />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Notification Segment ID
-            </label>
-            <Input
+            {/* <Form.Field
+              control={form.control}
               name="notificationSegmentId"
-              value={formData.notificationSegmentId}
-              onChange={handleChange}
-              placeholder="Enter notification segment ID"
-            />
-          </div>
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Notification Segment</Form.Label>
+                  <Form.Control>
+                    <SelectSegment
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      nullable
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            /> */}
 
-          <div className="flex justify-end space-x-2">
-            <Button onClick={onClose} variant="outline">
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Topic'}
-            </Button>
-          </div>
-        </form>
+            <div className="flex justify-end space-x-2">
+              <Button onClick={onClose} variant="outline">
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Creating...' : 'Create Topic'}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </Sheet.View>
     </Sheet>
   );
