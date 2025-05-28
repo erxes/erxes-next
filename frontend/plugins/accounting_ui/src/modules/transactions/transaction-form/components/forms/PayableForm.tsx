@@ -1,10 +1,7 @@
-import { JournalEnum } from '@/settings/account/types/Account';
+import { AccountKind, JournalEnum } from '@/settings/account/types/Account';
 import { TR_SIDES } from '../../../types/constants';
 import { ITransactionGroupForm } from '../../types/AddTransaction';
-import { CtaxForm } from '../helpers/CtaxForm';
-import { CurrencyForm } from '../helpers/CurrencyForm';
-import { VatForm } from '../helpers/VatForm';
-import { CustomerFields } from './../CustomerFields';
+import { CustomerFields } from '../CustomerFields';
 import {
   AccountField,
   AmountField,
@@ -13,9 +10,12 @@ import {
   DepartmentField,
   DescriptionField,
   SideField,
-} from './../GeneralFormFields';
+} from '../GeneralFormFields';
+import { CtaxForm } from '../helpers/CtaxForm';
+import { CurrencyForm } from '../helpers/CurrencyForm';
+import { VatForm } from '../helpers/VatForm';
 
-export const BankTransaction = ({
+export const PayableTransaction = ({
   form,
   index,
 }: {
@@ -24,8 +24,8 @@ export const BankTransaction = ({
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6">
-      <AccountField form={form} index={index} filter={{ journals: [JournalEnum.BANK] }} />
-      <SideField form={form} index={index} sides={TR_SIDES.FUND_OPTIONS} />
+      <AccountField form={form} index={index} filter={{ journals: [JournalEnum.DEBT], kind: AccountKind.PASSIVE }} />
+      <SideField form={form} index={index} sides={TR_SIDES.PAYABLE_OPTIONS} />
       <AmountField form={form} index={index} />
       <CustomerFields form={form} index={index} />
       <AssignToField form={form} index={index} />

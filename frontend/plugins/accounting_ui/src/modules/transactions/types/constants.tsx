@@ -2,7 +2,8 @@ export enum TrJournalEnum {
   MAIN = 'main',
   CASH = 'cash',
   BANK = 'bank',
-  DEBT = 'debt',
+  RECEIVABLE = 'receivable',
+  PAYABLE = 'payable',
   INVENTORY = 'inventory',
   FIXED_ASSET = 'fixedAsset',
   TAX = 'tax',
@@ -12,9 +13,10 @@ export enum TrJournalEnum {
 
 export const TR_JOURNAL_LABELS = {
   [TrJournalEnum.MAIN]: 'Main',
-  [TrJournalEnum.BANK]: 'Bank',
   [TrJournalEnum.CASH]: 'Cash',
-  [TrJournalEnum.DEBT]: 'Debt',
+  [TrJournalEnum.BANK]: 'Bank',
+  [TrJournalEnum.RECEIVABLE]: 'receivable',
+  [TrJournalEnum.PAYABLE]: 'payable',
   [TrJournalEnum.INVENTORY]: 'Inventory',
   [TrJournalEnum.FIXED_ASSET]: 'Fixed Asset',
   [TrJournalEnum.TAX]: 'Tax',
