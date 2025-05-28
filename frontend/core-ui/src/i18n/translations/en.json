@@ -28,6 +28,7 @@
     "accounting": "Accounting",
     "automations": "Automations",
     "segments": "Segments",
+    "pos": "Pos",
     "accounting.subMenu": {
       "main": "Transactions",
       "records": "Records",
