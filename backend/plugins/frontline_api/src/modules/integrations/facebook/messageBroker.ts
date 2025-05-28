@@ -15,7 +15,7 @@ export interface StatusResponse {
   error?: string;
 }
 
- export async function facebookIntegrations({ subdomain, data  }) {
+   export async function facebookIntegrations({ subdomain, data  }) {
       const models = await generateModels(subdomain);
       const { action, type } = data;
       let response: {
