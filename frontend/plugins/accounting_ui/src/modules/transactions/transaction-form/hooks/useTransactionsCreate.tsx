@@ -16,6 +16,10 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
   const createTransaction = (data: TAddTransactionGroup) => {
     const trDocs = data.trDocs.map(trD => ({
       ...trD,
+      details: trD.details.map(det => ({
+        ...det,
+        account: undefined,
+      })),
       date: data.date,
       number: data.number,
     }));

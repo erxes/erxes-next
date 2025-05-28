@@ -247,7 +247,9 @@ export const SelectTagsValue = () => {
 
   if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
 
-  return <TagList renderAsPlainText={mode === 'single'} />;
+  return (
+    <TagList placeholder="Select tags" renderAsPlainText={mode === 'single'} />
+  );
 };
 
 export const SelectTagsContent = () => {
