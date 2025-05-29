@@ -5,17 +5,10 @@ import {
 import Redis from 'ioredis';
 import { generateModels } from '../db/connectionResolvers';
 import { handleMongoChangeEvent } from './mongo';
-
-type JobData = {
-  subdomain: string;
-  source: 'graphql' | 'mongo';
-  status: 'success' | 'failed';
-  action?: string;
-  contentType?: string;
-  payload: any;
-  userId?: string;
-  processId?: string;
-};
+import { handleAfterProcess } from './afterProccess';
+import { IJobData } from '~/types';
+import { ILogDocument } from '~/db/definitions/logs';
+import { AFTER_PROCESS_CONSTANTS, LOG_STATUSES } from '~/constants';
 
 export const initMQWorkers = async (redis: any) => {
   console.info('Starting worker ...');
@@ -36,31 +29,58 @@ export const initMQWorkers = async (redis: any) => {
             action,
             status,
             processId,
-          } = (data ?? {}) as JobData;
+          } = (data ?? {}) as IJobData;
 
-          console.log({ source, subdomain, contentType });
+          console.log({ data });
 
           try {
             const models = await generateModels(subdomain);
-            switch (source) {
-              case 'mongo':
-                await handleMongoChangeEvent(models.Logs, payload, contentType);
-                sendWorkerQueue('automations', 'trigger').add('trigger', {
-                  subdomain,
-                  data: payload?.fullDocument,
-                });
-                break;
-              default:
-                await models.Logs.insertOne({
-                  source,
-                  action,
-                  payload,
+
+            let result: ILogDocument;
+
+            if (source === 'mongo') {
+              result = await handleMongoChangeEvent(
+                models.Logs,
+                payload,
+                contentType,
+              );
+              sendWorkerQueue('automations', 'trigger').add('trigger', {
+                subdomain,
+                data: payload?.fullDocument,
+              });
+            } else {
+              const logDoc = {
+                source,
+                action,
+                payload,
+                createdAt: new Date(),
+                userId,
+                status,
+                processId,
+              };
+              result = await models.Logs.insertOne(logDoc);
+            }
+
+            if (status === 'success') {
+              handleAfterProcess(subdomain, {
+                source,
+                action: result.action || action,
+                contentType,
+                payload: { ...result?.payload, userId, processId },
+              }).catch((err) => {
+                models.Logs.insertOne({
+                  source: 'afterProcess',
+                  action: AFTER_PROCESS_CONSTANTS[`${source}.${action}`],
+                  payload: { ...result?.payload, userId },
                   createdAt: new Date(),
                   userId,
-                  status,
+                  status: LOG_STATUSES.FAILED,
                   processId,
                 });
-                break;
+                console.error(
+                  `Error occured during afterProcess job ${id}: ${err.message}`,
+                );
+              });
             }
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);

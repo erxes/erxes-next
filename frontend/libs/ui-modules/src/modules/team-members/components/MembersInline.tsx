@@ -80,7 +80,7 @@ export const MembersInlineProvider = ({
 
 const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   const currentUser = useAtomValue(currentUserState) as IMember;
-  const { members, updateMembers } = useMembersInlineContext();
+  const { members, memberIds, updateMembers } = useMembersInlineContext();
   const { userDetail } = useMemberInline({
     variables: {
       _id: memberId,
@@ -89,12 +89,14 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   });
 
   useEffect(() => {
+    const newMembers = [...members].filter((m) => memberIds?.includes(m._id));
+
     if (userDetail) {
-      updateMembers?.([...members, { ...userDetail, _id: memberId }]);
+      updateMembers?.([...newMembers, { ...userDetail, _id: memberId }]);
     }
 
     if (currentUser._id === memberId) {
-      updateMembers?.([currentUser, ...members]);
+      updateMembers?.([currentUser, ...newMembers]);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

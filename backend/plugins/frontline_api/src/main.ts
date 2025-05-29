@@ -6,7 +6,7 @@ import { generateModels } from './connectionResolvers';
 
 startPlugin({
   name: 'frontline',
-  port: 3302,
+  port: 3304,
   graphql: async () => ({
     typeDefs: await typeDefs(),
     resolvers,
@@ -26,6 +26,25 @@ startPlugin({
       context.models = models;
 
       return context;
+    },
+  },
+
+  meta: {
+    afterProcess: {
+      rules: [
+        { type: 'updatedDocument', contentTypes: ['core:user'] },
+        { type: 'afterAuth', types: ['login'] },
+        { type: 'afterMutation', mutationNames: ['usersEdit'] },
+      ],
+      onDocumentUpdated: async ({ subdomain }, data) => {
+        // do logic
+      },
+      onAfterAuth: async (context, data) => {
+        // do logic
+      },
+      onAfterMutation: (context, args) => {
+        // do logic
+      },
     },
   },
 });

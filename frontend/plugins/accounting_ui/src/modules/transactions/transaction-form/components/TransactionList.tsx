@@ -10,13 +10,15 @@ import { Tabs, Button } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { activeJournalState } from '../states/trStates';
 import { AddTransaction } from '../../components/AddTransaction';
-import { CashTransaction } from './forms/CashForm';
 import { MainJournalForm } from './forms/MainJournalForm';
+import { CashTransaction } from './forms/CashForm';
 import { BankTransaction } from './forms/BankForm';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
 import { InvIncomeForm } from './forms/InvIncomeForm';
 import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
 import { TBalance } from './TBalance';
+import { ReceivableTransaction } from './forms/ReceivableForm';
+import { PayableTransaction } from './forms/PayableForm';
 
 
 // Separate the transaction form component to prevent unnecessary re-renders
@@ -35,6 +37,10 @@ const TransactionForm = ({
     return <CashTransaction form={form} index={index} />;
   if (field.journal === TrJournalEnum.BANK)
     return <BankTransaction form={form} index={index} />;
+  if (field.journal === TrJournalEnum.RECEIVABLE)
+    return <ReceivableTransaction form={form} index={index} />;
+  if (field.journal === TrJournalEnum.PAYABLE)
+    return <PayableTransaction form={form} index={index} />;
   if (field.journal === TrJournalEnum.INV_INCOME)
     return <InvIncomeForm form={form} index={index} />;
   return null;
