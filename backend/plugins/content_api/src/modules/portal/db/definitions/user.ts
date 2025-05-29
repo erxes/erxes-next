@@ -66,7 +66,7 @@ export const userSchema = new Schema({
   email: {
     type: String,
     match: [
-      /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,10})+$/,
+      /^[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,10})+$/,
       'Please fill a valid email address',
     ],
     label: 'Email',
