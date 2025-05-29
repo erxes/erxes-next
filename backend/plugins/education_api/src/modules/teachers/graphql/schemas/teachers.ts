@@ -15,7 +15,7 @@ export const types = `
 const queryParams = `
   page: Int, 
   perPage: Int,
-  cursor: String
+  cursor: String,
   direction: CURSOR_DIRECTION
 `;
 

@@ -33,14 +33,12 @@ export const loadCourseClass = (models: IModels) => {
      * Create a course
      */
     public static async createCourse(doc) {
-      const course = await models.Courses.create({
+      return await models.Courses.create({
         ...doc,
         createdAt: new Date(),
         modifiedAt: new Date(),
         searchText: this.fillSearchText(doc),
       });
-
-      return course;
     }
 
     /**
@@ -55,7 +53,7 @@ export const loadCourseClass = (models: IModels) => {
      */
     public static async updateCourse(_id, doc) {
       const searchText = this.fillSearchText(
-        Object.assign(await models.Courses.createCourse(_id), doc),
+        Object.assign(await models.Courses.getCourse(_id), doc),
       );
       await models.Courses.updateOne(
         { _id },

@@ -21,7 +21,7 @@ const queryParams = `
   parentId: String, 
   page: Int, 
   perPage: Int,
-  cursor: String
+  cursor: String,
   direction: CURSOR_DIRECTION
 `;
 

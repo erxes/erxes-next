@@ -7,9 +7,7 @@ export const courseMutations = {
    * Creates a new course
    */
   courseAdd: async (_root, doc: ICourse, { models }: IContext) => {
-    const course = await models.Courses.createCourse(doc);
-
-    return course;
+    return await models.Courses.createCourse(doc);
   },
   /**
    * Edit a course
@@ -19,9 +17,7 @@ export const courseMutations = {
     { _id, ...doc }: { _id: string } & ICourse,
     { models }: IContext,
   ) => {
-    const updated = await models.Courses.updateCourse(_id, doc);
-
-    return updated;
+    return await models.Courses.updateCourse(_id, doc);
   },
   /**
    * Removes course
@@ -58,11 +54,7 @@ export const courseMutations = {
     doc: ICourseCategory,
     { models }: IContext,
   ) => {
-    const courseCategory = await models.CourseCategories.createCourseCategory(
-      doc,
-    );
-
-    return courseCategory;
+    return await models.CourseCategories.createCourseCategory(doc);
   },
   /**
    * Edits a course category
@@ -72,12 +64,10 @@ export const courseMutations = {
     { _id, ...doc }: { _id: string } & ICourseCategory,
     { models }: IContext,
   ) => {
-    const updated = await models.CourseCategories.updateCourseCategory(
+    return await models.CourseCategories.updateCourseCategory(
       _id,
       doc as ICourseCategory,
     );
-
-    return updated;
   },
   /**
    * Delete a course category
@@ -87,8 +77,6 @@ export const courseMutations = {
     { _id }: { _id: string },
     { models }: IContext,
   ) => {
-    const removed = await models.CourseCategories.removeCourseCategory(_id);
-
-    return removed;
+    return await models.CourseCategories.removeCourseCategory(_id);
   },
 };

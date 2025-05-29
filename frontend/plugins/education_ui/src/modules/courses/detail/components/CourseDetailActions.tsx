@@ -33,7 +33,7 @@ const actionTabs = {
   attendances: {
     title: 'Attendances',
     icon: IconCalendarClock,
-    code: 'attendaces',
+    code: 'attendances',
   },
 };
 

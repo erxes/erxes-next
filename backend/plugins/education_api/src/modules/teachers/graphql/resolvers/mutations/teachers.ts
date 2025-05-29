@@ -3,9 +3,7 @@ import { ITeacher } from '@/teachers/@types/teachers';
 
 export const teacherMutations = {
   teacherAdd: async (_root, doc: ITeacher, { models }: IContext) => {
-    const teacher = await models.Teachers.createTeacher(doc);
-
-    return teacher;
+    return await models.Teachers.createTeacher(doc);
   },
   teacherRemove: async (
     _root,

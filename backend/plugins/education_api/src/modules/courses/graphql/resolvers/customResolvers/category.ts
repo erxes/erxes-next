@@ -10,7 +10,7 @@ export default {
     return models.CourseCategories.findOne({ _id });
   },
   isRoot: (category: ICourseCategoryDocument) => {
-    return category.parentId ? false : true;
+    return !category.parentId;
   },
   courseCount: async (
     category: ICourseCategoryDocument,

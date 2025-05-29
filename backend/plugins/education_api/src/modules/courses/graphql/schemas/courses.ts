@@ -59,7 +59,6 @@ const courseCategoryParams = `
 const queryParams = `
   page: Int
   perPage: Int
-  categoryId: String
   ids: [String]
   searchValue: String
   sortField: String

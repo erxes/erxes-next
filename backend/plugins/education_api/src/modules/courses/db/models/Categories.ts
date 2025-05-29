@@ -22,12 +22,7 @@ export interface ICourseCategoryModel extends Model<ICourseCategoryDocument> {
 
 export const loadCourseCategoryClass = (models: IModels) => {
   class CourseCategory {
-    /**
-     *
-     * Get Course Cagegory
-     */
-
-    public static async getActivityCategory(selector: any) {
+    public static async getCourseCategory(selector: any) {
       const courseCategory = await models.CourseCategories.findOne(selector);
 
       if (!courseCategory) {
@@ -36,9 +31,6 @@ export const loadCourseCategoryClass = (models: IModels) => {
 
       return courseCategory;
     }
-    /**
-     * Create a course categorys
-     */
     public static async createCourseCategory(doc) {
       const parentCategory = doc.parentId
         ? await models.CourseCategories.findOne({
@@ -52,9 +44,6 @@ export const loadCourseCategoryClass = (models: IModels) => {
       return models.CourseCategories.create(doc);
     }
 
-    /**
-     * Update Activity category
-     */
     public static async updateCourseCategory(_id, doc) {
       const parentCategory = doc.parentId
         ? await models.CourseCategories.findOne({
@@ -84,7 +73,7 @@ export const loadCourseCategoryClass = (models: IModels) => {
 
       // updating child categories order
       childCategories.forEach(async (category) => {
-        let order = category.order;
+        let { order } = category;
 
         order = order.replace(courseCategory.order, doc.order);
 
@@ -97,9 +86,6 @@ export const loadCourseCategoryClass = (models: IModels) => {
       return models.CourseCategories.findOne({ _id });
     }
 
-    /**
-     * Remove course category
-     */
     public static async removeCourseCategory(_id) {
       await models.CourseCategories.getCourseCategory({ _id });
 
@@ -116,9 +102,6 @@ export const loadCourseCategoryClass = (models: IModels) => {
       return models.CourseCategories.deleteOne({ _id });
     }
 
-    /**
-     * Generating order
-     */
     public static async generateOrder(parentCategory, doc) {
       const order = parentCategory
         ? `${parentCategory.order}/${doc.code}`

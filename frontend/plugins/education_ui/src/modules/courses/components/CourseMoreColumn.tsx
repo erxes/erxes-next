@@ -11,7 +11,7 @@ export const CourseMoreColumnCell = ({
   cell: Cell<any, unknown>;
 }) => {
   const [, setOpen] = useQueryState('courseId');
-  const setRenderingContactDetail = useSetAtom(renderingCourseDetailAtom);
+  const setRenderingCourseDetail = useSetAtom(renderingCourseDetailAtom);
   const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
   const { _id } = cell.row.original;
   return (
@@ -24,7 +24,7 @@ export const CourseMoreColumnCell = ({
             CourseHotKeyScope.CourseEditSheet,
           );
         }, 100);
-        setRenderingContactDetail(false);
+        setRenderingCourseDetail(false);
       }}
     />
   );

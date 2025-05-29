@@ -35,7 +35,7 @@ export const CourseCategoryRecordTable = () => {
 
   return (
     <RecordTable.Provider
-      columns={productCategoryColumns(categoryObject || {})}
+      columns={courseCategoryColumns(categoryObject || {})}
       data={courseCategories || []}
       className="m-3"
     >
@@ -62,7 +62,7 @@ export const CourseCategoryRecordTable = () => {
   );
 };
 
-export const productCategoryColumns: (
+export const courseCategoryColumns: (
   categoryObject: Record<string, ICourseCategory>,
 ) => ColumnDef<ICourseCategory & { hasChildren: boolean }>[] = (
   categoryObject,

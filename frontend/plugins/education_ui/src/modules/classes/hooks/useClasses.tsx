@@ -49,7 +49,7 @@ export const useClasses = (options?: QueryHookOptions) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          classCourse: mergeCursorData({
+          courseClasses: mergeCursorData({
             direction,
             fetchMoreResult: fetchMoreResult.courseClasses,
             prevResult: prev.courseClasses,

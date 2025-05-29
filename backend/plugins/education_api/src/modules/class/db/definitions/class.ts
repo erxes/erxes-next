@@ -13,7 +13,7 @@ export const classSchema = new Schema(
       type: String,
       enum: CLASS_LEVEL_TYPES.ALL,
       default: CLASS_LEVEL_TYPES.Beginner,
-      label: 'level',
+      label: 'Level',
     },
     createdAt: { type: Date, default: new Date(), label: 'Created at' },
     updatedAt: { type: Date, default: new Date(), label: 'Updated at' },

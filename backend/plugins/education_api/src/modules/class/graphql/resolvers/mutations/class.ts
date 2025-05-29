@@ -15,9 +15,7 @@ export const classMutations = {
     { _id, ...doc }: { _id: string } & IClass,
     { models }: IContext,
   ) => {
-    const courseClass = await models.Classes.updateClass(_id, doc);
-
-    return courseClass;
+    return await models.Classes.updateClass(_id, doc);
   },
   //
   classesRemove: async (
@@ -25,8 +23,6 @@ export const classMutations = {
     { classIds }: { classIds: string[] },
     { models }: IContext,
   ) => {
-    await models.Classes.removeClasses(classIds);
-
-    return classIds;
+    return await models.Classes.removeClasses(classIds);
   },
 };

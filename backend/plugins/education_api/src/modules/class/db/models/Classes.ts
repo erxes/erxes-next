@@ -23,12 +23,11 @@ export const loadClassesClass = (models: IModels) => {
     }
 
     public static async createClass(doc) {
-      const courseClass = await models.Classes.create({
+      return await models.Classes.create({
         ...doc,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-      return courseClass;
     }
 
     public static async updateClass(_id, doc) {

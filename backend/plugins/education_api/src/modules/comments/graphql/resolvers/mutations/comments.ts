@@ -3,18 +3,14 @@ import { IComment } from '@/comments/@types/comments';
 
 export const commentMutations = {
   courseCommentAdd: async (_root, doc: IComment, { models }: IContext) => {
-    const comment = await models.Comments.createComment(doc);
-
-    return comment;
+    return await models.Comments.createComment(doc);
   },
   courseCommentEdit: async (
     _root,
     { _id, ...doc }: { _id: string } & IComment,
     { models }: IContext,
   ) => {
-    const comment = await models.Comments.updateComment(_id, doc);
-
-    return comment;
+    return await models.Comments.updateComment(_id, doc);
   },
   courseCommentRemove: async (
     _root,

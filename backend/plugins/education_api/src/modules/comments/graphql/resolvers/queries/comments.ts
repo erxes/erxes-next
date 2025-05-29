@@ -17,6 +17,6 @@ export const commentQueries = {
     return { list, totalCount, pageInfo };
   },
   courseCommentCount: async (_root, { _id }, { models }: IContext) => {
-    return models.Comments.find(_id).countDocuments();
+    return models.Comments.find({ courseId: _id }).countDocuments();
   },
 };
