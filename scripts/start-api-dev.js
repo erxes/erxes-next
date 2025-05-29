@@ -20,6 +20,6 @@ if (ENABLED_PLUGINS) {
   }
 }
 
-const command = `npx nx run-many -t serve -p core-api ${plugins} gateway --verbose --parallel=${pluginsCount} --skip-nx-cache`;
+const command = `npx nx run-many -t serve -p core-api ${plugins} gateway --verbose --parallel=${pluginsCount}`;
 console.log(`Running: ${command}`);
 execSync(command, { stdio: 'inherit' });
