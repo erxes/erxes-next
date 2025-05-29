@@ -17,9 +17,7 @@ const config: ModuleFederationConfig = {
   exposes: {
     './config': './src/config.ts',
     './knowledgebase': './src/modules/knowledgebase/Main.tsx',
-    './contentFirstSettings': './src/modules/knowledgebase/Settings.tsx',
-    './contentSecond': './src/modules/content-second/Main.tsx',
-    './contentSecondSettings': './src/modules/content-second/Settings.tsx',
+    // './contentFirstSettings': './src/modules/knowledgebase/Settings.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {
