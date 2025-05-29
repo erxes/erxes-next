@@ -1,5 +1,4 @@
-import { Resizable } from 'erxes-ui';
-import { useQueryState } from '../hooks/useQueryState';
+import { Resizable, useQueryState } from 'erxes-ui';
 
 export const InboxLayout = ({
   conversations,

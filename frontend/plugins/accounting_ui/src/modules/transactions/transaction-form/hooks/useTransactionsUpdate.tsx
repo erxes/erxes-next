@@ -14,6 +14,10 @@ export const useTransactionsUpdate = (options?: OperationVariables) => {
   const updateTransaction = (data: TAddTransactionGroup) => {
     const trDocs = data.trDocs.map(trD => ({
       ...trD,
+      details: trD.details.map(det => ({
+        ...det,
+        account: undefined,
+      })),
       date: data.date,
       number: data.number,
     }));
@@ -33,7 +37,7 @@ export const useTransactionsUpdate = (options?: OperationVariables) => {
         const newParentId = data?.accTransactionsCreate[0]?.parentId;
 
         const pathname = newParentId
-          ? `/accounting/transaction/edit/${newParentId}`
+          ? `/accounting/transaction/edit?parentId=${newParentId}`
           : "/accounting/main";
 
         navigate(pathname);

@@ -58,7 +58,8 @@ const FormFields = memo(
 FormFields.displayName = 'FormFields';
 
 export const TransactionsGroupForm = () => {
-  const parentId = useParams().parentId;
+  // const parentId = useParams().parentId;
+  const [parentId] = useQueryState<string>('parentId');
   const { transactions, activeTrs, loading } = useTransactionDetail({
     variables: { _id: parentId },
     skip: !parentId,
@@ -97,7 +98,7 @@ export const TransactionsGroupForm = () => {
   };
 
   useEffect(() => {
-    if (activeTrs?.length) {
+    if (activeTrs?.length && parentId) {
       const currentTr = trId ? activeTrs.find(tr => tr._id === trId) : activeTrs[0];
       // setTransactionGroups({})
       // setting form values

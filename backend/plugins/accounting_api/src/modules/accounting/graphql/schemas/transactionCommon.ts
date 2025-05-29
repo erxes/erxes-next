@@ -15,6 +15,9 @@ const trDetailFields = `
   productId: String
   count: Float
   unitPrice: Float
+
+  excludeVat: Boolean
+  excludeCtax: Boolean
 `;
 
 const transactionFields = `

@@ -1,33 +1,23 @@
 import mongoose from 'mongoose';
-import { getEnv, getSubdomain } from '../utils';
-import { connect } from './mongo-connection';
-import {
-  coreModelOrganizations,
-  getSaasCoreConnection,
-} from '../saas/saas-mongo-connection';
-import { redis } from '../redis';
 import { sendWorkerQueue } from '../mq-worker';
-import { isEnabled } from '../service-discovery';
+import { redis } from '../redis';
+import { getEnv } from '../utils';
 const activeStreams = new Map<string, any>();
 
-export const cleanActiveChangeStream = async () => {
-  const REDIS_KEY_PREFIX = getEnv({
-    name: 'REDIS_KEY_PREFIX',
-    defaultValue: 'changeStreamActive',
-  });
-  const keys = await redis.keys(`${REDIS_KEY_PREFIX}:*`);
-
-  // Check if keys is an array and contains valid keys
-  if (keys && keys.length > 0) {
-    // Make sure all keys are strings
-    const validKeys = keys.filter(
-      (key) => typeof key === 'string' && key.length > 0,
-    );
-
-    if (validKeys.length > 0) {
-      await redis.del(...validKeys);
+// Add a cleanup function to properly close all streams when needed
+export const cleanupChangeStreams = () => {
+  activeStreams.forEach((stream, modelName) => {
+    console.log(`Closing change stream for model: ${modelName}`);
+    try {
+      stream.close();
+    } catch (error) {
+      console.error(
+        `Failed to close change stream for model ${modelName}:`,
+        error,
+      );
     }
-  }
+  });
+  activeStreams.clear();
 };
 
 export const startChangeStreams = (
