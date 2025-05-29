@@ -366,39 +366,83 @@ export function ArticleDrawer({
                       <Form.Item>
                         <Form.Label>Attachments</Form.Label>
                         <Form.Control>
-                          <Upload.Root
-                            value={field.value?.[0]?.url || ''}
-                            onChange={(value) => {
-                              if ('url' in value) {
-                                const newAttachment = {
-                                  url: value.url,
-                                  name: value.fileInfo?.name || '',
-                                };
-                                field.onChange([
-                                  ...(field.value || []),
-                                  newAttachment,
-                                ]);
-                              }
-                            }}
-                            multiple
-                          >
-                            <Upload.Preview />
-                            <div className="flex flex-col gap-2">
-                              <Upload.Button
-                                size="sm"
-                                variant="outline"
-                                type="button"
+                          <div className="space-y-2">
+                            {field.value?.map((attachment, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2"
                               >
-                                <IconUpload className="h-4 w-4 mr-2" />
-                                Upload files
-                              </Upload.Button>
-                              <Upload.RemoveButton
-                                size="sm"
-                                variant="outline"
-                                type="button"
-                              />
-                            </div>
-                          </Upload.Root>
+                                <Upload.Root
+                                  value={attachment.url}
+                                  onChange={(value) => {
+                                    if ('url' in value) {
+                                      const newAttachments = [
+                                        ...(field.value || []),
+                                      ];
+                                      newAttachments[index] = {
+                                        url: value.url,
+                                        name: value.fileInfo?.name || '',
+                                      };
+                                      field.onChange(newAttachments);
+                                    }
+                                  }}
+                                >
+                                  <Upload.Preview />
+                                  <div className="flex gap-2">
+                                    <Upload.Button
+                                      size="sm"
+                                      variant="outline"
+                                      type="button"
+                                    >
+                                      <IconUpload className="h-4 w-4 mr-2" />
+                                      Replace
+                                    </Upload.Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      type="button"
+                                      onClick={() => {
+                                        const newAttachments = [
+                                          ...(field.value || []),
+                                        ];
+                                        newAttachments.splice(index, 1);
+                                        field.onChange(newAttachments);
+                                      }}
+                                    >
+                                      Remove
+                                    </Button>
+                                  </div>
+                                </Upload.Root>
+                              </div>
+                            ))}
+                            <Upload.Root
+                              value=""
+                              onChange={(value) => {
+                                if ('url' in value) {
+                                  const newAttachment = {
+                                    url: value.url,
+                                    name: value.fileInfo?.name || '',
+                                  };
+                                  field.onChange([
+                                    ...(field.value || []),
+                                    newAttachment,
+                                  ]);
+                                }
+                              }}
+                            >
+                              <Upload.Preview />
+                              <div className="flex flex-col gap-2">
+                                <Upload.Button
+                                  size="sm"
+                                  variant="outline"
+                                  type="button"
+                                >
+                                  <IconUpload className="h-4 w-4 mr-2" />
+                                  Add file
+                                </Upload.Button>
+                              </div>
+                            </Upload.Root>
+                          </div>
                         </Form.Control>
                         <Form.Message />
                       </Form.Item>

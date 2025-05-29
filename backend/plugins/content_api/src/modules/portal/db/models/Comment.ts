@@ -35,6 +35,10 @@ export const loadCommentClass = (models: IModels) => {
     public static async deleteComment(_id: string) {
       return models.Comments.deleteOne({ _id });
     }
+
+    public static async updateComment(_id: string, doc: IComment) {
+      return models.Comments.findByIdAndUpdate(_id, doc, { new: true });
+    }
   }
 
   commentSchema.loadClass(Comment);

@@ -26,7 +26,7 @@ export const KnowledgeBaseCategory = {
         categoryId: category._id,
         status: { $in: [PUBLISH_STATUSES.PUBLISH, PUBLISH_STATUSES.DRAFT] },
       },
-      { createdBy: 1 }
+      { createdBy: 1 },
     );
 
     const authorIds = articles.map((article) => article.createdBy);
@@ -61,7 +61,7 @@ export const KnowledgeBaseCategory = {
 export const KnowledgeBaseParentCategory = {
   ...KnowledgeBaseCategory,
 
-  async childrens(category: ICategoryDocument, _args, { models }: IContext) {
+  async children(category: ICategoryDocument, _args, { models }: IContext) {
     return models.KnowledgeBaseCategories.find({
       parentCategoryId: category._id,
     }).sort({ title: 1 });
