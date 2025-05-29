@@ -138,9 +138,17 @@ export const random = (pattern: string, length: number) => {
 
   let result = '';
   const crypto = require('crypto');
-  const randomBytes = crypto.randomBytes(length);
-  for (let i = 0; i < length; i++) {
-    result += chars[randomBytes[i] % chars.length];
+
+  const maxByte = 255;
+  const maxMultiple = Math.floor(maxByte / chars.length) * chars.length;
+
+  while (result.length < length) {
+    const randomBytes = crypto.randomBytes(1);
+    const randomValue = randomBytes[0];
+
+    if (randomValue < maxMultiple) {
+      result += chars[randomValue % chars.length];
+    }
   }
 
   return result;
