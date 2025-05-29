@@ -101,7 +101,7 @@ export const fieldsTrpcRouter = t.router({
           input.map((item) => {
             return {
               field: item.field,
-              value: item.value || '',
+              value: item.value ?? '',
               extraValue: item.extraValue,
             };
           }),
