@@ -4,13 +4,18 @@ import { sendTRPCMessage } from 'erxes-api-shared/src/utils/trpc';
 import { IModels } from '~/connectionResolvers';
 
 export const handleContacts = async (args: IContactsParams) => {
-  const { models, portalId, document, password = random('Aa0!', 8) } = args;
+  const {
+    models,
+    clientPortalId,
+    document,
+    password = random('Aa0!', 8),
+  } = args;
   const { type = 'customer' } = document;
   const trimmedMail = (document.email || '').toLowerCase().trim();
   const phone = document.phone;
 
   let qry: any = {
-    portalId,
+    clientPortalId,
     ...(phone ? { phone } : {}),
     ...(document.email && !phone ? { email: trimmedMail } : {}),
   };
@@ -19,14 +24,14 @@ export const handleContacts = async (args: IContactsParams) => {
 
   if (type === 'customer') {
     const customer = await findOrCreateCustomer(trimmedMail, phone, document);
-    qry = { erxesCustomerId: customer._id, portalId };
+    qry = { erxesCustomerId: customer._id, clientPortalId };
 
     user = await models.Users.findOne(qry);
     if (user) {
       throw new Error('user is already exists');
     }
 
-    user = await createUser(models, document, password, portalId);
+    user = await createUser(models, document, password, clientPortalId);
     await linkCustomerToUser(models, user._id, customer._id);
 
     // TODO: fix
@@ -47,7 +52,7 @@ export const handleContacts = async (args: IContactsParams) => {
   if (type === 'company') {
     const company = await findOrCreateCompany(trimmedMail, phone, document);
 
-    qry = { erxesCompanyId: company._id, portalId };
+    qry = { erxesCompanyId: company._id, clientPortalId };
     user = await models.Users.findOne(qry);
 
     if (user && (user.isEmailVerified || user.isPhoneVerified)) {
@@ -55,7 +60,7 @@ export const handleContacts = async (args: IContactsParams) => {
     }
 
     if (!user) {
-      user = await createUser(models, document, password, portalId);
+      user = await createUser(models, document, password, clientPortalId);
     }
 
     await linkCompanyToUser(models, user._id, company._id);
@@ -143,11 +148,11 @@ const createUser = async (
   models: any,
   doc: any,
   password: string,
-  portalId: string,
+  clientPortalId: string,
 ) => {
   return await models.Users.create({
     ...doc,
-    portalId,
+    clientPortalId,
     password: password && (await models.Users.generatePassword(password)),
   });
 };
@@ -191,7 +196,7 @@ export const putActivityLog = async (subdomain, user) => {
   //     data: {
   //       contentType,
   //       contentId,
-  //       createdBy: user.portalId,
+  //       createdBy: user.clientPortalId,
   //       action: 'create',
   //     },
   //   },
@@ -342,4 +347,67 @@ export const participantEditRelation = async (
 
 export const escapeRegex = (string: string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+export const getConfigByHost = async (
+  models: IModels,
+  requestInfo,
+  clientPortalName?,
+) => {
+  const origin = requestInfo.headers.origin;
+  const pattern = `.*${origin}.*`;
+
+  let config = await models.Portals.findOne({ url: { $regex: pattern } });
+
+  if (clientPortalName) {
+    config = await models.Portals.findOne({
+      name: clientPortalName,
+    });
+  }
+
+  if (!config) {
+    throw new Error('Not found');
+  }
+
+  return config;
+};
+
+export const getUserCards = async (
+  userId: string,
+  contentType: string,
+  models: IModels,
+) => {
+  const cardIds = await models.UserCards.find({
+    cpUserId: userId,
+    contentType,
+  }).distinct('contentTypeId');
+
+  // const message = {
+  //   subdomain,
+  //   action: `${contentType}s.find`,
+  //   data: {
+  //     _id: { $in: cardIds },
+  //   },
+  //   isRPC: true,
+  //   defaultValue: [],
+  // };
+
+  const cards = [];
+
+  // switch (contentType) {
+  //   case 'deal':
+  //     cards = await sendSalesMessage(message);
+  //     break;
+  //   case 'task':
+  //     cards = await sendTasksMessage(message);
+  //     break;
+  //   case 'ticket':
+  //     cards = await sendTicketsMessage(message);
+  //     break;
+  //   case 'purchase':
+  //     cards = await sendPurchasesMessage(message);
+  //     break;
+  // }
+
+  return cards;
 };

@@ -6,7 +6,7 @@ import {
 import { Document } from 'mongoose';
 
 export interface IPostTag {
-  portalId: string;
+  clientPortalId: string;
   name: string;
   colorCode?: string;
   slug: string;
@@ -24,7 +24,7 @@ export interface IPostCategory {
   description?: string;
   parentId?: string;
   status?: 'active' | 'inactive';
-  portalId: string;
+  clientPortalId: string;
   customFieldsData?: ICustomField[];
 }
 
@@ -34,7 +34,7 @@ export interface IPostCategoryDocument extends IPostCategory, Document {
 }
 
 export interface IPost {
-  portalId: string;
+  clientPortalId: string;
   title: string;
   slug: string;
   content?: string;

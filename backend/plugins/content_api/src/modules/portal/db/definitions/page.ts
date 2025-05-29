@@ -6,7 +6,7 @@ import { Schema } from 'mongoose';
 export const pageSchema = new Schema<IPageDocument>(
   {
     _id: mongooseStringRandomId,
-    portalId: { type: String, required: true },
+    clientPortalId: { type: String, required: true },
     name: { type: String, required: true },
     description: { type: String },
     content: { type: String },
@@ -31,4 +31,4 @@ export const pageSchema = new Schema<IPageDocument>(
   { timestamps: true },
 );
 
-pageSchema.index({ slug: 1, portalId: 1 }, { sparse: true });
+pageSchema.index({ slug: 1, clientPortalId: 1 }, { sparse: true });

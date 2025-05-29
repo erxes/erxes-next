@@ -13,7 +13,7 @@ import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
 export const postSchema = new Schema<IPostDocument>(
   {
     _id: mongooseStringRandomId,
-    portalId: { type: String, required: true },
+    clientPortalId: { type: String, required: true },
     title: { type: String, required: true },
     type: { type: String, required: true, default: 'post' },
     slug: { type: String, required: true, unique: true },
@@ -58,14 +58,14 @@ export const postSchema = new Schema<IPostDocument>(
 );
 
 postSchema.index(
-  { slug: 1, portalId: 1 },
+  { slug: 1, clientPortalId: 1 },
   { unique: true, sparse: true },
 );
 
 export const postCategorySchema = new Schema<IPostCategoryDocument>(
   {
     _id: mongooseStringRandomId,
-    portalId: { type: String, required: true },
+    clientPortalId: { type: String, required: true },
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     description: { type: String },
@@ -76,12 +76,12 @@ export const postCategorySchema = new Schema<IPostCategoryDocument>(
   { timestamps: true },
 );
 
-postCategorySchema.index({ slug: 1, portalId: 1 }, { sparse: true });
+postCategorySchema.index({ slug: 1, clientPortalId: 1 }, { sparse: true });
 
 export const postTagSchema = new Schema<IPostTagDocument>(
   {
     _id: mongooseStringRandomId,
-    portalId: { type: String, required: true },
+    clientPortalId: { type: String, required: true },
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     createdUserId: { type: String, ref: 'User' }, // team member
@@ -90,4 +90,4 @@ export const postTagSchema = new Schema<IPostTagDocument>(
   { timestamps: true },
 );
 
-postTagSchema.index({ slug: 1, portalId: 1 }, { sparse: true });
+postTagSchema.index({ slug: 1, clientPortalId: 1 }, { sparse: true });

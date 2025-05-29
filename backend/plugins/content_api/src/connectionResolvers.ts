@@ -1,4 +1,4 @@
-import { IMainContext, IUserDocument } from 'erxes-api-shared/core-types';
+import { IMainContext } from 'erxes-api-shared/core-types';
 import { createGenerateModels } from 'erxes-api-shared/utils';
 
 import mongoose from 'mongoose';
@@ -20,6 +20,7 @@ import { ICommentDocument } from '@/portal/@types/comment';
 import { IPortalCompanyDocument } from '@/portal/@types/company';
 import { INotificationDocument } from '@/portal/@types/notification';
 import { IPortalDocument } from '@/portal/@types/portal';
+import { IUserDocument } from '@/portal/@types/user';
 import { IUserCardDocument } from '@/portal/@types/userCard';
 import { ICommentModel, loadCommentClass } from '@/portal/db/models/Comment';
 import {
@@ -53,6 +54,7 @@ export interface IModels {
 export interface IContext extends IMainContext {
   commonQuerySelector: any;
   models: IModels;
+  portalUser: IUserDocument;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {

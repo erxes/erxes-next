@@ -29,7 +29,7 @@ import { sendTRPCMessage } from 'erxes-api-shared/src/utils/trpc';
 const SALT_WORK_FACTOR = 10;
 
 export interface ILoginParams {
-  portalId: string;
+  clientPortalId: string;
   login: string;
   password: string;
   deviceToken?: string;
@@ -97,7 +97,7 @@ export interface IUserModel extends Model<IUserDocument> {
   };
   imposeVerificationCode({
     codeLength,
-    portalId,
+    clientPortalId,
     phone,
     email,
     isRessetting,
@@ -105,7 +105,7 @@ export interface IUserModel extends Model<IUserDocument> {
     testUserOTP,
   }: {
     codeLength: number;
-    portalId: string;
+    clientPortalId: string;
     expireAfter?: number;
     phone?: string;
     email?: string;
@@ -169,7 +169,7 @@ export interface IUserModel extends Model<IUserDocument> {
   moveUser(
     oldportalId: string,
     newportalId: string,
-  ): Promise<{ userIds: string[]; portalId: string }>;
+  ): Promise<{ userIds: string[]; clientPortalId: string }>;
 }
 
 export const loadUserClass = (models: IModels) => {
@@ -233,9 +233,9 @@ export const loadUserClass = (models: IModels) => {
 
     public static async createUser(
       subdomain: string,
-      { password, portalId, ...doc }: IUser,
+      { password, clientPortalId, ...doc }: IUser,
     ) {
-      const portal = await models.Portals.getConfig(portalId);
+      const portal = await models.Portals.getConfig(clientPortalId);
 
       if (!portal.otpConfig && !portal.mailConfig && !password) {
         throw new Error('Password is required');
@@ -273,7 +273,7 @@ export const loadUserClass = (models: IModels) => {
       const user = await handleContacts({
         subdomain,
         models,
-        portalId,
+        clientPortalId,
         document,
         password,
       });
@@ -313,7 +313,7 @@ export const loadUserClass = (models: IModels) => {
       // TODO: implement sendSms after migration
       // if (user.phone && portal.otpConfig) {
       //   const phoneCode = await this.imposeVerificationCode({
-      //     portalId,
+      //     clientPortalId,
       //     codeLength: portal.otpConfig.codeLength,
       //     phone: user.phone,
       //   });
@@ -520,7 +520,7 @@ export const loadUserClass = (models: IModels) => {
       phone: string,
       email: string,
     ) {
-      const query: any = { portalId: portal._id };
+      const query: any = { clientPortalId: portal._id };
 
       const isEmail = portal.passwordVerificationConfig
         ? !portal.passwordVerificationConfig.verifyByOTP
@@ -552,7 +552,7 @@ export const loadUserClass = (models: IModels) => {
 
       const phoneCode = await this.imposeVerificationCode({
         codeLength: portal.otpConfig ? portal.otpConfig.codeLength : 4,
-        portalId: portal._id,
+        clientPortalId: portal._id,
         phone,
         email,
         isRessetting: true,
@@ -669,7 +669,7 @@ export const loadUserClass = (models: IModels) => {
 
     public static async imposeVerificationCode({
       codeLength,
-      portalId,
+      clientPortalId,
       phone,
       email,
       expireAfter,
@@ -677,7 +677,7 @@ export const loadUserClass = (models: IModels) => {
       testUserOTP,
     }: {
       codeLength: number;
-      portalId: string;
+      clientPortalId: string;
       phone?: string;
       email?: string;
       expireAfter?: number;
@@ -697,7 +697,7 @@ export const loadUserClass = (models: IModels) => {
           phoneVerificationCode: code,
           phoneVerificationCodeExpires: codeExpires,
         };
-        userFindQuery = { phone, portalId };
+        userFindQuery = { phone, clientPortalId };
       }
 
       if (email) {
@@ -705,7 +705,7 @@ export const loadUserClass = (models: IModels) => {
           emailVerificationCode: code,
           emailVerificationCodeExpires: codeExpires,
         };
-        userFindQuery = { email, portalId };
+        userFindQuery = { email, clientPortalId };
       }
 
       const user = await models.Users.findOne(userFindQuery);
@@ -786,10 +786,10 @@ export const loadUserClass = (models: IModels) => {
       login,
       password,
       deviceToken,
-      portalId,
+      clientPortalId,
       twoFactor,
     }: ILoginParams) {
-      if (!login || !password || !portalId) {
+      if (!login || !password || !clientPortalId) {
         throw new Error('Invalid login');
       }
 
@@ -799,7 +799,7 @@ export const loadUserClass = (models: IModels) => {
           { username: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
           { phone: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
         ],
-        portalId,
+        clientPortalId,
       });
 
       if (!user || !user.password) {
@@ -810,7 +810,7 @@ export const loadUserClass = (models: IModels) => {
         throw new Error('User is not verified');
       }
 
-      const cp = await models.Portals.getConfig(portalId);
+      const cp = await models.Portals.getConfig(clientPortalId);
 
       if (
         cp.manualVerificationConfig &&
@@ -870,7 +870,7 @@ export const loadUserClass = (models: IModels) => {
 
     public static async createTestUser(
       subdomain: string,
-      { password, portalId, ...doc }: IInvitiation,
+      { password, clientPortalId, ...doc }: IInvitiation,
     ) {
       if (!password) {
         password = random('Aa0!', 8);
@@ -883,13 +883,13 @@ export const loadUserClass = (models: IModels) => {
       return await handleContacts({
         subdomain,
         models,
-        portalId,
+        clientPortalId,
         document: doc,
         password,
       });
 
       // TODO: improve test user creation
-      // const portal = await models.Portals.getConfig(portalId);
+      // const portal = await models.Portals.getConfig(clientPortalId);
 
       // await sendAfterMutation(
       //   subdomain,
@@ -905,7 +905,7 @@ export const loadUserClass = (models: IModels) => {
 
     public static async invite(
       subdomain: string,
-      { password, portalId, ...doc }: IInvitiation,
+      { password, clientPortalId, ...doc }: IInvitiation,
     ) {
       if (!password) {
         password = random('Aa0!', 8);
@@ -920,12 +920,12 @@ export const loadUserClass = (models: IModels) => {
       const user = await handleContacts({
         subdomain,
         models,
-        portalId,
+        clientPortalId,
         document: doc,
         password,
       });
 
-      const portal = await models.Portals.getConfig(portalId);
+      const portal = await models.Portals.getConfig(clientPortalId);
 
       if (!doc.disableVerificationMail) {
         const { token, expires } = await models.Users.generateToken();
@@ -1136,14 +1136,14 @@ export const loadUserClass = (models: IModels) => {
     ) {
       let user = await models.Users.findOne({
         phone,
-        portalId: portal._id,
+        clientPortalId: portal._id,
       });
 
       if (!user) {
         user = await handleContacts({
           subdomain,
           models,
-          portalId: portal._id,
+          clientPortalId: portal._id,
           document: { phone },
         });
       }
@@ -1162,7 +1162,7 @@ export const loadUserClass = (models: IModels) => {
       };
 
       const phoneCode = await this.imposeVerificationCode({
-        portalId: portal._id,
+        clientPortalId: portal._id,
         codeLength: config.codeLength,
         phone: user.phone,
         expireAfter: config.expireAfter,
@@ -1196,14 +1196,14 @@ export const loadUserClass = (models: IModels) => {
 
       let user = await models.Users.findOne({
         $or: query,
-        portalId: portal._id,
+        clientPortalId: portal._id,
       });
 
       if (!user) {
         user = await handleContacts({
           subdomain,
           models,
-          portalId: portal._id,
+          clientPortalId: portal._id,
           document: doc,
         });
       }
@@ -1296,11 +1296,11 @@ export const loadUserClass = (models: IModels) => {
 
     public static async moveUser(oldportalId, newportalId) {
       const oldUsers = await models.Users.find({
-        portalId: oldportalId,
+        clientPortalId: oldportalId,
       });
 
       const newUsers = await models.Users.find({
-        portalId: newportalId,
+        clientPortalId: newportalId,
       });
 
       if (!oldUsers || !oldUsers.length) {
@@ -1326,7 +1326,7 @@ export const loadUserClass = (models: IModels) => {
 
       const updatedUsers = await models.Users.updateMany(
         { _id: { $in: userIdsToUpdate } },
-        { $set: { portalId: newportalId, modifiedAt: new Date() } },
+        { $set: { clientPortalId: newportalId, modifiedAt: new Date() } },
       );
 
       return updatedUsers;

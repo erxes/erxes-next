@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 
 export interface IMenuItem {
-  portalId: string;
+  clientPortalId: string;
   label: string;
   contentType: string;
   contentTypeID: string;

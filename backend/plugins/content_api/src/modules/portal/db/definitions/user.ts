@@ -99,7 +99,7 @@ export const userSchema = new Schema({
     optional: true,
     label: 'Company registration number',
   },
-  portalId: { type: String, required: true },
+  clientPortalId: { type: String, required: true },
   erxesCompanyId: { type: String, optional: true },
   erxesCustomerId: { type: String, optional: true },
   phoneVerificationCode: { type: String, optional: true },

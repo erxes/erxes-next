@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 
 export interface ICustomPostType {
   _id: string;
-  portalId: string;
+  clientPortalId: string;
 
   label: string;
   pluralLabel: string;

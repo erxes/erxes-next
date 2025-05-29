@@ -1,9 +1,8 @@
-
-import { ICustomField } from "erxes-api-shared/src/core-types";
-import { Document } from "mongoose";
+import { ICustomField } from 'erxes-api-shared/src/core-types';
+import { Document } from 'mongoose';
 
 export interface IPage {
-  portalId: string;
+  clientPortalId: string;
   name: string;
   description: string;
   content: string;
@@ -18,4 +17,3 @@ export interface IPage {
 export interface IPageDocument extends IPage, Document {
   _id: string;
 }
-

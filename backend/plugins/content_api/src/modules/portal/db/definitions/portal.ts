@@ -1,7 +1,6 @@
 import { Schema } from 'mongoose';
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
-
 const stylesSchema = new Schema(
   {
     bodyColor: { type: String, optional: true },
@@ -204,7 +203,7 @@ export const portalSchema = new Schema({
   },
   language: { type: String, optional: true },
   slug: { type: String, optional: true },
-  template: { type: String, optional: true },
+  template: { type: String, optional: true, default: 'helpdesk' },
   templateId: { type: String, optional: true },
   keywords: { type: String, optional: true },
   copyright: { type: String, optional: true },

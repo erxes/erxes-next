@@ -6,7 +6,7 @@ export interface INotification {
   link?: string;
   receiver?: string;
   notifType?: 'engage' | 'system';
-  portalId: string;
+  clientPortalId: string;
   eventData?: any | null;
   groupId?: string;
 }

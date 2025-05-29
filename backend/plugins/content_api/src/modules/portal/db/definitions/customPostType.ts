@@ -2,11 +2,10 @@ import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
 import { Schema } from 'mongoose';
 import { ICustomPostTypeDocument } from '@/portal/@types/customPostType';
 
-
 export const customPostTypeSchema = new Schema<ICustomPostTypeDocument>(
   {
     _id: mongooseStringRandomId,
-    portalId: { type: String, required: true },
+    clientPortalId: { type: String, required: true },
 
     label: { type: String, required: true },
     pluralLabel: { type: String, required: true },
@@ -14,7 +13,7 @@ export const customPostTypeSchema = new Schema<ICustomPostTypeDocument>(
     isActive: { type: Boolean, default: true },
     description: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-customPostTypeSchema.index({ name: 1, portalId: 1 }, { unique: true });
+customPostTypeSchema.index({ name: 1, clientPortalId: 1 }, { unique: true });

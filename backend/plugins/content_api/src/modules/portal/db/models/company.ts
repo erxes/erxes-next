@@ -53,11 +53,11 @@ export const loadCompanyClass = (models: IModels) => {
     }
 
     public static async createOrUpdateCompany(doc: IPortalCompanyDocument) {
-      const { erxesCompanyId, portalId } = doc;
+      const { erxesCompanyId, clientPortalId } = doc;
 
       const company = await models.Companies.findOne({
         erxesCompanyId,
-        portalId,
+        clientPortalId,
       });
 
       if (company) {
