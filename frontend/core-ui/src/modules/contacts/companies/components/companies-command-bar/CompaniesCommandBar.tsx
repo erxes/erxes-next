@@ -1,12 +1,9 @@
-import { CustomersDelete } from '@/contacts/customers/components/customers-command-bar/delete/CustomersDelete';
-import { CommandBar, Separator } from 'erxes-ui/components';
-import { RecordTable } from 'erxes-ui/modules/record-table';
-import { CustomersMerge } from '@/contacts/customers/components/customers-command-bar/merge/CustomersMerge';
-import { ICustomer, SelectTags } from 'ui-modules';
 import { ApolloError } from '@apollo/client';
-import { toast } from 'erxes-ui';
-import { Row } from '@tanstack/table-core';
-export const CustomersCommandBar = () => {
+import { CommandBar, RecordTable, Separator, toast } from 'erxes-ui';
+import { SelectTags } from 'ui-modules';
+import { CompaniesDelete } from './delete/CompaniesDelete';
+import { CompaniesMerge } from './merge/CompaniesMerge';
+export const CompaniesCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
   const intersection = (arrays: string[][]): string[] => {
     if (arrays.length === 0) return [];
@@ -15,9 +12,9 @@ export const CustomersCommandBar = () => {
     );
   };
 
-  const customerIds = table
+  const companyIds = table
     .getFilteredSelectedRowModel()
-    .rows.map((row: Row<ICustomer>) => row.original._id);
+    .rows.map((row) => row.original._id);
   return (
     <CommandBar open={table.getFilteredSelectedRowModel().rows.length > 0}>
       <CommandBar.Bar>
@@ -25,24 +22,27 @@ export const CustomersCommandBar = () => {
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
         <Separator.Inline />
-        <CustomersDelete customerIds={customerIds} rows={table.getFilteredSelectedRowModel().rows}/>
+        <CompaniesDelete
+          companyIds={companyIds}
+          rows={table.getFilteredSelectedRowModel().rows}
+        />
         <Separator.Inline />
         <SelectTags.CommandbarItem
           mode="multiple"
-          tagType="core:customer"
+          tagType="core:company"
           value={intersection(
             table
               .getFilteredSelectedRowModel()
               .rows.map((row) => row.original.tagIds),
           )}
-          targetIds={customerIds}
+          targetIds={companyIds}
           options={(newSelectedTagIds) => ({
             update: (cache) => {
-              customerIds.forEach((customerId) => {
+              companyIds.forEach((companyId) => {
                 cache.modify({
                   id: cache.identify({
-                    __typename: 'Customer',
-                    _id: customerId,
+                    __typename: 'Company',
+                    _id: companyId,
                   }),
                   fields: {
                     tagIds: () => newSelectedTagIds,
@@ -59,13 +59,7 @@ export const CustomersCommandBar = () => {
           })}
         />
         <Separator.Inline />
-        <CustomersMerge
-          customers={table
-            .getFilteredSelectedRowModel()
-            .rows.map((row) => row.original)}
-          disabled={table.getFilteredSelectedRowModel().rows.length != 2}
-          rows={table.getFilteredSelectedRowModel().rows}
-        />
+        <CompaniesMerge companies={table.getFilteredSelectedRowModel().rows.map((row) => row.original)} rows={table.getFilteredSelectedRowModel().rows} />
       </CommandBar.Bar>
     </CommandBar>
   );

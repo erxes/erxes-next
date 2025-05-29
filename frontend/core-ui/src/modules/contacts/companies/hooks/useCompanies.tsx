@@ -4,7 +4,6 @@ import {
   IRecordTableCursorPageInfo,
   mergeCursorData,
   useMultiQueryState,
-  useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
 import { GET_COMPANIES } from '@/contacts/companies/graphql/queries/getCompanies';
@@ -20,7 +19,12 @@ export const useCompanies = (options?: QueryHookOptions) => {
     updated: string;
     lastSeen: string;
   }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
-
+  const companiesQueryVariables = {
+    limit: COMPANIES_PER_PAGE,
+    searchValue,
+    tags,
+    ...options?.variables,
+  };
   const { data, loading, fetchMore } = useQuery<{
     companies: {
       list: ICompany[];
@@ -29,12 +33,7 @@ export const useCompanies = (options?: QueryHookOptions) => {
     };
   }>(GET_COMPANIES, {
     ...options,
-    variables: {
-      limit: COMPANIES_PER_PAGE,
-      searchValue,
-      tags,
-      ...options?.variables,
-    },
+    variables: companiesQueryVariables,
   });
 
   const { list: companies, totalCount, pageInfo } = data?.companies || {};
@@ -72,5 +71,6 @@ export const useCompanies = (options?: QueryHookOptions) => {
     totalCount,
     handleFetchMore,
     pageInfo,
+    companiesQueryVariables,
   };
 };

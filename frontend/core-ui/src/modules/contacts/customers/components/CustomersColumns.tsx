@@ -293,33 +293,26 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'tagIds',
     header: () => <RecordTable.InlineHead label="Tags" icon={IconTags} />,
     cell: ({ cell }) => {
-      const [selectedTags, setSelectedTags] = useState<string[]>(
-        cell.row.original.tagIds || [],
-      );
-      const [open, setOpen] = useState(false);
-
       return (
-        <SelectTags
+        <SelectTags.InlineCell
           tagType="core:customer"
           mode="multiple"
-          value={selectedTags}
+          value={cell.row.original.tagIds}
           targetIds={[cell.row.original._id]}
-          onValueChange={(tags) => {
-            if (Array.isArray(tags)) {
-              setSelectedTags(tags);
-              setOpen(false);
-            }
-          }}
-        >
-          <RecordTablePopover open={open} onOpenChange={setOpen}>
-            <RecordTableCellTrigger>
-              <SelectTags.List />
-            </RecordTableCellTrigger>
-            <RecordTableCellContent className="w-96">
-              <SelectTags.Content />
-            </RecordTableCellContent>
-          </RecordTablePopover>
-        </SelectTags>
+          options={(newSelectedTagIds) => ({
+            update: (cache) => {
+              cache.modify({
+                id: cache.identify({
+                  __typename: 'Customer',
+                  _id: cell.row.original._id,
+                }),
+                fields: {
+                  tagIds: () => newSelectedTagIds,
+                },
+              });
+            },
+          })}
+        />
       );
     },
     size: 360,
