@@ -15,7 +15,7 @@ const knowledgeBaseMutations = {
     { input }: { input: ITopic },
     { user, models }: IContext,
   ) {
-    const topic = await models.KnowledgeBaseTopics.createDoc(input, user._id);
+    return await models.KnowledgeBaseTopics.createDoc(input, user._id);
 
     // TODO: implement logs
     // await putCreateLog(
@@ -32,8 +32,6 @@ const knowledgeBaseMutations = {
     //   },
     //   user
     // );
-
-    return topic;
   },
 
   /**
@@ -44,12 +42,8 @@ const knowledgeBaseMutations = {
     { _id, input }: { _id: string; input: ITopic },
     { user, models }: IContext,
   ) {
-    const topic = await models.KnowledgeBaseTopics.getTopic(_id);
-    const updated = await models.KnowledgeBaseTopics.updateDoc(
-      _id,
-      input,
-      user._id,
-    );
+    // const topic = await models.KnowledgeBaseTopics.getTopic(_id);
+    return await models.KnowledgeBaseTopics.updateDoc(_id, input, user._id);
 
     // TODO: implement logs
     // await putUpdateLog(
@@ -68,7 +62,7 @@ const knowledgeBaseMutations = {
     //   user,
     // );
 
-    return updated;
+    // return updated;
   },
 
   /**
@@ -112,10 +106,7 @@ const knowledgeBaseMutations = {
     { input }: { input: ICategoryCreate },
     { user, models }: IContext,
   ) {
-    const kbCategory = await models.KnowledgeBaseCategories.createDoc(
-      input,
-      user._id,
-    );
+    return await models.KnowledgeBaseCategories.createDoc(input, user._id);
 
     // await putCreateLog(
     //   models,
@@ -132,7 +123,7 @@ const knowledgeBaseMutations = {
     //   user,
     // );
 
-    return kbCategory;
+    // return kbCategory;
   },
 
   /**
@@ -143,12 +134,8 @@ const knowledgeBaseMutations = {
     { _id, input }: { _id: string; input: ICategoryCreate },
     { user, models }: IContext,
   ) {
-    const kbCategory = await models.KnowledgeBaseCategories.getCategory(_id);
-    const updated = await models.KnowledgeBaseCategories.updateDoc(
-      _id,
-      input,
-      user._id,
-    );
+    // const kbCategory = await models.KnowledgeBaseCategories.getCategory(_id);
+    return await models.KnowledgeBaseCategories.updateDoc(_id, input, user._id);
 
     // TODO: implement logs
     // await putUpdateLog(
@@ -167,7 +154,7 @@ const knowledgeBaseMutations = {
     //   user,
     // );
 
-    return updated;
+    // return updated;
   },
 
   /**
@@ -185,7 +172,7 @@ const knowledgeBaseMutations = {
       { $unset: { parentCategoryId: 1 } },
     );
 
-    const removed = await models.KnowledgeBaseCategories.removeDoc(_id);
+    return await models.KnowledgeBaseCategories.removeDoc(_id);
 
     // TODO: implement logs
     // await putDeleteLog(
@@ -195,7 +182,7 @@ const knowledgeBaseMutations = {
     //   user,
     // );
 
-    return removed;
+    // return removed;
   },
 
   /**
@@ -218,10 +205,7 @@ const knowledgeBaseMutations = {
       throw new Error('Scheduled Date can not be in the past !');
     }
 
-    const kbArticle = await models.KnowledgeBaseArticles.createDoc(
-      input,
-      user._id,
-    );
+    return await models.KnowledgeBaseArticles.createDoc(input, user._id);
 
     // TODO: implement logs
     // await putCreateLog(
@@ -248,9 +232,9 @@ const knowledgeBaseMutations = {
     //   },
     // });
 
-    const topic = await models.KnowledgeBaseTopics.findOne({
-      _id: kbArticle.topicId,
-    });
+    // const topic = await models.KnowledgeBaseTopics.findOne({
+    //   _id: kbArticle.topicId,
+    // });
 
     // TODO: implement notifications
     // if (topic && topic.notificationSegmentId) {
@@ -276,7 +260,7 @@ const knowledgeBaseMutations = {
     //   });
     // }
 
-    return kbArticle;
+    // return kbArticle;
   },
 
   /**
@@ -301,11 +285,7 @@ const knowledgeBaseMutations = {
       throw new Error('Scheduled Date can not be in the past !');
     }
 
-    const updated = await models.KnowledgeBaseArticles.updateDoc(
-      _id,
-      input,
-      user._id,
-    );
+    return await models.KnowledgeBaseArticles.updateDoc(_id, input, user._id);
 
     // TODO: implement logs
     // await putUpdateLog(
@@ -324,7 +304,7 @@ const knowledgeBaseMutations = {
     //   user,
     // );
 
-    return updated;
+    // return updated;
   },
 
   /**
@@ -335,8 +315,8 @@ const knowledgeBaseMutations = {
     { _id }: { _id: string },
     { user, models }: IContext,
   ) {
-    const kbArticle = await models.KnowledgeBaseArticles.getArticle(_id);
-    const removed = await models.KnowledgeBaseArticles.removeDoc(_id);
+    // const kbArticle = await models.KnowledgeBaseArticles.getArticle(_id);
+    return await models.KnowledgeBaseArticles.removeDoc(_id);
 
     // TODO: implement logs
     // await putDeleteLog(
@@ -346,7 +326,7 @@ const knowledgeBaseMutations = {
     //   user,
     // );
 
-    return removed;
+    // return removed;
   },
 
   async knowledgeBaseArticlesIncrementViewCount(
