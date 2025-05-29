@@ -189,14 +189,12 @@ export const loadCategoryClass = (models: IModels) => {
         throw new Error('userId must be supplied');
       }
 
-      const category = await models.KnowledgeBaseCategories.create({
+      return await models.KnowledgeBaseCategories.create({
         ...docFields,
         createdDate: new Date(),
         createdBy: userId,
         modifiedDate: new Date(),
       });
-
-      return category;
     }
 
     /**
@@ -239,9 +237,7 @@ export const loadCategoryClass = (models: IModels) => {
         },
       );
 
-      const category = await models.KnowledgeBaseCategories.getCategory(_id);
-
-      return category;
+      return await models.KnowledgeBaseCategories.getCategory(_id);
     }
 
     /**
