@@ -19,6 +19,7 @@ import { userSchema } from '@/portal/db/definitions/user';
 
 // import { DEFAULT_MAIL_CONFIG } from '@/portal/constants';
 import {
+  escapeRegex,
   handleContacts,
   handleDeviceToken,
   putActivityLog,
@@ -794,9 +795,9 @@ export const loadUserClass = (models: IModels) => {
 
       const user = await models.Users.findOne({
         $or: [
-          { email: { $regex: new RegExp(`^${login}$`, 'i') } },
-          { username: { $regex: new RegExp(`^${login}$`, 'i') } },
-          { phone: { $regex: new RegExp(`^${login}$`, 'i') } },
+          { email: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
+          { username: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
+          { phone: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
         ],
         portalId,
       });
@@ -1176,11 +1177,25 @@ export const loadUserClass = (models: IModels) => {
       doc: IUser,
       deviceToken?: string,
     ) {
+      const query: any = [];
+
+      if (doc.email) {
+        query.push({
+          email: {
+            $regex: new RegExp(`^${escapeRegex(doc.email || '')}$`, 'i'),
+          },
+        });
+      }
+      if (doc.phone) {
+        query.push({
+          phone: {
+            $regex: new RegExp(`^${escapeRegex(doc.phone || '')}$`, 'i'),
+          },
+        });
+      }
+
       let user = await models.Users.findOne({
-        $or: [
-          { email: { $regex: new RegExp(`^${doc.email}$`, 'i') } },
-          { phone: { $regex: new RegExp(`^${doc.phone}$`, 'i') } },
-        ],
+        $or: query,
         portalId: portal._id,
       });
 
