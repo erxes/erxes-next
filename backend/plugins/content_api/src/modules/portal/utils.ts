@@ -22,7 +22,9 @@ export const handleContacts = async (args: IContactsParams) => {
     qry = { erxesCustomerId: customer._id, portalId };
 
     user = await models.Users.findOne(qry);
-    if (user) throw new Error('user is already exists');
+    if (user) {
+      throw new Error('user is already exists');
+    }
 
     user = await createUser(models, document, password, portalId);
     await linkCustomerToUser(models, user._id, customer._id);

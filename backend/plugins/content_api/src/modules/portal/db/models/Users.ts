@@ -482,9 +482,9 @@ export const loadUserClass = (models: IModels) => {
       currentPassword: string;
       newPassword: string;
     }) {
-      // Password can not be empty string
+      // Password cannot be empty string
       if (newPassword === '') {
-        throw new Error('Password can not be empty');
+        throw new Error('Password cannot be empty');
       }
 
       this.checkPassword(newPassword);
@@ -583,9 +583,9 @@ export const loadUserClass = (models: IModels) => {
         throw new Error('Wrong code');
       }
 
-      // Password can not be empty string
+      // Password cannot be empty string
       if (password === '') {
-        throw new Error('Password can not be empty');
+        throw new Error('Password cannot be empty');
       }
 
       this.checkPassword(password);
@@ -879,7 +879,7 @@ export const loadUserClass = (models: IModels) => {
         this.checkPassword(password);
       }
 
-      const user = await handleContacts({
+      return await handleContacts({
         subdomain,
         models,
         portalId,
@@ -899,7 +899,7 @@ export const loadUserClass = (models: IModels) => {
       //   `User's profile has been created on ${portal.name}`,
       // );
 
-      return user;
+      // return user;
     }
 
     public static async invite(
@@ -1148,7 +1148,7 @@ export const loadUserClass = (models: IModels) => {
       }
 
       if (!user) {
-        throw new Error('Can not create user');
+        throw new Error('cannot create user');
       }
 
       await handleDeviceToken(user, deviceToken);
@@ -1194,7 +1194,7 @@ export const loadUserClass = (models: IModels) => {
       }
 
       if (!user) {
-        throw new Error('Can not create user');
+        throw new Error('cannot create user');
       }
 
       await handleDeviceToken(user, deviceToken);

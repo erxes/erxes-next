@@ -118,7 +118,7 @@ export const loadArticleClass = (models: IModels) => {
     }
 
     /*
-     * Modify form view count
+     * Modify reaction count
      */
     public static async modifyReactionCount(
       articleId: string,
@@ -222,7 +222,7 @@ export const loadCategoryClass = (models: IModels) => {
           });
 
         if (childrenCounts > 0) {
-          throw new Error('Cannot change category. this is parent tag');
+          throw new Error('Cannot change category. this is parent category');
         }
       }
 

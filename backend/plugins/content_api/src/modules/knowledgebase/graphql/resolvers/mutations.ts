@@ -15,7 +15,7 @@ const knowledgeBaseMutations = {
     { input }: { input: ITopic },
     { user, models }: IContext,
   ) {
-    return await models.KnowledgeBaseTopics.createDoc(input, user._id);
+    return models.KnowledgeBaseTopics.createDoc(input, user._id);
 
     // TODO: implement logs
     // await putCreateLog(
@@ -43,7 +43,7 @@ const knowledgeBaseMutations = {
     { user, models }: IContext,
   ) {
     // const topic = await models.KnowledgeBaseTopics.getTopic(_id);
-    return await models.KnowledgeBaseTopics.updateDoc(_id, input, user._id);
+    return models.KnowledgeBaseTopics.updateDoc(_id, input, user._id);
 
     // TODO: implement logs
     // await putUpdateLog(
@@ -106,7 +106,7 @@ const knowledgeBaseMutations = {
     { input }: { input: ICategoryCreate },
     { user, models }: IContext,
   ) {
-    return await models.KnowledgeBaseCategories.createDoc(input, user._id);
+    return models.KnowledgeBaseCategories.createDoc(input, user._id);
 
     // await putCreateLog(
     //   models,
@@ -135,7 +135,7 @@ const knowledgeBaseMutations = {
     { user, models }: IContext,
   ) {
     // const kbCategory = await models.KnowledgeBaseCategories.getCategory(_id);
-    return await models.KnowledgeBaseCategories.updateDoc(_id, input, user._id);
+    return models.KnowledgeBaseCategories.updateDoc(_id, input, user._id);
 
     // TODO: implement logs
     // await putUpdateLog(
@@ -172,7 +172,7 @@ const knowledgeBaseMutations = {
       { $unset: { parentCategoryId: 1 } },
     );
 
-    return await models.KnowledgeBaseCategories.removeDoc(_id);
+    return models.KnowledgeBaseCategories.removeDoc(_id);
 
     // TODO: implement logs
     // await putDeleteLog(
@@ -202,10 +202,10 @@ const knowledgeBaseMutations = {
       input.scheduledDate &&
       input.scheduledDate < new Date()
     ) {
-      throw new Error('Scheduled Date can not be in the past !');
+      throw new Error('Scheduled Date cannot be in the past!');
     }
 
-    return await models.KnowledgeBaseArticles.createDoc(input, user._id);
+    return models.KnowledgeBaseArticles.createDoc(input, user._id);
 
     // TODO: implement logs
     // await putCreateLog(
@@ -282,10 +282,10 @@ const knowledgeBaseMutations = {
       input.scheduledDate &&
       input.scheduledDate < new Date()
     ) {
-      throw new Error('Scheduled Date can not be in the past !');
+      throw new Error('Scheduled Date cannot be in the past !');
     }
 
-    return await models.KnowledgeBaseArticles.updateDoc(_id, input, user._id);
+    return models.KnowledgeBaseArticles.updateDoc(_id, input, user._id);
 
     // TODO: implement logs
     // await putUpdateLog(
@@ -316,7 +316,7 @@ const knowledgeBaseMutations = {
     { user, models }: IContext,
   ) {
     // const kbArticle = await models.KnowledgeBaseArticles.getArticle(_id);
-    return await models.KnowledgeBaseArticles.removeDoc(_id);
+    return models.KnowledgeBaseArticles.removeDoc(_id);
 
     // TODO: implement logs
     // await putDeleteLog(
@@ -334,7 +334,7 @@ const knowledgeBaseMutations = {
     { _id }: { _id: string },
     { models }: IContext,
   ) {
-    return await models.KnowledgeBaseArticles.incrementViewCount(_id);
+    return models.KnowledgeBaseArticles.incrementViewCount(_id);
   },
 };
 

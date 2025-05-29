@@ -70,7 +70,7 @@ type KnowledgeBaseParentCategory {
     authors: [User]
     numOfArticles(status: String): Float
 
-    childrens: [KnowledgeBaseCategory]
+    children: [KnowledgeBaseCategory]
   }
 
 type KnowledgeBaseTopic @key(fields: "_id") {

@@ -16,7 +16,7 @@ interface Category {
   icon: string;
   topicId: string;
   parentCategoryId?: string;
-  childrens?: Category[];
+  children?: Category[];
 }
 
 interface Topic {
@@ -208,8 +208,8 @@ export function TopicList({
           </div>
           {renderCategoryActions(category)}
         </div>
-        {category.childrens && category.childrens.length > 0 && (
-          <div className="ml-4">{renderCategoryTree(category.childrens)}</div>
+        {category.children && category.children.length > 0 && (
+          <div className="ml-4">{renderCategoryTree(category.children)}</div>
         )}
       </div>
     ));
