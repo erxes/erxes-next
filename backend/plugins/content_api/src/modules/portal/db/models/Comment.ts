@@ -25,7 +25,7 @@ export const loadCommentClass = (models: IModels) => {
       return comment;
     }
 
-    public static async createComment(doc: ICommentDocument) {
+    public static async createComment(doc: IComment) {
       return models.Comments.create({
         ...doc,
         createdAt: new Date(),
