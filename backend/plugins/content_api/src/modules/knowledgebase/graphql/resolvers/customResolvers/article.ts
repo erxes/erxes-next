@@ -11,14 +11,12 @@ export default {
     if (!article.createdBy) {
       return null;
     }
-    const user = await sendTRPCMessage({
+    return await sendTRPCMessage({
       pluginName: 'core',
       module: 'users',
       action: 'findOne',
       input: { query: { _id: article.createdBy } },
     });
-
-    return user;
   },
   publishedUser(article: IArticleDocument) {
     if (!article.publishedUserId) {
