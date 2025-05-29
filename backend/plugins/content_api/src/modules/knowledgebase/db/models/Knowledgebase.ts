@@ -271,7 +271,7 @@ export interface ITopicModel extends Model<ITopicDocument> {
     docFields: ITopic,
     userId?: string,
   ): Promise<ITopicDocument>;
-  removeDoc(_id: string): void;
+  removeDoc(_id: string): Promise<any>;
 }
 
 export const loadTopicClass = (models: IModels) => {
