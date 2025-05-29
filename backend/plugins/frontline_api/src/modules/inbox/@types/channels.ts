@@ -8,7 +8,9 @@ export interface IChannel {
   conversationCount?: number;
   openConversationCount?: number;
 }
-
+export interface IChannelsEdit extends IChannel {
+  _id: string;
+}
 export interface IChannelDocument extends IChannel, Document {
   createdAt: Date;
 }

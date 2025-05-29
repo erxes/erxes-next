@@ -1,9 +1,8 @@
-// import * as graph from 'fbgraph';
 import { generateModels,IModels } from '~/connectionResolvers';
 import { getSubdomain } from 'erxes-api-shared/utils';
 import { debugFacebook,debugError } from '@/integrations/facebook/debuggers';
 import{checkIsAdsOpenThread} from '@/integrations/facebook/utils';
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { INTEGRATION_KINDS ,FACEBOOK_POST_TYPES} from '@/integrations/facebook/constants';
 import {getPageAccessTokenFromMap,} from '@/integrations/facebook/utils';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
@@ -193,6 +192,18 @@ export async function processMessagingEvent(
       if (!facebookAccounts) {
         debugFacebook(`No Facebook account found for accountId: ${integration.accountId}`);
         continue;
+      }
+     const { facebookPageTokensMap = {} } = integration;
+      try {
+        accessTokensByPageId[pageId] = getPageAccessTokenFromMap(
+          pageId,
+          facebookPageTokensMap
+        );
+      } catch (e) {
+        debugFacebook(
+          `Error occurred while getting page access token: ${e.message}`
+        );
+        return next();
       }
 
       // Create activity object for processing

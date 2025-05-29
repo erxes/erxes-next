@@ -202,7 +202,7 @@ export const facebookQueries = {
     { _id }: { _id: string },
     { models }: IContext,
   ) {
-    const conversation = await models.Conversations.findOne({ _id });
+    const conversation = await models.FacebookConversations.findOne({ _id });
     if (conversation) {
       return conversation;
     }

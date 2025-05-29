@@ -2,6 +2,9 @@ import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels } from '~/connectionResolvers';
 import { RPError, RPResult, RPSuccess } from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
+import { pConversationClientMessageInserted } from './graphql/resolvers/mutations/widget';
+import { IConversationDocument } from './@types/conversations';
 
 const sendError = (message): RPError => ({
   status: 'error',
@@ -43,10 +46,11 @@ export const receiveTrpcMessage = async (
       await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
-        module: 'customer',
+        module: 'customers',
         action: 'findOne',
         input: { selector },
       });
+      
     if (primaryPhone) {
       customer = await getCustomer({ primaryPhone });
 
@@ -54,7 +58,7 @@ export const receiveTrpcMessage = async (
         await sendTRPCMessage({
           pluginName: 'core',
           method: 'mutation', // this is a mutation, not a query
-          module: 'customer',
+          module: 'customers',
           action: 'updateCustomer',
           input: {
             doc: {
@@ -77,7 +81,7 @@ export const receiveTrpcMessage = async (
       customer = await sendTRPCMessage({
         pluginName: 'core',
         method: 'mutation',
-        module: 'customer',
+        module: 'customers',
         action: 'createCustomer',
         input: {
           doc: {
@@ -188,31 +192,30 @@ export const receiveTrpcMessage = async (
     );
 
     // FIXME: Find userId and `conversationClientMessageInserted:${userId}`
-    //   graphqlPubsub.publish<{ conversationClientMessageInserted: any }>(
-    //     'conversationClientMessageInserted',
-    //     {
-    //       conversationClientMessageInserted: message,
-    //     }
-    // );
+    const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
 
-    //     graphqlPubsub.publish(
-    //       `conversationMessageInserted:${message.conversationId}`,
-    //       {
-    //         conversationMessageInserted: message,
-    //       },
-    //     );
+    await publish('conversationClientMessageInserted', {
+      conversationClientMessageInserted: message,
+    });
+
+    await publish(`conversationClientMessageInserted:${message.conversationId}`, {
+      conversationClientMessageInserted: message,
+    });
+
 
     return sendSuccess({ _id: message._id });
   }
 
   if (action === 'get-configs') {
-    // const configs = await sendCoreMessage({
-    //   subdomain,
-    //   action: 'getConfigs',
-    //   data: {},
-    //   isRPC: true,
-    // });
-    // return sendSuccess({ configs });
+     const configs = await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'query', // this is a mutation, not a query
+          module: 'config',
+          action: 'getConfig',
+          input: {},
+        });
+    return sendSuccess({ configs });
+  
   }
 
   if (action === 'getUserIds') {
@@ -238,22 +241,24 @@ export const receiveIntegrationsNotification = async (subdomain, msg) => {
 
   const models = await generateModels(subdomain);
 
+  const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+
   if (action === 'external-integration-entry-added') {
-    // graphqlPubsub.publish('conversationExternalIntegrationMessageInserted', {});
+    await publish('conversationExternalIntegrationMessageInserted', {});
 
     if (conversationId) {
       await models.Conversations.reopen(conversationId);
       // FIXME: It must have _id
-      // await pConversationClientMessageInserted(models, subdomain, {
-      //   conversationId,
-      // });
+      await pConversationClientMessageInserted(models, subdomain, {
+        _id: conversationId,
+      });
     }
 
     return sendSuccess({ status: 'ok' });
   }
 
   if (action === 'sync-calendar-event') {
-    // graphqlPubsub.publish('calendarEventUpdated', {});
+    await publish('calendarEventUpdated', {});
 
     return sendSuccess({ status: 'ok' });
   }
@@ -270,52 +275,28 @@ export const collectConversations = async (
   subdomain: string,
   { contentId }: { contentId: string },
 ) => {
-  const models = await generateModels(subdomain);
+const models = await generateModels(subdomain);
   const results: any[] = [];
+  let conversations: IConversationDocument[] = [];
 
-  // const activities = await sendCoreMessage({
-  //   subdomain,
-  //   action: 'activityLogs.findMany',
-  //   data: {
-  //     query: {
-  //       contentId,
-  //       action: 'convert',
-  //     },
-  //     options: {
-  //       content: 1,
-  //     },
-  //   },
-  //   isRPC: true,
-  //   defaultValue: [],
-  // });
+    conversations = await models.Conversations.find({
+      $or: [{ customerId: contentId }, { participatedUserIds: contentId }],
+    }).lean();
+    
 
-  // const contentIds = activities.map((activity) => activity.content);
-
-  // let conversations: IConversationDocument[] = [];
-
-  // if (!contentIds.length) {
-  //   conversations = await models.Conversations.find({
-  //     $or: [{ customerId: contentId }, { participatedUserIds: contentId }],
-  //   }).lean();
-  // } else {
-  //   conversations = await models.Conversations.find({
-  //     _id: { $in: contentIds },
-  //   }).lean();
-  // }
-
-  // for (const c of conversations) {
-  //   results.push({
-  //     _id: c._id,
-  //     contentType: 'inbox:conversation',
-  //     contentId,
-  //     createdAt: c.createdAt,
-  //     contentTypeDetail: {
-  //       integration: await models.Integrations.findOne({
-  //         _id: c.integrationId,
-  //       }),
-  //     },
-  //   });
-  // }
+  for (const c of conversations) {
+    results.push({
+      _id: c._id,
+      contentType: 'inbox:conversation',
+      contentId,
+      createdAt: c.createdAt,
+      contentTypeDetail: {
+        integration: await models.Integrations.findOne({
+          _id: c.integrationId,
+        }),
+      },
+    });
+  }
 
   return results;
 };

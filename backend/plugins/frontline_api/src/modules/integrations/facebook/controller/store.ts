@@ -6,13 +6,14 @@ import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/int
 import { IFacebookCustomer } from '@/integrations/facebook/@types/customers';
 import { getFacebookUser } from '@/integrations/facebook/utils'
 import { receiveTrpcMessage } from '@/inbox/receiveMessage'
+import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget'
-// import { uploadMedia, getPostLink, getFacebookUserProfilePic, getPostDetails } from '@/integrations/facebook/utils'
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import {
   getPostLink,
   getFacebookUserProfilePic,
-  getPostDetails
-
+  getPostDetails,
+  uploadMedia
 } from '@/integrations/facebook/utils'; 
 
 
@@ -202,15 +203,15 @@ export const getOrCreateComment = async (
     };
     await pConversationClientMessageInserted(models,subdomain, doc);
   
-    // graphqlPubsub.publish(
-    //   `conversationMessageInserted:${conversation.erxesApiId}`,
-    //   {
-    //     conversationMessageInserted: {
-    //       ...conversation?.toObject(),
-    //       conversationId: conversation.erxesApiId
-    //     }
-    //   }
-    // );
+    const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+
+   await publish(`conversationClientMessageInserted:${conversation.erxesApiId}`, {
+      conversationClientMessageInserted: {
+        ...conversation?.toObject(),
+        conversationId: conversation.erxesApiId,
+      },
+    });
+
   } catch {
     throw new Error(
       `Failed to update the database with the Erxes API response for this conversation.`
@@ -234,31 +235,36 @@ export const generatePostDoc = async (
     photo_id,
     video_id
   } = postParams;
-  // let generatedMediaUrls: string[] = [];
+  let generatedMediaUrls: string[] = [];
 
-  // const { UPLOAD_SERVICE_TYPE } = await getFileUploadConfigs(subdomain);
+      const { UPLOAD_SERVICE_TYPE } = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'users',
+        action: 'getFileUploadConfigs',
+        input: {},
+      });
+  if (UPLOAD_SERVICE_TYPE === 'AWS') {
+    if (link) {
+      if (video_id) {
+        const mediaUrl = await uploadMedia(subdomain, link, true);
+        if (typeof mediaUrl === 'string') generatedMediaUrls.push(mediaUrl);
+      } else if (photo_id) {
+        const mediaUrl = await uploadMedia(subdomain, link, false);
+        if (typeof mediaUrl === 'string') generatedMediaUrls.push(mediaUrl);
+      }
+    }
 
-  // if (UPLOAD_SERVICE_TYPE === 'AWS') {
-  //   if (link) {
-  //     if (video_id) {
-  //       const mediaUrl = await uploadMedia(subdomain, link, true);
-  //       if (typeof mediaUrl === 'string') generatedMediaUrls.push(mediaUrl);
-  //     } else if (photo_id) {
-  //       const mediaUrl = await uploadMedia(subdomain, link, false);
-  //       if (typeof mediaUrl === 'string') generatedMediaUrls.push(mediaUrl);
-  //     }
-  //   }
+    if (photos && photos.length > 0) {
+      const mediaUrls = await Promise.all(
+        photos.map((url) => uploadMedia(subdomain, url, false))
+      );
 
-  //   if (photos && photos.length > 0) {
-  //     const mediaUrls = await Promise.all(
-  //       photos.map((url) => uploadMedia(subdomain, url, false))
-  //     );
-
-  //     generatedMediaUrls = mediaUrls.filter(
-  //       (url): url is string => url !== null && typeof url === 'string'
-  //     );
-  //   }
-  // }
+      generatedMediaUrls = mediaUrls.filter(
+        (url): url is string => url !== null && typeof url === 'string'
+      );
+    }
+  }
 
   const doc = {
     postId: post_id || id,
@@ -266,7 +272,7 @@ export const generatePostDoc = async (
     recipientId: pageId,
     senderId: userId,
     permalink_url: '',
-    // attachments: generatedMediaUrls.length > 0 ? generatedMediaUrls : [],
+    attachments: generatedMediaUrls.length > 0 ? generatedMediaUrls : [],
     timestamp: created_time ? new Date(created_time) : undefined
   };
 
@@ -337,9 +343,9 @@ export const getOrCreatePost = async (
     postParams.post_id || ''
   );
   const doc = await generatePostDoc(postParams, pageId, userId, subdomain);
-  // if (!doc.attachments && doc.content === '...') {
-  //   throw new Error();
-  // }
+  if (!doc.attachments && doc.content === '...') {
+   throw new Error('Invalid post document: missing attachments and content');
+  }
 
   doc.permalink_url = postUrl;
   post = await models.FacebookPostConversations.create(doc);

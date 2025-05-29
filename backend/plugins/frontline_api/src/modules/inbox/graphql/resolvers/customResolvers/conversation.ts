@@ -72,59 +72,8 @@ export default {
     return messages.filter((message) => message);
   },
 
-  async callProAudio(
-    conv: IConversationDocument,
-    _args,
-    { user, models, subdomain }: IContext,
-  ) {
-    const integration =
-      (await models.Integrations.findOne({
-        _id: conv.integrationId,
-      })) || ({} as any);
-
-    if (integration && integration.kind !== 'callpro') {
-      return null;
-    }
-
-    return null;
-  },
-
   async tags(conv: IConversationDocument) {
     return (conv.tagIds || []).map((_id) => ({ __typename: 'Tag', _id }));
   },
 
-  async callHistory(
-    conversation: IConversationDocument,
-    _args,
-    { models, subdomain }: IContext,
-  ) {
-    const integration =
-      (await models.Integrations.findOne({
-        _id: conversation.integrationId,
-      })) || ({} as any);
-
-    if (integration && integration.kind !== 'calls') {
-      return null;
-    }
-
-    return null;
-  },
-
-  async cloudflareCallsHistory(
-    conversation: IConversationDocument,
-    _args,
-    { models, subdomain }: IContext,
-  ) {
-    const integration =
-      (await models.Integrations.findOne({
-        _id: conversation.integrationId,
-      })) || ({} as any);
-
-    if (
-      integration &&
-      !['cloudflarecalls', 'messenger'].includes(integration.kind)
-    ) {
-      return null;
-    }
-  },
 };

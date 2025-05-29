@@ -42,3 +42,14 @@ export const getIntegrationsKinds = async () => {
 
   return response;
 };
+
+export const isServiceRunning = async (
+  integrationKind: string,
+): Promise<boolean> => {
+  const serviceNames = await getPlugins();
+
+  // some kinds are separated by -
+  return (
+    !!integrationKind && serviceNames.includes(integrationKind.split('-')[0])
+  );
+};
