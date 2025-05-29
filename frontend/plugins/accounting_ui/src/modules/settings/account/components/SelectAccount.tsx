@@ -10,6 +10,7 @@ import { useAccounts } from '../hooks/useAccounts';
 import { IAccount } from '../types/Account';
 
 import React from 'react';
+import { useDebounce } from 'use-debounce';
 
 export const SelectAccount = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
@@ -21,20 +22,15 @@ export const SelectAccount = React.forwardRef<
   }
 >(({ value, onValueChange, onCallback, defaultFilter, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-  const { accounts, loading, error } = useAccounts({
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 200);
+  const { accounts, loading, error, totalCount, handleFetchMore } = useAccounts({
     variables: {
       ...defaultFilter,
+      searchValue: debouncedSearch
     },
     skip: (!value && !open),
   });
-
-  // useEffect(() => {
-  //   const account = accounts?.find((account: IAccount) => account._id === value)
-  //   if (onCallback && account) {
-  //     onCallback(account)
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [accounts])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,8 +47,12 @@ export const SelectAccount = React.forwardRef<
         )}
       </Combobox.Trigger>
       <Combobox.Content>
-        <Command>
-          <Command.Input placeholder="Search account" />
+        <Command shouldFilter={false}>
+          <Command.Input
+            placeholder="Search account"
+            value={search}
+            onValueChange={(v) => setSearch(v)}
+          />
           <Command.List>
             <Combobox.Empty loading={loading} error={error} />
             {accounts?.map((account: IAccount) => (
@@ -69,6 +69,8 @@ export const SelectAccount = React.forwardRef<
                 <Combobox.Check checked={account._id === value} />
               </Command.Item>
             ))}
+
+            <Combobox.FetchMore totalCount={totalCount} currentLength={accounts?.length ?? 0} fetchMore={handleFetchMore} />
           </Command.List>
         </Command>
       </Combobox.Content>
