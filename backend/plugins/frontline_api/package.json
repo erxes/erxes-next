@@ -17,6 +17,7 @@
     "erxes-api-shared": "workspace:^",
     "fbgraph": "^1.4.4",
     "moment-timezone": "^0.5.48",
+    "nodemailer": "^7.0.3",
     "strip": "^3.0.0"
   }
 }
