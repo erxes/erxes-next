@@ -51,8 +51,12 @@ export const PARENT_CATEGORY_FRAGMENT = gql`
 
 export const TOPICS_SHORT = gql`
   ${PAGE_INFO_FRAGMENT}
-  query knowledgeBaseTopics($page: Int, $perPage: Int) {
-    knowledgeBaseTopics(page: $page, perPage: $perPage) {
+  query knowledgeBaseTopics(
+    $limit: Int
+    $cursor: String
+    $direction: CURSOR_DIRECTION
+  ) {
+    knowledgeBaseTopics(limit: $limit, cursor: $cursor, direction: $direction) {
       list {
         _id
         title
@@ -69,8 +73,12 @@ export const TOPICS = gql`
   ${PAGE_INFO_FRAGMENT}
   ${CATEGORY_FRAGMENT}
   ${PARENT_CATEGORY_FRAGMENT}
-  query knowledgeBaseTopics($page: Int, $perPage: Int) {
-    knowledgeBaseTopics(page: $page, perPage: $perPage) {
+  query knowledgeBaseTopics(
+    $limit: Int
+    $cursor: String
+    $direction: CURSOR_DIRECTION
+  ) {
+    knowledgeBaseTopics(limit: $limit, cursor: $cursor, direction: $direction) {
       list {
         _id
         title
@@ -125,13 +133,15 @@ export const CATEGORIES = gql`
   ${CATEGORY_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
   query knowledgeBaseCategories(
-    $page: Int
-    $perPage: Int
+    $limit: Int
+    $cursor: String
+    $direction: CURSOR_DIRECTION
     $topicIds: [String]
   ) {
     knowledgebaseCategories(
-      page: $page
-      perPage: $perPage
+      limit: $limit
+      cursor: $cursor
+      direction: $direction
       topicIds: $topicIds
     ) {
       list {
@@ -191,13 +201,15 @@ export const ARTICLES = gql`
   ${USER_FRAGMENT}
   ${PAGE_INFO_FRAGMENT}
   query knowledgeBaseArticles(
-    $page: Int
-    $perPage: Int
+    $limit: Int
+    $cursor: String
+    $direction: CURSOR_DIRECTION
     $categoryIds: [String]
   ) {
     knowledgeBaseArticles(
-      page: $page
-      perPage: $perPage
+      limit: $limit
+      cursor: $cursor
+      direction: $direction
       categoryIds: $categoryIds
     ) {
       list {
