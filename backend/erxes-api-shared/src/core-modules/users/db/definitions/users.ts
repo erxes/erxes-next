@@ -175,6 +175,7 @@ export const userSchema = schemaWrapper(
       label: 'Custom fields data',
     }),
   }),
+  { contentType: 'core:user' },
 );
 
 export const userMovemmentSchema = schemaWrapper(
