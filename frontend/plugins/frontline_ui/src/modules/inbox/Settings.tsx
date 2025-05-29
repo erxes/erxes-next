@@ -5,28 +5,29 @@ import {
   OTHER_INTEGRATIONS,
 } from '../settings/constants/integrations';
 import { IntegrationContext } from '../settings/context/IntegrationContext';
-import { Filter, PageContainer, Spinner } from 'erxes-ui';
-import { InboxSettingsBreadcrumb } from '../settings/components/InboxSettingsBreadcrumb';
+import { Button, PageContainer, Spinner } from 'erxes-ui';
+
 import { InboxSettingsTopbar } from '../settings/components/InboxSettingsTopbar';
 import { InboxSettingsSidebar } from '../settings/components/Sidebar';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
+import { IconMailFilled } from '@tabler/icons-react';
 
-export const InboxMainConfig = lazy(() =>
-  import('~/pages/SettingsPage').then((module) => ({
-    default: module.SettingsPage,
-  })),
-);
-
-export const IntegrationDetailPage = lazy(() =>
-  import('~/pages/IntegrationCreatePage').then((module) => ({
-    default: module.IntegrationCreatePage,
+export const IntegrationSettingsPage = lazy(() =>
+  import('~/pages/IntegrationSettingsPage').then((module) => ({
+    default: module.IntegrationSettingsPage,
   })),
 );
 
 export const ChannelsSettingsPage = lazy(() =>
   import('~/pages/ChannelsSettingsPage').then((module) => ({
     default: module.default,
+  })),
+);
+
+export const IntegrationDetailPage = lazy(() =>
+  import('~/pages/IntegrationDetailPage').then((module) => ({
+    default: module.IntegrationDetailPage,
   })),
 );
 
@@ -44,17 +45,21 @@ const InboxSettings = () => {
         setOtherIntegrations,
       }}
     >
-      <PageContainer>
-        <PageHeader>
-          <PageHeaderStart>
-            <InboxSettingsBreadcrumb />
-          </PageHeaderStart>
-          <PageHeaderEnd>
-            <InboxSettingsTopbar />
-          </PageHeaderEnd>
-        </PageHeader>
-        <div className="flex flex-auto w-full overflow-hidden">
-          <InboxSettingsSidebar />
+      <div className="flex flex-auto w-full overflow-hidden">
+        <InboxSettingsSidebar />
+        <PageContainer className="flex-1">
+          <PageHeader>
+            <PageHeaderStart>
+              <Button variant={'ghost'} className="font-semibold">
+                <IconMailFilled className="w-4 h-4 text-accent-foreground" />
+                Team inbox
+              </Button>
+            </PageHeaderStart>
+            <PageHeaderEnd>
+              <InboxSettingsTopbar />
+            </PageHeaderEnd>
+          </PageHeader>
+
           <Suspense
             fallback={
               <div className="flex justify-center items-center h-full">
@@ -63,16 +68,23 @@ const InboxSettings = () => {
             }
           >
             <Routes>
-              <Route path="/" element={<InboxMainConfig />} />
               <Route
-                path="/details/:kind"
+                path="/"
+                element={<Navigate to="integrations" replace />}
+              />
+              <Route
+                path="integrations"
+                element={<IntegrationSettingsPage />}
+              />
+              <Route
+                path="integrations/:integrationType"
                 element={<IntegrationDetailPage />}
               />
               <Route path="channels" element={<ChannelsSettingsPage />} />
             </Routes>
           </Suspense>
-        </div>
-      </PageContainer>
+        </PageContainer>
+      </div>
     </IntegrationContext.Provider>
   );
 };

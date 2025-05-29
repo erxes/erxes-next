@@ -1,8 +1,5 @@
 import { gql } from '@apollo/client';
-import {
-  COMMON_COMMENT_AND_MESSAGE_FIELDS,
-  COMMON_POST_AND_COMMENT_FIELDS,
-} from './fbFragments';
+import { ATTACHMENT_GQL } from 'erxes-ui/constants';
 
 export const GET_COMMENTS = gql`
   query FacebookGetComments(
@@ -18,25 +15,12 @@ export const GET_COMMENTS = gql`
       limit: $limit
     ) {
       _id
-      content
-      conversationId
-      attachments {
-        url
-        name
-        type
-        size
-        duration
-      }
+      ...CommonCommentAndMessageFields
+      ${ATTACHMENT_GQL}
       customerId
       userId
       createdAt
       commentId
-      customer {
-        _id
-      }
-      user {
-        _id
-      }
     }
   }
 `;

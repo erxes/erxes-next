@@ -9,22 +9,10 @@ export interface IConversation {
   updatedAt: string;
   customer?: ICustomerInline;
   customerId?: string;
-  integration: IIntegration;
+  integrationId?: string;
   readUserIds: string[];
   assignedUserId?: string;
   tagIds?: string[];
-}
-
-export interface IIntegration {
-  name: string;
-  kind: string;
-  brand: {
-    name: string;
-  };
-}
-
-export interface IBrand {
-  name: string;
 }
 
 export interface IMessage {

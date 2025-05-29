@@ -4,6 +4,12 @@ import { Sidebar } from 'erxes-ui';
 import { SETTINGS_ROUTES } from '../constants/settingsRoutes';
 
 export const InboxSettingsSidebar = () => {
+  const location = useLocation();
+
+  if (location.pathname !== '/settings/inbox/integrations') {
+    return null;
+  }
+
   return (
     <Sidebar collapsible="none" className="border-r flex-none">
       <Sidebar.Group>

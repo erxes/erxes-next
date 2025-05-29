@@ -9,8 +9,9 @@ import { activeConversationState } from '@/inbox/conversations/states/activeConv
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { ConversationIntegrationDetail } from './ConversationIntegrationDetail';
 import { MessageInput } from './MessageInput';
-import { MessagesSkeleton } from '@/inbox/conversation-messages/components/MessagesSkeleton';
+
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
+import { InboxMessagesSkeleton } from '@/inbox/components/InboxMessagesSkeleton';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -32,7 +33,7 @@ export const ConversationDetail = () => {
   if (loading && !currentConversation) {
     return (
       <div className="relative h-full">
-        <MessagesSkeleton />
+        <InboxMessagesSkeleton />
       </div>
     );
   }

@@ -9,3 +9,16 @@ export const getIntegrations = gql`
     conversationCounts(limit: $limit, only: $only)
   }
 `;
+
+export const INTEGRATION_DETAIL = gql`
+  query IntegrationDetail($id: String!) {
+    integrationDetail(_id: $id) {
+      _id
+      kind
+      brand {
+        _id
+        name
+      }
+    }
+  }
+`;
