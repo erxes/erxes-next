@@ -339,3 +339,7 @@ export const participantEditRelation = async (
 
   return 'ok';
 };
+
+export const escapeRegex = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
