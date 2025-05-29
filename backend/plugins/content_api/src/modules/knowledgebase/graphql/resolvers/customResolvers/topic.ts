@@ -1,5 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { ITopicDocument } from '@/knowledgebase/@types/knowledgebase';
+import { sendTRPCMessage } from 'erxes-api-shared/src/utils';
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {
@@ -7,12 +8,16 @@ export default {
   },
 
   brand(topic: ITopicDocument) {
-    return (
-      topic.brandId && {
-        __typename: 'Brand',
-        _id: topic.brandId,
-      }
-    );
+    if (!topic.brandId) {
+      return null;
+    }
+
+    return sendTRPCMessage({
+      pluginName: 'core',
+      module: 'brands',
+      action: 'findOne',
+      input: { query: { _id: topic.brandId } },
+    });
   },
 
   async categories(topic: ITopicDocument, _args, { models }: IContext) {

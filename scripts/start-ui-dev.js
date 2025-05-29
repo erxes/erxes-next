@@ -16,6 +16,6 @@ if (ENABLED_PLUGINS) {
   }
 }
 
-const command = `nx serve core-ui ${devRemotesArg} --verbose`;
+const command = `nx serve core-ui ${devRemotesArg} --verbose --skip-nx-cache`;
 console.log(`Running: ${command}`);
 execSync(command, { stdio: 'inherit' });

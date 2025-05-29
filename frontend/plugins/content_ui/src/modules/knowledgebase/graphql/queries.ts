@@ -76,7 +76,11 @@ export const TOPICS = gql`
         title
         code
         description
-
+        brandId
+        brand {
+          _id
+          name
+        }
         categories {
           ...CategoryFragment
         }

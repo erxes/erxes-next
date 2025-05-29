@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ADD_TOPIC, EDIT_TOPIC } from '../graphql/mutations';
 import { TOPICS } from '../graphql/queries';
+import { SelectBrand } from 'ui-modules';
 
 interface Topic {
   _id: string;
@@ -220,6 +221,24 @@ export function TopicDrawer({ topic, isOpen, onClose }: TopicDrawerProps) {
                         />
                       </div>
                     </Upload.Root>
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
+
+            <Form.Field
+              control={form.control}
+              name="brandId"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Brand</Form.Label>
+                  <Form.Control>
+                    <SelectBrand
+                      {...field}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>

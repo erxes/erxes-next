@@ -51,6 +51,7 @@ export function KnowledgeBase() {
       page: 1,
       perPage: 20,
     },
+    fetchPolicy: 'network-only',
   });
 
   const [removeTopic] = useMutation(REMOVE_TOPIC);

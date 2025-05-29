@@ -15,10 +15,8 @@ export const userTrpcRouter = t.router({
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
-      console.log('query', query);
-      const user = await models.Users.findOne(query);
-      console.log('user', user);
-      return user;
+
+      return models.Users.findOne(query);
     }),
 
     updateOne: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {

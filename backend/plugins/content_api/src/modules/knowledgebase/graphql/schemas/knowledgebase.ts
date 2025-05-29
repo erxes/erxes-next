@@ -79,6 +79,7 @@ type KnowledgeBaseTopic @key(fields: "_id") {
     title: String
     description: String
     categories: [KnowledgeBaseCategory]
+    brandId: String
     brand: Brand
     color: String
     backgroundImage: String
