@@ -163,17 +163,23 @@ input KnowledgeBaseTopicInput {
   }
 `;
 
+const cursorParams = `
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
+`;
+
 export const queries = `
-  knowledgeBaseTopics(page: Int, perPage: Int, brandId: String, codes: [String]): KnowledgeBaseTopicsListResponse
+  knowledgeBaseTopics(${cursorParams}, brandId: String, codes: [String]): KnowledgeBaseTopicsListResponse
   knowledgeBaseTopicDetail(_id: String!): KnowledgeBaseTopic
   knowledgeBaseTopicsTotalCount: Int
 
-  knowledgeBaseCategories(page: Int, perPage: Int,ids:[String] topicIds: [String], codes: [String],icon:String): [KnowledgeBaseCategory]
+  knowledgeBaseCategories(${cursorParams},ids:[String] topicIds: [String], codes: [String],icon:String): [KnowledgeBaseCategory]
   knowledgeBaseCategoryDetail(_id: String!): KnowledgeBaseCategory
   knowledgeBaseCategoriesTotalCount(topicIds: [String], codes: [String]): Int
   knowledgeBaseCategoriesGetLast: KnowledgeBaseCategory
 
-  knowledgeBaseArticles(searchValue: String, page: Int, perPage: Int, categoryIds: [String],articleIds:[String], codes: [String], topicIds: [String], sortField:String, sortDirection: Int, status: String): KnowledgeBaseArticlesListResponse
+  knowledgeBaseArticles(searchValue: String, ${cursorParams}, categoryIds: [String],articleIds:[String], codes: [String], topicIds: [String], sortField:String, sortDirection: Int, status: String): KnowledgeBaseArticlesListResponse
   knowledgeBaseArticleDetail(_id: String!): KnowledgeBaseArticle
   knowledgeBaseArticleDetailAndIncViewCount(_id: String!): KnowledgeBaseArticle
   knowledgeBaseArticlesTotalCount(categoryIds: [String], codes: [String], articleIds:[String], topicIds: [String], status: String): Int
