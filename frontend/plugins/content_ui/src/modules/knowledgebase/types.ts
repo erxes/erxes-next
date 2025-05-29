@@ -1,36 +1,26 @@
-export interface Category {
+export interface IUser {
   _id: string;
+  details: {
+    fullName: string;
+    avatar: string;
+  };
+}
+
+export interface ICategory {
+  _id: string;
+  topicId: string;
   title: string;
   code?: string;
   description?: string;
   icon?: string;
   numOfArticles?: number;
-  authors?: Array<{
-    _id: string;
-    details: {
-      fullName?: string;
-      avatar?: string;
-    };
-  }>;
+  countArticles?: number;
+  authors?: IUser[];
+  parentCategoryId?: string;
+  children?: ICategory[];
 }
 
-export interface TopicResponse {
-  _id: string;
-  title: string;
-  code?: string;
-  description?: string;
-  categories?: Category[];
-  color?: string;
-  backgroundImage?: string;
-  languageCode?: string;
-  createdBy?: string;
-  createdDate?: string;
-  modifiedBy?: string;
-  notificationSegmentId?: string;
-  parentCategories?: Category[];
-}
-
-export interface Topic {
+export interface ITopic {
   _id: string;
   title: string;
   code: string;
@@ -40,9 +30,9 @@ export interface Topic {
   backgroundImage: string;
   languageCode: string;
   notificationSegmentId: string;
-  categories?: Category[];
+  categories?: ICategory[];
   createdBy?: string;
   createdDate?: string;
   modifiedBy?: string;
-  parentCategories?: Category[];
+  parentCategories?: ICategory[];
 }

@@ -19,6 +19,7 @@ export const SelectBrand = React.forwardRef<
   HTMLButtonElement,
   SelectBrandProps
 >(({ value, onValueChange, ...props }, ref) => {
+  console.log('value', value);
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
   const [debouncedSearch] = useDebounce(search, 500);

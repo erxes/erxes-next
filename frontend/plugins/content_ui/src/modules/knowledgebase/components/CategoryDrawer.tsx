@@ -6,19 +6,10 @@ import { useEffect } from 'react';
 import { ADD_CATEGORY, EDIT_CATEGORY } from '../graphql/mutations';
 import { CATEGORIES } from '../graphql/queries';
 import { Form, Input, Sheet, Button, Textarea, IconPicker } from 'erxes-ui';
-
-interface Category {
-  _id: string;
-  code: string;
-  title: string;
-  description: string;
-  icon: string;
-  topicId: string;
-  parentCategoryId?: string;
-}
+import { ICategory } from '../types';
 
 interface CategoryDrawerProps {
-  category?: Category;
+  category?: ICategory;
   topicId?: string;
   isOpen: boolean;
   onClose: () => void;

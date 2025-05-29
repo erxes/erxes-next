@@ -1,38 +1,26 @@
 'use client';
 
 import { useMutation } from '@apollo/client';
-import { Accordion, DropdownMenu, Spinner, useConfirm } from 'erxes-ui';
-import { Ellipsis } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import {
+  Collapsible,
+  DropdownMenu,
+  Sidebar,
+  Spinner,
+  useConfirm,
+} from 'erxes-ui';
+import { ChevronDown, ChevronUp, Ellipsis } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { REMOVE_CATEGORY } from '../graphql/mutations';
-import { CategoryDrawer } from './CategoryDrawer';
-
-interface Category {
-  _id: string;
-  code: string;
-  title: string;
-  description: string;
-  icon: string;
-  topicId: string;
-  parentCategoryId?: string;
-  children?: Category[];
-}
-
-interface Topic {
-  _id: string;
-  title: string;
-  description: string;
-  categories: Category[];
-}
+import { ICategory, ITopic } from '../types';
 
 interface TopicListProps {
-  topics: Topic[];
+  topics: ITopic[];
   loading: boolean;
   selectedTopic: string | null;
   onTopicSelect: (topicId: string) => void;
   removeTopic: (topicId: string) => void;
-  onEditTopic: (topic: Topic) => void;
+  onEditTopic: (topic: ITopic) => void;
 }
 
 export function TopicList({
@@ -47,7 +35,7 @@ export function TopicList({
   const [selectedTopicForCategory, setSelectedTopicForCategory] = useState<
     string | undefined
   >(undefined);
-  const [editingCategory, setEditingCategory] = useState<Category | undefined>(
+  const [editingCategory, setEditingCategory] = useState<ICategory | undefined>(
     undefined,
   );
 
@@ -60,17 +48,27 @@ export function TopicList({
 
   useEffect(() => {
     if (!loading && topics.length > 0) {
-      const categoryId = searchParams.get('categoryId');
+      const topicId = searchParams.get('topicId');
 
-      if (!categoryId) {
-        const firstTopic = topics[0];
-        if (firstTopic.categories.length > 0) {
-          const firstCategory = firstTopic.categories[0];
-          setSearchParams({ categoryId: firstCategory._id });
-        }
+      const firstTopic = topics[0];
+
+      const newParams: Record<string, string> = {};
+
+      if (!topicId && firstTopic) {
+        newParams.topicId = firstTopic._id;
+      }
+
+      if (Object.keys(newParams).length > 0) {
+        setSearchParams((prev) => {
+          const updated = new URLSearchParams(prev.toString());
+          Object.entries(newParams).forEach(([key, value]) =>
+            updated.set(key, value),
+          );
+          return updated;
+        });
       }
     }
-  }, [loading, topics, searchParams, setSearchParams]);
+  }, [loading, searchParams, setSearchParams, topics]);
 
   if (loading) {
     return (
@@ -80,8 +78,8 @@ export function TopicList({
     );
   }
 
-  const handleDeleteTopic = async (topic: Topic) => {
-    const categoryCount = topic.categories.length;
+  const handleDeleteTopic = async (topic: ITopic) => {
+    const categoryCount = topic.categories?.length || 0;
     const message = `Are you sure you want to delete "${topic.title}"? This will also delete ${categoryCount} categories and all their associated articles. This action cannot be undone.`;
 
     const confirmOptions = {
@@ -101,7 +99,7 @@ export function TopicList({
     }
   };
 
-  const handleDeleteCategory = async (category: Category) => {
+  const handleDeleteCategory = async (category: ICategory) => {
     const message = `Are you sure you want to delete "${category.title}"? This will also delete all associated articles. This action cannot be undone.`;
 
     const confirmOptions = {
@@ -125,11 +123,7 @@ export function TopicList({
     }
   };
 
-  const handleCategorySelect = (categoryId: string) => {
-    setSearchParams({ categoryId });
-  };
-
-  const renderCategoryActions = (category: Category) => (
+  const renderCategoryActions = (category: ICategory) => (
     <DropdownMenu>
       <DropdownMenu.Trigger className="ml-2 p-2">
         <Ellipsis className="w-4 h-4" />
@@ -162,7 +156,7 @@ export function TopicList({
     </DropdownMenu>
   );
 
-  const renderTopicActions = (topic: Topic) => (
+  const renderTopicActions = (topic: ITopic) => (
     <DropdownMenu>
       <DropdownMenu.Trigger className="ml-2 p-2">
         <Ellipsis className="w-4 h-4" />
@@ -190,68 +184,47 @@ export function TopicList({
     </DropdownMenu>
   );
 
-  const renderCategoryTree = (categories: Category[]) => {
-    const parentCategories = categories.filter((cat) => !cat.parentCategoryId);
-    const selectedCategoryId = searchParams.get('categoryId');
-
-    return parentCategories.map((category) => (
-      <div key={category._id} className="ml-4">
-        <div
-          className={`flex items-center justify-between p-2 cursor-pointer rounded`}
-        >
-          <div
-            className="flex-1"
-            onClick={() => handleCategorySelect(category._id)}
-          >
-            <div className="font-medium">{category.title}</div>
-            <div className="text-sm text-gray-500">{category.description}</div>
-          </div>
-          {renderCategoryActions(category)}
-        </div>
-        {category.children && category.children.length > 0 && (
-          <div className="ml-4">{renderCategoryTree(category.children)}</div>
-        )}
-      </div>
-    ));
-  };
-
   return (
-    <div className="overflow-y-auto h-[calc(100vh-80px)]">
-      <Accordion type="single" collapsible>
-        {topics.map((topic) => (
-          <Accordion.Item
-            key={topic._id}
-            value={topic._id}
-            className="border-b"
+    <Sidebar.Menu>
+      {topics.map((topic) => (
+        <Sidebar.MenuItem key={topic._id}>
+          <Sidebar.MenuButton
+            isActive={topic._id === searchParams.get('topicId')}
           >
-            <Accordion.Trigger className="flex items-center justify-between w-full p-4">
-              <div className="flex items-center justify-between w-full">
-                <span>{topic.title}</span>
-                {renderTopicActions(topic)}
-              </div>
-            </Accordion.Trigger>
-            <Accordion.Content className="px-4 pb-4">
-              <div className="text-sm text-gray-500 mb-2">
-                {topic.description}
-              </div>
-              <div className="space-y-2">
-                {renderCategoryTree(topic.categories)}
-              </div>
-            </Accordion.Content>
-          </Accordion.Item>
-        ))}
-      </Accordion>
-
-      <CategoryDrawer
-        category={editingCategory}
-        topicId={selectedTopicForCategory}
-        isOpen={isCategoryDrawerOpen}
-        onClose={() => {
-          setIsCategoryDrawerOpen(false);
-          setSelectedTopicForCategory(undefined);
-          setEditingCategory(undefined);
-        }}
-      />
-    </div>
+            <div
+              className="flex items-center justify-between w-full"
+              onClick={() => navigate(`?topicId=${topic._id}`)}
+            >
+              <Collapsible
+                key={topic._id}
+                open={topic._id === searchParams.get('topicId')}
+              >
+                <Collapsible.Trigger>
+                  <span>{topic.title}</span>
+                </Collapsible.Trigger>
+                {topic.parentCategories &&
+                  topic.parentCategories.length > 0 && (
+                    <Collapsible.Content className="overflow-hidden transition-[max-height] duration-300 ease-in-out">
+                      {topic.parentCategories.map((category) => {
+                        return (
+                          <div key={category._id}>
+                            <span>{category.title}</span>
+                          </div>
+                        );
+                      })}
+                    </Collapsible.Content>
+                  )}
+              </Collapsible>
+            </div>
+            {renderTopicActions(topic)}
+            {topic._id === searchParams.get('topicId') ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </Sidebar.MenuButton>
+        </Sidebar.MenuItem>
+      ))}
+    </Sidebar.Menu>
   );
 }
