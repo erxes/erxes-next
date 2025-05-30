@@ -31,6 +31,4 @@ export const mutations = `
   classAdd(${classesCommonParams}): Classes
   classEdit(_id:String!, ${classesCommonParams}): Classes
   classesRemove(classIds: [String]): JSON
-  studentAdd(studentId: String!, classId: String!): Classes
-  studentRemove(studentId: String!, classId: String!): Classes
 `;

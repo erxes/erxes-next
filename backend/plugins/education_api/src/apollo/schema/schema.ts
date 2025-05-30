@@ -18,6 +18,11 @@ import {
   queries as TeacherQueries,
   types as TeacherTypes,
 } from '@/teachers/graphql/schemas/teachers';
+import {
+  mutations as StudentMutations,
+  queries as StudentQueries,
+  types as StudentTypes,
+} from '@/students/graphql/schemas/students';
 
 export const types = `
   enum CacheControlScope {
@@ -34,6 +39,7 @@ export const types = `
   ${ClassTypes}
   ${CommentTypes}
   ${TeacherTypes}
+  ${StudentTypes}
 `;
 
 export const queries = `
@@ -41,6 +47,7 @@ export const queries = `
   ${ClassQueries}
   ${CommentQueries}
   ${TeacherQueries}
+  ${StudentQueries}
 `;
 
 export const mutations = `
@@ -48,6 +55,7 @@ export const mutations = `
   ${ClassMutations}
   ${CommentMutations}
   ${TeacherMutations}
+  ${StudentMutations}
 `;
 
 export default { types, queries, mutations };

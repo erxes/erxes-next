@@ -1,9 +1,8 @@
-import { IconCopy } from '@tabler/icons-react';
+import { IconCopy, IconTrash } from '@tabler/icons-react';
 
 import { Button, CommandBar, RecordTable, Separator } from 'erxes-ui';
-import { CoursesDelete } from '@/courses/components/course-command-bar/CoursesDelete';
 
-export const CourseCommandBar = () => {
+export const StudentCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
 
   return (
@@ -13,16 +12,12 @@ export const CourseCommandBar = () => {
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
         <Separator.Inline />
-        <CoursesDelete
-          courseIds={table
-            .getFilteredSelectedRowModel()
-            .rows.map((row) => row.original._id)}
-        />
+        <Button variant="secondary" className="bg-red-500 text-white">
+          <IconTrash className="text-white" />
+          Delete
+        </Button>
         <Separator.Inline />
-        <Button
-          variant="secondary"
-          disabled={table.getFilteredSelectedRowModel().rows.length !== 1}
-        >
+        <Button variant="secondary">
           <IconCopy />
           Copy
         </Button>

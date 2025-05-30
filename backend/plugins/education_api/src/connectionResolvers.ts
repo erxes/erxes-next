@@ -9,12 +9,14 @@ import {
 import { IClassModel, loadClassesClass } from '@/class/db/models/Classes';
 import { ICommentModel, loadCommentClass } from '@/comments/db/models/Comments';
 import { ITeacherModel, loadTeacherClass } from '@/teachers/db/models/Teachers';
+import { IStudentModel, loadStudentClass } from '@/students/db/models/Students';
 //
 import { ICourseDocument } from '@/courses/@types/course';
 import { IClassDocument } from '@/class/@types/classes';
 import { ICourseCategoryDocument } from '@/courses/@types/category';
 import { ICommentDocument } from '@/comments/@types/comments';
 import { ITeacherDocument } from '@/teachers/@types/teachers';
+import { IStudentDocument } from '@/students/@types/students';
 
 export interface IModels {
   Courses: ICourseModel;
@@ -22,6 +24,7 @@ export interface IModels {
   Classes: IClassModel;
   Comments: ICommentModel;
   Teachers: ITeacherModel;
+  Students: IStudentModel;
 }
 
 export interface IContext extends IMainContext {
@@ -55,6 +58,11 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Teachers = db.model<ITeacherDocument, ITeacherModel>(
     'course_teachers',
     loadTeacherClass(models),
+  );
+
+  models.Students = db.model<IStudentDocument, IStudentModel>(
+    'course_students',
+    loadStudentClass(models),
   );
 
   return models;
