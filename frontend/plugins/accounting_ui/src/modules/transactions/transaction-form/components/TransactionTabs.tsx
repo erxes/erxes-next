@@ -1,25 +1,22 @@
 import { IconPlus, IconX } from '@tabler/icons-react';
-
+import { Button, cn, Tabs } from 'erxes-ui';
+import { useAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
-
+import { AddTransaction } from '../../components/AddTransaction';
+import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
+import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
+import { activeJournalState } from '../states/trStates';
 import {
   ITransactionGroupForm,
   TTrDoc,
 } from '../types/AddTransaction';
-import { Tabs, Button } from 'erxes-ui';
-import { useAtom } from 'jotai';
-import { activeJournalState } from '../states/trStates';
-import { AddTransaction } from '../../components/AddTransaction';
-import { MainJournalForm } from './forms/MainJournalForm';
-import { CashTransaction } from './forms/CashForm';
-import { BankTransaction } from './forms/BankForm';
-import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
-import { InvIncomeForm } from './forms/InvIncomeForm';
-import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
 import { TBalance } from './common/TBalance';
-import { ReceivableTransaction } from './forms/ReceivableForm';
+import { BankTransaction } from './forms/BankForm';
+import { CashTransaction } from './forms/CashForm';
+import { InvIncomeForm } from './forms/InvIncomeForm';
+import { MainJournalForm } from './forms/MainJournalForm';
 import { PayableTransaction } from './forms/PayableForm';
-
+import { ReceivableTransaction } from './forms/ReceivableForm';
 
 // Separate the transaction form component to prevent unnecessary re-renders
 const TransactionForm = ({
@@ -88,7 +85,7 @@ export const TransactionsTabsList = ({
             <Tabs.Trigger
               key={field.fieldId}
               value={index.toString()}
-              className="capitalize py-1 gap-2 pr-1 h-8"
+              className={cn(index.toString() === activeJournal && "font-extrabold", "capitalize py-1 gap-2 pr-1 h-8")}
               asChild
             >
               <div>
@@ -109,7 +106,7 @@ export const TransactionsTabsList = ({
           <Tabs.Trigger
             key={'tBalance'}
             value={'tBalance'}
-            className="capitalize py-1 gap-2 pr-1 h-8"
+            className={cn('tBalance' === activeJournal && "font-extrabold", "capitalize py-1 gap-2 pr-1 h-8")}
             asChild
           >
             <div>

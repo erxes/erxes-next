@@ -1,8 +1,6 @@
 import { flexRender } from '@tanstack/react-table';
 import { cn, RecordTable, Table } from 'erxes-ui';
 import React, { useMemo } from 'react';
-import { Link } from 'react-router';
-
 
 export const TBalanceTableRow = ({
   handleRowViewChange,
