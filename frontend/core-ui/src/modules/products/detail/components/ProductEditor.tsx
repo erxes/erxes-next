@@ -25,7 +25,7 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
   const handleEditorChange = async (value: string, editorInstance?: any) => {
     try {
       const blocks: Block[] = JSON.parse(value);
-      if (editorInstance && editorInstance.blocksToHTMLLossy) {
+      if (editorInstance?.blocksToHTMLLossy) {
         const htmlContent = await editorInstance.blocksToHTMLLossy(blocks);
         setValue(name, htmlContent, {
           shouldDirty: true,
@@ -41,6 +41,13 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
                 .join("");
               return textContent ? `<p>${textContent}</p>` : "";
             }
+            if (block.type === "heading" && block.content) {
+              const textContent = block.content
+                .map((item: any) => item.text || "")
+                .join("");
+              const level = (block.props as any)?.level || 1;
+              return textContent ? `<h${level}>${textContent}</h${level}>` : "";
+            }
             return "";
           })
           .filter(Boolean)
@@ -53,6 +60,14 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
         });
       }
     } catch (error) {
+      console.error(`Error processing editor content for field '${name}':`, {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        value: value?.substring(0, 200) + (value?.length > 200 ? '...' : ''),
+        editorInstanceAvailable: !!editorInstance,
+        hasBlocksToHTMLLossy: !!(editorInstance?.blocksToHTMLLossy)
+      });
+      
       setValue(name, "", {
         shouldDirty: true,
         shouldTouch: true,
@@ -76,14 +91,15 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
       }];
     }
 
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+    const container = doc.body;
     
     const blocks: Block[] = [];
-    const children = Array.from(tempDiv.children);
+    const children = Array.from(container.children);
     
     if (children.length === 0) {
-      const textContent = tempDiv.textContent || tempDiv.innerText || "";
+      const textContent = container.textContent || container.innerText || "";
       if (textContent.trim()) {
         blocks.push({
           id: crypto.randomUUID(),
@@ -107,8 +123,8 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
         const textContent = element.textContent || "";
         
         if (textContent.trim()) {
-          let blockType: string = "paragraph";
-          let props: any = {
+          let blockType = "paragraph";
+          const props: any = {
             textColor: "default",
             backgroundColor: "default",
             textAlignment: "left"
