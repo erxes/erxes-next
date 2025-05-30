@@ -71,9 +71,12 @@ export const commonTransactionFields = `
   details {
     ${commonTrDetailFields}
     account {
+      _id
       code
       name
       currency
+      kind
+      journal
     }
   }
   shortDetail {

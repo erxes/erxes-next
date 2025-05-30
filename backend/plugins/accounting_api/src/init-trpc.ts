@@ -38,9 +38,8 @@ export const sendCoreMessage = async (
 
 export const getConfig = async (code: string, defaultValue?: any) => {
   return await sendTRPCMessage({
-    method: 'query',
     pluginName: 'core',
-    module: 'config',
+    module: 'configs',
     action: 'getConfig',
     input: { code, defaultValue },
   });
