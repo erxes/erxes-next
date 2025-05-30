@@ -15,6 +15,8 @@ import { productQueries } from '@/products/graphql/resolvers/queries';
 import { relationsQueries } from '@/relations/graphql/queries';
 import { segmentQueries } from '@/segments/graphql/resolvers';
 import { tagQueries } from '@/tags/graphql/queries';
+import { automationQueries } from '@/automations/graphql/resolvers/queries';
+import { logQueries } from '@/logs/graphql/resolvers/queries';
 
 export const queries = {
   ...contactQueries,
@@ -34,4 +36,6 @@ export const queries = {
   ...permissionQueries,
   ...usersGroupQueries,
   ...documentQueries,
+  ...automationQueries,
+  ...logQueries,
 };

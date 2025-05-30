@@ -37,7 +37,7 @@ const PluginAccounting = () => {
         />
         <Route path="/main" element={<TransactionList />} />
         <Route path="/records" element={<TrRecordList />} />
-        <Route path="/transaction/edit/:parentId" element={<TransactionForm />} />
+        <Route path="/transaction/edit" element={<TransactionForm />} />
         <Route path="/transaction/create" element={<TransactionForm />} />
       </Routes>
       <PageChangeEffect />

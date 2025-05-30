@@ -15,6 +15,7 @@ import { productMutations } from '@/products/graphql/resolvers/mutations';
 import { relationsMutations } from '@/relations/graphql/mutations';
 import { segmentMutations } from '@/segments/graphql/resolvers/mutations';
 import { tagMutations } from '@/tags/graphql/mutations';
+import { automationMutations } from '@/automations/graphql/resolvers/mutations';
 
 export const mutations = {
   ...contactMutations,
@@ -34,4 +35,5 @@ export const mutations = {
   ...permissionMutations,
   ...usersGroupMutations,
   ...documentMutations,
+  ...automationMutations,
 };

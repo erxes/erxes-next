@@ -66,20 +66,6 @@ export interface IMainContext {
   __: <T extends object>(doc: T) => T & { processId: string };
   processId: string;
 }
-export interface ILogDoc {
-  subdomain: string;
-  source: 'webhook' | 'graphql' | 'mongo' | 'auth';
-  action: string;
-  payload: any;
-  userId?: string;
-  executionTime?: {
-    startDate: Date;
-    endDate: Date;
-    durationMs: number;
-  };
-  status?: 'failed' | 'success';
-  processId?: string;
-}
 
 export interface IOrderInput {
   _id: string;

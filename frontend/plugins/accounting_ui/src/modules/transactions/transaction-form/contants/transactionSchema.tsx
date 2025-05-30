@@ -31,10 +31,7 @@ export const baseTrDetailSchema = z.object({
     { message: 'wrong side aaaa' }
   ),
 
-  originId: z.string().nullish(),
-  followType: z.string().nullish(),
   followInfos: z.object({}).nullish(),
-  follows: z.array(z.object({ id: z.string(), type: z.string() })).nullish(),
 
   excludeVat: z.boolean().nullish(),
   excludeCtax: z.boolean().nullish(),
@@ -74,10 +71,7 @@ export const baseTransactionSchema = z.object({
   ptrId: z.string().optional(),
   parentId: z.string().optional(),
 
-  originId: z.string().nullish(),
-  followType: z.string().nullish(),
   followInfos: z.object({}).nullish(),
-  follows: z.array(z.object({ id: z.string(), type: z.string() })).nullish(),
 
   description: z.string().nullish(),
   customerType: z.nativeEnum(CustomerType),
@@ -90,8 +84,6 @@ export const baseTransactionSchema = z.object({
   ...vatSchema.shape,
   ...ctaxSchema.shape,
 
-  sumDt: z.number().optional(),
-  sumCt: z.number().optional(),
   extraData: z.object({}).nullish(),
 });
 

@@ -746,8 +746,6 @@ export const loadUserClass = (models: IModels) => {
     }) {
       email = (email || '').toLowerCase().trim();
 
-      console.log({ email });
-
       const user = await models.Users.findOne({
         $or: [
           { email: { $regex: new RegExp(`^${email}$`, 'i') } },

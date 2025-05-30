@@ -15,7 +15,7 @@ import {
 } from 'erxes-api-shared/utils';
 
 import './automations';
-import { generateModels } from './connectionResolvers';
+import { generateModels, IContext, IModels } from './connectionResolvers';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
 import './segments';

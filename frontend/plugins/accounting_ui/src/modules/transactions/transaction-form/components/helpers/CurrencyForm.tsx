@@ -35,8 +35,6 @@ export const CurrencyForm = ({
   });
   const [changingAmount, setChangingAmount] = useState(true);
 
-  const diffFollowData = (trDoc.follows || []).find((f) => f.type === 'currencyDiff');
-
   const { configs } = useMainConfigs();
   const mainCurrency = 'MNT';
 
@@ -96,10 +94,6 @@ export const CurrencyForm = ({
 
   useEffect(() => {
     if (!diffAmount) {
-      form.setValue(
-        `trDocs.${journalIndex}.follows`,
-        trDoc.follows?.filter((f) => f.type !== 'currencyDiff'),
-      );
       setFollowTrDocs(
         (followTrDocs || []).filter(
           (ftr) =>
@@ -111,7 +105,7 @@ export const CurrencyForm = ({
 
     const { sumDt, sumCt } = side === TR_SIDES.DEBIT ? { sumDt: diffAmount, sumCt: 0 } : { sumDt: 0, sumCt: diffAmount };
 
-    const curr = followTrDocs.find(ftr => ftr._id === diffFollowData?.id);
+    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'currencyDiff');
 
     const currencyDiffFtr = {
       ...curr || (trDoc as ITransaction),
@@ -130,9 +124,8 @@ export const CurrencyForm = ({
       sumCt,
     };
 
-    form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'currencyDiff'), { type: 'currencyDiff', id: currencyDiffFtr._id }])
     setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'currencyDiff')), currencyDiffFtr]);
-  }, [detail, diffAmount, diffFollowData?.id, followTrDocs, form, journalIndex, setFollowTrDocs, side, trDoc]);
+  }, [detail, diffAmount, followTrDocs, form, journalIndex, setFollowTrDocs, side, trDoc]);
 
   if (
     !detail?.account?.currency ||

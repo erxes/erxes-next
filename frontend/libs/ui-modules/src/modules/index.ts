@@ -10,3 +10,4 @@ export * from './types/PageInfo';
 export * from './segments';
 export * from './automations';
 export * from './header';
+export * from './brands';
