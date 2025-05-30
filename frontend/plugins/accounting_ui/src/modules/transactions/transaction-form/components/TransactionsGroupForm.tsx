@@ -97,7 +97,6 @@ export const TransactionsGroupForm = () => {
   useEffect(() => {
     if (activeTrs?.length && parentId) {
       const currentTr = trId ? activeTrs.find(tr => tr._id === trId) : activeTrs[0];
-      // setTransactionGroups({})
       // setting form values
       form.reset({
         ...form.getValues(),
@@ -108,7 +107,6 @@ export const TransactionsGroupForm = () => {
       });
     }
     if (defaultJournal) {
-      // setTransactionGroups({})
       form.reset({
         ...form.getValues(),
         trDocs: [JOURNALS_BY_JOURNAL(defaultJournal)],
