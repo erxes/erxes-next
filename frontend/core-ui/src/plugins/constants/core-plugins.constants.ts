@@ -8,6 +8,8 @@ import {
   IconBuilding,
   IconSpiral,
   IconCategoryFilled,
+  IconAffiliate,
+  IconReport,
 } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui/types';
 
@@ -64,6 +66,20 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     name: 'segments',
     icon: IconChartPie,
     path: 'segments',
+    hasSettings: true,
+    hasWidgets: true,
+  },
+  {
+    name: 'automations',
+    icon: IconAffiliate,
+    path: 'automations',
+    hasSettings: true,
+    hasWidgets: true,
+  },
+  {
+    name: 'logs',
+    icon: IconReport,
+    path: 'logs',
     hasSettings: true,
     hasWidgets: true,
   },

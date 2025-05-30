@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
   type Product @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String!
@@ -29,6 +31,8 @@ export const types = `
     hasSimilarity: Boolean
 
     pdfAttachment: PdfAttachment
+
+    cursor: String
   }
 
   type ProductSimilarityGroup {
@@ -70,9 +74,7 @@ const queryParams = `
   sortField: String
   sortDirection: Int
 
-  limit: Int
-  cursor: String
-  direction: CURSOR_DIRECTION
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `

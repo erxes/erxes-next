@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
   type Permission {
     _id: String!
@@ -9,6 +11,8 @@ export const types = `
     allowed: Boolean
     user: User
     group: UsersGroup
+
+    cursor: String
   }
 
   type PermissionAction {
@@ -37,9 +41,7 @@ const queryParams = `
   groupId: String,
   allowed: Boolean,
 
-  limit: Int
-  cursor: String
-  direction: CURSOR_DIRECTION
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `
