@@ -338,4 +338,6 @@ export const loadClasses = (
   return models;
 };
 
-export const generateModels = createGenerateModels<IModels>(loadClasses);
+export const generateModels = createGenerateModels<IModels>(loadClasses, {
+  ignoreModels: ['Logs'],
+});

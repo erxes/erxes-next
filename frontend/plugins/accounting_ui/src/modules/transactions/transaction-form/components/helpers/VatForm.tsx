@@ -27,7 +27,6 @@ export const VatForm = ({
     control: form.control,
     name: `trDocs.${journalIndex}`
   })
-  const vatFollowData = (trDoc.follows || []).find(f => f.type === 'vat');
 
   const hasVat = useWatch({
     control: form.control,
@@ -78,14 +77,13 @@ export const VatForm = ({
 
   useEffect(() => {
     if (!trDoc.hasVat) {
-      form.setValue(`trDocs.${journalIndex}.follows`, trDoc.follows?.filter(f => f.type !== 'vat'));
       setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'vat')));
       return;
     }
 
     const { sumDt, sumCt } = side === TR_SIDES.DEBIT ? { sumDt: calcedAmount, sumCt: 0 } : { sumDt: 0, sumCt: calcedAmount };
 
-    const curr = followTrDocs.find(ftr => ftr._id === vatFollowData?.id);
+    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'vat');
 
     const vatFtr = {
       ...curr || (trDoc as ITransaction),
@@ -105,8 +103,12 @@ export const VatForm = ({
       sumDt,
       sumCt,
     };
-    form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'vat'), { type: 'vat', id: vatFtr._id }])
-    setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'vat')), vatFtr]);
+    setFollowTrDocs([
+      ...(followTrDocs || []).filter(
+        ftr => !(ftr.originId === trDoc._id && ftr.followType === 'vat')
+      ),
+      vatFtr
+    ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasVat, side, calcedAmount, configs]);

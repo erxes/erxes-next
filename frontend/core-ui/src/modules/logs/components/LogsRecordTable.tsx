@@ -1,11 +1,31 @@
 import { gql, useQuery } from '@apollo/client';
-import { IconChartPie } from '@tabler/icons-react';
-import { PageSubHeader, RecordTable, Skeleton, Spinner } from 'erxes-ui';
-import { PageHeader } from 'ui-modules';
+import {
+  IconCalendarPlus,
+  IconChartPie,
+  IconLabel,
+  IconProgressCheck,
+  IconSearch,
+  IconSettings,
+  IconSourceCode,
+} from '@tabler/icons-react';
+import {
+  Combobox,
+  Command,
+  EnumCursorDirection,
+  Filter,
+  mergeCursorData,
+  PageSubHeader,
+  RecordTable,
+  Skeleton,
+  Spinner,
+} from 'erxes-ui';
+import { PageHeader, SelectMember, TagsFilter } from 'ui-modules';
+import { LOGS_MAIN_LIST } from '../graphql/logQueries';
 import { LogsMainListQueryResponse } from '../types';
 import { logColumns } from './LogColumns';
-import { LOGS_MAIN_LIST } from '../graphql/logQueries';
+import { LogsRecordTableFilter } from './LogsRecordTableFilter';
 export const LogsRecordTable = () => {
+  console.log({ fucker: 'dakdjabskds' });
   const { data, loading, fetchMore } = useQuery<LogsMainListQueryResponse>(
     gql(LOGS_MAIN_LIST),
   );
@@ -17,25 +37,31 @@ export const LogsRecordTable = () => {
   const { list = [], totalCount = 0, pageInfo } = data?.logsMainList || {};
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
-  const handleFetchMore = () => {
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+  }) => {
     if (!list || !totalCount || totalCount <= list.length) {
       return;
     }
     fetchMore({
       variables: {
-        page: Math.ceil(list.length / 20) + 1,
-        perPage: 20,
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
+        limit: 20,
+        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          logsMainList: {
-            ...prev.logsMainList,
-            list: [
-              ...(prev.logsMainList?.list || []),
-              ...(fetchMoreResult.logsMainList?.list || []),
-            ],
-          },
+          logsMainList: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.logsMainList,
+            prevResult: prev.logsMainList,
+          }),
         });
       },
     });
@@ -50,6 +76,7 @@ export const LogsRecordTable = () => {
         </PageHeader.Start>
       </PageHeader>
       <PageSubHeader>
+        <LogsRecordTableFilter />
         <div className="text-muted-foreground font-medium text-sm whitespace-nowrap h-7 leading-7">
           {totalCount
             ? `${totalCount} records found`

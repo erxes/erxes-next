@@ -39,7 +39,7 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
         const newParentId = data?.accTransactionsCreate[0]?.parentId;
 
         const pathname = newParentId
-          ? `/accounting/transaction/edit/${newParentId}`
+          ? `/accounting/transaction/edit?parentId=${newParentId}`
           : "/accounting/main";
 
         navigate(pathname);

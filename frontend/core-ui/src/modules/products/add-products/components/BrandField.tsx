@@ -1,15 +1,14 @@
-import React from 'react';
+import { SelectBrand } from 'ui-modules';
 
-import { SelectBrand } from '@/brands/components/SelectBrand';
 interface BrandFieldProps {
-  values: string[];
-  onChange: (value: string[]) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
 
-export const BrandField = ({ values, onChange }: BrandFieldProps) => {
+export const BrandField = ({ value, onChange }: BrandFieldProps) => {
   return (
     <div>
-      <SelectBrand values={values} onValueChange={onChange}></SelectBrand>
+      <SelectBrand value={value} onValueChange={onChange}></SelectBrand>
     </div>
-  );   
+  );
 };
