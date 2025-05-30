@@ -26,9 +26,13 @@ const catProdMappingSchema = z.object({
   productIds: z.array(z.string()).default([]),
 });
 
+// Updated to match your backend structure exactly
 const paymentTypeSchema = z.object({
+  _id: z.string().optional(), // Backend ID
   type: z.string(),
-  config: z.record(z.any()).optional(),
+  title: z.string(),
+  icon: z.string(),
+  config: z.string(), // Keep as string for backend compatibility
 });
 
 export const posDetailSchema = z.object({

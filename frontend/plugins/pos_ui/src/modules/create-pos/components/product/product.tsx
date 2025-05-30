@@ -1,318 +1,240 @@
 "use client"
-import { Button, Input, Select, Checkbox, Label } from "erxes-ui"
-import { useSearchParams } from "react-router-dom"
-import { useAtom } from "jotai"
-import { IconPlus } from "@tabler/icons-react"
-import { useState } from "react"
-import { productServiceSettingsAtom } from "../../states/posCategory"
-import { ProductGroup } from "../../types"
 
-export default function ProductServiceForm() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [productSettings, setProductSettings] = useAtom(productServiceSettingsAtom)
+import { useState, useEffect } from "react"
+import { useForm } from "react-hook-form"
+import type { UseFormReturn } from "react-hook-form"
+import { Form, Input, Select, Checkbox, Button, Label } from "erxes-ui"
+import { IconPlus, IconTrash } from "@tabler/icons-react"
+import type { ProductFormValues } from "../formSchema"
+
+interface ProductFormProps {
+  form?: UseFormReturn<ProductFormValues>
+  posDetail?: any
+  isReadOnly?: boolean
+}
+
+export default function ProductForm({ form: externalForm, posDetail, isReadOnly = false }: ProductFormProps) {
+  const isEditMode = !!posDetail
   const [showProductGroups, setShowProductGroups] = useState(false)
   const [showMappings, setShowMappings] = useState(false)
 
-  const [productGroups, setProductGroups] = useState<ProductGroup[]>([
-    {
-      name: "",
-      description: "",
-      productCategory: "",
-      excludeProductCategory: "",
-      excludeProducts: "",
-    },
-  ])
+  const internalForm = useForm<ProductFormValues>({
+    defaultValues: {
+      productDetails: [],
+      catProdMappings: [],
+      initialCategoryIds: [],
+      kioskExcludeCategoryIds: [],
+      kioskExcludeProductIds: [],
+      checkExcludeCategoryIds: [],
+    }
+  })
 
-  const [mappings, setMappings] = useState([
-    {
-      sourceProduct: "",
-      targetCategory: "",
-    },
-  ])
+  const form = externalForm || internalForm
+
+  useEffect(() => {
+    if (!posDetail) return
+
+    form.reset({
+      productDetails: posDetail.productDetails || [],
+      catProdMappings: posDetail.catProdMappings || [],
+      initialCategoryIds: posDetail.initialCategoryIds || [],
+      kioskExcludeCategoryIds: posDetail.kioskExcludeCategoryIds || [],
+      kioskExcludeProductIds: posDetail.kioskExcludeProductIds || [],
+      checkExcludeCategoryIds: posDetail.checkExcludeCategoryIds || [],
+    })
+  }, [posDetail, form])
 
   const handleToggleProductGroups = () => {
+    if (isReadOnly) return
     setShowProductGroups(!showProductGroups)
   }
 
   const handleToggleMappings = () => {
+    if (isReadOnly) return
     setShowMappings(!showMappings)
   }
 
-  const handleAddGroup = () => {
-    setProductGroups([
-      ...productGroups,
-      {
-        name: "",
-        description: "",
-        productCategory: "",
-        excludeProductCategory: "",
-        excludeProducts: "",
-      },
-    ])
+  const handleAddProductDetail = () => {
+    if (isReadOnly) return
+    const currentDetails = form.watch("productDetails") || []
+    const newProductDetail = {
+      productId: "",
+      categoryId: "",
+      isRequired: false,
+    }
+    form.setValue("productDetails", [...currentDetails, newProductDetail])
   }
 
   const handleAddMapping = () => {
-    setMappings([
-      ...mappings,
-      {
-        sourceProduct: "",
-        targetCategory: "",
-      },
-    ])
-  }
-
-  const handleGroupChange = (index: number, field: keyof ProductGroup, value: string) => {
-    const updatedGroups = [...productGroups]
-    updatedGroups[index] = {
-      ...updatedGroups[index],
-      [field]: value,
+    if (isReadOnly) return
+    const currentMappings = form.watch("catProdMappings") || []
+    const newMapping = {
+      categoryId: "",
+      productIds: [],
     }
-    setProductGroups(updatedGroups)
+    form.setValue("catProdMappings", [...currentMappings, newMapping])
   }
 
-  const handleMappingChange = (index: number, field: string, value: string) => {
-    const updatedMappings = [...mappings]
-    updatedMappings[index] = {
-      ...updatedMappings[index],
-      [field]: value,
-    }
-    setMappings(updatedMappings)
+  const handleRemoveProductDetail = (index: number) => {
+    if (isReadOnly) return
+    const currentDetails = form.watch("productDetails") || []
+    const updatedDetails = currentDetails.filter((_, i) => i !== index)
+    form.setValue("productDetails", updatedDetails)
   }
 
-  const handleSettingChange = <K extends keyof typeof productSettings>(
-    field: K,
-    value: (typeof productSettings)[K],
-  ) => {
-    setProductSettings({
-      ...productSettings,
-      [field]: value,
-    })
+  const handleRemoveMapping = (index: number) => {
+    if (isReadOnly) return
+    const currentMappings = form.watch("catProdMappings") || []
+    const updatedMappings = currentMappings.filter((_, i) => i !== index)
+    form.setValue("catProdMappings", updatedMappings)
   }
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    setProductSettings({
-      ...productSettings,
-      productGroups: productGroups,
-    })
-
-    console.log("Product & Service form submitted:", {
-      ...productSettings,
-      productGroups,
-      mappings,
-    })
-
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set("tab", "appearance")
-    setSearchParams(newParams)
+  const getFormTitle = () => {
+    if (isReadOnly) return "View Product & Service Details"
+    return isEditMode ? "Edit Product & Service" : "Configure Product & Service"
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-3">
-      <div className="space-y-8">
-        <div className="space-y-4">
-          <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT GROUPS</h2>
-
-          <Button
-            onClick={handleToggleProductGroups}
-            className="hover:bg-indigo-700 text-white flex items-center gap-2"
-          >
-            <IconPlus size={16} />
-            Add group
-          </Button>
-
-          {showProductGroups && (
-            <div className="space-y-4">
-              {productGroups.map((group, index) => (
-                <div key={index} className="grid grid-cols-2 gap-4 mt-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm text-gray-500">GROUP NAME</Label>
-                    <Input
-                      value={group.name}
-                      onChange={(e) => handleGroupChange(index, "name", e.target.value)}
-                      placeholder="Write here"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm text-gray-500">GROUP DESCRIPTION</Label>
-                    <Select
-                      value={group.description}
-                      onValueChange={(value) => handleGroupChange(index, "description", value)}
-                    >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Kiosk" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="kiosk">Kiosk</Select.Item>
-                        <Select.Item value="pos">POS</Select.Item>
-                        <Select.Item value="mobile">Mobile</Select.Item>
-                      </Select.Content>
-                    </Select>
-                  </div>
-                  <div className="flex w-full justify-between gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-sm text-gray-500">PRODUCT CATEGORY</Label>
-                    <Select
-                      value={group.productCategory}
-                      onValueChange={(value) => handleGroupChange(index, "productCategory", value)}
-                    >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Choose product category" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="food">Food</Select.Item>
-                        <Select.Item value="beverage">Beverage</Select.Item>
-                        <Select.Item value="merchandise">Merchandise</Select.Item>
-                      </Select.Content>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm text-gray-500">EXCLUDE PRODUCT CATEGORY</Label>
-                    <Select
-                      value={group.excludeProductCategory}
-                      onValueChange={(value) => handleGroupChange(index, "excludeProductCategory", value)}
-                    >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Choose module category" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="category1">Category 1</Select.Item>
-                        <Select.Item value="category2">Category 2</Select.Item>
-                        <Select.Item value="category3">Category 3</Select.Item>
-                      </Select.Content>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-sm text-gray-500">EXCLUDE PRODUCTS</Label>
-                    <Select
-                      value={group.excludeProducts}
-                      onValueChange={(value) => handleGroupChange(index, "excludeProducts", value)}
-                    >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Choose module category" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="product1">Product 1</Select.Item>
-                        <Select.Item value="product2">Product 2</Select.Item>
-                        <Select.Item value="product3">Product 3</Select.Item>
-                      </Select.Content>
-                    </Select>
-                  </div>
-                  </div>
-                </div>
-              ))}
-
-              <div className="flex justify-end mt-4">
-                <Button>Save</Button>
-              </div>
-            </div>
-          )}
+    <Form {...form}>
+      <div className="p-3">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">{getFormTitle()}</h2>
         </div>
 
-        <div className="space-y-4">
-          <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">INITIAL PRODUCT CATEGORIES</h2>
-          <div className="space-y-2">
-            <Label className="text-sm text-gray-500">PRODUCT CATEGORY</Label>
-            <Select
-              value={productSettings.initialProductCategory}
-              onValueChange={(value) => handleSettingChange("initialProductCategory", value)}
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT DETAILS</h2>
+
+            <Button
+              type="button"
+              onClick={handleToggleProductGroups}
+              className="hover:bg-indigo-700 text-white flex items-center gap-2"
+              disabled={isReadOnly}
             >
-              <Select.Trigger>
-                <Select.Value placeholder="Choose product category" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="category1">Category 1</Select.Item>
-                <Select.Item value="category2">Category 2</Select.Item>
-                <Select.Item value="category3">Category 3</Select.Item>
-              </Select.Content>
-            </Select>
-          </div>
-        </div>
+              <IconPlus size={16} />
+              Add Product Detail
+            </Button>
 
-        <div className="space-y-4">
-          <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">KIOSK EXCLUDE PRODUCTS</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">CATEGORIES</Label>
-              <Select
-                value={productSettings.kioskExcludeCategories}
-                onValueChange={(value) => handleSettingChange("kioskExcludeCategories", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="kiosk">Kiosk</Select.Item>
-                  <Select.Item value="pos">POS</Select.Item>
-                  <Select.Item value="mobile">Mobile</Select.Item>
-                </Select.Content>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">PRODUCTS</Label>
-              <Select
-                value={productSettings.kioskExcludeProducts}
-                onValueChange={(value) => handleSettingChange("kioskExcludeProducts", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="product1">Product 1</Select.Item>
-                  <Select.Item value="product2">Product 2</Select.Item>
-                  <Select.Item value="product3">Product 3</Select.Item>
-                </Select.Content>
-              </Select>
-            </div>
-          </div>
-        </div>
+            {showProductGroups && (
+              <div className="space-y-4">
+                {(form.watch("productDetails") || []).map((detail, index) => (
+                  <div key={index} className="grid grid-cols-2 gap-4 mt-4 p-4 border rounded-md">
+                    <Form.Field
+                      control={form.control}
+                      name={`productDetails.${index}.productId`}
+                      render={({ field }) => (
+                        <Form.Item>
+                          <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                            PRODUCT ID <span className="text-red-500">*</span>
+                          </Form.Label>
+                          <Form.Control>
+                            <Input
+                              {...field}
+                              placeholder="Enter product ID"
+                              className="border border-gray-300 h-10"
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </Form.Control>
+                          <Form.Message />
+                        </Form.Item>
+                      )}
+                    />
 
-        <div className="space-y-4">
-          <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT & CATEGORY MAPPING</h2>
-          <p className="text-sm text-gray-500">
-            MAP A PRODUCT TO CATEGORY.WHEN A PRODUCT WITHIN THAT CATEGORY IS SOLD IN POS SYSTEM WITH TAKE OPTION,THEN
-            THE MAPPED PRODUCT WILL BE ADDED TO THE PRICE
-          </p>
+                    <Form.Field
+                      control={form.control}
+                      name={`productDetails.${index}.categoryId`}
+                      render={({ field }) => (
+                        <Form.Item>
+                          <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                            CATEGORY ID
+                          </Form.Label>
+                          <Form.Control>
+                            <Input
+                              {...field}
+                              value={field.value || ""}
+                              placeholder="Enter category ID (optional)"
+                              className="border border-gray-300 h-10"
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </Form.Control>
+                          <Form.Message />
+                        </Form.Item>
+                      )}
+                    />
 
-          <Button
-            onClick={handleToggleMappings}
-            className=" hover:bg-indigo-700 text-white flex items-center gap-2"
-          >
-            <IconPlus size={16} />
-            Mapping
-          </Button>
+                    <Form.Field
+                      control={form.control}
+                      name={`productDetails.${index}.isRequired`}
+                      render={({ field }) => (
+                        <Form.Item>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={(checked) => field.onChange(Boolean(checked))}
+                              id={`required-${index}`}
+                              disabled={isReadOnly}
+                            />
+                            <Label htmlFor={`required-${index}`} className="text-sm text-gray-500">
+                              Required
+                            </Label>
+                          </div>
+                          <Form.Message />
+                        </Form.Item>
+                      )}
+                    />
 
-          {showMappings && (
-            <div className="space-y-4 p-4 mt-4">
-              {mappings.map((mapping, index) => (
-                <div key={index} className="grid grid-cols-2 gap-4 mt-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm text-gray-500">SOURCE PRODUCT</Label>
-                    <Select
-                      value={mapping.sourceProduct}
-                      onValueChange={(value) => handleMappingChange(index, "sourceProduct", value)}
-                    >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Choose product" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="product1">Product 1</Select.Item>
-                        <Select.Item value="product2">Product 2</Select.Item>
-                        <Select.Item value="product3">Product 3</Select.Item>
-                      </Select.Content>
-                    </Select>
+                    {!isReadOnly && (
+                      <div className="flex justify-end">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRemoveProductDetail(index)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <IconTrash size={16} />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm text-gray-500">TARGET CATEGORY</Label>
-                    <Select
-                      value={mapping.targetCategory}
-                      onValueChange={(value) => handleMappingChange(index, "targetCategory", value)}
+                ))}
+
+                {!isReadOnly && (
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      type="button"
+                      onClick={handleAddProductDetail}
+                      className="bg-green-600 hover:bg-green-700 text-white"
                     >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Choose category" />
+                      <IconPlus size={16} className="mr-1" />
+                      Add Another Product Detail
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">INITIAL PRODUCT CATEGORIES</h2>
+            <Form.Field
+              control={form.control}
+              name="initialCategoryIds"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                    INITIAL CATEGORY IDS
+                  </Form.Label>
+                  <Form.Control>
+                    <Select
+                      onValueChange={(value) => form.setValue("initialCategoryIds", [value])}
+                      value={field.value?.[0] || ""}
+                      disabled={isReadOnly}
+                    >
+                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                        <Select.Value placeholder="Choose initial categories" />
                       </Select.Trigger>
                       <Select.Content>
                         <Select.Item value="category1">Category 1</Select.Item>
@@ -320,58 +242,209 @@ export default function ProductServiceForm() {
                         <Select.Item value="category3">Category 3</Select.Item>
                       </Select.Content>
                     </Select>
-                  </div>
-                </div>
-              ))}
-
-              <div className="flex justify-end mt-4">
-                <Button type="button" onClick={handleAddMapping} className="bg-green-600 hover:bg-green-700 text-white">
-                  <IconPlus size={16} className="mr-1" />
-                  Add Another Mapping
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">REMAINDER CONFIGS</h2>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              checked={productSettings.remainderConfigEnabled}
-              onCheckedChange={(checked) => handleSettingChange("remainderConfigEnabled", Boolean(checked))}
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">EXCLUDE CATEGORIES</Label>
-              <Select
-                value={productSettings.excludeCategories}
-                onValueChange={(value) => handleSettingChange("excludeCategories", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="category1">Category 1</Select.Item>
-                  <Select.Item value="category2">Category 2</Select.Item>
-                  <Select.Item value="category3">Category 3</Select.Item>
-                </Select.Content>
-              </Select>
+          <div className="space-y-4">
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">KIOSK EXCLUDE PRODUCTS</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <Form.Field
+                control={form.control}
+                name="kioskExcludeCategoryIds"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                      EXCLUDE CATEGORIES
+                    </Form.Label>
+                    <Form.Control>
+                      <Select
+                        onValueChange={(value) => form.setValue("kioskExcludeCategoryIds", [value])}
+                        value={field.value?.[0] || ""}
+                        disabled={isReadOnly}
+                      >
+                        <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                          <Select.Value placeholder="Choose categories to exclude" />
+                        </Select.Trigger>
+                        <Select.Content>
+                          <Select.Item value="category1">Category 1</Select.Item>
+                          <Select.Item value="category2">Category 2</Select.Item>
+                          <Select.Item value="category3">Category 3</Select.Item>
+                        </Select.Content>
+                      </Select>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+
+              <Form.Field
+                control={form.control}
+                name="kioskExcludeProductIds"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">EXCLUDE PRODUCTS</Form.Label>
+                    <Form.Control>
+                      <Select
+                        onValueChange={(value) => form.setValue("kioskExcludeProductIds", [value])}
+                        value={field.value?.[0] || ""}
+                        disabled={isReadOnly}
+                      >
+                        <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                          <Select.Value placeholder="Choose products to exclude" />
+                        </Select.Trigger>
+                        <Select.Content>
+                          <Select.Item value="product1">Product 1</Select.Item>
+                          <Select.Item value="product2">Product 2</Select.Item>
+                          <Select.Item value="product3">Product 3</Select.Item>
+                        </Select.Content>
+                      </Select>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
             </div>
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">BAN FRACTIONS</Label>
-              <div className="flex items-center h-10">
-                <Checkbox
-                  checked={productSettings.banFractions}
-                  onCheckedChange={(checked) => handleSettingChange("banFractions", Boolean(checked))}
-                />
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT & CATEGORY MAPPING</h2>
+            <p className="text-sm text-gray-500">
+              MAP A PRODUCT TO CATEGORY. WHEN A PRODUCT WITHIN THAT CATEGORY IS SOLD IN POS SYSTEM WITH TAKE OPTION,
+              THEN THE MAPPED PRODUCT WILL BE ADDED TO THE PRICE
+            </p>
+
+            <Button
+              type="button"
+              onClick={handleToggleMappings}
+              className="hover:bg-indigo-700 text-white flex items-center gap-2"
+              disabled={isReadOnly}
+            >
+              <IconPlus size={16} />
+              Add Mapping
+            </Button>
+
+            {showMappings && (
+              <div className="space-y-4 p-4 mt-4 border rounded-md">
+                {(form.watch("catProdMappings") || []).map((mapping, index) => (
+                  <div key={index} className="grid grid-cols-2 gap-4 mt-4">
+                    <Form.Field
+                      control={form.control}
+                      name={`catProdMappings.${index}.categoryId`}
+                      render={({ field }) => (
+                        <Form.Item>
+                          <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                            CATEGORY ID <span className="text-red-500">*</span>
+                          </Form.Label>
+                          <Form.Control>
+                            <Input
+                              {...field}
+                              placeholder="Enter category ID"
+                              className="border border-gray-300 h-10"
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </Form.Control>
+                          <Form.Message />
+                        </Form.Item>
+                      )}
+                    />
+
+                    <Form.Field
+                      control={form.control}
+                      name={`catProdMappings.${index}.productIds`}
+                      render={({ field }) => (
+                        <Form.Item>
+                          <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                            PRODUCT IDS
+                          </Form.Label>
+                          <Form.Control>
+                            <Select
+                              onValueChange={(value) => form.setValue(`catProdMappings.${index}.productIds`, [value])}
+                              value={field.value?.[0] || ""}
+                              disabled={isReadOnly}
+                            >
+                              <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                                <Select.Value placeholder="Choose products" />
+                              </Select.Trigger>
+                              <Select.Content>
+                                <Select.Item value="product1">Product 1</Select.Item>
+                                <Select.Item value="product2">Product 2</Select.Item>
+                                <Select.Item value="product3">Product 3</Select.Item>
+                              </Select.Content>
+                            </Select>
+                          </Form.Control>
+                          <Form.Message />
+                        </Form.Item>
+                      )}
+                    />
+
+                    {!isReadOnly && (
+                      <div className="flex justify-end col-span-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRemoveMapping(index)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <IconTrash size={16} />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {!isReadOnly && (
+                  <div className="flex justify-end mt-4">
+                    <Button
+                      type="button"
+                      onClick={handleAddMapping}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <IconPlus size={16} className="mr-1" />
+                      Add Another Mapping
+                    </Button>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">CHECK EXCLUDE CATEGORIES</h2>
+            <Form.Field
+              control={form.control}
+              name="checkExcludeCategoryIds"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">EXCLUDE CATEGORIES</Form.Label>
+                  <Form.Control>
+                    <Select
+                      onValueChange={(value) => form.setValue("checkExcludeCategoryIds", [value])}
+                      value={field.value?.[0] || ""}
+                      disabled={isReadOnly}
+                    >
+                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                        <Select.Value placeholder="Choose categories to exclude" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        <Select.Item value="category1">Category 1</Select.Item>
+                        <Select.Item value="category2">Category 2</Select.Item>
+                        <Select.Item value="category3">Category 3</Select.Item>
+                      </Select.Content>
+                    </Select>
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
           </div>
         </div>
       </div>
-    </form>
+    </Form>
   )
 }

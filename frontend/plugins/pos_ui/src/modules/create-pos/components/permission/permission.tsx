@@ -9,6 +9,7 @@ import { useEffect, useState, useRef, useImperativeHandle, forwardRef } from 're
 interface PermissionFormProps {
   form?: UseFormReturn<PermissionFormValues>;
   onFormSubmit?: (data: PermissionFormValues) => void;
+  posDetail?: any; // Added posDetail prop
 }
 
 export interface PermissionFormRef {
@@ -17,7 +18,7 @@ export interface PermissionFormRef {
 }
 
 const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
-  ({ form: externalForm, onFormSubmit }, ref) => {
+  ({ form: externalForm, onFormSubmit, posDetail }, ref) => {
     const [selectedAdminId, setSelectedAdminId] = useState<string>('');
     const [selectedCashierId, setSelectedCashierId] = useState<string>('');
 
@@ -40,15 +41,53 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
 
     const form = externalForm || internalForm;
 
+    // Initialize form with posDetail values when component mounts or posDetail changes
+    useEffect(() => {
+      if (posDetail) {
+        // Set selected IDs first
+        const adminId = posDetail.adminTeamMember || posDetail.adminIds?.[0] || '';
+        const cashierId = posDetail.cashierTeamMember || posDetail.cashierIds?.[0] || '';
+        
+        setSelectedAdminId(adminId);
+        setSelectedCashierId(cashierId);
+
+        // Set form values from posDetail
+        form.reset({
+          adminTeamMember: adminId,
+          adminPrintTempBill: posDetail.adminPrintTempBill || false,
+          adminDirectSales: posDetail.adminDirectSales || false,
+          adminDirectDiscountLimit: posDetail.adminDirectDiscountLimit || '',
+          cashierTeamMember: cashierId,
+          cashierPrintTempBill: posDetail.cashierPrintTempBill || false,
+          cashierDirectSales: posDetail.cashierDirectSales || false,
+          cashierDirectDiscountLimit: posDetail.cashierDirectDiscountLimit || '',
+          adminIds: adminId ? [adminId] : [],
+          cashierIds: cashierId ? [cashierId] : [],
+          permissionConfig: posDetail.permissionConfig || {},
+        });
+      }
+    }, [posDetail, form]);
+
     const getAdminIds = (): string[] => {
-      return selectedAdminId ? [selectedAdminId] : [];
+      const formAdminIds = form.getValues('adminIds') || [];
+      const currentAdminId = selectedAdminId || form.getValues('adminTeamMember');
+      
+      if (currentAdminId && !formAdminIds.includes(currentAdminId)) {
+        return [currentAdminId];
+      }
+      return formAdminIds.length > 0 ? formAdminIds : (currentAdminId ? [currentAdminId] : []);
     };
 
     const getCashierIds = (): string[] => {
-      return selectedCashierId ? [selectedCashierId] : [];
+      const formCashierIds = form.getValues('cashierIds') || [];
+      const currentCashierId = selectedCashierId || form.getValues('cashierTeamMember');
+      
+      if (currentCashierId && !formCashierIds.includes(currentCashierId)) {
+        return [currentCashierId];
+      }
+      return formCashierIds.length > 0 ? formCashierIds : (currentCashierId ? [currentCashierId] : []);
     };
 
-    // Expose methods via ref
     useImperativeHandle(ref, () => ({
       getAdminIds,
       getCashierIds,
@@ -283,11 +322,22 @@ PermissionForm.displayName = 'PermissionForm';
 
 export default PermissionForm;
 
+// Enhanced helper function to get permission form IDs
 export const getPermissionFormIds = (formRef: React.RefObject<PermissionFormRef>) => {
   if (!formRef.current) return { adminIds: [], cashierIds: [] };
   
   return {
     adminIds: formRef.current.getAdminIds() || [],
     cashierIds: formRef.current.getCashierIds() || [],
+  };
+};
+
+// Additional helper function to get current form values including IDs
+export const getPermissionFormValues = (form: UseFormReturn<PermissionFormValues>) => {
+  const values = form.getValues();
+  return {
+    ...values,
+    adminIds: values.adminIds || (values.adminTeamMember ? [values.adminTeamMember] : []),
+    cashierIds: values.cashierIds || (values.cashierTeamMember ? [values.cashierTeamMember] : []),
   };
 };

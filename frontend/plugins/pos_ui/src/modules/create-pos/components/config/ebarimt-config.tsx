@@ -1,10 +1,15 @@
 "use client"
-import { Button, Input, Select, Checkbox, Label } from "erxes-ui"
+import { Input, Select, Checkbox, Label } from "erxes-ui"
 import { useSearchParams } from "react-router-dom"
 import { useAtom } from "jotai"
 import { ebarimtConfigSettingsAtom } from "../../states/posCategory"
+import { PosDetailQueryResponse } from "~/modules/pos-detail.tsx/types/detail"
 
-export default function EbarimtConfigForm() {
+interface EbarimtConfigFormProps {
+  posDetail?: PosDetailQueryResponse['posDetail'];
+}
+
+export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const [ebarimtConfig, setEbarimtConfig] = useAtom(ebarimtConfigSettingsAtom)
 

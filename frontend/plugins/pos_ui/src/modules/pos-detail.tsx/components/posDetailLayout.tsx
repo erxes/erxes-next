@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react"
 import { Stepper, Resizable, Button } from "erxes-ui"
 import { useSearchParams } from "react-router-dom"
 import { useAtom } from "jotai"
-import { IconCheck, IconLoader2, IconAlertCircle, IconEdit } from "@tabler/icons-react"
+import { IconCheck, IconAlertCircle, IconEdit } from "@tabler/icons-react"
 import { PosDetailSheet } from "./posDetailSheet"
 import { UseFormReturn } from 'react-hook-form'
 import { posCategoryAtom } from "~/modules/create-pos/states/posCategory"
@@ -177,9 +177,7 @@ interface NavigationFooterProps {
   handlePrevStep: () => void
   handleNextStep: () => void
   isLastStep: boolean
-  isLoading?: boolean
   validationError?: string | null
-  isSubmitting?: boolean
 }
 
 const NavigationFooter = React.memo(({ 
@@ -188,9 +186,7 @@ const NavigationFooter = React.memo(({
   handlePrevStep, 
   handleNextStep, 
   isLastStep,
-  isLoading = false,
-  validationError = null,
-  isSubmitting = false
+  validationError = null
 }: NavigationFooterProps) => (
   <div className="flex flex-col p-4 border-t sticky bottom-0 bg-white">
     {validationError && (
@@ -201,7 +197,7 @@ const NavigationFooter = React.memo(({
         type="button" 
         variant="outline" 
         onClick={handlePrevStep} 
-        disabled={!prevStep || isLoading || isSubmitting}
+        disabled={!prevStep}
       >
         Previous
       </Button>
@@ -210,7 +206,7 @@ const NavigationFooter = React.memo(({
           type="button" 
           variant="outline"
           onClick={handleNextStep} 
-          disabled={(!nextStep && !isLastStep) || isLoading || isSubmitting}
+          disabled={!nextStep && !isLastStep}
         >
           {isLastStep ? "Save & Close" : "Next step"}
         </Button>
@@ -218,16 +214,8 @@ const NavigationFooter = React.memo(({
           <Button 
             type="button" 
             onClick={handleNextStep}
-            disabled={isLoading || isSubmitting}
           >
-            {isLoading || isSubmitting ? (
-              <span className="flex items-center gap-2">
-                <IconLoader2 className="h-4 w-4 animate-spin" />
-                Updating...
-              </span>
-            ) : (
-              "Update POS"
-            )}
+            Update POS
           </Button>
         )}
       </div>
@@ -308,12 +296,8 @@ const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
 interface PosEditLayoutProps {
   children: React.ReactNode
   actions?: React.ReactNode
-  form?: UseFormReturn<BasicInfoFormValues , PermissionFormValues>
-  onFormSubmit?: (data: BasicInfoFormValues) => void
+  form?: UseFormReturn<BasicInfoFormValues, PermissionFormValues>
   onFinalSubmit?: () => void
-  isSubmitting?: boolean
-  loading: boolean
-  error: any
   posDetail: any
 }
 
@@ -321,17 +305,12 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
   children, 
   actions, 
   form,
-  onFormSubmit,
   onFinalSubmit,
-  isSubmitting = false,
-  loading,
-  error,
   posDetail
 }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [posCategory] = useAtom(posCategoryAtom)
   const selectedStep = searchParams.get("tab") || "overview"
-  const [isLoading, setIsLoading] = React.useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
 
   const steps = useMemo(() => {
@@ -379,38 +358,29 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
       return
     }
 
-    if (selectedStep === "properties" && form && onFormSubmit) {
+    if (selectedStep === "properties" && form) {
       try {
-        setIsLoading(true)
         const isValid = await form.trigger()
         
         if (!isValid) {
           setValidationError("Please fix the form errors before proceeding.")
           return
         }
-
-        const formData = form.getValues()
-        onFormSubmit(formData)
       } catch (error) {
-        console.error("Form submission error:", error)
-        setValidationError("Failed to save form data. Please try again.")
+        console.error("Form validation error:", error)
+        setValidationError("Failed to validate form. Please try again.")
         return
-      } finally {
-        setIsLoading(false)
       }
     }
 
     if (isLastStep) {
       try {
-        setIsLoading(true)
         if (onFinalSubmit) {
           await onFinalSubmit()
         }
       } catch (error) {
         console.error("Error updating:", error)
         setValidationError("Failed to update. Please try again.")
-      } finally {
-        setIsLoading(false)
       }
       return
     }
@@ -437,9 +407,7 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
                   handlePrevStep={handlePrevStep}
                   handleNextStep={handleNextStep}
                   isLastStep={isLastStep}
-                  isLoading={isLoading || loading}
                   validationError={validationError}
-                  isSubmitting={isSubmitting}
                 />
               </div>
             </Resizable.Panel>

@@ -2,19 +2,17 @@
 
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { Form, Input, Label, Select } from "erxes-ui";
-import { useSearchParams } from "react-router-dom";
-import { useSetAtom } from "jotai";
-import { slotAtom } from "../../states/posCategory";
+import { Form, Input, Select } from "erxes-ui";
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { Branch, Department } from '../../types';
+import { PosDetailQueryResponse } from '~/modules/pos-detail.tsx/types/detail';
 
 type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
 
 interface EcommerceFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
-  posDetail?: any;
+  posDetail?: PosDetailQueryResponse['posDetail'];
   isReadOnly?: boolean;
   branches?: Branch[]; 
   departments?: Department[]; 
@@ -27,8 +25,6 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
   branches = [], 
   departments = []
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const setSlot = useSetAtom(slotAtom);
   const isEditMode = !!posDetail;
   const defaultBranches: Branch[] = [
     { id: "branch1", name: "Main Branch" },
@@ -45,8 +41,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
   const availableBranches = branches.length > 0 ? branches : defaultBranches;
   const availableDepartments = departments.length > 0 ? departments : defaultDepartments;
 
-
-  const handleTypeChange = (typeValue: AllowedType) => {
+  const handleTypeChange = (typeValue: string) => {
     if (isReadOnly) return;
     
     const currentTypes = (form.watch('allowTypes') || []) as string[];
@@ -186,28 +181,44 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                 <p className="text-sm text-gray-500">How use types ?</p>
                 <Form.Control>
                   <div className="grid grid-cols-3 gap-3">
-                    {Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="flex flex-col">
-                        <Select 
-                          onValueChange={(value) => {
-                            handleTypeChange(value as AllowedType);
-                          }}
-                          value=""
-                          disabled={isReadOnly}
-                        >
-                          <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                            <Select.Value placeholder={`Select Type ${index + 1}`} />
-                          </Select.Trigger>
-                          <Select.Content>
-                            {ALLOW_TYPES.map((type) => (
-                              <Select.Item key={type.value} value={type.value}>
-                                {type.label}
-                              </Select.Item>
-                            ))}
-                          </Select.Content>
-                        </Select>
-                      </div>
-                    ))}
+                    {Array.from({ length: 6 }, (_, index) => {
+                      const selectedTypes = field.value || [];
+                      const currentValue = selectedTypes[index] || "";
+                      
+                      return (
+                        <div key={index} className="flex flex-col">
+                          <Select 
+                            onValueChange={(value) => {
+                              if (isReadOnly) return;
+                              const newTypes = [...(field.value || [])];
+                              if (value === "NULL") {
+                                newTypes.splice(index, 1);
+                              } else {
+                                newTypes[index] = value as "eat" | "take" | "delivery";
+                              }
+                              const cleanTypes = newTypes.filter((type, idx, arr) => 
+                                type && arr.indexOf(type) === idx
+                              );
+                              form.setValue('allowTypes', cleanTypes);
+                            }}
+                            value={currentValue || "NULL"}
+                            disabled={isReadOnly}
+                          >
+                            <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                              <Select.Value placeholder={`Select Type ${index + 1}`} />
+                            </Select.Trigger>
+                            <Select.Content>
+                              <Select.Item value="NULL">NULL</Select.Item>
+                              {ALLOW_TYPES.map((type) => (
+                                <Select.Item key={type.value} value={type.value}>
+                                  {type.label}
+                                </Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select>
+                        </div>
+                      );
+                    })}
                   </div>
                 </Form.Control>
                 <Form.Message />

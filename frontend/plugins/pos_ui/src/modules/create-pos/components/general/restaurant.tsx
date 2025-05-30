@@ -9,23 +9,45 @@ import { useSetAtom } from "jotai";
 import { slotAtom } from "../../states/posCategory";
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
+import { Branch, Department } from '../../types';
+import { PosDetailQueryResponse } from '~/modules/pos-detail.tsx/types/detail';
 
 type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
-  posDetail?: any;
+  posDetail?: PosDetailQueryResponse['posDetail'];
   isReadOnly?: boolean;
+  branches?: Branch[]; 
+  departments?: Department[]; 
 }
 
 export const RestaurantForm: React.FC<RestaurantFormProps> = ({ 
   form, 
   posDetail,
-  isReadOnly = false 
+  isReadOnly = false,
+  branches = [], 
+  departments = []
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setSlot = useSetAtom(slotAtom);
   const isEditMode = !!posDetail;
+
+  // Default data similar to EcommerceForm
+  const defaultBranches: Branch[] = [
+    { id: "branch1", name: "Main Branch" },
+    { id: "branch2", name: "Downtown Branch" },
+    { id: "branch3", name: "Mall Branch" },
+  ];
+
+  const defaultDepartments: Department[] = [
+    { id: "kitchen", name: "Kitchen" },
+    { id: "bar", name: "Bar" },
+    { id: "service", name: "Service" },
+  ];
+
+  const availableBranches = branches.length > 0 ? branches : defaultBranches;
+  const availableDepartments = departments.length > 0 ? departments : defaultDepartments;
 
   const handleAddSlot = () => {
     if (isReadOnly) return;
@@ -35,7 +57,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     setSearchParams(newParams);
   };
 
-  const handleTypeChange = (typeValue: AllowedType) => {
+  const handleTypeChange = (typeValue: string) => {
     if (isReadOnly) return;
     
     const currentTypes = (form.watch('allowTypes') || []) as string[];
@@ -67,6 +89,11 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     
     form.setValue('allowBranchIds', newBranches);
   };
+
+  // const handleDepartmentChange = (departmentId: string) => {
+  //   if (isReadOnly) return;
+  //   form.setValue('departmentId', departmentId);
+  // };
 
   const getFormTitle = () => {
     if (isReadOnly) return 'View Restaurant Details';
@@ -187,28 +214,44 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                 <p className="text-sm text-gray-500">How use types ?</p>
                 <Form.Control>
                   <div className="grid grid-cols-3 gap-3">
-                    {Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="flex flex-col">
-                        <Select 
-                          onValueChange={(value) => {
-                            handleTypeChange(value as AllowedType);
-                          }}
-                          value=""
-                          disabled={isReadOnly}
-                        >
-                          <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                            <Select.Value placeholder={`Select Type ${index + 1}`} />
-                          </Select.Trigger>
-                          <Select.Content>
-                            {ALLOW_TYPES.map((type) => (
-                              <Select.Item key={type.value} value={type.value}>
-                                {type.label}
-                              </Select.Item>
-                            ))}
-                          </Select.Content>
-                        </Select>
-                      </div>
-                    ))}
+                    {Array.from({ length: 6 }, (_, index) => {
+                      const selectedTypes = field.value || [];
+                      const currentValue = selectedTypes[index] || "";
+                      
+                      return (
+                        <div key={index} className="flex flex-col">
+                          <Select 
+                            onValueChange={(value) => {
+                              if (isReadOnly) return;
+                              const newTypes = [...(field.value || [])];
+                              if (value === "NULL") {
+                                newTypes.splice(index, 1);
+                              } else {
+                                newTypes[index] = value as "eat" | "take" | "delivery";
+                              }
+                              const cleanTypes = newTypes.filter((type, idx, arr) => 
+                                type && arr.indexOf(type) === idx
+                              );
+                              form.setValue('allowTypes', cleanTypes);
+                            }}
+                            value={currentValue || "NULL"}
+                            disabled={isReadOnly}
+                          >
+                            <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                              <Select.Value placeholder={`Select Type ${index + 1}`} />
+                            </Select.Trigger>
+                            <Select.Content>
+                              <Select.Item value="NULL">NULL</Select.Item>
+                              {ALLOW_TYPES.map((type) => (
+                                <Select.Item key={type.value} value={type.value}>
+                                  {type.label}
+                                </Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select>
+                        </div>
+                      );
+                    })}
                   </div>
                 </Form.Control>
                 <Form.Message />
@@ -235,9 +278,11 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                         <Select.Value placeholder="Choose branch" />
                       </Select.Trigger>
                       <Select.Content>
-                        <Select.Item value="breakfast">Breakfast</Select.Item>
-                        <Select.Item value="lunch">Lunch</Select.Item>
-                        <Select.Item value="dinner">Dinner</Select.Item>
+                        {availableBranches.map((branch) => (
+                          <Select.Item key={branch.id} value={branch.id}>
+                            {branch.name}
+                          </Select.Item>
+                        ))}
                       </Select.Content>
                     </Select>
                   </Form.Control>
@@ -246,19 +291,36 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
               )}
             />
 
-            <div className="space-y-1">
-              <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">CHOOSE DEPARTMENT</Label>
-              <Select disabled={isReadOnly}>
-                <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                  <Select.Value placeholder="Choose department" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="kitchen">Kitchen</Select.Item>
-                  <Select.Item value="bar">Bar</Select.Item>
-                  <Select.Item value="service">Service</Select.Item>
-                </Select.Content>
-              </Select>
-            </div>
+            {/* <Form.Field
+              control={form.control}
+              name="departmentId"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                    CHOOSE DEPARTMENT
+                  </Form.Label>
+                  <Form.Control>
+                    <Select 
+                      onValueChange={(value) => handleDepartmentChange(value)}
+                      value={field.value || ""}
+                      disabled={isReadOnly}
+                    >
+                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                        <Select.Value placeholder="Choose department" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        {availableDepartments.map((department) => (
+                          <Select.Item key={department.id} value={department.id}>
+                            {department.name}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            /> */}
           </div>
         </div>
       </div>
