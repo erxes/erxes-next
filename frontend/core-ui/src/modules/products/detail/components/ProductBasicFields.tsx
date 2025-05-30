@@ -1,8 +1,7 @@
 import type React from "react";
 import { Form, Input, Select, CurrencyField, Label, Button } from "erxes-ui";
-import { SelectCategory } from "@/products/product-category/components/SelectCategory";
 import { PRODUCT_TYPE_OPTIONS } from "@/products/constants/ProductConstants";
-import { SelectBrand, SelectCompany } from "ui-modules";
+import { SelectBrand, SelectCompany , SelectCategory } from "ui-modules";
 import { Control } from "react-hook-form";
 import { IconPlus, IconUpload, IconX } from "@tabler/icons-react";
 import { ProductFormValues } from "@/products/constants/formSchema";
@@ -228,7 +227,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
               <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">BRAND</Form.Label>
               <Form.Control>
               <SelectBrand
-                value={Array.isArray(field.value) && field.value.length > 0 ? field.value[0] : undefined}
+                value={Array.isArray(field.value) && field.value.length > 0 ? field.value[0] : ''}
                 onValueChange={(brandId) => {
                   field.onChange([brandId]);
                 }}
