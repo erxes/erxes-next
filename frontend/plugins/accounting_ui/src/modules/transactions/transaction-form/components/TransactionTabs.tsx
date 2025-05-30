@@ -16,7 +16,7 @@ import { BankTransaction } from './forms/BankForm';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
 import { InvIncomeForm } from './forms/InvIncomeForm';
 import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
-import { TBalance } from './TBalance';
+import { TBalance } from './common/TBalance';
 import { ReceivableTransaction } from './forms/ReceivableForm';
 import { PayableTransaction } from './forms/PayableForm';
 

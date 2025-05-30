@@ -72,7 +72,7 @@ export const transactionSchema = schemaWrapper(
       default: 'real',
       index: true,
     },
-    ptrId: { type: String, label: 'Group' },
+    ptrId: { type: String, label: 'Group', index: true },
     parentId: { type: String, optional: true, label: 'Parent ID', index: true },
     number: { type: String, optional: true, label: 'Number', index: true },
     journal: {

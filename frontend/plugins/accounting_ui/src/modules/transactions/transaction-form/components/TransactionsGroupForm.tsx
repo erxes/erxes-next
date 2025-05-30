@@ -1,9 +1,9 @@
+import { useMainConfigs } from '@/settings/hooks/useMainConfigs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DatePicker, Form, Input, Spinner, useQueryState } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { memo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router';
 import { TrJournalEnum } from '../../types/constants';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
 import { transactionGroupSchema } from '../contants/transactionSchema';
@@ -12,9 +12,8 @@ import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 import { useTransactionsUpdate } from '../hooks/useTransactionsUpdate';
 import { activeJournalState } from '../states/trStates';
 import { TAddTransactionGroup } from '../types/AddTransaction';
-import { Summary } from './Summary';
-import { TransactionsTabsList } from './TransactionList';
-import { useMainConfigs } from '~/modules/settings/hooks/useMainConfigs';
+import { Summary } from './common/Summary';
+import { TransactionsTabsList } from './TransactionTabs';
 
 // Memoize form fields to prevent unnecessary re-renders
 const FormFields = memo(
@@ -60,7 +59,7 @@ FormFields.displayName = 'FormFields';
 export const TransactionsGroupForm = () => {
   // const parentId = useParams().parentId;
   const [parentId] = useQueryState<string>('parentId');
-  const { transactions, activeTrs, loading } = useTransactionDetail({
+  const { activeTrs, loading } = useTransactionDetail({
     variables: { _id: parentId },
     skip: !parentId,
   });
@@ -68,9 +67,7 @@ export const TransactionsGroupForm = () => {
   const { loading: configsLoading } = useMainConfigs();
   const form = useForm<TAddTransactionGroup>({
     resolver: zodResolver(transactionGroupSchema),
-    defaultValues: {
-      date: new Date(),
-    },
+
   });
 
   const [defaultJournal] = useQueryState<TrJournalEnum>('defaultJournal');

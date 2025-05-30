@@ -1,27 +1,31 @@
 import { Button } from 'erxes-ui';
+import { useAtom } from 'jotai';
 import { useWatch } from 'react-hook-form';
-import { TR_SIDES } from '../../types/constants';
-import { ITransactionGroupForm } from '../types/AddTransaction';
+import { TR_SIDES } from '../../../types/constants';
+import { followTrDocsState } from '../../states/trStates';
+import { ITransactionGroupForm } from '../../types/AddTransaction';
+
+const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
+  trDocs?.forEach((tr) => {
+    if (!(tr?.details && tr?.details[0])) {
+      return;
+    }
+
+    if (tr?.details[0]?.side === TR_SIDES.DEBIT) {
+      sumDebit += tr?.details[0]?.amount ?? 0;
+    } else {
+      sumCredit += tr?.details[0]?.amount ?? 0;
+    }
+  });
+  return [sumDebit, sumCredit];
+}
 
 export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { trDocs } = useWatch({ control: form.control });
-  const sumDebit =
-    trDocs?.reduce((acc, curr) => {
-      return (
-        acc + (
-          curr && curr.details && curr?.details[0]?.side === TR_SIDES.DEBIT ? (curr?.details[0]?.amount ?? 0) : 0
-        )
-      );
-    }, 0) ?? 0;
+  const [followTrDocs] = useAtom(followTrDocsState);
 
-  const sumCredit =
-    trDocs?.reduce((acc, curr) => {
-      return (
-        acc + (
-          curr && curr.details && curr?.details[0]?.side === TR_SIDES.CREDIT ? (curr?.details[0]?.amount ?? 0) : 0
-        )
-      );
-    }, 0) ?? 0;
+  const [sumDt, sumCt] = getSum(trDocs || [], 0, 0);
+  const [sumDebit, sumCredit] = getSum(followTrDocs, sumDt, sumCt);
 
   return (
     <div className="flex justify-end items-center col-span-2 xl:col-span-3 gap-6">

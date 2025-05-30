@@ -1,5 +1,5 @@
 import { Form, Select } from 'erxes-ui';
-import { ITransactionGroupForm } from '../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/AddTransaction';
 import {
   CustomerType,
   SelectCustomer,

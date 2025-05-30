@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { AccountingHotkeyScope } from '~/modules/types/AccountingHotkeyScope';
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import { useIsMatchingLocation, useSetHotkeyScope } from 'erxes-ui';
-import { AccountingPath } from '~/modules/types/AccountingPath';
+import { AccountingPath } from '@/types/AccountingPath';
 
 export const PageChangeEffect = () => {
   const isMatchingLocation = useIsMatchingLocation();
