@@ -1,10 +1,19 @@
 import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
 import { CreateBrand } from './CreateBrand';
-import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { Breadcrumb, Button, useMultiQueryState } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { IconChessKnightFilled } from '@tabler/icons-react';
+import { useBrands } from '../hooks/useBrands';
 
 export function BrandsHeader() {
+  const [{ searchValue }] = useMultiQueryState<{
+    searchValue: string;
+  }>(['searchValue']);
+  const { totalCount, loading } = useBrands({
+    variables: {
+      searchValue,
+    },
+  });
   return (
     <PageHeader>
       <PageHeaderStart>
@@ -20,8 +29,6 @@ export function BrandsHeader() {
             </Breadcrumb.Item>
           </Breadcrumb.List>
         </Breadcrumb>
-        {/* <Separator.Inline /> */}
-        {/* <PageHeader.FavoriteToggleButton /> */}
       </PageHeaderStart>
       <PageHeaderEnd>
         <CreateBrand />

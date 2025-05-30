@@ -7,6 +7,8 @@ export interface IPositionListItem {
   title: string;
   parentId: string;
   userCount: number;
+  order: string;
+  hasChildren: boolean;
 }
 
 export enum PositionHotKeyScope {

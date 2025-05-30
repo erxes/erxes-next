@@ -92,7 +92,7 @@ export function useRemoveUnit() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_UNITS, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: [GET_UNITS_LIST],
+    refetchQueries: ['unitsMain'],
   });
 
   return {

@@ -1,28 +1,33 @@
-import { RecordTable } from 'erxes-ui';
+import { RecordTable, RecordTableTree } from 'erxes-ui';
 import { DepartmentColumns } from './DepartmentColumns';
 import { useDepartmentsList } from '../../hooks/useDepartmentsList';
-import { DepartmentsRemove } from './DepartmentsRemove';
 import { DepartmentEdit } from './detail/DepartmentEdit';
+import { DepartmentsFilter } from './DepartmentsFilter';
+import { DepartmentsCommandBar } from './DepartmentsCommandBar';
 
 export function DepartmentSettings() {
-  const { departments, loading } = useDepartmentsList();
+  const { sortedDepartments, loading } = useDepartmentsList();
   return (
     <div className="w-full overflow-hidden flex flex-col">
       <DepartmentEdit />
+      <DepartmentsFilter />
       <RecordTable.Provider
-        data={departments || []}
+        data={sortedDepartments || []}
         columns={DepartmentColumns}
         className="m-3"
       >
-        <RecordTable.Scroll>
-          <RecordTable>
-            <RecordTable.Header />
-            <RecordTable.Body>
-              <RecordTable.RowList />
-            </RecordTable.Body>
-            <DepartmentsRemove />
-          </RecordTable>
-        </RecordTable.Scroll>
+        <RecordTableTree id="departments-list" ordered>
+          <RecordTable.Scroll>
+            <RecordTable>
+              <RecordTable.Header />
+              <RecordTable.Body>
+                <RecordTable.RowList Row={RecordTableTree.Row} />
+                {loading && <RecordTable.RowSkeleton rows={30} />}
+              </RecordTable.Body>
+              <DepartmentsCommandBar />
+            </RecordTable>
+          </RecordTable.Scroll>
+        </RecordTableTree>
       </RecordTable.Provider>
     </div>
   );

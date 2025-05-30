@@ -96,7 +96,7 @@ export function useRemoveBranch() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_BRANCHES, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: [GET_BRANCHES_LIST],
+    refetchQueries: ['branchesMain'],
   });
 
   return {

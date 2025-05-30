@@ -123,7 +123,9 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay className="justify-center">
-          {cell.getValue() as number}
+          <Badge variant={'secondary'}>
+            {(cell.getValue() as number) || 0}
+          </Badge>
         </RecordTableCellDisplay>
       );
     },
@@ -134,7 +136,9 @@ export const tagsColumns: ColumnDef<ITag & { hasChildren: boolean }>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay className="justify-center">
-          {cell.getValue() as number}
+          <Badge variant={'secondary'}>
+            {(cell.getValue() as number) || 0}
+          </Badge>
         </RecordTableCellDisplay>
       );
     },
@@ -173,7 +177,7 @@ export const TagsRecordTable = () => {
       className="m-3"
       stickyColumns={['more', 'name']}
     >
-      <RecordTableTree id="product-categories" ordered>
+      <RecordTableTree id="tags-list" ordered>
         <RecordTable.Scroll>
           <RecordTable>
             <RecordTable.Header />
@@ -182,7 +186,7 @@ export const TagsRecordTable = () => {
               {loading && <RecordTable.RowSkeleton rows={30} />}
               {!loading && pageInfo?.hasNextPage && (
                 <RecordTable.RowSkeleton
-                  rows={3}
+                  rows={1}
                   handleInView={handleFetchMore}
                 />
               )}

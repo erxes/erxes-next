@@ -108,7 +108,7 @@ export function useRemoveDepartment() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_DEPARTMENTS, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: [GET_DEPARTMENTS_LIST],
+    refetchQueries: ['departmentsMain'],
   });
 
   return {

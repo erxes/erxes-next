@@ -1,5 +1,6 @@
 import { type Cell, type ColumnDef } from '@tanstack/table-core';
 import {
+  Badge,
   Button,
   Input,
   RecordTable,
@@ -7,6 +8,7 @@ import {
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
+  RecordTableTree,
   Textarea,
   TextOverflowTooltip,
   useQueryState,
@@ -35,6 +37,26 @@ export const BranchEditColumnCell = ({
       variant={'outline'}
     >
       <IconEdit size={12} />
+    </Button>
+  );
+};
+export const BranchWorkingHoursColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IBranchListItem, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('workingHoursId');
+  const setRenderingBranchDetail = useSetAtom(renderingBranchDetailAtom);
+  const { _id } = cell.row.original;
+  return (
+    <Button
+      onClick={() => {
+        setOpen(_id);
+        setRenderingBranchDetail(false);
+      }}
+      variant={'outline'}
+    >
+      <IconClock size={12} />
     </Button>
   );
 };
@@ -68,6 +90,31 @@ export const BranchRemoveCell = ({
 export const BranchColumns: ColumnDef<IBranchListItem>[] = [
   RecordTable.checkboxColumn as ColumnDef<IBranchListItem>,
   {
+    id: 'title',
+    accessorKey: 'title',
+    header: () => <RecordTable.InlineHead label="title" />,
+    cell: ({ cell }) => {
+      console.log('cell.row.original', cell.row.original);
+      return (
+        <RecordTablePopover>
+          <RecordTableCellTrigger>
+            <RecordTableTree.Trigger
+              order={cell.row.original.order}
+              name={cell.getValue() as string}
+              hasChildren={cell.row.original.hasChildren as boolean}
+            >
+              <TextOverflowTooltip value={cell.getValue() as string} />
+            </RecordTableTree.Trigger>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <Input value={cell.getValue() as string} />
+          </RecordTableCellContent>
+        </RecordTablePopover>
+      );
+    },
+    size: 250,
+  },
+  {
     id: 'code',
     accessorKey: 'code',
     header: () => <RecordTable.InlineHead icon={IconHash} label="code" />,
@@ -83,24 +130,6 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
         </RecordTablePopover>
       );
     },
-  },
-  {
-    id: 'title',
-    accessorKey: 'title',
-    header: () => <RecordTable.InlineHead label="title" />,
-    cell: ({ cell }) => {
-      return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <TextOverflowTooltip value={cell.getValue() as string} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      );
-    },
-    size: 250,
   },
   {
     id: 'parentId',
@@ -142,14 +171,9 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger className="text-center flex w-full justify-center">
-            {cell.getValue() as number}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as number} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+        <RecordTableCellDisplay className="text-center flex w-full justify-center">
+          <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
+        </RecordTableCellDisplay>
       );
     },
   },
@@ -159,9 +183,7 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay className="flex justify-center gap-1 [&>button]:px-2">
-          <Button variant={'outline'}>
-            <IconClock size={12} />
-          </Button>
+          <BranchWorkingHoursColumnCell cell={cell} />
           <BranchEditColumnCell cell={cell} />
           <BranchRemoveCell cell={cell} />
         </RecordTableCellDisplay>

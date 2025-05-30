@@ -110,12 +110,12 @@ export const DepartmentList = ({
 }: {
   renderItem: (department: IDepartment) => React.ReactNode;
 }) => {
-  const { departments, loading } = useDepartments();
+  const { departments, loading, error } = useDepartments();
   return (
     <Command>
       <Command.Input placeholder="Search department" />
       <Command.List>
-        <Combobox.Empty loading={loading} />
+        <Combobox.Empty loading={loading} error={error} />
         {departments?.map((department: IDepartment) => renderItem(department))}
       </Command.List>
     </Command>

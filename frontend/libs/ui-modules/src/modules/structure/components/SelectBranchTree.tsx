@@ -102,37 +102,43 @@ export const SelectBranchCommand = ({
   }, [focusOnMount]);
 
   return (
-    <Command shouldFilter={false}>
-      <Command.Input
-        variant="secondary"
-        placeholder="Filter by branch"
-        ref={inputRef}
-        value={search}
-        onValueChange={(value) => setSearch(value)}
-      />
-      <Command.List className="p-1">
-        <Combobox.Empty error={error} loading={loading} />
-        {nullable && (
-          <Command.Item key="null" value="null" onSelect={() => onSelect(null)}>
-            No branch selected
-          </Command.Item>
-        )}
-        {branches?.map((branch: IBranch) => (
-          <SelectBranchItem
-            key={branch._id}
-            totalCount={branch.userCount || 0}
-            branch={branch}
-            selected={selectedBranch?._id === branch._id}
-            onSelect={() => onSelect(branch._id)}
-            disabled={exclude?.includes(branch._id)}
-            hasChildren={
-              branches.find((c: IBranch) => c.parentId === branch._id) !==
-              undefined
-            }
-          />
-        ))}
-      </Command.List>
-    </Command>
+    <SelectTree.Provider id="select-branch" ordered>
+      <Command shouldFilter={false}>
+        <Command.Input
+          variant="secondary"
+          placeholder="Filter by branch"
+          ref={inputRef}
+          value={search}
+          onValueChange={(value) => setSearch(value)}
+        />
+        <Command.List className="p-1">
+          <Combobox.Empty error={error} loading={loading} />
+          {nullable && (
+            <Command.Item
+              key="null"
+              value="null"
+              onSelect={() => onSelect(null)}
+            >
+              No branch selected
+            </Command.Item>
+          )}
+          {branches?.map((branch: IBranch) => (
+            <SelectBranchItem
+              key={branch._id}
+              totalCount={branch.userCount || 0}
+              branch={branch}
+              selected={selectedBranch?._id === branch._id}
+              onSelect={() => onSelect(branch._id)}
+              disabled={exclude?.includes(branch._id)}
+              hasChildren={
+                branches.find((c: IBranch) => c.parentId === branch._id) !==
+                undefined
+              }
+            />
+          ))}
+        </Command.List>
+      </Command>
+    </SelectTree.Provider>
   );
 };
 
