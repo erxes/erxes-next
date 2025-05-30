@@ -1,10 +1,8 @@
 import { flexRender } from '@tanstack/react-table';
 import { cn, RecordTable, Table } from 'erxes-ui';
 import React, { useMemo } from 'react';
-import { Link } from 'react-router';
 
-
-export const AccountingTableRow = ({
+export const TBalanceTableRow = ({
   handleRowViewChange,
   Row,
 }: {
@@ -29,24 +27,13 @@ export const AccountingTableRow = ({
             }
           >
             <Table.Cell
-              key={`${row.original.ptrId}_${rowIndex}_`}
-              id={`${row.original.ptrId}_${rowIndex}_`}
-              className={cn(rowIndex === 0 && 'border-t')}
-            >
-              <Link to={`/accounting/transaction/edit?parentId=${row.original.parentId}`}>
-                <RecordTable.MoreButton
-                  className="w-full h-full"
-                />
-              </Link>
-            </Table.Cell>
-            <Table.Cell
               key={`${row.original.ptrId}_${rowIndex}__`}
               id={`${row.original.ptrId}_${rowIndex}__`}
-              colSpan={row.getVisibleCells().length - 1}
+              colSpan={row.getVisibleCells().length}
               className={cn(rowIndex === 0 && 'border-t', row.original.ptrStatus === 'diff' && 'bg-red-50/25')}
             >
               {`
-                status: ${row.original.ptrStatus} | len: ${row.original.ptrInfo?.len ?? ''} | amount: ${row.original.ptrInfo?.value?.toLocaleString() ?? ''} ${row.original.ptrInfo?.diff ? `| diff: ${row.original.ptrInfo?.diff.toLocaleString()}` : ''}
+                Ажил гүйлгээ                
               `}
             </Table.Cell>
           </RowComponent>

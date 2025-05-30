@@ -92,6 +92,8 @@ export const types = () => `
     branch: Branch
     department: Department
     customer: AccCustomer
+
+    ptrInfo: JSON
   }
 
   type AccCommonTrRecord {
