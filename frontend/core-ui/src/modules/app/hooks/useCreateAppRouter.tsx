@@ -18,6 +18,8 @@ import { OnBoarding } from '~/pages/onboarding/Onboarding';
 import { Providers } from '~/providers';
 import ForgotPasswordPage from '~/pages/auth/ForgotPasswordPage';
 import { SegmentRoutes } from '@/app/components/SegmentsRoutes';
+import { AutomationRoutes } from '@/app/components/AutomationRoutes';
+import { LogRoutes } from '@/app/components/LogRoutes';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
@@ -59,6 +61,11 @@ export const useCreateAppRouter = () => {
                 path={AppPath.SegmentsCatchAll}
                 element={<SegmentRoutes />}
               />
+              <Route
+                path={AppPath.AutoamtionsCatchAll}
+                element={<AutomationRoutes />}
+              />
+              <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
               {...getPluginsRoutes()}
             </Route>
           </Route>

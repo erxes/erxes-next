@@ -25,10 +25,18 @@ export const cleanupChangeStreams = () => {
 export const startChangeStreams = (
   models: Record<string, mongoose.Model<any>>,
   subdomain: string,
+  logIgnoreOptions?: {
+    ignoreChangeStream?: boolean;
+    ignoreModels?: string[];
+  },
 ) => {
   for (const [modelName, model] of Object.entries(models)) {
     // Skip if already watching this model
     if (activeStreams.has(modelName)) continue;
+
+    if ((logIgnoreOptions?.ignoreModels || []).includes(modelName)) {
+      continue;
+    }
 
     const changeStream = model.watch([], {
       fullDocument: 'updateLookup',

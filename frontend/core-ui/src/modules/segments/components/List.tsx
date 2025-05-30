@@ -71,7 +71,6 @@ export default function List() {
   if (loading) {
     return <Spinner />;
   }
-  console.log({ segmentsObject, orderedSegments });
   return (
     <div className="flex flex-col h-full p-3 pt-0">
       <PageHeader className="p-3 mx-0" separatorClassName="mb-0">

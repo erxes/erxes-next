@@ -3,7 +3,6 @@ import {
   cursorPaginate,
   getPlugin,
   getPlugins,
-  IContext,
   paginate,
 } from 'erxes-api-shared/utils';
 
@@ -13,6 +12,7 @@ import {
   AUTOMATION_STATUSES,
 } from 'erxes-api-shared/core-modules';
 import { UI_ACTIONS } from '../../constants';
+import { IContext } from '~/connectionResolvers';
 
 export interface IListArgs {
   status: string;

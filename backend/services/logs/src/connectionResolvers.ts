@@ -27,4 +27,6 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   return models;
 };
 
-export const generateModels = createGenerateModels<IModels>(loadClasses, true);
+export const generateModels = createGenerateModels<IModels>(loadClasses, {
+  ignoreChangeStream: true,
+});
