@@ -87,7 +87,3 @@ export const createTRPCContext =
 
     return context as TContext & ITPRCContext;
   };
-
-export type ITRPCContext<TExtraContext = {}> = Awaited<
-  ReturnType<ReturnType<typeof createTRPCContext<TExtraContext>>>
->;

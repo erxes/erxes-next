@@ -1,11 +1,7 @@
 import { initTRPC } from '@trpc/server';
-import {
-  generateElkId,
-  generateElkIds,
-  ITRPCContext,
-} from 'erxes-api-shared/utils';
+import { generateElkId, ITRPCContext } from 'erxes-api-shared/utils';
 import { z } from 'zod';
-import { generateModels, IContext, IModels } from '~/connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 import { fetchSegment } from '../utils/fetchSegment';
 
 const t = initTRPC.context<ITRPCContext<IContext>>().create();
@@ -44,7 +40,7 @@ export const segmentsRouter = t.router({
         const { models, subdomain } = ctx;
 
         const segment = await models.Segments.getSegment(segmentId);
-        let defaultMustSelectorFieldName: string = '_id';
+        let defaultMustSelectorFieldName = '_id';
 
         if (!segment?.name && segment.contentType === 'core:form_submission') {
           defaultMustSelectorFieldName = 'customerId';
