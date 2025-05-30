@@ -39,6 +39,12 @@ export const PARENT_CATEGORY_FRAGMENT = gql`
     description
     icon
     numOfArticles
+    children {
+      _id
+      title
+      icon
+      numOfArticles
+    }
     authors {
       _id
       details {

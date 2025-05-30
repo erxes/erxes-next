@@ -40,13 +40,14 @@ interface UseArticlesResult {
   hasMore: boolean;
   endCursor: string | null;
   loadMore: () => Promise<void>;
+  refetch: () => void;
   totalCount: number;
 }
 
 export function useArticles({
   categoryIds,
 }: UseArticlesProps = {}): UseArticlesResult {
-  const { data, loading, fetchMore } = useQuery(ARTICLES, {
+  const { data, loading, fetchMore, refetch } = useQuery(ARTICLES, {
     variables: {
       limit: ITEMS_PER_PAGE,
       cursor: null,
@@ -83,6 +84,7 @@ export function useArticles({
     hasMore,
     endCursor,
     loadMore,
+    refetch,
     totalCount,
   };
 }

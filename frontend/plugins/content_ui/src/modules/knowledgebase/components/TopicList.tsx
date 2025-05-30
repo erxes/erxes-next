@@ -2,49 +2,34 @@
 
 import { useMutation } from '@apollo/client';
 import {
+  cn,
   Collapsible,
   DropdownMenu,
   Sidebar,
   Spinner,
   useConfirm,
 } from 'erxes-ui';
-import { ChevronDown, ChevronUp, Ellipsis } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
+import { Ellipsis, icons } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { REMOVE_CATEGORY } from '../graphql/mutations';
 import { ICategory, ITopic } from '../types';
+import { CategoryDrawer } from './CategoryDrawer';
+import { useTopics } from '../hooks/useTopics';
 
 interface TopicListProps {
   topics: ITopic[];
   loading: boolean;
-  selectedTopic: string | null;
-  onTopicSelect: (topicId: string) => void;
+
   removeTopic: (topicId: string) => void;
   onEditTopic: (topic: ITopic) => void;
 }
 
-export function TopicList({
-  topics,
-  loading,
-  selectedTopic,
-  onTopicSelect,
-  removeTopic,
-  onEditTopic,
-}: TopicListProps) {
-  const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false);
-  const [selectedTopicForCategory, setSelectedTopicForCategory] = useState<
-    string | undefined
-  >(undefined);
-  const [editingCategory, setEditingCategory] = useState<ICategory | undefined>(
-    undefined,
-  );
+export function TopicList(props: TopicListProps) {
+  const { topics, loading, removeTopic, onEditTopic } = props;
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-
-  const { confirm } = useConfirm();
-
-  const [removeCategory] = useMutation(REMOVE_CATEGORY);
 
   useEffect(() => {
     if (!loading && topics.length > 0) {
@@ -78,6 +63,52 @@ export function TopicList({
     );
   }
 
+  return (
+    <Collapsible defaultOpen className="group/collapsible">
+      <Sidebar.Group>
+        <Collapsible.Content>
+          <Sidebar.GroupContent className="pt-2">
+            <Sidebar.Menu>
+              {topics.map((topic) => {
+                return (
+                  <TopicItem
+                    key={topic._id}
+                    topic={topic}
+                    removeTopic={removeTopic}
+                    onEditTopic={onEditTopic}
+                  />
+                );
+              })}
+            </Sidebar.Menu>
+          </Sidebar.GroupContent>
+        </Collapsible.Content>
+      </Sidebar.Group>
+    </Collapsible>
+  );
+}
+
+export function TopicItem(props: {
+  topic: ITopic;
+  removeTopic: (topicId: string) => void;
+  onEditTopic: (topic: ITopic) => void;
+}) {
+  const [removeCategory] = useMutation(REMOVE_CATEGORY);
+  const { refetch } = useTopics();
+  const { topic, removeTopic, onEditTopic } = props;
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const { confirm } = useConfirm();
+  const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false);
+  const [parentCategoryId, setParentCategoryId] = useState<string | undefined>(
+    undefined,
+  );
+  const [editingCategory, setEditingCategory] = useState<ICategory | undefined>(
+    undefined,
+  );
+  const isActive = topic._id === searchParams.get('topicId');
+
+  const { parentCategories = [] } = topic;
   const handleDeleteTopic = async (topic: ITopic) => {
     const categoryCount = topic.categories?.length || 0;
     const message = `Are you sure you want to delete "${topic.title}"? This will also delete ${categoryCount} categories and all their associated articles. This action cannot be undone.`;
@@ -117,44 +148,13 @@ export function TopicList({
         variables: {
           _id: category._id,
         },
+      }).then(() => {
+        refetch();
       });
     } catch (error) {
       console.error('Error deleting category:', error);
     }
   };
-
-  const renderCategoryActions = (category: ICategory) => (
-    <DropdownMenu>
-      <DropdownMenu.Trigger className="ml-2 p-2">
-        <Ellipsis className="w-4 h-4" />
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item
-          onClick={() => {
-            setEditingCategory(category);
-            setIsCategoryDrawerOpen(true);
-          }}
-        >
-          Edit Category
-        </DropdownMenu.Item>
-        <DropdownMenu.Item
-          onClick={() => {
-            setSelectedTopicForCategory(category.topicId);
-            setIsCategoryDrawerOpen(true);
-          }}
-        >
-          Add Subcategory
-        </DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item
-          onClick={() => handleDeleteCategory(category)}
-          className="text-red-600"
-        >
-          Delete Category
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  );
 
   const renderTopicActions = (topic: ITopic) => (
     <DropdownMenu>
@@ -167,7 +167,6 @@ export function TopicList({
         </DropdownMenu.Item>
         <DropdownMenu.Item
           onClick={() => {
-            setSelectedTopicForCategory(topic._id);
             setIsCategoryDrawerOpen(true);
           }}
         >
@@ -184,47 +183,148 @@ export function TopicList({
     </DropdownMenu>
   );
 
+  const renderCategoryActions = (
+    category: ICategory,
+    isSubCategory?: boolean,
+  ) => (
+    <DropdownMenu>
+      <DropdownMenu.Trigger className="ml-2 p-2">
+        <Ellipsis className="w-4 h-4" />
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item
+          onClick={() => {
+            setEditingCategory(category);
+            setIsCategoryDrawerOpen(true);
+          }}
+        >
+          Edit Category
+        </DropdownMenu.Item>
+        {!isSubCategory && (
+          <DropdownMenu.Item
+            onClick={() => {
+              setParentCategoryId(category._id);
+              setIsCategoryDrawerOpen(true);
+            }}
+          >
+            Add Sub Category
+          </DropdownMenu.Item>
+        )}
+        <DropdownMenu.Separator />
+        <DropdownMenu.Item onClick={() => handleDeleteCategory(category)}>
+          Delete Category
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+
   return (
-    <Sidebar.Menu>
-      {topics.map((topic) => (
+    <>
+      <Collapsible asChild open={isActive} className="group/collapsible">
         <Sidebar.MenuItem key={topic._id}>
           <Sidebar.MenuButton
-            isActive={topic._id === searchParams.get('topicId')}
+            onClick={() => {
+              navigate(`?topicId=${topic._id}`);
+            }}
           >
-            <div
-              className="flex items-center justify-between w-full"
-              onClick={() => navigate(`?topicId=${topic._id}`)}
-            >
-              <Collapsible
-                key={topic._id}
-                open={topic._id === searchParams.get('topicId')}
-              >
-                <Collapsible.Trigger>
-                  <span>{topic.title}</span>
-                </Collapsible.Trigger>
-                {topic.parentCategories &&
-                  topic.parentCategories.length > 0 && (
-                    <Collapsible.Content className="overflow-hidden transition-[max-height] duration-300 ease-in-out">
-                      {topic.parentCategories.map((category) => {
-                        return (
-                          <div key={category._id}>
-                            <span>{category.title}</span>
-                          </div>
-                        );
-                      })}
-                    </Collapsible.Content>
-                  )}
-              </Collapsible>
+            <div className="flex items-center justify-between w-full">
+              <span>{topic.title}</span>
+              {renderTopicActions(topic)}
             </div>
-            {renderTopicActions(topic)}
-            {topic._id === searchParams.get('topicId') ? (
-              <ChevronUp className="w-4 h-4" />
-            ) : (
-              <ChevronDown className="w-4 h-4" />
-            )}
           </Sidebar.MenuButton>
+          {parentCategories.length > 0 && (
+            <Collapsible.Content asChild>
+              <Sidebar.Sub>
+                {parentCategories.map((cat) => {
+                  const IconComponent =
+                    LucideIcons[cat.icon as keyof typeof icons];
+                  const isSubmenuActive =
+                    cat._id === searchParams.get('categoryId');
+                  return (
+                    <Sidebar.SubItem key={cat._id}>
+                      <Sidebar.SubButton
+                        asChild
+                        isActive={isSubmenuActive}
+                        className="w-full"
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <Link
+                            to={`?topicId=${topic._id}&categoryId=${cat._id}`}
+                            className="flex items-center gap-2 flex-grow"
+                          >
+                            <span className="w-5 flex justify-center">
+                              {IconComponent && (
+                                <IconComponent
+                                  className={cn(
+                                    'text-accent-foreground',
+                                    isSubmenuActive && 'text-primary',
+                                  )}
+                                />
+                              )}
+                            </span>
+                            <span>{cat.title}</span>
+                          </Link>
+
+                          {renderCategoryActions(cat)}
+                        </div>
+                      </Sidebar.SubButton>
+                      {cat.children && cat.children.length > 0 && (
+                        <div className="ml-4 space-y-1 mt-1">
+                          {cat.children.map((sub) => {
+                            const isSubActive =
+                              sub._id === searchParams.get('categoryId');
+                            const IconComponent =
+                              LucideIcons[sub.icon as keyof typeof icons];
+                            return (
+                              <Sidebar.SubItem key={sub._id}>
+                                <Sidebar.SubButton
+                                  asChild
+                                  isActive={isSubActive}
+                                  className="w-full"
+                                >
+                                  <div className="flex items-center justify-between w-full">
+                                    <Link
+                                      to={`?topicId=${topic._id}&categoryId=${sub._id}`}
+                                      className="flex items-center gap-2 flex-grow"
+                                    >
+                                      <span className="w-5 flex justify-center">
+                                        {IconComponent && (
+                                          <IconComponent
+                                            className={cn(
+                                              'text-accent-foreground',
+                                              isSubmenuActive && 'text-primary',
+                                            )}
+                                          />
+                                        )}
+                                      </span>
+                                      <span>{sub.title}</span>
+                                    </Link>
+
+                                    {renderCategoryActions(sub, true)}
+                                  </div>
+                                </Sidebar.SubButton>
+                              </Sidebar.SubItem>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </Sidebar.SubItem>
+                  );
+                })}
+              </Sidebar.Sub>
+            </Collapsible.Content>
+          )}
         </Sidebar.MenuItem>
-      ))}
-    </Sidebar.Menu>
+      </Collapsible>
+
+      <CategoryDrawer
+        refetch={refetch}
+        topicId={searchParams.get('topicId') || ''}
+        parentCategoryId={parentCategoryId}
+        category={editingCategory}
+        isOpen={isCategoryDrawerOpen}
+        onClose={() => setIsCategoryDrawerOpen(false)}
+      />
+    </>
   );
 }

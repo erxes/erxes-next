@@ -41,7 +41,6 @@ interface TopicFormData {
 
 export function TopicDrawer({ topic, isOpen, onClose }: TopicDrawerProps) {
   const isEditing = !!topic;
-  console.log('topic', topic);
 
   const form = useForm<TopicFormData>({
     defaultValues: {
@@ -68,8 +67,6 @@ export function TopicDrawer({ topic, isOpen, onClose }: TopicDrawerProps) {
         languageCode: topic.languageCode || '',
         notificationSegmentId: topic.notificationSegmentId || '',
       });
-
-      console.log('form.getValues()', form.getValues());
     } else {
       form.reset({
         code: '',

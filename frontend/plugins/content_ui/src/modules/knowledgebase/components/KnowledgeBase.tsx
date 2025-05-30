@@ -69,8 +69,6 @@ export function KnowledgeBase() {
             <TopicList
               topics={topics}
               loading={loading}
-              selectedTopic={selectedTopic}
-              onTopicSelect={setSelectedTopic}
               removeTopic={(_id) =>
                 removeTopic({
                   variables: {
@@ -81,9 +79,9 @@ export function KnowledgeBase() {
                 })
               }
               onEditTopic={(topic) => {
-                console.log('editing', topic);
                 setEditingTopic(topic);
                 setIsTopicDrawerOpen(true);
+                refetch();
               }}
             />
           </Sidebar.GroupContent>

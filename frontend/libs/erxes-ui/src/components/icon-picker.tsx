@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { PopoverTrigger, PopoverContent } from '@radix-ui/react-popover';
 
 type IconPickerProps = {
-  value: string | null;
+  value: string | undefined;
   onChange: (iconName: string) => void;
 };
 
@@ -22,7 +22,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
     iconName.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const SelectedIcon = value ? LucideIcons[value] : null;
+  const SelectedIcon = value ? LucideIcons[value as keyof typeof icons] : null;
 
   return (
     <Popover>

@@ -22,6 +22,7 @@ import { useForm } from 'react-hook-form';
 import { REACTIONS } from '../constants';
 import { ADD_ARTICLE, EDIT_ARTICLE } from '../graphql/mutations';
 import { ARTICLES } from '../graphql/queries';
+import { useArticles } from '../hooks/useArticles';
 
 interface Article {
   _id: string;
@@ -65,7 +66,9 @@ export function ArticleDrawer({
   categoryId,
 }: ArticleDrawerProps) {
   const isEditing = !!article;
-
+  const { refetch } = useArticles({
+    categoryIds: [categoryId],
+  });
   const form = useForm<ArticleFormData>({
     defaultValues: {
       code: '',
@@ -116,6 +119,7 @@ export function ArticleDrawer({
     onCompleted: () => {
       onClose();
       form.reset();
+      refetch();
     },
   });
 
@@ -124,6 +128,7 @@ export function ArticleDrawer({
     onCompleted: () => {
       onClose();
       form.reset();
+      refetch();
     },
   });
 
