@@ -34,6 +34,9 @@
       "odds": "Odd Transactions"
     },
     "sample": "Sample",
-    "modules": "Modules"
+    "modules": "Modules",
+    "education": "Education",
+    "courses": "Course",
+    "classes": "Class"
   }
 }

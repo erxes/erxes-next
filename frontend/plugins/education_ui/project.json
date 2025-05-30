@@ -1,0 +1,61 @@
+{
+  "name": "education_ui",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "frontend/plugins/education_ui/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/frontend/plugins/education_ui",
+        "main": "frontend/plugins/education_ui/src/main.ts",
+        "tsConfig": "frontend/plugins/education_ui/tsconfig.app.json",
+        "rspackConfig": "frontend/plugins/education_ui/rspack.config.ts",
+        "assets": []
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "frontend/plugins/education_ui/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "education_ui:build:development",
+        "port": 3022
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "education_ui:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "education_ui:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "education_ui:serve:development"
+        },
+        "production": {
+          "serveTarget": "education_ui:serve:production"
+        }
+      }
+    }
+  }
+}
