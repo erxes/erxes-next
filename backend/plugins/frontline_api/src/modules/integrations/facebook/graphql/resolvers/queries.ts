@@ -216,16 +216,19 @@ export const facebookQueries = {
   ) {
     const { conversationId, limit, skip, getFirst } = args;
 
-    const conversation = await models.FacebookConversations.findOne({
-      erxesApiId: conversationId,
-    });
+    const conversation = await models.FacebookConversations.findOne({});
     let messages: IFacebookConversationMessageDocument[] = [];
-    const query = await buildSelector(conversationId, models.FacebookConversations);
+    const query = await buildSelector(
+      conversationId,
+      models.FacebookConversations,
+    );
+
+    console.log(conversation);
     if (conversation) {
       if (limit) {
         const sort: any = getFirst ? { createdAt: 1 } : { createdAt: -1 };
 
-        messages = await models.FacebookConversationMessages.find(query)
+        messages = await models.FacebookConversationMessages.find({})
           .sort(sort)
           .skip(skip || 0)
           .limit(limit);
@@ -233,7 +236,7 @@ export const facebookQueries = {
         return getFirst ? messages : messages.reverse();
       }
 
-      messages = await models.FacebookConversationMessages.find(query)
+      messages = await models.FacebookConversationMessages.find({})
         .sort({ createdAt: -1 })
         .limit(50);
 
@@ -273,7 +276,10 @@ export const facebookQueries = {
     { conversationId }: { conversationId: string },
     { models }: IContext,
   ) {
-    const selector = await buildSelector(conversationId, models.FacebookConversations);
+    const selector = await buildSelector(
+      conversationId,
+      models.FacebookConversations,
+    );
 
     return models.FacebookConversationMessages.countDocuments(selector);
   },
@@ -460,7 +466,10 @@ export const facebookQueries = {
       return false;
     }
 
-    const query = await buildSelector(conversationId, models.FacebookConversations);
+    const query = await buildSelector(
+      conversationId,
+      models.FacebookConversations,
+    );
 
     const messages = await models.FacebookConversationMessages.find({
       ...query,

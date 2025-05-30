@@ -187,8 +187,8 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
           <Tooltip.Trigger asChild>
             <Avatar
               className={cn('ring-2 ring-background bg-background', className)}
-              {...props}
               size="lg"
+              {...props}
             >
               <Avatar.Fallback className="bg-primary/10 text-primary">
                 +{restMembers.length}
