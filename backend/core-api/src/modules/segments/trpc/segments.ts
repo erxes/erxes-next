@@ -1,10 +1,10 @@
 import { initTRPC } from '@trpc/server';
-import { generateElkId, ITRPCContext } from 'erxes-api-shared/utils';
+import { generateElkId } from 'erxes-api-shared/utils';
 import { z } from 'zod';
-import { IContext } from '~/connectionResolvers';
+import { CoreTRPCContext } from '~/init-trpc';
 import { fetchSegment } from '../utils/fetchSegment';
 
-const t = initTRPC.context<ITRPCContext<IContext>>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const optionsSchema = z.object({
   returnAssociated: z

@@ -1,8 +1,11 @@
 import { initTRPC } from '@trpc/server';
 
 import { ITRPCContext } from 'erxes-api-shared/utils';
+import { IModels } from '~/connectionResolvers';
 
-const t = initTRPC.context<ITRPCContext>().create();
+export type SalesTRPCContext = ITRPCContext<{ models: IModels }>;
+
+const t = initTRPC.context<SalesTRPCContext>().create();
 
 export const appRouter = t.router({
   sample: {

@@ -2,8 +2,9 @@ import { initTRPC } from '@trpc/server';
 import { ITRPCContext } from 'erxes-api-shared/utils';
 import { z } from 'zod';
 import { IContext } from '~/connectionResolvers';
+import { CoreTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext<IContext>>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const logsRouter = t.router({
   log: t.router({
