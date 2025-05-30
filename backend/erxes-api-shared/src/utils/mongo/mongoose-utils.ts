@@ -1,5 +1,12 @@
+import { ICursorPaginateParams, ICursorPaginateResult } from '@/core-types';
 import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
+import {
+  computeOperator,
+  encodeCursor,
+  getCursor,
+  getPaginationInfo,
+} from './cursor-util';
 import { mongooseStringRandomId } from './mongoose-types';
 
 export interface IOrderInput {
@@ -94,101 +101,88 @@ export const checkCollectionCodeDuplication = async (
   }
 };
 
-interface CursorPaginateResult<T> {
-  list: T[];
-  pageInfo: {
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-    startCursor: string | undefined;
-    endCursor: string | undefined;
-  };
-  totalCount: number;
-}
-
-interface CursorPaginateParams {
-  limit?: number;
-  cursor?: string | null;
-  direction?: 'forward' | 'backward';
-  sortField?: string;
-}
-
-const PAGINATE_DIRECTION_MAP = {
-  forward: {
-    operator: '$gt',
-    order: 1,
-    reverseOrder: -1,
-  },
-  backward: {
-    operator: '$lt',
-    order: -1,
-    reverseOrder: 1,
-  },
-} as const;
-
-export const getPaginationInfo = (
-  direction: 'forward' | 'backward',
-  hasCursor: boolean,
-  hasMore: boolean,
-) => {
-  const hasNextPage = direction === 'backward' ? true : hasMore;
-
-  let hasPreviousPage = false;
-
-  if (hasCursor) {
-    if (direction === 'backward') {
-      hasPreviousPage = hasMore;
-    } else {
-      hasPreviousPage = true;
-    }
-  }
-
-  return {
-    hasNextPage,
-    hasPreviousPage,
-  };
-};
-
 export const cursorPaginate = async <T extends Document>({
   model,
   params,
   query,
 }: {
   model: Model<T>;
-  params: CursorPaginateParams;
+  params: ICursorPaginateParams;
   query: mongoose.FilterQuery<T>;
-}): Promise<CursorPaginateResult<T>> => {
+}): Promise<ICursorPaginateResult<T>> => {
   const {
     limit = 20,
-    cursor = null,
     direction = 'forward',
-    sortField = '_id',
+    orderBy = {},
+    cursorMode = 'exclusive',
   } = params;
 
   if (limit < 1) {
     throw new Error('Limit must be greater than 0');
   }
 
-  const { operator, order } = PAGINATE_DIRECTION_MAP[direction];
+  if (!('_id' in orderBy)) {
+    orderBy['_id'] = 1;
+  }
 
   const baseQuery: mongoose.FilterQuery<T> = { ...query };
 
-  if (cursor) {
-    baseQuery._id = { [operator]: cursor };
+  const baseSort: Record<string, SortOrder> = { ...orderBy };
+
+  if (direction === 'backward') {
+    for (const key in baseSort) {
+      baseSort[key] = baseSort[key] === 1 ? -1 : 1;
+    }
   }
 
-  const _limit = Number(limit);
+  const cursor = getCursor(params);
+
+  if (cursor) {
+    const conditions: Record<string, any> = {};
+
+    const sortKeys = Object.keys(baseSort);
+
+    const orConditions: Record<string, any>[] = [];
+
+    for (let i = 0; i < sortKeys.length; i++) {
+      const field = sortKeys[i];
+
+      const andCondition: Record<string, any> = {};
+
+      for (let j = 0; j < i; j++) {
+        const prevField = sortKeys[j];
+        andCondition[prevField] = cursor[prevField];
+      }
+
+      const fieldOperator = computeOperator(
+        orderBy[field] === 1,
+        direction === 'forward',
+        cursorMode,
+      );
+
+      andCondition[field] = { [fieldOperator]: cursor[field] };
+
+      orConditions.push(andCondition);
+    }
+
+    conditions['$or'] = orConditions;
+
+    Object.assign(baseQuery, conditions);
+  }
+
+  const _limit = Math.min(Number(limit), 50);
 
   try {
     const [documents, totalCount] = await Promise.all([
       model
         .find(baseQuery)
-        .sort({ [sortField]: order as SortOrder })
+        .sort(baseSort)
         .limit(_limit + 1)
         .lean<T[]>(),
       model.countDocuments(query),
     ]);
 
-    const hasMore = documents.length > limit;
+    const hasMore = documents.length > _limit;
 
     if (hasMore) {
       documents.pop();
@@ -198,47 +192,21 @@ export const cursorPaginate = async <T extends Document>({
       documents.reverse();
     }
 
-    if (documents.length === 0 && cursor) {
-      const { reverseOrder } = PAGINATE_DIRECTION_MAP[direction];
-
-      const edgeDoc = await model
-        .findOne(query)
-        .sort({ [sortField]: reverseOrder as SortOrder })
-        .select({ [sortField]: 1 })
-        .lean();
-
-      if (
-        edgeDoc &&
-        edgeDoc[sortField as keyof T]?.toString() === cursor.toString()
-      ) {
-        const edgeDocs = await model
-          .find(query)
-          .sort({ [sortField]: reverseOrder as SortOrder })
-          .limit(limit)
-          .lean<T[]>();
-
-        if (direction === 'forward') {
-          edgeDocs.reverse();
-        }
-
-        const { hasNextPage, hasPreviousPage } = getPaginationInfo(
-          direction,
-          Boolean(cursor),
-          false,
-        );
-
-        return {
-          list: edgeDocs,
-          pageInfo: {
-            hasNextPage,
-            hasPreviousPage,
-            startCursor: edgeDocs[0]?._id?.toString(),
-            endCursor: edgeDocs[edgeDocs.length - 1]?._id?.toString(),
-          },
-          totalCount,
-        };
-      }
+    if (documents.length === 0) {
+      return {
+        list: [],
+        pageInfo: {
+          hasNextPage: false,
+          hasPreviousPage: Boolean(cursor),
+          startCursor: null,
+          endCursor: null,
+        },
+        totalCount,
+      };
     }
+
+    const startCursor = encodeCursor<T>(documents[0], orderBy);
+    const endCursor = encodeCursor<T>(documents[documents.length - 1], orderBy);
 
     const { hasNextPage, hasPreviousPage } = getPaginationInfo(
       direction,
@@ -249,12 +217,17 @@ export const cursorPaginate = async <T extends Document>({
     const pageInfo = {
       hasNextPage,
       hasPreviousPage,
-      startCursor: documents[0]?._id?.toString(),
-      endCursor: documents[documents.length - 1]?._id?.toString(),
+      startCursor,
+      endCursor,
     };
 
     return {
-      list: documents,
+      // Currently adds cursor directly to data items;
+      // Can be replaced with a proper Relay-style `edges`/`node` structure.
+      list: documents.map((document) => ({
+        ...document,
+        cursor: encodeCursor(document, orderBy),
+      })),
       pageInfo,
       totalCount,
     };

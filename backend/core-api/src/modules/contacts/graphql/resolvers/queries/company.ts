@@ -20,7 +20,7 @@ export const companyQueries = {
     params: ICompanyFilterQueryParams,
     { models }: IContext,
   ) => {
-    const filter: FilterQuery<ICompanyFilterQueryParams> = await generateFilter(
+    const filter: FilterQuery<ICompanyDocument> = await generateFilter(
       params,
       models,
     );

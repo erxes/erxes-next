@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from "erxes-api-shared/utils";
+
 export const commonParams = `
     ids: [String]
     excludeIds: Boolean
@@ -8,7 +10,5 @@ export const commonParams = `
 
     sortField: String
 
-    limit: Int
-    cursor: String
-    direction: CURSOR_DIRECTION
+    ${GQL_CURSOR_PARAM_DEFS}
 `;

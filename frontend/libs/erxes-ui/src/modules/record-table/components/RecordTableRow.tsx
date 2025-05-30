@@ -25,7 +25,7 @@ export const RecordTableRow = React.forwardRef<
       {...props}
       ref={mergeRefs([ref, inViewRef])}
       className={cn('h-cell', inView ? 'in-view' : 'out-of-view', className)}
-      id={original?._id}
+      id={original?.cursor}
     >
       {table.getRowModel().rows.length > 200 && !inView ? (
         <td
