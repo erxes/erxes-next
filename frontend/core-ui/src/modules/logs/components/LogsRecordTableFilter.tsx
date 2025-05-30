@@ -59,7 +59,7 @@ export const LogsRecordTableFilter = () => {
             <Command shouldFilter={false}>
               <Command.Input
                 variant="secondary"
-                placeholder="Filter by branch"
+                placeholder="Filter by status"
               />
               <Command.List className="p-1">
                 <Combobox.Empty />
