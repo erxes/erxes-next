@@ -886,241 +886,7 @@ importers:
         specifier: workspace:^
         version: link:../erxes-api-shared
 
-  backend/gateway/dist:
-    dependencies:
-      '@apollo/client':
-        specifier: 3.13.8
-        version: 3.13.8(@types/react@18.3.1)(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@apollo/server':
-        specifier: 4.12.0
-        version: 4.12.0(encoding@0.1.13)(graphql@16.10.0)
-      '@babel/preset-env':
-        specifier: 7.26.9
-        version: 7.26.9(@babel/core@7.26.10)
-      '@bull-board/api':
-        specifier: 6.9.2
-        version: 6.9.2(@bull-board/ui@6.9.2)
-      '@bull-board/express':
-        specifier: 6.9.2
-        version: 6.9.2
-      '@elastic/elasticsearch':
-        specifier: 7.17.14
-        version: 7.17.14
-      '@envelop/core':
-        specifier: 5.2.3
-        version: 5.2.3
-      '@escape.tech/graphql-armor-character-limit':
-        specifier: 2.3.0
-        version: 2.3.0
-      '@escape.tech/graphql-armor-max-aliases':
-        specifier: 2.6.1
-        version: 2.6.1
-      '@escape.tech/graphql-armor-max-depth':
-        specifier: 2.4.0
-        version: 2.4.0
-      '@graphql-tools/schema':
-        specifier: 10.0.23
-        version: 10.0.23(graphql@16.10.0)
-      '@preconstruct/cli':
-        specifier: 2.8.12
-        version: 2.8.12
-      '@prettier/sync':
-        specifier: 0.5.5
-        version: 0.5.5(prettier@2.8.8)
-      '@sniptt/guards':
-        specifier: 0.2.0
-        version: 0.2.0
-      '@trpc/client':
-        specifier: 11.1.0
-        version: 11.1.0(@trpc/server@11.1.0(typescript@5.7.3))(typescript@5.7.3)
-      '@trpc/server':
-        specifier: 11.1.0
-        version: 11.1.0(typescript@5.7.3)
-      '@types/babel__preset-env':
-        specifier: 7.10.0
-        version: 7.10.0
-      '@types/graphql':
-        specifier: 14.5.0
-        version: 14.5.0
-      '@types/ioredis':
-        specifier: 5.0.0
-        version: 5.0.0
-      babel-plugin-module-resolver:
-        specifier: 5.0.2
-        version: 5.0.2
-      bullmq:
-        specifier: 5.49.1
-        version: 5.49.1
-      cookie-parser:
-        specifier: 1.4.7
-        version: 1.4.7
-      cors:
-        specifier: 2.8.5
-        version: 2.8.5
-      dayjs:
-        specifier: 1.11.13
-        version: 1.11.13
-      dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../../erxes-api-shared
-      express:
-        specifier: 4.21.2
-        version: 4.21.2
-      glob:
-        specifier: 11.0.1
-        version: 11.0.1
-      graphql:
-        specifier: 16.10.0
-        version: 16.10.0
-      graphql-parse-resolve-info:
-        specifier: 4.14.1
-        version: 4.14.1(graphql@16.10.0)
-      graphql-redis-subscriptions:
-        specifier: 2.7.0
-        version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
-      graphql-subscriptions:
-        specifier: 3.0.0
-        version: 3.0.0(graphql@16.10.0)
-      graphql-ws:
-        specifier: 5.16.2
-        version: 5.16.2(graphql@16.10.0)
-      http-proxy-middleware:
-        specifier: 3.0.5
-        version: 3.0.5
-      ioredis:
-        specifier: 5.6.1
-        version: 5.6.1
-      jsonwebtoken:
-        specifier: 9.0.2
-        version: 9.0.2
-      lodash:
-        specifier: 4.17.21
-        version: 4.17.21
-      mongoose:
-        specifier: 8.13.2
-        version: 8.13.2
-      nanoid:
-        specifier: 3.3.8
-        version: 3.3.8
-      node-fetch:
-        specifier: 2.7.0
-        version: 2.7.0(encoding@0.1.13)
-      react:
-        specifier: 18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: 18.3.1
-        version: 18.3.1(react@18.3.1)
-      strip-ansi:
-        specifier: 7.1.0
-        version: 7.1.0
-      ws:
-        specifier: 8.18.2
-        version: 8.18.2
-      yaml:
-        specifier: 2.7.1
-        version: 2.7.1
-      zod:
-        specifier: 3.23.8
-        version: 3.23.8
-
-  backend/plugins/accounting_api/dist:
-    dependencies:
-      '@apollo/server':
-        specifier: 4.12.0
-        version: 4.12.0(encoding@0.1.13)(graphql@16.10.0)
-      '@apollo/subgraph':
-        specifier: 2.10.2
-        version: 2.10.2(graphql@16.10.0)
-      '@babel/preset-env':
-        specifier: 7.26.9
-        version: 7.26.9(@babel/core@7.26.10)
-      '@elastic/elasticsearch':
-        specifier: 7.17.14
-        version: 7.17.14
-      '@preconstruct/cli':
-        specifier: 2.8.12
-        version: 2.8.12
-      '@prettier/sync':
-        specifier: 0.5.5
-        version: 0.5.5(prettier@2.8.8)
-      '@sniptt/guards':
-        specifier: 0.2.0
-        version: 0.2.0
-      '@trpc/client':
-        specifier: 11.1.0
-        version: 11.1.0(@trpc/server@11.1.0(typescript@5.7.3))(typescript@5.7.3)
-      '@trpc/server':
-        specifier: 11.1.0
-        version: 11.1.0(typescript@5.7.3)
-      '@types/babel__preset-env':
-        specifier: 7.10.0
-        version: 7.10.0
-      '@types/graphql':
-        specifier: 14.5.0
-        version: 14.5.0
-      '@types/ioredis':
-        specifier: 5.0.0
-        version: 5.0.0
-      babel-plugin-module-resolver:
-        specifier: 5.0.2
-        version: 5.0.2
-      bullmq:
-        specifier: 5.49.1
-        version: 5.49.1
-      cookie-parser:
-        specifier: 1.4.7
-        version: 1.4.7
-      cors:
-        specifier: 2.8.5
-        version: 2.8.5
-      dayjs:
-        specifier: 1.11.13
-        version: 1.11.13
-      dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
-      erxes-api-shared:
-        specifier: workspace:^
-        version: link:../../../erxes-api-shared
-      express:
-        specifier: 4.21.2
-        version: 4.21.2
-      glob:
-        specifier: 11.0.1
-        version: 11.0.1
-      graphql:
-        specifier: 16.10.0
-        version: 16.10.0
-      graphql-redis-subscriptions:
-        specifier: 2.7.0
-        version: 2.7.0(graphql-subscriptions@3.0.0(graphql@16.10.0))
-      graphql-subscriptions:
-        specifier: 3.0.0
-        version: 3.0.0(graphql@16.10.0)
-      graphql-tag:
-        specifier: 2.12.6
-        version: 2.12.6(graphql@16.10.0)
-      ioredis:
-        specifier: 5.6.1
-        version: 5.6.1
-      mongoose:
-        specifier: 8.13.2
-        version: 8.13.2
-      nanoid:
-        specifier: 3.3.11
-        version: 3.3.11
-      strip-ansi:
-        specifier: 7.1.0
-        version: 7.1.0
-      zod:
-        specifier: 3.23.8
-        version: 3.23.8
-
-  backend/plugins/automations_api:
+  backend/plugins/accounting_api:
     dependencies:
       erxes-api-shared:
         specifier: workspace:^
@@ -1337,7 +1103,10 @@ packages:
       graphql: 14.x || 15.x || 16.x
 
   '@apollo/client@3.13.6':
-    resolution: {integrity: sha512-G6A8uNb13V/Tv4TJQOs5PnxuE5Rf5D2dMnBQcg9mng1Eo4YBecwFEJ0L022mraq/dLB0jD5tiAESOD2bTyJ6gg==}
+    resolution:
+      {
+        integrity: sha512-G6A8uNb13V/Tv4TJQOs5PnxuE5Rf5D2dMnBQcg9mng1Eo4YBecwFEJ0L022mraq/dLB0jD5tiAESOD2bTyJ6gg==,
+      }
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
       graphql-ws: ^5.5.5 || ^6.0.3
@@ -1355,8 +1124,11 @@ packages:
         optional: true
 
   '@apollo/federation-internals@2.10.0':
-    resolution: {integrity: sha512-IneWuwDc9ozKLcEsKw7YEkhzo7VAa54RjKwAVEqPFHPVqUjIYUKX99gSWAp9ZQeI8DGrz2a8uKEDlKGOHh3UaA==}
-    engines: {node: '>=14.15.0'}
+    resolution:
+      {
+        integrity: sha512-IneWuwDc9ozKLcEsKw7YEkhzo7VAa54RjKwAVEqPFHPVqUjIYUKX99gSWAp9ZQeI8DGrz2a8uKEDlKGOHh3UaA==,
+      }
+    engines: { node: '>=14.15.0' }
     peerDependencies:
       graphql: ^16.5.0
 
@@ -1384,14 +1156,20 @@ packages:
       graphql: 14.x || 15.x || 16.x
 
   '@apollo/server@4.11.3':
-    resolution: {integrity: sha512-mW8idE2q0/BN14mimfJU5DAnoPHZRrAWgwsVLBEdACds+mxapIYxIbI6AH4AsOpxfrpvHts3PCYDbopy1XPW1g==}
-    engines: {node: '>=14.16.0'}
+    resolution:
+      {
+        integrity: sha512-mW8idE2q0/BN14mimfJU5DAnoPHZRrAWgwsVLBEdACds+mxapIYxIbI6AH4AsOpxfrpvHts3PCYDbopy1XPW1g==,
+      }
+    engines: { node: '>=14.16.0' }
     peerDependencies:
       graphql: ^16.6.0
 
   '@apollo/subgraph@2.10.0':
-    resolution: {integrity: sha512-krPirTgu17KgF4gpTY60sB8O2xHJt+4YuX1Cbmr7eGeNEbEjFervAEljkzyk7/nT/2nUjbugSPHymaCs1PUlnQ==}
-    engines: {node: '>=14.15.0'}
+    resolution:
+      {
+        integrity: sha512-krPirTgu17KgF4gpTY60sB8O2xHJt+4YuX1Cbmr7eGeNEbEjFervAEljkzyk7/nT/2nUjbugSPHymaCs1PUlnQ==,
+      }
+    engines: { node: '>=14.15.0' }
     peerDependencies:
       graphql: ^16.5.0
 
@@ -2524,10 +2302,16 @@ packages:
       '@bull-board/ui': 6.9.0
 
   '@bull-board/express@6.9.0':
-    resolution: {integrity: sha512-TH1NDYtl058aZVR+roEzJ+oK9sHXlg0ypeZHeqjBfdttCR0YQdAkyElfilHTdOwElPTJntwxGYVhXWajtCskcw==}
+    resolution:
+      {
+        integrity: sha512-TH1NDYtl058aZVR+roEzJ+oK9sHXlg0ypeZHeqjBfdttCR0YQdAkyElfilHTdOwElPTJntwxGYVhXWajtCskcw==,
+      }
 
   '@bull-board/ui@6.9.0':
-    resolution: {integrity: sha512-PbMswtthSAyYHhV+/kIkDPStgv2JKIC6frhXW/doTuhaQGCnggA080kiysz4e7omYP8SCBApuKBeVmc2bxfhWA==}
+    resolution:
+      {
+        integrity: sha512-PbMswtthSAyYHhV+/kIkDPStgv2JKIC6frhXW/doTuhaQGCnggA080kiysz4e7omYP8SCBApuKBeVmc2bxfhWA==,
+      }
 
   '@colors/colors@1.5.0':
     resolution:
@@ -3514,8 +3298,11 @@ packages:
     engines: { node: '>=18.0.0' }
 
   '@escape.tech/graphql-armor-max-aliases@2.6.0':
-    resolution: {integrity: sha512-9dwRC5+dl986byBD9QRYRUrLALa7awpUe4aIM1j7StZHGJgmYRj3LZaWQM3JyI8j2FXg4rqBC4FJAiVYpRyWqw==}
-    engines: {node: '>=18.0.0'}
+    resolution:
+      {
+        integrity: sha512-9dwRC5+dl986byBD9QRYRUrLALa7awpUe4aIM1j7StZHGJgmYRj3LZaWQM3JyI8j2FXg4rqBC4FJAiVYpRyWqw==,
+      }
+    engines: { node: '>=18.0.0' }
 
   '@escape.tech/graphql-armor-max-depth@2.4.0':
     resolution:
@@ -7513,7 +7300,10 @@ packages:
       typescript: '>=5.7.2'
 
   '@trpc/server@11.0.4':
-    resolution: {integrity: sha512-beDEGEw+slNiYxLUpZ8HKU1mnZBoP/VLMtrKh2ABKl7VC0PQV9XcDMVjB0GcSW15nTSiOnGDGyFDeudp4dH2qw==}
+    resolution:
+      {
+        integrity: sha512-beDEGEw+slNiYxLUpZ8HKU1mnZBoP/VLMtrKh2ABKl7VC0PQV9XcDMVjB0GcSW15nTSiOnGDGyFDeudp4dH2qw==,
+      }
     peerDependencies:
       typescript: '>=5.7.2'
 
@@ -9502,7 +9292,10 @@ packages:
     engines: { node: '>=6' }
 
   bullmq@5.40.4:
-    resolution: {integrity: sha512-MaIOhc31ZbVi9HbY0VAalsXoywelzEPNr6dojoKSMCXDnEVTQ27LkT5LA0Mlpr7ZunMLfpH94SLYrWNsPMsQrg==}
+    resolution:
+      {
+        integrity: sha512-MaIOhc31ZbVi9HbY0VAalsXoywelzEPNr6dojoKSMCXDnEVTQ27LkT5LA0Mlpr7ZunMLfpH94SLYrWNsPMsQrg==,
+      }
 
   bundle-name@4.1.0:
     resolution:
@@ -11205,8 +10998,11 @@ packages:
     engines: { node: '>=12' }
 
   dotenv@16.4.7:
-    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
-    engines: {node: '>=12'}
+    resolution:
+      {
+        integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==,
+      }
+    engines: { node: '>=12' }
 
   dset@3.1.4:
     resolution:
@@ -16254,8 +16050,11 @@ packages:
       }
 
   nanoid@3.3.11:
-    resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    resolution:
+      {
+        integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==,
+      }
+    engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
 
   natural-compare@1.4.0:
