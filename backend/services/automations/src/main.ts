@@ -1,28 +1,18 @@
-import * as trpcExpress from '@trpc/server/adapters/express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express from 'express';
-import * as http from 'http';
-import { appRouter } from '~/init-trpc';
-import { initApolloServer } from './apollo/apolloServer';
-import { router } from './routes';
-
 import {
   closeMongooose,
-  createTRPCContext,
   joinErxesGateway,
   leaveErxesGateway,
+  redis,
 } from 'erxes-api-shared/utils';
+import express from 'express';
+import * as http from 'http';
+import { initMQWorkers } from './bullmq';
 
-import './automations';
-import { generateModels, IContext, IModels } from './connectionResolvers';
-import { moduleObjects } from './meta/permission';
-import { tags } from './meta/tags';
-import './segments';
+const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT } = process.env;
 
-const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
-
-const port = process.env.PORT ? Number(process.env.PORT) : 3300;
+const port = PORT ? Number(PORT) : 3302;
 
 const app = express();
 
@@ -50,45 +40,36 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(router);
 
-app.use(
-  '/trpc',
-  trpcExpress.createExpressMiddleware({
-    router: appRouter,
-    createContext: createTRPCContext(async (subdomain, context) => {
-      const models = await generateModels(subdomain);
+// app.use(
+//   '/trpc',
+//   trpcExpress.createExpressMiddleware({
+//     router: appRouter,
+//     createContext: createTRPCContext(async (subdomain, context) => {
+//       const models = await generateModels(subdomain);
+//       context.models = models;
+//       return context;
+//     }),
+//   }),
+// );
 
-      context.models = models;
-
-      return context;
-    }),
-  }),
-);
-
-// Wrap the Express server
 const httpServer = http.createServer(app);
 
 httpServer.listen(port, async () => {
-  await initApolloServer(app, httpServer);
-
   await joinErxesGateway({
-    name: 'core',
+    name: 'automations',
     port,
     hasSubscriptions: false,
-    meta: {
-      permissions: moduleObjects,
-      tags,
-    },
+    meta: {},
   });
+  await initMQWorkers(redis);
 });
 
-// GRACEFULL SHUTDOWN
-process.stdin.resume(); // so the program will not close instantly
+process.stdin.resume();
 
 async function leaveServiceDiscovery() {
   try {
-    await leaveErxesGateway('core', port);
+    await leaveErxesGateway('automations', port);
     console.log('Left from service discovery');
   } catch (e) {
     console.error(e);
@@ -98,7 +79,6 @@ async function leaveServiceDiscovery() {
 async function closeHttpServer() {
   try {
     await new Promise<void>((resolve, reject) => {
-      // Stops the server from accepting new connections and finishes existing connections.
       httpServer.close((error: Error | undefined) => {
         if (error) {
           return reject(error);
@@ -111,7 +91,6 @@ async function closeHttpServer() {
   }
 }
 
-// If the Node process ends, close the http-server and mongoose.connection and leaveErxesGateway service discovery.
 (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
   process.on(sig, async () => {
     await closeHttpServer();
