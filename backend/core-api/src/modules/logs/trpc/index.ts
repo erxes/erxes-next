@@ -1,7 +1,7 @@
 import { initTRPC } from '@trpc/server';
+import { CoreTRPCContext } from '~/init-trpc';
 import { logsRouter } from './logs';
-import { ITRPCContext } from 'erxes-api-shared/utils';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const appRouter = t.mergeRouters(logsRouter);
