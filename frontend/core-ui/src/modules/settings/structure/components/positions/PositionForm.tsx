@@ -39,7 +39,6 @@ export const PositionForm = () => {
         control={control}
         name="userIds"
         render={({ field }) => {
-          console.log('field', field);
           return (
             <Form.Item className="col-span-2">
               <Form.Label>{'Team members'}</Form.Label>

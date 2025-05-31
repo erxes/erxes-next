@@ -6,7 +6,7 @@ import {
   IListParams,
   IStringMap,
 } from '../../common';
-import { IAddress } from './contacts-common';
+import { IAddress, ILocation } from './contacts-common';
 
 export interface IVisitorContact {
   email?: string;
@@ -61,6 +61,9 @@ export interface ICustomerDocument extends ICustomer, Document {
   _id: string;
   createdAt: Date;
   updatedAt: Date;
+
+  location?: ILocation;
+  searchText?: string;
 }
 
 export interface ICustomerQueryFilterParams
@@ -68,6 +71,7 @@ export interface ICustomerQueryFilterParams
     IListParams {
   createdAt?: Date;
   type?: string;
+  status?: string;
   dateFilters?: string;
 
   tagIds?: string[];

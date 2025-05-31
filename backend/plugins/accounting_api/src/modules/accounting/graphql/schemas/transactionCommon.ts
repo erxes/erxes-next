@@ -3,6 +3,7 @@ const trDetailFields = `
   accountId: String
   transactionId: String
   originId: String
+  followType: String
   followInfos: JSON
 
   side: String
@@ -14,6 +15,9 @@ const trDetailFields = `
   productId: String
   count: Float
   unitPrice: Float
+
+  excludeVat: Boolean
+  excludeCtax: Boolean
 `;
 
 const transactionFields = `
@@ -24,6 +28,7 @@ const transactionFields = `
   date: Date
   description: String
   journal: String
+  followType: String
   followInfos: JSON
 
   branchId: String
@@ -87,6 +92,8 @@ export const types = () => `
     branch: Branch
     department: Department
     customer: AccCustomer
+
+    ptrInfo: JSON
   }
 
   type AccCommonTrRecord {

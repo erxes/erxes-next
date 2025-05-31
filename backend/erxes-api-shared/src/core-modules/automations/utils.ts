@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { OPERATORS, staticPlaceholders } from './constants';
+import { AUTOMATION_PROPERTY_OPERATORS, STATIC_PLACEHOLDER } from './constants';
 import { pluralFormation, sendWorkerMessage } from '../../utils';
 import {
   IPerValueProps,
@@ -19,7 +19,7 @@ const processDatePlaceholders = (value: string): string => {
   );
 
   // Handle static date placeholders
-  Object.entries(staticPlaceholders).forEach(([placeholder, offsetDays]) => {
+  Object.entries(STATIC_PLACEHOLDER).forEach(([placeholder, offsetDays]) => {
     if (processed.includes(placeholder)) {
       processed = processed.replace(
         placeholder,
@@ -218,30 +218,30 @@ const getPerValue = async <TModels>({
 
   if (
     [
-      OPERATORS.ADD,
-      OPERATORS.SUBTRACT,
-      OPERATORS.MULTIPLY,
-      OPERATORS.DIVIDE,
-      OPERATORS.PERCENT,
+      AUTOMATION_PROPERTY_OPERATORS.ADD,
+      AUTOMATION_PROPERTY_OPERATORS.SUBTRACT,
+      AUTOMATION_PROPERTY_OPERATORS.MULTIPLY,
+      AUTOMATION_PROPERTY_OPERATORS.DIVIDE,
+      AUTOMATION_PROPERTY_OPERATORS.PERCENT,
     ].includes(operator)
   ) {
     op1 = op1 || 0;
     const numberValue = parseInt(value, 10);
 
     switch (operator) {
-      case OPERATORS.ADD:
+      case AUTOMATION_PROPERTY_OPERATORS.ADD:
         updatedValue = op1 + numberValue;
         break;
-      case OPERATORS.SUBTRACT:
+      case AUTOMATION_PROPERTY_OPERATORS.SUBTRACT:
         updatedValue = op1 - numberValue;
         break;
-      case OPERATORS.MULTIPLY:
+      case AUTOMATION_PROPERTY_OPERATORS.MULTIPLY:
         updatedValue = op1 * numberValue;
         break;
-      case OPERATORS.DIVIDE:
+      case AUTOMATION_PROPERTY_OPERATORS.DIVIDE:
         updatedValue = op1 / numberValue || 1;
         break;
-      case OPERATORS.PERCENT:
+      case AUTOMATION_PROPERTY_OPERATORS.PERCENT:
         updatedValue = (op1 / 100) * numberValue;
         break;
     }

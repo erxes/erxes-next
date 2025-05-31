@@ -14,6 +14,7 @@ export const commonTrDetailFields = `
   accountId
   transactionId
   originId
+  followType
   followInfos
   follows {
     ${followTrType}
@@ -44,6 +45,7 @@ export const commonTransactionFields = `
   status
   journal
   originId
+  followType
   follows {
     ${followTrType}
   }
@@ -69,9 +71,12 @@ export const commonTransactionFields = `
   details {
     ${commonTrDetailFields}
     account {
+      _id
       code
       name
       currency
+      kind
+      journal
     }
   }
   shortDetail {
@@ -221,6 +226,7 @@ export const TRANSACTIONS_QUERY = gql`
   query accTransactions(${trsFilterParamDefs}, ${commonParamDefs}) {
     accTransactions(${trsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
+      ptrInfo
     }
     accTransactionsCount(${trsFilterParams})
   }

@@ -128,7 +128,6 @@ export default startAutomations('core', {
     { subdomain },
     { action, execution, triggerType, actionType },
   ) => {
-    console.log({ action, execution, triggerType, actionType, subdomain });
     const models = await generateModels(subdomain);
 
     if (actionType === 'set-property') {

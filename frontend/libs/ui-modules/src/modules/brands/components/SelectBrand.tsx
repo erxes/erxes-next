@@ -1,160 +1,176 @@
-import React, { ReactNode, useState } from 'react';
-import { IBrand } from '../types';
-import { SelectBrandContext } from '../contexts/SelectBrandContext';
-import { cn, Combobox, Command, Popover, TextOverflowTooltip } from 'erxes-ui';
-import { useSelectBrandContext } from '../hooks/useSelectBrandContext';
+import { ButtonProps, Combobox, Command, Popover } from 'erxes-ui';
 import { useBrands } from '../hooks/useBrands';
-import { useBrandById } from '../hooks/useBrandById';
+import { IBrand } from '../types/brand';
+import { useDebounce } from 'use-debounce';
+import React from 'react';
+import { cn } from 'erxes-ui';
 
-const SelectBrandProvider = ({
-  children,
-  value,
-  onValueChange,
-}: {
-  children: ReactNode;
-  value?: string;
-  onValueChange?: (value: string) => void;
-}) => {
-  const [brandId, setBrandId] = useState<string>();
-  const [brand, setBrand] = useState<IBrand>();
+interface SelectBrandProps extends Omit<ButtonProps, 'onChange'> {
+  value: string;
+  onValueChange: (value: string) => void;
+}
 
-  const onSelect = (brand: IBrand) => {
-    if (!brand) return;
+interface SelectBrandTriggerProps extends ButtonProps {
+  currentValue: string;
+  currentName: string;
+}
 
-    setBrand(brand);
-    return onValueChange?.(brand._id);
-  };
-  return (
-    <SelectBrandContext.Provider
-      value={{
-        selectedBrandId: brandId || value,
-        selectedBrand: brand,
-        onSelect,
-        setSelectedBrandId: setBrandId,
-      }}
-    >
-      {children}
-    </SelectBrandContext.Provider>
-  );
-};
+export const SelectBrand = React.forwardRef<
+  HTMLButtonElement,
+  SelectBrandProps
+>(({ value, onValueChange, ...props }, ref) => {
+  const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
 
-const SelectBrandValue = ({
-  placeholder,
-  value,
-}: {
-  placeholder?: string;
-  value: string | undefined;
-}) => {
-  const { selectedBrand } = useSelectBrandContext();
-  const { brand, loading } = useBrandById({
+  const {
+    brands = [],
+    loading,
+    handleFetchMore,
+    totalCount = 0,
+  } = useBrands({
     variables: {
-      id: value || selectedBrand?._id,
+      searchValue: debouncedSearch,
     },
   });
-  return <Combobox.Value placeholder={placeholder} value={brand.name} />;
-};
 
-const SelectBrandItem = ({
-  value,
-  onValueChange,
-  selected,
-}: {
-  value: IBrand;
-  onValueChange: (value: string) => void;
-  selected?: boolean | undefined;
+  const currentValue = brands?.find((brand) => brand._id === value)?._id;
+
+  const handleSelectBrand = (brandId: string) => {
+    onValueChange(brandId === currentValue ? '' : brandId);
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen} modal>
+      <SelectBrandTrigger
+        currentValue={currentValue || ''}
+        currentName={
+          brands.find((brand) => brand._id === currentValue)?.name || ''
+        }
+        ref={ref}
+        {...props}
+      />
+      <Combobox.Content>
+        <Command shouldFilter={false} id="brand-command-menu">
+          <Command.Input
+            value={search}
+            onValueChange={setSearch}
+            variant="secondary"
+            wrapperClassName="flex-auto"
+            placeholder="Search brand..."
+            className="h-9"
+          />
+          <Command.List>
+            <Combobox.Empty loading={loading} />
+            {brands?.map((brand) => (
+              <SelectBrandItem
+                key={brand._id}
+                brand={brand}
+                currentValue={currentValue || ''}
+                handleSelectBrand={handleSelectBrand}
+              />
+            ))}
+            <Combobox.FetchMore
+              fetchMore={() => handleFetchMore({})}
+              totalCount={totalCount}
+              currentLength={brands.length}
+            />
+          </Command.List>
+        </Command>
+      </Combobox.Content>
+    </Popover>
+  );
+});
+
+SelectBrand.displayName = 'SelectBrand';
+
+// const SelectBrandCommand = () => {
+//   const [search, setSearch] = React.useState('');
+//   const [debouncedSearch] = useDebounce(search, 500);
+//   const {
+//     brands = [],
+//     loading,
+//     handleFetchMore,
+//     totalCount = 0,
+//   } = useBrands({
+//     variables: {
+//       searchValue: debouncedSearch,
+//     },
+//   });
+
+//   return (
+//     <Command shouldFilter={false} id="brand-command-menu">
+//       <Command.Input
+//         value={search}
+//         onValueChange={setSearch}
+//         variant="secondary"
+//         wrapperClassName="flex-auto"
+//         placeholder="Search brand..."
+//         className="h-9"
+//       />
+//       <Command.List>
+//         <Combobox.Empty loading={loading} />
+//         {brands?.map((brand) => (
+//           <SelectBrandItem
+//             key={brand._id}
+//             brand={brand}
+//             currentValue={currentValue || ''}
+//             handleSelectBrand={handleSelectBrand}
+//           />
+//         ))}
+//         <Combobox.FetchMore
+//           fetchMore={handleFetchMore}
+//           totalCount={totalCount}
+//           currentLength={brands.length}
+//         />
+//       </Command.List>
+//     </Command>
+//   );
+// };
+
+const SelectBrandTrigger = React.forwardRef<
+  HTMLButtonElement,
+  SelectBrandTriggerProps
+>(({ currentName, className, ...props }, ref) => {
+  return (
+    <Combobox.Trigger
+      className={cn('w-full flex', className)}
+      ref={ref}
+      {...props}
+    >
+      <Combobox.Value
+        value={currentName}
+        placeholder="Select brand"
+        className="truncate"
+      />
+    </Combobox.Trigger>
+  );
+});
+
+SelectBrandTrigger.displayName = 'SelectBrandTrigger';
+
+interface SelectBrandItemProps {
+  brand: IBrand;
+  handleSelectBrand: (brandId: string) => void;
+  currentValue: string;
+}
+
+const SelectBrandItem: React.FC<SelectBrandItemProps> = ({
+  brand,
+  handleSelectBrand,
+  currentValue,
 }) => {
-  const { onSelect } = useSelectBrandContext();
   return (
     <Command.Item
-      value={value.name}
-      onSelect={() => {
-        onSelect?.(value);
-        onValueChange(value._id);
-      }}
+      key={brand._id}
+      className="h-7"
+      value={brand._id}
+      onSelect={() => handleSelectBrand(brand._id)}
+      title={brand.name}
     >
-      <SelectBrandBadge value={value} selected={selected} />
+      <span className="text-xs text-foreground truncate">{brand.name}</span>
+      <Combobox.Check checked={currentValue === brand._id} />
     </Command.Item>
   );
 };
-
-const SelectBrandBadge = ({
-  value,
-  selected,
-}: {
-  value?: IBrand;
-  selected?: boolean;
-}) => {
-  if (!value) return;
-  return (
-    <>
-      <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
-        <div className="text-muted-foreground">{value.code}</div>
-        <TextOverflowTooltip value={value.name} className="flex-auto" />
-      </div>
-      {!selected ? (
-        value.memberIds?.length > 0 && (
-          <div className="text-muted-foreground ml-auto">
-            {value.memberIds?.length}
-          </div>
-        )
-      ) : (
-        <Combobox.Check checked={selected} />
-      )}
-    </>
-  );
-};
-
-const BrandsList = ({
-  renderItem,
-}: {
-  renderItem: (brand: IBrand) => React.ReactNode;
-}) => {
-  const { brands, loading, error } = useBrands();
-  return (
-    <Command>
-      <Command.Input placeholder="Search brand" />
-      <Command.List>
-        <Combobox.Empty loading={loading} error={error} />
-        {brands && brands?.map((brand: IBrand) => renderItem(brand))}
-      </Command.List>
-    </Command>
-  );
-};
-
-export const SelectBrand = React.forwardRef<
-  React.ElementRef<typeof Combobox.Trigger>,
-  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
-    value?: string;
-    onValueChange?: (value: string) => void;
-  }
->(({ value, onValueChange, ...props }, ref) => {
-  const [_open, _setOpen] = useState<boolean>(false);
-  return (
-    <SelectBrandProvider>
-      <Popover open={_open} onOpenChange={_setOpen}>
-        <Combobox.Trigger
-          {...props}
-          ref={ref}
-          className={cn('w-full flex text-left', props.className)}
-        >
-          <SelectBrandValue placeholder="Select brand" value={value} />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <BrandsList
-            renderItem={(brand) => (
-              <SelectBrandItem
-                key={brand._id}
-                value={brand}
-                onValueChange={(value) => {
-                  onValueChange?.(value);
-                  _setOpen(false);
-                }}
-                selected={brand._id === value}
-              />
-            )}
-          />
-        </Combobox.Content>
-      </Popover>
-    </SelectBrandProvider>
-  );
-});

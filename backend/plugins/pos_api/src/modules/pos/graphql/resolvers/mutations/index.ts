@@ -1,9 +1,9 @@
-import posMutations from './pos';
-import orderMutations from "./orders";
-import coverMutations from './covers';
+import pos from './pos';
+import order from "./orders";
+import cover from './covers';
 
-export default {
-  ...posMutations,
-  ...orderMutations,
-  ...coverMutations,
+export {
+  pos,
+  order,
+  cover,
 };

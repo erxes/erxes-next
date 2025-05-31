@@ -1,8 +1,8 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
-import { ITRPCContext } from 'erxes-api-shared/utils';
+import { AccountingTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<AccountingTRPCContext>().create();
 
 export const transactionTrpcRouter = t.router({
   accountingTransaction: t.router({

@@ -1,25 +1,16 @@
 import { initTRPC } from '@trpc/server';
 
-import * as trpcExpress from '@trpc/server/adapters/express';
-import { getSubdomain, MessageProps, sendTRPCMessage } from 'erxes-api-shared/utils';
+import {
+  ITRPCContext,
+  MessageProps,
+  sendTRPCMessage,
+} from 'erxes-api-shared/utils';
 
-import { generateModels } from './connectionResolvers';
+import { IModels } from './connectionResolvers';
 
-export const createContext = async ({
-  req,
-}: trpcExpress.CreateExpressContextOptions) => {
-  const subdomain = getSubdomain(req);
-  const models = await generateModels(subdomain);
+export type PosTRPCContext = ITRPCContext<{ models: IModels }>;
 
-  return {
-    subdomain,
-    models,
-  };
-};
-
-export type ITRPCContext = Awaited<ReturnType<typeof createContext>>;
-
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<PosTRPCContext>().create();
 
 export const appRouter = t.mergeRouters();
 
@@ -33,4 +24,3 @@ export const sendCoreMessage = async (
     pluginName: 'core',
   });
 };
-

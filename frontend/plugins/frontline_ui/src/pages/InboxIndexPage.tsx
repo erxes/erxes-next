@@ -3,13 +3,13 @@ import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 import { InboxLayout } from '@/inbox/components/InboxLayout';
-import { ConversationDetail } from '@/inbox/conversation-detail/components/ConversationDetail';
-import { Conversations } from '@/inbox/components/Conversations';
-import { MainFilters } from '@/inbox/components/MainFilters';
+import { ConversationDetail } from '@/inbox/conversations/conversation-detail/components/ConversationDetail';
+import { Conversations } from '@/inbox/conversations/components/Conversations';
+import { InboxMainFilter } from '@/inbox/components/InboxMainFilter';
 
 const InboxIndexPage = () => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-dvh">
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>
@@ -25,7 +25,7 @@ const InboxIndexPage = () => {
             </Breadcrumb.List>
           </Breadcrumb>
           <Separator.Inline />
-          <PageHeader.FavoriteToggleButton item="inbox" />
+          <PageHeader.FavoriteToggleButton />
         </PageHeader.Start>
         <PageHeader.End>
           <Button variant="outline" asChild>
@@ -38,7 +38,7 @@ const InboxIndexPage = () => {
       </PageHeader>
       <InboxLayout
         conversations={<Conversations />}
-        mainFilters={<MainFilters />}
+        mainFilters={<InboxMainFilter />}
         conversationDetail={<ConversationDetail />}
       />
     </div>

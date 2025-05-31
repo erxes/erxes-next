@@ -1,9 +1,9 @@
 import { initTRPC } from '@trpc/server';
-import { ITRPCContext } from 'erxes-api-shared/utils';
+import { CoreTRPCContext } from '~/init-trpc';
 import { permissionTrpcRouter as permissionRouter } from './permission';
 import { userGroupTrpcRouter } from './userGroup';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const permissionTrpcRouter = t.mergeRouters(
   permissionRouter,

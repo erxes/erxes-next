@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const tagsAdd = gql`
+export const ADD_TAG = gql`
   mutation TagsAdd(
     $name: String!
     $type: String!

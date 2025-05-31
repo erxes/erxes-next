@@ -9,17 +9,17 @@ import { ProductFormValues } from './formSchema';
 import { CategoryHotKeyScope } from '../../types/CategoryHotKeyScope';
 
 export const ACCOUNT_CATEGORY_MASK_TYPES = [
-    { label: 'Any', value: 'any' },
-    { label: 'Soft', value: 'soft' },
-    { label: 'Hard', value: 'hard' },
-    { label: 'All', value: 'all' },
-  ];
+  { label: 'Any', value: 'any' },
+  { label: 'Soft', value: 'soft' },
+  { label: 'Hard', value: 'hard' },
+  { label: 'All', value: 'all' },
+];
 
 export const PRODUCT_CATEGORIES_STATUS = [
-    { label: 'Active', value: 'active' },
-    { label: 'Disabled', value: 'disabled' },
-    { label: 'Archived', value: 'archived' },
-  ];
+  { label: 'Active', value: 'active' },
+  { label: 'Disabled', value: 'disabled' },
+  { label: 'Archived', value: 'archived' },
+];
 
 export const ProductCategoryAddMoreFields = ({
   form,
@@ -37,7 +37,7 @@ export const ProductCategoryAddMoreFields = ({
         control={form.control}
         name="meta"
         render={({ field }) => (
-          <Form.Item className='mb-5'>
+          <Form.Item className="mb-5">
             <Form.Label>META</Form.Label>
             <Form.Control>
               <Input {...field} />
@@ -46,25 +46,25 @@ export const ProductCategoryAddMoreFields = ({
           </Form.Item>
         )}
       />
-       <Form.Field
-          control={form.control}
-          name="scopeBrandIds"
-          render={({ field }) => (
-            <Form.Item className="flex flex-col mb-5">
-              <Form.Label>BRAND</Form.Label>
-              <Form.Control>
+      {/* <Form.Field
+        control={form.control}
+        name="scopeBrandIds"
+        render={({ field }) => (
+          <Form.Item className="flex flex-col mb-5">
+            <Form.Label>BRAND</Form.Label>
+            <Form.Control>
               <SelectBrand
-                value={Array.isArray(field.value) && field.value.length > 0 ? field.value[0] : undefined}
+                value={field.value?.[0]}
                 onValueChange={(brandId) => {
-                  field.onChange([brandId]);
+                  field.onChange(brandId);
                 }}
               />
-              </Form.Control>
-              <Form.Message className="text-destructive" />
-            </Form.Item>
-          )}
-        />
-         <Form.Field
+            </Form.Control>
+            <Form.Message className="text-destructive" />
+          </Form.Item>
+        )}
+      /> */}
+      <Form.Field
         control={form.control}
         name="description"
         render={({ field }) => (
@@ -81,7 +81,7 @@ export const ProductCategoryAddMoreFields = ({
           </Form.Item>
         )}
       />
-       <Form.Field
+      <Form.Field
         control={form.control}
         name="attachment"
         render={({ field }) => (
@@ -109,58 +109,62 @@ export const ProductCategoryAddMoreFields = ({
         control={form.control}
         name="accountMaskType"
         render={({ field }) => (
-          <Form.Item className='mb-5'>
+          <Form.Item className="mb-5">
             <Form.Label>MASK TYPE</Form.Label>
             <Select onValueChange={field.onChange} value={field.value}>
-            <Form.Control>
-            <Select.Trigger>
-                <Select.Value placeholder="Choose type">
-                {ACCOUNT_CATEGORY_MASK_TYPES.find(
-                    (type) => type.value === field.value
-                )?.label}
-                </Select.Value>
-            </Select.Trigger>
-            </Form.Control>
-            <Select.Content>
-            {ACCOUNT_CATEGORY_MASK_TYPES.map((type) => (
-                <Select.Item key={type.value} value={type.value}>
-                {type.label}
-                </Select.Item>
-            ))}
-            </Select.Content>
-        </Select>
-        <Form.Message />
-        </Form.Item>
-    )}
-    />
-    <Form.Field
+              <Form.Control>
+                <Select.Trigger>
+                  <Select.Value placeholder="Choose type">
+                    {
+                      ACCOUNT_CATEGORY_MASK_TYPES.find(
+                        (type) => type.value === field.value,
+                      )?.label
+                    }
+                  </Select.Value>
+                </Select.Trigger>
+              </Form.Control>
+              <Select.Content>
+                {ACCOUNT_CATEGORY_MASK_TYPES.map((type) => (
+                  <Select.Item key={type.value} value={type.value}>
+                    {type.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
+      <Form.Field
         control={form.control}
         name="state"
         render={({ field }) => (
           <Form.Item>
             <Form.Label>State</Form.Label>
             <Select onValueChange={field.onChange} value={field.value}>
-            <Form.Control>
-            <Select.Trigger>
-                <Select.Value placeholder="Choose type">
-                {PRODUCT_CATEGORIES_STATUS.find(
-                    (type) => type.value === field.value
-                )?.label}
-                </Select.Value>
-            </Select.Trigger>
-            </Form.Control>
-            <Select.Content>
-            {PRODUCT_CATEGORIES_STATUS.map((type) => (
-                <Select.Item key={type.value} value={type.value}>
-                {type.label}
-                </Select.Item>
-            ))}
-            </Select.Content>
-        </Select>
-        <Form.Message />
-        </Form.Item>
-    )}
-    />
+              <Form.Control>
+                <Select.Trigger>
+                  <Select.Value placeholder="Choose type">
+                    {
+                      PRODUCT_CATEGORIES_STATUS.find(
+                        (type) => type.value === field.value,
+                      )?.label
+                    }
+                  </Select.Value>
+                </Select.Trigger>
+              </Form.Control>
+              <Select.Content>
+                {PRODUCT_CATEGORIES_STATUS.map((type) => (
+                  <Select.Item key={type.value} value={type.value}>
+                    {type.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+            <Form.Message />
+          </Form.Item>
+        )}
+      />
     </>
   );
 };
