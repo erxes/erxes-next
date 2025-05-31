@@ -1,4 +1,4 @@
-import { Button } from 'erxes-ui';
+import { Button, CurrencyCode, CurrencyFormatedDisplay } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useWatch } from 'react-hook-form';
 import { TR_SIDES } from '../../../types/constants';
@@ -31,15 +31,36 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
     <div className="flex justify-end items-center col-span-2 xl:col-span-3 gap-6">
       <div className="flex items-center gap-2 text-sm">
         <span className="text-accent-foreground">Sum Debit:</span>
-        <span className="text-primary font-bold">{sumDebit}</span>
+        <span className="text-primary font-bold">
+          <CurrencyFormatedDisplay
+            currencyValue={{
+              currencyCode: CurrencyCode.MNT,
+              amountMicros: sumDebit * 1000000,
+            }}
+          />
+        </span>
       </div>
       <div className="flex items-center gap-2 text-sm">
         <span className="text-accent-foreground">Sum Credit:</span>
-        <span className="text-primary font-bold">{sumCredit}</span>
+        <span className="text-primary font-bold">
+          <CurrencyFormatedDisplay
+            currencyValue={{
+              currencyCode: CurrencyCode.MNT,
+              amountMicros: sumCredit * 1000000,
+            }}
+          />
+        </span>
       </div>
       <div className="flex items-center gap-2 text-sm">
         <span className="text-accent-foreground">+CT:</span>
-        <span className="text-primary font-bold">{sumCredit - sumDebit}</span>
+        <span className="text-primary font-bold">
+          <CurrencyFormatedDisplay
+            currencyValue={{
+              currencyCode: CurrencyCode.MNT,
+              amountMicros: (sumCredit - sumDebit) * 1000000,
+            }}
+          />
+        </span>
       </div>
       <Button type="submit">Save</Button>
     </div>
