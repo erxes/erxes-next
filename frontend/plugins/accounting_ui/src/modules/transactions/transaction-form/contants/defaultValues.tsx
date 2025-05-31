@@ -9,7 +9,7 @@ import {
   TPayableJournal,
   // TFixedAssetJournal,
   // TInventoryJournal,
-  // TInvIncomeJournal,
+  TInvIncomeJournal,
   // TInvOutJournal,
   TMainJournal,
   TTaxJournal,
@@ -117,21 +117,24 @@ export const TAX_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TTaxJour
   }
 };
 
-// export const INV_INCOME_JOURNAL_DEFAULT_VALUES: Partial<TInvIncomeJournal> = {
-//   journal: TrJournalEnum.INV_INCOME,
-//   customerType: CustomerType.CUSTOMER,
-//   ...DEFAULT_VAT_VALUES,
-//   details: [
-//     {
-//       side: 'dt',
-//       accountId: '',
-//       productId: '',
-//       quantity: 0,
-//       unitPrice: 0,
-//       amount: 0,
-//     },
-//   ],
-// };
+export const INV_INCOME_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TInvIncomeJournal> => {
+  return {
+    journal: TrJournalEnum.INV_INCOME,
+    customerType: CustomerType.CUSTOMER,
+    ...DEFAULT_VAT_VALUES,
+    details: !doc?.details.length ? [{
+      ...trDetailWrapper(),
+      productId: '',
+      quantity: 0,
+      unitPrice: 0,
+    }] : doc?.details.map(det => ({
+      ...trDetailWrapper(det),
+      productId: '',
+      quantity: 0,
+      unitPrice: 0,
+    }))
+  }
+};
 
 // export const INV_OUT_JOURNAL_DEFAULT_VALUES: Partial<TInvOutJournal> = {
 //   journal: TrJournalEnum.INV_OUT,
@@ -176,6 +179,9 @@ export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction) => {
 
     case TrJournalEnum.PAYABLE:
       return PAYABLE_JOURNAL_DEFAULT_VALUES(doc);
+
+    case TrJournalEnum.INV_INCOME:
+      return INV_INCOME_JOURNAL_DEFAULT_VALUES(doc);
 
     default:
       return MAIN_JOURNAL_DEFAULT_VALUES(doc);

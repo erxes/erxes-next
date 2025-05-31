@@ -2,6 +2,7 @@ import { CustomerType } from 'ui-modules';
 import { z } from 'zod';
 import { TR_SIDES, TrJournalEnum } from '../../types/constants';
 
+//#region common:
 export const vatSchema = z.object({
   hasVat: z.boolean().optional().nullish(),
   handleVat: z.boolean().optional().nullish(),
@@ -86,14 +87,9 @@ export const baseTransactionSchema = z.object({
 
   extraData: z.object({}).nullish(),
 });
+//#endregion common
 
-// export const inventorySchema = z.object({
-//   productId: z.string().optional(),
-//   quantity: z.number().min(1),
-//   unitPrice: z.number().min(1),
-//   ...baseTrDetailSchema.shape
-// });
-
+//#region Single trs
 export const transactionMainSchema = z.object({
   journal: z.literal(TrJournalEnum.MAIN),
   ...baseTransactionSchema.shape,
@@ -144,14 +140,31 @@ export const transactionTaxSchema = z.object({
   journal: z.literal('tax'),
   ...baseTransactionSchema.shape,
 });
+//#endregion Single trs
 
+//#endregion Inventories
 
-// export const transactionInvIncomeSchema = z.object({
-//   journal: z.literal('invIncome'),
-//   ...baseTransactionSchema.shape,
-//   details: z.array(inventorySchema).min(1),
-//   ...vatSchema.shape,
-// });
+export const invDetailSchema = z.object({
+  ...baseTrDetailSchema.shape,
+}).extend({
+  productId: z.string(),
+  quantity: z.number().min(0),
+  unitPrice: z.number().min(0),
+});
+
+export const transactionInvIncomeSchema = z.object({
+  journal: z.literal(TrJournalEnum.INV_INCOME),
+  ...baseTransactionSchema.shape,
+}).extend({
+  customerId: z.string(),
+  hasVat: z.boolean(),
+  hasCtax: z.boolean(),
+  details: z.array(z.object({
+    ...invDetailSchema.shape,
+  })),
+});
+
+//#region Inventories
 
 // export const transactionInvOutSchema = z.object({
 //   journal: z.literal('invOut'),
@@ -180,7 +193,7 @@ export const trDocSchema = z
     transactionBankSchema,
     transactionReceivableSchema,
     transactionPayableSchema,
-    // transactionInvIncomeSchema,
+    transactionInvIncomeSchema,
     // transactionInvOutSchema,
     // transactionInventorySchema,
     // transactionFixedAssetSchema,

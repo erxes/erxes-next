@@ -1,15 +1,15 @@
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { CustomerFields } from '../../helpers/CustomerFields';
+import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { TrJournalEnum } from '@/transactions/types/constants';
+import { VatForm } from '../../helpers/VatForm';
 import {
   AccountField,
   AssignToField,
   BranchField,
   DepartmentField,
   DescriptionField,
-} from './../GeneralFormFields';
-import { CustomerFields } from '../helpers/CustomerFields';
+} from '../../GeneralFormFields';
 // import { InventoryForm } from '../../../inventory/components/InventoryForm';
-import { VatForm } from '../helpers/VatForm';
-import { TrJournalEnum } from '@/transactions/types/constants';
 
 export const InvIncomeForm = ({
   form,
@@ -21,7 +21,7 @@ export const InvIncomeForm = ({
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
-        <AccountField form={form} index={index} journal={TrJournalEnum.INVENTORY} />
+        <AccountField form={form} index={index} filter={{ journal: TrJournalEnum.INVENTORY }} />
         <CustomerFields form={form} index={index} />
         <AssignToField form={form} index={index} />
         <BranchField form={form} index={index} />
