@@ -226,6 +226,7 @@ export const TRANSACTIONS_QUERY = gql`
   query accTransactions(${trsFilterParamDefs}, ${commonParamDefs}) {
     accTransactions(${trsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
+      ptrInfo
     }
     accTransactionsCount(${trsFilterParams})
   }

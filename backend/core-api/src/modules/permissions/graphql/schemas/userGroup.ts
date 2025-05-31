@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
   type UsersGroup {
     _id: String!
@@ -7,6 +9,8 @@ export const types = `
     members: [User]
     branchIds: [String]
     departmentIds:[String]
+
+    cursor: String
   }
 
   type UsersGroupListResponse {
@@ -19,9 +23,7 @@ export const types = `
 const queriesParams = `
   searchValue: String
 
-  limit: Int
-  cursor: String
-  direction: CURSOR_DIRECTION
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `

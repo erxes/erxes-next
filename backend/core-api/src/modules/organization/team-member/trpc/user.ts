@@ -1,8 +1,8 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
-import { ITRPCContext } from 'erxes-api-shared/utils';
+import { CoreTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const userTrpcRouter = t.router({
   users: t.router({

@@ -1,14 +1,14 @@
 const extendTypes = `
   extend type Branch @key(fields: "_id") {
-    _id: String! @external
+    _id: String @external
   }
 
   extend type Department @key(fields: "_id") {
-    _id: String! @external
+    _id: String @external
   }
 
   extend type User @key(fields: "_id") {
-    _id: String! @external
+    _id: String @external
   }
 
   type AccCustomer {
