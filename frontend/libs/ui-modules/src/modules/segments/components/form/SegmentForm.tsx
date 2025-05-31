@@ -23,7 +23,7 @@ import { SegmentGroup } from './SegmentGroup';
 import {
   generateParamsSegmentPreviewCount,
   getSegmentFormDefaultValues,
-} from '../../utils';
+} from '../../utils/segmentFormUtils';
 import { ISegment, SegmentFormProps } from '../../types';
 import { SegmentGroups } from './SegmentGroups';
 import { SEGMENT_ADD, SEGMENT_EDIT } from '../../graphql/mutations';

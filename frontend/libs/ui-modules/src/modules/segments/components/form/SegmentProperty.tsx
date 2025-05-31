@@ -14,7 +14,7 @@ import {
   createFieldNameSafe,
   getSelectedFieldConfig,
   groupFieldsByType,
-} from '../../utils';
+} from '../../utils/segmentFormUtils';
 import { FieldWithError } from '../FieldWithError';
 import { QuerySelectInput } from '../QuerySelectInput';
 

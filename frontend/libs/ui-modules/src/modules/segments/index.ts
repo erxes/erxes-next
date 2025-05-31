@@ -4,4 +4,4 @@ export * from './hooks';
 export * from './types';
 export * from './components/form/SegmentForm';
 export * from './components/FieldWithError';
-export * from './utils';
+export * from './utils/segmentFormUtils';

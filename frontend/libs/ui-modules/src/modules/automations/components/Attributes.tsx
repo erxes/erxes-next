@@ -1,6 +1,13 @@
 import { gql, useQuery } from '@apollo/client';
 import { IconChevronDown } from '@tabler/icons-react';
-import { Button, Collapsible, Combobox, Command, Popover } from 'erxes-ui';
+import {
+  Button,
+  Collapsible,
+  Combobox,
+  Command,
+  EnumCursorDirection,
+  Popover,
+} from 'erxes-ui';
 import {
   FIELDS_COMBINED_BY_CONTENT_TYPE,
   useQuerySelectInputList,
@@ -81,7 +88,9 @@ const renderSelection = ({ selectionConfig, onSelect }: SelectionProps) => {
           <Combobox.FetchMore
             currentLength={items?.length}
             totalCount={totalCount}
-            fetchMore={() => handleFetchMore({ direction: 'forward' })}
+            fetchMore={() =>
+              handleFetchMore({ direction: EnumCursorDirection.FORWARD })
+            }
           />
         </Command.Group>
       </Collapsible.Content>
@@ -157,7 +166,6 @@ export const Attributes = ({
           </Button>
         )}
       </Combobox.TriggerBase>
-      {/* </Combobox.Trigger> */}
       <Combobox.Content>
         <Command>
           <Command.Input placeholder="Search ..." />

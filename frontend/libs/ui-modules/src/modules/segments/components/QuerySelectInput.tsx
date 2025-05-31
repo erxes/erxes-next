@@ -1,5 +1,5 @@
 import { DocumentNode } from '@apollo/client';
-import { Combobox, Command, Popover } from 'erxes-ui';
+import { Combobox, Command, EnumCursorDirection, Popover } from 'erxes-ui';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuerySelectInputList } from '../hooks';
@@ -30,7 +30,6 @@ export const QuerySelectInput = ({
   const [search, setSearch] = useState('');
   const [value, setValue] = useState<string | string[]>(initialValue || '');
   const [open, setOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [debouncedSearch] = useDebounce(search, 500);
   const {
     list = [],
@@ -44,12 +43,6 @@ export const QuerySelectInput = ({
   const selectedValue = items?.find(
     (option: any) => option._id === value,
   )?.value;
-
-  useEffect(() => {
-    if (inputRef.current && focusOnMount) {
-      inputRef.current.focus();
-    }
-  }, [focusOnMount]);
 
   const handleSelect = (selectedValue: any) => {
     let updatedValue: string | string[] = '';
@@ -79,6 +72,7 @@ export const QuerySelectInput = ({
       <Combobox.Content>
         <Command>
           <Command.Input
+            focusOnMount
             placeholder={`Search ${labelField}...`}
             value={search}
             onValueChange={(searchValue) => setSearch(searchValue)}
@@ -99,7 +93,9 @@ export const QuerySelectInput = ({
             <Combobox.FetchMore
               currentLength={items?.length}
               totalCount={totalCount}
-              fetchMore={() => handleFetchMore({ direction: 'forward' })}
+              fetchMore={() =>
+                handleFetchMore({ direction: EnumCursorDirection.FORWARD })
+              }
             />
           </Command.List>
         </Command>

@@ -1,2 +1,2 @@
 export * from './types';
-export * from './common/PlaceHolderInput';
+export * from './components/PlaceHolderInput';

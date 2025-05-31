@@ -53,7 +53,7 @@ export const useQuerySelectInputList = (
   const handleFetchMore = ({
     direction,
   }: {
-    direction: 'forward' | 'backward';
+    direction: EnumCursorDirection;
     onFetchMoreCompleted?: (fetchMoreResult: {
       [queryName: string]: {
         list: any[];
