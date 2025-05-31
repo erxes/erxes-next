@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-const segmentFields = `
+const SEGMENT_FIELDS = `
   _id
   contentType
   name
@@ -14,7 +14,7 @@ const segmentFields = `
   config
 `;
 
-const fieldsCombinedByContentType = gql(
+export const FIELDS_COMBINED_BY_CONTENT_TYPE = gql(
   `
     query Fields($contentType: String!) {
       fieldsCombinedByContentType(contentType: $contentType)
@@ -22,7 +22,7 @@ const fieldsCombinedByContentType = gql(
 `,
 );
 
-const segments = gql(`
+export const SEGMENTS = gql(`
     query Segments($contentTypes: [String]!, $config: JSON, $ids: [String],$excludeIds: [String],$searchValue:String) {
       segments(contentTypes: $contentTypes, config: $config, ids: $ids,excludeIds:$excludeIds,searchValue:$searchValue) {
         _id
@@ -36,41 +36,41 @@ const segments = gql(`
 }
 `);
 
-const associationTypes = gql(`
+export const ASSOCIATION_TYPES = gql(`
   query GetAssociationTypes($contentType: String!) {
     segmentsGetAssociationTypes(contentType: $contentType)
   }
 `);
 
-const segmentsGetTypes = gql`
+export const SEGMENTS_GET_TYPES = gql`
   query SegmentsGetTypes {
     segmentsGetTypes
   }
 `;
 
-const propertiesWithFields = gql(`
+export const PROPERTIES_WITH_FIELDS = gql(`
     query Query($contentType: String!) {
       fieldsCombinedByContentType(contentType: $contentType)
       segmentsGetAssociationTypes(contentType: $contentType)
     }
 `);
 
-const segmentDetail = gql`
+export const SEGMENT_DETAIL = gql`
   query segmentDetail($_id: String) {
     segmentDetail(_id: $_id) {
-      ${segmentFields}
+      ${SEGMENT_FIELDS}
       getSubSegments {
-        ${segmentFields}
+        ${SEGMENT_FIELDS}
       }
       subSegmentConditions
       {
-        ${segmentFields}
+        ${SEGMENT_FIELDS}
       }
     }
   }
 `;
 
-const segmentsPreviewCount = gql`
+export const SEGMENTS_PREVIEW_COUNT = gql`
   query Query(
     $contentType: String!
     $conditions: JSON
@@ -87,13 +87,3 @@ const segmentsPreviewCount = gql`
     )
   }
 `;
-
-export default {
-  segments,
-  fieldsCombinedByContentType,
-  associationTypes,
-  propertiesWithFields,
-  segmentDetail,
-  segmentsGetTypes,
-  segmentsPreviewCount,
-};

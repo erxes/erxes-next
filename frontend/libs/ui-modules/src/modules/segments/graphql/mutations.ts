@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-const paramDefs = `
+const PARAMS_DEFS = `
   $name: String,
   $description: String,
   $subOf: String,
@@ -12,7 +12,7 @@ const paramDefs = `
   $shouldWriteActivityLog: Boolean!
 `;
 
-const params = `
+const PARAMS = `
   name: $name,
   description: $description,
   subOf: $subOf,
@@ -24,25 +24,20 @@ const params = `
   shouldWriteActivityLog: $shouldWriteActivityLog
 `;
 
-const segmentsAdd = gql`
-  mutation segmentsAdd($contentType: String!, ${paramDefs}) {
-    segmentsAdd(contentType: $contentType, ${params}) {
+export const SEGMENT_ADD = gql`
+  mutation segmentsAdd($contentType: String!, ${PARAMS_DEFS}) {
+    segmentsAdd(contentType: $contentType, ${PARAMS}) {
       _id
       count
     }
   }
 `;
 
-const segmentsEdit = gql`
-  mutation segmentsEdit($_id: String!, ${paramDefs}) {
-    segmentsEdit(_id: $_id, ${params}) {
+export const SEGMENT_EDIT = gql`
+  mutation segmentsEdit($_id: String!, ${PARAMS_DEFS}) {
+    segmentsEdit(_id: $_id, ${PARAMS}) {
       _id
       count
     }
   }
 `;
-
-export default {
-  segmentsAdd,
-  segmentsEdit,
-};

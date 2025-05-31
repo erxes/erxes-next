@@ -1,6 +1,5 @@
 import { Input } from 'erxes-ui';
 import { Attributes } from './Attributes';
-import { IconChevronDown } from '@tabler/icons-react';
 
 type Props = {
   propertyType: string;
@@ -45,8 +44,6 @@ export const PlaceHolderInput = ({
 
   return (
     <div className="flex flex-row items-end gap-2">
-      {/* {renderOptions()} */}
-
       <Input
         value={value}
         placeholder="Value"

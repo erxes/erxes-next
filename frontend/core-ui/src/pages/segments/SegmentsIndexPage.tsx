@@ -1,14 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { Spinner } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
+import { Spinner, useQueryState } from 'erxes-ui';
 import { useEffect } from 'react';
-import List from '~/modules/segments/components/List';
-import { ListSidebar } from '~/modules/segments/components/Sidebar';
-import queries from 'ui-modules/modules/segments/graphql/queries';
+import { SegmentsRecordTable } from '@/segments/components/SegmentRecordTable';
+import { SegmentListSidebar } from '@/segments/components/SegmentsSidebar';
+import { SEGMENTS_GET_TYPES } from 'ui-modules';
 
-export default function Segments() {
+export default function SegmentsIndexPage() {
   const [contentType, setType] = useQueryState<string>('contentType');
-  const { data, loading } = useQuery(queries.segmentsGetTypes);
+  const { data, loading } = useQuery(SEGMENTS_GET_TYPES);
 
   useEffect(() => {
     if (!loading && data?.segmentsGetTypes?.length) {
@@ -27,8 +26,8 @@ export default function Segments() {
 
   return (
     <div className="flex flex-row h-full">
-      <ListSidebar types={segmentsGetTypes} />
-      <List />
+      <SegmentListSidebar types={segmentsGetTypes} />
+      <SegmentsRecordTable />
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import { cn } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import { SegmentFormProps } from './schema';
-import Segment from './Segment';
+import { SegmentGroup } from './SegmentGroup';
+import { SegmentFormProps } from '../../types';
 
-export const Segments = ({
+export const SegmentGroups = ({
   form,
   contentType,
 }: {
@@ -17,7 +17,6 @@ export const Segments = ({
   });
 
   const total = watch(`conditionSegments`)?.length || 0;
-  console.log({ fields, total });
 
   return (
     <>
@@ -73,7 +72,7 @@ export const Segments = ({
               </div>
             )}
             <div className={cn('relative pt-4', { 'pl-12': total > 1 })}>
-              <Segment
+              <SegmentGroup
                 form={form}
                 contentType={contentType}
                 parentFieldName={`conditionSegments.${index}`}
