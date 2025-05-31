@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { useApolloClient } from '@apollo/client';
-import { useProductTags } from '@/products/hooks/useProductTags';
 import { AlertDialog, Button, useToast } from 'erxes-ui';
 import { useProductsEdit } from '../../hooks/useProductsEdit';
 import { TagsManagerProps } from '../types/tagsTypes';
 import { useRemoveTag } from '@/settings/tags/hooks/useRemoveTag';
-import { CreateTagForm, ITag } from 'ui-modules';
+import { CreateTagForm, SelectTagCreateContainer, useTags } from 'ui-modules';
+
+interface ITag {
+  _id: string;
+  name: string;
+  order?: number;
+}
 
 export function TagsManager({
   productId,
@@ -16,35 +21,30 @@ export function TagsManager({
 }: TagsManagerProps) {
   const client = useApolloClient();
   const { toast } = useToast();
-  const { tags: availableTags = [], refetch: refetchTags } =
-    useProductTags() || {};
-  const [tags, setTags] = React.useState<string[]>(() =>
-    initialTags.map((tag) => (typeof tag === 'string' ? tag : tag._id)),
-  );
+  const { tags: availableTags = [], refetch: refetchTags } = useTags() || {};
 
+  const [tags, setTags] = React.useState<string[]>(() =>
+    initialTags.map((tag) => (typeof tag === 'string' ? tag : tag._id))
+  );
   const [isEditingTags, setIsEditingTags] = React.useState(false);
   const [showTagCreator, setShowTagCreator] = React.useState(false);
   const [tagToDelete, setTagToDelete] = React.useState<{
     id: string;
     name: string;
   } | null>(null);
+
   const { productsEdit } = useProductsEdit();
   const { removeTag, loading: removeLoading } = useRemoveTag();
+
   const confirmTagDeletion = (tagId: string, tagName: string) => {
     setTagToDelete({ id: tagId, name: tagName });
   };
+
   const refreshData = async () => {
     try {
-      if (refetchTags) {
-        await refetchTags();
-      }
-      await client.refetchQueries({
-        include: ['Tags'],
-      });
-
-      if (onTagsUpdated) {
-        onTagsUpdated();
-      }
+      if (refetchTags) await refetchTags();
+      await client.refetchQueries({ include: ['Tags'] });
+      if (onTagsUpdated) onTagsUpdated();
     } catch (error) {
       console.error('Error refreshing data:', error);
     }
@@ -52,11 +52,9 @@ export function TagsManager({
 
   const handleRemoveTag = async () => {
     if (!tagToDelete) return;
-
     try {
       await removeTag(tagToDelete.id);
       setTags((prevTags) => prevTags.filter((tag) => tag !== tagToDelete.id));
-
       toast({
         title: 'Tag removed',
         description: `Successfully removed tag: ${tagToDelete.name}`,
@@ -74,9 +72,9 @@ export function TagsManager({
       setTagToDelete(null);
     }
   };
+
   const handleSaveTags = async (selectedTags: string[]) => {
     if (!productId) return;
-
     setIsEditingTags(true);
 
     try {
@@ -106,6 +104,7 @@ export function TagsManager({
       setIsEditingTags(false);
     }
   };
+
   const handleTagCreated = (newTag: ITag) => {
     const updatedTags = [...tags, newTag._id];
     setTags(updatedTags);
@@ -133,10 +132,12 @@ export function TagsManager({
 
       {showTagCreator && (
         <div className="mb-4">
-          <CreateTagForm
+          <SelectTagCreateContainer
             tagType="core:product"
-            onCompleted={handleTagCreated}
-          />
+            onSelect={handleTagCreated}
+          >
+            <CreateTagForm />
+          </SelectTagCreateContainer>
         </div>
       )}
 
@@ -166,6 +167,7 @@ export function TagsManager({
           );
         })}
       </div>
+
       <AlertDialog
         open={!!tagToDelete}
         onOpenChange={() => setTagToDelete(null)}
