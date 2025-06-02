@@ -2,18 +2,20 @@ import * as strip from 'strip';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { conversationMessageSchema } from '@/integrations/facebook/db/definitions/conversationMessages';
-import { IFacebookConversationMessage,IFacebookConversationMessageDocument } from '@/integrations/facebook/@types/conversationMessages';
-
+import {
+  IFacebookConversationMessage,
+  IFacebookConversationMessageDocument,
+} from '@/integrations/facebook/@types/conversationMessages';
 
 export interface IFacebookConversationMessageModel
   extends Model<IFacebookConversationMessageDocument> {
   getMessage(_id: string): Promise<IFacebookConversationMessageDocument>;
   createMessage(
-    doc: IFacebookConversationMessage
+    doc: IFacebookConversationMessage,
   ): Promise<IFacebookConversationMessageDocument>;
   addMessage(
     doc: IFacebookConversationMessage,
-    userId?: string
+    userId?: string,
   ): Promise<IFacebookConversationMessageDocument>;
 }
 
@@ -23,7 +25,9 @@ export const loadFacebookConversationMessageClass = (models: IModels) => {
      * Retreives message
      */
     public static async getMessage(_id: string) {
-      const message = await models.FacebookConversationMessages.findOne({ _id }).lean();
+      const message = await models.FacebookConversationMessages.findOne({
+        _id,
+      }).lean();
 
       if (!message) {
         throw new Error('Conversation message not found');
@@ -37,7 +41,7 @@ export const loadFacebookConversationMessageClass = (models: IModels) => {
     public static async createMessage(doc: IFacebookConversationMessage) {
       const message = await models.FacebookConversationMessages.create({
         ...doc,
-        createdAt: doc.createdAt || new Date()
+        createdAt: doc.createdAt || new Date(),
       });
 
       return message;
@@ -46,9 +50,12 @@ export const loadFacebookConversationMessageClass = (models: IModels) => {
     /**
      * Create a conversation message
      */
-    public static async addMessage(doc: IFacebookConversationMessageDocument, userId?: string) {
+    public static async addMessage(
+      doc: IFacebookConversationMessageDocument,
+      userId?: string,
+    ) {
       const conversation = await models.FacebookConversations.findOne({
-        _id: doc.conversationId
+        _id: doc.conversationId,
       });
 
       if (!conversation) {

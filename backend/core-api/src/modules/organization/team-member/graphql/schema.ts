@@ -75,7 +75,7 @@ export const types = `
 
 
   type User @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String!
+    _id: String
     createdAt: Date
     username: String
     email: String

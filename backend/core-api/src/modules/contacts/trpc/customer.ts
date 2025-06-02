@@ -1,13 +1,13 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
+import { CoreTRPCContext } from '~/init-trpc';
 import { AWS_EMAIL_STATUSES, EMAIL_VALIDATION_STATUSES } from '../constants';
 import { createOrUpdate } from '../utils';
-import { ITRPCContext } from 'erxes-api-shared/utils';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const customerRouter = t.router({
-  customer: t.router({
+  customers: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;

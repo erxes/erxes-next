@@ -130,3 +130,7 @@ src/subscription/plugins/downloads
 
 src/apollo-router/temp
 src/apollo-router/downloads
+
+
+# Allow specific logs folder inside modules
+!src/modules/logs/

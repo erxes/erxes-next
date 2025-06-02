@@ -1,8 +1,8 @@
-import { GQL_CURSOR_PARAM_DEFS } from "erxes-api-shared/utils";
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
   type Brand @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String!
+    _id: String
     name: String
     description: String
     code: String

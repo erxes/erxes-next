@@ -1,4 +1,3 @@
-// import { IContext } from '~/db/connectionResolvers';
 import {
   IAutomation,
   IAutomationDoc,
@@ -79,7 +78,7 @@ export const automationMutations = {
       name,
       duplicate,
     }: { _id: string; name?: string; duplicate?: boolean },
-    { user, models, subdomain }: IContext,
+    { user, models }: IContext,
   ) {
     const automation = await models.Automations.getAutomation(_id);
 

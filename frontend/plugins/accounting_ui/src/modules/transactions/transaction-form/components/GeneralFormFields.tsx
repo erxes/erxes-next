@@ -6,7 +6,7 @@ import {
   SelectBranch,
   SelectDepartment,
 } from 'ui-modules';
-import { IAccount } from '~/modules/settings/account/types/Account';
+import { IAccount } from '@/settings/account/types/Account';
 
 export const AccountField = ({
   form,

@@ -11,6 +11,8 @@ export interface IFacebookIntegration {
   error?: string;
 }
 
-export interface IFacebookIntegrationDocument extends IFacebookIntegration, Document {
-  _id: string; 
+export interface IFacebookIntegrationDocument
+  extends IFacebookIntegration,
+    Document {
+  _id: string;
 }
