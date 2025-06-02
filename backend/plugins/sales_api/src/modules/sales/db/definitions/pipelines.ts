@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 import {
   HACK_SCORING_TYPES,
   SALES_STATUSES,
-  VISIBLITIES,
+  VISIBILITIES,
 } from '../../constants';
 
 export const pipelineSchema = new Schema(
@@ -24,8 +24,8 @@ export const pipelineSchema = new Schema(
     },
     visibility: {
       type: String,
-      enum: VISIBLITIES.ALL,
-      default: VISIBLITIES.PUBLIC,
+      enum: VISIBILITIES.ALL,
+      default: VISIBILITIES.PUBLIC,
       label: 'Visibility',
     },
     watchedUserIds: { type: [String], label: 'Watched users' },

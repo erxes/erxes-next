@@ -159,7 +159,7 @@ export default {
     return products;
   },
 
-  async unUsedAmount(deal: IDealDocument) {
+  async unusedAmount(deal: IDealDocument) {
     return generateAmounts(deal.productsData || [], false);
   },
 

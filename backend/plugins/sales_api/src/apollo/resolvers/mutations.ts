@@ -1,6 +1,6 @@
 import { boardMutations } from '~/modules/sales/graphql/resolvers/mutations/boards';
 import { checklistMutations } from '~/modules/sales/graphql/resolvers/mutations/checklists';
-import { dealMutation } from '~/modules/sales/graphql/resolvers/mutations/deals';
+import { dealMutations } from '~/modules/sales/graphql/resolvers/mutations/deals';
 import { pipelineLabelMutations } from '~/modules/sales/graphql/resolvers/mutations/labels';
 import { pipelineMutations } from '~/modules/sales/graphql/resolvers/mutations/pipelines';
 import { stageMutations } from '~/modules/sales/graphql/resolvers/mutations/stages';
@@ -9,7 +9,7 @@ export const mutations = {
   ...boardMutations,
   ...pipelineMutations,
   ...stageMutations,
-  ...dealMutation,
+  ...dealMutations,
   ...pipelineLabelMutations,
   ...checklistMutations,
 };

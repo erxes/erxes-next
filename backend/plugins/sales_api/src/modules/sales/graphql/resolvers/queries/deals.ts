@@ -221,11 +221,11 @@ export const generateFilter = async (
 
   if (closeDateType) {
     if (closeDateType === CLOSE_DATE_TYPES.NEXT_DAY) {
-      const tommorrow = moment().add(1, 'days');
+      const tomorrow = moment().add(1, 'days');
 
       filter.closeDate = {
-        $gte: new Date(tommorrow.startOf('day').toISOString()),
-        $lte: new Date(tommorrow.endOf('day').toISOString()),
+        $gte: new Date(tomorrow.startOf('day').toISOString()),
+        $lte: new Date(tomorrow.endOf('day').toISOString()),
       };
     }
 
@@ -645,7 +645,7 @@ export const dealQueries = {
 
     const getExtraFields = async (item: any) => ({
       amount: await dealResolvers.amount(item),
-      unUsedAmount: await dealResolvers.unUsedAmount(item),
+      unUsedAmount: await dealResolvers.unusedAmount(item),
     });
 
     const deals = await getItemList(
@@ -689,7 +689,7 @@ export const dealQueries = {
       deal.products = [];
 
       // do not display to many products
-      pd = pd.splice(0, 10);
+      pd = pd.slice(0, 10);
 
       for (const pData of pd) {
         if (!pData.productId) {
@@ -837,8 +837,7 @@ export const dealQueries = {
               forecastedTotal[currency.name] +
               currency.amount * percentage(type._id);
 
-            inprogressTotal[currency.name] =
-              inprogressTotal[currency.name] + currency.amount;
+            inprogressTotal[currency.name] += currency.amount;
           } else {
             forecastedTotal[currency.name] =
               currency.amount * percentage(type._id);

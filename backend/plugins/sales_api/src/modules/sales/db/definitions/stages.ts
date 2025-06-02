@@ -1,6 +1,6 @@
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
-import { PROBABILITY, SALES_STATUSES, VISIBLITIES } from '../../constants';
+import { PROBABILITY, SALES_STATUSES, VISIBILITIES } from '../../constants';
 
 export const stageSchema = new Schema(
   {
@@ -20,8 +20,8 @@ export const stageSchema = new Schema(
     },
     visibility: {
       type: String,
-      enum: VISIBLITIES.ALL,
-      default: VISIBLITIES.PUBLIC,
+      enum: VISIBILITIES.ALL,
+      default: VISIBILITIES.PUBLIC,
       label: 'Visibility',
     },
     code: {

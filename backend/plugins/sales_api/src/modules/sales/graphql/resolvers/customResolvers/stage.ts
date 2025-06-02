@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { IStageDocument } from '~/modules/sales/@types';
-import { SALES_STATUSES, VISIBLITIES } from '~/modules/sales/constants';
+import { SALES_STATUSES, VISIBILITIES } from '~/modules/sales/constants';
 import { getAmountsMap } from '~/modules/sales/utils';
 import { generateFilter } from '../queries/deals';
 
@@ -10,7 +10,7 @@ export default {
   },
 
   members(stage: IStageDocument) {
-    if (stage.visibility === VISIBLITIES.PRIVATE && stage.memberIds) {
+    if (stage.visibility === VISIBILITIES.PRIVATE && stage.memberIds) {
       return stage.memberIds.map((memberId) => ({
         __typename: 'User',
         _id: memberId,

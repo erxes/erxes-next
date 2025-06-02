@@ -120,7 +120,7 @@ export const pipelineMutations = {
    */
   async salesPipelinesArchive(
     _root,
-    { _id, status }: { _id; status: string },
+    { _id, status }: { _id: string; status: string },
     { models }: IContext,
   ) {
     return await models.Pipelines.archivePipeline(_id, status);

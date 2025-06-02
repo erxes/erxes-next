@@ -10,7 +10,7 @@ export const types = `
   }
 
   type SalesConvertTo {
-    dealUrl: String,
+    dealUrl: String
   }
 
   type SalesBoardCount {

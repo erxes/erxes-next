@@ -268,7 +268,7 @@ export const generateLastNum = async (models: IModels, doc: IPipeline) => {
   });
 
   if (pipeline) {
-    return pipeline.lastNum;
+    return pipeline.lastNum || '';
   }
 
   const item = await models.Deals.findOne({
@@ -425,7 +425,7 @@ export const getCloseDateByType = (closeDateType: string) => {
   }
 };
 
-const generateArhivedItemsFilter = (
+const generateArchivedItemsFilter = (
   params: IArchiveArgs,
   stages: IStageDocument[],
 ) => {
@@ -509,7 +509,7 @@ export const archivedItems = async (
   const stages = await models.Stages.find({ pipelineId }).lean();
 
   if (stages.length > 0) {
-    const filter = generateArhivedItemsFilter(params, stages);
+    const filter = generateArchivedItemsFilter(params, stages);
 
     return collection
       .find(filter)
@@ -534,7 +534,7 @@ export const archivedItemsCount = async (
   const stages = await models.Stages.find({ pipelineId });
 
   if (stages.length > 0) {
-    const filter = generateArhivedItemsFilter(params, stages);
+    const filter = generateArchivedItemsFilter(params, stages);
 
     return collection.find(filter).countDocuments();
   }
@@ -1078,7 +1078,7 @@ export const bulkUpdateOrders = async ({
       },
     });
 
-    ord = ord + 10;
+    ord += 10;
   }
 
   if (!bulkOps.length) {

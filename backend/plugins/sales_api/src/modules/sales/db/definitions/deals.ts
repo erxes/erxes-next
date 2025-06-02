@@ -18,11 +18,11 @@ export const productDataSchema = new Schema(
     globalUnitPrice: { type: Number, label: 'Global unit price' }, // Global unit price
     unitPricePercent: { type: Number, label: 'Unit price percent' }, // Unit price percent
     taxPercent: { type: Number, label: 'Tax percent' }, // Tax percent
-    vatPercent: { type: Number, label: 'Tax percent' }, // Vat percent
+    vatPercent: { type: Number, label: 'Vat percent' }, // Vat percent
     tax: { type: Number, label: 'Tax' }, // Tax
     discountPercent: { type: Number, label: 'Discount percent' }, // Discount percent
     discount: { type: Number, label: 'Discount' }, // Discount
-    bonusCount: { type: Number, label: 'Bonus Count' }, // Discount
+    bonusCount: { type: Number, label: 'Bonus Count' }, // Bonus Count
     amount: { type: Number, label: 'Amount' }, // Amount
     tickUsed: { type: Boolean, label: 'Tick used' }, // TickUsed
     isVatApplied: { type: Boolean, label: 'Is vat applied' }, // isVatApplied
@@ -137,13 +137,13 @@ export const dealSchema = new Schema(
       type: [String],
       optional: true,
       index: true,
-      label: 'Tags',
+      label: 'Branches',
     },
     departmentIds: {
       type: [String],
       optional: true,
       index: true,
-      label: 'Tags',
+      label: 'Departments',
     },
 
     productsData: { type: [productDataSchema], label: 'Products' },

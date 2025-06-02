@@ -62,7 +62,15 @@ export const stageMutations = {
       'alphabetically-asc': { name: 1 },
     };
 
-    const sort: { [key: string]: any } = sortTypes[sortType];
+    const sort: { [key: string]: any } = sortTypes[sortType] || {};
+
+    if (!sort) {
+      throw new Error(
+        `Invalid sortType: ${sortType}. Valid values are: ${Object.keys(
+          sortTypes,
+        ).join(', ')}`,
+      );
+    }
 
     if (sortType === 'close-asc') {
       await bulkUpdateOrders({

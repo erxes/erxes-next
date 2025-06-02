@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { IPipelineDocument } from '~/modules/sales/@types';
-import { VISIBLITIES } from '~/modules/sales/constants';
+import { VISIBILITIES } from '~/modules/sales/constants';
 import { generateFilter } from '../queries/deals';
 
 export default {
@@ -13,7 +13,7 @@ export default {
   },
 
   members(pipeline: IPipelineDocument) {
-    if (pipeline.visibility === VISIBLITIES.PRIVATE && pipeline.memberIds) {
+    if (pipeline.visibility === VISIBILITIES.PRIVATE && pipeline.memberIds) {
       return pipeline.memberIds.map((memberId) => ({
         __typename: 'User',
         _id: memberId,

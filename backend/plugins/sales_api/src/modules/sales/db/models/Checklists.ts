@@ -110,7 +110,7 @@ export const loadCheckListClass = (models: IModels) => {
     }
 
     /*
-     * Remove checklist
+     * Remove checklist item
      */
     public static async removeChecklist(_id: string) {
       const checklistObj = await models.Checklists.findOne({ _id });
@@ -206,7 +206,7 @@ export const loadCheckListItemClass = (models: IModels) => {
       });
 
       if (!checklistItem) {
-        throw new Error(`Checklist's item not found with id ${_id}`);
+        throw new Error(`Checklist item not found with id ${_id}`);
       }
 
       //   await putChecklistActivityLog(subdomain, {
@@ -222,7 +222,7 @@ export const loadCheckListItemClass = (models: IModels) => {
       const currentItem = await models.ChecklistItems.findOne({ _id }).lean();
 
       if (!currentItem) {
-        throw new Error(`ChecklistItems _id = ${_id} not found`);
+        throw new Error(`Checklist item with id = ${_id} not found`);
       }
 
       await models.ChecklistItems.updateOne(

@@ -11,7 +11,7 @@ import {
   itemsEdit,
 } from '~/modules/sales/utils';
 
-export const dealMutation = {
+export const dealMutations = {
   /**
    * Creates a new deal
    */
@@ -528,7 +528,7 @@ export const dealMutation = {
     }
 
     // undefenid or null then true
-    const tickUsed = stage.defaultTick === false ? false : true;
+    const tickUsed = !(stage.defaultTick === false);
     const addDocs = (docs || []).map(
       (doc) => ({ ...doc, tickUsed } as IProductData),
     );

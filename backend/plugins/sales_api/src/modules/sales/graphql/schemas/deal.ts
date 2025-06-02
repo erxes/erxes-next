@@ -39,7 +39,7 @@ export const types = `
     tags: [Tag]
 
     products: JSON
-    unUsedAmount: JSON
+    unusedAmount: JSON
     amount: JSON
     customFieldsData: JSON
   }
