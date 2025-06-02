@@ -79,6 +79,11 @@ export const CurrencyForm = ({
   };
 
   useEffect(() => {
+    form.setValue(`trDocs.${journalIndex}.details.0.amount`, spotRate * (detail.currencyAmount ?? 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spotRate]);
+
+  useEffect(() => {
     if (spotRate) {
       setChangingAmount(true);
       form.setValue(
