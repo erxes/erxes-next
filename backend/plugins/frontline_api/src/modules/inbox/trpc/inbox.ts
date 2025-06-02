@@ -69,6 +69,10 @@ const createConversationAndMessage = async (
   return { conversation, message };
 };
 const t = initTRPC.context<ITRPCContext>().create();
+import { FrontlineTRPCContext } from '~/init-trpc';
+
+const t = initTRPC.context<FrontlineTRPCContext>().create();
+
 
 export const integrationsRouter = t.router({
   receive: t.procedure.input(z.any()).mutation(async ({ input, ctx }) => {

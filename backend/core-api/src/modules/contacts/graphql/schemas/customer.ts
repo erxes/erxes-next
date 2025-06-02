@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
   type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String
@@ -49,6 +51,8 @@ export const types = `
     links: JSON
     companies: [Company]
     getTags: [Tag]
+
+    cursor: String
   }
 
   type CustomersListResponse {
@@ -97,11 +101,10 @@ const queryParams = `
   dateFilters: String
   segmentData: String
   emailValidationStatus:String
-  limit: Int
-  cursor: String
-  direction: CURSOR_DIRECTION
   status: CONTACT_STATUS
+
   ${conformityQueryFields}
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `

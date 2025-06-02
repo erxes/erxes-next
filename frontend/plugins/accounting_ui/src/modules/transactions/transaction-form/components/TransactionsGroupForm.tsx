@@ -1,9 +1,9 @@
+import { useMainConfigs } from '@/settings/hooks/useMainConfigs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DatePicker, Form, Input, Spinner, useQueryState } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { memo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router';
 import { TrJournalEnum } from '../../types/constants';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
 import { transactionGroupSchema } from '../contants/transactionSchema';
@@ -12,9 +12,8 @@ import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 import { useTransactionsUpdate } from '../hooks/useTransactionsUpdate';
 import { activeJournalState } from '../states/trStates';
 import { TAddTransactionGroup } from '../types/AddTransaction';
-import { Summary } from './Summary';
-import { TransactionsTabsList } from './TransactionList';
-import { useMainConfigs } from '~/modules/settings/hooks/useMainConfigs';
+import { Summary } from './common/Summary';
+import { TransactionsTabsList } from './TransactionTabs';
 
 // Memoize form fields to prevent unnecessary re-renders
 const FormFields = memo(
@@ -58,8 +57,9 @@ const FormFields = memo(
 FormFields.displayName = 'FormFields';
 
 export const TransactionsGroupForm = () => {
-  const parentId = useParams().parentId;
-  const { transactions, activeTrs, loading } = useTransactionDetail({
+  // const parentId = useParams().parentId;
+  const [parentId] = useQueryState<string>('parentId');
+  const { activeTrs, loading } = useTransactionDetail({
     variables: { _id: parentId },
     skip: !parentId,
   });
@@ -67,9 +67,7 @@ export const TransactionsGroupForm = () => {
   const { loading: configsLoading } = useMainConfigs();
   const form = useForm<TAddTransactionGroup>({
     resolver: zodResolver(transactionGroupSchema),
-    defaultValues: {
-      date: new Date(),
-    },
+
   });
 
   const [defaultJournal] = useQueryState<TrJournalEnum>('defaultJournal');
@@ -97,9 +95,8 @@ export const TransactionsGroupForm = () => {
   };
 
   useEffect(() => {
-    if (activeTrs?.length) {
+    if (activeTrs?.length && parentId) {
       const currentTr = trId ? activeTrs.find(tr => tr._id === trId) : activeTrs[0];
-      // setTransactionGroups({})
       // setting form values
       form.reset({
         ...form.getValues(),
@@ -110,7 +107,6 @@ export const TransactionsGroupForm = () => {
       });
     }
     if (defaultJournal) {
-      // setTransactionGroups({})
       form.reset({
         ...form.getValues(),
         trDocs: [JOURNALS_BY_JOURNAL(defaultJournal)],

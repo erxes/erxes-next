@@ -1,15 +1,17 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
   extend type Customer @key(fields: "_id") {
-    _id: String! @external
+    _id: String @external
     conversations: [Conversation]
   }
   extend type Brand @key(fields: "_id") {
-    _id: String! @external
+    _id: String @external
   }
 
   extend type Tag @key(fields: "_id") {
-  _id: String! @external
-}
+    _id: String @external
+  }
 
   type Conversation {
     _id: String!
@@ -43,6 +45,7 @@ export const types = `
 
 
     customFieldsData: JSON
+    cursor: String
   }
 
 
@@ -190,6 +193,8 @@ export const cursorParams = `
   limit: Int
   cursor: String
   direction: CURSOR_DIRECTION
+  cursorMode: CURSOR_MODE
+  orderBy: JSON
 `;
 
 const filterParams = `
@@ -215,7 +220,7 @@ export const queries = `
   conversationDetail(_id: String!): Conversation
   conversationsGetLast(${filterParams}): Conversation
   conversationsTotalUnreadCount: Int
-  userConversations(_id: String, ${cursorParams}, perPage: Int): UserConversationListResponse
+  userConversations(_id: String, ${GQL_CURSOR_PARAM_DEFS}, perPage: Int): UserConversationListResponse
 `;
 
 export const mutations = `

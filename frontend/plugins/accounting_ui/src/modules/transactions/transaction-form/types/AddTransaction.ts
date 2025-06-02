@@ -4,7 +4,8 @@ import {
   transactionMainSchema,
   transactionCashSchema,
   transactionBankSchema,
-  transactionDebtSchema,
+  transactionPayableSchema,
+  transactionReceivableSchema,
   transactionTaxSchema,
   // transactionInvIncomeSchema,
   // transactionInvOutSchema,
@@ -21,7 +22,8 @@ export type TTrDoc = z.infer<typeof trDocSchema>
 export type TMainJournal = z.infer<typeof transactionMainSchema>;
 export type TCashJournal = z.infer<typeof transactionCashSchema>;
 export type TBankJournal = z.infer<typeof transactionBankSchema>;
-export type TDebtJournal = z.infer<typeof transactionDebtSchema>;
+export type TReceivableJournal = z.infer<typeof transactionReceivableSchema>;
+export type TPayableJournal = z.infer<typeof transactionPayableSchema>;
 export type TTaxJournal = z.infer<typeof transactionTaxSchema>;
 
 // export type TInvIncomeJournal = z.infer<typeof transactionInvIncomeSchema>;
