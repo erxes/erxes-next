@@ -1,8 +1,8 @@
- export interface IKind {
+export interface IKind {
   kind: string;
 }
 
- export interface IDetailParams {
+export interface IDetailParams {
   erxesApiId: string;
 }
 
@@ -34,8 +34,6 @@ export interface IReplyParams extends ICommentStatusParams {
   content: string;
   attachments: any;
 }
-
-
 
 export interface IPostParams {
   id?: string;
@@ -73,7 +71,7 @@ export interface ICommentParams {
 }
 
 export interface IChannelData {
- sender: {
+  sender: {
     id: string;
   };
   recipient: {
@@ -119,7 +117,6 @@ export interface IChannelData {
     };
   };
 }
-
 
 export interface Activity {
   channelId: string;

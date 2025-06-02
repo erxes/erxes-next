@@ -37,7 +37,7 @@ export const types = `
     tagIds: [String]
     createdAt: Date
     tags: [Tag]
-  
+
     leadData: JSON
     messengerData: JSON
     ticketData: JSON
@@ -53,7 +53,7 @@ export const types = `
 
     healthStatus: JSON
     form : Form
-       
+
     visibility: String
     departmentIds: [String]
 
@@ -193,8 +193,8 @@ export const mutations = `
     color: String
     logo:String
   ): Integration
-    
-    
+
+
   integrationsEditMessengerOnboarding(
     _id: String!,
     brandId: String!,
@@ -203,7 +203,7 @@ export const mutations = `
     color: String
     logo:String
   ): Integration
- 
+
   integrationsCreateMessengerIntegration(
     name: String!,
     brandId: String!,
