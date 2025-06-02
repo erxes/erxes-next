@@ -89,6 +89,36 @@ export const validSearchText = (values: string[]) => {
   return value.substring(0, 511);
 };
 
+const stringToRegex = (value: string) => {
+  const specialChars = '{}[]\\^$.|?*+()'.split('');
+  const val = value.split('');
+
+  const result = val.map((char) =>
+    specialChars.includes(char) ? '.?\\' + char : '.?' + char,
+  );
+
+  return '.*' + result.join('').substring(2) + '.*';
+};
+
+export const regexSearchText = (
+  searchValue: string,
+  searchKey = 'searchText',
+) => {
+  const result: any[] = [];
+
+  searchValue = searchValue.replace(/\s\s+/g, ' ');
+
+  const words = searchValue.split(' ');
+
+  for (const word of words) {
+    result.push({
+      [searchKey]: { $regex: `${stringToRegex(word)}`, $options: 'mui' },
+    });
+  }
+
+  return { $and: result };
+};
+
 export const getCoreDomain = () => {
   const NODE_ENV = process.env.NODE_ENV;
 
