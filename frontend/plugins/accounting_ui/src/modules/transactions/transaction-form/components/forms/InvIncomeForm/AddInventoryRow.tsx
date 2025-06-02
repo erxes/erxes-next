@@ -24,7 +24,7 @@ export const AddInventoryRowButton = ({
     name: `trDocs.${journalIndex}.details`,
   });
 
-  const lastDetail = preDetails[preDetails.length]
+  const lastDetail = preDetails[preDetails.length - 1]
 
   const detailDefaultValues = {
     ...lastDetail,
