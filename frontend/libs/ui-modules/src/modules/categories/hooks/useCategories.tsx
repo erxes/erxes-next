@@ -1,17 +1,17 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-
 import { categories } from '../graphql/queries';
+import { ProductCategoriesResponse, UseProductCategoriesResult } from '../types/category';
 
-export const useProductCategories = (options?: OperationVariables) => {
-  const { data, loading, error } = useQuery(
+export const useProductCategories = (
+  options?: OperationVariables,
+): UseProductCategoriesResult => {
+  const { data, loading, error } = useQuery<ProductCategoriesResponse>(
     categories.productCategories,
-    options
+    options,
   );
 
-  const { productCategories } = data || {};
-
   return {
-    productCategories,
+    productCategories: data?.productCategories,
     loading,
     error,
   };

@@ -1,5 +1,3 @@
-'use client';
-
 import {
   ProductDetailLayout,
   ProductDetailTabContent,
@@ -10,13 +8,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ProductDetailForm } from './ProductGeneral';
 import {
-  productFormSchema,
+  ProductFormSchema,
   ProductFormValues,
-} from '@/products/constants/formSchema';
+} from '@/products/constants/ProductFormSchema';
 
 export const ProductDetail = () => {
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
+    resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       name: '',
       code: '',

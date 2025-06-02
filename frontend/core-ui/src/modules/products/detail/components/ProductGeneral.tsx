@@ -1,21 +1,23 @@
-"use client";
+'use client';
 
-import type React from "react";
-import { UseFormReturn } from "react-hook-form";
-import { useProductDetail } from "../hooks/useProductDetail";
-import { useUom } from "@/products/hooks/useUom";
-import { ProductHotKeyScope } from "@/products/types/ProductsHotKeyScope";
-import { ProductBasicFields } from "./ProductBasicFields";
-import { FileUploadSection } from "./FileUploadSection";
-import { useProductFormData } from "../hooks/useProductFormData";
-import { ProductEditorField } from "./ProductEditor";
-import { ProductFormValues } from "@/products/constants/formSchema";
+import type React from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import { useProductDetail } from '../hooks/useProductDetail';
+import { useUom } from '@/products/hooks/useUom';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
+import { ProductBasicFields } from './ProductBasicFields';
+import { FileUploadSection } from './FileUploadSection';
+import { useProductFormData } from '../hooks/useProductFormData';
+import { ProductEditorField } from './ProductEditor';
+import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 
 interface ProductDetailFormProps {
   form: UseFormReturn<ProductFormValues>;
 }
 
-export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({ form }) => {
+export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
+  form,
+}) => {
   const { productDetail, loading } = useProductDetail();
   const { uoms } = useUom({});
 
@@ -49,11 +51,8 @@ export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({ form }) =>
         initialContent={productDetail?.barcodeDescription}
         scope={ProductHotKeyScope.ProductAddSheetBarcodeDescriptionField}
       />
-      
-      <FileUploadSection
-        label="FEATURED IMAGE"
-        buttonText="Upload Image"
-      />
+
+      <FileUploadSection label="FEATURED IMAGE" buttonText="Upload Image" />
 
       <FileUploadSection
         label="SECONDARY IMAGES"

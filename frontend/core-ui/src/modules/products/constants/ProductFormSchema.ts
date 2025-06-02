@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const productFormSchema = z.object({
+export const ProductFormSchema = z.object({
     name: z.string().min(1, { message: "Product name is required" }),
     code: z.string().optional(),
     barcodes: z.array(z.string()).optional(),
@@ -22,4 +22,4 @@ export const productFormSchema = z.object({
     }).optional(),
   })
   
-  export type ProductFormValues = z.infer<typeof productFormSchema>
+  export type ProductFormValues = z.infer<typeof ProductFormSchema>

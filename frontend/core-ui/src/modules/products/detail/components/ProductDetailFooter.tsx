@@ -4,7 +4,7 @@ import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 import { useProductDetail } from '../hooks/useProductDetail';
 import { useToast } from 'erxes-ui';
 import { UseFormReturn } from 'react-hook-form';
-import { ProductFormValues } from '@/products/constants/formSchema';
+import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 
 interface ProductDetailFooterProps {
   form: UseFormReturn<ProductFormValues>;
@@ -24,7 +24,7 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
   const handleSubmit = async (data: ProductFormValues) => {
     if (!productDetail?._id) {
       return;
-    };
+    }
 
     try {
       await productsEdit({

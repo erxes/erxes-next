@@ -3,11 +3,20 @@ import { IAttachment } from 'erxes-ui';
 export interface IProductCategory {
     _id: string;
     name: string;
-    avatar: IAttachment;
+    avatar?: IAttachment;
     code: string;
     order: string;
     productCount: number;
-    parentId: string;
+    parentId?: string;
+  }
+
+export interface ProductCategoriesResponse {
+    productCategories: IProductCategory[];
   }
   
+export interface UseProductCategoriesResult {
+    productCategories: IProductCategory[] | undefined;
+    loading: boolean;
+    error: Error | undefined;
+  }
   

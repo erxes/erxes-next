@@ -1,14 +1,14 @@
-import type React from "react";
-import { Form, Editor } from "erxes-ui";
-import { Control, UseFormSetValue } from "react-hook-form";
-import { ProductHotKeyScope } from "@/products/types/ProductsHotKeyScope";
-import { ProductFormValues } from "@/products/constants/formSchema";
-import { Block } from "@blocknote/core";
+import type React from 'react';
+import { Form, Editor } from 'erxes-ui';
+import { Control, UseFormSetValue } from 'react-hook-form';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
+import { ProductFormValues } from '@/products/constants/ProductFormSchema';
+import { Block } from '@blocknote/core';
 
 interface ProductEditorFieldProps {
   control: Control<ProductFormValues>;
   setValue: UseFormSetValue<ProductFormValues>;
-  name: "description" | "barcodeDescription";
+  name: 'description' | 'barcodeDescription';
   label: string;
   initialContent?: string;
   scope: ProductHotKeyScope;
@@ -20,7 +20,7 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
   name,
   label,
   initialContent,
-  scope
+  scope,
 }) => {
   const handleEditorChange = async (value: string, editorInstance?: any) => {
     try {
@@ -30,33 +30,33 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
         setValue(name, htmlContent, {
           shouldDirty: true,
           shouldTouch: true,
-          shouldValidate: false
+          shouldValidate: false,
         });
       } else {
         const htmlContent = blocks
           .map((block: Block) => {
-            if (block.type === "paragraph" && block.content) {
+            if (block.type === 'paragraph' && block.content) {
               const textContent = block.content
-                .map((item: any) => item.text || "")
-                .join("");
-              return textContent ? `<p>${textContent}</p>` : "";
+                .map((item: any) => item.text || '')
+                .join('');
+              return textContent ? `<p>${textContent}</p>` : '';
             }
-            if (block.type === "heading" && block.content) {
+            if (block.type === 'heading' && block.content) {
               const textContent = block.content
-                .map((item: any) => item.text || "")
-                .join("");
+                .map((item: any) => item.text || '')
+                .join('');
               const level = (block.props as any)?.level || 1;
-              return textContent ? `<h${level}>${textContent}</h${level}>` : "";
+              return textContent ? `<h${level}>${textContent}</h${level}>` : '';
             }
-            return "";
+            return '';
           })
           .filter(Boolean)
-          .join("");
-                
+          .join('');
+
         setValue(name, htmlContent, {
           shouldDirty: true,
           shouldTouch: true,
-          shouldValidate: false
+          shouldValidate: false,
         });
       }
     } catch (error) {
@@ -65,121 +65,131 @@ export const ProductEditorField: React.FC<ProductEditorFieldProps> = ({
         stack: error instanceof Error ? error.stack : undefined,
         value: value?.substring(0, 200) + (value?.length > 200 ? '...' : ''),
         editorInstanceAvailable: !!editorInstance,
-        hasBlocksToHTMLLossy: !!(editorInstance?.blocksToHTMLLossy)
+        hasBlocksToHTMLLossy: !!editorInstance?.blocksToHTMLLossy,
       });
-      
-      setValue(name, "", {
+
+      setValue(name, '', {
         shouldDirty: true,
         shouldTouch: true,
-        shouldValidate: false
+        shouldValidate: false,
       });
     }
   };
 
   const convertHTMLToBlocks = (htmlContent: string): Block[] => {
-    if (!htmlContent || htmlContent.trim() === "") {
-      return [{
-        id: crypto.randomUUID(),
-        type: "paragraph",
-        props: {
-          textColor: "default",
-          backgroundColor: "default",
-          textAlignment: "left"
+    if (!htmlContent || htmlContent.trim() === '') {
+      return [
+        {
+          id: crypto.randomUUID(),
+          type: 'paragraph',
+          props: {
+            textColor: 'default',
+            backgroundColor: 'default',
+            textAlignment: 'left',
+          },
+          content: [],
+          children: [],
         },
-        content: [],
-        children: []
-      }];
+      ];
     }
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, 'text/html');
     const container = doc.body;
-    
+
     const blocks: Block[] = [];
     const children = Array.from(container.children);
-    
+
     if (children.length === 0) {
-      const textContent = container.textContent || container.innerText || "";
+      const textContent = container.textContent || container.innerText || '';
       if (textContent.trim()) {
         blocks.push({
           id: crypto.randomUUID(),
-          type: "paragraph",
+          type: 'paragraph',
           props: {
-            textColor: "default",
-            backgroundColor: "default",
-            textAlignment: "left"
+            textColor: 'default',
+            backgroundColor: 'default',
+            textAlignment: 'left',
           },
-          content: [{
-            type: "text",
-            text: textContent,
-            styles: {}
-          }],
-          children: []
+          content: [
+            {
+              type: 'text',
+              text: textContent,
+              styles: {},
+            },
+          ],
+          children: [],
         });
       }
     } else {
       children.forEach((element) => {
         const tagName = element.tagName.toLowerCase();
-        const textContent = element.textContent || "";
-        
+        const textContent = element.textContent || '';
+
         if (textContent.trim()) {
-          let blockType = "paragraph";
+          let blockType = 'paragraph';
           const props: any = {
-            textColor: "default",
-            backgroundColor: "default",
-            textAlignment: "left"
+            textColor: 'default',
+            backgroundColor: 'default',
+            textAlignment: 'left',
           };
 
           if (tagName.match(/^h[1-6]$/)) {
-            blockType = "heading";
+            blockType = 'heading';
             props.level = parseInt(tagName.charAt(1));
           }
 
           blocks.push({
             id: crypto.randomUUID(),
-            type: blockType as "paragraph" | "heading",
+            type: blockType as 'paragraph' | 'heading',
             props,
-            content: [{
-              type: "text",
-              text: textContent,
-              styles: {}
-            }],
-            children: []
+            content: [
+              {
+                type: 'text',
+                text: textContent,
+                styles: {},
+              },
+            ],
+            children: [],
           });
         }
       });
     }
 
-    return blocks.length > 0 ? blocks : [{
-      id: crypto.randomUUID(),
-      type: "paragraph",
-      props: {
-        textColor: "default",
-        backgroundColor: "default",
-        textAlignment: "left"
-      },
-      content: [],
-      children: []
-    }];
+    return blocks.length > 0
+      ? blocks
+      : [
+          {
+            id: crypto.randomUUID(),
+            type: 'paragraph',
+            props: {
+              textColor: 'default',
+              backgroundColor: 'default',
+              textAlignment: 'left',
+            },
+            content: [],
+            children: [],
+          },
+        ];
   };
 
   const formatInitialContent = (content?: string): string | undefined => {
-    if (!content || content.trim() === "") {
+    if (!content || content.trim() === '') {
       return undefined;
     }
 
-    if (content.startsWith("[")) {
+    if (content.startsWith('[')) {
       try {
         const parsed = JSON.parse(content);
         if (Array.isArray(parsed)) {
           return content;
         }
       } catch (e) {
-        console.error("Failed to parse initial content as JSON:", e);
+        console.error('Failed to parse initial content as JSON:', e);
       }
     }
 
-    if (content.includes("<") && content.includes(">")) {
+    if (content.includes('<') && content.includes('>')) {
       const blocks = convertHTMLToBlocks(content);
       return JSON.stringify(blocks);
     }

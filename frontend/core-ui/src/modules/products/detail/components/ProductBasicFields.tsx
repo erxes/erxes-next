@@ -1,11 +1,10 @@
-import type React from "react";
-import { Form, Input, Select, CurrencyField, Label, Button } from "erxes-ui";
-import { PRODUCT_TYPE_OPTIONS } from "@/products/constants/ProductConstants";
-import { SelectBrand, SelectCompany , SelectCategory } from "ui-modules";
-import { Control } from "react-hook-form";
-import { IconPlus, IconUpload, IconX } from "@tabler/icons-react";
-import { ProductFormValues } from "@/products/constants/formSchema";
-
+import type React from 'react';
+import { Form, Input, Select, CurrencyField, Label, Button } from 'erxes-ui';
+import { PRODUCT_TYPE_OPTIONS } from '@/products/constants/ProductConstants';
+import { SelectBrand, SelectCompany, SelectCategory } from 'ui-modules';
+import { Control } from 'react-hook-form';
+import { IconPlus, IconUpload, IconX } from '@tabler/icons-react';
+import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 
 interface UnitOfMeasurement {
   _id: string;
@@ -17,9 +16,9 @@ interface ProductBasicFieldsProps {
   uoms: UnitOfMeasurement[];
 }
 
-export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({ 
-  control, 
-  uoms 
+export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
+  control,
+  uoms,
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -43,9 +42,10 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         control={control}
         name="barcodes"
         render={({ field }) => {
-          const barcodes = Array.isArray(field.value) && field.value.length > 0 
-            ? field.value 
-            : [""];
+          const barcodes =
+            Array.isArray(field.value) && field.value.length > 0
+              ? field.value
+              : [''];
 
           return (
             <Form.Item>
@@ -60,7 +60,9 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
                       onChange={(e) => {
                         const newBarcodes = [...barcodes];
                         newBarcodes[index] = e.target.value;
-                        const filteredBarcodes = newBarcodes.filter(b => b.trim() !== "");
+                        const filteredBarcodes = newBarcodes.filter(
+                          (b) => b.trim() !== '',
+                        );
                         field.onChange(filteredBarcodes);
                       }}
                       placeholder="Enter barcode"
@@ -72,8 +74,12 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                          const newBarcodes = barcodes.filter((_: string, i: number) => i !== index);
-                          field.onChange(newBarcodes.length > 0 ? newBarcodes : []);
+                          const newBarcodes = barcodes.filter(
+                            (_: string, i: number) => i !== index,
+                          );
+                          field.onChange(
+                            newBarcodes.length > 0 ? newBarcodes : [],
+                          );
                         }}
                       >
                         <IconX className="h-4 w-4" />
@@ -86,8 +92,10 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    const currentBarcodes = Array.isArray(field.value) ? field.value : [];
-                    field.onChange([...currentBarcodes, ""]);
+                    const currentBarcodes = Array.isArray(field.value)
+                      ? field.value
+                      : [];
+                    field.onChange([...currentBarcodes, '']);
                   }}
                   className="w-full"
                 >
@@ -145,9 +153,9 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
           <Form.Item className="flex flex-col">
             <Form.Label>UNIT PRICE</Form.Label>
             <Form.Control>
-              <CurrencyField.ValueInput 
-                value={field.value} 
-                onChange={(value) => field.onChange(value)} 
+              <CurrencyField.ValueInput
+                value={field.value}
+                onChange={(value) => field.onChange(value)}
               />
             </Form.Control>
             <Form.Message />
@@ -219,24 +227,30 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         )}
       />
 
-        <Form.Field
-          control={control}
-          name="scopeBrandIds"
-          render={({ field }) => (
-            <Form.Item className="">
-              <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">BRAND</Form.Label>
-              <Form.Control>
+      <Form.Field
+        control={control}
+        name="scopeBrandIds"
+        render={({ field }) => (
+          <Form.Item className="">
+            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
+              BRAND
+            </Form.Label>
+            <Form.Control>
               <SelectBrand
-                value={Array.isArray(field.value) && field.value.length > 0 ? field.value[0] : ''}
+                value={
+                  Array.isArray(field.value) && field.value.length > 0
+                    ? field.value[0]
+                    : ''
+                }
                 onValueChange={(brandId) => {
                   field.onChange([brandId]);
                 }}
               />
-              </Form.Control>
-              <Form.Message className="text-destructive" />
-            </Form.Item>
-          )}
-        />
+            </Form.Control>
+            <Form.Message className="text-destructive" />
+          </Form.Item>
+        )}
+      />
 
       <Form.Field
         control={control}
@@ -247,7 +261,10 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
               VENDOR
             </Form.Label>
             <Form.Control>
-              <SelectCompany value={field.value} onValueChange={field.onChange} />
+              <SelectCompany
+                value={field.value}
+                onValueChange={field.onChange}
+              />
             </Form.Control>
             <Form.Message />
           </Form.Item>
@@ -270,14 +287,18 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         )}
       />
       <div className="space-y-2">
-          <Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-            PDF
-          </Label>
-          <Button variant="outline" className="w-full justify-between h-8" type="button">
-            Upload a PDF
-            <IconUpload className="h-4 w-4" />
-          </Button>
-        </div>
+        <Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
+          PDF
+        </Label>
+        <Button
+          variant="outline"
+          className="w-full justify-between h-8"
+          type="button"
+        >
+          Upload a PDF
+          <IconUpload className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };

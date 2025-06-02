@@ -1,18 +1,18 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { IProduct } from 'ui-modules';
-import { productRemove } from '../detail/graphql/mutations/productEditMutations';
+import { productsMutations } from '@/products/graphql';
 import { productsQueries } from '@/products/graphql';
 
 const PRODUCTS_PAGE_SIZE = 30;
 
 export const useRemoveProducts = () => {
-  const [_removeProducts, { loading }] = useMutation(productRemove);
+  const [_removeProducts, { loading }] = useMutation(productsMutations.productRemove);
 
-  const removeProducts = async (
+  const removeProducts = (
     productIds: string[],
     options?: OperationVariables,
   ) => {
-    await _removeProducts({
+    _removeProducts({
       ...options,
       variables: { productIds, ...options?.variables },
       update: (cache) => {

@@ -6,7 +6,7 @@ import { ProductDetailSheet } from './ProductDetailSheet';
 import { useSearchParams } from 'react-router-dom';
 import { ProductDetailFooter } from './ProductDetailFooter';
 import type { useForm } from 'react-hook-form';
-import { ProductFormValues } from '@/products/constants/formSchema';
+import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 
 export const ProductDetailLayout = ({
   children,
