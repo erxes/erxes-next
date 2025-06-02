@@ -1,17 +1,14 @@
-import { generateModels,  } from '~/connectionResolvers';
-
-
-
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 export const pConversationClientMessageInserted = async (
   models,
   subdomain,
-  message: { _id: string; [other: string]: any }
+  message: { _id: string; [other: string]: any },
 ) => {
   const conversation = await models.Conversations.findOne(
     {
-      _id: message.conversationId
+      _id: message.conversationId,
     },
-    { integrationId: 1 }
+    { integrationId: 1 },
   );
 
   let integration;
@@ -19,9 +16,9 @@ export const pConversationClientMessageInserted = async (
   if (conversation) {
     integration = await models.Integrations.findOne(
       {
-        _id: conversation.integrationId
+        _id: conversation.integrationId,
       },
-      { _id: 1, name: 1 }
+      { _id: 1, name: 1 },
     );
   }
 
@@ -30,9 +27,9 @@ export const pConversationClientMessageInserted = async (
   if (integration) {
     const channels = await models.Channels.find(
       {
-        integrationIds: { $in: [integration._id] }
+        integrationIds: { $in: [integration._id] },
       },
-      { _id: 1, memberIds: 1 }
+      { _id: 1, memberIds: 1 },
     );
 
     for (const channel of channels) {
@@ -40,38 +37,24 @@ export const pConversationClientMessageInserted = async (
     }
   }
 
-  // graphqlPubsub.publish(`conversationMessageInserted:${conversation._id}`, {
-  //   conversationMessageInserted: message,
-  //   subdomain,
-  //   conversation,
-  //   integration
-  // });
+  (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
+    `conversationMessageInserted:${conversation._id}`,
+    {
+      conversationMessageInserted: message,
+      subdomain,
+      conversation,
+      integration,
+    },
+  );
 
   for (const userId of channelMemberIds) {
-    // graphqlPubsub.publish(
-    //   `conversationClientMessageInserted:${subdomain}:${userId}`,
-    //   {
-    //     conversationClientMessageInserted: message,
-    //     subdomain,
-    //     conversation,
-    //     integration
-    //   }
-    // );
-  }
-
-  if (message.content) {
-    // sendCoreMessage({
-    //   subdomain,
-    //   action: "sendMobileNotification",
-    //   data: {
-    //     title: integration ? integration.name : "New message",
-    //     body: message.content,
-    //     receivers: channelMemberIds,
-    //     data: {
-    //       type: "conversation",
-    //       id: conversation._id
-    //     }
-    //   }
-    // });
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationClientMessageInserted:${subdomain}:${userId}`, {
+      conversationClientMessageInserted: message,
+      subdomain,
+      conversation,
+      integration,
+    });
   }
 };

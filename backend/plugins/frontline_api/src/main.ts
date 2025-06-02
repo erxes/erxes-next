@@ -12,7 +12,16 @@ startPlugin({
     typeDefs: await typeDefs(),
     resolvers,
   }),
+
+
+  // hasSubscriptions: false,
+  // subscriptionPluginPath: require('path').resolve(
+  //   __dirname,
+  //   'graphql',
+  //   'subscriptionPlugin.js',
+  // ),
   expressRouter: router,
+
   apolloServerContext: async (subdomain, context) => {
     const models = await generateModels(subdomain);
 

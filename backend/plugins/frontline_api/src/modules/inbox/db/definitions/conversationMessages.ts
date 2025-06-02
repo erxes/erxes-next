@@ -12,7 +12,7 @@ const engageDataRuleSchema = new Schema(
   { _id: false }
 );
 
-const engageDataSchema = new Schema(
+export const engageDataSchema = new Schema(
   {
     engageKind: ({ type: String }),
     messageId: ({ type: String }),

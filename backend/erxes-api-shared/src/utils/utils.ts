@@ -2,6 +2,7 @@ import { IOrderInput } from '@/core-types';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import stripAnsi from 'strip-ansi';
+import { randomAlphanumeric } from './random';
 
 export const getEnv = ({
   name,
@@ -185,6 +186,47 @@ export const fixDate = (
 
   return defaultValue;
 };
+
+export const checkUserIds = (
+  oldUserIds: string[] = [],
+  newUserIds: string[] = [],
+) => {
+  const removedUserIds = oldUserIds.filter((e) => !newUserIds.includes(e));
+
+  const addedUserIds = newUserIds.filter((e) => !oldUserIds.includes(e));
+
+  return { addedUserIds, removedUserIds };
+};
+const generateRandomEmail = () => {
+ return randomAlphanumeric(15) + '@gmail.com';
+};
+export const getUniqueValue = async (
+   collection: any,
+   fieldName = 'code',
+   defaultValue?: string,
+ ) => {
+ const getRandomValue = (type: string) =>
+     type === 'email' ? generateRandomEmail() : randomAlphanumeric();
+
+  let uniqueValue = defaultValue || getRandomValue(fieldName);
+  let retryCount = 0;
+  const maxRetries = 100;
+
+  let duplicated = await collection.findOne({ [fieldName]: uniqueValue });
+
+ while (duplicated && retryCount < maxRetries) {
+     uniqueValue = getRandomValue(fieldName);
+     retryCount ++;
+
+     duplicated = await collection.findOne({ [fieldName]: uniqueValue });
+   }
+
+  if (retryCount >= maxRetries) {
+    throw new Error(`Unable to generate unique value for field ${fieldName} after ${maxRetries} attempts`);
+  }
+
+   return uniqueValue;
+ };
 
 export const getDate = (date: Date, day: number): Date => {
   const currentDate = new Date();
