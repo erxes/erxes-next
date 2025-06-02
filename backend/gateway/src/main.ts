@@ -32,7 +32,7 @@ const corsOptions = {
   credentials: true,
   origin: [domain],
 };
-
+//test
 const myQueue = new Queue('gateway-service-discovery', {
   connection: redis,
   defaultJobOptions: {
