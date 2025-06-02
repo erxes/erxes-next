@@ -12,7 +12,9 @@ import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mu
 import { IEngageData } from '@/inbox/@types/conversationMessages';
 import { IConversationDocument } from '../@types/conversations';
 import { cursorPaginate } from 'erxes-api-shared/utils';
+import { FrontlineTRPCContext } from '~/init-trpc';
 
+const t = initTRPC.context<FrontlineTRPCContext>().create();
 interface CreateConversationAndMessageParams {
   userId?: string;
   status?: string;
@@ -68,11 +70,6 @@ const createConversationAndMessage = async (
   });
   return { conversation, message };
 };
-const t = initTRPC.context<ITRPCContext>().create();
-import { FrontlineTRPCContext } from '~/init-trpc';
-
-const t = initTRPC.context<FrontlineTRPCContext>().create();
-
 
 export const integrationsRouter = t.router({
   receive: t.procedure.input(z.any()).mutation(async ({ input, ctx }) => {
@@ -104,72 +101,45 @@ export const integrationsRouter = t.router({
     }
   }),
 
-  remove: t.procedure
-    .input(
-      z.object({
-        _id: z.string().min(1, 'Integration ID is required'),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { models } = ctx;
-      const { _id } = input;
+  remove: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
+    const { _id } = input;
+    if (!_id) {
+      return {
+        status: 'error',
+        error: {
+          code: 'INVALID_INPUT',
+          message: 'Integration ID is required for deletion',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    }
+    const { models } = ctx;
+    try {
+      const conversationIds = await models.Conversations.find({
+        integrationId: _id,
+      }).distinct('_id');
+      await models.ConversationMessages.deleteMany({
+        conversationId: { $in: conversationIds },
+      });
+      await models.Conversations.deleteMany({ integrationId: _id });
+      return models.Integrations.removeIntegration(_id);
+    } catch (error) {
+      console.error('Failed to create integration:', error);
 
-      try {
-        const session = await models.startSession();
-        let result;
-
-        try {
-          await session.withTransaction(async () => {
-            const conversationIds = await models.Conversations.find(
-              {
-                integrationId: _id,
-              },
-              { session },
-            ).distinct('_id');
-
-            await models.ConversationMessages.deleteMany(
-              {
-                conversationId: { $in: conversationIds },
-              },
-              { session },
-            );
-
-            await models.Conversations.deleteMany(
-              { integrationId: _id },
-              { session },
-            );
-
-            result = await models.Integrations.removeIntegration(_id, {
-              session,
-            });
-          });
-
-          return {
-            status: 'success',
-            data: result,
-            message: 'Integration and all related data removed successfully',
-            timestamp: new Date().toISOString(),
-          };
-        } finally {
-          await session.endSession();
-        }
-      } catch (error) {
-        console.error('Integration removal failed:', error);
-
-        return {
-          status: 'error',
-          error: {
-            code: 'INTEGRATION_REMOVAL_FAILED',
-            message: 'Failed to remove integration',
-            details: error instanceof Error ? error.message : undefined,
-            ...(process.env.NODE_ENV === 'development' && {
-              stack: error instanceof Error ? error.stack : undefined,
-            }),
-          },
-          timestamp: new Date().toISOString(),
-        };
-      }
-    }),
+      return {
+        status: 'error',
+        error: {
+          code: 'INTEGRATION_CREATION_FAILED',
+          message: 'Failed to create integration',
+          details: error instanceof Error ? error.message : undefined,
+          ...(process.env.NODE_ENV === 'development' && {
+            stack: error instanceof Error ? error.stack : undefined,
+          }),
+        },
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }),
 
   find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
     const { query = {}, options } = input;
@@ -724,9 +694,10 @@ export const inboxTrpcRouter = t.router({
             await models.Conversations.removeCustomersConversations(
               customerIds,
             );
+
           return {
             status: 'success',
-            deletedCount: result.deletedCount || 0,
+            deletedCount: result?.n ?? 0,
           };
         } catch (error) {
           console.error('Error removing conversations:', {
@@ -752,9 +723,10 @@ export const inboxTrpcRouter = t.router({
             customerId,
             customerIds,
           );
+
           return {
             status: 'success',
-            modifiedCount: result.modifiedCount || 0,
+            data: result,
           };
         } catch (error) {
           console.error('Error changing customer for conversations:', {
@@ -806,46 +778,27 @@ export const inboxTrpcRouter = t.router({
       )
       .mutation(async ({ ctx, input }) => {
         const { models } = ctx;
-        const { _id, force } = input;
-        const session = await models.startSession();
+        const { _id } = input;
 
         try {
-          const transactionResult = await session.withTransaction(async () => {
-            // Delete all related messages first
-            const messagesResult = await models.ConversationMessages.deleteMany(
-              { conversationId: _id },
-              { session },
-            );
-
-            if (!force && messagesResult.deletedCount === 0) {
-              console.warn(`No messages found for conversation ${_id}`);
-            }
-
-            // Then delete the conversation
-            const conversationResult = await models.Conversations.deleteOne(
-              { _id },
-              { session },
-            );
-
-            if (!force && conversationResult.deletedCount === 0) {
-              throw new Error(`Conversation ${_id} not found`);
-            }
-
-            return {
-              conversationDeletedCount: conversationResult.deletedCount,
-              messagesDeletedCount: messagesResult.deletedCount,
-            };
+          const messagesResult = await models.ConversationMessages.deleteMany({
+            conversationId: _id,
+          });
+          const conversationResult = await models.Conversations.deleteOne({
+            _id,
           });
 
           return {
             status: 'success',
-            data: transactionResult,
+            data: {
+              conversationDeleted: conversationResult.deletedCount,
+              messagesDeleted: messagesResult.deletedCount,
+            },
             timestamp: new Date().toISOString(),
-            message: `Deleted conversation and ${transactionResult.messagesDeletedCount} messages`,
+            message: `Deleted conversation and ${messagesResult.deletedCount} messages`,
           };
         } catch (error) {
-          await session.abortTransaction();
-          console.error('Transaction failed:', {
+          console.error('removeConversation failed:', {
             conversationId: _id,
             error: error instanceof Error ? error.stack : error,
           });
@@ -865,8 +818,6 @@ export const inboxTrpcRouter = t.router({
             },
             timestamp: new Date().toISOString(),
           };
-        } finally {
-          await session.endSession();
         }
       }),
 
