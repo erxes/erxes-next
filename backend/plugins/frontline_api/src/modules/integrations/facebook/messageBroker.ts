@@ -3,7 +3,7 @@ import {
   removeAccount,
   repairIntegrations,
   facebookCreateIntegration,
-  removeIntegration
+  removeIntegration,
 } from '@/integrations/facebook/helpers';
 import { handleFacebookMessage } from '@/integrations/facebook/handleFacebookMessage';
 export interface StatusRequest {
@@ -15,49 +15,51 @@ export interface StatusResponse {
   error?: string;
 }
 
-   export async function facebookIntegrations({ subdomain, data  }) {
-      const models = await generateModels(subdomain);
-      const { action, type } = data;
-      let response: {
-        status: 'success' | 'error';
-        data?: any;
-        errorMessage?: string;
-      } = {
-        status: 'success'
-      };
+export async function facebookIntegrations({ subdomain, data }) {
+  const models = await generateModels(subdomain);
+  const { action, type } = data;
+  let response: {
+    status: 'success' | 'error';
+    data?: any;
+    errorMessage?: string;
+  } = {
+    status: 'success',
+  };
 
-      try {
-        if (type === 'facebook') {
-          response.data = await handleFacebookMessage(models, data, subdomain);
-        }
+  try {
+    if (type === 'facebook') {
+      response.data = await handleFacebookMessage(models, data, subdomain);
+    }
 
-        if (action === 'getConfigs') {
-          response.data = await models.FacebookConfigs.find({});
-        }
-      } catch (e) {
-        response = {
-          status: 'error',
-          errorMessage: e.message
-        };
-      }
+    if (action === 'getConfigs') {
+      response.data = await models.FacebookConfigs.find({});
+    }
+  } catch (e) {
+    response = {
+      status: 'error',
+      errorMessage: e.message,
+    };
+  }
 
   return response;
 }
-  
 
-  export async function facebookCreateIntegrations({ subdomain, data }) {
-   try {
-      const models = await generateModels(subdomain);
-      return await facebookCreateIntegration(subdomain, models, data);
+export async function facebookCreateIntegrations({ subdomain, data }) {
+  try {
+    const models = await generateModels(subdomain);
+    return await facebookCreateIntegration(subdomain, models, data);
   } catch (e) {
     return {
-      status: "error",
+      status: 'error',
       errorMessage: `Failed to create integration: ${e.message}`,
     };
   }
 }
 
-export async function facebookUpdateIntegrations({ subdomain, data: { integrationId, doc } }) {
+export async function facebookUpdateIntegrations({
+  subdomain,
+  data: { integrationId, doc },
+}) {
   try {
     const models = await generateModels(subdomain);
     let details;
@@ -65,7 +67,7 @@ export async function facebookUpdateIntegrations({ subdomain, data: { integratio
       details = JSON.parse(doc);
     } catch (parseError) {
       return {
-        status: "error",
+        status: 'error',
         errorMessage: `Invalid payload format: ${parseError.message}`,
       };
     }
@@ -76,69 +78,73 @@ export async function facebookUpdateIntegrations({ subdomain, data: { integratio
 
     if (!integration) {
       return {
-        status: "error",
-        errorMessage: "Integration not found.",
+        status: 'error',
+        errorMessage: 'Integration not found.',
       };
     }
 
     await models.FacebookIntegrations.updateOne(
       { erxesApiId: integrationId },
-      { $set: details }
+      { $set: details },
     );
 
     return {
-      status: "success",
+      status: 'success',
     };
   } catch (e) {
     return {
-      status: "error",
+      status: 'error',
       errorMessage: `Failed to update integration: ${e.message}`,
     };
   }
 }
 
-
-  export async function facebookRemoveIntegrations({ subdomain, data: { integrationId } }) {
-   try {
-      const models = await generateModels(subdomain);
-      return await removeIntegration(subdomain, models, integrationId);
+export async function facebookRemoveIntegrations({
+  subdomain,
+  data: { integrationId },
+}) {
+  try {
+    const models = await generateModels(subdomain);
+    return await removeIntegration(subdomain, models, integrationId);
   } catch (e) {
     return {
-      status: "error",
+      status: 'error',
       errorMessage: `Failed to remove integration: ${e.message}`,
     };
   }
 }
 
+export async function facebookRemoveAccount({
+  subdomain,
+  data: { integrationId },
+}) {
+  try {
+    const models = await generateModels(subdomain);
 
-  export async function facebookRemoveAccount({ subdomain, data: { integrationId } }) {
-   try {
-      const models = await generateModels(subdomain);
-
-     const result = await removeAccount(subdomain, models, integrationId);
-       return {
-        erxesApiId: result,
-        status: 'success'
-      };
-
+    const result = await removeAccount(subdomain, models, integrationId);
+    return {
+      erxesApiId: result,
+      status: 'success',
+    };
   } catch (e) {
     return {
-      status: "error",
+      status: 'error',
       errorMessage: `Failed to remove account: ${e.message}`,
     };
   }
 }
 
-  export async function facebookRepairIntegrations({ subdomain, data: { integrationId } }) {
-   try {
-      const models = await generateModels(subdomain);
+export async function facebookRepairIntegrations({
+  subdomain,
+  data: { integrationId },
+}) {
+  try {
+    const models = await generateModels(subdomain);
 
-      return  await repairIntegrations(subdomain, models, integrationId);
-    
-
+    return await repairIntegrations(subdomain, models, integrationId);
   } catch (e) {
     return {
-      status: "error",
+      status: 'error',
       errorMessage: `Failed to repair integration: ${e.message}`,
     };
   }
@@ -146,7 +152,7 @@ export async function facebookUpdateIntegrations({ subdomain, data: { integratio
 
 export async function facebookStatus({
   subdomain,
-  data: { integrationId }
+  data: { integrationId },
 }: {
   subdomain: string;
   data: { integrationId: string };
@@ -155,32 +161,32 @@ export async function facebookStatus({
     const models = await generateModels(subdomain);
 
     const integration = await models.FacebookIntegrations.findOne({
-      erxesApiId: integrationId
+      erxesApiId: integrationId,
     });
 
     let result = {
-      status: 'healthy'
+      status: 'healthy',
     } as any;
 
     if (integration) {
       result = {
         status: integration.healthStatus || 'healthy',
-        error: integration.error
+        error: integration.error,
       };
     }
 
     return {
       data: result,
-      status: 'success'
+      status: 'success',
     };
   } catch (error) {
     return {
       data: {
         status: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
+        error:
+          error instanceof Error ? error.message : 'Unknown error occurred',
       },
-      status: 'error'
+      status: 'error',
     };
   }
 }
-  

@@ -2,11 +2,14 @@ import * as graph from 'fbgraph';
 import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import { debugError, debugFacebook } from '@/integrations/facebook/debuggers';
-import { generateAttachmentUrl } from "@/integrations/facebook/commonUtils";
-import { IAttachment, IAttachmentMessage } from "@/integrations/facebook/@types/utils";
+import { generateAttachmentUrl } from '@/integrations/facebook/commonUtils';
+import {
+  IAttachment,
+  IAttachmentMessage,
+} from '@/integrations/facebook/@types/utils';
 import { randomAlphanumeric } from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
-import * as AWS from "aws-sdk";
+import * as AWS from 'aws-sdk';
 export const graphRequest = {
   base(method: string, path?: any, accessToken?: any, ...otherParams) {
     // set access token
@@ -62,22 +65,22 @@ export const getPostDetails = async (
   }
 };
 
-
 export const createAWS = async () => {
-      const {   
-      AWS_FORCE_PATH_STYLE,
-      AWS_COMPATIBLE_SERVICE_ENDPOINT,
-      AWS_BUCKET,
-      AWS_SECRET_ACCESS_KEY,
-      AWS_ACCESS_KEY_ID } = await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'query',
-        module: 'users',
-        action: 'getFileUploadConfigs',
-        input: {},
-      });
+  const {
+    AWS_FORCE_PATH_STYLE,
+    AWS_COMPATIBLE_SERVICE_ENDPOINT,
+    AWS_BUCKET,
+    AWS_SECRET_ACCESS_KEY,
+    AWS_ACCESS_KEY_ID,
+  } = await sendTRPCMessage({
+    pluginName: 'core',
+    method: 'query',
+    module: 'users',
+    action: 'getFileUploadConfigs',
+    input: {},
+  });
   if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_BUCKET) {
-    throw new Error("AWS credentials are not configured");
+    throw new Error('AWS credentials are not configured');
   }
 
   const options: {
@@ -87,10 +90,10 @@ export const createAWS = async () => {
     s3ForcePathStyle?: boolean;
   } = {
     accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY
+    secretAccessKey: AWS_SECRET_ACCESS_KEY,
   };
 
-  if (String(AWS_FORCE_PATH_STYLE) === "true") {
+  if (String(AWS_FORCE_PATH_STYLE) === 'true') {
     options.s3ForcePathStyle = true;
   }
 
@@ -113,9 +116,11 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 export const uploadMedia = async (
   subdomain: string,
   url: string,
-  video: boolean
+  video: boolean,
 ) => {
- const mediaFile = `uploads/${randomAlphanumeric(16)}.${video ? 'mp4' : 'jpg'}`
+  const mediaFile = `uploads/${randomAlphanumeric(16)}.${
+    video ? 'mp4' : 'jpg'
+  }`;
   // 1. Cache Handling (with concurrency + TTL)
   if (
     !cachedUploadConfig ||
@@ -147,33 +152,36 @@ export const uploadMedia = async (
 
   // 3. Upload to S3 (unchanged)
   const { AWS_BUCKET } = cachedUploadConfig;
-try {
+  try {
     const s3 = await createAWS();
 
-   
-  // Additional security: Set timeout for fetch request
+    // Additional security: Set timeout for fetch request
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-    
-    const response = await fetch(url, { 
-      signal: controller.signal,
-      redirect: 'error' // Prevent redirects that could bypass our validation
-    });
-    
-    clearTimeout(timeout);
 
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    try {
+      const response = await fetch(url, {
+        signal: controller.signal,
+        redirect: 'error', // Prevent redirects that could bypass our validation
+      });
 
-    const buffer = Buffer.from(await response.arrayBuffer());
-    const data = await s3.upload({
-      Bucket: AWS_BUCKET,
-      Key: mediaFile,
-      Body: buffer,
-      ACL: "public-read",
-      ContentType: video ? "video/mp4" : "image/jpeg",
-    }).promise();
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-    return data.Location;
+      const buffer = Buffer.from(await response.arrayBuffer());
+      const data = await s3
+        .upload({
+          Bucket: AWS_BUCKET,
+          Key: mediaFile,
+          Body: buffer,
+          ACL: 'public-read',
+          ContentType: video ? 'video/mp4' : 'image/jpeg',
+        })
+        .promise();
+
+      return data.Location;
+    } finally {
+      clearTimeout(timeout);
+    }
   } catch (e) {
     debugError(`Upload failed: ${e.message}`);
     return null;
@@ -345,7 +353,6 @@ export const getFacebookUser = async (
   }
 };
 
-
 export const restorePost = async (
   postId: string,
   pageId: string,
@@ -370,7 +377,6 @@ export const restorePost = async (
   }
 };
 
-
 export const sendReply = async (
   models: IModels,
   url: string,
@@ -378,7 +384,6 @@ export const sendReply = async (
   recipientId: string,
   integrationId: string | undefined,
 ) => {
-
   if (!integrationId) {
     throw new Error('integrationId is required');
   }
@@ -397,8 +402,7 @@ export const sendReply = async (
     );
   } catch (e) {
     debugError(
-       `Error occurred while trying to get page access token with ${e.message}`
-
+      `Error occurred while trying to get page access token with ${e.message}`,
     );
     return e;
   }
@@ -438,15 +442,15 @@ export const sendReply = async (
 
 export const generateAttachmentMessages = (
   subdomain: string,
-  attachments: IAttachment[]
+  attachments: IAttachment[],
 ) => {
   const messages: IAttachmentMessage[] = [];
 
   for (const attachment of attachments || []) {
-    let type = "file";
+    let type = 'file';
 
-    if (attachment.type.startsWith("image")) {
-      type = "image";
+    if (attachment.type.startsWith('image')) {
+      type = 'image';
     }
 
     const url = generateAttachmentUrl(subdomain, attachment.url);
@@ -455,9 +459,9 @@ export const generateAttachmentMessages = (
       attachment: {
         type,
         payload: {
-          url
-        }
-      }
+          url,
+        },
+      },
     });
   }
 
@@ -540,18 +544,18 @@ export const getFacebookUserProfilePic = async (
     );
 
     const { UPLOAD_SERVICE_TYPE } = await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'query',
-        module: 'users',
-        action: 'getFileUploadConfigs',
-        input: {},
-      });
+      pluginName: 'core',
+      method: 'query',
+      module: 'users',
+      action: 'getFileUploadConfigs',
+      input: {},
+    });
 
-    if (UPLOAD_SERVICE_TYPE === "AWS") {
+    if (UPLOAD_SERVICE_TYPE === 'AWS') {
       const awsResponse = await uploadMedia(
         subdomain,
         response.location,
-        false
+        false,
       );
 
       return awsResponse as string; // Ensure the return type is string
@@ -566,8 +570,6 @@ export const getFacebookUserProfilePic = async (
     return null;
   }
 };
-
-
 
 export const checkIsAdsOpenThread = (entry: any[] = []) => {
   const messaging = entry[0]?.messaging || [];

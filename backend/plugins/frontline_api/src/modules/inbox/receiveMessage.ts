@@ -2,7 +2,7 @@ import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels } from '~/connectionResolvers';
 import { RPError, RPResult, RPSuccess } from 'erxes-api-shared/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
-import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
+import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
 import { pConversationClientMessageInserted } from './graphql/resolvers/mutations/widget';
 import { IConversationDocument } from './@types/conversations';
 
@@ -50,7 +50,7 @@ export const receiveTrpcMessage = async (
         action: 'findOne',
         input: { selector },
       });
-      
+
     if (primaryPhone) {
       customer = await getCustomer({ primaryPhone });
 
@@ -192,30 +192,34 @@ export const receiveTrpcMessage = async (
     );
 
     // FIXME: Find userId and `conversationClientMessageInserted:${userId}`
-    const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+    const publish = graphqlPubsub.publish as <T>(
+      trigger: string,
+      payload: T,
+    ) => Promise<void>;
 
     await publish('conversationClientMessageInserted', {
       conversationClientMessageInserted: message,
     });
 
-    await publish(`conversationClientMessageInserted:${message.conversationId}`, {
-      conversationClientMessageInserted: message,
-    });
-
+    await publish(
+      `conversationClientMessageInserted:${message.conversationId}`,
+      {
+        conversationClientMessageInserted: message,
+      },
+    );
 
     return sendSuccess({ _id: message._id });
   }
 
   if (action === 'get-configs') {
-     const configs = await sendTRPCMessage({
-          pluginName: 'core',
-          method: 'query', // this is a mutation, not a query
-          module: 'config',
-          action: 'getConfig',
-          input: {},
-        });
+    const configs = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query', // this is a mutation, not a query
+      module: 'config',
+      action: 'getConfig',
+      input: {},
+    });
     return sendSuccess({ configs });
-  
   }
 
   if (action === 'getUserIds') {
@@ -241,7 +245,10 @@ export const receiveIntegrationsNotification = async (subdomain, msg) => {
 
   const models = await generateModels(subdomain);
 
-  const publish = graphqlPubsub.publish as <T>(trigger: string, payload: T) => Promise<void>;
+  const publish = graphqlPubsub.publish as <T>(
+    trigger: string,
+    payload: T,
+  ) => Promise<void>;
 
   if (action === 'external-integration-entry-added') {
     await publish('conversationExternalIntegrationMessageInserted', {});
@@ -275,28 +282,39 @@ export const collectConversations = async (
   subdomain: string,
   { contentId }: { contentId: string },
 ) => {
-const models = await generateModels(subdomain);
-  const results: any[] = [];
-  let conversations: IConversationDocument[] = [];
+  const models = await generateModels(subdomain);
 
-    conversations = await models.Conversations.find({
-      $or: [{ customerId: contentId }, { participatedUserIds: contentId }],
-    }).lean();
-    
+  const conversations = await models.Conversations.find({
+    $or: [{ customerId: contentId }, { participatedUserIds: contentId }],
+  }).lean();
 
-  for (const c of conversations) {
-    results.push({
-      _id: c._id,
-      contentType: 'inbox:conversation',
-      contentId,
-      createdAt: c.createdAt,
-      contentTypeDetail: {
-        integration: await models.Integrations.findOne({
-          _id: c.integrationId,
-        }),
-      },
-    });
-  }
+  // Collect all unique integration IDs
+  const integrationIds = [
+    ...new Set(conversations.map((c) => c.integrationId)),
+  ];
+
+  // Fetch all integrations in one query
+  const integrations = await models.Integrations.find({
+    _id: { $in: integrationIds },
+  }).lean();
+
+  // Map integrations by _id for quick access
+  const integrationMap = new Map(
+    integrations.map((i) => [i._id.toString(), i]),
+  );
+
+  // Build results
+  const results = conversations.map((c) => ({
+    _id: c._id,
+    contentType: 'inbox:conversation',
+    contentId,
+    createdAt: c.createdAt,
+    contentTypeDetail: {
+      integration: c.integrationId
+        ? integrationMap.get(c.integrationId.toString())
+        : undefined,
+    },
+  }));
 
   return results;
 };

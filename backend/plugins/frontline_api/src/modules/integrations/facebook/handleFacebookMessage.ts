@@ -1,9 +1,12 @@
 import { stripHtml } from 'strip-html';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
-import { sendReply, generateAttachmentMessages } from '@/integrations/facebook/utils'
+import {
+  sendReply,
+  generateAttachmentMessages,
+} from '@/integrations/facebook/utils';
 import DOMPurify from 'dompurify';
-import {sendNotifications} from '@/inbox/graphql/resolvers/mutations/conversations'
+import { sendNotifications } from '@/inbox/graphql/resolvers/mutations/conversations';
 
 /**
  * Handle requests from erxes api
@@ -11,33 +14,29 @@ import {sendNotifications} from '@/inbox/graphql/resolvers/mutations/conversatio
 export const handleFacebookMessage = async (
   models: IModels,
   msg,
-  subdomain
+  subdomain,
 ) => {
   const { action, payload } = msg;
   const doc = JSON.parse(payload || '{}');
   if (doc.internal) {
     const conversation = await models.FacebookConversations.getConversation({
-      erxesApiId: doc.conversationId
+      erxesApiId: doc.conversationId,
     });
 
     return models.ConversationMessages.addMessage(
       {
         ...doc,
-        conversationId: conversation._id
+        conversationId: conversation._id,
       },
-      doc.userId
+      doc.userId,
     );
   }
   if (action === 'reply-post') {
-    const {
-      conversationId,
-      content = '',
-      attachments = [],
-      userId
-    } = doc;
-    const commentConversationResult = await models.FacebookCommentConversation.findOne({
-      erxesApiId: conversationId
-    });
+    const { conversationId, content = '', attachments = [], userId } = doc;
+    const commentConversationResult =
+      await models.FacebookCommentConversation.findOne({
+        erxesApiId: conversationId,
+      });
 
     const post = await models.FacebookPostConversations.findOne({
       $or: [
@@ -45,9 +44,9 @@ export const handleFacebookMessage = async (
         {
           postId: commentConversationResult
             ? commentConversationResult.postId
-            : ''
-        }
-      ]
+            : '',
+        },
+      ],
     });
     if (!commentConversationResult) {
       throw new Error('comment not found');
@@ -67,7 +66,7 @@ export const handleFacebookMessage = async (
       userId: userId,
       createdAt: new Date(Date.now()),
       content: strippedContent,
-      parentId: comment_id
+      parentId: comment_id,
     });
 
     let attachment: {
@@ -80,13 +79,13 @@ export const handleFacebookMessage = async (
       attachment = {
         type: 'file',
         payload: {
-          url: attachments[0].url
-        }
+          url: attachments[0].url,
+        },
       };
     }
     let data = {
       message: strippedContent,
-      attachment_url: attachment.payload ? attachment.payload.url : undefined
+      attachment_url: attachment.payload ? attachment.payload.url : undefined,
     };
     const id = commentConversationResult
       ? commentConversationResult.comment_id
@@ -94,27 +93,27 @@ export const handleFacebookMessage = async (
     if (commentConversationResult && commentConversationResult.comment_id) {
       data = {
         message: ` @[${commentConversationResult.senderId}] ${strippedContent}`,
-        attachment_url: attachment.payload ? attachment.payload.url : undefined
+        attachment_url: attachment.payload ? attachment.payload.url : undefined,
       };
     }
     try {
-        const inboxConversation = await models.Conversations.findOne({
-          _id: conversationId
-        })
+      const inboxConversation = await models.Conversations.findOne({
+        _id: conversationId,
+      });
 
-        if(!inboxConversation){
-          throw new Error('conversation not found');
-        }
+      if (!inboxConversation) {
+        throw new Error('conversation not found');
+      }
 
-        await sendReply(
-          models,
-          `${id}/comments`,
-          data,
-          recipientId,
-         inboxConversation.integrationId
-        );
- 
-     const user = await sendTRPCMessage({
+      await sendReply(
+        models,
+        `${id}/comments`,
+        data,
+        recipientId,
+        inboxConversation.integrationId,
+      );
+
+      const user = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
         module: 'users',
@@ -123,16 +122,13 @@ export const handleFacebookMessage = async (
       });
 
       if (user) {
-         sendNotifications(
-          subdomain,
-          {
-            user,
-            conversations: [inboxConversation],
-            type: 'conversationStateChange',
-            mobile: true,
-            messageContent: content
-         }
-        );
+        sendNotifications(subdomain, {
+          user,
+          conversations: [inboxConversation],
+          type: 'conversationStateChange',
+          mobile: true,
+          messageContent: strippedContent,
+        });
         return { status: 'success' };
       } else {
         throw new Error('User not found');
@@ -148,14 +144,14 @@ export const handleFacebookMessage = async (
       conversationId,
       content = '',
       attachments = [],
-      extraInfo
+      extraInfo,
     } = doc;
 
     const tag = extraInfo?.tag || '';
 
     // Extract image URLs from the content
     const images = (content.match(/<img[^>]* src="([^"]*)"/g) || []).map(
-      (img) => img.match(/src="([^"]*)"/)[1]
+      (img) => img.match(/src="([^"]*)"/)[1],
     );
     images.forEach((img) => attachments.push({ type: 'image', url: img }));
 
@@ -165,15 +161,13 @@ export const handleFacebookMessage = async (
       // Remove all tags and any malicious content
       const clean = DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
       // Preserve paragraph breaks, then trim whitespace
-      return clean
-        .replace(/<\/p>/g, '\n')
-        .trim();
-     }
+      return clean.replace(/<\/p>/g, '\n').trim();
+    }
 
-   const strippedContent = sanitizeAndFormat(content);
+    const strippedContent = sanitizeAndFormat(content);
 
     const conversation = await models.FacebookConversations.getConversation({
-      erxesApiId: conversationId
+      erxesApiId: conversationId,
     });
     const { senderId } = conversation;
     let localMessage;
@@ -187,10 +181,10 @@ export const handleFacebookMessage = async (
           {
             recipient: { id: senderId },
             message: { text: strippedContent },
-            tag
+            tag,
           },
           conversation.recipientId,
-          integrationId
+          integrationId,
         );
 
         if (resp) {
@@ -198,9 +192,9 @@ export const handleFacebookMessage = async (
             {
               ...doc,
               conversationId: conversation._id,
-              mid: resp.message_id
+              mid: resp.message_id,
             },
-            doc.userId
+            doc.userId,
           );
         }
       }
@@ -208,7 +202,7 @@ export const handleFacebookMessage = async (
       // Send attachments
       for (const message of generateAttachmentMessages(
         subdomain,
-        attachments
+        attachments,
       )) {
         const resp = await sendReply(
           models,
@@ -216,10 +210,10 @@ export const handleFacebookMessage = async (
           {
             recipient: { id: senderId },
             message,
-            tag
+            tag,
           },
           conversation.recipientId,
-          integrationId
+          integrationId,
         );
 
         if (resp) {
@@ -227,22 +221,24 @@ export const handleFacebookMessage = async (
             {
               ...doc,
               conversationId: conversation._id,
-              mid: resp.message_id
+              mid: resp.message_id,
             },
-            doc.userId
+            doc.userId,
           );
         }
       }
     } catch (e) {
       if (localMessage) {
-        await models.FacebookConversationMessages.deleteOne({ _id: localMessage._id });
+        await models.FacebookConversationMessages.deleteOne({
+          _id: localMessage._id,
+        });
       }
       throw new Error(e.message);
     }
 
     return {
       status: 'success',
-      data: { ...localMessage.toObject(), conversationId }
+      data: { ...localMessage.toObject(), conversationId },
     };
   }
 };
