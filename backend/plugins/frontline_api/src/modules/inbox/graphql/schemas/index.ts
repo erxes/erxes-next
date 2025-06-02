@@ -29,5 +29,5 @@ export const queries = `
 export const mutations = `
   ${ChannelMutations}
   ${ConversationMutations}
-  ${IntegrationMutations} 
+  ${IntegrationMutations}
 `;
