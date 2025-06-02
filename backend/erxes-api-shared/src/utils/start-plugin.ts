@@ -178,15 +178,15 @@ export async function startPlugin(
     next();
   });
 
-  // Error handling middleware
-  app.use((error: any, _req: any, res: any) => {
-    // const msg = filterXSS(error.message);
-    const msg = error.message;
+  // // Error handling middleware
+  // app.use((error: any, _req: any, res: any) => {
+  //   // const msg = filterXSS(error.message);
+  //   const msg = error.message;
 
-    // debugError(`Error: ${msg}`);
+  //   // debugError(`Error: ${msg}`);
 
-    res.status(500).send(msg);
-  });
+  //   res.status(500).send(msg);
+  // });
 
   const httpServer = http.createServer(app);
 
