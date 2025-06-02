@@ -9,6 +9,7 @@ import {
   DepartmentField,
   DescriptionField,
 } from '../../GeneralFormFields';
+import { InventoryForm } from './InventoryForm';
 // import { InventoryForm } from '../../../inventory/components/InventoryForm';
 
 export const InvIncomeForm = ({
@@ -30,11 +31,11 @@ export const InvIncomeForm = ({
         <VatForm form={form} journalIndex={index} isSameSide={true} isWithTax={false} />
       </div>
 
-      {/* <InventoryForm
+      <InventoryForm
         form={form}
         journalIndex={index}
         journal={TrJournalEnum.INV_INCOME}
-      /> */}
+      />
     </>
   );
 };
