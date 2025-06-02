@@ -48,14 +48,13 @@ export const pConversationClientMessageInserted = async (
   );
 
   for (const userId of channelMemberIds) {
-    (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-      `conversationClientMessageInserted:${subdomain}:${userId}`,
-      {
-        conversationClientMessageInserted: message,
-        subdomain,
-        conversation,
-        integration,
-      },
-    );
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationClientMessageInserted:${subdomain}:${userId}`, {
+      conversationClientMessageInserted: message,
+      subdomain,
+      conversation,
+      integration,
+    });
   }
 };

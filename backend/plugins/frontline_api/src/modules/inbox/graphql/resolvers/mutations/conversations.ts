@@ -87,12 +87,11 @@ export const publishConversationsChanged = async (
   const models = await generateModels(subdomain);
 
   for (const _id of _ids) {
-    (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-      `conversationChanged:${_id}`,
-      {
-        conversationChanged: { conversationId: _id, type },
-      },
-    );
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationChanged:${_id}`, {
+      conversationChanged: { conversationId: _id, type },
+    });
     await models.Conversations.findOne({ _id });
   }
 
@@ -120,15 +119,14 @@ export const publishMessage = async (
         message.conversationId,
       );
 
-    (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-      `conversationAdminMessageInserted:${customerId}`,
-      {
-        conversationAdminMessageInserted: {
-          customerId,
-          unreadCount,
-        },
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationAdminMessageInserted:${customerId}`, {
+      conversationAdminMessageInserted: {
+        customerId,
+        unreadCount,
       },
-    );
+    });
   }
 };
 
@@ -466,12 +464,11 @@ export const conversationMutations = {
         },
       ],
     });
-    (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-      `conversationClientMessageInserted:${message.conversationId}`,
-      {
-        conversationClientMessageInserted: message,
-      },
-    );
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationClientMessageInserted:${message.conversationId}`, {
+      conversationClientMessageInserted: message,
+    });
 
     return models.Conversations.updateOne(
       { _id },
