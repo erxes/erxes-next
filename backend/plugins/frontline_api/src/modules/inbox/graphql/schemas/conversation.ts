@@ -31,7 +31,7 @@ export const types = `
 
     messages: [ConversationMessage]
     callProAudio: String
-    
+
     tags: [Tag]
     customer: Customer
     integration: Integration
@@ -70,7 +70,7 @@ export const types = `
     userId: String
     createdAt: Date
     isCustomerRead: Boolean
-    engageData: EngageData 
+    engageData: EngageData
     formWidgetData: JSON
     messengerAppData: JSON
     botGreetMessage: String

@@ -1,18 +1,21 @@
 import { IModels } from '~/connectionResolvers';
-import {IPostParams} from '@/integrations/facebook/@types/utils'
+import { IPostParams } from '@/integrations/facebook/@types/utils';
 import { INTEGRATION_KINDS } from '@/integrations/facebook/constants';
- import { getOrCreateCustomer, getOrCreatePost } from '@/integrations/facebook/controller/store';
+import {
+  getOrCreateCustomer,
+  getOrCreatePost,
+} from '@/integrations/facebook/controller/store';
 export const receivePost = async (
   models: IModels,
   subdomain: string,
   params: IPostParams,
-  pageId: string
+  pageId: string,
 ) => {
   const integration = await models.FacebookIntegrations.findOne({
     $and: [
       { facebookPageIds: { $in: pageId } },
-      { kind: INTEGRATION_KINDS.POST }
-    ]
+      { kind: INTEGRATION_KINDS.POST },
+    ],
   });
 
   if (!integration) {
@@ -21,15 +24,15 @@ export const receivePost = async (
 
   const userId = params.from.id;
 
- const customer = await getOrCreateCustomer(
+  const customer = await getOrCreateCustomer(
     models,
     subdomain,
     pageId,
     userId,
-    INTEGRATION_KINDS.POST
+    INTEGRATION_KINDS.POST,
   );
-  if (!customer){
+  if (!customer) {
     throw new Error('Customer not found');
   }
-  await getOrCreatePost(models, subdomain, params, pageId, userId,integration);
+  await getOrCreatePost(models, subdomain, params, pageId, userId, integration);
 };

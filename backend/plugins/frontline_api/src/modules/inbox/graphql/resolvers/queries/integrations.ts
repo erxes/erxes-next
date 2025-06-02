@@ -1,13 +1,14 @@
 import { getIntegrationsKinds } from '@/inbox/utils';
-import { IContext, } from '~/connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 import { cursorPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
-import {IChannelDocument} from '@/inbox/@types/channels'
+import { IChannelDocument } from '@/inbox/@types/channels';
+import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 const generateFilterQuery = async (
   { kind, channelId, brandId, searchValue, tag, status },
   models,
 ) => {
- const query: any = {};
+  const query: any = {};
 
   if (kind) {
     query.kind = kind;
@@ -30,20 +31,23 @@ const generateFilterQuery = async (
 
   // filtering integrations by tag
   if (tag) {
-    try{
-     const object = await sendTRPCMessage({
+    try {
+      const object = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
         module: 'tags',
         action: 'findOne',
         input: {
-         type: 'inbox:integration'
+          type: 'inbox:integration',
         },
       });
 
-     query.tagIds = { $in: [tag, ...(object?.relatedIds || [])] };
+      query.tagIds = { $in: [tag, ...(object?.relatedIds || [])] };
     } catch (error) {
-      console.warn('Failed to fetch related tags, using original tag only:', error);
+      console.warn(
+        'Failed to fetch related tags, using original tag only:',
+        error,
+      );
       query.tagIds = { $in: [tag] };
     }
   }
@@ -73,7 +77,7 @@ export const integrationQueries = {
       formLoadType: string;
       sortField: string;
       sortDirection: number;
-    },
+    } & ICursorPaginateParams,
     { models, user }: IContext,
   ) {
     if (!user) {
@@ -119,12 +123,8 @@ export const integrationQueries = {
   /**
    * Get lead all integration list
    */
-  async allLeadIntegrations(
-    _root,
-    _args,
-    { models }: IContext,
-  ) {
-     const query = {
+  async allLeadIntegrations(_root, _args, { models }: IContext) {
+    const query = {
       kind: 'lead',
     };
 
@@ -141,22 +141,21 @@ export const integrationQueries = {
       const kindMap = await getIntegrationsKinds();
 
       for (const kind of Object.keys(kindMap)) {
-          if (
-            (await models.Integrations.findIntegrations({
-              kind,
-            }).countDocuments()) > 0
-          ) {
-            usedTypes.push({ _id: kind, name: kindMap[kind] });
-          }
+        if (
+          (await models.Integrations.findIntegrations({
+            kind,
+          }).countDocuments()) > 0
+        ) {
+          usedTypes.push({ _id: kind, name: kindMap[kind] });
         }
+      }
 
-        return usedTypes;
+      return usedTypes;
     } catch (error) {
       console.error('Error in integrationsGetUsedTypes:', error);
       throw new Error('Failed to fetch used integration types');
     }
   },
-
 
   /**
    * Get one integration
@@ -183,7 +182,7 @@ export const integrationQueries = {
       status: string;
       formLoadType: string;
     },
-    { models,  }: IContext,
+    { models }: IContext,
   ) {
     const counts = {
       total: 0,
@@ -195,31 +194,31 @@ export const integrationQueries = {
     };
 
     const qry = {
-      ...(await generateFilterQuery( args, models)),
+      ...(await generateFilterQuery(args, models)),
     };
 
     const count = async (query) => {
       return models.Integrations.countDocuments(query);
     };
 
-     const tags = await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'query',
-        module: 'tags',
-        action: 'find',
-        input: {
-         type: 'inbox:integration'
-        },
-      });
+    const tags = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'tags',
+      action: 'find',
+      input: {
+        type: 'inbox:integration',
+      },
+    });
 
-  for (const tag of tags) {
+    for (const tag of tags) {
       const countQueryResult = await count({ tagIds: tag._id, ...qry });
 
       counts.byTag[tag._id] = !args.tag
         ? countQueryResult
         : args.tag === tag._id
-          ? countQueryResult
-          : 0;
+        ? countQueryResult
+        : 0;
     }
 
     // Counting integrations by kind
@@ -230,45 +229,45 @@ export const integrationQueries = {
       counts.byKind[kind] = !args.kind
         ? countQueryResult
         : args.kind === kind
-          ? countQueryResult
-          : 0;
+        ? countQueryResult
+        : 0;
     }
 
     // Counting integrations by channel
-  const channels = await models.Channels.find({}); // No need for 'as IChannelDocument[]' if models.Channels is typed
-  if (channels) {
-    for (const channel of channels as IChannelDocument[]) {
-      const countQueryResult = await count({
-        _id: { $in: channel.integrationIds },
-        ...qry,
-      });
+    const channels = await models.Channels.find({}); // No need for 'as IChannelDocument[]' if models.Channels is typed
+    if (channels) {
+      for (const channel of channels as IChannelDocument[]) {
+        const countQueryResult = await count({
+          _id: { $in: channel.integrationIds },
+          ...qry,
+        });
 
-      counts.byChannel[channel._id as string] = !args.channelId
-        ? countQueryResult
-        : args.channelId === channel._id
+        counts.byChannel[channel._id as string] = !args.channelId
+          ? countQueryResult
+          : args.channelId === channel._id
           ? countQueryResult
           : 0;
+      }
     }
-  }
- 
+
     // Counting integrations by brand
- 
-     const brands = await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'query',
-        module: 'brands',
-        action: 'find',
-        input: {
-         query: {}
-        },
-      });
+
+    const brands = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'brands',
+      action: 'find',
+      input: {
+        query: {},
+      },
+    });
     for (const brand of brands) {
       const countQueryResult = await count({ brandId: brand._id, ...qry });
       counts.byBrand[brand._id] = !args.brandId
         ? countQueryResult
         : args.brandId === brand._id
-          ? countQueryResult
-          : 0;
+        ? countQueryResult
+        : 0;
     }
 
     counts.byStatus.active = await count({ isActive: true, ...qry });

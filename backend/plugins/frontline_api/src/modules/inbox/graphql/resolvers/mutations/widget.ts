@@ -1,14 +1,14 @@
-import graphqlPubsub  from 'erxes-api-shared/utils/graphqlPubSub'
+import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
 export const pConversationClientMessageInserted = async (
   models,
   subdomain,
-  message: { _id: string; [other: string]: any }
+  message: { _id: string; [other: string]: any },
 ) => {
-   const conversation = await models.Conversations.findOne(
+  const conversation = await models.Conversations.findOne(
     {
-      _id: message.conversationId
+      _id: message.conversationId,
     },
-    { integrationId: 1 }
+    { integrationId: 1 },
   );
 
   let integration;
@@ -16,9 +16,9 @@ export const pConversationClientMessageInserted = async (
   if (conversation) {
     integration = await models.Integrations.findOne(
       {
-        _id: conversation.integrationId
+        _id: conversation.integrationId,
       },
-      { _id: 1, name: 1 }
+      { _id: 1, name: 1 },
     );
   }
 
@@ -27,9 +27,9 @@ export const pConversationClientMessageInserted = async (
   if (integration) {
     const channels = await models.Channels.find(
       {
-        integrationIds: { $in: [integration._id] }
+        integrationIds: { $in: [integration._id] },
       },
-      { _id: 1, memberIds: 1 }
+      { _id: 1, memberIds: 1 },
     );
 
     for (const channel of channels) {
@@ -43,8 +43,8 @@ export const pConversationClientMessageInserted = async (
       conversationMessageInserted: message,
       subdomain,
       conversation,
-      integration
-    }
+      integration,
+    },
   );
 
   for (const userId of channelMemberIds) {
@@ -55,7 +55,7 @@ export const pConversationClientMessageInserted = async (
         subdomain,
         conversation,
         integration,
-      }
+      },
     );
   }
 };

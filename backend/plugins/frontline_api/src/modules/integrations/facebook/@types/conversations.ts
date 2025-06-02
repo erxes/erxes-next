@@ -1,4 +1,4 @@
-import {HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export interface IFacebookConversation {
   // id on erxes-api
@@ -13,4 +13,5 @@ export interface IFacebookConversation {
   botId?: string;
 }
 
-export type IFacebookConversationDocument = HydratedDocument<IFacebookConversation>;
+export type IFacebookConversationDocument =
+  HydratedDocument<IFacebookConversation>;

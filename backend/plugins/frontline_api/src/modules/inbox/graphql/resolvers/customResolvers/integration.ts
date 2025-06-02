@@ -1,22 +1,22 @@
 import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { IContext } from '~/connectionResolvers';
-import {facebookStatus} from '@/integrations/facebook/messageBroker'
+import { facebookStatus } from '@/integrations/facebook/messageBroker';
 export const integrationStatus = async (
   serviceName: string,
   subdomain: string,
- data: { integrationId: string }
+  data: { integrationId: string },
 ) => {
-try {
+  try {
     switch (serviceName) {
       case 'facebook':
-      return await facebookStatus({ subdomain, data });
+        return await facebookStatus({ subdomain, data });
 
       case 'instagram':
-       // TODO: Implement Instagram status check
+        // TODO: Implement Instagram status check
         break;
 
       case 'mobinetSms':
-      //  TODO: Implement mobinetSms status check
+        //  TODO: Implement mobinetSms status check
         break;
 
       default:
@@ -24,7 +24,7 @@ try {
     }
   } catch (e) {
     throw new Error(
-      `Failed to check integration status for ${serviceName}. Error: ${e.message}. Please check the integrations list and resolve any issues.`
+      `Failed to check integration status for ${serviceName}. Error: ${e.message}. Please check the integrations list and resolve any issues.`,
     );
   }
 };
@@ -94,7 +94,7 @@ export default {
     return [];
   },
 
- async healthStatus(
+  async healthStatus(
     integration: IIntegrationDocument,
     _args,
     { subdomain }: IContext,
@@ -106,18 +106,15 @@ export default {
     if (kind === 'messenger') {
       return { status: 'healthy' };
     }
-      try {
-        const status = await integrationStatus(
-          kind,
-          subdomain,
-          { integrationId: integration._id }
-        );
+    try {
+      const status = await integrationStatus(kind, subdomain, {
+        integrationId: integration._id,
+      });
 
-        return status;
-      } catch (e) {
-        return { status: 'healthy' };
-      }
-    
+      return status;
+    } catch (e) {
+      return { status: 'healthy' };
+    }
   },
 
   async details(
@@ -125,7 +122,6 @@ export default {
     _args,
     { subdomain }: IContext,
   ) {
-
     const serviceName = integration.kind.includes('facebook')
       ? 'facebook'
       : integration.kind;
@@ -133,9 +129,6 @@ export default {
     if (integration.kind === 'messenger') {
       return null;
     }
-    return serviceName
- 
+    return serviceName;
   },
-
-
 };

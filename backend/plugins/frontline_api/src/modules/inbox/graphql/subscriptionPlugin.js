@@ -1,6 +1,5 @@
 import { withFilter } from 'graphql-subscriptions';
 
-
 module.exports = {
   name: 'inbox',
   typeDefs: `
@@ -29,7 +28,9 @@ module.exports = {
         resolve(payload, args, { dataSources: { gatewayDataSource } }, info) {
           if (!payload) {
             console.error(
-              `Subscription resolver error: conversationMessageInserted: payload is ${JSON.stringify(payload)}`,
+              `Subscription resolver error: conversationMessageInserted: payload is ${JSON.stringify(
+                payload,
+              )}`,
             );
             return;
           }

@@ -220,7 +220,10 @@ export const facebookQueries = {
       erxesApiId: conversationId,
     });
     let messages: IFacebookConversationMessageDocument[] = [];
-    const query = await buildSelector(conversationId, models.FacebookConversations);
+    const query = await buildSelector(
+      conversationId,
+      models.FacebookConversations,
+    );
     if (conversation) {
       if (limit) {
         const sort: any = getFirst ? { createdAt: 1 } : { createdAt: -1 };
@@ -273,7 +276,10 @@ export const facebookQueries = {
     { conversationId }: { conversationId: string },
     { models }: IContext,
   ) {
-    const selector = await buildSelector(conversationId, models.FacebookConversations);
+    const selector = await buildSelector(
+      conversationId,
+      models.FacebookConversations,
+    );
 
     return models.FacebookConversationMessages.countDocuments(selector);
   },
@@ -460,7 +466,10 @@ export const facebookQueries = {
       return false;
     }
 
-    const query = await buildSelector(conversationId, models.FacebookConversations);
+    const query = await buildSelector(
+      conversationId,
+      models.FacebookConversations,
+    );
 
     const messages = await models.FacebookConversationMessages.find({
       ...query,
