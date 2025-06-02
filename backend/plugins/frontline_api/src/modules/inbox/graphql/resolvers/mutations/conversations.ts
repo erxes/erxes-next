@@ -9,7 +9,7 @@ import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { AUTO_BOT_MESSAGES } from '@/inbox/db/definitions/constants';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { facebookIntegrations } from '@/integrations/facebook/messageBroker';
-import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 /**
  * conversation notrification receiver ids

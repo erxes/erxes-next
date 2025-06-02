@@ -1,4 +1,4 @@
-import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 export const pConversationClientMessageInserted = async (
   models,
   subdomain,

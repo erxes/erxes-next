@@ -9,7 +9,7 @@ import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/int
 import { IFacebookCustomer } from '@/integrations/facebook/@types/customers';
 import { getFacebookUser } from '@/integrations/facebook/utils';
 import { receiveTrpcMessage } from '@/inbox/receiveMessage';
-import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import {

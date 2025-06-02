@@ -3,6 +3,7 @@ import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
+
 startPlugin({
   name: 'frontline',
   port: 3302,
@@ -10,12 +11,13 @@ startPlugin({
     typeDefs: await typeDefs(),
     resolvers,
   }),
-  hasSubscriptions: true,
-  subscriptionPluginPath: require("path").resolve(
-    __dirname,
-    "graphql",
-    "subscriptionPlugin.js"
-  ),
+
+  // hasSubscriptions: false,
+  // subscriptionPluginPath: require('path').resolve(
+  //   __dirname,
+  //   'graphql',
+  //   'subscriptionPlugin.js',
+  // ),
   apolloServerContext: async (subdomain, context) => {
     const models = await generateModels(subdomain);
 

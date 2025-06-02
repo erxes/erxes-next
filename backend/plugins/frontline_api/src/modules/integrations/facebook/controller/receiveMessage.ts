@@ -6,7 +6,7 @@ import { receiveTrpcMessage } from '@/inbox/receiveMessage';
 import { debugFacebook } from '@/integrations/facebook/debuggers';
 import { Activity } from '@/integrations/facebook/@types/utils';
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget';
-import graphqlPubsub from 'erxes-api-shared/utils/graphqlPubSub';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 export const receiveMessage = async (
   models: IModels,
