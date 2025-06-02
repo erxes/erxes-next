@@ -1,7 +1,7 @@
 import { RecordTable } from 'erxes-ui';
 
 import { productColumns } from '@/products/components/ProductColumns';
-import { ProductCommandBar } from '@/products/components/ProductCommandBar';
+import { ProductCommandBar } from '@/products/components/product-command-bar/ProductCommandBar';
 import { useProducts } from '@/products/hooks/useProducts';
 export const ProductsRecordTable = () => {
   const { products, handleFetchMore, loading, pageInfo } = useProducts();

@@ -2,9 +2,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Collapsible } from 'erxes-ui';
-import { TagsManager } from './tagsManager';
 import { useParams } from 'react-router-dom';
 import { useProductDetail } from '../hooks/useProductDetail';
+import { TagsManager } from './tagsManager';
 
 export function ProductProperties() {
   return (
@@ -102,8 +102,8 @@ function TagsSection() {
                   productId={product?._id}
                   initialTags={product?.tagsId || []}
                   uom={product?.uom || ''}
-                  onTagsUpdated={() => refetch()}
-                />
+                    onTagsUpdated={() => refetch()}
+                  />
               </div>
             </motion.div>
           </Collapsible.Content>

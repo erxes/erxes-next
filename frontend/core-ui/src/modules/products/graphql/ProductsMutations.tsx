@@ -96,6 +96,7 @@ const productsEdit = gql`
     $_id: String!
     $name: String
     $shortName: String
+    $barcodes: [String]
     $categoryId: String
     $type: String
     $description: String
@@ -111,6 +112,7 @@ const productsEdit = gql`
       name: $name
       shortName: $shortName
       categoryId: $categoryId
+      barcodes: $barcodes
       type: $type
       description: $description
       unitPrice: $unitPrice

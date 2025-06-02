@@ -9,7 +9,7 @@ import {
 import { Form, Input, Select, CurrencyField } from 'erxes-ui';
 import { ProductFormValues } from './formSchema';
 import { useUom } from '@/products/hooks/useUom';
-import { SelectCategory } from '../../product-category/components/SelectCategory';
+import { SelectCategory } from 'ui-modules';
 
 const types = [
   { label: 'Product', value: 'product', icon: IconPackage },
