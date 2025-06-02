@@ -7,16 +7,38 @@ import {
   SelectDepartment,
 } from 'ui-modules';
 import { IAccount } from '@/settings/account/types/Account';
+import { useWatch } from 'react-hook-form';
 
 export const AccountField = ({
   form,
   index,
   filter,
+  allDetails
 }: ICommonFieldProps & {
   filter?: any;
+  allDetails?: boolean
 }) => {
+  const details = useWatch({
+    control: form.control,
+    name: `trDocs.${index}.details`
+  })
   const onChangeAccount = (account: IAccount) => {
-    form.setValue(`trDocs.${index}.details.0.account`, account as any);
+    if (allDetails) {
+      details.forEach((_d, ind) => {
+        form.setValue(`trDocs.${index}.details.${ind}.account`, account as any);
+        form.setValue(`trDocs.${index}.details.${ind}.accountId`, account._id as any);
+      });
+    } else {
+      form.setValue(`trDocs.${index}.details.0.account`, account as any);
+    }
+
+    if (account?.branchId) {
+      form.setValue(`trDocs.${index}.branchId`, account.branchId);
+    }
+
+    if (account?.departmentId) {
+      form.setValue(`trDocs.${index}.departmentId`, account.departmentId);
+    }
   }
   return (
     <Form.Field

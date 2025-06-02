@@ -79,18 +79,20 @@ export const CurrencyForm = ({
   };
 
   useEffect(() => {
-    if (
-      spotRate &&
-      amount &&
-      amount !== spotRate * (detail.currencyAmount || 0)
-    ) {
+    form.setValue(`trDocs.${journalIndex}.details.0.amount`, spotRate * (detail.currencyAmount ?? 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spotRate]);
+
+  useEffect(() => {
+    if (spotRate) {
       setChangingAmount(true);
       form.setValue(
         `trDocs.${journalIndex}.details.0.currencyAmount`,
         amount / spotRate,
       );
     }
-  }, [amount, form, journalIndex, spotRate, detail.currencyAmount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount]);
 
   useEffect(() => {
     if (!diffAmount) {
@@ -115,7 +117,7 @@ export const CurrencyForm = ({
       followType: 'currencyDiff',
       details: [{
         ...(curr?.details || [{}])[0],
-        accountId: (detail?.followInfos as any).currencyDiffAccountId ?? '',
+        accountId: (detail?.followInfos as any)?.currencyDiffAccountId ?? '',
         side,
         amount: diffAmount
       }],
@@ -125,7 +127,8 @@ export const CurrencyForm = ({
     };
 
     setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'currencyDiff')), currencyDiffFtr]);
-  }, [detail, diffAmount, followTrDocs, form, journalIndex, setFollowTrDocs, side, trDoc]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detail, diffAmount, side]);
 
   if (
     !detail?.account?.currency ||

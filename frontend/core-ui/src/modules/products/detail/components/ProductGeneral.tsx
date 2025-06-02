@@ -2,11 +2,10 @@
 
 import { IconUpload } from '@tabler/icons-react';
 import { useProductDetail } from '../hooks/useProductDetail';
-import { Skeleton, Label, Input, Select, Button } from 'erxes-ui';
+import { Skeleton, Label, Input, Select, Button, CurrencyFormatedDisplay, InputNumber } from 'erxes-ui';
 import { useProductsEdit } from '@/products/hooks/useProductsEdit';
 import { PRODUCT_TYPE_OPTIONS } from '@/products/constants/ProductConstants';
-import { IconCurrencyDollar } from '@tabler/icons-react';
-import { CurrencyDisplay, CurrencyCode, CurrencyInput } from 'erxes-ui';
+import { CurrencyDisplay, CurrencyCode } from 'erxes-ui';
 import { useState, useEffect } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { SelectCategory } from '@/products/product-category/components/SelectCategory';
@@ -196,7 +195,6 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
         </div>
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <IconCurrencyDollar className="h-4 w-4" />
             <Label
               htmlFor="unit-price"
               className="text-xs font-semibold text-gray-500 tracking-wider mb-1"
@@ -207,9 +205,9 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
           {isEditingPrice ? (
             <div className="flex items-center space-x-2">
               <div className="flex-grow">
-                <CurrencyInput
+                <InputNumber
                   value={priceValue}
-                  onChange={(value: number) => setPriceValue(value)}
+                  onChange={(value) => setPriceValue(Number(value) || 0)}
                 />
               </div>
               <div className="flex space-x-1">
@@ -234,7 +232,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
               className="flex items-center justify-between p-2 border rounded-md cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
               onClick={() => setIsEditingPrice(true)}
             >
-              <CurrencyDisplay
+              <CurrencyFormatedDisplay
                 currencyValue={{
                   currencyCode: CurrencyCode.USD,
                   amountMicros: priceValue * 1000000,
@@ -324,7 +322,7 @@ export const ProductGeneral = ({ form }: ProductGeneralProps) => {
             BRAND
           </Label>
           <BrandField
-            values={scopeBrandIds || []}
+            value={scopeBrandIds || []}
             onChange={(value) => handleInputChange('scopeBrandIds', value)}
           />
         </div>

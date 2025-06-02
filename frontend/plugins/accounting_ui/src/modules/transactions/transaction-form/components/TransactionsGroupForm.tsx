@@ -67,7 +67,9 @@ export const TransactionsGroupForm = () => {
   const { loading: configsLoading } = useMainConfigs();
   const form = useForm<TAddTransactionGroup>({
     resolver: zodResolver(transactionGroupSchema),
-
+    defaultValues: {
+      date: new Date(),
+    },
   });
 
   const [defaultJournal] = useQueryState<TrJournalEnum>('defaultJournal');
