@@ -1,7 +1,6 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
-import {getFileUploadConfigs} from '@/organization/settings/utils/configs'
-const t = initTRPC.context<ITRPCContext>().create();
+import { getFileUploadConfigs } from '@/organization/settings/utils/configs';
 import { CoreTRPCContext } from '~/init-trpc';
 
 const t = initTRPC.context<CoreTRPCContext>().create();
@@ -30,7 +29,7 @@ export const configTrpcRouter = t.router({
       return await models.Configs.find(query).distinct('value');
     }),
     getFileUploadConfigs: t.procedure.input(z.any()).query(async () => {
-       return await getFileUploadConfigs();
+      return await getFileUploadConfigs();
     }),
     createOrUpdateConfig: t.procedure
       .input(z.any())
