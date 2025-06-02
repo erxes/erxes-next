@@ -30,7 +30,7 @@ const TeamMemberTable = () => {
         hasNextPage={hasNextPage}
         loading={loading}
         dataLength={users?.length}
-        sessionKey="products_cursor"
+        sessionKey="users_cursor"
       >
         <RecordTable>
           <RecordTable.Header />

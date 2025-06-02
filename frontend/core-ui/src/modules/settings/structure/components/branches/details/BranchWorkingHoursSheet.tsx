@@ -1,7 +1,7 @@
 import { Button, Sheet, Switch, useQueryState } from 'erxes-ui';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { TimePicker } from './TimePciker';
+import { TimePicker } from './TimePicker';
 import { format } from 'date-fns';
 
 export const BranchWorkingHoursSheet = () => {

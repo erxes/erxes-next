@@ -2,7 +2,7 @@ import { Button, Sheet, Switch, useQueryState } from 'erxes-ui';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { format } from 'date-fns';
-import { TimePicker } from '../../branches/details/TimePciker';
+import { TimePicker } from '../../branches/details/TimePicker';
 
 export const DepartmentWorkingHoursSheet = () => {
   const [workingHoursId] = useQueryState('workingHoursId');

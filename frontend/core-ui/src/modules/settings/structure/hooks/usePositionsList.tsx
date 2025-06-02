@@ -27,7 +27,7 @@ export const usePositionsList = (options?: OperationVariables) => {
   return {
     positions: positionsWithHasChildren,
     sortedPositions: [...(positionsWithHasChildren || [])].sort((a, b) =>
-      a.order?.localeCompare(b.order),
+      (a.order ?? '')?.localeCompare(b.order ?? ''),
     ),
     totalCount: data ? data.positionsMain.totalCount : 0,
     loading,
