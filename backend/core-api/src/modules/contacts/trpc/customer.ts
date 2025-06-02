@@ -7,7 +7,7 @@ import { createOrUpdate } from '../utils';
 const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const customerRouter = t.router({
-  customer: t.router({
+  customers: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
