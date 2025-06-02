@@ -8,7 +8,7 @@ import { CoreTRPCContext } from '~/init-trpc';
 const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const companyTrpcRouter = t.router({
-  company: t.router({
+  companies: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
