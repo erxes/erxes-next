@@ -63,7 +63,6 @@ const productsAdd = gql`
     }
   }
 `;
-
 const productsEdit = gql`
   mutation ProductsEdit(
     $_id: String!
@@ -99,10 +98,4 @@ const productsEdit = gql`
     }
   }
 `;
-  const productRemove = gql`
-    mutation productsRemove($productIds: [String!]) {
-        productsRemove(productIds: $productIds)
-    }`
-
-
-export const productsMutations = { productsEdit, productsAdd , productRemove };
+export const productsMutations = { productsEdit, productsAdd };

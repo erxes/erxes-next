@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const productCategoryDetail = gql`
+const productCategoryDetail = gql`
   query productDetail($_id: String) {
     productDetail(_id: $_id) {
       _id
@@ -84,3 +84,5 @@ export const productCategoryDetail = gql`
     }
   }
 `;
+
+export const productDetailQueries = {productCategoryDetail};

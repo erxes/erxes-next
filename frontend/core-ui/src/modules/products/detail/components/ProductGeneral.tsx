@@ -10,6 +10,7 @@ import { FileUploadSection } from './FileUploadSection';
 import { useProductFormData } from '../hooks/useProductFormData';
 import { ProductEditorField } from './ProductEditor';
 import { ProductFormValues } from '@/products/constants/ProductFormSchema';
+import { Spinner } from 'erxes-ui';
 
 interface ProductDetailFormProps {
   form: UseFormReturn<ProductFormValues>;
@@ -25,8 +26,9 @@ export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-full">
-        Loading product details...
+      <div className="flex flex-col items-center justify-center h-full space-y-4">
+        <Spinner size="large" />
+        <p className="text-muted-foreground font-medium">Loading product details...</p>
       </div>
     );
   }

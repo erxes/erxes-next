@@ -1,12 +1,12 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { IProduct } from 'ui-modules';
-import { productsMutations } from '@/products/graphql';
+import { productsRemoveMutation } from '../detail/graphql/mutations/productRemoveMutation';
 import { productsQueries } from '@/products/graphql';
 
 const PRODUCTS_PAGE_SIZE = 30;
 
 export const useRemoveProducts = () => {
-  const [_removeProducts, { loading }] = useMutation(productsMutations.productRemove);
+  const [_removeProducts, { loading }] = useMutation(productsRemoveMutation.productRemove);
 
   const removeProducts = (
     productIds: string[],
