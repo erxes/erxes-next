@@ -3,4 +3,6 @@ export enum SettingsHotKeyScope {
   TagsAddDialog = 'settings-tags-add-dialog',
   BranchesPage = 'settings-branches-page',
   DepartmentsPage = 'settings-departments-page',
+  UnitsPage = 'settings-units-page',
+  PositionsPage = 'settings-positions-page',
 }

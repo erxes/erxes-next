@@ -1,4 +1,4 @@
-enum TimeSlot {
+export enum TimeSlot {
   '07:00' = '07:00',
   '07:30' = '07:30',
   '08:00' = '08:00',

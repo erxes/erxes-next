@@ -8,7 +8,7 @@ export const UnitsFilter = () => {
     <PageSubHeader>
       <Filter id="units">
         <Filter.Bar>
-          <Filter.Popover scope={SettingsHotKeyScope.BranchesPage}>
+          <Filter.Popover scope={SettingsHotKeyScope.UnitsPage}>
             <Filter.Trigger />
             <Combobox.Content>
               <Filter.View>

@@ -67,8 +67,9 @@ const FileUpload = () => {
           config.code === 'UPLOAD_FILE_TYPES' ||
           config.code === 'WIDGETS_UPLOAD_FILE_TYPES'
         ) {
-          const selectedMimeTypes = config.value
+          const selectedMimeTypes = (config.value || '')
             .split(',')
+            .filter(Boolean)
             .map((mime: string) => {
               const found = FILE_MIME_TYPES.find((item) => item.value === mime);
               return found

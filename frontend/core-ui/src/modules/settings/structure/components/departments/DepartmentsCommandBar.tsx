@@ -12,9 +12,8 @@ export const DepartmentsCommandBar = () => {
   const confirmOptions = { confirmationValue: 'delete' };
 
   const onRemove = () => {
-    const ids: string[] = table
-      .getSelectedRowModel()
-      .rows?.map((row) => row.original._id);
+    const ids: string[] =
+      table.getSelectedRowModel().rows?.map((row) => row.original._id) || [];
 
     confirm({
       message: 'Are you sure you want to remove the selected?',

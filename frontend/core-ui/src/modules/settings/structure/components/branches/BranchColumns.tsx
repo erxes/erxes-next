@@ -153,7 +153,7 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
 
       const onSave = () => {
         if (_code !== code) {
-          branchesEdit({ variables: { id: _id, title: _code } }, ['code']);
+          branchesEdit({ variables: { id: _id, code: _code } }, ['code']);
         }
       };
 
@@ -176,7 +176,7 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
             {cell.getValue() as string}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
+            <Input value={_code} onChange={onChange} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
