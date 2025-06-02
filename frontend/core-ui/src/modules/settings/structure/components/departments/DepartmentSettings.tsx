@@ -4,12 +4,14 @@ import { useDepartmentsList } from '../../hooks/useDepartmentsList';
 import { DepartmentEdit } from './detail/DepartmentEdit';
 import { DepartmentsFilter } from './DepartmentsFilter';
 import { DepartmentsCommandBar } from './DepartmentsCommandBar';
+import { DepartmentWorkingHoursSheet } from './detail/DepartmentWorkingHoursSheet';
 
 export function DepartmentSettings() {
   const { sortedDepartments, loading } = useDepartmentsList();
   return (
     <div className="w-full overflow-hidden flex flex-col">
       <DepartmentEdit />
+      <DepartmentWorkingHoursSheet />
       <DepartmentsFilter />
       <RecordTable.Provider
         data={sortedDepartments || []}

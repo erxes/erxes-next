@@ -1,4 +1,9 @@
-import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
+import {
+  ApolloCache,
+  MutationHookOptions,
+  OperationVariables,
+  useMutation,
+} from '@apollo/client';
 
 import { useToast } from 'erxes-ui';
 import { IUnitListItem, TUnitForm } from '../types/unit';
@@ -100,4 +105,30 @@ export function useRemoveUnit() {
     loading,
     error,
   };
+}
+
+export function useUnitInlineEdit() {
+  const [_unitsEdit, { loading }] = useMutation(EDIT_UNIT);
+
+  const unitsEdit = (
+    operationVariables: OperationVariables,
+    fields: string[],
+  ) => {
+    const variables = operationVariables?.variables || {};
+    const fieldsToUpdate: Record<string, () => any> = {};
+    fields.forEach((field) => {
+      fieldsToUpdate[field] = () => variables[field];
+    });
+    return _unitsEdit({
+      ...operationVariables,
+      variables,
+      update: (cache, { data: { unitsEdit } }) => {
+        cache.modify({
+          id: cache.identify(unitsEdit),
+          fields: fieldsToUpdate,
+        });
+      },
+    });
+  };
+  return { unitsEdit, loading };
 }

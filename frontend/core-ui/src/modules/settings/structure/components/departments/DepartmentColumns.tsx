@@ -19,19 +19,44 @@ import { renderingDepartmentDetailAtom } from '../../states/renderingDepartmentD
 import { AssignMember, AssignMemberTrigger } from 'ui-modules';
 import { useRemoveDepartment } from '../../hooks/useDepartmentActions';
 
-export const UserMoreColumnCell = ({
+export const DepartmentWorkingHoursColumnCell = ({
   cell,
 }: {
   cell: Cell<IDepartmentListItem, unknown>;
 }) => {
-  const [, setOpen] = useQueryState('department_id');
-  const setRenderingCustomerDetail = useSetAtom(renderingDepartmentDetailAtom);
+  const [, setOpen] = useQueryState('workingHoursId');
+  const setRenderingDepartmentDetail = useSetAtom(
+    renderingDepartmentDetailAtom,
+  );
   const { _id } = cell.row.original;
   return (
     <Button
       onClick={() => {
         setOpen(_id);
-        setRenderingCustomerDetail(false);
+        setRenderingDepartmentDetail(false);
+      }}
+      variant={'outline'}
+    >
+      <IconClock size={12} />
+    </Button>
+  );
+};
+
+export const DepartmentMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IDepartmentListItem, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('department_id');
+  const setRenderingDepartmentDetail = useSetAtom(
+    renderingDepartmentDetailAtom,
+  );
+  const { _id } = cell.row.original;
+  return (
+    <Button
+      onClick={() => {
+        setOpen(_id);
+        setRenderingDepartmentDetail(false);
       }}
       variant={'outline'}
     >
@@ -142,10 +167,8 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay className="gap-1 [&>button]:px-2 justify-center">
-          <Button variant={'outline'}>
-            <IconClock size={12} />
-          </Button>
-          <UserMoreColumnCell cell={cell} />
+          <DepartmentWorkingHoursColumnCell cell={cell} />
+          <DepartmentMoreColumnCell cell={cell} />
           <DepartmentRemoveCell cell={cell} />
         </RecordTableCellDisplay>
       );

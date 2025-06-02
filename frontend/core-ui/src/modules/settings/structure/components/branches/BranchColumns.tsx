@@ -18,7 +18,11 @@ import { renderingBranchDetailAtom } from '../../states/renderingBranchDetail';
 import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import { IBranchListItem } from '../../types/branch';
 import { SelectBranch } from 'ui-modules';
-import { useRemoveBranch } from '../../hooks/useBranchActions';
+import {
+  useBranchInlineEdit,
+  useRemoveBranch,
+} from '../../hooks/useBranchActions';
+import { ChangeEvent, useState } from 'react';
 
 export const BranchEditColumnCell = ({
   cell,
@@ -94,9 +98,32 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'title',
     header: () => <RecordTable.InlineHead label="title" />,
     cell: ({ cell }) => {
-      console.log('cell.row.original', cell.row.original);
+      const { title, _id } = cell.row.original;
+      const [_title, setTitle] = useState<string>(title);
+      const { branchesEdit, loading } = useBranchInlineEdit();
+      const [open, setOpen] = useState<boolean>(false);
+
+      const onSave = () => {
+        if (_title !== title) {
+          branchesEdit({ variables: { id: _id, title: _title } }, ['title']);
+        }
+      };
+
+      const onChange = (el: ChangeEvent<HTMLInputElement>) => {
+        const { value } = el.currentTarget;
+        setTitle(value);
+      };
+
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
             <RecordTableTree.Trigger
               order={cell.row.original.order}
@@ -107,7 +134,7 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
             </RecordTableTree.Trigger>
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
+            <Input value={_title} onChange={onChange} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
@@ -119,8 +146,32 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'code',
     header: () => <RecordTable.InlineHead icon={IconHash} label="code" />,
     cell: ({ cell }) => {
+      const { code, _id } = cell.row.original;
+      const [_code, setCode] = useState<string>(code);
+      const { branchesEdit, loading } = useBranchInlineEdit();
+      const [open, setOpen] = useState<boolean>(false);
+
+      const onSave = () => {
+        if (_code !== code) {
+          branchesEdit({ variables: { id: _id, title: _code } }, ['code']);
+        }
+      };
+
+      const onChange = (el: ChangeEvent<HTMLInputElement>) => {
+        const { value } = el.currentTarget;
+        setCode(value);
+      };
+
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
             {cell.getValue() as string}
           </RecordTableCellTrigger>

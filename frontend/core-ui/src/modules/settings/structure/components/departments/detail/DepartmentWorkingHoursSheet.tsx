@@ -1,10 +1,10 @@
 import { Button, Sheet, Switch, useQueryState } from 'erxes-ui';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { TimePicker } from './TimePciker';
 import { format } from 'date-fns';
+import { TimePicker } from '../../branches/details/TimePciker';
 
-export const BranchWorkingHoursSheet = () => {
+export const DepartmentWorkingHoursSheet = () => {
   const [workingHoursId] = useQueryState('workingHoursId');
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -29,7 +29,7 @@ export const BranchWorkingHoursSheet = () => {
       <Sheet.View className="p-0 md:max-w-screen-md">
         <div className="flex flex-col gap-0 size-full">
           <Sheet.Header>
-            <Sheet.Title>Setup branch working hours</Sheet.Title>
+            <Sheet.Title>Setup department working hours</Sheet.Title>
             <Sheet.Close />
           </Sheet.Header>
           <Sheet.Content className="grow size-full h-auto flex flex-col">

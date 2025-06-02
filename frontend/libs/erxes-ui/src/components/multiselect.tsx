@@ -127,7 +127,7 @@ function removePickedOption(
 
   for (const [key, value] of Object.entries(cloneOption)) {
     cloneOption[key] = value.filter(
-      (val) => !picked.find((p) => p.value === val.value),
+      (val) => !picked?.find((p) => p.value === val.value),
     );
   }
   return cloneOption;
