@@ -124,14 +124,18 @@ export const INV_INCOME_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<T
     ...DEFAULT_VAT_VALUES,
     details: !doc?.details.length ? [{
       ...trDetailWrapper(),
+      side: TR_SIDES.DEBIT,
       productId: '',
-      quantity: 0,
+      count: 0,
       unitPrice: 0,
+      amount: 0,
     }] : doc?.details.map(det => ({
       ...trDetailWrapper(det),
+      side: TR_SIDES.DEBIT,
       productId: '',
-      quantity: 0,
+      count: 0,
       unitPrice: 0,
+      amount: 0,
     }))
   }
 };

@@ -1,21 +1,18 @@
 import { AddInventoryRowButton } from './AddInventoryRow';
-import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
+// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 import { InventoryRow } from './InventoryRow';
 import { ITransactionGroupForm } from '../../../types/AddTransaction';
 import { RemoveButton } from './RemoveButton';
 import { Table } from 'erxes-ui';
 import { useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
-import { TrJournalEnum } from '~/modules/transactions/types/constants';
 
 export const InventoryForm = ({
   form,
   journalIndex,
-  journal,
 }: {
   form: ITransactionGroupForm;
   journalIndex: number;
-  journal: TrJournalEnum;
 }) => {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -38,11 +35,12 @@ export const InventoryForm = ({
       > */}
       <InventoryTableHeader />
       <Table.Body className="overflow-hidden">
-        {fields.map((product, productIndex) => (
+        {fields.map((product, detailIndex) => (
           <InventoryRow
-            productIndex={productIndex}
-            product={product}
             key={product.id}
+            detailIndex={detailIndex}
+            journalIndex={journalIndex}
+            form={form}
           />
         ))}
       </Table.Body>
@@ -50,7 +48,7 @@ export const InventoryForm = ({
         <tr>
           <td colSpan={6} className="p-4">
             <div className="flex w-full justify-center gap-4">
-              <AddInventoryRowButton append={append} />
+              <AddInventoryRowButton append={append} form={form} journalIndex={journalIndex} />
               <RemoveButton remove={remove} fields={fields} />
             </div>
           </td>
@@ -65,7 +63,8 @@ const InventoryTableHeader = () => {
   return (
     <Table.Header>
       <Table.Row>
-        <InventoryHeaderCheckbox />
+        {/* <InventoryHeaderCheckbox /> */}
+        <Table.Head></Table.Head>
         <Table.Head>Account</Table.Head>
         <Table.Head>Inventory</Table.Head>
         <Table.Head>Quantity</Table.Head>

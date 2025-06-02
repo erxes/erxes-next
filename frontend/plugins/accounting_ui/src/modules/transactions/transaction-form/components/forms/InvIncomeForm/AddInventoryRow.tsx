@@ -1,29 +1,37 @@
 import { IconPlus } from '@tabler/icons-react';
 
 import { useWatch } from 'react-hook-form';
-import { TInventoryProduct } from '../../transaction-form/types/AddTransaction';
+import { TInvDetail } from '../../../types/AddTransaction';
 
 import { Button } from 'erxes-ui/components/button';
-import { useInventoryContext } from '../hooks/useInventoryContext';
+import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { TR_SIDES } from '~/modules/transactions/types/constants';
+// import { useInventoryContext } from '../hooks/useInventoryContext';
 
 export const AddInventoryRowButton = ({
   append,
+  journalIndex,
+  form
 }: {
-  append: (product: TInventoryProduct | TInventoryProduct[]) => void;
+  form: ITransactionGroupForm;
+  journalIndex: number;
+  append: (product: TInvDetail | TInvDetail[]) => void;
 }) => {
-  const { inventoriesLength, journalIndex, form } = useInventoryContext();
   const { control } = form;
 
-  const lastProduct = useWatch({
+  const preDetails = useWatch({
     control,
-    name: `details.${journalIndex}.products.${inventoriesLength - 1}`,
+    name: `trDocs.${journalIndex}.details`,
   });
 
-  const productDefaultValues = {
+  const lastDetail = preDetails[preDetails.length]
+
+  const detailDefaultValues = {
+    ...lastDetail,
+    side: TR_SIDES.DEBIT,
     amount: 0,
-    accountId: lastProduct?.accountId || '',
     productId: '',
-    quantity: 0,
+    count: 0,
     unitPrice: 0,
   };
 
@@ -32,24 +40,24 @@ export const AddInventoryRowButton = ({
       <Button
         variant="secondary"
         className="bg-border"
-        onClick={() => append(productDefaultValues)}
+        onClick={() => append(detailDefaultValues)}
       >
         <IconPlus />
-        Add Product
+        Add Empty Row
       </Button>
       <Button
         variant="secondary"
         className="bg-border"
         onClick={() =>
           append([
-            productDefaultValues,
-            productDefaultValues,
-            productDefaultValues,
+            detailDefaultValues,
+            detailDefaultValues,
+            detailDefaultValues,
           ])
         }
       >
         <IconPlus />
-        Add Multiple Products
+        Add Many Products
       </Button>
     </>
   );

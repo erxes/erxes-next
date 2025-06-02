@@ -148,7 +148,7 @@ export const invDetailSchema = z.object({
   ...baseTrDetailSchema.shape,
 }).extend({
   productId: z.string(),
-  quantity: z.number().min(0),
+  count: z.number().min(0),
   unitPrice: z.number().min(0),
 });
 

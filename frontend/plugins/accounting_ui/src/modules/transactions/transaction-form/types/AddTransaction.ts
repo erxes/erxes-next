@@ -13,6 +13,7 @@ import {
   // transactionFixedAssetSchema,
   // inventorySchema,
   trDocSchema,
+  invDetailSchema,
 } from '../contants/transactionSchema';
 import { UseFormReturn } from 'react-hook-form';
 
@@ -27,6 +28,7 @@ export type TPayableJournal = z.infer<typeof transactionPayableSchema>;
 export type TTaxJournal = z.infer<typeof transactionTaxSchema>;
 
 export type TInvIncomeJournal = z.infer<typeof transactionInvIncomeSchema>;
+export type TInvDetail = z.infer<typeof invDetailSchema>;
 // export type TInvOutJournal = z.infer<typeof transactionInvOutSchema>;
 // export type TInventoryJournal = z.infer<typeof transactionInventorySchema>;
 // export type TFixedAssetJournal = z.infer<typeof transactionFixedAssetSchema>;
