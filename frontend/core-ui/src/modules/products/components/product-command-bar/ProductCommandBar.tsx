@@ -1,6 +1,7 @@
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 
-import { Button, CommandBar, RecordTable, Separator } from 'erxes-ui';
+import { Button, CommandBar, RecordTable, Separator } from 'erxes-ui';  
+import { ProductsDelete } from './delete/productDelete';
 
 export const ProductCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
@@ -12,10 +13,11 @@ export const ProductCommandBar = () => {
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
         <Separator.Inline />
-        <Button variant="secondary">
-          <IconTrash />
-          Delete
-        </Button>
+        <ProductsDelete
+          productIds={table
+            .getFilteredSelectedRowModel()
+            .rows.map((row) => row.original._id)}
+        />
         <Separator.Inline />
         <Button variant="secondary">
           <IconPlus />

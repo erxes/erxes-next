@@ -1,35 +1,40 @@
+'use client';
+
+import type React from 'react';
 import { Tabs, Resizable } from 'erxes-ui';
 import { ProductDetailSheet } from './ProductDetailSheet';
 import { useSearchParams } from 'react-router-dom';
+import { ProductDetailFooter } from './ProductDetailFooter';
+import type { useForm } from 'react-hook-form';
+import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 
 export const ProductDetailLayout = ({
   children,
-  actions,
+  form,
 }: {
   children: React.ReactNode;
-  actions?: React.ReactNode;
+  form: ReturnType<typeof useForm<ProductFormValues>>;
 }) => {
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'overview';
+
   return (
     <ProductDetailSheet>
-      <div className="flex h-auto flex-auto overflow-auto">
+      <div className="flex h-full flex-auto overflow-auto">
         <div className="flex flex-col flex-auto min-h-full overflow-hidden">
-          <Resizable.PanelGroup
-            direction="horizontal"
-            className="flex-auto min-h-full overflow-hidden"
-          >
-            <Resizable.Panel defaultSize={75} minSize={30}>
-              <ProductDetailTabs>{children}</ProductDetailTabs>
-            </Resizable.Panel>
-
-            {actions && (
-              <>
-                <Resizable.Handle />
-                <Resizable.Panel defaultSize={25} minSize={20}>
-                  {actions}
-                </Resizable.Panel>
-              </>
-            )}
-          </Resizable.PanelGroup>
+          <div className="flex-1 overflow-auto">
+            <Resizable.PanelGroup
+              direction="horizontal"
+              className="min-h-full overflow-hidden"
+            >
+              <Resizable.Panel defaultSize={100} minSize={30}>
+                <ProductDetailTabs>{children}</ProductDetailTabs>
+              </Resizable.Panel>
+            </Resizable.PanelGroup>
+          </div>
+          <div className="bottom-0 left-0 right-0 border-t bg-white z-10 shadow-sm">
+            <ProductDetailFooter form={form} activeTab={activeTab} />
+          </div>
         </div>
       </div>
     </ProductDetailSheet>
@@ -50,7 +55,7 @@ const ProductDetailTabs = ({ children }: { children: React.ReactNode }) => {
     <Tabs
       value={selectedTab}
       onValueChange={handleTabChange}
-      className="flex-auto flex flex-col"
+      className="flex-auto flex flex-col bg-white"
     >
       <Tabs.List className="h-12">
         <Tabs.Trigger value="overview" className="text-base h-full">
@@ -73,7 +78,7 @@ export const ProductDetailTabContent = ({
   value: string;
 }) => {
   return (
-    <Tabs.Content value={value} className="flex-auto overflow-hidden">
+    <Tabs.Content value={value} className="flex-auto overflow-auto h-full">
       {children}
     </Tabs.Content>
   );
