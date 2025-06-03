@@ -87,7 +87,6 @@ class TaxTrs {
     this.sumCt = this.doc.details
       .filter(d => d.side === TR_SIDES.CREDIT)
       .reduce((sum, cur) => sum + cur.amount, 0)
-
   }
 
   private checkVatValidation = async () => {
@@ -179,8 +178,8 @@ class TaxTrs {
 
   public checkTaxValidation = async () => {
     await this.initTaxValues();
-    this.checkVatValidation();
-    this.checkCtaxValidation();
+    await this.checkVatValidation();
+    await this.checkCtaxValidation();
   }
 
   private doVatTr = async (transaction: ITransactionDocument) => {

@@ -48,9 +48,10 @@ export const commonUpdate = async (subdomain: string, models: IModels, doc: ITra
 
       break;
     }
+
     case 'invIncome': {
       const taxTrsClass = new TaxTrs(models, doc, 'dt', false);
-      taxTrsClass.checkTaxValidation();
+      await taxTrsClass.checkTaxValidation();
 
       const transaction =
         await models.Transactions.updateTransaction(oldTr._id, { ...doc });
@@ -66,6 +67,7 @@ export const commonUpdate = async (subdomain: string, models: IModels, doc: ITra
       }
       break;
     }
+
     case 'invOut': {
       const transaction =
         await models.Transactions.updateTransaction(oldTr._id, { ...doc });
