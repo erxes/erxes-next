@@ -9,11 +9,10 @@ import { useToast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
 import { Row } from '@tanstack/table-core';
 
-
 interface MergeProps {
   disabled?: boolean;
   customers: ICustomer[];
-  rows: Row<any>[];
+  rows: Row<ICustomer>[];
 }
 
 interface FieldMapping {
@@ -24,7 +23,7 @@ interface FieldMapping {
 }
 
 export const CustomersMerge = ({
-  disabled = false, 
+  disabled = false,
   customers,
   rows,
 }: MergeProps) => {
@@ -45,7 +44,9 @@ export const CustomersMerge = ({
         });
       },
       onCompleted: () => {
-        rows.forEach((row) => row.toggleSelected(false));
+        rows.forEach((row) => {
+          row.toggleSelected(false);
+        });
         setSheetOpen(false);
         toast({
           title: 'Success',

@@ -34,38 +34,6 @@ export const ADD_CUSTOMERS = gql`
       state: $state
     ) {
       _id
-      firstName
-      middleName
-      lastName
-      avatar
-      sex
-      birthDate
-      primaryEmail
-      emails
-      primaryPhone
-      phones
-      updatedAt
-      position
-      department
-      leadStatus
-      state
-      hasAuthority
-      description
-      isSubscribed
-      code
-      emailValidationStatus
-      phoneValidationStatus
-      score
-      isOnline
-      lastSeenAt
-      links
-      ownerId
-      integrationId
-      createdAt
-      remoteAddress
-      location
-      customFieldsData
-      trackedData
     }
   }
 `;

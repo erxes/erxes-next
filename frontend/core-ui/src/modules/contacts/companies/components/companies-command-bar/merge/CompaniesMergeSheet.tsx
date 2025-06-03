@@ -4,13 +4,13 @@ import {
 } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui/components';
 import { ReactNode } from 'react';
-import { MergeTooltip } from '@/contacts/customers/components/customers-command-bar/merge/MergeTooltip';
+import { CompaniesMergeTooltip } from '@/contacts/companies/components/companies-command-bar/merge/CompaniesMergeTooltip';
 import { cn } from 'erxes-ui/lib';
 
 const noop = () => {
   //
 };
-interface MergeSheetProps extends React.ComponentProps<typeof Sheet> {
+interface CompaniesMergeSheetProps extends React.ComponentProps<typeof Sheet> {
   children?: ReactNode;
   disabled?: boolean;
   className?: string;
@@ -18,55 +18,57 @@ interface MergeSheetProps extends React.ComponentProps<typeof Sheet> {
   onSave?: () => void;
 }
 
-export const MergeSheet = ({
+export const CompaniesMergeSheet = ({
   children,
   disabled = false,
   className,
   onDiscard = noop,
   onSave = noop,
   ...props
-}: MergeSheetProps) => {
+}: CompaniesMergeSheetProps) => {
   return (
     <Sheet {...props}>
-      <MergeTooltip disabled={!disabled}>
-        <Sheet.Trigger asChild>
-          <Button variant={'secondary'} disabled={disabled}>
-            <IconArrowMerge />
-            Merge
-          </Button>
-        </Sheet.Trigger>
-      </MergeTooltip>
+      <Sheet.Trigger asChild>
+        <Button variant={'secondary'} disabled={disabled}>
+          <IconArrowMerge />
+          Merge
+        </Button>
+      </Sheet.Trigger>
       <Sheet.View className="sm:max-w-screen-lg flex gap-0 flex-col m-0 p-0">
-        <MergeSheetHeader />
+        <Sheet.Description className="sr-only" />
+        <CompaniesMergeSheetHeader />
         <Sheet.Content>
           <div className={cn('w-full h-full overflow-y-auto ', className)}>
             {children}
           </div>
         </Sheet.Content>
         {!disabled && (
-          <MergeSheetFooter onDiscard={onDiscard} onSave={onSave} />
+          <CompaniesMergeSheetFooter onDiscard={onDiscard} onSave={onSave} />
         )}
       </Sheet.View>
     </Sheet>
   );
 };
 
-const MergeSheetHeader = () => (
+const CompaniesMergeSheetHeader = () => (
   <Sheet.Header className="border-b p-3 m-0 flex-row items-center space-y-0 gap-3">
     <Button variant="ghost" size="icon">
       <IconLayoutSidebarLeftCollapse />
     </Button>
-    <Sheet.Title>Merge Customers</Sheet.Title>
+    <Sheet.Title>Merge Companies</Sheet.Title>
     <Sheet.Close />
   </Sheet.Header>
 );
 
-interface MergeSheetFooterProps {
+interface CompaniesMergeSheetFooterProps {
   onDiscard: () => void;
   onSave: () => void;
 }
 
-const MergeSheetFooter = ({ onDiscard, onSave }: MergeSheetFooterProps) => {
+const CompaniesMergeSheetFooter = ({
+  onDiscard,
+  onSave,
+}: CompaniesMergeSheetFooterProps) => {
   return (
     <Sheet.Footer className="flex justify-end p-5">
       <Button
@@ -85,5 +87,20 @@ const MergeSheetFooter = ({ onDiscard, onSave }: MergeSheetFooterProps) => {
         Save
       </Button>
     </Sheet.Footer>
+  );
+};
+
+export const CompaniesMergeSheetTrigger = ({
+  disabled = false,
+}: {
+  disabled?: boolean;
+}) => {
+  return (
+    <CompaniesMergeTooltip disabled={!disabled}>
+      <Button variant={'secondary'} disabled={disabled}>
+        <IconArrowMerge />
+        Merge
+      </Button>
+    </CompaniesMergeTooltip>
   );
 };
