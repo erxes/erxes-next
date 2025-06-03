@@ -69,16 +69,11 @@ export const conversationQueries = {
           orderBy: { createdAt: -1 }, // Optional, _id is used as a fallback
           limit: params.limit || 20,
           direction: 'forward', // or 'backward'
-          cursor: params.cursor, // Optional: should be an object with sort key(s)
           cursorMode: 'exclusive', // Optional
         },
         query: qb.mainQuery(),
       });
 
-    const conversations = await models.Conversations.find(qb.mainQuery())
-      .sort({ updatedAt: -1 })
-      .skip(params.skip || 0)
-      .limit(params.limit || 0);
     serverTiming?.endTime('conversationsQuery');
 
     serverTiming?.endTime('conversations');
