@@ -27,7 +27,7 @@ export const useRemoveCompanies = () => {
                 ...companies,
                 list: updatedCompanies,
                 totalCount:
-                  companies.totalCount - options?.variables?.companyIds.length,
+                  companies.totalCount - options?.variables?.companyIds.length || 0,
               },
             };
           },

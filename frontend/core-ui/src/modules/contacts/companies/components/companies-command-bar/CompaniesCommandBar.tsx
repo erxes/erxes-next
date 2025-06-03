@@ -11,30 +11,19 @@ export const CompaniesCommandBar = () => {
       common.filter((item) => current.includes(item)),
     );
   };
-
-  const companyIds = table
-    .getFilteredSelectedRowModel()
-    .rows.map((row) => row.original._id);
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  const companyIds = selectedRows.map((row) => row.original._id);
   return (
-    <CommandBar open={table.getFilteredSelectedRowModel().rows.length > 0}>
+    <CommandBar open={selectedRows.length > 0}>
       <CommandBar.Bar>
-        <CommandBar.Value>
-          {table.getFilteredSelectedRowModel().rows.length} selected
-        </CommandBar.Value>
+        <CommandBar.Value>{selectedRows.length} selected</CommandBar.Value>
         <Separator.Inline />
-        <CompaniesDelete
-          companyIds={companyIds}
-          rows={table.getFilteredSelectedRowModel().rows}
-        />
+        <CompaniesDelete companyIds={companyIds} rows={selectedRows} />
         <Separator.Inline />
         <SelectTags.CommandbarItem
           mode="multiple"
           tagType="core:company"
-          value={intersection(
-            table
-              .getFilteredSelectedRowModel()
-              .rows.map((row) => row.original.tagIds),
-          )}
+          value={intersection(selectedRows.map((row) => row.original.tagIds))}
           targetIds={companyIds}
           options={(newSelectedTagIds) => ({
             update: (cache) => {
@@ -59,7 +48,10 @@ export const CompaniesCommandBar = () => {
           })}
         />
         <Separator.Inline />
-        <CompaniesMerge companies={table.getFilteredSelectedRowModel().rows.map((row) => row.original)} rows={table.getFilteredSelectedRowModel().rows} />
+        <CompaniesMerge
+          companies={selectedRows.map((row) => row.original)}
+          rows={selectedRows}
+        />
       </CommandBar.Bar>
     </CommandBar>
   );

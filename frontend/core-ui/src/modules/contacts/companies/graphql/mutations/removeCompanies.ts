@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const REMOVE_COMPANIES = gql`
-  mutation Mutation($companyIds: [String]) {
+  mutation RemoveCompanies($companyIds: [String]) {
     companiesRemove(companyIds: $companyIds)
   }
 `;
