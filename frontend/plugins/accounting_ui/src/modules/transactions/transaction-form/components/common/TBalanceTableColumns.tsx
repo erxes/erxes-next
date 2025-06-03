@@ -14,7 +14,7 @@ import { useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { TR_SIDES } from '@/transactions/types/constants';
 import { activeJournalState } from '../../states/trStates';
-import { ITBalanceTransaction } from '../../types/tbalance';
+import { ITBalanceTransaction } from '../../types/TBalance';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {

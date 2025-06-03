@@ -11,7 +11,7 @@ import { useTransactionDetail } from '../hooks/useTransactionDetail';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 import { useTransactionsUpdate } from '../hooks/useTransactionsUpdate';
 import { activeJournalState } from '../states/trStates';
-import { TAddTransactionGroup } from '../types/AddTransaction';
+import { TAddTransactionGroup } from '../types/JournalForms';
 import { Summary } from './common/Summary';
 import { TransactionsTabsList } from './TransactionTabs';
 

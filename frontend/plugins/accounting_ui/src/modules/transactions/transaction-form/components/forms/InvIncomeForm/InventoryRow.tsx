@@ -4,7 +4,7 @@ import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
 // import { InventoryRowCheckbox } from './InventoryRowCheckbox';
 import { JournalEnum } from '@/settings/account/types/Account';
-import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
 
 export const InventoryRow = ({
   detailIndex,

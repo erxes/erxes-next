@@ -1,7 +1,7 @@
 import { AddInventoryRowButton } from './AddInventoryRow';
 // import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 import { InventoryRow } from './InventoryRow';
-import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
 import { RemoveButton } from './RemoveButton';
 import { Table } from 'erxes-ui';
 import { useFieldArray } from 'react-hook-form';

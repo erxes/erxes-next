@@ -9,7 +9,7 @@ import { activeJournalState } from '../states/trStates';
 import {
   ITransactionGroupForm,
   TTrDoc,
-} from '../types/AddTransaction';
+} from '../types/JournalForms';
 import { TBalance } from './common/TBalance';
 import { BankTransaction } from './forms/BankForm';
 import { CashTransaction } from './forms/CashForm';
