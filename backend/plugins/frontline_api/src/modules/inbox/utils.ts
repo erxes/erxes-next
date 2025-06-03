@@ -1,5 +1,4 @@
 import { getPlugins } from 'erxes-api-shared/utils';
-
 import debug from 'debug';
 
 export const debugInfo = debug(`erxes:info`);
@@ -22,7 +21,7 @@ export const getIntegrationsKinds = async () => {
     webhook: 'Webhook',
     booking: 'Booking',
     callpro: 'Callpro',
-    imap: 'IMap',
+    imap: 'IMAP',
     'facebook-messenger': 'Facebook messenger',
     'facebook-post': 'Facebook post',
     'instagram-messenger': 'Instagram messenger',

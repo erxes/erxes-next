@@ -62,16 +62,15 @@ export const conversationQueries = {
     serverTiming?.endTime('buildQuery');
 
     serverTiming?.startTime('conversationsQuery');
-    console.log('Conversations query params:', qb.mainQuery());
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
         params: {
-          // orderBy: { createdAt: -1 }, // Optional, _id is used as a fallback
-          // limit: params.limit || 20,
-          // direction: 'forward', // or 'backward'
-          // cursor: params.cursor, // Optional: should be an object with sort key(s)
-          // cursorMode: 'exclusive', // Optional
+          orderBy: { createdAt: -1 }, // Optional, _id is used as a fallback
+          limit: params.limit || 20,
+          direction: 'forward', // or 'backward'
+          cursor: params.cursor, // Optional: should be an object with sort key(s)
+          cursorMode: 'exclusive', // Optional
         },
         query: qb.mainQuery(),
       });
