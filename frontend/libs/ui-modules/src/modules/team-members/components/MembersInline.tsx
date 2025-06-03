@@ -150,7 +150,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     }
 
     return (
-      <Tooltip delayDuration={100}>
+      <Tooltip>
         <Tooltip.Trigger asChild>
           <Avatar
             className={cn(
@@ -183,7 +183,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     <div className="flex -space-x-1.5">
       {withAvatar.map(renderAvatar)}
       {restMembers.length > 0 && (
-        <Tooltip delayDuration={100}>
+        <Tooltip>
           <Tooltip.Trigger asChild>
             <Avatar
               className={cn('ring-2 ring-background bg-background', className)}
