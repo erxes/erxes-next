@@ -112,7 +112,9 @@ export const SelectCategoryBadge = ({
   category?: IProductCategory;
   selected?: boolean;
 }) => {
-  if (!category) return null;
+  if (!category) {
+    return null
+  };
   const { code, name, productCount } = category;
   return (
     <>

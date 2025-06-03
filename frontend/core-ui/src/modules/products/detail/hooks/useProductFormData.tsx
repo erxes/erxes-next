@@ -3,6 +3,12 @@ import { UseFormReturn } from 'react-hook-form';
 import { ProductDetail } from '../types/detailTypes';
 import { ProductFormValues } from '@/products/constants/ProductFormSchema';
 
+const normalizeBarcodes = (barcodes: any): string[] => {
+  if (Array.isArray(barcodes)) return barcodes;
+  if (barcodes) return [barcodes];
+  return [];
+};
+
 export const useProductFormData = (
   productDetail: ProductDetail | null,
   form: UseFormReturn<ProductFormValues>,
@@ -12,11 +18,7 @@ export const useProductFormData = (
       form.reset({
         name: productDetail.name || '',
         code: productDetail.code || '',
-        barcodes: Array.isArray(productDetail.barcodes)
-          ? productDetail.barcodes
-          : productDetail.barcodes
-          ? [productDetail.barcodes]
-          : [],
+        barcodes: normalizeBarcodes(productDetail.barcodes),
         categoryId: productDetail.categoryId || '',
         type: productDetail.type || '',
         status: productDetail.status || '',

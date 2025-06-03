@@ -28,12 +28,12 @@ export const useRemoveProducts = () => {
                 list: productsMain.list.filter(
                   (product: IProduct) => !productIds.includes(product._id),
                 ),
-                totalCount: productsMain.totalCount - productIds.length,
+                totalCount: Math.max(0, productsMain.totalCount - productIds.length),
               },
             }),
           );
         } catch (e) {
-          console.log(e);
+        console.error('Cache update failed:', e);
         }
       },
     });

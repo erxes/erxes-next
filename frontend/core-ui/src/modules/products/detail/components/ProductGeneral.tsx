@@ -19,7 +19,7 @@ interface ProductDetailFormProps {
 export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
   form,
 }) => {
-  const { productDetail, loading } = useProductDetail();
+  const { productDetail, loading, error } = useProductDetail();
   const { uoms } = useUom({});
 
   useProductFormData(productDetail, form);
@@ -29,6 +29,25 @@ export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
       <div className="flex flex-col items-center justify-center h-full space-y-4">
         <Spinner size="large" />
         <p className="text-muted-foreground font-medium">Loading product details...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full space-y-4 p-6">
+        <div className="text-red-500 text-center">
+          <h3 className="text-lg font-semibold mb-2">Error Loading Product</h3>
+          <p className="text-sm text-muted-foreground">
+            {error.message || 'Failed to load product details. Please try again.'}
+          </p>
+        </div>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        >
+          Retry
+        </button>
       </div>
     );
   }
@@ -60,7 +79,6 @@ export const ProductDetailForm: React.FC<ProductDetailFormProps> = ({
         label="SECONDARY IMAGES"
         buttonText="Upload Images"
         variant="secondary"
-        multiple
       />
     </div>
   );

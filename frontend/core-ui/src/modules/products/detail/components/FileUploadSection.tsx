@@ -5,15 +5,12 @@ import { IconUpload } from "@tabler/icons-react";
 interface FileUploadSectionProps {
   label: string;
   buttonText: string;
-  multiple?: boolean;
-  accept?: string;
   variant?: "default" | "secondary";
 }
 
 export const FileUploadSection: React.FC<FileUploadSectionProps> = ({
   label,
   buttonText,
-  multiple = false,
   variant = "default"
 }) => {
   const buttonClasses = variant === "secondary" 
