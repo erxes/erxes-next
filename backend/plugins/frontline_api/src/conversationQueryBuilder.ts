@@ -202,9 +202,7 @@ export default class Builder {
       return;
     }
 
-    const integrationIds = (integrations as { _id: string }[]).map(
-      (i) => i._id,
-    );
+    const integrationIds = _.pluck(integrations, '_id');
     return {
       integrationId: { $in: integrationIds },
     };
