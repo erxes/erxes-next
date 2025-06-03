@@ -7,7 +7,15 @@ import {
   IConversationListParams,
 } from '@/inbox/@types/conversations';
 import { IMessageDocument } from '@/inbox/@types/conversationMessages';
+import { countByConversations } from '@/inbox/conversationUtils';
 
+interface ICountBy {
+  [index: string]: number;
+}
+
+interface IConversationRes {
+  [index: string]: number | ICountBy;
+}
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
   const result = await models.Conversations.countDocuments(query);
@@ -20,8 +28,28 @@ export const conversationQueries = {
   async conversations(
     _parent: undefined,
     params: IConversationListParams,
-    { user, models, subdomain }: IContext,
+    { user, models, subdomain, serverTiming }: IContext,
   ) {
+    serverTiming?.startTime('conversations');
+
+    if (params && params.ids) {
+      const { list, totalCount, pageInfo } =
+        await cursorPaginate<IConversationDocument>({
+          model: models.Conversations,
+          params: {
+            orderBy: { updatedAt: -1 }, // Optional, _id is used as a fallback
+          },
+          query: { _id: { $in: params.ids } },
+        });
+
+      serverTiming?.endTime('conversationsQuery');
+
+      serverTiming?.endTime('conversations');
+
+      return { list, totalCount, pageInfo };
+    }
+
+    serverTiming?.startTime('buildQuery');
     const qb = new QueryBuilder(models, subdomain, params, {
       _id: user._id,
       code: user.code,
@@ -30,14 +58,32 @@ export const conversationQueries = {
     });
 
     await qb.buildAllQueries();
-    const query = qb.mainQuery();
+
+    serverTiming?.endTime('buildQuery');
+
+    serverTiming?.startTime('conversationsQuery');
+    console.log('Conversations query params:', qb.mainQuery());
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
-        params,
-        query: query,
+        params: {
+          // orderBy: { createdAt: -1 }, // Optional, _id is used as a fallback
+          // limit: params.limit || 20,
+          // direction: 'forward', // or 'backward'
+          // cursor: params.cursor, // Optional: should be an object with sort key(s)
+          // cursorMode: 'exclusive', // Optional
+        },
+        query: qb.mainQuery(),
       });
 
+    const conversations = await models.Conversations.find(qb.mainQuery())
+      .sort({ updatedAt: -1 })
+      .skip(params.skip || 0)
+      .limit(params.limit || 0);
+    serverTiming?.endTime('conversationsQuery');
+
+    serverTiming?.endTime('conversations');
+    console.log(conversations, 'conversations');
     return { list, totalCount, pageInfo };
   },
 
@@ -100,7 +146,9 @@ export const conversationQueries = {
     params: IListArgs,
     { user, models, subdomain }: IContext,
   ) {
-    const response: any = {};
+    const { only } = params;
+
+    const response: IConversationRes = {};
     const _user = {
       _id: user._id,
       code: user.code,
@@ -109,9 +157,22 @@ export const conversationQueries = {
     };
 
     const qb = new QueryBuilder(models, subdomain, params, _user);
+
     await qb.buildAllQueries();
 
     const queries = qb.queries;
+    const integrationIds = queries.integrations.integrationId.$in;
+
+    if (only) {
+      response[only] = await countByConversations(
+        models,
+        subdomain,
+        params,
+        integrationIds,
+        _user,
+        only,
+      );
+    }
 
     const mainQuery = {
       ...qb.mainQuery(),
@@ -148,6 +209,7 @@ export const conversationQueries = {
       ...mainQuery,
       ...qb.awaitingResponse(),
     });
+
     return response;
   },
 
