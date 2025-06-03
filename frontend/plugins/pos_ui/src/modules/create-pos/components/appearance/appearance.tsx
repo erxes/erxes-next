@@ -5,13 +5,13 @@ import { Upload } from "erxes-ui"
 import { useSearchParams } from "react-router-dom"
 import { IconUpload } from "@tabler/icons-react"
 import { useState, useEffect } from "react"
-import { ProductFormValues } from "../formSchema"
+import { UiConfigFormValues } from "../formSchema"
 import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
 
 interface AppearanceFormProps {
   posDetail?: IPosDetail;
   isReadOnly?: boolean;
-  onSubmit?: (data: ProductFormValues) => Promise<void>;
+  onSubmit?: (data: UiConfigFormValues) => Promise<void>;
 }
 
 export default function AppearanceForm({ 
@@ -55,7 +55,25 @@ export default function AppearanceForm({
     
     if (onSubmit) {
       try {
-        await onSubmit(formData)
+        await onSubmit({
+          uiOptions: {
+            colors: {
+              bodyColor: formData.backgroundColor,
+              headerColor: formData.accentColor,
+              footerColor: formData.textColor,
+            },
+            logo: formData.logoImage,
+            bgImage: '',
+            favIcon: '',
+            receiptIcon: '',
+            kioskHeaderImage: '',
+            mobileAppImage: '',
+            qrCodeImage: '',
+          },
+          beginNumber: '',
+          maxSkipNumber: 0,
+          checkRemainder: false,
+        })
       } catch (error) {
         console.error("Appearance form submission failed:", error)
       }
@@ -90,7 +108,6 @@ export default function AppearanceForm({
               value={formData.logoImage} 
               onChange={(value) => handleInputChange("logoImage", typeof value === 'string' ? value : '')} 
               className="h-[128px]"
-              disabled={isReadOnly}
             >
               <Upload.Preview className="hidden" />
               <Upload.Button

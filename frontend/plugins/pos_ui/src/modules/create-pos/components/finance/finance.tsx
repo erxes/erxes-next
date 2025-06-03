@@ -153,6 +153,7 @@ export default function FinanceConfigForm({
               <div className="space-y-2">
                 <Label className="text-sm text-gray-500">USER EMAIL</Label>
                 <Input
+                  type='email'
                   value={financeConfig.userEmail}
                   onChange={(e) =>
                     handleInputChange('userEmail', e.target.value)

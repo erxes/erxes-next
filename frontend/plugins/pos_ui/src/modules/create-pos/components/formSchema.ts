@@ -12,7 +12,7 @@ const uiOptionsSchema = z.object({
   receiptIcon: z.string().default(''),
   kioskHeaderImage: z.string().default(''),
   mobileAppImage: z.string().default(''),
-  qrCodeImage: z.string().default(''),
+  qrCodeImage: z.string().default(''), 
 });
 
 const productDetailSchema = z.object({
@@ -70,6 +70,7 @@ export const posDetailSchema = z.object({
     .array(z.enum(['eat', 'take', 'delivery']))
     .default(['eat', 'take', 'delivery']),
   checkExcludeCategoryIds: z.array(z.string()).default([]),
+  departmentId: z.string().optional(),
 });
 
 export type PosDetailFormValues = z.infer<typeof posDetailSchema>;
@@ -82,6 +83,7 @@ export const basicInfoSchema = z.object({
     .min(1, 'At least one type is required'),
   scopeBrandIds: z.array(z.string()).default([]),
   allowBranchIds: z.array(z.string()).default([]),
+  departmentId: z.string().optional(), 
 });
 
 export const permissionSchema = z.object({

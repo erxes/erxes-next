@@ -34,8 +34,8 @@ export interface IPosDetail {
   productDetails?: ProductDetail[];
   token: string;
   erxesAppToken: string;
-  adminIds: [string];
-  cashierIds: [string];
+  adminIds: string[];
+  cashierIds: string[];
   paymentIds: string[];
   paymentTypes: any[];
   user: IUser;

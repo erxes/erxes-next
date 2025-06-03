@@ -5,53 +5,21 @@ import { UseFormReturn } from 'react-hook-form';
 import { Form, Input, Select } from "erxes-ui";
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
-import { Branch, Department } from '../../types';
-import { PosDetailQueryResponse } from '~/modules/pos-detail.tsx/types/detail';
 import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
-
-type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
+import { SelectBranch, SelectDepartment } from 'ui-modules';
 
 interface EcommerceFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
   posDetail?: IPosDetail;
   isReadOnly?: boolean;
-  branches?: Branch[]; 
-  departments?: Department[]; 
 }
 
 export const EcommerceForm: React.FC<EcommerceFormProps> = ({ 
   form, 
   posDetail,
   isReadOnly = false,
-  branches = [], 
-  departments = []
 }) => {
   const isEditMode = !!posDetail;
-  const defaultBranches: Branch[] = [
-    { id: "branch1", name: "Main Branch" },
-    { id: "branch2", name: "Downtown Branch" },
-    { id: "branch3", name: "Mall Branch" },
-  ];
-
-  const defaultDepartments: Department[] = [
-    { id: "kitchen", name: "Kitchen" },
-    { id: "bar", name: "Bar" },
-    { id: "service", name: "Service" },
-  ];
-
-  const availableBranches = branches.length > 0 ? branches : defaultBranches;
-  const availableDepartments = departments.length > 0 ? departments : defaultDepartments;
-
-  const handleTypeChange = (typeValue: string) => {
-    if (isReadOnly) return;
-    
-    const currentTypes = (form.watch('allowTypes') || []) as string[];
-    const newTypes: string[] = currentTypes.includes(typeValue)
-      ? currentTypes.filter((t: string) => t !== typeValue)
-      : [...currentTypes, typeValue];
-    
-    form.setValue('allowTypes', newTypes as any);
-  };
 
   const handleBrandChange = (brandId: string) => {
     if (isReadOnly) return;
@@ -77,7 +45,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
 
   const handleDepartmentChange = (departmentId: string) => {
     if (isReadOnly) return;
-    // form.setValue('departmentId', departmentId);
+    form.setValue('departmentId', departmentId);
   };
 
   const getFormTitle = () => {
@@ -237,29 +205,22 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                     CHOOSE BRANCH
                   </Form.Label>
                   <Form.Control>
-                    <Select 
-                      onValueChange={(value) => handleBranchChange(value)}
+                    <SelectBranch
                       value={field.value?.[0] || ""}
-                      disabled={isReadOnly}
-                    >
-                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                        <Select.Value placeholder="Choose branch" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {availableBranches.map((branch) => (
-                          <Select.Item key={branch.id} value={branch.id}>
-                            {branch.name}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
+                      onValueChange={(branchId) => {
+                        if (!isReadOnly) {
+                          handleBranchChange(branchId);
+                        }
+                      }}
+                      className="w-full h-10"
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
             />
 
-            {/* <Form.Field
+            <Form.Field
               control={form.control}
               name="departmentId"
               render={({ field }) => (
@@ -268,27 +229,21 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                     CHOOSE DEPARTMENT
                   </Form.Label>
                   <Form.Control>
-                    <Select 
-                      onValueChange={(value) => handleDepartmentChange(value)}
+                    <SelectDepartment
                       value={field.value || ""}
+                      onValueChange={(departmentId) => {
+                        if (!isReadOnly) {
+                          handleDepartmentChange(departmentId);
+                        }
+                      }}
+                      className="w-full h-10 px-3 text-left justify-between"
                       disabled={isReadOnly}
-                    >
-                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                        <Select.Value placeholder="Choose department" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {availableDepartments.map((department) => (
-                          <Select.Item key={department.id} value={department.id}>
-                            {department.name}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
-            /> */}
+            />
           </div>
         </div>
       </div>

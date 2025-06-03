@@ -34,7 +34,6 @@ type StepType = StepConfig & {
 
 const getSteps = (posCategory: string | null): StepConfig[] => {
   const baseSteps: StepConfig[] = [
-    // { value: 'overview', title: 'Choose category' },
     { value: 'properties', title: 'General information' },
     { value: 'payments', title: 'Payments' },
     { value: 'permission', title: 'Permission' },
@@ -49,7 +48,7 @@ const getSteps = (posCategory: string | null): StepConfig[] => {
 
   if (posCategory === 'restaurant') {
     const updatedSteps = [...baseSteps];
-    updatedSteps.splice(2, 0, { value: 'slot', title: 'Slot' });
+    updatedSteps.splice(1, 0, { value: 'slot', title: 'Slot' });
     return updatedSteps;
   }
 
@@ -244,14 +243,14 @@ export const PosEditTabContent: React.FC<PosEditTabContentProps> = ({
 }) => {
   const [searchParams] = useSearchParams();
   const [posCategory] = useAtom(posCategoryAtom);
-  const selectedStep = searchParams.get('tab') || 'overview';
+  const selectedStep = searchParams.get('tab') || 'properties';
   const hasCategorySelected = !!posCategory;
 
   if (value !== selectedStep) {
     return null;
   }
 
-  if (value !== 'overview' && !hasCategorySelected) {
+  if (!hasCategorySelected) {
     return (
       <div className="flex-auto overflow-hidden flex items-center justify-center h-full">
         <div className="text-center p-8 rounded-lg bg-yellow-50 border border-yellow-200">
@@ -276,7 +275,7 @@ interface PosEditStepperProps {
 const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [posCategory] = useAtom(posCategoryAtom);
-  const selectedStep = searchParams.get('tab') || 'overview';
+  const selectedStep = searchParams.get('tab') || 'properties';
   const hasCategorySelected = !!posCategory;
 
   const stepsWithIds = useMemo(() => {
@@ -295,7 +294,7 @@ const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
       selectedStep &&
       !stepsWithIds.some((step) => step.value === selectedStep)
     ) {
-      navigateToTab(setSearchParams, searchParams, 'overview');
+      navigateToTab(setSearchParams, searchParams, 'properties');
     }
   }, [selectedStep, stepsWithIds, setSearchParams, searchParams]);
 
@@ -334,7 +333,7 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [posCategory] = useAtom(posCategoryAtom);
-  const selectedStep = searchParams.get('tab') || 'overview';
+  const selectedStep = searchParams.get('tab') || 'properties';
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const steps = useMemo(() => {

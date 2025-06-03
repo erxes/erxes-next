@@ -59,7 +59,7 @@ export default function ScreenConfigForm({
     })
   }
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     
     if (onSubmit) {
@@ -72,7 +72,6 @@ export default function ScreenConfigForm({
         setIsSubmitting(false)
       }
     } else {
-      console.log("Screen config form submitted:", screenConfig)
       const newParams = new URLSearchParams(searchParams)
       newParams.set("tab", "ebarimt")
       setSearchParams(newParams)

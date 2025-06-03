@@ -14,7 +14,6 @@ import {
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PosEditLayout, PosEditTabContent } from "./posDetailLayout"
-import ChooseCategoryPage from "~/modules/create-pos/components/category/choose-category"
 import { EcommerceForm } from "~/modules/create-pos/components/general/ecommerce"
 import { RestaurantForm } from "~/modules/create-pos/components/general/restaurant"
 import POSSlotsManager from "~/modules/slot/components/slot"
@@ -160,10 +159,6 @@ export const PosEdit = () => {
 
   return (
     <PosEditLayout form={basicInfoForm} onFinalSubmit={handleFinalSubmit} posDetail={posDetail}>
-      <PosEditTabContent value="overview">
-        <ChooseCategoryPage />
-      </PosEditTabContent>
-
       <PosEditTabContent value="properties">
         {getCategoryComponent(
           <EcommerceForm form={basicInfoForm} posDetail={posDetail} />,

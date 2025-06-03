@@ -58,8 +58,6 @@ export default function SyncCardForm() {
     if (syncCardSettings.currentConfig.title) {
       handleAddConfig()
     }
-
-    console.log("Sync card form submitted:", syncCardSettings)
     const newParams = new URLSearchParams(searchParams)
     newParams.set("tab", "complete")
     setSearchParams(newParams)
@@ -95,8 +93,8 @@ export default function SyncCardForm() {
               <div className="space-y-2">
                 <Label className="text-sm text-gray-500">CHOOSE BRUNCH</Label>
                 <Select
-                  value={syncCardSettings.currentConfig.brunch}
-                  onValueChange={(value) => handleSelectChange("brunch", value)}
+                  value={syncCardSettings.currentConfig.branch}
+                  onValueChange={(value) => handleSelectChange("branch", value)}
                 >
                   <Select.Trigger>
                     <Select.Value placeholder="Choose brunch" />

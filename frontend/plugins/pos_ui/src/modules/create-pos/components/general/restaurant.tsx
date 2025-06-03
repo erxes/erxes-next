@@ -9,39 +9,23 @@ import { useSetAtom } from "jotai";
 import { slotAtom } from "../../states/posCategory";
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
-import { Branch, Department } from '../../types';
-import { PosDetailQueryResponse } from '~/modules/pos-detail.tsx/types/detail';
 import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
-import { SelectBranch } from 'ui-modules';
-
-type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
+import { SelectBranch, SelectDepartment } from 'ui-modules';
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
   posDetail?: IPosDetail;
   isReadOnly?: boolean;
-  branches?: Branch[]; 
-  departments?: Department[]; 
 }
 
 export const RestaurantForm: React.FC<RestaurantFormProps> = ({ 
   form, 
   posDetail,
   isReadOnly = false,
-  branches = [], 
-  departments = []
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setSlot = useSetAtom(slotAtom);
   const isEditMode = !!posDetail;
-
-  const defaultDepartments: Department[] = [
-    { id: "kitchen", name: "Kitchen" },
-    { id: "bar", name: "Bar" },
-    { id: "service", name: "Service" },
-  ];
-
-  const availableDepartments = departments.length > 0 ? departments : defaultDepartments;
 
   const handleAddSlot = () => {
     if (isReadOnly) return;
@@ -82,6 +66,11 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
       : [...currentBranches, branchId];
     
     form.setValue('allowBranchIds', newBranches);
+  };
+
+  const handleDepartmentChange = (departmentId: string) => {
+    if (isReadOnly) return;
+    form.setValue('departmentId', departmentId);
   };
 
   const getFormTitle = () => {
@@ -273,8 +262,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
               )}
             />
 
-            {/* Keep the department selection as is, or create a similar SelectDepartment component */}
-            {/* <Form.Field
+            <Form.Field
               control={form.control}
               name="departmentId"
               render={({ field }) => (
@@ -283,31 +271,21 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     CHOOSE DEPARTMENT
                   </Form.Label>
                   <Form.Control>
-                    <Select 
-                      onValueChange={(value) => {
+                    <SelectDepartment
+                      value={field.value || ""}
+                      onValueChange={(departmentId) => {
                         if (!isReadOnly) {
-                          form.setValue('departmentId', value);
+                          handleDepartmentChange(departmentId);
                         }
                       }}
-                      value={field.value || ""}
+                      className="w-full h-10 px-3 text-left justify-between"
                       disabled={isReadOnly}
-                    >
-                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                        <Select.Value placeholder="Choose department" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {availableDepartments.map((department) => (
-                          <Select.Item key={department.id} value={department.id}>
-                            {department.name}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
-            /> */}
+            />
           </div>
         </div>
       </div>

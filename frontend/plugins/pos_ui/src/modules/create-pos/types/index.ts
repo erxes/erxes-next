@@ -70,7 +70,7 @@ export interface PermissionSettings {
 
   export interface SyncCardConfig {
     title: string
-    brunch: string
+    branch: string
     stageBoard: string
     pipeline: string
     stage: string
