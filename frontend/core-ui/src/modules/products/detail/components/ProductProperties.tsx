@@ -64,7 +64,7 @@ function TagsSection() {
   const [isOpen, setIsOpen] = useState(true);
   const params = useParams();
   const productId = params?.id as string;
-  const { product, refetch } = useProductDetail(productId);
+  const { productDetail, refetch } = useProductDetail({ _id: productId });
 
   return (
     <Collapsible defaultOpen={true} open={isOpen} onOpenChange={setIsOpen}>
@@ -99,9 +99,9 @@ function TagsSection() {
             >
               <div className="p-4 border-b border-gray-200">
                 <TagsManager
-                  productId={product?._id}
-                  initialTags={product?.tagsId || []}
-                  uom={product?.uom || ''}
+                  productId={productDetail?._id}
+                  initialTags={productDetail?.tagsId || []}
+                  uom={productDetail?.uom || ''}
                   onTagsUpdated={() => refetch()}
                 />
               </div>

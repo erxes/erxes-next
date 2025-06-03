@@ -111,7 +111,7 @@ export const VatForm = ({
     ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasVat, side, calcedAmount, configs]);
+  }, [hasVat, side, calcedAmount]);
 
   const changeVatRow = (vatRow: IVatRow) => {
     const vatPercent = vatRow.percent ?? 0;
