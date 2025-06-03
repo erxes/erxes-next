@@ -25,16 +25,21 @@ export const CustomersCommandBar = () => {
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
         <Separator.Inline />
-        <CustomersDelete customerIds={customerIds} rows={table.getFilteredSelectedRowModel().rows}/>
+        <CustomersDelete
+          customerIds={customerIds}
+          rows={table.getFilteredSelectedRowModel().rows}
+        />
         <Separator.Inline />
         <SelectTags.CommandbarItem
           mode="multiple"
           tagType="core:customer"
-          value={intersection(
-            table
-              .getFilteredSelectedRowModel()
-              .rows.map((row) => row.original.tagIds),
-          )}
+          value={
+            intersection(
+              table
+                .getFilteredSelectedRowModel()
+                .rows.map((row) => row.original.tagIds),
+            ) || []
+          }
           targetIds={customerIds}
           options={(newSelectedTagIds) => ({
             update: (cache) => {
