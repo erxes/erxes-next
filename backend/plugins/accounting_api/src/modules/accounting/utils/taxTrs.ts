@@ -206,6 +206,7 @@ class TaxTrs {
         vatTr = await this.models.Transactions.updateTransaction(oldvatTr._id, {
           ...this.vatTrDoc,
           originId: transaction._id,
+          followType: 'vat',
           parentId: transaction.parentId
         });
 
@@ -213,6 +214,7 @@ class TaxTrs {
         vatTr = await this.models.Transactions.createTransaction({
           ...this.vatTrDoc,
           originId: transaction._id,
+          followType: 'vat',
           parentId: transaction.parentId
         });
 
@@ -234,6 +236,7 @@ class TaxTrs {
       vatTr = await this.models.Transactions.createTransaction({
         ...this.vatTrDoc,
         originId: transaction._id,
+        followType: 'vat',
         parentId: transaction.parentId
       });
 
@@ -274,6 +277,7 @@ class TaxTrs {
         ctaxTr = await this.models.Transactions.updateTransaction(oldctaxTr._id, {
           ...this.ctaxTrDoc,
           originId: transaction._id,
+          followType: 'ctax',
           parentId: transaction.parentId
         });
 
@@ -281,6 +285,7 @@ class TaxTrs {
         ctaxTr = await this.models.Transactions.createTransaction({
           ...this.ctaxTrDoc,
           originId: transaction._id,
+          followType: 'ctax',
           parentId: transaction.parentId
         });
 
@@ -302,6 +307,7 @@ class TaxTrs {
       ctaxTr = await this.models.Transactions.createTransaction({
         ...this.ctaxTrDoc,
         originId: transaction._id,
+        followType: 'ctax',
         parentId: transaction.parentId
       });
 
