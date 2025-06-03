@@ -5,12 +5,7 @@ export default {
   __resolveReference({ _id }: ILogDocument, { models }: IContext) {
     return models.Logs.findOne({ _id });
   },
-  async user({ userId }: ILogDocument, {}, {}: IContext) {
-    if (!userId) return null;
-
-    return {
-      __typename: 'User',
-      _id: userId,
-    };
+  async user({ userId }: ILogDocument, {}, { models }: IContext) {
+    return await models.Users.findOne({ _id: userId });
   },
 };

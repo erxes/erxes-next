@@ -1,12 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { IconSettings } from '@tabler/icons-react';
+import { IconAffiliate, IconChartPie, IconSettings } from '@tabler/icons-react';
 import { Breadcrumb, Button, Separator, Spinner } from 'erxes-ui/components';
-import { RecordTable } from 'erxes-ui/modules';
+import { PageSubHeader, RecordTable } from 'erxes-ui/modules';
 import { Link } from 'react-router-dom';
 import { IPageInfo, PageHeader } from 'ui-modules';
 import { AUTOMATIONS_MAIN_LIST } from '../graphql/automationQueries';
 import { IAutomationDoc } from '../types';
 import { automationColumns } from './AutomationColumns';
+import { AutomationRecordTableFilters } from './AutomationRecordTableFilters';
 type QueryResponse = {
   automationsMain: {
     list: IAutomationDoc[];
@@ -16,7 +17,7 @@ type QueryResponse = {
 };
 
 export const AutomationsRecordTable = () => {
-  const { data, loading, fetchMore } = useQuery<QueryResponse>(
+  const { data, loading, fetchMore, refetch } = useQuery<QueryResponse>(
     AUTOMATIONS_MAIN_LIST,
     {},
   );
@@ -60,11 +61,9 @@ export const AutomationsRecordTable = () => {
           <Breadcrumb>
             <Breadcrumb.List className="gap-1">
               <Breadcrumb.Item>
-                <Button variant="ghost" asChild>
-                  <Link to="/settings/automations">
-                    <IconSettings />
-                    Go to settings
-                  </Link>
+                <Button variant="ghost">
+                  <IconAffiliate />
+                  Automations
                 </Button>
               </Breadcrumb.Item>
             </Breadcrumb.List>
@@ -83,6 +82,7 @@ export const AutomationsRecordTable = () => {
           </Button>
         </PageHeader.End>
       </PageHeader>
+      <AutomationRecordTableFilters loading={loading} totalCount={totalCount} />
       <RecordTable.Provider
         columns={automationColumns}
         data={list}

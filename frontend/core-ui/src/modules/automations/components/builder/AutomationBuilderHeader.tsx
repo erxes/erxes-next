@@ -3,21 +3,29 @@ import {
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
 import { useMutation } from '@apollo/client';
-import { IconCategory2 } from '@tabler/icons-react';
+import {
+  IconAffiliate,
+  IconCategory2,
+  IconSettings,
+} from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
 import {
+  Breadcrumb,
   Button,
   Form,
   Input,
   Label,
+  Separator,
   Spinner,
   Switch,
   Tabs,
 } from 'erxes-ui/components';
 import { useToast } from 'erxes-ui/hooks';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { TAutomationProps } from '../../utils/AutomationFormDefinitions';
+import { PageHeader } from 'ui-modules';
+import { PageSubHeader } from 'erxes-ui';
 
 export default ({ reactFlowInstance }: any) => {
   const { control, watch, setValue, handleSubmit, clearErrors } =
@@ -141,8 +149,35 @@ export default ({ reactFlowInstance }: any) => {
   };
 
   return (
-    <div className="h-12 border-b px-4">
-      <div className="flex items-center justify-between h-full">
+    <>
+      <PageHeader>
+        <PageHeader.Start>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <IconAffiliate className="w-5 h-5" />
+                <span className="font-medium">Automations</span>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
+        </PageHeader.Start>
+        <PageHeader.End>
+          <Button variant="outline" asChild>
+            <Link to="/settings/automations">
+              <IconSettings />
+              Go to settings
+            </Link>
+          </Button>
+          <Button
+            disabled={loading}
+            onClick={handleSubmit(handleSave, handleError)}
+          >
+            {loading ? <Spinner /> : `Save`}
+          </Button>
+        </PageHeader.End>
+      </PageHeader>
+      <PageSubHeader className="flex items-center justify-between">
         <div className="flex items-center space-x-2 gap-8">
           <Form.Field
             control={control}
@@ -187,7 +222,7 @@ export default ({ reactFlowInstance }: any) => {
           <div className="flex flex-row items-center space-x-2 gap-4">
             <Form.Field
               control={control}
-              name="activeTab"
+              name="detail.status"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Control>
@@ -195,15 +230,16 @@ export default ({ reactFlowInstance }: any) => {
                       <Label htmlFor="mode">InActive</Label>
                       <Switch
                         id="mode"
-                        onCheckedChange={field.onChange}
-                        checked={!!field.value}
+                        onCheckedChange={(open) =>
+                          field.onChange(open ? 'active' : 'draft')
+                        }
+                        checked={field.value === 'active'}
                       />
                     </div>
                   </Form.Control>
                 </Form.Item>
               )}
             />
-            {/* <Button className="w-24">Save</Button> */}
 
             <Button
               variant="secondary"
@@ -214,13 +250,7 @@ export default ({ reactFlowInstance }: any) => {
             </Button>
           </div>
         )}
-        <Button
-          disabled={loading}
-          onClick={handleSubmit(handleSave, handleError)}
-        >
-          {loading ? <Spinner /> : `Save`}
-        </Button>
-      </div>
-    </div>
+      </PageSubHeader>
+    </>
   );
 };
