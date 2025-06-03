@@ -9,17 +9,12 @@ import { useForm, UseFormReturn } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PaymentFormValues, paymentSchema } from "../formSchema"
 import { PosDetailQueryResponse } from "~/modules/pos-detail.tsx/types/detail"
-
-interface PaymentMethod {
-  _id?: string 
-  type: string
-  title: string
-  icon: string
-  config: string 
-}
+import { useToast } from "erxes-ui"
+import { PaymentMethod } from "../../types"
+import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
 
 interface EcommercePaymentsFormProps {
-  posDetail?: PosDetailQueryResponse['posDetail'];
+  posDetail?: IPosDetail;
   form?: UseFormReturn<PaymentFormValues>
   onFormSubmit?: (data: PaymentFormValues) => void
 }
@@ -31,6 +26,7 @@ export default function EcommercePaymentsForm({
 }: EcommercePaymentsFormProps) {
   const [paymentMethods, setPaymentMethods] = useAtom(paymentMethodsAtom)
   const [appToken, setAppToken] = useState("")
+  const { toast } = useToast()
 
   const internalForm = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -73,7 +69,11 @@ export default function EcommercePaymentsForm({
 
   const handleAddPaymentMethod = () => {
     if (!newPaymentMethod.type || !newPaymentMethod.title) {
-      alert('Please fill in both type and title fields')
+      toast({
+        title: "Validation Error",
+        description: "Please fill in both type and title fields",
+        variant: "destructive"
+      })
       return
     }
 
@@ -131,8 +131,21 @@ export default function EcommercePaymentsForm({
     }
   }
 
+  const safeDisplayValue = (value: any): string => {
+    if (value === null || value === undefined) {
+      return ''
+    }
+    if (typeof value === 'string') {
+      return value
+    }
+    if (typeof value === 'object') {
+      return JSON.stringify(value)
+    }
+    return String(value)
+  }
+
   const displayConfig = (config: string): string => {
-    return config || ''
+    return safeDisplayValue(config)
   }
 
   const { formState: { errors } } = form
@@ -195,20 +208,20 @@ export default function EcommercePaymentsForm({
             <div key={method._id || index} className="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg mb-2">
               <div>
                 <Label className="text-xs text-gray-500">Type</Label>
-                <div className="font-medium">{method.type}</div>
+                <div className="font-medium">{safeDisplayValue(method.type)}</div>
               </div>
               <div>
                 <Label className="text-xs text-gray-500">Title</Label>
-                <div className="font-medium">{method.title}</div>
+                <div className="font-medium">{safeDisplayValue(method.title)}</div>
               </div>
               <div>
                 <Label className="text-xs text-gray-500">Icon</Label>
-                <div className="font-medium">{method.icon}</div>
+                <div className="font-medium">{safeDisplayValue(method.icon)}</div>
               </div>
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-xs text-gray-500">Config</Label>
-                  <div className="font-medium text-sm">{displayConfig(method.config)}</div>
+                  <div className="font-medium">{safeDisplayValue(method.config)}</div>
                 </div>
                 <Button
                   type="button"

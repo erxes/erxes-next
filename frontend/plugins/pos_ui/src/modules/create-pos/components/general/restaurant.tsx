@@ -11,12 +11,14 @@ import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { Branch, Department } from '../../types';
 import { PosDetailQueryResponse } from '~/modules/pos-detail.tsx/types/detail';
+import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { SelectBranch } from 'ui-modules';
 
 type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
-  posDetail?: PosDetailQueryResponse['posDetail'];
+  posDetail?: IPosDetail;
   isReadOnly?: boolean;
   branches?: Branch[]; 
   departments?: Department[]; 
@@ -33,20 +35,12 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
   const setSlot = useSetAtom(slotAtom);
   const isEditMode = !!posDetail;
 
-  // Default data similar to EcommerceForm
-  const defaultBranches: Branch[] = [
-    { id: "branch1", name: "Main Branch" },
-    { id: "branch2", name: "Downtown Branch" },
-    { id: "branch3", name: "Mall Branch" },
-  ];
-
   const defaultDepartments: Department[] = [
     { id: "kitchen", name: "Kitchen" },
     { id: "bar", name: "Bar" },
     { id: "service", name: "Service" },
   ];
 
-  const availableBranches = branches.length > 0 ? branches : defaultBranches;
   const availableDepartments = departments.length > 0 ? departments : defaultDepartments;
 
   const handleAddSlot = () => {
@@ -89,11 +83,6 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     
     form.setValue('allowBranchIds', newBranches);
   };
-
-  // const handleDepartmentChange = (departmentId: string) => {
-  //   if (isReadOnly) return;
-  //   form.setValue('departmentId', departmentId);
-  // };
 
   const getFormTitle = () => {
     if (isReadOnly) return 'View Restaurant Details';
@@ -269,28 +258,22 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     CHOOSE BRANCH
                   </Form.Label>
                   <Form.Control>
-                    <Select 
-                      onValueChange={(value) => handleBranchChange(value)}
+                    <SelectBranch
                       value={field.value?.[0] || ""}
-                      disabled={isReadOnly}
-                    >
-                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                        <Select.Value placeholder="Choose branch" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {availableBranches.map((branch) => (
-                          <Select.Item key={branch.id} value={branch.id}>
-                            {branch.name}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
+                      onValueChange={(branchId) => {
+                        if (!isReadOnly) {
+                          handleBranchChange(branchId);
+                        }
+                      }}
+                      className="w-full h-10"
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
             />
 
+            {/* Keep the department selection as is, or create a similar SelectDepartment component */}
             {/* <Form.Field
               control={form.control}
               name="departmentId"
@@ -301,7 +284,11 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   </Form.Label>
                   <Form.Control>
                     <Select 
-                      onValueChange={(value) => handleDepartmentChange(value)}
+                      onValueChange={(value) => {
+                        if (!isReadOnly) {
+                          form.setValue('departmentId', value);
+                        }
+                      }}
                       value={field.value || ""}
                       disabled={isReadOnly}
                     >

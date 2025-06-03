@@ -1,22 +1,30 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { useForm } from "react-hook-form"
-import type { UseFormReturn } from "react-hook-form"
-import { Form, Input, Select, Checkbox, Button, Label } from "erxes-ui"
-import { IconPlus, IconTrash } from "@tabler/icons-react"
-import type { ProductFormValues } from "../formSchema"
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
+import { Form, Input, Select, Checkbox, Button, Label } from 'erxes-ui';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
+import type { ProductFormValues } from '../formSchema';
+import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
 interface ProductFormProps {
-  form?: UseFormReturn<ProductFormValues>
-  posDetail?: any
-  isReadOnly?: boolean
+  form?: UseFormReturn<ProductFormValues>;
+  posDetail?: IPosDetail;
+  isReadOnly?: boolean;
+  onSubmit?: (data: ProductFormValues) => Promise<void>;
 }
 
-export default function ProductForm({ form: externalForm, posDetail, isReadOnly = false }: ProductFormProps) {
-  const isEditMode = !!posDetail
-  const [showProductGroups, setShowProductGroups] = useState(false)
-  const [showMappings, setShowMappings] = useState(false)
+export default function ProductForm({
+  form: externalForm,
+  posDetail,
+  isReadOnly = false,
+  onSubmit,
+}: ProductFormProps) {
+  const isEditMode = !!posDetail;
+  const [showProductGroups, setShowProductGroups] = useState(false);
+  const [showMappings, setShowMappings] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const internalForm = useForm<ProductFormValues>({
     defaultValues: {
@@ -26,13 +34,13 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
       kioskExcludeCategoryIds: [],
       kioskExcludeProductIds: [],
       checkExcludeCategoryIds: [],
-    }
-  })
+    },
+  });
 
-  const form = externalForm || internalForm
+  const form = externalForm || internalForm;
 
   useEffect(() => {
-    if (!posDetail) return
+    if (!posDetail) return;
 
     form.reset({
       productDetails: posDetail.productDetails || [],
@@ -41,69 +49,88 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
       kioskExcludeCategoryIds: posDetail.kioskExcludeCategoryIds || [],
       kioskExcludeProductIds: posDetail.kioskExcludeProductIds || [],
       checkExcludeCategoryIds: posDetail.checkExcludeCategoryIds || [],
-    })
-  }, [posDetail, form])
+    });
+  }, [posDetail, form]);
 
   const handleToggleProductGroups = () => {
-    if (isReadOnly) return
-    setShowProductGroups(!showProductGroups)
-  }
+    if (isReadOnly) return;
+    setShowProductGroups(!showProductGroups);
+  };
 
   const handleToggleMappings = () => {
-    if (isReadOnly) return
-    setShowMappings(!showMappings)
-  }
+    if (isReadOnly) return;
+    setShowMappings(!showMappings);
+  };
 
   const handleAddProductDetail = () => {
-    if (isReadOnly) return
-    const currentDetails = form.watch("productDetails") || []
+    if (isReadOnly) return;
+    const currentDetails = form.watch('productDetails') || [];
     const newProductDetail = {
-      productId: "",
-      categoryId: "",
+      productId: '',
+      categoryId: '',
       isRequired: false,
-    }
-    form.setValue("productDetails", [...currentDetails, newProductDetail])
-  }
+    };
+    form.setValue('productDetails', [...currentDetails, newProductDetail]);
+  };
 
   const handleAddMapping = () => {
-    if (isReadOnly) return
-    const currentMappings = form.watch("catProdMappings") || []
+    if (isReadOnly) return;
+    const currentMappings = form.watch('catProdMappings') || [];
     const newMapping = {
-      categoryId: "",
+      categoryId: '',
       productIds: [],
-    }
-    form.setValue("catProdMappings", [...currentMappings, newMapping])
-  }
+    };
+    form.setValue('catProdMappings', [...currentMappings, newMapping]);
+  };
 
   const handleRemoveProductDetail = (index: number) => {
-    if (isReadOnly) return
-    const currentDetails = form.watch("productDetails") || []
-    const updatedDetails = currentDetails.filter((_, i) => i !== index)
-    form.setValue("productDetails", updatedDetails)
-  }
+    if (isReadOnly) return;
+    const currentDetails = form.watch('productDetails') || [];
+    const updatedDetails = currentDetails.filter((_, i) => i !== index);
+    form.setValue('productDetails', updatedDetails);
+  };
 
   const handleRemoveMapping = (index: number) => {
-    if (isReadOnly) return
-    const currentMappings = form.watch("catProdMappings") || []
-    const updatedMappings = currentMappings.filter((_, i) => i !== index)
-    form.setValue("catProdMappings", updatedMappings)
-  }
+    if (isReadOnly) return;
+    const currentMappings = form.watch('catProdMappings') || [];
+    const updatedMappings = currentMappings.filter((_, i) => i !== index);
+    form.setValue('catProdMappings', updatedMappings);
+  };
 
   const getFormTitle = () => {
-    if (isReadOnly) return "View Product & Service Details"
-    return isEditMode ? "Edit Product & Service" : "Configure Product & Service"
-  }
+    if (isReadOnly) return 'View Product & Service Details';
+    return isEditMode
+      ? 'Edit Product & Service'
+      : 'Configure Product & Service';
+  };
+
+  const handleSubmit = async (data: ProductFormValues) => {
+    if (isReadOnly || !onSubmit) return;
+
+    try {
+      setIsSubmitting(true);
+      await onSubmit(data);
+    } catch (error) {
+      console.error('Form submission failed:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Form {...form}>
-      <div className="p-3">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="p-3">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">{getFormTitle()}</h2>
+          <h2 className="text-lg font-semibold text-gray-800">
+            {getFormTitle()}
+          </h2>
         </div>
 
         <div className="space-y-8">
           <div className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT DETAILS</h2>
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              PRODUCT DETAILS
+            </h2>
 
             <Button
               type="button"
@@ -117,8 +144,11 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
 
             {showProductGroups && (
               <div className="space-y-4">
-                {(form.watch("productDetails") || []).map((detail, index) => (
-                  <div key={index} className="grid grid-cols-2 gap-4 mt-4 p-4 border rounded-md">
+                {(form.watch('productDetails') || []).map((detail, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-2 gap-4 mt-4 p-4 border rounded-md"
+                  >
                     <Form.Field
                       control={form.control}
                       name={`productDetails.${index}.productId`}
@@ -152,7 +182,7 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
                           <Form.Control>
                             <Input
                               {...field}
-                              value={field.value || ""}
+                              value={field.value || ''}
                               placeholder="Enter category ID (optional)"
                               className="border border-gray-300 h-10"
                               disabled={isReadOnly}
@@ -172,11 +202,16 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               checked={field.value}
-                              onCheckedChange={(checked) => field.onChange(Boolean(checked))}
+                              onCheckedChange={(checked) =>
+                                field.onChange(Boolean(checked))
+                              }
                               id={`required-${index}`}
                               disabled={isReadOnly}
                             />
-                            <Label htmlFor={`required-${index}`} className="text-sm text-gray-500">
+                            <Label
+                              htmlFor={`required-${index}`}
+                              className="text-sm text-gray-500"
+                            >
                               Required
                             </Label>
                           </div>
@@ -218,7 +253,9 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">INITIAL PRODUCT CATEGORIES</h2>
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              INITIAL PRODUCT CATEGORIES
+            </h2>
             <Form.Field
               control={form.control}
               name="initialCategoryIds"
@@ -229,8 +266,10 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
                   </Form.Label>
                   <Form.Control>
                     <Select
-                      onValueChange={(value) => form.setValue("initialCategoryIds", [value])}
-                      value={field.value?.[0] || ""}
+                      onValueChange={(value) =>
+                        form.setValue('initialCategoryIds', [value])
+                      }
+                      value={field.value?.[0] || ''}
                       disabled={isReadOnly}
                     >
                       <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
@@ -250,7 +289,9 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">KIOSK EXCLUDE PRODUCTS</h2>
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              KIOSK EXCLUDE PRODUCTS
+            </h2>
             <div className="grid grid-cols-2 gap-4">
               <Form.Field
                 control={form.control}
@@ -262,17 +303,25 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
                     </Form.Label>
                     <Form.Control>
                       <Select
-                        onValueChange={(value) => form.setValue("kioskExcludeCategoryIds", [value])}
-                        value={field.value?.[0] || ""}
+                        onValueChange={(value) =>
+                          form.setValue('kioskExcludeCategoryIds', [value])
+                        }
+                        value={field.value?.[0] || ''}
                         disabled={isReadOnly}
                       >
                         <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                           <Select.Value placeholder="Choose categories to exclude" />
                         </Select.Trigger>
                         <Select.Content>
-                          <Select.Item value="category1">Category 1</Select.Item>
-                          <Select.Item value="category2">Category 2</Select.Item>
-                          <Select.Item value="category3">Category 3</Select.Item>
+                          <Select.Item value="category1">
+                            Category 1
+                          </Select.Item>
+                          <Select.Item value="category2">
+                            Category 2
+                          </Select.Item>
+                          <Select.Item value="category3">
+                            Category 3
+                          </Select.Item>
                         </Select.Content>
                       </Select>
                     </Form.Control>
@@ -286,11 +335,15 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
                 name="kioskExcludeProductIds"
                 render={({ field }) => (
                   <Form.Item>
-                    <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">EXCLUDE PRODUCTS</Form.Label>
+                    <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                      EXCLUDE PRODUCTS
+                    </Form.Label>
                     <Form.Control>
                       <Select
-                        onValueChange={(value) => form.setValue("kioskExcludeProductIds", [value])}
-                        value={field.value?.[0] || ""}
+                        onValueChange={(value) =>
+                          form.setValue('kioskExcludeProductIds', [value])
+                        }
+                        value={field.value?.[0] || ''}
                         disabled={isReadOnly}
                       >
                         <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
@@ -311,10 +364,13 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT & CATEGORY MAPPING</h2>
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              PRODUCT & CATEGORY MAPPING
+            </h2>
             <p className="text-sm text-gray-500">
-              MAP A PRODUCT TO CATEGORY. WHEN A PRODUCT WITHIN THAT CATEGORY IS SOLD IN POS SYSTEM WITH TAKE OPTION,
-              THEN THE MAPPED PRODUCT WILL BE ADDED TO THE PRICE
+              MAP A PRODUCT TO CATEGORY. WHEN A PRODUCT WITHIN THAT CATEGORY IS
+              SOLD IN POS SYSTEM WITH TAKE OPTION, THEN THE MAPPED PRODUCT WILL
+              BE ADDED TO THE PRICE
             </p>
 
             <Button
@@ -329,7 +385,7 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
 
             {showMappings && (
               <div className="space-y-4 p-4 mt-4 border rounded-md">
-                {(form.watch("catProdMappings") || []).map((mapping, index) => (
+                {(form.watch('catProdMappings') || []).map((mapping, index) => (
                   <div key={index} className="grid grid-cols-2 gap-4 mt-4">
                     <Form.Field
                       control={form.control}
@@ -363,17 +419,28 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
                           </Form.Label>
                           <Form.Control>
                             <Select
-                              onValueChange={(value) => form.setValue(`catProdMappings.${index}.productIds`, [value])}
-                              value={field.value?.[0] || ""}
+                              onValueChange={(value) =>
+                                form.setValue(
+                                  `catProdMappings.${index}.productIds`,
+                                  [value],
+                                )
+                              }
+                              value={field.value?.[0] || ''}
                               disabled={isReadOnly}
                             >
                               <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                                 <Select.Value placeholder="Choose products" />
                               </Select.Trigger>
                               <Select.Content>
-                                <Select.Item value="product1">Product 1</Select.Item>
-                                <Select.Item value="product2">Product 2</Select.Item>
-                                <Select.Item value="product3">Product 3</Select.Item>
+                                <Select.Item value="product1">
+                                  Product 1
+                                </Select.Item>
+                                <Select.Item value="product2">
+                                  Product 2
+                                </Select.Item>
+                                <Select.Item value="product3">
+                                  Product 3
+                                </Select.Item>
                               </Select.Content>
                             </Select>
                           </Form.Control>
@@ -415,17 +482,23 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">CHECK EXCLUDE CATEGORIES</h2>
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              CHECK EXCLUDE CATEGORIES
+            </h2>
             <Form.Field
               control={form.control}
               name="checkExcludeCategoryIds"
               render={({ field }) => (
                 <Form.Item>
-                  <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">EXCLUDE CATEGORIES</Form.Label>
+                  <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                    EXCLUDE CATEGORIES
+                  </Form.Label>
                   <Form.Control>
                     <Select
-                      onValueChange={(value) => form.setValue("checkExcludeCategoryIds", [value])}
-                      value={field.value?.[0] || ""}
+                      onValueChange={(value) =>
+                        form.setValue('checkExcludeCategoryIds', [value])
+                      }
+                      value={field.value?.[0] || ''}
                       disabled={isReadOnly}
                     >
                       <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
@@ -444,7 +517,19 @@ export default function ProductForm({ form: externalForm, posDetail, isReadOnly 
             />
           </div>
         </div>
-      </div>
+
+        {!isReadOnly && onSubmit && (
+          <div className="mt-8 flex justify-end">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+            >
+              {isSubmitting ? 'Saving...' : isEditMode ? 'Update' : 'Save'}
+            </Button>
+          </div>
+        )}
+      </form>
     </Form>
-  )
+  );
 }

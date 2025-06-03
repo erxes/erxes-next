@@ -7,12 +7,13 @@ import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { Branch, Department } from '../../types';
 import { PosDetailQueryResponse } from '~/modules/pos-detail.tsx/types/detail';
+import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
 type AllowedType = "eat" | "take" | "delivery" | "loss" | "spend" | "reject";
 
 interface EcommerceFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
-  posDetail?: PosDetailQueryResponse['posDetail'];
+  posDetail?: IPosDetail;
   isReadOnly?: boolean;
   branches?: Branch[]; 
   departments?: Department[]; 

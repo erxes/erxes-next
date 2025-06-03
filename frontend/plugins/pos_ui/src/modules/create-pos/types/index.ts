@@ -103,4 +103,11 @@ export interface PermissionSettings {
     id: string;
     name: string;
   }
-  
+
+export interface PaymentMethod {
+    _id?: string 
+    type: string
+    title: string
+    icon: string
+    config: string 
+  }

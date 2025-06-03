@@ -4,12 +4,13 @@ import { SelectMember } from 'ui-modules';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PermissionFormValues, permissionSchema } from '../formSchema';
-import { useEffect, useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
+import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
 interface PermissionFormProps {
   form?: UseFormReturn<PermissionFormValues>;
   onFormSubmit?: (data: PermissionFormValues) => void;
-  posDetail?: any; // Added posDetail prop
+  posDetail?: IPosDetail;
 }
 
 export interface PermissionFormRef {
@@ -41,17 +42,13 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
 
     const form = externalForm || internalForm;
 
-    // Initialize form with posDetail values when component mounts or posDetail changes
     useEffect(() => {
       if (posDetail) {
-        // Set selected IDs first
         const adminId = posDetail.adminTeamMember || posDetail.adminIds?.[0] || '';
         const cashierId = posDetail.cashierTeamMember || posDetail.cashierIds?.[0] || '';
         
         setSelectedAdminId(adminId);
         setSelectedCashierId(cashierId);
-
-        // Set form values from posDetail
         form.reset({
           adminTeamMember: adminId,
           adminPrintTempBill: posDetail.adminPrintTempBill || false,
@@ -322,7 +319,6 @@ PermissionForm.displayName = 'PermissionForm';
 
 export default PermissionForm;
 
-// Enhanced helper function to get permission form IDs
 export const getPermissionFormIds = (formRef: React.RefObject<PermissionFormRef>) => {
   if (!formRef.current) return { adminIds: [], cashierIds: [] };
   
@@ -332,7 +328,6 @@ export const getPermissionFormIds = (formRef: React.RefObject<PermissionFormRef>
   };
 };
 
-// Additional helper function to get current form values including IDs
 export const getPermissionFormValues = (form: UseFormReturn<PermissionFormValues>) => {
   const values = form.getValues();
   return {

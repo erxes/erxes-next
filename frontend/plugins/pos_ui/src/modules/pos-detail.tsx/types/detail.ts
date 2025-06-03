@@ -54,6 +54,14 @@ export interface PosDetailQueryResponse {
       branchTitle?: string;
       departmentTitle?: string;
       productDetails?: any;
+      adminTeamMember?: string;
+      adminPrintTempBill?: boolean;
+      adminDirectSales?: boolean;
+      adminDirectDiscountLimit?: string;
+      cashierTeamMember?: string;
+      cashierPrintTempBill?: boolean;
+      cashierDirectSales?: boolean;
+      cashierDirectDiscountLimit?: string;
     };
   }
   

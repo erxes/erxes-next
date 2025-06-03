@@ -1,45 +1,107 @@
-"use client"
-import { Input, Label, Select, Switch } from "erxes-ui"
-import { useSearchParams } from "react-router-dom"
-import { useAtom } from "jotai"
-import { financeConfigSettingsAtom } from "../../states/posCategory"
+'use client';
+import { Input, Label, Select, Switch } from 'erxes-ui';
+import { useSearchParams } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { financeConfigSettingsAtom } from '../../states/posCategory';
+import { useEffect, useState } from 'react';
+import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
-export default function FinanceConfigForm() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [financeConfig, setFinanceConfig] = useAtom(financeConfigSettingsAtom)
+interface FinanceConfigFormProps {
+  posDetail?: any;
+  isReadOnly?: boolean;
+  onSubmit?: (data: any) => Promise<void>;
+}
 
-  const handleSwitchChange = (field: keyof typeof financeConfig, value: boolean) => {
+export default function FinanceConfigForm({ 
+  posDetail, 
+  isReadOnly = false, 
+  onSubmit 
+}: FinanceConfigFormProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [financeConfig, setFinanceConfig] = useAtom(financeConfigSettingsAtom);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (posDetail) {
+      setFinanceConfig({
+        isSyncErkhet: posDetail.isSyncErkhet ?? false,
+        checkErkhet: posDetail.checkErkhet ?? false,
+        checkInventories: posDetail.checkInventories ?? false,
+        userEmail: posDetail.userEmail || '',
+        beginBillNumber: posDetail.beginBillNumber || '',
+        defaultPay: posDetail.defaultPay || '',
+        account: posDetail.account || '',
+        location: posDetail.location || '',
+      });
+    }
+  }, [posDetail, setFinanceConfig]);
+
+  const handleSwitchChange = (
+    field: keyof typeof financeConfig,
+    value: boolean,
+  ) => {
+    if (isReadOnly) return;
     setFinanceConfig({
       ...financeConfig,
       [field]: value,
-    })
-  }
+    });
+  };
 
-  const handleInputChange = (field: keyof typeof financeConfig, value: string) => {
+  const handleInputChange = (
+    field: keyof typeof financeConfig,
+    value: string,
+  ) => {
+    if (isReadOnly) return;
     setFinanceConfig({
       ...financeConfig,
       [field]: value,
-    })
-  }
+    });
+  };
 
-  const handleSelectChange = (field: keyof typeof financeConfig, value: string) => {
+  const handleSelectChange = (
+    field: keyof typeof financeConfig,
+    value: string,
+  ) => {
+    if (isReadOnly) return;
     setFinanceConfig({
       ...financeConfig,
       [field]: value,
-    })
-  }
+    });
+  };
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    console.log("Finance config form submitted:", financeConfig)
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    
+    if (onSubmit) {
+      try {
+        setIsSubmitting(true);
+        await onSubmit(financeConfig);
+      } catch (error) {
+        console.error('Finance config form submission failed:', error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      console.log('Finance config form submitted:', financeConfig);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('tab', 'delivery');
+      setSearchParams(newParams);
+    }
+  };
 
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set("tab", "delivery")
-    setSearchParams(newParams)
-  }
+  const getFormTitle = () => {
+    if (isReadOnly) return 'View Finance Configuration';
+    return posDetail ? 'Edit Finance Configuration' : 'Configure Finance Settings';
+  };
 
   return (
     <form onSubmit={handleSubmit} className="p-3">
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">
+          {getFormTitle()}
+        </h2>
+      </div>
+
       <div className="space-y-8">
         <div className="space-y-4">
           <h2 className="text-indigo-600 text-xl font-medium">MAIN</h2>
@@ -49,7 +111,10 @@ export default function FinanceConfigForm() {
             <Switch
               className="scale-150 w-7"
               checked={financeConfig.isSyncErkhet}
-              onCheckedChange={(checked) => handleSwitchChange("isSyncErkhet", checked)}
+              onCheckedChange={(checked) =>
+                handleSwitchChange('isSyncErkhet', checked)
+              }
+              disabled={isReadOnly}
             />
           </div>
         </div>
@@ -61,7 +126,10 @@ export default function FinanceConfigForm() {
             <Switch
               className="scale-150 w-7"
               checked={financeConfig.checkErkhet}
-              onCheckedChange={(checked) => handleSwitchChange("checkErkhet", checked)}
+              onCheckedChange={(checked) =>
+                handleSwitchChange('checkErkhet', checked)
+              }
+              disabled={isReadOnly}
             />
           </div>
 
@@ -70,7 +138,10 @@ export default function FinanceConfigForm() {
             <Switch
               className="scale-150 w-7"
               checked={financeConfig.checkInventories}
-              onCheckedChange={(checked) => handleSwitchChange("checkInventories", checked)}
+              onCheckedChange={(checked) =>
+                handleSwitchChange('checkInventories', checked)
+              }
+              disabled={isReadOnly}
             />
           </div>
         </div>
@@ -83,17 +154,27 @@ export default function FinanceConfigForm() {
                 <Label className="text-sm text-gray-500">USER EMAIL</Label>
                 <Input
                   value={financeConfig.userEmail}
-                  onChange={(e) => handleInputChange("userEmail", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('userEmail', e.target.value)
+                  }
                   placeholder="Enter email"
+                  disabled={isReadOnly}
+                  readOnly={isReadOnly}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm text-gray-500">BEGIN BILL NUMBER</Label>
+                <Label className="text-sm text-gray-500">
+                  BEGIN BILL NUMBER
+                </Label>
                 <Input
                   value={financeConfig.beginBillNumber}
-                  onChange={(e) => handleInputChange("beginBillNumber", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('beginBillNumber', e.target.value)
+                  }
                   placeholder="Enter bill number"
+                  disabled={isReadOnly}
+                  readOnly={isReadOnly}
                 />
               </div>
 
@@ -101,7 +182,10 @@ export default function FinanceConfigForm() {
                 <Label className="text-sm text-gray-500">DEFAULTPAY</Label>
                 <Select
                   value={financeConfig.defaultPay}
-                  onValueChange={(value) => handleSelectChange("defaultPay", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange('defaultPay', value)
+                  }
+                  disabled={isReadOnly}
                 >
                   <Select.Trigger>
                     <Select.Value placeholder="Select..." />
@@ -120,8 +204,10 @@ export default function FinanceConfigForm() {
                 <Label className="text-sm text-gray-500">ACCOUNT</Label>
                 <Input
                   value={financeConfig.account}
-                  onChange={(e) => handleInputChange("account", e.target.value)}
+                  onChange={(e) => handleInputChange('account', e.target.value)}
                   placeholder="Enter account"
+                  disabled={isReadOnly}
+                  readOnly={isReadOnly}
                 />
               </div>
 
@@ -129,14 +215,30 @@ export default function FinanceConfigForm() {
                 <Label className="text-sm text-gray-500">LOCATION</Label>
                 <Input
                   value={financeConfig.location}
-                  onChange={(e) => handleInputChange("location", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('location', e.target.value)
+                  }
                   placeholder="Enter location"
+                  disabled={isReadOnly}
+                  readOnly={isReadOnly}
                 />
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {!isReadOnly && onSubmit && (
+        <div className="mt-8 flex justify-end">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          >
+            {isSubmitting ? 'Saving...' : posDetail ? 'Update' : 'Save'}
+          </button>
+        </div>
+      )}
     </form>
-  )
+  );
 }
