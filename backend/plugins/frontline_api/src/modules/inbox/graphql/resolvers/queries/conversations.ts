@@ -82,7 +82,6 @@ export const conversationQueries = {
     serverTiming?.endTime('conversationsQuery');
 
     serverTiming?.endTime('conversations');
-    console.log(conversations, 'conversations');
     return { list, totalCount, pageInfo };
   },
 
