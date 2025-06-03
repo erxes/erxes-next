@@ -5,12 +5,15 @@ import { IntegrationSteps } from '@/integrations/components/IntegrationSteps';
 export const AddErxesMessengerSheet = () => {
   return (
     <Sheet>
-      <Sheet.Trigger asChild>
-        <Button>
-          <IconPlus />
-          Add Messenger
-        </Button>
-      </Sheet.Trigger>
+      <div>
+        <Sheet.Trigger asChild>
+          <Button>
+            <IconPlus />
+            Add Messenger
+          </Button>
+        </Sheet.Trigger>
+      </div>
+
       <Sheet.View className="gap-0 flex-col flex">
         <Sheet.Header>
           <Sheet.Title>Add Erxes Messenger</Sheet.Title>

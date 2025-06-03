@@ -28,7 +28,7 @@ export const FacebookMessageItem = ({
 }) => {
   return (
     <div>
-      <Button asChild className="max-w-content" variant="secondary">
+      <Button asChild className="max-w-content " variant="secondary">
         <div className="text-left">
           {message.content}
           <RelativeDateDisplay.Value value={message.createdAt} />

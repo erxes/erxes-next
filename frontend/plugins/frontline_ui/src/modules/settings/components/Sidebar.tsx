@@ -2,11 +2,17 @@ import React from 'react';
 import { Link, useLocation } from 'react-router';
 import { Sidebar } from 'erxes-ui';
 import { SETTINGS_ROUTES } from '../constants/settingsRoutes';
+import { FrontlinePaths } from '@/types/FrontlinePaths';
 
 export const InboxSettingsSidebar = () => {
   const location = useLocation();
 
-  if (location.pathname !== '/settings/inbox/integrations') {
+  if (
+    location.pathname !== FrontlinePaths.Inbox + FrontlinePaths.Integrations &&
+    !location.pathname.includes(
+      FrontlinePaths.Inbox + FrontlinePaths.Integrations,
+    )
+  ) {
     return null;
   }
 

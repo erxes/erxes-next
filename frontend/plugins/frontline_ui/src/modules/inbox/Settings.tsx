@@ -12,6 +12,7 @@ import { InboxSettingsSidebar } from '../settings/components/Sidebar';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
 import { IconMailFilled } from '@tabler/icons-react';
+import { FrontlinePaths } from '@/types/FrontlinePaths';
 
 export const IntegrationSettingsPage = lazy(() =>
   import('~/pages/IntegrationSettingsPage').then((module) => ({
@@ -28,6 +29,12 @@ export const ChannelsSettingsPage = lazy(() =>
 export const IntegrationDetailPage = lazy(() =>
   import('~/pages/IntegrationDetailPage').then((module) => ({
     default: module.IntegrationDetailPage,
+  })),
+);
+
+export const IntegrationConfigPage = lazy(() =>
+  import('~/pages/IntegrationConfigPage').then((module) => ({
+    default: module.IntegrationConfigPage,
   })),
 );
 
@@ -73,12 +80,16 @@ const InboxSettings = () => {
                 element={<Navigate to="integrations" replace />}
               />
               <Route
-                path="integrations"
+                path={FrontlinePaths.Integrations}
                 element={<IntegrationSettingsPage />}
               />
               <Route
-                path="integrations/:integrationType"
+                path={FrontlinePaths.IntegrationDetail}
                 element={<IntegrationDetailPage />}
+              />
+              <Route
+                path={FrontlinePaths.IntegrationConfig}
+                element={<IntegrationConfigPage />}
               />
               <Route path="channels" element={<ChannelsSettingsPage />} />
             </Routes>

@@ -37,16 +37,16 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
-  'fixed z-50 gap-4 shadow-lg outline-none transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out rounded-md bg-muted',
+  'fixed z-50 shadow-lg outline-none transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out rounded-md bg-muted',
   {
     variants: {
       side: {
         top: 'inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
         bottom:
           'inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
-        left: 'inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-md',
+        left: 'inset-y-0 left-0 h-full flex flex-col w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-md',
         right:
-          'inset-y-2 right-2 h-[calc(100dvh-1rem)] w-[calc(100vw-theme(spacing.4))] md:w-3/4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right overflow-hidden sm:max-w-md',
+          'inset-y-2 right-2 flex flex-col h-[calc(100dvh-1rem)] w-[calc(100vw-theme(spacing.4))] md:w-3/4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right overflow-hidden sm:max-w-md',
       },
     },
     defaultVariants: {
@@ -92,17 +92,23 @@ SheetView.displayName = SheetPrimitive.Content.displayName;
 export const SheetClose = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Close>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close>
->(({ ...props }, ref) => (
-  <SheetPrimitive.Close ref={ref} {...props} asChild>
-    <Button
-      variant="secondary"
-      size="icon"
-      className={cn('ml-auto', props.className)}
-    >
-      <IconX />
-    </Button>
-  </SheetPrimitive.Close>
-));
+>(({ asChild, ...props }, ref) => {
+  if (asChild) {
+    return <SheetPrimitive.Close ref={ref} {...props} asChild />;
+  }
+
+  return (
+    <SheetPrimitive.Close ref={ref} {...props} asChild>
+      <Button
+        variant="secondary"
+        size="icon"
+        className={cn('ml-auto', props.className)}
+      >
+        <IconX />
+      </Button>
+    </SheetPrimitive.Close>
+  );
+});
 SheetClose.displayName = SheetPrimitive.Close.displayName;
 
 const SheetHeader = ({

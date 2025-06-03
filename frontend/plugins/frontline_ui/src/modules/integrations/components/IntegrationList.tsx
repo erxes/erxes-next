@@ -2,6 +2,8 @@ import { IconSearch } from '@tabler/icons-react';
 import { Card, Command, Input } from 'erxes-ui';
 import { INTEGRATIONS } from '../constants/integrations';
 import { Link } from 'react-router';
+import { IntegrationLogo } from './IntegrationLogo';
+import { IntegrationType } from '@/types/Integration';
 
 export const IntegrationList = () => {
   return (
@@ -20,12 +22,15 @@ export const IntegrationList = () => {
           className="[&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:mb-1.5 pb-8"
         >
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {INTEGRATIONS.map((integration) => (
-              <IntegrationCard
-                key={integration.type}
-                integration={integration}
-              />
-            ))}
+            {Object.entries(INTEGRATIONS).map(
+              ([integrationType, integration]) => (
+                <IntegrationCard
+                  key={integrationType}
+                  integration={integration}
+                  integrationType={integrationType as IntegrationType}
+                />
+              ),
+            )}
           </div>
         </Command.Group>
       </Command.List>
@@ -35,12 +40,14 @@ export const IntegrationList = () => {
 
 export const IntegrationCard = ({
   integration,
+  integrationType,
 }: {
-  integration: (typeof INTEGRATIONS)[0];
+  integration: (typeof INTEGRATIONS)[keyof typeof INTEGRATIONS];
+  integrationType: IntegrationType;
 }) => {
   return (
-    <Link to={`/settings/inbox/integrations/${integration.type}`}>
-      <Command.Primitive.Item asChild key={integration.type}>
+    <Link to={`/settings/inbox/integrations/${integrationType}`}>
+      <Command.Primitive.Item asChild key={integrationType}>
         <Card className="h-auto p-3 flex flex-col gap-2 rounded-lg">
           <IntegrationIntro integration={integration} />
         </Card>
@@ -52,7 +59,7 @@ export const IntegrationCard = ({
 export const IntegrationIntro = ({
   integration,
 }: {
-  integration?: (typeof INTEGRATIONS)[0];
+  integration?: (typeof INTEGRATIONS)[keyof typeof INTEGRATIONS];
 }) => {
   if (!integration) {
     return null;
@@ -61,13 +68,7 @@ export const IntegrationIntro = ({
   return (
     <>
       <div className="flex gap-2">
-        <div className="shadow-sm size-8 rounded flex-none overflow-hidden">
-          <img
-            src={integration.img}
-            alt={integration.name}
-            className="w-full h-full object-contain"
-          />
-        </div>
+        <IntegrationLogo img={integration.img} name={integration.name} />
         <h6 className="font-semibold text-sm self-center">
           {integration.name}
         </h6>
