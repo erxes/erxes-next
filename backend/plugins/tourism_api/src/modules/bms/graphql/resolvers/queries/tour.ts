@@ -1,9 +1,33 @@
 import { cursorPaginate } from 'erxes-api-shared/src/utils';
 import { IContext } from '~/connectionResolvers';
+import {
+  ITourDocument,
+  TourFilterParams,
+  TourListResponse,
+} from '@/bms/@types/tour';
+
+function buildDateSelector(
+  selector: Record<string, any>,
+  field: 'startDate' | 'endDate',
+  date1?: Date,
+  date2?: Date,
+) {
+  if (date1 || date2) {
+    if (!selector[field]) {
+      selector[field] = {};
+    }
+    if (date1) {
+      selector[field]['$gte'] = date1;
+    }
+    if (date2) {
+      selector[field]['$lte'] = date2;
+    }
+  }
+}
 
 const tourQueries = {
   async bmTours(
-    _root,
+    _root: any,
     {
       categories,
       status,
@@ -15,58 +39,30 @@ const tourQueries = {
       startDate2,
       endDate2,
       ...params
-    },
+    }: TourFilterParams,
     { models }: IContext,
-  ) {
-    const selector: any = {};
+  ): Promise<TourListResponse> {
+    const selector: Record<string, any> = {};
 
-    if (categories) {
+    if (categories?.length) {
       selector.categories = { $in: categories };
     }
     if (status) {
       selector.status = status;
     }
     if (branchId) {
-      selector.status = branchId;
+      selector.branchId = branchId;
     }
-    if (tags) {
+    if (tags?.length) {
       selector.tags = { $in: tags };
     }
     if (innerDate) {
-      const dateToCheck = innerDate;
-      selector.startDate = { $lte: dateToCheck };
-      selector.endDate = { $gte: dateToCheck };
-
-      // selector.$expr = {
-      //   $lte: [
-      //     dateToCheck,
-      //     {
-      //       $add: [
-      //         '$startDate',
-      //         { $multiply: ['$duration', 24 * 60 * 60 * 1000] },
-      //       ],
-      //     },
-      //   ],
-      // };
+      selector.startDate = { $lte: innerDate };
+      selector.endDate = { $gte: innerDate };
     }
 
-    if (startDate2) {
-      if (!selector.startDate) selector.startDate = {};
-      selector.startDate['$lte'] = startDate2;
-    }
-    if (startDate1) {
-      if (!selector.startDate) selector.startDate = {};
-      selector.startDate['$gte'] = startDate1;
-    }
-
-    if (endDate2) {
-      if (!selector.endDate) selector.endDate = {};
-      selector.endDate['$lte'] = endDate2;
-    }
-    if (endDate1) {
-      if (!selector.endDate) selector.endDate = {};
-      selector.endDate['$gte'] = endDate1;
-    }
+    buildDateSelector(selector, 'startDate', startDate1, startDate2);
+    buildDateSelector(selector, 'endDate', endDate1, endDate2);
 
     const { list, totalCount, pageInfo } = await cursorPaginate({
       model: models.Tours,
@@ -76,8 +72,13 @@ const tourQueries = {
 
     return { list, totalCount, pageInfo };
   },
-  async bmTourDetail(_root, { _id }, { models }: IContext) {
-    return await models.Tours.findById(_id);
+
+  async bmTourDetail(
+    _root: any,
+    { _id }: { _id: string },
+    { models }: IContext,
+  ): Promise<ITourDocument | null> {
+    return models.Tours.findById(_id);
   },
 };
 

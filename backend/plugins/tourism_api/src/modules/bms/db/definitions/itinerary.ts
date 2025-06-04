@@ -35,14 +35,14 @@ const groupDay = new Schema(
   { _id: false },
 );
 
-export const initnarySchema = new Schema({
+export const itinerarySchema = new Schema({
   _id: mongooseStringRandomId,
   createdAt: { type: Date, label: 'Created at' },
   modifiedAt: { type: Date, label: 'Modified at' },
 
   name: { type: String, optional: true, label: 'name' },
   content: { type: String, optional: true, label: 'content' },
-  totalcost: { type: Number, optional: true, label: 'total cost' },
+  totalCost: { type: Number, optional: true, label: 'total cost' },
   duration: { type: Number, optional: true, label: 'number' },
   groupDays: {
     type: [groupDay],

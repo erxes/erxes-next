@@ -20,8 +20,8 @@ export const types = `
     name: String
     content: String
     duration: Int
-    totalcost: Float
-    groupDays :[DayItem]
+    totalCost: Float
+    groupDays: [DayItem]
     location: [BMSLocation]
     images: [String]
     status: String
@@ -74,7 +74,7 @@ const params = `
   name: String,
   content: String,
   duration: Int,
-  totalcost: Float,
+  totalCost: Float,
   groupDays: [DayItemInput],
   location: [BMSLocationInput],
   images: [String],
@@ -85,7 +85,7 @@ const params = `
   gasCost: Float,
   driverCost: Float,
   guideCost:Float,
-  guideCostExtra:Float
+  guideCostExtra:Float,
   extra: JSON
 `;
 

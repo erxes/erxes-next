@@ -6,7 +6,7 @@ export const PAIMENT_STATUS_TYPES = [
 
 export const TOUR_STATUS_TYPES = [
   { label: 'running', value: 'running' },
-  { label: 'compeleted', value: 'compeleted' },
+  { label: 'completed', value: 'completed' },
   { label: 'scheduled', value: 'scheduled' },
   { label: 'cancelled', value: 'cancelled' },
 ];

@@ -50,7 +50,7 @@ export const types = `
 export const queries = `
   bmElements(branchId:String, categories: [String],name: String,quick: Boolean, ${GQL_CURSOR_PARAM_DEFS}): ElementListResponse
   bmElementDetail(_id:String!): Element
-  bmElementCategoryies(parentId:String): [ElementCategory]
+  bmElementCategories(parentId:String): [ElementCategory]
   bmElementsInit: JSON
   bmCategoryInit: JSON
 `;

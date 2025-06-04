@@ -21,6 +21,7 @@ import { IOTABookingDocument } from '@/ota/@types/bookings';
 import { IOTAHotelDocument } from '@/ota/@types/hotels';
 import { IReviewDocument } from '@/ota/@types/reviews';
 import { IOTARoomTypeDocument } from '@/ota/@types/roomTypes';
+import { IOTATourAvailabilityDocument } from '@/ota/@types/tourAvailabilities';
 import { IOTATourBookingDocument } from '@/ota/@types/tourBookings';
 import { IOTATourCategoryDocument } from '@/ota/@types/tourCategories';
 import { IOTATourDocument } from '@/ota/@types/tours';
@@ -29,10 +30,13 @@ import {
   loadAvailabilityClass,
 } from '@/ota/db/models/Availabilities';
 import { IBookingModel, loadBookingClass } from '@/ota/db/models/Bookings';
-import { IHotelModel, loadhotelClass } from '@/ota/db/models/Hotels';
+import { IHotelModel, loadHotelClass } from '@/ota/db/models/Hotels';
 import { IReviewModel, loadReviewClass } from '@/ota/db/models/Reviews';
 import { IRoomTypeModel, loadRoomTypeClass } from '@/ota/db/models/RoomTypes';
-import { ITourAvailabilityModel } from '@/ota/db/models/TourAvailabilities';
+import {
+  ITourAvailabilityModel,
+  loadTourAvailabilityClass,
+} from '@/ota/db/models/TourAvailabilities';
 import {
   ITourBookingModel,
   loadTourBookingClass,
@@ -103,7 +107,7 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
 
   models.Hotels = db.model<IOTAHotelDocument, IHotelModel>(
     'ota_hotels',
-    loadhotelClass(models),
+    loadHotelClass(models),
   );
 
   models.RoomTypes = db.model<IOTARoomTypeDocument, IRoomTypeModel>(
@@ -127,9 +131,9 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   );
 
   models.TourAvailabilities = db.model<
-    IOTATourDocument,
+    IOTATourAvailabilityDocument,
     ITourAvailabilityModel
-  >('ota_tour_availabilities', loadTourClass(models));
+  >('ota_tour_availabilities', loadTourAvailabilityClass(models));
 
   models.TourCategories = db.model<
     IOTATourCategoryDocument,

@@ -12,7 +12,7 @@ export interface IHotelModel extends Model<IOTAHotelDocument> {
   togglePublish: (id: string) => Promise<IOTAHotelDocument>;
 }
 
-export const loadhotelClass = (models: IModels) => {
+export const loadHotelClass = (models: IModels) => {
   class Hotels {
     public static createHotel = async (data: IOTAHotel) => {
       return models.Hotels.create(data);
@@ -32,9 +32,7 @@ export const loadhotelClass = (models: IModels) => {
     };
 
     public static getHotels = async (query: any) => {
-      const categories = await models.Hotels.find(query).lean();
-
-      return categories;
+      return models.Hotels.find(query).lean();
     };
 
     public static togglePublish = async (_id: string) => {

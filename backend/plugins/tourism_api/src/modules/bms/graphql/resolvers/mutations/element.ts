@@ -2,8 +2,7 @@ import { IContext } from '~/connectionResolvers';
 
 const elementMutations = {
   bmElementAdd: async (_root, doc, { user, models }: IContext) => {
-    const element = await models.Elements.createElement(doc, user);
-    return element;
+    return models.Elements.createElement(doc, user);
   },
 
   bmElementEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
@@ -20,11 +19,7 @@ const elementMutations = {
   },
 
   bmElementCategoryAdd: async (_root, doc, { models }: IContext) => {
-    const carCategory = await models.ElementCategories.createElementCategory(
-      doc,
-    );
-
-    return carCategory;
+    return models.ElementCategories.createElementCategory(doc);
   },
 
   bmElementCategoryEdit: async (

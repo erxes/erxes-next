@@ -20,7 +20,7 @@ export interface IItinerary {
   name: string;
   content: string;
   duration: number;
-  totalcost: number;
+  totalCost: number;
   groupDays: GroupDay[];
   location: ILocation[];
   images: string[];

@@ -11,7 +11,7 @@ export const branchSchema = new Schema({
   user2Ids: { type: [String], label: 'manager user ids' },
   paymentIds: { type: [String], label: 'Online Payments' },
   paymentTypes: { type: [Object], label: 'Other Payments' },
-  token: { type: String, label: ' token' },
+  token: { type: String, label: 'token' },
   uiOptions: { type: Object, label: 'UI Options' },
   erxesAppToken: { type: String, label: 'Erxes App token' },
   permissionConfig: {

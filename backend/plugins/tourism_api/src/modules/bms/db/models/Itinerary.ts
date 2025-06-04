@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 
 import { IModels } from '~/connectionResolvers';
 import { IItinerary, IItineraryDocument } from '@/bms/@types/itinerary';
-import { initnarySchema } from '@/bms/db/definitions/itinerary';
+import { itinerarySchema } from '@/bms/db/definitions/itinerary';
 
 export interface IItineraryModel extends Model<IItineraryDocument> {
   createItinerary(doc: IItinerary, user: any): Promise<IItineraryDocument>;
@@ -54,6 +54,6 @@ export const loadItineraryClass = (models: IModels) => {
       return models.Itineraries.deleteMany({ _id: { $in: ids } });
     }
   }
-  initnarySchema.loadClass(Itinerary);
-  return initnarySchema;
+  itinerarySchema.loadClass(Itinerary);
+  return itinerarySchema;
 };

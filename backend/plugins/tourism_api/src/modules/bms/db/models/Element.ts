@@ -20,7 +20,7 @@ export interface IElementModel extends Model<IElementDocument> {
 }
 
 export interface IElementCategoryModel extends Model<IElementCategoryDocument> {
-  getElementCatogery(selector: any): Promise<IElementCategoryDocument>;
+  getElementCategory(selector: any): Promise<IElementCategoryDocument>;
   createElementCategory(
     doc: IElementCategory,
   ): Promise<IElementCategoryDocument>;
@@ -71,7 +71,7 @@ export const loadElementClass = (models: IModels) => {
 
 export const loadElementCategoryClass = (models: IModels) => {
   class ElementCategory {
-    public static async getElementCatogery(selector: any) {
+    public static async getElementCategory(selector: any) {
       const elementCategory = await models.ElementCategories.findOne(selector);
 
       if (!elementCategory) {
@@ -103,7 +103,7 @@ export const loadElementCategoryClass = (models: IModels) => {
 
       doc.order = await this.generateOrder(parentCategory, doc);
 
-      const category = await models.ElementCategories.getElementCatogery({
+      const category = await models.ElementCategories.getElementCategory({
         _id,
       });
 
@@ -113,14 +113,14 @@ export const loadElementCategoryClass = (models: IModels) => {
     }
 
     public static async removeElementCategory(_id) {
-      await models.ElementCategories.getElementCatogery({ _id });
+      await models.ElementCategories.getElementCategory({ _id });
 
       let count = await models.Elements.countDocuments({ categoryId: _id });
 
       count += await models.ElementCategories.countDocuments({ parentId: _id });
 
       if (count > 0) {
-        throw new Error("Can't remove a car category");
+        throw new Error("Can't remove a category");
       }
 
       return models.ElementCategories.deleteOne({ _id });

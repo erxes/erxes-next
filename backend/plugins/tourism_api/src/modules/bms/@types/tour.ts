@@ -40,3 +40,27 @@ export interface ITourDocument extends ITour, Document {
   modifiedAt: Date;
   searchText: string;
 }
+
+export interface TourFilterParams {
+  categories?: string[];
+  status?: string;
+  innerDate?: Date;
+  branchId?: string;
+  tags?: string[];
+  startDate1?: Date;
+  endDate1?: Date;
+  startDate2?: Date;
+  endDate2?: Date;
+  [key: string]: any;
+}
+
+export interface TourListResponse {
+  list: ITourDocument[];
+  totalCount: number;
+  pageInfo: {
+    hasNext: boolean;
+    hasPrevious: boolean;
+    nextCursor: string;
+    previousCursor: string;
+  };
+}

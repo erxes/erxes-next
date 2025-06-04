@@ -80,7 +80,7 @@ const elementQueries = {
     return { list, totalCount, pageInfo };
   },
 
-  async bmElementCategoryies(_root, { parentId }, { models }: IContext) {
+  async bmElementCategories(_root, { parentId }, { models }: IContext) {
     const selector: any = {};
 
     if (parentId) {

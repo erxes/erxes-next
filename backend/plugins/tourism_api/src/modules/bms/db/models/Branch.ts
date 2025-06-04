@@ -5,7 +5,7 @@ import { branchSchema } from '@/bms/db/definitions/branch';
 import { random } from 'erxes-api-shared/utils/string';
 
 export interface IBranchModel extends Model<IBranchDocument> {
-  getList(query: any): Promise<IBranchDocument>;
+  getList(query: any): Promise<IBranchDocument[]>;
   get(query: any): Promise<IBranchDocument>;
   add(user, doc: IBranch): Promise<IBranchDocument>;
   edit(_id: string, doc: IBranch): Promise<IBranchDocument>;
@@ -55,7 +55,7 @@ export const loadBranchClass = (models: IModels) => {
     }
 
     public static async remove(_id: string) {
-      return await models.Branches.findByIdAndDelete({ _id });
+      return await models.Branches.findByIdAndDelete(_id);
     }
   }
 

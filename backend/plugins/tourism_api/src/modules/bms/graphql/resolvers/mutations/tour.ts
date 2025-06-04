@@ -2,8 +2,7 @@ import { IContext } from '~/connectionResolvers';
 
 const tourMutations = {
   bmTourAdd: async (_root, doc, { user, models }: IContext) => {
-    const element = await models.Tours.createTour(doc, user);
-    return element;
+    return models.Tours.createTour(doc, user);
   },
 
   bmTourEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
