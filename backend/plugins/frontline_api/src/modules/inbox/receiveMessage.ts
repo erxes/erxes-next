@@ -255,7 +255,7 @@ export const receiveIntegrationsNotification = async (subdomain, msg) => {
     if (conversationId) {
       await models.Conversations.reopen(conversationId);
       // FIXME: It must have _id
-      await pConversationClientMessageInserted(models, subdomain, {
+      await pConversationClientMessageInserted(subdomain, {
         _id: conversationId,
       });
     }
