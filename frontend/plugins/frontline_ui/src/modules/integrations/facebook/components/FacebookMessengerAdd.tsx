@@ -2,15 +2,22 @@ import { IntegrationSteps } from '@/integrations/components/IntegrationSteps';
 import { IconPlus } from '@tabler/icons-react';
 import { Button, Sheet } from 'erxes-ui';
 import { FacebookGetAccounts } from './FacebookGetAccounts';
-import { useAtomValue } from 'jotai';
-import { activeFacebookMessengerAddStepAtom } from '../states/facebookStates';
+import { useAtomValue, useSetAtom } from 'jotai';
+import {
+  activeFacebookMessengerAddStepAtom,
+  resetFacebookAddStateAtom,
+} from '../states/facebookStates';
 import { FacebookGetPages } from './FacebookGetPages';
 import { FacebookIntegrationSetup } from './FacebookIntegrationSetup';
+import { useAtom } from 'jotai';
+import { facebookAddSheetAtom } from '../states/facebookStates';
 
 export const FacebookMessengerAddSheet = () => {
+  const [facebookAddSheet, setFacebookAddSheet] = useAtom(facebookAddSheetAtom);
+
   return (
     <div>
-      <Sheet>
+      <Sheet open={facebookAddSheet} onOpenChange={setFacebookAddSheet}>
         <Sheet.Trigger asChild>
           <Button>
             <IconPlus />
@@ -44,6 +51,8 @@ export const FacebookMessengerAddLayout = ({
   children: React.ReactNode;
   actions: React.ReactNode;
 }) => {
+  const resetForm = useSetAtom(resetFacebookAddStateAtom);
+
   return (
     <>
       <Sheet.Header>
@@ -55,7 +64,11 @@ export const FacebookMessengerAddLayout = ({
       </Sheet.Content>
       <Sheet.Footer>
         <Sheet.Close asChild>
-          <Button className="mr-auto text-muted-foreground" variant="ghost">
+          <Button
+            className="mr-auto text-muted-foreground"
+            variant="ghost"
+            onClick={resetForm}
+          >
             Cancel
           </Button>
         </Sheet.Close>

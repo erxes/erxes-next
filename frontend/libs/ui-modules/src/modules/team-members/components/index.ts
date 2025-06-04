@@ -5,4 +5,3 @@ export * from './AssigMemberInEditor';
 export * from './AssignMultipleMembers';
 export * from './MembersInline';
 export * from './SelectMember';
-export * from './SelectBranch';

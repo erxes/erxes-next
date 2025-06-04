@@ -30,10 +30,14 @@ export const useChannelsByMembers = (
 const CHANNELS_PER_PAGE = 20;
 
 export const useChannels = (
-  options?: QueryHookOptions<{ channels: IChannel[] }>,
+  options?: QueryHookOptions<{
+    channels: IChannel[];
+    channelsTotalCount: number;
+  }>,
 ) => {
   const { data, loading, fetchMore, error } = useQuery<{
     channels: IChannel[];
+    channelsTotalCount: number;
   }>(GET_CHANNELS, {
     ...options,
     variables: {
@@ -43,16 +47,16 @@ export const useChannels = (
     },
   });
 
-  const { channels } = data || {};
+  const { channels, channelsTotalCount } = data || {};
 
   const handleFetchMore = () => {
-    if (!channels?.length) {
+    if (!channels?.length || channels.length % CHANNELS_PER_PAGE !== 0) {
       return null;
     }
 
     fetchMore({
       variables: {
-        page: channels.length / CHANNELS_PER_PAGE + 1,
+        page: Math.ceil(channels.length / CHANNELS_PER_PAGE) + 1,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) {
@@ -61,10 +65,11 @@ export const useChannels = (
 
         return {
           channels: [...prev.channels, ...fetchMoreResult.channels],
+          channelsTotalCount: fetchMoreResult.channelsTotalCount,
         };
       },
     });
   };
 
-  return { channels, loading, handleFetchMore, error };
+  return { channels, loading, handleFetchMore, error, channelsTotalCount };
 };
