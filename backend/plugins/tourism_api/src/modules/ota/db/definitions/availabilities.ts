@@ -12,3 +12,5 @@ export const availabilitySchema = new Schema<IAvailabilityDocument>(
   },
   { timestamps: true },
 );
+
+availabilitySchema.index({ roomTypeId: 1, date: 1 }, { unique: true });
