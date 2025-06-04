@@ -111,9 +111,7 @@ export default {
         integrationId: integration._id,
       });
 
-      const status = response?.data;
-
-      return status;
+      return response?.data;
     } catch (e) {
       return { status: 'healthy' };
     }

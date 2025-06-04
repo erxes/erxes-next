@@ -217,10 +217,6 @@ export const conversationMutations = {
       _id: conversation.integrationId,
     });
 
-    if (!conversation && !integration) {
-      throw new Error('Conversation or integration not found');
-    }
-
     await sendNotifications(subdomain, {
       user,
       conversations: [conversation],

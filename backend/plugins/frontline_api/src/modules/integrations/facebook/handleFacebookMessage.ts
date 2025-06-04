@@ -161,14 +161,18 @@ export const handleFacebookMessage = async (
     images.forEach((img) => attachments.push({ type: 'image', url: img }));
 
     // Strip HTML tags and format the content
-
     function sanitizeAndFormat(html: string): string {
-      return html
-        .replace(/<\/p>/g, '\n')
-        .replace(/<[^>]+>/g, '')
-        .trim();
+      let prev;
+      let output = html;
+      do {
+        prev = output;
+        output = output.replace(/<\/p>/gi, '\n').replace(/<[^>]+>/g, '');
+      } while (output !== prev);
+
+      return output.trim();
     }
 
+    console.log('Content before sanitization:', content);
     const strippedContent = sanitizeAndFormat(content);
 
     const conversation = await models.FacebookConversations.getConversation({
