@@ -1,12 +1,13 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_PAGE_INFO,
+  GQL_CURSOR_PARAMS,
+} from 'erxes-ui';
 
 export const GET_CUSTOMERS = gql`
-  query customersMainSelect(
-    $searchValue: String
-    $limit: Int
-    $direction: CURSOR_DIRECTION
-  ) {
-    customersMain(page: $page, perPage: $perPage, searchValue: $searchValue) {
+  query customers($searchValue: String ${GQL_CURSOR_PARAM_DEFS}) {
+    customers(searchValue: $searchValue ${GQL_CURSOR_PARAMS}) {
       list {
         _id
         firstName
@@ -17,6 +18,21 @@ export const GET_CUSTOMERS = gql`
         primaryPhone
       }
       totalCount
+      ${GQL_PAGE_INFO}
     }
   }
 `;
+
+export const GET_ASSIGNED_CUSTOMERS = gql`
+ query AssignedCustomers($ids: [String]) {
+  customers(ids: $ids) {
+    list {
+      _id
+      avatar
+      firstName
+      lastName
+    }
+  }
+}
+`;
+  
