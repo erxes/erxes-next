@@ -2,7 +2,11 @@ import { Skeleton } from 'erxes-ui';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
-export const MessagesSkeleton = ({ isFetched }: { isFetched?: boolean }) => {
+export const InboxMessagesSkeleton = ({
+  isFetched,
+}: {
+  isFetched?: boolean;
+}) => {
   const [display, setDisplay] = useState(true);
 
   useEffect(() => {
