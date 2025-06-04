@@ -1,4 +1,4 @@
-import { useChannels } from '~/modules/inbox/channel/hooks/useChannels';
+import { useChannelsByMembers } from '@/inbox/channel/hooks/useChannels';
 import { Button, Collapsible, Skeleton, TextOverflowTooltip } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { IChannel } from '@/inbox/types/Channel';
@@ -23,7 +23,7 @@ export const ChooseChannel = () => {
 };
 
 const ChooseChannelContent = ({ open }: { open: boolean }) => {
-  const { channels, loading } = useChannels({
+  const { channels, loading } = useChannelsByMembers({
     skip: !open,
   });
 

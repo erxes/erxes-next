@@ -50,8 +50,33 @@ export interface IConversationListParams
   extends IListParams,
     ICursorPaginateParams,
     IConversation {
+  limit?: number;
+  channelId?: string;
   status?: string;
-  tagIds?: string[];
-  skillId?: string;
-  operatorStatus?: string;
+  unassigned?: string;
+  awaitingResponse?: string;
+  brandId?: string;
+  tag?: string;
+  integrationType?: string;
+  participating?: string;
+  starred?: string;
+  ids?: string[];
+  startDate?: string;
+  endDate?: string;
+  only?: string;
+  page?: number;
+  perPage?: number;
+  sortField?: string;
+  sortDirection?: number;
+  segment?: string;
+  searchValue?: string;
+  skip?: number;
+}
+
+interface ICountBy {
+  [index: string]: number;
+}
+
+export interface IConversationRes {
+  [index: string]: number | ICountBy;
 }

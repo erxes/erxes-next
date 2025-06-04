@@ -1,26 +1,28 @@
 import { graphqlPubsub } from 'erxes-api-shared/utils';
+import { generateModels } from '~/connectionResolvers';
+
 export const pConversationClientMessageInserted = async (
-  models,
   subdomain,
   message: { _id: string; [other: string]: any },
 ) => {
+  const models = await generateModels(subdomain);
+
   const conversation = await models.Conversations.findOne(
     {
       _id: message.conversationId,
     },
     { integrationId: 1 },
   );
-
-  let integration;
-
-  if (conversation) {
-    integration = await models.Integrations.findOne(
-      {
-        _id: conversation.integrationId,
-      },
-      { _id: 1, name: 1 },
-    );
+  if (!conversation) {
+    console.warn(`Conversation not found for message: ${message._id}`);
+    return;
   }
+  const integration = await models.Integrations.findOne(
+    {
+      _id: conversation.integrationId,
+    },
+    { _id: 1, name: 1 },
+  );
 
   let channelMemberIds: string[] = [];
 
@@ -36,7 +38,10 @@ export const pConversationClientMessageInserted = async (
       channelMemberIds = [...channelMemberIds, ...(channel.memberIds || [])];
     }
   }
-
+  if (!conversation) {
+    console.warn(`Conversation not found for message: ${message._id}`);
+    return;
+  }
   (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
     `conversationMessageInserted:${conversation._id}`,
     {

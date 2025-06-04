@@ -1,7 +1,7 @@
 import { Combobox, Command } from 'erxes-ui/components';
 import { FIXED_DATES } from '../constants/dateTypes';
 import { cn } from 'erxes-ui/lib/utils';
-import { getDisplayValue } from '../utlis/getDisplayValue';
+import { getDisplayValue } from '../utils/getDisplayValue';
 import { useFilterContext } from '../../hooks/useFilterContext';
 
 export const DateFilterCommand = ({

@@ -27,7 +27,7 @@ import {
   openPopoverState,
 } from '../states/filterStates';
 import { FilterDialogDateView } from '../date-filter/components/DialogDateView';
-import { getDisplayValue } from '../date-filter/utlis/getDisplayValue';
+import { getDisplayValue } from '../date-filter/utils/getDisplayValue';
 import { DateFilterCommand } from '../date-filter/components/DateFilterCommand';
 import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
 import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';

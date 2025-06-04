@@ -115,81 +115,55 @@ export default class Builder {
   }
 
   public async intersectIntegrationIds(
-    ...queries: any[]
-  ): Promise<{ integrationId: IIn }> {
-    // filter only queries with $in field
-    const withIn = queries.filter(
-      (q) =>
-        q.integrationId &&
-        q.integrationId.$in &&
-        q.integrationId.$in.length > 0,
-    );
+    ...queries: Array<{ integrationId?: { $in: string[] } }>
+  ): Promise<{ integrationId: { $in: string[] } }> {
+    const inQueries = queries
+      .map((q) => q.integrationId?.$in)
+      .filter((ids): ids is string[] => Array.isArray(ids) && ids.length > 0);
 
-    // [{$in: ['id1', 'id2']}, {$in: ['id3', 'id1', 'id4']}]
-    const $ins = _.pluck(withIn, 'integrationId');
+    const intersectedIds = inQueries.length ? _.intersection(...inQueries) : [];
 
-    // [['id1', 'id2'], ['id3', 'id1', 'id4']]
-    const nestedIntegrationIds = _.pluck($ins, '$in');
-
-    // ['id1']
-    const integrationids: string[] = _.intersection(...nestedIntegrationIds);
-
-    return {
-      integrationId: { $in: integrationids },
-    };
+    return { integrationId: { $in: intersectedIds } };
   }
 
   /*
    * find integrationIds from channel && brand
    */
   public async integrationsFilter(): Promise<IIntersectIntegrationIds> {
-    // find all posssible integrations
-    let availIntegrationIds: string[] = [];
-
-    const channelQuery =
-      this.user.role && this.user.role === 'system'
-        ? {}
-        : {
-            memberIds: this.user._id,
-          };
+    const isSystemUser = this.user.role === 'system';
+    const channelQuery = isSystemUser ? {} : { memberIds: this.user._id };
 
     const channels = await this.models.Channels.find(channelQuery);
 
-    if (channels.length === 0) {
-      return {
-        integrationId: { $in: [] },
-      };
+    if (!channels.length) {
+      return { integrationId: { $in: [] } };
     }
 
-    channels.forEach((channel) => {
-      availIntegrationIds = _.union(
-        availIntegrationIds,
-        (channel.integrationIds || []).filter((id) =>
-          this.activeIntegrationIds.includes(id),
-        ),
-      );
-    });
+    // Get all active integrationIds from channels
+    const availIntegrationIds = _.chain(channels)
+      .map('integrationIds')
+      .flatten()
+      .uniq()
+      .filter((id) => this.activeIntegrationIds.includes(id))
+      .value();
 
-    const nestedIntegrationIds: Array<{ integrationId: { $in: string[] } }> = [
+    const nestedQueries: Array<{ integrationId: { $in: string[] } }> = [
       { integrationId: { $in: availIntegrationIds } },
     ];
 
-    // filter by channel
     if (this.params.channelId) {
-      const _channelQuery = await this.channelFilter(this.params.channelId);
-      nestedIntegrationIds.push(_channelQuery);
+      const channelFilter = await this.channelFilter(this.params.channelId);
+      nestedQueries.push(channelFilter);
     }
 
-    // filter by brand
     if (this.params.brandId) {
-      const brandQuery = await this.brandFilter(this.params.brandId);
-
-      if (brandQuery) {
-        nestedIntegrationIds.push(brandQuery);
+      const brandFilter = await this.brandFilter(this.params.brandId);
+      if (brandFilter) {
+        nestedQueries.push(brandFilter);
       }
     }
 
-    return this.intersectIntegrationIds(...nestedIntegrationIds);
+    return this.intersectIntegrationIds(...nestedQueries);
   }
 
   // filter by channel
@@ -229,7 +203,6 @@ export default class Builder {
     }
 
     const integrationIds = _.pluck(integrations, '_id');
-
     return {
       integrationId: { $in: integrationIds },
     };
@@ -317,7 +290,6 @@ export default class Builder {
   public async extendedQueryFilter({ integrationType }: IListArgs) {
     return {
       $and: [
-        { $or: this.userRelevanceQuery() },
         ...(integrationType
           ? await this.integrationTypeFilter(integrationType)
           : []),

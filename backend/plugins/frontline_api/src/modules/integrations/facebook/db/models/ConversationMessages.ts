@@ -1,4 +1,4 @@
-import * as strip from 'strip';
+import { stripHtml } from 'string-strip-html';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { conversationMessageSchema } from '@/integrations/facebook/db/definitions/conversationMessages';
@@ -62,18 +62,17 @@ export const loadFacebookConversationMessageClass = (models: IModels) => {
         throw new Error(`Conversation not found with id ${doc.conversationId}`);
       }
 
-      // normalize content, attachments
       const content = doc.content || '';
       const attachments = doc.attachments || [];
 
       doc.content = content;
       doc.attachments = attachments;
 
-      // <img> tags wrapped inside empty <p> tag should be allowed
-      const contentValid =
-        content.indexOf('<img') !== -1 ? true : strip(content);
+      // Determine if the content is valid
+      const hasImage = content.includes('<img');
+      const plainText = stripHtml(content).result.trim();
+      const contentValid = hasImage || plainText.length > 0;
 
-      // if there is no attachments and no content then throw content required error
       if (attachments.length === 0 && !contentValid) {
         throw new Error('Content is required');
       }
