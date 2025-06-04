@@ -232,9 +232,12 @@ export const conversationMutations = {
       method: 'query',
       module: 'customers',
       action: 'findOne',
-      input: { _id: conversation.customerId },
+      input: { query: { _id: conversation.customerId } },
     });
 
+    if (!customer) {
+      throw new Error('Customer not found for the conversation');
+    }
     // if conversation's integration kind is form then send reply to
     // customer's email
     const email = customer ? customer.primaryEmail : '';
@@ -273,18 +276,18 @@ export const conversationMutations = {
       serviceName,
       payload,
     );
-
     // if the service runs separately & returns data, then don't save message inside inbox
-    if (response && response.data) {
-      const { conversationId, content } = response.data;
+    if (response?.data?.data) {
+      const { conversationId, content } = response.data.data;
 
-      if (!!conversationId && !!content) {
+      if (conversationId && content) {
         await models.Conversations.updateConversation(conversationId, {
-          content: content || '',
+          content,
           updatedAt: new Date(),
         });
       }
-      return { ...response.data };
+
+      return { ...response.data.data };
     }
 
     // do not send internal message to third service integrations
@@ -299,7 +302,6 @@ export const conversationMutations = {
 
       return messageObj;
     }
-
     const message = await models.ConversationMessages.addMessage(doc, user._id);
 
     const dbMessage = await models.ConversationMessages.getMessage(message._id);

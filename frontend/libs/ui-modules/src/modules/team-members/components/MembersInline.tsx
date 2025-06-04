@@ -90,15 +90,12 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
 
   useEffect(() => {
     const newMembers = [...members].filter((m) => memberIds?.includes(m._id));
-
     if (userDetail) {
       updateMembers?.([...newMembers, { ...userDetail, _id: memberId }]);
     }
-
     if (currentUser._id === memberId) {
       updateMembers?.([currentUser, ...newMembers]);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetail, currentUser]);
 
@@ -150,7 +147,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     }
 
     return (
-      <Tooltip delayDuration={100}>
+      <Tooltip>
         <Tooltip.Trigger asChild>
           <Avatar
             className={cn(
@@ -183,12 +180,12 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     <div className="flex -space-x-1.5">
       {withAvatar.map(renderAvatar)}
       {restMembers.length > 0 && (
-        <Tooltip delayDuration={100}>
+        <Tooltip>
           <Tooltip.Trigger asChild>
             <Avatar
               className={cn('ring-2 ring-background bg-background', className)}
-              {...props}
               size="lg"
+              {...props}
             >
               <Avatar.Fallback className="bg-primary/10 text-primary">
                 +{restMembers.length}
@@ -196,7 +193,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
             </Avatar>
           </Tooltip.Trigger>
           <Tooltip.Content>
-            <p>{restMembers.map((m) => m.details.fullName).join(', ')}</p>
+            <p>{restMembers.map((m) => m.details?.fullName).join(', ')}</p>
           </Tooltip.Content>
         </Tooltip>
       )}
@@ -213,7 +210,7 @@ export const MembersInlineTitle = () => {
     if (members.length === 0) return undefined;
 
     if (members.length === 1) {
-      return isCurrentUser ? 'Current User' : members[0].details.fullName;
+      return isCurrentUser ? 'Current User' : members?.[0].details?.fullName;
     }
 
     if (isCurrentUser) {
@@ -223,7 +220,7 @@ export const MembersInlineTitle = () => {
       }
 
       const otherMember = members.find((m) => m._id !== currentUser._id);
-      return `You and ${otherMember?.details.fullName}`;
+      return `You and ${otherMember?.details?.fullName}`;
     }
 
     return `${members.length} members`;

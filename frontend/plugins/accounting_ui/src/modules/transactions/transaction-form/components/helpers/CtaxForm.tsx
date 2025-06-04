@@ -115,7 +115,7 @@ export const CtaxForm = ({
     ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasCtax, side, calcedAmount, configs]);
+  }, [hasCtax, side, calcedAmount]);
 
   const changeCtaxRow = (ctaxRow: ICtaxRow) => {
     const ctaxPercent = ctaxRow.percent ?? 0;

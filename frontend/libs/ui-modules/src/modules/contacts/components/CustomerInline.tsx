@@ -5,6 +5,7 @@ import {
   Avatar,
   avatarVariants,
   cn,
+  Combobox,
   Skeleton,
   TextOverflowTooltip,
 } from 'erxes-ui';
@@ -17,8 +18,9 @@ const CustomerInlineRoot = React.forwardRef<
     customer?: ICustomerInline;
     customerId?: string;
     avatarProps?: React.ComponentPropsWithoutRef<typeof Avatar>;
+    placeholder?: string;
   }
->(({ customer, customerId, avatarProps, className, ...props }, ref) => {
+>(({ customer, customerId, avatarProps, placeholder, ...props }, ref) => {
   return (
     <CustomerInlineProvider customerId={customerId} customer={customer}>
       <span
@@ -26,11 +28,11 @@ const CustomerInlineRoot = React.forwardRef<
         {...props}
         className={cn(
           'inline-flex items-center gap-2 overflow-hidden',
-          className,
+          props.className,
         )}
       >
         <CustomerInlineAvatar {...avatarProps} />
-        <CustomerInlineTitle />
+        <CustomerInlineTitle placeholder={placeholder} />
       </span>
     </CustomerInlineProvider>
   );
@@ -100,20 +102,21 @@ CustomerInlineAvatar.displayName = 'CustomerInlineAvatar';
 
 export const CustomerInlineTitle = React.forwardRef<
   HTMLSpanElement,
-  React.ComponentPropsWithoutRef<'span'>
+  React.ComponentPropsWithoutRef<'span'> & {
+    placeholder?: string;
+  }
 >((props, ref) => {
   const { firstName, lastName, primaryEmail, primaryPhone, loading } =
     useCustomerInlineContext();
-
-  if (loading) return <Skeleton className="w-20 h-4" />;
-
   return (
-    <TextOverflowTooltip
+    <Combobox.Value
+      loading={loading}
       value={
         firstName || lastName
           ? `${firstName || ''} ${lastName || ''}`
           : primaryEmail || primaryPhone
       }
+      placeholder={props.placeholder}
       {...props}
       ref={ref}
     />
@@ -127,3 +130,5 @@ export const CustomerInline = Object.assign(CustomerInlineRoot, {
   Avatar: CustomerInlineAvatar,
   Title: CustomerInlineTitle,
 });
+
+

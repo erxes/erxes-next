@@ -1,5 +1,5 @@
+import { IMessage } from '@/inbox/types/Conversation';
 import { createContext } from 'react';
-import { IMessage } from '../types/Conversation';
 
 export const ConversationMessageContext = createContext<
   IMessage & { previousMessage: IMessage; nextMessage: IMessage }

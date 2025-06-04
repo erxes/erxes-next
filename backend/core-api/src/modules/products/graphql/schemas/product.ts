@@ -55,10 +55,12 @@ export const types = `
 const queryParams = `
   type: String,
   status: String,
+  categoryId: String,
   categoryIds: [String],
   searchValue: String,
   vendorId: String,
-  brandIds: [String]
+  brandIds: [String],
+  tag: String,
   tagIds: [String],
   ids: [String],
   excludeIds: Boolean,
@@ -70,15 +72,24 @@ const queryParams = `
   segmentData: String,
   groupedSimilarity: String,
   image: String,
-
-  sortField: String
-  sortDirection: Int
+  brand: String,
 
   ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `
-  products(${queryParams}): ProductsListResponse
+  productsMain(
+    ${queryParams}
+    sortField: String,
+    sortDirection: Int,
+  ): ProductsListResponse
+  products(
+    ${queryParams}
+    page: Int,
+    perPage: Int,
+    sortField: String,
+    sortDirection: Int,
+  ): [Product]
   productsTotalCount(${queryParams}): Int
   productDetail(_id: String): Product
   productSimilarities(_id: String!, groupedSimilarity: String): ProductSimilarity

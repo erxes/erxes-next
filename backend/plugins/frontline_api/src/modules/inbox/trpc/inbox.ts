@@ -952,7 +952,6 @@ export const inboxTrpcRouter = t.router({
         const { models, subdomain } = ctx;
         try {
           const result = await pConversationClientMessageInserted(
-            models,
             subdomain,
             input,
           );
