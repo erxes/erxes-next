@@ -5,8 +5,8 @@ export interface IBranch {
   description?: string;
   userId: string;
   createdAt: Date;
-  user1Ids?: string[];
-  user2Ids?: string[];
+  generalManagerIds?: string[];
+  managerIds?: string[];
   paymentIds?: string[];
   paymentTypes?: any[];
   erxesAppToken: string;

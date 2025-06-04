@@ -86,7 +86,7 @@ export const loadElementCategoryClass = (models: IModels) => {
         ? await models.ElementCategories.findOne({ _id: doc.parentId }).lean()
         : undefined;
 
-      // Generatingg order
+      // Generating order
       doc.order = await this.generateOrder(parentCategory, doc);
 
       return models.ElementCategories.create(doc);

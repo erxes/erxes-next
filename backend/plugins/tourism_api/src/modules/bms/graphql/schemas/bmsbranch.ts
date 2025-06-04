@@ -3,8 +3,8 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 const commonFields = `
   name: String
   description: String
-  user1Ids: [String]
-  user2Ids: [String]
+  generalManagerIds: [String]
+  managerIds: [String]
   paymentIds: [String]
   paymentTypes: [JSON]
   departmentId: String

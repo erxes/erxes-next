@@ -14,7 +14,7 @@ export interface IItineraryModel extends Model<IItineraryDocument> {
 export const loadItineraryClass = (models: IModels) => {
   class Itinerary {
     /**
-     * Retreives element
+     * Retrieves element
      */
     public static async getItinerary(_id: string) {
       const element = await models.Itineraries.findOne({ _id });

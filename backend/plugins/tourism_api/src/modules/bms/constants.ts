@@ -1,4 +1,4 @@
-export const PAIMENT_STATUS_TYPES = [
+export const PAYMENT_STATUS_TYPES = [
   { label: 'paid', value: 'paid' },
   { label: 'notPaid', value: 'notPaid' },
   { label: 'somePaid', value: 'somePaid' },
@@ -68,15 +68,6 @@ export const CATEGORIES = [
           { name: 'Ski Resorts' },
           { name: 'Diving & Snorkeling Spots' },
           { name: 'Rock Climbing Destinations' },
-        ],
-      },
-      {
-        name: 'Relaxation & Wellness',
-        children: [
-          { name: 'Spa Towns' },
-          { name: 'Yoga Retreats' },
-          { name: 'Hot Springs' },
-          { name: 'Quiet Countryside' },
         ],
       },
       {

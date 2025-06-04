@@ -1,4 +1,3 @@
-// definitions/tourAvailabilities.ts
 import { Schema } from 'mongoose';
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { IOTATourAvailabilityDocument } from '@/ota/@types/tourAvailabilities';

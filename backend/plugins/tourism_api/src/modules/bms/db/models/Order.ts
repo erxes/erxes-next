@@ -14,7 +14,7 @@ export interface IOrderModel extends Model<IOrderDocument> {
 export const loadOrderClass = (models: IModels) => {
   class Order {
     /**
-     * Retreives Order
+     * Retrieves Order
      */
     public static async getOrder(_id: string) {
       const element = await models.Orders.findOne({ _id });

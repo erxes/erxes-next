@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { PAIMENT_STATUS_TYPES } from '@/bms/constants';
+import { PAYMENT_STATUS_TYPES } from '@/bms/constants';
 import { getEnum } from '@/bms/utils';
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
@@ -57,12 +57,12 @@ export const itinerarySchema = new Schema({
   images: { type: [String], optional: true, label: 'images' },
   status: {
     type: String,
-    enum: getEnum(PAIMENT_STATUS_TYPES),
+    enum: getEnum(PAYMENT_STATUS_TYPES),
     default: '',
     optional: true,
     label: 'status',
     esType: 'keyword',
-    selectOptions: PAIMENT_STATUS_TYPES,
+    selectOptions: PAYMENT_STATUS_TYPES,
   },
   color: { type: String, optional: true, label: 'color' },
 

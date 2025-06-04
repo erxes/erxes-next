@@ -14,27 +14,24 @@ export interface IReviewModel extends Model<IReviewDocument> {
 }
 
 export const loadReviewClass = (models: IModels) => {
-  class Reviews {
-    public static createReview = async (data: IReview) => {
+  const reviewMethods = {
+    createReview: async (data: IReview) => {
       return models.Reviews.create(data);
-    };
+    },
 
-    public static updateReview = async (
-      _id: string,
-      data: Partial<IReview>,
-    ) => {
+    updateReview: async (_id: string, data: Partial<IReview>) => {
       return models.Reviews.findOneAndUpdate(
         { _id },
         { $set: data },
         { new: true },
       );
-    };
+    },
 
-    public static deleteReview = async (_id: string) => {
+    deleteReview: async (_id: string) => {
       return models.Reviews.findOneAndDelete({ _id });
-    };
-  }
+    },
+  };
 
-  reviewSchema.loadClass(Reviews);
+  reviewSchema.statics = reviewMethods;
   return reviewSchema;
 };

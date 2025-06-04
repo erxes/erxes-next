@@ -1,4 +1,3 @@
-// definitions/tourAvailabilities.ts
 import { Document } from 'mongoose';
 
 export interface IOTATourAvailability {

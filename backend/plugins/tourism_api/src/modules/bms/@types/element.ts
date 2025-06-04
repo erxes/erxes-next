@@ -34,4 +34,5 @@ export interface IElementCategoryDocument extends IElementCategory, Document {
   _id: string;
   order?: string;
   createdAt: Date;
+  modifiedAt: Date;
 }

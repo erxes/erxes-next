@@ -1,5 +1,5 @@
 import { Document, Schema } from 'mongoose';
-import { PAIMENT_STATUS_TYPES } from '@/bms/constants';
+import { PAYMENT_STATUS_TYPES } from '@/bms/constants';
 import { getEnum } from '@/bms/utils';
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
@@ -33,12 +33,12 @@ export const orderSchema = new Schema({
   amount: { type: Number, optional: true, label: 'amount' },
   status: {
     type: String,
-    enum: getEnum(PAIMENT_STATUS_TYPES),
+    enum: getEnum(PAYMENT_STATUS_TYPES),
     default: '',
     optional: true,
     label: 'status',
     esType: 'keyword',
-    selectOptions: PAIMENT_STATUS_TYPES,
+    selectOptions: PAYMENT_STATUS_TYPES,
   },
   branchId: { type: String, optional: true, label: 'branchId' },
   numberOfPeople: {

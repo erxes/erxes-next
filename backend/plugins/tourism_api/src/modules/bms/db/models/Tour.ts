@@ -14,7 +14,7 @@ export interface ITourModel extends Model<ITourDocument> {
 export const loadTourClass = (models: IModels) => {
   class Tour {
     /**
-     * Retreives tour
+     * Retrieves tour
      */
     public static async getTour(_id: string) {
       const element = await models.Tours.findOne({ _id });
