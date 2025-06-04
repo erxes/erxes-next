@@ -277,16 +277,17 @@ export const conversationMutations = {
       payload,
     );
     // if the service runs separately & returns data, then don't save message inside inbox
-    if (response && response.data) {
-      const { conversationId, content } = response.data;
+    if (response?.data?.data) {
+      const { conversationId, content } = response.data.data;
 
-      if (!!conversationId && !!content) {
+      if (conversationId && content) {
         await models.Conversations.updateConversation(conversationId, {
-          content: content || '',
+          content,
           updatedAt: new Date(),
         });
       }
-      return { ...response.data };
+
+      return { ...response.data.data };
     }
 
     // do not send internal message to third service integrations
@@ -301,7 +302,6 @@ export const conversationMutations = {
 
       return messageObj;
     }
-
     const message = await models.ConversationMessages.addMessage(doc, user._id);
 
     const dbMessage = await models.ConversationMessages.getMessage(message._id);
