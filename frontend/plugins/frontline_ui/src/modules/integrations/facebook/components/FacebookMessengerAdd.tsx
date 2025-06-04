@@ -65,7 +65,7 @@ export const FacebookMessengerAddLayout = ({
   );
 };
 
-export const FacebookMessegerAddSteps = ({
+export const FacebookMessengerAddSteps = ({
   title,
   step,
   description,

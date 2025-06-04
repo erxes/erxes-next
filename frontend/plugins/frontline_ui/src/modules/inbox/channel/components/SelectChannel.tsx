@@ -24,7 +24,9 @@ const SelectChannelProvider = ({
   const isSingleMode = mode === 'single';
 
   const onSelect = (channel: IChannel) => {
-    if (!channel) return;
+    if (!channel) {
+      return;
+    }
 
     if (isSingleMode) {
       setChannels([channel]);

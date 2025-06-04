@@ -15,7 +15,7 @@ export interface IFacebookConversationMessagesQueryVariables {
 
 export const FACEBOOK_CONVERSATION_MESSAGES_LIMIT = 20;
 
-export const useFacebookConvesationMessages = () => {
+export const useFacebookConversationMessages = () => {
   const [conversationId] = useQueryState<string>('conversationId');
 
   const { data, loading, error, fetchMore } = useQuery<
@@ -43,7 +43,9 @@ export const useFacebookConvesationMessages = () => {
           skip: data?.facebookConversationMessages?.length || 0,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
+          if (!fetchMoreResult) {
+            return prev;
+          }
           return {
             facebookConversationMessages: [
               ...fetchMoreResult.facebookConversationMessages,

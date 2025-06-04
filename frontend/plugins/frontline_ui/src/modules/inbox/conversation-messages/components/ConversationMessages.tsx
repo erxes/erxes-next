@@ -17,8 +17,6 @@ export const ConversationMessages = () => {
       },
     });
 
-  console.log(messages, conversationId);
-
   return (
     <InboxMessagesContainer
       fetchMore={handleFetchMore}

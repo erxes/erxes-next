@@ -1,6 +1,6 @@
 import { Button, Form, Input } from 'erxes-ui';
 import {
-  FacebookMessegerAddSteps,
+  FacebookMessengerAddSteps,
   FacebookMessengerAddLayout,
 } from './FacebookMessengerAdd';
 import { useSetAtom } from 'jotai';
@@ -10,7 +10,7 @@ import {
 } from '../states/facebookStates';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { FACEBOOK_MESSENGER_SCHEMA } from '../contants/FbMessengerSchema';
+import { FACEBOOK_MESSENGER_SCHEMA } from '../constants/FbMessengerSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SelectBrand } from 'ui-modules';
 import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
@@ -86,7 +86,7 @@ export const FacebookIntegrationSetup = () => {
             </>
           }
         >
-          <FacebookMessegerAddSteps
+          <FacebookMessengerAddSteps
             title="Integration Setup"
             step={3}
             description=""

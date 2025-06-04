@@ -1,5 +1,5 @@
 import { Button, cn, Command, Input, RadioGroup } from 'erxes-ui';
-import { FacebookMessegerAddSteps } from './FacebookMessengerAdd';
+import { FacebookMessengerAddSteps } from './FacebookMessengerAdd';
 
 import { FacebookMessengerAddLayout } from './FacebookMessengerAdd';
 import { useAtom, useSetAtom } from 'jotai';
@@ -8,7 +8,6 @@ import {
   selectedFacebookPageAtom,
 } from '../states/facebookStates';
 import { useFacebookPages } from '../hooks/useFacebookPages';
-import { IconPlus } from '@tabler/icons-react';
 
 export const FacebookGetPages = () => {
   const [selectedPage, setSelectedPage] = useAtom(selectedFacebookPageAtom);
@@ -35,7 +34,7 @@ export const FacebookGetPages = () => {
         </>
       }
     >
-      <FacebookMessegerAddSteps
+      <FacebookMessengerAddSteps
         title="Connect pages"
         step={2}
         description="Select the pages where you want to integrate its pages with."

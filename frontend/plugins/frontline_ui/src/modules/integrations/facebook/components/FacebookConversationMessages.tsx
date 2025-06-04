@@ -1,11 +1,11 @@
 import { InboxMessagesContainer } from '@/inbox/components/InboxMessagesContainer';
-import { useFacebookConvesationMessages } from '../hooks/useFacebookConvesationMessages';
 import { IFacebookConversationMessage } from '../types/FacebookTypes';
 import { Button, RelativeDateDisplay } from 'erxes-ui';
+import { useFacebookConversationMessages } from '../hooks/useFacebookConversationMessages';
 
 export const FacebookConversationMessages = () => {
   const { facebookConversationMessages, handleFetchMore } =
-    useFacebookConvesationMessages();
+    useFacebookConversationMessages();
 
   return (
     <InboxMessagesContainer

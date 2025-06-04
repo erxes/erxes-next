@@ -46,14 +46,18 @@ export const useChannels = (
   const { channels } = data || {};
 
   const handleFetchMore = () => {
-    if (!channels?.length) return;
+    if (!channels?.length) {
+      return null;
+    }
 
     fetchMore({
       variables: {
         page: channels.length / CHANNELS_PER_PAGE + 1,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
+        if (!fetchMoreResult) {
+          return prev;
+        }
 
         return {
           channels: [...prev.channels, ...fetchMoreResult.channels],

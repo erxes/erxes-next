@@ -14,7 +14,7 @@ import {
   selectedFacebookAccountAtom,
 } from '../states/facebookStates';
 import {
-  FacebookMessegerAddSteps,
+  FacebookMessengerAddSteps,
   FacebookMessengerAddLayout,
 } from './FacebookMessengerAdd';
 import { IntegrationType } from '@/types/Integration';
@@ -43,7 +43,7 @@ export const FacebookGetAccounts = () => {
         </>
       }
     >
-      <FacebookMessegerAddSteps
+      <FacebookMessengerAddSteps
         title="Connect accounts"
         step={1}
         description="Select the accounts where you want to integrate its pages with."
