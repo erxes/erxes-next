@@ -172,7 +172,6 @@ export const handleFacebookMessage = async (
       return output.trim();
     }
 
-    console.log('Content before sanitization:', content);
     const strippedContent = sanitizeAndFormat(content);
 
     const conversation = await models.FacebookConversations.getConversation({
