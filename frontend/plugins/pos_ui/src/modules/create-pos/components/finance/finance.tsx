@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
 interface FinanceConfigFormProps {
-  posDetail?: any;
+  posDetail?: IPosDetail;
   isReadOnly?: boolean;
   onSubmit?: (data: any) => Promise<void>;
 }
@@ -24,14 +24,14 @@ export default function FinanceConfigForm({
   useEffect(() => {
     if (posDetail) {
       setFinanceConfig({
-        isSyncErkhet: posDetail.isSyncErkhet ?? false,
-        checkErkhet: posDetail.checkErkhet ?? false,
-        checkInventories: posDetail.checkInventories ?? false,
-        userEmail: posDetail.userEmail || '',
-        beginBillNumber: posDetail.beginBillNumber || '',
-        defaultPay: posDetail.defaultPay || '',
-        account: posDetail.account || '',
-        location: posDetail.location || '',
+        isSyncErkhet: posDetail.erkhetConfig?.isSyncErkhet ?? false,
+        checkErkhet: posDetail.erkhetConfig?.checkErkhet ?? false,
+        checkInventories: posDetail.isCheckRemainder ?? false, 
+        userEmail: posDetail.erkhetConfig?.userEmail || '',
+        beginBillNumber: posDetail.beginNumber || '', 
+        defaultPay: posDetail.erkhetConfig?.defaultPay || '',
+        account: posDetail.erkhetConfig?.account || '',
+        location: posDetail.erkhetConfig?.location || '',
       });
     }
   }, [posDetail, setFinanceConfig]);
@@ -69,7 +69,7 @@ export default function FinanceConfigForm({
     });
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (onSubmit) {
@@ -118,6 +118,7 @@ export default function FinanceConfigForm({
             />
           </div>
         </div>
+        
         <div className="space-y-4">
           <h2 className="text-indigo-600 text-xl font-medium">REMAINDER</h2>
 
@@ -145,6 +146,7 @@ export default function FinanceConfigForm({
             />
           </div>
         </div>
+        
         {financeConfig.isSyncErkhet && (
           <div className="space-y-6">
             <h2 className="text-indigo-600 text-xl font-medium">OTHER</h2>

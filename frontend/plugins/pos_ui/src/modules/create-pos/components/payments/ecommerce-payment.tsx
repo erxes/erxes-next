@@ -8,10 +8,10 @@ import { paymentMethodsAtom } from "../../states/posCategory"
 import { useForm, UseFormReturn } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PaymentFormValues, paymentSchema } from "../formSchema"
-import { PosDetailQueryResponse } from "~/modules/pos-detail.tsx/types/detail"
 import { useToast } from "erxes-ui"
 import { PaymentMethod } from "../../types"
 import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
+import PaymentIcon from "./paymentIcon"
 
 interface EcommercePaymentsFormProps {
   posDetail?: IPosDetail;
@@ -48,12 +48,26 @@ export default function EcommercePaymentsForm({
   useEffect(() => {
     if (posDetail) {
       const paymentTypesData = posDetail.paymentTypes || []
+      const processedPaymentTypes = paymentTypesData.map((item: any) => {
+        if (typeof item === 'string') {
+          return { type: item, title: '', icon: '', config: '', _id: '' }
+        } else if (typeof item === 'object' && item !== null) {
+          return {
+            _id: item._id || '',
+            type: item.type || '',
+            title: item.title || '',
+            icon: item.icon || '',
+            config: item.config || ''
+          }
+        }
+        return { type: '', title: '', icon: '', config: '', _id: '' }
+      })
       
       form.reset({
         paymentIds: posDetail.paymentIds || [],
-        paymentTypes: paymentTypesData.map((type: string) => ({ type, title: '', icon: '', config: '', _id: '' })),
+        paymentTypes: processedPaymentTypes,
       })
-      setPaymentMethods(paymentTypesData.map((type: string) => ({ type, title: '', icon: '', config: '', _id: '' })))
+      setPaymentMethods(processedPaymentTypes)
       setAppToken(posDetail.erxesAppToken || "")
     }
   }, [posDetail, form])
@@ -205,23 +219,29 @@ export default function EcommercePaymentsForm({
           </div>
           
           {paymentMethods.map((method: PaymentMethod, index: number) => (
-            <div key={method._id || index} className="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg mb-2">
+            <div key={method._id || index} className="grid grid-cols-4 gap-4 mb-2">
               <div>
                 <Label className="text-xs text-gray-500">Type</Label>
-                <div className="font-medium">{safeDisplayValue(method.type)}</div>
+                <div className="font-medium">{method.type}</div>
               </div>
               <div>
                 <Label className="text-xs text-gray-500">Title</Label>
-                <div className="font-medium">{safeDisplayValue(method.title)}</div>
+                <div className="font-medium flex items-center gap-2">
+                  {method.icon && <PaymentIcon iconType={method.icon} size={16} />}
+                  {method.title}
+                </div>
               </div>
               <div>
                 <Label className="text-xs text-gray-500">Icon</Label>
-                <div className="font-medium">{safeDisplayValue(method.icon)}</div>
+                <div className="font-medium flex items-center gap-2">
+                  {method.icon && <PaymentIcon iconType={method.icon} size={16} />}
+                  {method.icon}
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-xs text-gray-500">Config</Label>
-                  <div className="font-medium">{safeDisplayValue(method.config)}</div>
+                  <div className="font-medium">{method.config}</div>
                 </div>
                 <Button
                   type="button"
@@ -236,7 +256,7 @@ export default function EcommercePaymentsForm({
             </div>
           ))}
           
-          <div className="grid grid-cols-2 gap-4 p-4 border rounded-lg">
+          <div className="grid grid-cols-4 gap-4">
             <div>
               <Label className="text-xs text-gray-500 mb-1 block">Type *</Label>
               <Input
@@ -265,13 +285,48 @@ export default function EcommercePaymentsForm({
                   <Select.Value placeholder="Select icon" />
                 </Select.Trigger>
                 <Select.Content>
-                  <Select.Item value="credit-card">Credit Card</Select.Item>
-                  <Select.Item value="cash">Cash</Select.Item>
-                  <Select.Item value="bank">Bank</Select.Item>
-                  <Select.Item value="mobile">Mobile</Select.Item>
-                  <Select.Item value="visa">Visa</Select.Item>
-                  <Select.Item value="mastercard">Mastercard</Select.Item>
-                  <Select.Item value="sign-alt">Sign Alt</Select.Item>
+                  <Select.Item value="credit-card">
+                    <div className="flex items-center gap-2">
+                      <PaymentIcon iconType="credit-card" size={16} />
+                      Credit Card
+                    </div>
+                  </Select.Item>
+                  <Select.Item value="cash">
+                    <div className="flex items-center gap-2">
+                      <PaymentIcon iconType="cash" size={16} />
+                      Cash
+                    </div>
+                  </Select.Item>
+                  <Select.Item value="bank">
+                    <div className="flex items-center gap-2">
+                      <PaymentIcon iconType="bank" size={16} />
+                      Bank
+                    </div>
+                  </Select.Item>
+                  <Select.Item value="mobile">
+                    <div className="flex items-center gap-2">
+                      <PaymentIcon iconType="mobile" size={16} />
+                      Mobile
+                    </div>
+                  </Select.Item>
+                  <Select.Item value="visa">
+                    <div className="flex items-center gap-2">
+                      <PaymentIcon iconType="visa" size={16} />
+                      Visa
+                    </div>
+                  </Select.Item>
+                  <Select.Item value="mastercard">
+                    <div className="flex items-center gap-2">
+                      <PaymentIcon iconType="mastercard" size={16} />
+                      Mastercard
+                    </div>
+                  </Select.Item>
+                  <Select.Item value="sign-alt">
+                    <div className="flex items-center gap-2">
+                      <PaymentIcon iconType="sign-alt" size={16} />
+                      Sign Alt
+                    </div>
+                  </Select.Item>
                 </Select.Content>
               </Select>
             </div>

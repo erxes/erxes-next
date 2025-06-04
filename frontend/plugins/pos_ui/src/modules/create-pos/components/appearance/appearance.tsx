@@ -30,7 +30,7 @@ export default function AppearanceForm({
   })
 
   useEffect(() => {
-    if (posDetail && posDetail.uiOptions) {
+    if (posDetail?.uiOptions) {
       setFormData({
         logoImage: posDetail.uiOptions.logoImage || "",
         backgroundColor: posDetail.uiOptions.backgroundColor || "#FFFFFF",

@@ -34,13 +34,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
 
   const handleBranchChange = (branchId: string) => {
     if (isReadOnly) return;
-    
-    const currentBranches = form.watch('allowBranchIds') || [];
-    const newBranches = currentBranches.includes(branchId)
-      ? currentBranches.filter(id => id !== branchId)
-      : [...currentBranches, branchId];
-    
-    form.setValue('allowBranchIds', newBranches);
+    form.setValue('allowBranchIds', [branchId]);
   };
 
   const handleDepartmentChange = (departmentId: string) => {
@@ -119,7 +113,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                     <div className="border border-gray-300">
                       <Select 
                         onValueChange={(value) => handleBrandChange(value)}
-                        value={field.value?.[0] || ""}
+                        value={(field.value && field.value.length > 0) ? field.value.join(', ') : ""}
                         disabled={isReadOnly}
                       >
                         <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
@@ -147,7 +141,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                 <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                   TYPE <span className="text-red-500">*</span>
                 </Form.Label>
-                <p className="text-sm text-gray-500">How use types ?</p>
+                <p className="text-sm text-gray-500">How to use types?</p>
                 <Form.Control>
                   <div className="grid grid-cols-3 gap-3">
                     {Array.from({ length: 6 }, (_, index) => {

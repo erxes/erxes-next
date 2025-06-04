@@ -130,20 +130,9 @@ const VerticalStepper = React.memo(
       }
     };
 
-    const [isMobile, setIsMobile] = React.useState(false);
-
-    React.useEffect(() => {
-      const checkMobile = () => setIsMobile(window.innerWidth < 768);
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-      return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
     return (
       <div
-        className={`${
-          isMobile ? 'w-full' : LAYOUT.STEPPER_WIDTH
-        } border-r bg-gray-50 p-5 overflow-y-auto`}
+        className={`${LAYOUT.STEPPER_WIDTH} border-r bg-gray-50 p-5 overflow-y-auto`}
       >
         <div className="mb-4 flex items-center gap-2 text-sm text-blue-600 font-medium">
           <IconEdit className="h-4 w-4" />
@@ -152,7 +141,7 @@ const VerticalStepper = React.memo(
         <Stepper
           value={currentStepId}
           onValueChange={handleStepChange}
-          orientation={isMobile ? 'horizontal' : 'vertical'}
+          orientation="vertical"
           className="w-full"
         >
           {steps.map((step) => {
@@ -317,9 +306,7 @@ const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
 interface PosEditLayoutProps {
   children: React.ReactNode;
   actions?: React.ReactNode;
-  form?:
-    | UseFormReturn<BasicInfoFormValues>
-    | UseFormReturn<PermissionFormValues>;
+  form?: UseFormReturn<BasicInfoFormValues | PermissionFormValues>;
   onFinalSubmit?: () => void;
   posDetail?: PosDetailQueryResponse['posDetail'];
 }
