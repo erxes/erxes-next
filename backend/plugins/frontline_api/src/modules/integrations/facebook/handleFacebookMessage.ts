@@ -1,4 +1,4 @@
-import { stripHtml } from 'strip-html';
+import { stripHtml } from 'string-strip-html';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import {
@@ -33,49 +33,48 @@ export const handleFacebookMessage = async (
   }
   if (action === 'reply-post') {
     const { conversationId, content = '', attachments = [], userId } = doc;
+
+    // Find the comment conversation by erxesApiId
     const commentConversationResult =
       await models.FacebookCommentConversation.findOne({
         erxesApiId: conversationId,
       });
 
+    if (!commentConversationResult) {
+      throw new Error('Comment not found');
+    }
+
+    // Find the related post conversation either by erxesApiId or postId from commentConversationResult
     const post = await models.FacebookPostConversations.findOne({
       $or: [
         { erxesApiId: conversationId },
-        {
-          postId: commentConversationResult
-            ? commentConversationResult.postId
-            : '',
-        },
+        { postId: commentConversationResult.postId || '' },
       ],
     });
-    if (!commentConversationResult) {
-      throw new Error('comment not found');
-    }
+
     if (!post) {
       throw new Error('Post not found');
     }
-    let strippedContent = stripHtml(content).result;
 
+    // Strip HTML tags from content and decode &amp;
+    let strippedContent = stripHtml(content).result.trim();
     strippedContent = strippedContent.replace(/&amp;/g, '&');
 
-    const { recipientId, comment_id, senderId } = commentConversationResult;
+    // Create a reply record in DB
     await models.FacebookCommentConversationReply.create({
-      recipientId: recipientId,
-      senderId: senderId,
-      attachments: attachments,
-      userId: userId,
-      createdAt: new Date(Date.now()),
+      recipientId: commentConversationResult.recipientId,
+      senderId: commentConversationResult.senderId,
+      attachments,
+      userId,
+      createdAt: new Date(),
       content: strippedContent,
-      parentId: comment_id,
+      parentId: commentConversationResult.comment_id,
     });
 
-    let attachment: {
-      url?: string;
-      type?: string;
-      payload?: { url: string };
-    } = {};
-
-    if (attachments && attachments.length > 0) {
+    // Prepare attachment payload if any attachments present
+    let attachment: { url?: string; type?: string; payload?: { url: string } } =
+      {};
+    if (attachments.length > 0) {
       attachment = {
         type: 'file',
         payload: {
@@ -83,36 +82,39 @@ export const handleFacebookMessage = async (
         },
       };
     }
+
+    // Prepare data for sending reply to Facebook
+    const id = commentConversationResult.comment_id || post.postId;
     let data = {
       message: strippedContent,
       attachment_url: attachment.payload ? attachment.payload.url : undefined,
     };
-    const id = commentConversationResult
-      ? commentConversationResult.comment_id
-      : post.postId;
-    if (commentConversationResult && commentConversationResult.comment_id) {
-      data = {
-        message: ` @[${commentConversationResult.senderId}] ${strippedContent}`,
-        attachment_url: attachment.payload ? attachment.payload.url : undefined,
-      };
+
+    // If this is a reply to a comment, prepend a mention (adjust format as needed)
+    if (commentConversationResult.comment_id) {
+      data.message = ` @[${commentConversationResult.senderId}] ${strippedContent}`;
     }
+
     try {
+      // Find the inbox conversation for local reference
       const inboxConversation = await models.Conversations.findOne({
         _id: conversationId,
       });
 
       if (!inboxConversation) {
-        throw new Error('conversation not found');
+        throw new Error('Conversation not found');
       }
 
+      // Send the reply via the Facebook API (or relevant integration)
       await sendReply(
         models,
         `${id}/comments`,
         data,
-        recipientId,
+        commentConversationResult.recipientId,
         inboxConversation.integrationId,
       );
 
+      // Fetch the user who sent the reply
       const user = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
@@ -121,19 +123,22 @@ export const handleFacebookMessage = async (
         input: { _id: userId },
       });
 
-      if (user) {
-        sendNotifications(subdomain, {
-          user,
-          conversations: [inboxConversation],
-          type: 'conversationStateChange',
-          mobile: true,
-          messageContent: strippedContent,
-        });
-        return { status: 'success' };
-      } else {
+      if (!user) {
         throw new Error('User not found');
       }
-    } catch (e) {
+
+      // Send notification about the reply to relevant users/devices
+      sendNotifications(subdomain, {
+        user,
+        conversations: [inboxConversation],
+        type: 'conversationStateChange',
+        mobile: true,
+        messageContent: strippedContent,
+      });
+
+      return { status: 'success' };
+    } catch (e: any) {
+      console.error('Error replying to post comment:', e);
       throw new Error(e.message);
     }
   }
@@ -158,10 +163,10 @@ export const handleFacebookMessage = async (
     // Strip HTML tags and format the content
 
     function sanitizeAndFormat(html: string): string {
-      // Remove all tags and any malicious content
-      const clean = DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
-      // Preserve paragraph breaks, then trim whitespace
-      return clean.replace(/<\/p>/g, '\n').trim();
+      return html
+        .replace(/<\/p>/g, '\n')
+        .replace(/<[^>]+>/g, '')
+        .trim();
     }
 
     const strippedContent = sanitizeAndFormat(content);
@@ -171,7 +176,6 @@ export const handleFacebookMessage = async (
     });
     const { senderId } = conversation;
     let localMessage;
-
     try {
       // Send text message if strippedContent is not empty
       if (strippedContent) {

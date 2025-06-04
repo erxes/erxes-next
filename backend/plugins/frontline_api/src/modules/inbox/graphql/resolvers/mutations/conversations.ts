@@ -217,6 +217,10 @@ export const conversationMutations = {
       _id: conversation.integrationId,
     });
 
+    if (!conversation && !integration) {
+      throw new Error('Conversation or integration not found');
+    }
+
     await sendNotifications(subdomain, {
       user,
       conversations: [conversation],
@@ -232,9 +236,12 @@ export const conversationMutations = {
       method: 'query',
       module: 'customers',
       action: 'findOne',
-      input: { _id: conversation.customerId },
+      input: { query: { _id: conversation.customerId } },
     });
 
+    if (!customer) {
+      throw new Error('Customer not found for the conversation');
+    }
     // if conversation's integration kind is form then send reply to
     // customer's email
     const email = customer ? customer.primaryEmail : '';
@@ -273,7 +280,6 @@ export const conversationMutations = {
       serviceName,
       payload,
     );
-
     // if the service runs separately & returns data, then don't save message inside inbox
     if (response && response.data) {
       const { conversationId, content } = response.data;
