@@ -72,3 +72,11 @@ export interface IConversationListParams
   searchValue?: string;
   skip?: number;
 }
+
+interface ICountBy {
+  [index: string]: number;
+}
+
+export interface IConversationRes {
+  [index: string]: number | ICountBy;
+}

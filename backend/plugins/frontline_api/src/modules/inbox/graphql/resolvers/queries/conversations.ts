@@ -8,14 +8,7 @@ import {
 } from '@/inbox/@types/conversations';
 import { IMessageDocument } from '@/inbox/@types/conversationMessages';
 import { countByConversations } from '@/inbox/conversationUtils';
-
-interface ICountBy {
-  [index: string]: number;
-}
-
-interface IConversationRes {
-  [index: string]: number | ICountBy;
-}
+import { IConversationRes } from '@/inbox/@types/conversations';
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
   const result = await models.Conversations.countDocuments(query);
