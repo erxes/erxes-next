@@ -147,25 +147,15 @@ export const InventoryRow = ({
           name={`trDocs.${journalIndex}.details.${detailIndex}.count`}
           render={({ field }) => (
             <Form.Item>
-              <InlineCell
-                name="count"
-                recordId={_id}
-                display={() => (
-                  <InlineCellDisplay>{field.value}</InlineCellDisplay>
-                )}
-                edit={() => (
-                  <InlineCellEdit>
-                    <Form.Control>
-                      <InputNumber
-                        value={field.value ?? 0}
-                        onChange={(value) =>
-                          handlecountChange(value || 0, field.onChange)
-                        }
-                      />
-                    </Form.Control>
-                  </InlineCellEdit>
-                )}
-              />
+              <Form.Control>
+                <InputNumber
+                  value={field.value ?? 0}
+                  className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
+                  onChange={(value) =>
+                    handlecountChange(value || 0, field.onChange)
+                  }
+                />
+              </Form.Control>
               <Form.Message />
             </Form.Item>
           )}
@@ -181,27 +171,15 @@ export const InventoryRow = ({
           name={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
           render={({ field }) => (
             <Form.Item>
-              <InlineCell
-                name="unitPrice"
-                recordId={_id}
-                display={() => (
-                  <InlineCellDisplay>
-                    {field.value?.toLocaleString() || '0'}
-                  </InlineCellDisplay>
-                )}
-                edit={() => (
-                  <InlineCellEdit>
-                    <Form.Control>
-                      <CurrencyField.ValueInput
-                        value={field.value ?? 0}
-                        onChange={(value) =>
-                          handleUnitPriceChange(value || 0, field.onChange)
-                        }
-                      />
-                    </Form.Control>
-                  </InlineCellEdit>
-                )}
-              />
+              <Form.Control>
+                <CurrencyField.ValueInput
+                  value={field.value ?? 0}
+                  className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
+                  onChange={(value) =>
+                    handleUnitPriceChange(value || 0, field.onChange)
+                  }
+                />
+              </Form.Control>
               <Form.Message />
             </Form.Item>
           )}
@@ -210,7 +188,7 @@ export const InventoryRow = ({
       <Table.Cell
         className={cn({
           'rounded-tr-lg border-t': detailIndex === 0,
-          // 'rounded-br-lg': detailIndex ===  - 1,
+          'rounded-br-lg': detailIndex === details.length - 1,
         })}
       >
         <Form.Field
@@ -218,25 +196,15 @@ export const InventoryRow = ({
           name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
           render={({ field }) => (
             <Form.Item>
-              <InlineCell
-                name="total"
-                recordId={_id}
-                display={() => (
-                  <InlineCellDisplay>
-                    {amount?.toLocaleString() || '0'}
-                  </InlineCellDisplay>
-                )}
-                edit={() => (
-                  <InlineCellEdit>
-                    <CurrencyField.ValueInput
-                      value={field.value ?? 0}
-                      onChange={(value) =>
-                        handleAmountChange(value || 0, field.onChange)
-                      }
-                    />
-                  </InlineCellEdit>
-                )}
-              />
+              <Form.Control>
+                <CurrencyField.ValueInput
+                  value={field.value ?? 0}
+                  className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
+                  onChange={(value) =>
+                    handleAmountChange(value || 0, field.onChange)
+                  }
+                />
+              </Form.Control>
               <Form.Message />
             </Form.Item>
           )}

@@ -85,7 +85,7 @@ export const TransactionsTabsList = ({
             <Tabs.Trigger
               key={field.fieldId}
               value={index.toString()}
-              className={cn(index.toString() === activeJournal && "font-extrabold", "capitalize py-1 gap-2 pr-1 h-8")}
+              className={cn(index.toString() === activeJournal && "font-bold", "capitalize py-1 gap-2 pr-1 h-8")}
               asChild
             >
               <div>
@@ -106,7 +106,7 @@ export const TransactionsTabsList = ({
           <Tabs.Trigger
             key={'tBalance'}
             value={'tBalance'}
-            className={cn('tBalance' === activeJournal && "font-extrabold", "capitalize py-1 gap-2 pr-1 h-8")}
+            className={cn('tBalance' === activeJournal && "font-bold", "capitalize py-1 gap-2 pr-1 h-8")}
             asChild
           >
             <div>
