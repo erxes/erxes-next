@@ -3,7 +3,7 @@ import { useAtom } from 'jotai';
 import { useWatch } from 'react-hook-form';
 import { TR_SIDES } from '../../../types/constants';
 import { followTrDocsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/JournalForms';
 
 const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
   trDocs?.forEach((tr) => {

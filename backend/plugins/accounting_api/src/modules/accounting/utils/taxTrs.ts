@@ -87,7 +87,6 @@ class TaxTrs {
     this.sumCt = this.doc.details
       .filter(d => d.side === TR_SIDES.CREDIT)
       .reduce((sum, cur) => sum + cur.amount, 0)
-
   }
 
   private checkVatValidation = async () => {
@@ -179,8 +178,8 @@ class TaxTrs {
 
   public checkTaxValidation = async () => {
     await this.initTaxValues();
-    this.checkVatValidation();
-    this.checkCtaxValidation();
+    await this.checkVatValidation();
+    await this.checkCtaxValidation();
   }
 
   private doVatTr = async (transaction: ITransactionDocument) => {
@@ -207,6 +206,7 @@ class TaxTrs {
         vatTr = await this.models.Transactions.updateTransaction(oldvatTr._id, {
           ...this.vatTrDoc,
           originId: transaction._id,
+          followType: 'vat',
           parentId: transaction.parentId
         });
 
@@ -214,6 +214,7 @@ class TaxTrs {
         vatTr = await this.models.Transactions.createTransaction({
           ...this.vatTrDoc,
           originId: transaction._id,
+          followType: 'vat',
           parentId: transaction.parentId
         });
 
@@ -235,6 +236,7 @@ class TaxTrs {
       vatTr = await this.models.Transactions.createTransaction({
         ...this.vatTrDoc,
         originId: transaction._id,
+        followType: 'vat',
         parentId: transaction.parentId
       });
 
@@ -275,6 +277,7 @@ class TaxTrs {
         ctaxTr = await this.models.Transactions.updateTransaction(oldctaxTr._id, {
           ...this.ctaxTrDoc,
           originId: transaction._id,
+          followType: 'ctax',
           parentId: transaction.parentId
         });
 
@@ -282,6 +285,7 @@ class TaxTrs {
         ctaxTr = await this.models.Transactions.createTransaction({
           ...this.ctaxTrDoc,
           originId: transaction._id,
+          followType: 'ctax',
           parentId: transaction.parentId
         });
 
@@ -303,6 +307,7 @@ class TaxTrs {
       ctaxTr = await this.models.Transactions.createTransaction({
         ...this.ctaxTrDoc,
         originId: transaction._id,
+        followType: 'ctax',
         parentId: transaction.parentId
       });
 

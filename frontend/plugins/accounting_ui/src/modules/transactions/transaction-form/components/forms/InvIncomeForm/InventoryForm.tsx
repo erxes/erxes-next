@@ -1,11 +1,11 @@
 import { AddInventoryRowButton } from './AddInventoryRow';
 // import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
-import { InventoryRow } from './InventoryRow';
-import { ITransactionGroupForm } from '../../../types/AddTransaction';
-import { RemoveButton } from './RemoveButton';
 import { Table } from 'erxes-ui';
-import { useFieldArray } from 'react-hook-form';
 import { useState } from 'react';
+import { useFieldArray, useWatch } from 'react-hook-form';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { InventoryRow } from './InventoryRow';
+import { RemoveButton } from './RemoveButton';
 
 export const InventoryForm = ({
   form,
@@ -33,7 +33,7 @@ export const InventoryForm = ({
           fields: fields as any,
         }}
       > */}
-      <InventoryTableHeader />
+      <InventoryTableHeader form={form} journalIndex={journalIndex} />
       <Table.Body className="overflow-hidden">
         {fields.map((product, detailIndex) => (
           <InventoryRow
@@ -59,7 +59,12 @@ export const InventoryForm = ({
   );
 };
 
-const InventoryTableHeader = () => {
+const InventoryTableHeader = ({ form, journalIndex }: { form: ITransactionGroupForm, journalIndex: number }) => {
+  const trDoc = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}`,
+  });
+
   return (
     <Table.Header>
       <Table.Row>
@@ -70,6 +75,18 @@ const InventoryTableHeader = () => {
         <Table.Head>Quantity</Table.Head>
         <Table.Head>Unit Price</Table.Head>
         <Table.Head>Amount</Table.Head>
+        {trDoc.hasVat && (
+          <Table.Head>HasVat</Table.Head>
+        )}
+        {trDoc.hasCtax && (
+          <Table.Head>HasCtax</Table.Head>
+        )}
+        {(trDoc.hasVat || trDoc.hasCtax) && (
+          <>
+            <Table.Head>Unit with tax</Table.Head>
+            <Table.Head>Amount with tax</Table.Head>
+          </>
+        )}
       </Table.Row>
     </Table.Header>
   );
