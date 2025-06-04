@@ -4,7 +4,7 @@ import { ITransactionGroupForm } from '../../types/AddTransaction';
 import { CtaxForm } from '../helpers/CtaxForm';
 import { CurrencyForm } from '../helpers/CurrencyForm';
 import { VatForm } from '../helpers/VatForm';
-import { CustomerFields } from './../CustomerFields';
+import { CustomerFields } from '../helpers/CustomerFields';
 import {
   AccountField,
   AmountField,

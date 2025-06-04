@@ -17,6 +17,6 @@
     "erxes-api-shared": "workspace:^",
     "fbgraph": "^1.4.4",
     "moment-timezone": "^0.5.48",
-    "strip": "^3.0.0"
+    "strip-html": "^1.0.2"
   }
 }

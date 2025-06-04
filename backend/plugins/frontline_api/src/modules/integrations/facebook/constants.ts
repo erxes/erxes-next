@@ -3,24 +3,23 @@ export const FACEBOOK_POST_TYPES = [
   'video',
   'photo',
   'post',
-  'share'
+  'share',
 ];
 
 export const LOG_TYPES = {
   ERROR: 'error',
   REGULAR: 'regular',
   SUCCESS: 'success',
-  ALL: ['error', 'regular', 'success']
+  ALL: ['error', 'regular', 'success'],
 };
 
 export const INTEGRATION_KINDS = {
   MESSENGER: 'facebook-messenger',
   POST: 'facebook-post',
-  ALL: ['facebook-post', 'facebook-messenger']
+  ALL: ['facebook-post', 'facebook-messenger'],
 };
 
-
-export const BOT_SUBSCRIBE_FIELDS=  [
-  "messaging_postbacks",
-  "messaging_referrals"
-]
+export const BOT_SUBSCRIBE_FIELDS = [
+  'messaging_postbacks',
+  'messaging_referrals',
+];

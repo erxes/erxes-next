@@ -6,7 +6,7 @@ import {
   DepartmentField,
   DescriptionField,
 } from './../GeneralFormFields';
-import { CustomerFields } from './../CustomerFields';
+import { CustomerFields } from '../helpers/CustomerFields';
 // import { InventoryForm } from '../../../inventory/components/InventoryForm';
 import { VatForm } from '../helpers/VatForm';
 import { TrJournalEnum } from '@/transactions/types/constants';

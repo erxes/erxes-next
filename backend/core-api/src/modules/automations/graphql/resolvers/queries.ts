@@ -13,8 +13,9 @@ import {
 } from 'erxes-api-shared/core-modules';
 import { UI_ACTIONS } from '../../constants';
 import { IContext } from '~/connectionResolvers';
+import { ICursorPaginateParams } from 'erxes-api-shared/core-types';
 
-export interface IListArgs {
+export interface IListArgs extends ICursorPaginateParams {
   status: string;
   searchValue: string;
   ids?: string;

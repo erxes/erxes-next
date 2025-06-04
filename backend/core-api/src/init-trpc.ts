@@ -16,9 +16,11 @@ import { formsTrpcRouter } from './modules/forms/trpc';
 import { permissionTrpcRouter } from './modules/permissions/trpc';
 import { segmentsTRPCRouter } from './modules/segments/trpc';
 import { automationsRouter } from './modules/automations/trpc/automations';
-import { IContext, IModels } from './connectionResolvers';
+import { IModels } from './connectionResolvers';
 
-const t = initTRPC.context<ITRPCContext<IContext>>().create({});
+export type CoreTRPCContext = ITRPCContext<{ models: IModels }>;
+
+const t = initTRPC.context<CoreTRPCContext>().create({});
 
 export const appRouter = t.mergeRouters(
   configTrpcRouter,
