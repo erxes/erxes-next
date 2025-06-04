@@ -224,7 +224,6 @@ export const facebookQueries = {
       conversationId,
       models.FacebookConversations,
     );
-
     if (conversation) {
       if (limit) {
         const sort: any = getFirst ? { createdAt: 1 } : { createdAt: -1 };
