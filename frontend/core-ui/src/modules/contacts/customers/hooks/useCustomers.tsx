@@ -1,14 +1,14 @@
-import { QueryHookOptions, useQuery, } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_CUSTOMERS } from '@/contacts/customers/graphql/queries/getCustomers';
 import { ICustomer } from '@/contacts/types/customerType';
 import {
-  IRecordTableCursorPageInfo,
   useRecordTableCursor,
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
   useMultiQueryState,
   parseDateRangeFromString,
+  ICursorListResponse,
 } from 'erxes-ui';
 import { useLocation } from 'react-router-dom';
 import { ContactsPath } from '@/types/paths/ContactsPath';
@@ -16,7 +16,9 @@ import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/cus
 
 const CUSTOMERS_PER_PAGE = 30;
 
-export const useCustomers = (options?: QueryHookOptions) => {
+export const useCustomers = (
+  options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
+) => {
   const pathname = useLocation().pathname;
   const [{ searchValue, tags, created, updated, lastSeen }] =
     useMultiQueryState<{
@@ -54,16 +56,13 @@ export const useCustomers = (options?: QueryHookOptions) => {
     ...options?.variables,
   };
 
-  const { data, loading, fetchMore } = useQuery<{
-    customers: {
-      list: ICustomer[];
-      pageInfo: IRecordTableCursorPageInfo;
-      totalCount: number;
-    };
-  }>(GET_CUSTOMERS, {
-    ...options,
-    variables: customersQueryVariables,
-  });
+  const { data, loading, fetchMore } = useQuery<ICursorListResponse<ICustomer>>(
+    GET_CUSTOMERS,
+    {
+      ...options,
+      variables: customersQueryVariables,
+    },
+  );
 
   const { list: customers, pageInfo, totalCount } = data?.customers || {};
 

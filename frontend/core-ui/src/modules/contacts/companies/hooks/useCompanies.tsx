@@ -1,7 +1,7 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import {
   EnumCursorDirection,
-  IRecordTableCursorPageInfo,
+  ICursorListResponse,
   mergeCursorData,
   useMultiQueryState,
   validateFetchMore,
@@ -11,7 +11,9 @@ import { ICompany } from 'ui-modules';
 
 export const COMPANIES_PER_PAGE = 30;
 
-export const useCompanies = (options?: QueryHookOptions) => {
+export const useCompanies = (
+  options?: QueryHookOptions<ICursorListResponse<ICompany>>,
+) => {
   const [{ searchValue, tags }] = useMultiQueryState<{
     searchValue: string;
     tags: string[];
@@ -25,16 +27,13 @@ export const useCompanies = (options?: QueryHookOptions) => {
     tags,
     ...options?.variables,
   };
-  const { data, loading, fetchMore } = useQuery<{
-    companies: {
-      list: ICompany[];
-      totalCount: number;
-      pageInfo: IRecordTableCursorPageInfo;
-    };
-  }>(GET_COMPANIES, {
-    ...options,
-    variables: companiesQueryVariables,
-  });
+  const { data, loading, fetchMore } = useQuery<ICursorListResponse<ICompany>>(
+    GET_COMPANIES,
+    {
+      ...options,
+      variables: companiesQueryVariables,
+    },
+  );
 
   const { list: companies, totalCount, pageInfo } = data?.companies || {};
 

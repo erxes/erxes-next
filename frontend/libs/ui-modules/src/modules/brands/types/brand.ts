@@ -9,3 +9,10 @@ export interface SelectBrandFetchMoreProps {
   brandsLength: number;
   totalCount: number;
 }
+
+export interface BrandsInlineProps {
+  brandIds?: string[];
+  brands?: IBrand[];
+  placeholder?: string;
+  updateBrands?: (brands: IBrand[]) => void;
+}

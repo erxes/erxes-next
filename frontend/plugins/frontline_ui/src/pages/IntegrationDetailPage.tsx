@@ -1,4 +1,5 @@
 import { IntegrationLogo } from '@/integrations/components/IntegrationLogo';
+import { IntegrationsRecordTable } from '@/integrations/components/IntegrationsRecordTable';
 import { INTEGRATIONS } from '@/integrations/constants/integrations';
 import { IntegrationType } from '@/types/Integration';
 import { IconChevronLeft } from '@tabler/icons-react';
@@ -58,6 +59,7 @@ export const IntegrationDetailPage = () => {
           <FacebookIntegrationDetail />
         )}
       </Suspense>
+      <IntegrationsRecordTable />
     </div>
   );
 };
