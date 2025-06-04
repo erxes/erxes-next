@@ -1,4 +1,5 @@
 import { IChannelDocument } from '@/inbox/@types/channels';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 export default {
   async integrations(channel: IChannelDocument, _args, { models }: IContext) {
@@ -7,7 +8,24 @@ export default {
     });
   },
 
-  async members(channel: IChannelDocument, _args, { subdomain }: IContext) {
-    return null;
+  async members(channel: IChannelDocument) {
+    try {
+      return await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'users',
+        action: 'find',
+        input: {
+          query: {
+            _id: { $in: channel.memberIds },
+            isActive: { $ne: false },
+          },
+        },
+        defaultValue: [],
+      });
+    } catch (error) {
+      console.error('Failed to fetch channel members:', error);
+      return [];
+    }
   },
 };

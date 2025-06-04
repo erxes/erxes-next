@@ -35,8 +35,6 @@ export const CurrencyForm = ({
   });
   const [changingAmount, setChangingAmount] = useState(true);
 
-  const diffFollowData = (trDoc.follows || []).find((f) => f.type === 'currencyDiff');
-
   const { configs } = useMainConfigs();
   const mainCurrency = 'MNT';
 
@@ -81,25 +79,23 @@ export const CurrencyForm = ({
   };
 
   useEffect(() => {
-    if (
-      spotRate &&
-      amount &&
-      amount !== spotRate * (detail.currencyAmount || 0)
-    ) {
+    form.setValue(`trDocs.${journalIndex}.details.0.amount`, spotRate * (detail.currencyAmount ?? 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spotRate]);
+
+  useEffect(() => {
+    if (spotRate) {
       setChangingAmount(true);
       form.setValue(
         `trDocs.${journalIndex}.details.0.currencyAmount`,
         amount / spotRate,
       );
     }
-  }, [amount, form, journalIndex, spotRate, detail.currencyAmount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount]);
 
   useEffect(() => {
     if (!diffAmount) {
-      form.setValue(
-        `trDocs.${journalIndex}.follows`,
-        trDoc.follows?.filter((f) => f.type !== 'currencyDiff'),
-      );
       setFollowTrDocs(
         (followTrDocs || []).filter(
           (ftr) =>
@@ -111,7 +107,7 @@ export const CurrencyForm = ({
 
     const { sumDt, sumCt } = side === TR_SIDES.DEBIT ? { sumDt: diffAmount, sumCt: 0 } : { sumDt: 0, sumCt: diffAmount };
 
-    const curr = followTrDocs.find(ftr => ftr._id === diffFollowData?.id);
+    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'currencyDiff');
 
     const currencyDiffFtr = {
       ...curr || (trDoc as ITransaction),
@@ -121,7 +117,7 @@ export const CurrencyForm = ({
       followType: 'currencyDiff',
       details: [{
         ...(curr?.details || [{}])[0],
-        accountId: (detail?.followInfos as any).currencyDiffAccountId ?? '',
+        accountId: (detail?.followInfos as any)?.currencyDiffAccountId ?? '',
         side,
         amount: diffAmount
       }],
@@ -130,9 +126,9 @@ export const CurrencyForm = ({
       sumCt,
     };
 
-    form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'currencyDiff'), { type: 'currencyDiff', id: currencyDiffFtr._id }])
     setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'currencyDiff')), currencyDiffFtr]);
-  }, [detail, diffAmount, diffFollowData?.id, followTrDocs, form, journalIndex, setFollowTrDocs, side, trDoc]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detail, diffAmount, side]);
 
   if (
     !detail?.account?.currency ||

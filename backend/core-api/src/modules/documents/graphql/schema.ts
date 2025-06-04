@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from "erxes-api-shared/utils";
+
 export const types = `
   type Document {
     _id: String!
@@ -11,6 +13,8 @@ export const types = `
     name: String!
     content: String
     replacer: String
+
+    cursor: String
   }
 
   type DocumentEditorAttribute {
@@ -38,8 +42,7 @@ const queryParams = `
   contentType: String,
   subType: String
 
-  cursor: String
-  direction: CURSOR_DIRECTION
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `

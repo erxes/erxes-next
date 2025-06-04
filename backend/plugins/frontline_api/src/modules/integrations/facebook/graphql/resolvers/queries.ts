@@ -14,7 +14,7 @@ import { IFacebookConversationMessageDocument } from '@/integrations/facebook/@t
 import { INTEGRATION_KINDS } from '@/integrations/facebook/constants';
 
 const buildSelector = async (conversationId: string, model: any) => {
-  const query = { conversationId: '' };
+  const query = { conversationId: '' };https://github.com/erxes/erxes-next/pull/169/conflict?name=backend%252Fplugins%252Ffrontline_api%252Fsrc%252Fmodules%252Fintegrations%252Ffacebook%252Fgraphql%252Fresolvers%252Fqueries.ts&ancestor_oid=9b1f5817f987b78eda44c4f183a7665a603ef867&base_oid=4e13bf343ee12e310742041172d58552807ff029&head_oid=dd05fbe74d2fc51aca0286af10751b903ce77450
 
   const conversation = await model.findOne({
     erxesApiId: conversationId,
@@ -202,7 +202,7 @@ export const facebookQueries = {
     { _id }: { _id: string },
     { models }: IContext,
   ) {
-    const conversation = await models.Conversations.findOne({ _id });
+    const conversation = await models.FacebookConversations.findOne({ _id });
     if (conversation) {
       return conversation;
     }
@@ -223,7 +223,6 @@ export const facebookQueries = {
       models.FacebookConversations,
     );
 
-    console.log(conversation);
     if (conversation) {
       if (limit) {
         const sort: any = getFirst ? { createdAt: 1 } : { createdAt: -1 };

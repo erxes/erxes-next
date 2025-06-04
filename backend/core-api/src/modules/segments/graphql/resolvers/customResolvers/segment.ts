@@ -33,7 +33,6 @@ export default {
     { models }: IContext,
   ) {
     const segmentIds = segment.conditions.map((cond) => cond.subSegmentId);
-    console.log({ segmentIds });
 
     return models.Segments.aggregate([
       { $match: { _id: { $in: segmentIds } } },

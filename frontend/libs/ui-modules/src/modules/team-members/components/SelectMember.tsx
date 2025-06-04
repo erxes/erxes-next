@@ -40,7 +40,6 @@ const SelectMemberProvider = ({
 
   const onSelect = (member: IMember) => {
     if (!member) return;
-
     if (isSingleMode) {
       setMembers([member]);
       return onValueChange?.(member._id);
