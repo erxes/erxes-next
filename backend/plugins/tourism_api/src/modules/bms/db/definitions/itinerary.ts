@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
 import { PAIMENT_STATUS_TYPES } from '@/bms/constants';
 import { getEnum } from '@/bms/utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
 export const locationSchema = new Schema(
   {
@@ -35,7 +36,7 @@ const groupDay = new Schema(
 );
 
 export const initnarySchema = new Schema({
-  _id: { pkey: true },
+  _id: mongooseStringRandomId,
   createdAt: { type: Date, label: 'Created at' },
   modifiedAt: { type: Date, label: 'Modified at' },
 

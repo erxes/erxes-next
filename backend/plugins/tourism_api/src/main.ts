@@ -1,8 +1,9 @@
 import { startPlugin } from 'erxes-api-shared/utils';
 import { appRouter } from '~/trpc/init-trpc';
-import resolvers from './apollo/resolvers';
-import { typeDefs } from './apollo/typeDefs';
+
 import { generateModels } from './connectionResolvers';
+import { typeDefs } from './apollo/typeDefs';
+import resolvers from './apollo/resolvers';
 
 startPlugin({
   name: 'tourism',

@@ -1,14 +1,11 @@
-import SalesBoard from './board';
-
-import SalesChecklist from './checklist';
-import Deal from './deal';
-import SalesPipeline from './pipeline';
-import SalesStage from './stage';
+import ElementItem from './elementItemResolver';
+import Itinerary from './itineraryResolver';
+import Tour from './tourResolver';
+import Element from './element';
 
 export default {
-  SalesBoard,
-  SalesPipeline,
-  SalesStage,
-  Deal,
-  SalesChecklist,
+  ElementItem,
+  Element,
+  Tour,
+  Itinerary,
 };

@@ -1,8 +1,9 @@
 import { Schema } from 'mongoose';
 import { locationSchema } from '@/bms/db/definitions/itinerary';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
 export const elementCategorySchema = new Schema({
-  _id: { pkey: true },
+  _id: mongooseStringRandomId,
   name: { type: String, label: 'Name' },
   parentId: { type: String, label: 'parentId' },
   createdAt: {
@@ -13,7 +14,7 @@ export const elementCategorySchema = new Schema({
 });
 
 export const elementSchema = new Schema({
-  _id: { pkey: true },
+  _id: mongooseStringRandomId,
   createdAt: { type: Date, label: 'Created at' },
   modifiedAt: { type: Date, label: 'Modified at' },
   name: { type: String, optional: true, label: 'name' },

@@ -2,6 +2,7 @@ import { Schema } from 'mongoose';
 import { locationSchema } from '@/bms/db/definitions/itinerary';
 import { TOUR_STATUS_TYPES } from '@/bms/constants';
 import { getEnum } from '@/bms/utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
 export const guideItemSchema = new Schema(
   {
@@ -11,7 +12,7 @@ export const guideItemSchema = new Schema(
   { _id: false },
 );
 export const tourSchema = new Schema({
-  _id: { pkey: true },
+  _id: mongooseStringRandomId,
   createdAt: { type: Date, label: 'Created at' },
   modifiedAt: { type: Date, label: 'Modified at' },
   refNumber: { type: String, optional: true, label: 'refnumber' },

@@ -812,6 +812,12 @@ importers:
         specifier: workspace:^
         version: link:../../erxes-api-shared
 
+  backend/plugins/tourism_api:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+
   backend/services/automations:
     dependencies:
       erxes-api-shared:
