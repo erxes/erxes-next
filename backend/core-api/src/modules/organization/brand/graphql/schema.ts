@@ -1,6 +1,8 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
   type Brand @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String!
+    _id: String
     name: String
     description: String
     code: String
@@ -8,6 +10,8 @@ export const types = `
     createdAt: Date
     emailConfig: JSON
     memberIds: [String]
+
+    cursor: String
   }
 
   type BrandListResponse {
@@ -19,9 +23,7 @@ export const types = `
 
 const queryParams = `
   searchValue: String
-  limit: Int
-  cursor: String
-  direction: CURSOR_DIRECTION
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `
@@ -41,5 +43,5 @@ const mutationParams = `
 export const mutations = `
   brandsAdd(${mutationParams}): Brand
   brandsEdit(_id: String!, ${mutationParams}): Brand
-  brandsRemove(_id: String!): JSON
+  brandsRemove(_ids: [String!]): JSON
 `;

@@ -6,8 +6,7 @@ import { companyColumns } from '@/contacts/companies/components/CompanyColumns';
 export const CompaniesRecordTable = () => {
   const { companies, handleFetchMore, loading, pageInfo } = useCompanies();
 
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
   return (
     <RecordTable.Provider
       columns={companyColumns}

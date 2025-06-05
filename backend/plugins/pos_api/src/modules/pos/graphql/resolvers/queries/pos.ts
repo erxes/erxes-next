@@ -1,9 +1,9 @@
 import { getBranchesUtil } from "@/pos/utils";
+import { paginate } from "erxes-api-shared/utils";
 import { IContext } from "~/connectionResolvers";
-import { paginate } from "./orders";
 
-const generateFilterQuery = async ({ isOnline }, commonQuerySelector) => {
-  const query: any = { ...commonQuerySelector, status: { $ne: 'deleted' } };
+const generateFilterQuery = async ({ isOnline }) => {
+  const query: any = { status: { $ne: 'deleted' } };
   if (isOnline) {
     query.isOnline = isOnline === 'online';
   }
@@ -12,46 +12,46 @@ const generateFilterQuery = async ({ isOnline }, commonQuerySelector) => {
 };
 
 const queries = {
-  posEnv: async () => {
+  async posEnv() {
     const { ALL_AUTO_INIT } = process.env;
     return {
       ALL_AUTO_INIT: [true, 'true', 'True', '1'].includes(ALL_AUTO_INIT || '')
     };
   },
 
-  posList: async (_root, params, { commonQuerySelector, models }) => {
-    const query = await generateFilterQuery(params, commonQuerySelector);
+  async posList(_root, params, { models }: IContext) {
+    const query = await generateFilterQuery(params);
 
     const posList = paginate(models.Pos.find(query), params);
 
     return posList;
   },
 
-  posDetail: async (_root, { _id }, { models }) => {
+  async posDetail(_root, { _id }, { models }: IContext) {
     return await models.Pos.getPos({ $or: [{ _id }, { token: _id }] });
   },
 
-  ecommerceGetBranches: async (
+  async ecommerceGetBranches(
     _root,
     { posToken },
     { models, subdomain }: IContext
-  ) => {
+  ) {
     return await getBranchesUtil(subdomain, models, posToken);
   },
 
-  productGroups: async (
+  async productGroups(
     _root,
     { posId }: { posId: string },
     { models }: IContext
-  ) => {
+  ) {
     return await models.ProductGroups.groups(posId);
   },
 
-  posSlots: async (
+  async posSlots(
     _root,
     { posId }: { posId: string },
     { models }: IContext
-  ) => {
+  ) {
     return await models.PosSlots.find({ posId }).lean();
   }
 };

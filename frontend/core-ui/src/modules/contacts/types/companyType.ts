@@ -2,6 +2,7 @@ import { CountryCode } from 'libphonenumber-js';
 
 export interface TCompany {
   _id: string;
+  avatar?: string;
   primaryName: string;
   names?: string[];
   primaryEmail?: string;

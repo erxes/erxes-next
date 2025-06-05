@@ -1,5 +1,5 @@
 import { IProductDocument } from 'erxes-api-shared/core-types';
-import { cursorPaginate, escapeRegExp } from 'erxes-api-shared/utils';
+import { cursorPaginate, defaultPaginate, escapeRegExp } from 'erxes-api-shared/utils';
 import { FilterQuery, SortOrder } from 'mongoose';
 import { IContext, IModels } from '~/connectionResolvers';
 
@@ -136,6 +136,20 @@ export const productQueries = {
   /**
    * Products list
    */
+  async productsMain(
+    _parent: undefined,
+    params: IProductParams,
+    { commonQuerySelector, models }: IContext,
+  ) {
+    const filter = await generateFilter(models, commonQuerySelector, params);
+
+    return await cursorPaginate({
+      model: models.Products,
+      params,
+      query: filter,
+    });
+  },
+
   async products(
     _parent: undefined,
     params: IProductParams,
@@ -157,13 +171,11 @@ export const productQueries = {
       });
     }
 
-    const { list, totalCount, pageInfo } = await cursorPaginate({
-      model: models.Products,
-      params,
-      query: filter,
-    });
-
-    return { list, totalCount, pageInfo };
+    return await defaultPaginate(
+      models.Products.find(filter).sort(sort),
+      {
+        ...params,
+      });
   },
 
   async productDetail(
@@ -201,12 +213,12 @@ export const productQueries = {
       const getRegex = (str) => {
         return ['*', '.', '_'].includes(str)
           ? new RegExp(
-              `^${str
-                .replace(/\./g, '\\.')
-                .replace(/\*/g, '.')
-                .replace(/_/g, '.')}.*`,
-              'igu',
-            )
+            `^${str
+              .replace(/\./g, '\\.')
+              .replace(/\*/g, '.')
+              .replace(/_/g, '.')}.*`,
+            'igu',
+          )
           : new RegExp(`.*${escapeRegExp(str)}.*`, 'igu');
       };
 

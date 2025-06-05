@@ -79,6 +79,7 @@ export const SELECT_VATS = gql`
       _id
       name
       number
+      percent
     }
     vatRowsCount(
       status: $status
@@ -97,6 +98,7 @@ export const GET_VAT_VALUE = gql`
       _id
       name
       number
+      percent
     }
   }
 `;

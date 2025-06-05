@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Combobox, Command, Popover, TextOverflowTooltip } from 'erxes-ui';
 import { useVatRows } from '../hooks/useVatRows';
 import { useVatValue } from '../hooks/useVatValue';
@@ -9,14 +9,15 @@ export const SelectVat = React.forwardRef<
   React.ComponentProps<typeof Combobox.Trigger> & {
     value?: string;
     onValueChange: (value: string) => void;
+    onCallback?: (row: IVatRow) => void;
   }
->(({ value, onValueChange, ...props }, ref) => {
+>(({ value, onValueChange, onCallback, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const [selectedVat, setSelectedVat] = useState<IVatRow | undefined>(undefined);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Combobox.Trigger ref={ref} {...props}>
-        <SelectVatValue vatRowId={value} vatRow={selectedVat} />
+        <SelectVatValue vatRowId={value} vatRow={selectedVat} onCallback={onCallback} />
       </Combobox.Trigger>
       <Combobox.Content>
         <SelectVatList
@@ -77,9 +78,11 @@ export const SelectVatList = ({
 export const SelectVatValue = ({
   vatRowId,
   vatRow,
+  onCallback,
 }: {
   vatRowId?: string;
   vatRow?: IVatRow;
+  onCallback?: (row: IVatRow) => void;
 }) => {
   const { vatRowDetail, loading } = useVatValue({
     variables: {
@@ -88,10 +91,18 @@ export const SelectVatValue = ({
     skip: !vatRowId || !!vatRow,
   });
 
-  if (!vatRow?.name || !vatRowDetail?.name) {
+  const lastVatRow = vatRow?._id ? vatRow : vatRowDetail;
+
+  useEffect(() => {
+    if (onCallback && lastVatRow) {
+      onCallback(lastVatRow)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastVatRow, loading])
+
+  if (!lastVatRow?._id) {
     return (
       <Combobox.Value
-        value={vatRow?.name || vatRowDetail?.name}
         placeholder="Select Vat"
         loading={loading}
       />
@@ -100,8 +111,8 @@ export const SelectVatValue = ({
 
   return (
     <div className="inline-flex gap-2">
-      <span className="text-muted-foreground">{vatRow?.number}</span>
-      <Combobox.Value value={vatRow?.name || vatRowDetail?.name} />
+      <span className="text-muted-foreground">{lastVatRow?.number}</span>
+      <Combobox.Value value={lastVatRow?.name} />
     </div>
   );
 };

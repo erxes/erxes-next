@@ -53,3 +53,8 @@ export const COC_LIFECYCLE_STATE_TYPES = [
   'evangelist',
   'other',
 ];
+
+export const CONTACT_STATUSES = {
+  active: 'Active',
+  deleted: 'deleted',
+};

@@ -2,7 +2,8 @@ import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { integrationSchema } from '@/integrations/facebook/db/definitions/integrations';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-export interface IFacebookIntegrationModel extends Model<IFacebookIntegrationDocument> {
+export interface IFacebookIntegrationModel
+  extends Model<IFacebookIntegrationDocument> {
   getIntegration(selector): Promise<IFacebookIntegrationDocument>;
 }
 

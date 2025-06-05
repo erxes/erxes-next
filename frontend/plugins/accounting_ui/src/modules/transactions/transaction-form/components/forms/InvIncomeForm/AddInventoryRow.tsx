@@ -1,0 +1,64 @@
+import { IconPlus } from '@tabler/icons-react';
+
+import { useWatch } from 'react-hook-form';
+import { TInvDetail } from '../../../types/AddTransaction';
+
+import { Button } from 'erxes-ui/components/button';
+import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { TR_SIDES } from '~/modules/transactions/types/constants';
+// import { useInventoryContext } from '../hooks/useInventoryContext';
+
+export const AddInventoryRowButton = ({
+  append,
+  journalIndex,
+  form
+}: {
+  form: ITransactionGroupForm;
+  journalIndex: number;
+  append: (product: TInvDetail | TInvDetail[]) => void;
+}) => {
+  const { control } = form;
+
+  const preDetails = useWatch({
+    control,
+    name: `trDocs.${journalIndex}.details`,
+  });
+
+  const lastDetail = preDetails[preDetails.length - 1]
+
+  const detailDefaultValues = {
+    ...lastDetail,
+    side: TR_SIDES.DEBIT,
+    amount: 0,
+    productId: '',
+    count: 0,
+    unitPrice: 0,
+  };
+
+  return (
+    <>
+      <Button
+        variant="secondary"
+        className="bg-border"
+        onClick={() => append(detailDefaultValues)}
+      >
+        <IconPlus />
+        Add Empty Row
+      </Button>
+      <Button
+        variant="secondary"
+        className="bg-border"
+        onClick={() =>
+          append([
+            detailDefaultValues,
+            detailDefaultValues,
+            detailDefaultValues,
+          ])
+        }
+      >
+        <IconPlus />
+        Add Many Products
+      </Button>
+    </>
+  );
+};

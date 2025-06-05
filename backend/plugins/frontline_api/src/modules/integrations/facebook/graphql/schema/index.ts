@@ -4,7 +4,6 @@ import {
   types as FacebookTypes,
 } from './facebook';
 
-
 export const types = `
   ${FacebookTypes},
 

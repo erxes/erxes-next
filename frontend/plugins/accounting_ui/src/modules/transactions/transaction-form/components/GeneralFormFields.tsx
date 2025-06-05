@@ -6,33 +6,61 @@ import {
   SelectBranch,
   SelectDepartment,
 } from 'ui-modules';
-import { TR_JOURNAL_LABELS, TrJournalEnum } from '../../types/constants';
+import { IAccount } from '@/settings/account/types/Account';
+import { useWatch } from 'react-hook-form';
 
 export const AccountField = ({
   form,
   index,
-  journal,
+  filter,
+  allDetails
 }: ICommonFieldProps & {
-  journal: TrJournalEnum;
-}) => (
-  <Form.Field
-    control={form.control}
-    name={`trDocs.${index}.details.0.accountId`}
-    render={({ field }) => (
-      <Form.Item>
-        <Form.Label>{TR_JOURNAL_LABELS[journal]} account</Form.Label>
-        <Form.Control>
-          <SelectAccount
-            value={field.value || ''}
-            onValueChange={field.onChange}
-            journal={journal}
-          />
-        </Form.Control>
-        <Form.Message />
-      </Form.Item>
-    )}
-  />
-);
+  filter?: any;
+  allDetails?: boolean
+}) => {
+  const details = useWatch({
+    control: form.control,
+    name: `trDocs.${index}.details`
+  })
+  const onChangeAccount = (account: IAccount) => {
+    if (allDetails) {
+      details.forEach((_d, ind) => {
+        form.setValue(`trDocs.${index}.details.${ind}.account`, account as any);
+        form.setValue(`trDocs.${index}.details.${ind}.accountId`, account._id as any);
+      });
+    } else {
+      form.setValue(`trDocs.${index}.details.0.account`, account as any);
+    }
+
+    if (account?.branchId) {
+      form.setValue(`trDocs.${index}.branchId`, account.branchId);
+    }
+
+    if (account?.departmentId) {
+      form.setValue(`trDocs.${index}.departmentId`, account.departmentId);
+    }
+  }
+  return (
+    <Form.Field
+      control={form.control}
+      name={`trDocs.${index}.details.0.accountId`}
+      render={({ field }) => (
+        <Form.Item>
+          <Form.Label>Account</Form.Label>
+          <Form.Control>
+            <SelectAccount
+              value={field.value || ''}
+              onValueChange={field.onChange}
+              onCallback={onChangeAccount}
+              defaultFilter={{ ...filter }}
+            />
+          </Form.Control>
+          <Form.Message />
+        </Form.Item>
+      )}
+    />
+  )
+};
 
 export const SideField = ({
   form,

@@ -306,20 +306,16 @@ const Property = ({
 
   const fieldName = createFieldNameSafe(parentFieldName, 'conditions', index);
   const propertyType = watch(`${fieldName}.propertyType` as any);
-  console.log({ propertyType, fieldName });
   const { fields, propertyTypes, loading } = getFieldsProperties(propertyType);
 
   if (loading) {
     return <Spinner />;
   }
 
-  console.log({ fields, propertyTypes });
-
   const { selectedField, operators } =
     getSelectedFieldConfig(watch(`${fieldName}.propertyName` as any), fields) ||
     {};
 
-  console.log({ selectedField, operators });
   const renderAndOrBtn = () => {
     const hasTwoElement = total === 2;
     const isOdd = Math.round(total) % 2 === 0;

@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const conformityQueryFields = `
   conformityMainType: String
   conformityMainTypeId: String
@@ -29,7 +31,7 @@ export const types = `
     primaryPhone: String
     primaryAddress: JSON
     addresses: [JSON]
-
+    status: String
     businessType: String
     description: String
     isSubscribed: String
@@ -48,6 +50,8 @@ export const types = `
     code: String
     location: String
     score: Float
+
+    cursor: String
   }
 
   type CompaniesListResponse {
@@ -75,10 +79,10 @@ const queryParams = `
   sortDirection: Int
   dateFilters: String
   segmentData: String
-  limit: Int
-  cursor: String
-  direction: CURSOR_DIRECTION
+
+  status: CONTACT_STATUS
   ${conformityQueryFields}
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `

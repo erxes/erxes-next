@@ -2,7 +2,6 @@ import { Schema } from 'mongoose';
 
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
-
 export const accountSchema = new Schema({
   _id: mongooseStringRandomId,
   kind: { type: String },

@@ -108,6 +108,7 @@ const SelectMemberCommandItem = ({ user }: { user: IMember }) => {
             ...user,
           },
         ]}
+        placeholder="Unnamed user"
       />
       <Combobox.Check checked={memberIds.includes(user._id)} />
     </Command.Item>

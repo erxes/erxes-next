@@ -4,6 +4,7 @@ import { contactQueries } from '@/contacts/graphql/resolvers/queries';
 import { documentQueries } from '@/documents/graphql/queries';
 import { exchangeRateQueries } from '@/exchangeRates/graphql/resolvers';
 import { queries as formQueries } from '@/forms/graphql/resolvers';
+import { brandQueries } from '@/organization/brand/graphql/queries';
 import { organizationConfigQueries } from '@/organization/settings/graphql/configs/queries';
 import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
 import { structureQueries } from '@/organization/structure/graphql/resolvers/queries';
@@ -14,6 +15,8 @@ import { productQueries } from '@/products/graphql/resolvers/queries';
 import { relationsQueries } from '@/relations/graphql/queries';
 import { segmentQueries } from '@/segments/graphql/resolvers';
 import { tagQueries } from '@/tags/graphql/queries';
+import { automationQueries } from '@/automations/graphql/resolvers/queries';
+// import { logQueries } from '@/logs/graphql/resolvers/queries';
 
 export const queries = {
   ...contactQueries,
@@ -27,9 +30,12 @@ export const queries = {
   ...relationsQueries,
   ...favoriteQueries,
   ...structureQueries,
+  ...brandQueries,
   ...organizationConfigQueries,
   ...exchangeRateQueries,
   ...permissionQueries,
   ...usersGroupQueries,
   ...documentQueries,
+  ...automationQueries,
+  // ...logQueries,
 };

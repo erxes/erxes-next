@@ -1,4 +1,3 @@
-
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { accountSchema } from '@/integrations/facebook/db/definitions/accounts';

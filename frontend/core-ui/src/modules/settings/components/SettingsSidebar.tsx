@@ -77,7 +77,7 @@ export function SettingsSidebar() {
         </Sidebar.Group>
 
         <Sidebar.Group>
-          <Sidebar.GroupLabel>PLugins Settings</Sidebar.GroupLabel>
+          <Sidebar.GroupLabel>Plugins Settings</Sidebar.GroupLabel>
           <Sidebar.GroupContent>
             <Sidebar.Menu>
               {modules.map((item) => (

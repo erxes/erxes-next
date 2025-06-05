@@ -1,5 +1,6 @@
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
+import { CONTACT_STATUSES } from './constants';
 
 export const generateFilter = async (params: any, models: IModels) => {
   const {
@@ -12,6 +13,7 @@ export const generateFilter = async (params: any, models: IModels) => {
     brandIds,
     integrationIds,
     integrationTypes,
+    status
   } = params;
 
   const filter = {};
@@ -20,8 +22,12 @@ export const generateFilter = async (params: any, models: IModels) => {
     filter['state'] = { $eq: type };
   }
 
+  if (status) {
+    filter['status'] = { $eq: CONTACT_STATUSES[status] };
+  }
+
   if (searchValue) {
-    filter['$or'] = [{ searchText: { $regex: searchValue, $options: 'i' } }];
+    filter['searchText'] = { $regex: searchValue, $options: 'i' };
   }
 
   if (brandIds || integrationIds || integrationTypes) {

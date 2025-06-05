@@ -1,8 +1,9 @@
 import { initTRPC } from '@trpc/server';
-import { ITRPCContext } from 'erxes-api-shared/utils';
 import { z } from 'zod';
+import { getFileUploadConfigs } from '@/organization/settings/utils/configs';
+import { CoreTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const configTrpcRouter = t.router({
   configs: t.router({
@@ -15,7 +16,7 @@ export const configTrpcRouter = t.router({
     getConfig: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { code, defaultValue } = input;
       const { models } = ctx;
-      await models.Configs.getConfigValue(code, defaultValue);
+      return await models.Configs.getConfigValue(code, defaultValue);
     }),
     getConfigs: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { codes } = input;
@@ -26,6 +27,9 @@ export const configTrpcRouter = t.router({
       const { models } = ctx;
       const { query } = input;
       return await models.Configs.find(query).distinct('value');
+    }),
+    getFileUploadConfigs: t.procedure.input(z.any()).query(async () => {
+      return await getFileUploadConfigs();
     }),
     createOrUpdateConfig: t.procedure
       .input(z.any())
