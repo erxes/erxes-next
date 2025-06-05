@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Dialog } from 'erxes-ui';
 import ReactJson from 'react-json-view';
-import { maskFields } from '../utils';
+import { maskFields } from '../utils/logFormUtils';
 import { ILogDoc } from '../types';
 
 const graphql = ({ payload, createdAt }: ILogDoc) => {

@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import queries from '../graphql/queries';
+import { SEGMENTS } from '../graphql/queries';
 import { useQueryState } from 'erxes-ui';
 import { ISegment } from '../types';
 import { Combobox, Command, Popover, TextOverflowTooltip } from 'erxes-ui';
@@ -36,7 +36,7 @@ const SelectBranchBadge = ({
   );
 };
 
-export const SelectSegmentCommand = ({
+export const SelectSegment = ({
   selected,
   onSelect,
   focusOnMount,
@@ -52,7 +52,7 @@ export const SelectSegmentCommand = ({
   const [search, setSearch] = useState('');
   const [contentType] = useQueryState('contentType');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { data, loading, error } = useQuery(queries.segments, {
+  const { data, loading, error } = useQuery(SEGMENTS, {
     variables: {
       contentTypes: [contentType],
       searchValue: debouncedSearch ?? undefined,

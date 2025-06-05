@@ -44,6 +44,10 @@ import {
   automationBuilderFormSchema,
   TAutomationProps,
 } from '@/automations/utils/AutomationFormDefinitions';
+import { Breadcrumb, Button, PageSubHeader, Separator } from 'erxes-ui';
+import { IconAffiliate, IconSettings } from '@tabler/icons-react';
+import { PageHeader } from 'ui-modules';
+import { Link } from 'react-router';
 
 interface MenuState {
   id: string;

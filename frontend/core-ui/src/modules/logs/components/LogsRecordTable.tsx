@@ -1,71 +1,24 @@
-import { gql, useQuery } from '@apollo/client';
-import {
-  IconCalendarPlus,
-  IconChartPie,
-  IconLabel,
-  IconProgressCheck,
-  IconSearch,
-  IconSettings,
-  IconSourceCode,
-} from '@tabler/icons-react';
-import {
-  Combobox,
-  Command,
-  EnumCursorDirection,
-  Filter,
-  mergeCursorData,
-  PageSubHeader,
-  RecordTable,
-  Skeleton,
-  Spinner,
-} from 'erxes-ui';
-import { PageHeader, SelectMember, TagsFilter } from 'ui-modules';
-import { LOGS_MAIN_LIST } from '../graphql/logQueries';
-import { LogsMainListQueryResponse } from '../types';
+import { IconChartPie } from '@tabler/icons-react';
+import { PageSubHeader, RecordTable, Skeleton, Spinner } from 'erxes-ui';
+import { PageHeader } from 'ui-modules';
+import { LOGS_CURSOR_SESSION_KEY } from '../constants/logFilter';
+import { useLogs } from '../hooks/useLogs';
 import { logColumns } from './LogColumns';
-import { LogsRecordTableFilter } from './LogsRecordTableFilter';
+import { LogsRecordTableFilter } from './filters/LogsRecordTableFilter';
+
 export const LogsRecordTable = () => {
-  console.log({ fucker: 'dakdjabskds' });
-  const { data, loading, fetchMore } = useQuery<LogsMainListQueryResponse>(
-    gql(LOGS_MAIN_LIST),
-  );
+  const {
+    loading,
+    totalCount,
+    list,
+    handleFetchMore,
+    hasNextPage,
+    hasPreviousPage,
+  } = useLogs();
 
   if (loading) {
     return <Spinner />;
   }
-
-  const { list = [], totalCount = 0, pageInfo } = data?.logsMainList || {};
-  const { hasPreviousPage, hasNextPage } = pageInfo || {};
-
-  const handleFetchMore = ({
-    direction,
-  }: {
-    direction: EnumCursorDirection;
-  }) => {
-    if (!list || !totalCount || totalCount <= list.length) {
-      return;
-    }
-    fetchMore({
-      variables: {
-        cursor:
-          direction === EnumCursorDirection.FORWARD
-            ? pageInfo?.endCursor
-            : pageInfo?.startCursor,
-        limit: 20,
-        direction,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
-        return Object.assign({}, prev, {
-          logsMainList: mergeCursorData({
-            direction,
-            fetchMoreResult: fetchMoreResult.logsMainList,
-            prevResult: prev.logsMainList,
-          }),
-        });
-      },
-    });
-  };
 
   return (
     <div className="flex flex-col h-full p-3 pt-0">
@@ -89,7 +42,7 @@ export const LogsRecordTable = () => {
           hasNextPage={hasNextPage}
           loading={loading}
           dataLength={list?.length}
-          sessionKey="automations_cursor"
+          sessionKey={LOGS_CURSOR_SESSION_KEY}
         >
           <RecordTable className="w-full">
             <RecordTable.Header />

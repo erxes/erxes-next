@@ -1,9 +1,8 @@
 import { IconTrash } from '@tabler/icons-react';
-import { Button, Card, Form, Label } from 'erxes-ui';
+import { Button, Card, Label } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import Property from './Property';
-import { SegmentFormProps } from './schema';
-
+import { SegmentFormProps } from '../../types';
+import { SegmentProperty } from './SegmentProperty';
 type Props = {
   form: UseFormReturn<SegmentFormProps>;
   parentFieldName?: `conditionSegments.${number}`;
@@ -11,8 +10,12 @@ type Props = {
   contentType: string;
 };
 
-const Segment = ({ form, parentFieldName, onRemove, contentType }: Props) => {
-  // const [selectedContentType] = useQueryState<string>('contentType');
+export const SegmentGroup = ({
+  form,
+  parentFieldName,
+  onRemove,
+  contentType,
+}: Props) => {
   const { control } = form;
 
   const {
@@ -51,7 +54,7 @@ const Segment = ({ form, parentFieldName, onRemove, contentType }: Props) => {
         <div className="flex flex-col ">
           {(conditionFields || []).map((condition, index) => (
             <div key={(condition as any).id}>
-              <Property
+              <SegmentProperty
                 index={index}
                 form={form}
                 parentFieldName={parentFieldName}
@@ -82,5 +85,3 @@ const Segment = ({ form, parentFieldName, onRemove, contentType }: Props) => {
     </Card>
   );
 };
-
-export default Segment;

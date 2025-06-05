@@ -77,6 +77,9 @@ query AutomationsMain($page: Int, $perPage: Int, $ids: [String], $excludeIds: Bo
       updatedAt
       createdBy
       updatedBy
+      tagIds
+      triggers { id }
+      actions { id }
       createdUser {
         ${COMMON_USER_FIELDS}
       }

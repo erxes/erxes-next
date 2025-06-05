@@ -40,6 +40,7 @@ export const conditionsSchema = z.array(
       }
     }),
 );
+
 export const segmentFormSchema = z.object({
   name: z.string(),
   subOf: z.string().optional(),
@@ -57,5 +58,3 @@ export const segmentFormSchema = z.object({
   conditions: conditionsSchema.optional(),
   conditionsConjunction: z.enum(['and', 'or']),
 });
-
-export type SegmentFormProps = z.infer<typeof segmentFormSchema>;

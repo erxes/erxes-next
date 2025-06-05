@@ -1,41 +1,33 @@
 import { gql } from '@apollo/client';
 import { IconTrash } from '@tabler/icons-react';
-import {
-  Button,
-  cn,
-  DatePicker,
-  Form,
-  HoverCard,
-  Input,
-  Select,
-  Spinner,
-} from 'erxes-ui';
-import { ControllerRenderProps, FieldError } from 'react-hook-form';
-import { SelectCommand } from '../common';
-import { getFieldsProperties, getSelectedFieldConfig } from '../hooks';
+import { ControllerRenderProps } from 'react-hook-form';
+import { Button, cn, DatePicker, Form, Input, Select, Spinner } from 'erxes-ui';
+
+import { getFieldsProperties } from '../../hooks';
 import {
   IProperty,
   IPropertyCondtion,
   IPropertyField,
   IPropertyInput,
-} from '../types';
-import { createFieldNameSafe, groupByType } from '../utils';
-import { SegmentFormProps } from './schema';
-import { FieldWithError } from '../common/FieldWithError';
+} from '../../types';
+import {
+  createFieldNameSafe,
+  getSelectedFieldConfig,
+  groupFieldsByType,
+} from '../../utils/segmentFormUtils';
+import { FieldWithError } from '../FieldWithError';
+import { QuerySelectInput } from '../QuerySelectInput';
 
 const PropertyField = ({
-  index,
   form,
   fields,
-  currentField,
   parentFieldName,
   defaultValue,
   propertyTypes,
   contentType,
 }: IPropertyField) => {
   const { control } = form;
-  const groups = groupByType(fields);
-  // const [selectedContentType] = useQueryState<string>('contentType');
+  const groups = groupFieldsByType(fields);
   return (
     <div className="flex flex-row w-full">
       <Form.Field
@@ -242,12 +234,13 @@ const PropertyInput = ({
         }
       `;
     Component = (field: ControllerRenderProps<any, any>) => (
-      <SelectCommand
+      <QuerySelectInput
         query={query}
         queryName={queryName}
         labelField={labelField}
         valueField={valueField}
         nullable
+        multi
         initialValue={field.value}
         onSelect={(value) => field.onChange(value)}
         focusOnMount
@@ -291,7 +284,7 @@ const PropertyInput = ({
   );
 };
 
-const Property = ({
+export const SegmentProperty = ({
   form,
   index,
   condition,
@@ -419,5 +412,3 @@ const Property = ({
     </div>
   );
 };
-
-export default Property;

@@ -40,6 +40,7 @@ const types = `
     updatedAt: Date
     createdBy: String
     updatedBy: String
+    tagIds:[String]
     triggers: [Trigger]
     actions: [Action]
 

@@ -7,6 +7,7 @@ export const types = `
       action:String,
       status:String,
       userId:String,
+      cursor:String,
 
       user:User
       prevObject:String
@@ -19,6 +20,13 @@ export const types = `
     }
 `;
 
+const cursorParams = `
+  limit: Int
+  cursor: String
+  direction: CURSOR_DIRECTION
+  cursorMode: CURSOR_MODE
+`;
+
 export const commonListQueryParams = `
     searchValue:String,
     page:Int,
@@ -28,11 +36,9 @@ export const commonListQueryParams = `
 `;
 
 const commonQueryParams = `
-    ${commonListQueryParams}
+    ${commonListQueryParams},
+    ${cursorParams},
     filters:JSON
-    cursor: String
-    direction: CURSOR_DIRECTION
-    limit: Int
 `;
 
 export const queries = `
