@@ -112,38 +112,44 @@ export const SelectDepartmentCommand = ({
   }, [focusOnMount]);
 
   return (
-    <Command shouldFilter={false}>
-      <Command.Input
-        variant="secondary"
-        placeholder="Filter by department"
-        ref={inputRef}
-        value={search}
-        onValueChange={(value) => setSearch(value)}
-      />
-      <Command.Separator />
-      <Command.List className="p-1">
-        <Combobox.Empty error={error} loading={loading} />
-        {nullable && (
-          <Command.Item key="null" value="null" onSelect={() => onSelect(null)}>
-            No department selected
-          </Command.Item>
-        )}
-        {departments?.map((department: IDepartment) => (
-          <SelectDepartmentItem
-            key={department._id}
-            department={department}
-            selected={selectedDepartment?._id === department._id}
-            onSelect={() => onSelect(department._id)}
-            disabled={exclude?.includes(department._id)}
-            hasChildren={
-              departments?.find(
-                (c: IDepartment) => c.parentId === department._id,
-              ) !== undefined
-            }
-          />
-        ))}
-      </Command.List>
-    </Command>
+    <SelectTree.Provider id="select-department" ordered>
+      <Command shouldFilter={false}>
+        <Command.Input
+          variant="secondary"
+          placeholder="Filter by department"
+          ref={inputRef}
+          value={search}
+          onValueChange={(value) => setSearch(value)}
+        />
+        <Command.Separator />
+        <Command.List className="p-1">
+          <Combobox.Empty error={error} loading={loading} />
+          {nullable && (
+            <Command.Item
+              key="null"
+              value="null"
+              onSelect={() => onSelect(null)}
+            >
+              No department selected
+            </Command.Item>
+          )}
+          {departments?.map((department: IDepartment) => (
+            <SelectDepartmentItem
+              key={department._id}
+              department={department}
+              selected={selectedDepartment?._id === department._id}
+              onSelect={() => onSelect(department._id)}
+              disabled={exclude?.includes(department._id)}
+              hasChildren={
+                departments?.find(
+                  (c: IDepartment) => c.parentId === department._id,
+                ) !== undefined
+              }
+            />
+          ))}
+        </Command.List>
+      </Command>
+    </SelectTree.Provider>
   );
 };
 

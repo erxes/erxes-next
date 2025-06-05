@@ -33,6 +33,8 @@ const GET_DEPARTMENTS_LIST = gql`
         title
         supervisorId
         userCount
+        order
+        parentId
       }
       pageInfo {
         endCursor

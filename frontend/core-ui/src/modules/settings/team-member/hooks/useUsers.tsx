@@ -1,10 +1,19 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { queries } from '@/settings/team-member/graphql';
-import { useMultiQueryState } from 'erxes-ui';
+import {
+  EnumCursorDirection,
+  mergeCursorData,
+  useMultiQueryState,
+  useRecordTableCursor,
+  validateFetchMore,
+} from 'erxes-ui';
 
 export const USERS_PER_PAGE = 30;
 
 const useUsers = (options?: OperationVariables) => {
+  const { cursor } = useRecordTableCursor({
+    sessionKey: 'users_cursor',
+  });
   const [{ branchId, departmentId, unitId }] = useMultiQueryState([
     'branchId',
     'departmentId',
@@ -18,7 +27,8 @@ const useUsers = (options?: OperationVariables) => {
         branchId: branchId ?? undefined,
         departmentId: departmentId ?? undefined,
         unitId: unitId ?? undefined,
-        perPage: USERS_PER_PAGE,
+        limit: USERS_PER_PAGE,
+        cursor,
         ...options?.variables,
       },
       onError(error) {
@@ -27,26 +37,43 @@ const useUsers = (options?: OperationVariables) => {
     },
   );
 
-  const {
-    list: users,
-    usersTotalCount: totalCount,
-    pageInfo,
-  } = data?.users || {};
+  const { list: users, totalCount, pageInfo } = data?.users || {};
 
-  const handleFetchMore = () =>
-    totalCount > users?.length &&
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+  }) => {
+    if (
+      !validateFetchMore({
+        direction,
+        pageInfo,
+      })
+    ) {
+      return;
+    }
+
     fetchMore({
       variables: {
-        page: Math.ceil(users.length / USERS_PER_PAGE) + 1,
-        perPage: USERS_PER_PAGE,
+        cursor:
+          direction === EnumCursorDirection.FORWARD
+            ? pageInfo?.endCursor
+            : pageInfo?.startCursor,
+        limit: USERS_PER_PAGE,
+        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          users: [...(prev.users || []), ...fetchMoreResult.users],
+          users: mergeCursorData({
+            direction,
+            fetchMoreResult: fetchMoreResult.users,
+            prevResult: prev.users,
+          }),
         });
       },
     });
+  };
 
   return {
     loading,
@@ -54,6 +81,7 @@ const useUsers = (options?: OperationVariables) => {
     error,
     totalCount,
     handleFetchMore,
+    pageInfo,
   };
 };
 

@@ -108,7 +108,7 @@ export const SettingsExitButton = () => {
     );
 
   return (
-    <Sidebar.Header className="pb-0">
+    <Sidebar.Header className="pb-0 px-4">
       <Sidebar.Menu>
         <Sidebar.MenuItem>
           <Sidebar.MenuButton className="h-10" onClick={handleExitSettings}>

@@ -6,7 +6,8 @@ import Redis from 'ioredis';
 
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, SKIP_REDIS } = process.env;
 const skipRedis = SKIP_REDIS === 'true';
-const pubsub = skipRedis
+
+export const graphqlPubsub = skipRedis
   ? new PubSub()
   : new RedisPubSub({
       connectionListener: (error) => {
@@ -25,5 +26,3 @@ const pubsub = skipRedis
         password: REDIS_PASSWORD,
       }),
     });
-
-export default pubsub;

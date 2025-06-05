@@ -4,7 +4,7 @@ export interface IMember {
   _id: string;
   email?: string;
   username?: string;
-  details: {
+  details?: {
     fullName: string;
     avatar: string;
   };

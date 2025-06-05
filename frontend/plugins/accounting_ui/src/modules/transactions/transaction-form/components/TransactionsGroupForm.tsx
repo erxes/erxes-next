@@ -11,7 +11,7 @@ import { useTransactionDetail } from '../hooks/useTransactionDetail';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 import { useTransactionsUpdate } from '../hooks/useTransactionsUpdate';
 import { activeJournalState } from '../states/trStates';
-import { TAddTransactionGroup } from '../types/AddTransaction';
+import { TAddTransactionGroup } from '../types/JournalForms';
 import { Summary } from './common/Summary';
 import { TransactionsTabsList } from './TransactionTabs';
 
@@ -67,7 +67,9 @@ export const TransactionsGroupForm = () => {
   const { loading: configsLoading } = useMainConfigs();
   const form = useForm<TAddTransactionGroup>({
     resolver: zodResolver(transactionGroupSchema),
-
+    defaultValues: {
+      date: new Date(),
+    },
   });
 
   const [defaultJournal] = useQueryState<TrJournalEnum>('defaultJournal');

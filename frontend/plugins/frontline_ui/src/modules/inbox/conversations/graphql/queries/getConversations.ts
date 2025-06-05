@@ -41,13 +41,7 @@ export const GET_CONVERSATIONS = gql`
         content
         createdAt
         updatedAt
-        integration {
-          name
-          kind
-          brand {
-            name
-          }
-        }
+        integrationId
         customer {
           _id
           firstName

@@ -15,7 +15,6 @@ import {
   RecordTable,
   RecordTableCellDisplay,
   Skeleton,
-  Spinner,
 } from 'erxes-ui';
 
 import {

@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { ATTACHMENT_GQL } from 'erxes-ui';
 
 export const CONVERSATION_CHANGED = gql`
   subscription conversationChanged($_id: String!) {
@@ -14,11 +15,7 @@ export const CONVERSATION_MESSAGE_INSERTED = gql`
       _id
       content
       formWidgetData
-      attachments {
-        name
-        type
-        url
-      }
+      ${ATTACHMENT_GQL}
       internal
       createdAt
       isCustomerRead

@@ -8,6 +8,8 @@ export interface IBranchListItem {
   parentId: string;
   userCount: number;
   title: string;
+  order: string;
+  hasChildren?: boolean;
 }
 export enum BranchHotKeyScope {
   BranchSettingsPage = 'branch-settings-page',

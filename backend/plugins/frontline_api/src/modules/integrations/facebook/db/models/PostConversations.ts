@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { postConversationSchema } from '@/integrations/facebook/db/definitions/postConversations';
-import {IFacebookPostConversationDocument } from '@/integrations/facebook/@types/postConversations';
+import { IFacebookPostConversationDocument } from '@/integrations/facebook/@types/postConversations';
 export interface IFacebookPostConversationModel
   extends Model<IFacebookPostConversationDocument> {
   getConversation(
@@ -13,7 +13,9 @@ export interface IFacebookPostConversationModel
 export const loadFacebookPostConversationClass = (models: IModels) => {
   class PostConversation {
     public static async getConversation(selector) {
-      const conversation = await models.FacebookPostConversations.findOne(selector);
+      const conversation = await models.FacebookPostConversations.findOne(
+        selector,
+      );
 
       if (!conversation) {
         throw new Error('Post not found');
