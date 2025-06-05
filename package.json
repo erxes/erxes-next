@@ -99,6 +99,7 @@
     "http-proxy-middleware": "^3.0.3",
     "i18next": "^23.16.4",
     "i18next-browser-languagedetector": "^8.0.0",
+    "imax": "^0.1.0",
     "ioredis": "^5.4.2",
     "jimp": "^1.6.0",
     "jotai": "^2.12.0",
