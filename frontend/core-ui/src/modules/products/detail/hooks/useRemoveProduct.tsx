@@ -1,4 +1,4 @@
-import { OperationVariables, useMutation } from '@apollo/client';
+import { MutationHookOptions, useMutation } from '@apollo/client';
 import { IProduct } from 'ui-modules';
 import { productsRemoveMutation } from '../graphql/mutations/ProductRemoveMutations';
 import { productsQueries } from '@/products/graphql';
@@ -10,7 +10,7 @@ export const useRemoveProducts = () => {
 
   const removeProducts = (
     productIds: string[],
-    options?: OperationVariables,
+    options?: MutationHookOptions,
   ) => {
     _removeProducts({
       ...options,
@@ -33,7 +33,7 @@ export const useRemoveProducts = () => {
             }),
           );
         } catch (e) {
-        console.error('Cache update failed:', e);
+          console.error('Cache update failed:', e);
         }
       },
     });

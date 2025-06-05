@@ -9,7 +9,7 @@ const TAGS_PER_PAGE = 20;
 export const useTags = (
   options?: QueryHookOptions<ICursorListResponse<ITag>>,
 ) => {
-  const { data, loading, error, fetchMore, refetch } = useQuery<
+  const { data, loading, error, fetchMore } = useQuery<
     ICursorListResponse<ITag>
   >(TAGS_QUERY, {
     ...options,
@@ -53,7 +53,6 @@ export const useTags = (
     loading,
     error,
     handleFetchMore,
-    refetch,
   };
 };
 

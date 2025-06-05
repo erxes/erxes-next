@@ -55,7 +55,7 @@ const ProductDetailTabs = ({ children }: { children: React.ReactNode }) => {
     <Tabs
       value={selectedTab}
       onValueChange={handleTabChange}
-      className="flex-auto flex flex-col bg-white"
+      className="flex-auto flex flex-col bg-background"
     >
       <Tabs.List className="h-12">
         <Tabs.Trigger value="overview" className="text-base h-full">

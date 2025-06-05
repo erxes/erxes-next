@@ -21,30 +21,22 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
   const { productDetail } = useProductDetail();
   const { toast } = useToast();
 
-  const handleSubmit = async (data: ProductFormValues) => {
+  const handleSubmit = (data: ProductFormValues) => {
     if (!productDetail?._id) {
       return;
     }
 
-    try {
-      await productsEdit({
-        variables: {
-          ...data,
-          _id: productDetail._id,
-        },
-      });
+    productsEdit({
+      variables: {
+        ...data,
+        _id: productDetail._id,
+      },
+    });
 
-      toast({
-        title: 'Success',
-        description: 'Product updated successfully',
-      });
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update product',
-        variant: 'destructive',
-      });
-    }
+    toast({
+      title: 'Success',
+      description: 'Product updated successfully',
+    });
   };
 
   const handleCancel = () => {

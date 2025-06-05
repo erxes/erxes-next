@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
 import {
+  Avatar,
   Combobox,
   Command,
   Skeleton,
   TextOverflowTooltip,
   SelectTree,
 } from 'erxes-ui';
-
 import { IProductCategory } from '../types/category';
 import { useProductCategories } from '../hooks/useCategories';
 
@@ -112,13 +112,16 @@ export const SelectCategoryBadge = ({
   category?: IProductCategory;
   selected?: boolean;
 }) => {
-  if (!category) {
-    return null
-  };
-  const { code, name, productCount } = category;
+  if (!category) return null;
+  const { avatar, code, name, productCount } = category;
+  const firstLetter = name.charAt(0);
   return (
     <>
       <div className="flex items-center gap-2 flex-auto overflow-hidden justify-start">
+        <Avatar>
+          <Avatar.Image src={avatar?.url} />
+          <Avatar.Fallback>{firstLetter}</Avatar.Fallback>
+        </Avatar>
         <div className="text-muted-foreground">{code}</div>
         <TextOverflowTooltip value={name} className="flex-auto" />
       </div>
