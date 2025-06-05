@@ -17,12 +17,18 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
   activeTab,
   onCancel,
 }) => {
-  const { productsEdit, loading: editLoading } = useProductsEdit();
-  const { productDetail } = useProductDetail();
   const { toast } = useToast();
+  const { productDetail } = useProductDetail();
+
+  const { productsEdit, loading: editLoading } = useProductsEdit();
 
   const handleSubmit = (data: ProductFormValues) => {
     if (!productDetail?._id) {
+      toast({
+        title: 'Error',
+        description: 'Product ID is missing',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -31,11 +37,19 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
         ...data,
         _id: productDetail._id,
       },
-    });
-
-    toast({
-      title: 'Success',
-      description: 'Product updated successfully',
+      onCompleted: () => {
+        toast({
+          title: 'Success',
+          description: 'Product updated successfully',
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: 'Error',
+          description: error.message || 'Failed to update product',
+          variant: 'destructive',
+        });
+      },
     });
   };
 
