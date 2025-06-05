@@ -7,6 +7,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
+  cn,
   Form,
   Input,
   Label,
@@ -280,7 +281,10 @@ export function SegmentForm({
         <div className="py-4">{renderContent({ form, contentType })}</div>
         <Button
           variant="secondary"
-          className="w-full"
+          className={cn(
+            'w-full',
+            form.watch('conditionSegments')?.length && 'ml-12',
+          )}
           onClick={onAddSegmentGroup}
         >
           <Label>+ Add Group</Label>

@@ -1,4 +1,4 @@
-import { IconBell, IconLogout, IconSelector } from '@tabler/icons-react';
+import { IconSelector } from '@tabler/icons-react';
 import { currentUserState } from 'ui-modules';
 import { Avatar, DropdownMenu, Sidebar, useIsMobile } from 'erxes-ui';
 
@@ -6,14 +6,10 @@ import { readFile } from 'erxes-ui';
 
 import { SelectLanguages } from './SelectLanguages';
 import { ThemeSelector } from './ThemeSelector';
-
-import { useAuth } from '@/auth/hooks/useAuth';
 import { useAtomValue } from 'jotai';
-
+import { Link } from 'react-router-dom';
 export function User() {
   const isMobile = useIsMobile();
-
-  const { handleLogout } = useAuth();
 
   const currentUser = useAtomValue(currentUserState);
 
@@ -76,19 +72,14 @@ export function User() {
               </div>
             </DropdownMenu.Label>
             <DropdownMenu.Separator />
+            <DropdownMenu.Item>
+              <Link to="/settings/profile" className="text-sm">
+                My profile
+              </Link>
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
             <ThemeSelector />
             <SelectLanguages />
-            <DropdownMenu.Group>
-              <DropdownMenu.Item>
-                <IconBell />
-                Notifications
-              </DropdownMenu.Item>
-            </DropdownMenu.Group>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item onClick={() => handleLogout()}>
-              <IconLogout />
-              Log out
-            </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu>
       </Sidebar.MenuItem>

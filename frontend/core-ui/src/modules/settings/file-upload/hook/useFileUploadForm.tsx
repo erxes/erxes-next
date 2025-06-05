@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { FILES_VALIDATION_SCHEMA } from '@/settings/file-upload/schema';
 import { UploadConfigFormT } from '@/settings/file-upload/types';
-import { FILE_MIME_TYPES } from '../constants/serviceData';
 
 const useFileUploadForm = () => {
   const form = useForm<UploadConfigFormT>({
