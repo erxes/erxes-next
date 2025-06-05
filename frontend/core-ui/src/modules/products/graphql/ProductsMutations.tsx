@@ -87,7 +87,6 @@ const categoryEdit = gql`
       similarities: $similarities
     ) {
       _id
-      __typename
   }
 }
 `
@@ -105,6 +104,7 @@ const productsEdit = gql`
     $vendorId: String
     $uom: String
     $barcodeDescription: String
+    $barcodes: [String]
   ) {
     productsEdit(
       _id: $_id
@@ -117,6 +117,7 @@ const productsEdit = gql`
       code: $code
       customFieldsData: $customFieldsData
       vendorId: $vendorId
+      barcodes: $barcodes 
       uom: $uom
       barcodeDescription: $barcodeDescription
     ) {

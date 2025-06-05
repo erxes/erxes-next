@@ -16,10 +16,38 @@ interface ProductBasicFieldsProps {
   uoms: UnitOfMeasurement[];
 }
 
+const formLabelClassName =
+  'text-xs font-semibold text-gray-500 tracking-wider mb-1';
+const selectTriggerClassName = 'w-full border-gray-200 rounded-md';
+
 export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
   control,
   uoms,
 }) => {
+  const handleBarcodeChange = (
+    value: string,
+    onChange: (value: string[]) => void,
+  ) => {
+    if (!value || value.trim() === '') {
+      onChange([]);
+      return;
+    }
+
+    const barcodes = value
+      .split(',')
+      .map((barcode) => barcode.trim())
+      .filter((barcode) => barcode !== ''); 
+    
+    onChange(barcodes);
+  };
+
+  const barcodesToString = (barcodes: string[] | undefined): string => {
+    if (!barcodes || !Array.isArray(barcodes)) {
+      return '';
+    }
+    return barcodes.join(', ');
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <Form.Field
@@ -27,9 +55,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         name="name"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              PRODUCT NAME
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>PRODUCT NAME</Form.Label>
             <Form.Control>
               <Input {...field} placeholder="Enter product name" />
             </Form.Control>
@@ -43,13 +69,14 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         name="barcodes"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              BARCODES
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>BARCODES</Form.Label>
             <Form.Control>
               <Input
-                {...field}
-                placeholder="Enter barcode"
+                value={barcodesToString(field.value)}
+                onChange={(e) =>
+                  handleBarcodeChange(e.target.value, field.onChange)
+                }
+                placeholder="Enter barcodes separated by commas"
                 className="w-full rounded-md border-gray-200 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all"
               />
             </Form.Control>
@@ -63,9 +90,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         name="code"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              CODE
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>CODE</Form.Label>
             <Form.Control>
               <Input {...field} placeholder="Enter code" />
             </Form.Control>
@@ -79,9 +104,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         name="categoryId"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              CATEGORY
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>CATEGORY</Form.Label>
             <Form.Control className="h-8">
               <SelectCategory
                 selected={field.value}
@@ -99,28 +122,25 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         control={control}
         name="unitPrice"
         render={({ field }) => (
-          <Form.Item className="flex flex-col">
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider">
-              UNIT PRICE
-            </Form.Label>
+          <Form.Item>
+            <Form.Label className={formLabelClassName}>UNIT PRICE</Form.Label>
             <Form.Control>
               <CurrencyField.ValueInput
                 value={field.value}
-                onChange={(value) => field.onChange(value)}
+                onChange={field.onChange}
               />
             </Form.Control>
             <Form.Message />
           </Form.Item>
         )}
       />
+
       <Form.Field
         control={control}
         name="status"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider">
-              STATUS
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>STATUS</Form.Label>
             <Form.Control>
               <Input {...field} disabled className="bg-gray-50" />
             </Form.Control>
@@ -128,21 +148,20 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
           </Form.Item>
         )}
       />
+
       <Form.Field
         control={control}
         name="type"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              TYPE
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>TYPE</Form.Label>
             <Select value={field.value} onValueChange={field.onChange}>
-              <Select.Trigger className="w-full border-gray-200 rounded-md">
+              <Select.Trigger className={selectTriggerClassName}>
                 <Select.Value placeholder="Choose type" />
               </Select.Trigger>
               <Select.Content>
                 {PRODUCT_TYPE_OPTIONS.map((type) => (
-                  <Select.Item value={type.value} key={type.value}>
+                  <Select.Item key={type.value} value={type.value}>
                     {type.label}
                   </Select.Item>
                 ))}
@@ -158,11 +177,11 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         name="uom"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
+            <Form.Label className={formLabelClassName}>
               UNIT OF MEASUREMENTS
             </Form.Label>
             <Select value={field.value} onValueChange={field.onChange}>
-              <Select.Trigger className="w-full border-gray-200 rounded-md">
+              <Select.Trigger className={selectTriggerClassName}>
                 <Select.Value placeholder="Select UOM" />
               </Select.Trigger>
               <Select.Content>
@@ -182,10 +201,8 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         control={control}
         name="scopeBrandIds"
         render={({ field }) => (
-          <Form.Item className="">
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              BRAND
-            </Form.Label>
+          <Form.Item>
+            <Form.Label className={formLabelClassName}>BRAND</Form.Label>
             <Form.Control>
               <SelectBrand
                 value={
@@ -193,9 +210,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
                     ? field.value[0]
                     : ''
                 }
-                onValueChange={(brandId) => {
-                  field.onChange([brandId]);
-                }}
+                onValueChange={(brandId) => field.onChange([brandId])}
               />
             </Form.Control>
             <Form.Message className="text-destructive" />
@@ -208,9 +223,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         name="vendorId"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              VENDOR
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>VENDOR</Form.Label>
             <Form.Control>
               <SelectCompany
                 value={field.value}
@@ -227,9 +240,7 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
         name="shortName"
         render={({ field }) => (
           <Form.Item>
-            <Form.Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-              SHORT NAME
-            </Form.Label>
+            <Form.Label className={formLabelClassName}>SHORT NAME</Form.Label>
             <Form.Control>
               <Input {...field} placeholder="Enter short name" />
             </Form.Control>
@@ -237,10 +248,9 @@ export const ProductBasicFields: React.FC<ProductBasicFieldsProps> = ({
           </Form.Item>
         )}
       />
+
       <div className="space-y-2">
-        <Label className="text-xs font-semibold text-gray-500 tracking-wider mb-1">
-          PDF
-        </Label>
+        <Label className={formLabelClassName}>PDF</Label>
         <Button
           variant="outline"
           className="w-full justify-between h-8"

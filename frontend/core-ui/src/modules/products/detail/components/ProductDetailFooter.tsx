@@ -23,6 +23,7 @@ export const ProductDetailFooter: React.FC<ProductDetailFooterProps> = ({
   const { productsEdit, loading: editLoading } = useProductsEdit();
 
   const handleSubmit = (data: ProductFormValues) => {
+    console.log('Barcodes specifically:', data.barcodes);
     if (!productDetail?._id) {
       toast({
         title: 'Error',

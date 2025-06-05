@@ -18,7 +18,7 @@ export const ProductDetail = () => {
     defaultValues: {
       name: '',
       code: '',
-      barcodes: [],
+      barcodes: [''],
       categoryId: '',
       type: '',
       status: '',
