@@ -1,1 +1,1 @@
-export * from './utlis/parseDateRangeFromString';
+export * from './utils/parseDateRangeFromString';

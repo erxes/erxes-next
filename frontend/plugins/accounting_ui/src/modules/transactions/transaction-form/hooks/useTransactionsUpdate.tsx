@@ -1,6 +1,6 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { ACC_TRANSACTIONS_UPDATE } from '../graphql/mutations/accTransactionsUpdate';
-import { TAddTransactionGroup } from '../types/AddTransaction';
+import { TAddTransactionGroup } from '../types/JournalForms';
 import { toast } from 'erxes-ui/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,11 +1,9 @@
 import { IconPlus } from '@tabler/icons-react';
-
-import { useWatch } from 'react-hook-form';
-import { TInvDetail } from '../../../types/AddTransaction';
-
 import { Button } from 'erxes-ui/components/button';
-import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { useWatch } from 'react-hook-form';
 import { TR_SIDES } from '~/modules/transactions/types/constants';
+import { ITransactionGroupForm, TInvDetail } from '../../../types/JournalForms';
+import { getTempId } from '../../utils';
 // import { useInventoryContext } from '../hooks/useInventoryContext';
 
 export const AddInventoryRowButton = ({
@@ -28,6 +26,7 @@ export const AddInventoryRowButton = ({
 
   const detailDefaultValues = {
     ...lastDetail,
+    _id: getTempId(),
     side: TR_SIDES.DEBIT,
     amount: 0,
     productId: '',

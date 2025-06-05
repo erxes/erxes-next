@@ -1,5 +1,5 @@
 import { CustomerFields } from '../../helpers/CustomerFields';
-import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
 import { TrJournalEnum } from '@/transactions/types/constants';
 import { VatForm } from '../../helpers/VatForm';
 import {

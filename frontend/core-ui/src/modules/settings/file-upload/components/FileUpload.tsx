@@ -42,18 +42,47 @@ const FileUpload = () => {
 
   const onSubmit = (data: UploadConfigFormT) => {
     const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
-      acc[config.code] = data[config.code] ?? config.value;
+      if (
+        config.code === 'UPLOAD_FILE_TYPES' ||
+        config.code === 'WIDGETS_UPLOAD_FILE_TYPES'
+      ) {
+        const selectedOptions = data[config.code];
+        const mimeTypes = selectedOptions.map((option: Option) => option.value);
+        acc[config.code] = mimeTypes.join(',');
+      } else {
+        acc[config.code] = data[config.code] ?? config.value;
+      }
       return acc;
     }, {} as Record<string, any>);
+
     updateConfig(updatedConfigs);
   };
 
   useEffect(() => {
-    if (configs === undefined) {
+    if (!configs) {
       form.reset();
     } else {
       const values = configs.reduce((acc: any, config: any) => {
-        acc[config.code] = config.value;
+        if (
+          config.code === 'UPLOAD_FILE_TYPES' ||
+          config.code === 'WIDGETS_UPLOAD_FILE_TYPES'
+        ) {
+          const selectedMimeTypes = (config.value || '')
+            .split(',')
+            .filter(Boolean)
+            .map((mime: string) => {
+              const found = FILE_MIME_TYPES.find((item) => item.value === mime);
+              return found
+                ? {
+                    label: `${found.label} (${found.extension})`,
+                    value: found.value,
+                  }
+                : { label: mime, value: mime };
+            });
+          acc[config.code] = selectedMimeTypes;
+        } else {
+          acc[config.code] = config.value;
+        }
         return acc;
       }, {});
 

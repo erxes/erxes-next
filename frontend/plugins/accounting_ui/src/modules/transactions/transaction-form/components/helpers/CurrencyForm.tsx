@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { TrJournalEnum, TR_SIDES } from '../../../types/constants';
 import { followTrDocsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/JournalForms';
 import { getTempId, getTrSide } from '../utils';
 import { ITransaction } from '../../../types/Transaction';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';

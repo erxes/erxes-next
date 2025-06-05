@@ -1,4 +1,10 @@
-import { IconBrandAws, IconBrandAzure, IconBrandCloudflare, IconBrandGoogle, IconDeviceLaptop } from '@tabler/icons-react';
+import {
+  IconBrandAws,
+  IconBrandAzure,
+  IconBrandCloudflare,
+  IconBrandGoogle,
+  IconDeviceLaptop,
+} from '@tabler/icons-react';
 
 import { fileMimeTypes } from '@/settings/file-upload/types';
 
@@ -27,224 +33,223 @@ export const UPLOAD_SERVICE_DATA = [
     label: 'Azure Storage',
     value: 'AZURE',
     icon: IconBrandAzure,
-  }
-]
+  },
+];
 
 export const FILE_MIME_TYPES: fileMimeTypes[] = [
-  // images
   {
     value: 'image/gif',
     label: 'Graphics Interchange Format',
-    extension: '.gif'
+    extension: '.gif',
   },
   {
     value: 'image/vnd.microsoft.icon',
     label: 'Icon format',
-    extension: '.ico'
+    extension: '.ico',
   },
   {
     value: 'image/tiff',
     label: 'Tagged Image File Format',
-    extension: '.tif'
+    extension: '.tif',
   },
   {
     value: 'image/jpeg',
     label: 'JPEG image',
-    extension: '.jpeg'
+    extension: '.jpeg',
   },
   {
     value: 'image/bmp',
     label: 'Windows OS/2 Bitmap Graphics',
-    extension: '.bmp'
+    extension: '.bmp',
   },
   {
     value: 'image/png',
     label: 'Portable Network Graphics',
-    extension: '.png'
+    extension: '.png',
   },
   {
     value: 'image/svg+xml',
     label: 'Scalable Vector Graphics',
-    extension: '.svg'
+    extension: '.svg',
   },
   {
     value: 'image/webp',
     label: 'WEBP image',
-    extension: '.webp'
+    extension: '.webp',
   },
   {
     value: 'image/heic',
     label: 'High Efficiency Image Coding',
-    extension: '.heic'
+    extension: '.heic',
   },
   {
     value: 'image/heif',
     label: 'High Efficiency Image Format',
-    extension: '.heif'
+    extension: '.heif',
   },
   // documents
   {
     value: 'text/csv',
     label: 'Comma-separated values',
-    extension: '.csv'
+    extension: '.csv',
   },
   {
     value: 'application/msword',
     label: 'Microsoft Word',
-    extension: '.doc'
+    extension: '.doc',
   },
   {
     value:
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     label: 'Microsoft Word (OpenXML)',
-    extension: '.docx'
+    extension: '.docx',
   },
   {
     value: 'application/vnd.ms-excel',
     label: 'Microsoft Excel',
-    extension: '.xls'
+    extension: '.xls',
   },
   {
     value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     label: 'Microsoft Excel OpenXML',
-    extension: '.xlsx'
+    extension: '.xlsx',
   },
   {
     value: 'application/vnd.ms-powerpoint',
     label: 'Microsoft PowerPoint',
-    extension: '.ppt'
+    extension: '.ppt',
   },
   {
     value:
       'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     label: 'Microsoft PowerPoint (OpenXML)',
-    extension: '.pptx'
+    extension: '.pptx',
   },
   {
     value: 'application/vnd.oasis.opendocument.presentation',
     label: 'OpenDocument presentation document',
-    extension: '.odp'
+    extension: '.odp',
   },
   {
     value: 'application/vnd.oasis.opendocument.spreadsheet',
     label: 'OpenDocument spreadsheet document',
-    extension: '.ods'
+    extension: '.ods',
   },
   {
     value: 'application/vnd.oasis.opendocument.text',
     label: 'OpenDocument text document',
-    extension: '.odt'
+    extension: '.odt',
   },
   {
     value: 'application/pdf',
     label: 'Adobe Portable Document Format',
-    extension: '.pdf'
+    extension: '.pdf',
   },
   {
     value: 'application/rtf',
     label: 'Rich Text Format',
-    extension: '.rtf'
+    extension: '.rtf',
   },
   {
     value: 'text/plain',
     label: 'Plain text',
-    extension: '.txt'
+    extension: '.txt',
   },
   {
     value: 'application/haansoft-hwp',
     label: 'Hanword Document (HWP)',
-    extension: '.hwp'
+    extension: '.hwp',
   },
   {
     value: 'application/haansoft-hwpml',
     label: 'Hanword Document (HWPX)',
-    extension: '.hwpx'
+    extension: '.hwpx',
   },
   // media
   {
     value: 'audio/aac',
     label: 'AAC audio',
-    extension: '.aac'
+    extension: '.aac',
   },
   {
     value: 'audio/mpeg',
     label: 'MP3 audio',
-    extension: '.mp3'
+    extension: '.mp3',
   },
   {
     value: 'audio/ogg',
     label: 'OGG audio',
-    extension: '.oga'
+    extension: '.oga',
   },
   {
     value: 'audio/3gpp',
     label: '3GPP audio/video container',
-    extension: '.3gpp'
+    extension: '.3gpp',
   },
   {
     value: 'audio/3gpp2',
     label: '3GPP audio/video container',
-    extension: '.3gpp2'
+    extension: '.3gpp2',
   },
   {
     value: 'video/mpeg',
     label: 'MPEG video',
-    extension: '.mpeg'
+    extension: '.mpeg',
   },
   {
     value: 'video/ogg',
     label: 'OGG video',
-    extension: '.ogv'
+    extension: '.ogv',
   },
   {
     value: 'video/mp4',
     label: 'MP4 video',
-    extension: '.mp4'
+    extension: '.mp4',
   },
   {
     value: 'video/webm',
     label: 'WebM video',
-    extension: '.webm'
+    extension: '.webm',
   },
   {
     value: 'audio/wav',
     label: 'WAV audio',
-    extension: '.wav'
+    extension: '.wav',
   },
   {
     value: 'audio/vnd.wave',
     label: 'WAV vnd audio',
-    extension: '.wav'
+    extension: '.wav',
   },
   {
     value: 'audio/m4a',
     label: 'MPEG-4 Audio',
-    extension: '.m4a'
+    extension: '.m4a',
   },
   // archives
   {
     value: 'application/vnd.rar',
     label: 'RAR archive',
-    extension: '.rar'
+    extension: '.rar',
   },
   {
     value: 'application/x-tar',
     label: 'Tape archive',
-    extension: '.tar'
+    extension: '.tar',
   },
   {
     value: 'application/x-7z-compressed',
     label: '7-zip archive',
-    extension: '.7z'
+    extension: '.7z',
   },
   {
     value: 'application/gzip',
     label: 'GZip Compressed Archive',
-    extension: '.gz'
-  }
+    extension: '.gz',
+  },
 ];
 
 export const FILE_SYSTEM_TYPES = [
   { label: 'Public', value: 'true' },
-  { label: 'Private', value: 'false' }
+  { label: 'Private', value: 'false' },
 ];

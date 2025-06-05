@@ -107,11 +107,11 @@ export default {
       return { status: 'healthy' };
     }
     try {
-      const status = await integrationStatus(kind, subdomain, {
+      const response = await integrationStatus(kind, subdomain, {
         integrationId: integration._id,
       });
 
-      return status;
+      return response?.data;
     } catch (e) {
       return { status: 'healthy' };
     }

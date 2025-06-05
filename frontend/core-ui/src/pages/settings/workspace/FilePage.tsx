@@ -1,6 +1,5 @@
 import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
 import FileUpload from '@/settings/file-upload/components/FileUpload';
-import { IconBox } from '@tabler/icons-react';
 import { ScrollArea } from 'erxes-ui';
 
 export function FilePage() {

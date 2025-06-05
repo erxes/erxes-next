@@ -4,14 +4,8 @@ import { BrandsCommandBar } from './BrandsCommandBar';
 import { useBrands } from '../hooks/useBrands';
 
 export function BrandsRecordTable() {
-  const [queries] = useMultiQueryState<{
-    searchValue: string;
-  }>(['searchValue']);
-  const { brands, loading } = useBrands({
-    variables: {
-      searchValue: queries?.searchValue,
-    },
-  });
+  const { brands, loading } = useBrands();
+
   return (
     <RecordTable.Provider
       data={brands || []}
@@ -23,6 +17,7 @@ export function BrandsRecordTable() {
         <RecordTable.Header />
         <RecordTable.Body>
           <RecordTable.RowList />
+          {loading && <RecordTable.RowSkeleton rows={30} />}
         </RecordTable.Body>
       </RecordTable>
       <BrandsCommandBar />

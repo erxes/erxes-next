@@ -1,4 +1,4 @@
-import { ICommonFieldProps } from '../types/AddTransaction';
+import { ICommonFieldProps } from '../types/JournalForms';
 import { CurrencyField, Form, Input, Select } from 'erxes-ui';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import {

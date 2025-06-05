@@ -1,8 +1,12 @@
 import { z } from 'zod';
 
 const COMMON_FILE_UPLOAD_FIELDS = {
-  UPLOAD_FILE_TYPES: z.array(z.object({ label: z.string(), value: z.string() })),
-  WIDGETS_UPLOAD_FILE_TYPES: z.array(z.object({ label: z.string(), value: z.string() })),
+  UPLOAD_FILE_TYPES: z.array(
+    z.object({ label: z.string(), value: z.string() }),
+  ),
+  WIDGETS_UPLOAD_FILE_TYPES: z.array(
+    z.object({ label: z.string(), value: z.string() }),
+  ),
   FILE_SYSTEM_PUBLIC: z.string(),
 };
 
@@ -61,6 +65,4 @@ const FILES_VALIDATION_SCHEMA = z.discriminatedUnion('UPLOAD_SERVICE_TYPE', [
   AZURE_FIELDS_SCHEMA,
 ]);
 
-export {
-  FILES_VALIDATION_SCHEMA
-}
+export { FILES_VALIDATION_SCHEMA };
