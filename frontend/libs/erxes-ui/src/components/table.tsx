@@ -50,10 +50,11 @@ TableFooter.displayName = 'TableFooter';
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLTableRowElement> & { onRowClick?: () => void }
+>(({ className, onRowClick, ...props }, ref) => (
   <tr
     ref={ref}
+    onClick={onRowClick}
     className={cn(
       '[&>td]:border-b [&>td:first-child]:border-l transition-colors group/table-row hover:bg-muted',
       className,
