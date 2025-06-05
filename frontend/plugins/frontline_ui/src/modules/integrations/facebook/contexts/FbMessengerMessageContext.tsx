@@ -1,21 +1,27 @@
-import { useContext } from 'react';
-import { ConversationMessageContext } from '@/inbox/conversations/context/ConversationMessageContext';
-import { IMessage } from '@/inbox/types/Conversation';
+import { createContext, useContext } from 'react';
+import { IFacebookConversationMessage } from '../types/FacebookTypes';
 import { differenceInMinutes } from 'date-fns';
 
-export const useConversationMessageContext = () => {
-  const context = useContext(ConversationMessageContext);
+export const FbMessengerMessageContext = createContext<
+  | (IFacebookConversationMessage & {
+      previousMessage?: IFacebookConversationMessage;
+      nextMessage?: IFacebookConversationMessage;
+    })
+  | null
+>(null);
 
+export const useFbMessengerMessageContext = () => {
+  const context = useContext(FbMessengerMessageContext);
   if (!context) {
     throw new Error(
-      'useConversationMessageContext must be used within a ConversationMessageContext',
+      'useFbMessengerMessageContext must be used within a FbMessengerMessageContext',
     );
   }
 
   const { previousMessage, nextMessage, userId, customerId, createdAt } =
     context;
 
-  const checkHasSibling = (message?: IMessage) => {
+  const checkHasSibling = (message?: IFacebookConversationMessage) => {
     if (!message) {
       return false;
     }

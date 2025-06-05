@@ -1,7 +1,7 @@
 import { InboxMessagesContainer } from '@/inbox/components/InboxMessagesContainer';
-import { IFacebookConversationMessage } from '../types/FacebookTypes';
-import { Button, RelativeDateDisplay } from 'erxes-ui';
 import { useFacebookConversationMessages } from '../hooks/useFacebookConversationMessages';
+import { FbMessengerMessageContext } from '../contexts/FbMessengerMessageContext';
+import { FbMessengerMessage } from './FbMessengerMessages';
 
 export const FacebookConversationMessages = () => {
   const { facebookConversationMessages, handleFetchMore } =
@@ -15,25 +15,23 @@ export const FacebookConversationMessages = () => {
       loading={false}
     >
       {facebookConversationMessages?.map((message) => (
-        <FacebookMessageItem key={message._id} message={message} />
+        <FbMessengerMessageContext.Provider
+          value={{
+            ...message,
+            previousMessage:
+              facebookConversationMessages[
+                facebookConversationMessages.indexOf(message) - 1
+              ],
+            nextMessage:
+              facebookConversationMessages[
+                facebookConversationMessages.indexOf(message) + 1
+              ],
+          }}
+          key={message._id}
+        >
+          <FbMessengerMessage />
+        </FbMessengerMessageContext.Provider>
       ))}
     </InboxMessagesContainer>
-  );
-};
-
-export const FacebookMessageItem = ({
-  message,
-}: {
-  message: IFacebookConversationMessage;
-}) => {
-  return (
-    <div>
-      <Button asChild className="max-w-content " variant="secondary">
-        <div className="text-left">
-          {message.content}
-          <RelativeDateDisplay.Value value={message.createdAt} />
-        </div>
-      </Button>
-    </div>
   );
 };
