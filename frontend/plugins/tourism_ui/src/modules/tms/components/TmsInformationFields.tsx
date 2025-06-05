@@ -6,11 +6,12 @@ import {
   SelectColor,
   LogoField,
   FavIconField,
-  GeneralManeger,
-  Maneger,
+  GeneralManager,
+  Manager,
   Payments,
   Token,
   OtherPayments,
+  Prepaid,
 } from '@/tms/components/TmsFormFields';
 import { Button } from 'erxes-ui';
 import { IconPlus } from '@tabler/icons-react';
@@ -42,23 +43,24 @@ export const TmsInformationFields = ({
           <>
             <Button
               variant="default"
-              className="flex items-center w-40 gap-2 mb-2"
+              className="flex items-center w-40 gap-2 my-4"
             >
               <IconPlus size={16} />
               Add team member
             </Button>
 
-            <GeneralManeger control={form.control} />
-            <Maneger control={form.control} />
+            <GeneralManager control={form.control} />
+            <Manager control={form.control} />
           </>
         );
       case 3:
         return (
-          <>
+          <div>
             <Payments control={form.control} />
             <Token control={form.control} />
+            <Prepaid control={form.control} />
             <OtherPayments control={form.control} />
-          </>
+          </div>
         );
       default:
         return null;
@@ -91,43 +93,43 @@ export const TmsInformationFields = ({
   }
 
   return (
-    <div className="flex flex-col justify-between w-full max-w-3xl mx-auto border-r border-[#F4F4F5]">
-      <div className="flex flex-col">
-        <div className="flex p-5 flex-col justify-center items-start gap-3 self-stretch border-b border-[#F4F4F5]">
-          <div className="flex items-center gap-2">
-            <div className="flex h-5 px-2 justify-center items-center gap-1 rounded-[21px] border border-[rgba(79,70,229,0.10)] bg-[rgba(79,70,229,0.10)]">
-              <p className="text-[#4F46E5] leading-none text-[12px] font-semibold uppercase font-mono">
-                STEP {currentStep}
-              </p>
-            </div>
-            <p className="text-[#4F46E5] font-inter text-[14px] font-semibold leading-[140%]">
-              {currentStep === 1
-                ? 'General information'
-                : currentStep === 2
-                ? 'Permission'
-                : 'Payments'}
+    <div className="flex flex-col w-full h-full max-w-3xl mx-auto border-r">
+      <div className="flex flex-col items-start self-stretch justify-center flex-shrink-0 gap-3 p-5 border-b">
+        <div className="flex items-center gap-2">
+          <div className="flex h-5 px-2 justify-center items-center gap-1 rounded-[21px] bg-[rgba(79,70,229,0.10)]">
+            <p className="text-primary leading-none text-[12px] font-semibold uppercase font-mono">
+              STEP {currentStep}
             </p>
           </div>
-          <div className="flex items-center self-stretch gap-2">
-            {[1, 2, 3].map((step) => (
-              <div
-                key={step}
-                className={`w-16 h-1 rounded-full ${
-                  step === currentStep ? 'bg-[#4F46E5]' : 'bg-[#F4F4F5]'
-                }`}
-              />
-            ))}
-          </div>
-          <p className="self-stretch text-[#71717A] font-inter text-[13px] font-medium leading-[140%]">
+          <p className="text-primary font-inter text-[14px] font-semibold leading-[140%]">
             {currentStep === 1
-              ? 'Set up your TMS information'
+              ? 'General information'
               : currentStep === 2
-              ? 'Setup your permission'
-              : 'Setup your payments'}
+              ? 'Permission'
+              : 'Payments'}
           </p>
         </div>
+        <div className="flex items-center self-stretch gap-2">
+          {[1, 2, 3].map((step) => (
+            <div
+              key={step}
+              className={`w-16 h-1 rounded-full ${
+                step === currentStep ? 'bg-primary' : 'bg-[#F4F4F5]'
+              }`}
+            />
+          ))}
+        </div>
+        <p className="self-stretch text-muted-foreground font-inter text-[13px] font-medium leading-[140%]">
+          {currentStep === 1
+            ? 'Set up your TMS information'
+            : currentStep === 2
+            ? 'Setup your permission'
+            : 'Setup your payments'}
+        </p>
+      </div>
+      <div className="flex-1 overflow-y-auto">
         <div
-          className={`grid grid-cols-1 gap-4 p-4 ${
+          className={`grid grid-cols-1 gap-4 py-2 px-4 ${
             currentStep === 1 ? 'md:grid-cols-2' : ''
           } md:gap-8`}
         >
@@ -135,7 +137,7 @@ export const TmsInformationFields = ({
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2 p-4 border-t border-[#F4F4F5]">
+      <div className="flex items-center justify-between flex-shrink-0 gap-2 p-4 border-t">
         {currentStep === 1 ? (
           <Button variant="outline" onClick={handleCancel}>
             Cancel

@@ -24,9 +24,9 @@ const CreateTmsForm = ({
       color: '#4F46E5',
       logo: '',
       favIcon: '',
-      generalManeger: '',
-      manegers: [],
-      payment: '',
+      generalManager: [],
+      managers: [],
+      payment: [],
       token: '',
       otherPayments: [],
     },
@@ -39,9 +39,9 @@ const CreateTmsForm = ({
     createBranch({
       variables: {
         name: data.name,
-        user1Ids: data.generalManeger ? [data.generalManeger] : undefined,
-        user2Ids: data.manegers || undefined,
-        paymentIds: data.payment ? [data.payment] : undefined,
+        user1Ids: data.generalManager || undefined,
+        user2Ids: data.managers || undefined,
+        paymentIds: data.payment || undefined,
         token: data.token,
         erxesAppToken: '',
         uiOptions: {
@@ -78,7 +78,7 @@ const CreateTmsForm = ({
         className="flex flex-col h-full"
       >
         <TmsCreateSheetHeader />
-        <Sheet.Content className="grid grid-cols-2">
+        <Sheet.Content className="grid min-h-0 grid-cols-2 overflow-y-auto">
           <TmsInformationFields
             form={form}
             onOpenChange={onOpenChange}

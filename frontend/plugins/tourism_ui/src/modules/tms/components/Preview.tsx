@@ -27,7 +27,7 @@ export default function Preview({ formData }: PreviewProps) {
 
   const renderLoginForm = () => {
     return (
-      <div className="max-w-[80vh] p-6 mx-auto bg-white rounded-md shadow-md">
+      <div className="max-w-[80vh] bg-white p-6 mx-auto rounded-md shadow-md">
         <div className="flex items-center justify-center mb-6">
           <img src={logoUrl} alt="Company Logo" width={100} height={30} />
         </div>
@@ -88,89 +88,90 @@ export default function Preview({ formData }: PreviewProps) {
     switch (activeDevice) {
       case 'desktop':
         return (
-          <div className="flex flex-col w-full h-full overflow-hidden bg-white rounded-md shadow-lg">
-            <div className="flex items-center h-8 px-3 bg-gray-100 border-b border-[#F4F4F5]">
-              <div className="flex mr-4 space-x-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              </div>
-              <div className="flex-1 h-5 bg-white rounded-md"></div>
-            </div>
-            <div className="flex-1 p-4 overflow-auto">
-              <div className="flex items-center justify-center w-full h-full rounded-md bg-gray-50">
-                {renderLoginForm()}
-              </div>
-            </div>
-          </div>
+          // <div className="flex flex-col w-full h-full overflow-hidden bg-white rounded-md shadow-lg">
+          //   <div className="flex items-center h-8 px-3 bg-gray-100 border-b border-[#F4F4F5]">
+          //     <div className="flex mr-4 space-x-2">
+          //       <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          //       <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          //       <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          //     </div>
+          //     <div className="flex-1 h-5 bg-white rounded-md"></div>
+          //   </div>
+          //   <div className="flex-1 p-4 overflow-auto">
+          //     <div className="flex items-center justify-center w-full h-full rounded-md bg-gray-50">
+          //       {renderLoginForm()}
+          //     </div>
+          //   </div>
+          // </div>
+          <div className="text-muted-foreground">desktop</div>
         );
 
       case 'mobile':
         return (
-          <div className="flex flex-col w-64 mx-auto bg-black shadow-lg h-[500px] rounded-3xl overflow-hidden">
-            {/* Status bar */}
-            <div className="flex items-center justify-between px-4 text-white bg-black h-7">
-              <div className="text-xs">9:41</div>
-              <div className="flex space-x-1.5 items-center">
-                <IconAntennaBars5 size={12} />
-                <IconWifi size={12} />
-                <IconBattery size={14} />
-              </div>
-            </div>
-            {/* Notch */}
-            <div className="relative h-6 bg-black">
-              <div className="absolute w-32 h-6 -translate-x-1/2 bg-black rounded-b-lg left-1/2"></div>
-            </div>
-            {/* Content */}
-            <div className="flex-1 p-2 overflow-auto bg-white">
-              <div className="flex items-center justify-center h-full bg-gray-50">
-                <div className="transform scale-[0.65]">
-                  {renderLoginForm()}
-                </div>
-              </div>
-            </div>
-            {/* Home indicator */}
-            <div className="flex items-center justify-center h-6 bg-white">
-              <div className="h-1 bg-gray-400 rounded-full w-28"></div>
-            </div>
-          </div>
+          // <div className="flex flex-col w-64 mx-auto bg-black shadow-lg h-[500px] rounded-3xl overflow-hidden">
+          //   <div className="flex items-center justify-between px-4 text-white bg-black h-7">
+          //     <div className="text-xs">9:41</div>
+          //     <div className="flex space-x-1.5 items-center">
+          //       <IconAntennaBars5 size={12} />
+          //       <IconWifi size={12} />
+          //       <IconBattery size={14} />
+          //     </div>
+          //   </div>
+
+          //   <div className="relative h-6 bg-black">
+          //     <div className="absolute w-32 h-6 -translate-x-1/2 bg-black rounded-b-lg left-1/2"></div>
+          //   </div>
+
+          //   <div className="flex-1 p-2 overflow-auto bg-white">
+          //     <div className="flex items-center justify-center h-full bg-gray-50">
+          //       <div className="transform scale-[0.65]">
+          //         {renderLoginForm()}
+          //       </div>
+          //     </div>
+          //   </div>
+
+          //   <div className="flex items-center justify-center h-6 bg-white">
+          //     <div className="h-1 bg-gray-400 rounded-full w-28"></div>
+          //   </div>
+          // </div>
+          <div className="text-muted-foreground">mobile</div>
         );
 
       case 'tablet':
         return (
-          <div className="flex flex-col mx-auto bg-black shadow-lg w-[500px] h-[350px] rounded-xl overflow-hidden">
-            {/* Status bar */}
-            <div className="flex items-center justify-between h-6 px-4 text-white bg-black">
-              <div className="text-xs">9:41</div>
-              <div className="flex space-x-1.5 items-center">
-                <IconAntennaBars5 size={12} />
-                <IconWifi size={12} />
-                <IconBattery size={14} />
-              </div>
-            </div>
-            {/* Content */}
-            <div className="flex-1 p-4 overflow-auto bg-white">
-              <div className="flex items-center justify-center h-full bg-gray-50">
-                <div className="transform scale-[0.8]">{renderLoginForm()}</div>
-              </div>
-            </div>
-            {/* Home button */}
-            <div className="flex items-center justify-center h-8 bg-black">
-              <div className="w-6 h-6 border border-gray-400 rounded-full"></div>
-            </div>
-          </div>
+          // <div className="flex flex-col mx-auto bg-black shadow-lg w-[500px] h-[350px] rounded-xl overflow-hidden">
+          //   <div className="flex items-center justify-between h-6 px-4 text-white bg-black">
+          //     <div className="text-xs">9:41</div>
+          //     <div className="flex space-x-1.5 items-center">
+          //       <IconAntennaBars5 size={12} />
+          //       <IconWifi size={12} />
+          //       <IconBattery size={14} />
+          //     </div>
+          //   </div>
+
+          //   <div className="flex-1 p-4 overflow-auto bg-white">
+          //     <div className="flex items-center justify-center h-full bg-gray-50">
+          //       <div className="transform scale-[0.8]">{renderLoginForm()}</div>
+          //     </div>
+          //   </div>
+
+          //   <div className="flex items-center justify-center h-8 bg-black">
+          //     <div className="w-6 h-6 border border-gray-400 rounded-full"></div>
+          //   </div>
+          // </div>
+          <div className="text-muted-foreground">tablet</div>
         );
     }
   };
 
   return (
-    <div className="h-full bg-gray-100">
-      <div className="flex h-12 justify-center items-center border-b border-[#E4E4E7] bg-white">
+    <div className="h-full bg-background">
+      <div className="flex items-center justify-center h-12 border-b bg-background">
         {(['desktop', 'mobile', 'tablet'] as DeviceType[]).map((device) => (
           <div
             key={device}
             className={`flex px-4 py-2 justify-center items-center gap-2 cursor-pointer transition-all ${
-              activeDevice === device ? 'border-b-2 border-[#4F46E5]' : ''
+              activeDevice === device ? 'border-b-2 border-primary ' : ''
             }`}
             onClick={() => setActiveDevice(device)}
           >
@@ -178,7 +179,9 @@ export default function Preview({ formData }: PreviewProps) {
               <IconDeviceDesktop
                 size={20}
                 className={
-                  activeDevice === device ? 'text-[#4F46E5]' : 'text-[#71717A]'
+                  activeDevice === device
+                    ? 'text-primary'
+                    : 'text-muted-foreground'
                 }
               />
             )}
@@ -186,7 +189,9 @@ export default function Preview({ formData }: PreviewProps) {
               <IconDeviceMobile
                 size={20}
                 className={
-                  activeDevice === device ? 'text-[#4F46E5]' : 'text-[#71717A]'
+                  activeDevice === device
+                    ? 'text-primary'
+                    : 'text-muted-foreground'
                 }
               />
             )}
@@ -194,13 +199,17 @@ export default function Preview({ formData }: PreviewProps) {
               <IconDeviceTablet
                 size={20}
                 className={
-                  activeDevice === device ? 'text-[#4F46E5]' : 'text-[#71717A]'
+                  activeDevice === device
+                    ? 'text-primary'
+                    : 'text-muted-foreground'
                 }
               />
             )}
             <p
               className={`text-[14px] font-semibold ${
-                activeDevice === device ? 'text-[#4F46E5]' : 'text-[#71717A]'
+                activeDevice === device
+                  ? 'text-primary'
+                  : 'text-muted-foreground'
               }`}
             >
               {device.charAt(0).toUpperCase() + device.slice(1)}

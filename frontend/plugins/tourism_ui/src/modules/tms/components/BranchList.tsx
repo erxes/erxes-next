@@ -66,13 +66,13 @@ export const BranchList = () => {
         {list.map((branch: IBranch, index: number) => (
           <div
             key={branch._id}
-            className="flex flex-col items-start w-full h-full p-2 bg-white shrink-0"
+            className="flex flex-col items-start w-full h-full p-2 bg-background shrink-0"
           >
             <div className="flex items-start self-stretch gap-4">
-              <div className="flex flex-col items-start w-[290px] rounded-sm bg-white shadow-lg">
+              <div className="flex flex-col items-start w-[290px] rounded-sm bg-background shadow-lg">
                 <div className="flex items-center self-stretch justify-between px-3 h-9">
                   <div className="flex items-center gap-1">
-                    <h3 className="text-sm font-semibold leading-[100%] text-black font-inter">
+                    <h3 className="text-sm font-semibold leading-[100%] text-foreground font-inter">
                       {branch.name || 'Unnamed Branch'}
                     </h3>
                   </div>
