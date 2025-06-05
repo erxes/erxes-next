@@ -5,7 +5,7 @@ export const tagMutations = {
   /**
    * Creates a new tag
    */
-  async tagsAdd(_root: undefined, doc: ITag, { models }: IContext) {
+  async tagsAdd(_parent: undefined, doc: ITag, { models }: IContext) {
     return await models.Tags.createTag(doc);
   },
 
@@ -13,18 +13,18 @@ export const tagMutations = {
    * Edits a tag
    */
   async tagsEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & ITag,
-    { models }: IContext,
+    { models, __ }: IContext,
   ) {
-    return await models.Tags.updateTag(_id, doc);
+    return await models.Tags.updateTag(_id, __(doc));
   },
 
   /**
    * Attach a tag
    */
   async tagsTag(
-    _root: undefined,
+    _parent: undefined,
     {
       type,
       targetIds,
@@ -54,7 +54,7 @@ export const tagMutations = {
         customer: models.Customers,
         user: models.Users,
         company: models.Companies,
-        // form: models.Forms,
+        form: models.Forms,
         product: models.Products,
       };
 
@@ -64,30 +64,29 @@ export const tagMutations = {
         throw new Error(`Unknown content type: ${contentType}`);
       }
 
-      await model.updateMany({ _id: { $in: targetIds } }, { $set: { tagIds } });
-
-      return '';
+      return await model.updateMany(
+        { _id: { $in: targetIds } },
+        { $set: { tagIds } },
+      );
     }
-
-    return null;
   },
 
   /**
    * Removes a tag
    */
   async tagsRemove(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
-    return await models.Tags.removeTag(_id);
+    return models.Tags.removeTag(_id);
   },
 
   /**
    * Merge tags
    */
   async tagsMerge(
-    _root: undefined,
+    _parent: undefined,
     { sourceId, destId }: { sourceId: string; destId: string },
     { models }: IContext,
   ) {

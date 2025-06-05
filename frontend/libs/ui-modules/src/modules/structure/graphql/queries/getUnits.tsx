@@ -1,16 +1,12 @@
 import { gql } from '@apollo/client';
 
 export const GET_UNITS_MAIN = gql`
-  query unitsMain($perPage: Int, $page: Int, $searchValue: String) {
-    unitsMain(perPage: $perPage, page: $page, searchValue: $searchValue) {
-      list {
-        _id
-        title
-        code
-        userCount
-      }
-      totalCount
-      totalUsersCount
+  query unitsMain($searchValue: String) {
+    units(searchValue: $searchValue) {
+      _id
+      title
+      code
+      userCount
     }
   }
 `;

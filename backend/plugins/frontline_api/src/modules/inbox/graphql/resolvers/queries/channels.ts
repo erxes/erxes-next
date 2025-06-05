@@ -50,7 +50,7 @@ export const channelQueries = {
    * Get all channels count. We will use it in pager
    */
   async channelsTotalCount(_root, _params, { models }: IContext) {
-    return models.Channels.find({}).countDocuments();
+    return models.Channels.countDocuments({});
   },
 
   /**

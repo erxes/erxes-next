@@ -57,9 +57,7 @@ export const integrationMutations = {
     doc: any,
     { user, models, subdomain }: IContext,
   ) {
-    const integrationsCount = await models.Integrations.find(
-      {},
-    ).countDocuments();
+    const integrationsCount = await models.Integrations.countDocuments();
 
     if (integrationsCount > 0) {
       return models.Integrations.findOne();
@@ -372,9 +370,11 @@ export const integrationMutations = {
   async integrationsCopyLeadIntegration(
     _root,
     { _id }: { _id },
-    { docModifier, user, models, subdomain }: IContext,
+    { user, models, subdomain }: IContext,
   ) {
-    const sourceIntegration = await models.Integrations.getIntegration({ _id });
+    const sourceIntegration = await models.Integrations.getIntegration({
+      _id,
+    });
 
     if (!sourceIntegration.formId) {
       throw new Error('Integration kind is not form');

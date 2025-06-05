@@ -1,11 +1,12 @@
 import { RecordTable } from 'erxes-ui';
 import { useCustomers } from '@/contacts/customers/hooks/useCustomers';
 import { customersColumns } from './CustomersColumns';
+import { CustomersCommandBar } from '@/contacts/customers/components/customers-command-bar';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/customersCursorSessionKey';
 
 export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   return (
     <RecordTable.Provider
@@ -19,24 +20,23 @@ export const CustomersRecordTable = () => {
         hasNextPage={hasNextPage}
         loading={loading}
         dataLength={customers?.length}
-        sessionKey="customers_cursor"
+        sessionKey={CUSTOMERS_CURSOR_SESSION_KEY}
       >
         <RecordTable>
           <RecordTable.Header />
           <RecordTable.Body>
             <RecordTable.CursorBackwardSkeleton
               handleFetchMore={handleFetchMore}
-              startCursor={startCursor}
             />
             {loading && <RecordTable.RowSkeleton rows={40} />}
             <RecordTable.RowList />
             <RecordTable.CursorForwardSkeleton
               handleFetchMore={handleFetchMore}
-              endCursor={endCursor}
             />
           </RecordTable.Body>
         </RecordTable>
       </RecordTable.CursorProvider>
+      <CustomersCommandBar />
     </RecordTable.Provider>
   );
 };

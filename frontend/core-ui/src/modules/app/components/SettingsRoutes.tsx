@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 
 import {
   SettingsPath,
@@ -8,6 +8,7 @@ import {
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
 import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
+import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -43,10 +44,28 @@ const StructureSettings = lazy(() =>
   ),
 );
 
+const TagsSettings = lazy(() =>
+  import('~/pages/settings/workspace/tags/TagsSettingPage').then((module) => ({
+    default: module.TagsSettingPage,
+  })),
+);
+
+const ProductsSettingsRoutes = lazy(() =>
+  import('@/products/settings/components/ProductSettingsRoutes').then(
+    (module) => ({
+      default: module.ProductsSettingRoutes,
+    }),
+  ),
+);
+
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
       <Routes>
+        <Route
+          path="/"
+          element={<Navigate to={`${SettingsPath.Profile}`} replace />}
+        />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
           path={SettingsPath.Experience}
@@ -69,12 +88,17 @@ export function SettingsRoutes() {
           element={<TeamMemberSettings />}
         />
         <Route
-          path={SettingsWorkspacePath.Structure}
+          path={SettingsWorkspacePath.StructureCatchAll}
           element={<StructureSettings />}
         />
-
+        <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
+        <Route
+          path={SettingsWorkspacePath.ProductsCatchAll}
+          element={<ProductsSettingsRoutes />}
+        />
         {getPluginsSettingsRoutes()}
       </Routes>
+      <SettingsPageEffect />
     </Suspense>
   );
 }

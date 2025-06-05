@@ -1,6 +1,6 @@
 import { Route } from 'react-router';
 
-import { RenderPLuginsComponent } from '~/plugins/components/RenderPLuginsComponent';
+import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { pluginsConfigState } from 'ui-modules';
 import { useAtom } from 'jotai';
 
@@ -20,7 +20,7 @@ export const getPluginsRoutes = () => {
       key={module.name}
       path={`/${module.path}/*`}
       element={
-        <RenderPLuginsComponent
+        <RenderPluginsComponent
           moduleName={module.name}
           pluginName={`${module.pluginName}_ui`}
           remoteModuleName={module.name}
@@ -48,7 +48,7 @@ export const getPluginsSettingsRoutes = () => {
       key={module.name}
       path={`/${module.path}/*`}
       element={
-        <RenderPLuginsComponent
+        <RenderPluginsComponent
           moduleName={module.name}
           pluginName={`${module.pluginName}_ui`}
           remoteModuleName={`${module.name}Settings`}

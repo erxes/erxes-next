@@ -1,8 +1,9 @@
 import { ITagDocument } from 'erxes-api-shared/core-types';
+import { getPlugin } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 
 // set related tags
-export const setRelatedIds = async (models: IModels, tag: ITagDocument) => {
+export const setRelatedTagIds = async (models: IModels, tag: ITagDocument) => {
   if (tag.parentId) {
     const parentTag = await models.Tags.findOne({ _id: tag.parentId });
 
@@ -24,14 +25,17 @@ export const setRelatedIds = async (models: IModels, tag: ITagDocument) => {
       const updated = await models.Tags.findOne({ _id: tag.parentId });
 
       if (updated) {
-        await setRelatedIds(models, updated);
+        await setRelatedTagIds(models, updated);
       }
     }
   }
 };
 
 // remove related tags
-export const removeRelatedIds = async (models: IModels, tag: ITagDocument) => {
+export const removeRelatedTagIds = async (
+  models: IModels,
+  tag: ITagDocument,
+) => {
   const tags = await models.Tags.find({ relatedIds: { $in: tag._id } });
 
   if (tags.length === 0) {
@@ -61,4 +65,11 @@ export const removeRelatedIds = async (models: IModels, tag: ITagDocument) => {
   });
 
   await models.Tags.bulkWrite(doc);
+};
+
+export const getContentTypes = async (serviceName) => {
+  const service = await getPlugin(serviceName);
+  const meta = service.config.meta || {};
+  const types = (meta.tags && meta.tags.types) || [];
+  return types.map((type) => `${serviceName}:${type.type}`);
 };

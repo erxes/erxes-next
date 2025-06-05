@@ -7,7 +7,11 @@ import { IContext } from '~/connectionResolvers';
 import { generateFilters } from './utils';
 
 export const deparmentQueries = {
-  async departments(_root: undefined, params: any, { models, user }: IContext) {
+  async departments(
+    _parent: undefined,
+    params: any,
+    { models, user }: IContext,
+  ) {
     const filter = await generateFilters({
       models,
       user,
@@ -28,7 +32,7 @@ export const deparmentQueries = {
   },
 
   async departmentsMain(
-    _root: undefined,
+    _parent: undefined,
     params: IListParams & ICursorPaginateParams,
     { models, user }: IContext,
   ) {
@@ -48,7 +52,7 @@ export const deparmentQueries = {
     return { list, totalCount, pageInfo };
   },
 
-  async departmentDetail(_root: undefined, { _id }, { models }: IContext) {
+  async departmentDetail(_parent: undefined, { _id }, { models }: IContext) {
     return models.Departments.getDepartment({ _id });
   },
 };

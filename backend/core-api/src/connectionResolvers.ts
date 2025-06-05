@@ -1,20 +1,8 @@
-import { createGenerateModels } from 'erxes-api-shared/utils';
+import { IAppModel, loadAppClass } from '@/apps/db/models/Apps';
 import {
-  ICompanyDocument,
-  ICustomerDocument,
-  IRelationDocument,
-  IUserDocument,
-  IUserMovementDocument,
-} from 'erxes-api-shared/core-types';
-import mongoose from 'mongoose';
-
-import { ITagDocument } from 'erxes-api-shared/core-types';
-import {
-  IProductCategoryDocument,
-  IProductDocument,
-  IProductsConfigDocument,
-  IUomDocument,
-} from 'erxes-api-shared/core-types';
+  IConformityModel,
+  loadConformityClass,
+} from '@/conformities/db/models/Conformities';
 import {
   ICompanyModel,
   loadCompanyClass,
@@ -23,6 +11,39 @@ import {
   ICustomerModel,
   loadCustomerClass,
 } from '@/contacts/db/models/Customers';
+import { IExchangeRateDocument } from '@/exchangeRates/@types/exchangeRate';
+import {
+  IExchangeRateModel,
+  loadExchangeRateClass,
+} from '@/exchangeRates/db/models/ExchangeRates';
+import {
+  IBrandModel,
+  loadBrandClass,
+} from '@/organization/brand/db/models/Brands';
+import { IFavoritesDocument } from '@/organization/settings/db/definitions/favorites';
+import {
+  IFavoritesModel,
+  loadFavoritesClass,
+} from '@/organization/settings/db/models/Favorites';
+import {
+  IBranchDocument,
+  IDepartmentDocument,
+  IPositionDocument,
+  IStructureDocument,
+  IUnitDocument,
+} from '@/organization/structure/@types/structure';
+import {
+  IBranchModel,
+  IDepartmentModel,
+  IPositionModel,
+  IStructureModel,
+  IUnitModel,
+  loadBranchClass,
+  loadDepartmentClass,
+  loadPositionClass,
+  loadStructureClass,
+  loadUnitClass,
+} from '@/organization/structure/db/models/Structure';
 import {
   IUserModel,
   IUserMovemmentModel,
@@ -39,45 +60,81 @@ import {
 } from '@/products/db/models/Configs';
 import { IProductModel, loadProductClass } from '@/products/db/models/Products';
 import { IUomModel, loadUomClass } from '@/products/db/models/Uoms';
-import { IConfigDocument } from '@/settings/db/definitions/configs';
-import { IConfigModel } from '@/settings/db/models/Configs';
+import {
+  IRelationModel,
+  loadRelationClass,
+} from '@/relations/db/models/Relations';
 import { ITagModel, loadTagClass } from '@/tags/db/models/Tags';
-import { IMainContext } from 'erxes-api-shared/core-types';
-
 import {
-  IBranchDocument,
-  IDepartmentDocument,
-  IPositionDocument,
-  IStructureDocument,
-  IUnitDocument,
-} from '@/organization/structure/@types/structure';
-import { IAppModel, loadAppClass } from '@/apps/db/models/Apps';
-import { IAppDocument } from 'erxes-api-shared/core-types';
+  IAppDocument,
+  IBrandDocument,
+  ICompanyDocument,
+  ICustomerDocument,
+  IMainContext,
+  IPermissionDocument,
+  IProductCategoryDocument,
+  IProductDocument,
+  IProductsConfigDocument,
+  IRelationDocument,
+  ITagDocument,
+  IUomDocument,
+  IUserDocument,
+  IUserGroupDocument,
+  IUserMovementDocument,
+} from 'erxes-api-shared/core-types';
+import { createGenerateModels } from 'erxes-api-shared/utils';
+import mongoose from 'mongoose';
 import {
-  IBranchModel,
-  IDepartmentModel,
-  IPositionModel,
-  IStructureModel,
-  IUnitModel,
-  loadBranchClass,
-  loadDepartmentClass,
-  loadPositionClass,
-  loadStructureClass,
-  loadUnitClass,
-} from '@/organization/structure/db/models/Structure';
+  IDocumentModel,
+  loadDocumentClass,
+} from '~/modules/documents/db/models/Documents';
+import { IDocumentDocument } from '~/modules/documents/types';
+import { IConfigDocument } from '~/modules/organization/settings/db/definitions/configs';
+import { IConfigModel } from '~/modules/organization/settings/db/models/Configs';
 import {
-  IConformityModel,
-  loadConformityClass,
-} from '@/conformities/db/models/Conformities';
+  IPermissionModel,
+  loadPermissionClass,
+} from '~/modules/permissions/db/models/Permissions';
+import {
+  IUserGroupModel,
+  loadUserGroupClass,
+} from '~/modules/permissions/db/models/UserGroups';
 import { IConformityDocument } from './modules/conformities/db/definitions/conformities';
-import { IRelationModel } from '@/relations/db/models/Relations';
-import { loadRelationClass } from '@/relations/db/models/Relations';
+import {
+  IFieldDocument,
+  IFieldGroupDocument,
+} from './modules/forms/db/definitions/fields';
+import {
+  IForm,
+  IFormSubmissionDocument,
+} from './modules/forms/db/definitions/forms';
+import {
+  IFieldGroupModel,
+  IFieldModel,
+  loadFieldClass,
+  loadGroupClass,
+} from './modules/forms/db/models/Fields';
+import {
+  IFormModel,
+  IFormSubmissionModel,
+  loadFormClass,
+  loadFormSubmissionClass,
+} from './modules/forms/db/models/Forms';
+import { ISegmentDocument } from './modules/segments/db/definitions/segments';
+import {
+  ISegmentModel,
+  loadSegmentClass,
+} from './modules/segments/db/models/Segments';
+
 export interface IModels {
+  Brands: IBrandModel;
   Customers: ICustomerModel;
   Companies: ICompanyModel;
   Users: IUserModel;
   UserMovements: IUserMovemmentModel;
   Configs: IConfigModel;
+  Permissions: IPermissionModel;
+  UsersGroups: IUserGroupModel;
   Tags: ITagModel;
   Products: IProductModel;
   ProductCategories: IProductCategoryModel;
@@ -89,8 +146,16 @@ export interface IModels {
   Branches: IBranchModel;
   Positions: IPositionModel;
   Apps: IAppModel;
+  Fields: IFieldModel;
+  FieldsGroups: IFieldGroupModel;
+  Forms: IFormModel;
+  FormSubmissions: IFormSubmissionModel;
+  Segments: ISegmentModel;
   Conformities: IConformityModel;
   Relations: IRelationModel;
+  Favorites: IFavoritesModel;
+  ExchangeRates: IExchangeRateModel;
+  Documents: IDocumentModel;
 }
 
 export interface IContext extends IMainContext {
@@ -99,12 +164,25 @@ export interface IContext extends IMainContext {
   subdomain: string;
 }
 
-export const loadClasses = (db: mongoose.Connection): IModels => {
+export const loadClasses = (
+  db: mongoose.Connection,
+  subdomain: string,
+): IModels => {
   const models = {} as IModels;
 
   models.Users = db.model<IUserDocument, IUserModel>(
     'users',
     loadUserClass(models),
+  );
+
+  models.Brands = db.model<IBrandDocument, IBrandModel>(
+    'brands',
+    loadBrandClass(models),
+  );
+
+  models.Conformities = db.model<IConformityDocument, IConformityModel>(
+    'conformity',
+    loadConformityClass(models),
   );
 
   models.Customers = db.model<ICustomerDocument, ICustomerModel>(
@@ -125,6 +203,16 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   models.Configs = db.model<IConfigDocument, IConfigModel>(
     'configs',
     loadUserMovemmentClass(models),
+  );
+
+  models.Permissions = db.model<IPermissionDocument, IPermissionModel>(
+    'permissions',
+    loadPermissionClass(models),
+  );
+
+  models.UsersGroups = db.model<IUserGroupDocument, IUserGroupModel>(
+    'user_groups',
+    loadUserGroupClass(models),
   );
 
   models.Tags = db.model<ITagDocument, ITagModel>('tags', loadTagClass(models));
@@ -168,14 +256,43 @@ export const loadClasses = (db: mongoose.Connection): IModels => {
   );
   models.Apps = db.model<IAppDocument, IAppModel>('apps', loadAppClass(models));
 
-  models.Conformities = db.model<IConformityDocument, IConformityModel>(
-    'conformities',
-    loadConformityClass(models),
+  models.Fields = db.model<IFieldDocument, IFieldModel>(
+    'form_fields',
+    loadFieldClass(models, subdomain),
+  );
+  models.FieldsGroups = db.model<IFieldGroupDocument, IFieldGroupModel>(
+    'fields_groups',
+    loadGroupClass(models),
+  );
+  models.Forms = db.model<IForm, IFormModel>('forms', loadFormClass(models));
+  models.FormSubmissions = db.model<
+    IFormSubmissionDocument,
+    IFormSubmissionModel
+  >('form_submissions', loadFormSubmissionClass(models));
+
+  models.Segments = db.model<ISegmentDocument, ISegmentModel>(
+    'segments',
+    loadSegmentClass(models),
   );
 
   models.Relations = db.model<IRelationDocument, IRelationModel>(
     'relations',
     loadRelationClass(models),
+  );
+
+  models.Favorites = db.model<IFavoritesDocument, IFavoritesModel>(
+    'favorites',
+    loadFavoritesClass(models),
+  );
+
+  models.ExchangeRates = db.model<IExchangeRateDocument, IExchangeRateModel>(
+    'exchange_rates',
+    loadExchangeRateClass(models, subdomain),
+  );
+
+  models.Documents = db.model<IDocumentDocument, IDocumentModel>(
+    'documents',
+    loadDocumentClass(models),
   );
 
   return models;

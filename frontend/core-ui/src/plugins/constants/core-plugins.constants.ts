@@ -1,6 +1,8 @@
 import {
   IconShoppingCartFilled,
   IconBookmarksFilled,
+  IconLogs,
+  IconChartPie,
   IconMagnetFilled,
   IconUserFilled,
   IconBuilding,
@@ -57,5 +59,12 @@ export const CORE_MODULES: IUIConfig['modules'] = [
         icon: IconCategoryFilled,
       },
     ],
+  },
+  {
+    name: 'segments',
+    icon: IconChartPie,
+    path: 'segments',
+    hasSettings: true,
+    hasWidgets: true,
   },
 ];

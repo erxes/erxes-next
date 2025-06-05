@@ -5,7 +5,12 @@ export * from './redis';
 export * from './service-discovery';
 export * from './utils';
 export * from './constants';
-export * from './apollo';
+export * from './start-plugin';
 export * from './saas';
+export * from './apollo';
+export * from './logs';
+export * from './elasticsearch';
 export * from './random';
+export * from './graphqlPubSub'
 export * from './trpc';
+export * from './elasticsearch';

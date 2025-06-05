@@ -32,7 +32,7 @@
       "dependsOn": ["typecheck", "build"],
       "options": {
         "cwd": "backend/gateway",
-        "command": "node dist/src/main.js"
+        "command": "NODE_ENV=development && node dist/src/main.js"
       }
     },
 
@@ -47,7 +47,7 @@
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/gateway/Dockerfile . -t gateway"
+      "command": "docker build -f backend/gateway/Dockerfile . -t erxes/erxes-next-gateway"
     }
   }
 }

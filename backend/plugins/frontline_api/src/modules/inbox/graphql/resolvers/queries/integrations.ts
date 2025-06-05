@@ -1,8 +1,8 @@
-import { defaultPaginate } from 'erxes-api-shared/src/utils';
-import { IContext } from '~/connectionResolvers';
-/**
- * Common helper for integrations & integrationsTotalCount
- */
+import { getIntegrationsKinds } from '@/inbox/utils';
+import { IContext, } from '~/connectionResolvers';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { IIntegrationDocument } from '~/modules/inbox/@types/integrations';
+
 const generateFilterQuery = async (
   subdomain,
   { kind, channelId, brandId, searchValue, tag, status, formLoadType },
@@ -48,7 +48,6 @@ export const integrationQueries = {
       page: number;
       perPage: number;
       kind: string;
-
       searchValue: string;
       channelId: string;
       brandId: string;
@@ -58,13 +57,12 @@ export const integrationQueries = {
       sortField: string;
       sortDirection: number;
     },
-    { singleBrandIdSelector, models, subdomain, user }: IContext,
+    { models, subdomain, user }: IContext,
   ) {
     if (!user) {
       throw new Error('User not authenticated');
     }
     let query = {
-      ...singleBrandIdSelector,
       ...(await generateFilterQuery(subdomain, args, models)),
     };
     if (!user.isOwner) {
@@ -92,12 +90,13 @@ export const integrationQueries = {
       return models.Integrations.findLeadIntegrations(query, args);
     }
 
-    const integrations = defaultPaginate(
-      models.Integrations.findAllIntegrations(query),
-      args,
-    );
-
-    return integrations.sort({ name: 1 });
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<IIntegrationDocument>({
+        model: models.Integrations,
+        params: args,
+        query,
+      });
+    return { list, totalCount, pageInfo };
   },
 
   /**
@@ -106,10 +105,9 @@ export const integrationQueries = {
   async allLeadIntegrations(
     _root,
     _args,
-    { singleBrandIdSelector, models }: IContext,
+    { models }: IContext,
   ) {
     const query = {
-      ...singleBrandIdSelector,
       kind: 'lead',
     };
 
@@ -119,11 +117,32 @@ export const integrationQueries = {
   /**
    * Get used integration types
    */
-  async integrationsGetUsedTypes(_root, { object }, { models }: IContext) {
+  async integrationsGetUsedTypes(_root, _args, { models }: IContext) {
     const usedTypes: Array<{ _id: string; name: string }> = [];
 
-    return usedTypes;
+    try {
+      const kindMap = await getIntegrationsKinds();
+
+      const distinctKinds = await models.Integrations.find({}).distinct('kind');
+
+      for (const kind of distinctKinds) {
+        const count = await models.Integrations.find({ kind }).countDocuments();
+
+        if (count > 0) {
+          usedTypes.push({
+            _id: kind,
+            name: kindMap[kind] || kind.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+          });
+        }
+      }
+
+      return usedTypes;
+    } catch (error) {
+      console.error('Error in integrationsGetUsedTypes:', error);
+      throw new Error('Failed to fetch used integration types');
+    }
   },
+
 
   /**
    * Get one integration
@@ -166,12 +185,10 @@ export const integrationQueries = {
     };
 
     const count = async (query) => {
-      return models.Integrations.findAllIntegrations(query).countDocuments();
+      return models.Integrations.countDocuments(query);
     };
 
-    // Counting integrations by tag
 
-    // Counting integrations by kind
 
     // Counting integrations by channel
 

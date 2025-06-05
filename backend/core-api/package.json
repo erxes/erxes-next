@@ -13,6 +13,5 @@
   "license": "ISC",
   "dependencies": {
     "erxes-api-shared": "workspace:^"
-  },
-  "devDependencies": {}
+  }
 }

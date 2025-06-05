@@ -29,7 +29,7 @@ export const userMutations = {
       lastName?: string;
       subscribeEmail?: boolean;
     },
-    { models }: IContext,
+    { models, __ }: IContext,
   ) {
     const userCount = await models.Users.countDocuments();
 
@@ -91,7 +91,7 @@ export const userMutations = {
   /*
    * Update user
    */
-  async usersEdit(_root: undefined, args: IUsersEdit, { models }: IContext) {
+  async usersEdit(_parent: undefined, args: IUsersEdit, { models }: IContext) {
     const { _id, ...doc } = args;
 
     // clean custom field values

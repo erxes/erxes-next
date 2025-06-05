@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { IconLoader } from '@tabler/icons-react';
 
 import { useInView } from 'react-intersection-observer';
-import { MemberInline } from './MemberInline';
+import { MembersInline } from './MembersInline';
 
 export const AssignMemberInEditor = ({ editor }: { editor: IBlockEditor }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -99,7 +99,7 @@ function MentionMenuItem({ onClick, isSelected, user }: MentionMenuItemProps) {
       className="justify-start"
       isSelected={isSelected}
     >
-      <MemberInline member={user} />
+      {!!user && <MembersInline members={[user]} />}
     </SuggestionMenuItem>
   );
 }

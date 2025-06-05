@@ -3,7 +3,7 @@ export interface IProductCategoryParams {
   searchValue: string;
   status: string;
   withChild: boolean;
-  brand: string;
+  brandIds: string;
   meta: string | number;
   ids: string[];
 }

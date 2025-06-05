@@ -1,23 +1,23 @@
-// import { sendInboxMessage } from '../messageBroker';
 import { getSubdomain } from 'erxes-api-shared/utils';
+import {receiveTrpcMessage} from '@/inbox/receiveMessage'
+export let userIds: string[] = [];
 
-export const userIds: string[] = [];
 
-const userMiddleware = async (req, _res, next) => {
+export const userMiddleware = async (req, _res, next) => {
   const { path, headers, query } = req;
   const subdomain = getSubdomain(req);
 
   if (userIds.length === 0) {
-    // const response = await sendInboxMessage({
-    //   subdomain,
-    //   action: 'integrations.receive',
-    //   data: {
-    //     action: 'getUserIds'
-    //   },
-    //   isRPC: true
-    // });
+    const data = {
+      action: 'getUserIds',
+    };
 
-    // userIds = response.userIds;
+  const response = await receiveTrpcMessage(subdomain, data);
+   if (response.status === 'success') {
+       userIds= response.data.userIds;
+    } else {
+      throw new Error(` userMiddleware failed:`);
+    }
   }
 
   if (path.startsWith('/accounts')) {
@@ -34,7 +34,5 @@ const userMiddleware = async (req, _res, next) => {
     }
   }
 
-  return next();
+  next();
 };
-
-export default userMiddleware;

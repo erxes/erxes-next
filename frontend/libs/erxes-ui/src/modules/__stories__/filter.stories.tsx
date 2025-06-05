@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Meta, StoryObj } from '@storybook/react';
-import { Filter, useFilterContext } from '../filter';
-import { Command } from 'erxes-ui/components/command';
-import { Combobox } from 'erxes-ui/components/combobox';
+import { Filter, useFilterContext, CurrencyField } from 'erxes-ui/modules';
+import { Command, Combobox } from 'erxes-ui/components';
 import {
   IconCalendarEventFilled,
   IconLabelFilled,
@@ -10,7 +9,7 @@ import {
   IconCoins,
   IconToggleRightFilled,
 } from '@tabler/icons-react';
-import { CurrencyCode, CurrencyField } from 'erxes-ui/index';
+import { CurrencyCode } from 'erxes-ui/types';
 import { useState } from 'react';
 
 const meta: Meta<typeof Filter> = {

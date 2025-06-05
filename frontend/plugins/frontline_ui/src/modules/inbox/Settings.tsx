@@ -1,25 +1,32 @@
 import { lazy, Suspense, useState } from 'react';
-import { MainSettingsForm } from '../settings/components/MainSettingsForm';
 import { IIntegrationItem } from '../settings/types/integration';
 import {
   INTEGRATIONS,
   OTHER_INTEGRATIONS,
 } from '../settings/constants/integrations';
 import { IntegrationContext } from '../settings/context/IntegrationContext';
-import { Filter, SettingsHeader, Spinner } from 'erxes-ui';
+import { Filter, PageContainer, Spinner } from 'erxes-ui';
 import { InboxSettingsBreadcrumb } from '../settings/components/InboxSettingsBreadcrumb';
 import { InboxSettingsTopbar } from '../settings/components/InboxSettingsTopbar';
 import { InboxSettingsSidebar } from '../settings/components/Sidebar';
 import { Route, Routes } from 'react-router-dom';
+import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
 
 export const InboxMainConfig = lazy(() =>
   import('~/pages/SettingsPage').then((module) => ({
     default: module.SettingsPage,
   })),
 );
+
 export const IntegrationDetailPage = lazy(() =>
   import('~/pages/IntegrationCreatePage').then((module) => ({
     default: module.IntegrationCreatePage,
+  })),
+);
+
+export const ChannelsSettingsPage = lazy(() =>
+  import('~/pages/ChannelsSettingsPage').then((module) => ({
+    default: module.default,
   })),
 );
 
@@ -37,33 +44,35 @@ const InboxSettings = () => {
         setOtherIntegrations,
       }}
     >
-      <Filter id="inbox-settings">
-        <div className="flex flex-col flex-auto overflow-hidden">
-          <SettingsHeader breadcrumbs={<InboxSettingsBreadcrumb />}>
-            <div className="flex ml-auto">
-              <InboxSettingsTopbar />
-            </div>
-          </SettingsHeader>
-          <div className="flex flex-auto overflow-hidden">
-            <InboxSettingsSidebar />
-            <Suspense
-              fallback={
-                <div className="flex justify-center items-center h-full">
-                  <Spinner />
-                </div>
-              }
-            >
-              <Routes>
-                <Route path="/" element={<InboxMainConfig />} />
-                <Route
-                  path="/details/:kind"
-                  element={<IntegrationDetailPage />}
-                />
-              </Routes>
-            </Suspense>
-          </div>
+      <PageContainer>
+        <PageHeader>
+          <PageHeaderStart>
+            <InboxSettingsBreadcrumb />
+          </PageHeaderStart>
+          <PageHeaderEnd>
+            <InboxSettingsTopbar />
+          </PageHeaderEnd>
+        </PageHeader>
+        <div className="flex flex-auto w-full overflow-hidden">
+          <InboxSettingsSidebar />
+          <Suspense
+            fallback={
+              <div className="flex justify-center items-center h-full">
+                <Spinner />
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<InboxMainConfig />} />
+              <Route
+                path="/details/:kind"
+                element={<IntegrationDetailPage />}
+              />
+              <Route path="channels" element={<ChannelsSettingsPage />} />
+            </Routes>
+          </Suspense>
         </div>
-      </Filter>
+      </PageContainer>
     </IntegrationContext.Provider>
   );
 };

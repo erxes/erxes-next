@@ -4,8 +4,6 @@ import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailSta
 import { useSetAtom } from 'jotai';
 import { ICustomer } from '@/contacts/types/customerType';
 import { useQueryState } from 'erxes-ui';
-import { usePreviousHotkeyScope } from 'erxes-ui';
-import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
 
 export const CustomerMoreColumnCell = ({
   cell,
@@ -14,18 +12,13 @@ export const CustomerMoreColumnCell = ({
 }) => {
   const [, setOpen] = useQueryState('contactId');
   const setRenderingCustomerDetail = useSetAtom(renderingCustomerDetailAtom);
-  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
   const { _id } = cell.row.original;
   return (
     <RecordTable.MoreButton
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);
-        setTimeout(() => {
-          setHotkeyScopeAndMemorizePreviousScope(
-            CustomerHotKeyScope.CustomerEditSheet,
-          );
-        }, 100);
+
         setRenderingCustomerDetail(false);
       }}
     />

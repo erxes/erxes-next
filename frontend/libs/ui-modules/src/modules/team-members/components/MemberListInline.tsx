@@ -70,9 +70,7 @@ export const MemberListInlineAvatars = () => {
           key={member._id}
         >
           <Avatar.Image src={member.details.avatar} />
-          <Avatar.Fallback colorSeed={member._id}>
-            {member.details.fullName.charAt(0)}
-          </Avatar.Fallback>
+          <Avatar.Fallback>{member.details.fullName.charAt(0)}</Avatar.Fallback>
         </Avatar>
       ))}
       {members.length - withAvatar.length > 0 && (

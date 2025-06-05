@@ -5,16 +5,13 @@ import {
   useUsers,
 } from '@/settings/team-member/hooks/useUsers';
 import { teamMemberColumns } from '@/settings/team-member/components/record/TeamMemberColumns';
-import { teamMemberMoreColumn } from '@/settings/team-member/components/record/TeamMemberMoreColumn';
 
 const TeamMemberTable = () => {
   const { users, totalCount, handleFetchMore, loading, error } = useUsers({
     page: 1,
     perPage: USERS_PER_PAGE,
   });
-  if (loading) {
-    return <Skeleton className="w-full h-full" />;
-  }
+
   if (error) {
     return (
       <div className="text-destructive">
@@ -23,11 +20,17 @@ const TeamMemberTable = () => {
     );
   }
   return (
-    <RecordTable.Provider columns={teamMemberColumns} data={users || []}>
+    <RecordTable.Provider
+      columns={teamMemberColumns}
+      data={users || []}
+      stickyColumns={['more', 'avatar', 'firstName', 'lastName']}
+      className="m-3"
+    >
       <RecordTable.Scroll>
         <RecordTable>
           <RecordTable.Header />
           <RecordTable.Body>
+            {loading && <RecordTable.RowSkeleton rows={20} />}
             <RecordTable.RowList />
             {!loading && totalCount > users?.length && (
               <RecordTable.RowSkeleton

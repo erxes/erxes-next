@@ -1,4 +1,7 @@
+import { IOrderInput } from '@/core-types';
+import mongoose from 'mongoose';
 import stripAnsi from 'strip-ansi';
+import dayjs from 'dayjs';
 
 export const getEnv = ({
   name,
@@ -29,6 +32,10 @@ export const getSubdomain = (req: any): string => {
   return subdomain;
 };
 
+export const connectionOptions: mongoose.ConnectOptions = {
+  family: 4,
+};
+
 export const authCookieOptions = (options: any = {}) => {
   const NODE_ENV = getEnv({ name: 'NODE_ENV' });
   const maxAge = options.expires || 14 * 24 * 60 * 60 * 1000;
@@ -48,6 +55,27 @@ export const authCookieOptions = (options: any = {}) => {
   };
 
   return cookieOptions;
+};
+
+export const paginate = (
+  collection: any,
+  params: {
+    ids?: string[];
+    page?: number;
+    perPage?: number;
+    excludeIds?: boolean;
+  },
+) => {
+  const { page = 1, perPage = 20, ids, excludeIds } = params || { ids: null };
+
+  const _page = Number(page || '1');
+  const _limit = Number(perPage || '20');
+
+  if (ids && ids.length > 0) {
+    return excludeIds ? collection.limit(_limit) : collection;
+  }
+
+  return collection.limit(_limit).skip((_page - 1) * _limit);
 };
 
 export const validSearchText = (values: string[]) => {
@@ -71,7 +99,44 @@ export const getCoreDomain = () => {
 export const escapeRegExp = (str: string) => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
+export const updateOrder = async (collection: any, orders: IOrderInput[]) => {
+  if (orders.length === 0) {
+    return [];
+  }
 
+  const ids: string[] = [];
+  const bulkOps: Array<{
+    updateOne: {
+      filter: { _id: string };
+      update: { order: number };
+    };
+  }> = [];
+
+  for (const { _id, order } of orders) {
+    ids.push(_id);
+
+    const selector: { order: number } = { order };
+
+    bulkOps.push({
+      updateOne: {
+        filter: { _id },
+        update: selector,
+      },
+    });
+  }
+
+  await collection.bulkWrite(bulkOps);
+
+  return collection.find({ _id: { $in: ids } }).sort({ order: 1 });
+};
+
+export const pluralFormation = (type: string) => {
+  if (type[type.length - 1] === 'y') {
+    return type.slice(0, -1) + 'ies';
+  }
+
+  return type + 's';
+}
 export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
   const tempArray: T[][] = [];
 
@@ -106,6 +171,7 @@ export const splitStr = (str: string, size: number): string[] => {
 
   return cleanStr.match(regex) || [];
 };
+
 export const fixDate = (
   value: string | number | Date,
   defaultValue: Date = new Date(),
@@ -117,4 +183,134 @@ export const fixDate = (
   }
 
   return defaultValue;
+};
+
+export const getDate = (date: Date, day: number): Date => {
+  const currentDate = new Date();
+
+  date.setDate(currentDate.getDate() + day + 1);
+  date.setHours(0, 0, 0, 0);
+
+  return date;
+};
+
+export const getToday = (date: Date): Date => {
+  return getFullDate(date);
+};
+
+export const getFullDate = (date: Date) => {
+  return new Date(dayjs(date).format('YYYY-MM-DD'));
+};
+
+export const getPureDate = (date: Date, multiplier = 1) => {
+  const ndate = new Date(date);
+  const diffTimeZone =
+    multiplier * Number(process.env.TIMEZONE || 0) * 1000 * 60 * 60;
+  return new Date(ndate.getTime() - diffTimeZone);
+};
+
+export const getTomorrow = (date: Date) => {
+  return new Date(dayjs(date).add(1, 'day').format('YYYY-MM-DD'));
+};
+
+export const getNextMonth = (date: Date): { start: number; end: number } => {
+  const today = getToday(date);
+  const currentMonth = new Date().getMonth();
+
+  if (currentMonth === 11) {
+    today.setFullYear(today.getFullYear() + 1);
+  }
+
+  const month = (currentMonth + 1) % 12;
+  const start = today.setMonth(month, 1);
+  const end = today.setMonth(month + 1, 0);
+
+  return { start, end };
+};
+
+export const fixNum = (value?: number, p = 4) => {
+  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ''));
+
+  if (isNaN(cleanNumber)) {
+    return 0;
+  }
+
+  return Number(cleanNumber.toFixed(p));
+};
+
+const DATE_OPTIONS = {
+  d: 1000 * 60 * 60 * 24,
+  h: 1000 * 60 * 60,
+  m: 1000 * 60,
+  s: 1000,
+  ms: 1,
+};
+
+const CHARACTERS =
+  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@#$%^&*()-=+{}[]<>.,:;"`|/?';
+
+const BEGIN_DIFF = 1577836800000; // new Date('2020-01-01').getTime();
+
+export const dateToShortStr = (
+  date?: Date | string | number,
+  scale?: 10 | 16 | 62 | 92 | number,
+  kind?: 'd' | 'h' | 'm' | 's' | 'ms',
+) => {
+  date = new Date(date || new Date());
+
+  if (!scale) {
+    scale = 62;
+  }
+  if (!kind) {
+    kind = 'd';
+  }
+
+  const divider = DATE_OPTIONS[kind];
+  const chars = CHARACTERS.substring(0, scale);
+
+  let intgr = Math.round((date.getTime() - BEGIN_DIFF) / divider);
+
+  let short = '';
+
+  while (intgr > 0) {
+    const preInt = intgr;
+    intgr = Math.floor(intgr / scale);
+    const strInd = preInt - intgr * scale;
+    short = `${chars[strInd]}${short}`;
+  }
+
+  return short;
+};
+
+export const shortStrToDate = (
+  shortStr: string,
+  scale?: 10 | 16 | 62 | 92 | number,
+  kind?: 'd' | 'h' | 'm' | 's' | 'ms',
+  resultType?: 'd' | 'n',
+) => {
+  if (!shortStr) return;
+
+  if (!scale) {
+    scale = 62;
+  }
+  if (!kind) {
+    kind = 'd';
+  }
+  const chars = CHARACTERS.substring(0, scale);
+  const multiplier = DATE_OPTIONS[kind];
+
+  let intgr = 0;
+  let scaler = 1;
+
+  for (let i = shortStr.length; i--; i >= 0) {
+    const char = shortStr[i];
+    intgr = intgr + scaler * chars.indexOf(char);
+    scaler = scaler * scale;
+  }
+
+  intgr = intgr * multiplier + BEGIN_DIFF;
+
+  if (resultType === 'd') return new Date(intgr);
+
+  return intgr;
 };

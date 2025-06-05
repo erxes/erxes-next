@@ -3,8 +3,8 @@ import { Control } from 'react-hook-form';
 import { Editor, Form, Input, Select, Switch, Upload } from 'erxes-ui';
 
 import { CustomerFormType } from '@/contacts/customers/constants/formSchema';
-import { CustomerHotKeyScope } from '@/contacts/types/CustomerHotKeyScope';
-import { AssignMember } from 'ui-modules';
+import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+import { SelectMember } from 'ui-modules';
 
 export const AvatarField = ({
   control,
@@ -91,7 +91,7 @@ export const DescriptionField = ({
             <Editor
               initialContent={field.value}
               onChange={field.onChange}
-              scope={CustomerHotKeyScope.CustomerAddSheetDescriptionField}
+              scope={ContactsHotKeyScope.CustomerAddSheetDescriptionField}
             />
           </Form.Control>
           <Form.Message className="text-destructive" />
@@ -126,29 +126,17 @@ export const EmailValidationStatusField = ({
           <Form.Label>EMAIL VERIFICATION STATUS</Form.Label>
           <Select onValueChange={field.onChange} value={field.value}>
             <Form.Control>
-              <Select.Trigger className="justify-between w-full h-8 truncate rounded-md text-foreground">
-                <Select.Value
-                  placeholder={
-                    <span className="text-sm font-medium truncate text-muted-foreground">
-                      {'Choose'}
-                    </span>
+              <Select.Trigger>
+                <Select.Value placeholder={'Choose'}>
+                  {
+                    emailValidationStatuses.find(
+                      (status) => status.value === field.value,
+                    )?.label
                   }
-                >
-                  {' '}
-                  <span className="text-sm font-medium text-foreground">
-                    {
-                      emailValidationStatuses.find(
-                        (status) => status.value === field.value,
-                      )?.label
-                    }
-                  </span>
                 </Select.Value>
               </Select.Trigger>
             </Form.Control>
-            <Select.Content
-              className="border p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-              align="start"
-            >
+            <Select.Content>
               <Select.Group>
                 {emailValidationStatuses.map((status) => (
                   <Select.Item
@@ -257,10 +245,9 @@ export const OwnerIdField = ({
           <Form.Label>CHOOSE AN OWNER</Form.Label>
           <Form.Control>
             <div className="w-full">
-              <AssignMember
+              <SelectMember.FormItem
                 value={field.value}
                 onValueChange={field.onChange}
-                className="w-full shadow-xs"
               />
             </div>
           </Form.Control>
@@ -293,15 +280,9 @@ export const PhoneValidationStatusField = ({
           <Form.Label>PHONE VERIFICATION STATUS</Form.Label>
           <Select onValueChange={field.onChange} value={field.value}>
             <Form.Control>
-              <Select.Trigger className="justify-between w-full h-8 truncate rounded-md text-foreground">
-                <Select.Value
-                  placeholder={
-                    <span className="text-sm font-medium truncate text-muted-foreground">
-                      {'Choose'}
-                    </span>
-                  }
-                >
-                  <span className="text-sm font-medium text-foreground">
+              <Select.Trigger className="truncate w-full rounded-md justify-between text-foreground h-8">
+                <Select.Value placeholder={'Choose'}>
+                  <span className="text-foreground font-medium text-sm">
                     {
                       phoneValidationStatuses.find(
                         (status) => status.value === field.value,
@@ -311,21 +292,16 @@ export const PhoneValidationStatusField = ({
                 </Select.Value>
               </Select.Trigger>
             </Form.Control>
-            <Select.Content
-              className="border p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-              align="start"
-            >
-              <Select.Group>
-                {phoneValidationStatuses.map((status) => (
-                  <Select.Item
-                    key={status.value}
-                    className="text-xs h-7"
-                    value={status.value}
-                  >
-                    {status.label}
-                  </Select.Item>
-                ))}
-              </Select.Group>
+            <Select.Content align="start">
+              {phoneValidationStatuses.map((status) => (
+                <Select.Item
+                  key={status.value}
+                  className="h-7 text-xs"
+                  value={status.value}
+                >
+                  {status.label}
+                </Select.Item>
+              ))}
             </Select.Content>
           </Select>
           <Form.Message className="text-destructive" />

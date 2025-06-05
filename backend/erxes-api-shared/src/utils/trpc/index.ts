@@ -4,15 +4,40 @@ import {
   TRPCRequestOptions,
 } from '@trpc/client';
 import { getPlugin } from '../service-discovery';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { getSubdomain } from '../utils';
 
-type MessageProps = {
-  method: 'query' | 'mutation';
+export type MessageProps = {
+  method?: 'query' | 'mutation';
   pluginName: string;
   module: string;
   action: string;
   input: any;
   defaultValue?: any;
   options?: TRPCRequestOptions;
+};
+export interface InterMessage {
+  subdomain: string;
+  data?: any;
+  timeout?: number;
+  defaultValue?: any;
+  thirdService?: boolean;
+}
+
+export interface RPSuccess {
+  status: 'success';
+  data?: any;
+}
+export interface RPError {
+  status: 'error';
+  errorMessage: string;
+}
+export type RPResult = RPSuccess | RPError;
+export type RP = (params: InterMessage) => RPResult | Promise<RPResult>;
+
+export type IContext = {
+  subdomain: string;
+  models?: any;
 };
 
 export const sendTRPCMessage = async ({
@@ -24,6 +49,10 @@ export const sendTRPCMessage = async ({
   defaultValue,
   options,
 }: MessageProps) => {
+  if (!method) {
+    method = 'query';
+  }
+
   const pluginInfo = await getPlugin(pluginName);
 
   const client = createTRPCUntypedClient({
@@ -34,3 +63,26 @@ export const sendTRPCMessage = async ({
 
   return result || defaultValue;
 };
+
+export const createTRPCContext =
+  <TContext>(
+    trpcContext: (
+      subdomain: string,
+      context: IContext,
+    ) => Promise<TContext & IContext>,
+  ) =>
+  async ({ req }: trpcExpress.CreateExpressContextOptions) => {
+    const subdomain = getSubdomain(req);
+
+    const context: IContext = {
+      subdomain,
+    };
+
+    if (trpcContext) {
+      return await trpcContext(subdomain, context);
+    }
+
+    return context;
+  };
+
+export type ITRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;

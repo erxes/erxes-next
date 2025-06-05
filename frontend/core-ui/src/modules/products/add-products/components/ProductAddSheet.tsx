@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { AddProductForm } from './AddProductForm';
 import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
+
 export const ProductAddSheet = () => {
   const setHotkeyScope = useSetHotkeyScope();
   const [open, setOpen] = useState<boolean>(false);
@@ -23,11 +23,11 @@ export const ProductAddSheet = () => {
   };
 
   const onClose = () => {
-    setHotkeyScope(PageHotkeyScope.ProductsPage);
+    setHotkeyScope(ProductHotKeyScope.ProductsPage);
     setOpen(false);
   };
 
-  useScopedHotkeys(`c`, () => onOpen(), PageHotkeyScope.ProductsPage);
+  useScopedHotkeys(`c`, () => onOpen(), ProductHotKeyScope.ProductsPage);
   useScopedHotkeys(`esc`, () => onClose(), ProductHotKeyScope.ProductAddSheet);
 
   return (

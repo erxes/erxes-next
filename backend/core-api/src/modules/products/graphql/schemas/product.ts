@@ -1,5 +1,5 @@
 export const types = `
-  type Product {
+  type Product @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String!
     name: String
     shortName: String
@@ -51,15 +51,14 @@ export const types = `
 const queryParams = `
   type: String,
   status: String,
-  categoryId: String,
+  categoryIds: [String],
   searchValue: String,
   vendorId: String,
-  brand: String
-  tag: String,
+  brandIds: [String]
+  tagIds: [String],
   ids: [String],
   excludeIds: Boolean,
-  tags: [String]
-  excludeTags: [String]
+  excludeTagIds: [String]
   tagWithRelated: Boolean
   pipelineId: String,
   boardId: String,
@@ -81,6 +80,7 @@ export const queries = `
   productsTotalCount(${queryParams}): Int
   productDetail(_id: String): Product
   productSimilarities(_id: String!, groupedSimilarity: String): ProductSimilarity
+  productCountByTags: JSON
 `;
 
 export const mutationParams = `

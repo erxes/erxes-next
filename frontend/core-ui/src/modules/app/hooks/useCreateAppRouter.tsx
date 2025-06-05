@@ -12,11 +12,12 @@ import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
 import { UserProvider } from '@/auth/providers/UserProvider';
 import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
 import { AppPath } from '@/types/paths/AppPath';
-import { DefaultLayout } from '@/ui/components/DefaultLayout';
+import { DefaultLayout } from '@/app/components/MainLayout';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { OnBoarding } from '~/pages/onboarding/Onboarding';
 import { Providers } from '~/providers';
 import ForgotPasswordPage from '~/pages/auth/ForgotPasswordPage';
+import { SegmentRoutes } from '@/app/components/SegmentsRoutes';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
@@ -33,7 +34,10 @@ export const useCreateAppRouter = () => {
         <Route path={AppPath.CreateOwner} element={<CreateOwnerPage />} />
         <Route element={<OrganizationProvider />}>
           <Route path={AppPath.Login} element={<LoginPage />} />
-          <Route path={AppPath.ForgotPassword} element={<ForgotPasswordPage />} />
+          <Route
+            path={AppPath.ForgotPassword}
+            element={<ForgotPasswordPage />}
+          />
           <Route path={AppPath.ResetPassword} element={<ResetPasswordPage />} />
 
           <Route element={<UserProvider />}>
@@ -50,6 +54,10 @@ export const useCreateAppRouter = () => {
               <Route
                 path={AppPath.ContactsCatchAll}
                 element={<ContactsRoutes />}
+              />
+              <Route
+                path={AppPath.SegmentsCatchAll}
+                element={<SegmentRoutes />}
               />
               {...getPluginsRoutes()}
             </Route>

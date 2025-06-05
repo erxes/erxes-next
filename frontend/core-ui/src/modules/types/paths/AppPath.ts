@@ -9,10 +9,14 @@ export enum AppPath {
   Index = '/',
   Settings = 'settings',
   SettingsCatchAll = `/${Settings}/*`,
+
   Products = 'products',
   ProductsCatchAll = `/${Products}/*`,
+
   Contacts = 'contacts',
   ContactsCatchAll = `/${Contacts}/*`,
+  Segments = 'segments',
+  SegmentsCatchAll = `/${Segments}/*`,
   Marketplace = 'marketplace',
   MarketplaceCatchAll = `/${Marketplace}/*`,
 

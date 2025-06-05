@@ -46,7 +46,7 @@ export interface ICompanyDocument extends ICompany, Document {
   _id: string;
   status?: string;
   createdAt: Date;
-  modifiedAt: Date;
+  updatedAt: Date;
   searchText: string;
   score?: number;
 }
@@ -55,4 +55,14 @@ export interface ICompanyFilterQueryParams
   extends IListParams,
     ICursorPaginateParams {
   createdAt?: Date;
+  dateFilters?: string;
+
+  tagIds?: string[];
+  excludeTagIds?: string[];
+  tagWithRelated?: boolean;
+
+  integrationIds?: string[];
+  integrationTypes?: string[];
+
+  brandIds?: string[];
 }

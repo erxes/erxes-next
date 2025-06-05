@@ -31,8 +31,7 @@ export const stopRouter = (signal: NodeJS.Signals) => {
     console.error(e);
   }
 };
-
-export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 1024;
+export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 50_000;
 
 const downloadRouter = async () => {
   if (NODE_ENV === 'production') {

@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 
 export interface IRelation {
   createdAt: Date;
-  modifiedAt: Date;
+  updatedAt: Date;
   entities: {
     contentType: string;
     contentId: string;

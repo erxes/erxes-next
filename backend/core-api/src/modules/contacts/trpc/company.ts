@@ -1,7 +1,8 @@
 import { initTRPC } from '@trpc/server';
+import { generateModels } from '~/connectionResolvers';
 import { z } from 'zod';
-import { ITRPCContext } from '~/init-trpc';
-import { createOrUpdate } from './utils';
+import { createOrUpdate } from '../utils';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
 const t = initTRPC.context<ITRPCContext>().create();
 
@@ -130,6 +131,18 @@ export const companyTrpcRouter = t.router({
           collection: models.Companies,
           data: doc,
         });
+      }),
+    updateMany: t.procedure
+      .input(
+        z.object({
+          selector: z.record(z.any()),
+          modifier: z.record(z.any()),
+        }),
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { models } = ctx;
+        const { selector, modifier } = input;
+        return await models.Companies.updateMany(selector, modifier);
       }),
   }),
 });

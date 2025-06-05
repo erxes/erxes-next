@@ -89,9 +89,9 @@ export default {
   ) {
     const allChildrenIds = await getAllChildrenIds(models, position._id);
 
-    return await models.Users.find({
+    return await models.Users.countDocuments({
       positionIds: { $in: [position._id, ...allChildrenIds] },
       isActive: true,
-    }).countDocuments();
+    });
   },
 };

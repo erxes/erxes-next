@@ -118,7 +118,7 @@ export const userQueries = {
       ...NORMAL_USER_SELECTOR,
     };
 
-    return models.Users.find(selector).countDocuments();
+    return models.Users.countDocuments(selector);
   },
 
   async userDetail(
@@ -132,13 +132,31 @@ export const userQueries = {
   async allUsers(
     _parent: undefined,
     {
+      searchValue,
       isActive,
       ids,
       assignedToMe,
-    }: { isActive: boolean; ids: string[]; assignedToMe: string },
+    }: {
+      searchValue: string;
+      isActive: boolean;
+      ids: string[];
+      assignedToMe: string;
+    },
     { user, models }: IContext,
   ) {
-    const selector: { isActive?: boolean; _id?: any } = {};
+    const selector: any = {};
+
+    if (searchValue) {
+      const fields = [
+        { email: new RegExp(`.*${searchValue}.*`, 'i') },
+        { employeeId: new RegExp(`.*${searchValue}.*`, 'i') },
+        { username: new RegExp(`.*${searchValue}.*`, 'i') },
+        { 'details.fullName': new RegExp(`.*${searchValue}.*`, 'i') },
+        { 'details.position': new RegExp(`.*${searchValue}.*`, 'i') },
+      ];
+
+      selector.$or = fields;
+    }
 
     if (isActive) {
       selector.isActive = true;

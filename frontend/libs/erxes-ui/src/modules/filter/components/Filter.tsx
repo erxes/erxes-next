@@ -13,9 +13,10 @@ import {
 import {
   IconAdjustmentsHorizontal,
   IconChevronRight,
+  IconSearch,
   IconX,
 } from '@tabler/icons-react';
-import { useQueryState, useRemoveQueryStateByKey } from 'erxes-ui/hooks';
+import { useRemoveQueryStateByKey } from 'erxes-ui/hooks';
 import { Except } from 'type-fest';
 import { cn } from 'erxes-ui/lib';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -30,13 +31,16 @@ import { getDisplayValue } from '../date-filter/utlis/getDisplayValue';
 import { DateFilterCommand } from '../date-filter/components/DateFilterCommand';
 import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
 import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
+import { useFilterQueryState } from '../hooks/useFilterQueryState';
 
 const FilterProvider = ({
   children,
   id,
+  sessionKey,
 }: {
   children: React.ReactNode;
   id: string;
+  sessionKey?: string;
 }) => {
   const setOpen = useSetAtom(openPopoverState(id));
   const setView = useSetAtom(filterPopoverViewState(id));
@@ -54,6 +58,7 @@ const FilterProvider = ({
     <FilterContext.Provider
       value={{
         id,
+        sessionKey,
         resetFilterState,
         setOpen,
         setView,
@@ -103,15 +108,20 @@ const FilterPopover = ({
 
   useScopedHotkeys(`f`, () => setOpen(true), scope);
 
+  useEffect(() => {
+    if (open) {
+      setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover');
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  }, [open]);
+
   return (
     <Popover
       open={open}
       onOpenChange={(op) => {
         setOpen(op);
         op && setView('root');
-        op
-          ? setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover')
-          : goBackToPreviousHotkeyScope();
       }}
       {...props}
     />
@@ -188,10 +198,7 @@ const FilterBar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn(
-        'flex-none bg-sidebar px-3 py-2 border-b flex gap-3 h-auto',
-        className,
-      )}
+      className={cn('flex flex-wrap items-center gap-2 flex-1', className)}
       {...props}
     />
   );
@@ -242,7 +249,10 @@ const FilterBarButton = React.forwardRef<
     <Button
       ref={ref}
       variant="ghost"
-      className={cn('rounded-none bg-background focus-visible:z-10', className)}
+      className={cn(
+        'rounded-none bg-background focus-visible:z-10 max-w-72 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent',
+        className,
+      )}
       onClick={() => {
         if (inDialog) {
           setDialogView(filterKey ?? 'root');
@@ -277,10 +287,13 @@ const FilterBarCloseButton = React.forwardRef<
 });
 
 const FilterDialogStringView = ({ filterKey }: { filterKey: string }) => {
-  const { id, setDialogView, setOpenDialog } = useFilterContext();
+  const { id, setDialogView, setOpenDialog, sessionKey } = useFilterContext();
   const dialogView = useAtomValue(filterDialogViewState(id));
   const [dialogSearch, setDialogSearch] = useState('');
-  const [query, setQuery] = useQueryState<string>(dialogView);
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
 
   useEffect(() => {
     if (query) {
@@ -328,7 +341,7 @@ const FilterDialogStringView = ({ filterKey }: { filterKey: string }) => {
 const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
   const { resetFilterState } = useFilterContext();
 
-  const [query, setQuery] = useQueryState<string>(filterKey);
+  const [query, setQuery] = useFilterQueryState<string>(filterKey, filterKey);
 
   return (
     <DateFilterCommand
@@ -344,8 +357,13 @@ const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
 };
 
 const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
-  const [query, setQuery] = useQueryState<string>(filterKey);
+  const { sessionKey } = useFilterContext();
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
   const [open, setOpen] = useState(false);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
@@ -384,11 +402,42 @@ const FilterCommandInput = React.forwardRef<
   );
 });
 
+const FilterSearchValueTrigger = () => (
+  <Filter.Item value="searchValue" inDialog>
+    <IconSearch />
+    Search
+  </Filter.Item>
+);
+const FilterSearchValueBarItem = () => {
+  const [searchValue] = useFilterQueryState<string>('searchValue');
+
+  if (!searchValue) {
+    return null;
+  }
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarItem>
+        <Filter.BarName>
+          <IconSearch />
+          Search
+        </Filter.BarName>
+        <Filter.BarButton filterKey="searchValue" inDialog>
+          {searchValue}
+        </Filter.BarButton>
+        <Filter.BarClose filterKey="searchValue" />
+      </Filter.BarItem>
+    </Filter.BarItem>
+  );
+};
+
 export const Filter = Object.assign(FilterProvider, {
   Trigger: FilterTrigger,
   Popover: FilterPopover,
   Item: FilterItem,
   View: FilterView,
+  SearchValueTrigger: FilterSearchValueTrigger,
+  SearchValueBarItem: FilterSearchValueBarItem,
   Dialog: FilterDialog,
   DialogStringView: FilterDialogStringView,
   DialogDateView: FilterDialogDateView,

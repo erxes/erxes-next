@@ -6,7 +6,7 @@ import { UnitFilter } from '@/settings/team-member/components/header/UnitFilter'
 
 export function TeamMemberFilter() {
   return (
-    <Filter.Popover>
+    <Filter.Popover scope="TeamMemberPage">
       <Filter.Trigger />
       <Combobox.Content>
         <Filter.View>
@@ -16,7 +16,6 @@ export function TeamMemberFilter() {
               variant="secondary"
               className="bg-background"
             />
-            <Command.Separator />
             <Command.List className="p-1">
               <Filter.Item value="branchId">
                 <IconGitBranch />
