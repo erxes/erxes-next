@@ -1,4 +1,9 @@
-import { getPlugin, getPlugins } from 'erxes-api-shared/utils';
+import { getPlugins } from 'erxes-api-shared/utils';
+import debug from 'debug';
+
+export const debugInfo = debug(`erxes:info`);
+export const debugError = debug(`erxes:error`);
+
 export const MODULE_NAMES = {
   CHANNEL: 'channel',
   EMAIL_TEMPLATE: 'emailTemplate',
@@ -9,36 +14,33 @@ export const MODULE_NAMES = {
   SCRIPT: 'script',
 };
 
-export const getIntegrationMeta = async () => {
-  const serviceNames = await getPlugins();
-  let metas: any = [];
-
-  for (const serviceName of serviceNames) {
-    const service = await getPlugin(serviceName);
-    const inboxIntegrations =
-      (service.config.meta || {}).inboxIntegrations || [];
-
-    if (inboxIntegrations && inboxIntegrations.length > 0) {
-      metas = metas.concat(inboxIntegrations);
-    }
-  }
-
-  return metas;
-};
-
 export const getIntegrationsKinds = async () => {
-  const metas = await getIntegrationMeta();
-
   const response = {
     messenger: 'Messenger',
     lead: 'Popups & forms',
     webhook: 'Webhook',
+    booking: 'Booking',
     callpro: 'Callpro',
+    imap: 'IMAP',
+    'facebook-messenger': 'Facebook messenger',
+    'facebook-post': 'Facebook post',
+    'instagram-messenger': 'Instagram messenger',
+    'instagram-post': 'Instagram post',
+    calls: 'Phone call',
+    client: 'Client Portal',
+    vendor: 'Vendor Portal',
   };
 
-  for (const meta of metas) {
-    response[meta.kind] = meta.label;
-  }
-
   return response;
+};
+
+export const isServiceRunning = async (
+  integrationKind: string,
+): Promise<boolean> => {
+  const serviceNames = await getPlugins();
+
+  // some kinds are separated by -
+  return (
+    !!integrationKind && serviceNames.includes(integrationKind.split('-')[0])
+  );
 };

@@ -2,6 +2,7 @@ import { Cell, ColumnDef } from '@tanstack/table-core';
 import { IUnitListItem } from '../../types/unit';
 import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import {
+  Badge,
   Button,
   Input,
   RecordTable,
@@ -14,7 +15,7 @@ import {
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingUnitDetailAtom } from '../../states/renderingUnitDetail';
-import { AssignMember, SelectDepartment } from 'ui-modules';
+import { AssignMember, SelectDepartmentTree } from 'ui-modules';
 import { useRemoveUnit } from '../../hooks/useUnitActions';
 
 export const UnitEditColumnCell = ({
@@ -123,9 +124,10 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>
-          <SelectDepartment
-            value={cell.getValue() as string}
-            onValueChange={() => {}}
+          <SelectDepartmentTree
+            recordId={cell.id}
+            selected={cell.getValue() as string}
+            onSelect={() => {}}
             className="shadow-none bg-transparent"
           />
         </RecordTableCellDisplay>
@@ -138,14 +140,9 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableCellDisplay value={cell.getValue() as number} />
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as number} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+        <RecordTableCellDisplay className="justify-center">
+          <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
+        </RecordTableCellDisplay>
       );
     },
   },
@@ -155,9 +152,6 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay className="justify-center gap-1 [&>button]:px-2">
-          <Button variant={'outline'}>
-            <IconClock size={12} />
-          </Button>
           <UnitEditColumnCell cell={cell} />
           <UnitRemoveCell cell={cell} />
         </RecordTableCellDisplay>

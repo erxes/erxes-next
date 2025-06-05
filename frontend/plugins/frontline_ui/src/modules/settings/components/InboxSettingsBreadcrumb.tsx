@@ -1,12 +1,8 @@
 import { useLocation } from 'react-router';
 import { Button, Separator } from 'erxes-ui';
 import { IconMailFilled } from '@tabler/icons-react';
-import { SETTINGS_ROUTES } from '../constants/settingsRoutes';
-import { IntegrationTotalCountByKind } from './IntegrationTotalCountByKind';
-import { ChannelsCount } from './channels/ChannelsCount';
 
 export const InboxSettingsBreadcrumb = () => {
-  const { pathname } = useLocation();
   return (
     <>
       <Button variant={'ghost'} className="font-semibold">
@@ -14,11 +10,6 @@ export const InboxSettingsBreadcrumb = () => {
         Team inbox
       </Button>
       <Separator.Inline />
-      <Button variant="ghost" className="hover:bg-transparent font-semibold">
-        {SETTINGS_ROUTES[pathname as keyof typeof SETTINGS_ROUTES]}
-        {pathname === '/settings/inbox' && <IntegrationTotalCountByKind />}
-        {pathname === '/settings/inbox/channels' && <ChannelsCount />}
-      </Button>
     </>
   );
 };

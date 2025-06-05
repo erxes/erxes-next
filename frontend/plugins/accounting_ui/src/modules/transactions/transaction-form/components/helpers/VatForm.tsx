@@ -6,7 +6,7 @@ import { useEffect, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 import { TrJournalEnum, TR_SIDES } from '../../../types/constants';
 import { followTrDocsState, taxPercentsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/JournalForms';
 import { IVatRow } from '@/settings/vat/types/VatRow';
 import { getTempId } from '../utils';
 import { ITransaction } from '../../../types/Transaction';
@@ -111,7 +111,7 @@ export const VatForm = ({
     ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasVat, side, calcedAmount, configs]);
+  }, [hasVat, side, calcedAmount]);
 
   const changeVatRow = (vatRow: IVatRow) => {
     const vatPercent = vatRow.percent ?? 0;

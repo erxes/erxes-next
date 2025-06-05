@@ -3,8 +3,8 @@ import { useAtomValue } from 'jotai';
 import { useWatch } from 'react-hook-form';
 import { ITrDetail } from '../../../types/Transaction';
 import { followTrDocsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
-import { ITBalanceTransaction } from '../../types/tbalance';
+import { ITransactionGroupForm } from '../../types/JournalForms';
+import { ITBalanceTransaction } from '../../types/TBalance';
 import { tbalanceColumns } from './TBalanceTableColumns';
 import { TBalanceTableRow } from './TBalanceTableRow';
 

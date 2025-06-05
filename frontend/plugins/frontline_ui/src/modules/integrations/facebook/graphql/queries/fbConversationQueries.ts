@@ -1,61 +1,30 @@
 import { gql } from '@apollo/client';
-import { COMMON_COMMENT_AND_MESSAGE_FIELDS } from './fbFragments';
 
 export const GET_CONVERSATION_MESSAGES = gql`
   query FacebookConversationMessages(
     $conversationId: String!
+    $getFirst: Boolean
     $skip: Int
     $limit: Int
-    $getFirst: Boolean
   ) {
     facebookConversationMessages(
       conversationId: $conversationId
+      getFirst: $getFirst
       skip: $skip
       limit: $limit
-      getFirst: $getFirst
     ) {
       _id
-      ...CommonCommentAndMessageFields
-      customerId
-      userId
+      botData
       createdAt
-      isCustomerRead
+      customerId
+      fromBot
       internal
-      attachments {
-        url
-        name
-        type
-        size
-      }
-      user {
-        _id
-        username
-        details {
-          avatar
-          fullName
-          position
-        }
-      }
-      customer {
-        _id
-        avatar
-        firstName
-        middleName
-        lastName
-        primaryEmail
-        primaryPhone
-        state
-        companies {
-          _id
-          primaryName
-          website
-        }
-        customFieldsData
-        tagIds
-      }
+      isCustomerRead
+      mid
+      userId
+      content
     }
   }
-  ${COMMON_COMMENT_AND_MESSAGE_FIELDS}
 `;
 
 export const GET_CONVERSATION_MESSAGES_COUNT = gql`

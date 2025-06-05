@@ -1,4 +1,3 @@
-
 const commonCommentAndMessageFields = `
   content: String
   conversationId: String
@@ -87,12 +86,10 @@ export const types = `
   }
 `;
 
-
-
 export const queries = `
   facebookGetAccounts(kind: String): JSON
   facebookGetIntegrations(kind: String): JSON
-  facebookGetIntegrationDetail(erxesApiId: String): JSON 
+  facebookGetIntegrationDetail(erxesApiId: String): JSON
   facebookGetConfigs: JSON
   facebookGetComments(conversationId: String!, getFirst: Boolean, ${pageParams}): [FacebookPostMessage]
   facebookGetCommentCount(${commentQueryParamDefs}): JSON
@@ -108,8 +105,6 @@ export const queries = `
 
 
 `;
-
-
 
 export const mutations = `
   facebookUpdateConfigs(configsMap: JSON!): JSON

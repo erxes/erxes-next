@@ -12,6 +12,7 @@ import {
 } from 'ui-modules/modules/tags/components/SelectTagType';
 import { IconTagStarred } from '@tabler/icons-react';
 import { useFilterQueryState } from 'erxes-ui/modules/filter/hooks/useFilterQueryState';
+import { TagsTotalCount } from './TagsTotalCount';
 
 export const TagsSettingFilter = () => {
   return (
@@ -39,6 +40,7 @@ export const TagsSettingFilter = () => {
         </Filter.Dialog>
         <Filter.SearchValueBarItem />
         <TagsTypeFilterBar />
+        <TagsTotalCount />
       </Filter.Bar>
     </Filter>
   );

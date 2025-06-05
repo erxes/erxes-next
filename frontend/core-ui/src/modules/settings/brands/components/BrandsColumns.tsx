@@ -7,6 +7,7 @@ import {
 } from '@tabler/icons-react';
 import { Cell, ColumnDef } from '@tanstack/table-core';
 import {
+  Badge,
   Button,
   Input,
   RecordTable,
@@ -93,7 +94,7 @@ export const brandsColumns: ColumnDef<IBrand>[] = [
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            {cell.getValue() as string}
+            <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
           </RecordTableCellTrigger>
           <RecordTableCellContent>
             <Input value={cell.getValue() as string} />

@@ -2,62 +2,56 @@ import { Schema } from 'mongoose';
 import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { JOURNALS, PTR_STATUSES, TR_SIDES, TR_STATUSES } from '../../@types/constants';
 
-export const followDetailSchema = schemaWrapper(
-  new Schema({
-    _id: mongooseStringRandomId,
-    id: { type: String, index: true, label: 'follow tr id' },
-    type: {
-      type: String, label: 'follow tr type', enum: [
-        'currencyDiff',
-      ]
-    },
-  })
-)
+export const followDetailSchema = new Schema({
+  _id: mongooseStringRandomId,
+  id: { type: String, index: true, label: 'follow tr id' },
+  type: {
+    type: String, label: 'follow tr type', enum: [
+      'currencyDiff',
+    ]
+  },
+});
 
-export const transactionDetailSchema = schemaWrapper(
-  new Schema({
-    _id: mongooseStringRandomId,
-    accountId: { type: String, label: 'Account', index: true },
-    originId: { type: String, optional: true, label: 'Source Transaction' },
-    followType: { type: String, optional: true, label: 'This follow Type' },
-    followInfos: {
-      type: Object, label: 'Follower tr detail input'
-    },
-    follows: {
-      type: [followDetailSchema], label: 'Follower tr detail'
-    },
+export const transactionDetailSchema = new Schema({
+  _id: mongooseStringRandomId,
+  accountId: { type: String, label: 'Account', index: true },
+  originId: { type: String, optional: true, label: 'Source Transaction' },
+  followType: { type: String, optional: true, label: 'This follow Type' },
+  followInfos: {
+    type: Object, label: 'Follower tr detail input'
+  },
+  follows: {
+    type: [followDetailSchema], label: 'Follower tr detail'
+  },
 
-    side: {
-      type: String,
-      enum: TR_SIDES.ALL,
-      label: 'Side',
-      default: 'new',
-      index: true,
-    },
-    amount: { type: Number, label: 'Amount' },
-    currency: { type: String, optional: true, label: 'Currency' },
-    currencyAmount: { type: Number, optional: true, label: 'CurrencyAmount' },
-    customRate: { type: Number, optional: true, label: 'CustomRate' },
+  side: {
+    type: String,
+    enum: TR_SIDES.ALL,
+    label: 'Side',
+    default: 'new',
+    index: true,
+  },
+  amount: { type: Number, label: 'Amount' },
+  currency: { type: String, optional: true, label: 'Currency' },
+  currencyAmount: { type: Number, optional: true, label: 'CurrencyAmount' },
+  customRate: { type: Number, optional: true, label: 'CustomRate' },
 
-    assignUserId: { type: String, optional: true, esType: 'keyword' }, // AssignUserId
+  assignUserId: { type: String, optional: true, esType: 'keyword' }, // AssignUserId
 
-    productId: { type: String, optional: true, label: 'Product' },
-    count: { type: Number, optional: true, label: 'Count' },
-    unitPrice: { type: Number, optional: true, label: 'unitPrice' },
-  })
-);
+  productId: { type: String, optional: true, label: 'Product' },
+  count: { type: Number, optional: true, label: 'Count' },
+  unitPrice: { type: Number, optional: true, label: 'unitPrice' },
+});
 
-export const followSchema = schemaWrapper(
-  new Schema({
-    _id: mongooseStringRandomId,
-    id: { type: String, index: true, label: 'follow tr id' },
-    type: {
-      type: String, label: 'follow tr type', enum: [
-        'vat', 'ctax'
-      ]
-    },
-  })
-)
+export const followSchema = new Schema({
+  _id: mongooseStringRandomId,
+  id: { type: String, index: true, label: 'follow tr id' },
+  type: {
+    type: String, label: 'follow tr type', enum: [
+      'vat', 'ctax'
+    ]
+  },
+});
 
 export const transactionSchema = schemaWrapper(
   new Schema({

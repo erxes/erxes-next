@@ -1,7 +1,6 @@
 import { Schema } from 'mongoose';
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
-
 export const customerSchema = new Schema({
   _id: mongooseStringRandomId,
   userId: { type: String, unique: true, label: 'Facebook user id' },
@@ -9,5 +8,5 @@ export const customerSchema = new Schema({
   firstName: String,
   lastName: String,
   profilePic: String,
-  integrationId: { type: String, label: 'Inbox integration id' }
+  integrationId: { type: String, label: 'Inbox integration id' },
 });

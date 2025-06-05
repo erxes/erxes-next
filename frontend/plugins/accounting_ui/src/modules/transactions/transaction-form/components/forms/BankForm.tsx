@@ -1,6 +1,6 @@
 import { JournalEnum } from '@/settings/account/types/Account';
 import { TR_SIDES } from '../../../types/constants';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/JournalForms';
 import { CtaxForm } from '../helpers/CtaxForm';
 import { CurrencyForm } from '../helpers/CurrencyForm';
 import { VatForm } from '../helpers/VatForm';

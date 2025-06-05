@@ -1,6 +1,33 @@
 import { IIntegrationDocument } from '@/inbox/@types/integrations';
-
 import { IContext } from '~/connectionResolvers';
+import { facebookStatus } from '@/integrations/facebook/messageBroker';
+export const integrationStatus = async (
+  serviceName: string,
+  subdomain: string,
+  data: { integrationId: string },
+) => {
+  try {
+    switch (serviceName) {
+      case 'facebook':
+        return await facebookStatus({ subdomain, data });
+
+      case 'instagram':
+        // TODO: Implement Instagram status check
+        break;
+
+      case 'mobinetSms':
+        //  TODO: Implement mobinetSms status check
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
+  } catch (e) {
+    throw new Error(
+      `Failed to check integration status for ${serviceName}. Error: ${e.message}. Please check the integrations list and resolve any issues.`,
+    );
+  }
+};
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {
@@ -79,8 +106,15 @@ export default {
     if (kind === 'messenger') {
       return { status: 'healthy' };
     }
+    try {
+      const response = await integrationStatus(kind, subdomain, {
+        integrationId: integration._id,
+      });
 
-    return { status: 'healthy' };
+      return response?.data;
+    } catch (e) {
+      return { status: 'healthy' };
+    }
   },
 
   async details(
@@ -88,8 +122,6 @@ export default {
     _args,
     { subdomain }: IContext,
   ) {
-    const inboxId: string = integration._id;
-
     const serviceName = integration.kind.includes('facebook')
       ? 'facebook'
       : integration.kind;
@@ -97,20 +129,6 @@ export default {
     if (integration.kind === 'messenger') {
       return null;
     }
-
     return serviceName;
-  },
-
-  async callData(
-    integration: IIntegrationDocument,
-    _args,
-    { subdomain }: IContext,
-  ) {
-    const inboxId: string = integration._id;
-
-    if (integration.kind !== 'messenger') {
-      return null;
-    }
-    return 'success';
   },
 };

@@ -55,3 +55,14 @@ export interface IMessageDocument extends IMessage, Document {
   engageData?: IEngageDataDocument;
   createdAt: Date;
 }
+
+
+export interface IConversationMessageAdd {
+  conversationId: string;
+  content: string;
+  mentionedUserIds?: string[];
+  internal?: boolean;
+  attachments?: any;
+  userId?: string;
+  extraInfo?: any;
+}
