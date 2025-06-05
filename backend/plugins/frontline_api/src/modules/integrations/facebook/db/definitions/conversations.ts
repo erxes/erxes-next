@@ -2,7 +2,6 @@ import { Schema } from 'mongoose';
 
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
-
 export const conversationSchema = new Schema({
   _id: mongooseStringRandomId,
   erxesApiId: String,
@@ -12,7 +11,7 @@ export const conversationSchema = new Schema({
   integrationId: String,
   content: String,
   isBot: Boolean,
-  botId: { type: String, optional: true }
+  botId: { type: String, optional: true },
 });
 
 conversationSchema.index({ senderId: 1, recipientId: 1 }, { unique: true });

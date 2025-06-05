@@ -8,7 +8,6 @@ export interface IMainContext {
   res: any;
   requestInfo: any;
   user: IUserDocument;
-  docModifier: <T>(doc: T) => any;
 }
 
 export interface IModels {

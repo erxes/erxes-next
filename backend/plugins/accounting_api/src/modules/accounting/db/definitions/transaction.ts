@@ -18,6 +18,8 @@ export const transactionDetailSchema = schemaWrapper(
   new Schema({
     _id: mongooseStringRandomId,
     accountId: { type: String, label: 'Account', index: true },
+    originId: { type: String, optional: true, label: 'Source Transaction' },
+    followType: { type: String, optional: true, label: 'This follow Type' },
     followInfos: {
       type: Object, label: 'Follower tr detail input'
     },
@@ -70,7 +72,7 @@ export const transactionSchema = schemaWrapper(
       default: 'real',
       index: true,
     },
-    ptrId: { type: String, label: 'Group' },
+    ptrId: { type: String, label: 'Group', index: true },
     parentId: { type: String, optional: true, label: 'Parent ID', index: true },
     number: { type: String, optional: true, label: 'Number', index: true },
     journal: {
@@ -88,11 +90,12 @@ export const transactionSchema = schemaWrapper(
       optional: true,
       index: true,
     },
-    originId: { type: String, label: 'Source Transaction' },
-    followInfos: {
+    originId: { type: String, optional: true, label: 'Source Transaction' }, // Үндсэн бичилтийн айд, Дагалдах бичилт үед л ашиглагдана
+    followType: { type: String, optional: true, label: 'This follow Type' }, // Уг бичилтийн үндсэн бичилтэд хавсарч буй үүрэг буюу төрөл - дагалдах бичилт үед л ашиглагдана
+    followInfos: { // Үндсэн бичилт үед ашиглагдана, Дагалдах бичилтүүдийн мэдээлэл байна
       type: Object, label: 'Follower transactions'
     },
-    follows: {
+    follows: { // Үндсэн бичилт үед ашиглагдана, Дагалдах бичилтүүдийн айд төрөл байна
       type: [followSchema], label: 'Follower transactions'
     },
     preTrId: { type: String, optional: true, label: 'previous transaction', index: true },

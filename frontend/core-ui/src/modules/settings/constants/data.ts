@@ -1,6 +1,7 @@
 import {
   IconAdjustmentsAlt,
   IconChartPie2,
+  IconChessKnightFilled,
   IconColorSwatch,
   IconFile,
   IconMail,
@@ -144,6 +145,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       name: 'Tags',
       icon: IconTagFilled,
       path: SettingsWorkspacePath.Tags,
+    },
+    {
+      name: 'Brands',
+      icon: IconChessKnightFilled,
+      path: SettingsWorkspacePath.Brands,
     },
   ],
 };

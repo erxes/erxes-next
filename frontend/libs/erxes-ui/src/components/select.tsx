@@ -147,6 +147,7 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 export const Select = Object.assign(SelectRoot, {
   Group: SelectGroup,
   Value: SelectValue,
+  Primitive: SelectPrimitive,
   Trigger: SelectTrigger,
   Content: SelectContent,
   Label: SelectLabel,

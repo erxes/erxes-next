@@ -1,9 +1,13 @@
 import * as graph from 'fbgraph';
 import { getSubdomain } from 'erxes-api-shared/utils';
-import { getConfig, } from '@/integrations/facebook/commonUtils';
+import { getConfig } from '@/integrations/facebook/commonUtils';
 import { generateModels } from '~/connectionResolvers';
 import { graphRequest } from '@/integrations/facebook/utils';
-import { debugFacebook, debugRequest, debugResponse } from '@/integrations/facebook/debuggers';
+import {
+  debugFacebook,
+  debugRequest,
+  debugResponse,
+} from '@/integrations/facebook/debuggers';
 import { repairIntegrations } from '@/integrations/facebook/helpers';
 import { getEnv } from 'erxes-api-shared/utils';
 
@@ -43,7 +47,7 @@ export const loginMiddleware = async (req, res) => {
       client_id: conf.client_id,
       redirect_uri: conf.redirect_uri,
       scope: conf.scope,
-      state: `${DOMAIN}/gateway/pl:facebook`
+      state: `${DOMAIN}/gateway/pl:facebook`,
     });
     // checks whether a user denied the app facebook login/permissions
     if (!req.query.error) {
@@ -63,20 +67,19 @@ export const loginMiddleware = async (req, res) => {
 
   debugResponse(debugFacebook, req, JSON.stringify(config));
 
-
-
   return graph.authorize(config, async (_err, facebookRes) => {
-      if (_err) {
-        console.error('Facebook authorization error:', _err);
-        return res.status(500).json({ 
-          error: 'Failed to authenticate with Facebook',
-          details: process.env.NODE_ENV === 'development' ? _err.message : undefined
-        });
-      }
+    if (_err) {
+      console.error('Facebook authorization error:', _err);
+      return res.status(500).json({
+        error: 'Failed to authenticate with Facebook',
+        details:
+          process.env.NODE_ENV === 'development' ? _err.message : undefined,
+      });
+    }
 
     if (!facebookRes?.access_token) {
-      return res.status(400).json({ 
-        error: 'Invalid Facebook authorization response' 
+      return res.status(400).json({
+        error: 'Invalid Facebook authorization response',
       });
     }
     const { access_token } = facebookRes;
@@ -92,7 +95,9 @@ export const loginMiddleware = async (req, res) => {
 
     const name = `${userAccount.first_name} ${userAccount.last_name}`;
 
-    const account = await models.FacebookAccounts.findOne({ uid: userAccount.id });
+    const account = await models.FacebookAccounts.findOne({
+      uid: userAccount.id,
+    });
 
     if (account) {
       await models.FacebookAccounts.updateOne(

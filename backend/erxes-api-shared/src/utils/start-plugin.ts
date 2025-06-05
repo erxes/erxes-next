@@ -6,8 +6,10 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
 import cookieParser from 'cookie-parser';
+
 import cors from 'cors';
 import express, {
+  Router,
   Request as ApiRequest,
   Response as ApiResponse,
   Application,
@@ -23,7 +25,7 @@ import { AutomationConfigs } from '../core-modules/automations/types';
 import { generateApolloContext } from './apollo';
 import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
-import { logHandler } from './logs';
+import { AfterProcessConfigs, logHandler, startAfterProcess } from './logs';
 import { closeMongooose } from './mongo';
 import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
 import { createTRPCContext } from './trpc';
@@ -34,6 +36,7 @@ dotenv.config();
 type IMeta = {
   automations?: AutomationConfigs;
   segments?: SegmentConfigs;
+  afterProcess?: AfterProcessConfigs;
 };
 
 type ApiHandler = {
@@ -56,6 +59,7 @@ type ConfigTypes = {
     resolvers: GraphqlResolver;
     typeDefs: DocumentNode;
   }>;
+  expressRouter?: Router;
   apolloServerContext: (
     subdomain: string,
     context: any,
@@ -99,6 +103,10 @@ export async function startPlugin(
     res.end('ok');
   });
 
+  if (configs.expressRouter) {
+    app.use(configs.expressRouter);
+  }
+
   if (configs.middlewares) {
     for (const middleware of configs.middlewares) {
       app.use(middleware);
@@ -132,6 +140,7 @@ export async function startPlugin(
             source: 'webhook',
             action: method,
             payload: {
+              path,
               headers: req.headers,
               body: req.body,
               query: req?.query,
@@ -169,15 +178,15 @@ export async function startPlugin(
     next();
   });
 
-  // Error handling middleware
-  app.use((error: any, _req: any, res: any, _next: any) => {
-    // const msg = filterXSS(error.message);
-    const msg = error.message;
+  // // Error handling middleware
+  // app.use((error: any, _req: any, res: any) => {
+  //   // const msg = filterXSS(error.message);
+  //   const msg = error.message;
 
-    // debugError(`Error: ${msg}`);
+  //   // debugError(`Error: ${msg}`);
 
-    res.status(500).send(msg);
-  });
+  //   res.status(500).send(msg);
+  // });
 
   const httpServer = http.createServer(app);
 
@@ -212,7 +221,6 @@ export async function startPlugin(
   // If the Node process ends, close the Mongoose connection
   (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((sig) => {
     process.on(sig, async () => {
-      console.log('daczx');
       await closeHttpServer();
       await closeMongooose();
       await leaveServiceDiscovery();
@@ -263,14 +271,18 @@ export async function startPlugin(
   );
 
   if (configs.meta) {
-    const { automations, segments } = configs.meta || {};
+    const { automations, segments, afterProcess } = configs.meta || {};
 
     if (automations) {
-      startAutomations(configs.name, automations);
+      await startAutomations(configs.name, automations);
     }
 
     if (segments) {
-      startSegments(configs.name, segments);
+      await startSegments(configs.name, segments);
+    }
+
+    if (afterProcess) {
+      await startAfterProcess(configs.name, afterProcess);
     }
   } // end configs.meta if
 

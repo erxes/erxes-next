@@ -192,10 +192,10 @@ const TransactionMoreColumnCell = ({
 }: {
   cell: Cell<ITransaction, unknown>;
 }) => {
-  const { parentId, _id } = cell.row.original;
+  const { parentId, _id, originId } = cell.row.original;
 
   return (
-    <Link to={`/accounting/transaction/edit/${parentId}?trId=${_id}`}>
+    <Link to={`/accounting/transaction/edit?parentId=${parentId}&trId=${originId || _id}`}>
       <RecordTable.MoreButton
         className="w-full h-full"
       />

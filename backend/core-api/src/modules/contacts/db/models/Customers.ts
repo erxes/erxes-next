@@ -308,16 +308,16 @@ export const loadCustomerClass = (models: IModels) => {
         oldTypeIds: customerIds,
       });
 
-    //  await sendTRPCMessage({
-    //     pluginName: 'frontline',
-    //     method: 'mutation',
-    //     module: 'inbox',
-    //     action: 'changeCustomer',
-    //     input: {
-    //       customerId: customer._id,
-    //       customerIds,
-    //     },
-    //   });
+      //  await sendTRPCMessage({
+      //     pluginName: 'frontline',
+      //     method: 'mutation',
+      //     module: 'inbox',
+      //     action: 'changeCustomer',
+      //     input: {
+      //       customerId: customer._id,
+      //       customerIds,
+      //     },
+      //   });
 
       return customer;
     }
@@ -691,7 +691,7 @@ export const loadCustomerClass = (models: IModels) => {
     /**
      * Calc customer profileScore, searchText and state
      */
-    public static async calcPSS(customer: ICustomerDocument) {
+    public static calcPSS(customer: ICustomerDocument) {
       const nullValues = ['', null];
 
       let possibleLead = false;

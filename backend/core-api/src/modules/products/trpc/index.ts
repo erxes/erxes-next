@@ -4,9 +4,9 @@ import { productCategoryTrpcRouter } from '@/products/trpc/category';
 import { productConfigTrpcRouter } from '@/products/trpc/config';
 import { productsTrpcRouter } from '@/products/trpc/product';
 import { uomTrpcRouter } from '@/products/trpc/uom';
-import { ITRPCContext } from 'erxes-api-shared/utils';
+import { CoreTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const productTrpcRouter = t.mergeRouters(
   productsTrpcRouter,

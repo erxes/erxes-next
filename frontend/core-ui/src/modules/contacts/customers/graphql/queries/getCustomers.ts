@@ -75,6 +75,7 @@ export const GET_CUSTOMERS = gql`
         customFieldsData
         trackedData
         tagIds
+        cursor
       }
       ${GQL_PAGE_INFO}
     }

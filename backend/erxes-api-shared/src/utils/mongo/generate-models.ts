@@ -15,11 +15,14 @@ const initializeModels = async <IModels>(
     subdomain: string,
   ) => IModels | Promise<IModels>,
   subdomain: string,
-  ignoreChangeStream?: boolean,
+  logIgnoreOptions?: {
+    ignoreChangeStream?: boolean;
+    ignoreModels?: string[];
+  },
 ) => {
   const models = await loadClasses(connection, subdomain);
-  if (!ignoreChangeStream && (await isEnabled('logs'))) {
-    startChangeStreams(models as any, subdomain);
+  if (!logIgnoreOptions?.ignoreChangeStream && (await isEnabled('logs'))) {
+    startChangeStreams(models as any, subdomain, logIgnoreOptions);
   }
 
   return models;
@@ -30,7 +33,10 @@ export const createGenerateModels = <IModels>(
     db: mongoose.Connection,
     subdomain: string,
   ) => IModels | Promise<IModels>,
-  ignoreChangeStream?: boolean,
+  logIgnoreOptions?: {
+    ignoreChangeStream?: boolean;
+    ignoreModels?: string[];
+  },
 ): ((hostnameOrSubdomain: string) => Promise<IModels>) => {
   const VERSION = getEnv({ name: 'VERSION', defaultValue: 'os' });
 
@@ -49,7 +55,7 @@ export const createGenerateModels = <IModels>(
         mongoose.connection,
         loadClasses,
         hostnameOrSubdomain,
-        ignoreChangeStream,
+        logIgnoreOptions,
       );
     };
   } else {
@@ -93,7 +99,7 @@ export const createGenerateModels = <IModels>(
         tenantCon,
         loadClasses,
         subdomain,
-        ignoreChangeStream,
+        logIgnoreOptions,
       );
     };
   }

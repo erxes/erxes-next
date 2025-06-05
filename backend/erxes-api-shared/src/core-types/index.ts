@@ -12,3 +12,4 @@ export * from './modules/tags/tag';
 export * from './modules/team-member/structure';
 export * from './modules/team-member/user';
 export * from './modules/relations/relations';
+export * from './modules/logs/logs';

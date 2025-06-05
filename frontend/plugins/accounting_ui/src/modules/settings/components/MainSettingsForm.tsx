@@ -121,64 +121,64 @@ export const VatFormFields = ({
         <>
           <Form.Field
             control={form.control}
-            name="VatAccountPayable"
+            name="VatPayableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAccountPayable">
+                <Form.Label htmlFor="VatPayableAccount">
                   Vat account payable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name="VatAccountReceivable"
+            name="VatReceivableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAccountReceivable">
+                <Form.Label htmlFor="VatReceivableAccount">
                   Vat account receivable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name="VatAfterAccountPayable"
+            name="VatAfterPayableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAfterAccountPayable">
+                <Form.Label htmlFor="VatAfterPayableAccount">
                   Vat after account payable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name="VatAfterAccountReceivable"
+            name="VatAfterReceivableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAfterAccountReceivable">
+                <Form.Label htmlFor="VatAfterReceivableAccount">
                   Vat after account receivable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
                   onValueChange={field.onChange}
-                  journal="tax"
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
@@ -215,14 +215,14 @@ export const CtaxFormFields = ({
       {HasCtax && (
         <Form.Field
           control={form.control}
-          name="CtaxAccountPayable"
+          name="CtaxPayableAccount"
           render={({ field }) => (
             <Form.Item>
               <Form.Label>Ctax account payable</Form.Label>
               <SelectAccount
                 value={field.value}
                 onValueChange={field.onChange}
-                journal="tax"
+                defaultFilter={{ journals: ["tax"] }}
               />
             </Form.Item>
           )}

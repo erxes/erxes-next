@@ -14,8 +14,13 @@ import { relationTrpcRouter } from '~/modules/relations/trpc/relation';
 import { tagTrpcRouter } from '~/modules/tags/trpc/tag';
 import { formsTrpcRouter } from './modules/forms/trpc';
 import { permissionTrpcRouter } from './modules/permissions/trpc';
+import { segmentsTRPCRouter } from './modules/segments/trpc';
+import { automationsRouter } from './modules/automations/trpc/automations';
+import { IModels } from './connectionResolvers';
 
-const t = initTRPC.context<ITRPCContext>().create({});
+export type CoreTRPCContext = ITRPCContext<{ models: IModels }>;
+
+const t = initTRPC.context<CoreTRPCContext>().create({});
 
 export const appRouter = t.mergeRouters(
   configTrpcRouter,
@@ -30,6 +35,8 @@ export const appRouter = t.mergeRouters(
   tagTrpcRouter,
   exchangeRateTrpcRouter,
   permissionTrpcRouter,
+  segmentsTRPCRouter,
+  automationsRouter,
 );
 
 export type AppRouter = typeof appRouter;

@@ -5,8 +5,8 @@ import {
   GQL_PAGE_INFO,
 } from 'erxes-ui';
 
-const products = gql`
-  query Products(
+const productsMain = gql`
+  query ProductsMain(
     $type: String
     $categoryIds: [String]
     $searchValue: String
@@ -19,7 +19,7 @@ const products = gql`
     $sortDirection: Int
      ${GQL_CURSOR_PARAM_DEFS}
   ) {
-    products(
+    productsMain(
       type: $type
       categoryIds: $categoryIds
       searchValue: $searchValue
@@ -36,24 +36,24 @@ const products = gql`
         _id
         attachment {
           url
-      }
-      categoryId
-      code
-      createdAt
-      customFieldsData
-      description
-      tagIds
-      name
-      shortName
-      uom
-      unitPrice
-      type
-      vendor {
-        _id
-          primaryName
         }
-      }
-      ${GQL_PAGE_INFO}
+        categoryId
+        code
+        createdAt
+        customFieldsData
+        description
+        tagIds
+        name
+        shortName
+        uom
+        unitPrice
+        type
+        vendor {
+          _id
+            primaryName
+          }
+        }
+        ${GQL_PAGE_INFO}
     }
   }
 `;
@@ -85,8 +85,21 @@ const productTags = gql`
   }
 `;
 
+const productCategoryDetail = gql`
+  query productCategoryDetail($_id: String) {
+    productCategoryDetail(_id: $_id) {
+      _id
+      code
+      name
+      productCount
+      __typename
+  }
+}
+`
+
 export const productsQueries = {
-  products,
+  productsMain,
   productCategories,
   productTags,
+  productCategoryDetail,
 };

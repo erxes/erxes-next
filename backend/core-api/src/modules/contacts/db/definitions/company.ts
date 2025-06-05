@@ -152,7 +152,7 @@ export const companySchema = schemaWrapper(
         optional: true,
         label: 'Tracked Data',
       },
-      searchText: { type: String, optional: true, index: true },
+      searchText: { type: String, optional: true },
       code: { type: String, label: 'Code', optional: true },
       location: { type: String, optional: true, label: 'Location' },
       score: {
@@ -168,4 +168,4 @@ export const companySchema = schemaWrapper(
   ),
 );
 
-companySchema.index({ _id: 1, createdAt: 1 });
+companySchema.index({ _id: 1, createdAt: 1, searchText: 1 });

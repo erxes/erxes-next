@@ -19,3 +19,14 @@ export interface IAddress {
   };
   short: string;
 }
+
+export interface ILocation {
+  remoteAddress: string;
+  country: string;
+  countryCode: string;
+  city: string;
+  region: string;
+  hostname: string;
+  language: string;
+  userAgent: string;
+}

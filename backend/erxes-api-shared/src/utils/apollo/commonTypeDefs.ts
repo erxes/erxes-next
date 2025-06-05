@@ -44,9 +44,20 @@ export const graphqlPaginationInfo = `
 export const apolloCommonTypes = `
   scalar Date
   scalar JSON
+
   enum CURSOR_DIRECTION {
     forward,
     backward
+  }
+
+  enum CURSOR_MODE {
+    inclusive,
+    exclusive
+  }
+
+  enum CONTACT_STATUS {
+    active,
+    deleted
   }
 
   type Coordinate {

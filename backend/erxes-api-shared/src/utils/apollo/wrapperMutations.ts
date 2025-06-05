@@ -5,7 +5,7 @@ import { logHandler } from '../logs';
 type GraphqlLogHandler<TArgs = any, TReturn = any> = (
   root: any,
   args: TArgs,
-  context: IMainContext,
+  context: { subdomain: string } & IMainContext,
   info: GraphQLResolveInfo,
 ) => Promise<TReturn> | TReturn;
 
@@ -19,7 +19,7 @@ const withLogging = (resolver: GraphqlLogHandler): GraphqlLogHandler => {
       {
         subdomain,
         source: 'graphql',
-        action: 'mutations',
+        action: 'mutation',
         payload: {
           mutationName: info.fieldName,
           requestData,
