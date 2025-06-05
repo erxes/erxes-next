@@ -7,6 +7,9 @@ export interface IDepartmentListItem {
   title: string;
   supervisorId: string;
   userCount: number;
+  parentId: string;
+  order?: string;
+  hasChildren?: boolean;
 }
 
 export enum DepartmentHotKeyScope {

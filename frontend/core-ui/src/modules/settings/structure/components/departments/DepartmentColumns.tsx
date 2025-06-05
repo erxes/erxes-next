@@ -1,6 +1,7 @@
 import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import { Cell, ColumnDef } from '@tanstack/table-core';
 import {
+  Badge,
   Button,
   Input,
   RecordTable,
@@ -8,6 +9,7 @@ import {
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
+  RecordTableTree,
   TextOverflowTooltip,
   useQueryState,
 } from 'erxes-ui';
@@ -17,19 +19,44 @@ import { renderingDepartmentDetailAtom } from '../../states/renderingDepartmentD
 import { AssignMember, AssignMemberTrigger } from 'ui-modules';
 import { useRemoveDepartment } from '../../hooks/useDepartmentActions';
 
-export const UserMoreColumnCell = ({
+export const DepartmentWorkingHoursColumnCell = ({
   cell,
 }: {
   cell: Cell<IDepartmentListItem, unknown>;
 }) => {
-  const [, setOpen] = useQueryState('department_id');
-  const setRenderingCustomerDetail = useSetAtom(renderingDepartmentDetailAtom);
+  const [, setOpen] = useQueryState('workingHoursId');
+  const setRenderingDepartmentDetail = useSetAtom(
+    renderingDepartmentDetailAtom,
+  );
   const { _id } = cell.row.original;
   return (
     <Button
       onClick={() => {
         setOpen(_id);
-        setRenderingCustomerDetail(false);
+        setRenderingDepartmentDetail(false);
+      }}
+      variant={'outline'}
+    >
+      <IconClock size={12} />
+    </Button>
+  );
+};
+
+export const DepartmentMoreColumnCell = ({
+  cell,
+}: {
+  cell: Cell<IDepartmentListItem, unknown>;
+}) => {
+  const [, setOpen] = useQueryState('department_id');
+  const setRenderingDepartmentDetail = useSetAtom(
+    renderingDepartmentDetailAtom,
+  );
+  const { _id } = cell.row.original;
+  return (
+    <Button
+      onClick={() => {
+        setOpen(_id);
+        setRenderingDepartmentDetail(false);
       }}
       variant={'outline'}
     >
@@ -91,7 +118,13 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            <TextOverflowTooltip value={cell.getValue() as string} />
+            <RecordTableTree.Trigger
+              order={(cell.row.original?.order as string) || ''}
+              name={cell.getValue() as string}
+              hasChildren={cell.row.original?.hasChildren as boolean}
+            >
+              <TextOverflowTooltip value={cell.getValue() as string} />
+            </RecordTableTree.Trigger>
           </RecordTableCellTrigger>
           <RecordTableCellContent>
             <Input value={cell.getValue() as string} />
@@ -99,7 +132,7 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
         </RecordTablePopover>
       );
     },
-    size: 300,
+    size: 350,
   },
   {
     id: 'supervisorId',
@@ -122,14 +155,9 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger className="justify-center">
-            {cell.getValue() as number}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as number} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+        <RecordTableCellDisplay className="justify-center">
+          <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
+        </RecordTableCellDisplay>
       );
     },
   },
@@ -139,10 +167,8 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay className="gap-1 [&>button]:px-2 justify-center">
-          <Button variant={'outline'}>
-            <IconClock size={12} />
-          </Button>
-          <UserMoreColumnCell cell={cell} />
+          <DepartmentWorkingHoursColumnCell cell={cell} />
+          <DepartmentMoreColumnCell cell={cell} />
           <DepartmentRemoveCell cell={cell} />
         </RecordTableCellDisplay>
       );
