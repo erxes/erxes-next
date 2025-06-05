@@ -2,17 +2,16 @@ import { gql, useQuery } from '@apollo/client';
 import {
   EnumCursorDirection,
   mergeCursorData,
-  useMultiQueryState,
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
+import { useSearchParams } from 'react-router';
 import {
   LOGS_COMMON_FILTER_FIELD_NAMES,
   LOGS_CURSOR_SESSION_KEY,
 } from '../constants/logFilter';
 import { LOGS_MAIN_LIST } from '../graphql/logQueries';
 import { LogsMainListQueryResponse } from '../types';
-import { useSearchParams } from 'react-router';
 
 const LOGS_PER_PAGE = 20;
 const getParamsObject = (searchParams: URLSearchParams) => {
@@ -87,30 +86,6 @@ export const useLogs = () => {
   const { cursor } = useRecordTableCursor({
     sessionKey: LOGS_CURSOR_SESSION_KEY,
   });
-
-  // const [queryParams] = useMultiQueryState<{
-  //   status: string;
-  //   source: string;
-  //   action: string;
-  //   userIds: string[];
-  //   createdAt: string;
-  //   statusOperator: string;
-  //   sourceOperator: string;
-  //   actionOperator: string;
-  //   userIdsOperator: string;
-  //   createdAtOperator: string;
-  // }>([
-  //   'status',
-  //   'source',
-  //   'action',
-  //   'userIds',
-  //   'createdAt',
-  //   'statusOperator',
-  //   'sourceOperator',
-  //   'actionOperator',
-  //   'userIdsOperator',
-  //   'createdAtOperator',
-  // ]);
 
   const { data, loading, fetchMore } = useQuery<LogsMainListQueryResponse>(
     gql(LOGS_MAIN_LIST),

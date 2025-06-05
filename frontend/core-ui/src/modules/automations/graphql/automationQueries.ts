@@ -1,3 +1,8 @@
+import {
+  GQL_PAGE_INFO,
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+} from 'erxes-ui';
 import gql from 'graphql-tag';
 
 const COMMON_USER_FIELDS = `
@@ -14,7 +19,7 @@ const COMMON_USER_FIELDS = `
       }
 `;
 
-export const AUTOMATOMATION_CONSTANTS = `
+export const AUTOMATOMATION_CONSTANTS = gql`
   query automationConstants {
     automationConstants
   }
@@ -95,5 +100,32 @@ query AutomationsMain($page: Int, $perPage: Int, $ids: [String], $excludeIds: Bo
       endCursor
     }
   }
+}
+`;
+
+export const AUTOMATION_HISTORIES = gql`
+query AutomationHistories($automationId: String!,${GQL_CURSOR_PARAM_DEFS}, $page: Int, $perPage: Int, $status: String, $triggerId: String, $triggerType: String, $beginDate: Date, $endDate: Date, $targetId: String, $targetIds: [String], $triggerTypes: [String], $ids: [String]) {
+  automationHistories(automationId: $automationId,${GQL_CURSOR_PARAMS}, page: $page, perPage: $perPage, status: $status, triggerId: $triggerId, triggerType: $triggerType, beginDate: $beginDate, endDate: $endDate, targetId: $targetId, targetIds: $targetIds, triggerTypes: $triggerTypes, ids: $ids) {
+    list {
+      _id
+      createdAt
+      modifiedAt
+      automationId
+      triggerId
+      triggerType
+      triggerConfig
+      nextActionId
+      targetId
+      target
+      status
+      description
+      actions
+      startWaitingDate
+      waitingActionId
+    }
+    totalCount
+     ${GQL_PAGE_INFO}
+  }
+  automationConstants
 }
 `;

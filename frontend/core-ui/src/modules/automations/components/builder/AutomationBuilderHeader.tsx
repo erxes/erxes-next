@@ -20,7 +20,7 @@ import {
   Switch,
   Tabs,
 } from 'erxes-ui/components';
-import { useToast } from 'erxes-ui/hooks';
+import { useQueryState, useToast } from 'erxes-ui/hooks';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { Link, useParams } from 'react-router';
 import { TAutomationProps } from '../../utils/AutomationFormDefinitions';
@@ -30,6 +30,7 @@ import { PageSubHeader } from 'erxes-ui';
 export default ({ reactFlowInstance }: any) => {
   const { control, watch, setValue, handleSubmit, clearErrors } =
     useFormContext<TAutomationProps>();
+  const [_, setActiveTabParams] = useQueryState('activeTab');
 
   const { getNodes, setNodes } = useReactFlow();
   const { toast } = useToast();
@@ -148,6 +149,11 @@ export default ({ reactFlowInstance }: any) => {
     }
   };
 
+  const toggleTabs = (value: 'builder' | 'history') => {
+    setValue('activeTab', value);
+    setActiveTabParams(value);
+  };
+
   return (
     <>
       <PageHeader>
@@ -197,13 +203,13 @@ export default ({ reactFlowInstance }: any) => {
             )}
           />
 
-          <Tabs defaultValue="builder">
+          <Tabs defaultValue={activeTab}>
             <Tabs.List size="sm" className="h-8 ">
               <Tabs.Trigger
                 size="sm"
                 value="builder"
                 className="h-8 py-2 px-6"
-                onClick={() => setValue('activeTab', 'builder')}
+                onClick={() => toggleTabs('builder')}
               >
                 Builder
               </Tabs.Trigger>
@@ -211,7 +217,7 @@ export default ({ reactFlowInstance }: any) => {
                 size="sm"
                 value="history"
                 className="h-8 py-2 px-6"
-                onClick={() => setValue('activeTab', 'history')}
+                onClick={() => toggleTabs('history')}
               >
                 History
               </Tabs.Trigger>

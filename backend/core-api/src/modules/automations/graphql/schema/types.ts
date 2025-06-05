@@ -87,6 +87,12 @@ const types = `
     waitingActionId: String
   }
 
+  type AutomationHistories {
+    list:[AutomationHistory]
+    totalCount: Int
+    pageInfo: PageInfo
+  }
+
   input TriggerInput {
     ${commonTriggerTypes}
   }

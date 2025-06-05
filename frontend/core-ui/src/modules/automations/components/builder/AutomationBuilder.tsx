@@ -48,6 +48,7 @@ import { Breadcrumb, Button, PageSubHeader, Separator } from 'erxes-ui';
 import { IconAffiliate, IconSettings } from '@tabler/icons-react';
 import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router';
+import { AutomationHistories } from './AutomationHistories';
 
 interface MenuState {
   id: string;
@@ -350,26 +351,36 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
 
 export default ({ detail }: { detail?: IAutomation }) => {
   const [activeNodeId] = useQueryState('activeNodeId');
+  const [activeTabQueryParam] = useQueryState<'builder' | 'history'>(
+    'activeTab',
+  );
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
   const form = useForm<TAutomationProps>({
     resolver: zodResolver(automationBuilderFormSchema),
     defaultValues: {
       isMinimized: activeNodeId ? false : true,
-      activeTab: 'builder',
+      activeTab: activeTabQueryParam || 'builder',
       detail: deepCleanNulls(detail),
     },
   });
+
+  const activeTab = form.watch('activeTab');
 
   return (
     <ReactFlowProvider>
       <AutomationBuilderDnDProvider>
         <FormProvider {...form}>
           <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
-          <Editor
-            reactFlowInstance={reactFlowInstance}
-            setReactFlowInstance={setReactFlowInstance}
-          />
+
+          {activeTab === 'history' ? (
+            <AutomationHistories />
+          ) : (
+            <Editor
+              reactFlowInstance={reactFlowInstance}
+              setReactFlowInstance={setReactFlowInstance}
+            />
+          )}
         </FormProvider>
       </AutomationBuilderDnDProvider>
     </ReactFlowProvider>

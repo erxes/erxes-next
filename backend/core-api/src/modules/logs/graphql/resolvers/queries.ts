@@ -50,8 +50,6 @@ const generateValue = (field, value, operator) => {
 const generateFilters = (params) => {
   let filter: any = {};
 
-  console.log({ d: params?.filters });
-
   if (Object.keys(params?.filters || {})?.length) {
     for (const [field, { operator, value }] of Object.entries<{
       operator: string;
@@ -63,7 +61,6 @@ const generateFilters = (params) => {
     }
   }
 
-  console.log(JSON.stringify(filter));
   return filter;
 };
 
