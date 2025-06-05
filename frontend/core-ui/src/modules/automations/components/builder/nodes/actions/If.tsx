@@ -1,8 +1,7 @@
 import { getContentType } from '@/automations/utils/automationBuilderUtils';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { useFormContext } from 'react-hook-form';
-import { IActionProps } from 'ui-modules';
-import SegmentForm from 'ui-modules/modules/segments/form';
+import { IActionProps, SegmentForm } from 'ui-modules';
 
 export const IF = ({ currentAction, handleSave }: IActionProps) => {
   const { watch } = useFormContext<TAutomationProps>();

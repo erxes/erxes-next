@@ -1,6 +1,8 @@
 import { UseFormReturn } from 'react-hook-form';
-import { SegmentFormProps } from '../form/schema';
+import { segmentFormSchema } from '../states/segmentFormSchema';
+import { z } from 'zod';
 
+export type SegmentFormProps = z.infer<typeof segmentFormSchema>;
 export interface ListQueryResponse {
   segments: ISegment[];
 }

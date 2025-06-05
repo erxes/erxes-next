@@ -1,1 +1,4 @@
-export default {};
+import Automation from './automations';
+export default {
+  Automation,
+};

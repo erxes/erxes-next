@@ -1,7 +1,7 @@
 import { Dialog } from 'erxes-ui';
 import ReactJson from 'react-json-view';
 import { ILogDoc } from '../types';
-import { maskFields } from '../utils';
+import { maskFields } from '../utils/logFormUtils';
 
 const mongo = ({ payload, action }: ILogDoc) => {
   const { collectionName, fullDocument, prevDocument, updateDescription } =

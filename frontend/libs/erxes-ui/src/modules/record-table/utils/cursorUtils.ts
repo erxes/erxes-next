@@ -20,12 +20,12 @@ export const mergeCursorData = <T>({
 }) => {
   const isForward = direction === EnumCursorDirection.FORWARD;
   const fetchPageInfo =
-    fetchMoreResult.pageInfo || ({} as IRecordTableCursorPageInfo);
+    fetchMoreResult?.pageInfo || ({} as IRecordTableCursorPageInfo);
   const prevPageInfo =
-    prevResult.pageInfo || ({} as IRecordTableCursorPageInfo);
+    prevResult?.pageInfo || ({} as IRecordTableCursorPageInfo);
 
-  const fetchList = fetchMoreResult.list || [];
-  const prevList = prevResult.list || [];
+  const fetchList = fetchMoreResult?.list || [];
+  const prevList = prevResult?.list || [];
 
   return {
     ...fetchMoreResult,
