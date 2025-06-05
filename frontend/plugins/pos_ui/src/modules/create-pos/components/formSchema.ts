@@ -57,7 +57,7 @@ export const posDetailSchema = z.object({
     qrCodeImage: '',
   }),
   catProdMappings: z.array(catProdMappingSchema).default([]),
-  allowBranchIds: z.array(z.string()).default([]),
+  branchId: z.string().optional(), 
   beginNumber: z.string().default(''),
   maxSkipNumber: z.number().min(0).default(5),
   scopeBrandIds: z.array(z.string()).default([]),
@@ -82,7 +82,7 @@ export const basicInfoSchema = z.object({
     .array(z.enum(['eat', 'take', 'delivery']))
     .min(1, 'At least one type is required'),
   scopeBrandIds: z.array(z.string()).default([]),
-  allowBranchIds: z.array(z.string()).default([]),
+  branchId: z.string().optional(), 
   departmentId: z.string().optional(), 
 });
 
@@ -123,11 +123,24 @@ export const uiConfigSchema = z.object({
   checkRemainder: z.boolean().default(false),
 });
 
+export const deliveryConfigSchema = z.object({
+  board: z.string().optional(),
+  pipeline: z.string().optional(),
+  stage: z.string().optional(),
+  watchedUsers: z.string().optional(),
+  assignedUsers: z.string().optional(),
+  deliveryProduct: z.string().optional(),
+  watchedUserIds: z.array(z.string()).default([]),
+  assignedUserIds: z.array(z.string()).default([]),
+  deliveryConfig: z.record(z.any()).default({}),
+});
+
 export type BasicInfoFormValues = z.infer<typeof basicInfoSchema>;
 export type PermissionFormValues = z.infer<typeof permissionSchema>;
 export type ProductFormValues = z.infer<typeof productSchema>;
 export type PaymentFormValues = z.infer<typeof paymentSchema>;
 export type UiConfigFormValues = z.infer<typeof uiConfigSchema>;
+export type DeliveryConfigFormValues = z.infer<typeof deliveryConfigSchema>;
 
 export interface FormStepData {
   basicInfo?: BasicInfoFormValues;
@@ -135,6 +148,7 @@ export interface FormStepData {
   product?: ProductFormValues;
   payment?: PaymentFormValues;
   uiConfig?: UiConfigFormValues;
+  deliveryConfig?: DeliveryConfigFormValues;
 }
 
 export const combineFormData = (
@@ -146,5 +160,6 @@ export const combineFormData = (
     ...stepData.product,
     ...stepData.payment,
     ...stepData.uiConfig,
+    ...stepData.deliveryConfig,
   };
 };

@@ -1,25 +1,25 @@
-"use client"
+'use client';
 
-import { useAtom } from "jotai"
-import { posCategoryAtom } from "../../states/posCategory"
-import { PosCreateTabContent, PosCreateLayout } from "./pos-create-layout"
+import { useAtom } from 'jotai';
+import { posCategoryAtom } from '../../states/posCategory';
+import { PosCreateTabContent, PosCreateLayout } from './pos-create-layout';
 
-import ChooseCategoryPage from "../category/choose-category"
-import EcommercePaymentsForm from "../payments/ecommerce-payment"
-import RestaurantPaymentsForm from "../payments/restaurant-payment"
-import PermissionForm from "../permission/permission"
-import AppearanceForm from "../appearance/appearance"
-import ScreenConfigForm from "../config/screen-config"
-import EbarimtConfigForm from "../config/ebarimt-config"
-import DeliveryConfigForm from "../delievery/delievery"
-import SyncCardForm from "../sync/sync"
-import FinanceConfigForm from "../finance/finance"
-import type { JSX } from "react/jsx-runtime"
-import POSSlotsManager from "~/modules/slot/components/slot"
-import { EcommerceForm } from "../general/ecommerce"
-import { useForm } from "react-hook-form"
-import { RestaurantForm } from "../general/restaurant"
-import { useState } from "react"
+import ChooseCategoryPage from '../category/choose-category';
+import EcommercePaymentsForm from '../payments/ecommerce-payment';
+import RestaurantPaymentsForm from '../payments/restaurant-payment';
+import PermissionForm from '../permission/permission';
+import AppearanceForm from '../appearance/appearance';
+import ScreenConfigForm from '../config/screen-config';
+import EbarimtConfigForm from '../config/ebarimt-config';
+import DeliveryConfigForm from '../delivery/delivery';
+import SyncCardForm from '../sync/sync';
+import FinanceConfigForm from '../finance/finance';
+import type { JSX } from 'react/jsx-runtime';
+import POSSlotsManager from '~/modules/slot/components/slot';
+import { EcommerceForm } from '../general/ecommerce';
+import { useForm } from 'react-hook-form';
+import { RestaurantForm } from '../general/restaurant';
+import { useState } from 'react';
 import {
   type BasicInfoFormValues,
   type PermissionFormValues,
@@ -30,32 +30,32 @@ import {
   productSchema,
   paymentSchema,
   type FormStepData,
-} from "../formSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useSubmitPosForm } from "~/modules/hooks/usePosAdd"
-import ProductForm from "../product/product"
+} from '../formSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useSubmitPosForm } from '~/modules/hooks/usePosAdd';
+import ProductForm from '../product/product';
 
 export const PosCreate = () => {
-  const [posCategory] = useAtom(posCategoryAtom)
-  const { submitForm, loading, error } = useSubmitPosForm()
+  const [posCategory] = useAtom(posCategoryAtom);
+  const { submitForm, loading, error } = useSubmitPosForm();
 
   const [formStepData, setFormStepData] = useState<FormStepData>({
     basicInfo: {
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       allowTypes: [],
       scopeBrandIds: [],
-      allowBranchIds: [],
+      branchId: '',
     },
     permission: {
-      adminTeamMember: "",
+      adminTeamMember: '',
       adminPrintTempBill: false,
       adminDirectSales: false,
-      adminDirectDiscountLimit: "",
-      cashierTeamMember: "",
+      adminDirectDiscountLimit: '',
+      cashierTeamMember: '',
       cashierPrintTempBill: false,
       cashierDirectSales: false,
-      cashierDirectDiscountLimit: "",
+      cashierDirectDiscountLimit: '',
       adminIds: [],
       cashierIds: [],
       permissionConfig: {},
@@ -72,35 +72,35 @@ export const PosCreate = () => {
       paymentIds: [],
       paymentTypes: [],
     },
-  })
+  });
 
   const basicInfoForm = useForm<BasicInfoFormValues>({
     resolver: zodResolver(basicInfoSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       allowTypes: [],
       scopeBrandIds: [],
-      allowBranchIds: [],
+      branchId: '',
     },
-  })
+  });
 
   const permissionForm = useForm<PermissionFormValues>({
     resolver: zodResolver(permissionSchema),
     defaultValues: {
-      adminTeamMember: "",
+      adminTeamMember: '',
       adminPrintTempBill: false,
       adminDirectSales: false,
-      adminDirectDiscountLimit: "",
-      cashierTeamMember: "",
+      adminDirectDiscountLimit: '',
+      cashierTeamMember: '',
       cashierPrintTempBill: false,
       cashierDirectSales: false,
-      cashierDirectDiscountLimit: "",
+      cashierDirectDiscountLimit: '',
       adminIds: [],
       cashierIds: [],
       permissionConfig: {},
     },
-  })
+  });
 
   const productForm = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -112,7 +112,7 @@ export const PosCreate = () => {
       kioskExcludeProductIds: [],
       checkExcludeCategoryIds: [],
     },
-  })
+  });
 
   const paymentForm = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -120,68 +120,75 @@ export const PosCreate = () => {
       paymentIds: [],
       paymentTypes: [],
     },
-  })
+  });
 
   const handleBasicInfoSubmit = (data: BasicInfoFormValues) => {
     setFormStepData((prev) => ({
       ...prev,
       basicInfo: data,
-    }))
-  }
+    }));
+  };
 
   const handlePermissionSubmit = (data: PermissionFormValues) => {
     setFormStepData((prev) => ({
       ...prev,
       permission: data,
-    }))
-  }
+    }));
+  };
 
   const handlePaymentSubmit = (data: PaymentFormValues) => {
     setFormStepData((prev) => ({
       ...prev,
       payment: data,
-    }))
-    console.log("Payment data updated:", data)
-  }
+    }));
+    console.log('Payment data updated:', data);
+  };
 
   const handleFinalSubmit = async () => {
     try {
-      const currentBasicInfo = basicInfoForm.getValues()
-      const currentPermission = permissionForm.getValues()
-      const currentProduct = productForm.getValues()
-      const currentPayment = paymentForm.getValues()
+      const currentBasicInfo = basicInfoForm.getValues();
+      const currentPermission = permissionForm.getValues();
+      const currentProduct = productForm.getValues();
+      const currentPayment = paymentForm.getValues();
 
       const finalFormStepData = {
         ...formStepData,
         basicInfo: currentBasicInfo,
         permission: {
           ...currentPermission,
-          adminIds: currentPermission.adminTeamMember ? [currentPermission.adminTeamMember] : [],
-          cashierIds: currentPermission.cashierTeamMember ? [currentPermission.cashierTeamMember] : [],
+          adminIds: currentPermission.adminTeamMember
+            ? [currentPermission.adminTeamMember]
+            : [],
+          cashierIds: currentPermission.cashierTeamMember
+            ? [currentPermission.cashierTeamMember]
+            : [],
         },
         product: currentProduct,
         payment: currentPayment, // This will include the full payment structure
-      }
+      };
 
-      console.log("Final form data being submitted:", finalFormStepData)
+      console.log('Final form data being submitted:', finalFormStepData);
 
-      const result = await submitForm(finalFormStepData)
-      console.log("POS created successfully:", result)
+      const result = await submitForm(finalFormStepData);
+      console.log('POS created successfully:', result);
 
-      setFormStepData(finalFormStepData)
+      setFormStepData(finalFormStepData);
     } catch (error) {
-      console.error("Failed to create POS:", error)
+      console.error('Failed to create POS:', error);
     }
-  }
+  };
 
-  const getCategoryComponent = (ecommerceComponent: JSX.Element, restaurantComponent: JSX.Element) => {
-    if (posCategory === "ecommerce") {
-      return ecommerceComponent
-    } else if (posCategory === "restaurant") {
-      return restaurantComponent
+  const getCategoryComponent = (
+    ecommerceComponent: JSX.Element,
+    restaurantComponent: JSX.Element,
+  ) => {
+    if (posCategory === 'ecommerce') {
+      return ecommerceComponent;
+    } else if (posCategory === 'restaurant') {
+      return restaurantComponent;
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <PosCreateLayout
@@ -196,24 +203,33 @@ export const PosCreate = () => {
       </PosCreateTabContent>
 
       <PosCreateTabContent value="properties">
-        {getCategoryComponent(<EcommerceForm form={basicInfoForm} />, <RestaurantForm form={basicInfoForm} />)}
+        {getCategoryComponent(
+          <EcommerceForm form={basicInfoForm} />,
+          <RestaurantForm form={basicInfoForm} />,
+        )}
       </PosCreateTabContent>
 
-      {posCategory === "restaurant" && (
+      {posCategory === 'restaurant' && (
         <PosCreateTabContent value="slot">
-          <POSSlotsManager posId={""} />
+          <POSSlotsManager posId={''} />
         </PosCreateTabContent>
       )}
 
       <PosCreateTabContent value="payments">
         {getCategoryComponent(
-          <EcommercePaymentsForm form={paymentForm} onFormSubmit={handlePaymentSubmit} />, 
-          <RestaurantPaymentsForm />
+          <EcommercePaymentsForm
+            form={paymentForm}
+            onFormSubmit={handlePaymentSubmit}
+          />,
+          <RestaurantPaymentsForm />,
         )}
       </PosCreateTabContent>
 
       <PosCreateTabContent value="permission">
-        <PermissionForm form={permissionForm} onFormSubmit={handlePermissionSubmit} />
+        <PermissionForm
+          form={permissionForm}
+          onFormSubmit={handlePermissionSubmit}
+        />
       </PosCreateTabContent>
 
       <PosCreateTabContent value="product">
@@ -244,5 +260,5 @@ export const PosCreate = () => {
         <SyncCardForm />
       </PosCreateTabContent>
     </PosCreateLayout>
-  )
-}
+  );
+};

@@ -1,116 +1,121 @@
-"use client"
+'use client';
 
-import { useAtom } from "jotai"
-import { useEffect, useRef } from "react"
-import { usePosDetail } from "../hooks/useDetail"
-import { posCategoryAtom } from "~/modules/create-pos/states/posCategory"
-import { usePosEdit } from "~/modules/hooks/usePosEdit"
+import { useAtom } from 'jotai';
+import { useEffect, useRef } from 'react';
+import { usePosDetail } from '../hooks/useDetail';
+import { posCategoryAtom } from '~/modules/create-pos/states/posCategory';
+import { usePosEdit } from '~/modules/hooks/usePosEdit';
 import {
   type BasicInfoFormValues,
   basicInfoSchema,
   type PermissionFormValues,
   permissionSchema,
-} from "~/modules/create-pos/components/formSchema"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { PosEditLayout, PosEditTabContent } from "./posDetailLayout"
-import { EcommerceForm } from "~/modules/create-pos/components/general/ecommerce"
-import { RestaurantForm } from "~/modules/create-pos/components/general/restaurant"
-import POSSlotsManager from "~/modules/slot/components/slot"
-import EcommercePaymentsForm from "~/modules/create-pos/components/payments/ecommerce-payment"
-import RestaurantPaymentsForm from "~/modules/create-pos/components/payments/restaurant-payment"
+} from '~/modules/create-pos/components/formSchema';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PosEditLayout, PosEditTabContent } from './posDetailLayout';
+import { EcommerceForm } from '~/modules/create-pos/components/general/ecommerce';
+import { RestaurantForm } from '~/modules/create-pos/components/general/restaurant';
+import POSSlotsManager from '~/modules/slot/components/slot';
+import EcommercePaymentsForm from '~/modules/create-pos/components/payments/ecommerce-payment';
+import RestaurantPaymentsForm from '~/modules/create-pos/components/payments/restaurant-payment';
 import PermissionForm, {
   type PermissionFormRef,
   getPermissionFormValues,
-} from "~/modules/create-pos/components/permission/permission"
-import AppearanceForm from "~/modules/create-pos/components/appearance/appearance"
-import ScreenConfigForm from "~/modules/create-pos/components/config/screen-config"
-import EbarimtConfigForm from "~/modules/create-pos/components/config/ebarimt-config"
-import FinanceConfigForm from "~/modules/create-pos/components/finance/finance"
-import DeliveryConfigForm from "~/modules/create-pos/components/delievery/delievery"
-import SyncCardForm from "~/modules/create-pos/components/sync/sync"
-import type { JSX } from "react/jsx-runtime" 
-import ProductForm from "~/modules/create-pos/components/product/product"
+} from '~/modules/create-pos/components/permission/permission';
+import AppearanceForm from '~/modules/create-pos/components/appearance/appearance';
+import ScreenConfigForm from '~/modules/create-pos/components/config/screen-config';
+import EbarimtConfigForm from '~/modules/create-pos/components/config/ebarimt-config';
+import FinanceConfigForm from '~/modules/create-pos/components/finance/finance';
+import DeliveryConfigForm from '~/modules/create-pos/components/delivery/delivery';
+import SyncCardForm from '~/modules/create-pos/components/sync/sync';
+import type { JSX } from 'react/jsx-runtime';
+import ProductForm from '~/modules/create-pos/components/product/product';
 
 export const PosEdit = () => {
-  const { posDetail } = usePosDetail()
-  const [posCategory, setPosCategory] = useAtom(posCategoryAtom)
-  const { posEdit } = usePosEdit()
-  const permissionFormRef = useRef<PermissionFormRef>(null)
+  const { posDetail } = usePosDetail();
+  const [posCategory, setPosCategory] = useAtom(posCategoryAtom);
+  const { posEdit } = usePosEdit();
+  const permissionFormRef = useRef<PermissionFormRef>(null);
 
   const basicInfoForm = useForm<BasicInfoFormValues>({
     resolver: zodResolver(basicInfoSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       allowTypes: [],
       scopeBrandIds: [],
-      allowBranchIds: [],
+      branchId: '',
     },
-  })
+  });
 
   const permissionForm = useForm<PermissionFormValues>({
     resolver: zodResolver(permissionSchema),
     defaultValues: {
-      adminTeamMember: "",
+      adminTeamMember: '',
       adminPrintTempBill: false,
       adminDirectSales: false,
-      adminDirectDiscountLimit: "",
-      cashierTeamMember: "",
+      adminDirectDiscountLimit: '',
+      cashierTeamMember: '',
       cashierPrintTempBill: false,
       cashierDirectSales: false,
-      cashierDirectDiscountLimit: "",
+      cashierDirectDiscountLimit: '',
       adminIds: [],
       cashierIds: [],
       permissionConfig: {},
     },
-  })
+  });
 
   useEffect(() => {
-    if (!posDetail) return
+    if (!posDetail) return;
 
     if (posDetail.category) {
-      setPosCategory(posDetail.category)
+      setPosCategory(posDetail.category);
     }
 
     basicInfoForm.reset({
-      name: posDetail.name || "",
-      description: posDetail.description || "",
+      name: posDetail.name || '',
+      description: posDetail.description || '',
       allowTypes: posDetail.allowTypes || [],
       scopeBrandIds: posDetail.scopeBrandIds || [],
-      allowBranchIds: posDetail.allowBranchIds || [],
-    })
+      branchId: posDetail.branchId || '',
+    });
 
-    const adminId = posDetail.adminTeamMember || posDetail.adminIds?.[0] || ""
-    const cashierId = posDetail.cashierTeamMember || posDetail.cashierIds?.[0] || ""
+    const adminId = posDetail.adminTeamMember || posDetail.adminIds?.[0] || '';
+    const cashierId =
+      posDetail.cashierTeamMember || posDetail.cashierIds?.[0] || '';
 
     permissionForm.reset({
       adminTeamMember: adminId,
       adminPrintTempBill: posDetail.adminPrintTempBill || false,
       adminDirectSales: posDetail.adminDirectSales || false,
-      adminDirectDiscountLimit: posDetail.adminDirectDiscountLimit || "",
+      adminDirectDiscountLimit: posDetail.adminDirectDiscountLimit || '',
       cashierTeamMember: cashierId,
       cashierPrintTempBill: posDetail.cashierPrintTempBill || false,
       cashierDirectSales: posDetail.cashierDirectSales || false,
-      cashierDirectDiscountLimit: posDetail.cashierDirectDiscountLimit || "",
+      cashierDirectDiscountLimit: posDetail.cashierDirectDiscountLimit || '',
       adminIds: adminId ? [adminId] : posDetail.adminIds || [],
       cashierIds: cashierId ? [cashierId] : posDetail.cashierIds || [],
       permissionConfig: posDetail.permissionConfig || {},
-    })
-  }, [posDetail, basicInfoForm, permissionForm, setPosCategory])
+    });
+  }, [posDetail, basicInfoForm, permissionForm, setPosCategory]);
 
   const handleFinalSubmit = async () => {
-    const currentBasicInfo = basicInfoForm.getValues()
-    const permissionValues = getPermissionFormValues(permissionForm)
+    const currentBasicInfo = basicInfoForm.getValues();
+    const permissionValues = getPermissionFormValues(permissionForm);
     const refIds = permissionFormRef.current
       ? {
           adminIds: permissionFormRef.current.getAdminIds(),
           cashierIds: permissionFormRef.current.getCashierIds(),
         }
-      : { adminIds: [], cashierIds: [] }
+      : { adminIds: [], cashierIds: [] };
 
-    const finalAdminIds = refIds.adminIds.length > 0 ? refIds.adminIds : permissionValues.adminIds
-    const finalCashierIds = refIds.cashierIds.length > 0 ? refIds.cashierIds : permissionValues.cashierIds
+    const finalAdminIds =
+      refIds.adminIds.length > 0 ? refIds.adminIds : permissionValues.adminIds;
+    const finalCashierIds =
+      refIds.cashierIds.length > 0
+        ? refIds.cashierIds
+        : permissionValues.cashierIds;
 
     const finalData = {
       basicInfo: currentBasicInfo,
@@ -119,7 +124,7 @@ export const PosEdit = () => {
         adminIds: finalAdminIds,
         cashierIds: finalCashierIds,
       },
-    }
+    };
 
     await posEdit(
       {
@@ -129,36 +134,43 @@ export const PosEdit = () => {
         },
       },
       [
-        "name",
-        "description",
-        "allowTypes",
-        "scopeBrandIds",
-        "allowBranchIds",
-        "adminTeamMember",
-        "adminPrintTempBill",
-        "adminDirectSales",
-        "adminDirectDiscountLimit",
-        "cashierTeamMember",
-        "cashierPrintTempBill",
-        "cashierDirectSales",
-        "cashierDirectDiscountLimit",
-        "adminIds",
-        "cashierIds",
-        "permissionConfig",
+        'name',
+        'description',
+        'allowTypes',
+        'scopeBrandIds',
+        'branchId',
+        'adminTeamMember',
+        'adminPrintTempBill',
+        'adminDirectSales',
+        'adminDirectDiscountLimit',
+        'cashierTeamMember',
+        'cashierPrintTempBill',
+        'cashierDirectSales',
+        'cashierDirectDiscountLimit',
+        'adminIds',
+        'cashierIds',
+        'permissionConfig',
       ],
-    )
-  }
+    );
+  };
 
-  const getCategoryComponent = (ecommerceComponent: JSX.Element, restaurantComponent: JSX.Element) => {
-    if (posCategory === "ecommerce") return ecommerceComponent
-    if (posCategory === "restaurant") return restaurantComponent
-    return null
-  }
+  const getCategoryComponent = (
+    ecommerceComponent: JSX.Element,
+    restaurantComponent: JSX.Element,
+  ) => {
+    if (posCategory === 'ecommerce') return ecommerceComponent;
+    if (posCategory === 'restaurant') return restaurantComponent;
+    return null;
+  };
 
-  if (!posDetail) return null
+  if (!posDetail) return null;
 
   return (
-    <PosEditLayout form={basicInfoForm} onFinalSubmit={handleFinalSubmit} posDetail={posDetail}>
+    <PosEditLayout
+      form={basicInfoForm}
+      onFinalSubmit={handleFinalSubmit}
+      posDetail={posDetail}
+    >
       <PosEditTabContent value="properties">
         {getCategoryComponent(
           <EcommerceForm form={basicInfoForm} posDetail={posDetail} />,
@@ -166,7 +178,7 @@ export const PosEdit = () => {
         )}
       </PosEditTabContent>
 
-      {posCategory === "restaurant" && (
+      {posCategory === 'restaurant' && (
         <PosEditTabContent value="slot">
           <POSSlotsManager posId={posDetail._id} />
         </PosEditTabContent>
@@ -180,11 +192,15 @@ export const PosEdit = () => {
       </PosEditTabContent>
 
       <PosEditTabContent value="permission">
-        <PermissionForm ref={permissionFormRef} form={permissionForm} posDetail={posDetail} />
+        <PermissionForm
+          ref={permissionFormRef}
+          form={permissionForm}
+          posDetail={posDetail}
+        />
       </PosEditTabContent>
 
       <PosEditTabContent value="product">
-        <ProductForm posDetail={posDetail}/>
+        <ProductForm posDetail={posDetail} />
       </PosEditTabContent>
 
       <PosEditTabContent value="appearance">
@@ -211,5 +227,5 @@ export const PosEdit = () => {
         <SyncCardForm posDetail={posDetail} />
       </PosEditTabContent>
     </PosEditLayout>
-  )
-}
+  );
+};

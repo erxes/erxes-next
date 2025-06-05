@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { IconPlus } from "@tabler/icons-react";
-import { Button, Form, Input, Label, Select } from "erxes-ui";
-import { useSearchParams } from "react-router-dom";
-import { useSetAtom } from "jotai";
-import { slotAtom } from "../../states/posCategory";
+import { IconPlus } from '@tabler/icons-react';
+import { Button, Form, Input, Label, Select } from 'erxes-ui';
+import { useSearchParams } from 'react-router-dom';
+import { useSetAtom } from 'jotai';
+import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
@@ -18,8 +18,8 @@ interface RestaurantFormProps {
   isReadOnly?: boolean;
 }
 
-export const RestaurantForm: React.FC<RestaurantFormProps> = ({ 
-  form, 
+export const RestaurantForm: React.FC<RestaurantFormProps> = ({
+  form,
   posDetail,
   isReadOnly = false,
 }) => {
@@ -31,41 +31,35 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     if (isReadOnly) return;
     setSlot(true);
     const newParams = new URLSearchParams(searchParams);
-    newParams.set("tab", "slot");
+    newParams.set('tab', 'slot');
     setSearchParams(newParams);
   };
 
   const handleTypeChange = (typeValue: string) => {
     if (isReadOnly) return;
-    
+
     const currentTypes = (form.watch('allowTypes') || []) as string[];
     const newTypes: string[] = currentTypes.includes(typeValue)
       ? currentTypes.filter((t: string) => t !== typeValue)
       : [...currentTypes, typeValue];
-    
+
     form.setValue('allowTypes', newTypes as any);
   };
 
   const handleBrandChange = (brandId: string) => {
     if (isReadOnly) return;
-    
+
     const currentBrands = form.watch('scopeBrandIds') || [];
     const newBrands = currentBrands.includes(brandId)
-      ? currentBrands.filter(id => id !== brandId)
+      ? currentBrands.filter((id) => id !== brandId)
       : [...currentBrands, brandId];
-    
+
     form.setValue('scopeBrandIds', newBrands);
   };
 
   const handleBranchChange = (branchId: string) => {
     if (isReadOnly) return;
-    
-    const currentBranches = form.watch('allowBranchIds') || [];
-    const newBranches = currentBranches.includes(branchId)
-      ? currentBranches.filter(id => id !== branchId)
-      : [...currentBranches, branchId];
-    
-    form.setValue('allowBranchIds', newBranches);
+    form.setValue('branchId', branchId);
   };
 
   const handleDepartmentChange = (departmentId: string) => {
@@ -82,7 +76,9 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     <Form {...form}>
       <div className="p-3">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">{getFormTitle()}</h2>
+          <h2 className="text-lg font-semibold text-gray-800">
+            {getFormTitle()}
+          </h2>
         </div>
 
         <div className="space-y-6">
@@ -117,7 +113,9 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     DESCRIPTION <span className="text-red-500">*</span>
                   </Form.Label>
-                  <p className="text-sm font-medium text-[#71717A]">What is description ?</p>
+                  <p className="text-sm font-medium text-[#71717A]">
+                    What is description ?
+                  </p>
                   <Form.Control>
                     <Input
                       {...field}
@@ -139,21 +137,29 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     BRANDS
                   </Form.Label>
-                  <p className="text-sm text-gray-500">Which specific Brand does this integration belongs to?</p>
+                  <p className="text-sm text-gray-500">
+                    Which specific Brand does this integration belongs to?
+                  </p>
                   <Form.Control>
                     <div className="border border-gray-300">
-                      <Select 
+                      <Select
                         onValueChange={(value) => handleBrandChange(value)}
-                        value={field.value?.[0] || ""}
+                        value={field.value?.[0] || ''}
                         disabled={isReadOnly}
                       >
                         <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                           <Select.Value placeholder="Choose brands" />
                         </Select.Trigger>
                         <Select.Content>
-                          <Select.Item value="restaurant_brand1">Restaurant Brand 1</Select.Item>
-                          <Select.Item value="restaurant_brand2">Restaurant Brand 2</Select.Item>
-                          <Select.Item value="restaurant_brand3">Restaurant Brand 3</Select.Item>
+                          <Select.Item value="restaurant_brand1">
+                            Restaurant Brand 1
+                          </Select.Item>
+                          <Select.Item value="restaurant_brand2">
+                            Restaurant Brand 2
+                          </Select.Item>
+                          <Select.Item value="restaurant_brand3">
+                            Restaurant Brand 3
+                          </Select.Item>
                         </Select.Content>
                       </Select>
                     </div>
@@ -166,7 +172,9 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
 
           <div className="space-y-2">
             <div className="flex items-center">
-              <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">SLOTS</Label>
+              <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                SLOTS
+              </Label>
               <Button
                 type="button"
                 size="sm"
@@ -194,34 +202,43 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   <div className="grid grid-cols-3 gap-3">
                     {Array.from({ length: 6 }, (_, index) => {
                       const selectedTypes = field.value || [];
-                      const currentValue = selectedTypes[index] || "";
-                      
+                      const currentValue = selectedTypes[index] || '';
+
                       return (
                         <div key={index} className="flex flex-col">
-                          <Select 
+                          <Select
                             onValueChange={(value) => {
                               if (isReadOnly) return;
                               const newTypes = [...(field.value || [])];
-                              if (value === "NULL") {
+                              if (value === 'NULL') {
                                 newTypes.splice(index, 1);
                               } else {
-                                newTypes[index] = value as "eat" | "take" | "delivery";
+                                newTypes[index] = value as
+                                  | 'eat'
+                                  | 'take'
+                                  | 'delivery';
                               }
-                              const cleanTypes = newTypes.filter((type, idx, arr) => 
-                                type && arr.indexOf(type) === idx
+                              const cleanTypes = newTypes.filter(
+                                (type, idx, arr) =>
+                                  type && arr.indexOf(type) === idx,
                               );
                               form.setValue('allowTypes', cleanTypes);
                             }}
-                            value={currentValue || "NULL"}
+                            value={currentValue || 'NULL'}
                             disabled={isReadOnly}
                           >
                             <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                              <Select.Value placeholder={`Select Type ${index + 1}`} />
+                              <Select.Value
+                                placeholder={`Select Type ${index + 1}`}
+                              />
                             </Select.Trigger>
                             <Select.Content>
                               <Select.Item value="NULL">NULL</Select.Item>
                               {ALLOW_TYPES.map((type) => (
-                                <Select.Item key={type.value} value={type.value}>
+                                <Select.Item
+                                  key={type.value}
+                                  value={type.value}
+                                >
                                   {type.label}
                                 </Select.Item>
                               ))}
@@ -240,7 +257,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
           <div className="grid grid-cols-2 gap-6">
             <Form.Field
               control={form.control}
-              name="allowBranchIds"
+              name="branchId"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
@@ -248,7 +265,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   </Form.Label>
                   <Form.Control>
                     <SelectBranch
-                      value={field.value?.[0] || ""}
+                      value={field.value || ''}
                       onValueChange={(branchId) => {
                         if (!isReadOnly) {
                           handleBranchChange(branchId);
@@ -272,7 +289,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   </Form.Label>
                   <Form.Control>
                     <SelectDepartment
-                      value={field.value || ""}
+                      value={field.value || ''}
                       onValueChange={(departmentId) => {
                         if (!isReadOnly) {
                           handleDepartmentChange(departmentId);

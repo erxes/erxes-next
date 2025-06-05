@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { screenConfigSettingsAtom } from '../../states/posCategory';
 import { useEffect, useState } from 'react';
 import { IPosDetail, IScreenConfig } from '~/modules/pos-detail.tsx/types/IPos';
+import { KITCHEN_TYPE_OPTIONS, SHOW_TYPE_OPTIONS, WAITING_TYPE_OPTIONS } from '~/modules/constants';
 
 interface ScreenConfigFormProps {
   posDetail?: IPosDetail;
@@ -140,14 +141,14 @@ export default function ScreenConfigForm({
                     disabled={isReadOnly}
                   >
                     <Select.Trigger>
-                      <Select.Value placeholder="Defined orders only" />
+                      <Select.Value placeholder="Select show type" />
                     </Select.Trigger>
                     <Select.Content>
-                      <Select.Item value="defined">
-                        Defined orders only
-                      </Select.Item>
-                      <Select.Item value="all">All orders</Select.Item>
-                      <Select.Item value="custom">Custom</Select.Item>
+                      {SHOW_TYPE_OPTIONS.map((option) => (
+                        <Select.Item key={option.value} value={option.value}>
+                          {option.label}
+                        </Select.Item>
+                      ))}
                     </Select.Content>
                   </Select>
                 </div>
@@ -164,13 +165,14 @@ export default function ScreenConfigForm({
                     disabled={isReadOnly}
                   >
                     <Select.Trigger>
-                      <Select.Value placeholder="Choose status" />
+                      <Select.Value placeholder="Select status change type" />
                     </Select.Trigger>
                     <Select.Content>
-                      <Select.Item value="pending">Pending</Select.Item>
-                      <Select.Item value="processing">Processing</Select.Item>
-                      <Select.Item value="completed">Completed</Select.Item>
-                      <Select.Item value="cancelled">Cancelled</Select.Item>
+                      {KITCHEN_TYPE_OPTIONS.map((option) => (
+                        <Select.Item key={option.value} value={option.value}>
+                          {option.label}
+                        </Select.Item>
+                      ))}
                     </Select.Content>
                   </Select>
                 </div>
@@ -203,12 +205,14 @@ export default function ScreenConfigForm({
                     disabled={isReadOnly}
                   >
                     <Select.Trigger>
-                      <Select.Value placeholder="Choose product category" />
+                      <Select.Value placeholder="Select change type" />
                     </Select.Trigger>
                     <Select.Content>
-                      <Select.Item value="category1">Category 1</Select.Item>
-                      <Select.Item value="category2">Category 2</Select.Item>
-                      <Select.Item value="category3">Category 3</Select.Item>
+                      {WAITING_TYPE_OPTIONS.map((option) => (
+                        <Select.Item key={option.value} value={option.value}>
+                          {option.label}
+                        </Select.Item>
+                      ))}
                     </Select.Content>
                   </Select>
                 </div>
@@ -221,7 +225,7 @@ export default function ScreenConfigForm({
                     onChange={(e) =>
                       handleInputChange('changeCount', e.target.value)
                     }
-                    placeholder="Write here"
+                    placeholder="Enter count"
                     disabled={isReadOnly}
                     readOnly={isReadOnly}
                   />
@@ -235,7 +239,7 @@ export default function ScreenConfigForm({
                     onChange={(e) =>
                       handleInputChange('contentUrl', e.target.value)
                     }
-                    placeholder="Write here"
+                    placeholder="Enter URL"
                     disabled={isReadOnly}
                     readOnly={isReadOnly}
                   />

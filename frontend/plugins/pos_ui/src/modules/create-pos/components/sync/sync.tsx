@@ -43,7 +43,7 @@ export default function SyncCardForm() {
       configs: newConfigs,
       currentConfig: {
         title: "",
-        brunch: "",
+        branch: "",
         stageBoard: "",
         pipeline: "",
         stage: "",

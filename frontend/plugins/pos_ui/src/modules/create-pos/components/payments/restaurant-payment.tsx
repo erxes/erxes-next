@@ -279,7 +279,7 @@ export default function RestaurantPaymentsForm({
             </div>
           ))}
           
-          <div className="grid grid-cols-2 gap-4 p-4 border rounded-lg">
+          <div className="grid grid-cols-4 gap-4">
             <div>
               <Label className="text-xs text-gray-500 mb-1 block">Type *</Label>
               <Input

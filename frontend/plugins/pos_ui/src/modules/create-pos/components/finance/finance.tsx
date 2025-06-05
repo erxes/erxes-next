@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { financeConfigSettingsAtom } from '../../states/posCategory';
 import { useEffect, useState } from 'react';
 import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { options } from '~/modules/constants';
 
 interface FinanceConfigFormProps {
   posDetail?: IPosDetail;
@@ -194,9 +195,11 @@ export default function FinanceConfigForm({
                     <Select.Value placeholder="Select..." />
                   </Select.Trigger>
                   <Select.Content>
-                    <Select.Item value="option1">Option 1</Select.Item>
-                    <Select.Item value="option2">Option 2</Select.Item>
-                    <Select.Item value="option3">Option 3</Select.Item>
+                    {options.map((option) => (
+                      <Select.Item key={option.value} value={option.value}>
+                        {option.label}
+                      </Select.Item>
+                    ))}
                   </Select.Content>
                 </Select>
               </div>

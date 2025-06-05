@@ -12,7 +12,7 @@ import {
   BasicInfoFormValues,
   PermissionFormValues,
 } from '~/modules/create-pos/components/formSchema';
-import { PosDetailQueryResponse } from '../types/detail';
+import { IPosDetail } from '../types/IPos';
 
 const LAYOUT = {
   STEPPER_WIDTH: 'w-44',
@@ -306,9 +306,9 @@ const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
 interface PosEditLayoutProps {
   children: React.ReactNode;
   actions?: React.ReactNode;
-  form?: UseFormReturn<BasicInfoFormValues | PermissionFormValues>;
+  form?: UseFormReturn<BasicInfoFormValues> | UseFormReturn<PermissionFormValues>;
   onFinalSubmit?: () => void;
-  posDetail?: PosDetailQueryResponse['posDetail'];
+  posDetail?:IPosDetail;
 }
 
 export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
@@ -316,7 +316,6 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
   actions,
   form,
   onFinalSubmit,
-  posDetail,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [posCategory] = useAtom(posCategoryAtom);
@@ -368,6 +367,7 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
         }
       }
     }
+    
     return true;
   };
 

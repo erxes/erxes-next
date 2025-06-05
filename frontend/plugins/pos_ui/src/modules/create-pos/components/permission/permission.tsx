@@ -160,13 +160,10 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
       const userId = Array.isArray(value) ? value[0] : value;
       const finalUserId = userId || '';
       
-      console.log('Cashier member selected:', finalUserId);
-      
       setSelectedCashierId(finalUserId);
       form.setValue('cashierTeamMember', finalUserId, { shouldValidate: true });
       form.setValue('cashierIds', finalUserId ? [finalUserId] : [], { shouldValidate: true });
       
-      console.log('Updated cashierIds:', finalUserId ? [finalUserId] : []);
     };
 
     return (

@@ -34,7 +34,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
 
   const handleBranchChange = (branchId: string) => {
     if (isReadOnly) return;
-    form.setValue('allowBranchIds', [branchId]);
+    form.setValue('branchId', branchId);
   };
 
   const handleDepartmentChange = (departmentId: string) => {
@@ -192,7 +192,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
           <div className="grid grid-cols-2 gap-6">
             <Form.Field
               control={form.control}
-              name="allowBranchIds"
+              name="branchId"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
@@ -200,7 +200,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                   </Form.Label>
                   <Form.Control>
                     <SelectBranch
-                      value={field.value?.[0] || ""}
+                      value={field.value || ""}
                       onValueChange={(branchId) => {
                         if (!isReadOnly) {
                           handleBranchChange(branchId);

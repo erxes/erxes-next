@@ -52,51 +52,29 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">COMPANY NAME</Label>
-              <Select
+              <Input
                 value={ebarimtConfig.companyName}
-                onValueChange={(value) => handleSelectChange("companyName", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Restaurant">Restaurant</Select.Item>
-                  <Select.Item value="Retail">Retail</Select.Item>
-                </Select.Content>
-              </Select>
+                onChange={(e) => handleInputChange("companyName", e.target.value)}
+                placeholder="Enter company name"
+              />
             </div>
 
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">EBARIMT URL</Label>
-              <Select
+              <Input
                 value={ebarimtConfig.ebarimtUrl}
-                onValueChange={(value) => handleSelectChange("ebarimtUrl", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+                onChange={(e) => handleInputChange("ebarimtUrl", e.target.value)}
+                placeholder="Enter ebarimt URL"
+              />
             </div>
 
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">CHECK TAXPAYER URL</Label>
-              <Select
+              <Input
                 value={ebarimtConfig.checkTaxpayerUrl}
-                onValueChange={(value) => handleSelectChange("checkTaxpayerUrl", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+                onChange={(e) => handleInputChange("checkTaxpayerUrl", e.target.value)}
+                placeholder="Enter taxpayer URL"
+              />
             </div>
           </div>
         </div>
@@ -106,91 +84,58 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">COMPANYRD</Label>
-              <Select value={ebarimtConfig.companyRd} onValueChange={(value) => handleSelectChange("companyRd", value)}>
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+              <Input
+                value={ebarimtConfig.companyRd}
+                onChange={(e) => handleInputChange("companyRd", e.target.value)}
+                placeholder="Enter company RD"
+              />
             </div>
 
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">MERCHANTIN</Label>
-              <Select
+              <Input
                 value={ebarimtConfig.merchantin}
-                onValueChange={(value) => handleSelectChange("merchantin", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+                onChange={(e) => handleInputChange("merchantin", e.target.value)}
+                placeholder="Enter merchant ID"
+              />
             </div>
 
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">POSNO</Label>
-              <Select value={ebarimtConfig.posno} onValueChange={(value) => handleSelectChange("posno", value)}>
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+              <Input
+                value={ebarimtConfig.posno}
+                onChange={(e) => handleInputChange("posno", e.target.value)}
+                placeholder="Enter POS number"
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">DISTRICTCODE</Label>
-              <Select
+              <Input
                 value={ebarimtConfig.districtCode}
-                onValueChange={(value) => handleSelectChange("districtCode", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+                onChange={(e) => handleInputChange("districtCode", e.target.value)}
+                placeholder="Enter district code"
+              />
             </div>
 
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">BRANCHNO</Label>
-              <Select value={ebarimtConfig.branchNo} onValueChange={(value) => handleSelectChange("branchNo", value)}>
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+              <Input
+                value={ebarimtConfig.branchNo}
+                onChange={(e) => handleInputChange("branchNo", e.target.value)}
+                placeholder="Enter branch number"
+              />
             </div>
 
             <div className="space-y-2">
               <Label className="text-sm text-gray-500">DEFAULTGSCODE</Label>
-              <Select
+              <Input
                 value={ebarimtConfig.defaultGsCode}
-                onValueChange={(value) => handleSelectChange("defaultGsCode", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Kiosk" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="Kiosk">Kiosk</Select.Item>
-                  <Select.Item value="Custom">Custom</Select.Item>
-                </Select.Content>
-              </Select>
+                onChange={(e) => handleInputChange("defaultGsCode", e.target.value)}
+                placeholder="Enter default GS code"
+              />
             </div>
           </div>
         </div>
@@ -244,11 +189,20 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
 
           <div className="space-y-2">
             <Label className="text-sm text-gray-500">ANOTHER RULE OF PRODUCTS ON CITY TAX</Label>
-            <Input
+            <Select
               value={ebarimtConfig.anotherRuleOfProductsOnCityTax}
-              onChange={(e) => handleInputChange("anotherRuleOfProductsOnCityTax", e.target.value)}
-              placeholder="reserveCtaxRules"
-            />
+              onValueChange={(value) => handleSelectChange("anotherRuleOfProductsOnCityTax", value)}
+            >
+              <Select.Trigger>
+                <Select.Value placeholder="reserveCtaxRules" />
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Item value="reserveCtaxRules">reserveCtaxRules</Select.Item>
+                <Select.Item value="standardCtaxRules">standardCtaxRules</Select.Item>
+                <Select.Item value="exemptCtaxRules">exemptCtaxRules</Select.Item>
+                <Select.Item value="customCtaxRules">customCtaxRules</Select.Item>
+              </Select.Content>
+            </Select>
           </div>
         </div>
         <div className="space-y-4">

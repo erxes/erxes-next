@@ -66,7 +66,7 @@ export const menuPos = [
     'euro',
     'dollar-alt',
     'dollar-sign',
-    'calcualtor',
+    'calculator',
     'at',
     'briefcase-alt',
     'atm-card',
@@ -91,4 +91,36 @@ export const menuPos = [
     'sync'
   ];
 
+  export const SCREEN_TYPE_OPTIONS = [
+    { label: "Time", value: "time" },
+    { label: "Manual", value: "manual" }, // used only in kitchen
+    { label: "Count", value: "count" },   // used only in waiting
+  ];
+  //kitchen status change
+  export const KITCHEN_TYPE_OPTIONS = [
+    { label: "Time", value: "time" },
+    { label: "Manual", value: "manual" },
+  ];
+  //waiting change type 
+  export const WAITING_TYPE_OPTIONS = [
+    { label: "Time", value: "time" },
+    { label: "Count", value: "count" },
+  ];
+  // kitchen show types
+  export const SHOW_TYPE_OPTIONS = [
+    { label: "All saved orders", value: "all" },
+    { label: "Paid all orders", value: "paid" },
+    // { label: "Orders containing certain products", value: "filtered" }, // optional/future
+    { label: "Defined orders only", value: "click" },
+  ];
+  export const options = [
+    { value: "debtAmount", label: "Зээлийн данс" },
+    { value: "cashAmount", label: "Бэлэн мөнгө данс" },
+    { value: "cardAmount", label: "Картын данс" },
+    { value: "card2Amount", label: "Картын данс нэмэлт" },
+    { value: "mobileAmount", label: "Мобайл данс" },
+    { value: "debtBarterAmount", label: "Бартер данс" },
+  ];
+  
+  
   

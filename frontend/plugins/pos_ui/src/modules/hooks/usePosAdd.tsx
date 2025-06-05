@@ -71,7 +71,7 @@ export function useSubmitPosForm() {
         adminIds: validatedData.adminIds,
         cashierIds: validatedData.cashierIds,
         scopeBrandIds: validatedData.scopeBrandIds,
-        allowBranchIds: validatedData.allowBranchIds,
+        branchId: validatedData.branchId,
         productDetails: validatedData.productDetails?.map((pd) => pd.productId),
         paymentIds: validatedData.paymentIds,
         paymentTypes: validatedData.paymentTypes,

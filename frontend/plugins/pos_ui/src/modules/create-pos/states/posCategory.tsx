@@ -63,14 +63,14 @@ export const ebarimtConfigSettingsAtom = atom<EbarimtConfigSettings>({
   districtCode: '',
   branchNo: '',
   defaultGsCode: '',
-  hasVat: true,
+  hasVat: false,
   vatPercent: '0',
-  hasUbCityTax: true,
+  hasUbCityTax: false,
   ubCityTaxPercent: '0',
   anotherRuleOfProductsOnCityTax: '',
-  headerText: '0',
-  footerText: '0',
-  hasCopy: true,
+  headerText: '',
+  footerText: '',
+  hasCopy: false,
 });
 
 export const deliveryConfigSettingsAtom = atom<DeliveryConfigSettings>({
