@@ -17,11 +17,11 @@ RUN pnpm install
 FROM --platform=linux/amd64 build AS logs-build
 
 # Copy source code
-COPY ./backend/plugins/logs /app/backend/plugins/logs
+COPY ./backend/services/logs /app/backend/services/logs
 COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
-WORKDIR /app/backend/plugins/logs
+WORKDIR /app/backend/services/logs
 
 ENV NX_DAEMON=false
 RUN npx nx build:packageJson logs

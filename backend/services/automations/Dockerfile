@@ -17,11 +17,11 @@ RUN pnpm install
 FROM --platform=linux/amd64 build AS automations-build
 
 # Copy source code
-COPY ./backend/plugins/automations /app/backend/plugins/automations
+COPY ./backend/services/automations /app/backend/services/automations
 COPY ./backend/erxes-api-shared /app/backend/erxes-api-shared
 
 # Build following exact sequence
-WORKDIR /app/backend/plugins/automations
+WORKDIR /app/backend/services/automations
 
 ENV NX_DAEMON=false
 RUN npx nx build:packageJson automations
