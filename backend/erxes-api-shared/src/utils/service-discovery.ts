@@ -18,7 +18,7 @@ interface PluginConfig {
 export const keyForConfig = (name: string) => `service:config:${name}`;
 
 export const getPlugins = async (): Promise<string[]> => {
-  const enabledServices =
+  const enabledServices: any[] =
     process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) || [];
 
   return ['core', ...enabledServices];
