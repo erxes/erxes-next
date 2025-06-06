@@ -12,6 +12,7 @@ import { useWatch } from 'react-hook-form';
 export const AccountField = ({
   form,
   index,
+  detIndex,
   filter,
   allDetails
 }: ICommonFieldProps & {
@@ -29,7 +30,7 @@ export const AccountField = ({
         form.setValue(`trDocs.${index}.details.${ind}.accountId`, account._id as any);
       });
     } else {
-      form.setValue(`trDocs.${index}.details.0.account`, account as any);
+      form.setValue(`trDocs.${index}.details.${detIndex ?? 0}.account`, account as any);
     }
 
     if (account?.branchId) {
@@ -43,7 +44,7 @@ export const AccountField = ({
   return (
     <Form.Field
       control={form.control}
-      name={`trDocs.${index}.details.0.accountId`}
+      name={`trDocs.${index}.details.${detIndex ?? 0}.accountId`}
       render={({ field }) => (
         <Form.Item>
           <Form.Label>Account</Form.Label>
@@ -65,6 +66,7 @@ export const AccountField = ({
 export const SideField = ({
   form,
   index,
+  detIndex,
   sides,
 }: ICommonFieldProps & {
   sides: {
@@ -74,7 +76,7 @@ export const SideField = ({
 }) => (
   <Form.Field
     control={form.control}
-    name={`trDocs.${index}.details.0.side`}
+    name={`trDocs.${index}.details.${detIndex ?? 0}.side`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Side</Form.Label>
@@ -97,10 +99,10 @@ export const SideField = ({
   />
 );
 
-export const AmountField = ({ form, index }: ICommonFieldProps) => (
+export const AmountField = ({ form, index, detIndex }: ICommonFieldProps) => (
   <Form.Field
     control={form.control}
-    name={`trDocs.${index}.details.0.amount`}
+    name={`trDocs.${index}.details.${detIndex ?? 0}.amount`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Amount</Form.Label>
