@@ -17,17 +17,26 @@ const AWS_FIELDS_SCHEMA = z.object({
     .string()
     .min(16, { message: 'Access key id must be at least 16 characters.' })
     .max(128, { message: 'Access key id must be at most 128 characters.' })
-    .optional(),
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Access key ID is required when configuring AWS',
+    }),
   AWS_SECRET_ACCESS_KEY: z
     .string()
     .min(16, { message: 'Secret access key must be at least 16 characters.' })
     .max(128, { message: 'Secret access key must be at most 128 characters.' })
-    .optional(),
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Secret access key is required when configuring AWS',
+    }),
   AWS_BUCKET: z
     .string()
     .min(3, { message: 'Bucket name must be at least 3 characters.' })
     .max(63, { message: 'Bucket name must be at most 63 characters.' })
-    .optional(),
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Bucket is required when configuring AWS',
+    }),
   AWS_PREFIX: z.string().optional(),
   AWS_COMPATIBLE_SERVICE_ENDPOINT: z.string().optional(),
   AWS_FORCE_PATH_STYLE: z.string().optional(),
@@ -40,26 +49,69 @@ const GCS_FIELDS_SCHEMA = z.object({
     .string()
     .min(3, { message: 'Bucket name must be at least 3 characters.' })
     .max(63, { message: 'Bucket name must be at most 63 characters.' })
-    .optional(),
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Bucket is required when configuring Google Cloud Service',
+    }),
 });
 
 const CLOUDFLARE_FIELDS_SCHEMA = z.object({
   UPLOAD_SERVICE_TYPE: z.literal('CLOUDFLARE'),
   ...COMMON_FILE_UPLOAD_FIELDS,
-  CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
-  CLOUDFLARE_API_TOKEN: z.string().optional(),
-  CLOUDFLARE_ACCESS_KEY_ID: z.string().optional(),
-  CLOUDFLARE_SECRET_ACCESS_KEY: z.string().optional(),
-  CLOUDFLARE_BUCKET_NAME: z.string().optional(),
-  CLOUDFLARE_ACCOUNT_HASH: z.string().optional(),
+  CLOUDFLARE_ACCOUNT_ID: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Account ID is required when configuring CLOUDFLARE',
+    }),
+  CLOUDFLARE_API_TOKEN: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'API token is required when configuring CLOUDFLARE',
+    }),
+  CLOUDFLARE_ACCESS_KEY_ID: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Access key ID is required when configuring CLOUDFLARE',
+    }),
+  CLOUDFLARE_SECRET_ACCESS_KEY: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Secret access key is required when configuring CLOUDFLARE',
+    }),
+  CLOUDFLARE_BUCKET_NAME: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Bucket name is required when configuring CLOUDFLARE',
+    }),
+  CLOUDFLARE_ACCOUNT_HASH: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Account hash is required when configuring CLOUDFLARE',
+    }),
   CLOUDFLARE_USE_CDN: z.boolean().optional(),
 });
 
 const AZURE_FIELDS_SCHEMA = z.object({
   UPLOAD_SERVICE_TYPE: z.literal('AZURE'),
   ...COMMON_FILE_UPLOAD_FIELDS,
-  ABS_CONTAINER_NAME: z.string().optional(),
-  AB_CONNECTION_STRING: z.string().optional(),
+  ABS_CONTAINER_NAME: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Container name is required when configuring Azure',
+    }),
+  AB_CONNECTION_STRING: z
+    .string()
+    .optional()
+    .refine((val) => val === undefined || val.length > 0, {
+      message: 'Connection string is required when configuring Azure',
+    }),
 });
 
 const FILES_VALIDATION_SCHEMA = z.discriminatedUnion('UPLOAD_SERVICE_TYPE', [
