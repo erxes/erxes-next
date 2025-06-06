@@ -5,8 +5,8 @@ export interface IMember {
   email?: string;
   username?: string;
   details?: {
-    fullName: string;
-    avatar: string;
+    fullName?: string;
+    avatar?: string;
   };
 }
 export interface IMemberGroup {
