@@ -11,7 +11,7 @@ export const CustomersRecordTable = () => {
   return (
     <RecordTable.Provider
       columns={customersColumns}
-      data={customers || []}
+      data={customers || [{}]}
       stickyColumns={['more', 'checkbox', 'avatar', 'name']}
       className="m-3"
     >

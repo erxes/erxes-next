@@ -14,9 +14,9 @@ export function SidebarNavigationFavorites() {
     <Collapsible defaultOpen className="group/collapsible">
       <Sidebar.Group>
         <Sidebar.GroupLabel asChild>
-          <Collapsible.Trigger>
-            Favorites
+          <Collapsible.Trigger className="flex items-center gap-2">
             <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+            <span className="text-xs font-sans font-semibold normal-case">Favorites</span>
           </Collapsible.Trigger>
         </Sidebar.GroupLabel>
         <Collapsible.Content>
@@ -41,11 +41,11 @@ export function SidebarNavigationFavoritesItem({
   path,
 }: {
   name: string;
-  icon: React.ElementType;
+  icon?: React.ElementType;
   path: string;
 }) {
   const pathname = useLocation().pathname;
-  const Icon = icon;
+  const Icon = icon || (() => <span />);
   const pathWithoutUi = path.replace('_ui', '');
   const isActive = pathname.includes(pathWithoutUi);
 

@@ -6,12 +6,11 @@ import {
   fileSettingsMutations,
   fileSettingsQueries,
 } from '@/settings/file-upload/graphql';
-import React from 'react';
 
 const useConfig = () => {
   const { toast } = useToast();
 
-  const { data, loading, error } = useQuery(fileSettingsQueries.GET_CONFIGS, {
+  const { data, loading } = useQuery(fileSettingsQueries.GET_CONFIGS, {
     onError(error) {
       console.error(error.message);
     },

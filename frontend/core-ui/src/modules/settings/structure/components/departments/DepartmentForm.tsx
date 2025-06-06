@@ -3,7 +3,7 @@ import { Form, Input, Textarea } from 'erxes-ui';
 import {
   AssignMember,
   AssignMultipleMembers,
-  SelectDepartment,
+  SelectDepartmentTree,
 } from 'ui-modules';
 import { TDepartmentForm } from '../../types/department';
 
@@ -74,9 +74,10 @@ export const DepartmentForm = () => {
           <Form.Item>
             <Form.Label>{'Parent'}</Form.Label>
             <Form.Control>
-              <SelectDepartment
-                value={field.value}
-                onValueChange={field.onChange}
+              <SelectDepartmentTree
+                recordId={'parentId'}
+                selected={field.value}
+                onSelect={field.onChange}
               />
             </Form.Control>
             <Form.Message />
