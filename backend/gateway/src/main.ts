@@ -58,8 +58,8 @@ app.use(userMiddleware);
 
 app.use('/bullmq-board', serverAdapter.getRouter());
 
-app.get('/health', (req, res) => {
-  res.send('OK');
+app.get('/health', async (_req, res) => {
+  res.end('ok');
 });
 
 app.use('/pl:serviceName', async (req, res) => {
