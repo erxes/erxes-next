@@ -46,13 +46,13 @@ export function Organization() {
             Settings
           </Link>
         </DropdownMenu.Item>
-        <DropdownMenu.Item asChild>
+        {/* <DropdownMenu.Item asChild>
           <Link to="/settings/team-member" className="text-sm">
             Invite and manage team members
           </Link>
-        </DropdownMenu.Item>
+        </DropdownMenu.Item> */}
         <DropdownMenu.Separator />
-        <DropdownMenu.Sub>
+        {/* <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger>
             Switch organization
             <IconChevronRight className="ml-auto size-4 text-accent-foreground" />
@@ -91,7 +91,7 @@ export function Organization() {
               </DropdownMenu.RadioItem>
             </DropdownMenu.RadioGroup>
           </DropdownMenu.SubContent>
-        </DropdownMenu.Sub>
+        </DropdownMenu.Sub> */}
         <DropdownMenu.Item className="text-sm" onClick={() => handleLogout()}>
           Logout
         </DropdownMenu.Item>
