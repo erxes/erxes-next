@@ -28,16 +28,16 @@ export function User() {
             >
               <Avatar className="h-8 w-8 rounded-full">
                 <Avatar.Image
-                  src={readFile(userDetail.avatar)}
-                  alt={userDetail.fullName}
+                  src={readFile(userDetail?.avatar || '')}
+                  alt={userDetail?.fullName || ''}
                 />
                 <Avatar.Fallback className="rounded-lg">
-                  {userDetail.fullName.split('')[0]}
+                  {userDetail?.fullName?.split('')[0]}
                 </Avatar.Fallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {userDetail.fullName}
+                  {userDetail?.fullName}
                 </span>
                 <span className="truncate text-xs text-accent-foreground font-medium">
                   {currentUser.email}
@@ -56,16 +56,16 @@ export function User() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <Avatar.Image
-                    src={readFile(userDetail.avatar)}
-                    alt={userDetail.fullName}
+                    src={readFile(userDetail?.avatar || '')}
+                    alt={userDetail?.fullName || ''}
                   />
                   <Avatar.Fallback className="rounded-lg">
-                    {userDetail.fullName.split('')[0]}
+                    {userDetail?.fullName?.split('')[0]}
                   </Avatar.Fallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {userDetail.fullName}
+                    {userDetail?.fullName}
                   </span>
                   <span className="truncate text-xs">{currentUser.email}</span>
                 </div>
