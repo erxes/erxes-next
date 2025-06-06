@@ -58,6 +58,10 @@ app.use(userMiddleware);
 
 app.use('/bullmq-board', serverAdapter.getRouter());
 
+app.get('/health', (req, res) => {
+  res.send('OK');
+});
+
 app.use('/pl:serviceName', async (req, res) => {
   try {
     const serviceName: string = req.params.serviceName.replace(':', '');
