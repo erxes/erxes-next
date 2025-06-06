@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - 'frontend/services/automations/**'
-      - 'frontend/libs/**'
+      - 'backend/services/automations/**'
+      - 'backend/libs/**'
       - '.github/workflows/ci-automations.yml'
   pull_request:
     paths:
-      - 'frontend/services/automations/**'
-      - 'frontend/libs/**'
+      - 'backend/services/automations/**'
+      - 'backend/libs/**'
       - '.github/workflows/ci-automations.yml'
 permissions:
   actions: read
@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: frontend/services/automations/Dockerfile
+          file: backend/services/automations/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

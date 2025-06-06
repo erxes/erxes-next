@@ -5,13 +5,13 @@ on:
     branches:
       - main
     paths:
-      - 'frontend/services/logs/**'
-      - 'frontend/libs/**'
+      - 'backend/services/logs/**'
+      - 'backend/libs/**'
       - '.github/workflows/ci-logs.yml'
   pull_request:
     paths:
-      - 'frontend/services/logs/**'
-      - 'frontend/libs/**'
+      - 'backend/services/logs/**'
+      - 'backend/libs/**'
       - '.github/workflows/ci-logs.yml'
 permissions:
   actions: read
@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: frontend/services/logs/Dockerfile
+          file: backend/services/logs/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
