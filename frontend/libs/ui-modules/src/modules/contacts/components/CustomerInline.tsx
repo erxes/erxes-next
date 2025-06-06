@@ -1,14 +1,7 @@
 import React from 'react';
 import { useCustomerInline } from '../hooks/useCustomerInline';
 import { ICustomerInline } from '../types/Customer';
-import {
-  Avatar,
-  avatarVariants,
-  cn,
-  Combobox,
-  Skeleton,
-  TextOverflowTooltip,
-} from 'erxes-ui';
+import { Avatar, avatarVariants, cn, Combobox, Skeleton } from 'erxes-ui';
 import { useCustomerInlineContext } from '../hooks/useCustomerInlineContext';
 import { CustomerInlineContext } from '../contexts/CustomerInlineContext';
 
@@ -71,15 +64,8 @@ const CustomerInlineAvatar = React.forwardRef<
   React.ElementRef<typeof Avatar>,
   React.ComponentPropsWithoutRef<typeof Avatar>
 >(({ ...props }, ref) => {
-  const {
-    firstName,
-    lastName,
-    avatar,
-    primaryEmail,
-    primaryPhone,
-    loading,
-    _id,
-  } = useCustomerInlineContext();
+  const { firstName, lastName, avatar, primaryEmail, primaryPhone, loading } =
+    useCustomerInlineContext();
 
   if (loading)
     return <Skeleton className={avatarVariants({ size: props.size })} />;
@@ -108,6 +94,7 @@ export const CustomerInlineTitle = React.forwardRef<
 >((props, ref) => {
   const { firstName, lastName, primaryEmail, primaryPhone, loading } =
     useCustomerInlineContext();
+
   return (
     <Combobox.Value
       loading={loading}
@@ -130,5 +117,3 @@ export const CustomerInline = Object.assign(CustomerInlineRoot, {
   Avatar: CustomerInlineAvatar,
   Title: CustomerInlineTitle,
 });
-
-

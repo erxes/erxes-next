@@ -1,5 +1,16 @@
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
-import { Checkbox, cn, CurrencyField, Form, InputNumber, Table } from 'erxes-ui';
+import {
+  Checkbox,
+  cn,
+  CurrencyField,
+  Form,
+  InputNumber,
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTableHotKeyControl,
+  RecordTablePopover,
+  Table,
+} from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
 // import { InventoryRowCheckbox } from './InventoryRowCheckbox';
@@ -8,6 +19,7 @@ import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
 import { taxPercentsState } from '../../../states/trStates';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { AccountingHotkeyScope } from '~/modules/types/AccountingHotkeyScope';
 
 export const InventoryRow = ({
   detailIndex,
@@ -42,25 +54,30 @@ export const InventoryRow = ({
   const rowPercent = useMemo(() => {
     let percent = taxPercents.sum ?? 0;
     if (detail.excludeVat) {
-      percent = percent - (taxPercents.vat ?? 0)
+      percent = percent - (taxPercents.vat ?? 0);
     }
     if (detail.excludeCtax) {
-      percent = percent - (taxPercents.ctax ?? 0)
+      percent = percent - (taxPercents.ctax ?? 0);
     }
     return percent;
-  }, [taxPercents.sum, taxPercents.vat, taxPercents.ctax, detail.excludeVat, detail.excludeCtax])
-
+  }, [
+    taxPercents.sum,
+    taxPercents.vat,
+    taxPercents.ctax,
+    detail.excludeVat,
+    detail.excludeCtax,
+  ]);
 
   const [taxAmounts, setTaxAmounts] = useState({
-    unitPriceWithTax: (detail.unitPrice ?? 0) / 100 * (100 + rowPercent),
-    amountWithTax: (detail.amount ?? 0) / 100 * (100 + rowPercent),
+    unitPriceWithTax: ((detail.unitPrice ?? 0) / 100) * (100 + rowPercent),
+    amountWithTax: ((detail.amount ?? 0) / 100) * (100 + rowPercent),
   });
 
   const { unitPrice, count, _id } = detail;
 
   const getFieldName = (name: string) => {
     return `trDocs.${journalIndex}.details.${detailIndex}.${name}`;
-  }
+  };
 
   const handleAmountChange = (
     value: number,
@@ -72,9 +89,9 @@ export const InventoryRow = ({
     form.setValue(getFieldName('unitPrice') as any, newUnitPrice);
     if (trDoc.hasVat || trDoc.hasCtax) {
       setTaxAmounts({
-        unitPriceWithTax: newUnitPrice / 100 * (100 + rowPercent),
-        amountWithTax: value / 100 * (100 + rowPercent),
-      })
+        unitPriceWithTax: (newUnitPrice / 100) * (100 + rowPercent),
+        amountWithTax: (value / 100) * (100 + rowPercent),
+      });
     }
   };
 
@@ -84,11 +101,11 @@ export const InventoryRow = ({
 
     if (trDoc.hasVat || trDoc.hasCtax) {
       setTaxAmounts({
-        unitPriceWithTax: (pUnitPrice ?? 0) / 100 * (100 + rowPercent),
-        amountWithTax: newAmount / 100 * (100 + rowPercent)
-      })
+        unitPriceWithTax: ((pUnitPrice ?? 0) / 100) * (100 + rowPercent),
+        amountWithTax: (newAmount / 100) * (100 + rowPercent),
+      });
     }
-  }
+  };
 
   const handleCountChange = (
     value: number,
@@ -112,28 +129,38 @@ export const InventoryRow = ({
 
     setTaxAmounts({ unitPriceWithTax, amountWithTax });
 
-    form.setValue(getFieldName('amount') as any, amountWithTax / (100 + rowPercent) * 100);
-    form.setValue(getFieldName('unitPrice') as any, unitPriceWithTax / (100 + rowPercent) * 100);
-  }
+    form.setValue(
+      getFieldName('amount') as any,
+      (amountWithTax / (100 + rowPercent)) * 100,
+    );
+    form.setValue(
+      getFieldName('unitPrice') as any,
+      (unitPriceWithTax / (100 + rowPercent)) * 100,
+    );
+  };
 
-  const handleExcludeTax = (type: string, checked: boolean, onChange: (value: boolean) => void) => {
+  const handleExcludeTax = (
+    type: string,
+    checked: boolean,
+    onChange: (value: boolean) => void,
+  ) => {
     let percent = taxPercents.sum ?? 0;
 
     if (type === 'vat' ? !checked : detail.excludeVat) {
-      percent = percent - (taxPercents.vat ?? 0)
+      percent = percent - (taxPercents.vat ?? 0);
     }
 
     if (type === 'ctax' ? !checked : detail.excludeCtax) {
-      percent = percent - (taxPercents.ctax ?? 0)
+      percent = percent - (taxPercents.ctax ?? 0);
     }
 
-    const unitPriceWithTax = (unitPrice ?? 0) / 100 * (100 + percent);
+    const unitPriceWithTax = ((unitPrice ?? 0) / 100) * (100 + percent);
     setTaxAmounts({
       unitPriceWithTax,
-      amountWithTax: unitPriceWithTax * (count ?? 0)
-    })
+      amountWithTax: unitPriceWithTax * (count ?? 0),
+    });
     onChange(!checked);
-  }
+  };
 
   return (
     <Table.Row
@@ -141,145 +168,144 @@ export const InventoryRow = ({
       // data-state={
       //   selectedProducts.includes(product.id) ? 'selected' : 'unselected'
       // }
-      className="overflow-hidden h-cell"
+      className={cn(
+        'overflow-hidden h-cell hover:!bg-background',
+        detailIndex === 0 && '[&>td]:border-t',
+      )}
     >
-      <Table.Cell
+      {/* <Table.Cell
         className={cn('overflow-hidden', {
           'rounded-tl-lg border-t': detailIndex === 0,
           'rounded-bl-lg': detailIndex === details.length - 1,
         })}
       >
         <div className="w-9 flex items-center justify-center">
-          {/* <InventoryRowCheckbox productId={product.id} /> */}
-
+          <InventoryRowCheckbox productId={product.id} />
         </div>
-      </Table.Cell>
+      </Table.Cell> */}
 
-      <Table.Cell
-        className={cn({
-          'border-t': detailIndex === 0,
-        })}
-      >
-        <Form.Field
-          control={form.control}
-          name={`trDocs.${journalIndex}.details.${detailIndex}.accountId`}
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Control>
-                <SelectAccount
-                  value={field.value || ''}
-                  onValueChange={(accountId) => {
-                    field.onChange(accountId);
-                  }}
-                  defaultFilter={{ journals: [JournalEnum.INVENTORY] }}
-                  className="rounded-none focus-visible:relative focus-visible:z-10"
-                  variant="ghost"
-                />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-      </Table.Cell>
-      <Table.Cell
-        className={cn({
-          'border-t': detailIndex === 0,
-        })}
-      >
-        <Form.Field
-          control={form.control}
-          name={`trDocs.${journalIndex}.details.${detailIndex}.productId`}
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Control>
-                <SelectProduct
-                  value={field.value || ''}
-                  onValueChange={(productId) => {
-                    field.onChange(productId);
-                  }}
-                  className="rounded-none focus-visible:relative focus-visible:z-10"
-                  variant="ghost"
-                />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-      </Table.Cell>
-      <Table.Cell
-        className={cn({
-          'border-t': detailIndex === 0,
-        })}
-      >
-        <Form.Field
-          control={form.control}
-          name={`trDocs.${journalIndex}.details.${detailIndex}.count`}
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Control>
-                <InputNumber
-                  value={field.value ?? 0}
-                  className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
-                  onChange={(value) =>
-                    handleCountChange(value || 0, field.onChange)
-                  }
-                />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-      </Table.Cell>
-      <Table.Cell
-        className={cn({
-          'border-t': detailIndex === 0,
-        })}
-      >
-        <Form.Field
-          control={form.control}
-          name={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Control>
-                <CurrencyField.ValueInput
-                  value={field.value ?? 0}
-                  className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
-                  onChange={(value) =>
-                    handleUnitPriceChange(value || 0, field.onChange)
-                  }
-                />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-      </Table.Cell>
-      <Table.Cell
-        className={cn({
-          'border-t': detailIndex === 0,
-          'rounded-tr-lg': !(trDoc.hasVat || trDoc.hasCtax) && detailIndex === 0,
-          'rounded-br-lg': !(trDoc.hasVat || trDoc.hasCtax) && detailIndex === details.length - 1,
-        })}
-      >
-        <Form.Field
-          control={form.control}
-          name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Control>
-                <CurrencyField.ValueInput
-                  value={field.value ?? 0}
-                  className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
-                  onChange={(value) =>
-                    handleAmountChange(value || 0, field.onChange)
-                  }
-                />
-              </Form.Control>
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-      </Table.Cell>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={0}>
+        <Table.Cell>
+          <Form.Field
+            control={form.control}
+            name={`trDocs.${journalIndex}.details.${detailIndex}.accountId`}
+            render={({ field }) => (
+              <SelectAccount
+                value={field.value || ''}
+                onValueChange={(accountId) => {
+                  field.onChange(accountId);
+                }}
+                defaultFilter={{ journals: [JournalEnum.INVENTORY] }}
+                className="rounded-none focus-visible:relative focus-visible:z-10"
+                variant="ghost"
+                inForm
+                scope={AccountingHotkeyScope.TransactionCEPage}
+              />
+            )}
+          />
+        </Table.Cell>
+      </RecordTableHotKeyControl>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={1}>
+        <Table.Cell>
+          <Form.Field
+            control={form.control}
+            name={`trDocs.${journalIndex}.details.${detailIndex}.productId`}
+            render={({ field }) => (
+              <SelectProduct
+                value={field.value || ''}
+                onValueChange={(productId) => {
+                  field.onChange(productId);
+                }}
+                className="rounded-none focus-visible:relative focus-visible:z-10 bg-background"
+                variant="ghost"
+                scope={AccountingHotkeyScope.TransactionCEPage}
+              />
+            )}
+          />
+        </Table.Cell>
+      </RecordTableHotKeyControl>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={2}>
+        <Table.Cell>
+          <Form.Field
+            control={form.control}
+            name={`trDocs.${journalIndex}.details.${detailIndex}.count`}
+            render={({ field }) => (
+              <RecordTablePopover
+                scope={`trDocs.${journalIndex}.details.${detailIndex}.count`}
+                closeOnEnter
+              >
+                <Form.Control>
+                  <RecordTableCellTrigger>
+                    {field.value?.toLocaleString() || 0}
+                  </RecordTableCellTrigger>
+                </Form.Control>
+                <RecordTableCellContent>
+                  <InputNumber
+                    value={field.value ?? 0}
+                    onChange={(value) =>
+                      handleCountChange(value || 0, field.onChange)
+                    }
+                  />
+                </RecordTableCellContent>
+              </RecordTablePopover>
+            )}
+          />
+        </Table.Cell>
+      </RecordTableHotKeyControl>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={3}>
+        <Table.Cell>
+          <Form.Field
+            control={form.control}
+            name={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
+            render={({ field }) => (
+              <RecordTablePopover
+                scope={`trDocs.${journalIndex}.details.${detailIndex}.unitPrice`}
+                closeOnEnter
+              >
+                <Form.Control>
+                  <RecordTableCellTrigger>
+                    {field.value?.toLocaleString() || 0}
+                  </RecordTableCellTrigger>
+                </Form.Control>
+                <RecordTableCellContent>
+                  <CurrencyField.ValueInput
+                    value={field.value || 0}
+                    onChange={(value) =>
+                      handleUnitPriceChange(value || 0, field.onChange)
+                    }
+                  />
+                </RecordTableCellContent>
+              </RecordTablePopover>
+            )}
+          />
+        </Table.Cell>
+      </RecordTableHotKeyControl>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={4}>
+        <Table.Cell>
+          <Form.Field
+            control={form.control}
+            name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
+            render={({ field }) => (
+              <RecordTablePopover
+                scope={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
+                closeOnEnter
+              >
+                <RecordTableCellTrigger>
+                  {field.value?.toLocaleString() || 0}
+                </RecordTableCellTrigger>
+                <RecordTableCellContent>
+                  <CurrencyField.ValueInput
+                    value={field.value ?? 0}
+                    onChange={(value) =>
+                      handleAmountChange(value || 0, field.onChange)
+                    }
+                  />
+                </RecordTableCellContent>
+              </RecordTablePopover>
+            )}
+          />
+        </Table.Cell>
+      </RecordTableHotKeyControl>
 
       {trDoc.hasVat && (
         <Table.Cell
@@ -295,7 +321,9 @@ export const InventoryRow = ({
                 <Form.Control>
                   <Checkbox
                     checked={!field.value}
-                    onCheckedChange={(checked) => handleExcludeTax('vat', Boolean(checked), field.onChange)}
+                    onCheckedChange={(checked) =>
+                      handleExcludeTax('vat', Boolean(checked), field.onChange)
+                    }
                   />
                 </Form.Control>
                 <Form.Message />
@@ -319,7 +347,9 @@ export const InventoryRow = ({
                 <Form.Control>
                   <Checkbox
                     checked={!field.value}
-                    onCheckedChange={(checked) => handleExcludeTax('ctax', Boolean(checked), field.onChange)}
+                    onCheckedChange={(checked) =>
+                      handleExcludeTax('ctax', Boolean(checked), field.onChange)
+                    }
                   />
                 </Form.Control>
                 <Form.Message />
@@ -338,10 +368,9 @@ export const InventoryRow = ({
           >
             <CurrencyField.ValueInput
               value={taxAmounts.unitPriceWithTax ?? 0}
-              className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
+              className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
               onChange={(value) => handleTaxValueChange('unitPrice', value)}
             />
-
           </Table.Cell>
           <Table.Cell
             className={cn({
@@ -351,7 +380,7 @@ export const InventoryRow = ({
           >
             <CurrencyField.ValueInput
               value={taxAmounts.amountWithTax ?? 0}
-              className='rounded-none focus-visible:relative focus-visible:z-10 shadow-none'
+              className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
               onChange={(value) => handleTaxValueChange('amount', value)}
             />
           </Table.Cell>

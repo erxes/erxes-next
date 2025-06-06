@@ -34,9 +34,11 @@ export const useCustomers = (options?: OperationVariables) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
+          ...prev,
           customers: {
+            ...prev.customers,
             list: [
-              ...(prev.customers?.list || []),
+              ...(prev.customers.list || []),
               ...fetchMoreResult.customers.list,
             ],
             totalCount: fetchMoreResult.customers.totalCount,

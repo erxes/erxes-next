@@ -17,6 +17,14 @@ export const PageChangeEffect = () => {
         setHotkeyScope(AccountingHotkeyScope.TransactionPage);
         break;
       }
+      case isMatchingLocation(AccountingPath.TransactionCreate): {
+        setHotkeyScope(AccountingHotkeyScope.TransactionCEPage);
+        break;
+      }
+      case isMatchingLocation(AccountingPath.TransactionEdit): {
+        setHotkeyScope(AccountingHotkeyScope.TransactionCEPage);
+        break;
+      }
     }
   }, [isMatchingLocation, setHotkeyScope]);
 

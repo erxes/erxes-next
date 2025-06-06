@@ -3,25 +3,47 @@ import { cn } from 'erxes-ui/lib/utils';
 import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
+import { Key } from 'erxes-ui/types';
+import { useScopedHotkeys } from 'erxes-ui/modules/hotkey';
 
 export const RecordTablePopover = ({
   scope,
   onOpenChange,
+  open,
+  closeOnEnter,
   ...props
 }: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> & {
   scope?: string;
+  closeOnEnter?: boolean;
 }) => {
+  const [_open, _setOpen] = React.useState(false);
   const {
     setHotkeyScopeAndMemorizePreviousScope,
     goBackToPreviousHotkeyScope,
   } = usePreviousHotkeyScope();
 
+  useScopedHotkeys(
+    Key.Enter,
+    () => {
+      if (!scope || !closeOnEnter) {
+        return;
+      }
+      onOpenChange?.(false);
+      _setOpen(false);
+      goBackToPreviousHotkeyScope();
+    },
+    scope + '.Popover',
+    [],
+  );
+
   return (
     <PopoverPrimitive.Root
       modal
       {...props}
+      open={open ?? _open}
       onOpenChange={(open) => {
         onOpenChange?.(open);
+        _setOpen(open);
         open
           ? setHotkeyScopeAndMemorizePreviousScope(scope + '.Popover')
           : goBackToPreviousHotkeyScope();
