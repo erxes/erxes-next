@@ -1,6 +1,6 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-import { Collapsible, Sidebar, IUIConfig, cn } from 'erxes-ui';
+import { Collapsible, Sidebar } from 'erxes-ui';
 import { NavigationButton } from './NavigationButton';
 import { Icon } from '@tabler/icons-react';
 import { useFavorites } from '../hooks/useFavorites';
@@ -15,8 +15,10 @@ export function SidebarNavigationFavorites() {
       <Sidebar.Group>
         <Sidebar.GroupLabel asChild>
           <Collapsible.Trigger className="flex items-center gap-2">
-            <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-            <span className="text-xs font-sans font-semibold normal-case">Favorites</span>
+            <IconCaretUpFilled className="size-3.5 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+            <span className="font-sans text-xs font-semibold normal-case">
+              Favorites
+            </span>
           </Collapsible.Trigger>
         </Sidebar.GroupLabel>
         <Collapsible.Content>
