@@ -1,7 +1,7 @@
 import { currentOrganizationState } from 'ui-modules';
 
 import {
-  Avatar,
+  // Avatar,
   cn,
   DropdownMenu,
   Sidebar,
@@ -10,7 +10,7 @@ import {
 
 import { Logo } from '@/auth/components/Logo';
 import { useAtom } from 'jotai';
-import { IconChevronRight, IconSelector } from '@tabler/icons-react';
+import { IconSelector } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/auth/hooks/useAuth';
 
