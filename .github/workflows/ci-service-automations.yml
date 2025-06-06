@@ -7,12 +7,12 @@ on:
     paths:
       - 'backend/services/automations/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-api-core.yml'
+      - '.github/workflows/ci-service-automations.yml'
   pull_request:
     paths:
       - 'backend/services/automations/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-automations.yml'
+      - '.github/workflows/ci-service-automations.yml'
 
 jobs:
   automations-ci:
