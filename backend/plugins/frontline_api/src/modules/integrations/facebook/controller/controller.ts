@@ -1,152 +1,142 @@
-// import * as graph from 'fbgraph';
-import { generateModels,IModels } from '~/connectionResolvers';
+import { generateModels, IModels } from '~/connectionResolvers';
 import { getSubdomain } from 'erxes-api-shared/utils';
-import { debugFacebook,debugError } from '@/integrations/facebook/debuggers';
-import{checkIsAdsOpenThread} from '@/integrations/facebook/utils';
-import { NextFunction, Request, Response } from "express";
-import { INTEGRATION_KINDS ,FACEBOOK_POST_TYPES} from '@/integrations/facebook/constants';
-import {getPageAccessTokenFromMap,} from '@/integrations/facebook/utils';
+import { debugFacebook, debugError } from '@/integrations/facebook/debuggers';
+import { checkIsAdsOpenThread } from '@/integrations/facebook/utils';
+import { NextFunction, Response } from 'express';
+import {
+  INTEGRATION_KINDS,
+  FACEBOOK_POST_TYPES,
+} from '@/integrations/facebook/constants';
+import { getPageAccessTokenFromMap } from '@/integrations/facebook/utils';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-import {receiveMessage} from '@/integrations/facebook/controller/receiveMessage';
-import { getConfig} from '@/integrations/facebook/commonUtils';
-import {Activity} from '@/integrations/facebook/@types/utils'
-import {receiveComment} from '@/integrations/facebook/controller/receiveComment'
-import {receivePost} from '@/integrations/facebook/controller/receivePost'
+import { receiveMessage } from '@/integrations/facebook/controller/receiveMessage';
+import { getConfig } from '@/integrations/facebook/commonUtils';
+import { Activity } from '@/integrations/facebook/@types/utils';
+import { receiveComment } from '@/integrations/facebook/controller/receiveComment';
+import { receivePost } from '@/integrations/facebook/controller/receivePost';
 export const facebookGetPost = async (req, res) => {
-    debugFacebook(
-      `Request to get post data with: ${JSON.stringify(req.query)}`
-    );
+  debugFacebook(`Request to get post data with: ${JSON.stringify(req.query)}`);
 
-    const subdomain = getSubdomain(req);
-    const models = await generateModels(subdomain);
+  const subdomain = getSubdomain(req);
+  const models = await generateModels(subdomain);
 
-    const { erxesApiId } = req.query;
+  const { erxesApiId } = req.query;
 
-    const post = await models.FacebookPostConversations.findOne({ erxesApiId });
+  const post = await models.FacebookPostConversations.findOne({ erxesApiId });
 
-    return res.json({ ...post });
-
-}
-
+  return res.json({ ...post });
+};
 
 export const facebookGetStatus = async (req, res) => {
-    const subdomain = getSubdomain(req);
-    const models = await generateModels(subdomain);
+  const subdomain = getSubdomain(req);
+  const models = await generateModels(subdomain);
 
-    const { integrationId } = req.query;
+  const { integrationId } = req.query;
 
-    const integration = await models.FacebookIntegrations.findOne({
-      erxesApiId: integrationId
-    });
+  const integration = await models.FacebookIntegrations.findOne({
+    erxesApiId: integrationId,
+  });
 
-    let result = {
-      status: "healthy"
-    } as any;
+  let result = {
+    status: 'healthy',
+  } as any;
 
-    if (integration) {
-      result = {
-        status: integration.healthStatus || "healthy",
-        error: integration.error
-      };
-    }
+  if (integration) {
+    result = {
+      status: integration.healthStatus || 'healthy',
+      error: integration.error,
+    };
+  }
 
-    return res.send(result);
-}
+  return res.send(result);
+};
 
-  const accessTokensByPageId = {};
+const accessTokensByPageId = {};
 export const facebookSubscription = async (req, res) => {
-    const subdomain = getSubdomain(req);
-    const models = await generateModels(subdomain);
+  const subdomain = getSubdomain(req);
+  const models = await generateModels(subdomain);
 
-    const FACEBOOK_VERIFY_TOKEN = await getConfig(
-      models,
-      "FACEBOOK_VERIFY_TOKEN"
-    );
+  const FACEBOOK_VERIFY_TOKEN = await getConfig(
+    models,
+    'FACEBOOK_VERIFY_TOKEN',
+  );
 
-    // when the endpoint is registered as a webhook, it must echo back
-    // the 'hub.challenge' value it receives in the query arguments
-    if (req.query["hub.mode"] === "subscribe") {
-      if (req.query["hub.verify_token"] === FACEBOOK_VERIFY_TOKEN) {
-        res.send(req.query["hub.challenge"]);
-      } else {
-        res.send("OK");
+  // when the endpoint is registered as a webhook, it must echo back
+  // the 'hub.challenge' value it receives in the query arguments
+  if (req.query['hub.mode'] === 'subscribe') {
+    if (req.query['hub.verify_token'] === FACEBOOK_VERIFY_TOKEN) {
+      res.send(req.query['hub.challenge']);
+    } else {
+      res.send('OK');
+    }
+  }
+};
+export const facebookWebhook = async (req, res, next) => {
+  const subdomain = getSubdomain(req);
+  const models = await generateModels(subdomain);
+  const data = req.body;
+  if (data.object !== 'page' && !checkIsAdsOpenThread(data?.entry)) {
+    return;
+  }
+  for (const entry of data.entry) {
+    // receive chat
+    try {
+      if (entry.messaging) {
+        await processMessagingEvent(
+          entry,
+          models,
+          res,
+          next,
+          subdomain,
+          accessTokensByPageId,
+        );
       }
-    }
-}
-export const facebookWebhook = async (req, res,next) => {
-    const subdomain = getSubdomain(req);
-    const models = await generateModels(subdomain);
-    const data = req.body;
-    if (data.object !== "page" && !checkIsAdsOpenThread(data?.entry)) {
-      return;
-    }
-    for (const entry of data.entry) {
-      // receive chat
-      try {
-        if (entry.messaging) {
-          await processMessagingEvent(
-            entry,
-            models,
-            res,
-            next,
-            subdomain,
-            accessTokensByPageId
-          );
+      if (entry.standby) {
+        const activities = await processStandbyEvents(entry, models);
+        for (const { activity, integration } of activities) {
+          await receiveMessage(models, subdomain, integration, activity);
         }
-        if (entry.standby) {
-          const activities = await processStandbyEvents(entry, models);
-          for (const { activity, integration } of activities) {
-            await receiveMessage(models, subdomain, integration, activity);
+      }
+    } catch (error) {
+      debugFacebook(`Error processing entry: ${error.message}`);
+      // Optionally, send a response or log the error
+      res.status(500).send('Internal Server Error');
+    }
+
+    // receive post and comment
+    if (entry.changes) {
+      for (const event of entry.changes) {
+        if (event.value.item === 'comment') {
+          debugFacebook(`Received comment data ${JSON.stringify(event.value)}`);
+          try {
+            await receiveComment(models, subdomain, event.value, entry.id);
+            debugFacebook(`Successfully saved  ${JSON.stringify(event.value)}`);
+            return res.end('success');
+          } catch (e) {
+            debugError(`Error processing comment: ${e.message}`);
+            return res.end('success');
           }
         }
-      } catch (error) {
-        debugFacebook(`Error processing entry: ${error.message}`);
-        // Optionally, send a response or log the error
-        res.status(500).send("Internal Server Error");
-      }
 
-      // receive post and comment
-      if (entry.changes) {
-        for (const event of entry.changes) {
-          if (event.value.item === "comment") {
+        if (FACEBOOK_POST_TYPES.includes(event.value.item)) {
+          try {
+            debugFacebook(`Received post data ${JSON.stringify(event.value)}`);
+            await receivePost(models, subdomain, event.value, entry.id);
             debugFacebook(
-              `Received comment data ${JSON.stringify(event.value)}`
+              `Successfully saved post ${JSON.stringify(event.value)}`,
             );
-            try {
-              await receiveComment(models, subdomain, event.value, entry.id);
-              debugFacebook(
-                `Successfully saved  ${JSON.stringify(event.value)}`
-              );
-              return res.end("success");
-            } catch (e) {
-              debugError(`Error processing comment: ${e.message}`);
-              return res.end("success");
-            }
+            return res.end('success');
+          } catch (e) {
+            debugError(`Error processing post: ${e.message}`);
+            return res.end('success');
           }
-
-          if (FACEBOOK_POST_TYPES.includes(event.value.item)) {
-            try {
-              debugFacebook(
-                `Received post data ${JSON.stringify(event.value)}`
-              );
-              await receivePost(models, subdomain, event.value, entry.id);
-              debugFacebook(
-                `Successfully saved post ${JSON.stringify(event.value)}`
-              );
-              return res.end("success");
-            } catch (e) {
-              debugError(`Error processing post: ${e.message}`);
-              return res.end("success");
-            }
-          } else {
-            return res.end("success");
-          }
+        } else {
+          return res.end('success');
         }
       }
     }
-}
-
-
+  }
+};
 
 export async function processMessagingEvent(
   entry: any,
@@ -154,7 +144,7 @@ export async function processMessagingEvent(
   res: Response,
   next: NextFunction,
   subdomain: string,
-  accessTokensByPageId: Record<string, string>
+  accessTokensByPageId: Record<string, string>,
 ) {
   debugFacebook(`Received messenger data ${JSON.stringify(entry)}`);
 
@@ -162,13 +152,13 @@ export async function processMessagingEvent(
     const messagingEvents = entry.messaging;
 
     if (!Array.isArray(messagingEvents)) {
-      debugFacebook("Invalid format: entry.messaging is not an array.");
+      debugFacebook('Invalid format: entry.messaging is not an array.');
       return next();
     }
 
     for (const activity of messagingEvents) {
       if (!activity?.recipient?.id) {
-        debugFacebook("Skipping activity with missing recipient ID.");
+        debugFacebook('Skipping activity with missing recipient ID.');
         continue;
       }
       const pageId = activity.recipient.id;
@@ -191,13 +181,27 @@ export async function processMessagingEvent(
       });
 
       if (!facebookAccounts) {
-        debugFacebook(`No Facebook account found for accountId: ${integration.accountId}`);
+        debugFacebook(
+          `No Facebook account found for accountId: ${integration.accountId}`,
+        );
+        continue;
+      }
+      const { facebookPageTokensMap = {} } = integration;
+      try {
+        accessTokensByPageId[pageId] = getPageAccessTokenFromMap(
+          pageId,
+          facebookPageTokensMap,
+        );
+      } catch (e) {
+        debugFacebook(
+          `Error occurred while getting page access token: ${e.message}`,
+        );
         continue;
       }
 
       // Create activity object for processing
       const activityData: Activity = {
-        channelId: "facebook",
+        channelId: 'facebook',
         timestamp: new Date(activity.timestamp),
         conversation: {
           id: activity.sender.id,
@@ -211,8 +215,8 @@ export async function processMessagingEvent(
           name: activity.recipient.id,
         },
         channelData: activity,
-        type: "message",
-        text: activity.message?.text || "",
+        type: 'message',
+        text: activity.message?.text || '',
       };
 
       debugFacebook(`Processing activity: ${JSON.stringify(activityData)}`);
@@ -221,13 +225,12 @@ export async function processMessagingEvent(
       await receiveMessage(models, subdomain, integration, activityData);
     }
 
-    res.status(200).send("EVENT_RECEIVED");
+    res.status(200).send('EVENT_RECEIVED');
   } catch (e) {
     debugFacebook(`Failed to process messaging event: ${(e as Error).message}`);
-    res.status(200).send("EVENT_RECEIVED"); // Always respond with 200 for webhook
+    res.status(200).send('EVENT_RECEIVED'); // Always respond with 200 for webhook
   }
 }
-
 
 export async function processStandbyEvents(data: any, models: IModels) {
   const activities: {
@@ -235,7 +238,7 @@ export async function processStandbyEvents(data: any, models: IModels) {
     integration: IFacebookIntegrationDocument;
   }[] = [];
   if (!data.standby || !Array.isArray(data.standby)) {
-    debugFacebook("No standby events found or standby is not an array");
+    debugFacebook('No standby events found or standby is not an array');
     return activities;
   }
   for (const standbyEvent of data.standby) {
@@ -245,41 +248,41 @@ export async function processStandbyEvents(data: any, models: IModels) {
         !standbyEvent.sender?.id ||
         !standbyEvent.timestamp
       ) {
-        debugFacebook("Invalid standby event: missing required fields");
+        debugFacebook('Invalid standby event: missing required fields');
         continue; // Skip invalid event
       }
 
       const integration = await models.FacebookIntegrations.getIntegration({
         $and: [
           { facebookPageIds: { $in: [standbyEvent.recipient.id] } },
-          { kind: INTEGRATION_KINDS.MESSENGER }
-        ]
+          { kind: INTEGRATION_KINDS.MESSENGER },
+        ],
       });
 
       if (!integration) {
         debugFacebook(
-          `Integration not found for pageId: ${standbyEvent.recipient.id}`
+          `Integration not found for pageId: ${standbyEvent.recipient.id}`,
         );
         continue;
       }
 
       const activity: any = {
-        channelId: "facebook",
+        channelId: 'facebook',
         timestamp: new Date(standbyEvent.timestamp),
         conversation: {
-          id: standbyEvent.sender.id
+          id: standbyEvent.sender.id,
         },
         from: {
           id: standbyEvent.sender.id,
-          name: standbyEvent.sender.id
+          name: standbyEvent.sender.id,
         },
         recipient: {
           id: standbyEvent.recipient.id,
-          name: standbyEvent.recipient.id
+          name: standbyEvent.recipient.id,
         },
         channelData: standbyEvent,
-        type: "message",
-        text: standbyEvent.message?.text || ""
+        type: 'message',
+        text: standbyEvent.message?.text || '',
       };
 
       activities.push({ activity, integration });

@@ -4,14 +4,49 @@ import { IConversationDocument } from '@/inbox/@types/conversations';
 import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels, IContext, IModels } from '~/connectionResolvers';
-
-/**
- *  Send conversation to integrations
- */
+import { IConversationMessageAdd } from '@/inbox/@types/conversationMessages';
+import { IIntegrationDocument } from '@/inbox/@types/integrations';
+import { AUTO_BOT_MESSAGES } from '@/inbox/db/definitions/constants';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
+import { facebookIntegrations } from '@/integrations/facebook/messageBroker';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 /**
  * conversation notrification receiver ids
  */
+export const sendConversationToServices = async (
+  subdomain: string,
+  integration: IIntegrationDocument,
+  serviceName: string,
+  payload: object,
+) => {
+  try {
+    const data = {
+      action: `reply-${integration.kind.split('-')[1]}`,
+      type: serviceName,
+      payload: JSON.stringify(payload),
+      integrationId: integration._id,
+    };
+    switch (serviceName) {
+      case 'facebook':
+        return await facebookIntegrations({ subdomain, data });
+
+      case 'instagram':
+        break;
+
+      case 'mobinetSms':
+        break;
+
+      default:
+        throw new Error(`Unsupported service: ${serviceName}`);
+    }
+  } catch (e) {
+    throw new Error(
+      `Your message not sent. Error: ${e.message}. Go to integrations list and fix it.`,
+    );
+  }
+};
+
 export const conversationNotifReceivers = (
   conversation: IConversationDocument,
   currentUserId: string,
@@ -52,6 +87,11 @@ export const publishConversationsChanged = async (
   const models = await generateModels(subdomain);
 
   for (const _id of _ids) {
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationChanged:${_id}`, {
+      conversationChanged: { conversationId: _id, type },
+    });
     await models.Conversations.findOne({ _id });
   }
 
@@ -66,9 +106,28 @@ export const publishMessage = async (
   message: any,
   customerId?: string,
 ) => {
-  // widget is listening for this subscription to show notification
-  // customerId available means trying to notify to client
-  //incomplete
+  (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
+    `conversationClientMessageInserted:${message.conversationId}`,
+    {
+      conversationClientMessageInserted: message,
+    },
+  );
+
+  if (customerId) {
+    const unreadCount =
+      await models.ConversationMessages.widgetsGetUnreadMessagesCount(
+        message.conversationId,
+      );
+
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationAdminMessageInserted:${customerId}`, {
+      conversationAdminMessageInserted: {
+        customerId,
+        unreadCount,
+      },
+    });
+  }
 };
 
 export const sendNotifications = async (
@@ -148,7 +207,7 @@ export const conversationMutations = {
    */
   async conversationMessageAdd(
     _root,
-    doc: any,
+    doc: IConversationMessageAdd,
     { user, models, subdomain }: IContext,
   ) {
     const conversation = await models.Conversations.getConversation(
@@ -168,21 +227,103 @@ export const conversationMutations = {
 
     const kind = integration.kind;
 
+    const customer = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'customers',
+      action: 'findOne',
+      input: { query: { _id: conversation.customerId } },
+    });
+
+    if (!customer) {
+      throw new Error('Customer not found for the conversation');
+    }
     // if conversation's integration kind is form then send reply to
     // customer's email
-    //incomplete
+    const email = customer ? customer.primaryEmail : '';
 
-    return 'dbMessage';
+    if (!doc.internal && kind === 'lead' && email) {
+      await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'core',
+        action: 'sendEmail',
+        input: {
+          toEmails: [email],
+          title: 'Reply',
+          template: {
+            data: doc.content,
+          },
+        },
+      });
+    }
+
+    const serviceName = integration.kind.split('-')[0];
+
+    const payload = {
+      integrationId: integration._id,
+      conversationId: conversation._id,
+      content: doc.content || '',
+      internal: doc.internal,
+      attachments: doc.attachments || [],
+      extraInfo: doc.extraInfo,
+      userId: user._id,
+    };
+
+    const response = await sendConversationToServices(
+      subdomain,
+      integration,
+      serviceName,
+      payload,
+    );
+    // if the service runs separately & returns data, then don't save message inside inbox
+    if (response?.data?.data) {
+      const { conversationId, content } = response.data.data;
+
+      if (conversationId && content) {
+        await models.Conversations.updateConversation(conversationId, {
+          content,
+          updatedAt: new Date(),
+        });
+      }
+
+      return { ...response.data.data };
+    }
+
+    // do not send internal message to third service integrations
+    if (doc.internal) {
+      const messageObj = await models.ConversationMessages.addMessage(
+        doc,
+        user._id,
+      );
+
+      // publish new message to conversation detail
+      publishMessage(models, messageObj);
+
+      return messageObj;
+    }
+    const message = await models.ConversationMessages.addMessage(doc, user._id);
+
+    const dbMessage = await models.ConversationMessages.getMessage(message._id);
+
+    // Publishing both admin & client
+    publishMessage(models, dbMessage, conversation.customerId);
+
+    return dbMessage;
   },
 
   async conversationMessageEdit(
     _root,
     { _id, ...fields }: any,
-    { user, models, subdomain }: IContext,
+    { user, models }: IContext,
   ) {
-    //incomplete
-
-    return 'success';
+    const message = await models.ConversationMessages.getMessage(_id);
+    if (message.internal && user._id === message.userId) {
+      return await models.ConversationMessages.updateMessage(_id, fields);
+    }
+    throw new Error(
+      `You cannot edit this message. Only the author of an internal message can edit it.`,
+    );
   },
 
   /**
@@ -196,10 +337,6 @@ export const conversationMutations = {
     }: { conversationIds: string[]; assignedUserId: string },
     { user, models, subdomain }: IContext,
   ) {
-    const { oldConversationById } = await getConversationById(models, {
-      _id: { $in: conversationIds },
-    });
-
     const conversations: IConversationDocument[] =
       await models.Conversations.assignUserConversation(
         conversationIds,
@@ -226,10 +363,9 @@ export const conversationMutations = {
     { _ids }: { _ids: string[] },
     { user, models, subdomain }: IContext,
   ) {
-    const { oldConversations, oldConversationById } = await getConversationById(
-      models,
-      { _id: { $in: _ids } },
-    );
+    const { oldConversations } = await getConversationById(models, {
+      _id: { $in: _ids },
+    });
     const updatedConversations =
       await models.Conversations.unassignUserConversation(_ids);
 
@@ -254,10 +390,6 @@ export const conversationMutations = {
     { user, models, subdomain, serverTiming }: IContext,
   ) {
     serverTiming.startTime('changeStatus');
-
-    const { oldConversationById } = await getConversationById(models, {
-      _id: { $in: _ids },
-    });
 
     await models.Conversations.changeStatusConversation(_ids, status, user._id);
 
@@ -295,7 +427,6 @@ export const conversationMutations = {
     await qb.buildAllQueries();
     const query = qb.mainQuery();
 
-    const { oldConversationById } = await getConversationById(models, query);
     const param = {
       status: CONVERSATION_STATUSES.CLOSED,
       closedUserId: user._id,
@@ -326,6 +457,21 @@ export const conversationMutations = {
     { _id, operatorStatus }: { _id: string; operatorStatus: string },
     { models }: IContext,
   ) {
+    const message = await models.ConversationMessages.createMessage({
+      conversationId: _id,
+      botData: [
+        {
+          type: 'text',
+          text: AUTO_BOT_MESSAGES.CHANGE_OPERATOR,
+        },
+      ],
+    });
+    await (
+      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
+    )(`conversationClientMessageInserted:${message.conversationId}`, {
+      conversationClientMessageInserted: message,
+    });
+
     return models.Conversations.updateOne(
       { _id },
       { $set: { operatorStatus } },
@@ -335,7 +481,7 @@ export const conversationMutations = {
   async conversationConvertToCard(
     _root,
     params: any,
-    { user, models, subdomain }: IContext,
+    { user, models }: IContext,
   ) {
     const { _id } = params;
 

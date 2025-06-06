@@ -1,7 +1,6 @@
 import { Schema } from 'mongoose';
-import {attachmentSchema} from 'erxes-api-shared/core-modules';
+import { attachmentSchema } from 'erxes-api-shared/core-modules';
 import { mongooseStringRandomId } from 'erxes-api-shared/utils';
-
 
 export const commentConversationSchema = new Schema({
   _id: mongooseStringRandomId,

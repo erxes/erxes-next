@@ -1,10 +1,9 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import {
   EnumCursorDirection,
-  IRecordTableCursorPageInfo,
+  ICursorListResponse,
   mergeCursorData,
   useMultiQueryState,
-  useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
 import { GET_COMPANIES } from '@/contacts/companies/graphql/queries/getCompanies';
@@ -12,7 +11,9 @@ import { ICompany } from 'ui-modules';
 
 export const COMPANIES_PER_PAGE = 30;
 
-export const useCompanies = (options?: QueryHookOptions) => {
+export const useCompanies = (
+  options?: QueryHookOptions<ICursorListResponse<ICompany>>,
+) => {
   const [{ searchValue, tags }] = useMultiQueryState<{
     searchValue: string;
     tags: string[];
@@ -20,22 +21,19 @@ export const useCompanies = (options?: QueryHookOptions) => {
     updated: string;
     lastSeen: string;
   }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
-
-  const { data, loading, fetchMore } = useQuery<{
-    companies: {
-      list: ICompany[];
-      totalCount: number;
-      pageInfo: IRecordTableCursorPageInfo;
-    };
-  }>(GET_COMPANIES, {
-    ...options,
-    variables: {
-      limit: COMPANIES_PER_PAGE,
-      searchValue,
-      tags,
-      ...options?.variables,
+  const companiesQueryVariables = {
+    limit: COMPANIES_PER_PAGE,
+    searchValue,
+    tags,
+    ...options?.variables,
+  };
+  const { data, loading, fetchMore } = useQuery<ICursorListResponse<ICompany>>(
+    GET_COMPANIES,
+    {
+      ...options,
+      variables: companiesQueryVariables,
     },
-  });
+  );
 
   const { list: companies, totalCount, pageInfo } = data?.companies || {};
 
@@ -72,5 +70,6 @@ export const useCompanies = (options?: QueryHookOptions) => {
     totalCount,
     handleFetchMore,
     pageInfo,
+    companiesQueryVariables,
   };
 };

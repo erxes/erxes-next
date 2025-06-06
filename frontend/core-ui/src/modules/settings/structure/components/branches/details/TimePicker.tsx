@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import IMask from 'imask';
-import { IMaskInput } from 'react-imask';
+import { IMask, IMaskInput } from 'react-imask';
 import { parse, isValid, format } from 'date-fns';
 import { cn } from 'erxes-ui';
 

@@ -3,11 +3,12 @@ import { generateModels } from '~/connectionResolvers';
 import { z } from 'zod';
 import { createOrUpdate } from '../utils';
 import { ITRPCContext } from 'erxes-api-shared/utils';
+import { CoreTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const companyTrpcRouter = t.router({
-  company: t.router({
+  companies: t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;

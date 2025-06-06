@@ -70,6 +70,7 @@ import {
   IBrandDocument,
   ICompanyDocument,
   ICustomerDocument,
+  ILogDocument,
   IMainContext,
   IPermissionDocument,
   IProductCategoryDocument,
@@ -90,7 +91,10 @@ import {
 } from '~/modules/documents/db/models/Documents';
 import { IDocumentDocument } from '~/modules/documents/types';
 import { IConfigDocument } from '~/modules/organization/settings/db/definitions/configs';
-import { IConfigModel, loadConfigClass } from '~/modules/organization/settings/db/models/Configs';
+import {
+  IConfigModel,
+  loadConfigClass,
+} from '~/modules/organization/settings/db/models/Configs';
 import {
   IPermissionModel,
   loadPermissionClass,
@@ -126,6 +130,20 @@ import {
   loadSegmentClass,
 } from './modules/segments/db/models/Segments';
 
+import {
+  IAutomationModel,
+  loadClass as loadAutomationClass,
+} from './modules/automations/db/models/Automations';
+import {
+  IExecutionModel,
+  loadClass as loadExecutionClass,
+} from './modules/automations/db/models/Executions';
+import {
+  IAutomationDocument,
+  IAutomationExecutionDocument,
+} from 'erxes-api-shared/core-modules';
+import { ILogModel, loadLogsClass } from './modules/logs/db/models/Logs';
+
 export interface IModels {
   Brands: IBrandModel;
   Customers: ICustomerModel;
@@ -156,6 +174,9 @@ export interface IModels {
   Favorites: IFavoritesModel;
   ExchangeRates: IExchangeRateModel;
   Documents: IDocumentModel;
+  Automations: IAutomationModel;
+  Executions: IExecutionModel;
+  Logs: ILogModel;
 }
 
 export interface IContext extends IMainContext {
@@ -295,7 +316,28 @@ export const loadClasses = (
     loadDocumentClass(models),
   );
 
+  models.Automations = db.model<IAutomationDocument, IAutomationModel>(
+    'automations',
+    loadAutomationClass(models),
+  );
+
+  models.Executions = db.model<IAutomationExecutionDocument, IExecutionModel>(
+    'automations_executions',
+    loadExecutionClass(models),
+  );
+
+  const db_name = db.name;
+
+  const logDb = db.useDb(`${db_name}_logs`);
+
+  models.Logs = logDb.model<ILogDocument, ILogModel>(
+    'logs',
+    loadLogsClass(models),
+  );
+
   return models;
 };
 
-export const generateModels = createGenerateModels<IModels>(loadClasses);
+export const generateModels = createGenerateModels<IModels>(loadClasses, {
+  ignoreModels: ['Logs'],
+});

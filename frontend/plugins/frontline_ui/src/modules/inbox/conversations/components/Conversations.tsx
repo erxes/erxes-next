@@ -33,6 +33,7 @@ import {
 import { ConversationsHeader } from '@/inbox/conversations/components/ConversationsHeader';
 import { ConversationFilter } from './ConversationFilter';
 import { FilterTags } from './FilterTags';
+import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
 
 export const Conversations = () => {
   const [ref] = useInView({
@@ -62,18 +63,15 @@ export const Conversations = () => {
     'conversationId',
   ]);
 
-  const [defaultCursor] = useState(conversationId);
-
   const parsedDate = parseDateRangeFromString(date || '');
 
-  const { totalCount, conversations, handleFetchMore, loading } =
+  const { totalCount, conversations, handleFetchMore, loading, pageInfo } =
     useConversations({
       variables: {
         limit: 50,
         channelId,
         integrationType,
         unassigned,
-        cursor: defaultCursor,
         status,
         startDate: parsedDate?.from,
         endDate: parsedDate?.to,
@@ -93,7 +91,6 @@ export const Conversations = () => {
           <ConversationFilter />
           <FilterTags />
         </ConversationsHeader>
-
         <Separator />
         <div className="h-full w-full overflow-y-auto">
           {conversations?.map((conversation: IConversation) => (
@@ -104,21 +101,19 @@ export const Conversations = () => {
               <ConversationItem />
             </ConversationContext.Provider>
           ))}
-          {!loading &&
-            conversations?.length > 0 &&
-            conversations?.length < totalCount && (
-              <Button
-                variant="ghost"
-                ref={ref}
-                className="pl-6 h-8 w-full text-muted-foreground"
-                asChild
-              >
-                <div>
-                  <IconLoader className="size-4 animate-spin" />
-                  loading more...
-                </div>
-              </Button>
-            )}
+          {!loading && conversations?.length > 0 && pageInfo?.hasNextPage && (
+            <Button
+              variant="ghost"
+              ref={ref}
+              className="pl-6 h-8 w-full text-muted-foreground"
+              asChild
+            >
+              <div>
+                <IconLoader className="size-4 animate-spin" />
+                loading more...
+              </div>
+            </Button>
+          )}
         </div>
       </div>
     </ConversationListContext.Provider>
@@ -129,8 +124,14 @@ export const ConversationItem = () => {
   const [conversationId] = useQueryState<string>('conversationId');
   const [detailView] = useQueryState<boolean>('detailView');
 
-  const { integration, createdAt, updatedAt, customer } =
+  const { createdAt, updatedAt, customer, integrationId } =
     useConversationContext();
+
+  const { integration } = useIntegrationDetail({
+    variables: {
+      id: integrationId,
+    },
+  });
   const { brand } = integration || {};
 
   if (conversationId || detailView) {
@@ -142,7 +143,7 @@ export const ConversationItem = () => {
             <div className="flex-1 space-y-1 truncate">
               <CustomerInline.Title className="truncate" />
               <div className="font-normal text-accent-foreground text-xs">
-                {brand?.name}
+                {brand?.name ?? 'No brand'}
               </div>
             </div>
             <div className="ml-auto text-accent-foreground font-medium">
@@ -291,7 +292,12 @@ const ConversationCheckedEffect = ({
 };
 
 const ConversationIntegrationBadge = () => {
-  const { integration } = useConversationContext();
+  const { integrationId } = useConversationContext();
+  const { integration } = useIntegrationDetail({
+    variables: {
+      id: integrationId,
+    },
+  });
   const { kind } = integration || {};
 
   const Icon =

@@ -144,4 +144,20 @@ export default {
       _id: aui,
     }));
   },
+
+  async ptrInfo(transaction: ITransactionDocument, _, { models }: IContext) {
+    const perPtrTrs = await models.Transactions.find({ ptrId: transaction.ptrId }, {
+      sumCt: 1, sumDt: 1, journal: 1
+    }).lean();
+
+    const debit = perPtrTrs.reduce((sum, tr) => (tr.sumDt ?? 0) + sum, 0)
+    const credit = perPtrTrs.reduce((sum, tr) => (tr.sumCt ?? 0) + sum, 0)
+    return {
+      len: perPtrTrs.length,
+      activeLen: perPtrTrs.filter(tr => !tr.originId).length,
+      status: perPtrTrs[0].ptrStatus,
+      diff: Math.abs(debit - credit),
+      value: Math.max(debit, credit)
+    };
+  }
 };

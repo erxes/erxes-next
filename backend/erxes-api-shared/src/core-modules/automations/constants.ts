@@ -1,4 +1,4 @@
-export const OPERATORS = {
+export const AUTOMATION_PROPERTY_OPERATORS = {
   SET: 'set',
   CONCAT: 'concat',
   ADD: 'add',
@@ -9,9 +9,15 @@ export const OPERATORS = {
   ALL: ['set', 'concat', 'add', 'subtract', 'multiply', 'divide', 'percent'],
 };
 
-export const staticPlaceholders = {
+export const STATIC_PLACEHOLDER = {
   '{{ now }}': 0,
   '{{ tomorrow }}': 1,
   '{{ nextWeek }}': 7,
   '{{ nextMonth }}': 30,
+};
+
+export const AUTOMATION_STATUSES = {
+  DRAFT: 'draft',
+  ACTIVE: 'active',
+  ARCHIVED: 'archived',
 };

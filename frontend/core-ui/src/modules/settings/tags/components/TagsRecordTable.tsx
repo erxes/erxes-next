@@ -163,7 +163,7 @@ export const TagsRecordTable = () => {
     searchValue: string;
   }>(['contentType', 'searchValue']);
   const { contentType, searchValue } = queries;
-  const { tags, pageInfo, loading, handleFetchMore, sortedTags } = useTags({
+  const { tags, pageInfo, loading, handleFetchMore } = useTags({
     variables: {
       type: contentType || '',
       searchValue: searchValue ?? undefined,
@@ -173,7 +173,7 @@ export const TagsRecordTable = () => {
   return (
     <RecordTable.Provider
       columns={tagsColumns}
-      data={sortedTags || []}
+      data={tags || []}
       className="m-3"
       stickyColumns={['more', 'name']}
     >

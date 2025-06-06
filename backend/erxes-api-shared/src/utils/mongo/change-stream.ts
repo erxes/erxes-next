@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 import { sendWorkerQueue } from '../mq-worker';
-import { redis } from '../redis';
-import { getEnv } from '../utils';
 const activeStreams = new Map<string, any>();
 
 // Add a cleanup function to properly close all streams when needed
 export const cleanupChangeStreams = () => {
+  if (!activeStreams.size) {
+    return;
+  }
+
   activeStreams.forEach((stream, modelName) => {
     console.log(`Closing change stream for model: ${modelName}`);
     try {
@@ -23,10 +25,18 @@ export const cleanupChangeStreams = () => {
 export const startChangeStreams = (
   models: Record<string, mongoose.Model<any>>,
   subdomain: string,
+  logIgnoreOptions?: {
+    ignoreChangeStream?: boolean;
+    ignoreModels?: string[];
+  },
 ) => {
   for (const [modelName, model] of Object.entries(models)) {
     // Skip if already watching this model
     if (activeStreams.has(modelName)) continue;
+
+    if ((logIgnoreOptions?.ignoreModels || []).includes(modelName)) {
+      continue;
+    }
 
     const changeStream = model.watch([], {
       fullDocument: 'updateLookup',
