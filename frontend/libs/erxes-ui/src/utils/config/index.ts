@@ -27,7 +27,7 @@ const getApi = (): string => {
     (process.env.REACT_APP_API_URL || getDefaultUrl());
 
   memoizedApiUrl = envApiUrl?.includes('<subdomain>')
-    ? envApiUrl.replace('<subdomain>', getSubdomain()).replace('next', 'api')
+    ? envApiUrl.replace('<subdomain>', getSubdomain())
     : envApiUrl;
 
   return memoizedApiUrl;
