@@ -88,7 +88,7 @@ export const DepartmentEdit = () => {
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <DepartmentForm />
+              <DepartmentForm loading={loading} />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(null)}>

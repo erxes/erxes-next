@@ -41,19 +41,39 @@ const FileUpload = () => {
   }, [form.watch('UPLOAD_SERVICE_TYPE')]);
 
   const onSubmit = (data: UploadConfigFormT) => {
-    const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
-      if (
-        config.code === 'UPLOAD_FILE_TYPES' ||
-        config.code === 'WIDGETS_UPLOAD_FILE_TYPES'
-      ) {
-        const selectedOptions = data[config.code];
-        const mimeTypes = selectedOptions.map((option: Option) => option.value);
-        acc[config.code] = mimeTypes.join(',');
-      } else {
-        acc[config.code] = data[config.code] ?? config.value;
-      }
-      return acc;
-    }, {} as Record<string, any>);
+    const updatedConfigs: Record<string, any> = {};
+
+    if (configs && configs.length > 0) {
+      configs.forEach((config: TConfig) => {
+        if (
+          config.code === 'UPLOAD_FILE_TYPES' ||
+          config.code === 'WIDGETS_UPLOAD_FILE_TYPES'
+        ) {
+          const selectedOptions = data[config.code] || [];
+          const mimeTypes = selectedOptions.map(
+            (option: Option) => option.value,
+          );
+          updatedConfigs[config.code] = mimeTypes.join(',');
+        } else {
+          updatedConfigs[config.code] = data[config.code] ?? config.value;
+        }
+      });
+    }
+
+    if (!configs || configs.length === 0) {
+      Object.entries(data).forEach(([code, value]) => {
+        if (
+          code === 'UPLOAD_FILE_TYPES' ||
+          code === 'WIDGETS_UPLOAD_FILE_TYPES'
+        ) {
+          const selectedOptions = value as Option[];
+          const mimeTypes = selectedOptions.map((option) => option.value);
+          updatedConfigs[code] = mimeTypes.join(',');
+        } else {
+          updatedConfigs[code] = value;
+        }
+      });
+    }
 
     updateConfig(updatedConfigs);
   };
