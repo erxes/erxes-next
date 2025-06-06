@@ -43,19 +43,11 @@ const useConfig = () => {
     confirm({
       message: 'Are you sure you want to update file configs?',
       options: confirmOptions,
-    }).then(async () => {
-      try {
-        await update({
-          variables: {
-            configsMap: {
-              ...args,
-            },
-          },
-        });
-      } catch (e) {
+    })
+      .then(() => update({ variables: { configsMap: { ...args } } }))
+      .catch((e) => {
         console.error(e);
-      }
-    });
+      });
   };
 
   const configs = data?.configs || undefined;
