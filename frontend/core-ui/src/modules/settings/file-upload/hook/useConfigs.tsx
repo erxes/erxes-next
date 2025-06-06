@@ -45,7 +45,7 @@ const useConfig = () => {
       options: confirmOptions,
     }).then(async () => {
       try {
-        update({
+        await update({
           variables: {
             configsMap: {
               ...args,
