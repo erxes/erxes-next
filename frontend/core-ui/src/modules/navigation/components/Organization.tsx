@@ -17,6 +17,7 @@ import { useAuth } from '@/auth/hooks/useAuth';
 export function Organization() {
   const [currentOrganization] = useAtom(currentOrganizationState);
   const { handleLogout } = useAuth();
+
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -31,7 +32,7 @@ export function Organization() {
             />
           </div>
           <TextOverflowTooltip
-            value={currentOrganization?.name || 'Name unavailable'}
+            value={currentOrganization?.name || 'erxes'}
             className={cn('font-medium text-sm', {
               'text-accent-foreground font-normal': !currentOrganization?.name,
             })}
