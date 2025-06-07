@@ -1,19 +1,13 @@
-import { useQuery } from '@apollo/client';
+import { OperationVariables, useQuery } from '@apollo/client';
 import React from 'react';
 import { SettingsQueries } from '../graphql';
 
-type TProps = {
-  onCompleted: (data: any) => void;
-  codes?: string[];
-  pattern?: string;
-};
-
-const useConfigByCode = ({ onCompleted, codes, pattern }: TProps) => {
+const useConfigByCode = (options?: OperationVariables) => {
   const { data, loading, error } = useQuery(
     SettingsQueries.queryConfigsByCodes,
     {
-      skip: !codes || !pattern,
-      onCompleted,
+      ...options,
+      skip: !options?.variables?.codes,
     },
   );
   const configs = (data && data.configsByCode) || [];

@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { Form, Input, Textarea } from 'erxes-ui';
+import { Form, Input, Skeleton, Textarea } from 'erxes-ui';
 import {
   AssignMember,
   AssignMultipleMembers,
@@ -7,8 +7,12 @@ import {
 } from 'ui-modules';
 import { TUnitForm } from '../../types/unit';
 
-export const UnitForm = () => {
+export const UnitForm = ({ loading }: { loading: boolean }) => {
   const { control } = useFormContext<TUnitForm>();
+
+  if (loading) {
+    return <Skeleton className="w-full h-full" />;
+  }
 
   return (
     <div className="grid grid-cols-2 gap-2">

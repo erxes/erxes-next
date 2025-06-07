@@ -89,7 +89,7 @@ export const PositionEdit = () => {
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <PositionForm />
+              <PositionForm loading={loading} />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(null)}>

@@ -1,11 +1,15 @@
 import { useFormContext } from 'react-hook-form';
-import { Form, Input } from 'erxes-ui';
+import { Form, Input, Skeleton } from 'erxes-ui';
 import { AssignMultipleMembers } from 'ui-modules';
 import { TPositionForm } from '../../types/position';
 import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
 
-export const PositionForm = () => {
+export const PositionForm = ({ loading }: { loading: boolean }) => {
   const { control } = useFormContext<TPositionForm>();
+
+  if (loading) {
+    return <Skeleton className="w-full h-full" />;
+  }
 
   return (
     <div className="grid grid-cols-2 gap-2">
