@@ -40,6 +40,7 @@ export const AccountField = ({
       form.setValue(`trDocs.${index}.departmentId`, account.departmentId);
     }
   };
+
   return (
     <Form.Field
       control={form.control}
