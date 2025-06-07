@@ -48,7 +48,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           export NX_DAEMON=false
-          pnpm nx docker-build automations-services
+          pnpm nx docker-build automations-service
           docker tag erxes/erxes-next-automations erxes/erxes-next-automations:latest
           docker tag erxes/erxes-next-automations erxes/erxes-next-automations:${{ github.sha }}
           docker push erxes/erxes-next-automations:latest
