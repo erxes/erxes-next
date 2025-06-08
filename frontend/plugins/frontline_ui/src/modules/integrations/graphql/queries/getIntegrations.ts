@@ -16,8 +16,8 @@ export const getIntegrations = gql`
 `;
 
 export const INTEGRATION_DETAIL = gql`
-  query IntegrationDetail($id: String!) {
-    integrationDetail(_id: $id) {
+  query IntegrationDetail($_id: String!) {
+    integrationDetail(_id: $_id) {
       _id
       kind
       brand {

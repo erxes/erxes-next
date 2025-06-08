@@ -129,7 +129,7 @@ export const ConversationItem = () => {
 
   const { integration } = useIntegrationDetail({
     variables: {
-      id: integrationId,
+      _id: integrationId,
     },
   });
   const { brand } = integration || {};
@@ -295,7 +295,7 @@ const ConversationIntegrationBadge = () => {
   const { integrationId } = useConversationContext();
   const { integration } = useIntegrationDetail({
     variables: {
-      id: integrationId,
+      _id: integrationId,
     },
   });
   const { kind } = integration || {};
