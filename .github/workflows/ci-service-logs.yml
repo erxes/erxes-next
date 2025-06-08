@@ -1,4 +1,4 @@
-name: CI Logs-api
+name: CI Logs-service
 
 on:
   push:

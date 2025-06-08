@@ -1,4 +1,4 @@
-name: CI Automations-api
+name: CI Automations-service
 
 on:
   push:
