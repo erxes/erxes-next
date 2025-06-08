@@ -3,7 +3,6 @@ import {
   // cursorPaginate,
   getPlugin,
   getPlugins,
-  paginate,
 } from 'erxes-api-shared/utils';
 
 import {
@@ -23,7 +22,7 @@ import {
   encodeCursor,
   getCursor,
   getPaginationInfo,
-} from 'erxes-api-shared/utils/mongo/cursor-util';
+} from 'erxes-api-shared/utils';
 import { FilterQuery, Model, SortOrder, Document, Types } from 'mongoose';
 
 export interface IListArgs extends ICursorPaginateParams {

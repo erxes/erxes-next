@@ -8,7 +8,7 @@ import {
   encodeCursor,
   getCursor,
   getPaginationInfo,
-} from 'erxes-api-shared/utils/mongo/cursor-util';
+} from 'erxes-api-shared/utils';
 import mongoose, { Document, Model, SortOrder, Types } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
 const operatorMap = {
