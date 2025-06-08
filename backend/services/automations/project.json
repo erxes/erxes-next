@@ -1,5 +1,5 @@
 {
-  "name": "automations",
+  "name": "automations-service",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/services/automations/src",
   "projectType": "application",

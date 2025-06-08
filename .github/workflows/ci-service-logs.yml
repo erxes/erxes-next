@@ -1,21 +1,21 @@
-name: CI Automations-service
+name: CI Logs-service
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'backend/services/automations/**'
+      - 'backend/services/logs/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-service-automations.yml'
+      - '.github/workflows/ci-service-logs.yml'
   pull_request:
     paths:
-      - 'backend/services/automations/**'
+      - 'backend/services/logs/**'
       - 'backend/erxes-api-shared/**'
-      - '.github/workflows/ci-service-automations.yml'
+      - '.github/workflows/ci-service-logs.yml'
 
 jobs:
-  automations-ci:
+  logs-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,9 +48,9 @@ jobs:
       - name: Build and push Docker image
         run: |
           export NX_DAEMON=false
-          pnpm nx docker-build automations-service
-          docker tag erxes/erxes-next-automations erxes/erxes-next-automations:latest
-          docker tag erxes/erxes-next-automations erxes/erxes-next-automations:${{ github.sha }}
-          docker push erxes/erxes-next-automations:latest
-          docker push erxes/erxes-next-automations:${{ github.sha }}
+          pnpm nx docker-build logs-service
+          docker tag erxes/erxes-next-logs erxes/erxes-next-logs:latest
+          docker tag erxes/erxes-next-logs erxes/erxes-next-logs:${{ github.sha }}
+          docker push erxes/erxes-next-logs:latest
+          docker push erxes/erxes-next-logs:${{ github.sha }}
         if: github.event_name != 'pull_request'

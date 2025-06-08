@@ -44,6 +44,7 @@ export const initMQWorkers = async (redis: any) => {
               sendWorkerQueue('automations', 'trigger').add('trigger', {
                 subdomain,
                 data: payload?.fullDocument,
+                contentType,
               });
             } else {
               const logDoc = {
