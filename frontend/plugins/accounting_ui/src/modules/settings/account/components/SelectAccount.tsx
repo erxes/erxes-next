@@ -65,8 +65,7 @@ export const SelectAccount = React.forwardRef<
         <Controller>
           <Combobox.Trigger
             ref={ref}
-            {...props}
-            className={cn('bg-background', className)}
+            {...props}            
           >
             {loading ? (
               <Skeleton className="w-full h-4" />

@@ -19,9 +19,15 @@ export const InventoryForm = ({
     name: `trDocs.${journalIndex}.details`,
   });
 
+  const trDoc = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}`,
+  });
+
+
   return (
     <RecordTableHotkeyProvider
-      columnLength={5}
+      columnLength={5 + (trDoc.hasVat ? 1 : 0) + (trDoc.hasCtax ? 1 : 0) + ((trDoc.hasVat || trDoc.hasCtax) ? 2 : 0)}
       rowLength={fields.length}
       scope={AccountingHotkeyScope.TransactionCEPage}
     >

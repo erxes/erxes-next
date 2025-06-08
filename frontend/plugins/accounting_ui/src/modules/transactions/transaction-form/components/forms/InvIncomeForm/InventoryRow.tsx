@@ -196,7 +196,6 @@ export const InventoryRow = ({
                   field.onChange(accountId);
                 }}
                 defaultFilter={{ journals: [JournalEnum.INVENTORY] }}
-                className="rounded-none focus-visible:relative focus-visible:z-10"
                 variant="ghost"
                 inForm
                 scope={AccountingHotkeyScope.TransactionCEPage}
@@ -216,7 +215,6 @@ export const InventoryRow = ({
                 onValueChange={(productId) => {
                   field.onChange(productId);
                 }}
-                className="rounded-none focus-visible:relative focus-visible:z-10 bg-background"
                 variant="ghost"
                 scope={AccountingHotkeyScope.TransactionCEPage}
               />
@@ -308,82 +306,108 @@ export const InventoryRow = ({
       </RecordTableHotKeyControl>
 
       {trDoc.hasVat && (
-        <Table.Cell
-          className={cn({
-            'border-t': detailIndex === 0,
-          })}
-        >
-          <Form.Field
-            control={form.control}
-            name={`trDocs.${journalIndex}.details.${detailIndex}.excludeVat`}
-            render={({ field }) => (
-              <Form.Item>
-                <Form.Control>
-                  <Checkbox
-                    checked={!field.value}
-                    onCheckedChange={(checked) =>
-                      handleExcludeTax('vat', Boolean(checked), field.onChange)
-                    }
-                  />
-                </Form.Control>
-                <Form.Message />
-              </Form.Item>
-            )}
-          />
-        </Table.Cell>
-      )}
-
-      {trDoc.hasCtax && (
-        <Table.Cell
-          className={cn({
-            'border-t': detailIndex === 0,
-          })}
-        >
-          <Form.Field
-            control={form.control}
-            name={`trDocs.${journalIndex}.details.${detailIndex}.excludeCtax`}
-            render={({ field }) => (
-              <Form.Item>
-                <Form.Control>
-                  <Checkbox
-                    checked={!field.value}
-                    onCheckedChange={(checked) =>
-                      handleExcludeTax('ctax', Boolean(checked), field.onChange)
-                    }
-                  />
-                </Form.Control>
-                <Form.Message />
-              </Form.Item>
-            )}
-          />
-        </Table.Cell>
-      )}
-
-      {(trDoc.hasVat || trDoc.hasCtax) && (
-        <>
+        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={5}>
           <Table.Cell
             className={cn({
               'border-t': detailIndex === 0,
             })}
           >
-            <CurrencyField.ValueInput
-              value={taxAmounts.unitPriceWithTax ?? 0}
-              className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-              onChange={(value) => handleTaxValueChange('unitPrice', value)}
+            <Form.Field
+              control={form.control}
+              name={`trDocs.${journalIndex}.details.${detailIndex}.excludeVat`}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Control>
+                    <Checkbox
+                      checked={!field.value}
+                      onCheckedChange={(checked) =>
+                        handleExcludeTax('vat', Boolean(checked), field.onChange)
+                      }
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
           </Table.Cell>
+        </RecordTableHotKeyControl>
+      )}
+
+      {trDoc.hasCtax && (
+        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={trDoc.hasVat ? 6 : 5}>
           <Table.Cell
             className={cn({
-              'rounded-tr-lg border-t': detailIndex === 0,
-              'rounded-br-lg': detailIndex === details.length - 1,
+              'border-t': detailIndex === 0,
             })}
           >
-            <CurrencyField.ValueInput
-              value={taxAmounts.amountWithTax ?? 0}
-              className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-              onChange={(value) => handleTaxValueChange('amount', value)}
+            <Form.Field
+              control={form.control}
+              name={`trDocs.${journalIndex}.details.${detailIndex}.excludeCtax`}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Control>
+                    <Checkbox
+                      checked={!field.value}
+                      onCheckedChange={(checked) =>
+                        handleExcludeTax('ctax', Boolean(checked), field.onChange)
+                      }
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
             />
           </Table.Cell>
+        </RecordTableHotKeyControl>
+      )}
+
+      {(trDoc.hasVat || trDoc.hasCtax) && (
+        <>
+          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={(trDoc.hasVat && trDoc.hasCtax) ? 7 : 6}>
+            <Table.Cell>
+              <RecordTablePopover
+                scope={`temp_trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
+                closeOnEnter
+              >
+                <Form.Control>
+                  <RecordTableCellTrigger>
+                    {taxAmounts.unitPriceWithTax?.toLocaleString() || 0}
+                  </RecordTableCellTrigger>
+                </Form.Control>
+                <RecordTableCellContent>
+                  <CurrencyField.ValueInput
+                    value={taxAmounts.unitPriceWithTax ?? 0}
+                    onChange={(value) => handleTaxValueChange('unitPrice', value)}
+                  />
+                </RecordTableCellContent>
+              </RecordTablePopover>
+            </Table.Cell>
+          </RecordTableHotKeyControl>
+
+          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={(trDoc.hasVat && trDoc.hasCtax) ? 8 : 7}>
+            <Table.Cell
+              className={cn({
+                'border-t': detailIndex === 0,
+                'rounded-br-lg': detailIndex === details.length - 1,
+              })}
+            >
+              <RecordTablePopover
+                scope={`temp_trDocs.${journalIndex}.details.${detailIndex}.amountWithTax`}
+                closeOnEnter
+              >
+                <RecordTableCellTrigger>
+                  {taxAmounts.amountWithTax?.toLocaleString() || 0}
+                </RecordTableCellTrigger>
+                <RecordTableCellContent>
+                  <CurrencyField.ValueInput
+                    value={taxAmounts.amountWithTax ?? 0}
+                    onChange={(value) => handleTaxValueChange('amount', value)}
+                  />
+                </RecordTableCellContent>
+              </RecordTablePopover>
+
+            </Table.Cell>
+          </RecordTableHotKeyControl>
         </>
       )}
     </Table.Row>
