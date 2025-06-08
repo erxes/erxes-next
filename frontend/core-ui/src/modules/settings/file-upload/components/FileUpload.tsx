@@ -41,19 +41,17 @@ const FileUpload = () => {
   }, [form.watch('UPLOAD_SERVICE_TYPE')]);
 
   const onSubmit = (data: UploadConfigFormT) => {
-    const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
-      if (
-        config.code === 'UPLOAD_FILE_TYPES' ||
-        config.code === 'WIDGETS_UPLOAD_FILE_TYPES'
-      ) {
-        const selectedOptions = data[config.code];
-        const mimeTypes = selectedOptions.map((option: Option) => option.value);
-        acc[config.code] = mimeTypes.join(',');
+    const updatedConfigs: Record<string, any> = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key === 'UPLOAD_FILE_TYPES' || key === 'WIDGETS_UPLOAD_FILE_TYPES') {
+        const selectedOptions = value as Option[];
+        const mimeTypes = selectedOptions?.map((option) => option.value) ?? [];
+        updatedConfigs[key] = mimeTypes.join(',');
       } else {
-        acc[config.code] = data[config.code] ?? config.value;
+        updatedConfigs[key] = value;
       }
-      return acc;
-    }, {} as Record<string, any>);
+    });
 
     updateConfig(updatedConfigs);
   };

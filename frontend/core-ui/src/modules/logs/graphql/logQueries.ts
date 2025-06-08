@@ -15,6 +15,7 @@ query LogsMainList(${GQL_CURSOR_PARAM_DEFS},$searchValue: String, $page: Int, $p
       action
       status
       userId
+      cursor
       user {
         _id
         email
