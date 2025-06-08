@@ -15,15 +15,18 @@ export interface IExecutionModel extends Model<IAutomationExecutionDocument> {
 export const loadClass = (models: IModels) => {
   class Execution {
     public static async createExecution(doc) {
-      return models.Executions.create({ createdAt: new Date(), ...doc });
+      return models.AutomationExecutions.create({
+        createdAt: new Date(),
+        ...doc,
+      });
     }
 
     public static async getExecution(selector) {
-      return models.Executions.findOne(selector);
+      return models.AutomationExecutions.findOne(selector);
     }
 
     public static async removeExecutions(automationIds) {
-      return models.Executions.deleteMany({
+      return models.AutomationExecutions.deleteMany({
         automationId: { $in: automationIds },
       });
     }
