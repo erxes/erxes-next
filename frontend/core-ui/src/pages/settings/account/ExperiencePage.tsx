@@ -1,4 +1,4 @@
-import { Breadcrumb, Input, Label } from 'erxes-ui';
+// import { Breadcrumb, Input, Label } from 'erxes-ui';
 
 import { ChooseTheme } from '@/settings/components/ChooseTheme';
 import { SettingsBreadcrumbs } from '@/settings/components/SettingsBreadcrumbs';
@@ -14,7 +14,7 @@ export const SettingsExperiencePage = () => {
         <div className="flex flex-col gap-4">
           <ChooseTheme />
         </div>
-        <div className="flex flex-col gap-6">
+        {/* <div className="flex flex-col gap-6">
           <Label>Date and time</Label>
           <p className="text-sm text-muted-foreground">
             Configure how dates are displayed across the app
@@ -31,7 +31,7 @@ export const SettingsExperiencePage = () => {
             <Label className="text-xs text-muted-foreground">Time format</Label>
             <Input />
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

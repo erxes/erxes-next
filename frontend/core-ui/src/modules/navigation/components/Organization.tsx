@@ -1,7 +1,7 @@
 import { currentOrganizationState } from 'ui-modules';
 
 import {
-  Avatar,
+  // Avatar,
   cn,
   DropdownMenu,
   Sidebar,
@@ -10,13 +10,14 @@ import {
 
 import { Logo } from '@/auth/components/Logo';
 import { useAtom } from 'jotai';
-import { IconChevronRight, IconSelector } from '@tabler/icons-react';
+import { IconSelector } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/auth/hooks/useAuth';
 
 export function Organization() {
   const [currentOrganization] = useAtom(currentOrganizationState);
   const { handleLogout } = useAuth();
+
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
@@ -31,7 +32,7 @@ export function Organization() {
             />
           </div>
           <TextOverflowTooltip
-            value={currentOrganization?.name || 'Name unavailable'}
+            value={currentOrganization?.name || 'erxes'}
             className={cn('font-medium text-sm', {
               'text-accent-foreground font-normal': !currentOrganization?.name,
             })}
@@ -45,13 +46,13 @@ export function Organization() {
             Settings
           </Link>
         </DropdownMenu.Item>
-        <DropdownMenu.Item asChild>
+        {/* <DropdownMenu.Item asChild>
           <Link to="/settings/team-member" className="text-sm">
             Invite and manage team members
           </Link>
-        </DropdownMenu.Item>
+        </DropdownMenu.Item> */}
         <DropdownMenu.Separator />
-        <DropdownMenu.Sub>
+        {/* <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger>
             Switch organization
             <IconChevronRight className="ml-auto size-4 text-accent-foreground" />
@@ -90,7 +91,7 @@ export function Organization() {
               </DropdownMenu.RadioItem>
             </DropdownMenu.RadioGroup>
           </DropdownMenu.SubContent>
-        </DropdownMenu.Sub>
+        </DropdownMenu.Sub> */}
         <DropdownMenu.Item className="text-sm" onClick={() => handleLogout()}>
           Logout
         </DropdownMenu.Item>
