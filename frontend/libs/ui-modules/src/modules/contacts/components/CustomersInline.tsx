@@ -172,10 +172,10 @@ const CustomersInlineTitle = () => {
     if (customers.length === 0) return undefined;
 
     if (customers.length === 1) {
-      if (!customers[0].firstName && !customers[0].lastName) {
-        return;
-      }
-      return `${customers[0].firstName || ''} ${customers[0].lastName || ''}`;
+      const { firstName, lastName, primaryEmail, primaryPhone } = customers[0];
+      return firstName || lastName
+        ? `${firstName || ''} ${lastName || ''}`
+        : primaryEmail || primaryPhone;
     }
 
     return `${customers.length} customers`;

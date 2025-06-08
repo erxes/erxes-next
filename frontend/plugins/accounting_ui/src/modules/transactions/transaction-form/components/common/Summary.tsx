@@ -3,7 +3,8 @@ import { useAtom } from 'jotai';
 import { useWatch } from 'react-hook-form';
 import { TR_SIDES } from '../../../types/constants';
 import { followTrDocsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/JournalForms';
+import { ITransactionGroupForm, TTrDoc } from '../../types/JournalForms';
+import { ITransaction } from '~/modules/transactions/types/Transaction';
 
 const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
   trDocs?.forEach((tr) => {
@@ -20,12 +21,17 @@ const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
   return [sumDebit, sumCredit];
 }
 
+export const sumDtAndCt = (trDocs: TTrDoc[], followTrDocs: ITransaction[]) => {
+  const [sumDt, sumCt] = getSum(trDocs || [], 0, 0);
+  const [sumDebit, sumCredit] = getSum(followTrDocs, sumDt, sumCt);
+  return [sumDebit, sumCredit]
+}
+
 export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { trDocs } = useWatch({ control: form.control });
   const [followTrDocs] = useAtom(followTrDocsState);
 
-  const [sumDt, sumCt] = getSum(trDocs || [], 0, 0);
-  const [sumDebit, sumCredit] = getSum(followTrDocs, sumDt, sumCt);
+  const [sumDebit, sumCredit] = sumDtAndCt(trDocs as TTrDoc[], followTrDocs)
 
   return (
     <div className="flex justify-end items-center col-span-2 xl:col-span-3 gap-6">
