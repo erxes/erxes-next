@@ -47,7 +47,7 @@
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/services/logs/Dockerfile . -t logs_api"
+      "command": "docker build -f backend/services/logs/Dockerfile . -t erxes/erxes-next-logs"
     }
   }
 }
