@@ -6,6 +6,7 @@ import {
   Form,
   InputNumber,
   RecordTableCellContent,
+  RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTableHotKeyControl,
   RecordTablePopover,
@@ -312,27 +313,29 @@ export const InventoryRow = ({
               'border-t': detailIndex === 0,
             })}
           >
-            <Form.Field
-              control={form.control}
-              name={`trDocs.${journalIndex}.details.${detailIndex}.excludeVat`}
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Control>
-                    <Checkbox
-                      checked={!field.value}
-                      onCheckedChange={(checked) =>
-                        handleExcludeTax(
-                          'vat',
-                          Boolean(checked),
-                          field.onChange,
-                        )
-                      }
-                    />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+            <RecordTableCellDisplay className="justify-center">
+              <Form.Field
+                control={form.control}
+                name={`trDocs.${journalIndex}.details.${detailIndex}.excludeVat`}
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Control>
+                      <Checkbox
+                        checked={!field.value}
+                        onCheckedChange={(checked) =>
+                          handleExcludeTax(
+                            'vat',
+                            Boolean(checked),
+                            field.onChange,
+                          )
+                        }
+                      />
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+            </RecordTableCellDisplay>
           </Table.Cell>
         </RecordTableHotKeyControl>
       )}
@@ -344,27 +347,29 @@ export const InventoryRow = ({
               'border-t': detailIndex === 0,
             })}
           >
-            <Form.Field
-              control={form.control}
-              name={`trDocs.${journalIndex}.details.${detailIndex}.excludeCtax`}
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Control>
-                    <Checkbox
-                      checked={!field.value}
-                      onCheckedChange={(checked) =>
-                        handleExcludeTax(
-                          'ctax',
-                          Boolean(checked),
-                          field.onChange,
-                        )
-                      }
-                    />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
+            <RecordTableCellDisplay className="justify-center">
+              <Form.Field
+                control={form.control}
+                name={`trDocs.${journalIndex}.details.${detailIndex}.excludeCtax`}
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Control>
+                      <Checkbox
+                        checked={!field.value}
+                        onCheckedChange={(checked) =>
+                          handleExcludeTax(
+                            'ctax',
+                            Boolean(checked),
+                            field.onChange,
+                          )
+                        }
+                      />
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+            </RecordTableCellDisplay>
           </Table.Cell>
         </RecordTableHotKeyControl>
       )}
