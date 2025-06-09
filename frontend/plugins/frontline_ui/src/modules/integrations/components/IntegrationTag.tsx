@@ -44,6 +44,7 @@ export const IntegrationTag = () => {
                 {integrations?.map((integration: IIntegration) => (
                   <Command.Item
                     value={integration._id}
+                    key={integration._id}
                     onSelect={() => setIntegrationType(integration._id)}
                   >
                     <TextOverflowTooltip value={integration.name} />
