@@ -45,14 +45,14 @@ const ConfigRow = ({
             <div className="flex flex-col gap-2 items-start">
               <Label className="flex flex-row gap-2 items-center">
                 {title}
-                <IconCircleDashedCheck className={'text-success w-4 h-4'} />
+                {isDone && (
+                  <IconCircleDashedCheck className={'text-success w-4 h-4'} />
+                )}
               </Label>
               <span className="font-mono text-muted-foreground text-start text-xs">
                 {subContent}
               </span>
             </div>
-            {/* {isDone &&  */}
-            {/* //   } */}
           </div>
           {isOpen ? (
             <Button variant="link" onClick={toggleOpen}>
@@ -77,6 +77,7 @@ const ConfigurationForm = ({
   currentActionIndex: number;
 }) => {
   const { control, watch } = useFormContext<TAutomationProps>();
+  const config = watch(`detail.actions.${currentActionIndex}.config`);
   const { actions = [], triggers = [] } = watch('detail');
   const contentType = getContentType(
     actions[currentActionIndex],
@@ -90,6 +91,7 @@ const ConfigurationForm = ({
         title="Sender"
         subContent="Who is sending email"
         buttonText="sender"
+        isDone={!!config?.fromUserId}
       >
         <Form.Field
           name={`detail.actions.${currentActionIndex}.config.fromUserId`}
@@ -112,6 +114,7 @@ const ConfigurationForm = ({
         title="Subject"
         subContent="Configure the subject of the email"
         buttonText="Subject"
+        isDone={!!config?.subject}
       >
         <Form.Field
           name={`detail.actions.${currentActionIndex}.config.subject`}
