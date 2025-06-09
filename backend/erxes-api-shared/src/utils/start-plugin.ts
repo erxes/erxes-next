@@ -154,14 +154,15 @@ export async function startPlugin(
     }
   }
 
-  console.log(configs)
-
   if (configs.hasSubscriptions) {
-    console.log('configs.subscriptionPluginPath', configs.subscriptionPluginPath);
+    console.log(
+      'configs.subscriptionPluginPath',
+      configs.subscriptionPluginPath,
+    );
     app.get('/subscriptionPlugin.js', async (_req, res) => {
       res.sendFile(path.join(configs.subscriptionPluginPath));
     });
-  } 
+  }
 
   if (configs.trpcAppRouter) {
     app.use(
