@@ -62,7 +62,8 @@ export const PositionEdit = () => {
 
   useEffect(() => {
     if (positionDetail) {
-      reset(positionDetail);
+      const { __typename, ...rest } = positionDetail;
+      reset(rest);
     }
   }, [positionDetail]);
 

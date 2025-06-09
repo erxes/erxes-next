@@ -10,6 +10,15 @@ export const useBranchesMain = (options?: OperationVariables) => {
     };
   }>(GET_BRANCHES_MAIN, options);
 
+  const branchesWithHasChildren = data?.branchesMain?.list?.map(
+    (branch: IBranch) => ({
+      ...branch,
+      hasChildren: data?.branchesMain?.list?.some(
+        (b: IBranch) => b.parentId === branch._id,
+      ),
+    }),
+  );
+
   const handleFetchMore = () => {
     fetchMore({
       variables: {
@@ -20,10 +29,12 @@ export const useBranchesMain = (options?: OperationVariables) => {
 
   return {
     branches: data?.branchesMain?.list,
+    sortedBranches: [...(branchesWithHasChildren || [])].sort((a, b) =>
+      (a.order || '').localeCompare(b.order || ''),
+    ),
     loading,
     error,
     handleFetchMore,
     totalCount: data?.branchesMain?.totalCount,
-    totalUsersCount: data?.branchesMain?.totalUsersCount,
   };
 };

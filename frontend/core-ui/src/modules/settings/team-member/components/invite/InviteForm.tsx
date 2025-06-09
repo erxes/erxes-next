@@ -64,7 +64,7 @@ export function InviteForm({
               </Table.Body>
               <Table.Footer>
                 <tr>
-                  <td colSpan={8} className="p-4">
+                  <td colSpan={7} className="p-4">
                     <div className="flex w-full justify-center gap-4">
                       <AddInviteRowButton append={append} />
                       <InviteRowRemoveButton remove={remove} />
@@ -97,7 +97,6 @@ const InviteTableHeader = () => {
         <Table.Head>Email</Table.Head>
         <Table.Head>Password</Table.Head>
         <Table.Head>Permission</Table.Head>
-        <Table.Head>Channles</Table.Head>
         <Table.Head>Unit</Table.Head>
         <Table.Head>Department</Table.Head>
         <Table.Head>Branch</Table.Head>
