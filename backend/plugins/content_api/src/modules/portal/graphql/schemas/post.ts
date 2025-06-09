@@ -3,13 +3,8 @@ import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 export const types = `
 
 
-    extend type User @key(fields: "_id") {
-      _id: String! @external
-    }
 
-    extend type Tag @key(fields: "_id") {
-      _id: String! @external
-    }
+
     
     enum PostStatus {
         draft
@@ -25,7 +20,7 @@ export const types = `
 
     union Author = User | ClientPortalUser
 
-    type Post @key(fields: "_id") @cacheControl(maxAge: 3) {
+    type Post @key(fields: "_id") @cacheControl(maxAge: 3){
         _id: String!
         type: String
         customPostType: CustomPostType

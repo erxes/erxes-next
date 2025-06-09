@@ -8,7 +8,7 @@ export const notificationSchema = new Schema({
   link: { type: String, optional: true },
   content: { type: String },
   createdUser: { type: String },
-  receiver: { type: String, index: true },
+  receiver: { type: String },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -23,7 +23,6 @@ export const notificationSchema = new Schema({
   },
   clientPortalId: {
     type: String,
-    index: true,
   },
   eventData: {
     type: Schema.Types.Mixed,

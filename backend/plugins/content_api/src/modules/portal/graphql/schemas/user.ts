@@ -1,11 +1,6 @@
 import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
-    enum PostAuthorKind {
-        user
-        clientPortalUser
-    }
-
     enum ClientPortalUserVerificationStatus {
         verified
         notVerified

@@ -6,8 +6,20 @@
 // } from 'erxes-api-shared/src/utils/apollo/commonTypeDefs';
 
 export const TypeExtensions = `
+    enum CacheControlScope {
+      PUBLIC
+      PRIVATE
+    }
+    
+    directive @cacheControl(
+      maxAge: Int
+      scope: CacheControlScope
+      inheritMaxAge: Boolean
+    ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+
   extend type User @key(fields: "_id") {
-    _id: String! @external
+    _id: String @external
   }
 
   extend type Brand @key(fields: "_id") {
@@ -22,7 +34,9 @@ export const TypeExtensions = `
     _id: String! @external
   }
 
-  
+  extend type Tag @key(fields: "_id") {
+    _id: String! @external
+  }
 `;
 
   // ${graphqlAttachmentType}

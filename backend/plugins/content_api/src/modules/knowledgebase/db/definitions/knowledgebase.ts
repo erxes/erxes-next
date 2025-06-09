@@ -123,7 +123,3 @@ export const topicSchema = new Schema({
 
   ...commonFields,
 });
-
-articleSchema.index({ code: 1 }, { unique: true, sparse: true });
-categorySchema.index({ code: 1 }, { unique: true, sparse: true });
-topicSchema.index({ code: 1 }, { unique: true, sparse: true });
