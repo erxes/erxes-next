@@ -184,7 +184,7 @@ export const InventoryRow = ({
         </div>
       </Table.Cell> */}
 
-      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={0}>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
           <Form.Field
             control={form.control}
@@ -204,7 +204,7 @@ export const InventoryRow = ({
           />
         </Table.Cell>
       </RecordTableHotKeyControl>
-      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={1}>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
           <Form.Field
             control={form.control}
@@ -222,7 +222,7 @@ export const InventoryRow = ({
           />
         </Table.Cell>
       </RecordTableHotKeyControl>
-      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={2}>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
           <Form.Field
             control={form.control}
@@ -250,7 +250,7 @@ export const InventoryRow = ({
           />
         </Table.Cell>
       </RecordTableHotKeyControl>
-      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={3}>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
           <Form.Field
             control={form.control}
@@ -278,7 +278,7 @@ export const InventoryRow = ({
           />
         </Table.Cell>
       </RecordTableHotKeyControl>
-      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={4}>
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
           <Form.Field
             control={form.control}
@@ -306,7 +306,7 @@ export const InventoryRow = ({
       </RecordTableHotKeyControl>
 
       {trDoc.hasVat && (
-        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={5}>
+        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
           <Table.Cell
             className={cn({
               'border-t': detailIndex === 0,
@@ -321,7 +321,11 @@ export const InventoryRow = ({
                     <Checkbox
                       checked={!field.value}
                       onCheckedChange={(checked) =>
-                        handleExcludeTax('vat', Boolean(checked), field.onChange)
+                        handleExcludeTax(
+                          'vat',
+                          Boolean(checked),
+                          field.onChange,
+                        )
                       }
                     />
                   </Form.Control>
@@ -334,7 +338,7 @@ export const InventoryRow = ({
       )}
 
       {trDoc.hasCtax && (
-        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={trDoc.hasVat ? 6 : 5}>
+        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
           <Table.Cell
             className={cn({
               'border-t': detailIndex === 0,
@@ -349,7 +353,11 @@ export const InventoryRow = ({
                     <Checkbox
                       checked={!field.value}
                       onCheckedChange={(checked) =>
-                        handleExcludeTax('ctax', Boolean(checked), field.onChange)
+                        handleExcludeTax(
+                          'ctax',
+                          Boolean(checked),
+                          field.onChange,
+                        )
                       }
                     />
                   </Form.Control>
@@ -363,7 +371,7 @@ export const InventoryRow = ({
 
       {(trDoc.hasVat || trDoc.hasCtax) && (
         <>
-          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={(trDoc.hasVat && trDoc.hasCtax) ? 7 : 6}>
+          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
             <Table.Cell>
               <RecordTablePopover
                 scope={`temp_trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
@@ -377,14 +385,16 @@ export const InventoryRow = ({
                 <RecordTableCellContent>
                   <CurrencyField.ValueInput
                     value={taxAmounts.unitPriceWithTax ?? 0}
-                    onChange={(value) => handleTaxValueChange('unitPrice', value)}
+                    onChange={(value) =>
+                      handleTaxValueChange('unitPrice', value)
+                    }
                   />
                 </RecordTableCellContent>
               </RecordTablePopover>
             </Table.Cell>
           </RecordTableHotKeyControl>
 
-          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex} colIndex={(trDoc.hasVat && trDoc.hasCtax) ? 8 : 7}>
+          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
             <Table.Cell
               className={cn({
                 'border-t': detailIndex === 0,
@@ -405,7 +415,6 @@ export const InventoryRow = ({
                   />
                 </RecordTableCellContent>
               </RecordTablePopover>
-
             </Table.Cell>
           </RecordTableHotKeyControl>
         </>
