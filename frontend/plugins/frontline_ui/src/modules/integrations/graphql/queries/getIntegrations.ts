@@ -20,6 +20,7 @@ export const INTEGRATION_DETAIL = gql`
     integrationDetail(_id: $_id) {
       _id
       kind
+      brandId
       brand {
         _id
         name
