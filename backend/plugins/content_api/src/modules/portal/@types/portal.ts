@@ -44,6 +44,14 @@ export interface IPasswordVerificationConfig {
   smsContent: string;
 }
 
+export interface ITokiConfig {
+  merchantId: string;
+  apiKey: string;
+  username: string;
+  password: string;
+  production?: boolean;
+}
+
 export interface IPortal {
   _id?: string;
   name?: string;
@@ -69,6 +77,7 @@ export interface IPortal {
   manualVerificationConfig?: IManualVerificationConfig;
   passwordVerificationConfig?: IPasswordVerificationConfig;
   socialpayConfig?: ISocialpayConfig;
+  tokiConfig?: ITokiConfig;
 
   googleCredentials?: string;
   googleClientId?: string;

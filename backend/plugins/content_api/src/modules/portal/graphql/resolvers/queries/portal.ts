@@ -1,6 +1,8 @@
 import { cursorPaginate } from 'erxes-api-shared/src/utils';
 import { IContext } from '~/connectionResolvers';
-import { getConfigByHost, getUserCards } from '~/modules/portal/utils';
+import { getUserCards } from '@/portal/utils/cards';
+import { getConfigByHost } from '@/portal/utils/common';
+
 
 const queries = {
   async clientPortalGetConfigs(_root, args, { models }: IContext) {

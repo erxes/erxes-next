@@ -2,8 +2,8 @@ import * as jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
 
 import { IContext } from '~/connectionResolvers';
-import { IInvitiation, ITwoFactorDevice, IUser } from '../../../@types/user';
-import { ILoginParams } from '../../../db/models/Users';
+import { IInvitiation, ITwoFactorDevice, IUser } from '@/portal/@types/user';
+import { ILoginParams } from '@/portal/db/models/Users';
 import {
   authCookieOptions,
   getEnv,
@@ -13,6 +13,9 @@ import {
 import { IAttachment } from 'erxes-api-shared/src/core-types';
 import { random } from 'erxes-api-shared/src/utils/string';
 import { checkPermission } from 'erxes-api-shared/src/core-modules';
+import { fetchUserFromToki, tokenHandler } from '@/portal/utils/auth';
+import { fetchUserFromSocialpay } from '@/portal/utils/socialpay';
+import { sendSms } from '../../../utils/common';
 
 export interface IVerificationParams {
   userId: string;
@@ -71,9 +74,9 @@ export const clientPortalUserMutations = {
     return user;
   },
 
-  async UsersEdit(
+  async clientPortalUsersEdit(
     _root,
-    { _id, ...doc }: IClientPortalUserEdit,
+    { _id, ...doc },
     { models }: IContext,
   ) {
     const updated = await models.Users.updateUser(_id, doc);
@@ -85,7 +88,7 @@ export const clientPortalUserMutations = {
    * Removes a clientPortal User
    * @param {string} param1._id clientPortal User id
    */
-  async UsersRemove(
+  async clientPortalUsersRemove(
     _root,
     { clientPortalUserIds }: { clientPortalUserIds: string[] },
     { models }: IContext,
@@ -123,13 +126,13 @@ export const clientPortalUserMutations = {
     const optConfig = clientPortal.otpConfig;
 
     if (optConfig && optConfig.loginWithOTP) {
-      // return tokenHandler(user, clientPortal, res, false);
+      return tokenHandler(user, clientPortal, res, false);
     }
 
     return 'verified';
   },
 
-  UsersVerify: async (
+  clientPortalUsersVerify: async (
     _root,
     { userIds, type }: { userIds: string[]; type: string },
     context: IContext,
@@ -149,13 +152,13 @@ export const clientPortalUserMutations = {
   ) => {
     const { user, portal, isPassed2FA } = await models.Users.login(args);
 
-    // return tokenHandler(
-    //   user,
-    //   clientPortal,
-    //   res,
-    //   clientPortal.twoFactorConfig?.enableTwoFactor,
-    //   isPassed2FA,
-    // );
+    return tokenHandler(
+      user,
+      portal,
+      res,
+      portal.twoFactorConfig?.enableTwoFactor,
+      isPassed2FA,
+    );
   },
 
   clientPortalFacebookAuthentication: async (
@@ -255,10 +258,10 @@ export const clientPortalUserMutations = {
         );
       }
 
-      const clientPortal = await models.Portals.getConfig(user.clientPortalId);
+      const portal = await models.Portals.getConfig(user.clientPortalId);
 
-      // TODO: return tokenHandler(user, clientPortal, res, false);
-      // return tokenHandler(user, clientPortal, res, false);
+
+      return tokenHandler(user, portal, res, false);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -439,8 +442,8 @@ export const clientPortalUserMutations = {
     }
 
     const clientPortal = await models.Portals.getConfig(user.clientPortalId);
-    // TODO: return tokenHandler(user, clientPortal, res, false);
-    // return tokenHandler(user, clientPortal, res, false);
+ 
+    return tokenHandler(user, clientPortal, res, false);
   },
 
   /*
@@ -568,8 +571,8 @@ export const clientPortalUserMutations = {
           )
         : passwordVerificationConfig.smsContent.replace(/{.*}/, phoneCode);
 
-      // TODO: await sendSms(config.smsTransporterType, phone, smsContent);
-      // await sendSms(config.smsTransporterType, phone, smsContent);
+
+      await sendSms(config.smsTransporterType, phone, smsContent);
 
       return 'sent';
     }
@@ -682,14 +685,14 @@ export const clientPortalUserMutations = {
             const body =
               config.content.replace(/{.*}/, testPhoneCode) ||
               `Your verification code is ${testPhoneCode}`;
-            // TODO: sms
-            // await sendSms(
-            //   config.smsTransporterType
-            //     ? config.smsTransporterType
-            //     : 'messagePro',
-            //   clientPortal?.testUserPhone,
-            //   body,
-            // );
+         
+            await sendSms(
+              config.smsTransporterType
+                ? config.smsTransporterType
+                : 'messagePro',
+              clientPortal?.testUserPhone,
+              body,
+            );
           }
 
           return { userId: user._id, message: 'Sms sent' };
@@ -710,12 +713,12 @@ export const clientPortalUserMutations = {
       const body =
         config.content.replace(/{.*}/, phoneCode) ||
         `Your verification code is ${phoneCode}`;
-      // TODO: sms
-      // await sendSms(
-      //   config.smsTransporterType ? config.smsTransporterType : 'messagePro',
-      //   phone,
-      //   body,
-      // );
+
+      await sendSms(
+        config.smsTransporterType ? config.smsTransporterType : 'messagePro',
+        phone,
+        body,
+      );
     }
 
     return { userId: user._id, message: 'Sms sent' };
@@ -789,14 +792,14 @@ export const clientPortalUserMutations = {
               config.content.replace(/{.*}/, testPhoneCode) ||
               `Your verification code is ${testPhoneCode}`;
 
-            // TODO: sms
-            // await sendSms(
-            //   config.smsTransporterType
-            //     ? config.smsTransporterType
-            //     : 'messagePro',
-            //   clientPortal?.testUserPhone,
-            //   body,
-            // );
+    
+            await sendSms(
+              config.smsTransporterType
+                ? config.smsTransporterType
+                : 'messagePro',
+              clientPortal?.testUserPhone,
+              body,
+            );
           }
 
           return { userId: portalUser._id, message: 'Sms sent' };
@@ -821,12 +824,11 @@ export const clientPortalUserMutations = {
           config.content.replace(/{.*}/, phoneCode) ||
           `Your verification code is ${phoneCode}`;
 
-        // TODO: sms
-        // await sendSms(
-        //   config.smsTransporterType ? config.smsTransporterType : 'messagePro',
-        //   portalUser.phone,
-        //   body,
-        // );
+        await sendSms(
+          config.smsTransporterType ? config.smsTransporterType : 'messagePro',
+          portalUser.phone,
+          body,
+        );
       }
       return { userId: portalUser._id, message: 'Sms sent' };
     }
@@ -902,13 +904,13 @@ export const clientPortalUserMutations = {
         await portalUser.updateOne({ $set: { twoFactorDevices } });
       }
 
-      // return tokenHandler(
-      //   portalUser,
-      //   clientPortal,
-      //   res,
-      //   twoFactorConfig.enableTwoFactor,
-      //   true,
-      // );
+      return tokenHandler(
+        portalUser,
+        clientPortal,
+        res,
+        twoFactorConfig.enableTwoFactor,
+        true,
+      );
     }
 
     return '2Factor not enabled';
@@ -1162,12 +1164,6 @@ export const clientPortalUserMutations = {
       { $set: { verificationRequest } },
     );
 
-    // const createdBy = await sendCoreMessage({
-    //   action: 'users.findOne',
-    //   data: { role: 'system' },
-    //   isRPC: true,
-    //   defaultValue: {},
-    // });
 
     const createdBy = await sendTRPCMessage({
       pluginName: 'core',
@@ -1356,16 +1352,7 @@ export const clientPortalUserMutations = {
     }
 
     try {
-      // add conformity company to customer
-      // await sendCoreMessage({
-      //   action: 'conformities.addConformity',
-      //   data: {
-      //     mainType: 'customer',
-      //     mainTypeId: erxesCustomerId,
-      //     relType: 'company',
-      //     relTypeId: erxesCompanyId,
-      //   },
-      // });
+
       await sendTRPCMessage({
         pluginName: 'core',
         method: 'mutation',
@@ -1488,7 +1475,7 @@ export const clientPortalUserMutations = {
     return newToken;
   },
 
-  UsersetSecondaryPassword: async (
+  clientPortalUsersetSecondaryPassword: async (
     _root,
     args: { newPassword: string; oldPassword?: string },
     { models, portalUser }: IContext,
@@ -1506,7 +1493,7 @@ export const clientPortalUserMutations = {
     );
   },
 
-  async UsersMove(
+  async clientPortalUsersMove(
     _root,
     {
       oldClientPortalId,

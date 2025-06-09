@@ -1,6 +1,6 @@
 import { IPortal } from '@/portal/@types/portal';
 import { IContext } from '~/connectionResolvers';
-import { createCard, participantEditRelation } from '@/portal/utils';
+import { createCard, participantEditRelation } from '@/portal/utils/cards';
 import { checkPermission } from 'erxes-api-shared/src/core-modules';
 
 export interface IVerificationParams {

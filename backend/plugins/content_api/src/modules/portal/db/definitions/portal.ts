@@ -201,7 +201,19 @@ export const portalSchema = new Schema({
     },
     optional: true,
   },
+  tokiConfig: {
+    type: {
+      merchantId: { type: String, optional: true },
+      apiKey: { type: String, optional: true },
+      username: { type: String, optional: true },
+      password: { type: String, optional: true },
+      production: { type: Boolean, optional: true },
+    },
+    optional: true,
+  },
   language: { type: String, optional: true },
+  languages: { type: [String], optional: true },
+
   slug: { type: String, optional: true },
   template: { type: String, optional: true, default: 'helpdesk' },
   templateId: { type: String, optional: true },

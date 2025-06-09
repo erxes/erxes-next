@@ -19,12 +19,13 @@ import { userSchema } from '@/portal/db/definitions/user';
 
 // import { DEFAULT_MAIL_CONFIG } from '@/portal/constants';
 import {
-  escapeRegex,
+
   handleContacts,
   handleDeviceToken,
-  putActivityLog,
-} from '@/portal/utils';
+} from '@/portal/utils/contacts';
 import { sendTRPCMessage } from 'erxes-api-shared/src/utils/trpc';
+import { escapeRegExp } from 'erxes-api-shared/src/utils/string';
+import { sendSms } from '../../utils/common';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -293,25 +294,25 @@ export const loadUserClass = (models: IModels) => {
         // });
       }
 
-      // TODO: implement sendSms after migration
-      // if (user.phone && portal.otpConfig) {
-      //   const phoneCode = await this.imposeVerificationCode({
-      //     clientPortalId,
-      //     codeLength: portal.otpConfig.codeLength,
-      //     phone: user.phone,
-      //   });
+    
+      if (user.phone && portal.otpConfig) {
+        const phoneCode = await this.imposeVerificationCode({
+          clientPortalId,
+          codeLength: portal.otpConfig.codeLength,
+          phone: user.phone,
+        });
 
-      //   const smsBody =
-      //     portal.otpConfig.content.replace(/{{.*}}/, phoneCode) ||
-      //     `Your verification code is ${phoneCode}`;
+        const smsBody =
+          portal.otpConfig.content.replace(/{{.*}}/, phoneCode) ||
+          `Your verification code is ${phoneCode}`;
 
-      //   await sendSms(
-      //
-      //     portal.otpConfig.smsTransporterType,
-      //     user.phone,
-      //     smsBody,
-      //   );
-      // }
+        await sendSms(
+      
+          portal.otpConfig.smsTransporterType,
+          user.phone,
+          smsBody,
+        );
+      }
 
       // TODO: consider following function necessary
       // await sendAfterMutation(
@@ -643,9 +644,6 @@ export const loadUserClass = (models: IModels) => {
       };
     }
 
-    static generateVerificationCode(codeLenth: number) {
-      return random('0', codeLenth);
-    }
 
     public static async imposeVerificationCode({
       codeLength,
@@ -662,11 +660,11 @@ export const loadUserClass = (models: IModels) => {
       email?: string;
       expireAfter?: number;
       isRessetting?: boolean;
-      testUserOTP?: number;
+      testUserOTP?: string;
     }) {
       const code = testUserOTP
         ? testUserOTP
-        : this.generateVerificationCode(codeLength);
+        : random('0', codeLength)
       const codeExpires = Date.now() + 60000 * (expireAfter || 5);
 
       let query: any = {};
@@ -757,8 +755,6 @@ export const loadUserClass = (models: IModels) => {
 
       await user.save();
 
-      await putActivityLog(user);
-
       return user;
     }
 
@@ -775,9 +771,9 @@ export const loadUserClass = (models: IModels) => {
 
       const user = await models.Users.findOne({
         $or: [
-          { email: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
-          { username: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
-          { phone: { $regex: new RegExp(`^${escapeRegex(login)}$`, 'i') } },
+          { email: { $regex: new RegExp(`^${escapeRegExp(login)}$`, 'i') } },
+          { username: { $regex: new RegExp(`^${escapeRegExp(login)}$`, 'i') } },
+          { phone: { $regex: new RegExp(`^${escapeRegExp(login)}$`, 'i') } },
         ],
         clientPortalId,
       });
@@ -1151,14 +1147,14 @@ export const loadUserClass = (models: IModels) => {
       if (doc.email) {
         query.push({
           email: {
-            $regex: new RegExp(`^${escapeRegex(doc.email || '')}$`, 'i'),
+            $regex: new RegExp(`^${escapeRegExp(doc.email || '')}$`, 'i'),
           },
         });
       }
       if (doc.phone) {
         query.push({
           phone: {
-            $regex: new RegExp(`^${escapeRegex(doc.phone || '')}$`, 'i'),
+            $regex: new RegExp(`^${escapeRegExp(doc.phone || '')}$`, 'i'),
           },
         });
       }

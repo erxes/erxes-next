@@ -126,7 +126,7 @@ const clientPortalCommentMutations = {
         //   }
         // });
       } catch (error) {
-        throw new Error('Error in notification workflow:', error);
+        throw new Error(`Error in notification workflow: ${error}`);
       }
     } else {
       // Send notifications to related card users
