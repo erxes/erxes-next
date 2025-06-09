@@ -1,17 +1,17 @@
 import {
+  addEdge,
   Background,
+  Connection,
   Controls,
+  Edge,
+  getOutgoers,
   MiniMap,
   Node,
   ReactFlow,
   ReactFlowProvider,
-  addEdge,
-  getOutgoers,
   useEdgesState,
   useNodesState,
   useReactFlow,
-  Connection,
-  Edge,
 } from '@xyflow/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -22,13 +22,13 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import { useQueryState } from 'erxes-ui/hooks';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
-import AutomationBuilderHeader from './AutomationBuilderHeader';
-import AutomationBuilderSidebar from './AutomationBuilderSidebar';
+import { AutomationBuilderHeader } from './AutomationBuilderHeader';
+import { AutomationBuilderSidebar } from './AutomationBuilderSidebar';
 
-import ConnectionLine from './edges/connectionLine';
-import PrimaryEdge from './edges/primary';
-import ActionNode from './nodes/Action';
-import TriggerNode from './nodes/Trigger';
+import {
+  automationBuilderFormSchema,
+  TAutomationProps,
+} from '@/automations/utils/AutomationFormDefinitions';
 import { IAutomation, NodeData } from '../../types';
 import {
   connectionHandler,
@@ -40,15 +40,12 @@ import {
   generateEdges,
   generateNodes,
 } from '../../utils/automationBuilderUtils';
-import {
-  automationBuilderFormSchema,
-  TAutomationProps,
-} from '@/automations/utils/AutomationFormDefinitions';
-import { Breadcrumb, Button, PageSubHeader, Separator } from 'erxes-ui';
-import { IconAffiliate, IconSettings } from '@tabler/icons-react';
-import { PageHeader } from 'ui-modules';
-import { Link } from 'react-router';
 import { AutomationHistories } from './AutomationHistories';
+import ConnectionLine from './edges/connectionLine';
+import PrimaryEdge from './edges/primary';
+import ActionNode from './nodes/Action';
+import TriggerNode from './nodes/Trigger';
+import { DraggableSidebar } from './DraggableSidebar';
 
 interface MenuState {
   id: string;
@@ -342,9 +339,9 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
           <Controls />
           <Background />
           <MiniMap pannable position="top-left" />
+          <AutomationBuilderSidebar />
         </ReactFlow>
       </div>
-      <AutomationBuilderSidebar />
     </div>
   );
 };

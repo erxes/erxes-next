@@ -1,12 +1,14 @@
 import { Input } from 'erxes-ui';
 import { Attributes } from './Attributes';
+import { IField } from '../../segments/types';
 
 type Props = {
   propertyType: string;
   value: string;
   onChange: (value: string) => void;
-  selectedOperator?: any;
-  selectedField?: any;
+  isDisabled?: boolean;
+  selectedField?: IField;
+  fieldType?: string;
   onlySet?: boolean;
   ref?: any;
 };
@@ -15,16 +17,14 @@ export const PlaceHolderInput = ({
   propertyType,
   value,
   onChange,
-  selectedOperator,
-  selectedField,
   onlySet,
   ref,
+  isDisabled,
+  fieldType,
+  selectedField,
 }: Props) => {
-  const { value: operatorValue = '' } = selectedOperator || {};
-  const { type } = selectedField || {};
-
   const getComma = (preValue: any) => {
-    if (type === 'select' && preValue) {
+    if (fieldType === 'select' && preValue) {
       return ', ';
     }
 
@@ -50,13 +50,12 @@ export const PlaceHolderInput = ({
         value={value}
         placeholder="Value"
         onChange={(e) => onChange(e.target.value)}
-        disabled={!operatorValue}
+        disabled={isDisabled}
         ref={ref}
       />
       <Attributes
         ref={ref}
         selectedField={selectedField}
-        selectedOperator={selectedOperator}
         contentType={propertyType}
         onSelect={onSelect}
       />

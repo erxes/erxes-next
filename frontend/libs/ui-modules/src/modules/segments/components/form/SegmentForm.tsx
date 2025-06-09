@@ -225,6 +225,9 @@ export function SegmentForm({
         contentType: contentType,
         shouldWriteActivityLog: false,
         _id: segment ? segment?._id : undefined,
+        conditionSegments: data?.conditionSegments?.length
+          ? data?.conditionSegments
+          : data?.conditions,
       },
       onError: (e: ApolloError) => {
         toast({
@@ -283,7 +286,7 @@ export function SegmentForm({
           variant="secondary"
           className={cn(
             'w-full',
-            form.watch('conditionSegments')?.length && 'ml-12',
+            (form.watch('conditionSegments')?.length || 0) > 1 && 'pl-12',
           )}
           onClick={onAddSegmentGroup}
         >

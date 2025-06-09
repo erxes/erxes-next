@@ -338,6 +338,7 @@ export const calculateExecution = async ({
     automationId,
     triggerId: id,
     targetId: target._id,
+    status: { $ne: AUTOMATION_EXECUTION_STATUS.ERROR },
   })
     .sort({ createdAt: -1 })
     .limit(1)
@@ -347,24 +348,24 @@ export const calculateExecution = async ({
     ? executions[0]
     : null;
 
-  if (latestExecution) {
-    if (!reEnrollment || !reEnrollmentRules.length) {
-      return;
-    }
+  // if (latestExecution) {
+  //   if (!reEnrollment || !reEnrollmentRules.length) {
+  //     return;
+  //   }
 
-    let isChanged = false;
+  //   let isChanged = false;
 
-    for (const reEnrollmentRule of reEnrollmentRules) {
-      if (isDiffValue(latestExecution.target, target, reEnrollmentRule)) {
-        isChanged = true;
-        break;
-      }
-    }
+  //   for (const reEnrollmentRule of reEnrollmentRules) {
+  //     if (isDiffValue(latestExecution.target, target, reEnrollmentRule)) {
+  //       isChanged = true;
+  //       break;
+  //     }
+  //   }
 
-    if (!isChanged) {
-      return;
-    }
-  }
+  //   if (!isChanged) {
+  //     return;
+  //   }
+  // }
 
   return models.Executions.create({
     automationId,

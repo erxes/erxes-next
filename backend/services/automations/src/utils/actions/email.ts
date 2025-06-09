@@ -7,8 +7,8 @@ import {
   sendWorkerMessage,
 } from 'erxes-api-shared/utils';
 import { EMAIL_RECIPIENTS_TYPES } from '~/constants';
-import * as AWS from 'aws-sdk';
-import * as nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer';
+import AWS from 'aws-sdk';
 
 const generateEmails = (entry: string | any[], key?: string): string[] => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -175,6 +175,7 @@ export const getEmailRecipientTypes = async () => {
       ];
     }
   }
+
   return reciepentTypes;
 };
 
@@ -202,7 +203,7 @@ export const getRecipientEmails = async ({
   execution,
 }) => {
   let toEmails: string[] = [];
-  const reciepentTypes: any = getEmailRecipientTypes();
+  const reciepentTypes: any = await getEmailRecipientTypes();
 
   const reciepentTypeKeys = reciepentTypes.map((rT) => rT.name);
 
@@ -367,9 +368,9 @@ export const generateDoc = async ({
 const getConfig = (configs, code, defaultValue?: string) => {
   const version = getEnv({ name: 'VERSION' });
 
-  if (version === 'saas') {
-    return getEnv({ name: code, defaultValue });
-  }
+  // if (version === 'saas') {
+  return getEnv({ name: code, defaultValue });
+  // }
 
   return configs[code] || defaultValue || '';
 };
@@ -385,13 +386,13 @@ const createTransporter = async ({ ses }, configs) => {
     const AWS_REGION = getConfig(configs, 'AWS_REGION');
 
     AWS.config.update({
-      region: AWS_REGION,
       accessKeyId: AWS_SES_ACCESS_KEY_ID,
       secretAccessKey: AWS_SES_SECRET_ACCESS_KEY,
+      region: AWS_REGION,
     });
 
     return nodemailer.createTransport({
-      SES: new AWS.SES({ apiVersion: '2010-12-01' }),
+      SES: new AWS.SES(),
     });
   }
 
@@ -415,6 +416,7 @@ const createTransporter = async ({ ses }, configs) => {
     host: MAIL_HOST,
     port: MAIL_PORT,
     auth,
+    secure: MAIL_PORT === '465',
   });
 };
 

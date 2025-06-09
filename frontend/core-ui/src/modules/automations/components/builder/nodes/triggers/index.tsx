@@ -32,5 +32,9 @@ const DefaultTriggerContent = ({ activeNode }: Props) => {
 };
 
 export const TriggerDetail = ({ activeNode }: Props) => {
-  return <DefaultTriggerContent activeNode={activeNode} />;
+  return (
+    <div className="w-[650px]">
+      <DefaultTriggerContent activeNode={activeNode} />
+    </div>
+  );
 };

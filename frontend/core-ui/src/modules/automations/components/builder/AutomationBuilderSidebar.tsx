@@ -2,10 +2,10 @@ import { AUTOMATOMATION_CONSTANTS } from '@/automations/graphql/automationQuerie
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError, gql, useQuery } from '@apollo/client';
-import { IconX } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
 import { Button, Card, Input, Skeleton, Tabs } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
+import { useMultiQueryState, useQueryState } from 'erxes-ui/hooks';
 import { TablerIcon } from 'erxes-ui/icons';
 import { cn } from 'erxes-ui/lib';
 import { Search } from 'lucide-react';
@@ -102,6 +102,9 @@ const TabContentWrapper = (
 
 const Default = () => {
   const [searchValue, setSearchValue] = useState('');
+  const [activeNodeTab, setNodeActiveTab] = useQueryState<'trigger' | 'action'>(
+    'activeNodeTab',
+  );
 
   const { data, loading, error, refetch } = useQuery<ConstantsQueryResponse>(
     AUTOMATOMATION_CONSTANTS,
@@ -140,15 +143,19 @@ const Default = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="trigger" className="flex-1 flex flex-col">
+      <Tabs
+        defaultValue={activeNodeTab || 'trigger'}
+        onValueChange={(value) =>
+          setNodeActiveTab(value as 'trigger' | 'action')
+        }
+        className="flex-1 flex flex-col"
+      >
         <div className="px-4 pt-2">
           <Tabs.List size="sm" className="w-full">
             <Tabs.Trigger size="sm" value="trigger" className="flex-1">
-              {/* <IconHandClick /> */}
               Triggers
             </Tabs.Trigger>
             <Tabs.Trigger size="sm" value="action" className="flex-1">
-              {/* <IconSettingsBolt /> */}
               Actions
             </Tabs.Trigger>
           </Tabs.List>
@@ -178,29 +185,42 @@ const Default = () => {
   );
 };
 
-export default () => {
-  const { watch, setValue } = useFormContext<TAutomationProps>();
-  const [activeNodeId, setActiveNode] = useQueryState('activeNodeId');
+export const AutomationBuilderSidebar = () => {
   const { getNodes } = useReactFlow();
+  const { watch, setValue } = useFormContext<TAutomationProps>();
+  const [queries, setQueries] = useMultiQueryState<{
+    activeNodeId: string;
+    activeNodeTab: 'trigger' | 'action';
+  }>(['activeNodeId', 'activeNodeTab']);
+
   const isMinimized = watch('isMinimized');
   const activeNode = watch('activeNode');
 
   useEffect(() => {
-    if (!!activeNodeId && !activeNode) {
+    if (!!queries.activeNodeId && !activeNode) {
       const nodes = getNodes();
-      const node = nodes.find((node) => node.id === activeNodeId);
+      const node = nodes.find((node) => node.id === queries.activeNodeId);
       if (node) {
         setValue('activeNode', { ...node.data, id: node.id });
       }
     }
-  }, [activeNode, activeNodeId]);
+  }, [activeNode, queries.activeNodeId]);
 
   // Filter templates based on search term and active module
 
   const handleClose = () => {
-    setActiveNode(null);
     setValue('activeNode', null);
     setValue('isMinimized', true);
+    setQueries({
+      activeNodeId: null,
+    });
+  };
+  const handleBack = () => {
+    setValue('activeNode', null);
+    setQueries({
+      activeNodeId: null,
+      activeNodeTab: activeNode?.nodeType || null,
+    });
   };
 
   const renderSideBarContent = () => {
@@ -224,14 +244,19 @@ export default () => {
       )}
     >
       {activeNode && (
-        <Card.Header className="flex flex-row justify-between w-full font-mono">
+        <Card.Header className="w-full font-mono">
+          <div className="flex flex-row justify-between">
+            <Button size="icon" variant="outline" onClick={handleBack}>
+              <IconChevronLeft />
+            </Button>
+            <Button size="icon" variant="outline" onClick={handleClose}>
+              <IconX />
+            </Button>
+          </div>
           <div className="max-w-64">
             <Card.Title>{activeNode?.label || ''}</Card.Title>
             <Card.Description>{activeNode?.description || ''}</Card.Description>
           </div>
-          <Button size="icon" variant="outline" onClick={handleClose}>
-            <IconX />
-          </Button>
         </Card.Header>
       )}
       <div className=" flex-1 flex flex-col min-w-80 max-w-2xl w-fit">

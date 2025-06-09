@@ -21,6 +21,8 @@ export const startAutomations = async (
           try {
             const { subdomain, data } = jobData;
 
+            console.log(jobData);
+
             if (!subdomain) {
               throw new Error('You should provide subdomain on message');
             }
@@ -36,7 +38,7 @@ export const startAutomations = async (
 
             const resolver = config[resolverName];
 
-            const result = await resolver({ subdomain }, data);
+            const result = await resolver({ subdomain }, { data });
             return result;
           } catch (error: any) {
             console.error(`Error processing job ${id}: ${error.message}`);

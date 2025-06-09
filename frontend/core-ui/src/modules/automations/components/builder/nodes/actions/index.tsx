@@ -44,6 +44,7 @@ export const ActionDetail = () => {
   const { watch, control } = useFormContext<TAutomationProps>();
 
   const actions = watch(`detail.actions`) || [];
+  console.log({ activeNodeId });
   const currentIndex = actions.findIndex(
     (action) => action.id === activeNodeId,
   );

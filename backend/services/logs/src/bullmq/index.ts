@@ -41,10 +41,10 @@ export const initMQWorkers = async (redis: any) => {
                 payload,
                 contentType,
               );
+
               sendWorkerQueue('automations', 'trigger').add('trigger', {
                 subdomain,
-                data: payload?.fullDocument,
-                contentType,
+                data: { type: contentType, targets: [payload?.fullDocument] },
               });
             } else {
               const logDoc = {

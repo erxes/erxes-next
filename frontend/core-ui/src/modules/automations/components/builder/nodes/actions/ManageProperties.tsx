@@ -146,10 +146,10 @@ const Rule = ({
 
           <PlaceHolderInput
             propertyType={propertyType}
-            selectedOperator={operatorOptions.find(
-              (op) => op.value === rule.operator,
-            )}
-            selectedField={selectedField}
+            isDisabled={
+              !!operatorOptions.find((op) => op.value === rule.operator)?.value
+            }
+            fieldType={selectedField?.type}
             value={rule.value}
             onChange={(value) => handleChange('value', value)}
           />

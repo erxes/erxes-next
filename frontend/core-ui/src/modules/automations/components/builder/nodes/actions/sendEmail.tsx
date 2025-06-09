@@ -19,6 +19,7 @@ import {
   AssignMultipleMembers,
   IActionProps,
   PlaceHolderInput,
+  SelectCustomers,
 } from 'ui-modules';
 
 const ConfigRow = ({
@@ -161,11 +162,33 @@ const ConfigurationForm = ({
         />
       </ConfigRow>
 
-      <ConfigRow title="Reciepent" buttonText="select recipients">
-        <Tabs defaultValue="general">
-          <Tabs.List className="w-full">
-            <Tabs.Trigger value="general">General</Tabs.Trigger>
-            <Tabs.Trigger value="static">Static</Tabs.Trigger>
+      <ConfigRow
+        title="Reciepent"
+        buttonText="select recipients"
+        subContent="Who is reciepents"
+        isDone={[
+          'attributionMails',
+          'customMails',
+          'customer',
+          'teamMember',
+        ].some((key) => (config || {})[key])}
+      >
+        <Tabs defaultValue="general" className="w-full p-4">
+          <Tabs.List size="sm" className="w-full">
+            <Tabs.Trigger value="general" size="sm" className="w-full">
+              General
+              {config?.attributionMails && (
+                <Badge variant="destructive">
+                  <IconCheck />
+                </Badge>
+              )}
+            </Tabs.Trigger>
+            <Tabs.Trigger value="static" className="relative w-full" size="sm">
+              Static
+              {(config?.customMails ||
+                config?.customer ||
+                config?.teamMember) && <IconCheck className="w-4 h-4" />}
+            </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="general" className="p-4">
             <Form.Field
@@ -180,6 +203,33 @@ const ConfigurationForm = ({
           </Tabs.Content>
           <Tabs.Content value="static" className="p-4">
             <CustomMailField currentActionIndex={currentActionIndex} />
+            <Form.Field
+              name={`detail.actions.${currentActionIndex}.config.teamMember`}
+              control={control}
+              render={({ field }) => (
+                <Form.Item className="py-4">
+                  <Form.Label>Team members</Form.Label>
+                  <AssignMultipleMembers
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
+              name={`detail.actions.${currentActionIndex}.config.customer`}
+              control={control}
+              render={({ field }) => (
+                <Form.Item className="py-4">
+                  <Form.Label>Customers</Form.Label>
+                  <SelectCustomers.FormItem
+                    mode="multiple"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  />
+                </Form.Item>
+              )}
+            />
           </Tabs.Content>
         </Tabs>
       </ConfigRow>
@@ -194,7 +244,6 @@ const ConfigurationForm = ({
           control={control}
           render={({ field }) => (
             <Form.Item className="py-4">
-              {/* <Input {...field} /> */}
               <PlaceHolderInput propertyType={contentType} {...field} />
             </Form.Item>
           )}

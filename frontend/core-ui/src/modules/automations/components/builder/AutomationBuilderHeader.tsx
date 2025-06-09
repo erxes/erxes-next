@@ -27,7 +27,7 @@ import { TAutomationProps } from '../../utils/AutomationFormDefinitions';
 import { PageHeader } from 'ui-modules';
 import { PageSubHeader } from 'erxes-ui';
 
-export default ({ reactFlowInstance }: any) => {
+export const AutomationBuilderHeader = ({ reactFlowInstance }: any) => {
   const { control, watch, setValue, handleSubmit, clearErrors } =
     useFormContext<TAutomationProps>();
   const [_, setActiveTabParams] = useQueryState('activeTab');
@@ -162,7 +162,9 @@ export default ({ reactFlowInstance }: any) => {
             <Breadcrumb.List className="gap-1">
               <Breadcrumb.Item>
                 <IconAffiliate className="w-5 h-5" />
-                <span className="font-medium">Automations</span>
+                <span className="font-medium">
+                  <Link to={`/automations`}>Automations</Link>
+                </span>
               </Breadcrumb.Item>
             </Breadcrumb.List>
           </Breadcrumb>

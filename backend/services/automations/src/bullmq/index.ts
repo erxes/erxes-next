@@ -28,6 +28,10 @@ export const initMQWorkers = async (redis: any) => {
           const { subdomain, data } = job?.data ?? {};
           const models = await generateModels(subdomain);
 
+          console.info(
+            `Recieved data from:${JSON.stringify({ subdomain, data })}`,
+          );
+
           const { type, actionType, targets, executionId } = data;
           try {
             const waitingExecution = await checkWaitingResponseAction(

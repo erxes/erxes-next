@@ -9,12 +9,14 @@ export const isInSegment = async (
 ) => {
   await delay(delayMs);
 
-  return await sendTRPCMessage({
+  const isValid = await sendTRPCMessage({
     pluginName: 'core',
     method: 'query',
     module: 'segment',
     action: 'isInSegment',
     input: { segmentId, idToCheck: targetId },
-    defaultValue: [],
+    defaultValue: false,
   });
+
+  return isValid;
 };

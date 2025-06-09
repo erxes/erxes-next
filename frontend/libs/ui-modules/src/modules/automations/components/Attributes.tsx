@@ -10,13 +10,13 @@ import {
 } from 'erxes-ui';
 import {
   FIELDS_COMBINED_BY_CONTENT_TYPE,
+  IField,
   useQuerySelectInputList,
-} from 'ui-modules/modules/segments';
+} from '../../segments';
 
 type Props = {
   contentType: string;
-  selectedField: any;
-  selectedOperator: any;
+  selectedField?: IField;
   onSelect: (value: string) => void;
   customAttributions?: any[];
   attrConfig?: any;
