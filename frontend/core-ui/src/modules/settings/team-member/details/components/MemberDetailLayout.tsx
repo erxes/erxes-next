@@ -76,9 +76,6 @@ const MemberDetailTabs = ({ children }: { children: React.ReactNode }) => {
         <Tabs.Trigger value="links" className="text-base h-full">
           Links
         </Tabs.Trigger>
-        <Tabs.Trigger value="other" className="text-base h-full">
-          Other
-        </Tabs.Trigger>
       </Tabs.List>
       {children}
     </Tabs>

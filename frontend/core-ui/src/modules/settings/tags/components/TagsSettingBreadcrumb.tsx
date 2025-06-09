@@ -20,13 +20,6 @@ export const TagsSettingBreadcrumb = () => {
       <Button variant="ghost" className="font-semibold">
         <IconTagsFilled className="size-4 text-accent-foreground" />
         Tags
-        <span className="text-sm text-muted-foreground">
-          {loading ? (
-            <Skeleton className="size-4" />
-          ) : (
-            `(${totalCount || 'No results found'})`
-          )}
-        </span>
       </Button>
     </>
   );

@@ -144,7 +144,18 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
           <Form.Item className="col-span-2">
             <Form.Label>{field.name}</Form.Label>
             <Form.Control>
-              <Input {...field} inputMode="numeric" placeholder="Radius" />
+              <Input
+                value={field.value as number}
+                onChange={(e) =>
+                  field.onChange(
+                    e.currentTarget.value === ''
+                      ? 0
+                      : Number(e.currentTarget.value),
+                  )
+                }
+                inputMode="numeric"
+                placeholder="Radius"
+              />
             </Form.Control>
             <Form.Message />
           </Form.Item>

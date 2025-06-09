@@ -114,7 +114,12 @@ const AZURE_FIELDS_SCHEMA = z.object({
     }),
 });
 
+const LOCAL_FIELD = z.object({
+  UPLOAD_SERVICE_TYPE: z.literal('local'),
+});
+
 const FILES_VALIDATION_SCHEMA = z.discriminatedUnion('UPLOAD_SERVICE_TYPE', [
+  LOCAL_FIELD,
   AWS_FIELDS_SCHEMA,
   GCS_FIELDS_SCHEMA,
   CLOUDFLARE_FIELDS_SCHEMA,

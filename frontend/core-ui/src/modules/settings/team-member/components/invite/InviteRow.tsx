@@ -1,12 +1,10 @@
-import React from 'react';
 import { IUserEntry, TUserForm } from '../../types';
 import { useUserInviteContext } from '../../hooks/useUserInviteContext';
 import { InviteMemberRowContext } from '../../context/InviteMemberContext';
-import { Checkbox, cn, Form, Input, Table } from 'erxes-ui';
+import { cn, Form, Input, Table } from 'erxes-ui';
 import { InviteRowCheckbox } from './InviteRowCheckbox';
 import { useFormContext } from 'react-hook-form';
 import {
-  MultipleSelectChannels,
   SelectBranch,
   SelectDepartment,
   SelectUnit,
@@ -104,28 +102,6 @@ export const InviteRow = ({
               <Form.Item>
                 <Form.Control>
                   <SelectUsersGroup
-                    name={field.name}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                  />
-                </Form.Control>
-              </Form.Item>
-            )}
-          />
-        </Table.Cell>
-        <Table.Cell
-          className={cn({
-            'border-t': userIndex === 0,
-          })}
-        >
-          <Form.Field
-            control={control}
-            name={`entries.${userIndex}.channelIds`}
-            render={({ field }) => (
-              <Form.Item>
-                <Form.Control>
-                  <MultipleSelectChannels
                     name={field.name}
                     onValueChange={field.onChange}
                     value={field.value}
