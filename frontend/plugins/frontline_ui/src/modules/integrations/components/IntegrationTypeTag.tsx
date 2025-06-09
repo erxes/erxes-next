@@ -7,20 +7,20 @@ import {
   TextOverflowTooltip,
   useQueryState,
 } from 'erxes-ui';
-import { useUsedIntegrationTypes } from '../hooks/useUsedIntegrationTypes';
-import { IIntegrationType } from '../types/Integration';
+import { useUsedIntegrationKinds } from '../hooks/useUsedIntegrationKinds';
+import { IIntegrationKind } from '../types/Integration';
 
-export const IntegrationTypeTag = () => {
-  const [integrationTypeId, setIntegrationTypeId] =
+export const IntegrationKindTag = () => {
+  const [integrationKindId, setIntegrationKindId] =
     useQueryState<string>('integrationType');
-  const { integrationTypes, loading } = useUsedIntegrationTypes();
+  const { integrationKinds, loading } = useUsedIntegrationKinds();
 
-  const integrationType = integrationTypes?.find(
-    (integrationType: IIntegrationType) =>
-      integrationType._id === integrationTypeId,
+  const integrationKind = integrationKinds?.find(
+    (integrationKind: IIntegrationKind) =>
+      integrationKind._id === integrationKindId,
   );
 
-  if (!integrationType) return null;
+  if (!integrationKind) return null;
 
   if (loading) {
     return <Skeleton className="w-20 h-4" />;
@@ -30,21 +30,21 @@ export const IntegrationTypeTag = () => {
     <Filter.BarItem>
       <Popover>
         <Popover.Trigger asChild>
-          <Filter.BarButton>{integrationType.name}</Filter.BarButton>
+          <Filter.BarButton>{integrationKind.name}</Filter.BarButton>
         </Popover.Trigger>
         <Combobox.Content>
           <Command>
             <Command.Input placeholder="Select integration" />
             <Command.List>
-              {integrationTypes?.map((integrationType: IIntegrationType) => (
+              {integrationKinds?.map((integrationKind: IIntegrationKind) => (
                 <Command.Item
-                  value={integrationType._id}
-                  key={integrationType._id}
-                  onSelect={() => setIntegrationTypeId(integrationType._id)}
+                  value={integrationKind._id}
+                  key={integrationKind._id}
+                  onSelect={() => setIntegrationKindId(integrationKind._id)}
                 >
-                  <TextOverflowTooltip value={integrationType.name} />
+                  <TextOverflowTooltip value={integrationKind.name} />
                   <Combobox.Check
-                    checked={integrationType._id === integrationTypeId}
+                    checked={integrationKind._id === integrationKindId}
                   />
                 </Command.Item>
               ))}

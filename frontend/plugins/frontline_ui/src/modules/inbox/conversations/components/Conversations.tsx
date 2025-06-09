@@ -71,7 +71,7 @@ export const Conversations = () => {
         channelId,
         integrationType,
         unassigned,
-        status,
+        status: status || 'closed',
         startDate: parsedDate?.from,
         endDate: parsedDate?.to,
       },

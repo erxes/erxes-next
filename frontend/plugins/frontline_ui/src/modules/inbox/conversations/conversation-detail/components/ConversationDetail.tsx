@@ -57,6 +57,7 @@ export const ConversationDetail = () => {
           value={{
             ...currentConversation,
             ...conversationDetail,
+            integration,
             loading,
           }}
         >
