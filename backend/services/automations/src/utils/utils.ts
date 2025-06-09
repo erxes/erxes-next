@@ -5,14 +5,15 @@ import {
   IAutomationExecAction,
   IAutomationExecutionDocument,
   ITrigger,
+  splitType,
   TriggerType,
 } from 'erxes-api-shared/core-modules';
-import { sendTRPCMessage, sendWorkerMessage } from 'erxes-api-shared/utils';
-import { ACTIONS } from '~/constants';
-import { setActionWait } from './actions/wait';
+import { sendWorkerMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolver';
-import { isInSegment } from './segments/utils';
+import { ACTIONS } from '~/constants';
 import { handleEmail } from './actions/email';
+import { setActionWait } from './actions/wait';
+import { isInSegment } from './segments/utils';
 
 export const getActionsMap = async (actions: IAction[]) => {
   const actionsMap: IActionsMap = {};
@@ -139,11 +140,11 @@ export const executeActions = async (
 
     if (action.type === ACTIONS.SET_PROPERTY) {
       const { module } = action.config;
-      const [serviceName, collectionType] = module.split(':');
+      const [pluginName, collectionType] = splitType(module);
 
       actionResponse = await sendWorkerMessage({
         subdomain,
-        serviceName,
+        pluginName,
         queueName: 'automations',
         jobName: 'receiveActions',
         data: {
@@ -171,11 +172,11 @@ export const executeActions = async (
     }
 
     if (action.type.includes('create')) {
-      const [serviceName, type] = action.type.split(':');
+      const [pluginName, type] = splitType(action.type);
 
       actionResponse = await sendWorkerMessage({
         subdomain,
-        serviceName,
+        pluginName,
         queueName: 'automations',
         jobName: 'receiveActions',
         data: {
@@ -296,11 +297,11 @@ export const calculateExecution = async ({
 
   try {
     if (!!isCustom) {
-      const [serviceName, collectionType] = (trigger?.type || '').split(':');
+      const [pluginName, collectionType] = splitType(trigger?.type || '');
 
       const isValid = await sendWorkerMessage({
         subdomain,
-        serviceName,
+        pluginName,
         queueName: 'automations',
         jobName: 'checkCustomTrigger',
         data: {

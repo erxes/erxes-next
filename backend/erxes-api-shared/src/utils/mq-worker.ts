@@ -50,7 +50,7 @@ export const sendWorkerQueue = (serviceName: string, queueName: string) =>
   });
 
 export const sendWorkerMessage = async ({
-  serviceName,
+  pluginName,
   queueName,
   jobName,
   subdomain,
@@ -58,7 +58,7 @@ export const sendWorkerMessage = async ({
   defaultValue,
   timeout = 3000,
 }: {
-  serviceName: string;
+  pluginName: string;
   queueName: string;
   jobName: string;
   subdomain: string;
@@ -66,7 +66,7 @@ export const sendWorkerMessage = async ({
   defaultValue?: any;
   timeout?: number;
 }) => {
-  const queueKey = `${serviceName}-${queueName}`;
+  const queueKey = `${pluginName}-${queueName}`;
 
   // Get or create the Queue instance
   let queue = queueMap.get(queueKey);

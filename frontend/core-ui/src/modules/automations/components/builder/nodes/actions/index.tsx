@@ -23,6 +23,11 @@ const ManageProperties = lazy(() =>
     default: module.ManageProperties,
   })),
 );
+const AutomationSendEmail = lazy(() =>
+  import('./sendEmail').then((module) => ({
+    default: module.AutomationSendEmail,
+  })),
+);
 
 const Actions: Record<
   string,
@@ -31,6 +36,7 @@ const Actions: Record<
   delay: Delay,
   if: IF,
   setProperty: ManageProperties,
+  sendEmail: AutomationSendEmail,
 };
 
 export const ActionDetail = () => {

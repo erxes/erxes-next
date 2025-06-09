@@ -1,7 +1,4 @@
-import {
-  createMQWorkerWithListeners,
-  sendWorkerMessage,
-} from 'erxes-api-shared/utils';
+import { createMQWorkerWithListeners } from 'erxes-api-shared/utils';
 import Redis from 'ioredis';
 import { generateModels } from '~/connectionResolver';
 import {

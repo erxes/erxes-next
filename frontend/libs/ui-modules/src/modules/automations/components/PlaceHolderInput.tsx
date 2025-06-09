@@ -5,9 +5,10 @@ type Props = {
   propertyType: string;
   value: string;
   onChange: (value: string) => void;
-  selectedOperator: any;
-  selectedField: any;
+  selectedOperator?: any;
+  selectedField?: any;
   onlySet?: boolean;
+  ref?: any;
 };
 
 export const PlaceHolderInput = ({
@@ -17,8 +18,9 @@ export const PlaceHolderInput = ({
   selectedOperator,
   selectedField,
   onlySet,
+  ref,
 }: Props) => {
-  const { value: operatorValue = '', noInput } = selectedOperator || {};
+  const { value: operatorValue = '' } = selectedOperator || {};
   const { type } = selectedField || {};
 
   const getComma = (preValue: any) => {
@@ -49,8 +51,10 @@ export const PlaceHolderInput = ({
         placeholder="Value"
         onChange={(e) => onChange(e.target.value)}
         disabled={!operatorValue}
+        ref={ref}
       />
       <Attributes
+        ref={ref}
         selectedField={selectedField}
         selectedOperator={selectedOperator}
         contentType={propertyType}

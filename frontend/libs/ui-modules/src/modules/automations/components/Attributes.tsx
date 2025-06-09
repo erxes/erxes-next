@@ -22,6 +22,7 @@ type Props = {
   attrConfig?: any;
   onlySet?: boolean;
   trigger?: React.ReactNode;
+  ref?: any;
 };
 
 type QueryResponse = {
@@ -106,6 +107,7 @@ export const Attributes = ({
   customAttributions,
   onSelect,
   onlySet,
+  ref,
 }: Props) => {
   const { selectOptions = [], selectionConfig } = selectedField || {};
   const { data, loading } = useQuery<QueryResponse>(
@@ -167,7 +169,7 @@ export const Attributes = ({
         )}
       </Combobox.TriggerBase>
       <Combobox.Content>
-        <Command>
+        <Command ref={ref}>
           <Command.Input placeholder="Search ..." />
 
           <Command.List>

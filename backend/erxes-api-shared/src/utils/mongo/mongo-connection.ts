@@ -35,7 +35,9 @@ export async function connect(): Promise<mongoose.Connection> {
     throw new Error('MONGO_URL is not defined');
   }
 
-  await mongoose.connect(MONGO_URL, mongooseConnectionOptions);
+  await mongoose
+    .connect(MONGO_URL, mongooseConnectionOptions)
+    .catch((error) => console.log(error.message));
   return mongoose.connection;
 }
 

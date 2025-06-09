@@ -173,12 +173,12 @@ const getPerValue = async <TModels>({
     value.match(/\{\{\s*([^}]+)\s*\}\}/g) &&
     !(triggerType || '').includes(serviceName)
   ) {
-    const [relatedServiceName] = splitType(triggerType);
+    const [relatedPluginName] = splitType(triggerType);
 
     value =
       (
         await sendWorkerMessage({
-          serviceName: relatedServiceName,
+          pluginName: relatedPluginName,
           queueName: 'automations',
           jobName: 'replacePlaceHolders',
           subdomain,
