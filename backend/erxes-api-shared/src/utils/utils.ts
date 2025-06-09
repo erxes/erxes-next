@@ -1,4 +1,4 @@
-import { IOrderInput } from '@/core-types';
+import { IOrderInput } from '../core-types';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import stripAnsi from 'strip-ansi';

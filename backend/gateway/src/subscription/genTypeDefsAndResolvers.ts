@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+
 dotenv.config();
 
 import getPluginConfigs from "./plugins/getPluginConfigs";
@@ -15,7 +16,7 @@ export default async function genTypeDefsAndResolvers(): Promise<{
   if(!plugins?.length) { return null; }
 
   const typeDefs = genTypeDefs(plugins);
-  const resolvers = genResolvers(plugins);
+  const resolvers = genResolvers(plugins);  
 
   return { typeDefs, resolvers };
 }

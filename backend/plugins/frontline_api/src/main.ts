@@ -14,12 +14,13 @@ startPlugin({
   }),
 
 
-  // hasSubscriptions: false,
-  // subscriptionPluginPath: require('path').resolve(
-  //   __dirname,
-  //   'graphql',
-  //   'subscriptionPlugin.js',
-  // ),
+  hasSubscriptions: true,
+  subscriptionPluginPath: require('path').resolve(
+    __dirname,
+    'apollo',
+    'subscription.js',
+  ),
+
   expressRouter: router,
 
   apolloServerContext: async (subdomain, context) => {

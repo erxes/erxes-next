@@ -1,4 +1,4 @@
-import { ICursorPaginateParams, ICursorPaginateResult } from '@/core-types';
+import { ICursorPaginateParams, ICursorPaginateResult } from '../../core-types';
 import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
 import {
