@@ -1,4 +1,9 @@
-import { Combobox, Command, Popover } from 'erxes-ui';
+import {
+  Combobox,
+  Command,
+  PopoverScoped,
+  usePreviousHotkeyScope,
+} from 'erxes-ui';
 import { useProducts } from '../hooks/useProducts';
 import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
@@ -11,21 +16,25 @@ export const SelectProduct = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
     value?: string;
     onValueChange?: (value: string) => void;
+    scope?: string;
   }
->(({ value, onValueChange, ...props }, ref) => {
+>(({ value, onValueChange, scope, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | undefined>(
     undefined,
   );
 
+  const { goBackToPreviousHotkeyScope } = usePreviousHotkeyScope();
+
   const handleSelect = (product?: IProduct) => {
     setSelectedProduct(product);
     onValueChange?.(product?._id || '');
     setOpen(false);
+    scope && goBackToPreviousHotkeyScope();
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen} modal>
+    <PopoverScoped scope={scope} open={open} onOpenChange={setOpen} modal>
       <Combobox.Trigger ref={ref} {...props}>
         {!value && <Combobox.Value placeholder="Select product" />}
         {value && <ProductInline productId={value} product={selectedProduct} />}
@@ -33,7 +42,7 @@ export const SelectProduct = React.forwardRef<
       <Combobox.Content>
         <SelectProductList handleSelect={handleSelect} />
       </Combobox.Content>
-    </Popover>
+    </PopoverScoped>
   );
 });
 

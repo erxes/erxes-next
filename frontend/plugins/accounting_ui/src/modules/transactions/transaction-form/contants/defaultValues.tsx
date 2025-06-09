@@ -141,7 +141,7 @@ export const INV_INCOME_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<T
   }
 };
 
-export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction) => {
+export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction | any) => {
   if (!doc) {
     doc = {
       details: [] as ITrDetail[]

@@ -9,7 +9,7 @@ import { IModels } from '~/connectionResolvers';
 export interface IExecutionModel extends Model<IAutomationExecutionDocument> {
   createExecution(doc: IAutomationExecution): IAutomationExecutionDocument;
   getExecution(selector: any): IAutomationExecutionDocument;
-  removeExecutions(automationIds: string[]): void;
+  removeExecutions(automationIds: string[]): Promise<void>;
 }
 
 export const loadClass = (models: IModels) => {

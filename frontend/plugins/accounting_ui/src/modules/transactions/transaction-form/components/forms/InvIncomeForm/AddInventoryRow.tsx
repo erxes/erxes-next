@@ -13,7 +13,7 @@ export const AddInventoryRowButton = ({
 }: {
   form: ITransactionGroupForm;
   journalIndex: number;
-  append: (product: TInvDetail | TInvDetail[]) => void;
+  append: (detail: TInvDetail | TInvDetail[]) => void;
 }) => {
   const { control } = form;
 

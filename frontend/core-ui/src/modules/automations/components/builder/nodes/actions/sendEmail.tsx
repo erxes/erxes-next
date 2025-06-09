@@ -2,6 +2,8 @@ import { getContentType } from '@/automations/utils/automationBuilderUtils';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { IconCheck, IconCircleDashedCheck, IconX } from '@tabler/icons-react';
 import {
+  Avatar,
+  Badge,
   Button,
   Card,
   Collapsible,
@@ -9,6 +11,7 @@ import {
   Input,
   Label,
   Separator,
+  Tabs,
 } from 'erxes-ui';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -71,6 +74,57 @@ const ConfigRow = ({
   );
 };
 
+const CustomMailField = ({
+  currentActionIndex,
+}: {
+  currentActionIndex: number;
+}) => {
+  const { control, watch, setValue } = useFormContext<TAutomationProps>();
+  const config = watch(`detail.actions.${currentActionIndex}.config`);
+
+  const removeMail = (mail: string) => {
+    setValue(
+      `detail.actions.${currentActionIndex}.config.customMails`,
+      (config?.customMails || []).filter((value: string) => value !== mail),
+    );
+  };
+
+  const onChange = (e: any, onChange: (...props: any[]) => void) => {
+    const { value } = e.currentTarget;
+    if (
+      e.key === 'Enter' &&
+      value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ) {
+      onChange((config?.customMails || []).concat(value));
+      e.currentTarget.value = '';
+    }
+  };
+
+  return (
+    <Form.Field
+      name={`detail.actions.${currentActionIndex}.config.customMails`}
+      control={control}
+      render={({ field }) => (
+        <Form.Item>
+          {(config?.customMails || []).map((customMail: string) => (
+            <Badge key={customMail}>
+              {customMail}
+              <IconX
+                className="w-4 h-4 hover:text-accent-foreground hover:cursor-pointer"
+                onClick={() => removeMail(customMail)}
+              />
+            </Badge>
+          ))}
+          <Input
+            onKeyPress={(e) => onChange(e, field.onChange)}
+            placeholder="Enter some email"
+          />
+        </Form.Item>
+      )}
+    />
+  );
+};
+
 const ConfigurationForm = ({
   currentActionIndex,
 }: {
@@ -108,7 +162,26 @@ const ConfigurationForm = ({
       </ConfigRow>
 
       <ConfigRow title="Reciepent" buttonText="select recipients">
-        dacxzcz
+        <Tabs defaultValue="general">
+          <Tabs.List className="w-full">
+            <Tabs.Trigger value="general">General</Tabs.Trigger>
+            <Tabs.Trigger value="static">Static</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="general" className="p-4">
+            <Form.Field
+              name={`detail.actions.${currentActionIndex}.config.attributionMails`}
+              control={control}
+              render={({ field }) => (
+                <Form.Item>
+                  <PlaceHolderInput propertyType={contentType} {...field} />
+                </Form.Item>
+              )}
+            />
+          </Tabs.Content>
+          <Tabs.Content value="static" className="p-4">
+            <CustomMailField currentActionIndex={currentActionIndex} />
+          </Tabs.Content>
+        </Tabs>
       </ConfigRow>
       <ConfigRow
         title="Subject"

@@ -31,4 +31,5 @@ export type ITransactionGroupForm = UseFormReturn<TAddTransactionGroup>;
 export interface ICommonFieldProps {
   form: ITransactionGroupForm;
   index: number;
+  detIndex?: number;
 }
