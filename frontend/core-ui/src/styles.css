@@ -97,4 +97,7 @@
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
   }
+  .block-child > * {
+    @apply block !important;
+  }
 }

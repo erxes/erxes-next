@@ -13,12 +13,13 @@ startPlugin({
     resolvers,
   }),
 
-
   hasSubscriptions: true,
   subscriptionPluginPath: require('path').resolve(
     __dirname,
     'apollo',
-    'subscription.js',
+    process.env.NODE_ENV === 'production'
+      ? 'subscription.js'
+      : 'subscription.ts',
   ),
 
   expressRouter: router,

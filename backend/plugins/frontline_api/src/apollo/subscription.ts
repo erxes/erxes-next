@@ -1,6 +1,6 @@
-const { withFilter } = require('graphql-subscriptions');
+import { withFilter } from 'graphql-subscriptions';
 
-module.exports = {
+export default {
   name: 'frontline',
   typeDefs: `
 			conversationChanged(_id: String!): ConversationChangedResponse
@@ -83,7 +83,7 @@ module.exports = {
        * Admin is listening for this subscription to show unread notification
        */
       conversationClientMessageInserted: {
-        resolve(payload, args, { dataSources: { gatewayDataSource } }, info) {
+        resolve(payload, _args, { dataSources: { gatewayDataSource } }, info) {
           if (!payload) {
             console.error(
               `Subscription resolver error: conversationClientMessageInserted: payload is ${payload}`,
@@ -123,7 +123,7 @@ module.exports = {
               `conversationClientMessageInserted:${subdomain}:${userId}`,
             );
           },
-          async (payload, variables) => {
+          async (payload) => {
             const { conversation, integration } = payload;
 
             if (!conversation) {

@@ -11,7 +11,7 @@ export const InboxMainFilter = () => {
   }>(['assignedToMe', 'detailView']);
 
   return (
-    <ScrollArea className="h-full" viewportClassName="[&>div]:block">
+    <ScrollArea className="h-full" viewportClassName="block-child">
       <Collapsible
         className="group/collapsible flex flex-col gap-1 py-4 px-2 w-full overflow-x-hidden"
         defaultOpen

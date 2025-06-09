@@ -30,7 +30,7 @@ export const useBranchesMain = (options?: OperationVariables) => {
   return {
     branches: data?.branchesMain?.list,
     sortedBranches: [...(branchesWithHasChildren || [])].sort((a, b) =>
-      a.order?.localeCompare(b.order),
+      (a.order || '').localeCompare(b.order || ''),
     ),
     loading,
     error,
