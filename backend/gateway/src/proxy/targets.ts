@@ -19,6 +19,8 @@ async function getProxyTarget(name: string): Promise<ErxesProxyTarget> {
     throw new Error(`Plugin ${name} has no address value in service discovery`);
   }
 
+  console.log(`${name} address: ${service.address}`);
+
   return {
     name,
     address: service.address,
@@ -87,11 +89,15 @@ async function retryEnsureGraphqlEndpointIsUp(target: ErxesProxyTarget) {
 }
 
 export async function retryGetProxyTargets(): Promise<ErxesProxyTarget[]> {
+  const SERVICES = ['automations', 'logs'];
+
   try {
     const serviceNames = await getPlugins();
 
     const proxyTargets: ErxesProxyTarget[] = await Promise.all(
-      serviceNames.map(retryGetProxyTarget),
+      serviceNames
+        .filter((servicename) => !SERVICES.includes(servicename))
+        .map(retryGetProxyTarget),
     );
 
     await Promise.all(proxyTargets.map(retryEnsureGraphqlEndpointIsUp));

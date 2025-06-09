@@ -66,6 +66,10 @@ app.use(
   }),
 );
 
+app.get('/health', async (_req, res) => {
+  res.end('ok');
+});
+
 // Wrap the Express server
 const httpServer = http.createServer(app);
 

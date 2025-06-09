@@ -1,3 +1,4 @@
+// no longer being used
 import { Cell, ColumnDef } from '@tanstack/react-table';
 import { RecordTable } from 'erxes-ui';
 import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
@@ -18,7 +19,6 @@ export const CustomerMoreColumnCell = ({
       className="w-full h-full"
       onClick={() => {
         setOpen(_id);
-
         setRenderingCustomerDetail(false);
       }}
     />

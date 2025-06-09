@@ -28,7 +28,7 @@ export const useRecordTableTree = (order: string) => {
   };
 
   const isHiddenByParent = hideChildren.some(
-    (e) => order.startsWith(e) && order.length > e.length,
+    (e) => order?.startsWith(e) && order.length > e.length,
   );
 
   const isHidden = hideChildren.includes(order);

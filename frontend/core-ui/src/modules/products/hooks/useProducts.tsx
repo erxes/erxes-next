@@ -9,19 +9,19 @@ import {
   validateFetchMore,
 } from 'erxes-ui';
 import { IProduct } from 'ui-modules';
-const PRODUCTS_PER_PAGE = 30;
+export const PRODUCTS_PER_PAGE = 30;
 
 export const useProducts = (options?: QueryHookOptions) => {
   const { cursor } = useRecordTableCursor({
     sessionKey: 'products_cursor',
   });
   const { data, loading, fetchMore } = useQuery<{
-    products: {
+    productsMain: {
       list: IProduct[];
       totalCount: number;
       pageInfo: IRecordTableCursorPageInfo;
     };
-  }>(productsQueries.products, {
+  }>(productsQueries.productsMain, {
     ...options,
     variables: {
       limit: PRODUCTS_PER_PAGE,
@@ -30,7 +30,7 @@ export const useProducts = (options?: QueryHookOptions) => {
     },
   });
 
-  const { list: products, totalCount, pageInfo } = data?.products || {};
+  const { list: productsMain, totalCount, pageInfo } = data?.productsMain || {};
 
   const handleFetchMore = ({
     direction,
@@ -58,10 +58,10 @@ export const useProducts = (options?: QueryHookOptions) => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          products: mergeCursorData({
+          productsMain: mergeCursorData({
             direction,
-            fetchMoreResult: fetchMoreResult.products,
-            prevResult: prev.products,
+            fetchMoreResult: fetchMoreResult.productsMain,
+            prevResult: prev.productsMain,
           }),
         });
       },
@@ -70,7 +70,7 @@ export const useProducts = (options?: QueryHookOptions) => {
 
   return {
     loading,
-    products,
+    productsMain,
     totalCount,
     handleFetchMore,
     pageInfo,

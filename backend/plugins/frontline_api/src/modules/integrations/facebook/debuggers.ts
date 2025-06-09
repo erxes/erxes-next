@@ -19,5 +19,5 @@ export const debugRequest = (debugInstance, req) =>
 
 export const debugResponse = (debugInstance, req, data = 'success') =>
   debugInstance(
-    `Responding ${req.path} request to ${req.headers.origin} with ${data}`
+    `Responding ${req.path} request to ${req.headers.origin} with ${data}`,
   );

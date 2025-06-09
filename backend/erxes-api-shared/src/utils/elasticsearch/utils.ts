@@ -37,6 +37,17 @@ export const getRealIdFromElk = (_id: string) => {
   return _id;
 };
 
+export const generateElkId = async (id: string, subdomain: string) => {
+  const VERSION = getEnv({ name: 'VERSION' });
+
+  if (VERSION && VERSION === 'saas') {
+    const organizationId = await getSaasOrganizationIdBySubdomain(subdomain);
+
+    return `${organizationId}__${id}`;
+  }
+  return id;
+};
+
 export const generateElkIds = async (ids: string[], subdomain: string) => {
   const VERSION = getEnv({ name: 'VERSION' });
 

@@ -14,6 +14,7 @@ import {
 } from 'erxes-ui';
 import { SelectBranchTree, SelectDepartmentTree, SelectUnit } from 'ui-modules';
 import { TeamMemberFilter } from './TeamMemberFilter';
+import { TeamMemberCounts } from '../TeamMemberCounts';
 
 export const TeamMemberFilterBar = () => {
   const [queries] = useMultiQueryState<{
@@ -60,6 +61,7 @@ export const TeamMemberFilterBar = () => {
           {!!branchId && <BranchFilterBar />}
           {!!departmentId && <DepartmentFilterBar />}
           {!!unitId && <UnitFilterBar />}
+          <TeamMemberCounts />
         </Filter.Bar>
       </PageSubHeader>
     </Filter>

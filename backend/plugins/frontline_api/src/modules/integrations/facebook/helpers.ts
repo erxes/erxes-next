@@ -4,17 +4,17 @@ import {
   getPageAccessToken,
   refreshPageAccessToken,
   subscribePage,
-  unsubscribePage
+  unsubscribePage,
 } from '@/integrations/facebook/utils';
 import fetch from 'node-fetch';
-import {getEnv ,resetConfigsCache} from 'erxes-api-shared/utils'
+import { getEnv, resetConfigsCache } from 'erxes-api-shared/utils';
 export const removeIntegration = async (
   subdomain: string,
   models: IModels,
-  integrationErxesApiId: string
+  integrationErxesApiId: string,
 ): Promise<string> => {
   const integration = await models.FacebookIntegrations.findOne({
-    erxesApiId: integrationErxesApiId
+    erxesApiId: integrationErxesApiId,
   });
 
   if (!integration) {
@@ -44,33 +44,35 @@ export const removeIntegration = async (
         pageTokenResponse = await getPageAccessToken(pageId, account.token);
       } catch (e) {
         debugError(
-          `Error occurred while trying to get page access token with ${e.message}`
+          `Error occurred while trying to get page access token with ${e.message}`,
         );
       }
 
-  
       try {
-        await models.FacebookPostConversations.deleteMany({ recipientId: pageId });
+        await models.FacebookPostConversations.deleteMany({
+          recipientId: pageId,
+        });
         await unsubscribePage(pageId, pageTokenResponse);
       } catch (e) {
         debugError(
-          `Error occured while trying to unsubscribe page pageId: ${pageId}`
+          `Error occured while trying to unsubscribe page pageId: ${pageId}`,
         );
       }
     }
 
     integrationRemoveBy = { fbPageIds: integration.facebookPageIds };
 
-    const conversationIds =
-      await models.FacebookConversations.find(selector).distinct('_id');
+    const conversationIds = await models.FacebookConversations.find(
+      selector,
+    ).distinct('_id');
 
     await models.FacebookCustomers.deleteMany({
-      integrationId: integrationErxesApiId
+      integrationId: integrationErxesApiId,
     });
 
     await models.FacebookConversations.deleteMany(selector);
     await models.FacebookConversationMessages.deleteMany({
-      conversationId: { $in: conversationIds }
+      conversationId: { $in: conversationIds },
     });
 
     await models.FacebookIntegrations.deleteOne({ _id });
@@ -79,7 +81,7 @@ export const removeIntegration = async (
   // Remove from core =========
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
-  
+
   let domain = `${DOMAIN}/gateway/pl:facebook`;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -93,17 +95,16 @@ export const removeIntegration = async (
         method: 'POST',
         body: JSON.stringify({
           domain,
-          ...integrationRemoveBy
+          ...integrationRemoveBy,
         }),
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
     } catch (e) {
       throw new Error(e.message);
     }
   }
-
 
   return erxesApiId;
 };
@@ -111,7 +112,7 @@ export const removeIntegration = async (
 export const removeAccount = async (
   subdomain: string,
   models: IModels,
-  _id: string
+  _id: string,
 ): Promise<{ erxesApiIds: string[] }> => {
   const account = await models.FacebookAccounts.findOne({ _id });
 
@@ -122,14 +123,14 @@ export const removeAccount = async (
   const erxesApiIds: string[] = [];
 
   const integrations = await models.FacebookIntegrations.find({
-    accountId: account._id
+    accountId: account._id,
   });
 
   if (integrations.length > 0) {
     const results = await Promise.all(
-      integrations.map(integration =>
-        removeIntegration(subdomain, models, integration.erxesApiId)
-      )
+      integrations.map((integration) =>
+        removeIntegration(subdomain, models, integration.erxesApiId),
+      ),
     );
 
     erxesApiIds.push(...results);
@@ -143,10 +144,10 @@ export const removeAccount = async (
 export const repairIntegrations = async (
   subdomain: string,
   models: IModels,
-  integrationId: string
+  integrationId: string,
 ): Promise<true | Error> => {
   const integration = await models.FacebookIntegrations.findOne({
-    erxesApiId: integrationId
+    erxesApiId: integrationId,
   });
 
   if (!integration) {
@@ -154,20 +155,24 @@ export const repairIntegrations = async (
   }
 
   for (const pageId of integration.facebookPageIds || []) {
-    const pageTokens = await refreshPageAccessToken(models, pageId, integration);
+    const pageTokens = await refreshPageAccessToken(
+      models,
+      pageId,
+      integration,
+    );
 
-    await subscribePage(models,pageId, pageTokens[pageId]);
+    await subscribePage(models, pageId, pageTokens[pageId]);
 
     await models.FacebookIntegrations.deleteMany({
       erxesApiId: { $ne: integrationId },
       facebookPageIds: pageId,
-      kind: integration.kind
+      kind: integration.kind,
     });
   }
 
   await models.FacebookIntegrations.updateOne(
     { erxesApiId: integrationId },
-    { $set: { healthStatus: 'healthy', error: '' } }
+    { $set: { healthStatus: 'healthy', error: '' } },
   );
 
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
@@ -185,9 +190,9 @@ export const repairIntegrations = async (
       body: JSON.stringify({
         domain,
         facebookPageIds: integration.facebookPageIds,
-        fbPageIds: integration.facebookPageIds // Consider removing if duplicate of facebookPageIds
+        fbPageIds: integration.facebookPageIds, // Consider removing if duplicate of facebookPageIds
       }),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   }
   return true;
@@ -202,7 +207,7 @@ export const removeCustomers = async (models: IModels, params) => {
 
 export const updateConfigs = async (
   models: IModels,
-  configsMap
+  configsMap,
 ): Promise<void> => {
   await models.FacebookConfigs.updateConfigs(configsMap);
 
@@ -227,9 +232,11 @@ export const routeErrorHandling = (fn, callback?: any) => {
 
 export const facebookGetCustomerPosts = async (
   models: IModels,
-  { customerId }
+  { customerId },
 ) => {
-  const customer = await models.FacebookCustomers.findOne({ erxesApiId: customerId });
+  const customer = await models.FacebookCustomers.findOne({
+    erxesApiId: customerId,
+  });
 
   if (!customer) {
     return [];
@@ -242,23 +249,23 @@ export const facebookGetCustomerPosts = async (
         from: 'posts_conversations_facebooks',
         localField: 'postId',
         foreignField: 'postId',
-        as: 'post'
-      }
+        as: 'post',
+      },
     },
     {
       $unwind: {
         path: '$post',
-        preserveNullAndEmptyArrays: true
-      }
+        preserveNullAndEmptyArrays: true,
+      },
     },
     {
       $addFields: {
-        conversationId: '$post.erxesApiId'
-      }
+        conversationId: '$post.erxesApiId',
+      },
     },
     {
-      $project: { _id: 0, conversationId: 1 }
-    }
+      $project: { _id: 0, conversationId: 1 },
+    },
   ]);
 
   const conversationIds = result.map((conv) => conv.conversationId);
@@ -269,7 +276,7 @@ export const facebookGetCustomerPosts = async (
 export const facebookCreateIntegration = async (
   subdomain: string,
   models: IModels,
-  { accountId, integrationId, data, kind }
+  { accountId, integrationId, data, kind },
 ): Promise<{ status: 'success' }> => {
   const facebookPageIds = JSON.parse(data).pageIds;
 
@@ -279,7 +286,7 @@ export const facebookCreateIntegration = async (
     kind,
     accountId,
     erxesApiId: integrationId,
-    facebookPageIds
+    facebookPageIds,
   });
 
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
@@ -299,9 +306,9 @@ export const facebookCreateIntegration = async (
         body: JSON.stringify({
           domain,
           facebookPageIds,
-          fbPageIds: facebookPageIds
+          fbPageIds: facebookPageIds,
         }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
     } catch (e) {
       await models.FacebookIntegrations.deleteOne({ _id: integration._id });
@@ -318,11 +325,11 @@ export const facebookCreateIntegration = async (
       facebookPageTokensMap[pageId] = pageAccessToken;
 
       try {
-        await subscribePage(models,pageId, pageAccessToken);
+        await subscribePage(models, pageId, pageAccessToken);
         debugFacebook(`Successfully subscribed page ${pageId}`);
       } catch (e) {
         debugError(
-          `Error ocurred while trying to subscribe page ${e.message || e}`
+          `Error ocurred while trying to subscribe page ${e.message || e}`,
         );
         throw e;
       }
@@ -330,7 +337,7 @@ export const facebookCreateIntegration = async (
       debugError(
         `Error ocurred while trying to get page access token with ${
           e.message || e
-        }`
+        }`,
       );
 
       throw e;

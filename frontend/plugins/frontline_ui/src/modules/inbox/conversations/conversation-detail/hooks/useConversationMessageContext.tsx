@@ -5,6 +5,7 @@ import { differenceInMinutes } from 'date-fns';
 
 export const useConversationMessageContext = () => {
   const context = useContext(ConversationMessageContext);
+
   if (!context) {
     throw new Error(
       'useConversationMessageContext must be used within a ConversationMessageContext',

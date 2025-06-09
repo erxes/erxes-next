@@ -18,6 +18,8 @@ const coreLibraries = new Set([
   'react-i18next',
 ]);
 
+const SERVICES = ['automations', 'logs'];
+
 const config: ModuleFederationConfig = {
   name: 'core-ui',
 
@@ -29,7 +31,9 @@ const config: ModuleFederationConfig = {
   },
 
   remotes: process.env.ENABLED_PLUGINS
-    ? process.env.ENABLED_PLUGINS.split(',').map((plugin) => `${plugin}_ui`)
+    ? process.env.ENABLED_PLUGINS.split(',')
+        .filter((plugin) => !SERVICES.includes(plugin))
+        .map((plugin) => `${plugin}_ui`)
     : [],
 };
 

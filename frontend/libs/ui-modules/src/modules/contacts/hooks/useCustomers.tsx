@@ -1,35 +1,46 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { GET_CUSTOMERS } from '../graphql/queries/getCustomers';
+import {
+  GET_ASSIGNED_CUSTOMERS,
+  GET_CUSTOMERS,
+} from '../graphql/queries/getCustomers';
+import { ICustomer } from '../types';
+import { EnumCursorDirection } from 'erxes-ui';
 
+const CUSTOMERS_LIMIT = 30;
 export const useCustomers = (options?: OperationVariables) => {
-  const CUSTOMERS_PER_PAGE = 30;
-  const { data, loading, fetchMore, error } = useQuery(GET_CUSTOMERS, {
+  const { data, loading, fetchMore, error } = useQuery<{
+    customers: {
+      list: ICustomer[];
+      totalCount: number;
+      pageInfo: { endCursor: string };
+    };
+  }>(GET_CUSTOMERS, {
     ...options,
     variables: {
-      perPage: CUSTOMERS_PER_PAGE,
+      limit: CUSTOMERS_LIMIT,
       ...options?.variables,
     },
   });
-  const customers = data?.customersMain?.list;
-  const totalCount = data?.customersMain?.totalCount;
+  const { list = [], totalCount = 0, pageInfo } = data?.customers || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= customers?.length) return;
+    if (totalCount <= list.length) return;
     fetchMore({
       variables: {
         ...options?.variables,
-        page: Math.ceil((customers?.length || 1) / CUSTOMERS_PER_PAGE) + 1,
-        perPage: CUSTOMERS_PER_PAGE,
+        cursor: pageInfo?.endCursor,
+        direction: EnumCursorDirection.FORWARD,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          customersMain: {
+          customers: {
             list: [
-              ...(prev.customersMain?.list || []),
-              ...fetchMoreResult.customersMain.list,
+              ...(prev.customers?.list || []),
+              ...fetchMoreResult.customers.list,
             ],
-            totalCount: fetchMoreResult.customersMain.totalCount,
+            totalCount: fetchMoreResult.customers.totalCount,
+            pageInfo: fetchMoreResult.customers.pageInfo,
           },
         });
       },
@@ -37,10 +48,22 @@ export const useCustomers = (options?: OperationVariables) => {
   };
 
   return {
-    customers,
+    customers: list,
     loading,
     handleFetchMore,
     totalCount,
     error,
   };
+};
+
+interface ICustomerInlineData {
+  customers: ICustomer[];
+}
+
+export const useCustomersInline = (options?: OperationVariables) => {
+  const { data, loading, error } = useQuery<ICustomerInlineData>(
+    GET_ASSIGNED_CUSTOMERS,
+    options,
+  );
+  return { customers: data?.customers, loading, error };
 };

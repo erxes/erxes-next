@@ -2,7 +2,7 @@ import { commonParams } from './commonTypeDefs';
 
 export const DepartmentTypes = `
     type Department @key(fields: "_id") @cacheControl(maxAge: 3) {
-        _id: String!
+        _id: String
         title: String
         description: String
         parentId: String

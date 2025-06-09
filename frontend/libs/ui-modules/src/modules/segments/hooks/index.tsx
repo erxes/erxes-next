@@ -1,14 +1,18 @@
-import { useQuery } from '@apollo/client';
-import { FieldQueryResponse, IField, IOperator } from '../types';
-import queries from '../graphql/queries';
-import { DEFAULT_OPERATORS, OPERATORS } from '../constants';
-import { useQueryState } from 'erxes-ui';
+import { DocumentNode, useQuery } from '@apollo/client';
+import {
+  EnumCursorDirection,
+  mergeCursorData,
+  useQueryState,
+  useRecordTableCursor,
+} from 'erxes-ui';
+import { PROPERTIES_WITH_FIELDS } from '../graphql/queries';
+import { FieldQueryResponse } from '../types';
 
 export const getFieldsProperties = (propertyType?: string) => {
   const [contentType] = useQueryState<string>('contentType');
 
   const { data, loading } = useQuery<FieldQueryResponse>(
-    queries.propertiesWithFields,
+    PROPERTIES_WITH_FIELDS,
     {
       variables: { contentType: propertyType || contentType },
       skip: !contentType && !propertyType,
@@ -25,29 +29,85 @@ export const getFieldsProperties = (propertyType?: string) => {
   };
 };
 
-export const getSelectedFieldConfig = (
-  fieldName: string,
-  fields: IField[],
-): { selectedField: IField; operators: IOperator[] } | undefined => {
-  if (!fieldName) {
-    return;
-  }
+export const useQuerySelectInputList = (
+  query: DocumentNode,
+  queryName: string,
+  searchValue: string,
+  skip?: boolean,
+) => {
+  const PER_PAGE = 30;
+  const { cursor } = useRecordTableCursor({
+    sessionKey: 'property_cursor',
+  });
+  const { data, loading, fetchMore } = useQuery(query, {
+    variables: {
+      limit: PER_PAGE,
+      cursor,
+      searchValue: searchValue ?? undefined,
+    },
+    skip,
+  });
 
-  const selectedField = fields.find((field) => field.name === fieldName);
+  const { list, totalCount, pageInfo } = (data || {})[queryName] || {};
 
-  if (!selectedField) {
-    return undefined;
-  }
+  const handleFetchMore = ({
+    direction,
+  }: {
+    direction: EnumCursorDirection;
+    onFetchMoreCompleted?: (fetchMoreResult: {
+      [queryName: string]: {
+        list: any[];
+      };
+    }) => void;
+  }) => {
+    if (
+      (direction === 'forward' && pageInfo?.hasNextPage) ||
+      (direction === 'backward' && pageInfo?.hasPreviousPage)
+    ) {
+      return fetchMore({
+        variables: {
+          cursor:
+            direction === 'forward'
+              ? pageInfo?.endCursor
+              : pageInfo?.startCursor,
+          limit: PER_PAGE,
+          direction,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            return prev;
+          }
 
-  const { type, validation } = selectedField || {};
+          const { pageInfo: fetchMorePageInfo, list: fetchMoreList = [] } =
+            (fetchMoreResult || {})[queryName];
 
-  const operatorType = (type || validation || '').toLowerCase() as
-    | 'string'
-    | 'boolean'
-    | 'number'
-    | 'date';
+          const { pageInfo: prevPageInfo, list: prevList = [] } =
+            (prev || {})[queryName] || {};
 
-  const operators = OPERATORS[operatorType] || DEFAULT_OPERATORS;
+          // setCursor(prevPageInfo?.endCursor);
 
-  return { selectedField, operators };
+          return Object.assign({}, prev, {
+            [queryName]: mergeCursorData({
+              direction: EnumCursorDirection.FORWARD,
+              fetchMoreResult: {
+                pageInfo: fetchMorePageInfo,
+                list: fetchMoreList,
+              },
+              prevResult: {
+                pageInfo: prevPageInfo,
+                list: prevList,
+              },
+            }),
+          });
+        },
+      });
+    }
+  };
+
+  return {
+    list,
+    loading,
+    totalCount,
+    handleFetchMore,
+  };
 };

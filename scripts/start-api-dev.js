@@ -4,13 +4,15 @@ require('dotenv').config();
 const { ENABLED_PLUGINS } = process.env;
 const { execSync } = require('child_process');
 
+const SERVICES = ['automations', 'logs'];
+
 let plugins = '';
 let pluginsCount = 2;
 
 if (ENABLED_PLUGINS) {
   try {
     plugins = ENABLED_PLUGINS.split(',')
-      .map((plugin) => `${plugin}_api`)
+      .map((plugin) => (SERVICES.includes(plugin) ? plugin : `${plugin}_api`))
       .join(' ');
 
     pluginsCount += plugins.split(' ').length;
@@ -20,6 +22,6 @@ if (ENABLED_PLUGINS) {
   }
 }
 
-const command = `npx nx run-many -t serve -p core-api ${plugins} gateway --verbose --parallel=${pluginsCount}`;
+const command = `npx nx run-many -t serve -p core-api gateway --verbose --parallel=${pluginsCount}`;
 console.log(`Running: ${command}`);
 execSync(command, { stdio: 'inherit' });

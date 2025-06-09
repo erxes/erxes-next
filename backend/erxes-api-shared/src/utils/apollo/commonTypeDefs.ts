@@ -50,6 +50,11 @@ export const apolloCommonTypes = `
     backward
   }
 
+  enum CURSOR_MODE {
+    inclusive,
+    exclusive
+  }
+
   enum CONTACT_STATUS {
     active,
     deleted

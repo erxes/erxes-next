@@ -7,7 +7,9 @@ import { ReactNode } from 'react';
 import { MergeTooltip } from '@/contacts/customers/components/customers-command-bar/merge/MergeTooltip';
 import { cn } from 'erxes-ui/lib';
 
-const noop = () => {};
+const noop = () => {
+  //
+};
 interface MergeSheetProps extends React.ComponentProps<typeof Sheet> {
   children?: ReactNode;
   disabled?: boolean;

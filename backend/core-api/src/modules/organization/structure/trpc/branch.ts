@@ -1,8 +1,9 @@
 import { initTRPC } from '@trpc/server';
-import { escapeRegExp, ITRPCContext } from 'erxes-api-shared/utils';
+import { escapeRegExp } from 'erxes-api-shared/utils';
 import { z } from 'zod';
+import { CoreTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const branchTrpcRouter = t.router({
   branches: t.router({

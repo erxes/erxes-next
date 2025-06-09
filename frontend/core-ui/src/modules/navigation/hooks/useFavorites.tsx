@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { GET_FAVORITES } from '@/navigation/graphql/queries/getFavorites';
-import { usePluginsModules } from '@/navigation/hooks/usePLuginsModules';
+import { usePluginsModules } from '@/navigation/hooks/usePluginsModules';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules';
 

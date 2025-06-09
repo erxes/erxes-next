@@ -7,19 +7,16 @@ import { JOURNALS, TR_SIDES } from '../@types/constants';
 import { ITransaction, ITransactionDocument } from '../@types/transaction';
 
 export default class CurrencyTr {
-  private subdomain: string;
   private models: IModels;
   private doc: ITransaction;
   private currencyDiffTrDoc?: ITransaction;
   private spotRate?: any;
 
   constructor(
-    subdomain: string,
     models: IModels,
     doc: ITransaction
   ) {
     this.models = models;
-    this.subdomain = subdomain;
     this.doc = doc;
   }
 
@@ -119,6 +116,7 @@ export default class CurrencyTr {
         await this.models.Transactions.updateTransaction(oldCurrencyTr._id, {
           ...this.currencyDiffTrDoc,
           originId: transaction._id,
+          followType: 'currencyDiff',
           parentId: transaction.parentId
         });
         currencyTr = this.models.Transactions.findOne({ _id: oldCurrencyTr._id });
@@ -127,6 +125,7 @@ export default class CurrencyTr {
         currencyTr = await this.models.Transactions.createTransaction({
           ...this.currencyDiffTrDoc,
           originId: transaction._id,
+          followType: 'currencyDiff',
           parentId: transaction.parentId
         });
 
@@ -148,6 +147,7 @@ export default class CurrencyTr {
       currencyTr = await this.models.Transactions.createTransaction({
         ...this.currencyDiffTrDoc,
         originId: transaction._id,
+        followType: 'currencyDiff',
         parentId: transaction.parentId
       });
 
