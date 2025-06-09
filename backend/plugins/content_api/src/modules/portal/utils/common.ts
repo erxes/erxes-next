@@ -100,3 +100,66 @@ export const getConfigByHost = async (
         input: { phoneNumber, content },
     });
   };
+
+  export const buildCustomFieldsMap = async (
+    fieldGroups: any[],
+    customFieldsData: any
+  ) => {
+    const jsonMap: any = {};
+  
+    if (fieldGroups.length > 0) {
+      for (const fieldGroup of fieldGroups) {
+
+
+        const fields = await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'query',
+          module: 'core',
+          action: 'fields.find',
+          input: { query: { groupId: fieldGroup._id } },
+        });
+  
+        jsonMap[fieldGroup.code] = fields.reduce((acc, field: any) => {
+          const value = customFieldsData.find((c: any) => c.field === field._id);
+          acc[field.code] = value ? value.value : null;
+          return acc;
+        }, {});
+      }
+    }
+  
+    return jsonMap;
+  };
+  
+  export const customFieldsDataByFieldCode = async (object) => {
+    const customFieldsData =
+      object.customFieldsData && object.customFieldsData.toObject
+        ? object.customFieldsData.toObject()
+        : object.customFieldsData || [];
+  
+    const fieldIds = customFieldsData.map((data) => data.field);
+  
+    const fields = await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'core',
+      action: 'fields.find',
+      input: { query: { _id: { $in: fieldIds } } },
+    });
+  
+    const fieldCodesById = {};
+  
+    for (const field of fields) {
+      fieldCodesById[field._id] = field.code;
+    }
+  
+    const results: any = {};
+  
+    for (const data of customFieldsData) {
+      results[fieldCodesById[data.field]] = {
+        ...data,
+      };
+    }
+  
+    return results;
+  };
+  

@@ -93,6 +93,7 @@ export interface IContext extends IMainContext {
   portalUser: IUserDocument;
   session: any;
   clientPortalId?: string;
+  isPassed2FA?: boolean;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {

@@ -190,7 +190,6 @@ export const queries = `
 
 
   clientPortalUserPosts(searchValue: String, ${GQL_CURSOR_PARAM_DEFS}): ClientPortalUserPostListResponse
-
 `;
 
 const userParams = `

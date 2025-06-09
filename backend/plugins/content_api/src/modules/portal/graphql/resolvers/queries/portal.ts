@@ -3,7 +3,6 @@ import { IContext } from '~/connectionResolvers';
 import { getUserCards } from '@/portal/utils/cards';
 import { getConfigByHost } from '@/portal/utils/common';
 
-
 const queries = {
   async clientPortalGetConfigs(_root, args, { models }: IContext) {
     const { kind, search } = args;
@@ -408,10 +407,18 @@ const queries = {
 
     const filter = {} as any;
 
-    if (contentType) filter.contentType = contentType;
-    if (contentTypeId) filter.contentTypeId = contentTypeId;
-    if (users?.length > 0) filter.cpUserId = { $in: users.map((d) => d._id) };
-    else return [];
+    if (contentType) {
+      filter.contentType = contentType;
+    }
+
+    if (contentTypeId) {
+      filter.contentTypeId = contentTypeId;
+    }
+    if (users?.length > 0) {
+      filter.cpUserId = { $in: users.map((d) => d._id) };
+    } else {
+      return [];
+    }
     return models.UserCards.find(filter);
   },
 };
