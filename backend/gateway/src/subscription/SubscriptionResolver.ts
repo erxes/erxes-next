@@ -23,7 +23,7 @@ function fieldPathsAsStrings(obj: { [key: string]: any }) {
   const paths = (obj = {}, head = ''): string[] => {
     return Object.entries(obj).reduce(
       (acc: string[], [key, value]: [string, any]) => {
-        let fullPath = addDelimiter(head, key);
+        const fullPath = addDelimiter(head, key);
         return isObject(value)
           ? acc.concat(key, paths(value, fullPath))
           : acc.concat(fullPath);
@@ -45,9 +45,9 @@ function addDelimiter(a: string, b: string) {
 function isFieldObject(obj: any) {
   return (
     isObject(obj) &&
-    obj.hasOwnProperty('args') &&
-    obj.hasOwnProperty('alias') &&
-    obj.hasOwnProperty('name')
+    Object.prototype.hasOwnProperty.call(obj, 'args') &&
+    Object.prototype.hasOwnProperty.call(obj, 'alias') &&
+    Object.prototype.hasOwnProperty.call(obj, 'name')
   );
 }
 
@@ -58,7 +58,7 @@ function fieldPathsAsMapFromResolveInfo(
   const paths = (obj = {}, head = ''): [string, any][] => {
     return Object.entries(obj).reduce(
       (acc: [string, any][], [key, value]: [string, any]) => {
-        let fullPath = addDelimiter(head, key);
+        const fullPath = addDelimiter(head, key);
         if (
           isFieldObject(value) &&
           Object.keys(value.fieldsByTypeName).length === 0
@@ -91,7 +91,7 @@ function fieldPathsAsMapFromResolveInfo(
             pathParts.splice(i - 1, 2);
           }
         });
-        let keptOptions = {
+        const keptOptions = {
           ...(name !== alias && { alias }),
           ...(Object.keys(args).length && { args }),
         };

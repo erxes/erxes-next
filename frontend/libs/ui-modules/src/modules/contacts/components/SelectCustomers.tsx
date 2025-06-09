@@ -4,7 +4,7 @@ import { useSelectCustomerContext } from '../hooks/useSelectCustomerContext';
 import { useCustomers } from '../hooks';
 import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
-import { cn, Combobox, Command, Popover } from 'erxes-ui';
+import { cn, Combobox, Command, Form, Popover } from 'erxes-ui';
 import { CustomersInline } from './CustomersInline';
 import {
   RecordTablePopover,
@@ -209,9 +209,41 @@ const SelectCustomersValue = () => {
     <CustomersInline
       customerIds={customerIds}
       customers={customers}
-      placeholder="Unnamed customer"
+      placeholder="Select customer"
       updateCustomers={setCustomers}
     />
+  );
+};
+
+const SelectCustomerFormItem = ({
+  onValueChange,
+  className,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectCustomersProvider>, 'children'> & {
+  className?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <SelectCustomersProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Form.Control>
+          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
+            <SelectCustomers.Value />
+          </Combobox.Trigger>
+        </Form.Control>
+
+        <Combobox.Content>
+          <SelectCustomers.Content />
+        </Combobox.Content>
+      </Popover>
+    </SelectCustomersProvider>
   );
 };
 
@@ -221,4 +253,5 @@ export const SelectCustomers = Object.assign(SelectCustomerRoot, {
   Item: SelectCustomerCommandItem,
   InlineCell: SelectCustomerInlineCell,
   Value: SelectCustomersValue,
+  FormItem: SelectCustomerFormItem,
 });

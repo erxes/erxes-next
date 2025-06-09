@@ -1,7 +1,7 @@
 import {
   IBranchDocument,
   IDepartmentDocument,
-} from '@/core-types/modules/structure/structure';
+} from '../../core-types/modules/structure/structure'
 import {
   IActionMap,
   IPermissionDocument,

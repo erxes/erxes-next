@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "watch": false
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules"]
+} 

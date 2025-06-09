@@ -1,4 +1,4 @@
-import { IPermissionContext, IUserDocument } from '@/core-types';
+import { IPermissionContext, IUserDocument } from '../../core-types';
 import { getEnv, redis } from '../../utils';
 import { getUserActionsMap } from './user-actions-map';
 

@@ -1,5 +1,9 @@
 import { gql } from '@apollo/client';
 
+const commonCommentAndMessageFields = `
+  content
+  conversationId
+`;
 export const GET_CONVERSATION_MESSAGES = gql`
   query FacebookConversationMessages(
     $conversationId: String!
@@ -12,17 +16,51 @@ export const GET_CONVERSATION_MESSAGES = gql`
       getFirst: $getFirst
       skip: $skip
       limit: $limit
-    ) {
+    )
+   {
+
       _id
-      botData
-      createdAt
+      ${commonCommentAndMessageFields}
       customerId
-      fromBot
-      internal
-      isCustomerRead
-      mid
       userId
-      content
+      createdAt
+      isCustomerRead
+      internal
+
+      attachments {
+        url
+        name
+        type
+        size
+      }
+
+      user {
+        _id
+        username
+        details {
+          avatar
+          fullName
+          position
+        }
+      }
+          customer {
+            _id
+            avatar
+            firstName
+            middleName
+            lastName
+            primaryEmail
+            primaryPhone
+            state
+            companies {
+              _id
+              primaryName
+              website
+            }
+
+            customFieldsData
+            tagIds
+          }
     }
   }
 `;

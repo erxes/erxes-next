@@ -1,5 +1,5 @@
 {
-  "name": "logs",
+  "name": "logs-service",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/services/logs/src",
   "projectType": "application",
@@ -47,7 +47,7 @@
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/services/logs/Dockerfile . -t logs_api"
+      "command": "docker build -f backend/services/logs/Dockerfile . -t erxes/erxes-next-logs"
     }
   }
 }
