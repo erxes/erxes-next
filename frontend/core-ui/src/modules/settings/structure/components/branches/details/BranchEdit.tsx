@@ -61,7 +61,8 @@ export const BranchEdit = ({ children }: { children?: React.ReactNode }) => {
 
   useEffect(() => {
     if (branchDetail) {
-      reset(branchDetail);
+      const { __typename, ...rest } = branchDetail;
+      reset(rest);
     }
   }, [branchDetail]);
 
