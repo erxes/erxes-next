@@ -215,7 +215,7 @@ export const handleDeviceToken = async (user, deviceToken) => {
   }
 };
 
-export const createCard = async (subdomain, models, cpUser, doc) => {
+export const createCard = async (models, cpUser, doc) => {
   //TODO: fix
   // const customer = await sendCoreMessage({
   //   subdomain,
@@ -307,7 +307,6 @@ export const createCard = async (subdomain, models, cpUser, doc) => {
 };
 
 export const participantEditRelation = async (
-  subdomain,
   models: IModels,
   type,
   cardId,

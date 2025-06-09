@@ -1,4 +1,4 @@
-import { getPlugin, isEnabled } from 'erxes-api-shared/utils';
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
      enum TokenPassMethod {
@@ -339,14 +339,8 @@ input OTPConfigInput {
   }
 `;
 
-const cursorParams = `
-  limit: Int
-  cursor: String
-  direction: CURSOR_DIRECTION
-`;
-
 export const queries = `
-clientPortalGetConfigs(kind:BusinessPortalKind, search: String, ${cursorParams}): ClientPortalListResponse
+  clientPortalGetConfigs(kind:BusinessPortalKind, search: String, ${GQL_CURSOR_PARAM_DEFS}): ClientPortalListResponse
   clientPortalGetConfig(_id: String!): ClientPortal
   clientPortalGetConfigByDomain(clientPortalName: String): ClientPortal
   clientPortalGetLast(kind: BusinessPortalKind): ClientPortal
@@ -360,7 +354,7 @@ clientPortalGetConfigs(kind:BusinessPortalKind, search: String, ${cursorParams})
 
 
    clientPortalKnowledgeBaseTopicDetail(_id: String!): KnowledgeBaseTopic
-   clientPortalKnowledgeBaseArticles(searchValue: String, categoryIds: [String], topicId: String, isPrivate: Boolean, ${cursorParams}): KnowledgeBaseArticlesListResponse
+   clientPortalKnowledgeBaseArticles(searchValue: String, categoryIds: [String], topicId: String, isPrivate: Boolean, ${GQL_CURSOR_PARAM_DEFS}): KnowledgeBaseArticlesListResponse
 `;
 
 export const mutations = `

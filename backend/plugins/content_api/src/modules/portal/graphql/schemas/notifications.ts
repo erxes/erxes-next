@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
   enum NotificationType {
     system
@@ -9,8 +11,6 @@ export const types = `
     label: String
     isAllowed: Boolean
   }
-
-
 
   type UserNotificationSettings {
     receiveByEmail: Boolean
@@ -32,12 +32,15 @@ export const types = `
     eventData: JSON
   }
 
+  type ClientPortalNotificationListResponse {
+    list: [ClientPortalNotification]
+    totalCount: Int
+    pageInfo: PageInfo
+  }
 `;
 
 const params = `
-  limit: Int,
-  page: Int,
-  perPage: Int,
+${GQL_CURSOR_PARAM_DEFS}
   requireRead: Boolean,
   notifType: NotificationType
   search: String
@@ -65,7 +68,7 @@ input MobileFireBaseConfig {
 `;
 
 export const queries = `
-  clientPortalNotifications(${params}): [ClientPortalNotification]
+  clientPortalNotifications(${params}): ClientPortalNotificationListResponse
   clientPortalNotificationCount(all: Boolean): Int
   clientPortalNotificationDetail(_id: String!): ClientPortalNotification
 `;

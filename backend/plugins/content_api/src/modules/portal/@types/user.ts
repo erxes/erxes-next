@@ -84,7 +84,6 @@ export interface IVerificationParams {
 }
 
 export interface IContactsParams {
-  subdomain: string;
   models: IModels;
   clientPortalId: string;
   document: any;

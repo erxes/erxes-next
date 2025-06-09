@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
     enum PostAuthorKind {
         user
@@ -17,6 +19,7 @@ type VerificationRequest {
   description: String
   verifiedBy: String
 }
+  
 type TwoFactorDevice {
   key: String
   device: String
@@ -86,11 +89,22 @@ type TwoFactorDevice {
 
 
 
-    type ClientportalUserPostList {
-        posts: [Post]
+    type ClientPortalUserPostListResponse {
+        list: [Post]
         totalCount: Int
-        totalPages: Int
-        currentPage: Int
+        pageInfo: PageInfo
+    }
+
+    type ClientPortalUsersListResponse {
+        list: [ClientPortalUser]
+        totalCount: Int
+        pageInfo: PageInfo
+    }
+
+    type ClientPortalCompanyListResponse {
+        list: [ClientPortalCompany]
+        totalCount: Int
+        pageInfo: PageInfo
     }
 `;
 
@@ -153,8 +167,7 @@ export const conformityQueryFields = `
 `;
 
 const queryParams = `
-  page: Int
-  perPage: Int
+${GQL_CURSOR_PARAM_DEFS}
   type: String
   ids: [String]
   excludeIds: Boolean
@@ -169,14 +182,14 @@ const queryParams = `
 export const queries = `
   clientPortalCurrentUser: ClientPortalUser
   clientPortalUserDetail(_id: String!): ClientPortalUser
-  clientPortalUsers(${queryParams}): [ClientPortalUser]
-  clientPortalUsersMain(${queryParams}): clientPortalUsersListResponse
+  clientPortalUsers(${queryParams}): ClientPortalUsersListResponse
+  clientPortalUsersMain(${queryParams}): ClientPortalUsersListResponse
   clientPortalUserCounts(type: String): Int
 
-  clientPortalCompanies(clientPortalId: String!): [ClientPortalCompany]
+  clientPortalCompanies(clientPortalId: String! ${GQL_CURSOR_PARAM_DEFS}): ClientPortalCompanyListResponse
 
 
-  clientPortalUserPosts(searchValue: String, page: Int, perPage: Int): ClientportalUserPostList
+  clientPortalUserPosts(searchValue: String, ${GQL_CURSOR_PARAM_DEFS}): ClientPortalUserPostListResponse
 
 `;
 
