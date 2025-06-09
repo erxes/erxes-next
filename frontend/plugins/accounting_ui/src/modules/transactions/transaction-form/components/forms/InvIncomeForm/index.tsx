@@ -11,6 +11,7 @@ import {
 } from '../../GeneralFormFields';
 import { InventoryForm } from './InventoryForm';
 import { CtaxForm } from '../../helpers/CtaxForm';
+import { ExpenseForm } from './ExpenseForm';
 // import { InventoryForm } from '../../../inventory/components/InventoryForm';
 
 export const InvIncomeForm = ({
@@ -33,10 +34,16 @@ export const InvIncomeForm = ({
         <CtaxForm form={form} journalIndex={index} isWithTax={false} isSameSide={true} />
       </div>
 
-      <InventoryForm
-        form={form}
-        journalIndex={index}
-      />
+      <div className=" pt-3">
+        <ExpenseForm form={form} journalIndex={index} />
+      </div>
+
+      <div className='-mt-3'>
+        <InventoryForm
+          form={form}
+          journalIndex={index}
+        />
+      </div>
     </>
   );
 };

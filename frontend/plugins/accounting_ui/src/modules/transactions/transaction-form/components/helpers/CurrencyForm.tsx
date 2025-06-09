@@ -11,7 +11,7 @@ import { getTempId, getTrSide } from '../utils';
 import { ITransaction } from '../../../types/Transaction';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 
-export const CurrencyForm = ({
+const CurrencyFormBody = ({
   form,
   journalIndex,
 }: {
@@ -130,13 +130,6 @@ export const CurrencyForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detail, diffAmount, side]);
 
-  if (
-    !detail?.account?.currency ||
-    detail?.account?.currency === mainCurrency
-  ) {
-    return null;
-  }
-
   return (
     <>
       <Form.Item>
@@ -203,4 +196,32 @@ export const CurrencyForm = ({
       )}
     </>
   );
+}
+
+export const CurrencyForm = ({
+  form,
+  journalIndex,
+}: {
+  form: ITransactionGroupForm;
+  journalIndex: number;
+}) => {
+  const account = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}.details.0.account`,
+  });
+
+  const mainCurrency = 'MNT';
+
+  if (
+    !account?.currency ||
+    account?.currency === mainCurrency
+  ) {
+    return null;
+  }
+
+  return <CurrencyFormBody
+    form={form}
+    journalIndex={journalIndex}
+  />
+
 };

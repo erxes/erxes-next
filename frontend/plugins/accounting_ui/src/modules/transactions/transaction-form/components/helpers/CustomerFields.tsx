@@ -4,7 +4,7 @@ import {
   CustomerType,
   SelectCustomers,
   SelectCompany,
-  AssignMember,
+  SelectMember,
 } from 'ui-modules';
 
 export const CustomerFields = ({
@@ -18,10 +18,10 @@ export const CustomerFields = ({
 
   const SelectComponent =
     customerType === CustomerType.CUSTOMER
-      ? SelectCustomers
+      ? SelectCustomers.FormItem
       : customerType === CustomerType.COMPANY
-        ? SelectCompany
-        : AssignMember;
+      ? SelectCompany
+      : SelectMember.FormItem;
 
   return (
     <>
@@ -60,7 +60,7 @@ export const CustomerFields = ({
                 value={field.value ?? ''}
                 onValueChange={field.onChange}
                 mode={'single'}
-                className='flex'
+                className="flex"
               />
             </Form.Control>
             <Form.Message />

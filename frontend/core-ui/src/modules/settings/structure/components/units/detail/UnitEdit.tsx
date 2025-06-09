@@ -61,7 +61,8 @@ export const UnitEdit = () => {
 
   useEffect(() => {
     if (unitDetail) {
-      reset(unitDetail);
+      const { __typename, ...rest } = unitDetail;
+      reset(rest);
     }
   }, [unitDetail]);
 
@@ -88,7 +89,7 @@ export const UnitEdit = () => {
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <UnitForm />
+              <UnitForm loading={loading} />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(null)}>

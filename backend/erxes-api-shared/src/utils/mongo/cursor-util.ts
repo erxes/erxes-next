@@ -1,4 +1,4 @@
-import { ICursorPaginateParams } from '@/core-types';
+import { ICursorPaginateParams } from '../../core-types';
 import { SortOrder } from 'mongoose';
 
 export interface CursorData {

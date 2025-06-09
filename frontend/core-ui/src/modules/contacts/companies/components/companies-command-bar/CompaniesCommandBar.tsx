@@ -18,8 +18,6 @@ export const CompaniesCommandBar = () => {
       <CommandBar.Bar>
         <CommandBar.Value>{selectedRows.length} selected</CommandBar.Value>
         <Separator.Inline />
-        <CompaniesDelete companyIds={companyIds} rows={selectedRows} />
-        <Separator.Inline />
         <SelectTags.CommandbarItem
           mode="multiple"
           tagType="core:company"
@@ -52,6 +50,8 @@ export const CompaniesCommandBar = () => {
           companies={selectedRows.map((row) => row.original)}
           rows={selectedRows}
         />
+        <Separator.Inline />
+        <CompaniesDelete companyIds={companyIds} rows={selectedRows} />
       </CommandBar.Bar>
     </CommandBar>
   );

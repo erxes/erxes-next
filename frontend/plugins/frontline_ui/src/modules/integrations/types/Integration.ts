@@ -1,10 +1,8 @@
-import { IBrand } from 'ui-modules';
-
 export interface IIntegration {
   _id: string;
   name: string;
   kind: string;
-  brand?: Partial<IBrand>;
+  brandId: string;
 }
 
 export interface IIntegrationDetail extends IIntegration {
@@ -13,4 +11,9 @@ export interface IIntegrationDetail extends IIntegration {
   healthStatus: {
     status: 'success' | 'page-token' | 'account-token';
   };
+}
+
+export interface IIntegrationType {
+  _id: string;
+  name: string;
 }

@@ -4,6 +4,8 @@ import { useCallback } from 'react';
 import { previousHotkeyScopeState } from '../states/internal/previousHotkeyScopeState';
 import { currentHotkeyScopeState } from '../states/internal/currentHotkeyScopeState';
 import { CustomHotkeyScopes } from '../types/CustomHotkeyScope';
+import { DEBUG_HOTKEY_SCOPE } from './useScopedHotKeysCallback';
+import { logDebug } from 'erxes-ui/utils/logDebug';
 
 export const usePreviousHotkeyScope = () => {
   const setHotKeyScope = useSetHotkeyScope();
@@ -15,6 +17,10 @@ export const usePreviousHotkeyScope = () => {
 
         if (!previousHotkeyScope) {
           return;
+        }
+
+        if (DEBUG_HOTKEY_SCOPE) {
+          logDebug('DEBUG: goBackToPreviousHotkeyScope', previousHotkeyScope);
         }
 
         setHotKeyScope(
@@ -30,6 +36,15 @@ export const usePreviousHotkeyScope = () => {
     useCallback(
       (get, set, scope: string, customScopes?: CustomHotkeyScopes) => {
         const currentHotkeyScope = get(currentHotkeyScopeState);
+
+        if (DEBUG_HOTKEY_SCOPE) {
+          logDebug('DEBUG: setHotkeyScopeAndMemorizePreviousScope', {
+            currentHotkeyScope,
+            scope,
+            customScopes,
+          });
+        }
+
         setHotKeyScope(scope, customScopes);
         set(previousHotkeyScopeState, currentHotkeyScope);
       },

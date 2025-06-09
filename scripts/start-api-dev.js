@@ -12,7 +12,9 @@ let pluginsCount = 2;
 if (ENABLED_PLUGINS) {
   try {
     plugins = ENABLED_PLUGINS.split(',')
-      .map((plugin) => (SERVICES.includes(plugin) ? plugin : `${plugin}_api`))
+      .map((plugin) =>
+        SERVICES.includes(plugin) ? `${plugin}-service` : `${plugin}_api`,
+      )
       .join(' ');
 
     pluginsCount += plugins.split(' ').length;

@@ -16,10 +16,11 @@ export const getIntegrations = gql`
 `;
 
 export const INTEGRATION_DETAIL = gql`
-  query IntegrationDetail($id: String!) {
-    integrationDetail(_id: $id) {
+  query IntegrationDetail($_id: String!) {
+    integrationDetail(_id: $_id) {
       _id
       kind
+      brandId
       brand {
         _id
         name
@@ -40,6 +41,15 @@ export const GET_INTEGRATIONS_BY_KIND = gql`
         healthStatus
       }
       ${GQL_PAGE_INFO}
+    }
+  }
+`;
+
+export const GET_INTEGRATION_TYPES = gql`
+  query IntegrationsGetUsedTypes {
+    integrationsGetUsedTypes {
+      _id
+      name
     }
   }
 `;

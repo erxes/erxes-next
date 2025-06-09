@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 
-import { useToast } from 'erxes-ui';
+import { useConfirm, useToast } from 'erxes-ui';
 
 import {
   fileSettingsMutations,
@@ -9,6 +9,8 @@ import {
 
 const useConfig = () => {
   const { toast } = useToast();
+  const { confirm } = useConfirm();
+  const confirmOptions = { confirmationValue: 'update' };
 
   const { data, loading } = useQuery(fileSettingsQueries.GET_CONFIGS, {
     onError(error) {
@@ -38,13 +40,14 @@ const useConfig = () => {
   );
 
   const updateConfig = (args: any) => {
-    update({
-      variables: {
-        configsMap: {
-          ...args,
-        },
-      },
-    });
+    confirm({
+      message: 'Are you sure you want to update file configs?',
+      options: confirmOptions,
+    })
+      .then(() => update({ variables: { configsMap: { ...args } } }))
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
   const configs = data?.configs || undefined;

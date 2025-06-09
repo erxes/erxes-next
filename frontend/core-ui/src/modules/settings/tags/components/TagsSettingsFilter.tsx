@@ -1,10 +1,4 @@
-import {
-  Combobox,
-  Command,
-  Filter,
-  useFilterContext,
-  useQueryState,
-} from 'erxes-ui';
+import { Combobox, Command, Filter, useFilterContext } from 'erxes-ui';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import {
   SelectTagType,

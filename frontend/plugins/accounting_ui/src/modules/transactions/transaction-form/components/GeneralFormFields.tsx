@@ -1,35 +1,35 @@
 import { ICommonFieldProps } from '../types/JournalForms';
 import { CurrencyField, Form, Input, Select } from 'erxes-ui';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
-import {
-  AssignMultipleMembers,
-  SelectBranch,
-  SelectDepartment,
-} from 'ui-modules';
+import { SelectBranch, SelectDepartment, SelectMember } from 'ui-modules';
 import { IAccount } from '@/settings/account/types/Account';
 import { useWatch } from 'react-hook-form';
 
 export const AccountField = ({
   form,
   index,
+  detIndex,
   filter,
-  allDetails
+  allDetails,
 }: ICommonFieldProps & {
   filter?: any;
-  allDetails?: boolean
+  allDetails?: boolean;
 }) => {
   const details = useWatch({
     control: form.control,
-    name: `trDocs.${index}.details`
-  })
+    name: `trDocs.${index}.details`,
+  });
   const onChangeAccount = (account: IAccount) => {
     if (allDetails) {
       details.forEach((_d, ind) => {
         form.setValue(`trDocs.${index}.details.${ind}.account`, account as any);
-        form.setValue(`trDocs.${index}.details.${ind}.accountId`, account._id as any);
+        form.setValue(
+          `trDocs.${index}.details.${ind}.accountId`,
+          account._id as any,
+        );
       });
     } else {
-      form.setValue(`trDocs.${index}.details.0.account`, account as any);
+      form.setValue(`trDocs.${index}.details.${detIndex ?? 0}.account`, account as any);
     }
 
     if (account?.branchId) {
@@ -39,11 +39,12 @@ export const AccountField = ({
     if (account?.departmentId) {
       form.setValue(`trDocs.${index}.departmentId`, account.departmentId);
     }
-  }
+  };
+
   return (
     <Form.Field
       control={form.control}
-      name={`trDocs.${index}.details.0.accountId`}
+      name={`trDocs.${index}.details.${detIndex ?? 0}.accountId`}
       render={({ field }) => (
         <Form.Item>
           <Form.Label>Account</Form.Label>
@@ -59,12 +60,13 @@ export const AccountField = ({
         </Form.Item>
       )}
     />
-  )
+  );
 };
 
 export const SideField = ({
   form,
   index,
+  detIndex,
   sides,
 }: ICommonFieldProps & {
   sides: {
@@ -74,7 +76,7 @@ export const SideField = ({
 }) => (
   <Form.Field
     control={form.control}
-    name={`trDocs.${index}.details.0.side`}
+    name={`trDocs.${index}.details.${detIndex ?? 0}.side`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Side</Form.Label>
@@ -97,15 +99,18 @@ export const SideField = ({
   />
 );
 
-export const AmountField = ({ form, index }: ICommonFieldProps) => (
+export const AmountField = ({ form, index, detIndex }: ICommonFieldProps) => (
   <Form.Field
     control={form.control}
-    name={`trDocs.${index}.details.0.amount`}
+    name={`trDocs.${index}.details.${detIndex ?? 0}.amount`}
     render={({ field }) => (
       <Form.Item>
         <Form.Label>Amount</Form.Label>
         <Form.Control>
-          <CurrencyField.ValueInput value={field.value} onChange={field.onChange} />
+          <CurrencyField.ValueInput
+            value={field.value}
+            onChange={field.onChange}
+          />
         </Form.Control>
       </Form.Item>
     )}
@@ -120,7 +125,7 @@ export const AssignToField = ({ form, index }: ICommonFieldProps) => (
       <Form.Item>
         <Form.Label>Assign To</Form.Label>
         <Form.Control>
-          <AssignMultipleMembers
+          <SelectMember.FormItem
             onValueChange={(user) => field.onChange(user)}
             value={field.value}
           />

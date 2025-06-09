@@ -1,14 +1,13 @@
-import { IconMailFilled, IconTicket } from '@tabler/icons-react';
-
+import { IconInbox, IconTicket } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui/types';
 
 export const CONFIG: IUIConfig = {
   name: 'frontline',
-  icon: IconMailFilled,
+  icon: IconInbox,
   modules: [
     {
       name: 'inbox',
-      icon: IconMailFilled,
+      icon: IconInbox,
       path: 'inbox',
       hasSettings: true,
       hasWidgets: true,

@@ -1,11 +1,11 @@
 import {
   IconAdjustmentsAlt,
   IconChartPie2,
-  IconChessKnightFilled,
+  IconChessKnight,
   IconColorSwatch,
   IconFile,
   IconMail,
-  IconTagFilled,
+  IconTag,
   IconUserCircle,
   IconUsersGroup,
 } from '@tabler/icons-react';
@@ -117,6 +117,11 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
   ],
   nav: [
     {
+      name: 'Team member',
+      icon: IconUsersGroup,
+      path: SettingsWorkspacePath.TeamMember,
+    },
+    {
       name: 'General',
       icon: IconAdjustmentsAlt,
       path: SettingsWorkspacePath.General,
@@ -131,11 +136,7 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
       icon: IconMail,
       path: SettingsWorkspacePath.MailConfig,
     },
-    {
-      name: 'Team member',
-      icon: IconUsersGroup,
-      path: SettingsWorkspacePath.TeamMember,
-    },
+
     {
       name: 'Structure',
       icon: IconChartPie2,
@@ -143,12 +144,12 @@ export const SETTINGS_PATH_DATA: { [key: string]: TSettingPath[] } = {
     },
     {
       name: 'Tags',
-      icon: IconTagFilled,
+      icon: IconTag,
       path: SettingsWorkspacePath.Tags,
     },
     {
       name: 'Brands',
-      icon: IconChessKnightFilled,
+      icon: IconChessKnight,
       path: SettingsWorkspacePath.Brands,
     },
   ],

@@ -104,7 +104,7 @@ const Default = () => {
   const [searchValue, setSearchValue] = useState('');
 
   const { data, loading, error, refetch } = useQuery<ConstantsQueryResponse>(
-    gql(AUTOMATOMATION_CONSTANTS),
+    AUTOMATOMATION_CONSTANTS,
     { fetchPolicy: 'network-only' },
   );
 
