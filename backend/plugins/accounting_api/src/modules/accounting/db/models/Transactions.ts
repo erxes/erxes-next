@@ -303,7 +303,11 @@ export const loadTransactionClass = (models: IModels, subdomain: string) => {
       if ((await models.Transactions.find({ preTrId: { $in: deleteTrIds }, _id: { $nin: deleteTrIds } }).lean()).length) {
         throw new Error('cant remove this transaction. Remove the dependent transaction first')
       }
-
+      if (!(await models.Transactions.find({
+        _id: { $in: deleteTrIds }
+      }).lean()).length) {
+        throw new Error('not found trs')
+      }
       return await models.Transactions.deleteMany({ _id: { $in: deleteTrIds } });
     }
   }

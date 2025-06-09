@@ -35,6 +35,12 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
         });
         options?.onError?.(error);
       },
+      onCompleted: () => {
+        toast({
+          title: 'Success',
+          description: 'Transactions created successfully',
+        });
+      },
       update: (_cache, { data }) => {
         const newParentId = data?.accTransactionsCreate[0]?.parentId;
 
