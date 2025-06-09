@@ -203,13 +203,38 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     accessorKey: 'address',
     header: () => <RecordTable.InlineHead label="address" />,
     cell: ({ cell }) => {
+      const { address, _id } = cell.row.original;
+      const [_address, setAddress] = useState<string>(address);
+      const { branchesEdit, loading } = useBranchInlineEdit();
+      const [open, setOpen] = useState<boolean>(false);
+
+      const onSave = () => {
+        if (_address !== address) {
+          branchesEdit({ variables: { id: _id, address: _address } }, [
+            'address',
+          ]);
+        }
+      };
+
+      const onChange = (el: ChangeEvent<HTMLTextAreaElement>) => {
+        const { value } = el.currentTarget;
+        setAddress(value);
+      };
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
             <TextOverflowTooltip value={cell.getValue() as string} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <Textarea value={cell.getValue() as string} />
+            <Textarea value={_address} onChange={onChange} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
