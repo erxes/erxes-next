@@ -4,14 +4,13 @@ import { IconPlus } from '@tabler/icons-react';
 import { SidebarListProps } from '../types';
 import SlotCard from './slotCard';
 
-
 const SidebarList: React.FC<SidebarListProps> = ({
   nodes,
   selectedNode,
   onNodeClick,
   onAddSlot,
   onDuplicateSlot,
-  onDeleteSlot
+  onDeleteSlot,
 }) => {
   return (
     <div className="m-0 border rounded-lg border-gray-200">
@@ -46,7 +45,11 @@ const SidebarList: React.FC<SidebarListProps> = ({
           )}
 
           {nodes.length > 0 && (
-            <Button variant="outline" className="w-full mt-4" onClick={onAddSlot}>
+            <Button
+              variant="outline"
+              className="w-full mt-4"
+              onClick={onAddSlot}
+            >
               <IconPlus className="h-4 w-4 mr-2" />
               Add slot
             </Button>

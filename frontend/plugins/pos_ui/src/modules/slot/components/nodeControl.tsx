@@ -4,8 +4,10 @@ import { Panel } from '@xyflow/react';
 import { IconPlus, IconArrowsMoveVertical } from '@tabler/icons-react';
 import { NodeControlsProps } from '../types';
 
-
-const NodeControls: React.FC<NodeControlsProps> = ({ onAddSlot, onArrangeNodes }) => {
+const NodeControls: React.FC<NodeControlsProps> = ({
+  onAddSlot,
+  onArrangeNodes,
+}) => {
   return (
     <Panel
       position="top-right"

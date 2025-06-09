@@ -3,22 +3,10 @@
 import { useAtom } from 'jotai';
 import { posCategoryAtom } from '../../states/posCategory';
 import { PosCreateTabContent, PosCreateLayout } from './pos-create-layout';
-
-import ChooseCategoryPage from '../category/choose-category';
-import EcommercePaymentsForm from '../payments/ecommerce-payment';
-import RestaurantPaymentsForm from '../payments/restaurant-payment';
-import PermissionForm from '../permission/permission';
-import AppearanceForm from '../appearance/appearance';
-import ScreenConfigForm from '../config/screen-config';
-import EbarimtConfigForm from '../config/ebarimt-config';
-import DeliveryConfigForm from '../delivery/delivery';
-import SyncCardForm from '../sync/sync';
-import FinanceConfigForm from '../finance/finance';
-import type { JSX } from 'react/jsx-runtime';
-import POSSlotsManager from '~/modules/slot/components/slot';
-import { EcommerceForm } from '../general/ecommerce';
 import { useForm } from 'react-hook-form';
-import { RestaurantForm } from '../general/restaurant';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useSubmitPosForm } from '~/modules/hooks/usePosAdd';
+import { useUpdatePosSlots } from '~/modules/hooks/useSlotAdd';
 import { useState } from 'react';
 import {
   type BasicInfoFormValues,
@@ -31,13 +19,40 @@ import {
   paymentSchema,
   type FormStepData,
 } from '../formSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useSubmitPosForm } from '~/modules/hooks/usePosAdd';
+import { CustomNode } from '~/modules/slot/types';
+import POSSlotsManager from '~/modules/slot/components/slot';
+import { useToast } from 'erxes-ui/hooks';
+
+import ChooseCategoryPage from '../category/choose-category';
+import EcommercePaymentsForm from '../payments/ecommerce-payment';
+import RestaurantPaymentsForm from '../payments/restaurant-payment';
+import PermissionForm from '../permission/permission';
+import AppearanceForm from '../appearance/appearance';
+import ScreenConfigForm from '../config/screen-config';
+import EbarimtConfigForm from '../config/ebarimt-config';
+import DeliveryConfigForm from '../delivery/delivery';
+import SyncCardForm from '../sync/sync';
+import FinanceConfigForm from '../finance/finance';
+import type { JSX } from 'react/jsx-runtime';
+import { EcommerceForm } from '../general/ecommerce';
 import ProductForm from '../product/product';
+import { RestaurantForm } from '../general/restaurant';
 
 export const PosCreate = () => {
   const [posCategory] = useAtom(posCategoryAtom);
-  const { submitForm, loading, error } = useSubmitPosForm();
+  const {
+    submitForm,
+    loading: posLoading,
+    error: posError,
+  } = useSubmitPosForm();
+  const {
+    updatePosSlots,
+    loading: slotLoading,
+    error: slotError,
+  } = useUpdatePosSlots();
+  const [createdPosId, setCreatedPosId] = useState<string | null>(null);
+  const [slotNodes, setSlotNodes] = useState<CustomNode[]>([]);
+  const { toast } = useToast();
 
   const [formStepData, setFormStepData] = useState<FormStepData>({
     basicInfo: {
@@ -144,6 +159,51 @@ export const PosCreate = () => {
     console.log('Payment data updated:', data);
   };
 
+  const handleSaveSlots = async (posId: string) => {
+    if (!posId || slotNodes.length === 0) {
+      return;
+    }
+
+    try {
+      const slotsData = slotNodes.map((node) => ({
+        code: node.data.code,
+        name: node.data.label,
+        posId: posId,
+        option: {
+          width: node.data.width,
+          height: node.data.height,
+          top: node.data.positionY,
+          left: node.data.positionX,
+          rotateAngle: node.data.rotateAngle,
+          borderRadius: node.data.rounded ? 8 : 0,
+          color: node.data.color,
+          zIndex: node.data.zIndex,
+          isShape: false,
+        },
+      }));
+
+      await updatePosSlots({
+        variables: {
+          posId: posId,
+          slots: slotsData,
+        },
+      });
+
+      toast({
+        title: 'Slots saved successfully',
+        description: `Saved ${slotsData.length} slots`,
+      });
+    } catch (error) {
+      console.error('Failed to save slots:', error);
+      toast({
+        title: 'Failed to save slots',
+        description: 'Please try again later',
+        variant: 'destructive',
+      });
+      throw error;
+    }
+  };
+
   const handleFinalSubmit = async () => {
     try {
       const currentBasicInfo = basicInfoForm.getValues();
@@ -164,18 +224,38 @@ export const PosCreate = () => {
             : [],
         },
         product: currentProduct,
-        payment: currentPayment, // This will include the full payment structure
+        payment: currentPayment,
       };
 
-      console.log('Final form data being submitted:', finalFormStepData);
-
       const result = await submitForm(finalFormStepData);
-      console.log('POS created successfully:', result);
+
+      if (result?.data?.posAdd?._id) {
+        const posId = result.data.posAdd._id;
+        setCreatedPosId(posId);
+
+        if (posCategory === 'restaurant' && slotNodes.length > 0) {
+          await handleSaveSlots(posId);
+        }
+
+        toast({
+          title: 'POS created successfully',
+          description: 'POS has been created',
+        });
+      }
 
       setFormStepData(finalFormStepData);
     } catch (error) {
       console.error('Failed to create POS:', error);
+      toast({
+        title: 'Failed to create POS',
+        description: 'Please try again later',
+        variant: 'destructive',
+      });
     }
+  };
+
+  const handleNodesUpdate = (nodes: CustomNode[]) => {
+    setSlotNodes(nodes);
   };
 
   const getCategoryComponent = (
@@ -195,8 +275,9 @@ export const PosCreate = () => {
       form={basicInfoForm}
       onFormSubmit={handleBasicInfoSubmit}
       onFinalSubmit={handleFinalSubmit}
-      loading={loading}
-      error={error}
+      onSaveSlots={() => handleSaveSlots(createdPosId || '')}
+      loading={posLoading || slotLoading}
+      error={posError || slotError}
     >
       <PosCreateTabContent value="overview">
         <ChooseCategoryPage />
@@ -211,7 +292,12 @@ export const PosCreate = () => {
 
       {posCategory === 'restaurant' && (
         <PosCreateTabContent value="slot">
-          <POSSlotsManager posId={''} />
+          <POSSlotsManager
+            posId={createdPosId || ''}
+            initialNodes={slotNodes}
+            onNodesChange={handleNodesUpdate}
+            isCreating={true}
+          />
         </PosCreateTabContent>
       )}
 

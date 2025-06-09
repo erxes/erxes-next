@@ -16,39 +16,46 @@ export const useKeyboardShortcuts = ({
   onDeleteNode,
   onSaveNode,
   onAddNode,
-  onToggleSidebar
+  onToggleSidebar,
 }: UseKeyboardShortcutsProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Delete selected node with Delete key
-      if (event.key === "Delete" && selectedNode) {
+      if (event.key === 'Delete' && selectedNode) {
         onDeleteNode(selectedNode.id);
       }
 
       // Save with Ctrl+S
-      if (event.ctrlKey && event.key === "s" && selectedNode) {
+      if (event.ctrlKey && event.key === 's' && selectedNode) {
         event.preventDefault();
         onSaveNode();
       }
 
       // Add new node with Ctrl+N
-      if (event.ctrlKey && event.key === "n") {
+      if (event.ctrlKey && event.key === 'n') {
         event.preventDefault();
         onAddNode();
       }
 
       // Toggle sidebar with Ctrl+B
-      if (event.ctrlKey && event.key === "b") {
+      if (event.ctrlKey && event.key === 'b') {
         event.preventDefault();
-        onToggleSidebar(sidebarView === "hidden" ? "list" : "hidden");
+        onToggleSidebar(sidebarView === 'hidden' ? 'list' : 'hidden');
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedNode, sidebarView, onDeleteNode, onSaveNode, onAddNode, onToggleSidebar]);
+  }, [
+    selectedNode,
+    sidebarView,
+    onDeleteNode,
+    onSaveNode,
+    onAddNode,
+    onToggleSidebar,
+  ]);
 };
 
 export default useKeyboardShortcuts;

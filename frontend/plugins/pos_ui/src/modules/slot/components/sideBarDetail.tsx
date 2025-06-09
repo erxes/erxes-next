@@ -1,20 +1,22 @@
-"use client"
+'use client';
 
-import { useAtom } from "jotai"
-import { slotDetailAtom } from "../states/slot"
-import { Button, Checkbox, Input, Label } from "erxes-ui"
-import { SidebarDetailProps, SlotDetailForm } from "../types"
-
+import { useAtom } from 'jotai';
+import { slotDetailAtom } from '../states/slot';
+import { Button, Checkbox, Input, Label } from 'erxes-ui';
+import { SidebarDetailProps, SlotDetailForm } from '../types';
 
 const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
-  const [slotDetail, setSlotDetail] = useAtom(slotDetailAtom)
+  const [slotDetail, setSlotDetail] = useAtom(slotDetailAtom);
 
-  const handleChange = (field: keyof SlotDetailForm, value: string | boolean) => {
+  const handleChange = (
+    field: keyof SlotDetailForm,
+    value: string | boolean,
+  ) => {
     setSlotDetail({
       ...slotDetail,
       [field]: value,
-    })
-  }
+    });
+  };
 
   return (
     <div className="p-4 max-w-md mx-auto">
@@ -28,7 +30,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
           <Input
             id="name"
             value={slotDetail.name}
-            onChange={(e) => handleChange("name", e.target.value)}
+            onChange={(e) => handleChange('name', e.target.value)}
             className="mt-1 rounded-lg"
           />
         </div>
@@ -40,7 +42,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
           <Input
             id="code"
             value={slotDetail.code}
-            onChange={(e) => handleChange("code", e.target.value)}
+            onChange={(e) => handleChange('code', e.target.value)}
             className="mt-1 rounded-lg"
             disabled
           />
@@ -51,7 +53,9 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             <Checkbox
               id="rounded"
               checked={slotDetail.rounded}
-              onCheckedChange={(checked) => handleChange("rounded", checked === true)}
+              onCheckedChange={(checked) =>
+                handleChange('rounded', checked === true)
+              }
             />
             <Label htmlFor="rounded" className="text-gray-500 uppercase">
               Rounded
@@ -67,7 +71,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             id="width"
             type="text"
             value={slotDetail.width}
-            onChange={(e) => handleChange("width", e.target.value)}
+            onChange={(e) => handleChange('width', e.target.value)}
             className="mt-1 rounded-lg"
           />
         </div>
@@ -80,7 +84,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             id="height"
             type="text"
             value={slotDetail.height}
-            onChange={(e) => handleChange("height", e.target.value)}
+            onChange={(e) => handleChange('height', e.target.value)}
             className="mt-1 rounded-lg"
           />
         </div>
@@ -93,7 +97,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             id="top"
             type="text"
             value={slotDetail.top}
-            onChange={(e) => handleChange("top", e.target.value)}
+            onChange={(e) => handleChange('top', e.target.value)}
             className="mt-1 rounded-lg"
           />
         </div>
@@ -106,7 +110,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             id="left"
             type="text"
             value={slotDetail.left}
-            onChange={(e) => handleChange("left", e.target.value)}
+            onChange={(e) => handleChange('left', e.target.value)}
             className="mt-1 rounded-lg"
           />
         </div>
@@ -119,7 +123,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             id="rotateAngle"
             type="text"
             value={slotDetail.rotateAngle}
-            onChange={(e) => handleChange("rotateAngle", e.target.value)}
+            onChange={(e) => handleChange('rotateAngle', e.target.value)}
             className="mt-1 rounded-lg"
           />
         </div>
@@ -132,7 +136,7 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             id="zIndex"
             type="text"
             value={slotDetail.zIndex}
-            onChange={(e) => handleChange("zIndex", e.target.value)}
+            onChange={(e) => handleChange('zIndex', e.target.value)}
             className="mt-1 rounded-lg"
           />
         </div>
@@ -146,13 +150,13 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
               id="color-picker"
               type="color"
               value={slotDetail.color}
-              onChange={(e) => handleChange("color", e.target.value)}
+              onChange={(e) => handleChange('color', e.target.value)}
               className="w-12 h-10 p-1 cursor-pointer"
             />
             <Input
               id="color"
               value={slotDetail.color}
-              onChange={(e) => handleChange("color", e.target.value)}
+              onChange={(e) => handleChange('color', e.target.value)}
               className="flex-1"
             />
           </div>
@@ -163,7 +167,9 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
             <Checkbox
               id="disabled"
               checked={slotDetail.disabled}
-              onCheckedChange={(checked) => handleChange("disabled", checked === true)}
+              onCheckedChange={(checked) =>
+                handleChange('disabled', checked === true)
+              }
             />
             <Label htmlFor="disabled" className="text-gray-500 uppercase">
               Disabled
@@ -179,13 +185,16 @@ const SidebarDetail = ({ onSave, onCancel }: SidebarDetailProps) => {
           >
             Cancel
           </Button>
-          <Button onClick={onSave} className="px-8 py-2 bg-[#5E5CFF] hover:bg-[#4a48cc]">
+          <Button
+            onClick={onSave}
+            className="px-8 py-2 bg-[#5E5CFF] hover:bg-[#4a48cc]"
+          >
             Save
           </Button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SidebarDetail
+export default SidebarDetail;

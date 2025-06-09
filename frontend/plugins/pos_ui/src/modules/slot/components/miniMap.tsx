@@ -1,18 +1,17 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { MiniMap, PanelPosition } from "@xyflow/react"
-import { IconMap, IconX } from "@tabler/icons-react"
-import { MiniMapToggleProps } from "../types"
-
+import { useState } from 'react';
+import { MiniMap, PanelPosition } from '@xyflow/react';
+import { IconMap, IconX } from '@tabler/icons-react';
+import { MiniMapToggleProps } from '../types';
 
 export default function MiniMapToggle({
   nodeStrokeWidth = 3,
   zoomable = true,
   pannable = true,
-  position = "top-left",
+  position = 'top-left',
 }: MiniMapToggleProps) {
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(true);
 
   if (!isVisible) {
     return (
@@ -25,7 +24,7 @@ export default function MiniMapToggle({
           <IconMap className="h-4 w-4 text-gray-500 dark:text-gray-400" />
         </button>
       </div>
-    )
+    );
   }
 
   return (
@@ -36,9 +35,9 @@ export default function MiniMapToggle({
         pannable={pannable}
         position={position as PanelPosition}
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
-          border: "1px solid #e2e8f0",
-          borderRadius: "0.375rem",
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          border: '1px solid #e2e8f0',
+          borderRadius: '0.375rem',
         }}
       />
 
@@ -52,5 +51,5 @@ export default function MiniMapToggle({
         </button>
       </div>
     </div>
-  )
+  );
 }

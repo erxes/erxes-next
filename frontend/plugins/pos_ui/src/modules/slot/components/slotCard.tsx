@@ -1,29 +1,30 @@
 import React from 'react';
 import { Button, Card } from 'erxes-ui';
-import { IconEdit, IconTrash, IconCopy } from "@tabler/icons-react";
+import { IconEdit, IconTrash, IconCopy } from '@tabler/icons-react';
 import { cn } from 'erxes-ui/lib';
 import { SlotCardProps } from '../types';
-
 
 const SlotCard: React.FC<SlotCardProps> = ({
   node,
   selected,
   onEdit,
   onDuplicate,
-  onDelete
+  onDelete,
 }) => {
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-all hover:shadow-md",
-        selected ? "ring-2 ring-indigo-500" : "",
-        node.data.disabled ? "opacity-60" : "",
+        'overflow-hidden transition-all hover:shadow-md',
+        selected ? 'ring-2 ring-indigo-500' : '',
+        node.data.disabled ? 'opacity-60' : '',
       )}
     >
       <div className="p-0">
         <div className="flex items-center p-3">
           <div className="flex-1">
-            <h3 className="font-medium">{node.data.label as React.ReactNode}</h3>
+            <h3 className="font-medium">
+              {node.data.label as React.ReactNode}
+            </h3>
           </div>
           <div className="flex gap-1">
             <Button

@@ -1,67 +1,81 @@
-"use client"
-import { Button, Input, Label, Select } from "erxes-ui"
-import { useSearchParams } from "react-router-dom"
-import { useAtom } from "jotai"
-import { IconPlus } from "@tabler/icons-react"
-import { syncCardSettingsAtom } from "../../states/posCategory"
+'use client';
+import { Button, Input, Label, Select } from 'erxes-ui';
+import { useSearchParams } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { IconPlus } from '@tabler/icons-react';
+import { syncCardSettingsAtom } from '../../states/posCategory';
+import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
-export default function SyncCardForm() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom)
+interface SyncCardFormProps {
+  posDetail: IPosDetail;
+}
+
+export default function SyncCardForm({ posDetail }: SyncCardFormProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom);
 
   const handleToggleNewConfig = () => {
     setSyncCardSettings({
       ...syncCardSettings,
       showNewConfig: !syncCardSettings.showNewConfig,
-    })
-  }
+    });
+  };
 
-  const handleInputChange = (field: keyof typeof syncCardSettings.currentConfig, value: string) => {
+  const handleInputChange = (
+    field: keyof typeof syncCardSettings.currentConfig,
+    value: string,
+  ) => {
     setSyncCardSettings({
       ...syncCardSettings,
       currentConfig: {
         ...syncCardSettings.currentConfig,
         [field]: value,
       },
-    })
-  }
+    });
+  };
 
-  const handleSelectChange = (field: keyof typeof syncCardSettings.currentConfig, value: string) => {
+  const handleSelectChange = (
+    field: keyof typeof syncCardSettings.currentConfig,
+    value: string,
+  ) => {
     setSyncCardSettings({
       ...syncCardSettings,
       currentConfig: {
         ...syncCardSettings.currentConfig,
         [field]: value,
       },
-    })
-  }
+    });
+  };
 
   const handleAddConfig = () => {
-    const newConfigs = [...syncCardSettings.configs, { ...syncCardSettings.currentConfig }]
+    const newConfigs = [
+      ...syncCardSettings.configs,
+      { ...syncCardSettings.currentConfig },
+    ];
     setSyncCardSettings({
       ...syncCardSettings,
       configs: newConfigs,
       currentConfig: {
-        title: "",
-        branch: "",
-        stageBoard: "",
-        pipeline: "",
-        stage: "",
-        assignedUsers: "",
-        mapField: "",
+        title: '',
+        branch: '',
+        stageBoard: '',
+        pipeline: '',
+        stage: '',
+        assignedUsers: '',
+        mapField: '',
       },
-    })
-  }
+    });
+  };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
+    e.preventDefault();
     if (syncCardSettings.currentConfig.title) {
-      handleAddConfig()
+      handleAddConfig();
     }
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set("tab", "complete")
-    setSearchParams(newParams)
-  }
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('tab', 'complete');
+    setSearchParams(newParams);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="p-3">
@@ -85,7 +99,7 @@ export default function SyncCardForm() {
                 <Label className="text-sm text-gray-500">TITLE</Label>
                 <Input
                   value={syncCardSettings.currentConfig.title}
-                  onChange={(e) => handleInputChange("title", e.target.value)}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="Enter title"
                 />
               </div>
@@ -94,7 +108,7 @@ export default function SyncCardForm() {
                 <Label className="text-sm text-gray-500">CHOOSE BRUNCH</Label>
                 <Select
                   value={syncCardSettings.currentConfig.branch}
-                  onValueChange={(value) => handleSelectChange("branch", value)}
+                  onValueChange={(value) => handleSelectChange('branch', value)}
                 >
                   <Select.Trigger>
                     <Select.Value placeholder="Choose brunch" />
@@ -110,10 +124,14 @@ export default function SyncCardForm() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-sm text-gray-500">CHOOSE STAGE BOARD</Label>
+                <Label className="text-sm text-gray-500">
+                  CHOOSE STAGE BOARD
+                </Label>
                 <Select
                   value={syncCardSettings.currentConfig.stageBoard}
-                  onValueChange={(value) => handleSelectChange("stageBoard", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange('stageBoard', value)
+                  }
                 >
                   <Select.Trigger>
                     <Select.Value placeholder="Choose board" />
@@ -127,10 +145,14 @@ export default function SyncCardForm() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm text-gray-500">CHOOSE ASSIGNED USERS</Label>
+                <Label className="text-sm text-gray-500">
+                  CHOOSE ASSIGNED USERS
+                </Label>
                 <Select
                   value={syncCardSettings.currentConfig.assignedUsers}
-                  onValueChange={(value) => handleSelectChange("assignedUsers", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange('assignedUsers', value)
+                  }
                 >
                   <Select.Trigger>
                     <Select.Value placeholder="Choose team member" />
@@ -149,7 +171,9 @@ export default function SyncCardForm() {
                 <Label className="text-sm text-gray-500">PIPELINE</Label>
                 <Select
                   value={syncCardSettings.currentConfig.pipeline}
-                  onValueChange={(value) => handleSelectChange("pipeline", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange('pipeline', value)
+                  }
                 >
                   <Select.Trigger>
                     <Select.Value placeholder="Choose pipeline" />
@@ -166,7 +190,7 @@ export default function SyncCardForm() {
                 <Label className="text-sm text-gray-500">STAGE</Label>
                 <Select
                   value={syncCardSettings.currentConfig.stage}
-                  onValueChange={(value) => handleSelectChange("stage", value)}
+                  onValueChange={(value) => handleSelectChange('stage', value)}
                 >
                   <Select.Trigger>
                     <Select.Value placeholder="Choose a stage" />
@@ -184,7 +208,7 @@ export default function SyncCardForm() {
               <Label className="text-sm text-gray-500">CHOOSE MAP FIELD</Label>
               <Select
                 value={syncCardSettings.currentConfig.mapField}
-                onValueChange={(value) => handleSelectChange("mapField", value)}
+                onValueChange={(value) => handleSelectChange('mapField', value)}
               >
                 <Select.Trigger>
                   <Select.Value placeholder="Select" />
@@ -198,7 +222,11 @@ export default function SyncCardForm() {
             </div>
 
             <div className="flex justify-end">
-              <Button type="button" onClick={handleAddConfig} className="text-white">
+              <Button
+                type="button"
+                onClick={handleAddConfig}
+                className="text-white"
+              >
                 Add Config
               </Button>
             </div>
@@ -213,7 +241,8 @@ export default function SyncCardForm() {
                 <div key={index} className="p-3">
                   <div className="font-medium">{config.title}</div>
                   <div className="text-sm text-gray-500">
-                    Board: {config.stageBoard}, Pipeline: {config.pipeline}, Stage: {config.stage}
+                    Board: {config.stageBoard}, Pipeline: {config.pipeline},
+                    Stage: {config.stage}
                   </div>
                 </div>
               ))}
@@ -222,5 +251,5 @@ export default function SyncCardForm() {
         )}
       </div>
     </form>
-  )
+  );
 }

@@ -66,8 +66,6 @@ export interface NodeResizeEvent extends CustomEvent {
   detail: ResizeEventDetail;
 }
 
-
-
 export type TabValue = 'slots' | 'details';
 
 export type SidebarViewType = 'list' | 'detail' | 'hidden';
@@ -128,3 +126,4 @@ export interface SlotCardProps {
   onDuplicate: (id: string) => void;
   onDelete: (id: string) => void;
 }
+
