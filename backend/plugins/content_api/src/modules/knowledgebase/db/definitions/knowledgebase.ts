@@ -12,8 +12,6 @@ const commonFields = {
   code: {
     type: String,
     optional: true,
-    sparse: true,
-    unique: true,
     label: 'Code',
   },
 };
