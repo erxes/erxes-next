@@ -199,7 +199,7 @@ export const InventoryRow = ({
                 defaultFilter={{ journals: [JournalEnum.INVENTORY] }}
                 variant="ghost"
                 inForm
-                scope={AccountingHotkeyScope.TransactionCEPage}
+                scope={AccountingHotkeyScope.TransactionFormPage}
               />
             )}
           />
@@ -217,7 +217,7 @@ export const InventoryRow = ({
                   field.onChange(productId);
                 }}
                 variant="ghost"
-                scope={AccountingHotkeyScope.TransactionCEPage}
+                scope={AccountingHotkeyScope.TransactionFormPage}
               />
             )}
           />

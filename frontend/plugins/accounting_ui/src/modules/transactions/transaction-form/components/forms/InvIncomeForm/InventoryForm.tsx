@@ -1,12 +1,12 @@
-import { AddInventoryRowButton } from './AddInventoryRow';
-// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
-import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
-import { useFieldArray, useWatch } from 'react-hook-form';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { InventoryRow } from './InventoryRow';
-import { RemoveButton } from './RemoveButton';
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
-import { useEffect, useRef, useState } from 'react';
+import { AddInventoryRowButton } from './AddInventoryRow';
+import { InventoryRow } from './InventoryRow';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
+import { RemoveButton } from './RemoveButton';
+import { useFieldArray, useWatch } from 'react-hook-form';
+import { useRef } from 'react';
+// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 
 export const InventoryForm = ({
   form,
@@ -29,10 +29,10 @@ export const InventoryForm = ({
     <RecordTableHotkeyProvider
       columnLength={columnsLength}
       rowLength={fields.length}
-      scope={AccountingHotkeyScope.TransactionCEPage}
+      scope={AccountingHotkeyScope.TransactionFormPage}
     >
       <Table
-        className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar"
+        className="mt-5 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar"
         ref={tableRef}
       >
         <InventoryTableHeader form={form} journalIndex={journalIndex} />

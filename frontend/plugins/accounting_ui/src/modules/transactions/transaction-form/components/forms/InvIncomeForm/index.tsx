@@ -34,16 +34,14 @@ export const InvIncomeForm = ({
         <CtaxForm form={form} journalIndex={index} isWithTax={false} isSameSide={true} />
       </div>
 
-      <div className=" pt-3">
+      <div className="pt-3">
         <ExpenseForm form={form} journalIndex={index} />
       </div>
 
-      <div className='-mt-3'>
         <InventoryForm
           form={form}
           journalIndex={index}
         />
-      </div>
     </>
   );
 };
