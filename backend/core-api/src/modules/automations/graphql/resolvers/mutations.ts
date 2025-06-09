@@ -169,7 +169,7 @@ export const automationMutations = {
     }
 
     await models.Automations.deleteMany({ _id: { $in: automationIds } });
-    await models.Executions.removeExecutions(automationIds);
+    await models.AutomationExecutions.removeExecutions(automationIds);
 
     for (const segmentId of segmentIds || []) {
       //   sendSegmentsMessage({

@@ -40,7 +40,7 @@ export const MessageItem = () => {
               'mt-2 h-auto py-2 text-left [&_*]:whitespace-pre-wrap block font-normal space-y-2 overflow-x-hidden text-pretty break-words [&_a]:text-primary [&_a]:underline [&_img]:aspect-square [&_img]:object-cover [&_img]:rounded',
               userId && 'bg-primary/10 hover:bg-primary/10',
               internal &&
-              'bg-yellow-50 hover:bg-yellow-50 dark:bg-yellow-950 dark:hover:bg-yellow-950',
+                'bg-yellow-50 hover:bg-yellow-50 dark:bg-yellow-950 dark:hover:bg-yellow-950',
               separatePrevious && 'mt-8',
             )}
             asChild
@@ -49,7 +49,9 @@ export const MessageItem = () => {
               <MessageContent content={content} internal={internal} />
               {separateNext && (
                 <div className="text-muted-foreground mt-1">
-                  <RelativeDateDisplay value={createdAt} />
+                  <RelativeDateDisplay value={createdAt}>
+                    <RelativeDateDisplay.Value value={createdAt} />
+                  </RelativeDateDisplay>
                 </div>
               )}
             </div>

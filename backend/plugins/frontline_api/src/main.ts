@@ -13,13 +13,15 @@ startPlugin({
     resolvers,
   }),
 
+  hasSubscriptions: true,
+  subscriptionPluginPath: require('path').resolve(
+    __dirname,
+    'apollo',
+    process.env.NODE_ENV === 'production'
+      ? 'subscription.js'
+      : 'subscription.ts',
+  ),
 
-  // hasSubscriptions: false,
-  // subscriptionPluginPath: require('path').resolve(
-  //   __dirname,
-  //   'graphql',
-  //   'subscriptionPlugin.js',
-  // ),
   expressRouter: router,
 
   apolloServerContext: async (subdomain, context) => {

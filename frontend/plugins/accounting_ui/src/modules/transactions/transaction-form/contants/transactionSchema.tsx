@@ -162,6 +162,14 @@ export const transactionInvIncomeSchema = z.object({
   details: z.array(z.object({
     ...invDetailSchema.shape,
   })),
+  extraData: z.object({
+    invIncomeExpenses: z.array(z.object({
+      expenseCode: z.string(),
+      expenseTitle: z.string(),
+      rule: z.string(),
+      amount: z.number().min(0)
+    })).min(0)
+  })
 });
 
 //#region Inventories

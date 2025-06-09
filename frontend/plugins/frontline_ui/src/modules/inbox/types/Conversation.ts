@@ -10,6 +10,7 @@ export interface IConversation {
   customer?: ICustomerInline;
   customerId?: string;
   integrationId?: string;
+  brandId?: string;
   readUserIds: string[];
   assignedUserId?: string;
   tagIds?: string[];

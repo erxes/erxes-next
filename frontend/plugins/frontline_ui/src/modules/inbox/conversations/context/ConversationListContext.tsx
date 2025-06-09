@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { IConversation } from '../types/Conversation';
+import { IConversation } from '@/inbox/types/Conversation';
 
 export interface IConversationListContext {
   conversations: IConversation[];

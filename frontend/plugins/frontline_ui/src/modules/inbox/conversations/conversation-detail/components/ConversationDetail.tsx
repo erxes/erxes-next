@@ -12,6 +12,7 @@ import { MessageInput } from './MessageInput';
 
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
 import { InboxMessagesSkeleton } from '@/inbox/components/InboxMessagesSkeleton';
+import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -28,9 +29,16 @@ export const ConversationDetail = () => {
     skip: !conversationId,
   });
 
-  const { integration } = currentConversation || conversationDetail || {};
+  const { integrationId } = currentConversation || conversationDetail || {};
 
-  if (loading && !currentConversation) {
+  const { integration, loading: integrationLoading } = useIntegrationDetail({
+    variables: {
+      _id: integrationId,
+    },
+    skip: !integrationId,
+  });
+
+  if (loading && !currentConversation && !integrationLoading) {
     return (
       <div className="relative h-full">
         <InboxMessagesSkeleton />
@@ -55,9 +63,10 @@ export const ConversationDetail = () => {
           <ConversationHeader />
           <Separator />
           <ConversationDetailLayout input={<MessageInput />}>
-            {['messenger', 'lead'].includes(integration?.kind) && (
-              <ConversationMessages />
-            )}
+            {integration?.kind &&
+              ['messenger', 'lead'].includes(integration?.kind) && (
+                <ConversationMessages />
+              )}
             <ConversationIntegrationDetail />
           </ConversationDetailLayout>
         </ConversationContext.Provider>
