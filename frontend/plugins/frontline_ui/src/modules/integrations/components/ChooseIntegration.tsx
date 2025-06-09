@@ -1,4 +1,10 @@
-import { Button, Collapsible, Skeleton, useMultiQueryState } from 'erxes-ui';
+import {
+  Button,
+  Collapsible,
+  Skeleton,
+  TextOverflowTooltip,
+  useMultiQueryState,
+} from 'erxes-ui';
 import { useIntegrations } from '@/integrations/hooks/useIntegrations';
 import { useAtom } from 'jotai';
 import { integrationCollapsibleState } from '@/integrations/state/integrationCollapsibleState';
@@ -10,7 +16,6 @@ export const ChooseIntegration = () => {
 
   return (
     <Collapsible
-      title="Choose Integration"
       className="group/integration"
       open={open}
       onOpenChange={setOpen}
@@ -19,7 +24,7 @@ export const ChooseIntegration = () => {
         <Collapsible.TriggerIcon className="group-data-[state=open]/integration:rotate-180" />
         Integrations
       </Collapsible.TriggerButton>
-      <Collapsible.Content className="pl-1 flex flex-col gap-1 py-1">
+      <Collapsible.Content className="pl-1 flex flex-col gap-1 py-1 overflow-hidden">
         <ChooseIntegrationContent open={open} />
       </Collapsible.Content>
     </Collapsible>
@@ -27,10 +32,10 @@ export const ChooseIntegration = () => {
 };
 
 const ChooseIntegrationContent = ({ open }: { open: boolean }) => {
-  const { integrations, loading, conversationCounts } = useIntegrations({
+  const { integrations, loading } = useIntegrations({
     variables: {
       only: 'byIntegrationTypes',
-      limit: 100,
+      limit: 20,
     },
     skip: !open,
   });
@@ -68,11 +73,11 @@ const IntegrationItem = ({ _id, name }: IIntegration) => {
   return (
     <Button
       variant={isActive ? 'secondary' : 'ghost'}
-      className="w-full justify-start pl-7 relative"
+      className="justify-start pl-7 relative overflow-hidden text-left flex-auto"
       onClick={handleClick}
     >
       {isActive && <IconCheck className="absolute left-1.5" />}
-      <span className="overflow-hidden truncate">{name}</span>
+      <TextOverflowTooltip value={name} className="flex-auto" />
       <span className="ml-auto text-xs text-accent-foreground">{0}</span>
     </Button>
   );

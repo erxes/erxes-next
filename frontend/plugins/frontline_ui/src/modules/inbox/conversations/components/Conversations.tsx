@@ -14,7 +14,7 @@ import {
 } from '../states/selectConversationsState';
 import { useConversationContext } from '~/modules/inbox/conversations/hooks/useConversationContext';
 import { useConversations } from '~/modules/inbox/conversations/hooks/useConversations';
-import { currentUserState, CustomerInline } from 'ui-modules';
+import { BrandsInline, currentUserState, CustomerInline } from 'ui-modules';
 
 import {
   Badge,
@@ -45,23 +45,22 @@ export const Conversations = () => {
       }
     },
   });
-  const [
-    { channelId, integrationType, unassigned, status, date, conversationId },
-  ] = useMultiQueryState<{
-    channelId: string;
-    integrationType: string;
-    unassigned: string;
-    status: string;
-    date: string;
-    conversationId: string;
-  }>([
-    'channelId',
-    'integrationType',
-    'unassigned',
-    'status',
-    'date',
-    'conversationId',
-  ]);
+  const [{ channelId, integrationType, unassigned, status, date }] =
+    useMultiQueryState<{
+      channelId: string;
+      integrationType: string;
+      unassigned: string;
+      status: string;
+      date: string;
+      conversationId: string;
+    }>([
+      'channelId',
+      'integrationType',
+      'unassigned',
+      'status',
+      'date',
+      'conversationId',
+    ]);
 
   const parsedDate = parseDateRangeFromString(date || '');
 
@@ -86,7 +85,7 @@ export const Conversations = () => {
         totalCount,
       }}
     >
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden w-full">
         <ConversationsHeader>
           <ConversationFilter />
           <FilterTags />
@@ -132,7 +131,7 @@ export const ConversationItem = () => {
       _id: integrationId,
     },
   });
-  const { brand } = integration || {};
+  const { brandId } = integration || {};
 
   if (conversationId || detailView) {
     return (
@@ -143,7 +142,10 @@ export const ConversationItem = () => {
             <div className="flex-1 space-y-1 truncate">
               <CustomerInline.Title className="truncate" />
               <div className="font-normal text-accent-foreground text-xs">
-                {brand?.name ?? 'No brand'}
+                <BrandsInline
+                  brandIds={[brandId || '']}
+                  placeholder={brandId ? 'brand not found' : 'no brand'}
+                />
               </div>
             </div>
             <div className="ml-auto text-accent-foreground font-medium">
@@ -163,7 +165,7 @@ export const ConversationItem = () => {
         <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
         <ConversationItemContent />
         <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
-          to {brand?.name}
+          to <BrandsInline brandIds={[brandId || '']} />
         </div>
         <div className="w-32 text-right flex-none">
           <RelativeDateDisplay value={updatedAt || createdAt}>

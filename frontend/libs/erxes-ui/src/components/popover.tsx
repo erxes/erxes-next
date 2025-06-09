@@ -52,4 +52,5 @@ export const Popover = Object.assign(PopoverPrimitive.Root, {
   Trigger: PopoverPrimitive.Trigger,
   Content: PopoverContent,
   Anchor: PopoverPrimitive.Anchor,
+  Close: PopoverPrimitive.Close,
 });
