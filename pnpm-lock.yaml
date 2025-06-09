@@ -1129,6 +1129,9 @@ importers:
       debug:
         specifier: ^4.4.0
         version: 4.4.0(supports-color@5.5.0)
+      dompurify:
+        specifier: 3.2.5
+        version: 3.2.5
       dotenv:
         specifier: 16.4.7
         version: 16.4.7
@@ -1156,9 +1159,6 @@ importers:
       graphql-tag:
         specifier: 2.12.6
         version: 2.12.6(graphql@16.10.0)
-      ioredis:
-        specifier: 5.6.1
-        version: 5.6.1
       moment:
         specifier: 2.30.1
         version: 2.30.1
@@ -1174,12 +1174,15 @@ importers:
       node-fetch:
         specifier: 2.7.0
         version: 2.7.0(encoding@0.1.13)
-      strip:
-        specifier: ^3.0.0
-        version: 3.0.0
+      string-strip-html:
+        specifier: ^13.4.12
+        version: 13.4.12
       strip-ansi:
         specifier: 7.1.0
         version: 7.1.0
+      strip-html:
+        specifier: ^1.0.2
+        version: 1.0.2
       underscore:
         specifier: 1.13.7
         version: 1.13.7
