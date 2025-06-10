@@ -18,7 +18,7 @@ const InboxIndexPage = () => {
                 <Button variant="ghost" asChild>
                   <Link to="/inbox">
                     <IconInbox />
-                    Inbox bororor
+                    Inbox
                   </Link>
                 </Button>
               </Breadcrumb.Item>
