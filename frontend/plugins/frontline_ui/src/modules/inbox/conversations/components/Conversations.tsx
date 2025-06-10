@@ -9,6 +9,7 @@ import { useConversations } from '~/modules/inbox/conversations/hooks/useConvers
 import {
   Button,
   EnumCursorDirection,
+  EnumCursorMode,
   parseDateRangeFromString,
   Separator,
   useNonNullMultiQueryState,
@@ -59,6 +60,7 @@ export const Conversations = () => {
         status: status || 'closed',
         startDate: parsedDate?.from,
         endDate: parsedDate?.to,
+        cursorMode: EnumCursorMode.INCLUSIVE,
       },
     });
 

@@ -35,7 +35,6 @@ export const useConversations = (
             ? pageInfo?.endCursor
             : pageInfo?.startCursor,
         limit: CONVERSATIONS_LIMIT,
-        direction,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
