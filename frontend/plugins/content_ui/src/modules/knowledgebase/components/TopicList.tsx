@@ -107,8 +107,8 @@ export function TopicItem(props: {
     undefined,
   );
   const isActive = topic._id === searchParams.get('topicId');
+  const parentCategories = topic.parentCategories ?? [];
 
-  const { parentCategories = [] } = topic;
   const handleDeleteTopic = async (topic: ITopic) => {
     const categoryCount = topic.categories?.length || 0;
     const message = `Are you sure you want to delete "${topic.title}"? This will also delete ${categoryCount} categories and all their associated articles. This action cannot be undone.`;
