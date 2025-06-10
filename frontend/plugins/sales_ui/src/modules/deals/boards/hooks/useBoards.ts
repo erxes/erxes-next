@@ -1,7 +1,7 @@
 import { QueryHookOptions, useQuery } from "@apollo/client";
 
-import { GET_BOARDS } from "../../graphql/queries/BoardsQueries";
-import { IBoard } from "../../types/boards";
+import { GET_BOARDS } from "@/deals/graphql/queries/BoardsQueries";
+import { IBoard } from "@/deals/types/boards";
 
 export const useBoards = (
     options?: QueryHookOptions<{ salesBoards: IBoard[] }>,
