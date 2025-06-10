@@ -5,7 +5,7 @@ export const integrationCollapsibleState = atomWithStorage(
   false,
 );
 
-export const integrationTypeCollapsibleState = atomWithStorage(
-  'integrationTypeCollapsibleState',
+export const integrationKindCollapsibleState = atomWithStorage(
+  'integrationKindCollapsibleState',
   false,
 );

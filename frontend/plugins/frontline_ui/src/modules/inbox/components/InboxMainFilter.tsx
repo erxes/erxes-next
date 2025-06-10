@@ -2,7 +2,7 @@ import { IconUserFilled, IconUserUp } from '@tabler/icons-react';
 import { Button, Collapsible, ScrollArea } from 'erxes-ui';
 import { ChooseChannel } from '@/inbox/channel/components/ChooseChannel';
 import { useMultiQueryState } from 'erxes-ui';
-import { ChooseIntegrationType } from '@/integrations/components/ChooseIntegrationType';
+import { ChooseIntegrationKind } from '@/integrations/components/ChooseIntegrationKind';
 
 export const InboxMainFilter = () => {
   const [, setQueryStates] = useMultiQueryState<{
@@ -47,7 +47,7 @@ export const InboxMainFilter = () => {
             Assigned to me
           </Button>
           <ChooseChannel />
-          <ChooseIntegrationType />
+          <ChooseIntegrationKind />
         </Collapsible.Content>
       </Collapsible>
     </ScrollArea>
