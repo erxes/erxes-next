@@ -78,9 +78,9 @@ export const types = `
 `;
 
 export const queries = `
-  bmTours(branchId:String, ${GQL_CURSOR_PARAM_DEFS}, status: String, innerDate: Date, tags: [String],startDate1:Date,startDate2:Date,endDate1:Date,endDate2:Date): TourListResponse
-  bmTourDetail(_id:String!,branchId: String): Tour
-  bmOrders( tourId:String, customerId:String ,branchId: String, ${GQL_CURSOR_PARAM_DEFS}):BmsOrderListResponse
+  bmsTours(branchId:String, ${GQL_CURSOR_PARAM_DEFS}, status: String, innerDate: Date, tags: [String],startDate1:Date,startDate2:Date,endDate1:Date,endDate2:Date): TourListResponse
+  bmsTourDetail(_id:String!,branchId: String): Tour
+  bmsOrders( tourId:String, customerId:String ,branchId: String, ${GQL_CURSOR_PARAM_DEFS}):BmsOrderListResponse
 `;
 
 const params = `
@@ -109,11 +109,11 @@ const params = `
 `;
 
 export const mutations = `
-  bmTourAdd(${params}): Tour
-  bmTourRemove(ids: [String]): JSON
-  bmTourViewCount(_id: String): JSON
-  bmTourEdit(_id:String!, ${params}): Tour
-  bmOrderAdd(order:BmsOrderInput): BmsOrder
-  bmOrderEdit(_id:String!,order:BmsOrderInput): BmsOrder
-  bmOrderRemove(ids:[String]): JSON
+  bmsTourAdd(${params}): Tour
+  bmsTourRemove(ids: [String]): JSON
+  bmsTourViewCount(_id: String): JSON
+  bmsTourEdit(_id:String!, ${params}): Tour
+  bmsOrderAdd(order:BmsOrderInput): BmsOrder
+  bmsOrderEdit(_id:String!,order:BmsOrderInput): BmsOrder
+  bmsOrderRemove(ids:[String]): JSON
 `;

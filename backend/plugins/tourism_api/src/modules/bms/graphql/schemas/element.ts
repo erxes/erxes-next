@@ -71,10 +71,10 @@ const params = `
 `;
 
 export const mutations = `
-  bmElementAdd(${params}): Element
-  bmElementRemove(ids: [String]): JSON
-  bmElementEdit(_id:String!, ${params}): Element
-  bmElementCategoryAdd(name:String,parentId:String):ElementCategory
-  bmElementCategoryRemove(_id: String!):JSON
-  bmElementCategoryEdit(_id: String!, name:String,parentId:String): ElementCategory
+  bmsElementAdd(${params}): Element
+  bmsElementRemove(ids: [String]): JSON
+  bmsElementEdit(_id:String!, ${params}): Element
+  bmsElementCategoryAdd(name:String,parentId:String):ElementCategory
+  bmsElementCategoryRemove(_id: String!):JSON
+  bmsElementCategoryEdit(_id: String!, name:String,parentId:String): ElementCategory
 `;

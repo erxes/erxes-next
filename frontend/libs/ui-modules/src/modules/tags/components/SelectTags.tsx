@@ -11,7 +11,7 @@ import {
 } from 'erxes-ui';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ISelectTagsProviderProps,
   ITag,
@@ -341,7 +341,6 @@ export const SelectTagsDetail = React.forwardRef<
 );
 
 SelectTagsDetail.displayName = 'SelectTagsDetail';
-
 
 export const SelectTagsCommandbarItem = ({
   onValueChange,

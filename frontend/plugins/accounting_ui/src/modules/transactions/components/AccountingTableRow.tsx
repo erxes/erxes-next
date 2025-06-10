@@ -63,7 +63,6 @@ export const AccountingTableRow = ({
             <RecordTable.Cell
               cell={cell}
               key={cell.id}
-
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </RecordTable.Cell>

@@ -4,7 +4,7 @@ import segmentResolvers from '@/segments/graphql/resolvers/customResolvers';
 import structureResolvers from '@/organization/structure/graphql/resolvers/customResolvers';
 import logResolvers from '@/logs/graphql/resolvers/customResolvers';
 import automationsResolvers from '@/automations/graphql/resolvers/customResolver';
-import userResolvers from '@/organization/team-member/graphql/customResolvers';
+import userResolvers from '@/organization/team-member/graphql/customResolver';
 
 export const customResolvers = {
   ...contactResolvers,

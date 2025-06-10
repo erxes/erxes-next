@@ -46,7 +46,7 @@ export const ExpenseForm = ({
     <RecordTableHotkeyProvider
       columnLength={5}
       rowLength={fields.length}
-      scope={AccountingHotkeyScope.TransactionCEPage}
+      scope={AccountingHotkeyScope.TransactionFormSubPage}
     >
       <Table className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar">
         <InventoryTableHeader form={form} journalIndex={journalIndex} />

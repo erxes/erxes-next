@@ -30,7 +30,7 @@ export const useConversationMessages = (
       fetchMore({
         variables: {
           skip: conversationMessages.length,
-          limit: 5,
+          limit: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
