@@ -37,7 +37,7 @@ const insertCategoryDefaults = async (
 };
 
 const elementQueries = {
-  async bmElements(
+  async bmsElements(
     _root,
     { categories, branchId, name, quick, ...params },
     { models }: IContext,
@@ -80,7 +80,7 @@ const elementQueries = {
     return { list, totalCount, pageInfo };
   },
 
-  async bmElementCategories(_root, { parentId }, { models }: IContext) {
+  async bmsElementCategories(_root, { parentId }, { models }: IContext) {
     const selector: any = {};
 
     if (parentId) {
@@ -91,11 +91,11 @@ const elementQueries = {
 
     return await models.ElementCategories.find(selector);
   },
-  async bmElementDetail(_root, { _id }, { models }: IContext) {
+  async bmsElementDetail(_root, { _id }, { models }: IContext) {
     return await models.Elements.findById(_id);
   },
 
-  async bmElementsInit(_root, _args, { models }: IContext) {
+  async bmsElementsInit(_root, _args, { models }: IContext) {
     await checkDefaults(models, 'Breakfast', 'soup');
     await checkDefaults(models, 'Lunch', 'utensils');
     await checkDefaults(models, 'Dinner', 'utensils');
@@ -113,7 +113,7 @@ const elementQueries = {
 
     return 'ok';
   },
-  async bmCategoryInit(_root, _args, { models }: IContext) {
+  async bmsCategoryInit(_root, _args, { models }: IContext) {
     let one: any = null;
 
     for (const x of CATEGORIES) {

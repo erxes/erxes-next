@@ -1,22 +1,22 @@
 import { IContext } from '~/connectionResolvers';
 
 const tourMutations = {
-  bmTourAdd: async (_root, doc, { user, models }: IContext) => {
+  bmsTourAdd: async (_root, doc, { user, models }: IContext) => {
     return models.Tours.createTour(doc, user);
   },
 
-  bmTourEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
+  bmsTourEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
     const updated = await models.Tours.updateTour(_id, doc as any);
     return updated;
   },
-  bmTourViewCount: async (_root, { _id }, { models }: IContext) => {
+  bmsTourViewCount: async (_root, { _id }, { models }: IContext) => {
     return await models.Tours.findOneAndUpdate(
       { _id: _id },
       { $inc: { viewCount: 1 } },
     ).exec();
   },
 
-  bmTourRemove: async (
+  bmsTourRemove: async (
     _root,
     { ids }: { ids: string[] },
     { models }: IContext,
