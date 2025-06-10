@@ -776,6 +776,12 @@ importers:
         specifier: workspace:^
         version: link:../../erxes-api-shared
 
+  backend/plugins/education_api:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+
   backend/plugins/frontline_api:
     dependencies:
       aws-sdk:
