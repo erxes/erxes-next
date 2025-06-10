@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-import { cleanHtml } from 'erxes-api-shared/utils';
+import { cleanHtml } from 'erxes-api-shared/utils/string';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { conversationSchema } from '@/inbox/db/definitions/conversations';
 import { IModels } from '~/connectionResolvers';
@@ -115,7 +115,7 @@ export const loadClass = (models: IModels) => {
       const result = await models.Conversations.create({
         status: CONVERSATION_STATUSES.NEW,
         ...doc,
-        content: cleanHtml(doc.content),
+        content: await cleanHtml(doc.content),
         createdAt: doc.createdAt || now,
         updatedAt: doc.createdAt || now,
         number: (await models.Conversations.countDocuments()) + 1,
@@ -131,7 +131,7 @@ export const loadClass = (models: IModels) => {
      */
     public static async updateConversation(_id, doc) {
       if (doc.content) {
-        doc.content = cleanHtml(doc.content);
+        doc.content = await cleanHtml(doc.content);
       }
 
       doc.updatedAt = new Date();
