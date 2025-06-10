@@ -1,23 +1,23 @@
-import { IconPlus, IconX } from '@tabler/icons-react';
+import { activeJournalState, followTrDocsState } from '../states/trStates';
+import { AddTransaction } from '../../components/AddTransaction';
+import { BankTransaction } from './forms/BankForm';
 import { Button, cn, Tabs } from 'erxes-ui';
+import { CashTransaction } from './forms/CashForm';
+import { IconPlus, IconX } from '@tabler/icons-react';
+import { InvIncomeForm } from './forms/InvIncomeForm';
+import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
+import { MainJournalForm } from './forms/MainJournalForm';
+import { PayableTransaction } from './forms/PayableForm';
+import { ReceivableTransaction } from './forms/ReceivableForm';
+import { sumDtAndCt } from './Summary';
+import { TBalance } from './TBalance';
+import { TR_JOURNAL_LABELS, TR_SIDES, TrJournalEnum } from '../../types/constants';
 import { useAtom } from 'jotai';
 import { useFieldArray } from 'react-hook-form';
-import { AddTransaction } from '../../components/AddTransaction';
-import { TR_JOURNAL_LABELS, TR_SIDES, TrJournalEnum } from '../../types/constants';
-import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
-import { activeJournalState, followTrDocsState } from '../states/trStates';
 import {
   ITransactionGroupForm,
   TTrDoc,
 } from '../types/JournalForms';
-import { TBalance } from './common/TBalance';
-import { BankTransaction } from './forms/BankForm';
-import { CashTransaction } from './forms/CashForm';
-import { InvIncomeForm } from './forms/InvIncomeForm';
-import { MainJournalForm } from './forms/MainJournalForm';
-import { PayableTransaction } from './forms/PayableForm';
-import { ReceivableTransaction } from './forms/ReceivableForm';
-import { sumDtAndCt } from './common/Summary';
 
 // Separate the transaction form component to prevent unnecessary re-renders
 const TransactionForm = ({

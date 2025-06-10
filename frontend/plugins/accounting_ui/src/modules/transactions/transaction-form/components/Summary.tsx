@@ -1,12 +1,18 @@
-import { Button, CurrencyCode, CurrencyFormatedDisplay, toast, useConfirm, useQueryState } from 'erxes-ui';
-import { useAtom } from 'jotai';
-import { useWatch } from 'react-hook-form';
-import { TR_SIDES } from '../../../types/constants';
-import { followTrDocsState } from '../../states/trStates';
-import { ITransactionGroupForm, TTrDoc } from '../../types/JournalForms';
-import { ITransaction } from '~/modules/transactions/types/Transaction';
+import {
+  Button,
+  CurrencyCode,
+  CurrencyFormatedDisplay,
+  useConfirm,
+  useQueryState
+  } from 'erxes-ui';
+import { followTrDocsState } from '../states/trStates';
 import { IconGavel, IconTrashX } from '@tabler/icons-react';
-import { useTransactionsRemove } from '../../hooks/useTransactionsRemove';
+import { ITransactionGroupForm, TTrDoc } from '../types/JournalForms';
+import { TR_SIDES } from '../../types/constants';
+import { useAtom } from 'jotai';
+import { useTransactionsRemove } from '../hooks/useTransactionsRemove';
+import { useWatch } from 'react-hook-form';
+import { ITransaction } from '~/modules/transactions/types/Transaction';
 
 const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
   trDocs?.forEach((tr) => {

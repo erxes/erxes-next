@@ -1,6 +1,11 @@
-import { IconCalendar, IconFile, IconMoneybag } from '@tabler/icons-react';
-import { Cell, ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { activeJournalState } from '../states/trStates';
+import { Cell, ColumnDef } from '@tanstack/react-table';
+import { IconCalendar, IconFile, IconMoneybag } from '@tabler/icons-react';
+import { ITBalanceTransaction } from '../types/TBalance';
+import { TR_SIDES } from '@/transactions/types/constants';
+import { useSetAtom } from 'jotai';
+import { useState } from 'react';
 import {
   CurrencyCode,
   CurrencyFormatedDisplay,
@@ -10,11 +15,6 @@ import {
   Input,
   RecordTable,
 } from 'erxes-ui';
-import { useSetAtom } from 'jotai';
-import { useState } from 'react';
-import { TR_SIDES } from '@/transactions/types/constants';
-import { activeJournalState } from '../../states/trStates';
-import { ITBalanceTransaction } from '../../types/TBalance';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {
