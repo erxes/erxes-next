@@ -345,7 +345,7 @@ export const queries = `
   clientPortalGetConfigByDomain(clientPortalName: String): ClientPortal
   clientPortalGetLast(kind: BusinessPortalKind): ClientPortal
   clientPortalConfigsTotalCount: Int
-  clientPortalGetAllowedFields(_id: String!): [Field]
+  clientPortalGetAllowedFields(_id: String!): JSON
 
 
   clientPortalParticipantDetail(_id: String, contentType:String, contentTypeId:String, cpUserId:String): ClientPortalParticipant
