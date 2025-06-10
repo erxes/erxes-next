@@ -1,4 +1,3 @@
-
 let stripAnsiModule: ((str: string) => string) | null = null;
 
 const stripAnsi = async (str: string) => {
@@ -57,7 +56,10 @@ export const isValidURL = (url: string): boolean => {
  * @param size - Character length of each chunk
  * @returns An array of string chunks
  */
-export const splitStr = async (str: string, size: number): Promise<string[]> => {
+export const splitStr = async (
+  str: string,
+  size: number,
+): Promise<string[]> => {
   const cleanStr = await stripAnsi(str);
 
   const regex = new RegExp(`.{1,${size}}(\\s|$)`, 'g');

@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-import { cleanHtml } from 'erxes-api-shared/utils/string';
+import { cleanHtml } from 'erxes-api-shared/utils';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { conversationSchema } from '@/inbox/db/definitions/conversations';
 import { IModels } from '~/connectionResolvers';
