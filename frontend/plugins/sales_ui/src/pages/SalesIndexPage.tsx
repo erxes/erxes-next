@@ -7,13 +7,13 @@ import {
 } from 'erxes-ui';
 import { IconSandbox, IconSettings } from '@tabler/icons-react';
 
-import DealsMain from '~/modules/deals/Main';
+import DealsMain from '@/deals/Main';
 import { Link } from 'react-router-dom';
-import MainActionBar from '~/modules/deals/actionBar/components/MainActionBar';
+import MainActionBar from '@/deals/actionBar/components/MainActionBar';
 import { PageHeader } from 'ui-modules';
-import { SalesLeftSidebar } from '~/modules/deals/components/SalesLeftSidebar';
+import { SalesLeftSidebar } from '@/deals/components/SalesLeftSidebar';
 
-export const SalesIndexPage = (...props: any) => {
+export const SalesIndexPage = () => {
   return (
     <div className="flex h-full">
       <SalesLeftSidebar />
