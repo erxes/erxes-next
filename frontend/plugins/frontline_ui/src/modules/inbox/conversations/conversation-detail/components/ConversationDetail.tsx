@@ -13,6 +13,7 @@ import { MessageInput } from './MessageInput';
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
 import { InboxMessagesSkeleton } from '@/inbox/components/InboxMessagesSkeleton';
 import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
+import { NoConversationSelected } from './NoConversationSelected';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -37,6 +38,10 @@ export const ConversationDetail = () => {
     },
     skip: !integrationId,
   });
+
+  if (!conversationDetail && !integration) {
+    return <NoConversationSelected />;
+  }
 
   if (loading && !currentConversation && !integrationLoading) {
     return (
