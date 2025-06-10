@@ -335,19 +335,6 @@ export const removePipelineStagesWithItems = async (
   return await models.Stages.deleteMany({ pipelineId });
 };
 
-export const removePipelineStagesWithItems = async (
-  models: IModels,
-  pipelineId: string,
-): Promise<DeleteResult> => {
-  const stageIds = await models.Stages.find({ pipelineId })
-    .distinct('_id')
-    .lean();
-
-  await removeItems(models, stageIds);
-
-  return await models.Stages.deleteMany({ pipelineId });
-};
-
 
 
 // Get board item link
@@ -789,6 +776,7 @@ export const updateName = async (
       }
     } 
   }
+
 
 
 await collection.updateOne(
@@ -2484,10 +2472,9 @@ export const generateCommonFilters = async (
             method:'query',
             module:'users',
             action: 'users.find',
-            data: {
+            input: {
               query: { departmentIds: { $in: commonIds } }
             },
-            isRPC: true,
             defaultValue: []
           });
 

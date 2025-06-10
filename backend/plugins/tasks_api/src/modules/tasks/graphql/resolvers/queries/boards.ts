@@ -9,7 +9,7 @@ import {
   CLOSE_DATE_TYPES,
   PRIORITIES,
 } from '~/modules/tasks/constants';
-
+import { getCloseDateByType } from '~/modules/tasks/utils'
 
 interface IBoardContentTypeDetailArgs {
   contentType: string;

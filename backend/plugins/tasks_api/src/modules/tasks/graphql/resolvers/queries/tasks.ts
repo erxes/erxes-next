@@ -7,7 +7,6 @@ import { IArchiveArgs } from '~/modules/tasks/utils';
 import { checkItemPermByUser } from '~/modules/tasks/utils';
 import { archivedItems, archivedItemsCount  } from '~/modules/tasks/utils';
 
-
 interface ITasksAsLogsParams {
   contentId: string;
   contentType: string;
@@ -18,9 +17,9 @@ const taskQueries = {
   /**
    * Tasks list
    */
-  async tasks(_root, args: IListParams, { user, models }: IContext) {
+  async tasks(_root, args: IListParams, { user, models, subdomain }: IContext) {
     const filter = {
-    ...(await generateTaskCommonFilters(models, user._id, args))
+      ...(await generateTaskCommonFilters(models, subdomain, user._id, args))
     };
 
     return await getItemList(models, filter, args, user, 'task');
@@ -29,10 +28,10 @@ const taskQueries = {
   async tasksTotalCount(
     _root,
     args: IListParams,
-    { user, models }: IContext
+    { user, models, subdomain }: IContext
   ) {
     const filter = {
-      ...(await generateTaskCommonFilters(models, user._id, args))
+      ...(await generateTaskCommonFilters(models, subdomain, user._id, args))
     };
 
     return models.Tasks.find(filter).countDocuments();
@@ -64,12 +63,12 @@ const taskQueries = {
       return task;
     }
 
-    return checkItemPermByUser(models,user, item);
+    return checkItemPermByUser(models, user, task);
   },
 
   async tasksAsLogs(
     _root,
-    { contentId, contentType }: ITasksAsLogsParams,
+    { contentId, contentType, limit }: ITasksAsLogsParams,
     { models: { Tasks } }: IContext
   ) {
     let tasks: any[] = [];
@@ -96,14 +95,18 @@ const taskQueries = {
     });
 
     if (contentType !== 'tasks:task') {
-      tasks = await Tasks.find({
+      const query = Tasks.find({
         $and: [
           { _id: { $in: relatedTaskIds } },
           { status: { $ne: 'archived' } }
         ]
-      })
-        .sort({ closeDate: 1 })
-        .lean();
+      }).sort({ closeDate: 1 });
+
+      if (limit) {
+        query.limit(limit);
+      }
+
+      tasks = await query.lean();
     }
 
     return tasks;
