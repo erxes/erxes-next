@@ -30,6 +30,7 @@ export const conversationQueries = {
         await cursorPaginate<IConversationDocument>({
           model: models.Conversations,
           params: {
+            ...params,
             orderBy: { updatedAt: -1 }, // Optional, _id is used as a fallback
           },
           query: { _id: { $in: params.ids } },
@@ -59,10 +60,9 @@ export const conversationQueries = {
       await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
         params: {
-          orderBy: { createdAt: -1 }, // Optional, _id is used as a fallback
+          ...params,
+          orderBy: { createdAt: -1 },
           limit: params.limit || 20,
-          direction: 'forward', // or 'backward'
-          cursorMode: 'exclusive', // Optional
         },
         query: qb.mainQuery(),
       });
