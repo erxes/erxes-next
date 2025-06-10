@@ -4,4 +4,10 @@ import Tour from './tour';
 import Order from './order';
 import Branch from './branch';
 
-export default { Element, Itinerary, Tour, Order, Branch };
+export default {
+  ...Element,
+  ...Itinerary,
+  ...Tour,
+  ...Order,
+  ...Branch,
+};

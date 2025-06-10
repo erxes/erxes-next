@@ -1,6 +1,22 @@
 import { gql } from '@apollo/client';
 import { ATTACHMENT_GQL } from 'erxes-ui';
+import messageFields from './messageFields';
 
+export const conversationChanged = gql`
+  subscription conversationChanged($_id: String!) {
+    conversationChanged(_id: $_id) {
+      type
+    }
+  }
+`;
+
+export const conversationMessageInserted = gql`
+  subscription conversationMessageInserted($_id: String!) {
+    conversationMessageInserted(_id: $_id) {
+      ${messageFields}
+    }
+  }
+`;
 export const CONVERSATION_CHANGED = gql`
   subscription conversationChanged($_id: String!) {
     conversationChanged(_id: $_id) {
@@ -58,6 +74,8 @@ const customerConnectionChanged = `
 `;
 
 export default {
+  conversationChanged,
+  conversationMessageInserted,
   conversationClientMessageInserted,
   conversationClientTypingStatusChanged,
   conversationExternalIntegrationMessageInserted,

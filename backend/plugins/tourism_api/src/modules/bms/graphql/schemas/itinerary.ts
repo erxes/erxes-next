@@ -65,8 +65,8 @@ export const types = `
 `;
 
 export const queries = `
-  bmItineraries( ${GQL_CURSOR_PARAM_DEFS},branchId: String): ItineraryListResponse
-  bmItineraryDetail(_id:String!, branchId: String): Itinerary
+  bmsItineraries( ${GQL_CURSOR_PARAM_DEFS},branchId: String): ItineraryListResponse
+  bmsItineraryDetail(_id:String!, branchId: String): Itinerary
 `;
 
 const params = `
@@ -90,8 +90,8 @@ const params = `
 `;
 
 export const mutations = `
-  bmItineraryAdd(${params}): Itinerary
-  bmItineraryRemove(ids: [String],branchId:String): JSON
-  bmItineraryEdit(_id:String!, ${params}): Itinerary
+  bmsItineraryAdd(${params}): Itinerary
+  bmsItineraryRemove(ids: [String],branchId:String): JSON
+  bmsItineraryEdit(_id:String!, ${params}): Itinerary
 
 `;

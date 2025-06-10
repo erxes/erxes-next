@@ -30,7 +30,7 @@ export const IntegrationsRecordTable = () => {
 
   return (
     <RecordTable.Provider
-      columns={integrationKindColumns}
+      columns={integrationTypeColumns}
       data={integrations || []}
       stickyColumns={['name']}
     >
@@ -59,7 +59,7 @@ export const IntegrationsRecordTable = () => {
   );
 };
 
-export const integrationKindColumns: ColumnDef<IIntegrationDetail>[] = [
+export const integrationTypeColumns: ColumnDef<IIntegrationDetail>[] = [
   {
     id: 'name',
     accessorKey: 'name',
