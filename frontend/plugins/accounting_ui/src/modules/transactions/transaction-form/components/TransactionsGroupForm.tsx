@@ -80,12 +80,27 @@ export const TransactionsGroupForm = () => {
   const { createTransaction } = useTransactionsCreate();
   const { updateTransaction } = useTransactionsUpdate();
 
+
   const onSubmit = (data: TAddTransactionGroup) => {
     // transactionGroup get
+    const trDocs = data.trDocs.map(trD => ({
+      ...trD,
+      details: trD.details.map(det => ({
+        ...det,
+        account: undefined,
+      })),
+      date: data.date,
+      number: data.number,
+    }));
+
     if (parentId) {
-      updateTransaction(data);
+      updateTransaction({
+        variables: { parentId, trDocs },
+      });
     } else {
-      createTransaction(data);
+      createTransaction({
+        variables: { trDocs }
+      });
     }
   };
 

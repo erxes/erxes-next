@@ -210,6 +210,7 @@ export const trRecordColumns: ColumnDef<ITrRecord>[] = [
     ),
     accessorKey: 'details',
     cell: ({ row }) => <AccountCell row={row} />,
+    size: 500
   },
   {
     id: 'number',
@@ -222,6 +223,7 @@ export const trRecordColumns: ColumnDef<ITrRecord>[] = [
     header: () => <RecordTable.InlineHead icon={IconCalendar} label="Date" />,
     accessorKey: 'date',
     cell: ({ getValue, row }) => <DateCell getValue={getValue} row={row} />,
+    size: 80
   },
   {
     id: 'description',

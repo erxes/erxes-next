@@ -136,13 +136,14 @@ export const TransactionsTabsList = ({
               {'T Balance'}
             </div>
           </Tabs.Trigger>
-        </Tabs.List>
-        <AddTransaction inForm onClick={handleAddTransaction}>
-          <Button variant="outline">
+          <AddTransaction inForm onClick={handleAddTransaction}>
+          <Button variant="ghost">
             <IconPlus />
             New Transaction
           </Button>
         </AddTransaction>
+        </Tabs.List>
+        
         <Button variant="secondary">Save transaction template</Button>
       </div>
       {fields.map((field, index) => (

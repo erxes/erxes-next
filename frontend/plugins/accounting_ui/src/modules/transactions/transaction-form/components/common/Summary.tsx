@@ -50,20 +50,7 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
       removeTransactions({
         variables: {
           parentId
-        },
-        onError: (error: Error) => {
-          toast({
-            title: 'Error',
-            description: error.message,
-            variant: 'destructive',
-          });
-        },
-        onCompleted: () => {
-          toast({
-            title: 'Success',
-            description: 'Transactions deleted successfully',
-          });
-        },
+        }
       });
     });
 

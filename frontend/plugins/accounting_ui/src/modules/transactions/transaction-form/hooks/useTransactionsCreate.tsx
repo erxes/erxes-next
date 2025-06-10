@@ -1,8 +1,8 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { ACC_TRANSACTIONS_CREATE } from '../graphql/mutations/accTransactionsCreate';
-import { TAddTransactionGroup } from '../types/JournalForms';
-import { toast } from 'erxes-ui/hooks';
+import { toast } from 'erxes-ui';
 import { useNavigate } from 'react-router-dom';
+import { TR_RECORDS_QUERY, TRANSACTIONS_QUERY } from '../../graphql/transactionQueries';
 
 
 export const useTransactionsCreate = (options?: OperationVariables) => {
@@ -13,21 +13,10 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
     options,
   );
 
-  const createTransaction = (data: TAddTransactionGroup) => {
-    const trDocs = data.trDocs.map(trD => ({
-      ...trD,
-      details: trD.details.map(det => ({
-        ...det,
-        account: undefined,
-      })),
-      date: data.date,
-      number: data.number,
-    }));
-
+  const createTransaction = (options?: OperationVariables) => {
     return _createTransaction({
       ...options,
-      variables: { trDocs },
-      onError: (error) => {
+      onError: (error: Error) => {
         toast({
           title: 'Error',
           description: error.message,
@@ -40,7 +29,21 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
           title: 'Success',
           description: 'Transactions created successfully',
         });
+        options?.onCompeleted()
       },
+      refetchQueries: [
+        {
+          query: TRANSACTIONS_QUERY,
+          variables: {
+            "page": 1,
+            "perPage": 20
+          }
+        },
+        {
+          query: TR_RECORDS_QUERY,
+        }
+      ],
+      awaitRefetchQueries: true,
       update: (_cache, { data }) => {
         const newParentId = data?.accTransactionsCreate[0]?.parentId;
 

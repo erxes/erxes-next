@@ -1,41 +1,46 @@
 import { ACC_TRANSACTIONS_REMOVE } from '../graphql/mutations/accTransactionsRemove';
 import { OperationVariables, useMutation } from '@apollo/client';
+import { toast } from 'erxes-ui';
+import { TR_RECORDS_QUERY, TRANSACTIONS_QUERY } from '../../graphql/transactionQueries';
 import { useNavigate } from 'react-router-dom';
-import { ACC_TRS__PER_PAGE } from '../../hooks/useTransactions';
-import { TRANSACTIONS_QUERY } from '../../graphql/transactionQueries';
-import { ITransaction } from '../../types/Transaction';
 
-export const useTransactionsRemove = () => {
+export const useTransactionsRemove = (options?: OperationVariables) => {
   const navigate = useNavigate();
-  const [_removeTransactions, { loading }] = useMutation(ACC_TRANSACTIONS_REMOVE);
+  const [_removeTransactions, { loading }] = useMutation(
+    ACC_TRANSACTIONS_REMOVE,
+    options
+  );
 
   const removeTransactions = (options: OperationVariables) => {
     return _removeTransactions({
       ...options,
-      update: (cache) => {
-        try {
-          const queryVariables = { perPage: ACC_TRS__PER_PAGE, page: 1 };
-          const existingData = cache.readQuery<{ accTransactions: ITransaction[] }>({
-            query: TRANSACTIONS_QUERY,
-            variables: queryVariables,
-          });
-          if (!existingData || !existingData.accTransactions) return;
-
-          cache.writeQuery({
-            query: TRANSACTIONS_QUERY,
-            variables: queryVariables,
-            data: {
-              ...existingData,
-              accTransactions: existingData.accTransactions.filter(
-                (tr: ITransaction) =>
-                  !options.variables.parentIds.includes(tr.parentId),
-              ),
-            },
-          });
-        } catch (error) {
-          console.error(error);
+      onError: (error: Error) => {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+      },
+      onCompleted: () => {
+        toast({
+          title: 'Success',
+          description: 'Transactions deleted successfully',
+        });
+      },
+      refetchQueries: [
+        {
+          query: TRANSACTIONS_QUERY,
+          variables: {
+            "page": 1,
+            "perPage": 20
+          }
+        },
+        {
+          query: TR_RECORDS_QUERY,
         }
-
+      ],
+      awaitRefetchQueries: true,
+      update: (cache) => {
         const pathname = "/accounting/main";
         navigate(pathname);
       },
