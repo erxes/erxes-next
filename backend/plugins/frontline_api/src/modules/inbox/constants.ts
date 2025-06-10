@@ -85,7 +85,7 @@ export const VERIFY_EMAIL_TRANSLATIONS = {
   fr: 'Cliquez ici pour vérifier votre email',
   de: 'Klicken Sie hier, um Ihre E-Mail zu bestätigen',
   it: 'Clicca qui per verificare la tua email',
-  ru: 'Нажмите здесь, чтобы подтвердить свой электронный адрес',
+  ru: 'Нажмите здесь, чтобы подтвердить ваш электронный адрес',
   ja: 'ここをクリックしてメールアドレスを確認してください',
   nl: 'Klik hier om uw e-mail te verifiëren',
   ko: '이메일을 확인하려면 여기를 클릭하세요',
