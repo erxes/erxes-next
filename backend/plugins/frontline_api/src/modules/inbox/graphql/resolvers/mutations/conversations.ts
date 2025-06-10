@@ -466,7 +466,7 @@ export const conversationMutations = {
         },
       ],
     });
-    await await graphqlPubsub.publish(
+    await graphqlPubsub.publish(
       `conversationMessageInserted:${message.conversationId}`,
       {
         conversationMessageInserted: message,
