@@ -1,5 +1,5 @@
 import { Sidebar, useQueryState } from 'erxes-ui';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 type Props = {
   types: { contentType: string; description: string }[];

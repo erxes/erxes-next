@@ -44,10 +44,6 @@ import {
   automationBuilderFormSchema,
   TAutomationProps,
 } from '@/automations/utils/AutomationFormDefinitions';
-import { Breadcrumb, Button, PageSubHeader, Separator } from 'erxes-ui';
-import { IconAffiliate, IconSettings } from '@tabler/icons-react';
-import { PageHeader } from 'ui-modules';
-import { Link } from 'react-router';
 import { AutomationHistories } from './AutomationHistories';
 
 interface MenuState {
@@ -288,8 +284,8 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
         }
       };
 
-      if (target?.parentId && connection?.source && target.id) {
-      }
+      // if (target?.parentId && connection?.source && target.id) {
+      // }
 
       return !hasCycle(target);
     },

@@ -6,7 +6,8 @@ import { AUTOMATIONS_MAIN_LIST } from '../graphql/automationQueries';
 import { IAutomationDoc } from '../types';
 import { automationColumns } from './AutomationColumns';
 import { AutomationRecordTableFilters } from './AutomationRecordTableFilters';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
+
 type QueryResponse = {
   automationsMain: {
     list: IAutomationDoc[];
