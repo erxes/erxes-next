@@ -1,0 +1,37 @@
+import { createGenerateModels } from 'erxes-api-shared/utils';
+import { IMainContext } from 'erxes-api-shared/core-types';
+import { ICarDocument } from '~/modules/module/@types/car';
+
+import mongoose, { model } from 'mongoose';
+
+import { loadCarClass, ICarModel } from '~/modules/module/db/models/carModel';
+import {
+  ICarCategoryModel,
+  loadCarCategoryClass,
+} from './modules/module/db/models/categoryModel';
+import { ICarCategoryDocument } from './modules/module/@types/category';
+
+export interface IModels {
+  Cars: ICarModel;
+  CarCategories: ICarCategoryModel;
+}
+
+export interface IContext extends IMainContext {
+  models: IModels;
+  commonQuerySelector: string;
+}
+
+export const loadClasses = (db: mongoose.Connection): IModels => {
+  const models = {} as IModels;
+
+  models.Cars = db.model<ICarDocument, ICarModel>('cars', loadCarClass(models));
+
+  models.CarCategories = db.model<ICarCategoryDocument, ICarCategoryModel>(
+    'carCategories',
+    loadCarCategoryClass(models),
+  );
+
+  return models;
+};
+
+export const generateModels = createGenerateModels<IModels>(loadClasses);
