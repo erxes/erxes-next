@@ -1,4 +1,4 @@
-export const cleanIntegrationKind = (name: string) => {
+export const cleanIntegrationType = (name: string) => {
   if (name.includes('nylas')) {
     name = name.replace('nylas-', '');
   }

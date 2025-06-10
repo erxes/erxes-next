@@ -1,0 +1,20 @@
+import { QueryHookOptions, useQuery } from "@apollo/client";
+
+import { GET_BOARDS } from "../../graphql/queries/BoardsQueries";
+import { IBoard } from "../../types/boards";
+
+export const useBoards = (
+    options?: QueryHookOptions<{ salesBoards: IBoard[] }>,
+  ) => {  
+    const { data, loading } = useQuery<{ salesBoards: IBoard[] }>(
+      GET_BOARDS,
+      {
+        ...options,
+        variables: {
+          ...options?.variables,
+        },
+      },
+    );
+  
+    return { boards: data?.salesBoards, loading };
+  };

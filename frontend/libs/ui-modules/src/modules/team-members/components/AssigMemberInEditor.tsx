@@ -60,7 +60,7 @@ export function MentionMenu({
               text={item.title}
               isSelected={selectedIndex === index}
               index={index}
-              user={users.find((user) => user.details.fullName === item.title)}
+              user={users.find((user) => user.details?.fullName === item.title)}
             />
           ))}
           {!!users.length && users.length < totalCount && (
@@ -109,12 +109,12 @@ function getMentionMenuItems(
   users: IUser[],
 ): DefaultReactSuggestionItem[] {
   return users.map((user) => ({
-    title: user.details.fullName,
+    title: user.details?.fullName || '',
     onItemClick: () => {
       editor.insertInlineContent([
         {
           type: 'mention',
-          props: { fullName: user.details.fullName, _id: user._id },
+          props: { fullName: user.details?.fullName || '', _id: user._id },
         },
         ' ',
       ]);

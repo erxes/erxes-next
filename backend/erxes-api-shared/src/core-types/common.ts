@@ -91,3 +91,11 @@ export interface IAttachment {
   size: number;
   type: string;
 }
+
+
+export interface IPageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
+  endCursor: string | null;
+}

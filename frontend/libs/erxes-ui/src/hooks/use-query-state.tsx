@@ -97,6 +97,18 @@ export function useMultiQueryState<T extends QueryTypes>(
   return [queries, setQueries];
 }
 
+export const useNonNullMultiQueryState = <T extends QueryTypes>(
+  queryKeys: (keyof T)[],
+): QueryValues<T> => {
+  const [queries] = useMultiQueryState(queryKeys);
+
+  const nonNullQueries = Object.fromEntries(
+    Object.entries(queries).filter(([_, value]) => value !== null),
+  ) as QueryValues<T>;
+
+  return nonNullQueries;
+};
+
 export function useSetQueryStateByKey() {
   const [searchParams, setSearchParams] = useSearchParams();
 

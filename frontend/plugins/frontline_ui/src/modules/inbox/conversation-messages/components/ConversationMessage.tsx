@@ -118,7 +118,7 @@ const Attachment = ({ attachment }: { attachment: IAttachment }) => {
     <img
       src={attachment.url}
       alt={attachment.name}
-      className="w-full aspect-square object-cover rounded bg-accent"
+      className="w-full aspect-square object-cover rounded"
     />
   );
 };
