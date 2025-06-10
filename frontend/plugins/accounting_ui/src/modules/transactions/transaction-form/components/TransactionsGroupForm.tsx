@@ -11,7 +11,7 @@ import { useTransactionDetail } from '../hooks/useTransactionDetail';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 import { useTransactionsUpdate } from '../hooks/useTransactionsUpdate';
 import { activeJournalState } from '../states/trStates';
-import { TAddTransactionGroup } from '../types/AddTransaction';
+import { TAddTransactionGroup } from '../types/JournalForms';
 import { Summary } from './common/Summary';
 import { TransactionsTabsList } from './TransactionTabs';
 
@@ -50,8 +50,8 @@ const FormFields = memo(
         />
         <Summary form={form} />
       </div>
-    )
-  }
+    );
+  },
 );
 
 FormFields.displayName = 'FormFields';
@@ -80,12 +80,27 @@ export const TransactionsGroupForm = () => {
   const { createTransaction } = useTransactionsCreate();
   const { updateTransaction } = useTransactionsUpdate();
 
+
   const onSubmit = (data: TAddTransactionGroup) => {
     // transactionGroup get
+    const trDocs = data.trDocs.map(trD => ({
+      ...trD,
+      details: trD.details.map(det => ({
+        ...det,
+        account: undefined,
+      })),
+      date: data.date,
+      number: data.number,
+    }));
+
     if (parentId) {
-      updateTransaction(data);
+      updateTransaction({
+        variables: { parentId, trDocs },
+      });
     } else {
-      createTransaction(data);
+      createTransaction({
+        variables: { trDocs }
+      });
     }
   };
 
@@ -98,14 +113,18 @@ export const TransactionsGroupForm = () => {
 
   useEffect(() => {
     if (activeTrs?.length && parentId) {
-      const currentTr = trId ? activeTrs.find(tr => tr._id === trId) : activeTrs[0];
+      const currentTr = trId
+        ? activeTrs.find((tr) => tr._id === trId)
+        : activeTrs[0];
       // setting form values
       form.reset({
         ...form.getValues(),
         parentId,
         number: currentTr?.number || 'auto',
         date: new Date(currentTr?.date || new Date()),
-        trDocs: activeTrs.map(atr => (JOURNALS_BY_JOURNAL(atr?.journal || '', atr)))
+        trDocs: activeTrs.map((atr) =>
+          JOURNALS_BY_JOURNAL(atr?.journal || '', atr),
+        ),
       });
     }
     if (defaultJournal) {
@@ -118,16 +137,18 @@ export const TransactionsGroupForm = () => {
   }, [defaultJournal, trId, form, loading]);
 
   if (configsLoading || loading) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
     <Form {...form}>
       <form
-        className="px-6 flex-auto overflow-auto"
+        className="p-6 flex-auto overflow-auto"
         onSubmit={form.handleSubmit(onSubmit, onError)}
       >
-        <h3 className="text-lg font-bold">{parentId ? `Edit` : `Create`} Transaction</h3>
+        <h3 className="text-lg font-bold">
+          {parentId ? `Edit` : `Create`} Transaction
+        </h3>
         <FormFields form={form} />
         <TransactionsTabsList form={form} />
       </form>

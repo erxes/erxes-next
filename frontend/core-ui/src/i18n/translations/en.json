@@ -28,6 +28,7 @@
     "accounting": "Accounting",
     "automations": "Automations",
     "segments": "Segments",
+    "pos": "Pos",
     "accounting.subMenu": {
       "main": "Transactions",
       "records": "Records",
@@ -35,8 +36,13 @@
     },
     "sample": "Sample",
     "modules": "Modules",
+<<<<<<< HEAD
     "education": "Education",
     "courses": "Course",
     "classes": "Class"
+=======
+    "pms": "PMS",
+    "tms": "TMS"
+>>>>>>> 8d39ca2d6403a0973bae87aba078551a5118e8de
   }
 }

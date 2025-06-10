@@ -1,6 +1,6 @@
 import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
 import { CreateBrand } from './CreateBrand';
-import { Breadcrumb, Button, Separator } from 'erxes-ui';
+import { Breadcrumb, Button } from 'erxes-ui';
 import { Link } from 'react-router-dom';
 import { IconChessKnightFilled } from '@tabler/icons-react';
 
@@ -20,8 +20,6 @@ export function BrandsHeader() {
             </Breadcrumb.Item>
           </Breadcrumb.List>
         </Breadcrumb>
-        {/* <Separator.Inline /> */}
-        {/* <PageHeader.FavoriteToggleButton /> */}
       </PageHeaderStart>
       <PageHeaderEnd>
         <CreateBrand />

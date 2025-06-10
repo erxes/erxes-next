@@ -175,7 +175,7 @@ export interface IModels {
   ExchangeRates: IExchangeRateModel;
   Documents: IDocumentModel;
   Automations: IAutomationModel;
-  Executions: IExecutionModel;
+  AutomationExecutions: IExecutionModel;
   Logs: ILogModel;
 }
 
@@ -321,10 +321,10 @@ export const loadClasses = (
     loadAutomationClass(models),
   );
 
-  models.Executions = db.model<IAutomationExecutionDocument, IExecutionModel>(
-    'automations_executions',
-    loadExecutionClass(models),
-  );
+  models.AutomationExecutions = db.model<
+    IAutomationExecutionDocument,
+    IExecutionModel
+  >('automations_executions', loadExecutionClass(models));
 
   const db_name = db.name;
 

@@ -30,7 +30,6 @@ export interface IUserEntry {
   email: string;
   password: string;
   groupId: string;
-  channelIds?: string[];
   unitId?: string;
   branchId?: string;
   departmentId?: string;

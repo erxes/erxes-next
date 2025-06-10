@@ -24,15 +24,9 @@ export const ConversationHeader = () => {
             <Skeleton className="w-32 h-4 ml-2" />
           )}
           <Separator.Inline />
-          Assigned to:
-          {!loading ? (
-            <AssignConversation />
-          ) : (
-            <Skeleton className="w-32 h-4 ml-2" />
-          )}
+          <AssignConversation />
           <Separator.Inline />
-          Tags:
-          {!loading ? <Tags /> : <Skeleton className="w-32 h-4 ml-2" />}
+          <Tags />
         </div>
         <ScrollArea.Bar orientation="horizontal" />
       </ScrollArea>
@@ -43,7 +37,7 @@ export const ConversationHeader = () => {
 
 const AssignConversation = () => {
   const { assignedUserId, _id } = useConversationContext();
-  const { assignConversations, loading } = useAssignConversations({
+  const { assignConversations } = useAssignConversations({
     onError: (error: Error) => {
       toast({
         title: 'Error',
@@ -54,17 +48,20 @@ const AssignConversation = () => {
   });
 
   return (
-    <SelectMember.Detail
-      value={assignedUserId}
-      onValueChange={(value) => {
-        assignConversations({
-          variables: {
-            conversationIds: [_id],
-            assignedUserId: value,
-          },
-        });
-      }}
-    />
+    <div className="flex items-center gap-1">
+      Assigned to:
+      <SelectMember.Detail
+        value={assignedUserId}
+        onValueChange={(value) => {
+          assignConversations({
+            variables: {
+              conversationIds: [_id],
+              assignedUserId: value,
+            },
+          });
+        }}
+      />
+    </div>
   );
 };
 
@@ -75,6 +72,7 @@ const Tags = () => {
     <SelectTags.Detail
       tagType="frontline:conversation"
       className="flex-none w-auto"
+      variant="ghost"
       value={tagIds}
       targetIds={[_id]}
     />

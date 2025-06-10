@@ -6,6 +6,7 @@ import { ICustomer, SelectTags } from 'ui-modules';
 import { ApolloError } from '@apollo/client';
 import { toast } from 'erxes-ui';
 import { Row } from '@tanstack/table-core';
+
 export const CustomersCommandBar = () => {
   const { table } = RecordTable.useRecordTable();
   const intersection = (arrays: string[][]): string[] => {
@@ -24,11 +25,6 @@ export const CustomersCommandBar = () => {
         <CommandBar.Value>
           {table.getFilteredSelectedRowModel().rows.length} selected
         </CommandBar.Value>
-        <Separator.Inline />
-        <CustomersDelete
-          customerIds={customerIds}
-          rows={table.getFilteredSelectedRowModel().rows}
-        />
         <Separator.Inline />
         <SelectTags.CommandbarItem
           mode="multiple"
@@ -69,6 +65,11 @@ export const CustomersCommandBar = () => {
             .getFilteredSelectedRowModel()
             .rows.map((row) => row.original)}
           disabled={table.getFilteredSelectedRowModel().rows.length != 2}
+          rows={table.getFilteredSelectedRowModel().rows}
+        />
+        <Separator.Inline />
+        <CustomersDelete
+          customerIds={customerIds}
           rows={table.getFilteredSelectedRowModel().rows}
         />
       </CommandBar.Bar>

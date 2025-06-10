@@ -1,23 +1,19 @@
 import { gql } from '@apollo/client/core';
 import { DocumentNode } from 'graphql';
 
-export default function getTypeDefs(plugins: any[]): DocumentNode {
+export default function getTypeDefs(plugins): DocumentNode {
   const pluginTypeDefs = (plugins || [])
-    .map((plugin) => plugin.typeDefs)
+    .map((plugin) => {
+      const pluginModule = plugin.default || plugin;
+      return pluginModule.typeDefs;
+    })
     .join('\n\n');
 
   return gql`
     type Subscription {
-
       ${pluginTypeDefs}
-
       activityLogsChanged: Boolean
-
-      onboardingChanged(userId: String!): OnboardingNotification
-
       userChanged(userId: String): JSON
-
-      calendarEventUpdated: JSON
-  }
-`;
+    }
+  `;
 }

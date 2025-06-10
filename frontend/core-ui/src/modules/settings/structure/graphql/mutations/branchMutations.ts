@@ -45,7 +45,7 @@ export const ADD_BRANCH = gql`
 
 export const EDIT_BRANCH = gql`
   mutation BranchesEdit($id: String! ${commonDefs}) {
-    branchesEdit(id: $id, ${commonVars}) {
+    branchesEdit(_id: $id, ${commonVars}) {
       _id
       address
       code

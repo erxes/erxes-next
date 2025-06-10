@@ -5,7 +5,7 @@ import {
 } from '@/inbox/channel/context/ChannelsInlineContext';
 import { Skeleton, TextOverflowTooltip, Tooltip } from 'erxes-ui';
 import { useChannelInline } from '../hooks/useChannelInline';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const ChannelsInline = ({
   channels,
@@ -43,14 +43,16 @@ export const ChannelsInlineProvider = ({
   placeholder?: string;
   updateChannels?: (channels: IChannel[]) => void;
 }) => {
+  const [_channels, _setChannels] = useState<IChannel[]>(channels || []);
+
   return (
     <ChannelsInlineContext.Provider
       value={{
-        channels: channels || [],
+        channels: channels || _channels,
         loading: false,
         channelIds: channelIds || [],
         placeholder: placeholder || 'Select channels',
-        updateChannels,
+        updateChannels: updateChannels || _setChannels,
       }}
     >
       {children}

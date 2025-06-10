@@ -1,10 +1,10 @@
 import { Form, Select } from 'erxes-ui';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/JournalForms';
 import {
   CustomerType,
-  SelectCustomer,
+  SelectCustomers,
   SelectCompany,
-  AssignMember,
+  SelectMember,
 } from 'ui-modules';
 
 export const CustomerFields = ({
@@ -18,10 +18,10 @@ export const CustomerFields = ({
 
   const SelectComponent =
     customerType === CustomerType.CUSTOMER
-      ? SelectCustomer
+      ? SelectCustomers.FormItem
       : customerType === CustomerType.COMPANY
-        ? SelectCompany
-        : AssignMember;
+      ? SelectCompany
+      : SelectMember.FormItem;
 
   return (
     <>
@@ -59,6 +59,8 @@ export const CustomerFields = ({
               <SelectComponent
                 value={field.value ?? ''}
                 onValueChange={field.onChange}
+                mode={'single'}
+                className="flex"
               />
             </Form.Control>
             <Form.Message />

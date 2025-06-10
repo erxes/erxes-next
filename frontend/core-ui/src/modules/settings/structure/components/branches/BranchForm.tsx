@@ -1,13 +1,17 @@
 import { useId } from 'react';
 import { TBranchForm } from '../../types/branch';
 import { ControllerRenderProps, Path, useFormContext } from 'react-hook-form';
-import { Collapsible, Form, Input, Textarea } from 'erxes-ui';
+import { Collapsible, Form, Input, Skeleton, Textarea } from 'erxes-ui';
 import { AssignMember, AssignMultipleMembers, SelectBranch } from 'ui-modules';
 import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 import { IconChevronDown } from '@tabler/icons-react';
 
-export const BranchForm = () => {
+export const BranchForm = ({ loading }: { loading: boolean }) => {
   const { control } = useFormContext<TBranchForm>();
+
+  if (loading) {
+    return <Skeleton className="w-full h-full" />;
+  }
 
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -140,7 +144,18 @@ export const BranchForm = () => {
           <Form.Item className="col-span-2">
             <Form.Label>{field.name}</Form.Label>
             <Form.Control>
-              <Input {...field} inputMode="numeric" placeholder="Radius" />
+              <Input
+                value={field.value as number}
+                onChange={(e) =>
+                  field.onChange(
+                    e.currentTarget.value === ''
+                      ? 0
+                      : Number(e.currentTarget.value),
+                  )
+                }
+                inputMode="numeric"
+                placeholder="Radius"
+              />
             </Form.Control>
             <Form.Message />
           </Form.Item>

@@ -17,6 +17,7 @@ import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
 import { useIntegrationAdd } from '@/integrations/hooks/useIntegrationAdd';
 import { useAtomValue } from 'jotai';
 import { selectedFacebookAccountAtom } from '../states/facebookStates';
+import { IntegrationType } from '@/types/Integration';
 
 export const FacebookIntegrationSetup = () => {
   const form = useForm<z.infer<typeof FACEBOOK_MESSENGER_SCHEMA>>({
@@ -51,7 +52,7 @@ export const FacebookIntegrationSetup = () => {
   const onNext = (data: z.infer<typeof FACEBOOK_MESSENGER_SCHEMA>) => {
     addIntegration({
       variables: {
-        kind: 'facebook_messenger',
+        kind: IntegrationType.FACEBOOK_MESSENGER,
         name: data.name,
         brandId: data.brandId,
         accountId,
@@ -60,6 +61,7 @@ export const FacebookIntegrationSetup = () => {
           pageIds: [pageId],
         },
       },
+      refetchQueries: ['integrations'],
     });
     setActiveStep(4);
   };

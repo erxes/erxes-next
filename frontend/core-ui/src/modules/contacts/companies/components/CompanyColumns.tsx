@@ -27,7 +27,6 @@ import { TCompany } from '@/contacts/types/companyType';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { ApolloError } from '@apollo/client';
 import { useToast } from 'erxes-ui';
-import { useState } from 'react';
 import { SelectMember, SelectTags } from 'ui-modules';
 
 export const companyColumns: ColumnDef<TCompany>[] = [

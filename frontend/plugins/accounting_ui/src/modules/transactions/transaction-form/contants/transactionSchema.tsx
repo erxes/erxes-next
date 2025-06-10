@@ -4,7 +4,7 @@ import { TR_SIDES, TrJournalEnum } from '../../types/constants';
 
 //#region common:
 export const vatSchema = z.object({
-  hasVat: z.boolean().optional().nullish(),
+  hasVat: z.boolean().nullish(),
   handleVat: z.boolean().optional().nullish(),
   afterVat: z.boolean().optional().nullish(),
   vatRowId: z.string().optional().nullish(),
@@ -12,7 +12,7 @@ export const vatSchema = z.object({
 });
 
 export const ctaxSchema = z.object({
-  hasCtax: z.boolean().optional(),
+  hasCtax: z.boolean().nullish(),
   handleCtax: z.boolean().optional().nullish(),
   ctaxRowId: z.string().optional().nullish(),
   ctaxAmount: z.number().optional().nullish(),
@@ -162,6 +162,14 @@ export const transactionInvIncomeSchema = z.object({
   details: z.array(z.object({
     ...invDetailSchema.shape,
   })),
+  extraData: z.object({
+    invIncomeExpenses: z.array(z.object({
+      expenseCode: z.string(),
+      expenseTitle: z.string(),
+      rule: z.string(),
+      amount: z.number().min(0)
+    })).min(0)
+  })
 });
 
 //#region Inventories

@@ -15,6 +15,7 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import {
   Avatar,
+  Badge,
   EmailDisplay,
   EmailListField,
   FullNameField,
@@ -30,16 +31,17 @@ import {
   SexDisplay,
   SexField,
   readFile,
+  useQueryState,
   useToast,
 } from 'erxes-ui';
 import { useState } from 'react';
 import { ICustomer, SelectTags } from 'ui-modules';
-import { customerMoreColumn } from './CustomerMoreColumn';
+import { useSetAtom } from 'jotai';
+import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 
 const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<ICustomer>;
 
 export const customersColumns: ColumnDef<ICustomer>[] = [
-  customerMoreColumn as ColumnDef<ICustomer>,
   checkBoxColumn,
   {
     id: 'avatar',
@@ -72,6 +74,10 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
+      const [, setDetailOpen] = useQueryState('contactId');
+      const setRenderingCustomerDetail = useSetAtom(
+        renderingCustomerDetailAtom,
+      );
       const { firstName, lastName, _id } = cell.row.original;
       const { customersEdit } = useCustomersEdit();
       const [_firstName, setFirstName] = useState(firstName);
@@ -99,7 +105,22 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           }}
         >
           <RecordTableCellTrigger>
-            {_firstName} {_lastName}
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDetailOpen(_id);
+                setRenderingCustomerDetail(false);
+              }}
+            >
+              {firstName || lastName ? (
+                <span>
+                  {firstName} {lastName}
+                </span>
+              ) : (
+                <span className="text-muted-foreground">Unnamed customer</span>
+              )}
+            </Badge>
           </RecordTableCellTrigger>
           <RecordTableCellContent className="w-72" asChild>
             <form

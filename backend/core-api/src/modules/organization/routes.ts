@@ -22,6 +22,8 @@ router.get('/initial-setup', async (req: Request, res: Response) => {
       subdomain,
       models,
     });
+
+    organizationInfo.type = 'saas';
   }
 
   const userCount = await models.Users.countDocuments({

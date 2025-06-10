@@ -6,7 +6,7 @@ import { useEffect, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 import { TrJournalEnum, TR_SIDES } from '../../../types/constants';
 import { followTrDocsState, taxPercentsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/JournalForms';
 import { ICtaxRow } from '@/settings/ctax/types/CtaxRow';
 import { getTempId } from '../utils';
 import { ITransaction } from '../../../types/Transaction';

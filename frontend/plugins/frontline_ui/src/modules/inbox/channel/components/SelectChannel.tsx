@@ -72,29 +72,21 @@ const SelectChannelsValue = () => {
 };
 
 export const SelectChannelsContent = () => {
-  const [search, setSearch] = useState('');
-  const [debouncedSearch] = useDebounce(search, 500);
-
   const { channelIds, onSelect } = useSelectChannelContext();
   const {
     channels: channelsData,
     loading,
     error,
     handleFetchMore,
-  } = useChannels({
-    variables: {
-      searchValue: debouncedSearch,
-    },
-  });
+    channelsTotalCount,
+  } = useChannels();
 
   return (
     <Command shouldFilter={false}>
       <Command.Input
-        value={search}
-        onValueChange={setSearch}
         variant="secondary"
-        wrapperClassName="flex-auto"
         focusOnMount
+        placeholder="Search channels"
       />
       <Command.List className="max-h-[300px] overflow-y-auto">
         <Combobox.Empty loading={loading} error={error} />
@@ -102,6 +94,7 @@ export const SelectChannelsContent = () => {
           <>
             {channelsData.map((channel) => (
               <Command.Item
+                key={channel._id}
                 value={channel._id}
                 onSelect={() => {
                   onSelect(channel);
@@ -111,12 +104,11 @@ export const SelectChannelsContent = () => {
                 <Combobox.Check checked={channelIds.includes(channel._id)} />
               </Command.Item>
             ))}
-            <Command.Separator className="my-1" />
 
             <Combobox.FetchMore
               fetchMore={handleFetchMore}
               currentLength={channelsData.length}
-              totalCount={channelsData.length + 1}
+              totalCount={channelsTotalCount || 0}
             />
           </>
         )}
@@ -131,15 +123,21 @@ export const SelectChannelsFormItem = ({
 }: Omit<React.ComponentProps<typeof SelectChannelProvider>, 'children'> & {
   className?: string;
 }) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <SelectChannelProvider {...props}>
-      <Popover>
+    <SelectChannelProvider
+      {...props}
+      onValueChange={(value) => {
+        props.mode === 'single' && setOpen(false);
+        props.onValueChange?.(value);
+      }}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
-          <Popover.Trigger asChild>
-            <Combobox.Trigger className={cn('w-full', className)}>
-              <SelectChannelsValue />
-            </Combobox.Trigger>
-          </Popover.Trigger>
+          <Combobox.Trigger className={cn('w-full', className)}>
+            <SelectChannelsValue />
+          </Combobox.Trigger>
         </Form.Control>
 
         <Combobox.Content>

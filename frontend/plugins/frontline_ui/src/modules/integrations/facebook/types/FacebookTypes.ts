@@ -5,4 +5,7 @@ export interface IFacebookConversationMessage {
   content: string;
   createdAt: string;
   attachments: IAttachment[];
+  customerId?: string;
+  userId?: string;
+  internal?: boolean;
 }

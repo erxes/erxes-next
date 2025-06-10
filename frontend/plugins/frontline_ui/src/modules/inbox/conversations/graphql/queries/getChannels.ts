@@ -15,5 +15,6 @@ export const GET_CHANNELS = gql`
       _id
       name
     }
+    channelsTotalCount
   }
 `;

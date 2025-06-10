@@ -1,5 +1,5 @@
 import { CustomerFields } from '../../helpers/CustomerFields';
-import { ITransactionGroupForm } from '../../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
 import { TrJournalEnum } from '@/transactions/types/constants';
 import { VatForm } from '../../helpers/VatForm';
 import {
@@ -11,6 +11,7 @@ import {
 } from '../../GeneralFormFields';
 import { InventoryForm } from './InventoryForm';
 import { CtaxForm } from '../../helpers/CtaxForm';
+import { ExpenseForm } from './ExpenseForm';
 // import { InventoryForm } from '../../../inventory/components/InventoryForm';
 
 export const InvIncomeForm = ({
@@ -33,10 +34,14 @@ export const InvIncomeForm = ({
         <CtaxForm form={form} journalIndex={index} isWithTax={false} isSameSide={true} />
       </div>
 
-      <InventoryForm
-        form={form}
-        journalIndex={index}
-      />
+      <div className="pt-3">
+        <ExpenseForm form={form} journalIndex={index} />
+      </div>
+
+        <InventoryForm
+          form={form}
+          journalIndex={index}
+        />
     </>
   );
 };

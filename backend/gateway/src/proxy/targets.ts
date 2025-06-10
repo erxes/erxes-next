@@ -19,6 +19,8 @@ async function getProxyTarget(name: string): Promise<ErxesProxyTarget> {
     throw new Error(`Plugin ${name} has no address value in service discovery`);
   }
 
+  console.log(`${name} address: ${service.address}`);
+
   return {
     name,
     address: service.address,

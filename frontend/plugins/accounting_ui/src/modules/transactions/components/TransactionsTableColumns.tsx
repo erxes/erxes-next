@@ -219,6 +219,7 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     ),
     accessorKey: 'details',
     cell: ({ row }) => <AccountCell row={row} />,
+    size: 500
   },
   {
     id: 'number',
@@ -231,6 +232,7 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     header: () => <RecordTable.InlineHead icon={IconCalendar} label="Date" />,
     accessorKey: 'date',
     cell: ({ getValue, row }) => <DateCell getValue={getValue} row={row} />,
+    size: 80
   },
   {
     id: 'description',

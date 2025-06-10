@@ -40,6 +40,7 @@ const types = `
     updatedAt: Date
     createdBy: String
     updatedBy: String
+    tagIds:[String]
     triggers: [Trigger]
     actions: [Action]
 
@@ -84,6 +85,12 @@ const types = `
     actions: [JSON]
     startWaitingDate: Date
     waitingActionId: String
+  }
+
+  type AutomationHistories {
+    list:[AutomationHistory]
+    totalCount: Int
+    pageInfo: PageInfo
   }
 
   input TriggerInput {

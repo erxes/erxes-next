@@ -15,7 +15,7 @@ import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules/states';
 import { IconUserCircle } from '@tabler/icons-react';
 import { useMemberInline } from '../hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const MembersInlineRoot = ({
   members,
@@ -56,16 +56,18 @@ export const MembersInlineProvider = ({
   placeholder?: string;
   updateMembers?: (members: IMember[]) => void;
 }) => {
+  const [_members, _setMembers] = useState<IMember[]>(members || []);
+
   return (
     <MembersInlineContext.Provider
       value={{
-        members: members || [],
+        members: members || _members,
         loading: false,
         memberIds: memberIds || [],
         placeholder: isUndefinedOrNull(placeholder)
           ? 'Select members'
           : placeholder,
-        updateMembers,
+        updateMembers: updateMembers || _setMembers,
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
