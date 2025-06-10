@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { ButtonProps, Combobox, Popover } from 'erxes-ui';
 import { AssignMemberItem, AssignMemberList } from './AssignMember';
-import { IMember } from '../types/TeamMembers';
+import { ButtonProps, Combobox, Popover } from 'erxes-ui';
+import React, { useState } from 'react';
+
+import { IUser } from '../types/TeamMembers';
 import { MemberListInline } from './MemberListInline';
 
 interface AssignMultipleMembersProps {
@@ -14,12 +15,12 @@ export const AssignMultipleMembers = React.forwardRef<
   ButtonProps & AssignMultipleMembersProps
 >(({ value, onValueChange, children, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-  const [selectedMembers, setSelectedMembers] = useState<IMember[]>([]);
+  const [selectedMembers, setSelectedMembers] = useState<IUser[]>([]);
 
-  const isSelected = (member: IMember) =>
+  const isSelected = (member: IUser) =>
     selectedMembers.some((m) => m._id === member._id);
 
-  const handleSelect = (member?: IMember) => {
+  const handleSelect = (member?: IUser) => {
     if (!member) return;
 
     const newSelectedMembers = isSelected(member)

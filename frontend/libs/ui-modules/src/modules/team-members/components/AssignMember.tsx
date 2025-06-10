@@ -7,11 +7,12 @@ import {
   Skeleton,
 } from 'erxes-ui';
 import { useAssignedMember, useUsers } from '../hooks/useUsers';
-import { useState } from 'react';
-import { useDebounce } from 'use-debounce';
-import { IMember } from '../types/TeamMembers';
-import React from 'react';
+
+import { IUser } from '../types/TeamMembers';
 import { MemberInline } from './MemberInline';
+import React from 'react';
+import { useDebounce } from 'use-debounce';
+import { useState } from 'react';
 
 interface AssignMemberProps {
   value?: string;
@@ -23,11 +24,11 @@ export const AssignMember = React.forwardRef<
   ButtonProps & AssignMemberProps
 >(({ value, onValueChange, children, ...props }, ref) => {
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<IMember | undefined>(
+  const [selectedUser, setSelectedUser] = useState<IUser | undefined>(
     undefined,
   );
 
-  const handleSelect = (user?: IMember) => {
+  const handleSelect = (user?: IUser) => {
     setSelectedUser(user);
     onValueChange?.(user?._id || '');
     setOpen(false);
@@ -68,7 +69,7 @@ export function AssignMemberList({
   children,
   sort = true,
 }: {
-  renderItem: (user: IMember) => React.ReactNode;
+  renderItem: (user: IUser) => React.ReactNode;
   children?: React.ReactNode;
   sort?: boolean;
 }) {
@@ -91,7 +92,7 @@ export function AssignMemberList({
       {children}
       <Command.List className="max-h-[300px] overflow-y-auto">
         <Combobox.Empty loading={loading} error={error} />
-        {users?.map((user: IMember) => renderItem(user))}
+        {users?.map((user: IUser) => renderItem(user))}
         <Combobox.FetchMore
           fetchMore={handleFetchMore}
           currentLength={users.length}
@@ -106,14 +107,14 @@ export const AssignMemberTrigger = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
   ButtonProps & {
     value: string;
-    selectedUser?: IMember;
-    setSelectedUser: (user?: IMember) => void;
+    selectedUser?: IUser;
+    setSelectedUser: (user?: IUser) => void;
   }
 >(({ value, selectedUser, setSelectedUser, ...props }, ref) => {
   const { loading } = useAssignedMember({
     variables: { _id: value },
     skip: !value || selectedUser?._id === value,
-    onCompleted: ({ userDetail }: { userDetail: IMember }) => {
+    onCompleted: ({ userDetail }: { userDetail: IUser }) => {
       setSelectedUser({ ...userDetail, _id: value });
     },
   });
@@ -142,9 +143,9 @@ export const AssignMemberItem = ({
   isSelected,
   handleSelect,
 }: {
-  user: IMember;
+  user: IUser;
   isSelected: boolean;
-  handleSelect: (user?: IMember) => void;
+  handleSelect: (user?: IUser) => void;
 }) => {
   return (
     <Command.Item

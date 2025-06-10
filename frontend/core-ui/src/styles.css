@@ -26,6 +26,7 @@
     --radius: 0.5rem;
     --sidebar-background: 0 0% 98%; /* gray/1 */
     --shadow: 0, 0%, 0%, 0.05;
+    --baby-blue: 226, 100%, 94%; /* blue/3 */
   }
   .dark {
     --background: 0 0% 9%; /* primary/white */
@@ -48,6 +49,7 @@
     --radius: 0.5rem;
     --sidebar-background: 0 0% 11%; /* gray/1 */
     --shadow: 0, 0%, 100%, 0.05;
+    --baby-blue: 226, 100%, 94%; /* blue/3 */
   }
 }
 

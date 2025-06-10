@@ -1,22 +1,23 @@
 import {
+  AssignMemberItem,
+  AssignMemberList,
+  IUser,
+  MemberListInline,
+} from 'ui-modules';
+import { Filter, Input, Popover, useMultiQueryState } from 'erxes-ui';
+import {
   IconCalendarPlus,
   IconProgressCheck,
   IconSourceCode,
   IconUser,
 } from '@tabler/icons-react';
-import { Filter, Input, Popover, useMultiQueryState } from 'erxes-ui';
+
+import { LOGS_COMMON_FILTER_FIELD_NAMES } from '@/logs/constants/logFilter';
+import { LogActionsFilter } from './LogActionFilter';
+import { LogRecordTableFilterBarOperator } from './LogRecordTableFilterBarOperator';
 import { LogSourceFilter } from './LogSourceFilter';
 import { LogStatusFilter } from './LogStatusFilter';
-import { LogActionsFilter } from './LogActionFilter';
-import {
-  AssignMemberItem,
-  AssignMemberList,
-  IMember,
-  MemberListInline,
-} from 'ui-modules';
-import { LogRecordTableFilterBarOperator } from './LogRecordTableFilterBarOperator';
 import { useSearchParams } from 'react-router';
-import { LOGS_COMMON_FILTER_FIELD_NAMES } from '@/logs/constants/logFilter';
 import { useState } from 'react';
 
 const getCustomFilters = (searchParams: URLSearchParams) => {
@@ -49,7 +50,7 @@ export const LogRecordTableFilterBars = () => {
   const { status, source, action, userIds, createdAt } = queries;
 
   const customFilters = getCustomFilters(searchParams);
-  const handleUserSelect = (user?: IMember) => {
+  const handleUserSelect = (user?: IUser) => {
     if (!user) {
       return;
     }

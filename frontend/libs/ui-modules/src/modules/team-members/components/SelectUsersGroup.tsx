@@ -1,15 +1,16 @@
 import {
-  cn,
   Combobox,
   Command,
   Popover,
   Skeleton,
   TextOverflowTooltip,
+  cn,
 } from 'erxes-ui';
 import React, { useState } from 'react';
-import { IMemberGroup } from '../types/TeamMembers';
-import { SelectUsersGroupContext } from '../contexts/SelectUsersGroupContext';
 import { useSelectUsersGroupContext, useUsersGroup } from '../hooks';
+
+import { IUserGroup } from '../types/TeamMembers';
+import { SelectUsersGroupContext } from '../contexts/SelectUsersGroupContext';
 
 type Props = {
   value?: string;
@@ -54,7 +55,7 @@ const SelectUsersGroupItem = ({
   usersGroup,
   onValueChange,
 }: {
-  usersGroup: IMemberGroup;
+  usersGroup: IUserGroup;
   onValueChange: (value: string) => void;
 }) => {
   const { selectedUsersGroup, setSelectedUsersGroup } =
@@ -79,7 +80,7 @@ const SelectUsersGroupProvider = ({
   children: React.ReactNode;
 }) => {
   const [selectedUsersGroup, setSelectedUsersGroup] = useState<
-    IMemberGroup | undefined
+    IUserGroup | undefined
   >(undefined);
   return (
     <SelectUsersGroupContext.Provider
@@ -96,7 +97,7 @@ const SelectUsersGroupValue = ({ value }: { value?: string }) => {
 
   if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
   const usersGroup = usersGroups?.find(
-    (group: IMemberGroup) => group._id === value,
+    (group: IUserGroup) => group._id === value,
   );
   return (
     <Combobox.Value
@@ -109,14 +110,14 @@ const SelectUsersGroupValue = ({ value }: { value?: string }) => {
 export const UsersGroupsList = ({
   renderItem,
 }: {
-  renderItem: (usersGroup: IMemberGroup) => React.ReactNode;
+  renderItem: (usersGroup: IUserGroup) => React.ReactNode;
 }) => {
   const { usersGroups, loading } = useUsersGroup();
   return (
     <Command>
       <Command.List>
         <Combobox.Empty loading={loading} />
-        {usersGroups?.map((usersGroup: IMemberGroup) => renderItem(usersGroup))}
+        {usersGroups?.map((usersGroup: IUserGroup) => renderItem(usersGroup))}
       </Command.List>
     </Command>
   );

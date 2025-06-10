@@ -37,14 +37,7 @@ const TablerIcon = React.forwardRef<HTMLButtonElement, IconProps>(
       // Return a default icon or null if the icon name is not found
       return null;
     }
-
-    return (
-      <IconComponent
-        ref={ref}
-        className={cn(iconVariants({ className, size }))}
-        {...props}
-      />
-    );
+    return <div className={cn(iconVariants({ className, size }))} />;
   },
 );
 

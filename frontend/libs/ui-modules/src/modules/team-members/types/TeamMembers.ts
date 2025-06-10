@@ -1,6 +1,6 @@
 import { SlashMenuProps } from 'erxes-ui';
 
-export interface IMember {
+export interface IUser {
   _id: string;
   email?: string;
   username?: string;
@@ -9,21 +9,21 @@ export interface IMember {
     avatar?: string;
   };
 }
-export interface IMemberGroup {
+export interface IUserGroup {
   _id: string;
   name: string;
-  members: IMember[];
+  members: IUser[];
   description: string;
 }
 
-export interface IMemberGroupContext {
-  selectedUsersGroup: IMemberGroup | undefined;
-  setSelectedUsersGroup: (usersGroup: IMemberGroup) => void;
+export interface IUserGroupContext {
+  selectedUsersGroup: IUserGroup | undefined;
+  setSelectedUsersGroup: (usersGroup: IUserGroup) => void;
 }
 
 export interface MentionMenuProps extends SlashMenuProps {
   loading: boolean;
-  users: IMember[];
+  users: IUser[];
   handleFetchMore: () => void;
   totalCount: number;
 }

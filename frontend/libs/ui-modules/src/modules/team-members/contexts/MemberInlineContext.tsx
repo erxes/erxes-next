@@ -1,6 +1,6 @@
+import { IUser } from '../types/TeamMembers';
 import { createContext } from 'react';
-import { IMember } from '../types/TeamMembers';
 
 export const MemberInlineContext = createContext<
-  IMember['details'] & { loading: boolean; _id: string }
->({} as IMember['details'] & { loading: boolean; _id: string });
+  IUser['details'] & { loading: boolean; _id: string }
+>({} as IUser['details'] & { loading: boolean; _id: string });

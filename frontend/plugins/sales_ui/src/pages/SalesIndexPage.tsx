@@ -1,43 +1,55 @@
 import {
-  IconCaretDownFilled,
-  IconSandbox,
-  IconSettings,
-} from '@tabler/icons-react';
-import { Breadcrumb, Button, Separator } from 'erxes-ui';
-import { PageHeader } from 'ui-modules';
+  Breadcrumb,
+  Button,
+  PageContainer,
+  PageSubHeader,
+  Separator,
+} from 'erxes-ui';
+import { IconSandbox, IconSettings } from '@tabler/icons-react';
+
+import DealsMain from '@/deals/Main';
 import { Link } from 'react-router-dom';
+import MainActionBar from '@/deals/actionBar/components/MainActionBar';
+import { PageHeader } from 'ui-modules';
+import { SalesLeftSidebar } from '@/deals/components/SalesLeftSidebar';
 
 export const SalesIndexPage = () => {
   return (
-    <div className="flex flex-col h-full">
-      <PageHeader>
-        <PageHeader.Start>
-          <Breadcrumb>
-            <Breadcrumb.List className="gap-1">
-              <Breadcrumb.Item>
-                <Button variant="ghost" asChild>
-                  <Link to="/sales">
-                    <IconSandbox />
-                    Sales
-                  </Link>
-                </Button>
-              </Breadcrumb.Item>
-            </Breadcrumb.List>
-          </Breadcrumb>
-          <Separator.Inline />
-          <PageHeader.FavoriteToggleButton />
-        </PageHeader.Start>
-        <PageHeader.End>
-          <Button variant="outline" asChild>
-            <Link to="/settings/sales">
-              <IconSettings />
-              Go to settings
-            </Link>
-          </Button>
-        </PageHeader.End>
-      </PageHeader>
-      <div className="flex-1">
-        <h1>Sales plugin</h1>
+    <div className="flex h-full">
+      <SalesLeftSidebar />
+      <div className="flex flex-col h-full w-full">
+        <PageHeader>
+          <PageHeader.Start>
+            <Breadcrumb>
+              <Breadcrumb.List className="gap-1">
+                <Breadcrumb.Item>
+                  <Button variant="ghost" asChild>
+                    <Link to="/sales">
+                      <IconSandbox />
+                      Sales
+                    </Link>
+                  </Button>
+                </Breadcrumb.Item>
+              </Breadcrumb.List>
+            </Breadcrumb>
+            <Separator.Inline />
+            <PageHeader.FavoriteToggleButton />
+          </PageHeader.Start>
+          <PageHeader.End>
+            <Button variant="outline" asChild>
+              <Link to="/settings/sales">
+                <IconSettings />
+                Go to settings
+              </Link>
+            </Button>
+          </PageHeader.End>
+        </PageHeader>
+        <PageContainer>
+          <PageSubHeader>
+            <MainActionBar />
+          </PageSubHeader>
+          <DealsMain />
+        </PageContainer>
       </div>
     </div>
   );

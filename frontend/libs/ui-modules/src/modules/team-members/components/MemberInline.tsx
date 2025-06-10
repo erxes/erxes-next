@@ -1,22 +1,23 @@
-import React from 'react';
-import { IMember } from '../types/TeamMembers';
 import {
   Avatar,
-  avatarVariants,
-  cn,
-  readFile,
   Skeleton,
   TextOverflowTooltip,
   Tooltip,
+  avatarVariants,
+  cn,
+  readFile,
 } from 'erxes-ui';
-import { useMemberInlineContext } from '../hooks/useMemberInline';
-import { useAssignedMember } from '../hooks/useUsers';
+
+import { IUser } from '../types/TeamMembers';
 import { MemberInlineContext } from '../contexts/MemberInlineContext';
+import React from 'react';
+import { useAssignedMember } from '../hooks/useUsers';
+import { useMemberInlineContext } from '../hooks/useMemberInline';
 
 export const MemberInlineRoot = React.forwardRef<
   HTMLSpanElement,
   Omit<React.ComponentPropsWithoutRef<'span'>, 'children'> & {
-    member?: IMember;
+    member?: IUser;
     memberId?: string;
     avatarProps?: React.ComponentPropsWithoutRef<typeof Avatar>;
   }
@@ -46,7 +47,7 @@ const MemberInlineProvider = ({
   memberId,
 }: {
   children: React.ReactNode;
-  member?: IMember;
+  member?: IUser;
   memberId?: string;
 }) => {
   const { details, loading } = useAssignedMember({

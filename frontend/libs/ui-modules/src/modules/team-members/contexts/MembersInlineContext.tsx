@@ -1,15 +1,16 @@
 import { createContext, useContext } from 'react';
-import { IMember } from '../types/TeamMembers';
 
-export interface IMembersInlineContext {
-  members: IMember[];
+import { IUser } from '../types/TeamMembers';
+
+export interface IUsersInlineContext {
+  members: IUser[];
   loading: boolean;
   memberIds?: string[];
   placeholder: string;
-  updateMembers?: (members: IMember[]) => void;
+  updateMembers?: (members: IUser[]) => void;
 }
 
-export const MembersInlineContext = createContext<IMembersInlineContext | null>(
+export const MembersInlineContext = createContext<IUsersInlineContext | null>(
   null,
 );
 

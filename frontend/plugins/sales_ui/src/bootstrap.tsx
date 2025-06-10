@@ -1,9 +1,7 @@
-import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 
-const App = () => {
-  return <div>App</div>;
-};
+import App from './modules/app/components/app';
+import { StrictMode } from 'react';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
