@@ -37,6 +37,9 @@ export const TypeExtensions = `
   extend type Tag @key(fields: "_id") {
     _id: String! @external
   }
+
+
+
 `;
 
   // ${graphqlAttachmentType}
