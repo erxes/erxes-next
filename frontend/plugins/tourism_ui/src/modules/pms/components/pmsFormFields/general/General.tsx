@@ -5,7 +5,7 @@ import Heading from '../../ui/heading';
 import CheckInCheckOutTime from './CheckInCheckOutTime';
 import Discount from './Discount';
 import Lock from './Lock';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const General = ({ control }: { control: Control<PmsBranchFormType> }) => {
   return (

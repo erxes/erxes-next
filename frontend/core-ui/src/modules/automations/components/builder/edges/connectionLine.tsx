@@ -1,5 +1,5 @@
 import { ConnectionLineComponentProps } from '@xyflow/react';
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 
 // const checkIsOptionalConnect = (id = '') => {
 //   const hasTwoHyphens = id.split('-').length - 1 === 2;

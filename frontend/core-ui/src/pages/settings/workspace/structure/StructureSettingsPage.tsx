@@ -7,39 +7,37 @@ import { Route, Routes } from 'react-router-dom';
 import { SettingsHeader } from 'ui-modules';
 
 export const StructureMain = lazy(() =>
-  import('~/modules/settings/structure/components/Structure').then(
+  import('@/settings/structure/components/Structure').then((module) => ({
+    default: module.Structure,
+  })),
+);
+export const BranchesSettings = lazy(() =>
+  import('@/settings/structure/components/branches/BranchesSettings').then(
     (module) => ({
-      default: module.Structure,
+      default: module.BranchesSettings,
     }),
   ),
 );
-export const BranchesSettings = lazy(() =>
-  import(
-    '~/modules/settings/structure/components/branches/BranchesSettings'
-  ).then((module) => ({
-    default: module.BranchesSettings,
-  })),
-);
 export const DepartmentsSettings = lazy(() =>
-  import(
-    '~/modules/settings/structure/components/departments/DepartmentSettings'
-  ).then((module) => ({
-    default: module.DepartmentSettings,
-  })),
+  import('@/settings/structure/components/departments/DepartmentSettings').then(
+    (module) => ({
+      default: module.DepartmentSettings,
+    }),
+  ),
 );
 export const UnitsSettings = lazy(() =>
-  import('~/modules/settings/structure/components/units/UnitsSettings').then(
+  import('@/settings/structure/components/units/UnitsSettings').then(
     (module) => ({
       default: module.UnitsSettings,
     }),
   ),
 );
 export const PositionsSettings = lazy(() =>
-  import(
-    '~/modules/settings/structure/components/positions/PositionsSettings'
-  ).then((module) => ({
-    default: module.PositionsSettings,
-  })),
+  import('@/settings/structure/components/positions/PositionsSettings').then(
+    (module) => ({
+      default: module.PositionsSettings,
+    }),
+  ),
 );
 
 export function StructureSettingsPage() {

@@ -1,7 +1,7 @@
 import { Form, Input, Textarea } from 'erxes-ui';
 import { Control } from 'react-hook-form';
 import { SelectMember } from 'ui-modules';
-import { type TChannelForm } from '~/modules/settings/types/channel';
+import { type TChannelForm } from '@/settings/types/channel';
 
 type TProp = {
   control: Control<TChannelForm, any, TChannelForm>;

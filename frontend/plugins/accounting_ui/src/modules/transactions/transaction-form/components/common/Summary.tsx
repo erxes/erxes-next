@@ -1,10 +1,19 @@
-import { Button, CurrencyCode, CurrencyFormatedDisplay } from 'erxes-ui';
+import {
+  Button,
+  CurrencyCode,
+  CurrencyFormatedDisplay,
+  toast,
+  useConfirm,
+  useQueryState,
+} from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useWatch } from 'react-hook-form';
 import { TR_SIDES } from '../../../types/constants';
 import { followTrDocsState } from '../../states/trStates';
 import { ITransactionGroupForm, TTrDoc } from '../../types/JournalForms';
-import { ITransaction } from '~/modules/transactions/types/Transaction';
+import { ITransaction } from '@/transactions/types/Transaction';
+import { IconGavel, IconTrashX } from '@tabler/icons-react';
+import { useTransactionsRemove } from '../../hooks/useTransactionsRemove';
 
 const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
   trDocs?.forEach((tr) => {
@@ -19,19 +28,38 @@ const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
     }
   });
   return [sumDebit, sumCredit];
-}
+};
 
 export const sumDtAndCt = (trDocs: TTrDoc[], followTrDocs: ITransaction[]) => {
   const [sumDt, sumCt] = getSum(trDocs || [], 0, 0);
   const [sumDebit, sumCredit] = getSum(followTrDocs, sumDt, sumCt);
-  return [sumDebit, sumCredit]
-}
+  return [sumDebit, sumCredit];
+};
 
 export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { trDocs } = useWatch({ control: form.control });
   const [followTrDocs] = useAtom(followTrDocsState);
+  const [parentId] = useQueryState<string>('parentId');
 
-  const [sumDebit, sumCredit] = sumDtAndCt(trDocs as TTrDoc[], followTrDocs)
+  const { removeTransactions } = useTransactionsRemove();
+  const { confirm } = useConfirm();
+
+  const [sumDebit, sumCredit] = sumDtAndCt(trDocs as TTrDoc[], followTrDocs);
+
+  const handleDelete = () =>
+    confirm({
+      message: 'Are you sure you want to delete these transactions?',
+      options: {
+        okLabel: 'Delete',
+        cancelLabel: 'Cancel',
+      },
+    }).then(() => {
+      removeTransactions({
+        variables: {
+          parentId,
+        },
+      });
+    });
 
   return (
     <div className="flex justify-end items-center col-span-2 xl:col-span-3 gap-6">
@@ -68,7 +96,18 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
           />
         </span>
       </div>
-      <Button type="submit">Save</Button>
+      <Button type="submit">
+        <IconGavel />
+        Save
+      </Button>
+      <Button
+        variant="secondary"
+        className="text-destructive"
+        onClick={handleDelete}
+      >
+        <IconTrashX />
+        {`Delete`}
+      </Button>
     </div>
   );
 };

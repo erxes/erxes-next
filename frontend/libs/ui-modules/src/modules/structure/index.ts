@@ -8,3 +8,4 @@ export * from './hooks/useDepartmentsMain';
 export * from './hooks/useUnits';
 export * from './types/Branch';
 export * from './types/Department';
+export * from './components/SelectPosition';
