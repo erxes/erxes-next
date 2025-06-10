@@ -21,10 +21,8 @@ export const conversationQueries = {
   async conversations(
     _parent: undefined,
     params: IConversationListParams,
-    { user, models, subdomain, serverTiming }: IContext,
+    { user, models, subdomain }: IContext,
   ) {
-    serverTiming?.startTime('conversations');
-
     if (params && params.ids) {
       const { list, totalCount, pageInfo } =
         await cursorPaginate<IConversationDocument>({
@@ -36,14 +34,9 @@ export const conversationQueries = {
           query: { _id: { $in: params.ids } },
         });
 
-      serverTiming?.endTime('conversationsQuery');
-
-      serverTiming?.endTime('conversations');
-
       return { list, totalCount, pageInfo };
     }
 
-    serverTiming?.startTime('buildQuery');
     const qb = new QueryBuilder(models, subdomain, params, {
       _id: user._id,
       code: user.code,
@@ -53,9 +46,6 @@ export const conversationQueries = {
 
     await qb.buildAllQueries();
 
-    serverTiming?.endTime('buildQuery');
-
-    serverTiming?.startTime('conversationsQuery');
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
@@ -67,9 +57,6 @@ export const conversationQueries = {
         query: qb.mainQuery(),
       });
 
-    serverTiming?.endTime('conversationsQuery');
-
-    serverTiming?.endTime('conversations');
     return { list, totalCount, pageInfo };
   },
 
@@ -258,10 +245,8 @@ export const conversationQueries = {
   async conversationsTotalUnreadCount(
     _root,
     _args,
-    { user, models, subdomain, serverTiming }: IContext,
+    { user, models, subdomain }: IContext,
   ) {
-    serverTiming.startTime('buildQuery');
-
     // initiate query builder
     const qb = new QueryBuilder(
       models,
@@ -272,16 +257,8 @@ export const conversationQueries = {
 
     await qb.buildAllQueries();
 
-    serverTiming.endTime('buildQuery');
-
-    serverTiming.startTime('integrationFilter');
-
     // get all possible integration ids
     const integrationsFilter = await qb.integrationsFilter();
-
-    serverTiming.endTime('integrationFilter');
-
-    serverTiming.startTime('query');
 
     const response = await models.Conversations.countDocuments({
       ...integrationsFilter,
@@ -289,8 +266,6 @@ export const conversationQueries = {
       readUserIds: { $ne: user._id },
       $and: [{ $or: qb.userRelevanceQuery() }],
     });
-
-    serverTiming.endTime('query');
 
     return response;
   },
