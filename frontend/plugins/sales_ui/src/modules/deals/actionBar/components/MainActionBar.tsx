@@ -1,7 +1,25 @@
 import { Button, DropdownMenu } from 'erxes-ui';
 import { IconAdjustmentsHorizontal, IconFilter } from '@tabler/icons-react';
 
+import { ActionBarFilters } from '../constants/Filters';
+import { FilterItem } from '../types/actionBarTypes';
+import React from 'react';
+
 const MainActionBar = () => {
+  const renderDropdownItem = (item: FilterItem, itemIndex: number) => {
+    const Icon = item.icon;
+
+    return (
+      <DropdownMenu.Item key={itemIndex}>
+        <div className="flex items-center gap-2">
+          <Icon className="w-4 h-4" />
+          {item.value}
+        </div>
+        <DropdownMenu.Shortcut>⌘P</DropdownMenu.Shortcut>
+      </DropdownMenu.Item>
+    );
+  };
+
   return (
     <div className="flex items-center justify-between gap-2 w-full">
       <DropdownMenu>
@@ -11,28 +29,18 @@ const MainActionBar = () => {
           </div>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Group>
-            <DropdownMenu.Item>
-              Profile
-              <DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item>
-              Billing
-              <DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item>
-              Settings
-              <DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item>
-              Keyboard shortcuts
-              <DropdownMenu.Shortcut>⌘K</DropdownMenu.Shortcut>
-            </DropdownMenu.Item>
-          </DropdownMenu.Group>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Group>
-            <DropdownMenu.Item>Team</DropdownMenu.Item>
-          </DropdownMenu.Group>
+          {ActionBarFilters.map((group, groupIndex) => (
+            <React.Fragment key={groupIndex}>
+              <DropdownMenu.Group>
+                {group.map((filter, itemIndex) =>
+                  renderDropdownItem(filter, itemIndex),
+                )}
+              </DropdownMenu.Group>
+              {groupIndex < ActionBarFilters.length - 1 && (
+                <DropdownMenu.Separator />
+              )}
+            </React.Fragment>
+          ))}
         </DropdownMenu.Content>
       </DropdownMenu>
 
