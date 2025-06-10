@@ -1,5 +1,8 @@
 import { IContext } from '~/connectionResolvers';
 import { ICarParams } from '~/modules/module/@types/car';
+import { generateFilter } from './carQueries';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { ICarCategoryDocument } from '~/modules/module/@types/category';
 
 export const CarCategoryQueries = {
   carCategoryDetail: async (
@@ -11,20 +14,19 @@ export const CarCategoryQueries = {
   },
   carCategories: async (
     _root: undefined,
-    { parentId, searchValue },
+    params: ICarParams,
     { commonQuerySelector, models }: IContext,
   ) => {
-    const filter: any = commonQuerySelector;
+    const filter = await generateFilter(params, commonQuerySelector, models);
 
-    if (parentId) {
-      filter.parentId = parentId;
-    }
+    const { list, totalCount, pageInfo } =
+      await cursorPaginate<ICarCategoryDocument>({
+        model: models.CarCategories,
+        params,
+        query: filter,
+      });
 
-    if (searchValue) {
-      filter.name = new RegExp(`.*${searchValue}.*`, 'i');
-    }
-
-    return models.CarCategories.find(filter).sort({ order: 1 });
+    return { list, totalCount, pageInfo };
   },
 
   carCategoriesTotalCount: async (

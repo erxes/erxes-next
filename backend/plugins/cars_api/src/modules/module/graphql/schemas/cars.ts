@@ -1,29 +1,29 @@
 export const types = `
   type Car {
-  ownerId: String
-  customers: [Customer]
-  companies: [Company]
+    ownerId: String
+    customers: [Customer]
+    companies: [Company]
 
-  getTags: [Tag]
-  plateNumber: String
-  vinNumber: String
-  colorCode: String
-  category: carCategory
-  bodyType: String
-  fuelType: String
-  gearBox: String
-  vintageYear: Float
-  importYear: Float
-  status: String
-  description: String
-  tagIds: [String]
-  attachment: Attachment
+    getTags: [Tag]
+    plateNumber: String
+    vinNumber: String
+    colorCode: String
+    category: carCategory
+    bodyType: String
+    fuelType: String
+    gearBox: String
+    vintageYear: Float
+    importYear: Float
+    status: String
+    description: String
+    tagIds: [String]
+    attachment: Attachment
  }
 
   type CarListResponse {
-  list: [Car],
-  pageInfo: PageInfo
-  totalCount: Int,
+    list: [Car],
+    pageInfo: PageInfo
+    totalCount: Float,
   }
 
 `;
@@ -42,7 +42,7 @@ const queryParams = `
 
 export const queries = `
   carDetail(_id: String!): Car
-  cars(${queryParams}): [CarListResponse]
+  cars(${queryParams}): CarListResponse
 `;
 
 const mutationParams = `

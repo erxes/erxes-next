@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { cursorPaginate, paginate } from 'erxes-api-shared/utils';
+import { cursorPaginate } from 'erxes-api-shared/utils';
 import { ICarDocument, ICarParams } from '~/modules/module/@types/car';
 
 export const generateFilter = async (params, commonQuerySelector, models) => {
@@ -56,11 +56,15 @@ export const carQueries = {
   ) => {
     const filter = await generateFilter(params, commonQuerySelector, models);
 
+    console.log(1111);
+
     const { list, totalCount, pageInfo } = await cursorPaginate<ICarDocument>({
       model: models.Cars,
       params,
       query: filter,
     });
+
+    console.log({ list, totalCount, pageInfo });
 
     return { list, totalCount, pageInfo };
   },
