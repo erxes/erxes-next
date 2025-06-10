@@ -21,7 +21,7 @@ export const loadAccountCategoryClass = (models: IModels) => {
   class AccountingCategory {
     /**
      *
-     * Get Accounting Cagegory
+     * Get Accounting Category
      */
 
     public static async getAccountCategory(selector: any) {

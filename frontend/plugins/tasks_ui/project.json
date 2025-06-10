@@ -1,0 +1,65 @@
+{
+  "name": "tasks_ui",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "frontend/plugins/tasks_ui/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/frontend/plugins/tasks_ui",
+        "main": "frontend/plugins/tasks_ui/src/main.ts",
+        "tsConfig": "frontend/plugins/tasks_ui/tsconfig.app.json",
+        "rspackConfig": "frontend/plugins/tasks_ui/rspack.config.ts",
+        "assets": [
+          "frontend/plugins/tasks_ui/src/assets"
+        ]
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "frontend/plugins/tasks_ui/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "tasks_ui:build:development",
+        "port": 3005
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "tasks_ui:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "tasks_ui:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "tasks_ui:serve:development"
+        },
+        "production": {
+          "serveTarget": "tasks_ui:serve:production"
+        }
+      }
+    }
+  }
+}

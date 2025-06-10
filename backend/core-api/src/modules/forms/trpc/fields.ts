@@ -12,13 +12,13 @@ import {
 const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const fieldsTrpcRouter = t.router({
-  fields: t.router({
-    find: t.procedure
+  fieldsGroups: t.router({
+    updateGroup: t.procedure
       .input(z.object({ query: z.any(), projection: z.any(), sort: z.any() }))
       .query(async ({ ctx, input }) => {
         const { query, projection, sort } = input;
         const { models } = ctx;
-        return await models.Fields.find(query, projection).sort(sort).lean();
+        return await models.FieldsGroups.find(query, projection).sort(sort).lean();
       }),
     findOne: t.procedure
       .input(z.object({ _id: z.string() }))
