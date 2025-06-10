@@ -7,10 +7,12 @@ import { syncCardSettingsAtom } from '../../states/posCategory';
 import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
 interface SyncCardFormProps {
-  posDetail: IPosDetail;
+  posDetail?: IPosDetail;
+  isReadOnly?: boolean;
 }
 
-export default function SyncCardForm({ posDetail }: SyncCardFormProps) {
+export default function SyncCardForm({ 
+}: SyncCardFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom);
 

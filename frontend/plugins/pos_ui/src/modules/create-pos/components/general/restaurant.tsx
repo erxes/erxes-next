@@ -10,7 +10,7 @@ import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
-import { SelectBranch, SelectDepartment } from 'ui-modules';
+import { SelectBranch, SelectDepartment , SelectBrand } from 'ui-modules';
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
@@ -66,6 +66,8 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     if (isReadOnly) return;
     form.setValue('departmentId', departmentId);
   };
+
+  const selectedBrandId = form.watch('scopeBrandIds')?.[0] || '';
 
   const getFormTitle = () => {
     if (isReadOnly) return 'View Restaurant Details';
@@ -141,28 +143,12 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     Which specific Brand does this integration belongs to?
                   </p>
                   <Form.Control>
-                    <div className="border border-gray-300">
-                      <Select
-                        onValueChange={(value) => handleBrandChange(value)}
-                        value={field.value?.[0] || ''}
-                        disabled={isReadOnly}
-                      >
-                        <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                          <Select.Value placeholder="Choose brands" />
-                        </Select.Trigger>
-                        <Select.Content>
-                          <Select.Item value="restaurant_brand1">
-                            Restaurant Brand 1
-                          </Select.Item>
-                          <Select.Item value="restaurant_brand2">
-                            Restaurant Brand 2
-                          </Select.Item>
-                          <Select.Item value="restaurant_brand3">
-                            Restaurant Brand 3
-                          </Select.Item>
-                        </Select.Content>
-                      </Select>
-                    </div>
+                    <SelectBrand
+                      value={selectedBrandId}
+                      onValueChange={handleBrandChange}
+                      className="w-full h-10 border border-gray-300"
+                      disabled={isReadOnly}
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>

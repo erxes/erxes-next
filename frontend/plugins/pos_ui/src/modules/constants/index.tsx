@@ -1,3 +1,4 @@
+import { StepConfig } from '../pos-detail.tsx/types/IPosLayout';
 import { CustomNode } from '../slot/types';
 
 export const ALLOW_TYPES = [
@@ -87,3 +88,59 @@ export const DefaultNode: CustomNode = {
   },
 };
 
+export const GRID_LAYOUT = {
+  SPACING_X: 200,
+  SPACING_Y: 150,
+  COLUMNS: 3,
+  START_X: 100,
+  START_Y: 100,
+};
+
+export const DEFAULT_SLOT_DIMENSIONS = {
+  WIDTH: 80,
+  HEIGHT: 80,
+};
+
+export const SNAP_GRID = [20, 20] as const;
+
+export const LAYOUT = {
+  STEPPER_WIDTH: 'w-44',
+  CONTENT_MAX_HEIGHT: 'max-h-[calc(100vh-120px)]',
+  STEPPER_INDICATOR_LEFT: 'left-[18px]',
+  STEPPER_SEPARATOR_TOP: 'top-9',
+  STEPPER_SEPARATOR_HEIGHT: 'h-8',
+};
+
+export const getSteps = (posCategory: string | null): StepConfig[] => {
+  const baseSteps: StepConfig[] = [
+    { value: 'overview', title: 'Choose category' },
+    { value: 'properties', title: 'General information' },
+    { value: 'payments', title: 'Payments' },
+    { value: 'permission', title: 'Permission' },
+    { value: 'product', title: 'Product & Service' },
+    { value: 'appearance', title: 'Appearance' },
+    { value: 'screen', title: 'Screen config' },
+    { value: 'ebarimt', title: 'Ebarimt config' },
+    { value: 'finance', title: 'Finance config' },
+    { value: 'delivery', title: 'Delivery config' },
+    { value: 'sync', title: 'Sync card' },
+  ];
+
+  if (posCategory === 'restaurant') {
+    const updatedSteps = [...baseSteps];
+    updatedSteps.splice(2, 0, { value: 'slot', title: 'Slot' });
+    return updatedSteps;
+  }
+
+  return baseSteps;
+};
+
+export const navigateToTab = (
+  setSearchParams: (params: URLSearchParams) => void,
+  searchParams: URLSearchParams,
+  tabValue: string,
+): void => {
+  const newParams = new URLSearchParams(searchParams);
+  newParams.set('tab', tabValue);
+  setSearchParams(newParams);
+};

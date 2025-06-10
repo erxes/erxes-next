@@ -4,33 +4,19 @@ import React, { useMemo, useState } from 'react';
 import { Stepper, Resizable, Button } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { IconCheck, IconAlertCircle, IconEdit } from '@tabler/icons-react';
+import { IconCheck, IconEdit } from '@tabler/icons-react';
 import { PosDetailSheet } from './posDetailSheet';
-import { UseFormReturn } from 'react-hook-form';
 import { posCategoryAtom } from '~/modules/create-pos/states/posCategory';
 import {
   BasicInfoFormValues,
   PermissionFormValues,
 } from '~/modules/create-pos/components/formSchema';
+import { LAYOUT, navigateToTab } from '~/modules/constants';
+import { NavigationFooterProps, PosLayoutProps, PosTabContentProps, StepConfig, StepperItemProps, VerticalStepperProps } from '../types/IPosLayout';
+import { ValidationAlert } from '~/modules/create-pos/components/index/lay-stepper';
+import { UseFormReturn } from 'react-hook-form';
 import { IPosDetail } from '../types/IPos';
 
-const LAYOUT = {
-  STEPPER_WIDTH: 'w-44',
-  CONTENT_MAX_HEIGHT: 'max-h-[calc(100vh-120px)]',
-  STEPPER_INDICATOR_LEFT: 'left-[18px]',
-  STEPPER_SEPARATOR_TOP: 'top-9',
-  STEPPER_SEPARATOR_HEIGHT: 'h-8',
-};
-
-type StepConfig = {
-  value: string;
-  title: string;
-};
-
-type StepType = StepConfig & {
-  id: number;
-  totalSteps?: number;
-};
 
 const getSteps = (posCategory: string | null): StepConfig[] => {
   const baseSteps: StepConfig[] = [
@@ -54,22 +40,6 @@ const getSteps = (posCategory: string | null): StepConfig[] => {
 
   return baseSteps;
 };
-
-const navigateToTab = (
-  setSearchParams: (params: URLSearchParams) => void,
-  searchParams: URLSearchParams,
-  tabValue: string,
-): void => {
-  const newParams = new URLSearchParams(searchParams);
-  newParams.set('tab', tabValue);
-  setSearchParams(newParams);
-};
-
-interface StepperItemProps {
-  step: StepType;
-  currentStep: number;
-  isClickable: boolean;
-}
 
 const StepperItem = React.memo(
   ({ step, currentStep, isClickable }: StepperItemProps) => (
@@ -106,14 +76,6 @@ const StepperItem = React.memo(
     </Stepper.Item>
   ),
 );
-
-interface VerticalStepperProps {
-  steps: StepType[];
-  currentStepId: number;
-  hasCategorySelected: boolean;
-  searchParams: URLSearchParams;
-  setSearchParams: (params: URLSearchParams) => void;
-}
 
 const VerticalStepper = React.memo(
   ({
@@ -161,26 +123,6 @@ const VerticalStepper = React.memo(
   },
 );
 
-interface ValidationAlertProps {
-  message: string;
-}
-
-const ValidationAlert: React.FC<ValidationAlertProps> = ({ message }) => (
-  <div className="flex items-center gap-2 p-3 text-red-600 bg-red-50 border border-red-200 rounded-md mb-4">
-    <IconAlertCircle className="h-5 w-5 flex-shrink-0" />
-    <span>{message}</span>
-  </div>
-);
-
-interface NavigationFooterProps {
-  prevStep: string | null;
-  nextStep: string | null;
-  handlePrevStep: () => void;
-  handleNextStep: () => void;
-  isLastStep: boolean;
-  validationError?: string | null;
-}
-
 const NavigationFooter = React.memo(
   ({
     prevStep,
@@ -221,12 +163,7 @@ const NavigationFooter = React.memo(
   ),
 );
 
-interface PosEditTabContentProps {
-  children: React.ReactNode;
-  value: string;
-}
-
-export const PosEditTabContent: React.FC<PosEditTabContentProps> = ({
+export const PosEditTabContent: React.FC<PosTabContentProps> = ({
   children,
   value,
 }) => {
