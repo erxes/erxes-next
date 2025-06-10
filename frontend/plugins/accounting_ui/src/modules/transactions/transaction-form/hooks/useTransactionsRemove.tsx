@@ -1,20 +1,18 @@
+import { ACC_TRANSACTIONS_REMOVE } from '../graphql/mutations/accTransactionsRemove';
 import { OperationVariables, useMutation } from '@apollo/client';
-import { ACC_TRANSACTIONS_CREATE } from '../graphql/mutations/accTransactionsCreate';
 import { toast } from 'erxes-ui';
-import { useNavigate } from 'react-router-dom';
 import { TR_RECORDS_QUERY, TRANSACTIONS_QUERY } from '../../graphql/transactionQueries';
+import { useNavigate } from 'react-router-dom';
 
-
-export const useTransactionsCreate = (options?: OperationVariables) => {
+export const useTransactionsRemove = (options?: OperationVariables) => {
   const navigate = useNavigate();
-
-  const [_createTransaction, { loading }] = useMutation(
-    ACC_TRANSACTIONS_CREATE,
-    options,
+  const [_removeTransactions, { loading }] = useMutation(
+    ACC_TRANSACTIONS_REMOVE,
+    options
   );
 
-  const createTransaction = (options?: OperationVariables) => {
-    return _createTransaction({
+  const removeTransactions = (options: OperationVariables) => {
+    return _removeTransactions({
       ...options,
       onError: (error: Error) => {
         toast({
@@ -22,14 +20,12 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
           description: error.message,
           variant: 'destructive',
         });
-        options?.onError?.(error);
       },
       onCompleted: () => {
         toast({
           title: 'Success',
-          description: 'Transactions created successfully',
+          description: 'Transactions deleted successfully',
         });
-        options?.onCompeleted()
       },
       refetchQueries: [
         {
@@ -44,20 +40,15 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
         }
       ],
       awaitRefetchQueries: true,
-      update: (_cache, { data }) => {
-        const newParentId = data?.accTransactionsCreate[0]?.parentId;
-
-        const pathname = newParentId
-          ? `/accounting/transaction/edit?parentId=${newParentId}`
-          : "/accounting/main";
-
+      update: (cache) => {
+        const pathname = "/accounting/main";
         navigate(pathname);
       },
     });
   };
 
   return {
-    createTransaction,
+    removeTransactions,
     loading,
   };
 };

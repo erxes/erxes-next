@@ -1,7 +1,3 @@
-// import { accountFields } from '../../settings/accounts/graphql/queries';
-// import { ctaxRowFields } from '../../settings/ctaxRows/graphql/queries';
-// import { vatRowFields } from '../../settings/vatRows/graphql/queries';
-
 import { gql } from '@apollo/client';
 
 const followTrType = `
@@ -223,7 +219,7 @@ const commonParams = `
 `;
 
 export const TRANSACTIONS_QUERY = gql`
-  query accTransactions(${trsFilterParamDefs}, ${commonParamDefs}) {
+  query AccTransactions(${trsFilterParamDefs}, ${commonParamDefs}) {
     accTransactions(${trsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
       ptrInfo
@@ -233,7 +229,7 @@ export const TRANSACTIONS_QUERY = gql`
 `;
 
 export const TR_RECORDS_QUERY = gql`
-  query accTrRecords(${trRecsFilterParamDefs}, ${commonParamDefs}) {
+  query AccTrRecords(${trRecsFilterParamDefs}, ${commonParamDefs}) {
     accTrRecords(${trRecsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
     }
