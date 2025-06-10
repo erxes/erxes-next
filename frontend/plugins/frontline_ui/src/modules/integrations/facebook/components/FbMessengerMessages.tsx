@@ -19,7 +19,6 @@ export const FbMessengerMessage = () => {
     separatePrevious,
     attachments,
   } = useFbMessengerMessageContext();
-  console.log(separateNext, 'separateNext');
 
   return (
     <MessageWrapper>

@@ -8,19 +8,19 @@ import { lazy, Suspense } from 'react';
 import { Link, useParams } from 'react-router';
 
 const ErxesMessengerDetail = lazy(() =>
-  import(
-    '~/modules/integrations/erxes-messenger/components/ErxesMessengerDetail'
-  ).then((module) => ({
-    default: module.ErxesMessengerDetail,
-  })),
+  import('@/integrations/erxes-messenger/components/ErxesMessengerDetail').then(
+    (module) => ({
+      default: module.ErxesMessengerDetail,
+    }),
+  ),
 );
 
 const FacebookIntegrationDetail = lazy(() =>
-  import(
-    '~/modules/integrations/facebook/components/FacebookIntegrationDetail'
-  ).then((module) => ({
-    default: module.FacebookIntegrationDetail,
-  })),
+  import('@/integrations/facebook/components/FacebookIntegrationDetail').then(
+    (module) => ({
+      default: module.FacebookIntegrationDetail,
+    }),
+  ),
 );
 
 export const IntegrationDetailPage = () => {

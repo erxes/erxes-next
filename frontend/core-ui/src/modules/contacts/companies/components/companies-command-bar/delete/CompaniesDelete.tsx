@@ -1,7 +1,5 @@
-import { Button } from 'erxes-ui/components';
+import { Button, useConfirm, useToast } from 'erxes-ui';
 import { IconTrash } from '@tabler/icons-react';
-import { useConfirm } from 'erxes-ui/hooks';
-import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { useRemoveCompanies } from '@/contacts/companies/hooks/useRemoveCompanies';
 import { Row } from '@tanstack/table-core';

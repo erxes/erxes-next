@@ -1,11 +1,16 @@
 import { IconTrash } from '@tabler/icons-react';
 
-import { Button, CommandBar, Separator, useConfirm } from 'erxes-ui';
-import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordTableProvider';
+import {
+  Button,
+  CommandBar,
+  Separator,
+  useConfirm,
+  RecordTable,
+} from 'erxes-ui';
 import { useRemoveUnit } from '../../hooks/useUnitActions';
 
 export const UnitsCommandBar = () => {
-  const { table } = useRecordTable();
+  const { table } = RecordTable.useRecordTable();
   const { handleRemove } = useRemoveUnit();
   const { confirm } = useConfirm();
 

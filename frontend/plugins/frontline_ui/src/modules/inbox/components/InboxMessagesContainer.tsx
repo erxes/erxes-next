@@ -1,4 +1,4 @@
-import { ScrollArea } from 'erxes-ui/components';
+import { ScrollArea } from 'erxes-ui';
 import { useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { InboxMessagesSkeleton } from './InboxMessagesSkeleton';

@@ -19,7 +19,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useAtom } from 'jotai';
-import { useToast } from 'erxes-ui/hooks';
+import { useToast, cn, Tabs } from 'erxes-ui';
 import { TableNode } from './tableNode';
 import {
   isFullscreenAtom,
@@ -28,14 +28,12 @@ import {
   syncSelectedNodeAtom,
 } from '../states/slot';
 import NodeControls from './nodeControl';
-import { cn } from 'erxes-ui/lib';
-import { Tabs } from 'erxes-ui/components';
 import SidebarList from './sideBar';
 import SidebarDetail from './sideBarDetail';
 import MiniMapToggle from './miniMap';
 import { CustomNode, TableNodeData } from '../types';
-import { usePosSlots } from '~/modules/hooks/usePosSlots';
-import { DefaultNode } from '~/modules/constants';
+import { usePosSlots } from '@/hooks/usePosSlots';
+import { DefaultNode } from '@/constants';
 
 interface POSSlotsManagerProps {
   posId: string;

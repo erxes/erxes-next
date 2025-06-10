@@ -1,4 +1,4 @@
-import { Skeleton } from 'erxes-ui/components/skeleton';
+import { Skeleton } from 'erxes-ui';
 import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 
 export const IntegrationTotalCountByKind = ({

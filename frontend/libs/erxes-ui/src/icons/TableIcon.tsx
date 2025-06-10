@@ -30,7 +30,8 @@ interface IconProps
 
 const TablerIcon = React.forwardRef<HTMLButtonElement, IconProps>(
   ({ name, className, size, ...props }, ref) => {
-    const IconComponent = name;
+    const Icons: any = TablerIcon;
+    const IconComponent = Icons[name];
 
     if (!IconComponent) {
       // Return a default icon or null if the icon name is not found

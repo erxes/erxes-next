@@ -1,9 +1,13 @@
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { IconGitBranch } from '@tabler/icons-react';
 import { Command } from 'cmdk';
-import { Combobox, Filter, PageSubHeader, useFilterContext } from 'erxes-ui';
-import { useFilterQueryState } from 'erxes-ui/modules/filter/hooks/useFilterQueryState';
-import React from 'react';
+import {
+  Combobox,
+  Filter,
+  PageSubHeader,
+  useFilterContext,
+  useFilterQueryState,
+} from 'erxes-ui';
 import { SelectDepartment, SelectDepartmentCommand } from 'ui-modules';
 import { DepartmentsTotalCount } from './DepartmentsTotalCount';
 

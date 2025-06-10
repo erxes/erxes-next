@@ -4,8 +4,12 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { screenConfigSettingsAtom } from '../../states/posCategory';
 import { useEffect, useState } from 'react';
-import { IPosDetail, IScreenConfig } from '~/modules/pos-detail.tsx/types/IPos';
-import { KITCHEN_TYPE_OPTIONS, SHOW_TYPE_OPTIONS, WAITING_TYPE_OPTIONS } from '~/modules/constants';
+import { IPosDetail, IScreenConfig } from '@/pos-detail.tsx/types/IPos';
+import {
+  KITCHEN_TYPE_OPTIONS,
+  SHOW_TYPE_OPTIONS,
+  WAITING_TYPE_OPTIONS,
+} from '@/constants';
 
 interface ScreenConfigFormProps {
   posDetail?: IPosDetail;
