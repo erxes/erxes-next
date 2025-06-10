@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { ATTACHMENT_GQL } from 'erxes-ui';
 
 export const GET_CONVERSATION_MESSAGES = gql`
   query ConversationMessages(
@@ -16,11 +17,7 @@ export const GET_CONVERSATION_MESSAGES = gql`
       _id
       content
       formWidgetData
-      attachments {
-        name
-        type
-        url
-      }
+      ${ATTACHMENT_GQL}
       internal
       createdAt
       isCustomerRead

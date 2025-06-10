@@ -1,10 +1,10 @@
 import { RecordTable } from 'erxes-ui';
 
 import { productColumns } from '@/products/components/ProductColumns';
-import { ProductCommandBar } from '@/products/components/ProductCommandBar';
+import { ProductCommandBar } from '@/products/components/product-command-bar/ProductCommandBar';
 import { useProducts } from '@/products/hooks/useProducts';
 export const ProductsRecordTable = () => {
-  const { products, handleFetchMore, loading, pageInfo } = useProducts();
+  const { productsMain, handleFetchMore, loading, pageInfo } = useProducts();
 
   const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
     pageInfo || {};
@@ -12,7 +12,7 @@ export const ProductsRecordTable = () => {
   return (
     <RecordTable.Provider
       columns={productColumns}
-      data={products || []}
+      data={productsMain || []}
       className="m-3"
       stickyColumns={['more', 'checkbox', 'name']}
     >
@@ -20,7 +20,7 @@ export const ProductsRecordTable = () => {
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
         loading={loading}
-        dataLength={products?.length}
+        dataLength={productsMain?.length}
         sessionKey="products_cursor"
       >
         <RecordTable>

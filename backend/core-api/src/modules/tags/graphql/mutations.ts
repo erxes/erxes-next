@@ -56,6 +56,7 @@ export const tagMutations = {
         company: models.Companies,
         form: models.Forms,
         product: models.Products,
+        automation: models.Automations,
       };
 
       const model = modelMap[contentType];

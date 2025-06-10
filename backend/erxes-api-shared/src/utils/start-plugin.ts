@@ -6,14 +6,18 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { AnyRouter } from '@trpc/server/dist/unstable-core-do-not-import';
 import cookieParser from 'cookie-parser';
+
 import cors from 'cors';
 import express, {
+  Router,
   Request as ApiRequest,
   Response as ApiResponse,
   Application,
 } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import * as http from 'http';
+import * as path from 'path';
+
 import {
   SegmentConfigs,
   startAutomations,
@@ -57,6 +61,7 @@ type ConfigTypes = {
     resolvers: GraphqlResolver;
     typeDefs: DocumentNode;
   }>;
+  expressRouter?: Router;
   apolloServerContext: (
     subdomain: string,
     context: any,
@@ -99,6 +104,10 @@ export async function startPlugin(
   app.get('/health', async (_req, res) => {
     res.end('ok');
   });
+
+  if (configs.expressRouter) {
+    app.use(configs.expressRouter);
+  }
 
   if (configs.middlewares) {
     for (const middleware of configs.middlewares) {
@@ -145,11 +154,15 @@ export async function startPlugin(
     }
   }
 
-  // if (configs.hasSubscriptions) {
-  //   app.get('/subscriptionPlugin.js', async (req, res) => {
-  //     res.sendFile(path.join(configs.subscriptionPluginPath));
-  //   });
-  // }
+  if (configs.hasSubscriptions) {
+    console.log(
+      'configs.subscriptionPluginPath',
+      configs.subscriptionPluginPath,
+    );
+    app.get('/subscriptionPlugin.js', async (_req, res) => {
+      res.sendFile(path.join(configs.subscriptionPluginPath));
+    });
+  }
 
   if (configs.trpcAppRouter) {
     app.use(
@@ -171,15 +184,15 @@ export async function startPlugin(
     next();
   });
 
-  // Error handling middleware
-  app.use((error: any, _req: any, res: any, _next: any) => {
-    // const msg = filterXSS(error.message);
-    const msg = error.message;
+  // // Error handling middleware
+  // app.use((error: any, _req: any, res: any) => {
+  //   // const msg = filterXSS(error.message);
+  //   const msg = error.message;
 
-    // debugError(`Error: ${msg}`);
+  //   // debugError(`Error: ${msg}`);
 
-    res.status(500).send(msg);
-  });
+  //   res.status(500).send(msg);
+  // });
 
   const httpServer = http.createServer(app);
 

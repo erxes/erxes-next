@@ -6,7 +6,7 @@ import {
 } from 'erxes-ui';
 
 export const GET_CUSTOMERS = gql`
-  query customers(
+  query customersRecordTable(
     $segment: String
     $tagIds: [String]
     $type: String
@@ -75,6 +75,7 @@ export const GET_CUSTOMERS = gql`
         customFieldsData
         trackedData
         tagIds
+        cursor
       }
       ${GQL_PAGE_INFO}
     }

@@ -36,10 +36,7 @@ export const CustomersHeader = () => {
             </Breadcrumb.Page>
           )}
         </ContactsBreadcrumb>
-        <PageHeader.FavoriteToggleButton
-          type="module"
-          item={pathname.includes(ContactsPath.Leads) ? 'leads' : 'customers'}
-        />
+        <PageHeader.FavoriteToggleButton />
       </PageHeader.Start>
       <PageHeader.End>
         <CustomerAddSheet />

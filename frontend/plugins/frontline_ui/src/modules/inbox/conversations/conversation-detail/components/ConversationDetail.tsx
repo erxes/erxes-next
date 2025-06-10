@@ -9,8 +9,10 @@ import { activeConversationState } from '@/inbox/conversations/states/activeConv
 import { ConversationDetailLayout } from './ConversationDetailLayout';
 import { ConversationIntegrationDetail } from './ConversationIntegrationDetail';
 import { MessageInput } from './MessageInput';
-import { MessagesSkeleton } from '@/inbox/conversation-messages/components/MessagesSkeleton';
+
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
+import { InboxMessagesSkeleton } from '@/inbox/components/InboxMessagesSkeleton';
+import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -27,12 +29,19 @@ export const ConversationDetail = () => {
     skip: !conversationId,
   });
 
-  const { integration } = currentConversation || conversationDetail || {};
+  const { integrationId } = currentConversation || conversationDetail || {};
 
-  if (loading && !currentConversation) {
+  const { integration, loading: integrationLoading } = useIntegrationDetail({
+    variables: {
+      _id: integrationId,
+    },
+    skip: !integrationId,
+  });
+
+  if (loading && !currentConversation && !integrationLoading) {
     return (
       <div className="relative h-full">
-        <MessagesSkeleton />
+        <InboxMessagesSkeleton />
       </div>
     );
   }
@@ -54,9 +63,10 @@ export const ConversationDetail = () => {
           <ConversationHeader />
           <Separator />
           <ConversationDetailLayout input={<MessageInput />}>
-            {['messenger', 'lead'].includes(integration?.kind) && (
-              <ConversationMessages />
-            )}
+            {integration?.kind &&
+              ['messenger', 'lead'].includes(integration?.kind) && (
+                <ConversationMessages />
+              )}
             <ConversationIntegrationDetail />
           </ConversationDetailLayout>
         </ConversationContext.Provider>

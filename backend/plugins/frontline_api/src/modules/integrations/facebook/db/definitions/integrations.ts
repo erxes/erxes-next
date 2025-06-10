@@ -6,17 +6,17 @@ export const integrationSchema = new Schema({
   accountId: String,
   erxesApiId: String,
   emailScope: String,
-  facebookPageIds: ({
+  facebookPageIds: {
     type: [String],
     label: 'Facebook page ids',
-    optional: true
-  }),
+    optional: true,
+  },
   email: String,
   expiration: String,
-  facebookPageTokensMap: ({
+  facebookPageTokensMap: {
     type: Object,
-    default: {}
-  }),
+    default: {},
+  },
   healthStatus: String,
-  error: String
+  error: String,
 });

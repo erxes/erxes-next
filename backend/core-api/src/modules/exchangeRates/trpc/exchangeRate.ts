@@ -1,8 +1,8 @@
 import { initTRPC } from '@trpc/server';
-import { ITRPCContext } from 'erxes-api-shared/utils';
 import { z } from 'zod';
+import { CoreTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const exchangeRateTrpcRouter = t.router({
   exchangeRates: t.router({

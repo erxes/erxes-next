@@ -14,6 +14,7 @@ import { useAddCustomer } from '@/contacts/customers/hooks/useAddCustomer';
 import { ContactsPath } from '@/types/paths/ContactsPath';
 import { ApolloError } from '@apollo/client';
 import { useLocation } from 'react-router-dom';
+import { useQueryState } from 'erxes-ui';
 
 export function AddCustomerForm({
   onOpenChange,
@@ -27,6 +28,7 @@ export function AddCustomerForm({
     resolver: zodResolver(customerFormSchema),
   });
   const { toast } = useToast();
+  const [, setCustomerId] = useQueryState('contactId');
 
   const onSubmit = (data: CustomerFormType) => {
     const state = pathname.includes(ContactsPath.Leads) ? 'lead' : 'customer';
@@ -42,9 +44,10 @@ export function AddCustomerForm({
           description: e.message,
         });
       },
-      onCompleted: () => {
+      onCompleted: (data) => {
         form.reset();
         onOpenChange?.(false);
+        setCustomerId(data?.customersAdd._id);
       },
     });
   };
@@ -61,7 +64,7 @@ export function AddCustomerForm({
             <CustomerAddGeneralInformationFields form={form} />
           </AddCustomerFormTabs>
         </Sheet.Content>
-        <Sheet.Footer className="flex justify-end flex-shrink-0 px-5 gap-1">
+        <Sheet.Footer className="flex justify-end flex-shrink-0 gap-1 px-5">
           <Button
             type="button"
             variant="ghost"

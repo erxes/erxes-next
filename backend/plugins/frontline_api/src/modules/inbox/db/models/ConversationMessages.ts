@@ -1,4 +1,4 @@
-import * as strip from 'strip';
+import { stripHtml } from 'string-strip-html';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { messageSchema } from '@/inbox/db/definitions/conversationMessages';
@@ -99,18 +99,16 @@ export const loadClass = (models: IModels) => {
         throw new Error(`Conversation not found with id ${doc.conversationId}`);
       }
 
-      // normalize content, attachments
       const content = doc.content || '';
       const attachments = doc.attachments || [];
 
       doc.content = content;
       doc.attachments = attachments;
 
-      // <img> tags wrapped inside empty <p> tag should be allowed
-      const contentValid =
-        content.indexOf('<img') !== -1 ? true : strip(content);
+      const contentValid = content.includes('<img')
+        ? true
+        : stripHtml(content).result.trim().length > 0;
 
-      // if there is no attachments and no content then throw content required error
       if (
         doc.contentType !== MESSAGE_TYPES.VIDEO_CALL &&
         attachments.length === 0 &&
@@ -119,7 +117,6 @@ export const loadClass = (models: IModels) => {
         throw new Error('Content is required');
       }
 
-      // setting conversation's content to last message & first responded user
       const modifier: {
         content?: string;
         firstRespondedUserId?: string;

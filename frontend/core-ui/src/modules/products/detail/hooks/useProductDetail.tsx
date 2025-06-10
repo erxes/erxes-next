@@ -8,7 +8,7 @@ export const useProductDetail = (operationVariables?: OperationVariables) => {
   const [searchParams] = useSearchParams();
   const _id = searchParams.get('product_id');
   const setRendering = useSetAtom(renderingProductDetailAtom);
-  const { data, loading, error } = useQuery(productCategoryDetail, {
+  const { data, loading, error, refetch } = useQuery(productCategoryDetail, {
     variables: {
       _id,
     },
@@ -23,5 +23,5 @@ export const useProductDetail = (operationVariables?: OperationVariables) => {
       operationVariables?.onError?.(error);
     },
   });
-  return { productDetail: data?.productDetail ?? null, loading, error };
+  return { productDetail: data?.productDetail ?? null, loading, error, refetch };
 };

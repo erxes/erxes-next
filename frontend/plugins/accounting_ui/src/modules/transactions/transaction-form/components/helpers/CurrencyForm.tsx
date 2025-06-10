@@ -6,12 +6,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { TrJournalEnum, TR_SIDES } from '../../../types/constants';
 import { followTrDocsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
+import { ITransactionGroupForm } from '../../types/JournalForms';
 import { getTempId, getTrSide } from '../utils';
 import { ITransaction } from '../../../types/Transaction';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 
-export const CurrencyForm = ({
+const CurrencyFormBody = ({
   form,
   journalIndex,
 }: {
@@ -79,18 +79,20 @@ export const CurrencyForm = ({
   };
 
   useEffect(() => {
-    if (
-      spotRate &&
-      amount &&
-      amount !== spotRate * (detail.currencyAmount || 0)
-    ) {
+    form.setValue(`trDocs.${journalIndex}.details.0.amount`, spotRate * (detail.currencyAmount ?? 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spotRate]);
+
+  useEffect(() => {
+    if (spotRate) {
       setChangingAmount(true);
       form.setValue(
         `trDocs.${journalIndex}.details.0.currencyAmount`,
         amount / spotRate,
       );
     }
-  }, [amount, form, journalIndex, spotRate, detail.currencyAmount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount]);
 
   useEffect(() => {
     if (!diffAmount) {
@@ -115,7 +117,7 @@ export const CurrencyForm = ({
       followType: 'currencyDiff',
       details: [{
         ...(curr?.details || [{}])[0],
-        accountId: (detail?.followInfos as any).currencyDiffAccountId ?? '',
+        accountId: (detail?.followInfos as any)?.currencyDiffAccountId ?? '',
         side,
         amount: diffAmount
       }],
@@ -125,14 +127,8 @@ export const CurrencyForm = ({
     };
 
     setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'currencyDiff')), currencyDiffFtr]);
-  }, [detail, diffAmount, followTrDocs, form, journalIndex, setFollowTrDocs, side, trDoc]);
-
-  if (
-    !detail?.account?.currency ||
-    detail?.account?.currency === mainCurrency
-  ) {
-    return null;
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detail, diffAmount, side]);
 
   return (
     <>
@@ -200,4 +196,32 @@ export const CurrencyForm = ({
       )}
     </>
   );
+}
+
+export const CurrencyForm = ({
+  form,
+  journalIndex,
+}: {
+  form: ITransactionGroupForm;
+  journalIndex: number;
+}) => {
+  const account = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}.details.0.account`,
+  });
+
+  const mainCurrency = 'MNT';
+
+  if (
+    !account?.currency ||
+    account?.currency === mainCurrency
+  ) {
+    return null;
+  }
+
+  return <CurrencyFormBody
+    form={form}
+    journalIndex={journalIndex}
+  />
+
 };

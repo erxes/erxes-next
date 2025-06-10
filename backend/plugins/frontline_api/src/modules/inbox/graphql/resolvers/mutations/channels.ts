@@ -1,4 +1,9 @@
-import { IChannelDocument, IChannel } from '@/inbox/@types/channels';
+import {
+  IChannelDocument,
+  IChannel,
+  IChannelsEdit,
+} from '@/inbox/@types/channels';
+import { checkUserIds } from 'erxes-api-shared/utils';
 
 import { IContext } from '~/connectionResolvers';
 
@@ -29,6 +34,7 @@ export const channelMutations = {
     { user, models, subdomain }: IContext,
   ) {
     const channel = await models.Channels.createChannel(doc, user._id);
+    await sendChannelNotifications(subdomain, channel, 'invited', user);
 
     return channel;
   },
@@ -38,12 +44,32 @@ export const channelMutations = {
    */
   async channelsEdit(
     _root,
-    { _id, ...doc }: any,
+    { _id, ...doc }: IChannelsEdit,
     { user, models, subdomain }: IContext,
   ) {
     const channel = await models.Channels.getChannel(_id);
 
+    const { addedUserIds, removedUserIds } = checkUserIds(
+      channel.memberIds || [],
+      doc.memberIds || [],
+    );
+
     const updated = await models.Channels.updateChannel(_id, doc);
+
+    await sendChannelNotifications(
+      subdomain,
+      channel,
+      'invited',
+      user,
+      addedUserIds,
+    );
+    await sendChannelNotifications(
+      subdomain,
+      channel,
+      'removed',
+      user,
+      removedUserIds,
+    );
 
     return updated;
   },
@@ -56,6 +82,8 @@ export const channelMutations = {
     { _id }: { _id: string },
     { user, models, subdomain }: IContext,
   ) {
+    const channel = await models.Channels.getChannel(_id);
+    await sendChannelNotifications(subdomain, channel, 'removed', user);
     await models.Channels.removeChannel(_id);
     return true;
   },

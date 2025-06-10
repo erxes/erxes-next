@@ -35,9 +35,8 @@ export interface RPError {
 export type RPResult = RPSuccess | RPError;
 export type RP = (params: InterMessage) => RPResult | Promise<RPResult>;
 
-export type IContext = {
+type TRPCContext = {
   subdomain: string;
-  models?: any;
 };
 
 export const sendTRPCMessage = async ({
@@ -72,13 +71,13 @@ export const createTRPCContext =
   <TContext>(
     trpcContext: (
       subdomain: string,
-      context: IContext,
-    ) => Promise<TContext & IContext>,
+      context: any,
+    ) => Promise<TContext & TRPCContext>,
   ) =>
   async ({ req }: trpcExpress.CreateExpressContextOptions) => {
     const subdomain = getSubdomain(req);
 
-    const context: IContext = {
+    const context: TRPCContext = {
       subdomain,
     };
 
@@ -86,7 +85,9 @@ export const createTRPCContext =
       return await trpcContext(subdomain, context);
     }
 
-    return context;
+    return context as TContext & TRPCContext;
   };
 
-export type ITRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
+export type ITRPCContext<TExtraContext = {}> = Awaited<
+  ReturnType<typeof createTRPCContext<TExtraContext>>
+>;

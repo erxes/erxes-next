@@ -1,7 +1,7 @@
 import { AccountKind, JournalEnum } from '@/settings/account/types/Account';
 import { TR_SIDES } from '../../../types/constants';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
-import { CustomerFields } from '../CustomerFields';
+import { ITransactionGroupForm } from '../../types/JournalForms';
+import { CustomerFields } from '../helpers/CustomerFields';
 import {
   AccountField,
   AmountField,

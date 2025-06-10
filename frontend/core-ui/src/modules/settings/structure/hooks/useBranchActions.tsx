@@ -1,4 +1,9 @@
-import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
+import {
+  ApolloCache,
+  MutationHookOptions,
+  OperationVariables,
+  useMutation,
+} from '@apollo/client';
 import {
   ADD_BRANCH,
   EDIT_BRANCH,
@@ -96,7 +101,7 @@ export function useRemoveBranch() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_BRANCHES, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: [GET_BRANCHES_LIST],
+    refetchQueries: ['branchesMain'],
   });
 
   return {
@@ -104,4 +109,30 @@ export function useRemoveBranch() {
     loading,
     error,
   };
+}
+
+export function useBranchInlineEdit() {
+  const [_branchesEdit, { loading }] = useMutation(EDIT_BRANCH);
+
+  const branchesEdit = (
+    operationVariables: OperationVariables,
+    fields: string[],
+  ) => {
+    const variables = operationVariables?.variables || {};
+    const fieldsToUpdate: Record<string, () => any> = {};
+    fields.forEach((field) => {
+      fieldsToUpdate[field] = () => variables[field];
+    });
+    return _branchesEdit({
+      ...operationVariables,
+      variables,
+      update: (cache, { data: { branchesEdit } }) => {
+        cache.modify({
+          id: cache.identify(branchesEdit),
+          fields: fieldsToUpdate,
+        });
+      },
+    });
+  };
+  return { branchesEdit, loading };
 }

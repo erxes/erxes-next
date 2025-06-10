@@ -9,6 +9,7 @@ import {
   ILeadData,
   IMessengerData,
   IUiOptions,
+  ITicketData
 } from '@/inbox/@types/integrations';
 import { integrationSchema } from '@/inbox/db/definitions/integrations';
 export interface IMessengerIntegration {
@@ -97,6 +98,10 @@ export interface IIntegrationModel extends Model<IIntegrationDocument> {
   updateMessengerIntegration(
     _id: string,
     doc: IIntegration,
+  ): Promise<IIntegrationDocument>;
+ integrationsSaveMessengerTicketData(
+    _id: string,
+    doc: ITicketData
   ): Promise<IIntegrationDocument>;
   saveMessengerAppearanceData(
     _id: string,
@@ -285,6 +290,41 @@ export const loadClass = (models: IModels, subdomain: string) => {
 
       return models.Integrations.findOne({ _id });
     }
+
+      public static async integrationsSaveMessengerTicketData(
+      _id: string,
+      {
+        ticketLabel,
+        ticketToggle,
+        ticketStageId,
+        ticketPipelineId,
+        ticketBoardId
+      }: ITicketData
+    ) {
+        const result = await models.Integrations.updateOne(
+        { _id },
+        {
+          $set: {
+            ticketData: {
+              ticketLabel,
+              ticketToggle,
+              ticketStageId,
+              ticketPipelineId,
+              ticketBoardId
+            }
+          }
+        },
+        { runValidators: true }
+      );
+    
+        if (!result.acknowledged) {
+        throw new Error('Failed to update ticket data');
+        }
+
+      return models.Integrations.findOne({ _id });
+
+    }
+
 
     /**
      * Save messenger appearance data

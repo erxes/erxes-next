@@ -1,12 +1,18 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { configSchema } from '@/integrations/facebook/db/definitions/config';
-import {IFacebookConfigDocument,IFacebookConfig} from '@/integrations/facebook/@types/config';
+import {
+  IFacebookConfigDocument,
+  IFacebookConfig,
+} from '@/integrations/facebook/@types/config';
 
 export interface IFacebookConfigModel extends Model<IFacebookConfigDocument> {
   getConfig(code: string): Promise<IFacebookConfigDocument>;
   updateConfigs(configsMap): Promise<void>;
-  createOrUpdateConfig({ code, value }: IFacebookConfig): IFacebookConfigDocument;
+  createOrUpdateConfig({
+    code,
+    value,
+  }: IFacebookConfig): IFacebookConfigDocument;
 }
 
 export const loadFacebookConfigClass = (models: IModels) => {
@@ -29,7 +35,7 @@ export const loadFacebookConfigClass = (models: IModels) => {
      */
     public static async createOrUpdateConfig({
       code,
-      value
+      value,
     }: {
       code: string;
       value: string[];
@@ -37,7 +43,10 @@ export const loadFacebookConfigClass = (models: IModels) => {
       const obj = await models.FacebookConfigs.findOne({ code });
 
       if (obj) {
-        await models.FacebookConfigs.updateOne({ _id: obj._id }, { $set: { value } });
+        await models.FacebookConfigs.updateOne(
+          { _id: obj._id },
+          { $set: { value } },
+        );
 
         return models.FacebookConfigs.findOne({ _id: obj._id });
       }

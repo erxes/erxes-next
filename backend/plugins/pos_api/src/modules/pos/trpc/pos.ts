@@ -1,8 +1,8 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
-import { ITRPCContext } from 'erxes-api-shared/utils';
+import { PosTRPCContext } from '~/init-trpc';
 
-const t = initTRPC.context<ITRPCContext>().create();
+const t = initTRPC.context<PosTRPCContext>().create();
 
 export const inboxTrpcRouter = t.router({
   inbox: t.router({

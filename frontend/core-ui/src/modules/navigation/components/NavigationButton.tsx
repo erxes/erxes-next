@@ -3,47 +3,49 @@ import { Icon, IconCaretDownFilled } from '@tabler/icons-react';
 import { cn, Sidebar } from 'erxes-ui';
 import { Link, useLocation } from 'react-router';
 
-export const NavigationButton = ({
-  pathPrefix,
-  pathname,
-  name,
-  icon,
-  isFavorite,
-}: {
+interface NavigationButtonProps {
   pathPrefix?: string;
   pathname: string;
   name: string;
   icon: Icon;
   isFavorite?: boolean;
-}) => {
-  const Icon = icon;
-  const activePathname = useLocation().pathname;
-  const pathnameWithSlash = '/' + pathname;
+}
 
+export const NavigationButton = ({
+  pathPrefix,
+  pathname,
+  name,
+  icon: IconComponent,
+  isFavorite,
+}: NavigationButtonProps) => {
+  const { pathname: activePathname } = useLocation();
+  const pathnameWithSlash = `/${pathname}`;
   const pathnameWithPrefix = pathPrefix
-    ? '/' + pathPrefix + pathnameWithSlash
+    ? `/${pathPrefix}${pathnameWithSlash}`
     : pathnameWithSlash;
 
   const isActive = activePathname === pathnameWithPrefix;
-
   const isSubItemActive =
-    !isFavorite &&
-    !isActive &&
-    activePathname.includes(pathnameWithPrefix) &&
-    !activePathname.includes(SettingsPath.Index);
+    !isFavorite && !isActive && activePathname.includes(pathnameWithPrefix);
+  const isSettingsIndexActive = activePathname.includes(SettingsPath.Index);
+  const shouldShowCaret = isSubItemActive && !isSettingsIndexActive;
+  const isIconActive = isActive || (isSubItemActive && isSettingsIndexActive);
 
   return (
     <Sidebar.MenuButton
       asChild
-      isActive={isActive}
+      isActive={isIconActive}
       className={cn(isSubItemActive && 'bg-muted')}
     >
       <Link to={pathnameWithPrefix}>
-        {isSubItemActive ? (
+        {shouldShowCaret ? (
           <IconCaretDownFilled className="text-accent-foreground" />
         ) : (
-          <Icon
-            className={cn('text-accent-foreground', isActive && 'text-primary')}
+          <IconComponent
+            className={cn(
+              'text-accent-foreground',
+              isIconActive && 'text-primary',
+            )}
           />
         )}
         <span className="capitalize">{name}</span>

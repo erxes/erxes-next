@@ -1,14 +1,18 @@
 import { useFormContext } from 'react-hook-form';
-import { Form, Input, Textarea } from 'erxes-ui';
+import { Form, Input, Skeleton, Textarea } from 'erxes-ui';
 import {
   AssignMember,
   AssignMultipleMembers,
-  SelectDepartment,
+  SelectDepartmentTree,
 } from 'ui-modules';
 import { TDepartmentForm } from '../../types/department';
 
-export const DepartmentForm = () => {
+export const DepartmentForm = ({ loading }: { loading: boolean }) => {
   const { control } = useFormContext<TDepartmentForm>();
+
+  if (loading) {
+    return <Skeleton className="w-full h-full" />;
+  }
 
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -74,9 +78,10 @@ export const DepartmentForm = () => {
           <Form.Item>
             <Form.Label>{'Parent'}</Form.Label>
             <Form.Control>
-              <SelectDepartment
-                value={field.value}
-                onValueChange={field.onChange}
+              <SelectDepartmentTree
+                recordId={'parentId'}
+                selected={field.value}
+                onSelect={field.onChange}
               />
             </Form.Control>
             <Form.Message />

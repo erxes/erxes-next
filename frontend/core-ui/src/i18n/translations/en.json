@@ -34,6 +34,8 @@
       "odds": "Odd Transactions"
     },
     "sample": "Sample",
-    "modules": "Modules"
+    "modules": "Modules",
+    "pms": "PMS",
+    "tms": "TMS"
   }
 }

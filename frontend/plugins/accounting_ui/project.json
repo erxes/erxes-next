@@ -7,7 +7,9 @@
   "targets": {
     "build": {
       "executor": "@nx/rspack:rspack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "target": "web",
@@ -15,7 +17,9 @@
         "main": "frontend/plugins/accounting_ui/src/main.ts",
         "tsConfig": "frontend/plugins/accounting_ui/tsconfig.app.json",
         "rspackConfig": "frontend/plugins/accounting_ui/rspack.config.ts",
-        "assets": []
+        "assets": [
+          "frontend/plugins/accounting_ui/src/assets"
+        ]
       },
       "configurations": {
         "development": {

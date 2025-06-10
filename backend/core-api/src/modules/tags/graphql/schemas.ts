@@ -1,6 +1,8 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
     type Tag @key(fields: "_id") @cacheControl(maxAge: 3) {
-    _id: String!
+    _id: String
     name: String
     type: String
     colorCode: String
@@ -10,6 +12,8 @@ export const types = `
     parentId: String
     order: String
     relatedIds: [String]
+
+    cursor: String
   }
 
   type TagsListResponse {
@@ -20,18 +24,16 @@ export const types = `
 `;
 
 const queryParams = `
-    type: String,
-    searchValue: String,
-    tagIds: [String],
-    parentId: String,
-    ids: [String],
-    excludeIds: Boolean,
+  type: String,
+  searchValue: String,
+  tagIds: [String],
+  parentId: String,
+  ids: [String],
+  excludeIds: Boolean,
 
-    sortField: String,
- 
-    limit: Int,
-    cursor: String,
-    direction: CURSOR_DIRECTION,
+  sortField: String,
+
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `

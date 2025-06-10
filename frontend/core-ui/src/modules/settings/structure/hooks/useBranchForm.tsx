@@ -10,23 +10,6 @@ export const useBranchForm = () => {
       title: '',
       address: '',
       code: '',
-      supervisorId: '',
-      parentId: '',
-      userIds: undefined,
-      phoneNumber: '',
-      email: '',
-      coordinate: {
-        latitude: '',
-        longitude: '',
-      },
-      links: {
-        website: '',
-        facebook: '',
-        whatsapp: '',
-        twitter: '',
-        youtube: '',
-      },
-      radius: undefined,
     },
     resolver: zodResolver(BRANCH_CREATE_SCHEMA),
   });
