@@ -1,4 +1,4 @@
-import { TypeExtensions } from '../../modules/inbox/graphql/schemas/extensions';
+// import { TypeExtensions } from '../../modules/inbox/graphql/schemas/extensions';
 import {
   mutations as ChannelsMutations,
   queries as ChannelsQueries,
@@ -24,7 +24,6 @@ import {
 } from '@/integrations/facebook/graphql/schema/facebook';
 
 export const types = `
-    ${TypeExtensions}
     ${ChannelsTypes}
     ${ConversationsTypes}
     ${IntegrationsTypes}

@@ -1,6 +1,10 @@
 import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
+  extend type User @key(fields: "_id") {
+    _id: String @external
+  }
+
   extend type Customer @key(fields: "_id") {
     _id: String @external
     conversations: [Conversation]
