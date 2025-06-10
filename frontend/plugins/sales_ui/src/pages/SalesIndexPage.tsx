@@ -7,9 +7,10 @@ import {
 } from 'erxes-ui';
 import { IconSandbox, IconSettings } from '@tabler/icons-react';
 
+import DealsMain from '~/modules/deals/Main';
 import { Link } from 'react-router-dom';
+import MainActionBar from '~/modules/deals/actionBar/components/MainActionBar';
 import { PageHeader } from 'ui-modules';
-import { SalesList } from '~/modules/deals/List';
 
 export const SalesIndexPage = (...props: any) => {
   return (
@@ -41,8 +42,10 @@ export const SalesIndexPage = (...props: any) => {
         </PageHeader.End>
       </PageHeader>
       <PageContainer>
-        <PageSubHeader>haha</PageSubHeader>
-        <SalesList />
+        <PageSubHeader>
+          <MainActionBar />
+        </PageSubHeader>
+        <DealsMain />
       </PageContainer>
     </div>
   );

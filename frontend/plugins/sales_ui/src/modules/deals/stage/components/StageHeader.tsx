@@ -1,7 +1,7 @@
 import { Button, DropdownMenu, Sheet } from 'erxes-ui';
 import { IconDots, IconPlus } from '@tabler/icons-react';
 
-import { AddCustomerForm } from '../cards/AddCardForm';
+import { AddCustomerForm } from '../../cards/AddCardForm';
 import { useState } from 'react';
 
 type Props = {

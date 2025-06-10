@@ -15,33 +15,33 @@ export const stages = [
 
 export const cards = [
   {
-    _id: "1",
+    _id: "11",
     title: "Test 1",
     stageId: "1"
   },
   {
-    _id: "2",
+    _id: "12",
     title: "Test 2",
     stageId: "1"
   },
   {
-    _id: "3",
+    _id: "13",
     title: "Test 3",
     stageId: "1"
   },
   {
-    _id: "1",
-    title: "Test 13",
+    _id: "14",
+    title: "Test 4",
     stageId: "2"
   },
   {
-    _id: "2",
-    title: "Test 22",
+    _id: "15",
+    title: "Test 5",
     stageId: "3"
   },
   {
-    _id: "3",
-    title: "Test 33",
+    _id: "16",
+    title: "Test 6",
     stageId: "3"
   }
 ];
