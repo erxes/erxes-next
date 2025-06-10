@@ -209,15 +209,10 @@ export const getOrCreateComment = async (
     };
     await pConversationClientMessageInserted(subdomain, doc);
 
-    const publish = graphqlPubsub.publish as <T>(
-      trigger: string,
-      payload: T,
-    ) => Promise<void>;
-
-    await publish(
-      `conversationClientMessageInserted:${conversation.erxesApiId}`,
+    graphqlPubsub.publish(
+      `conversationMessageInserted:${conversation.erxesApiId}`,
       {
-        conversationClientMessageInserted: {
+        conversationMessageInserted: {
           ...conversation?.toObject(),
           conversationId: conversation.erxesApiId,
         },

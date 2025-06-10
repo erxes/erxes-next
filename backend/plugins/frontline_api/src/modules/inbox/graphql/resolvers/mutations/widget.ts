@@ -42,24 +42,22 @@ export const pConversationClientMessageInserted = async (
     console.warn(`Conversation not found for message: ${message._id}`);
     return;
   }
-  (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-    `conversationMessageInserted:${conversation._id}`,
-    {
-      conversationMessageInserted: message,
-      subdomain,
-      conversation,
-      integration,
-    },
-  );
+  graphqlPubsub.publish(`conversationMessageInserted:${conversation._id}`, {
+    conversationMessageInserted: message,
+    subdomain,
+    conversation,
+    integration,
+  });
 
   for (const userId of channelMemberIds) {
-    await (
-      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
-    )(`conversationClientMessageInserted:${subdomain}:${userId}`, {
-      conversationClientMessageInserted: message,
-      subdomain,
-      conversation,
-      integration,
-    });
+    graphqlPubsub.publish(
+      `conversationClientMessageInserted:${subdomain}:${userId}`,
+      {
+        conversationClientMessageInserted: message,
+        subdomain,
+        conversation,
+        integration,
+      },
+    );
   }
 };
