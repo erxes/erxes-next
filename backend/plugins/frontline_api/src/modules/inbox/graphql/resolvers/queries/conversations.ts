@@ -245,10 +245,8 @@ export const conversationQueries = {
   async conversationsTotalUnreadCount(
     _root,
     _args,
-    { user, models, subdomain, serverTiming }: IContext,
+    { user, models, subdomain }: IContext,
   ) {
-    serverTiming.startTime('buildQuery');
-
     // initiate query builder
     const qb = new QueryBuilder(
       models,
@@ -259,16 +257,8 @@ export const conversationQueries = {
 
     await qb.buildAllQueries();
 
-    serverTiming.endTime('buildQuery');
-
-    serverTiming.startTime('integrationFilter');
-
     // get all possible integration ids
     const integrationsFilter = await qb.integrationsFilter();
-
-    serverTiming.endTime('integrationFilter');
-
-    serverTiming.startTime('query');
 
     const response = await models.Conversations.countDocuments({
       ...integrationsFilter,
@@ -276,8 +266,6 @@ export const conversationQueries = {
       readUserIds: { $ne: user._id },
       $and: [{ $or: qb.userRelevanceQuery() }],
     });
-
-    serverTiming.endTime('query');
 
     return response;
   },
