@@ -1,28 +1,28 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
 import { RedisPubSub } from 'graphql-redis-subscriptions';
-import { PubSub } from 'graphql-subscriptions';
 import Redis from 'ioredis';
 
-const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, SKIP_REDIS } = process.env;
-const skipRedis = SKIP_REDIS === 'true';
+// load environment variables
+dotenv.config();
 
-export const graphqlPubsub = skipRedis
-  ? new PubSub()
-  : new RedisPubSub({
-      connectionListener: (error) => {
-        if (error) {
-          console.log(error);
-        }
-      },
-      publisher: new Redis({
-        host: REDIS_HOST,
-        port: parseInt(REDIS_PORT || '6379', 10),
-        password: REDIS_PASSWORD,
-      }),
-      subscriber: new Redis({
-        host: REDIS_HOST,
-        port: parseInt(REDIS_PORT || '6379', 10),
-        password: REDIS_PASSWORD,
-      }),
-    });
+const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, SKIP_REDIS } = process.env;
+
+const redisOptions = {
+  host: REDIS_HOST,
+  port: parseInt(REDIS_PORT || '6379', 10),
+  password: REDIS_PASSWORD,
+};
+
+const createPubsubInstance = () => {
+  return new RedisPubSub({
+    connectionListener: (error) => {
+      if (error) {
+        console.error(error);
+      }
+    },
+    publisher: new Redis(redisOptions),
+    subscriber: new Redis(redisOptions),
+  });
+};
+
+export const graphqlPubsub = createPubsubInstance();
