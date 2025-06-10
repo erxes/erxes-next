@@ -809,8 +809,6 @@ const POSSlotsManager = ({
               <NodeControls
                 onAddSlot={handleAddSlot}
                 onArrangeNodes={arrangeNodesInGrid}
-                isEditMode={false}
-                toggleEditMode={() => {}}
                 isFullscreen={isFullscreen}
                 toggleFullscreen={() => setIsFullscreen(!isFullscreen)}
                 selectedNode={selectedNode}

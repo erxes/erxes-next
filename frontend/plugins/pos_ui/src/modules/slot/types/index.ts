@@ -3,7 +3,7 @@ export interface TableNodeData {
   color: string;
   width: number;
   height: number;
-  positionX?: number; 
+  positionX?: number;
   positionY?: number;
   rounded: boolean;
   rotateAngle: number;
@@ -13,28 +13,28 @@ export interface TableNodeData {
 }
 
 export interface CustomNode {
-    id: string;
-    type: string;
-    position: {
-      x: number;
-      y: number;
-    };
-    data: {
-      label: string;
-      code: string;
-      color: string;
-      width: number;
-      height: number;
-      positionX: number;
-      positionY: number;
-      rounded: boolean;
-      rotateAngle: number;
-      zIndex: number;
-      disabled: boolean;
-    };
-    width?: number;
-    height?: number;
-  }
+  id: string;
+  type: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  data: {
+    label: string;
+    code: string;
+    color: string;
+    width: number;
+    height: number;
+    positionX: number;
+    positionY: number;
+    rounded: boolean;
+    rotateAngle: number;
+    zIndex: number;
+    disabled: boolean;
+  };
+  width?: number;
+  height?: number;
+}
 
 export interface SlotDetailForm {
   name: string;
@@ -48,7 +48,7 @@ export interface SlotDetailForm {
   zIndex: string;
   color: string;
   disabled: boolean;
-  label: string
+  label: string;
 }
 
 export interface TableNodeProps {
@@ -71,41 +71,39 @@ export type TabValue = 'slots' | 'details';
 export type SidebarViewType = 'list' | 'detail' | 'hidden';
 
 export interface SidebarListProps {
-    nodes: CustomNode[];
-    onNodeSelect: (nodeId: string) => void;
-    onAddNew: (nodeData?: Partial<TableNodeData>) => void;
-  }
+  nodes: CustomNode[];
+  onNodeSelect: (nodeId: string) => void;
+  onAddNew: (nodeData?: Partial<TableNodeData>) => void;
+}
 
-  export interface UseKeyboardShortcutsProps {
-    selectedNode: CustomNode | null;
-    setSelectedNode: React.Dispatch<React.SetStateAction<CustomNode | null>>;
-    isEditMode: boolean;
-    setNodes: React.Dispatch<React.SetStateAction<CustomNode[]>>; 
-    sidebarView: SidebarViewType; 
-    onDeleteNode: () => void;
-    onSaveNode: () => void;
-    onAddNode: () => void;
-    onToggleSidebar: () => void;
-  }
-  export interface NodeControlsProps {
-    isEditMode: boolean;
-    toggleEditMode: () => void;
-    isFullscreen: boolean;
-    toggleFullscreen: () => void;
-    selectedNode: CustomNode | null;
-    onSave: () => void;
-    onAdd: (nodeData?: Partial<TableNodeData>) => void;
-    onDelete: (() => void) | undefined;
-    onAddSlot: () => void;
-    onArrangeNodes: () => void;
-  }
+export interface UseKeyboardShortcutsProps {
+  selectedNode: CustomNode | null;
+  setSelectedNode: React.Dispatch<React.SetStateAction<CustomNode | null>>;
+  isEditMode: boolean;
+  setNodes: React.Dispatch<React.SetStateAction<CustomNode[]>>;
+  sidebarView: SidebarViewType;
+  onDeleteNode: () => void;
+  onSaveNode: () => void;
+  onAddNode: () => void;
+  onToggleSidebar: () => void;
+}
+export interface NodeControlsProps {
+  isFullscreen: boolean;
+  toggleFullscreen: () => void;
+  selectedNode: CustomNode | null;
+  onSave: () => void;
+  onAdd: (nodeData?: Partial<TableNodeData>) => void;
+  onDelete: (() => void) | undefined;
+  onAddSlot: () => void;
+  onArrangeNodes: () => void;
+}
 
 export interface MiniMapToggleProps {
-    nodeStrokeWidth?: number
-    zoomable?: boolean
-    pannable?: boolean
-    position?: string
-  }
+  nodeStrokeWidth?: number;
+  zoomable?: boolean;
+  pannable?: boolean;
+  position?: string;
+}
 export interface SidebarListProps {
   nodes: CustomNode[];
   selectedNode: CustomNode | null;
@@ -113,11 +111,11 @@ export interface SidebarListProps {
   onAddSlot: () => void;
   onDuplicateSlot: (id: string) => void;
   onDeleteSlot: (id: string) => void;
-}  
+}
 
 export interface SidebarDetailProps {
-  onSave: () => void
-  onCancel: () => void
+  onSave: () => void;
+  onCancel: () => void;
 }
 export interface SlotCardProps {
   node: CustomNode;
@@ -126,4 +124,3 @@ export interface SlotCardProps {
   onDuplicate: (id: string) => void;
   onDelete: (id: string) => void;
 }
-
