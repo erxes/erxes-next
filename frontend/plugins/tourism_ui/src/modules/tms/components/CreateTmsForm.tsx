@@ -39,11 +39,18 @@ const CreateTmsForm = ({
     createBranch({
       variables: {
         name: data.name,
-        user1Ids: data.generalManager || undefined,
-        user2Ids: data.managers || undefined,
-        paymentIds: data.payment || undefined,
-        token: data.token,
-        erxesAppToken: '',
+        generalManagerIds: data.generalManager || [],
+        managerIds: data.managers || [],
+        paymentIds: data.payment || [],
+        permissionConfig:
+          data.otherPayments?.map((payment) => ({
+            _id: payment._id || '',
+            type: payment.type,
+            title: payment.title,
+            icon: payment.icon,
+            config: payment.config,
+          })) || [],
+        erxesAppToken: data.token,
         uiOptions: {
           logo: data.logo,
           favIcon: data.favIcon,
@@ -78,14 +85,22 @@ const CreateTmsForm = ({
         className="flex flex-col h-full"
       >
         <TmsCreateSheetHeader />
-        <Sheet.Content className="grid min-h-0 grid-cols-2 overflow-y-auto">
-          <TmsInformationFields
-            form={form}
-            onOpenChange={onOpenChange}
-            onSubmit={onSubmit}
-          />
-          <Preview formData={watchedValues} />
+        <Sheet.Content className="grid min-h-0 overflow-y-auto lg:grid-cols-2">
+          <div>
+            <TmsInformationFields
+              form={form}
+              onOpenChange={onOpenChange}
+              onSubmit={onSubmit}
+            />
+          </div>
+          <div className="hidden lg:block">
+            <Preview formData={watchedValues} />
+          </div>
         </Sheet.Content>
+
+        <div className="block lg:hidden">
+          <Preview formData={watchedValues} />
+        </div>
       </form>
     </Form>
   );

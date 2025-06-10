@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const TmsFormSchema = z.object({
-  name: z.string().min(1, 'Tour name is required'),
+  name: z.string().min(1, 'Name is required'),
   color: z.string().min(1, 'Color is required'),
   logo: z.string().optional(),
   favIcon: z.string().optional(),

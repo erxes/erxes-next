@@ -1,8 +1,9 @@
 import { Control, useFieldArray } from 'react-hook-form';
-import { Button, Form, Input, Label, Select, Switch, Upload } from 'erxes-ui';
+import { Button, Form, Input, Select, Upload, Avatar } from 'erxes-ui';
 import { TmsFormType } from '@/tms/constants/formSchema';
 import { IconUpload, IconPlus, IconTrash } from '@tabler/icons-react';
-import { useState } from 'react';
+import { UsersList } from '~/modules/tms/hooks/UsersList';
+import { readFile } from 'erxes-ui/utils/core';
 
 export const TourName = ({ control }: { control: Control<TmsFormType> }) => {
   return (
@@ -12,7 +13,7 @@ export const TourName = ({ control }: { control: Control<TmsFormType> }) => {
       render={({ field }) => (
         <Form.Item>
           <Form.Label>
-            Tour Name <span className="text-destructive">*</span>
+            Name <span className="text-destructive">*</span>
           </Form.Label>
           <Form.Control>
             <Input className="h-8 rounded-md" {...field} />
@@ -162,25 +163,42 @@ export const FavIconField = ({
   );
 };
 
-const TestGeneralManager = [
-  { label: 'Bold Bold', value: '1' },
-  { label: 'Bat Bat', value: '2' },
-  { label: 'Toroo Toroo', value: '3' },
-  { label: 'Temuulen Temuulen', value: '4' },
-];
-
 export const GeneralManager = ({
   control,
 }: {
   control: Control<TmsFormType>;
 }) => {
+  const { list, loading, error } = UsersList();
+
+  if (loading) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        Loading general managers...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-sm text-destructive">
+        Error loading general managers
+      </div>
+    );
+  }
+
+  const generalManager = (list || []).map((user) => ({
+    value: user._id,
+    label: user.details?.fullName || user.username || user.email,
+    avatar: user.details?.avatar,
+  }));
+
   return (
     <Form.Field
       control={control}
       name="generalManager"
       render={({ field }) => (
         <Form.Item>
-          <Form.Label>General Manager</Form.Label>
+          <Form.Label>General Managers</Form.Label>
           <Form.Description>
             General manager can be shown on the top of the post also in the list
             view
@@ -194,25 +212,17 @@ export const GeneralManager = ({
                 field.onChange([...currentValues, value]);
               }
             }}
-            value={field.value && field.value.length > 0 ? field.value[0] : ''}
+            value=""
           >
             <Form.Control>
-              <Select.Trigger className="justify-between h-8 truncate rounded-md appearance-none w-44 text-foreground [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
+              <Select.Trigger className="justify-between h-8 truncate rounded-md appearance-none [&>svg]:hidden w-44 text-foreground [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
                 <Select.Value
                   placeholder={
                     <span className="text-sm font-medium text-center truncate text-muted-foreground">
                       {'Choose team member'}
                     </span>
                   }
-                >
-                  <span className="text-sm font-medium text-foreground">
-                    {field.value && field.value.length > 0
-                      ? TestGeneralManager.find(
-                          (status) => status.value === field.value?.[0],
-                        )?.label || ''
-                      : ''}
-                  </span>
-                </Select.Value>
+                />
               </Select.Trigger>
             </Form.Control>
             <Select.Content
@@ -220,18 +230,71 @@ export const GeneralManager = ({
               align="start"
             >
               <Select.Group>
-                {TestGeneralManager.map((status) => (
+                {generalManager.map((generalManager) => (
                   <Select.Item
-                    key={status.value}
-                    className="text-xs h-7"
-                    value={status.value}
+                    key={generalManager.value}
+                    className="text-xs h-8 [&>span]:flex [&>span]:items-center [&>span]:gap-2"
+                    value={generalManager.value}
                   >
-                    {status.label}
+                    <Avatar className="w-4 h-4 rounded-full">
+                      <Avatar.Image
+                        src={readFile(generalManager.avatar)}
+                        alt={generalManager.label}
+                      />
+                      <Avatar.Fallback className="rounded-lg">
+                        {generalManager.label.split('')[0]}
+                      </Avatar.Fallback>
+                    </Avatar>
+                    {generalManager.label}
                   </Select.Item>
                 ))}
               </Select.Group>
             </Select.Content>
           </Select>
+
+          {field.value && field.value.length > 0 && (
+            <div className="pb-2 my-2">
+              <div className="mb-1 text-xs text-muted-foreground">
+                Selected general managers:
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {field.value.map((managerId) => {
+                  const manager = generalManager.find(
+                    (gm) => gm.value === managerId,
+                  );
+                  return manager ? (
+                    <span
+                      key={managerId}
+                      className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-primary/10 text-primary"
+                    >
+                      <Avatar className="w-3 h-3 rounded-full">
+                        <Avatar.Image
+                          src={readFile(manager.avatar)}
+                          alt={manager.label}
+                        />
+                        <Avatar.Fallback className="rounded-lg">
+                          {manager.label.split('')[0]}
+                        </Avatar.Fallback>
+                      </Avatar>
+                      {manager.label}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          field.onChange(
+                            field.value?.filter((v) => v !== managerId),
+                          );
+                        }}
+                        className="hover:text-destructive"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          )}
+
           <Form.Message className="text-destructive" />
         </Form.Item>
       )}
@@ -239,14 +302,27 @@ export const GeneralManager = ({
   );
 };
 
-const TestManagers = [
-  { label: 'Bold Bold', value: '1' },
-  { label: 'Bat Bat', value: '2' },
-  { label: 'Toroo Toroo', value: '3' },
-  { label: 'Temuulen Temuulen', value: '4' },
-];
-
 export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
+  const { list, loading, error } = UsersList();
+
+  if (loading) {
+    return (
+      <div className="text-sm text-muted-foreground">Loading managers...</div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-sm text-destructive">Error loading managers</div>
+    );
+  }
+
+  const managers = (list || []).map((user) => ({
+    value: user._id,
+    label: user.details?.fullName || user.username || user.email,
+    avatar: user.details?.avatar,
+  }));
+
   return (
     <Form.Field
       control={control}
@@ -266,7 +342,7 @@ export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
                 field.onChange([...currentValues, value]);
               }
             }}
-            value={field.value && field.value.length > 0 ? field.value[0] : ''}
+            value=""
           >
             <Form.Control>
               <Select.Trigger className="justify-between h-8 truncate rounded-md appearance-none [&>svg]:hidden w-44 text-foreground [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
@@ -276,15 +352,7 @@ export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
                       {'Choose team member'}
                     </span>
                   }
-                >
-                  <span className="text-sm font-medium text-foreground">
-                    {field.value && field.value.length > 0
-                      ? TestManagers.find(
-                          (status) => status.value === field.value?.[0],
-                        )?.label || ''
-                      : ''}
-                  </span>
-                </Select.Value>
+                />
               </Select.Trigger>
             </Form.Control>
             <Select.Content
@@ -292,18 +360,69 @@ export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
               align="start"
             >
               <Select.Group>
-                {TestManagers.map((status) => (
+                {managers.map((manager) => (
                   <Select.Item
-                    key={status.value}
-                    className="text-xs h-7"
-                    value={status.value}
+                    key={manager.value}
+                    className="text-xs h-8 [&>span]:flex [&>span]:items-center [&>span]:gap-2"
+                    value={manager.value}
                   >
-                    {status.label}
+                    <Avatar className="w-4 h-4 rounded-full">
+                      <Avatar.Image
+                        src={readFile(manager.avatar)}
+                        alt={manager.label}
+                      />
+                      <Avatar.Fallback className="rounded-lg">
+                        {manager.label.split('')[0]}
+                      </Avatar.Fallback>
+                    </Avatar>
+                    {manager.label}
                   </Select.Item>
                 ))}
               </Select.Group>
             </Select.Content>
           </Select>
+
+          {field.value && field.value.length > 0 && (
+            <div className="pb-2 my-2">
+              <div className="mb-1 text-xs text-muted-foreground">
+                Selected managers:
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {field.value.map((managerId) => {
+                  const manager = managers.find((m) => m.value === managerId);
+                  return manager ? (
+                    <span
+                      key={managerId}
+                      className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-primary/10 text-primary"
+                    >
+                      <Avatar className="w-3 h-3 rounded-full">
+                        <Avatar.Image
+                          src={readFile(manager.avatar)}
+                          alt={manager.label}
+                        />
+                        <Avatar.Fallback className="rounded-lg">
+                          {manager.label.split('')[0]}
+                        </Avatar.Fallback>
+                      </Avatar>
+                      {manager.label}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          field.onChange(
+                            field.value?.filter((v) => v !== managerId),
+                          );
+                        }}
+                        className="hover:text-destructive"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          )}
+
           <Form.Message className="text-destructive" />
         </Form.Item>
       )}
@@ -441,7 +560,7 @@ export const Token = ({ control }: { control: Control<TmsFormType> }) => {
       control={control}
       name="token"
       render={({ field }) => (
-        <Form.Item className="py-3 border-t">
+        <Form.Item className="py-3 border-y">
           <Form.Label>Erxes app token</Form.Label>
           <Form.Description>What is erxes app token ?</Form.Description>
           <Form.Control>
@@ -477,13 +596,13 @@ export const OtherPayments = ({
   };
 
   return (
-    <div className="py-2">
+    <div className="py-3">
       <div className="flex flex-col items-start self-stretch gap-2">
-        <h2 className="self-stretch text-sm font-medium leading-tight text-primary">
+        <h2 className="self-stretch text-[#4F46E5] text-sm font-medium leading-tight">
           Other Payments
         </h2>
 
-        <p className="text-xs font-medium leading-[140%] text-muted-foreground">
+        <p className="text-[#71717A] font-['Inter'] text-xs font-medium leading-[140%]">
           Type is must latin, some default types: golomtCard, khaanCard, TDBCard
           Хэрэв тухайн төлбөрт ебаримт хэвлэхгүй бол: "skipEbarimt: true",
           Харилцагч сонгосон үед л харагдах бол: "mustCustomer: true", Хэрэв
@@ -504,162 +623,116 @@ export const OtherPayments = ({
         </Button>
       </div>
 
-      <div className="px-4 max-h-[60px] overflow-y-auto">
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="flex items-end self-stretch justify-between w-full px-4 mb-4"
-          >
-            <div className="flex w-[100px] flex-col justify-end items-start">
-              <Form.Field
-                control={control}
-                name={`otherPayments.${index}.type`}
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label className="text-xs">TYPE</Form.Label>
-                    <Form.Control>
-                      <Input
-                        className="w-full px-0 border-0 border-b rounded-none shadow-none"
-                        {...field}
-                      />
-                    </Form.Control>
-                  </Form.Item>
-                )}
-              />
-            </div>
-
-            <div className="flex w-[100px] flex-col justify-end items-start">
-              <Form.Field
-                control={control}
-                name={`otherPayments.${index}.title`}
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label className="text-xs">TITLE</Form.Label>
-                    <Form.Control>
-                      <Input
-                        className="w-full px-0 border-0 border-b rounded-none shadow-none"
-                        {...field}
-                      />
-                    </Form.Control>
-                  </Form.Item>
-                )}
-              />
-            </div>
-
-            <div className="flex w-[100px] flex-col items-start">
-              <Form.Field
-                control={control}
-                name={`otherPayments.${index}.icon`}
-                render={({ field }) => (
-                  <Form.Item className="flex flex-col w-full">
-                    <Form.Label className="text-xs ">ICON</Form.Label>
-                    <Select
-                      value={field.value || ''}
-                      onValueChange={field.onChange}
-                    >
-                      <Form.Control>
-                        <Select.Trigger className="w-full px-0 border-0 border-b rounded-none shadow-none [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
-                          <Select.Value placeholder="Select" />
-                        </Select.Trigger>
-                      </Form.Control>
-                      <Select.Content>
-                        {Icon.map((icon) => (
-                          <Select.Item
-                            key={icon.value}
-                            className="text-xs"
-                            value={icon.value}
-                          >
-                            {icon.label}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
-                  </Form.Item>
-                )}
-              />
-            </div>
-
-            <div className="flex w-[100px] flex-col justify-end items-start">
-              <Form.Field
-                control={control}
-                name={`otherPayments.${index}.config`}
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label className="text-xs ">CONFIG</Form.Label>
-                    <Form.Control>
-                      <Input
-                        className="w-full px-0 border-0 border-b rounded-none shadow-none"
-                        {...field}
-                      />
-                    </Form.Control>
-                  </Form.Item>
-                )}
-              />
-            </div>
-
-            <Button
-              variant="ghost"
-              className="h-8 px-2 text-destructive"
-              type="button"
-              onClick={() => remove(index)}
-            >
-              <IconTrash size={16} />
-            </Button>
+      {fields.map((field, index) => (
+        <div
+          key={field.id}
+          className="flex items-end self-stretch justify-between w-full gap-10 px-4 mb-4"
+        >
+          <div className="flex flex-col items-start justify-end">
+            <Form.Field
+              control={control}
+              name={`otherPayments.${index}.type`}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="text-xs text-gray-600">
+                    TYPE
+                  </Form.Label>
+                  <Form.Control>
+                    <Input
+                      className="w-full px-0 border-0 border-b border-gray-200 rounded-none shadow-none"
+                      {...field}
+                    />
+                  </Form.Control>
+                </Form.Item>
+              )}
+            />
           </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
-export const Prepaid = ({ control }: { control: Control<TmsFormType> }) => {
-  const [prepaidSwitch, setPrepaidSwitch] = useState<boolean>(false);
+          <div className="flex flex-col items-start justify-end">
+            <Form.Field
+              control={control}
+              name={`otherPayments.${index}.title`}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="text-xs text-gray-600">
+                    TITLE
+                  </Form.Label>
+                  <Form.Control>
+                    <Input
+                      className="w-full px-0 border-0 border-b border-gray-200 rounded-none shadow-none"
+                      {...field}
+                    />
+                  </Form.Control>
+                </Form.Item>
+              )}
+            />
+          </div>
 
-  return (
-    <div className="grid grid-cols-2 gap-6 py-3 border-y">
-      <div className="flex flex-col gap-3">
-        <Label>Enable Prepaid Option</Label>
-        <Switch
-          checked={prepaidSwitch}
-          onCheckedChange={setPrepaidSwitch}
-          className="w-10 h-6 [&_span]:size-4 data-[state=checked]:[&_span]:translate-x-[19px] data-[state=checked]:[&_span]:rtl:-translate-x-[19px]"
-        />
-      </div>
+          <div className="flex flex-col items-start">
+            <Form.Field
+              control={control}
+              name={`otherPayments.${index}.icon`}
+              render={({ field }) => (
+                <Form.Item className="flex flex-col w-full">
+                  <Form.Label className="text-xs text-gray-600">
+                    ICON
+                  </Form.Label>
+                  <Select
+                    value={field.value || ''}
+                    onValueChange={field.onChange}
+                  >
+                    <Form.Control>
+                      <Select.Trigger className="w-full px-0 border-0 border-b border-gray-200 rounded-none shadow-none [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
+                        <Select.Value placeholder="Select" />
+                      </Select.Trigger>
+                    </Form.Control>
+                    <Select.Content>
+                      {Icon.map((icon) => (
+                        <Select.Item
+                          key={icon.value}
+                          className="text-xs"
+                          value={icon.value}
+                        >
+                          {icon.label}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select>
+                </Form.Item>
+              )}
+            />
+          </div>
 
-      {prepaidSwitch && (
-        <Form.Field
-          control={control}
-          name="prepaidAmount"
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Label>Prepaid Percentage (%)</Form.Label>
-              <Form.Control>
-                <Input
-                  type="number"
-                  className="rounded-md h-7"
-                  min={1}
-                  max={100}
-                  value={field.value || ''}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value);
-                    if (isNaN(value)) {
-                      field.onChange('');
-                    } else if (value < 1) {
-                      field.onChange(1);
-                    } else if (value > 100) {
-                      field.onChange(100);
-                    } else {
-                      field.onChange(value);
-                    }
-                  }}
-                  onBlur={field.onBlur}
-                  name={field.name}
-                />
-              </Form.Control>
-            </Form.Item>
-          )}
-        />
-      )}
+          <div className="flex flex-col items-start justify-end">
+            <Form.Field
+              control={control}
+              name={`otherPayments.${index}.config`}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="text-xs text-gray-600">
+                    CONFIG
+                  </Form.Label>
+                  <Form.Control>
+                    <Input
+                      className="w-full px-0 border-0 border-b border-gray-200 rounded-none shadow-none"
+                      {...field}
+                    />
+                  </Form.Control>
+                </Form.Item>
+              )}
+            />
+          </div>
+
+          <Button
+            variant="ghost"
+            className="h-8 px-2 text-destructive"
+            type="button"
+            onClick={() => remove(index)}
+          >
+            <IconTrash size={16} />
+          </Button>
+        </div>
+      ))}
     </div>
   );
 };

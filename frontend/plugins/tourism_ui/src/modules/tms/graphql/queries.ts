@@ -1,32 +1,119 @@
 import { gql } from '@apollo/client';
 
 export const GET_BRANCH_LIST = gql`
-  query bmsBranchList($sortField: String, $sortDirection: Int) {
-    bmsBranchList(sortField: $sortField, sortDirection: $sortDirection) {
-      _id
-      name
-      description
-      createdAt
-      token
-      erxesAppToken
-      user1Ids
-      user2Ids
-      paymentIds
-      paymentTypes
-      user {
+  query BmsBranchList(
+    $limit: Int
+    $cursor: String
+    $cursorMode: CURSOR_MODE
+    $direction: CURSOR_DIRECTION
+    $orderBy: JSON
+  ) {
+    bmsBranchList(
+      limit: $limit
+      cursor: $cursor
+      cursorMode: $cursorMode
+      direction: $direction
+      orderBy: $orderBy
+    ) {
+      list {
         _id
-        details {
-          avatar
-          fullName
-          __typename
+        createdAt
+        userId
+        user {
+          _id
+          username
+          email
+          details {
+            avatar
+            fullName
+            shortName
+          }
         }
-        __typename
+        name
+        description
+        generalManagerIds
+        managerIds
+        paymentIds
+        paymentTypes
+        departmentId
+        token
+        erxesAppToken
+        permissionConfig
+        uiOptions
       }
-      uiOptions
-      permissionConfig
-      __typename
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
     }
   }
 `;
 
+export const BRANCH_LIST_DETAIL = gql`
+  query BmsBranchDetail($id: String!) {
+    bmsBranchDetail(_id: $id) {
+      _id
+      createdAt
+      userId
+      user {
+        _id
+        username
+        email
+        details {
+          avatar
+          fullName
+          shortName
+        }
+      }
+      name
+      description
+      generalManagerIds
+      managerIds
+      paymentIds
+      paymentTypes
+      departmentId
+      token
+      erxesAppToken
+      permissionConfig
+      uiOptions
+    }
+  }
+`;
 
+export const USERS_LIST = gql`
+  query Users {
+    users {
+      totalCount
+      list {
+        _id
+        createdAt
+        username
+        email
+        isActive
+        details {
+          avatar
+          fullName
+          shortName
+        }
+        links
+        status
+        groupIds
+        isSubscribed
+        isShowNotification
+        customFieldsData
+        isOwner
+        permissionActions
+        configs
+        configsConstants
+        branchIds
+        score
+        leaderBoardPosition
+        employeeId
+        cursor
+      }
+    }
+  }
+`;

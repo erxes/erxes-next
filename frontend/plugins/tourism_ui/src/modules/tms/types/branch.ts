@@ -25,6 +25,32 @@ export interface IBranch {
   __typename: string;
 }
 
+export interface IUser {
+  _id: string;
+  username: string;
+  email: string;
+  details: {
+    avatar: string;
+    fullName: string;
+    shortName: string;
+  };
+  links: string[];
+  status: string;
+  groupIds: string[];
+  isSubscribed: boolean;
+  isShowNotification: boolean;
+  customFieldsData: any;
+  isOwner: boolean;
+  permissionActions: any;
+  configs: any;
+  configsConstants: any;
+  branchIds: string[];
+  score: number;
+  leaderBoardPosition: number;
+  employeeId: string;
+  cursor: string;
+}
+
 export interface IBranchRemoveVariables {
   id: string;
 }

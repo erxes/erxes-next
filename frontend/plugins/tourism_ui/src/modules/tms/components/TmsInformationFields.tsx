@@ -11,7 +11,6 @@ import {
   Payments,
   Token,
   OtherPayments,
-  Prepaid,
 } from '@/tms/components/TmsFormFields';
 import { Button } from 'erxes-ui';
 import { IconPlus } from '@tabler/icons-react';
@@ -58,7 +57,6 @@ export const TmsInformationFields = ({
           <div>
             <Payments control={form.control} />
             <Token control={form.control} />
-            <Prepaid control={form.control} />
             <OtherPayments control={form.control} />
           </div>
         );

@@ -33,12 +33,19 @@ export const BranchList = () => {
         const success = await removeBranchById(branchId);
 
         if (success) {
-          toast.success('Branch deleted successfully');
+          toast({
+            title: 'Branch deleted successfully',
+          });
         } else {
-          toast.error('Failed to delete branch');
+          toast({
+            title: 'Failed to delete branch',
+          });
         }
       } catch (error) {
-        toast.error('Failed to delete branch');
+        toast({
+          title: 'Failed to delete branch',
+          description: `${error.message}`,
+        });
       }
     }
   };
@@ -57,7 +64,13 @@ export const BranchList = () => {
   }, [menuRef]);
 
   if (loading) return <div className="w-full p-3">Loading...</div>;
-  if (error) return <div className="w-full p-3">Error loading branches</div>;
+  if (error)
+    return (
+      <div className="w-full p-3 text-center">
+        <p>Error loading branches</p>
+        <p>{error.message}</p>
+      </div>
+    );
   if (!list || list.length === 0) return <EmptyList />;
 
   return (
@@ -124,7 +137,6 @@ export const BranchList = () => {
                 </div>
 
                 <div className="flex h-[150px] w-full flex-col items-start gap-3 self-stretch">
-                  {/* Placeholder image since we don't have an image property in the data */}
                   <div className="flex items-center justify-center w-full h-full bg-gray-200">
                     <span className="text-gray-500">
                       {branch.name?.charAt(0) || 'B'}

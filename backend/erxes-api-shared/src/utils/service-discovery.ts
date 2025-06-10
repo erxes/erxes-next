@@ -19,11 +19,9 @@ export const keyForConfig = (name: string) => `service:config:${name}`;
 
 export const getPlugins = async (): Promise<string[]> => {
   const enabledServices: any[] =
-    // process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) || [];
-    [];
+    process.env.ENABLED_PLUGINS?.split(',').map((plugin) => `${plugin}`) || [];
 
-  // return ['core', ...enabledServices];
-  return ['core'];
+  return ['core', ...enabledServices];
 };
 
 type ServiceInfo = { address: string; config: any };

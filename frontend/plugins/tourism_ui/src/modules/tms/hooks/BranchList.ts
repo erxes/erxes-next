@@ -7,8 +7,12 @@ interface BranchListResponse {
 }
 
 export const useBranchList = () => {
-  const { data, loading, error } =
-    useQuery<BranchListResponse>(GET_BRANCH_LIST);
+  const { data, loading, error } = useQuery<BranchListResponse>(
+    GET_BRANCH_LIST,
+    {
+      fetchPolicy: 'network-only',
+    },
+  );
 
   const list = data?.bmsBranchList || [];
 
