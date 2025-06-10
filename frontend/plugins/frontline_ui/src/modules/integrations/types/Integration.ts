@@ -13,7 +13,7 @@ export interface IIntegrationDetail extends IIntegration {
   };
 }
 
-export interface IIntegrationKind {
+export interface IIntegrationType {
   _id: string;
   name: string;
 }
