@@ -28,7 +28,7 @@ export const loginMiddleware = async (req, res) => {
   const FACEBOOK_LOGIN_REDIRECT_URL = await getConfig(
     models,
     'FACEBOOK_LOGIN_REDIRECT_URL',
-    `${API_DOMAIN}/pl:facebook/fblogin`,
+    `${API_DOMAIN}/pl:frontline/facebook/fblogin`,
   );
   const conf = {
     client_id: FACEBOOK_APP_ID,
@@ -45,7 +45,7 @@ export const loginMiddleware = async (req, res) => {
       client_id: conf.client_id,
       redirect_uri: conf.redirect_uri,
       scope: conf.scope,
-      state: `${API_DOMAIN}/pl:facebook`,
+      state: `${API_DOMAIN}/pl:frontline/facebook`,
     });
 
     // checks whether a user denied the app facebook login/permissions
