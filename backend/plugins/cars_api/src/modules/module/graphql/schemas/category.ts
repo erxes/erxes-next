@@ -9,12 +9,17 @@ export const types = `
     secondaryImage: Attachment
     producCategoryId: String
     }
+
+    type carCategoryListResponse {
+    list: [carCategory],
+    pageInfo: PageInfo
+    totalCount: Int,}
 `;
 
 export const queries = `
-    getCarCategory(_id: String!): carCategory
-    getCarCategories: [carCategory]
-    getCarCategoriesCount: Int
+    carCategoryDetail(_id: String!): carCategory
+    carCategories: [carCategoryListResponse]
+    carCategoriesTotalCount: Int
 `;
 
 const mutationParams = `
@@ -28,7 +33,7 @@ const mutationParams = `
 `;
 
 export const mutations = `
-    createCarCategory(${mutationParams}): carCategory
-    updateCarCategory(_id: String!, ${mutationParams}): carCategory
-    removeCarCategory(_id: String!): carCategory
+    carCategoriesAdd(${mutationParams}): carCategory
+    carCategoriesEdit(_id: String!, ${mutationParams}): carCategory
+    carCategoriesRemove(_id: String!): carCategory
 `;

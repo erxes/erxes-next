@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { cursorPaginate, paginate } from 'erxes-api-shared/utils';
-import { ICarDocument } from '~/modules/module/@types/car';
+import { ICarDocument, ICarParams } from '~/modules/module/@types/car';
 
 export const generateFilter = async (params, commonQuerySelector, models) => {
   const { tag } = params;
@@ -40,7 +40,7 @@ export const sortBuilder = (params) => {
 export const carQueries = {
   //CarDetail
 
-  getCar: async (
+  carDetail: async (
     _root: undefined,
     { _id }: { _id: string },
     { models }: IContext,
@@ -51,7 +51,7 @@ export const carQueries = {
   //Cars list
   cars: async (
     _root: undefined,
-    params: any,
+    params: ICarParams,
     { commonQuerySelector, models }: IContext,
   ) => {
     const filter = await generateFilter(params, commonQuerySelector, models);
@@ -63,22 +63,6 @@ export const carQueries = {
     });
 
     return { list, totalCount, pageInfo };
-  },
-
-  carsMain: async (
-    _root: undefined,
-    params: any,
-    { commonQuerySelector, models }: IContext,
-  ) => {
-    const filter = await generateFilter(params, commonQuerySelector, models);
-
-    return {
-      list: await paginate(models.Cars.find(filter).sort(sortBuilder(params)), {
-        page: params.page,
-        perPage: params.perPage,
-      }),
-      totalCount: await models.Cars.find(filter).countDocuments(),
-    };
   },
 
   //Cars count
@@ -107,4 +91,5 @@ export const carQueries = {
   //   }
 
   //   return counts;
+  //}
 };

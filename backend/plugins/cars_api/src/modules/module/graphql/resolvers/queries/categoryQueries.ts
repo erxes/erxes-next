@@ -1,4 +1,5 @@
 import { IContext } from '~/connectionResolvers';
+import { ICarParams } from '~/modules/module/@types/car';
 
 export const CarCategoryQueries = {
   carCategoryDetail: async (
@@ -28,7 +29,7 @@ export const CarCategoryQueries = {
 
   carCategoriesTotalCount: async (
     _root: undefined,
-    _param: any,
+    _param: ICarParams,
     { models }: IContext,
   ) => {
     return models.CarCategories.find().countDocuments();

@@ -1,5 +1,9 @@
 import { Document } from 'mongoose';
-import { IAttachment } from 'erxes-api-shared/core-types';
+import {
+  IAttachment,
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
 
 export interface ICar {
   ownerId: String;
@@ -26,4 +30,11 @@ export interface ICarDocument extends ICar, Document {
   updatedAt: Date;
   ownerId: string;
   searchText: string;
+}
+
+export interface ICarParams extends IListParams, ICursorPaginateParams {
+  ids?: string[];
+  categoryId?: string;
+  searchValue?: string;
+  tag?: string;
 }

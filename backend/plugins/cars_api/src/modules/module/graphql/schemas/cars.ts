@@ -19,6 +19,13 @@ export const types = `
   tagIds: [String]
   attachment: Attachment
  }
+
+  type CarListResponse {
+  list: [Car],
+  pageInfo: PageInfo
+  totalCount: Int,
+  }
+
 `;
 
 const queryParams = `
@@ -34,9 +41,8 @@ const queryParams = `
 `;
 
 export const queries = `
-  getCar(_id: String!): Car
-  getCars(${queryParams}): [Car]
-  carsCount(${queryParams}, only: String): Int
+  carDetail(_id: String!): Car
+  cars(${queryParams}): [CarListResponse]
 `;
 
 const mutationParams = `
@@ -55,7 +61,7 @@ const mutationParams = `
 `;
 
 export const mutations = `
-  createCar(${mutationParams}): Car
-  updateCar(_id: String!, ${mutationParams}): Car
-  removeCar(_id: String!): Car
+  carsdd(${mutationParams}): Car
+  carsEdit(_id: String!, ${mutationParams}): Car
+  carsRemove(_id: String!): Car
 `;
