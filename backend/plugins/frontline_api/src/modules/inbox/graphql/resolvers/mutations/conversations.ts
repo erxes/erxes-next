@@ -226,7 +226,7 @@ export const conversationMutations = {
         messageContent: doc.content,
       });
 
-      const kind = integration.kind;
+      const { kind } = integration;
 
       const customer = await sendTRPCMessage({
         pluginName: 'core',
