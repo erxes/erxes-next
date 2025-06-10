@@ -1,6 +1,6 @@
-let stripAnsiModule: ((str: string) => string) | null = null;
+export const stripAnsi = async (str: string) => {
+  let stripAnsiModule: ((str: string) => string) | null = null;
 
-const stripAnsi = async (str: string) => {
   if (!stripAnsiModule) {
     const { default: imported } = await import('strip-ansi');
     stripAnsiModule = imported;
@@ -86,10 +86,6 @@ export const cleanHtml = async (content?: string): Promise<string> =>
  *
  * @param {string} str the string to escape
  * @returns {string} the escaped string
- */
-export const escapeRegExp = (str: string) => {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-};
 
 /**
  * Takes an array of strings and returns a single string that is
@@ -99,15 +95,6 @@ export const escapeRegExp = (str: string) => {
  * @param {string[]} values an array of strings to join
  * @returns {string} a single string suitable for use as a search query
  */
-export const validSearchText = (values: string[]) => {
-  const value = values.join(' ');
-
-  if (value.length < 512) {
-    return value;
-  }
-
-  return value.substring(0, 511);
-};
 
 /**
  * Generates a random string of a given length using a given pattern.
