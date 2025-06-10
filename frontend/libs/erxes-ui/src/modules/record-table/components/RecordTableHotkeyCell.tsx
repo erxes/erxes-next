@@ -11,14 +11,14 @@ export const RecordTableHotKeyControl = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Slot> & {
     rowId: string;
     rowIndex: number;
-    colIndex: number;
   }
->(({ rowId, rowIndex, colIndex, className, onClickCapture, ...props }, ref) => {
+>(({ rowId, rowIndex, className, onClickCapture, ...props }, ref) => {
   const controlRef = useRef<HTMLTableCellElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const { activeCell, setActiveRow, setActiveCell } = useRecordTableHotkey();
 
   const innerButton = controlRef.current?.querySelector('button');
+  const colIndex = controlRef.current?.cellIndex;
 
   useHotkeys(
     Key.Enter,
@@ -54,7 +54,7 @@ export const RecordTableHotKeyControl = React.forwardRef<
       onClickCapture={() => {
         setIsFocused(true);
         setActiveRow(rowId);
-        setActiveCell([rowIndex, colIndex]);
+        setActiveCell([rowIndex, colIndex || 0]);
       }}
       className={cn(
         isFocused &&

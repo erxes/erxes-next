@@ -7,13 +7,7 @@ export const GET_CONVERSATION_DETAIL = gql`
       createdAt
       tagIds
       content
-      integration {
-        name
-        kind
-        brand {
-          name
-        }
-      }
+      integrationId
       assignedUserId
       customerId
       updatedAt
