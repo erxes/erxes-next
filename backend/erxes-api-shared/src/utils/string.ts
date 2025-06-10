@@ -1,6 +1,11 @@
 
+let stripAnsiModule: ((str: string) => string) | null = null;
+
 const stripAnsi = async (str: string) => {
-  const { default: stripAnsiModule } = await import('strip-ansi');
+  if (!stripAnsiModule) {
+    const { default: imported } = await import('strip-ansi');
+    stripAnsiModule = imported;
+  }
   return stripAnsiModule(str);
 };
 
