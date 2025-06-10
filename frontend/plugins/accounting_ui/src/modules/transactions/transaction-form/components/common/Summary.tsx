@@ -1,10 +1,17 @@
-import { Button, CurrencyCode, CurrencyFormatedDisplay, toast, useConfirm, useQueryState } from 'erxes-ui';
+import {
+  Button,
+  CurrencyCode,
+  CurrencyFormatedDisplay,
+  toast,
+  useConfirm,
+  useQueryState,
+} from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useWatch } from 'react-hook-form';
 import { TR_SIDES } from '../../../types/constants';
 import { followTrDocsState } from '../../states/trStates';
 import { ITransactionGroupForm, TTrDoc } from '../../types/JournalForms';
-import { ITransaction } from '~/modules/transactions/types/Transaction';
+import { ITransaction } from '@/transactions/types/Transaction';
 import { IconGavel, IconTrashX } from '@tabler/icons-react';
 import { useTransactionsRemove } from '../../hooks/useTransactionsRemove';
 
@@ -21,13 +28,13 @@ const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
     }
   });
   return [sumDebit, sumCredit];
-}
+};
 
 export const sumDtAndCt = (trDocs: TTrDoc[], followTrDocs: ITransaction[]) => {
   const [sumDt, sumCt] = getSum(trDocs || [], 0, 0);
   const [sumDebit, sumCredit] = getSum(followTrDocs, sumDt, sumCt);
-  return [sumDebit, sumCredit]
-}
+  return [sumDebit, sumCredit];
+};
 
 export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { trDocs } = useWatch({ control: form.control });
@@ -37,7 +44,7 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { removeTransactions } = useTransactionsRemove();
   const { confirm } = useConfirm();
 
-  const [sumDebit, sumCredit] = sumDtAndCt(trDocs as TTrDoc[], followTrDocs)
+  const [sumDebit, sumCredit] = sumDtAndCt(trDocs as TTrDoc[], followTrDocs);
 
   const handleDelete = () =>
     confirm({
@@ -49,8 +56,8 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
     }).then(() => {
       removeTransactions({
         variables: {
-          parentId
-        }
+          parentId,
+        },
       });
     });
 

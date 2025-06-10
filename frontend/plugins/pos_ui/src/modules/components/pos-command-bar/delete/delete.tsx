@@ -1,9 +1,8 @@
-import { Button } from 'erxes-ui/components';
+import { Button, useConfirm } from 'erxes-ui';
 import { IconTrash } from '@tabler/icons-react';
-import { useConfirm } from 'erxes-ui/hooks';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
-import { useRemovePos } from '~/modules/hooks/usePosRemove';
+import { useRemovePos } from '@/hooks/usePosRemove';
 
 interface PosDeleteProps {
   posIds: string;
@@ -14,11 +13,9 @@ export const PosDelete = ({ posIds, onDeleteSuccess }: PosDeleteProps) => {
   const { confirm } = useConfirm();
   const { removePos } = useRemovePos();
   const { toast } = useToast();
-  
-  const posCount = posIds.includes(',') 
-    ? posIds.split(',').length 
-    : 1;
-  
+
+  const posCount = posIds.includes(',') ? posIds.split(',').length : 1;
+
   return (
     <Button
       variant="secondary"
@@ -27,7 +24,7 @@ export const PosDelete = ({ posIds, onDeleteSuccess }: PosDeleteProps) => {
         confirm({
           message: `Are you sure you want to delete the ${posCount} selected pos?`,
         }).then(() => {
-            removePos(posIds, {
+          removePos(posIds, {
             onError: (e: ApolloError) => {
               toast({
                 title: 'Error',
@@ -40,11 +37,11 @@ export const PosDelete = ({ posIds, onDeleteSuccess }: PosDeleteProps) => {
                 title: 'Success',
                 description: `pos deleted successfully.`,
               });
-              
+
               if (onDeleteSuccess) {
                 onDeleteSuccess();
               }
-            }
+            },
           });
         })
       }

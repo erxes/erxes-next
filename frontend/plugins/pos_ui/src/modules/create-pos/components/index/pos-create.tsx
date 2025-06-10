@@ -5,8 +5,8 @@ import { posCategoryAtom } from '../../states/posCategory';
 import { PosCreateTabContent, PosCreateLayout } from './pos-create-layout';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSubmitPosForm } from '~/modules/hooks/usePosAdd';
-import { useUpdatePosSlots } from '~/modules/hooks/useSlotAdd';
+import { useSubmitPosForm } from '@/hooks/usePosAdd';
+import { useUpdatePosSlots } from '@/hooks/useSlotAdd';
 import { useState } from 'react';
 import {
   type BasicInfoFormValues,
@@ -19,9 +19,9 @@ import {
   paymentSchema,
   type FormStepData,
 } from '../formSchema';
-import { CustomNode } from '~/modules/slot/types';
-import POSSlotsManager from '~/modules/slot/components/slot';
-import { useToast } from 'erxes-ui/hooks';
+import { CustomNode } from '@/slot/types';
+import POSSlotsManager from '@/slot/components/slot';
+import { useToast } from 'erxes-ui';
 
 import ChooseCategoryPage from '../category/choose-category';
 import EcommercePaymentsForm from '../payments/ecommerce-payment';

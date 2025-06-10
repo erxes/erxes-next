@@ -1,6 +1,5 @@
-import React from 'react';
 import { OperationVariables, useQuery } from '@apollo/client';
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import { queries } from '@/settings/team-member/graphql';
 
 export const useUserDetail = (options?: OperationVariables) => {

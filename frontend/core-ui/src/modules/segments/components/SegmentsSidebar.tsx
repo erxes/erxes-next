@@ -1,5 +1,4 @@
-import { Sidebar } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
+import { Sidebar, useQueryState } from 'erxes-ui';
 import { Link } from 'react-router';
 
 type Props = {

@@ -20,7 +20,7 @@ import '@xyflow/react/dist/style.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import AutomationBuilderHeader from './AutomationBuilderHeader';
 import AutomationBuilderSidebar from './AutomationBuilderSidebar';
@@ -96,7 +96,7 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     );
 
     const mergedArray = updatedNodes.map((node1) => {
-      let node2 = nodes.find((o) => o.id === node1.id);
+      const node2 = nodes.find((o) => o.id === node1.id);
 
       if (node2) {
         return {
@@ -224,7 +224,7 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   }) => {
     setEdges((eds: Edge[]) => eds.filter((e) => e.id !== edge.id));
-    let info: any = { source: edge.source, target: undefined };
+    const info: any = { source: edge.source, target: undefined };
 
     const sourceNode = nodes.find((n) => n.id === edge.source);
 

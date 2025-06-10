@@ -1,8 +1,8 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { useSetAtom } from 'jotai';
 import { useQueryState } from 'erxes-ui';
-import { renderingPosDetailAtom } from '~/modules/states/posDetail';
-import { queries } from '~/modules/graphql';
+import { renderingPosDetailAtom } from '@/states/posDetail';
+import { queries } from '@/graphql';
 
 export const usePosDetail = (operationVariables?: OperationVariables) => {
   const [_id] = useQueryState('pos_id');

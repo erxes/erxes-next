@@ -4,7 +4,7 @@ import { IconLoader } from '@tabler/icons-react';
 import { ConversationContext } from '@/inbox/conversations/context/ConversationContext';
 import { ConversationListContext } from '@/inbox/conversations/context/ConversationListContext';
 import { IConversation } from '@/inbox/types/Conversation';
-import { useConversations } from '~/modules/inbox/conversations/hooks/useConversations';
+import { useConversations } from '@/inbox/conversations/hooks/useConversations';
 
 import {
   Button,

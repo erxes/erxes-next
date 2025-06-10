@@ -5,7 +5,7 @@ import { memo } from 'react';
 //     Handle,
 //     Position
 // } from "reactflow"
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 import { IconAdjustmentsAlt, IconMessage, IconPlus } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
 import { NodeData } from '../../../types';
