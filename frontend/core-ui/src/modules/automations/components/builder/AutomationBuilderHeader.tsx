@@ -19,8 +19,8 @@ import {
   Spinner,
   Switch,
   Tabs,
-} from 'erxes-ui/components';
-import { useQueryState, useToast } from 'erxes-ui/hooks';
+} from 'erxes-ui';
+import { useQueryState, useToast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { Link, useParams } from 'react-router';
 import { TAutomationProps } from '../../utils/AutomationFormDefinitions';

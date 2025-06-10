@@ -1,5 +1,5 @@
 import { IconAlertCircle } from '@tabler/icons-react';
-import { Button, Collapsible } from 'erxes-ui/components';
+import { Button, Collapsible } from 'erxes-ui';
 import { ChevronDown, ChevronUp, RefreshCw, X } from 'lucide-react';
 import { useState } from 'react';
 

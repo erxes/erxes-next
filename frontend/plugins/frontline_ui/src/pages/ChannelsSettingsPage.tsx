@@ -1,6 +1,6 @@
 import { PageSubHeader } from 'erxes-ui';
-import { ChannelsFilter } from '~/modules/settings/components/channels/ChannelsFilter';
-import { ChannelsSettings } from '~/modules/settings/components/ChannelsSettings';
+import { ChannelsFilter } from '@/settings/components/channels/ChannelsFilter';
+import { ChannelsSettings } from '@/settings/components/ChannelsSettings';
 
 const ChannelsSettingsPage = () => {
   return (

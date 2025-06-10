@@ -1,7 +1,7 @@
 import { IconSearch } from '@tabler/icons-react';
 import { Card, Command, Input } from 'erxes-ui';
 import { INTEGRATIONS } from '../constants/integrations';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { IntegrationLogo } from './IntegrationLogo';
 import { IntegrationType } from '@/types/Integration';
 

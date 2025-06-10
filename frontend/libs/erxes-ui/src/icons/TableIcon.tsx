@@ -1,4 +1,4 @@
-import * as TablerIcons from '@tabler/icons-react';
+// import * as TablerIcons from '@tabler/icons-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 import { cn } from 'erxes-ui/lib';
@@ -20,17 +20,17 @@ const iconVariants = cva(``, {
 });
 
 export type TablerIconSize = 'xsm' | 'sm' | 'md' | 'lg' | 'xl';
-export type TablerIconNamesType = keyof typeof TablerIcons;
+// export type TablerIconNamesType = keyof typeof TablerIcons;
 
 interface IconProps
   extends React.HtmlHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof iconVariants> {
-  name: TablerIconNamesType;
+  name: string;
 }
 
 const TablerIcon = React.forwardRef<HTMLButtonElement, IconProps>(
   ({ name, className, size, ...props }, ref) => {
-    const Icons: any = TablerIcons;
+    const Icons: any = TablerIcon;
     const IconComponent = Icons[name];
 
     if (!IconComponent) {

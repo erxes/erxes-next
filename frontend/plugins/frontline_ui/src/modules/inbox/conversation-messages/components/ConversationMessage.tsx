@@ -1,4 +1,4 @@
-import { cn } from 'erxes-ui/lib/utils';
+import { cn } from 'erxes-ui';
 import { HAS_ATTACHMENT } from '../../constants/messengerConstants';
 import { ConversationFormDisplay } from './ConversationFormDisplay';
 import { Button, IAttachment, RelativeDateDisplay } from 'erxes-ui';

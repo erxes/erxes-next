@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { IconAffiliate, IconChartPie, IconSettings } from '@tabler/icons-react';
-import { Breadcrumb, Button, Separator, Spinner } from 'erxes-ui/components';
-import { PageSubHeader, RecordTable } from 'erxes-ui/modules';
-import { Link } from 'react-router-dom';
+import { IconAffiliate, IconSettings } from '@tabler/icons-react';
+import { Breadcrumb, Button, RecordTable, Separator, Spinner } from 'erxes-ui';
 import { IPageInfo, PageHeader } from 'ui-modules';
 import { AUTOMATIONS_MAIN_LIST } from '../graphql/automationQueries';
 import { IAutomationDoc } from '../types';
 import { automationColumns } from './AutomationColumns';
 import { AutomationRecordTableFilters } from './AutomationRecordTableFilters';
+import { Link } from 'react-router-dom';
+
 type QueryResponse = {
   automationsMain: {
     list: IAutomationDoc[];
@@ -17,7 +17,7 @@ type QueryResponse = {
 };
 
 export const AutomationsRecordTable = () => {
-  const { data, loading, fetchMore, refetch } = useQuery<QueryResponse>(
+  const { data, loading, fetchMore } = useQuery<QueryResponse>(
     AUTOMATIONS_MAIN_LIST,
     {},
   );
@@ -27,8 +27,7 @@ export const AutomationsRecordTable = () => {
   }
 
   const { list = [], totalCount = 0, pageInfo } = data?.automationsMain || {};
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   const handleFetchMore = () => {
     if (!list || !totalCount || totalCount <= list.length) {

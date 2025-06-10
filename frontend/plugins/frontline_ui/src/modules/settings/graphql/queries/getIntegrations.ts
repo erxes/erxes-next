@@ -3,7 +3,7 @@ import {
   GQL_CURSOR_PARAM_DEFS,
   GQL_CURSOR_PARAMS,
   GQL_PAGE_INFO,
-} from 'erxes-ui/constants';
+} from 'erxes-ui';
 
 export const GET_INTEGRATIONS_COUNTS = gql`
   query totalIntegrationsCount {
