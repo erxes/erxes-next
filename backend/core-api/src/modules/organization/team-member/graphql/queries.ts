@@ -4,7 +4,7 @@ import {
   IUserDocument,
 } from 'erxes-api-shared/core-types';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { IContext, IModels } from '~/connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
 type IListArgs = {
   sortDirection?: number;
@@ -29,12 +29,7 @@ type IListArgs = {
 
 const NORMAL_USER_SELECTOR = { role: { $ne: USER_ROLES.SYSTEM } };
 
-const queryBuilder = async (
-  models: IModels,
-  params: IListArgs,
-  subdomain: string,
-  user: IUserDocument,
-) => {
+const queryBuilder = async (params: IListArgs) => {
   const {
     searchValue,
     isActive,
@@ -44,13 +39,7 @@ const queryBuilder = async (
     excludeIds,
     brandIds,
     departmentId,
-    unitId,
     branchId,
-    isAssignee,
-    departmentIds,
-    branchIds,
-    segment,
-    segmentData,
   } = params;
 
   const selector: any = {
@@ -111,10 +100,10 @@ export const userQueries = {
   async usersTotalCount(
     _parent: undefined,
     args: IListArgs,
-    { models, subdomain, user }: IContext,
+    { models }: IContext,
   ) {
     const selector = {
-      ...(await queryBuilder(models, args, subdomain, user)),
+      ...(await queryBuilder(args)),
       ...NORMAL_USER_SELECTOR,
     };
 
@@ -176,10 +165,10 @@ export const userQueries = {
   async users(
     _parent: undefined,
     args: IListArgs & ICursorPaginateParams,
-    { models, subdomain, user }: IContext,
+    { models }: IContext,
   ) {
     const selector = {
-      ...(await queryBuilder(models, args, subdomain, user)),
+      ...(await queryBuilder(args)),
       ...NORMAL_USER_SELECTOR,
     };
 

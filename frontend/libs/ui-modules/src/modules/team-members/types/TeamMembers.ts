@@ -4,9 +4,9 @@ export interface IMember {
   _id: string;
   email?: string;
   username?: string;
-  details: {
-    fullName: string;
-    avatar: string;
+  details?: {
+    fullName?: string;
+    avatar?: string;
   };
 }
 export interface IMemberGroup {

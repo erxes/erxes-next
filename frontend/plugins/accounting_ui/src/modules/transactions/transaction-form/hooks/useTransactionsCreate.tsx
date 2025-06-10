@@ -1,6 +1,6 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { ACC_TRANSACTIONS_CREATE } from '../graphql/mutations/accTransactionsCreate';
-import { TAddTransactionGroup } from '../types/AddTransaction';
+import { TAddTransactionGroup } from '../types/JournalForms';
 import { toast } from 'erxes-ui/hooks';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,10 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
   const createTransaction = (data: TAddTransactionGroup) => {
     const trDocs = data.trDocs.map(trD => ({
       ...trD,
+      details: trD.details.map(det => ({
+        ...det,
+        account: undefined,
+      })),
       date: data.date,
       number: data.number,
     }));
@@ -35,7 +39,7 @@ export const useTransactionsCreate = (options?: OperationVariables) => {
         const newParentId = data?.accTransactionsCreate[0]?.parentId;
 
         const pathname = newParentId
-          ? `/accounting/transaction/edit/${newParentId}`
+          ? `/accounting/transaction/edit?parentId=${newParentId}`
           : "/accounting/main";
 
         navigate(pathname);

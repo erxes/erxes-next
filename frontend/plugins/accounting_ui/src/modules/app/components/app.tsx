@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import { Spinner } from 'erxes-ui';
-import { PageChangeEffect } from '../effect-components/AccoountingPageChangeEffect';
+import { PageChangeEffect } from '../effect-components/AccountingPageChangeEffect';
 
 const TransactionList = lazy(() =>
   import('~/pages/TransactionListPage').then((module) => ({
@@ -37,7 +37,7 @@ const PluginAccounting = () => {
         />
         <Route path="/main" element={<TransactionList />} />
         <Route path="/records" element={<TrRecordList />} />
-        <Route path="/transaction/edit/:parentId" element={<TransactionForm />} />
+        <Route path="/transaction/edit" element={<TransactionForm />} />
         <Route path="/transaction/create" element={<TransactionForm />} />
       </Routes>
       <PageChangeEffect />

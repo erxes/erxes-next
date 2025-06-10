@@ -27,7 +27,7 @@ export const SelectBranchTree = React.forwardRef<
   }
 >(({ onSelect, selected, recordId, nullable, exclude, ...props }, ref) => {
   const [selectedBranch, setSelectedBranch] = useState<IBranch | undefined>();
-  const { branches, loading } = useBranchesMain({
+  const { sortedBranches: branches, loading } = useBranchesMain({
     onCompleted: ({ branches: list }: { branches: IBranch[] }) => {
       setSelectedBranch(list.find((branch) => branch._id === selected));
     },
@@ -87,7 +87,11 @@ export const SelectBranchCommand = ({
 }) => {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { branches, loading, error } = useBranchesMain({
+  const {
+    sortedBranches: branches,
+    loading,
+    error,
+  } = useBranchesMain({
     variables: {
       searchValue: debouncedSearch ?? undefined,
     },
@@ -102,37 +106,43 @@ export const SelectBranchCommand = ({
   }, [focusOnMount]);
 
   return (
-    <Command shouldFilter={false}>
-      <Command.Input
-        variant="secondary"
-        placeholder="Filter by branch"
-        ref={inputRef}
-        value={search}
-        onValueChange={(value) => setSearch(value)}
-      />
-      <Command.List className="p-1">
-        <Combobox.Empty error={error} loading={loading} />
-        {nullable && (
-          <Command.Item key="null" value="null" onSelect={() => onSelect(null)}>
-            No branch selected
-          </Command.Item>
-        )}
-        {branches?.map((branch: IBranch) => (
-          <SelectBranchItem
-            key={branch._id}
-            totalCount={branch.userCount || 0}
-            branch={branch}
-            selected={selectedBranch?._id === branch._id}
-            onSelect={() => onSelect(branch._id)}
-            disabled={exclude?.includes(branch._id)}
-            hasChildren={
-              branches.find((c: IBranch) => c.parentId === branch._id) !==
-              undefined
-            }
-          />
-        ))}
-      </Command.List>
-    </Command>
+    <SelectTree.Provider id="select-branch" ordered>
+      <Command shouldFilter={false}>
+        <Command.Input
+          variant="secondary"
+          placeholder="Filter by branch"
+          ref={inputRef}
+          value={search}
+          onValueChange={(value) => setSearch(value)}
+        />
+        <Command.List className="p-1">
+          <Combobox.Empty error={error} loading={loading} />
+          {nullable && (
+            <Command.Item
+              key="null"
+              value="null"
+              onSelect={() => onSelect(null)}
+            >
+              No branch selected
+            </Command.Item>
+          )}
+          {branches?.map((branch: IBranch) => (
+            <SelectBranchItem
+              key={branch._id}
+              totalCount={branch.userCount || 0}
+              branch={branch}
+              selected={selectedBranch?._id === branch._id}
+              onSelect={() => onSelect(branch._id)}
+              disabled={exclude?.includes(branch._id)}
+              hasChildren={
+                branches.find((c: IBranch) => c.parentId === branch._id) !==
+                undefined
+              }
+            />
+          ))}
+        </Command.List>
+      </Command>
+    </SelectTree.Provider>
   );
 };
 

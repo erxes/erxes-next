@@ -49,7 +49,9 @@ export const MessageItem = () => {
               <MessageContent content={content} internal={internal} />
               {separateNext && (
                 <div className="text-muted-foreground mt-1">
-                  <RelativeDateDisplay value={createdAt} />
+                  <RelativeDateDisplay value={createdAt}>
+                    <RelativeDateDisplay.Value value={createdAt} />
+                  </RelativeDateDisplay>
                 </div>
               )}
             </div>

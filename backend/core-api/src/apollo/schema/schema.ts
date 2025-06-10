@@ -130,6 +130,17 @@ import {
   types as DocumentTypes,
 } from '@/documents/graphql/schema';
 
+import {
+  mutations as AutomationsMutations,
+  queries as AutomationsQueries,
+  types as AutomationsTypes,
+} from '@/automations/graphql/schema';
+
+import {
+  queries as LogsQueries,
+  types as LogsTypes,
+} from '@/logs/graphql/schema';
+
 export const types = `
     enum CacheControlScope {
       PUBLIC
@@ -166,6 +177,8 @@ export const types = `
     ${PermissionTypes}
     ${UsersGroupTypes}
     ${DocumentTypes}
+    ${AutomationsTypes}
+    ${LogsTypes}
   `;
 
 export const queries = `
@@ -191,6 +204,8 @@ export const queries = `
     ${PermissionQueries}
     ${UsersGroupQueries}
     ${DocumentQueries}
+    ${AutomationsQueries}
+    ${LogsQueries}
   `;
 
 export const mutations = `
@@ -216,6 +231,7 @@ export const mutations = `
     ${PermissionMutations}
     ${UsersGroupMutations}
     ${DocumentMutations}
+    ${AutomationsMutations}
   `;
 
 export default { types, queries, mutations };

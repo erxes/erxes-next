@@ -1,7 +1,7 @@
 import {
   Combobox,
   Command,
-  Popover,
+  Button,
   PopoverScoped,
   RecordTableCellContent,
   RecordTableCellTrigger,
@@ -11,7 +11,7 @@ import {
 } from 'erxes-ui';
 import { useTags } from '../hooks/useTags';
 import { useDebounce } from 'use-debounce';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ISelectTagsProviderProps,
   ITag,
@@ -19,7 +19,7 @@ import {
 } from 'ui-modules/modules';
 import { SelectTagsContext } from '../contexts/SelectTagsContext';
 import { useSelectTagsContext } from '../hooks/useSelectTagsContext';
-import { IconPlus } from '@tabler/icons-react';
+import { IconPlus, IconTag } from '@tabler/icons-react';
 import { CreateTagForm, SelectTagCreateContainer } from './CreateTagForm';
 import { TagBadge } from './TagBadge';
 
@@ -35,7 +35,6 @@ export const SelectTagsProvider = ({
   const [newTagName, setNewTagName] = useState('');
   const { giveTags } = useGiveTags();
   const [selectedTags, setSelectedTags] = useState<ITag[]>([]);
-
   const handleSelectCallback = (tag: ITag) => {
     if (!tag) return;
 
@@ -57,7 +56,6 @@ export const SelectTagsProvider = ({
 
     setSelectedTags(newSelectedTags);
     onValueChange?.(isSingleMode ? tag._id : newSelectedTagIds);
-
     if (targetIds) {
       giveTags({
         variables: {
@@ -182,11 +180,8 @@ export const SelectTagsItem = ({
 }: {
   tag: ITag & { hasChildren: boolean };
 }) => {
-  const { value, onSelect } = useSelectTagsContext();
-  const isSelected = Array.isArray(value)
-    ? (value as string[]).includes(tag._id)
-    : value === tag._id;
-
+  const { onSelect, selectedTags } = useSelectTagsContext();
+  const isSelected = selectedTags.some((t) => t._id === tag._id);
   return (
     <SelectTree.Item
       key={tag._id}
@@ -252,7 +247,9 @@ export const SelectTagsValue = () => {
 
   if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
 
-  return <TagList renderAsPlainText={mode === 'single'} />;
+  return (
+    <TagList placeholder="Select tags" renderAsPlainText={mode === 'single'} />
+  );
 };
 
 export const SelectTagsContent = () => {
@@ -345,7 +342,37 @@ export const SelectTagsDetail = React.forwardRef<
 
 SelectTagsDetail.displayName = 'SelectTagsDetail';
 
+
+export const SelectTagsCommandbarItem = ({
+  onValueChange,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'>) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <SelectTagsProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <RecordTablePopover open={open} onOpenChange={setOpen}>
+        <Button variant={'secondary'} asChild>
+          <RecordTableCellTrigger>
+            <IconTag />
+            Tag
+          </RecordTableCellTrigger>
+        </Button>
+        <RecordTableCellContent className="w-96">
+          <SelectTagsContent />
+        </RecordTableCellContent>
+      </RecordTablePopover>
+    </SelectTagsProvider>
+  );
+};
 export const SelectTags = Object.assign(SelectTagsProvider, {
+  CommandbarItem: SelectTagsCommandbarItem,
   Content: SelectTagsContent,
   Command: SelectTagsCommand,
   Item: SelectTagsItem,

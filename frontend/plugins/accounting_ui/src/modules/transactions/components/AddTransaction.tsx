@@ -31,22 +31,20 @@ export const AddTransaction = ({
     AccountingHotkeyScope.MainPage,
   );
 
-  useEffect(() => {
-    if (open) {
-      setHotkeyScopeAndMemorizePreviousScope(
-        AccountingHotkeyScope.AddTransactionDropdown,
-      );
-    } else {
-      goBackToPreviousHotkeyScope();
-    }
-  }, [
-    open,
-    goBackToPreviousHotkeyScope,
-    setHotkeyScopeAndMemorizePreviousScope,
-  ]);
-
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu
+      open={open}
+      onOpenChange={(op) => {
+        setOpen(op);
+        if (op) {
+          setHotkeyScopeAndMemorizePreviousScope(
+            AccountingHotkeyScope.AddTransactionDropdown,
+          );
+        } else {
+          goBackToPreviousHotkeyScope();
+        }
+      }}
+    >
       <DropdownMenu.Trigger asChild>{children}</DropdownMenu.Trigger>
       <DropdownMenu.Content className="min-w-[--radix-dropdown-menu-trigger-width]">
         <DropdownMenu.Label>Ерөнхий</DropdownMenu.Label>
@@ -74,6 +72,20 @@ export const AddTransaction = ({
           Харилцах
         </AddTransactionItem>
         <DropdownMenu.Label>Тооцоо</DropdownMenu.Label>
+        <AddTransactionItem
+          journal={TrJournalEnum.RECEIVABLE}
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Авлага
+        </AddTransactionItem>
+        <AddTransactionItem
+          journal={TrJournalEnum.PAYABLE}
+          onClick={onClick}
+          inForm={inForm}
+        >
+          Өглөг
+        </AddTransactionItem>
 
         <DropdownMenu.Label>Бараа материал</DropdownMenu.Label>
         <AddTransactionItem

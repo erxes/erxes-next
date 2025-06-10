@@ -1,6 +1,6 @@
 import { RecordTable } from 'erxes-ui';
 import { useCompanies } from '@/contacts/companies/hooks/useCompanies';
-
+import { CompaniesCommandBar } from '@/contacts/companies/components/companies-command-bar';
 import { companyColumns } from '@/contacts/companies/components/CompanyColumns';
 
 export const CompaniesRecordTable = () => {
@@ -35,6 +35,7 @@ export const CompaniesRecordTable = () => {
           </RecordTable.Body>
         </RecordTable>
       </RecordTable.CursorProvider>
+      <CompaniesCommandBar />
     </RecordTable.Provider>
   );
 };

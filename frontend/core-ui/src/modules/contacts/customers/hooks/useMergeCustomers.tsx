@@ -1,47 +1,28 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { CUSTOMERS_MERGE_MUTATION } from '../graphql/mutations/mergeCustomers';
-import { GET_CUSTOMERS } from '../graphql/queries/getCustomers';
 import { ICustomer } from 'ui-modules';
-
+import { useRecordTableCursor } from 'erxes-ui';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '../constants/customersCursorSessionKey';
 interface ICustomerMergeData {
   mergeCustomers: ICustomer[];
 }
+
 export const useMergeCustomers = () => {
+  const { setCursor } = useRecordTableCursor({
+    sessionKey: CUSTOMERS_CURSOR_SESSION_KEY,
+  });
   const [_mergeCustomers, { loading, error }] = useMutation<ICustomerMergeData>(
     CUSTOMERS_MERGE_MUTATION,
   );
 
-  const mergeCustomers = (operationVariables?: OperationVariables) => {
+  const mergeCustomers = (options?: OperationVariables) => {
     return _mergeCustomers({
-      ...operationVariables,
-      update: (cache, { data }) => {
-        try {
-          cache.updateQuery(
-            {
-              query: GET_CUSTOMERS,
-              variables: {
-                perPage: 30,
-                dateFilters: null,
-              },
-            },
-            ({ customers }) => {
-              const customerIds =
-                operationVariables?.variables.customerIds ?? [];
-
-              return {
-                customers: [
-                  data?.mergeCustomers,
-                  ...customers.filter(
-                    (customer: ICustomer) =>
-                      !customerIds.includes(customer._id),
-                  ),
-                ],
-              };
-            },
-          );
-        } catch {
-          //
-        }
+      ...options,
+      onCompleted: (data) => {
+        options?.onCompleted?.(data);
+        setTimeout(() => {
+          setCursor(null);
+        }, 100);
       },
     });
   };

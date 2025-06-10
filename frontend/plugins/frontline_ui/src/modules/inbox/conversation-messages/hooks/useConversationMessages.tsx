@@ -1,4 +1,4 @@
-import { OperationVariables } from '@apollo/client';
+import { QueryHookOptions } from '@apollo/client';
 
 import { useQuery } from '@apollo/client';
 import { GET_CONVERSATION_MESSAGES } from '../../conversations/conversation-detail/graphql/queries/getConversationMessages';
@@ -6,13 +6,21 @@ import { useEffect } from 'react';
 import { CONVERSATION_MESSAGE_INSERTED } from '../../conversations/graphql/subscriptions/inboxSubscriptions';
 import { IMessage } from '../../types/Conversation';
 
-export const useConversationMessages = (options: OperationVariables) => {
-  const { data, loading, fetchMore, subscribeToMore, client } = useQuery(
-    GET_CONVERSATION_MESSAGES,
-    options,
-  );
+export const useConversationMessages = (
+  options: QueryHookOptions<{
+    conversationMessages: IMessage[];
+    conversationMessagesTotalCount: number;
+  }>,
+) => {
+  const { data, loading, fetchMore, subscribeToMore, client } = useQuery<{
+    conversationMessages: IMessage[];
+    conversationMessagesTotalCount: number;
+  }>(GET_CONVERSATION_MESSAGES, options);
 
-  const { conversationMessages, conversationMessagesTotalCount } = data || {};
+  const { conversationMessages, conversationMessagesTotalCount } = data || {
+    conversationMessages: [],
+    conversationMessagesTotalCount: 0,
+  };
 
   const handleFetchMore = () => {
     if (
@@ -41,7 +49,9 @@ export const useConversationMessages = (options: OperationVariables) => {
   };
 
   useEffect(() => {
-    const unsubscribe = subscribeToMore({
+    const unsubscribe = subscribeToMore<{
+      conversationMessageInserted: IMessage;
+    }>({
       document: CONVERSATION_MESSAGE_INSERTED,
       variables: {
         _id: options.variables?.conversationId,

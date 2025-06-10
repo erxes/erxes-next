@@ -61,7 +61,8 @@ export const BranchEdit = ({ children }: { children?: React.ReactNode }) => {
 
   useEffect(() => {
     if (branchDetail) {
-      reset(branchDetail);
+      const { __typename, ...rest } = branchDetail;
+      reset(rest);
     }
   }, [branchDetail]);
 
@@ -88,7 +89,7 @@ export const BranchEdit = ({ children }: { children?: React.ReactNode }) => {
               <Sheet.Close />
             </Sheet.Header>
             <Sheet.Content className="grow size-full h-auto flex flex-col px-5 py-4">
-              <BranchForm />
+              <BranchForm loading={loading} />
             </Sheet.Content>
             <Sheet.Footer>
               <Button variant={'ghost'} onClick={() => setOpen(null)}>

@@ -41,5 +41,5 @@ export const AccountingTopbar = () => {
     );
   }
 
-  return <div>AccountingTopbar</div>;
+  return null;
 };

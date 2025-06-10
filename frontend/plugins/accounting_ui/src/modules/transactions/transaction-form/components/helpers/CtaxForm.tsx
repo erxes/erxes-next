@@ -6,8 +6,8 @@ import { useEffect, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 import { TrJournalEnum, TR_SIDES } from '../../../types/constants';
 import { followTrDocsState, taxPercentsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/AddTransaction';
-import { ICtaxRow } from '~/modules/settings/ctax/types/CtaxRow';
+import { ITransactionGroupForm } from '../../types/JournalForms';
+import { ICtaxRow } from '@/settings/ctax/types/CtaxRow';
 import { getTempId } from '../utils';
 import { ITransaction } from '../../../types/Transaction';
 
@@ -27,7 +27,6 @@ export const CtaxForm = ({
     control: form.control,
     name: `trDocs.${journalIndex}`
   })
-  const ctaxFollowData = (trDoc.follows || []).find(f => f.type === 'ctax');
 
   const hasCtax = useWatch({
     control: form.control,
@@ -78,20 +77,18 @@ export const CtaxForm = ({
 
   useEffect(() => {
     if (!trDoc.hasCtax) {
-      form.setValue(`trDocs.${journalIndex}.follows`, trDoc.follows?.filter(f => f.type !== 'ctax'));
       setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'ctax')));
       return;
     }
 
     if (side === TR_SIDES.DEBIT) {
-      form.setValue(`trDocs.${journalIndex}.follows`, trDoc.follows?.filter(f => f.type !== 'ctax'));
       setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'ctax')));
       return;
     }
 
     const { sumDt, sumCt } = side === TR_SIDES.DEBIT ? { sumDt: calcedAmount, sumCt: 0 } : { sumDt: 0, sumCt: calcedAmount };
 
-    const curr = followTrDocs.find(ftr => ftr._id === ctaxFollowData?.id);
+    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'ctax');
 
     const ctaxFtr = {
       ...curr || (trDoc as ITransaction),
@@ -110,11 +107,15 @@ export const CtaxForm = ({
       sumCt,
     };
 
-    form.setValue(`trDocs.${journalIndex}.follows`, [...(trDoc.follows || []).filter(f => f.type !== 'ctax'), { type: 'ctax', id: ctaxFtr._id }])
-    setFollowTrDocs([...(followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'ctax')), ctaxFtr]);
+    setFollowTrDocs([
+      ...(followTrDocs || []).filter(ftr => !(
+        ftr.originId === trDoc._id && ftr.followType === 'ctax'
+      )),
+      ctaxFtr
+    ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasCtax, side, calcedAmount, configs]);
+  }, [hasCtax, side, calcedAmount]);
 
   const changeCtaxRow = (ctaxRow: ICtaxRow) => {
     const ctaxPercent = ctaxRow.percent ?? 0;

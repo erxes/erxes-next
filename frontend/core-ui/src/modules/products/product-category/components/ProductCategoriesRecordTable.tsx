@@ -20,6 +20,7 @@ import {
 import { useMemo } from 'react';
 import { categoryMoreColumn } from './ProductCategoryMoreColumn';
 import { CategoryCommandBar } from './product-command-bar/CategoryCommandBar';
+import { PRODUCTS_PER_PAGE } from '@/products/hooks/useProducts';
 
 export const ProductCategoriesRecordTable = () => {
   const { productCategories, loading } = useProductCategories();
@@ -53,12 +54,12 @@ export const ProductCategoriesRecordTable = () => {
             <RecordTable.Header />
             <RecordTable.Body>
               <RecordTable.RowList Row={RecordTableTree.Row} />
-              {loading && <RecordTable.RowSkeleton rows={30} />}
+              {loading && <RecordTable.RowSkeleton rows={PRODUCTS_PER_PAGE} />}
             </RecordTable.Body>
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTableTree>
-      <CategoryCommandBar/>
+      <CategoryCommandBar />
     </RecordTable.Provider>
   );
 };
@@ -68,93 +69,93 @@ export const productCategoryColumns: (
 ) => ColumnDef<IProductCategory & { hasChildren: boolean }>[] = (
   categoryObject,
 ) => [
-  categoryMoreColumn,
-  RecordTable.checkboxColumn as ColumnDef<
-    IProductCategory & { hasChildren: boolean }
-  >,
-  {
-    id: 'attachment',
-    header: () => <RecordTable.InlineHead icon={IconImageInPicture} label="" />,
-    accessorKey: 'attachment',
-    cell: ({ cell }) => {
-      return (
-        <RecordTableCellDisplay className="px-1 justify-center">
-          <Avatar>
-            <Avatar.Image src={(cell.getValue() as any)?.url || ''} />
-            <Avatar.Fallback>
-              {cell.row.original.name.charAt(0)}
-            </Avatar.Fallback>
-          </Avatar>
-        </RecordTableCellDisplay>
-      );
-    },
-    size: 32,
-  },
-  {
-    id: 'name',
-    header: () => (
-      <RecordTable.InlineHead icon={IconLabelFilled} label="Name" />
-    ),
-    accessorKey: 'name',
-    cell: ({ cell }) => {
-      return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            <RecordTableTree.Trigger
-              order={cell.row.original.order}
-              name={cell.getValue() as string}
-              hasChildren={cell.row.original.hasChildren}
-            >
-              {cell.getValue() as string}
-            </RecordTableTree.Trigger>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      );
-    },
-    size: 300,
-  },
-  {
-    id: 'code',
-    header: () => <RecordTable.InlineHead icon={IconHash} label="Code" />,
-    accessorKey: 'code',
-    cell: ({ cell }) => {
-      return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger>
-            {cell.getValue() as string}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as string} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      );
-    },
-  },
+      categoryMoreColumn,
+      RecordTable.checkboxColumn as ColumnDef<
+        IProductCategory & { hasChildren: boolean }
+      >,
+      {
+        id: 'attachment',
+        header: () => <RecordTable.InlineHead icon={IconImageInPicture} label="" />,
+        accessorKey: 'attachment',
+        cell: ({ cell }) => {
+          return (
+            <RecordTableCellDisplay className="px-1 justify-center">
+              <Avatar>
+                <Avatar.Image src={(cell.getValue() as any)?.url || ''} />
+                <Avatar.Fallback>
+                  {cell.row.original.name.charAt(0)}
+                </Avatar.Fallback>
+              </Avatar>
+            </RecordTableCellDisplay>
+          );
+        },
+        size: 32,
+      },
+      {
+        id: 'name',
+        header: () => (
+          <RecordTable.InlineHead icon={IconLabelFilled} label="Name" />
+        ),
+        accessorKey: 'name',
+        cell: ({ cell }) => {
+          return (
+            <RecordTablePopover>
+              <RecordTableCellTrigger>
+                <RecordTableTree.Trigger
+                  order={cell.row.original.order}
+                  name={cell.getValue() as string}
+                  hasChildren={cell.row.original.hasChildren}
+                >
+                  {cell.getValue() as string}
+                </RecordTableTree.Trigger>
+              </RecordTableCellTrigger>
+              <RecordTableCellContent>
+                <Input value={cell.getValue() as string} />
+              </RecordTableCellContent>
+            </RecordTablePopover>
+          );
+        },
+        size: 300,
+      },
+      {
+        id: 'code',
+        header: () => <RecordTable.InlineHead icon={IconHash} label="Code" />,
+        accessorKey: 'code',
+        cell: ({ cell }) => {
+          return (
+            <RecordTablePopover>
+              <RecordTableCellTrigger>
+                {cell.getValue() as string}
+              </RecordTableCellTrigger>
+              <RecordTableCellContent>
+                <Input value={cell.getValue() as string} />
+              </RecordTableCellContent>
+            </RecordTablePopover>
+          );
+        },
+      },
 
-  {
-    id: 'productCount',
-    header: () => (
-      <RecordTable.InlineHead icon={IconPackage} label="Product Count" />
-    ),
-    accessorKey: 'productCount',
-    cell: ({ cell }) => {
-      return (
-        <RecordTableCellDisplay>
-          {cell.getValue() as number}
-        </RecordTableCellDisplay>
-      );
-    },
-  },
-  {
-    id: 'parentId',
-    header: () => <RecordTable.InlineHead icon={IconPackage} label="Parent" />,
-    accessorKey: 'parentId',
-    cell: ({ cell }) => {
-      const parent = categoryObject[cell.getValue() as string];
-      return <RecordTableCellDisplay>{parent?.name}</RecordTableCellDisplay>;
-    },
-  },
-];
+      {
+        id: 'productCount',
+        header: () => (
+          <RecordTable.InlineHead icon={IconPackage} label="Product Count" />
+        ),
+        accessorKey: 'productCount',
+        cell: ({ cell }) => {
+          return (
+            <RecordTableCellDisplay>
+              {cell.getValue() as number}
+            </RecordTableCellDisplay>
+          );
+        },
+      },
+      {
+        id: 'parentId',
+        header: () => <RecordTable.InlineHead icon={IconPackage} label="Parent" />,
+        accessorKey: 'parentId',
+        cell: ({ cell }) => {
+          const parent = categoryObject[cell.getValue() as string];
+          return <RecordTableCellDisplay>{parent?.name}</RecordTableCellDisplay>;
+        },
+      },
+    ];

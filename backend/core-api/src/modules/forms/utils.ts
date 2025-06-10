@@ -97,8 +97,6 @@ export const fieldsCombinedByContentType = async (
 
   const [pluginName, moduleType] = splitType(contentType);
 
-  // console.log({ pluginName, moduleType });
-
   let fields = await sendTRPCMessage({
     pluginName,
     method: 'query',
@@ -112,8 +110,6 @@ export const fieldsCombinedByContentType = async (
     },
     defaultValue: [],
   });
-
-  // console.log({ fields });
 
   let validation;
 

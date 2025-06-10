@@ -22,13 +22,10 @@ export const useConversations = (
   }: {
     direction: EnumCursorDirection;
   }) => {
-    if (list?.length >= totalCount) return;
+    if (!pageInfo?.hasNextPage) return;
     fetchMore({
       variables: {
-        cursor:
-          direction === EnumCursorDirection.FORWARD
-            ? pageInfo?.endCursor
-            : pageInfo?.startCursor,
+        cursor: pageInfo?.endCursor,
         limit: 50,
         direction,
       },
@@ -50,5 +47,6 @@ export const useConversations = (
     conversations: list,
     loading,
     handleFetchMore,
+    pageInfo,
   };
 };

@@ -15,7 +15,7 @@ import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules/states';
 import { IconUserCircle } from '@tabler/icons-react';
 import { useMemberInline } from '../hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const MembersInlineRoot = ({
   members,
@@ -56,16 +56,18 @@ export const MembersInlineProvider = ({
   placeholder?: string;
   updateMembers?: (members: IMember[]) => void;
 }) => {
+  const [_members, _setMembers] = useState<IMember[]>(members || []);
+
   return (
     <MembersInlineContext.Provider
       value={{
-        members: members || [],
+        members: members || _members,
         loading: false,
         memberIds: memberIds || [],
         placeholder: isUndefinedOrNull(placeholder)
           ? 'Select members'
           : placeholder,
-        updateMembers,
+        updateMembers: updateMembers || _setMembers,
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
@@ -80,7 +82,7 @@ export const MembersInlineProvider = ({
 
 const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   const currentUser = useAtomValue(currentUserState) as IMember;
-  const { members, updateMembers } = useMembersInlineContext();
+  const { members, memberIds, updateMembers } = useMembersInlineContext();
   const { userDetail } = useMemberInline({
     variables: {
       _id: memberId,
@@ -89,14 +91,13 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   });
 
   useEffect(() => {
+    const newMembers = [...members].filter((m) => memberIds?.includes(m._id));
     if (userDetail) {
-      updateMembers?.([...members, { ...userDetail, _id: memberId }]);
+      updateMembers?.([...newMembers, { ...userDetail, _id: memberId }]);
     }
-
     if (currentUser._id === memberId) {
-      updateMembers?.([currentUser, ...members]);
+      updateMembers?.([currentUser, ...newMembers]);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetail, currentUser]);
 
@@ -148,7 +149,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     }
 
     return (
-      <Tooltip delayDuration={100}>
+      <Tooltip>
         <Tooltip.Trigger asChild>
           <Avatar
             className={cn(
@@ -181,12 +182,12 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     <div className="flex -space-x-1.5">
       {withAvatar.map(renderAvatar)}
       {restMembers.length > 0 && (
-        <Tooltip delayDuration={100}>
+        <Tooltip>
           <Tooltip.Trigger asChild>
             <Avatar
               className={cn('ring-2 ring-background bg-background', className)}
-              {...props}
               size="lg"
+              {...props}
             >
               <Avatar.Fallback className="bg-primary/10 text-primary">
                 +{restMembers.length}
@@ -194,7 +195,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
             </Avatar>
           </Tooltip.Trigger>
           <Tooltip.Content>
-            <p>{restMembers.map((m) => m.details.fullName).join(', ')}</p>
+            <p>{restMembers.map((m) => m.details?.fullName).join(', ')}</p>
           </Tooltip.Content>
         </Tooltip>
       )}
@@ -211,7 +212,7 @@ export const MembersInlineTitle = () => {
     if (members.length === 0) return undefined;
 
     if (members.length === 1) {
-      return isCurrentUser ? 'Current User' : members[0].details.fullName;
+      return isCurrentUser ? 'Current User' : members?.[0].details?.fullName;
     }
 
     if (isCurrentUser) {
@@ -221,7 +222,7 @@ export const MembersInlineTitle = () => {
       }
 
       const otherMember = members.find((m) => m._id !== currentUser._id);
-      return `You and ${otherMember?.details.fullName}`;
+      return `You and ${otherMember?.details?.fullName}`;
     }
 
     return `${members.length} members`;

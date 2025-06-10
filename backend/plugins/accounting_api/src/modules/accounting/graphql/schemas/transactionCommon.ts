@@ -15,6 +15,9 @@ const trDetailFields = `
   productId: String
   count: Float
   unitPrice: Float
+
+  excludeVat: Boolean
+  excludeCtax: Boolean
 `;
 
 const transactionFields = `
@@ -89,6 +92,8 @@ export const types = () => `
     branch: Branch
     department: Department
     customer: AccCustomer
+
+    ptrInfo: JSON
   }
 
   type AccCommonTrRecord {

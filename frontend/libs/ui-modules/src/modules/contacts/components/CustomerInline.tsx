@@ -1,13 +1,7 @@
 import React from 'react';
 import { useCustomerInline } from '../hooks/useCustomerInline';
 import { ICustomerInline } from '../types/Customer';
-import {
-  Avatar,
-  avatarVariants,
-  cn,
-  Skeleton,
-  TextOverflowTooltip,
-} from 'erxes-ui';
+import { Avatar, avatarVariants, cn, Combobox, Skeleton } from 'erxes-ui';
 import { useCustomerInlineContext } from '../hooks/useCustomerInlineContext';
 import { CustomerInlineContext } from '../contexts/CustomerInlineContext';
 
@@ -17,8 +11,9 @@ const CustomerInlineRoot = React.forwardRef<
     customer?: ICustomerInline;
     customerId?: string;
     avatarProps?: React.ComponentPropsWithoutRef<typeof Avatar>;
+    placeholder?: string;
   }
->(({ customer, customerId, avatarProps, className, ...props }, ref) => {
+>(({ customer, customerId, avatarProps, placeholder, ...props }, ref) => {
   return (
     <CustomerInlineProvider customerId={customerId} customer={customer}>
       <span
@@ -26,11 +21,11 @@ const CustomerInlineRoot = React.forwardRef<
         {...props}
         className={cn(
           'inline-flex items-center gap-2 overflow-hidden',
-          className,
+          props.className,
         )}
       >
         <CustomerInlineAvatar {...avatarProps} />
-        <CustomerInlineTitle />
+        <CustomerInlineTitle placeholder={placeholder} />
       </span>
     </CustomerInlineProvider>
   );
@@ -69,15 +64,8 @@ const CustomerInlineAvatar = React.forwardRef<
   React.ElementRef<typeof Avatar>,
   React.ComponentPropsWithoutRef<typeof Avatar>
 >(({ ...props }, ref) => {
-  const {
-    firstName,
-    lastName,
-    avatar,
-    primaryEmail,
-    primaryPhone,
-    loading,
-    _id,
-  } = useCustomerInlineContext();
+  const { firstName, lastName, avatar, primaryEmail, primaryPhone, loading } =
+    useCustomerInlineContext();
 
   if (loading)
     return <Skeleton className={avatarVariants({ size: props.size })} />;
@@ -100,20 +88,27 @@ CustomerInlineAvatar.displayName = 'CustomerInlineAvatar';
 
 export const CustomerInlineTitle = React.forwardRef<
   HTMLSpanElement,
-  React.ComponentPropsWithoutRef<'span'>
->((props, ref) => {
+  React.ComponentPropsWithoutRef<'span'> & {
+    placeholder?: string;
+  }
+>(({ className, ...props }, ref) => {
   const { firstName, lastName, primaryEmail, primaryPhone, loading } =
     useCustomerInlineContext();
 
-  if (loading) return <Skeleton className="w-20 h-4" />;
+  const placeholder = props.placeholder || 'anonymous customer';
+  const value =
+    firstName || lastName
+      ? `${firstName || ''} ${lastName || ''}`
+      : primaryEmail || primaryPhone || placeholder;
 
   return (
-    <TextOverflowTooltip
-      value={
-        firstName || lastName
-          ? `${firstName || ''} ${lastName || ''}`
-          : primaryEmail || primaryPhone
-      }
+    <Combobox.Value
+      loading={loading}
+      value={value}
+      className={cn(
+        value === placeholder ? 'text-muted-foreground' : '',
+        className,
+      )}
       {...props}
       ref={ref}
     />

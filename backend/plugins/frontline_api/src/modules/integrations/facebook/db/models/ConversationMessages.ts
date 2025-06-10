@@ -1,19 +1,21 @@
-import * as strip from 'strip';
+import { stripHtml } from 'string-strip-html';
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { conversationMessageSchema } from '@/integrations/facebook/db/definitions/conversationMessages';
-import { IFacebookConversationMessage,IFacebookConversationMessageDocument } from '@/integrations/facebook/@types/conversationMessages';
-
+import {
+  IFacebookConversationMessage,
+  IFacebookConversationMessageDocument,
+} from '@/integrations/facebook/@types/conversationMessages';
 
 export interface IFacebookConversationMessageModel
   extends Model<IFacebookConversationMessageDocument> {
   getMessage(_id: string): Promise<IFacebookConversationMessageDocument>;
   createMessage(
-    doc: IFacebookConversationMessage
+    doc: IFacebookConversationMessage,
   ): Promise<IFacebookConversationMessageDocument>;
   addMessage(
     doc: IFacebookConversationMessage,
-    userId?: string
+    userId?: string,
   ): Promise<IFacebookConversationMessageDocument>;
 }
 
@@ -23,7 +25,9 @@ export const loadFacebookConversationMessageClass = (models: IModels) => {
      * Retreives message
      */
     public static async getMessage(_id: string) {
-      const message = await models.FacebookConversationMessages.findOne({ _id }).lean();
+      const message = await models.FacebookConversationMessages.findOne({
+        _id,
+      }).lean();
 
       if (!message) {
         throw new Error('Conversation message not found');
@@ -37,7 +41,7 @@ export const loadFacebookConversationMessageClass = (models: IModels) => {
     public static async createMessage(doc: IFacebookConversationMessage) {
       const message = await models.FacebookConversationMessages.create({
         ...doc,
-        createdAt: doc.createdAt || new Date()
+        createdAt: doc.createdAt || new Date(),
       });
 
       return message;
@@ -46,27 +50,29 @@ export const loadFacebookConversationMessageClass = (models: IModels) => {
     /**
      * Create a conversation message
      */
-    public static async addMessage(doc: IFacebookConversationMessageDocument, userId?: string) {
+    public static async addMessage(
+      doc: IFacebookConversationMessageDocument,
+      userId?: string,
+    ) {
       const conversation = await models.FacebookConversations.findOne({
-        _id: doc.conversationId
+        _id: doc.conversationId,
       });
 
       if (!conversation) {
         throw new Error(`Conversation not found with id ${doc.conversationId}`);
       }
 
-      // normalize content, attachments
       const content = doc.content || '';
       const attachments = doc.attachments || [];
 
       doc.content = content;
       doc.attachments = attachments;
 
-      // <img> tags wrapped inside empty <p> tag should be allowed
-      const contentValid =
-        content.indexOf('<img') !== -1 ? true : strip(content);
+      // Determine if the content is valid
+      const hasImage = content.includes('<img');
+      const plainText = stripHtml(content).result.trim();
+      const contentValid = hasImage || plainText.length > 0;
 
-      // if there is no attachments and no content then throw content required error
       if (attachments.length === 0 && !contentValid) {
         throw new Error('Content is required');
       }

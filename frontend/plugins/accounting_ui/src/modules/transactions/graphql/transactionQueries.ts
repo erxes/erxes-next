@@ -71,9 +71,12 @@ export const commonTransactionFields = `
   details {
     ${commonTrDetailFields}
     account {
+      _id
       code
       name
       currency
+      kind
+      journal
     }
   }
   shortDetail {
@@ -223,6 +226,7 @@ export const TRANSACTIONS_QUERY = gql`
   query accTransactions(${trsFilterParamDefs}, ${commonParamDefs}) {
     accTransactions(${trsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
+      ptrInfo
     }
     accTransactionsCount(${trsFilterParams})
   }

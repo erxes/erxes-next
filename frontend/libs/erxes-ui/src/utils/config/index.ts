@@ -20,14 +20,14 @@ const getSubdomain = () => {
 let memoizedApiUrl: string | null = null;
 
 const getApi = (): string => {
-  if (memoizedApiUrl) return memoizedApiUrl;
+  // if (memoizedApiUrl) return memoizedApiUrl;
 
   const envApiUrl =
     window.env?.REACT_APP_API_URL ??
     (process.env.REACT_APP_API_URL || getDefaultUrl());
 
   memoizedApiUrl = envApiUrl?.includes('<subdomain>')
-    ? envApiUrl.replace('<subdomain>', getSubdomain()).replace('next', 'api')
+    ? envApiUrl.replace('<subdomain>', getSubdomain())
     : envApiUrl;
 
   return memoizedApiUrl;

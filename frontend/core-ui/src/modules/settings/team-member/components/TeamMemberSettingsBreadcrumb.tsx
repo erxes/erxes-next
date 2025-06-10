@@ -2,7 +2,6 @@ import { IconUsersGroup } from '@tabler/icons-react';
 import { Button, Separator } from 'erxes-ui';
 import { SETTINGS_ROUTES } from '@/settings/team-member/constants/teamMemberRoutes';
 import { useLocation } from 'react-router';
-import { TeamMemberCounts } from '@/settings/team-member/components/TeamMemberCounts';
 
 export function TeamMemberSettingsBreadcrumb() {
   const { pathname } = useLocation();
@@ -15,7 +14,6 @@ export function TeamMemberSettingsBreadcrumb() {
       <Separator.Inline />
       <Button variant="ghost" className="hover:bg-transparent font-semibold">
         {SETTINGS_ROUTES[pathname as keyof typeof SETTINGS_ROUTES]}
-        <TeamMemberCounts />
       </Button>
     </>
   );

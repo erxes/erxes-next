@@ -5,14 +5,31 @@ import { getTempId } from '../components/utils';
 import {
   TBankJournal,
   TCashJournal,
-  TDebtJournal,
-  // TFixedAssetJournal,
-  // TInventoryJournal,
-  // TInvIncomeJournal,
-  // TInvOutJournal,
+  TReceivableJournal,
+  TPayableJournal,
+  TInvIncomeJournal,
   TMainJournal,
   TTaxJournal,
-} from '../types/AddTransaction';
+} from '../types/JournalForms';
+
+const trDataWrapper = (doc?: ITransaction) => {
+  return {
+    ...doc,
+    _id: doc?._id ?? getTempId(),
+    customerType: doc?.customerType || CustomerType.CUSTOMER,
+  }
+}
+
+const trDetailWrapper = (detail?: ITrDetail) => {
+  return {
+    ...(detail || {}),
+    _id: detail?._id ?? getTempId(),
+    account: detail?.account,
+    accountId: detail?.accountId ?? '',
+    side: (detail?.side || TR_SIDES.DEBIT),
+    amount: detail?.amount ?? 0,
+  }
+}
 
 export const DEFAULT_VAT_VALUES = (doc?: ITransaction) => {
   return {
@@ -33,112 +50,98 @@ export const DEFAULT_CTAX_VALUES = (doc?: ITransaction) => {
 
 export const MAIN_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TMainJournal> => {
   return {
-    ...doc,
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.MAIN,
-    _id: doc?._id ?? getTempId(),
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0])
     }]
   };
 }
 
 export const CASH_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TCashJournal> => {
   return {
-    ...doc,
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.CASH,
-    _id: doc?._id ?? getTempId(),
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     ...DEFAULT_VAT_VALUES(doc),
     ...DEFAULT_CTAX_VALUES(doc),
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
     }]
   };
 };
 
 export const BANK_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TBankJournal> => {
   return {
-    ...doc,
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.BANK,
-    _id: doc?._id ?? getTempId(),
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     ...DEFAULT_VAT_VALUES(doc),
     ...DEFAULT_CTAX_VALUES(doc),
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
     }]
   }
 };
 
-export const DEBT_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TDebtJournal> => {
+export const RECEIVABLE_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TReceivableJournal> => {
   return {
-    ...doc,
-    journal: TrJournalEnum.DEBT,
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
+    ...trDataWrapper(doc),
+    journal: TrJournalEnum.RECEIVABLE,
     ...DEFAULT_VAT_VALUES(doc),
     ...DEFAULT_CTAX_VALUES(doc),
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
+    }]
+  };
+}
+
+export const PAYABLE_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TPayableJournal> => {
+  return {
+    ...trDataWrapper(doc),
+    journal: TrJournalEnum.PAYABLE,
+    ...DEFAULT_VAT_VALUES(doc),
+    ...DEFAULT_CTAX_VALUES(doc),
+    details: [{
+      ...trDetailWrapper(doc?.details[0]),
     }]
   };
 }
 
 export const TAX_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TTaxJournal> => {
   return {
+    ...trDataWrapper(doc),
     journal: TrJournalEnum.TAX,
-    customerType: doc?.customerType || CustomerType.CUSTOMER,
     details: [{
-      ...(doc?.details[0] || {}),
-      side: (doc?.details[0]?.side || TR_SIDES.DEBIT),
-      amount: doc?.details[0]?.amount ?? 0,
+      ...trDetailWrapper(doc?.details[0]),
     }]
   }
 };
 
-// export const INV_INCOME_JOURNAL_DEFAULT_VALUES: Partial<TInvIncomeJournal> = {
-//   journal: TrJournalEnum.INV_INCOME,
-//   customerType: CustomerType.CUSTOMER,
-//   ...DEFAULT_VAT_VALUES,
-//   details: [
-//     {
-//       side: 'dt',
-//       accountId: '',
-//       productId: '',
-//       quantity: 0,
-//       unitPrice: 0,
-//       amount: 0,
-//     },
-//   ],
-// };
+export const INV_INCOME_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TInvIncomeJournal> => {
+  return {
+    ...trDataWrapper(doc),
+    journal: TrJournalEnum.INV_INCOME,
+    ...DEFAULT_VAT_VALUES(doc),
+    ...DEFAULT_CTAX_VALUES(doc),
+    details: !doc?.details.length ? [{
+      ...trDetailWrapper(),
+      side: TR_SIDES.DEBIT,
+      productId: '',
+      count: 0,
+      unitPrice: 0,
+      amount: 0,
+    }] : doc?.details.map(det => ({
+      ...trDetailWrapper(det),
+      side: TR_SIDES.DEBIT,
+      productId: det.productId || '',
+      product: det.product,
+      count: det.count ?? 0,
+      unitPrice: det.unitPrice ?? 0,
+      amount: det.amount ?? 0,
+    }))
+  }
+};
 
-// export const INV_OUT_JOURNAL_DEFAULT_VALUES: Partial<TInvOutJournal> = {
-//   journal: TrJournalEnum.INV_OUT,
-//   customerType: CustomerType.CUSTOMER,
-//   ...DEFAULT_VAT_VALUES,
-// };
-
-// export const INVENTORY_JOURNAL_DEFAULT_VALUES: Partial<TInventoryJournal> = {
-//   // journal: TrJournalEnum.INVENTORY,
-//   customerType: CustomerType.CUSTOMER,
-//   ...DEFAULT_VAT_VALUES,
-// };
-
-// export const FIXED_ASSET_JOURNAL_DEFAULT_VALUES: Partial<TFixedAssetJournal> = {
-//   // journal: TrJournalEnum.FIXED_ASSET,
-//   customerType: CustomerType.CUSTOMER,
-//   ...DEFAULT_VAT_VALUES,
-// };
-
-export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction) => {
+export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction | any) => {
   if (!doc) {
     doc = {
       details: [] as ITrDetail[]
@@ -150,23 +153,22 @@ export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction) => {
   }
 
   switch (journal) {
-    // case TrJournalEnum.MAIN:
-    //   return MAIN_JOURNAL_DEFAULT_VALUES(doc);
     case TrJournalEnum.CASH:
       return CASH_JOURNAL_DEFAULT_VALUES(doc);
 
     case TrJournalEnum.BANK:
       return BANK_JOURNAL_DEFAULT_VALUES(doc);
 
-    case TrJournalEnum.DEBT:
-      return DEBT_JOURNAL_DEFAULT_VALUES(doc);
+    case TrJournalEnum.RECEIVABLE:
+      return RECEIVABLE_JOURNAL_DEFAULT_VALUES(doc);
 
-    default:
+    case TrJournalEnum.PAYABLE:
+      return PAYABLE_JOURNAL_DEFAULT_VALUES(doc);
+
+    case TrJournalEnum.INV_INCOME:
+      return INV_INCOME_JOURNAL_DEFAULT_VALUES(doc);
+
+    default: // MAIN
       return MAIN_JOURNAL_DEFAULT_VALUES(doc);
   }
-  //   [TrJournalEnum.INVENTORY]: INVENTORY_JOURNAL_DEFAULT_VALUES,
-  //   [TrJournalEnum.FIXED_ASSET]: FIXED_ASSET_JOURNAL_DEFAULT_VALUES,
-  //   [TrJournalEnum.TAX]: TAX_JOURNAL_DEFAULT_VALUES,
-  //   [TrJournalEnum.INV_INCOME]: INV_INCOME_JOURNAL_DEFAULT_VALUES,
-  //   [TrJournalEnum.INV_OUT]: INV_OUT_JOURNAL_DEFAULT_VALUES,
 };

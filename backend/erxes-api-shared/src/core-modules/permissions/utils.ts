@@ -1,4 +1,4 @@
-import { IPermissionContext, IUserDocument } from '@/core-types';
+import { IPermissionContext, IUserDocument } from '../../core-types';
 import { getEnv, redis } from '../../utils';
 import { getUserActionsMap } from './user-actions-map';
 
@@ -69,7 +69,6 @@ export const permissionWrapper = (
 };
 
 export const can = async (
-  subdomain: string,
   action: string,
   user?: IUserDocument,
 ): Promise<boolean> => {
@@ -118,14 +117,14 @@ export const checkPermission = async (
   cls[methodName] = async (
     root: any,
     args: any,
-    context: { user?: IUserDocument; [x: string]: any; subdomain: string },
+    context: { user?: IUserDocument; [x: string]: any },
     info: any,
   ) => {
-    const { user, subdomain } = context;
+    const { user } = context;
 
     checkLogin(user);
 
-    const allowed = await can(subdomain, actionName, user);
+    const allowed = await can(actionName, user);
 
     if (!allowed) {
       if (defaultValue) {
