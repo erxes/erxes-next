@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client';
 import { GET_INTEGRATION_KINDS } from '../graphql/queries/getIntegrations';
 
-export const useUsedIntegrationKinds = () => {
+export const useUsedIntegrationTypes = () => {
   const { data, loading } = useQuery(GET_INTEGRATION_KINDS);
 
   return {
-    integrationKinds: data?.integrationsGetUsedTypes || [],
+    integrationTypes: data?.integrationsGetUsedTypes || [],
     loading,
   };
 };
