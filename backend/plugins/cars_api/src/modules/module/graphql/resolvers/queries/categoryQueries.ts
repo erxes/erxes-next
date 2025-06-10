@@ -1,14 +1,14 @@
 import { IContext } from '~/connectionResolvers';
 
 export const CarCategoryQueries = {
-  getCarCategory: async (
+  carCategoryDetail: async (
     _root: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) => {
     return models.CarCategories.findOne({ _id });
   },
-  getCarCategories: async (
+  carCategories: async (
     _root: undefined,
     { parentId, searchValue },
     { commonQuerySelector, models }: IContext,
@@ -26,7 +26,7 @@ export const CarCategoryQueries = {
     return models.CarCategories.find(filter).sort({ order: 1 });
   },
 
-  getCarCategoriesCount: async (
+  carCategoriesTotalCount: async (
     _root: undefined,
     _param: any,
     { models }: IContext,

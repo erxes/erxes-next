@@ -83,11 +83,28 @@ export const carQueries = {
 
   //Cars count
 
-  carsCount: async (
-    _root: undefined,
-    _args: undefined,
-    { models }: IContext,
-  ) => {
-    return models.Cars.find().countDocuments();
-  },
+  // carCounts: async (
+  //   _root,
+  //   params,
+  //   { commonQuerySelector, commonQuerySelectorElk, models, subdomain }: IContext
+  // ) => {
+  //   const counts = {
+  //     bySegment: {},
+  //     byTag: {},
+  //   };
+
+  //   const { only } = params;
+
+  //   const qb = new Builder(models, subdomain, params, {
+  //     commonQuerySelector,
+  //     commonQuerySelectorElk,
+  //   });
+
+  //   switch (only) {
+  //     case "bySegment":
+  //       counts.bySegment = await countBySegment(subdomain, "cars:car", qb);
+  //       break;
+  //   }
+
+  //   return counts;
 };

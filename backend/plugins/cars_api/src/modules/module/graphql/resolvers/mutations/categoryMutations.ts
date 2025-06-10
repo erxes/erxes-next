@@ -6,7 +6,7 @@ import {
 } from '~/modules/module/@types/category';
 
 export const carCategoryMutations = {
-  createCarCategory: async (
+  carCategoriesAdd: async (
     _root: undefined,
     doc: ICarCategory,
     { models }: IContext,
@@ -14,7 +14,7 @@ export const carCategoryMutations = {
     return await models.CarCategories.createCarCategory({ ...doc });
   },
 
-  updateCarCategory: async (
+  carCategoriesEdit: async (
     _root: undefined,
     { _id, ...doc }: ICarCategoryDocument,
     { models }: IContext,
@@ -22,7 +22,7 @@ export const carCategoryMutations = {
     return await models.CarCategories.updateCarCategory(_id, doc);
   },
 
-  removeCarCategory: async (
+  carCategoriesRemove: async (
     _root: undefined,
     { _id }: ICarCategoryDocument,
     { models }: IContext,
