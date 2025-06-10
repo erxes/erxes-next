@@ -1,9 +1,6 @@
 import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
 export const types = `
-  extend type Field @key(fields: "_id") {
-    _id: String! @external
-  }
 
   type CustomPostType {
     _id: String!
@@ -36,7 +33,7 @@ export const types = `
     enabledPageIds: [String]
     enabledCategoryIds: [String]
 
-    fields: [Field]
+    fields: JSON
   }
 
   type CustomFieldGroupResponse {
