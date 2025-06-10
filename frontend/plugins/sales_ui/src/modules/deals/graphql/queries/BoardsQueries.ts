@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_BOARDS = gql`
-  query salesBoards($type: String!) {
-    salesBoards(type: $type) {
+  query salesBoards {
+    salesBoards {
       _id
       name
 
@@ -16,10 +16,11 @@ export const GET_BOARDS = gql`
 
 
 export const GET_BOARD_GET_LAST = gql`
-  query salesBoardGetLast($type: String!) {
-    salesBoardGetLast(type: $type) {
+  query salesBoardGetLast {
+    salesBoardGetLast {
       _id
       name
+      createdAt
       pipelines {
         _id
         name
