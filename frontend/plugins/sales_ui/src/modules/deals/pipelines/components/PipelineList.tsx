@@ -25,21 +25,29 @@ export const PipelineList = ({
   const pipelines = boardDetail?.pipelines || ([] as IPipeline[]);
 
   return (
-    <Accordion.Content className="content">
-      <Sidebar.Menu className="px-2">
-        {pipelines?.map((pipeline) => (
-          <Link
-            key={pipeline._id}
-            to={`?boardId=${boardId}&pipelineId=${pipeline._id}`}
-          >
-            <Sidebar.MenuItem>
-              <Sidebar.MenuButton isActive={pipeline._id === pipelineId}>
-                <div className="flex items-center">{pipeline.name}</div>
-              </Sidebar.MenuButton>
-            </Sidebar.MenuItem>
-          </Link>
-        ))}
-      </Sidebar.Menu>
-    </Accordion.Content>
+    <>
+      <Accordion.Trigger className="text-gray-400 text-sm">
+        Pipelines ({pipelines?.length || 0})
+      </Accordion.Trigger>
+      <Accordion.Content className="content">
+        <Sidebar.Menu className="px-2">
+          {pipelines?.map((pipeline) => (
+            <Link
+              key={pipeline._id}
+              to={`?boardId=${boardId}&pipelineId=${pipeline._id}`}
+            >
+              <Sidebar.MenuItem>
+                <Sidebar.MenuButton
+                  className="!h-auto"
+                  isActive={pipeline._id === pipelineId}
+                >
+                  <div className="flex items-center">{pipeline.name}</div>
+                </Sidebar.MenuButton>
+              </Sidebar.MenuItem>
+            </Link>
+          ))}
+        </Sidebar.Menu>
+      </Accordion.Content>
+    </>
   );
 };

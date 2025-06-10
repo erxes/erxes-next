@@ -13,7 +13,6 @@ import {
   SortableContext,
   arrayMove,
   horizontalListSortingStrategy,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { cards as initialCards, stages as initialStages } from '../constants';
 

@@ -58,7 +58,7 @@ export const SalesLeftSidebar = () => {
           >
             <Accordion.Item value="boards">
               <Accordion.Trigger className="text-gray-400 text-sm">
-                Boards
+                Boards ({boards?.length || 0})
               </Accordion.Trigger>
               <Accordion.Content className="content">
                 <Sidebar.Menu className="px-2">
@@ -75,10 +75,7 @@ export const SalesLeftSidebar = () => {
                         <Sidebar.MenuButton
                           isActive={board._id === selectedBoardId}
                         >
-                          <div className="flex items-center">
-                            {board.name}{' '}
-                            <span>{board.pipelines?.length || 0}</span>
-                          </div>
+                          <div className="flex items-center">{board.name}</div>
                         </Sidebar.MenuButton>
                       </Sidebar.MenuItem>
                     </Link>
@@ -87,9 +84,6 @@ export const SalesLeftSidebar = () => {
               </Accordion.Content>
             </Accordion.Item>
             <Accordion.Item value="pipelines">
-              <Accordion.Trigger className="text-gray-400 text-sm">
-                Pipelines
-              </Accordion.Trigger>
               <PipelineList
                 boardId={selectedBoardId || ''}
                 pipelineId={selectedPipelineId || ''}
