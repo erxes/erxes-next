@@ -41,7 +41,6 @@ const commonParams = `
   $noSkipArchive: Boolean
   $branchIds:[String]
   $departmentIds:[String]
-  ${conformityQueryFields},
   $createdStartDate: Date,
   $createdEndDate: Date,
   $stateChangedStartDate: Date
@@ -77,7 +76,6 @@ const commonParamDefs = `
   noSkipArchive: $noSkipArchive
   branchIds: $branchIds,
   departmentIds: $departmentIds,
-  ${conformityQueryFieldDefs},
   createdStartDate: $createdStartDate,
   createdEndDate: $createdEndDate,
   stateChangedStartDate: $stateChangedStartDate
@@ -117,36 +115,34 @@ export const commonListFields = `
   }
 `;
 
-export const deals = gql`
+export const GET_DEALS = gql`
   query deals(
     $initialStageId: String,
     $stageId: String,
-    $skip: Int,
-    $limit: Int,
+
     ${commonParams}
   ) {
     deals(
       initialStageId: $initialStageId,
       stageId: $stageId,
-      skip: $skip,
-      limit: $limit,
+    
       ${commonParamDefs}
     ) {
       products
-      unUsedAmount
+      unusedAmount
       amount
       ${commonListFields}
     }
   }
 `;
 
-export const itemsCountBySegments = gql`
+export const GET_ITEMS_COUNT_BY_SEGMENTS = gql`
   query salesItemsCountBySegments($type: String!, $boardId: String, $pipelineId: String) {
     salesItemsCountBySegments(type: $type, boardId: $boardId, pipelineId: $pipelineId)
   }
 `;
 
-export const itemsCountByAssignedUser = gql`
+export const GET_ITEMS_COUNT_BY_ASSIGNED_USER = gql`
   query salesItemsCountByAssignedUser($pipelineId: String!, $type: String!, $stackBy: String) {
     salesItemsCountByAssignedUser(pipelineId: $pipelineId, type: $type, stackBy: $stackBy)
   }

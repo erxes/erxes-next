@@ -1,9 +1,9 @@
 import { CSS } from '@dnd-kit/utilities';
-import { CardType } from '../Main';
+import { IDeal } from '@/deals/types/deals';
 import { useSortable } from '@dnd-kit/sortable';
 
 type Props = {
-  card: CardType;
+  card: IDeal;
 };
 
 export const Card = ({ card }: Props) => {
@@ -30,7 +30,7 @@ export const Card = ({ card }: Props) => {
       style={style}
       className="p-2 bg-white rounded shadow min-h-[100px]"
     >
-      {card.title}
+      {card.name}
     </div>
   );
 };
