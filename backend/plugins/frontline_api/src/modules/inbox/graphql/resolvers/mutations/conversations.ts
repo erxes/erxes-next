@@ -87,7 +87,7 @@ export const publishConversationsChanged = async (
   const models = await generateModels(subdomain);
 
   for (const _id of _ids) {
-    graphqlPubsub.publish(`conversationChanged:${_id}`, {
+    await graphqlPubsub.publish(`conversationChanged:${_id}`, {
       conversationChanged: { conversationId: _id, type },
     });
 
@@ -105,7 +105,7 @@ export const publishMessage = async (
   message: any,
   customerId?: string,
 ) => {
-  graphqlPubsub.publish(
+  await graphqlPubsub.publish(
     `conversationMessageInserted:${message.conversationId}`,
     {
       conversationMessageInserted: message,
@@ -118,12 +118,15 @@ export const publishMessage = async (
         message.conversationId,
       );
 
-    graphqlPubsub.publish(`conversationAdminMessageInserted:${customerId}`, {
-      conversationAdminMessageInserted: {
-        customerId,
-        unreadCount,
+    await graphqlPubsub.publish(
+      `conversationAdminMessageInserted:${customerId}`,
+      {
+        conversationAdminMessageInserted: {
+          customerId,
+          unreadCount,
+        },
       },
-    });
+    );
   }
 };
 
@@ -463,7 +466,7 @@ export const conversationMutations = {
         },
       ],
     });
-    await graphqlPubsub.publish(
+    await await graphqlPubsub.publish(
       `conversationMessageInserted:${message.conversationId}`,
       {
         conversationMessageInserted: message,

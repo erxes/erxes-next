@@ -190,7 +190,7 @@ export const receiveTrpcMessage = async (
       conversationDoc,
     );
 
-    graphqlPubsub.publish(
+    await graphqlPubsub.publish(
       `conversationMessageInserted:${message.conversationId}`,
       {
         conversationMessageInserted: message,
@@ -234,7 +234,10 @@ export const receiveIntegrationsNotification = async (subdomain, msg) => {
   const models = await generateModels(subdomain);
 
   if (action === 'external-integration-entry-added') {
-    graphqlPubsub.publish('conversationExternalIntegrationMessageInserted', {});
+    await graphqlPubsub.publish(
+      'conversationExternalIntegrationMessageInserted',
+      {},
+    );
 
     if (conversationId) {
       await models.Conversations.reopen(conversationId);
@@ -248,7 +251,7 @@ export const receiveIntegrationsNotification = async (subdomain, msg) => {
   }
 
   if (action === 'sync-calendar-event') {
-    graphqlPubsub.publish('calendarEventUpdated', {});
+    await graphqlPubsub.publish('calendarEventUpdated', {});
 
     return sendSuccess({ status: 'ok' });
   }

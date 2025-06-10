@@ -121,7 +121,7 @@ export const receiveMessage = async (
 
         await pConversationClientMessageInserted(subdomain, doc);
 
-        graphqlPubsub.publish(
+        await graphqlPubsub.publish(
           `conversationMessageInserted:${conversation.erxesApiId}`,
           {
             conversationMessageInserted: {

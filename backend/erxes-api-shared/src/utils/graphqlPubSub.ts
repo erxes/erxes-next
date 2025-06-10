@@ -5,7 +5,7 @@ import Redis from 'ioredis';
 // load environment variables
 dotenv.config();
 
-const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env;
+const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, SKIP_REDIS } = process.env;
 
 const redisOptions = {
   host: REDIS_HOST,
