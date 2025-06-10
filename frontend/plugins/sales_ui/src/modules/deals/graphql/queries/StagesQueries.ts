@@ -48,7 +48,7 @@ export const commonParamDefs = `
 
 const stageParams = `
   $isNotLost: Boolean,
-  $pipelineId: String!,
+  $pipelineId: String,
   ${commonParams}
 `;
 
@@ -72,7 +72,7 @@ const stageCommon = `
   probability
 `;
 
-export const archivedStagesCount = gql`
+export const GET_ARCHIVED_STAGES_COUNT = gql`
   query salesArchivedStagesCount(
     $pipelineId: String!,
     $search: String
@@ -84,7 +84,7 @@ export const archivedStagesCount = gql`
   }
 `;
 
-export const stages = gql`
+export const GET_STAGES = gql`
   query salesStages(
     ${stageParams}
   ) {
@@ -96,7 +96,7 @@ export const stages = gql`
   }
 `;
 
-export const stageDetail = gql`
+export const GET_STAGE_DETAIL = gql`
   query salesStageDetail(
     $_id: String!,
     ${commonParams}
@@ -114,7 +114,7 @@ export const stageDetail = gql`
   }
 `;
 
-export const conversionStages = gql`
+export const GET_CONVERSION_STAGES = gql`
   query salesStages(
     ${stageParams}
   ) {

@@ -1,11 +1,12 @@
-import { Button, DropdownMenu, Sheet } from 'erxes-ui';
+import { DropdownMenu, Sheet } from 'erxes-ui';
 import { IconDots, IconPlus } from '@tabler/icons-react';
 
-import { AddCustomerForm } from '../../cards/AddCardForm';
+import { IStage } from '@/deals/types/stages';
+// import { AddCustomerForm } from '../../cards/AddCardForm';
 import { useState } from 'react';
 
 type Props = {
-  stage: any;
+  stage: IStage;
 };
 
 export const StageHeader = ({ stage }: Props) => {
@@ -13,7 +14,9 @@ export const StageHeader = ({ stage }: Props) => {
 
   return (
     <div className="flex justify-between items-center">
-      <h4>{stage.title}</h4>
+      <h4>
+        {stage.name} {stage.itemsTotalCount}
+      </h4>
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
@@ -59,7 +62,8 @@ export const StageHeader = ({ stage }: Props) => {
               e.preventDefault();
             }}
           >
-            <AddCustomerForm onOpenChange={setOpen} />
+            hi
+            {/* <AddCustomerForm onOpenChange={setOpen} /> */}
           </Sheet.View>
         </Sheet>
       </div>

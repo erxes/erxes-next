@@ -19,7 +19,7 @@ import {
   stages as initialStages,
 } from '~/modules/deals/constants/cards';
 
-import { Stages } from '@/deals/stage/components/Stages';
+import { Stages } from '@/deals/stage/components/Stage';
 import { useState } from 'react';
 
 export type StageType = {
