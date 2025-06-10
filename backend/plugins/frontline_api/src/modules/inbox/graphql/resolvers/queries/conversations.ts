@@ -295,7 +295,7 @@ export const conversationQueries = {
     return response;
   },
 
-  async inboxFields(_root, _args, { subdomain }: IContext) {
+  async inboxFields() {
     const response: {
       customer?: any[];
       conversation?: any[];
