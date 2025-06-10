@@ -1,7 +1,6 @@
 import { IOrderInput } from '../core-types';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
-import stripAnsi from 'strip-ansi';
 import { randomAlphanumeric } from './random';
 
 export const getEnv = ({
@@ -180,29 +179,6 @@ export const chunkArray = <T>(myArray: T[], chunkSize: number): T[][] => {
   return tempArray;
 };
 
-export const cleanHtml = (content?: string): string =>
-  stripAnsi(content || '').substring(0, 100);
-
-/**
- * Splits text into chunks of strings limited by the given character count.
- *
- * Regex explanation:
- * .{1,100}(\\s|$)
- * - .         → matches any character (except line terminators)
- * - {1,100}   → matches 1 to 100 of the preceding token
- * - (\\s|$)   → ends with a whitespace OR end of string
- *
- * @param str - Text to be split
- * @param size - Character length of each chunk
- * @returns An array of string chunks
- */
-export const splitStr = (str: string, size: number): string[] => {
-  const cleanStr = stripAnsi(str);
-
-  const regex = new RegExp(`.{1,${size}}(\\s|$)`, 'g');
-
-  return cleanStr.match(regex) || [];
-};
 
 export const fixDate = (
   value: string | number | Date,
@@ -227,9 +203,11 @@ export const checkUserIds = (
 
   return { addedUserIds, removedUserIds };
 };
+
 const generateRandomEmail = () => {
   return randomAlphanumeric(15) + '@gmail.com';
 };
+
 export const getUniqueValue = async (
   collection: any,
   fieldName = 'code',

@@ -1,4 +1,8 @@
-import stripAnsi from 'strip-ansi';
+
+const stripAnsi = async (str: string) => {
+  const { default: stripAnsiModule } = await import('strip-ansi');
+  return stripAnsiModule(str);
+};
 
 /**
  * Removes the last trailing slash from a string if it exists.
@@ -48,8 +52,8 @@ export const isValidURL = (url: string): boolean => {
  * @param size - Character length of each chunk
  * @returns An array of string chunks
  */
-export const splitStr = (str: string, size: number): string[] => {
-  const cleanStr = stripAnsi(str);
+export const splitStr = async (str: string, size: number): Promise<string[]> => {
+  const cleanStr = await stripAnsi(str);
 
   const regex = new RegExp(`.{1,${size}}(\\s|$)`, 'g');
 
@@ -64,8 +68,8 @@ export const splitStr = (str: string, size: number): string[] => {
  * @returns The cleaned content as a string.
  */
 
-export const cleanHtml = (content?: string): string =>
-  stripAnsi(content || '').substring(0, 100);
+export const cleanHtml = async (content?: string): Promise<string> =>
+  (await stripAnsi(content || '')).substring(0, 100);
 
 /**
  * Escapes a string so that it can be used in a regular expression.
