@@ -1,4 +1,4 @@
-import { Badge, cn, Skeleton, TextOverflowTooltip } from 'erxes-ui';
+import { Badge, Skeleton, TextOverflowTooltip } from 'erxes-ui';
 import { useTagsByIds } from '../hooks/useTags';
 import { ITag } from '../types/Tag';
 import React from 'react';

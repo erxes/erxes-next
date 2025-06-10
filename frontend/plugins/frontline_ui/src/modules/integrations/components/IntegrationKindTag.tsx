@@ -12,7 +12,7 @@ import { IIntegrationKind } from '../types/Integration';
 
 export const IntegrationKindTag = () => {
   const [integrationKindId, setIntegrationKindId] =
-    useQueryState<string>('integrationType');
+    useQueryState<string>('integrationKind');
   const { integrationKinds, loading } = useUsedIntegrationKinds();
 
   const integrationKind = integrationKinds?.find(

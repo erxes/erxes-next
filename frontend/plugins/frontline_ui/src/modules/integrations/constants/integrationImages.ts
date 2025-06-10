@@ -3,7 +3,7 @@ import {
   InstagramIcon,
   MessengerIcon,
   FacebookIcon,
-} from '../../integrations/components/Icons';
+} from '@/integrations/components/Icons';
 
 export const INTEGRATION_ICONS = {
   'facebook-messenger': MessengerIcon,

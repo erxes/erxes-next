@@ -3,7 +3,7 @@ import { useMultiQueryState, useQueryState } from 'erxes-ui';
 import { ChannelTag } from '@/inbox/channel/components/ChannelTag';
 import { IconX } from '@tabler/icons-react';
 import { BOOLEAN_FILTERS } from '../../constants/booleanFilters';
-import { IntegrationKindTag } from '@/integrations/components/IntegrationTypeTag';
+import { IntegrationKindTag } from '@/integrations/components/IntegrationKindTag';
 
 export const FilterTags = () => {
   const [{ channelId, integrationType, status }] = useMultiQueryState<{
