@@ -1,4 +1,5 @@
 import { IContext } from '~/connectionResolvers';
+import { requireLogin, checkPermission } from 'erxes-api-shared/core-modules';
 
 import {
   ICarCategory,
@@ -11,7 +12,7 @@ export const carCategoryMutations = {
     doc: ICarCategory,
     { models }: IContext,
   ) => {
-    return await models.CarCategories.createCarCategory({ ...doc });
+    return await models.CarCategories.carsCategoryAdd({ ...doc });
   },
 
   carCategoriesEdit: async (
@@ -19,14 +20,20 @@ export const carCategoryMutations = {
     { _id, ...doc }: ICarCategoryDocument,
     { models }: IContext,
   ) => {
-    return await models.CarCategories.updateCarCategory(_id, doc);
+    return await models.CarCategories.carsCategoriesEdit(_id, doc);
   },
 
   carCategoriesRemove: async (
     _root: undefined,
-    { _id }: ICarCategoryDocument,
+    { _id }: { _id: string },
     { models }: IContext,
   ) => {
-    return await models.CarCategories.removeCarCategory(_id);
+    return await models.CarCategories.carsCategoriesRemove(_id);
   },
 };
+
+requireLogin(carCategoryMutations, 'manageCars');
+
+checkPermission(carCategoryMutations, 'carCategoriesAdd', 'manageCars');
+checkPermission(carCategoryMutations, 'carCategoriesEdit', 'manageCars');
+checkPermission(carCategoryMutations, 'carCategoriesRemove', 'manageCars');

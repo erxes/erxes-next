@@ -1,6 +1,7 @@
 import { IContext } from '~/connectionResolvers';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { ICarDocument, ICarParams } from '~/modules/module/@types/car';
+import { checkPermission, requireLogin } from 'erxes-api-shared/core-modules';
 
 export const generateFilter = async (params, commonQuerySelector, models) => {
   const { tag } = params;
@@ -97,3 +98,8 @@ export const carQueries = {
   //   return counts;
   //}
 };
+
+requireLogin(carQueries, 'showCars');
+
+checkPermission(carQueries, 'cars', 'showCars');
+checkPermission(carQueries, 'carDetail', 'showCars');

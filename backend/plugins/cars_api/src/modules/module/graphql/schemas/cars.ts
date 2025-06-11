@@ -64,4 +64,5 @@ export const mutations = `
   carsdd(${mutationParams}): Car
   carsEdit(_id: String!, ${mutationParams}): Car
   carsRemove(_id: String!): Car
+  carsMerge(arIds: [String], carFields: JSON): Car
 `;

@@ -19,7 +19,6 @@ export const types = `
 export const queries = `
     carCategoryDetail(_id: String!): carCategory
     carCategories: carCategoryListResponse
-    carCategoriesTotalCount: Int
 `;
 
 const mutationParams = `

@@ -3,6 +3,7 @@ import { ICarParams } from '~/modules/module/@types/car';
 import { generateFilter } from './carQueries';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { ICarCategoryDocument } from '~/modules/module/@types/category';
+import { checkPermission, requireLogin } from 'erxes-api-shared/core-modules';
 
 export const CarCategoryQueries = {
   carCategoryDetail: async (
@@ -28,12 +29,9 @@ export const CarCategoryQueries = {
 
     return { list, totalCount, pageInfo };
   },
-
-  carCategoriesTotalCount: async (
-    _root: undefined,
-    _param: ICarParams,
-    { models }: IContext,
-  ) => {
-    return models.CarCategories.find().countDocuments();
-  },
 };
+
+requireLogin(CarCategoryQueries, 'showCarCategories');
+
+checkPermission(CarCategoryQueries, 'carCategoryDetail', 'showCarCategories');
+checkPermission(CarCategoryQueries, 'carCategories', 'showCarCategories');

@@ -1,9 +1,10 @@
+import { requireLogin, checkPermission } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
 import { ICar, ICarDocument } from '~/modules/module/@types/car';
 
 export const carMutations = {
   carsAdd: async (_root: undefined, doc: ICar, { models }: IContext) => {
-    return await models.Cars.createCar({ ...doc });
+    return await models.Cars.carsAdd({ ...doc });
   },
 
   carsEdit: async (
@@ -11,10 +12,21 @@ export const carMutations = {
     { _id, ...doc }: ICarDocument,
     { models }: IContext,
   ) => {
-    return await models.Cars.updateCar(_id, doc);
+    return await models.Cars.carsEdit(_id, doc);
   },
 
   carsRemove: async (_root: undefined, { _id }, { models }: IContext) => {
-    return models.Cars.removeCar(_id);
+    return models.Cars.carsRemove(_id);
+  },
+
+  carsMerge: async (_root: undefined, { carIds, carFields }, { models }) => {
+    return models.Cars.mergeCars(carIds, carFields);
   },
 };
+
+requireLogin(carMutations, 'manageCars');
+
+checkPermission(carMutations, 'carsAdd', 'manageCars');
+checkPermission(carMutations, 'carsEdit', 'manageCars');
+checkPermission(carMutations, 'carsRemove', 'manageCars');
+checkPermission(carMutations, 'carsMerge', 'manageCars');
