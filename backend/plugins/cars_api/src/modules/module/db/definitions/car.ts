@@ -1,6 +1,6 @@
-import { Schema } from 'mongoose';
+import { Schema, STATES } from 'mongoose';
 
-import { mongooseField, schemaWrapper } from 'erxes-api-shared/utils';
+import { schemaWrapper } from 'erxes-api-shared/utils';
 import { BODY_TYPES, FUEL_TYPES, GEARBOX, STATUSES } from '../../constants';
 import {
   customFieldSchema,
@@ -20,12 +20,17 @@ export const carSchema = schemaWrapper(
         required: true,
         index: true,
       },
-      bodyType: { type: String, label: 'Brand', enum: BODY_TYPES },
-      fuelType: { type: String, label: 'Brand', enum: FUEL_TYPES },
-      gearBox: { type: String, label: 'Gear box', enum: GEARBOX },
+      bodyType: { type: String, label: 'Brand', enum: BODY_TYPES.ALL },
+      fuelType: { type: String, label: 'Brand', enum: FUEL_TYPES.ALL },
+      gearBox: { type: String, label: 'Gear box', enum: GEARBOX.ALL },
       vintageYear: { type: Number, label: 'Vintage year', required: true },
-      imporYear: { type: Number, label: 'Imported year', required: true },
-      status: { type: String, label: 'Status', enum: STATUSES, index: true },
+      importYear: { type: Number, label: 'Imported year', required: true },
+      status: {
+        type: String,
+        label: 'Status',
+        enum: STATUSES.ALL,
+        index: true,
+      },
       description: { type: String, label: 'Description' },
       tagIds: { type: [String], label: 'Tags' },
       mergedIds: { type: [String], label: 'Merged companies' },
