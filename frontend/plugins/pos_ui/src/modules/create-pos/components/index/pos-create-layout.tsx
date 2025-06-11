@@ -9,7 +9,7 @@ import { PosDetailSheet } from './posDetailSheet';
 import { getSteps, navigateToTab } from '~/modules/constants';
 import { PosCreateStepper } from './pos-create-tab';
 import { NavigationFooter } from './navigation-footer';
-import { PosLayoutProps } from '~/modules/pos-detail.tsx/types/IPosLayout';
+import { PosLayoutProps } from '~/modules/pos-detail/types/IPosLayout';
 
 export const PosCreateLayout: React.FC<PosLayoutProps> = ({
   children,

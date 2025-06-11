@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { financeConfigSettingsAtom } from '../../states/posCategory';
 import { useEffect, useState } from 'react';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
 import { options } from '~/modules/constants';
 
 interface FinanceConfigFormProps {

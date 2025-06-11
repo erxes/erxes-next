@@ -3,7 +3,7 @@ import { Input, Select, Checkbox, Label } from "erxes-ui"
 import { useSearchParams } from "react-router-dom"
 import { useAtom } from "jotai"
 import { ebarimtConfigSettingsAtom } from "../../states/posCategory"
-import { PosDetailQueryResponse } from "~/modules/pos-detail.tsx/types/detail"
+import { PosDetailQueryResponse } from "~/modules/pos-detail/types/detail"
 
 interface EbarimtConfigFormProps {
   posDetail?: PosDetailQueryResponse['posDetail'];

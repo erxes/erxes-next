@@ -1,8 +1,8 @@
 import React from 'react';
 import { Stepper } from 'erxes-ui';
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react';
-import { StepperItemProps, ValidationAlertProps, VerticalStepperProps } from '~/modules/pos-detail.tsx/types/IPosLayout';
-import { LAYOUT } from '~/modules/constants';
+import { StepperItemProps, ValidationAlertProps, VerticalStepperProps } from '~/modules/pos-detail/types/IPosLayout';
+import { LAYOUT, navigateToTab } from '~/modules/constants';
 
 export const StepperItem = React.memo(
   ({ step, currentStep, isClickable }: StepperItemProps) => (
@@ -55,7 +55,6 @@ export const VerticalStepper = React.memo(
       ) {
         const targetStep = steps.find((step) => step.id === stepId);
         if (targetStep) {
-          const { navigateToTab } = require('./constants');
           navigateToTab(setSearchParams, searchParams, targetStep.value);
         }
       }

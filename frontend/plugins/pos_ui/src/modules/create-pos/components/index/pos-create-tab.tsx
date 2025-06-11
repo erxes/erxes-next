@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { posCategoryAtom } from '../../states/posCategory';
-import { PosCreateStepperProps, PosCreateTabContentProps } from '~/modules/pos-detail.tsx/types/IPosLayout';
 import { getSteps, LAYOUT, navigateToTab } from '~/modules/constants';
 import { VerticalStepper } from './lay-stepper';
+import { PosCreateStepperProps, PosTabContentProps } from '~/modules/pos-detail/types/IPosLayout';
 
-export const PosCreateTabContent: React.FC<PosCreateTabContentProps> = ({
+export const PosCreateTabContent: React.FC<PosTabContentProps> = ({
   children,
   value,
 }) => {

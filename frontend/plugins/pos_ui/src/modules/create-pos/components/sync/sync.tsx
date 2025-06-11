@@ -4,7 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { IconPlus } from '@tabler/icons-react';
 import { syncCardSettingsAtom } from '../../states/posCategory';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { SelectBranch, SelectMember } from 'ui-modules';
 
 interface SyncCardFormProps {
   posDetail?: IPosDetail;
@@ -45,6 +46,26 @@ export default function SyncCardForm({
       currentConfig: {
         ...syncCardSettings.currentConfig,
         [field]: value,
+      },
+    });
+  };
+
+  const handleBranchChange = (branchId: string) => {
+    setSyncCardSettings({
+      ...syncCardSettings,
+      currentConfig: {
+        ...syncCardSettings.currentConfig,
+        branch: branchId,
+      },
+    });
+  };
+
+  const handleUserChange = (userId: string | string[]) => {
+    setSyncCardSettings({
+      ...syncCardSettings,
+      currentConfig: {
+        ...syncCardSettings.currentConfig,
+        assignedUsers: Array.isArray(userId) ? userId.join(',') : userId,
       },
     });
   };
@@ -107,20 +128,11 @@ export default function SyncCardForm({
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm text-gray-500">CHOOSE BRUNCH</Label>
-                <Select
+                <Label className="text-sm text-gray-500">CHOOSE BRANCH</Label>
+                <SelectBranch
                   value={syncCardSettings.currentConfig.branch}
-                  onValueChange={(value) => handleSelectChange('branch', value)}
-                >
-                  <Select.Trigger>
-                    <Select.Value placeholder="Choose brunch" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    <Select.Item value="brunch1">Brunch 1</Select.Item>
-                    <Select.Item value="brunch2">Brunch 2</Select.Item>
-                    <Select.Item value="brunch3">Brunch 3</Select.Item>
-                  </Select.Content>
-                </Select>
+                  onValueChange={handleBranchChange}
+                />
               </div>
             </div>
 
@@ -150,21 +162,14 @@ export default function SyncCardForm({
                 <Label className="text-sm text-gray-500">
                   CHOOSE ASSIGNED USERS
                 </Label>
-                <Select
-                  value={syncCardSettings.currentConfig.assignedUsers}
-                  onValueChange={(value) =>
-                    handleSelectChange('assignedUsers', value)
+                <SelectMember.FormItem
+                  mode="multiple"
+                  value={syncCardSettings.currentConfig.assignedUsers ? 
+                    syncCardSettings.currentConfig.assignedUsers.split(',') : 
+                    []
                   }
-                >
-                  <Select.Trigger>
-                    <Select.Value placeholder="Choose team member" />
-                  </Select.Trigger>
-                  <Select.Content>
-                    <Select.Item value="user1">User 1</Select.Item>
-                    <Select.Item value="user2">User 2</Select.Item>
-                    <Select.Item value="user3">User 3</Select.Item>
-                  </Select.Content>
-                </Select>
+                  onValueChange={handleUserChange}
+                />
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'erxes-ui';
 import { IconLoader2 } from '@tabler/icons-react';
-import { NavigationFooterProps } from '~/modules/pos-detail.tsx/types/IPosLayout';
+import { NavigationFooterProps } from '~/modules/pos-detail/types/IPosLayout';
 import { ValidationAlert } from './lay-stepper';
 
 export const NavigationFooter = React.memo(

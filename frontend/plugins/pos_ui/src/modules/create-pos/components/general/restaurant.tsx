@@ -9,7 +9,7 @@ import { useSetAtom } from 'jotai';
 import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
 import { SelectBranch, SelectDepartment , SelectBrand } from 'ui-modules';
 
 interface RestaurantFormProps {

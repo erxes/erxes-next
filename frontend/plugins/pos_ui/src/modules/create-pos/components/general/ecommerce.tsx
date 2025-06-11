@@ -5,7 +5,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { Form, Input, Select } from "erxes-ui";
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
 import { SelectBranch, SelectBrand, SelectDepartment } from 'ui-modules';
 
 interface EcommerceFormProps {

@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { PaymentFormValues, paymentSchema } from "../formSchema"
 import { useToast } from "erxes-ui"
 import { PaymentMethod } from "../../types"
-import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
+import { IPosDetail } from "~/modules/pos-detail/types/IPos"
 import PaymentIcon from "./paymentIcon"
 
 interface EcommercePaymentsFormProps {

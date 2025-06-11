@@ -1,4 +1,4 @@
-import { StepConfig } from '../pos-detail.tsx/types/IPosLayout';
+import { StepConfig } from '../pos-detail/types/IPosLayout';
 import { CustomNode } from '../slot/types';
 
 export const ALLOW_TYPES = [

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import {
   ReactFlow,
   Background,
@@ -65,14 +65,29 @@ const POSSlotsManager = ({
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
+  const nodeTypes = useMemo(() => ({ tableNode: TableNode }), []);
+  const snapGrid = useMemo(() => [...SNAP_GRID] as [number, number], []);
+
+  const setNodes = useCallback((updater: any) => {
+    if (typeof updater === 'function') {
+      handleNodesChange(updater(nodes));
+    } else {
+      handleNodesChange(updater);
+    }
+  }, [nodes, handleNodesChange]);
+
+  const setHookNodes = useCallback((updater: any) => {
+    if (typeof updater === 'function') {
+      handleNodesChange(updater(nodes));
+    } else {
+      handleNodesChange(updater);
+    }
+  }, [nodes, handleNodesChange]);
+
   useNodeEvents({
     nodes,
-    setNodes: (updater) => {
-      console.log('Node update:', updater);
-    },
-    setHookNodes: (updater) => {
-      console.log('Hook node update:', updater);
-    },
+    setNodes,
+    setHookNodes,
     updateNodePosition,
     setActiveTab,
   });
@@ -96,8 +111,6 @@ const POSSlotsManager = ({
     }
   }, [nodes, onNodesChange]);
 
-  const nodeTypes = { tableNode: TableNode };
-
   const onNodeClick: NodeMouseHandler = useCallback(
     (event, node) => {
       handleNodeClick(node as CustomNode);
@@ -108,11 +121,9 @@ const POSSlotsManager = ({
 
   const onPaneClick = useCallback(() => {
     setSelectedNode(null);
-    if (sidebarView === 'detail') {
-      setSidebarView('list');
-    }
+    setSidebarView('list');
     setActiveTab('slots');
-  }, [sidebarView, setSidebarView, setSelectedNode]);
+  }, [setSidebarView, setSelectedNode]);
 
   const handleNodeSelect = useCallback(
     (nodeId: string) => {
@@ -167,7 +178,7 @@ const POSSlotsManager = ({
               nodeTypes={nodeTypes}
               fitView
               snapToGrid
-              snapGrid={[...SNAP_GRID]}
+              snapGrid={snapGrid}
               onDragStart={() => setIsDragging(true)}
               onDragEnd={() => setIsDragging(false)}
               proOptions={{ hideAttribution: true }}

@@ -6,7 +6,7 @@ import type { UseFormReturn } from 'react-hook-form';
 import { Form, Checkbox, Button, Label } from 'erxes-ui';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import type { ProductFormValues } from '../formSchema';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
 import { SelectCategory, SelectProduct } from 'ui-modules';
 
 interface ProductFormProps {

@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom"
 import { IconUpload } from "@tabler/icons-react"
 import { useState, useEffect } from "react"
 import { UiConfigFormValues } from "../formSchema"
-import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
+import { IPosDetail } from "~/modules/pos-detail/types/IPos"
 
 interface AppearanceFormProps {
   posDetail?: IPosDetail;
