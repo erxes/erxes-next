@@ -1,8 +1,8 @@
 import { IContext } from '~/connectionResolvers';
-import { ICarParams } from '~/modules/module/@types/car';
+import { ICarParams } from '~/modules/cars/@types/car';
 import { generateFilter } from './carQueries';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { ICarCategoryDocument } from '~/modules/module/@types/category';
+import { ICarCategoryDocument } from '~/modules/cars/@types/category';
 import { checkPermission, requireLogin } from 'erxes-api-shared/core-modules';
 
 export const CarCategoryQueries = {

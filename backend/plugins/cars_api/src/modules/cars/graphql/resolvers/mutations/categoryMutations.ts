@@ -4,7 +4,7 @@ import { requireLogin, checkPermission } from 'erxes-api-shared/core-modules';
 import {
   ICarCategory,
   ICarCategoryDocument,
-} from '~/modules/module/@types/category';
+} from '~/modules/cars/@types/category';
 
 export const carCategoryMutations = {
   carCategoriesAdd: async (

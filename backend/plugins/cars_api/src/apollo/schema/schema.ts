@@ -2,15 +2,15 @@ import {
   mutations as carMutations,
   queries as carQueries,
   types as carTypes,
-} from '~/modules/module/graphql/schemas/cars';
+} from '~/modules/cars/graphql/schemas/cars';
 
 import {
   mutations as carCategoryMutations,
   queries as CarCategoryQueries,
   types as carCategoryTypes,
-} from '~/modules/module/graphql/schemas/category';
+} from '~/modules/cars/graphql/schemas/category';
 
-import { TypeExtensions } from '~/modules/module/graphql/schemas/extension';
+import { TypeExtensions } from '~/modules/cars/graphql/schemas/extension';
 
 export const types = `
   ${TypeExtensions}

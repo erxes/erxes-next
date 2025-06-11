@@ -1,15 +1,19 @@
 import { initTRPC } from '@trpc/server';
+import { escapeRegExp } from 'erxes-api-shared/utils';
+import { z } from 'zod';
 
 import { ITRPCContext } from 'erxes-api-shared/utils';
+import { IModels } from '~/connectionResolvers';
 
-const t = initTRPC.context<ITRPCContext>().create();
+export type FrontlineTRPCContext = ITRPCContext<{ models: IModels }>;
 
-export const appRouter = t.router({
-  cars: {
-    hello: t.procedure.query(() => {
-      return 'Hello cars';
+const t = initTRPC.context<FrontlineTRPCContext>().create();
+
+export const carsTrpcRouter = t.router({
+  cars: t.router({
+    find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
     }),
-  },
+  }),
 });
-
-export type AppRouter = typeof appRouter;

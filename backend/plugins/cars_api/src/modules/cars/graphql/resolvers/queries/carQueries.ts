@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { cursorPaginate } from 'erxes-api-shared/utils';
-import { ICarDocument, ICarParams } from '~/modules/module/@types/car';
+import { ICarDocument, ICarParams } from '~/modules/cars/@types/car';
 import { checkPermission, requireLogin } from 'erxes-api-shared/core-modules';
 
 export const generateFilter = async (params, commonQuerySelector, models) => {
@@ -72,31 +72,7 @@ export const carQueries = {
 
   //Cars count
 
-  // carCounts: async (
-  //   _root,
-  //   params,
-  //   { commonQuerySelector, commonQuerySelectorElk, models, subdomain }: IContext
-  // ) => {
-  //   const counts = {
-  //     bySegment: {},
-  //     byTag: {},
-  //   };
-
-  //   const { only } = params;
-
-  //   const qb = new Builder(models, subdomain, params, {
-  //     commonQuerySelector,
-  //     commonQuerySelectorElk,
-  //   });
-
-  //   switch (only) {
-  //     case "bySegment":
-  //       counts.bySegment = await countBySegment(subdomain, "cars:car", qb);
-  //       break;
-  //   }
-
-  //   return counts;
-  //}
+  // carCounts: async () => {}
 };
 
 requireLogin(carQueries, 'showCars');

@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
-import { carSchema } from '~/modules/module/db/definitions/car';
-import { ICar, ICarDocument } from '~/modules/module/@types/car';
+import { carSchema } from '~/modules/cars/db/definitions/car';
+import { ICar, ICarDocument } from '~/modules/cars/@types/car';
 
 export interface ICarModel extends Model<ICarDocument> {
   carDetail(_id: string): Promise<ICarDocument>;
@@ -104,6 +104,7 @@ export const loadCarClass = (models: IModels) => {
      * Remove cars
      */
     public static async carsRemove(carIds: string[]) {
+      console.log(2, carIds);
       return models.Cars.deleteMany({ _id: { $in: carIds } });
     }
 

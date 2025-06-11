@@ -1,4 +1,4 @@
-import { ICarCategoryDocument } from '~/modules/module/@types/category';
+import { ICarCategoryDocument } from '~/modules/cars/@types/category';
 import { IContext } from '~/connectionResolvers';
 
 export default {

@@ -1,5 +1,5 @@
 import { IContext } from '~/connectionResolvers';
-import { ICarDocument } from '~/modules/module/@types/car';
+import { ICarDocument } from '~/modules/cars/@types/car';
 
 export default {
   category: async (car: ICarDocument, _args: any, { models }: IContext) => {

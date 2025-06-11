@@ -1,6 +1,6 @@
 import { requireLogin, checkPermission } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
-import { ICar, ICarDocument } from '~/modules/module/@types/car';
+import { ICar, ICarDocument } from '~/modules/cars/@types/car';
 
 export const carMutations = {
   carsAdd: async (_root: undefined, doc: ICar, { models }: IContext) => {
@@ -20,6 +20,7 @@ export const carMutations = {
     { carIds }: { carIds: string[] },
     { models }: IContext,
   ) => {
+    console.log(1, carIds);
     return await models.Cars.carsRemove(carIds);
   },
 
