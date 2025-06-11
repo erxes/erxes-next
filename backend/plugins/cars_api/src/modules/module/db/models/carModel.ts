@@ -8,7 +8,7 @@ export interface ICarModel extends Model<ICarDocument> {
   cars(): Promise<ICarDocument[]>;
   carsAdd(doc: ICar): Promise<ICarDocument>;
   carsEdit(_id: string, doc: ICar): Promise<ICarDocument>;
-  carsRemove(ModuleId: string): Promise<{ ok: number }>;
+  carsRemove(ModuleId: string[]): Promise<{ ok: number }>;
   getCar(_id: string): Promise<ICarDocument>;
 }
 
@@ -103,8 +103,8 @@ export const loadCarClass = (models: IModels) => {
     /**
      * Remove cars
      */
-    public static async carsRemove(CarId: string[]) {
-      return models.Cars.deleteOne({ _id: { $in: CarId } });
+    public static async carsRemove(carIds: string[]) {
+      return models.Cars.deleteMany({ _id: { $in: carIds } });
     }
 
     public static async carsMerge(carIds, carFields) {

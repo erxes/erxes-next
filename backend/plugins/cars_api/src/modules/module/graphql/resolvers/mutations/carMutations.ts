@@ -15,8 +15,12 @@ export const carMutations = {
     return await models.Cars.carsEdit(_id, doc);
   },
 
-  carsRemove: async (_root: undefined, { _id }, { models }: IContext) => {
-    return models.Cars.carsRemove(_id);
+  carsRemove: async (
+    _root: undefined,
+    { carIds }: { carIds: string[] },
+    { models }: IContext,
+  ) => {
+    return await models.Cars.carsRemove(carIds);
   },
 
   carsMerge: async (_root: undefined, { carIds, carFields }, { models }) => {

@@ -61,8 +61,8 @@ const mutationParams = `
 `;
 
 export const mutations = `
-  carsdd(${mutationParams}): Car
+  carsAdd(${mutationParams}): Car
   carsEdit(_id: String!, ${mutationParams}): Car
-  carsRemove(_id: String!): Car
-  carsMerge(arIds: [String], carFields: JSON): Car
+  carsRemove(_ids: [String]!): Car
+  carsMerge(carIds: [String], carFields: JSON): Car
 `;
