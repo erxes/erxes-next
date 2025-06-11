@@ -6,17 +6,17 @@ import { attachmentSchema } from 'erxes-api-shared/core-modules';
 export const categorySchema = schemaWrapper(
   new Schema(
     {
-      name: { type: String, label: 'name', required: true },
-      code: { type: String, label: 'code', required: true },
-      order: { type: String, label: 'order', equired: true },
-      parentId: { type: String, label: 'parentId' },
-      description: { type: String, label: 'description' },
-      image: { type: attachmentSchema, label: 'image' },
+      name: { type: String, label: 'Name', required: true },
+      code: { type: String, label: 'Code', required: true },
+      order: { type: String, label: 'Order', equired: true },
+      parentId: { type: String, label: 'Parent' },
+      description: { type: String, label: 'Description' },
+      image: { type: attachmentSchema, label: 'Image' },
       secondaryImage: {
         type: [attachmentSchema],
-        label: 'secondaryImage',
+        label: 'Secondary images',
       },
-      productCategoryId: { type: String, label: 'product' },
+      productCategoryId: { type: String, label: 'Product' },
     },
     {
       timestamps: true,

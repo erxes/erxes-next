@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { schemaWrapper } from 'erxes-api-shared/utils';
+import { mongooseField, schemaWrapper } from 'erxes-api-shared/utils';
 import { BODY_TYPES, FUEL_TYPES, GEARBOX, STATUSES } from '../../constants';
 import {
   customFieldSchema,
@@ -10,31 +10,34 @@ import {
 export const carSchema = schemaWrapper(
   new Schema(
     {
-      ownerId: { type: String, label: 'ownerId' },
-      plateNumber: { type: String, label: 'plateNumber', index: true },
-      vinNumber: { type: String, label: 'vinNumber', index: true },
+      ownerId: { type: String, label: 'Owner' },
+      plateNumber: { type: String, label: 'Plate number', index: true },
+      vinNumber: { type: String, label: 'VIN number', index: true },
       colorCode: { type: String, label: 'colorCode' },
       categoryId: {
         type: String,
-        label: 'categoryId',
+        label: 'Category',
         required: true,
         index: true,
       },
-      bodyType: { type: String, label: 'bodyType', enum: BODY_TYPES },
-      fuelType: { type: String, label: 'fuelType', enum: FUEL_TYPES },
-      gearBox: { type: String, label: 'gearBox', enum: GEARBOX },
-      vintageYear: { type: Number, label: 'vintageYear', required: true },
-      imporYear: { type: Number, label: 'imporYear', required: true },
-      status: { type: String, label: 'status', enum: STATUSES, index: true },
-      description: { type: String, label: 'description' },
-      tagIds: { type: [String], label: 'tagIds' },
-      mergedIds: { type: [String], label: 'mergedIds' },
-      searchText: { type: String, label: 'searchText', index: true },
+      bodyType: { type: String, label: 'Brand', enum: BODY_TYPES },
+      fuelType: { type: String, label: 'Brand', enum: FUEL_TYPES },
+      gearBox: { type: String, label: 'Gear box', enum: GEARBOX },
+      vintageYear: { type: Number, label: 'Vintage year', required: true },
+      imporYear: { type: Number, label: 'Imported year', required: true },
+      status: { type: String, label: 'Status', enum: STATUSES, index: true },
+      description: { type: String, label: 'Description' },
+      tagIds: { type: [String], label: 'Tags' },
+      mergedIds: { type: [String], label: 'Merged companies' },
+      searchText: { type: String, index: true },
       attachment: {
         type: attachmentSchema,
         label: 'attachment',
       },
-      customFieldsDays: { type: customFieldSchema, label: 'customDays' },
+      customFieldsDays: {
+        type: customFieldSchema,
+        label: 'Custom fields data ',
+      },
     },
     {
       timestamps: true,
