@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { PaymentFormValues, paymentSchema } from "../formSchema"
 import { useToast } from "erxes-ui"
 import { PaymentMethod } from "../../types"
-import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
+import { IPosDetail } from "~/modules/pos-detail/types/IPos"
 import PaymentIcon from "./paymentIcon"
 
 interface RestaurantPaymentsFormProps {
@@ -51,13 +51,10 @@ export default function RestaurantPaymentsForm({
     if (posDetail) {
       const paymentTypesData = posDetail.paymentTypes || []
       
-      // Check if paymentTypes is already an array of objects or array of strings
       const processedPaymentTypes = paymentTypesData.map((item: any) => {
         if (typeof item === 'string') {
-          // If it's a string, convert to object
           return { type: item, title: '', icon: '', config: '', _id: '' }
         } else if (typeof item === 'object' && item !== null) {
-          // If it's already an object, use it as is but ensure all required fields exist
           return {
             _id: item._id || '',
             type: item.type || '',
@@ -140,17 +137,6 @@ export default function RestaurantPaymentsForm({
     }
   }
 
-  const handlePaymentIdsChange = (selectedIds: string[]) => {
-    form.setValue('paymentIds', selectedIds)
-    
-    if (onFormSubmit) {
-      onFormSubmit({
-        paymentIds: selectedIds,
-        paymentTypes: form.getValues('paymentTypes')
-      })
-    }
-  }
-
   const safeDisplayValue = (value: any): string => {
     if (value === null || value === undefined) {
       return ''
@@ -162,10 +148,6 @@ export default function RestaurantPaymentsForm({
       return JSON.stringify(value)
     }
     return String(value)
-  }
-
-  const displayConfig = (config: string): string => {
-    return safeDisplayValue(config)
   }
 
   const handleSubmit = (e: { preventDefault: () => void }) => {

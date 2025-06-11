@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { UseFormReturn } from 'react-hook-form';
-import { Form, Input, Select, Checkbox, Button, Label } from 'erxes-ui';
+import { Form, Checkbox, Button, Label } from 'erxes-ui';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import type { ProductFormValues } from '../formSchema';
-import { IPosDetail } from '@/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { SelectCategory, SelectProduct } from 'ui-modules';
 
 interface ProductFormProps {
   form?: UseFormReturn<ProductFormValues>;
@@ -97,13 +98,6 @@ export default function ProductForm({
     form.setValue('catProdMappings', updatedMappings);
   };
 
-  const getFormTitle = () => {
-    if (isReadOnly) return 'View Product & Service Details';
-    return isEditMode
-      ? 'Edit Product & Service'
-      : 'Configure Product & Service';
-  };
-
   const handleSubmit = async (data: ProductFormValues) => {
     if (isReadOnly || !onSubmit) return;
 
@@ -117,15 +111,34 @@ export default function ProductForm({
     }
   };
 
+  const handleCategorySelect = (categoryId: string, fieldName: string) => {
+    form.setValue(fieldName as any, [categoryId]);
+  };
+
+  const handleProductSelect = (productId: string, fieldName: string) => {
+    form.setValue(fieldName as any, [productId]);
+  };
+
+  const handleProductDetailCategorySelect = (categoryId: string, index: number) => {
+    form.setValue(`productDetails.${index}.categoryId`, categoryId);
+  };
+
+  const handleProductDetailProductSelect = (productId: string, index: number) => {
+    form.setValue(`productDetails.${index}.productId`, productId);
+  };
+
+  const handleMappingCategorySelect = (categoryId: string, index: number) => {
+    form.setValue(`catProdMappings.${index}.categoryId`, categoryId);
+  };
+
+  const handleMappingProductSelect = (productId: string, index: number) => {
+    const currentProductIds = form.watch(`catProdMappings.${index}.productIds`) || [];
+    form.setValue(`catProdMappings.${index}.productIds`, [...currentProductIds, productId]);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="p-3">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">
-            {getFormTitle()}
-          </h2>
-        </div>
-
         <div className="space-y-8">
           <div className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
@@ -155,15 +168,16 @@ export default function ProductForm({
                       render={({ field }) => (
                         <Form.Item>
                           <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
-                            PRODUCT ID <span className="text-red-500">*</span>
+                            PRODUCT <span className="text-red-500">*</span>
                           </Form.Label>
                           <Form.Control>
-                            <Input
-                              {...field}
-                              placeholder="Enter product ID"
-                              className="border border-gray-300 h-10"
+                            <SelectProduct
+                              value={field.value}
+                              onValueChange={(productId) => 
+                                handleProductDetailProductSelect(productId, index)
+                              }
                               disabled={isReadOnly}
-                              readOnly={isReadOnly}
+                              className="border border-gray-300 h-10"
                             />
                           </Form.Control>
                           <Form.Message />
@@ -177,16 +191,16 @@ export default function ProductForm({
                       render={({ field }) => (
                         <Form.Item>
                           <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
-                            CATEGORY ID
+                            CATEGORY
                           </Form.Label>
                           <Form.Control>
-                            <Input
-                              {...field}
-                              value={field.value || ''}
-                              placeholder="Enter category ID (optional)"
-                              className="border border-gray-300 h-10"
+                            <SelectCategory
+                              selected={field.value}
+                              onSelect={(categoryId) => 
+                                handleProductDetailCategorySelect(categoryId as string, index)
+                              }
                               disabled={isReadOnly}
-                              readOnly={isReadOnly}
+                              className="border border-gray-300 h-10"
                             />
                           </Form.Control>
                           <Form.Message />
@@ -265,22 +279,14 @@ export default function ProductForm({
                     INITIAL CATEGORY IDS
                   </Form.Label>
                   <Form.Control>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue('initialCategoryIds', [value])
+                    <SelectCategory
+                      selected={field.value?.[0]}
+                      onSelect={(categoryId) => 
+                        handleCategorySelect(categoryId as string, 'initialCategoryIds')
                       }
-                      value={field.value?.[0] || ''}
                       disabled={isReadOnly}
-                    >
-                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                        <Select.Value placeholder="Choose initial categories" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="category1">Category 1</Select.Item>
-                        <Select.Item value="category2">Category 2</Select.Item>
-                        <Select.Item value="category3">Category 3</Select.Item>
-                      </Select.Content>
-                    </Select>
+                      className="w-full h-10 px-3 text-left justify-between"
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
@@ -302,28 +308,14 @@ export default function ProductForm({
                       EXCLUDE CATEGORIES
                     </Form.Label>
                     <Form.Control>
-                      <Select
-                        onValueChange={(value) =>
-                          form.setValue('kioskExcludeCategoryIds', [value])
+                      <SelectCategory
+                        selected={field.value?.[0]}
+                        onSelect={(categoryId) => 
+                          handleCategorySelect(categoryId as string, 'kioskExcludeCategoryIds')
                         }
-                        value={field.value?.[0] || ''}
                         disabled={isReadOnly}
-                      >
-                        <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                          <Select.Value placeholder="Choose categories to exclude" />
-                        </Select.Trigger>
-                        <Select.Content>
-                          <Select.Item value="category1">
-                            Category 1
-                          </Select.Item>
-                          <Select.Item value="category2">
-                            Category 2
-                          </Select.Item>
-                          <Select.Item value="category3">
-                            Category 3
-                          </Select.Item>
-                        </Select.Content>
-                      </Select>
+                        className="w-full h-10 px-3 text-left justify-between"
+                      />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -339,22 +331,14 @@ export default function ProductForm({
                       EXCLUDE PRODUCTS
                     </Form.Label>
                     <Form.Control>
-                      <Select
-                        onValueChange={(value) =>
-                          form.setValue('kioskExcludeProductIds', [value])
+                      <SelectProduct
+                        value={field.value?.[0]}
+                        onValueChange={(productId) => 
+                          handleProductSelect(productId, 'kioskExcludeProductIds')
                         }
-                        value={field.value?.[0] || ''}
                         disabled={isReadOnly}
-                      >
-                        <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                          <Select.Value placeholder="Choose products to exclude" />
-                        </Select.Trigger>
-                        <Select.Content>
-                          <Select.Item value="product1">Product 1</Select.Item>
-                          <Select.Item value="product2">Product 2</Select.Item>
-                          <Select.Item value="product3">Product 3</Select.Item>
-                        </Select.Content>
-                      </Select>
+                        className="w-full h-10 px-3 text-left justify-between"
+                      />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -393,15 +377,16 @@ export default function ProductForm({
                       render={({ field }) => (
                         <Form.Item>
                           <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
-                            CATEGORY ID <span className="text-red-500">*</span>
+                            CATEGORY <span className="text-red-500">*</span>
                           </Form.Label>
                           <Form.Control>
-                            <Input
-                              {...field}
-                              placeholder="Enter category ID"
-                              className="border border-gray-300 h-10"
+                            <SelectCategory
+                              selected={field.value}
+                              onSelect={(categoryId) => 
+                                handleMappingCategorySelect(categoryId as string, index)
+                              }
                               disabled={isReadOnly}
-                              readOnly={isReadOnly}
+                              className="border border-gray-300 h-10"
                             />
                           </Form.Control>
                           <Form.Message />
@@ -415,34 +400,17 @@ export default function ProductForm({
                       render={({ field }) => (
                         <Form.Item>
                           <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
-                            PRODUCT IDS
+                            PRODUCTS
                           </Form.Label>
                           <Form.Control>
-                            <Select
-                              onValueChange={(value) =>
-                                form.setValue(
-                                  `catProdMappings.${index}.productIds`,
-                                  [value],
-                                )
+                            <SelectProduct
+                              value={field.value?.[0]}
+                              onValueChange={(productId) => 
+                                handleMappingProductSelect(productId, index)
                               }
-                              value={field.value?.[0] || ''}
                               disabled={isReadOnly}
-                            >
-                              <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                                <Select.Value placeholder="Choose products" />
-                              </Select.Trigger>
-                              <Select.Content>
-                                <Select.Item value="product1">
-                                  Product 1
-                                </Select.Item>
-                                <Select.Item value="product2">
-                                  Product 2
-                                </Select.Item>
-                                <Select.Item value="product3">
-                                  Product 3
-                                </Select.Item>
-                              </Select.Content>
-                            </Select>
+                              className="w-full h-10 px-3 text-left justify-between"
+                            />
                           </Form.Control>
                           <Form.Message />
                         </Form.Item>
@@ -494,22 +462,14 @@ export default function ProductForm({
                     EXCLUDE CATEGORIES
                   </Form.Label>
                   <Form.Control>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue('checkExcludeCategoryIds', [value])
+                    <SelectCategory
+                      selected={field.value?.[0]}
+                      onSelect={(categoryId) => 
+                        handleCategorySelect(categoryId as string, 'checkExcludeCategoryIds')
                       }
-                      value={field.value?.[0] || ''}
                       disabled={isReadOnly}
-                    >
-                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                        <Select.Value placeholder="Choose categories to exclude" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="category1">Category 1</Select.Item>
-                        <Select.Item value="category2">Category 2</Select.Item>
-                        <Select.Item value="category3">Category 3</Select.Item>
-                      </Select.Content>
-                    </Select>
+                      className="w-full h-10 px-3 text-left justify-between"
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
