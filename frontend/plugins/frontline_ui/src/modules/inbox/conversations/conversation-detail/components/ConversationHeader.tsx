@@ -36,29 +36,32 @@ export const ConversationHeader = () => {
 
 const AssignConversation = () => {
   const { assignedUserId, _id } = useConversationContext();
-  const { assignConversations } = useAssignConversations({
-    onError: (error: Error) => {
-      toast({
-        title: 'Error',
-        description: error.message,
-        variant: 'destructive',
-      });
-    },
-  });
+  const { assignConversations } = useAssignConversations();
+
+  const handleAssignConversations = (value: string | string[]) => {
+    assignConversations({
+      variables: {
+        conversationIds: [_id],
+        assignedUserId: value,
+      },
+      onError: (error: Error) => {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+      },
+    });
+  };
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-2">
       Assigned to:
       <SelectMember.Detail
         value={assignedUserId}
-        onValueChange={(value) => {
-          assignConversations({
-            variables: {
-              conversationIds: [_id],
-              assignedUserId: value,
-            },
-          });
-        }}
+        onValueChange={handleAssignConversations}
+        className="text-foreground"
+        variant="outline"
       />
     </div>
   );

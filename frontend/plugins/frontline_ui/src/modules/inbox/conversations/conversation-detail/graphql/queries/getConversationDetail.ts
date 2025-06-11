@@ -11,6 +11,7 @@ export const GET_CONVERSATION_DETAIL = gql`
       assignedUserId
       customerId
       updatedAt
+      status
     }
   }
 `;

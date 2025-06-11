@@ -35,7 +35,7 @@ export const ConversationItem = () => {
 
   if (conversationId || detailView) {
     return (
-      <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start">
+      <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer">
         <CustomerInline.Provider customer={customer}>
           <div className="flex w-full gap-3 leading-tight">
             <ConversationSelector />

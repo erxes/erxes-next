@@ -1,11 +1,11 @@
 import { Combobox, Command, Filter } from 'erxes-ui';
+import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 
 export const FilterConversations = () => {
   return (
     <Filter id="inbox-filter-dropdown">
-      {/* TODO: Add scope */}
       <Filter.Bar>
-        <Filter.Popover scope="inbox">
+        <Filter.Popover scope={InboxHotkeyScope.MainPage}>
           <Filter.Trigger isFiltered />
           <Combobox.Content className="w-64">
             <Filter.View>
