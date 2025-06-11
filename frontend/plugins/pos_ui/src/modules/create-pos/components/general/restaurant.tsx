@@ -8,9 +8,9 @@ import { useSearchParams } from 'react-router-dom';
 import { useSetAtom } from 'jotai';
 import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
-import { ALLOW_TYPES } from '@/constants';
-import { IPosDetail } from '@/pos-detail.tsx/types/IPos';
-import { SelectBranch, SelectDepartment } from 'ui-modules';
+import { ALLOW_TYPES } from '~/modules/constants';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { SelectBranch, SelectDepartment , SelectBrand } from 'ui-modules';
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
@@ -67,20 +67,11 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     form.setValue('departmentId', departmentId);
   };
 
-  const getFormTitle = () => {
-    if (isReadOnly) return 'View Restaurant Details';
-    return isEditMode ? 'Edit Restaurant' : 'Create New Restaurant';
-  };
+  const selectedBrandId = form.watch('scopeBrandIds')?.[0] || '';
 
   return (
     <Form {...form}>
       <div className="p-3">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">
-            {getFormTitle()}
-          </h2>
-        </div>
-
         <div className="space-y-6">
           <Form.Field
             control={form.control}
@@ -141,28 +132,12 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     Which specific Brand does this integration belongs to?
                   </p>
                   <Form.Control>
-                    <div className="border border-gray-300">
-                      <Select
-                        onValueChange={(value) => handleBrandChange(value)}
-                        value={field.value?.[0] || ''}
-                        disabled={isReadOnly}
-                      >
-                        <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                          <Select.Value placeholder="Choose brands" />
-                        </Select.Trigger>
-                        <Select.Content>
-                          <Select.Item value="restaurant_brand1">
-                            Restaurant Brand 1
-                          </Select.Item>
-                          <Select.Item value="restaurant_brand2">
-                            Restaurant Brand 2
-                          </Select.Item>
-                          <Select.Item value="restaurant_brand3">
-                            Restaurant Brand 3
-                          </Select.Item>
-                        </Select.Content>
-                      </Select>
-                    </div>
+                    <SelectBrand
+                      value={selectedBrandId}
+                      onValueChange={handleBrandChange}
+                      className="w-full h-10 border border-gray-300"
+                      disabled={isReadOnly}
+                    />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>

@@ -3,11 +3,15 @@ import { Button, cn, Sheet, useSetHotkeyScope } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { useSearchParams } from 'react-router-dom';
-import { renderingPosDetailAtom } from '@/states/posDetail';
-import { PosHotKeyScope } from '@/types/posHotkeyScope';
+import { renderingPosDetailAtom } from '~/modules/states/posDetail';
+import { PosHotKeyScope } from '~/modules/types/posHotkeyScope';
 import { usePosDetail } from '../hooks/useDetail';
 
-export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
+export const PosDetailSheet = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [activeTab] = useAtom(renderingPosDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,7 +60,9 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
           </Button>
           <Sheet.Title>Pos Detail</Sheet.Title>
           <Sheet.Close />
-          <Sheet.Description className="sr-only">Pos Detail</Sheet.Description>
+          <Sheet.Description className="sr-only">
+            Pos Detail
+          </Sheet.Description>
         </Sheet.Header>
         {children}
       </Sheet.View>

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { useUpdatePosSlots } from './useSlotAdd';
-import { useToast } from 'erxes-ui';
+import { useToast } from 'erxes-ui/hooks';
 import { CustomNode } from '../slot/types';
 import { queries } from '../graphql';
 

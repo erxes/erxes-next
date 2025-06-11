@@ -4,12 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { screenConfigSettingsAtom } from '../../states/posCategory';
 import { useEffect, useState } from 'react';
-import { IPosDetail, IScreenConfig } from '@/pos-detail.tsx/types/IPos';
-import {
-  KITCHEN_TYPE_OPTIONS,
-  SHOW_TYPE_OPTIONS,
-  WAITING_TYPE_OPTIONS,
-} from '@/constants';
+import { IPosDetail, IScreenConfig } from '~/modules/pos-detail/types/IPos';
+import { KITCHEN_TYPE_OPTIONS, SHOW_TYPE_OPTIONS, WAITING_TYPE_OPTIONS } from '~/modules/constants';
 
 interface ScreenConfigFormProps {
   posDetail?: IPosDetail;
@@ -100,22 +96,8 @@ export default function ScreenConfigForm({
       setSearchParams(newParams);
     }
   };
-
-  const getFormTitle = () => {
-    if (isReadOnly) return 'View Screen Configuration';
-    return posDetail
-      ? 'Edit Screen Configuration'
-      : 'Configure Screen Settings';
-  };
-
   return (
     <form onSubmit={handleSubmit} className="p-3">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">
-          {getFormTitle()}
-        </h2>
-      </div>
-
       <div className="space-y-8">
         <div className="space-y-6">
           <h2 className="text-[#4F46E5] text-base font-semibold">MAIN</h2>
