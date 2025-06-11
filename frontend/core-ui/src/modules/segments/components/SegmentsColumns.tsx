@@ -9,8 +9,13 @@ import { Button } from 'erxes-ui/components';
 import { IconEdit } from '@tabler/icons-react';
 import { ISegment } from 'ui-modules';
 
+const checkBoxColumn = RecordTable.checkboxColumn as ColumnDef<
+  { order: string; hasChildren: boolean } & ISegment
+>;
+
 const columns: ColumnDef<{ order: string; hasChildren: boolean } & ISegment>[] =
   [
+    checkBoxColumn,
     {
       id: 'name',
       accessorKey: 'name',
