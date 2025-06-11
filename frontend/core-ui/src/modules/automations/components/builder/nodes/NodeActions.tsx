@@ -1,5 +1,5 @@
 import { IconDotsVertical, IconEdit } from '@tabler/icons-react';
-import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui/components';
+import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useFormContext, UseFormSetValue } from 'react-hook-form';

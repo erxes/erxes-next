@@ -9,13 +9,13 @@ import {
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import dayjs from 'dayjs';
-import { Avatar, Badge } from 'erxes-ui/components';
 import {
+  Avatar,
+  Badge,
   RecordTable,
   RecordTableCellDisplay,
   RelativeDateDisplay,
-} from 'erxes-ui/modules';
-import { AvatarPopover } from './AvatarPopover';
+} from 'erxes-ui';
 import { LogDetailDialog } from './LogDetail';
 import { readFile } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';

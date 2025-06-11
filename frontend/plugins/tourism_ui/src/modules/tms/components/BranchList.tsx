@@ -7,9 +7,9 @@ import {
   IconChevronDown,
 } from '@tabler/icons-react';
 import { useState, useRef, useEffect } from 'react';
-import { useBranchList } from '~/modules/tms/hooks/BranchList';
-import { useBranchRemove } from '~/modules/tms/hooks/BranchRemove';
-import { IBranch } from '~/modules/tms/types/branch';
+import { useBranchList } from '@/tms/hooks/BranchList';
+import { useBranchRemove } from '@/tms/hooks/BranchRemove';
+import { IBranch } from '@/tms/types/branch';
 import { format } from 'date-fns';
 import { EmptyList } from './EmptyList';
 import { toast } from 'erxes-ui';

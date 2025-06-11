@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import { Form, Input, Skeleton } from 'erxes-ui';
 import { AssignMultipleMembers } from 'ui-modules';
 import { TPositionForm } from '../../types/position';
-import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+import { SelectPosition } from 'ui-modules';
 
 export const PositionForm = ({ loading }: { loading: boolean }) => {
   const { control } = useFormContext<TPositionForm>();

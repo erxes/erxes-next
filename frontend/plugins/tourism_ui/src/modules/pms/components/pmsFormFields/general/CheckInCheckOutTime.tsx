@@ -1,7 +1,7 @@
 import { Control } from 'react-hook-form';
 import { Form, Input, Select } from 'erxes-ui';
-import { times } from '~/modules/pms/constants/time.constants';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { times } from '@/pms/constants/time.constants';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const CheckInCheckOutTime = ({
   control,

@@ -1,5 +1,5 @@
 import { IconCashRegister } from '@tabler/icons-react';
-import { IUIConfig } from 'erxes-ui/types';
+import { IUIConfig } from 'erxes-ui';
 
 export const CONFIG: IUIConfig = {
   name: 'pos',

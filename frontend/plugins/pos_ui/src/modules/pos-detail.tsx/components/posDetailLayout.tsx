@@ -7,11 +7,11 @@ import { useAtom } from 'jotai';
 import { IconCheck, IconAlertCircle, IconEdit } from '@tabler/icons-react';
 import { PosDetailSheet } from './posDetailSheet';
 import { UseFormReturn } from 'react-hook-form';
-import { posCategoryAtom } from '~/modules/create-pos/states/posCategory';
+import { posCategoryAtom } from '@/create-pos/states/posCategory';
 import {
   BasicInfoFormValues,
   PermissionFormValues,
-} from '~/modules/create-pos/components/formSchema';
+} from '@/create-pos/components/formSchema';
 import { IPosDetail } from '../types/IPos';
 
 const LAYOUT = {
@@ -306,9 +306,11 @@ const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
 interface PosEditLayoutProps {
   children: React.ReactNode;
   actions?: React.ReactNode;
-  form?: UseFormReturn<BasicInfoFormValues> | UseFormReturn<PermissionFormValues>;
+  form?:
+    | UseFormReturn<BasicInfoFormValues>
+    | UseFormReturn<PermissionFormValues>;
   onFinalSubmit?: () => void;
-  posDetail?:IPosDetail;
+  posDetail?: IPosDetail;
 }
 
 export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
@@ -367,7 +369,7 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
         }
       }
     }
-    
+
     return true;
   };
 

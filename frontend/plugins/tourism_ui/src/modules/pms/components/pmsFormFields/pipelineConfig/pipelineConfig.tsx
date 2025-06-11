@@ -8,7 +8,7 @@ import {
 } from 'erxes-ui';
 import PmsFormFieldsLayout from '../PmsFormFieldsLayout';
 import { IconPlus } from '@tabler/icons-react';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 import Heading from '../../ui/heading';
 
 const PipelineConfig = ({

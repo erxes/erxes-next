@@ -3,7 +3,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { Button, Form, Input } from 'erxes-ui';
 import { useLogin } from '@/auth/login/hooks/useLogin';
 import { FormType, useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { useQueryState } from 'erxes-ui';
 
 export const CredentialLoginForm = () => {
@@ -65,10 +65,14 @@ export const CredentialLoginForm = () => {
             className="hover:bg-transparent h-min w-min text-muted-foreground hover:underline text-center block hover:text-primary"
             asChild
           >
-            <Link to={(() => {
-              const email = form.getValues('email');
-              return `/forgot-password${email ? `?email=${encodeURIComponent(email)}` : ''}`;
-            })()}>
+            <Link
+              to={(() => {
+                const email = form.getValues('email');
+                return `/forgot-password${
+                  email ? `?email=${encodeURIComponent(email)}` : ''
+                }`;
+              })()}
+            >
               Forgot password?
             </Link>
           </Button>
