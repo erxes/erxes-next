@@ -281,7 +281,7 @@ export function SegmentForm({
           segment={segment}
           isTemporary={isTempoaray}
         />
-        <div className="py-4">{renderContent({ form, contentType })}</div>
+        <div className="pb-4">{renderContent({ form, contentType })}</div>
         <Button
           variant="secondary"
           className={cn(

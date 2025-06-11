@@ -33,7 +33,7 @@ const DefaultTriggerContent = ({ activeNode }: Props) => {
 
 export const TriggerDetail = ({ activeNode }: Props) => {
   return (
-    <div className="w-[650px]">
+    <div className="w-[650px] flex flex-col max-h-full">
       <DefaultTriggerContent activeNode={activeNode} />
     </div>
   );

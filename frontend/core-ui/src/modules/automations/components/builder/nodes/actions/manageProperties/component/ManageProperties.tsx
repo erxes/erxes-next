@@ -12,6 +12,8 @@ import {
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { getContentType } from '@/automations/utils/automationBuilderUtils';
 import { PROPERTY_OPERATOR } from '@/automations/constants';
+import { useManagePropertyRule } from '../hooks/useManagePropertyRule';
+import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
 
 type OperatorType = 'String' | 'Date' | 'Number' | 'Default';
 
@@ -41,16 +43,6 @@ interface IConfig {
 }
 
 type IFieldName = `detail.actions.${number}.config`;
-
-// Component Props
-interface RuleInputProps {
-  propertyType: string;
-
-  selectedOperator?: IOperator;
-  selectedField?: IField;
-  value: any;
-  onChange: (value: any) => void;
-}
 
 interface RuleProps {
   rule: IRule;
@@ -159,37 +151,30 @@ const Rule = ({
   );
 };
 
-export const ManageProperties = ({
+const SideBarContent = ({
   currentActionIndex,
   currentAction,
 }: IActionProps) => {
-  const fieldName: IFieldName = `detail.actions.${currentActionIndex}.config`;
-  const { setValue, watch, control } = useFormContext<TAutomationProps>();
-  const { actions = [], triggers = [] } = watch('detail');
-  const module = watch(`${fieldName}.module`);
-  const propertyType =
-    module || getContentType(currentAction, actions, triggers);
+  const {
+    setValue,
+    propertyTypes,
+    propertyType,
+    fieldName,
+    control,
+    addRule,
+    rules,
+    fields,
+    groups,
+  } = useManagePropertySidebarContent(currentActionIndex, currentAction);
 
   useEffect(() => {
     if (module !== propertyType) {
       setValue(`${fieldName}.module`, propertyType);
     }
   }, [propertyType]);
-  const { propertyTypes, fields, loading } = getFieldsProperties(propertyType);
-
-  const groups = groupFieldsByType(fields || []);
-  const config = watch(fieldName) as IConfig;
-  const { rules = [{ field: '', operator: '' }] } = config || {};
-
-  const addRule = () => {
-    setValue(fieldName, {
-      ...config,
-      rules: [...rules, { field: '', operator: '' }],
-    });
-  };
 
   return (
-    <Card.Content className="w-[500px]">
+    <div className="w-[500px] p-4">
       <Form.Field
         control={control}
         name={`${fieldName}.module`}
@@ -219,50 +204,35 @@ export const ManageProperties = ({
         <Label className="pb-4">Rules</Label>
 
         {rules.map((rule, index) => {
-          const handleChange = (name: string, value: any) => {
-            const updatedRules = [...rules];
-            updatedRules[index] = { ...updatedRules[index], [name]: value };
-            setValue(`${fieldName}.rules` as any, updatedRules);
-          };
-
-          const selectedField = fields.find(
-            (field) => field.name === rule.field,
-          );
-
-          const handleRemove = () => {
-            setValue(
-              `${fieldName}.rules` as any,
-              rules.filter((_, ruleIndex) => index !== ruleIndex),
+          const { handleChange, handleRemove, selectedField, operators } =
+            useManagePropertyRule(
+              rules,
+              index,
+              fieldName,
+              setValue,
+              fields,
+              rule,
             );
+
+          const updatedProps = {
+            key: index,
+            rule,
+            handleChange,
+            remove: handleRemove,
+            groups,
+            propertyType,
+            selectedField,
+            operatorOptions: operators,
           };
 
-          const operatorType = selectedField?.name.includes('customFieldsData')
-            ? capitalizeFirstLetter(selectedField?.validation || 'String')
-            : selectedField?.type || '';
-
-          const operators =
-            PROPERTY_OPERATOR[operatorType as OperatorType] ||
-            PROPERTY_OPERATOR.Default;
-
-          return (
-            <Rule
-              key={index}
-              rule={rule}
-              handleChange={handleChange}
-              remove={handleRemove}
-              groups={groups}
-              propertyType={propertyType}
-              selectedField={selectedField}
-              operatorOptions={operators}
-            />
-          );
+          return <Rule {...updatedProps} />;
         })}
 
         <Button className="w-full" variant="secondary" onClick={addRule}>
           <Label>Add Rule</Label>
         </Button>
       </div>
-    </Card.Content>
+    </div>
   );
 };
 
@@ -289,4 +259,9 @@ export const NodeContent = ({ config }: any) => {
         ))}
     </>
   );
+};
+
+export const ManageProperties = {
+  SideBarContent,
+  NodeContent,
 };

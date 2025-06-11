@@ -1,12 +1,6 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { useFormContext } from 'react-hook-form';
-import {
-  ReactFlow,
-  Background,
-  ConnectionMode,
-  Controls,
-  EdgeTypes,
-} from '@xyflow/react';
+import { ReactFlow, Background, ConnectionMode, Controls } from '@xyflow/react';
 import {
   generateEdges,
   generateNodes,

@@ -1,0 +1,70 @@
+import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { ChangeEvent } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+export const useDelay = (currentActionIndex: number) => {
+  const configField: `detail.actions.${number}.config` = `detail.actions.${currentActionIndex}.config`;
+  const { control, watch, setValue } = useFormContext<TAutomationProps>();
+
+  const { value, type } = watch(configField) || {};
+
+  const handleValueChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    onChange: (...event: any[]) => void,
+  ) => {
+    let { value } = e.currentTarget;
+    let intervalType: 'minute' | 'hour' | 'day' | 'month' | 'year' | undefined;
+
+    const numericValue = Number(value);
+    const set = (newValue: string, newType: typeof intervalType) => {
+      value = newValue;
+      intervalType = newType;
+    };
+
+    if (numericValue < 1) {
+      // Fall back to previous interval if user inputs 0 or negative
+      if (type === 'hour') set('1', 'minute');
+      else if (type === 'day') set('1', 'hour');
+      else if (type === 'month') set('1', 'day');
+      else if (type === 'year') set('1', 'month');
+      else set('1', 'minute'); // default case
+    } else {
+      // Handle upward overflow (e.g., 60 minutes => 1 hour)
+      if (type === 'minute' && numericValue >= 60) set('1', 'hour');
+      else if (type === 'hour' && numericValue >= 24) set('1', 'day');
+      else if (type === 'day' && numericValue >= 31) set('1', 'month');
+      else if (type === 'month' && numericValue >= 12) set('1', 'year');
+    }
+
+    if (intervalType) {
+      setValue(`${configField}.type`, intervalType);
+    }
+
+    onChange(value);
+  };
+
+  const handleIntervalChange = (
+    type: string,
+    onChange: (...event: any[]) => void,
+  ) => {
+    const maxValues: Record<string, number> = {
+      minute: 59,
+      hour: 23,
+      day: 30,
+      month: 11,
+      year: Infinity,
+    };
+
+    const numericValue = Number(value);
+
+    const max = maxValues[type] ?? Infinity;
+
+    if (numericValue > max) {
+      setValue(`${configField}.value`, '1');
+    }
+
+    onChange(type);
+  };
+
+  return { control, configField, handleValueChange, handleIntervalChange };
+};

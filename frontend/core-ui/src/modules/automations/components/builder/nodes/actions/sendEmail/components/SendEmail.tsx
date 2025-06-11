@@ -1,8 +1,11 @@
-import { getContentType } from '@/automations/utils/automationBuilderUtils';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { IconCheck, IconCircleDashedCheck, IconX } from '@tabler/icons-react';
+import { generateSendEmailReciepentMails } from '@/automations/utils/automationBuilderUtils';
 import {
-  Avatar,
+  IconCheck,
+  IconCircleDashedCheck,
+  IconEye,
+  IconX,
+} from '@tabler/icons-react';
+import {
   Badge,
   Button,
   Card,
@@ -10,17 +13,24 @@ import {
   Form,
   Input,
   Label,
+  Popover,
   Separator,
   Tabs,
+  Tooltip,
 } from 'erxes-ui';
-import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useMemo, useState } from 'react';
 import {
   AssignMultipleMembers,
   IActionProps,
   PlaceHolderInput,
   SelectCustomers,
 } from 'ui-modules';
+import { ActionContentRow } from '../../../ActionContentRow';
+import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';
+import {
+  useSendEmailCustomMailField,
+  useSendEmailSidebarForm,
+} from '../hooks/useSendEmailSidbarForm';
 
 const ConfigRow = ({
   title,
@@ -80,26 +90,8 @@ const CustomMailField = ({
 }: {
   currentActionIndex: number;
 }) => {
-  const { control, watch, setValue } = useFormContext<TAutomationProps>();
-  const config = watch(`detail.actions.${currentActionIndex}.config`);
-
-  const removeMail = (mail: string) => {
-    setValue(
-      `detail.actions.${currentActionIndex}.config.customMails`,
-      (config?.customMails || []).filter((value: string) => value !== mail),
-    );
-  };
-
-  const onChange = (e: any, onChange: (...props: any[]) => void) => {
-    const { value } = e.currentTarget;
-    if (
-      e.key === 'Enter' &&
-      value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-    ) {
-      onChange((config?.customMails || []).concat(value));
-      e.currentTarget.value = '';
-    }
-  };
+  const { onChange, removeMail, control, config } =
+    useSendEmailCustomMailField(currentActionIndex);
 
   return (
     <Form.Field
@@ -126,22 +118,15 @@ const CustomMailField = ({
   );
 };
 
-const ConfigurationForm = ({
+const SendEmailConfigurationForm = ({
   currentActionIndex,
 }: {
   currentActionIndex: number;
 }) => {
-  const { control, watch } = useFormContext<TAutomationProps>();
-  const config = watch(`detail.actions.${currentActionIndex}.config`);
-  const { actions = [], triggers = [] } = watch('detail');
-  const contentType = getContentType(
-    actions[currentActionIndex],
-    actions,
-    triggers,
-  );
-
+  const { config, control, contentType } =
+    useSendEmailSidebarForm(currentActionIndex);
   return (
-    <Card.Content className="flex flex-col gap-4 max-w-xl">
+    <Card.Content className="flex flex-col gap-4 max-w-xl pt-6">
       <ConfigRow
         title="Sender"
         subContent="Who is sending email"
@@ -258,6 +243,94 @@ const ConfigurationForm = ({
     </Card.Content>
   );
 };
-export const AutomationSendEmail = ({ currentActionIndex }: IActionProps) => {
-  return <ConfigurationForm currentActionIndex={currentActionIndex} />;
+const AutomationSendEmail = ({ currentActionIndex }: IActionProps) => {
+  return <SendEmailConfigurationForm currentActionIndex={currentActionIndex} />;
+};
+
+const ReciepentEmails = ({ config }: { config: any }) => {
+  const mails = useMemo(
+    () => generateSendEmailReciepentMails(config),
+    [config],
+  );
+
+  return (
+    <div>
+      {mails.map((mail, index) => (
+        <Badge key={index}>{mail}</Badge>
+      ))}
+    </div>
+  );
+};
+
+const AutomationSendEmailActionResult = ({ result }: { result: any }) => {
+  const { getLabelColor, getLabelText } = useSendEmailActionResult();
+  const { fromEmail = '', title, responses } = result;
+
+  return (
+    <Popover>
+      <Popover.Trigger>
+        <Button variant="ghost">
+          See <IconEye />
+        </Button>
+      </Popover.Trigger>
+      <Popover.Content>
+        <ActionContentRow fieldName="From" content={fromEmail} />
+
+        <ActionContentRow fieldName="Title" content={title} />
+
+        <ActionContentRow
+          fieldName="To"
+          content={
+            <>
+              {responses.map((response: any, i: number) => (
+                <Tooltip key={i}>
+                  <Tooltip.Trigger>
+                    <Badge variant={getLabelColor(response)}>
+                      {response?.toEmail || ''}
+                    </Badge>
+                  </Tooltip.Trigger>
+                  <Tooltip.Content>{getLabelText(response)}</Tooltip.Content>
+                </Tooltip>
+              ))}
+            </>
+          }
+        />
+      </Popover.Content>
+    </Popover>
+  );
+};
+
+const NodeContent = ({ config }: any) => {
+  const { fromUserId, subject, templateId } = config || {};
+
+  return (
+    <>
+      <ActionContentRow fieldName="From" content={fromUserId} />
+      <ActionContentRow
+        fieldName="Reciepents"
+        content={
+          <Popover>
+            <Popover.Trigger>
+              <Button variant="ghost">
+                See Emails
+                <IconEye />
+              </Button>
+            </Popover.Trigger>
+            <Popover.Content>
+              <Label>Reciepent emails</Label>
+              <ReciepentEmails config={config} />
+            </Popover.Content>
+          </Popover>
+        }
+      />
+      <ActionContentRow fieldName="Subject" content={subject} />
+      <ActionContentRow fieldName="Template" content={`Under develop`} />
+    </>
+  );
+};
+
+export const SendEmail = {
+  SideBarContent: AutomationSendEmail,
+  NodeContent,
+  ActionResult: AutomationSendEmailActionResult,
 };

@@ -2,9 +2,12 @@ import {
   IAutomationHistory,
   IAutomationHistoryAction,
 } from '@/automations/types';
+import { IconEye } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import { RelativeDateDisplay, Table } from 'erxes-ui';
+import { Button, Popover, RelativeDateDisplay, Table } from 'erxes-ui';
 import { IAction, ITrigger } from 'ui-modules';
+import { ActionContentRow } from '../nodes/ActionContentRow';
+import { SendEmail } from '../nodes/actions/sendEmail/components/SendEmail';
 
 export const generateActionResult = (action: IAutomationHistoryAction) => {
   if (!action.result) {
@@ -27,11 +30,9 @@ export const generateActionResult = (action: IAutomationHistoryAction) => {
     return `Condition: ${result.condition}`;
   }
 
-  // if (action.actionType === 'sendEmail') {
-  //   return (
-  //     <SendEmail result={result} action={action} hideTemplate={hideTemplate} />
-  //   );
-  // }
+  if (action.actionType === 'sendEmail') {
+    return <SendEmail.ActionResult result={result} />;
+  }
 
   // const Component = renderDynamicComponent(
   //   {

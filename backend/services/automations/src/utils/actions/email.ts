@@ -8,6 +8,8 @@ import {
 } from 'erxes-api-shared/utils';
 import { EMAIL_RECIPIENTS_TYPES } from '~/constants';
 import nodemailer from 'nodemailer';
+// import AWS from 'aws-sdk';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import AWS from 'aws-sdk';
 
 const generateEmails = (entry: string | any[], key?: string): string[] => {
@@ -368,9 +370,9 @@ export const generateDoc = async ({
 const getConfig = (configs, code, defaultValue?: string) => {
   const version = getEnv({ name: 'VERSION' });
 
-  // if (version === 'saas') {
-  return getEnv({ name: code, defaultValue });
-  // }
+  if (version === 'saas') {
+    return getEnv({ name: code, defaultValue });
+  }
 
   return configs[code] || defaultValue || '';
 };
@@ -386,13 +388,13 @@ const createTransporter = async ({ ses }, configs) => {
     const AWS_REGION = getConfig(configs, 'AWS_REGION');
 
     AWS.config.update({
+      region: AWS_REGION,
       accessKeyId: AWS_SES_ACCESS_KEY_ID,
       secretAccessKey: AWS_SES_SECRET_ACCESS_KEY,
-      region: AWS_REGION,
     });
 
     return nodemailer.createTransport({
-      SES: new AWS.SES(),
+      SES: new AWS.SES({ apiVersion: '2010-12-01' }),
     });
   }
 
