@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Stepper, Resizable, Button } from 'erxes-ui';
+import { Stepper, Resizable, Button , useMultiQueryState } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { IconCheck, IconEdit } from '@tabler/icons-react';
@@ -12,7 +12,7 @@ import {
   PermissionFormValues,
 } from '~/modules/create-pos/components/formSchema';
 import { LAYOUT, navigateToTab } from '~/modules/constants';
-import { NavigationFooterProps, PosLayoutProps, PosTabContentProps, StepConfig, StepperItemProps, VerticalStepperProps } from '../types/IPosLayout';
+import { NavigationFooterProps, PosTabContentProps, StepConfig, StepperItemProps, VerticalStepperProps } from '../types/IPosLayout';
 import { ValidationAlert } from '~/modules/create-pos/components/index/lay-stepper';
 import { UseFormReturn } from 'react-hook-form';
 import { IPosDetail } from '../types/IPos';
@@ -254,9 +254,10 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
   form,
   onFinalSubmit,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [posCategory] = useAtom(posCategoryAtom);
-  const selectedStep = searchParams.get('tab') || 'properties';
+  const [{ tab: selectedStep }, setQueries] = useMultiQueryState<{
+    tab: string;
+  }>(['tab']);
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const steps = useMemo(() => {
@@ -277,7 +278,7 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
   const handlePrevStep = (): void => {
     setValidationError(null);
     if (prevStep) {
-      navigateToTab(setSearchParams, searchParams, prevStep);
+      setQueries({ tab: prevStep });
     }
   };
 
@@ -324,7 +325,6 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
           return;
         }
       } catch (error) {
-        console.error('Form validation error:', error);
         setValidationError('Failed to validate form. Please try again.');
         return;
       }
@@ -336,14 +336,13 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
           await onFinalSubmit();
         }
       } catch (error) {
-        console.error('Error updating:', error);
         setValidationError('Failed to update. Please try again.');
       }
       return;
     }
 
     if (nextStep) {
-      navigateToTab(setSearchParams, searchParams, nextStep);
+      setQueries({ tab: nextStep });
     }
   };
 

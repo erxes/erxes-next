@@ -37,6 +37,8 @@ export const useNodeEvents = ({
     const handleNodeResize = (event: Event) => {
       const { detail } = event as CustomEvent<NodeEventDetail>;
       if (!detail?.id) return;
+      const rotateAngle = Number(detail.rotateAngle);
+       if (isNaN(rotateAngle)) return;
 
       const updateNodeData = (node: CustomNode) => {
         if (node.id === detail.id) {
@@ -65,7 +67,6 @@ export const useNodeEvents = ({
       setNodes((nds) => nds.map(updateNodeData));
       setHookNodes((nds) => nds.map(updateNodeData));
 
-      // Update selected node if it matches
       if (selectedNodeRef.current?.id === detail.id) {
         const updatedNode = nodesRef.current.find((node) => node.id === detail.id);
         if (updatedNode) {
@@ -103,7 +104,10 @@ export const useNodeEvents = ({
 
     const handleNodeRotate = (event: Event) => {
       const { detail } = event as CustomEvent<NodeEventDetail>;
-      if (!detail?.id || detail.rotateAngle === undefined) return;
+      if (!detail?.id) return;
+      
+      const rotateAngle = Number(detail.rotateAngle);
+      if (isNaN(rotateAngle)) return;
 
       const updateNodeRotation = (node: CustomNode) => {
         if (node.id === detail.id) {
@@ -111,7 +115,7 @@ export const useNodeEvents = ({
             ...node,
             data: {
               ...node.data,
-              rotateAngle: detail.rotateAngle!,
+              rotateAngle,
             },
           };
         }
@@ -121,7 +125,6 @@ export const useNodeEvents = ({
       setNodes((nds) => nds.map(updateNodeRotation));
       setHookNodes((nds) => nds.map(updateNodeRotation));
 
-      // Update selected node if it matches
       if (selectedNodeRef.current?.id === detail.id) {
         const updatedNode = nodesRef.current.find((node) => node.id === detail.id);
         if (updatedNode) {
@@ -129,14 +132,14 @@ export const useNodeEvents = ({
             ...updatedNode,
             data: {
               ...updatedNode.data,
-              rotateAngle: detail.rotateAngle!,
+              rotateAngle,
             },
           } as CustomNode;
 
           setSelectedNode(newSelectedNode);
           setSlotDetail((prev) => ({
             ...prev,
-            rotateAngle: String(detail.rotateAngle!),
+            rotateAngle: String(rotateAngle),
           }));
         }
       }
@@ -168,13 +171,11 @@ export const useNodeEvents = ({
       }
     };
 
-    // Add event listeners
     document.addEventListener('node:dimensions-change', handleNodeResize);
     document.addEventListener('node:position', handleNodePosition);
     document.addEventListener('node:rotate', handleNodeRotate);
     document.addEventListener('node:edit', handleNodeEdit);
 
-    // Cleanup
     return () => {
       document.removeEventListener('node:dimensions-change', handleNodeResize);
       document.removeEventListener('node:position', handleNodePosition);

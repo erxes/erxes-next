@@ -23,7 +23,7 @@ export interface GetPosCreateTabsProps {
   
 export interface TabConfig {
     value: string;
-    component: JSX.Element;
+    component: React.ReactNode;
   }
 
   

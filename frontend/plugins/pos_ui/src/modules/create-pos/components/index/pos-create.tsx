@@ -2,11 +2,10 @@
 
 import { useAtom } from 'jotai';
 import { posCategoryAtom } from '../../states/posCategory';
-import { PosCreateLayout } from './pos-create-layout';
+import { PosCreateLayout, PosCreateTabContent } from './pos-create-layout';
 import { usePosCreateForm } from '../../hooks/usePosCreateForm';
 import { usePosCreateHandlers } from '../../hooks/useCustomHook';
 import { getPosCreateTabs } from '../../utils';
-import { PosCreateTabContent } from './pos-create-tab';
 
 export const PosCreate = () => {
   const [posCategory] = useAtom(posCategoryAtom);

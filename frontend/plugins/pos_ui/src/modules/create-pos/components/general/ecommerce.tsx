@@ -16,33 +16,41 @@ interface EcommerceFormProps {
 
 export const EcommerceForm: React.FC<EcommerceFormProps> = ({ 
   form, 
-  posDetail,
   isReadOnly = false,
 }) => {
-  const isEditMode = !!posDetail;
 
   const handleBrandChange = (brandId: string) => {
     if (isReadOnly) return;
+    console.log('Brand changed:', brandId);
     
-    const currentBrands = form.watch('scopeBrandIds') || [];
-    const newBrands = currentBrands.includes(brandId)
-      ? currentBrands.filter(id => id !== brandId)
-      : [...currentBrands, brandId];
-    
-    form.setValue('scopeBrandIds', newBrands);
+    const newValue = brandId && brandId !== '' ? [brandId] : [];
+    form.setValue('scopeBrandIds', newValue);
+    form.trigger('scopeBrandIds');
   };
 
   const handleBranchChange = (branchId: string) => {
     if (isReadOnly) return;
     form.setValue('branchId', branchId);
+    form.trigger('branchId');
   };
 
   const handleDepartmentChange = (departmentId: string) => {
     if (isReadOnly) return;
     form.setValue('departmentId', departmentId);
+    form.trigger('departmentId');
   };
 
-  const selectedBrandId = form.watch('scopeBrandIds')?.[0] || '';
+  // Fix: Better handling of the watched value with additional safety checks
+  const scopeBrandIds = form.watch('scopeBrandIds') || [];
+  const selectedBrandId = Array.isArray(scopeBrandIds) && scopeBrandIds.length > 0 
+    ? scopeBrandIds[0] 
+    : '';
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('Current scopeBrandIds:', scopeBrandIds);
+    console.log('Selected brand ID:', selectedBrandId);
+  }, [scopeBrandIds, selectedBrandId]);
 
   return (
     <Form {...form}>
@@ -146,6 +154,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                                 type && arr.indexOf(type) === idx
                               );
                               form.setValue('allowTypes', cleanTypes);
+                              form.trigger('allowTypes');
                             }}
                             value={currentValue || "NULL"}
                             disabled={isReadOnly}
