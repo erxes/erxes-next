@@ -91,7 +91,6 @@ export function usePosSlots(posId: string): UsePosSlotReturn {
   useEffect(() => {
     if (data?.posSlots && Array.isArray(data.posSlots)) {
       const transformedNodes = transformSlotsToNodes(data.posSlots);
-      console.log('Transformed nodes from server:', transformedNodes);
       setNodes(transformedNodes);
     }
   }, [data, transformSlotsToNodes]);
@@ -112,12 +111,6 @@ export function usePosSlots(posId: string): UsePosSlotReturn {
     async (targetPosId: string) => {
       try {
         const slotsData = transformNodesToSlots(nodes, targetPosId);
-
-        console.log('Saving slots data:', {
-          posId: targetPosId,
-          slotsCount: slotsData.length,
-          slotsData,
-        });
 
         await updatePosSlots({
           variables: {
@@ -175,7 +168,6 @@ export function usePosSlots(posId: string): UsePosSlotReturn {
         },
       };
 
-      console.log('Adding new slot:', newNode);
       setNodes((prev) => [...prev, newNode]);
       return newNode;
     },
@@ -212,7 +204,6 @@ export function usePosSlots(posId: string): UsePosSlotReturn {
   }, []);
 
   const deleteSlot = useCallback((id: string) => {
-    console.log('Deleting slot:', id);
     setNodes((prev) => prev.filter((node) => node.id !== id));
   }, []);
 

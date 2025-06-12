@@ -38,7 +38,7 @@ export const PosCreate = () => {
       form={forms.basicInfo}
       onFormSubmit={handleBasicInfoSubmit}
       onFinalSubmit={handleFinalSubmit}
-      onSaveSlots={() => handleSaveSlots(createdPosId || '')}
+      onSaveSlots={() => createdPosId ? handleSaveSlots(createdPosId) : Promise.resolve()}
       loading={loading}
       error={error}
     >
