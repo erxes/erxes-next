@@ -5,7 +5,6 @@ import {
   sendReply,
   generateAttachmentMessages,
 } from '@/integrations/facebook/utils';
-import DOMPurify from 'dompurify';
 import { sendNotifications } from '@/inbox/graphql/resolvers/mutations/conversations';
 
 /**

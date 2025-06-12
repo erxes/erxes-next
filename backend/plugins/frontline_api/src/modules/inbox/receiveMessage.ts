@@ -145,7 +145,12 @@ export const receiveTrpcMessage = async (
           conversationId: doc.conversationId,
           updatedAt: doc.updatedAt,
         };
+
         await Conversations.createConversation(formattedDoc);
+
+        graphqlPubsub.publish('conversationClientMessageInserted', {
+          conversationClientMessageInserted: doc,
+        });
       }
 
       return sendSuccess({ _id: conversationId });
