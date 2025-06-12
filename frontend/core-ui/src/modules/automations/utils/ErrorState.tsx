@@ -1,6 +1,11 @@
-import { IconAlertCircle } from '@tabler/icons-react';
+import {
+  IconAlertCircle,
+  IconChevronDown,
+  IconChevronUp,
+  IconRefresh,
+  IconX,
+} from '@tabler/icons-react';
 import { Button, Collapsible } from 'erxes-ui';
-import { ChevronDown, ChevronUp, RefreshCw, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface ErrorStateProps {
@@ -36,7 +41,7 @@ export function ErrorState({
                 className="h-6 w-6 rounded-full -mt-1 -mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                 onClick={onDismiss}
               >
-                <X className="h-4 w-4" />
+                <IconX className="h-4 w-4" />
                 <span className="sr-only">Dismiss</span>
               </Button>
             )}
@@ -67,9 +72,9 @@ export function ErrorState({
                   {isOpen ? 'Hide details' : 'Show details'}
                 </span>
                 {isOpen ? (
-                  <ChevronUp className="h-3 w-3 ml-1" />
+                  <IconChevronUp className="h-3 w-3 ml-1" />
                 ) : (
-                  <ChevronDown className="h-3 w-3 ml-1" />
+                  <IconChevronDown className="h-3 w-3 ml-1" />
                 )}
               </Button>
             </Collapsible.Trigger>
@@ -90,7 +95,7 @@ export function ErrorState({
             className="text-sm border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
             onClick={onRetry}
           >
-            <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+            <IconRefresh className="h-3.5 w-3.5 mr-1.5" />
             Try again
           </Button>
         </div>
