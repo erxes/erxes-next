@@ -202,6 +202,7 @@ export const conversationMutations = {
         _id: conversation.integrationId,
       });
 
+
       const { _id: integrationId } = integration;
       const { _id: conversationId } = conversation;
       const { content = '', internal, attachments = [], extraInfo } = doc;
