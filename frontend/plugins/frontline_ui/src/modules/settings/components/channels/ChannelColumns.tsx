@@ -19,11 +19,7 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
-import { AssignMember, SelectMember } from 'ui-modules/modules';
-import {
-  ChannelHotKeyScope,
-  type TChannel,
-} from '~/modules/settings/types/channel';
+import { type TChannel } from '@/settings/types/channel';
 import { renderingChannelDetailAtom } from '../../states/renderingChannelDetail';
 import { useChannelsEdit } from '../../hooks/useChannelsEdit';
 

@@ -12,10 +12,10 @@ import {
   RecordTableTree,
   useQueryState,
 } from 'erxes-ui';
-import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import { useSetAtom } from 'jotai';
 import { renderingPositionDetailAtom } from '../../states/renderingPositionDetail';
-import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+import { SelectPosition } from 'ui-modules';
 
 export const UnitEditColumnCell = ({
   cell,
@@ -91,7 +91,7 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
           <SelectPosition
             className="shadow-none bg-transparent"
             value={cell.getValue() as string}
-            onValueChange={() => {}}
+            onValueChange={() => null}
           />
         </RecordTableCellDisplay>
       );

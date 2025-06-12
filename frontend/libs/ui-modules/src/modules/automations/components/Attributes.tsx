@@ -34,7 +34,7 @@ type SelectionProps = {
   onSelect: (value: string) => void;
 };
 
-const renderSelection = ({ selectionConfig, onSelect }: SelectionProps) => {
+const RenderSelection = ({ selectionConfig, onSelect }: SelectionProps) => {
   const { queryName, labelField, valueField = '_id' } = selectionConfig || {};
   const query = gql`
         query ${queryName}($searchValue: String,$direction: CURSOR_DIRECTION,$cursor: String,$limit:Int) {
@@ -194,7 +194,10 @@ export const Attributes = ({
             </Collapsible>
 
             {renderOptions()}
-            {renderSelection({ selectionConfig, onSelect })}
+            <RenderSelection
+              selectionConfig={selectionConfig}
+              onSelect={onSelect}
+            />
           </Command.List>
         </Command>
       </Combobox.Content>

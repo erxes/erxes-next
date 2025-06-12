@@ -87,11 +87,10 @@ export const publishConversationsChanged = async (
   const models = await generateModels(subdomain);
 
   for (const _id of _ids) {
-    await (
-      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
-    )(`conversationChanged:${_id}`, {
+    await graphqlPubsub.publish(`conversationChanged:${_id}`, {
       conversationChanged: { conversationId: _id, type },
     });
+
     await models.Conversations.findOne({ _id });
   }
 
@@ -106,10 +105,10 @@ export const publishMessage = async (
   message: any,
   customerId?: string,
 ) => {
-  (graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>)(
-    `conversationClientMessageInserted:${message.conversationId}`,
+  await graphqlPubsub.publish(
+    `conversationMessageInserted:${message.conversationId}`,
     {
-      conversationClientMessageInserted: message,
+      conversationMessageInserted: message,
     },
   );
 
@@ -119,14 +118,15 @@ export const publishMessage = async (
         message.conversationId,
       );
 
-    await (
-      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
-    )(`conversationAdminMessageInserted:${customerId}`, {
-      conversationAdminMessageInserted: {
-        customerId,
-        unreadCount,
+    await graphqlPubsub.publish(
+      `conversationAdminMessageInserted:${customerId}`,
+      {
+        conversationAdminMessageInserted: {
+          customerId,
+          unreadCount,
+        },
       },
-    });
+    );
   }
 };
 
@@ -210,106 +210,112 @@ export const conversationMutations = {
     doc: IConversationMessageAdd,
     { user, models, subdomain }: IContext,
   ) {
-    const conversation = await models.Conversations.getConversation(
-      doc.conversationId,
-    );
-    const integration = await models.Integrations.getIntegration({
-      _id: conversation.integrationId,
-    });
-
-    await sendNotifications(subdomain, {
-      user,
-      conversations: [conversation],
-      type: 'conversationAddMessage',
-      mobile: true,
-      messageContent: doc.content,
-    });
-
-    const kind = integration.kind;
-
-    const customer = await sendTRPCMessage({
-      pluginName: 'core',
-      method: 'query',
-      module: 'customers',
-      action: 'findOne',
-      input: { query: { _id: conversation.customerId } },
-    });
-
-    if (!customer) {
-      throw new Error('Customer not found for the conversation');
-    }
-    // if conversation's integration kind is form then send reply to
-    // customer's email
-    const email = customer ? customer.primaryEmail : '';
-
-    if (!doc.internal && kind === 'lead' && email) {
-      await sendTRPCMessage({
-        pluginName: 'core',
-        method: 'mutation',
-        module: 'core',
-        action: 'sendEmail',
-        input: {
-          toEmails: [email],
-          title: 'Reply',
-          template: {
-            data: doc.content,
-          },
-        },
+    try {
+      const conversation = await models.Conversations.getConversation(
+        doc.conversationId,
+      );
+      const integration = await models.Integrations.getIntegration({
+        _id: conversation.integrationId,
       });
-    }
 
-    const serviceName = integration.kind.split('-')[0];
+      await sendNotifications(subdomain, {
+        user,
+        conversations: [conversation],
+        type: 'conversationAddMessage',
+        mobile: true,
+        messageContent: doc.content,
+      });
 
-    const payload = {
-      integrationId: integration._id,
-      conversationId: conversation._id,
-      content: doc.content || '',
-      internal: doc.internal,
-      attachments: doc.attachments || [],
-      extraInfo: doc.extraInfo,
-      userId: user._id,
-    };
+      const { kind } = integration;
 
-    const response = await sendConversationToServices(
-      subdomain,
-      integration,
-      serviceName,
-      payload,
-    );
-    // if the service runs separately & returns data, then don't save message inside inbox
-    if (response?.data?.data) {
-      const { conversationId, content } = response.data.data;
+      const customer = await sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'customers',
+        action: 'findOne',
+        input: { query: { _id: conversation.customerId } },
+      });
 
-      if (conversationId && content) {
-        await models.Conversations.updateConversation(conversationId, {
-          content,
-          updatedAt: new Date(),
+      if (!customer) {
+        throw new Error('Customer not found for the conversation');
+      }
+      // if conversation's integration kind is form then send reply to
+      // customer's email
+      const email = customer ? customer.primaryEmail : '';
+
+      if (!doc.internal && kind === 'lead' && email) {
+        await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'mutation',
+          module: 'core',
+          action: 'sendEmail',
+          input: {
+            toEmails: [email],
+            title: 'Reply',
+            template: {
+              data: doc.content,
+            },
+          },
         });
       }
 
-      return { ...response.data.data };
-    }
+      const serviceName = integration.kind.split('-')[0];
 
-    // do not send internal message to third service integrations
-    if (doc.internal) {
-      const messageObj = await models.ConversationMessages.addMessage(
+      const payload = {
+        integrationId: integration._id,
+        conversationId: conversation._id,
+        content: doc.content || '',
+        internal: doc.internal,
+        attachments: doc.attachments || [],
+        extraInfo: doc.extraInfo,
+        userId: user._id,
+      };
+
+      const response = await sendConversationToServices(
+        subdomain,
+        integration,
+        serviceName,
+        payload,
+      );
+      // if the service runs separately & returns data, then don't save message inside inbox
+      if (response?.data?.data && response) {
+        const { conversationId, content } = response.data.data;
+        if (!!conversationId && !!content) {
+          await models.Conversations.updateConversation(conversationId, {
+            content: content || '',
+            updatedAt: new Date(),
+          });
+        }
+      }
+
+      // // do not send internal message to third service integrations
+      if (doc.internal) {
+        const messageObj = await models.ConversationMessages.addMessage(
+          doc,
+          user._id,
+        );
+
+        // publish new message to conversation detail
+        publishMessage(models, messageObj);
+
+        return messageObj;
+      }
+      const message = await models.ConversationMessages.addMessage(
         doc,
         user._id,
       );
 
-      // publish new message to conversation detail
-      publishMessage(models, messageObj);
+      const dbMessage = await models.ConversationMessages.getMessage(
+        message._id,
+      );
 
-      return messageObj;
+      // Publishing both admin & client
+      publishMessage(models, dbMessage, conversation.customerId);
+      return dbMessage;
+    } catch (err) {
+      console.error('conversationMessageAdd error:', err);
+      throw new Error(`Failed to add message to conversation: ${err.message}`);
     }
-    const message = await models.ConversationMessages.addMessage(doc, user._id);
-
-    const dbMessage = await models.ConversationMessages.getMessage(message._id);
-
-    // Publishing both admin & client
-    publishMessage(models, dbMessage, conversation.customerId);
-
-    return dbMessage;
   },
 
   async conversationMessageEdit(
@@ -466,11 +472,12 @@ export const conversationMutations = {
         },
       ],
     });
-    await (
-      graphqlPubsub.publish as (trigger: string, payload: any) => Promise<void>
-    )(`conversationClientMessageInserted:${message.conversationId}`, {
-      conversationClientMessageInserted: message,
-    });
+    await graphqlPubsub.publish(
+      `conversationMessageInserted:${message.conversationId}`,
+      {
+        conversationMessageInserted: message,
+      },
+    );
 
     return models.Conversations.updateOne(
       { _id },

@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { ILocation } from '@/bms/@types/itinerary';
+import { IPageInfo } from 'erxes-api-shared/src/core-types';
 
 export interface IGuideItem {
   guideId: string;
@@ -57,10 +58,5 @@ export interface TourFilterParams {
 export interface TourListResponse {
   list: ITourDocument[];
   totalCount: number;
-  pageInfo: {
-    hasNext: boolean;
-    hasPrevious: boolean;
-    nextCursor: string;
-    previousCursor: string;
-  };
+  pageInfo: IPageInfo
 }

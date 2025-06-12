@@ -1,7 +1,6 @@
 import { TeamMember } from '@/settings/team-member/components/TeamMember';
-import { useQueryState } from 'erxes-ui/hooks';
+import { PageContainer, useQueryState } from 'erxes-ui';
 import { MemberDetail } from '@/settings/team-member/details/components/MemberDetail';
-import { PageContainer } from 'erxes-ui';
 
 export function TeamMemberPage() {
   const [userId] = useQueryState('user_id');

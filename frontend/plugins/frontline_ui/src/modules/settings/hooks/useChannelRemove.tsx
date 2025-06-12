@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { useToast } from 'erxes-ui/hooks';
+import { useToast } from 'erxes-ui';
 import { REMOVE_CHANNELS } from '../graphql/mutations/removeChannels';
 import { GET_CHANNELS } from '../graphql';
 

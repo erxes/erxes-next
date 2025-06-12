@@ -1,5 +1,5 @@
 import { IconPlus, IconZoomCancel, IconZoomIn } from '@tabler/icons-react';
-import { Button } from 'erxes-ui/components/button';
+import { Button } from 'erxes-ui';
 // import { AddInventoryRowButton } from './AddInventoryRow';
 // import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
@@ -39,14 +39,14 @@ export const ExpenseForm = ({
         <IconZoomIn />
         {`Show expenses (${fields.length})`}
       </Button>
-    )
+    );
   }
 
   return (
     <RecordTableHotkeyProvider
       columnLength={5}
       rowLength={fields.length}
-      scope={AccountingHotkeyScope.TransactionCEPage}
+      scope={AccountingHotkeyScope.TransactionFormSubPage}
     >
       <Table className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar">
         <InventoryTableHeader form={form} journalIndex={journalIndex} />
@@ -86,7 +86,6 @@ export const ExpenseForm = ({
           </tr>
         </Table.Footer>
       </Table>
-
     </RecordTableHotkeyProvider>
   );
 };

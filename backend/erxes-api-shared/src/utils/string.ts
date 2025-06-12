@@ -1,4 +1,12 @@
-import stripAnsi from 'strip-ansi';
+export const stripAnsi = async (str: string) => {
+  let stripAnsiModule: ((str: string) => string) | null = null;
+
+  if (!stripAnsiModule) {
+    const { default: imported } = await import('strip-ansi');
+    stripAnsiModule = imported;
+  }
+  return stripAnsiModule(str);
+};
 
 /**
  * Removes the last trailing slash from a string if it exists.
@@ -48,8 +56,11 @@ export const isValidURL = (url: string): boolean => {
  * @param size - Character length of each chunk
  * @returns An array of string chunks
  */
-export const splitStr = (str: string, size: number): string[] => {
-  const cleanStr = stripAnsi(str);
+export const splitStr = async (
+  str: string,
+  size: number,
+): Promise<string[]> => {
+  const cleanStr = await stripAnsi(str);
 
   const regex = new RegExp(`.{1,${size}}(\\s|$)`, 'g');
 
@@ -64,8 +75,8 @@ export const splitStr = (str: string, size: number): string[] => {
  * @returns The cleaned content as a string.
  */
 
-export const cleanHtml = (content?: string): string =>
-  stripAnsi(content || '').substring(0, 100);
+export const cleanHtml = async (content?: string): Promise<string> =>
+  (await stripAnsi(content || '')).substring(0, 100);
 
 /**
  * Escapes a string so that it can be used in a regular expression.
@@ -75,10 +86,6 @@ export const cleanHtml = (content?: string): string =>
  *
  * @param {string} str the string to escape
  * @returns {string} the escaped string
- */
-export const escapeRegExp = (str: string) => {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-};
 
 /**
  * Takes an array of strings and returns a single string that is
@@ -88,15 +95,6 @@ export const escapeRegExp = (str: string) => {
  * @param {string[]} values an array of strings to join
  * @returns {string} a single string suitable for use as a search query
  */
-export const validSearchText = (values: string[]) => {
-  const value = values.join(' ');
-
-  if (value.length < 512) {
-    return value;
-  }
-
-  return value.substring(0, 511);
-};
 
 /**
  * Generates a random string of a given length using a given pattern.

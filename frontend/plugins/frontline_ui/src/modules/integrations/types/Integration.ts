@@ -12,3 +12,8 @@ export interface IIntegrationDetail extends IIntegration {
     status: 'success' | 'page-token' | 'account-token';
   };
 }
+
+export interface IIntegrationType {
+  _id: string;
+  name: string;
+}

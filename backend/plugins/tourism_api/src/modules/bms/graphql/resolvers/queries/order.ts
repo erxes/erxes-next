@@ -2,7 +2,7 @@ import { cursorPaginate } from 'erxes-api-shared/src/utils';
 import { IContext } from '~/connectionResolvers';
 
 const orderQueries = {
-  async bmOrders(
+  async bmsOrders(
     _root,
     { tourId, customerId, branchId, ...params },
     { models }: IContext,

@@ -1,5 +1,5 @@
 import { useAccounts } from '@/settings/account/hooks/useAccounts';
-import { Skeleton } from 'erxes-ui/components/skeleton';
+import { Skeleton } from 'erxes-ui';
 
 export const AccountsTotalCount = () => {
   const { totalCount, loading } = useAccounts();

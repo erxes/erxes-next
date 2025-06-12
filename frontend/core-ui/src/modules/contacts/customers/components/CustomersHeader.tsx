@@ -2,7 +2,7 @@ import { IconMagnetFilled, IconUserFilled } from '@tabler/icons-react';
 import { Breadcrumb, Button } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
-import { ContactsPath } from '~/modules/types/paths/ContactsPath';
+import { ContactsPath } from '@/types/paths/ContactsPath';
 import { CustomerAddSheet } from './CustomerAddSheet';
 import { useLocation } from 'react-router-dom';
 import { ContactsBreadcrumb } from '@/contacts/components/ContactsBreadcrumb';
@@ -38,6 +38,7 @@ export const CustomersHeader = () => {
         </ContactsBreadcrumb>
         <PageHeader.FavoriteToggleButton />
       </PageHeader.Start>
+
       <PageHeader.End>
         <CustomerAddSheet />
       </PageHeader.End>

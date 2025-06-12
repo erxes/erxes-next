@@ -27,7 +27,7 @@ export const SelectBranchTree = React.forwardRef<
   }
 >(({ onSelect, selected, recordId, nullable, exclude, ...props }, ref) => {
   const [selectedBranch, setSelectedBranch] = useState<IBranch | undefined>();
-  const { branches, loading } = useBranchesMain({
+  const { sortedBranches: branches, loading } = useBranchesMain({
     onCompleted: ({ branches: list }: { branches: IBranch[] }) => {
       setSelectedBranch(list.find((branch) => branch._id === selected));
     },
@@ -87,7 +87,11 @@ export const SelectBranchCommand = ({
 }) => {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { branches, loading, error } = useBranchesMain({
+  const {
+    sortedBranches: branches,
+    loading,
+    error,
+  } = useBranchesMain({
     variables: {
       searchValue: debouncedSearch ?? undefined,
     },

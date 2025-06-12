@@ -4,8 +4,8 @@ import {
   RecordTableCellDisplay,
   RecordTableTree,
   useQueryState,
+  Button,
 } from 'erxes-ui';
-import { Button } from 'erxes-ui/components';
 import { IconEdit } from '@tabler/icons-react';
 import { ISegment } from 'ui-modules';
 

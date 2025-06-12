@@ -12,7 +12,7 @@ import '@xyflow/react/dist/style.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
 import { AutomationBuilderSidebar } from './AutomationBuilderSidebar';
