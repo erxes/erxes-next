@@ -20,7 +20,7 @@ import '@xyflow/react/dist/style.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import AutomationBuilderHeader from './AutomationBuilderHeader';
 import AutomationBuilderSidebar from './AutomationBuilderSidebar';
@@ -44,10 +44,6 @@ import {
   automationBuilderFormSchema,
   TAutomationProps,
 } from '@/automations/utils/AutomationFormDefinitions';
-import { Breadcrumb, Button, PageSubHeader, Separator } from 'erxes-ui';
-import { IconAffiliate, IconSettings } from '@tabler/icons-react';
-import { PageHeader } from 'ui-modules';
-import { Link } from 'react-router';
 import { AutomationHistories } from './AutomationHistories';
 
 interface MenuState {
@@ -96,7 +92,7 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     );
 
     const mergedArray = updatedNodes.map((node1) => {
-      let node2 = nodes.find((o) => o.id === node1.id);
+      const node2 = nodes.find((o) => o.id === node1.id);
 
       if (node2) {
         return {
@@ -224,7 +220,7 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   }) => {
     setEdges((eds: Edge[]) => eds.filter((e) => e.id !== edge.id));
-    let info: any = { source: edge.source, target: undefined };
+    const info: any = { source: edge.source, target: undefined };
 
     const sourceNode = nodes.find((n) => n.id === edge.source);
 
@@ -288,8 +284,8 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
         }
       };
 
-      if (target?.parentId && connection?.source && target.id) {
-      }
+      // if (target?.parentId && connection?.source && target.id) {
+      // }
 
       return !hasCycle(target);
     },

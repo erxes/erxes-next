@@ -1,12 +1,12 @@
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 
 import { Button, CommandBar, Separator, useConfirm } from 'erxes-ui';
-import { useRecordTable } from 'erxes-ui/modules/record-table/components/RecordTableProvider';
+import { RecordTable } from 'erxes-ui';
 import { useChannelRemove } from '../../hooks/useChannelRemove';
 
 export const ChannelCommandBar = () => {
-  const { table } = useRecordTable();
-  const { channelsRemove, loading } = useChannelRemove();
+  const { table } = RecordTable.useRecordTable();
+  const { channelsRemove } = useChannelRemove();
   const { confirm } = useConfirm();
 
   const confirmOptions = { confirmationValue: 'delete' };

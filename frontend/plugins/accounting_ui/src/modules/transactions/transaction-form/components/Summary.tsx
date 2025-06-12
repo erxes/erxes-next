@@ -1,18 +1,18 @@
-import {
-  Button,
-  CurrencyCode,
-  CurrencyFormatedDisplay,
-  useConfirm,
-  useQueryState
-  } from 'erxes-ui';
 import { followTrDocsState } from '../states/trStates';
 import { IconGavel, IconTrashX } from '@tabler/icons-react';
+import { ITransaction } from '@/transactions/types/Transaction';
 import { ITransactionGroupForm, TTrDoc } from '../types/JournalForms';
 import { TR_SIDES } from '../../types/constants';
 import { useAtom } from 'jotai';
 import { useTransactionsRemove } from '../hooks/useTransactionsRemove';
 import { useWatch } from 'react-hook-form';
-import { ITransaction } from '~/modules/transactions/types/Transaction';
+import {
+  Button,
+  CurrencyCode,
+  CurrencyFormatedDisplay,
+  useConfirm,
+  useQueryState,
+} from 'erxes-ui';
 
 const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
   trDocs?.forEach((tr) => {
@@ -27,13 +27,13 @@ const getSum = (trDocs: any[], sumDebit: number, sumCredit: number) => {
     }
   });
   return [sumDebit, sumCredit];
-}
+};
 
 export const sumDtAndCt = (trDocs: TTrDoc[], followTrDocs: ITransaction[]) => {
   const [sumDt, sumCt] = getSum(trDocs || [], 0, 0);
   const [sumDebit, sumCredit] = getSum(followTrDocs, sumDt, sumCt);
-  return [sumDebit, sumCredit]
-}
+  return [sumDebit, sumCredit];
+};
 
 export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { trDocs } = useWatch({ control: form.control });
@@ -43,7 +43,7 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
   const { removeTransactions } = useTransactionsRemove();
   const { confirm } = useConfirm();
 
-  const [sumDebit, sumCredit] = sumDtAndCt(trDocs as TTrDoc[], followTrDocs)
+  const [sumDebit, sumCredit] = sumDtAndCt(trDocs as TTrDoc[], followTrDocs);
 
   const handleDelete = () =>
     confirm({
@@ -55,8 +55,8 @@ export const Summary = ({ form }: { form: ITransactionGroupForm }) => {
     }).then(() => {
       removeTransactions({
         variables: {
-          parentId
-        }
+          parentId,
+        },
       });
     });
 

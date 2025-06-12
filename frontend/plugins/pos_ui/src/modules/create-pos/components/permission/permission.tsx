@@ -5,7 +5,7 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PermissionFormValues, permissionSchema } from '../formSchema';
 import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '@/pos-detail.tsx/types/IPos';
 
 interface PermissionFormProps {
   form?: UseFormReturn<PermissionFormValues>;
@@ -44,9 +44,11 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
 
     useEffect(() => {
       if (posDetail) {
-        const adminId = posDetail.adminTeamMember || posDetail.adminIds?.[0] || '';
-        const cashierId = posDetail.cashierTeamMember || posDetail.cashierIds?.[0] || '';
-        
+        const adminId =
+          posDetail.adminTeamMember || posDetail.adminIds?.[0] || '';
+        const cashierId =
+          posDetail.cashierTeamMember || posDetail.cashierIds?.[0] || '';
+
         setSelectedAdminId(adminId);
         setSelectedCashierId(cashierId);
         form.reset({
@@ -57,7 +59,8 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
           cashierTeamMember: cashierId,
           cashierPrintTempBill: posDetail.cashierPrintTempBill || false,
           cashierDirectSales: posDetail.cashierDirectSales || false,
-          cashierDirectDiscountLimit: posDetail.cashierDirectDiscountLimit || '',
+          cashierDirectDiscountLimit:
+            posDetail.cashierDirectDiscountLimit || '',
           adminIds: adminId ? [adminId] : [],
           cashierIds: cashierId ? [cashierId] : [],
           permissionConfig: posDetail.permissionConfig || {},
@@ -67,22 +70,32 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
 
     const getAdminIds = (): string[] => {
       const formAdminIds = form.getValues('adminIds') || [];
-      const currentAdminId = selectedAdminId || form.getValues('adminTeamMember');
-      
+      const currentAdminId =
+        selectedAdminId || form.getValues('adminTeamMember');
+
       if (currentAdminId && !formAdminIds.includes(currentAdminId)) {
         return [currentAdminId];
       }
-      return formAdminIds.length > 0 ? formAdminIds : (currentAdminId ? [currentAdminId] : []);
+      return formAdminIds.length > 0
+        ? formAdminIds
+        : currentAdminId
+        ? [currentAdminId]
+        : [];
     };
 
     const getCashierIds = (): string[] => {
       const formCashierIds = form.getValues('cashierIds') || [];
-      const currentCashierId = selectedCashierId || form.getValues('cashierTeamMember');
-      
+      const currentCashierId =
+        selectedCashierId || form.getValues('cashierTeamMember');
+
       if (currentCashierId && !formCashierIds.includes(currentCashierId)) {
         return [currentCashierId];
       }
-      return formCashierIds.length > 0 ? formCashierIds : (currentCashierId ? [currentCashierId] : []);
+      return formCashierIds.length > 0
+        ? formCashierIds
+        : currentCashierId
+        ? [currentCashierId]
+        : [];
     };
 
     useImperativeHandle(ref, () => ({
@@ -90,10 +103,12 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
       getCashierIds,
     }));
 
-    const transformFormData = (values: PermissionFormValues): PermissionFormValues => {
+    const transformFormData = (
+      values: PermissionFormValues,
+    ): PermissionFormValues => {
       const adminIds = getAdminIds();
       const cashierIds = getCashierIds();
-      
+
       return {
         ...values,
         adminIds,
@@ -117,11 +132,13 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
       if (onFormSubmit) {
         const subscription = form.watch((values) => {
           if (values) {
-            const transformedData = transformFormData(values as PermissionFormValues);
+            const transformedData = transformFormData(
+              values as PermissionFormValues,
+            );
             onFormSubmit(transformedData);
           }
         });
-        
+
         return () => subscription.unsubscribe();
       }
     }, [form, onFormSubmit, selectedAdminId, selectedCashierId]);
@@ -146,24 +163,27 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
     const handleAdminMemberChange = (value: string | string[]) => {
       const userId = Array.isArray(value) ? value[0] : value;
       const finalUserId = userId || '';
-      
+
       console.log('Admin member selected:', finalUserId);
-      
+
       setSelectedAdminId(finalUserId);
       form.setValue('adminTeamMember', finalUserId, { shouldValidate: true });
-      form.setValue('adminIds', finalUserId ? [finalUserId] : [], { shouldValidate: true });
-      
+      form.setValue('adminIds', finalUserId ? [finalUserId] : [], {
+        shouldValidate: true,
+      });
+
       console.log('Updated adminIds:', finalUserId ? [finalUserId] : []);
     };
 
     const handleCashierMemberChange = (value: string | string[]) => {
       const userId = Array.isArray(value) ? value[0] : value;
       const finalUserId = userId || '';
-      
+
       setSelectedCashierId(finalUserId);
       form.setValue('cashierTeamMember', finalUserId, { shouldValidate: true });
-      form.setValue('cashierIds', finalUserId ? [finalUserId] : [], { shouldValidate: true });
-      
+      form.setValue('cashierIds', finalUserId ? [finalUserId] : [], {
+        shouldValidate: true,
+      });
     };
 
     return (
@@ -201,7 +221,9 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   checked={form.watch('adminPrintTempBill') || false}
                   onCheckedChange={(checked) => {
                     console.log('Admin print temp bill changed:', checked);
-                    form.setValue('adminPrintTempBill', checked, { shouldValidate: true });
+                    form.setValue('adminPrintTempBill', checked, {
+                      shouldValidate: true,
+                    });
                   }}
                 />
               </div>
@@ -214,12 +236,14 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   checked={form.watch('adminDirectSales') || false}
                   onCheckedChange={(checked) => {
                     console.log('Admin direct sales changed:', checked);
-                    form.setValue('adminDirectSales', checked, { shouldValidate: true });
+                    form.setValue('adminDirectSales', checked, {
+                      shouldValidate: true,
+                    });
                   }}
                 />
               </div>
             </div>
-            
+
             {form.watch('adminDirectSales') && (
               <div className="space-y-2">
                 <Label className="text-gray-500 text-sm">
@@ -228,8 +252,13 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                 <Input
                   value={form.watch('adminDirectDiscountLimit') || ''}
                   onChange={(e) => {
-                    console.log('Admin discount limit changed:', e.target.value);
-                    form.setValue('adminDirectDiscountLimit', e.target.value, { shouldValidate: true });
+                    console.log(
+                      'Admin discount limit changed:',
+                      e.target.value,
+                    );
+                    form.setValue('adminDirectDiscountLimit', e.target.value, {
+                      shouldValidate: true,
+                    });
                   }}
                   placeholder="Write here"
                   className="h-10"
@@ -241,7 +270,9 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
           <div className="space-y-4 pt-6 border-t">
             <div className="flex flex-col gap-3">
               <h2 className="text-[#4F46E5] text-lg font-semibold">Cashiers</h2>
-              <p className="text-[#A1A1AA] text-xs font-semibold">Pos Cashier</p>
+              <p className="text-[#A1A1AA] text-xs font-semibold">
+                Pos Cashier
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -270,7 +301,9 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   checked={form.watch('cashierPrintTempBill') || false}
                   onCheckedChange={(checked) => {
                     console.log('Cashier print temp bill changed:', checked);
-                    form.setValue('cashierPrintTempBill', checked, { shouldValidate: true });
+                    form.setValue('cashierPrintTempBill', checked, {
+                      shouldValidate: true,
+                    });
                   }}
                 />
               </div>
@@ -283,7 +316,9 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   checked={form.watch('cashierDirectSales') || false}
                   onCheckedChange={(checked) => {
                     console.log('Cashier direct sales changed:', checked);
-                    form.setValue('cashierDirectSales', checked, { shouldValidate: true });
+                    form.setValue('cashierDirectSales', checked, {
+                      shouldValidate: true,
+                    });
                   }}
                 />
               </div>
@@ -297,8 +332,15 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                 <Input
                   value={form.watch('cashierDirectDiscountLimit') || ''}
                   onChange={(e) => {
-                    console.log('Cashier discount limit changed:', e.target.value);
-                    form.setValue('cashierDirectDiscountLimit', e.target.value, { shouldValidate: true });
+                    console.log(
+                      'Cashier discount limit changed:',
+                      e.target.value,
+                    );
+                    form.setValue(
+                      'cashierDirectDiscountLimit',
+                      e.target.value,
+                      { shouldValidate: true },
+                    );
                   }}
                   placeholder="Write here"
                   className="h-10"
@@ -309,27 +351,35 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
         </div>
       </form>
     );
-  }
+  },
 );
 
 PermissionForm.displayName = 'PermissionForm';
 
 export default PermissionForm;
 
-export const getPermissionFormIds = (formRef: React.RefObject<PermissionFormRef>) => {
+export const getPermissionFormIds = (
+  formRef: React.RefObject<PermissionFormRef>,
+) => {
   if (!formRef.current) return { adminIds: [], cashierIds: [] };
-  
+
   return {
     adminIds: formRef.current.getAdminIds() || [],
     cashierIds: formRef.current.getCashierIds() || [],
   };
 };
 
-export const getPermissionFormValues = (form: UseFormReturn<PermissionFormValues>) => {
+export const getPermissionFormValues = (
+  form: UseFormReturn<PermissionFormValues>,
+) => {
   const values = form.getValues();
   return {
     ...values,
-    adminIds: values.adminIds || (values.adminTeamMember ? [values.adminTeamMember] : []),
-    cashierIds: values.cashierIds || (values.cashierTeamMember ? [values.cashierTeamMember] : []),
+    adminIds:
+      values.adminIds ||
+      (values.adminTeamMember ? [values.adminTeamMember] : []),
+    cashierIds:
+      values.cashierIds ||
+      (values.cashierTeamMember ? [values.cashierTeamMember] : []),
   };
 };

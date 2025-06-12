@@ -1,14 +1,20 @@
 import { AUTOMATOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { ErrorState } from '@/automations/utils/ErrorState';
-import { ApolloError, gql, useQuery } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 import { IconX } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
-import { Button, Card, Input, Skeleton, Tabs } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
-import { TablerIcon } from 'erxes-ui/icons';
-import { cn } from 'erxes-ui/lib';
-import { Search } from 'lucide-react';
+import {
+  Button,
+  Card,
+  Input,
+  Skeleton,
+  Tabs,
+  useQueryState,
+  TablerIcon,
+  cn,
+} from 'erxes-ui';
+import { IconSearch } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ConstantsQueryResponse } from '../../types';
@@ -130,7 +136,7 @@ const Default = () => {
       <div className="p-4 border-b">
         <h3 className="font-medium mb-3">Workflow Components</h3>
         <div className="relative flex items-center">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <IconSearch className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search components..."
             className="pl-8"

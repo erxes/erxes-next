@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { GET_RELATIONS_BY_ENTITY } from '../graphql/getRelations';
-import { IRelation } from 'erxes-ui/types';
+import { IRelation } from 'erxes-ui';
 
 export const useRelations = ({
   contentId,

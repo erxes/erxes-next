@@ -1,6 +1,5 @@
-import { ScrollArea, Separator, Skeleton } from 'erxes-ui/components';
+import { ScrollArea, Separator, Skeleton, toast } from 'erxes-ui';
 import { CustomerInline, SelectMember, SelectTags } from 'ui-modules';
-import { toast } from 'erxes-ui/hooks';
 
 import { useConversationContext } from '@/inbox/conversations/hooks/useConversationContext';
 import { useAssignConversations } from '@/inbox/conversations/hooks/useAssignConversations';

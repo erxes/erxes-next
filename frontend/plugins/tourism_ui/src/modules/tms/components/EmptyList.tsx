@@ -1,4 +1,4 @@
-import { TmsCreateSheet } from '~/modules/tms/components/CreateTmsSheet';
+import { TmsCreateSheet } from '@/tms/components/CreateTmsSheet';
 
 export const EmptyList = () => {
   return (
