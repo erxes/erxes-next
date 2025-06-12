@@ -145,7 +145,16 @@ export const receiveTrpcMessage = async (
           conversationId: doc.conversationId,
           updatedAt: doc.updatedAt,
         };
+
         await Conversations.createConversation(formattedDoc);
+        await graphqlPubsub.publish(
+          `conversationClientMessageInserted:${subdomain}:${doc.customerId}`,
+          {
+            conversationClientMessageInserted: doc,
+            subdomain,
+            conversation,
+          },
+        );
       }
 
       return sendSuccess({ _id: conversationId });
