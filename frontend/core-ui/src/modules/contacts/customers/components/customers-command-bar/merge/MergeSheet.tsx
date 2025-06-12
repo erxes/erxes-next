@@ -2,10 +2,9 @@ import {
   IconArrowMerge,
   IconLayoutSidebarLeftCollapse,
 } from '@tabler/icons-react';
-import { Button, Sheet } from 'erxes-ui/components';
+import { Button, Sheet, cn } from 'erxes-ui';
 import { ReactNode } from 'react';
 import { MergeTooltip } from '@/contacts/customers/components/customers-command-bar/merge/MergeTooltip';
-import { cn } from 'erxes-ui/lib';
 
 const noop = () => {
   //

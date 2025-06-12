@@ -30,7 +30,9 @@ export const IntegrationTypeTag = () => {
     <Filter.BarItem>
       <Popover>
         <Popover.Trigger asChild>
-          <Filter.BarButton>{integrationType.name}</Filter.BarButton>
+          <Filter.BarButton className="rounded-l">
+            {integrationType.name}
+          </Filter.BarButton>
         </Popover.Trigger>
         <Combobox.Content>
           <Command>

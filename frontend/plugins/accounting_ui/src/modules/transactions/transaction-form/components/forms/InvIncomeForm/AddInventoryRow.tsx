@@ -1,7 +1,7 @@
 import { IconPlus } from '@tabler/icons-react';
-import { Button } from 'erxes-ui/components/button';
+import { Button } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
-import { TR_SIDES } from '~/modules/transactions/types/constants';
+import { TR_SIDES } from '@/transactions/types/constants';
 import { ITransactionGroupForm, TInvDetail } from '../../../types/JournalForms';
 import { getTempId } from '../../utils';
 // import { useInventoryContext } from '../hooks/useInventoryContext';
@@ -9,7 +9,7 @@ import { getTempId } from '../../utils';
 export const AddInventoryRowButton = ({
   append,
   journalIndex,
-  form
+  form,
 }: {
   form: ITransactionGroupForm;
   journalIndex: number;
@@ -22,7 +22,7 @@ export const AddInventoryRowButton = ({
     name: `trDocs.${journalIndex}.details`,
   });
 
-  const lastDetail = preDetails[preDetails.length - 1]
+  const lastDetail = preDetails[preDetails.length - 1];
 
   const detailDefaultValues = {
     ...lastDetail,

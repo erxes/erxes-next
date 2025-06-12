@@ -1,4 +1,4 @@
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 import { PropsWithChildren } from 'react';
 
 const Heading = ({

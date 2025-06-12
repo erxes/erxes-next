@@ -5,3 +5,4 @@ export * from './hooks/useGiveTags';
 export * from './hooks/useTags';
 export * from './types/Tag';
 export * from './components/CreateTagForm';
+export * from './components/SelectTagType';

@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai';
-import { Separator, useQueryState } from 'erxes-ui';
+import { Separator, Skeleton, useQueryState } from 'erxes-ui';
 
 import { ConversationContext } from '@/inbox/conversations/context/ConversationContext';
 import { ConversationHeader } from './ConversationHeader';
@@ -13,6 +13,7 @@ import { MessageInput } from './MessageInput';
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
 import { InboxMessagesSkeleton } from '@/inbox/components/InboxMessagesSkeleton';
 import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
+import { NoConversationSelected } from './NoConversationSelected';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -38,17 +39,23 @@ export const ConversationDetail = () => {
     skip: !integrationId,
   });
 
+  if (!conversationDetail && !integration) {
+    return <NoConversationSelected />;
+  }
+
   if (loading && !currentConversation && !integrationLoading) {
     return (
-      <div className="relative h-full">
-        <InboxMessagesSkeleton />
+      <div className="flex flex-col">
+        <div className="h-12 border-b flex-none flex items-center px-6">
+          <Skeleton className="w-32 h-4" />
+          <Skeleton className="w-32 h-4 ml-auto" />
+        </div>
+        <div className="relative h-full">
+          <InboxMessagesSkeleton />
+        </div>
       </div>
     );
   }
-
-  // if (!['messenger', 'lead'].includes(integration?.kind)) {
-  //   return <UnderConstruction />;
-  // }
 
   return (
     <div className="flex h-full overflow-hidden">
@@ -57,6 +64,7 @@ export const ConversationDetail = () => {
           value={{
             ...currentConversation,
             ...conversationDetail,
+            integration,
             loading,
           }}
         >

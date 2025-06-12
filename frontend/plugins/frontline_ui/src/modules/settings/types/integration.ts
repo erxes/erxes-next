@@ -29,8 +29,8 @@ export interface IIntegrationContext {
   setOtherIntegrations: (
     integrations: Record<string, IIntegrationItem>,
   ) => void;
-  selectedIntegrationKind?: string;
-  setSelectedIntegrationKind?: (kind: string) => void;
+  selectedIntegrationType?: string;
+  setSelectedIntegrationType?: (kind: string) => void;
 }
 
 export interface IBrand {

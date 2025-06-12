@@ -1,4 +1,4 @@
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import { accountDetailAtom } from '../states/accountStates';
 import { useAtomValue } from 'jotai';
 import { GET_ACCOUNT_DETAIL } from '../graphql/queries/getAccounts';

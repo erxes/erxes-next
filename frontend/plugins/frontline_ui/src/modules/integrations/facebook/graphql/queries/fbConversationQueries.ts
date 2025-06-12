@@ -18,7 +18,6 @@ export const GET_CONVERSATION_MESSAGES = gql`
       limit: $limit
     )
    {
-
       _id
       ${commonCommentAndMessageFields}
       customerId
@@ -26,41 +25,12 @@ export const GET_CONVERSATION_MESSAGES = gql`
       createdAt
       isCustomerRead
       internal
-
       attachments {
         url
         name
         type
         size
       }
-
-      user {
-        _id
-        username
-        details {
-          avatar
-          fullName
-          position
-        }
-      }
-          customer {
-            _id
-            avatar
-            firstName
-            middleName
-            lastName
-            primaryEmail
-            primaryPhone
-            state
-            companies {
-              _id
-              primaryName
-              website
-            }
-
-            customFieldsData
-            tagIds
-          }
     }
   }
 `;

@@ -1,16 +1,16 @@
 import { IContext } from '~/connectionResolvers';
 
 const itineraryMutations = {
-  bmItineraryAdd: async (_root, doc, { user, models }: IContext) => {
+  bmsItineraryAdd: async (_root, doc, { user, models }: IContext) => {
     return models.Itineraries.createItinerary(doc, user);
   },
 
-  bmItineraryEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
+  bmsItineraryEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
     const updated = await models.Itineraries.updateItinerary(_id, doc as any);
     return updated;
   },
 
-  bmItineraryRemove: async (
+  bmsItineraryRemove: async (
     _root,
     { ids }: { ids: string[] },
     { models }: IContext,

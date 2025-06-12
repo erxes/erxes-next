@@ -1,8 +1,8 @@
 import { IconPlus } from '@tabler/icons-react';
 
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
-import { Button } from 'erxes-ui/components/button';
+import { Button } from 'erxes-ui';
 import { useUserInviteContext } from '../../hooks/useUserInviteContext';
 import { IUserEntry, TUserForm } from '../../types';
 

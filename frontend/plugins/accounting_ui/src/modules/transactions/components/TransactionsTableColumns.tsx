@@ -13,7 +13,7 @@ import {
 } from 'erxes-ui';
 import { IconMoneybag, IconFile, IconCalendar } from '@tabler/icons-react';
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {
@@ -148,7 +148,9 @@ const DepartmentCell = ({ row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          {`${department?.code ? `${department.code} - ` : ''}${department?.title ?? ''}`}
+          {`${department?.code ? `${department.code} - ` : ''}${
+            department?.title ?? ''
+          }`}
         </InlineCellDisplay>
       )}
     />
@@ -163,7 +165,7 @@ const DateCell = ({ getValue, row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          {dayjs(new Date(getValue())).format("YYYY-MM-DD")}
+          {dayjs(new Date(getValue())).format('YYYY-MM-DD')}
         </InlineCellDisplay>
       )}
     />
@@ -195,10 +197,12 @@ const TransactionMoreColumnCell = ({
   const { parentId, _id, originId } = cell.row.original;
 
   return (
-    <Link to={`/accounting/transaction/edit?parentId=${parentId}&trId=${originId || _id}`}>
-      <RecordTable.MoreButton
-        className="w-full h-full"
-      />
+    <Link
+      to={`/accounting/transaction/edit?parentId=${parentId}&trId=${
+        originId || _id
+      }`}
+    >
+      <RecordTable.MoreButton className="w-full h-full" />
     </Link>
   );
 };
@@ -219,6 +223,7 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     ),
     accessorKey: 'details',
     cell: ({ row }) => <AccountCell row={row} />,
+    size: 500,
   },
   {
     id: 'number',
@@ -231,6 +236,7 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     header: () => <RecordTable.InlineHead icon={IconCalendar} label="Date" />,
     accessorKey: 'date',
     cell: ({ getValue, row }) => <DateCell getValue={getValue} row={row} />,
+    size: 80,
   },
   {
     id: 'description',
@@ -271,6 +277,8 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     id: 'department',
     header: () => <RecordTable.InlineHead icon={IconFile} label="Department" />,
     accessorKey: 'department',
-    cell: ({ getValue, row }) => <DepartmentCell getValue={getValue} row={row} />,
+    cell: ({ getValue, row }) => (
+      <DepartmentCell getValue={getValue} row={row} />
+    ),
   },
 ];
