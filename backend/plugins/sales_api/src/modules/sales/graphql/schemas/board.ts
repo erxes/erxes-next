@@ -27,8 +27,8 @@ export const types = `
 
 export const queries = `
   salesBoards: [SalesBoard]
-  salesBoardCounts(type: String!): [SalesBoardCount]
-  salesBoardGetLast(type: String!): SalesBoard
+  salesBoardCounts: [SalesBoardCount]
+  salesBoardGetLast: SalesBoard
   salesBoardDetail(_id: String!): SalesBoard
   salesConvertToInfo(conversationId: String!): SalesConvertTo
   salesItemsCountByAssignedUser(type: String!, pipelineId: String!, stackBy: String): JSON
@@ -39,14 +39,13 @@ export const queries = `
 `;
 
 const mutationParams = `
-  name: String!,
-  type: String!
+  name: String!
 `;
 
 export const mutations = `
   salesBoardsAdd(${mutationParams}): SalesBoard
   salesBoardsEdit(_id: String!, ${mutationParams}): SalesBoard
   salesBoardsRemove(_id: String!): JSON
-  salesBoardItemUpdateTimeTracking(_id: String!, type: String!, status: String!, timeSpent: Int!, startDate: String): JSON
-  salesBoardItemsSaveForGanttTimeline(items: JSON, links: JSON, type: String!): String
+  salesBoardItemUpdateTimeTracking(_id: String!, status: String!, timeSpent: Int!, startDate: String): JSON
+  salesBoardItemsSaveForGanttTimeline(items: JSON, links: JSON): String
 `;

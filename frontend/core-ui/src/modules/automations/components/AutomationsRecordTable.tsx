@@ -1,12 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { IconSettings } from '@tabler/icons-react';
-import { Breadcrumb, Button, Separator, Spinner } from 'erxes-ui/components';
-import { RecordTable } from 'erxes-ui/modules';
-import { Link } from 'react-router-dom';
+import { IconAffiliate, IconSettings } from '@tabler/icons-react';
+import { Breadcrumb, Button, RecordTable, Separator, Spinner } from 'erxes-ui';
 import { IPageInfo, PageHeader } from 'ui-modules';
 import { AUTOMATIONS_MAIN_LIST } from '../graphql/automationQueries';
 import { IAutomationDoc } from '../types';
 import { automationColumns } from './AutomationColumns';
+import { AutomationRecordTableFilters } from './AutomationRecordTableFilters';
+import { Link } from 'react-router-dom';
+
 type QueryResponse = {
   automationsMain: {
     list: IAutomationDoc[];
@@ -26,8 +27,7 @@ export const AutomationsRecordTable = () => {
   }
 
   const { list = [], totalCount = 0, pageInfo } = data?.automationsMain || {};
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   const handleFetchMore = () => {
     if (!list || !totalCount || totalCount <= list.length) {
@@ -60,11 +60,9 @@ export const AutomationsRecordTable = () => {
           <Breadcrumb>
             <Breadcrumb.List className="gap-1">
               <Breadcrumb.Item>
-                <Button variant="ghost" asChild>
-                  <Link to="/settings/automations">
-                    <IconSettings />
-                    Go to settings
-                  </Link>
+                <Button variant="ghost">
+                  <IconAffiliate />
+                  Automations
                 </Button>
               </Breadcrumb.Item>
             </Breadcrumb.List>
@@ -83,6 +81,7 @@ export const AutomationsRecordTable = () => {
           </Button>
         </PageHeader.End>
       </PageHeader>
+      <AutomationRecordTableFilters loading={loading} totalCount={totalCount} />
       <RecordTable.Provider
         columns={automationColumns}
         data={list}

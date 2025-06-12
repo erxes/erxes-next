@@ -1,8 +1,7 @@
 import { flexRender } from '@tanstack/react-table';
 import { cn, RecordTable, Table } from 'erxes-ui';
 import React, { useMemo } from 'react';
-import { Link } from 'react-router';
-
+import { Link } from 'react-router-dom';
 
 export const AccountingTableRow = ({
   handleRowViewChange,
@@ -16,7 +15,8 @@ export const AccountingTableRow = ({
   const rows = table.getRowModel().rows;
 
   const tableContent = rows.map((row, rowIndex) => {
-    const hasChangedPtrId = rows[rowIndex - 1]?.original?.ptrId !== row.original.ptrId;
+    const hasChangedPtrId =
+      rows[rowIndex - 1]?.original?.ptrId !== row.original.ptrId;
 
     return (
       <React.Fragment key={`row-group-${row.original._id}`}>
@@ -33,20 +33,31 @@ export const AccountingTableRow = ({
               id={`${row.original.ptrId}_${rowIndex}_`}
               className={cn(rowIndex === 0 && 'border-t')}
             >
-              <Link to={`/accounting/transaction/edit?parentId=${row.original.parentId}`}>
-                <RecordTable.MoreButton
-                  className="w-full h-full"
-                />
+              <Link
+                to={`/accounting/transaction/edit?parentId=${row.original.parentId}`}
+              >
+                <RecordTable.MoreButton className="w-full h-full" />
               </Link>
             </Table.Cell>
             <Table.Cell
               key={`${row.original.ptrId}_${rowIndex}__`}
               id={`${row.original.ptrId}_${rowIndex}__`}
               colSpan={row.getVisibleCells().length - 1}
-              className={cn(rowIndex === 0 && 'border-t', row.original.ptrStatus === 'diff' && 'bg-red-50/25')}
+              className={cn(
+                rowIndex === 0 && 'border-t',
+                row.original.ptrStatus === 'diff' && 'bg-red-50/25',
+              )}
             >
               {`
-                status: ${row.original.ptrStatus} | len: ${row.original.ptrInfo?.len ?? ''} | amount: ${row.original.ptrInfo?.value?.toLocaleString() ?? ''} ${row.original.ptrInfo?.diff ? `| diff: ${row.original.ptrInfo?.diff.toLocaleString()}` : ''}
+                status: ${row.original.ptrStatus} | len: ${
+                row.original.ptrInfo?.len ?? ''
+              } | amount: ${
+                row.original.ptrInfo?.value?.toLocaleString() ?? ''
+              } ${
+                row.original.ptrInfo?.diff
+                  ? `| diff: ${row.original.ptrInfo?.diff.toLocaleString()}`
+                  : ''
+              }
               `}
             </Table.Cell>
           </RowComponent>
@@ -60,17 +71,13 @@ export const AccountingTableRow = ({
           }
         >
           {row.getVisibleCells().map((cell, cellIndex) => (
-            <RecordTable.Cell
-              cell={cell}
-              key={cell.id}
-
-            >
+            <RecordTable.Cell cell={cell} key={cell.id}>
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </RecordTable.Cell>
           ))}
         </RowComponent>
       </React.Fragment>
-    )
+    );
   });
 
   const memoizedTableContent = useMemo(

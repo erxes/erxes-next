@@ -1,7 +1,5 @@
-import { Button } from 'erxes-ui/components';
+import { Button, useConfirm, useToast } from 'erxes-ui';
 import { IconTrash } from '@tabler/icons-react';
-import { useConfirm } from 'erxes-ui/hooks';
-import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { useRemoveCategories } from '@/products/product-category/hooks/useRemoveCategories';
 
@@ -10,15 +8,18 @@ interface CategoriesDeleteProps {
   onDeleteSuccess?: () => void;
 }
 
-export const CategoriesDelete = ({ categoryIds, onDeleteSuccess }: CategoriesDeleteProps) => {
+export const CategoriesDelete = ({
+  categoryIds,
+  onDeleteSuccess,
+}: CategoriesDeleteProps) => {
   const { confirm } = useConfirm();
   const { removeCategory } = useRemoveCategories();
   const { toast } = useToast();
-  
-  const categoryCount = categoryIds.includes(',') 
-    ? categoryIds.split(',').length 
+
+  const categoryCount = categoryIds.includes(',')
+    ? categoryIds.split(',').length
     : 1;
-  
+
   return (
     <Button
       variant="secondary"
@@ -38,13 +39,15 @@ export const CategoriesDelete = ({ categoryIds, onDeleteSuccess }: CategoriesDel
             onCompleted: () => {
               toast({
                 title: 'Success',
-                description: `${categoryCount} ${categoryCount === 1 ? 'category' : 'categories'} deleted successfully.`,
+                description: `${categoryCount} ${
+                  categoryCount === 1 ? 'category' : 'categories'
+                } deleted successfully.`,
               });
-              
+
               if (onDeleteSuccess) {
                 onDeleteSuccess();
               }
-            }
+            },
           });
         })
       }

@@ -1,19 +1,7 @@
-import { IconCalendarPlus, IconSearch } from '@tabler/icons-react';
-import {
-  Combobox,
-  Command,
-  Filter,
-  PageSubHeader,
-  useMultiQueryState,
-} from 'erxes-ui';
-import React from 'react';
+import { Combobox, Command, Filter, PageSubHeader } from 'erxes-ui';
+import { BrandsTotalCount } from './BrandsTotalCount';
 
 export const BrandsSubHeader = () => {
-  const [queries] = useMultiQueryState<{
-    searchValue: string;
-    created: string;
-  }>(['searchValue', 'created']);
-  const { searchValue, created } = queries || {};
   return (
     <Filter id="brands">
       <PageSubHeader>
@@ -40,18 +28,8 @@ export const BrandsSubHeader = () => {
               <Filter.DialogStringView filterKey="searchValue" />
             </Filter.View>
           </Filter.Dialog>
-          {searchValue && (
-            <Filter.BarItem>
-              <Filter.BarName>
-                <IconSearch />
-                Search
-              </Filter.BarName>
-              <Filter.BarButton filterKey="searchValue" inDialog>
-                {searchValue}
-              </Filter.BarButton>
-              <Filter.BarClose filterKey="searchValue" />
-            </Filter.BarItem>
-          )}
+          <Filter.SearchValueBarItem />
+          <BrandsTotalCount />
         </Filter.Bar>
       </PageSubHeader>
     </Filter>

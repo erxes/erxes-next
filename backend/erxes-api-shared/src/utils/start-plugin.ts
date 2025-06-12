@@ -16,6 +16,8 @@ import express, {
 } from 'express';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import * as http from 'http';
+import * as path from 'path';
+
 import {
   SegmentConfigs,
   startAutomations,
@@ -152,11 +154,15 @@ export async function startPlugin(
     }
   }
 
-  // if (configs.hasSubscriptions) {
-  //   app.get('/subscriptionPlugin.js', async (req, res) => {
-  //     res.sendFile(path.join(configs.subscriptionPluginPath));
-  //   });
-  // }
+  if (configs.hasSubscriptions) {
+    console.log(
+      'configs.subscriptionPluginPath',
+      configs.subscriptionPluginPath,
+    );
+    app.get('/subscriptionPlugin.js', async (_req, res) => {
+      res.sendFile(path.join(configs.subscriptionPluginPath));
+    });
+  }
 
   if (configs.trpcAppRouter) {
     app.use(

@@ -1,6 +1,5 @@
-import React from 'react';
 import { useChannels } from '../../hooks/useChannels';
-import { RecordTable } from 'erxes-ui/modules';
+import { RecordTable } from 'erxes-ui';
 import { ChannelColumns } from './ChannelColumns';
 import { ChannelCommandBar } from './ChannelCommandBar';
 

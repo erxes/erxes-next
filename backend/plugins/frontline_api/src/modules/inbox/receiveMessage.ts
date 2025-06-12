@@ -190,23 +190,12 @@ export const receiveTrpcMessage = async (
       conversationDoc,
     );
 
-    // FIXME: Find userId and `conversationClientMessageInserted:${userId}`
-    const publish = graphqlPubsub.publish as <T>(
-      trigger: string,
-      payload: T,
-    ) => Promise<void>;
-
-    await publish('conversationClientMessageInserted', {
-      conversationClientMessageInserted: message,
-    });
-
-    await publish(
-      `conversationClientMessageInserted:${message.conversationId}`,
+    await graphqlPubsub.publish(
+      `conversationMessageInserted:${message.conversationId}`,
       {
-        conversationClientMessageInserted: message,
+        conversationMessageInserted: message,
       },
     );
-
     return sendSuccess({ _id: message._id });
   }
 
@@ -244,27 +233,25 @@ export const receiveIntegrationsNotification = async (subdomain, msg) => {
 
   const models = await generateModels(subdomain);
 
-  const publish = graphqlPubsub.publish as <T>(
-    trigger: string,
-    payload: T,
-  ) => Promise<void>;
-
   if (action === 'external-integration-entry-added') {
-    await publish('conversationExternalIntegrationMessageInserted', {});
+    await graphqlPubsub.publish(
+      'conversationExternalIntegrationMessageInserted',
+      {},
+    );
 
     if (conversationId) {
       await models.Conversations.reopen(conversationId);
       // FIXME: It must have _id
-      await pConversationClientMessageInserted(models, subdomain, {
-        _id: conversationId,
-      });
+      // await pConversationClientMessageInserted(models, subdomain, {
+      //   conversationId,
+      // });
     }
 
     return sendSuccess({ status: 'ok' });
   }
 
   if (action === 'sync-calendar-event') {
-    await publish('calendarEventUpdated', {});
+    await graphqlPubsub.publish('calendarEventUpdated', {});
 
     return sendSuccess({ status: 'ok' });
   }

@@ -3,13 +3,13 @@ import { Button, Form, Input, Upload } from 'erxes-ui';
 import PmsFormFieldsLayout from '../PmsFormFieldsLayout';
 import Heading from '../../ui/heading';
 import { IconPlus, IconTrash, IconUpload } from '@tabler/icons-react';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
   return (
     <PmsFormFieldsLayout>
       <Heading>Logo and favicon</Heading>
-      <div className="xl:grid grid-cols-3">
+      <div className="grid-cols-3 xl:grid">
         <Form.Field
           control={control}
           name="logo"
@@ -26,7 +26,7 @@ const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
                     size="sm"
                     variant="secondary"
                     type="button"
-                    className="flex flex-col gap-3 items-center justify-center w-full h-52 border border-dashed text-muted-foreground"
+                    className="flex flex-col items-center justify-center w-full gap-3 border border-dashed h-52 text-muted-foreground"
                   >
                     <IconUpload />
                     <Button variant={'outline'}>Upload Logo</Button>

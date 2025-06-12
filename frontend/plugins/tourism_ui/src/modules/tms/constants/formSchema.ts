@@ -19,8 +19,6 @@ export const TmsFormSchema = z.object({
       }),
     )
     .optional(),
-  prepaid: z.boolean().optional(),
-  prepaidAmount: z.number().min(1).max(100).optional(),
 });
 
 export type TmsFormType = z.infer<typeof TmsFormSchema>;

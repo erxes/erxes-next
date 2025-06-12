@@ -20,7 +20,7 @@ import '@xyflow/react/dist/style.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import AutomationBuilderHeader from './AutomationBuilderHeader';
 import AutomationBuilderSidebar from './AutomationBuilderSidebar';
@@ -44,6 +44,7 @@ import {
   automationBuilderFormSchema,
   TAutomationProps,
 } from '@/automations/utils/AutomationFormDefinitions';
+import { AutomationHistories } from './AutomationHistories';
 
 interface MenuState {
   id: string;
@@ -91,7 +92,7 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     );
 
     const mergedArray = updatedNodes.map((node1) => {
-      let node2 = nodes.find((o) => o.id === node1.id);
+      const node2 = nodes.find((o) => o.id === node1.id);
 
       if (node2) {
         return {
@@ -219,7 +220,7 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
     setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
   }) => {
     setEdges((eds: Edge[]) => eds.filter((e) => e.id !== edge.id));
-    let info: any = { source: edge.source, target: undefined };
+    const info: any = { source: edge.source, target: undefined };
 
     const sourceNode = nodes.find((n) => n.id === edge.source);
 
@@ -283,8 +284,8 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
         }
       };
 
-      if (target?.parentId && connection?.source && target.id) {
-      }
+      // if (target?.parentId && connection?.source && target.id) {
+      // }
 
       return !hasCycle(target);
     },
@@ -346,26 +347,36 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
 
 export default ({ detail }: { detail?: IAutomation }) => {
   const [activeNodeId] = useQueryState('activeNodeId');
+  const [activeTabQueryParam] = useQueryState<'builder' | 'history'>(
+    'activeTab',
+  );
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
   const form = useForm<TAutomationProps>({
     resolver: zodResolver(automationBuilderFormSchema),
     defaultValues: {
       isMinimized: activeNodeId ? false : true,
-      activeTab: 'builder',
+      activeTab: activeTabQueryParam || 'builder',
       detail: deepCleanNulls(detail),
     },
   });
+
+  const activeTab = form.watch('activeTab');
 
   return (
     <ReactFlowProvider>
       <AutomationBuilderDnDProvider>
         <FormProvider {...form}>
           <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
-          <Editor
-            reactFlowInstance={reactFlowInstance}
-            setReactFlowInstance={setReactFlowInstance}
-          />
+
+          {activeTab === 'history' ? (
+            <AutomationHistories />
+          ) : (
+            <Editor
+              reactFlowInstance={reactFlowInstance}
+              setReactFlowInstance={setReactFlowInstance}
+            />
+          )}
         </FormProvider>
       </AutomationBuilderDnDProvider>
     </ReactFlowProvider>

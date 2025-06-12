@@ -1,9 +1,9 @@
 import { useFormContext } from 'react-hook-form';
 import { TTagsForm } from '../hooks/useTagsForm';
-import { Button, Combobox, Command, Form, Input, Popover } from 'erxes-ui';
+import { Button, Combobox, Form, Input, Popover } from 'erxes-ui';
 import { SelectTags } from 'ui-modules';
 import { IconChevronDown } from '@tabler/icons-react';
-import { SelectTagType } from 'ui-modules/modules/tags/components/SelectTagType';
+import { SelectTagType } from 'ui-modules';
 
 export const TagsForm = () => {
   const form = useFormContext<TTagsForm>();

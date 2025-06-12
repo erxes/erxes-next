@@ -1,9 +1,9 @@
 import { Button } from 'erxes-ui';
 import { useMultiQueryState, useQueryState } from 'erxes-ui';
 import { ChannelTag } from '@/inbox/channel/components/ChannelTag';
-import { IntegrationTag } from '@/integrations/components/IntegrationTag';
 import { IconX } from '@tabler/icons-react';
 import { BOOLEAN_FILTERS } from '../../constants/booleanFilters';
+import { IntegrationTypeTag } from '@/integrations/components/IntegrationTypeTag';
 
 export const FilterTags = () => {
   const [{ channelId, integrationType, status }] = useMultiQueryState<{
@@ -19,7 +19,7 @@ export const FilterTags = () => {
       <span className="text-xs text-accent-foreground">Filters:</span>
       <div className="flex flex-wrap gap-2">
         <ChannelTag />
-        <IntegrationTag />
+        <IntegrationTypeTag />
         {status === 'closed' && (
           <FilterTagBoolean label="Resolved" statusKey="status" />
         )}

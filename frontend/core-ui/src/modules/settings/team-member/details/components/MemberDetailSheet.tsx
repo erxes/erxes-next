@@ -1,6 +1,5 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import { Button, cn, Sheet } from 'erxes-ui';
-import { useQueryState } from 'erxes-ui/hooks';
 import { useSearchParams } from 'react-router-dom';
 
 export const MemberDetailSheet = ({

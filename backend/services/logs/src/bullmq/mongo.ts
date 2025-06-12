@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { LOG_STATUSES } from '../constants';
-import { ILogDocument } from '../db/definitions/logs';
 import { StatusType } from '~/types';
+import { ILogDocument } from 'erxes-api-shared/core-types';
 
 type CommonObject = {
   source: 'mongo';

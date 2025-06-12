@@ -10,6 +10,11 @@ export enum EnumCursorDirection {
   BACKWARD = 'backward',
 }
 
+export enum EnumCursorMode {
+  INCLUSIVE = 'inclusive',
+  EXCLUSIVE = 'exclusive',
+}
+
 export interface IRecordTableCursorContext {
   scrollRef: React.RefObject<HTMLDivElement>;
   isFetchBackward: boolean;

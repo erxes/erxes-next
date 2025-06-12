@@ -1,7 +1,7 @@
 import { Control, useFieldArray } from 'react-hook-form';
 import { Button, Form, Input } from 'erxes-ui';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const Discount = ({ control }: { control: Control<PmsBranchFormType> }) => {
   const { fields, append, remove } = useFieldArray({
@@ -17,8 +17,8 @@ const Discount = ({ control }: { control: Control<PmsBranchFormType> }) => {
       </Button>
 
       {fields.map((field, index) => (
-        <div className="flex gap-6 items-end">
-          <div className="w-full grid grid-cols-3 gap-6">
+        <div className="flex items-end gap-6">
+          <div className="grid w-full grid-cols-3 gap-6">
             <Form.Field
               control={control}
               name={`discounts.${index}.type`}
@@ -62,7 +62,7 @@ const Discount = ({ control }: { control: Control<PmsBranchFormType> }) => {
           <Button
             variant={'destructive'}
             size={'icon'}
-            className="h-8 w-8"
+            className="w-8 h-8"
             onClick={() => remove(index)}
           >
             <IconTrash />

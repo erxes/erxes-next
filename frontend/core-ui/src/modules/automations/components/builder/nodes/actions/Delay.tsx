@@ -1,5 +1,5 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { Card, Form, Input, Select } from 'erxes-ui/components';
+import { Card, Form, Input, Select } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 import { IActionProps } from 'ui-modules';
 

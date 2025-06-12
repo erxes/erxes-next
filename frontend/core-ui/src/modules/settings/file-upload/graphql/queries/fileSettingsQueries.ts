@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client"
+import { gql } from '@apollo/client';
 
 const GET_CONFIGS = gql`
   query configs {
@@ -7,9 +7,9 @@ const GET_CONFIGS = gql`
       code
       value
     }
-}
-`
+  }
+`;
 
 export const fileSettingsQueries = {
-  GET_CONFIGS
-}
+  GET_CONFIGS,
+};

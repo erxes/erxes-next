@@ -1,5 +1,5 @@
 {
-  "name": "automations",
+  "name": "automations-service",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "backend/services/automations/src",
   "projectType": "application",
@@ -32,7 +32,7 @@
       "dependsOn": ["typecheck", "build"],
       "options": {
         "cwd": "backend/services/automations",
-        "command": "NODE_ENV=development && node dist/src/main.js"
+        "command": "NODE_ENV=development  node dist/src/main.js"
       }
     },
 
@@ -41,13 +41,13 @@
 
       "options": {
         "cwd": "backend/services/automations",
-        "command": "NODE_ENV=development &&  pnpm dev"
+        "command": "NODE_ENV=development  pnpm dev"
       }
     },
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/services/automations/Dockerfile . -t automations"
+      "command": "docker build -f backend/services/automations/Dockerfile . -t erxes/erxes-next-automations"
     }
   }
 }

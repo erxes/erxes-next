@@ -34,6 +34,7 @@ const GET_BRANCHES_LIST = gql`
         parentId
         userCount
         title
+        order
       }
       pageInfo {
         endCursor

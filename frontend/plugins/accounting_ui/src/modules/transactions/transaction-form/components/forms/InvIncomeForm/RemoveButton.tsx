@@ -1,5 +1,5 @@
 import { IconX } from '@tabler/icons-react';
-import { Button } from 'erxes-ui/components/button';
+import { Button } from 'erxes-ui';
 
 export const RemoveButton = ({
   remove,

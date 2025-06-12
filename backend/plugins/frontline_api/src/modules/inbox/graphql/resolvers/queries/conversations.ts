@@ -7,7 +7,8 @@ import {
   IConversationListParams,
 } from '@/inbox/@types/conversations';
 import { IMessageDocument } from '@/inbox/@types/conversationMessages';
-
+import { countByConversations } from '@/inbox/conversationUtils';
+import { IConversationRes } from '@/inbox/@types/conversations';
 // count helper
 const count = async (models: IModels, query: any): Promise<number> => {
   const result = await models.Conversations.countDocuments(query);
@@ -22,6 +23,20 @@ export const conversationQueries = {
     params: IConversationListParams,
     { user, models, subdomain }: IContext,
   ) {
+    if (params && params.ids) {
+      const { list, totalCount, pageInfo } =
+        await cursorPaginate<IConversationDocument>({
+          model: models.Conversations,
+          params: {
+            ...params,
+            orderBy: { updatedAt: -1 }, // Optional, _id is used as a fallback
+          },
+          query: { _id: { $in: params.ids } },
+        });
+
+      return { list, totalCount, pageInfo };
+    }
+
     const qb = new QueryBuilder(models, subdomain, params, {
       _id: user._id,
       code: user.code,
@@ -30,12 +45,16 @@ export const conversationQueries = {
     });
 
     await qb.buildAllQueries();
-    const query = qb.mainQuery();
+
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IConversationDocument>({
         model: models.Conversations,
-        params,
-        query: query,
+        params: {
+          ...params,
+          orderBy: { createdAt: -1 },
+          limit: params.limit || 20,
+        },
+        query: qb.mainQuery(),
       });
 
     return { list, totalCount, pageInfo };
@@ -100,7 +119,9 @@ export const conversationQueries = {
     params: IListArgs,
     { user, models, subdomain }: IContext,
   ) {
-    const response: any = {};
+    const { only } = params;
+
+    const response: IConversationRes = {};
     const _user = {
       _id: user._id,
       code: user.code,
@@ -109,9 +130,22 @@ export const conversationQueries = {
     };
 
     const qb = new QueryBuilder(models, subdomain, params, _user);
+
     await qb.buildAllQueries();
 
     const queries = qb.queries;
+    const integrationIds = queries.integrations.integrationId.$in;
+
+    if (only) {
+      response[only] = await countByConversations(
+        models,
+        subdomain,
+        params,
+        integrationIds,
+        _user,
+        only,
+      );
+    }
 
     const mainQuery = {
       ...qb.mainQuery(),
@@ -148,6 +182,7 @@ export const conversationQueries = {
       ...mainQuery,
       ...qb.awaitingResponse(),
     });
+
     return response;
   },
 
@@ -210,10 +245,8 @@ export const conversationQueries = {
   async conversationsTotalUnreadCount(
     _root,
     _args,
-    { user, models, subdomain, serverTiming }: IContext,
+    { user, models, subdomain }: IContext,
   ) {
-    serverTiming.startTime('buildQuery');
-
     // initiate query builder
     const qb = new QueryBuilder(
       models,
@@ -224,16 +257,8 @@ export const conversationQueries = {
 
     await qb.buildAllQueries();
 
-    serverTiming.endTime('buildQuery');
-
-    serverTiming.startTime('integrationFilter');
-
     // get all possible integration ids
     const integrationsFilter = await qb.integrationsFilter();
-
-    serverTiming.endTime('integrationFilter');
-
-    serverTiming.startTime('query');
 
     const response = await models.Conversations.countDocuments({
       ...integrationsFilter,
@@ -242,12 +267,10 @@ export const conversationQueries = {
       $and: [{ $or: qb.userRelevanceQuery() }],
     });
 
-    serverTiming.endTime('query');
-
     return response;
   },
 
-  async inboxFields(_root, _args, { subdomain }: IContext) {
+  async inboxFields() {
     const response: {
       customer?: any[];
       conversation?: any[];

@@ -1,8 +1,6 @@
-
 import { Sidebar, Skeleton, useQueryState } from 'erxes-ui';
 import { useTagsTypes } from '../hooks/useTagsTypes';
-import { IconTag } from '@tabler/icons-react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { ITagType } from 'ui-modules';
 
 export const TagsSidebar = () => {
@@ -37,10 +35,10 @@ const TagMenuItem = ({ tag }: { tag: ITagType }) => {
   const [contentType] = useQueryState('contentType');
   const isActive = tag.contentType === contentType;
   return (
-    <Sidebar.MenuButton isActive={isActive}>
-      <Link to={`/settings/tags?contentType=${tag.contentType}`}>
+    <Link to={`/settings/tags?contentType=${tag.contentType}`}>
+      <Sidebar.MenuButton isActive={isActive}>
         {tag.description}
-      </Link>
-    </Sidebar.MenuButton>
+      </Sidebar.MenuButton>
+    </Link>
   );
 };

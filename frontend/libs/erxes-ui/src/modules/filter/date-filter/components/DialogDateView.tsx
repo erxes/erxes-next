@@ -6,11 +6,11 @@ import {
   Tabs,
 } from 'erxes-ui/components';
 import { useEffect, useId, useRef, useState } from 'react';
-import { getActiveTab } from '../utlis/getActiveTab';
-import { parseDateRangeFromString } from '../utlis/parseDateRangeFromString';
+import { getActiveTab } from '../utils/getActiveTab';
+import { parseDateRangeFromString } from '../utils/parseDateRangeFromString';
 import { DateRange } from 'react-day-picker';
 import { useFilterContext } from 'erxes-ui/modules';
-import { getYearsArray } from '../utlis/getYears';
+import { getYearsArray } from '../utils/getYears';
 import { cn } from 'erxes-ui/lib';
 import { MONTHS, QUARTERS } from '../constants/dateTypes';
 import { useFilterQueryState } from '../../hooks/useFilterQueryState';

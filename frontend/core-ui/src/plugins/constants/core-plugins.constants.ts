@@ -1,22 +1,21 @@
 import {
-  IconShoppingCartFilled,
-  IconBookmarksFilled,
-  IconLogs,
+  IconShoppingCart,
+  IconBookmarks,
   IconChartPie,
-  IconMagnetFilled,
-  IconUserFilled,
+  IconMagnet,
+  IconUser,
   IconBuilding,
   IconSpiral,
-  IconCategoryFilled,
+  IconCategory,
   IconAffiliate,
   IconReport,
 } from '@tabler/icons-react';
-import { IUIConfig } from 'erxes-ui/types';
+import { IUIConfig } from 'erxes-ui';
 
 export const CORE_MODULES: IUIConfig['modules'] = [
   {
     name: 'contacts',
-    icon: IconBookmarksFilled,
+    icon: IconBookmarks,
     path: 'contacts',
     hasSettings: true,
     hasWidgets: true,
@@ -24,12 +23,12 @@ export const CORE_MODULES: IUIConfig['modules'] = [
       {
         name: 'customers',
         path: 'contacts/customers',
-        icon: IconUserFilled,
+        icon: IconUser,
       },
       {
         name: 'leads',
         path: 'contacts/leads',
-        icon: IconMagnetFilled,
+        icon: IconMagnet,
       },
       {
         name: 'companies',
@@ -50,7 +49,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
   },
   {
     name: 'products',
-    icon: IconShoppingCartFilled,
+    icon: IconShoppingCart,
     path: 'products',
     hasSettings: true,
     hasWidgets: true,
@@ -58,7 +57,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
       {
         name: 'categories',
         path: 'products/categories',
-        icon: IconCategoryFilled,
+        icon: IconCategory,
       },
     ],
   },

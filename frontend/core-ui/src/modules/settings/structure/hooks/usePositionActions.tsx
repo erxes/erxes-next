@@ -1,4 +1,9 @@
-import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
+import {
+  ApolloCache,
+  MutationHookOptions,
+  OperationVariables,
+  useMutation,
+} from '@apollo/client';
 
 import { useToast } from 'erxes-ui';
 import { IPositionListItem, TPositionForm } from '../types/position';
@@ -101,7 +106,7 @@ export function useRemovePosition() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_POSITIONS, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: [GET_POSITIONS_LIST],
+    refetchQueries: ['positionsMain'],
   });
 
   return {
@@ -109,4 +114,30 @@ export function useRemovePosition() {
     loading,
     error,
   };
+}
+
+export function usePositionInlineEdit() {
+  const [_positionsEdit, { loading }] = useMutation(EDIT_POSITION);
+
+  const positionsEdit = (
+    operationVariables: OperationVariables,
+    fields: string[],
+  ) => {
+    const variables = operationVariables?.variables || {};
+    const fieldsToUpdate: Record<string, () => any> = {};
+    fields.forEach((field) => {
+      fieldsToUpdate[field] = () => variables[field];
+    });
+    return _positionsEdit({
+      ...operationVariables,
+      variables,
+      update: (cache, { data: { positionsEdit } }) => {
+        cache.modify({
+          id: cache.identify(positionsEdit),
+          fields: fieldsToUpdate,
+        });
+      },
+    });
+  };
+  return { positionsEdit, loading };
 }

@@ -1,6 +1,7 @@
 import { Cell, ColumnDef } from '@tanstack/table-core';
 import { IPositionListItem } from '../../types/position';
 import {
+  Badge,
   Button,
   Input,
   RecordTable,
@@ -8,12 +9,13 @@ import {
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTablePopover,
+  RecordTableTree,
   useQueryState,
 } from 'erxes-ui';
-import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import { useSetAtom } from 'jotai';
 import { renderingPositionDetailAtom } from '../../states/renderingPositionDetail';
-import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+import { SelectPosition } from 'ui-modules';
 
 export const UnitEditColumnCell = ({
   cell,
@@ -46,7 +48,13 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
       return (
         <RecordTablePopover>
           <RecordTableCellTrigger>
-            {cell.getValue() as string}
+            <RecordTableTree.Trigger
+              order={cell.row.original.order}
+              name={cell.getValue() as string}
+              hasChildren={cell.row.original.hasChildren}
+            >
+              {cell.getValue() as string}
+            </RecordTableTree.Trigger>
           </RecordTableCellTrigger>
           <RecordTableCellContent>
             <Input value={cell.getValue() as string} />
@@ -83,7 +91,7 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
           <SelectPosition
             className="shadow-none bg-transparent"
             value={cell.getValue() as string}
-            onValueChange={() => {}}
+            onValueChange={() => null}
           />
         </RecordTableCellDisplay>
       );
@@ -96,14 +104,9 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
     header: () => <RecordTable.InlineHead label="team member count" />,
     cell: ({ cell }) => {
       return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger className="justify-center">
-            {cell.getValue() as number}
-          </RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input value={cell.getValue() as number} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
+        <RecordTableCellDisplay className="justify-center">
+          <Badge variant={'secondary'}>{cell.getValue() as number}</Badge>
+        </RecordTableCellDisplay>
       );
     },
   },
@@ -113,9 +116,6 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay className="justify-center gap-1 [&>button]:px-2">
-          <Button variant={'outline'}>
-            <IconClock size={12} />
-          </Button>
           <UnitEditColumnCell cell={cell} />
           <Button
             variant={'outline'}

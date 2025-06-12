@@ -1,4 +1,9 @@
-import { ApolloCache, MutationHookOptions, useMutation } from '@apollo/client';
+import {
+  ApolloCache,
+  MutationHookOptions,
+  OperationVariables,
+  useMutation,
+} from '@apollo/client';
 
 import { useToast } from 'erxes-ui';
 import { IDepartmentListItem, TDepartmentForm } from '../types/department';
@@ -108,7 +113,7 @@ export function useRemoveDepartment() {
   const { toast } = useToast();
   const [handleRemove, { loading, error }] = useMutation(REMOVE_DEPARTMENTS, {
     onCompleted: () => toast({ title: 'Removed successfully!' }),
-    refetchQueries: [GET_DEPARTMENTS_LIST],
+    refetchQueries: ['departmentsMain'],
   });
 
   return {
@@ -116,4 +121,30 @@ export function useRemoveDepartment() {
     loading,
     error,
   };
+}
+
+export function useDepartmentInlineEdit() {
+  const [_departmentsEdit, { loading }] = useMutation(EDIT_DEPARTMENT);
+
+  const departmentsEdit = (
+    operationVariables: OperationVariables,
+    fields: string[],
+  ) => {
+    const variables = operationVariables?.variables || {};
+    const fieldsToUpdate: Record<string, () => any> = {};
+    fields.forEach((field) => {
+      fieldsToUpdate[field] = () => variables[field];
+    });
+    return _departmentsEdit({
+      ...operationVariables,
+      variables,
+      update: (cache, { data: { departmentsEdit } }) => {
+        cache.modify({
+          id: cache.identify(departmentsEdit),
+          fields: fieldsToUpdate,
+        });
+      },
+    });
+  };
+  return { departmentsEdit, loading };
 }

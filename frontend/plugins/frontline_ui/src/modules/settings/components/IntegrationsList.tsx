@@ -15,7 +15,6 @@ import {
   RecordTable,
   RecordTableCellDisplay,
   Skeleton,
-  Spinner,
 } from 'erxes-ui';
 
 import {
@@ -60,7 +59,7 @@ export const IntegrationsList = () => {
           {totalCount || 0} {integration.label} integrations
         </strong>
         <RecordTable.Provider
-          columns={integrationKindColumns}
+          columns={integrationTypeColumns}
           data={integrations || []}
         >
           <RecordTable.Scroll>
@@ -90,7 +89,7 @@ export const IntegrationsList = () => {
   );
 };
 
-export const integrationKindColumns: ColumnDef<IIntegrationColumnDef>[] = [
+export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
   {
     id: 'name',
     accessorKey: 'name',

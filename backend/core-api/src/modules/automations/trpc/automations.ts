@@ -32,7 +32,7 @@ export const automationsRouter = t.router({
       .query(async ({ input, ctx }) => {
         const { ...query } = input;
         const { models } = ctx;
-        return await models.Executions.find(query);
+        return await models.AutomationExecutions.find(query);
       }),
   }),
 });

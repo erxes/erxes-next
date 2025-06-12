@@ -1,7 +1,6 @@
-import { Avatar } from 'erxes-ui/components';
+import { Avatar, ChoiceboxGroup } from 'erxes-ui';
 import { FieldType } from './MergeMap';
 import { GENDER_CODE } from '@/contacts/customers/constants/genderCode';
-import { ChoiceboxGroup } from 'erxes-ui/components';
 
 interface MergingFieldContainerProps {
   fieldName: string;
@@ -68,7 +67,7 @@ const OwnerField = ({
 
 const AvatarField = ({ fieldValue }: { fieldValue: string }) => {
   return (
-     <Avatar>
+    <Avatar>
       <Avatar.Image src={fieldValue} />
     </Avatar>
   );

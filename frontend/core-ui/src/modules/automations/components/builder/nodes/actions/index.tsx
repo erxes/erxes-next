@@ -1,7 +1,6 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { ErrorState } from '@/automations/utils/ErrorState';
-import { Card, Form, Spinner } from 'erxes-ui/components';
-import { useQueryState } from 'erxes-ui/hooks';
+import { Card, Form, Spinner, useQueryState } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useFormContext } from 'react-hook-form';

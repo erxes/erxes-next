@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Dialog, Input } from 'erxes-ui/components';
+import { Button, Dialog, Input } from 'erxes-ui';
 import { UseFormSetValue } from 'react-hook-form';
 import { NodeData } from '../../../types';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';

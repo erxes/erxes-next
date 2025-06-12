@@ -1,8 +1,7 @@
-import dayjs from 'dayjs';
 import { DatePicker, Form, Input } from 'erxes-ui';
 import React from 'react';
 import { Control, FieldPath, FieldValues } from 'react-hook-form';
-import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+import { SelectPosition } from 'ui-modules';
 
 type Props<T extends FieldValues> = {
   label: string;

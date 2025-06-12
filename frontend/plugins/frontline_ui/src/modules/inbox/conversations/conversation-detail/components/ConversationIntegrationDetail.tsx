@@ -1,8 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { IntegrationKind } from '@/types/Integration';
+import { IntegrationType } from '@/types/Integration';
 import { useConversationContext } from '../hooks/useConversationContext';
-import { MessagesSkeleton } from '@/inbox/conversation-messages/components/MessagesSkeleton';
-
 const IMapConversationDetail = lazy(() =>
   import('@/integrations/imap/components/ImapConversationDetail').then(
     (module) => ({ default: module.ImapConversationDetail }),
@@ -17,20 +15,20 @@ const FbPostConversationDetail = lazy(() =>
 
 const FbMessengerConversationDetail = lazy(() =>
   import(
-    '@/integrations/facebook/components/FbMessengerConversationDetail'
-  ).then((module) => ({ default: module.FbMessengerConversationDetail })),
+    '@/integrations/facebook/components/FacebookConversationMessages'
+  ).then((module) => ({ default: module.FacebookConversationMessages })),
 );
 
 export const ConversationIntegrationDetail = () => {
   const { integration } = useConversationContext();
 
   return (
-    <Suspense fallback={<MessagesSkeleton isFetched={false} />}>
-      {integration?.kind === IntegrationKind.IMAP && <IMapConversationDetail />}
-      {integration?.kind === IntegrationKind.FACEBOOK_POST && (
+    <Suspense fallback={<div />}>
+      {integration?.kind === IntegrationType.IMAP && <IMapConversationDetail />}
+      {integration?.kind === IntegrationType.FACEBOOK_POST && (
         <FbPostConversationDetail />
       )}
-      {integration?.kind === IntegrationKind.FACEBOOK_MESSENGER && (
+      {integration?.kind === IntegrationType.FACEBOOK_MESSENGER && (
         <FbMessengerConversationDetail />
       )}
     </Suspense>

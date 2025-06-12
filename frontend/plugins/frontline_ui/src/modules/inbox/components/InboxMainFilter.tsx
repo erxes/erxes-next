@@ -1,8 +1,8 @@
 import { IconUserFilled, IconUserUp } from '@tabler/icons-react';
 import { Button, Collapsible, ScrollArea } from 'erxes-ui';
 import { ChooseChannel } from '@/inbox/channel/components/ChooseChannel';
-import { ChooseIntegration } from '@/integrations/components/ChooseIntegration';
 import { useMultiQueryState } from 'erxes-ui';
+import { ChooseIntegrationType } from '@/integrations/components/ChooseIntegrationType';
 
 export const InboxMainFilter = () => {
   const [, setQueryStates] = useMultiQueryState<{
@@ -11,7 +11,7 @@ export const InboxMainFilter = () => {
   }>(['assignedToMe', 'detailView']);
 
   return (
-    <ScrollArea className="h-full" viewportClassName="[&>div]:block">
+    <ScrollArea className="h-full" viewportClassName="block-child">
       <Collapsible
         className="group/collapsible flex flex-col gap-1 py-4 px-2 w-full overflow-x-hidden"
         defaultOpen
@@ -47,7 +47,7 @@ export const InboxMainFilter = () => {
             Assigned to me
           </Button>
           <ChooseChannel />
-          <ChooseIntegration />
+          <ChooseIntegrationType />
         </Collapsible.Content>
       </Collapsible>
     </ScrollArea>

@@ -3,15 +3,12 @@ import {
   Command,
   Filter,
   useFilterContext,
-  useQueryState,
+  useFilterQueryState,
 } from 'erxes-ui';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
-import {
-  SelectTagType,
-  SelectTagTypeCommand,
-} from 'ui-modules/modules/tags/components/SelectTagType';
+import { SelectTagType, SelectTagTypeCommand } from 'ui-modules';
 import { IconTagStarred } from '@tabler/icons-react';
-import { useFilterQueryState } from 'erxes-ui/modules/filter/hooks/useFilterQueryState';
+import { TagsTotalCount } from './TagsTotalCount';
 
 export const TagsSettingFilter = () => {
   return (
@@ -39,6 +36,7 @@ export const TagsSettingFilter = () => {
         </Filter.Dialog>
         <Filter.SearchValueBarItem />
         <TagsTypeFilterBar />
+        <TagsTotalCount />
       </Filter.Bar>
     </Filter>
   );
