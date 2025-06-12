@@ -393,15 +393,9 @@ export const conversationMutations = {
   async conversationsChangeStatus(
     _root,
     { _ids, status }: { _ids: string[]; status: string },
-    { user, models, subdomain, serverTiming }: IContext,
+    { user, models, subdomain }: IContext,
   ) {
-    serverTiming.startTime('changeStatus');
-
     await models.Conversations.changeStatusConversation(_ids, status, user._id);
-
-    serverTiming.endTime('changeStatus');
-
-    serverTiming.startTime('sendNotifications');
 
     // notify graphl subscription
     publishConversationsChanged(subdomain, _ids, status);
@@ -455,7 +449,7 @@ export const conversationMutations = {
     { _id }: { _id: string },
     { user, models }: IContext,
   ) {
-    return models.Conversations.markAsReadConversation(_id, user._id);
+    return await models.Conversations.markAsReadConversation(_id, user._id);
   },
 
   async changeConversationOperator(
