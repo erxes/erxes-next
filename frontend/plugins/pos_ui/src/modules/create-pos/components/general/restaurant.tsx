@@ -8,8 +8,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useSetAtom } from 'jotai';
 import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
-import { ALLOW_TYPES } from '~/modules/constants';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
+import { ALLOW_TYPES } from '@/constants';
+import { IPosDetail } from '@/pos-detail.tsx/types/IPos';
 import { SelectBranch, SelectDepartment } from 'ui-modules';
 
 interface RestaurantFormProps {

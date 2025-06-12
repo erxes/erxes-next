@@ -1,12 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  Badge,
-  Button,
-  InlineCell,
-  InlineCellDisplay,
-  RecordTable,
-  RecordTableCellDisplay,
-} from 'erxes-ui';
+import { Badge, Button, RecordTable, RecordTableCellDisplay } from 'erxes-ui';
 import {
   IconArchive,
   IconEdit,
@@ -16,7 +9,7 @@ import {
 import { IIntegrationDetail } from '../types/Integration';
 import { useIntegrations } from '../hooks/useIntegrations';
 import { useParams } from 'react-router-dom';
-import { BrandsInline } from 'ui-modules/modules';
+import { BrandsInline } from 'ui-modules';
 
 export const IntegrationsRecordTable = () => {
   const params = useParams();
@@ -30,7 +23,7 @@ export const IntegrationsRecordTable = () => {
 
   return (
     <RecordTable.Provider
-      columns={integrationKindColumns}
+      columns={integrationTypeColumns}
       data={integrations || []}
       stickyColumns={['name']}
     >
@@ -59,7 +52,7 @@ export const IntegrationsRecordTable = () => {
   );
 };
 
-export const integrationKindColumns: ColumnDef<IIntegrationDetail>[] = [
+export const integrationTypeColumns: ColumnDef<IIntegrationDetail>[] = [
   {
     id: 'name',
     accessorKey: 'name',

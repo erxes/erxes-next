@@ -1,4 +1,4 @@
-import { Tooltip } from 'erxes-ui/components';
+import { Tooltip } from 'erxes-ui';
 import { ReactNode } from 'react';
 
 export const MergeTooltip = ({

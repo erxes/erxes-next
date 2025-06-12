@@ -1,8 +1,5 @@
-
-import { Button } from 'erxes-ui/components';
+import { Button, useConfirm, useToast } from 'erxes-ui';
 import { IconTrash } from '@tabler/icons-react';
-import { useConfirm } from 'erxes-ui/hooks';
-import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { useRemoveProducts } from '@/products/detail/hooks/useRemoveProduct';
 
@@ -16,9 +13,11 @@ export const ProductsDelete = ({ productIds }: { productIds: string[] }) => {
       className="text-destructive"
       onClick={() =>
         confirm({
-          message: `Are you sure you want to delete the ${productIds.length} selected product${productIds.length === 1 ? '' : 's'}?`,
+          message: `Are you sure you want to delete the ${
+            productIds.length
+          } selected product${productIds.length === 1 ? '' : 's'}?`,
         }).then(() => {
-            removeProducts(productIds, {
+          removeProducts(productIds, {
             onError: (e: ApolloError) => {
               toast({
                 title: 'Error',

@@ -11,7 +11,7 @@ import {
 import { Button, cn, Sheet, Tooltip } from 'erxes-ui';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { isFullscreenAtom, sidebarViewAtom } from '~/modules/slot/states/slot';
+import { isFullscreenAtom, sidebarViewAtom } from '@/slot/states/slot';
 import { posCategoryAtom } from '../../states/posCategory';
 import { renderingPosCreateAtom } from '../../states/renderingPosCreateAtom';
 

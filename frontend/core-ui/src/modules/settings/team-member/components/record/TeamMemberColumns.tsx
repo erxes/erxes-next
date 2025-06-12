@@ -27,7 +27,7 @@ import { TextFieldUserDetails } from '@/settings/team-member/components/record/t
 import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
 import { useSetAtom } from 'jotai';
 import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
-import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+import { SelectPosition } from 'ui-modules';
 
 export const UserMoreColumnCell = ({
   cell,
@@ -189,7 +189,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
             <TextOverflowTooltip value={position} />
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <SelectPosition value={position} onValueChange={() => {}} />
+            <SelectPosition value={position} onValueChange={() => null} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );

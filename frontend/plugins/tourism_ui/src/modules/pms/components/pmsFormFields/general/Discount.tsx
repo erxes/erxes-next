@@ -1,7 +1,7 @@
 import { Control, useFieldArray } from 'react-hook-form';
 import { Button, Form, Input } from 'erxes-ui';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const Discount = ({ control }: { control: Control<PmsBranchFormType> }) => {
   const { fields, append, remove } = useFieldArray({

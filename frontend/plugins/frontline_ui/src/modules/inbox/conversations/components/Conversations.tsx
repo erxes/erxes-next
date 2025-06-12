@@ -4,7 +4,7 @@ import { IconLoader } from '@tabler/icons-react';
 import { ConversationContext } from '@/inbox/conversations/context/ConversationContext';
 import { ConversationListContext } from '@/inbox/conversations/context/ConversationListContext';
 import { IConversation } from '@/inbox/types/Conversation';
-import { useConversations } from '~/modules/inbox/conversations/hooks/useConversations';
+import { useConversations } from '@/inbox/conversations/hooks/useConversations';
 
 import {
   Button,
@@ -31,17 +31,17 @@ export const Conversations = () => {
       }
     },
   });
-  const { channelId, integrationKind, unassigned, status, date } =
+  const { channelId, integrationType, unassigned, status, date } =
     useNonNullMultiQueryState<{
       channelId: string;
-      integrationKind: string;
+      integrationType: string;
       unassigned: string;
       status: string;
       date: string;
       conversationId: string;
     }>([
       'channelId',
-      'integrationKind',
+      'integrationType',
       'unassigned',
       'status',
       'date',
@@ -55,7 +55,7 @@ export const Conversations = () => {
       variables: {
         limit: CONVERSATIONS_LIMIT,
         channelId,
-        integrationType: integrationKind,
+        integrationType: integrationType,
         unassigned,
         status: status || 'closed',
         startDate: parsedDate?.from,

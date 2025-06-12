@@ -20,7 +20,7 @@ import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
 import { taxPercentsState } from '../../../states/trStates';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { AccountingHotkeyScope } from '~/modules/types/AccountingHotkeyScope';
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 
 export const InventoryRow = ({
   detailIndex,
