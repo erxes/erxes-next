@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { financeConfigSettingsAtom } from '../../states/posCategory';
 import { useEffect, useState } from 'react';
-import { IPosDetail } from '@/pos-detail.tsx/types/IPos';
-import { options } from '@/constants';
+import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { options } from '~/modules/constants';
 
 interface FinanceConfigFormProps {
   posDetail?: IPosDetail;
@@ -13,10 +13,10 @@ interface FinanceConfigFormProps {
   onSubmit?: (data: any) => Promise<void>;
 }
 
-export default function FinanceConfigForm({
-  posDetail,
-  isReadOnly = false,
-  onSubmit,
+export default function FinanceConfigForm({ 
+  posDetail, 
+  isReadOnly = false, 
+  onSubmit 
 }: FinanceConfigFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [financeConfig, setFinanceConfig] = useAtom(financeConfigSettingsAtom);
@@ -27,9 +27,9 @@ export default function FinanceConfigForm({
       setFinanceConfig({
         isSyncErkhet: posDetail.erkhetConfig?.isSyncErkhet ?? false,
         checkErkhet: posDetail.erkhetConfig?.checkErkhet ?? false,
-        checkInventories: posDetail.isCheckRemainder ?? false,
+        checkInventories: posDetail.isCheckRemainder ?? false, 
         userEmail: posDetail.erkhetConfig?.userEmail || '',
-        beginBillNumber: posDetail.beginNumber || '',
+        beginBillNumber: posDetail.beginNumber || '', 
         defaultPay: posDetail.erkhetConfig?.defaultPay || '',
         account: posDetail.erkhetConfig?.account || '',
         location: posDetail.erkhetConfig?.location || '',
@@ -72,7 +72,7 @@ export default function FinanceConfigForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     if (onSubmit) {
       try {
         setIsSubmitting(true);
@@ -83,28 +83,14 @@ export default function FinanceConfigForm({
         setIsSubmitting(false);
       }
     } else {
-      console.log('Finance config form submitted:', financeConfig);
       const newParams = new URLSearchParams(searchParams);
       newParams.set('tab', 'delivery');
       setSearchParams(newParams);
     }
   };
 
-  const getFormTitle = () => {
-    if (isReadOnly) return 'View Finance Configuration';
-    return posDetail
-      ? 'Edit Finance Configuration'
-      : 'Configure Finance Settings';
-  };
-
   return (
     <form onSubmit={handleSubmit} className="p-3">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">
-          {getFormTitle()}
-        </h2>
-      </div>
-
       <div className="space-y-8">
         <div className="space-y-4">
           <h2 className="text-indigo-600 text-xl font-medium">MAIN</h2>
@@ -121,7 +107,7 @@ export default function FinanceConfigForm({
             />
           </div>
         </div>
-
+        
         <div className="space-y-4">
           <h2 className="text-indigo-600 text-xl font-medium">REMAINDER</h2>
 
@@ -149,7 +135,7 @@ export default function FinanceConfigForm({
             />
           </div>
         </div>
-
+        
         {financeConfig.isSyncErkhet && (
           <div className="space-y-6">
             <h2 className="text-indigo-600 text-xl font-medium">OTHER</h2>
@@ -158,7 +144,7 @@ export default function FinanceConfigForm({
               <div className="space-y-2">
                 <Label className="text-sm text-gray-500">USER EMAIL</Label>
                 <Input
-                  type="email"
+                  type='email'
                   value={financeConfig.userEmail}
                   onChange={(e) =>
                     handleInputChange('userEmail', e.target.value)
