@@ -13,16 +13,15 @@ const CACHE_NAME = 'configs_erxes_fb_integrations';
 export const generateAttachmentUrl = (subdomain: string, urlOrName: string) => {
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
   const NODE_ENV = getEnv({ name: 'NODE_ENV' });
-
   if (urlOrName.startsWith('http')) {
     return urlOrName;
   }
 
   if (NODE_ENV === 'development') {
-    return `${DOMAIN}/pl:core/read-file?key=${urlOrName}`;
+    return `${DOMAIN}/core/read-file?key=${urlOrName}`;
   }
 
-  return `${DOMAIN}/gateway/pl:core/read-file?key=${urlOrName}`;
+  return `${DOMAIN}/gateway/core/read-file?key=${urlOrName}`;
 };
 
 export const getConfigs = async (models: IModels) => {

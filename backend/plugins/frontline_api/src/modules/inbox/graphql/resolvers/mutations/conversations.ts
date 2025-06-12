@@ -5,7 +5,6 @@ import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels, IContext, IModels } from '~/connectionResolvers';
 import { IConversationMessageAdd } from '@/inbox/@types/conversationMessages';
-import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { AUTO_BOT_MESSAGES } from '@/inbox/db/definitions/constants';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { handleFacebookIntegration } from '@/integrations/facebook/messageBroker';
@@ -201,7 +200,6 @@ export const conversationMutations = {
       const integration = await models.Integrations.getIntegration({
         _id: conversation.integrationId,
       });
-
 
       const { _id: integrationId } = integration;
       const { _id: conversationId } = conversation;
