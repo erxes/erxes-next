@@ -61,7 +61,6 @@ const AssignConversation = () => {
         value={assignedUserId}
         onValueChange={handleAssignConversations}
         className="text-foreground"
-        variant="outline"
       />
     </div>
   );
@@ -72,7 +71,7 @@ const Tags = () => {
 
   return (
     <SelectTags.Detail
-      tagType="frontline:conversation"
+      tagType="inbox:conversation"
       className="flex-none w-auto"
       variant="ghost"
       value={tagIds}

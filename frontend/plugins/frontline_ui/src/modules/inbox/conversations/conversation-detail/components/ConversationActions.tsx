@@ -7,11 +7,11 @@ export const ConversationActions = () => {
   const { changeConversationStatus, loading } = useChangeConversationStatus();
   const { _id, status } = useConversationContext();
 
-  const resolveConversation = () => {
+  const handleChangeConversationStatus = (pressed: boolean) => {
     changeConversationStatus({
       variables: {
         ids: [_id],
-        status: ConversationStatus.CLOSED,
+        status: pressed ? ConversationStatus.CLOSED : ConversationStatus.OPEN,
       },
     });
   };
@@ -21,7 +21,7 @@ export const ConversationActions = () => {
       variant="outline"
       className="flex-none"
       pressed={status === ConversationStatus.CLOSED}
-      onPressedChange={resolveConversation}
+      onPressedChange={handleChangeConversationStatus}
       disabled={loading}
     >
       {loading && <Spinner size="small" />}
@@ -32,17 +32,4 @@ export const ConversationActions = () => {
         : 'Resolve'}
     </Toggle>
   );
-
-  // return (
-  //   <DropdownMenu>
-  //     <DropdownMenu.Trigger asChild>
-  //       <Button className="flex-none pr-2" variant="outline">
-  //         Actions <IconChevronDown className="w-4 h-4" />
-  //       </Button>
-  //     </DropdownMenu.Trigger>
-  //     <DropdownMenu.Content>
-  //       <DropdownMenu.Item>Resolve</DropdownMenu.Item>
-  //     </DropdownMenu.Content>
-  //   </DropdownMenu>
-  // );
 };
