@@ -2,9 +2,9 @@ import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
 import { TablerIcon } from 'erxes-ui';
 import { Card, Input, Skeleton, Tabs } from 'erxes-ui/components';
-import { Search } from 'lucide-react';
 import React, { useState } from 'react';
 import { useSidebarDefaultContent } from './hooks/useSidebarDefaultContent';
+import { IconSearch } from '@tabler/icons-react';
 
 const TabsContent = (
   nodeType: string,
@@ -108,7 +108,7 @@ export const AutomationSidebarDefaultContent = () => {
       <div className="p-4 border-b">
         <h3 className="font-medium mb-3">Workflow Components</h3>
         <div className="relative flex items-center">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <IconSearch className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search components..."
             className="pl-8"

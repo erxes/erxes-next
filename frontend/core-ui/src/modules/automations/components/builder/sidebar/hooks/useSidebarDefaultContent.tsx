@@ -1,12 +1,8 @@
 import { AUTOMATOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
 import { ConstantsQueryResponse } from '@/automations/types';
-import { ErrorState } from '@/automations/utils/ErrorState';
-import { ApolloError, useQuery } from '@apollo/client';
-import { TablerIcon } from 'erxes-ui';
-import { Card, Input, Skeleton, Tabs } from 'erxes-ui/components';
+import { useQuery } from '@apollo/client';
 import { useQueryState } from 'erxes-ui/hooks';
-import { Search } from 'lucide-react';
-import React, { useState } from 'react';
+import React from 'react';
 
 export const useSidebarDefaultContent = () => {
   const [activeNodeTab, setNodeActiveTab] = useQueryState<'trigger' | 'action'>(
