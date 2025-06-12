@@ -370,11 +370,11 @@ export const generateDoc = async ({
 const getConfig = (configs, code, defaultValue?: string) => {
   const version = getEnv({ name: 'VERSION' });
 
-  if (version === 'saas') {
-    return getEnv({ name: code, defaultValue });
-  }
+  // if (version === 'saas') {
+  return getEnv({ name: code, defaultValue });
+  // }
 
-  return configs[code] || defaultValue || '';
+  // return configs[code] || defaultValue || '';
 };
 
 const createTransporter = async ({ ses }, configs) => {
@@ -386,6 +386,12 @@ const createTransporter = async ({ ses }, configs) => {
       'AWS_SES_SECRET_ACCESS_KEY',
     );
     const AWS_REGION = getConfig(configs, 'AWS_REGION');
+
+    console.log({
+      AWS_SES_ACCESS_KEY_ID,
+      AWS_SES_SECRET_ACCESS_KEY,
+      AWS_REGION,
+    });
 
     AWS.config.update({
       region: AWS_REGION,

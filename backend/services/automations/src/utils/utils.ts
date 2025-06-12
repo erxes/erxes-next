@@ -8,12 +8,13 @@ import {
   splitType,
   TriggerType,
 } from 'erxes-api-shared/core-modules';
-import { sendWorkerMessage } from 'erxes-api-shared/utils';
+import { sendWorkerMessage, sendWorkerQueue } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolver';
 import { ACTIONS } from '~/constants';
 import { handleEmail } from './actions/email';
 import { setActionWait } from './actions/wait';
 import { isInSegment } from './segments/utils';
+import moment from 'moment';
 
 export const getActionsMap = async (actions: IAction[]) => {
   const actionsMap: IActionsMap = {};
@@ -107,6 +108,32 @@ export const executeActions = async (
       execution.startWaitingDate = new Date();
       execution.status = AUTOMATION_EXECUTION_STATUS.WAITING;
       execution.actions = [...(execution.actions || []), execAction];
+
+      const { value, type } = action?.config || {};
+
+      const performDate = moment(execution.startWaitingDate)
+        .add(value, type)
+        .toDate();
+
+      // Calculate delay in milliseconds
+
+      const delay = Math.max(0, performDate.getTime() - Date.now());
+      sendWorkerQueue('automations', 'playWait').add(
+        'playWait',
+        {
+          subdomain,
+          data: {
+            automationId: execution.automationId,
+            waitingActionId: action.id,
+            execId: execution._id,
+          },
+        },
+        {
+          delay: delay,
+          removeOnComplete: true,
+          removeOnFail: true,
+        },
+      );
       await execution.save();
       return 'paused';
     }
@@ -388,7 +415,7 @@ export const receiveTrigger = async ({
 }: {
   models: IModels;
   subdomain: string;
-  type: TriggerType;
+  type: string;
   targets: any[];
 }) => {
   const automations = await models.Automations.find({

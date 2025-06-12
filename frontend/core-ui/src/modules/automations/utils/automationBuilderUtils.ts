@@ -32,7 +32,7 @@ type MyNodeData = {
     constants: AutomationConstants;
     forceToolbarVisible: boolean;
     toolbarPosition: Position;
-    additionalContent?: (id: string, type: string) => React.ReactNode;
+    beforeTitleContent?: (id: string, type: string) => React.ReactNode;
     addWorkFlowAction: (workflowId: string, actions: IAction[]) => void;
     removeWorkFlowAction?: (workflowId: string) => void;
   };

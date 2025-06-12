@@ -45,14 +45,14 @@ export const AutomationHistoryDetail = ({
               </div>
               <Sheet.Close />
             </Tabs.List>
-            <Tabs.Content value="flow" className="h-full">
+            <Tabs.Content value="flow" className="h-[calc(100%-36px)]">
               <AutomationHistoryByFlow
                 history={history}
                 constants={constants}
               />
             </Tabs.Content>
 
-            <Tabs.Content value="table" className="h-full">
+            <Tabs.Content value="table" className="h-[calc(100%-36px)]">
               <AutomationHistoryByTable
                 history={history}
                 constants={constants}

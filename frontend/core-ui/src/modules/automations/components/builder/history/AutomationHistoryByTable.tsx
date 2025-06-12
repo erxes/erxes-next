@@ -10,6 +10,11 @@ import { ActionContentRow } from '../nodes/ActionContentRow';
 import { SendEmail } from '../nodes/actions/sendEmail/components/SendEmail';
 
 export const generateActionResult = (action: IAutomationHistoryAction) => {
+  if (action.actionType === 'delay') {
+    const { value, type } = action?.actionConfig || {};
+    return `Delaying for: ${value} ${type}s`;
+  }
+
   if (!action.result) {
     return 'Result has not been recorded yet';
   }
@@ -23,7 +28,7 @@ export const generateActionResult = (action: IAutomationHistoryAction) => {
   if (action.actionType === 'setProperty') {
     return `Update for ${(result.result || []).length} ${result.module}: ${
       result.fields || ''
-    }, (${result.result.map((r: any) => (r.error && r.error) || '')})`;
+    }, (${(result?.result || []).map((r: any) => (r.error && r.error) || '')})`;
   }
 
   if (action.actionType === 'if') {

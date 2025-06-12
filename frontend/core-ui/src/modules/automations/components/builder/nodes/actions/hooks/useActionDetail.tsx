@@ -49,7 +49,7 @@ export const useActionDetail = () => {
   );
 
   const currentAction = watch(`detail.actions.${currentIndex}`);
-  const Component = Actions[currentAction.type];
+  const Component = Actions[currentAction?.type] || null;
 
   return { Component, control, currentIndex, currentAction };
 };

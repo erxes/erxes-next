@@ -232,6 +232,7 @@ export function SegmentForm({
       onError: (e: ApolloError) => {
         toast({
           title: 'Error',
+          variant: 'destructive',
           description: e.message,
         });
       },
