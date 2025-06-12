@@ -1,12 +1,11 @@
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
-import { AddInventoryRowButton } from './AddInventoryRow';
+import { AddDetailRowButton } from './AddInventoryRow';
 import { InventoryRow } from './InventoryRow';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
+import { Checkbox, RecordTableHotkeyProvider, Table } from 'erxes-ui';
 import { RemoveButton } from './RemoveButton';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { useRef } from 'react';
-// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 
 export const InventoryForm = ({
   form,
@@ -19,6 +18,7 @@ export const InventoryForm = ({
     control: form.control,
     name: `trDocs.${journalIndex}.details`,
   });
+
   const tableRef = useRef<HTMLTableElement>(null);
 
   const columnsLength =
@@ -50,12 +50,12 @@ export const InventoryForm = ({
           <tr>
             <td colSpan={columnsLength} className="p-4">
               <div className="flex w-full justify-center gap-4">
-                <AddInventoryRowButton
+                <AddDetailRowButton
                   append={append}
                   form={form}
                   journalIndex={journalIndex}
                 />
-                <RemoveButton remove={remove} fields={fields} />
+                <RemoveButton remove={remove} form={form} journalIndex={journalIndex} />
               </div>
             </td>
           </tr>
@@ -80,8 +80,21 @@ const InventoryTableHeader = ({
   return (
     <Table.Header>
       <Table.Row>
-        {/* <InventoryHeaderCheckbox /> */}
-        {/* <Table.Head></Table.Head> */}
+        <Table.Head className='w-10'>
+          <div className="flex items-center justify-center">
+            <Checkbox
+              checked={!!!trDoc.details.filter(d => !d.checked).length}
+              onCheckedChange={(checked) => {
+                trDoc.details.forEach((_d, ind) => {
+                  form.setValue(
+                    `trDocs.${journalIndex}.details.${ind}.checked`,
+                    !!checked,
+                  );
+                });
+              }}
+            />
+          </div>
+        </Table.Head>
         <Table.Head>Account</Table.Head>
         <Table.Head>Inventory</Table.Head>
         <Table.Head>Quantity</Table.Head>

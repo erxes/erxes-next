@@ -5,7 +5,7 @@ import {
   Input,
   Spinner,
   useQueryState
-  } from 'erxes-ui';
+} from 'erxes-ui';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
 import { memo, useEffect } from 'react';
 import { Summary } from './Summary';
@@ -94,6 +94,7 @@ export const TransactionsGroupForm = () => {
       details: trD.details.map(det => ({
         ...det,
         account: undefined,
+        checked: undefined,
       })),
       date: data.date,
       number: data.number,

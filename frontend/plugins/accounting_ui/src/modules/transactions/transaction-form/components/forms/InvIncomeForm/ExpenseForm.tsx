@@ -1,7 +1,5 @@
 import { IconPlus, IconZoomCancel, IconZoomIn } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
-// import { AddInventoryRowButton } from './AddInventoryRow';
-// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
