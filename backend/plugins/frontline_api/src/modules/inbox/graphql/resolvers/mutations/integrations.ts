@@ -576,11 +576,9 @@ export const integrationMutations = {
 
       const serviceName = kind.split('-')[0];
 
-      const repairResult = await sendRepairIntegration(subdomain, serviceName, {
+      return await sendRepairIntegration(subdomain, serviceName, {
         integrationId: _id,
       });
-
-      return repairResult;
     } catch (error) {
       console.error(`Failed to repair ${kind} integration ${_id}:`, error);
       // Convert to a more user-friendly error if needed
