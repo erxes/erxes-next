@@ -16,6 +16,7 @@ import DeliveryConfigForm from '../components/delivery/delivery';
 import SyncCardForm from '../components/sync/sync';
 import { UseFormReturn } from 'react-hook-form';
 import { BasicInfoFormValues, PermissionFormValues, ProductFormValues, PaymentFormValues } from '../components/formSchema';
+import { TabConfig } from '../types/pos';
 
 interface GetPosCreateTabsProps {
   posCategory: 'ecommerce' | 'restaurant';
@@ -34,11 +35,6 @@ interface GetPosCreateTabsProps {
     createdPosId: string | null;
     slotNodes: CustomNode[];
   };
-}
-
-interface TabConfig {
-  value: string;
-  component: JSX.Element;
 }
 
 const getCategoryComponent = (

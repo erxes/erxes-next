@@ -51,6 +51,13 @@ export default function ProductForm({
       kioskExcludeProductIds: posDetail.kioskExcludeProductIds || [],
       checkExcludeCategoryIds: posDetail.checkExcludeCategoryIds || [],
     });
+
+    if (posDetail.productDetails && posDetail.productDetails.length > 0) {
+      setShowProductGroups(true);
+    }
+    if (posDetail.catProdMappings && posDetail.catProdMappings.length > 0) {
+      setShowMappings(true);
+    }
   }, [posDetail, form]);
 
   const handleToggleProductGroups = () => {
@@ -112,11 +119,21 @@ export default function ProductForm({
   };
 
   const handleCategorySelect = (categoryId: string, fieldName: string) => {
-    form.setValue(fieldName as any, [categoryId]);
+    const currentValue = form.watch(fieldName as any) || [];
+    if (currentValue.includes(categoryId)) {
+      form.setValue(fieldName as any, currentValue.filter((id: string) => id !== categoryId));
+    } else {
+      form.setValue(fieldName as any, [...currentValue, categoryId]);
+    }
   };
 
   const handleProductSelect = (productId: string, fieldName: string) => {
-    form.setValue(fieldName as any, [productId]);
+    const currentValue = form.watch(fieldName as any) || [];
+    if (currentValue.includes(productId)) {
+      form.setValue(fieldName as any, currentValue.filter((id: string) => id !== productId));
+    } else {
+      form.setValue(fieldName as any, [...currentValue, productId]);
+    }
   };
 
   const handleProductDetailCategorySelect = (categoryId: string, index: number) => {
@@ -133,7 +150,16 @@ export default function ProductForm({
 
   const handleMappingProductSelect = (productId: string, index: number) => {
     const currentProductIds = form.watch(`catProdMappings.${index}.productIds`) || [];
-    form.setValue(`catProdMappings.${index}.productIds`, [...currentProductIds, productId]);
+    if (!currentProductIds.includes(productId)) {
+      form.setValue(`catProdMappings.${index}.productIds`, [...currentProductIds, productId]);
+    }
+  };
+
+  const handleRemoveProductFromMapping = (productId: string, index: number) => {
+    const currentProductIds = form.watch(`catProdMappings.${index}.productIds`) || [];
+    form.setValue(`catProdMappings.${index}.productIds`, 
+      currentProductIds.filter((id: string) => id !== productId)
+    );
   };
 
   return (
@@ -152,7 +178,7 @@ export default function ProductForm({
               disabled={isReadOnly}
             >
               <IconPlus size={16} />
-              Add Product Detail
+              {showProductGroups ? 'Hide' : 'Show'} Product Details
             </Button>
 
             {showProductGroups && (
@@ -258,14 +284,13 @@ export default function ProductForm({
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
-                      Add Another Product Detail
+                      Add Product Detail
                     </Button>
                   </div>
                 )}
               </div>
             )}
           </div>
-
           <div className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               INITIAL PRODUCT CATEGORIES
@@ -279,21 +304,27 @@ export default function ProductForm({
                     INITIAL CATEGORY IDS
                   </Form.Label>
                   <Form.Control>
-                    <SelectCategory
-                      selected={field.value?.[0]}
-                      onSelect={(categoryId) => 
-                        handleCategorySelect(categoryId as string, 'initialCategoryIds')
-                      }
-                      disabled={isReadOnly}
-                      className="w-full h-10 px-3 text-left justify-between"
-                    />
+                    <div className="space-y-2">
+                      <SelectCategory
+                        selected={field.value?.[0]}
+                        onSelect={(categoryId) => 
+                          handleCategorySelect(categoryId as string, 'initialCategoryIds')
+                        }
+                        disabled={isReadOnly}
+                        className="w-full h-10 px-3 text-left justify-between"
+                      />
+                      {field.value && field.value.length > 0 && (
+                        <div className="text-sm text-gray-600">
+                          Selected: {field.value.length} category(ies)
+                        </div>
+                      )}
+                    </div>
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
             />
           </div>
-
           <div className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               KIOSK EXCLUDE PRODUCTS
@@ -308,14 +339,21 @@ export default function ProductForm({
                       EXCLUDE CATEGORIES
                     </Form.Label>
                     <Form.Control>
-                      <SelectCategory
-                        selected={field.value?.[0]}
-                        onSelect={(categoryId) => 
-                          handleCategorySelect(categoryId as string, 'kioskExcludeCategoryIds')
-                        }
-                        disabled={isReadOnly}
-                        className="w-full h-10 px-3 text-left justify-between"
-                      />
+                      <div className="space-y-2">
+                        <SelectCategory
+                          selected={field.value?.[0]}
+                          onSelect={(categoryId) => 
+                            handleCategorySelect(categoryId as string, 'kioskExcludeCategoryIds')
+                          }
+                          disabled={isReadOnly}
+                          className="w-full h-10 px-3 text-left justify-between"
+                        />
+                        {field.value && field.value.length > 0 && (
+                          <div className="text-sm text-gray-600">
+                            Selected: {field.value.length} category(ies)
+                          </div>
+                        )}
+                      </div>
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -331,14 +369,21 @@ export default function ProductForm({
                       EXCLUDE PRODUCTS
                     </Form.Label>
                     <Form.Control>
-                      <SelectProduct
-                        value={field.value?.[0]}
-                        onValueChange={(productId) => 
-                          handleProductSelect(productId, 'kioskExcludeProductIds')
-                        }
-                        disabled={isReadOnly}
-                        className="w-full h-10 px-3 text-left justify-between"
-                      />
+                      <div className="space-y-2">
+                        <SelectProduct
+                          value={field.value?.[0]}
+                          onValueChange={(productId) => 
+                            handleProductSelect(productId, 'kioskExcludeProductIds')
+                          }
+                          disabled={isReadOnly}
+                          className="w-full h-10 px-3 text-left justify-between"
+                        />
+                        {field.value && field.value.length > 0 && (
+                          <div className="text-sm text-gray-600">
+                            Selected: {field.value.length} product(s)
+                          </div>
+                        )}
+                      </div>
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -346,7 +391,6 @@ export default function ProductForm({
               />
             </div>
           </div>
-
           <div className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               PRODUCT & CATEGORY MAPPING
@@ -364,7 +408,7 @@ export default function ProductForm({
               disabled={isReadOnly}
             >
               <IconPlus size={16} />
-              Add Mapping
+              {showMappings ? 'Hide' : 'Show'} Mappings
             </Button>
 
             {showMappings && (
@@ -403,14 +447,37 @@ export default function ProductForm({
                             PRODUCTS
                           </Form.Label>
                           <Form.Control>
-                            <SelectProduct
-                              value={field.value?.[0]}
-                              onValueChange={(productId) => 
-                                handleMappingProductSelect(productId, index)
-                              }
-                              disabled={isReadOnly}
-                              className="w-full h-10 px-3 text-left justify-between"
-                            />
+                            <div className="space-y-2">
+                              <SelectProduct
+                                value=""
+                                onValueChange={(productId) => 
+                                  handleMappingProductSelect(productId, index)
+                                }
+                                disabled={isReadOnly}
+                                className="w-full h-10 px-3 text-left justify-between"
+                              />
+                              {field.value && field.value.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {field.value.map((productId: string) => (
+                                    <div
+                                      key={productId}
+                                      className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm flex items-center gap-1"
+                                    >
+                                      Product: {productId}
+                                      {!isReadOnly && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleRemoveProductFromMapping(productId, index)}
+                                          className="text-red-600 hover:text-red-800"
+                                        >
+                                          ×
+                                        </button>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </Form.Control>
                           <Form.Message />
                         </Form.Item>
@@ -441,14 +508,13 @@ export default function ProductForm({
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
-                      Add Another Mapping
+                      Add Mapping
                     </Button>
                   </div>
                 )}
               </div>
             )}
           </div>
-
           <div className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               CHECK EXCLUDE CATEGORIES
@@ -462,14 +528,21 @@ export default function ProductForm({
                     EXCLUDE CATEGORIES
                   </Form.Label>
                   <Form.Control>
-                    <SelectCategory
-                      selected={field.value?.[0]}
-                      onSelect={(categoryId) => 
-                        handleCategorySelect(categoryId as string, 'checkExcludeCategoryIds')
-                      }
-                      disabled={isReadOnly}
-                      className="w-full h-10 px-3 text-left justify-between"
-                    />
+                    <div className="space-y-2">
+                      <SelectCategory
+                        selected={field.value?.[0]}
+                        onSelect={(categoryId) => 
+                          handleCategorySelect(categoryId as string, 'checkExcludeCategoryIds')
+                        }
+                        disabled={isReadOnly}
+                        className="w-full h-10 px-3 text-left justify-between"
+                      />
+                      {field.value && field.value.length > 0 && (
+                        <div className="text-sm text-gray-600">
+                          Selected: {field.value.length} category(ies)
+                        </div>
+                      )}
+                    </div>
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>

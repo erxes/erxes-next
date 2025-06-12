@@ -46,6 +46,7 @@ export const PosEdit = () => {
       allowTypes: [],
       scopeBrandIds: [],
       branchId: '',
+      departmentId: '',
     },
   });
 
@@ -79,6 +80,7 @@ export const PosEdit = () => {
       allowTypes: posDetail.allowTypes || [],
       scopeBrandIds: posDetail.scopeBrandIds || [],
       branchId: posDetail.branchId || '',
+      departmentId: posDetail.departmentId || '',
     });
 
     const adminId = posDetail.adminTeamMember || posDetail.adminIds?.[0] || '';

@@ -10,7 +10,7 @@ import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { IPosDetail } from '~/modules/pos-detail/types/IPos';
-import { SelectBranch, SelectDepartment , SelectBrand } from 'ui-modules';
+import { SelectBranch, SelectDepartment, SelectBrand } from 'ui-modules';
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
@@ -20,12 +20,10 @@ interface RestaurantFormProps {
 
 export const RestaurantForm: React.FC<RestaurantFormProps> = ({
   form,
-  posDetail,
   isReadOnly = false,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setSlot = useSetAtom(slotAtom);
-  const isEditMode = !!posDetail;
 
   const handleAddSlot = () => {
     if (isReadOnly) return;
@@ -35,26 +33,10 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     setSearchParams(newParams);
   };
 
-  const handleTypeChange = (typeValue: string) => {
-    if (isReadOnly) return;
-
-    const currentTypes = (form.watch('allowTypes') || []) as string[];
-    const newTypes: string[] = currentTypes.includes(typeValue)
-      ? currentTypes.filter((t: string) => t !== typeValue)
-      : [...currentTypes, typeValue];
-
-    form.setValue('allowTypes', newTypes as any);
-  };
-
   const handleBrandChange = (brandId: string) => {
     if (isReadOnly) return;
 
-    const currentBrands = form.watch('scopeBrandIds') || [];
-    const newBrands = currentBrands.includes(brandId)
-      ? currentBrands.filter((id) => id !== brandId)
-      : [...currentBrands, brandId];
-
-    form.setValue('scopeBrandIds', newBrands);
+    form.setValue('scopeBrandIds', brandId ? [brandId] : []);
   };
 
   const handleBranchChange = (branchId: string) => {
@@ -128,9 +110,7 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     BRANDS
                   </Form.Label>
-                  <p className="text-sm text-gray-500">
-                    Which specific Brand does this integration belongs to?
-                  </p>
+                  <p className="text-sm text-gray-500">Which specific Brand does this integration belongs to?</p>
                   <Form.Control>
                     <SelectBrand
                       value={selectedBrandId}

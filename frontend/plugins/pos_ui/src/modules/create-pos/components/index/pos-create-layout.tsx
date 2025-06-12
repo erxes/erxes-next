@@ -1,15 +1,85 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Resizable } from 'erxes-ui';
-import { useSearchParams } from 'react-router-dom';
+import { Resizable, useQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { posCategoryAtom } from '../../states/posCategory';
 import { PosDetailSheet } from './posDetailSheet';
-import { getSteps, navigateToTab } from '~/modules/constants';
-import { PosCreateStepper } from './pos-create-tab';
+import { getSteps, LAYOUT } from '~/modules/constants';
+import { VerticalStepper } from './lay-stepper';
 import { NavigationFooter } from './navigation-footer';
-import { PosLayoutProps } from '~/modules/pos-detail/types/IPosLayout';
+import { PosLayoutProps, PosCreateStepperProps, PosTabContentProps } from '~/modules/pos-detail/types/IPosLayout';
+
+export const PosCreateTabContent: React.FC<PosTabContentProps> = ({
+  children,
+  value,
+}) => {
+  const [tab] = useQueryState<string>('tab', { defaultValue: 'overview' });
+  const [posCategory] = useAtom(posCategoryAtom);
+  const hasCategorySelected = !!posCategory;
+
+  if (value !== tab) {
+    return null;
+  }
+
+  if (value !== 'overview' && !hasCategorySelected) {
+    return (
+      <div className="flex-auto overflow-hidden flex items-center justify-center h-full">
+        <div className="text-center p-8 rounded-lg bg-yellow-50 border border-yellow-200">
+          <h3 className="text-lg font-medium text-yellow-800 mb-2">
+            Category Selection Required
+          </h3>
+          <p className="text-yellow-700">
+            Please select a category first before accessing this section.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <div className="flex-auto overflow-auto">{children}</div>;
+};
+
+export const PosCreateStepper: React.FC<PosCreateStepperProps> = ({ children }) => {
+  const [tab, setTab] = useQueryState<string>('tab', { defaultValue: 'overview' });
+  const [posCategory] = useAtom(posCategoryAtom);
+  const hasCategorySelected = !!posCategory;
+
+  const stepsWithIds = useMemo(() => {
+    return getSteps(posCategory).map((step, idx) => ({
+      ...step,
+      id: idx + 1,
+    }));
+  }, [posCategory]);
+
+  const currentStepId = useMemo(() => {
+    return stepsWithIds.find((step) => step.value === tab)?.id || 1;
+  }, [stepsWithIds, tab]);
+
+  React.useEffect(() => {
+    if (tab && !stepsWithIds.some((step) => step.value === tab)) {
+      setTab('overview');
+    }
+  }, [tab, stepsWithIds, setTab]);
+
+  return (
+    <div className="flex h-full">
+      <VerticalStepper
+        steps={stepsWithIds}
+        currentStepId={currentStepId}
+        hasCategorySelected={hasCategorySelected}
+        searchParams={new URLSearchParams(window.location.search)}
+        setSearchParams={(params) => {
+          const newParams = new URLSearchParams(params);
+          setTab(newParams.get('tab') || 'overview');
+        }}
+      />
+      <div className={`flex-1 overflow-auto p-6 ${LAYOUT.CONTENT_MAX_HEIGHT}`}>
+        {children}
+      </div>
+    </div>
+  );
+};
 
 export const PosCreateLayout: React.FC<PosLayoutProps> = ({
   children,
@@ -20,9 +90,8 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
   isSubmitting = false,
   onSaveSlots,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [tab, setTab] = useQueryState<string>('tab', { defaultValue: 'overview' });
   const [posCategory] = useAtom(posCategoryAtom);
-  const selectedStep = searchParams.get('tab') || 'overview';
   const [isLoading, setIsLoading] = React.useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -31,7 +100,7 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
   }, [posCategory]);
 
   const currentStepIndex = steps.findIndex(
-    (step) => step.value === selectedStep,
+    (step) => step.value === tab,
   );
   const prevStep =
     currentStepIndex > 0 ? steps[currentStepIndex - 1].value : null;
@@ -44,12 +113,12 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
   const handlePrevStep = (): void => {
     setValidationError(null);
     if (prevStep) {
-      navigateToTab(setSearchParams, searchParams, prevStep);
+      setTab(prevStep);
     }
   };
 
   const validateCurrentStep = (): boolean => {
-    if (selectedStep === 'properties' && form) {
+    if (tab === 'properties' && form) {
       const values = form.getValues();
 
       if (!values.name?.trim()) {
@@ -79,7 +148,7 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
       return;
     }
 
-    if (selectedStep === 'properties' && form && onFormSubmit) {
+    if (tab === 'properties' && form && onFormSubmit) {
       try {
         setIsLoading(true);
         const isValid = await form.trigger();
@@ -92,7 +161,6 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
         const formData = form.getValues();
         onFormSubmit(formData);
       } catch (error) {
-        console.error('Form submission error:', error);
         setValidationError('Failed to save form data. Please try again.');
         return;
       } finally {
@@ -104,11 +172,10 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
       try {
         setIsLoading(true);
 
-        if (selectedStep === 'slot' && onSaveSlots) {
+        if (tab === 'slot' && onSaveSlots) {
           try {
             await onSaveSlots();
           } catch (error) {
-            console.error('Error saving slots:', error);
             setValidationError('Failed to save slots. Please try again.');
             return;
           }
@@ -118,7 +185,6 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
           await onFinalSubmit();
         }
       } catch (error) {
-        console.error('Error saving:', error);
         setValidationError('Failed to save. Please try again.');
       } finally {
         setIsLoading(false);
@@ -127,7 +193,7 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
     }
 
     if (nextStep) {
-      navigateToTab(setSearchParams, searchParams, nextStep);
+      setTab(nextStep);
     }
   };
 

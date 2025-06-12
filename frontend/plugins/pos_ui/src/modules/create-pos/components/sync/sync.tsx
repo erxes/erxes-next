@@ -13,6 +13,7 @@ interface SyncCardFormProps {
 }
 
 export default function SyncCardForm({ 
+  isReadOnly = false 
 }: SyncCardFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom);
@@ -108,6 +109,7 @@ export default function SyncCardForm({
             type="button"
             onClick={handleToggleNewConfig}
             className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
+            disabled={isReadOnly}
           >
             <IconPlus size={16} />
             New config
@@ -124,6 +126,7 @@ export default function SyncCardForm({
                   value={syncCardSettings.currentConfig.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="Enter title"
+                  disabled={isReadOnly}
                 />
               </div>
 
@@ -132,6 +135,7 @@ export default function SyncCardForm({
                 <SelectBranch
                   value={syncCardSettings.currentConfig.branch}
                   onValueChange={handleBranchChange}
+                  disabled={isReadOnly}
                 />
               </div>
             </div>

@@ -5,19 +5,6 @@ import { useToast } from 'erxes-ui/hooks';
 import { CustomNode } from '~/modules/slot/types';
 import { BasicInfoFormValues, FormStepData, PaymentFormValues, PermissionFormValues, ProductFormValues } from '../components/formSchema';
 import { UseFormReturn } from 'react-hook-form';
-
-interface PosForms {
-  basicInfo: UseFormReturn<BasicInfoFormValues>;
-  permission: UseFormReturn<PermissionFormValues>;
-  product: UseFormReturn<ProductFormValues>;
-  payment: UseFormReturn<PaymentFormValues>;
-}
-
-interface PosHandlers {
-  handlePaymentSubmit: (data: PaymentFormValues) => void;
-  handlePermissionSubmit: (data: PermissionFormValues) => void;
-  handleNodesUpdate: (nodes: CustomNode[]) => void;
-}
 interface UsePosCreateHandlersProps {
   forms: {
     basicInfo: UseFormReturn<BasicInfoFormValues>;
