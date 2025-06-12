@@ -44,3 +44,12 @@ export const GET_INTEGRATIONS_BY_KIND = gql`
     }
   }
 `;
+
+export const GET_INTEGRATION_KINDS = gql`
+  query IntegrationsGetUsedTypes {
+    integrationsGetUsedTypes {
+      _id
+      name
+    }
+  }
+`;

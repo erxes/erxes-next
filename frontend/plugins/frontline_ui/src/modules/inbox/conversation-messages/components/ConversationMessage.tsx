@@ -1,4 +1,4 @@
-import { cn } from 'erxes-ui/lib/utils';
+import { cn } from 'erxes-ui';
 import { HAS_ATTACHMENT } from '../../constants/messengerConstants';
 import { ConversationFormDisplay } from './ConversationFormDisplay';
 import { Button, IAttachment, RelativeDateDisplay } from 'erxes-ui';
@@ -118,7 +118,7 @@ const Attachment = ({ attachment }: { attachment: IAttachment }) => {
     <img
       src={attachment.url}
       alt={attachment.name}
-      className="w-full aspect-square object-cover rounded bg-accent"
+      className="w-full aspect-square object-cover rounded"
     />
   );
 };

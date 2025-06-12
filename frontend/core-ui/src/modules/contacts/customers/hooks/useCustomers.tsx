@@ -6,7 +6,7 @@ import {
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
-  useMultiQueryState,
+  useNonNullMultiQueryState,
   parseDateRangeFromString,
   ICursorListResponse,
 } from 'erxes-ui';
@@ -20,8 +20,8 @@ export const useCustomers = (
   options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
 ) => {
   const pathname = useLocation().pathname;
-  const [{ searchValue, tags, created, updated, lastSeen }] =
-    useMultiQueryState<{
+  const { searchValue, tags, created, updated, lastSeen } =
+    useNonNullMultiQueryState<{
       searchValue: string;
       tags: string[];
       created: string;
@@ -71,7 +71,9 @@ export const useCustomers = (
   }: {
     direction: EnumCursorDirection;
   }) => {
-    if (!validateFetchMore({ direction, pageInfo })) return;
+    if (!validateFetchMore({ direction, pageInfo })) {
+      return;
+    }
 
     fetchMore({
       variables: {

@@ -1,11 +1,12 @@
-import { AddInventoryRowButton } from './AddInventoryRow';
-// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
-import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
-import { useFieldArray, useWatch } from 'react-hook-form';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { InventoryRow } from './InventoryRow';
-import { RemoveButton } from './RemoveButton';
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
+import { AddInventoryRowButton } from './AddInventoryRow';
+import { InventoryRow } from './InventoryRow';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
+import { RemoveButton } from './RemoveButton';
+import { useFieldArray, useWatch } from 'react-hook-form';
+import { useRef } from 'react';
+// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 
 export const InventoryForm = ({
   form,
@@ -18,19 +19,22 @@ export const InventoryForm = ({
     control: form.control,
     name: `trDocs.${journalIndex}.details`,
   });
+  const tableRef = useRef<HTMLTableElement>(null);
 
-  const trDoc = useWatch({
-    control: form.control,
-    name: `trDocs.${journalIndex}`,
-  });
+  const columnsLength =
+    tableRef.current?.querySelector('tr')?.querySelectorAll('td, th').length ||
+    5;
 
   return (
     <RecordTableHotkeyProvider
-      columnLength={5 + (trDoc.hasVat ? 1 : 0) + (trDoc.hasCtax ? 1 : 0) + ((trDoc.hasVat || trDoc.hasCtax) ? 2 : 0)}
+      columnLength={columnsLength}
       rowLength={fields.length}
-      scope={AccountingHotkeyScope.TransactionCEPage}
+      scope={AccountingHotkeyScope.TransactionFormPage}
     >
-      <Table className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar">
+      <Table
+        className="mt-5 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar"
+        ref={tableRef}
+      >
         <InventoryTableHeader form={form} journalIndex={journalIndex} />
         <Table.Body className="overflow-hidden">
           {fields.map((product, detailIndex) => (
@@ -44,7 +48,7 @@ export const InventoryForm = ({
         </Table.Body>
         <Table.Footer>
           <tr>
-            <td colSpan={5} className="p-4">
+            <td colSpan={columnsLength} className="p-4">
               <div className="flex w-full justify-center gap-4">
                 <AddInventoryRowButton
                   append={append}

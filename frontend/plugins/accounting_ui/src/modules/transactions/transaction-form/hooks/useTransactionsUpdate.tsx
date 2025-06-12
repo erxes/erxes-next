@@ -1,31 +1,20 @@
 import { OperationVariables, useMutation } from '@apollo/client';
 import { ACC_TRANSACTIONS_UPDATE } from '../graphql/mutations/accTransactionsUpdate';
-import { TAddTransactionGroup } from '../types/JournalForms';
-import { toast } from 'erxes-ui/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { toast } from 'erxes-ui';
+import { TRANSACTIONS_QUERY, TR_RECORDS_QUERY } from '../../graphql/transactionQueries';
+import { TRANSACTION_DETAIL_QUERY } from '../graphql/queries/accTransactionDetail';
 
 export const useTransactionsUpdate = (options?: OperationVariables) => {
-  const navigate = useNavigate();
   const [_updateTransaction, { loading }] = useMutation(
     ACC_TRANSACTIONS_UPDATE,
     options,
   );
 
-  const updateTransaction = (data: TAddTransactionGroup) => {
-    const trDocs = data.trDocs.map(trD => ({
-      ...trD,
-      details: trD.details.map(det => ({
-        ...det,
-        account: undefined,
-      })),
-      date: data.date,
-      number: data.number,
-    }));
+  const updateTransaction = (options: OperationVariables) => {
 
     return _updateTransaction({
       ...options,
-      variables: { parentId: data.parentId, trDocs },
-      onError: (error) => {
+      onError: (error: Error) => {
         toast({
           title: 'Error',
           description: error.message,
@@ -33,15 +22,27 @@ export const useTransactionsUpdate = (options?: OperationVariables) => {
         });
         options?.onError?.(error);
       },
-      update: (_cache, { data }) => {
-        const newParentId = data?.accTransactionsCreate[0]?.parentId;
-
-        const pathname = newParentId
-          ? `/accounting/transaction/edit?parentId=${newParentId}`
-          : "/accounting/main";
-
-        navigate(pathname);
+      onCompleted: (data) => {
+        toast({
+          title: 'Success',
+          description: 'Transactions updated successfully',
+        });
+        options?.onCompleted?.(data)
       },
+      refetchQueries: [
+        {
+          query: TRANSACTIONS_QUERY,
+          variables: {
+            "page": 1,
+            "perPage": 20
+          }
+        },
+        {
+          query: TR_RECORDS_QUERY,
+        },
+        TRANSACTION_DETAIL_QUERY
+      ],
+      awaitRefetchQueries: true,
     });
 
   };

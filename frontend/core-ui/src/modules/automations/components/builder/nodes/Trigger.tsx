@@ -1,7 +1,7 @@
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import { memo } from 'react';
 import { IconSunElectricity } from '@tabler/icons-react';
-import { cn } from 'erxes-ui/lib';
+import { cn } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeActions';

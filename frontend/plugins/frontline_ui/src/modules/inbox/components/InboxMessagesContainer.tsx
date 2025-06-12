@@ -1,4 +1,4 @@
-import { ScrollArea } from 'erxes-ui/components';
+import { ScrollArea } from 'erxes-ui';
 import { useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { InboxMessagesSkeleton } from './InboxMessagesSkeleton';
@@ -16,6 +16,7 @@ export const InboxMessagesContainer = ({
   loading: boolean;
 }>) => {
   const viewportRef = useRef<HTMLDivElement>(null);
+
   const [fetchMoreRef] = useInView({
     threshold: 0,
     onChange(inView) {
@@ -41,14 +42,11 @@ export const InboxMessagesContainer = ({
         viewportRef.current.scrollTop =
           viewportRef.current.scrollHeight - distanceFromBottomRef.current;
         distanceFromBottomRef.current = 0;
-      } else {
+      } else if (messagesLength > 0) {
         scrollToBottom();
       }
     }
-    if (messagesLength > 0) {
-      scrollToBottom();
-    }
-  }, [messagesLength]);
+  }, [messagesLength, fetchMore]);
 
   return (
     <ScrollArea.Root className="h-full">
@@ -56,7 +54,9 @@ export const InboxMessagesContainer = ({
         {messagesLength && totalCount > messagesLength && (
           <p ref={fetchMoreRef} />
         )}
-        <div className="flex flex-col w-[648px] mx-auto p-6">{children}</div>
+        <div className="flex flex-col max-w-[648px] mx-auto p-6">
+          {children}
+        </div>
         <InboxMessagesSkeleton isFetched={!loading && !!messagesLength} />
       </ScrollArea.Viewport>
       <ScrollArea.Bar orientation="vertical" />

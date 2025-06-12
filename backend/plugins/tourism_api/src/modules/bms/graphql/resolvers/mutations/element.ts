@@ -1,16 +1,16 @@
 import { IContext } from '~/connectionResolvers';
 
 const elementMutations = {
-  bmElementAdd: async (_root, doc, { user, models }: IContext) => {
+  bmsElementAdd: async (_root, doc, { user, models }: IContext) => {
     return models.Elements.createElement(doc, user);
   },
 
-  bmElementEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
+  bmsElementEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
     const updated = await models.Elements.updateElement(_id, doc as any);
     return updated;
   },
 
-  bmElementRemove: async (
+  bmsElementRemove: async (
     _root,
     { ids }: { ids: string[] },
     { models }: IContext,
@@ -18,11 +18,11 @@ const elementMutations = {
     return await models.Elements.removeElements(ids);
   },
 
-  bmElementCategoryAdd: async (_root, doc, { models }: IContext) => {
+  bmsElementCategoryAdd: async (_root, doc, { models }: IContext) => {
     return models.ElementCategories.createElementCategory(doc);
   },
 
-  bmElementCategoryEdit: async (
+  bmsElementCategoryEdit: async (
     _root,
     { _id, ...doc },
     { models }: IContext,
@@ -34,7 +34,7 @@ const elementMutations = {
     return updated;
   },
 
-  bmElementCategoryRemove: async (
+  bmsElementCategoryRemove: async (
     _root,
     { _id }: { _id: string },
     { models }: IContext,

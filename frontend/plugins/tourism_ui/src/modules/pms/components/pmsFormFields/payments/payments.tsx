@@ -9,7 +9,7 @@ import {
 import PmsFormFieldsLayout from '../PmsFormFieldsLayout';
 import Heading from '../../ui/heading';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const Payments = ({ control }: { control: Control<PmsBranchFormType> }) => {
   const { fields, append, remove } = useFieldArray({

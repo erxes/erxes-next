@@ -2,5 +2,6 @@ export enum AccountingHotkeyScope {
   MainPage = 'accounting-main-page',
   AddTransactionDropdown = 'accounting-add-transaction-dropdown',
   TransactionPage = 'accounting-transaction-page',
-  TransactionCEPage = 'accounting-transaction-create-edit-page',
+  TransactionFormPage = 'accounting-transaction-form-page',
+  TransactionFormSubPage = 'accounting-transaction-form-sub-page',
 }

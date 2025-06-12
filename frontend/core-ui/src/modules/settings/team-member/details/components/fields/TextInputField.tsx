@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { DatePicker, Form, Input } from 'erxes-ui';
 import React from 'react';
 import { Control, FieldPath, FieldValues } from 'react-hook-form';

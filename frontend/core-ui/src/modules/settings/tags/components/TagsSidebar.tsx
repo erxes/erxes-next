@@ -1,7 +1,6 @@
 import { Sidebar, Skeleton, useQueryState } from 'erxes-ui';
 import { useTagsTypes } from '../hooks/useTagsTypes';
-import { IconTag } from '@tabler/icons-react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { ITagType } from 'ui-modules';
 
 export const TagsSidebar = () => {

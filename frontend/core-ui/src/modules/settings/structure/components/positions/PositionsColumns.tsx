@@ -12,7 +12,7 @@ import {
   RecordTableTree,
   useQueryState,
 } from 'erxes-ui';
-import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import { useSetAtom } from 'jotai';
 import { renderingPositionDetailAtom } from '../../states/renderingPositionDetail';
 import { SelectPositions } from 'ui-modules';

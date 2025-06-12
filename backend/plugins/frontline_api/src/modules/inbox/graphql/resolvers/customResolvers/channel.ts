@@ -1,6 +1,7 @@
 import { IChannelDocument } from '@/inbox/@types/channels';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+
 export default {
   async integrations(channel: IChannelDocument, _args, { models }: IContext) {
     return models.Integrations.findIntegrations({

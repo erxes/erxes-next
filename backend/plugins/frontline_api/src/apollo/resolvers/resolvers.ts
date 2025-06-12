@@ -1,5 +1,5 @@
-import contactResolvers from '~/modules/inbox/graphql/resolvers/customResolvers';
+import inboxResolvers from '@/inbox/graphql/resolvers/customResolvers';
 
 export const customResolvers = {
-  ...contactResolvers,
+  ...inboxResolvers,
 };

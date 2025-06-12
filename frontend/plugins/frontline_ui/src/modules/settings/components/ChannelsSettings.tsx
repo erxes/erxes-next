@@ -1,4 +1,4 @@
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import ChannelsTable from './channels/ChannelsTable';
 import { ChannelDetailSheet } from './channels/details/ChannelDetailSheet';
 

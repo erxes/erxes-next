@@ -3,9 +3,8 @@ import { MergeSheet } from './MergeSheet';
 import { ICustomer } from '@/contacts/types/customerType';
 import { MergingFieldContainer } from './MergingFieldContainer';
 import { MergeMap, FieldType } from './MergeMap';
-import { ChoiceboxGroup } from 'erxes-ui/components';
+import { ChoiceboxGroup, useToast } from 'erxes-ui';
 import { useMergeCustomers } from '@/contacts/customers/hooks/useMergeCustomers';
-import { useToast } from 'erxes-ui/hooks';
 import { ApolloError } from '@apollo/client';
 import { Row } from '@tanstack/table-core';
 

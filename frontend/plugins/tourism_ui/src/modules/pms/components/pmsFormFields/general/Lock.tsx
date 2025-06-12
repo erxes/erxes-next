@@ -1,8 +1,8 @@
 import { Control } from 'react-hook-form';
 import { Form, Label, Select, Switch } from 'erxes-ui';
-import { lockDurations } from '~/modules/pms/constants/time.constants';
+import { lockDurations } from '@/pms/constants/time.constants';
 import { useState } from 'react';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const Lock = ({ control }: { control: Control<PmsBranchFormType> }) => {
   const [timeSwitch, setTimeSwitch] = useState<boolean>(false);

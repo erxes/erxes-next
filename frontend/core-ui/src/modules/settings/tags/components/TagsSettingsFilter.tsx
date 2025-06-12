@@ -1,11 +1,7 @@
-import { Combobox, Command, Filter, useFilterContext } from 'erxes-ui';
+import { Combobox, Command, Filter, useFilterContext, useFilterQueryState } from 'erxes-ui';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
-import {
-  SelectTagType,
-  SelectTagTypeCommand,
-} from 'ui-modules/modules/tags/components/SelectTagType';
+import { SelectTagType, SelectTagTypeCommand } from 'ui-modules';
 import { IconTagStarred } from '@tabler/icons-react';
-import { useFilterQueryState } from 'erxes-ui/modules/filter/hooks/useFilterQueryState';
 import { TagsTotalCount } from './TagsTotalCount';
 
 export const TagsSettingFilter = () => {

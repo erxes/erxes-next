@@ -1,13 +1,13 @@
 import { IconChalkboard } from '@tabler/icons-react';
 import { Button, Form, Sheet, Spinner, useToast } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
-import { useChannelById } from '~/modules/settings/hooks/useChannels';
+import { useChannelById } from '@/settings/hooks/useChannels';
 import { ChannelForm } from './ChannelForm';
-import { useChannelForm } from '~/modules/settings/hooks/useChannelForm';
+import { useChannelForm } from '@/settings/hooks/useChannelForm';
 import { type SubmitHandler } from 'react-hook-form';
-import { TChannelForm } from '~/modules/settings/types/channel';
+import { TChannelForm } from '@/settings/types/channel';
 import React from 'react';
-import { useChannelsEdit } from '~/modules/settings/hooks/useChannelsEdit';
+import { useChannelsEdit } from '@/settings/hooks/useChannelsEdit';
 import { describe } from 'node:test';
 import { ApolloError } from '@apollo/client';
 
