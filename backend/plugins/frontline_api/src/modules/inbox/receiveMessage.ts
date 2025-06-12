@@ -147,14 +147,10 @@ export const receiveTrpcMessage = async (
         };
 
         await Conversations.createConversation(formattedDoc);
-        await graphqlPubsub.publish(
-          `conversationClientMessageInserted:${subdomain}:${doc.customerId}`,
-          {
-            conversationClientMessageInserted: doc,
-            subdomain,
-            conversation,
-          },
-        );
+
+        graphqlPubsub.publish('conversationClientMessageInserted', {
+          conversationClientMessageInserted: doc,
+        });
       }
 
       return sendSuccess({ _id: conversationId });
