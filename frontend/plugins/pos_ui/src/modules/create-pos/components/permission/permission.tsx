@@ -131,7 +131,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
 
       const isValid = await form.trigger();
       if (!isValid) {
-        console.log('Form validation failed');
         return;
       }
 
@@ -150,8 +149,7 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
       setSelectedAdminId(finalUserId);
       form.setValue('adminTeamMember', finalUserId, { shouldValidate: true });
       form.setValue('adminIds', finalUserId ? [finalUserId] : [], { shouldValidate: true });
-      
-      console.log('Updated adminIds:', finalUserId ? [finalUserId] : []);
+    
     };
 
     const handleCashierMemberChange = (value: string | string[]) => {
@@ -198,7 +196,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   className="scale-150 w-7"
                   checked={form.watch('adminPrintTempBill') || false}
                   onCheckedChange={(checked) => {
-                    console.log('Admin print temp bill changed:', checked);
                     form.setValue('adminPrintTempBill', checked, { shouldValidate: true });
                   }}
                 />
@@ -211,7 +208,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   className="scale-150 w-7"
                   checked={form.watch('adminDirectSales') || false}
                   onCheckedChange={(checked) => {
-                    console.log('Admin direct sales changed:', checked);
                     form.setValue('adminDirectSales', checked, { shouldValidate: true });
                   }}
                 />
@@ -226,7 +222,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                 <Input
                   value={form.watch('adminDirectDiscountLimit') || ''}
                   onChange={(e) => {
-                    console.log('Admin discount limit changed:', e.target.value);
                     form.setValue('adminDirectDiscountLimit', e.target.value, { shouldValidate: true });
                   }}
                   placeholder="Write here"
@@ -267,7 +262,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   className="scale-150 w-7"
                   checked={form.watch('cashierPrintTempBill') || false}
                   onCheckedChange={(checked) => {
-                    console.log('Cashier print temp bill changed:', checked);
                     form.setValue('cashierPrintTempBill', checked, { shouldValidate: true });
                   }}
                 />
@@ -280,7 +274,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                   className="scale-150 w-7"
                   checked={form.watch('cashierDirectSales') || false}
                   onCheckedChange={(checked) => {
-                    console.log('Cashier direct sales changed:', checked);
                     form.setValue('cashierDirectSales', checked, { shouldValidate: true });
                   }}
                 />
@@ -295,7 +288,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                 <Input
                   value={form.watch('cashierDirectDiscountLimit') || ''}
                   onChange={(e) => {
-                    console.log('Cashier discount limit changed:', e.target.value);
                     form.setValue('cashierDirectDiscountLimit', e.target.value, { shouldValidate: true });
                   }}
                   placeholder="Write here"

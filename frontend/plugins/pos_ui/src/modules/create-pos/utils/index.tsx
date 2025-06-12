@@ -27,8 +27,6 @@ interface GetPosCreateTabsProps {
     payment: UseFormReturn<PaymentFormValues>;
   };
   handlers: {
-    handlePaymentSubmit: (data: PaymentFormValues) => void;
-    handlePermissionSubmit: (data: PermissionFormValues) => void;
     handleNodesUpdate: (nodes: CustomNode[]) => void;
   };
   data: {
@@ -72,7 +70,6 @@ export const getPosCreateTabs = ({
         posCategory,
         <EcommercePaymentsForm
           form={forms.payment}
-          onFormSubmit={handlers.handlePaymentSubmit}
         />,
         <RestaurantPaymentsForm />,
       ) || <div>Please select a category first</div>,
@@ -82,7 +79,6 @@ export const getPosCreateTabs = ({
       component: (
         <PermissionForm
           form={forms.permission}
-          onFormSubmit={handlers.handlePermissionSubmit}
         />
       ),
     },

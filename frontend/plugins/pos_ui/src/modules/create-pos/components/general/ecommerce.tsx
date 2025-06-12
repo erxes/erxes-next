@@ -21,7 +21,6 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
 
   const handleBrandChange = (brandId: string) => {
     if (isReadOnly) return;
-    console.log('Brand changed:', brandId);
     
     const newValue = brandId && brandId !== '' ? [brandId] : [];
     form.setValue('scopeBrandIds', newValue);
@@ -40,18 +39,10 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
     form.trigger('departmentId');
   };
 
-  // Fix: Better handling of the watched value with additional safety checks
   const scopeBrandIds = form.watch('scopeBrandIds') || [];
   const selectedBrandId = Array.isArray(scopeBrandIds) && scopeBrandIds.length > 0 
     ? scopeBrandIds[0] 
     : '';
-
-  // Debug logging
-  React.useEffect(() => {
-    console.log('Current scopeBrandIds:', scopeBrandIds);
-    console.log('Selected brand ID:', selectedBrandId);
-  }, [scopeBrandIds, selectedBrandId]);
-
   return (
     <Form {...form}>
       <div className="p-3">

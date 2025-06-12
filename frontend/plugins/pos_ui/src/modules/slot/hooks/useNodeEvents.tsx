@@ -37,9 +37,7 @@ export const useNodeEvents = ({
     const handleNodeResize = (event: Event) => {
       const { detail } = event as CustomEvent<NodeEventDetail>;
       if (!detail?.id) return;
-      const rotateAngle = Number(detail.rotateAngle);
-       if (isNaN(rotateAngle)) return;
-
+      
       const updateNodeData = (node: CustomNode) => {
         if (node.id === detail.id) {
           const updatedNode = {
@@ -64,8 +62,9 @@ export const useNodeEvents = ({
         return node;
       };
 
-      setNodes((nds) => nds.map(updateNodeData));
-      setHookNodes((nds) => nds.map(updateNodeData));
+      const updateNodes = (nds: CustomNode[]) => nds.map(updateNodeData);
+      setNodes(updateNodes);
+      setHookNodes(updateNodes);
 
       if (selectedNodeRef.current?.id === detail.id) {
         const updatedNode = nodesRef.current.find((node) => node.id === detail.id);
@@ -106,8 +105,8 @@ export const useNodeEvents = ({
       const { detail } = event as CustomEvent<NodeEventDetail>;
       if (!detail?.id) return;
       
-      const rotateAngle = Number(detail.rotateAngle);
-      if (isNaN(rotateAngle)) return;
+      const rotateAngle = detail.rotateAngle !== undefined ? Number(detail.rotateAngle) : undefined;
+      if (rotateAngle === undefined || isNaN(rotateAngle)) return;
 
       const updateNodeRotation = (node: CustomNode) => {
         if (node.id === detail.id) {
@@ -121,9 +120,9 @@ export const useNodeEvents = ({
         }
         return node;
       };
-
-      setNodes((nds) => nds.map(updateNodeRotation));
-      setHookNodes((nds) => nds.map(updateNodeRotation));
+      const updateNodes = (nds: CustomNode[]) => nds.map(updateNodeRotation);
+      setNodes(updateNodes);
+      setHookNodes(updateNodes);
 
       if (selectedNodeRef.current?.id === detail.id) {
         const updatedNode = nodesRef.current.find((node) => node.id === detail.id);

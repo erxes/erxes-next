@@ -26,15 +26,7 @@ export const usePosCreateHandlers = ({
   const { toast } = useToast();
 
   const handleBasicInfoSubmit = (data: BasicInfoFormValues) => {
-    console.log('Basic info data updated:', data);
-  };
-
-  const handlePermissionSubmit = (data: PermissionFormValues) => {
-    console.log('Permission data updated:', data);
-  };
-
-  const handlePaymentSubmit = (data: PaymentFormValues) => {
-    console.log('Payment data updated:', data);
+    forms.basicInfo.reset(data);
   };
 
   const handleSaveSlots = async (posId: string) => {
@@ -126,8 +118,6 @@ export const usePosCreateHandlers = ({
 
   return {
     handleBasicInfoSubmit,
-    handlePermissionSubmit,
-    handlePaymentSubmit,
     handleFinalSubmit,
     handleNodesUpdate,
     handleSaveSlots,
