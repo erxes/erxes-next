@@ -7,7 +7,7 @@ export function useMultiSelectToggle<T extends FieldValues>(
     fieldName: K,
     value: string
   ) => {
-    const currentValues = (form.watch(fieldName) || []) as string[];
+    const currentValues = (form.getValues(fieldName) || []) as string[];
     
     const newValues = currentValues.includes(value)
       ? currentValues.filter((item: string) => item !== value)
