@@ -45,7 +45,6 @@ const useMailConfigForm = () => {
       acc[config.code] = data[config.code] ?? config.value;
       return acc;
     }, {} as Record<string, any>);
-    console.log({ updatedConfigs });
     updateConfig(updatedConfigs);
   }, []);
 

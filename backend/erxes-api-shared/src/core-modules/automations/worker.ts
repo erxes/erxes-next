@@ -21,8 +21,6 @@ export const startAutomations = async (
           try {
             const { subdomain, data } = jobData;
 
-            console.log(jobData);
-
             if (!subdomain) {
               throw new Error('You should provide subdomain on message');
             }
