@@ -103,7 +103,7 @@ const getAttributionEmails = async ({
 }) => {
   let emails: string[] = [];
   const matches = (value || '').match(/\{\{\s*([^}]+)\s*\}\}/g);
-  const attributes = matches.map((match) =>
+  const attributes = (matches || []).map((match) =>
     match.replace(/\{\{\s*|\s*\}\}/g, ''),
   );
   const relatedValueProps = {};
