@@ -7,15 +7,20 @@ const USER_DETAIL_SCHEMA = z.object({
       message: 'Please fill a valid email address',
     })
     .default(''),
-  groupId: z.string({ required_error: 'Required field' }),
-  channelIds: z.string().array().optional(),
-  unitId: z.string().optional(),
-  departmentId: z.string().optional(),
-  branchId: z.string().optional(),
-  details: z.any(),
-  links: z.any().optional(),
-  groupIds: z.string().array().optional(),
-  brandIds: z.string().array().optional(),
+  username: z.string({ required_error: 'Username required' }),
+  employeeId: z.string().optional().nullable(),
+  details: z.object({
+    firstName: z.string(),
+    lastName: z.string().optional().nullable(),
+    middleName: z.string().optional().nullable(),
+    shortName: z.string().optional().nullable(),
+    description: z.string().optional().nullable(),
+    birthDate: z.any().optional().nullable(),
+    location: z.any().optional().nullable(),
+    workStartedDate: z.any().optional().nullable(),
+  }),
+  positionIds: z.string().array().optional(),
+  links: z.any().optional().nullable(),
 });
 
 const USER_SUBMIT_SCHEMA = z.object({

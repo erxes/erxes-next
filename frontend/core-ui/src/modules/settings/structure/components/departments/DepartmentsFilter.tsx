@@ -1,11 +1,8 @@
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
-import { IconGitBranch } from '@tabler/icons-react';
 import { Command } from 'cmdk';
-import { Combobox, Filter, PageSubHeader, useFilterContext } from 'erxes-ui';
-import { useFilterQueryState } from 'erxes-ui/modules/filter/hooks/useFilterQueryState';
-import React from 'react';
-import { SelectDepartment, SelectDepartmentCommand } from 'ui-modules';
+import { Combobox, Filter, PageSubHeader } from 'erxes-ui';
 import { DepartmentsTotalCount } from './DepartmentsTotalCount';
+import { SelectDepartments } from 'ui-modules';
 
 export const DepartmentsFilter = () => {
   return (
@@ -20,65 +17,31 @@ export const DepartmentsFilter = () => {
                   <Filter.CommandInput />
                   <Command.List>
                     <Filter.SearchValueTrigger />
-                    <Filter.Item value="parentId">
-                      <IconGitBranch /> By Parent
-                    </Filter.Item>
+                    <SelectDepartments.FilterItem
+                      value="parentId"
+                      label="By Parent"
+                    />
                   </Command.List>
                 </Command>
               </Filter.View>
-              <DepartmentParentFilterView />
+              <SelectDepartments.FilterView
+                mode="single"
+                filterKey="parentId"
+              />
             </Combobox.Content>
           </Filter.Popover>
           <Filter.Dialog>
             <Filter.DialogStringView filterKey="searchValue" />
           </Filter.Dialog>
           <Filter.SearchValueBarItem />
-          <DepartmentParentFilterBar />
+          <SelectDepartments.FilterBar
+            mode="single"
+            filterKey="parentId"
+            label="By Parent"
+          />
           <DepartmentsTotalCount />
         </Filter.Bar>
       </Filter>
     </PageSubHeader>
-  );
-};
-
-const DepartmentParentFilterView = () => {
-  const [parentId, setParentId] = useFilterQueryState('parentId', 'parentId');
-  const { resetFilterState } = useFilterContext();
-  return (
-    <Filter.View filterKey="parentId">
-      <SelectDepartmentCommand
-        selected={parentId as string}
-        onSelect={(id) => {
-          setParentId(id);
-          resetFilterState();
-        }}
-        focusOnMount
-      />
-    </Filter.View>
-  );
-};
-
-const DepartmentParentFilterBar = () => {
-  const [parentId, setParentId] = useFilterQueryState('parentId', 'parentId');
-  const { resetFilterState } = useFilterContext();
-  if (!parentId) {
-    return;
-  }
-  return (
-    <Filter.BarItem>
-      <Filter.BarName className="whitespace-nowrap">
-        <IconGitBranch />
-        By Parent
-      </Filter.BarName>
-      <SelectDepartment
-        value={parentId as string}
-        className="h-full shadow-none rounded-none"
-        onValueChange={(value) => {
-          setParentId(value);
-          resetFilterState();
-        }}
-      />
-      <Filter.BarClose filterKey="parentId" />
-    </Filter.BarItem>
   );
 };

@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import { Form, Input, Skeleton } from 'erxes-ui';
 import { AssignMultipleMembers } from 'ui-modules';
 import { TPositionForm } from '../../types/position';
-import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+import { SelectPositions } from 'ui-modules';
 
 export const PositionForm = ({ loading }: { loading: boolean }) => {
   const { control } = useFormContext<TPositionForm>();
@@ -62,13 +62,12 @@ export const PositionForm = ({ loading }: { loading: boolean }) => {
         name="parentId"
         render={({ field }) => (
           <Form.Item className="col-span-2">
-            <Form.Label>{'Parent'}</Form.Label>
-            <Form.Control>
-              <SelectPosition
-                value={field.value}
-                onValueChange={field.onChange}
-              />
-            </Form.Control>
+            <Form.Label>Parent position</Form.Label>
+            <SelectPositions.FormItem
+              mode="single"
+              value={field.value}
+              onValueChange={field.onChange}
+            />
             <Form.Message />
           </Form.Item>
         )}

@@ -1,6 +1,7 @@
 import {
   IconAlignLeft,
   IconChecks,
+  IconLabelFilled,
   IconMail,
   IconMailCheck,
   IconUser,
@@ -19,15 +20,19 @@ import {
   Input,
   RecordTableCellContent,
   TextOverflowTooltip,
+  FullNameField,
+  RecordTableCellDisplay,
+  DatePicker,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
-import { TextFieldUser } from '@/settings/team-member/components/record/team-member-edit/TextField';
-import dayjs from 'dayjs';
-import { TextFieldUserDetails } from '@/settings/team-member/components/record/team-member-edit/TextFieldDetails';
-import { FirstNameField } from '@/settings/team-member/components/record/team-member-edit/FirstNameField';
 import { useSetAtom } from 'jotai';
 import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberDetail';
-import { SelectPosition } from 'ui-modules/modules/structure/components/SelectPosition';
+import { SelectPositions } from 'ui-modules';
+import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
+import { ChangeEvent, useState } from 'react';
+import { TeammemberEmailField } from './team-member-edit/TeammemberEmailField';
+import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
+import { format } from 'date-fns';
 
 export const UserMoreColumnCell = ({
   cell,
@@ -80,44 +85,100 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     size: 34,
   },
   {
-    id: 'firstName',
-    accessorKey: 'firstName',
+    id: 'name',
+    accessorKey: 'name',
     header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="First name" />
+      <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
-      const {
-        details: { firstName },
-        _id,
-      } = cell.row.original;
+      const [, setDetailOpen] = useQueryState('user_id');
+      const setRenderingTeamMemberDetail = useSetAtom(
+        renderingTeamMemberDetailAtom,
+      );
+      const { details, _id } = cell.row.original;
+      const { firstName, lastName } = details || {};
+
+      const { usersEdit } = useUserEdit();
+      const [_firstName, setFirstName] = useState(firstName);
+      const [_lastName, setLastName] = useState(lastName);
+      const [open, setOpen] = useState(false);
+
+      const onSave = () => {
+        if (_firstName !== firstName || _lastName !== lastName) {
+          usersEdit(
+            {
+              variables: {
+                _id,
+                details: {
+                  ...details,
+                  firstName: _firstName,
+                  lastName: _lastName,
+                },
+              },
+            },
+            ['details'],
+          );
+        }
+      };
+
       return (
-        <FirstNameField
-          field="firstName"
-          _id={_id}
-          value={firstName as string}
-        />
+        <RecordTablePopover
+          scope={SettingsHotKeyScope.UsersPage + '.' + _id + '.Name'}
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
+          <RecordTableCellTrigger>
+            <Badge
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDetailOpen(_id);
+                setRenderingTeamMemberDetail(false);
+              }}
+            >
+              {firstName || lastName ? (
+                <span>
+                  {firstName} {lastName}
+                </span>
+              ) : (
+                <span className="text-muted-foreground">Unnamed user</span>
+              )}
+            </Badge>
+          </RecordTableCellTrigger>
+          <RecordTableCellContent className="w-72" asChild>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSave();
+                setOpen(false);
+              }}
+            >
+              <FullNameField>
+                <FullNameField.FirstName
+                  value={_firstName || ''}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                />
+                <FullNameField.LastName
+                  value={_lastName || ''}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }}
+                />
+              </FullNameField>
+              <button type="submit" className="sr-only" />
+            </form>
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
-  },
-  {
-    id: 'lastName',
-    accessorKey: 'lastName',
-    header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="Last name" />
-    ),
-    cell: ({ cell }) => {
-      const {
-        details: { lastName },
-        _id,
-      } = cell.row.original;
-      return (
-        <TextFieldUserDetails
-          field="lastName"
-          _id={_id}
-          value={lastName as string}
-        />
-      );
-    },
+    size: 240,
   },
   {
     id: 'status',
@@ -133,11 +194,17 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
           className="flex items-center justify-center"
           recordId={cell.row.original._id}
           display={() => {
-            if (status === 'Verified') {
-              return <Badge variant={'success'}>{status}</Badge>;
-            } else {
-              return <Badge variant={'destructive'}>Unverified</Badge>;
-            }
+            return (
+              <Badge
+                variant={
+                  !status || status === 'Not verified'
+                    ? 'destructive'
+                    : 'success'
+                }
+              >
+                {status || 'Not verified'}
+              </Badge>
+            );
           }}
         />
       );
@@ -147,53 +214,93 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'email',
     accessorKey: 'email',
     header: () => <RecordTable.InlineHead icon={IconMail} label="Email" />,
-    cell: ({ cell }) => {
-      const { email, _id } = cell.row.original;
-      return (
-        <RecordTablePopover>
-          <RecordTableCellTrigger asChild>{email}</RecordTableCellTrigger>
-          <RecordTableCellContent>
-            <Input key={_id} value={email} />
-          </RecordTableCellContent>
-        </RecordTablePopover>
-      );
-    },
+    cell: ({ cell }) => <TeammemberEmailField cell={cell} />,
+    size: 250,
   },
   ...['employeeId'].map((field) => ({
     id: field,
     accessorKey: field,
     header: () => <RecordTable.InlineHead icon={IconAlignLeft} label={field} />,
-    cell: ({ cell }: { cell: Cell<IUser, unknown> }) => (
-      <TextFieldUser
-        field="employeeId"
-        _id={cell.row.original._id}
-        className="text-center"
-        value={(cell.getValue() as string) || '-'}
-      />
-    ),
-  })),
-  {
-    id: 'position',
-    accessorKey: 'position',
-    header: () => (
-      <RecordTable.InlineHead icon={IconAlignLeft} label="Position" />
-    ),
-    cell: ({ cell }) => {
-      const {
-        details: { position },
-        _id,
-      } = cell.row.original;
+    cell: ({ cell }: { cell: Cell<IUser, unknown> }) => {
+      const { _id, employeeId } = cell.row.original || {};
+      const { usersEdit } = useUserEdit();
+      const [open, setOpen] = useState<boolean>(false);
+      const [_employeeId, setEmployeeId] = useState<string>(employeeId);
+      const onSave = () => {
+        usersEdit(
+          {
+            variables: {
+              _id,
+              employeeId: _employeeId,
+            },
+          },
+          ['employeeId'],
+        );
+      };
+
+      const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.currentTarget || {};
+        if (value === employeeId) return;
+        setEmployeeId(value);
+      };
       return (
-        <RecordTablePopover>
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
           <RecordTableCellTrigger>
-            <TextOverflowTooltip value={position} />
+            {(employeeId && (
+              <Badge variant={'secondary'}>{employeeId}</Badge>
+            )) ||
+              '-'}
           </RecordTableCellTrigger>
           <RecordTableCellContent>
-            <SelectPosition value={position} onValueChange={() => {}} />
+            <Input value={_employeeId} onChange={onChange} />
           </RecordTableCellContent>
         </RecordTablePopover>
       );
     },
+  })),
+  {
+    id: 'positionIds',
+    accessorKey: 'positionIds',
+    header: () => (
+      <RecordTable.InlineHead icon={IconAlignLeft} label="Positions" />
+    ),
+    cell: ({ cell }) => {
+      const { positionIds, _id } = cell.row.original;
+      const { usersEdit } = useUserEdit();
+
+      return (
+        <SelectPositions.InlineCell
+          scope={
+            SettingsHotKeyScope.UsersPage +
+            '.' +
+            cell.row.original._id +
+            '.Position'
+          }
+          mode="multiple"
+          value={cell.getValue() as string[]}
+          onValueChange={(value) =>
+            usersEdit(
+              {
+                variables: {
+                  _id,
+                  positionIds: value,
+                },
+              },
+              ['positionIds'],
+            )
+          }
+        />
+      );
+    },
+    size: 240,
   },
   {
     id: 'workStartedDate',
@@ -202,20 +309,54 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       <RecordTable.InlineHead icon={IconAlignLeft} label="workStartedDate" />
     ),
     cell: ({ cell }) => {
-      const {
-        details: { workStartedDate },
-        _id,
-      } = cell.row.original;
+      const { details, _id } = cell.row.original;
+      const { workStartedDate, ...rest } = details || {};
+      const [open, setOpen] = useState<boolean>(false);
+      const [_workStartedDate, setWorkStartedDate] =
+        useState<Date>(workStartedDate);
+      const { usersEdit } = useUserEdit();
+      const onSave = () => {
+        usersEdit(
+          {
+            variables: {
+              _id,
+              details: {
+                ...rest,
+                workStartedDate: _workStartedDate,
+              },
+            },
+          },
+          ['details'],
+        );
+      };
+
+      const onChange = (date: Date) => {
+        if (date === workStartedDate) return;
+        setWorkStartedDate(date);
+      };
+
       return (
-        <TextFieldUserDetails
-          field="workStartedDate"
-          _id={_id}
-          value={
-            (workStartedDate &&
-              (dayjs(workStartedDate).format('YYYY/MM/DD') as string)) ||
-            '-'
-          }
-        />
+        <RecordTablePopover
+          open={open}
+          onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              onSave();
+            }
+          }}
+        >
+          <RecordTableCellTrigger>
+            {(_workStartedDate &&
+              format(new Date(_workStartedDate), 'yyyy/MM/dd')) ||
+              'YYYY/MM/DD'}
+          </RecordTableCellTrigger>
+          <RecordTableCellContent>
+            <DatePicker
+              value={_workStartedDate}
+              onChange={(d) => onChange(d as Date)}
+            />
+          </RecordTableCellContent>
+        </RecordTablePopover>
       );
     },
   },
@@ -223,15 +364,29 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'isActive',
     accessorKey: 'isActive',
     header: () => <RecordTable.InlineHead icon={IconChecks} label="Status" />,
-    cell: ({ cell }) => (
-      <InlineCell
-        name="isActive"
-        className="flex items-center justify-center"
-        recordId={cell.row.original._id}
-        display={() => (
-          <Switch className="mx-auto" checked={cell.row.original.isActive} />
-        )}
-      />
-    ),
+    cell: ({ cell }) => {
+      const { _id } = cell.row.original || {};
+      const { editStatus } = useUsersStatusEdit();
+      return (
+        <InlineCell
+          name="isActive"
+          className="flex items-center justify-center"
+          recordId={cell.row.original._id}
+          display={() => (
+            <Switch
+              className="mx-auto"
+              checked={cell.getValue() as boolean}
+              onCheckedChange={() => {
+                editStatus({
+                  variables: {
+                    _id,
+                  },
+                });
+              }}
+            />
+          )}
+        />
+      );
+    },
   },
 ];
