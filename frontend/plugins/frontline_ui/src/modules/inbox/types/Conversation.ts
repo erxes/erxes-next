@@ -11,7 +11,7 @@ export interface IConversation {
   customerId?: string;
   integrationId?: string;
   brandId?: string;
-  readUserIds: string[];
+  readUserIds?: string[];
   assignedUserId?: string;
   tagIds?: string[];
   status?: ConversationStatus;
