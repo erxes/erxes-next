@@ -108,7 +108,6 @@
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.11.20",
     "lodash": "^4.17.21",
-    "lucide-react": "^0.462.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.48",
     "mongoose": "^8.9.6",
