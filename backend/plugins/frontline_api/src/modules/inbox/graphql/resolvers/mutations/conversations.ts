@@ -252,26 +252,24 @@ export const conversationMutations = {
       const actionType = kind?.split('-')[1] || 'unknown';
 
       const payload = {
-        integrationId,
-        conversationId,
-        content,
-        internal,
-        attachments,
-        extraInfo,
-        userId,
-      };
-
-      const data = {
         action: `reply-${actionType}`,
         type: serviceName,
-        payload: JSON.stringify(payload),
+        payload: JSON.stringify({
+          integrationId,
+          conversationId,
+          content,
+          internal,
+          attachments,
+          extraInfo,
+          userId,
+        }),
         integrationId,
       };
 
       const response = await dispatchConversationToService(
         subdomain,
         serviceName,
-        data,
+        payload,
       );
 
       // Case: external service handled it, do not save locally
