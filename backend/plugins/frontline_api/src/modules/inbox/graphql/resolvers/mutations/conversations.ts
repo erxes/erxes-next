@@ -5,11 +5,17 @@ import QueryBuilder, { IListArgs } from '~/conversationQueryBuilder';
 import { CONVERSATION_STATUSES } from '@/inbox/db/definitions/constants';
 import { generateModels, IContext, IModels } from '~/connectionResolvers';
 import { IConversationMessageAdd } from '@/inbox/@types/conversationMessages';
-import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { AUTO_BOT_MESSAGES } from '@/inbox/db/definitions/constants';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { handleFacebookIntegration } from '@/integrations/facebook/messageBroker';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
+
+interface DispatchConversationData {
+  action: string;
+  type: string;
+  payload: string;
+  integrationId: string;
+}
 
 /**
  * conversation notrification receiver ids
@@ -17,12 +23,12 @@ import { graphqlPubsub } from 'erxes-api-shared/utils';
 export const dispatchConversationToService = async (
   subdomain: string,
   serviceName: string,
-  payload: object,
+  data: DispatchConversationData,
 ) => {
   try {
     switch (serviceName) {
       case 'facebook':
-        return await handleFacebookIntegration({ subdomain, data: payload });
+        return await handleFacebookIntegration({ subdomain, data });
 
       case 'instagram':
         // TODO: Implement Instagram logic
@@ -202,7 +208,6 @@ export const conversationMutations = {
         _id: conversation.integrationId,
       });
 
-
       const { _id: integrationId } = integration;
       const { _id: conversationId } = conversation;
       const { content = '', internal, attachments = [], extraInfo } = doc;
@@ -249,25 +254,23 @@ export const conversationMutations = {
       const serviceName = integration.kind.split('-')[0];
       const actionType = kind?.split('-')[1] || 'unknown';
 
-      const payload = {
-        action: `reply-${actionType}`,
-        type: serviceName,
-        payload: JSON.stringify({
-          integrationId,
-          conversationId,
-          content,
-          internal,
-          attachments,
-          extraInfo,
-          userId,
-        }),
-        integrationId,
-      };
-
       const response = await dispatchConversationToService(
         subdomain,
         serviceName,
-        payload,
+        {
+          action: `reply-${actionType}`,
+          type: serviceName,
+          payload: JSON.stringify({
+            integrationId,
+            conversationId,
+            content,
+            internal,
+            attachments,
+            extraInfo,
+            userId,
+          }),
+          integrationId,
+        },
       );
 
       // Case: external service handled it, do not save locally
