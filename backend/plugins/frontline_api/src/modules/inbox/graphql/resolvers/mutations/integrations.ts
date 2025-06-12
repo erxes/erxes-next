@@ -31,12 +31,6 @@ export const sendCreateIntegration = async (
     if (kindParts.length < 2) {
       throw new Error(`Invalid integration kind format: ${integration.kind}`);
     }
-    // const data = {
-    // action: `reply-${kindParts[1]}`,
-    //   type: serviceName,
-    //   payload: JSON.stringify(payload),
-    //   integrationId: integration._id,
-    // };
     switch (serviceName) {
       case 'facebook':
         return await facebookCreateIntegrations({ subdomain, data: payload });

@@ -13,7 +13,8 @@ import { graphqlPubsub } from 'erxes-api-shared/utils';
 
 /**
  * conversation notrification receiver ids
- */ export const dispatchConversationToService = async (
+ */
+export const dispatchConversationToService = async (
   subdomain: string,
   serviceName: string,
   payload: object,
@@ -214,11 +215,10 @@ export const conversationMutations = {
         conversations: [conversation],
         type: 'conversationAddMessage',
         mobile: true,
-        messageContent: doc.content,
+        messageContent: content,
       });
 
       const { kind } = integration;
-
       const customer = await sendTRPCMessage({
         pluginName: 'core',
         method: 'query',
@@ -230,11 +230,11 @@ export const conversationMutations = {
       if (!customer) {
         throw new Error('Customer not found for the conversation');
       }
-      // if conversation's integration kind is form then send reply to
-      // customer's email
-      const email = customer ? customer.primaryEmail : '';
 
-      if (!doc.internal && kind === 'lead' && email) {
+      const email = customer.primaryEmail;
+
+      // Send auto-reply email for lead forms
+      if (!internal && kind === 'lead' && email) {
         await sendTRPCMessage({
           pluginName: 'core',
           method: 'mutation',
@@ -243,14 +243,13 @@ export const conversationMutations = {
           input: {
             toEmails: [email],
             title: 'Reply',
-            template: {
-              data: doc.content,
-            },
+            template: { data: content },
           },
         });
       }
 
       const serviceName = integration.kind.split('-')[0];
+      const actionType = kind?.split('-')[1] || 'unknown';
 
       const payload = {
         integrationId,
@@ -261,8 +260,6 @@ export const conversationMutations = {
         extraInfo,
         userId,
       };
-
-      const actionType = kind?.split('-')[1] || 'unknown';
 
       const data = {
         action: `reply-${actionType}`,
@@ -276,42 +273,45 @@ export const conversationMutations = {
         serviceName,
         data,
       );
-      // if the service runs separately & returns data, then don't save message inside inbox
-      if (response?.data?.data && response) {
+
+      // Case: external service handled it, do not save locally
+      if (response?.data?.data) {
         const { conversationId, content } = response.data.data;
-        if (!!conversationId && !!content) {
+
+        if (conversationId && content) {
           await models.Conversations.updateConversation(conversationId, {
             content: content || '',
             updatedAt: new Date(),
           });
         }
+
         const message = await models.ConversationMessages.addMessage(
           doc,
-          user._id,
+          userId,
         );
-
         const dbMessage = await models.ConversationMessages.getMessage(
           message._id,
         );
 
-        // Publishing both admin & client
         publishMessage(models, dbMessage, conversation.customerId);
-
         return dbMessage;
       }
 
-      // // do not send internal message to third service integrations
-      if (doc.internal) {
-        const messageObj = await models.ConversationMessages.addMessage(
-          doc,
-          user._id,
-        );
+      //  Fallback: always save message locally if not already handled
+      const message = await models.ConversationMessages.addMessage(doc, userId);
+      const dbMessage = await models.ConversationMessages.getMessage(
+        message._id,
+      );
 
-        // publish new message to conversation detail
-        publishMessage(models, messageObj);
-
-        return messageObj;
+      if (internal) {
+        // Internal message: only publish to admins
+        publishMessage(models, dbMessage);
+      } else {
+        // Normal message: publish to both admin and client
+        publishMessage(models, dbMessage, conversation.customerId);
       }
+
+      return dbMessage;
     } catch (err) {
       console.error('conversationMessageAdd error:', err);
       throw new Error(`Failed to add message to conversation: ${err.message}`);
