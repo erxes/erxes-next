@@ -6,7 +6,7 @@ import {
   EdgeProps,
   getBezierPath,
 } from '@xyflow/react';
-import { Button } from 'erxes-ui/components';
+import { Button } from 'erxes-ui';
 import { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 

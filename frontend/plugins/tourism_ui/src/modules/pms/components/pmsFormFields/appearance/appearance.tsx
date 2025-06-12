@@ -3,7 +3,7 @@ import { Button, Form, Input, Upload } from 'erxes-ui';
 import PmsFormFieldsLayout from '../PmsFormFieldsLayout';
 import Heading from '../../ui/heading';
 import { IconPlus, IconTrash, IconUpload } from '@tabler/icons-react';
-import { PmsBranchFormType } from '~/modules/pms/constants/formSchema';
+import { PmsBranchFormType } from '@/pms/constants/formSchema';
 
 const Appearance = ({ control }: { control: Control<PmsBranchFormType> }) => {
   return (

@@ -4,13 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { IconPlus } from '@tabler/icons-react';
 import { syncCardSettingsAtom } from '../../states/posCategory';
-import { IPosDetail } from '~/modules/pos-detail.tsx/types/IPos';
 
-interface SyncCardFormProps {
-  posDetail: IPosDetail;
-}
-
-export default function SyncCardForm({ posDetail }: SyncCardFormProps) {
+export default function SyncCardForm() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom);
 

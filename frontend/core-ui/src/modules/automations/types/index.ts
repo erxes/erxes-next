@@ -1,4 +1,4 @@
-import { IAction, ITrigger } from 'ui-modules/modules/automations';
+import { IAction, ITrigger } from 'ui-modules';
 
 export interface AutomationConstants {
   triggersConst: ITrigger[];

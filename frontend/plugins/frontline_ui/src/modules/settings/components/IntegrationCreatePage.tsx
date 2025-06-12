@@ -1,5 +1,5 @@
 import React from 'react';
-import { IntegrationSettings } from '~/modules/settings/components/IntegrationSettings';
+import { IntegrationSettings } from '@/settings/components/IntegrationSettings';
 
 export const IntegrationCreatePage = () => {
   return (

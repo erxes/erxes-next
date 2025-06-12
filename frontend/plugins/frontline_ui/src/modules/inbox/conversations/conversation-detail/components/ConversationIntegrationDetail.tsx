@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { IntegrationKind } from '@/types/Integration';
+import { IntegrationType } from '@/types/Integration';
 import { useConversationContext } from '../hooks/useConversationContext';
 const IMapConversationDetail = lazy(() =>
   import('@/integrations/imap/components/ImapConversationDetail').then(
@@ -24,11 +24,11 @@ export const ConversationIntegrationDetail = () => {
 
   return (
     <Suspense fallback={<div />}>
-      {integration?.kind === IntegrationKind.IMAP && <IMapConversationDetail />}
-      {integration?.kind === IntegrationKind.FACEBOOK_POST && (
+      {integration?.kind === IntegrationType.IMAP && <IMapConversationDetail />}
+      {integration?.kind === IntegrationType.FACEBOOK_POST && (
         <FbPostConversationDetail />
       )}
-      {integration?.kind === IntegrationKind.FACEBOOK_MESSENGER && (
+      {integration?.kind === IntegrationType.FACEBOOK_MESSENGER && (
         <FbMessengerConversationDetail />
       )}
     </Suspense>

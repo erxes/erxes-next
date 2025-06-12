@@ -1,7 +1,6 @@
 import {
   IconShoppingCart,
   IconBookmarks,
-  IconLogs,
   IconChartPie,
   IconMagnet,
   IconUser,
@@ -11,7 +10,7 @@ import {
   IconAffiliate,
   IconReport,
 } from '@tabler/icons-react';
-import { IUIConfig } from 'erxes-ui/types';
+import { IUIConfig } from 'erxes-ui';
 
 export const CORE_MODULES: IUIConfig['modules'] = [
   {
