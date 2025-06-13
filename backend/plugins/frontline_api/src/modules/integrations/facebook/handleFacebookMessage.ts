@@ -128,7 +128,7 @@ export const handleFacebookMessage = async (
       }
 
       // Send notification about the reply to relevant users/devices
-      sendNotifications(subdomain, {
+      sendNotifications({
         user,
         conversations: [inboxConversation],
         type: 'conversationStateChange',
