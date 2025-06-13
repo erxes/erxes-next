@@ -59,7 +59,8 @@ export const useCustomers = (options?: OperationVariables) => {
 };
 
 interface ICustomerInlineData {
-  customers: ICustomer[];
+  customers: { list: ICustomer[]};
+
 }
 
 export const useCustomersInline = (options?: OperationVariables) => {
@@ -67,5 +68,5 @@ export const useCustomersInline = (options?: OperationVariables) => {
     GET_ASSIGNED_CUSTOMERS,
     options,
   );
-  return { customers: data?.customers, loading, error };
+  return { customers: data?.customers.list, loading, error };
 };

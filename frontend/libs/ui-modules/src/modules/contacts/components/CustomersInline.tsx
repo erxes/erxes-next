@@ -102,7 +102,7 @@ const CustomersInlineAvatar = ({ className, ...props }: AvatarProps) => {
   const renderAvatar = (customer: ICustomer) => {
     const { avatar, firstName, lastName } = customer;
 
-    const fullName = `${firstName} ${lastName}`;
+    const fullName = `${firstName || ''} ${lastName || ''}`;
 
     return (
       <Tooltip delayDuration={100}>

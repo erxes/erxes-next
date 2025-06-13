@@ -327,7 +327,38 @@ export const SelectMemberDetail = ({
   );
 };
 
-export const SelectMember = {
+export const SelectMemberRoot = ({
+  onValueChange,
+  className,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
+  className?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectMember.Provider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.Trigger
+          className={cn('w-full inline-flex', className)}
+          variant="outline"
+        >
+          <SelectMember.Value size="lg" />
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <SelectMember.Content />
+        </Combobox.Content>
+      </Popover>
+    </SelectMember.Provider>
+  );
+};
+
+export const SelectMember = Object.assign(SelectMemberRoot, {
   Provider: SelectMemberProvider,
   Value: SelectMemberValue,
   Content: SelectMemberContent,
@@ -337,4 +368,4 @@ export const SelectMember = {
   InlineCell: SelectMemberInlineCell,
   FormItem: SelectMemberFormItem,
   Detail: SelectMemberDetail,
-};
+});

@@ -91,7 +91,7 @@ const SelectBrandTrigger = React.forwardRef<
 >(({ currentName, className, ...props }, ref) => {
   return (
     <Combobox.Trigger
-      className={cn('w-full flex', className)}
+      className={cn('w-full flex shadow-none', className)}
       ref={ref}
       {...props}
     >

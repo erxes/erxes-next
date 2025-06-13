@@ -68,7 +68,20 @@ export const GET_BRANCHES_MAIN = gql`
         order
         userCount
       }
+      totalCount
       ${GQL_PAGE_INFO}
+    }
+  }
+`;
+
+export const ASSIGNED_BRANCHES = gql`
+  query assignedBranches($ids: [String]) {
+    branchesMain(ids: $ids) {
+      list {
+        _id
+        title
+        code
+      }
     }
   }
 `;
