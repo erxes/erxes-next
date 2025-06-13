@@ -2,13 +2,21 @@ import { MainNavigationBar } from '@/navigation/components/MainNavigationBar';
 import { SettingsSidebar } from '@/settings/components/SettingsSidebar';
 import { Sidebar } from 'erxes-ui';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAtom } from 'jotai';
 import { Outlet, useLocation } from 'react-router';
+import { mainSidebarOpenState } from '../states/mainSidebarState';
 
 export const DefaultLayout = () => {
   const location = useLocation();
   const isSettings = location.pathname.includes('/settings');
+  const [mainSidebarOpen, setMainSidebarOpen] = useAtom(mainSidebarOpenState);
+
   return (
-    <Sidebar.Provider className="w-screen">
+    <Sidebar.Provider
+      className="w-screen"
+      open={mainSidebarOpen}
+      onOpenChange={setMainSidebarOpen}
+    >
       <Sidebar collapsible="offcanvas" variant="sidebar" className="p-0">
         <SidebarAnimationContainer isSettings={isSettings}>
           {isSettings ? <SettingsSidebar /> : <MainNavigationBar />}

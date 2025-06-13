@@ -1,5 +1,3 @@
-// Dependencies: pnpm install lucide-react
-
 import { IconCheck, IconMinus } from '@tabler/icons-react';
 
 import { RadioGroup } from 'erxes-ui';

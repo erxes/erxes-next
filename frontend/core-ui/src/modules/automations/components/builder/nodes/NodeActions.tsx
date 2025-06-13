@@ -1,6 +1,5 @@
-import { IconDotsVertical, IconEdit } from '@tabler/icons-react';
+import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
-import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useFormContext, UseFormSetValue } from 'react-hook-form';
 import { NodeData } from '../../../types';
@@ -78,7 +77,7 @@ export const NodeDropdownActions = ({
           <AlertDialog>
             <AlertDialog.Trigger asChild>
               <Button variant="ghost" className="w-full justify-start">
-                <Trash2 className="h-4 w-4 text-red-500" />
+                <IconTrash className="h-4 w-4 text-red-500" />
                 Delete
               </Button>
             </AlertDialog.Trigger>

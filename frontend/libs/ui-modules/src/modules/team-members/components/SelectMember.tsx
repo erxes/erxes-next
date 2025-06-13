@@ -19,6 +19,7 @@ import {
 import { IUser } from '../types/TeamMembers';
 import { IconUser } from '@tabler/icons-react';
 import { MembersInline } from './MembersInline';
+import React from 'react';
 import { currentUserState } from 'ui-modules/states';
 import { useAtomValue } from 'jotai';
 import { useDebounce } from 'use-debounce';
@@ -297,13 +298,11 @@ export const SelectMemberFormItem = ({
   );
 };
 
-export const SelectMemberDetail = ({
-  onValueChange,
-  className,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
-  className?: string;
-}) => {
+export const SelectMemberDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> &
+    React.ComponentProps<typeof Combobox.Trigger>
+>(({ onValueChange, className, mode, value, ...props }, ref) => {
   const [open, setOpen] = useState(false);
   return (
     <SelectMember.Provider
@@ -311,12 +310,15 @@ export const SelectMemberDetail = ({
         onValueChange?.(value);
         setOpen(false);
       }}
-      {...props}
+      mode={mode}
+      value={value}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Combobox.Trigger
+          ref={ref}
           className={cn('w-auto inline-flex', className)}
           variant="ghost"
+          {...props}
         >
           <SelectMember.Value size="lg" />
         </Combobox.Trigger>
@@ -326,7 +328,7 @@ export const SelectMemberDetail = ({
       </Popover>
     </SelectMember.Provider>
   );
-};
+});
 
 export const SelectMember = {
   Provider: SelectMemberProvider,
