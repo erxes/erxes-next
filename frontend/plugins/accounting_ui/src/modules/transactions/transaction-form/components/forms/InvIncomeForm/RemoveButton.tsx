@@ -5,12 +5,10 @@ import { useWatch } from 'react-hook-form';
 
 export const RemoveButton = ({
   form,
-  journalIndex,
-  remove
+  journalIndex
 }: {
   form: ITransactionGroupForm;
   journalIndex: number;
-  remove: (index: number | number[]) => void;
 }) => {
   const details = useWatch({
     control: form.control,
@@ -20,8 +18,7 @@ export const RemoveButton = ({
   if (!details.filter(d => d.checked).length) return null;
 
   const handleRemove = () => {
-    const indexes = details.map((d, ind) => d.checked && ind || -1).filter(d => d > -1)
-    remove(indexes)
+    form.setValue(`trDocs.${journalIndex}.details`, details.filter(d => !d.checked))
   };
 
   return (

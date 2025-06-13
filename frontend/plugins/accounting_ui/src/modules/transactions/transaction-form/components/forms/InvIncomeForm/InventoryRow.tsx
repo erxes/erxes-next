@@ -24,13 +24,12 @@ import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 export const InventoryRow = ({
   detailIndex,
   journalIndex,
-  form
+  form,
 }: {
   detailIndex: number;
   journalIndex: number;
   form: ITransactionGroupForm;
 }) => {
-  console.log(detailIndex, '---')
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`,
@@ -157,7 +156,6 @@ export const InventoryRow = ({
   return (
     <Table.Row
       key={_id}
-      
       className={cn(
         'overflow-hidden h-cell hover:!bg-background',
         detailIndex === 0 && '[&>td]:border-t',
@@ -168,7 +166,7 @@ export const InventoryRow = ({
           className={cn({
             'border-t': detailIndex === 0,
             'rounded-tl-lg': detailIndex === 0,
-            'rounded-bl-lg': detailIndex === trDoc.details.length - 1,            
+            'rounded-bl-lg': detailIndex === trDoc.details.length - 1,
           })}
         >
           <RecordTableCellDisplay className="justify-center">
