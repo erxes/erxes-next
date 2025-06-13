@@ -11,9 +11,7 @@ import { useIsCustomerLeadSessionKey } from '../hooks/useCustomerLeadSessionKey'
 
 export const CustomersHeader = () => {
   const { sessionKey, isLead } = useIsCustomerLeadSessionKey();
-  const setCustomers = useSetAtom(recordTableCursorAtomFamily(sessionKey));
-
-  const setLeads = useSetAtom(recordTableCursorAtomFamily(sessionKey));
+  const setCursor = useSetAtom(recordTableCursorAtomFamily(sessionKey));
 
   return (
     <PageHeader>
@@ -22,7 +20,7 @@ export const CustomersHeader = () => {
           {isLead ? (
             <>
               <Breadcrumb.Page>
-                <Button variant="ghost" asChild onClick={() => setLeads(null)}>
+                <Button variant="ghost" asChild onClick={() => setCursor(null)}>
                   <Link to={`/contacts/${ContactsPath.Leads}`}>
                     <IconMagnetFilled />
                     Leads
@@ -32,11 +30,7 @@ export const CustomersHeader = () => {
             </>
           ) : (
             <Breadcrumb.Page>
-              <Button
-                variant="ghost"
-                asChild
-                onClick={() => setCustomers(null)}
-              >
+              <Button variant="ghost" asChild onClick={() => setCursor(null)}>
                 <Link to={`/contacts/${ContactsPath.Customers}`}>
                   <IconUserFilled />
                   Customers
