@@ -30,7 +30,7 @@ const domain = process.env.DOMAIN ?? 'http://localhost:3001';
 
 const corsOptions = {
   credentials: true,
-  origin: ['http://localhost:3001'],
+  origin: [domain],
 };
 
 const myQueue = new Queue('gateway-service-discovery', {
