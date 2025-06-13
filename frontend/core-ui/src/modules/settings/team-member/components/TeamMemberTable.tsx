@@ -1,15 +1,10 @@
 import { RecordTable } from 'erxes-ui';
-import { Skeleton } from 'erxes-ui';
-import {
-  USERS_PER_PAGE,
-  useUsers,
-} from '@/settings/team-member/hooks/useUsers';
+import { useUsers } from '@/settings/team-member/hooks/useUsers';
 import { teamMemberColumns } from '@/settings/team-member/components/record/TeamMemberColumns';
 
 const TeamMemberTable = () => {
   const { users, handleFetchMore, loading, error, pageInfo } = useUsers();
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   if (error) {
     return (
@@ -28,7 +23,6 @@ const TeamMemberTable = () => {
       <RecordTable.CursorProvider
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
-        loading={loading}
         dataLength={users?.length}
         sessionKey="users_cursor"
       >

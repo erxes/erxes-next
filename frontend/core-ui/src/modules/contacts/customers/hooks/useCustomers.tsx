@@ -6,13 +6,16 @@ import {
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
-  useNonNullMultiQueryState,
   parseDateRangeFromString,
   ICursorListResponse,
+  useMultiQueryState,
 } from 'erxes-ui';
 import { useLocation } from 'react-router-dom';
 import { ContactsPath } from '@/types/paths/ContactsPath';
-import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/customersCursorSessionKey';
+import { useSetAtom } from 'jotai';
+import { customerTotalCountAtom } from '@/contacts/states/customerCounts';
+import { useEffect } from 'react';
+import { useIsCustomerLeadSessionKey } from './useCustomerLeadSessionKey';
 
 const CUSTOMERS_PER_PAGE = 30;
 
@@ -20,17 +23,19 @@ export const useCustomers = (
   options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
 ) => {
   const pathname = useLocation().pathname;
-  const { searchValue, tags, created, updated, lastSeen } =
-    useNonNullMultiQueryState<{
+  const setCustomerTotalCount = useSetAtom(customerTotalCountAtom);
+  const [{ searchValue, tags, created, updated, lastSeen }] =
+    useMultiQueryState<{
       searchValue: string;
       tags: string[];
       created: string;
       updated: string;
       lastSeen: string;
     }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
+  const { sessionKey } = useIsCustomerLeadSessionKey();
 
   const { cursor } = useRecordTableCursor({
-    sessionKey: CUSTOMERS_CURSOR_SESSION_KEY,
+    sessionKey,
   });
 
   const customersQueryVariables = {
@@ -68,6 +73,11 @@ export const useCustomers = (
   );
 
   const { list: customers, pageInfo, totalCount } = data?.customers || {};
+
+  useEffect(() => {
+    if (!totalCount) return;
+    setCustomerTotalCount(totalCount);
+  }, [totalCount]);
 
   const handleFetchMore = ({
     direction,
