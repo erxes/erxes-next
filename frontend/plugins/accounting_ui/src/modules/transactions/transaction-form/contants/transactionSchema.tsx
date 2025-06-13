@@ -45,6 +45,7 @@ export const baseTrDetailSchema = z.object({
   count: z.number().nullish(),
   unitPrice: z.number().nullish(),
 
+  checked: z.boolean().default(false),
   account: z.object({
     _id: z.string(),
     code: z.string(),

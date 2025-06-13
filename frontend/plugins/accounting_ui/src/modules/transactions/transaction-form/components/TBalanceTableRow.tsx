@@ -1,6 +1,6 @@
-import { flexRender } from '@tanstack/react-table';
-import { cn, RecordTable, Table } from 'erxes-ui';
 import React, { useMemo } from 'react';
+import { cn, RecordTable, Table } from 'erxes-ui';
+import { flexRender } from '@tanstack/react-table';
 
 export const TBalanceTableRow = ({
   handleRowViewChange,

@@ -14,7 +14,6 @@ import {
 } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
-// import { InventoryRowCheckbox } from './InventoryRowCheckbox';
 import { JournalEnum } from '@/settings/account/types/Account';
 import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
@@ -30,19 +29,10 @@ export const InventoryRow = ({
   detailIndex: number;
   journalIndex: number;
   form: ITransactionGroupForm;
-  // product: TInventoryProduct & { id: string };
 }) => {
-  // const { selectedProducts, form, inventoriesLength, journalIndex } =
-  //   useInventoryContext();
-
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`,
-  });
-
-  const details = useWatch({
-    control: form.control,
-    name: `trDocs.${journalIndex}.details`,
   });
 
   const detail = useWatch({
@@ -166,24 +156,38 @@ export const InventoryRow = ({
   return (
     <Table.Row
       key={_id}
-      // data-state={
-      //   selectedProducts.includes(product.id) ? 'selected' : 'unselected'
-      // }
       className={cn(
         'overflow-hidden h-cell hover:!bg-background',
         detailIndex === 0 && '[&>td]:border-t',
       )}
     >
-      {/* <Table.Cell
-        className={cn('overflow-hidden', {
-          'rounded-tl-lg border-t': detailIndex === 0,
-          'rounded-bl-lg': detailIndex === details.length - 1,
-        })}
-      >
-        <div className="w-9 flex items-center justify-center">
-          <InventoryRowCheckbox productId={product.id} />
-        </div>
-      </Table.Cell> */}
+      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
+        <Table.Cell
+          className={cn({
+            'border-t': detailIndex === 0,
+            'rounded-tl-lg': detailIndex === 0,
+            'rounded-bl-lg': detailIndex === trDoc.details.length - 1,
+          })}
+        >
+          <RecordTableCellDisplay className="justify-center">
+            <Form.Field
+              control={form.control}
+              name={`trDocs.${journalIndex}.details.${detailIndex}.checked`}
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Control>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
+          </RecordTableCellDisplay>
+        </Table.Cell>
+      </RecordTableHotKeyControl>
 
       <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
@@ -379,7 +383,7 @@ export const InventoryRow = ({
           <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
             <Table.Cell>
               <RecordTablePopover
-                scope={`temp_trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
+                scope={`trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
                 closeOnEnter
               >
                 <Form.Control>
@@ -403,11 +407,11 @@ export const InventoryRow = ({
             <Table.Cell
               className={cn({
                 'border-t': detailIndex === 0,
-                'rounded-br-lg': detailIndex === details.length - 1,
+                'rounded-br-lg': detailIndex === trDoc.details.length - 1,
               })}
             >
               <RecordTablePopover
-                scope={`temp_trDocs.${journalIndex}.details.${detailIndex}.amountWithTax`}
+                scope={`trDocs.${journalIndex}.details.${detailIndex}.amountWithTax`}
                 closeOnEnter
               >
                 <RecordTableCellTrigger>
