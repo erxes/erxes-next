@@ -175,6 +175,11 @@ const getPerValue = async <TModels>({
   ) {
     const [relatedPluginName] = splitType(triggerType);
 
+    if (!relatedPluginName) {
+      // Skip placeholder replacement when triggerType is empty
+      return value;
+    }
+
     value =
       (
         await sendWorkerMessage({

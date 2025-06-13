@@ -201,7 +201,6 @@ const SideBarContent = ({
             );
 
           const updatedProps = {
-            key: index,
             rule,
             handleChange,
             remove: handleRemove,
@@ -211,7 +210,7 @@ const SideBarContent = ({
             operatorOptions: operators,
           };
 
-          return <Rule {...updatedProps} />;
+          return <Rule key={index} {...updatedProps} />;
         })}
 
         <Button className="w-full" variant="secondary" onClick={addRule}>

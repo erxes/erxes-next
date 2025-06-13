@@ -123,7 +123,7 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
         | `detail.actions` = `detail.${nodeType}s`;
       const nodes = watch(fieldName) || [];
 
-      const id = getNewId(actions.map((a) => a.id));
+      const id = getNewId([...triggers, ...actions].map((a) => a.id));
       // Create a new node
       const newNode: Node<NodeData> = {
         id,
@@ -232,8 +232,8 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
         }
       };
 
-      if (target?.parentId && connection?.source && target.id) {
-      }
+      // if (target?.parentId && connection?.source && target.id) {
+      // }
 
       if (!target) {
         return false;

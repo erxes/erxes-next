@@ -30,7 +30,7 @@ import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';
 import {
   useSendEmailCustomMailField,
   useSendEmailSidebarForm,
-} from '../hooks/useSendEmailSidbarForm';
+} from '../hooks/useSendEmailSidebarForm';
 
 const ConfigRow = ({
   title,
@@ -148,7 +148,7 @@ const SendEmailConfigurationForm = ({
       </ConfigRow>
 
       <ConfigRow
-        title="Reciepent"
+        title="Recipient"
         buttonText="select recipients"
         subContent="Who is reciepents"
         isDone={[
@@ -317,7 +317,7 @@ const NodeContent = ({ config }: any) => {
               </Button>
             </Popover.Trigger>
             <Popover.Content>
-              <Label>Reciepent emails</Label>
+              <Label>Recipient emails</Label>
               <ReciepentEmails config={config} />
             </Popover.Content>
           </Popover>
