@@ -1,35 +1,47 @@
-import { OperationVariables, useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_COMPANIES } from '../graphql/queries/getCompanies';
+import { ICompany } from '../types';
+import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
-export const useCompanies = (options?: OperationVariables) => {
+export const useCompanies = (
+  options?: QueryHookOptions<ICursorListResponse<ICompany>>,
+) => {
   const COMPANIES_PER_PAGE = 30;
-  const { data, loading, fetchMore, error } = useQuery(GET_COMPANIES, {
+  const { data, loading, fetchMore, error } = useQuery<
+    ICursorListResponse<ICompany>
+  >(GET_COMPANIES, {
     ...options,
     variables: {
       perPage: COMPANIES_PER_PAGE,
       ...options?.variables,
     },
   });
-  const companies = data?.companiesMain?.list;
-  const totalCount = data?.companiesMain?.totalCount;
+
+  const {
+    list: companies = [],
+    totalCount = 0,
+    pageInfo,
+  } = data?.companies || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= companies?.length) return;
+    if (totalCount <= companies?.length) {
+      return;
+    }
     fetchMore({
       variables: {
         ...options?.variables,
-        page: Math.ceil((companies?.length || 1) / COMPANIES_PER_PAGE) + 1,
-        perPage: COMPANIES_PER_PAGE,
+        direction: EnumCursorDirection.FORWARD,
+        cursor: pageInfo?.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          companiesMain: {
+          companies: {
             list: [
-              ...(prev.companiesMain?.list || []),
-              ...fetchMoreResult.companiesMain.list,
+              ...(prev.companies?.list || []),
+              ...fetchMoreResult.companies.list,
             ],
-            totalCount: fetchMoreResult.companiesMain.totalCount,
+            totalCount: fetchMoreResult.companies.totalCount,
           },
         });
       },
