@@ -1,20 +1,18 @@
-import { OperationVariables, useQuery } from '@apollo/client';
+import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
 import {
   GET_ASSIGNED_CUSTOMERS,
   GET_CUSTOMERS,
 } from '../graphql/queries/getCustomers';
 import { ICustomer } from '../types';
-import { EnumCursorDirection } from 'erxes-ui';
+import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
 const CUSTOMERS_LIMIT = 30;
-export const useCustomers = (options?: OperationVariables) => {
-  const { data, loading, fetchMore, error } = useQuery<{
-    customers: {
-      list: ICustomer[];
-      totalCount: number;
-      pageInfo: { endCursor: string };
-    };
-  }>(GET_CUSTOMERS, {
+export const useCustomers = (
+  options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
+) => {
+  const { data, loading, fetchMore, error } = useQuery<
+    ICursorListResponse<ICustomer>
+  >(GET_CUSTOMERS, {
     ...options,
     variables: {
       limit: CUSTOMERS_LIMIT,
@@ -58,12 +56,10 @@ export const useCustomers = (options?: OperationVariables) => {
   };
 };
 
-interface ICustomerInlineData {
-  customers?: { list: ICustomer[] };
-}
-
-export const useCustomersInline = (options?: OperationVariables) => {
-  const { data, loading, error } = useQuery<ICustomerInlineData>(
+export const useCustomersInline = (
+  options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
+) => {
+  const { data, loading, error } = useQuery<ICursorListResponse<ICustomer>>(
     GET_ASSIGNED_CUSTOMERS,
     options,
   );

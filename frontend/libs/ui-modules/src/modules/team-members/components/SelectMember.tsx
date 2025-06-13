@@ -102,6 +102,7 @@ const SelectMemberCommandItem = ({ user }: { user: IMember }) => {
       }}
     >
       <MembersInline
+        memberIds={memberIds}
         members={[
           {
             ...user,

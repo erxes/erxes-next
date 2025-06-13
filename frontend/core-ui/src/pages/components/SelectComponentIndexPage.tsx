@@ -1,10 +1,10 @@
 import {
   SelectBranches,
-  SelectCompanies, //
-  SelectCustomers, //
+  SelectCompanies,
+  SelectCustomers,
   SelectProducts,
-  SelectMember, //
-  SelectTags, //
+  SelectMember,
+  SelectTags, 
 } from 'ui-modules';
 import { PageContainer, Switch, Tooltip } from 'erxes-ui';
 import { useState } from 'react';

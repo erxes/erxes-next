@@ -1,20 +1,18 @@
-import { OperationVariables, useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import {
   GET_ASSIGNED_PRODUCTS,
   GET_PRODUCTS,
 } from '../graphql/queries/getProducts';
 import { IProduct } from '../types/Product';
-import { EnumCursorDirection } from 'erxes-ui';
+import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
 const PRODUCTS_LIMIT = 30;
-export const useProducts = (options?: OperationVariables) => {
-  const { data, loading, fetchMore, error } = useQuery<{
-    productsMain: {
-      list: IProduct[];
-      totalCount: number;
-      pageInfo: { endCursor: string };
-    };
-  }>(GET_PRODUCTS, {
+export const useProducts = (
+  options?: QueryHookOptions<ICursorListResponse<IProduct>>,
+) => {
+  const { data, loading, fetchMore, error } = useQuery<
+    ICursorListResponse<IProduct>
+  >(GET_PRODUCTS, {
     ...options,
     variables: {
       limit: PRODUCTS_LIMIT,
@@ -55,12 +53,9 @@ export const useProducts = (options?: OperationVariables) => {
   };
 };
 
-interface IProductInlineData {
-  productsMain?: { list: IProduct[] };
-}
 
-export const useProductsInline = (options?: OperationVariables) => {
-  const { data, loading, error } = useQuery<IProductInlineData>(
+export const useProductsInline = (options?: QueryHookOptions<ICursorListResponse<IProduct>>) => {
+  const { data, loading, error } = useQuery<ICursorListResponse<IProduct>>(
     GET_ASSIGNED_PRODUCTS,
     options,
   );
