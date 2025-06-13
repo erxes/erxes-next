@@ -12,8 +12,9 @@ import { MessageInput } from './MessageInput';
 
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
 import { InboxMessagesSkeleton } from '@/inbox/components/InboxMessagesSkeleton';
-import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
+import { useIntegrationInline } from '@/integrations/hooks/useIntegrations';
 import { NoConversationSelected } from './NoConversationSelected';
+import { ConversationMarkAsReadEffect } from './ConversationMarkAsReadEffect';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -32,7 +33,7 @@ export const ConversationDetail = () => {
 
   const { integrationId } = currentConversation || conversationDetail || {};
 
-  const { integration, loading: integrationLoading } = useIntegrationDetail({
+  const { integration, loading: integrationLoading } = useIntegrationInline({
     variables: {
       _id: integrationId,
     },
@@ -77,6 +78,7 @@ export const ConversationDetail = () => {
               )}
             <ConversationIntegrationDetail />
           </ConversationDetailLayout>
+          <ConversationMarkAsReadEffect />
         </ConversationContext.Provider>
       </div>
     </div>

@@ -1,13 +1,10 @@
-import { OperationVariables, useMutation } from '@apollo/client';
+import { MutationHookOptions, useMutation } from '@apollo/client';
 import { CONVERSATION_ASSIGN } from '@/inbox/conversations/graphql/mutations/conversationAssign';
 
-export const useAssignConversations = (options?: OperationVariables) => {
-  const [assignConversations, { loading }] = useMutation(
-    CONVERSATION_ASSIGN,
-    options,
-  );
+export const useAssignConversations = () => {
+  const [assignConversations, { loading }] = useMutation(CONVERSATION_ASSIGN);
 
-  const handleAssignConversations = (options: OperationVariables) => {
+  const handleAssignConversations = (options: MutationHookOptions) => {
     assignConversations({
       ...options,
       update: (cache) => {

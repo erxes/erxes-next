@@ -1,5 +1,14 @@
 import { useChannelsByMembers } from '@/inbox/channel/hooks/useChannels';
-import { Button, Collapsible, Skeleton, TextOverflowTooltip } from 'erxes-ui';
+import {
+  Button,
+  cn,
+  Collapsible,
+  Command,
+  Input,
+  ScrollArea,
+  Skeleton,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { IChannel } from '@/inbox/types/Channel';
 import { useMultiQueryState } from 'erxes-ui';
@@ -43,9 +52,22 @@ const ChooseChannelContent = ({ open }: { open: boolean }) => {
       </div>
     );
 
-  return channels?.map((channel: IChannel) => (
-    <ChannelItem key={channel._id} {...channel} />
-  ));
+  return (
+    <Command>
+      <div className="p-1 pb-2">
+        <Command.Primitive.Input placeholder="Search channels" asChild>
+          <Input variant="secondary" />
+        </Command.Primitive.Input>
+      </div>
+      <ScrollArea className="max-h-[70vh]">
+        <Command.List>
+          {channels?.map((channel: IChannel) => (
+            <ChannelItem key={channel._id} {...channel} />
+          ))}
+        </Command.List>
+      </ScrollArea>
+    </Command>
+  );
 };
 
 const ChannelItem = ({ _id, name }: IChannel) => {
@@ -63,15 +85,17 @@ const ChannelItem = ({ _id, name }: IChannel) => {
     });
 
   return (
-    <Button
-      key={_id}
-      variant={isActive ? 'secondary' : 'ghost'}
-      className="w-full justify-start pl-7 relative text-left"
-      onClick={handleClick}
+    <Command.Item
+      value={name}
+      onSelect={handleClick}
+      className={cn(
+        'w-full justify-start pl-7 pr-2 relative text-left',
+        isActive && 'bg-muted',
+      )}
     >
       {isActive && <IconCheck className="absolute left-1.5" />}
       <TextOverflowTooltip value={name} />
-      <span className="ml-auto text-xs text-accent-foreground">0</span>
-    </Button>
+      <span className="ml-auto text-xs text-accent-foreground pr-2">0</span>
+    </Command.Item>
   );
 };
