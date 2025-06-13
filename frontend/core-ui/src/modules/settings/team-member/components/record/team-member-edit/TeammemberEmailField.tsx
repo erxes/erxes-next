@@ -12,7 +12,7 @@ import {
 } from 'erxes-ui';
 import React, { useState } from 'react';
 
-export const TeammemberEmailField = ({
+export const TeamMemberEmailField = ({
   cell,
 }: {
   cell: Cell<IUser, unknown>;

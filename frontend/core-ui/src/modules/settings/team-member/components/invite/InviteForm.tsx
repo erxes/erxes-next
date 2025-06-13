@@ -43,7 +43,7 @@ export function InviteForm({
         console.error('Error submitting form:', error);
       }
     },
-    [handleInvitations, setIsOpen],
+    [handleInvitations, setIsOpen, toast],
   );
 
   return (

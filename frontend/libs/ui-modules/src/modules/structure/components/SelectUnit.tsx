@@ -74,7 +74,7 @@ export const SelectUnitCommand = ({
     },
     skip: !!noUnitSearchValue && debouncedSearch.includes(noUnitSearchValue),
     onCompleted(data) {
-      const { totalCount } = data?.positionsMain || {};
+      const { totalCount } = data?.unitsMain || {};
       setNoUnitSearchValue(totalCount === 0 ? debouncedSearch : '');
     },
   });
@@ -158,9 +158,8 @@ export const SelectUnitValue = ({ placeholder }: { placeholder?: string }) => {
   const { selectedUnit, value, setSelectedUnit, onSelect } =
     useSelectUnitContext();
 
-  console.log('placeholder', placeholder, !value || value === undefined);
   if (!value || value === undefined) {
-    <Combobox.Value placeholder={placeholder || ''} />;
+    return <Combobox.Value placeholder={placeholder || ''} />;
   }
 
   return (
@@ -214,7 +213,7 @@ export const SelectUnitInlineCell = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
-          <SelectUnitValue placeholder='"Select unit"' />
+          <SelectUnitValue placeholder="Select unit" />
         </RecordTableCellTrigger>
         <RecordTableCellContent className="min-w-72">
           <SelectUnitContent />
@@ -295,7 +294,7 @@ export const SelectUnitFormItem = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <SelectUnit.Provider
+    <SelectUnitProvider
       onValueChange={(value) => {
         onValueChange?.(value);
         setOpen(false);
@@ -305,15 +304,15 @@ export const SelectUnitFormItem = ({
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
           <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectUnit.Value placeholder="Select unit" />
+            <SelectUnitValue placeholder="Select unit" />
           </Combobox.Trigger>
         </Form.Control>
 
         <Combobox.Content>
-          <SelectUnit.Content />
+          <SelectUnitContent />
         </Combobox.Content>
       </Popover>
-    </SelectUnit.Provider>
+    </SelectUnitProvider>
   );
 };
 

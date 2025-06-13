@@ -30,9 +30,10 @@ import { renderingTeamMemberDetailAtom } from '../../states/renderingTeamMemberD
 import { SelectPositions } from 'ui-modules';
 import { useUserEdit, useUsersStatusEdit } from '../../hooks/useUserEdit';
 import { ChangeEvent, useState } from 'react';
-import { TeammemberEmailField } from './team-member-edit/TeammemberEmailField';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { format } from 'date-fns';
+import { TeamMemberEmailField } from './team-member-edit/TeammemberEmailField';
+import { ApolloError } from '@apollo/client';
 
 export const UserMoreColumnCell = ({
   cell,
@@ -115,6 +116,8 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
                   lastName: _lastName,
                 },
               },
+              onError: (error: ApolloError) =>
+                console.error('Failed to update user details:', error),
             },
             ['details'],
           );
@@ -214,7 +217,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     id: 'email',
     accessorKey: 'email',
     header: () => <RecordTable.InlineHead icon={IconMail} label="Email" />,
-    cell: ({ cell }) => <TeammemberEmailField cell={cell} />,
+    cell: ({ cell }) => <TeamMemberEmailField cell={cell} />,
     size: 250,
   },
   ...['employeeId'].map((field) => ({

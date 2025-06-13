@@ -25,7 +25,7 @@ export type ISelectBranchesProviderProps = {
   onValueChange?: (Branches?: string[] | string) => void;
   mode?: 'single' | 'multiple';
   children: React.ReactNode;
-  options?: (newSelectedBrancheIds: string[]) => MutationHookOptions<
+  options?: (newSelectedBranchIds: string[]) => MutationHookOptions<
     {
       BranchesMain: {
         totalCount: number;

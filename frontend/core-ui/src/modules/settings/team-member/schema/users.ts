@@ -7,7 +7,14 @@ const USER_DETAIL_SCHEMA = z.object({
       message: 'Please fill a valid email address',
     })
     .default(''),
-  username: z.string({ required_error: 'Username required' }),
+  username: z
+    .string({ required_error: 'Username required' })
+    .min(3, 'Username must be at least 3 characters')
+    .max(30, 'Username must not exceed 30 characters')
+    .regex(
+      /^[a-zA-Z0-9_-]+$/,
+      'Username can only contain letters, numbers, hyphens, and underscores',
+    ),
   employeeId: z.string().optional().nullable(),
   details: z.object({
     firstName: z.string(),

@@ -112,7 +112,7 @@ export const SelectPositionsCommand = ({
       <Command.Input
         value={search}
         onValueChange={setSearch}
-        placeholder="Search positons"
+        placeholder="Search positions"
         focusOnMount
       />
       {selectedPositions?.length > 0 && (
@@ -373,7 +373,7 @@ export const SelectPositionsFormItem = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <SelectPositions.Provider
+    <SelectPositionsProvider
       onValueChange={(value) => {
         onValueChange?.(value);
         setOpen(false);
@@ -383,15 +383,15 @@ export const SelectPositionsFormItem = ({
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
           <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectPositions.Value />
+            <SelectPositionsValue />
           </Combobox.Trigger>
         </Form.Control>
 
         <Combobox.Content>
-          <SelectPositions.Content />
+          <SelectPositionsContent />
         </Combobox.Content>
       </Popover>
-    </SelectPositions.Provider>
+    </SelectPositionsProvider>
   );
 };
 
