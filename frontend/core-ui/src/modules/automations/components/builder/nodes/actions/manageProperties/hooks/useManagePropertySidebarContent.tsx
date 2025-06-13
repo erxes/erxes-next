@@ -14,15 +14,14 @@ export const useManagePropertySidebarContent = (
   const fieldName: IManagePropertyFieldName = `detail.actions.${currentActionIndex}.config`;
   const { setValue, watch, control } = useFormContext<TAutomationProps>();
   const { actions = [], triggers = [] } = watch('detail');
-  const module = watch(`${fieldName}.module`);
+  const config = watch(fieldName) as IConfig;
+  const { module, rules = [{ field: '', operator: '' }] } = config || {};
   const propertyType =
     module || getContentType(currentAction, actions, triggers);
 
   const { propertyTypes, fields, loading } = getFieldsProperties(propertyType);
 
   const groups = groupFieldsByType(fields || []);
-  const config = watch(fieldName) as IConfig;
-  const { rules = [{ field: '', operator: '' }] } = config || {};
 
   const addRule = () => {
     setValue(fieldName, {

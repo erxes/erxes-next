@@ -21,15 +21,18 @@ export const useDelay = (currentActionIndex: number) => {
       intervalType = newType;
     };
 
-    if (numericValue < 1) {
-      // Fall back to previous interval if user inputs 0 or negative
+    if (numericValue < 0) {
+      // Negative is invalid, downgrade
       if (type === 'hour') set('1', 'minute');
       else if (type === 'day') set('1', 'hour');
       else if (type === 'month') set('1', 'day');
       else if (type === 'year') set('1', 'month');
-      else set('1', 'minute'); // default case
+      else set('1', 'minute');
+    } else if (numericValue === 0) {
+      // Keep 0 if you consider it valid
+      set('0', type);
     } else {
-      // Handle upward overflow (e.g., 60 minutes => 1 hour)
+      // Overflow handling
       if (type === 'minute' && numericValue >= 60) set('1', 'hour');
       else if (type === 'hour' && numericValue >= 24) set('1', 'day');
       else if (type === 'day' && numericValue >= 31) set('1', 'month');

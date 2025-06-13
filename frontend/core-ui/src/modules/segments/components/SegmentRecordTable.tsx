@@ -5,7 +5,7 @@ import { SEGMENTS, ISegment, ListQueryResponse, PageHeader } from 'ui-modules';
 import { SegmentDetail } from './SegmentDetail';
 import columns from './SegmentsColumns';
 import { useMemo } from 'react';
-import { SegmentCommanBar } from './SegmentCommanBar';
+import { SegmentCommandBar } from './SegmentCommandBar';
 
 const generateOrderPath = (items: ISegment[]) => {
   const map = new Map(items.map((item) => [item._id, item]));
@@ -80,7 +80,7 @@ export function SegmentsRecordTable() {
             </RecordTable>
           </RecordTable.Scroll>
         </RecordTableTree>
-        <SegmentCommanBar />
+        <SegmentCommandBar />
       </RecordTable.Provider>
     </div>
   );

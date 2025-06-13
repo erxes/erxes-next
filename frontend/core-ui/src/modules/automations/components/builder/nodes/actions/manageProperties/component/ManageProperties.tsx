@@ -1,23 +1,14 @@
 import { IconTrash } from '@tabler/icons-react';
-import { Button, Card, Form, Label, Select } from 'erxes-ui';
+import { Button, Form, Label, Select } from 'erxes-ui';
 import { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
 import {
-  getFieldsProperties,
-  groupFieldsByType,
   IActionProps,
   PlaceHolderInput,
   IField as UIModuleField,
 } from 'ui-modules';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { getContentType } from '@/automations/utils/automationBuilderUtils';
-import { PROPERTY_OPERATOR } from '@/automations/constants';
 import { useManagePropertyRule } from '../hooks/useManagePropertyRule';
 import { useManagePropertySidebarContent } from '../hooks/useManagePropertySidebarContent';
 
-type OperatorType = 'String' | 'Date' | 'Number' | 'Default';
-
-// Types
 interface IField extends Partial<UIModuleField> {
   group?: string;
   groupDetail?: {
@@ -42,8 +33,6 @@ interface IConfig {
   rules: IRule[];
 }
 
-type IFieldName = `detail.actions.${number}.config`;
-
 interface RuleProps {
   rule: IRule;
   propertyType: string;
@@ -52,10 +41,6 @@ interface RuleProps {
   handleChange: (name: string, value: any) => void;
   groups: Record<string, IField[]>;
   operatorOptions: IOperator[];
-}
-
-function capitalizeFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 const Rule = ({
@@ -169,10 +154,10 @@ const SideBarContent = ({
   } = useManagePropertySidebarContent(currentActionIndex, currentAction);
 
   useEffect(() => {
-    if (module !== propertyType) {
+    if (module && module !== propertyType) {
       setValue(`${fieldName}.module`, propertyType);
     }
-  }, [propertyType]);
+  }, [module, propertyType]);
 
   return (
     <div className="w-[500px] p-4">
