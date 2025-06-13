@@ -7,7 +7,6 @@ export * from './components/SelectUnit';
 export * from './hooks/useBranchesMain';
 export * from './hooks/useDepartmentsMain';
 export * from './hooks/useUnits';
-export * from './hooks/useSelectBranchesContext';
 export * from './types/Branch';
 export * from './types/Department';
 export * from './components/SelectPosition';

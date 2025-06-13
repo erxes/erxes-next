@@ -24,7 +24,7 @@ export const useProducts = (options?: OperationVariables) => {
   const { list = [], totalCount = 0, pageInfo } = data?.productsMain || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= list.length) return;
+    if (!pageInfo || totalCount <= list.length) return;
     fetchMore({
       variables: {
         ...options?.variables,
@@ -56,8 +56,7 @@ export const useProducts = (options?: OperationVariables) => {
 };
 
 interface IProductInlineData {
-  productsMain: {list: IProduct[]};
-
+  productsMain?: { list: IProduct[] };
 }
 
 export const useProductsInline = (options?: OperationVariables) => {
@@ -65,5 +64,5 @@ export const useProductsInline = (options?: OperationVariables) => {
     GET_ASSIGNED_PRODUCTS,
     options,
   );
-  return { products: data?.productsMain.list, loading, error };
+  return { products: data?.productsMain?.list || [], loading, error };
 };

@@ -9,16 +9,13 @@ interface CompaniesInlineContextType {
   companyIds?: string[];
 }
 
-export const CompaniesInlineContext = createContext<CompaniesInlineContextType>(
-  {
-    companies: [],
-    loading: false,
-  },
+export const CompaniesInlineContext = createContext<CompaniesInlineContextType | null>(
+  null
 );
 
 export const useCompaniesInlineContext = () => {
   const context = useContext(CompaniesInlineContext);
-  if (!context) {
+  if (context === null) {
     throw new Error(
       'useCompaniesInlineContext must be used within a CompaniesInlineProvider',
     );

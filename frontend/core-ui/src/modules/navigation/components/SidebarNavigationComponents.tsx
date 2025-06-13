@@ -5,7 +5,7 @@ import { useLocation } from 'react-router';
 import { NavigationButton } from './NavigationButton';
 
 export const SidebarNavigationComponents = () => {
-  const pathname = useLocation().pathname;
+  const {pathname} = useLocation();
   const isActive = pathname.includes(ComponentsPath.Index);
   return (
     <Sidebar.Group>

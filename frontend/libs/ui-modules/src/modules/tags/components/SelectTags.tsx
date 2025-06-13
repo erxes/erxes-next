@@ -415,6 +415,7 @@ export const SelectTagsRoot = React.forwardRef<
     );
   },
 );
+SelectTagsRoot.displayName = 'SelectTagsRoot';
 
 export const SelectTags = Object.assign(SelectTagsRoot, {
   Provider: SelectTagsProvider,

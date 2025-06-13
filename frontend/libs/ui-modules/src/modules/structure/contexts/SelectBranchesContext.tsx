@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import { IBranch } from '../types/Branch';
 
 export interface ISelectBranchesContext {
@@ -10,11 +10,14 @@ export interface ISelectBranchesContext {
   error: Error | null;
 }
 
-export const SelectBranchesContext = createContext<ISelectBranchesContext>({
-  branchIds: [],
-  onSelect: () => {},
-  branches: [],
-  setBranches: () => {},
-  loading: false,
-  error: null,
-});
+export const SelectBranchesContext = createContext<ISelectBranchesContext | null>(null);
+
+export const useSelectBranchesContext = () => {
+  const context = useContext(SelectBranchesContext);
+  if (!context) {
+    throw new Error(
+      'useSelectBranchesContext must be used within a SelectBranchesProvider',
+    );
+  }
+  return context;
+};

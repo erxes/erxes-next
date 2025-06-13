@@ -1,6 +1,8 @@
-import { SelectCompanyContext } from '../contexts/SelectCompanyContext';
 import { ICompany } from '../types';
-import { useSelectCompanyContext } from 'ui-modules/modules/contacts/contexts/SelectCompanyContext';
+import {
+  SelectCompanyContext,
+  useSelectCompanyContext,
+} from 'ui-modules/modules/contacts/contexts/SelectCompanyContext';
 import { useCompanies } from 'ui-modules/modules/contacts/hooks/useCompanies';
 import { useDebounce } from 'use-debounce';
 import { useState } from 'react';
@@ -112,7 +114,7 @@ const SelectCompaniesContent = () => {
         {!loading && (
           <Combobox.FetchMore
             fetchMore={handleFetchMore}
-            currentLength={companiesData.length}
+            currentLength={companiesData.length || 0}
             totalCount={totalCount}
           />
         )}

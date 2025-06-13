@@ -37,13 +37,14 @@ export const useBranches = (options?: OperationVariables) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
           branchesMain: {
+            ...prev.branchesMain,
+            ...fetchMoreResult.branchesMain,
             list: [
               ...(prev.branchesMain?.list || []),
               ...fetchMoreResult.branchesMain.list,
             ],
             totalCount: fetchMoreResult.branchesMain.totalCount,
-            pageInfo: fetchMoreResult.branchesMain.pageInfo,
-          },
+            pageInfo: fetchMoreResult.branchesMain.pageInfo,},
         });
       },
     });

@@ -1,7 +1,7 @@
 import {
   BranchesInlineContext,
   useBranchesInlineContext,
-} from '../contexts/BranchseInlineContext';
+} from '../contexts/BranchesInlineContext';
 import { Combobox, isUndefinedOrNull, Tooltip } from 'erxes-ui';
 import { IBranch } from '../types/Branch';
 import { useEffect } from 'react';
@@ -53,27 +53,27 @@ const BranchesInlineEffectComponent = ({
   branchIdsWithNoDetails: string[];
 }) => {
   const { updateBranches, branches } = useBranchesInlineContext();
-  const { branches: detailMissingbranches } = useBranchesInline({
+  const { branches: detailMissingBranches } = useBranchesInline({
     variables: {
       _ids: branchIdsWithNoDetails,
     },
   });
 
   useEffect(() => {
-    if (detailMissingbranches && detailMissingbranches.length > 0) {
+    if (detailMissingBranches && detailMissingBranches.length > 0) {
       const existingbranchesMap = new Map(
         branches.map((branch) => [branch._id, branch]),
       );
-      const newbranches = detailMissingbranches.filter(
+      const newBranches = detailMissingBranches.filter(
         (branch) => !existingbranchesMap.has(branch._id),
       );
 
-      if (newbranches.length > 0) {
-        updateBranches?.([...branches, ...newbranches]);
+      if (newBranches.length > 0) {
+        updateBranches?.([...branches, ...newBranches]);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detailMissingbranches, updateBranches, branchIdsWithNoDetails]);
+  }, [detailMissingBranches, updateBranches, branchIdsWithNoDetails]);
 
   return null;
 };

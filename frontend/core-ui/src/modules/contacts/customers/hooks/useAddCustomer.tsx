@@ -4,16 +4,18 @@ import { GET_CUSTOMERS } from '@/contacts/customers/graphql/queries/getCustomers
 import { ICustomer } from '@/contacts/types/customerType';
 import { useRecordTableCursor } from 'erxes-ui';
 import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/customersCursorSessionKey';
+import { useCustomers } from './useCustomers';
 
+// Not finished yet needs improvement 
 interface AddCustomerResult {
   customersAdd: ICustomer;
 }
 
 export function useAddCustomer() {
-  const { setCursor, cursor } = useRecordTableCursor({
+  const { customersQueryVariables } = useCustomers()
+    const { setCursor, cursor } = useRecordTableCursor({
     sessionKey: CUSTOMERS_CURSOR_SESSION_KEY,
   });
-  console.log('cursor', cursor);
   const [customersAdd, { loading, error }] =
     useMutation<AddCustomerResult>(ADD_CUSTOMERS);
 
@@ -29,6 +31,10 @@ export function useAddCustomer() {
       refetchQueries: () => [
         {
           query: GET_CUSTOMERS,
+          variables: {
+            ...customersQueryVariables,
+            cursor: null,
+          },
         },
       ],
     });

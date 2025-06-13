@@ -26,6 +26,7 @@ const ProductsInlineProvider = ({
     <ProductsInlineContext.Provider
       value={{
         products: products || [],
+        // Todo: Add dynamic loading state
         loading: false,
         placeholder: isUndefinedOrNull(placeholder)
           ? 'Select Products'

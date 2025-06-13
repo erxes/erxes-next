@@ -24,7 +24,7 @@ export const useCompanies = (options?: OperationVariables) => {
   const { list = [], totalCount = 0, pageInfo } = data?.companies || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= list.length) return;
+    if (!pageInfo || totalCount <= list.length) return;
     fetchMore({
       variables: {
         ...options?.variables,
@@ -57,7 +57,7 @@ export const useCompanies = (options?: OperationVariables) => {
 };
 
 interface ICompanyInlineData {
-  companies: ICompany[];
+  companies?: { list: ICompany[] };
 }
 
 export const useCompaniesInline = (options?: OperationVariables) => {
@@ -65,5 +65,5 @@ export const useCompaniesInline = (options?: OperationVariables) => {
     GET_ASSIGNED_COMPANIES,
     options,
   );
-  return { companies: data?.companies, loading, error };
+  return { companies: data?.companies?.list || [], loading, error };
 };
