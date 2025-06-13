@@ -1,140 +1,50 @@
-import {
-  IconFolder,
-  IconGitBranch,
-  IconHash,
-  IconLabelFilled,
-  IconUsersGroup,
-} from '@tabler/icons-react';
-import {
-  Filter,
-  PageSubHeader,
-  useFilterContext,
-  useMultiQueryState,
-  useQueryState,
-} from 'erxes-ui';
-import { SelectBranchTree, SelectDepartmentTree, SelectUnit } from 'ui-modules';
-import { TeamMemberFilter } from './TeamMemberFilter';
+import { Filter, PageSubHeader, useMultiQueryState } from 'erxes-ui';
+import { SelectBranches, SelectDepartments, SelectUnit } from 'ui-modules';
+import { TeamMemberFilterPopover } from './TeamMemberFilterPopover';
 import { TeamMemberCounts } from '../TeamMemberCounts';
+import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../../constants/teamMemberCursorSessionKey';
 
 export const TeamMemberFilterBar = () => {
   const [queries] = useMultiQueryState<{
-    code: string;
-    name: string;
-    branchId: string;
-    departmentId: string;
+    branchIds: string;
+    departmentIds: string;
     unitId: string;
-  }>(['code', 'name', 'branchId', 'departmentId', 'unitId']);
+    isActive: boolean;
+  }>(['branchIds', 'departmentIds', 'unitId', 'isActive']);
 
   const isFiltered = Object.values(queries).some((query) => !!query);
 
-  const { code, name, branchId, departmentId, unitId } = queries;
+  const { branchIds, departmentIds, unitId, isActive } = queries;
 
   return (
-    <Filter id="team-member">
-      <PageSubHeader>
+    <PageSubHeader>
+      <Filter id="team-member" sessionKey={TEAM_MEMBER_CURSOR_SESSION_KEY}>
         <Filter.Bar>
-          <TeamMemberFilter />
-          {!!code && (
-            <Filter.BarItem>
-              <Filter.BarName>
-                <IconHash />
-                Code
-              </Filter.BarName>
-              <Filter.BarButton filterKey="code" inDialog>
-                {code}
-              </Filter.BarButton>
-              <Filter.BarClose filterKey="code" />
-            </Filter.BarItem>
+          <TeamMemberFilterPopover />
+          <Filter.Dialog>
+            <Filter.View filterKey="searchValue" inDialog>
+              <Filter.DialogStringView filterKey="searchValue" />
+            </Filter.View>
+          </Filter.Dialog>
+          <Filter.SearchValueBarItem />
+          {!!branchIds && (
+            <SelectBranches.FilterBar
+              mode={'multiple'}
+              filterKey="branchIds"
+              label="Branch"
+            />
           )}
-          {!!name && (
-            <Filter.BarItem>
-              <Filter.BarName>
-                <IconLabelFilled />
-                Name
-              </Filter.BarName>
-              <Filter.BarButton filterKey="name" inDialog>
-                {name}
-              </Filter.BarButton>
-              <Filter.BarClose filterKey="name" />
-            </Filter.BarItem>
+          {!!departmentIds && (
+            <SelectDepartments.FilterBar
+              mode={'multiple'}
+              filterKey="departmentIds"
+              label="Department"
+            />
           )}
-          {!!branchId && <BranchFilterBar />}
-          {!!departmentId && <DepartmentFilterBar />}
-          {!!unitId && <UnitFilterBar />}
+          {!!unitId && <SelectUnit.FilterBar />}
           <TeamMemberCounts />
         </Filter.Bar>
-      </PageSubHeader>
-    </Filter>
-  );
-};
-
-const BranchFilterBar = () => {
-  const [branchId, setBranchId] = useQueryState<string>('branchId');
-  const { resetFilterState } = useFilterContext();
-
-  return (
-    <Filter.BarItem>
-      <Filter.BarName>
-        <IconGitBranch />
-        Branch
-      </Filter.BarName>
-      <SelectBranchTree
-        selected={branchId ?? undefined}
-        onSelect={(value) => {
-          setBranchId(value);
-          resetFilterState();
-        }}
-        recordId="branchId"
-        className="h-7 shadow-none rounded-none"
-      />
-      <Filter.BarClose filterKey="branchId" />
-    </Filter.BarItem>
-  );
-};
-
-const DepartmentFilterBar = () => {
-  const [departmentId, setDepartmentId] = useQueryState<string>('departmentId');
-  const { resetFilterState } = useFilterContext();
-
-  return (
-    <Filter.BarItem>
-      <Filter.BarName>
-        <IconFolder />
-        Department
-      </Filter.BarName>
-      <SelectDepartmentTree
-        selected={departmentId ?? undefined}
-        onSelect={(value) => {
-          setDepartmentId(value);
-          resetFilterState();
-        }}
-        recordId="departmentId"
-        className="h-7 shadow-none rounded-none"
-      />
-      <Filter.BarClose filterKey="departmentId" />
-    </Filter.BarItem>
-  );
-};
-
-const UnitFilterBar = () => {
-  const [unitId, setUnitId] = useQueryState<string>('unitId');
-  const { resetFilterState } = useFilterContext();
-
-  return (
-    <Filter.BarItem>
-      <Filter.BarName>
-        <IconUsersGroup />
-        Unit
-      </Filter.BarName>
-      <SelectUnit
-        value={unitId ?? undefined}
-        onValueChange={(value) => {
-          setUnitId(value);
-          resetFilterState();
-        }}
-        className="h-7 rounded-none shadow-none"
-      />
-      <Filter.BarClose filterKey="unitId" />
-    </Filter.BarItem>
+      </Filter>
+    </PageSubHeader>
   );
 };

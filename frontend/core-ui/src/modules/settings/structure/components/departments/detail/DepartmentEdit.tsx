@@ -61,7 +61,7 @@ export const DepartmentEdit = () => {
 
   useEffect(() => {
     if (departmentDetail) {
-      const { __typename, ...rest } = departmentDetail;
+      const { __typename, _id, ...rest } = departmentDetail;
       reset(rest);
     }
   }, [departmentDetail]);

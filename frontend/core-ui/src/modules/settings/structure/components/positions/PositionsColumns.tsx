@@ -15,7 +15,9 @@ import {
 import { IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import { useSetAtom } from 'jotai';
 import { renderingPositionDetailAtom } from '../../states/renderingPositionDetail';
-import { SelectPosition } from 'ui-modules';
+import { SelectPositions } from 'ui-modules';
+import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
+import { usePositionInlineEdit } from '../../hooks/usePositionActions';
 
 export const UnitEditColumnCell = ({
   cell,
@@ -86,14 +88,30 @@ export const PositionsColumns: ColumnDef<IPositionListItem>[] = [
     accessorKey: 'parentId',
     header: () => <RecordTable.InlineHead label="parent" />,
     cell: ({ cell }) => {
+      const { _id } = cell.row.original || {};
+      const { positionsEdit } = usePositionInlineEdit();
       return (
-        <RecordTableCellDisplay>
-          <SelectPosition
-            className="shadow-none bg-transparent"
-            value={cell.getValue() as string}
-            onValueChange={() => null}
-          />
-        </RecordTableCellDisplay>
+        <SelectPositions.InlineCell
+          scope={
+            SettingsHotKeyScope.PositionsPage +
+            '.' +
+            cell.row.original._id +
+            '.parentId'
+          }
+          mode="single"
+          value={cell.getValue() as string[]}
+          onValueChange={(value) =>
+            positionsEdit(
+              {
+                variables: {
+                  _id,
+                  parentId: value,
+                },
+              },
+              ['parentId'],
+            )
+          }
+        />
       );
     },
     size: 250,

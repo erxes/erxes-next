@@ -15,7 +15,7 @@ import {
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingUnitDetailAtom } from '../../states/renderingUnitDetail';
-import { AssignMember, SelectDepartmentTree } from 'ui-modules';
+import { AssignMember, SelectDepartments } from 'ui-modules';
 import { useRemoveUnit } from '../../hooks/useUnitActions';
 
 export const UnitEditColumnCell = ({
@@ -123,14 +123,11 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     header: () => <RecordTable.InlineHead label="department" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          <SelectDepartmentTree
-            recordId={cell.id}
-            selected={cell.getValue() as string}
-            onSelect={() => {}}
-            className="shadow-none bg-transparent"
-          />
-        </RecordTableCellDisplay>
+        <SelectDepartments.InlineCell
+          mode="single"
+          value={cell.getValue() as string}
+          onValueChange={() => {}}
+        />
       );
     },
   },

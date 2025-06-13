@@ -1,7 +1,7 @@
 import { ICommonFieldProps } from '../types/JournalForms';
 import { CurrencyField, Form, Input, Select } from 'erxes-ui';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
-import { SelectBranch, SelectDepartment, SelectMember } from 'ui-modules';
+import { SelectBranches, SelectDepartments, SelectMember } from 'ui-modules';
 import { IAccount } from '@/settings/account/types/Account';
 import { useWatch } from 'react-hook-form';
 
@@ -29,7 +29,10 @@ export const AccountField = ({
         );
       });
     } else {
-      form.setValue(`trDocs.${index}.details.${detIndex ?? 0}.account`, account as any);
+      form.setValue(
+        `trDocs.${index}.details.${detIndex ?? 0}.account`,
+        account as any,
+      );
     }
 
     if (account?.branchId) {
@@ -144,7 +147,8 @@ export const BranchField = ({ form, index }: ICommonFieldProps) => (
       <Form.Item>
         <Form.Label>Branch</Form.Label>
         <Form.Control>
-          <SelectBranch
+          <SelectBranches.FormItem
+            mode="single"
             value={field.value ?? ''}
             onValueChange={(branch) => field.onChange(branch)}
           />
@@ -163,7 +167,8 @@ export const DepartmentField = ({ form, index }: ICommonFieldProps) => (
       <Form.Item>
         <Form.Label>Department</Form.Label>
         <Form.Control>
-          <SelectDepartment
+          <SelectDepartments.FormItem
+            mode="single"
             value={field.value ?? ''}
             onValueChange={(department) => field.onChange(department)}
           />

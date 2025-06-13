@@ -95,12 +95,11 @@ export const USER_DETAIL_FIELDS: IDetailField[] = [
     description: 'Employee Id',
   },
   {
-    label: 'Position',
-    name: 'position',
-    placeholder: 'Position',
+    label: 'Positions',
+    name: 'positionIds',
+    placeholder: 'Positions',
     attributeType: 'text',
-    path: 'details',
-    description: 'Position',
+    description: 'Positions',
   },
   {
     label: 'Birth date',

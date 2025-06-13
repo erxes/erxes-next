@@ -17,7 +17,7 @@ import { useSetAtom } from 'jotai';
 import { renderingBranchDetailAtom } from '../../states/renderingBranchDetail';
 import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import { IBranchListItem } from '../../types/branch';
-import { SelectBranch } from 'ui-modules';
+import { SelectBranches } from 'ui-modules';
 import {
   useBranchInlineEdit,
   useRemoveBranch,
@@ -188,15 +188,14 @@ export const BranchColumns: ColumnDef<IBranchListItem>[] = [
     header: () => <RecordTable.InlineHead label="parent" />,
     cell: ({ cell }) => {
       return (
-        <div>
-          <SelectBranch
-            className="shadow-none bg-transparent"
-            value={cell.getValue() as string}
-            onValueChange={() => {}}
-          />
-        </div>
+        <SelectBranches.InlineCell
+          mode="single"
+          value={cell.getValue() as string}
+          onValueChange={() => {}}
+        />
       );
     },
+    size: 240,
   },
   {
     id: 'address',

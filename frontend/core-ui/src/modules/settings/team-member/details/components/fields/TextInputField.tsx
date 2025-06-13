@@ -1,7 +1,7 @@
 import { DatePicker, Form, Input } from 'erxes-ui';
 import React from 'react';
 import { Control, FieldPath, FieldValues } from 'react-hook-form';
-import { SelectPosition } from 'ui-modules';
+import { SelectPositions } from 'ui-modules';
 
 type Props<T extends FieldValues> = {
   label: string;
@@ -29,11 +29,12 @@ export const TextInputField = <T extends FieldValues>({
             <Form.Control>
               <DatePicker {...field} onChange={field.onChange} />
             </Form.Control>
+            <Form.Message />
           </Form.Item>
         )}
       />
     );
-  } else if (name === 'details.position') {
+  } else if (name === 'positionIds') {
     return (
       <Form.Field
         control={control}
@@ -42,12 +43,12 @@ export const TextInputField = <T extends FieldValues>({
           <Form.Item>
             <Form.Label>{label}</Form.Label>
             <Form.Description>{description}</Form.Description>
-            <Form.Control>
-              <SelectPosition
-                value={field.value}
-                onValueChange={field.onChange}
-              />
-            </Form.Control>
+            <SelectPositions.FormItem
+              mode="multiple"
+              value={field.value}
+              onValueChange={field.onChange}
+            />
+            <Form.Message />
           </Form.Item>
         )}
       />
@@ -64,6 +65,7 @@ export const TextInputField = <T extends FieldValues>({
           <Form.Control>
             <Input {...field} {...rest} />
           </Form.Control>
+          <Form.Message />
         </Form.Item>
       )}
     />

@@ -20,9 +20,9 @@ export const MemberDetailLayout = ({
 
   React.useEffect(() => {
     if (userDetail) {
-      reset(userDetail);
+      const { __typename, _id, ...rest } = userDetail || {};
+      reset(rest);
     }
-    return () => {};
   }, [userDetail]);
 
   return (
