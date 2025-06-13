@@ -26,10 +26,7 @@ import {
 } from './subscription';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
-const domain =
-  process.env.NODE_ENV === 'production'
-    ? process.env.DOMAIN ?? 'http://localhost:3001'
-    : 'http://localhost:3001';
+const domain = process.env.DOMAIN ?? 'http://localhost:3001';
 
 const corsOptions = {
   credentials: true,
