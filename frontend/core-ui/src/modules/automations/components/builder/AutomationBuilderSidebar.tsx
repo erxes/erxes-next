@@ -12,15 +12,17 @@ import { AutomationSidebarDefaultContent } from './sidebar/AutomationSidebarDefa
 const AutomationBuilderSidebarContent = ({
   activeNode,
 }: {
-  activeNode: NodeData;
+  activeNode: NodeData | null;
 }) => {
-  const { nodeType = '' } = activeNode || {};
-  if (nodeType === 'trigger') {
-    return <TriggerDetail activeNode={activeNode} />;
-  }
+  if (activeNode) {
+    const { nodeType = '' } = activeNode || {};
+    if (nodeType === 'trigger') {
+      return <TriggerDetail activeNode={activeNode} />;
+    }
 
-  if (nodeType === 'action') {
-    return <ActionDetail />;
+    if (nodeType === 'action') {
+      return <ActionDetail />;
+    }
   }
 
   return <AutomationSidebarDefaultContent />;

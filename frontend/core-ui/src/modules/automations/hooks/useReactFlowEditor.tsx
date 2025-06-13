@@ -235,6 +235,10 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
       if (target?.parentId && connection?.source && target.id) {
       }
 
+      if (!target) {
+        return false;
+      }
+
       return !hasCycle(target);
     },
     [nodes, edges],

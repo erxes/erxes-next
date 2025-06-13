@@ -34,7 +34,7 @@ type Props = {
   contentType: string;
   segmentId?: string;
   callback: (contentId: string) => void;
-  isTempoaray?: boolean;
+  isTemporary?: boolean;
 };
 
 type StatsType = {
@@ -130,7 +130,7 @@ const renderContent = ({
 
 export function SegmentForm({
   contentType,
-  isTempoaray,
+  isTemporary,
   callback,
   segmentId,
 }: Props) {
@@ -280,7 +280,7 @@ export function SegmentForm({
         <SegmentMetadataForm
           form={form}
           segment={segment}
-          isTemporary={isTempoaray}
+          isTemporary={isTemporary}
         />
         <div className="pb-4">{renderContent({ form, contentType })}</div>
         <Button

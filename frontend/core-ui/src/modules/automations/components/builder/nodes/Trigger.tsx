@@ -1,6 +1,6 @@
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import { memo } from 'react';
-import { IconCheck, IconSunElectricity } from '@tabler/icons-react';
+import { IconSunElectricity } from '@tabler/icons-react';
 import { cn } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 import { ErrorState } from '../../../utils/ErrorState';
@@ -27,9 +27,6 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
       >
         <div className="p-3 flex items-center justify-between border-b border-slate-200 gap-8">
           <div className="flex items-center gap-2 text-primary">
-            {/* <div className="text-success bg-success/10 p-1 border border-success rounded">
-              <IconCheck className="w-4 h-4" />
-            </div> */}
             {beforeTitleContent && beforeTitleContent(id, 'trigger')}
             <div
               className={`h-6 w-6 rounded-full flex items-center justify-center`}

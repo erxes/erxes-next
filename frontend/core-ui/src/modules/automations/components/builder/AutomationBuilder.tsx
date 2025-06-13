@@ -17,7 +17,7 @@ import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
 import { AutomationBuilderSidebar } from './AutomationBuilderSidebar';
 
-import { useReactFlowEditor } from '@/automations/hooks/useReacFlowEditor';
+import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
 import {
   automationBuilderFormSchema,
   TAutomationProps,

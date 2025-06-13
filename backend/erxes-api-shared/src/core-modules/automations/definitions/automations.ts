@@ -97,7 +97,7 @@ const actionSchema = new Schema(
 );
 
 export const automationSchema = new Schema({
-  _id: { type: Schema.ObjectId },
+  _id: { type: Schema.Types.ObjectId },
   name: { type: String, required: true },
   status: { type: String, default: AUTOMATION_STATUSES.DRAFT },
   triggers: { type: [triggerSchema] },

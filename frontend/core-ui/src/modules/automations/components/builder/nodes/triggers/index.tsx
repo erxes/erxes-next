@@ -26,7 +26,7 @@ const DefaultTriggerContent = ({ activeNode }: Props) => {
       contentType={activeNode?.type || ''}
       segmentId={contentId}
       callback={handleCallback}
-      isTempoaray
+      isTemporary
     />
   );
 };

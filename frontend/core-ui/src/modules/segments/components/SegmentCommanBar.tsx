@@ -4,7 +4,7 @@ import { RecordTable } from 'erxes-ui/modules/record-table';
 import { ISegment } from 'ui-modules';
 import { SegmentRemoveButtonCommandBar } from './SegmentsRemoveButton';
 
-export const SegmentsCommandBar = () => {
+export const SegmentCommanBar = () => {
   const { table } = RecordTable.useRecordTable();
 
   const segmentIds = table

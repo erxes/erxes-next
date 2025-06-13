@@ -31,7 +31,7 @@ export const startChangeStreams = (
   },
 ) => {
   for (const [_, model] of Object.entries(models)) {
-    const modelName = model.modelName;
+    const { modelName } = model;
     // Skip if already watching this model
     if (activeStreams.has(modelName)) continue;
 

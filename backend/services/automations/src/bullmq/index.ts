@@ -66,7 +66,7 @@ const triggerHandlerWorker = async (job: Job<ITriggerJobData>) => {
 };
 
 const playWaitingActionWorker = async (job: Job<IPlayWaitJobData>) => {
-  const { subdomain, data, ...fuckers } = job.data;
+  const { subdomain, data } = job.data;
 
   const models = await generateModels(subdomain);
 
@@ -86,7 +86,7 @@ const playWaitingActionWorker = async (job: Job<IPlayWaitJobData>) => {
   }).lean();
 
   if (!automation) {
-    models.Executions.updateOne({
+    await models.Executions.updateOne({
       _id: execution.id,
       status: AUTOMATION_EXECUTION_STATUS.MISSID,
       description: 'Not found automation of execution',
@@ -120,23 +120,29 @@ const playWaitingActionWorker = async (job: Job<IPlayWaitJobData>) => {
 
 const generateMQWorker = (
   redis: any,
-  resolve: (value: void | PromiseLike<void>) => void,
   queueName: string,
   resolver: (job: Job) => Promise<any>,
-) =>
-  createMQWorkerWithListeners('automations', queueName, resolver, redis, () => {
-    resolve();
+): Promise<void> => {
+  return new Promise((resolve) => {
+    createMQWorkerWithListeners(
+      'automations',
+      queueName,
+      resolver,
+      redis,
+      () => {
+        resolve();
+      },
+    );
   });
+};
 
 export const initMQWorkers = async (redis: any) => {
-  console.info('Starting worker ...');
+  console.info('Starting workers...');
 
-  return new Promise<void>((resolve, reject) => {
-    try {
-      generateMQWorker(redis, resolve, 'trigger', triggerHandlerWorker);
-      generateMQWorker(redis, resolve, 'playWait', playWaitingActionWorker);
-    } catch (error) {
-      reject(error);
-    }
-  });
+  await Promise.all([
+    generateMQWorker(redis, 'trigger', triggerHandlerWorker),
+    generateMQWorker(redis, 'playWait', playWaitingActionWorker),
+  ]);
+
+  console.info('All workers initialized');
 };

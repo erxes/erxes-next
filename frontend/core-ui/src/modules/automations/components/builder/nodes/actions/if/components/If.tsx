@@ -10,7 +10,7 @@ export const IF = ({ currentAction, handleSave }: IActionProps) => {
         contentType={contentType}
         segmentId={currentAction?.config?.contentId}
         callback={(contentId) => handleSave({ contentId })}
-        isTempoaray
+        isTemporary
       />
     </div>
   );

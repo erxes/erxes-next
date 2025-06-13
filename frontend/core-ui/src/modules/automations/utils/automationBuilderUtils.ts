@@ -368,7 +368,7 @@ export const getContentType = (
   return triggers[0]?.type;
 };
 
-export const generateSendEmailReciepentMails = ({
+export const generateSendEmailRecipientMails = ({
   attributionMails,
   customMails = [],
   customer = [],

@@ -1,4 +1,4 @@
-import { generateSendEmailReciepentMails } from '@/automations/utils/automationBuilderUtils';
+import { generateSendEmailRecipientMails } from '@/automations/utils/automationBuilderUtils';
 import {
   IconCheck,
   IconCircleDashedCheck,
@@ -249,7 +249,7 @@ const AutomationSendEmail = ({ currentActionIndex }: IActionProps) => {
 
 const ReciepentEmails = ({ config }: { config: any }) => {
   const mails = useMemo(
-    () => generateSendEmailReciepentMails(config),
+    () => generateSendEmailRecipientMails(config),
     [config],
   );
 

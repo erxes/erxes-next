@@ -8,8 +8,6 @@ import {
 } from 'erxes-api-shared/utils';
 import { EMAIL_RECIPIENTS_TYPES } from '~/constants';
 import nodemailer from 'nodemailer';
-// import AWS from 'aws-sdk';
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import AWS from 'aws-sdk';
 
 const generateEmails = (entry: string | any[], key?: string): string[] => {
@@ -114,13 +112,13 @@ const getAttributionEmails = async ({
 
   for (const attribute of attributes) {
     if (attribute === 'triggerExecutors') {
-      const excutorEmails = await getSegmentEmails({
+      const executorEmails = await getSegmentEmails({
         subdomain,
         pluginName,
         contentType,
         execution,
       });
-      emails = [...emails, ...excutorEmails];
+      emails = [...emails, ...executorEmails];
     }
 
     relatedValueProps[attribute] = {
@@ -168,12 +166,12 @@ export const getEmailRecipientTypes = async () => {
     const plugin = await getPlugin(pluginName);
     const meta = plugin.config?.meta || {};
 
-    if (meta?.automations?.constants?.emailRecipIentTypes) {
-      const { emailRecipIentTypes } = meta?.automations?.constants || {};
+    if (meta?.automations?.constants?.emailRecipientTypes) {
+      const { emailRecipientTypes } = meta?.automations?.constants || {};
 
       reciepentTypes = [
         ...reciepentTypes,
-        ...emailRecipIentTypes.map((eTR) => ({ ...eTR, pluginName })),
+        ...emailRecipientTypes.map((eTR) => ({ ...eTR, pluginName })),
       ];
     }
   }
@@ -356,7 +354,7 @@ export const generateDoc = async ({
   });
 
   if (!toEmails?.length) {
-    throw new Error('"Recieving emails not found"');
+    throw new Error('Receiving emails not found');
   }
 
   return {
@@ -463,10 +461,6 @@ const sendEmails = async ({
 
   if (!fromEmail && !COMPANY_EMAIL_FROM) {
     throw new Error('From Email is required');
-  }
-
-  if (NODE_ENV === 'test') {
-    throw new Error('Node environment is required');
   }
 
   let transporter;

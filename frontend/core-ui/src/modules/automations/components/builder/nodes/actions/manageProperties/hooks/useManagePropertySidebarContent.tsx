@@ -42,5 +42,6 @@ export const useManagePropertySidebarContent = (
     fieldName,
     rules,
     fields,
+    module,
   };
 };

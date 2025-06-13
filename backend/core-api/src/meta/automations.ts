@@ -153,7 +153,7 @@ export default startAutomations('core', {
     }
     return 'Hello World Core';
   },
-  replacePlaceHolders: async ({ subdomain, ...dasds }, { data }) => {
+  replacePlaceHolders: async ({ subdomain }, { data }) => {
     const { target, config, relatedValueProps } = data || {};
     const models = await generateModels(subdomain);
 

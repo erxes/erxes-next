@@ -34,7 +34,7 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
 
   const handleSave = (values: TAutomationProps) => {
     const generateValues = () => {
-      const finalValues = {
+      return {
         id,
         name,
         status: status,
@@ -62,8 +62,6 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
           workflowId: a.workflowId,
         })),
       };
-
-      return finalValues;
     };
 
     return save({ variables: generateValues() }).then(() => {

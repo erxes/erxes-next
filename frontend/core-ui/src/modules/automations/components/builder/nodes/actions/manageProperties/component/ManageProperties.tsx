@@ -165,6 +165,7 @@ const SideBarContent = ({
     rules,
     fields,
     groups,
+    module,
   } = useManagePropertySidebarContent(currentActionIndex, currentAction);
 
   useEffect(() => {
