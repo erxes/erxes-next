@@ -14,7 +14,7 @@ export const InventoryForm = ({
   form: ITransactionGroupForm;
   journalIndex: number;
 }) => {
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control: form.control,
     name: `trDocs.${journalIndex}.details`,
   });
@@ -55,7 +55,7 @@ export const InventoryForm = ({
                   form={form}
                   journalIndex={journalIndex}
                 />
-                <RemoveButton remove={remove} form={form} journalIndex={journalIndex} />
+                <RemoveButton form={form} journalIndex={journalIndex} />
               </div>
             </td>
           </tr>
