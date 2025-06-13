@@ -16,7 +16,7 @@ export const useDepartments = (
     list: departments,
     totalCount = 0,
     pageInfo,
-  } = data ? data?.departmentsMain : {};
+  } = data?.departmentsMain ?? {};
 
   const handleFetchMore = () => {
     if (totalCount <= (departments?.length || 0)) return;

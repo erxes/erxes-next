@@ -12,7 +12,7 @@ export const useUnits = (
     ICursorListResponse<IUnit>
   >(GET_UNITS_MAIN, { ...options });
 
-  const { list: units, totalCount = 0, pageInfo } = data ? data?.unitsMain : {};
+  const { list: units, totalCount = 0, pageInfo } = data?.unitsMain ?? {};
 
   const handleFetchMore = () => {
     if (totalCount <= (units?.length || 0)) return;

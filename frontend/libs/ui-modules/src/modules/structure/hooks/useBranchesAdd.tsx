@@ -8,7 +8,7 @@ export const useBranchesAdd = () => {
     branchesAdd({
       ...options,
       variables,
-      refetchQueries: ['branchesMain'],
+      refetchQueries: ['BranchesMain'],
     });
   };
 

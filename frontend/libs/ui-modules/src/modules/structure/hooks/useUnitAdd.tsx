@@ -8,7 +8,7 @@ export const useUnitAdd = () => {
     unitsAdd({
       ...options,
       variables,
-      refetchQueries: ['unitsMain'],
+      refetchQueries: ['UnitsMain'],
     });
   };
 

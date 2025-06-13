@@ -72,7 +72,7 @@ export const SelectUnitCommand = ({
     variables: {
       searchValue: debouncedSearch,
     },
-    skip: !!noUnitSearchValue && debouncedSearch.includes(noUnitSearchValue),
+    skip: debouncedSearch === noUnitSearchValue,
     onCompleted(data) {
       const { totalCount } = data?.unitsMain || {};
       setNoUnitSearchValue(totalCount === 0 ? debouncedSearch : '');

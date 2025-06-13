@@ -16,7 +16,7 @@ export const usePositions = (
     list: positions,
     totalCount = 0,
     pageInfo,
-  } = data ? data?.positionsMain : {};
+  } = data?.positionsMain ?? {};
 
   const handleFetchMore = () => {
     if (totalCount <= (positions?.length || 0)) return;

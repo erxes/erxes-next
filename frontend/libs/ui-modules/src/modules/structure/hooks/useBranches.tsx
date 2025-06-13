@@ -12,11 +12,7 @@ export const useBranches = (
     ICursorListResponse<IBranch>
   >(GET_BRANCHES_MAIN, { ...options });
 
-  const {
-    list: branches,
-    totalCount = 0,
-    pageInfo,
-  } = data ? data?.branchesMain : {};
+  const { list: branches, totalCount = 0, pageInfo } = data?.branchesMain ?? {};
 
   const handleFetchMore = () => {
     if (totalCount <= (branches?.length || 0)) return;

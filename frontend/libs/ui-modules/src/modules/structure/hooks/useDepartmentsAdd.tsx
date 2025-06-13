@@ -8,7 +8,7 @@ export const useDepartmentsAdd = () => {
     departmentsAdd({
       ...options,
       variables,
-      refetchQueries: ['departmentsMain'],
+      refetchQueries: ['DepartmentsMain'],
     });
   };
 
