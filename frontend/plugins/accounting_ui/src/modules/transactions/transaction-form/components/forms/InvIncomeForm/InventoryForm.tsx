@@ -83,7 +83,7 @@ const InventoryTableHeader = ({
         <Table.Head className='w-10'>
           <div className="flex items-center justify-center">
             <Checkbox
-              checked={!!!trDoc.details.filter(d => !d.checked).length}
+              checked={!trDoc.details.filter(d => !d.checked).length}
               onCheckedChange={(checked) => {
                 trDoc.details.forEach((_d, ind) => {
                   form.setValue(
