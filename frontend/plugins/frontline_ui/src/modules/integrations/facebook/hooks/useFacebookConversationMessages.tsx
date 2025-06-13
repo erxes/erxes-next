@@ -61,6 +61,7 @@ export const useFacebookConversationMessages = () => {
   };
 
   useEffect(() => {
+    if (!conversationId) return;
     const unsubscribe = subscribeToMore<{
       conversationMessageInserted: IFacebookConversationMessage;
     }>({
