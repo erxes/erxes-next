@@ -10,8 +10,6 @@ import {
   ICursorListResponse,
   useMultiQueryState,
 } from 'erxes-ui';
-import { useLocation } from 'react-router-dom';
-import { ContactsPath } from '@/types/paths/ContactsPath';
 import { useSetAtom } from 'jotai';
 import { customerTotalCountAtom } from '@/contacts/states/customerCounts';
 import { useEffect } from 'react';
@@ -22,7 +20,7 @@ const CUSTOMERS_PER_PAGE = 30;
 export const useCustomers = (
   options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
 ) => {
-  const pathname = useLocation().pathname;
+  const { isLead } = useIsCustomerLeadSessionKey();
   const setCustomerTotalCount = useSetAtom(customerTotalCountAtom);
   const [{ searchValue, tags, created, updated, lastSeen }] =
     useMultiQueryState<{
@@ -60,7 +58,7 @@ export const useCustomers = (
         lte: parseDateRangeFromString(lastSeen)?.to,
       },
     }),
-    type: pathname.includes(ContactsPath.Leads) ? 'lead' : 'customer',
+    type: isLead ? 'lead' : 'customer',
     ...options?.variables,
   };
 

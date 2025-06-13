@@ -6,7 +6,7 @@ import {
 } from '@/contacts/customers/constants/customersCursorSessionKey';
 
 export const useIsCustomerLeadSessionKey = () => {
-  const pathname = useLocation().pathname;
+  const { pathname } = useLocation();
 
   const isLead = pathname.includes(ContactsPath.Leads);
 
