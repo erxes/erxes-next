@@ -5,7 +5,7 @@ import {
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
 import { useReactFlow } from '@xyflow/react';
-import { useQueryState, useToast } from 'erxes-ui/hooks';
+import { useQueryState, useToast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
 import { useParams } from 'react-router';
 

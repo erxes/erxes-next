@@ -1,4 +1,4 @@
-import { Card, Form, Input, Select } from 'erxes-ui/components';
+import { Card, Form, Input, Select } from 'erxes-ui';
 import { IActionProps } from 'ui-modules';
 import { useDelay } from '../hooks/useDelay';
 

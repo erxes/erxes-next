@@ -1,39 +1,25 @@
 import {
   addEdge,
-  Background,
   Connection,
-  Controls,
   Edge,
   getOutgoers,
-  MiniMap,
   Node,
-  ReactFlow,
-  ReactFlowProvider,
   useEdgesState,
   useNodesState,
-  useReactFlow,
 } from '@xyflow/react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-
+import React, { useCallback, useRef } from 'react';
 import '@xyflow/react/dist/style.css';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form';
-
-import { useQueryState } from 'erxes-ui/hooks';
-
-import {
-  automationBuilderFormSchema,
-  TAutomationProps,
-} from '@/automations/utils/AutomationFormDefinitions';
-import { Sidebar } from 'erxes-ui';
-import { generateEdges, generateNodes } from '../utils/automationBuilderUtils';
+import { useFormContext } from 'react-hook-form';
+import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { NodeData } from '../types';
 import {
   connectionHandler,
   generateConnect,
   getNewId,
 } from '../utils/automationActionConnectionUtils';
+import { generateEdges, generateNodes } from '../utils/automationBuilderUtils';
+import { useQueryState } from 'erxes-ui';
+
 export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
   const { watch, setValue } = useFormContext<TAutomationProps>();
   const [activeNodeId, setActiveNodeId] = useQueryState('activeNodeId');

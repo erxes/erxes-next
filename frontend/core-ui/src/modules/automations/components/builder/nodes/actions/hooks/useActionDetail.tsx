@@ -1,9 +1,6 @@
-import { useQueryState } from 'erxes-ui';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { ErrorState } from '@/automations/utils/ErrorState';
-import { Card, Form, Spinner } from 'erxes-ui/components';
-import { lazy, Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { useQueryState } from 'erxes-ui';
+import { lazy } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 const Delay = lazy(() =>

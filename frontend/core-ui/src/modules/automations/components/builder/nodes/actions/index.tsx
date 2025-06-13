@@ -1,5 +1,5 @@
 import { ErrorState } from '@/automations/utils/ErrorState';
-import { Card, Form, Spinner } from 'erxes-ui/components';
+import { Card, Form, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useActionDetail } from './hooks/useActionDetail';

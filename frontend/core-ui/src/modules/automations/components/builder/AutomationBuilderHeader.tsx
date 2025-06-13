@@ -3,7 +3,6 @@ import {
   IconCategory2,
   IconSettings,
 } from '@tabler/icons-react';
-import { PageSubHeader } from 'erxes-ui';
 import {
   Breadcrumb,
   Button,
@@ -14,7 +13,8 @@ import {
   Spinner,
   Switch,
   Tabs,
-} from 'erxes-ui/components';
+  PageSubHeader,
+} from 'erxes-ui';
 import { Link } from 'react-router';
 import { PageHeader } from 'ui-modules';
 import { useAutomationHeader } from './hooks/useAutomationHeader';

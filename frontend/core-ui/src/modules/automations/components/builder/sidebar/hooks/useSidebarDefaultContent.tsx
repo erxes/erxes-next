@@ -1,7 +1,7 @@
 import { AUTOMATOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
 import { ConstantsQueryResponse } from '@/automations/types';
 import { useQuery } from '@apollo/client';
-import { useQueryState } from 'erxes-ui/hooks';
+import { useQueryState } from 'erxes-ui';
 import React from 'react';
 
 export const useSidebarDefaultContent = () => {

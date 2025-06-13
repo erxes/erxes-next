@@ -1,7 +1,6 @@
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
-import { TablerIcon } from 'erxes-ui';
-import { Card, Input, Skeleton, Tabs } from 'erxes-ui/components';
+import { TablerIcon, Card, Input, Skeleton, Tabs } from 'erxes-ui';
 import React, { useState } from 'react';
 import { useSidebarDefaultContent } from './hooks/useSidebarDefaultContent';
 import { IconSearch } from '@tabler/icons-react';
