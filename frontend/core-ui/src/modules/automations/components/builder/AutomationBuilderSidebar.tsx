@@ -1,8 +1,7 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { IconArrowLeft, IconX } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
-import { Button, Card, Separator } from 'erxes-ui/components';
-import { useMultiQueryState } from 'erxes-ui/hooks';
+import { Button, Card, Separator, useMultiQueryState } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { NodeData } from '../../types';

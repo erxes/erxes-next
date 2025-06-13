@@ -11,9 +11,10 @@ export interface IConversation {
   customerId?: string;
   integrationId?: string;
   brandId?: string;
-  readUserIds: string[];
+  readUserIds?: string[];
   assignedUserId?: string;
   tagIds?: string[];
+  status?: ConversationStatus;
 }
 
 export interface IMessage {
@@ -26,4 +27,9 @@ export interface IMessage {
   attachments?: IAttachment[];
   formWidgetData?: IFormWidgetItem[];
   internal?: boolean;
+}
+
+export enum ConversationStatus {
+  OPEN = 'open',
+  CLOSED = 'closed',
 }

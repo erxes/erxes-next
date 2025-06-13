@@ -8,7 +8,7 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { useConversationContext } from '../hooks/useConversationContext';
-import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
+import { useIntegrationInline } from '@/integrations/hooks/useIntegrations';
 import { BrandsInline, currentUserState, CustomerInline } from 'ui-modules';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { activeConversationState } from '../states/activeConversationState';
@@ -26,7 +26,7 @@ export const ConversationItem = () => {
   const { createdAt, updatedAt, customer, integrationId } =
     useConversationContext();
 
-  const { integration } = useIntegrationDetail({
+  const { integration } = useIntegrationInline({
     variables: {
       _id: integrationId,
     },
@@ -35,7 +35,7 @@ export const ConversationItem = () => {
 
   if (conversationId || detailView) {
     return (
-      <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start">
+      <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer">
         <CustomerInline.Provider customer={customer}>
           <div className="flex w-full gap-3 leading-tight">
             <ConversationSelector />
