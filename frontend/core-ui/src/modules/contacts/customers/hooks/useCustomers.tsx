@@ -35,6 +35,9 @@ export const useCustomers = (
 
   const customersQueryVariables = {
     limit: CUSTOMERS_PER_PAGE,
+    orderBy: {
+      createdAt: -1,
+    },
     cursor,
     searchValue,
     tagIds: tags,
