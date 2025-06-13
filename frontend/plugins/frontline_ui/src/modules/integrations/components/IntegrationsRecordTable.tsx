@@ -30,7 +30,6 @@ export const IntegrationsRecordTable = () => {
       <RecordTable.CursorProvider
         hasPreviousPage={false}
         hasNextPage={false}
-        loading={loading}
         dataLength={integrations?.length}
         sessionKey="integrations_cursor"
       >

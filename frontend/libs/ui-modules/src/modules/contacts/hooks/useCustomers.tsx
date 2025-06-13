@@ -1,4 +1,4 @@
-import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import {
   GET_ASSIGNED_CUSTOMERS,
   GET_CUSTOMERS,
