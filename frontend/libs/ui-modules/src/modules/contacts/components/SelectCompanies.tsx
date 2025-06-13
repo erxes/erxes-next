@@ -1,0 +1,220 @@
+import { SelectCompanyContext } from '../contexts/SelectCompanyContext';
+import { ICompany } from '../types';
+import { useSelectCompanyContext } from 'ui-modules/modules/contacts/contexts/SelectCompanyContext';
+import { useCompanies } from 'ui-modules/modules/contacts/hooks/useCompanies';
+import { useDebounce } from 'use-debounce';
+import { useState } from 'react';
+import { cn, Combobox, Command, Popover } from 'erxes-ui';
+import { CompaniesInline } from './CompaniesInline';
+import {
+  RecordTablePopover,
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+} from 'erxes-ui';
+
+interface SelectCompanyProviderProps {
+  children: React.ReactNode;
+  value?: string[] | string;
+  onValueChange?: (value: string[] | string) => void;
+  mode?: 'single' | 'multiple';
+}
+
+const SelectCompaniesProvider = ({
+  children,
+  value,
+  onValueChange,
+  mode = 'single',
+}: SelectCompanyProviderProps) => {
+  const [companies, setCompanies] = useState<ICompany[]>([]);
+  const companyIds = !value ? [] : Array.isArray(value) ? value : [value];
+  const onSelect = (company: ICompany) => {
+    if (!company) return;
+    if (mode === 'single') {
+      setCompanies([company]);
+      onValueChange?.(company._id);
+      return;
+    }
+    const arrayValue = Array.isArray(value) ? value : [];
+    const isCompanySelected = arrayValue.includes(company._id);
+    const newSelectedCompanyIds = isCompanySelected
+      ? arrayValue.filter((id) => id !== company._id)
+      : [...arrayValue, company._id];
+
+    setCompanies((prevCompanies) => {
+      const companyMap = new Map(prevCompanies.map((c) => [c._id, c]));
+      companyMap.set(company._id, company);
+      return newSelectedCompanyIds
+        .map((id) => companyMap.get(id))
+        .filter((c): c is ICompany => c !== undefined);
+    });
+    onValueChange?.(newSelectedCompanyIds);
+  };
+  return (
+    <SelectCompanyContext.Provider
+      value={{
+        companyIds,
+        onSelect,
+        companies,
+        setCompanies,
+        loading: false,
+        error: null,
+      }}
+    >
+      {children}
+    </SelectCompanyContext.Provider>
+  );
+};
+
+const SelectCompaniesContent = () => {
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
+  const { companyIds, companies } = useSelectCompanyContext();
+  const {
+    companies: companiesData,
+    loading,
+    handleFetchMore,
+    totalCount,
+    error,
+  } = useCompanies({
+    variables: {
+      searchValue: debouncedSearch,
+    },
+  });
+  return (
+    <Command shouldFilter={false}>
+      <Command.Input
+        value={search}
+        onValueChange={setSearch}
+        variant="secondary"
+        wrapperClassName="flex-auto"
+        focusOnMount
+      />
+      <Command.List className="max-h-[300px] overflow-y-auto">
+        {companies?.length > 0 && (
+          <>
+            {companies.map((company) => (
+              <SelectCompanyCommandItem key={company._id} company={company} />
+            ))}
+            <Command.Separator className="my-1" />
+          </>
+        )}
+        <Combobox.Empty loading={loading} error={error} />
+        {!loading &&
+          companiesData
+            ?.filter(
+              (company) =>
+                !companyIds.find((companyId) => companyId === company._id),
+            )
+            .map((company) => (
+              <SelectCompanyCommandItem key={company._id} company={company} />
+            ))}
+
+        {!loading && (
+          <Combobox.FetchMore
+            fetchMore={handleFetchMore}
+            currentLength={companiesData.length}
+            totalCount={totalCount}
+          />
+        )}
+      </Command.List>
+    </Command>
+  );
+};
+
+const SelectCompanyCommandItem = ({ company }: { company: ICompany }) => {
+  const { onSelect, companyIds } = useSelectCompanyContext();
+  return (
+    <Command.Item
+      value={company._id}
+      onSelect={() => {
+        onSelect(company);
+      }}
+    >
+      <CompaniesInline companies={[company]} placeholder="Unnamed company" />
+      <Combobox.Check checked={companyIds.includes(company._id)} />
+    </Command.Item>
+  );
+};
+
+const SelectCompanyInlineCell = ({
+  onValueChange,
+  scope,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectCompaniesProvider>, 'children'> & {
+  scope?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectCompaniesProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableCellTrigger>
+          <SelectCompanies.Value />
+        </RecordTableCellTrigger>
+        <RecordTableCellContent>
+          <SelectCompanies.Content />
+        </RecordTableCellContent>
+      </RecordTablePopover>
+    </SelectCompaniesProvider>
+  );
+};
+
+const SelectCompanyRoot = ({
+  onValueChange,
+  className,
+  mode = 'single',
+  ...props
+}: Omit<React.ComponentProps<typeof SelectCompaniesProvider>, 'children'> & {
+  className?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <SelectCompaniesProvider
+      onValueChange={(value) => {
+        if (mode === 'single') {
+          setOpen(false);
+        }
+        onValueChange?.(value);
+      }}
+      mode={mode}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.Trigger
+          className={cn('w-full inline-flex', className)}
+          variant="outline"
+        >
+          <SelectCompanies.Value />
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <SelectCompanies.Content />
+        </Combobox.Content>
+      </Popover>
+    </SelectCompaniesProvider>
+  );
+};
+
+const SelectCompaniesValue = () => {
+  const { companyIds, companies, setCompanies } = useSelectCompanyContext();
+  return (
+    <CompaniesInline
+      companyIds={companyIds}
+      companies={companies}
+      updateCompanies={setCompanies}
+    />
+  );
+};
+
+export const SelectCompanies = Object.assign(SelectCompanyRoot, {
+  Provider: SelectCompaniesProvider,
+  Content: SelectCompaniesContent,
+  Item: SelectCompanyCommandItem,
+  InlineCell: SelectCompanyInlineCell,
+  Value: SelectCompaniesValue,
+});
