@@ -1,5 +1,4 @@
 export * from './components/SelectBranch';
-export * from './components/SelectBranches';
 export * from './components/SelectBranchTree';
 export * from './components/SelectDepartment';
 export * from './components/SelectDepartmentTree';

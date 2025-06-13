@@ -1,10 +1,10 @@
 import {
-  SelectBranches,
+  // SelectBranches,
   SelectCompanies,
   SelectCustomers,
   SelectProducts,
   SelectMember,
-  SelectTags, 
+  SelectTags,
 } from 'ui-modules';
 import { PageContainer, Switch, Tooltip } from 'erxes-ui';
 import { useState } from 'react';
@@ -201,12 +201,12 @@ export const SelectComponentIndexPage = () => {
             >
               <SelectMember value={memberId} onValueChange={setMemberId} />
             </SelectContainer>
-            <SelectContainer
+            {/* <SelectContainer
               label="Branch Select"
               description="Browse and select branches"
             >
               <SelectBranches value={branchId} onValueChange={setBranchId} />
-            </SelectContainer>
+            </SelectContainer> */}
           </SelectContainerGroup>
           <SelectContainerGroup
             label="Content"
