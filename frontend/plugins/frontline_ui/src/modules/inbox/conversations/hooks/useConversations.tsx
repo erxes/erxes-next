@@ -8,13 +8,18 @@ import {
   validateFetchMore,
 } from 'erxes-ui';
 import { CONVERSATIONS_LIMIT } from '@/inbox/constants/conversationsConstants';
+import { useEffect } from 'react';
+import { CONVERSATION_CLIENT_MESSAGE_INSERTED } from '../graphql/subscriptions/inboxSubscriptions';
+import { useAtomValue } from 'jotai';
+import { currentUserState } from 'ui-modules';
 
 export const useConversations = (
   options?: QueryHookOptions<ICursorListResponse<IConversation>>,
 ) => {
-  const { data, loading, fetchMore } = useQuery<
+  const { data, fetchMore, subscribeToMore, loading } = useQuery<
     ICursorListResponse<IConversation>
   >(GET_CONVERSATIONS, options);
+  const { _id: userId } = useAtomValue(currentUserState) || {};
 
   const { conversations } = data || {};
   const { list = [], totalCount = 0, pageInfo } = conversations || {};
@@ -48,6 +53,24 @@ export const useConversations = (
       },
     });
   };
+
+  useEffect(() => {
+    const unsubscribe = subscribeToMore({
+      document: CONVERSATION_CLIENT_MESSAGE_INSERTED,
+      variables: {
+        userId,
+      },
+      updateQuery: (prev, { subscriptionData }) => {
+        console.log('subscriptionData', subscriptionData);
+        return prev;
+      },
+      onError: (error) => {
+        console.log('error', error);
+      },
+    });
+
+    return unsubscribe;
+  }, []);
 
   return {
     totalCount,

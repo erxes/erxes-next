@@ -2,7 +2,7 @@ import { AUTOMATOMATION_CONSTANTS } from '@/automations/graphql/automationQuerie
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError, useQuery } from '@apollo/client';
-import { IconX } from '@tabler/icons-react';
+import { IconSearch, IconX } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
 import {
   Button,
@@ -14,7 +14,6 @@ import {
   TablerIcon,
   cn,
 } from 'erxes-ui';
-import { IconSearch } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ConstantsQueryResponse } from '../../types';
