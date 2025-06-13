@@ -339,5 +339,5 @@ export const loadClasses = (
 };
 
 export const generateModels = createGenerateModels<IModels>(loadClasses, {
-  ignoreModels: ['Logs'],
+  ignoreModels: ['logs', 'automations_executions'],
 });

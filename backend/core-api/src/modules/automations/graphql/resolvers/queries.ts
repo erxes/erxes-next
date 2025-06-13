@@ -309,7 +309,15 @@ export const automationQueries = {
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IAutomationDocument>({
         model: models.Automations,
-        params,
+        params: {
+          ...params,
+          orderBy: {
+            createdAt: -1,
+          },
+          fieldTypes: {
+            createdAt: 'date',
+          },
+        },
         query: filter,
       });
 

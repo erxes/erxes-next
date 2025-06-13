@@ -1,6 +1,5 @@
-// import * as TablerIcons from '@tabler/icons-react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
+import React, { ComponentType, SVGProps, lazy, Suspense } from 'react';
 import { cn } from 'erxes-ui/lib';
 
 const iconVariants = cva(``, {
@@ -20,7 +19,6 @@ const iconVariants = cva(``, {
 });
 
 export type TablerIconSize = 'xsm' | 'sm' | 'md' | 'lg' | 'xl';
-// export type TablerIconNamesType = keyof typeof TablerIcons;
 
 interface IconProps
   extends React.HtmlHTMLAttributes<HTMLButtonElement>,
@@ -28,22 +26,44 @@ interface IconProps
   name: string;
 }
 
-const TablerIcon = React.forwardRef<HTMLButtonElement, IconProps>(
+function loadIcon(name: string) {
+  return lazy(() =>
+    import('@tabler/icons-react').then((module) => {
+      const Icon = module[name as keyof typeof module] as ComponentType<
+        SVGProps<SVGSVGElement>
+      >;
+
+      if (!Icon) {
+        throw new Error(
+          `Icon "${name}" does not exist in @tabler/icons-react.`,
+        );
+      }
+
+      return { default: Icon };
+    }),
+  );
+}
+
+const DynamicTablerIcon = ({ name }: { name: string }) => {
+  const LazyIcon = loadIcon(name);
+
+  return (
+    <Suspense fallback={<span className="w-4 h-4 animate-pulse" />}>
+      <LazyIcon />
+    </Suspense>
+  );
+};
+
+const TablerIcon = React.forwardRef<SVGElement, IconProps>(
   ({ name, className, size, ...props }, ref) => {
-    const Icons: any = TablerIcon;
-    const IconComponent = Icons[name];
-
-    if (!IconComponent) {
-      // Return a default icon or null if the icon name is not found
-      return null;
-    }
-
     return (
-      <IconComponent
-        ref={ref}
-        className={cn(iconVariants({ className, size }))}
+      <span
+        ref={ref as any}
+        className={cn(iconVariants({ size }), className)}
         {...props}
-      />
+      >
+        <DynamicTablerIcon name={name} />
+      </span>
     );
   },
 );

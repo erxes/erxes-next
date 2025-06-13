@@ -1,14 +1,21 @@
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 
 const actions: any = {
   delay: lazy(() =>
-    import('./actions/Delay').then((module) => ({
-      default: module.NodeContent,
+    import('./actions/delay/components/Delay').then((module) => ({
+      default: module.Delay.NodeContent,
     })),
   ),
   setProperty: lazy(() =>
-    import('./actions/ManageProperties').then((module) => ({
-      default: module.NodeContent,
+    import('./actions/manageProperties/component/ManageProperties').then(
+      (module) => ({
+        default: module.ManageProperties.NodeContent,
+      }),
+    ),
+  ),
+  sendEmail: lazy(() =>
+    import('./actions/sendEmail/components/SendEmail').then((module) => ({
+      default: module.SendEmail.NodeContent,
     })),
   ),
 };

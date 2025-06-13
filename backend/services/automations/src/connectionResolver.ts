@@ -35,4 +35,6 @@ export const loadClasses = (db: Connection, subdomain: string): IModels => {
   return models;
 };
 
-export const generateModels = createGenerateModels<IModels>(loadClasses);
+export const generateModels = createGenerateModels<IModels>(loadClasses, {
+  ignoreModels: ['automations_executions'],
+});

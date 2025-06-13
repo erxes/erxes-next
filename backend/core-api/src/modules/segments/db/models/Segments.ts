@@ -51,7 +51,8 @@ export interface ISegmentModel extends Model<ISegmentDocument> {
     doc: ISegment,
     conditionSegments: ISegment[],
   ): Promise<ISegmentDocument>;
-  removeSegment(_id: string): void;
+  removeSegment(_id: string): Promise<void>;
+  removeSegments(ids: string[]): Promise<void>;
 }
 
 export const loadSegmentClass = (models: IModels) => {
@@ -131,6 +132,25 @@ export const loadSegmentClass = (models: IModels) => {
       await models.Segments.deleteMany({ _id: { $in: subSegmentIds } });
       await segmentObj.deleteOne();
       return segmentObj;
+    }
+
+    public static async removeSegments(ids: string[]) {
+      const segments = await models.Segments.find({ _id: { $in: ids } }).lean();
+
+      const segmentIds: string[] = [];
+
+      for (const segment of segments) {
+        segmentIds.push(segment._id);
+        if (segment.conditions) {
+          for (const condition of segment.conditions) {
+            if (condition.subSegmentId) {
+              segmentIds.push(condition.subSegmentId);
+            }
+          }
+        }
+      }
+
+      return await models.Segments.deleteMany({ _id: { $in: segmentIds } });
     }
   }
 

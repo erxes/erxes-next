@@ -26,11 +26,15 @@ const DefaultTriggerContent = ({ activeNode }: Props) => {
       contentType={activeNode?.type || ''}
       segmentId={contentId}
       callback={handleCallback}
-      isTempoaray
+      isTemporary
     />
   );
 };
 
 export const TriggerDetail = ({ activeNode }: Props) => {
-  return <DefaultTriggerContent activeNode={activeNode} />;
+  return (
+    <div className="w-[650px] flex flex-col max-h-full">
+      <DefaultTriggerContent activeNode={activeNode} />
+    </div>
+  );
 };
