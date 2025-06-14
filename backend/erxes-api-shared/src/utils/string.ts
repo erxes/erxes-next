@@ -135,8 +135,18 @@ export const random = (pattern: string, length: number) => {
   if (!chars) throw new Error('No valid pattern provided.');
 
   let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars[Math.floor(Math.random() * chars.length)];
+  const crypto = require('crypto');
+
+  const maxByte = 255;
+  const maxMultiple = Math.floor(maxByte / chars.length) * chars.length;
+
+  while (result.length < length) {
+    const randomBytes = crypto.randomBytes(1);
+    const randomValue = randomBytes[0];
+
+    if (randomValue < maxMultiple) {
+      result += chars[randomValue % chars.length];
+    }
   }
 
   return result;
