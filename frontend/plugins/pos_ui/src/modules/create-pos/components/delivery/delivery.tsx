@@ -1,11 +1,11 @@
 "use client"
 import { Label, Select } from "erxes-ui"
-import { SelectMember } from "ui-modules"
+import { SelectMember, SelectProduct } from "ui-modules"
 import { useForm, UseFormReturn } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState, useImperativeHandle, forwardRef } from "react"
 import { deliveryConfigSchema, type DeliveryConfigFormValues } from "../formSchema"
-import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
+import { IPosDetail } from "~/modules/pos-detail/types/IPos"
 
 interface DeliveryConfigFormProps {
   form?: UseFormReturn<DeliveryConfigFormValues>
@@ -106,7 +106,7 @@ const DeliveryConfigForm = forwardRef<DeliveryConfigFormRef, DeliveryConfigFormP
     const handleSubmit = async () => {
       const isValid = await form.trigger()
       if (!isValid) {
-        console.log("Form validation failed")
+        console.error("Form validation failed")
         return
       }
 
@@ -168,6 +168,10 @@ const DeliveryConfigForm = forwardRef<DeliveryConfigFormRef, DeliveryConfigFormP
       
       setSelectedAssignedUserId(finalUserId)
       form.setValue("assignedUsers", finalUserId, { shouldValidate: true })
+    }
+
+    const handleDeliveryProductChange = (value: string) => {
+      form.setValue("deliveryProduct", value, { shouldValidate: true })
     }
 
     return (
@@ -292,19 +296,11 @@ const DeliveryConfigForm = forwardRef<DeliveryConfigFormRef, DeliveryConfigFormP
             <h2 className="text-indigo-600 text-xl font-medium">DELIVERY PRODUCT</h2>
 
             <div className="space-y-2">
-              <Select
+              <SelectProduct
                 value={form.watch("deliveryProduct") || ""}
-                onValueChange={(value) => handleSelectChange("deliveryProduct", value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Choose delivery product" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="product1">Product 1</Select.Item>
-                  <Select.Item value="product2">Product 2</Select.Item>
-                  <Select.Item value="product3">Product 3</Select.Item>
-                </Select.Content>
-              </Select>
+                onValueChange={handleDeliveryProductChange}
+                className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+              />
               {form.formState.errors.deliveryProduct && (
                 <p className="text-red-500 text-sm mt-1">
                   {form.formState.errors.deliveryProduct.message}

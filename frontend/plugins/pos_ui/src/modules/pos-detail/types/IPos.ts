@@ -1,4 +1,4 @@
-import { IUser } from '@/types/pos';
+import { IUser } from '~/modules/types/pos';
 
 export interface IScreenConfig {
   isActive: boolean;

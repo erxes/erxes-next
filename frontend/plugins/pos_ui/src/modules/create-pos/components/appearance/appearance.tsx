@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom"
 import { IconUpload } from "@tabler/icons-react"
 import { useState, useEffect } from "react"
 import { UiConfigFormValues } from "../formSchema"
-import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
+import { IPosDetail } from "~/modules/pos-detail/types/IPos"
 
 interface AppearanceFormProps {
   posDetail?: IPosDetail;
@@ -85,19 +85,8 @@ export default function AppearanceForm({
     }
   }
 
-  const getFormTitle = () => {
-    if (isReadOnly) return 'View Appearance Settings';
-    return posDetail ? 'Edit Appearance Settings' : 'Configure Appearance Settings';
-  }
-
   return (
     <form onSubmit={handleSubmit} className="p-3">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">
-          {getFormTitle()}
-        </h2>
-      </div>
-
       <div className="space-y-8">
         <div className="space-y-4">
           <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">Logo and favicon</h2>
