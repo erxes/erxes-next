@@ -4,26 +4,30 @@ import { lazy } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 const Delay = lazy(() =>
-  import('../delay/components/Delay').then((module) => ({
+  import('../../nodes/actions/delay/components/Delay').then((module) => ({
     default: module.Delay.SideBarContent,
   })),
 );
 
-const IF = lazy(() =>
-  import('../branches/components/Branches').then((module) => ({
-    default: module.IF,
+const Branches = lazy(() =>
+  import('../../nodes/actions/branches/components/Branches').then((module) => ({
+    default: module.Branches,
   })),
 );
 
 const ManageProperties = lazy(() =>
-  import('../manageProperties/component/ManageProperties').then((module) => ({
+  import(
+    '../../nodes/actions/manageProperties/component/ManageProperties'
+  ).then((module) => ({
     default: module.ManageProperties.SideBarContent,
   })),
 );
 const AutomationSendEmail = lazy(() =>
-  import('../sendEmail/components/SendEmail').then((module) => ({
-    default: module.SendEmail.SideBarContent,
-  })),
+  import('../../nodes/actions/sendEmail/components/SendEmail').then(
+    (module) => ({
+      default: module.SendEmail.SideBarContent,
+    }),
+  ),
 );
 
 const Actions: Record<
@@ -31,12 +35,12 @@ const Actions: Record<
   React.LazyExoticComponent<React.ComponentType<any>>
 > = {
   delay: Delay,
-  if: IF,
+  if: Branches,
   setProperty: ManageProperties,
   sendEmail: AutomationSendEmail,
 };
 
-export const useActionDetail = () => {
+export const useAutomationActionContentSidebar = () => {
   const [activeNodeId] = useQueryState('activeNodeId');
   const { watch, control } = useFormContext<TAutomationProps>();
 

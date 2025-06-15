@@ -2,10 +2,11 @@ import { ErrorState } from '@/automations/utils/ErrorState';
 import { Card, Form, Spinner } from 'erxes-ui';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useActionDetail } from './hooks/useActionDetail';
+import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
 
-export const ActionDetail = () => {
-  const { currentIndex, Component, currentAction, control } = useActionDetail();
+export const AutomationActionContentSidebar = () => {
+  const { currentIndex, Component, currentAction, control } =
+    useAutomationActionContentSidebar();
 
   if (currentIndex === -1) {
     return <Card.Content>Something went wrong</Card.Content>;

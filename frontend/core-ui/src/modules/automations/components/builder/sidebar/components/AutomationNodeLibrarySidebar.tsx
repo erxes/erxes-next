@@ -1,8 +1,8 @@
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
-import { TablerIcon, Card, Input, Skeleton, Tabs } from 'erxes-ui';
+import { TablerIcon, Card, Input, Skeleton, Tabs, Badge } from 'erxes-ui';
 import React, { useState } from 'react';
-import { useSidebarDefaultContent } from './hooks/useSidebarDefaultContent';
+import { useAutomationNodeLibrarySidebar } from '../hooks/useAutomationNodeLibrarySidebar';
 import { IconSearch } from '@tabler/icons-react';
 
 const TabsContent = (
@@ -19,30 +19,38 @@ const TabsContent = (
     list = list.filter((item) => new RegExp(searchValue, 'i').test(item.label));
   }
 
-  return list.map((item, index) => (
-    <Card
-      key={index}
-      className="cursor-grab hover:bg-slate-50 transition-colors mb-2"
-      draggable
-      onDragStart={(event) => onDragStart(event, nodeType, item)}
-    >
-      <Card.Header className="p-3">
-        <Card.Title className="text-sm font-medium flex items-center justify-between">
-          <div className="flex items-center gap-2">
+  return list.map((item, index) => {
+    const color = nodeType === 'action' ? 'success' : 'primary';
+
+    return (
+      <Card
+        key={index}
+        className={`hover:shadow-md transition-shadow cursor-pointer border-accent hover:border-${color} cursor-grab hover:bg-accent transition-colors mb-2 w-[500px]`}
+        draggable
+        onDragStart={(event) => onDragStart(event, nodeType, item)}
+      >
+        <Card.Content className="p-3">
+          <div className="flex items-center gap-4">
             <div
-              className={`h-5 w-5 rounded-full flex items-center justify-center`}
+              className={`p-3 bg-${color}/10 text-${color} border-${color} rounded-lg`}
             >
-              <TablerIcon name={`Icon${item?.icon}` as any} />
+              <TablerIcon name={`Icon${item?.icon}` as any} size="xsm" />
             </div>
-            <span>{item?.label}</span>
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center gap-4">
+                <h3 className="font-semibold text-foreground text-sm">
+                  {item?.label}
+                </h3>
+              </div>
+              <p className="text-accent-foreground leading-relaxed text-xs">
+                {item?.description}
+              </p>
+            </div>
           </div>
-        </Card.Title>
-        <p className="text-xs text-muted-foreground mt-1">
-          {item?.description}
-        </p>
-      </Card.Header>
-    </Card>
-  ));
+        </Card.Content>
+      </Card>
+    );
+  });
 };
 
 const LoadingSkeleton = () => {
@@ -90,7 +98,7 @@ const TabContentWrapper = (
   return <div>{TabsContent(type, list, onDragStart, searchValue)}</div>;
 };
 
-export const AutomationSidebarDefaultContent = () => {
+export const AutomationNodeLibrarySidebar = () => {
   const [searchValue, setSearchValue] = useState('');
   const {
     actionsConst,
@@ -101,11 +109,11 @@ export const AutomationSidebarDefaultContent = () => {
     error,
     refetch,
     onDragStart,
-  } = useSidebarDefaultContent();
+  } = useAutomationNodeLibrarySidebar();
+
   return (
-    <div className="w-80">
+    <div>
       <div className="p-4 border-b">
-        <h3 className="font-medium mb-3">Workflow Components</h3>
         <div className="relative flex items-center">
           <IconSearch className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input

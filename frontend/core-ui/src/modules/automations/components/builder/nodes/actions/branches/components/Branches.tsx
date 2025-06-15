@@ -1,8 +1,8 @@
 import { IActionProps, SegmentForm } from 'ui-modules';
-import { useIf } from '../hooks/useIf';
+import { useBranches } from '../hooks/useBranches';
 
-export const IF = ({ currentAction, handleSave }: IActionProps) => {
-  const { contentType } = useIf(currentAction);
+export const Branches = ({ currentAction, handleSave }: IActionProps) => {
+  const { contentType } = useBranches(currentAction);
 
   return (
     <div className="w-[650px] flex flex-col max-h-full">

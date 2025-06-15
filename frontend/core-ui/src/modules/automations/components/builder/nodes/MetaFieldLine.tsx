@@ -1,4 +1,4 @@
-export const ActionContentRow = ({
+export const MetaFieldLine = ({
   fieldName,
   content,
 }: {
@@ -6,7 +6,7 @@ export const ActionContentRow = ({
   content: React.ReactNode;
 }) => {
   return (
-    <div className="flex justify-between text-slate-600 text-xs w-max">
+    <div className="flex justify-between items-center text-slate-600 text-xs w-max">
       <span className="font-mono">{fieldName}:</span>
       <span className="font-mono">{content}</span>
     </div>

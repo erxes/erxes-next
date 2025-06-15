@@ -25,7 +25,7 @@ import {
   PlaceHolderInput,
   SelectCustomers,
 } from 'ui-modules';
-import { ActionContentRow } from '../../../ActionContentRow';
+import { MetaFieldLine } from '../../../MetaFieldLine';
 import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';
 import {
   useSendEmailCustomMailField,
@@ -274,11 +274,11 @@ const AutomationSendEmailActionResult = ({ result }: { result: any }) => {
         </Button>
       </Popover.Trigger>
       <Popover.Content>
-        <ActionContentRow fieldName="From" content={fromEmail} />
+        <MetaFieldLine fieldName="From" content={fromEmail} />
 
-        <ActionContentRow fieldName="Title" content={title} />
+        <MetaFieldLine fieldName="Title" content={title} />
 
-        <ActionContentRow
+        <MetaFieldLine
           fieldName="To"
           content={
             <>
@@ -305,8 +305,8 @@ const NodeContent = ({ config }: any) => {
 
   return (
     <>
-      <ActionContentRow fieldName="From" content={fromUserId} />
-      <ActionContentRow
+      <MetaFieldLine fieldName="From" content={fromUserId} />
+      <MetaFieldLine
         fieldName="Reciepents"
         content={
           <Popover>
@@ -323,8 +323,8 @@ const NodeContent = ({ config }: any) => {
           </Popover>
         }
       />
-      <ActionContentRow fieldName="Subject" content={subject} />
-      <ActionContentRow fieldName="Template" content={`Under develop`} />
+      <MetaFieldLine fieldName="Subject" content={subject} />
+      <MetaFieldLine fieldName="Template" content={`Under develop`} />
     </>
   );
 };

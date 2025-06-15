@@ -2,10 +2,10 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React, { ComponentType, SVGProps, lazy, Suspense } from 'react';
 import { cn } from 'erxes-ui/lib';
 
-const iconVariants = cva(``, {
+const iconVariants = cva('', {
   variants: {
     size: {
-      default: '',
+      default: 'w-6 h-6',
       xsm: 'w-4 h-4',
       sm: 'w-6 h-6',
       md: 'w-8 h-8',
@@ -21,7 +21,7 @@ const iconVariants = cva(``, {
 export type TablerIconSize = 'xsm' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface IconProps
-  extends React.HtmlHTMLAttributes<HTMLButtonElement>,
+  extends Omit<SVGProps<SVGSVGElement>, 'ref'>,
     VariantProps<typeof iconVariants> {
   name: string;
 }
@@ -44,30 +44,38 @@ function loadIcon(name: string) {
   );
 }
 
-const DynamicTablerIcon = ({ name }: { name: string }) => {
-  const LazyIcon = loadIcon(name);
+const DynamicTablerIcon = React.forwardRef<SVGSVGElement, IconProps>(
+  ({ name, size, className, ...props }, ref) => {
+    const LazyIcon = loadIcon(name);
 
-  return (
-    <Suspense fallback={<span className="w-4 h-4 animate-pulse" />}>
-      <LazyIcon />
-    </Suspense>
-  );
-};
-
-const TablerIcon = React.forwardRef<SVGElement, IconProps>(
-  ({ name, className, size, ...props }, ref) => {
     return (
-      <span
-        ref={ref as any}
-        className={cn(iconVariants({ size }), className)}
-        {...props}
-      >
-        <DynamicTablerIcon name={name} />
-      </span>
+      <Suspense fallback={<span className="w-4 h-4 animate-pulse" />}>
+        <LazyIcon
+          ref={ref}
+          className={cn(iconVariants({ size }), className)}
+          {...props}
+        />
+      </Suspense>
     );
   },
 );
 
-TablerIcon.displayName = 'Icon';
+DynamicTablerIcon.displayName = 'DynamicTablerIcon';
+
+const TablerIcon = React.forwardRef<SVGSVGElement, IconProps>(
+  ({ name, size, className, ...props }, ref) => {
+    return (
+      <DynamicTablerIcon
+        ref={ref}
+        name={name}
+        size={size}
+        className={className}
+        {...props}
+      />
+    );
+  },
+);
+
+TablerIcon.displayName = 'TablerIcon';
 
 export { TablerIcon, iconVariants };

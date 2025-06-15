@@ -21,6 +21,8 @@ const config: ModuleFederationConfig = {
     './inboxSettings': './src/modules/inbox/Settings.tsx',
     './ticketSettings': './src/modules/ticket/Settings.tsx',
     './widgets': './src/widgets/Widgets.tsx',
+    './automations':
+      './src/widgets/automations/components/AutomationRemoteEntry.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

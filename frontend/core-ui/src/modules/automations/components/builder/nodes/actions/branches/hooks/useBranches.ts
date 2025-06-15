@@ -3,7 +3,7 @@ import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions'
 import { useFormContext } from 'react-hook-form';
 import { IAction } from 'ui-modules';
 
-export const useIf = (currentAction: IAction) => {
+export const useBranches = (currentAction: IAction) => {
   const { watch } = useFormContext<TAutomationProps>();
   const { actions = [], triggers = [] } = watch('detail');
 

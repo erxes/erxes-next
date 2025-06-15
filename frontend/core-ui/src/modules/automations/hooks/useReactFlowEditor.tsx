@@ -18,11 +18,13 @@ import {
   getNewId,
 } from '../utils/automationActionConnectionUtils';
 import { generateEdges, generateNodes } from '../utils/automationBuilderUtils';
-import { useQueryState } from 'erxes-ui';
+import { themeState, useQueryState } from 'erxes-ui';
+import { useAtomValue } from 'jotai';
 
 export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
   const { watch, setValue } = useFormContext<TAutomationProps>();
   const [activeNodeId, setActiveNodeId] = useQueryState('activeNodeId');
+  const theme = useAtomValue(themeState);
 
   const { triggers = [], actions = [] } = watch('detail') || {};
 
@@ -94,19 +96,33 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      const nodeType = event.dataTransfer.getData(
-        'application/reactflow/type',
-      ) as 'trigger' | 'action';
-      const nodeModule = event.dataTransfer.getData(
-        'application/reactflow/module',
+      const draggingNode = event.dataTransfer.getData(
+        'application/reactflow/draggingNode',
       );
-      const nodeLabel = event.dataTransfer.getData(
-        'application/reactflow/label',
-      );
-      const nodeDescription = event.dataTransfer.getData(
-        'application/reactflow/description',
-      );
-      const nodeIcon = event.dataTransfer.getData('application/reactflow/icon');
+      // const nodeType = event.dataTransfer.getData(
+      //   'application/reactflow/type',
+      // ) as 'trigger' | 'action';
+      // const nodeModule = event.dataTransfer.getData(
+      //   'application/reactflow/module',
+      // );
+      // const nodeLabel = event.dataTransfer.getData(
+      //   'application/reactflow/label',
+      // );
+      // const nodeDescription = event.dataTransfer.getData(
+      //   'application/reactflow/description',
+      // );
+      // const nodeIcon = event.dataTransfer.getData('application/reactflow/icon');
+
+      const { nodeType, type, label, description, icon, isCustom } = JSON.parse(
+        draggingNode || '{}',
+      ) as {
+        nodeType: 'trigger' | 'action';
+        type: string;
+        label: string;
+        description: string;
+        icon: string;
+        isCustom?: boolean;
+      };
 
       // Check if the dropped element is valid
       if (typeof nodeType === 'undefined' || !nodeType) {
@@ -131,13 +147,14 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
         position,
         data: {
           id,
-          label: nodeLabel || `New ${nodeType}`,
-          icon: nodeIcon,
+          label: label || `New ${nodeType}`,
+          icon: icon,
           nodeType: nodeType as 'trigger' | 'action',
-          type: nodeModule,
-          description: nodeDescription || '',
+          type,
+          description: description || '',
           config: {},
           nodeIndex: nodes.length + 1,
+          isCustom,
           ...(nodeType === 'action' ? {} : { actionId: undefined }),
         },
       };
@@ -147,11 +164,12 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
         ...nodes,
         {
           id,
-          type: nodeModule,
+          type,
           config: {},
-          icon: nodeIcon,
-          label: nodeLabel,
-          description: nodeDescription,
+          icon: icon,
+          label: label,
+          description: description,
+          isCustom,
         },
       ]);
     },
@@ -264,6 +282,7 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
   };
 
   return {
+    theme,
     triggers,
     actions,
     nodes,

@@ -3,7 +3,7 @@ import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { useState } from 'react';
 import { useFormContext, UseFormSetValue } from 'react-hook-form';
 import { NodeData } from '../../../types';
-import { EditForm } from './EditNodeForm';
+import { EditForm } from './NodeEditForm';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 
 const fields = {

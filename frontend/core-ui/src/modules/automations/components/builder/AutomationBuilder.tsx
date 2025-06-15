@@ -15,7 +15,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
-import { AutomationBuilderSidebar } from './AutomationBuilderSidebar';
+import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
 
 import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
 import {
@@ -27,8 +27,8 @@ import { deepCleanNulls } from '../../utils/automationBuilderUtils';
 import { AutomationHistories } from './AutomationHistories';
 import ConnectionLine from './edges/connectionLine';
 import PrimaryEdge from './edges/primary';
-import ActionNode from './nodes/Action';
-import TriggerNode from './nodes/Trigger';
+import ActionNode from './nodes/ActionNode';
+import TriggerNode from './nodes/TriggerNode';
 
 const nodeTypes = {
   trigger: TriggerNode as any,
@@ -37,8 +37,9 @@ const nodeTypes = {
 const edgeTypes = {
   primary: PrimaryEdge,
 };
-const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
+const Builder = ({ reactFlowInstance, setReactFlowInstance }: any) => {
   const {
+    theme,
     resetNodes,
     reactFlowWrapper,
     nodes,
@@ -62,7 +63,8 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
 
   return (
     <div
-      className="flex flex-column grow h-full relative"
+      // className="flex flex-column grow h-full relative"
+      className="h-full"
       ref={reactFlowWrapper}
     >
       <ReactFlow
@@ -83,17 +85,17 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
         style={{ backgroundColor: '#F7F9FB' }}
         connectionLineComponent={ConnectionLine}
         onNodeDragStop={onNodeDragStop}
+        colorMode={theme}
       >
         <Controls />
         <Background />
         <MiniMap pannable position="top-left" />
       </ReactFlow>
-      <AutomationBuilderSidebar />
     </div>
   );
 };
 
-export default ({ detail }: { detail?: IAutomation }) => {
+export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
   const [activeNodeId] = useQueryState('activeNodeId');
   const [activeTabQueryParam] = useQueryState<'builder' | 'history'>(
     'activeTab',
@@ -120,10 +122,13 @@ export default ({ detail }: { detail?: IAutomation }) => {
           {activeTab === 'history' ? (
             <AutomationHistories />
           ) : (
-            <Editor
-              reactFlowInstance={reactFlowInstance}
-              setReactFlowInstance={setReactFlowInstance}
-            />
+            <div className="relative h-full flex flex-col grow">
+              <Builder
+                reactFlowInstance={reactFlowInstance}
+                setReactFlowInstance={setReactFlowInstance}
+              />
+              <AutomationBuilderSidebar />
+            </div>
           )}
         </FormProvider>
       </AutomationBuilderDnDProvider>

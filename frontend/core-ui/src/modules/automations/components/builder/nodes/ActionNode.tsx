@@ -5,8 +5,8 @@ import { IconAdjustmentsAlt, IconMessage, IconPlus } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
 import { NodeData } from '../../../types';
 import { ErrorState } from '../../../utils/ErrorState';
-import { NodeDropdownActions } from './NodeActions';
-import { ActionNodeContent } from './ActionContent';
+import { NodeDropdownActions } from './NodeDropdownActions';
+import { ActionNodeConfigurationContent } from './ActionNodeConfigurationContent';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 
 const renderContent = (data: NodeData) => {
@@ -31,7 +31,10 @@ const renderContent = (data: NodeData) => {
         <p className="text-sm font-semibold">Configuration</p>
       </div>
       <div className="rounded border bg-muted overflow-x-auto">
-        <ActionNodeContent type={data.type || ''} config={data.config} />
+        <ActionNodeConfigurationContent
+          type={data.type || ''}
+          config={data.config}
+        />
       </div>
     </div>
   );
@@ -89,7 +92,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
       </div>
       <div
         className={cn(
-          'rounded-md shadow-md bg-white border border-muted w-[280px] font-mono',
+          'rounded-md shadow-md bg-background border border-muted w-[280px] font-mono',
           selected ? 'ring-2 ring-success ring-offset-2' : '',
           data?.error ? 'ring-2 ring-red-300 ring-offset-2' : '',
           'transition-all duration-200',

@@ -4,10 +4,10 @@ import { useReactFlow } from '@xyflow/react';
 import { Button, Card, Separator, useMultiQueryState } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { NodeData } from '../../types';
-import { ActionDetail } from './nodes/actions';
-import { TriggerDetail } from './nodes/triggers';
-import { AutomationSidebarDefaultContent } from './sidebar/AutomationSidebarDefaultContent';
+import { NodeData } from '@/automations/types';
+import { AutomationActionContentSidebar } from './AutomationActionContentSidebar';
+import { AutomationTriggerContentSidebar } from './AutomationTriggerContentSidebar';
+import { AutomationNodeLibrarySidebar } from './AutomationNodeLibrarySidebar';
 
 const AutomationBuilderSidebarContent = ({
   activeNode,
@@ -17,15 +17,15 @@ const AutomationBuilderSidebarContent = ({
   if (activeNode) {
     const { nodeType = '' } = activeNode || {};
     if (nodeType === 'trigger') {
-      return <TriggerDetail activeNode={activeNode} />;
+      return <AutomationTriggerContentSidebar activeNode={activeNode} />;
     }
 
     if (nodeType === 'action') {
-      return <ActionDetail />;
+      return <AutomationActionContentSidebar />;
     }
   }
 
-  return <AutomationSidebarDefaultContent />;
+  return <AutomationNodeLibrarySidebar />;
 };
 
 const useAutomationBuilderSidebarHooks = () => {
@@ -75,6 +75,7 @@ export const AutomationBuilderSidebar = () => {
     handleClose,
     setValue,
   } = useAutomationBuilderSidebarHooks();
+
   useEffect(() => {
     if (!!queries.activeNodeId && !activeNode) {
       const nodes = getNodes();
@@ -116,7 +117,7 @@ export const AutomationBuilderSidebar = () => {
       )}
 
       {/* Make this the scrollable area */}
-      <Card.Content className="min-w-80 max-w-2xl w-full flex-1 overflow-auto">
+      <Card.Content className="min-w-80 max-w-2xl w-full flex-1 overflow-auto p-0">
         <AutomationBuilderSidebarContent activeNode={activeNode} />
       </Card.Content>
     </Card>

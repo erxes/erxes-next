@@ -368,6 +368,33 @@ export const getContentType = (
   return triggers[0]?.type;
 };
 
+export const getTriggerOfAction = (
+  currentActionId: string,
+  actions: IAction[],
+  triggers: ITrigger[],
+) => {
+  // Build a map of nextActionId → actionId
+  const reverseMap = new Map<string, string>();
+
+  for (const { id, nextActionId } of actions) {
+    if (nextActionId) {
+      reverseMap.set(nextActionId, id);
+    }
+  }
+
+  let cursor = currentActionId;
+
+  // Walk backward
+  while (cursor) {
+    const trigger = triggers.find((t) => t.actionId === cursor);
+    if (trigger) return trigger.type;
+
+    cursor = reverseMap.get(cursor) ?? '';
+  }
+
+  return undefined;
+};
+
 export const generateSendEmailRecipientMails = ({
   attributionMails,
   customMails = [],

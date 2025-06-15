@@ -24,6 +24,7 @@ export type NodeData = {
   outputs?: number;
   color?: string;
   error?: string;
+  isCustom?: boolean;
 };
 
 export interface IAutomationDoc {

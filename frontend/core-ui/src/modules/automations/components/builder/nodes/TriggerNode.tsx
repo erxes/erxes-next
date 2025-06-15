@@ -4,7 +4,7 @@ import { IconSunElectricity } from '@tabler/icons-react';
 import { cn } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 import { ErrorState } from '../../../utils/ErrorState';
-import { NodeDropdownActions } from './NodeActions';
+import { NodeDropdownActions } from './NodeDropdownActions';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 
 const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {

@@ -5,8 +5,8 @@ import {
   generateEdges,
   generateNodes,
 } from '@/automations/utils/automationBuilderUtils';
-import ActionNode from '../nodes/Action';
-import TriggerNode from '../nodes/Trigger';
+import ActionNode from '../nodes/ActionNode';
+import TriggerNode from '../nodes/TriggerNode';
 import PrimaryEdge from '../edges/primary';
 import { IAction, ITrigger } from 'ui-modules';
 import { IAutomationHistory } from '@/automations/types';

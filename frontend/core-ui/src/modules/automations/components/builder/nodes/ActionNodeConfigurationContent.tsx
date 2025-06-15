@@ -20,22 +20,22 @@ const actions: any = {
   ),
 };
 
-export const ActionNodeContent = ({
+export const ActionNodeConfigurationContent = ({
   type,
   config,
 }: {
   type: string;
   config: any;
 }) => {
-  const Action = actions[type];
+  const Component = actions[type];
 
-  if (!Action) {
+  if (!Component) {
     return null;
   }
 
   return (
     <div className="px-4 py-2">
-      <Action config={config} />
+      <Component config={config} />
     </div>
   );
 };

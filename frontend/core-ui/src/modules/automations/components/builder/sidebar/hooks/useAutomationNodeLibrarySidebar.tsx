@@ -4,31 +4,41 @@ import { useQuery } from '@apollo/client';
 import { useQueryState } from 'erxes-ui';
 import React from 'react';
 
-export const useSidebarDefaultContent = () => {
+export const useAutomationNodeLibrarySidebar = () => {
   const [activeNodeTab, setNodeActiveTab] = useQueryState<'trigger' | 'action'>(
     'activeNodeTab',
   );
 
   const { data, loading, error, refetch } = useQuery<ConstantsQueryResponse>(
     AUTOMATOMATION_CONSTANTS,
-    { fetchPolicy: 'network-only' },
+    {
+      fetchPolicy: 'cache-first',
+      nextFetchPolicy: 'cache-only', // Prevent any refetch after the first
+      notifyOnNetworkStatusChange: false,
+    },
   );
 
-  const { triggersConst, actionsConst } = data?.automationConstants || {};
+  const { triggersConst = [], actionsConst = [] } =
+    data?.automationConstants || {};
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string,
-    { type, label, description, icon }: any,
+    { type, label, description, icon, isCustom }: any,
   ) => {
-    event.dataTransfer.setData('application/reactflow/type', nodeType);
-    event.dataTransfer.setData('application/reactflow/module', type);
-    event.dataTransfer.setData('application/reactflow/label', label);
-    event.dataTransfer.setData(
-      'application/reactflow/description',
+    const data = {
+      nodeType,
+      type,
+      label,
       description,
+      icon,
+      isCustom,
+    };
+
+    event.dataTransfer.setData(
+      'application/reactflow/draggingNode',
+      JSON.stringify(data),
     );
-    event.dataTransfer.setData('application/reactflow/icon', icon);
     event.dataTransfer.effectAllowed = 'move';
   };
 

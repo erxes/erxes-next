@@ -11,7 +11,7 @@ import {
   AUTOMATION_STATUSES,
   IAutomationExecutionDocument,
 } from 'erxes-api-shared/core-modules';
-import { UI_ACTIONS } from '../../constants';
+import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
 import { IContext } from '~/connectionResolvers';
 import {
   ICursorPaginateParams,
@@ -24,6 +24,10 @@ import {
   getPaginationInfo,
 } from 'erxes-api-shared/utils';
 import { FilterQuery, Model, SortOrder, Document, Types } from 'mongoose';
+import {
+  IAutomationsActionConfig,
+  IAutomationsTriggerConfig,
+} from 'erxes-api-shared/core-modules/automations/types';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;
@@ -447,12 +451,12 @@ export const automationQueries = {
     const plugins = await getPlugins();
 
     const constants: {
-      triggersConst: ITrigger[];
+      triggersConst: IAutomationsTriggerConfig[];
       triggerTypesConst: string[];
-      actionsConst: any[];
+      actionsConst: IAutomationsActionConfig[];
       propertyTypesConst: Array<{ value: string; label: string }>;
     } = {
-      triggersConst: [],
+      triggersConst: [...UI_TRIGGERS],
       triggerTypesConst: [],
       actionsConst: [...UI_ACTIONS],
       propertyTypesConst: [],
@@ -467,7 +471,7 @@ export const automationQueries = {
         const { triggers = [], actions = [] } = pluginConstants;
 
         for (const trigger of triggers) {
-          constants.triggersConst.push(trigger);
+          constants.triggersConst.push({ ...trigger, pluginName });
           constants.triggerTypesConst.push(trigger.type);
           constants.propertyTypesConst.push({
             value: trigger.type,
@@ -476,7 +480,7 @@ export const automationQueries = {
         }
 
         for (const action of actions) {
-          constants.actionsConst.push(action);
+          constants.actionsConst.push({ ...action, pluginName });
         }
 
         if (!!pluginConstants?.emailRecipientTypes?.length) {
