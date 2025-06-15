@@ -120,20 +120,16 @@ export const PosEdit = () => {
         : permissionValues.cashierIds;
 
     const finalData = {
-      basicInfo: currentBasicInfo,
-      permission: {
-        ...permissionValues,
-        adminIds: finalAdminIds,
-        cashierIds: finalCashierIds,
-      },
+      _id: posDetail._id,
+      ...currentBasicInfo,
+      ...permissionValues,
+      adminIds: finalAdminIds,
+      cashierIds: finalCashierIds,
     };
 
     await posEdit(
       {
-        variables: {
-          _id: posDetail._id,
-          ...finalData,
-        },
+        variables: finalData,
       },
       [
         'name',
