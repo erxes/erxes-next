@@ -8,12 +8,18 @@ import {
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
-import { IUser, IUsersDetails } from '../types';
+import { EStatus, IUsersDetails } from '../types';
+import { IMember } from 'ui-modules';
 
 export const USERS_PER_PAGE = 30;
 
 type IUsersQuery = ICursorListResponse<
-  IUser & { details: IUsersDetails & { __typename: string } }
+  IMember & { details: IUsersDetails & { __typename: string } } & {
+    status: EStatus;
+    employeeId: string;
+    isActive: boolean;
+    positionIds: string[];
+  }
 >;
 
 const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
@@ -52,7 +58,7 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
     },
   );
 
-  const { list: users, totalCount, pageInfo } = data?.users || {};
+  const { list = [], totalCount = 0, pageInfo } = data?.users || {};
 
   const handleFetchMore = ({
     direction,
@@ -92,12 +98,12 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
 
   return {
     loading,
-    users: users?.map(
-      ({ details: { __typename, ...detailData }, ...user }) => ({
-        ...user,
-        details: detailData,
-      }),
-    ),
+    users: list?.map(({ details, ...user }) => {
+      const { __typename, ...detailData } = details || {}
+      return {
+      ...user,
+      details: detailData,
+    }}),
     error,
     totalCount,
     handleFetchMore,
