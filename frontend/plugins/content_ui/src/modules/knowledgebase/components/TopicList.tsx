@@ -10,24 +10,15 @@ import {
   useConfirm,
 } from 'erxes-ui';
 
-import {
-  IconDotsVertical,
-  IconFolder,
-  IconBook,
-  IconFileText,
-  IconHelp,
-  IconInfoCircle,
-  IconQuestionMark,
-  IconArticle,
-  IconNotes,
-  IconFile,
-} from '@tabler/icons-react';
+import { IconDotsVertical, IconFolder } from '@tabler/icons-react';
+
+import { ICONS } from '@/knowledgebase/constants';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { REMOVE_CATEGORY } from '../graphql/mutations';
+import { useTopics } from '../hooks/useTopics';
 import { ICategory, ITopic } from '../types';
 import { CategoryDrawer } from './CategoryDrawer';
-import { useTopics } from '../hooks/useTopics';
 
 interface TopicListProps {
   topics: ITopic[];
@@ -230,19 +221,8 @@ export function TopicItem(props: {
   );
 
   const getIconComponent = (iconName?: string) => {
-    const iconMap: Record<string, React.ComponentType<any>> = {
-      folder: IconFolder,
-      book: IconBook,
-      file: IconFile,
-      article: IconArticle,
-      help: IconHelp,
-      info: IconInfoCircle,
-      question: IconQuestionMark,
-      notes: IconNotes,
-      fileText: IconFileText,
-    };
-
-    return iconName ? iconMap[iconName] || IconFolder : IconFolder;
+    const icon = ICONS.find((icon) => icon.value === iconName);
+    return icon ? icon.icon : IconFolder;
   };
 
   return (
