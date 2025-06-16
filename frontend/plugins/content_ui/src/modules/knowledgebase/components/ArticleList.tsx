@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, DropdownMenu, Spinner } from 'erxes-ui';
-import { Ellipsis } from 'lucide-react';
+import { IconDotsVertical } from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
 import { useArticles } from '../hooks/useArticles';
 
@@ -55,7 +55,7 @@ export function ArticleList({ onEditArticle }: ArticleListProps) {
           <DropdownMenu>
             <DropdownMenu.Trigger asChild>
               <Button variant="ghost" size="icon">
-                <Ellipsis className="w-4 h-4" />
+                <IconDotsVertical className="w-4 h-4" />
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content>

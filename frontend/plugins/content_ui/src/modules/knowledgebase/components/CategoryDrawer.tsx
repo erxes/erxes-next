@@ -4,18 +4,11 @@ import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { ADD_CATEGORY, EDIT_CATEGORY } from '../graphql/mutations';
-import {
-  Form,
-  Input,
-  Sheet,
-  Button,
-  Textarea,
-  IconPicker,
-  useToast,
-} from 'erxes-ui';
+import { Form, Input, Sheet, Button, Textarea, useToast } from 'erxes-ui';
 import { ICategory } from '../types';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconPicker } from '@/knowledgebase/components/IconPicker';
 
 interface CategoryDrawerProps {
   category?: ICategory;
@@ -30,7 +23,9 @@ const categorySchema = z.object({
   code: z.string().min(1, { message: 'Code is required' }),
   title: z.string().min(1, { message: 'Title is required' }),
   description: z.string().optional(),
+  topicId: z.string().optional(),
   icon: z.string().optional(),
+  parentCategoryId: z.string().optional(),
 });
 
 type CategoryFormData = z.infer<typeof categorySchema>;
@@ -174,6 +169,7 @@ export function CategoryDrawer({
               )}
             />
 
+            {/* TODO enable icon picker after erxes-ui add icon picker component */}
             <Form.Field
               control={form.control}
               name="icon"
@@ -183,6 +179,18 @@ export function CategoryDrawer({
                   <Form.Control>
                     <IconPicker value={field.value} onChange={field.onChange} />
                   </Form.Control>
+                  <Form.Message className="text-destructive" />
+                </Form.Item>
+              )}
+            />
+
+            <Form.Field
+              control={form.control}
+              name="icon"
+              render={({ field }) => (
+                <Form.Item className="flex flex-col gap-2">
+                  <Form.Label>Icon</Form.Label>
+                  <Form.Control></Form.Control>
                   <Form.Message className="text-destructive" />
                 </Form.Item>
               )}

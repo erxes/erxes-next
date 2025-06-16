@@ -1,6 +1,6 @@
 import { IconSandbox } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui/types';
-import { BookOpenCheck } from 'lucide-react';
+import { IconBooks } from '@tabler/icons-react';
 
 export const CONFIG: IUIConfig = {
   name: 'content',
@@ -8,7 +8,7 @@ export const CONFIG: IUIConfig = {
   modules: [
     {
       name: 'knowledgebase',
-      icon: BookOpenCheck,
+      icon: IconBooks,
       path: 'knowledgebase',
       hasSettings: false,
       hasWidgets: false,

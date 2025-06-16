@@ -9,8 +9,19 @@ import {
   Spinner,
   useConfirm,
 } from 'erxes-ui';
-import * as LucideIcons from 'lucide-react';
-import { Ellipsis, icons } from 'lucide-react';
+
+import {
+  IconDotsVertical,
+  IconFolder,
+  IconBook,
+  IconFileText,
+  IconHelp,
+  IconInfoCircle,
+  IconQuestionMark,
+  IconArticle,
+  IconNotes,
+  IconFile,
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { REMOVE_CATEGORY } from '../graphql/mutations';
@@ -159,7 +170,7 @@ export function TopicItem(props: {
   const renderTopicActions = (topic: ITopic) => (
     <DropdownMenu>
       <DropdownMenu.Trigger className="ml-2 p-2">
-        <Ellipsis className="w-4 h-4" />
+        <IconDotsVertical className="w-4 h-4" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item onClick={() => onEditTopic(topic)}>
@@ -189,7 +200,7 @@ export function TopicItem(props: {
   ) => (
     <DropdownMenu>
       <DropdownMenu.Trigger className="ml-2 p-2">
-        <Ellipsis className="w-4 h-4" />
+        <IconDotsVertical className="w-4 h-4" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item
@@ -218,6 +229,22 @@ export function TopicItem(props: {
     </DropdownMenu>
   );
 
+  const getIconComponent = (iconName?: string) => {
+    const iconMap: Record<string, React.ComponentType<any>> = {
+      folder: IconFolder,
+      book: IconBook,
+      file: IconFile,
+      article: IconArticle,
+      help: IconHelp,
+      info: IconInfoCircle,
+      question: IconQuestionMark,
+      notes: IconNotes,
+      fileText: IconFileText,
+    };
+
+    return iconName ? iconMap[iconName] || IconFolder : IconFolder;
+  };
+
   return (
     <>
       <Collapsible asChild open={isActive} className="group/collapsible">
@@ -236,8 +263,7 @@ export function TopicItem(props: {
             <Collapsible.Content asChild>
               <Sidebar.Sub>
                 {parentCategories.map((cat) => {
-                  const IconComponent =
-                    LucideIcons[cat.icon as keyof typeof icons];
+                  const IconComponent = getIconComponent(cat.icon);
                   const isSubmenuActive =
                     cat._id === searchParams.get('categoryId');
                   return (
@@ -273,8 +299,7 @@ export function TopicItem(props: {
                           {cat.children.map((sub) => {
                             const isSubActive =
                               sub._id === searchParams.get('categoryId');
-                            const IconComponent =
-                              LucideIcons[sub.icon as keyof typeof icons];
+                            const IconComponent = getIconComponent(sub.icon);
                             return (
                               <Sidebar.SubItem key={sub._id}>
                                 <Sidebar.SubButton
