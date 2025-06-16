@@ -1,8 +1,8 @@
 export const types = `
   type Car {
     ownerId: String
-    customers: [Customer]
-    companies: [Company]
+    customer: Customer
+    companies: Company
 
     getTags: [Tag]
     plateNumber: String
