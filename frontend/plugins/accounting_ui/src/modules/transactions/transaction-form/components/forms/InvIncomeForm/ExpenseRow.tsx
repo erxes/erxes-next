@@ -1,6 +1,13 @@
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
+import { followTrDocsState } from '../../../states/trStates';
+import { getSingleJournalByAccount, getTempId } from '../../utils';
+import { IAccount, JournalEnum } from '@/settings/account/types/Account';
+import { IconTrashX } from '@tabler/icons-react';
+import { INV_INCOME_EXPENSE_TYPES, TR_SIDES } from '@/transactions/types/constants';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { JournalEnum } from '@/settings/account/types/Account';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
+import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import {
   Form,
@@ -15,9 +22,6 @@ import {
   Table,
   Button,
 } from 'erxes-ui';
-import { AccountingHotkeyScope } from '~/modules/types/AccountingHotkeyScope';
-import { INV_INCOME_EXPENSE_TYPES } from '~/modules/transactions/types/constants';
-import { IconTrashX } from '@tabler/icons-react';
 
 export const ExpenseRow = ({
   form,
@@ -28,6 +32,10 @@ export const ExpenseRow = ({
   expenseIndex: number;
   journalIndex: number;
 }) => {
+  const trDoc = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}`
+  });
 
   const expenses = useWatch({
     control: form.control,
@@ -38,6 +46,46 @@ export const ExpenseRow = ({
     control: form.control,
     name: `trDocs.${journalIndex}.extraData.invIncomeExpenses.${expenseIndex}`,
   });
+
+  const [account, setAccount] = useState<IAccount>();
+  const [followTrDocs, setFollowTrDocs] = useAtom(followTrDocsState);
+
+  useEffect(() => {
+    console.log(expense.accountId, 'kkkkkkkkkkkkkkkk', account)
+    if (!expense.accountId) {
+      setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'incomeExpense')));
+      return;
+    }
+
+    const { sumDt, sumCt } = { sumDt: expense.amount, sumCt: 0 };
+
+    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'incomeExpense');
+
+    const vatFtr = {
+      ...curr,
+      _id: curr?._id || getTempId(),
+      journal: getSingleJournalByAccount(account?.journal, account?.kind),
+      originId: trDoc._id,
+      followType: 'vat',
+      details: [{
+        ...(curr?.details || [{}])[0],
+        accountId: expense.accountId,
+        side: TR_SIDES.CREDIT,
+        amount: expense.amount ?? 0
+      }],
+
+      sumDt,
+      sumCt,
+    };
+    setFollowTrDocs([
+      ...(followTrDocs || []).filter(
+        ftr => !(ftr.originId === trDoc._id && ftr.followType === 'vat')
+      ),
+      vatFtr
+    ]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expense.amount, expense.accountId]);
 
   const { _id } = expense;
 
@@ -166,6 +214,7 @@ export const ExpenseRow = ({
                   variant="ghost"
                   inForm
                   scope={AccountingHotkeyScope.TransactionFormSubPage}
+                  onCallback={(account) => setAccount(account)}
                 />
               </RecordTablePopover>
             )}

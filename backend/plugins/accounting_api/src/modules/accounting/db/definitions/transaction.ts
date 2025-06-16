@@ -7,7 +7,7 @@ export const followDetailSchema = new Schema({
   id: { type: String, index: true, label: 'follow tr id' },
   type: {
     type: String, label: 'follow tr type', enum: [
-      'currencyDiff',
+      'currencyDiff', 'incomeExpense'
     ]
   },
 });
