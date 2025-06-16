@@ -1,52 +1,15 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { ErrorState } from '@/automations/utils/ErrorState';
-import { Card, Form, Spinner, useQueryState } from 'erxes-ui';
-import { lazy, Suspense } from 'react';
+import { Card, Form, Spinner } from 'erxes-ui';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useFormContext } from 'react-hook-form';
-
-const Delay = lazy(() =>
-  import('./Delay').then((module) => ({
-    default: module.Delay,
-  })),
-);
-
-const IF = lazy(() =>
-  import('./If').then((module) => ({
-    default: module.IF,
-  })),
-);
-
-const ManageProperties = lazy(() =>
-  import('./ManageProperties').then((module) => ({
-    default: module.ManageProperties,
-  })),
-);
-
-const Actions: Record<
-  string,
-  React.LazyExoticComponent<React.ComponentType<any>>
-> = {
-  delay: Delay,
-  if: IF,
-  setProperty: ManageProperties,
-};
+import { useActionDetail } from './hooks/useActionDetail';
 
 export const ActionDetail = () => {
-  const [activeNodeId] = useQueryState('activeNodeId');
-  const { watch, control } = useFormContext<TAutomationProps>();
-
-  const actions = watch(`detail.actions`) || [];
-  const currentIndex = actions.findIndex(
-    (action) => action.id === activeNodeId,
-  );
+  const { currentIndex, Component, currentAction, control } = useActionDetail();
 
   if (currentIndex === -1) {
     return <Card.Content>Something went wrong</Card.Content>;
   }
-
-  const currentAction = watch(`detail.actions.${currentIndex}`);
-  const Component = Actions[currentAction.type];
 
   if (!Component) {
     return (
