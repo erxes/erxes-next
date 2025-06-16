@@ -25,12 +25,6 @@ export const ExpenseForm = ({
     keyName: '_id'
   });
 
-  const trDoc = useWatch({
-    control: form.control,
-    name: `trDocs.${journalIndex}`,
-    
-  });
-
   const handleAppend = () => {
     append({
       _id: getTempId(),

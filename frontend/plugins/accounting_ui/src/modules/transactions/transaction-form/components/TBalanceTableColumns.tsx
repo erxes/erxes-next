@@ -74,12 +74,13 @@ const DebitCell = ({ getValue, row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          <CurrencyFormatedDisplay
+          {side === TR_SIDES.DEBIT ? amount.toLocaleString() : 0}
+          {/* <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
               amountMicros: side === TR_SIDES.DEBIT ? amount * 1000000 : 0,
             }}
-          />
+          /> */}
         </InlineCellDisplay>
       )}
     />
@@ -96,12 +97,13 @@ const CreditCell = ({ getValue, row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          <CurrencyFormatedDisplay
+          {side === TR_SIDES.CREDIT ? amount : 0}
+          {/* <CurrencyFormatedDisplay
             currencyValue={{
               currencyCode: CurrencyCode.MNT,
               amountMicros: side === TR_SIDES.CREDIT ? amount * 1000000 : 0,
             }}
-          />
+          /> */}
         </InlineCellDisplay>
       )}
     />
