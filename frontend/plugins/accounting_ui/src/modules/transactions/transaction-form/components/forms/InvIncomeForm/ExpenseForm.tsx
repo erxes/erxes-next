@@ -1,5 +1,5 @@
 import { IconPlus, IconZoomCancel, IconZoomIn } from '@tabler/icons-react';
-import { Button } from 'erxes-ui';
+import { Button, usePreviousHotkeyScope } from 'erxes-ui';
 import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
@@ -7,6 +7,7 @@ import { ExpenseRow } from './ExpenseRow';
 // import { RemoveButton } from './RemoveButton';
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import { useState } from 'react';
+import { getTempId } from '../../utils';
 
 export const ExpenseForm = ({
   form,
@@ -16,22 +17,25 @@ export const ExpenseForm = ({
   journalIndex: number;
 }) => {
   const [isShow, setIsShow] = useState(false);
+  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope()
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control: form.control,
     name: `trDocs.${journalIndex}.extraData.invIncomeExpenses`,
+    keyName: '_id'
   });
 
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`,
+    
   });
 
   const handleAppend = () => {
     append({
+      _id: getTempId(),
       amount: 0,
-      expenseCode: '',
-      expenseTitle: '1',
+      title: '',
       rule: 'amount'
     })
   }
@@ -55,12 +59,12 @@ export const ExpenseForm = ({
       rowLength={fields.length}
       scope={AccountingHotkeyScope.TransactionFormSubPage}
     >
-      <Table className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar">
+      <Table className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar" onClickCapture={() => setHotkeyScopeAndMemorizePreviousScope(AccountingHotkeyScope.TransactionFormSubPage)} >
         <ExpenseTableHeader form={form} journalIndex={journalIndex} />
         <Table.Body className="overflow-hidden">
           {fields.map((expense, expenseIndex) => (
             <ExpenseRow
-              key={expense.id || Math.random()}
+              key={expense._id}
               expenseIndex={expenseIndex}
               journalIndex={journalIndex}
               form={form}
@@ -106,8 +110,7 @@ const ExpenseTableHeader = ({
   return (
     <Table.Header>
       <Table.Row>
-        {/* <InventoryHeaderCheckbox /> */}
-        {/* <Table.Head></Table.Head> */}
+        <Table.Head className='w-10'></Table.Head>
         <Table.Head>Expense</Table.Head>
         <Table.Head>Rule</Table.Head>
         <Table.Head>Amount</Table.Head>

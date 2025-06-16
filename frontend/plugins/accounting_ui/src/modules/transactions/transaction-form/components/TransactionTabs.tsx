@@ -60,6 +60,7 @@ export const TransactionsTabsList = ({
       minLength: 1,
     },
   });
+
   const [followTrDocs] = useAtom(followTrDocsState);
 
   const handleRemove = (index: number, e: React.MouseEvent) => {

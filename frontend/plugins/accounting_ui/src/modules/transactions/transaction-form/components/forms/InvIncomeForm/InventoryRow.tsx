@@ -72,10 +72,7 @@ export const InventoryRow = ({
 
   const handleAmountChange = (
     value: number,
-    onChange: (value: number) => void,
   ) => {
-    onChange(value);
-
     const newUnitPrice = count ? value / count : 0;
     form.setValue(getFieldName('unitPrice') as any, newUnitPrice);
     if (trDoc.hasVat || trDoc.hasCtax) {
@@ -120,10 +117,6 @@ export const InventoryRow = ({
 
     setTaxAmounts({ unitPriceWithTax, amountWithTax });
 
-    form.setValue(
-      getFieldName('amount') as any,
-      (amountWithTax / (100 + rowPercent)) * 100,
-    );
     form.setValue(
       getFieldName('unitPrice') as any,
       (unitPriceWithTax / (100 + rowPercent)) * 100,
@@ -285,28 +278,22 @@ export const InventoryRow = ({
       </RecordTableHotKeyControl>
       <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
-          <Form.Field
-            control={form.control}
-            name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
-            render={({ field }) => (
-              <RecordTablePopover
-                scope={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
-                closeOnEnter
-              >
-                <RecordTableCellTrigger>
-                  {field.value?.toLocaleString() || 0}
-                </RecordTableCellTrigger>
-                <RecordTableCellContent>
-                  <CurrencyField.ValueInput
-                    value={field.value ?? 0}
-                    onChange={(value) =>
-                      handleAmountChange(value || 0, field.onChange)
-                    }
-                  />
-                </RecordTableCellContent>
-              </RecordTablePopover>
-            )}
-          />
+          <RecordTablePopover
+            scope={`trDocs.${journalIndex}.details.${detailIndex}.tempAmount`}
+            closeOnEnter
+          >
+            <RecordTableCellTrigger>
+              {((unitPrice ?? 0) * (count ?? 0)).toLocaleString() || 0}
+            </RecordTableCellTrigger>
+            <RecordTableCellContent>
+              <CurrencyField.ValueInput
+                value={((unitPrice ?? 0) * (count ?? 0)) || 0}
+                onChange={(value) =>
+                  handleAmountChange(value || 0)
+                }
+              />
+            </RecordTableCellContent>
+          </RecordTablePopover>
         </Table.Cell>
       </RecordTableHotKeyControl>
 
@@ -429,6 +416,5 @@ export const InventoryRow = ({
         </>
       )}
     </Table.Row>
-    // </InventoryRowContext.Provider>
   );
 };

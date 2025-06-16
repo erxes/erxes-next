@@ -2,7 +2,7 @@ import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import { AddDetailRowButton } from './AddInventoryRow';
 import { InventoryRow } from './InventoryRow';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { Checkbox, RecordTableHotkeyProvider, Table } from 'erxes-ui';
+import { Checkbox, RecordTableHotkeyProvider, Table, useSetHotkeyScope } from 'erxes-ui';
 import { RemoveButton } from './RemoveButton';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { useRef } from 'react';
@@ -18,6 +18,7 @@ export const InventoryForm = ({
     control: form.control,
     name: `trDocs.${journalIndex}.details`,
   });
+  const setHotkeyScope = useSetHotkeyScope()
 
   const tableRef = useRef<HTMLTableElement>(null);
 
@@ -34,6 +35,7 @@ export const InventoryForm = ({
       <Table
         className="mt-5 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar"
         ref={tableRef}
+        onClickCapture={() => setHotkeyScope(AccountingHotkeyScope.TransactionFormPage)}
       >
         <InventoryTableHeader form={form} journalIndex={journalIndex} />
         <Table.Body className="overflow-hidden">
