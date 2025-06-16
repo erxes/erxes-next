@@ -1,8 +1,8 @@
-import { Skeleton, useQueryState } from 'erxes-ui';
-
 import DraggableGroup from '@/deals/components/common/Droppable';
 import { IStage } from '@/deals/types/stages';
 import { Stage } from './Stage';
+import { StagesLoading } from '@/deals/components/loading/StagesLoading';
+import { useQueryState } from 'erxes-ui';
 import { useStages } from '@/deals/stage/hooks/useStages';
 
 export const StagesList = () => {
@@ -15,7 +15,7 @@ export const StagesList = () => {
   });
 
   if (stagesLoading) {
-    return <Skeleton />;
+    return <StagesLoading />;
   }
 
   return (
