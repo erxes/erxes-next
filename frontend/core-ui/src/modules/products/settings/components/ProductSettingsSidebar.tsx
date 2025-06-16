@@ -1,7 +1,7 @@
 import { Sidebar } from 'erxes-ui';
 import { Link, useLocation } from 'react-router-dom';
 export function ProductSettingsSidebar() {
-  const activePath = useLocation().pathname;
+  const { pathname } = useLocation();
   return (
     <Sidebar collapsible="none" className="border-r flex-none">
       <Sidebar.Group>
@@ -9,7 +9,7 @@ export function ProductSettingsSidebar() {
           <Sidebar.Menu>
             <Sidebar.MenuItem>
               <Sidebar.MenuButton
-                isActive={activePath === '/settings/products'}
+                isActive={pathname === '/settings/products'}
                 asChild
               >
                 <Link to="/settings/products">General</Link>
@@ -17,7 +17,7 @@ export function ProductSettingsSidebar() {
             </Sidebar.MenuItem>
             <Sidebar.MenuItem>
               <Sidebar.MenuButton
-                isActive={activePath === '/settings/products/uom'}
+                isActive={pathname === '/settings/products/uom'}
                 asChild
               >
                 <Link to="/settings/products/uom">Uom</Link>
@@ -25,9 +25,7 @@ export function ProductSettingsSidebar() {
             </Sidebar.MenuItem>
             <Sidebar.MenuItem>
               <Sidebar.MenuButton
-                isActive={
-                  activePath === '/settings/products/similarity-configs'
-                }
+                isActive={pathname === '/settings/products/similarity-configs'}
                 asChild
               >
                 <Link to="/settings/products/similarity-configs">

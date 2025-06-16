@@ -6,8 +6,7 @@ import { useProducts } from '@/products/hooks/useProducts';
 export const ProductsRecordTable = () => {
   const { productsMain, handleFetchMore, loading, pageInfo } = useProducts();
 
-  const { hasPreviousPage, hasNextPage, startCursor, endCursor } =
-    pageInfo || {};
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
   return (
     <RecordTable.Provider
@@ -19,7 +18,6 @@ export const ProductsRecordTable = () => {
       <RecordTable.CursorProvider
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
-        loading={loading}
         dataLength={productsMain?.length}
         sessionKey="products_cursor"
       >

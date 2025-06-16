@@ -7,7 +7,7 @@ import {
 import { AfterProcessProps } from '~/types';
 
 interface WorkerMessage {
-  serviceName: string;
+  pluginName: string;
   queueName: string;
   jobName: string;
   subdomain: string;
@@ -65,7 +65,7 @@ const handleAfterMutation = ({
 
     if (mutationNames.includes(mutationName)) {
       sendProcessMessage({
-        serviceName: pluginName,
+        pluginName,
         queueName: 'afterProcess',
         jobName: 'onAfterMutation',
         subdomain,
@@ -105,7 +105,7 @@ const handleUpdatedDocument = ({
 
       if (shouldSend) {
         sendProcessMessage({
-          serviceName: pluginName,
+          pluginName,
           queueName: 'afterProcess',
           jobName: 'onDocumentUpdated',
           subdomain,
@@ -142,7 +142,7 @@ const handleCreateDocument = ({
 
       if (shouldSend) {
         sendProcessMessage({
-          serviceName: pluginName,
+          pluginName,
           queueName: 'afterProcess',
           jobName: 'onDocumentCreated',
           subdomain,
@@ -166,7 +166,7 @@ const handleAfterAPIRequest = ({
     const { path } = payload || {};
     if (paths.includes(path)) {
       sendProcessMessage({
-        serviceName: pluginName,
+        pluginName,
         queueName: 'afterProcess',
         jobName: 'onAfterApiRequest',
         subdomain,
@@ -187,7 +187,7 @@ const handleAfterAuth = ({
 
   if (rule && (rule?.types || []).includes(action)) {
     sendProcessMessage({
-      serviceName: pluginName,
+      pluginName,
       queueName: 'afterProcess',
       jobName: 'onAfterAuth',
       subdomain,

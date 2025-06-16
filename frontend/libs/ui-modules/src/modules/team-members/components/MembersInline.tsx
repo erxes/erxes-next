@@ -25,7 +25,7 @@ export const MembersInlineRoot = ({
   size,
 }: {
   members?: IMember[];
-  memberIds?: string[];
+  memberIds: string[];
   placeholder?: string;
   updateMembers?: (members: IMember[]) => void;
   size?: 'lg';
@@ -51,7 +51,7 @@ export const MembersInlineProvider = ({
   updateMembers,
 }: {
   children?: React.ReactNode;
-  memberIds?: string[];
+  memberIds: string[];
   members?: IMember[];
   placeholder?: string;
   updateMembers?: (members: IMember[]) => void;
