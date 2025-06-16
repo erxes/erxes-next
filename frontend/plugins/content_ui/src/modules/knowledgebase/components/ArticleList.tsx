@@ -1,22 +1,27 @@
 'use client';
 
-import { useQuery } from '@apollo/client';
-import { ARTICLES } from '../graphql/queries';
-import { Button, Spinner, DropdownMenu } from 'erxes-ui';
-import { Ellipsis } from 'lucide-react';
+import { Button, DropdownMenu, Spinner } from 'erxes-ui';
+import { IconDotsVertical } from '@tabler/icons-react';
+import { useSearchParams } from 'react-router-dom';
+import { useArticles } from '../hooks/useArticles';
 
 interface ArticleListProps {
-  categoryId: string;
   onEditArticle: (article: any) => void;
 }
 
-export function ArticleList({ categoryId, onEditArticle }: ArticleListProps) {
-  const { data, loading } = useQuery(ARTICLES, {
-    variables: {
-      categoryId,
-      page: 1,
-      perPage: 20,
-    },
+export function ArticleList({ onEditArticle }: ArticleListProps) {
+  const [searchParams] = useSearchParams();
+  // const { data, loading } = useQuery(ARTICLES, {
+  //   variables: {
+  //     categoryIds: [searchParams.get('categoryId') || ''],
+  //     page: 1,
+  //     perPage: 20,
+  //   },
+  //   fetchPolicy: 'network-only',
+  // });
+
+  const { articles, loading } = useArticles({
+    categoryIds: [searchParams.get('categoryId') || ''],
   });
 
   if (loading) {
@@ -27,7 +32,7 @@ export function ArticleList({ categoryId, onEditArticle }: ArticleListProps) {
     );
   }
 
-  const articles = data?.knowledgeBaseArticles.list || [];
+  // const articles = data?.knowledgeBaseArticles.list || [];
 
   return (
     <div className="space-y-4">
@@ -50,7 +55,7 @@ export function ArticleList({ categoryId, onEditArticle }: ArticleListProps) {
           <DropdownMenu>
             <DropdownMenu.Trigger asChild>
               <Button variant="ghost" size="icon">
-                <Ellipsis className="w-4 h-4" />
+                <IconDotsVertical className="w-4 h-4" />
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content>

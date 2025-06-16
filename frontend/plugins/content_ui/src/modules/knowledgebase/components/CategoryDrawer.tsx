@@ -4,51 +4,51 @@ import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { ADD_CATEGORY, EDIT_CATEGORY } from '../graphql/mutations';
-import { CATEGORIES } from '../graphql/queries';
-import { Form, Input, Sheet, Button, Textarea, IconPicker } from 'erxes-ui';
-
-interface Category {
-  _id: string;
-  code: string;
-  title: string;
-  description: string;
-  icon: string;
-  topicId: string;
-  parentCategoryId?: string;
-}
+import { Form, Input, Sheet, Button, Textarea, useToast } from 'erxes-ui';
+import { ICategory } from '../types';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IconPicker } from '@/knowledgebase/components/IconPicker';
 
 interface CategoryDrawerProps {
-  category?: Category;
-  topicId?: string;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-interface CategoryFormData {
-  code: string;
-  title: string;
-  description: string;
-  icon: string;
+  category?: ICategory;
   topicId: string;
   parentCategoryId?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  refetch: () => void;
 }
+
+const categorySchema = z.object({
+  code: z.string().min(1, { message: 'Code is required' }),
+  title: z.string().min(1, { message: 'Title is required' }),
+  description: z.string().optional(),
+  topicId: z.string().optional(),
+  icon: z.string().optional(),
+  parentCategoryId: z.string().optional(),
+});
+
+type CategoryFormData = z.infer<typeof categorySchema>;
 
 export function CategoryDrawer({
   category,
+  parentCategoryId,
   topicId,
   isOpen,
   onClose,
+  refetch,
 }: CategoryDrawerProps) {
+  const { toast } = useToast();
+
   const isEditing = !!category;
 
   const form = useForm<CategoryFormData>({
+    resolver: zodResolver(categorySchema),
     defaultValues: {
       code: '',
       title: '',
       description: '',
       icon: '',
-      topicId: topicId || '',
-      parentCategoryId: '',
     },
   });
 
@@ -59,8 +59,6 @@ export function CategoryDrawer({
         title: category.title || '',
         description: category.description || '',
         icon: category.icon || '',
-        topicId: category.topicId || '',
-        parentCategoryId: category.parentCategoryId || '',
       });
     } else {
       form.reset({
@@ -68,25 +66,23 @@ export function CategoryDrawer({
         title: '',
         description: '',
         icon: '',
-        topicId: topicId || '',
-        parentCategoryId: '',
       });
     }
   }, [category, topicId, form]);
 
   const [addCategory, { loading: adding }] = useMutation(ADD_CATEGORY, {
-    refetchQueries: [{ query: CATEGORIES }],
     onCompleted: () => {
       onClose();
       form.reset();
+      refetch();
     },
   });
 
   const [editCategory, { loading: editing }] = useMutation(EDIT_CATEGORY, {
-    refetchQueries: [{ query: CATEGORIES }],
     onCompleted: () => {
       onClose();
       form.reset();
+      refetch();
     },
   });
 
@@ -95,13 +91,13 @@ export function CategoryDrawer({
       editCategory({
         variables: {
           _id: category._id,
-          input: data,
+          input: { ...data, topicId, parentCategoryId },
         },
       });
     } else {
       addCategory({
         variables: {
-          input: data,
+          input: { ...data, topicId, parentCategoryId },
         },
       });
     }
@@ -119,7 +115,9 @@ export function CategoryDrawer({
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit, (error) => {
+              console.error(error);
+            })}
             className="p-4 space-y-4"
           >
             <Form.Field
@@ -131,7 +129,7 @@ export function CategoryDrawer({
                   <Form.Control>
                     <Input {...field} placeholder="Enter category code" />
                   </Form.Control>
-                  <Form.Message />
+                  <Form.Message className="text-destructive" />
                 </Form.Item>
               )}
             />
@@ -149,7 +147,7 @@ export function CategoryDrawer({
                       required
                     />
                   </Form.Control>
-                  <Form.Message />
+                  <Form.Message className="text-destructive" />
                 </Form.Item>
               )}
             />
@@ -166,7 +164,22 @@ export function CategoryDrawer({
                       placeholder="Enter category description"
                     />
                   </Form.Control>
-                  <Form.Message />
+                  <Form.Message className="text-destructive" />
+                </Form.Item>
+              )}
+            />
+
+            {/* TODO enable icon picker after erxes-ui add icon picker component */}
+            <Form.Field
+              control={form.control}
+              name="icon"
+              render={({ field }) => (
+                <Form.Item className="flex flex-col gap-2">
+                  <Form.Label>Icon</Form.Label>
+                  <Form.Control>
+                    <IconPicker value={field.value} onChange={field.onChange} />
+                  </Form.Control>
+                  <Form.Message className="text-destructive" />
                 </Form.Item>
               )}
             />
@@ -177,14 +190,22 @@ export function CategoryDrawer({
               render={({ field }) => (
                 <Form.Item className="flex flex-col gap-2">
                   <Form.Label>Icon</Form.Label>
-                  <Form.Control>
-                    <IconPicker value={field.value} onChange={field.onChange} />
-                  </Form.Control>
-                  <Form.Message />
+                  <Form.Control></Form.Control>
+                  <Form.Message className="text-destructive" />
                 </Form.Item>
               )}
             />
 
+            <Form.Field
+              control={form.control}
+              name="topicId"
+              render={({ field }) => <input type="hidden" {...field} />}
+            />
+            <Form.Field
+              control={form.control}
+              name="parentCategoryId"
+              render={({ field }) => <input type="hidden" {...field} />}
+            />
             <div className="flex justify-end space-x-2">
               <Button onClick={onClose} variant="outline">
                 Cancel

@@ -53,22 +53,7 @@ const knowledgeBaseQueries = {
   /**
    * Article list
    */
-  async knowledgeBaseArticles(
-    _root,
-    args: {
-      page: number;
-      perPage: number;
-      searchValue?: string;
-      categoryIds: string[];
-      articleIds: string[];
-      codes: string[];
-      topicIds: string[];
-      sortField?: string;
-      sortDirection?: number;
-      status?: string;
-    },
-    { models }: IContext,
-  ) {
+  async knowledgeBaseArticles(_root, args, { models }: IContext) {
     const selector: any = buildQuery(args);
     let sort: any = { createdDate: -1 };
 

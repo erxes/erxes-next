@@ -1,71 +1,40 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { useSearchParams } from 'react-router-dom';
-import { TOPICS } from '../graphql/queries';
-import { REMOVE_TOPIC } from '../graphql/mutations';
+import { useMutation } from '@apollo/client';
 import { Button, Sidebar } from 'erxes-ui';
-import { TopicList } from './TopicList';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { REMOVE_TOPIC } from '../graphql/mutations';
+import { useTopics } from '../hooks/useTopics';
+import { ICategory, ITopic } from '../types';
+import { ArticleDrawer } from './ArticleDrawer';
 import { ArticleList } from './ArticleList';
 import { TopicDrawer } from './TopicDrawer';
-import { ArticleDrawer } from './ArticleDrawer';
-import { Category, Topic, TopicResponse } from '../types';
-
-function convertToTopic(response: TopicResponse): Topic {
-  return {
-    _id: response._id,
-    title: response.title,
-    code: response.code || '',
-    description: response.description || '',
-    brandId: '', // Default value since it's not in the response
-    color: response.color || '',
-    backgroundImage: response.backgroundImage || '',
-    languageCode: response.languageCode || '',
-    notificationSegmentId: response.notificationSegmentId || '',
-    categories: response.categories,
-    createdBy: response.createdBy,
-    createdDate: response.createdDate,
-    modifiedBy: response.modifiedBy,
-    parentCategories: response.parentCategories,
-  };
-}
+import { TopicList } from './TopicList';
 
 export function KnowledgeBase() {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [isTopicDrawerOpen, setIsTopicDrawerOpen] = useState(false);
   const [isArticleDrawerOpen, setIsArticleDrawerOpen] = useState(false);
-  const [editingTopic, setEditingTopic] = useState<Topic | undefined>(
+  const [editingTopic, setEditingTopic] = useState<ITopic | undefined>(
     undefined,
   );
   const [editingArticle, setEditingArticle] = useState<any>(null);
   const [searchParams] = useSearchParams();
-  const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
-
-  const {
-    data: topicsData,
-    loading: topicsLoading,
-    refetch,
-  } = useQuery(TOPICS, {
-    variables: {
-      page: 1,
-      perPage: 20,
-    },
-    fetchPolicy: 'network-only',
-  });
+  const [currentCategory, setCurrentCategory] = useState<ICategory | null>(
+    null,
+  );
+  const { topics, handleFetchMore, loading, pageInfo, refetch } = useTopics();
 
   const [removeTopic] = useMutation(REMOVE_TOPIC);
 
-  const topics = (topicsData?.knowledgeBaseTopics.list || []).map(
-    convertToTopic,
-  );
   const selectedCategoryId = searchParams.get('categoryId');
 
   useEffect(() => {
     if (selectedCategoryId && topics.length > 0) {
       const category = topics
-        .flatMap((topic: Topic) => topic.categories || [])
-        .find((cat: Category) => cat._id === selectedCategoryId);
+        .flatMap((topic: ITopic) => topic.categories || [])
+        .find((cat: ICategory) => cat._id === selectedCategoryId);
 
       if (category) {
         setCurrentCategory(category);
@@ -99,9 +68,7 @@ export function KnowledgeBase() {
             </div>
             <TopicList
               topics={topics}
-              loading={topicsLoading}
-              selectedTopic={selectedTopic}
-              onTopicSelect={setSelectedTopic}
+              loading={loading}
               removeTopic={(_id) =>
                 removeTopic({
                   variables: {
@@ -114,6 +81,7 @@ export function KnowledgeBase() {
               onEditTopic={(topic) => {
                 setEditingTopic(topic);
                 setIsTopicDrawerOpen(true);
+                refetch();
               }}
             />
           </Sidebar.GroupContent>

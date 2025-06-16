@@ -1,6 +1,6 @@
 import { Queue, QueueEvents, Worker } from 'bullmq';
 import type { Redis } from 'ioredis';
-import type { Job, Worker as WorkerType } from 'bullmq';
+import type { DefaultJobOptions, Job, Worker as WorkerType } from 'bullmq';
 import { redis } from './redis';
 
 const queueMap = new Map<string, Queue>();
@@ -50,23 +50,25 @@ export const sendWorkerQueue = (serviceName: string, queueName: string) =>
   });
 
 export const sendWorkerMessage = async ({
-  serviceName,
+  pluginName,
   queueName,
   jobName,
   subdomain,
   data,
   defaultValue,
   timeout = 3000,
+  options,
 }: {
-  serviceName: string;
+  pluginName: string;
   queueName: string;
   jobName: string;
   subdomain: string;
   data: any;
   defaultValue?: any;
   timeout?: number;
+  options?: DefaultJobOptions;
 }) => {
-  const queueKey = `${serviceName}-${queueName}`;
+  const queueKey = `${pluginName}-${queueName}`;
 
   // Get or create the Queue instance
   let queue = queueMap.get(queueKey);
@@ -86,7 +88,7 @@ export const sendWorkerMessage = async ({
   const job = await queue.add(
     jobName,
     { subdomain, data },
-    { attempts: 3, backoff: timeout },
+    { ...(options || {}) },
   );
   const result = await Promise.race([
     job.waitUntilFinished(queueEvents),

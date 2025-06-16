@@ -1,9 +1,3 @@
-// import {
-//   graphqlAttachmentInput,
-//   graphqlAttachmentType,
-//   graphqlPdfAttachmentInput,
-//   graphqlPdfAttachmentType,
-// } from 'erxes-api-shared/src/utils/apollo/commonTypeDefs';
 
 export const TypeExtensions = `
     enum CacheControlScope {
@@ -41,8 +35,3 @@ export const TypeExtensions = `
 
 
 `;
-
-  // ${graphqlAttachmentType}
-  // ${graphqlAttachmentInput}
-  // ${graphqlPdfAttachmentType}
-  // ${graphqlPdfAttachmentInput}

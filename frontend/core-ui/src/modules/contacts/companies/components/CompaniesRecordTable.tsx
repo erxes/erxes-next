@@ -17,7 +17,6 @@ export const CompaniesRecordTable = () => {
       <RecordTable.CursorProvider
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
-        loading={loading}
         dataLength={companies?.length}
         sessionKey="companies_cursor"
       >

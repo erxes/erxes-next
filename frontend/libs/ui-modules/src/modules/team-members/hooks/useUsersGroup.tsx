@@ -10,8 +10,8 @@ export const useUsersGroup = (options?: OperationVariables) => {
       ...options?.variables,
     },
   });
-  const usersGroups = data?.usersGroups || [];
-  const totalCount = data?.usersGroupsTotalCount;
+  const usersGroups = data?.usersGroups?.list || [];
+  const totalCount = data?.usersGroups?.TotalCount;
 
   const handleFetchMore = () => {
     if (totalCount <= usersGroups?.length) return;

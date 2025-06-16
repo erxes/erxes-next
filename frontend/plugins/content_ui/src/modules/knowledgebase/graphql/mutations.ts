@@ -46,9 +46,7 @@ export const EDIT_CATEGORY = gql`
 
 export const REMOVE_CATEGORY = gql`
   mutation knowledgeBaseCategoriesRemove($_id: String!) {
-    knowledgeBaseCategoriesRemove(_id: $_id) {
-      _id
-    }
+    knowledgeBaseCategoriesRemove(_id: $_id)
   }
 `;
 

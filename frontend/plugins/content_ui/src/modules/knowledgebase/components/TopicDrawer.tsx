@@ -2,12 +2,13 @@
 
 import { useMutation } from '@apollo/client';
 import { IconUpload } from '@tabler/icons-react';
-import { Button, Form, Input, Sheet, Textarea, Upload } from 'erxes-ui';
+import { Button, Form, Input, Select, Sheet, Textarea, Upload } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ADD_TOPIC, EDIT_TOPIC } from '../graphql/mutations';
 import { TOPICS } from '../graphql/queries';
 import { SelectBrand } from 'ui-modules';
+import { LANGUAGES } from '../../../constants';
 
 interface Topic {
   _id: string;
@@ -252,7 +253,22 @@ export function TopicDrawer({ topic, isOpen, onClose }: TopicDrawerProps) {
                 <Form.Item>
                   <Form.Label>Language Code</Form.Label>
                   <Form.Control>
-                    <Input {...field} placeholder="Enter language code" />
+                    <Select
+                      {...field}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <Select.Trigger>
+                        <Select.Value placeholder="Select language" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        {LANGUAGES.map((lang) => (
+                          <Select.Item key={lang.value} value={lang.value}>
+                            {lang.label}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select>
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>

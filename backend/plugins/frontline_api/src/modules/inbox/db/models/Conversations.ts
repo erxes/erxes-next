@@ -204,6 +204,7 @@ export const loadClass = (models: IModels) => {
     ) {
       //incomplete use coversation message model
     }
+
     /**
      * Change conversation status
      */
@@ -240,7 +241,6 @@ export const loadClass = (models: IModels) => {
       }
 
       const readUserIds = conversation.readUserIds || [];
-
       // if current user is first one
       if (!readUserIds || readUserIds.length === 0) {
         await models.Conversations.updateConversation(_id, {
@@ -253,12 +253,8 @@ export const loadClass = (models: IModels) => {
         readUserIds.push(userId);
         await models.Conversations.updateConversation(_id, { readUserIds });
       }
-      const publish = graphqlPubsub.publish as <T>(
-        trigger: string,
-        payload: T,
-      ) => Promise<void>;
 
-      await publish(`conversationChanged:${_id}`, {
+      graphqlPubsub.publish(`conversationChanged:${_id}`, {
         conversationChanged: {
           conversationId: _id,
           type: 'inbox:conversation',

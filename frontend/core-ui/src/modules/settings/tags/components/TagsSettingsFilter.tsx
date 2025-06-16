@@ -1,10 +1,4 @@
-import {
-  Combobox,
-  Command,
-  Filter,
-  useFilterContext,
-  useFilterQueryState,
-} from 'erxes-ui';
+import { Combobox, Command, Filter, useFilterContext, useFilterQueryState } from 'erxes-ui';
 import { SettingsHotKeyScope } from '@/types/SettingsHotKeyScope';
 import { SelectTagType, SelectTagTypeCommand } from 'ui-modules';
 import { IconTagStarred } from '@tabler/icons-react';

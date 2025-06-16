@@ -72,7 +72,7 @@ export const ComboboxTriggerIcon = React.forwardRef<
 });
 
 export const ComboboxValue = React.forwardRef<
-  HTMLSpanElement,
+  HTMLSpanElement, 
   React.ComponentPropsWithoutRef<typeof TextOverflowTooltip> & {
     placeholder?: string;
     loading?: boolean;
