@@ -5,6 +5,7 @@ import { DealsDatePicker } from '../common/DealsDatePicker';
 import { EntitySelector } from './EntitySelector';
 import { IDeal } from '@/deals/types/deals';
 import { ItemFooter } from './Footer';
+import { useQueryState } from 'erxes-ui';
 import { useSortable } from '@dnd-kit/sortable';
 
 type Props = {
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export const Card = ({ card = {} as IDeal }: Props) => {
+  const [, setSalesItemId] = useQueryState<string>('salesItemId');
+
   const {
     setNodeRef,
     attributes,
@@ -36,6 +39,9 @@ export const Card = ({ card = {} as IDeal }: Props) => {
       {...listeners}
       style={style}
       className="bg-white rounded-md shadow min-h-[100px] flex flex-col justify-between"
+      onClick={() => setSalesItemId(card._id)}
+      onPointerDown={(e) => e.stopPropagation()}
+      onPointerUp={(e) => e.stopPropagation()}
     >
       <div className="flex justify-between border-b p-2">
         <DealsDatePicker

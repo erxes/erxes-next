@@ -59,7 +59,11 @@ export const StageHeader = ({ stage = {} as IStage }: Props) => {
           </DropdownMenu.Content>
         </DropdownMenu>
         <Sheet open={open} onOpenChange={setOpen}>
-          <Sheet.Trigger asChild>
+          <Sheet.Trigger
+            asChild
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+          >
             <IconPlus className="cursor-pointer p-1 transition-all duration-300 hover:bg-white rounded-sm" />
           </Sheet.Trigger>
           <Sheet.View

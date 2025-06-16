@@ -10,6 +10,7 @@ import { IconSandbox, IconSettings } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import MainActionBar from '@/deals/actionBar/components/MainActionBar';
 import { PageHeader } from 'ui-modules';
+import { SalesItemDetail } from '@/deals/cards/components/detail/SalesItemDetail';
 import { SalesLeftSidebar } from '@/deals/components/SalesLeftSidebar';
 import { StagesList } from '@/deals/stage/components/StagesList';
 
@@ -52,6 +53,7 @@ export const SalesIndexPage = () => {
             <div className="flex gap-4 min-w-max h-full">
               <StagesList />
             </div>
+            <SalesItemDetail />
           </div>
         </PageContainer>
       </div>
