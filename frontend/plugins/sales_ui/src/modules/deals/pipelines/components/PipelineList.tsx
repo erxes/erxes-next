@@ -2,7 +2,7 @@ import { Accordion, Sidebar } from 'erxes-ui';
 
 import { IPipeline } from '@/deals/types/pipelines';
 import { Link } from 'react-router-dom';
-import { Skeleton } from 'erxes-ui';
+import { PipelineListLoading } from '@/deals/components/loading/PipelineListLoading';
 import { useBoardDetail } from '@/deals/boards/hooks/useBoardDetail';
 
 export const PipelineList = ({
@@ -19,7 +19,7 @@ export const PipelineList = ({
   });
 
   if (loading) {
-    return <Skeleton className="w-full flex-1 h-8" />;
+    return <PipelineListLoading />;
   }
 
   const pipelines = boardDetail?.pipelines || ([] as IPipeline[]);
