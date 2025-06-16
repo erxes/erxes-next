@@ -30,6 +30,7 @@ export const useBrands = (
 
   const handleFetchMore = () => {
     if (totalCount && totalCount <= (brands?.length || 0)) return;
+    if (!fetchMore) return;
     fetchMore({
       variables: {
         ...options?.variables,

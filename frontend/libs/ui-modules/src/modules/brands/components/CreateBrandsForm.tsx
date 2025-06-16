@@ -4,9 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconChevronLeft, IconLoader2 } from '@tabler/icons-react';
 import { z } from 'zod';
 
-import { Button, Combobox, Form, Input, Popover, Separator } from 'erxes-ui';
-
-import { useEffect, useRef, useState } from 'react';
+import { Button, Form, Input, Separator } from 'erxes-ui';
 import { useSelectBrandsContext } from '../hooks/useSelectBrandsContext';
 import { useBrandsAdd } from '../hooks/useBrandsAdd';
 
@@ -17,7 +15,6 @@ const formSchema = z.object({
 });
 
 export const CreateBrandForm = () => {
-  const [open, setOpen] = useState(false);
   const { newBrandName, onSelect, setNewBrandName } = useSelectBrandsContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -29,15 +26,6 @@ export const CreateBrandForm = () => {
   });
   const { addBrand, loading } = useBrandsAdd();
 
-  const selectParentRef =
-    useRef<React.ElementRef<typeof Combobox.Trigger>>(null);
-
-  useEffect(() => {
-    if (selectParentRef.current) {
-      selectParentRef.current.focus();
-    }
-  }, [selectParentRef]);
-
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     addBrand({
       variables: {
@@ -48,6 +36,11 @@ export const CreateBrandForm = () => {
         onSelect({
           _id: BrandsAdd._id,
           ...values,
+        });
+      },
+      onError(error) {
+        form.setError('root', {
+          message: error.message || 'Failed to create brand',
         });
       },
     });

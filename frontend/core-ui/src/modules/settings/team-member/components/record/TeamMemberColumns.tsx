@@ -205,7 +205,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
                     : 'success'
                 }
               >
-                {!!status && (cell.getValue() as string) || 'Not verified'}
+                {status ? (cell.getValue() as string) : 'Not verified'}
               </Badge>
             );
           }}

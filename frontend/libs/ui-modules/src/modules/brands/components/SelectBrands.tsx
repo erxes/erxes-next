@@ -54,7 +54,7 @@ export const SelectBrandsProvider = ({
     const newSelectedBrands = isSingleMode
       ? [brand]
       : isSelected
-      ? selectedBrands.filter((b) => b._id === brand._id)
+      ? selectedBrands.filter((b) => b._id !== brand._id)
       : [...selectedBrands, brand];
 
     setSelectedBrands(newSelectedBrands);
@@ -89,8 +89,7 @@ export const SelectBrandsCommand = () => {
     variables: {
       searchValue: debouncedSearch,
     },
-    skip:
-      !!noBrandsSearchValue && debouncedSearch.includes(noBrandsSearchValue),
+    skip: !!noBrandsSearchValue && noBrandsSearchValue === debouncedSearch,
     onCompleted(data) {
       const { totalCount } = data?.brands || {};
       setNoBrandsSearchValue(totalCount === 0 ? debouncedSearch : '');
@@ -207,7 +206,9 @@ export const BrandsList = ({
           onCompleted={(brand) => {
             if (!brand) return;
             if (selectedBrandIds.includes(brand._id)) {
-              setSelectedBrands([...selectedBrands, brand]);
+              setSelectedBrands(
+                selectedBrands.map((b) => (b._id === brand._id ? brand : b)),
+              );
             }
           }}
           onClose={() =>

@@ -23,7 +23,7 @@ export function TeamMemberFilterPopover() {
               <SelectBranches.FilterItem value="branchIds" label="Branches" />
               <SelectDepartments.FilterItem
                 value="departmentIds"
-                label="Departmentes"
+                label="Departments"
               />
               <SelectUnit.FilterItem />
               <SelectBrands.FilterItem value="brandIds" label="Brands" />
