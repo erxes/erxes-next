@@ -33,7 +33,7 @@ export const carSchema = schemaWrapper(
       },
       description: { type: String, label: 'Description' },
       tagIds: { type: [String], label: 'Tags' },
-      mergedIds: { type: [String], label: 'Merged companies' },
+      mergeIds: { type: [String], label: 'Merged companies' },
       searchText: { type: String, index: true },
       attachment: {
         type: attachmentSchema,

@@ -19,7 +19,7 @@ export const companyTrpcRouter = t.router({
     findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
-
+      console.log('company', input);
       const defaultFilter = { status: { $ne: 'deleted' } };
 
       if (query.companyPrimaryName) {

@@ -2,7 +2,7 @@ import { createGenerateModels } from 'erxes-api-shared/utils';
 import { IMainContext } from 'erxes-api-shared/core-types';
 import { ICarDocument } from '~/modules/cars/@types/car';
 
-import mongoose, { model } from 'mongoose';
+import mongoose from 'mongoose';
 
 import { loadCarClass, ICarModel } from '~/modules/cars/db/models/carModel';
 import {

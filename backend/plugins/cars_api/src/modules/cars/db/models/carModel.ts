@@ -2,18 +2,31 @@ import { Model } from 'mongoose';
 import { IModels } from '~/connectionResolvers';
 import { carSchema } from '~/modules/cars/db/definitions/car';
 import { ICar, ICarDocument } from '~/modules/cars/@types/car';
+import { validSearchText } from 'erxes-api-shared/utils';
+import { any } from 'zod';
 
 export interface ICarModel extends Model<ICarDocument> {
+  fillSearchText(doc: ICar);
   carDetail(_id: string): Promise<ICarDocument>;
   cars(): Promise<ICarDocument[]>;
   carsAdd(doc: ICar): Promise<ICarDocument>;
   carsEdit(_id: string, doc: ICar): Promise<ICarDocument>;
   carsRemove(ModuleId: string[]): Promise<{ ok: number }>;
   getCar(_id: string): Promise<ICarDocument>;
+  mergeCars(carIds: string[], carFields: ICar): Promise<ICarDocument>;
 }
 
 export const loadCarClass = (models: IModels) => {
   class Cars {
+    public static fillSearchText(doc: ICar) {
+      return validSearchText([
+        doc.plateNumber || '',
+        doc.vinNumber || '',
+        doc.description || '',
+        doc.categoryId || '',
+      ]);
+    }
+
     public static async checkDuplication(
       carFields: {
         plateNumber?: string;
@@ -90,14 +103,28 @@ export const loadCarClass = (models: IModels) => {
      * Create a cars
      */
     public static async carsAdd(doc: ICar): Promise<ICarDocument> {
-      return models.Cars.create(doc);
+      return models.Cars.create({
+        ...doc,
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        searchText: models.Cars.fillSearchText(doc),
+      });
     }
 
     /*
      * Update cars
      */
     public static async carsEdit(_id: string, doc: ICar) {
-      return await models.Cars.findOneAndUpdate({ _id }, { $set: { ...doc } });
+      const searchText = models.Cars.fillSearchText(
+        Object.assign(await models.Cars.getCar(_id), doc),
+      );
+
+      await models.Cars.updateOne(
+        { _id },
+        { $set: { ...doc, searchText: any, modifiedAt: new Date() } },
+      );
+
+      return models.Cars.findOne({ _id });
     }
 
     /**
@@ -108,7 +135,9 @@ export const loadCarClass = (models: IModels) => {
       return models.Cars.deleteMany({ _id: { $in: carIds } });
     }
 
-    public static async carsMerge(carIds, carFields) {
+    // Merge cars
+
+    public static async mergeCars(carIds: string[], carFields: ICar) {
       await this.checkDuplication(carFields, carIds);
 
       for (const carId of carIds) {
@@ -117,6 +146,11 @@ export const loadCarClass = (models: IModels) => {
           $set: { status: 'Deleted' },
         });
       }
+
+      return await models.Cars.carsAdd({
+        ...carFields,
+        mergeIds: carIds,
+      });
     }
   }
 

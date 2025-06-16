@@ -2,8 +2,7 @@ export const types = `
   type Car {
     ownerId: String
     customer: Customer
-    companies: Company
-
+    mergeIds: [String]
     getTags: [Tag]
     plateNumber: String
     vinNumber: String
@@ -47,6 +46,7 @@ export const queries = `
 
 const mutationParams = `
   ownerId: String,
+  mergeIds: [String],
   description: String
   plateNumber: String
   vinNumber: String
