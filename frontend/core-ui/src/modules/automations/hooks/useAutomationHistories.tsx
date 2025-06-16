@@ -15,7 +15,7 @@ import { ConstantsQueryResponse } from '../types';
 export const useAutomationHistories = () => {
   const { id } = useParams();
 
-  const { data, loading, fetchMore } = useQuery(AUTOMATION_HISTORIES, {
+  const { data, loading, fetchMore, refetch } = useQuery(AUTOMATION_HISTORIES, {
     variables: { automationId: id },
   });
 
@@ -66,5 +66,6 @@ export const useAutomationHistories = () => {
     triggersConst,
     actionsConst,
     handleFetchMore,
+    refetch,
   };
 };

@@ -23,6 +23,7 @@ import { useUsers } from 'ui-modules/modules';
 import { useAtomValue } from 'jotai';
 import { currentUserState } from 'ui-modules/states';
 import { IconUser } from '@tabler/icons-react';
+import React from 'react';
 
 const SelectMemberProvider = ({
   children,
@@ -102,6 +103,7 @@ const SelectMemberCommandItem = ({ user }: { user: IMember }) => {
       }}
     >
       <MembersInline
+        memberIds={memberIds}
         members={[
           {
             ...user,
@@ -181,7 +183,7 @@ export const SelectMemberFilterView = () => {
 
   return (
     <Filter.View filterKey="assignedTo">
-      <SelectMember.Provider
+      <SelectMemberProvider
         mode="multiple"
         value={assignedTo || []}
         onValueChange={(value) => {
@@ -189,8 +191,8 @@ export const SelectMemberFilterView = () => {
           resetFilterState();
         }}
       >
-        <SelectMember.Content />
-      </SelectMember.Provider>
+        <SelectMemberContent />
+      </SelectMemberProvider>
     </Filter.View>
   );
 };
@@ -209,7 +211,7 @@ export const SelectMemberFilterBar = () => {
         <IconUser />
         Assigned To
       </Filter.BarName>
-      <SelectMember.Provider
+      <SelectMemberProvider
         mode="multiple"
         value={assignedTo || []}
         onValueChange={(value) => {
@@ -228,10 +230,10 @@ export const SelectMemberFilterBar = () => {
             </Filter.BarButton>
           </Popover.Trigger>
           <Combobox.Content>
-            <SelectMember.Content />
+            <SelectMemberContent />
           </Combobox.Content>
         </Popover>
-      </SelectMember.Provider>
+      </SelectMemberProvider>
       <Filter.BarClose filterKey="assignedTo" />
     </Filter.BarItem>
   );
@@ -255,10 +257,10 @@ export const SelectMemberInlineCell = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
-          <SelectMember.Value placeholder={''} />
+          <SelectMemberValue placeholder={''} />
         </RecordTableCellTrigger>
         <RecordTableCellContent>
-          <SelectMember.Content />
+          <SelectMemberContent />
         </RecordTableCellContent>
       </RecordTablePopover>
     </SelectMemberProvider>
@@ -274,7 +276,7 @@ export const SelectMemberFormItem = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <SelectMember.Provider
+    <SelectMemberProvider
       onValueChange={(value) => {
         onValueChange?.(value);
         setOpen(false);
@@ -284,19 +286,51 @@ export const SelectMemberFormItem = ({
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
           <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectMember.Value />
+            <SelectMemberValue />
           </Combobox.Trigger>
         </Form.Control>
 
         <Combobox.Content>
-          <SelectMember.Content />
+          <SelectMemberContent />
         </Combobox.Content>
       </Popover>
-    </SelectMember.Provider>
+    </SelectMemberProvider>
   );
 };
 
-export const SelectMemberDetail = ({
+export const SelectMemberDetail = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> &
+    React.ComponentProps<typeof Combobox.Trigger>
+>(({ onValueChange, className, mode, value, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectMemberProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      mode={mode}
+      value={value}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.Trigger
+          ref={ref}
+          className={cn('w-auto inline-flex', className)}
+          variant="ghost"
+          {...props}
+        >
+          <SelectMember.Value size="lg" />
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <SelectMemberContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectMemberProvider>
+  );
+});
+
+export const SelectMemberRoot = ({
   onValueChange,
   className,
   ...props
@@ -305,7 +339,7 @@ export const SelectMemberDetail = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <SelectMember.Provider
+    <SelectMemberProvider
       onValueChange={(value) => {
         onValueChange?.(value);
         setOpen(false);
@@ -314,20 +348,20 @@ export const SelectMemberDetail = ({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Combobox.Trigger
-          className={cn('w-auto inline-flex', className)}
-          variant="ghost"
+          className={cn('w-full inline-flex', className)}
+          variant="outline"
         >
-          <SelectMember.Value size="lg" />
+          <SelectMemberValue size="lg" />
         </Combobox.Trigger>
         <Combobox.Content>
-          <SelectMember.Content />
+          <SelectMemberContent />
         </Combobox.Content>
       </Popover>
-    </SelectMember.Provider>
+    </SelectMemberProvider>
   );
 };
 
-export const SelectMember = {
+export const SelectMember = Object.assign(SelectMemberRoot, {
   Provider: SelectMemberProvider,
   Value: SelectMemberValue,
   Content: SelectMemberContent,
@@ -337,4 +371,4 @@ export const SelectMember = {
   InlineCell: SelectMemberInlineCell,
   FormItem: SelectMemberFormItem,
   Detail: SelectMemberDetail,
-};
+});

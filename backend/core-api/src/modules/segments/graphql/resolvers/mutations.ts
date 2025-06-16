@@ -7,6 +7,7 @@
 import { IContext } from '~/connectionResolvers';
 import { ISegment } from '../../db/definitions/segments';
 import { ISegmentsEdit } from '../../types';
+import { checkPermission } from 'erxes-api-shared/core-modules';
 
 export const segmentMutations = {
   /**
@@ -48,18 +49,20 @@ export const segmentMutations = {
    */
   async segmentsRemove(
     _root,
-    { _id }: { _id: string },
-    { models, subdomain, user }: IContext,
+    { _id, ids }: { _id: string; ids: string[] },
+    { models }: IContext,
   ) {
-    const segment = await models.Segments.getSegment(_id);
+    if (!_id && !ids?.length) {
+      throw new Error('You should provide segment');
+    }
 
-    if (!segment) {
-      throw new Error('Segment not found');
+    if (ids.length) {
+      return await models.Segments.removeSegments(ids);
     }
     return await models.Segments.removeSegment(_id);
   },
 };
 
-// checkPermission(segmentMutations, "segmentsAdd", "manageSegments");
-// checkPermission(segmentMutations, "segmentsEdit", "manageSegments");
-// checkPermission(segmentMutations, "segmentsRemove", "manageSegments");
+checkPermission(segmentMutations, 'segmentsAdd', 'manageSegments');
+checkPermission(segmentMutations, 'segmentsEdit', 'manageSegments');
+checkPermission(segmentMutations, 'segmentsRemove', 'manageSegments');

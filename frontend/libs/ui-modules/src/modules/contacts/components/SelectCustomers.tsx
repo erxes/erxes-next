@@ -89,15 +89,18 @@ const SelectCustomersContent = () => {
         wrapperClassName="flex-auto"
         focusOnMount
       />
-      {customers?.length > 0 && (
-        <>
-          {customers.map((customer) => (
-            <SelectCustomerCommandItem key={customer._id} customer={customer} />
-          ))}
-          <Command.Separator className="my-1" />
-        </>
-      )}
       <Command.List className="max-h-[300px] overflow-y-auto">
+        {customers?.length > 0 && (
+          <>
+            {customers.map((customer) => (
+              <SelectCustomerCommandItem
+                key={customer._id}
+                customer={customer}
+              />
+            ))}
+            <Command.Separator className="my-1" />
+          </>
+        )}
         <Combobox.Empty loading={loading} error={error} />
         {!loading &&
           customersData
@@ -190,8 +193,8 @@ const SelectCustomerRoot = ({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <Combobox.Trigger
-          className={cn('w-auto inline-flex', className)}
-          variant="ghost"
+          className={cn('w-full inline-flex', className)}
+          variant="outline"
         >
           <SelectCustomers.Value />
         </Combobox.Trigger>
@@ -209,7 +212,6 @@ const SelectCustomersValue = () => {
     <CustomersInline
       customerIds={customerIds}
       customers={customers}
-      placeholder="Select customer"
       updateCustomers={setCustomers}
     />
   );

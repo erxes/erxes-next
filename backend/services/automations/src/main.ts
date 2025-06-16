@@ -10,7 +10,8 @@ import express from 'express';
 import * as http from 'http';
 import { initMQWorkers } from './bullmq';
 
-const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT } = process.env;
+const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT, AWS_REGION } =
+  process.env;
 
 const port = PORT ? Number(PORT) : 3302;
 

@@ -2,7 +2,11 @@ import { useId } from 'react';
 import { TBranchForm } from '../../types/branch';
 import { ControllerRenderProps, Path, useFormContext } from 'react-hook-form';
 import { Collapsible, Form, Input, Skeleton, Textarea } from 'erxes-ui';
-import { AssignMember, AssignMultipleMembers, SelectBranch } from 'ui-modules';
+import {
+  AssignMember,
+  AssignMultipleMembers,
+  SelectBranches,
+} from 'ui-modules';
 import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 import { IconChevronDown } from '@tabler/icons-react';
 
@@ -76,12 +80,10 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
         render={({ field }) => (
           <Form.Item>
             <Form.Label>{'Parent'}</Form.Label>
-            <Form.Control>
-              <SelectBranch
-                value={field.value}
-                onValueChange={field.onChange}
-              />
-            </Form.Control>
+            <SelectBranches.FormItem
+              value={field.value}
+              onValueChange={field.onChange}
+            />
             <Form.Message />
           </Form.Item>
         )}

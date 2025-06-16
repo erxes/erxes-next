@@ -1,50 +1,63 @@
-import { OperationVariables, useQuery } from '@apollo/client';
-import { GET_SELECT_PRODUCTS } from '../graphql/queries/getProducts';
-import { IProduct } from 'ui-modules';
+import { QueryHookOptions, useQuery } from '@apollo/client';
+import {
+  GET_ASSIGNED_PRODUCTS,
+  GET_PRODUCTS,
+} from '../graphql/queries/getProducts';
+import { IProduct } from '../types/Product';
+import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
-const PRODUCTS_PER_PAGE = 30;
-
-export const useProducts = (options?: OperationVariables) => {
-  const { data, loading, fetchMore, error } = useQuery<{
-    products: IProduct[];
-    productsTotalCount: number;
-  }>(GET_SELECT_PRODUCTS, {
+const PRODUCTS_LIMIT = 30;
+export const useProducts = (
+  options?: QueryHookOptions<ICursorListResponse<IProduct>>,
+) => {
+  const { data, loading, fetchMore, error } = useQuery<
+    ICursorListResponse<IProduct>
+  >(GET_PRODUCTS, {
     ...options,
     variables: {
-      perPage: PRODUCTS_PER_PAGE,
+      limit: PRODUCTS_LIMIT,
       ...options?.variables,
     },
   });
-
-  const { products, productsTotalCount } = data || {};
+  const { list = [], totalCount = 0, pageInfo } = data?.productsMain || {};
 
   const handleFetchMore = () => {
-    if (
-      !products ||
-      !productsTotalCount ||
-      productsTotalCount <= products.length
-    ) {
-      return;
-    }
+    if (!pageInfo || totalCount <= list.length) return;
     fetchMore({
       variables: {
-        page: Math.ceil(products.length / PRODUCTS_PER_PAGE) + 1,
-        perPage: PRODUCTS_PER_PAGE,
+        ...options?.variables,
+        cursor: pageInfo?.endCursor,
+        direction: EnumCursorDirection.FORWARD,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          products: [...(prev.products || []), ...fetchMoreResult.products],
+          productsMain: {
+            list: [
+              ...(prev.productsMain?.list || []),
+              ...fetchMoreResult.productsMain.list,
+            ],
+            totalCount: fetchMoreResult.productsMain.totalCount,
+            pageInfo: fetchMoreResult.productsMain.pageInfo,
+          },
         });
       },
     });
   };
-
   return {
+    products: list,
     loading,
-    products,
-    totalCount: productsTotalCount,
     handleFetchMore,
+    totalCount,
     error,
   };
+};
+
+
+export const useProductsInline = (options?: QueryHookOptions<ICursorListResponse<IProduct>>) => {
+  const { data, loading, error } = useQuery<ICursorListResponse<IProduct>>(
+    GET_ASSIGNED_PRODUCTS,
+    options,
+  );
+  return { products: data?.productsMain?.list || [], loading, error };
 };

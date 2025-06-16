@@ -1,4 +1,3 @@
-import { TeamMemberSidebar } from '@/settings/team-member/components/Sidebar';
 import { TeamMemberTable } from '@/settings/team-member/components/TeamMemberTable';
 import { TeamMemberSettingsBreadcrumb } from '@/settings/team-member/components/TeamMemberSettingsBreadcrumb';
 import { TeamMemberTopbar } from '@/settings/team-member/components/header/TeamMemberTopbar';
@@ -12,7 +11,6 @@ export const TeamMember = () => {
         <TeamMemberTopbar />
       </SettingsHeader>
       <div className="flex flex-auto w-full overflow-hidden">
-        <TeamMemberSidebar />
         <div className="w-full overflow-hidden flex flex-col">
           <TeamMemberFilterBar />
           <TeamMemberTable />
