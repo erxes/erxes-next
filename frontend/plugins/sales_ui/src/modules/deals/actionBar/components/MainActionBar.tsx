@@ -19,7 +19,11 @@ const MainActionBar = () => {
             <React.Fragment key={groupIndex}>
               <DropdownMenu.Group>
                 {group.map((filter, itemIndex) => (
-                  <DropdownItem item={filter} itemIndex={itemIndex} />
+                  <DropdownItem
+                    key={itemIndex}
+                    item={filter}
+                    itemIndex={itemIndex}
+                  />
                 ))}
               </DropdownMenu.Group>
               {groupIndex < ActionBarFilters.length - 1 && (
