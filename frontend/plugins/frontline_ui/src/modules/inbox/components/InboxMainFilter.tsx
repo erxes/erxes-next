@@ -18,7 +18,7 @@ export const InboxMainFilter = () => {
       >
         <Collapsible.TriggerButton>
           <Collapsible.TriggerIcon className="group-data-[state=open]/collapsible:rotate-180" />
-          Team Inbox
+          Team Inboxss
         </Collapsible.TriggerButton>
         <Collapsible.Content className="pl-4 flex flex-col gap-1">
           <Button
