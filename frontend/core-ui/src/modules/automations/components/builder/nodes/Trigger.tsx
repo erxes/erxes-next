@@ -10,6 +10,8 @@ import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions'
 const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
   const { setValue } = useFormContext<TAutomationProps>();
 
+  const { beforeTitleContent } = data;
+
   return (
     <div className="flex flex-col ">
       <div className="w-1/4 ml-1 bg-primary/10 text-primary text-center px-2 py-1 rounded-t-md">
@@ -25,6 +27,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
       >
         <div className="p-3 flex items-center justify-between border-b border-slate-200 gap-8">
           <div className="flex items-center gap-2 text-primary">
+            {beforeTitleContent && beforeTitleContent(id, 'trigger')}
             <div
               className={`h-6 w-6 rounded-full flex items-center justify-center`}
             >

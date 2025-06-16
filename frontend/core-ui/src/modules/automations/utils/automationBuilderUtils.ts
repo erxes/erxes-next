@@ -1,6 +1,11 @@
 import { Edge, Node, Position } from '@xyflow/react';
 import { IAction, ITrigger } from 'ui-modules';
 import { AutomationConstants, IAutomation } from '../types';
+import { gql, useLazyQuery, useQuery } from '@apollo/client';
+import { CUSTOMERS_MERGE_MUTATION } from '@/contacts/customers/graphql/mutations/mergeCustomers';
+import { ICustomer } from '@/contacts/types/customerType';
+import { IUser } from '@/settings/team-member/types';
+import { GET_CUSTOMERS_EMAIL, GET_TEAM_MEMBERS_EMAIL } from '../graphql/utils';
 
 type MyNodeData = {
   x: number;
@@ -27,7 +32,7 @@ type MyNodeData = {
     constants: AutomationConstants;
     forceToolbarVisible: boolean;
     toolbarPosition: Position;
-    additionalContent?: (id: string, type: string) => React.ReactNode;
+    beforeTitleContent?: (id: string, type: string) => React.ReactNode;
     addWorkFlowAction: (workflowId: string, actions: IAction[]) => void;
     removeWorkFlowAction?: (workflowId: string) => void;
   };
@@ -361,4 +366,39 @@ export const getContentType = (
 
   // Fallback if nothing found in the chain
   return triggers[0]?.type;
+};
+
+export const generateSendEmailRecipientMails = ({
+  attributionMails,
+  customMails = [],
+  customer = [],
+  teamMember = [],
+}: any) => {
+  let mails = [];
+
+  if (attributionMails) {
+    mails.push(attributionMails);
+  }
+  if (customMails.length) {
+    mails = [...mails, ...customMails];
+  }
+
+  if (customer.length) {
+    const { data } = useQuery(GET_CUSTOMERS_EMAIL);
+
+    const customerMails = (data?.list || [])
+      .map(({ primaryEmail }: ICustomer) => primaryEmail)
+      .filter((email: string) => email);
+    mails = [...mails, ...customerMails];
+  }
+  if (teamMember.length) {
+    const { data } = useQuery(GET_TEAM_MEMBERS_EMAIL);
+
+    const teamMemberMails = (data?.list || [])
+      .map(({ email }: IUser) => email)
+      .filter((email: string) => email);
+    mails = [...mails, ...teamMemberMails];
+  }
+
+  return mails;
 };

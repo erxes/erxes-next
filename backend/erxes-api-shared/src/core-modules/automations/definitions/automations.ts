@@ -96,21 +96,19 @@ const actionSchema = new Schema(
   { _id: false },
 );
 
-export const automationSchema = schemaWrapper(
-  new Schema({
-    _id: { type: Schema.ObjectId },
-    name: { type: String, required: true },
-    status: { type: String, default: AUTOMATION_STATUSES.DRAFT },
-    triggers: { type: [triggerSchema] },
-    actions: { type: [actionSchema] },
-    createdAt: {
-      type: Date,
-      default: new Date(),
-      label: 'Created date',
-    },
-    createdBy: { type: String },
-    updatedAt: { type: Date, default: new Date(), label: 'Updated date' },
-    updatedBy: { type: String },
-    tagIds: { type: [String], label: 'Tag Ids', optional: true },
-  }),
-);
+export const automationSchema = new Schema({
+  _id: { type: Schema.Types.ObjectId },
+  name: { type: String, required: true },
+  status: { type: String, default: AUTOMATION_STATUSES.DRAFT },
+  triggers: { type: [triggerSchema] },
+  actions: { type: [actionSchema] },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+    label: 'Created date',
+  },
+  createdBy: { type: String },
+  updatedAt: { type: Date, default: new Date(), label: 'Updated date' },
+  updatedBy: { type: String },
+  tagIds: { type: [String], label: 'Tag Ids', optional: true },
+});

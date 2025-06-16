@@ -46,7 +46,7 @@ export function SidebarNavigationFavoritesItem({
   icon?: React.ElementType;
   path: string;
 }) {
-  const pathname = useLocation().pathname;
+  const { pathname } = useLocation();
   const Icon = icon || (() => <span />);
   const pathWithoutUi = path.replace('_ui', '');
   const isActive = pathname.includes(pathWithoutUi);

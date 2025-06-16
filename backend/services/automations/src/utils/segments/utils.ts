@@ -15,6 +15,6 @@ export const isInSegment = async (
     module: 'segment',
     action: 'isInSegment',
     input: { segmentId, idToCheck: targetId },
-    defaultValue: [],
+    defaultValue: false,
   });
 };

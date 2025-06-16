@@ -1,6 +1,6 @@
 import { IconMail } from '@tabler/icons-react';
 import { INTEGRATION_ICONS } from '../constants/integrationImages';
-import { useIntegrationDetail } from '../hooks/useIntegrations';
+import { useIntegrationInline } from '../hooks/useIntegrations';
 import { Badge } from 'erxes-ui';
 
 export const ConversationIntegrationBadge = ({
@@ -8,7 +8,7 @@ export const ConversationIntegrationBadge = ({
 }: {
   integrationId?: string;
 }) => {
-  const { integration } = useIntegrationDetail({
+  const { integration } = useIntegrationInline({
     variables: {
       _id: integrationId,
     },

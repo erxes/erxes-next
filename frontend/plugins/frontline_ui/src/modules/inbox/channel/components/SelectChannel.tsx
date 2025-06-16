@@ -5,7 +5,6 @@ import {
 } from '@/inbox/channel/context/SelectChannelContext';
 import { useState } from 'react';
 import { ChannelsInline } from './ChannelsInline';
-import { useDebounce } from 'use-debounce';
 import { cn, Combobox, Command, Form, Popover } from 'erxes-ui';
 import { useChannels } from '../hooks/useChannels';
 

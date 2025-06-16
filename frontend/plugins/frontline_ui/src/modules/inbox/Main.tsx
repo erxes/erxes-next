@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
+import { InboxPageChangeEffect } from './components/InboxPageChangeEffect';
 
 const Inbox = lazy(() =>
   import('~/pages/InboxIndexPage').then((module) => ({
@@ -13,6 +14,7 @@ const InboxMain = () => {
       <Routes>
         <Route path="/" element={<Inbox />} />
       </Routes>
+      <InboxPageChangeEffect />
     </Suspense>
   );
 };
