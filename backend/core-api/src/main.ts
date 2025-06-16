@@ -14,7 +14,7 @@ import {
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
 
-import './automations';
+import './meta/automations';
 import { generateModels } from './connectionResolvers';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';

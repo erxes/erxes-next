@@ -1,34 +1,46 @@
-import { OperationVariables, useQuery } from '@apollo/client';
+import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
 import { queries } from '@/settings/team-member/graphql';
 import {
   EnumCursorDirection,
+  ICursorListResponse,
   mergeCursorData,
   useMultiQueryState,
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
+import { IUser, IUsersDetails } from '../types';
 
 export const USERS_PER_PAGE = 30;
 
-const useUsers = (options?: OperationVariables) => {
+type IUsersQuery = ICursorListResponse<
+  IUser & { details: IUsersDetails & { __typename: string } }
+>;
+
+const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
   const { cursor } = useRecordTableCursor({
     sessionKey: 'users_cursor',
   });
-  const [{ branchId, departmentId, unitId }] = useMultiQueryState([
-    'branchId',
-    'departmentId',
-    'unitId',
-  ]);
-  const { data, loading, error, fetchMore } = useQuery(
+  const [{ branchIds, departmentIds, unitId, searchValue, isActive }] =
+    useMultiQueryState([
+      'branchIds',
+      'departmentIds',
+      'unitId',
+      'searchValue',
+      'isActive',
+    ]);
+
+  const { data, loading, error, fetchMore } = useQuery<IUsersQuery>(
     queries.GET_USERS_QUERY,
     {
       ...options,
       variables: {
-        branchId: branchId ?? undefined,
-        departmentId: departmentId ?? undefined,
+        branchIds: branchIds ?? undefined,
+        departmentIds: departmentIds ?? undefined,
         unitId: unitId ?? undefined,
         limit: USERS_PER_PAGE,
         cursor,
+        searchValue: searchValue ?? undefined,
+        isActive: isActive ?? undefined,
         ...options?.variables,
       },
       onError(error) {
@@ -77,7 +89,12 @@ const useUsers = (options?: OperationVariables) => {
 
   return {
     loading,
-    users,
+    users: users?.map(
+      ({ details: { __typename, ...detailData }, ...user }) => ({
+        ...user,
+        details: detailData,
+      }),
+    ),
     error,
     totalCount,
     handleFetchMore,

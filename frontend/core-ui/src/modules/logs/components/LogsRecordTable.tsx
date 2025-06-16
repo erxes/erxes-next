@@ -40,7 +40,6 @@ export const LogsRecordTable = () => {
         <RecordTable.CursorProvider
           hasPreviousPage={hasPreviousPage}
           hasNextPage={hasNextPage}
-          loading={loading}
           dataLength={list?.length}
           sessionKey={LOGS_CURSOR_SESSION_KEY}
         >

@@ -39,7 +39,7 @@ export function SidebarNavigationItem({
   path,
   submenus,
 }: IUIConfig['modules'][number]) {
-  const pathname = useLocation().pathname;
+  const { pathname } = useLocation();
   const Icon = icon;
   const pathWithoutUi = path.replace('_ui', '');
   const isActive = pathname.includes(pathWithoutUi);

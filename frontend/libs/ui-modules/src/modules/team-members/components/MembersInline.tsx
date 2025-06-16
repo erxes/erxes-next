@@ -26,7 +26,7 @@ export const MembersInlineRoot = ({
   size,
 }: {
   members?: IUser[];
-  memberIds?: string[];
+  memberIds: string[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
   size?: 'lg';

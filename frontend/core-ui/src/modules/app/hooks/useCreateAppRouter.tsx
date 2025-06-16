@@ -6,6 +6,7 @@ import {
 
 import { AppPath } from '@/types/paths/AppPath';
 import { AutomationRoutes } from '@/app/components/AutomationRoutes';
+import { ComponentsRoutes } from '../components/ComponentsRoutes';
 import { ContactsRoutes } from '@/app/components/ContactsRoutes';
 import { DefaultLayout } from '@/app/components/MainLayout';
 import ForgotPasswordPage from '~/pages/auth/ForgotPasswordPage';
@@ -28,7 +29,6 @@ const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
 const CreateOwnerPage = lazy(
   () => import('~/pages/organization/CreateOwnerPage'),
 );
-
 export const useCreateAppRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
@@ -44,7 +44,7 @@ export const useCreateAppRouter = () => {
 
           <Route element={<UserProvider />}>
             <Route element={<DefaultLayout />}>
-              {/* <Route path={AppPath.Index} element={<OnBoarding />} />
+              <Route path={AppPath.Index} element={<OnBoarding />} />
               <Route
                 path={AppPath.SettingsCatchAll}
                 element={<SettingsRoutes />}
@@ -65,8 +65,14 @@ export const useCreateAppRouter = () => {
                 path={AppPath.AutoamtionsCatchAll}
                 element={<AutomationRoutes />}
               />
-              <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} /> */}
+              <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
               {...getPluginsRoutes()}
+              {process.env.NODE_ENV === 'development' && (
+                <Route
+                  path={AppPath.ComponentsCatchAll}
+                  element={<ComponentsRoutes />}
+                />
+              )}
             </Route>
           </Route>
         </Route>
