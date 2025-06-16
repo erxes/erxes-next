@@ -17,7 +17,6 @@ import {
 
 import { ConversationsHeader } from '@/inbox/conversations/components/ConversationsHeader';
 import { ConversationFilter } from './ConversationFilter';
-import { FilterTags } from './FilterTags';
 import { CONVERSATIONS_LIMIT } from '@/inbox/constants/conversationsConstants';
 import { ConversationItem } from './ConversationItem';
 
@@ -57,7 +56,7 @@ export const Conversations = () => {
         channelId,
         integrationType: integrationType,
         unassigned,
-        status,
+        status: status || '',
         startDate: parsedDate?.from,
         endDate: parsedDate?.to,
         cursorMode: EnumCursorMode.INCLUSIVE,
@@ -75,7 +74,7 @@ export const Conversations = () => {
       <div className="flex flex-col h-full overflow-hidden w-full">
         <ConversationsHeader>
           <ConversationFilter />
-          <FilterTags />
+          {/* <FilterTags /> */}
         </ConversationsHeader>
         <Separator />
         <div className="h-full w-full overflow-y-auto">

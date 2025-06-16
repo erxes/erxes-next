@@ -20,6 +20,11 @@ export const useChangeConversationStatus = () => {
               },
             });
           });
+          console.log(
+            Object.entries(cache.extract()['ROOT_QUERY'])
+              .filter(([key]) => key.startsWith('conversations'))
+              .map(([key, value]) => [key, value]),
+          );
         } catch (error) {
           console.error(error);
           return;
