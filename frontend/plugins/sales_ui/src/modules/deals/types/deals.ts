@@ -1,4 +1,4 @@
-import { ICompany, ICustomer, ITag, IUser } from "ui-modules";
+import { IBranch, ICompany, ICustomer, IDepartment, ITag, IUser } from "ui-modules";
 import { IPipeline, IPipelineLabel } from "./pipelines";
 
 import { IAttachment } from "erxes-ui";
@@ -62,6 +62,8 @@ export interface IItem {
 export interface IDeal extends IItem {
     products?: any;
     paymentsData?: IPaymentsData;
+    departments?: IDepartment[];
+    branches?: IBranch[];
   }
 
 export type dealsProductDataMutationParams = {

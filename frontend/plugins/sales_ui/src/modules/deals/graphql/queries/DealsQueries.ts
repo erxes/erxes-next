@@ -132,6 +132,17 @@ export const GET_DEALS = gql`
       unusedAmount
       amount
       ${commonListFields}
+      departments {
+        _id
+        title
+      }
+      branches {
+        _id
+        title
+      }
+      companies
+      customers
+      relations
     }
   }
 `;

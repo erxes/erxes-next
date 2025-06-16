@@ -1,22 +1,31 @@
 import { DropdownMenu, Sheet } from 'erxes-ui';
 import { IconDots, IconPlus } from '@tabler/icons-react';
 
+import { AddCardForm } from '@/deals/cards/components/AddCardForm';
 import { IStage } from '@/deals/types/stages';
-// import { AddCustomerForm } from '../../cards/AddCardForm';
 import { useState } from 'react';
 
 type Props = {
   stage: IStage;
 };
 
-export const StageHeader = ({ stage }: Props) => {
+export const StageHeader = ({ stage = {} as IStage }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
+  const { probability, itemsTotalCount, name } = stage;
 
   return (
     <div className="flex justify-between items-center">
-      <h4>
-        {stage.name} {stage.itemsTotalCount}
-      </h4>
+      <div>
+        <h4 className="font-semibold flex items-center gap-2">
+          {name}
+          <span className="text-xs text-gray-400">{itemsTotalCount || 0}</span>
+        </h4>
+        {probability && (
+          <span className="text-xs text-gray-400">
+            Forecasted ({probability})
+          </span>
+        )}
+      </div>
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
@@ -59,8 +68,7 @@ export const StageHeader = ({ stage }: Props) => {
               e.preventDefault();
             }}
           >
-            hi
-            {/* <AddCustomerForm onOpenChange={setOpen} /> */}
+            <AddCardForm />
           </Sheet.View>
         </Sheet>
       </div>
