@@ -1,6 +1,6 @@
 import { Card } from '@/deals/cards/components/Card';
+import { CardsLoading } from '@/deals/components/loading/CardsLoading';
 import { IDeal } from '@/deals/types/deals';
-import { Skeleton } from 'erxes-ui';
 import { useDeals } from '@/deals/cards/hooks/useDeals';
 
 type Props = {
@@ -15,7 +15,7 @@ export const CardList = ({ stageId }: Props) => {
   });
 
   if (dealsLoading) {
-    return <Skeleton />;
+    return <CardsLoading />;
   }
 
   return (deals || ([] as IDeal[])).map((deal) => (

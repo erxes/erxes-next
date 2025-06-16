@@ -1,6 +1,5 @@
 import { CardList } from '@/deals/cards/components/CardList';
 import { IStage } from '@/deals/types/stages';
-// import { Card } from '@/deals/cards/Card';
 import { StageHeader } from './StageHeader';
 
 type Props = {
