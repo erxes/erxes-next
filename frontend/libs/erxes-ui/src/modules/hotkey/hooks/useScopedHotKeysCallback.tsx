@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import { internalHotkeysEnabledScopesState } from '../states/internal/internalHotkeysEnabledScopeState';
 import { logDebug } from 'erxes-ui/utils/logDebug';
 
-export const DEBUG_HOTKEY_SCOPE = false;
+export const DEBUG_HOTKEY_SCOPE = true;
 
 export const useScopedHotKeysCallback = (
   dependencies?: OptionsOrDependencyArray,

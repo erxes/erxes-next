@@ -61,7 +61,7 @@ export const UnitEdit = () => {
 
   useEffect(() => {
     if (unitDetail) {
-      const { __typename, ...rest } = unitDetail;
+      const { __typename, _id, ...rest } = unitDetail;
       reset(rest);
     }
   }, [unitDetail]);

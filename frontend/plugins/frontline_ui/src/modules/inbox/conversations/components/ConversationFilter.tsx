@@ -14,9 +14,9 @@ export const ConversationFilter = () => {
     <>
       <div className="flex items-center pl-2 gap-2">
         <ConversationSelectAll />
-        <Button variant="ghost" size="icon" className="ml-auto">
+        {/* <Button variant="ghost" size="icon" className="ml-auto">
           <IconSortDescending />
-        </Button>
+        </Button> */}
         <FilterConversations />
       </div>
       <ConversationsCommandBar />

@@ -1,35 +1,46 @@
 import { OperationVariables, useQuery } from '@apollo/client';
-import { GET_COMPANIES } from '../graphql/queries/getCompanies';
+import {
+  GET_COMPANIES,
+  GET_ASSIGNED_COMPANIES,
+} from '../graphql/queries/getCompanies';
+import { ICompany } from '../types';
+import { EnumCursorDirection } from 'erxes-ui';
 
+const COMPANIES_LIMIT = 30;
 export const useCompanies = (options?: OperationVariables) => {
-  const COMPANIES_PER_PAGE = 30;
-  const { data, loading, fetchMore, error } = useQuery(GET_COMPANIES, {
+  const { data, loading, fetchMore, error } = useQuery<{
+    companies: {
+      list: ICompany[];
+      totalCount: number;
+      pageInfo: { endCursor: string };
+    };
+  }>(GET_COMPANIES, {
     ...options,
     variables: {
-      perPage: COMPANIES_PER_PAGE,
+      limit: COMPANIES_LIMIT,
       ...options?.variables,
     },
   });
-  const companies = data?.companiesMain?.list;
-  const totalCount = data?.companiesMain?.totalCount;
+  const { list = [], totalCount = 0, pageInfo } = data?.companies || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= companies?.length) return;
+    if (!pageInfo || totalCount <= list.length) return;
     fetchMore({
       variables: {
         ...options?.variables,
-        page: Math.ceil((companies?.length || 1) / COMPANIES_PER_PAGE) + 1,
-        perPage: COMPANIES_PER_PAGE,
+        cursor: pageInfo?.endCursor,
+        direction: EnumCursorDirection.FORWARD,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          companiesMain: {
+          companies: {
             list: [
-              ...(prev.companiesMain?.list || []),
-              ...fetchMoreResult.companiesMain.list,
+              ...(prev.companies?.list || []),
+              ...fetchMoreResult.companies.list,
             ],
-            totalCount: fetchMoreResult.companiesMain.totalCount,
+            totalCount: fetchMoreResult.companies.totalCount,
+            pageInfo: fetchMoreResult.companies.pageInfo,
           },
         });
       },
@@ -37,10 +48,22 @@ export const useCompanies = (options?: OperationVariables) => {
   };
 
   return {
-    companies,
+    companies: list,
     loading,
     handleFetchMore,
     totalCount,
     error,
   };
+};
+
+interface ICompanyInlineData {
+  companies?: { list: ICompany[] };
+}
+
+export const useCompaniesInline = (options?: OperationVariables) => {
+  const { data, loading, error } = useQuery<ICompanyInlineData>(
+    GET_ASSIGNED_COMPANIES,
+    options,
+  );
+  return { companies: data?.companies?.list || [], loading, error };
 };
