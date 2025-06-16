@@ -16,7 +16,7 @@ const config: ModuleFederationConfig = {
   name: 'sales_ui',
   exposes: {
     './config': './src/config.ts',
-    './deals': './src/remote-entry.ts',
+    './deals': './src/modules/deals/Main.tsx',
     './dealsSettings': './src/modules/deals/Settings.tsx',
     './Widgets': './src/widgets/Widgets.tsx',
   },

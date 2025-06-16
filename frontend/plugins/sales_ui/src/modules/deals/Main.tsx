@@ -1,26 +1,22 @@
-'use client';
+import { Route, Routes } from 'react-router';
+import { Suspense, lazy } from 'react';
 
-import { StagesList } from '@/deals/stage/components/StagesList';
+import { Spinner } from 'erxes-ui/components';
 
-export type StageType = {
-  _id: string;
-  title: string;
-};
+const DealsMain = lazy(() =>
+  import('~/pages/SalesIndexPage').then((module) => ({
+    default: module.SalesIndexPage,
+  })),
+);
 
-export type CardType = {
-  _id: string;
-  title: string;
-  stageId: string;
-};
-
-const DealsMain = () => {
+const App = () => {
   return (
-    <div className="w-full h-full p-4 overflow-x-auto">
-      <div className="flex gap-4 min-w-max h-full">
-        <StagesList />
-      </div>
-    </div>
+    <Suspense fallback={<Spinner />}>
+      <Routes>
+        <Route path="/" element={<DealsMain />} />
+      </Routes>
+    </Suspense>
   );
 };
 
-export default DealsMain;
+export default App;

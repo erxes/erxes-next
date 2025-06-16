@@ -7,11 +7,11 @@ import {
 } from 'erxes-ui';
 import { IconSandbox, IconSettings } from '@tabler/icons-react';
 
-import DealsMain from '@/deals/Main';
 import { Link } from 'react-router-dom';
 import MainActionBar from '@/deals/actionBar/components/MainActionBar';
 import { PageHeader } from 'ui-modules';
 import { SalesLeftSidebar } from '@/deals/components/SalesLeftSidebar';
+import { StagesList } from '@/deals/stage/components/StagesList';
 
 export const SalesIndexPage = () => {
   return (
@@ -48,7 +48,11 @@ export const SalesIndexPage = () => {
           <PageSubHeader>
             <MainActionBar />
           </PageSubHeader>
-          <DealsMain />
+          <div className="w-full h-full p-4 overflow-x-auto">
+            <div className="flex gap-4 min-w-max h-full">
+              <StagesList />
+            </div>
+          </div>
         </PageContainer>
       </div>
     </div>
