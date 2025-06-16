@@ -10,9 +10,9 @@ module.exports = {
     ),
     'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).tsx',
     'frontend/libs/ui-modules/src/**/!(*.stories|*.spec).tsx',
-    ...process.env.ENABLED_PLUGINS.split(',').map((p) => {
+    ...(process.env.ENABLED_PLUGINS?.split(',').map((p) => {
       return `frontend/plugins/${p}_ui/src/**/!(*.stories|*.spec).tsx`;
-    }),
+    }) || ['frontend/plugins/*_ui/src/**/!(*.stories|*.spec).tsx']),
   ],
   darkMode: 'class',
   theme: {

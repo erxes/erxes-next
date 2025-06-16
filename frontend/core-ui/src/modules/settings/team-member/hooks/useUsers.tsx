@@ -20,14 +20,16 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
   const { cursor } = useRecordTableCursor({
     sessionKey: 'users_cursor',
   });
-  const [{ branchIds, departmentIds, unitId, searchValue, isActive }] =
-    useMultiQueryState([
-      'branchIds',
-      'departmentIds',
-      'unitId',
-      'searchValue',
-      'isActive',
-    ]);
+  const [
+    { branchIds, departmentIds, unitId, searchValue, isActive, brandIds },
+  ] = useMultiQueryState([
+    'branchIds',
+    'departmentIds',
+    'unitId',
+    'searchValue',
+    'isActive',
+    'brandIds',
+  ]);
 
   const { data, loading, error, fetchMore } = useQuery<IUsersQuery>(
     queries.GET_USERS_QUERY,
@@ -41,6 +43,7 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
         cursor,
         searchValue: searchValue ?? undefined,
         isActive: isActive ?? undefined,
+        brandIds: brandIds ?? undefined,
         ...options?.variables,
       },
       onError(error) {

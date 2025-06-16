@@ -173,12 +173,17 @@ const getPerValue = async <TModels>({
     value.match(/\{\{\s*([^}]+)\s*\}\}/g) &&
     !(triggerType || '').includes(serviceName)
   ) {
-    const [relatedServiceName] = splitType(triggerType);
+    const [relatedPluginName] = splitType(triggerType);
+
+    if (!relatedPluginName) {
+      // Skip placeholder replacement when triggerType is empty
+      return value;
+    }
 
     value =
       (
         await sendWorkerMessage({
-          serviceName: relatedServiceName,
+          pluginName: relatedPluginName,
           queueName: 'automations',
           jobName: 'replacePlaceHolders',
           subdomain,

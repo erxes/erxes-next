@@ -11,7 +11,7 @@ import {
   Popover,
 } from 'erxes-ui/components';
 import {
-  IconAdjustmentsHorizontal,
+  IconFilter2,
   IconChevronRight,
   IconSearch,
   IconX,
@@ -85,7 +85,7 @@ const FilterTrigger = React.forwardRef<
         size={isFiltered ? 'icon' : 'default'}
         {...props}
       >
-        <IconAdjustmentsHorizontal className="w-4 h-4" />
+        <IconFilter2 className="w-4 h-4" />
         {!isFiltered && 'Filter'}
       </Button>
     </Popover.Trigger>

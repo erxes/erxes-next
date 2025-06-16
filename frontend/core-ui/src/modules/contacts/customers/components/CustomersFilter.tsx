@@ -11,8 +11,8 @@ import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 
 import { SelectMember, TagsFilter } from 'ui-modules';
 import { CustomerTotalCount } from './CustomerTotalCount';
-import { CUSTOMERS_CURSOR_SESSION_KEY } from '../constants/customersCursorSessionKey';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+import { useIsCustomerLeadSessionKey } from '../hooks/useCustomerLeadSessionKey';
 
 const CustomersFilterPopover = () => {
   const [queries] = useMultiQueryState<{
@@ -110,9 +110,10 @@ export const CustomersFilter = () => {
     tags: string[];
   }>(['searchValue', 'created', 'updated', 'lastSeen', 'tags']);
   const { searchValue, created, updated, lastSeen } = queries || {};
+  const { sessionKey } = useIsCustomerLeadSessionKey();
 
   return (
-    <Filter id="customers-filter" sessionKey={CUSTOMERS_CURSOR_SESSION_KEY}>
+    <Filter id="customers-filter" sessionKey={sessionKey}>
       <Filter.Bar>
         {searchValue && (
           <Filter.BarItem>

@@ -370,7 +370,55 @@ export const SelectTagsCommandbarItem = ({
     </SelectTagsProvider>
   );
 };
-export const SelectTags = Object.assign(SelectTagsProvider, {
+
+export const SelectTagsRoot = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'> &
+    Omit<
+      React.ComponentPropsWithoutRef<typeof Combobox.Trigger>,
+      'children'
+    > & {
+      scope?: string;
+    }
+>(
+  (
+    {
+      onValueChange,
+      scope,
+      targetIds,
+      tagType,
+      value,
+      mode,
+      options,
+      ...props
+    },
+    ref,
+  ) => {
+    const [open, setOpen] = useState(false);
+    return (
+      <SelectTagsProvider
+        onValueChange={(value) => {
+          onValueChange?.(value);
+          setOpen(false);
+        }}
+        {...{ targetIds, tagType, value, mode, options }}
+      >
+        <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
+          <Combobox.Trigger ref={ref} {...props}>
+            <SelectTagsValue />
+          </Combobox.Trigger>
+          <Combobox.Content>
+            <SelectTagsContent />
+          </Combobox.Content>
+        </PopoverScoped>
+      </SelectTagsProvider>
+    );
+  },
+);
+SelectTagsRoot.displayName = 'SelectTagsRoot';
+
+export const SelectTags = Object.assign(SelectTagsRoot, {
+  Provider: SelectTagsProvider,
   CommandbarItem: SelectTagsCommandbarItem,
   Content: SelectTagsContent,
   Command: SelectTagsCommand,

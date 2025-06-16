@@ -3,7 +3,7 @@ import {
   setProperty,
   startAutomations,
 } from 'erxes-api-shared/core-modules';
-import { generateModels, IModels } from './connectionResolvers';
+import { generateModels, IModels } from '../connectionResolvers';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 const getRelatedValue = async (
@@ -153,10 +153,8 @@ export default startAutomations('core', {
     }
     return 'Hello World Core';
   },
-  replacePlaceHolders: async (
-    { subdomain },
-    { data: { target, config, relatedValueProps } },
-  ) => {
+  replacePlaceHolders: async ({ subdomain }, { data }) => {
+    const { target, config, relatedValueProps } = data || {};
     const models = await generateModels(subdomain);
 
     return await replacePlaceHolders<IModels>({
