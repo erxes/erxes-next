@@ -1,12 +1,4 @@
-import { useState } from 'react';
 import {
-  SelectMemberContext,
-  useSelectMemberContext,
-} from '../contexts/SelectMemberContext';
-import { IMember } from '../types/TeamMembers';
-import { MembersInline } from './MembersInline';
-import {
-  cn,
   Combobox,
   Command,
   Filter,
@@ -15,15 +7,24 @@ import {
   RecordTableCellContent,
   RecordTableCellTrigger,
   RecordTablePopover,
+  cn,
   useFilterContext,
   useQueryState,
 } from 'erxes-ui';
-import { useDebounce } from 'use-debounce';
-import { useUsers } from 'ui-modules/modules';
-import { useAtomValue } from 'jotai';
-import { currentUserState } from 'ui-modules/states';
+import {
+  SelectMemberContext,
+  useSelectMemberContext,
+} from '../contexts/SelectMemberContext';
+
+import { IUser } from '../types/TeamMembers';
 import { IconUser } from '@tabler/icons-react';
+import { MembersInline } from './MembersInline';
 import React from 'react';
+import { currentUserState } from 'ui-modules/states';
+import { useAtomValue } from 'jotai';
+import { useDebounce } from 'use-debounce';
+import { useState } from 'react';
+import { useUsers } from 'ui-modules/modules';
 
 const SelectMemberProvider = ({
   children,
@@ -36,10 +37,10 @@ const SelectMemberProvider = ({
   value?: string[] | string;
   onValueChange?: (value: string[] | string) => void;
 }) => {
-  const [members, setMembers] = useState<IMember[]>([]);
+  const [members, setMembers] = useState<IUser[]>([]);
   const isSingleMode = mode === 'single';
 
-  const onSelect = (member: IMember) => {
+  const onSelect = (member: IUser) => {
     if (!member) return;
     if (isSingleMode) {
       setMembers([member]);
@@ -92,7 +93,7 @@ const SelectMemberValue = ({
   );
 };
 
-const SelectMemberCommandItem = ({ user }: { user: IMember }) => {
+const SelectMemberCommandItem = ({ user }: { user: IUser }) => {
   const { onSelect, memberIds } = useSelectMemberContext();
 
   return (
@@ -119,7 +120,7 @@ const SelectMemberCommandItem = ({ user }: { user: IMember }) => {
 const SelectMemberContent = () => {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const currentUser = useAtomValue(currentUserState) as IMember;
+  const currentUser = useAtomValue(currentUserState) as IUser;
   const { memberIds, members } = useSelectMemberContext();
   const { users, loading, handleFetchMore, totalCount, error } = useUsers({
     variables: {
