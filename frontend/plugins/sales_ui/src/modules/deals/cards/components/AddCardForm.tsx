@@ -1,19 +1,16 @@
 import { Button, Form, ScrollArea, Sheet, useToast } from 'erxes-ui';
-import { SalesFormType, salesFormSchema } from '../constants/formSchema';
+import { SalesFormType, salesFormSchema } from '@/deals/constants/formSchema';
 
 import { ApolloError } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-export function AddCustomerForm({
+export function AddCardForm({
   onOpenChange,
 }: {
   onOpenChange?: (open: boolean) => void;
 }) {
-  const { pathname } = useLocation();
-
-  //   const { customersAdd } = useAddCustomer();
   const form = useForm<SalesFormType>({
     resolver: zodResolver(salesFormSchema),
   });

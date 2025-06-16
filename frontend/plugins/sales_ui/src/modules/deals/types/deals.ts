@@ -13,7 +13,7 @@ export interface IItem {
     startDate: Date;
     closeDate: Date;
     description: string;
-    unUsedAmount?: number;
+    unusedAmount?: number;
     amount: number;
     modifiedAt: Date;
     assignedUserIds?: string[];
@@ -65,7 +65,7 @@ export interface IDeal extends IItem {
   }
 
 export type dealsProductDataMutationParams = {
-    proccessId?: string;
+    processId?: string;
     dealId?: string;
     dataId?: string;
     doc?: any;

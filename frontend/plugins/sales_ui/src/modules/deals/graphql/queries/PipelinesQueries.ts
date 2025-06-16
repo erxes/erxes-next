@@ -10,7 +10,7 @@ export const pipelineLabelFields = `
 `;
 
 export const GET_PIPELINE_DETAIL = gql`
-  query salesPipelineDetail($_id: String!) {
+  query SalesPipelineDetail($_id: String!) {
     salesPipelineDetail(_id: $_id) {
       _id
       name
@@ -29,7 +29,7 @@ export const GET_PIPELINE_DETAIL = gql`
 `;
 
 export const GET_PIPELINE_LABELS = gql`
-  query salesPipelineLabels($pipelineId: String!) {
+  query SalesPipelineLabels($pipelineId: String!) {
     salesPipelineLabels(pipelineId: $pipelineId) {
       ${pipelineLabelFields}
     }
@@ -37,7 +37,7 @@ export const GET_PIPELINE_LABELS = gql`
 `;
 
 export const GET_PIPELINE_ASSIGNED_USERS = gql`
-  query salesPipelineAssignedUsers($_id: String!) {
+  query SalesPipelineAssignedUsers($_id: String!) {
     salesPipelineAssignedUsers(_id: $_id) {
       _id
       details {
@@ -49,7 +49,7 @@ export const GET_PIPELINE_ASSIGNED_USERS = gql`
 `;
 
 export const GET_PIPELINE_LABEL_DETAIL = gql`
-  query salesPipelineLabelDetail($_id: String!) {
+  query SalesPipelineLabelDetail($_id: String!) {
     salesPipelineLabelDetail(_id: $_id) {
       ${pipelineLabelFields}
     }

@@ -6,7 +6,7 @@ import { IBoard } from "@/deals/types/boards";
 export const useBoards = (
     options?: QueryHookOptions<{ salesBoards: IBoard[] }>,
   ) => {  
-    const { data, loading } = useQuery<{ salesBoards: IBoard[] }>(
+    const { data, loading, error } = useQuery<{ salesBoards: IBoard[] }>(
       GET_BOARDS,
       {
         ...options,
@@ -16,5 +16,5 @@ export const useBoards = (
       },
     );
   
-    return { boards: data?.salesBoards, loading };
+    return { boards: data?.salesBoards, loading, error };
   };

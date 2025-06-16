@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_BOARDS = gql`
-  query salesBoards {
+  query SalesBoards {
     salesBoards {
       _id
       name
@@ -16,7 +16,7 @@ export const GET_BOARDS = gql`
 
 
 export const GET_BOARD_GET_LAST = gql`
-  query salesBoardGetLast {
+  query SalesBoardGetLast {
     salesBoardGetLast {
       _id
       name
@@ -30,7 +30,7 @@ export const GET_BOARD_GET_LAST = gql`
 `;
 
 export const GET_BOARD_DETAIL = gql`
-  query salesBoardDetail($_id: String!) {
+  query SalesBoardDetail($_id: String!) {
     salesBoardDetail(_id: $_id) {
       _id
       name
@@ -59,7 +59,7 @@ export const GET_BOARD_DETAIL = gql`
 `;
 
 export const GET_BOARD_COUNTS = gql`
-  query salesBoardCounts($type: String!) {
+  query SalesBoardCounts($type: String!) {
     salesBoardCounts(type: $type) {
       _id
       name
@@ -69,13 +69,13 @@ export const GET_BOARD_COUNTS = gql`
 `;
 
 export const GET_BOARD_CONTENT_TYPE_DETAIL = gql`
-  query salesBoardContentTypeDetail($contentType: String, $contentId: String){
+  query SalesBoardContentTypeDetail($contentType: String, $contentId: String){
     salesBoardContentTypeDetail(contentType: $contentType, contentId: $contentId)
   }
 `;
 
 export const GET_BOARD_LOGS = gql`
-  query salesBoardLogs($action: String, $content: JSON, $contentType: String, $contentId: String){
+  query SalesBoardLogs($action: String, $content: JSON, $contentType: String, $contentId: String){
     salesBoardLogs(action: $action, content: $content, contentType: $contentType, contentId: $contentId)
   }
 `;

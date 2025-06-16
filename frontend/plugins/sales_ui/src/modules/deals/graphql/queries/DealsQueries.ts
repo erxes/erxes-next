@@ -116,7 +116,7 @@ export const commonListFields = `
 `;
 
 export const GET_DEALS = gql`
-  query deals(
+  query Deals(
     $initialStageId: String,
     $stageId: String,
 
@@ -137,13 +137,13 @@ export const GET_DEALS = gql`
 `;
 
 export const GET_ITEMS_COUNT_BY_SEGMENTS = gql`
-  query salesItemsCountBySegments($type: String!, $boardId: String, $pipelineId: String) {
+  query SalesItemsCountBySegments($type: String!, $boardId: String, $pipelineId: String) {
     salesItemsCountBySegments(type: $type, boardId: $boardId, pipelineId: $pipelineId)
   }
 `;
 
 export const GET_ITEMS_COUNT_BY_ASSIGNED_USER = gql`
-  query salesItemsCountByAssignedUser($pipelineId: String!, $type: String!, $stackBy: String) {
+  query SalesItemsCountByAssignedUser($pipelineId: String!, $type: String!, $stackBy: String) {
     salesItemsCountByAssignedUser(pipelineId: $pipelineId, type: $type, stackBy: $stackBy)
   }
 `;

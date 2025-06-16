@@ -1,11 +1,10 @@
 import { Accordion, Sidebar, Skeleton } from 'erxes-ui';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { Link } from 'react-router';
 import { PipelineList } from '@/deals/pipelines/components/PipelineList';
 import { useBoards } from '@/deals/boards/hooks/useBoards';
 import { useEffect } from 'react';
 import { useLastBoard } from '@/deals/boards/hooks/useLastBoard';
-import { useNavigate } from 'react-router-dom';
 import { useQueryState } from 'erxes-ui';
 
 export const SalesLeftSidebar = () => {
@@ -36,16 +35,18 @@ export const SalesLeftSidebar = () => {
     return <Skeleton className="w-full flex-1 h-8" />;
   }
 
-  if (!selectedBoardId && lastBoard) {
-    const baseUrl = `?boardId=${lastBoard._id}`;
+  useEffect(() => {
+    if (!selectedBoardId && lastBoard) {
+      const baseUrl = `?boardId=${lastBoard._id}`;
 
-    const url =
-      lastBoard.pipelines && lastBoard.pipelines.length > 0
-        ? `${baseUrl}&pipelineId=${lastBoard.pipelines[0]._id}`
-        : baseUrl;
+      const url =
+        lastBoard.pipelines && lastBoard.pipelines.length > 0
+          ? `${baseUrl}&pipelineId=${lastBoard.pipelines[0]._id}`
+          : baseUrl;
 
-    navigate(url);
-  }
+      navigate(url);
+    }
+  }, [selectedBoardId, lastBoard, navigate]);
 
   return (
     <Sidebar collapsible="none" className="border-r flex-none">

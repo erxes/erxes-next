@@ -14,7 +14,11 @@ export const salesFormSchema = z.object({
   ownerId: z.string().default(''),
   description: z.string().default(''),
   isSubscribed: z.string().default('Yes'),
-  links: z.any().default({}),
+  links: z.object({
+    website: z.string().url().optional(),
+    linkedin: z.string().url().optional(),
+    twitter: z.string().url().optional(),
+  }).default({}),
   code: z.string().default(''),
   emailValidationStatus: z.string().default('unknown'),
   phoneValidationStatus: z.string().default('unknown'),

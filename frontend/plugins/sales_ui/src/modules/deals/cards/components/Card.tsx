@@ -30,7 +30,7 @@ export const Card = ({ card }: Props) => {
       style={style}
       className="p-2 bg-white rounded shadow min-h-[100px]"
     >
-      {card.name}
+      {card.name || 'Untitled Deal'}
     </div>
   );
 };

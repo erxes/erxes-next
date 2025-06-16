@@ -2,24 +2,10 @@ import { Button, DropdownMenu } from 'erxes-ui';
 import { IconAdjustmentsHorizontal, IconFilter } from '@tabler/icons-react';
 
 import { ActionBarFilters } from '../constants/Filters';
-import { FilterItem } from '../types/actionBarTypes';
+import DropdownItem from './DropdownItem';
 import React from 'react';
 
 const MainActionBar = () => {
-  const renderDropdownItem = (item: FilterItem, itemIndex: number) => {
-    const Icon = item.icon;
-
-    return (
-      <DropdownMenu.Item key={itemIndex}>
-        <div className="flex items-center gap-2">
-          <Icon className="w-4 h-4" />
-          {item.value}
-        </div>
-        <DropdownMenu.Shortcut>⌘P</DropdownMenu.Shortcut>
-      </DropdownMenu.Item>
-    );
-  };
-
   return (
     <div className="flex items-center justify-between gap-2 w-full">
       <DropdownMenu>
@@ -32,9 +18,9 @@ const MainActionBar = () => {
           {ActionBarFilters.map((group, groupIndex) => (
             <React.Fragment key={groupIndex}>
               <DropdownMenu.Group>
-                {group.map((filter, itemIndex) =>
-                  renderDropdownItem(filter, itemIndex),
-                )}
+                {group.map((filter, itemIndex) => (
+                  <DropdownItem item={filter} itemIndex={itemIndex} />
+                ))}
               </DropdownMenu.Group>
               {groupIndex < ActionBarFilters.length - 1 && (
                 <DropdownMenu.Separator />

@@ -9,7 +9,7 @@ export interface IPipeline {
     status: string;
     createdAt: Date;
     createdUser: IUser;
-    members?: any[];
+    members?: IUser[];
     departmentIds?: string[];
     branchIds?: string[];
     memberIds?: string[];

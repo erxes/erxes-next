@@ -1,4 +1,6 @@
+import { Icon } from "@tabler/icons-react";
+
 export interface FilterItem {
-  icon: any;
+  icon: Icon;
   value: string;
 }

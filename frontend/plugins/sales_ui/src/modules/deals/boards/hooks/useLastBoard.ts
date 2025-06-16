@@ -6,7 +6,7 @@ import { IBoard } from "@/deals/types/boards";
 export const useLastBoard = (
     options?: QueryHookOptions<{ salesBoardGetLast: IBoard }>,
   ) => {  
-    const { data, loading } = useQuery<{ salesBoardGetLast: IBoard }>(
+    const { data, loading, error } = useQuery<{ salesBoardGetLast: IBoard }>(
       GET_BOARD_GET_LAST,
       {
         ...options,
@@ -16,5 +16,5 @@ export const useLastBoard = (
       },
     );
   
-    return { lastBoard: data?.salesBoardGetLast, loading };
+    return { lastBoard: data?.salesBoardGetLast, loading, error };
   };

@@ -49,10 +49,7 @@ export const StageHeader = ({ stage }: Props) => {
             </DropdownMenu.Group>
           </DropdownMenu.Content>
         </DropdownMenu>
-        <Sheet
-          open={open}
-          onOpenChange={(open) => (open ? setOpen(true) : setOpen(false))}
-        >
+        <Sheet open={open} onOpenChange={setOpen}>
           <Sheet.Trigger asChild>
             <IconPlus className="cursor-pointer p-1 transition-all duration-300 hover:bg-white rounded-sm" />
           </Sheet.Trigger>

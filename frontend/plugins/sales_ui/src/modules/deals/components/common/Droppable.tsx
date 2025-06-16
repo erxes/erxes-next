@@ -17,7 +17,7 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
-type DragDirection = 'vertical' | 'horizontal' | 'both';
+type DragDirection = 'vertical' | 'horizontal';
 
 interface SortableItemProps {
   id: string;

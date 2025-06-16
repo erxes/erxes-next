@@ -18,7 +18,7 @@ export const CardList = ({ stageId }: Props) => {
     return <Skeleton />;
   }
 
-  return (deals || ([] as IDeal[]))?.map((deal) => (
+  return (deals || ([] as IDeal[])).map((deal) => (
     <Card key={deal._id} card={deal} />
   ));
 };

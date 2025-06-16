@@ -13,7 +13,6 @@ export const StagesList = () => {
       pipelineId,
     },
   });
-  console.log('stages', stages);
 
   if (stagesLoading) {
     return <Skeleton />;

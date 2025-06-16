@@ -73,7 +73,7 @@ const stageCommon = `
 `;
 
 export const GET_ARCHIVED_STAGES_COUNT = gql`
-  query salesArchivedStagesCount(
+  query SalesArchivedStagesCount(
     $pipelineId: String!,
     $search: String
   ) {
@@ -85,7 +85,7 @@ export const GET_ARCHIVED_STAGES_COUNT = gql`
 `;
 
 export const GET_STAGES = gql`
-  query salesStages(
+  query SalesStages(
     ${stageParams}
   ) {
     salesStages(
@@ -97,7 +97,7 @@ export const GET_STAGES = gql`
 `;
 
 export const GET_STAGE_DETAIL = gql`
-  query salesStageDetail(
+  query SalesStageDetail(
     $_id: String!,
     ${commonParams}
   ) {
@@ -115,7 +115,7 @@ export const GET_STAGE_DETAIL = gql`
 `;
 
 export const GET_CONVERSION_STAGES = gql`
-  query salesStages(
+  query SalesStages(
     ${stageParams}
   ) {
     salesStages(
