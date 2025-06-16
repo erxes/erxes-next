@@ -11,7 +11,8 @@ export const useUserDetail = (options?: OperationVariables) => {
     },
     skip: !userId,
   });
-  const { userDetail } = data || {};
+  const userDetail = data?.userDetail;
+
   return {
     userDetail,
     loading,

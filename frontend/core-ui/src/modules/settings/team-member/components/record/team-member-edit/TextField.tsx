@@ -1,5 +1,4 @@
 import { TextField } from 'erxes-ui';
-import { useCustomersEdit } from '@/contacts/customer-edit/hooks/useCustomerEdit';
 import { useUserEdit } from '../../../hooks/useUserEdit';
 
 interface TextFieldProps {

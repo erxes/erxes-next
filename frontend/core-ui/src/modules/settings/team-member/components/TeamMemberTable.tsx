@@ -1,6 +1,7 @@
 import { RecordTable } from 'erxes-ui';
 import { useUsers } from '@/settings/team-member/hooks/useUsers';
 import { teamMemberColumns } from '@/settings/team-member/components/record/TeamMemberColumns';
+import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../constants/teamMemberCursorSessionKey';
 
 const TeamMemberTable = () => {
   const { users, handleFetchMore, loading, error, pageInfo } = useUsers();
@@ -13,6 +14,7 @@ const TeamMemberTable = () => {
       </div>
     );
   }
+
   return (
     <RecordTable.Provider
       columns={teamMemberColumns}
@@ -24,7 +26,7 @@ const TeamMemberTable = () => {
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
         dataLength={users?.length}
-        sessionKey="users_cursor"
+        sessionKey={TEAM_MEMBER_CURSOR_SESSION_KEY}
       >
         <RecordTable>
           <RecordTable.Header />

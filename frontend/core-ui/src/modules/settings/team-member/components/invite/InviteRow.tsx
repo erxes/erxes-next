@@ -5,8 +5,8 @@ import { cn, Form, Input, Table } from 'erxes-ui';
 import { InviteRowCheckbox } from './InviteRowCheckbox';
 import { useFormContext } from 'react-hook-form';
 import {
-  SelectBranch,
-  SelectDepartment,
+  SelectBranches,
+  SelectDepartments,
   SelectUnit,
   SelectUsersGroup,
 } from 'ui-modules';
@@ -120,18 +120,20 @@ export const InviteRow = ({
           <Form.Field
             control={control}
             name={`entries.${userIndex}.unitId`}
-            render={({ field }) => (
-              <Form.Item>
-                <Form.Control>
-                  <SelectUnit
-                    name={field.name}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                  />
-                </Form.Control>
-              </Form.Item>
-            )}
+            render={({ field }) => {
+              console.log('field.value', field.value);
+              return (
+                <Form.Item>
+                  <Form.Control>
+                    <SelectUnit.FormItem
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                    />
+                  </Form.Control>
+                </Form.Item>
+              );
+            }}
           />
         </Table.Cell>
         <Table.Cell
@@ -144,14 +146,12 @@ export const InviteRow = ({
             name={`entries.${userIndex}.departmentId`}
             render={({ field }) => (
               <Form.Item>
-                <Form.Control>
-                  <SelectDepartment
-                    name={field.name}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                  />
-                </Form.Control>
+                <SelectDepartments.FormItem
+                  mode="single"
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                />
               </Form.Item>
             )}
           />
@@ -170,14 +170,12 @@ export const InviteRow = ({
             name={`entries.${userIndex}.branchId`}
             render={({ field }) => (
               <Form.Item>
-                <Form.Control>
-                  <SelectBranch
-                    name={field.name}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                  />
-                </Form.Control>
+                <SelectBranches.FormItem
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  mode="single"
+                  className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
+                />
               </Form.Item>
             )}
           />
