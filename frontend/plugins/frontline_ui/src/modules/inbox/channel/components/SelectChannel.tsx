@@ -165,7 +165,7 @@ export const SelectChannelFilterItem = () => {
 };
 
 export const SelectChannelFilterView = () => {
-  const [channelId, setChannelId] = useQueryState<string[]>('channelId');
+  const [channelId, setChannelId] = useQueryState<string>('channelId');
   const { resetFilterState } = useFilterContext();
 
   return (
@@ -173,7 +173,7 @@ export const SelectChannelFilterView = () => {
       <SelectChannelProvider
         value={channelId || []}
         onValueChange={(value) => {
-          setChannelId(value as string[]);
+          setChannelId(value as string);
           resetFilterState();
         }}
       >
@@ -184,7 +184,7 @@ export const SelectChannelFilterView = () => {
 };
 
 export const SelectChannelBar = () => {
-  const [channelId, setChannelId] = useQueryState<string[]>('channelId');
+  const [channelId, setChannelId] = useQueryState<string>('channelId');
   const [open, setOpen] = useState(false);
 
   return (
@@ -193,7 +193,7 @@ export const SelectChannelBar = () => {
         value={channelId || []}
         onValueChange={(value) => {
           if (value.length > 0) {
-            setChannelId(value as string[]);
+            setChannelId(value as string);
           } else {
             setChannelId(null);
           }

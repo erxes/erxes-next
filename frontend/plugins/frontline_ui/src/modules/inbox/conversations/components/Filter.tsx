@@ -12,7 +12,6 @@ import {
 import { SelectMember } from 'ui-modules';
 import { useQueryState } from 'erxes-ui';
 import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
-import { ConversationCount } from './ConversationsHeader';
 import { ConversationStatus } from '@/inbox/types/Conversation';
 import { ChannelTag } from '@/inbox/channel/components/ChannelTag';
 
@@ -23,7 +22,7 @@ export const FilterConversations = () => {
     useQueryState<boolean>('awaitingResponse');
   const [participated, setParticipated] =
     useQueryState<boolean>('participated');
-  const [created] = useQueryState<boolean>('created');
+  const [created] = useQueryState<Date>('created');
 
   return (
     <Filter id="inbox-filter-dropdown">
