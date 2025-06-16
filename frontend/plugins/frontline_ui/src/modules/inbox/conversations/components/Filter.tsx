@@ -1,27 +1,29 @@
-import {
-  Combobox,
-  Command,
-  Filter,
-  Separator,
-  Toggle,
-  ToggleGroup,
-} from 'erxes-ui';
+import { Combobox, Command, Filter } from 'erxes-ui';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 import {
   IconCalendarPlus,
+  IconCheck,
   IconCheckbox,
-  IconLayoutColumns,
-  IconList,
   IconLoader,
   IconSquare,
+  IconUsersGroup,
   IconUserX,
 } from '@tabler/icons-react';
 import { SelectMember } from 'ui-modules';
 import { useQueryState } from 'erxes-ui';
+import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
+import { ConversationCount } from './ConversationsHeader';
+import { ConversationStatus } from '@/inbox/types/Conversation';
+import { ChannelTag } from '@/inbox/channel/components/ChannelTag';
 
 export const FilterConversations = () => {
-  const [view, setView] = useQueryState<string>('view');
-  const [isResolved, setIsResolved] = useQueryState<string>('isResolved');
+  const [status, setStatus] = useQueryState<ConversationStatus>('status');
+  const [unassigned, setUnassigned] = useQueryState<boolean>('unassigned');
+  const [awaitingResponse, setAwaitingResponse] =
+    useQueryState<boolean>('awaitingResponse');
+  const [participated, setParticipated] =
+    useQueryState<boolean>('participated');
+  const [created] = useQueryState<boolean>('created');
 
   return (
     <Filter id="inbox-filter-dropdown">
@@ -31,75 +33,120 @@ export const FilterConversations = () => {
           <Combobox.Content className="w-64">
             <Filter.View>
               <Command>
-                <Command.List className="p-0">
-                  <ToggleGroup
-                    type="single"
-                    className="p-1"
-                    value={view || 'list'}
-                    onValueChange={setView}
+                <Filter.CommandInput
+                  placeholder="Filter"
+                  variant="secondary"
+                  className="bg-background"
+                />
+                <Command.List>
+                  <Command.Item onSelect={() => setStatus(null)}>
+                    <IconSquare />
+                    Unresolved
+                    {status === null && <IconCheck className="ml-auto" />}
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => setStatus(ConversationStatus.CLOSED)}
                   >
-                    <ToggleGroup.Item
-                      value="split"
-                      className="h-14 flex-col flex-auto gap-1 [&_svg]:size-5 text-muted-foreground data-[state=on]:bg-muted data-[state=on]:text-foreground"
-                      variant="default"
-                    >
-                      <IconLayoutColumns />
-                      Split view
-                    </ToggleGroup.Item>
-                    <ToggleGroup.Item
-                      value="list"
-                      className="h-14 flex-col flex-auto gap-1 [&_svg]:size-5 text-muted-foreground data-[state=on]:bg-muted data-[state=on]:text-foreground"
-                      variant="default"
-                    >
-                      <IconList />
-                      List view
-                    </ToggleGroup.Item>
-                  </ToggleGroup>
-                  <Separator />
-                  <div className="p-1">
-                    <Toggle className="justify-start text-center w-full px-2">
-                      <IconCheckbox />
-                      Resolved
-                    </Toggle>
-                  </div>
-                  <Separator />
-
-                  <ToggleGroup
-                    type="single"
-                    className="flex-col items-stretch p-1 gap-0.5"
+                    <IconCheckbox />
+                    Resolved
+                    {status === ConversationStatus.CLOSED && (
+                      <IconCheck className="ml-auto" />
+                    )}
+                  </Command.Item>
+                  <Command.Separator className="my-1" />
+                  <SelectMember.FilterItem />
+                  <Command.Item
+                    onSelect={() => setUnassigned(unassigned ? null : true)}
                   >
-                    <SelectMember.FilterItem />
-                    <ToggleGroup.Item
-                      value="unassigned"
-                      className="justify-start text-center"
-                    >
-                      <IconUserX />
-                      Unassigned
-                    </ToggleGroup.Item>
-                    <ToggleGroup.Item
-                      value="awaiting_response"
-                      className="justify-start text-center"
-                    >
-                      <IconLoader />
-                      Awaiting response
-                    </ToggleGroup.Item>
-                  </ToggleGroup>
-                  <Separator />
-                  <Filter.Item value="created" className="m-1">
+                    <IconUserX />
+                    Unassigned
+                    {unassigned && <IconCheck className="ml-auto" />}
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() =>
+                      setAwaitingResponse(awaitingResponse ? null : true)
+                    }
+                  >
+                    <IconLoader />
+                    Awaiting response
+                    {awaitingResponse && <IconCheck className="ml-auto" />}
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => setParticipated(participated ? null : true)}
+                  >
+                    <IconUsersGroup />
+                    Participated
+                    {participated && <IconCheck className="ml-auto" />}
+                  </Command.Item>
+                  <Command.Separator className="my-1" />
+                  <SelectChannel.FilterItem />
+                  <Command.Separator className="my-1" />
+                  <Filter.Item value="created">
                     <IconCalendarPlus />
-                    Date created
+                    Created At
                   </Filter.Item>
-                  <Command.Separator />
                 </Command.List>
               </Command>
             </Filter.View>
-            <SelectMember.FilterView />
+            <SelectMember.FilterView
+              onValueChange={() => setUnassigned(null)}
+            />
+            <SelectChannel.FilterView />
+            <Filter.View filterKey="created">
+              <Filter.DateView filterKey="created" />
+            </Filter.View>
           </Combobox.Content>
         </Filter.Popover>
         <Filter.Dialog>
-          <Filter.DialogStringView filterKey="searchValue" />
+          <Filter.DialogDateView filterKey="created" />
         </Filter.Dialog>
-        <Filter.SearchValueBarItem />
+        <SelectMember.FilterBar
+          iconOnly
+          onValueChange={() => setUnassigned(null)}
+        />
+        {status === ConversationStatus.CLOSED && (
+          <Filter.BarItem>
+            <Filter.BarName>
+              <IconCheckbox />
+              Resolved
+            </Filter.BarName>
+            <Filter.BarClose filterKey="status" />
+          </Filter.BarItem>
+        )}
+        {created && (
+          <Filter.BarItem>
+            <Filter.Date filterKey="created" className="rounded-l" />
+            <Filter.BarClose filterKey="created" />
+          </Filter.BarItem>
+        )}
+        {unassigned && (
+          <Filter.BarItem>
+            <Filter.BarName>
+              <IconUserX />
+              Unassigned
+            </Filter.BarName>
+            <Filter.BarClose filterKey="unassigned" />
+          </Filter.BarItem>
+        )}
+        {awaitingResponse && (
+          <Filter.BarItem>
+            <Filter.BarName>
+              <IconLoader />
+              Awaiting response
+            </Filter.BarName>
+            <Filter.BarClose filterKey="awaitingResponse" />
+          </Filter.BarItem>
+        )}
+        {participated && (
+          <Filter.BarItem>
+            <Filter.BarName>
+              <IconUsersGroup />
+              Participated
+            </Filter.BarName>
+            <Filter.BarClose filterKey="participated" />
+          </Filter.BarItem>
+        )}
+        <ChannelTag />
       </Filter.Bar>
     </Filter>
   );

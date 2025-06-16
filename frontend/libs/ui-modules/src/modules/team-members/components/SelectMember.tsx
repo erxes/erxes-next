@@ -177,7 +177,11 @@ export const SelectMemberFilterItem = () => {
   );
 };
 
-export const SelectMemberFilterView = () => {
+export const SelectMemberFilterView = ({
+  onValueChange,
+}: {
+  onValueChange?: (value: string[] | string) => void;
+}) => {
   const [assignedTo, setAssignedTo] = useQueryState<string[]>('assignedTo');
   const { resetFilterState } = useFilterContext();
 
@@ -189,6 +193,7 @@ export const SelectMemberFilterView = () => {
         onValueChange={(value) => {
           setAssignedTo(value as string[]);
           resetFilterState();
+          onValueChange?.(value);
         }}
       >
         <SelectMemberContent />
@@ -197,7 +202,13 @@ export const SelectMemberFilterView = () => {
   );
 };
 
-export const SelectMemberFilterBar = () => {
+export const SelectMemberFilterBar = ({
+  iconOnly,
+  onValueChange,
+}: {
+  iconOnly?: boolean;
+  onValueChange?: (value: string[] | string) => void;
+}) => {
   const [assignedTo, setAssignedTo] = useQueryState<string[]>('assignedTo');
   const [open, setOpen] = useState(false);
 
@@ -209,7 +220,7 @@ export const SelectMemberFilterBar = () => {
     <Filter.BarItem>
       <Filter.BarName>
         <IconUser />
-        Assigned To
+        {!iconOnly && 'Assigned To'}
       </Filter.BarName>
       <SelectMemberProvider
         mode="multiple"
@@ -221,6 +232,7 @@ export const SelectMemberFilterBar = () => {
             setAssignedTo(null);
           }
           setOpen(false);
+          onValueChange?.(value);
         }}
       >
         <Popover open={open} onOpenChange={setOpen}>

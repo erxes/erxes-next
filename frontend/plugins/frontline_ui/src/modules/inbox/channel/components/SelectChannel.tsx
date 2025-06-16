@@ -5,8 +5,18 @@ import {
 } from '@/inbox/channel/context/SelectChannelContext';
 import { useState } from 'react';
 import { ChannelsInline } from './ChannelsInline';
-import { cn, Combobox, Command, Form, Popover } from 'erxes-ui';
+import {
+  cn,
+  Combobox,
+  Command,
+  Filter,
+  Form,
+  Popover,
+  useFilterContext,
+  useQueryState,
+} from 'erxes-ui';
 import { useChannels } from '../hooks/useChannels';
+import { IconTopologyStar3 } from '@tabler/icons-react';
 
 const SelectChannelProvider = ({
   children,
@@ -95,9 +105,7 @@ export const SelectChannelsContent = () => {
               <Command.Item
                 key={channel._id}
                 value={channel._id}
-                onSelect={() => {
-                  onSelect(channel);
-                }}
+                onSelect={() => onSelect(channel)}
               >
                 {channel.name}
                 <Combobox.Check checked={channelIds.includes(channel._id)} />
@@ -147,9 +155,73 @@ export const SelectChannelsFormItem = ({
   );
 };
 
+export const SelectChannelFilterItem = () => {
+  return (
+    <Filter.Item value="channelId">
+      <IconTopologyStar3 />
+      Select Channel
+    </Filter.Item>
+  );
+};
+
+export const SelectChannelFilterView = () => {
+  const [channelId, setChannelId] = useQueryState<string[]>('channelId');
+  const { resetFilterState } = useFilterContext();
+
+  return (
+    <Filter.View filterKey="channelId">
+      <SelectChannelProvider
+        value={channelId || []}
+        onValueChange={(value) => {
+          setChannelId(value as string[]);
+          resetFilterState();
+        }}
+      >
+        <SelectChannelsContent />
+      </SelectChannelProvider>
+    </Filter.View>
+  );
+};
+
+export const SelectChannelBar = () => {
+  const [channelId, setChannelId] = useQueryState<string[]>('channelId');
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Filter.BarItem>
+      <SelectChannelProvider
+        value={channelId || []}
+        onValueChange={(value) => {
+          if (value.length > 0) {
+            setChannelId(value as string[]);
+          } else {
+            setChannelId(null);
+          }
+          setOpen(false);
+        }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Filter.BarButton filterKey="channelId" className="rounded-l">
+              <SelectChannelsValue />
+            </Filter.BarButton>
+          </Popover.Trigger>
+          <Combobox.Content>
+            <SelectChannelsContent />
+          </Combobox.Content>
+        </Popover>
+      </SelectChannelProvider>
+      <Filter.BarClose filterKey="channelId" />
+    </Filter.BarItem>
+  );
+};
+
 export const SelectChannel = {
   Provider: SelectChannelProvider,
   Value: SelectChannelsValue,
   Content: SelectChannelsContent,
   FormItem: SelectChannelsFormItem,
+  FilterItem: SelectChannelFilterItem,
+  FilterView: SelectChannelFilterView,
+  Bar: SelectChannelBar,
 };
