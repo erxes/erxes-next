@@ -1,9 +1,10 @@
-import { Button, Dialog, TablerIcon } from 'erxes-ui';
+import { Button, Dialog } from 'erxes-ui';
 import ReactJson from 'react-json-view';
 import auth from './AuthLogDetailContent';
 import graphql from './GraphqlLogDetailContent';
 import mongo from './MongoLogDetailContent';
 import { ILogDoc } from '../types';
+import { IconEye } from '@tabler/icons-react';
 
 type Props = {
   doc: ILogDoc;
@@ -32,7 +33,8 @@ export function LogDetailDialog({ doc }: Props) {
       <Dialog.Trigger>
         <div className="flex w-full justify-center">
           <Button variant="ghost" size="icon">
-            <TablerIcon name="IconEye" className="text-muted-foreground" />
+            {/* <TablerIcon name="IconEye" className="text-muted-foreground" /> */}
+            <IconEye />
           </Button>
         </div>
       </Dialog.Trigger>
