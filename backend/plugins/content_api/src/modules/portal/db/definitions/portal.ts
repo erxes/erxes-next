@@ -24,6 +24,14 @@ const stylesSchema = new Schema(
   },
 );
 
+const environmentVariableSchema = new Schema(
+  {
+    key: { type: String, required: true },
+    value: { type: String, required: true },
+  },
+  { _id: false },
+);
+
 const otpConfigSchema = new Schema(
   {
     content: { type: String, optional: true },
@@ -225,4 +233,5 @@ export const portalSchema = new Schema({
   googleTagManager: { type: String, optional: true },
   vercelProjectId: { type: String, optional: true },
   lastVercelDeploymentId: { type: String, optional: true },
+  environmentVariables: { type: [environmentVariableSchema], optional: true },
 });

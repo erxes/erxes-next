@@ -184,7 +184,11 @@ const allFilePaths = (dirPath: string, arrayOfFiles: any[] = []) => {
   return arrayOfFiles;
 };
 
-export const deploy = async (models: IModels, subdomain: string, config: IPortalDocument) => {
+export const deploy = async (
+  models: IModels,
+  subdomain: string,
+  config: IPortalDocument,
+) => {
   if (!config.name) {
     throw new Error('Client portal name is required');
   }
@@ -236,14 +240,22 @@ export const deploy = async (models: IModels, subdomain: string, config: IPortal
     // const layoutPath = path.join(tmpDir, 'app', 'layout.tsx');
     const dataPath = path.join(tmpDir, 'data', 'configs.json');
 
+    const env: any = {
+      ERXES_API_URL: `${domain}/graphql`,
+      ERXES_URL: domain,
+      ERXES_FILE_URL: `${domain}/read-file?key=`,
+      ERXES_CP_ID: config._id,
+      ERXES_APP_TOKEN: config.erxesAppToken,
+    };
+
+    const { environmentVariables = [] } = config;
+
+    for (const environmentVariable of environmentVariables) {
+      env[environmentVariable.key] = environmentVariable.value;
+    }
+
     const projectConfig = `export default {
-      env: {
-        ERXES_API_URL: "${domain}/graphql",
-        ERXES_URL: "${domain}",
-        ERXES_FILE_URL: "${domain}/read-file?key=",
-        ERXES_CP_ID: "${config._id}",
-        ERXES_APP_TOKEN: "${config.erxesAppToken}",
-      },
+      env: ${JSON.stringify(env)},
       images: {
         unoptimized: true,
         remotePatterns: [

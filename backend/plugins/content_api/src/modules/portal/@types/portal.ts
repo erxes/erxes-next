@@ -52,6 +52,11 @@ export interface ITokiConfig {
   production?: boolean;
 }
 
+export type EnvironmentVariable = {
+  key: string;
+  value: string;
+};
+
 export interface IPortal {
   _id?: string;
   name?: string;
@@ -137,6 +142,8 @@ export interface IPortal {
   googleTagManager?: string;
   vercelProjectId?: string;
   lastVercelDeploymentId?: string;
+
+  environmentVariables?: EnvironmentVariable[];
 }
 
 interface IStyles {

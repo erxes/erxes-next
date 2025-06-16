@@ -98,6 +98,13 @@ enum UserCardEnum {
     password: String
   }
 
+
+  type EnvironmentVariable {
+    key: String
+    value: String
+  }
+
+
 type ClientPortal {
     _id: String!
     name: String!
@@ -181,6 +188,7 @@ type ClientPortal {
     googleTagManager: String
 
     createdAt: Date
+    environmentVariables: [EnvironmentVariable]
   }
 
   type Styles {
@@ -206,6 +214,8 @@ type ClientPortal {
     pageInfo: PageInfo
     totalCount: Int
   }
+
+
 
 `;
 
@@ -256,6 +266,11 @@ input OTPConfigInput {
   input ItemDate {
     month: Int
     year: Int
+  }
+
+  input EnvironmentVariableInput {
+    key: String
+    value: String
   }
 
   input ClientPortalConfigInput {
@@ -336,7 +351,10 @@ input OTPConfigInput {
     googleAnalytics: String
     facebookPixel: String
     googleTagManager: String
+    environmentVariables: [EnvironmentVariableInput]
   }
+
+
 `;
 
 export const queries = `
