@@ -20,6 +20,7 @@ import ForgotPasswordPage from '~/pages/auth/ForgotPasswordPage';
 import { SegmentRoutes } from '@/app/components/SegmentsRoutes';
 import { AutomationRoutes } from '@/app/components/AutomationRoutes';
 import { LogRoutes } from '@/app/components/LogRoutes';
+import { ComponentsRoutes } from '../components/ComponentsRoutes';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
@@ -28,7 +29,6 @@ const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
 const CreateOwnerPage = lazy(
   () => import('~/pages/organization/CreateOwnerPage'),
 );
-
 export const useCreateAppRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
@@ -67,6 +67,12 @@ export const useCreateAppRouter = () => {
               />
               <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
               {...getPluginsRoutes()}
+              {process.env.NODE_ENV === 'development' && (
+                <Route
+                  path={AppPath.ComponentsCatchAll}
+                  element={<ComponentsRoutes />}
+                />
+              )}
             </Route>
           </Route>
         </Route>

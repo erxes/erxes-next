@@ -102,7 +102,7 @@ const CustomersInlineAvatar = ({ className, ...props }: AvatarProps) => {
   const renderAvatar = (customer: ICustomer) => {
     const { avatar, firstName, lastName } = customer;
 
-    const fullName = `${firstName} ${lastName}`;
+const fullName = `${firstName ?? ''} ${lastName ?? ''}`.trim();
 
     return (
       <Tooltip delayDuration={100}>
@@ -118,7 +118,9 @@ const CustomersInlineAvatar = ({ className, ...props }: AvatarProps) => {
             {...props}
           >
             <Avatar.Image src={avatar} />
-            <Avatar.Fallback>{fullName?.charAt(0) || ''}</Avatar.Fallback>
+                  <Avatar.Fallback>
++              {(fullName.charAt(0) || '').toUpperCase()}
++            </Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>
         <Tooltip.Content>

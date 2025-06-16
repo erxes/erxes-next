@@ -1,6 +1,11 @@
-import { IconAlertCircle } from '@tabler/icons-react';
+import {
+  IconAlertCircle,
+  IconChevronDown,
+  IconChevronUp,
+  IconRefresh,
+  IconX,
+} from '@tabler/icons-react';
 import { Button, Collapsible } from 'erxes-ui';
-import { IconChevronDown, IconChevronUp, IconRefresh, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
 
 interface ErrorStateProps {

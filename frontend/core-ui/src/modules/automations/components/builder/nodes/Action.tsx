@@ -1,10 +1,5 @@
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import { memo } from 'react';
-// import {
-//     type NodeProps,
-//     Handle,
-//     Position
-// } from "reactflow"
 import { cn } from 'erxes-ui';
 import { IconAdjustmentsAlt, IconMessage, IconPlus } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
@@ -85,6 +80,7 @@ const renderSourceHandler = (type: string) => {
 
 const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
   const { setValue } = useFormContext<TAutomationProps>();
+  const { beforeTitleContent } = data;
 
   return (
     <div className="flex flex-col" key={id}>
@@ -101,6 +97,8 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
       >
         <div className="p-3 flex items-center justify-between border-b border-muted">
           <div className="flex items-center gap-2 text-success/90">
+            {beforeTitleContent && beforeTitleContent(id, 'action')}
+
             <div
               className={`h-6 w-6 rounded-full bg-success/10  flex items-center justify-center`}
             >

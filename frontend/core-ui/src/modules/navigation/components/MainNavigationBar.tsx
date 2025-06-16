@@ -4,6 +4,7 @@ import { SidebarNavigation } from './SidebarNavigation';
 import { SidebarNavigationFavorites } from './SidebarNavigationFavorites';
 import { User } from './User';
 import { Notification } from '@/notification/components/Notification';
+import { SidebarNavigationComponents } from './SidebarNavigationComponents';
 
 export const MainNavigationBar = () => {
   return (
@@ -19,6 +20,9 @@ export const MainNavigationBar = () => {
       <Sidebar.Separator className="mx-0" />
 
       <Sidebar.Content className="gap-0">
+        {process.env.NODE_ENV === 'development' && (
+          <SidebarNavigationComponents />
+        )}
         <SidebarNavigationFavorites />
         <SidebarNavigation />
       </Sidebar.Content>
