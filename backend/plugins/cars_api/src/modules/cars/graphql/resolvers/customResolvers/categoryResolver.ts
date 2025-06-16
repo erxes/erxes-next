@@ -11,4 +11,14 @@ export default {
   isRoot: (category: ICarCategoryDocument) => {
     return category.parentId ? false : true;
   },
+
+  async carCount(
+    category: ICarCategoryDocument,
+    _args: any,
+    { models }: IContext,
+  ) {
+    return models.Cars.countDocuments({
+      categoryId: category._id,
+    });
+  },
 };

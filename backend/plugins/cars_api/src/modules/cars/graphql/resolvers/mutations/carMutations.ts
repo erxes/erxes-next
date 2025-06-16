@@ -20,7 +20,6 @@ export const carMutations = {
     { carIds }: { carIds: string[] },
     { models }: IContext,
   ) => {
-    console.log(1, carIds);
     return await models.Cars.carsRemove(carIds);
   },
 

@@ -57,15 +57,11 @@ export const carQueries = {
   ) => {
     const filter = await generateFilter(params, commonQuerySelector, models);
 
-    console.log(1111);
-
     const { list, totalCount, pageInfo } = await cursorPaginate<ICarDocument>({
       model: models.Cars,
       params,
       query: filter,
     });
-
-    console.log({ list, totalCount, pageInfo });
 
     return { list, totalCount, pageInfo };
   },

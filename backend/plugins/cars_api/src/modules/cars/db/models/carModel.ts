@@ -12,7 +12,7 @@ export interface ICarModel extends Model<ICarDocument> {
   carsAdd(doc: ICar): Promise<ICarDocument>;
   carsEdit(_id: string, doc: ICar): Promise<ICarDocument>;
   carsRemove(ModuleId: string[]): Promise<{ ok: number }>;
-  getCar(_id: string): Promise<ICarDocument>;
+  carDetail(_id: string): Promise<ICarDocument>;
   mergeCars(carIds: string[], carFields: ICar): Promise<ICarDocument>;
 }
 
@@ -69,16 +69,6 @@ export const loadCarClass = (models: IModels) => {
       }
     }
 
-    public static async getCar(_id: string) {
-      const car = await models.Cars.findOne({ _id });
-
-      if (!car) {
-        throw new Error('Car not found');
-      }
-
-      return car;
-    }
-
     /**
      * Retrieves cars
      */
@@ -115,13 +105,15 @@ export const loadCarClass = (models: IModels) => {
      * Update cars
      */
     public static async carsEdit(_id: string, doc: ICar) {
-      const searchText = models.Cars.fillSearchText(
-        Object.assign(await models.Cars.getCar(_id), doc),
+      const car = await models.Cars.carDetail(_id);
+
+      const searchText: string = models.Cars.fillSearchText(
+        Object.assign(car, doc),
       );
 
       await models.Cars.updateOne(
         { _id },
-        { $set: { ...doc, searchText: any, modifiedAt: new Date() } },
+        { $set: { ...doc, searchText, modifiedAt: new Date() } },
       );
 
       return models.Cars.findOne({ _id });
@@ -131,7 +123,6 @@ export const loadCarClass = (models: IModels) => {
      * Remove cars
      */
     public static async carsRemove(carIds: string[]) {
-      console.log(2, carIds);
       return models.Cars.deleteMany({ _id: { $in: carIds } });
     }
 
@@ -141,7 +132,7 @@ export const loadCarClass = (models: IModels) => {
       await this.checkDuplication(carFields, carIds);
 
       for (const carId of carIds) {
-        models.Cars.getCar(carId);
+        models.Cars.carDetail(carId);
         await models.Cars.findByIdAndUpdate(carId, {
           $set: { status: 'Deleted' },
         });

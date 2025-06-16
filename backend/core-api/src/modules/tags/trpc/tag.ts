@@ -10,7 +10,7 @@ export const tagTrpcRouter = t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
-
+      console.log('tag', query);
       return await models.Tags.find(query).lean();
     }),
 

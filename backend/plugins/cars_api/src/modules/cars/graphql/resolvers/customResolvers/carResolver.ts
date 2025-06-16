@@ -12,7 +12,7 @@ export default {
   },
 
   customer: async (car: ICarDocument, _args: any) => {
-    const result = await sendTRPCMessage({
+    return await sendTRPCMessage({
       method: `query`,
       pluginName: `core`,
       module: `customers`,
@@ -20,6 +20,19 @@ export default {
       input: {
         query: { _id: car.ownerId },
       },
+    });
+  },
+
+  tags: async (car: ICarDocument, _args: any) => {
+    const result = await sendTRPCMessage({
+      method: `query`,
+      pluginName: `core`,
+      module: `tags`,
+      action: `find`,
+      input: {
+        query: { _id: { $in: car.tagIds } },
+      },
+      defaultValue: [],
     });
 
     return result;

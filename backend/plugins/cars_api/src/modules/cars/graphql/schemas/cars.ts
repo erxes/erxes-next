@@ -3,7 +3,7 @@ export const types = `
     ownerId: String
     customer: Customer
     mergeIds: [String]
-    getTags: [Tag]
+    tags: [Tag]
     plateNumber: String
     vinNumber: String
     colorCode: String
@@ -47,6 +47,7 @@ export const queries = `
 const mutationParams = `
   ownerId: String,
   mergeIds: [String],
+  tagIds: [String]
   description: String
   plateNumber: String
   vinNumber: String
