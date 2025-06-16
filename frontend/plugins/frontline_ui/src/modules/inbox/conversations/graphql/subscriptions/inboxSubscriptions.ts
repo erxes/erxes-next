@@ -58,7 +58,7 @@ const conversationClientTypingStatusChanged = `
   }
 `;
 
-const conversationExternalIntegrationMessageInserted = `
+export const CONVERSATION_EXTERNAL_INTEGRATION_MESSAGE_INSERTED = gql`
   subscription conversationExternalIntegrationMessageInserted {
     conversationExternalIntegrationMessageInserted
   }
@@ -77,6 +77,5 @@ export default {
   conversationChanged,
   conversationMessageInserted,
   conversationClientTypingStatusChanged,
-  conversationExternalIntegrationMessageInserted,
   customerConnectionChanged,
 };
