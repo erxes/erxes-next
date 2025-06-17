@@ -3,34 +3,34 @@
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { usePosDetail } from '../hooks/useDetail';
-import { posCategoryAtom } from '@/create-pos/states/posCategory';
-import { usePosEdit } from '@/hooks/usePosEdit';
+import { posCategoryAtom } from '~/modules/create-pos/states/posCategory';
+import { usePosEdit } from '~/modules/hooks/usePosEdit';
 import {
   type BasicInfoFormValues,
   basicInfoSchema,
   type PermissionFormValues,
   permissionSchema,
-} from '@/create-pos/components/formSchema';
+} from '~/modules/create-pos/components/formSchema';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PosEditLayout, PosEditTabContent } from './posDetailLayout';
-import { EcommerceForm } from '@/create-pos/components/general/ecommerce';
-import { RestaurantForm } from '@/create-pos/components/general/restaurant';
-import POSSlotsManager from '@/slot/components/slot';
-import EcommercePaymentsForm from '@/create-pos/components/payments/ecommerce-payment';
-import RestaurantPaymentsForm from '@/create-pos/components/payments/restaurant-payment';
+import { EcommerceForm } from '~/modules/create-pos/components/general/ecommerce';
+import { RestaurantForm } from '~/modules/create-pos/components/general/restaurant';
+import POSSlotsManager from '~/modules/slot/components/slot';
+import EcommercePaymentsForm from '~/modules/create-pos/components/payments/ecommerce-payment';
+import RestaurantPaymentsForm from '~/modules/create-pos/components/payments/restaurant-payment';
 import PermissionForm, {
   type PermissionFormRef,
   getPermissionFormValues,
-} from '@/create-pos/components/permission/permission';
-import AppearanceForm from '@/create-pos/components/appearance/appearance';
-import ScreenConfigForm from '@/create-pos/components/config/screen-config';
-import EbarimtConfigForm from '@/create-pos/components/config/ebarimt-config';
-import FinanceConfigForm from '@/create-pos/components/finance/finance';
-import DeliveryConfigForm from '@/create-pos/components/delivery/delivery';
-import SyncCardForm from '@/create-pos/components/sync/sync';
+} from '~/modules/create-pos/components/permission/permission';
+import AppearanceForm from '~/modules/create-pos/components/appearance/appearance';
+import ScreenConfigForm from '~/modules/create-pos/components/config/screen-config';
+import EbarimtConfigForm from '~/modules/create-pos/components/config/ebarimt-config';
+import FinanceConfigForm from '~/modules/create-pos/components/finance/finance';
+import DeliveryConfigForm from '~/modules/create-pos/components/delivery/delivery';
+import SyncCardForm from '~/modules/create-pos/components/sync/sync';
 import type { JSX } from 'react/jsx-runtime';
-import ProductForm from '@/create-pos/components/product/product';
+import ProductForm from '~/modules/create-pos/components/product/product';
 
 export const PosEdit = () => {
   const { posDetail } = usePosDetail();
@@ -46,6 +46,7 @@ export const PosEdit = () => {
       allowTypes: [],
       scopeBrandIds: [],
       branchId: '',
+      departmentId: '',
     },
   });
 
@@ -79,6 +80,7 @@ export const PosEdit = () => {
       allowTypes: posDetail.allowTypes || [],
       scopeBrandIds: posDetail.scopeBrandIds || [],
       branchId: posDetail.branchId || '',
+      departmentId: posDetail.departmentId || '',
     });
 
     const adminId = posDetail.adminTeamMember || posDetail.adminIds?.[0] || '';
@@ -118,20 +120,16 @@ export const PosEdit = () => {
         : permissionValues.cashierIds;
 
     const finalData = {
-      basicInfo: currentBasicInfo,
-      permission: {
-        ...permissionValues,
-        adminIds: finalAdminIds,
-        cashierIds: finalCashierIds,
-      },
+      _id: posDetail._id,
+      ...currentBasicInfo,
+      ...permissionValues,
+      adminIds: finalAdminIds,
+      cashierIds: finalCashierIds,
     };
 
     await posEdit(
       {
-        variables: {
-          _id: posDetail._id,
-          ...finalData,
-        },
+        variables: finalData,
       },
       [
         'name',

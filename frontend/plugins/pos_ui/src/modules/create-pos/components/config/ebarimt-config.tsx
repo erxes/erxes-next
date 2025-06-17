@@ -3,10 +3,10 @@ import { Input, Select, Checkbox, Label } from "erxes-ui"
 import { useSearchParams } from "react-router-dom"
 import { useAtom } from "jotai"
 import { ebarimtConfigSettingsAtom } from "../../states/posCategory"
-import { PosDetailQueryResponse } from "~/modules/pos-detail.tsx/types/detail"
+import { IPosDetail } from "~/modules/pos-detail/types/IPos"
 
 interface EbarimtConfigFormProps {
-  posDetail?: PosDetailQueryResponse['posDetail'];
+  posDetail?: IPosDetail;
 }
 
 export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps) {

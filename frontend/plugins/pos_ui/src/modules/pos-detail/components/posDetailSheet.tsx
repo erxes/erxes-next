@@ -2,17 +2,18 @@ import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import { Button, cn, Sheet, useSetHotkeyScope } from 'erxes-ui';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { useSearchParams } from 'react-router-dom';
-import { renderingPosDetailAtom } from '@/states/posDetail';
-import { PosHotKeyScope } from '@/types/posHotkeyScope';
-import { usePosDetail } from '../hooks/useDetail';
+import { useQueryState } from 'erxes-ui';
+import { renderingPosDetailAtom } from '~/modules/states/posDetail';
+import { PosHotKeyScope } from '~/modules/types/posHotkeyScope';
 
-export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
+export const PosDetailSheet = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [activeTab] = useAtom(renderingPosDetailAtom);
   const setHotkeyScope = useSetHotkeyScope();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const posId = searchParams.get('pos_id');
+  const [posId, setPosId] = useQueryState<string>('pos_id');
 
   useEffect(() => {
     if (posId) {
@@ -21,13 +22,7 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
   }, [posId, setHotkeyScope]);
 
   const setOpen = (newPosId: string | null) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    if (newPosId) {
-      newSearchParams.set('pos_id', newPosId);
-    } else {
-      newSearchParams.delete('pos_id');
-    }
-    setSearchParams(newSearchParams);
+    setPosId(newPosId);
 
     if (!newPosId) {
       setHotkeyScope(PosHotKeyScope.PosPage);
@@ -56,7 +51,9 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
           </Button>
           <Sheet.Title>Pos Detail</Sheet.Title>
           <Sheet.Close />
-          <Sheet.Description className="sr-only">Pos Detail</Sheet.Description>
+          <Sheet.Description className="sr-only">
+            Pos Detail
+          </Sheet.Description>
         </Sheet.Header>
         {children}
       </Sheet.View>
