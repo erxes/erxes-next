@@ -10,12 +10,10 @@ export const pipelineQueries = {
     _root,
     {
       boardId,
-      type,
       isAll,
       ...queryParams
     }: {
       boardId: string;
-      type: string;
       isAll: boolean;
       page: number;
       perPage: number;
@@ -73,10 +71,6 @@ export const pipelineQueries = {
       query.boardId = boardId;
     }
 
-    if (type) {
-      query.type = type;
-    }
-
     if (page && perPage) {
       return defaultPaginate(
         models.Pipelines.find(query).sort({ createdAt: 1 }),
@@ -91,17 +85,13 @@ export const pipelineQueries = {
 
   async salesPipelineStateCount(
     _root,
-    { boardId, type }: { boardId: string; type: string },
+    { boardId }: { boardId: string },
     { models }: IContext,
   ) {
     const query: any = {};
 
     if (boardId) {
       query.boardId = boardId;
-    }
-
-    if (type) {
-      query.type = type;
     }
 
     const counts: any = {};

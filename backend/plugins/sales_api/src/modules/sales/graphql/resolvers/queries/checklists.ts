@@ -7,7 +7,7 @@ export const checklistQueries = {
    */
   async salesChecklists(
     _root: undefined,
-    { contentTypeId }: { contentType: string; contentTypeId: string },
+    { contentTypeId }: { contentTypeId: string },
     { models }: IContext,
   ) {
     return models.Checklists.find({ contentTypeId }).sort({
