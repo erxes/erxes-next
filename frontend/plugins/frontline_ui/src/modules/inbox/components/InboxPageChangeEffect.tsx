@@ -13,6 +13,10 @@ export const InboxPageChangeEffect = () => {
         setHotkeyScope(InboxHotkeyScope.MainPage);
         break;
       }
+      case isMatchingLocation(InboxPath.IntegrationSettingsPage): {
+        setHotkeyScope(InboxHotkeyScope.IntegrationSettingsPage);
+        break;
+      }
     }
   }, [isMatchingLocation, setHotkeyScope]);
 
