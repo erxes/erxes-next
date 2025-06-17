@@ -1,11 +1,10 @@
-import { useContext } from 'react';
+import { IUser } from '../types/TeamMembers';
 import { MemberInlineContext } from '../contexts/MemberInlineContext';
-import { IMember } from '../types/TeamMembers';
+import { useContext } from 'react';
 
 export const useMemberInlineContext = () => {
   const memberInline = useContext(MemberInlineContext);
   return (
-    memberInline ||
-    ({} as IMember['details'] & { loading: boolean; _id: string })
+    memberInline || ({} as IUser['details'] & { loading: boolean; _id: string })
   );
 };
