@@ -9,6 +9,7 @@ import {
   supergraphPath,
 } from '~/apollo-router/paths';
 import supergraphCompose from '~/apollo-router/supergraph-compose';
+import { isDev } from 'erxes-api-shared/utils';
 
 const {
   DOMAIN,
@@ -95,6 +96,7 @@ const createRouterConfig = async () => {
       allow_credentials: true,
       origins: [
         DOMAIN ? DOMAIN : 'http://localhost:3001',
+        ...(isDev ? ['http://localhost:3001'] : []),
         ...(ALLOWED_DOMAINS || '').split(','),
         'https://studio.apollographql.com',
       ].filter((x) => typeof x === 'string'),
