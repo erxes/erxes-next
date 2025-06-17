@@ -505,6 +505,26 @@ export const automationQueries = {
 
     return constants;
   },
+
+  async automationBotsConstants() {
+    console.log('running');
+
+    const plugins = await getPlugins();
+    const botsConstants: any[] = [];
+
+    for (const pluginName of plugins) {
+      const plugin = await getPlugin(pluginName);
+      const bots = plugin?.config?.meta?.automations?.constants?.bots || [];
+
+      console.log(bots);
+
+      if (bots.length) {
+        botsConstants.push(...bots);
+      }
+    }
+
+    return botsConstants;
+  },
 };
 
 // requireLogin(automationQueries, 'automationsMain');

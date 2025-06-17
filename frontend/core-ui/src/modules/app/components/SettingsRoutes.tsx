@@ -63,6 +63,14 @@ const BrandsSettingsRoutes = lazy(() =>
   })),
 );
 
+const AutomationSettingsRoutes = lazy(() =>
+  import(
+    '@/automations/components/settings/components/AutomationSettingsRoutes'
+  ).then((module) => ({
+    default: module.AutomationsSettingRoutes,
+  })),
+);
+
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
@@ -104,6 +112,10 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.ProductsCatchAll}
           element={<ProductsSettingsRoutes />}
+        />
+        <Route
+          path={SettingsWorkspacePath.AutomationsCatchAll}
+          element={<AutomationSettingsRoutes />}
         />
         {getPluginsSettingsRoutes()}
       </Routes>

@@ -25,7 +25,6 @@ export default {
         isAvailable: true,
       },
     ],
-    // triggers: [],
     triggers: [
       {
         type: 'frontline:inbox.conversation',
@@ -45,18 +44,18 @@ export default {
           {
             type: 'getStarted',
             label: 'Get Started',
-            icon: 'messenger',
+            icon: 'IconBrandMessengerFilled',
             description: 'User click on get started on the messenger',
           },
           {
             type: 'persistentMenu',
             label: 'Persistent menu',
-            icon: 'menu-2',
+            icon: 'IconMenu2',
             description: 'User click on persistent menu on the messenger',
           },
           {
             type: 'direct',
-            icon: 'messenger',
+            icon: 'IconBrandMessenger',
             label: 'Direct Message',
             description: 'User sends direct message with keyword',
           },
@@ -73,18 +72,19 @@ export default {
           {
             type: 'getStarted',
             label: 'Get Started',
-            icon: 'messenger',
+            icon: 'IconBrandMessengerFilled',
+
             description: 'User click on get started on the messenger',
           },
           {
             type: 'persistentMenu',
             label: 'Persistent menu',
-            icon: 'menu-2',
+            icon: 'IconMenu2',
             description: 'User click on persistent menu on the messenger',
           },
           {
             type: 'direct',
-            icon: 'messenger',
+            icon: 'IconBrandMessenger',
             label: 'Direct Message',
             description: 'User sends direct message with keyword',
           },
@@ -105,6 +105,15 @@ export default {
         description:
           'Start with a blank workflow that enrolls and is triggered off clicked send message on facebook ads',
         isCustom: true,
+      },
+    ],
+    bots: [
+      {
+        name: 'facebook-messenger-bots',
+        label: 'Facebook Messenger',
+        description: 'Generate Facebook Messenger Bots',
+        logo: '/images/integrations/fb-messenger.png',
+        totalCountQueryName: 'facebootMessengerBotsTotalCount',
       },
     ],
   },

@@ -90,6 +90,8 @@ export const AutomationBuilderSidebar = () => {
     return null;
   }
 
+  console.log('fakjdbaksdbksj');
+
   return (
     <Card className="absolute right-0 min-w-80 max-w-2xl w-fit h-full bg-sidebar rounded-none flex flex-col">
       {activeNode && (

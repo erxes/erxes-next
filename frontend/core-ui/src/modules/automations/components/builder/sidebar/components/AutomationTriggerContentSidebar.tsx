@@ -5,6 +5,7 @@ import { NodeData } from '../../../../types';
 import { useAtom } from 'jotai';
 import { useWidgetsModules } from '@/widgets/hooks/useWidgetsModules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
+import { useQueryState } from 'erxes-ui';
 
 type Props = { activeNode: NodeData };
 
@@ -35,12 +36,29 @@ const DefaultTriggerContent = ({ activeNode }: Props) => {
 };
 
 const CustomTriggerContent = ({ activeNode }: Props) => {
+  const { watch, setValue } = useFormContext<TAutomationProps>();
+  const [_, setActiveNodeId] = useQueryState('activeNodeId');
+
+  const onSaveTriggerConfig = (config: any) => {
+    const triggers = watch(`detail.triggers`);
+    const currentIndex = triggers.findIndex(
+      (trigger) => trigger.id === activeNode.id,
+    );
+
+    setValue(`detail.triggers.${currentIndex}.config`, config);
+    setActiveNodeId(null);
+  };
+
   return (
     <RenderPluginsComponent
       pluginName={`frontline_ui`}
       remoteModuleName="automations"
       moduleName={'facebook'}
-      props={{ componentType: 'triggerForm', activeTrigger: activeNode }}
+      props={{
+        componentType: 'triggerForm',
+        activeTrigger: activeNode,
+        onSaveTriggerConfig,
+      }}
     />
   );
 };

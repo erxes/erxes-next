@@ -26,7 +26,15 @@ export type IAutomationsActionConfig = {
   emailRecipientsConst?: any;
 };
 
-export type AutomationConstants =
+export type IAutomationsBotsConfig = {
+  name: string;
+  label: string;
+  description: string;
+  logo: string;
+  totalCountQueryName: string;
+};
+
+type IAutomationTriggersActionsConfig =
   | {
       triggers: IAutomationsTriggerConfig[];
       actions?: IAutomationsActionConfig[];
@@ -34,11 +42,28 @@ export type AutomationConstants =
   | {
       triggers?: IAutomationsTriggerConfig[];
       actions: IAutomationsActionConfig[];
-    }
-  | {
-      triggers: IAutomationsTriggerConfig[];
-      actions: IAutomationsActionConfig[];
     };
+
+export type AutomationConstants = IAutomationTriggersActionsConfig & {
+  bots?: IAutomationsBotsConfig[];
+};
+
+// export type AutomationConstants =
+//   | {
+//       triggers: IAutomationsTriggerConfig[];
+//       actions?: IAutomationsActionConfig[];
+//       bots?:IAutomationsBotsConfig[]
+//     }
+//   | {
+//       triggers?: IAutomationsTriggerConfig[];
+//       actions: IAutomationsActionConfig[];
+//       bots?:IAutomationsBotsConfig[]
+//     }
+//   | {
+//       triggers: IAutomationsTriggerConfig[];
+//       actions: IAutomationsActionConfig[];
+//       bots?:IAutomationsBotsConfig[]
+//     };
 
 export interface AutomationConfigs {
   constants: AutomationConstants;

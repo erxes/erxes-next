@@ -25,10 +25,24 @@ export const automationBuilderFormSchema = z.object({
             })
             .optional(),
         })
-        .refine(({ config, isCustom }) => !isCustom && config?.contentId, {
-          path: ['config'],
-          message: 'Each non-custom trigger must include a config with segment',
-        }),
+        .refine(
+          ({ config, isCustom }) => {
+            // Only enforce contentId check if not custom
+            console.log({ config, isCustom });
+            if (!isCustom) {
+              console.log('why', config?.contentId);
+              return !!config?.contentId;
+            }
+
+            // If custom, it's valid regardless of contentId
+            return true;
+          },
+          {
+            path: ['config'],
+            message:
+              'Each non-custom trigger must include a config with segment',
+          },
+        ),
       { message: 'A trigger is required to save this automation.' },
     ),
     actions: z.array(

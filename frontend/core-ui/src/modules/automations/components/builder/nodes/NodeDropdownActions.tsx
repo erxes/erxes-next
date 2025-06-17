@@ -1,5 +1,11 @@
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
-import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
+import {
+  AlertDialog,
+  Button,
+  Dialog,
+  DropdownMenu,
+  useQueryState,
+} from 'erxes-ui';
 import { useState } from 'react';
 import { useFormContext, UseFormSetValue } from 'react-hook-form';
 import { NodeData } from '../../../types';
@@ -20,6 +26,8 @@ export const NodeDropdownActions = ({
   data: NodeData;
   setValue: UseFormSetValue<TAutomationProps>;
 }) => {
+  const [_, setActiveNodeId] = useQueryState('activeNodeId');
+
   const { getValues } = useFormContext<TAutomationProps>();
   const [isOpenDropDown, setOpenDropDown] = useState(false);
   const [isOpenDialog, setOpenDialog] = useState(false);
@@ -34,6 +42,7 @@ export const NodeDropdownActions = ({
       `detail.${fieldName}`,
       nodes.filter((node) => node.id !== id),
     );
+    setActiveNodeId(null);
   };
 
   return (

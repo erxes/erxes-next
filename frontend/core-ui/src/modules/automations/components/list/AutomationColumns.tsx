@@ -17,10 +17,10 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IAction, ITrigger, SelectTags } from 'ui-modules';
-import { IAutomation } from '../types';
+import { IAutomation } from '../../types';
 import { IUser } from '@/settings/team-member/types';
 import { useMutation } from '@apollo/client';
-import { AUTOMATION_EDIT } from '../graphql/automationMutations';
+import { AUTOMATION_EDIT } from '../../graphql/automationMutations';
 
 const generateUserName = (user: IUser) => {
   if (user?.details?.firstName || user?.details?.lastName) {

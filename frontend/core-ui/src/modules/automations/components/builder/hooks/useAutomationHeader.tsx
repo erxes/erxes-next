@@ -66,6 +66,9 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
 
     return save({ variables: generateValues() }).then(() => {
       clearErrors();
+      toast({
+        title: 'Save successfull',
+      });
     });
   };
 

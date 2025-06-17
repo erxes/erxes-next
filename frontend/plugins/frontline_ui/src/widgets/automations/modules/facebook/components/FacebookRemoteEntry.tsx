@@ -1,4 +1,4 @@
-import { MessageTriggerForm } from './MessageTriggerForm';
+import { MessageTriggerForm } from './trigger/components/MessageTriggerForm';
 
 export const FacebookRemoteEntry = (props: any) => {
   console.log({ props });
