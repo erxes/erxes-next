@@ -11,30 +11,17 @@ export default {
     return car.status === 'active';
   },
 
-  customer: async (car: ICarDocument, _args: any) => {
-    return await sendTRPCMessage({
-      method: `query`,
-      pluginName: `core`,
-      module: `customers`,
-      action: `findOne`,
-      input: {
-        query: { _id: car.ownerId },
-      },
-    });
+  customer: async (car: ICarDocument) => {
+    if (!car?.ownerId) return '';
+
+    return { __typename: 'Customer', _id: car.ownerId };
   },
 
-  tags: async (car: ICarDocument, _args: any) => {
-    const result = await sendTRPCMessage({
-      method: `query`,
-      pluginName: `core`,
-      module: `tags`,
-      action: `find`,
-      input: {
-        query: { _id: { $in: car.tagIds } },
-      },
-      defaultValue: [],
-    });
+  tags(car: ICarDocument) {
+    if (!car.tagIds?.length) {
+      return [];
+    }
 
-    return result;
+    return car.tagIds.map((_id) => ({ __typename: 'Tag', _id }));
   },
 };
