@@ -1,5 +1,5 @@
 import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
-import { defaultPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 export const pipelineQueries = {
@@ -11,12 +11,9 @@ export const pipelineQueries = {
     {
       boardId,
       isAll,
-      ...queryParams
     }: {
       boardId: string;
       isAll: boolean;
-      page: number;
-      perPage: number;
     },
     { user, models }: IContext,
   ) {
@@ -65,17 +62,8 @@ export const pipelineQueries = {
       }
     }
 
-    const { page, perPage } = queryParams;
-
     if (boardId) {
       query.boardId = boardId;
-    }
-
-    if (page && perPage) {
-      return defaultPaginate(
-        models.Pipelines.find(query).sort({ createdAt: 1 }),
-        queryParams,
-      );
     }
 
     return models.Pipelines.find(query)

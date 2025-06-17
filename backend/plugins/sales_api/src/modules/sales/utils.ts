@@ -515,7 +515,7 @@ export const archivedItems = async (models: IModels, params: IArchiveArgs) => {
     return { list, pageInfo, totalCount };
   }
 
-  return [];
+  return {};
 };
 
 export const archivedItemsCount = async (

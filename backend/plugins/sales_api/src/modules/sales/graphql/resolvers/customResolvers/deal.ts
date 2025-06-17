@@ -14,7 +14,7 @@ export default {
 
   async branches(deal: IDealDocument) {
     if (!deal.branchIds?.length) {
-      return;
+      return [];
     }
 
     return deal.branchIds.map((branchId) => ({
@@ -25,7 +25,7 @@ export default {
 
   async departments(deal: IDealDocument) {
     if (!deal.departmentIds?.length) {
-      return;
+      return [];
     }
 
     return deal.departmentIds.map((departmentId) => ({
@@ -36,7 +36,7 @@ export default {
 
   async assignedUsers(deal: IDealDocument) {
     if (!deal.assignedUserIds?.length) {
-      return;
+      return [];
     }
 
     return deal.assignedUserIds.map((assignedUserId) => ({

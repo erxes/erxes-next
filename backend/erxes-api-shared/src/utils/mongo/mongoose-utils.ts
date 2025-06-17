@@ -1,6 +1,6 @@
-import { ICursorPaginateParams, ICursorPaginateResult } from '../../core-types';
 import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
+import { ICursorPaginateParams, ICursorPaginateResult } from '../../core-types';
 import {
   computeOperator,
   encodeCursor,
@@ -127,7 +127,7 @@ export const cursorPaginate = async <T extends Document>({
 
   const baseQuery: mongoose.FilterQuery<T> = { ...query };
 
-  const baseSort: Record<string, SortOrder> = { ...orderBy };
+  const baseSort: Record<string, SortOrder> = { ...orderBy, _id: 1 };
 
   if (direction === 'backward') {
     for (const key in baseSort) {
