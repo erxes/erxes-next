@@ -69,7 +69,6 @@ export const boardMutations = {
       startDate,
     }: {
       _id: string;
-      type: string;
       status: string;
       timeSpent: number;
       startDate: string;
