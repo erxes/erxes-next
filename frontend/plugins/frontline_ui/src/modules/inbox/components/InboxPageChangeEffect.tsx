@@ -6,7 +6,7 @@ import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 export const InboxPageChangeEffect = () => {
   const isMatchingLocation = useIsMatchingLocation();
   const setHotkeyScope = useSetHotkeyScope();
-  console.log(isMatchingLocation(InboxPath.IntegrationSettingsPage));
+
   useEffect(() => {
     switch (true) {
       case isMatchingLocation(InboxPath.MainPage): {

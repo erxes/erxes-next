@@ -86,7 +86,7 @@ const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
           handleSave();
         }
       }}
-      scope={InboxHotkeyScope.IntegrationSettingsPage + cell.row.original._id}
+      scope={`${InboxHotkeyScope.IntegrationSettingsPage}_${cell.row.original._id}_name`}
       closeOnEnter
     >
       <RecordTableCellTrigger>{name}</RecordTableCellTrigger>
