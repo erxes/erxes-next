@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { IntegrationType } from '@/types/Integration';
-import { useConversationContext } from '../hooks/useConversationContext';
+import { useConversationContext } from '@/inbox/conversations/conversation-detail/hooks/useConversationContext';
+
 const IMapConversationDetail = lazy(() =>
   import('@/integrations/imap/components/ImapConversationDetail').then(
     (module) => ({ default: module.ImapConversationDetail }),

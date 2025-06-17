@@ -18,10 +18,10 @@ import {
   selectConversationsState,
   setSelectConversationsState,
 } from '../states/selectConversationsState';
+import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 
 export const ConversationItem = () => {
-  const [conversationId] = useQueryState<string>('conversationId');
-  const [detailView] = useQueryState<boolean>('detailView');
+  const inboxLayout = useAtomValue(inboxLayoutState);
 
   const { createdAt, updatedAt, customer, integrationId } =
     useConversationContext();
@@ -33,7 +33,7 @@ export const ConversationItem = () => {
   });
   const { brandId } = integration || {};
 
-  if (conversationId || detailView) {
+  if (inboxLayout === 'split') {
     return (
       <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer">
         <CustomerInline.Provider customer={customer}>
@@ -95,8 +95,7 @@ const ConversationContainer = ({
 }) => {
   const [{ conversationId }, setValues] = useMultiQueryState<{
     conversationId: string;
-    detailView: boolean;
-  }>(['conversationId', 'detailView']);
+  }>(['conversationId']);
   const setActiveConversation = useSetAtom(activeConversationState);
   const conversation = useConversationContext();
   const { _id, readUserIds } = conversation || {};
@@ -120,7 +119,6 @@ const ConversationContainer = ({
         setActiveConversation(conversation);
         setValues({
           conversationId: _id,
-          detailView: true,
         });
       }}
     >
