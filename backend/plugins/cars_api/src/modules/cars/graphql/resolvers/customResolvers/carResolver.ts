@@ -1,4 +1,3 @@
-import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { ICarDocument } from '~/modules/cars/@types/car';
 
