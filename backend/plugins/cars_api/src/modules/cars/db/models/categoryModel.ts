@@ -12,13 +12,16 @@ export interface ICarCategoryModel extends Model<ICarCategoryDocument> {
     doc: ICarCategory,
   ): Promise<ICarCategoryDocument>;
   carsCategoriesRemove(ModuleId: string): Promise<ICarCategoryDocument>;
+  generateOrder(
+    parentCategory: any,
+    doc: ICarCategory,
+  ): Promise<ICarCategoryDocument>;
 }
 
 export const loadCarCategoryClass = (models: IModels) => {
   class CarCategories {
     public static async carCategoryDetail(_id: string) {
-      const carCategories = await models.CarCategories.findOne({ _id }).lean();
-      return carCategories;
+      return await models.CarCategories.findOne({ _id }).lean();
     }
 
     public static async carsCategories(): Promise<ICarCategoryDocument[]> {
@@ -28,18 +31,79 @@ export const loadCarCategoryClass = (models: IModels) => {
     public static async carsCategoryAdd(
       doc: ICarCategory,
     ): Promise<ICarCategoryDocument> {
+      const parentCategory = doc.parentId
+        ? await models.CarCategories.findOne({ _id: doc.parentId }).lean()
+        : undefined;
+
+      // Generatingg order
+      doc.order = await this.generateOrder(parentCategory, doc);
+
       return models.CarCategories.create(doc);
     }
 
     public static async carsCategoriesEdit(_id: string, doc: ICarCategory) {
-      return models.CarCategories.findOneAndUpdate(
-        { _id },
-        { $set: { ...doc } },
-      );
+      const parentCategory = doc.parentId
+        ? await models.CarCategories.findOne({ _id: doc.parentId }).lean()
+        : undefined;
+
+      if (parentCategory && parentCategory.parentId === _id) {
+        throw new Error('Cannot change category');
+      }
+
+      // Generatingg  order
+      doc.order = await this.generateOrder(parentCategory, doc);
+
+      const carCategory = await models.CarCategories.carCategoryDetail({
+        _id,
+      });
+
+      const childCategories = await models.CarCategories.find({
+        $and: [
+          { order: { $regex: new RegExp(carCategory.order, 'i') } },
+          { _id: { $ne: _id } },
+        ],
+      });
+
+      childCategories.forEach(async (category) => {
+        let order = category.order;
+
+        order = order.replace(carCategory.order, doc.order);
+
+        await models.CarCategories.updateOne(
+          { _id: category._id },
+          { $set: { order } },
+        );
+      });
+
+      await models.CarCategories.updateOne({ _id }, { $set: doc });
+
+      return models.CarCategories.findOne({ _id });
     }
 
     public static async carsCategoriesRemove(CarCategoryId: string) {
-      return models.CarCategories.deleteOne({ _id: { $in: CarCategoryId } });
+      await models.CarCategories.carCategoryDetail({ CarCategoryId });
+
+      let count = await models.Cars.countDocuments({
+        categoryId: CarCategoryId,
+      });
+
+      count += await models.CarCategories.countDocuments({
+        parentId: CarCategoryId,
+      });
+
+      if (count > 0) {
+        throw new Error("Can't remove a car category");
+      }
+
+      return models.CarCategories.deleteOne({ CarCategoryId });
+    }
+
+    public static async generateOrder(parentCategory: any, doc: ICarCategory) {
+      const order = parentCategory
+        ? `${parentCategory.order}/${doc.code}`
+        : `${doc.code}`;
+
+      return order;
     }
   }
 

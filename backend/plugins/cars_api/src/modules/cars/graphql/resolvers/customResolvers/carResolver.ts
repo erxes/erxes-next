@@ -6,10 +6,6 @@ export default {
     return models.CarCategories.findOne({ _id: car.categoryId });
   },
 
-  isAvailable: (car: ICarDocument) => {
-    return car.status === 'active';
-  },
-
   customer: async (car: ICarDocument) => {
     if (!car?.ownerId) return '';
 

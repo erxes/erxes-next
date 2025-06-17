@@ -2,13 +2,14 @@ import { Document } from 'mongoose';
 import { IAttachment } from 'erxes-api-shared/core-types';
 
 export interface ICarCategory {
-  name: String;
-  code: String;
-  parentId: String;
-  description: String;
+  name: string;
+  code: string;
+  order: string;
+  parentId: string;
+  description: string;
   image: IAttachment;
-  secondaryImages: [IAttachment];
-  productCategoryId: String;
+  secondaryImages: IAttachment[];
+  productCategoryId: string;
 }
 
 export interface ICarCategoryDocument extends ICarCategory, Document {

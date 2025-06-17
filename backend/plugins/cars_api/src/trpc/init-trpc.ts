@@ -14,6 +14,8 @@ export const carsTrpcRouter = t.router({
     find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
       const { query } = input;
       const { models } = ctx;
+
+      return await models.Cars.find(query).lean();
     }),
   }),
 });

@@ -1,4 +1,4 @@
-import { Schema, STATES } from 'mongoose';
+import { Schema } from 'mongoose';
 
 import { schemaWrapper } from 'erxes-api-shared/utils';
 import { BODY_TYPES, FUEL_TYPES, GEARBOX, STATUSES } from '../../constants';
