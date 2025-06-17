@@ -1,10 +1,12 @@
-import { ICursorPaginateParams, ICursorPaginateResult } from '../../core-types';
 import mongoose, { Document, Model, Schema, SortOrder } from 'mongoose';
 import { nanoid } from 'nanoid';
+import { ICursorPaginateParams, ICursorPaginateResult } from '../../core-types';
 import {
-  computeOperator,
+  computeCursorFilter,
+  computeEdgeCase,
   encodeCursor,
   getCursor,
+  getCursorInfo,
   getPaginationInfo,
 } from './cursor-util';
 import { mongooseStringRandomId } from './mongoose-types';
@@ -138,36 +140,14 @@ export const cursorPaginate = async <T extends Document>({
   const cursor = getCursor(params);
 
   if (cursor) {
-    const conditions: Record<string, any> = {};
+    const conditions = computeCursorFilter(
+      cursor,
+      orderBy,
+      direction,
+      cursorMode,
+    );
 
-    const sortKeys = Object.keys(baseSort);
-
-    const orConditions: Record<string, any>[] = [];
-
-    for (let i = 0; i < sortKeys.length; i++) {
-      const field = sortKeys[i];
-
-      const andCondition: Record<string, any> = {};
-
-      for (let j = 0; j < i; j++) {
-        const prevField = sortKeys[j];
-        andCondition[prevField] = cursor[prevField];
-      }
-
-      const fieldOperator = computeOperator(
-        orderBy[field] === 1,
-        direction === 'forward',
-        cursorMode,
-      );
-
-      andCondition[field] = { [fieldOperator]: cursor[field] };
-
-      orConditions.push(andCondition);
-    }
-
-    conditions['$or'] = orConditions;
-
-    Object.assign(baseQuery, conditions);
+    Object.assign(baseQuery, { $or: conditions });
   }
 
   const _limit = Math.min(Number(limit), 50);
@@ -182,15 +162,12 @@ export const cursorPaginate = async <T extends Document>({
       model.countDocuments(query),
     ]);
 
-    const hasMore = documents.length > _limit;
-
-    if (hasMore) {
-      documents.pop();
-    }
-
-    if (direction === 'backward') {
-      documents.reverse();
-    }
+    const isEdgeCase = await computeEdgeCase<T>(
+      model,
+      baseQuery,
+      cursor,
+      orderBy,
+    );
 
     if (documents.length === 0) {
       return {
@@ -205,13 +182,21 @@ export const cursorPaginate = async <T extends Document>({
       };
     }
 
-    const startCursor = encodeCursor<T>(documents[0], orderBy);
-    const endCursor = encodeCursor<T>(documents[documents.length - 1], orderBy);
+    const hasMore = documents.length > _limit;
+
+    const { startCursor, endCursor } = getCursorInfo(
+      documents,
+      orderBy,
+      direction,
+      cursorMode,
+      hasMore,
+    );
 
     const { hasNextPage, hasPreviousPage } = getPaginationInfo(
       direction,
       Boolean(cursor),
       hasMore,
+      isEdgeCase,
     );
 
     const pageInfo = {
@@ -222,8 +207,6 @@ export const cursorPaginate = async <T extends Document>({
     };
 
     return {
-      // Currently adds cursor directly to data items;
-      // Can be replaced with a proper Relay-style `edges`/`node` structure.
       list: documents.map((document) => ({
         ...document,
         cursor: encodeCursor(document, orderBy),
