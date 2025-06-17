@@ -54,12 +54,8 @@ export const loadCheckListClass = (models: IModels) => {
       return checklist;
     }
 
-    public static async removeChecklists(
-      contentType: string,
-      contentTypeIds: string[],
-    ) {
+    public static async removeChecklists(contentTypeIds: string[]) {
       const checklists = await models.Checklists.find({
-        contentType,
         contentTypeId: { $in: contentTypeIds },
       });
 
@@ -80,11 +76,10 @@ export const loadCheckListClass = (models: IModels) => {
      * Create new checklist
      */
     public static async createChecklist(
-      { contentType, contentTypeId, ...fields }: IChecklist,
+      { contentTypeId, ...fields }: IChecklist,
       user: IUserDocument,
     ) {
       const checklist = await models.Checklists.create({
-        contentType,
         contentTypeId,
         createdUserId: user._id,
         createdDate: new Date(),

@@ -1,48 +1,34 @@
-export const types = `
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
+const typeDeps = `
   type SalesTimeTrack {
     status: String,
     timeSpent: Int,
     startDate: String
   }
 
-  type DealListItem @key(fields: "_id") {
-    _id: String!
+  type DealTotalCurrency {
+    amount: Float
     name: String
-    companies: JSON
-    customers: JSON
-    assignedUsers: JSON
-    stage: JSON
-    labels: JSON
-    isComplete: Boolean
-    isWatched: Boolean
-    relations: JSON
-    startDate: Date
-    closeDate: Date
-    createdAt: Date
-    modifiedAt: Date
-    priority: String
-    hasNotified: Boolean
-    score: Float
-    number: String
-    stageChangedDate: Date
-    tagIds: [String]
-    customProperties: JSON
-    status: String
-    branchIds: [String]
-    branches:[Branch]
-    departmentIds: [String]
-    departments:[Department]
-    assignedUserIds: [String]
-    order: Int,
-    createdUserId:String
-    tags: [Tag]
-
-    products: JSON
-    unusedAmount: JSON
-    amount: JSON
-    customFieldsData: JSON
   }
+`;
+
+const inputDeps = `
+  input SalesItemDate {
+    month: Int
+    year: Int
+  }
+
+  input SalesProductField {
+    productId : String
+    quantity: Int
+    unitPrice: Float
+  }
+`;
+
+export const types = `
+  ${typeDeps}
+  ${inputDeps}
 
   type Deal @key(fields: "_id") {
     _id: String!
@@ -95,11 +81,8 @@ export const types = `
     products: JSON
     productsData: JSON
     paymentsData: JSON
-  }
 
-  type DealTotalCurrency {
-    amount: Float
-    name: String
+    cursor: String
   }
 
   type SalesTotalForType {
@@ -108,15 +91,10 @@ export const types = `
     currencies: [DealTotalCurrency]
   }
 
-  input SalesItemDate {
-    month: Int
-    year: Int
-  }
-
-  input SalesProductField {
-    productId : String
-    quantity: Int
-    unitPrice: Float
+  type DealsListResponse {
+    list: [Deal],
+    pageInfo: PageInfo
+    totalCount: Int,
   }
 `;
 
@@ -135,8 +113,6 @@ const queryParams = `
   labelIds: [String]
   search: String
   priority: [String]
-  sortField: String
-  sortDirection: Int
   userIds: [String]
   segment: String
   segmentData: String
@@ -163,6 +139,8 @@ const queryParams = `
   closeDateStartDate: Date
   closeDateEndDate: Date
   resolvedDayBetween:[Int]
+
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 const archivedDealsParams = `
@@ -177,16 +155,20 @@ const archivedDealsParams = `
   customerIds: [String]
   startDate: String
   endDate: String
+
+  ${GQL_CURSOR_PARAM_DEFS}
  `;
 
 export const queries = `
-  dealDetail(_id: String!, clientPortalCard: Boolean): Deal
   checkDiscount(_id: String!,products:[SalesProductField], couponCode: String, voucherId: String):JSON
-  deals(stageId: String, initialStageId: String, ${queryParams}): [DealListItem]
+  
+  deals(stageId: String, initialStageId: String, ${queryParams}): DealsListResponse
+  dealDetail(_id: String!, clientPortalCard: Boolean): Deal
   dealsTotalCount(stageId: String, initialStageId: String, ${queryParams}): Int
-  archivedDeals(page: Int, perPage: Int, ${archivedDealsParams}): [Deal]
-  archivedDealsCount(${archivedDealsParams}): Int
   dealsTotalAmounts(${queryParams}): [SalesTotalForType]
+  
+  archivedDeals(${archivedDealsParams}): DealsListResponse
+  archivedDealsCount(${archivedDealsParams}): Int
 `;
 
 const mutationParams = `
