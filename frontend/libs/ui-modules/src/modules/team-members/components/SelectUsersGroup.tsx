@@ -17,7 +17,7 @@ type Props = {
   onValueChange: (value: string) => void;
 };
 
-export const SelectUsersGroup = React.forwardRef<
+export const SelectUsersGroupMain = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
   React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & Props
 >(({ value, onValueChange, ...props }, ref) => {
@@ -122,3 +122,10 @@ export const UsersGroupsList = ({
     </Command>
   );
 };
+
+export const SelectUsersGroup = Object.assign(SelectUsersGroupMain, {
+  Value: SelectUsersGroupValue,
+  Item: SelectUsersGroupItem,
+  List: UsersGroupsList,
+  Provider: SelectUsersGroupProvider,
+});

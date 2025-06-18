@@ -1,4 +1,4 @@
-import { IconProps } from '@tabler/icons-react';
+import { IconProps, IconUsersGroup } from '@tabler/icons-react';
 import {
   RecordTable,
   Sidebar,
@@ -8,6 +8,11 @@ import {
   Combobox,
   Command,
   PageSubHeader,
+  Skeleton,
+  useMultiQueryState,
+  Popover,
+  useFilterQueryState,
+  useFilterContext,
 } from 'erxes-ui';
 import { Link, useLocation } from 'react-router-dom';
 import { permissionColumns } from 'ui-modules/modules/permissions/components/permission-columns';
@@ -16,6 +21,8 @@ import { usePermissions } from 'ui-modules/modules/permissions/hooks/usePermissi
 import { IconChevronDown } from '@tabler/icons-react';
 import path from 'path';
 import { PermissionsFilterScope } from 'ui-modules/modules/permissions/types/permission';
+import { SelectUsersGroup } from 'ui-modules/modules/team-members';
+import { useState } from 'react';
 
 export const PermissionsSidebarItem = ({
   to,
@@ -150,7 +157,7 @@ export const PermissionsView = ({ module }: { module?: string }) => {
     <div className="flex flex-auto w-full overflow-hidden">
       <div className="w-full overflow-hidden flex flex-col">
         <PageSubHeader>
-          <PermissionsFilter />
+          <PermissionsFilter module={module} />
         </PageSubHeader>
         <PermissionsRecordTable module={module} />
       </div>
@@ -158,7 +165,9 @@ export const PermissionsView = ({ module }: { module?: string }) => {
   );
 };
 
-export const PermissionsFilter = () => {
+export const PermissionsFilter = ({ module }: { module?: string }) => {
+  const [groupId, setGroupId] = useFilterQueryState<string>('groupId');
+  const [open, setOpen] = useState<boolean>(false);
   return (
     <Filter id="permissions-filter">
       <Filter.Bar>
@@ -179,8 +188,62 @@ export const PermissionsFilter = () => {
           <Filter.DialogStringView filterKey="searchValue" />
         </Filter.Dialog>
         <Filter.SearchValueBarItem />
+        {groupId && (
+          <Filter.BarItem>
+            <Filter.BarName>
+              <IconUsersGroup />
+              Users group
+            </Filter.BarName>
+            <SelectUsersGroup.Provider>
+              <Popover open={open} onOpenChange={setOpen}>
+                <Popover.Trigger asChild>
+                  <Filter.BarButton filterKey={'groupId'}>
+                    <SelectUsersGroup.Value value={groupId ?? ''} />
+                  </Filter.BarButton>
+                </Popover.Trigger>
+                <Combobox.Content>
+                  <SelectUsersGroup.List
+                    renderItem={(usersGroup) => (
+                      <SelectUsersGroup.Item
+                        key={usersGroup._id}
+                        usersGroup={usersGroup}
+                        onValueChange={(value) => {
+                          setGroupId(value);
+                          setOpen(false);
+                        }}
+                      />
+                    )}
+                  />
+                </Combobox.Content>
+              </Popover>
+            </SelectUsersGroup.Provider>
+            <Filter.BarClose filterKey="groupId" />
+          </Filter.BarItem>
+        )}
+        <PermissionsTotalCount module={module} />
       </Filter.Bar>
     </Filter>
+  );
+};
+
+export const PermissionsTotalCount = ({ module }: { module?: string }) => {
+  const { totalCount, loading } = usePermissions({
+    variables: {
+      module: module ?? undefined,
+    },
+  });
+  return (
+    <div className="text-muted-foreground font-medium text-sm whitespace-nowrap h-7 leading-7">
+      {loading ? (
+        <Skeleton className="w-20 h-4 inline-block mt-1.5" />
+      ) : totalCount !== null && totalCount !== undefined ? (
+        totalCount > 0 ? (
+          `${totalCount} records found`
+        ) : (
+          'No records found'
+        )
+      ) : null}
+    </div>
   );
 };
 
@@ -189,5 +252,6 @@ export const Permissions = Object.assign({
   SidebarSubItem: PermissionsSidebarSubItem,
   SidebarGroup: PermissionsSidebarGroup,
   RecordTable: PermissionsRecordTable,
+  Filter: PermissionsFilter,
   View: PermissionsView,
 });

@@ -1,17 +1,18 @@
 import { IconPlus, IconTool, IconUserShield } from '@tabler/icons-react';
-import { Button } from 'erxes-ui';
+import { Button, PageContainer } from 'erxes-ui';
 import { Permission } from '@/settings/permission/components/Permission';
 import { SettingsHeader } from 'ui-modules';
+import { UsersGroupSidebar } from '@/settings/permission/components/UsersGroupSidebar';
 
 export function PermissionPage() {
   return (
-    <section className="mx-auto flex w-full h-screen relative">
-      {/* <PermissionSidebar /> */}
-      <div className="flex flex-col h-full w-full">
+    <PageContainer className="flex-row">
+      <UsersGroupSidebar />
+      <div className="flex-1 flex flex-col relative overflow-hidden">
         <SettingsHeader breadcrumbs={[]}>
           <Button variant="ghost" className="font-semibold">
             <IconUserShield className="w-4 h-4 text-accent-foreground" />
-            Permission
+            Permissions
           </Button>
           <div className="flex items-center gap-4 ml-auto">
             <Button type="button" variant="ghost" className="border">
@@ -24,10 +25,10 @@ export function PermissionPage() {
             </Button>
           </div>
         </SettingsHeader>
-        <div className="flex h-full">
+        <div className="flex flex-auto w-full overflow-hidden">
           <Permission />
         </div>
       </div>
-    </section>
+    </PageContainer>
   );
 }

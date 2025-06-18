@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import { useMultiQueryState } from 'erxes-ui';
 import { GET_PERMISSIONS } from 'ui-modules/modules/permissions/graphql';
 import {
   IPermissionResponse,
@@ -8,12 +9,14 @@ import {
 const PERMISSIONS_PER_PAGE = 30;
 
 export const usePermissions = (options?: IQueryPermissionsHookOptions) => {
+  const [{ groupId }] = useMultiQueryState<{ groupId: string }>(['groupId']);
   const { data, error, loading, fetchMore } = useQuery<IPermissionResponse>(
     GET_PERMISSIONS,
     {
       ...options,
       variables: {
         limit: PERMISSIONS_PER_PAGE,
+        groupId: groupId ?? undefined,
         ...options?.variables,
       },
     },
