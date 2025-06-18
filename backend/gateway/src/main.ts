@@ -18,7 +18,7 @@ import {
   proxyReq,
 } from '~/proxy/middleware';
 
-import { getPlugin, redis } from 'erxes-api-shared/utils';
+import { getPlugin, isDev, redis } from 'erxes-api-shared/utils';
 import { applyGraphqlLimiters } from '~/middlewares/graphql-limiter';
 import {
   startSubscriptionServer,
@@ -26,11 +26,14 @@ import {
 } from './subscription';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
-const domain = process.env.DOMAIN ?? 'http://localhost:3001';
+const { DOMAIN } = process.env;
 
 const corsOptions = {
   credentials: true,
-  origin: [domain],
+  origin: [
+    ...(DOMAIN ? [DOMAIN] : []),
+    ...(isDev ? ['http://localhost:3001'] : []),
+  ],
 };
 
 const myQueue = new Queue('gateway-service-discovery', {
