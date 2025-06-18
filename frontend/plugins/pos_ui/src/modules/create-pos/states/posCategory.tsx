@@ -10,7 +10,7 @@ import {
   SyncCardSettings,
 } from '../types';
 
-export const posCategoryAtom = atom<'restaurant' | 'ecommerce'>('restaurant');
+export const posCategoryAtom = atom<'restaurant' | 'ecommerce' | 'kiosk'>('restaurant');
 export const permissionSettingsAtom = atom<PermissionSettings>({
   adminPrintTempBill: false,
   adminDirectSales: false,
