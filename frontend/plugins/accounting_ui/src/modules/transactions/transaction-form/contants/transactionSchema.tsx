@@ -45,6 +45,7 @@ export const baseTrDetailSchema = z.object({
   count: z.number().nullish(),
   unitPrice: z.number().nullish(),
 
+  checked: z.boolean().default(false),
   account: z.object({
     _id: z.string(),
     code: z.string(),
@@ -164,10 +165,11 @@ export const transactionInvIncomeSchema = z.object({
   })),
   extraData: z.object({
     invIncomeExpenses: z.array(z.object({
-      expenseCode: z.string(),
-      expenseTitle: z.string(),
+      _id: z.string(),
+      title: z.string(),
       rule: z.string(),
-      amount: z.number().min(0)
+      amount: z.number().min(0),
+      accountId: z.string().nullish(),
     })).min(0)
   })
 });
