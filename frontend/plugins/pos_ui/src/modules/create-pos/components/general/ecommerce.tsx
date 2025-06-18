@@ -16,7 +16,6 @@ interface EcommerceFormProps {
 
 export const EcommerceForm: React.FC<EcommerceFormProps> = ({ 
   form, 
-  posDetail,
   isReadOnly = false,
 }) => {
   const handleBrandChange = (brandId: string) => {
@@ -72,7 +71,6 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
     <Form {...form}>
       <div className="p-3">
         <div className="space-y-6">
-          {/* Name Field */}
           <Form.Field
             control={form.control}
             name="name"
@@ -197,7 +195,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                   </Form.Label>
                   <Form.Control>
                     <SelectBranches.FormItem
-                      value={branchId}
+                      value={branchId ?? ''}
                       onValueChange={handleBranchChange}
                       className="w-full h-10"
                       mode="single"
