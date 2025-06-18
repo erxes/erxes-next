@@ -49,6 +49,7 @@ export interface ICustomField {
   stringValue?: string;
   numberValue?: number;
   dateValue?: Date;
+  extraValue?: string;
 }
 
 export interface IBrowserInfo {
@@ -91,7 +92,6 @@ export interface IAttachment {
   size: number;
   type: string;
 }
-
 
 export interface IPageInfo {
   hasNextPage: boolean;
