@@ -41,9 +41,9 @@ app.use(cookieParser());
 const corsOptions = {
   credentials: true,
   origin: [
-    DOMAIN,
-    isDev ? 'http://localhost:3001' : 'http://localhost:3200',
-    ALLOWED_DOMAINS,
+    ...(DOMAIN ? [DOMAIN] : []),
+    ...(isDev ? ['http://localhost:3001'] : []),
+    ...(ALLOWED_DOMAINS || '').split(','),
     ...(CLIENT_PORTAL_DOMAINS || '').split(','),
     ...(process.env.ALLOWED_ORIGINS || '')
       .split(',')
