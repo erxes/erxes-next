@@ -150,7 +150,6 @@ export const DirectMessageConfigForm = ({
   botId,
   onConditionChange,
 }: Props) => {
-  console.log('fucker');
   const onRemoveCondition = (id: string) => {
     onConditionChange(
       'conditions',
@@ -188,7 +187,10 @@ export const DirectMessageConfigForm = ({
         };
 
         return (
-          <div className="border rounded-md p-4 relative group mt-4 hover:shadow">
+          <div
+            className="border rounded-md p-4 relative group mt-4 hover:shadow"
+            key={condition._id}
+          >
             <Button
               variant="destructive"
               size="icon"

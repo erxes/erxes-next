@@ -6,9 +6,16 @@ const AUTOMATION_CONSTANTS = gql`
   }
 `;
 
+type ICondition = {
+  type: string;
+  label: string;
+  icon: string;
+  description: string;
+};
+
 export const useFacebookMessengerTrigger = () => {
   const { data, loading } = useQuery(AUTOMATION_CONSTANTS, {
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'cache-first',
   });
 
   const { conditions = [] } =
@@ -17,7 +24,7 @@ export const useFacebookMessengerTrigger = () => {
     ) || {};
 
   return {
-    conditions,
+    triggerConditionsConstans: conditions as ICondition[],
     loading,
   };
 };

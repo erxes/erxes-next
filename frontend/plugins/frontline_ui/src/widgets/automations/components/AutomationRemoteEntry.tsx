@@ -46,8 +46,6 @@ export const GenericErrorFallback = ({
 const AutomationRemoteEntries = ({ moduleName, ...props }: any) => {
   const RemoteComponent = Remotes[moduleName];
 
-  console.log({ RemoteComponent });
-
   return (
     <Suspense fallback={<Spinner />}>
       <ErrorBoundary FallbackComponent={GenericErrorFallback}>

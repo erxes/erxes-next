@@ -1,4 +1,4 @@
-import { useFacebookBots } from '@/integrations/hooks/useFacebookBots';
+import { useFacebookBots } from '@/integrations/facebook/hooks/useFacebookBots';
 import { IconCheck, IconChevronDown, IconSettings } from '@tabler/icons-react';
 import { Avatar, Card, Collapsible, Label, Separator, Spinner } from 'erxes-ui';
 import { useState } from 'react';

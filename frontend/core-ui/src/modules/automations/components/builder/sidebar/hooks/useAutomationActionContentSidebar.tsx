@@ -41,8 +41,8 @@ const Actions: Record<
 };
 
 export const useAutomationActionContentSidebar = () => {
-  const [activeNodeId] = useQueryState('activeNodeId');
-  const { watch, control } = useFormContext<TAutomationProps>();
+  const [activeNodeId, setActiveNodeId] = useQueryState('activeNodeId');
+  const { watch, control, setValue } = useFormContext<TAutomationProps>();
 
   const actions = watch(`detail.actions`) || [];
   const currentIndex = actions.findIndex(
@@ -52,5 +52,12 @@ export const useAutomationActionContentSidebar = () => {
   const currentAction = watch(`detail.actions.${currentIndex}`);
   const Component = Actions[currentAction?.type] || null;
 
-  return { Component, control, currentIndex, currentAction };
+  return {
+    Component,
+    control,
+    currentIndex,
+    currentAction,
+    setActiveNodeId,
+    setValue,
+  };
 };

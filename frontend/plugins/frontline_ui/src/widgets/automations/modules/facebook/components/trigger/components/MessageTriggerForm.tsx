@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconChevronLeft } from '@tabler/icons-react';
 import { Button, cn, Form, Label } from 'erxes-ui';
 import { useState } from 'react';
-import { useForm, UseFormSetValue } from 'react-hook-form';
+import { useForm, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 import { DirectMessageConfigForm } from '../components/DirectMessageConfigForm';
 import { FacebookBotPersistenceMenuSelector } from '../components/FacebookBotPersistenceMenuSelector';
 import { MessageTriggerConditionsList } from '../components/MessageTriggerConditionsList';
@@ -43,6 +43,10 @@ const renderActiveItemContent = ({
     onConditionChange(activeItemType, fieldName, fieldValue);
   };
 
+  const currentCondition = formState.conditions?.find(
+    ({ type }) => type === activeItemType,
+  );
+
   return (
     <div className="border border-md m-4 py-2 px-4">
       <Button variant="ghost" onClick={() => setActiveItemType('')}>
@@ -54,10 +58,7 @@ const renderActiveItemContent = ({
           case 'direct':
             return (
               <DirectMessageConfigForm
-                conditions={
-                  formState.conditions?.find(({ type }) => type === 'direct')
-                    ?.conditions || []
-                }
+                conditions={currentCondition?.conditions || []}
                 botId={formState.botId}
                 onConditionChange={onConditionItemChange}
               />
@@ -66,7 +67,7 @@ const renderActiveItemContent = ({
             return (
               <FacebookBotPersistenceMenuSelector
                 botId={formState.botId}
-                selectedPersistentMenuIds={formState.persistentMenuIds}
+                selectedPersistentMenuIds={currentCondition?.persistentMenuIds}
                 onConditionChange={onConditionItemChange}
               />
             );
@@ -79,19 +80,17 @@ const renderActiveItemContent = ({
 };
 
 const renderConditionsContent = ({
-  conditions,
-  loading,
   activeItemType,
   setActiveItemType,
   formState,
   setFormValue,
+  form,
 }: {
-  conditions: any[];
-  loading: boolean;
   activeItemType: string;
   setActiveItemType: React.Dispatch<React.SetStateAction<string>>;
   formState: TMessageTriggerForm;
   setFormValue: UseFormSetValue<TMessageTriggerForm>;
+  form: UseFormReturn<TMessageTriggerForm>;
 }) => {
   const onConditionChange = (
     conditionType: string,
@@ -141,10 +140,12 @@ const renderConditionsContent = ({
 
   return (
     <MessageTriggerConditionsList
-      conditions={conditions}
-      loading={loading}
+      form={form}
       setActiveItemType={setActiveItemType}
       onItemCheck={onItemCheck}
+      selectedConditionTypes={(formState?.conditions || [])
+        .filter(({ isSelected }) => isSelected)
+        .map(({ type }) => type)}
     />
   );
 };
@@ -157,10 +158,9 @@ export const MessageTriggerForm = ({
     resolver: zodResolver(triggerFormSchema),
     values: { ...(activeTrigger?.config || {}) },
   });
-  const { watch, setValue } = form;
+  const { watch, setValue, handleSubmit } = form;
   const formState = watch();
   const [activeItemType, setActiveItemType] = useState('');
-  const { conditions, loading } = useFacebookMessengerTrigger();
 
   return (
     <Form {...form}>
@@ -176,7 +176,7 @@ export const MessageTriggerForm = ({
           )}
         />
 
-        <Label>Triggers</Label>
+        <Label className="ml-4 mt-2">Triggers</Label>
         <div
           className={cn('flex-1 flex flex-col relative', {
             blur: !formState.botId,
@@ -184,17 +184,22 @@ export const MessageTriggerForm = ({
         >
           <div className="flex-1 overflow-auto">
             {renderConditionsContent({
-              conditions,
-              loading,
               activeItemType,
               setActiveItemType,
               formState,
               setFormValue: setValue,
+              form,
             })}
           </div>
 
           <div className="p-2 flex justify-end border-t bg-white">
-            <Button onClick={() => onSaveTriggerConfig(formState)}>Save</Button>
+            <Button
+              onClick={handleSubmit(onSaveTriggerConfig, (prop) =>
+                console.log(prop),
+              )}
+            >
+              Save
+            </Button>
           </div>
         </div>
       </div>

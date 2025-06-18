@@ -1,11 +1,50 @@
 import { Handle, NodeProps, Position } from '@xyflow/react';
 import { memo } from 'react';
-import { IconSunElectricity } from '@tabler/icons-react';
+import { IconAdjustmentsAlt, IconSunElectricity } from '@tabler/icons-react';
 import { cn } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
 import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { NodeData } from '@/automations/types';
+import { TriggerNodeConfigurationContent } from '@/automations/components/builder/nodes/TriggerNodeConfigurationContent';
+
+const renderContent = (data: NodeData) => {
+  if (data?.error) {
+    return (
+      <ErrorState errorCode={'Invalid action'} errorDetails={data?.error} />
+    );
+  }
+
+  if (!data?.isCustom) {
+    return null;
+  }
+
+  if (!Object.keys(data?.config || {}).length) {
+    return null;
+  }
+
+  const TriggerConfigContent = (
+    <TriggerNodeConfigurationContent
+      type={data.type || ''}
+      config={data.config}
+    />
+  );
+  return (
+    <div className="p-3">
+      <div className="flex items-center gap-2 text-primary/90 pb-2">
+        <IconAdjustmentsAlt className="w-4 h-4" />
+        <p className="text-sm font-semibold">Configuration</p>
+      </div>
+      <div className="rounded border bg-muted overflow-x-auto text-muted-foreground text-xs font-mono">
+        <TriggerNodeConfigurationContent
+          type={data.type || ''}
+          config={data.config}
+        />
+      </div>
+    </div>
+  );
+};
 
 const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
   const { setValue } = useFormContext<TAutomationProps>();
@@ -47,12 +86,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
             {data.description}
           </span>
 
-          {data?.error && (
-            <ErrorState
-              errorCode={'Invalid trigger'}
-              errorDetails={data?.error}
-            />
-          )}
+          {renderContent(data)}
         </div>
 
         {/* Output handle */}

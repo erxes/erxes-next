@@ -103,6 +103,7 @@ export const generateNode = (
       type: node.type,
       isAvailableOptionalConnect,
       config,
+      isCustom,
       ...props,
     },
     position: generatNodePosition(nodes, node, generatedNodes),

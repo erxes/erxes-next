@@ -1,4 +1,4 @@
-import { FACEBOOK_BOT_DETAIL } from '@/integrations/graphql/queries/facebookBots';
+import { FACEBOOK_BOT_DETAIL } from '@/integrations/facebook/graphql/queries/facebookBots';
 import { useQuery } from '@apollo/client';
 import { IconList } from '@tabler/icons-react';
 import { Checkbox, cn, Spinner } from 'erxes-ui';

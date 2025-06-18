@@ -40,6 +40,22 @@ export const FACEBOOK_BOT_DETAIL = gql`
     }
 `;
 
+export const GET_FACEBOOK_BOT_PROFILE = gql`
+  query FacebootMessengerBot($_id: String) {
+    facebootMessengerBot(_id: $_id) {
+      _id
+      name
+      profileUrl
+      persistentMenus {
+        _id
+        text
+        type
+        link
+      }
+    }
+  }
+`;
+
 export const FACEBOOK_GET_BOT_POSTS = gql`
   query FacebookGetBotPosts($botId: String) {
     facebookGetBotPosts(botId: $botId)

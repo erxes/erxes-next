@@ -1,11 +1,9 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { toast, useQueryState } from 'erxes-ui';
 import { useFormContext } from 'react-hook-form';
-import { pluginsConfigState, SegmentForm, useWidget } from 'ui-modules';
-import { NodeData } from '../../../../types';
-import { useAtom } from 'jotai';
-import { useWidgetsModules } from '@/widgets/hooks/useWidgetsModules';
+import { SegmentForm } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
-import { useQueryState } from 'erxes-ui';
+import { NodeData } from '../../../../types';
 
 type Props = { activeNode: NodeData };
 
@@ -47,6 +45,9 @@ const CustomTriggerContent = ({ activeNode }: Props) => {
 
     setValue(`detail.triggers.${currentIndex}.config`, config);
     setActiveNodeId(null);
+    toast({
+      title: 'Trigger configuration added successfully.',
+    });
   };
 
   return (
@@ -64,8 +65,6 @@ const CustomTriggerContent = ({ activeNode }: Props) => {
 };
 
 export const AutomationTriggerContentSidebar = ({ activeNode }: Props) => {
-  console.log({ activeNode });
-
   if (activeNode?.isCustom) {
     return <CustomTriggerContent activeNode={activeNode} />;
   }
