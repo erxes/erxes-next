@@ -237,7 +237,6 @@ export const portalUserRouter = t.router({
             defaultValue: null,
           });
 
-          console.log(customer);
           if (doc.email && customer) {
             Object.assign(doc, {
               erxesCustomerId: customer._id,
