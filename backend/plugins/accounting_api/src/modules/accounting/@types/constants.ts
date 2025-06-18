@@ -80,14 +80,13 @@ export const JOURNALS = {
   INV_SALE_RETURN: 'invSaleReturn',
   INV_SALE_COST: 'invSaleCost',
   INV_SALE_OUT: 'invSaleOut',
-  VAT: 'vat',
-  CTAX: 'ctax',
+  TAX: 'tax',
   ALL: [
     'main', 'cash', 'bank', 'receivable', 'payable',
     'inv_fb', 'invIncome', 'invOut', 'inv_move', 'inv_adjust', 'inv_convert',
     'inv_sale', 'inv_cost',
     'inv_in_return', 'inv_sale_return',
-    'expense', 'vat', 'ctax'
+    'expense', 'tax'
   ],
   ALL_REAL_INV: [ // yag urtug uldegdeld nuluuluh journal ni
     'inv_fb',

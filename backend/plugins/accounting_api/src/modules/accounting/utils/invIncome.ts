@@ -1,7 +1,8 @@
 import { nanoid } from 'nanoid';
 import { IModels } from '~/connectionResolvers';
-import { JOURNALS, TR_FOLLOW_TYPES, TR_SIDES } from '../@types/constants';
+import { TR_FOLLOW_TYPES, TR_SIDES } from '../@types/constants';
 import { ITransactionDocument } from '../@types/transaction';
+import { getSingleJournalByAccount } from './utils';
 
 export const InvIncomeExpenseTrs = async (
   models: IModels,
@@ -12,8 +13,14 @@ export const InvIncomeExpenseTrs = async (
   const matchedIds: string[] = [];
   const expenseInfos = transaction.extraData?.invIncomeExpenses || [];
   const withAccountExpenses = expenseInfos.filter(ei => ei.accountId);
+  const accounts = await models.Accounts.find({ _id: { $in: withAccountExpenses.map(e => e.accountId) } });
 
   for (const expenseInfo of withAccountExpenses) {
+    const account = accounts.find(a => a._id === expenseInfo.accountId);
+    if (!account) {
+      continue;
+    }
+
     const followTrDoc = {
       ptrId: transaction.ptrId,
       parentId: transaction.parentId,
@@ -23,7 +30,7 @@ export const InvIncomeExpenseTrs = async (
       number: transaction.number,
       date: transaction.date,
       description: transaction.description,
-      journal: JOURNALS.MAIN,
+      journal: getSingleJournalByAccount(account.journal, account.kind),
       branchId: transaction.branchId,
       departmentId: transaction.departmentId,
       customerType: transaction.customerType,
