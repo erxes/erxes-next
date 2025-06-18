@@ -1,10 +1,10 @@
+import { AssignMemberItem, AssignMemberList, IUser } from 'ui-modules';
 import { Command, useQueryState } from 'erxes-ui';
-import { AssignMemberItem, AssignMemberList, IMember } from 'ui-modules';
 
 export const LogUsersFilter = () => {
   const [selectedUserIds, setUserIds] = useQueryState<string[]>('userIds');
 
-  const handleUserSelect = (user?: IMember) => {
+  const handleUserSelect = (user?: IUser) => {
     if (!user) {
       return;
     }

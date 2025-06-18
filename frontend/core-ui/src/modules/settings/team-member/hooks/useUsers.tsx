@@ -1,4 +1,4 @@
-import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import { queries } from '@/settings/team-member/graphql';
 import {
   EnumCursorDirection,
@@ -8,23 +8,18 @@ import {
   useRecordTableCursor,
   validateFetchMore,
 } from 'erxes-ui';
-import { EStatus, IUsersDetails } from '../types';
-import { IMember } from 'ui-modules';
+import { IUser, IUsersDetails } from '../types';
+import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../constants/teamMemberCursorSessionKey';
 
 export const USERS_PER_PAGE = 30;
 
 type IUsersQuery = ICursorListResponse<
-  IMember & { details: IUsersDetails & { __typename: string } } & {
-    status: EStatus;
-    employeeId: string;
-    isActive: boolean;
-    positionIds: string[];
-  }
+  IUser & { details?: IUsersDetails & { __typename?: string } }
 >;
 
 const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
   const { cursor } = useRecordTableCursor({
-    sessionKey: 'users_cursor',
+    sessionKey: TEAM_MEMBER_CURSOR_SESSION_KEY,
   });
   const [
     { branchIds, departmentIds, unitId, searchValue, isActive, brandIds },
@@ -99,11 +94,12 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
   return {
     loading,
     users: list?.map(({ details, ...user }) => {
-      const { __typename, ...detailData } = details || {}
+      const { __typename, ...detailData } = details || {};
       return {
-      ...user,
-      details: detailData,
-    }}),
+        ...user,
+        details: detailData,
+      };
+    }),
     error,
     totalCount,
     handleFetchMore,

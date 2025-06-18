@@ -65,6 +65,7 @@ module.exports = {
           foreground: 'hsl(var(--accent-foreground))',
         },
         sidebar: 'hsl(var(--sidebar-background))',
+        babyBlue: 'hsl(var(--baby-blue))',
       },
       borderRadius: {
         lg: `var(--radius)`,

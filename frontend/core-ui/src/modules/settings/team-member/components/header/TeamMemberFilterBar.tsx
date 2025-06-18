@@ -20,7 +20,7 @@ export const TeamMemberFilterBar = () => {
 
   const isFiltered = Object.values(queries).some((query) => !!query);
 
-  const { branchIds, departmentIds, unitId, isActive, brandIds } = queries;
+  const { branchIds, departmentIds, unitId, brandIds } = queries;
 
   return (
     <PageSubHeader>

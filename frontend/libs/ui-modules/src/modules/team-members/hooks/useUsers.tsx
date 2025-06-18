@@ -1,15 +1,16 @@
-import { useQuery, OperationVariables, QueryHookOptions } from '@apollo/client';
-import { GET_ASSIGNED_MEMBER, GET_USERS } from '../graphql/queries/userQueries';
-import { IMember } from '../types/TeamMembers';
 import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
+import { GET_ASSIGNED_MEMBER, GET_USERS } from '../graphql/queries/userQueries';
+import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
+
+import { IUser } from '../types/TeamMembers';
 
 const USERS_LIMIT = 30;
 
 export const useUsers = (
-  options?: QueryHookOptions<ICursorListResponse<IMember>>,
+  options?: QueryHookOptions<ICursorListResponse<IUser>>,
 ) => {
   const { data, loading, fetchMore, error } = useQuery<
-    ICursorListResponse<IMember>
+    ICursorListResponse<IUser>
   >(GET_USERS, {
     ...options,
     variables: {
@@ -59,14 +60,14 @@ export const useAssignedMember = (options?: OperationVariables) => {
   return { details: data?.userDetail?.details, loading, error };
 };
 
-export interface IMemberInlineData {
-  userDetail: IMember;
+export interface IUserInlineData {
+  userDetail: IUser;
 }
 
 export const useMemberInline = (
-  options?: QueryHookOptions<IMemberInlineData>,
+  options?: QueryHookOptions<IUserInlineData>,
 ) => {
-  const { data, loading, error } = useQuery<IMemberInlineData>(
+  const { data, loading, error } = useQuery<IUserInlineData>(
     GET_ASSIGNED_MEMBER,
     options,
   );

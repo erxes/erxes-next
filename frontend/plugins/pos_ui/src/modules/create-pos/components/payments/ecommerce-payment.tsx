@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { PaymentFormValues, paymentSchema } from "../formSchema"
 import { useToast } from "erxes-ui"
 import { PaymentMethod } from "../../types"
-import { IPosDetail } from "~/modules/pos-detail.tsx/types/IPos"
+import { IPosDetail } from "~/modules/pos-detail/types/IPos"
 import PaymentIcon from "./paymentIcon"
 
 interface EcommercePaymentsFormProps {
@@ -134,17 +134,6 @@ export default function EcommercePaymentsForm({
     }
   }
 
-  const handlePaymentIdsChange = (selectedIds: string[]) => {
-    form.setValue('paymentIds', selectedIds)
-    
-    if (onFormSubmit) {
-      onFormSubmit({
-        paymentIds: selectedIds,
-        paymentTypes: form.getValues('paymentTypes')
-      })
-    }
-  }
-
   const safeDisplayValue = (value: any): string => {
     if (value === null || value === undefined) {
       return ''
@@ -156,10 +145,6 @@ export default function EcommercePaymentsForm({
       return JSON.stringify(value)
     }
     return String(value)
-  }
-
-  const displayConfig = (config: string): string => {
-    return safeDisplayValue(config)
   }
 
   const { formState: { errors } } = form

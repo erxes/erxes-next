@@ -19,9 +19,7 @@ import {
   RecordTableCellTrigger,
   Input,
   RecordTableCellContent,
-  TextOverflowTooltip,
   FullNameField,
-  RecordTableCellDisplay,
   DatePicker,
 } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
@@ -75,8 +73,8 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
           <Avatar>
             <Avatar.Image src={cell.getValue() as string} />
             <Avatar.Fallback>
-              {cell.row.original.details.firstName?.charAt(0) ||
-                cell.row.original.details.lastName?.charAt(0) ||
+              {cell.row.original.details?.firstName?.charAt(0) ||
+                cell.row.original.details?.lastName?.charAt(0) ||
                 cell.row.original.email?.charAt(0)}
             </Avatar.Fallback>
           </Avatar>
@@ -276,7 +274,7 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       <RecordTable.InlineHead icon={IconAlignLeft} label="Positions" />
     ),
     cell: ({ cell }) => {
-      const { positionIds, _id } = cell.row.original;
+      const { _id } = cell.row.original;
       const { usersEdit } = useUserEdit();
 
       return (
@@ -315,8 +313,9 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
       const { details, _id } = cell.row.original;
       const { workStartedDate, ...rest } = details || {};
       const [open, setOpen] = useState<boolean>(false);
-      const [_workStartedDate, setWorkStartedDate] =
-        useState<Date>(workStartedDate);
+      const [_workStartedDate, setWorkStartedDate] = useState<Date>(
+        workStartedDate || new Date(),
+      );
       const { usersEdit } = useUserEdit();
       const onSave = () => {
         usersEdit(

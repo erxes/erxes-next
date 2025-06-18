@@ -3,6 +3,7 @@ import { RecordTable } from 'erxes-ui';
 import { productColumns } from '@/products/components/ProductColumns';
 import { ProductCommandBar } from '@/products/components/product-command-bar/ProductCommandBar';
 import { useProducts } from '@/products/hooks/useProducts';
+import { PRODUCTS_CURSOR_SESSION_KEY } from '@/products/constants/productsCursorSessionKey';
 export const ProductsRecordTable = () => {
   const { productsMain, handleFetchMore, loading, pageInfo } = useProducts();
 
@@ -19,7 +20,7 @@ export const ProductsRecordTable = () => {
         hasPreviousPage={hasPreviousPage}
         hasNextPage={hasNextPage}
         dataLength={productsMain?.length}
-        sessionKey="products_cursor"
+        sessionKey={PRODUCTS_CURSOR_SESSION_KEY}
       >
         <RecordTable>
           <RecordTable.Header />
