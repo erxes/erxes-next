@@ -157,6 +157,8 @@ export const transactionInvIncomeSchema = z.object({
   ...baseTransactionSchema.shape,
 }).extend({
   customerId: z.string(),
+  branchId: z.string(),
+  departmentId: z.string(),
   hasVat: z.boolean(),
   hasCtax: z.boolean(),
   details: z.array(z.object({
@@ -178,6 +180,8 @@ export const transactionInvOutSchema = z.object({
   ...baseTransactionSchema.shape,
 }).extend({
   customerId: z.string().nullish(),
+  branchId: z.string(),
+  departmentId: z.string(),
   details: z.array(z.object({
     ...invDetailSchema.shape,
   })),

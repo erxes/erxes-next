@@ -1,3 +1,4 @@
+import { useGetAccCurrentCost } from '../../../hooks/useGetInvCostInfo';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { JournalEnum } from '@/settings/account/types/Account';
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
@@ -17,6 +18,8 @@ import {
 import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { useEffect, useRef, useState } from 'react';
+
 
 export const InventoryRow = ({
   detailIndex,
@@ -27,6 +30,9 @@ export const InventoryRow = ({
   journalIndex: number;
   form: ITransactionGroupForm;
 }) => {
+  const initialMount = useRef(true); // зөвхөн нэг удаа true
+  const [wasChanged, setWasChanged] = useState(false); // field өөрчлөгдсөн эсэх
+
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`,
@@ -40,19 +46,47 @@ export const InventoryRow = ({
   const { unitPrice, count, _id } = detail;
 
   const getFieldName = (name: string) => {
-    return `trDocs.${journalIndex}.details.${detailIndex}.${name}`;
+    return `trDocs.${journalIndex}.details.${detailIndex}.${name}` as any;
   };
+
+  const shouldSkip =
+    !detail.accountId ||
+    !trDoc.branchId ||
+    !trDoc.departmentId ||
+    !detail.productId ||
+    (!wasChanged && !!unitPrice); // анхны unitPrice байвал skip
+
+  const { currentCostInfo, loading } = useGetAccCurrentCost({
+    variables: {
+      accountId: detail.accountId,
+      branchId: trDoc.branchId,
+      departmentId: trDoc.departmentId,
+      productIds: [detail.productId],
+    },
+    skip: shouldSkip,
+  });
+
+  // 🚨 Unit price-г зөвхөн дараа нь өөрчлөгдсөн тохиолдолд шинэчилнэ
+  useEffect(() => {
+    if (loading || !currentCostInfo || !wasChanged) return;
+
+    const cost = currentCostInfo[detail.productId || ''];
+    if (cost === undefined) return;
+
+    form.setValue(getFieldName('unitPrice'), cost);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentCostInfo, detail.productId, loading, wasChanged,]);
 
   const handleAmountChange = (
     value: number,
   ) => {
     const newUnitPrice = count ? value / count : 0;
-    form.setValue(getFieldName('unitPrice') as any, newUnitPrice);
+    form.setValue(getFieldName('unitPrice'), newUnitPrice);
   };
 
   const calcAmount = (pCount?: number, pUnitPrice?: number) => {
     const newAmount = (pCount ?? 0) * (pUnitPrice ?? 0);
-    form.setValue(getFieldName('amount') as any, newAmount);
+    form.setValue(getFieldName('amount'), newAmount);
   };
 
   const handleCountChange = (
@@ -70,6 +104,28 @@ export const InventoryRow = ({
     calcAmount(count ?? 0, value);
     onChange(value);
   };
+
+  const handleProduct = (productId: string, onChange: (productId: string) => void) => {
+    // setMount(false);
+    onChange(productId);
+  }
+
+  // 🧠 Field өөрчлөгдвөл wasChanged-г true болгоно
+  useEffect(() => {
+    if (!initialMount.current) {
+      setWasChanged(true);
+    }
+  }, [
+    detail.accountId,
+    detail.productId,
+    trDoc.branchId,
+    trDoc.departmentId,
+  ]);
+
+  // ✅ Анхны render тэмдэглэл дуусгавар болгоно
+  useEffect(() => {
+    initialMount.current = false;
+  }, []);
 
   return (
     <Table.Row
@@ -116,6 +172,7 @@ export const InventoryRow = ({
               <SelectAccount
                 value={field.value || ''}
                 onValueChange={(accountId) => {
+                  // setMount(false)
                   field.onChange(accountId);
                 }}
                 defaultFilter={{ journals: [JournalEnum.INVENTORY] }}
@@ -136,7 +193,7 @@ export const InventoryRow = ({
               <SelectProduct
                 value={field.value || ''}
                 onValueChange={(productId) => {
-                  field.onChange(productId);
+                  handleProduct(productId, field.onChange)
                 }}
                 variant="ghost"
                 scope={AccountingHotkeyScope.TransactionFormPage}
