@@ -34,7 +34,7 @@ enum UserCardEnum {
   }
 
   type ClientPortalParticipant {
-    _id: String
+    _id: String!
     contentType: UserCardEnum
     contentTypeId: String
     cpUserId: String

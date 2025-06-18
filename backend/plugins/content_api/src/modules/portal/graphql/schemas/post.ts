@@ -68,7 +68,7 @@ export const types = `
     }
 
     type PostTranslation {
-        _id: String
+        _id: String!
         postId: String
         language: String
         title: String

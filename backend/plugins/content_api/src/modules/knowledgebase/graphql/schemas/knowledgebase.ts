@@ -35,7 +35,7 @@ type KnowledgeBaseArticle @key(fields: "_id") {
 
 
 type KnowledgeBaseCategory {
-    _id: String
+    _id: String!
     code: String
     title: String
     description: String
@@ -54,7 +54,7 @@ type KnowledgeBaseCategory {
   }
 
 type KnowledgeBaseParentCategory {
-    _id: String
+    _id: String!
     code: String
     title: String
     description: String

@@ -17,13 +17,13 @@ export type ContentTRPCContext = ITRPCContext<{ models: IModels }>;
 
 const t = initTRPC.context<ContentTRPCContext>().create();
 
-export const appRouter = t.mergeRouters(
-  portalRouter,
-  portalUserRouter,
-  portalNotificationRouter,
-  portalUserCardRouter,
-  cmsRouter,
-  knowledgebaseRouter,
-);
+export const appRouter = t.router({
+  portal: portalRouter,
+  portalUser: portalUserRouter,
+  portalNotification: portalNotificationRouter,
+  portalUserCard: portalUserCardRouter,
+  cms: cmsRouter,
+  knowledgebase: knowledgebaseRouter,
+});
 
 export type AppRouter = typeof appRouter;
