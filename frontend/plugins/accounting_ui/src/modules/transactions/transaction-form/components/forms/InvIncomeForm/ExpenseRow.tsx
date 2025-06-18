@@ -67,7 +67,7 @@ export const ExpenseRow = ({
       originId: trDoc._id,
       ptrId: trDoc.ptrId,
       parentId: trDoc.parentId,
-      followType: 'invIncomeExpenses',
+      followType: 'invIncomeExpense',
       originSubId: expense._id,
       details: [{
         ...(curr?.details || [{}])[0],
