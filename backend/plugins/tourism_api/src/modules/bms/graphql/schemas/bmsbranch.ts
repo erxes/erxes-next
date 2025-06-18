@@ -20,7 +20,7 @@ export const types = `
     _id: String! @external
   }
   type BmsBranch {
-    _id: String
+    _id: String!
     createdAt: Date
     userId: String
     user: User
