@@ -1,12 +1,12 @@
+import { followTrDocsState } from '../states/trStates';
+import { ITBalanceTransaction } from '../types/TBalance';
+import { ITransactionGroupForm } from '../types/JournalForms';
+import { ITrDetail } from '../../types/Transaction';
 import { RecordTable } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
-import { useWatch } from 'react-hook-form';
-import { ITrDetail } from '../../../types/Transaction';
-import { followTrDocsState } from '../../states/trStates';
-import { ITransactionGroupForm } from '../../types/JournalForms';
-import { ITBalanceTransaction } from '../../types/TBalance';
 import { tbalanceColumns } from './TBalanceTableColumns';
 import { TBalanceTableRow } from './TBalanceTableRow';
+import { useAtomValue } from 'jotai';
+import { useWatch } from 'react-hook-form';
 
 export const TBalance = (
   { form }: {

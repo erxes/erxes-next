@@ -1,6 +1,10 @@
 import dayjs from 'dayjs';
 import { Cell, ColumnDef } from '@tanstack/react-table';
+import { IconCalendar, IconFile, IconMoneybag } from '@tabler/icons-react';
 import { ITransaction } from '../types/Transaction';
+import { Link } from 'react-router-dom';
+import { TR_JOURNAL_LABELS, TrJournalEnum } from '../types/constants';
+import { useState } from 'react';
 import {
   RecordTable,
   InlineCell,
@@ -11,9 +15,6 @@ import {
   CurrencyField,
   CurrencyFormatedDisplay,
 } from 'erxes-ui';
-import { IconMoneybag, IconFile, IconCalendar } from '@tabler/icons-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 // Create named components for cell renderers to fix React Hook usage
 const NumberCell = ({ getValue, row }: any) => {
@@ -58,6 +59,21 @@ const DescriptionCell = ({ getValue, row }: any) => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </InlineCellEdit>
+      )}
+    />
+  );
+};
+
+const JournalCell = ({ getValue, row }: any) => {
+  const journal = getValue() as TrJournalEnum;
+  const { _id } = row.original;
+
+  return (
+    <InlineCell
+      name="journal"
+      recordId={_id || ''}
+      display={() => (
+        <InlineCellDisplay>{TR_JOURNAL_LABELS[journal] || 'Main'}</InlineCellDisplay>
       )}
     />
   );
@@ -148,9 +164,8 @@ const DepartmentCell = ({ row }: any) => {
       recordId={_id || ''}
       display={() => (
         <InlineCellDisplay>
-          {`${department?.code ? `${department.code} - ` : ''}${
-            department?.title ?? ''
-          }`}
+          {`${department?.code ? `${department.code} - ` : ''}${department?.title ?? ''
+            }`}
         </InlineCellDisplay>
       )}
     />
@@ -198,9 +213,8 @@ const TransactionMoreColumnCell = ({
 
   return (
     <Link
-      to={`/accounting/transaction/edit?parentId=${parentId}&trId=${
-        originId || _id
-      }`}
+      to={`/accounting/transaction/edit?parentId=${parentId}&trId=${originId || _id
+        }`}
     >
       <RecordTable.MoreButton className="w-full h-full" />
     </Link>
@@ -223,7 +237,7 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     ),
     accessorKey: 'details',
     cell: ({ row }) => <AccountCell row={row} />,
-    size: 500,
+    size: 400,
   },
   {
     id: 'number',
@@ -236,7 +250,7 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     header: () => <RecordTable.InlineHead icon={IconCalendar} label="Date" />,
     accessorKey: 'date',
     cell: ({ getValue, row }) => <DateCell getValue={getValue} row={row} />,
-    size: 80,
+    size: 100,
   },
   {
     id: 'description',
@@ -247,7 +261,7 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     cell: ({ getValue, row }) => (
       <DescriptionCell getValue={getValue} row={row} />
     ),
-    size: 300,
+    size: 200,
   },
   {
     id: 'sumDt',
@@ -266,6 +280,12 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     cell: ({ getValue, row }) => (
       <SumCreditCell getValue={getValue} row={row} />
     ),
+  },
+  {
+    id: 'journal',
+    header: () => <RecordTable.InlineHead icon={IconFile} label="Journal" />,
+    accessorKey: 'journal',
+    cell: ({ getValue, row }) => <JournalCell getValue={getValue} row={row} />,
   },
   {
     id: 'branch',
