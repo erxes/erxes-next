@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
-import { attachmentSchema } from 'erxes-api-shared/src/core-modules/common/db/definitions/common';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
+import { attachmentSchema } from 'erxes-api-shared/core-modules';
 import { PUBLISH_STATUSES } from '~/modules/knowledgebase/constants';
 
 const commonFields = {

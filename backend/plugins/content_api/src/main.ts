@@ -25,6 +25,7 @@ startPlugin({
       const models = await generateModels(subdomain);
 
       context.models = models;
+      context.subdomain = subdomain;
 
       return context;
     },

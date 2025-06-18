@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { ICommentDocument } from '@/portal/@types/comment';
-import { sendTRPCMessage } from 'erxes-api-shared/src/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {

@@ -1,6 +1,6 @@
 import { IPostTranslationDocument } from '@/portal/@types/translations';
-import { customFieldSchema } from 'erxes-api-shared/src/core-modules/common/db/definitions/common';
-import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
+import { customFieldSchema } from 'erxes-api-shared/core-modules';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const postTranslationSchema = new Schema<IPostTranslationDocument>({

@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-import { IPdfAttachment } from 'erxes-api-shared/src/core-types';
+import { IPdfAttachment } from 'erxes-api-shared/core-types';
 
 interface ICommonFields {
   createdBy: string;

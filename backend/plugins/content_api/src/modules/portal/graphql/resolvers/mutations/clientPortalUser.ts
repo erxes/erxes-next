@@ -9,13 +9,13 @@ import {
   getEnv,
   redis,
   sendTRPCMessage,
-} from 'erxes-api-shared/src/utils';
-import { IAttachment } from 'erxes-api-shared/src/core-types';
-import { random } from 'erxes-api-shared/src/utils/string';
-import { checkPermission } from 'erxes-api-shared/src/core-modules';
+} from 'erxes-api-shared/utils';
+import { IAttachment } from 'erxes-api-shared/core-types';
+import { random } from 'erxes-api-shared/utils';
+import { checkPermission } from 'erxes-api-shared/core-modules';
 import { fetchUserFromToki, tokenHandler } from '@/portal/utils/auth';
 import { fetchUserFromSocialpay } from '@/portal/utils/socialpay';
-import { sendSms } from '../../../utils/common';
+import { sendSms } from '@/portal/utils/common';
 
 export interface IVerificationParams {
   userId: string;
@@ -25,9 +25,6 @@ export interface IVerificationParams {
   twoFactor?: ITwoFactorDevice;
 }
 
-interface IClientPortalUserEdit extends IUser {
-  _id: string;
-}
 interface IGoogleOauthToken {
   access_token: string;
   id_token: string;
@@ -74,14 +71,9 @@ export const clientPortalUserMutations = {
     return user;
   },
 
-  async clientPortalUsersEdit(
-    _root,
-    { _id, ...doc },
-    { models }: IContext,
-  ) {
-    const updated = await models.Users.updateUser(_id, doc);
-
-    return updated;
+  async clientPortalUsersEdit(_root, args: any, { models }: IContext) {
+    const {_id, doc} = args;
+    return  models.Users.updateUser(_id, doc);
   },
 
   /**
@@ -259,7 +251,6 @@ export const clientPortalUserMutations = {
       }
 
       const portal = await models.Portals.getConfig(user.clientPortalId);
-
 
       return tokenHandler(user, portal, res, false);
     } catch (e) {
@@ -442,7 +433,7 @@ export const clientPortalUserMutations = {
     }
 
     const clientPortal = await models.Portals.getConfig(user.clientPortalId);
- 
+
     return tokenHandler(user, clientPortal, res, false);
   },
 
@@ -571,7 +562,6 @@ export const clientPortalUserMutations = {
           )
         : passwordVerificationConfig.smsContent.replace(/{.*}/, phoneCode);
 
-
       await sendSms(config.smsTransporterType, phone, smsContent);
 
       return 'sent';
@@ -685,7 +675,7 @@ export const clientPortalUserMutations = {
             const body =
               config.content.replace(/{.*}/, testPhoneCode) ||
               `Your verification code is ${testPhoneCode}`;
-         
+
             await sendSms(
               config.smsTransporterType
                 ? config.smsTransporterType
@@ -792,7 +782,6 @@ export const clientPortalUserMutations = {
               config.content.replace(/{.*}/, testPhoneCode) ||
               `Your verification code is ${testPhoneCode}`;
 
-    
             await sendSms(
               config.smsTransporterType
                 ? config.smsTransporterType
@@ -1164,7 +1153,6 @@ export const clientPortalUserMutations = {
       { $set: { verificationRequest } },
     );
 
-
     const createdBy = await sendTRPCMessage({
       pluginName: 'core',
       method: 'query',
@@ -1352,7 +1340,6 @@ export const clientPortalUserMutations = {
     }
 
     try {
-
       await sendTRPCMessage({
         pluginName: 'core',
         method: 'mutation',

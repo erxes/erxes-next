@@ -1,7 +1,6 @@
-import { graphqlPubsub } from 'erxes-api-shared/src/utils';
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 import { INotifcationSettings } from '@/portal/@types/user';
-// import { sendNotification } from '../../../utils';
 
 const notificationMutations = {
   async clientPortalNotificationsMarkAsRead(

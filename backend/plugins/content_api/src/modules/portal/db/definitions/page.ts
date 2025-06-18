@@ -1,6 +1,6 @@
 import { IPageDocument } from '@/portal/@types/page';
-import { customFieldSchema } from 'erxes-api-shared/src/core-modules/common/db/definitions/common';
-import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
+import { customFieldSchema } from 'erxes-api-shared/core-modules';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const pageSchema = new Schema<IPageDocument>(

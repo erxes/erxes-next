@@ -10,7 +10,7 @@ import {
 } from 'erxes-api-shared/utils';
 
 import { gql } from 'graphql-tag';
-import { generateModels } from '../connectionResolvers';
+import { generateModels } from '~/connectionResolvers';
 import * as typeDefDetails from './schema/schema';
 import resolvers from './resolvers';
 

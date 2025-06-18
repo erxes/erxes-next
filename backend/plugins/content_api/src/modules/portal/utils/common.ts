@@ -1,4 +1,4 @@
-import { isEnabled, sendTRPCMessage } from "erxes-api-shared/src/utils";
+import { isEnabled, sendTRPCMessage } from "erxes-api-shared/utils";
 import { IModels } from "~/connectionResolvers";
 
 export const getConfig = async (

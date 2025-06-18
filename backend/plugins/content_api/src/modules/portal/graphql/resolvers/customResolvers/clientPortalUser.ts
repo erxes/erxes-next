@@ -1,7 +1,7 @@
 import { IContext } from '~/connectionResolvers';
 import { IUser } from '@/portal/@types/user';
 import { customFieldsDataByFieldCode } from '@/portal/utils/common';
-import { sendTRPCMessage } from 'erxes-api-shared/src/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 const ClientPortalUser = {
   __resolveReference: async ({ _id }, { models }: IContext) => {

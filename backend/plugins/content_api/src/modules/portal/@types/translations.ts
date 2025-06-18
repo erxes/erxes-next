@@ -1,4 +1,4 @@
-import { ICustomField } from 'erxes-api-shared/src/core-types';
+import { ICustomField } from 'erxes-api-shared/core-types';
 
 export interface IPostTranslation {
   postId: string;

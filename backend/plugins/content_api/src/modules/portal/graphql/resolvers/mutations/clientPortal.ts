@@ -1,7 +1,7 @@
 import { IPortal } from '@/portal/@types/portal';
 import { IContext } from '~/connectionResolvers';
 import { createCard, participantEditRelation } from '@/portal/utils/cards';
-import { checkPermission } from 'erxes-api-shared/src/core-modules';
+import { checkPermission } from 'erxes-api-shared/core-modules';
 
 export interface IVerificationParams {
   userId: string;
