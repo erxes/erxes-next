@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { IArticleDocument } from '@/knowledgebase/@types/knowledgebase';
-import { sendTRPCMessage } from 'erxes-api-shared/src/utils/trpc';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export default {
   async __resolveReference({ _id }, { models }: IContext) {
@@ -11,7 +11,7 @@ export default {
     if (!article.createdBy) {
       return null;
     }
-    
+
     return {
       _id: article.createdBy,
       __typename: 'User',

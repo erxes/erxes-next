@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { USER_TYPES } from '../../constants';
+import { USER_TYPES } from '@/portal/constants';
 
 export const commentSchema = new Schema({
   typeId: { type: String, label: 'Type Id' },

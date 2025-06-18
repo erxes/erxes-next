@@ -1,14 +1,14 @@
 import {
   attachmentSchema,
   customFieldSchema,
-} from 'erxes-api-shared/src/core-modules/common/db/definitions/common';
+} from 'erxes-api-shared/core-modules';
 import { Schema } from 'mongoose';
 import {
   IPostCategoryDocument,
   IPostDocument,
   IPostTagDocument,
 } from '@/portal/@types/post';
-import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 
 export const postSchema = new Schema<IPostDocument>(
   {

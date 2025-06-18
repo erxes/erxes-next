@@ -2,7 +2,7 @@ import {
   IAttachment,
   ICustomField,
   IPdfAttachment,
-} from 'erxes-api-shared/core-types/common';
+} from 'erxes-api-shared/core-types';
 import { Document } from 'mongoose';
 
 export interface IPostTag {

@@ -4,7 +4,7 @@ import {
 } from 'erxes-api-shared/core-modules';
 import { cursorPaginate } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { ITopicDocument } from '../../@types/knowledgebase';
+import { ITopicDocument } from '@/knowledgebase/@types/knowledgebase';
 
 const findDetail = async (model, _id) => {
   return await model.findOne({ $or: [{ _id }, { code: _id }] });

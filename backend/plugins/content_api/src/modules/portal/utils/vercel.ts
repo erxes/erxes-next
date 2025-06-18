@@ -4,7 +4,7 @@ import * as path from 'path';
 import simpleGit from 'simple-git';
 import * as tmp from 'tmp';
 import { IPortalDocument } from '@/portal/@types/portal';
-import { getEnv } from 'erxes-api-shared/src/utils';
+import { getEnv } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 
 const buildConfigs = (

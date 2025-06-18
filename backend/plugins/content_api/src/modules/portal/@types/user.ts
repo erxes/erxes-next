@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { IAttachment } from 'erxes-api-shared/core-types/common';
+import { IAttachment } from 'erxes-api-shared/core-types';
 import { IModels } from '~/connectionResolvers';
 
 export interface INotificationConfig {

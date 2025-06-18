@@ -1,4 +1,4 @@
-import { requireLogin } from 'erxes-api-shared/src/core-modules';
+import { requireLogin } from 'erxes-api-shared/core-modules';
 import { IContext } from '~/connectionResolvers';
 const systemTypes = ['page', 'post', 'category'];
 

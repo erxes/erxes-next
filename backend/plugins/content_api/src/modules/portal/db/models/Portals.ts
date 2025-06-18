@@ -8,7 +8,7 @@ import { portalSchema } from '@/portal/db/definitions/portal';
 import {
   removeExtraSpaces,
   removeLastTrailingSlash,
-} from 'erxes-api-shared/utils/string';
+} from 'erxes-api-shared/utils';
 
 export interface IPortalModel extends Model<IPortalDocument> {
   /**

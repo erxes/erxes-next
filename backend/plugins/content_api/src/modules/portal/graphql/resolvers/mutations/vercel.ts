@@ -1,7 +1,7 @@
 import { IContext, IModels } from '~/connectionResolvers';
-import { IPortalDocument } from '../../../@types/portal';
+import { IPortalDocument } from '@/portal/@types/portal';
+import { addDomain, deploy, removeProject } from '@/portal/utils/vercel';
 
-// import { addDomain, deploy, removeProject } from '../../../vercel/util';
 
 const getConfig = async (_id: string, models: IModels) => {
   const config: IPortalDocument | null = await models.Portals.findOne({
@@ -20,7 +20,7 @@ const getConfig = async (_id: string, models: IModels) => {
 };
 
 const mutations = {
-  async clientPortalDeployVercel(_root, args: { _id }, { models }: IContext) {
+  async clientPortalDeployVercel(_root, args: { _id }, { models, subdomain }: IContext) {
     const config = await models.Portals.findOne({
       $or: [{ _id: args._id }, { vercelProjectId: args._id }],
     });
@@ -29,7 +29,11 @@ const mutations = {
       throw new Error('Config not found');
     }
 
-    const vercelResult = await deploy(config);
+    if (!subdomain) {
+      throw new Error('Subdomain is required');
+    }
+
+    const vercelResult = await deploy(models, subdomain, config);
 
     if (!vercelResult) {
       throw new Error('Could not deploy');

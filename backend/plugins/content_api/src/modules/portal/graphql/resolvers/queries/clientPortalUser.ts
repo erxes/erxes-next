@@ -1,5 +1,5 @@
 
-import { cursorPaginate, escapeRegExp } from 'erxes-api-shared/src/utils';
+import { cursorPaginate, escapeRegExp } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 const clientPortalUserQueries = {

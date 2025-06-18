@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 
-import { random } from 'erxes-api-shared/utils/string';
+import { escapeRegExp, random, sendTRPCMessage } from 'erxes-api-shared/utils';
 import sha256 from 'sha256';
 import { IModels } from '~/connectionResolvers';
 
@@ -16,16 +16,9 @@ import {
   IVerificationParams,
 } from '@/portal/@types/user';
 import { userSchema } from '@/portal/db/definitions/user';
-
 // import { DEFAULT_MAIL_CONFIG } from '@/portal/constants';
-import {
-
-  handleContacts,
-  handleDeviceToken,
-} from '@/portal/utils/contacts';
-import { sendTRPCMessage } from 'erxes-api-shared/src/utils/trpc';
-import { escapeRegExp } from 'erxes-api-shared/src/utils/string';
-import { sendSms } from '../../utils/common';
+import { handleContacts, handleDeviceToken } from '@/portal/utils/contacts';
+import { sendSms } from '@/portal/utils/common';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -294,7 +287,6 @@ export const loadUserClass = (models: IModels) => {
         // });
       }
 
-    
       if (user.phone && portal.otpConfig) {
         const phoneCode = await this.imposeVerificationCode({
           clientPortalId,
@@ -306,12 +298,7 @@ export const loadUserClass = (models: IModels) => {
           portal.otpConfig.content.replace(/{{.*}}/, phoneCode) ||
           `Your verification code is ${phoneCode}`;
 
-        await sendSms(
-      
-          portal.otpConfig.smsTransporterType,
-          user.phone,
-          smsBody,
-        );
+        await sendSms(portal.otpConfig.smsTransporterType, user.phone, smsBody);
       }
 
       // TODO: consider following function necessary
@@ -644,7 +631,6 @@ export const loadUserClass = (models: IModels) => {
       };
     }
 
-
     public static async imposeVerificationCode({
       codeLength,
       clientPortalId,
@@ -662,9 +648,7 @@ export const loadUserClass = (models: IModels) => {
       isRessetting?: boolean;
       testUserOTP?: string;
     }) {
-      const code = testUserOTP
-        ? testUserOTP
-        : random('0', codeLength)
+      const code = testUserOTP ? testUserOTP : random('0', codeLength);
       const codeExpires = Date.now() + 60000 * (expireAfter || 5);
 
       let query: any = {};

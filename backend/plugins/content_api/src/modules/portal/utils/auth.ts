@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { IPortal } from '@/portal/@types/portal';
 import { IUserDocument } from '@/portal/@types/user';
-import { authCookieOptions, getEnv } from 'erxes-api-shared/src/utils';
+import { authCookieOptions, getEnv } from 'erxes-api-shared/utils';
 
 
 export const createJwtToken = (payload: any, clientPortal?: IPortal) => {

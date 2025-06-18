@@ -1,7 +1,7 @@
 import {
   checkPermission,
   requireLogin,
-} from 'erxes-api-shared/src/core-modules/permissions/utils';
+} from 'erxes-api-shared/core-modules';
 
 import { IContext } from '~/connectionResolvers';
 

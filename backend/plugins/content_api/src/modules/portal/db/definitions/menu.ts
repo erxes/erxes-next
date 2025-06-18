@@ -1,5 +1,5 @@
 import { IMenuItemDocument } from '@/portal/@types/menu';
-import { mongooseStringRandomId } from 'erxes-api-shared/src/utils';
+import { mongooseStringRandomId } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
 
 export const menuItemSchema = new Schema<IMenuItemDocument>(
