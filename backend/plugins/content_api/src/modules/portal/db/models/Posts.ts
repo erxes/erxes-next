@@ -54,9 +54,7 @@ export const loadPostClass = (models: IModels) => {
     }
 
     public static getPosts = async (query: any, sort: any) => {
-      const posts = await models.Posts.find(query).sort(sort).lean();
-
-      return posts;
+      return models.Posts.find(query).sort(sort).lean();
     };
 
     public static createPost = async (doc: IPost) => {
