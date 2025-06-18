@@ -151,9 +151,11 @@ export const loadCustomerClass = (models: IModels) => {
         doc.phones = [doc.primaryPhone];
       }
 
-      doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
-        doc.customFieldsData,
-      );
+      if (doc.customFieldsData) {
+        doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+          doc.customFieldsData,
+        );
+      }
 
       if (doc.integrationId) {
         doc.relatedIntegrationIds = [doc.integrationId];
