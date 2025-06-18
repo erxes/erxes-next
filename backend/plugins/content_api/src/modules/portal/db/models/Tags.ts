@@ -18,8 +18,7 @@ export const loadPostTagClass = (models: IModels) => {
     public static createTag = async (data: IPostTag) => {
       const slug = data.slug || slugify(data.name, { lower: true });
       data.slug = slug;
-      const tag = await models.PostTags.create(data);
-      return tag;
+      return models.PostTags.create(data);
     };
 
     public static updateTag = async (id: string, data: IPostTag) => {
@@ -27,17 +26,15 @@ export const loadPostTagClass = (models: IModels) => {
         data.slug = slugify(data.name, { lower: true });
       }
 
-      const tag = await models.PostTags.findOneAndUpdate(
+      return models.PostTags.findOneAndUpdate(
         { _id: id },
         { $set: data },
         { new: true },
       );
-      return tag;
     };
 
     public static deleteTag = async (id: string) => {
-      const tag = await models.PostTags.findOneAndDelete({ _id: id });
-      return tag;
+      return models.PostTags.findOneAndDelete({ _id: id });
     };
 
     public static getPostTags = async (query: any) => {
