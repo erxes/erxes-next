@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+
 export const stripAnsi = async (str: string) => {
   let stripAnsiModule: ((str: string) => string) | null = null;
 
@@ -135,7 +137,6 @@ export const random = (pattern: string, length: number) => {
   if (!chars) throw new Error('No valid pattern provided.');
 
   let result = '';
-  const crypto = require('crypto');
 
   const maxByte = 255;
   const maxMultiple = Math.floor(maxByte / chars.length) * chars.length;
