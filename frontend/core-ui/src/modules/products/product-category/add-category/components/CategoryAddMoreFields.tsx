@@ -56,7 +56,7 @@ export const ProductCategoryAddMoreFields = ({
               <SelectBrand
                 value={field.value?.[0] || ''}
                 onValueChange={(brandId) => {
-                  field.onChange(brandId);
+                  field.onChange([brandId]);
                 }}
               />
             </Form.Control>
