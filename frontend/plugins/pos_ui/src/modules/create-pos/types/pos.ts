@@ -1,9 +1,13 @@
 import { UseFormReturn } from "react-hook-form";
 import { BasicInfoFormValues, PaymentFormValues, PermissionFormValues, ProductFormValues } from "../components/formSchema";
 import { CustomNode } from "~/modules/slot/types";
-
+  
+export interface TabConfig {
+    value: string;
+    component: React.ReactNode;
+  }
 export interface GetPosCreateTabsProps {
-    posCategory: 'ecommerce' | 'restaurant';
+    posCategory: 'ecommerce' | 'restaurant' | 'kiosk';
     forms: {
       basicInfo: UseFormReturn<BasicInfoFormValues>;
       permission: UseFormReturn<PermissionFormValues>;
@@ -11,8 +15,6 @@ export interface GetPosCreateTabsProps {
       payment: UseFormReturn<PaymentFormValues>;
     };
     handlers: {
-      handlePaymentSubmit: (data: PaymentFormValues) => void;
-      handlePermissionSubmit: (data: PermissionFormValues) => void;
       handleNodesUpdate: (nodes: CustomNode[]) => void;
     };
     data: {
@@ -21,9 +23,4 @@ export interface GetPosCreateTabsProps {
     };
   }
   
-export interface TabConfig {
-    value: string;
-    component: React.ReactNode;
-  }
-
   
