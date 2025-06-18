@@ -23,12 +23,9 @@ const prepareExcerpt = (content: string) => {
   const excerptLength = 100;
   const plainTextContent = htmlToText(content, { wordwrap: 130 });
 
-  const excerpt =
-    plainTextContent.length > excerptLength
-      ? plainTextContent.substring(0, excerptLength) + '...'
-      : plainTextContent;
-
-  return excerpt;
+  return plainTextContent.length > excerptLength
+    ? plainTextContent.substring(0, excerptLength) + '...'
+    : plainTextContent;
 };
 
 export const loadPostClass = (models: IModels) => {
