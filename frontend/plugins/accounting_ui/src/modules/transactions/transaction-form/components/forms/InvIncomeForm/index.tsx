@@ -1,13 +1,8 @@
-import { CtaxForm } from '../../helpers/CtaxForm';
-import { CustomerFields } from '../../helpers/CustomerFields';
-import { ExpenseForm } from './ExpenseForm';
-import { fixNum } from 'erxes-ui/lib';
-import { InventoryForm } from './InventoryForm';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
 import { TrJournalEnum } from '@/transactions/types/constants';
+import { fixNum } from 'erxes-ui/lib';
 import { useEffect } from 'react';
 import { useWatch } from 'react-hook-form';
-import { VatForm } from '../../helpers/VatForm';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
 import {
   AccountField,
   AssignToField,
@@ -15,6 +10,11 @@ import {
   DepartmentField,
   DescriptionField,
 } from '../../GeneralFormFields';
+import { CtaxForm } from '../../helpers/CtaxForm';
+import { CustomerFields } from '../../helpers/CustomerFields';
+import { VatForm } from '../../helpers/VatForm';
+import { ExpenseForm } from './ExpenseForm';
+import { InventoryForm } from './InventoryForm';
 
 export const InvIncomeForm = ({
   form,

@@ -14,11 +14,8 @@ import {
   RecordTablePopover,
   Table,
 } from 'erxes-ui';
-import { useAtom } from 'jotai';
-import { useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
-import { taxPercentsState } from '../../../states/trStates';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
 
 export const InventoryRow = ({
@@ -40,30 +37,6 @@ export const InventoryRow = ({
     name: `trDocs.${journalIndex}.details.${detailIndex}`,
   });
 
-  const [taxPercents] = useAtom(taxPercentsState);
-
-  const rowPercent = useMemo(() => {
-    let percent = taxPercents.sum ?? 0;
-    if (detail.excludeVat) {
-      percent = percent - (taxPercents.vat ?? 0);
-    }
-    if (detail.excludeCtax) {
-      percent = percent - (taxPercents.ctax ?? 0);
-    }
-    return percent;
-  }, [
-    taxPercents.sum,
-    taxPercents.vat,
-    taxPercents.ctax,
-    detail.excludeVat,
-    detail.excludeCtax,
-  ]);
-
-  const [taxAmounts, setTaxAmounts] = useState({
-    unitPriceWithTax: ((detail.unitPrice ?? 0) / 100) * (100 + rowPercent),
-    amountWithTax: ((detail.amount ?? 0) / 100) * (100 + rowPercent),
-  });
-
   const { unitPrice, count, _id } = detail;
 
   const getFieldName = (name: string) => {
@@ -75,24 +48,11 @@ export const InventoryRow = ({
   ) => {
     const newUnitPrice = count ? value / count : 0;
     form.setValue(getFieldName('unitPrice') as any, newUnitPrice);
-    if (trDoc.hasVat || trDoc.hasCtax) {
-      setTaxAmounts({
-        unitPriceWithTax: (newUnitPrice / 100) * (100 + rowPercent),
-        amountWithTax: (value / 100) * (100 + rowPercent),
-      });
-    }
   };
 
   const calcAmount = (pCount?: number, pUnitPrice?: number) => {
     const newAmount = (pCount ?? 0) * (pUnitPrice ?? 0);
     form.setValue(getFieldName('amount') as any, newAmount);
-
-    if (trDoc.hasVat || trDoc.hasCtax) {
-      setTaxAmounts({
-        unitPriceWithTax: ((pUnitPrice ?? 0) / 100) * (100 + rowPercent),
-        amountWithTax: (newAmount / 100) * (100 + rowPercent),
-      });
-    }
   };
 
   const handleCountChange = (
@@ -109,41 +69,6 @@ export const InventoryRow = ({
   ) => {
     calcAmount(count ?? 0, value);
     onChange(value);
-  };
-
-  const handleTaxValueChange = (key: string, value: number) => {
-    const amountWithTax = key === 'amount' ? value : value * (count ?? 0);
-    const unitPriceWithTax = key === 'amount' ? value / (count ?? 1) : value;
-
-    setTaxAmounts({ unitPriceWithTax, amountWithTax });
-
-    form.setValue(
-      getFieldName('unitPrice') as any,
-      (unitPriceWithTax / (100 + rowPercent)) * 100,
-    );
-  };
-
-  const handleExcludeTax = (
-    type: string,
-    checked: boolean,
-    onChange: (value: boolean) => void,
-  ) => {
-    let percent = taxPercents.sum ?? 0;
-
-    if (type === 'vat' ? !checked : detail.excludeVat) {
-      percent = percent - (taxPercents.vat ?? 0);
-    }
-
-    if (type === 'ctax' ? !checked : detail.excludeCtax) {
-      percent = percent - (taxPercents.ctax ?? 0);
-    }
-
-    const unitPriceWithTax = ((unitPrice ?? 0) / 100) * (100 + percent);
-    setTaxAmounts({
-      unitPriceWithTax,
-      amountWithTax: unitPriceWithTax * (count ?? 0),
-    });
-    onChange(!checked);
   };
 
   return (
@@ -296,125 +221,6 @@ export const InventoryRow = ({
           </RecordTablePopover>
         </Table.Cell>
       </RecordTableHotKeyControl>
-
-      {trDoc.hasVat && (
-        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
-          <Table.Cell
-            className={cn({
-              'border-t': detailIndex === 0,
-            })}
-          >
-            <RecordTableCellDisplay className="justify-center">
-              <Form.Field
-                control={form.control}
-                name={`trDocs.${journalIndex}.details.${detailIndex}.excludeVat`}
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Control>
-                      <Checkbox
-                        checked={!field.value}
-                        onCheckedChange={(checked) =>
-                          handleExcludeTax(
-                            'vat',
-                            Boolean(checked),
-                            field.onChange,
-                          )
-                        }
-                      />
-                    </Form.Control>
-                    <Form.Message />
-                  </Form.Item>
-                )}
-              />
-            </RecordTableCellDisplay>
-          </Table.Cell>
-        </RecordTableHotKeyControl>
-      )}
-
-      {trDoc.hasCtax && (
-        <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
-          <Table.Cell
-            className={cn({
-              'border-t': detailIndex === 0,
-            })}
-          >
-            <RecordTableCellDisplay className="justify-center">
-              <Form.Field
-                control={form.control}
-                name={`trDocs.${journalIndex}.details.${detailIndex}.excludeCtax`}
-                render={({ field }) => (
-                  <Form.Item>
-                    <Form.Control>
-                      <Checkbox
-                        checked={!field.value}
-                        onCheckedChange={(checked) =>
-                          handleExcludeTax(
-                            'ctax',
-                            Boolean(checked),
-                            field.onChange,
-                          )
-                        }
-                      />
-                    </Form.Control>
-                    <Form.Message />
-                  </Form.Item>
-                )}
-              />
-            </RecordTableCellDisplay>
-          </Table.Cell>
-        </RecordTableHotKeyControl>
-      )}
-
-      {(trDoc.hasVat || trDoc.hasCtax) && (
-        <>
-          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
-            <Table.Cell>
-              <RecordTablePopover
-                scope={`trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
-                closeOnEnter
-              >
-                <Form.Control>
-                  <RecordTableCellTrigger>
-                    {taxAmounts.unitPriceWithTax?.toLocaleString() || 0}
-                  </RecordTableCellTrigger>
-                </Form.Control>
-                <RecordTableCellContent>
-                  <CurrencyField.ValueInput
-                    value={taxAmounts.unitPriceWithTax ?? 0}
-                    onChange={(value) =>
-                      handleTaxValueChange('unitPrice', value)
-                    }
-                  />
-                </RecordTableCellContent>
-              </RecordTablePopover>
-            </Table.Cell>
-          </RecordTableHotKeyControl>
-
-          <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
-            <Table.Cell
-              className={cn({
-                'border-t': detailIndex === 0,
-                'rounded-br-lg': detailIndex === trDoc.details.length - 1,
-              })}
-            >
-              <RecordTablePopover
-                scope={`trDocs.${journalIndex}.details.${detailIndex}.amountWithTax`}
-                closeOnEnter
-              >
-                <RecordTableCellTrigger>
-                  {taxAmounts.amountWithTax?.toLocaleString() || 0}
-                </RecordTableCellTrigger>
-                <RecordTableCellContent>
-                  <CurrencyField.ValueInput
-                    value={taxAmounts.amountWithTax ?? 0}
-                    onChange={(value) => handleTaxValueChange('amount', value)}
-                  />
-                </RecordTableCellContent>
-              </RecordTablePopover>
-            </Table.Cell>
-          </RecordTableHotKeyControl>
-        </>
-      )}
     </Table.Row>
   );
 };
