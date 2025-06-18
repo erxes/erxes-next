@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import { IconPlus } from '@tabler/icons-react';
 import { syncCardSettingsAtom } from '../../states/posCategory';
 import { IPosDetail } from '~/modules/pos-detail/types/IPos';
-import { SelectBranch, SelectMember } from 'ui-modules';
+import { SelectBranches, SelectMember } from 'ui-modules';
 
 interface SyncCardFormProps {
   posDetail?: IPosDetail;
@@ -51,12 +51,12 @@ export default function SyncCardForm({
     });
   };
 
-  const handleBranchChange = (branchId: string) => {
+  const handleBranchChange = (branchId: string | string[] | undefined) => {
     setSyncCardSettings({
       ...syncCardSettings,
       currentConfig: {
         ...syncCardSettings.currentConfig,
-        branch: branchId,
+        branch: Array.isArray(branchId) ? branchId[0] : branchId || '',
       },
     });
   };
@@ -132,10 +132,10 @@ export default function SyncCardForm({
 
               <div className="space-y-2">
                 <Label className="text-sm text-gray-500">CHOOSE BRANCH</Label>
-                <SelectBranch
+                <SelectBranches.Detail
                   value={syncCardSettings.currentConfig.branch}
                   onValueChange={handleBranchChange}
-                  disabled={isReadOnly}
+                  mode="single"
                 />
               </div>
             </div>

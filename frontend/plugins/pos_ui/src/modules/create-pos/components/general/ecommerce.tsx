@@ -6,7 +6,7 @@ import { Form, Input, Select } from "erxes-ui";
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { IPosDetail } from '~/modules/pos-detail/types/IPos';
-import { SelectBranch, SelectBrand, SelectDepartment } from 'ui-modules';
+import { SelectBranches, SelectBrand, SelectDepartments } from 'ui-modules';
 
 interface EcommerceFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
@@ -16,37 +16,63 @@ interface EcommerceFormProps {
 
 export const EcommerceForm: React.FC<EcommerceFormProps> = ({ 
   form, 
+  posDetail,
   isReadOnly = false,
 }) => {
-
   const handleBrandChange = (brandId: string) => {
     if (isReadOnly) return;
-    
-    const newValue = brandId && brandId !== '' ? [brandId] : [];
-    form.setValue('scopeBrandIds', newValue);
+    form.setValue('scopeBrandIds', brandId ? [brandId] : []);
     form.trigger('scopeBrandIds');
   };
 
-  const handleBranchChange = (branchId: string) => {
+  const handleBranchChange = (branchId: string | string[] | undefined) => {
     if (isReadOnly) return;
-    form.setValue('branchId', branchId);
+    const singleBranchId = Array.isArray(branchId) ? branchId[0] : branchId;
+    form.setValue('branchId', singleBranchId || '');
     form.trigger('branchId');
   };
 
-  const handleDepartmentChange = (departmentId: string) => {
+  const handleDepartmentChange = (departmentId: string | string[] | undefined) => {
     if (isReadOnly) return;
-    form.setValue('departmentId', departmentId);
+    const singleDepartmentId = Array.isArray(departmentId) ? departmentId[0] : departmentId;
+    form.setValue('departmentId', singleDepartmentId || '');
     form.trigger('departmentId');
+  };
+
+  const handleAllowTypesChange = (value: string, index: number) => {
+    if (isReadOnly) return;
+    
+    const currentTypes = form.getValues('allowTypes') || [];
+    const newTypes = [...currentTypes];
+    
+    if (value === "NULL" || value === "") {
+      newTypes.splice(index, 1);
+    } else {
+      newTypes[index] = value as "eat" | "take" | "delivery";
+    }
+    
+    const cleanTypes = newTypes.filter((type, idx, arr) => 
+      type && arr.indexOf(type) === idx
+    );
+    
+    form.setValue('allowTypes', cleanTypes);
+    form.trigger('allowTypes');
   };
 
   const scopeBrandIds = form.watch('scopeBrandIds') || [];
   const selectedBrandId = Array.isArray(scopeBrandIds) && scopeBrandIds.length > 0 
     ? scopeBrandIds[0] 
     : '';
+  
+  const allowTypes = form.watch('allowTypes') || [];
+  const branchId = form.watch('branchId') || '';
+  const departmentId = form.watch('departmentId') || '';
+
   return (
     <Form {...form}>
       <div className="p-3">
         <div className="space-y-6">
+          {/* Name Field */}
           <Form.Field
             control={form.control}
             name="name"
@@ -78,7 +104,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     DESCRIPTION <span className="text-red-500">*</span>
                   </Form.Label>
-                  <p className="text-sm font-medium text-[#71717A]">What is description ?</p>
+                  <p className="text-sm font-medium text-[#71717A]">What is description?</p>
                   <Form.Control>
                     <Input
                       {...field}
@@ -86,12 +112,14 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                       value={field.value || ''}
                       disabled={isReadOnly}
                       readOnly={isReadOnly}
+                      placeholder="Enter description"
                     />
                   </Form.Control>
                   <Form.Message />
                 </Form.Item>
               )}
             />
+            
             <Form.Field
               control={form.control}
               name="scopeBrandIds"
@@ -100,7 +128,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     BRANDS
                   </Form.Label>
-                  <p className="text-sm text-gray-500">Which specific Brand does this integration belongs to?</p>
+                  <p className="text-sm text-gray-500">Which specific Brand does this integration belong to?</p>
                   <Form.Control>
                     <SelectBrand
                       value={selectedBrandId}
@@ -127,26 +155,12 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                 <Form.Control>
                   <div className="grid grid-cols-3 gap-3">
                     {Array.from({ length: 6 }, (_, index) => {
-                      const selectedTypes = field.value || [];
-                      const currentValue = selectedTypes[index] || "";
+                      const currentValue = allowTypes[index] || "";
                       
                       return (
                         <div key={index} className="flex flex-col">
                           <Select 
-                            onValueChange={(value) => {
-                              if (isReadOnly) return;
-                              const newTypes = [...(field.value || [])];
-                              if (value === "NULL") {
-                                newTypes.splice(index, 1);
-                              } else {
-                                newTypes[index] = value as "eat" | "take" | "delivery";
-                              }
-                              const cleanTypes = newTypes.filter((type, idx, arr) => 
-                                type && arr.indexOf(type) === idx
-                              );
-                              form.setValue('allowTypes', cleanTypes);
-                              form.trigger('allowTypes');
-                            }}
+                            onValueChange={(value) => handleAllowTypesChange(value, index)}
                             value={currentValue || "NULL"}
                             disabled={isReadOnly}
                           >
@@ -182,14 +196,11 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                     CHOOSE BRANCH
                   </Form.Label>
                   <Form.Control>
-                    <SelectBranch
-                      value={field.value || ""}
-                      onValueChange={(branchId) => {
-                        if (!isReadOnly) {
-                          handleBranchChange(branchId);
-                        }
-                      }}
+                    <SelectBranches.FormItem
+                      value={branchId}
+                      onValueChange={handleBranchChange}
                       className="w-full h-10"
+                      mode="single"
                     />
                   </Form.Control>
                   <Form.Message />
@@ -206,15 +217,11 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                     CHOOSE DEPARTMENT
                   </Form.Label>
                   <Form.Control>
-                    <SelectDepartment
-                      value={field.value || ""}
-                      onValueChange={(departmentId) => {
-                        if (!isReadOnly) {
-                          handleDepartmentChange(departmentId);
-                        }
-                      }}
-                      className="w-full h-10 px-3 text-left justify-between"
-                      disabled={isReadOnly}
+                    <SelectDepartments.FormItem
+                      value={departmentId}
+                      onValueChange={handleDepartmentChange}
+                      className="w-full h-10"
+                      mode="single"
                     />
                   </Form.Control>
                   <Form.Message />

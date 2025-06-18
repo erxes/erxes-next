@@ -14,27 +14,7 @@ import EbarimtConfigForm from '../components/config/ebarimt-config';
 import FinanceConfigForm from '../components/finance/finance';
 import DeliveryConfigForm from '../components/delivery/delivery';
 import SyncCardForm from '../components/sync/sync';
-import { UseFormReturn } from 'react-hook-form';
-import { BasicInfoFormValues, PermissionFormValues, ProductFormValues, PaymentFormValues } from '../components/formSchema';
-import { TabConfig } from '../types/pos';
-
-interface GetPosCreateTabsProps {
-  posCategory: 'ecommerce' | 'restaurant';
-  forms: {
-    basicInfo: UseFormReturn<BasicInfoFormValues>;
-    permission: UseFormReturn<PermissionFormValues>;
-    product: UseFormReturn<ProductFormValues>;
-    payment: UseFormReturn<PaymentFormValues>;
-  };
-  handlers: {
-    handleNodesUpdate: (nodes: CustomNode[]) => void;
-  };
-  data: {
-    createdPosId: string | null;
-    slotNodes: CustomNode[];
-  };
-}
-
+import { GetPosCreateTabsProps, TabConfig } from '../types/pos';
 const getCategoryComponent = (
   posCategory: string,
   ecommerceComponent: JSX.Element,
