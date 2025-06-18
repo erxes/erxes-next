@@ -28,6 +28,7 @@ const trDetailWrapper = (detail?: ITrDetail) => {
     accountId: detail?.accountId ?? '',
     side: (detail?.side || TR_SIDES.DEBIT),
     amount: detail?.amount ?? 0,
+    checked: false
   }
 }
 
