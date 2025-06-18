@@ -78,6 +78,7 @@ const queries = {
     //   isRPC: true,
     // });
 
+    // TODO: implement after tasks microservice is ready
     return [];
   },
 
@@ -110,6 +111,7 @@ const queries = {
     //   isRPC: true,
     // });
 
+    // TODO: implement after tasks microservice is ready
     return [];
   },
 
@@ -146,6 +148,9 @@ const queries = {
     //   },
     //   isRPC: true,
     // });
+
+    // TODO: implement after tickets microservice is ready
+    return null;
   },
 
   /**
