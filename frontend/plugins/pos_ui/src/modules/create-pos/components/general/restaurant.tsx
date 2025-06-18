@@ -10,7 +10,7 @@ import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
 import { ALLOW_TYPES } from '~/modules/constants';
 import { IPosDetail } from '~/modules/pos-detail/types/IPos';
-import { SelectBranch, SelectDepartment, SelectBrand } from 'ui-modules';
+import { SelectBranches, SelectBrand, SelectDepartments } from 'ui-modules';
 
 interface RestaurantFormProps {
   form: UseFormReturn<BasicInfoFormValues>;
@@ -39,14 +39,18 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     form.setValue('scopeBrandIds', brandId ? [brandId] : []);
   };
 
-  const handleBranchChange = (branchId: string) => {
+  const handleBranchChange = (branchId: string | string[] | undefined) => {
     if (isReadOnly) return;
-    form.setValue('branchId', branchId);
+    const singleBranchId = Array.isArray(branchId) ? branchId[0] : branchId;
+    form.setValue('branchId', singleBranchId || '');
+    form.trigger('branchId');
   };
 
-  const handleDepartmentChange = (departmentId: string) => {
+  const handleDepartmentChange = (departmentId: string | string[] | undefined) => {
     if (isReadOnly) return;
-    form.setValue('departmentId', departmentId);
+    const singleDepartmentId = Array.isArray(departmentId) ? departmentId[0] : departmentId;
+    form.setValue('departmentId', singleDepartmentId || '');
+    form.trigger('departmentId');
   };
 
   const selectedBrandId = form.watch('scopeBrandIds')?.[0] || '';
@@ -219,14 +223,11 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     CHOOSE BRANCH
                   </Form.Label>
                   <Form.Control>
-                    <SelectBranch
-                      value={field.value || ''}
-                      onValueChange={(branchId) => {
-                        if (!isReadOnly) {
-                          handleBranchChange(branchId);
-                        }
-                      }}
+                    <SelectBranches.FormItem
+                      value={field.value}
+                      onValueChange={handleBranchChange}
                       className="w-full h-10"
+                      mode="single"
                     />
                   </Form.Control>
                   <Form.Message />
@@ -243,15 +244,11 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                     CHOOSE DEPARTMENT
                   </Form.Label>
                   <Form.Control>
-                    <SelectDepartment
-                      value={field.value || ''}
-                      onValueChange={(departmentId) => {
-                        if (!isReadOnly) {
-                          handleDepartmentChange(departmentId);
-                        }
-                      }}
-                      className="w-full h-10 px-3 text-left justify-between"
-                      disabled={isReadOnly}
+                    <SelectDepartments.FormItem
+                      value={field.value}
+                      onValueChange={handleDepartmentChange}
+                      className="w-full h-10"
+                      mode="single"
                     />
                   </Form.Control>
                   <Form.Message />
