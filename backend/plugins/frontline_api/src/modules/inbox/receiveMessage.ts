@@ -18,7 +18,7 @@ const sendSuccess = (data): RPSuccess => ({
 /*
  * Handle requests from integrations api
  */
-export const receiveTrpcMessage = async (
+export const receiveInboxMessage = async (
   subdomain,
   data,
 ): Promise<RPResult> => {
@@ -147,10 +147,6 @@ export const receiveTrpcMessage = async (
         };
 
         await Conversations.createConversation(formattedDoc);
-
-        graphqlPubsub.publish('conversationClientMessageInserted', {
-          conversationClientMessageInserted: doc,
-        });
       }
 
       return sendSuccess({ _id: conversationId });
