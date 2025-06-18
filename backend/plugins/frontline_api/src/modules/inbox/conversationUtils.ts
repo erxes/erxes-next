@@ -6,7 +6,6 @@ import { IModels } from '~/connectionResolvers';
 import { getIntegrationsKinds } from '@/inbox/utils';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
-// erxes-next/backend/erxes-api-shared/src/utils/utils.ts
 export interface ICountBy {
   [index: string]: number;
 }
@@ -36,11 +35,7 @@ const countByChannels = async (
 };
 
 // Count conversation by brand
-const countByBrands = async (
-  subdomain: string,
-  qb: any,
-  counts: ICountBy,
-): Promise<ICountBy> => {
+const countByBrands = async (qb: any, counts: ICountBy): Promise<ICountBy> => {
   const brands = await sendTRPCMessage({
     pluginName: 'core',
     method: 'query', // this is a mutation, not a query
@@ -64,11 +59,7 @@ const countByBrands = async (
 };
 
 // Count converstaion by tag
-const countByTags = async (
-  subdomain: string,
-  qb: any,
-  counts: ICountBy,
-): Promise<ICountBy> => {
+const countByTags = async (qb: any, counts: ICountBy): Promise<ICountBy> => {
   const tags = await sendTRPCMessage({
     pluginName: 'core',
     method: 'query', // this is a mutation, not a query
@@ -129,11 +120,11 @@ export const countByConversations = async (
       break;
 
     case 'byBrands':
-      await countByBrands(subdomain, qb, counts);
+      await countByBrands(qb, counts);
       break;
 
     case 'byTags':
-      await countByTags(subdomain, qb, counts);
+      await countByTags(qb, counts);
       break;
   }
 

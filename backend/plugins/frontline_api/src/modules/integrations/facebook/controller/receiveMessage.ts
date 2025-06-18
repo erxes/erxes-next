@@ -2,7 +2,7 @@ import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import { INTEGRATION_KINDS } from '@/integrations/facebook/constants';
 import { getOrCreateCustomer } from '@/integrations/facebook/controller/store';
-import { receiveTrpcMessage } from '@/inbox/receiveMessage';
+import { receiveInboxMessage } from '@/inbox/receiveMessage';
 import { debugFacebook } from '@/integrations/facebook/debuggers';
 import { Activity } from '@/integrations/facebook/@types/utils';
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget';
@@ -81,7 +81,10 @@ export const receiveMessage = async (
         }),
       };
 
-      const apiConversationResponse = await receiveTrpcMessage(subdomain, data);
+      const apiConversationResponse = await receiveInboxMessage(
+        subdomain,
+        data,
+      );
 
       if (apiConversationResponse.status === 'success') {
         conversation.erxesApiId = apiConversationResponse.data._id;
