@@ -7,7 +7,7 @@ import { useConversationDetail } from '../hooks/useConversationDetail';
 
 import { activeConversationState } from '@/inbox/conversations/states/activeConversationState';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
-import { ConversationIntegrationDetail } from './ConversationIntegrationDetail';
+import { ConversationIntegrationDetail } from '@/integrations/components/ConversationIntegrationDetail';
 import { MessageInput } from './MessageInput';
 
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
@@ -29,6 +29,7 @@ export const ConversationDetail = () => {
       _id: conversationId,
     },
     skip: !conversationId,
+    fetchPolicy: 'cache-and-network',
   });
 
   const { integrationId } = currentConversation || conversationDetail || {};

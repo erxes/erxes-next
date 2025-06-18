@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import {
   closeMongooose,
+  isDev,
   joinErxesGateway,
   leaveErxesGateway,
   redis,
@@ -10,8 +11,7 @@ import express from 'express';
 import * as http from 'http';
 import { initMQWorkers } from './bullmq';
 
-const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT, AWS_REGION } =
-  process.env;
+const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT } = process.env;
 
 const port = PORT ? Number(PORT) : 3302;
 
@@ -31,7 +31,8 @@ app.use(cookieParser());
 const corsOptions = {
   credentials: true,
   origin: [
-    DOMAIN ? DOMAIN : 'http://localhost:3001',
+    ...(DOMAIN ? [DOMAIN] : []),
+    ...(isDev ? ['http://localhost:3001'] : []),
     ALLOWED_DOMAINS ? ALLOWED_DOMAINS : 'http://localhost:3200',
     ...(CLIENT_PORTAL_DOMAINS || '').split(','),
     ...(process.env.ALLOWED_ORIGINS || '')

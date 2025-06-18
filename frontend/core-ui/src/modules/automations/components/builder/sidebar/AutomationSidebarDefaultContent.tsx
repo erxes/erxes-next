@@ -1,6 +1,6 @@
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
-import { TablerIcon, Card, Input, Skeleton, Tabs } from 'erxes-ui';
+import { Card, Input, Skeleton, Tabs } from 'erxes-ui';
 import React, { useState } from 'react';
 import { useSidebarDefaultContent } from './hooks/useSidebarDefaultContent';
 import { IconSearch } from '@tabler/icons-react';
@@ -29,11 +29,11 @@ const TabsContent = (
       <Card.Header className="p-3">
         <Card.Title className="text-sm font-medium flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div
+            {/* <div
               className={`h-5 w-5 rounded-full flex items-center justify-center`}
             >
               <TablerIcon name={`Icon${item?.icon}` as any} />
-            </div>
+            </div> */}
             <span>{item?.label}</span>
           </div>
         </Card.Title>

@@ -1,4 +1,4 @@
-import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
+import { QueryHookOptions, useQuery } from '@apollo/client';
 import { queries } from '@/settings/team-member/graphql';
 import {
   EnumCursorDirection,
@@ -9,6 +9,7 @@ import {
   validateFetchMore,
 } from 'erxes-ui';
 import { IUser, IUsersDetails } from '../types';
+import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../constants/teamMemberCursorSessionKey';
 
 export const USERS_PER_PAGE = 30;
 
@@ -18,7 +19,7 @@ type IUsersQuery = ICursorListResponse<
 
 const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
   const { cursor } = useRecordTableCursor({
-    sessionKey: 'users_cursor',
+    sessionKey: TEAM_MEMBER_CURSOR_SESSION_KEY,
   });
   const [{ branchIds, departmentIds, unitId, searchValue, isActive }] =
     useMultiQueryState([
@@ -89,12 +90,10 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
 
   return {
     loading,
-    users: users?.map(
-      ({ details: { __typename, ...detailData }, ...user }) => ({
-        ...user,
-        details: detailData,
-      }),
-    ),
+    users: users?.map(({ details: { ...detailData }, ...user }) => ({
+      ...user,
+      details: detailData,
+    })),
     error,
     totalCount,
     handleFetchMore,

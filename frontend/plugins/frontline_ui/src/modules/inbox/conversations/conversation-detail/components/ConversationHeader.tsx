@@ -1,17 +1,33 @@
-import { ScrollArea, Separator, Skeleton, toast } from 'erxes-ui';
+import { Button, ScrollArea, Separator, Skeleton, toast } from 'erxes-ui';
 import { CustomerInline, SelectMember, SelectTags } from 'ui-modules';
-
 import { useConversationContext } from '@/inbox/conversations/hooks/useConversationContext';
 import { useAssignConversations } from '@/inbox/conversations/hooks/useAssignConversations';
 import { ConversationActions } from './ConversationActions';
+import { useQueryState } from 'erxes-ui';
+import { IconArrowLeft } from '@tabler/icons-react';
+import { useAtomValue } from 'jotai';
+import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
+import { IntegrationActions } from '@/integrations/components/IntegrationActions';
 
 export const ConversationHeader = () => {
   const { customer, customerId, loading } = useConversationContext();
+  const [, setConversationId] = useQueryState<string>('conversationId');
+  const view = useAtomValue(inboxLayoutState);
+
   return (
     <div className="flex gap-6 items-center h-12 flex-none pr-6">
       <ScrollArea className="flex-auto">
         <div className="h-12 flex items-center px-5 text-xs font-medium text-muted-foreground flex-none gap-3 whitespace-nowrap">
-          Customer:
+          {view === 'list' && (
+            <Button
+              variant="secondary"
+              size="icon"
+              className="[&>svg]:size-4 text-foreground"
+              onClick={() => setConversationId(null)}
+            >
+              <IconArrowLeft />
+            </Button>
+          )}
           {!loading ? (
             <CustomerInline
               customerId={customerId}
@@ -29,6 +45,7 @@ export const ConversationHeader = () => {
         </div>
         <ScrollArea.Bar orientation="horizontal" />
       </ScrollArea>
+      <IntegrationActions />
       <ConversationActions />
     </div>
   );

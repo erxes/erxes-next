@@ -1,5 +1,5 @@
 import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
-import { defaultPaginate, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
 
 export const pipelineQueries = {
@@ -10,15 +10,10 @@ export const pipelineQueries = {
     _root,
     {
       boardId,
-      type,
       isAll,
-      ...queryParams
     }: {
       boardId: string;
-      type: string;
       isAll: boolean;
-      page: number;
-      perPage: number;
     },
     { user, models }: IContext,
   ) {
@@ -67,21 +62,8 @@ export const pipelineQueries = {
       }
     }
 
-    const { page, perPage } = queryParams;
-
     if (boardId) {
       query.boardId = boardId;
-    }
-
-    if (type) {
-      query.type = type;
-    }
-
-    if (page && perPage) {
-      return defaultPaginate(
-        models.Pipelines.find(query).sort({ createdAt: 1 }),
-        queryParams,
-      );
     }
 
     return models.Pipelines.find(query)
@@ -91,17 +73,13 @@ export const pipelineQueries = {
 
   async salesPipelineStateCount(
     _root,
-    { boardId, type }: { boardId: string; type: string },
+    { boardId }: { boardId: string },
     { models }: IContext,
   ) {
     const query: any = {};
 
     if (boardId) {
       query.boardId = boardId;
-    }
-
-    if (type) {
-      query.type = type;
     }
 
     const counts: any = {};

@@ -12,9 +12,7 @@ export const TeamMemberFilterBar = () => {
     isActive: boolean;
   }>(['branchIds', 'departmentIds', 'unitId', 'isActive']);
 
-  const isFiltered = Object.values(queries).some((query) => !!query);
-
-  const { branchIds, departmentIds, unitId, isActive } = queries;
+  const { branchIds, departmentIds, unitId } = queries;
 
   return (
     <PageSubHeader>
