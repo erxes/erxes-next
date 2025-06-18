@@ -1,5 +1,5 @@
 import { generateModels, IModels } from '~/connectionResolvers';
-import { getSubdomain } from 'erxes-api-shared/utils';
+import { getSubdomain, isDev } from 'erxes-api-shared/utils';
 import { debugFacebook, debugError } from '@/integrations/facebook/debuggers';
 import { checkIsAdsOpenThread } from '@/integrations/facebook/utils';
 import { NextFunction, Response } from 'express';
@@ -72,7 +72,10 @@ export const facebookSubscription = async (req, res) => {
   }
 };
 export const facebookWebhook = async (req, res, next) => {
-  const subdomain = getSubdomain(req);
+  const subdomain = isDev ? 'localhost' : getSubdomain(req);
+
+  debugFacebook(`Received webhook request for subdomain: ${subdomain}`);
+
   const models = await generateModels(subdomain);
   const data = req.body;
   if (data.object !== 'page' && !checkIsAdsOpenThread(data?.entry)) {
