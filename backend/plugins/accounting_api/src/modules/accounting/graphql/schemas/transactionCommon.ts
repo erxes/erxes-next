@@ -4,6 +4,7 @@ const trDetailFields = `
   transactionId: String
   originId: String
   followType: String
+  originSubId: String
   followInfos: JSON
 
   side: String
@@ -75,6 +76,7 @@ export const types = () => `
     updatedAt: Date
 
     originId: String
+    originSubId: String
     follows: [FollowTrType]
 
     details: [AccTrDetail]
@@ -110,6 +112,7 @@ export const types = () => `
     updatedAt: Date
 
     originId: String
+    originSubId: String
     follows: [FollowTrType]
 
     details: AccTrDetail

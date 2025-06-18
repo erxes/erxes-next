@@ -51,24 +51,27 @@ export const ExpenseRow = ({
   const [followTrDocs, setFollowTrDocs] = useAtom(followTrDocsState);
 
   useEffect(() => {
-    console.log(expense.accountId, 'kkkkkkkkkkkkkkkk', account)
     if (!expense.accountId) {
-      setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'incomeExpense')));
+      setFollowTrDocs((followTrDocs || []).filter(ftr => !(ftr.originId === trDoc._id && ftr.followType === 'invIncomeExpense' && expense._id === ftr.originSubId)));
       return;
     }
 
     const { sumDt, sumCt } = { sumDt: expense.amount, sumCt: 0 };
 
-    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'incomeExpense');
+    const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'invIncomeExpense' && ftr.originSubId === expense._id);
 
-    const vatFtr = {
+    const expenseTr = [{
       ...curr,
       _id: curr?._id || getTempId(),
       journal: getSingleJournalByAccount(account?.journal, account?.kind),
       originId: trDoc._id,
-      followType: 'vat',
+      ptrId: trDoc.ptrId,
+      parentId: trDoc.parentId,
+      followType: 'invIncomeExpenses',
+      originSubId: expense._id,
       details: [{
         ...(curr?.details || [{}])[0],
+        account,
         accountId: expense.accountId,
         side: TR_SIDES.CREDIT,
         amount: expense.amount ?? 0
@@ -76,12 +79,12 @@ export const ExpenseRow = ({
 
       sumDt,
       sumCt,
-    };
+    }];
     setFollowTrDocs([
       ...(followTrDocs || []).filter(
-        ftr => !(ftr.originId === trDoc._id && ftr.followType === 'vat')
+        ftr => !(ftr.originId === trDoc._id && ftr.followType === 'invIncomeExpense' && ftr.originSubId === expense._id)
       ),
-      vatFtr
+      ...expenseTr
     ]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

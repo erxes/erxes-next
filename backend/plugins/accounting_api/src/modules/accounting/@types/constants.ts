@@ -102,3 +102,15 @@ export const JOURNALS = {
     'invSaleOut'
   ],
 }
+
+export const TR_FOLLOW_TYPES = {
+  VAT: 'vat',
+  CTAX: 'ctax',
+  CURRENCY_DIFF: 'currencyDiff',
+  INV_INCOME_EXPENSE: 'invIncomeExpense',
+  ALL: ['vat', 'ctax', 'currencyDiff', 'invIncomeExpense',]
+}
+
+export const TR_DETAIL_FOLLOW_TYPES = {
+  ALL: []
+}
