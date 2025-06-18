@@ -12,8 +12,8 @@ interface SyncCardFormProps {
   isReadOnly?: boolean;
 }
 
-export default function SyncCardForm({ 
-  isReadOnly = false 
+export default function SyncCardForm({
+  isReadOnly = false,
 }: SyncCardFormProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom);
@@ -166,8 +166,10 @@ export default function SyncCardForm({
                 <Label className="text-sm text-gray-500">
                   CHOOSE ASSIGNED USERS
                 </Label>
-                <SelectMember.Detail
-                  value={syncCardSettings.currentConfig.assignedUsers || undefined}
+                <SelectMember
+                  value={
+                    syncCardSettings.currentConfig.assignedUsers || undefined
+                  }
                   onValueChange={handleUserChange}
                   className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
                 />

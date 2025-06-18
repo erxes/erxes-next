@@ -56,16 +56,9 @@ export const FbMessengerMessage = () => {
 };
 
 export const MessageWrapper = ({ children }: { children: React.ReactNode }) => {
-  const {
-    previousMessage,
-    nextMessage,
-    separateNext,
-    separatePrevious,
-    customerId,
-    userId,
-  } = useFbMessengerMessageContext();
+  const { separateNext, customerId, userId } = useFbMessengerMessageContext();
 
-  const customer = useAtomValue(activeConversationState) || {};
+  const { customer } = useAtomValue(activeConversationState) || {};
 
   return (
     <div

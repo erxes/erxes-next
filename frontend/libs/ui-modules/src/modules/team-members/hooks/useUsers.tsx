@@ -1,4 +1,9 @@
-import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
+import {
+  EnumCursorDirection,
+  ICursorListResponse,
+  mergeCursorData,
+  validateFetchMore,
+} from 'erxes-ui';
 import { GET_ASSIGNED_MEMBER, GET_USERS } from '../graphql/queries/userQueries';
 import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
 
@@ -22,26 +27,26 @@ export const useUsers = (
   const { list = [], totalCount = 0, pageInfo } = data?.users || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= list.length) return;
+    if (
+      !validateFetchMore({ direction: EnumCursorDirection.FORWARD, pageInfo })
+    )
+      return;
 
     fetchMore({
       variables: {
-        ...options?.variables,
         direction: EnumCursorDirection.FORWARD,
         cursor: pageInfo?.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
 
-        return {
-          ...prev,
-          users: {
-            ...prev.users,
-            list: [...(prev.users.list || []), ...fetchMoreResult.users.list],
-            totalCount: fetchMoreResult.users.totalCount,
-            pageInfo: fetchMoreResult.users.pageInfo,
-          },
-        };
+        return Object.assign({}, prev, {
+          users: mergeCursorData({
+            direction: EnumCursorDirection.FORWARD,
+            fetchMoreResult: fetchMoreResult.users,
+            prevResult: prev.users,
+          }),
+        });
       },
     });
   };
@@ -52,6 +57,7 @@ export const useUsers = (
     handleFetchMore,
     error,
     totalCount,
+    pageInfo,
   };
 };
 

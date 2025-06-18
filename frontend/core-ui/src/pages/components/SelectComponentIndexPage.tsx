@@ -5,11 +5,13 @@ import {
   SelectProducts,
   SelectMember,
   SelectTags,
+  SelectBrand,
 } from 'ui-modules';
 import { PageContainer, Switch, Tooltip } from 'erxes-ui';
 import { useState } from 'react';
 import { IconInfoCircle } from '@tabler/icons-react';
 import React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 
 interface SelectContainerProps {
   children: React.ReactElement<{ mode?: 'single' | 'multiple' }>;
@@ -22,31 +24,24 @@ const SelectContainer = ({
   label,
   description,
 }: SelectContainerProps) => {
-  const [isSingleMode, setIsSingleMode] = useState(true);
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-
-  const child = React.Children.only(children);
-  const childWithMode = React.cloneElement(child, {
-    mode: isSingleMode ? 'single' : 'multiple',
-  });
+  const [isMultipleMode, setIsMultipleMode] = useState(false);
 
   return (
     <div className="rounded-lg shadow-sm p-6 flex flex-col gap-4 md:max-w-[17rem]">
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
           <h3 className="text-lg font-medium text-foreground">{label}</h3>
-          <Tooltip open={isTooltipOpen} onOpenChange={setIsTooltipOpen}>
-            <Tooltip.Trigger>
-              <Switch
-                checked={!isSingleMode}
-                onCheckedChange={(checked) => {
-                  setIsSingleMode(!checked);
-                  setIsTooltipOpen(true);
-                }}
-              />
+          <Tooltip>
+            <Tooltip.Trigger asChild>
+              <div>
+                <Switch
+                  checked={isMultipleMode}
+                  onCheckedChange={setIsMultipleMode}
+                />
+              </div>
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <p>{isSingleMode ? 'single' : 'multiple'} mode</p>
+              <p>{isMultipleMode ? 'multiple' : 'single'} mode</p>
             </Tooltip.Content>
           </Tooltip>
         </div>
@@ -54,7 +49,11 @@ const SelectContainer = ({
           <p className="text-sm text-muted-foreground">{description}</p>
         )}
       </div>
-      <div className="w-full">{childWithMode}</div>
+      <div className="w-full">
+        <Slot {...{ mode: isMultipleMode ? 'multiple' : 'single' }}>
+          {children}
+        </Slot>
+      </div>
     </div>
   );
 };
@@ -64,7 +63,7 @@ const SelectContainerGroup = ({
   label,
   description,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   label: string;
   description?: string;
 }) => {
@@ -94,7 +93,7 @@ export const SelectComponentIndexPage = () => {
   const [customerTagId, setCustomerTagId] = useState<string | string[]>('');
   const [productTagId, setProductTagId] = useState<string | string[]>('');
   const [companyTagId, setCompanyTagId] = useState<string | string[]>('');
-  const [branchId, setBranchId] = useState<string | string[]>('');
+  const [brandId, setBrandId] = useState<string | string[]>('');
   return (
     <PageContainer className="overflow-y-auto">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -116,7 +115,22 @@ export const SelectComponentIndexPage = () => {
               </Tooltip>
             </span>
           </div>
-
+          <SelectContainerGroup
+            label="Brands"
+            description="Select component for different brand types"
+          >
+            <SelectContainer
+              label="Select brands"
+              description="Choose from available brands"
+            >
+              <SelectBrand
+                value={brandId}
+                onValueChange={(value) => {
+                  setBrandId(value);
+                }}
+              />
+            </SelectContainer>
+          </SelectContainerGroup>
           <SelectContainerGroup
             label="Tags"
             description="Select component for different tag types"
@@ -212,6 +226,12 @@ export const SelectComponentIndexPage = () => {
             label="Content"
             description="Components for managing content and products"
           >
+            <SelectContainer
+              label="Product Select"
+              description="Browse and select products"
+            >
+              <SelectProducts value={productId} onValueChange={setProductId} />
+            </SelectContainer>
             <SelectContainer
               label="Product Select"
               description="Browse and select products"

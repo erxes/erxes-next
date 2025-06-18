@@ -6,7 +6,7 @@ import {
 } from '../hooks/useStructureDetails';
 import { useStructureDetailsForm } from '../hooks/useStructureDetailsForm';
 import { useEffect } from 'react';
-import { AssignMember } from 'ui-modules';
+import { SelectMember } from 'ui-modules';
 
 export const Structure = () => {
   const { structureDetail } = useStructureDetails();
@@ -96,9 +96,11 @@ export const Structure = () => {
                 render={({ field }) => (
                   <Form.Item>
                     <Form.Label>{'supervisor'}</Form.Label>
-                    <Form.Control>
-                      <AssignMember {...field} onValueChange={field.onChange} />
-                    </Form.Control>
+                    <SelectMember.FormItem
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      placeholder="Select supervisor"
+                    />
                     <Form.Message />
                   </Form.Item>
                 )}

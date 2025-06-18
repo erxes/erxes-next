@@ -20,7 +20,11 @@ import {
 } from '../states/selectConversationsState';
 import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 
-export const ConversationItem = () => {
+export const ConversationItem = ({
+  onConversationSelect,
+}: {
+  onConversationSelect: () => void;
+}) => {
   const inboxLayout = useAtomValue(inboxLayoutState);
 
   const { createdAt, updatedAt, customer, integrationId } =
@@ -35,7 +39,10 @@ export const ConversationItem = () => {
 
   if (inboxLayout === 'split') {
     return (
-      <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer">
+      <ConversationContainer
+        className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer"
+        onConversationSelect={onConversationSelect}
+      >
         <CustomerInline.Provider customer={customer}>
           <div className="flex w-full gap-3 leading-tight">
             <ConversationSelector />
@@ -59,7 +66,7 @@ export const ConversationItem = () => {
   }
 
   return (
-    <ConversationContainer>
+    <ConversationContainer onConversationSelect={onConversationSelect}>
       <CustomerInline.Provider customer={customer}>
         <ConversationSelector />
         <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
@@ -89,9 +96,11 @@ export const ConversationItemContent = () => {
 const ConversationContainer = ({
   children,
   className,
+  onConversationSelect,
 }: {
   children: React.ReactNode;
   className?: string;
+  onConversationSelect?: () => void;
 }) => {
   const [{ conversationId }, setValues] = useMultiQueryState<{
     conversationId: string;
@@ -120,6 +129,7 @@ const ConversationContainer = ({
         setValues({
           conversationId: _id,
         });
+        onConversationSelect?.();
       }}
     >
       <div>{children}</div>

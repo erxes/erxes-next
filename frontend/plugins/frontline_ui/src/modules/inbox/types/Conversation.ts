@@ -30,6 +30,7 @@ export interface IMessage {
 }
 
 export enum ConversationStatus {
+  NEW = '',
   OPEN = 'open',
   CLOSED = 'closed',
 }

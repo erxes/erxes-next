@@ -1,28 +1,112 @@
-import { ButtonProps, Combobox, Command, Popover } from 'erxes-ui';
+import {
+  cn,
+  Combobox,
+  Command,
+  Filter,
+  Form,
+  Popover,
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+  useFilterContext,
+  useQueryState,
+} from 'erxes-ui';
 import { useBrands } from '../hooks/useBrands';
 import { IBrand } from '../types/brand';
 import { useDebounce } from 'use-debounce';
-import React from 'react';
-import { cn } from 'erxes-ui';
+import React, { useState } from 'react';
+import {
+  SelectBrandContext,
+  useSelectBrandContext,
+} from '../contexts/SelectBrandContext';
+import { BrandsInline } from '../components/BrandsInline';
+import { IconLabel } from '@tabler/icons-react';
 
-interface SelectBrandProps extends Omit<ButtonProps, 'onChange'> {
-  value: string;
-  onValueChange: (value: string) => void;
-}
+export const SelectBrandProvider = ({
+  children,
+  mode = 'single',
+  value,
+  onValueChange,
+  brands,
+}: {
+  children: React.ReactNode;
+  mode?: 'single' | 'multiple';
+  value?: string[] | string;
+  onValueChange: (value: string[] | string) => void;
+  brands?: IBrand[];
+}) => {
+  const [_brands, setBrands] = useState<IBrand[]>(brands || []);
+  const isSingleMode = mode === 'single';
 
-interface SelectBrandTriggerProps extends ButtonProps {
-  currentValue: string;
-  currentName: string;
-}
+  const onSelect = (brand: IBrand) => {
+    if (!brand) return;
+    if (isSingleMode) {
+      setBrands([brand]);
+      return onValueChange?.(brand._id);
+    }
 
-export const SelectBrand = React.forwardRef<
-  HTMLButtonElement,
-  SelectBrandProps
->(({ value, onValueChange, ...props }, ref) => {
-  console.log('value', value);
-  const [open, setOpen] = React.useState(false);
+    const arrayValue = Array.isArray(value) ? value : [];
+
+    const isBrandSelected = arrayValue.includes(brand._id);
+    const newSelectedBrandIds = isBrandSelected
+      ? arrayValue.filter((id) => id !== brand._id)
+      : [...arrayValue, brand._id];
+
+    setBrands(
+      [..._brands, brand].filter((b) => newSelectedBrandIds.includes(b._id)),
+    );
+    onValueChange?.(newSelectedBrandIds);
+  };
+
+  return (
+    <SelectBrandContext.Provider
+      value={{
+        brands: _brands,
+        brandIds: !value ? [] : Array.isArray(value) ? value : [value],
+        onSelect,
+        setBrands,
+        loading: false,
+        error: null,
+      }}
+    >
+      {children}
+    </SelectBrandContext.Provider>
+  );
+};
+
+const SelectBrandValue = ({ placeholder }: { placeholder?: string }) => {
+  const { brandIds, brands, setBrands } = useSelectBrandContext();
+
+  return (
+    <BrandsInline
+      brandIds={brandIds}
+      brands={brands}
+      updateBrands={setBrands}
+      placeholder={placeholder}
+    />
+  );
+};
+
+const SelectBrandCommandItem = ({ brand }: { brand: IBrand }) => {
+  const { onSelect, brandIds } = useSelectBrandContext();
+
+  return (
+    <Command.Item
+      value={brand._id}
+      onSelect={() => {
+        onSelect(brand);
+      }}
+    >
+      <BrandsInline brands={[brand]} placeholder="Unnamed user" />
+      <Combobox.Check checked={brandIds.includes(brand._id)} />
+    </Command.Item>
+  );
+};
+
+const SelectBrandContent = () => {
   const [search, setSearch] = React.useState('');
   const [debouncedSearch] = useDebounce(search, 500);
+  const { brands: selectedBrands } = useSelectBrandContext();
 
   const {
     brands = [],
@@ -35,143 +119,242 @@ export const SelectBrand = React.forwardRef<
     },
   });
 
-  const currentValue = brands?.find((brand) => brand._id === value)?._id;
-
-  const handleSelectBrand = (brandId: string) => {
-    onValueChange(brandId === currentValue ? '' : brandId);
-    setOpen(false);
-  };
-
   return (
-    <Popover open={open} onOpenChange={setOpen} modal>
-      <SelectBrandTrigger
-        currentValue={currentValue || ''}
-        currentName={
-          brands.find((brand) => brand._id === currentValue)?.name || ''
-        }
-        ref={ref}
-        {...props}
+    <Command shouldFilter={false} id="brand-command-menu">
+      <Command.Input
+        value={search}
+        onValueChange={setSearch}
+        variant="secondary"
+        wrapperClassName="flex-auto"
+        placeholder="Search brand..."
+        className="h-9"
       />
-      <Combobox.Content>
-        <Command shouldFilter={false} id="brand-command-menu">
-          <Command.Input
-            value={search}
-            onValueChange={setSearch}
-            variant="secondary"
-            wrapperClassName="flex-auto"
-            placeholder="Search brand..."
-            className="h-9"
-          />
-          <Command.List>
-            <Combobox.Empty loading={loading} />
-            {brands?.map((brand) => (
-              <SelectBrandItem
-                key={brand._id}
-                brand={brand}
-                currentValue={currentValue || ''}
-                handleSelectBrand={handleSelectBrand}
-              />
+      <Command.List>
+        <Combobox.Empty loading={loading} />
+        {selectedBrands.length > 0 && (
+          <>
+            {selectedBrands?.map((brand) => (
+              <SelectBrandCommandItem key={brand._id} brand={brand} />
             ))}
-            <Combobox.FetchMore
-              fetchMore={() => handleFetchMore({})}
-              totalCount={totalCount}
-              currentLength={brands.length}
-            />
-          </Command.List>
-        </Command>
-      </Combobox.Content>
-    </Popover>
-  );
-});
-
-SelectBrand.displayName = 'SelectBrand';
-
-// const SelectBrandCommand = () => {
-//   const [search, setSearch] = React.useState('');
-//   const [debouncedSearch] = useDebounce(search, 500);
-//   const {
-//     brands = [],
-//     loading,
-//     handleFetchMore,
-//     totalCount = 0,
-//   } = useBrands({
-//     variables: {
-//       searchValue: debouncedSearch,
-//     },
-//   });
-
-//   return (
-//     <Command shouldFilter={false} id="brand-command-menu">
-//       <Command.Input
-//         value={search}
-//         onValueChange={setSearch}
-//         variant="secondary"
-//         wrapperClassName="flex-auto"
-//         placeholder="Search brand..."
-//         className="h-9"
-//       />
-//       <Command.List>
-//         <Combobox.Empty loading={loading} />
-//         {brands?.map((brand) => (
-//           <SelectBrandItem
-//             key={brand._id}
-//             brand={brand}
-//             currentValue={currentValue || ''}
-//             handleSelectBrand={handleSelectBrand}
-//           />
-//         ))}
-//         <Combobox.FetchMore
-//           fetchMore={handleFetchMore}
-//           totalCount={totalCount}
-//           currentLength={brands.length}
-//         />
-//       </Command.List>
-//     </Command>
-//   );
-// };
-
-const SelectBrandTrigger = React.forwardRef<
-  HTMLButtonElement,
-  SelectBrandTriggerProps
->(({ currentName, className, ...props }, ref) => {
-  return (
-    <Combobox.Trigger
-      className={cn('w-full flex', className)}
-      ref={ref}
-      {...props}
-    >
-      <Combobox.Value
-        value={currentName}
-        placeholder="Select brand"
-        className="truncate"
-      />
-    </Combobox.Trigger>
-  );
-});
-
-SelectBrandTrigger.displayName = 'SelectBrandTrigger';
-
-interface SelectBrandItemProps {
-  brand: IBrand;
-  handleSelectBrand: (brandId: string) => void;
-  currentValue: string;
-}
-
-const SelectBrandItem: React.FC<SelectBrandItemProps> = ({
-  brand,
-  handleSelectBrand,
-  currentValue,
-}) => {
-  return (
-    <Command.Item
-      key={brand._id}
-      className="h-7"
-      value={brand._id}
-      onSelect={() => handleSelectBrand(brand._id)}
-      title={brand.name}
-    >
-      <span className="text-xs text-foreground truncate">{brand.name}</span>
-      <Combobox.Check checked={currentValue === brand._id} />
-    </Command.Item>
+            <Command.Separator className="my-1" />
+          </>
+        )}
+        {brands
+          .filter((brand) => !selectedBrands.some((b) => b._id === brand._id))
+          .map((brand) => (
+            <SelectBrandCommandItem key={brand._id} brand={brand} />
+          ))}
+        <Combobox.FetchMore
+          fetchMore={handleFetchMore}
+          totalCount={totalCount}
+          currentLength={brands.length}
+        />
+      </Command.List>
+    </Command>
   );
 };
+
+export const SelectBrandFilterItem = () => {
+  return (
+    <Filter.Item value="brand">
+      <IconLabel />
+      Brand
+    </Filter.Item>
+  );
+};
+
+export const SelectBrandFilterView = ({
+  onValueChange,
+  queryKey,
+  mode = 'single',
+}: {
+  onValueChange?: (value: string[] | string) => void;
+  queryKey?: string;
+  mode?: 'single' | 'multiple';
+}) => {
+  const [brand, setBrand] = useQueryState<string[] | string>(
+    queryKey || 'brand',
+  );
+  const { resetFilterState } = useFilterContext();
+
+  return (
+    <Filter.View filterKey={queryKey || 'brand'}>
+      <SelectBrandProvider
+        mode={mode}
+        value={brand || (mode === 'single' ? '' : [])}
+        onValueChange={(value) => {
+          setBrand(value as string[] | string);
+          resetFilterState();
+          onValueChange?.(value);
+        }}
+      >
+        <SelectBrandContent />
+      </SelectBrandProvider>
+    </Filter.View>
+  );
+};
+
+export const SelectBrandFilterBar = ({
+  iconOnly,
+  onValueChange,
+  queryKey,
+  mode = 'single',
+}: {
+  iconOnly?: boolean;
+  onValueChange?: (value: string[] | string) => void;
+  queryKey?: string;
+  mode?: 'single' | 'multiple';
+}) => {
+  const [brand, setBrand] = useQueryState<string[] | string>(
+    queryKey || 'brand',
+  );
+  const [open, setOpen] = useState(false);
+
+  if (!brand) {
+    return null;
+  }
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarName>
+        <IconLabel />
+        {!iconOnly && 'Brand'}
+      </Filter.BarName>
+      <SelectBrandProvider
+        mode={mode}
+        value={brand || (mode === 'single' ? '' : [])}
+        onValueChange={(value) => {
+          if (value.length > 0) {
+            setBrand(value as string[] | string);
+          } else {
+            setBrand(null);
+          }
+          setOpen(false);
+          onValueChange?.(value);
+        }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Filter.BarButton filterKey={queryKey || 'brand'}>
+              <SelectBrandValue />
+            </Filter.BarButton>
+          </Popover.Trigger>
+          <Combobox.Content>
+            <SelectBrandContent />
+          </Combobox.Content>
+        </Popover>
+      </SelectBrandProvider>
+      <Filter.BarClose filterKey={queryKey || 'brand'} />
+    </Filter.BarItem>
+  );
+};
+
+export const SelectBrandInlineCell = ({
+  onValueChange,
+  scope,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectBrandProvider>, 'children'> & {
+  scope?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectBrandProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
+        <RecordTableCellTrigger>
+          <SelectBrandValue placeholder={''} />
+        </RecordTableCellTrigger>
+        <RecordTableCellContent>
+          <SelectBrandContent />
+        </RecordTableCellContent>
+      </RecordTablePopover>
+    </SelectBrandProvider>
+  );
+};
+
+export const SelectBrandFormItem = ({
+  onValueChange,
+  className,
+  placeholder,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectBrandProvider>, 'children'> & {
+  className?: string;
+  placeholder?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectBrandProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Form.Control>
+          <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
+            <SelectBrandValue placeholder={placeholder} />
+          </Combobox.Trigger>
+        </Form.Control>
+
+        <Combobox.Content>
+          <SelectBrandContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectBrandProvider>
+  );
+};
+
+SelectBrandFormItem.displayName = 'SelectBrandFormItem';
+
+const SelectBrandRoot = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  Omit<React.ComponentProps<typeof SelectBrandProvider>, 'children'> &
+    React.ComponentProps<typeof Combobox.Trigger> & {
+      placeholder?: string;
+    }
+>(({ onValueChange, className, mode, value, placeholder, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <SelectBrandProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      mode={mode}
+      value={value}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.Trigger
+          ref={ref}
+          className={cn('w-full inline-flex', className)}
+          variant="outline"
+          {...props}
+        >
+          <SelectBrandValue placeholder={placeholder} />
+        </Combobox.Trigger>
+        <Combobox.Content>
+          <SelectBrandContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectBrandProvider>
+  );
+});
+
+SelectBrandRoot.displayName = 'SelectBrandRoot';
+
+export const SelectBrand = Object.assign(SelectBrandRoot, {
+  Provider: SelectBrandProvider,
+  Value: SelectBrandValue,
+  Content: SelectBrandContent,
+  FilterItem: SelectBrandFilterItem,
+  FilterView: SelectBrandFilterView,
+  FilterBar: SelectBrandFilterBar,
+  InlineCell: SelectBrandInlineCell,
+  FormItem: SelectBrandFormItem,
+});
