@@ -1,5 +1,5 @@
 import { getSubdomain } from 'erxes-api-shared/utils';
-import { receiveTrpcMessage } from '@/inbox/receiveMessage';
+import { receiveInboxMessage } from '@/inbox/receiveMessage';
 export let userIds: string[] = [];
 
 export const userMiddleware = async (req, _res, next) => {
@@ -11,7 +11,7 @@ export const userMiddleware = async (req, _res, next) => {
       action: 'getUserIds',
     };
 
-    const response = await receiveTrpcMessage(subdomain, data);
+    const response = await receiveInboxMessage(subdomain, data);
     if (response.status === 'success') {
       userIds = response.data.userIds;
     } else {
