@@ -1,19 +1,19 @@
 import { useChannelsByMembers } from '@/inbox/channel/hooks/useChannels';
 import {
-  Button,
   cn,
   Collapsible,
   Command,
   Input,
-  ScrollArea,
   Skeleton,
   TextOverflowTooltip,
+  useQueryState,
 } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { IChannel } from '@/inbox/types/Channel';
-import { useMultiQueryState } from 'erxes-ui';
 import { IconCheck } from '@tabler/icons-react';
 import { channelCollapsibleState } from '@/inbox/channel/states/channelCollapsibleState';
+import { useSetAtom } from 'jotai';
+import { selectMainFilterState } from '@/inbox/states/inboxLayoutState';
 
 export const ChooseChannel = () => {
   const [open, setOpen] = useAtom(channelCollapsibleState);
@@ -59,30 +59,26 @@ const ChooseChannelContent = ({ open }: { open: boolean }) => {
           <Input variant="secondary" />
         </Command.Primitive.Input>
       </div>
-      <ScrollArea className="max-h-[70vh]">
-        <Command.List>
-          {channels?.map((channel: IChannel) => (
-            <ChannelItem key={channel._id} {...channel} />
-          ))}
-        </Command.List>
-      </ScrollArea>
+
+      <Command.List>
+        {channels?.map((channel: IChannel) => (
+          <ChannelItem key={channel._id} {...channel} />
+        ))}
+      </Command.List>
     </Command>
   );
 };
 
 const ChannelItem = ({ _id, name }: IChannel) => {
-  const [{ channelId }, setValues] = useMultiQueryState<{
-    channelId: string;
-    detailView: boolean;
-  }>(['channelId', 'detailView']);
+  const [channelId, setChannelId] = useQueryState<string>('channelId');
+  const selectMainFilter = useSetAtom(selectMainFilterState);
 
   const isActive = channelId === _id;
 
-  const handleClick = () =>
-    setValues({
-      channelId: _id,
-      detailView: true,
-    });
+  const handleClick = () => {
+    setChannelId(_id === channelId ? null : _id);
+    selectMainFilter();
+  };
 
   return (
     <Command.Item

@@ -1,15 +1,16 @@
 import { Avatar, Combobox, Skeleton } from 'erxes-ui';
-import { IMember } from '../types/TeamMembers';
+
+import { IUser } from '../types/TeamMembers';
 import { MemberListInlineContext } from '../contexts/MemberListInlineContext';
-import { useUsers } from '../hooks';
-import { useMemberListContext } from '../hooks/useMemberListContext';
 import React from 'react';
+import { useMemberListContext } from '../hooks/useMemberListContext';
+import { useUsers } from '../hooks';
 
 export const MemberListInlineRoot = ({
   members,
   memberIds,
 }: {
-  members?: IMember[];
+  members?: IUser[];
   memberIds?: string[];
 }) => {
   return (
@@ -28,7 +29,7 @@ export const MemberListInlineProvider = ({
   memberIds,
 }: {
   children: React.ReactNode;
-  members?: IMember[];
+  members?: IUser[];
   memberIds?: string[];
 }) => {
   const { users, loading } = useUsers({
