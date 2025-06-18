@@ -11,6 +11,7 @@ import {
   portalUserCardRouter,
 } from '~/modules/portal/trpc/portal';
 import { cmsRouter } from '~/modules/portal/trpc/cms';
+import { knowledgebaseRouter } from '~/modules/knowledgebase/trpc/knowledgebase';
 
 export type ContentTRPCContext = ITRPCContext<{ models: IModels }>;
 
@@ -22,6 +23,7 @@ export const appRouter = t.mergeRouters(
   portalNotificationRouter,
   portalUserCardRouter,
   cmsRouter,
+  knowledgebaseRouter,
 );
 
 export type AppRouter = typeof appRouter;
