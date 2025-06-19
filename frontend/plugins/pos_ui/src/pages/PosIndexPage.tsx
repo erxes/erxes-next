@@ -2,11 +2,11 @@ import { IconCashRegister, IconPlus, IconSettings } from '@tabler/icons-react';
 import { Breadcrumb, Button, Separator } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { Link, useSearchParams } from 'react-router-dom';
-import { PosRecordTable } from '~/modules/components/PosRecordTable';
+import { PosRecordTable } from '@/components/PosRecordTable';
 import { useAtom } from 'jotai';
-import { PosCreate } from '~/modules/create-pos/components/index/pos-create';
-import { PosEdit } from '~/modules/pos-detail/components/posDetail';
-import { renderingPosCreateAtom } from '~/modules/create-pos/states/renderingPosCreateAtom';
+import { PosCreate } from '@/create-pos/components/index/pos-create';
+import { PosEdit } from '@/pos-detail/components/posDetail';
+import { renderingPosCreateAtom } from '@/create-pos/states/renderingPosCreateAtom';
 
 export const PosIndexPage = () => {
   const [, setSearchParams] = useSearchParams();

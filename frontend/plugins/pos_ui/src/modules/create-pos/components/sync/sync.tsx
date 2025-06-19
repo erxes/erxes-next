@@ -4,14 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { IconPlus } from '@tabler/icons-react';
 import { syncCardSettingsAtom } from '../../states/posCategory';
-import { IPosDetail } from '~/modules/pos-detail/types/IPos';
-import { SelectBranches, SelectMember } from 'ui-modules';
-
-interface SyncCardFormProps {
-  posDetail?: IPosDetail;
-  isReadOnly?: boolean;
-}
-import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 import { SelectBranches, SelectMember } from 'ui-modules';
 
 interface SyncCardFormProps {
@@ -78,26 +71,6 @@ export default function SyncCardForm({
     });
   };
 
-  const handleBranchChange = (branchId: string | string[] | undefined) => {
-    setSyncCardSettings({
-      ...syncCardSettings,
-      currentConfig: {
-        ...syncCardSettings.currentConfig,
-        branch: Array.isArray(branchId) ? branchId[0] : branchId || '',
-      },
-    });
-  };
-
-  const handleUserChange = (userId: string | string[]) => {
-    setSyncCardSettings({
-      ...syncCardSettings,
-      currentConfig: {
-        ...syncCardSettings.currentConfig,
-        assignedUsers: Array.isArray(userId) ? userId.join(',') : userId,
-      },
-    });
-  };
-
   const handleAddConfig = () => {
     const newConfigs = [
       ...syncCardSettings.configs,
@@ -137,7 +110,6 @@ export default function SyncCardForm({
             onClick={handleToggleNewConfig}
             className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
             disabled={isReadOnly}
-            disabled={isReadOnly}
           >
             <IconPlus size={16} />
             New config
@@ -155,19 +127,13 @@ export default function SyncCardForm({
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="Enter title"
                   disabled={isReadOnly}
-                  disabled={isReadOnly}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label className="text-sm text-gray-500">CHOOSE BRANCH</Label>
                 <SelectBranches.Detail
-                <Label className="text-sm text-gray-500">CHOOSE BRANCH</Label>
-                <SelectBranches.Detail
                   value={syncCardSettings.currentConfig.branch}
-                  onValueChange={handleBranchChange}
-                  mode="single"
-                />
                   onValueChange={handleBranchChange}
                   mode="single"
                 />

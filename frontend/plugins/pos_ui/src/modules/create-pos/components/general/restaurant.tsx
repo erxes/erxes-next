@@ -8,8 +8,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useSetAtom } from 'jotai';
 import { slotAtom } from '../../states/posCategory';
 import { BasicInfoFormValues } from '../formSchema';
-import { ALLOW_TYPES } from '~/modules/constants';
-import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { ALLOW_TYPES } from '@/constants';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 import { SelectBranches, SelectBrand, SelectDepartments } from 'ui-modules';
 
 interface RestaurantFormProps {
@@ -46,9 +46,13 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     form.trigger('branchId');
   };
 
-  const handleDepartmentChange = (departmentId: string | string[] | undefined) => {
+  const handleDepartmentChange = (
+    departmentId: string | string[] | undefined,
+  ) => {
     if (isReadOnly) return;
-    const singleDepartmentId = Array.isArray(departmentId) ? departmentId[0] : departmentId;
+    const singleDepartmentId = Array.isArray(departmentId)
+      ? departmentId[0]
+      : departmentId;
     form.setValue('departmentId', singleDepartmentId || '');
     form.trigger('departmentId');
   };
@@ -114,7 +118,9 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     BRANDS
                   </Form.Label>
-                  <p className="text-sm text-gray-500">Which specific Brand does this integration belongs to?</p>
+                  <p className="text-sm text-gray-500">
+                    Which specific Brand does this integration belongs to?
+                  </p>
                   <Form.Control>
                     <SelectBrand
                       value={selectedBrandId}

@@ -55,8 +55,8 @@ const SelectMemberProvider = ({
       ? arrayValue.filter((id) => id !== member._id)
       : [...arrayValue, member._id];
 
-    setMembers(
-      [..._members, member].filter((m) => newSelectedMemberIds.includes(m._id)),
+    setMembers((prev) =>
+      [...prev, member].filter((m) => newSelectedMemberIds.includes(m._id)),
     );
     onValueChange?.(newSelectedMemberIds);
   };

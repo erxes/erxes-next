@@ -8,7 +8,7 @@ import {
   deliveryConfigSchema,
   type DeliveryConfigFormValues,
 } from '../formSchema';
-import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 
 interface DeliveryConfigFormProps {
   form?: UseFormReturn<DeliveryConfigFormValues>;

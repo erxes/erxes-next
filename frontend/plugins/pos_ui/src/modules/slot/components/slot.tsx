@@ -21,7 +21,7 @@ import SidebarDetail from './sideBarDetail';
 import MiniMapToggle from './miniMap';
 import { CustomNode, POSSlotsManagerProps } from '../types';
 import { useSlotManager } from '../hooks/customHooks';
-import { SNAP_GRID } from '~/modules/constants';
+import { SNAP_GRID } from '@/constants';
 import { useNodeEvents } from '../hooks/useNodeEvents';
 
 const POSSlotsManager = ({
@@ -39,12 +39,12 @@ const POSSlotsManager = ({
     sidebarView,
     slotsLoading,
     hasSlots,
-    
+
     // Actions
     setSelectedNode,
     setSidebarView,
     updateNodePosition,
-    
+
     // Handlers
     handleNodesChange,
     onEdgesChange,
@@ -68,13 +68,16 @@ const POSSlotsManager = ({
   const nodeTypes = useMemo(() => ({ tableNode: TableNode }), []);
   const snapGrid = useMemo(() => [...SNAP_GRID] as [number, number], []);
 
-  const createNodeUpdater = useCallback((updater: any) => {
-    if (typeof updater === 'function') {
-      handleNodesChange(updater(nodes));
-    } else {
-      handleNodesChange(updater);
-    }
-  }, [nodes, handleNodesChange]);
+  const createNodeUpdater = useCallback(
+    (updater: any) => {
+      if (typeof updater === 'function') {
+        handleNodesChange(updater(nodes));
+      } else {
+        handleNodesChange(updater);
+      }
+    },
+    [nodes, handleNodesChange],
+  );
 
   const setNodes = createNodeUpdater;
   const setHookNodes = createNodeUpdater;
@@ -91,9 +94,11 @@ const POSSlotsManager = ({
     if (selectedNode && slotDetail.left && slotDetail.top) {
       const formX = Number(slotDetail.left);
       const formY = Number(slotDetail.top);
-      const currentX = selectedNode.position?.x ?? selectedNode.data.positionX ?? 0;
-      const currentY = selectedNode.position?.y ?? selectedNode.data.positionY ?? 0;
-      
+      const currentX =
+        selectedNode.position?.x ?? selectedNode.data.positionX ?? 0;
+      const currentY =
+        selectedNode.position?.y ?? selectedNode.data.positionY ?? 0;
+
       if (formX !== currentX || formY !== currentY) {
         updateNodePosition(selectedNode.id, { x: formX, y: formY }, true);
       }
@@ -194,7 +199,9 @@ const POSSlotsManager = ({
                 toggleFullscreen={() => setIsFullscreen(!isFullscreen)}
                 selectedNode={selectedNode}
                 onSave={handleSidebarSave}
-                onDelete={() => selectedNode && handleDeleteSlot(selectedNode.id)}
+                onDelete={() =>
+                  selectedNode && handleDeleteSlot(selectedNode.id)
+                }
                 onAdd={handleAddNew}
               />
             </ReactFlow>

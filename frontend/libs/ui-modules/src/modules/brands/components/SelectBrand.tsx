@@ -14,7 +14,7 @@ import {
 import { useBrands } from '../hooks/useBrands';
 import { IBrand } from '../types/brand';
 import { useDebounce } from 'use-debounce';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SelectBrandContext,
   useSelectBrandContext,
@@ -52,8 +52,8 @@ export const SelectBrandProvider = ({
       ? arrayValue.filter((id) => id !== brand._id)
       : [...arrayValue, brand._id];
 
-    setBrands(
-      [..._brands, brand].filter((b) => newSelectedBrandIds.includes(b._id)),
+    setBrands((prev) =>
+      [...prev, brand].filter((b) => newSelectedBrandIds.includes(b._id)),
     );
     onValueChange?.(newSelectedBrandIds);
   };
