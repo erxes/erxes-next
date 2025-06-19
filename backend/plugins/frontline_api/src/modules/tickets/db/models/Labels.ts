@@ -71,11 +71,7 @@ export const loadPipelineLabelClass = (models: IModels) => {
         throw new Error('Label not found');
       }
 
-      await models.Tickets.updateMany(
-        { _id: targetId },
-        { $set: { labelIds } },
-        { multi: true },
-      );
+      await models.Tickets.updateOne({ _id: targetId }, { $set: { labelIds } });
     }
 
     /**

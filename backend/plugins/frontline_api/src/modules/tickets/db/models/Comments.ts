@@ -6,7 +6,6 @@ import { commentSchema } from '~/modules/tickets/db/definitions/comments';
 export interface ICommentModel extends Model<ICommentDocument> {
   getComment(typeId: string): Promise<ICommentDocument>;
   createComment(comment: IComment): Promise<ICommentDocument>;
-  updateComment(_id: string, comment: IComment): Promise<ICommentDocument>;
   deleteComment(_id: string): void;
 }
 
