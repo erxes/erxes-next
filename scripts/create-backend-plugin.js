@@ -248,7 +248,7 @@ import { I${capitalizedModuleName}Document } from '@/${moduleName}/@types/${modu
 
 import mongoose from 'mongoose';
 
-import { load${capitalizedModuleName}Class, I${capitalizedModuleName}Model } from '@/${moduleName}/db/models/${moduleName}';
+import { load${capitalizedModuleName}Class, I${capitalizedModuleName}Model } from '@/${moduleName}/db/models/${capitalizedModuleName}';
 
 export interface IModels {
   ${capitalizedModuleName}: I${capitalizedModuleName}Model;
