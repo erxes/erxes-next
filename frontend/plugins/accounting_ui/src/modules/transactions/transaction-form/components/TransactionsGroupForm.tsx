@@ -1,19 +1,25 @@
-import { useMainConfigs } from '@/settings/hooks/useMainConfigs';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { DatePicker, Form, Input, Spinner, useQueryState } from 'erxes-ui';
-import { useSetAtom } from 'jotai';
-import { memo, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { TrJournalEnum } from '../../types/constants';
+import { activeJournalState } from '../states/trStates';
+import {
+  DatePicker,
+  Form,
+  Input,
+  Spinner,
+  useQueryState
+} from 'erxes-ui';
 import { JOURNALS_BY_JOURNAL } from '../contants/defaultValues';
+import { memo, useEffect } from 'react';
+import { Summary } from './Summary';
+import { TAddTransactionGroup } from '../types/JournalForms';
 import { transactionGroupSchema } from '../contants/transactionSchema';
+import { TransactionsTabsList } from './TransactionTabs';
+import { TrJournalEnum } from '../../types/constants';
+import { useForm } from 'react-hook-form';
+import { useMainConfigs } from '@/settings/hooks/useMainConfigs';
+import { useSetAtom } from 'jotai';
 import { useTransactionDetail } from '../hooks/useTransactionDetail';
 import { useTransactionsCreate } from '../hooks/useTransactionsCreate';
 import { useTransactionsUpdate } from '../hooks/useTransactionsUpdate';
-import { activeJournalState } from '../states/trStates';
-import { TAddTransactionGroup } from '../types/JournalForms';
-import { Summary } from './common/Summary';
-import { TransactionsTabsList } from './TransactionTabs';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Memoize form fields to prevent unnecessary re-renders
 const FormFields = memo(
@@ -88,6 +94,7 @@ export const TransactionsGroupForm = () => {
       details: trD.details.map(det => ({
         ...det,
         account: undefined,
+        checked: undefined,
       })),
       date: data.date,
       number: data.number,

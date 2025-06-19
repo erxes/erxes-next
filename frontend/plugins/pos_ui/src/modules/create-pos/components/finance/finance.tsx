@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { financeConfigSettingsAtom } from '../../states/posCategory';
 import { useEffect, useState } from 'react';
-import { IPosDetail } from '@/pos-detail.tsx/types/IPos';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 import { options } from '@/constants';
 
 interface FinanceConfigFormProps {
@@ -83,28 +83,14 @@ export default function FinanceConfigForm({
         setIsSubmitting(false);
       }
     } else {
-      console.log('Finance config form submitted:', financeConfig);
       const newParams = new URLSearchParams(searchParams);
       newParams.set('tab', 'delivery');
       setSearchParams(newParams);
     }
   };
 
-  const getFormTitle = () => {
-    if (isReadOnly) return 'View Finance Configuration';
-    return posDetail
-      ? 'Edit Finance Configuration'
-      : 'Configure Finance Settings';
-  };
-
   return (
     <form onSubmit={handleSubmit} className="p-3">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">
-          {getFormTitle()}
-        </h2>
-      </div>
-
       <div className="space-y-8">
         <div className="space-y-4">
           <h2 className="text-indigo-600 text-xl font-medium">MAIN</h2>

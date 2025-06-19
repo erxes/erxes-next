@@ -26,7 +26,7 @@ export const MembersInlineRoot = ({
   size,
 }: {
   members?: IUser[];
-  memberIds: string[];
+  memberIds?: string[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
   size?: 'lg';
@@ -73,7 +73,7 @@ export const MembersInlineProvider = ({
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
       {memberIds
-        ?.filter((id) => !members?.find((member) => member._id === id))
+        ?.filter((id) => !members?.some((member) => member._id === id))
         .map((memberId) => (
           <MemberInlineEffectComponent key={memberId} memberId={memberId} />
         ))}
@@ -132,7 +132,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
 
     if (member._id === currentUser._id) {
       return (
-        <Tooltip delayDuration={100}>
+        <Tooltip delayDuration={100} key={member._id}>
           <Tooltip.Trigger asChild>
             <Avatar
               size="lg"
@@ -150,7 +150,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     }
 
     return (
-      <Tooltip>
+      <Tooltip key={member._id}>
         <Tooltip.Trigger asChild>
           <Avatar
             className={cn(

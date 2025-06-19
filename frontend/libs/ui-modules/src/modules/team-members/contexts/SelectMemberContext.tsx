@@ -8,7 +8,6 @@ export type ISelectMemberContext = {
   members: IUser[];
   setMembers: (members: IUser[]) => void;
   loading: boolean;
-  error: string | null;
 };
 
 export const SelectMemberContext = createContext<ISelectMemberContext | null>(

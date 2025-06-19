@@ -2,6 +2,7 @@ import { IModels } from "~/connectionResolvers";
 import CurrencyTr from "./currencyTr";
 import TaxTrs from './taxTrs';
 import { ITransaction, ITransactionDocument } from "../@types/transaction";
+import { InvIncomeExpenseTrs } from '~/modules/accounting/utils/invIncome';
 
 export const commonCreate = async (_subdomain: string, models: IModels, doc: ITransaction) => {
   let mainTr: ITransactionDocument | null = null;
@@ -55,6 +56,13 @@ export const commonCreate = async (_subdomain: string, models: IModels, doc: ITr
       if (taxTrs?.length) {
         for (const taxTr of taxTrs) {
           otherTrs.push(taxTr)
+        }
+      }
+
+      const expenseTrs = await InvIncomeExpenseTrs(models, transaction)
+      if (expenseTrs?.length) {
+        for (const expenseTr of expenseTrs) {
+          otherTrs.push(expenseTr)
         }
       }
       break;

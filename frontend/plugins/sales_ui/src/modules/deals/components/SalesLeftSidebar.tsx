@@ -1,7 +1,7 @@
 import { Accordion, Sidebar, useQueryState } from 'erxes-ui';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { LeftSidebarLoading } from '~/modules/deals/components/loading/LeftSidebarLoading';
+import { LeftSidebarLoading } from '@/deals/components/loading/LeftSidebarLoading';
 import { PipelineList } from '@/deals/pipelines/components/PipelineList';
 import { useBoards } from '@/deals/boards/hooks/useBoards';
 import { useEffect } from 'react';
