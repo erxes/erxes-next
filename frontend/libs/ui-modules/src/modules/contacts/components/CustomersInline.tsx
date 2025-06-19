@@ -119,8 +119,8 @@ const fullName = `${firstName ?? ''} ${lastName ?? ''}`.trim();
           >
             <Avatar.Image src={avatar} />
                   <Avatar.Fallback>
-+              {(fullName.charAt(0) || '').toUpperCase()}
-+            </Avatar.Fallback>
+              {(fullName.charAt(0) || '').toUpperCase()}
+            </Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>
         <Tooltip.Content>
@@ -174,10 +174,10 @@ const CustomersInlineTitle = () => {
     if (customers.length === 0) return undefined;
 
     if (customers.length === 1) {
-      const { firstName, lastName, primaryEmail, primaryPhone } = customers[0];
+      const { firstName, lastName, primaryPhone } = customers[0];
       return firstName || lastName
         ? `${firstName || ''} ${lastName || ''}`
-        : primaryEmail || primaryPhone;
+        : primaryPhone;
     }
 
     return `${customers.length} customers`;

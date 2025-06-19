@@ -9,11 +9,12 @@ import { useState } from 'react';
 import {
   CurrencyCode,
   CurrencyFormatedDisplay,
-  InlineCell,
-  InlineCellDisplay,
-  InlineCellEdit,
   Input,
   RecordTable,
+  RecordTableCellContent,
+  RecordTableCellDisplay,
+  RecordTableCellTrigger,
+  RecordTablePopover,
 } from 'erxes-ui';
 
 // Create named components for cell renderers to fix React Hook usage
@@ -22,22 +23,16 @@ const NumberCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <InlineCell
-      name="number"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>{getValue() as string}</InlineCellDisplay>
-      )}
-      edit={() => (
-        <InlineCellEdit>
-          <Input
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
-            className="w-full"
-          />
-        </InlineCellEdit>
-      )}
-    />
+    <RecordTablePopover scope={`tbalance-${_id}-number`}>
+      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
+      <RecordTableCellContent>
+        <Input
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+          className="w-full"
+        />
+      </RecordTableCellContent>
+    </RecordTablePopover>
   );
 };
 
@@ -46,131 +41,89 @@ const DescriptionCell = ({ getValue, row }: any) => {
   const { _id } = row.original;
 
   return (
-    <InlineCell
-      name="description"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>{getValue() as string}</InlineCellDisplay>
-      )}
-      edit={() => (
-        <InlineCellEdit className="w-80">
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </InlineCellEdit>
-      )}
-    />
+    <RecordTablePopover scope={`tbalance-${_id}-description`}>
+      <RecordTableCellTrigger>{getValue() as string}</RecordTableCellTrigger>
+      <RecordTableCellContent className="w-80">
+        <Input
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full"
+        />
+      </RecordTableCellContent>
+    </RecordTablePopover>
   );
 };
 
 const DebitCell = ({ getValue, row }: any) => {
-  const { _id, detail } = row.original;
+  const { detail } = row.original;
   const { amount, side } = detail;
 
   return (
-    <InlineCell
-      name="debit"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>
-          {side === TR_SIDES.DEBIT ? amount.toLocaleString() : 0}
-          {/* <CurrencyFormatedDisplay
-            currencyValue={{
-              currencyCode: CurrencyCode.MNT,
-              amountMicros: side === TR_SIDES.DEBIT ? amount * 1000000 : 0,
-            }}
-          /> */}
-        </InlineCellDisplay>
-      )}
-    />
+    <RecordTableCellDisplay>
+      {side === TR_SIDES.DEBIT ? amount.toLocaleString() : 0}
+      {/* <CurrencyFormatedDisplay
+        currencyValue={{
+          currencyCode: CurrencyCode.MNT,
+          amountMicros: side === TR_SIDES.DEBIT ? amount * 1000000 : 0,
+        }}
+      /> */}
+    </RecordTableCellDisplay>
   );
 };
 
 const CreditCell = ({ getValue, row }: any) => {
-  const { _id, detail } = row.original;
+  const { detail } = row.original;
   const { amount, side } = detail;
 
   return (
-    <InlineCell
-      name="credit"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>
-          {side === TR_SIDES.CREDIT ? amount : 0}
-          {/* <CurrencyFormatedDisplay
-            currencyValue={{
-              currencyCode: CurrencyCode.MNT,
-              amountMicros: side === TR_SIDES.CREDIT ? amount * 1000000 : 0,
-            }}
-          /> */}
-        </InlineCellDisplay>
-      )}
-    />
+    <RecordTableCellDisplay>
+      {side === TR_SIDES.CREDIT ? amount : 0}
+      {/* <CurrencyFormatedDisplay
+        currencyValue={{
+          currencyCode: CurrencyCode.MNT,
+          amountMicros: side === TR_SIDES.CREDIT ? amount * 1000000 : 0,
+        }}
+      /> */}
+    </RecordTableCellDisplay> 
   );
 };
 
 const BranchCell = ({ row }: any) => {
-  const { _id, branch } = row.original;
+  const { branch } = row.original;
 
   return (
-    <InlineCell
-      name="branch"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>
-          {`${branch?.code ? `${branch.code} - ` : ''}${branch?.title ?? ''}`}
-        </InlineCellDisplay>
-      )}
-    />
+    <RecordTableCellDisplay>
+      {`${branch?.code ? `${branch.code} - ` : ''}${branch?.title ?? ''}`}
+    </RecordTableCellDisplay> 
   );
 };
 
 const DepartmentCell = ({ row }: any) => {
-  const { _id, department } = row.original;
+  const { department } = row.original;
 
   return (
-    <InlineCell
-      name="department"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>
-          {`${department?.code ? `${department.code} - ` : ''}${department?.title ?? ''}`}
-        </InlineCellDisplay>
-      )}
-    />
+    <RecordTableCellDisplay>
+      {`${department?.code ? `${department.code} - ` : ''}${department?.title ?? ''}`}
+    </RecordTableCellDisplay>
   );
 };
 
-const DateCell = ({ getValue, row }: any) => {
-  const { _id } = row.original;
+const DateCell = ({ getValue }: any) => {
   return (
-    <InlineCell
-      name="date"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>
-          {dayjs(new Date(getValue())).format("YYYY-MM-DD")}
-        </InlineCellDisplay>
-      )}
-    />
+    <RecordTableCellDisplay>
+      {dayjs(new Date(getValue())).format("YYYY-MM-DD")}
+    </RecordTableCellDisplay>
   );
 };
 
 const AccountCell = ({ row }: any) => {
-  const { details, _id } = row.original;
+  const { details } = row.original;
 
   return (
-    <InlineCell
-      name="account"
-      recordId={_id || ''}
-      display={() => (
-        <InlineCellDisplay>
-          {details.length &&
-            `${details[0].account?.code} - ${details[0].account?.name}`}
-        </InlineCellDisplay>
-      )}
-    />
+    <RecordTableCellDisplay>
+      {details.length &&
+        `${details[0].account?.code} - ${details[0].account?.name}`}
+    </RecordTableCellDisplay>
   );
 };
 
