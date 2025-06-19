@@ -1,53 +1,30 @@
-import { createGenerateModels } from 'erxes-api-shared/utils';
-import { IMainContext } from 'erxes-api-shared/core-types';
-import mongoose from 'mongoose';
 import { IChannelDocument } from '@/inbox/@types/channels';
-import { IIntegrationDocument } from '@/inbox/@types/integrations';
-import { IConversationDocument } from '@/inbox/@types/conversations';
 import { IMessageDocument } from '@/inbox/@types/conversationMessages';
-import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
-import { IFacebookLogDocument } from '@/integrations/facebook/@types/logs';
-import { IFacebookAccountDocument } from '@/integrations/facebook/@types/accounts';
-import { IFacebookCustomerDocument } from '@/integrations/facebook/@types/customers';
-import { IFacebookConversationDocument } from '@/integrations/facebook/@types/conversations';
-import { IFacebookConversationMessageDocument } from '@/integrations/facebook/@types/conversationMessages';
-import { IFacebookCommentConversationDocument } from '@/integrations/facebook/@types/comment_conversations';
-import { IFacebookCommentConversationReplyDocument } from '@/integrations/facebook/@types/comment_conversations_reply';
-import { IFacebookPostConversationDocument } from '@/integrations/facebook/@types/postConversations';
-import { IFacebookConfigDocument } from '@/integrations/facebook/@types/config';
+import { IConversationDocument } from '@/inbox/@types/conversations';
+import { IIntegrationDocument } from '@/inbox/@types/integrations';
 import { IChannelModel, loadChannelClass } from '@/inbox/db/models/Channels';
-import {
-  IIntegrationModel,
-  loadClass as loadIntegrationClass,
-} from '~/modules/inbox/db/models/Integrations';
-import {
-  IConversationModel,
-  loadClass as loadConversationClass,
-} from '@/inbox/db/models/Conversations';
 import {
   IMessageModel,
   loadClass as loadMessageClass,
 } from '@/inbox/db/models/ConversationMessages';
 import {
-  IFacebookIntegrationModel,
-  loadFacebookIntegrationClass,
-} from '@/integrations/facebook/db/models/Integrations';
+  IConversationModel,
+  loadClass as loadConversationClass,
+} from '@/inbox/db/models/Conversations';
+import { IFacebookAccountDocument } from '@/integrations/facebook/@types/accounts';
+import { IFacebookCommentConversationDocument } from '@/integrations/facebook/@types/comment_conversations';
+import { IFacebookCommentConversationReplyDocument } from '@/integrations/facebook/@types/comment_conversations_reply';
+import { IFacebookConfigDocument } from '@/integrations/facebook/@types/config';
+import { IFacebookConversationMessageDocument } from '@/integrations/facebook/@types/conversationMessages';
+import { IFacebookConversationDocument } from '@/integrations/facebook/@types/conversations';
+import { IFacebookCustomerDocument } from '@/integrations/facebook/@types/customers';
+import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
+import { IFacebookLogDocument } from '@/integrations/facebook/@types/logs';
+import { IFacebookPostConversationDocument } from '@/integrations/facebook/@types/postConversations';
 import {
   IFacebookAccountModel,
   loadFacebookAccountClass,
 } from '@/integrations/facebook/db/models/Accounts';
-import {
-  IFacebookCustomerModel,
-  loadFacebookCustomerClass,
-} from '@/integrations/facebook/db/models/Customers';
-import {
-  IFacebookConversationModel,
-  loadFacebookConversationClass,
-} from '@/integrations/facebook/db/models/Conversations';
-import {
-  IFacebookConversationMessageModel,
-  loadFacebookConversationMessageClass,
-} from '@/integrations/facebook/db/models/ConversationMessages';
 import {
   IFacebookCommentConversationModel,
   loadFacebookCommentConversationClass,
@@ -57,6 +34,26 @@ import {
   loadFacebookCommentConversationReplyClass,
 } from '@/integrations/facebook/db/models/Comment_conversations_reply';
 import {
+  IFacebookConfigModel,
+  loadFacebookConfigClass,
+} from '@/integrations/facebook/db/models/Config';
+import {
+  IFacebookConversationMessageModel,
+  loadFacebookConversationMessageClass,
+} from '@/integrations/facebook/db/models/ConversationMessages';
+import {
+  IFacebookConversationModel,
+  loadFacebookConversationClass,
+} from '@/integrations/facebook/db/models/Conversations';
+import {
+  IFacebookCustomerModel,
+  loadFacebookCustomerClass,
+} from '@/integrations/facebook/db/models/Customers';
+import {
+  IFacebookIntegrationModel,
+  loadFacebookIntegrationClass,
+} from '@/integrations/facebook/db/models/Integrations';
+import {
   IFacebookLogModel,
   loadFacebookLogClass,
 } from '@/integrations/facebook/db/models/Logs';
@@ -64,10 +61,24 @@ import {
   IFacebookPostConversationModel,
   loadFacebookPostConversationClass,
 } from '@/integrations/facebook/db/models/PostConversations';
+import { IMainContext } from 'erxes-api-shared/core-types';
+import { createGenerateModels } from 'erxes-api-shared/utils';
+import mongoose from 'mongoose';
 import {
-  IFacebookConfigModel,
-  loadFacebookConfigClass,
-} from '@/integrations/facebook/db/models/Config';
+  IIntegrationModel,
+  loadClass as loadIntegrationClass,
+} from '~/modules/inbox/db/models/Integrations';
+import { IBoardModel } from '~/modules/tickets/db/models/Boards';
+import {
+  IChecklistItemModel,
+  IChecklistModel,
+} from '~/modules/tickets/db/models/Checklists';
+import { ICommentModel } from '~/modules/tickets/db/models/Comments';
+import { IPipelineLabelModel } from '~/modules/tickets/db/models/Labels';
+import { IPipelineModel } from '~/modules/tickets/db/models/Pipelines';
+import { IStageModel } from '~/modules/tickets/db/models/Stages';
+import { ITicketModel } from '~/modules/tickets/db/models/Tickets';
+import { loadClasses as loadTicketClasses } from '~/modules/tickets/resolver';
 
 export interface IModels {
   Channels: IChannelModel;
@@ -84,6 +95,15 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
+
+  Boards: IBoardModel;
+  Pipelines: IPipelineModel;
+  Stages: IStageModel;
+  Tickets: ITicketModel;
+  PipelineLabels: IPipelineLabelModel;
+  CheckLists: IChecklistModel;
+  CheckListItems: IChecklistItemModel;
+  Comments: ICommentModel;
 }
 
 export interface IContext extends IMainContext {
@@ -163,6 +183,9 @@ export const loadClasses = (
     IFacebookConfigDocument,
     IFacebookConfigModel
   >('facebook_configs', loadFacebookConfigClass(models));
+
+  loadTicketClasses(models, db);
+
   return models;
 };
 

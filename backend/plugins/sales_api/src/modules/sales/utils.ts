@@ -5,6 +5,7 @@ import {
   cursorPaginate,
   getNextMonth,
   getToday,
+  graphqlPubsub,
   regexSearchText,
   sendTRPCMessage,
   USER_ROLES,
@@ -13,6 +14,7 @@ import {
 import moment from 'moment';
 import { DeleteResult } from 'mongoose';
 import * as _ from 'underscore';
+import resolvers from '~/apollo/resolvers';
 import { IModels } from '~/connectionResolvers';
 import {
   IArchiveArgs,
@@ -25,6 +27,26 @@ import {
 } from './@types';
 import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
 import { generateFilter } from './graphql/resolvers/queries/deals';
+
+export const itemResolver = async (models: IModels, user: any, item: IDeal) => {
+  const additionInfo = {};
+  const resolver = resolvers['Deal'] || {};
+
+  for (const subResolver of Object.keys(resolver)) {
+    try {
+      additionInfo[subResolver] = await resolver[subResolver](
+        item,
+        {},
+        { models, user },
+        { isSubscription: true },
+      );
+    } catch (unused) {
+      continue;
+    }
+  }
+
+  return additionInfo;
+};
 
 export const configReplacer = (config) => {
   const now = new Date();
@@ -1159,58 +1181,58 @@ export const itemsEdit = async (
   //   user
   // );
 
-  // const updatedStage = await models.Stages.getStage(updatedItem.stageId);
+  const updatedStage = await models.Stages.getStage(updatedItem.stageId);
 
-  // if (doc.tagIds || doc.startDate || doc.closeDate || doc.name) {
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: stage.pipelineId,
-  //     },
-  //   });
-  // }
+  if (doc.tagIds || doc.startDate || doc.closeDate || doc.name) {
+    graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+      salesPipelinesChanged: {
+        _id: stage.pipelineId,
+      },
+    });
+  }
 
-  // if (updatedStage.pipelineId !== stage.pipelineId) {
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: stage.pipelineId,
-  //       proccessId,
-  //       action: "itemRemove",
-  //       data: {
-  //         item: oldItem,
-  //         oldStageId: stage._id,
-  //       },
-  //     },
-  //   });
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: updatedStage.pipelineId,
-  //       proccessId,
-  //       action: "itemAdd",
-  //       data: {
-  //         item: {
-  //           ...updatedItem._doc,
-  //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
-  //         },
-  //         aboveItemId: "",
-  //         destinationStageId: updatedStage._id,
-  //       },
-  //     },
-  //   });
-  // } else {
-  //   graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //     salesPipelinesChanged: {
-  //       _id: stage.pipelineId,
-  //       proccessId,
-  //       action: "itemUpdate",
-  //       data: {
-  //         item: {
-  //           ...updatedItem._doc,
-  //           ...(await itemResolver(models, subdomain, user, type, updatedItem)),
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
+  if (updatedStage.pipelineId !== stage.pipelineId) {
+    graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+      salesPipelinesChanged: {
+        _id: stage.pipelineId,
+        proccessId,
+        action: 'itemRemove',
+        data: {
+          item: oldItem,
+          oldStageId: stage._id,
+        },
+      },
+    });
+    graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+      salesPipelinesChanged: {
+        _id: updatedStage.pipelineId,
+        proccessId,
+        action: 'itemAdd',
+        data: {
+          item: {
+            ...updatedItem._doc,
+            ...(await itemResolver(models, user, updatedItem)),
+          },
+          aboveItemId: '',
+          destinationStageId: updatedStage._id,
+        },
+      },
+    });
+  } else {
+    graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+      salesPipelinesChanged: {
+        _id: stage.pipelineId,
+        proccessId,
+        action: 'itemUpdate',
+        data: {
+          item: {
+            ...updatedItem._doc,
+            ...(await itemResolver(models, user, updatedItem)),
+          },
+        },
+      },
+    });
+  }
 
   // await doScoreCampaign(subdomain, models, _id, updatedItem);
 
@@ -1315,17 +1337,17 @@ export const changeItemStatus = async (
   },
 ) => {
   if (status === 'archived') {
-    // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-    //   salesPipelinesChanged: {
-    //     _id: stage.pipelineId,
-    //     proccessId,
-    //     action: "itemRemove",
-    //     data: {
-    //       item,
-    //       oldStageId: item.stageId,
-    //     },
-    //   },
-    // });
+    graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+      salesPipelinesChanged: {
+        _id: stage.pipelineId,
+        proccessId,
+        action: 'itemRemove',
+        data: {
+          item,
+          oldStageId: item.stageId,
+        },
+      },
+    });
 
     return;
   }
@@ -1354,21 +1376,21 @@ export const changeItemStatus = async (
     },
   );
 
-  // graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-  //   salesPipelinesChanged: {
-  //     _id: stage.pipelineId,
-  //     proccessId,
-  //     action: "itemAdd",
-  //     data: {
-  //       item: {
-  //         ...item._doc,
-  //         ...(await itemResolver(models, subdomain, user, type, item)),
-  //       },
-  //       aboveItemId,
-  //       destinationStageId: item.stageId,
-  //     },
-  //   },
-  // });
+  graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
+    salesPipelinesChanged: {
+      _id: stage.pipelineId,
+      proccessId,
+      action: 'itemAdd',
+      data: {
+        item: {
+          ...item._doc,
+          ...(await itemResolver(models, user, item)),
+        },
+        aboveItemId,
+        destinationStageId: item.stageId,
+      },
+    },
+  });
 };
 
 /**
