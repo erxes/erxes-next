@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAtom } from 'jotai';
 import { Outlet, useLocation } from 'react-router';
 import { mainSidebarOpenState } from '../states/mainSidebarState';
+import { FloatingWidgets } from '@/widgets/components/FloatingWidgets';
 
 export const DefaultLayout = () => {
   const location = useLocation();
@@ -24,11 +25,13 @@ export const DefaultLayout = () => {
         <Sidebar.Rail />
       </Sidebar>
       <Sidebar.Inset className="h-[calc(100svh-theme(spacing.4))] flex-grow-0 flex-shrink basis-full overflow-hidden shadow-sidebar-inset">
+        <FloatingWidgets />
         <Outlet />
       </Sidebar.Inset>
     </Sidebar.Provider>
   );
 };
+
 export const SidebarAnimationContainer = ({
   children,
   isSettings,

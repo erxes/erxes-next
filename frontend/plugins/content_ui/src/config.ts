@@ -11,7 +11,7 @@ export const CONFIG: IUIConfig = {
       icon: IconBooks,
       path: 'knowledgebase',
       hasSettings: false,
-      hasWidgets: false,
+      hasRelationWidget: false,
     },
   ],
 };
