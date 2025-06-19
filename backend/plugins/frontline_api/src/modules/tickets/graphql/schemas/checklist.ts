@@ -27,7 +27,7 @@ export const queries = `
 
 export const mutations = `
   ticketsChecklistsAdd(contentTypeId: String, title: String): TicketsChecklist
-  ticketsChecklistsEdit(_id: String!, title: String, contentTypeId: String,): TicketsChecklist
+  ticketsChecklistsEdit(_id: String!, title: String, contentTypeId: String): TicketsChecklist
   ticketsChecklistsRemove(_id: String!): TicketsChecklist
   ticketsChecklistItemsOrder(_id: String!, destinationIndex: Int): TicketsChecklistItem
 

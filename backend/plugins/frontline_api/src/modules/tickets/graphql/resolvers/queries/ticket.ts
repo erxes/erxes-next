@@ -13,7 +13,7 @@ import { TICKET_STATUSES } from '~/modules/tickets/constants';
 import {
   calendarFilters,
   checkItemPermByUser,
-  generateArhivedItemsFilter,
+  generateArchivedItemsFilter,
   generateExtraFilters,
   getCloseDateByType,
   getItemList,
@@ -309,54 +309,52 @@ export const generateFilter = async (
           { userId: { $in: uqinueCheckUserIds } },
         ],
       });
-    } else {
-      if (
-        (pipeline.isCheckUser || pipeline.isCheckDepartment) &&
-        !isEligibleSeeAllCards
-      ) {
-        let includeCheckUserIds: string[] = [];
+    } else if (
+      (pipeline.isCheckUser || pipeline.isCheckDepartment) &&
+      !isEligibleSeeAllCards
+    ) {
+      let includeCheckUserIds: string[] = [];
 
-        if (pipeline.isCheckDepartment) {
-          const userDepartmentIds = user?.departmentIds || [];
-          const commonIds = userDepartmentIds.filter((id) =>
-            pipelineDepartmentIds.includes(id),
-          );
+      if (pipeline.isCheckDepartment) {
+        const userDepartmentIds = user?.departmentIds || [];
+        const commonIds = userDepartmentIds.filter((id) =>
+          pipelineDepartmentIds.includes(id),
+        );
 
-          const otherDepartmentUsers = await sendTRPCMessage({
-            pluginName: 'core',
-            method: 'query',
-            module: 'users',
-            action: 'find',
-            input: {
-              query: { departmentIds: { $in: commonIds } },
-            },
-            defaultValue: [],
-          });
+        const otherDepartmentUsers = await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'query',
+          module: 'users',
+          action: 'find',
+          input: {
+            query: { departmentIds: { $in: commonIds } },
+          },
+          defaultValue: [],
+        });
 
-          for (const departmentUser of otherDepartmentUsers) {
-            includeCheckUserIds = [...includeCheckUserIds, departmentUser._id];
-          }
-
-          if (
-            pipelineDepartmentIds.filter((departmentId) =>
-              userDepartmentIds.includes(departmentId),
-            ).length
-          ) {
-            includeCheckUserIds = includeCheckUserIds.concat(user._id || []);
-          }
+        for (const departmentUser of otherDepartmentUsers) {
+          includeCheckUserIds = [...includeCheckUserIds, departmentUser._id];
         }
 
-        const uqinueCheckUserIds = [
-          ...new Set(includeCheckUserIds.concat(currentUserId)),
-        ];
-
-        Object.assign(filter, {
-          $or: [
-            { assignedUserIds: { $in: uqinueCheckUserIds } },
-            { userId: { $in: uqinueCheckUserIds } },
-          ],
-        });
+        if (
+          pipelineDepartmentIds.filter((departmentId) =>
+            userDepartmentIds.includes(departmentId),
+          ).length
+        ) {
+          includeCheckUserIds = includeCheckUserIds.concat(user._id || []);
+        }
       }
+
+      const uqinueCheckUserIds = [
+        ...new Set(includeCheckUserIds.concat(currentUserId)),
+      ];
+
+      Object.assign(filter, {
+        $or: [
+          { assignedUserIds: { $in: uqinueCheckUserIds } },
+          { userId: { $in: uqinueCheckUserIds } },
+        ],
+      });
     }
   }
 
@@ -505,7 +503,7 @@ export const ticketQueries = {
     const stages = await models.Stages.find({ pipelineId }).lean();
 
     if (stages.length > 0) {
-      const filter = generateArhivedItemsFilter(args, stages);
+      const filter = generateArchivedItemsFilter(args, stages);
 
       const { list, pageInfo, totalCount } =
         await cursorPaginate<ITicketDocument>({
@@ -530,7 +528,7 @@ export const ticketQueries = {
     const stages = await models.Stages.find({ pipelineId });
 
     if (stages.length > 0) {
-      const filter = generateArhivedItemsFilter(args, stages);
+      const filter = generateArchivedItemsFilter(args, stages);
 
       return models.Tickets.find(filter).countDocuments();
     }

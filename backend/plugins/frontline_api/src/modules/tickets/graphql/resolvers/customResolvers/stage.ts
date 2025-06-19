@@ -1,6 +1,6 @@
 import { IContext } from '~/connectionResolvers';
 import { IStageDocument } from '~/modules/tickets/@types/stage';
-import { TICKET_STATUSES, VISIBLITIES } from '~/modules/tickets/constants';
+import { TICKET_STATUSES, VISIBILITIES } from '~/modules/tickets/constants';
 import { generateFilter } from '~/modules/tickets/graphql/resolvers/queries/ticket';
 import { getAmountsMap } from '~/modules/tickets/utils';
 
@@ -10,7 +10,7 @@ export default {
   },
 
   members(stage: IStageDocument) {
-    if (stage.visibility === VISIBLITIES.PRIVATE && stage.memberIds) {
+    if (stage.visibility === VISIBILITIES.PRIVATE && stage.memberIds) {
       return stage.memberIds.map((memberId) => ({
         __typename: 'User',
         _id: memberId,

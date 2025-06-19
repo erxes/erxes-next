@@ -79,7 +79,7 @@ export const boardNumberGenerator = async (
     });
 
     if (pipeline?.lastNum) {
-      const lastNum = pipeline.lastNum;
+      const { lastNum } = pipeline;
 
       const lastGeneratedNumber = lastNum.slice(replacedConfig.length);
 
@@ -119,14 +119,12 @@ export const generateLastNum = async (models: IModels, doc: IPipeline) => {
   }
 
   // generate new number by new numberConfig
-  const generatedNum = await boardNumberGenerator(
+  return await boardNumberGenerator(
     models,
     doc.numberConfig || '',
     doc.numberSize || '',
     true,
   );
-
-  return generatedNum;
 };
 
 export const createOrUpdatePipelineStages = async (
@@ -161,18 +159,16 @@ export const createOrUpdatePipelineStages = async (
 
     const doc: any = { ...stage, order, pipelineId };
 
-    const _id = doc._id;
-
-    const prevEntry = prevEntriesIds.includes(_id);
+    const prevEntry = prevEntriesIds.includes(doc._id);
 
     // edit
     if (prevEntry) {
-      validStageIds.push(_id);
+      validStageIds.push(doc._id);
 
       bulkOpsPrevEntry.push({
         updateOne: {
           filter: {
-            _id,
+            _id: doc._id,
           },
           update: {
             $set: doc,
@@ -181,7 +177,7 @@ export const createOrUpdatePipelineStages = async (
       });
       // create
     } else {
-      delete doc._id;
+      doc._id = undefined;
       const createdStage = await models.Stages.createStage(doc);
       validStageIds.push(createdStage._id);
     }
@@ -235,7 +231,7 @@ export const bulkUpdateOrders = async ({
       },
     });
 
-    ord = ord + 10;
+    ord += 10;
   }
 
   if (!bulkOps.length) {
@@ -631,11 +627,11 @@ export const compareDepartmentIds = (
 
 export const getCloseDateByType = (closeDateType: string) => {
   if (closeDateType === CLOSE_DATE_TYPES.NEXT_DAY) {
-    const tommorrow = moment().add(1, 'days');
+    const tomorrow = moment().add(1, 'days');
 
     return {
-      $gte: new Date(tommorrow.startOf('day').toISOString()),
-      $lte: new Date(tommorrow.endOf('day').toISOString()),
+      $gte: new Date(tomorrow.startOf('day').toISOString()),
+      $lte: new Date(tomorrow.endOf('day').toISOString()),
     };
   }
 
@@ -818,7 +814,7 @@ export const dateSelector = (date: { month: number; year: number }) => {
   };
 };
 
-export const generateArhivedItemsFilter = (
+export const generateArchivedItemsFilter = (
   params: IArchiveArgs,
   stages: IStageDocument[],
 ) => {
@@ -894,7 +890,7 @@ const randomBetween = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
 
-const orderHeler = (aboveOrder, belowOrder) => {
+const orderHelper = (aboveOrder, belowOrder) => {
   // empty stage
   if (!aboveOrder && !belowOrder) {
     return 100;
@@ -938,7 +934,7 @@ export const getNewOrder = async ({
 
   const belowOrder = belowItems[0]?.order;
 
-  const order = orderHeler(aboveOrder, belowOrder);
+  const order = orderHelper(aboveOrder, belowOrder);
 
   // if duplicated order, then in stages items bulkUpdate 100, 110, 120, 130
   if ([aboveOrder, belowOrder].includes(order)) {
@@ -1022,11 +1018,7 @@ export const copyPipelineLabels = async (
     updatedLabelIds.push(newLabel._id);
   }
 
-  await models.PipelineLabels.labelsLabel(
-    newStage.pipelineId,
-    item._id,
-    updatedLabelIds,
-  );
+  await models.PipelineLabels.labelsLabel(item._id, updatedLabelIds);
 };
 
 export const checkMovePermission = (

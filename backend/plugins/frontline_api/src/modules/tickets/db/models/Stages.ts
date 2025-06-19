@@ -11,7 +11,7 @@ export interface IStageModel extends Model<IStageDocument> {
   removeStage(_id: string): Promise<{ deletedCount: number; acknowledged: boolean }>;
   updateStage(_id: string, doc: IStage): Promise<IStageDocument>;
   updateOrder(orders: IOrderInput[]): Promise<IStageDocument[]>;
-  checkCodeDuplication(code: string): string;
+  checkCodeDuplication(code: string): Promise<void>;
 }
 
 export const loadStageClass = (models: IModels) => {

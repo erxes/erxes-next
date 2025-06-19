@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 import {
   HACK_SCORING_TYPES,
   TICKET_STATUSES,
-  VISIBLITIES,
+  VISIBILITIES,
 } from '~/modules/tickets/constants';
 
 export const pipelineSchema = new Schema(
@@ -24,8 +24,8 @@ export const pipelineSchema = new Schema(
     },
     visibility: {
       type: String,
-      enum: VISIBLITIES.ALL,
-      default: VISIBLITIES.PUBLIC,
+      enum: VISIBILITIES.ALL,
+      default: VISIBILITIES.PUBLIC,
       label: 'Visibility',
     },
     watchedUserIds: { type: [String], label: 'Watched users' },
@@ -59,7 +59,7 @@ export const pipelineSchema = new Schema(
     excludeCheckUserIds: {
       type: [String],
       optional: true,
-      label: 'Users elligible to see all cards',
+      label: 'Users eligible to see all cards',
     },
     numberConfig: { type: String, optional: true, label: 'Number config' },
     numberSize: { type: String, optional: true, label: 'Number count' },

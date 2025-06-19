@@ -65,8 +65,6 @@ export const stageQueries = {
       }
     }
 
-    console.log('filter', filter);
-
     return await models.Stages.find(filter)
       .sort({ order: 1, createdAt: -1 })
       .lean();

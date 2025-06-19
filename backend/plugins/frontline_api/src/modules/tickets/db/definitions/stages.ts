@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 import {
   PROBABILITY,
   TICKET_STATUSES,
-  VISIBLITIES,
+  VISIBILITIES,
 } from '~/modules/tickets/constants';
 
 export const stageSchema = new Schema(
@@ -24,8 +24,8 @@ export const stageSchema = new Schema(
     },
     visibility: {
       type: String,
-      enum: VISIBLITIES.ALL,
-      default: VISIBLITIES.PUBLIC,
+      enum: VISIBILITIES.ALL,
+      default: VISIBILITIES.PUBLIC,
       label: 'Visibility',
     },
     code: {

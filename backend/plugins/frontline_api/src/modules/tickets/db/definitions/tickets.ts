@@ -108,13 +108,13 @@ export const ticketSchema = new Schema(
       type: [String],
       optional: true,
       index: true,
-      label: 'Tags',
+      label: 'Branches',
     },
     departmentIds: {
       type: [String],
       optional: true,
       index: true,
-      label: 'Tags',
+      label: 'Departments',
     },
 
     source: { type: String, label: 'Source' },

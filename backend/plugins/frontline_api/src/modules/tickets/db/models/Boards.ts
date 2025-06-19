@@ -8,12 +8,6 @@ export interface IBoardModel extends Model<IBoardDocument> {
   createBoard(doc: IBoard): Promise<IBoardDocument>;
   updateBoard(_id: string, doc: IBoard): Promise<IBoardDocument>;
   removeBoard(_id: string): object;
-  updateTimeTracking(
-    _id: string,
-    status: string,
-    timeSpent: number,
-    startDate: string,
-  ): Promise<any>;
 }
 
 export const loadBoardClass = (models: IModels) => {
@@ -87,31 +81,6 @@ export const loadBoardClass = (models: IModels) => {
       }
 
       return models.Boards.deleteOne({ _id });
-    }
-
-    /**
-     * Update Time Tracking
-     */
-    public static async updateTimeTracking(
-      _id: string,
-      status: string,
-      timeSpent: number,
-      startDate?: string,
-    ) {
-      const doc: { status: string; timeSpent: number; startDate?: string } = {
-        status,
-        timeSpent,
-      };
-
-      if (startDate) {
-        doc.startDate = startDate;
-      }
-
-      return await models.Tickets.findOneAndUpdate(
-        { _id },
-        { $set: { timeTrack: doc } },
-        { new: true },
-      );
     }
   }
 

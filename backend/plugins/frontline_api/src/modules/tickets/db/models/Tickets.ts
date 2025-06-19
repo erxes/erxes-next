@@ -20,6 +20,12 @@ export interface ITicketModel extends Model<ITicketDocument> {
     userType: string,
     customerId: string,
   ): Promise<ITicketDocument>;
+  updateTimeTracking(
+    _id: string,
+    status: string,
+    timeSpent: number,
+    startDate: string,
+  ): Promise<any>;
 }
 
 export const loadTicketClass = (models: IModels) => {
@@ -101,15 +107,13 @@ export const loadTicketClass = (models: IModels) => {
         throw new Error('typeId or content not found');
       }
 
-      const comment = await models.Comments.createComment({
+      return await models.Comments.createComment({
         type,
         typeId,
         content,
         userType,
         userId: customerId,
       });
-
-      return comment;
     }
 
     /**
@@ -158,6 +162,31 @@ export const loadTicketClass = (models: IModels) => {
       await models.CheckLists.removeChecklists(_ids);
 
       return models.Tickets.deleteMany({ _id: { $in: _ids } });
+    }
+
+    /**
+     * Update Time Tracking
+     */
+    public static async updateTimeTracking(
+      _id: string,
+      status: string,
+      timeSpent: number,
+      startDate?: string,
+    ) {
+      const doc: { status: string; timeSpent: number; startDate?: string } = {
+        status,
+        timeSpent,
+      };
+
+      if (startDate) {
+        doc.startDate = startDate;
+      }
+
+      return await models.Tickets.findOneAndUpdate(
+        { _id },
+        { $set: { timeTrack: doc } },
+        { new: true },
+      );
     }
   }
 

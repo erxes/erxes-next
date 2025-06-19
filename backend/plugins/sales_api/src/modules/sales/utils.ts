@@ -29,12 +29,12 @@ import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
 import { generateFilter } from './graphql/resolvers/queries/deals';
 
 export const itemResolver = async (models: IModels, user: any, item: IDeal) => {
-  const additionInfo = {};
+  const additionalInfo = {};
   const resolver = resolvers['Deal'] || {};
 
   for (const subResolver of Object.keys(resolver)) {
     try {
-      additionInfo[subResolver] = await resolver[subResolver](
+      additionalInfo[subResolver] = await resolver[subResolver](
         item,
         {},
         { models, user },
@@ -45,7 +45,7 @@ export const itemResolver = async (models: IModels, user: any, item: IDeal) => {
     }
   }
 
-  return additionInfo;
+  return additionalInfo;
 };
 
 export const configReplacer = (config) => {

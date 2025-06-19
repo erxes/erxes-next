@@ -60,6 +60,7 @@ export const stageMutations = {
       'close-desc': { closeDate: -1, order: 1 },
       'alphabetically-asc': { name: 1 },
     };
+
     const sort: { [key: string]: any } = sortTypes[sortType];
 
     if (sortType === 'close-asc') {

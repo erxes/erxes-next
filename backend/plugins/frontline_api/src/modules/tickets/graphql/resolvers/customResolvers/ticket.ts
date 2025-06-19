@@ -165,9 +165,11 @@ export default {
   },
 
   async tags(ticket: ITicketDocument) {
-    return (ticket.tagIds || [])
-      .filter((_id) => !!_id)
-      .map((_id) => ({ __typename: 'Tag', _id }));
+    if (!ticket.tagIds || ticket.tagIds.length === 0) {
+      return [];
+    }
+
+    return ticket.tagIds.map((_id) => ({ __typename: 'Tag', _id }));
   },
 
   createdUser(ticket: ITicketDocument) {

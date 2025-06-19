@@ -1,10 +1,15 @@
 import { Document } from 'mongoose';
 
+export enum PipelineVisibility {
+  PUBLIC = 'public',
+  PRIVATE = 'private',
+}
+
 export interface IPipeline {
   name?: string;
   boardId: string;
   status?: string;
-  visibility?: string;
+  visibility?: PipelineVisibility;
   memberIds?: string[];
   bgColor?: string;
   watchedUserIds?: string[];

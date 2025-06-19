@@ -91,7 +91,7 @@ export const loadChecklistClass = (models: IModels) => {
         checklistId: checklist._id,
       });
 
-      return await models.CheckListItems.findOneAndDelete({ _id });
+      return await models.CheckLists.findOneAndDelete({ _id });
     }
   }
 

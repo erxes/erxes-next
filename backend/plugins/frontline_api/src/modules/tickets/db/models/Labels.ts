@@ -18,7 +18,7 @@ export interface IPipelineLabelModel extends Model<IPipelineLabelDocument> {
     doc: IPipelineLabel,
   ): Promise<IPipelineLabelDocument>;
   removePipelineLabel(_id: string): void;
-  labelsLabel(pipelineId: string, targetId: string, labelIds: string[]): void;
+  labelsLabel(targetId: string, labelIds: string[]): void;
   validateUniqueness(filter: IFilter, _id?: string): Promise<boolean>;
   labelObject(params: { labelIds: string[]; targetId: string }): void;
 }
@@ -27,6 +27,10 @@ export const loadPipelineLabelClass = (models: IModels) => {
   class PipelineLabel {
     public static async getPipelineLabel(_id: string) {
       const pipelineLabel = await models.PipelineLabels.findOne({ _id });
+
+      if (!pipelineLabel) {
+        throw new Error('Label not found');
+      }
 
       return pipelineLabel;
     }

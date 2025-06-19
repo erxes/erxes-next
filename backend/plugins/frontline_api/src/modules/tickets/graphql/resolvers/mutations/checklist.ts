@@ -111,7 +111,12 @@ export const checklistMutations = {
     { _id }: { _id: string },
     { models }: IContext,
   ) {
-    return await models.CheckListItems.removeChecklistItem(_id);
+    const checklistItem = await models.CheckListItems.getChecklistItem(_id);
+    const removed = await models.CheckListItems.removeChecklistItem(_id);
+
+    ticketsChecklistDetailChanged(checklistItem.checklistId);
+
+    return removed;
   },
 
   async ticketsChecklistItemsOrder(
