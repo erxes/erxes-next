@@ -1,34 +1,34 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { Button, Label, Select, Input } from "erxes-ui"
-import { useSearchParams } from "react-router-dom"
-import { useAtom } from "jotai"
-import { IconPlus, IconTrash } from "@tabler/icons-react"
-import { paymentMethodsAtom } from "../../states/posCategory"
-import { useForm, UseFormReturn } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { PaymentFormValues, paymentSchema } from "../formSchema"
-import { useToast } from "erxes-ui"
-import { PaymentMethod } from "../../types"
-import { IPosDetail } from "~/modules/pos-detail/types/IPos"
-import PaymentIcon from "./paymentIcon"
+import { useState, useEffect } from 'react';
+import { Button, Label, Select, Input } from 'erxes-ui';
+import { useSearchParams } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { paymentMethodsAtom } from '../../states/posCategory';
+import { useForm, UseFormReturn } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PaymentFormValues, paymentSchema } from '../formSchema';
+import { useToast } from 'erxes-ui';
+import { PaymentMethod } from '../../types';
+import { IPosDetail } from '@/pos-detail/types/IPos';
+import PaymentIcon from './paymentIcon';
 
 interface RestaurantPaymentsFormProps {
   posDetail?: IPosDetail;
-  form?: UseFormReturn<PaymentFormValues>
-  onFormSubmit?: (data: PaymentFormValues) => void
+  form?: UseFormReturn<PaymentFormValues>;
+  onFormSubmit?: (data: PaymentFormValues) => void;
 }
 
-export default function RestaurantPaymentsForm({ 
+export default function RestaurantPaymentsForm({
   posDetail,
   form: externalForm,
-  onFormSubmit
+  onFormSubmit,
 }: RestaurantPaymentsFormProps) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [paymentMethods, setPaymentMethods] = useAtom(paymentMethodsAtom)
-  const [appToken, setAppToken] = useState("")
-  const { toast } = useToast()
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [paymentMethods, setPaymentMethods] = useAtom(paymentMethodsAtom);
+  const [appToken, setAppToken] = useState('');
+  const { toast } = useToast();
 
   const internalForm = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -36,62 +36,62 @@ export default function RestaurantPaymentsForm({
       paymentIds: [],
       paymentTypes: [],
     },
-  })
+  });
 
-  const form = externalForm || internalForm
+  const form = externalForm || internalForm;
 
   const [newPaymentMethod, setNewPaymentMethod] = useState<PaymentMethod>({
-    type: "",
-    title: "",
-    icon: "",
-    config: "",
-  })
+    type: '',
+    title: '',
+    icon: '',
+    config: '',
+  });
 
   useEffect(() => {
     if (posDetail) {
-      const paymentTypesData = posDetail.paymentTypes || []
-      
+      const paymentTypesData = posDetail.paymentTypes || [];
+
       const processedPaymentTypes = paymentTypesData.map((item: any) => {
         if (typeof item === 'string') {
-          return { type: item, title: '', icon: '', config: '', _id: '' }
+          return { type: item, title: '', icon: '', config: '', _id: '' };
         } else if (typeof item === 'object' && item !== null) {
           return {
             _id: item._id || '',
             type: item.type || '',
             title: item.title || '',
             icon: item.icon || '',
-            config: item.config || ''
-          }
+            config: item.config || '',
+          };
         }
-        return { type: '', title: '', icon: '', config: '', _id: '' }
-      })
-      
+        return { type: '', title: '', icon: '', config: '', _id: '' };
+      });
+
       form.reset({
         paymentIds: posDetail.paymentIds || [],
         paymentTypes: processedPaymentTypes,
-      })
-      setPaymentMethods(processedPaymentTypes)
-      setAppToken(posDetail.erxesAppToken || "")
+      });
+      setPaymentMethods(processedPaymentTypes);
+      setAppToken(posDetail.erxesAppToken || '');
     }
-  }, [posDetail, form])
+  }, [posDetail, form]);
 
   const handleInputChange = (field: keyof PaymentMethod, value: string) => {
     setNewPaymentMethod({
       ...newPaymentMethod,
       [field]: value,
-    })
-  }
+    });
+  };
 
-  const generateId = () => Math.random().toString()
+  const generateId = () => Math.random().toString();
 
   const handleAddPaymentMethod = () => {
     if (!newPaymentMethod.type || !newPaymentMethod.title) {
       toast({
-        title: "Validation Error",
-        description: "Please fill in both type and title fields",
-        variant: "destructive"
-      })
-      return
+        title: 'Validation Error',
+        description: 'Please fill in both type and title fields',
+        variant: 'destructive',
+      });
+      return;
     }
 
     const paymentType: PaymentMethod = {
@@ -99,82 +99,88 @@ export default function RestaurantPaymentsForm({
       type: newPaymentMethod.type,
       title: newPaymentMethod.title,
       icon: newPaymentMethod.icon,
-      config: newPaymentMethod.config, 
-    }
+      config: newPaymentMethod.config,
+    };
 
-    const updatedPaymentMethods = [...paymentMethods, paymentType]
-    setPaymentMethods(updatedPaymentMethods)
-    
-    form.setValue('paymentTypes', updatedPaymentMethods)
+    const updatedPaymentMethods = [...paymentMethods, paymentType];
+    setPaymentMethods(updatedPaymentMethods);
+
+    form.setValue('paymentTypes', updatedPaymentMethods);
 
     if (onFormSubmit) {
       onFormSubmit({
         paymentIds: form.getValues('paymentIds'),
-        paymentTypes: updatedPaymentMethods
-      })
+        paymentTypes: updatedPaymentMethods,
+      });
     }
 
     setNewPaymentMethod({
-      type: "",
-      title: "",
-      icon: "",
-      config: "",
-    })
-  }
+      type: '',
+      title: '',
+      icon: '',
+      config: '',
+    });
+  };
 
   const handleRemovePaymentMethod = (index: number) => {
-    const updatedMethods = [...paymentMethods]
-    updatedMethods.splice(index, 1)
-    setPaymentMethods(updatedMethods)
-    
-    form.setValue('paymentTypes', updatedMethods)
+    const updatedMethods = [...paymentMethods];
+    updatedMethods.splice(index, 1);
+    setPaymentMethods(updatedMethods);
+
+    form.setValue('paymentTypes', updatedMethods);
 
     if (onFormSubmit) {
       onFormSubmit({
         paymentIds: form.getValues('paymentIds'),
-        paymentTypes: updatedMethods
-      })
+        paymentTypes: updatedMethods,
+      });
     }
-  }
+  };
 
   const safeDisplayValue = (value: any): string => {
     if (value === null || value === undefined) {
-      return ''
+      return '';
     }
     if (typeof value === 'string') {
-      return value
+      return value;
     }
     if (typeof value === 'object') {
-      return JSON.stringify(value)
+      return JSON.stringify(value);
     }
-    return String(value)
-  }
+    return String(value);
+  };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     const formData: PaymentFormValues = {
       paymentIds: form.getValues('paymentIds'),
-      paymentTypes: paymentMethods
-    }
-    
-    if (onFormSubmit) {
-      onFormSubmit(formData)
-    }
-    
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set("tab", "permission")
-    setSearchParams(newParams)
-  }
+      paymentTypes: paymentMethods,
+    };
 
-  const { formState: { errors } } = form
+    if (onFormSubmit) {
+      onFormSubmit(formData);
+    }
+
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('tab', 'permission');
+    setSearchParams(newParams);
+  };
+
+  const {
+    formState: { errors },
+  } = form;
 
   return (
     <form onSubmit={handleSubmit} className="p-3">
       <div className="space-y-6">
         <div className="space-y-1">
-          <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">PAYMENTS</Label>
-          <p className="text-sm text-gray-500">Select payments that you want to use</p>
+          <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+            PAYMENTS
+          </Label>
+          <p className="text-sm text-gray-500">
+            Select payments that you want to use
+          </p>
           <div>
             <Select>
               <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
@@ -188,9 +194,11 @@ export default function RestaurantPaymentsForm({
             </Select>
           </div>
         </div>
-        
+
         <div className="space-y-1">
-          <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">ERXES APP TOKEN</Label>
+          <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+            ERXES APP TOKEN
+          </Label>
           <Input
             value={appToken}
             onChange={(e) => setAppToken(e.target.value)}
@@ -200,12 +208,16 @@ export default function RestaurantPaymentsForm({
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm text-indigo-600 font-medium uppercase">OTHER PAYMENTS</Label>
+          <Label className="text-sm text-indigo-600 font-medium uppercase">
+            OTHER PAYMENTS
+          </Label>
           <p className="text-sm text-gray-500">
-            Type is must latin, some default types: golomtCard, khaanCard, TDBCard
+            Type is must latin, some default types: golomtCard, khaanCard,
+            TDBCard
             <br />
-            Хэрэв тухайн талбэрт ебаримт хавлагүй бол: "skipEbarimt: true", Харилцагч сонгосон үед л харагдах бол:
-            "mustCustomer: true", Харав хуваах боломжгүй бол: "notSplit: true" Үрэдчилж төлсөн төлбөрөөр
+            Хэрэв тухайн талбэрт ебаримт хавлагүй бол: "skipEbarimt: true",
+            Харилцагч сонгосон үед л харагдах бол: "mustCustomer: true", Харав
+            хуваах боломжгүй бол: "notSplit: true" Үрэдчилж төлсөн төлбөрөөр
             <br />
             (Татвар тооцсон) бол: "preTax: true
           </p>
@@ -222,9 +234,12 @@ export default function RestaurantPaymentsForm({
               Add payments method
             </Button>
           </div>
-          
+
           {paymentMethods.map((method: PaymentMethod, index: number) => (
-            <div key={method._id || index} className="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg mb-2">
+            <div
+              key={method._id || index}
+              className="grid grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg mb-2"
+            >
               <div>
                 <Label className="text-xs text-gray-500">Type</Label>
                 <div className="font-medium">{method.type}</div>
@@ -232,14 +247,18 @@ export default function RestaurantPaymentsForm({
               <div>
                 <Label className="text-xs text-gray-500">Title</Label>
                 <div className="font-medium flex items-center gap-2">
-                  {method.icon && <PaymentIcon iconType={method.icon} size={16} />}
+                  {method.icon && (
+                    <PaymentIcon iconType={method.icon} size={16} />
+                  )}
                   {method.title}
                 </div>
               </div>
               <div>
                 <Label className="text-xs text-gray-500">Icon</Label>
                 <div className="font-medium flex items-center gap-2">
-                  {method.icon && <PaymentIcon iconType={method.icon} size={16} />}
+                  {method.icon && (
+                    <PaymentIcon iconType={method.icon} size={16} />
+                  )}
                   {method.icon}
                 </div>
               </div>
@@ -260,31 +279,35 @@ export default function RestaurantPaymentsForm({
               </div>
             </div>
           ))}
-          
+
           <div className="grid grid-cols-4 gap-4">
             <div>
               <Label className="text-xs text-gray-500 mb-1 block">Type *</Label>
               <Input
                 value={newPaymentMethod.type}
-                onChange={(e) => handleInputChange("type", e.target.value)}
+                onChange={(e) => handleInputChange('type', e.target.value)}
                 className="h-10"
                 placeholder="e.g. golomtCard, khaanCard, TDBCard"
               />
             </div>
             <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Title *</Label>
+              <Label className="text-xs text-gray-500 mb-1 block">
+                Title *
+              </Label>
               <Input
                 value={newPaymentMethod.title}
-                onChange={(e) => handleInputChange("title", e.target.value)}
+                onChange={(e) => handleInputChange('title', e.target.value)}
                 className="h-10"
                 placeholder="e.g. Visa, Mastercard"
               />
             </div>
             <div>
               <Label className="text-xs text-gray-500 mb-1 block">Icon</Label>
-              <Select 
-                value={newPaymentMethod.icon} 
-                onValueChange={(value: string) => handleInputChange("icon", value)}
+              <Select
+                value={newPaymentMethod.icon}
+                onValueChange={(value: string) =>
+                  handleInputChange('icon', value)
+                }
               >
                 <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
                   <Select.Value placeholder="Select icon" />
@@ -333,7 +356,7 @@ export default function RestaurantPaymentsForm({
               <Label className="text-xs text-gray-500 mb-1 block">Config</Label>
               <Input
                 value={newPaymentMethod.config}
-                onChange={(e) => handleInputChange("config", e.target.value)}
+                onChange={(e) => handleInputChange('config', e.target.value)}
                 className="h-10"
                 placeholder="e.g. skipEbarimt: true, mustCustomer: true"
               />
@@ -348,5 +371,5 @@ export default function RestaurantPaymentsForm({
         )}
       </div>
     </form>
-  )
+  );
 }

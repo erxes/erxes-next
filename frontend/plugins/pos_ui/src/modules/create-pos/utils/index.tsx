@@ -1,6 +1,6 @@
 import type { JSX } from 'react/jsx-runtime';
-import { CustomNode } from '~/modules/slot/types';
-import POSSlotsManager from '~/modules/slot/components/slot';
+import { CustomNode } from '@/slot/types';
+import POSSlotsManager from '@/slot/components/slot';
 import ChooseCategoryPage from '../components/category/choose-category';
 import { EcommerceForm } from '../components/general/ecommerce';
 import { RestaurantForm } from '../components/general/restaurant';
@@ -48,19 +48,13 @@ export const getPosCreateTabs = ({
       value: 'payments',
       component: getCategoryComponent(
         posCategory,
-        <EcommercePaymentsForm
-          form={forms.payment}
-        />,
+        <EcommercePaymentsForm form={forms.payment} />,
         <RestaurantPaymentsForm />,
       ) || <div>Please select a category first</div>,
     },
     {
       value: 'permission',
-      component: (
-        <PermissionForm
-          form={forms.permission}
-        />
-      ),
+      component: <PermissionForm form={forms.permission} />,
     },
     {
       value: 'product',
@@ -105,7 +99,9 @@ export const getPosCreateTabs = ({
       ),
     };
 
-    const propertiesIndex = baseTabs.findIndex(tab => tab.value === 'properties');
+    const propertiesIndex = baseTabs.findIndex(
+      (tab) => tab.value === 'properties',
+    );
     baseTabs.splice(propertiesIndex + 1, 0, slotTab);
   }
 

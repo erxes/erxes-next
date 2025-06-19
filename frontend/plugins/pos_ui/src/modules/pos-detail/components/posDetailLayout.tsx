@@ -1,22 +1,27 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Stepper, Resizable, Button , useMultiQueryState } from 'erxes-ui';
+import { Stepper, Resizable, Button, useMultiQueryState } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { IconCheck, IconEdit } from '@tabler/icons-react';
 import { PosDetailSheet } from './posDetailSheet';
-import { posCategoryAtom } from '~/modules/create-pos/states/posCategory';
+import { posCategoryAtom } from '@/create-pos/states/posCategory';
 import {
   BasicInfoFormValues,
   PermissionFormValues,
-} from '~/modules/create-pos/components/formSchema';
-import { LAYOUT, navigateToTab } from '~/modules/constants';
-import { NavigationFooterProps, PosTabContentProps, StepConfig, StepperItemProps, VerticalStepperProps } from '../types/IPosLayout';
-import { ValidationAlert } from '~/modules/create-pos/components/index/lay-stepper';
+} from '@/create-pos/components/formSchema';
+import { LAYOUT, navigateToTab } from '@/constants';
+import {
+  NavigationFooterProps,
+  PosTabContentProps,
+  StepConfig,
+  StepperItemProps,
+  VerticalStepperProps,
+} from '../types/IPosLayout';
+import { ValidationAlert } from '@/create-pos/components/index/lay-stepper';
 import { UseFormReturn } from 'react-hook-form';
 import { IPosDetail } from '../types/IPos';
-
 
 const getSteps = (posCategory: string | null): StepConfig[] => {
   const baseSteps: StepConfig[] = [
@@ -243,9 +248,11 @@ const PosEditStepper: React.FC<PosEditStepperProps> = ({ children }) => {
 interface PosEditLayoutProps {
   children: React.ReactNode;
   actions?: React.ReactNode;
-  form?: UseFormReturn<BasicInfoFormValues> | UseFormReturn<PermissionFormValues>;
+  form?:
+    | UseFormReturn<BasicInfoFormValues>
+    | UseFormReturn<PermissionFormValues>;
   onFinalSubmit?: () => void;
-  posDetail?:IPosDetail;
+  posDetail?: IPosDetail;
 }
 
 export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
@@ -305,7 +312,7 @@ export const PosEditLayout: React.FC<PosEditLayoutProps> = ({
         }
       }
     }
-    
+
     return true;
   };
 

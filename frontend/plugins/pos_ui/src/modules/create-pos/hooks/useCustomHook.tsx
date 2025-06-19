@@ -1,9 +1,15 @@
 import { useState } from 'react';
-import { useSubmitPosForm } from '~/modules/hooks/usePosAdd';
-import { useUpdatePosSlots } from '~/modules/hooks/useSlotAdd';
+import { useSubmitPosForm } from '@/hooks/usePosAdd';
+import { useUpdatePosSlots } from '@/hooks/useSlotAdd';
 import { useToast } from 'erxes-ui/hooks';
-import { CustomNode } from '~/modules/slot/types';
-import { BasicInfoFormValues, FormStepData, PaymentFormValues, PermissionFormValues, ProductFormValues } from '../components/formSchema';
+import { CustomNode } from '@/slot/types';
+import {
+  BasicInfoFormValues,
+  FormStepData,
+  PaymentFormValues,
+  PermissionFormValues,
+  ProductFormValues,
+} from '../components/formSchema';
 import { UseFormReturn } from 'react-hook-form';
 interface UsePosCreateHandlersProps {
   forms: {
@@ -19,8 +25,16 @@ export const usePosCreateHandlers = ({
   forms,
   formStepData,
 }: UsePosCreateHandlersProps) => {
-  const { submitForm, loading: posLoading, error: posError } = useSubmitPosForm();
-  const { updatePosSlots, loading: slotLoading, error: slotError } = useUpdatePosSlots();
+  const {
+    submitForm,
+    loading: posLoading,
+    error: posError,
+  } = useSubmitPosForm();
+  const {
+    updatePosSlots,
+    loading: slotLoading,
+    error: slotError,
+  } = useUpdatePosSlots();
   const [createdPosId, setCreatedPosId] = useState<string | null>(null);
   const [slotNodes, setSlotNodes] = useState<CustomNode[]>([]);
   const { toast } = useToast();

@@ -74,7 +74,7 @@ const AssignConversation = () => {
   return (
     <div className="flex items-center gap-2">
       Assigned to:
-      <SelectMember.Detail
+      <SelectMember
         value={assignedUserId}
         onValueChange={handleAssignConversations}
         className="text-foreground"
