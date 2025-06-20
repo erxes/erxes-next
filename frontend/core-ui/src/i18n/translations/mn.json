@@ -1,7 +1,7 @@
 {
   "$schema": "./$schema.json",
   "nav": {
-    "plugins": "Плагин",
+    "modules": "Модуул",
     "teamInbox": "Багийн имэйл хайрцаг",
     "inbox": "Inbox",
     "sales": "Борлуулалт",

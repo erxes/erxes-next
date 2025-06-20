@@ -24,6 +24,8 @@ import {
   startSubscriptionServer,
   stopSubscriptionServer,
 } from './subscription';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 const { DOMAIN } = process.env;
@@ -65,6 +67,16 @@ app.get('/health', async (_req, res) => {
   res.end('ok');
 });
 
+app.get('/locales/:lng', async (req, res) => {
+  try {
+    const lngJson = fs.readFileSync(
+      path.join(__dirname, `./locales/${req.params.lng}`),
+    );
+    res.json(JSON.parse(lngJson.toString()));
+  } catch {
+    res.status(500).send('Error fetching services');
+  }
+});
 app.use('/pl:serviceName', async (req, res) => {
   try {
     const serviceName: string = req.params.serviceName.replace(':', '');
