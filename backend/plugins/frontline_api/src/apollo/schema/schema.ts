@@ -1,9 +1,9 @@
-// import { TypeExtensions } from '../../modules/inbox/graphql/schemas/extensions';
 import {
   mutations as ChannelsMutations,
   queries as ChannelsQueries,
   types as ChannelsTypes,
 } from '@/inbox/graphql/schemas/channel';
+import { TypeExtensions } from './extensions';
 
 import {
   mutations as ConversationsMutations,
@@ -23,17 +23,26 @@ import {
   types as FacebookTypes,
 } from '@/integrations/facebook/graphql/schema/facebook';
 
+import {
+  mutations as TicketsMutations,
+  queries as TicketsQueries,
+  types as TicketsTypes,
+} from '~/modules/tickets/graphql/schemas';
+
 export const types = `
+    ${TypeExtensions}
     ${ChannelsTypes}
     ${ConversationsTypes}
     ${IntegrationsTypes}
     ${FacebookTypes}
+    ${TicketsTypes}
   `;
 export const queries = `
     ${ChannelsQueries}
     ${ConversationsQueries}
     ${IntegrationsQueries}
     ${FacebookQueries}
+    ${TicketsQueries}
   `;
 
 export const mutations = `
@@ -41,5 +50,6 @@ export const mutations = `
    ${ConversationsMutations}
    ${IntegrationsMutations}
    ${FacebookMutations}
+   ${TicketsMutations}
 `;
 export default { types, queries, mutations };

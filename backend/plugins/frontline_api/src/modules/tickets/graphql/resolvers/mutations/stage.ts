@@ -1,27 +1,27 @@
 import { IOrderInput } from 'erxes-api-shared/core-types';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-import { IStageDocument } from '~/modules/sales/@types';
-import { bulkUpdateOrders } from '~/modules/sales/utils';
+import { IStage } from '~/modules/tickets/@types/stage';
+import { bulkUpdateOrders } from '~/modules/tickets/utils';
 
 export const stageMutations = {
   /**
    * Update stage orders
    */
-  async salesStagesUpdateOrder(
-    _root,
+  async ticketsStagesUpdateOrder(
+    _root: undefined,
     { orders }: { orders: IOrderInput[] },
     { models }: IContext,
   ) {
-    return models.Stages.updateOrder(orders);
+    return await models.Stages.updateOrder(orders);
   },
 
   /**
    * Edit stage
    */
-  async salesStagesEdit(
-    _root,
-    { _id, ...doc }: IStageDocument,
+  async ticketsStagesEdit(
+    _root: undefined,
+    { _id, ...doc }: IStage & { _id: string },
     { models }: IContext,
   ) {
     return await models.Stages.updateStage(_id, doc);
@@ -30,16 +30,16 @@ export const stageMutations = {
   /**
    * Remove stage
    */
-  async salesStagesRemove(
-    _root,
+  async ticketsStagesRemove(
+    _root: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
     return await models.Stages.removeStage(_id);
   },
 
-  async salesStagesSortItems(
-    _root,
+  async ticketsStagesSortItems(
+    _root: undefined,
     {
       stageId,
       proccessId,
@@ -61,25 +61,17 @@ export const stageMutations = {
       'alphabetically-asc': { name: 1 },
     };
 
-    const sort: { [key: string]: any } = sortTypes[sortType] || {};
-
-    if (!sort) {
-      throw new Error(
-        `Invalid sortType: ${sortType}. Valid values are: ${Object.keys(
-          sortTypes,
-        ).join(', ')}`,
-      );
-    }
+    const sort: { [key: string]: any } = sortTypes[sortType];
 
     if (sortType === 'close-asc') {
       await bulkUpdateOrders({
-        collection: models.Deals,
+        collection: models.Tickets,
         stageId,
         sort,
         additionFilter: { closeDate: { $ne: null } },
       });
       await bulkUpdateOrders({
-        collection: models.Deals,
+        collection: models.Tickets,
         stageId,
         sort: { order: 1 },
         additionFilter: { closeDate: null },
@@ -87,7 +79,7 @@ export const stageMutations = {
       });
     } else {
       const response = await bulkUpdateOrders({
-        collection: models.Deals,
+        collection: models.Tickets,
         stageId,
         sort,
       });
@@ -99,8 +91,8 @@ export const stageMutations = {
 
     const stage = await models.Stages.getStage(stageId);
 
-    graphqlPubsub.publish(`salesPipelinesChanged:${stage.pipelineId}`, {
-      salesPipelinesChanged: {
+    graphqlPubsub.publish(`ticketsPipelinesChanged:${stage.pipelineId}`, {
+      ticketsPipelinesChanged: {
         _id: stage.pipelineId,
         proccessId,
         action: 'reOrdered',
