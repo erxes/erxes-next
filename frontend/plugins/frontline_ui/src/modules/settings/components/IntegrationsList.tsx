@@ -10,8 +10,6 @@ import {
 import {
   Badge,
   Button,
-  InlineCell,
-  InlineCellDisplay,
   RecordTable,
   RecordTableCellDisplay,
   Skeleton,
@@ -96,13 +94,9 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
     header: () => <RecordTable.InlineHead label="Name" />,
     cell: ({ cell }) => {
       return (
-        <InlineCell
-          name={cell.column.id}
-          recordId={cell.row.original._id}
-          display={() => (
-            <InlineCellDisplay>{cell.getValue() as string}</InlineCellDisplay>
-          )}
-        />
+        <RecordTableCellDisplay>
+          {cell.getValue() as string}
+        </RecordTableCellDisplay>
       );
     },
     size: 250,
@@ -113,15 +107,9 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
     header: () => <RecordTable.InlineHead label="Kind" />,
     cell: ({ cell }) => {
       return (
-        <InlineCell
-          name={cell.column.id}
-          recordId={cell.row.original._id}
-          display={() => (
-            <InlineCellDisplay className="w-full flex items-center justify-center">
-              <Badge className="text-xs">{cell.getValue() as string}</Badge>
-            </InlineCellDisplay>
-          )}
-        />
+        <RecordTableCellDisplay className="w-full flex items-center justify-center">
+          <Badge className="text-xs">{cell.getValue() as string}</Badge>
+        </RecordTableCellDisplay>
       );
     },
   },
@@ -147,29 +135,19 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
 
       if (status) {
         return (
-          <InlineCell
-            name={cell.column.id}
-            recordId={cell.row.original._id}
-            display={() => (
-              <InlineCellDisplay className="w-full flex items-center justify-center">
-                <Badge className="text-xs capitalize" variant={'success'}>
-                  Active
-                </Badge>
-              </InlineCellDisplay>
-            )}
-          />
+          <RecordTableCellDisplay className="w-full flex items-center justify-center">
+            <Badge className="text-xs capitalize" variant={'success'}>
+              Active
+            </Badge>
+          </RecordTableCellDisplay>
         );
       } else
         return (
-          <InlineCell
-            name="healthStatus"
-            recordId={cell.row.original._id}
-            display={() => (
-              <Badge className="text-xs" variant={'destructive'}>
-                Inactive
-              </Badge>
-            )}
-          />
+          <RecordTableCellDisplay>
+            <Badge className="text-xs" variant={'destructive'}>
+              Inactive
+            </Badge>
+          </RecordTableCellDisplay>
         );
     },
     size: 100,
@@ -184,29 +162,19 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
 
       if (status === 'healthy') {
         return (
-          <InlineCell
-            name={cell.column.id}
-            recordId={cell.row.original._id}
-            display={() => (
-              <InlineCellDisplay className="w-full flex items-center justify-center">
-                <Badge className="text-xs capitalize" variant={'success'}>
-                  {status}
-                </Badge>
-              </InlineCellDisplay>
-            )}
-          />
+          <RecordTableCellDisplay className="w-full flex items-center justify-center">
+            <Badge className="text-xs capitalize" variant={'success'}>
+              {status}
+            </Badge>
+          </RecordTableCellDisplay>
         );
       } else
         return (
-          <InlineCell
-            name="healthStatus"
-            recordId={cell.row.original._id}
-            display={() => (
-              <Badge className="text-xs" variant={'destructive'}>
-                {'Unhealthy'}
-              </Badge>
-            )}
-          />
+          <RecordTableCellDisplay>
+            <Badge className="text-xs" variant={'destructive'}>
+              {'Unhealthy'}
+            </Badge>
+          </RecordTableCellDisplay>
         );
     },
     size: 120,

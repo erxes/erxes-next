@@ -26,7 +26,7 @@ const PluginAccounting = () => {
     <Suspense
       fallback={
         <div className="flex justify-center items-center h-full">
-          <Spinner />
+          <Spinner size="small" />
         </div>
       }
     >

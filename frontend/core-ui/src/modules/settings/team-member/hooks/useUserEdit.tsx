@@ -89,7 +89,7 @@ export const useUserEdit = () => {
   return { usersEdit, loading };
 };
 
-export const useUsersStatusEdit = () => {
+export const  useUsersStatusEdit = () => {
   const { toast } = useToast();
   const [editStatus, { loading }] = useMutation(
     mutations.USERS_SET_ACTIVE_STATUS,
