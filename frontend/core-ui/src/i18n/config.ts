@@ -3,12 +3,14 @@ import i18n, { InitOptions } from 'i18next';
 import HttpBackend from 'i18next-http-backend';
 import { REACT_APP_API_URL } from 'erxes-ui';
 
+const supportedLngs = ['en', 'mn'];
+
 export const defaultI18nOptions: InitOptions = {
   fallbackLng: 'en',
   interpolation: {
     escapeValue: false,
   },
-  supportedLngs: ['en', 'mn'], // Or dynamically get this
+  supportedLngs,
   detection: {
     caches: ['cookie', 'localStorage', 'header'],
     lookupCookie: 'lng',
@@ -25,19 +27,20 @@ export const defaultI18nOptions: InitOptions = {
 
 export const i18nInstance = i18n.createInstance();
 
-// Save selected language
 i18nInstance.on('languageChanged', (lng) => {
   localStorage.setItem('lng', lng);
 });
 
-const savedLanguage =
-  localStorage.getItem('lng') || defaultI18nOptions.fallbackLng;
+const savedLanguage = localStorage.getItem('lng');
+const lng =
+  savedLanguage && supportedLngs.includes(savedLanguage)
+    ? savedLanguage
+    : String(defaultI18nOptions.fallbackLng); // Ensure fallback is a string
 
-// Add the backend loader
 i18nInstance
-  .use(HttpBackend) // ⬅️ Use the backend loader
+  .use(HttpBackend)
   .use(initReactI18next)
   .init({
     ...defaultI18nOptions,
-    lng: savedLanguage as string,
+    lng: lng as string | undefined,
   });
