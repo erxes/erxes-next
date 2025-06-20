@@ -67,9 +67,6 @@ const queryParams = `
   tagIds: [String]
   excludeTagIds: [String]
   tagWithRelated: Boolean
-
-  brandIds: [String]
-
   ids: [String]
   excludeIds: Boolean
   searchValue: String
