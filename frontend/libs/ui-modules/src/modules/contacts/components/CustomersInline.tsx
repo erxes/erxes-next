@@ -13,6 +13,7 @@ import {
 import { ICustomer } from '../types';
 import { useEffect } from 'react';
 import { useCustomersInline } from '../hooks';
+import React from 'react';
 
 interface CustomersInlineProviderProps {
   children: React.ReactNode;
@@ -29,6 +30,15 @@ const CustomersInlineProvider = ({
   customers,
   updateCustomers,
 }: CustomersInlineProviderProps) => {
+  const getCustomerTitle = (customer: ICustomer) => {
+    const { firstName, lastName, primaryEmail, primaryPhone } = customer;
+    const fullName =
+      firstName || lastName
+        ? `${firstName || ''} ${lastName || ''}`.trim()
+        : primaryEmail || primaryPhone || placeholder || 'anonymous customer';
+    return fullName;
+  };
+
   return (
     <CustomersInlineContext.Provider
       value={{
@@ -38,6 +48,7 @@ const CustomersInlineProvider = ({
           ? 'Select Customers'
           : placeholder,
         updateCustomers,
+        getCustomerTitle,
       }}
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
@@ -86,7 +97,8 @@ const CustomerInlineEffectComponent = ({
 };
 
 const CustomersInlineAvatar = ({ className, ...props }: AvatarProps) => {
-  const { customers, loading, customerIds } = useCustomersInlineContext();
+  const { customers, loading, customerIds, getCustomerTitle } =
+    useCustomersInlineContext();
 
   if (loading)
     return (
@@ -100,10 +112,6 @@ const CustomersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     );
 
   const renderAvatar = (customer: ICustomer) => {
-    const { avatar, firstName, lastName } = customer;
-
-const fullName = `${firstName ?? ''} ${lastName ?? ''}`.trim();
-
     return (
       <Tooltip delayDuration={100}>
         <Tooltip.Trigger asChild>
@@ -117,14 +125,14 @@ const fullName = `${firstName ?? ''} ${lastName ?? ''}`.trim();
             size="lg"
             {...props}
           >
-            <Avatar.Image src={avatar} />
-                  <Avatar.Fallback>
-+              {(fullName.charAt(0) || '').toUpperCase()}
-+            </Avatar.Fallback>
+            <Avatar.Image src={customer.avatar} />
+            <Avatar.Fallback>
+              {getCustomerTitle(customer).charAt(0)}
+            </Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>
         <Tooltip.Content>
-          <p>{fullName}</p>
+          <p>{getCustomerTitle(customer)}</p>
         </Tooltip.Content>
       </Tooltip>
     );
@@ -167,17 +175,15 @@ const fullName = `${firstName ?? ''} ${lastName ?? ''}`.trim();
   );
 };
 
-const CustomersInlineTitle = () => {
-  const { customers, loading, placeholder } = useCustomersInlineContext();
+const CustomersInlineTitle = ({ className }: { className?: string }) => {
+  const { getCustomerTitle, customers, loading, placeholder } =
+    useCustomersInlineContext();
 
   const getDisplayValue = () => {
-    if (customers.length === 0) return undefined;
+    if (!customers || customers.length === 0) return placeholder;
 
     if (customers.length === 1) {
-      const { firstName, lastName, primaryEmail, primaryPhone } = customers[0];
-      return firstName || lastName
-        ? `${firstName || ''} ${lastName || ''}`
-        : primaryEmail || primaryPhone;
+      return getCustomerTitle(customers[0]);
     }
 
     return `${customers.length} customers`;
@@ -188,28 +194,49 @@ const CustomersInlineTitle = () => {
       value={getDisplayValue()}
       loading={loading}
       placeholder={placeholder}
+      className={className}
     />
   );
 };
 
-const CustomersInlineRoot = ({
-  customerIds,
-  customers,
-  placeholder,
-  updateCustomers,
-}: Omit<CustomersInlineProviderProps, 'children'>) => {
-  return (
-    <CustomersInlineProvider
-      customerIds={customerIds}
-      customers={customers}
-      placeholder={placeholder}
-      updateCustomers={updateCustomers}
-    >
-      <CustomersInline.Avatar />
-      <CustomersInline.Title />
-    </CustomersInlineProvider>
-  );
-};
+const CustomersInlineRoot = React.forwardRef<
+  HTMLSpanElement,
+  Omit<React.ComponentPropsWithoutRef<'span'>, 'children'> &
+    Omit<CustomersInlineProviderProps, 'children'>
+>(
+  (
+    {
+      customerIds,
+      customers,
+      placeholder,
+      updateCustomers,
+      className,
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      <CustomersInlineProvider
+        customerIds={customerIds}
+        customers={customers}
+        placeholder={placeholder}
+        updateCustomers={updateCustomers}
+      >
+        <span
+          ref={ref}
+          {...props}
+          className={cn(
+            'inline-flex items-center gap-2 overflow-hidden',
+            className,
+          )}
+        >
+          <CustomersInlineAvatar />
+          <CustomersInlineTitle />
+        </span>
+      </CustomersInlineProvider>
+    );
+  },
+);
 
 export const CustomersInline = Object.assign(CustomersInlineRoot, {
   Provider: CustomersInlineProvider,

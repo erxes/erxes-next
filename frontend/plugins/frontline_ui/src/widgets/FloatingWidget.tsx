@@ -1,13 +1,7 @@
-import { Button } from 'erxes-ui';
+import { CallWidget } from '@/integrations/call/components/CallWidget';
 
 const FloatingWidget = () => {
-  return (
-    <div className="absolute bottom-4 right-4 z-50">
-      <Button variant="default" className="rounded-full">
-        Inbox floating widget
-      </Button>
-    </div>
-  );
+  return <CallWidget />;
 };
 
 export default FloatingWidget;
