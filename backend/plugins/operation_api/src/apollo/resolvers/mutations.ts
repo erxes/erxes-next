@@ -1,5 +1,5 @@
-import { tasksMutations } from '@/tasks/graphql/resolvers/mutations/tasks';
+import { mutations as taskMutations } from '~/modules/tasks/graphql/resolvers/mutations';
 
 export const mutations = {
-  ...tasksMutations,
+  ...taskMutations,
 };

@@ -1,10 +1,12 @@
+import { TypeExtensions } from '~/apollo/schema/extension';
 import {
   mutations as TasksMutations,
   queries as TasksQueries,
   types as TasksTypes,
-} from '@/tasks/graphql/schemas/tasks';
+} from '~/modules/tasks/graphql/schemas';
 
 export const types = `
+  ${TypeExtensions}
   ${TasksTypes}
 `;
 

@@ -1,5 +1,5 @@
-import { tasksQueries } from '@/tasks/graphql/resolvers/queries/tasks';
+import { queries as taskQueries } from '~/modules/tasks/graphql/resolvers/queries';
 
 export const queries = {
-  ...tasksQueries,
+  ...taskQueries,
 };
