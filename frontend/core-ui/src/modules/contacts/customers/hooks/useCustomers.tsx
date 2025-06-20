@@ -22,20 +22,23 @@ export const useCustomers = (
 ) => {
   const { isLead } = useIsCustomerLeadSessionKey();
   const setCustomerTotalCount = useSetAtom(customerTotalCountAtom);
-  const [{ searchValue, tags, created, updated, lastSeen }] =
+  // Customer Filter implementation
+  const [{ searchValue, tags, created, updated, lastSeen, brand, birthday }] =
     useMultiQueryState<{
       searchValue: string;
       tags: string[];
       created: string;
       updated: string;
       lastSeen: string;
-    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
+      brand: string;
+      birthday: string;
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen', 'brand', 'birthday']);
   const { sessionKey } = useIsCustomerLeadSessionKey();
 
   const { cursor } = useRecordTableCursor({
     sessionKey,
   });
-
+  
   const customersQueryVariables = {
     limit: CUSTOMERS_PER_PAGE,
     orderBy: {
@@ -44,6 +47,7 @@ export const useCustomers = (
     cursor,
     searchValue,
     tagIds: tags,
+    brandIds: [brand],
     dateFilters: JSON.stringify({
       createdAt: {
         gte: parseDateRangeFromString(created)?.from,
@@ -57,6 +61,10 @@ export const useCustomers = (
         gte: parseDateRangeFromString(lastSeen)?.from,
         lte: parseDateRangeFromString(lastSeen)?.to,
       },
+      birthDate: {
+        gte: parseDateRangeFromString(birthday)?.from,
+        lte: parseDateRangeFromString(birthday)?.to,
+      }
     }),
     type: isLead ? 'lead' : 'customer',
     ...options?.variables,

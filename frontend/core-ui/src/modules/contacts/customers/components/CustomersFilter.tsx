@@ -9,7 +9,7 @@ import {
 
 import { Combobox, Command, Filter, useMultiQueryState } from 'erxes-ui';
 
-import { SelectMember, TagsFilter } from 'ui-modules';
+import { SelectMember, TagsFilter, SelectBrand } from 'ui-modules';
 import { CustomerTotalCount } from './CustomerTotalCount';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { useIsCustomerLeadSessionKey } from '../hooks/useCustomerLeadSessionKey';
@@ -21,7 +21,8 @@ const CustomersFilterPopover = () => {
     created: string;
     updated: string;
     lastSeen: string;
-  }>(['tags', 'searchValue', 'created', 'updated', 'lastSeen']);
+    brand: string;
+  }>(['tags', 'searchValue', 'created', 'updated', 'lastSeen', 'brand']);
 
   const hasFilters = Object.values(queries || {}).some(
     (value) => value !== null,
@@ -71,6 +72,7 @@ const CustomersFilterPopover = () => {
             </Command>
           </Filter.View>
           <SelectMember.FilterView />
+          <SelectBrand.FilterView />
           <TagsFilter.View tagType="core:customer" />
           <Filter.View filterKey="created">
             <Filter.DateView filterKey="created" />
@@ -80,6 +82,9 @@ const CustomersFilterPopover = () => {
           </Filter.View>
           <Filter.View filterKey="lastSeen">
             <Filter.DateView filterKey="lastSeen" />
+          </Filter.View>
+          <Filter.View filterKey="birthday">
+            <Filter.DateView filterKey="birthday" />
           </Filter.View>
         </Combobox.Content>
       </Filter.Popover>
@@ -96,6 +101,9 @@ const CustomersFilterPopover = () => {
         <Filter.View filterKey="lastSeen" inDialog>
           <Filter.DialogDateView filterKey="lastSeen" />
         </Filter.View>
+        <Filter.View filterKey="birthday" inDialog>
+          <Filter.DialogDateView filterKey="birthday" />
+        </Filter.View>
       </Filter.Dialog>
     </>
   );
@@ -107,9 +115,11 @@ export const CustomersFilter = () => {
     created: string;
     updated: string;
     lastSeen: string;
+    birthday: string;
     tags: string[];
-  }>(['searchValue', 'created', 'updated', 'lastSeen', 'tags']);
-  const { searchValue, created, updated, lastSeen } = queries || {};
+    brand: string;
+  }>(['searchValue', 'created', 'updated', 'lastSeen', 'birthday', 'tags', 'brand']);
+  const { searchValue, created, updated, lastSeen, birthday } = queries || {};
   const { sessionKey } = useIsCustomerLeadSessionKey();
 
   return (
@@ -158,7 +168,18 @@ export const CustomersFilter = () => {
             <Filter.BarClose filterKey="lastSeen" />
           </Filter.BarItem>
         )}
+        {birthday && (
+          <Filter.BarItem>
+            <Filter.BarName>
+              <IconCalendar />
+              Birthday
+            </Filter.BarName>
+            <Filter.Date filterKey="birthday" />
+            <Filter.BarClose filterKey="birthday" />
+          </Filter.BarItem>
+        )}
         <SelectMember.FilterBar />
+        <SelectBrand.FilterBar />
         <CustomersFilterPopover />
         <CustomerTotalCount />
       </Filter.Bar>
