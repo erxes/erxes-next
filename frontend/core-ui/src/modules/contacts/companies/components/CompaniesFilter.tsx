@@ -1,5 +1,4 @@
 import {
-  IconCalendar,
   IconCalendarPlus,
   IconCalendarTime,
   IconCalendarUp,
@@ -56,10 +55,6 @@ const CompaniesFilterPopover = () => {
                   <IconCalendarTime />
                   Last Seen At
                 </Filter.Item>
-                <Filter.Item value="birthday">
-                  <IconCalendar />
-                  Birthday
-                </Filter.Item>
               </Command.List>
             </Command>
           </Filter.View>
@@ -104,7 +99,7 @@ export const CompaniesFilter = () => {
   const { searchValue, created, updated, lastSeen } = queries || {};
 
   return (
-    <Filter id="customers-filter" sessionKey={COMPANIES_CURSOR_SESSION_KEY}>
+    <Filter id="companies-filter" sessionKey={COMPANIES_CURSOR_SESSION_KEY}>
       <Filter.Bar>
         {searchValue && (
           <Filter.BarItem>
