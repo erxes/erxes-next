@@ -68,6 +68,7 @@ export const PhoneListField = ({
     return () => {
       setShowPhoneInput(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phones, setPhones]);
 
   return (
@@ -134,7 +135,7 @@ const PhoneOptions = ({
   isPrimary,
 }: IPhoneField & { isPrimary?: boolean }) => {
   const { recordId, onValueChange } = usePhoneFields();
-  const [phones, setPhones] = useAtom(phonesFamilyState(recordId));
+  const phones = useAtomValue(phonesFamilyState(recordId));
   const setEditingPhone = useSetAtom(editingPhoneFamilyState(recordId));
   const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
   const handleSetPrimaryPhone = () => {

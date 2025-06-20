@@ -125,6 +125,7 @@ const CustomersInlineAvatar = ({ className, ...props }: AvatarProps) => {
             size="lg"
             {...props}
           >
+
             <Avatar.Image src={customer.avatar} />
             <Avatar.Fallback>
               {getCustomerTitle(customer).charAt(0)}
