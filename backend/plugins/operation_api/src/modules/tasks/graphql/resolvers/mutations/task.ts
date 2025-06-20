@@ -20,11 +20,11 @@ export const taskMutations = {
     { user, models }: IContext,
   ) {
     doc.initialStageId = doc.stageId;
-    doc.watchedUserIds = user && [user._id];
+    doc.watchedUserIds = user ? [user._id] : undefined;
 
     const extendedDoc = {
       ...doc,
-      modifiedBy: user && user._id,
+      modifiedBy: user ? user._id : undefined,
       userId: user ? user._id : doc.userId,
       order: await getNewOrder({
         collection: models.Tasks,
@@ -404,9 +404,7 @@ export const taskMutations = {
 
     await models.Checklists.removeChecklists([task._id]);
 
-    const removed = await models.Tasks.findOneAndDelete({ _id: task._id });
-
-    return removed;
+    return await models.Tasks.findOneAndDelete({ _id: task._id });
   },
 
   /**
@@ -454,7 +452,7 @@ export const taskMutations = {
       })),
     };
 
-    delete doc.sourceConversationIds;
+    doc.sourceConversationIds = undefined;
 
     const clone = await models.Tasks.createTask(doc);
 

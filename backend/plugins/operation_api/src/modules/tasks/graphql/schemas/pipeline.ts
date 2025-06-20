@@ -55,9 +55,9 @@ const mutationParams = `
   metric: String,
   hackScoringType: String,
   templateId: String,
-  isCheckDate: Boolean
-  isCheckUser: Boolean
-  isCheckDepartment: Boolean
+  isCheckDate: Boolean,
+  isCheckUser: Boolean,
+  isCheckDepartment: Boolean,
   excludeCheckUserIds: [String],
   numberConfig: String,
   numberSize: String,

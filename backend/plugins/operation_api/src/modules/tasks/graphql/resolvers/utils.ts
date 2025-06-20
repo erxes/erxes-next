@@ -104,7 +104,7 @@ export const bulkUpdateOrders = async ({
       },
     });
 
-    ord = ord + 10;
+    ord += 10;
   }
 
   if (!bulkOps.length) {
@@ -166,11 +166,11 @@ export const getAmountsMap = async (
 
 export const getCloseDateByType = (closeDateType: string) => {
   if (closeDateType === CLOSE_DATE_TYPES.NEXT_DAY) {
-    const tommorrow = moment().add(1, 'days');
+    const tomorrow = moment().add(1, 'days');
 
     return {
-      $gte: new Date(tommorrow.startOf('day').toISOString()),
-      $lte: new Date(tommorrow.endOf('day').toISOString()),
+      $gte: new Date(tomorrow.startOf('day').toISOString()),
+      $lte: new Date(tomorrow.endOf('day').toISOString()),
     };
   }
 
@@ -646,54 +646,52 @@ export const generateFilter = async (
           { userId: { $in: uqinueCheckUserIds } },
         ],
       });
-    } else {
-      if (
-        (pipeline.isCheckUser || pipeline.isCheckDepartment) &&
-        !isEligibleSeeAllCards
-      ) {
-        let includeCheckUserIds: string[] = [];
+    } else if (
+      (pipeline.isCheckUser || pipeline.isCheckDepartment) &&
+      !isEligibleSeeAllCards
+    ) {
+      let includeCheckUserIds: string[] = [];
 
-        if (pipeline.isCheckDepartment) {
-          const userDepartmentIds = user?.departmentIds || [];
-          const commonIds = userDepartmentIds.filter((id) =>
-            pipelineDepartmentIds.includes(id),
-          );
+      if (pipeline.isCheckDepartment) {
+        const userDepartmentIds = user?.departmentIds || [];
+        const commonIds = userDepartmentIds.filter((id) =>
+          pipelineDepartmentIds.includes(id),
+        );
 
-          const otherDepartmentUsers = await sendTRPCMessage({
-            pluginName: 'core',
-            method: 'query',
-            module: 'users',
-            action: 'find',
-            input: {
-              query: { departmentIds: { $in: commonIds } },
-            },
-            defaultValue: [],
-          });
+        const otherDepartmentUsers = await sendTRPCMessage({
+          pluginName: 'core',
+          method: 'query',
+          module: 'users',
+          action: 'find',
+          input: {
+            query: { departmentIds: { $in: commonIds } },
+          },
+          defaultValue: [],
+        });
 
-          for (const departmentUser of otherDepartmentUsers) {
-            includeCheckUserIds = [...includeCheckUserIds, departmentUser._id];
-          }
-
-          if (
-            pipelineDepartmentIds.filter((departmentId) =>
-              userDepartmentIds.includes(departmentId),
-            ).length
-          ) {
-            includeCheckUserIds = includeCheckUserIds.concat(user._id || []);
-          }
+        for (const departmentUser of otherDepartmentUsers) {
+          includeCheckUserIds = [...includeCheckUserIds, departmentUser._id];
         }
 
-        const uqinueCheckUserIds = [
-          ...new Set(includeCheckUserIds.concat(currentUserId)),
-        ];
-
-        Object.assign(filter, {
-          $or: [
-            { assignedUserIds: { $in: uqinueCheckUserIds } },
-            { userId: { $in: uqinueCheckUserIds } },
-          ],
-        });
+        if (
+          pipelineDepartmentIds.filter((departmentId) =>
+            userDepartmentIds.includes(departmentId),
+          ).length
+        ) {
+          includeCheckUserIds = includeCheckUserIds.concat(user._id || []);
+        }
       }
+
+      const uqinueCheckUserIds = [
+        ...new Set(includeCheckUserIds.concat(currentUserId)),
+      ];
+
+      Object.assign(filter, {
+        $or: [
+          { assignedUserIds: { $in: uqinueCheckUserIds } },
+          { userId: { $in: uqinueCheckUserIds } },
+        ],
+      });
     }
   }
 
@@ -761,7 +759,7 @@ export const generateFilter = async (
   return filter;
 };
 
-export const generateArhivedTasksFilter = (
+export const generateArchivedTasksFilter = (
   params: IArchivedTaskQueryParams,
   stages: IStageDocument[],
 ) => {
@@ -854,7 +852,7 @@ const randomBetween = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
 
-const orderHeler = (aboveOrder, belowOrder) => {
+const orderHelper = (aboveOrder, belowOrder) => {
   // empty stage
   if (!aboveOrder && !belowOrder) {
     return 100;
@@ -898,7 +896,7 @@ export const getNewOrder = async ({
 
   const belowOrder = belowItems[0]?.order;
 
-  const order = orderHeler(aboveOrder, belowOrder);
+  const order = orderHelper(aboveOrder, belowOrder);
 
   // if duplicated order, then in stages items bulkUpdate 100, 110, 120, 130
   if ([aboveOrder, belowOrder].includes(order)) {

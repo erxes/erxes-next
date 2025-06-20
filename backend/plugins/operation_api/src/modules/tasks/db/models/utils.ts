@@ -43,7 +43,7 @@ export const boardNumberGenerator = async (
     });
 
     if (pipeline?.lastNum) {
-      const lastNum = pipeline.lastNum;
+      const { lastNum } = pipeline;
 
       const lastGeneratedNumber = lastNum.slice(replacedConfig.length);
 
@@ -82,14 +82,12 @@ export const generateLastNum = async (models: IModels, doc: IPipeline) => {
   }
 
   // generate new number by new numberConfig
-  const generatedNum = await boardNumberGenerator(
+  return await boardNumberGenerator(
     models,
     doc.numberConfig || '',
     doc.numberSize || '',
     true,
   );
-
-  return generatedNum;
 };
 
 export const fillSearchTextItem = (doc: ITask, item?: ITask) => {

@@ -22,33 +22,22 @@ export default {
     return [];
   },
 
-  async unUsedAmount(
+  async unusedAmount(
     stage: IStageDocument,
     _args,
     { user, models }: IContext,
     { variableValues: args },
   ) {
-    const amountsMap = getAmountsMap(
-      models,
-      models.Tasks,
-      user,
-      args,
-      stage,
-      false,
-    );
-
-    return amountsMap;
+    return getAmountsMap(models, models.Tasks, user, args, stage, false);
   },
 
   async amount(
-    stage: IStageDocument,
+    stage: IStageDocument,  
     _args,
     { user, models }: IContext,
     { variableValues: args },
   ) {
-    const amountsMap = getAmountsMap(models, models.Tasks, user, args, stage);
-
-    return amountsMap;
+    return getAmountsMap(models, models.Tasks, user, args, stage);
   },
 
   async itemsTotalCount(
@@ -235,7 +224,10 @@ export default {
     if (stages.length === 2) {
       const [first, second] = stages;
       result.count = first.currentTaskCount - second.currentTaskCount;
-      result.percent = (second.initialTaskCount * 100) / first.initialTaskCount;
+      result.percent =
+        first.initialTaskCount > 0
+          ? (second.initialTaskCount * 100) / first.initialTaskCount
+          : 0;
     }
 
     return result;

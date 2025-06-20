@@ -6,7 +6,7 @@ import {
 } from '~/modules/tasks/@types/tasks';
 import {
   compareDepartmentIds,
-  generateArhivedTasksFilter,
+  generateArchivedTasksFilter,
   generateFilter,
 } from '~/modules/tasks/graphql/resolvers/utils';
 
@@ -176,7 +176,7 @@ export const taskQueries = {
     const stages = await models.Stages.find({ pipelineId }).lean();
 
     if (stages.length > 0) {
-      const filter = generateArhivedTasksFilter(args, stages);
+      const filter = generateArchivedTasksFilter(args, stages);
 
       const { list, pageInfo, totalCount } = await cursorPaginate({
         model: models.Tasks,
@@ -200,7 +200,7 @@ export const taskQueries = {
     const stages = await models.Stages.find({ pipelineId });
 
     if (stages.length > 0) {
-      const filter = generateArhivedTasksFilter(args, stages);
+      const filter = generateArchivedTasksFilter(args, stages);
 
       return models.Tasks.find(filter).countDocuments();
     }

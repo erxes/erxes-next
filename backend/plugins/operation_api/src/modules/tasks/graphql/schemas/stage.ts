@@ -22,7 +22,7 @@ export const types = `
     departmentIds: [String]
     probability: String
     status: String
-    unUsedAmount: JSON
+    unusedAmount: JSON
     amount: JSON
     itemsTotalCount: Int
     compareNextStageTasks: JSON

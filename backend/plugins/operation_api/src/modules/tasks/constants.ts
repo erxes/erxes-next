@@ -15,7 +15,7 @@ export const PROBABILITY = {
   TEN: '10%',
   TWENTY: '20%',
   THIRTY: '30%',
-  FOURTY: '40%',
+  FORTY: '40%',
   FIFTY: '50%',
   SIXTY: '60%',
   SEVENTY: '70%',
@@ -80,7 +80,7 @@ export const CLOSE_DATE_TYPES = {
       value: 'noCloseDate',
     },
     {
-      name: 'Over due',
+      name: 'Overdue',
       value: 'overdue',
     },
   ],

@@ -44,7 +44,7 @@ export const loadChecklistClass = (models: IModels) => {
       { contentTypeId, ...fields }: IChecklist,
       user: IUserDocument,
     ) {
-      await models.Checklists.create({
+      return await models.Checklists.create({
         contentTypeId,
         createdUserId: user._id,
         ...fields,
@@ -131,14 +131,12 @@ export const loadChecklistItemClass = (models: IModels) => {
         checklistId,
       }).countDocuments();
 
-      const checklistItem = await models.ChecklistItems.create({
+      return await models.ChecklistItems.create({
         checklistId,
         createdUserId: user._id,
         order: itemsCount + 1,
         ...fields,
       });
-
-      return checklistItem;
     }
 
     /*
@@ -153,7 +151,7 @@ export const loadChecklistItemClass = (models: IModels) => {
     }
 
     /*
-     * Remove checklist
+     * Remove checklist item
      */
     public static async removeChecklistItem(_id: string) {
       const checklistItem = await models.ChecklistItems.findOneAndDelete({
@@ -161,7 +159,7 @@ export const loadChecklistItemClass = (models: IModels) => {
       });
 
       if (!checklistItem) {
-        throw new Error(`Checklist's item not found with id ${_id}`);
+        throw new Error(`Checklist item not found with id ${_id}`);
       }
 
       return checklistItem;
