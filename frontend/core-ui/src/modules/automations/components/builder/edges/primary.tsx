@@ -1,34 +1,30 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { NodeData } from '@/automations/types';
+import { onDisconnect } from '@/automations/utils/automationConnectionUtils';
 import { IconScissors } from '@tabler/icons-react';
 import {
   BaseEdge,
+  Edge,
   EdgeLabelRenderer,
   EdgeProps,
   getBezierPath,
+  Node,
+  useReactFlow,
 } from '@xyflow/react';
 import { Button } from 'erxes-ui';
 import { FC } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 
-type T = {
-  name: 'actions' | 'triggers';
-  field: 'nexActionId' | 'actionID';
-  list: any[];
-};
-
-const Edge: FC<EdgeProps> = ({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  selected,
-  source,
-  sourceHandleId,
-  data,
-}) => {
+const Edge: FC<EdgeProps> = (edge) => {
+  const {
+    id,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+    selected,
+  } = edge;
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -38,16 +34,11 @@ const Edge: FC<EdgeProps> = ({
     targetPosition,
   });
 
-  const type = (data || {}).type as 'action' | 'trigger';
-  const { watch, setValue } = useFormContext<TAutomationProps>();
-  const { actions = [], triggers = [] } = watch('detail');
-
-  const types = {
-    action: { list: actions, name: 'actions', field: 'nextActionId' },
-    trigger: { list: triggers, name: 'triggers', field: 'actionId' },
-  };
-
-  const { name, list = [], field } = types[type] as T;
+  const { getNodes, setEdges } = useReactFlow<
+    Node<NodeData>,
+    Edge<EdgeProps>
+  >();
+  const { actions = [], triggers = [] } = useWatch({ name: 'detail' });
 
   return (
     <>
@@ -65,12 +56,13 @@ const Edge: FC<EdgeProps> = ({
               className="rounded-full"
               size="icon"
               onClick={() => {
-                setValue(
-                  `detail.${name}`,
-                  list.map((item) =>
-                    item.id === source ? { ...item, [field]: undefined } : item,
-                  ),
-                );
+                onDisconnect({
+                  edge,
+                  setEdges,
+                  nodes: getNodes(),
+                  triggers,
+                  actions,
+                });
               }}
             >
               <IconScissors className="w-4 h-4 text-red-500" />

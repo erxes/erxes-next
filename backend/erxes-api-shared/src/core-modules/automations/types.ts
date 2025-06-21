@@ -3,7 +3,7 @@ type IContext = {
   processId?: string;
 };
 
-type ITriggerConfig = {
+export type IAutomationsTriggerConfig = {
   type: string;
   icon: string;
   label: string;
@@ -17,18 +17,53 @@ type ITriggerConfig = {
   }[];
 };
 
-type IActionConfig = {
+export type IAutomationsActionConfig = {
   type: string;
   icon: string;
   label: string;
   description: string;
   isAvailableOptionalConnect?: boolean;
+  emailRecipientsConst?: any;
 };
 
-export type AutomationConstants =
-  | { triggers: ITriggerConfig[]; actions?: IActionConfig }
-  | { triggers?: ITriggerConfig[]; actions: IActionConfig }
-  | { triggers: ITriggerConfig[]; actions: IActionConfig };
+export type IAutomationsBotsConfig = {
+  name: string;
+  label: string;
+  description: string;
+  logo: string;
+  totalCountQueryName: string;
+};
+
+type IAutomationTriggersActionsConfig =
+  | {
+      triggers: IAutomationsTriggerConfig[];
+      actions?: IAutomationsActionConfig[];
+    }
+  | {
+      triggers?: IAutomationsTriggerConfig[];
+      actions: IAutomationsActionConfig[];
+    };
+
+export type AutomationConstants = IAutomationTriggersActionsConfig & {
+  bots?: IAutomationsBotsConfig[];
+};
+
+// export type AutomationConstants =
+//   | {
+//       triggers: IAutomationsTriggerConfig[];
+//       actions?: IAutomationsActionConfig[];
+//       bots?:IAutomationsBotsConfig[]
+//     }
+//   | {
+//       triggers?: IAutomationsTriggerConfig[];
+//       actions: IAutomationsActionConfig[];
+//       bots?:IAutomationsBotsConfig[]
+//     }
+//   | {
+//       triggers: IAutomationsTriggerConfig[];
+//       actions: IAutomationsActionConfig[];
+//       bots?:IAutomationsBotsConfig[]
+//     };
 
 export interface AutomationConfigs {
   constants: AutomationConstants;

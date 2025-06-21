@@ -126,6 +126,5 @@ query AutomationHistories($automationId: String!,${GQL_CURSOR_PARAM_DEFS}, $page
     totalCount
      ${GQL_PAGE_INFO}
   }
-  automationConstants
 }
 `;

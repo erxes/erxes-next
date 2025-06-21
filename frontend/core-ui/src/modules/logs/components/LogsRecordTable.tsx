@@ -1,5 +1,5 @@
-import { IconChartPie } from '@tabler/icons-react';
-import { PageSubHeader, RecordTable, Skeleton, Spinner } from 'erxes-ui';
+import { IconArchive, IconChartPie } from '@tabler/icons-react';
+import { Label, PageSubHeader, RecordTable, Skeleton, Spinner } from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
 import { LOGS_CURSOR_SESSION_KEY } from '../constants/logFilter';
 import { useLogs } from '../hooks/useLogs';
@@ -49,6 +49,16 @@ export const LogsRecordTable = () => {
               <RecordTable.CursorBackwardSkeleton
                 handleFetchMore={handleFetchMore}
               />
+              {!totalCount && (
+                <tr className="h-[80vh]">
+                  <td colSpan={6} className="py-10 text-center">
+                    <div className="flex flex-col items-center justify-center text-muted-foreground">
+                      <IconArchive className="w-8 h-8 mb-2" />
+                      <Label>No results</Label>
+                    </div>
+                  </td>
+                </tr>
+              )}
               {loading && <RecordTable.RowSkeleton rows={40} />}
               <RecordTable.RowList />
               <RecordTable.CursorForwardSkeleton

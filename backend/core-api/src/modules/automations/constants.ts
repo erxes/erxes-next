@@ -84,3 +84,41 @@ export const UI_ACTIONS = [
     isAvailable: true,
   },
 ];
+
+export const UI_TRIGGERS = [
+  {
+    type: 'core:user',
+    icon: 'Users',
+    label: 'Team member',
+    description:
+      'Start with a blank workflow that enralls and is triggered off team members',
+  },
+  {
+    type: 'core:customer',
+    icon: 'UsersGroup',
+    label: 'Customer',
+    description:
+      'Start with a blank workflow that enrolls and is triggered off Customers',
+  },
+  {
+    type: 'core:lead',
+    icon: 'UsersGroup',
+    label: 'Lead',
+    description:
+      'Start with a blank workflow that enrolls and is triggered off Leads',
+  },
+  {
+    type: 'core:company',
+    icon: 'Building',
+    label: 'Company',
+    description:
+      'Start with a blank workflow that enrolls and is triggered off company',
+  },
+  {
+    type: 'core:form_submission',
+    icon: 'Forms',
+    label: 'Form submission',
+    description:
+      'Start with a blank workflow that enrolls and is triggered off form submission',
+  },
+];

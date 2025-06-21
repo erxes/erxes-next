@@ -1,27 +1,37 @@
 import { getContentType } from '@/automations/utils/automationBuilderUtils';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
+
+type TSendEmailConfigFieldName = `detail.actions.${number}.config`;
 
 export const useSendEmailSidebarForm = (currentActionIndex: number) => {
-  const { control, watch } = useFormContext<TAutomationProps>();
-  const config = watch(`detail.actions.${currentActionIndex}.config`);
-  const { actions = [], triggers = [] } = watch('detail');
+  const configFieldName: TSendEmailConfigFieldName = `detail.actions.${currentActionIndex}.config`;
+
+  const { control } = useFormContext<TAutomationProps>();
+  const [triggers = [], actions = [], config = {}] = useWatch<TAutomationProps>(
+    {
+      control,
+      name: ['detail.triggers', 'detail.actions', `${configFieldName}`],
+    },
+  );
+  console.log({ actions });
   const contentType = getContentType(
-    actions[currentActionIndex],
+    actions[currentActionIndex].id,
     actions,
     triggers,
-  );
+  )?.type;
 
   return { control, config, contentType };
 };
 
 export const useSendEmailCustomMailField = (currentActionIndex: number) => {
-  const { control, watch, setValue } = useFormContext<TAutomationProps>();
-  const config = watch(`detail.actions.${currentActionIndex}.config`);
+  const configFieldName: TSendEmailConfigFieldName = `detail.actions.${currentActionIndex}.config`;
+  const { control, setValue } = useFormContext<TAutomationProps>();
+  const config = useWatch({ control, name: configFieldName });
 
   const removeMail = (mail: string) => {
     setValue(
-      `detail.actions.${currentActionIndex}.config.customMails`,
+      `${configFieldName}.customMails`,
       (config?.customMails || []).filter((value: string) => value !== mail),
     );
   };

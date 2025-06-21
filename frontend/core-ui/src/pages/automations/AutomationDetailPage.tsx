@@ -1,4 +1,4 @@
-import AutomationBuilder from '@/automations/components/builder/AutomationBuilder';
+import { AutomationBuilder } from '@/automations/components/builder/AutomationBuilder';
 import { AUTOMATION_DETAIL } from '@/automations/graphql/automationQueries';
 import { IAutomation } from '@/automations/types';
 import { useQuery } from '@apollo/client';
