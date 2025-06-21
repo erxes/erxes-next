@@ -12,17 +12,20 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { IconX } from '@tabler/icons-react';
+import { IconGripVertical, IconX } from '@tabler/icons-react';
 import { Button, Card, cn, Input, Label } from 'erxes-ui';
+import { TBotMessageButton } from '../states/replyMessageActionForm';
 
 export const FacebookMessageButtonsGenerator = ({
   buttons = [],
   setButtons,
   addButtonText = '+ Add button',
+  limit,
 }: {
-  buttons: any[];
-  setButtons: (buttons: any[]) => void;
+  buttons: TBotMessageButton[];
+  setButtons: (buttons: TBotMessageButton[]) => void;
   addButtonText?: string;
+  limit: number;
 }) => {
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -37,6 +40,26 @@ export const FacebookMessageButtonsGenerator = ({
     }
   };
 
+  const handleChangeButton = (btn: TBotMessageButton) => {
+    const updatedButtons = buttons.map((button) =>
+      button._id === btn._id ? { ...button, ...btn } : button,
+    );
+
+    console.log({ updatedButtons });
+
+    setButtons(updatedButtons);
+  };
+
+  const onAddButton = () =>
+    setButtons([
+      ...buttons,
+      { _id: Math.random().toString(), text: '', isEditing: true },
+    ]);
+
+  const onRemovButton = (index: number) => {
+    setButtons(buttons.filter((_, buttonIndex) => buttonIndex !== index));
+  };
+
   return (
     <>
       <DndContext
@@ -48,16 +71,12 @@ export const FacebookMessageButtonsGenerator = ({
           items={buttons.map((button) => button._id)}
           strategy={verticalListSortingStrategy}
         >
-          {buttons.map((button: any) => (
+          {buttons.map((button: TBotMessageButton, index: number) => (
             <FacebookMessageButton
+              key={index}
               button={button}
-              setButton={(btn: any) =>
-                setButtons(
-                  buttons.map((button) =>
-                    button._id === btn._id ? { ...button, ...btn } : button,
-                  ),
-                )
-              }
+              handleChangeButton={handleChangeButton}
+              onRemovButton={() => onRemovButton(index)}
             />
           ))}
         </SortableContext>
@@ -65,12 +84,8 @@ export const FacebookMessageButtonsGenerator = ({
       <Button
         variant="secondary"
         className="w-full"
-        onClick={() =>
-          setButtons([
-            ...buttons,
-            { _id: Math.random().toString(), text: '', isEditing: true },
-          ])
-        }
+        disabled={buttons.length >= limit}
+        onClick={onAddButton}
       >
         <Label>{addButtonText}</Label>
       </Button>
@@ -80,10 +95,12 @@ export const FacebookMessageButtonsGenerator = ({
 
 const FacebookMessageButton = ({
   button,
-  setButton,
+  handleChangeButton,
+  onRemovButton,
 }: {
-  button: any;
-  setButton: (button: any) => void;
+  button: TBotMessageButton;
+  handleChangeButton: (button: TBotMessageButton) => void;
+  onRemovButton: () => void;
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: button._id });
@@ -98,38 +115,46 @@ const FacebookMessageButton = ({
 
     e.preventDefault();
 
-    setButton({ ...button, text: value, isEditing: false });
+    handleChangeButton({ ...button, text: value, isEditing: false });
   };
 
   return (
     <Card
       ref={setNodeRef}
       style={style}
-      {...(!button.isEditing ? { ...attributes, ...listeners } : {})}
-      className={cn(
-        'p-3  flex flex-row gap-2 items-center justify-between',
-        button.isEditing
-          ? 'cursor-auto'
-          : 'cursor-grab  active:cursor-grabbing',
-      )}
-      onDoubleClick={() => setButton({ ...button, isEditing: true })}
+      {...(!button.isEditing ? { ...attributes } : {})}
+      className={'p-3  flex flex-row gap-2 items-center justify-between'}
+      onDoubleClick={() => handleChangeButton({ ...button, isEditing: true })}
     >
-      <div className="flex-1 border rounded-lg p-2">
+      <div
+        {...listeners}
+        className={cn(
+          'p-2 rounded hover:bg-muted text-accent-foreground',
+          button.isEditing
+            ? 'cursor-auto'
+            : 'cursor-grab  active:cursor-grabbing',
+        )}
+      >
+        <IconGripVertical className="w-4 h-4" />
+      </div>
+      <div className="flex-1 border rounded-lg p-2 flex items-center">
         {button?.isEditing ? (
           <Input
             autoFocus
             value={button.text}
             onBlur={onSave}
             onChange={(e) =>
-              setButton({ ...button, text: e.currentTarget.value })
+              handleChangeButton({ ...button, text: e.currentTarget.value })
             }
             onKeyDown={(e) => e.key === 'Enter' && onSave(e as any)}
           />
         ) : (
-          button.text
+          <span className="font-mono font-bold text-foreground text-sm">
+            {button.text || 'Type a button label'}
+          </span>
         )}
       </div>
-      <Button size="icon" variant="destructive">
+      <Button size="icon" variant="destructive" onClick={onRemovButton}>
         <IconX />
       </Button>
     </Card>

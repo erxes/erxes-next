@@ -1,24 +1,28 @@
 import {
   IconBolt,
-  IconCashEdit,
+  IconCards,
   IconForms,
   IconLetterTSmall,
   IconMusic,
   IconPaperclip,
   IconPhotoScan,
-  IconSquareRoundedLetterT,
   IconVideo,
 } from '@tabler/icons-react';
 
 export const REPLY_MESSAGE_ACTION_BUTTONS = [
   { type: 'text', title: 'Text', icon: IconLetterTSmall },
-  { type: 'card', title: 'Card', icon: IconCashEdit },
+  { type: 'card', title: 'Card', icon: IconCards },
   { type: 'quickReplies', title: 'Quick Replies', icon: IconBolt },
-  { type: 'image', title: 'Image', icon: IconPhotoScan },
-  { type: 'attachments', title: 'Attachments', icon: IconPaperclip },
-  { type: 'audio', title: 'Audio', icon: IconMusic },
-  { type: 'video', title: 'Video', icon: IconVideo },
   { type: 'input', title: 'Input', icon: IconForms },
+  { type: 'image', title: 'Image', icon: IconPhotoScan, inProgress: true },
+  {
+    type: 'attachments',
+    title: 'Attachments',
+    icon: IconPaperclip,
+    inProgress: true,
+  },
+  { type: 'audio', title: 'Audio', icon: IconMusic, inProgress: true },
+  { type: 'video', title: 'Video', icon: IconVideo, inProgress: true },
 ];
 
 export const INITIAL_OBJ_MESSAGE_TYPES = {
@@ -45,6 +49,10 @@ export const INITIAL_OBJ_MESSAGE_TYPES = {
     video: '',
   },
   input: {
-    input: {},
+    input: {
+      text: '',
+      value: '1',
+      type: 'minute' as 'minute' | 'hour' | 'day' | 'month' | 'year',
+    },
   },
 };

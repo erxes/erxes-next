@@ -1,24 +1,19 @@
-import { useState } from 'react';
-import { Button, Dialog, Input } from 'erxes-ui';
-import { UseFormSetValue } from 'react-hook-form';
-import { NodeData } from '../../../types';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { Button, Dialog, Input } from 'erxes-ui';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { NodeData } from '../../../types';
 
 type Props = {
   id: string;
   fieldName: 'actions' | 'triggers';
   data: NodeData;
-  setValue: UseFormSetValue<TAutomationProps>;
   callback: () => void;
 };
 
-export const EditForm = ({
-  id,
-  fieldName,
-  data,
-  setValue,
-  callback,
-}: Props) => {
+export const EditForm = ({ id, fieldName, data, callback }: Props) => {
+  const { setValue } = useFormContext<TAutomationProps>();
+
   const { nodeIndex, label, description } = data || {};
 
   const [doc, setDoc] = useState({
@@ -33,9 +28,18 @@ export const EditForm = ({
   };
 
   const handleSave = () => {
-    setValue(`detail.${fieldName}.${nodeIndex}.label`, doc.label);
-    setValue(`detail.${fieldName}.${nodeIndex}.description`, doc.description);
+    setValue(
+      `detail.${fieldName}.${nodeIndex}`,
+      {
+        ...data,
+        label: doc.label,
+        description: doc.description,
+      },
+      { shouldValidate: true, shouldDirty: true },
+    );
+
     setValue('activeNode', { ...data, id, ...doc });
+
     callback();
   };
 

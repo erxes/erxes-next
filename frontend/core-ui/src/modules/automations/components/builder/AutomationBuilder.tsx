@@ -12,7 +12,7 @@ import '@xyflow/react/dist/style.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useQueryState } from 'erxes-ui';
+import { useMultiQueryState, useQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
 import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
@@ -29,10 +29,13 @@ import ConnectionLine from './edges/connectionLine';
 import PrimaryEdge from './edges/primary';
 import ActionNode from './nodes/ActionNode';
 import TriggerNode from './nodes/TriggerNode';
+import { AutomationProvider } from '@/automations/components/builder/hooks/useAutomation';
+import { PlaceHolderNode } from '@/automations/components/builder/nodes/PlaceHolderNode';
 
 const nodeTypes = {
   trigger: TriggerNode as any,
   action: ActionNode as any,
+  scratch: PlaceHolderNode,
 };
 const edgeTypes = {
   primary: PrimaryEdge,
@@ -62,11 +65,7 @@ const Builder = ({ reactFlowInstance, setReactFlowInstance }: any) => {
   }, [JSON.stringify(triggers), JSON.stringify(actions)]);
 
   return (
-    <div
-      // className="flex flex-column grow h-full relative"
-      className="h-full"
-      ref={reactFlowWrapper}
-    >
+    <div className="h-full" ref={reactFlowWrapper}>
       <ReactFlow
         ref={editorWrapper}
         nodes={nodes}
@@ -86,6 +85,7 @@ const Builder = ({ reactFlowInstance, setReactFlowInstance }: any) => {
         connectionLineComponent={ConnectionLine}
         onNodeDragStop={onNodeDragStop}
         colorMode={theme}
+        minZoom={0.1}
       >
         <Controls />
         <Background />
@@ -96,42 +96,44 @@ const Builder = ({ reactFlowInstance, setReactFlowInstance }: any) => {
 };
 
 export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
-  const [activeNodeId] = useQueryState('activeNodeId');
-  const [activeTabQueryParam] = useQueryState<'builder' | 'history'>(
-    'activeTab',
-  );
+  const [queryParams] = useMultiQueryState<{
+    activeNodeId: string;
+    activeTab: string;
+  }>(['activeNodeId', 'activeTab']);
+  const { activeNodeId, activeTab } = queryParams;
+
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
   const form = useForm<TAutomationProps>({
     resolver: zodResolver(automationBuilderFormSchema),
     defaultValues: {
       isMinimized: activeNodeId ? false : true,
-      activeTab: activeTabQueryParam || 'builder',
+      activeTab: activeTab || 'builder',
       detail: deepCleanNulls(detail),
     },
   });
 
-  const activeTab = form.watch('activeTab');
-
   return (
-    <ReactFlowProvider>
-      <AutomationBuilderDnDProvider>
-        <FormProvider {...form}>
-          <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
+    <AutomationProvider>
+      <ReactFlowProvider>
+        <AutomationBuilderDnDProvider>
+          <FormProvider {...form}>
+            <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
 
-          {activeTab === 'history' ? (
-            <AutomationHistories />
-          ) : (
-            <div className="relative h-full flex flex-col grow">
-              <Builder
-                reactFlowInstance={reactFlowInstance}
-                setReactFlowInstance={setReactFlowInstance}
-              />
-              <AutomationBuilderSidebar />
-            </div>
-          )}
-        </FormProvider>
-      </AutomationBuilderDnDProvider>
-    </ReactFlowProvider>
+            {form.watch('activeTab') === 'history' ? (
+              <AutomationHistories />
+            ) : (
+              <div className="relative h-full flex flex-col grow">
+                <Builder
+                  reactFlowInstance={reactFlowInstance}
+                  setReactFlowInstance={setReactFlowInstance}
+                />
+                <AutomationBuilderSidebar />
+              </div>
+            )}
+          </FormProvider>
+        </AutomationBuilderDnDProvider>
+      </ReactFlowProvider>
+    </AutomationProvider>
   );
 };

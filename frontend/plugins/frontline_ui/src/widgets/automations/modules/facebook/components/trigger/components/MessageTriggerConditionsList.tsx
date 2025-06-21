@@ -1,8 +1,8 @@
 import { Checkbox, cn, Form, Spinner, TablerIcon } from 'erxes-ui';
 import { UseFormReturn } from 'react-hook-form';
-import { useFacebookMessengerTrigger } from '~/widgets/automations/modules/facebook/components/trigger/hooks/useFacebookMessengerTrigger';
-import { TMessageTriggerForm } from '~/widgets/automations/modules/facebook/components/trigger/states/messageTriggerFormSchema';
-import { getConditionsFieldErrors } from '~/widgets/automations/modules/facebook/components/trigger/utils/messageTriggerUtils';
+import { useFacebookMessengerTrigger } from '../hooks/useFacebookMessengerTrigger';
+import { TMessageTriggerForm } from '../states/messageTriggerFormSchema';
+import { getConditionsFieldErrors } from '../utils/messageTriggerUtils';
 
 type Props = {
   setActiveItemType: React.Dispatch<React.SetStateAction<string>>;

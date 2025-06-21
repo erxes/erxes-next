@@ -1,8 +1,7 @@
 import { useFacebookBots } from '@/integrations/facebook/hooks/useFacebookBots';
 import { IconCheck, IconChevronDown, IconSettings } from '@tabler/icons-react';
-import { Avatar, Card, Collapsible, Label, Separator, Spinner } from 'erxes-ui';
+import { Avatar, Collapsible, Label, Separator, Spinner } from 'erxes-ui';
 import { useState } from 'react';
-import { Link } from 'react-router';
 
 type Props = {
   onSelect: (id: string) => void;

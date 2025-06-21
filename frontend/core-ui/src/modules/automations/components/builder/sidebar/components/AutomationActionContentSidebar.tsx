@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
+import { getAutomationTypes } from 'ui-modules';
+import { coreActionNames } from '../../nodes/actions/coreActions';
 
 export const AutomationActionContentSidebar = () => {
   const {
@@ -11,22 +13,23 @@ export const AutomationActionContentSidebar = () => {
     Component,
     currentAction,
     control,
-    setActiveNodeId,
+    setQueryParams,
     setValue,
   } = useAutomationActionContentSidebar();
 
-  if (currentIndex === -1) {
+  if (!currentAction || currentIndex === -1) {
     return <Card.Content>Something went wrong</Card.Content>;
   }
 
-  const [pluginName, moduleName] = (currentAction?.type || '')
-    .replace('.', ':')
-    .split(':');
+  const isCoreAction = coreActionNames.includes(currentAction?.type || '');
 
-  if (pluginName !== 'core') {
+  if (!isCoreAction) {
+    const [pluginName, moduleName] = getAutomationTypes(
+      currentAction?.type || '',
+    );
     const onSaveActionConfig = (config: any) => {
       setValue(`detail.actions.${currentIndex}.config`, config);
-      setActiveNodeId(null);
+      setQueryParams({ activeNodeId: null });
       setValue('isMinimized', true);
       toast({
         title: 'Action configuration added successfully.',
@@ -34,17 +37,25 @@ export const AutomationActionContentSidebar = () => {
     };
 
     return (
-      <RenderPluginsComponent
-        pluginName={`${pluginName}_ui`}
-        remoteModuleName="automations"
-        moduleName={moduleName}
-        props={{
-          componentType: 'actionForm',
-          type: currentAction?.type,
-          currentAction,
-          onSaveActionConfig,
-        }}
-      />
+      <Suspense fallback={<Spinner />}>
+        <ErrorBoundary
+          FallbackComponent={({ resetErrorBoundary }) => (
+            <ErrorState onRetry={resetErrorBoundary} />
+          )}
+        >
+          <RenderPluginsComponent
+            pluginName={`${pluginName}_ui`}
+            remoteModuleName="automations"
+            moduleName={moduleName}
+            props={{
+              componentType: 'actionForm',
+              type: currentAction?.type,
+              currentAction,
+              onSaveActionConfig,
+            }}
+          />
+        </ErrorBoundary>
+      </Suspense>
     );
   }
 

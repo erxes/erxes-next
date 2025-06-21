@@ -1,21 +1,13 @@
 import { Form, Textarea } from 'erxes-ui';
-import { Control } from 'react-hook-form';
-import { FacebookMessageButtonsGenerator } from '~/widgets/automations/modules/facebook/components/action/components/FacebookMessageButtonsGenerator';
-import { InputTextCounter } from '~/widgets/automations/modules/facebook/components/action/components/InputTextCounter';
-import {
-  TBotMessage,
-  TMessageActionForm,
-} from '~/widgets/automations/modules/facebook/components/action/states/replyMessageActionForm';
+import { FacebookMessageProps } from '~/widgets/automations/modules/facebook/components/action/types/messageActionForm';
+import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
+import { InputTextCounter } from './InputTextCounter';
 
 export const FacebookTextMessage = ({
   index,
   message,
   control,
-}: {
-  index: number;
-  message: TBotMessage;
-  control: Control<TMessageActionForm>;
-}) => {
+}: FacebookMessageProps) => {
   const limit = (message.buttons || []).length ? 640 : 2000;
 
   return (
@@ -49,6 +41,7 @@ export const FacebookTextMessage = ({
             </Form.Label>
             <Form.Control>
               <FacebookMessageButtonsGenerator
+                limit={3}
                 buttons={field.value || []}
                 setButtons={field.onChange}
               />

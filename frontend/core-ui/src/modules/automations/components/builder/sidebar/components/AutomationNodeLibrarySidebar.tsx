@@ -102,7 +102,7 @@ export const AutomationNodeLibrarySidebar = () => {
   const [searchValue, setSearchValue] = useState('');
   const {
     actionsConst,
-    setNodeActiveTab,
+    setQueryParams,
     activeNodeTab,
     triggersConst,
     loading,
@@ -128,7 +128,7 @@ export const AutomationNodeLibrarySidebar = () => {
       <Tabs
         defaultValue={activeNodeTab || 'trigger'}
         onValueChange={(value) =>
-          setNodeActiveTab(value as 'trigger' | 'action')
+          setQueryParams({ activeNodeTab: value as 'trigger' | 'action' })
         }
         className="flex-1 flex flex-col"
       >

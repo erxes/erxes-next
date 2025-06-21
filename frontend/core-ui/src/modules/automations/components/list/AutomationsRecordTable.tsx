@@ -1,57 +1,25 @@
-import { useQuery } from '@apollo/client';
+import { useAutomationsRecordTable } from '@/automations/hooks/useAutomationsRecordTable';
 import { IconAffiliate, IconSettings } from '@tabler/icons-react';
 import { Breadcrumb, Button, RecordTable, Separator, Spinner } from 'erxes-ui';
+import { Link } from 'react-router-dom';
 import { IPageInfo, PageHeader } from 'ui-modules';
-import { AUTOMATIONS_MAIN_LIST } from '../../graphql/automationQueries';
 import { IAutomationDoc } from '../../types';
 import { automationColumns } from './AutomationColumns';
 import { AutomationRecordTableFilters } from './AutomationRecordTableFilters';
-import { Link } from 'react-router-dom';
-
-type QueryResponse = {
-  automationsMain: {
-    list: IAutomationDoc[];
-    totalCount: number;
-    pageInfo: IPageInfo;
-  };
-};
 
 export const AutomationsRecordTable = () => {
-  const { data, loading, fetchMore } = useQuery<QueryResponse>(
-    AUTOMATIONS_MAIN_LIST,
-    {},
-  );
+  const {
+    list,
+    loading,
+    totalCount,
+    hasNextPage,
+    handleFetchMore,
+    hasPreviousPage,
+  } = useAutomationsRecordTable();
 
   if (loading) {
     return <Spinner />;
   }
-
-  const { list = [], totalCount = 0, pageInfo } = data?.automationsMain || {};
-  const { hasPreviousPage, hasNextPage } = pageInfo || {};
-
-  const handleFetchMore = () => {
-    if (!list || !totalCount || totalCount <= list.length) {
-      return;
-    }
-    fetchMore({
-      variables: {
-        page: Math.ceil(list.length / 20) + 1,
-        perPage: 20,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
-        return Object.assign({}, prev, {
-          automationsMain: {
-            ...prev.automationsMain,
-            list: [
-              ...(prev.automationsMain?.list || []),
-              ...(fetchMoreResult.automationsMain?.list || []),
-            ],
-          },
-        });
-      },
-    });
-  };
 
   return (
     <>

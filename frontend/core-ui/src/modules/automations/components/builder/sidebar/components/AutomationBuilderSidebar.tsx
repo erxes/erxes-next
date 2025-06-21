@@ -1,13 +1,12 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { IconArrowLeft, IconX } from '@tabler/icons-react';
-import { useReactFlow } from '@xyflow/react';
-import { Button, Card, Separator, useMultiQueryState } from 'erxes-ui';
-import { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useAutomationBuilderSidebarHooks } from '@/automations/components/builder/sidebar/hooks/useAutomationBuilderSidebarHooks';
 import { NodeData } from '@/automations/types';
+import { IconArrowLeft, IconX } from '@tabler/icons-react';
+import { Button, Card, Separator } from 'erxes-ui';
+import { useEffect } from 'react';
 import { AutomationActionContentSidebar } from './AutomationActionContentSidebar';
-import { AutomationTriggerContentSidebar } from './AutomationTriggerContentSidebar';
 import { AutomationNodeLibrarySidebar } from './AutomationNodeLibrarySidebar';
+import { AutomationTriggerContentSidebar } from './AutomationTriggerContentSidebar';
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 
 const AutomationBuilderSidebarContent = ({
   activeNode,
@@ -28,69 +27,41 @@ const AutomationBuilderSidebarContent = ({
   return <AutomationNodeLibrarySidebar />;
 };
 
-const useAutomationBuilderSidebarHooks = () => {
-  const { getNodes } = useReactFlow();
-  const { watch, setValue } = useFormContext<TAutomationProps>();
-  const [queries, setQueries] = useMultiQueryState<{
-    activeNodeId: string;
-    activeNodeTab: 'trigger' | 'action';
-  }>(['activeNodeId', 'activeNodeTab']);
-
-  const isMinimized = watch('isMinimized');
-  const activeNode = watch('activeNode');
-
-  const handleClose = () => {
-    setValue('activeNode', null);
-    setValue('isMinimized', true);
-    setQueries({
-      activeNodeId: null,
-    });
-  };
-  const handleBack = () => {
-    setValue('activeNode', null);
-    setQueries({
-      activeNodeId: null,
-      activeNodeTab: activeNode?.nodeType || null,
-    });
-  };
-
-  return {
-    getNodes,
-    isMinimized,
-    activeNode,
-    queries,
-    handleBack,
-    handleClose,
-    setValue,
-  };
-};
-
 export const AutomationBuilderSidebar = () => {
+  const { awaitingToConnectNodeId } = useAutomation();
   const {
     getNodes,
     isMinimized,
     activeNode,
-    queries,
+    queryParams,
     handleBack,
     handleClose,
     setValue,
   } = useAutomationBuilderSidebarHooks();
 
   useEffect(() => {
-    if (!!queries.activeNodeId && !activeNode) {
+    if (!!queryParams.activeNodeId && !activeNode) {
       const nodes = getNodes();
-      const node = nodes.find((node) => node.id === queries.activeNodeId);
+      const node = nodes.find((node) => node.id === queryParams.activeNodeId);
       if (node) {
         setValue('activeNode', { ...node.data, id: node.id });
       }
     }
-  }, [activeNode, queries.activeNodeId]);
+
+    if (isMinimized && awaitingToConnectNodeId) {
+      setValue('isMinimized', false);
+    }
+  }, [
+    activeNode,
+    queryParams.activeNodeId,
+    isMinimized,
+    awaitingToConnectNodeId,
+  ]);
 
   if (isMinimized) {
     return null;
   }
-
-  console.log('fakjdbaksdbksj');
+  console.log({ activeNode });
 
   return (
     <Card className="absolute right-0 min-w-80 max-w-2xl w-fit h-full bg-sidebar rounded-none flex flex-col">

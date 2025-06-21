@@ -1,3 +1,4 @@
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import {
   AUTOMATION_CREATE,
   AUTOMATION_EDIT,
@@ -5,21 +6,24 @@ import {
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
 import { useReactFlow } from '@xyflow/react';
-import { useQueryState, useToast } from 'erxes-ui';
-import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
+import { useToast } from 'erxes-ui';
+import { SubmitErrorHandler, useFormContext, useWatch } from 'react-hook-form';
 import { useParams } from 'react-router';
 
 export const useAutomationHeader = (reactFlowInstance: any) => {
-  const { control, watch, setValue, handleSubmit, clearErrors } =
+  const { control, setValue, handleSubmit, clearErrors } =
     useFormContext<TAutomationProps>();
-  const [_, setActiveTabParams] = useQueryState('activeTab');
+
+  const { setQueryParams } = useAutomation();
 
   const { getNodes, setNodes } = useReactFlow();
   const { toast } = useToast();
+  const { id } = useParams();
 
-  const activeTab = watch('activeTab');
-  const isMinimized = watch('isMinimized');
-  const detail = watch('detail');
+  const [activeTab, isMinimized, detail] = useWatch({
+    control,
+    name: ['activeTab', 'isMinimized', 'detail'],
+  });
   const {
     triggers = [],
     actions = [],
@@ -27,7 +31,6 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
     status = 'draft',
   } = detail || {};
 
-  const { id } = useParams();
   const [save, { loading }] = useMutation(
     id ? AUTOMATION_EDIT : AUTOMATION_CREATE,
   );
@@ -75,7 +78,6 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
   const handleError: SubmitErrorHandler<TAutomationProps> = ({
     detail: errors,
   }) => {
-    const { triggers = [], actions = [] } = watch('detail');
     const nodes = getNodes();
     const { triggers: triggersErrors, actions: actionsErrors } = errors || {};
 
@@ -134,7 +136,7 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
 
   const toggleTabs = (value: 'builder' | 'history') => {
     setValue('activeTab', value);
-    setActiveTabParams(value);
+    setQueryParams({ activeTab: value });
   };
 
   return {

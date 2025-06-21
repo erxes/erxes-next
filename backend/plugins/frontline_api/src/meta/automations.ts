@@ -63,6 +63,10 @@ export default {
       },
       {
         type: 'frontline:facebook.messages',
+        connectableActionTypes: [
+          'frontline:facebook.messages.create',
+          'frontline:facebook.comments.create',
+        ],
         icon: 'BrandMessenger',
         label: 'Facebook Message',
         description:
@@ -97,6 +101,10 @@ export default {
         description:
           'Start with a blank workflow that enrolls and is triggered off facebook comments',
         isCustom: true,
+        connectableActionTypes: [
+          'frontline:facebook.messages.create',
+          'frontline:facebook.comments.create',
+        ],
       },
       {
         type: 'frontline:facebook.ads',
@@ -105,6 +113,10 @@ export default {
         description:
           'Start with a blank workflow that enrolls and is triggered off clicked send message on facebook ads',
         isCustom: true,
+        connectableActionTypes: [
+          'frontline:facebook.messages.create',
+          'frontline:facebook.comments.create',
+        ],
       },
     ],
     bots: [

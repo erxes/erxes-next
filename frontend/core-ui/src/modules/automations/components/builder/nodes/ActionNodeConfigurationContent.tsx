@@ -1,41 +1,12 @@
-import { lazy } from 'react';
-
-const actions: any = {
-  delay: lazy(() =>
-    import('./actions/delay/components/Delay').then((module) => ({
-      default: module.Delay.NodeContent,
-    })),
-  ),
-  setProperty: lazy(() =>
-    import('./actions/manageProperties/component/ManageProperties').then(
-      (module) => ({
-        default: module.ManageProperties.NodeContent,
-      }),
-    ),
-  ),
-  sendEmail: lazy(() =>
-    import('./actions/sendEmail/components/SendEmail').then((module) => ({
-      default: module.SendEmail.NodeContent,
-    })),
-  ),
-};
+import { useActionNodeConfiguration } from '@/automations/components/builder/nodes/hooks/useActionNodeConfiguration';
+import { NodeData } from '@/automations/types';
 
 export const ActionNodeConfigurationContent = ({
-  type,
-  config,
+  data,
 }: {
-  type: string;
-  config: any;
+  data: NodeData;
 }) => {
-  const Component = actions[type];
+  const { Component } = useActionNodeConfiguration(data);
 
-  if (!Component) {
-    return null;
-  }
-
-  return (
-    <div className="px-4 py-2">
-      <Component config={config} />
-    </div>
-  );
+  return Component;
 };

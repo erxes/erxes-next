@@ -1,13 +1,12 @@
-import { Handle, NodeProps, Position } from '@xyflow/react';
-import { memo } from 'react';
+import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
+import { NodeData } from '@/automations/types';
 import { IconAdjustmentsAlt, IconSunElectricity } from '@tabler/icons-react';
+import { Node } from '@xyflow/react';
 import { cn } from 'erxes-ui';
-import { useFormContext } from 'react-hook-form';
+import { memo } from 'react';
 import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeDropdownActions';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { NodeData } from '@/automations/types';
-import { TriggerNodeConfigurationContent } from '@/automations/components/builder/nodes/TriggerNodeConfigurationContent';
+import { TriggerNodeConfigurationContent } from './TriggerNodeConfigurationContent';
 
 const renderContent = (data: NodeData) => {
   if (data?.error) {
@@ -24,12 +23,6 @@ const renderContent = (data: NodeData) => {
     return null;
   }
 
-  const TriggerConfigContent = (
-    <TriggerNodeConfigurationContent
-      type={data.type || ''}
-      config={data.config}
-    />
-  );
   return (
     <div className="p-3">
       <div className="flex items-center gap-2 text-primary/90 pb-2">
@@ -46,10 +39,8 @@ const renderContent = (data: NodeData) => {
   );
 };
 
-const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
-  const { setValue } = useFormContext<TAutomationProps>();
-
-  const { beforeTitleContent } = data;
+const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
+  const { beforeTitleContent, actionId } = data;
 
   return (
     <div className="flex flex-col ">
@@ -78,7 +69,7 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
           </div>
 
           <div className="flex items-center gap-1">
-            <NodeDropdownActions id={id} data={data} setValue={setValue} />
+            <NodeDropdownActions id={id} data={data} />
           </div>
         </div>
         <div className="p-3">
@@ -89,13 +80,12 @@ const TriggerNode = ({ data, selected, id }: NodeProps<any>) => {
           {renderContent(data)}
         </div>
 
-        {/* Output handle */}
-        <Handle
-          key="right"
-          id="right"
-          type="source"
-          position={Position.Right}
-          className="!w-4 !h-4 -z-10 !bg-primary !border-white border-2 rounded-full"
+        <NodeOutputHandler
+          nodeType="trigger"
+          handlerId={id}
+          className="!bg-primary"
+          addButtonClassName="hover:border-primary hover:text-primary "
+          showAddButton={!actionId}
         />
       </div>
     </div>

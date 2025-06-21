@@ -1,3 +1,7 @@
+import { NodeData } from '@/automations/types';
+import { Connection, Edge, EdgeProps, getOutgoers, Node } from '@xyflow/react';
+import { SetStateAction } from 'jotai';
+import { Dispatch } from 'react';
 import { IAction, ITrigger, OptionalConnect } from 'ui-modules';
 
 export const connectionHandler = (
@@ -107,7 +111,10 @@ export const connectionHandler = (
   return { triggers, actions };
 };
 
-export const generateConnect = (params: any, source: any) => {
+export const generateConnect = (
+  params: Connection,
+  source?: Node<NodeData>,
+) => {
   const { sourceHandle } = params;
 
   let info: any = {
@@ -118,8 +125,8 @@ export const generateConnect = (params: any, source: any) => {
   };
 
   if (sourceHandle) {
-    if (params?.sourceHandle.includes(params?.source)) {
-      const [_sourceId, optionalConnectId] = params.sourceHandle.split('-');
+    if (sourceHandle.includes(params?.source)) {
+      const [_sourceId, optionalConnectId] = sourceHandle.split('-');
       info.optionalConnectId = optionalConnectId;
       info.connectType = 'optional';
     }
@@ -151,4 +158,90 @@ export const getNewId = (checkIds: string[]) => {
   }
 
   return newId;
+};
+
+export const checkIsValidConnect = ({
+  nodes,
+  edges,
+  connection,
+  triggersConst,
+  actionsConst,
+}: {
+  nodes: Node<NodeData>[];
+  connection: Connection;
+  edges: Edge[];
+  triggersConst: any[];
+  actionsConst: any[];
+}) => {
+  const target = nodes.find((node) => node.id === connection.target);
+  const source = nodes.find((node) => node.id === connection.source);
+
+  const hasCycle = (node: Node<NodeData>, visited = new Set()) => {
+    if (node?.data?.nodeType === 'trigger') return true;
+    if (visited.has(node.id)) return false;
+
+    visited.add(node.id);
+
+    for (const outgoer of getOutgoers(node, nodes, edges)) {
+      if (outgoer.id === connection.source) return true;
+      if (hasCycle(outgoer, visited)) return true;
+    }
+  };
+
+  if (!target || !source) {
+    return false;
+  }
+
+  const allNodes = [...triggersConst, ...actionsConst];
+  const sourceDef = allNodes.find((n) => n.type === source.data?.type);
+
+  if (
+    sourceDef?.connectableActionTypes &&
+    !sourceDef.connectableActionTypes.includes(target.data?.type)
+  ) {
+    return false;
+  }
+
+  return !hasCycle(target);
+};
+
+export const onDisconnect = ({
+  edge,
+  setEdges,
+  nodes,
+  triggers,
+  actions,
+}: {
+  edge: EdgeProps;
+  setEdges: Dispatch<SetStateAction<Edge<EdgeProps>[]>>;
+  nodes: Node<NodeData>[];
+  triggers: ITrigger[];
+  actions: IAction[];
+}) => {
+  setEdges((eds: Edge<EdgeProps>[]) => eds.filter((e) => e.id !== edge.id));
+  let info: any = { source: edge.source, target: undefined };
+
+  const sourceNode = nodes.find((n) => n.id === edge.source);
+
+  if ((edge?.sourceHandleId || '').includes(sourceNode?.id || '')) {
+    const [_action, _sourceId, optionalConnectId] = (edge.id || '').split('-');
+    info.optionalConnectId = optionalConnectId;
+    info.connectType = 'optional';
+  }
+
+  connectionHandler(
+    triggers,
+    actions,
+    generateConnect(
+      {
+        source: edge.source,
+        target: edge.target,
+        sourceHandle: edge.sourceHandleId || '',
+        targetHandle: edge.targetHandleId || '',
+      },
+      sourceNode,
+    ),
+    info.targetId,
+    [],
+  );
 };

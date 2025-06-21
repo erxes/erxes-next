@@ -1,3 +1,4 @@
+import { getAutomationTypes } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const TriggerNodeConfigurationContent = ({
@@ -7,11 +8,13 @@ export const TriggerNodeConfigurationContent = ({
   type: string;
   config: any;
 }) => {
+  const [pluginName, moduleName] = getAutomationTypes(type || '');
+
   return (
     <RenderPluginsComponent
-      pluginName={`frontline_ui`}
+      pluginName={`${pluginName}_ui`}
       remoteModuleName="automations"
-      moduleName={'facebook'}
+      moduleName={moduleName}
       props={{
         componentType: 'triggerConfigContent',
         type,

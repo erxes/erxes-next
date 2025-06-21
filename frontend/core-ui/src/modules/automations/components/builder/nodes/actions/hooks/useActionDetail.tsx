@@ -1,7 +1,7 @@
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { useQueryState } from 'erxes-ui';
 import { lazy } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 const Delay = lazy(() =>
   import('../delay/components/Delay').then((module) => ({
@@ -9,9 +9,9 @@ const Delay = lazy(() =>
   })),
 );
 
-const IF = lazy(() =>
+const Branches = lazy(() =>
   import('../branches/components/Branches').then((module) => ({
-    default: module.IF,
+    default: module.Branches,
   })),
 );
 
@@ -31,22 +31,31 @@ const Actions: Record<
   React.LazyExoticComponent<React.ComponentType<any>>
 > = {
   delay: Delay,
-  if: IF,
+  if: Branches,
   setProperty: ManageProperties,
   sendEmail: AutomationSendEmail,
 };
 
 export const useActionDetail = () => {
-  const [activeNodeId] = useQueryState('activeNodeId');
-  const { watch, control } = useFormContext<TAutomationProps>();
+  const { queryParams } = useAutomation();
+  const { control } = useFormContext<TAutomationProps>();
 
-  const actions = watch(`detail.actions`) || [];
+  // Watch all actions once
+  const actions =
+    useWatch({
+      control,
+      name: 'detail.actions',
+    }) || [];
+
   const currentIndex = actions.findIndex(
-    (action) => action.id === activeNodeId,
+    (action) => action.id === queryParams?.activeNodeId,
   );
+  const currentAction = currentIndex >= 0 ? actions[currentIndex] : null;
 
-  const currentAction = watch(`detail.actions.${currentIndex}`);
-  const Component = Actions[currentAction?.type] || null;
+  const Component =
+    currentAction && Actions[currentAction.type]
+      ? Actions[currentAction.type]
+      : null;
 
   return { Component, control, currentIndex, currentAction };
 };

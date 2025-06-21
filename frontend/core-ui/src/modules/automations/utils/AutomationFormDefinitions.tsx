@@ -28,9 +28,7 @@ export const automationBuilderFormSchema = z.object({
         .refine(
           ({ config, isCustom }) => {
             // Only enforce contentId check if not custom
-            console.log({ config, isCustom });
             if (!isCustom) {
-              console.log('why', config?.contentId);
               return !!config?.contentId;
             }
 

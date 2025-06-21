@@ -1,29 +1,57 @@
-import { AUTOMATOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
-import { ConstantsQueryResponse } from '@/automations/types';
-import { useQuery } from '@apollo/client';
-import { useQueryState } from 'erxes-ui';
-import React from 'react';
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { coreActionNames } from '@/automations/components/builder/nodes/actions/coreActions';
+import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import React, { useMemo } from 'react';
+import { useWatch } from 'react-hook-form';
 
 export const useAutomationNodeLibrarySidebar = () => {
-  const [activeNodeTab, setNodeActiveTab] = useQueryState<'trigger' | 'action'>(
-    'activeNodeTab',
-  );
+  const { awaitingToConnectNodeId, queryParams, setQueryParams } =
+    useAutomation();
+  const { activeNodeTab } = queryParams || {};
 
-  const { data, loading, error, refetch } = useQuery<ConstantsQueryResponse>(
-    AUTOMATOMATION_CONSTANTS,
-    {
-      fetchPolicy: 'cache-first',
-      nextFetchPolicy: 'cache-only', // Prevent any refetch after the first
-      notifyOnNetworkStatusChange: false,
-    },
-  );
+  const triggers =
+    useWatch<TAutomationProps>({ name: 'detail.triggers' }) ?? [];
+  const actions = useWatch<TAutomationProps>({ name: 'detail.actions' }) ?? [];
 
-  const { triggersConst = [], actionsConst = [] } =
-    data?.automationConstants || {};
+  const { triggersConst, actionsConst, loading, error, refetch } =
+    useAutomation();
+
+  const filteredActionsConst = useMemo(() => {
+    if (!awaitingToConnectNodeId) return actionsConst;
+
+    const [nodeType, nodeId] = awaitingToConnectNodeId.split('__') as [
+      'trigger' | 'action',
+      string,
+    ];
+
+    const nodeList = nodeType === 'trigger' ? triggers : actions;
+    const nodeTypeValue = nodeList.find(
+      (node: any) => node.id === nodeId,
+    )?.type;
+
+    const constantsMap = {
+      trigger: triggersConst,
+      action: actionsConst,
+    };
+
+    const connectableActionTypes =
+      constantsMap[nodeType]?.find((c) => c.type === nodeTypeValue)
+        ?.connectableActionTypes ?? [];
+
+    if (!connectableActionTypes?.length) {
+      return actionsConst;
+    }
+
+    return actionsConst.filter(
+      (action) =>
+        coreActionNames.includes(action?.type) ||
+        connectableActionTypes.includes(action.type),
+    );
+  }, [awaitingToConnectNodeId, triggers, actions, actionsConst, triggersConst]);
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    nodeType: string,
+    nodeType: 'trigger' | 'action',
     { type, label, description, icon, isCustom }: any,
   ) => {
     const data = {
@@ -33,6 +61,7 @@ export const useAutomationNodeLibrarySidebar = () => {
       description,
       icon,
       isCustom,
+      awaitingToConnectNodeId,
     };
 
     event.dataTransfer.setData(
@@ -43,11 +72,11 @@ export const useAutomationNodeLibrarySidebar = () => {
   };
 
   return {
-    activeNodeTab,
-    setNodeActiveTab,
+    activeNodeTab: awaitingToConnectNodeId ? 'action' : activeNodeTab,
+    setQueryParams,
     loading,
     triggersConst,
-    actionsConst,
+    actionsConst: filteredActionsConst,
     onDragStart,
     error,
     refetch,

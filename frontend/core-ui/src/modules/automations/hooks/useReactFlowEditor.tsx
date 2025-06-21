@@ -1,34 +1,50 @@
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { useResetNodes } from '@/automations/hooks/useResetNodes';
+import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import {
   addEdge,
   Connection,
-  Edge,
-  getOutgoers,
   Node,
   useEdgesState,
   useNodesState,
 } from '@xyflow/react';
-import React, { useCallback, useRef } from 'react';
 import '@xyflow/react/dist/style.css';
-import { useFormContext } from 'react-hook-form';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { themeState } from 'erxes-ui';
+import { useAtomValue } from 'jotai';
+import React, { useCallback, useRef } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { IAction, ITrigger } from 'ui-modules';
 import { NodeData } from '../types';
 import {
+  automationDropHandler,
+  generateEdges,
+  generateNodes,
+} from '../utils/automationBuilderUtils';
+import {
+  checkIsValidConnect,
   connectionHandler,
   generateConnect,
-  getNewId,
-} from '../utils/automationActionConnectionUtils';
-import { generateEdges, generateNodes } from '../utils/automationBuilderUtils';
-import { themeState, useQueryState } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+} from '../utils/automationConnectionUtils';
 
 export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const editorWrapper = useRef<HTMLDivElement>(null);
+  const { triggersConst, actionsConst } = useAutomation();
   const { watch, setValue } = useFormContext<TAutomationProps>();
-  const [activeNodeId, setActiveNodeId] = useQueryState('activeNodeId');
+  const {
+    awaitingToConnectNodeId,
+    setAwaitingToConnectNodeId,
+    setQueryParams,
+  } = useAutomation();
+
   const theme = useAtomValue(themeState);
 
-  const { triggers = [], actions = [] } = watch('detail') || {};
+  const [triggers = [], actions = []] = watch([
+    'detail.triggers',
+    'detail.actions',
+  ]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<any>(
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node<NodeData>>(
     generateNodes({ triggers, actions }, {}),
   );
   const [edges, setEdges, onEdgesChange] = useEdgesState<any>(
@@ -38,44 +54,21 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
       workFlowActions: [],
     }),
   );
-  const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const editorWrapper = useRef<HTMLDivElement>(null);
-  const edgeUpdateSuccessful = useRef(true);
 
-  const resetNodes = () => {
-    const updatedNodes: any[] = generateNodes(
-      { triggers, actions, workFlowActions: [] },
-      {},
-    );
-
-    const mergedArray = updatedNodes.map((node1) => {
-      let node2 = nodes.find((o) => o.id === node1.id);
-
-      if (node2) {
-        return {
-          ...node1,
-          data: { ...node2.data, ...node1.data },
-          position: { ...node1.position, ...node2.position },
-        };
-      }
-      return node1;
-    });
-    setNodes(mergedArray);
-    setEdges(
-      generateEdges({
-        triggers,
-        actions,
-        workFlowActions: [],
-      }),
-    );
-  };
+  const { resetNodes } = useResetNodes({
+    nodes,
+    triggers,
+    actions,
+    setEdges,
+    setNodes,
+  });
 
   const onConnection = (info: any) => {
     connectionHandler(triggers, actions, info, info.targetId, []);
   };
 
   const onConnect = useCallback(
-    (params: any) => {
+    (params: Connection) => {
       const source = nodes.find((node) => node.id === params.source);
       setEdges((eds) => {
         const updatedEdges = addEdge({ ...params }, eds);
@@ -92,143 +85,37 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  const onDrop = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
+  const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const { actions: newActions, triggers: newTriggers } =
+      automationDropHandler({
+        event,
+        reactFlowInstance,
+        triggers,
+        actions,
+      }) || {};
 
-      const draggingNode = event.dataTransfer.getData(
-        'application/reactflow/draggingNode',
-      );
-      // const nodeType = event.dataTransfer.getData(
-      //   'application/reactflow/type',
-      // ) as 'trigger' | 'action';
-      // const nodeModule = event.dataTransfer.getData(
-      //   'application/reactflow/module',
-      // );
-      // const nodeLabel = event.dataTransfer.getData(
-      //   'application/reactflow/label',
-      // );
-      // const nodeDescription = event.dataTransfer.getData(
-      //   'application/reactflow/description',
-      // );
-      // const nodeIcon = event.dataTransfer.getData('application/reactflow/icon');
+    setValue('detail.actions', newActions);
+    setValue('detail.triggers', newTriggers);
 
-      const { nodeType, type, label, description, icon, isCustom } = JSON.parse(
-        draggingNode || '{}',
-      ) as {
-        nodeType: 'trigger' | 'action';
-        type: string;
-        label: string;
-        description: string;
-        icon: string;
-        isCustom?: boolean;
-      };
-
-      // Check if the dropped element is valid
-      if (typeof nodeType === 'undefined' || !nodeType) {
-        return;
-      }
-
-      // Get canvas position for the new node
-      const position = reactFlowInstance.screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-      const fieldName:
-        | `detail.triggers`
-        | `detail.actions` = `detail.${nodeType}s`;
-      const nodes = watch(fieldName) || [];
-
-      const id = getNewId([...triggers, ...actions].map((a) => a.id));
-      // Create a new node
-      const newNode: Node<NodeData> = {
-        id,
-        type: nodeType,
-        position,
-        data: {
-          id,
-          label: label || `New ${nodeType}`,
-          icon: icon,
-          nodeType: nodeType as 'trigger' | 'action',
-          type,
-          description: description || '',
-          config: {},
-          nodeIndex: nodes.length + 1,
-          isCustom,
-          ...(nodeType === 'action' ? {} : { actionId: undefined }),
-        },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
-      setValue(fieldName, [
-        ...nodes,
-        {
-          id,
-          type,
-          config: {},
-          icon: icon,
-          label: label,
-          description: description,
-          isCustom,
-        },
-      ]);
-    },
-    [reactFlowInstance, setNodes],
-  );
-
-  const onDisconnection = ({
-    nodes,
-    edge,
-    setEdges,
-  }: {
-    nodes: Node<NodeData>[];
-    edge: any;
-    setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
-  }) => {
-    setEdges((eds: Edge[]) => eds.filter((e) => e.id !== edge.id));
-    let info: any = { source: edge.source, target: undefined };
-
-    const sourceNode = nodes.find((n) => n.id === edge.source);
-
-    if (edge.sourceHandle.includes(sourceNode?.id || '')) {
-      const [_action, _sourceId, optionalConnectId] = (edge.id || '').split(
-        '-',
-      );
-      info.optionalConnectId = optionalConnectId;
-      info.connectType = 'optional';
+    if (awaitingToConnectNodeId) {
+      setAwaitingToConnectNodeId('');
     }
-
-    onConnection(info);
-  };
-  // Handle drag start from sidebar
-  const onDragStart = (
-    event: React.DragEvent<HTMLDivElement>,
-    nodeType: string,
-    nodeModule: string,
-    nodeLabel: string,
-    nodeDescription: string,
-  ) => {
-    event.dataTransfer.setData('application/reactflow/type', nodeType);
-    event.dataTransfer.setData('application/reactflow/module', nodeModule);
-    event.dataTransfer.setData('application/reactflow/label', nodeLabel);
-    event.dataTransfer.setData(
-      'application/reactflow/description',
-      nodeDescription,
-    );
-    event.dataTransfer.effectAllowed = 'move';
   };
 
   const onNodeDragStop = (_: any, node: Node<NodeData>) => {
     const nodeType = node.data.nodeType as 'trigger' | 'action';
     const names = {
-      trigger: 'triggers',
-      action: 'actions',
+      trigger: triggers,
+      action: actions,
     };
-    const name = names[nodeType] as 'triggers' | 'actions';
-    const list = watch('detail')[name];
+    const list = names[nodeType] as ITrigger[] | IAction[];
+
+    if (!list?.length) {
+      return;
+    }
 
     setValue(
-      `detail.${name}`,
+      `detail.${nodeType}s`,
       list.map((item) =>
         item.id === node.id ? { ...item, position: node.position } : item,
       ),
@@ -236,49 +123,30 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
   };
 
   const isValidConnection = useCallback(
-    (connection: Connection) => {
-      const target = nodes.find((node) => node.id === connection.target);
-      const hasCycle = (node: Node<NodeData>, visited = new Set()) => {
-        if (node?.data?.nodeType === 'trigger') return true;
-        if (visited.has(node.id)) return false;
-
-        visited.add(node.id);
-
-        for (const outgoer of getOutgoers(node, nodes, edges)) {
-          if (outgoer.id === connection.source) return true;
-          if (hasCycle(outgoer, visited)) return true;
-        }
-      };
-
-      // if (target?.parentId && connection?.source && target.id) {
-      // }
-
-      if (!target) {
-        return false;
-      }
-
-      return !hasCycle(target);
-    },
+    (connection: Connection) =>
+      checkIsValidConnect({
+        nodes,
+        edges,
+        connection,
+        triggersConst,
+        actionsConst,
+      }),
     [nodes, edges],
   );
 
-  const onEdgeUpdateEnd = useCallback((_: any, edge: Edge) => {
-    if (!edgeUpdateSuccessful.current) {
-      onDisconnection({ nodes, edge, setEdges });
-    }
-
-    edgeUpdateSuccessful.current = true;
-  }, []);
-
   const onNodeDoubleClick = (event: any, node: Node<NodeData>) => {
-    const isCollapsibleTrigger = (event.target as HTMLElement).closest(
-      '[data-collapsible-trigger]',
-    );
-    if (!isCollapsibleTrigger) {
-      setValue('activeNode', { ...node.data, id: node.id });
-      setValue('isMinimized', false);
-      setActiveNodeId(node.id);
+    const target = event.target as HTMLElement;
+
+    const isCollapsibleTrigger = target.closest('[data-collapsible-trigger]');
+    const isButton = target.closest('button');
+
+    if (isCollapsibleTrigger || isButton) {
+      return; // Prevent double-click action
     }
+
+    setValue('activeNode', { ...node.data, id: node.id });
+    setValue('isMinimized', false);
+    setQueryParams({ activeNodeId: node.id });
   };
 
   return {
@@ -291,10 +159,8 @@ export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
     editorWrapper,
     resetNodes,
     onNodeDoubleClick,
-    onEdgeUpdateEnd,
     isValidConnection,
     onNodeDragStop,
-    onDragStart,
     onDragOver,
     onNodesChange,
     onEdgesChange,

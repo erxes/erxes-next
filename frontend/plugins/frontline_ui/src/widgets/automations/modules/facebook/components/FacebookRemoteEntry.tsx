@@ -1,48 +1,71 @@
-import { TriggerConfigContent } from './trigger/components/TriggerConfigContent';
-import { MessageTriggerForm } from './trigger/components/MessageTriggerForm';
-import { getAutomationTypes } from 'ui-modules';
+import {
+  AutomaitionRemoteEntryProps,
+  AutomaitionRemoteEntryTypes,
+  getAutomationTypes,
+} from 'ui-modules';
+import { ActionConfigContent } from './action/components/ActionConfigContent';
 import { MessageActionForm } from './action/components/MessageActionForm';
+import { MessageTriggerForm } from './trigger/components/MessageTriggerForm';
+import { TriggerConfigContent } from './trigger/components/TriggerConfigContent';
 
-export const FacebookRemoteEntry = (props: any) => {
-  const { componentType } = props || {};
+export const FacebookRemoteEntry = (props: AutomaitionRemoteEntryProps) => {
+  const { componentType = '' } = props;
 
-  if (componentType === 'actionForm') {
-    const { type: actionType = '' } = props?.currentAction || {};
-    const [_pluginName, _moduleName, contentType] =
-      getAutomationTypes(actionType);
+  switch (componentType) {
+    case 'actionForm':
+      return renderActionForm(
+        props as AutomaitionRemoteEntryTypes['ActionForm'],
+      );
 
-    switch (contentType) {
-      case 'messages':
-        return <MessageActionForm {...props} />;
-      //   case "comments":
-      //     return <CommnetForm {...props} />;
-      //   case "ads":
-      //     return <AdsForm {...props} />;
-      default:
-        return null;
-    }
-  }
+    case 'triggerForm':
+      return renderTriggerForm(
+        props as AutomaitionRemoteEntryTypes['TriggerForm'],
+      );
 
-  if (componentType === 'triggerForm') {
-    const { type: triggerType = '' } = props?.activeTrigger || {};
-    const [_pluginName, _moduleName, contentType] =
-      getAutomationTypes(triggerType);
+    case 'triggerConfigContent':
+      return (
+        <TriggerConfigContent
+          {...(props as AutomaitionRemoteEntryTypes['TriggerNodeConfig'])}
+        />
+      );
 
-    switch (contentType) {
-      case 'messages':
-        return <MessageTriggerForm {...props} />;
-      //   case "comments":
-      //     return <CommnetForm {...props} />;
-      //   case "ads":
-      //     return <AdsForm {...props} />;
-      default:
-        return null;
-    }
-  }
+    case 'actionNodeConfiguration':
+      return (
+        <ActionConfigContent
+          {...(props as AutomaitionRemoteEntryTypes['ActionNodeConfig'])}
+        />
+      );
 
-  if (componentType === 'triggerConfigContent') {
-    const { config = {} } = props || {};
-
-    return <TriggerConfigContent config={config} />;
+    default:
+      return null;
   }
 };
+
+// Helper functions
+function renderActionForm(props: AutomaitionRemoteEntryTypes['ActionForm']) {
+  const actionType = props.currentAction?.type || '';
+  const [_pluginName, _moduleName, contentType] =
+    getAutomationTypes(actionType);
+
+  switch (contentType) {
+    case 'messages':
+      return <MessageActionForm {...props} />;
+    // Add other cases as needed
+    default:
+      return null;
+  }
+}
+
+function renderTriggerForm(props: AutomaitionRemoteEntryTypes['TriggerForm']) {
+  const triggerType = props.activeTrigger?.type || '';
+  const [_pluginName, _moduleName, contentType] =
+    getAutomationTypes(triggerType);
+
+  switch (contentType) {
+    case 'messages':
+      return <MessageTriggerForm {...props} />;
+    // Add other cases as needed
+    default:
+      return null;
+  }
+}

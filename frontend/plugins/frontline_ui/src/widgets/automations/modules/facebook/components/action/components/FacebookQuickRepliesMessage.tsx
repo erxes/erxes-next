@@ -1,20 +1,12 @@
 import { Form, Textarea } from 'erxes-ui';
-import { Control } from 'react-hook-form';
-import { FacebookMessageButtonsGenerator } from '~/widgets/automations/modules/facebook/components/action/components/FacebookMessageButtonsGenerator';
-import { InputTextCounter } from '~/widgets/automations/modules/facebook/components/action/components/InputTextCounter';
-import {
-  TBotMessage,
-  TMessageActionForm,
-} from '~/widgets/automations/modules/facebook/components/action/states/replyMessageActionForm';
+import { FacebookMessageProps } from '../types/messageActionForm';
+import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
+import { InputTextCounter } from './InputTextCounter';
 
 export const FacebookQuickRepliesMessage = ({
   index,
   control,
-}: {
-  index: number;
-  message: TBotMessage;
-  control: Control<TMessageActionForm>;
-}) => {
+}: FacebookMessageProps) => {
   return (
     <>
       <Form.Field
@@ -42,11 +34,13 @@ export const FacebookQuickRepliesMessage = ({
               </Form.Label>
               <Form.Control>
                 <FacebookMessageButtonsGenerator
+                  limit={13}
                   buttons={field.value || []}
                   setButtons={field.onChange}
                   addButtonText="+ add quick reply"
                 />
               </Form.Control>
+              <Form.Message />
             </Form.Item>
           );
         }}

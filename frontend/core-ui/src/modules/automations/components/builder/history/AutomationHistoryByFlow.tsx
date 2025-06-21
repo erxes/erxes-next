@@ -1,18 +1,17 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { useFormContext } from 'react-hook-form';
-import { ReactFlow, Background, ConnectionMode, Controls } from '@xyflow/react';
+import { IAutomationHistory } from '@/automations/types';
 import {
   generateEdges,
   generateNodes,
 } from '@/automations/utils/automationBuilderUtils';
+import { IconCheck, IconQuestionMark, IconX } from '@tabler/icons-react';
+import { Background, ConnectionMode, Controls, ReactFlow } from '@xyflow/react';
+import dayjs from 'dayjs';
+import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
+import { useWatch } from 'react-hook-form';
+import { IAction, ITrigger } from 'ui-modules';
+import PrimaryEdge from '../edges/primary';
 import ActionNode from '../nodes/ActionNode';
 import TriggerNode from '../nodes/TriggerNode';
-import PrimaryEdge from '../edges/primary';
-import { IAction, ITrigger } from 'ui-modules';
-import { IAutomationHistory } from '@/automations/types';
-import { IconCheck, IconQuestionMark, IconX } from '@tabler/icons-react';
-import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
-import dayjs from 'dayjs';
 import { generateActionResult } from './AutomationHistoryByTable';
 
 const nodeTypes = {
@@ -84,9 +83,7 @@ export const AutomationHistoryByFlow = ({
   history: IAutomationHistory;
   constants: { triggersConst: ITrigger[]; actionsConst: IAction[] };
 }) => {
-  const { watch } = useFormContext<TAutomationProps>();
-
-  const { triggers = [], actions = [] } = watch('detail') || {};
+  const { triggers = [], actions = [] } = useWatch({ name: 'detail' }) || {};
 
   const { beforeTitleContent } = useBeforeTitleContent(history);
 

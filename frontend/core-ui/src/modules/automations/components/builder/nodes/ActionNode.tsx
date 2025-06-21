@@ -1,13 +1,12 @@
+import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
+import { IconAdjustmentsAlt, IconMessage } from '@tabler/icons-react';
 import { Handle, NodeProps, Position } from '@xyflow/react';
-import { memo } from 'react';
 import { cn } from 'erxes-ui';
-import { IconAdjustmentsAlt, IconMessage, IconPlus } from '@tabler/icons-react';
-import { useFormContext } from 'react-hook-form';
+import { memo } from 'react';
 import { NodeData } from '../../../types';
 import { ErrorState } from '../../../utils/ErrorState';
-import { NodeDropdownActions } from './NodeDropdownActions';
 import { ActionNodeConfigurationContent } from './ActionNodeConfigurationContent';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { NodeDropdownActions } from './NodeDropdownActions';
 
 const renderContent = (data: NodeData) => {
   if (data?.error) {
@@ -30,60 +29,71 @@ const renderContent = (data: NodeData) => {
         <IconAdjustmentsAlt className="w-4 h-4" />
         <p className="text-sm font-semibold">Configuration</p>
       </div>
-      <div className="rounded border bg-muted overflow-x-auto">
-        <ActionNodeConfigurationContent
-          type={data.type || ''}
-          config={data.config}
-        />
+      <div className="rounded border bg-muted text-muted-foreground overflow-x-auto">
+        <ActionNodeConfigurationContent data={data} />
       </div>
     </div>
   );
 };
 
-const renderSourceHandler = (type: string) => {
-  const position = Position.Right;
+const renderSourceHandler = (
+  id: string,
+  type: string,
+  nextActionId?: string,
+  config?: any,
+) => {
   if (type === 'if') {
     return (
       <>
-        <Handle
+        <NodeOutputHandler
           key="yes-right"
           id="yes-right"
-          type="source"
-          position={position}
-          className={`!w-4 !h-4 -z-10 !bg-success`}
+          handlerId={`${id}__yes`}
+          className="!bg-success"
+          addButtonClassName="hover:text-success hover:border-success"
           style={{ top: '50%' }}
+          showAddButton={!config?.yes}
+          nodeType="action"
         >
-          <div className="ml-4 text-xs text-muted-foreground ">True</div>
-        </Handle>
-        <Handle
+          <div
+            className="ml-4 text-xs text-muted-foreground fixed -top-2"
+            // key="yes-right"
+            // id="yes-right"
+          >
+            True
+          </div>
+        </NodeOutputHandler>
+        <NodeOutputHandler
           key="no-right"
           id="no-right"
-          type="source"
-          position={position}
-          className={`!w-4 !h-4 -z-10 !bg-red-300`}
-          style={{ top: '70%' }}
+          handlerId={`${id}__no`}
+          className="!bg-destructive"
+          addButtonClassName="hover:text-destructive hover:border-destructive"
+          style={{ top: '80%' }}
+          showAddButton={!config?.no}
+          nodeType="action"
         >
-          <div className="ml-4 text-xs text-muted-foreground ">False</div>
-        </Handle>
+          <div className="ml-4 text-xs text-muted-foreground fixed -top-2">
+            False
+          </div>
+        </NodeOutputHandler>
       </>
     );
   }
+
   return (
-    <>
-      <Handle
-        key="right"
-        id="right"
-        type="source"
-        position={position}
-        className={`!w-4 !h-4 -z-10 !bg-success `}
-      />
-    </>
+    <NodeOutputHandler
+      className="!bg-success"
+      handlerId={id}
+      addButtonClassName="hover:text-success  hover:border-success"
+      showAddButton={!nextActionId}
+      nodeType="action"
+    />
   );
 };
 
 const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
-  const { setValue } = useFormContext<TAutomationProps>();
-  const { beforeTitleContent } = data;
+  const { beforeTitleContent, config, nextActionId } = data;
 
   return (
     <div className="flex flex-col" key={id}>
@@ -111,7 +121,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
           </div>
 
           <div className="flex items-center gap-1">
-            <NodeDropdownActions id={id} data={data} setValue={setValue} />
+            <NodeDropdownActions id={id} data={data} />
           </div>
         </div>
 
@@ -120,7 +130,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
             {data.description}
           </span>
         </div>
-        {renderContent(data)}
+        {renderContent({ ...data, id })}
 
         {/* Input handle */}
         <Handle
@@ -131,7 +141,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
           className={`!w-4 !h-4 -z-10 !bg-success `}
         />
 
-        {renderSourceHandler(data.type)}
+        {renderSourceHandler(id, data.type, nextActionId, config)}
       </div>
     </div>
   );

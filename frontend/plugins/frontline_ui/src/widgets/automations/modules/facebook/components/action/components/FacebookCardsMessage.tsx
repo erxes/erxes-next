@@ -1,32 +1,22 @@
-import {
-  IconImageInPicture,
-  IconPhotoScan,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconPhotoScan, IconTrash } from '@tabler/icons-react';
 import { Button, Card, Form, Input, Label, Tabs, Textarea } from 'erxes-ui';
-import { Control } from 'react-hook-form';
-import { InputTextCounter } from '~/widgets/automations/modules/facebook/components/action/components/InputTextCounter';
-import {
-  TBotMessage,
-  TMessageActionForm,
-} from '~/widgets/automations/modules/facebook/components/action/states/replyMessageActionForm';
+import { FacebookMessageProps } from '../types/messageActionForm';
+import { TBotMessageCard } from '../states/replyMessageActionForm';
+import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
+import { InputTextCounter } from './InputTextCounter';
 
 export const FacebookCardsMessage = ({
   message,
   control,
   index,
-}: {
-  index: number;
-  message: TBotMessage;
-  control: Control<TMessageActionForm>;
-}) => {
+}: FacebookMessageProps) => {
   const { cards = [] } = message || {};
 
   return (
     <Form.Field
       control={control}
       name={`messages.${index}.cards`}
-      render={({ field }) => {
+      render={({ field, fieldState }) => {
         const addPage = () => {
           field.onChange([
             ...cards,
@@ -39,10 +29,14 @@ export const FacebookCardsMessage = ({
 
         const onChangeCardInfo = (id: string, newData: any) => {
           field.onChange(
-            cards.map((card: any) =>
+            cards.map((card: TBotMessageCard) =>
               card._id === id ? { ...card, ...newData } : card,
             ),
           );
+        };
+
+        const onRemoveCard = (cardIndex: number) => {
+          field.onChange(cards.filter((_, index) => index !== cardIndex));
         };
 
         return (
@@ -54,15 +48,19 @@ export const FacebookCardsMessage = ({
                 <Button
                   variant="outline"
                   className="float-end"
+                  disabled={cards.length >= 10}
                   onClick={addPage}
                 >
                   + add page
                 </Button>
               </div>
             </div>
-            <Tabs defaultValue={cards?.length ? '1' : undefined}>
+            <Tabs>
               <div className="overflow-x-auto p-2">
-                <Tabs.List size="sm">
+                <Tabs.List
+                  size="sm"
+                  defaultValue={cards?.length === 1 ? '1' : undefined}
+                >
                   {cards.map((_, index) => (
                     <Tabs.Trigger size="sm" value={String(index)}>{`${
                       index + 1
@@ -70,10 +68,14 @@ export const FacebookCardsMessage = ({
                   ))}
                 </Tabs.List>
               </div>
-              {cards.map((card: any, index) => (
+              {cards.map((card, index) => (
                 <Tabs.Content value={String(index)}>
                   <Card>
-                    <Button className="float-end m-2" variant="destructive">
+                    <Button
+                      className="float-end m-2"
+                      variant="destructive"
+                      onClick={() => onRemoveCard(index)}
+                    >
                       <IconTrash />
                     </Button>
                     <div className="px-4">
@@ -118,11 +120,21 @@ export const FacebookCardsMessage = ({
                           placeholder="Enter a subtitle"
                         />
                       </Card.Description>
+                      <FacebookMessageButtonsGenerator
+                        limit={3}
+                        buttons={card.buttons || []}
+                        setButtons={(buttons) =>
+                          onChangeCardInfo(card._id, {
+                            buttons,
+                          })
+                        }
+                      />
                     </Card.Header>
                   </Card>
                 </Tabs.Content>
               ))}
             </Tabs>
+            <Form.Message />
           </Form.Item>
         );
       }}

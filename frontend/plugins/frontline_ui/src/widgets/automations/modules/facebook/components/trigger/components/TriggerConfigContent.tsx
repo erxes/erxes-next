@@ -1,17 +1,18 @@
 import { useFacebookBot } from '@/integrations/facebook/hooks/useFacebookBots';
 import { IFacebookBot } from '@/integrations/facebook/types/FacebookBot';
 import { Avatar, Label, Separator, Spinner } from 'erxes-ui';
-import { useFacebookMessengerTrigger } from '~/widgets/automations/modules/facebook/components/trigger/hooks/useFacebookMessengerTrigger';
-import { TMessageTriggerFormCondition } from '~/widgets/automations/modules/facebook/components/trigger/states/messageTriggerFormSchema';
+import { useFacebookMessengerTrigger } from '../hooks/useFacebookMessengerTrigger';
+import { TMessageTriggerFormCondition } from '../states/messageTriggerFormSchema';
+import { AutomaitionTriggerConfigProps } from 'ui-modules';
 
 type Props = {
-  config: {
-    botId: string;
-    conditions: TMessageTriggerFormCondition[];
-  };
+  botId: string;
+  conditions: TMessageTriggerFormCondition[];
 };
 
-export const TriggerConfigContent = ({ config }: Props) => {
+export const TriggerConfigContent = ({
+  config,
+}: AutomaitionTriggerConfigProps<Props>) => {
   const { conditions = [], botId } = config || {};
   const { triggerConditionsConstans } = useFacebookMessengerTrigger();
   const { bot, loading } = useFacebookBot(botId);
@@ -23,7 +24,7 @@ export const TriggerConfigContent = ({ config }: Props) => {
       {conditions.map(
         (condition: TMessageTriggerFormCondition, index: number) => (
           <Condtion
-            key={bot?._id}
+            key={index}
             bot={bot}
             condition={condition}
             triggerConditionsConstans={triggerConditionsConstans}

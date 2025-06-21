@@ -1,7 +1,7 @@
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { useQueryState } from 'erxes-ui';
 import { lazy } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 const Delay = lazy(() =>
   import('../../nodes/actions/delay/components/Delay').then((module) => ({
@@ -41,23 +41,29 @@ const Actions: Record<
 };
 
 export const useAutomationActionContentSidebar = () => {
-  const [activeNodeId, setActiveNodeId] = useQueryState('activeNodeId');
-  const { watch, control, setValue } = useFormContext<TAutomationProps>();
+  const { queryParams, setQueryParams } = useAutomation();
+  const { control, setValue } = useFormContext<TAutomationProps>();
 
-  const actions = watch(`detail.actions`) || [];
+  // Watch all actions once
+  const actions = useWatch({ control, name: 'detail.actions' }) || [];
+
+  // Find the index of the active node by id
   const currentIndex = actions.findIndex(
-    (action) => action.id === activeNodeId,
+    (action) => action.id === queryParams?.activeNodeId,
   );
 
-  const currentAction = watch(`detail.actions.${currentIndex}`);
-  const Component = Actions[currentAction?.type] || null;
+  // Safely get currentAction, guard against -1
+  const currentAction = currentIndex >= 0 ? actions[currentIndex] : null;
+
+  // Pick component from Actions map or fallback to null
+  const Component = currentAction ? Actions[currentAction.type] ?? null : null;
 
   return {
     Component,
     control,
     currentIndex,
     currentAction,
-    setActiveNodeId,
+    setQueryParams,
     setValue,
   };
 };

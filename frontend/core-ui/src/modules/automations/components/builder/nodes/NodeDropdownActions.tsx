@@ -1,49 +1,25 @@
+import { useNodeDropDrownActions } from './hooks/useNodeDropDownActions';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
-import {
-  AlertDialog,
-  Button,
-  Dialog,
-  DropdownMenu,
-  useQueryState,
-} from 'erxes-ui';
-import { useState } from 'react';
-import { useFormContext, UseFormSetValue } from 'react-hook-form';
+import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
+import { Dispatch, SetStateAction } from 'react';
 import { NodeData } from '../../../types';
 import { EditForm } from './NodeEditForm';
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-
-const fields = {
-  trigger: 'triggers',
-  action: 'actions',
-};
 
 export const NodeDropdownActions = ({
   id,
   data,
-  setValue,
 }: {
   id: string;
   data: NodeData;
-  setValue: UseFormSetValue<TAutomationProps>;
 }) => {
-  const [_, setActiveNodeId] = useQueryState('activeNodeId');
-
-  const { getValues } = useFormContext<TAutomationProps>();
-  const [isOpenDropDown, setOpenDropDown] = useState(false);
-  const [isOpenDialog, setOpenDialog] = useState(false);
-  const nodeType = data.nodeType;
-
-  const fieldName = fields[nodeType] as 'triggers' | 'actions';
-
-  const onRemove = () => {
-    const nodes = getValues(`detail.${fieldName}`);
-
-    setValue(
-      `detail.${fieldName}`,
-      nodes.filter((node) => node.id !== id),
-    );
-    setActiveNodeId(null);
-  };
+  const {
+    fieldName,
+    isOpenDialog,
+    isOpenDropDown,
+    setOpenDialog,
+    setOpenDropDown,
+    onRemoveNode,
+  } = useNodeDropDrownActions(id, data.nodeType);
 
   return (
     <DropdownMenu
@@ -61,52 +37,85 @@ export const NodeDropdownActions = ({
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="w-42">
         <DropdownMenu.Item asChild>
-          <Dialog
-            open={isOpenDialog}
-            onOpenChange={(open) => {
-              setOpenDialog(open);
-            }}
-          >
-            <Dialog.Trigger asChild>
-              <Button variant="ghost" className="w-full justify-start">
-                <IconEdit className="w-4 h-4" />
-                Edit
-              </Button>
-            </Dialog.Trigger>
-            <EditForm
-              id={id}
-              fieldName={fieldName}
-              data={data}
-              setValue={setValue}
-              callback={() => setOpenDialog(false)}
-            />
-          </Dialog>
+          <NodeEditForm
+            isOpenDialog={isOpenDialog}
+            setOpenDialog={setOpenDialog}
+            data={data}
+            id={id}
+            fieldName={fieldName}
+          />
         </DropdownMenu.Item>
         <DropdownMenu.Item asChild>
-          <AlertDialog>
-            <AlertDialog.Trigger asChild>
-              <Button variant="ghost" className="w-full justify-start">
-                <IconTrash className="h-4 w-4 text-red-500" />
-                Delete
-              </Button>
-            </AlertDialog.Trigger>
-            <AlertDialog.Content>
-              <AlertDialog.Header>
-                <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-                <AlertDialog.Description>
-                  This action cannot be undone.
-                </AlertDialog.Description>
-              </AlertDialog.Header>
-              <AlertDialog.Footer>
-                <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-                <AlertDialog.Action onClick={onRemove}>
-                  Continue
-                </AlertDialog.Action>
-              </AlertDialog.Footer>
-            </AlertDialog.Content>
-          </AlertDialog>
+          <NodeRemoveActionDialog onRemoveNode={onRemoveNode} />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
+  );
+};
+
+const NodeRemoveActionDialog = ({
+  onRemoveNode,
+}: {
+  onRemoveNode: () => void;
+}) => {
+  return (
+    <AlertDialog>
+      <AlertDialog.Trigger asChild>
+        <Button variant="ghost" className="w-full justify-start">
+          <IconTrash className="h-4 w-4 text-red-500" />
+          Delete
+        </Button>
+      </AlertDialog.Trigger>
+      <AlertDialog.Content>
+        <AlertDialog.Header>
+          <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+          <AlertDialog.Description>
+            This action cannot be undone.
+          </AlertDialog.Description>
+        </AlertDialog.Header>
+        <AlertDialog.Footer>
+          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+          <AlertDialog.Action onClick={onRemoveNode}>
+            Continue
+          </AlertDialog.Action>
+        </AlertDialog.Footer>
+      </AlertDialog.Content>
+    </AlertDialog>
+  );
+};
+
+const NodeEditForm = ({
+  isOpenDialog,
+  setOpenDialog,
+  data,
+  id,
+  fieldName,
+}: {
+  isOpenDialog: boolean;
+  setOpenDialog: Dispatch<SetStateAction<boolean>>;
+  data: NodeData;
+  id: string;
+  fieldName: 'triggers' | 'actions';
+}) => {
+  return (
+    <Dialog
+      open={isOpenDialog}
+      onOpenChange={(open) => {
+        setOpenDialog(open);
+      }}
+    >
+      <Dialog.Trigger asChild>
+        <Button variant="ghost" className="w-full justify-start">
+          <IconEdit className="w-4 h-4" />
+          Edit
+        </Button>
+      </Dialog.Trigger>
+      <EditForm
+        id={id}
+        fieldName={fieldName}
+        data={data}
+        callback={() => setOpenDialog(false)}
+      />
+    </Dialog>
   );
 };

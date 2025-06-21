@@ -181,7 +181,10 @@ const SendEmailConfigurationForm = ({
               control={control}
               render={({ field }) => (
                 <Form.Item>
-                  <PlaceHolderInput propertyType={contentType} {...field} />
+                  <PlaceHolderInput
+                    propertyType={contentType || ''}
+                    {...field}
+                  />
                 </Form.Item>
               )}
             />
@@ -229,7 +232,7 @@ const SendEmailConfigurationForm = ({
           control={control}
           render={({ field }) => (
             <Form.Item className="py-4">
-              <PlaceHolderInput propertyType={contentType} {...field} />
+              <PlaceHolderInput propertyType={contentType || ''} {...field} />
             </Form.Item>
           )}
         />
@@ -310,7 +313,7 @@ const NodeContent = ({ config }: any) => {
         fieldName="Reciepents"
         content={
           <Popover>
-            <Popover.Trigger>
+            <Popover.Trigger asChild>
               <Button variant="ghost">
                 See Emails
                 <IconEye />

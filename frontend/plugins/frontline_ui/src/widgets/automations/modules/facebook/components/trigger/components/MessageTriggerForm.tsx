@@ -3,17 +3,17 @@ import { IconChevronLeft } from '@tabler/icons-react';
 import { Button, cn, Form, Label } from 'erxes-ui';
 import { useState } from 'react';
 import { useForm, UseFormReturn, UseFormSetValue } from 'react-hook-form';
-import { DirectMessageConfigForm } from '../components/DirectMessageConfigForm';
-import { FacebookBotPersistenceMenuSelector } from '../components/FacebookBotPersistenceMenuSelector';
-import { MessageTriggerConditionsList } from '../components/MessageTriggerConditionsList';
-import { useFacebookMessengerTrigger } from '../hooks/useFacebookMessengerTrigger';
+import { FacebookBotSelector } from '../../MessengerBotSelector';
+import { DirectMessageConfigForm } from './DirectMessageConfigForm';
+import { FacebookBotPersistenceMenuSelector } from './FacebookBotPersistenceMenuSelector';
+import { MessageTriggerConditionsList } from './MessageTriggerConditionsList';
 import {
   TMessageTriggerForm,
   TMessageTriggerFormDirectMessage,
   TMessageTriggerFormPersistentMenu,
   triggerFormSchema,
 } from '../states/messageTriggerFormSchema';
-import { FacebookBotSelector } from '../../MessengerBotSelector';
+import { AutomaitionTriggerFormProps } from 'ui-modules';
 
 const renderActiveItemContent = ({
   onConditionChange,
@@ -153,10 +153,10 @@ const renderConditionsContent = ({
 export const MessageTriggerForm = ({
   activeTrigger,
   onSaveTriggerConfig,
-}: any) => {
+}: AutomaitionTriggerFormProps<TMessageTriggerForm>) => {
   const form = useForm<TMessageTriggerForm>({
     resolver: zodResolver(triggerFormSchema),
-    values: { ...(activeTrigger?.config || {}) },
+    values: { ...((activeTrigger?.config || {}) as TMessageTriggerForm) },
   });
   const { watch, setValue, handleSubmit } = form;
   const formState = watch();
