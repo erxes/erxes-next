@@ -1,5 +1,14 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { Badge, Button, RecordTable, RecordTableCellDisplay } from 'erxes-ui';
+import { Cell, ColumnDef } from '@tanstack/react-table';
+import {
+  Badge,
+  Button,
+  Input,
+  RecordTable,
+  RecordTableCellContent,
+  RecordTableCellDisplay,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+} from 'erxes-ui';
 import {
   IconArchive,
   IconEdit,
@@ -9,7 +18,10 @@ import {
 import { IIntegrationDetail } from '../types/Integration';
 import { useIntegrations } from '../hooks/useIntegrations';
 import { useParams } from 'react-router-dom';
-import { BrandsInline } from 'ui-modules';
+import { BrandsInline, SelectBrand } from 'ui-modules';
+import { useIntegrationEditField } from '@/integrations/hooks/useIntegrationEdit';
+import { useState } from 'react';
+import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
 
 export const IntegrationsRecordTable = () => {
   const params = useParams();
@@ -19,18 +31,18 @@ export const IntegrationsRecordTable = () => {
       kind: params?.integrationType,
     },
     skip: !params?.integrationType,
+    errorPolicy: 'all',
   });
 
   return (
     <RecordTable.Provider
       columns={integrationTypeColumns}
-      data={integrations || []}
+      data={(integrations || []).filter((integration) => integration)}
       stickyColumns={['name']}
     >
       <RecordTable.CursorProvider
         hasPreviousPage={false}
         hasNextPage={false}
-        loading={loading}
         dataLength={integrations?.length}
         sessionKey="integrations_cursor"
       >
@@ -52,18 +64,53 @@ export const IntegrationsRecordTable = () => {
   );
 };
 
+const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
+  const [name, setName] = useState(cell.row.original.name);
+  const { editIntegrationField } = useIntegrationEditField(cell.row.original);
+
+  const handleSave = () => {
+    editIntegrationField(
+      {
+        variables: {
+          name,
+        },
+      },
+      cell.row.original.name === name,
+    );
+  };
+
+  return (
+    <RecordTablePopover
+      onOpenChange={(open) => {
+        if (!open) {
+          handleSave();
+        }
+      }}
+      scope={`${InboxHotkeyScope.IntegrationSettingsPage}_${cell.row.original._id}_name`}
+      closeOnEnter
+    >
+      <RecordTableCellTrigger>{name}</RecordTableCellTrigger>
+      <RecordTableCellContent>
+        <Input value={name} onChange={(e) => setName(e.target.value)} />
+      </RecordTableCellContent>
+    </RecordTablePopover>
+  );
+};
+
+export const BrandField = ({
+  cell,
+}: {
+  cell: Cell<IIntegrationDetail, unknown>;
+}) => {
+  return <></>;
+};
+
 export const integrationTypeColumns: ColumnDef<IIntegrationDetail>[] = [
   {
     id: 'name',
     accessorKey: 'name',
     header: () => <RecordTable.InlineHead label="Name" />,
-    cell: ({ cell }) => {
-      return (
-        <RecordTableCellDisplay>
-          {cell.getValue() as string}
-        </RecordTableCellDisplay>
-      );
-    },
+    cell: ({ cell }) => <NameField cell={cell} />,
     size: 250,
   },
   {

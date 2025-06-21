@@ -1,5 +1,5 @@
-import { IconCheckbox, IconSortDescending } from '@tabler/icons-react';
-import { Button, Checkbox, CommandBar, Separator } from 'erxes-ui';
+import { IconCheckbox } from '@tabler/icons-react';
+import { Button, Checkbox, CommandBar, Filter, Separator } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useConversationListContext } from '@/inbox/conversations/hooks/useConversationListContext';
 import { useEffect } from 'react';
@@ -8,19 +8,20 @@ import { ReplaceAssignee } from '@/inbox/conversations/components/ReplaceAssigne
 import { selectConversationsState } from '@/inbox/conversations/states/selectConversationsState';
 import { FilterConversations } from '@/inbox/conversations/components/Filter';
 import { ConversationTag } from './ConversationTag';
+import { ConversationDisplay } from './ConversationDisplay';
+import { ConversationRefetch } from './ConversationRefetch';
 
 export const ConversationFilter = () => {
   return (
-    <>
-      <div className="flex items-center pl-2 gap-2">
+    <Filter id="inbox-filter-dropdown">
+      <div className="flex items-center gap-1">
         <ConversationSelectAll />
-        {/* <Button variant="ghost" size="icon" className="ml-auto">
-          <IconSortDescending />
-        </Button> */}
+        <ConversationRefetch />
         <FilterConversations />
+        <ConversationDisplay />
       </div>
       <ConversationsCommandBar />
-    </>
+    </Filter>
   );
 };
 
@@ -56,6 +57,7 @@ export const ConversationSelectAll = () => {
     <Checkbox
       checked={isAllSelected ? true : isSomeSelected ? 'indeterminate' : false}
       onCheckedChange={handleCheckboxChange}
+      className="mx-2"
     />
   );
 };

@@ -20,9 +20,10 @@ const config: ModuleFederationConfig = {
     './ticket': './src/modules/ticket/Main.tsx',
     './inboxSettings': './src/modules/inbox/Settings.tsx',
     './ticketSettings': './src/modules/ticket/Settings.tsx',
-    './widgets': './src/widgets/Widgets.tsx',
     './automations':
       './src/widgets/automations/components/AutomationRemoteEntry.tsx',
+    './relationWidget': './src/widgets/RelationWidget.tsx',
+    './floatingWidget': './src/widgets/FloatingWidget.tsx',
   },
 
   shared: (libraryName, defaultConfig) => {

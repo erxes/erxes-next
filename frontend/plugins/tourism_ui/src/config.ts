@@ -10,14 +10,14 @@ export const CONFIG: IUIConfig = {
       icon: IconSandbox,
       path: 'pms',
       hasSettings: true,
-      hasWidgets: true,
+      hasRelationWidget: true,
     },
     {
       name: 'tms',
       icon: IconBox,
       path: 'tms',
       hasSettings: true,
-      hasWidgets: true,
+      hasRelationWidget: true,
       // submenus: [
       //   {
       //     name: 'submenu1',

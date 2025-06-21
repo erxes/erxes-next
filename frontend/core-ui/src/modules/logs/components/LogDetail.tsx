@@ -48,11 +48,13 @@ export function LogDetailDialog({ doc }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>
-        <Button variant="ghost" size="icon">
-          <IconEye />
-        </Button>
+    <Dialog>
+      <Dialog.Trigger>
+        <div className="flex w-full justify-center">
+          <Button variant="ghost" size="icon">
+            <IconEye />
+          </Button>
+        </div>
       </Dialog.Trigger>
       <Dialog.Content className="max-w-[1200px]">
         {open && <LogDetailContent doc={doc} />}

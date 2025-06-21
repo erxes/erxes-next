@@ -1,47 +1,58 @@
-"use client"
-import { Input, Select, Checkbox, Label } from "erxes-ui"
-import { useSearchParams } from "react-router-dom"
-import { useAtom } from "jotai"
-import { ebarimtConfigSettingsAtom } from "../../states/posCategory"
-import { PosDetailQueryResponse } from "~/modules/pos-detail.tsx/types/detail"
+'use client';
+import { Input, Select, Checkbox, Label } from 'erxes-ui';
+import { useSearchParams } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { ebarimtConfigSettingsAtom } from '../../states/posCategory';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 
 interface EbarimtConfigFormProps {
-  posDetail?: PosDetailQueryResponse['posDetail'];
+  posDetail?: IPosDetail;
 }
 
-export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [ebarimtConfig, setEbarimtConfig] = useAtom(ebarimtConfigSettingsAtom)
+export default function EbarimtConfigForm({
+  posDetail,
+}: EbarimtConfigFormProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [ebarimtConfig, setEbarimtConfig] = useAtom(ebarimtConfigSettingsAtom);
 
-  const handleCheckboxChange = (field: keyof typeof ebarimtConfig, checked: boolean) => {
+  const handleCheckboxChange = (
+    field: keyof typeof ebarimtConfig,
+    checked: boolean,
+  ) => {
     setEbarimtConfig({
       ...ebarimtConfig,
       [field]: checked,
-    })
-  }
+    });
+  };
 
-  const handleInputChange = (field: keyof typeof ebarimtConfig, value: string) => {
+  const handleInputChange = (
+    field: keyof typeof ebarimtConfig,
+    value: string,
+  ) => {
     setEbarimtConfig({
       ...ebarimtConfig,
       [field]: value,
-    })
-  }
+    });
+  };
 
-  const handleSelectChange = (field: keyof typeof ebarimtConfig, value: string) => {
+  const handleSelectChange = (
+    field: keyof typeof ebarimtConfig,
+    value: string,
+  ) => {
     setEbarimtConfig({
       ...ebarimtConfig,
       [field]: value,
-    })
-  }
+    });
+  };
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    console.log("Ebarimt config form submitted:", ebarimtConfig)
+    e.preventDefault();
+    console.log('Ebarimt config form submitted:', ebarimtConfig);
 
-    const newParams = new URLSearchParams(searchParams)
-    newParams.set("tab", "finance")
-    setSearchParams(newParams)
-  }
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('tab', 'finance');
+    setSearchParams(newParams);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="p-3">
@@ -54,7 +65,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">COMPANY NAME</Label>
               <Input
                 value={ebarimtConfig.companyName}
-                onChange={(e) => handleInputChange("companyName", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('companyName', e.target.value)
+                }
                 placeholder="Enter company name"
               />
             </div>
@@ -63,16 +76,22 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">EBARIMT URL</Label>
               <Input
                 value={ebarimtConfig.ebarimtUrl}
-                onChange={(e) => handleInputChange("ebarimtUrl", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('ebarimtUrl', e.target.value)
+                }
                 placeholder="Enter ebarimt URL"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-500">CHECK TAXPAYER URL</Label>
+              <Label className="text-sm text-gray-500">
+                CHECK TAXPAYER URL
+              </Label>
               <Input
                 value={ebarimtConfig.checkTaxpayerUrl}
-                onChange={(e) => handleInputChange("checkTaxpayerUrl", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('checkTaxpayerUrl', e.target.value)
+                }
                 placeholder="Enter taxpayer URL"
               />
             </div>
@@ -86,7 +105,7 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">COMPANYRD</Label>
               <Input
                 value={ebarimtConfig.companyRd}
-                onChange={(e) => handleInputChange("companyRd", e.target.value)}
+                onChange={(e) => handleInputChange('companyRd', e.target.value)}
                 placeholder="Enter company RD"
               />
             </div>
@@ -95,7 +114,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">MERCHANTIN</Label>
               <Input
                 value={ebarimtConfig.merchantin}
-                onChange={(e) => handleInputChange("merchantin", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('merchantin', e.target.value)
+                }
                 placeholder="Enter merchant ID"
               />
             </div>
@@ -104,7 +125,7 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">POSNO</Label>
               <Input
                 value={ebarimtConfig.posno}
-                onChange={(e) => handleInputChange("posno", e.target.value)}
+                onChange={(e) => handleInputChange('posno', e.target.value)}
                 placeholder="Enter POS number"
               />
             </div>
@@ -115,7 +136,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">DISTRICTCODE</Label>
               <Input
                 value={ebarimtConfig.districtCode}
-                onChange={(e) => handleInputChange("districtCode", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('districtCode', e.target.value)
+                }
                 placeholder="Enter district code"
               />
             </div>
@@ -124,7 +147,7 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">BRANCHNO</Label>
               <Input
                 value={ebarimtConfig.branchNo}
-                onChange={(e) => handleInputChange("branchNo", e.target.value)}
+                onChange={(e) => handleInputChange('branchNo', e.target.value)}
                 placeholder="Enter branch number"
               />
             </div>
@@ -133,7 +156,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">DEFAULTGSCODE</Label>
               <Input
                 value={ebarimtConfig.defaultGsCode}
-                onChange={(e) => handleInputChange("defaultGsCode", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('defaultGsCode', e.target.value)
+                }
                 placeholder="Enter default GS code"
               />
             </div>
@@ -148,7 +173,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <div className="h-10 flex items-center">
                 <Checkbox
                   checked={ebarimtConfig.hasVat}
-                  onCheckedChange={(checked) => handleCheckboxChange("hasVat", Boolean(checked))}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('hasVat', Boolean(checked))
+                  }
                 />
               </div>
             </div>
@@ -157,7 +184,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">VAT PERCENT</Label>
               <Input
                 value={ebarimtConfig.vatPercent}
-                onChange={(e) => handleInputChange("vatPercent", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('vatPercent', e.target.value)
+                }
                 placeholder="0"
               />
             </div>
@@ -172,35 +201,53 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <div className="h-10 flex items-center">
                 <Checkbox
                   checked={ebarimtConfig.hasUbCityTax}
-                  onCheckedChange={(checked) => handleCheckboxChange("hasUbCityTax", Boolean(checked))}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('hasUbCityTax', Boolean(checked))
+                  }
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm text-gray-500">UB CITY TAX PERCENT</Label>
+              <Label className="text-sm text-gray-500">
+                UB CITY TAX PERCENT
+              </Label>
               <Input
                 value={ebarimtConfig.ubCityTaxPercent}
-                onChange={(e) => handleInputChange("ubCityTaxPercent", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('ubCityTaxPercent', e.target.value)
+                }
                 placeholder="0"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm text-gray-500">ANOTHER RULE OF PRODUCTS ON CITY TAX</Label>
+            <Label className="text-sm text-gray-500">
+              ANOTHER RULE OF PRODUCTS ON CITY TAX
+            </Label>
             <Select
               value={ebarimtConfig.anotherRuleOfProductsOnCityTax}
-              onValueChange={(value) => handleSelectChange("anotherRuleOfProductsOnCityTax", value)}
+              onValueChange={(value) =>
+                handleSelectChange('anotherRuleOfProductsOnCityTax', value)
+              }
             >
               <Select.Trigger>
                 <Select.Value placeholder="reserveCtaxRules" />
               </Select.Trigger>
               <Select.Content>
-                <Select.Item value="reserveCtaxRules">reserveCtaxRules</Select.Item>
-                <Select.Item value="standardCtaxRules">standardCtaxRules</Select.Item>
-                <Select.Item value="exemptCtaxRules">exemptCtaxRules</Select.Item>
-                <Select.Item value="customCtaxRules">customCtaxRules</Select.Item>
+                <Select.Item value="reserveCtaxRules">
+                  reserveCtaxRules
+                </Select.Item>
+                <Select.Item value="standardCtaxRules">
+                  standardCtaxRules
+                </Select.Item>
+                <Select.Item value="exemptCtaxRules">
+                  exemptCtaxRules
+                </Select.Item>
+                <Select.Item value="customCtaxRules">
+                  customCtaxRules
+                </Select.Item>
               </Select.Content>
             </Select>
           </div>
@@ -213,7 +260,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">HEADER TEXT</Label>
               <Input
                 value={ebarimtConfig.headerText}
-                onChange={(e) => handleInputChange("headerText", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('headerText', e.target.value)
+                }
                 placeholder="0"
               />
             </div>
@@ -222,7 +271,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <Label className="text-sm text-gray-500">FOOTER TEXT</Label>
               <Input
                 value={ebarimtConfig.footerText}
-                onChange={(e) => handleInputChange("footerText", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('footerText', e.target.value)
+                }
                 placeholder="0"
               />
             </div>
@@ -232,7 +283,9 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
               <div className="h-10 flex items-center">
                 <Checkbox
                   checked={ebarimtConfig.hasCopy}
-                  onCheckedChange={(checked) => handleCheckboxChange("hasCopy", Boolean(checked))}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange('hasCopy', Boolean(checked))
+                  }
                 />
               </div>
             </div>
@@ -240,5 +293,5 @@ export default function EbarimtConfigForm({ posDetail }: EbarimtConfigFormProps)
         </div>
       </div>
     </form>
-  )
+  );
 }

@@ -8,7 +8,6 @@ import { TrJournalEnum, TR_SIDES } from '../../../types/constants';
 import { followTrDocsState } from '../../states/trStates';
 import { ITransactionGroupForm } from '../../types/JournalForms';
 import { getTempId, getTrSide } from '../utils';
-import { ITransaction } from '../../../types/Transaction';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
 
 const CurrencyFormBody = ({
@@ -110,7 +109,7 @@ const CurrencyFormBody = ({
     const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'currencyDiff');
 
     const currencyDiffFtr = {
-      ...curr || (trDoc as ITransaction),
+      ...curr,
       _id: curr?._id || getTempId(),
       journal: TrJournalEnum.TAX,
       originId: trDoc._id,

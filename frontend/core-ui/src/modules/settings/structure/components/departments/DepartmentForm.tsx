@@ -1,10 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { Form, Input, Skeleton, Textarea } from 'erxes-ui';
-import {
-  AssignMember,
-  AssignMultipleMembers,
-  SelectDepartmentTree,
-} from 'ui-modules';
+import { SelectDepartments, SelectMember } from 'ui-modules';
 import { TDepartmentForm } from '../../types/department';
 
 export const DepartmentForm = ({ loading }: { loading: boolean }) => {
@@ -61,12 +57,10 @@ export const DepartmentForm = ({ loading }: { loading: boolean }) => {
         render={({ field }) => (
           <Form.Item>
             <Form.Label>{'Supervisor'}</Form.Label>
-            <Form.Control>
-              <AssignMember
-                value={field.value}
-                onValueChange={field.onChange}
-              />
-            </Form.Control>
+            <SelectMember.FormItem
+              value={field.value}
+              onValueChange={field.onChange}
+            />
             <Form.Message />
           </Form.Item>
         )}
@@ -78,10 +72,10 @@ export const DepartmentForm = ({ loading }: { loading: boolean }) => {
           <Form.Item>
             <Form.Label>{'Parent'}</Form.Label>
             <Form.Control>
-              <SelectDepartmentTree
-                recordId={'parentId'}
-                selected={field.value}
-                onSelect={field.onChange}
+              <SelectDepartments.FormItem
+                mode="single"
+                value={field.value}
+                onValueChange={field.onChange}
               />
             </Form.Control>
             <Form.Message />
@@ -94,12 +88,11 @@ export const DepartmentForm = ({ loading }: { loading: boolean }) => {
         render={({ field }) => (
           <Form.Item className="col-span-2">
             <Form.Label>{'Team members'}</Form.Label>
-            <Form.Control>
-              <AssignMultipleMembers
-                value={field.value}
-                onValueChange={field.onChange}
-              />
-            </Form.Control>
+            <SelectMember.FormItem
+              mode="multiple"
+              value={field.value}
+              onValueChange={field.onChange}
+            />
             <Form.Message />
           </Form.Item>
         )}

@@ -31,10 +31,10 @@ export const queries = `
   salesBoardGetLast: SalesBoard
   salesBoardDetail(_id: String!): SalesBoard
   salesConvertToInfo(conversationId: String!): SalesConvertTo
-  salesItemsCountByAssignedUser(type: String!, pipelineId: String!, stackBy: String): JSON
+  salesItemsCountByAssignedUser(pipelineId: String!, stackBy: String): JSON
   salesCardsFields: JSON
   salesBoardContentTypeDetail(contentType: String, contentId: String): JSON
-  salesBoardLogs(action: String, content:JSON, contentId: String, contentType: String): JSON
+  salesBoardLogs(action: String, content:JSON, contentId: String): JSON
   salesCheckFreeTimes(pipelineId: String, intervals: [SalesInterval]): JSON
 `;
 

@@ -3,7 +3,7 @@ import { IconBriefcase, IconSandbox } from '@tabler/icons-react';
 export const CONFIG = {
   name: 'sales',
   icon: IconBriefcase,
-  hasWidgets: true,
+  hasRelationWidget: true,
   widgetsIcon: IconBriefcase,
   modules: [
     {

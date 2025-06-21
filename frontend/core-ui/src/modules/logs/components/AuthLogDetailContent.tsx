@@ -1,8 +1,16 @@
 import { SelectSeparator } from '@radix-ui/react-select';
 import dayjs from 'dayjs';
-import { Dialog, TablerIcon } from 'erxes-ui';
+import { Dialog } from 'erxes-ui';
 import { UAParser } from 'ua-parser-js';
 import { ILogDoc } from '../types';
+import {
+  IconBrowser,
+  IconClockHour1,
+  IconDeviceDesktopCode,
+  IconDeviceImac,
+  IconShield,
+  IconUser,
+} from '@tabler/icons-react';
 
 const getClientInfo = (headers: any) => {
   if (!headers) {
@@ -52,23 +60,23 @@ export const AuthLogDetailContent = ({ payload, createdAt }: ILogDoc) => {
   return (
     <>
       <Dialog.Title className="flex flex-row gap-2">
-        <TablerIcon name={`IconShield`} className="pr-2" />
+        <IconShield className="pr-2" />
         Authentication Details
       </Dialog.Title>
       <Dialog.Description>User Information </Dialog.Description>
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
-          <TablerIcon name={`IconUser`} />
+          <IconUser />
           <p className="font-bold">Email:</p>
           <span>{payload.email}</span>
         </div>
         <div className="flex flex-row gap-2">
-          <TablerIcon name={`IconClockHour1`} />
+          <IconClockHour1 />
           <p className="font-bold">Time:</p>
           <span>{dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
         </div>
         <div className="flex flex-row gap-2">
-          <TablerIcon name={`IconShield`} />
+          <IconShield />
           <p className="font-bold">Method:</p>
           <span>{payload.method}</span>
         </div>
@@ -76,22 +84,22 @@ export const AuthLogDetailContent = ({ payload, createdAt }: ILogDoc) => {
       <SelectSeparator />
       <div className="w-full flex flex-row justify-between">
         <div className="flex flex-col gap-2 items-center">
-          <TablerIcon name={`IconUser`} />
+          <IconUser />
           <p>IP Address</p>
           <span>{ip}</span>
         </div>
         <div className="flex flex-col gap-2 items-center">
-          <TablerIcon name={`IconDeviceImac`} />
+          <IconDeviceImac />
           <p>Device</p>
           <span>{device}</span>
         </div>
         <div className="flex flex-col gap-2 items-center">
-          <TablerIcon name={`IconDeviceDesktopCode`} />
+          <IconDeviceDesktopCode />
           <p>Os</p>
           <span>{os}</span>
         </div>
         <div className="flex flex-col gap-2 items-center">
-          <TablerIcon name={`IconBrowser`} />
+          <IconBrowser />
           <p>Browser</p>
           <span>{browser}</span>
         </div>

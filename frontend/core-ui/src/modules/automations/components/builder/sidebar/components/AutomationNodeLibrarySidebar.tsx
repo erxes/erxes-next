@@ -1,9 +1,9 @@
 import { ErrorState } from '@/automations/utils/ErrorState';
 import { ApolloError } from '@apollo/client';
-import { TablerIcon, Card, Input, Skeleton, Tabs, Badge } from 'erxes-ui';
+import { Card, Input, Skeleton, Tabs, Badge } from 'erxes-ui';
 import React, { useState } from 'react';
 import { useAutomationNodeLibrarySidebar } from '../hooks/useAutomationNodeLibrarySidebar';
-import { IconSearch } from '@tabler/icons-react';
+import { IconCodeVariable, IconSearch } from '@tabler/icons-react';
 
 const TabsContent = (
   nodeType: string,
@@ -34,7 +34,7 @@ const TabsContent = (
             <div
               className={`p-3 bg-${color}/10 text-${color} border-${color} rounded-lg`}
             >
-              <TablerIcon name={`Icon${item?.icon}` as any} size="xsm" />
+              <IconCodeVariable />
             </div>
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-4">

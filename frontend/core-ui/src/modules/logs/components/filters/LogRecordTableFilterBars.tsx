@@ -1,22 +1,17 @@
+import { IUser, SelectMember } from 'ui-modules';
+import { Filter, Input, Popover, useMultiQueryState } from 'erxes-ui';
 import {
   IconCalendarPlus,
   IconProgressCheck,
   IconSourceCode,
-  IconUser,
 } from '@tabler/icons-react';
-import { Filter, Input, Popover, useMultiQueryState } from 'erxes-ui';
+
+import { LOGS_COMMON_FILTER_FIELD_NAMES } from '@/logs/constants/logFilter';
+import { LogActionsFilter } from './LogActionFilter';
+import { LogRecordTableFilterBarOperator } from './LogRecordTableFilterBarOperator';
 import { LogSourceFilter } from './LogSourceFilter';
 import { LogStatusFilter } from './LogStatusFilter';
-import { LogActionsFilter } from './LogActionFilter';
-import {
-  AssignMemberItem,
-  AssignMemberList,
-  IMember,
-  MemberListInline,
-} from 'ui-modules';
-import { LogRecordTableFilterBarOperator } from './LogRecordTableFilterBarOperator';
 import { useSearchParams } from 'react-router';
-import { LOGS_COMMON_FILTER_FIELD_NAMES } from '@/logs/constants/logFilter';
 import { useState } from 'react';
 
 const getCustomFilters = (searchParams: URLSearchParams) => {
@@ -49,7 +44,7 @@ export const LogRecordTableFilterBars = () => {
   const { status, source, action, userIds, createdAt } = queries;
 
   const customFilters = getCustomFilters(searchParams);
-  const handleUserSelect = (user?: IMember) => {
+  const handleUserSelect = (user?: IUser) => {
     if (!user) {
       return;
     }
@@ -135,36 +130,7 @@ export const LogRecordTableFilterBars = () => {
           <Filter.BarClose filterKey="action" />
         </Filter.BarItem>
       )}
-      {!!userIds?.length && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconUser />
-            User
-          </Filter.BarName>
-          <LogRecordTableFilterBarOperator fieldName="userIds" />
-
-          <Popover>
-            <Popover.Trigger>
-              <Filter.BarButton filterKey="userIds">
-                <MemberListInline memberIds={userIds} />
-              </Filter.BarButton>
-            </Popover.Trigger>
-            <Popover.Content>
-              <AssignMemberList
-                renderItem={(user) => (
-                  <AssignMemberItem
-                    key={user._id}
-                    user={user}
-                    isSelected={(userIds || [])?.includes(user._id)}
-                    handleSelect={handleUserSelect}
-                  />
-                )}
-              />
-            </Popover.Content>
-          </Popover>
-          <Filter.BarClose filterKey="userIds" />
-        </Filter.BarItem>
-      )}
+      {!!userIds?.length && <SelectMember.FilterBar queryKey="userIds" />}
 
       {customFilters.map(({ name, value }) => (
         <Filter.BarItem>

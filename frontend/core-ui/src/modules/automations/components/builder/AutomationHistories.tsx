@@ -160,7 +160,6 @@ export const AutomationHistories = () => {
         <RecordTable.CursorProvider
           hasPreviousPage={hasPreviousPage}
           hasNextPage={hasNextPage}
-          loading={loading}
           dataLength={list?.length}
           sessionKey={AUTOMATION_HISTORIES_CURSOR_SESSION_KEY}
         >

@@ -21,7 +21,6 @@ import {
   RecordTablePopover,
   TextOverflowTooltip,
 } from 'erxes-ui';
-
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
 import { TCompany } from '@/contacts/types/companyType';
 import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
@@ -32,7 +31,7 @@ import { SelectMember, SelectTags } from 'ui-modules';
 export const companyColumns: ColumnDef<TCompany>[] = [
   {
     id: 'more',
-    cell: ({ cell }) => <RecordTable.MoreButton className="w-full h-full" />,
+    cell: () => <RecordTable.MoreButton className="w-full h-full" />,
     size: 33,
   },
   RecordTable.checkboxColumn as ColumnDef<TCompany>,

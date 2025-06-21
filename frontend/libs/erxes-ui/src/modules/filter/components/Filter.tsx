@@ -11,7 +11,7 @@ import {
   Popover,
 } from 'erxes-ui/components';
 import {
-  IconAdjustmentsHorizontal,
+  IconFilter2,
   IconChevronRight,
   IconSearch,
   IconX,
@@ -85,7 +85,7 @@ const FilterTrigger = React.forwardRef<
         size={isFiltered ? 'icon' : 'default'}
         {...props}
       >
-        <IconAdjustmentsHorizontal className="w-4 h-4" />
+        <IconFilter2 className="w-4 h-4" />
         {!isFiltered && 'Filter'}
       </Button>
     </Popover.Trigger>
@@ -360,7 +360,12 @@ const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
   );
 };
 
-const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
+const FilterBarDate = React.forwardRef<
+  React.ComponentRef<typeof Button>,
+  React.ComponentPropsWithoutRef<typeof Button> & {
+    filterKey: string;
+  }
+>(({ filterKey, className, ...props }, ref) => {
   const { sessionKey } = useFilterContext();
   const [query, setQuery] = useFilterQueryState<string>(
     filterKey,
@@ -371,7 +376,12 @@ const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <Button variant="ghost" className="rounded-none h-7 bg-background">
+        <Button
+          ref={ref}
+          variant="ghost"
+          className={cn('rounded-none h-7 bg-background', className)}
+          {...props}
+        >
           {getDisplayValue(query ?? '')}
         </Button>
       </Popover.Trigger>
@@ -387,7 +397,7 @@ const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
       </Combobox.Content>
     </Popover>
   );
-};
+});
 
 const FilterCommandInput = React.forwardRef<
   HTMLInputElement,

@@ -10,11 +10,9 @@ module.exports = {
     ),
     'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).tsx',
     'frontend/libs/ui-modules/src/**/!(*.stories|*.spec).tsx',
-    ...(process.env.NODE_ENV === 'development'
-      ? process.env.ENABLED_PLUGINS?.split(',').map((p) => {
-          return `frontend/plugins/${p}_ui/src/**/!(*.stories|*.spec).tsx`;
-        }) || []
-      : ['frontend/plugins/*_ui/src/**/!(*.stories|*.spec).tsx']),
+    ...(process.env.ENABLED_PLUGINS?.split(',').map((p) => {
+      return `frontend/plugins/${p}_ui/src/**/!(*.stories|*.spec).tsx`;
+    }) || ['frontend/plugins/*_ui/src/**/!(*.stories|*.spec).tsx']),
   ],
   darkMode: 'class',
   theme: {
@@ -67,6 +65,7 @@ module.exports = {
           foreground: 'hsl(var(--accent-foreground))',
         },
         sidebar: 'hsl(var(--sidebar-background))',
+        babyBlue: 'hsl(var(--baby-blue))',
       },
       borderRadius: {
         lg: `var(--radius)`,

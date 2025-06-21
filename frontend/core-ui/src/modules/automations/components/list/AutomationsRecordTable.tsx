@@ -59,7 +59,6 @@ export const AutomationsRecordTable = () => {
         <RecordTable.CursorProvider
           hasPreviousPage={hasPreviousPage}
           hasNextPage={hasNextPage}
-          loading={loading}
           dataLength={list?.length}
           sessionKey="automations_cursor"
         >
