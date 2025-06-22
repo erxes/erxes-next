@@ -6,6 +6,7 @@ import { InboxLayout } from '@/inbox/components/InboxLayout';
 import { ConversationDetail } from '@/inbox/conversations/conversation-detail/components/ConversationDetail';
 import { Conversations } from '@/inbox/conversations/components/Conversations';
 import { InboxMainFilter } from '@/inbox/components/InboxMainFilter';
+import { CallWidget } from '@/integrations/call/components/CallWidget';
 
 const InboxIndexPage = () => {
   return (

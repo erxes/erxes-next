@@ -36,8 +36,8 @@ export const ConversationsHeader = ({
     );
   }
   return (
-    <div className="pl-4 pr-4 py-3 flex">
-      {children}{' '}
+    <div className="px-4 py-3 flex">
+      {children}
       <ConversationFilterBar>
         <ConversationCount />
       </ConversationFilterBar>

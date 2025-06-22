@@ -10,14 +10,15 @@ export const CONFIG: IUIConfig = {
       icon: IconInbox,
       path: 'inbox',
       hasSettings: true,
-      hasWidgets: true,
+      hasRelationWidget: true,
+      hasFloatingWidget: true,
     },
     {
       name: 'ticket',
       icon: IconTicket,
       path: 'ticket',
       hasSettings: true,
-      hasWidgets: true,
+      hasRelationWidget: true,
     },
   ],
 };

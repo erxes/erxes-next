@@ -90,10 +90,13 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
 
   return {
     loading,
-    users: users?.map(({ details: { ...detailData }, ...user }) => ({
-      ...user,
-      details: detailData,
-    })),
+    users: users?.map((user) => {
+      const detailData = user?.details || {};
+      return {
+        ...user,
+        details: detailData,
+      };
+    }),
     error,
     totalCount,
     handleFetchMore,

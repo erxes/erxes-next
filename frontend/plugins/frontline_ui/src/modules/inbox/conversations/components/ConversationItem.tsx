@@ -9,7 +9,7 @@ import {
 } from 'erxes-ui';
 import { useConversationContext } from '../hooks/useConversationContext';
 import { useIntegrationInline } from '@/integrations/hooks/useIntegrations';
-import { BrandsInline, currentUserState, CustomerInline } from 'ui-modules';
+import { BrandsInline, currentUserState, CustomersInline } from 'ui-modules';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { activeConversationState } from '../states/activeConversationState';
 import { ConversationIntegrationBadge } from '@/integrations/components/IntegrationBadge';
@@ -43,11 +43,11 @@ export const ConversationItem = ({
         className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer"
         onConversationSelect={onConversationSelect}
       >
-        <CustomerInline.Provider customer={customer}>
+        <CustomersInline.Provider customers={[customer]}>
           <div className="flex w-full gap-3 leading-tight">
             <ConversationSelector />
             <div className="flex-1 space-y-1 truncate">
-              <CustomerInline.Title className="truncate" />
+              <CustomersInline.Title className="truncate" />
               <div className="font-normal text-accent-foreground text-xs">
                 <BrandsInline
                   brandIds={[brandId || '']}
@@ -60,16 +60,16 @@ export const ConversationItem = ({
             </div>
           </div>
           <ConversationItemContent />
-        </CustomerInline.Provider>
+        </CustomersInline.Provider>
       </ConversationContainer>
     );
   }
 
   return (
     <ConversationContainer onConversationSelect={onConversationSelect}>
-      <CustomerInline.Provider customer={customer}>
+      <CustomersInline.Provider customers={[customer]}>
         <ConversationSelector />
-        <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
+        <CustomersInline.Title className="w-56 truncate flex-none text-foreground" />
         <ConversationItemContent />
         <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
           to <BrandsInline brandIds={[brandId || '']} />
@@ -79,7 +79,7 @@ export const ConversationItem = ({
             <RelativeDateDisplay.Value value={updatedAt || createdAt} />
           </RelativeDateDisplay>
         </div>
-      </CustomerInline.Provider>
+      </CustomersInline.Provider>
     </ConversationContainer>
   );
 };
@@ -151,7 +151,7 @@ const ConversationSelector = () => {
       <div className="absolute size-full bg-primary/10 rounded-full" />
       <ConversationCheckbox />
       <div className="transition-opacity duration-200 relative opacity-100 group-hover:opacity-0 peer-data-[state=checked]:opacity-0">
-        <CustomerInline.Avatar
+        <CustomersInline.Avatar
           size={conversationId ? 'xl' : 'lg'}
           className=""
         />

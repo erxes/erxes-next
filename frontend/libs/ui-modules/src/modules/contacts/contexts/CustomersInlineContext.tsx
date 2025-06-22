@@ -7,6 +7,7 @@ export interface ICustomersInlineContext {
   customerIds?: string[];
   placeholder: string;
   updateCustomers?: (customers: ICustomer[]) => void;
+  getCustomerTitle: (customer: ICustomer) => string;
 }
 
 export const CustomersInlineContext =

@@ -2,7 +2,7 @@ import { cn, IAttachment } from 'erxes-ui';
 import { useFbMessengerMessageContext } from '../contexts/FbMessengerMessageContext';
 import { useAtomValue } from 'jotai';
 import { activeConversationState } from '@/inbox/conversations/states/activeConversationState';
-import { CustomerInline, MembersInline } from 'ui-modules';
+import { CustomersInline, MembersInline } from 'ui-modules';
 import { MessageContent } from '@/inbox/conversation-messages/components/MessageContent';
 import { RelativeDateDisplay } from 'erxes-ui';
 import { Button } from 'erxes-ui';
@@ -71,9 +71,12 @@ export const MessageWrapper = ({ children }: { children: React.ReactNode }) => {
       )}
     >
       {!!customerId && separateNext && (
-        <CustomerInline.Provider customerId={customerId} customer={customer}>
-          <CustomerInline.Avatar size="xl" />
-        </CustomerInline.Provider>
+        <CustomersInline.Provider
+          customerIds={[customerId]}
+          customers={customer ? [customer] : []}
+        >
+          <CustomersInline.Avatar size="xl" />
+        </CustomersInline.Provider>
       )}
       {children}
       {!!userId && separateNext && (

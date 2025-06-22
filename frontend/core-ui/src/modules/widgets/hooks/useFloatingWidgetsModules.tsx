@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai';
 import { pluginsConfigState } from 'ui-modules';
 
-export const useWidgetsModules = () => {
+export const useFloatingWidgetsModules = () => {
   const [pluginsMetaData] = useAtom(pluginsConfigState);
 
   if (!pluginsMetaData) {
@@ -12,7 +12,7 @@ export const useWidgetsModules = () => {
 
   return plugins.flatMap((plugin) =>
     plugin.modules
-      .filter((module) => module.hasWidgets)
+      .filter((module) => module.hasFloatingWidget)
       .map((module) => ({
         ...module,
         pluginName: plugin.name,

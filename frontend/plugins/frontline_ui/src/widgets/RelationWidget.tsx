@@ -1,6 +1,6 @@
 import { Widgets as InboxWidgets } from '@/inbox/widgets/Widgets';
 
-const Widgets = ({
+const RelationWidget = ({
   contentType,
   contentId,
   moduleName,
@@ -17,4 +17,4 @@ const Widgets = ({
   }
 };
 
-export default Widgets;
+export default RelationWidget;
