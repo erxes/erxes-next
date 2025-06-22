@@ -125,7 +125,7 @@ export default {
         label: 'Facebook Messenger',
         description: 'Generate Facebook Messenger Bots',
         logo: '/images/integrations/fb-messenger.png',
-        totalCountQueryName: 'facebootMessengerBotsTotalCount',
+        totalCountQueryName: 'facebookMessengerBotsTotalCount',
       },
     ],
   },

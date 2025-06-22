@@ -515,11 +515,11 @@ export const facebookQueries = {
     return messages.reverse();
   },
 
-  async facebootMessengerBotsTotalCount(_root, _args, { models }: IContext) {
+  async facebookMessengerBotsTotalCount(_root, _args, { models }: IContext) {
     return await models.FacebookBots.find({}).countDocuments();
   },
 
-  async facebootMessengerBots(_root, _args, { models }: IContext) {
+  async facebookMessengerBots(_root, _args, { models }: IContext) {
     return await models.FacebookBots.find({});
   },
 

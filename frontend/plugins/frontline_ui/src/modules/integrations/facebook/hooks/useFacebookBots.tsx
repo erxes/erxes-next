@@ -6,14 +6,14 @@ import { IFacebookBot } from '@/integrations/facebook/types/FacebookBot';
 import { useQuery } from '@apollo/client';
 
 export const useFacebookBots = () => {
-  const { data, loading } = useQuery<{ facebootMessengerBots: IFacebookBot[] }>(
+  const { data, loading } = useQuery<{ facebookMessengerBots: IFacebookBot[] }>(
     FACEBOOK_BOTS_LIST,
   );
 
-  const { facebootMessengerBots = [] } = data || {};
+  const { facebookMessengerBots = [] } = data || {};
 
   return {
-    bots: facebootMessengerBots,
+    bots: facebookMessengerBots,
     loading,
   };
 };

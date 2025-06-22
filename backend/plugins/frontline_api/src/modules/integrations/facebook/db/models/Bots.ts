@@ -197,7 +197,7 @@ export const loadFacebookBotClass = (models: IModels) => {
       try {
         await this.disconnectBotPageMessenger(_id);
       } catch (error) {
-        console.error(error.message);
+        console.error(`Failed to disconnect bot ${_id} from messenger:`, error);
       }
 
       await models.FacebookBots.deleteOne({ _id });

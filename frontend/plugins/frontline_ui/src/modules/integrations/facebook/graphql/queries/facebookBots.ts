@@ -15,16 +15,16 @@ const FACEBOOK_BOT_FIELDS = `
 `;
 
 export const FACEBOOK_BOTS_LIST = gql`
-    query FacebootMessengerBots {
-      facebootMessengerBots {
+    query FacebookMessengerBots {
+      facebookMessengerBots {
         ${FACEBOOK_BOT_FIELDS}
       }
     }
 `;
 
 export const FACEBOOK_BOTS_TOTAL_COUNT = gql`
-  query FacebootMessengerBotsTotalCount {
-    facebootMessengerBotsTotalCount
+  query FacebookMessengerBotsTotalCount {
+    facebookMessengerBotsTotalCount
   }
 `;
 

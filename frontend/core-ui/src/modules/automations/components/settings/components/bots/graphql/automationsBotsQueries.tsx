@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const AUTOMATIONS_BOTS_CONTANTS = gql`
+export const AUTOMATIONS_BOTS_CONSTANTS = gql`
   query AutomationBotsConstants {
     automationBotsConstants
   }

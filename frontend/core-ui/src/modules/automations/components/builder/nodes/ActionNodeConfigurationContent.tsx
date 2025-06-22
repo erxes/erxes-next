@@ -8,5 +8,5 @@ export const ActionNodeConfigurationContent = ({
 }) => {
   const { Component } = useActionNodeConfiguration(data);
 
-  return Component;
+  return Component || null;
 };

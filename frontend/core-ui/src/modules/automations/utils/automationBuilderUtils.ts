@@ -436,10 +436,6 @@ export const automationDropHandler = ({
     y: event.clientY,
   });
 
-  const fieldName = `detail.${nodeType}s` as
-    | 'detail.triggers'
-    | 'detail.actions';
-  let existingNodes = nodeType === 'trigger' ? triggers : actions;
   const id = getNewId([...triggers, ...actions].map((a) => a.id));
 
   if (awaitingToConnectNodeId) {

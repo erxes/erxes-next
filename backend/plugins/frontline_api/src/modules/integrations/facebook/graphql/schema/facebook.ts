@@ -131,8 +131,8 @@ export const queries = `
   facebookHasTaggedMessages(conversationId: String!): Boolean
 
   facebookPostMessages(conversationId: String! getFirst: Boolean, ${pageParams}): [FacebookPostMessage]
-  facebootMessengerBotsTotalCount:Int
-  facebootMessengerBots:[FacebookMessengerBot]
+  facebookMessengerBotsTotalCount:Int
+  facebookMessengerBots:[FacebookMessengerBot]
   facebootMessengerBot(_id:String):FacebookMessengerBot
 `;
 

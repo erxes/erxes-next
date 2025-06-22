@@ -122,7 +122,7 @@ const FacebookMessageButton = ({
     <Card
       ref={setNodeRef}
       style={style}
-      {...(!button.isEditing ? { ...attributes } : {})}
+      {...(button.isEditing ? {} : { ...attributes })}
       className={'p-3  flex flex-row gap-2 items-center justify-between'}
       onDoubleClick={() => handleChangeButton({ ...button, isEditing: true })}
     >

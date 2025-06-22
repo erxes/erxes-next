@@ -13,7 +13,7 @@ import {
   TMessageTriggerFormPersistentMenu,
   triggerFormSchema,
 } from '../states/messageTriggerFormSchema';
-import { AutomaitionTriggerFormProps } from 'ui-modules';
+import { AutomationTriggerFormProps } from 'ui-modules';
 
 const renderActiveItemContent = ({
   onConditionChange,
@@ -153,7 +153,7 @@ const renderConditionsContent = ({
 export const MessageTriggerForm = ({
   activeTrigger,
   onSaveTriggerConfig,
-}: AutomaitionTriggerFormProps<TMessageTriggerForm>) => {
+}: AutomationTriggerFormProps<TMessageTriggerForm>) => {
   const form = useForm<TMessageTriggerForm>({
     resolver: zodResolver(triggerFormSchema),
     values: { ...((activeTrigger?.config || {}) as TMessageTriggerForm) },

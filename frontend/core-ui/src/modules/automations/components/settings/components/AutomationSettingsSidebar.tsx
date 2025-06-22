@@ -13,7 +13,7 @@ export const AutomationSettingsSidebar = () => {
               <Sidebar.MenuButton
                 isActive={activePath === '/settings/automations/bots'}
               >
-                <Link to={`/bots`}>Bots</Link>
+                <Link to={`/settings/automations/bots`}>Bots</Link>
               </Sidebar.MenuButton>
             </Sidebar.MenuItem>
           </Sidebar.Menu>

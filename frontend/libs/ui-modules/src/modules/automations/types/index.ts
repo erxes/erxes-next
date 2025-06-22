@@ -62,7 +62,7 @@ export type BaseAutomationRemoteProps = {
   componentType: string;
 };
 
-export type AutomaitionTriggerFormProps<TConfig = any> =
+export type AutomationTriggerFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
     componentType: 'triggerForm';
     activeTrigger: ITrigger<TConfig>;
@@ -98,13 +98,13 @@ export type AutomaitionActionNodeConfigProps<
 };
 
 export type AutomaitionRemoteEntryProps =
-  | AutomaitionTriggerFormProps
+  | AutomationTriggerFormProps
   | AutomaitionActionFormProps
   | AutomaitionTriggerConfigProps
   | AutomaitionActionNodeConfigProps;
 
 export type AutomaitionRemoteEntryTypes = {
-  TriggerForm: AutomaitionTriggerFormProps;
+  TriggerForm: AutomationTriggerFormProps;
   ActionForm: AutomaitionActionFormProps;
   TriggerNodeConfig: AutomaitionTriggerConfigProps;
   ActionNodeConfig: AutomaitionActionNodeConfigProps;

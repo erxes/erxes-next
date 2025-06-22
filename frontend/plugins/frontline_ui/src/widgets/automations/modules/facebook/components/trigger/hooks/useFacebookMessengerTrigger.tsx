@@ -18,13 +18,16 @@ export const useFacebookMessengerTrigger = () => {
     fetchPolicy: 'cache-first',
   });
 
-  const { conditions = [] } =
-    data?.automationConstants?.triggersConst.find(
-      ({ type }: any) => 'frontline:facebook.messages' === type,
-    ) || {};
+  const { triggersConst = [] } = data?.automationConstants || {};
+
+  const facebookMessageConst = triggersConst.find(
+    ({ type }: any) => 'frontline:facebook.messages' === type,
+  );
+
+  const { conditions = [] } = facebookMessageConst || {};
 
   return {
-    triggerConditionsConstans: conditions as ICondition[],
+    triggerConditionsConstants: conditions as ICondition[],
     loading,
   };
 };

@@ -17,7 +17,7 @@ export const MessageTriggerConditionsList = ({
   selectedConditionTypes,
   form,
 }: Props) => {
-  const { triggerConditionsConstans, loading } = useFacebookMessengerTrigger();
+  const { triggerConditionsConstants, loading } = useFacebookMessengerTrigger();
 
   if (loading) {
     return <Spinner />;
@@ -26,7 +26,7 @@ export const MessageTriggerConditionsList = ({
 
   return (
     <div className="flex flex-col gap-2 p-4">
-      {triggerConditionsConstans.map(({ label, description, type, icon }) => (
+      {triggerConditionsConstants.map(({ label, description, type, icon }) => (
         <>
           <div
             key={type}

@@ -14,7 +14,7 @@ export const TriggerConfigContent = ({
   config,
 }: AutomaitionTriggerConfigProps<Props>) => {
   const { conditions = [], botId } = config || {};
-  const { triggerConditionsConstans } = useFacebookMessengerTrigger();
+  const { triggerConditionsConstants } = useFacebookMessengerTrigger();
   const { bot, loading } = useFacebookBot(botId);
 
   return (
@@ -23,11 +23,11 @@ export const TriggerConfigContent = ({
       <Separator />
       {conditions.map(
         (condition: TMessageTriggerFormCondition, index: number) => (
-          <Condtion
+          <Condition
             key={index}
             bot={bot}
             condition={condition}
-            triggerConditionsConstans={triggerConditionsConstans}
+            triggerConditionsConstants={triggerConditionsConstants}
             totalCount={
               conditions.filter(({ isSelected }) => isSelected).length
             }
@@ -89,17 +89,17 @@ const renderDescriptionContent = (
   return '';
 };
 
-const Condtion = ({
+const Condition = ({
   index,
   bot,
   condition,
   totalCount,
-  triggerConditionsConstans = [],
+  triggerConditionsConstants = [],
 }: {
   index: number;
   condition: TMessageTriggerFormCondition;
   bot?: IFacebookBot;
-  triggerConditionsConstans: any[];
+  triggerConditionsConstants: any[];
   totalCount: number;
 }) => {
   if (!condition?.isSelected) {
@@ -107,7 +107,8 @@ const Condtion = ({
   }
 
   const { label, description } =
-    triggerConditionsConstans.find((c: any) => c.type === condition.type) || {};
+    triggerConditionsConstants.find((c: any) => c.type === condition.type) ||
+    {};
 
   const renderORSeparator = () => {
     if (totalCount > 1 && index + 1 !== totalCount) {

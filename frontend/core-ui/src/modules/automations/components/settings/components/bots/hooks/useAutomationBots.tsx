@@ -1,8 +1,8 @@
-import { AUTOMATIONS_BOTS_CONTANTS } from '@/automations/components/settings/components/bots/graphql/automationsBotsQueries';
+import { AUTOMATIONS_BOTS_CONSTANTS } from '@/automations/components/settings/components/bots/graphql/automationsBotsQueries';
 import { gql, useQuery } from '@apollo/client';
 
 export const useAutomationBots = () => {
-  const { data, loading } = useQuery(AUTOMATIONS_BOTS_CONTANTS);
+  const { data, loading } = useQuery(AUTOMATIONS_BOTS_CONSTANTS);
 
   const { automationBotsConstants = [] } = data || {};
 

@@ -31,25 +31,24 @@ export const triggerFormSchema = z.object({
           const { type, isSelected, persistentMenuIds, conditions } = data;
 
           if (isSelected) {
-            if (type === 'persistentMenu') {
-              if (!persistentMenuIds || persistentMenuIds.length === 0) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message: 'You should select some persistent menu',
-                  path: ['persistentMenuIds'],
-                });
-              }
+            if (
+              type === 'persistentMenu' &&
+              (!persistentMenuIds || persistentMenuIds.length === 0)
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'You should select some persistent menu',
+                path: ['persistentMenuIds'],
+              });
             }
 
-            if (type === 'direct') {
-              if (!conditions || conditions.length === 0) {
-                ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
-                  message:
-                    'You should provide at least one keyword on direct message',
-                  path: ['conditions'],
-                });
-              }
+            if (type === 'direct' && (!conditions || conditions.length === 0)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message:
+                  'You should provide at least one keyword on direct message',
+                path: ['conditions'],
+              });
             }
           }
         }),

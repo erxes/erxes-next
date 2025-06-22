@@ -48,7 +48,7 @@ export function LogDetailDialog({ doc }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <Dialog.Trigger>
         <div className="flex w-full justify-center">
           <Button variant="ghost" size="icon">
