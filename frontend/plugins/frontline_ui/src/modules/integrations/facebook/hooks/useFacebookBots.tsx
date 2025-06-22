@@ -19,7 +19,7 @@ export const useFacebookBots = () => {
 };
 
 export const useFacebookBot = (botId: string) => {
-  const { data, loading } = useQuery<{ facebootMessengerBot: IFacebookBot }>(
+  const { data, loading } = useQuery<{ facebookMessengerBot: IFacebookBot }>(
     GET_FACEBOOK_BOT_PROFILE,
     {
       variables: { _id: botId },
@@ -27,10 +27,10 @@ export const useFacebookBot = (botId: string) => {
     },
   );
 
-  const { facebootMessengerBot } = data || {};
+  const { facebookMessengerBot } = data || {};
 
   return {
-    bot: facebootMessengerBot,
+    bot: facebookMessengerBot,
     loading,
   };
 };

@@ -11,7 +11,7 @@ export const AutomationSettingsSidebar = () => {
           <Sidebar.Menu>
             <Sidebar.MenuItem>
               <Sidebar.MenuButton
-                isActive={activePath === '/settings/automations/bots'}
+                isActive={activePath.includes('/settings/automations/bots')}
               >
                 <Link to={`/settings/automations/bots`}>Bots</Link>
               </Sidebar.MenuButton>

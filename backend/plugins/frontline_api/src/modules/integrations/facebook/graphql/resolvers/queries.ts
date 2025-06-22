@@ -523,7 +523,7 @@ export const facebookQueries = {
     return await models.FacebookBots.find({});
   },
 
-  async facebootMessengerBot(_root, { _id }, { models }: IContext) {
+  async facebookMessengerBot(_root, { _id }, { models }: IContext) {
     return await models.FacebookBots.findOne({ _id });
   },
 };

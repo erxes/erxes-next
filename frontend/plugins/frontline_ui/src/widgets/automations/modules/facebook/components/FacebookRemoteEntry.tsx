@@ -7,6 +7,7 @@ import { ActionConfigContent } from './action/components/ActionConfigContent';
 import { MessageActionForm } from './action/components/MessageActionForm';
 import { MessageTriggerForm } from './trigger/components/MessageTriggerForm';
 import { TriggerConfigContent } from './trigger/components/TriggerConfigContent';
+import { AutomationBotsRecordTable } from './bots/components/automationBotsRecordTable';
 
 export const FacebookRemoteEntry = (props: AutomaitionRemoteEntryProps) => {
   const { componentType = '' } = props;
@@ -35,6 +36,8 @@ export const FacebookRemoteEntry = (props: AutomaitionRemoteEntryProps) => {
           {...(props as AutomaitionRemoteEntryTypes['ActionNodeConfig'])}
         />
       );
+    case 'automationBotsContent':
+      return <AutomationBotsRecordTable {...props} />;
 
     default:
       return null;

@@ -27,6 +27,7 @@ export type IAutomationsActionConfig = {
 };
 
 export type IAutomationsBotsConfig = {
+  moduleName: string;
   name: string;
   label: string;
   description: string;

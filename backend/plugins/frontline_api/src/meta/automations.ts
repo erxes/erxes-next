@@ -121,6 +121,7 @@ export default {
     ],
     bots: [
       {
+        moduleName: 'facebook',
         name: 'facebook-messenger-bots',
         label: 'Facebook Messenger',
         description: 'Generate Facebook Messenger Bots',

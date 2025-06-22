@@ -133,7 +133,7 @@ export const queries = `
   facebookPostMessages(conversationId: String! getFirst: Boolean, ${pageParams}): [FacebookPostMessage]
   facebookMessengerBotsTotalCount:Int
   facebookMessengerBots:[FacebookMessengerBot]
-  facebootMessengerBot(_id:String):FacebookMessengerBot
+  facebookMessengerBot(_id:String):FacebookMessengerBot
 `;
 
 export const mutations = `

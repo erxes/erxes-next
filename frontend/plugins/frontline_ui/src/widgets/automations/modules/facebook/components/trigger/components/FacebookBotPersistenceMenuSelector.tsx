@@ -23,11 +23,11 @@ const useFacebookBot = (botId: string) => {
     variables: { _id: botId },
   });
 
-  const { facebootMessengerBot } = data || {};
+  const { facebookMessengerBot } = data || {};
 
   return {
     loading,
-    facebootMessengerBot,
+    facebookMessengerBot,
   };
 };
 
@@ -36,13 +36,13 @@ export const FacebookBotPersistenceMenuSelector = ({
   selectedPersistentMenuIds = [],
   onConditionChange,
 }: Props) => {
-  const { facebootMessengerBot, loading } = useFacebookBot(botId);
+  const { facebookMessengerBot, loading } = useFacebookBot(botId);
 
   if (loading) {
     return <Spinner />;
   }
 
-  const { persistentMenus = [] } = facebootMessengerBot || {};
+  const { persistentMenus = [] } = facebookMessengerBot || {};
 
   if (!persistentMenus.length) {
     return (

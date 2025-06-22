@@ -1,7 +1,7 @@
 export type IFacebookBotPersistentMenu = {
   _id: string;
   text: string;
-  type: string;
+  type: 'button' | 'link';
   link: string;
 };
 
@@ -16,7 +16,7 @@ export type IFacebookBot = {
   profileUrl: string;
   persistentMenus: IFacebookBotPersistentMenu[];
   greetText: string;
-  tag: string;
-  isEnabledBackBtn: string;
+  tag: 'CONFIRMED_EVENT_UPDATE' | 'POST_PURCHASE_UPDATE' | 'ACCOUNT_UPDATE';
+  isEnabledBackBtn: boolean;
   backButtonText: string;
 };

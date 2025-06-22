@@ -30,7 +30,7 @@ export const FACEBOOK_BOTS_TOTAL_COUNT = gql`
 
 export const FACEBOOK_BOT_DETAIL = gql`
     query FacebootMessengerBot($_id:String) {
-      facebootMessengerBot(_id:$_id) {
+      facebookMessengerBot(_id:$_id) {
         ${FACEBOOK_BOT_FIELDS}
         greetText
         tag
@@ -42,7 +42,7 @@ export const FACEBOOK_BOT_DETAIL = gql`
 
 export const GET_FACEBOOK_BOT_PROFILE = gql`
   query FacebootMessengerBot($_id: String) {
-    facebootMessengerBot(_id: $_id) {
+    facebookMessengerBot(_id: $_id) {
       _id
       name
       profileUrl

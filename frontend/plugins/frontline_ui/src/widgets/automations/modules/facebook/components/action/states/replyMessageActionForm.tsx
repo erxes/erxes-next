@@ -5,6 +5,8 @@ const buttonSchema = z
     z.object({
       _id: z.string(),
       text: z.string(),
+      type: z.enum(['button', 'link']).default('button').optional(),
+      link: z.string().optional(),
       isEditing: z.boolean().default(false).optional(),
     }),
   )

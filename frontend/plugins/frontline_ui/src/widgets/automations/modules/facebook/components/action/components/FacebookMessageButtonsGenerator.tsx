@@ -118,16 +118,40 @@ const FacebookMessageButton = ({
     handleChangeButton({ ...button, text: value, isEditing: false });
   };
 
+  const onChangeButtonText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+
+    // Check if the value starts with "http://" or "https://" or "www."
+    const isLink = /^https?:\/\/|^www\./i.test(value);
+
+    if (isLink) {
+      if (button.text) {
+        button.type = 'link';
+        button.text = '';
+      }
+
+      button.link = value;
+    } else {
+      button.text = value;
+      button.link = '';
+    }
+
+    handleChangeButton(button);
+  };
+
   return (
     <Card
       ref={setNodeRef}
       style={style}
       {...(button.isEditing ? {} : { ...attributes })}
-      className={'p-3  flex flex-row gap-2 items-center justify-between'}
+      className={'px-3 py-2 flex flex-row gap-2 items-center justify-between'}
       onDoubleClick={() => handleChangeButton({ ...button, isEditing: true })}
     >
       <div
         {...listeners}
+        role="button"
+        aria-label="Drag to reorder button"
+        tabIndex={button.isEditing ? -1 : 0}
         className={cn(
           'p-2 rounded hover:bg-muted text-accent-foreground',
           button.isEditing
@@ -141,20 +165,37 @@ const FacebookMessageButton = ({
         {button?.isEditing ? (
           <Input
             autoFocus
-            value={button.text}
+            maxLength={20}
+            placeholder="Enter button text"
+            value={button.text || button.link}
             onBlur={onSave}
-            onChange={(e) =>
-              handleChangeButton({ ...button, text: e.currentTarget.value })
-            }
-            onKeyDown={(e) => e.key === 'Enter' && onSave(e as any)}
+            onChange={onChangeButtonText}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.currentTarget.blur();
+              }
+            }}
           />
+        ) : button.link ? (
+          <a
+            href={button.link}
+            target="__blank"
+            className="text-blue-500 hover:text-blue-500/70 transition ease-in-out"
+          >
+            {button.link}
+          </a>
         ) : (
           <span className="font-mono font-bold text-foreground text-sm">
             {button.text || 'Type a button label'}
           </span>
         )}
       </div>
-      <Button size="icon" variant="destructive" onClick={onRemovButton}>
+      <Button
+        size="icon"
+        variant="destructive"
+        aria-label={`Remove button: ${button.text || 'untitled'}`}
+        onClick={onRemovButton}
+      >
         <IconX />
       </Button>
     </Card>

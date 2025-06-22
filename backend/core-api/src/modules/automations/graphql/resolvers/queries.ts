@@ -515,7 +515,7 @@ export const automationQueries = {
       const bots = plugin?.config?.meta?.automations?.constants?.bots || [];
 
       if (bots.length) {
-        botsConstants.push(...bots);
+        botsConstants.push(...bots.map((bot) => ({ ...bot, pluginName })));
       }
     }
 

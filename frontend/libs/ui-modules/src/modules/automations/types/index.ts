@@ -101,7 +101,8 @@ export type AutomaitionRemoteEntryProps =
   | AutomationTriggerFormProps
   | AutomaitionActionFormProps
   | AutomaitionTriggerConfigProps
-  | AutomaitionActionNodeConfigProps;
+  | AutomaitionActionNodeConfigProps
+  | { componentType: 'automationBotsContent' };
 
 export type AutomaitionRemoteEntryTypes = {
   TriggerForm: AutomationTriggerFormProps;

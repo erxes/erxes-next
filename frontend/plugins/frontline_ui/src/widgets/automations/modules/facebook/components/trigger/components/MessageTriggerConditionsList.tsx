@@ -1,8 +1,9 @@
-import { Checkbox, cn, Form, Spinner, TablerIcon } from 'erxes-ui';
+import { Checkbox, cn, Form, Spinner } from 'erxes-ui';
 import { UseFormReturn } from 'react-hook-form';
 import { useFacebookMessengerTrigger } from '../hooks/useFacebookMessengerTrigger';
 import { TMessageTriggerForm } from '../states/messageTriggerFormSchema';
 import { getConditionsFieldErrors } from '../utils/messageTriggerUtils';
+import { IconBrandMessenger } from '@tabler/icons-react';
 
 type Props = {
   setActiveItemType: React.Dispatch<React.SetStateAction<string>>;
@@ -49,7 +50,8 @@ export const MessageTriggerConditionsList = ({
               onClick={(e) => e.stopPropagation()}
             />
             <div className="rounded-full bg-blue-500 text-background p-3">
-              <TablerIcon name={icon} />
+              {/* <TablerIcon name={icon} /> */}
+              <IconBrandMessenger />
             </div>
             <div>
               <p className="font-semibold text-muted-foreground text-sm">
