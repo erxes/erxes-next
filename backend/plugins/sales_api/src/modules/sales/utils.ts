@@ -1,19 +1,6 @@
-import { can } from 'erxes-api-shared/core-modules';
-import { IUserDocument } from 'erxes-api-shared/core-types';
-import {
-  checkUserIds,
-  cursorPaginate,
-  getNextMonth,
-  getToday,
-  regexSearchText,
-  sendTRPCMessage,
-  USER_ROLES,
-  validSearchText,
-} from 'erxes-api-shared/utils';
-import moment from 'moment';
-import { DeleteResult } from 'mongoose';
 import * as _ from 'underscore';
-import { IModels } from '~/connectionResolvers';
+
+import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
 import {
   IArchiveArgs,
   IDeal,
@@ -23,8 +10,23 @@ import {
   IStage,
   IStageDocument,
 } from './@types';
-import { CLOSE_DATE_TYPES, SALES_STATUSES } from './constants';
+import {
+  USER_ROLES,
+  checkUserIds,
+  cursorPaginate,
+  getNextMonth,
+  getToday,
+  regexSearchText,
+  sendTRPCMessage,
+  validSearchText,
+} from 'erxes-api-shared/utils';
+
+import { DeleteResult } from 'mongoose';
+import { IModels } from '~/connectionResolvers';
+import { IUserDocument } from 'erxes-api-shared/core-types';
+import { can } from 'erxes-api-shared/core-modules';
 import { generateFilter } from './graphql/resolvers/queries/deals';
+import moment from 'moment';
 
 export const configReplacer = (config) => {
   const now = new Date();
@@ -580,15 +582,15 @@ export const checkItemPermByUser = async (
   ]);
   const isUserInBranch = compareDepartmentIds(branchIds, userBranchIds);
 
-  if (
-    visibility === 'private' &&
-    !(memberIds || []).includes(user._id) &&
-    !hasUserInDepartment &&
-    !isUserInBranch &&
-    user?.role !== USER_ROLES.SYSTEM
-  ) {
-    throw new Error('You do not have permission to view.');
-  }
+  // if (
+  //   visibility === 'private' &&
+  //   !(memberIds || []).includes(user._id) &&
+  //   !hasUserInDepartment &&
+  //   !isUserInBranch &&
+  //   user?.role !== USER_ROLES.SYSTEM
+  // ) {
+  //   throw new Error('You do not have permission to view.');
+  // }
 
   const isSuperVisorInDepartment = compareDepartmentIds(
     departmentIds,

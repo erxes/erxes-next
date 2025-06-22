@@ -1,6 +1,6 @@
+import { IContext } from '~/connectionResolvers';
 import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
-import { IContext } from '~/connectionResolvers';
 
 export const pipelineQueries = {
   /**
@@ -159,4 +159,4 @@ export const pipelineQueries = {
   },
 };
 
-moduleRequireLogin(pipelineQueries);
+// moduleRequireLogin(pipelineQueries);

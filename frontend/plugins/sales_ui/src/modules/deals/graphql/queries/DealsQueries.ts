@@ -29,8 +29,6 @@ const commonParams = `
   $pipelineId: String,
   $parentId: String,
   $closeDateType: String,
-  $sortField: String,
-  $sortDirection: Int,
   $userIds: [String],
   $segment: String,
   $segmentData:String,
@@ -64,8 +62,6 @@ const commonParamDefs = `
   pipelineId: $pipelineId,
   parentId: $parentId,
   closeDateType: $closeDateType,
-  sortField: $sortField,
-  sortDirection: $sortDirection,
   userIds: $userIds,
   segment: $segment,
   segmentData: $segmentData,
@@ -89,11 +85,32 @@ const commonParamDefs = `
 export const commonListFields = `
   _id
   name
-  companies
-  customers
-  assignedUsers
-  labels
-  stage
+  companies {
+    _id
+    primaryName
+  }
+  customers {
+    _id
+    firstName
+    lastName
+    email
+  }
+  assignedUsers {
+    _id
+    details {
+      avatar
+      fullName
+    }
+  }
+  labels {
+    _id
+    name
+    colorCode
+  }
+  stage {
+    _id
+    name
+  }
   isComplete
   isWatched
   relations
@@ -128,8 +145,12 @@ export const GET_DEALS = gql`
     
       ${commonParamDefs}
     ) {
-      products
-      unusedAmount
+      list {
+      products {
+        _id
+        name
+      }
+      unUsedAmount
       amount
       ${commonListFields}
       departments {
@@ -140,8 +161,55 @@ export const GET_DEALS = gql`
         _id
         title
       }
-      companies
-      customers
+      companies {
+        _id
+        primaryName
+      }
+      customers {
+        _id
+        firstName
+        lastName
+        email
+      }
+      relations
+    }
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+      }
+  }
+`;
+
+export const GET_DEAL_DETAIL = gql`
+  query DealDetail($_id: String!) {
+    dealDetail(_id: $_id) {
+      ${commonListFields}
+      departments {
+        _id
+        title
+      }
+      branches {
+        _id
+        title
+      }
+      companies {
+        _id
+        primaryName
+      }
+      customers {
+        _id
+        firstName
+        lastName
+        email
+      }
+      products {
+        _id
+        name
+      }
       relations
     }
   }

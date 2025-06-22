@@ -1,10 +1,16 @@
-import { Button, Sheet, cn, useQueryState } from 'erxes-ui';
+import { Resizable, Sheet, cn, useQueryState } from 'erxes-ui';
 
-import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
+import { IDeal } from '@/deals/types/deals';
+import { SalesDetailActions } from './SalesDetailActions';
+import { SalesDetailLeftSidebar } from './SalesDetailLeftSidebar';
+import { SalesItemDetailHeader } from './SalesItemDetailHeader';
+import { useDealDetail } from '@/deals/cards/hooks/useDeals';
 
 export const SalesItemDetail = () => {
   const [open, setOpen] = useQueryState<string>('salesItemId');
 
+  const { deal, loading: dealLoading } = useDealDetail();
+  console.log('ccc', deal, dealLoading);
   return (
     <>
       <div />
@@ -17,17 +23,22 @@ export const SalesItemDetail = () => {
             e.preventDefault();
           }}
         >
-          <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
-            <Button variant="ghost" size="icon">
-              <IconLayoutSidebarLeftCollapse />
-            </Button>
-            <Sheet.Title>Customer Detail</Sheet.Title>
-            <Sheet.Close />
-            <Sheet.Description className="sr-only">
-              Customer Detail
-            </Sheet.Description>
-          </Sheet.Header>
-          hi
+          <SalesItemDetailHeader deal={deal || ({} as IDeal)} />
+          <Sheet.Content>
+            <div className="flex h-full flex-auto overflow-auto">
+              <div className="flex flex-col flex-auto min-h-full overflow-hidden">
+                <Resizable.PanelGroup
+                  direction="horizontal"
+                  className="flex-auto min-h-full overflow-hidden"
+                >
+                  <Resizable.Panel>
+                    <SalesDetailLeftSidebar>hi</SalesDetailLeftSidebar>
+                  </Resizable.Panel>
+                  <SalesDetailActions />
+                </Resizable.PanelGroup>
+              </div>
+            </div>
+          </Sheet.Content>
         </Sheet.View>
       </Sheet>
     </>

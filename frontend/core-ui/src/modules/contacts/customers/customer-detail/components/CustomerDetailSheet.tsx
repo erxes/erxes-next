@@ -1,9 +1,10 @@
-import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
+import { Button, Sheet, cn, useQueryState } from 'erxes-ui';
 
-import { Button, Sheet, useQueryState, cn } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
+import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDetailStates';
+import { useAtomValue } from 'jotai';
 import { usePreviousHotkeyScope } from 'erxes-ui';
+
 export const CustomerDetailSheet = ({
   children,
 }: {

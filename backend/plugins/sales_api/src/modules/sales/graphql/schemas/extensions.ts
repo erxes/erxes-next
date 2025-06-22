@@ -22,4 +22,8 @@ export const TypeExtensions = `
   extend type Tag @key(fields: "_id") {
     _id: String @external
   }
+
+  extend type Product @key(fields: "_id") {
+    _id: String @external
+  }
 `;

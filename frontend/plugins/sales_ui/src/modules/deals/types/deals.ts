@@ -58,6 +58,17 @@ export interface IItem {
       info?: any;
     };
   }
+
+  export interface IDealList {
+    list: IDeal[];
+    pageInfo: {
+      endCursor: string;
+      startCursor: string;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+    totalCount: number;
+  }
   
 export interface IDeal extends IItem {
     products?: any;
