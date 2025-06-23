@@ -1,7 +1,6 @@
 import { Spinner } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 
 const FacebookRemoteEntry = lazy(() =>
   import('../modules/facebook/components/FacebookRemoteEntry').then(

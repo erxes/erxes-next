@@ -3,14 +3,23 @@ import {
   AUTOMATION_CREATE,
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
+import { NodeData } from '@/automations/types';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
-import { useReactFlow } from '@xyflow/react';
+import {
+  Edge,
+  EdgeProps,
+  Node,
+  ReactFlowInstance,
+  useReactFlow,
+} from '@xyflow/react';
 import { useToast } from 'erxes-ui';
 import { SubmitErrorHandler, useFormContext, useWatch } from 'react-hook-form';
 import { useParams } from 'react-router';
 
-export const useAutomationHeader = (reactFlowInstance: any) => {
+export const useAutomationHeader = (
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>,
+) => {
   const { control, setValue, handleSubmit, clearErrors } =
     useFormContext<TAutomationProps>();
 

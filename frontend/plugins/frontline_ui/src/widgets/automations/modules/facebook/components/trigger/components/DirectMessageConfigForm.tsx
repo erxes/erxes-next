@@ -6,6 +6,7 @@ import {
   TMessageTriggerFormDirectMessage,
   TMessageTriggerFormPersistentMenu,
 } from '../states/messageTriggerFormSchema';
+import { nanoid } from 'nanoid';
 
 const DirectMessageCondition = ({
   condition,
@@ -25,7 +26,7 @@ const DirectMessageCondition = ({
 
       onChange('keywords', [
         ...condition.keywords,
-        { _id: Math.random().toString(), text: value },
+        { _id: nanoid(), text: value },
       ]);
       e.currentTarget.value = '';
     }
@@ -160,7 +161,7 @@ export const DirectMessageConfigForm = ({
   const onAddCondition = () => {
     onConditionChange('conditions', [
       ...conditions,
-      { _id: Math.random().toString(), operator: '', keywords: [] },
+      { _id: nanoid(), operator: '', keywords: [] },
     ]);
   };
 

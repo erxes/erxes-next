@@ -1,6 +1,6 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { NodeData } from '../../../../types';
+import { NodeData } from '@/automations/types';
 
 export const useDefaultTriggerContent = ({
   activeNode,

@@ -1,4 +1,4 @@
-import { AUTOMATOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
+import { AUTOMATION_CONSTANTS } from '@/automations/graphql/automationQueries';
 import { ConstantsQueryResponse } from '@/automations/types';
 import { useQuery } from '@apollo/client';
 import { useMultiQueryState } from 'erxes-ui';
@@ -57,7 +57,7 @@ export const AutomationProvider = ({
   } | null>(null);
 
   const { data, loading, error, refetch } = useQuery<ConstantsQueryResponse>(
-    AUTOMATOMATION_CONSTANTS,
+    AUTOMATION_CONSTANTS,
     {
       skip: !!cached, // Skip query if cached
       fetchPolicy: 'cache-first',

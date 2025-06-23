@@ -14,6 +14,7 @@ import {
   triggerFormSchema,
 } from '../states/messageTriggerFormSchema';
 import { AutomationTriggerFormProps } from 'ui-modules';
+import { nanoid } from 'nanoid';
 
 const renderActiveItemContent = ({
   onConditionChange,
@@ -108,7 +109,7 @@ const renderConditionsContent = ({
       setFormValue('conditions', [
         ...(formState?.conditions || []),
         {
-          _id: Math.random().toString(),
+          _id: nanoid(),
           type: conditionType,
           [fieldName]: fieldValue,
         },

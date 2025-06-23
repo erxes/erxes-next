@@ -2,6 +2,7 @@ import { useFacebookBots } from '@/integrations/facebook/hooks/useFacebookBots';
 import { IconCheck, IconChevronDown, IconSettings } from '@tabler/icons-react';
 import { Avatar, Collapsible, Label, Separator, Spinner } from 'erxes-ui';
 import { useState } from 'react';
+import { Link } from 'react-router';
 
 type Props = {
   onSelect: (id: string) => void;
@@ -61,9 +62,11 @@ export const FacebookBotSelector = ({ botId, onSelect }: Props) => {
               </Avatar>
               {name}
             </div>
-            {/* <Link to={``}> */}
-            <IconSettings className="w-4 h-4 text-muted-foreground" />
-            {/* </Link> */}
+            <Link
+              to={`/settings/automations/bots/facebook-messenger-bots?facebookBotId=${_id}`}
+            >
+              <IconSettings className="w-4 h-4 text-muted-foreground" />
+            </Link>
           </div>
         ))}
       </Collapsible.Content>

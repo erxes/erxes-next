@@ -8,7 +8,7 @@ import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeDropdownActions';
 import { TriggerNodeConfigurationContent } from './TriggerNodeConfigurationContent';
 
-const renderContent = (data: NodeData) => {
+const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   if (data?.error) {
     return (
       <ErrorState errorCode={'Invalid action'} errorDetails={data?.error} />
@@ -77,7 +77,8 @@ const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
             {data.description}
           </span>
 
-          {renderContent(data)}
+          {/* {renderContent(data)} */}
+          <TriggerNodeContent data={data} />
         </div>
 
         <NodeOutputHandler

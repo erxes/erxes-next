@@ -2,7 +2,7 @@ import { useCustomTriggerContent } from '@/automations/components/builder/sideba
 import { useDefaultTriggerContent } from '@/automations/components/builder/sidebar/hooks/useDefaultTriggerContent';
 import { SegmentForm } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
-import { NodeData } from '../../../../types';
+import { NodeData } from '@/automations/types';
 
 type Props = { activeNode: NodeData };
 

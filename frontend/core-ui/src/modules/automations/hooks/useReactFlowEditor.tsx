@@ -4,7 +4,10 @@ import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions'
 import {
   addEdge,
   Connection,
+  Edge,
+  EdgeProps,
   Node,
+  ReactFlowInstance,
   useEdgesState,
   useNodesState,
 } from '@xyflow/react';
@@ -12,7 +15,7 @@ import '@xyflow/react/dist/style.css';
 import { themeState } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useRef } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { IAction, ITrigger } from 'ui-modules';
 import { NodeData } from '../types';
 import {
@@ -26,7 +29,11 @@ import {
   generateConnect,
 } from '../utils/automationConnectionUtils';
 
-export const useReactFlowEditor = ({ reactFlowInstance }: any) => {
+export const useReactFlowEditor = ({
+  reactFlowInstance,
+}: {
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
+}) => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const editorWrapper = useRef<HTMLDivElement>(null);
   const { triggersConst, actionsConst } = useAutomation();

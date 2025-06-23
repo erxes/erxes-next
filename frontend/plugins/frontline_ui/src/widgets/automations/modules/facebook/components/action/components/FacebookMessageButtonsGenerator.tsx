@@ -15,6 +15,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { IconGripVertical, IconX } from '@tabler/icons-react';
 import { Button, Card, cn, Input, Label } from 'erxes-ui';
 import { TBotMessageButton } from '../states/replyMessageActionForm';
+import { nanoid } from 'nanoid';
 
 export const FacebookMessageButtonsGenerator = ({
   buttons = [],
@@ -51,10 +52,7 @@ export const FacebookMessageButtonsGenerator = ({
   };
 
   const onAddButton = () =>
-    setButtons([
-      ...buttons,
-      { _id: Math.random().toString(), text: '', isEditing: true },
-    ]);
+    setButtons([...buttons, { _id: nanoid(), text: '', isEditing: true }]);
 
   const onRemovButton = (index: number) => {
     setButtons(buttons.filter((_, buttonIndex) => buttonIndex !== index));

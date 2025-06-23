@@ -4,6 +4,7 @@ import { FacebookMessageProps } from '../types/messageActionForm';
 import { TBotMessageCard } from '../states/replyMessageActionForm';
 import { FacebookMessageButtonsGenerator } from './FacebookMessageButtonsGenerator';
 import { InputTextCounter } from './InputTextCounter';
+import { nanoid } from 'nanoid';
 
 export const FacebookCardsMessage = ({
   message,
@@ -21,7 +22,7 @@ export const FacebookCardsMessage = ({
           field.onChange([
             ...cards,
             {
-              _id: Math.random().toString(),
+              _id: nanoid(),
               label: `Page ${(cards?.length || 0) + 1}`,
             },
           ]);

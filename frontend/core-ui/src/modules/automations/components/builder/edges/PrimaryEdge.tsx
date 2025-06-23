@@ -14,7 +14,7 @@ import { Button } from 'erxes-ui';
 import { FC } from 'react';
 import { useWatch } from 'react-hook-form';
 
-const Edge: FC<EdgeProps> = (edge) => {
+const PrimaryEdge: FC<EdgeProps> = (edge) => {
   const {
     id,
     sourceX,
@@ -74,4 +74,4 @@ const Edge: FC<EdgeProps> = (edge) => {
   );
 };
 
-export default Edge;
+export default PrimaryEdge;

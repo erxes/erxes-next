@@ -39,6 +39,7 @@ import { MessageActionTypeNames } from '../types/messageActionForm';
 import { CSS } from '@dnd-kit/utilities';
 import { AutomaitionActionFormProps } from 'ui-modules';
 import { FacebookInputMessage } from '~/widgets/automations/modules/facebook/components/action/components/FacebookInputMessage';
+import { nanoid } from 'nanoid';
 
 export const MessageActionForm = ({
   currentAction,
@@ -63,7 +64,7 @@ export const MessageActionForm = ({
 
     setValue('messages', [
       ...messages,
-      { _id: Math.random().toString(), type, ...initialValues },
+      { _id: nanoid(), type, ...initialValues },
     ]);
   };
 

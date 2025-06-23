@@ -12,6 +12,7 @@ import {
   Switch,
   useQueryState,
 } from 'erxes-ui';
+import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FacebookMessageButtonsGenerator } from '~/widgets/automations/modules/facebook/components/action/components/FacebookMessageButtonsGenerator';
@@ -40,7 +41,7 @@ const AutomationBotForm = ({
     defaultValues: {
       name: facebookMessengerBot?.name,
       persistentMenus: facebookMessengerBot?.persistentMenus || [
-        { _id: Math.random().toString(), text: 'Get Started', type: 'button' },
+        { _id: nanoid(), text: 'Get Started', type: 'button' },
       ],
       tag: facebookMessengerBot?.tag || 'CONFIRMED_EVENT_UPDATE',
       greetText: facebookMessengerBot?.greetText,
@@ -217,7 +218,9 @@ export const AutomationBotSheetForm = () => {
   const [isOpen, setOpen] = useState(false);
 
   useEffect(() => {
-    facebookBotId && setOpen(true);
+    if (facebookBotId) {
+      setOpen(true);
+    }
   }, [facebookBotId]);
 
   return (

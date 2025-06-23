@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const automationBuilderFormSchema = z.object({
   isMinimized: z.boolean(),
-  activeTab: z.string(z.enum(['builder', 'history'])).min(1),
+  activeTab: z.enum(['builder', 'history']),
   activeNode: z.any(),
   detail: z.object({
     name: z.string(),

@@ -1,5 +1,5 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { Node } from '@xyflow/react';
+import { EdgeProps, Edge, Node, ReactFlowInstance } from '@xyflow/react';
 import { UseFormSetValue } from 'react-hook-form';
 import { IAction, ITrigger } from 'ui-modules';
 
@@ -92,7 +92,7 @@ export interface IAutomationHistory {
 
 export type AutomationDropHandlerParams = {
   event: React.DragEvent<HTMLDivElement>;
-  reactFlowInstance: any;
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
   triggers: any[];
   actions: any[];
 };

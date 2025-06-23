@@ -19,7 +19,7 @@ const COMMON_USER_FIELDS = `
       }
 `;
 
-export const AUTOMATOMATION_CONSTANTS = gql`
+export const AUTOMATION_CONSTANTS = gql`
   query automationConstants {
     automationConstants
   }

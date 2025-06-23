@@ -8,7 +8,7 @@ import { ErrorState } from '../../../utils/ErrorState';
 import { ActionNodeConfigurationContent } from './ActionNodeConfigurationContent';
 import { NodeDropdownActions } from './NodeDropdownActions';
 
-const renderContent = (data: NodeData) => {
+const ActionNodeContent = ({ data }: { data: NodeData }) => {
   if (data?.error) {
     return (
       <ErrorState errorCode={'Invalid action'} errorDetails={data?.error} />
@@ -36,12 +36,17 @@ const renderContent = (data: NodeData) => {
   );
 };
 
-const renderSourceHandler = (
-  id: string,
-  type: string,
-  nextActionId?: string,
-  config?: any,
-) => {
+const ActionNodeSourceHandler = ({
+  id,
+  type,
+  nextActionId,
+  config,
+}: {
+  id: string;
+  type: string;
+  nextActionId?: string;
+  config?: any;
+}) => {
   if (type === 'if') {
     return (
       <>
@@ -130,7 +135,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
             {data.description}
           </span>
         </div>
-        {renderContent({ ...data, id })}
+        <ActionNodeContent data={{ ...data, id }} />
 
         {/* Input handle */}
         <Handle
@@ -141,7 +146,12 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
           className={`!w-4 !h-4 -z-10 !bg-success `}
         />
 
-        {renderSourceHandler(id, data.type, nextActionId, config)}
+        <ActionNodeSourceHandler
+          id={id}
+          type={data.type}
+          nextActionId={nextActionId}
+          config={config}
+        />
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
 import { IAction, ITrigger } from 'ui-modules';
-import PrimaryEdge from '../edges/primary';
+import PrimaryEdge from '../edges/PrimaryEdge';
 import ActionNode from '../nodes/ActionNode';
 import TriggerNode from '../nodes/TriggerNode';
 import { generateActionResult } from './AutomationHistoryByTable';
@@ -61,7 +61,7 @@ const useBeforeTitleContent = (history: IAutomationHistory) => {
               <Icon className="w-4 h-4" />
             </div>
           </Tooltip.Trigger>
-          <Tooltip.Content className="bg-white flex flex-col gap-2">
+          <Tooltip.Content className="bg-foreground flex flex-col gap-2">
             {createdAt && (
               <Label>{dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}</Label>
             )}
