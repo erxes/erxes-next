@@ -73,7 +73,7 @@ const CustomerInlineEffectComponent = ({
   const { updateCustomers, customers } = useCustomersInlineContext();
   const { customers: detailMissingCustomers } = useCustomersInline({
     variables: {
-      _ids: customerIdsWithNoDetails,
+      ids: customerIdsWithNoDetails,
     },
   });
 
@@ -181,7 +181,7 @@ const CustomersInlineTitle = ({ className }: { className?: string }) => {
     useCustomersInlineContext();
 
   const getDisplayValue = () => {
-    if (!customers || customers.length === 0) return placeholder;
+    if (!customers || customers.length === 0) return;
 
     if (customers.length === 1) {
       return getCustomerTitle(customers[0]);
@@ -189,7 +189,6 @@ const CustomersInlineTitle = ({ className }: { className?: string }) => {
 
     return `${customers.length} customers`;
   };
-
   return (
     <Combobox.Value
       value={getDisplayValue()}

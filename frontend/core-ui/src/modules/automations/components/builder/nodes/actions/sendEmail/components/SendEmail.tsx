@@ -23,7 +23,7 @@ import {
   AssignMultipleMembers,
   IActionProps,
   PlaceHolderInput,
-  SelectCustomers,
+  SelectCustomer,
 } from 'ui-modules';
 import { ActionContentRow } from '../../../ActionContentRow';
 import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';
@@ -207,7 +207,7 @@ const SendEmailConfigurationForm = ({
               render={({ field }) => (
                 <Form.Item className="py-4">
                   <Form.Label>Customers</Form.Label>
-                  <SelectCustomers.FormItem
+                  <SelectCustomer.FormItem
                     mode="multiple"
                     value={field.value}
                     onValueChange={field.onChange}
