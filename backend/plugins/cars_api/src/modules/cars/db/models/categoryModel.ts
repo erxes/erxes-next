@@ -38,6 +38,8 @@ export const loadCarCategoryClass = (models: IModels) => {
       // Generatingg order
       doc.order = await this.generateOrder(parentCategory, doc);
 
+      console.log(doc, 'doc');
+
       return models.CarCategories.create(doc);
     }
 
@@ -53,9 +55,7 @@ export const loadCarCategoryClass = (models: IModels) => {
       // Generatingg  order
       doc.order = await this.generateOrder(parentCategory, doc);
 
-      const carCategory = await models.CarCategories.carCategoryDetail({
-        _id,
-      });
+      const carCategory = await models.CarCategories.carCategoryDetail(_id);
 
       const childCategories = await models.CarCategories.find({
         $and: [
@@ -80,22 +80,22 @@ export const loadCarCategoryClass = (models: IModels) => {
       return models.CarCategories.findOne({ _id });
     }
 
-    public static async carsCategoriesRemove(CarCategoryId: string) {
-      await models.CarCategories.carCategoryDetail({ CarCategoryId });
+    public static async carsCategoriesRemove(_id: string) {
+      await models.CarCategories.carCategoryDetail(_id);
 
       let count = await models.Cars.countDocuments({
-        categoryId: CarCategoryId,
+        categoryId: _id,
       });
 
       count += await models.CarCategories.countDocuments({
-        parentId: CarCategoryId,
+        parentId: _id,
       });
 
       if (count > 0) {
         throw new Error("Can't remove a car category");
       }
 
-      return models.CarCategories.deleteOne({ CarCategoryId });
+      return await models.CarCategories.deleteOne({ _id });
     }
 
     public static async generateOrder(parentCategory: any, doc: ICarCategory) {
