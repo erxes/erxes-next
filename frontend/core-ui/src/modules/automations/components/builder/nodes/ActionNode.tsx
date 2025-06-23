@@ -137,7 +137,6 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
         </div>
         <ActionNodeContent data={{ ...data, id }} />
 
-        {/* Input handle */}
         <Handle
           key="left"
           id="left"
