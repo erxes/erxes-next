@@ -72,7 +72,7 @@ export const ComboboxTriggerIcon = React.forwardRef<
 });
 
 export const ComboboxValue = React.forwardRef<
-  HTMLSpanElement, 
+  HTMLSpanElement,
   React.ComponentPropsWithoutRef<typeof TextOverflowTooltip> & {
     placeholder?: string;
     loading?: boolean;
@@ -109,7 +109,7 @@ export const ComboboxContent = React.forwardRef<
       sideOffset={8}
       {...props}
       className={cn(
-        'p-0 min-w-72 w-[--radix-popper-anchor-width] max-w-96',
+        'p-0 min-w-72 w-(radix-popper-anchor-width) max-w-96',
         className,
       )}
     />

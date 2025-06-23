@@ -1,4 +1,4 @@
-import { Button } from 'erxes-ui';
+import { Button, Tooltip } from 'erxes-ui';
 import { IconRotateClockwise } from '@tabler/icons-react';
 import { useSetAtom } from 'jotai';
 import { refetchNewMessagesState } from '@/inbox/conversations/states/newMessagesCountState';
@@ -10,18 +10,25 @@ export const ConversationRefetch = () => {
   const setRefetchNewMessages = useSetAtom(refetchNewMessagesState);
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="relative"
-      onClick={() => setRefetchNewMessages(true)}
-    >
-      <IconRotateClockwise />{' '}
-      {newMessagesCount > 0 && (
-        <div className="size-3.5 bg-destructive text-primary-foreground rounded-full text-xs absolute top-0 right-0">
-          {newMessagesCount}
-        </div>
-      )}
-    </Button>
+    <Tooltip.Provider>
+      <Tooltip>
+        <Tooltip.Trigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={() => setRefetchNewMessages(true)}
+          >
+            <IconRotateClockwise />{' '}
+            {newMessagesCount > 0 && (
+              <div className="size-3.5 bg-destructive text-primary-foreground rounded-full text-xs absolute top-0 right-0">
+                {newMessagesCount}
+              </div>
+            )}
+          </Button>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Refresh</Tooltip.Content>
+      </Tooltip>
+    </Tooltip.Provider>
   );
 };
