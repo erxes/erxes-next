@@ -3,12 +3,10 @@ import { useCustomers } from '@/contacts/customers/hooks/useCustomers';
 import { customersColumns } from './CustomersColumns';
 import { CustomersCommandBar } from '@/contacts/customers/components/customers-command-bar';
 import { useIsCustomerLeadSessionKey } from '../hooks/useCustomerLeadSessionKey';
-
 export const CustomersRecordTable = () => {
   const { customers, handleFetchMore, loading, pageInfo } = useCustomers();
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
   const { sessionKey } = useIsCustomerLeadSessionKey();
-
   return (
     <RecordTable.Provider
       columns={customersColumns}
