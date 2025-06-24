@@ -18,7 +18,7 @@ export const checkMessageTrigger = async (subdomain, { target, config }) => {
   const { conditions = [], botId } = config;
 
   if (target.botId !== botId) {
-    return;
+    return false;
   }
 
   const payload = target?.payload || {};

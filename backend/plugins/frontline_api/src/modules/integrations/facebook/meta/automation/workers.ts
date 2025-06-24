@@ -13,7 +13,7 @@ import {
 } from '@/integrations/facebook/meta/automation/messages';
 import {
   IAutomationWorkerContext,
-  IAutomationRecieveActionData,
+  IAutomationReceiveActionData,
   ICheckTriggerData,
   IReplacePlaceholdersData,
 } from '@/integrations/facebook/meta/automation/types/automationTypes';
@@ -44,7 +44,7 @@ export const facebookAutomationWorkers = {
       actionType,
       collectionType,
       triggerType,
-    }: IAutomationRecieveActionData,
+    }: IAutomationReceiveActionData,
   ) => {
     if (actionType === 'create') {
       switch (collectionType) {

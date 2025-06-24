@@ -12,7 +12,7 @@ export type IAutomationWorkerContext = {
   subdomain: string;
 };
 
-export type IAutomationRecieveActionData = {
+export type IAutomationReceiveActionData = {
   action: IAction;
   execution: IAutomationExecutionDocument;
   actionType: string;

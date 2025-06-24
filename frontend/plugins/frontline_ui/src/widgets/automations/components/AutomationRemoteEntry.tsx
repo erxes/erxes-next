@@ -1,4 +1,4 @@
-import { Spinner } from 'erxes-ui';
+import { Button, Spinner } from 'erxes-ui';
 import { lazy, Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 
@@ -28,15 +28,12 @@ export const GenericErrorFallback = ({
 }: GenericErrorFallbackProps) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 text-center">
-      <div className="rounded-lg bg-white p-8 shadow-lg">
+      <div className="rounded-lg bg-background p-8 shadow-lg">
         <h1 className="mb-4 text-2xl font-bold text-foreground">{title}</h1>
         <p className="mb-6 text-accent-foreground">{error?.message}</p>
-        <button
-          onClick={resetErrorBoundary}
-          className="rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary/90"
-        >
+        <Button onClick={resetErrorBoundary} variant="secondary">
           Try Again
-        </button>
+        </Button>
       </div>
     </div>
   );
