@@ -19,8 +19,13 @@ import {
   Tooltip,
 } from 'erxes-ui';
 import { useMemo, useState } from 'react';
-import { IActionProps, PlaceHolderInput, SelectCustomers } from 'ui-modules';
 import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
+import {
+  IActionProps,
+  PlaceHolderInput,
+  SelectCustomer,
+  SelectMember,
+} from 'ui-modules';
 import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';
 import {
   useSendEmailCustomMailField,
@@ -133,7 +138,7 @@ const SendEmailConfigurationForm = ({
           control={control}
           render={({ field }) => (
             <Form.Item className="py-4">
-              <AssignMultipleMember
+              <SelectMember.FormItem
                 value={field.value}
                 onValueChange={field.onChange}
               />
@@ -192,7 +197,7 @@ const SendEmailConfigurationForm = ({
               render={({ field }) => (
                 <Form.Item className="py-4">
                   <Form.Label>Team members</Form.Label>
-                  <AssignMultipleMembers
+                  <SelectMember.FormItem
                     value={field.value}
                     onValueChange={field.onChange}
                   />
@@ -205,7 +210,7 @@ const SendEmailConfigurationForm = ({
               render={({ field }) => (
                 <Form.Item className="py-4">
                   <Form.Label>Customers</Form.Label>
-                  <SelectCustomers.FormItem
+                  <SelectCustomer.FormItem
                     mode="multiple"
                     value={field.value}
                     onValueChange={field.onChange}

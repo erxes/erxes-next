@@ -6,7 +6,7 @@ import {
 } from 'erxes-ui';
 
 export const GET_PRODUCTS = gql`
-  query SelectProducts(
+  query SelectProduct(
     $searchValue: String
     ${GQL_CURSOR_PARAM_DEFS}
   ) {

@@ -1,10 +1,8 @@
 import { IconPlus, IconZoomCancel, IconZoomIn } from '@tabler/icons-react';
-import { Button, usePreviousHotkeyScope } from 'erxes-ui';
-import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
-import { useFieldArray, useWatch } from 'react-hook-form';
+import { Button, RecordTableHotkeyProvider, Table, usePreviousHotkeyScope } from 'erxes-ui';
+import { useFieldArray } from 'react-hook-form';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
 import { ExpenseRow } from './ExpenseRow';
-// import { RemoveButton } from './RemoveButton';
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import { useState } from 'react';
 import { getTempId } from '../../utils';

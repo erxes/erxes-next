@@ -35,12 +35,12 @@ export const FilterConversations = () => {
               className="bg-background"
             />
             <Command.List>
-              <Command.Item onSelect={() => setStatus(null)}>
+              <Filter.CommandItem onSelect={() => setStatus(null)}>
                 <IconSquare />
                 Unresolved
                 {status === null && <IconCheck className="ml-auto" />}
-              </Command.Item>
-              <Command.Item
+              </Filter.CommandItem>
+              <Filter.CommandItem
                 onSelect={() => setStatus(ConversationStatus.CLOSED)}
               >
                 <IconCheckbox />
@@ -48,17 +48,17 @@ export const FilterConversations = () => {
                 {status === ConversationStatus.CLOSED && (
                   <IconCheck className="ml-auto" />
                 )}
-              </Command.Item>
+              </Filter.CommandItem>
               <Command.Separator className="my-1" />
               <SelectMember.FilterItem />
-              <Command.Item
+              <Filter.CommandItem
                 onSelect={() => setUnassigned(unassigned ? null : true)}
               >
                 <IconUserX />
                 Unassigned
                 {unassigned && <IconCheck className="ml-auto" />}
-              </Command.Item>
-              <Command.Item
+              </Filter.CommandItem>
+              <Filter.CommandItem
                 onSelect={() =>
                   setAwaitingResponse(awaitingResponse ? null : true)
                 }
@@ -66,14 +66,14 @@ export const FilterConversations = () => {
                 <IconLoader />
                 Awaiting response
                 {awaitingResponse && <IconCheck className="ml-auto" />}
-              </Command.Item>
-              <Command.Item
+              </Filter.CommandItem>
+              <Filter.CommandItem
                 onSelect={() => setParticipated(participated ? null : true)}
               >
                 <IconUsersGroup />
                 Participated
                 {participated && <IconCheck className="ml-auto" />}
-              </Command.Item>
+              </Filter.CommandItem>
               <Command.Separator className="my-1" />
               <SelectChannel.FilterItem />
               <Command.Separator className="my-1" />
