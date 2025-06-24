@@ -80,7 +80,7 @@ const FilterTrigger = React.forwardRef<
 >(({ isFiltered, ...props }, ref) => {
   return (
     <Tooltip.Provider>
-      <Tooltip>
+      <Tooltip delayDuration={0}>
         <Tooltip.Trigger asChild>
           <Popover.Trigger asChild>
             <Button

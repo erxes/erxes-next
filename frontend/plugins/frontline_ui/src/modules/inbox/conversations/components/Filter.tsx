@@ -13,7 +13,6 @@ import { SelectMember } from 'ui-modules';
 import { useQueryState } from 'erxes-ui';
 import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
 import { ConversationStatus } from '@/inbox/types/Conversation';
-import { ChannelTag } from '@/inbox/channel/components/ChannelTag';
 
 export const FilterConversations = () => {
   const [status, setStatus] = useQueryState<ConversationStatus>('status');
@@ -106,7 +105,7 @@ export const ConversationFilterBar = ({
   const [created] = useQueryState<Date>('created');
 
   return (
-    <Filter.Bar>
+    <Filter.Bar className="pl-2 mt-2">
       <Filter.Dialog>
         <Filter.DialogDateView filterKey="created" />
       </Filter.Dialog>
@@ -156,7 +155,7 @@ export const ConversationFilterBar = ({
           <Filter.BarClose filterKey="participated" />
         </Filter.BarItem>
       )}
-      <ChannelTag />
+      <SelectChannel.FilterBar />
       {children}
     </Filter.Bar>
   );

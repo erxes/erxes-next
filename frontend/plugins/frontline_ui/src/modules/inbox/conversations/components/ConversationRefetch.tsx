@@ -11,8 +11,8 @@ export const ConversationRefetch = () => {
 
   return (
     <Tooltip.Provider>
-      <Tooltip>
-        <Tooltip.Trigger>
+      <Tooltip delayDuration={0}>
+        <Tooltip.Trigger asChild>
           <Button
             variant="ghost"
             size="icon"
