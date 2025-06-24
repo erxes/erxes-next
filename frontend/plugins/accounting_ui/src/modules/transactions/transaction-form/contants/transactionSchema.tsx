@@ -143,8 +143,7 @@ export const transactionTaxSchema = z.object({
 });
 //#endregion Single trs
 
-//#endregion Inventories
-
+//#region Inventories
 export const invDetailSchema = z.object({
   ...baseTrDetailSchema.shape,
 }).extend({
@@ -158,6 +157,8 @@ export const transactionInvIncomeSchema = z.object({
   ...baseTransactionSchema.shape,
 }).extend({
   customerId: z.string(),
+  branchId: z.string(),
+  departmentId: z.string(),
   hasVat: z.boolean(),
   hasCtax: z.boolean(),
   details: z.array(z.object({
@@ -174,27 +175,18 @@ export const transactionInvIncomeSchema = z.object({
   })
 });
 
-//#region Inventories
-
-// export const transactionInvOutSchema = z.object({
-//   journal: z.literal('invOut'),
-//   ...baseTransactionSchema.shape,
-//   details: z.array(inventorySchema).min(1),
-//   ...vatSchema.shape,
-// });
-
-// export const transactionInventorySchema = z.object({
-//   journal: z.literal('inv'),
-//   ...baseTransactionSchema.shape,
-//   ...vatSchema.shape,
-// });
-
-// export const transactionFixedAssetSchema = z.object({
-//   journal: z.literal('asset'),
-//   ...baseTransactionSchema.shape,
-//   ...vatSchema.shape,
-// });
-
+export const transactionInvOutSchema = z.object({
+  journal: z.literal(TrJournalEnum.INV_OUT),
+  ...baseTransactionSchema.shape,
+}).extend({
+  customerId: z.string().nullish(),
+  branchId: z.string(),
+  departmentId: z.string(),
+  details: z.array(z.object({
+    ...invDetailSchema.shape,
+  })),
+});
+//#endregion Inventories
 
 export const trDocSchema = z
   .discriminatedUnion('journal', [
@@ -204,7 +196,7 @@ export const trDocSchema = z
     transactionReceivableSchema,
     transactionPayableSchema,
     transactionInvIncomeSchema,
-    // transactionInvOutSchema,
+    transactionInvOutSchema,
     // transactionInventorySchema,
     // transactionFixedAssetSchema,
     transactionTaxSchema,

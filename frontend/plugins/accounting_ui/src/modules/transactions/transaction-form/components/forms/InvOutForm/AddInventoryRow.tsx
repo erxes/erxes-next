@@ -26,7 +26,7 @@ export const AddDetailRowButton = ({
   const detailDefaultValues = {
     ...lastDetail,
     _id: getTempId(),
-    side: TR_SIDES.DEBIT,
+    side: TR_SIDES.CREDIT,
     amount: 0,
     productId: '',
     count: 0,
