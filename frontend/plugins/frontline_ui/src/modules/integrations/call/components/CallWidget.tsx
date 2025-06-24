@@ -20,7 +20,7 @@ import {
   showNumbersState,
 } from '@/integrations/call/states/callWidgetStates';
 import { CallNumberInput } from '@/integrations/call/components/CallNumberInput';
-import { CSSProperties, useRef } from 'react';
+import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
 
 // Static customer data to prevent recreating array
 const MOCK_CUSTOMERS = [
@@ -82,7 +82,7 @@ export const CallWidgetContent = ({
                   className="text-xs text-destructive size-9 relative bg-muted"
                 >
                   <div className="absolute top-1.5 left-2 size-2 bg-destructive rounded-full" />
-                  <div className="span mt-2">rec</div>
+                  <div className="mt-2">rec</div>
                 </Button>
                 <ShowNumbers />
                 <Button
@@ -133,6 +133,14 @@ export const ShowNumbers = () => {
 
 export const CallWidget = () => {
   const popoverContentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState<number | undefined>();
+
+  useLayoutEffect(() => {
+    if (popoverContentRef.current) {
+      setContentHeight(popoverContentRef.current.offsetHeight);
+    }
+  }, []);
+
   return (
     <PopoverPrimitive.Root open>
       <CallWidgetDraggableRoot>
@@ -147,8 +155,7 @@ export const CallWidget = () => {
           ref={popoverContentRef}
           style={
             {
-              '--radix-popper-content-height':
-                popoverContentRef.current?.offsetHeight,
+              '--radix-popper-content-height': contentHeight,
             } as CSSProperties
           }
           className="z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 rounded-lg min-w-[--radix-popper-anchor-width] bg-background text-foreground shadow-focus"
