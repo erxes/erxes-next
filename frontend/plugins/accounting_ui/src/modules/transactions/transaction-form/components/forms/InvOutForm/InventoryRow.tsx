@@ -113,7 +113,6 @@ export const InventoryRow = ({
   };
 
   const handleProduct = (productId: string, onChange: (productId: string) => void) => {
-    // setMount(false);
     onChange(productId);
   }
 
@@ -183,7 +182,7 @@ export const InventoryRow = ({
               <SelectProduct
                 value={field.value || ''}
                 onValueChange={(productId) => {
-                  handleProduct(productId, field.onChange)
+                  handleProduct(productId as string, field.onChange)
                 }}
                 variant="ghost"
                 scope={AccountingHotkeyScope.TransactionFormPage}
