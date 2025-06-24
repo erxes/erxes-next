@@ -9,7 +9,7 @@ const AutomationsBotsSettingsPage = lazy(() =>
   ).then((module) => ({ default: module.AutomationsBotsSettingsPage })),
 );
 
-export const AutomationsSettingRoutes = () => {
+export const AutomationSettingsRoutes = () => {
   return (
     <AutomationSettingsLayout>
       <Routes>

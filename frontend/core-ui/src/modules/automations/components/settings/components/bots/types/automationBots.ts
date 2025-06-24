@@ -8,6 +8,6 @@ export type IAutomationBot = {
   totalCountQueryName: string;
 };
 
-export type IAUtomationBotsConstantsQueryResponse = {
+export type IAutomationBotsConstantsQueryResponse = {
   automationBotsConstants: IAutomationBot[];
 };

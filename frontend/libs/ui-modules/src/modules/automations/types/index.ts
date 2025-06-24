@@ -69,20 +69,20 @@ export type AutomationTriggerFormProps<TConfig = any> =
     onSaveTriggerConfig: (config: TConfig) => void;
   };
 
-export type AutomaitionActionFormProps<TConfig = any> =
+export type AutomationActionFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
     componentType: 'actionForm';
     currentAction: IAction<TConfig>;
     onSaveActionConfig: (config: TConfig) => void;
   };
 
-export type AutomaitionTriggerConfigProps<TConfig = any> =
+export type AutomationTriggerConfigProps<TConfig = any> =
   BaseAutomationRemoteProps & {
     componentType: 'triggerConfigContent';
     config: TConfig;
   };
 
-export type AutomaitionActionNodeConfigProps<
+export type AutomationActionNodeConfigProps<
   TActionConfig = any,
   TTriggerConfig = any,
 > = BaseAutomationRemoteProps & {
@@ -97,16 +97,16 @@ export type AutomaitionActionNodeConfigProps<
   }) => React.ReactNode;
 };
 
-export type AutomaitionRemoteEntryProps =
+export type AutomationRemoteEntryProps =
   | AutomationTriggerFormProps
-  | AutomaitionActionFormProps
-  | AutomaitionTriggerConfigProps
-  | AutomaitionActionNodeConfigProps
+  | AutomationActionFormProps
+  | AutomationTriggerConfigProps
+  | AutomationActionNodeConfigProps
   | { componentType: 'automationBotsContent' };
 
-export type AutomaitionRemoteEntryTypes = {
+export type AutomationRemoteEntryTypes = {
   TriggerForm: AutomationTriggerFormProps;
-  ActionForm: AutomaitionActionFormProps;
-  TriggerNodeConfig: AutomaitionTriggerConfigProps;
-  ActionNodeConfig: AutomaitionActionNodeConfigProps;
+  ActionForm: AutomationActionFormProps;
+  TriggerNodeConfig: AutomationTriggerConfigProps;
+  ActionNodeConfig: AutomationActionNodeConfigProps;
 };

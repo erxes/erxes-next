@@ -92,7 +92,6 @@ const Builder = ({
         onInit={setReactFlowInstance}
         onDragOver={onDragOver}
         fitView
-        style={{ backgroundColor: '#F7F9FB' }}
         connectionLineComponent={ConnectionLine}
         onNodeDragStop={onNodeDragStop}
         colorMode={theme}

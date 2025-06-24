@@ -3,7 +3,7 @@ import { IFacebookBot } from '@/integrations/facebook/types/FacebookBot';
 import { Avatar, Label, Separator, Spinner } from 'erxes-ui';
 import { useFacebookMessengerTrigger } from '../hooks/useFacebookMessengerTrigger';
 import { TMessageTriggerFormCondition } from '../states/messageTriggerFormSchema';
-import { AutomaitionTriggerConfigProps } from 'ui-modules';
+import { AutomationTriggerConfigProps } from 'ui-modules';
 
 type Props = {
   botId: string;
@@ -12,7 +12,7 @@ type Props = {
 
 export const TriggerConfigContent = ({
   config,
-}: AutomaitionTriggerConfigProps<Props>) => {
+}: AutomationTriggerConfigProps<Props>) => {
   const { conditions = [], botId } = config || {};
   const { triggerConditionsConstants } = useFacebookMessengerTrigger();
   const { bot, loading } = useFacebookBot(botId);

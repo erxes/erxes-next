@@ -8,7 +8,7 @@ const fields = {
   action: 'actions',
 };
 
-export const useNodeDropDrownActions = (
+export const useNodeDropDownActions = (
   id: string,
   nodeType: 'trigger' | 'action',
 ) => {

@@ -1,4 +1,4 @@
-import { useNodeDropDrownActions } from './hooks/useNodeDropDownActions';
+import { useNodeDropDownActions } from './hooks/useNodeDropDownActions';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import { AlertDialog, Button, Dialog, DropdownMenu } from 'erxes-ui';
 import { Dispatch, SetStateAction } from 'react';
@@ -19,7 +19,7 @@ export const NodeDropdownActions = ({
     setOpenDialog,
     setOpenDropDown,
     onRemoveNode,
-  } = useNodeDropDrownActions(id, data.nodeType);
+  } = useNodeDropDownActions(id, data.nodeType);
 
   return (
     <DropdownMenu

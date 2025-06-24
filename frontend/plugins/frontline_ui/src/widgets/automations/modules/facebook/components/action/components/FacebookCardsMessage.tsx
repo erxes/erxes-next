@@ -63,14 +63,16 @@ export const FacebookCardsMessage = ({
                   defaultValue={cards?.length === 1 ? '1' : undefined}
                 >
                   {cards.map((_, index) => (
-                    <Tabs.Trigger size="sm" value={String(index)}>{`${
-                      index + 1
-                    } Page`}</Tabs.Trigger>
+                    <Tabs.Trigger
+                      key={index}
+                      size="sm"
+                      value={String(index)}
+                    >{`${index + 1} Page`}</Tabs.Trigger>
                   ))}
                 </Tabs.List>
               </div>
               {cards.map((card, index) => (
-                <Tabs.Content value={String(index)}>
+                <Tabs.Content key={card._id} value={String(index)}>
                   <Card>
                     <Button
                       className="float-end m-2"

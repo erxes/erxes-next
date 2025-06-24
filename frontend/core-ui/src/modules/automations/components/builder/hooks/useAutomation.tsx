@@ -104,8 +104,6 @@ export const AutomationProvider = ({
 export const useAutomation = () => {
   const ctx = useContext(AutomationContext);
   if (!ctx)
-    throw new Error(
-      'useAutomationConstants must be used within AutomationProvider',
-    );
+    throw new Error('useAutomation must be used within AutomationProvider');
   return ctx;
 };

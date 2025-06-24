@@ -77,7 +77,7 @@ export const automationFacebookBotsColumns: ColumnDef<IFacebookBot>[] = [
         REMOVE_FACEBOOK_BOT,
         {
           variables: { _id },
-          onCompleted: () => toast({ title: 'Repaired successfully' }),
+          onCompleted: () => toast({ title: 'Removed successfully' }),
           onError: (error) =>
             toast({
               title: 'Something went wrong',
@@ -102,7 +102,7 @@ export const automationFacebookBotsColumns: ColumnDef<IFacebookBot>[] = [
           </Button>
 
           <Button
-            disabled={loadingRepair}
+            disabled={loadingRemove}
             variant="ghost"
             onClick={() => removeBot()}
           >

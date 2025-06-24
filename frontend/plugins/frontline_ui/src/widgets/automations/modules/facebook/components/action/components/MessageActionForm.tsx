@@ -37,14 +37,14 @@ import {
 } from '../states/replyMessageActionForm';
 import { MessageActionTypeNames } from '../types/messageActionForm';
 import { CSS } from '@dnd-kit/utilities';
-import { AutomaitionActionFormProps } from 'ui-modules';
+import { AutomationActionFormProps } from 'ui-modules';
 import { FacebookInputMessage } from '~/widgets/automations/modules/facebook/components/action/components/FacebookInputMessage';
 import { nanoid } from 'nanoid';
 
 export const MessageActionForm = ({
   currentAction,
   onSaveActionConfig,
-}: AutomaitionActionFormProps<TMessageActionForm>) => {
+}: AutomationActionFormProps<TMessageActionForm>) => {
   const form = useForm<TMessageActionForm>({
     resolver: zodResolver(replyMessageFormSchema),
     defaultValues: { ...(currentAction?.config || {}) },

@@ -2,13 +2,13 @@ import {
   AUTOMATION_BOTS_TOTAL_COUNT,
   AUTOMATIONS_BOTS_CONSTANTS,
 } from '@/automations/components/settings/components/bots/graphql/automationsBotsQueries';
-import { IAUtomationBotsConstantsQueryResponse } from '@/automations/components/settings/components/bots/types/automationBots';
+import { IAutomationBotsConstantsQueryResponse } from '@/automations/components/settings/components/bots/types/automationBots';
 import { gql, useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 
 export const useAutomationBots = () => {
   const { data, loading, error } =
-    useQuery<IAUtomationBotsConstantsQueryResponse>(AUTOMATIONS_BOTS_CONSTANTS);
+    useQuery<IAutomationBotsConstantsQueryResponse>(AUTOMATIONS_BOTS_CONSTANTS);
 
   const { automationBotsConstants = [] } = data || {};
 

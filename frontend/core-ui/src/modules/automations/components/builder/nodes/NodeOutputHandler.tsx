@@ -55,8 +55,8 @@ const AwaitToConnectButton = memo(
           >
             {awaitingToConnectNodeId === nodeHandleId ? (
               <IconLinkPlus
-                className={`text-${
-                  nodeType === 'trigger' ? 'primary' : 'success'
+                className={`${
+                  nodeType === 'trigger' ? 'text-primary' : 'text-success'
                 }`}
               />
             ) : (
@@ -91,7 +91,7 @@ export const NodeOutputHandler = memo(
           id="right"
           type="source"
           position={Position.Right}
-          className={cn('!w-4 !h-4 -z-10', className)}
+          className={cn('!size-4 -z-10', className)}
           {...rest}
         >
           <>

@@ -67,7 +67,7 @@ const AutomationSettingsRoutes = lazy(() =>
   import(
     '@/automations/components/settings/components/AutomationSettingsRoutes'
   ).then((module) => ({
-    default: module.AutomationsSettingRoutes,
+    default: module.AutomationSettingsRoutes,
   })),
 );
 

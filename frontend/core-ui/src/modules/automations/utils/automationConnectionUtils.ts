@@ -219,7 +219,7 @@ export const onDisconnect = ({
   actions: IAction[];
 }) => {
   setEdges((eds: Edge<EdgeProps>[]) => eds.filter((e) => e.id !== edge.id));
-  let info: any = { source: edge.source, target: undefined };
+  const info: any = { source: edge.source, target: undefined };
 
   const sourceNode = nodes.find((n) => n.id === edge.source);
 

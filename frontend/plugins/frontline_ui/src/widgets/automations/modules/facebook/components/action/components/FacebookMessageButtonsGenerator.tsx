@@ -119,22 +119,23 @@ const FacebookMessageButton = ({
   const onChangeButtonText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
 
+    const updatedButton = { ...button };
     // Check if the value starts with "http://" or "https://" or "www."
     const isLink = /^https?:\/\/|^www\./i.test(value);
 
     if (isLink) {
       if (button.text) {
-        button.type = 'link';
-        button.text = '';
+        updatedButton.type = 'link';
+        updatedButton.text = '';
       }
 
-      button.link = value;
+      updatedButton.link = value;
     } else {
-      button.text = value;
-      button.link = '';
+      updatedButton.text = value;
+      updatedButton.link = '';
     }
 
-    handleChangeButton(button);
+    handleChangeButton(updatedButton);
   };
 
   return (

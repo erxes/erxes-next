@@ -8,7 +8,7 @@ import { GET_CUSTOMERS_EMAIL, GET_TEAM_MEMBERS_EMAIL } from '../graphql/utils';
 import { AutomationDropHandlerParams, NodeData, TDraggingNode } from '../types';
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 
-export const generatNodePosition = (
+export const generateNodePosition = (
   nodes: IAction[] & ITrigger[],
   node: IAction & ITrigger,
   generatedNodes: Node<NodeData>[],
@@ -80,7 +80,7 @@ export const generateNode = (
       actionId,
       ...props,
     },
-    position: generatNodePosition(nodes, node, generatedNodes),
+    position: generateNodePosition(nodes, node, generatedNodes),
     isConnectable: true,
     type: nodeType,
     style: {

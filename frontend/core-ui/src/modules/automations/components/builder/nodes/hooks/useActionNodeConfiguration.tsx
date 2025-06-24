@@ -2,12 +2,12 @@ import { useAutomationTrigger } from '@/automations/components/builder/hooks/use
 import {
   coreActionNames,
   coreActions,
-} from '@/automations/components/builder/nodes/actions/coreActions';
+} from '@/automations/components/builder/nodes/actions/CoreActions';
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { NodeData } from '@/automations/types';
 import { Handle, Position } from '@xyflow/react';
 import {
-  AutomaitionActionNodeConfigProps,
+  AutomationActionNodeConfigProps,
   getAutomationTypes,
 } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
@@ -21,7 +21,7 @@ export const useActionNodeConfiguration = (data: NodeData) => {
 
   let Component = null;
 
-  const actionNodeProps: AutomaitionActionNodeConfigProps = {
+  const actionNodeProps: AutomationActionNodeConfigProps = {
     componentType: 'actionNodeConfiguration',
     type,
     config,
@@ -80,7 +80,7 @@ const OptionConnectHandle = ({
       type="source"
       position={Position.Right}
       className={
-        '!right-4 !w-4 !h-4 !bg-background !border !border-2 !rounded-full !border-accent-foreground !z-4'
+        '!right-4 !size-4 !bg-background !border !border-2 !rounded-full !border-accent-foreground !z-4'
       }
       isConnectable
       title="optional-connect"

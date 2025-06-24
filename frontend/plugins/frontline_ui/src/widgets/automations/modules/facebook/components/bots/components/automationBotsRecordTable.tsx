@@ -3,7 +3,7 @@ import { AutomationBotSheetForm } from '~/widgets/automations/modules/facebook/c
 import { automationFacebookBotsColumns } from '~/widgets/automations/modules/facebook/components/bots/components/automationFacebookBotsColumns';
 import { useAutomationBotsRecordTable } from '~/widgets/automations/modules/facebook/components/bots/hooks/useAutomationBotsRecordTable';
 
-export const AutomationBotsRecordTable = ({}: any) => {
+export const AutomationBotsRecordTable = () => {
   const { facebookMessengerBots } = useAutomationBotsRecordTable();
 
   return (

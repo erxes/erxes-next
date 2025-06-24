@@ -26,9 +26,9 @@ const CustomTriggerContent = ({ activeNode }: Props) => {
 
   return (
     <RenderPluginsComponent
-      pluginName={`frontline_ui`}
+      pluginName={pluginName}
       remoteModuleName="automations"
-      moduleName={'facebook'}
+      moduleName={moduleName}
       props={{
         componentType: 'triggerForm',
         activeTrigger: activeNode,

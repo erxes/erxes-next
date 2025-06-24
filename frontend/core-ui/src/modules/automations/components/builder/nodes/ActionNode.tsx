@@ -142,7 +142,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
           id="left"
           type="target"
           position={Position.Left}
-          className={`!w-4 !h-4 -z-10 !bg-success `}
+          className={`!size-4 -z-10 !bg-success `}
         />
 
         <ActionNodeSourceHandler
