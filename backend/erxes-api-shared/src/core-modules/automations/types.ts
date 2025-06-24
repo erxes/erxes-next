@@ -1,3 +1,9 @@
+import {
+  IAction,
+  ITrigger,
+} from '@/core-modules/automations/definitions/automations';
+import { IAutomationExecution } from '@/core-modules/automations/definitions/executions';
+
 type IContext = {
   subdomain: string;
   processId?: string;
@@ -68,10 +74,31 @@ export type AutomationConstants = IAutomationTriggersActionsConfig & {
 
 export interface AutomationConfigs {
   constants: AutomationConstants;
-  receiveActions?: (context: IContext, args: any) => Promise<any>;
+  receiveActions?: (
+    context: IContext,
+    args: {
+      moduleName: string;
+      collectionType: string;
+      actionType: string;
+      triggerType: string;
+      action: IAction;
+      execution: IAutomationExecution;
+    },
+  ) => Promise<any>;
+
   getRecipientsEmails?: (context: IContext, args: any) => Promise<any>;
   replacePlaceHolders?: (context: IContext, args: any) => Promise<any>;
-  checkCustomTrigger?: (context: IContext, args: any) => Promise<any>;
+  checkCustomTrigger?: <TTarget = any, TConfig = any>(
+    context: IContext,
+    args: {
+      moduleName: string;
+      collectionType: string;
+      automationId: string;
+      trigger: ITrigger;
+      target: TTarget;
+      config: TConfig;
+    },
+  ) => Promise<any>;
 }
 
 export interface IReplacePlaceholdersProps<TModels> {
