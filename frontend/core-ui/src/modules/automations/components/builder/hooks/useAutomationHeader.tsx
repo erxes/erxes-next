@@ -1,25 +1,38 @@
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import {
   AUTOMATION_CREATE,
   AUTOMATION_EDIT,
 } from '@/automations/graphql/automationMutations';
+import { NodeData } from '@/automations/types';
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { useMutation } from '@apollo/client';
-import { useReactFlow } from '@xyflow/react';
-import { useQueryState, useToast } from 'erxes-ui';
-import { SubmitErrorHandler, useFormContext } from 'react-hook-form';
+import {
+  Edge,
+  EdgeProps,
+  Node,
+  ReactFlowInstance,
+  useReactFlow,
+} from '@xyflow/react';
+import { useToast } from 'erxes-ui';
+import { SubmitErrorHandler, useFormContext, useWatch } from 'react-hook-form';
 import { useParams } from 'react-router';
 
-export const useAutomationHeader = (reactFlowInstance: any) => {
-  const { control, watch, setValue, handleSubmit, clearErrors } =
+export const useAutomationHeader = (
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>,
+) => {
+  const { control, setValue, handleSubmit, clearErrors } =
     useFormContext<TAutomationProps>();
-  const [_, setActiveTabParams] = useQueryState('activeTab');
+
+  const { setQueryParams } = useAutomation();
 
   const { getNodes, setNodes } = useReactFlow();
   const { toast } = useToast();
+  const { id } = useParams();
 
-  const activeTab = watch('activeTab');
-  const isMinimized = watch('isMinimized');
-  const detail = watch('detail');
+  const [activeTab, isMinimized, detail] = useWatch({
+    control,
+    name: ['activeTab', 'isMinimized', 'detail'],
+  });
   const {
     triggers = [],
     actions = [],
@@ -27,7 +40,6 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
     status = 'draft',
   } = detail || {};
 
-  const { id } = useParams();
   const [save, { loading }] = useMutation(
     id ? AUTOMATION_EDIT : AUTOMATION_CREATE,
   );
@@ -66,13 +78,15 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
 
     return save({ variables: generateValues() }).then(() => {
       clearErrors();
+      toast({
+        title: 'Save successfull',
+      });
     });
   };
 
   const handleError: SubmitErrorHandler<TAutomationProps> = ({
     detail: errors,
   }) => {
-    const { triggers = [], actions = [] } = watch('detail');
     const nodes = getNodes();
     const { triggers: triggersErrors, actions: actionsErrors } = errors || {};
 
@@ -131,7 +145,7 @@ export const useAutomationHeader = (reactFlowInstance: any) => {
 
   const toggleTabs = (value: 'builder' | 'history') => {
     setValue('activeTab', value);
-    setActiveTabParams(value);
+    setQueryParams({ activeTab: value });
   };
 
   return {

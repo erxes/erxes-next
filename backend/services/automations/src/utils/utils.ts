@@ -167,7 +167,7 @@ export const executeActions = async (
 
     if (action.type === ACTIONS.SET_PROPERTY) {
       const { module } = action.config;
-      const [pluginName, collectionType] = splitType(module);
+      const [pluginName, moduleName, collectionType] = splitType(module);
 
       actionResponse = await sendWorkerMessage({
         subdomain,
@@ -175,6 +175,7 @@ export const executeActions = async (
         queueName: 'automations',
         jobName: 'receiveActions',
         data: {
+          moduleName,
           triggerType,
           actionType: 'set-property',
           action,
@@ -199,7 +200,9 @@ export const executeActions = async (
     }
 
     if (action.type.includes('create')) {
-      const [pluginName, type] = splitType(action.type);
+      const [pluginName, moduleName, collectionType, actionType] = splitType(
+        action.type,
+      );
 
       actionResponse = await sendWorkerMessage({
         subdomain,
@@ -207,10 +210,11 @@ export const executeActions = async (
         queueName: 'automations',
         jobName: 'receiveActions',
         data: {
-          actionType: 'create',
+          moduleName,
+          actionType,
           action,
           execution,
-          collectionType: type.replace('.create', ''),
+          collectionType,
         },
       });
 
@@ -324,7 +328,9 @@ export const calculateExecution = async ({
 
   try {
     if (!!isCustom) {
-      const [pluginName, collectionType] = splitType(trigger?.type || '');
+      const [pluginName, moduleName, collectionType] = splitType(
+        trigger?.type || '',
+      );
 
       const isValid = await sendWorkerMessage({
         subdomain,
@@ -332,6 +338,7 @@ export const calculateExecution = async ({
         queueName: 'automations',
         jobName: 'checkCustomTrigger',
         data: {
+          moduleName,
           collectionType,
           automationId,
           trigger,

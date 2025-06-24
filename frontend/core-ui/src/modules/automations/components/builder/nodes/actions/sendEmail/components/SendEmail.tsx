@@ -19,13 +19,13 @@ import {
   Tooltip,
 } from 'erxes-ui';
 import { useMemo, useState } from 'react';
+import { MetaFieldLine } from '@/automations/components/builder/nodes/MetaFieldLine';
 import {
-  AssignMultipleMembers,
   IActionProps,
   PlaceHolderInput,
   SelectCustomer,
+  SelectMember,
 } from 'ui-modules';
-import { ActionContentRow } from '../../../ActionContentRow';
 import { useSendEmailActionResult } from '../hooks/useSendEmailActionResult';
 import {
   useSendEmailCustomMailField,
@@ -138,7 +138,7 @@ const SendEmailConfigurationForm = ({
           control={control}
           render={({ field }) => (
             <Form.Item className="py-4">
-              <AssignMultipleMembers
+              <SelectMember.FormItem
                 value={field.value}
                 onValueChange={field.onChange}
               />
@@ -181,7 +181,10 @@ const SendEmailConfigurationForm = ({
               control={control}
               render={({ field }) => (
                 <Form.Item>
-                  <PlaceHolderInput propertyType={contentType} {...field} />
+                  <PlaceHolderInput
+                    propertyType={contentType || ''}
+                    {...field}
+                  />
                 </Form.Item>
               )}
             />
@@ -194,7 +197,7 @@ const SendEmailConfigurationForm = ({
               render={({ field }) => (
                 <Form.Item className="py-4">
                   <Form.Label>Team members</Form.Label>
-                  <AssignMultipleMembers
+                  <SelectMember.FormItem
                     value={field.value}
                     onValueChange={field.onChange}
                   />
@@ -229,7 +232,7 @@ const SendEmailConfigurationForm = ({
           control={control}
           render={({ field }) => (
             <Form.Item className="py-4">
-              <PlaceHolderInput propertyType={contentType} {...field} />
+              <PlaceHolderInput propertyType={contentType || ''} {...field} />
             </Form.Item>
           )}
         />
@@ -274,11 +277,11 @@ const AutomationSendEmailActionResult = ({ result }: { result: any }) => {
         </Button>
       </Popover.Trigger>
       <Popover.Content>
-        <ActionContentRow fieldName="From" content={fromEmail} />
+        <MetaFieldLine fieldName="From" content={fromEmail} />
 
-        <ActionContentRow fieldName="Title" content={title} />
+        <MetaFieldLine fieldName="Title" content={title} />
 
-        <ActionContentRow
+        <MetaFieldLine
           fieldName="To"
           content={
             <>
@@ -305,12 +308,12 @@ const NodeContent = ({ config }: any) => {
 
   return (
     <>
-      <ActionContentRow fieldName="From" content={fromUserId} />
-      <ActionContentRow
+      <MetaFieldLine fieldName="From" content={fromUserId} />
+      <MetaFieldLine
         fieldName="Reciepents"
         content={
           <Popover>
-            <Popover.Trigger>
+            <Popover.Trigger asChild>
               <Button variant="ghost">
                 See Emails
                 <IconEye />
@@ -323,8 +326,8 @@ const NodeContent = ({ config }: any) => {
           </Popover>
         }
       />
-      <ActionContentRow fieldName="Subject" content={subject} />
-      <ActionContentRow fieldName="Template" content={`Under develop`} />
+      <MetaFieldLine fieldName="Subject" content={subject} />
+      <MetaFieldLine fieldName="Template" content={`Under develop`} />
     </>
   );
 };
