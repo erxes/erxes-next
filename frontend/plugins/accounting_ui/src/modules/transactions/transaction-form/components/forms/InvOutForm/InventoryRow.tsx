@@ -18,8 +18,7 @@ import {
 import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { useEffect, useRef, useState } from 'react';
-
+import { useEffect, useRef } from 'react';
 
 export const InventoryRow = ({
   detailIndex,
@@ -30,9 +29,6 @@ export const InventoryRow = ({
   journalIndex: number;
   form: ITransactionGroupForm;
 }) => {
-  const initialMount = useRef(true); // зөвхөн нэг удаа true
-  const [wasChanged, setWasChanged] = useState(false); // field өөрчлөгдсөн эсэх
-
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`,
@@ -45,16 +41,14 @@ export const InventoryRow = ({
 
   const { unitPrice, count, _id } = detail;
 
+  const initProductId = useRef(detail.productId);
+  const initAccountId = useRef(detail.accountId);
+  const initBranchId = useRef(trDoc.branchId);
+  const initDepartmentId = useRef(trDoc.departmentId);
+
   const getFieldName = (name: string) => {
     return `trDocs.${journalIndex}.details.${detailIndex}.${name}` as any;
   };
-
-  const shouldSkip =
-    !detail.accountId ||
-    !trDoc.branchId ||
-    !trDoc.departmentId ||
-    !detail.productId ||
-    (!wasChanged && !!unitPrice); // анхны unitPrice байвал skip
 
   const { currentCostInfo, loading } = useGetAccCurrentCost({
     variables: {
@@ -63,23 +57,36 @@ export const InventoryRow = ({
       departmentId: trDoc.departmentId,
       productIds: [detail.productId],
     },
-    skip: shouldSkip,
+    skip: (
+      !detail.productId ||
+      !trDoc.branchId ||
+      !trDoc.departmentId ||
+      !detail.accountId
+    ) || (
+        initProductId.current && detail.productId === initProductId.current &&
+        initBranchId.current && trDoc.branchId === initBranchId.current &&
+        initDepartmentId.current && trDoc.departmentId === initDepartmentId.current &&
+        initAccountId.current && detail.accountId === initAccountId.current
+      )
   });
 
   // 🚨 Unit price-г зөвхөн дараа нь өөрчлөгдсөн тохиолдолд шинэчилнэ
   useEffect(() => {
-    if (loading || !currentCostInfo || !wasChanged) return;
+    if (loading || !currentCostInfo) return;
 
     const cost = currentCostInfo[detail.productId || ''];
     if (cost === undefined) return;
 
     form.setValue(getFieldName('unitPrice'), cost);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentCostInfo, detail.productId, loading, wasChanged,]);
+  }, [detail.productId, loading]);
 
   const handleAmountChange = (
     value: number,
+    onChange: (value: number) => void
   ) => {
+    onChange(value)
     const newUnitPrice = count ? value / count : 0;
     form.setValue(getFieldName('unitPrice'), newUnitPrice);
   };
@@ -109,23 +116,6 @@ export const InventoryRow = ({
     // setMount(false);
     onChange(productId);
   }
-
-  // 🧠 Field өөрчлөгдвөл wasChanged-г true болгоно
-  useEffect(() => {
-    if (!initialMount.current) {
-      setWasChanged(true);
-    }
-  }, [
-    detail.accountId,
-    detail.productId,
-    trDoc.branchId,
-    trDoc.departmentId,
-  ]);
-
-  // ✅ Анхны render тэмдэглэл дуусгавар болгоно
-  useEffect(() => {
-    initialMount.current = false;
-  }, []);
 
   return (
     <Table.Row
@@ -260,22 +250,30 @@ export const InventoryRow = ({
       </RecordTableHotKeyControl>
       <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
-          <RecordTablePopover
-            scope={`trDocs.${journalIndex}.details.${detailIndex}.tempAmount`}
-            closeOnEnter
-          >
-            <RecordTableCellTrigger>
-              {((unitPrice ?? 0) * (count ?? 0)).toLocaleString() || 0}
-            </RecordTableCellTrigger>
-            <RecordTableCellContent>
-              <CurrencyField.ValueInput
-                value={((unitPrice ?? 0) * (count ?? 0)) || 0}
-                onChange={(value) =>
-                  handleAmountChange(value || 0)
-                }
-              />
-            </RecordTableCellContent>
-          </RecordTablePopover>
+          <Form.Field
+            control={form.control}
+            name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
+            render={({ field }) => (
+              <RecordTablePopover
+                scope={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
+                closeOnEnter
+              >
+                <Form.Control>
+                  <RecordTableCellTrigger>
+                    {field.value?.toLocaleString() || 0}
+                  </RecordTableCellTrigger>
+                </Form.Control>
+                <RecordTableCellContent>
+                  <CurrencyField.ValueInput
+                    value={field.value || 0}
+                    onChange={(value) =>
+                      handleAmountChange(value || 0, field.onChange)
+                    }
+                  />
+                </RecordTableCellContent>
+              </RecordTablePopover>
+            )}
+          />
         </Table.Cell>
       </RecordTableHotKeyControl>
     </Table.Row>
