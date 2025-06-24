@@ -1,8 +1,11 @@
 import { UseFormReturn } from 'react-hook-form';
 import {
   BasicInfoFormValues,
+  DeliveryConfigFormValues,
+  FinanceConfigFormValues,
   PaymentFormValues,
   PermissionFormValues,
+  PosDetailFormValues,
   ProductFormValues,
 } from '../components/formSchema';
 import { CustomNode } from '@/slot/types';
@@ -14,6 +17,8 @@ export interface TabConfig {
 export interface GetPosCreateTabsProps {
   posCategory: 'ecommerce' | 'restaurant' | 'kiosk';
   forms: {
+    deliveryConfig: UseFormReturn<DeliveryConfigFormValues>;
+    financeConfig: UseFormReturn<FinanceConfigFormValues>;
     basicInfo: UseFormReturn<BasicInfoFormValues>;
     permission: UseFormReturn<PermissionFormValues>;
     product: UseFormReturn<ProductFormValues>;
@@ -21,9 +26,32 @@ export interface GetPosCreateTabsProps {
   };
   handlers: {
     handleNodesUpdate: (nodes: CustomNode[]) => void;
+    handleDeliveryConfigUpdate?: (data: DeliveryConfigFormValues) => void;
+    handleFinanceConfigSubmit?: (data: FinanceConfigFormValues) => void;
   };
   data: {
     createdPosId: string | null;
     slotNodes: CustomNode[];
   };
 }
+
+export interface UpdatePosDetailResult {
+  posDetailUpdate: PosDetailFormValues & { id: string };
+}
+
+export interface UpdatePosDetailVariables {
+  id: string;
+  input: Partial<PosDetailFormValues>;
+}
+
+export interface DeliveryConfig {
+  boardId: any;
+  pipeline: any;
+  stage: any;
+  watchedUsers?: any;
+  assignedUsers?: any;
+  deliveryProduct?: any;
+  watchedUserIds?: any;
+  assignedUserIds?: any;
+}
+

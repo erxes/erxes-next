@@ -144,3 +144,12 @@ export const navigateToTab = (
   newParams.set('tab', tabValue);
   setSearchParams(newParams);
 };
+
+export const TOAST_MESSAGES = {
+  POS_CREATED: 'POS created successfully',
+  POS_CREATED_WITH_DELIVERY: 'POS created with delivery configuration',
+  POS_CREATION_FAILED: 'Failed to create POS',
+  SLOTS_SAVED: 'Slots saved successfully',
+  SLOTS_SAVE_FAILED: 'Failed to save slots',
+  TRY_AGAIN: 'Please try again later',
+} as const;

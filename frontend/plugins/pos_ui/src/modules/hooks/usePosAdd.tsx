@@ -1,4 +1,5 @@
 import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
+import { useCallback } from 'react';
 import posMutations from '../graphql/mutations';
 import posQueries from '../graphql/queries';
 import {
@@ -12,58 +13,143 @@ import {
   AddPosDetailVariables,
   PosData,
 } from '../types/mutations';
+import { DeliveryConfig } from '~/modules/create-pos/types/pos';
+
+const DEFAULT_PER_PAGE = 30;
+
+const updateCacheAfterAdd = (
+  cache: ApolloCache<any>,
+  newPosData: PosData
+): void => {
+  try {
+    const queryVariables = { perPage: DEFAULT_PER_PAGE };
+    
+    const existingData = cache.readQuery<{ posList: PosData[] }>({
+      query: posQueries.posList,
+      variables: queryVariables,
+    });
+
+    if (!existingData?.posList) return;
+
+    cache.writeQuery<{ posList: PosData[] }>({
+      query: posQueries.posList,
+      variables: queryVariables,
+      data: {
+        posList: [...existingData.posList, newPosData],
+      },
+    });
+  } catch (error) {
+    console.error('Cache update error after add:', error);
+  }
+};
+
+const updateCacheAfterRemove = (
+  cache: ApolloCache<any>,
+  removedId: string
+): void => {
+  try {
+    const queryVariables = { perPage: DEFAULT_PER_PAGE };
+    
+    const existingData = cache.readQuery<{ posList: PosData[] }>({
+      query: posQueries.posList,
+      variables: queryVariables,
+    });
+
+    if (!existingData?.posList) return;
+
+    const filteredList = existingData.posList.filter(
+      (item) => item._id !== removedId
+    );
+
+    cache.writeQuery<{ posList: PosData[] }>({
+      query: posQueries.posList,
+      variables: queryVariables,
+      data: {
+        posList: filteredList,
+      },
+    });
+  } catch (error) {
+    console.error('Cache update error after remove:', error);
+  }
+};
+
+const extractDeliveryConfig = (
+  formData: FormStepData,
+  validatedData: PosDetailFormValues
+): DeliveryConfig | null => {
+  if (formData.deliveryConfig) {
+    return {
+      boardId: formData.deliveryConfig.board,
+      pipeline: formData.deliveryConfig.pipeline,
+      stage: formData.deliveryConfig.stage,
+      watchedUsers: formData.deliveryConfig.watchedUsers || [],
+      assignedUsers: formData.deliveryConfig.assignedUsers || [],
+      deliveryProduct: formData.deliveryConfig.deliveryProduct,
+      watchedUserIds: formData.deliveryConfig.watchedUserIds || [],
+      assignedUserIds: formData.deliveryConfig.assignedUserIds || [],
+    };
+  }
+
+  return null;
+};
+
+const extractFinanceConfig = (
+  formData: FormStepData,
+  validatedData: PosDetailFormValues
+): any | null => {
+  if (formData.financeConfig) {
+    return {
+      isSyncErkhet: formData.financeConfig.isSyncErkhet,
+      checkErkhet: formData.financeConfig.checkErkhet,
+      checkInventories: formData.financeConfig.checkInventories,
+      userEmail: formData.financeConfig.userEmail,
+      beginBillNumber: formData.financeConfig.beginBillNumber,
+      defaultPay: formData.financeConfig.defaultPay,
+      account: formData.financeConfig.account,
+      location: formData.financeConfig.location,
+      getRemainder: formData.financeConfig.getRemainder,
+    };
+  }
+  return null;
+};
 
 export function useAddPosDetail(
-  options?: MutationHookOptions<AddPosDetailResult, AddPosDetailVariables>,
+  options?: MutationHookOptions<AddPosDetailResult, AddPosDetailVariables>
 ) {
-  const [posAdd, { loading, error }] = useMutation<
+  const [posAdd, { loading, error, data }] = useMutation<
     AddPosDetailResult,
     AddPosDetailVariables
   >(posMutations.posAdd, {
     ...options,
-    update: (cache: ApolloCache<any>, { data }) => {
-      try {
-        const queryVariables = { perPage: 30 };
-
-        const existingData = cache.readQuery<{ posList: PosData[] }>({
-          query: posQueries.posList,
-          variables: queryVariables,
-        });
-
-        if (!existingData?.posList || !data?.posAdd) return;
-
-        cache.writeQuery<{ posList: PosData[] }>({
-          query: posQueries.posList,
-          variables: queryVariables,
-          data: {
-            posList: [...existingData.posList, data.posAdd],
-          },
-        });
-      } catch (error) {
-        console.error('Cache update error:', error);
+    update: (cache, { data }) => {
+      if (data?.posAdd) {
+        updateCacheAfterAdd(cache, data.posAdd);
       }
+    },
+    onError: (error) => {
+      console.error('POS add mutation error:', error);
+      options?.onError?.(error);
     },
   });
 
-  return { posAdd, loading, error };
-}
-
-export interface UpdatePosDetailResult {
-  posDetailUpdate: PosDetailFormValues & { id: string };
-}
-
-export interface UpdatePosDetailVariables {
-  id: string;
-  input: Partial<PosDetailFormValues>;
+  return { 
+    posAdd, 
+    loading, 
+    error, 
+    data 
+  };
 }
 
 export function useSubmitPosForm() {
   const { posAdd, loading: addLoading, error: addError } = useAddPosDetail();
 
-  const submitForm = async (formData: FormStepData) => {
+  const submitForm = useCallback(async (formData: FormStepData) => {
     try {
       const combinedData = combineFormData(formData);
       const validatedData = posDetailSchema.parse(combinedData);
+
+      const deliveryConfig = extractDeliveryConfig(formData, validatedData);
+      const financeConfig = extractFinanceConfig(formData, validatedData);
 
       const variables: AddPosDetailVariables = {
         name: validatedData.name,
@@ -87,15 +173,22 @@ export function useSubmitPosForm() {
         permissionConfig: validatedData.permissionConfig,
         allowTypes: validatedData.allowTypes,
         checkExcludeCategoryIds: validatedData.checkExcludeCategoryIds,
+        ...(deliveryConfig && { deliveryConfig }),
+        ...(financeConfig && { financeConfig }),
       };
 
       const result = await posAdd({ variables });
+      
+      if (!result.data?.posAdd) {
+        throw new Error('POS creation failed: No data returned');
+      }
+
       return result;
     } catch (error) {
       console.error('Form submission error:', error);
       throw error;
     }
-  };
+  }, [posAdd]);
 
   return {
     submitForm,
@@ -109,33 +202,38 @@ export function useRemovePosDetail() {
     { posRemove: string },
     { _id: string }
   >(posMutations.posRemove, {
-    update: (cache: ApolloCache<any>, { data }, { variables }) => {
-      try {
-        const queryVariables = { perPage: 30 };
-
-        const existingData = cache.readQuery<{ posList: PosData[] }>({
-          query: posQueries.posList,
-          variables: queryVariables,
-        });
-
-        if (!existingData?.posList || !variables?._id) return;
-
-        const filteredList = existingData.posList.filter(
-          (item) => item._id !== variables._id,
-        );
-
-        cache.writeQuery<{ posList: PosData[] }>({
-          query: posQueries.posList,
-          variables: queryVariables,
-          data: {
-            posList: filteredList,
-          },
-        });
-      } catch (error) {
-        console.error('Cache update error:', error);
+    update: (cache, { data }, { variables }) => {
+      if (variables?._id) {
+        updateCacheAfterRemove(cache, variables._id);
       }
+    },
+    onError: (error) => {
+      console.error('POS remove mutation error:', error);
     },
   });
 
-  return { posRemove, loading, error };
+  const removePosDetail = useCallback(async (id: string) => {
+    if (!id) {
+      throw new Error('POS ID is required for removal');
+    }
+
+    try {
+      const result = await posRemove({ variables: { _id: id } });
+      
+      if (!result.data?.posRemove) {
+        throw new Error('POS removal failed: No confirmation returned');
+      }
+
+      return result;
+    } catch (error) {
+      console.error('POS removal error:', error);
+      throw error;
+    }
+  }, [posRemove]);
+
+  return { 
+    removePosDetail, 
+    loading, 
+    error 
+  };
 }

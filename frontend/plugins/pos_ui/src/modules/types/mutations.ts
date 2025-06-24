@@ -1,3 +1,5 @@
+import { DeliveryConfig } from '~/modules/create-pos/types/pos';
+
 export interface CatProdInput {
     categoryId: string;
     productId: string;
@@ -234,7 +236,7 @@ export interface AlertInterface {
     initialCategoryIds?: string[];
     kioskExcludeCategoryIds?: string[];
     kioskExcludeProductIds?: string[];
-    deliveryConfig?: any;
+    deliveryConfig?: DeliveryConfig;
     checkRemainder?: boolean;
     permissionConfig?: any;
     allowTypes?: string[];

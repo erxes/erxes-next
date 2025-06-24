@@ -1,5 +1,4 @@
 import type { JSX } from 'react/jsx-runtime';
-import { CustomNode } from '@/slot/types';
 import POSSlotsManager from '@/slot/components/slot';
 import ChooseCategoryPage from '../components/category/choose-category';
 import { EcommerceForm } from '../components/general/ecommerce';
@@ -74,11 +73,11 @@ export const getPosCreateTabs = ({
     },
     {
       value: 'finance',
-      component: <FinanceConfigForm />,
+      component: <FinanceConfigForm form={forms.financeConfig} onSubmit={async (data) => handlers.handleFinanceConfigSubmit?.(data)} />,
     },
     {
       value: 'delivery',
-      component: <DeliveryConfigForm />,
+      component: <DeliveryConfigForm form={forms.deliveryConfig} onFormSubmit={handlers.handleDeliveryConfigUpdate} />,
     },
     {
       value: 'sync',
@@ -107,3 +106,4 @@ export const getPosCreateTabs = ({
 
   return baseTabs;
 };
+
