@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai';
 
-import { Icon123 } from '../components/TablerIcons';
 import { iconsState } from '../states/iconsState';
+import { Icon123 } from '@tabler/icons-react';
 
 export const useIcons = () => {
   const icons = useAtomValue(iconsState);

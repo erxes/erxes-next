@@ -12,7 +12,7 @@ export const IconsProvider = ({ children }: IconsProviderProps) => {
 
   useEffect(() => {
     import('../components/TablerIcons').then((Icons) => {
-      setIcons(Icons);
+      setIcons(Icons.ALL_ICONS);
     });
   }, [setIcons]);
 
