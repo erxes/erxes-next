@@ -9,8 +9,8 @@ import { PluginConfigsProvidersEffect } from '@/plugins/providers/PluginConfigsP
 import { UserProviderEffect } from '@/auth/providers/UserProviderEffect';
 import { OrganizationProviderEffect } from '@/organization/providers/OrganizationProviderEffect';
 import { WidgetsComponent } from '@/widgets/components/WidgetsComponent';
-import { useWidgetsModules } from '@/widgets/hooks/useWidgetsModules';
-import { WidgetProvider } from 'ui-modules';
+import { useRelationWidgetsModules } from '@/widgets/hooks/useRelationWidgetsModules';
+import { RelationWidgetProvider } from 'ui-modules';
 
 export const Providers = () => {
   return (
@@ -18,14 +18,14 @@ export const Providers = () => {
       <OrganizationProviderEffect />
       <UserProviderEffect />
       <PluginConfigsProvidersEffect />
-      <WidgetProvider
-        Widget={WidgetsComponent}
-        widgetsModules={useWidgetsModules()}
+      <RelationWidgetProvider
+        RelationWidget={WidgetsComponent}
+        relationWidgetsModules={useRelationWidgetsModules()}
       >
         <Suspense fallback={<div>Loading...</div>}>
           <Outlet />
         </Suspense>
-      </WidgetProvider>
+      </RelationWidgetProvider>
     </ApolloProvider>
   );
 };

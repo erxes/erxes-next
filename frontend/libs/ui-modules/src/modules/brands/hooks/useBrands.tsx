@@ -20,35 +20,29 @@ export const useBrands = (
   >(BRANDS_QUERY, {
     ...options,
     variables: {
-      perPage: BRANDS_PER_PAGE,
-      page: 1,
+      limit: BRANDS_PER_PAGE,
       ...options?.variables,
     },
   });
 
   const { list: brands, totalCount, pageInfo } = data?.brands || {};
 
-  const handleFetchMore = ({
-    direction = EnumCursorDirection.FORWARD,
-  }: {
-    direction?: EnumCursorDirection;
-  }) => {
-    if (!validateFetchMore({ direction, pageInfo })) return;
+  const handleFetchMore = () => {
+    if (
+      !validateFetchMore({ direction: EnumCursorDirection.FORWARD, pageInfo })
+    )
+      return;
 
     fetchMore({
       variables: {
-        cursor:
-          direction === EnumCursorDirection.FORWARD
-            ? pageInfo?.endCursor
-            : pageInfo?.startCursor,
-        limit: BRANDS_PER_PAGE,
-        direction,
+        cursor: pageInfo?.endCursor,
+        direction: EnumCursorDirection.FORWARD,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
           brands: mergeCursorData({
-            direction,
+            direction: EnumCursorDirection.FORWARD,
             fetchMoreResult: fetchMoreResult.brands,
             prevResult: prev.brands,
           }),

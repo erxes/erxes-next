@@ -20,7 +20,7 @@ export const ConversationIntegrationBadge = ({
     INTEGRATION_ICONS[kind as keyof typeof INTEGRATION_ICONS] ?? IconMail;
 
   return (
-    <Badge className="absolute -bottom-1 -right-1 size-4 rounded-full bg-background flex justify-center items-center p-0 text-purple-700">
+    <Badge className="absolute -bottom-1 -right-1 size-4 rounded-full bg-background flex justify-center items-center p-0 text-primary">
       <Icon className="size-4 flex-none text-primary" />
     </Badge>
   );

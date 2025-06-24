@@ -62,7 +62,7 @@ const CompanyInlineEffectComponent = ({
   const { updateCompanies, companies } = useCompaniesInlineContext();
   const { companies: detailMissingCompanies } = useCompaniesInline({
     variables: {
-      _ids: companyIdsWithNoDetails,
+      ids: companyIdsWithNoDetails,
     },
   });
 

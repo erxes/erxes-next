@@ -18,7 +18,7 @@ import {
 import { IIntegrationDetail } from '../types/Integration';
 import { useIntegrations } from '../hooks/useIntegrations';
 import { useParams } from 'react-router-dom';
-import { BrandsInline } from 'ui-modules';
+import { BrandsInline, SelectBrand } from 'ui-modules';
 import { useIntegrationEditField } from '@/integrations/hooks/useIntegrationEdit';
 import { useState } from 'react';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
@@ -95,6 +95,14 @@ const NameField = ({ cell }: { cell: Cell<IIntegrationDetail, unknown> }) => {
       </RecordTableCellContent>
     </RecordTablePopover>
   );
+};
+
+export const BrandField = ({
+  cell,
+}: {
+  cell: Cell<IIntegrationDetail, unknown>;
+}) => {
+  return <></>;
 };
 
 export const integrationTypeColumns: ColumnDef<IIntegrationDetail>[] = [

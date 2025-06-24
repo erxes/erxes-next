@@ -1,8 +1,12 @@
 import React from 'react';
 import { Stepper } from 'erxes-ui';
 import { IconCheck, IconAlertCircle } from '@tabler/icons-react';
-import { StepperItemProps, ValidationAlertProps, VerticalStepperProps } from '~/modules/pos-detail/types/IPosLayout';
-import { LAYOUT, navigateToTab } from '~/modules/constants';
+import {
+  StepperItemProps,
+  ValidationAlertProps,
+  VerticalStepperProps,
+} from '@/pos-detail/types/IPosLayout';
+import { LAYOUT, navigateToTab } from '@/constants';
 
 export const StepperItem = React.memo(
   ({ step, currentStep, isClickable }: StepperItemProps) => (
@@ -61,7 +65,9 @@ export const VerticalStepper = React.memo(
     };
 
     return (
-      <div className={`${LAYOUT.STEPPER_WIDTH} border-r bg-gray-50 p-5 overflow-y-auto`}>
+      <div
+        className={`${LAYOUT.STEPPER_WIDTH} border-r bg-gray-50 p-5 overflow-y-auto`}
+      >
         <Stepper
           value={currentStepId}
           onValueChange={handleStepChange}
@@ -86,7 +92,9 @@ export const VerticalStepper = React.memo(
   },
 );
 
-export const ValidationAlert: React.FC<ValidationAlertProps> = ({ message }) => (
+export const ValidationAlert: React.FC<ValidationAlertProps> = ({
+  message,
+}) => (
   <div className="flex items-center gap-2 p-3 text-red-600 bg-red-50 border border-red-200 rounded-md mb-4">
     <IconAlertCircle className="h-5 w-5 flex-shrink-0" />
     <span>{message}</span>

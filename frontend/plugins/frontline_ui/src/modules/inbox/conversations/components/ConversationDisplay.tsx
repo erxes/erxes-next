@@ -11,6 +11,7 @@ export const ConversationDisplay = () => {
   return (
     <Button
       variant="ghost"
+      size="icon"
       onClick={() => setView(view === 'split' ? 'list' : 'split')}
     >
       <Icon size={20} />

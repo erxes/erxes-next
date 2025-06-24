@@ -1,22 +1,28 @@
 import { nanoid } from 'nanoid';
-import { AccountKind, JournalEnum } from '~/modules/settings/account/types/Account';
+import { AccountKind, JournalEnum } from '@/settings/account/types/Account';
 import { TrJournalEnum } from '../../types/constants';
 export const getTempId = () => {
-  return nanoid()
-}
+  return nanoid();
+};
 
-export const getTrSide = (mainSide?: 'dt' | 'ct' | string, isInverse?: boolean) => {
+export const getTrSide = (
+  mainSide?: 'dt' | 'ct' | string,
+  isInverse?: boolean,
+) => {
   if (isInverse) {
     if (mainSide === 'dt') {
-      return 'ct'
+      return 'ct';
     }
-    return 'dt'
+    return 'dt';
   }
 
   return mainSide || 'dt';
-}
+};
 
-export const getSingleJournalByAccount = (accJournal?: string, accKind?: string) => {
+export const getSingleJournalByAccount = (
+  accJournal?: string,
+  accKind?: string,
+) => {
   switch (accJournal) {
     case JournalEnum.BANK:
       return TrJournalEnum.BANK;
@@ -34,4 +40,4 @@ export const getSingleJournalByAccount = (accJournal?: string, accKind?: string)
     default:
       return TrJournalEnum.MAIN;
   }
-}
+};

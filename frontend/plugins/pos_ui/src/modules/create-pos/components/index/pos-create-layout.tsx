@@ -5,10 +5,14 @@ import { Resizable, useQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { posCategoryAtom } from '../../states/posCategory';
 import { PosDetailSheet } from './posDetailSheet';
-import { getSteps, LAYOUT } from '~/modules/constants';
+import { getSteps, LAYOUT } from '@/constants';
 import { VerticalStepper } from './lay-stepper';
 import { NavigationFooter } from './navigation-footer';
-import { PosLayoutProps, PosCreateStepperProps, PosTabContentProps } from '~/modules/pos-detail/types/IPosLayout';
+import {
+  PosLayoutProps,
+  PosCreateStepperProps,
+  PosTabContentProps,
+} from '@/pos-detail/types/IPosLayout';
 
 export const PosCreateTabContent: React.FC<PosTabContentProps> = ({
   children,
@@ -40,8 +44,12 @@ export const PosCreateTabContent: React.FC<PosTabContentProps> = ({
   return <div className="flex-auto overflow-auto">{children}</div>;
 };
 
-export const PosCreateStepper: React.FC<PosCreateStepperProps> = ({ children }) => {
-  const [tab, setTab] = useQueryState<string>('tab', { defaultValue: 'overview' });
+export const PosCreateStepper: React.FC<PosCreateStepperProps> = ({
+  children,
+}) => {
+  const [tab, setTab] = useQueryState<string>('tab', {
+    defaultValue: 'overview',
+  });
   const [posCategory] = useAtom(posCategoryAtom);
   const hasCategorySelected = !!posCategory;
 
@@ -90,7 +98,9 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
   isSubmitting = false,
   onSaveSlots,
 }) => {
-  const [tab, setTab] = useQueryState<string>('tab', { defaultValue: 'overview' });
+  const [tab, setTab] = useQueryState<string>('tab', {
+    defaultValue: 'overview',
+  });
   const [posCategory] = useAtom(posCategoryAtom);
   const [isLoading, setIsLoading] = React.useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -99,9 +109,7 @@ export const PosCreateLayout: React.FC<PosLayoutProps> = ({
     return getSteps(posCategory).map((step, idx) => ({ ...step, id: idx + 1 }));
   }, [posCategory]);
 
-  const currentStepIndex = steps.findIndex(
-    (step) => step.value === tab,
-  );
+  const currentStepIndex = steps.findIndex((step) => step.value === tab);
   const prevStep =
     currentStepIndex > 0 ? steps[currentStepIndex - 1].value : null;
   const nextStep =
