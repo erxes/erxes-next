@@ -6,7 +6,6 @@ import {
   FormStepData,
   DeliveryConfigFormValues,
   FinanceConfigFormValues,
-  PermissionFormValues,
 } from '../components/formSchema';
 import { useSubmitPosForm } from '~/modules/hooks/usePosAdd';
 import { useUpdatePosSlots } from '~/modules/hooks/useSlotAdd';
@@ -137,10 +136,20 @@ export const usePosCreateHandlers = ({
   const handleFinalSubmit = useCallback(async (): Promise<void> => {
     try {
       const financeConfigData = forms.financeConfig?.getValues();
-      console.log('Finance config data before submission:', financeConfigData);
-      
+      const DeliveryConfigData = forms.deliveryConfig?.getValues();
+      const basicInfo = forms.basicInfo.getValues();
+      if (!basicInfo.name || !basicInfo.description) {
+        toast({
+          title: 'Missing required fields',
+          description: 'Name and Description are required.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
       const finalFormStepData: FormStepData = {
         ...formStepData,
+        basicInfo,
         permission: {
           ...forms.permission.getValues(),
           adminIds: forms.permission.getValues().adminTeamMember
@@ -151,6 +160,7 @@ export const usePosCreateHandlers = ({
             : [],
         },
         ...(financeConfigData && { financeConfig: financeConfigData }),
+        ...(DeliveryConfigData &&{deliveryConfig: DeliveryConfigData}),
       };
       console.log('Final form data:', finalFormStepData);
 

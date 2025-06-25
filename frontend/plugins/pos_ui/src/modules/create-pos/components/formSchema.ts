@@ -34,6 +34,17 @@ const paymentTypeSchema = z.object({
   config: z.string(),
 });
 
+export const screenConfigSchema = z.object({
+  kitchenScreenEnabled: z.boolean().default(false),
+  showTypes: z.string().default(''),
+  statusChange: z.string().default(''),
+  watchingScreenEnabled: z.boolean().default(false),
+  changeType: z.string().default(''),
+  changeCount: z.string().default(''),
+  contentUrl: z.string().default(''),
+  printEnabled: z.boolean().default(false),
+});
+
 export const financeConfigSchema = z.object({
   isSyncErkhet: z.boolean().default(false),
   checkErkhet: z.boolean().default(false),
@@ -154,6 +165,7 @@ export type PaymentFormValues = z.infer<typeof paymentSchema>;
 export type UiConfigFormValues = z.infer<typeof uiConfigSchema>;
 export type DeliveryConfigFormValues = z.infer<typeof deliveryConfigSchema>;
 export type FinanceConfigFormValues = z.infer<typeof financeConfigSchema>;
+export type ScreenConfigFormValues = z.infer<typeof screenConfigSchema>;
 
 export interface FormStepData {
   basicInfo?: BasicInfoFormValues;
@@ -163,6 +175,7 @@ export interface FormStepData {
   uiConfig?: UiConfigFormValues;
   deliveryConfig?: DeliveryConfigFormValues;
   financeConfig?: FinanceConfigFormValues;
+  screenConfig?: ScreenConfigFormValues;
 }
 
 export const combineFormData = (
@@ -176,5 +189,6 @@ export const combineFormData = (
     ...stepData.uiConfig,
     ...stepData.deliveryConfig, 
     ...stepData.financeConfig,
+    ...stepData.screenConfig,
   };
 };

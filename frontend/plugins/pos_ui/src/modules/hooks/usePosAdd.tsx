@@ -4,6 +4,7 @@ import posMutations from '../graphql/mutations';
 import posQueries from '../graphql/queries';
 import {
   combineFormData,
+  FinanceConfigFormValues,
   FormStepData,
   PosDetailFormValues,
   posDetailSchema,
@@ -96,7 +97,7 @@ const extractDeliveryConfig = (
 const extractFinanceConfig = (
   formData: FormStepData,
   validatedData: PosDetailFormValues
-): any | null => {
+): FinanceConfigFormValues | null => {
   if (formData.financeConfig) {
     return {
       isSyncErkhet: formData.financeConfig.isSyncErkhet,
@@ -173,8 +174,8 @@ export function useSubmitPosForm() {
         permissionConfig: validatedData.permissionConfig,
         allowTypes: validatedData.allowTypes,
         checkExcludeCategoryIds: validatedData.checkExcludeCategoryIds,
+        erkhetConfig: financeConfig,
         ...(deliveryConfig && { deliveryConfig }),
-        ...(financeConfig && { financeConfig }),
       };
 
       const result = await posAdd({ variables });
