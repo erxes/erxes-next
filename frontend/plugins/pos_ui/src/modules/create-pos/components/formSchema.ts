@@ -147,15 +147,14 @@ export const uiConfigSchema = z.object({
 });
 
 export const deliveryConfigSchema = z.object({
-  board: z.string().optional(),
+  boardId: z.string().optional(),
   pipeline: z.string().optional(),
   stage: z.string().optional(),
   watchedUsers: z.string().optional(),
   assignedUsers: z.string().optional(),
   deliveryProduct: z.string().optional(),
   watchedUserIds: z.array(z.string()).default([]),
-  assignedUserIds: z.array(z.string()).default([]),
-  deliveryConfig: z.record(z.any()).default({}),
+  assignedUserIds: z.array(z.string()).default([])
 });
 
 export type BasicInfoFormValues = z.infer<typeof basicInfoSchema>;

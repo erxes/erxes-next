@@ -33,7 +33,7 @@ const transformSlotNodes = (nodes: CustomNode[], posId: string): SlotData[] => {
 
 const validateDeliveryConfigData = (deliveryData: DeliveryConfigFormValues): boolean => {
   return !!(
-    deliveryData.board &&
+    deliveryData.boardId &&
     deliveryData.pipeline &&
     deliveryData.stage &&
     deliveryData.deliveryProduct
@@ -72,7 +72,7 @@ export const usePosCreateHandlers = ({
     
     if (process.env.NODE_ENV === 'development') {
       console.log('Delivery Config Updated:', {
-        board: data.board,
+        boardId: data.boardId,
         pipeline: data.pipeline,
         stage: data.stage,
         watchedUsers: data.watchedUsers,
@@ -136,7 +136,7 @@ export const usePosCreateHandlers = ({
   const handleFinalSubmit = useCallback(async (): Promise<void> => {
     try {
       const financeConfigData = forms.financeConfig?.getValues();
-      const DeliveryConfigData = forms.deliveryConfig?.getValues();
+      const deliveryConfigData = forms.deliveryConfig?.getValues();
       const basicInfo = forms.basicInfo.getValues();
       if (!basicInfo.name || !basicInfo.description) {
         toast({
@@ -160,7 +160,7 @@ export const usePosCreateHandlers = ({
             : [],
         },
         ...(financeConfigData && { financeConfig: financeConfigData }),
-        ...(DeliveryConfigData &&{deliveryConfig: DeliveryConfigData}),
+        ...(deliveryConfigData &&{deliveryConfig: deliveryConfigData}),
       };
       console.log('Final form data:', finalFormStepData);
 

@@ -84,7 +84,7 @@ const getDefaultFormStepData = (): FormStepData => ({
     getRemainder: false,
   },
   deliveryConfig: {
-    board: '',
+    boardId: '',
     pipeline: '',
     stage: '',
     watchedUsers: '',
@@ -92,7 +92,6 @@ const getDefaultFormStepData = (): FormStepData => ({
     deliveryProduct: '',
     watchedUserIds: [],
     assignedUserIds: [],
-    deliveryConfig: {},
   },
 });
 
@@ -171,6 +170,5 @@ export const usePosCreateForm = () => {
     setFormStepData,
     updateFormStepData,
     getAllFormValues,
-    // populateFormsWithData,
   };
 };

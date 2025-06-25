@@ -4,6 +4,7 @@ import posMutations from '../graphql/mutations';
 import posQueries from '../graphql/queries';
 import {
   combineFormData,
+  DeliveryConfigFormValues,
   FinanceConfigFormValues,
   FormStepData,
   PosDetailFormValues,
@@ -14,7 +15,6 @@ import {
   AddPosDetailVariables,
   PosData,
 } from '../types/mutations';
-import { DeliveryConfig } from '~/modules/create-pos/types/pos';
 
 const DEFAULT_PER_PAGE = 30;
 
@@ -77,14 +77,14 @@ const updateCacheAfterRemove = (
 const extractDeliveryConfig = (
   formData: FormStepData,
   validatedData: PosDetailFormValues
-): DeliveryConfig | null => {
+): DeliveryConfigFormValues | null => {
   if (formData.deliveryConfig) {
     return {
-      boardId: formData.deliveryConfig.board,
+      boardId: formData.deliveryConfig.boardId,
       pipeline: formData.deliveryConfig.pipeline,
       stage: formData.deliveryConfig.stage,
-      watchedUsers: formData.deliveryConfig.watchedUsers || [],
-      assignedUsers: formData.deliveryConfig.assignedUsers || [],
+      watchedUsers: formData.deliveryConfig.watchedUsers,
+      assignedUsers: formData.deliveryConfig.assignedUsers ,
       deliveryProduct: formData.deliveryConfig.deliveryProduct,
       watchedUserIds: formData.deliveryConfig.watchedUserIds || [],
       assignedUserIds: formData.deliveryConfig.assignedUserIds || [],

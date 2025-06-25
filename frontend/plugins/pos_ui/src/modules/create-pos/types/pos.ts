@@ -44,14 +44,3 @@ export interface UpdatePosDetailVariables {
   input: Partial<PosDetailFormValues>;
 }
 
-export interface DeliveryConfig {
-  boardId: any;
-  pipeline: any;
-  stage: any;
-  watchedUsers?: any;
-  assignedUsers?: any;
-  deliveryProduct?: any;
-  watchedUserIds?: any;
-  assignedUserIds?: any;
-}
-
