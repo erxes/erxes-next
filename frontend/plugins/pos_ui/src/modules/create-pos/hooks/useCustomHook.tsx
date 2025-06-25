@@ -44,20 +44,9 @@ export const usePosCreateHandlers = ({
   forms,
   formStepData,
 }: UsePosCreateHandlersProps) => {
-  const {
-    submitForm,
-    loading: posLoading,
-    error: posError,
-  } = useSubmitPosForm();
-  
-  const {
-    updatePosSlots,
-    loading: slotLoading,
-    error: slotError,
-  } = useUpdatePosSlots();
-  
+  const { submitForm, loading: posLoading, error: posError } = useSubmitPosForm();
+  const { updatePosSlots, loading: slotLoading, error: slotError } = useUpdatePosSlots();
   const { toast } = useToast();
-
   const [createdPosId, setCreatedPosId] = useState<string | null>(null);
   const [slotNodes, setSlotNodes] = useState<CustomNode[]>([]);
 
@@ -67,41 +56,12 @@ export const usePosCreateHandlers = ({
 
   const handleDeliveryConfigSubmit = useCallback((data: DeliveryConfigFormValues) => {
     if (!forms.deliveryConfig) return;
-
     forms.deliveryConfig.reset(data);
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Delivery Config Updated:', {
-        boardId: data.boardId,
-        pipeline: data.pipeline,
-        stage: data.stage,
-        watchedUsers: data.watchedUsers,
-        assignedUsers: data.assignedUsers,
-        deliveryProduct: data.deliveryProduct,
-        watchedUserIds: data.watchedUserIds,
-        assignedUserIds: data.assignedUserIds,
-      });
-    }
   }, [forms.deliveryConfig]);
 
   const handleFinanceConfigSubmit = useCallback((data: FinanceConfigFormValues) => {
     if (!forms.financeConfig) return;
-
     forms.financeConfig.reset(data);
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Finance Config Updated:', {
-        isSyncErkhet: data.isSyncErkhet,
-        checkErkhet: data.checkErkhet,
-        checkInventories: data.checkInventories,
-        userEmail: data.userEmail,
-        beginBillNumber: data.beginBillNumber,
-        defaultPay: data.defaultPay,
-        account: data.account,
-        location: data.location,
-        getRemainder: data.getRemainder,
-      });
-    }
   }, [forms.financeConfig]);
 
   const handleSaveSlots = useCallback(async (posId: string): Promise<void> => {
@@ -109,17 +69,12 @@ export const usePosCreateHandlers = ({
 
     try {
       const slotsData = transformSlotNodes(slotNodes, posId);
-
-      await updatePosSlots({
-        variables: { posId, slots: slotsData },
-      });
-
+      await updatePosSlots({ variables: { posId, slots: slotsData } });
       toast({
         title: TOAST_MESSAGES.SLOTS_SAVED,
         description: `Saved ${slotsData.length} slots`,
       });
     } catch (error) {
-      console.error('Failed to save slots:', error);
       toast({
         title: TOAST_MESSAGES.SLOTS_SAVE_FAILED,
         description: TOAST_MESSAGES.TRY_AGAIN,
@@ -135,8 +90,6 @@ export const usePosCreateHandlers = ({
 
   const handleFinalSubmit = useCallback(async (): Promise<void> => {
     try {
-      const financeConfigData = forms.financeConfig?.getValues();
-      const deliveryConfigData = forms.deliveryConfig?.getValues();
       const basicInfo = forms.basicInfo.getValues();
       if (!basicInfo.name || !basicInfo.description) {
         toast({
@@ -159,13 +112,11 @@ export const usePosCreateHandlers = ({
             ? [forms.permission.getValues().cashierTeamMember]
             : [],
         },
-        ...(financeConfigData && { financeConfig: financeConfigData }),
-        ...(deliveryConfigData &&{deliveryConfig: deliveryConfigData}),
+        ...(forms.financeConfig && { financeConfig: forms.financeConfig.getValues() }),
+        ...(forms.deliveryConfig && { deliveryConfig: forms.deliveryConfig.getValues() }),
       };
-      console.log('Final form data:', finalFormStepData);
 
       const result = await submitForm(finalFormStepData);
-
       if (!result?.data?.posAdd?._id) {
         throw new Error('POS creation failed: No ID returned');
       }
@@ -177,19 +128,11 @@ export const usePosCreateHandlers = ({
         await handleSaveSlots(posId);
       }
 
-      const successMessage = financeConfigData 
-        ? TOAST_MESSAGES.POS_CREATED_WITH_DELIVERY
-        : TOAST_MESSAGES.POS_CREATED;
-
       toast({
-        title: successMessage,
-        description: financeConfigData 
-          ? 'POS created with finance configuration' 
-          : 'POS has been created successfully',
+        title: TOAST_MESSAGES.POS_CREATED,
+        description: 'POS has been created successfully',
       });
-
     } catch (error) {
-      console.error('Failed to create POS:', error);
       toast({
         title: TOAST_MESSAGES.POS_CREATION_FAILED,
         description: TOAST_MESSAGES.TRY_AGAIN,
@@ -197,54 +140,23 @@ export const usePosCreateHandlers = ({
       });
       throw error;
     }
-  }, [
-    forms,
-    formStepData,
-    submitForm,
-    slotNodes,
-    handleSaveSlots,
-    toast,
-  ]);
+  }, [forms, formStepData, submitForm, slotNodes, handleSaveSlots, toast]);
 
   const getCurrentDeliveryConfig = useCallback(() => {
-    if (!forms.deliveryConfig) return null;
-    
-    const deliveryData = forms.deliveryConfig.getValues();
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Current delivery config:', deliveryData);
-    }
-    
-    return deliveryData;
+    return forms.deliveryConfig ? forms.deliveryConfig.getValues() : null;
   }, [forms.deliveryConfig]);
 
   const getCurrentFinanceConfig = useCallback(() => {
-    if (!forms.financeConfig) return null;
-    
-    const financeData = forms.financeConfig.getValues();
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Current finance config:', financeData);
-    }
-    
-    return financeData;
+    return forms.financeConfig ? forms.financeConfig.getValues() : null;
   }, [forms.financeConfig]);
 
   const validateDeliveryConfig = useCallback((): boolean => {
     if (!forms.deliveryConfig) return true;
-    
-    const deliveryData = forms.deliveryConfig.getValues();
-    const isValid = validateDeliveryConfigData(deliveryData);
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Delivery config validation:', { isValid, deliveryData });
-    }
-    
-    return isValid;
+    return validateDeliveryConfigData(forms.deliveryConfig.getValues());
   }, [forms.deliveryConfig]);
 
   const getAllFormValues = useCallback(() => {
-    const allValues = {
+    return {
       basicInfo: forms.basicInfo.getValues(),
       permission: forms.permission.getValues(),
       product: forms.product.getValues(),
@@ -253,12 +165,6 @@ export const usePosCreateHandlers = ({
       ...(forms.deliveryConfig && { deliveryConfig: forms.deliveryConfig.getValues() }),
       ...(forms.financeConfig && { financeConfig: forms.financeConfig.getValues() }),
     };
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('All form values:', allValues);
-    }
-    
-    return allValues;
   }, [forms]);
 
   return {
@@ -268,12 +174,10 @@ export const usePosCreateHandlers = ({
     handleFinalSubmit,
     handleNodesUpdate,
     handleSaveSlots,
-    
     getCurrentDeliveryConfig,
     getCurrentFinanceConfig,
     validateDeliveryConfig,
     getAllFormValues,
-    
     loading: posLoading || slotLoading,
     error: posError || slotError,
     createdPosId,
