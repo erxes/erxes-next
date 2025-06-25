@@ -15,7 +15,6 @@ import {
   AddPosDetailVariables,
   PosData,
 } from '../types/mutations';
-import { DeliveryConfig } from '../create-pos/types/pos';
 
 const DEFAULT_PER_PAGE = 30;
 
@@ -78,7 +77,7 @@ const updateCacheAfterRemove = (
 const extractDeliveryConfig = (
   formData: FormStepData,
   validatedData: PosDetailFormValues
-): DeliveryConfig | null => {
+): DeliveryConfigFormValues | null => {
   const cfg = formData.deliveryConfig;
   if (
     cfg &&
