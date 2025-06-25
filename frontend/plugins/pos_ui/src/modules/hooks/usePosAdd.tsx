@@ -78,24 +78,19 @@ const extractDeliveryConfig = (
   formData: FormStepData,
   validatedData: PosDetailFormValues
 ): DeliveryConfigFormValues | null => {
-  const cfg = formData.deliveryConfig;
-  if (
-    cfg &&
-    typeof cfg.boardId === 'string' &&
-    typeof cfg.pipeline === 'string' &&
-    typeof cfg.stage === 'string'
-  ) {
+  if (formData.deliveryConfig) {
     return {
-      boardId: cfg.boardId,
-      pipeline: cfg.pipeline,
-      stage: cfg.stage,
-      watchedUsers: cfg.watchedUsers,
-      assignedUsers: cfg.assignedUsers,
-      deliveryProduct: cfg.deliveryProduct,
-      watchedUserIds: cfg.watchedUserIds || [],
-      assignedUserIds: cfg.assignedUserIds || [],
+      boardId: formData.deliveryConfig?.boardId,
+      pipeline: formData.deliveryConfig?.pipeline,
+      stage: formData.deliveryConfig?.stage,
+      watchedUsers: formData.deliveryConfig?.watchedUsers,
+      assignedUsers: formData.deliveryConfig.assignedUsers ,
+      deliveryProduct: formData.deliveryConfig.deliveryProduct,
+      watchedUserIds: formData.deliveryConfig.watchedUserIds || [],
+      assignedUserIds: formData.deliveryConfig.assignedUserIds || [],
     };
   }
+
   return null;
 };
 
