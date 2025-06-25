@@ -183,6 +183,7 @@ export const executeActions = async (
           collectionType,
         },
       });
+      console.log({ actionResponse });
     }
 
     if (action.type === ACTIONS.SEND_EMAIL) {
@@ -200,6 +201,7 @@ export const executeActions = async (
     }
 
     if (action.type.includes('create')) {
+      console.log({ acType: action.type, dasvdhjas: splitType(action.type) });
       const [pluginName, moduleName, collectionType, actionType] = splitType(
         action.type,
       );
@@ -331,6 +333,7 @@ export const calculateExecution = async ({
       const [pluginName, moduleName, collectionType] = splitType(
         trigger?.type || '',
       );
+      console.log({ pluginName, moduleName, collectionType });
 
       const isValid = await sendWorkerMessage({
         subdomain,
@@ -347,6 +350,7 @@ export const calculateExecution = async ({
         },
         defaultValue: false,
       });
+      console.log({ isValid });
       if (!isValid) {
         return;
       }

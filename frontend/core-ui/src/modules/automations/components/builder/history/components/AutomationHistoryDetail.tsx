@@ -1,4 +1,3 @@
-import { IAutomationHistory } from '@/automations/types';
 import {
   IconAutomaticGearbox,
   IconEye,
@@ -12,7 +11,7 @@ import {
   Tabs,
 } from 'erxes-ui';
 import { AutomationHistoryByFlow } from './AutomationHistoryByFlow';
-import { IAction, ITrigger } from 'ui-modules';
+import { IAction, IAutomationHistory, ITrigger } from 'ui-modules';
 import { AutomationHistoryByTable } from './AutomationHistoryByTable';
 
 export const AutomationHistoryDetail = ({

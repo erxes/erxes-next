@@ -1,4 +1,3 @@
-import { IAutomationHistory } from '@/automations/types';
 import {
   generateEdges,
   generateNodes,
@@ -8,10 +7,10 @@ import { Background, ConnectionMode, Controls, ReactFlow } from '@xyflow/react';
 import dayjs from 'dayjs';
 import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
-import { IAction, ITrigger } from 'ui-modules';
-import PrimaryEdge from '../edges/PrimaryEdge';
-import ActionNode from '../nodes/ActionNode';
-import TriggerNode from '../nodes/TriggerNode';
+import { IAction, IAutomationHistory, ITrigger } from 'ui-modules';
+import PrimaryEdge from '../../edges/PrimaryEdge';
+import ActionNode from '../../nodes/ActionNode';
+import TriggerNode from '../../nodes/TriggerNode';
 import { generateActionResult } from './AutomationHistoryByTable';
 
 const nodeTypes = {

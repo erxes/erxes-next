@@ -1,12 +1,12 @@
 import { IconSquareKey, IconTrash } from '@tabler/icons-react';
 import { Badge, Button, Input, Select } from 'erxes-ui';
+import { generateAutomationElementId } from 'ui-modules';
 import { DIRECT_MESSAGE_OPERATOR_TYPES } from '../constants/messageTriggerForm';
 import {
   TMessageTriggerForm,
   TMessageTriggerFormDirectMessage,
   TMessageTriggerFormPersistentMenu,
 } from '../states/messageTriggerFormSchema';
-import { nanoid } from 'nanoid';
 
 const DirectMessageCondition = ({
   condition,
@@ -26,7 +26,7 @@ const DirectMessageCondition = ({
 
       onChange('keywords', [
         ...condition.keywords,
-        { _id: nanoid(), text: value },
+        { _id: generateAutomationElementId(), text: value },
       ]);
       e.currentTarget.value = '';
     }
@@ -161,7 +161,7 @@ export const DirectMessageConfigForm = ({
   const onAddCondition = () => {
     onConditionChange('conditions', [
       ...conditions,
-      { _id: nanoid(), operator: '', keywords: [] },
+      { _id: generateAutomationElementId(), operator: '', keywords: [] },
     ]);
   };
 

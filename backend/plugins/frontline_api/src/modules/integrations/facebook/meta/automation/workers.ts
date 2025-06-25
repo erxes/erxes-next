@@ -46,6 +46,7 @@ export const facebookAutomationWorkers = {
       triggerType,
     }: IAutomationReceiveActionData,
   ) => {
+    console.log({ actionType, collectionType, daskhvdas: 'dads' });
     if (actionType === 'create') {
       switch (collectionType) {
         case 'messages':

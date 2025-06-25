@@ -39,11 +39,9 @@ const ActionConfigMessage = ({
 }: {
   botId?: string;
   message: TBotMessage;
-  OptionConnectHandle?: ({
-    optionalId,
-  }: {
-    optionalId: string;
-  }) => React.ReactNode;
+  OptionConnectHandle?:
+    | (({ optionalId }: { optionalId: string }) => React.ReactNode)
+    | null;
 }) => {
   const { _id, type, text, cards = [], buttons, quickReplies, input } = message;
   switch (type) {
@@ -122,10 +120,10 @@ const ActionConfigMessageCard = ({
   title = '',
   subtitle = '',
   buttons = [],
-  image = '',
-  audio = '',
-  video = '',
-  attachments = [],
+  // image = '',
+  // audio = '',
+  // video = '',
+  // attachments = [],
   OptionConnectHandle,
 }: {
   _id: string;
@@ -138,11 +136,9 @@ const ActionConfigMessageCard = ({
   audio?: string;
   video?: string;
   attachments?: any[];
-  OptionConnectHandle?: ({
-    optionalId,
-  }: {
-    optionalId: string;
-  }) => React.ReactNode;
+  OptionConnectHandle?:
+    | (({ optionalId }: { optionalId: string }) => React.ReactNode)
+    | null;
 }) => {
   const { title: actionButtonTitle, icon: ActionButtonIcon } =
     REPLY_MESSAGE_ACTION_BUTTONS.find(
@@ -165,7 +161,7 @@ const ActionConfigMessageCard = ({
             <IconChevronDown />
           </Button>
         </Collapsible.Trigger>
-        <Collapsible.Content>
+        <Collapsible.Content className="px-6">
           <p>{text || title}</p>
           <span>{subtitle}</span>
         </Collapsible.Content>

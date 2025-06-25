@@ -38,6 +38,7 @@ type IPlayWaitJobData = IJobData<IPlayWaitData>;
 type IExecutePrevActionJobData = IJobData<{ query: any }>;
 
 const triggerHandlerWorker = async (job: Job<ITriggerJobData>) => {
+  console.log('fucking shit');
   const { subdomain, data } = job?.data ?? {};
   const models = await generateModels(subdomain);
   console.info('Initialized databases');

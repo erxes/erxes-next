@@ -1,6 +1,7 @@
 import {
   IAction,
   IAutomationExecutionDocument,
+  splitType,
 } from 'erxes-api-shared/core-modules';
 import { sendWorkerQueue } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
@@ -14,7 +15,10 @@ import {
   sendMessage,
 } from './utils';
 
-export const checkMessageTrigger = async (subdomain, { target, config }) => {
+export const checkMessageTrigger = async (
+  subdomain: string,
+  { target, config },
+) => {
   const { conditions = [], botId } = config;
 
   if (target.botId !== botId) {
@@ -85,11 +89,11 @@ export const actionCreateMessage = async (
     _id: executionId,
   } = execution || {};
   const { config } = action || {};
+  const [_pluginName, moduleName, collectionType] = splitType(triggerType);
 
   if (
-    !['facebook:messages', 'facebook:comments', 'facebook:ads'].includes(
-      triggerType,
-    )
+    moduleName !== 'facebook' &&
+    !['messages', 'comments', 'ads'].includes(triggerType)
   ) {
     throw new Error('Unsupported trigger type');
   }
@@ -101,7 +105,7 @@ export const actionCreateMessage = async (
     senderId,
     recipientId,
     botId,
-  } = await getData(models, subdomain, triggerType, target, triggerConfig);
+  } = await getData(models, subdomain, collectionType, target, triggerConfig);
 
   let result: any[] = [];
 

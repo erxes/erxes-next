@@ -77,12 +77,14 @@ export interface AutomationConfigs {
   receiveActions?: (
     context: IContext,
     args: {
-      moduleName: string;
-      collectionType: string;
-      actionType: string;
-      triggerType: string;
-      action: IAction;
-      execution: IAutomationExecution;
+      data: {
+        moduleName: string;
+        collectionType: string;
+        actionType: string;
+        triggerType: string;
+        action: IAction;
+        execution: IAutomationExecution;
+      };
     },
   ) => Promise<any>;
 
@@ -91,12 +93,14 @@ export interface AutomationConfigs {
   checkCustomTrigger?: <TTarget = any, TConfig = any>(
     context: IContext,
     args: {
-      moduleName: string;
-      collectionType: string;
-      automationId: string;
-      trigger: ITrigger;
-      target: TTarget;
-      config: TConfig;
+      data: {
+        moduleName: string;
+        collectionType: string;
+        automationId: string;
+        trigger: ITrigger;
+        target: TTarget;
+        config: TConfig;
+      };
     },
   ) => Promise<any>;
 }

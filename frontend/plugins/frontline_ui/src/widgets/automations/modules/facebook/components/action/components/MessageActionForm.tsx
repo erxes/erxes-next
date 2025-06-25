@@ -37,9 +37,11 @@ import {
 } from '../states/replyMessageActionForm';
 import { MessageActionTypeNames } from '../types/messageActionForm';
 import { CSS } from '@dnd-kit/utilities';
-import { AutomationActionFormProps } from 'ui-modules';
+import {
+  AutomationActionFormProps,
+  generateAutomationElementId,
+} from 'ui-modules';
 import { FacebookInputMessage } from '~/widgets/automations/modules/facebook/components/action/components/FacebookInputMessage';
-import { nanoid } from 'nanoid';
 
 export const MessageActionForm = ({
   currentAction,
@@ -64,7 +66,7 @@ export const MessageActionForm = ({
 
     setValue('messages', [
       ...messages,
-      { _id: nanoid(), type, ...initialValues },
+      { _id: generateAutomationElementId(), type, ...initialValues },
     ]);
   };
 

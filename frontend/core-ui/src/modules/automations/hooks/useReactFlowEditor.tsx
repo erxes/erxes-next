@@ -77,8 +77,10 @@ export const useReactFlowEditor = ({
   const onConnect = useCallback(
     (params: Connection) => {
       const source = nodes.find((node) => node.id === params.source);
+      console.log({ source });
       setEdges((eds) => {
         const updatedEdges = addEdge({ ...params }, eds);
+        console.log({ updatedEdges });
 
         onConnection(generateConnect(params, source));
 

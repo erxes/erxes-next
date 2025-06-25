@@ -8,6 +8,8 @@ import { MessageActionForm } from './action/components/MessageActionForm';
 import { MessageTriggerForm } from './trigger/components/MessageTriggerForm';
 import { TriggerConfigContent } from './trigger/components/TriggerConfigContent';
 import { AutomationBotsRecordTable } from './bots/components/automationBotsRecordTable';
+import { AutomationHistoryName } from '~/widgets/automations/modules/facebook/components/AutomationHistoryName';
+import { AutomationHistoryResult } from '~/widgets/automations/modules/facebook/components/AutomationHistoryResult';
 
 export const FacebookRemoteEntry = (props: AutomationRemoteEntryProps) => {
   const { componentType = '' } = props;
@@ -37,7 +39,19 @@ export const FacebookRemoteEntry = (props: AutomationRemoteEntryProps) => {
         />
       );
     case 'automationBotsContent':
-      return <AutomationBotsRecordTable {...props} />;
+      return <AutomationBotsRecordTable />;
+    case 'historyName':
+      return (
+        <AutomationHistoryName
+          {...(props as AutomationRemoteEntryTypes['HistoryName'])}
+        />
+      );
+    case 'historyActionResult':
+      return (
+        <AutomationHistoryResult
+          {...(props as AutomationRemoteEntryTypes['ActionResult'])}
+        />
+      );
 
     default:
       return null;

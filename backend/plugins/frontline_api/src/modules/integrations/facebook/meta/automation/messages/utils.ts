@@ -291,7 +291,7 @@ export const sendMessage = async (
 export const getData = async (
   models: IModels,
   subdomain: string,
-  triggerType: string,
+  collectionType: string,
   target: any,
   config: any,
 ): Promise<{
@@ -303,7 +303,7 @@ export const getData = async (
   senderId: string;
   botId: string;
 }> => {
-  if (triggerType === 'facebook:comments') {
+  if (collectionType === 'comments') {
     const { senderId, recipientId, erxesApiId } = target;
 
     const { botId } = config;
@@ -319,7 +319,7 @@ export const getData = async (
 
     if (!customer) {
       throw new Error(
-        `Error occurred during send message with trigger type ${triggerType}`,
+        `Error occurred during send message with trigger type ${collectionType}`,
       );
     }
     const integration = await models.FacebookIntegrations.findOne({
@@ -328,7 +328,7 @@ export const getData = async (
 
     if (!integration) {
       throw new Error(
-        `Error occurred during send message with trigger type ${triggerType}`,
+        `Error occurred during send message with trigger type ${collectionType}`,
       );
     }
 

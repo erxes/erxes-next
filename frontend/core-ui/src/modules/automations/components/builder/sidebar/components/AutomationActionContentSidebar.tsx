@@ -6,6 +6,7 @@ import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionC
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { getAutomationTypes } from 'ui-modules';
 import { coreActionNames } from '../../nodes/actions/CoreActions';
+import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 
 export const AutomationActionContentSidebar = () => {
   const {
@@ -43,9 +44,8 @@ export const AutomationActionContentSidebar = () => {
             <ErrorState onRetry={resetErrorBoundary} />
           )}
         >
-          <RenderPluginsComponent
-            pluginName={`${pluginName}_ui`}
-            remoteModuleName="automations"
+          <RenderPluginsComponentWrapper
+            pluginName={pluginName}
             moduleName={moduleName}
             props={{
               componentType: 'actionForm',

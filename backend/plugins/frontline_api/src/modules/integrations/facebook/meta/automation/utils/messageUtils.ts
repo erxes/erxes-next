@@ -15,16 +15,16 @@ export const triggerFacebookAutomation = async (
     adData: any;
   },
 ) => {
-  const target = { ...conversationMessage };
+  const target: any = { ...conversationMessage };
   let executionId;
   let type = 'frontline:facebook.messages';
 
-  // if (payload) {
-  //   target.payload = JSON.parse(payload || "{}");
-  //   if (target?.payload?.executionId) {
-  //     executionId = target.payload.executionId;
-  //   }
-  // }
+  if (payload) {
+    target.payload = JSON.parse(payload || '{}');
+    if (target?.payload?.executionId) {
+      executionId = target.payload.executionId;
+    }
+  }
 
   // if (adData) {
   //   target.adData = adData;

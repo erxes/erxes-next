@@ -1,11 +1,16 @@
+import { isEnabled, RelativeDateDisplay, Table } from 'erxes-ui';
 import {
+  getAutomationTypes,
+  IAction,
   IAutomationHistory,
   IAutomationHistoryAction,
-} from '@/automations/types';
-import { RelativeDateDisplay, Table } from 'erxes-ui';
-import { IAction, ITrigger } from 'ui-modules';
-import { SendEmail } from '../nodes/actions/sendEmail/components/SendEmail';
-import { format } from 'date-fns';
+  ITrigger,
+} from 'ui-modules';
+import { SendEmail } from '@/automations/components/builder/nodes/actions/sendEmail/components/SendEmail';
+import { format, isValid } from 'date-fns';
+import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
+import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
+import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 
 export const generateActionResult = (action: IAutomationHistoryAction) => {
   if (action.actionType === 'delay') {
@@ -37,18 +42,23 @@ export const generateActionResult = (action: IAutomationHistoryAction) => {
     return <SendEmail.ActionResult result={result} />;
   }
 
-  // const Component = renderDynamicComponent(
-  //   {
-  //     action,
-  //     result: action.result,
-  //     componentType: 'historyActionResult'
-  //   },
-  //   action.actionType
-  // );
+  const isCoreAction = coreActionNames.includes(action?.actionType);
 
-  // if (Component) {
-  //   return Component;
-  // }
+  const [pluginName, moduleName] = getAutomationTypes(action?.actionType);
+
+  if (!isCoreAction && isEnabled(pluginName) && moduleName) {
+    return (
+      <RenderPluginsComponentWrapper
+        pluginName={pluginName}
+        moduleName={moduleName}
+        props={{
+          componentType: 'historyActionResult',
+          result: action.result,
+          action,
+        }}
+      />
+    );
+  }
 
   return JSON.stringify(result);
 };
@@ -75,23 +85,21 @@ export const AutomationHistoryByTable = ({
         </Table.Header>
         <Table.Body>
           {actions.map((action) => {
+            const date = action.createdAt ? new Date(action.createdAt) : '';
+            const createdAt = isValid(date)
+              ? format(date, 'yyyy-MM-dd HH:mm:ss')
+              : 'N/A';
+
             return (
               <Table.Row key={action.actionId}>
                 <Table.Cell>
-                  <RelativeDateDisplay.Value
-                    value={
-                      action.createdAt
-                        ? format(
-                            new Date(action.createdAt),
-                            'YYYY-MM-DD HH:mm:ss',
-                          )
-                        : 'N/A'
-                    }
-                  />
+                  <RelativeDateDisplay.Value value={createdAt} />
                 </Table.Cell>
                 <Table.Cell>
                   {actionsConst.find(({ type }) => type === action.actionType)
-                    ?.label || 'Empty'}
+                    ?.label ||
+                    action.actionType ||
+                    'Empty'}
                 </Table.Cell>
                 <Table.Cell className="overflow-x-auto">
                   {generateActionResult(action)}

@@ -3,6 +3,7 @@ import { useDefaultTriggerContent } from '@/automations/components/builder/sideb
 import { SegmentForm } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { NodeData } from '@/automations/types';
+import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 
 type Props = { activeNode: NodeData };
 
@@ -21,17 +22,16 @@ const DefaultTriggerContent = ({ activeNode }: Props) => {
 };
 
 const CustomTriggerContent = ({ activeNode }: Props) => {
-  const { pluginName, moduleName, onSaveTriggerConfig } =
+  const { pluginName, moduleName, activeTrigger, onSaveTriggerConfig } =
     useCustomTriggerContent(activeNode);
 
   return (
-    <RenderPluginsComponent
+    <RenderPluginsComponentWrapper
       pluginName={pluginName}
-      remoteModuleName="automations"
       moduleName={moduleName}
       props={{
         componentType: 'triggerForm',
-        activeTrigger: activeNode,
+        activeTrigger,
         onSaveTriggerConfig,
       }}
     />

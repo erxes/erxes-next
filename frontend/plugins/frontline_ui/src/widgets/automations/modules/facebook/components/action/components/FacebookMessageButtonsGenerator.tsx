@@ -15,7 +15,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { IconGripVertical, IconX } from '@tabler/icons-react';
 import { Button, Card, cn, Input, Label } from 'erxes-ui';
 import { TBotMessageButton } from '../states/replyMessageActionForm';
-import { nanoid } from 'nanoid';
+import { generateAutomationElementId } from 'ui-modules';
 
 export const FacebookMessageButtonsGenerator = ({
   buttons = [],
@@ -23,7 +23,7 @@ export const FacebookMessageButtonsGenerator = ({
   addButtonText = '+ Add button',
   limit,
 }: {
-  buttons: TBotMessageButton[];
+  buttons: { disableRemoveButton?: boolean } & TBotMessageButton[];
   setButtons: (buttons: TBotMessageButton[]) => void;
   addButtonText?: string;
   limit: number;
@@ -46,13 +46,19 @@ export const FacebookMessageButtonsGenerator = ({
       button._id === btn._id ? { ...button, ...btn } : button,
     );
 
-    console.log({ updatedButtons });
-
     setButtons(updatedButtons);
   };
 
   const onAddButton = () =>
-    setButtons([...buttons, { _id: nanoid(), text: '', isEditing: true }]);
+    setButtons([
+      ...buttons,
+      {
+        _id: generateAutomationElementId(),
+        text: '',
+        type: 'button',
+        isEditing: true,
+      },
+    ]);
 
   const onRemovButton = (index: number) => {
     setButtons(buttons.filter((_, buttonIndex) => buttonIndex !== index));
@@ -96,7 +102,7 @@ const FacebookMessageButton = ({
   handleChangeButton,
   onRemovButton,
 }: {
-  button: TBotMessageButton;
+  button: { disableRemoveButton?: boolean } & TBotMessageButton;
   handleChangeButton: (button: TBotMessageButton) => void;
   onRemovButton: () => void;
 }) => {
@@ -192,6 +198,7 @@ const FacebookMessageButton = ({
       <Button
         size="icon"
         variant="destructive"
+        disabled={button.disableRemoveButton}
         aria-label={`Remove button: ${button.text || 'untitled'}`}
         onClick={onRemovButton}
       >

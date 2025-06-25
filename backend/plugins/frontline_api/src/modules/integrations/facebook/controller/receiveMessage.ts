@@ -23,27 +23,30 @@ export const receiveMessage = async (
       `Received message: ${activity.text} from ${activity.from.id}`,
     );
     const { recipient, from, timestamp, channelData } = activity;
+    let { message, postback } = channelData;
     const pageId = recipient.id,
       userId = from.id,
       kind = INTEGRATION_KINDS.MESSENGER,
-      mid = channelData.message?.mid,
+      mid = channelData.message?.mid || postback?.mid,
       attachments = channelData.message?.attachments;
 
-    let { message, postback } = channelData;
     let text = activity.text || message?.text;
     let adData;
 
-    // if (!text && !message && !!postback) {
-    //   text = postback.title;
+    console.log(JSON.stringify(channelData));
 
-    //   message = {
-    //     mid: postback.mid
-    //   };
+    if (!text && !message && !!postback) {
+      text = postback.title;
 
-    //   if (postback.payload) {
-    //     message.payload = postback.payload;
-    //   }
-    // }
+      message = {
+        mid: postback.mid,
+      };
+
+      if (postback.payload) {
+        message.payload = postback.payload;
+      }
+    }
+    console.log({ message });
 
     // if (message.quick_reply) {
     //   message.payload = message.quick_reply.payload;
@@ -67,6 +70,7 @@ export const receiveMessage = async (
 
     const bot = await checkIsBot(models, message, recipient.id);
     const botId = bot?._id;
+    console.log({ botId, bot });
 
     // create conversation
     if (!conversation) {
@@ -96,6 +100,7 @@ export const receiveMessage = async (
       }
       conversation.content = text || '';
     }
+    console.log({ conversation });
 
     const formattedAttachments = (attachments || [])
       .filter((att) => att.type !== 'fallback')
@@ -144,6 +149,7 @@ export const receiveMessage = async (
         mid: mid,
       },
     );
+    console.log({ conversationMessage });
     if (!conversationMessage) {
       try {
         const created = await models.FacebookConversationMessages.create({
@@ -153,6 +159,7 @@ export const receiveMessage = async (
           content: text,
           customerId: customer.erxesApiId,
           attachments: formattedAttachments,
+          botId,
         });
 
         const doc = {
@@ -173,8 +180,13 @@ export const receiveMessage = async (
         );
 
         conversationMessage = created;
+        console.log({ subdomain, fabkjdsvaksdv: 'dasdkasvm' });
 
-        // triggerFacebookAutomation(subdomain,{conversationMessage,payload,adData})
+        await triggerFacebookAutomation(subdomain, {
+          conversationMessage: conversationMessage.toObject(),
+          payload: message?.payload,
+          adData,
+        });
       } catch (e) {
         throw new Error(
           e.message.includes('duplicate')
