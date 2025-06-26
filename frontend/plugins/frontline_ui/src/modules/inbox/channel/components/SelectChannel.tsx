@@ -200,7 +200,7 @@ export const SelectChannelFilterView = () => {
   return (
     <Filter.View filterKey="channelId">
       <SelectChannelProvider
-        value={channelId || []}
+        value={channelId || ''}
         onValueChange={(value) => {
           setChannelId(value as string);
           resetFilterState();
@@ -209,39 +209,6 @@ export const SelectChannelFilterView = () => {
         <SelectChannelsContent />
       </SelectChannelProvider>
     </Filter.View>
-  );
-};
-
-export const SelectChannelBar = () => {
-  const [channelId, setChannelId] = useQueryState<string>('channelId');
-  const [open, setOpen] = useState(false);
-
-  return (
-    <Filter.BarItem>
-      <SelectChannelProvider
-        value={channelId || []}
-        onValueChange={(value) => {
-          if (value.length > 0) {
-            setChannelId(value as string);
-          } else {
-            setChannelId(null);
-          }
-          setOpen(false);
-        }}
-      >
-        <Popover open={open} onOpenChange={setOpen}>
-          <Popover.Trigger asChild>
-            <Filter.BarButton filterKey="channelId" className="rounded-l">
-              <SelectChannelsValue />
-            </Filter.BarButton>
-          </Popover.Trigger>
-          <Combobox.Content>
-            <SelectChannelsContent />
-          </Combobox.Content>
-        </Popover>
-      </SelectChannelProvider>
-      <Filter.BarClose filterKey="channelId" />
-    </Filter.BarItem>
   );
 };
 
@@ -307,6 +274,5 @@ export const SelectChannel = {
   FormItem: SelectChannelsFormItem,
   FilterItem: SelectChannelFilterItem,
   FilterView: SelectChannelFilterView,
-  Bar: SelectChannelBar,
   FilterBar: SelectChannelFilterBar,
 };
