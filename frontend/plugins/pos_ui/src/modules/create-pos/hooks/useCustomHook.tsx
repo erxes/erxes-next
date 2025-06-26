@@ -112,6 +112,9 @@ export const usePosCreateHandlers = ({
             ? [forms.permission.getValues().cashierTeamMember]
             : [],
         },
+        product: forms.product.getValues(),
+        payment: forms.payment.getValues(),
+        ...(forms.uiConfig && { uiConfig: forms.uiConfig.getValues() }),
         ...(forms.financeConfig && { financeConfig: forms.financeConfig.getValues() }),
         ...(forms.deliveryConfig && { deliveryConfig: forms.deliveryConfig.getValues() }),
       };
