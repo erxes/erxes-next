@@ -61,7 +61,7 @@ export default function AppearanceForm({
         showLogo: true,
       });
     }
-  }, [posDetail, form]);
+  }, [posDetail]);
 
   const handleSubmit = async (data: AppearanceFormData) => {
     if (onSubmit) {
