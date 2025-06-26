@@ -87,7 +87,6 @@ export default function ProductForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="p-3">
         <div className="space-y-8">
-          {/* Product Details */}
           <section className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               PRODUCT DETAILS
@@ -216,7 +215,6 @@ export default function ProductForm({
             )}
           </section>
 
-          {/* Initial Categories */}
           <section className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               INITIAL PRODUCT CATEGORIES
@@ -256,7 +254,6 @@ export default function ProductForm({
             />
           </section>
 
-          {/* Kiosk Exclude */}
           <section className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               KIOSK EXCLUDE PRODUCTS
@@ -331,7 +328,6 @@ export default function ProductForm({
             </div>
           </section>
 
-          {/* Category Mappings */}
           <section className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               PRODUCT & CATEGORY MAPPING
@@ -470,7 +466,6 @@ export default function ProductForm({
             )}
           </section>
 
-          {/* Check Exclude Categories */}
           <section className="space-y-4">
             <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
               CHECK EXCLUDE CATEGORIES

@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { PermissionFormValues, permissionSchema } from '../formSchema';
 import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { IPosDetail } from '@/pos-detail/types/IPos';
-import { IPosDetail } from '@/pos-detail/types/IPos';
 
 interface PermissionFormProps {
   form?: UseFormReturn<PermissionFormValues>;
