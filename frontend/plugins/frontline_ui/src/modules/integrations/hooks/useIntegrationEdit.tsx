@@ -19,10 +19,6 @@ export const useIntegrationEditField = (
     options: MutationFunctionOptions,
     skip = false,
   ) => {
-    console.log({
-      ...cellData,
-      ...options.variables,
-    });
     if (skip) return;
 
     editIntegration({

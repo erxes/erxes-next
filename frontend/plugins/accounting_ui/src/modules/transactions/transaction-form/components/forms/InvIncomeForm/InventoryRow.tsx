@@ -1,4 +1,6 @@
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
+import { JournalEnum } from '@/settings/account/types/Account';
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import {
   Checkbox,
   cn,
@@ -12,14 +14,12 @@ import {
   RecordTablePopover,
   Table,
 } from 'erxes-ui';
-import { useWatch } from 'react-hook-form';
-import { SelectProduct } from 'ui-modules';
-import { JournalEnum } from '@/settings/account/types/Account';
 import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
+import { useWatch } from 'react-hook-form';
+import { SelectProduct } from 'ui-modules';
 import { taxPercentsState } from '../../../states/trStates';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 
 export const InventoryRow = ({
   detailIndex,

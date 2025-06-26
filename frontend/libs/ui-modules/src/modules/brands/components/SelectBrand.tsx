@@ -14,7 +14,7 @@ import {
 import { useBrands } from '../hooks/useBrands';
 import { IBrand } from '../types/brand';
 import { useDebounce } from 'use-debounce';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   SelectBrandContext,
   useSelectBrandContext,
