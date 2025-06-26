@@ -9,7 +9,7 @@ export interface ICustomerInline {
   avatar?: string;
 }
 export interface ICustomer extends ICustomerInline {
-  type: CustomerType;
+  type?: CustomerType;
   links?: object;
   code?: string;
   emailValidationStatus?: 'valid' | 'invalid';

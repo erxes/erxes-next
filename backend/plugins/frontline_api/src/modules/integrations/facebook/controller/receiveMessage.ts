@@ -7,6 +7,10 @@ import { debugFacebook } from '@/integrations/facebook/debuggers';
 import { Activity } from '@/integrations/facebook/@types/utils';
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
+import {
+  checkIsBot,
+  triggerFacebookAutomation,
+} from '@/integrations/facebook/meta/automation/utils/messageUtils';
 
 export const receiveMessage = async (
   models: IModels,
@@ -18,12 +22,32 @@ export const receiveMessage = async (
     debugFacebook(
       `Received message: ${activity.text} from ${activity.from.id}`,
     );
-    const { recipient, from, timestamp, text, channelData } = activity;
+    const { recipient, from, timestamp, channelData } = activity;
     const pageId = recipient.id,
       userId = from.id,
       kind = INTEGRATION_KINDS.MESSENGER,
       mid = channelData.message?.mid,
       attachments = channelData.message?.attachments;
+
+    let { message, postback } = channelData;
+    let text = activity.text || message?.text;
+    let adData;
+
+    // if (!text && !message && !!postback) {
+    //   text = postback.title;
+
+    //   message = {
+    //     mid: postback.mid
+    //   };
+
+    //   if (postback.payload) {
+    //     message.payload = postback.payload;
+    //   }
+    // }
+
+    // if (message.quick_reply) {
+    //   message.payload = message.quick_reply.payload;
+    // }
 
     const customer = await getOrCreateCustomer(
       models,
@@ -41,6 +65,9 @@ export const receiveMessage = async (
       recipientId: pageId,
     });
 
+    const bot = await checkIsBot(models, message, recipient.id);
+    const botId = bot?._id;
+
     // create conversation
     if (!conversation) {
       // save on integrations db
@@ -51,6 +78,8 @@ export const receiveMessage = async (
           recipientId: pageId,
           content: text,
           integrationId: integration._id,
+          isBot: !!botId,
+          botId,
         });
       } catch (e) {
         throw new Error(
@@ -59,7 +88,15 @@ export const receiveMessage = async (
             : e,
         );
       }
+    } else {
+      const bot = await models.FacebookBots.findOne({ _id: botId });
+
+      if (bot) {
+        conversation.botId = botId;
+      }
+      conversation.content = text || '';
     }
+
     const formattedAttachments = (attachments || [])
       .filter((att) => att.type !== 'fallback')
       .map((att) => ({
@@ -136,6 +173,8 @@ export const receiveMessage = async (
         );
 
         conversationMessage = created;
+
+        // triggerFacebookAutomation(subdomain,{conversationMessage,payload,adData})
       } catch (e) {
         throw new Error(
           e.message.includes('duplicate')

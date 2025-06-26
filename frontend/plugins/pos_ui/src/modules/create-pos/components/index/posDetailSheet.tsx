@@ -10,7 +10,7 @@ import {
 } from '@tabler/icons-react';
 import { Button, cn, Sheet, Tooltip, useQueryState } from 'erxes-ui';
 import { useAtom } from 'jotai';
-import { isFullscreenAtom, sidebarViewAtom } from '~/modules/slot/states/slot';
+import { isFullscreenAtom, sidebarViewAtom } from '@/slot/states/slot';
 import { posCategoryAtom } from '../../states/posCategory';
 import { renderingPosCreateAtom } from '../../states/renderingPosCreateAtom';
 
@@ -22,7 +22,9 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
   const [sidebarView, setSidebarView] = useAtom(sidebarViewAtom);
   const [isFullscreen, setIsFullscreen] = useAtom(isFullscreenAtom);
   const [tab, setTab] = useQueryState<string>('tab');
-  const [create, setCreate] = useQueryState<boolean>('create', { defaultValue: false });
+  const [create, setCreate] = useQueryState<boolean>('create', {
+    defaultValue: false,
+  });
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -60,7 +62,7 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
       <Sheet.View
         className={cn(
           'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
-          'md:w-[calc(100vw-theme(spacing.4))]'
+          'md:w-[calc(100vw-theme(spacing.4))]',
         )}
       >
         <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">

@@ -1,15 +1,30 @@
 import { useCallback, useRef, useEffect } from 'react';
-import { useNodesState, useEdgesState, addEdge, type Edge, type OnConnect, type OnNodesChange, type NodeChange } from '@xyflow/react';
+import {
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  type Edge,
+  type OnConnect,
+  type OnNodesChange,
+  type NodeChange,
+} from '@xyflow/react';
 import { useAtom } from 'jotai';
 import { useToast } from 'erxes-ui/hooks';
-import { syncSelectedNodeAtom, slotDetailAtom, sidebarViewAtom } from '../states/slot';
-import { usePosSlots } from '~/modules/hooks/usePosSlots';
+import {
+  syncSelectedNodeAtom,
+  slotDetailAtom,
+  sidebarViewAtom,
+} from '../states/slot';
+import { usePosSlots } from '@/hooks/usePosSlots';
 import { CustomNode, TableNodeData } from '../types';
-import { DEFAULT_SLOT_DIMENSIONS, DefaultNode, GRID_LAYOUT } from '~/modules/constants';
+import { DEFAULT_SLOT_DIMENSIONS, DefaultNode, GRID_LAYOUT } from '@/constants';
 
-export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) => {
+export const useSlotManager = (
+  posId: string,
+  initialNodes: CustomNode[] = [],
+) => {
   const { toast } = useToast();
-  
+
   const {
     nodes: hookNodes,
     setNodes: setHookNodes,
@@ -27,9 +42,11 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
     return [DefaultNode];
   };
 
-  const [nodes, setNodes, onNodesChangeInternal] = useNodesState<CustomNode>(getInitialNodes());
+  const [nodes, setNodes, onNodesChangeInternal] = useNodesState<CustomNode>(
+    getInitialNodes(),
+  );
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  
+
   const [selectedNode, setSelectedNode] = useAtom(syncSelectedNodeAtom);
   const [slotDetail, setSlotDetail] = useAtom(slotDetailAtom);
   const [sidebarView, setSidebarView] = useAtom(sidebarViewAtom);
@@ -84,13 +101,21 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
   );
 
   const updateNodePosition = useCallback(
-    (nodeId: string, position: { x: number; y: number }, skipSlotDetailSync = false) => {
+    (
+      nodeId: string,
+      position: { x: number; y: number },
+      skipSlotDetailSync = false,
+    ) => {
       const updateNode = (node: CustomNode) => {
         if (node.id === nodeId) {
           return {
             ...node,
             position,
-            data: { ...node.data, positionX: position.x, positionY: position.y },
+            data: {
+              ...node.data,
+              positionX: position.x,
+              positionY: position.y,
+            },
           };
         }
         return node;
@@ -100,21 +125,39 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
       setHookNodes((nds) => nds.map(updateNode));
 
       if (selectedNode && selectedNode.id === nodeId) {
-        setSelectedNode({ ...selectedNode, position, data: { ...selectedNode.data, positionX: position.x, positionY: position.y } });
+        setSelectedNode({
+          ...selectedNode,
+          position,
+          data: {
+            ...selectedNode.data,
+            positionX: position.x,
+            positionY: position.y,
+          },
+        });
       }
 
       if (!skipSlotDetailSync) {
         syncPositionToSlotDetail(nodeId, position);
       }
     },
-    [setNodes, setHookNodes, selectedNode, setSelectedNode, syncPositionToSlotDetail],
+    [
+      setNodes,
+      setHookNodes,
+      selectedNode,
+      setSelectedNode,
+      syncPositionToSlotDetail,
+    ],
   );
 
   const handleNodesChange: OnNodesChange = useCallback(
     (changes) => {
       onNodesChangeInternal(changes as NodeChange<CustomNode>[]);
       changes.forEach((change) => {
-        if (change.type === 'position' && change.position && change.dragging === false) {
+        if (
+          change.type === 'position' &&
+          change.position &&
+          change.dragging === false
+        ) {
           syncPositionToSlotDetail(change.id, change.position);
         }
       });
@@ -124,7 +167,12 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
 
   const onConnect: OnConnect = useCallback(
     (params) => {
-      setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#5E5CFF' } }, eds));
+      setEdges((eds) =>
+        addEdge(
+          { ...params, animated: true, style: { stroke: '#5E5CFF' } },
+          eds,
+        ),
+      );
       toast({
         title: 'Connection created',
         description: `Connected ${params.source} to ${params.target}`,
@@ -195,8 +243,16 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
       },
     };
 
-    setNodes((nds) => nds.map((node) => node.id === selectedNodeRef.current?.id ? updatedNode : node));
-    setHookNodes((nds) => nds.map((node) => node.id === selectedNodeRef.current?.id ? updatedNode : node));
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === selectedNodeRef.current?.id ? updatedNode : node,
+      ),
+    );
+    setHookNodes((nds) =>
+      nds.map((node) =>
+        node.id === selectedNodeRef.current?.id ? updatedNode : node,
+      ),
+    );
 
     try {
       await hookSaveSlots(posId);
@@ -216,13 +272,24 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
       });
       throw error;
     }
-  }, [slotDetail, setNodes, setHookNodes, setSidebarView, setSelectedNode, toast, hookSaveSlots, posId]);
+  }, [
+    slotDetail,
+    setNodes,
+    setHookNodes,
+    setSidebarView,
+    setSelectedNode,
+    toast,
+    hookSaveSlots,
+    posId,
+  ]);
 
   const handleDeleteSlot = useCallback(
     async (id: string) => {
       hookDeleteSlot(id);
       setNodes((nds) => nds.filter((node) => node.id !== id));
-      setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+      setEdges((eds) =>
+        eds.filter((edge) => edge.source !== id && edge.target !== id),
+      );
 
       if (selectedNodeRef.current && selectedNodeRef.current.id === id) {
         setSelectedNode(null);
@@ -244,7 +311,16 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
         });
       }
     },
-    [hookDeleteSlot, hookSaveSlots, setNodes, setEdges, setSidebarView, setSelectedNode, toast, posId],
+    [
+      hookDeleteSlot,
+      hookSaveSlots,
+      setNodes,
+      setEdges,
+      setSidebarView,
+      setSelectedNode,
+      toast,
+      posId,
+    ],
   );
 
   const handleDuplicateSlot = useCallback(
@@ -345,12 +421,12 @@ export const useSlotManager = (posId: string, initialNodes: CustomNode[] = []) =
     sidebarView,
     slotsLoading,
     hasSlots,
-    
+
     // Actions
     setSelectedNode,
     setSidebarView,
     updateNodePosition,
-    
+
     // Handlers
     handleNodesChange,
     onEdgesChange,

@@ -18,8 +18,14 @@ import {
 import { Link } from 'react-router';
 import { PageHeader } from 'ui-modules';
 import { useAutomationHeader } from './hooks/useAutomationHeader';
+import { Edge, EdgeProps, Node, ReactFlowInstance } from '@xyflow/react';
+import { NodeData } from '@/automations/types';
 
-export const AutomationBuilderHeader = ({ reactFlowInstance }: any) => {
+export const AutomationBuilderHeader = ({
+  reactFlowInstance,
+}: {
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
+}) => {
   const {
     control,
     loading,

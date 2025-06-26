@@ -1,18 +1,17 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { useFormContext } from 'react-hook-form';
-import { ReactFlow, Background, ConnectionMode, Controls } from '@xyflow/react';
+import { IAutomationHistory } from '@/automations/types';
 import {
   generateEdges,
   generateNodes,
 } from '@/automations/utils/automationBuilderUtils';
-import ActionNode from '../nodes/Action';
-import TriggerNode from '../nodes/Trigger';
-import PrimaryEdge from '../edges/primary';
-import { IAction, ITrigger } from 'ui-modules';
-import { IAutomationHistory } from '@/automations/types';
 import { IconCheck, IconQuestionMark, IconX } from '@tabler/icons-react';
-import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
+import { Background, ConnectionMode, Controls, ReactFlow } from '@xyflow/react';
 import dayjs from 'dayjs';
+import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
+import { useWatch } from 'react-hook-form';
+import { IAction, ITrigger } from 'ui-modules';
+import PrimaryEdge from '../edges/PrimaryEdge';
+import ActionNode from '../nodes/ActionNode';
+import TriggerNode from '../nodes/TriggerNode';
 import { generateActionResult } from './AutomationHistoryByTable';
 
 const nodeTypes = {
@@ -62,7 +61,7 @@ const useBeforeTitleContent = (history: IAutomationHistory) => {
               <Icon className="w-4 h-4" />
             </div>
           </Tooltip.Trigger>
-          <Tooltip.Content className="bg-white flex flex-col gap-2">
+          <Tooltip.Content className="bg-foreground flex flex-col gap-2">
             {createdAt && (
               <Label>{dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}</Label>
             )}
@@ -84,9 +83,7 @@ export const AutomationHistoryByFlow = ({
   history: IAutomationHistory;
   constants: { triggersConst: ITrigger[]; actionsConst: IAction[] };
 }) => {
-  const { watch } = useFormContext<TAutomationProps>();
-
-  const { triggers = [], actions = [] } = watch('detail') || {};
+  const { triggers = [], actions = [] } = useWatch({ name: 'detail' }) || {};
 
   const { beforeTitleContent } = useBeforeTitleContent(history);
 

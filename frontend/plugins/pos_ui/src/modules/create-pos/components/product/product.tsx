@@ -6,7 +6,7 @@ import type { UseFormReturn } from 'react-hook-form';
 import { Form, Checkbox, Button, Label } from 'erxes-ui';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import type { ProductFormValues } from '../formSchema';
-import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 import { SelectCategory, SelectProduct } from 'ui-modules';
 import { useMultiSelectToggle } from '../../hooks/useMultiSelector';
 
@@ -87,14 +87,16 @@ export default function ProductForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="p-3">
         <div className="space-y-8">
-          
-          {/* Product Details */}
           <section className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT DETAILS</h2>
-            
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              PRODUCT DETAILS
+            </h2>
+
             <Button
               type="button"
-              onClick={() => !isReadOnly && setShowProductGroups(!showProductGroups)}
+              onClick={() =>
+                !isReadOnly && setShowProductGroups(!showProductGroups)
+              }
               className="hover:bg-indigo-700 text-white flex items-center gap-2"
               disabled={isReadOnly}
             >
@@ -105,8 +107,10 @@ export default function ProductForm({
             {showProductGroups && (
               <div className="space-y-4">
                 {form.watch('productDetails')?.map((_, index) => (
-                  <div key={index} className="grid grid-cols-2 gap-4 p-4 border rounded-md">
-                    
+                  <div
+                    key={index}
+                    className="grid grid-cols-2 gap-4 p-4 border rounded-md"
+                  >
                     <Form.Field
                       control={form.control}
                       name={`productDetails.${index}.productId`}
@@ -161,7 +165,10 @@ export default function ProductForm({
                               id={`required-${index}`}
                               disabled={isReadOnly}
                             />
-                            <Label htmlFor={`required-${index}`} className="text-sm text-gray-500">
+                            <Label
+                              htmlFor={`required-${index}`}
+                              className="text-sm text-gray-500"
+                            >
                               Required
                             </Label>
                           </div>
@@ -190,7 +197,13 @@ export default function ProductForm({
                   <div className="flex justify-end">
                     <Button
                       type="button"
-                      onClick={() => addItem('productDetails', { productId: '', categoryId: '', isRequired: false })}
+                      onClick={() =>
+                        addItem('productDetails', {
+                          productId: '',
+                          categoryId: '',
+                          isRequired: false,
+                        })
+                      }
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
@@ -202,10 +215,11 @@ export default function ProductForm({
             )}
           </section>
 
-          {/* Initial Categories */}
           <section className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">INITIAL PRODUCT CATEGORIES</h2>
-            
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              INITIAL PRODUCT CATEGORIES
+            </h2>
+
             <Form.Field
               control={form.control}
               name="initialCategoryIds"
@@ -218,7 +232,12 @@ export default function ProductForm({
                     <div className="space-y-2">
                       <SelectCategory
                         selected={field.value?.[0]}
-                        onSelect={(categoryId) => toggleMultiSelect('initialCategoryIds', categoryId as string)}
+                        onSelect={(categoryId) =>
+                          toggleMultiSelect(
+                            'initialCategoryIds',
+                            categoryId as string,
+                          )
+                        }
                         disabled={isReadOnly}
                         className="w-full h-10 px-3 text-left justify-between"
                       />
@@ -235,10 +254,11 @@ export default function ProductForm({
             />
           </section>
 
-          {/* Kiosk Exclude */}
           <section className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">KIOSK EXCLUDE PRODUCTS</h2>
-            
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              KIOSK EXCLUDE PRODUCTS
+            </h2>
+
             <div className="grid grid-cols-2 gap-4">
               <Form.Field
                 control={form.control}
@@ -252,7 +272,12 @@ export default function ProductForm({
                       <div className="space-y-2">
                         <SelectCategory
                           selected={field.value?.[0]}
-                          onSelect={(categoryId) => toggleMultiSelect('kioskExcludeCategoryIds', categoryId as string)}
+                          onSelect={(categoryId) =>
+                            toggleMultiSelect(
+                              'kioskExcludeCategoryIds',
+                              categoryId as string,
+                            )
+                          }
                           disabled={isReadOnly}
                           className="w-full h-10 px-3 text-left justify-between"
                         />
@@ -280,7 +305,12 @@ export default function ProductForm({
                       <div className="space-y-2">
                         <SelectProduct
                           value={field.value?.[0]}
-                          onValueChange={(productId) => toggleMultiSelect('kioskExcludeProductIds', productId)}
+                          onValueChange={(productId) =>
+                            toggleMultiSelect(
+                              'kioskExcludeProductIds',
+                              productId,
+                            )
+                          }
                           disabled={isReadOnly}
                           className="w-full h-10 px-3 text-left justify-between"
                         />
@@ -298,11 +328,14 @@ export default function ProductForm({
             </div>
           </section>
 
-          {/* Category Mappings */}
           <section className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">PRODUCT & CATEGORY MAPPING</h2>
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              PRODUCT & CATEGORY MAPPING
+            </h2>
             <p className="text-sm text-gray-500">
-              Map products to categories. When a product within that category is sold with take option, the mapped product will be added to the price.
+              Map products to categories. When a product within that category is
+              sold with take option, the mapped product will be added to the
+              price.
             </p>
 
             <Button
@@ -319,7 +352,6 @@ export default function ProductForm({
               <div className="space-y-4 p-4 border rounded-md">
                 {form.watch('catProdMappings')?.map((mapping, index) => (
                   <div key={index} className="grid grid-cols-2 gap-4">
-                    
                     <Form.Field
                       control={form.control}
                       name={`catProdMappings.${index}.categoryId`}
@@ -373,7 +405,14 @@ export default function ProductForm({
                                       {!isReadOnly && (
                                         <button
                                           type="button"
-                                          onClick={() => field.onChange(field.value.filter((id: string) => id !== productId))}
+                                          onClick={() =>
+                                            field.onChange(
+                                              field.value.filter(
+                                                (id: string) =>
+                                                  id !== productId,
+                                              ),
+                                            )
+                                          }
                                           className="text-red-600 hover:text-red-800"
                                         >
                                           ×
@@ -410,7 +449,12 @@ export default function ProductForm({
                   <div className="flex justify-end">
                     <Button
                       type="button"
-                      onClick={() => addItem('catProdMappings', { categoryId: '', productIds: [] })}
+                      onClick={() =>
+                        addItem('catProdMappings', {
+                          categoryId: '',
+                          productIds: [],
+                        })
+                      }
                       className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <IconPlus size={16} className="mr-1" />
@@ -422,10 +466,11 @@ export default function ProductForm({
             )}
           </section>
 
-          {/* Check Exclude Categories */}
           <section className="space-y-4">
-            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">CHECK EXCLUDE CATEGORIES</h2>
-            
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              CHECK EXCLUDE CATEGORIES
+            </h2>
+
             <Form.Field
               control={form.control}
               name="checkExcludeCategoryIds"
@@ -438,7 +483,12 @@ export default function ProductForm({
                     <div className="space-y-2">
                       <SelectCategory
                         selected={field.value?.[0]}
-                        onSelect={(categoryId) => toggleMultiSelect('checkExcludeCategoryIds', categoryId as string)}
+                        onSelect={(categoryId) =>
+                          toggleMultiSelect(
+                            'checkExcludeCategoryIds',
+                            categoryId as string,
+                          )
+                        }
                         disabled={isReadOnly}
                         className="w-full h-10 px-3 text-left justify-between"
                       />

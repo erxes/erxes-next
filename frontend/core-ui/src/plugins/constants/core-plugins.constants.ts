@@ -18,7 +18,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     icon: IconBookmarks,
     path: 'contacts',
     hasSettings: true,
-    hasWidgets: true,
+    hasRelationWidget: true,
     submenus: [
       {
         name: 'customers',
@@ -52,7 +52,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     icon: IconShoppingCart,
     path: 'products',
     hasSettings: true,
-    hasWidgets: true,
+    hasRelationWidget: true,
     submenus: [
       {
         name: 'categories',
@@ -66,20 +66,20 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     icon: IconChartPie,
     path: 'segments',
     hasSettings: true,
-    hasWidgets: true,
+    hasRelationWidget: true,
   },
   {
     name: 'automations',
     icon: IconAffiliate,
     path: 'automations',
     hasSettings: true,
-    hasWidgets: true,
+    hasRelationWidget: true,
   },
   {
     name: 'logs',
     icon: IconReport,
     path: 'logs',
     hasSettings: true,
-    hasWidgets: true,
+    hasRelationWidget: true,
   },
 ];

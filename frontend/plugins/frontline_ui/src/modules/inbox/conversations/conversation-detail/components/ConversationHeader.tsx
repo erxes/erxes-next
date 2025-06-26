@@ -1,5 +1,5 @@
 import { Button, ScrollArea, Separator, Skeleton, toast } from 'erxes-ui';
-import { CustomerInline, SelectMember, SelectTags } from 'ui-modules';
+import { CustomersInline, SelectMember, SelectTags } from 'ui-modules';
 import { useConversationContext } from '@/inbox/conversations/hooks/useConversationContext';
 import { useAssignConversations } from '@/inbox/conversations/hooks/useAssignConversations';
 import { ConversationActions } from './ConversationActions';
@@ -10,7 +10,7 @@ import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 import { IntegrationActions } from '@/integrations/components/IntegrationActions';
 
 export const ConversationHeader = () => {
-  const { customer, customerId, loading } = useConversationContext();
+  const { customerId, loading } = useConversationContext();
   const [, setConversationId] = useQueryState<string>('conversationId');
   const view = useAtomValue(inboxLayoutState);
 
@@ -29,11 +29,9 @@ export const ConversationHeader = () => {
             </Button>
           )}
           {!loading ? (
-            <CustomerInline
-              customerId={customerId}
-              customer={customer}
+            <CustomersInline
+              customerIds={customerId ? [customerId] : []}
               className="text-sm text-foreground flex-none"
-              avatarProps={{ size: 'lg' }}
             />
           ) : (
             <Skeleton className="w-32 h-4 ml-2" />
@@ -74,7 +72,7 @@ const AssignConversation = () => {
   return (
     <div className="flex items-center gap-2">
       Assigned to:
-      <SelectMember.Detail
+      <SelectMember
         value={assignedUserId}
         onValueChange={handleAssignConversations}
         className="text-foreground"

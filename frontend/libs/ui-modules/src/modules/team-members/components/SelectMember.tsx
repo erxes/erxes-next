@@ -31,13 +31,15 @@ const SelectMemberProvider = ({
   mode = 'single',
   value,
   onValueChange,
+  members,
 }: {
   children: React.ReactNode;
   mode?: 'single' | 'multiple';
   value?: string[] | string;
   onValueChange?: (value: string[] | string) => void;
+  members?: IUser[];
 }) => {
-  const [members, setMembers] = useState<IUser[]>([]);
+  const [_members, setMembers] = useState<IUser[]>(members || []);
   const isSingleMode = mode === 'single';
 
   const onSelect = (member: IUser) => {
@@ -53,7 +55,9 @@ const SelectMemberProvider = ({
       ? arrayValue.filter((id) => id !== member._id)
       : [...arrayValue, member._id];
 
-    setMembers(members.filter((m) => newSelectedMemberIds.includes(m._id)));
+    setMembers((prev) =>
+      [...prev, member].filter((m) => newSelectedMemberIds.includes(m._id)),
+    );
     onValueChange?.(newSelectedMemberIds);
   };
 
@@ -62,10 +66,9 @@ const SelectMemberProvider = ({
       value={{
         memberIds: !value ? [] : Array.isArray(value) ? value : [value],
         onSelect,
-        members,
+        members: _members,
         setMembers,
-        loading: false,
-        error: null,
+        loading: _members.length !== value?.length,
       }}
     >
       {children}
@@ -104,7 +107,6 @@ const SelectMemberCommandItem = ({ user }: { user: IUser }) => {
       }}
     >
       <MembersInline
-        memberIds={memberIds}
         members={[
           {
             ...user,
@@ -180,19 +182,25 @@ export const SelectMemberFilterItem = () => {
 
 export const SelectMemberFilterView = ({
   onValueChange,
+  queryKey,
+  mode = 'single',
 }: {
   onValueChange?: (value: string[] | string) => void;
+  queryKey?: string;
+  mode?: 'single' | 'multiple';
 }) => {
-  const [assignedTo, setAssignedTo] = useQueryState<string[]>('assignedTo');
+  const [assignedTo, setAssignedTo] = useQueryState<string[] | string>(
+    queryKey || 'assignedTo',
+  );
   const { resetFilterState } = useFilterContext();
 
   return (
-    <Filter.View filterKey="assignedTo">
+    <Filter.View filterKey={queryKey || 'assignedTo'}>
       <SelectMemberProvider
-        mode="multiple"
-        value={assignedTo || []}
+        mode={mode}
+        value={assignedTo || (mode === 'single' ? '' : [])}
         onValueChange={(value) => {
-          setAssignedTo(value as string[]);
+          setAssignedTo(value as string[] | string);
           resetFilterState();
           onValueChange?.(value);
         }}
@@ -206,11 +214,17 @@ export const SelectMemberFilterView = ({
 export const SelectMemberFilterBar = ({
   iconOnly,
   onValueChange,
+  queryKey,
+  mode = 'single',
 }: {
   iconOnly?: boolean;
   onValueChange?: (value: string[] | string) => void;
+  queryKey?: string;
+  mode?: 'single' | 'multiple';
 }) => {
-  const [assignedTo, setAssignedTo] = useQueryState<string[]>('assignedTo');
+  const [assignedTo, setAssignedTo] = useQueryState<string[] | string>(
+    queryKey || 'assignedTo',
+  );
   const [open, setOpen] = useState(false);
 
   if (!assignedTo) {
@@ -224,11 +238,11 @@ export const SelectMemberFilterBar = ({
         {!iconOnly && 'Assigned To'}
       </Filter.BarName>
       <SelectMemberProvider
-        mode="multiple"
-        value={assignedTo || []}
+        mode={mode}
+        value={assignedTo || (mode === 'single' ? '' : [])}
         onValueChange={(value) => {
           if (value.length > 0) {
-            setAssignedTo(value as string[]);
+            setAssignedTo(value as string[] | string);
           } else {
             setAssignedTo(null);
           }
@@ -238,7 +252,7 @@ export const SelectMemberFilterBar = ({
       >
         <Popover open={open} onOpenChange={setOpen}>
           <Popover.Trigger asChild>
-            <Filter.BarButton filterKey="assignedTo">
+            <Filter.BarButton filterKey={queryKey || 'assignedTo'}>
               <SelectMemberValue />
             </Filter.BarButton>
           </Popover.Trigger>
@@ -247,7 +261,7 @@ export const SelectMemberFilterBar = ({
           </Combobox.Content>
         </Popover>
       </SelectMemberProvider>
-      <Filter.BarClose filterKey="assignedTo" />
+      <Filter.BarClose filterKey={queryKey || 'assignedTo'} />
     </Filter.BarItem>
   );
 };
@@ -264,7 +278,6 @@ export const SelectMemberInlineCell = ({
     <SelectMemberProvider
       onValueChange={(value) => {
         onValueChange?.(value);
-        setOpen(false);
       }}
       {...props}
     >
@@ -283,9 +296,11 @@ export const SelectMemberInlineCell = ({
 export const SelectMemberFormItem = ({
   onValueChange,
   className,
+  placeholder,
   ...props
 }: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
   className?: string;
+  placeholder?: string;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -299,7 +314,7 @@ export const SelectMemberFormItem = ({
       <Popover open={open} onOpenChange={setOpen}>
         <Form.Control>
           <Combobox.Trigger className={cn('w-full shadow-xs', className)}>
-            <SelectMemberValue />
+            <SelectMemberValue placeholder={placeholder} />
           </Combobox.Trigger>
         </Form.Control>
 
@@ -311,44 +326,16 @@ export const SelectMemberFormItem = ({
   );
 };
 
-export const SelectMemberDetail = React.forwardRef<
-  React.ElementRef<typeof Combobox.Trigger>,
-  Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> &
-    React.ComponentProps<typeof Combobox.Trigger>
->(({ onValueChange, className, mode, value, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectMemberProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      mode={mode}
-      value={value}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <Combobox.Trigger
-          ref={ref}
-          className={cn('w-auto inline-flex', className)}
-          variant="ghost"
-          {...props}
-        >
-          <SelectMember.Value size="lg" />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectMemberContent />
-        </Combobox.Content>
-      </Popover>
-    </SelectMemberProvider>
-  );
-});
-
 export const SelectMemberRoot = ({
   onValueChange,
   className,
+  size,
+  placeholder,
   ...props
 }: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
   className?: string;
+  size?: 'lg';
+  placeholder?: string;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -364,7 +351,7 @@ export const SelectMemberRoot = ({
           className={cn('w-full inline-flex', className)}
           variant="outline"
         >
-          <SelectMemberValue size="lg" />
+          <SelectMemberValue size={size} placeholder={placeholder} />
         </Combobox.Trigger>
         <Combobox.Content>
           <SelectMemberContent />
@@ -383,5 +370,4 @@ export const SelectMember = Object.assign(SelectMemberRoot, {
   FilterBar: SelectMemberFilterBar,
   InlineCell: SelectMemberInlineCell,
   FormItem: SelectMemberFormItem,
-  Detail: SelectMemberDetail,
 });

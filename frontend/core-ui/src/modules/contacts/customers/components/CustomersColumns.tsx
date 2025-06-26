@@ -15,7 +15,6 @@ import {
 import { ColumnDef } from '@tanstack/table-core';
 import {
   Avatar,
-  Badge,
   EmailDisplay,
   EmailListField,
   FullNameField,
@@ -48,18 +47,13 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => {
-      const { firstName, lastName, primaryEmail, primaryPhone } =
-        cell.row.original;
+      const { firstName, lastName } = cell.row.original;
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar size="lg">
             <Avatar.Image src={readFile(cell.getValue() as string)} />
             <Avatar.Fallback>
-              {firstName?.charAt(0) ||
-                lastName?.charAt(0) ||
-                primaryEmail?.charAt(0) ||
-                primaryPhone?.charAt(0) ||
-                '-'}
+              {firstName?.charAt(0) || lastName?.charAt(0) || '-'}
             </Avatar.Fallback>
           </Avatar>
         </div>
@@ -78,76 +72,31 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       const setRenderingCustomerDetail = useSetAtom(
         renderingCustomerDetailAtom,
       );
-      const { firstName, lastName, _id } = cell.row.original;
+      const { firstName = '', lastName = '', _id } = cell.row.original;
       const { customersEdit } = useCustomersEdit();
-      const [_firstName, setFirstName] = useState(firstName);
-      const [_lastName, setLastName] = useState(lastName);
-      const [open, setOpen] = useState(false);
 
-      const onSave = () => {
-        if (_firstName !== firstName || _lastName !== lastName) {
+      const onSave = (first: string, last: string) => {
+        if (first !== firstName || last !== lastName) {
           customersEdit(
-            { variables: { _id, firstName: _firstName, lastName: _lastName } },
+            { variables: { _id, firstName: first, lastName: last } },
             ['firstName', 'lastName'],
           );
         }
       };
 
       return (
-        <RecordTablePopover
+        <FullNameField
           scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Name'}
-          open={open}
-          onOpenChange={(open) => {
-            setOpen(open);
-            if (!open) {
-              onSave();
-            }
+          firstName={firstName}
+          lastName={lastName}
+          onClose={onSave}
+          closeOnEnter
+          onClick={(e) => {
+            e.stopPropagation();
+            setDetailOpen(_id);
+            setRenderingCustomerDetail(false);
           }}
-        >
-          <RecordTableCellTrigger>
-            <Badge
-              variant="secondary"
-              onClick={(e) => {
-                e.stopPropagation();
-                setDetailOpen(_id);
-                setRenderingCustomerDetail(false);
-              }}
-            >
-              {firstName || lastName ? (
-                <span>
-                  {firstName} {lastName}
-                </span>
-              ) : (
-                <span className="text-muted-foreground">Unnamed customer</span>
-              )}
-            </Badge>
-          </RecordTableCellTrigger>
-          <RecordTableCellContent className="w-72" asChild>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                onSave();
-                setOpen(false);
-              }}
-            >
-              <FullNameField>
-                <FullNameField.FirstName
-                  value={_firstName || ''}
-                  onChange={(e) => {
-                    setFirstName(e.target.value);
-                  }}
-                />
-                <FullNameField.LastName
-                  value={_lastName || ''}
-                  onChange={(e) => {
-                    setLastName(e.target.value);
-                  }}
-                />
-              </FullNameField>
-              <button type="submit" className="sr-only" />
-            </form>
-          </RecordTableCellContent>
-        </RecordTablePopover>
+        />
       );
     },
     size: 240,

@@ -17,6 +17,7 @@ import {
 } from 'erxes-ui';
 import { useChannels } from '../hooks/useChannels';
 import { IconTopologyStar3 } from '@tabler/icons-react';
+import { useDebounce } from 'use-debounce';
 
 const SelectChannelProvider = ({
   children,
@@ -36,11 +37,11 @@ const SelectChannelProvider = ({
     if (!channel) {
       return;
     }
-
     if (isSingleMode) {
       setChannels([channel]);
       return onValueChange?.(channel._id);
     }
+
     const arrayValue = Array.isArray(value) ? value : [];
 
     const isChannelSelected = arrayValue.includes(channel._id);
@@ -48,7 +49,9 @@ const SelectChannelProvider = ({
       ? arrayValue.filter((id) => id !== channel._id)
       : [...arrayValue, channel._id];
 
-    setChannels(channels.filter((c) => newSelectedChannelIds.includes(c._id)));
+    setChannels((prev) =>
+      [...prev, channel].filter((c) => newSelectedChannelIds.includes(c._id)),
+    );
     onValueChange?.(newSelectedChannelIds);
   };
 
@@ -68,7 +71,7 @@ const SelectChannelProvider = ({
   );
 };
 
-const SelectChannelsValue = () => {
+const SelectChannelsValue = ({ placeholder }: { placeholder?: string }) => {
   const { channels, channelIds, setChannels } = useSelectChannelContext();
 
   return (
@@ -76,19 +79,26 @@ const SelectChannelsValue = () => {
       channels={channels}
       channelIds={channelIds}
       updateChannels={setChannels}
+      placeholder={placeholder}
     />
   );
 };
 
 export const SelectChannelsContent = () => {
-  const { channelIds, onSelect } = useSelectChannelContext();
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebounce(search, 500);
+  const { onSelect, channels } = useSelectChannelContext();
   const {
     channels: channelsData,
     loading,
     error,
     handleFetchMore,
     channelsTotalCount,
-  } = useChannels();
+  } = useChannels({
+    variables: {
+      searchValue: debouncedSearch,
+    },
+  });
 
   return (
     <Command shouldFilter={false}>
@@ -96,21 +106,40 @@ export const SelectChannelsContent = () => {
         variant="secondary"
         focusOnMount
         placeholder="Search channels"
+        value={search}
+        onValueChange={setSearch}
       />
       <Command.List className="max-h-[300px] overflow-y-auto">
         <Combobox.Empty loading={loading} error={error} />
-        {channelsData && channelsData?.length > 0 && (
+        {channels.length > 0 && (
           <>
-            {channelsData.map((channel) => (
+            {channels.map((channel) => (
               <Command.Item
                 key={channel._id}
                 value={channel._id}
                 onSelect={() => onSelect(channel)}
               >
                 {channel.name}
-                <Combobox.Check checked={channelIds.includes(channel._id)} />
+                <Combobox.Check checked />
               </Command.Item>
             ))}
+            <Command.Separator className="my-1" />
+          </>
+        )}
+
+        {channelsData && channelsData?.length > 0 && (
+          <>
+            {channelsData
+              .filter((channel) => !channels.some((c) => c._id === channel._id))
+              .map((channel) => (
+                <Command.Item
+                  key={channel._id}
+                  value={channel._id}
+                  onSelect={() => onSelect(channel)}
+                >
+                  {channel.name}
+                </Command.Item>
+              ))}
 
             <Combobox.FetchMore
               fetchMore={handleFetchMore}
@@ -216,6 +245,61 @@ export const SelectChannelBar = () => {
   );
 };
 
+export const SelectChannelFilterBar = ({
+  iconOnly,
+  onValueChange,
+  queryKey,
+  mode = 'single',
+}: {
+  iconOnly?: boolean;
+  onValueChange?: (value: string[] | string) => void;
+  queryKey?: string;
+  mode?: 'single' | 'multiple';
+}) => {
+  const [channelId, setChannelId] = useQueryState<string | string[]>(
+    queryKey || 'channelId',
+  );
+  const [open, setOpen] = useState(false);
+
+  if (!channelId) {
+    return null;
+  }
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarName>
+        <IconTopologyStar3 />
+        {!iconOnly && 'Select Channel'}
+      </Filter.BarName>
+      <SelectChannelProvider
+        value={channelId || (mode === 'single' ? '' : [])}
+        mode={mode}
+        onValueChange={(value) => {
+          if (value.length > 0) {
+            setChannelId(value as string[] | string);
+          } else {
+            setChannelId(null);
+          }
+          setOpen(false);
+          onValueChange?.(value);
+        }}
+      >
+        <Popover open={open} onOpenChange={setOpen}>
+          <Popover.Trigger asChild>
+            <Filter.BarButton filterKey={queryKey || 'channelId'}>
+              <SelectChannelsValue />
+            </Filter.BarButton>
+          </Popover.Trigger>
+          <Combobox.Content>
+            <SelectChannelsContent />
+          </Combobox.Content>
+        </Popover>
+      </SelectChannelProvider>
+      <Filter.BarClose filterKey={queryKey || 'channelId'} />
+    </Filter.BarItem>
+  );
+};
+
 export const SelectChannel = {
   Provider: SelectChannelProvider,
   Value: SelectChannelsValue,
@@ -224,4 +308,5 @@ export const SelectChannel = {
   FilterItem: SelectChannelFilterItem,
   FilterView: SelectChannelFilterView,
   Bar: SelectChannelBar,
+  FilterBar: SelectChannelFilterBar,
 };

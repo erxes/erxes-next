@@ -212,7 +212,7 @@ export default startAutomations('core', {
         icon: 'Users',
         label: 'Team member',
         description:
-          'Start with a blank workflow that enralls and is triggered off team members',
+          'Start with a blank workflow that enrolls and is triggered off team members',
       },
       {
         type: 'core:customer',

@@ -1,15 +1,9 @@
-import {
-  AssignMemberItem,
-  AssignMemberList,
-  IUser,
-  MemberListInline,
-} from 'ui-modules';
+import { IUser, SelectMember } from 'ui-modules';
 import { Filter, Input, Popover, useMultiQueryState } from 'erxes-ui';
 import {
   IconCalendarPlus,
   IconProgressCheck,
   IconSourceCode,
-  IconUser,
 } from '@tabler/icons-react';
 
 import { LOGS_COMMON_FILTER_FIELD_NAMES } from '@/logs/constants/logFilter';
@@ -136,36 +130,7 @@ export const LogRecordTableFilterBars = () => {
           <Filter.BarClose filterKey="action" />
         </Filter.BarItem>
       )}
-      {!!userIds?.length && (
-        <Filter.BarItem>
-          <Filter.BarName>
-            <IconUser />
-            User
-          </Filter.BarName>
-          <LogRecordTableFilterBarOperator fieldName="userIds" />
-
-          <Popover>
-            <Popover.Trigger>
-              <Filter.BarButton filterKey="userIds">
-                <MemberListInline memberIds={userIds} />
-              </Filter.BarButton>
-            </Popover.Trigger>
-            <Popover.Content>
-              <AssignMemberList
-                renderItem={(user) => (
-                  <AssignMemberItem
-                    key={user._id}
-                    user={user}
-                    isSelected={(userIds || [])?.includes(user._id)}
-                    handleSelect={handleUserSelect}
-                  />
-                )}
-              />
-            </Popover.Content>
-          </Popover>
-          <Filter.BarClose filterKey="userIds" />
-        </Filter.BarItem>
-      )}
+      {!!userIds?.length && <SelectMember.FilterBar queryKey="userIds" />}
 
       {customFilters.map(({ name, value }) => (
         <Filter.BarItem>

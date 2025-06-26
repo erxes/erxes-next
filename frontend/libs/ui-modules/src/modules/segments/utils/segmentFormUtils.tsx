@@ -11,6 +11,7 @@ import {
 import { Path } from 'react-hook-form';
 import { OPERATORS } from '../constants';
 import { DEFAULT_OPERATORS } from '../constants';
+import { nanoid } from 'nanoid';
 
 export function startCase(str: string) {
   return str
@@ -70,7 +71,7 @@ export const generateParamsSegmentPreviewCount = (
     conditionsForPreview.push({
       type: 'subSegment',
       subSegmentForPreview: {
-        key: Math.random().toString(),
+        key: nanoid(),
         contentType: selectedContentType || '',
         conditionsConjunction,
         conditions: conditions,
@@ -83,7 +84,7 @@ export const generateParamsSegmentPreviewCount = (
       conditionsForPreview.push({
         type: 'subSegment',
         subSegmentForPreview: {
-          key: Math.random().toString(),
+          key: nanoid(),
           ...segment,
           conditions: segment.conditions || [],
         },
