@@ -46,8 +46,6 @@ export const FacebookMessageButtonsGenerator = ({
       button._id === btn._id ? { ...button, ...btn } : button,
     );
 
-    console.log({ updatedButtons });
-
     setButtons(updatedButtons);
   };
 

@@ -99,7 +99,6 @@ export const MessageActionForm = ({
       <div className="p-2 flex justify-end border-t bg-white">
         <Button
           onClick={handleSubmit(onSaveActionConfig, (prop) => {
-            console.log(prop);
             toast({
               title: 'There is some error on field of form',
               variant: 'destructive',
