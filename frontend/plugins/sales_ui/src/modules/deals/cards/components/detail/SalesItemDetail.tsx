@@ -1,8 +1,12 @@
 import { Resizable, Sheet, cn, useQueryState } from 'erxes-ui';
+import {
+  SalesDetailLeftSidebar,
+  SalesDetailTabContent,
+} from './SalesDetailLeftSidebar';
 
 import { IDeal } from '@/deals/types/deals';
+import Overview from './overview/Overview';
 import { SalesDetailActions } from './SalesDetailActions';
-import { SalesDetailLeftSidebar } from './SalesDetailLeftSidebar';
 import { SalesItemDetailHeader } from './SalesItemDetailHeader';
 import { useDealDetail } from '@/deals/cards/hooks/useDeals';
 
@@ -32,7 +36,17 @@ export const SalesItemDetail = () => {
                   className="flex-auto min-h-full overflow-hidden"
                 >
                   <Resizable.Panel>
-                    <SalesDetailLeftSidebar>hi</SalesDetailLeftSidebar>
+                    <SalesDetailLeftSidebar>
+                      <SalesDetailTabContent value="overview">
+                        <Overview />
+                      </SalesDetailTabContent>
+                      <SalesDetailTabContent value="plugins">
+                        hi12
+                      </SalesDetailTabContent>
+                      <SalesDetailTabContent value="properties">
+                        hi34
+                      </SalesDetailTabContent>
+                    </SalesDetailLeftSidebar>
                   </Resizable.Panel>
                   <SalesDetailActions />
                 </Resizable.PanelGroup>

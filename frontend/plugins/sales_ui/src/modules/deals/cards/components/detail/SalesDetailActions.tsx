@@ -7,15 +7,15 @@ import { useAtom, useSetAtom } from 'jotai';
 import React from 'react';
 import { salesDetailActiveActionTabAtom } from '@/deals/states/salesDetailStates';
 import { useDealDetail } from '@/deals/cards/hooks/useDeals';
-import { useWidget } from 'ui-modules';
+import { useRelationWidget } from 'ui-modules';
 import { useWidgetsModules } from '@/widgets/hooks/useWidgetsModules';
 
 export const SalesDetailActions = () => {
   const { deal } = useDealDetail();
-  const contactId = deal?._id;
-  const [activeTab, setActiveTab] = useAtom(salesDetailActiveActionTabAtom);
   const widgetsModules = useWidgetsModules();
-  const { Widget } = useWidget();
+  const { RelationWidget } = useRelationWidget();
+
+  const [activeTab, setActiveTab] = useAtom(salesDetailActiveActionTabAtom);
 
   // return (
   //   <Widget
@@ -62,7 +62,7 @@ export const SalesDetailActions = () => {
               icon={item.icon as any}
               title={item.name}
             >
-              <Widget
+              <RelationWidget
                 module={item}
                 contentId={deal?._id || ''}
                 contentType="core:customer"
