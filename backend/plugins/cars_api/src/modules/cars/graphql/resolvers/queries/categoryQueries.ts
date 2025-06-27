@@ -20,14 +20,11 @@ export const CarCategoryQueries = {
   ) => {
     const filter = await generateFilter(params, commonQuerySelector, models);
 
-    const { list, totalCount, pageInfo } =
-      await cursorPaginate<ICarCategoryDocument>({
-        model: models.CarCategories,
-        params,
-        query: filter,
-      });
-
-    return { list, totalCount, pageInfo };
+    return await cursorPaginate<ICarCategoryDocument>({
+      model: models.CarCategories,
+      params,
+      query: filter,
+    });
   },
 };
 

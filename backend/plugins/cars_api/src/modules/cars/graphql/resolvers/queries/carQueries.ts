@@ -28,7 +28,7 @@ export const generateFilter = async (params, commonQuerySelector, models) => {
 };
 
 export const sortBuilder = (params) => {
-  const sortField = params.sortField;
+  const { sortField } = params;
   const sortDirection = params.sortDirection || 0;
 
   if (sortField) {
@@ -57,13 +57,11 @@ export const carQueries = {
   ) => {
     const filter = await generateFilter(params, commonQuerySelector, models);
 
-    const { list, totalCount, pageInfo } = await cursorPaginate<ICarDocument>({
+    return await cursorPaginate<ICarDocument>({
       model: models.Cars,
       params,
       query: filter,
     });
-
-    return { list, totalCount, pageInfo };
   },
 
   //Cars count

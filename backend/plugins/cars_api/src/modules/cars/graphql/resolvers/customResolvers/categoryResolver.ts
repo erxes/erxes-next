@@ -9,7 +9,7 @@ export default {
     return models.CarCategories.findOne({ _id });
   },
   isRoot: (category: ICarCategoryDocument) => {
-    return category.parentId ? false : true;
+    return !category.parentId;
   },
 
   async carCount(

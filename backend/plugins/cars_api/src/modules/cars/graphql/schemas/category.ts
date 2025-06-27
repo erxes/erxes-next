@@ -1,13 +1,13 @@
 export const types = `
-    type carCategory {
+    type CarCategory {
     name: String
     code: String
     order: String
     parentId: String
     description: String
     image: Attachment
-    secondaryImage: Attachment
-    producCategoryId: String
+    secondaryImages: Attachment
+    productCategoryId: String
     }
 
     type carCategoryListResponse {
@@ -17,7 +17,7 @@ export const types = `
 `;
 
 export const queries = `
-    carCategoryDetail(_id: String!): carCategory
+    carCategoryDetail(_id: String!): CarCategory
     carCategories: carCategoryListResponse
 `;
 
@@ -32,7 +32,7 @@ const mutationParams = `
 `;
 
 export const mutations = `
-    carCategoriesAdd(${mutationParams}): carCategory
-    carCategoriesEdit(_id: String!, ${mutationParams}): carCategory
-    carCategoriesRemove(_id: String!): carCategory
+    carCategoriesAdd(${mutationParams}): CarCategory
+    carCategoriesEdit(_id: String!, ${mutationParams}): CarCategory
+    carCategoriesRemove(_id: String!): CarCategory
 `;

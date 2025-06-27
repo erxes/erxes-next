@@ -7,7 +7,9 @@ export default {
   },
 
   customer: async (car: ICarDocument) => {
-    if (!car?.ownerId) return '';
+    if (!car?.ownerId) {
+      return null;
+    }
 
     return { __typename: 'Customer', _id: car.ownerId };
   },

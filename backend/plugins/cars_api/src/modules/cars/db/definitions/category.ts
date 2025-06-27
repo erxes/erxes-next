@@ -7,8 +7,8 @@ export const categorySchema = schemaWrapper(
   new Schema(
     {
       name: { type: String, label: 'Name', required: true },
-      code: { type: String, label: 'Code', required: true },
-      order: { type: String, label: 'Order', equired: true },
+      code: { type: String, label: 'Code', required: true, unique: true },
+      order: { type: String, label: 'Order', required: true },
       parentId: { type: String, label: 'Parent' },
       description: { type: String, label: 'Description' },
       image: { type: attachmentSchema, label: 'Image' },

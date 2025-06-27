@@ -22,7 +22,7 @@ export const BODY_TYPES = {
   SEDAN: 'sedan',
   SUV: 'suv',
   COMPACT: 'compact',
-  Wagon: 'wagon',
+  WAGON: 'wagon',
   VAN: 'van',
   HATCHBACK: 'hatchback',
   PICKUP: 'pickUp',

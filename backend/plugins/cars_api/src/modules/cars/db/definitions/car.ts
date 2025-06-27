@@ -20,7 +20,7 @@ export const carSchema = schemaWrapper(
         required: true,
         index: true,
       },
-      bodyType: { type: String, label: 'Brand', enum: BODY_TYPES.ALL },
+      bodyType: { type: String, label: 'Body Type', enum: BODY_TYPES.ALL },
       fuelType: { type: String, label: 'Brand', enum: FUEL_TYPES.ALL },
       gearBox: { type: String, label: 'Gear box', enum: GEARBOX.ALL },
       vintageYear: { type: Number, label: 'Vintage year', required: true },

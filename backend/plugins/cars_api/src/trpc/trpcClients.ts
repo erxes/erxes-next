@@ -12,9 +12,7 @@ export const coreTRPCClient = async (): Promise<
 
   const core = await getPlugin('core');
 
-  const client = createTRPCUntypedClient({
+  return createTRPCUntypedClient({
     links: [httpBatchLink({ url: core.address + '/trpc' })],
   });
-
-  return client;
 };
