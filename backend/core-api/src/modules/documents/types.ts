@@ -24,4 +24,6 @@ export interface IDocumentFilterQueryParams
   limit: number;
   contentType: string;
   subType?: string;
+  userIds?: string;
+  dateFilters?: string;
 }

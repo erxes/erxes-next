@@ -6,10 +6,11 @@ import {
   sendTRPCMessage,
 } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
+import { documents } from '~/meta/documents';
 import { IDocumentDocument, IDocumentFilterQueryParams } from '../types';
 
 const generateFilter = (params: IDocumentFilterQueryParams) => {
-  const { searchValue, contentType, subType } = params;
+  const { searchValue, contentType, subType, userIds, dateFilters } = params;
 
   const filter: any = {};
 
@@ -29,6 +30,30 @@ const generateFilter = (params: IDocumentFilterQueryParams) => {
     filter.name = new RegExp(`.*${searchValue}.*`, 'i');
   }
 
+  if (dateFilters) {
+    const dateFilter = JSON.parse(dateFilters);
+
+    for (const [key, value] of Object.entries(dateFilter)) {
+      const { gte, lte } = (value || {}) as { gte?: string; lte?: string };
+
+      if (gte || lte) {
+        filter[key] = {};
+
+        if (gte) {
+          filter[key]['$gte'] = gte;
+        }
+
+        if (lte) {
+          filter[key]['$lte'] = lte;
+        }
+      }
+    }
+  }
+
+  if (userIds?.length) {
+    filter.createdUserId = { $in: userIds };
+  }
+
   return filter;
 };
 
@@ -39,6 +64,8 @@ export const documentQueries = {
     { models }: IContext,
   ) => {
     const filter = generateFilter(params);
+
+    console.log('filter', filter);
 
     const { list, pageInfo, totalCount } =
       await cursorPaginate<IDocumentDocument>({
@@ -58,7 +85,7 @@ export const documentQueries = {
     return models.Documents.findOne({ _id });
   },
 
-  documentsGetContentTypes: async () => {
+  documentsTypes: async () => {
     const services = await getPlugins();
 
     const fieldTypes: Array<{
@@ -77,7 +104,7 @@ export const documentQueries = {
         for (const type of types) {
           fieldTypes.push({
             label: type.label,
-            contentType: `${type.type}`,
+            contentType: type.contentType,
             subTypes: type.subTypes,
           });
         }
@@ -90,15 +117,15 @@ export const documentQueries = {
   documentsGetEditorAttributes: async (
     _parent: undefined,
     { contentType }: { contentType: string },
-    { subdomain }: IContext,
+    { models, subdomain }: IContext,
   ) => {
-    const [serviceName, type] = contentType.split(':');
+    const [serviceName] = contentType.split(':');
 
-    // const editorAttributes = common.editorAttributes[type];
+    const editorAttributes = documents.editorAttributes;
 
-    // if (editorAttributes) {
-    //   return await editorAttributes({ subdomain, data: { contentType } });
-    // }
+    if (editorAttributes) {
+      return await editorAttributes(models, subdomain, contentType);
+    }
 
     return await sendTRPCMessage({
       pluginName: serviceName,
