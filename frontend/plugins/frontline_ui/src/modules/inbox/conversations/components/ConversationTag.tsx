@@ -7,7 +7,7 @@ export const ConversationTag = ({
 }) => {
   return (
     <SelectTags.Detail
-      tagType="inbox:conversation"
+      tagType="frontline:conversation"
       targetIds={conversationIds}
     />
   );

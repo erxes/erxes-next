@@ -1,11 +1,12 @@
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
-import { Checkbox, RecordTableHotkeyProvider, Table, useSetHotkeyScope } from 'erxes-ui';
-import { useRef } from 'react';
-import { useFieldArray, useWatch } from 'react-hook-form';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { AddDetailRowButton } from './AddInventoryRow';
+import { AddInventoryRowButton } from './AddInventoryRow';
 import { InventoryRow } from './InventoryRow';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
 import { RemoveButton } from './RemoveButton';
+import { useFieldArray, useWatch } from 'react-hook-form';
+import { useRef } from 'react';
+// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
 
 export const InventoryForm = ({
   form,
@@ -14,12 +15,10 @@ export const InventoryForm = ({
   form: ITransactionGroupForm;
   journalIndex: number;
 }) => {
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `trDocs.${journalIndex}.details`,
   });
-  const setHotkeyScope = useSetHotkeyScope()
-
   const tableRef = useRef<HTMLTableElement>(null);
 
   const columnsLength =
@@ -35,7 +34,6 @@ export const InventoryForm = ({
       <Table
         className="mt-5 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar"
         ref={tableRef}
-        onClickCapture={() => setHotkeyScope(AccountingHotkeyScope.TransactionFormPage)}
       >
         <InventoryTableHeader form={form} journalIndex={journalIndex} />
         <Table.Body className="overflow-hidden">
@@ -52,12 +50,12 @@ export const InventoryForm = ({
           <tr>
             <td colSpan={columnsLength} className="p-4">
               <div className="flex w-full justify-center gap-4">
-                <AddDetailRowButton
+                <AddInventoryRowButton
                   append={append}
                   form={form}
                   journalIndex={journalIndex}
                 />
-                <RemoveButton form={form} journalIndex={journalIndex} />
+                <RemoveButton remove={remove} fields={fields} />
               </div>
             </td>
           </tr>
@@ -82,21 +80,8 @@ const InventoryTableHeader = ({
   return (
     <Table.Header>
       <Table.Row>
-        <Table.Head className='w-10'>
-          <div className="flex items-center justify-center">
-            <Checkbox
-              checked={!trDoc.details.filter(d => !d.checked).length}
-              onCheckedChange={(checked) => {
-                trDoc.details.forEach((_d, ind) => {
-                  form.setValue(
-                    `trDocs.${journalIndex}.details.${ind}.checked`,
-                    !!checked,
-                  );
-                });
-              }}
-            />
-          </div>
-        </Table.Head>
+        {/* <InventoryHeaderCheckbox /> */}
+        {/* <Table.Head></Table.Head> */}
         <Table.Head>Account</Table.Head>
         <Table.Head>Inventory</Table.Head>
         <Table.Head>Quantity</Table.Head>

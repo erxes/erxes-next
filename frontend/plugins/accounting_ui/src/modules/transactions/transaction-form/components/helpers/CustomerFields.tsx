@@ -2,7 +2,7 @@ import { Form, Select } from 'erxes-ui';
 import { ITransactionGroupForm } from '../../types/JournalForms';
 import {
   CustomerType,
-  SelectCustomer,
+  SelectCustomers,
   SelectCompany,
   SelectMember,
 } from 'ui-modules';
@@ -18,7 +18,7 @@ export const CustomerFields = ({
 
   const SelectComponent =
     customerType === CustomerType.CUSTOMER
-      ? SelectCustomer.FormItem
+      ? SelectCustomers.FormItem
       : customerType === CustomerType.COMPANY
       ? SelectCompany
       : SelectMember.FormItem;

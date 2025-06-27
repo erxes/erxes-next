@@ -23,7 +23,7 @@ export const TagsFilterView = ({ tagType }: { tagType: string }) => {
   const { resetFilterState } = useFilterContext();
   return (
     <Filter.View filterKey="tags">
-      <SelectTags.Provider
+      <SelectTags
         tagType={tagType}
         mode="multiple"
         value={tags || []}
@@ -33,7 +33,7 @@ export const TagsFilterView = ({ tagType }: { tagType: string }) => {
         }}
       >
         <SelectTags.Content />
-      </SelectTags.Provider>
+      </SelectTags>
     </Filter.View>
   );
 };
@@ -52,7 +52,7 @@ const TagsFilterBar = ({ tagType }: { tagType: string }) => {
         <IconTags />
         Tags
       </Filter.BarName>
-      <SelectTags.Provider
+      <SelectTags
         tagType={tagType}
         value={tags || []}
         mode="multiple"
@@ -73,7 +73,7 @@ const TagsFilterBar = ({ tagType }: { tagType: string }) => {
             <SelectTags.Content />
           </Combobox.Content>
         </Popover>
-      </SelectTags.Provider>
+      </SelectTags>
       <Filter.BarClose filterKey="tags" />
     </Filter.BarItem>
   );

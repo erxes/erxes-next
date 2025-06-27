@@ -4,8 +4,8 @@ import ReactJson from 'react-json-view';
 import { maskFields } from '../utils/logFormUtils';
 import { ILogDoc } from '../types';
 
-export const GraphqlLogDetailContent = ({ payload, createdAt }: ILogDoc) => {
-  const { mutationName, args, result, error } = payload || {};
+const graphql = ({ payload, createdAt }: ILogDoc) => {
+  const { mutationName, args, result, error } = payload;
 
   const res = error ? error : result;
 
@@ -45,3 +45,5 @@ export const GraphqlLogDetailContent = ({ payload, createdAt }: ILogDoc) => {
     </>
   );
 };
+
+export default graphql;

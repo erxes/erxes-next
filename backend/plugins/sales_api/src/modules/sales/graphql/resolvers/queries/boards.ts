@@ -116,7 +116,10 @@ export const boardQueries = {
 
   async salesItemsCountByAssignedUser(
     _root,
-    { pipelineId, stackBy }: { pipelineId: string; stackBy: string },
+    {
+      pipelineId,
+      stackBy,
+    }: { pipelineId: string; type: string; stackBy: string },
     { models }: IContext,
   ) {
     const { Stages, PipelineLabels } = models;
@@ -280,10 +283,21 @@ export const boardQueries = {
 
   async salesBoardLogs(_root, args, { models }: IContext) {
     const { Deals, Stages } = models;
-    const { action, content, contentId } = args;
+    const { action, content, contentType, contentId } = args;
+
+    const type = contentType.split(':')[0];
 
     if (action === 'moved') {
-      const item = await Deals.getDeal(contentId);
+      let item = {};
+
+      switch (type) {
+        case 'deal':
+          item = await Deals.getDeal(contentId);
+          break;
+
+        default:
+          break;
+      }
 
       const { oldStageId, destinationStageId } = content;
 

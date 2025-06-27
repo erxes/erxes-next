@@ -5,7 +5,6 @@ import {
   IconCalendarTime,
   IconDots,
   IconEye,
-  IconRefresh,
   IconTournament,
 } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
@@ -14,12 +13,10 @@ import {
   Badge,
   Button,
   DropdownMenu,
-  PageSubHeader,
   RecordTable,
   RecordTableCellDisplay,
   RelativeDateDisplay,
   Sheet,
-  Skeleton,
   Tabs,
 } from 'erxes-ui';
 import { useState } from 'react';
@@ -130,27 +127,15 @@ export const AutomationHistories = () => {
   const {
     list,
     loading,
-    totalCount,
     triggersConst,
     actionsConst,
     handleFetchMore,
     hasNextPage,
     hasPreviousPage,
-    refetch,
   } = useAutomationHistories();
 
   return (
     <div>
-      <PageSubHeader>
-        <div className="text-muted-foreground font-medium text-sm whitespace-nowrap h-7 leading-7">
-          {totalCount
-            ? `${totalCount} records found`
-            : loading && <Skeleton className="w-20 h-4 inline-block mt-1.5" />}
-        </div>
-        <Button variant="ghost" onClick={() => refetch()}>
-          <IconRefresh />
-        </Button>
-      </PageSubHeader>
       <RecordTable.Provider
         columns={automationHistoriesColumns({ triggersConst, actionsConst })}
         data={list}
@@ -160,6 +145,7 @@ export const AutomationHistories = () => {
         <RecordTable.CursorProvider
           hasPreviousPage={hasPreviousPage}
           hasNextPage={hasNextPage}
+          loading={loading}
           dataLength={list?.length}
           sessionKey={AUTOMATION_HISTORIES_CURSOR_SESSION_KEY}
         >

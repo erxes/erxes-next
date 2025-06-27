@@ -1,24 +1,24 @@
 import { IconX } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
-import { useWatch } from 'react-hook-form';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
 
 export const RemoveButton = ({
-  form,
-  journalIndex
+  remove,
+  fields,
 }: {
-  form: ITransactionGroupForm;
-  journalIndex: number;
+  remove: (index: number | number[]) => void;
+  fields: Array<{ id: string }>;
 }) => {
-  const details = useWatch({
-    control: form.control,
-    name: `trDocs.${journalIndex}.details`,
-  });
+  // const { selectedProducts, setSelectedProducts } = useInventoryContext();
 
-  if (!details.filter(d => d.checked).length) return null;
+  // if (selectedProducts.length === 0) return null;
 
   const handleRemove = () => {
-    form.setValue(`trDocs.${journalIndex}.details`, details.filter(d => !d.checked))
+    //   remove(
+    //     selectedProducts.map((id) =>
+    //       fields.findIndex((product) => product.id === id),
+    //     ),
+    //   );
+    //   setSelectedProducts([]);
   };
 
   return (

@@ -31,22 +31,20 @@ export const GET_USERS = gql`
 `;
 
 export const GET_USERS_GROUP = gql`
-  query usersGroups($searchValue: String, $orderBy: JSON, ${GQL_CURSOR_PARAM_DEFS}) {
-    usersGroups(searchValue: $searchValue, orderBy: $orderBy,${GQL_CURSOR_PARAMS}) {
-      list {
+  query usersGroups($page: Int, $perPage: Int) {
+    usersGroups(page: $page, perPage: $perPage) {
+      _id
+      name
+      description
+      members {
         _id
-        name
-        description
-        members {
-          _id
-          details {
-            fullName
-            avatar
-          }
+        details {
+          fullName
+          avatar
         }
       }
-      ${GQL_PAGE_INFO}
     }
+    usersGroupsTotalCount
   }
 `;
 

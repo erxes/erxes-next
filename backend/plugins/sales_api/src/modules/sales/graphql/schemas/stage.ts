@@ -62,13 +62,13 @@ export const queries = `
     ${queryParams}
   ): [SalesStage]
   salesStageDetail(_id: String!, ${queryParams}): SalesStage
-  salesArchivedStages(pipelineId: String!, search: String): [SalesStage]
+  salesArchivedStages(pipelineId: String!, search: String, page: Int, perPage: Int): [SalesStage]
   salesArchivedStagesCount(pipelineId: String!, search: String): Int
 `;
 
 export const mutations = `
   salesStagesUpdateOrder(orders: [SalesOrderItem]): [SalesStage]
   salesStagesRemove(_id: String!): JSON
-  salesStagesEdit(_id: String!, name: String, status: String): SalesStage
-  salesStagesSortItems(stageId: String!, proccessId: String, sortType: String): String
+  salesStagesEdit(_id: String!, type: String, name: String, status: String): SalesStage
+  salesStagesSortItems(stageId: String!, type: String, proccessId: String, sortType: String): String
 `;

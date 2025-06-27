@@ -2,7 +2,6 @@ import { IModels } from "~/connectionResolvers";
 import { ITransaction, ITransactionDocument } from "../@types/transaction";
 import CurrencyTr from "./currencyTr";
 import TaxTrs from "./taxTrs";
-import { InvIncomeExpenseTrs } from './invIncome';
 
 export const commonUpdate = async (_subdomain: string, models: IModels, doc: ITransaction, oldTr?: ITransactionDocument) => {
   let mainTr: ITransactionDocument | null = null;
@@ -64,12 +63,6 @@ export const commonUpdate = async (_subdomain: string, models: IModels, doc: ITr
       if (taxTrs?.length) {
         for (const taxTr of taxTrs) {
           otherTrs.push(taxTr)
-        }
-      }
-      const expenseTrs = await InvIncomeExpenseTrs(models, transaction)
-      if (expenseTrs?.length) {
-        for (const expenseTr of expenseTrs) {
-          otherTrs.push(expenseTr)
         }
       }
       break;

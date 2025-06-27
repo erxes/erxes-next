@@ -8,13 +8,14 @@ interface TagsField extends SelectTagsProps {
   _id: string;
 }
 
-export const TagsField = ({ _id, tagType, selected }: TagsField) => {
+export const TagsField = ({ _id, tagType, selected, recordId }: TagsField) => {
   const { companiesEdit } = useCompaniesEdit();
   return (
     <SelectTags
       tagType={tagType}
-      value={selected}
-      onValueChange={(tagIds: string[] | string) => {
+      selected={selected}
+      recordId={recordId}
+      onSelect={(tagIds: string[] | string) => {
         companiesEdit(
           {
             variables: { _id, tagIds },

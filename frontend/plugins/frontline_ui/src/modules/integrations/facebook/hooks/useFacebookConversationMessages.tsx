@@ -30,7 +30,6 @@ export const useFacebookConversationMessages = () => {
       limit: FACEBOOK_CONVERSATION_MESSAGES_LIMIT,
     },
     skip: !conversationId,
-    fetchPolicy: 'cache-and-network',
   });
 
   const { facebookConversationMessages } = data || {};
@@ -62,7 +61,6 @@ export const useFacebookConversationMessages = () => {
   };
 
   useEffect(() => {
-    if (!conversationId) return;
     const unsubscribe = subscribeToMore<{
       conversationMessageInserted: IFacebookConversationMessage;
     }>({

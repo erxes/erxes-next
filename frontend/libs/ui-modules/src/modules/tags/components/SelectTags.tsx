@@ -242,17 +242,13 @@ export const TagList = ({
   );
 };
 
-export const SelectTagsValue = ({
-  placeholder,
-}: {
-  placeholder?: string;
-}) => {
+export const SelectTagsValue = () => {
   const { selectedTags, mode } = useSelectTagsContext();
 
   if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
 
   return (
-    <TagList placeholder={placeholder === undefined ? 'Select tags' : placeholder} renderAsPlainText={mode === 'single'} />
+    <TagList placeholder="Select tags" renderAsPlainText={mode === 'single'} />
   );
 };
 
@@ -289,7 +285,7 @@ export const SelectTagsInlineCell = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
-          <SelectTagsValue placeholder=""/>
+          <SelectTagsValue />
         </RecordTableCellTrigger>
         <RecordTableCellContent className="min-w-72">
           <SelectTagsContent />
@@ -374,55 +370,7 @@ export const SelectTagsCommandbarItem = ({
     </SelectTagsProvider>
   );
 };
-
-export const SelectTagsRoot = React.forwardRef<
-  React.ElementRef<typeof Combobox.Trigger>,
-  Omit<React.ComponentProps<typeof SelectTagsProvider>, 'children'> &
-    Omit<
-      React.ComponentPropsWithoutRef<typeof Combobox.Trigger>,
-      'children'
-    > & {
-      scope?: string;
-    }
->(
-  (
-    {
-      onValueChange,
-      scope,
-      targetIds,
-      tagType,
-      value,
-      mode,
-      options,
-      ...props
-    },
-    ref,
-  ) => {
-    const [open, setOpen] = useState(false);
-    return (
-      <SelectTagsProvider
-        onValueChange={(value) => {
-          onValueChange?.(value);
-          setOpen(false);
-        }}
-        {...{ targetIds, tagType, value, mode, options }}
-      >
-        <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-          <Combobox.Trigger ref={ref} {...props}>
-            <SelectTagsValue />
-          </Combobox.Trigger>
-          <Combobox.Content>
-            <SelectTagsContent />
-          </Combobox.Content>
-        </PopoverScoped>
-      </SelectTagsProvider>
-    );
-  },
-);
-SelectTagsRoot.displayName = 'SelectTagsRoot';
-
-export const SelectTags = Object.assign(SelectTagsRoot, {
-  Provider: SelectTagsProvider,
+export const SelectTags = Object.assign(SelectTagsProvider, {
   CommandbarItem: SelectTagsCommandbarItem,
   Content: SelectTagsContent,
   Command: SelectTagsCommand,

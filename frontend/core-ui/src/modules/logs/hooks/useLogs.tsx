@@ -87,14 +87,16 @@ export const useLogs = () => {
     sessionKey: LOGS_CURSOR_SESSION_KEY,
   });
 
-  const { data, loading, error, fetchMore } =
-    useQuery<LogsMainListQueryResponse>(gql(LOGS_MAIN_LIST), {
+  const { data, loading, fetchMore } = useQuery<LogsMainListQueryResponse>(
+    gql(LOGS_MAIN_LIST),
+    {
       variables: {
         filters: generateFilters(searchParams),
         cursor: cursor ?? undefined,
         limit: LOGS_PER_PAGE,
       },
-    });
+    },
+  );
 
   const { list = [], totalCount = 0, pageInfo } = data?.logsMainList || {};
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
@@ -134,7 +136,6 @@ export const useLogs = () => {
     loading,
     list,
     totalCount,
-    error,
     handleFetchMore,
     hasNextPage,
     hasPreviousPage,

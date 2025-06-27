@@ -1,6 +1,6 @@
 import { IconReplaceUser } from '@tabler/icons-react';
 import { Button, Popover } from 'erxes-ui';
-import { SelectMember } from 'ui-modules';
+import { AssignMember } from 'ui-modules';
 import { useAtom } from 'jotai';
 import { selectConversationsState } from '../states/selectConversationsState';
 import { useAssignConversations } from '../hooks/useAssignConversations';
@@ -12,7 +12,7 @@ export const ReplaceAssignee = () => {
   const { assignConversations } = useAssignConversations();
 
   return (
-    <SelectMember
+    <AssignMember
       onValueChange={(value) => {
         assignConversations({
           variables: {
@@ -22,7 +22,13 @@ export const ReplaceAssignee = () => {
           onCompleted: () => setSelectedConversations([]),
         });
       }}
-      placeholder="Select assignee"
-    />
+    >
+      <Popover.Trigger asChild>
+        <Button variant="secondary">
+          <IconReplaceUser />
+          Replace Assignee
+        </Button>
+      </Popover.Trigger>
+    </AssignMember>
   );
 };

@@ -6,48 +6,38 @@ import {
   mergeCursorData,
   validateFetchMore,
   EnumCursorDirection,
+  useNonNullMultiQueryState,
   parseDateRangeFromString,
   ICursorListResponse,
-  useMultiQueryState,
 } from 'erxes-ui';
-import { useSetAtom } from 'jotai';
-import { customerTotalCountAtom } from '@/contacts/states/customerCounts';
-import { useEffect } from 'react';
-import { useIsCustomerLeadSessionKey } from './useCustomerLeadSessionKey';
+import { useLocation } from 'react-router-dom';
+import { ContactsPath } from '@/types/paths/ContactsPath';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/customersCursorSessionKey';
 
 const CUSTOMERS_PER_PAGE = 30;
 
 export const useCustomers = (
   options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
 ) => {
-  const { isLead } = useIsCustomerLeadSessionKey();
-  const setCustomerTotalCount = useSetAtom(customerTotalCountAtom);
-  // Customer Filter implementation
-  const [{ searchValue, tags, created, updated, lastSeen, brand, birthday }] =
-    useMultiQueryState<{
+  const pathname = useLocation().pathname;
+  const { searchValue, tags, created, updated, lastSeen } =
+    useNonNullMultiQueryState<{
       searchValue: string;
       tags: string[];
       created: string;
       updated: string;
       lastSeen: string;
-      brand: string;
-      birthday: string;
-    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen', 'brand', 'birthday']);
-  const { sessionKey } = useIsCustomerLeadSessionKey();
+    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen']);
 
   const { cursor } = useRecordTableCursor({
-    sessionKey,
+    sessionKey: CUSTOMERS_CURSOR_SESSION_KEY,
   });
-  
+
   const customersQueryVariables = {
     limit: CUSTOMERS_PER_PAGE,
-    orderBy: {
-      createdAt: -1,
-    },
     cursor,
     searchValue,
     tagIds: tags,
-    brandIds: [brand],
     dateFilters: JSON.stringify({
       createdAt: {
         gte: parseDateRangeFromString(created)?.from,
@@ -61,12 +51,8 @@ export const useCustomers = (
         gte: parseDateRangeFromString(lastSeen)?.from,
         lte: parseDateRangeFromString(lastSeen)?.to,
       },
-      birthDate: {
-        gte: parseDateRangeFromString(birthday)?.from,
-        lte: parseDateRangeFromString(birthday)?.to,
-      }
     }),
-    type: isLead ? 'lead' : 'customer',
+    type: pathname.includes(ContactsPath.Leads) ? 'lead' : 'customer',
     ...options?.variables,
   };
 
@@ -79,11 +65,6 @@ export const useCustomers = (
   );
 
   const { list: customers, pageInfo, totalCount } = data?.customers || {};
-
-  useEffect(() => {
-    if (!totalCount) return;
-    setCustomerTotalCount(totalCount);
-  }, [totalCount]);
 
   const handleFetchMore = ({
     direction,

@@ -1,9 +1,4 @@
 import { Resizable, useQueryState } from 'erxes-ui';
-import { useAtomValue } from 'jotai';
-import {
-  inboxLayoutState,
-  showConversationsState,
-} from '../states/inboxLayoutState';
 
 export const InboxLayout = ({
   conversations,
@@ -15,8 +10,7 @@ export const InboxLayout = ({
   conversationDetail: React.ReactNode;
 }) => {
   const [conversationId] = useQueryState<string>('conversationId');
-  const inboxLayout = useAtomValue(inboxLayoutState);
-  const showConversations = useAtomValue(showConversationsState);
+  const [showDetailView] = useQueryState('detailView');
 
   return (
     <Resizable.PanelGroup
@@ -24,19 +18,11 @@ export const InboxLayout = ({
       className="flex-1 overflow-hidden"
     >
       <Resizable.Panel minSize={20} defaultSize={30}>
-        {inboxLayout === 'list'
-          ? mainFilters
-          : showConversations
-          ? conversations
-          : mainFilters}
+        {showDetailView ? conversations : mainFilters}
       </Resizable.Panel>
       <Resizable.Handle />
       <Resizable.Panel minSize={20} defaultSize={70}>
-        {inboxLayout === 'split'
-          ? conversationDetail
-          : conversationId
-          ? conversationDetail
-          : conversations}
+        {conversationId || showDetailView ? conversationDetail : conversations}
       </Resizable.Panel>
     </Resizable.PanelGroup>
   );

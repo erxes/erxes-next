@@ -8,13 +8,8 @@ import {
   useQueryState,
 } from 'erxes-ui';
 import { useConversationContext } from '../hooks/useConversationContext';
-import { useIntegrationInline } from '@/integrations/hooks/useIntegrations';
-import {
-  BrandsInline,
-  currentUserState,
-  CustomersInline,
-  TagBadge,
-} from 'ui-modules';
+import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
+import { BrandsInline, currentUserState, CustomerInline } from 'ui-modules';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { activeConversationState } from '../states/activeConversationState';
 import { ConversationIntegrationBadge } from '@/integrations/components/IntegrationBadge';
@@ -23,36 +18,29 @@ import {
   selectConversationsState,
   setSelectConversationsState,
 } from '../states/selectConversationsState';
-import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 
-export const ConversationItem = ({
-  onConversationSelect,
-}: {
-  onConversationSelect: () => void;
-}) => {
-  const inboxLayout = useAtomValue(inboxLayoutState);
+export const ConversationItem = () => {
+  const [conversationId] = useQueryState<string>('conversationId');
+  const [detailView] = useQueryState<boolean>('detailView');
 
-  const { createdAt, updatedAt, customer, integrationId, tagIds } =
+  const { createdAt, updatedAt, customer, integrationId } =
     useConversationContext();
 
-  const { integration } = useIntegrationInline({
+  const { integration } = useIntegrationDetail({
     variables: {
       _id: integrationId,
     },
   });
   const { brandId } = integration || {};
 
-  if (inboxLayout === 'split') {
+  if (conversationId || detailView) {
     return (
-      <ConversationContainer
-        className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer"
-        onConversationSelect={onConversationSelect}
-      >
-        <CustomersInline.Provider customers={customer ? [customer] : []}>
+      <ConversationContainer className="p-4 pl-6 h-auto overflow-hidden flex-col items-start">
+        <CustomerInline.Provider customer={customer}>
           <div className="flex w-full gap-3 leading-tight">
             <ConversationSelector />
             <div className="flex-1 space-y-1 truncate">
-              <CustomersInline.Title className="truncate" />
+              <CustomerInline.Title className="truncate" />
               <div className="font-normal text-accent-foreground text-xs">
                 <BrandsInline
                   brandIds={[brandId || '']}
@@ -61,46 +49,36 @@ export const ConversationItem = ({
               </div>
             </div>
             <div className="ml-auto text-accent-foreground font-medium">
-              {createdAt && (
-                <RelativeDateDisplay.Value value={updatedAt || createdAt} />
-              )}
+              <RelativeDateDisplay.Value value={updatedAt || createdAt} />
             </div>
           </div>
           <ConversationItemContent />
-          {tagIds &&
-            tagIds.length > 0 &&
-            tagIds.map((tagId) => (
-              <TagBadge key={tagId} tagId={tagId} variant="secondary" />
-            ))}
-        </CustomersInline.Provider>
+        </CustomerInline.Provider>
       </ConversationContainer>
     );
   }
 
   return (
-    <ConversationContainer onConversationSelect={onConversationSelect}>
-      <CustomersInline.Provider customers={customer ? [customer] : []}>
+    <ConversationContainer>
+      <CustomerInline.Provider customer={customer}>
         <ConversationSelector />
-        <CustomersInline.Title className="w-56 truncate flex-none text-foreground" />
+        <CustomerInline.Title className="w-56 truncate flex-none text-foreground" />
         <ConversationItemContent />
         <div className="ml-auto font-medium text-accent-foreground w-32 truncate flex-none">
           to <BrandsInline brandIds={[brandId || '']} />
         </div>
         <div className="w-32 text-right flex-none">
-          {createdAt && (
-            <RelativeDateDisplay value={updatedAt || createdAt}>
-              <RelativeDateDisplay.Value value={updatedAt || createdAt} />
-            </RelativeDateDisplay>
-          )}
+          <RelativeDateDisplay value={updatedAt || createdAt}>
+            <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+          </RelativeDateDisplay>
         </div>
-      </CustomersInline.Provider>
+      </CustomerInline.Provider>
     </ConversationContainer>
   );
 };
 
 export const ConversationItemContent = () => {
   const { content } = useConversationContext();
-  if (!content) return null;
   return (
     <div className="truncate w-full h-4 [&_*]:text-sm [&_*]:leading-tight [&_*]:font-medium">
       <BlockEditorReadOnly content={content} />
@@ -111,17 +89,16 @@ export const ConversationItemContent = () => {
 const ConversationContainer = ({
   children,
   className,
-  onConversationSelect,
 }: {
   children: React.ReactNode;
   className?: string;
-  onConversationSelect?: () => void;
 }) => {
   const [{ conversationId }, setValues] = useMultiQueryState<{
     conversationId: string;
-  }>(['conversationId']);
+    detailView: boolean;
+  }>(['conversationId', 'detailView']);
   const setActiveConversation = useSetAtom(activeConversationState);
-  const { loading, integration, ...conversation } = useConversationContext();
+  const conversation = useConversationContext();
   const { _id, readUserIds } = conversation || {};
   const currentUser = useAtomValue(currentUserState);
   const isRead = readUserIds?.includes(currentUser?._id || '');
@@ -140,11 +117,11 @@ const ConversationContainer = ({
       )}
       asChild
       onClick={() => {
-        conversation && setActiveConversation(conversation);
+        setActiveConversation(conversation);
         setValues({
           conversationId: _id,
+          detailView: true,
         });
-        onConversationSelect?.();
       }}
     >
       <div>{children}</div>
@@ -166,7 +143,7 @@ const ConversationSelector = () => {
       <div className="absolute size-full bg-primary/10 rounded-full" />
       <ConversationCheckbox />
       <div className="transition-opacity duration-200 relative opacity-100 group-hover:opacity-0 peer-data-[state=checked]:opacity-0">
-        <CustomersInline.Avatar
+        <CustomerInline.Avatar
           size={conversationId ? 'xl' : 'lg'}
           className=""
         />
@@ -187,7 +164,7 @@ const ConversationCheckbox = () => {
         checked={isChecked}
         className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 z-10"
         onClick={(e) => e.stopPropagation()}
-        onCheckedChange={() => setSelectConversations(_id || '')}
+        onCheckedChange={() => setSelectConversations(_id)}
       />
       <ConversationCheckedEffect
         isChecked={isChecked}
@@ -208,8 +185,8 @@ const ConversationCheckedEffect = ({
   const selectConversations = useAtomValue(selectConversationsState);
 
   useEffect(() => {
-    if (isChecked !== selectConversations.includes(_id || '')) {
-      setIsChecked(selectConversations.includes(_id || ''));
+    if (isChecked !== selectConversations.includes(_id)) {
+      setIsChecked(selectConversations.includes(_id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectConversations]);

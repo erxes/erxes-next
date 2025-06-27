@@ -77,5 +77,5 @@ const commonFields = `
 export const mutations = `
   segmentsAdd(contentType: String!, ${commonFields}): Segment
   segmentsEdit(_id: String!, ${commonFields}): Segment
-  segmentsRemove(_id: String,ids:[String]): JSON
+  segmentsRemove(_id: String!): JSON
 `;

@@ -5,11 +5,10 @@ import { getTempId } from '../components/utils';
 import {
   TBankJournal,
   TCashJournal,
-  TInvIncomeJournal,
-  TInvOutJournal,
-  TMainJournal,
-  TPayableJournal,
   TReceivableJournal,
+  TPayableJournal,
+  TInvIncomeJournal,
+  TMainJournal,
   TTaxJournal,
 } from '../types/JournalForms';
 
@@ -29,7 +28,6 @@ const trDetailWrapper = (detail?: ITrDetail) => {
     accountId: detail?.accountId ?? '',
     side: (detail?.side || TR_SIDES.DEBIT),
     amount: detail?.amount ?? 0,
-    checked: false
   }
 }
 
@@ -143,29 +141,6 @@ export const INV_INCOME_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<T
   }
 };
 
-export const INV_OUT_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TInvOutJournal> => {
-  return {
-    ...trDataWrapper(doc),
-    journal: TrJournalEnum.INV_OUT,
-    details: !doc?.details.length ? [{
-      ...trDetailWrapper(),
-      side: TR_SIDES.DEBIT,
-      productId: '',
-      count: 0,
-      unitPrice: 0,
-      amount: 0,
-    }] : doc?.details.map(det => ({
-      ...trDetailWrapper(det),
-      side: TR_SIDES.CREDIT,
-      productId: det.productId || '',
-      product: det.product,
-      count: det.count ?? 0,
-      unitPrice: det.unitPrice ?? 0,
-      amount: det.amount ?? 0,
-    }))
-  }
-};
-
 export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction | any) => {
   if (!doc) {
     doc = {
@@ -192,9 +167,6 @@ export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction | any) =
 
     case TrJournalEnum.INV_INCOME:
       return INV_INCOME_JOURNAL_DEFAULT_VALUES(doc);
-
-    case TrJournalEnum.INV_OUT:
-      return INV_OUT_JOURNAL_DEFAULT_VALUES(doc);
 
     default: // MAIN
       return MAIN_JOURNAL_DEFAULT_VALUES(doc);

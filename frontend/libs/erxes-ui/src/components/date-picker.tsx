@@ -1,10 +1,11 @@
-import { Calendar, CalendarProps } from './calendar';
-
-import { Combobox } from './combobox';
-import { Popover } from './popover';
 import React from 'react';
-import { cn } from '../lib/utils';
+
 import dayjs from 'dayjs';
+
+import { Calendar, CalendarProps } from './calendar';
+import { Popover } from './popover';
+import { cn } from '../lib/utils';
+import { Combobox } from './combobox';
 
 type DatePickerProps = {
   value: Date | Date[] | undefined;
@@ -12,8 +13,6 @@ type DatePickerProps = {
   placeholder?: string;
   withPresent?: boolean;
   mode?: 'single' | 'multiple';
-  format?: string;
-  variant?: 'outline' | 'default' | 'ghost';
 } & CalendarProps;
 
 export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
@@ -26,8 +25,6 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
       disabled,
       className,
       mode = 'single',
-      format = 'MMM DD, YYYY',
-      variant = 'outline',
       ...props
     },
     ref,
@@ -36,7 +33,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
     const renderButtonContent = () => {
       if (value) {
         if (mode === 'single') {
-          return dayjs(new Date(value as Date)).format(format);
+          return dayjs(new Date(value as Date)).format('MMM DD, YYYY');
         }
 
         if (mode === 'multiple' && Array.isArray(value)) {
@@ -64,7 +61,7 @@ export const DatePicker = React.forwardRef<React.JSX.Element, DatePickerProps>(
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild={true}>
           <Combobox.Trigger
-            variant={variant}
+            variant={'outline'}
             disabled={Boolean(disabled)}
             className={cn(
               !value && 'text-muted-foreground',

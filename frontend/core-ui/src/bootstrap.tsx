@@ -36,14 +36,6 @@ async function initFederation() {
           name: 'accounting_ui',
           entry: 'https://plugins.erxes.io/latest/accounting_ui/remoteEntry.js',
         },
-        {
-          name: 'sales_ui',
-          entry: 'https://plugins.erxes.io/latest/sales_ui/remoteEntry.js',
-        },
-        {
-          name: 'content_ui',
-          entry: 'https://plugins.erxes.io/latest/content_ui/remoteEntry.js',
-        },
       ],
     });
 

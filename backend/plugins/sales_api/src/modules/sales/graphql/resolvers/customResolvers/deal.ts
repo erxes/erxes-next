@@ -13,38 +13,31 @@ export default {
   // async customers() {},
 
   async branches(deal: IDealDocument) {
-    if (!deal.branchIds?.length) {
-      return [];
-    }
-
-    return deal.branchIds.map((branchId) => ({
-      __typename: 'Branch',
-      _id: branchId,
-    }));
+    return await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'branches',
+      action: 'find',
+      input: {
+        query: { _id: { $in: deal.branchIds } },
+      },
+      defaultValue: [],
+    });
   },
-
   async departments(deal: IDealDocument) {
-    if (!deal.departmentIds?.length) {
-      return [];
-    }
-
-    return deal.departmentIds.map((departmentId) => ({
-      __typename: 'Department',
-      _id: departmentId,
-    }));
+    return await sendTRPCMessage({
+      pluginName: 'core',
+      method: 'query',
+      module: 'departments',
+      action: 'find',
+      input: {
+        query: {
+          _id: { $in: deal.departmentIds },
+        },
+      },
+      defaultValue: [],
+    });
   },
-
-  async assignedUsers(deal: IDealDocument) {
-    if (!deal.assignedUserIds?.length) {
-      return [];
-    }
-
-    return deal.assignedUserIds.map((assignedUserId) => ({
-      __typename: 'User',
-      _id: assignedUserId,
-    }));
-  },
-
   async customPropertiesData(deal: IDealDocument) {
     const customFieldsData = (deal?.customFieldsData as any[]) || [];
 
@@ -172,6 +165,35 @@ export default {
 
   async amount(deal: IDealDocument) {
     return generateAmounts(deal.productsData || []);
+  },
+
+  async assignedUsers(
+    deal: IDealDocument,
+    _args: undefined,
+    _context: IContext,
+    { isSubscription },
+  ) {
+    if (isSubscription && deal.assignedUserIds?.length) {
+      return sendTRPCMessage({
+        pluginName: 'core',
+        method: 'query',
+        module: 'users',
+        action: 'find',
+        input: {
+          query: {
+            _id: { $in: deal.assignedUserIds },
+          },
+        },
+        defaultValue: [],
+      });
+    }
+
+    return (deal.assignedUserIds || [])
+      .filter((e) => e)
+      .map((_id) => ({
+        __typename: 'User',
+        _id,
+      }));
   },
 
   async pipeline(deal: IDealDocument, _args: undefined, { models }: IContext) {

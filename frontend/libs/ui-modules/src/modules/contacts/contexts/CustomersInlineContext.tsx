@@ -2,12 +2,11 @@ import { createContext, useContext } from 'react';
 import { ICustomer } from '../types';
 
 export interface ICustomersInlineContext {
-  customers?: ICustomer[];
+  customers: ICustomer[];
   loading: boolean;
   customerIds?: string[];
   placeholder: string;
   updateCustomers?: (customers: ICustomer[]) => void;
-  getCustomerTitle: (customer?: ICustomer) => string;
 }
 
 export const CustomersInlineContext =

@@ -9,6 +9,7 @@ import { followTrDocsState, taxPercentsState } from '../../states/trStates';
 import { ITransactionGroupForm } from '../../types/JournalForms';
 import { ICtaxRow } from '@/settings/ctax/types/CtaxRow';
 import { getTempId } from '../utils';
+import { ITransaction } from '../../../types/Transaction';
 
 export const CtaxForm = ({
   form,
@@ -25,7 +26,7 @@ export const CtaxForm = ({
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`
-  });
+  })
 
   const hasCtax = useWatch({
     control: form.control,
@@ -90,7 +91,7 @@ export const CtaxForm = ({
     const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'ctax');
 
     const ctaxFtr = {
-      ...curr,
+      ...curr || (trDoc as ITransaction),
       _id: curr?._id || getTempId(),
       journal: TrJournalEnum.TAX,
       originId: trDoc._id,

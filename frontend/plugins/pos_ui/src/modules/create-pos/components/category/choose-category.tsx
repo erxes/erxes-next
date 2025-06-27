@@ -7,11 +7,11 @@ import { Button } from 'erxes-ui';
 
 export default function ChooseCategoryPage() {
   const [posCategory, setPosCategory] = useAtom(posCategoryAtom);
-  const [selectedCategory, setSelectedCategory] = useState<"restaurant" | "ecommerce" | "kiosk" | null>(
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
     posCategory || null,
   );
 
-  const handleCategorySelect = (category: "restaurant" | "ecommerce" | "kiosk") => {
+  const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
     setPosCategory(category);
   };

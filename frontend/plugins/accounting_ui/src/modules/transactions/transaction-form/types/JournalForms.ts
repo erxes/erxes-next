@@ -1,18 +1,17 @@
-import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import {
-  invDetailSchema,
-  transactionBankSchema,
-  transactionCashSchema,
   transactionGroupSchema,
-  transactionInvIncomeSchema,
-  transactionInvOutSchema,
   transactionMainSchema,
+  transactionCashSchema,
+  transactionBankSchema,
   transactionPayableSchema,
   transactionReceivableSchema,
   transactionTaxSchema,
+  transactionInvIncomeSchema,
   trDocSchema,
+  invDetailSchema,
 } from '../contants/transactionSchema';
+import { UseFormReturn } from 'react-hook-form';
 
 export type TAddTransactionGroup = z.infer<typeof transactionGroupSchema>;
 export type TTrDoc = z.infer<typeof trDocSchema>
@@ -25,7 +24,6 @@ export type TPayableJournal = z.infer<typeof transactionPayableSchema>;
 export type TTaxJournal = z.infer<typeof transactionTaxSchema>;
 
 export type TInvIncomeJournal = z.infer<typeof transactionInvIncomeSchema>;
-export type TInvOutJournal = z.infer<typeof transactionInvOutSchema>;
 export type TInvDetail = z.infer<typeof invDetailSchema>;
 
 export type ITransactionGroupForm = UseFormReturn<TAddTransactionGroup>;

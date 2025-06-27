@@ -41,11 +41,13 @@ export const stageMutations = {
     _root,
     {
       stageId,
-      proccessId,
+      //   type,
+      //   proccessId,
       sortType,
     }: {
       stageId: string;
-      proccessId: string;
+      //   type: string;
+      //   proccessId: string;
       sortType: string;
     },
     { models }: IContext,

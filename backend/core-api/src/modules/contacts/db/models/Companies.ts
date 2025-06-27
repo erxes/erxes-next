@@ -82,11 +82,9 @@ export const loadCompanyClass = (models: IModels) => {
 
       this.fixListFields(doc, doc.trackedData);
 
-      if (doc.customFieldsData) {
-        doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
-          doc.customFieldsData,
-        );
-      }
+      doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+        doc.customFieldsData,
+      );
 
       const company = await models.Companies.create({
         ...doc,

@@ -68,7 +68,6 @@ export const GET_BRANCHES_MAIN = gql`
         order
         userCount
       }
-      totalCount
       ${GQL_PAGE_INFO}
     }
   }

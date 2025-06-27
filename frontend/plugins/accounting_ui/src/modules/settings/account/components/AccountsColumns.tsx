@@ -2,12 +2,13 @@ import { Cell, ColumnDef } from '@tanstack/react-table';
 import { IAccount, JournalEnum } from '../types/Account';
 import {
   CurrencyCode,
+  InlineCell,
+  InlineCellDisplay,
   ITextFieldContainerProps,
   RecordTable,
   CurrencyField,
   TextField,
   useQueryState,
-  RecordTableCellDisplay,
 } from 'erxes-ui';
 import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
 import { useAccountEdit } from '../hooks/useAccountEdit';
@@ -48,7 +49,7 @@ const AccountTextField = ({
   const { editAccount } = useAccountEdit();
   return (
     <TextField
-      value={value}  
+      value={value}
       scope={`account-${_id}-${field}`}
       onValueChange={(value) => {
         editAccount(
@@ -160,9 +161,13 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     header: () => <RecordTable.InlineHead label="Kind" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          {cell.getValue() as string}
-        </RecordTableCellDisplay>
+        <InlineCell
+          name={cell.column.id}
+          recordId={cell.row.original._id}
+          display={() => (
+            <InlineCellDisplay>{cell.getValue() as string}</InlineCellDisplay>
+          )}
+        />
       );
     },
   },
@@ -172,9 +177,15 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     header: () => <RecordTable.InlineHead label="Journal" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          {JOURNAL_LABELS[cell.getValue() as JournalEnum]}
-        </RecordTableCellDisplay>
+        <InlineCell
+          name={cell.column.id}
+          recordId={cell.row.original._id}
+          display={() => (
+            <InlineCellDisplay>
+              {JOURNAL_LABELS[cell.getValue() as JournalEnum]}
+            </InlineCellDisplay>
+          )}
+        />
       );
     },
   },
@@ -185,9 +196,15 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     size: 80,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          {cell.getValue() ? 'temp' : '-'}
-        </RecordTableCellDisplay>
+        <InlineCell
+          name={cell.column.id}
+          recordId={cell.row.original._id}
+          display={() => (
+            <InlineCellDisplay>
+              {cell.getValue() ? 'temp' : '-'}
+            </InlineCellDisplay>
+          )}
+        />
       );
     },
   },
@@ -198,9 +215,15 @@ export const accountsColumns: ColumnDef<IAccount>[] = [
     size: 80,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          {cell.getValue() ? 'Out' : '-'}
-        </RecordTableCellDisplay>
+        <InlineCell
+          name={cell.column.id}
+          recordId={cell.row.original._id}
+          display={() => (
+            <InlineCellDisplay>
+              {cell.getValue() ? 'Out' : '-'}
+            </InlineCellDisplay>
+          )}
+        />
       );
     },
   },

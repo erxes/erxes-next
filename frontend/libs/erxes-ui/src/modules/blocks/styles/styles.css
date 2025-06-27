@@ -50,7 +50,7 @@
   height: 100%;
 }
 
-.bn-shadcn .bn-editor {
+.bn-shadcn.internal-note .bn-editor {
   background-color: transparent;
 }
 

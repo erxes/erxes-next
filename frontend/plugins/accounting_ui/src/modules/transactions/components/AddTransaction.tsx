@@ -4,7 +4,7 @@ import {
   usePreviousHotkeyScope,
   useScopedHotkeys,
 } from 'erxes-ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TrJournalEnum } from '../types/constants';
 

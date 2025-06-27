@@ -1,4 +1,6 @@
 import { createContext } from 'react';
-import { ISelectUnitContext } from '../types/Unit';
+import { IUnitContext } from '../types/Unit';
 
-export const SelectUnitContext = createContext<ISelectUnitContext | null>(null);
+export const SelectUnitContext = createContext<IUnitContext>(
+  {} as IUnitContext,
+);

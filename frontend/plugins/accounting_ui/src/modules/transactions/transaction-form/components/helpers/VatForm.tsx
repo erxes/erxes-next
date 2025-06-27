@@ -9,6 +9,7 @@ import { followTrDocsState, taxPercentsState } from '../../states/trStates';
 import { ITransactionGroupForm } from '../../types/JournalForms';
 import { IVatRow } from '@/settings/vat/types/VatRow';
 import { getTempId } from '../utils';
+import { ITransaction } from '../../../types/Transaction';
 
 export const VatForm = ({
   form,
@@ -25,7 +26,7 @@ export const VatForm = ({
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`
-  });
+  })
 
   const hasVat = useWatch({
     control: form.control,
@@ -85,7 +86,7 @@ export const VatForm = ({
     const curr = followTrDocs.find(ftr => ftr.originId === trDoc._id && ftr.followType === 'vat');
 
     const vatFtr = {
-      ...curr,
+      ...curr || (trDoc as ITransaction),
       _id: curr?._id || getTempId(),
       journal: TrJournalEnum.TAX,
       originId: trDoc._id,

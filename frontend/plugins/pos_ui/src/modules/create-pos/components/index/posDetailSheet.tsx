@@ -8,23 +8,24 @@ import {
   IconMaximize,
   IconMinimize,
 } from '@tabler/icons-react';
-import { Button, cn, Sheet, Tooltip, useQueryState } from 'erxes-ui';
+import { Button, cn, Sheet, Tooltip } from 'erxes-ui';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { isFullscreenAtom, sidebarViewAtom } from '@/slot/states/slot';
 import { posCategoryAtom } from '../../states/posCategory';
 import { renderingPosCreateAtom } from '../../states/renderingPosCreateAtom';
 
 export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [renderingPosCreate, setRenderingPosCreate] = useAtom(
     renderingPosCreateAtom,
   );
+  const isOpen = searchParams.get('create') === 'true';
   const [posCategory] = useAtom(posCategoryAtom);
   const [sidebarView, setSidebarView] = useAtom(sidebarViewAtom);
   const [isFullscreen, setIsFullscreen] = useAtom(isFullscreenAtom);
-  const [tab, setTab] = useQueryState<string>('tab');
-  const [create, setCreate] = useQueryState<boolean>('create', {
-    defaultValue: false,
-  });
+  const tab = searchParams.get('tab');
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -41,10 +42,16 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
   };
 
   const setOpen = (isOpen: boolean) => {
-    setCreate(isOpen);
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (isOpen) {
+      newSearchParams.set('create', 'true');
+    } else {
+      newSearchParams.delete('create');
+    }
+    setSearchParams(newSearchParams);
     setRenderingPosCreate(false);
     if (!isOpen) {
-      setTab(null);
+      navigate('/pos');
     }
   };
 
@@ -54,7 +61,7 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Sheet
-      open={create ?? false}
+      open={isOpen}
       onOpenChange={(open) => {
         setOpen(open);
       }}
@@ -62,11 +69,13 @@ export const PosDetailSheet = ({ children }: { children: React.ReactNode }) => {
       <Sheet.View
         className={cn(
           'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
-          'md:w-[calc(100vw-theme(spacing.4))]',
+          renderingPosCreate
+            ? 'md:w-[calc(100vw-theme(spacing.4))]'
+            : 'md:w-[600px]',
         )}
       >
         <Sheet.Header className="border-b p-3 flex-row items-center space-y-0 gap-3">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" onClick={handleToggleSidebar}>
             <IconLayoutSidebarLeftCollapse />
           </Button>
           <Sheet.Title>Create POS /{posCategory}/</Sheet.Title>

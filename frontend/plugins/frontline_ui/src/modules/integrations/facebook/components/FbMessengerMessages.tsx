@@ -2,7 +2,7 @@ import { cn, IAttachment } from 'erxes-ui';
 import { useFbMessengerMessageContext } from '../contexts/FbMessengerMessageContext';
 import { useAtomValue } from 'jotai';
 import { activeConversationState } from '@/inbox/conversations/states/activeConversationState';
-import { CustomersInline, MembersInline } from 'ui-modules';
+import { CustomerInline, MembersInline } from 'ui-modules';
 import { MessageContent } from '@/inbox/conversation-messages/components/MessageContent';
 import { RelativeDateDisplay } from 'erxes-ui';
 import { Button } from 'erxes-ui';
@@ -56,9 +56,16 @@ export const FbMessengerMessage = () => {
 };
 
 export const MessageWrapper = ({ children }: { children: React.ReactNode }) => {
-  const { separateNext, customerId, userId } = useFbMessengerMessageContext();
+  const {
+    previousMessage,
+    nextMessage,
+    separateNext,
+    separatePrevious,
+    customerId,
+    userId,
+  } = useFbMessengerMessageContext();
 
-  const { customer } = useAtomValue(activeConversationState) || {};
+  const customer = useAtomValue(activeConversationState) || {};
 
   return (
     <div
@@ -71,12 +78,9 @@ export const MessageWrapper = ({ children }: { children: React.ReactNode }) => {
       )}
     >
       {!!customerId && separateNext && (
-        <CustomersInline.Provider
-          customerIds={[customerId]}
-          customers={customer ? [customer] : []}
-        >
-          <CustomersInline.Avatar size="xl" />
-        </CustomersInline.Provider>
+        <CustomerInline.Provider customerId={customerId} customer={customer}>
+          <CustomerInline.Avatar size="xl" />
+        </CustomerInline.Provider>
       )}
       {children}
       {!!userId && separateNext && (

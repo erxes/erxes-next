@@ -1,5 +1,6 @@
 import React from 'react';
 import { 
+    IconCurrencyDollar,
     IconCreditCard,
     IconCashBanknote,
     IconBuilding,

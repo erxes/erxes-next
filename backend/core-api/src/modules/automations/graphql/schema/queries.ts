@@ -37,7 +37,6 @@ const queries = `
   automationConfigPrievewCount(config: JSON): Int
   automationsTotalCount(status: String): automationsTotalCountResponse
   automationConstants: JSON
-  automationBotsConstants:JSON
 `;
 
 export default queries;

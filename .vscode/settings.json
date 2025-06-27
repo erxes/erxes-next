@@ -4,8 +4,5 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "nxConsole.nxWorkspacePath": "",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.updateImportsOnFileMove.enabled": "always"
+  "nxConsole.nxWorkspacePath": ""
 }

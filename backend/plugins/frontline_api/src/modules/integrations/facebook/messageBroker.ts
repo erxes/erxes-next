@@ -6,7 +6,6 @@ import {
   removeIntegration,
 } from '@/integrations/facebook/helpers';
 import { handleFacebookMessage } from '@/integrations/facebook/handleFacebookMessage';
-import { date } from 'zod';
 export interface StatusRequest {
   integrationId: string;
 }
@@ -16,7 +15,7 @@ export interface StatusResponse {
   error?: string;
 }
 
-export async function handleFacebookIntegration({ subdomain, data }) {
+export async function facebookIntegrations({ subdomain, data }) {
   const models = await generateModels(subdomain);
   const { action, type } = data;
   let response: {

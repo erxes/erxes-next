@@ -279,20 +279,14 @@ export const getNextMonth = (date: Date): { start: number; end: number } => {
   return { start, end };
 };
 
-export const fixNum = (value: any, p = 4) => {
-  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ""));
+export const fixNum = (value?: number, p = 4) => {
+  const cleanNumber = Number((value ?? '').toString().replace(/,/g, ''));
 
   if (isNaN(cleanNumber)) {
     return 0;
   }
 
-  const multiplier = 10 ** p;
-
-  const big = Math.round(
-    Number((cleanNumber * multiplier).toFixed(2))
-  );
-
-  return Number((big / multiplier).toFixed(p))
+  return Number(cleanNumber.toFixed(p));
 };
 
 const DATE_OPTIONS = {

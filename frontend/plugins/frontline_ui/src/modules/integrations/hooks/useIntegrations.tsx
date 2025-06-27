@@ -1,7 +1,7 @@
 import { useQuery, QueryHookOptions } from '@apollo/client';
 import {
   GET_INTEGRATIONS_BY_KIND,
-  INTEGRATION_INLINE,
+  INTEGRATION_DETAIL,
 } from '@/integrations/graphql/queries/getIntegrations';
 import { IIntegration } from '@/integrations/types/Integration';
 import {
@@ -59,12 +59,12 @@ export const useIntegrations = (
   };
 };
 
-export const useIntegrationInline = (
+export const useIntegrationDetail = (
   options?: QueryHookOptions<{ integrationDetail: IIntegration }>,
 ) => {
   const { data, loading } = useQuery<{
     integrationDetail: IIntegration;
-  }>(INTEGRATION_INLINE, options);
+  }>(INTEGRATION_DETAIL, options);
 
   return {
     integration: data?.integrationDetail,

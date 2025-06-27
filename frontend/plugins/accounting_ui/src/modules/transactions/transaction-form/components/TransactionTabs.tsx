@@ -10,15 +10,14 @@ import {
   ITransactionGroupForm,
   TTrDoc,
 } from '../types/JournalForms';
+import { TBalance } from './common/TBalance';
 import { BankTransaction } from './forms/BankForm';
 import { CashTransaction } from './forms/CashForm';
 import { InvIncomeForm } from './forms/InvIncomeForm';
-import { InvOutForm } from './forms/InvOutForm';
 import { MainJournalForm } from './forms/MainJournalForm';
 import { PayableTransaction } from './forms/PayableForm';
 import { ReceivableTransaction } from './forms/ReceivableForm';
-import { sumDtAndCt } from './Summary';
-import { TBalance } from './TBalance';
+import { sumDtAndCt } from './common/Summary';
 
 // Separate the transaction form component to prevent unnecessary re-renders
 const TransactionForm = ({
@@ -42,8 +41,6 @@ const TransactionForm = ({
     return <PayableTransaction form={form} index={index} />;
   if (field.journal === TrJournalEnum.INV_INCOME)
     return <InvIncomeForm form={form} index={index} />;
-  if (field.journal === TrJournalEnum.INV_OUT)
-    return <InvOutForm form={form} index={index} />;
   return null;
 };
 
@@ -63,7 +60,6 @@ export const TransactionsTabsList = ({
       minLength: 1,
     },
   });
-
   const [followTrDocs] = useAtom(followTrDocsState);
 
   const handleRemove = (index: number, e: React.MouseEvent) => {
@@ -141,13 +137,13 @@ export const TransactionsTabsList = ({
             </div>
           </Tabs.Trigger>
           <AddTransaction inForm onClick={handleAddTransaction}>
-            <Button variant="ghost">
-              <IconPlus />
-              New Transaction
-            </Button>
-          </AddTransaction>
+          <Button variant="ghost">
+            <IconPlus />
+            New Transaction
+          </Button>
+        </AddTransaction>
         </Tabs.List>
-
+        
         <Button variant="secondary">Save transaction template</Button>
       </div>
       {fields.map((field, index) => (

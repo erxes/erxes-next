@@ -16,7 +16,7 @@ import {
 import { IDepartmentListItem } from '../../types/department';
 import { useSetAtom } from 'jotai';
 import { renderingDepartmentDetailAtom } from '../../states/renderingDepartmentDetail';
-import { MembersInline } from 'ui-modules';
+import { AssignMember, AssignMemberTrigger } from 'ui-modules';
 import { useRemoveDepartment } from '../../hooks/useDepartmentActions';
 
 export const DepartmentWorkingHoursColumnCell = ({
@@ -141,7 +141,10 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>
-          <MembersInline.Provider memberIds={cell.getValue() as string[]} />
+          <AssignMember
+            className="shadow-none bg-transparent"
+            value={cell.getValue() as string}
+          />
         </RecordTableCellDisplay>
       );
     },

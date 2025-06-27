@@ -2,7 +2,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import {
   closeMongooose,
-  isDev,
   joinErxesGateway,
   leaveErxesGateway,
   redis,
@@ -31,8 +30,7 @@ app.use(cookieParser());
 const corsOptions = {
   credentials: true,
   origin: [
-    ...(DOMAIN ? [DOMAIN] : []),
-    ...(isDev ? ['http://localhost:3001'] : []),
+    DOMAIN ? DOMAIN : 'http://localhost:3001',
     ALLOWED_DOMAINS ? ALLOWED_DOMAINS : 'http://localhost:3200',
     ...(CLIENT_PORTAL_DOMAINS || '').split(','),
     ...(process.env.ALLOWED_ORIGINS || '')

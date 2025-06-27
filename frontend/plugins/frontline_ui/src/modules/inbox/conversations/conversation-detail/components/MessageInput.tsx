@@ -71,57 +71,53 @@ export const MessageInput = () => {
   useScopedHotkeys('mod+enter', handleSubmit, InboxHotkeyScope.MessageInput);
 
   return (
-    <div className="p-2 h-full">
-      <div
+    <div
+      className={cn(
+        'flex flex-col h-full py-4 gap-1',
+        isInternalNote && 'bg-yellow-50 dark:bg-yellow-950',
+      )}
+    >
+      <BlockEditor
+        editor={editor}
+        onChange={handleChange}
+        disabled={loading}
         className={cn(
-          'flex flex-col h-full py-4 gap-1 max-w-2xl mx-auto bg-sidebar shadow-xs rounded-lg',
-          isInternalNote && 'bg-yellow-50 dark:bg-yellow-950',
+          'h-full w-full overflow-y-auto',
+          isInternalNote && 'internal-note',
         )}
+        onFocus={() =>
+          setHotkeyScopeAndMemorizePreviousScope(InboxHotkeyScope.MessageInput)
+        }
+        onBlur={() => goBackToPreviousHotkeyScope()}
       >
-        <BlockEditor
-          editor={editor}
-          onChange={handleChange}
-          disabled={loading}
-          className={cn(
-            'h-full w-full overflow-y-auto',
-            isInternalNote && 'internal-note',
-          )}
-          onFocus={() =>
-            setHotkeyScopeAndMemorizePreviousScope(
-              InboxHotkeyScope.MessageInput,
-            )
-          }
-          onBlur={() => goBackToPreviousHotkeyScope()}
+        {isInternalNote && <AssignMemberInEditor editor={editor} />}
+      </BlockEditor>
+      <div className="flex px-6 gap-4">
+        <Toggle
+          pressed={isInternalNote}
+          size="lg"
+          variant="outline"
+          onPressedChange={() => setIsInternalNote(!isInternalNote)}
         >
-          {isInternalNote && <AssignMemberInEditor editor={editor} />}
-        </BlockEditor>
-        <div className="flex px-6 gap-4">
-          <Toggle
-            pressed={isInternalNote}
-            size="lg"
-            variant="outline"
-            onPressedChange={() => setIsInternalNote(!isInternalNote)}
-          >
-            Internal Note
-          </Toggle>
-          <Button size="icon" variant="outline" className="size-8">
-            <IconPaperclip />
-          </Button>
+          Internal Note
+        </Toggle>
+        <Button size="icon" variant="outline" className="size-8">
+          <IconPaperclip />
+        </Button>
 
-          <Button
-            size="lg"
-            className="ml-auto"
-            disabled={loading || content?.length === 0}
-            onClick={handleSubmit}
-          >
-            {loading ? <Spinner size="small" /> : <IconArrowUp />}
-            Send
-            <Kbd className="ml-1">
-              <IconCommand size={12} />
-              <IconCornerDownLeft size={12} />
-            </Kbd>
-          </Button>
-        </div>
+        <Button
+          size="lg"
+          className="ml-auto"
+          disabled={loading || content?.length === 0}
+          onClick={handleSubmit}
+        >
+          {loading ? <Spinner size="small" /> : <IconArrowUp />}
+          Send
+          <Kbd className="ml-1">
+            <IconCommand size={12} />
+            <IconCornerDownLeft size={12} />
+          </Kbd>
+        </Button>
       </div>
     </div>
   );

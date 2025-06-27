@@ -10,19 +10,18 @@ import {
 } from 'erxes-ui';
 import {
   FIELDS_COMBINED_BY_CONTENT_TYPE,
-  IField,
   useQuerySelectInputList,
-} from '../../segments';
+} from 'ui-modules/modules/segments';
 
 type Props = {
   contentType: string;
-  selectedField?: IField;
+  selectedField: any;
+  selectedOperator: any;
   onSelect: (value: string) => void;
   customAttributions?: any[];
   attrConfig?: any;
   onlySet?: boolean;
   trigger?: React.ReactNode;
-  ref?: any;
 };
 
 type QueryResponse = {
@@ -107,7 +106,6 @@ export const Attributes = ({
   customAttributions,
   onSelect,
   onlySet,
-  ref,
 }: Props) => {
   const { selectOptions = [], selectionConfig } = selectedField || {};
   const { data, loading } = useQuery<QueryResponse>(
@@ -169,7 +167,7 @@ export const Attributes = ({
         )}
       </Combobox.TriggerBase>
       <Combobox.Content>
-        <Command ref={ref}>
+        <Command>
           <Command.Input placeholder="Search ..." />
 
           <Command.List>

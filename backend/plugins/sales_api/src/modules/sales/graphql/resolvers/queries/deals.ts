@@ -648,11 +648,15 @@ export const dealQueries = {
       unUsedAmount: await dealResolvers.unusedAmount(item),
     });
 
-    const {
-      list: deals,
-      pageInfo,
-      totalCount,
-    } = await getItemList(models, filter, args, user, getExtraFields);
+    const deals = await getItemList(
+      models,
+      filter,
+      args,
+      user,
+      'deal',
+      { productsData: 1 },
+      getExtraFields,
+    );
 
     const dealProductIds = deals.flatMap((deal) => {
       if (deal.productsData && deal.productsData.length > 0) {
@@ -708,7 +712,7 @@ export const dealQueries = {
       }
     }
 
-    return { list: deals, pageInfo, totalCount };
+    return deals;
   },
 
   async dealsTotalCount(
@@ -725,7 +729,7 @@ export const dealQueries = {
    * Archived list
    */
   async archivedDeals(_root, args: IArchiveArgs, { models }: IContext) {
-    return archivedItems(models, args);
+    return archivedItems(models, args, models.Deals);
   },
 
   async archivedDealsCount(_root, args: IArchiveArgs, { models }: IContext) {

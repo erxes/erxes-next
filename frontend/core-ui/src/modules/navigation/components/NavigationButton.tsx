@@ -2,7 +2,6 @@ import { SettingsPath } from '@/types/paths/SettingsPath';
 import { Icon, IconCaretDownFilled } from '@tabler/icons-react';
 import { cn, Sidebar } from 'erxes-ui';
 import { Link, useLocation } from 'react-router';
-import { useTranslation } from 'react-i18next';
 
 interface NavigationButtonProps {
   pathPrefix?: string;
@@ -20,8 +19,6 @@ export const NavigationButton = ({
   isFavorite,
 }: NavigationButtonProps) => {
   const { pathname: activePathname } = useLocation();
-  const { t } = useTranslation();
-
   const pathnameWithSlash = `/${pathname}`;
   const pathnameWithPrefix = pathPrefix
     ? `/${pathPrefix}${pathnameWithSlash}`
@@ -51,7 +48,7 @@ export const NavigationButton = ({
             )}
           />
         )}
-        <span className="capitalize">{t(name)}</span>
+        <span className="capitalize">{name}</span>
       </Link>
     </Sidebar.MenuButton>
   );

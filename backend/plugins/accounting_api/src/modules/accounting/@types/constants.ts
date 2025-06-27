@@ -80,13 +80,14 @@ export const JOURNALS = {
   INV_SALE_RETURN: 'invSaleReturn',
   INV_SALE_COST: 'invSaleCost',
   INV_SALE_OUT: 'invSaleOut',
-  TAX: 'tax',
+  VAT: 'vat',
+  CTAX: 'ctax',
   ALL: [
     'main', 'cash', 'bank', 'receivable', 'payable',
     'inv_fb', 'invIncome', 'invOut', 'inv_move', 'inv_adjust', 'inv_convert',
     'inv_sale', 'inv_cost',
     'inv_in_return', 'inv_sale_return',
-    'expense', 'tax'
+    'expense', 'vat', 'ctax'
   ],
   ALL_REAL_INV: [ // yag urtug uldegdeld nuluuluh journal ni
     'inv_fb',
@@ -100,16 +101,4 @@ export const JOURNALS = {
     'invSaleReturn',
     'invSaleOut'
   ],
-}
-
-export const TR_FOLLOW_TYPES = {
-  VAT: 'vat',
-  CTAX: 'ctax',
-  CURRENCY_DIFF: 'currencyDiff',
-  INV_INCOME_EXPENSE: 'invIncomeExpense',
-  ALL: ['vat', 'ctax', 'currencyDiff', 'invIncomeExpense',]
-}
-
-export const TR_DETAIL_FOLLOW_TYPES = {
-  ALL: []
 }

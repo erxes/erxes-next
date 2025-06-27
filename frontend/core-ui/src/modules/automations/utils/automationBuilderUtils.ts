@@ -1,17 +1,42 @@
-import { getNewId } from '@/automations/utils/automationConnectionUtils';
-import { ICustomer } from '@/contacts/types/customerType';
-import { IUser } from '@/settings/team-member/types';
-import { useQuery } from '@apollo/client';
-import { Edge, Node } from '@xyflow/react';
+import { Edge, Node, Position } from '@xyflow/react';
 import { IAction, ITrigger } from 'ui-modules';
-import { GET_CUSTOMERS_EMAIL, GET_TEAM_MEMBERS_EMAIL } from '../graphql/utils';
-import { AutomationDropHandlerParams, NodeData, TDraggingNode } from '../types';
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
+import { AutomationConstants, IAutomation } from '../types';
 
-export const generateNodePosition = (
+type MyNodeData = {
+  x: number;
+  y: number;
+  data: {
+    automation: IAutomation;
+    type: string;
+    nodeType: string;
+    actionType: string;
+    triggerType?: string;
+    icon: string;
+    label: string;
+    description: string;
+    config: any;
+    toggleDrawer: ({
+      type,
+      awaitingNodeId,
+    }: {
+      type: string;
+      awaitingNodeId?: string;
+    }) => void;
+    onDoubleClick: (type: string, id: string) => void;
+    removeItem: (type: string, id: string) => void;
+    constants: AutomationConstants;
+    forceToolbarVisible: boolean;
+    toolbarPosition: Position;
+    additionalContent?: (id: string, type: string) => React.ReactNode;
+    addWorkFlowAction: (workflowId: string, actions: IAction[]) => void;
+    removeWorkFlowAction?: (workflowId: string) => void;
+  };
+};
+
+export const generatNodePosition = (
   nodes: IAction[] & ITrigger[],
   node: IAction & ITrigger,
-  generatedNodes: Node<NodeData>[],
+  generatedNodes: Node<MyNodeData>[],
 ) => {
   if (node.position) {
     if (
@@ -50,7 +75,7 @@ export const generateNode = (
   nodeType: string,
   nodes: IAction[] & ITrigger[],
   props: any,
-  generatedNodes: Node<NodeData>[],
+  generatedNodes: Node<MyNodeData>[],
   parentId?: string,
 ) => {
   const {
@@ -61,8 +86,6 @@ export const generateNode = (
     icon,
     config,
     isCustom,
-    nextActionId,
-    actionId,
   } = node;
 
   const doc: any = {
@@ -75,12 +98,9 @@ export const generateNode = (
       type: node.type,
       isAvailableOptionalConnect,
       config,
-      isCustom,
-      nextActionId,
-      actionId,
       ...props,
     },
-    position: generateNodePosition(nodes, node, generatedNodes),
+    position: generatNodePosition(nodes, node, generatedNodes),
     isConnectable: true,
     type: nodeType,
     style: {
@@ -121,18 +141,18 @@ export const generateNodes = (
   },
   props: any,
 ) => {
-  if (triggers.length === 0 && actions.length === 0) {
-    return [
-      {
-        id: 'scratch-node',
-        type: 'scratch',
-        data: props,
-        position: { x: 0, y: 0 },
-      },
-    ];
-  }
+  // if (triggers.length === 0 && actions.length === 0) {
+  //   return [
+  //     {
+  //       id: 'scratch-node',
+  //       type: 'scratch',
+  //       data: props,
+  //       position: { x: 0, y: 0 },
+  //     },
+  //   ];
+  // }
 
-  const generatedNodes: Node<NodeData>[] = [];
+  const generatedNodes: Node<MyNodeData>[] = [];
 
   for (const { type, nodes = [] } of [
     { type: 'trigger', nodes: triggers },
@@ -166,10 +186,12 @@ export const generateEdges = ({
   actions,
   triggers,
   workFlowActions,
+  onDisconnect,
 }: {
   triggers: ITrigger[];
   actions: IAction[];
   workFlowActions?: { workflowId: string; actions: IAction[] }[];
+  onDisconnect?: (edge: Edge) => void;
 }): Edge[] => {
   let generatedEdges: any = [];
 
@@ -201,6 +223,7 @@ export const generateEdges = ({
         type: 'primary',
         data: {
           type,
+          onDisconnect,
         },
       };
 
@@ -320,227 +343,22 @@ export const deepCleanNulls = (input: any): any => {
 };
 
 export const getContentType = (
-  currentActionId: string,
+  currentAction: IAction,
   actions: IAction[],
   triggers: ITrigger[],
-): ITrigger | undefined => {
-  const trigger = triggers.find((t) => t.actionId === currentActionId);
+): string => {
+  const trigger = triggers.find((t) => t.actionId === currentAction.id);
   if (trigger) {
-    return trigger;
+    return trigger.type;
   }
 
   // Find the parent action that leads to this current action
-  const parentAction = actions.find((a) => a.nextActionId === currentActionId);
+  const parentAction = actions.find((a) => a.nextActionId === currentAction.id);
   if (parentAction) {
     // Recursively call the function with the parent action
-    return getContentType(parentAction.id, actions, triggers);
+    return getContentType(parentAction, actions, triggers);
   }
 
   // Fallback if nothing found in the chain
-  return triggers[0];
+  return triggers[0]?.type;
 };
-
-export const getTriggerOfAction = (
-  currentActionId: string,
-  actions: IAction[],
-  triggers: ITrigger[],
-) => {
-  // Build a map of nextActionId → actionId
-  const reverseMap = new Map<string, string>();
-
-  for (const { id, nextActionId } of actions) {
-    if (nextActionId) {
-      reverseMap.set(nextActionId, id);
-    }
-  }
-
-  let cursor = currentActionId;
-
-  // Walk backward
-  while (cursor) {
-    const trigger = triggers.find((t) => t.actionId === cursor);
-    if (trigger) return trigger.type;
-
-    cursor = reverseMap.get(cursor) ?? '';
-  }
-
-  return undefined;
-};
-
-export const generateSendEmailRecipientMails = ({
-  attributionMails,
-  customMails = [],
-  customer = [],
-  teamMember = [],
-}: any) => {
-  let mails = [];
-
-  if (attributionMails) {
-    mails.push(attributionMails);
-  }
-  if (customMails.length) {
-    mails = [...mails, ...customMails];
-  }
-
-  if (customer.length) {
-    const { data } = useQuery(GET_CUSTOMERS_EMAIL);
-
-    const customerMails = (data?.list || [])
-      .map(({ primaryEmail }: ICustomer) => primaryEmail)
-      .filter((email: string) => email);
-    mails = [...mails, ...customerMails];
-  }
-  if (teamMember.length) {
-    const { data } = useQuery(GET_TEAM_MEMBERS_EMAIL);
-
-    const teamMemberMails = (data?.list || [])
-      .map(({ email }: IUser) => email)
-      .filter((email: string) => email);
-    mails = [...mails, ...teamMemberMails];
-  }
-
-  return mails;
-};
-
-export const automationDropHandler = ({
-  event,
-  reactFlowInstance,
-  triggers,
-  actions,
-}: AutomationDropHandlerParams) => {
-  event.preventDefault();
-
-  const draggingNode = event.dataTransfer.getData(
-    'application/reactflow/draggingNode',
-  );
-
-  const {
-    nodeType,
-    type,
-    label,
-    description,
-    icon,
-    isCustom,
-    awaitingToConnectNodeId,
-  } = JSON.parse(draggingNode || '{}') as TDraggingNode;
-
-  if (!nodeType) {
-    return {
-      actions,
-      triggers,
-    };
-  }
-
-  const position = reactFlowInstance.screenToFlowPosition({
-    x: event.clientX,
-    y: event.clientY,
-  });
-
-  const id = getNewId([...triggers, ...actions].map((a) => a.id));
-
-  if (awaitingToConnectNodeId) {
-    const [awaitingNodeType, nodeId, connectionFieldName] =
-      awaitingToConnectNodeId.split('__') as [
-        'trigger' | 'action',
-        string,
-        string | undefined,
-      ];
-
-    const isValidNodeType = ['trigger', 'action'].includes(awaitingNodeType);
-
-    if (isValidNodeType && nodeId) {
-      if (awaitingNodeType === 'trigger') {
-        triggers = triggers.map((trigger) =>
-          trigger.id === nodeId
-            ? generateAwaitingNodeConnection(
-                trigger,
-                awaitingNodeType,
-                id,
-                connectionFieldName,
-              )
-            : trigger,
-        );
-      } else {
-        actions = actions.map((action) =>
-          action.id === nodeId
-            ? generateAwaitingNodeConnection(
-                action,
-                awaitingNodeType,
-                id,
-                connectionFieldName,
-              )
-            : action,
-        );
-      }
-    }
-  }
-
-  if (nodeType === 'trigger') {
-    triggers = [
-      ...triggers,
-      {
-        id,
-        type,
-        config: {},
-        icon,
-        label,
-        description,
-        isCustom,
-        position,
-      },
-    ];
-  } else {
-    actions = [
-      ...actions,
-      {
-        id,
-        type,
-        config: {},
-        icon,
-        label,
-        description,
-        isCustom,
-        position,
-      },
-    ];
-  }
-
-  return {
-    actions,
-    triggers,
-  };
-};
-
-const generateAwaitingNodeConnection = (
-  node: IAction | ITrigger,
-  nodeType: string,
-  actionId: string,
-  connectionFieldName?: string,
-) => {
-  let fieldName = nodeType === 'trigger' ? 'actionId' : 'nextActionId';
-  let fieldValue = actionId;
-  if (connectionFieldName) {
-    fieldName = `config`;
-
-    fieldValue = setNestedField(
-      { ...(node?.config || {}) },
-      connectionFieldName,
-      actionId,
-    );
-  }
-
-  return { ...node, [fieldName]: fieldValue };
-};
-
-function setNestedField(obj: any, path: string, value: any) {
-  const keys = path.split('.');
-  let current = obj;
-
-  keys.slice(0, -1).forEach((key) => {
-    if (!current[key]) current[key] = {};
-    current = current[key];
-  });
-
-  current[keys[keys.length - 1]] = value;
-  return obj;
-}

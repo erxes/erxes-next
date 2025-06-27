@@ -13,16 +13,17 @@ import { customerDetailActiveActionTabAtom } from '@/contacts/states/customerDet
 // import { ActivityLogs } from '@/activity-logs/components/ActivityLogs';
 // import { AddInternalNotes } from '@/internal-notes/components/AddInternalNotes';
 import { useAtom, useSetAtom } from 'jotai';
-import { useRelationWidget } from 'ui-modules';
-import { useRelationWidgetsModules } from '@/widgets/hooks/useRelationWidgetsModules';
+import { useWidget } from 'ui-modules';
+import { useWidgetsModules } from '@/widgets/hooks/useWidgetsModules';
 import { useCustomerDetail } from '../hooks/useCustomerDetail';
 
 export const CustomerDetailActions = () => {
   const { customerDetail } = useCustomerDetail();
   const contactId = customerDetail?._id;
   const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
-  const widgetsModules = useRelationWidgetsModules();
-  const { RelationWidget } = useRelationWidget();
+  const widgetsModules = useWidgetsModules();
+  const { Widget } = useWidget();
+
 
   // return (
   //   <Widget
@@ -69,7 +70,7 @@ export const CustomerDetailActions = () => {
               icon={item.icon as any}
               title={item.name}
             >
-              <RelationWidget
+              <Widget
                 module={item}
                 contentId={contactId || ''}
                 contentType="core:customer"
@@ -112,7 +113,7 @@ export const CustomerDetailActions = () => {
 
 export const CustomerDetailActionsTrigger = () => {
   const [activeTab, setActiveTab] = useAtom(customerDetailActiveActionTabAtom);
-  const widgetsModules = useRelationWidgetsModules();
+  const widgetsModules = useWidgetsModules();
 
   return (
     <div className="flex flex-none overflow-hidden">

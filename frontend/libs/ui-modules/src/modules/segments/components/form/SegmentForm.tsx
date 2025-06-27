@@ -34,7 +34,7 @@ type Props = {
   contentType: string;
   segmentId?: string;
   callback: (contentId: string) => void;
-  isTemporary?: boolean;
+  isTempoaray?: boolean;
 };
 
 type StatsType = {
@@ -112,7 +112,7 @@ const SegmentMetadataForm = ({
   );
 };
 
-const SegmentFormContent = ({
+const renderContent = ({
   form,
   contentType,
 }: {
@@ -130,7 +130,7 @@ const SegmentFormContent = ({
 
 export function SegmentForm({
   contentType,
-  isTemporary,
+  isTempoaray,
   callback,
   segmentId,
 }: Props) {
@@ -225,14 +225,10 @@ export function SegmentForm({
         contentType: contentType,
         shouldWriteActivityLog: false,
         _id: segment ? segment?._id : undefined,
-        conditionSegments: data?.conditionSegments?.length
-          ? data?.conditionSegments
-          : data?.conditions,
       },
       onError: (e: ApolloError) => {
         toast({
           title: 'Error',
-          variant: 'destructive',
           description: e.message,
         });
       },
@@ -280,16 +276,14 @@ export function SegmentForm({
         <SegmentMetadataForm
           form={form}
           segment={segment}
-          isTemporary={isTemporary}
+          isTemporary={isTempoaray}
         />
-        <div className="pb-4">
-          <SegmentFormContent form={form} contentType={contentType} />
-        </div>
+        <div className="py-4">{renderContent({ form, contentType })}</div>
         <Button
           variant="secondary"
           className={cn(
             'w-full',
-            (form.watch('conditionSegments')?.length || 0) > 1 && 'pl-12',
+            form.watch('conditionSegments')?.length && 'ml-12',
           )}
           onClick={onAddSegmentGroup}
         >

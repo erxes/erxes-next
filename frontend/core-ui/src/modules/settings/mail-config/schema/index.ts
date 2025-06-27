@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const COMMON_FIELDS = z.object({
   COMPANY_EMAIL_FROM: z.string(),
-  COMPANY_EMAIL_TEMPLATE_TYPE: z.string().default('simple').optional(),
-  COMPANY_EMAIL_TEMPLATE: z.string().optional(),
+  COMPANY_EMAIL_TEMPLATE_TYPE: z.string().default('simple'),
+  COMPANY_EMAIL_TEMPLATE: z.string(),
 });
 
 const CUSTOM_MAIL_SERVICE_SCHEMA = COMMON_FIELDS.extend({

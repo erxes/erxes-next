@@ -33,6 +33,7 @@ export const RecordTablePopover = ({
       goBackToPreviousHotkeyScope();
     },
     scope + '.Popover',
+    [],
   );
 
   return (

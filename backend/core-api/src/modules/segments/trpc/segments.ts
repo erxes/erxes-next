@@ -6,26 +6,24 @@ import { fetchSegment } from '../utils/fetchSegment';
 
 const t = initTRPC.context<CoreTRPCContext>().create();
 
-export const optionsSchema = z
-  .object({
-    returnAssociated: z
-      .object({
-        mainType: z.string(),
-        relType: z.string(),
-      })
-      .optional(),
-    returnFields: z.array(z.string()).optional(),
-    returnFullDoc: z.boolean().optional(),
-    returnSelector: z.boolean().optional(),
-    returnCount: z.boolean().optional(),
-    defaultMustSelector: z.array(z.any()).optional(),
-    page: z.number().optional(),
-    perPage: z.number().optional(),
-    sortField: z.string().optional(),
-    sortDirection: z.number().optional(),
-    scroll: z.boolean().optional(),
-  })
-  .optional();
+export const optionsSchema = z.object({
+  returnAssociated: z
+    .object({
+      mainType: z.string(),
+      relType: z.string(),
+    })
+    .optional(),
+  returnFields: z.array(z.string()).optional(),
+  returnFullDoc: z.boolean().optional(),
+  returnSelector: z.boolean().optional(),
+  returnCount: z.boolean().optional(),
+  defaultMustSelector: z.array(z.any()).optional(),
+  page: z.number().optional(),
+  perPage: z.number().optional(),
+  sortField: z.string().optional(),
+  sortDirection: z.number().optional(),
+  scroll: z.boolean().optional(),
+});
 
 export const segmentsRouter = t.router({
   segment: t.router({
@@ -38,7 +36,7 @@ export const segmentsRouter = t.router({
         }),
       )
       .query(async ({ input, ctx }) => {
-        const { segmentId, idToCheck, options = {} } = input;
+        const { segmentId, idToCheck, options } = input;
         const { models, subdomain } = ctx;
 
         const segment = await models.Segments.getSegment(segmentId);
@@ -63,25 +61,6 @@ export const segmentsRouter = t.router({
         const count = await fetchSegment(models, subdomain, segment, options);
 
         return count > 0;
-      }),
-    fetchSegment: t.procedure
-      .input(
-        z.object({
-          segmentId: z.string().optional(),
-          segmentData: z.string().optional(),
-          options: optionsSchema,
-        }),
-      )
-      .query(async ({ input, ctx }) => {
-        const { models, subdomain } = ctx;
-
-        const { segmentId, options, segmentData } = input;
-
-        const segment = segmentData
-          ? segmentData
-          : await models.Segments.findOne({ _id: segmentId }).lean();
-
-        return await fetchSegment(models, subdomain, segment, options);
       }),
   }),
 });

@@ -15,12 +15,16 @@ export const getIntegrations = gql`
   }
 `;
 
-export const INTEGRATION_INLINE = gql`
-  query IntegrationInline($_id: String!) {
+export const INTEGRATION_DETAIL = gql`
+  query IntegrationDetail($_id: String!) {
     integrationDetail(_id: $_id) {
       _id
       kind
       brandId
+      brand {
+        _id
+        name
+      }
     }
   }
 `;

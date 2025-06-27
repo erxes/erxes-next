@@ -1,23 +1,28 @@
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
-import { AUTOMATION_HISTORIES } from '@/automations/graphql/automationQueries';
-import { useQuery } from '@apollo/client';
+import {
+  AUTOMATION_HISTORIES,
+  AUTOMATOMATION_CONSTANTS,
+} from '@/automations/graphql/automationQueries';
+import { gql, useQuery } from '@apollo/client';
+import { ColumnDef } from '@tanstack/table-core';
 import {
   EnumCursorDirection,
   mergeCursorData,
+  RecordTable,
   validateFetchMore,
 } from 'erxes-ui';
 import { useParams } from 'react-router';
+import { ConstantsQueryResponse } from '../types';
 export const useAutomationHistories = () => {
   const { id } = useParams();
 
-  const { actionsConst = [], triggersConst = [] } = useAutomation();
-  const { data, loading, fetchMore, refetch } = useQuery(AUTOMATION_HISTORIES, {
+  const { data, loading, fetchMore } = useQuery(AUTOMATION_HISTORIES, {
     variables: { automationId: id },
   });
 
-  const { automationHistories } = data || {};
+  const { automationConstants, automationHistories } = data || {};
 
   const { list = [], totalCount = 0, pageInfo } = automationHistories || {};
+  const { triggersConst = [], actionsConst = [] } = automationConstants || {};
 
   const { hasPreviousPage, hasNextPage } = pageInfo || {};
 
@@ -61,6 +66,5 @@ export const useAutomationHistories = () => {
     triggersConst,
     actionsConst,
     handleFetchMore,
-    refetch,
   };
 };

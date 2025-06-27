@@ -8,7 +8,7 @@ export const CustomerDetailAssignedTo = ({ ownerId }: { ownerId: string }) => {
     <div className="px-8 space-y-2">
       <Label>Assigned To</Label>
       <div>
-        <SelectMember
+        <SelectMember.Detail
           value={_ownerId}
           onValueChange={(value) => setOwnerId(value as string)}
           className="min-w-60"

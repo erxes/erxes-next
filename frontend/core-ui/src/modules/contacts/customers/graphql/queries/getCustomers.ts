@@ -21,7 +21,6 @@ export const GET_CUSTOMERS = gql`
     $dateFilters: String
     $segmentData: String
     $emailValidationStatus: String
-    $orderBy: JSON
     ${GQL_CURSOR_PARAM_DEFS}
   ) {
     customers(
@@ -39,7 +38,6 @@ export const GET_CUSTOMERS = gql`
       dateFilters: $dateFilters
       segmentData: $segmentData
       emailValidationStatus: $emailValidationStatus
-      orderBy: $orderBy
       ${GQL_CURSOR_PARAMS}
     ) {
       list {

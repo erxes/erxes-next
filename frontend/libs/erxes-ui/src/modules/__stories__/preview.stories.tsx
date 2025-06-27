@@ -1,6 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
 import { Preview } from '../preview/components/Preview';
 
+import React from 'react';
+import { Resizable } from 'erxes-ui/components';
 import { cn } from 'erxes-ui/lib/utils';
 import { MemoryRouter } from 'react-router-dom';
 

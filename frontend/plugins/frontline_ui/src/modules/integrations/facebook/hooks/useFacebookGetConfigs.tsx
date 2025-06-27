@@ -8,11 +8,11 @@ export const useFacebookGetConfigs = () => {
 
   const { facebookGetConfigs } = data || {};
 
-  const facebookConfigs: Record<string, string> = {};
+  const facebookConfigs = {};
 
-  (facebookGetConfigs || []).forEach(
+  (facebookGetConfigs || []).map(
     (conf) => (facebookConfigs[conf.code] = conf.value),
   );
 
-  return { loading, facebookConfigs };
+  return { data, loading, facebookConfigs };
 };

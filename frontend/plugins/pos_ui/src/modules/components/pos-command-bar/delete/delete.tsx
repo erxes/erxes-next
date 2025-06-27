@@ -1,6 +1,5 @@
-import { Button } from 'erxes-ui/components';
+import { Button, useConfirm } from 'erxes-ui';
 import { IconTrash } from '@tabler/icons-react';
-import { useConfirm } from 'erxes-ui/hooks';
 import { useToast } from 'erxes-ui';
 import { ApolloError } from '@apollo/client';
 import { useRemovePos } from '@/hooks/usePosRemove';

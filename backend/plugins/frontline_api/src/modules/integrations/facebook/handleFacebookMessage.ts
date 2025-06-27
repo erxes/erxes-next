@@ -5,6 +5,7 @@ import {
   sendReply,
   generateAttachmentMessages,
 } from '@/integrations/facebook/utils';
+import DOMPurify from 'dompurify';
 import { sendNotifications } from '@/inbox/graphql/resolvers/mutations/conversations';
 
 /**
@@ -127,7 +128,7 @@ export const handleFacebookMessage = async (
       }
 
       // Send notification about the reply to relevant users/devices
-      sendNotifications({
+      sendNotifications(subdomain, {
         user,
         conversations: [inboxConversation],
         type: 'conversationStateChange',

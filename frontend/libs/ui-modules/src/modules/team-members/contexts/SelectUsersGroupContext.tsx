@@ -1,6 +1,6 @@
-import { IUserGroupContext } from '../types/TeamMembers';
 import { createContext } from 'react';
+import { IMemberGroupContext } from '../types/TeamMembers';
 
-export const SelectUsersGroupContext = createContext<IUserGroupContext>(
-  {} as IUserGroupContext,
+export const SelectUsersGroupContext = createContext<IMemberGroupContext>(
+  {} as IMemberGroupContext,
 );

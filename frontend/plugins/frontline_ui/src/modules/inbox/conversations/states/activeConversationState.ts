@@ -1,6 +1,4 @@
-import { IConversation } from '@/inbox/types/Conversation';
+import { IConversation } from '../types/Conversation';
 import { atom } from 'jotai';
 
-export const activeConversationState = atom<Partial<IConversation> | null>(
-  null,
-);
+export const activeConversationState = atom<IConversation | null>(null);

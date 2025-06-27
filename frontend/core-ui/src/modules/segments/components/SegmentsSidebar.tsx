@@ -18,7 +18,6 @@ export const SegmentListSidebar = ({ types }: Props) => {
               <Sidebar.MenuItem key={contentType}>
                 <Sidebar.MenuButton
                   isActive={contentType === selectedContentType}
-                  asChild
                 >
                   <Link to={`?contentType=${contentType}`}>{description}</Link>
                 </Sidebar.MenuButton>

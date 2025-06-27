@@ -5,16 +5,14 @@ import {
   IAutomationExecAction,
   IAutomationExecutionDocument,
   ITrigger,
-  splitType,
   TriggerType,
 } from 'erxes-api-shared/core-modules';
-import { sendWorkerMessage, sendWorkerQueue } from 'erxes-api-shared/utils';
-import { IModels } from '~/connectionResolver';
+import { sendTRPCMessage, sendWorkerMessage } from 'erxes-api-shared/utils';
 import { ACTIONS } from '~/constants';
-import { handleEmail } from './actions/email';
 import { setActionWait } from './actions/wait';
+import { IModels } from '~/connectionResolver';
 import { isInSegment } from './segments/utils';
-import moment from 'moment';
+import { handleEmail } from './actions/email';
 
 export const getActionsMap = async (actions: IAction[]) => {
   const actionsMap: IActionsMap = {};
@@ -108,32 +106,6 @@ export const executeActions = async (
       execution.startWaitingDate = new Date();
       execution.status = AUTOMATION_EXECUTION_STATUS.WAITING;
       execution.actions = [...(execution.actions || []), execAction];
-
-      const { value, type } = action?.config || {};
-
-      const performDate = moment(execution.startWaitingDate)
-        .add(value, type)
-        .toDate();
-
-      // Calculate delay in milliseconds
-
-      const delay = Math.max(0, performDate.getTime() - Date.now());
-      sendWorkerQueue('automations', 'playWait').add(
-        'playWait',
-        {
-          subdomain,
-          data: {
-            automationId: execution.automationId,
-            waitingActionId: action.id,
-            execId: execution._id,
-          },
-        },
-        {
-          delay: delay,
-          removeOnComplete: true,
-          removeOnFail: true,
-        },
-      );
       await execution.save();
       return 'paused';
     }
@@ -167,15 +139,14 @@ export const executeActions = async (
 
     if (action.type === ACTIONS.SET_PROPERTY) {
       const { module } = action.config;
-      const [pluginName, moduleName, collectionType] = splitType(module);
+      const [serviceName, collectionType] = module.split(':');
 
       actionResponse = await sendWorkerMessage({
         subdomain,
-        pluginName,
+        serviceName,
         queueName: 'automations',
         jobName: 'receiveActions',
         data: {
-          moduleName,
           triggerType,
           actionType: 'set-property',
           action,
@@ -200,21 +171,18 @@ export const executeActions = async (
     }
 
     if (action.type.includes('create')) {
-      const [pluginName, moduleName, collectionType, actionType] = splitType(
-        action.type,
-      );
+      const [serviceName, type] = action.type.split(':');
 
       actionResponse = await sendWorkerMessage({
         subdomain,
-        pluginName,
+        serviceName,
         queueName: 'automations',
         jobName: 'receiveActions',
         data: {
-          moduleName,
-          actionType,
+          actionType: 'create',
           action,
           execution,
-          collectionType,
+          collectionType: type.replace('.create', ''),
         },
       });
 
@@ -328,17 +296,14 @@ export const calculateExecution = async ({
 
   try {
     if (!!isCustom) {
-      const [pluginName, moduleName, collectionType] = splitType(
-        trigger?.type || '',
-      );
+      const [serviceName, collectionType] = (trigger?.type || '').split(':');
 
       const isValid = await sendWorkerMessage({
         subdomain,
-        pluginName,
+        serviceName,
         queueName: 'automations',
         jobName: 'checkCustomTrigger',
         data: {
-          moduleName,
           collectionType,
           automationId,
           trigger,
@@ -372,7 +337,6 @@ export const calculateExecution = async ({
     automationId,
     triggerId: id,
     targetId: target._id,
-    status: { $ne: AUTOMATION_EXECUTION_STATUS.ERROR },
   })
     .sort({ createdAt: -1 })
     .limit(1)
@@ -382,24 +346,24 @@ export const calculateExecution = async ({
     ? executions[0]
     : null;
 
-  // if (latestExecution) {
-  //   if (!reEnrollment || !reEnrollmentRules.length) {
-  //     return;
-  //   }
+  if (latestExecution) {
+    if (!reEnrollment || !reEnrollmentRules.length) {
+      return;
+    }
 
-  //   let isChanged = false;
+    let isChanged = false;
 
-  //   for (const reEnrollmentRule of reEnrollmentRules) {
-  //     if (isDiffValue(latestExecution.target, target, reEnrollmentRule)) {
-  //       isChanged = true;
-  //       break;
-  //     }
-  //   }
+    for (const reEnrollmentRule of reEnrollmentRules) {
+      if (isDiffValue(latestExecution.target, target, reEnrollmentRule)) {
+        isChanged = true;
+        break;
+      }
+    }
 
-  //   if (!isChanged) {
-  //     return;
-  //   }
-  // }
+    if (!isChanged) {
+      return;
+    }
+  }
 
   return models.Executions.create({
     automationId,
@@ -422,7 +386,7 @@ export const receiveTrigger = async ({
 }: {
   models: IModels;
   subdomain: string;
-  type: string;
+  type: TriggerType;
   targets: any[];
 }) => {
   const automations = await models.Automations.find({

@@ -32,9 +32,12 @@ const useUsersForm = () => {
     mode: 'onBlur',
     resolver: zodResolver(USER_DETAIL_SCHEMA),
     defaultValues: {
-      email: '',
-      username: '',
-      positionIds: [],
+      email: undefined,
+      groupId: '',
+      channelIds: undefined,
+      unitId: undefined,
+      branchId: undefined,
+      departmentId: undefined,
     },
   });
   return {

@@ -1,11 +1,12 @@
-import { TR_SIDES } from '@/transactions/types/constants';
 import { IconPlus } from '@tabler/icons-react';
 import { Button } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
+import { TR_SIDES } from '@/transactions/types/constants';
 import { ITransactionGroupForm, TInvDetail } from '../../../types/JournalForms';
 import { getTempId } from '../../utils';
+// import { useInventoryContext } from '../hooks/useInventoryContext';
 
-export const AddDetailRowButton = ({
+export const AddInventoryRowButton = ({
   append,
   journalIndex,
   form,

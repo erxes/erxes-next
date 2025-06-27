@@ -30,6 +30,7 @@ export const RecordTableCursorProvider = ({
   } = useCursorScroll({
     dataLength,
     hasPreviousPage,
+    loading,
     offset,
   });
 

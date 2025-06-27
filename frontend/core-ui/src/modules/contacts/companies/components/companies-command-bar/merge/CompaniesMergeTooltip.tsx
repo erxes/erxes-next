@@ -10,7 +10,7 @@ export const CompaniesMergeTooltip = ({
 }) => {
   if (disabled) return children;
   return (
-    <Tooltip delayDuration={0}>
+    <Tooltip delayDuration={200}>
       <Tooltip.Trigger asChild>
         <div className="inline-block">{children}</div>
       </Tooltip.Trigger>

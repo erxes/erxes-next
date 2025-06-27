@@ -18,7 +18,7 @@ const sendSuccess = (data): RPSuccess => ({
 /*
  * Handle requests from integrations api
  */
-export const receiveInboxMessage = async (
+export const receiveTrpcMessage = async (
   subdomain,
   data,
 ): Promise<RPResult> => {
@@ -145,7 +145,6 @@ export const receiveInboxMessage = async (
           conversationId: doc.conversationId,
           updatedAt: doc.updatedAt,
         };
-
         await Conversations.createConversation(formattedDoc);
       }
 

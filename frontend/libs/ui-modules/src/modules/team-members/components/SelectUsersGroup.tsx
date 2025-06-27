@@ -1,16 +1,15 @@
 import {
+  cn,
   Combobox,
   Command,
   Popover,
   Skeleton,
   TextOverflowTooltip,
-  cn,
 } from 'erxes-ui';
 import React, { useState } from 'react';
-import { useSelectUsersGroupContext, useUsersGroup } from '../hooks';
-
-import { IUserGroup } from '../types/TeamMembers';
+import { IMemberGroup } from '../types/TeamMembers';
 import { SelectUsersGroupContext } from '../contexts/SelectUsersGroupContext';
+import { useSelectUsersGroupContext, useUsersGroup } from '../hooks';
 
 type Props = {
   value?: string;
@@ -55,7 +54,7 @@ const SelectUsersGroupItem = ({
   usersGroup,
   onValueChange,
 }: {
-  usersGroup: IUserGroup;
+  usersGroup: IMemberGroup;
   onValueChange: (value: string) => void;
 }) => {
   const { selectedUsersGroup, setSelectedUsersGroup } =
@@ -80,7 +79,7 @@ const SelectUsersGroupProvider = ({
   children: React.ReactNode;
 }) => {
   const [selectedUsersGroup, setSelectedUsersGroup] = useState<
-    IUserGroup | undefined
+    IMemberGroup | undefined
   >(undefined);
   return (
     <SelectUsersGroupContext.Provider
@@ -97,7 +96,7 @@ const SelectUsersGroupValue = ({ value }: { value?: string }) => {
 
   if (loading) return <Skeleton className="h-4 w-32 overflow-hidden" />;
   const usersGroup = usersGroups?.find(
-    (group: IUserGroup) => group._id === value,
+    (group: IMemberGroup) => group._id === value,
   );
   return (
     <Combobox.Value
@@ -110,14 +109,14 @@ const SelectUsersGroupValue = ({ value }: { value?: string }) => {
 export const UsersGroupsList = ({
   renderItem,
 }: {
-  renderItem: (usersGroup: IUserGroup) => React.ReactNode;
+  renderItem: (usersGroup: IMemberGroup) => React.ReactNode;
 }) => {
   const { usersGroups, loading } = useUsersGroup();
   return (
     <Command>
       <Command.List>
         <Combobox.Empty loading={loading} />
-        {usersGroups?.map((usersGroup: IUserGroup) => renderItem(usersGroup))}
+        {usersGroups?.map((usersGroup: IMemberGroup) => renderItem(usersGroup))}
       </Command.List>
     </Command>
   );

@@ -10,7 +10,7 @@ export const ConversationDetailLayout = ({
   return (
     <Resizable.PanelGroup direction="vertical">
       <Resizable.Panel defaultSize={70}>{children}</Resizable.Panel>
-      <Resizable.Handle className="bg-transparent hover:bg-border" />
+      <Resizable.Handle />
       <Resizable.Panel defaultSize={30}>{input}</Resizable.Panel>
     </Resizable.PanelGroup>
   );

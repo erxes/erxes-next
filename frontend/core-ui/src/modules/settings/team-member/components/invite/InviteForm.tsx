@@ -1,5 +1,5 @@
 import { FormProvider, SubmitHandler, useFieldArray } from 'react-hook-form';
-import { Button, ScrollArea, Spinner, Table, useToast } from 'erxes-ui';
+import { Button, ScrollArea, Spinner, Table } from 'erxes-ui';
 import { TUserForm } from '@/settings/team-member/types';
 import { useCallback, useState } from 'react';
 import { IconSend } from '@tabler/icons-react';
@@ -20,7 +20,6 @@ export function InviteForm({
     methods,
     methods: { control, handleSubmit },
   } = useUsersSubmitForm();
-  const { toast } = useToast();
   const { handleInvitations, loading } = useUsersInvite();
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const { fields, append, remove } = useFieldArray({
@@ -35,7 +34,6 @@ export function InviteForm({
             entries: data?.entries,
           },
           onCompleted() {
-            toast({ title: 'Invitation sent!' });
             setIsOpen(false);
           },
         });
@@ -43,7 +41,7 @@ export function InviteForm({
         console.error('Error submitting form:', error);
       }
     },
-    [handleInvitations, setIsOpen, toast],
+    [handleInvitations, setIsOpen],
   );
 
   return (

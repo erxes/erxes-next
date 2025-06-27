@@ -1,62 +1,28 @@
-import { QueryHookOptions, useQuery } from '@apollo/client';
-import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
-import { IDepartment } from '../types/Department';
+import { useQuery } from '@apollo/client';
 import { GET_DEPARTMENTS } from '../graphql/queries/getDepartments';
+import { OperationVariables } from '@apollo/client';
+import { IDepartment } from '../types/Department';
 
-const DEPARTMENTS_PER_PAGE = 20;
-
-export const useDepartments = (
-  options?: QueryHookOptions<ICursorListResponse<IDepartment>>,
-) => {
-  const { data, loading, error, fetchMore } = useQuery<
-    ICursorListResponse<IDepartment>
-  >(GET_DEPARTMENTS, { ...options });
-
-  const {
-    list: departments,
-    totalCount = 0,
-    pageInfo,
-  } = data?.departmentsMain ?? {};
-
-  const handleFetchMore = () => {
-    if (totalCount <= (departments?.length || 0)) return;
-    fetchMore({
-      variables: {
-        ...options?.variables,
-        cursor: pageInfo?.endCursor,
-        limit: DEPARTMENTS_PER_PAGE,
-        direction: EnumCursorDirection.FORWARD,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
-        return Object.assign({}, prev, {
-          departmentsMain: {
-            list: [
-              ...(prev.departmentsMain?.list || []),
-              ...fetchMoreResult.departmentsMain.list,
-            ],
-            totalCount: fetchMoreResult.departmentsMain.totalCount,
-            pageInfo: fetchMoreResult.departmentsMain.pageInfo,
-          },
-        });
-      },
-    });
+interface IQueryResult {
+  departmentsMain: {
+    list: IDepartment[];
+    totalCount?: number;
+    pageInfo: {
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+      startCursor: string;
+      endCursor: string;
+    };
   };
+}
 
-  const departmentsWithHasChildren = departments?.map((department) => ({
-    ...department,
-    hasChildren: departments?.some((d) => d.parentId === department._id),
-  }));
+export const useDepartments = (options?: OperationVariables) => {
+  const { data, loading, error } = useQuery<IQueryResult>(
+    GET_DEPARTMENTS,
+    options,
+  );
+  const departments = data?.departmentsMain.list || [];
+  const totalCount = data?.departmentsMain?.totalCount || 0;
 
-  return {
-    departments: departmentsWithHasChildren,
-    sortedDepartments: [...(departmentsWithHasChildren || [])].sort((a, b) =>
-      (a.order ?? '').localeCompare(b.order ?? ''),
-    ),
-    totalCount,
-    pageInfo,
-    loading,
-    error,
-    handleFetchMore,
-  };
+  return { departments, loading, error, totalCount };
 };

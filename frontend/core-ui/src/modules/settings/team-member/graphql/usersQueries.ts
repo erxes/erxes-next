@@ -11,13 +11,22 @@ const GET_USER = gql`
       _id
       username
       email
+      status
+      isActive
+      groupIds
+      brandIds
+      score
       positionIds
       details {
+        avatar
+        fullName
         shortName
         birthDate
+        position
         workStartedDate
         location
         description
+        operatorPhone
         firstName
         middleName
         lastName
@@ -41,7 +50,6 @@ const GET_USERS_QUERY = gql`
     $departmentIds: [String]
     $unitId: String
     $segment: String
-    $isActive: Boolean
   ) {
     users(
       ${GQL_CURSOR_PARAMS}
@@ -55,7 +63,6 @@ const GET_USERS_QUERY = gql`
       departmentIds: $departmentIds
       unitId: $unitId
       segment: $segment
-      isActive: $isActive
     ) {
       list {
         _id
@@ -72,6 +79,7 @@ const GET_USERS_QUERY = gql`
           fullName
           shortName
           birthDate
+          position
           workStartedDate
           location
           description

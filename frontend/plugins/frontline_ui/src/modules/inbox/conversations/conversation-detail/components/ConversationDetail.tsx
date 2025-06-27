@@ -7,14 +7,13 @@ import { useConversationDetail } from '../hooks/useConversationDetail';
 
 import { activeConversationState } from '@/inbox/conversations/states/activeConversationState';
 import { ConversationDetailLayout } from './ConversationDetailLayout';
-import { ConversationIntegrationDetail } from '@/integrations/components/ConversationIntegrationDetail';
+import { ConversationIntegrationDetail } from './ConversationIntegrationDetail';
 import { MessageInput } from './MessageInput';
 
 import { ConversationMessages } from '@/inbox/conversation-messages/components/ConversationMessages';
 import { InboxMessagesSkeleton } from '@/inbox/components/InboxMessagesSkeleton';
-import { useIntegrationInline } from '@/integrations/hooks/useIntegrations';
+import { useIntegrationDetail } from '@/integrations/hooks/useIntegrations';
 import { NoConversationSelected } from './NoConversationSelected';
-import { ConversationMarkAsReadEffect } from './ConversationMarkAsReadEffect';
 
 export const ConversationDetail = () => {
   const [conversationId] = useQueryState<string>('conversationId');
@@ -29,12 +28,11 @@ export const ConversationDetail = () => {
       _id: conversationId,
     },
     skip: !conversationId,
-    fetchPolicy: 'cache-and-network',
   });
 
   const { integrationId } = currentConversation || conversationDetail || {};
 
-  const { integration, loading: integrationLoading } = useIntegrationInline({
+  const { integration, loading: integrationLoading } = useIntegrationDetail({
     variables: {
       _id: integrationId,
     },
@@ -79,7 +77,6 @@ export const ConversationDetail = () => {
               )}
             <ConversationIntegrationDetail />
           </ConversationDetailLayout>
-          <ConversationMarkAsReadEffect />
         </ConversationContext.Provider>
       </div>
     </div>

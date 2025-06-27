@@ -3,7 +3,6 @@ export interface IIntegration {
   name: string;
   kind: string;
   brandId: string;
-  channelIds?: string[];
 }
 
 export interface IIntegrationDetail extends IIntegration {

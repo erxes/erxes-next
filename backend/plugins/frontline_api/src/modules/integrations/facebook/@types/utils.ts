@@ -70,22 +70,6 @@ export interface ICommentParams {
   post?: any;
 }
 
-interface IMessagePostback {
-  title?: string;
-  mid: string;
-  payload: string;
-  referral?: {
-    source: string;
-    type: string;
-    ad_id?: string;
-    ads_context_data?: {
-      ad_title?: string;
-      post_id?: string;
-      photo_url?: string;
-    };
-  };
-}
-
 export interface IChannelData {
   sender: {
     id: string;
@@ -118,7 +102,20 @@ export interface IChannelData {
       };
     };
   };
-  postback?: IMessagePostback;
+  postback?: {
+    title?: string;
+    payload: string;
+    referral?: {
+      source: string;
+      type: string;
+      ad_id?: string;
+      ads_context_data?: {
+        ad_title?: string;
+        post_id?: string;
+        photo_url?: string;
+      };
+    };
+  };
 }
 
 export interface Activity {

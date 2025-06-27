@@ -5,6 +5,8 @@ dotenv.config();
 
 const { NODE_ENV, LOAD_BALANCER_ADDRESS, MONGO_URL } = process.env;
 
+const isDev = NODE_ENV === 'development';
+
 interface PluginConfig {
   name: string;
   port: number;
@@ -12,8 +14,6 @@ interface PluginConfig {
   importExportTypes?: any;
   meta?: any;
 }
-
-export const isDev = NODE_ENV === 'development';
 
 export const keyForConfig = (name: string) => `service:config:${name}`;
 

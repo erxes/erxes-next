@@ -1,26 +1,25 @@
+import { lazy } from 'react';
 import {
+  createRoutesFromElements,
   Route,
   createBrowserRouter,
-  createRoutesFromElements,
 } from 'react-router-dom';
 
-import { AppPath } from '@/types/paths/AppPath';
-import { AutomationRoutes } from '@/app/components/AutomationRoutes';
-import { ComponentsRoutes } from '../components/ComponentsRoutes';
 import { ContactsRoutes } from '@/app/components/ContactsRoutes';
+import { ProductsRoutes } from '@/app/components/ProductsRoutes';
+import { SettingsRoutes } from '@/app/components/SettingsRoutes';
+import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
+import { UserProvider } from '@/auth/providers/UserProvider';
+import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
+import { AppPath } from '@/types/paths/AppPath';
 import { DefaultLayout } from '@/app/components/MainLayout';
-import ForgotPasswordPage from '~/pages/auth/ForgotPasswordPage';
-import { LogRoutes } from '@/app/components/LogRoutes';
 import { NotFoundPage } from '~/pages/not-found/NotFoundPage';
 import { OnBoarding } from '~/pages/onboarding/Onboarding';
-import { OrganizationProvider } from '@/organization/providers/OrganizationProvider';
-import { ProductsRoutes } from '@/app/components/ProductsRoutes';
 import { Providers } from '~/providers';
+import ForgotPasswordPage from '~/pages/auth/ForgotPasswordPage';
 import { SegmentRoutes } from '@/app/components/SegmentsRoutes';
-import { SettingsRoutes } from '@/app/components/SettingsRoutes';
-import { UserProvider } from '@/auth/providers/UserProvider';
-import { getPluginsRoutes } from '@/app/hooks/usePluginsRouter';
-import { lazy } from 'react';
+import { AutomationRoutes } from '@/app/components/AutomationRoutes';
+import { LogRoutes } from '@/app/components/LogRoutes';
 
 const LoginPage = lazy(() => import('~/pages/auth/LoginPage'));
 
@@ -29,6 +28,7 @@ const ResetPasswordPage = lazy(() => import('~/pages/auth/ResetPasswordPage'));
 const CreateOwnerPage = lazy(
   () => import('~/pages/organization/CreateOwnerPage'),
 );
+
 export const useCreateAppRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
@@ -67,12 +67,6 @@ export const useCreateAppRouter = () => {
               />
               <Route path={AppPath.LogsCatchAll} element={<LogRoutes />} />
               {...getPluginsRoutes()}
-              {process.env.NODE_ENV === 'development' && (
-                <Route
-                  path={AppPath.ComponentsCatchAll}
-                  element={<ComponentsRoutes />}
-                />
-              )}
             </Route>
           </Route>
         </Route>

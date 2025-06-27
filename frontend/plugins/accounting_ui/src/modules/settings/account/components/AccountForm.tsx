@@ -11,7 +11,7 @@ import {
 } from 'erxes-ui';
 import { AccountKind, JournalEnum } from '../types/Account';
 import { SelectAccountCategory } from '../account-categories/components/SelectAccountCategory';
-import { SelectBranches, SelectDepartments } from 'ui-modules';
+import { SelectBranch, SelectDepartment } from 'ui-modules';
 import { UseFormReturn } from 'react-hook-form';
 import { TAccountForm } from '../types/accountForm';
 import { JOURNAL_LABELS } from '../constants/journalLabel';
@@ -174,8 +174,7 @@ export const AccountForm = ({
             <Form.Item>
               <Form.Label>Branch</Form.Label>
               <Form.Control>
-                <SelectBranches.FormItem
-                  mode="single"
+                <SelectBranch
                   value={field.value}
                   onValueChange={field.onChange}
                 />
@@ -192,8 +191,7 @@ export const AccountForm = ({
             <Form.Item>
               <Form.Label>Department</Form.Label>
               <Form.Control>
-                <SelectDepartments.FormItem
-                  mode="single"
+                <SelectDepartment
                   value={field.value}
                   onValueChange={field.onChange}
                 />
@@ -250,3 +248,4 @@ export const AccountForm = ({
     </Form>
   );
 };
+

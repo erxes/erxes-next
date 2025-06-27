@@ -10,7 +10,7 @@ export const CONFIG: IUIConfig = {
       icon: IconCashBanknote,
       path: 'accounting',
       hasSettings: true,
-      hasRelationWidget: false,
+      hasWidgets: false,
       submenus: [
         {
           name: 'main',

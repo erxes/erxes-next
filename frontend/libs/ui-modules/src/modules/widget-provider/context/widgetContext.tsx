@@ -1,7 +1,7 @@
 import { IUIConfig } from 'erxes-ui';
 import { createContext, useContext } from 'react';
 
-export type RelationWidgetProps = {
+export type WidgetProps = {
   module: IUIConfig['modules'][number] & {
     pluginName: string;
   };
@@ -9,40 +9,32 @@ export type RelationWidgetProps = {
   contentType: string;
 };
 
-export const RelationWidgetContext = createContext<{
-  RelationWidget: (props: RelationWidgetProps) => JSX.Element | null;
-  relationWidgetsModules: (IUIConfig['modules'][number] & {
-    pluginName: string;
-  })[];
+export const WidgetContext = createContext<{
+  Widget: (props: WidgetProps) => JSX.Element | null;
+  widgetsModules: (IUIConfig['modules'][number] & { pluginName: string })[];
 }>(
   {} as {
-    RelationWidget: (props: any) => JSX.Element | null;
-    relationWidgetsModules: (IUIConfig['modules'][number] & {
-      pluginName: string;
-    })[];
+    Widget: (props: any) => JSX.Element | null;
+    widgetsModules: (IUIConfig['modules'][number] & { pluginName: string })[];
   },
 );
 
-export const RelationWidgetProvider = ({
+export const WidgetProvider = ({
   children,
-  RelationWidget,
-  relationWidgetsModules,
+  Widget,
+  widgetsModules,
 }: {
   children: React.ReactNode;
-  RelationWidget: (props: RelationWidgetProps) => JSX.Element | null;
-  relationWidgetsModules: (IUIConfig['modules'][number] & {
-    pluginName: string;
-  })[];
+  Widget: (props: WidgetProps) => JSX.Element | null;
+  widgetsModules: (IUIConfig['modules'][number] & { pluginName: string })[];
 }) => {
   return (
-    <RelationWidgetContext.Provider
-      value={{ RelationWidget, relationWidgetsModules }}
-    >
+    <WidgetContext.Provider value={{ Widget, widgetsModules }}>
       {children}
-    </RelationWidgetContext.Provider>
+    </WidgetContext.Provider>
   );
 };
 
-export const useRelationWidget = () => {
-  return useContext(RelationWidgetContext);
+export const useWidget = () => {
+  return useContext(WidgetContext);
 };

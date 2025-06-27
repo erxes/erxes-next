@@ -1,19 +1,10 @@
 import { useChannelsByMembers } from '@/inbox/channel/hooks/useChannels';
-import {
-  cn,
-  Collapsible,
-  Command,
-  Input,
-  Skeleton,
-  TextOverflowTooltip,
-  useQueryState,
-} from 'erxes-ui';
+import { Button, Collapsible, Skeleton, TextOverflowTooltip } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { IChannel } from '@/inbox/types/Channel';
+import { useMultiQueryState } from 'erxes-ui';
 import { IconCheck } from '@tabler/icons-react';
 import { channelCollapsibleState } from '@/inbox/channel/states/channelCollapsibleState';
-import { useSetAtom } from 'jotai';
-import { selectMainFilterState } from '@/inbox/states/inboxLayoutState';
 
 export const ChooseChannel = () => {
   const [open, setOpen] = useAtom(channelCollapsibleState);
@@ -52,46 +43,35 @@ const ChooseChannelContent = ({ open }: { open: boolean }) => {
       </div>
     );
 
-  return (
-    <Command>
-      <div className="p-1 pb-2">
-        <Command.Primitive.Input placeholder="Search channels" asChild>
-          <Input variant="secondary" />
-        </Command.Primitive.Input>
-      </div>
-
-      <Command.List>
-        {channels?.map((channel: IChannel) => (
-          <ChannelItem key={channel._id} {...channel} />
-        ))}
-      </Command.List>
-    </Command>
-  );
+  return channels?.map((channel: IChannel) => (
+    <ChannelItem key={channel._id} {...channel} />
+  ));
 };
 
 const ChannelItem = ({ _id, name }: IChannel) => {
-  const [channelId, setChannelId] = useQueryState<string>('channelId');
-  const selectMainFilter = useSetAtom(selectMainFilterState);
+  const [{ channelId }, setValues] = useMultiQueryState<{
+    channelId: string;
+    detailView: boolean;
+  }>(['channelId', 'detailView']);
 
   const isActive = channelId === _id;
 
-  const handleClick = () => {
-    setChannelId(_id === channelId ? null : _id);
-    selectMainFilter();
-  };
+  const handleClick = () =>
+    setValues({
+      channelId: _id,
+      detailView: true,
+    });
 
   return (
-    <Command.Item
-      value={name}
-      onSelect={handleClick}
-      className={cn(
-        'w-full justify-start pl-7 pr-2 relative text-left',
-        isActive && 'bg-muted',
-      )}
+    <Button
+      key={_id}
+      variant={isActive ? 'secondary' : 'ghost'}
+      className="w-full justify-start pl-7 relative text-left"
+      onClick={handleClick}
     >
       {isActive && <IconCheck className="absolute left-1.5" />}
       <TextOverflowTooltip value={name} />
-      <span className="ml-auto text-xs text-accent-foreground pr-2">0</span>
-    </Command.Item>
+      <span className="ml-auto text-xs text-accent-foreground">0</span>
+    </Button>
   );
 };

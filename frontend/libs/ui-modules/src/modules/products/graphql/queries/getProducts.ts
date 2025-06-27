@@ -1,39 +1,48 @@
 import { gql } from '@apollo/client';
-import {
-  GQL_CURSOR_PARAM_DEFS,
-  GQL_PAGE_INFO,
-  GQL_CURSOR_PARAMS,
-} from 'erxes-ui';
 
-export const GET_PRODUCTS = gql`
-  query SelectProduct(
+export const GET_SELECT_PRODUCTS = gql`
+  query SelectProducts(
+    $type: String
+    $categoryId: String
     $searchValue: String
-    ${GQL_CURSOR_PARAM_DEFS}
+    $vendorId: String
+    $brand: String
+    $tag: String
+    $segment: String
+    $segmentData: String
+    $page: Int
+    $perPage: Int
+    $sortField: String
+    $sortDirection: Int
   ) {
-    productsMain(
+    products(
+      type: $type
+      categoryId: $categoryId
       searchValue: $searchValue
-      ${GQL_CURSOR_PARAMS}
+      vendorId: $vendorId
+      brand: $brand
+      tag: $tag
+      segment: $segment
+      segmentData: $segmentData
+      page: $page
+      perPage: $perPage
+      sortField: $sortField
+      sortDirection: $sortDirection
     ) {
-      list {
-        _id
-        code
-        name
-      }
-      totalCount
-      ${GQL_PAGE_INFO}
+      _id
+      code
+      name
     }
-  }
-`;
-
-export const GET_ASSIGNED_PRODUCTS = gql`
-  query AssignedProducts($ids: [String]) {
-    productsMain(ids: $ids) {
-      list {
-        _id
-        name
-        code
-      }
-    }
+    productsTotalCount(
+      type: $type
+      categoryId: $categoryId
+      searchValue: $searchValue
+      vendorId: $vendorId
+      brand: $brand
+      tag: $tag
+      segment: $segment
+      segmentData: $segmentData
+    )
   }
 `;
 

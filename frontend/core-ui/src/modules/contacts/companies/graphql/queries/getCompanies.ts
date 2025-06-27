@@ -14,6 +14,7 @@ export const GET_COMPANIES = gql`
     $searchValue: String
     $autoCompletion: Boolean
     $autoCompletionType: String
+    $brandIds: [String]
     $sortField: String
     $sortDirection: Int
     $dateFilters: String
@@ -33,6 +34,7 @@ export const GET_COMPANIES = gql`
       searchValue: $searchValue
       autoCompletion: $autoCompletion
       autoCompletionType: $autoCompletionType
+      brandIds: $brandIds
       sortField: $sortField
       sortDirection: $sortDirection
       dateFilters: $dateFilters

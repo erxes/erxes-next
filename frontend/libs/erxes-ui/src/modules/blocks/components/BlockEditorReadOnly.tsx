@@ -7,7 +7,7 @@ import { themeState } from 'erxes-ui/state';
 import { parseBlocks } from '../utils';
 import DOMPurify from 'dompurify';
 import { cn } from 'erxes-ui/lib';
-import React, { useMemo } from 'react';
+import React from 'react';
 export const BlockEditorReadOnly = React.forwardRef<
   HTMLDivElement,
   {
@@ -23,16 +23,11 @@ export const BlockEditorReadOnly = React.forwardRef<
   });
   const theme = useAtomValue(themeState);
 
-  const sanitized = useMemo(
-    () => (content ? DOMPurify.sanitize(content) : ''),
-    [content],
-  );
-
   if (!contentBlocks) {
     if (content) {
       return (
         <div
-          dangerouslySetInnerHTML={{ __html: sanitized }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
           className={className}
           ref={ref}
         />

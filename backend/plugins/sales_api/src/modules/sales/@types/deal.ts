@@ -3,9 +3,8 @@ import {
   ICustomField,
   IListParams,
 } from 'erxes-api-shared/core-types';
-import { Document } from 'mongoose';
 
-export interface IProductData {
+export interface IProductData extends Document {
   _id?: string;
   productId: string;
   uom: string;
@@ -88,8 +87,6 @@ export interface IDealDocument extends IDeal, Document {
   _id: string;
   createdAt?: Date;
   updatedAt?: Date;
-
-  customProperties?: Record<string, any>[];
 }
 
 export interface IDate {
@@ -100,6 +97,8 @@ export interface IDate {
 export interface IDealQueryParams extends IListParams, ICursorPaginateParams {
   pipelineId: string;
   pipelineIds: string[];
+  page: number;
+  perPage: number;
   stageId: string;
   _ids?: string;
   skip?: number;
@@ -109,6 +108,8 @@ export interface IDealQueryParams extends IListParams, ICursorPaginateParams {
   customerIds?: string[];
   companyIds?: string[];
   assignedUserIds?: string[];
+  sortField?: string;
+  sortDirection?: number;
   labelIds?: string[];
   userIds?: string[];
   segment?: string;
@@ -119,20 +120,4 @@ export interface IDealQueryParams extends IListParams, ICursorPaginateParams {
   tagIds?: string[];
   number?: string;
   productIds?: string[];
-}
-
-export interface IArchiveArgs extends ICursorPaginateParams {
-  pipelineId: string;
-  search: string;
-  userIds?: string[];
-  priorities?: string[];
-  assignedUserIds?: string[];
-  labelIds?: string[];
-  productIds?: string[];
-  companyIds?: string[];
-  customerIds?: string[];
-  startDate?: string;
-  endDate?: string;
-  sources?: string[];
-  hackStages?: string[];
 }

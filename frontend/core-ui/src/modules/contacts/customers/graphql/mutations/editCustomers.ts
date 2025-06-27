@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const EDIT_CUSTOMERS = gql`
   mutation CustomersEdit(
-    $_id: String!
+    $id: String!
     $avatar: String
     $firstName: String
     $lastName: String
@@ -20,9 +20,10 @@ export const EDIT_CUSTOMERS = gql`
     $description: String
     $links: JSON
     $isSubscribed: String
+    $tagIds: [String]
   ) {
     customersEdit(
-      _id: $_id
+      _id: $id
       avatar: $avatar
       firstName: $firstName
       lastName: $lastName
@@ -40,6 +41,7 @@ export const EDIT_CUSTOMERS = gql`
       description: $description
       links: $links
       isSubscribed: $isSubscribed
+      tagIds: $tagIds
     ) {
       _id
     }

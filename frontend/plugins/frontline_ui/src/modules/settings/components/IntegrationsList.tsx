@@ -10,6 +10,8 @@ import {
 import {
   Badge,
   Button,
+  InlineCell,
+  InlineCellDisplay,
   RecordTable,
   RecordTableCellDisplay,
   Skeleton,
@@ -94,9 +96,13 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
     header: () => <RecordTable.InlineHead label="Name" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          {cell.getValue() as string}
-        </RecordTableCellDisplay>
+        <InlineCell
+          name={cell.column.id}
+          recordId={cell.row.original._id}
+          display={() => (
+            <InlineCellDisplay>{cell.getValue() as string}</InlineCellDisplay>
+          )}
+        />
       );
     },
     size: 250,
@@ -107,9 +113,15 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
     header: () => <RecordTable.InlineHead label="Kind" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay className="w-full flex items-center justify-center">
-          <Badge className="text-xs">{cell.getValue() as string}</Badge>
-        </RecordTableCellDisplay>
+        <InlineCell
+          name={cell.column.id}
+          recordId={cell.row.original._id}
+          display={() => (
+            <InlineCellDisplay className="w-full flex items-center justify-center">
+              <Badge className="text-xs">{cell.getValue() as string}</Badge>
+            </InlineCellDisplay>
+          )}
+        />
       );
     },
   },
@@ -135,19 +147,29 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
 
       if (status) {
         return (
-          <RecordTableCellDisplay className="w-full flex items-center justify-center">
-            <Badge className="text-xs capitalize" variant={'success'}>
-              Active
-            </Badge>
-          </RecordTableCellDisplay>
+          <InlineCell
+            name={cell.column.id}
+            recordId={cell.row.original._id}
+            display={() => (
+              <InlineCellDisplay className="w-full flex items-center justify-center">
+                <Badge className="text-xs capitalize" variant={'success'}>
+                  Active
+                </Badge>
+              </InlineCellDisplay>
+            )}
+          />
         );
       } else
         return (
-          <RecordTableCellDisplay>
-            <Badge className="text-xs" variant={'destructive'}>
-              Inactive
-            </Badge>
-          </RecordTableCellDisplay>
+          <InlineCell
+            name="healthStatus"
+            recordId={cell.row.original._id}
+            display={() => (
+              <Badge className="text-xs" variant={'destructive'}>
+                Inactive
+              </Badge>
+            )}
+          />
         );
     },
     size: 100,
@@ -162,19 +184,29 @@ export const integrationTypeColumns: ColumnDef<IIntegrationColumnDef>[] = [
 
       if (status === 'healthy') {
         return (
-          <RecordTableCellDisplay className="w-full flex items-center justify-center">
-            <Badge className="text-xs capitalize" variant={'success'}>
-              {status}
-            </Badge>
-          </RecordTableCellDisplay>
+          <InlineCell
+            name={cell.column.id}
+            recordId={cell.row.original._id}
+            display={() => (
+              <InlineCellDisplay className="w-full flex items-center justify-center">
+                <Badge className="text-xs capitalize" variant={'success'}>
+                  {status}
+                </Badge>
+              </InlineCellDisplay>
+            )}
+          />
         );
       } else
         return (
-          <RecordTableCellDisplay>
-            <Badge className="text-xs" variant={'destructive'}>
-              {'Unhealthy'}
-            </Badge>
-          </RecordTableCellDisplay>
+          <InlineCell
+            name="healthStatus"
+            recordId={cell.row.original._id}
+            display={() => (
+              <Badge className="text-xs" variant={'destructive'}>
+                {'Unhealthy'}
+              </Badge>
+            )}
+          />
         );
     },
     size: 120,

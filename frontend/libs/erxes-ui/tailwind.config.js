@@ -3,7 +3,10 @@ const { join } = require('path');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [join(__dirname, 'src/**/*.tsx')],
+  content: [
+    join(__dirname, '{src,pages,components,app,modules}/**/*.{ts,tsx,html}'),
+    'frontend/libs/ui-modules/src/**/*.{ts,tsx,html}',
+  ],
   darkMode: 'class',
   theme: {
     fontFamily: {

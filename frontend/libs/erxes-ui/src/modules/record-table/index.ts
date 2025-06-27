@@ -46,5 +46,3 @@ export * from './components/RecordTableCellInline';
 export * from './components/RecordTableTree';
 export * from './contexts/RecordTableHotkeyContext';
 export * from './components/RecordTableHotkeyCell';
-
-export * from './states/RecordTableCursorState';

@@ -1,6 +1,3 @@
-import { UseFormReturn } from "react-hook-form"
-import { BasicInfoFormValues, DeliveryConfigFormValues, FinanceConfigFormValues, FormStepData, PaymentFormValues, PermissionFormValues, ProductFormValues, UiConfigFormValues } from "~/modules/create-pos/components/formSchema"
-
 export interface PermissionSettings {
     adminPrintTempBill: boolean
     adminDirectSales: boolean
@@ -113,34 +110,4 @@ export interface PaymentMethod {
     title: string
     icon: string
     config: string 
-  }
-
-export interface UsePosCreateHandlersProps {
-    forms: {
-      basicInfo: UseFormReturn<BasicInfoFormValues>;
-      permission: UseFormReturn<PermissionFormValues>;
-      product: UseFormReturn<ProductFormValues>;
-      payment: UseFormReturn<PaymentFormValues>;
-      uiConfig?: UseFormReturn<UiConfigFormValues>;
-      deliveryConfig?: UseFormReturn<DeliveryConfigFormValues>;
-      financeConfig?: UseFormReturn<FinanceConfigFormValues>;
-    };
-    formStepData: FormStepData;
-  }
-  
-export interface SlotData {
-    code: string;
-    name: string;
-    posId: string;
-    option: {
-      width: number;
-      height: number;
-      top: number;
-      left: number;
-      rotateAngle: number;
-      borderRadius: number;
-      color: string;
-      zIndex: number;
-      isShape: boolean;
-    };
   }

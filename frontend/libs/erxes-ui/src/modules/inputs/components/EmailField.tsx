@@ -77,7 +77,6 @@ export const EmailListField = ({
     return () => {
       setShowEmailInput(false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, setEmails]);
   return (
     <EmailFieldsProvider recordId={recordId} onValueChange={onValueChange} noValidation={noValidation}>
@@ -143,7 +142,7 @@ const EmailOptions = ({
   isPrimary,
 }: IEmailField & { isPrimary?: boolean }) => {
   const { recordId, onValueChange, noValidation } = useEmailFields();
-  const emails = useAtomValue(emailsFamilyState(recordId));
+  const [emails, setEmails] = useAtom(emailsFamilyState(recordId));
   const setEditingEmail = useSetAtom(editingEmailFamilyState(recordId));
   const setShowEmailInput = useSetAtom(showEmailInputFamilyState(recordId));
   const handleSetPrimaryEmail = () => {
@@ -258,7 +257,6 @@ const EmailForm = () => {
     if (editingEmail) {
       form.setValue('email', editingEmail);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showEmailInput, editingEmail]);
 
   useEffect(() => {
@@ -295,7 +293,7 @@ const EmailForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(({ email }) => {
-          if (editingEmail) {
+          if (!!editingEmail) {
             onEmailEdit(email, editingEmail);
           } else {
             onEmailAdd(email);
@@ -309,7 +307,7 @@ const EmailForm = () => {
             render={({ field }) => (
               <div className="px-1 pb-1">
                 <Input
-                  placeholder={editingEmail ? 'Edit email' : 'Add email'}
+                  placeholder={!!editingEmail ? 'Edit email' : 'Add email'}
                   variant="secondary"
                   className={cn(
                     form.formState.errors.email &&
@@ -339,7 +337,7 @@ const EmailForm = () => {
             }}
           >
             <IconPlus />
-            {editingEmail ? 'Edit email' : 'Add email'}
+            {!!editingEmail ? 'Edit email' : 'Add email'}
           </Button>
         </div>
       </form>

@@ -9,7 +9,8 @@ export interface IUsersDetails {
   fullName: string;
   firstName: string;
   lastName: string;
-  workStartedDate: Date;
+  position: string;
+  workStartedDate: string;
 }
 export enum EStatus {
   Verified = 'Verified',
@@ -23,7 +24,6 @@ export interface IUser {
   email: string;
   employeeId: string;
   isActive: boolean;
-  positionIds: string[];
 }
 
 export interface IUserEntry {

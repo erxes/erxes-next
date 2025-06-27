@@ -18,24 +18,19 @@ import {
   proxyReq,
 } from '~/proxy/middleware';
 
-import { getPlugin, isDev, redis } from 'erxes-api-shared/utils';
+import { getPlugin, redis } from 'erxes-api-shared/utils';
 import { applyGraphqlLimiters } from '~/middlewares/graphql-limiter';
 import {
   startSubscriptionServer,
   stopSubscriptionServer,
 } from './subscription';
-import * as fs from 'fs';
-import * as path from 'path';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
-const { DOMAIN } = process.env;
+const domain = process.env.DOMAIN ?? 'http://localhost:3001';
 
 const corsOptions = {
   credentials: true,
-  origin: [
-    ...(DOMAIN ? [DOMAIN] : []),
-    ...(isDev ? ['http://localhost:3001'] : []),
-  ],
+  origin: [domain],
 };
 
 const myQueue = new Queue('gateway-service-discovery', {
@@ -67,16 +62,6 @@ app.get('/health', async (_req, res) => {
   res.end('ok');
 });
 
-app.get('/locales/:lng', async (req, res) => {
-  try {
-    const lngJson = fs.readFileSync(
-      path.join(__dirname, `./locales/${req.params.lng}`),
-    );
-    res.json(JSON.parse(lngJson.toString()));
-  } catch {
-    res.status(500).send('Error fetching services');
-  }
-});
 app.use('/pl:serviceName', async (req, res) => {
   try {
     const serviceName: string = req.params.serviceName.replace(':', '');

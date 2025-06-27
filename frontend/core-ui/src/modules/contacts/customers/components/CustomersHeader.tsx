@@ -4,23 +4,20 @@ import { PageHeader } from 'ui-modules';
 import { Link } from 'react-router-dom';
 import { ContactsPath } from '@/types/paths/ContactsPath';
 import { CustomerAddSheet } from './CustomerAddSheet';
+import { useLocation } from 'react-router-dom';
 import { ContactsBreadcrumb } from '@/contacts/components/ContactsBreadcrumb';
-import { useSetAtom } from 'jotai';
-import { recordTableCursorAtomFamily } from 'erxes-ui';
-import { useIsCustomerLeadSessionKey } from '../hooks/useCustomerLeadSessionKey';
 
 export const CustomersHeader = () => {
-  const { sessionKey, isLead } = useIsCustomerLeadSessionKey();
-  const setCursor = useSetAtom(recordTableCursorAtomFamily(sessionKey));
+  const pathname = useLocation().pathname;
 
   return (
     <PageHeader>
       <PageHeader.Start>
         <ContactsBreadcrumb>
-          {isLead ? (
+          {pathname.includes(ContactsPath.Leads) ? (
             <>
               <Breadcrumb.Page>
-                <Button variant="ghost" asChild onClick={() => setCursor(null)}>
+                <Button variant="ghost" asChild>
                   <Link to={`/contacts/${ContactsPath.Leads}`}>
                     <IconMagnetFilled />
                     Leads
@@ -30,7 +27,7 @@ export const CustomersHeader = () => {
             </>
           ) : (
             <Breadcrumb.Page>
-              <Button variant="ghost" asChild onClick={() => setCursor(null)}>
+              <Button variant="ghost" asChild>
                 <Link to={`/contacts/${ContactsPath.Customers}`}>
                   <IconUserFilled />
                   Customers
@@ -42,7 +39,9 @@ export const CustomersHeader = () => {
         <PageHeader.FavoriteToggleButton />
       </PageHeader.Start>
 
-      <PageHeader.End>{!isLead && <CustomerAddSheet />}</PageHeader.End>
+      <PageHeader.End>
+        <CustomerAddSheet />
+      </PageHeader.End>
     </PageHeader>
   );
 };

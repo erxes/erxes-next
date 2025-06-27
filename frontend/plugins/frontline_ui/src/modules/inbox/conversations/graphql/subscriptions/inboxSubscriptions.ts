@@ -41,7 +41,7 @@ export const CONVERSATION_MESSAGE_INSERTED = gql`
   }
 `;
 
-export const CONVERSATION_CLIENT_MESSAGE_INSERTED = gql`
+const conversationClientMessageInserted = `
   subscription conversationClientMessageInserted($userId: String!) {
     conversationClientMessageInserted(userId: $userId) {
       _id
@@ -58,7 +58,7 @@ const conversationClientTypingStatusChanged = `
   }
 `;
 
-export const CONVERSATION_EXTERNAL_INTEGRATION_MESSAGE_INSERTED = gql`
+const conversationExternalIntegrationMessageInserted = `
   subscription conversationExternalIntegrationMessageInserted {
     conversationExternalIntegrationMessageInserted
   }
@@ -76,6 +76,8 @@ const customerConnectionChanged = `
 export default {
   conversationChanged,
   conversationMessageInserted,
+  conversationClientMessageInserted,
   conversationClientTypingStatusChanged,
+  conversationExternalIntegrationMessageInserted,
   customerConnectionChanged,
 };

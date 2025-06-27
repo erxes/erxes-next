@@ -1,63 +1,44 @@
-import { IconEye } from '@tabler/icons-react';
-import { Button, Dialog } from 'erxes-ui';
-import { useState } from 'react';
+import { Button, Dialog, TablerIcon } from 'erxes-ui';
 import ReactJson from 'react-json-view';
+import auth from './AuthLogDetailContent';
+import graphql from './GraphqlLogDetailContent';
+import mongo from './MongoLogDetailContent';
 import { ILogDoc } from '../types';
-import { lazy } from 'react';
 
 type Props = {
   doc: ILogDoc;
 };
 
-const MongoContent = lazy(() =>
-  import('./MongoLogDetailContent').then((module) => ({
-    default: module.MongoLogDetailContent,
-  })),
-);
-
-const GraphqlContent = lazy(() =>
-  import('./GraphqlLogDetailContent').then((module) => ({
-    default: module.GraphqlLogDetailContent,
-  })),
-);
-
-const AuthContent = lazy(() =>
-  import('./AuthLogDetailContent').then((module) => ({
-    default: module.AuthLogDetailContent,
-  })),
-);
-
-const LogDetailContent = ({ doc }: { doc: ILogDoc }) => {
+const handleDetail = (doc: ILogDoc) => {
   const { source, payload } = doc;
 
   if (source === 'mongo') {
-    return <MongoContent {...doc} />;
+    return mongo(doc);
   }
 
   if (source === 'graphql') {
-    return <GraphqlContent {...doc} />;
+    return graphql(doc);
   }
 
   if (source === 'auth') {
-    return <AuthContent {...doc} />;
+    return auth(doc);
   }
   return <ReactJson src={payload} collapsed={1} />;
 };
 
 export function LogDetailDialog({ doc }: Props) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <Dialog.Trigger>
         <div className="flex w-full justify-center">
           <Button variant="ghost" size="icon">
-            <IconEye />
+            <TablerIcon name="IconEye" className="text-muted-foreground" />
           </Button>
         </div>
       </Dialog.Trigger>
       <Dialog.Content className="max-w-[1200px]">
-        {open && <LogDetailContent doc={doc} />}
+        <Dialog.Header></Dialog.Header>
+        {handleDetail(doc)}
       </Dialog.Content>
     </Dialog>
   );

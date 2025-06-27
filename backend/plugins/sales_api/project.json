@@ -47,7 +47,7 @@
 
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f backend/plugins/sales_api/Dockerfile . -t erxes/erxes-next-sales_api"
+      "command": "docker build -f backend/plugins/sales_api/Dockerfile . -t sales_api"
     }
   }
 }

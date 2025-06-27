@@ -1,21 +1,15 @@
-import {
-  EnumCursorDirection,
-  ICursorListResponse,
-  mergeCursorData,
-  validateFetchMore,
-} from 'erxes-ui';
+import { useQuery, OperationVariables, QueryHookOptions } from '@apollo/client';
 import { GET_ASSIGNED_MEMBER, GET_USERS } from '../graphql/queries/userQueries';
-import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
-
-import { IUser } from '../types/TeamMembers';
+import { IMember } from '../types/TeamMembers';
+import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
 const USERS_LIMIT = 30;
 
 export const useUsers = (
-  options?: QueryHookOptions<ICursorListResponse<IUser>>,
+  options?: QueryHookOptions<ICursorListResponse<IMember>>,
 ) => {
   const { data, loading, fetchMore, error } = useQuery<
-    ICursorListResponse<IUser>
+    ICursorListResponse<IMember>
   >(GET_USERS, {
     ...options,
     variables: {
@@ -27,26 +21,26 @@ export const useUsers = (
   const { list = [], totalCount = 0, pageInfo } = data?.users || {};
 
   const handleFetchMore = () => {
-    if (
-      !validateFetchMore({ direction: EnumCursorDirection.FORWARD, pageInfo })
-    )
-      return;
+    if (totalCount <= list.length) return;
 
     fetchMore({
       variables: {
+        ...options?.variables,
         direction: EnumCursorDirection.FORWARD,
         cursor: pageInfo?.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
 
-        return Object.assign({}, prev, {
-          users: mergeCursorData({
-            direction: EnumCursorDirection.FORWARD,
-            fetchMoreResult: fetchMoreResult.users,
-            prevResult: prev.users,
-          }),
-        });
+        return {
+          ...prev,
+          users: {
+            ...prev.users,
+            list: [...(prev.users.list || []), ...fetchMoreResult.users.list],
+            totalCount: fetchMoreResult.users.totalCount,
+            pageInfo: fetchMoreResult.users.pageInfo,
+          },
+        };
       },
     });
   };
@@ -57,7 +51,6 @@ export const useUsers = (
     handleFetchMore,
     error,
     totalCount,
-    pageInfo,
   };
 };
 
@@ -66,14 +59,14 @@ export const useAssignedMember = (options?: OperationVariables) => {
   return { details: data?.userDetail?.details, loading, error };
 };
 
-export interface IUserInlineData {
-  userDetail: IUser;
+export interface IMemberInlineData {
+  userDetail: IMember;
 }
 
 export const useMemberInline = (
-  options?: QueryHookOptions<IUserInlineData>,
+  options?: QueryHookOptions<IMemberInlineData>,
 ) => {
-  const { data, loading, error } = useQuery<IUserInlineData>(
+  const { data, loading, error } = useQuery<IMemberInlineData>(
     GET_ASSIGNED_MEMBER,
     options,
   );

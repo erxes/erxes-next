@@ -33,7 +33,7 @@ const configQueries = {
       { $sort: { date: -1 } },
       { $limit: 1 },
       { $unwind: '$details' },
-      { $match: { 'details.productId': { $in: productIds || [] } } },
+      { $match: { 'details.productId': { $in: productIds } } },
       { $group: { _id: '$details.productId', cost: { $first: '$cost' } } }
     ]);
 
@@ -42,11 +42,6 @@ const configQueries = {
       result[productIdCost._id] = productIdCost.cost;
     }
 
-    //temp test
-
-    for(const prodId of productIds || []) {
-      result[prodId] = Math.round(Math.random() * 100000);
-    }
     // { [productId: string]: number }
     return result
   },

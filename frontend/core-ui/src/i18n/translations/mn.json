@@ -1,0 +1,16 @@
+{
+  "$schema": "./$schema.json",
+  "nav": {
+    "plugins": "Плагин",
+    "teamInbox": "Багийн имэйл хайрцаг",
+    "inbox": "Inbox",
+    "sales": "Борлуулалт",
+    "tasks": "Даалгаврууд",
+    "accounting": "Нябо бүртгэл",
+    "accounting.subMenu": {
+      "main": "Баримтууд",
+      "records": "Бичилтүүд",
+      "odds": "Зөрүүтэй баримтууд"
+    }
+  }
+}

@@ -82,10 +82,10 @@ export const removeIntegration = async (
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-  let domain = `${DOMAIN}/gateway/pl:facebook`;
+  let domain = `${DOMAIN}/gateway/pl:frontline/facebook`;
 
   if (process.env.NODE_ENV !== 'production') {
-    domain = `${DOMAIN}/pl:facebook`;
+    domain = `${DOMAIN}/pl:frontline/facebook`;
   }
 
   if (ENDPOINT_URL) {
@@ -149,6 +149,7 @@ export const repairIntegrations = async (
   const integration = await models.FacebookIntegrations.findOne({
     erxesApiId: integrationId,
   });
+
   if (!integration) {
     throw new Error('Integration not found');
   }
@@ -177,10 +178,10 @@ export const repairIntegrations = async (
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-  let domain = `${DOMAIN}/gateway/pl:facebook`;
+  let domain = `${DOMAIN}/gateway/pl:frontline/facebook`;
 
   if (process.env.NODE_ENV !== 'production') {
-    domain = `${DOMAIN}/pl:facebook`;
+    domain = `${DOMAIN}/pl:frontline/facebook`;
   }
 
   if (ENDPOINT_URL) {
@@ -291,10 +292,10 @@ export const facebookCreateIntegration = async (
   const ENDPOINT_URL = getEnv({ name: 'ENDPOINT_URL' });
   const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-  let domain = `${DOMAIN}/gateway/pl:facebook`;
+  let domain = `${DOMAIN}/gateway/pl:frontline/facebook`;
 
   if (process.env.NODE_ENV !== 'production') {
-    domain = `${DOMAIN}/pl:facebook`;
+    domain = `${DOMAIN}/pl:frontline/facebook`;
   }
 
   if (ENDPOINT_URL) {

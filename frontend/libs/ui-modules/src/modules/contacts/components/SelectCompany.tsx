@@ -1,87 +1,83 @@
-import { ICompany } from '../types';
 import {
-  SelectCompanyContext,
-  useSelectCompanyContext,
-} from 'ui-modules/modules/contacts/contexts/SelectCompanyContext';
-import { useCompanies } from 'ui-modules/modules/contacts/hooks/useCompanies';
-import { useDebounce } from 'use-debounce';
-import { useState } from 'react';
-import { cn, Combobox, Command, Popover } from 'erxes-ui';
-import { CompaniesInline } from './CompaniesInline';
-import {
-  RecordTablePopover,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
+  AvatarProps,
+  ButtonProps,
+  Combobox,
+  Command,
+  Popover,
+  Skeleton,
 } from 'erxes-ui';
+import { useCompanies } from '../hooks/useCompanies';
+import { useState } from 'react';
+import { useDebounce } from 'use-debounce';
+import { ICompany } from '../types/Company';
+import React from 'react';
+import { useCompanyInline } from '../hooks/useCompanyInline';
+import { CompanyInline } from './CompanyInline';
 
-interface SelectCompanyProviderProps {
-  children: React.ReactNode;
-  value?: string[] | string;
-  onValueChange?: (value: string[] | string) => void;
-  mode?: 'single' | 'multiple';
+interface SelectCompanyProps {
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
-const SelectCompanyProvider = ({
-  children,
-  value,
-  onValueChange,
-  mode = 'single',
-}: SelectCompanyProviderProps) => {
-  const [companies, setCompanies] = useState<ICompany[]>([]);
-  const companyIds = !value ? [] : Array.isArray(value) ? value : [value];
-  const onSelect = (company: ICompany) => {
-    if (!company) return;
-    if (mode === 'single') {
-      setCompanies([company]);
-      onValueChange?.(company._id);
-      return;
-    }
-    const arrayValue = Array.isArray(value) ? value : [];
-    const isCompanySelected = arrayValue.includes(company._id);
-    const newSelectedCompanyIds = isCompanySelected
-      ? arrayValue.filter((id) => id !== company._id)
-      : [...arrayValue, company._id];
-
-    setCompanies((prevCompanies) => {
-      const companyMap = new Map(prevCompanies.map((c) => [c._id, c]));
-      companyMap.set(company._id, company);
-      return newSelectedCompanyIds
-        .map((id) => companyMap.get(id))
-        .filter((c): c is ICompany => c !== undefined);
-    });
-    onValueChange?.(newSelectedCompanyIds);
-  };
-  return (
-    <SelectCompanyContext.Provider
-      value={{
-        companyIds,
-        onSelect,
-        companies,
-        setCompanies,
-        loading: false,
-        error: null,
-      }}
-    >
-      {children}
-    </SelectCompanyContext.Provider>
+export const SelectCompany = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  ButtonProps & SelectCompanyProps
+>(({ value, onValueChange, children, ...props }, ref) => {
+  const [open, setOpen] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<ICompany | undefined>(
+    undefined,
   );
-};
 
-const SelectCompanyContent = () => {
+  const handleSelect = (company: ICompany | undefined) => {
+    setSelectedCompany(company);
+    onValueChange?.(company?._id || '');
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen} modal>
+      {children ? (
+        children
+      ) : (
+        <SelectCompanyTrigger
+          value={value || ''}
+          selectedCompany={selectedCompany}
+          setSelectedCompany={setSelectedCompany}
+          {...props}
+          ref={ref}
+        />
+      )}
+
+      <Combobox.Content>
+        <SelectCompanyList
+          renderItem={(company) => (
+            <SelectCompanyItem
+              key={company._id}
+              company={company}
+              selectedCompany={selectedCompany}
+              handleSelect={handleSelect}
+            />
+          )}
+        />
+      </Combobox.Content>
+    </Popover>
+  );
+});
+
+export function SelectCompanyList({
+  renderItem,
+}: {
+  renderItem: (company: ICompany) => React.ReactNode;
+}) {
   const [search, setSearch] = useState('');
   const [debouncedSearch] = useDebounce(search, 500);
-  const { companyIds, companies } = useSelectCompanyContext();
-  const {
-    companies: companiesData,
-    loading,
-    handleFetchMore,
-    totalCount,
-    error,
-  } = useCompanies({
-    variables: {
-      searchValue: debouncedSearch,
-    },
-  });
+
+  const { companies, loading, handleFetchMore, totalCount, error } =
+    useCompanies({
+      variables: {
+        searchValue: debouncedSearch,
+      },
+    });
   return (
     <Command shouldFilter={false}>
       <Command.Input
@@ -89,134 +85,72 @@ const SelectCompanyContent = () => {
         onValueChange={setSearch}
         variant="secondary"
         wrapperClassName="flex-auto"
-        focusOnMount
       />
       <Command.List className="max-h-[300px] overflow-y-auto">
-        {companies?.length > 0 && (
-          <>
-            {companies.map((company) => (
-              <SelectCompanyCommandItem key={company._id} company={company} />
-            ))}
-            <Command.Separator className="my-1" />
-          </>
-        )}
         <Combobox.Empty loading={loading} error={error} />
-        {!loading &&
-          companiesData
-            ?.filter(
-              (company) =>
-                !companyIds.find((companyId) => companyId === company._id),
-            )
-            .map((company) => (
-              <SelectCompanyCommandItem key={company._id} company={company} />
-            ))}
-
-        {!loading && (
-          <Combobox.FetchMore
-            fetchMore={handleFetchMore}
-            currentLength={companiesData.length || 0}
-            totalCount={totalCount}
-          />
-        )}
+        {companies?.map((company: ICompany) => renderItem(company))}
+        <Combobox.FetchMore
+          fetchMore={handleFetchMore}
+          currentLength={companies?.length}
+          totalCount={totalCount}
+        />
       </Command.List>
     </Command>
   );
-};
+}
 
-const SelectCompanyCommandItem = ({ company }: { company: ICompany }) => {
-  const { onSelect, companyIds } = useSelectCompanyContext();
+export const SelectCompanyTrigger = React.forwardRef<
+  React.ElementRef<typeof Combobox.Trigger>,
+  ButtonProps & {
+    value: string;
+    selectedCompany?: ICompany;
+    setSelectedCompany: (company?: ICompany) => void;
+  }
+>(({ value, selectedCompany, setSelectedCompany, ...props }, ref) => {
+  const { loading } = useCompanyInline({
+    variables: { _id: value },
+    skip: !value || selectedCompany?._id === value,
+    onCompleted: ({ companyDetail }: { companyDetail: ICompany }) => {
+      setSelectedCompany({ ...companyDetail, _id: value });
+    },
+  });
+
+  return (
+    <Combobox.Trigger disabled={loading} {...props} ref={ref}>
+      {value ? (
+        <CompanyInline
+          company={selectedCompany}
+          avatarProps={{
+            size: props.size as AvatarProps['size'],
+          }}
+        />
+      ) : loading ? (
+        <Skeleton className="w-full h-8" />
+      ) : (
+        <Combobox.Value placeholder="Select company" />
+      )}
+    </Combobox.Trigger>
+  );
+});
+
+export const SelectCompanyItem = ({
+  company,
+  selectedCompany,
+  handleSelect,
+}: {
+  company: ICompany;
+  selectedCompany?: ICompany;
+  handleSelect: (company?: ICompany) => void;
+}) => {
+  const isSelected = selectedCompany?._id === company._id;
   return (
     <Command.Item
+      key={company._id}
       value={company._id}
-      onSelect={() => {
-        onSelect(company);
-      }}
+      onSelect={() => handleSelect(isSelected ? undefined : company)}
     >
-      <CompaniesInline companies={[company]} placeholder="Unnamed company" />
-      <Combobox.Check checked={companyIds.includes(company._id)} />
+      <CompanyInline company={company} />
+      <Combobox.Check checked={isSelected} />
     </Command.Item>
   );
 };
-
-const SelectCompanyInlineCell = ({
-  onValueChange,
-  scope,
-  ...props
-}: Omit<React.ComponentProps<typeof SelectCompanyProvider>, 'children'> & {
-  scope?: string;
-}) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <SelectCompanyProvider
-      onValueChange={(value) => {
-        onValueChange?.(value);
-        setOpen(false);
-      }}
-      {...props}
-    >
-      <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
-        <RecordTableCellTrigger>
-          <SelectCompany.Value />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
-          <SelectCompany.Content />
-        </RecordTableCellContent>
-      </RecordTablePopover>
-    </SelectCompanyProvider>
-  );
-};
-
-const SelectCompanyRoot = ({
-  onValueChange,
-  className,
-  mode = 'single',
-  ...props
-}: Omit<React.ComponentProps<typeof SelectCompanyProvider>, 'children'> & {
-  className?: string;
-}) => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <SelectCompanyProvider
-      onValueChange={(value) => {
-        if (mode === 'single') {
-          setOpen(false);
-        }
-        onValueChange?.(value);
-      }}
-      mode={mode}
-      {...props}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <Combobox.Trigger
-          className={cn('w-full inline-flex', className)}
-          variant="outline"
-        >
-          <SelectCompany.Value />
-        </Combobox.Trigger>
-        <Combobox.Content>
-          <SelectCompany.Content />
-        </Combobox.Content>
-      </Popover>
-    </SelectCompanyProvider>
-  );
-};
-
-const SelectCompanyValue = () => {
-  const { companyIds, companies, setCompanies } = useSelectCompanyContext();
-  return (
-    <CompaniesInline
-      companyIds={companyIds}
-      companies={companies}
-      updateCompanies={setCompanies}
-    />
-  );
-};
-
-export const SelectCompany = Object.assign(SelectCompanyRoot, {
-  Provider: SelectCompanyProvider,
-  Content: SelectCompanyContent,
-  Item: SelectCompanyCommandItem,
-  InlineCell: SelectCompanyInlineCell,
-  Value: SelectCompanyValue,
-});

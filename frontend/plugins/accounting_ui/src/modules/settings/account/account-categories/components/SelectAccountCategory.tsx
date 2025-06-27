@@ -1,9 +1,8 @@
 import {
   Combobox,
   Command,
-  RecordTableCellContent,
-  RecordTableCellTrigger,
-  RecordTablePopover,
+  InlineCell,
+  InlineCellEdit,
   SelectTree,
   TextOverflowTooltip,
 } from 'erxes-ui';
@@ -26,7 +25,6 @@ export const SelectAccountCategory = React.forwardRef<
     exclude?: string[];
   }
 >(({ onSelect, selected, recordId, nullable, exclude, ...props }, ref) => {
-  const [open, setOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<
     IAccountCategory | undefined
   >();
@@ -53,36 +51,36 @@ export const SelectAccountCategory = React.forwardRef<
 
   return (
     <SelectTree.Provider id="select-account-category" ordered>
-      <RecordTablePopover
-        open={open}
-        onOpenChange={setOpen}
-        scope={`select-account-category.${recordId}`}
-      >
-        <RecordTableCellTrigger>
+      <InlineCell
+        name="accountCategory"
+        recordId={recordId}
+        display={() => (
           <SelectAccountCategoryTrigger
             ref={ref}
             {...props}
             selectedCategory={selectedCategory}
             loading={loading}
           />
-        </RecordTableCellTrigger>
-        <RecordTableCellContent>
-          <SelectAccountCommand
-            nullable={nullable}
-            exclude={exclude}
-            selected={selected}
-            onSelect={(categoryId) => {
-              onSelect(categoryId);
-              setSelectedCategory(
-                accountCategories?.find(
-                  (category) => category._id === categoryId,
-                ),
-              );
-              setOpen(false);
-            }}
-          />
-        </RecordTableCellContent>
-      </RecordTablePopover>
+        )}
+        edit={(closeEditMode) => (
+          <InlineCellEdit>
+            <SelectAccountCommand
+              nullable={nullable}
+              exclude={exclude}
+              selected={selected}
+              onSelect={(categoryId) => {
+                onSelect(categoryId);
+                setSelectedCategory(
+                  accountCategories?.find(
+                    (category) => category._id === categoryId,
+                  ),
+                );
+                closeEditMode();
+              }}
+            />
+          </InlineCellEdit>
+        )}
+      />
     </SelectTree.Provider>
   );
 });

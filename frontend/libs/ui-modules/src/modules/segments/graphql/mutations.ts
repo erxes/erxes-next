@@ -41,9 +41,3 @@ export const SEGMENT_EDIT = gql`
     }
   }
 `;
-
-export const SEGMENT_REMOVE = gql`
-  mutation SegmentsRemove($id: String, $ids: [String]) {
-    segmentsRemove(_id: $id, ids: $ids)
-  }
-`;

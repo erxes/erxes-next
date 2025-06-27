@@ -1,18 +1,18 @@
 import { useMutation, MutationFunctionOptions } from '@apollo/client';
 import { ADD_CUSTOMERS } from '@/contacts/customers/graphql/mutations/addCustomers';
 import { ICustomer } from '@/contacts/types/customerType';
-import { recordTableCursorAtomFamily } from 'erxes-ui';
-import { useIsCustomerLeadSessionKey } from '@/contacts/customers/hooks/useCustomerLeadSessionKey';
-import { useSetAtom } from 'jotai';
+import { useRecordTableCursor } from 'erxes-ui';
+import { CUSTOMERS_CURSOR_SESSION_KEY } from '@/contacts/customers/constants/customersCursorSessionKey';
 
-// Not finished yet needs improvement
 interface AddCustomerResult {
   customersAdd: ICustomer;
 }
 
 export function useAddCustomer() {
-  const { sessionKey } = useIsCustomerLeadSessionKey();
-  const setCursor = useSetAtom(recordTableCursorAtomFamily(sessionKey));
+  const { setCursor } = useRecordTableCursor({
+    sessionKey: CUSTOMERS_CURSOR_SESSION_KEY,
+  });
+
   const [customersAdd, { loading, error }] =
     useMutation<AddCustomerResult>(ADD_CUSTOMERS);
 

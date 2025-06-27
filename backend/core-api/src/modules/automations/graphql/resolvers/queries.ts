@@ -11,7 +11,7 @@ import {
   AUTOMATION_STATUSES,
   IAutomationExecutionDocument,
 } from 'erxes-api-shared/core-modules';
-import { UI_ACTIONS, UI_TRIGGERS } from '../../constants';
+import { UI_ACTIONS } from '../../constants';
 import { IContext } from '~/connectionResolvers';
 import {
   ICursorPaginateParams,
@@ -24,10 +24,6 @@ import {
   getPaginationInfo,
 } from 'erxes-api-shared/utils';
 import { FilterQuery, Model, SortOrder, Document, Types } from 'mongoose';
-import {
-  IAutomationsActionConfig,
-  IAutomationsTriggerConfig,
-} from 'erxes-api-shared/core-modules/automations/types';
 
 export interface IListArgs extends ICursorPaginateParams {
   status: string;
@@ -313,15 +309,7 @@ export const automationQueries = {
     const { list, totalCount, pageInfo } =
       await cursorPaginate<IAutomationDocument>({
         model: models.Automations,
-        params: {
-          ...params,
-          orderBy: {
-            createdAt: -1,
-          },
-          fieldTypes: {
-            createdAt: 'date',
-          },
-        },
+        params,
         query: filter,
       });
 
@@ -451,12 +439,12 @@ export const automationQueries = {
     const plugins = await getPlugins();
 
     const constants: {
-      triggersConst: IAutomationsTriggerConfig[];
+      triggersConst: ITrigger[];
       triggerTypesConst: string[];
-      actionsConst: IAutomationsActionConfig[];
+      actionsConst: any[];
       propertyTypesConst: Array<{ value: string; label: string }>;
     } = {
-      triggersConst: [...UI_TRIGGERS],
+      triggersConst: [],
       triggerTypesConst: [],
       actionsConst: [...UI_ACTIONS],
       propertyTypesConst: [],
@@ -471,7 +459,7 @@ export const automationQueries = {
         const { triggers = [], actions = [] } = pluginConstants;
 
         for (const trigger of triggers) {
-          constants.triggersConst.push({ ...trigger, pluginName });
+          constants.triggersConst.push(trigger);
           constants.triggerTypesConst.push(trigger.type);
           constants.propertyTypesConst.push({
             value: trigger.type,
@@ -480,7 +468,7 @@ export const automationQueries = {
         }
 
         for (const action of actions) {
-          constants.actionsConst.push({ ...action, pluginName });
+          constants.actionsConst.push(action);
         }
 
         if (!!pluginConstants?.emailRecipientTypes?.length) {
@@ -504,22 +492,6 @@ export const automationQueries = {
     }
 
     return constants;
-  },
-
-  async automationBotsConstants() {
-    const plugins = await getPlugins();
-    const botsConstants: any[] = [];
-
-    for (const pluginName of plugins) {
-      const plugin = await getPlugin(pluginName);
-      const bots = plugin?.config?.meta?.automations?.constants?.bots || [];
-
-      if (bots.length) {
-        botsConstants.push(...bots.map((bot) => ({ ...bot, pluginName })));
-      }
-    }
-
-    return botsConstants;
   },
 };
 

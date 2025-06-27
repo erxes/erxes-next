@@ -31,7 +31,7 @@ export const TextFieldUserDetails = ({
     <TextField
       placeholder={placeholder}
       value={value}
-      scope={`user-${_id}-details-${field}`}
+      scope={`user-${_id}-${field}`}
       onValueChange={onSave}
       className={className}
     />

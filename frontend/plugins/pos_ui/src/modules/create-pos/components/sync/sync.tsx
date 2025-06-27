@@ -4,17 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { IconPlus } from '@tabler/icons-react';
 import { syncCardSettingsAtom } from '../../states/posCategory';
-import { IPosDetail } from '@/pos-detail/types/IPos';
-import { SelectBranches, SelectMember } from 'ui-modules';
 
-interface SyncCardFormProps {
-  posDetail?: IPosDetail;
-  isReadOnly?: boolean;
-}
-
-export default function SyncCardForm({
-  isReadOnly = false,
-}: SyncCardFormProps) {
+export default function SyncCardForm() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [syncCardSettings, setSyncCardSettings] = useAtom(syncCardSettingsAtom);
 
@@ -47,26 +38,6 @@ export default function SyncCardForm({
       currentConfig: {
         ...syncCardSettings.currentConfig,
         [field]: value,
-      },
-    });
-  };
-
-  const handleBranchChange = (branchId: string | string[] | undefined) => {
-    setSyncCardSettings({
-      ...syncCardSettings,
-      currentConfig: {
-        ...syncCardSettings.currentConfig,
-        branch: Array.isArray(branchId) ? branchId[0] : branchId || '',
-      },
-    });
-  };
-
-  const handleUserChange = (userId: string | string[]) => {
-    setSyncCardSettings({
-      ...syncCardSettings,
-      currentConfig: {
-        ...syncCardSettings.currentConfig,
-        assignedUsers: Array.isArray(userId) ? userId.join(',') : userId,
       },
     });
   };
@@ -109,7 +80,6 @@ export default function SyncCardForm({
             type="button"
             onClick={handleToggleNewConfig}
             className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
-            disabled={isReadOnly}
           >
             <IconPlus size={16} />
             New config
@@ -126,17 +96,24 @@ export default function SyncCardForm({
                   value={syncCardSettings.currentConfig.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="Enter title"
-                  disabled={isReadOnly}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm text-gray-500">CHOOSE BRANCH</Label>
-                <SelectBranches.Detail
+                <Label className="text-sm text-gray-500">CHOOSE BRUNCH</Label>
+                <Select
                   value={syncCardSettings.currentConfig.branch}
-                  onValueChange={handleBranchChange}
-                  mode="single"
-                />
+                  onValueChange={(value) => handleSelectChange('branch', value)}
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Choose brunch" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="brunch1">Brunch 1</Select.Item>
+                    <Select.Item value="brunch2">Brunch 2</Select.Item>
+                    <Select.Item value="brunch3">Brunch 3</Select.Item>
+                  </Select.Content>
+                </Select>
               </div>
             </div>
 
@@ -166,13 +143,21 @@ export default function SyncCardForm({
                 <Label className="text-sm text-gray-500">
                   CHOOSE ASSIGNED USERS
                 </Label>
-                <SelectMember
-                  value={
-                    syncCardSettings.currentConfig.assignedUsers || undefined
+                <Select
+                  value={syncCardSettings.currentConfig.assignedUsers}
+                  onValueChange={(value) =>
+                    handleSelectChange('assignedUsers', value)
                   }
-                  onValueChange={handleUserChange}
-                  className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
-                />
+                >
+                  <Select.Trigger>
+                    <Select.Value placeholder="Choose team member" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="user1">User 1</Select.Item>
+                    <Select.Item value="user2">User 2</Select.Item>
+                    <Select.Item value="user3">User 3</Select.Item>
+                  </Select.Content>
+                </Select>
               </div>
             </div>
 

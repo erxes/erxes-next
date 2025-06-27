@@ -43,7 +43,6 @@ interface ICommontTr {
   ptrStatus?: string;
   originId?: string;
   followType?: string;
-  originSubId?: string;
   follows?: {
     type: string;
     id: string;

@@ -84,36 +84,6 @@ export const types = `
     ${commonPostAndCommentFields}
     content:String
   }
-
-  type BotPersistentMenuType {
-    _id:String
-    type:String
-    text: String
-    link: String
-  }
-
-  input BotPersistentMenuInput {
-    _id:String
-    type:String
-    text: String
-    link: String
-  }
-
-  type FacebookMessengerBot {
-    _id: String
-    name:String
-    accountId: String
-    account:JSON
-    pageId: String
-    page: JSON
-    createdAt: Date
-    persistentMenus:[BotPersistentMenuType]
-    profileUrl:String
-    greetText:String
-    tag:String
-    isEnabledBackBtn:Boolean
-    backButtonText:String
-  }
 `;
 
 export const queries = `
@@ -131,9 +101,9 @@ export const queries = `
   facebookHasTaggedMessages(conversationId: String!): Boolean
 
   facebookPostMessages(conversationId: String! getFirst: Boolean, ${pageParams}): [FacebookPostMessage]
-  facebookMessengerBotsTotalCount:Int
-  facebookMessengerBots:[FacebookMessengerBot]
-  facebookMessengerBot(_id:String):FacebookMessengerBot
+
+
+
 `;
 
 export const mutations = `

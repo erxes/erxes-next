@@ -124,32 +124,3 @@ export interface SlotCardProps {
   onDuplicate: (id: string) => void;
   onDelete: (id: string) => void;
 }
-export interface SlotDetail {
-  name: string;
-  code: string;
-  rounded: boolean;
-  width: string;
-  height: string;
-  top: string;
-  left: string;
-  rotateAngle: string;
-  zIndex: string;
-  color: string;
-  disabled: boolean;
-  label: string;
-}
-
-export interface POSSlotsManagerProps {
-  posId: string;
-  initialNodes?: CustomNode[];
-  onNodesChange?: (nodes: CustomNode[]) => void;
-  isCreating?: boolean;
-}
-
-export interface NodeEventDetail {
-  id: string;
-  width?: number;
-  height?: number;
-  position?: { x: number; y: number };
-  rotateAngle?: number;
-}

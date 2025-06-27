@@ -28,8 +28,4 @@ export enum AppPath {
 
   NotFoundWildcard = '/*',
   NotFound = '/not-found',
-
-  //dev
-  Components = 'components',
-  ComponentsCatchAll = `/${Components}/*`,
 }

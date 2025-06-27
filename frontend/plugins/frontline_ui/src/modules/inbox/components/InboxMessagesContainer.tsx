@@ -51,7 +51,7 @@ export const InboxMessagesContainer = ({
   return (
     <ScrollArea.Root className="h-full">
       <ScrollArea.Viewport ref={viewportRef}>
-        {!!messagesLength && totalCount > messagesLength && (
+        {messagesLength && totalCount > messagesLength && (
           <p ref={fetchMoreRef} />
         )}
         <div className="flex flex-col max-w-[648px] mx-auto p-6">

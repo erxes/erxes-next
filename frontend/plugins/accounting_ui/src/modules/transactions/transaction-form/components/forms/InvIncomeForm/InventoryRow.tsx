@@ -1,6 +1,4 @@
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
-import { JournalEnum } from '@/settings/account/types/Account';
-import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import {
   Checkbox,
   cn,
@@ -14,12 +12,15 @@ import {
   RecordTablePopover,
   Table,
 } from 'erxes-ui';
-import { useAtom } from 'jotai';
-import { useMemo, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { SelectProduct } from 'ui-modules';
+// import { InventoryRowCheckbox } from './InventoryRowCheckbox';
+import { JournalEnum } from '@/settings/account/types/Account';
+import { useAtom } from 'jotai';
+import { useMemo, useState } from 'react';
 import { taxPercentsState } from '../../../states/trStates';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 
 export const InventoryRow = ({
   detailIndex,
@@ -29,10 +30,19 @@ export const InventoryRow = ({
   detailIndex: number;
   journalIndex: number;
   form: ITransactionGroupForm;
+  // product: TInventoryProduct & { id: string };
 }) => {
+  // const { selectedProducts, form, inventoriesLength, journalIndex } =
+  //   useInventoryContext();
+
   const trDoc = useWatch({
     control: form.control,
     name: `trDocs.${journalIndex}`,
+  });
+
+  const details = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}.details`,
   });
 
   const detail = useWatch({
@@ -72,7 +82,10 @@ export const InventoryRow = ({
 
   const handleAmountChange = (
     value: number,
+    onChange: (value: number) => void,
   ) => {
+    onChange(value);
+
     const newUnitPrice = count ? value / count : 0;
     form.setValue(getFieldName('unitPrice') as any, newUnitPrice);
     if (trDoc.hasVat || trDoc.hasCtax) {
@@ -118,6 +131,10 @@ export const InventoryRow = ({
     setTaxAmounts({ unitPriceWithTax, amountWithTax });
 
     form.setValue(
+      getFieldName('amount') as any,
+      (amountWithTax / (100 + rowPercent)) * 100,
+    );
+    form.setValue(
       getFieldName('unitPrice') as any,
       (unitPriceWithTax / (100 + rowPercent)) * 100,
     );
@@ -149,38 +166,24 @@ export const InventoryRow = ({
   return (
     <Table.Row
       key={_id}
+      // data-state={
+      //   selectedProducts.includes(product.id) ? 'selected' : 'unselected'
+      // }
       className={cn(
         'overflow-hidden h-cell hover:!bg-background',
         detailIndex === 0 && '[&>td]:border-t',
       )}
     >
-      <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
-        <Table.Cell
-          className={cn({
-            'border-t': detailIndex === 0,
-            'rounded-tl-lg': detailIndex === 0,
-            'rounded-bl-lg': detailIndex === trDoc.details.length - 1,
-          })}
-        >
-          <RecordTableCellDisplay className="justify-center">
-            <Form.Field
-              control={form.control}
-              name={`trDocs.${journalIndex}.details.${detailIndex}.checked`}
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Control>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </Form.Control>
-                  <Form.Message />
-                </Form.Item>
-              )}
-            />
-          </RecordTableCellDisplay>
-        </Table.Cell>
-      </RecordTableHotKeyControl>
+      {/* <Table.Cell
+        className={cn('overflow-hidden', {
+          'rounded-tl-lg border-t': detailIndex === 0,
+          'rounded-bl-lg': detailIndex === details.length - 1,
+        })}
+      >
+        <div className="w-9 flex items-center justify-center">
+          <InventoryRowCheckbox productId={product.id} />
+        </div>
+      </Table.Cell> */}
 
       <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
@@ -278,22 +281,28 @@ export const InventoryRow = ({
       </RecordTableHotKeyControl>
       <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
         <Table.Cell>
-          <RecordTablePopover
-            scope={`trDocs.${journalIndex}.details.${detailIndex}.tempAmount`}
-            closeOnEnter
-          >
-            <RecordTableCellTrigger>
-              {((unitPrice ?? 0) * (count ?? 0)).toLocaleString() || 0}
-            </RecordTableCellTrigger>
-            <RecordTableCellContent>
-              <CurrencyField.ValueInput
-                value={((unitPrice ?? 0) * (count ?? 0)) || 0}
-                onChange={(value) =>
-                  handleAmountChange(value || 0)
-                }
-              />
-            </RecordTableCellContent>
-          </RecordTablePopover>
+          <Form.Field
+            control={form.control}
+            name={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
+            render={({ field }) => (
+              <RecordTablePopover
+                scope={`trDocs.${journalIndex}.details.${detailIndex}.amount`}
+                closeOnEnter
+              >
+                <RecordTableCellTrigger>
+                  {field.value?.toLocaleString() || 0}
+                </RecordTableCellTrigger>
+                <RecordTableCellContent>
+                  <CurrencyField.ValueInput
+                    value={field.value ?? 0}
+                    onChange={(value) =>
+                      handleAmountChange(value || 0, field.onChange)
+                    }
+                  />
+                </RecordTableCellContent>
+              </RecordTablePopover>
+            )}
+          />
         </Table.Cell>
       </RecordTableHotKeyControl>
 
@@ -370,7 +379,7 @@ export const InventoryRow = ({
           <RecordTableHotKeyControl rowId={_id} rowIndex={detailIndex}>
             <Table.Cell>
               <RecordTablePopover
-                scope={`trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
+                scope={`temp_trDocs.${journalIndex}.details.${detailIndex}.untiPriceWithTax`}
                 closeOnEnter
               >
                 <Form.Control>
@@ -394,11 +403,11 @@ export const InventoryRow = ({
             <Table.Cell
               className={cn({
                 'border-t': detailIndex === 0,
-                'rounded-br-lg': detailIndex === trDoc.details.length - 1,
+                'rounded-br-lg': detailIndex === details.length - 1,
               })}
             >
               <RecordTablePopover
-                scope={`trDocs.${journalIndex}.details.${detailIndex}.amountWithTax`}
+                scope={`temp_trDocs.${journalIndex}.details.${detailIndex}.amountWithTax`}
                 closeOnEnter
               >
                 <RecordTableCellTrigger>
@@ -416,5 +425,6 @@ export const InventoryRow = ({
         </>
       )}
     </Table.Row>
+    // </InventoryRowContext.Provider>
   );
 };

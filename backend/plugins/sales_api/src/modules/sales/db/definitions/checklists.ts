@@ -8,7 +8,6 @@ export const checklistSchema = new Schema(
       type: String,
       label: 'Content type',
       index: true,
-      default: 'deal'
     },
     order: { type: Number },
     contentTypeId: {

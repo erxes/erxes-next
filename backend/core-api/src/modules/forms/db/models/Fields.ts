@@ -74,11 +74,7 @@ export interface IFieldModel extends Model<IFieldDocument> {
     extraValue?: string,
   ): ITypedListItem;
   prepareCustomFieldsData(
-    customFieldsData: Array<{
-      field: string;
-      value: any;
-      extraValue?: string;
-    }>,
+    customFieldsData?: Array<{ field: string; value: any }>,
   ): Promise<ITypedListItem[]>;
   updateFieldsVisible(
     _id: string,
@@ -545,7 +541,7 @@ export const loadFieldClass = (models: IModels, subdomain: string) => {
         isDefinedByErxes: true,
       });
       if (fields.length > existingFields.length) {
-        const newFields: any[] = [];
+        let newFields: any[] = [];
         fields.map((x) => {
           const isExisted = existingFields.filter(
             (d) => d.text === x.text && d.type === x.type,

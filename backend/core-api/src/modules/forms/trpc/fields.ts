@@ -91,28 +91,5 @@ export const fieldsTrpcRouter = t.router({
             return generateFieldsUsers({ subdomain, data: input });
         }
       }),
-    prepareCustomFieldsData: t.procedure
-      .input(
-        z.array(
-          z.object({
-            field: z.string(),
-            value: z.any(),
-            extraValue: z.string().optional(),
-          }),
-        ),
-      )
-
-      .query(async ({ ctx, input }) => {
-        const { models } = ctx;
-        return await models.Fields.prepareCustomFieldsData(
-          input.map((item) => {
-            return {
-              field: item.field,
-              value: item.value ?? '',
-              extraValue: item.extraValue,
-            };
-          }),
-        );
-      }),
   }),
 });

@@ -34,29 +34,6 @@ const paymentTypeSchema = z.object({
   config: z.string(),
 });
 
-export const screenConfigSchema = z.object({
-  kitchenScreenEnabled: z.boolean().default(false),
-  showTypes: z.string().default(''),
-  statusChange: z.string().default(''),
-  watchingScreenEnabled: z.boolean().default(false),
-  changeType: z.string().default(''),
-  changeCount: z.string().default(''),
-  contentUrl: z.string().default(''),
-  printEnabled: z.boolean().default(false),
-});
-
-export const financeConfigSchema = z.object({
-  isSyncErkhet: z.boolean().default(false),
-  checkErkhet: z.boolean().default(false),
-  checkInventories: z.boolean().default(false),
-  userEmail: z.string().optional(),
-  beginBillNumber: z.string().optional(),
-  defaultPay: z.string().optional(),
-  account: z.string().optional(),
-  location: z.string().optional(),
-  getRemainder: z.boolean().default(false),
-});
-
 export const posDetailSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().min(1, 'Description is required'),
@@ -147,14 +124,15 @@ export const uiConfigSchema = z.object({
 });
 
 export const deliveryConfigSchema = z.object({
-  boardId: z.string().optional(),
+  board: z.string().optional(),
   pipeline: z.string().optional(),
   stage: z.string().optional(),
   watchedUsers: z.string().optional(),
   assignedUsers: z.string().optional(),
   deliveryProduct: z.string().optional(),
   watchedUserIds: z.array(z.string()).default([]),
-  assignedUserIds: z.array(z.string()).default([])
+  assignedUserIds: z.array(z.string()).default([]),
+  deliveryConfig: z.record(z.any()).default({}),
 });
 
 export type BasicInfoFormValues = z.infer<typeof basicInfoSchema>;
@@ -163,8 +141,6 @@ export type ProductFormValues = z.infer<typeof productSchema>;
 export type PaymentFormValues = z.infer<typeof paymentSchema>;
 export type UiConfigFormValues = z.infer<typeof uiConfigSchema>;
 export type DeliveryConfigFormValues = z.infer<typeof deliveryConfigSchema>;
-export type FinanceConfigFormValues = z.infer<typeof financeConfigSchema>;
-export type ScreenConfigFormValues = z.infer<typeof screenConfigSchema>;
 
 export interface FormStepData {
   basicInfo?: BasicInfoFormValues;
@@ -173,8 +149,6 @@ export interface FormStepData {
   payment?: PaymentFormValues;
   uiConfig?: UiConfigFormValues;
   deliveryConfig?: DeliveryConfigFormValues;
-  financeConfig?: FinanceConfigFormValues;
-  screenConfig?: ScreenConfigFormValues;
 }
 
 export const combineFormData = (
@@ -186,8 +160,6 @@ export const combineFormData = (
     ...stepData.product,
     ...stepData.payment,
     ...stepData.uiConfig,
-    ...stepData.deliveryConfig, 
-    ...stepData.financeConfig,
-    ...stepData.screenConfig,
+    ...stepData.deliveryConfig,
   };
 };

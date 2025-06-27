@@ -10,29 +10,18 @@ import {
   Button,
   EnumCursorDirection,
   EnumCursorMode,
-  Filter,
-  isUndefinedOrNull,
   parseDateRangeFromString,
   Separator,
   useNonNullMultiQueryState,
 } from 'erxes-ui';
 
 import { ConversationsHeader } from '@/inbox/conversations/components/ConversationsHeader';
+import { ConversationFilter } from './ConversationFilter';
+import { FilterTags } from './FilterTags';
 import { CONVERSATIONS_LIMIT } from '@/inbox/constants/conversationsConstants';
 import { ConversationItem } from './ConversationItem';
-import { useEffect, useRef, useState } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
-import { refetchNewMessagesState } from '@/inbox/conversations/states/newMessagesCountState';
-import { conversationsContainerScrollState } from '@/inbox/conversations/states/conversationsContainerScrollState';
-import { ConversationActions } from './ConversationActions';
 
 export const Conversations = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const refetchNewMessages = useAtomValue(refetchNewMessagesState);
-  const [conversationsContainerScroll, setConversationsContainerScroll] =
-    useAtom(conversationsContainerScrollState);
-  const [rerendered, setRerendered] = useState(false);
-
   const [ref] = useInView({
     onChange(inView) {
       if (inView) {
@@ -42,47 +31,24 @@ export const Conversations = () => {
       }
     },
   });
-
-  useEffect(() => {
-    if (
-      containerRef.current &&
-      !isUndefinedOrNull(conversationsContainerScroll) &&
-      !rerendered
-    ) {
-      containerRef.current.scrollTo({
-        top: conversationsContainerScroll,
-      });
-      setConversationsContainerScroll(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationsContainerScroll]);
-
-  useEffect(() => {
-    if (refetchNewMessages) {
-      containerRef.current?.scrollTo({
-        top: 0,
-      });
-    }
-  }, [refetchNewMessages]);
-
-  const { channelId, integrationType, unassigned, status, created } =
+  const { channelId, integrationType, unassigned, status, date } =
     useNonNullMultiQueryState<{
       channelId: string;
       integrationType: string;
       unassigned: string;
       status: string;
+      date: string;
       conversationId: string;
-      created: string;
     }>([
       'channelId',
       'integrationType',
       'unassigned',
       'status',
+      'date',
       'conversationId',
-      'created',
     ]);
 
-  const parsedDate = parseDateRangeFromString(created || '');
+  const parsedDate = parseDateRangeFromString(date || '');
 
   const { totalCount, conversations, handleFetchMore, loading, pageInfo } =
     useConversations({
@@ -91,7 +57,7 @@ export const Conversations = () => {
         channelId,
         integrationType: integrationType,
         unassigned,
-        status: status || '',
+        status: status || 'closed',
         startDate: parsedDate?.from,
         endDate: parsedDate?.to,
         cursorMode: EnumCursorMode.INCLUSIVE,
@@ -107,26 +73,18 @@ export const Conversations = () => {
       }}
     >
       <div className="flex flex-col h-full overflow-hidden w-full">
-        <Filter id="conversations">
-          <ConversationsHeader>
-            <ConversationActions />
-          </ConversationsHeader>
-        </Filter>
+        <ConversationsHeader>
+          <ConversationFilter />
+          <FilterTags />
+        </ConversationsHeader>
         <Separator />
-        <div className="h-full w-full overflow-y-auto" ref={containerRef}>
+        <div className="h-full w-full overflow-y-auto">
           {conversations?.map((conversation: IConversation) => (
             <ConversationContext.Provider
               key={conversation._id}
               value={conversation}
             >
-              <ConversationItem
-                onConversationSelect={() => {
-                  setConversationsContainerScroll(
-                    containerRef.current?.scrollTop || 0,
-                  );
-                  setRerendered(true);
-                }}
-              />
+              <ConversationItem />
             </ConversationContext.Provider>
           ))}
           {!loading && conversations?.length > 0 && pageInfo?.hasNextPage && (

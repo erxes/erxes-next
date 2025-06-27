@@ -1,26 +1,24 @@
-import { FullNameField } from 'erxes-ui';
+import { FullNameField } from '@/contacts/customers/customer-edit/components/FullNameField';
 import { useCustomerDetail } from '@/contacts/customers/customer-detail/hooks/useCustomerDetail';
 import { IconDeviceMobileMessage } from '@tabler/icons-react';
 import { IconMail } from '@tabler/icons-react';
 import { IconPhone } from '@tabler/icons-react';
 import { Avatar, Button, readFile } from 'erxes-ui';
 import { TextFieldCustomer } from '../../customer-edit/components/TextField';
-import { useCustomerEdit } from '@/contacts/customers/hooks/useEditCustomer';
-import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
+
 export const CustomerDetailGeneral = () => {
   const { customerDetail } = useCustomerDetail();
   const {
     _id,
     firstName,
     lastName,
-    middleName, 
+    middleName,
     primaryEmail,
     primaryPhone,
     avatar,
     position,
     department,
   } = customerDetail || {};
-  const { customerEdit } = useCustomerEdit();
   return (
     <div className="py-5 px-8">
       <div className="flex gap-3 items-center flex-col lg:flex-row">
@@ -32,25 +30,15 @@ export const CustomerDetailGeneral = () => {
         </Avatar>
         <div className="flex flex-col items-start">
           <FullNameField
-            scope={ContactsHotKeyScope.CustomerDetailPage + '.' + _id + '.Name'}
-            closeOnEnter
+            _id={_id}
             firstName={firstName}
             lastName={
               middleName
                 ? `${middleName || ''} ${lastName || ''}`
                 : lastName || ''
             }
-            onClose={(_firstName, _lastName) => {
-              if (_firstName !== firstName || _lastName !== lastName) {
-                customerEdit({
-                  variables: {
-                    _id,
-                    firstName: _firstName,
-                    lastName: _lastName,
-                  },
-                });
-              }
-            }}
+            fieldId="detail"
+            className="text-lg font-medium leading-none"
           />
 
           <div className="text-muted-foreground font-medium text-sm leading-none flex gap-1 items-center">

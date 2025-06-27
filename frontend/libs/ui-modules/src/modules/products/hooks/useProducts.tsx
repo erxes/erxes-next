@@ -1,63 +1,50 @@
-import { QueryHookOptions, useQuery } from '@apollo/client';
-import {
-  GET_ASSIGNED_PRODUCTS,
-  GET_PRODUCTS,
-} from '../graphql/queries/getProducts';
-import { IProduct } from '../types/Product';
-import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
+import { OperationVariables, useQuery } from '@apollo/client';
+import { GET_SELECT_PRODUCTS } from '../graphql/queries/getProducts';
+import { IProduct } from 'ui-modules';
 
-const PRODUCTS_LIMIT = 30;
-export const useProducts = (
-  options?: QueryHookOptions<ICursorListResponse<IProduct>>,
-) => {
-  const { data, loading, fetchMore, error } = useQuery<
-    ICursorListResponse<IProduct>
-  >(GET_PRODUCTS, {
+const PRODUCTS_PER_PAGE = 30;
+
+export const useProducts = (options?: OperationVariables) => {
+  const { data, loading, fetchMore, error } = useQuery<{
+    products: IProduct[];
+    productsTotalCount: number;
+  }>(GET_SELECT_PRODUCTS, {
     ...options,
     variables: {
-      limit: PRODUCTS_LIMIT,
+      perPage: PRODUCTS_PER_PAGE,
       ...options?.variables,
     },
   });
-  const { list = [], totalCount = 0, pageInfo } = data?.productsMain || {};
+
+  const { products, productsTotalCount } = data || {};
 
   const handleFetchMore = () => {
-    if (!pageInfo || totalCount <= list.length) return;
+    if (
+      !products ||
+      !productsTotalCount ||
+      productsTotalCount <= products.length
+    ) {
+      return;
+    }
     fetchMore({
       variables: {
-        ...options?.variables,
-        cursor: pageInfo?.endCursor,
-        direction: EnumCursorDirection.FORWARD,
+        page: Math.ceil(products.length / PRODUCTS_PER_PAGE) + 1,
+        perPage: PRODUCTS_PER_PAGE,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return Object.assign({}, prev, {
-          productsMain: {
-            list: [
-              ...(prev.productsMain?.list || []),
-              ...fetchMoreResult.productsMain.list,
-            ],
-            totalCount: fetchMoreResult.productsMain.totalCount,
-            pageInfo: fetchMoreResult.productsMain.pageInfo,
-          },
+          products: [...(prev.products || []), ...fetchMoreResult.products],
         });
       },
     });
   };
+
   return {
-    products: list,
     loading,
+    products,
+    totalCount: productsTotalCount,
     handleFetchMore,
-    totalCount,
     error,
   };
-};
-
-
-export const useProductsInline = (options?: QueryHookOptions<ICursorListResponse<IProduct>>) => {
-  const { data, loading, error } = useQuery<ICursorListResponse<IProduct>>(
-    GET_ASSIGNED_PRODUCTS,
-    options,
-  );
-  return { products: data?.productsMain?.list || [], loading, error };
 };

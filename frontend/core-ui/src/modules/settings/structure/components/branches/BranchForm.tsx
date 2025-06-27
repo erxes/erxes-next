@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { TBranchForm } from '../../types/branch';
 import { ControllerRenderProps, Path, useFormContext } from 'react-hook-form';
 import { Collapsible, Form, Input, Skeleton, Textarea } from 'erxes-ui';
-import { SelectBranches, SelectMember } from 'ui-modules';
+import { AssignMember, AssignMultipleMembers, SelectBranch } from 'ui-modules';
 import { PhoneInput } from 'erxes-ui/modules/record-field/meta-inputs/components/PhoneInput';
 import { IconChevronDown } from '@tabler/icons-react';
 
@@ -60,10 +60,12 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
         render={({ field }) => (
           <Form.Item>
             <Form.Label>{'Supervisor'}</Form.Label>
-            <SelectMember.FormItem
-              value={field.value}
-              onValueChange={field.onChange}
-            />
+            <Form.Control>
+              <AssignMember
+                value={field.value}
+                onValueChange={field.onChange}
+              />
+            </Form.Control>
             <Form.Message />
           </Form.Item>
         )}
@@ -74,10 +76,12 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
         render={({ field }) => (
           <Form.Item>
             <Form.Label>{'Parent'}</Form.Label>
-            <SelectBranches.FormItem
-              value={field.value}
-              onValueChange={field.onChange}
-            />
+            <Form.Control>
+              <SelectBranch
+                value={field.value}
+                onValueChange={field.onChange}
+              />
+            </Form.Control>
             <Form.Message />
           </Form.Item>
         )}
@@ -88,11 +92,12 @@ export const BranchForm = ({ loading }: { loading: boolean }) => {
         render={({ field }) => (
           <Form.Item className="col-span-2">
             <Form.Label>{'Team members'}</Form.Label>
-            <SelectMember.FormItem
-              value={field.value}
-              onValueChange={field.onChange}
-              mode="multiple"
-            />
+            <Form.Control>
+              <AssignMultipleMembers
+                value={field.value}
+                onValueChange={field.onChange}
+              />
+            </Form.Control>
             <Form.Message />
           </Form.Item>
         )}

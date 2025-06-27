@@ -4,7 +4,7 @@ import { ConversationFormDisplay } from './ConversationFormDisplay';
 import { Button, IAttachment, RelativeDateDisplay } from 'erxes-ui';
 import { MessageContent } from './MessageContent';
 import { useConversationMessageContext } from '../../conversations/conversation-detail/hooks/useConversationMessageContext';
-import { CustomersInline, MembersInline } from 'ui-modules';
+import { CustomerInline, MembersInline } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { activeConversationState } from '../../conversations/states/activeConversationState';
 
@@ -79,12 +79,9 @@ export const MessageWrapper = ({ children }: { children: React.ReactNode }) => {
       )}
     >
       {!!customerId && separateNext && (
-        <CustomersInline.Provider
-          customerIds={[customerId]}
-          customers={customer ? [customer] : []}
-        >
-          <CustomersInline.Avatar size="xl" />
-        </CustomersInline.Provider>
+        <CustomerInline.Provider customerId={customerId} customer={customer}>
+          <CustomerInline.Avatar size="xl" />
+        </CustomerInline.Provider>
       )}
       {children}
 

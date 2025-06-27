@@ -9,10 +9,8 @@ export const GET_CONVERSATION_DETAIL = gql`
       content
       integrationId
       assignedUserId
-      readUserIds
       customerId
       updatedAt
-      status
     }
   }
 `;

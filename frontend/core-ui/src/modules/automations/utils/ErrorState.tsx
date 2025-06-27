@@ -1,11 +1,6 @@
-import {
-  IconAlertCircle,
-  IconChevronDown,
-  IconChevronUp,
-  IconRefresh,
-  IconX,
-} from '@tabler/icons-react';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { Button, Collapsible } from 'erxes-ui';
+import { IconChevronDown, IconChevronUp, IconRefresh, IconX } from '@tabler/icons-react';
 import { useState } from 'react';
 
 interface ErrorStateProps {
@@ -28,7 +23,7 @@ export function ErrorState({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="p-4 rounded-lg border border-red-200 bg-foreground max-w-full overflow-auto">
+    <div className="p-4 rounded-lg border border-red-200 bg-white max-w-full overflow-auto">
       <div className="border-red-500/50 flex flex-row items-center gap-2">
         <IconAlertCircle className="h-5 w-5" />
         <div className="flex-1">

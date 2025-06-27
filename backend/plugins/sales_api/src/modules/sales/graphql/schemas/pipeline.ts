@@ -48,15 +48,16 @@ export const types = `
 `;
 
 export const queries = `
-  salesPipelines(boardId: String, isAll: Boolean): [SalesPipeline]
+  salesPipelines(boardId: String, type: String, isAll: Boolean, page: Int, perPage: Int): [SalesPipeline]
   salesPipelineDetail(_id: String!): SalesPipeline
   salesPipelineAssignedUsers(_id: String!): [User]
-  salesPipelineStateCount(boardId: String): JSON
+  salesPipelineStateCount(boardId: String, type: String): JSON
 `;
 
 const mutationParams = `
   name: String!,
   boardId: String!,
+  type: String!,
   stages: JSON,
   visibility: String!,
   memberIds: [String],
@@ -88,7 +89,7 @@ export const mutations = `
   salesPipelinesAdd(${mutationParams}): SalesPipeline
   salesPipelinesEdit(_id: String!, ${mutationParams}): SalesPipeline
   salesPipelinesUpdateOrder(orders: [SalesOrderItem]): [SalesPipeline]
-  salesPipelinesWatch(_id: String!, isAdd: Boolean): SalesPipeline
+  salesPipelinesWatch(_id: String!, isAdd: Boolean, type: String!): SalesPipeline
   salesPipelinesRemove(_id: String!): JSON
   salesPipelinesArchive(_id: String!): JSON
   salesPipelinesCopied(_id: String!): JSON

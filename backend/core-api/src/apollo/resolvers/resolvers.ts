@@ -6,7 +6,6 @@ import logResolvers from '@/logs/graphql/resolvers/customResolvers';
 import automationsResolvers from '@/automations/graphql/resolvers/customResolver';
 import userResolvers from '@/organization/team-member/graphql/customResolver';
 import brandResolvers from '@/organization/brand/graphql/customResolver/brand';
-import tagResolvers from '@/tags/graphql/customResolvers';
 
 export const customResolvers = {
   ...contactResolvers,
@@ -17,5 +16,4 @@ export const customResolvers = {
   ...automationsResolvers,
   ...userResolvers,
   ...brandResolvers,
-  ...tagResolvers,
 };

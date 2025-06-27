@@ -4,7 +4,7 @@ import { FbMessengerMessageContext } from '../contexts/FbMessengerMessageContext
 import { FbMessengerMessage } from './FbMessengerMessages';
 
 export const FacebookConversationMessages = () => {
-  const { facebookConversationMessages, handleFetchMore, loading } =
+  const { facebookConversationMessages, handleFetchMore } =
     useFacebookConversationMessages();
 
   return (
@@ -12,7 +12,7 @@ export const FacebookConversationMessages = () => {
       fetchMore={handleFetchMore}
       messagesLength={facebookConversationMessages?.length || 0}
       totalCount={facebookConversationMessages?.length || 0}
-      loading={loading}
+      loading={false}
     >
       {facebookConversationMessages?.map((message) => (
         <FbMessengerMessageContext.Provider

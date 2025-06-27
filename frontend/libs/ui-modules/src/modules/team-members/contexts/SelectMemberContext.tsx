@@ -1,13 +1,13 @@
 import { createContext, useContext } from 'react';
-
-import { IUser } from '../types/TeamMembers';
+import { IMember } from '../types/TeamMembers';
 
 export type ISelectMemberContext = {
   memberIds: string[];
-  onSelect: (member: IUser) => void;
-  members: IUser[];
-  setMembers: (members: IUser[]) => void;
+  onSelect: (member: IMember) => void;
+  members: IMember[];
+  setMembers: (members: IMember[]) => void;
   loading: boolean;
+  error: string | null;
 };
 
 export const SelectMemberContext = createContext<ISelectMemberContext | null>(

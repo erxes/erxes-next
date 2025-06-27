@@ -68,11 +68,6 @@ import {
   IFacebookConfigModel,
   loadFacebookConfigClass,
 } from '@/integrations/facebook/db/models/Config';
-import { IFacebookBotDocument } from '~/modules/integrations/facebook/db/definitions/bots';
-import {
-  IFacebookBotModel,
-  loadFacebookBotClass,
-} from '~/modules/integrations/facebook/db/models/Bots';
 
 export interface IModels {
   Channels: IChannelModel;
@@ -89,7 +84,6 @@ export interface IModels {
   FacebookLogs: IFacebookLogModel;
   FacebookPostConversations: IFacebookPostConversationModel;
   FacebookConfigs: IFacebookConfigModel;
-  FacebookBots: IFacebookBotModel;
 }
 
 export interface IContext extends IMainContext {
@@ -169,12 +163,6 @@ export const loadClasses = (
     IFacebookConfigDocument,
     IFacebookConfigModel
   >('facebook_configs', loadFacebookConfigClass(models));
-
-  models.FacebookBots = db.model<IFacebookBotDocument, IFacebookBotModel>(
-    'facebook_messengers_bots',
-    loadFacebookBotClass(models),
-  );
-
   return models;
 };
 

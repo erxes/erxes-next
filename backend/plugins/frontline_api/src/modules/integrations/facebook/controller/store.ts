@@ -8,7 +8,7 @@ import { INTEGRATION_KINDS } from '@/integrations/facebook/constants';
 import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import { IFacebookCustomer } from '@/integrations/facebook/@types/customers';
 import { getFacebookUser } from '@/integrations/facebook/utils';
-import { receiveInboxMessage } from '@/inbox/receiveMessage';
+import { receiveTrpcMessage } from '@/inbox/receiveMessage';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
@@ -73,7 +73,7 @@ export const getOrCreateCustomer = async (
     throw e; // Preserve stack trace
   }
 
-  // Save in core API (via receiveInboxMessage)
+  // Save in core API (via receiveTrpcMessage)
   try {
     const data = {
       action: 'get-create-update-customer',
@@ -86,7 +86,7 @@ export const getOrCreateCustomer = async (
       }),
     };
 
-    const apiCustomerResponse = await receiveInboxMessage(subdomain, data);
+    const apiCustomerResponse = await receiveTrpcMessage(subdomain, data);
 
     if (apiCustomerResponse.status === 'success') {
       customer.erxesApiId = apiCustomerResponse.data._id;
@@ -184,7 +184,7 @@ export const getOrCreateComment = async (
       }),
     };
 
-    const apiConversationResponse = await receiveInboxMessage(subdomain, data);
+    const apiConversationResponse = await receiveTrpcMessage(subdomain, data);
 
     if (apiConversationResponse.status === 'success') {
       conversation.erxesApiId = apiConversationResponse.data._id;

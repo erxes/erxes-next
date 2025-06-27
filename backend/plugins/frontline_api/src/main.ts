@@ -4,7 +4,6 @@ import { appRouter } from '~/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
 import { router } from '~/routes';
-import automations from './meta/automations';
 
 startPlugin({
   name: 'frontline',
@@ -44,22 +43,21 @@ startPlugin({
   },
 
   meta: {
-    automations,
-    // afterProcess: {
-    //   rules: [
-    //     { type: 'updatedDocument', contentTypes: ['core:user'] },
-    //     { type: 'afterAuth', types: ['login'] },
-    //     { type: 'afterMutation', mutationNames: ['usersEdit'] },
-    //   ],
-    //   onDocumentUpdated: async ({ subdomain }, data) => {
-    //     // do logic
-    //   },
-    //   onAfterAuth: async (context, data) => {
-    //     // do logic
-    //   },
-    //   onAfterMutation: (context, args) => {
-    //     // do logic
-    //   },
-    // },
+    afterProcess: {
+      rules: [
+        { type: 'updatedDocument', contentTypes: ['core:user'] },
+        { type: 'afterAuth', types: ['login'] },
+        { type: 'afterMutation', mutationNames: ['usersEdit'] },
+      ],
+      onDocumentUpdated: async ({ subdomain }, data) => {
+        // do logic
+      },
+      onAfterAuth: async (context, data) => {
+        // do logic
+      },
+      onAfterMutation: (context, args) => {
+        // do logic
+      },
+    },
   },
 });

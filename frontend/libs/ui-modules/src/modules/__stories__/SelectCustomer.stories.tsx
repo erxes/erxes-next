@@ -44,7 +44,7 @@ const customersList = [
 
 export const Default: Story = {
   args: {
-    onValueChange: (value: string | string[]) => alert(`Selected customer ID: ${value}`),
+    onValueChange: (value: string) => alert(`Selected customer ID: ${value}`),
   },
   parameters: {
     mocks: [
@@ -68,8 +68,8 @@ export const Default: Story = {
 
 export const WithInitialValue: Story = {
   args: {
-    value: ['1'],
-    onValueChange: (value: string | string[]) => alert(`Selected customer ID: ${value}`),
+    value: '1',
+    onValueChange: (value: string) => alert(`Selected customer ID: ${value}`),
   },
   parameters: Default.parameters,
 };

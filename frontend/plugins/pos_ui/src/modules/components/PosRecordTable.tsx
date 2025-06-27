@@ -16,6 +16,7 @@ export const PosRecordTable = () => {
       <RecordTable.CursorProvider
         hasPreviousPage={pageInfo?.hasPreviousPage}
         hasNextPage={pageInfo?.hasNextPage}
+        loading={loading}
         dataLength={posList?.length}
         sessionKey="pos_cursor"
       >

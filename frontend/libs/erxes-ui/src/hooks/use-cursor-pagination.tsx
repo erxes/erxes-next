@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { isUndefinedOrNull } from 'erxes-ui/utils';
 import { useEffect, useRef, useState } from 'react';
 
 export const useCursorScroll = ({
   dataLength,
   hasPreviousPage,
+  loading,
   offset = 102,
 }: {
   dataLength?: number;
   hasPreviousPage?: boolean;
+  loading?: boolean;
   offset?: number;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -17,10 +18,10 @@ export const useCursorScroll = ({
   const [isFetchBackward, setIsFetchBackward] = useState(false);
 
   useEffect(() => {
-    if (scrollRef.current && !isUndefinedOrNull(hasPreviousPage)) {
-      scrollRef.current.scrollTop = hasPreviousPage ? offset : 0;
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = offset;
     }
-  }, [hasPreviousPage]);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {

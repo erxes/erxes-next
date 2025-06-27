@@ -1,5 +1,7 @@
-import Tag from './tag';
+import { IContext } from '~/connectionResolvers';
 
 export default {
-  Tag,
+  async __resolveReference({ _id }, { models }: IContext) {
+    return models.Tags.findOne({ _id });
+  },
 };

@@ -1,11 +1,14 @@
 import { IconPlus, IconZoomCancel, IconZoomIn } from '@tabler/icons-react';
-import { Button, RecordTableHotkeyProvider, Table, usePreviousHotkeyScope } from 'erxes-ui';
-import { useFieldArray } from 'react-hook-form';
+import { Button } from 'erxes-ui';
+// import { AddInventoryRowButton } from './AddInventoryRow';
+// import { InventoryHeaderCheckbox } from './InventoryRowCheckbox';
+import { RecordTableHotkeyProvider, Table } from 'erxes-ui';
+import { useFieldArray, useWatch } from 'react-hook-form';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { ExpenseRow } from './ExpenseRow';
+// import { InventoryRow } from './InventoryRow';
+// import { RemoveButton } from './RemoveButton';
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
 import { useState } from 'react';
-import { getTempId } from '../../utils';
 
 export const ExpenseForm = ({
   form,
@@ -15,22 +18,16 @@ export const ExpenseForm = ({
   journalIndex: number;
 }) => {
   const [isShow, setIsShow] = useState(false);
-  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope()
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: `trDocs.${journalIndex}.extraData.invIncomeExpenses`,
-    keyName: '_id'
   });
 
-  const handleAppend = () => {
-    append({
-      _id: getTempId(),
-      amount: 0,
-      title: '',
-      rule: 'amount'
-    })
-  }
+  const trDoc = useWatch({
+    control: form.control,
+    name: `trDocs.${journalIndex}`,
+  });
 
   if (!isShow) {
     return (
@@ -51,16 +48,17 @@ export const ExpenseForm = ({
       rowLength={fields.length}
       scope={AccountingHotkeyScope.TransactionFormSubPage}
     >
-      <Table className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar" onClickCapture={() => setHotkeyScopeAndMemorizePreviousScope(AccountingHotkeyScope.TransactionFormSubPage)} >
-        <ExpenseTableHeader form={form} journalIndex={journalIndex} />
+      <Table className="mt-8 p-1 overflow-hidden rounded-lg bg-sidebar border-sidebar">
+        <InventoryTableHeader form={form} journalIndex={journalIndex} />
         <Table.Body className="overflow-hidden">
-          {fields.map((expense, expenseIndex) => (
-            <ExpenseRow
-              key={expense._id}
-              expenseIndex={expenseIndex}
-              journalIndex={journalIndex}
-              form={form}
-            />
+          {fields.map((product, detailIndex) => (
+            <></>
+            // <InventoryRow
+            //   key={product.id}
+            //   detailIndex={detailIndex}
+            //   journalIndex={journalIndex}
+            //   form={form}
+            // />
           ))}
         </Table.Body>
         <Table.Footer>
@@ -70,7 +68,7 @@ export const ExpenseForm = ({
                 <Button
                   variant="secondary"
                   className="bg-border"
-                  onClick={handleAppend}
+                  onClick={() => setIsShow(false)}
                 >
                   <IconPlus />
                   {`Add expense`}
@@ -92,7 +90,7 @@ export const ExpenseForm = ({
   );
 };
 
-const ExpenseTableHeader = ({
+const InventoryTableHeader = ({
   form,
   journalIndex,
 }: {
@@ -102,11 +100,12 @@ const ExpenseTableHeader = ({
   return (
     <Table.Header>
       <Table.Row>
-        <Table.Head className='w-10'></Table.Head>
+        {/* <InventoryHeaderCheckbox /> */}
+        {/* <Table.Head></Table.Head> */}
         <Table.Head>Expense</Table.Head>
         <Table.Head>Rule</Table.Head>
         <Table.Head>Amount</Table.Head>
-        <Table.Head>Account</Table.Head>
+        <Table.Head>Actions</Table.Head>
       </Table.Row>
     </Table.Header>
   );

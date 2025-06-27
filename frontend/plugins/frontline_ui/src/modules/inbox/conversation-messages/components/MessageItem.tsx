@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
 import { Button, IAttachment, RelativeDateDisplay, cn } from 'erxes-ui';
-import { CustomersInline, MembersInline } from 'ui-modules';
+import { CustomerInline, MembersInline } from 'ui-modules';
 
 import { HAS_ATTACHMENT } from '@/inbox/constants/messengerConstants';
 import { ConversationFormDisplay } from '@/inbox/conversation-messages/components/ConversationFormDisplay';
@@ -81,12 +81,9 @@ export const MessageWrapper = ({ children }: { children: React.ReactNode }) => {
       )}
     >
       {!!customerId && separateNext && (
-        <CustomersInline.Provider
-          customerIds={[customerId]}
-          customers={customer ? [customer] : []}
-        >
-          <CustomersInline.Avatar size="xl" />
-        </CustomersInline.Provider>
+        <CustomerInline.Provider customerId={customerId} customer={customer}>
+          <CustomerInline.Avatar size="xl" />
+        </CustomerInline.Provider>
       )}
       {children}
 

@@ -23,14 +23,6 @@ const FacebookIntegrationDetail = lazy(() =>
   ),
 );
 
-const CallIntegrationDetail = lazy(() =>
-  import('@/integrations/call/components/CallIntegrationDetail').then(
-    (module) => ({
-      default: module.CallIntegrationDetail,
-    }),
-  ),
-);
-
 export const IntegrationDetailPage = () => {
   const { integrationType } = useParams();
 
@@ -66,7 +58,6 @@ export const IntegrationDetailPage = () => {
         {integrationType === IntegrationType.FACEBOOK_MESSENGER && (
           <FacebookIntegrationDetail />
         )}
-        {integrationType === IntegrationType.CALL && <CallIntegrationDetail />}
       </Suspense>
       <IntegrationsRecordTable />
     </div>

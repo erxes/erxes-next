@@ -13,7 +13,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
 import { IconMailFilled } from '@tabler/icons-react';
 import { FrontlinePaths } from '@/types/FrontlinePaths';
-import { InboxPageChangeEffect } from '@/inbox/components/InboxPageChangeEffect';
 
 export const IntegrationSettingsPage = lazy(() =>
   import('~/pages/IntegrationSettingsPage').then((module) => ({
@@ -94,7 +93,6 @@ const InboxSettings = () => {
               />
               <Route path="channels" element={<ChannelsSettingsPage />} />
             </Routes>
-            <InboxPageChangeEffect />
           </Suspense>
         </PageContainer>
       </div>

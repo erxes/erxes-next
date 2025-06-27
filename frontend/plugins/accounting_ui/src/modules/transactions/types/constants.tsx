@@ -34,8 +34,3 @@ export const TR_SIDES = {
   RECEIVABLE_OPTIONS: [{ value: 'dt', label: 'open' }, { value: 'ct', label: 'close' }],
   PAYABLE_OPTIONS: [{ value: 'dt', label: 'close' }, { value: 'ct', label: 'open' }],
 }
-
-export const INV_INCOME_EXPENSE_TYPES = [
-  { value: 'amount', label: 'Amount' },
-  { value: 'count', label: 'Count' }
-]

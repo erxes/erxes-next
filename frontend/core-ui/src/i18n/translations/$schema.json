@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "nav": {
+      "type": "object",
+      "properties": {
+        "contacts": {
+          "type": "string"
+        },
+        "contactsSub": {
+          "type": "object",
+          "properties": {
+            "leads": {
+              "type": "string"
+            },
+            "customers": {
+              "type": "string"
+            },
+            "companies": {
+              "type": "string"
+            },
+            "vendors": {
+              "type": "string"
+            },
+            "clients": {
+              "type": "string"
+            }
+          }
+        },
+        "favorites": {
+          "type": "string"
+        },
+        "inbox": {
+          "type": "string"
+        },
+        "insights": {
+          "type": "string"
+        },
+        "plugins": {
+          "type": "string"
+        },
+        "products": {
+          "type": "string"
+        },
+        "projects": {
+          "type": "string"
+        },
+        "sales": {
+          "type": "string"
+        },
+        "settings": {
+          "type": "string"
+        },
+        "starred": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "string"
+        },
+        "teamInbox": {
+          "type": "string"
+        },
+        "teams": {
+          "type": "string"
+        },
+        "views": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

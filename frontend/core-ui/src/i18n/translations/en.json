@@ -1,0 +1,42 @@
+{
+  "$schema": "./$schema.json",
+  "nav": {
+    "contacts": "Contacts",
+    "contacts.subMenu": {
+      "leads": "Leads",
+      "customers": "Customers",
+      "companies": "Companies",
+      "vendors": "Vendor portal users",
+      "clients": "Client portal users"
+    },
+    "favorites": "Favorites",
+    "frontline": "Frontline",
+    "insights": "Insights",
+    "plugins": "Plugins",
+    "products": "Products & Services",
+    "products.subMenu": {
+      "categories": "Product Categories"
+    },
+    "projects": "Projects",
+    "sales": "Sales",
+    "settings": "Settings",
+    "starred": "Starred",
+    "tasks": "Tasks",
+    "teamInbox": "Team Inbox",
+    "teams": "Teams",
+    "views": "Views",
+    "accounting": "Accounting",
+    "automations": "Automations",
+    "segments": "Segments",
+    "pos": "Pos",
+    "accounting.subMenu": {
+      "main": "Transactions",
+      "records": "Records",
+      "odds": "Odd Transactions"
+    },
+    "sample": "Sample",
+    "modules": "Modules",
+    "pms": "PMS",
+    "tms": "TMS"
+  }
+}

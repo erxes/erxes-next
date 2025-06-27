@@ -163,8 +163,7 @@ export const CONFIG: IUIConfig = {
       icon: IconSandbox,
       path: '${kebabCaseModuleName}',
       hasSettings: true,
-      hasRelationWidget: false,
-      hasFloatingWidget: false,
+      hasWidgets: true,
     },
   ],
 };

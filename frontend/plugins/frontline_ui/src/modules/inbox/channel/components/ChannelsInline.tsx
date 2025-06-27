@@ -71,7 +71,7 @@ export const ChannelInlineEffectComponent = ({
   const { channels, channelIds, updateChannels } = useChannelsInlineContext();
   const { channelDetail } = useChannelInline({
     variables: {
-      id: channelId,
+      _id: channelId,
     },
     skip: !channelId || channels.some((c) => c._id === channelId),
   });

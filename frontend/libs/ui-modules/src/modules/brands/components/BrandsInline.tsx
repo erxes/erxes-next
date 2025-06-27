@@ -90,14 +90,10 @@ const BrandsInlineTitle = () => {
 
   return (
     <Tooltip.Provider>
-      <Tooltip>
-        <Tooltip.Trigger asChild>
-          <span>{`${brands.length} brands`}</span>
-        </Tooltip.Trigger>
-        <Tooltip.Content>
-          {brands.map((brand) => brand.name).join(', ')}
-        </Tooltip.Content>
-      </Tooltip>
+      <Tooltip.Trigger>{`${brands.length} brands`}</Tooltip.Trigger>
+      <Tooltip.Content>
+        {brands.map((brand) => brand.name).join(', ')}
+      </Tooltip.Content>
     </Tooltip.Provider>
   );
 };

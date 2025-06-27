@@ -91,27 +91,3 @@ export const createTRPCContext =
 export type ITRPCContext<TExtraContext = {}> = Awaited<
   ReturnType<typeof createTRPCContext<TExtraContext>>
 >;
-
-export const ok = (data: any) => {
-  return {
-    status: 'success',
-    data,
-    timestamp: new Date().toISOString(),
-  };
-};
-
-export const err = (error: any) => {
-  return {
-    status: 'error',
-    error: {
-      code: error.code || 'SERVER_ERROR',
-      message: error.message || error.message,
-      details: error instanceof Error ? error.message : 'Database error',
-      ...(process.env.NODE_ENV === 'development' && {
-        stack: error instanceof Error ? error.stack : undefined,
-      }),
-      ...(error.suggestion && { suggestion: error.suggestion }),
-    },
-    timestamp: new Date().toISOString(),
-  };
-};

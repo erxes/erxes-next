@@ -20,35 +20,23 @@ import {
   facebookCreateIntegrations,
 } from '@/integrations/facebook/messageBroker';
 
-interface IntegrationParams {
-  integrationId: string;
-}
-interface CreateIntegrationParams {
-  accountId: string;
-  kind: string;
-  integrationId: string;
-  data?: string;
-}
-
-interface UpdateIntegrationDoc {
-  accountId: string;
-  kind: string;
-  integrationId: string;
-  data?: string;
-}
-
-interface UpdateIntegrationData {
-  kind: string;
-  integrationId: string;
-  doc: UpdateIntegrationDoc;
-}
-
 export const sendCreateIntegration = async (
   subdomain: string,
+  integration: IIntegrationDocument,
   serviceName: string,
-  data: CreateIntegrationParams,
+  payload: object,
 ) => {
   try {
+    const kindParts = integration.kind.split('-');
+    if (kindParts.length < 2) {
+      throw new Error(`Invalid integration kind format: ${integration.kind}`);
+    }
+    const data = {
+      action: `reply-${kindParts[1]}`,
+      type: serviceName,
+      payload: JSON.stringify(payload),
+      integrationId: integration._id,
+    };
     switch (serviceName) {
       case 'facebook':
         return await facebookCreateIntegrations({ subdomain, data });
@@ -74,12 +62,12 @@ export const sendCreateIntegration = async (
 export const sendUpdateIntegration = async (
   subdomain: string,
   serviceName: string,
-  data: UpdateIntegrationData,
+  data: any,
 ) => {
   try {
     switch (serviceName) {
       case 'facebook':
-        return await facebookUpdateIntegrations({ subdomain, data });
+        return await facebookUpdateIntegrations({ subdomain, data: data });
 
       case 'instagram':
         break;
@@ -100,12 +88,12 @@ export const sendUpdateIntegration = async (
 export const sendRemoveIntegration = async (
   subdomain: string,
   serviceName: string,
-  data: IntegrationParams,
+  data: any,
 ) => {
   try {
     switch (serviceName) {
       case 'facebook':
-        return await facebookRemoveIntegrations({ subdomain, data });
+        return await facebookRemoveIntegrations({ subdomain, data: data });
 
       case 'instagram':
         break;
@@ -126,12 +114,12 @@ export const sendRemoveIntegration = async (
 export const sendRemoveAccount = async (
   subdomain: string,
   serviceName: string,
-  data: IntegrationParams,
+  params: any,
 ) => {
   try {
     switch (serviceName) {
       case 'facebook':
-        return await facebookRemoveAccount({ subdomain, data });
+        return await facebookRemoveAccount({ subdomain, data: params });
 
       case 'instagram':
         break;
@@ -152,12 +140,12 @@ export const sendRemoveAccount = async (
 export const sendRepairIntegration = async (
   subdomain: string,
   serviceName: string,
-  data: IntegrationParams,
+  params: any,
 ) => {
   try {
     switch (serviceName) {
       case 'facebook':
-        return await facebookRepairIntegrations({ subdomain, data });
+        return await facebookRepairIntegrations({ subdomain, data: params });
 
       case 'instagram':
         break;
@@ -442,14 +430,20 @@ export const integrationMutations = {
 
     try {
       if ('webhook' !== kind) {
-        const payload: CreateIntegrationParams = {
+        const payload = {
+          action: 'createIntegration',
           accountId: doc.accountId,
           kind: doc.kind,
           integrationId: integration._id,
           data: data ? JSON.stringify(data) : '',
         };
+        await sendCreateIntegration(
+          subdomain,
+          integration,
+          kind,
 
-        await sendCreateIntegration(subdomain, kind, payload);
+          payload,
+        );
       }
     } catch (e) {
       await models.Integrations.deleteOne({ _id: integration._id });
@@ -490,10 +484,7 @@ export const integrationMutations = {
         { $push: { integrationIds: integration._id } },
       );
     }
-
-    const serviceName = integration.kind.split('-')[0];
-
-    await sendUpdateIntegration(subdomain, serviceName, {
+    const data = {
       kind,
       integrationId: integration._id,
       doc: {
@@ -502,7 +493,9 @@ export const integrationMutations = {
         integrationId: integration._id,
         data: details ? JSON.stringify(details) : '',
       },
-    });
+    };
+
+    await sendUpdateIntegration(subdomain, kind, data);
 
     return updated;
   },
@@ -520,7 +513,12 @@ export const integrationMutations = {
 
     if (!['lead', 'messenger'].includes(kind)) {
       try {
-        await sendRemoveIntegration(subdomain, kind, { integrationId: _id });
+        const commonParams = {
+          subdomain,
+          data: { integrationId: _id },
+          action: 'removeIntegrations',
+        };
+        await sendRemoveIntegration(subdomain, kind, commonParams);
       } catch (e) {
         if (e.message !== 'Integration not found') {
           throw e;
@@ -541,13 +539,16 @@ export const integrationMutations = {
   ) {
     try {
       if (kind) {
-        const serviceName = kind.split('-')[0];
-
+        const commonParams = {
+          subdomain,
+          data: { integrationId: _id },
+          action: 'removeIntegrations',
+        };
         try {
           await sendRemoveAccount(
             subdomain,
-            serviceName, // kind should be explicitly set
-            { integrationId: _id },
+            kind, // kind should be explicitly set
+            commonParams,
           );
         } catch (error) {
           console.error('Error during account removal process:', error);
@@ -574,11 +575,19 @@ export const integrationMutations = {
         throw new Error('Integration kind is required for repair');
       }
 
-      const serviceName = kind.split('-')[0];
+      const commonParams = {
+        subdomain,
+        data: { integrationId: _id },
+        action: 'repair-integrations',
+      };
 
-      return await sendRepairIntegration(subdomain, serviceName, {
-        integrationId: _id,
-      });
+      const repairResult = await sendRepairIntegration(
+        subdomain,
+        kind,
+        commonParams,
+      );
+
+      return repairResult;
     } catch (error) {
       console.error(`Failed to repair ${kind} integration ${_id}:`, error);
       // Convert to a more user-friendly error if needed

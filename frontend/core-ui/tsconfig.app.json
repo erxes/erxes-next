@@ -8,9 +8,7 @@
       "node",
       "@nx/react/typings/cssmodule.d.ts",
       "@nx/react/typings/image.d.ts"
-    ],
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+    ]
   },
   "exclude": [
     "jest.config.ts",
