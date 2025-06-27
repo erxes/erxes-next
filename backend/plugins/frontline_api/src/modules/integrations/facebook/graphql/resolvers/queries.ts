@@ -514,4 +514,16 @@ export const facebookQueries = {
 
     return messages.reverse();
   },
+
+  async facebookMessengerBotsTotalCount(_root, _args, { models }: IContext) {
+    return await models.FacebookBots.find({}).countDocuments();
+  },
+
+  async facebookMessengerBots(_root, _args, { models }: IContext) {
+    return await models.FacebookBots.find({});
+  },
+
+  async facebookMessengerBot(_root, { _id }, { models }: IContext) {
+    return await models.FacebookBots.findOne({ _id });
+  },
 };

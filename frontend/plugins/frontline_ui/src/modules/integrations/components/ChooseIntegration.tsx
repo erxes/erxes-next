@@ -11,6 +11,8 @@ import { integrationCollapsibleState } from '@/integrations/state/integrationCol
 import { IIntegration } from '@/integrations/types/Integration';
 import { IconCheck } from '@tabler/icons-react';
 
+// TODO: remove this component if we not use it
+
 export const ChooseIntegration = () => {
   const [open, setOpen] = useAtom(integrationCollapsibleState);
 
@@ -59,15 +61,13 @@ const ChooseIntegrationContent = ({ open }: { open: boolean }) => {
 const IntegrationItem = ({ _id, name }: IIntegration) => {
   const [{ integrationType }, setValues] = useMultiQueryState<{
     integrationType: string;
-    detailView: boolean;
-  }>(['integrationType', 'detailView']);
+  }>(['integrationType']);
 
   const isActive = integrationType === _id;
 
   const handleClick = () =>
     setValues({
       integrationType: _id,
-      detailView: true,
     });
 
   return (

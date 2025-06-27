@@ -1,4 +1,5 @@
 export enum InboxHotkeyScope {
-  IndexPage = 'inbox-index-page',
+  MainPage = 'inbox-main-page',
   MessageInput = 'inbox-message-input',
+  IntegrationSettingsPage = 'inbox-integration-settings-page',
 }

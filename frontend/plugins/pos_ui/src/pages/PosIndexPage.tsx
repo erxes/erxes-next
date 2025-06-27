@@ -5,7 +5,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { PosRecordTable } from '@/components/PosRecordTable';
 import { useAtom } from 'jotai';
 import { PosCreate } from '@/create-pos/components/index/pos-create';
-import { PosEdit } from '@/pos-detail.tsx/components/posDetail';
+import { PosEdit } from '@/pos-detail/components/posDetail';
 import { renderingPosCreateAtom } from '@/create-pos/states/renderingPosCreateAtom';
 
 export const PosIndexPage = () => {

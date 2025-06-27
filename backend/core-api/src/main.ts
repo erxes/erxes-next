@@ -6,6 +6,7 @@ import * as http from 'http';
 import { appRouter } from '~/init-trpc';
 import { initApolloServer } from './apollo/apolloServer';
 import { router } from './routes';
+import { isDev } from 'erxes-api-shared/utils';
 
 import {
   closeMongooose,
@@ -14,7 +15,7 @@ import {
   leaveErxesGateway,
 } from 'erxes-api-shared/utils';
 
-import './automations';
+import './meta/automations';
 import { generateModels } from './connectionResolvers';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
@@ -40,8 +41,9 @@ app.use(cookieParser());
 const corsOptions = {
   credentials: true,
   origin: [
-    DOMAIN ? DOMAIN : 'http://localhost:3001',
-    ALLOWED_DOMAINS ? ALLOWED_DOMAINS : 'http://localhost:3200',
+    ...(DOMAIN ? [DOMAIN] : []),
+    ...(isDev ? ['http://localhost:3001'] : []),
+    ...(ALLOWED_DOMAINS || '').split(','),
     ...(CLIENT_PORTAL_DOMAINS || '').split(','),
     ...(process.env.ALLOWED_ORIGINS || '')
       .split(',')

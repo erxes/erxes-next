@@ -46,7 +46,7 @@ export const ProductCategoryAddMoreFields = ({
           </Form.Item>
         )}
       />
-      {/* <Form.Field
+      <Form.Field
         control={form.control}
         name="scopeBrandIds"
         render={({ field }) => (
@@ -54,16 +54,16 @@ export const ProductCategoryAddMoreFields = ({
             <Form.Label>BRAND</Form.Label>
             <Form.Control>
               <SelectBrand
-                value={field.value?.[0]}
+                value={field.value?.[0] || ''}
                 onValueChange={(brandId) => {
-                  field.onChange(brandId);
+                  field.onChange([brandId]);
                 }}
               />
             </Form.Control>
             <Form.Message className="text-destructive" />
           </Form.Item>
         )}
-      /> */}
+      />
       <Form.Field
         control={form.control}
         name="description"

@@ -6,7 +6,8 @@ export type IUIConfig = {
     icon: React.ElementType;
     path: string;
     hasSettings: boolean;
-    hasWidgets: boolean;
+    hasRelationWidget: boolean;
+    hasFloatingWidget?: boolean;
     submenus?: {
       name: string;
       path: string;

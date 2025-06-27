@@ -9,11 +9,12 @@ import {
   validateFetchMore,
 } from 'erxes-ui';
 import { IProduct } from 'ui-modules';
+import { PRODUCTS_CURSOR_SESSION_KEY } from '@/products/constants/productsCursorSessionKey';
 export const PRODUCTS_PER_PAGE = 30;
 
 export const useProducts = (options?: QueryHookOptions) => {
   const { cursor } = useRecordTableCursor({
-    sessionKey: 'products_cursor',
+    sessionKey: PRODUCTS_CURSOR_SESSION_KEY,
   });
   const { data, loading, fetchMore } = useQuery<{
     productsMain: {

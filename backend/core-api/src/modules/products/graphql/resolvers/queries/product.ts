@@ -143,6 +143,10 @@ export const productQueries = {
   ) {
     const filter = await generateFilter(models, commonQuerySelector, params);
 
+    if (!params.orderBy) {
+      params.orderBy = { code: 1 }
+    }
+
     return await cursorPaginate({
       model: models.Products,
       params,

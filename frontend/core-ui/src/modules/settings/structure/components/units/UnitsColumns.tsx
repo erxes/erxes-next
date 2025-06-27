@@ -1,6 +1,6 @@
 import { Cell, ColumnDef } from '@tanstack/table-core';
 import { IUnitListItem } from '../../types/unit';
-import { IconClock, IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconHash, IconTrash } from '@tabler/icons-react';
 import {
   Badge,
   Button,
@@ -15,7 +15,7 @@ import {
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { renderingUnitDetailAtom } from '../../states/renderingUnitDetail';
-import { AssignMember, SelectDepartmentTree } from 'ui-modules';
+import { MembersInline, SelectDepartments } from 'ui-modules';
 import { useRemoveUnit } from '../../hooks/useUnitActions';
 
 export const UnitEditColumnCell = ({
@@ -109,10 +109,7 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>
-          <AssignMember
-            className="shadow-none bg-transparent"
-            value={cell.getValue() as string}
-          />
+          <MembersInline memberIds={[cell.getValue() as string]} />
         </RecordTableCellDisplay>
       );
     },
@@ -123,14 +120,11 @@ export const UnitsColumns: ColumnDef<IUnitListItem>[] = [
     header: () => <RecordTable.InlineHead label="department" />,
     cell: ({ cell }) => {
       return (
-        <RecordTableCellDisplay>
-          <SelectDepartmentTree
-            recordId={cell.id}
-            selected={cell.getValue() as string}
-            onSelect={() => {}}
-            className="shadow-none bg-transparent"
-          />
-        </RecordTableCellDisplay>
+        <SelectDepartments.InlineCell
+          mode="single"
+          value={cell.getValue() as string}
+          onValueChange={() => {}}
+        />
       );
     },
   },

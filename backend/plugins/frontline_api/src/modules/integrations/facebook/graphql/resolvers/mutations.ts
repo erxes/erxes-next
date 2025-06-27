@@ -92,7 +92,7 @@ export const facebookMutations = {
         (inboxConversation && inboxConversation.integrationId) || '',
       );
 
-      await sendNotifications(subdomain, {
+      await sendNotifications({
         user,
         conversations: [inboxConversation],
         type: 'conversationStateChange',

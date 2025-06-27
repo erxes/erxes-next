@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { ITRPCContext } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import {
-  receiveTrpcMessage,
+  receiveInboxMessage,
   receiveIntegrationsNotification,
 } from '@/inbox/receiveMessage';
 import { getIntegrationsKinds } from '@/inbox/utils';
@@ -75,7 +75,7 @@ export const integrationsRouter = t.router({
   receive: t.procedure.input(z.any()).mutation(async ({ input, ctx }) => {
     const { subdomain } = ctx;
     try {
-      const result = await receiveTrpcMessage(subdomain, input);
+      const result = await receiveInboxMessage(subdomain, input);
 
       return {
         status: 'success',
@@ -930,9 +930,8 @@ export const inboxTrpcRouter = t.router({
     sendNotifications: t.procedure
       .input(z.any()) // Consider replacing with proper input validation
       .mutation(async ({ ctx, input }) => {
-        const { subdomain } = ctx;
         try {
-          await sendNotifications(subdomain, input);
+          await sendNotifications(input);
           return {
             status: 'success',
             message: 'Notifications sent successfully',

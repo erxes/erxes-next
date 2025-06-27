@@ -1,21 +1,22 @@
 import {
+  Avatar,
+  AvatarProps,
+  Combobox,
+  Tooltip,
+  cn,
+  isUndefinedOrNull,
+} from 'erxes-ui';
+import {
   MembersInlineContext,
   useMembersInlineContext,
 } from '../contexts/MembersInlineContext';
-import { IMember } from '../types/TeamMembers';
-import {
-  Avatar,
-  AvatarProps,
-  cn,
-  Combobox,
-  isUndefinedOrNull,
-  Tooltip,
-} from 'erxes-ui';
-import { useAtomValue } from 'jotai';
-import { currentUserState } from 'ui-modules/states';
-import { IconUserCircle } from '@tabler/icons-react';
-import { useMemberInline } from '../hooks';
 import { useEffect, useState } from 'react';
+
+import { IUser } from '../types/TeamMembers';
+import { IconUserCircle } from '@tabler/icons-react';
+import { currentUserState } from 'ui-modules/states';
+import { useAtomValue } from 'jotai';
+import { useMemberInline } from '../hooks';
 
 export const MembersInlineRoot = ({
   members,
@@ -24,10 +25,10 @@ export const MembersInlineRoot = ({
   updateMembers,
   size,
 }: {
-  members?: IMember[];
+  members?: IUser[];
   memberIds?: string[];
   placeholder?: string;
-  updateMembers?: (members: IMember[]) => void;
+  updateMembers?: (members: IUser[]) => void;
   size?: 'lg';
 }) => {
   return (
@@ -52,11 +53,11 @@ export const MembersInlineProvider = ({
 }: {
   children?: React.ReactNode;
   memberIds?: string[];
-  members?: IMember[];
+  members?: IUser[];
   placeholder?: string;
-  updateMembers?: (members: IMember[]) => void;
+  updateMembers?: (members: IUser[]) => void;
 }) => {
-  const [_members, _setMembers] = useState<IMember[]>(members || []);
+  const [_members, _setMembers] = useState<IUser[]>(members || []);
 
   return (
     <MembersInlineContext.Provider
@@ -72,7 +73,7 @@ export const MembersInlineProvider = ({
     >
       <Tooltip.Provider>{children}</Tooltip.Provider>
       {memberIds
-        ?.filter((id) => !members?.find((member) => member._id === id))
+        ?.filter((id) => !members?.some((member) => member._id === id))
         .map((memberId) => (
           <MemberInlineEffectComponent key={memberId} memberId={memberId} />
         ))}
@@ -81,7 +82,7 @@ export const MembersInlineProvider = ({
 };
 
 const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
-  const currentUser = useAtomValue(currentUserState) as IMember;
+  const currentUser = useAtomValue(currentUserState) as IUser;
   const { members, memberIds, updateMembers } = useMembersInlineContext();
   const { userDetail } = useMemberInline({
     variables: {
@@ -106,7 +107,7 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
 
 export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
   const { members, loading, memberIds } = useMembersInlineContext();
-  const currentUser = useAtomValue(currentUserState) as IMember;
+  const currentUser = useAtomValue(currentUserState) as IUser;
 
   const sortedMembers = [...members].sort((a, b) => {
     if (a._id === currentUser?._id) return -1;
@@ -125,13 +126,13 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
       </div>
     );
 
-  const renderAvatar = (member: IMember) => {
+  const renderAvatar = (member: IUser) => {
     const { details } = member;
     const { avatar, fullName } = details || {};
 
     if (member._id === currentUser._id) {
       return (
-        <Tooltip delayDuration={100}>
+        <Tooltip delayDuration={100} key={member._id}>
           <Tooltip.Trigger asChild>
             <Avatar
               size="lg"
@@ -149,7 +150,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
     }
 
     return (
-      <Tooltip>
+      <Tooltip key={member._id}>
         <Tooltip.Trigger asChild>
           <Avatar
             className={cn(
@@ -205,7 +206,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
 
 export const MembersInlineTitle = () => {
   const { members, loading, placeholder } = useMembersInlineContext();
-  const currentUser = useAtomValue(currentUserState) as IMember;
+  const currentUser = useAtomValue(currentUserState) as IUser;
   const isCurrentUser = members.some((m) => m._id === currentUser._id);
 
   const getDisplayValue = () => {

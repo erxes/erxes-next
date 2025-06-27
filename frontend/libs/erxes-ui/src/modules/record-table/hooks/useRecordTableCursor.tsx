@@ -11,7 +11,8 @@ export const useRecordTableCursor = ({
   );
 
   useEffect(() => {
-    setCursor(sessionKey ? sessionStorage.getItem(sessionKey) : null);
+    if (!sessionKey) return;
+    setCursor(sessionStorage.getItem(sessionKey));
   }, [sessionKey, setCursor]);
 
   return {
