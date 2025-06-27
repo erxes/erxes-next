@@ -65,8 +65,6 @@ export const documentQueries = {
   ) => {
     const filter = generateFilter(params);
 
-    console.log('filter', filter);
-
     const { list, pageInfo, totalCount } =
       await cursorPaginate<IDocumentDocument>({
         model: models.Documents,
