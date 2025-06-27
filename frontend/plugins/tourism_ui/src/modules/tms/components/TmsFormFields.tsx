@@ -289,7 +289,12 @@ export const GeneralManager = ({
                   : 'Choose team member'
               }
               defaultOptions={generalManagerOptions}
-              disabled={loading || !!error}
+              options={generalManagerOptions}
+              emptyIndicator={
+                <p className="text-sm text-center text-gray-600">
+                  {loading ? 'Loading...' : 'No team members found'}
+                </p>
+              }
               value={
                 (field.value
                   ?.map((id: string) =>
@@ -339,7 +344,12 @@ export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
                   : 'Choose team member'
               }
               defaultOptions={managerOptions}
-              disabled={loading || !!error}
+              options={managerOptions}
+              emptyIndicator={
+                <p className="text-sm text-center text-gray-600">
+                  {loading ? 'Loading...' : 'No team members found'}
+                </p>
+              }
               value={
                 (field.value
                   ?.map((id: string) =>
