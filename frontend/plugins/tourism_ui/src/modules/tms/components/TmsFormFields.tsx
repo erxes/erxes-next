@@ -1,9 +1,28 @@
 import { Control, useFieldArray } from 'react-hook-form';
-import { Button, Form, Input, Select, Upload, Avatar } from 'erxes-ui';
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  Upload,
+  MultipleSelector,
+  MultiSelectOption,
+} from 'erxes-ui';
 import { TmsFormType } from '@/tms/constants/formSchema';
-import { IconUpload, IconPlus, IconTrash } from '@tabler/icons-react';
+import {
+  IconUpload,
+  IconPlus,
+  IconTrash,
+  IconX,
+  IconCreditCard,
+  IconCashBanknote,
+  IconBuilding,
+  IconPhone,
+  IconBrandVisa,
+  IconBrandMastercard,
+  IconFile,
+} from '@tabler/icons-react';
 import { UsersList } from '~/modules/tms/hooks/UsersList';
-import { readFile } from 'erxes-ui/utils/core';
 
 export const TourName = ({ control }: { control: Control<TmsFormType> }) => {
   return (
@@ -38,7 +57,7 @@ export const SelectColor = ({ control }: { control: Control<TmsFormType> }) => {
 
           <Form.Control>
             <div
-              className="relative w-8 h-8 overflow-hidden rounded-full"
+              className="overflow-hidden relative w-8 h-8 rounded-full"
               style={{ backgroundColor: field.value || '#4F46E5' }}
             >
               <Input
@@ -68,36 +87,70 @@ export const LogoField = ({ control }: { control: Control<TmsFormType> }) => {
           </Form.Description>
           <Form.Control>
             <Upload.Root
-              {...field}
               value={field.value || ''}
               onChange={(fileInfo) => {
+                console.log('LogoField - Upload onChange triggered:', fileInfo);
+                console.log('LogoField - Type of fileInfo:', typeof fileInfo);
+                console.log(
+                  'LogoField - fileInfo keys:',
+                  Object.keys(fileInfo),
+                );
+
                 if ('url' in fileInfo) {
+                  console.log(
+                    'LogoField - URL found in fileInfo:',
+                    fileInfo.url,
+                  );
                   field.onChange(fileInfo.url);
+                } else {
+                  console.log(
+                    'LogoField - No URL in fileInfo, full object:',
+                    fileInfo,
+                  );
                 }
               }}
             >
-              <div className="w-full">
-                <Upload.Button
-                  size="sm"
-                  variant="secondary"
-                  type="button"
-                  className="flex flex-col items-center justify-center w-full border border-dashed h-28 text-muted-foreground"
-                >
-                  <IconUpload className="mb-2" />
-
-                  <Button variant="outline" className="text-sm font-medium">
-                    Upload logo
+              {field.value ? (
+                <div className="relative w-full">
+                  <div className="flex justify-center items-center w-full min-h-[7rem] p-4 rounded-md border shadow-sm bg-background">
+                    <Upload.Preview className="object-contain max-w-full max-h-32" />
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    type="button"
+                    className="absolute top-2 right-2 p-0 w-5 h-5 rounded-full opacity-80 transition-opacity hover:opacity-100"
+                    onClick={() => {
+                      console.log('LogoField - Delete button clicked');
+                      console.log(
+                        'LogoField - Current value before delete:',
+                        field.value,
+                      );
+                      field.onChange('');
+                    }}
+                  >
+                    <IconX size={12} />
                   </Button>
-
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Max size: 15MB, File type: PNG
-                  </p>
-                </Upload.Button>
-
-                {field.value && (
-                  <Upload.Preview className="w-full h-full mt-2" />
-                )}
-              </div>
+                </div>
+              ) : (
+                <>
+                  <Upload.Preview className="hidden" />
+                  <Upload.Button
+                    size="sm"
+                    variant="secondary"
+                    type="button"
+                    className="flex flex-col justify-center items-center w-full h-28 border border-dashed text-muted-foreground"
+                  >
+                    <IconUpload className="mb-2" />
+                    <Button variant="outline" className="text-sm font-medium">
+                      Upload logo
+                    </Button>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Max size: 15MB, File type: PNG
+                    </p>
+                  </Upload.Button>
+                </>
+              )}
             </Upload.Root>
           </Form.Control>
         </Form.Item>
@@ -124,37 +177,76 @@ export const FavIconField = ({
           </Form.Description>
           <Form.Control>
             <Upload.Root
-              {...field}
               value={field.value || ''}
               onChange={(fileInfo) => {
+                console.log(
+                  'FavIconField - Upload onChange triggered:',
+                  fileInfo,
+                );
+                console.log(
+                  'FavIconField - Type of fileInfo:',
+                  typeof fileInfo,
+                );
+                console.log(
+                  'FavIconField - fileInfo keys:',
+                  Object.keys(fileInfo),
+                );
+
                 if ('url' in fileInfo) {
+                  console.log(
+                    'FavIconField - URL found in fileInfo:',
+                    fileInfo.url,
+                  );
                   field.onChange(fileInfo.url);
+                } else {
+                  console.log(
+                    'FavIconField - No URL in fileInfo, full object:',
+                    fileInfo,
+                  );
                 }
               }}
             >
-              <Upload.Preview className="hidden" />
-              <div className="w-full">
-                <Upload.Button
-                  size="sm"
-                  variant="secondary"
-                  type="button"
-                  className="flex flex-col items-center justify-center w-full border border-dashed h-28 text-muted-foreground"
-                >
-                  <IconUpload className="mb-2" />
-
-                  <Button variant="outline" className="text-sm font-medium">
-                    Upload favicon
+              {field.value ? (
+                <div className="relative w-full">
+                  <div className="flex justify-center items-center w-full min-h-[7rem] p-4 rounded-md border shadow-sm bg-background">
+                    <Upload.Preview className="object-contain max-w-full max-h-32" />
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    type="button"
+                    className="absolute top-2 right-2 p-0 w-5 h-5 rounded-full opacity-80 transition-opacity hover:opacity-100"
+                    onClick={() => {
+                      console.log('FavIconField - Delete button clicked');
+                      console.log(
+                        'FavIconField - Current value before delete:',
+                        field.value,
+                      );
+                      field.onChange('');
+                    }}
+                  >
+                    <IconX size={12} />
                   </Button>
-
-                  <p className="mt-2 text-sm text-gray-400">
-                    Max size: 15MB, File type: PNG
-                  </p>
-                </Upload.Button>
-
-                {field.value && (
-                  <Upload.Preview className="w-full h-full mt-2" />
-                )}
-              </div>
+                </div>
+              ) : (
+                <>
+                  <Upload.Preview className="hidden" />
+                  <Upload.Button
+                    size="sm"
+                    variant="secondary"
+                    type="button"
+                    className="flex flex-col justify-center items-center w-full h-28 border border-dashed text-muted-foreground"
+                  >
+                    <IconUpload className="mb-2" />
+                    <Button variant="outline" className="text-sm font-medium">
+                      Upload favicon
+                    </Button>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Max size: 15MB, File type: PNG
+                    </p>
+                  </Upload.Button>
+                </>
+              )}
             </Upload.Root>
           </Form.Control>
         </Form.Item>
@@ -170,26 +262,9 @@ export const GeneralManager = ({
 }) => {
   const { list, loading, error } = UsersList();
 
-  if (loading) {
-    return (
-      <div className="text-sm text-muted-foreground">
-        Loading general managers...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-sm text-destructive">
-        Error loading general managers
-      </div>
-    );
-  }
-
-  const generalManager = (list || []).map((user) => ({
+  const generalManagerOptions = (list || []).map((user) => ({
     value: user._id,
     label: user.details?.fullName || user.username || user.email,
-    avatar: user.details?.avatar,
   }));
 
   return (
@@ -203,98 +278,31 @@ export const GeneralManager = ({
             General manager can be shown on the top of the post also in the list
             view
           </Form.Description>
-          <Select
-            onValueChange={(value) => {
-              const currentValues = field.value || [];
-              if (currentValues.includes(value)) {
-                field.onChange(currentValues.filter((v) => v !== value));
-              } else {
-                field.onChange([...currentValues, value]);
+          <Form.Control>
+            <MultipleSelector
+              hidePlaceholderWhenSelected
+              placeholder={
+                loading
+                  ? 'Loading general managers...'
+                  : error
+                  ? 'Error loading general managers'
+                  : 'Choose team member'
               }
-            }}
-            value=""
-          >
-            <Form.Control>
-              <Select.Trigger className="justify-between h-8 truncate rounded-md appearance-none [&>svg]:hidden w-44 text-foreground [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
-                <Select.Value
-                  placeholder={
-                    <span className="text-sm font-medium text-center truncate text-muted-foreground">
-                      {'Choose team member'}
-                    </span>
-                  }
-                />
-              </Select.Trigger>
-            </Form.Control>
-            <Select.Content
-              className="border p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-              align="start"
-            >
-              <Select.Group>
-                {generalManager.map((generalManager) => (
-                  <Select.Item
-                    key={generalManager.value}
-                    className="text-xs h-8 [&>span]:flex [&>span]:items-center [&>span]:gap-2"
-                    value={generalManager.value}
-                  >
-                    <Avatar className="w-4 h-4 rounded-full">
-                      <Avatar.Image
-                        src={readFile(generalManager.avatar)}
-                        alt={generalManager.label}
-                      />
-                      <Avatar.Fallback className="rounded-lg">
-                        {generalManager.label.split('')[0]}
-                      </Avatar.Fallback>
-                    </Avatar>
-                    {generalManager.label}
-                  </Select.Item>
-                ))}
-              </Select.Group>
-            </Select.Content>
-          </Select>
-
-          {field.value && field.value.length > 0 && (
-            <div className="pb-2 my-2">
-              <div className="mb-1 text-xs text-muted-foreground">
-                Selected general managers:
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {field.value.map((managerId) => {
-                  const manager = generalManager.find(
-                    (gm) => gm.value === managerId,
-                  );
-                  return manager ? (
-                    <span
-                      key={managerId}
-                      className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-primary/10 text-primary"
-                    >
-                      <Avatar className="w-3 h-3 rounded-full">
-                        <Avatar.Image
-                          src={readFile(manager.avatar)}
-                          alt={manager.label}
-                        />
-                        <Avatar.Fallback className="rounded-lg">
-                          {manager.label.split('')[0]}
-                        </Avatar.Fallback>
-                      </Avatar>
-                      {manager.label}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          field.onChange(
-                            field.value?.filter((v) => v !== managerId),
-                          );
-                        }}
-                        className="hover:text-destructive"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ) : null;
-                })}
-              </div>
-            </div>
-          )}
-
+              defaultOptions={generalManagerOptions}
+              disabled={loading || !!error}
+              value={
+                (field.value
+                  ?.map((id: string) =>
+                    generalManagerOptions.find((option) => option.value === id),
+                  )
+                  .filter(Boolean) as MultiSelectOption[]) || []
+              }
+              onChange={(values: MultiSelectOption[]) => {
+                field.onChange(values.map((v) => v.value));
+              }}
+              className="placeholder:text-accent-foreground/70"
+            />
+          </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
       )}
@@ -305,22 +313,9 @@ export const GeneralManager = ({
 export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
   const { list, loading, error } = UsersList();
 
-  if (loading) {
-    return (
-      <div className="text-sm text-muted-foreground">Loading managers...</div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-sm text-destructive">Error loading managers</div>
-    );
-  }
-
-  const managers = (list || []).map((user) => ({
+  const managerOptions = (list || []).map((user) => ({
     value: user._id,
     label: user.details?.fullName || user.username || user.email,
-    avatar: user.details?.avatar,
   }));
 
   return (
@@ -333,96 +328,31 @@ export const Manager = ({ control }: { control: Control<TmsFormType> }) => {
           <Form.Description>
             Manager can be shown on the top of the post also in the list view
           </Form.Description>
-          <Select
-            onValueChange={(value) => {
-              const currentValues = field.value || [];
-              if (currentValues.includes(value)) {
-                field.onChange(currentValues.filter((v) => v !== value));
-              } else {
-                field.onChange([...currentValues, value]);
+          <Form.Control>
+            <MultipleSelector
+              hidePlaceholderWhenSelected
+              placeholder={
+                loading
+                  ? 'Loading managers...'
+                  : error
+                  ? 'Error loading managers'
+                  : 'Choose team member'
               }
-            }}
-            value=""
-          >
-            <Form.Control>
-              <Select.Trigger className="justify-between h-8 truncate rounded-md appearance-none [&>svg]:hidden w-44 text-foreground [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
-                <Select.Value
-                  placeholder={
-                    <span className="text-sm font-medium text-center truncate text-muted-foreground">
-                      {'Choose team member'}
-                    </span>
-                  }
-                />
-              </Select.Trigger>
-            </Form.Control>
-            <Select.Content
-              className="border p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-              align="start"
-            >
-              <Select.Group>
-                {managers.map((manager) => (
-                  <Select.Item
-                    key={manager.value}
-                    className="text-xs h-8 [&>span]:flex [&>span]:items-center [&>span]:gap-2"
-                    value={manager.value}
-                  >
-                    <Avatar className="w-4 h-4 rounded-full">
-                      <Avatar.Image
-                        src={readFile(manager.avatar)}
-                        alt={manager.label}
-                      />
-                      <Avatar.Fallback className="rounded-lg">
-                        {manager.label.split('')[0]}
-                      </Avatar.Fallback>
-                    </Avatar>
-                    {manager.label}
-                  </Select.Item>
-                ))}
-              </Select.Group>
-            </Select.Content>
-          </Select>
-
-          {field.value && field.value.length > 0 && (
-            <div className="pb-2 my-2">
-              <div className="mb-1 text-xs text-muted-foreground">
-                Selected managers:
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {field.value.map((managerId) => {
-                  const manager = managers.find((m) => m.value === managerId);
-                  return manager ? (
-                    <span
-                      key={managerId}
-                      className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-primary/10 text-primary"
-                    >
-                      <Avatar className="w-3 h-3 rounded-full">
-                        <Avatar.Image
-                          src={readFile(manager.avatar)}
-                          alt={manager.label}
-                        />
-                        <Avatar.Fallback className="rounded-lg">
-                          {manager.label.split('')[0]}
-                        </Avatar.Fallback>
-                      </Avatar>
-                      {manager.label}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          field.onChange(
-                            field.value?.filter((v) => v !== managerId),
-                          );
-                        }}
-                        className="hover:text-destructive"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ) : null;
-                })}
-              </div>
-            </div>
-          )}
-
+              defaultOptions={managerOptions}
+              disabled={loading || !!error}
+              value={
+                (field.value
+                  ?.map((id: string) =>
+                    managerOptions.find((option) => option.value === id),
+                  )
+                  .filter(Boolean) as MultiSelectOption[]) || []
+              }
+              onChange={(values: MultiSelectOption[]) => {
+                field.onChange(values.map((v) => v.value));
+              }}
+              className="placeholder:text-accent-foreground/70"
+            />
+          </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
       )}
@@ -447,106 +377,37 @@ export const Payments = ({ control }: { control: Control<TmsFormType> }) => {
           <Form.Description>
             Select payments that you want to use
           </Form.Description>
-
-          <div className="flex items-center justify-between pb-3 my-2 space-x-4">
-            <Select
-              onValueChange={(value) => {
-                const currentValues = field.value || [];
-                if (currentValues.includes(value)) {
-                  field.onChange(currentValues.filter((v) => v !== value));
-                } else {
-                  field.onChange([...currentValues, value]);
+          <div className="flex gap-4 justify-between items-end">
+            <Form.Control className="flex-1">
+              <Select
+                value={
+                  Array.isArray(field.value)
+                    ? field.value[0] || ''
+                    : field.value || ''
                 }
-              }}
-              value={
-                field.value && field.value.length > 0 ? field.value[0] : ''
-              }
-            >
-              <Form.Control>
-                <Select.Trigger className="justify-between w-40 h-8 truncate rounded-md text-foreground appearance-none [&>span]:flex-1 [&>svg]:w-0 [&>svg]:mr-0">
-                  <Select.Value
-                    placeholder={
-                      <span className="text-sm font-medium truncate text-muted-foreground">
-                        {'Select payments'}
-                      </span>
-                    }
-                  >
-                    <span className="text-sm font-medium text-foreground">
-                      {field.value && field.value.length > 0
-                        ? TestPayments.find(
-                            (status) => status.value === field.value?.[0],
-                          )?.label || ''
-                        : ''}
-                    </span>
-                  </Select.Value>
-                </Select.Trigger>
-              </Form.Control>
-              <Select.Content
-                className="border p-0 [&_*[role=option]>span>svg]:shrink-0 [&_*[role=option]>span>svg]:text-muted-foreground/80 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:pe-8 [&_*[role=option]]:ps-2"
-                align="start"
+                onValueChange={field.onChange}
               >
-                <Select.Group>
-                  {TestPayments.map((status) => (
-                    <Select.Item
-                      key={status.value}
-                      className="text-xs h-7"
-                      value={status.value}
-                    >
-                      {status.label}
+                <Select.Trigger className="placeholder:text-accent-foreground/70">
+                  <Select.Value placeholder="Select payments" />
+                </Select.Trigger>
+                <Select.Content>
+                  {TestPayments.map((payment) => (
+                    <Select.Item key={payment.value} value={payment.value}>
+                      {payment.label}
                     </Select.Item>
                   ))}
-                </Select.Group>
-              </Select.Content>
-            </Select>
-
+                </Select.Content>
+              </Select>
+            </Form.Control>
             <Button
               variant="default"
-              className="flex items-center h-8 gap-2"
+              className="flex gap-2 items-center h-8"
               type="button"
-              onClick={() => {
-                // This would trigger adding a new payment method
-                // For now, just show that it's interactive
-              }}
             >
               <IconPlus size={18} />
               Add Payment
             </Button>
           </div>
-
-          {field.value && field.value.length > 0 && (
-            <div className="pb-2 my-2">
-              <div className="mb-1 text-xs text-muted-foreground">
-                Selected payments:
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {field.value.map((paymentId) => {
-                  const payment = TestPayments.find(
-                    (p) => p.value === paymentId,
-                  );
-                  return payment ? (
-                    <span
-                      key={paymentId}
-                      className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-primary/10 text-primary"
-                    >
-                      {payment.label}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          field.onChange(
-                            field.value?.filter((v) => v !== paymentId),
-                          );
-                        }}
-                        className="hover:text-destructive"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ) : null;
-                })}
-              </div>
-            </div>
-          )}
-
           <Form.Message className="text-destructive" />
         </Form.Item>
       )}
@@ -564,7 +425,7 @@ export const Token = ({ control }: { control: Control<TmsFormType> }) => {
           <Form.Label>Erxes app token</Form.Label>
           <Form.Description>What is erxes app token ?</Form.Description>
           <Form.Control>
-            <Input className="w-40 rounded-md h-7" {...field} />
+            <Input className="w-40 h-8 rounded-md" {...field} />
           </Form.Control>
           <Form.Message className="text-destructive" />
         </Form.Item>
@@ -578,12 +439,11 @@ export const OtherPayments = ({
 }: {
   control: Control<TmsFormType>;
 }) => {
-  // Define Icon options
   const Icon = [
-    { value: 'visa', label: 'Visa' },
-    { value: 'mastercard', label: 'Mastercard' },
-    { value: 'qpay', label: 'QPay' },
-    { value: 'socialpay', label: 'SocialPay' },
+    { value: 'visa', label: 'Visa', icon: IconBrandVisa },
+    { value: 'mastercard', label: 'Mastercard', icon: IconBrandMastercard },
+    { value: 'qpay', label: 'QPay', icon: IconCashBanknote },
+    { value: 'socialpay', label: 'SocialPay', icon: IconBuilding },
   ];
 
   const { fields, append, remove } = useFieldArray({
@@ -597,7 +457,7 @@ export const OtherPayments = ({
 
   return (
     <div className="py-3">
-      <div className="flex flex-col items-start self-stretch gap-2">
+      <div className="flex flex-col gap-2 items-start self-stretch">
         <h2 className="self-stretch text-[#4F46E5] text-sm font-medium leading-tight">
           Other Payments
         </h2>
@@ -611,10 +471,10 @@ export const OtherPayments = ({
         </p>
       </div>
 
-      <div className="flex items-center justify-end gap-2 p-3 pt-5">
+      <div className="flex gap-2 justify-end items-center p-3 pt-5">
         <Button
           variant="default"
-          className="flex items-center gap-2 mb-6"
+          className="flex gap-2 items-center mb-6"
           onClick={handleAddPayment}
           type="button"
         >
@@ -626,9 +486,9 @@ export const OtherPayments = ({
       {fields.map((field, index) => (
         <div
           key={field.id}
-          className="flex items-end self-stretch justify-between w-full gap-10 px-4 mb-4"
+          className="flex gap-10 justify-between items-end self-stretch px-4 mb-4 w-full"
         >
-          <div className="flex flex-col items-start justify-end">
+          <div className="flex flex-col justify-end items-start">
             <Form.Field
               control={control}
               name={`otherPayments.${index}.type`}
@@ -639,7 +499,7 @@ export const OtherPayments = ({
                   </Form.Label>
                   <Form.Control>
                     <Input
-                      className="w-full px-0 border-0 border-b border-gray-200 rounded-none shadow-none"
+                      className="px-0 w-full rounded-none border-0 border-b border-gray-200 shadow-none"
                       {...field}
                     />
                   </Form.Control>
@@ -648,7 +508,7 @@ export const OtherPayments = ({
             />
           </div>
 
-          <div className="flex flex-col items-start justify-end">
+          <div className="flex flex-col justify-end items-start">
             <Form.Field
               control={control}
               name={`otherPayments.${index}.title`}
@@ -659,7 +519,7 @@ export const OtherPayments = ({
                   </Form.Label>
                   <Form.Control>
                     <Input
-                      className="w-full px-0 border-0 border-b border-gray-200 rounded-none shadow-none"
+                      className="px-0 w-full rounded-none border-0 border-b border-gray-200 shadow-none"
                       {...field}
                     />
                   </Form.Control>
@@ -703,7 +563,7 @@ export const OtherPayments = ({
             />
           </div>
 
-          <div className="flex flex-col items-start justify-end">
+          <div className="flex flex-col justify-end items-start">
             <Form.Field
               control={control}
               name={`otherPayments.${index}.config`}
@@ -714,7 +574,7 @@ export const OtherPayments = ({
                   </Form.Label>
                   <Form.Control>
                     <Input
-                      className="w-full px-0 border-0 border-b border-gray-200 rounded-none shadow-none"
+                      className="px-0 w-full rounded-none border-0 border-b border-gray-200 shadow-none"
                       {...field}
                     />
                   </Form.Control>
@@ -725,7 +585,7 @@ export const OtherPayments = ({
 
           <Button
             variant="ghost"
-            className="h-8 px-2 text-destructive"
+            className="px-2 h-8 text-destructive"
             type="button"
             onClick={() => remove(index)}
           >

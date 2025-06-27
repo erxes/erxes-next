@@ -7,7 +7,7 @@ export const TmsFormSchema = z.object({
   favIcon: z.string().optional(),
   generalManager: z.array(z.string()).optional(),
   managers: z.array(z.string()).optional(),
-  payment: z.array(z.string()).optional(),
+  payment: z.string().optional(),
   token: z.string().optional(),
   otherPayments: z
     .array(

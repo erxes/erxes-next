@@ -141,11 +141,11 @@ const UploadPreview = React.forwardRef<
 
   return (
     <>
-      <div className={cn('relative inline-flex', className)}>
+      <div className={cn('inline-flex relative', className)}>
         <Button
           type="button"
           variant="outline"
-          className="relative size-16 overflow-hidden"
+          className="overflow-hidden relative size-16"
           onClick={!url ? handleThumbnailClick : ImageFocus}
           aria-label={url ? 'Change image' : 'Upload image'}
         >
@@ -159,7 +159,7 @@ const UploadPreview = React.forwardRef<
             </div>
           ) : url ? (
             <img
-              className="h-full w-full object-cover absolute"
+              className="object-cover absolute w-full h-full"
               src={readFile(url)}
               alt="Preview of uploaded"
             />

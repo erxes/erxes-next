@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { CREATE_BRANCH } from '../graphql/mutation';
+import { GET_BRANCH_LIST } from '../graphql/queries';
 import { IBranch } from '../types/branch';
 
 interface CreateBranchResponse {
@@ -12,12 +13,11 @@ export interface ICreateBranchVariables {
   generalManagerIds?: string[];
   managerIds?: string[];
   paymentIds?: string[];
-
   departmentId?: string;
   token?: string;
   erxesAppToken?: string;
   permissionConfig?: {
-    _id: string;
+    _id?: string;
     type: string;
     title: string;
     icon: string;
@@ -36,7 +36,14 @@ export const useCreateBranch = () => {
   const [createBranchMutation, { loading, error }] = useMutation<
     CreateBranchResponse,
     ICreateBranchVariables
-  >(CREATE_BRANCH);
+  >(CREATE_BRANCH, {
+    refetchQueries: [
+      {
+        query: GET_BRANCH_LIST,
+        variables: { limit: 10, page: 1 },
+      },
+    ],
+  });
 
   const createBranch = (options: {
     variables: ICreateBranchVariables;
@@ -46,5 +53,9 @@ export const useCreateBranch = () => {
     return createBranchMutation(options);
   };
 
-  return { createBranch, loading, error };
+  return {
+    createBranch,
+    loading,
+    error,
+  };
 };

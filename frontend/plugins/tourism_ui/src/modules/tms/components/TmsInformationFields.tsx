@@ -25,57 +25,94 @@ export const TmsInformationFields = ({
   onSubmit?: (data: TmsFormType) => void;
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <>
+    return (
+      <div className="relative w-full">
+        {/* Step 1 */}
+        <div
+          className={`absolute w-full transition-all duration-500 ease-in-out transform ${
+            currentStep === 1
+              ? 'opacity-100 translate-x-0 pointer-events-auto'
+              : currentStep < 1
+              ? 'opacity-0 translate-x-full pointer-events-none'
+              : 'opacity-0 -translate-x-full pointer-events-none'
+          }`}
+        >
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
             <TourName control={form.control} />
             <SelectColor control={form.control} />
             <LogoField control={form.control} />
             <FavIconField control={form.control} />
-          </>
-        );
-      case 2:
-        return (
-          <>
-            <Button
-              variant="default"
-              className="flex items-center w-40 gap-2 my-4"
-            >
-              <IconPlus size={16} />
-              Add team member
-            </Button>
+          </div>
+        </div>
 
+        {/* Step 2 */}
+        <div
+          className={`absolute w-full transition-all duration-500 ease-in-out transform ${
+            currentStep === 2
+              ? 'opacity-100 translate-x-0 pointer-events-auto'
+              : currentStep < 2
+              ? 'opacity-0 translate-x-full pointer-events-none'
+              : 'opacity-0 -translate-x-full pointer-events-none'
+          }`}
+        >
+          <Button
+            variant="default"
+            className="flex gap-2 items-center my-4 w-40 transition-all duration-200 hover:scale-105"
+          >
+            <IconPlus size={16} />
+            Add team member
+          </Button>
+          <div className="space-y-4">
             <GeneralManager control={form.control} />
             <Manager control={form.control} />
-          </>
-        );
-      case 3:
-        return (
-          <div>
+          </div>
+        </div>
+
+        {/* Step 3 */}
+        <div
+          className={`absolute w-full transition-all duration-500 ease-in-out transform ${
+            currentStep === 3
+              ? 'opacity-100 translate-x-0 pointer-events-auto overflow-y-auto max-h-[64vh] px-1'
+              : currentStep < 3
+              ? 'opacity-0 translate-x-full pointer-events-none'
+              : 'opacity-0 -translate-x-full pointer-events-none'
+          }`}
+        >
+          <div className="space-y-4">
             <Payments control={form.control} />
             <Token control={form.control} />
             <OtherPayments control={form.control} />
           </div>
-        );
-      default:
-        return null;
-    }
+        </div>
+      </div>
+    );
   };
 
   const handleNext = async () => {
+    if (isTransitioning) return;
+
+    setIsTransitioning(true);
     if (currentStep === 1) {
-      const result = await form.trigger(['name', 'color', 'logo']);
-      if (result) setCurrentStep(2);
+      const result = await form.trigger(['name', 'color']);
+      if (result) {
+        setCurrentStep(2);
+      }
     } else if (currentStep === 2) {
       setCurrentStep(3);
     }
+
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const handlePrevious = () => {
+    if (isTransitioning) return;
+
+    setIsTransitioning(true);
     if (currentStep > 1) setCurrentStep(currentStep - 1);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   function handleCancel() {
@@ -91,15 +128,15 @@ export const TmsInformationFields = ({
   }
 
   return (
-    <div className="flex flex-col w-full h-full max-w-3xl mx-auto border-r">
-      <div className="flex flex-col items-start self-stretch justify-center flex-shrink-0 gap-3 p-5 border-b">
-        <div className="flex items-center gap-2">
-          <div className="flex h-5 px-2 justify-center items-center gap-1 rounded-[21px] bg-[rgba(79,70,229,0.10)]">
+    <div className="flex flex-col mx-auto w-full max-w-3xl h-full border-r">
+      <div className="flex flex-col flex-shrink-0 gap-3 justify-center items-start self-stretch p-5 border-b">
+        <div className="flex gap-2 items-center">
+          <div className="flex h-5 px-2 justify-center items-center gap-1 rounded-[21px] bg-[rgba(79,70,229,0.10)] transition-all duration-300">
             <p className="text-primary leading-none text-[12px] font-semibold uppercase font-mono">
               STEP {currentStep}
             </p>
           </div>
-          <p className="text-primary font-inter text-[14px] font-semibold leading-[140%]">
+          <p className="text-primary font-inter text-[14px] font-semibold leading-[140%] transition-all duration-300">
             {currentStep === 1
               ? 'General information'
               : currentStep === 2
@@ -107,17 +144,21 @@ export const TmsInformationFields = ({
               : 'Payments'}
           </p>
         </div>
-        <div className="flex items-center self-stretch gap-2">
+        <div className="flex gap-2 items-center self-stretch">
           {[1, 2, 3].map((step) => (
             <div
               key={step}
-              className={`w-16 h-1 rounded-full ${
-                step === currentStep ? 'bg-primary' : 'bg-[#F4F4F5]'
+              className={`h-1 rounded-full transition-all duration-500 ease-in-out ${
+                step === currentStep
+                  ? 'bg-primary w-24'
+                  : step < currentStep
+                  ? 'bg-primary/50 w-16'
+                  : 'bg-[#F4F4F5] w-16'
               }`}
             />
           ))}
         </div>
-        <p className="self-stretch text-muted-foreground font-inter text-[13px] font-medium leading-[140%]">
+        <p className="self-stretch text-muted-foreground font-inter text-[13px] font-medium leading-[140%] transition-all duration-300">
           {currentStep === 1
             ? 'Set up your TMS information'
             : currentStep === 2
@@ -125,30 +166,44 @@ export const TmsInformationFields = ({
             : 'Setup your payments'}
         </p>
       </div>
-      <div className="flex-1 overflow-y-auto">
-        <div
-          className={`grid grid-cols-1 gap-4 py-2 px-4 ${
-            currentStep === 1 ? 'md:grid-cols-2' : ''
-          } md:gap-8`}
-        >
-          {renderStepContent()}
-        </div>
+      <div className="overflow-y-auto relative flex-1">
+        <div className="px-4 py-2 min-h-[400px]">{renderStepContent()}</div>
       </div>
 
-      <div className="flex items-center justify-between flex-shrink-0 gap-2 p-4 border-t">
+      <div className="flex flex-shrink-0 gap-2 justify-between items-center p-4 border-t">
         {currentStep === 1 ? (
-          <Button variant="outline" onClick={handleCancel}>
+          <Button
+            variant="outline"
+            onClick={handleCancel}
+            className="transition-all duration-200 hover:scale-105"
+          >
             Cancel
           </Button>
         ) : (
-          <Button variant="outline" onClick={handlePrevious}>
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={isTransitioning}
+            className="transition-all duration-200 hover:scale-105 disabled:opacity-50"
+          >
             Previous
           </Button>
         )}
         {currentStep < 3 ? (
-          <Button onClick={handleNext}>Next</Button>
+          <Button
+            onClick={handleNext}
+            disabled={isTransitioning}
+            className="transition-all duration-200 hover:scale-105 disabled:opacity-50"
+          >
+            Next
+          </Button>
         ) : (
-          <Button onClick={handleSave}>Save</Button>
+          <Button
+            onClick={handleSave}
+            className="transition-all duration-200 hover:scale-105"
+          >
+            Save
+          </Button>
         )}
       </div>
     </div>

@@ -6,8 +6,12 @@ const mutations = {
     return models.Branches.add(user, params);
   },
 
-  bmsBranchEdit: async (_root, { _id, ...doc }, { models }: IContext) => {
-    const updatedDocument = await models.Branches.edit(_id, doc as IBranch);
+  bmsBranchEdit: async (_root, { _id, ...doc }, { models, user }: IContext) => {
+    const updatedDocument = await models.Branches.edit(
+      _id,
+      doc as IBranch,
+      user,
+    );
     return updatedDocument;
   },
 

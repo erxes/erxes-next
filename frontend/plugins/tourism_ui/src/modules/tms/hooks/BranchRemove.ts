@@ -22,6 +22,7 @@ export const useBranchRemove = () => {
 
       return response.data?.bmsBranchRemove || false;
     } catch (error) {
+      console.error('Error removing branch:', error);
       return false;
     }
   };

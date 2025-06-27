@@ -26,11 +26,7 @@ function buildDateSelector(
 }
 
 const tourQueries = {
-<<<<<<< HEAD
-  async bmTours(
-=======
   async bmsTours(
->>>>>>> 3dc08d4583219c666381592c2537e8ae7b428f07
     _root: any,
     {
       categories,
@@ -77,11 +73,7 @@ const tourQueries = {
     return { list, totalCount, pageInfo };
   },
 
-<<<<<<< HEAD
-  async bmTourDetail(
-=======
   async bmsTourDetail(
->>>>>>> 3dc08d4583219c666381592c2537e8ae7b428f07
     _root: any,
     { _id }: { _id: string },
     { models }: IContext,

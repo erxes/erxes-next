@@ -8,15 +8,29 @@ import { ApolloError } from '@apollo/client';
 import { TmsInformationFields } from '@/tms/components/TmsInformationFields';
 import Preview from '@/tms/components/Preview';
 import { useCreateBranch } from '../hooks/CreateBranch';
+import { useBranchEdit } from '../hooks/BranchEdit';
+import { useBranchDetail } from '../hooks/BranchDetail';
+import { useEffect } from 'react';
 
 const CreateTmsForm = ({
+  branchId,
   onOpenChange,
   onSuccess,
+  refetch,
 }: {
+  branchId?: string;
   onOpenChange?: (open: boolean) => void;
   onSuccess?: () => void;
+  refetch?: () => Promise<any>;
 }) => {
   const { createBranch } = useCreateBranch();
+  const { editBranch } = useBranchEdit();
+  const { branchDetail, loading: detailLoading } = useBranchDetail({
+    id: branchId || '',
+  });
+
+  const isEditMode = !!branchId;
+
   const form = useForm<TmsFormType>({
     resolver: zodResolver(TmsFormSchema),
     defaultValues: {
@@ -26,7 +40,7 @@ const CreateTmsForm = ({
       favIcon: '',
       generalManager: [],
       managers: [],
-      payment: [],
+      payment: '',
       token: '',
       otherPayments: [],
     },
@@ -35,48 +49,121 @@ const CreateTmsForm = ({
   const watchedValues = form.watch();
   const { toast } = useToast();
 
+  useEffect(() => {
+    if (isEditMode && branchDetail) {
+      form.reset({
+        name: branchDetail.name || '',
+        color: branchDetail.uiOptions?.colors?.primary || '#4F46E5',
+        logo: branchDetail.uiOptions?.logo || '',
+        favIcon: branchDetail.uiOptions?.favIcon || '',
+        generalManager: branchDetail.generalManagerIds || [],
+        managers: branchDetail.managerIds || [],
+        payment: Array.isArray(branchDetail.paymentIds)
+          ? branchDetail.paymentIds[0] || ''
+          : '',
+        token: branchDetail.erxesAppToken || '',
+        otherPayments: Array.isArray(branchDetail.permissionConfig)
+          ? branchDetail.permissionConfig.map((config: any) => ({
+              type: config.type || '',
+              title: config.title || '',
+              icon: config.icon || '',
+              config: config.config || '',
+            }))
+          : [],
+      });
+    }
+  }, [isEditMode, branchDetail, form]);
+
   const onSubmit = (data: TmsFormType) => {
-    createBranch({
-      variables: {
-        name: data.name,
-        generalManagerIds: data.generalManager || [],
-        managerIds: data.managers || [],
-        paymentIds: data.payment || [],
-        permissionConfig:
-          data.otherPayments?.map((payment) => ({
-            _id: payment._id || '',
-            type: payment.type,
-            title: payment.title,
-            icon: payment.icon,
-            config: payment.config,
-          })) || [],
-        erxesAppToken: data.token,
-        uiOptions: {
-          logo: data.logo,
-          favIcon: data.favIcon,
-          colors: {
-            primary: data.color,
-          },
+    const permissionConfig =
+      data.otherPayments?.map((payment) => ({
+        type: payment.type,
+        title: payment.title,
+        icon: payment.icon,
+        config: payment.config,
+      })) || [];
+
+    const variables = {
+      name: data.name,
+      generalManagerIds: data.generalManager || [],
+      managerIds: data.managers || [],
+      paymentIds: data.payment ? [data.payment] : [],
+      permissionConfig,
+      erxesAppToken: data.token,
+      uiOptions: {
+        logo: data.logo || '',
+        favIcon: data.favIcon || '',
+        colors: {
+          primary: data.color,
         },
       },
-      onError: (e: ApolloError) => {
-        toast({
-          title: 'Error',
-          description: e.message,
-          variant: 'destructive',
-        });
-      },
-      onCompleted: () => {
-        toast({
-          title: 'Success',
-          description: 'Branch created successfully',
-        });
-        form.reset();
-        onOpenChange?.(false);
-        onSuccess?.();
-      },
-    });
+    };
+
+    if (isEditMode) {
+      editBranch({
+        variables: {
+          id: branchId,
+          ...variables,
+        },
+        onError: (e: ApolloError) => {
+          toast({
+            title: 'Error',
+            description: e.message,
+            variant: 'destructive',
+          });
+        },
+        onCompleted: () => {
+          toast({
+            title: 'Success',
+            description: 'Branch updated successfully',
+          });
+          onOpenChange?.(false);
+          onSuccess?.();
+        },
+      });
+    } else {
+      createBranch({
+        variables,
+        onError: (e: ApolloError) => {
+          toast({
+            title: 'Error',
+            description: e.message,
+            variant: 'destructive',
+          });
+        },
+        onCompleted: async () => {
+          toast({
+            title: 'Success',
+            description: 'Branch created successfully',
+          });
+          form.reset();
+          onOpenChange?.(false);
+          onSuccess?.();
+          if (refetch) {
+            try {
+              await refetch();
+            } catch (error) {
+              toast({
+                title: 'Warning',
+                description: error as string,
+                variant: 'destructive',
+              });
+            }
+          }
+        },
+      });
+    }
   };
+
+  if (isEditMode && detailLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-sm text-muted-foreground">
+          Loading branch details...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -84,8 +171,15 @@ const CreateTmsForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col h-full"
       >
-        <TmsCreateSheetHeader />
-        <Sheet.Content className="grid min-h-0 overflow-y-auto lg:grid-cols-2">
+        {isEditMode ? (
+          <Sheet.Header className="p-5 border">
+            <Sheet.Title>Edit Tour Management System</Sheet.Title>
+            <Sheet.Close />
+          </Sheet.Header>
+        ) : (
+          <TmsCreateSheetHeader />
+        )}
+        <Sheet.Content className="grid overflow-y-auto min-h-0 lg:grid-cols-2">
           <div>
             <TmsInformationFields
               form={form}
