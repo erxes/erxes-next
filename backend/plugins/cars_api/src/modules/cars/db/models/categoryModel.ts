@@ -38,8 +38,6 @@ export const loadCarCategoryClass = (models: IModels) => {
       // Generatingg order
       doc.order = await this.generateOrder(parentCategory, doc);
 
-      console.log(doc, 'doc');
-
       return models.CarCategories.create(doc);
     }
 
