@@ -75,7 +75,7 @@ const queryParams = `
   segment: String
   type: String
   ids: [String]
-  excludeIds: Boolean
+  excludeIds: [String]
 
   tagIds: [String]
   excludeTagIds: [String]

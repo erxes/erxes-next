@@ -131,6 +131,15 @@ import {
 } from './modules/segments/db/models/Segments';
 
 import {
+  IAutomationDocument,
+  IAutomationExecutionDocument,
+} from 'erxes-api-shared/core-modules';
+import {
+  IEmailDeliveryModel,
+  loadEmailDeliveryClass,
+} from '~/modules/organization/team-member/db/models/EmailDeliveries';
+import { IEmailDeliveriesDocument } from '~/modules/organization/team-member/types';
+import {
   IAutomationModel,
   loadClass as loadAutomationClass,
 } from './modules/automations/db/models/Automations';
@@ -138,10 +147,6 @@ import {
   IExecutionModel,
   loadClass as loadExecutionClass,
 } from './modules/automations/db/models/Executions';
-import {
-  IAutomationDocument,
-  IAutomationExecutionDocument,
-} from 'erxes-api-shared/core-modules';
 import { ILogModel, loadLogsClass } from './modules/logs/db/models/Logs';
 
 export interface IModels {
@@ -176,6 +181,7 @@ export interface IModels {
   Documents: IDocumentModel;
   Automations: IAutomationModel;
   AutomationExecutions: IExecutionModel;
+  EmailDeliveries: IEmailDeliveryModel;
   Logs: ILogModel;
 }
 
@@ -325,6 +331,11 @@ export const loadClasses = (
     IAutomationExecutionDocument,
     IExecutionModel
   >('automations_executions', loadExecutionClass(models));
+
+  models.EmailDeliveries = db.model<
+    IEmailDeliveriesDocument,
+    IEmailDeliveryModel
+  >('email_deliveries', loadEmailDeliveryClass(models));
 
   const db_name = db.name;
 

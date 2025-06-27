@@ -1,10 +1,13 @@
-import { IContext } from '~/connectionResolvers';
 import {
-  IUser,
   IDetail,
-  ILink,
   IEmailSignature,
+  ILink,
+  IUser,
 } from 'erxes-api-shared/core-types';
+import { isEnabled, sendTRPCMessage } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
+import { sendInvitationEmail } from '~/modules/organization/team-member/utils';
+import { resetPermissionsCache } from '~/modules/permissions/utils';
 
 export interface IUsersEdit extends IUser {
   channelIds?: string[];
@@ -198,7 +201,7 @@ export const userMutations = {
         departmentId?: string;
       }>;
     },
-    { models }: IContext,
+    { models, subdomain }: IContext,
   ) {
     for (const entry of entries) {
       await models.Users.checkDuplication({ email: entry.email });
@@ -210,6 +213,8 @@ export const userMutations = {
       if (docModified?.scopeBrandIds?.length) {
         doc.brandIds = docModified.scopeBrandIds;
       }
+
+      const token = await models.Users.invite(doc);
       const createdUser = await models.Users.findOne({ email: entry.email });
 
       if (entry.branchId) {
@@ -229,7 +234,21 @@ export const userMutations = {
           },
         );
       }
+
+      if (entry.channelIds && (await isEnabled('frontline'))) {
+        sendTRPCMessage({
+          pluginName: 'frontline',
+          method: 'mutation',
+          module: 'inbox',
+          action: 'updateUserChannels',
+          input: { channelIds: entry.channelIds, userId: createdUser?._id },
+        });
+      }
+
+      sendInvitationEmail(models, subdomain, { email: entry.email, token });
     }
+
+    await resetPermissionsCache(models);
   },
 
   /*

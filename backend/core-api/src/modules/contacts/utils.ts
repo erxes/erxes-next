@@ -13,7 +13,9 @@ export const generateFilter = async (params: any, models: IModels) => {
     brandIds,
     integrationIds,
     integrationTypes,
-    status
+    status,
+    ids,
+    excludeIds,
   } = params;
 
   const filter = {};
@@ -28,6 +30,19 @@ export const generateFilter = async (params: any, models: IModels) => {
 
   if (searchValue) {
     filter['searchText'] = { $regex: searchValue, $options: 'i' };
+  }
+
+  if (ids?.length || excludeIds?.length) {
+    if (ids?.length && excludeIds?.length) {
+      filter['_id'] = {
+        $in: ids,
+        $nin: excludeIds,
+      };
+    } else if (ids?.length) {
+      filter['_id'] = { $in: ids };
+    } else if (excludeIds?.length) {
+      filter['_id'] = { $nin: excludeIds };
+    }
   }
 
   if (brandIds || integrationIds || integrationTypes) {
