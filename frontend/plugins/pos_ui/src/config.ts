@@ -10,7 +10,7 @@ export const CONFIG: IUIConfig = {
       icon: IconCashRegister,
       path: 'pos',
       hasSettings: true,
-      hasWidgets: true,
+      hasRelationWidget: true,
     },
   ],
 };

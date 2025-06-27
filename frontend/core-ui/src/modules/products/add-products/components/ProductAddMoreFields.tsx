@@ -85,8 +85,8 @@ export const ProductAddMoreFields = ({
               <Form.Label>BRAND</Form.Label>
               <Form.Control>
                 <BrandField
-                  values={field.value || []}
-                  onChange={field.onChange}
+                  value={field.value?.[0] || ''}
+                  onChange={(brandId) => field.onChange([brandId])}
                 />
               </Form.Control>
               <Form.Message className="text-destructive" />

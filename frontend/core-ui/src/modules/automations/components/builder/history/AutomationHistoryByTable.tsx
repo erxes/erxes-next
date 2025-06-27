@@ -2,12 +2,10 @@ import {
   IAutomationHistory,
   IAutomationHistoryAction,
 } from '@/automations/types';
-import { IconEye } from '@tabler/icons-react';
-import dayjs from 'dayjs';
-import { Button, Popover, RelativeDateDisplay, Table } from 'erxes-ui';
+import { RelativeDateDisplay, Table } from 'erxes-ui';
 import { IAction, ITrigger } from 'ui-modules';
-import { ActionContentRow } from '../nodes/ActionContentRow';
 import { SendEmail } from '../nodes/actions/sendEmail/components/SendEmail';
+import { format } from 'date-fns';
 
 export const generateActionResult = (action: IAutomationHistoryAction) => {
   if (action.actionType === 'delay') {
@@ -81,9 +79,14 @@ export const AutomationHistoryByTable = ({
               <Table.Row key={action.actionId}>
                 <Table.Cell>
                   <RelativeDateDisplay.Value
-                    value={dayjs(action.createdAt).format(
-                      'YYYY-MM-DD HH:mm:ss',
-                    )}
+                    value={
+                      action.createdAt
+                        ? format(
+                            new Date(action.createdAt),
+                            'YYYY-MM-DD HH:mm:ss',
+                          )
+                        : 'N/A'
+                    }
                   />
                 </Table.Cell>
                 <Table.Cell>

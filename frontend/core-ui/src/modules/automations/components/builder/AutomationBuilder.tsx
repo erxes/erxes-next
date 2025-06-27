@@ -1,8 +1,13 @@
 import {
   Background,
   Controls,
+  Edge,
+  EdgeProps,
   MiniMap,
+  Node,
+  OnInit,
   ReactFlow,
+  ReactFlowInstance,
   ReactFlowProvider,
 } from '@xyflow/react';
 import { useEffect, useState } from 'react';
@@ -10,35 +15,45 @@ import { useEffect, useState } from 'react';
 import '@xyflow/react/dist/style.css';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { useQueryState } from 'erxes-ui';
+import { useMultiQueryState, useQueryState } from 'erxes-ui';
 import { AutomationBuilderDnDProvider } from './AutomationBuilderDnDProvider';
 import { AutomationBuilderHeader } from './AutomationBuilderHeader';
-import { AutomationBuilderSidebar } from './AutomationBuilderSidebar';
+import { AutomationBuilderSidebar } from './sidebar/components/AutomationBuilderSidebar';
 
 import { useReactFlowEditor } from '@/automations/hooks/useReactFlowEditor';
 import {
   automationBuilderFormSchema,
   TAutomationProps,
 } from '@/automations/utils/AutomationFormDefinitions';
-import { IAutomation } from '../../types';
+import { IAutomation, NodeData } from '../../types';
 import { deepCleanNulls } from '../../utils/automationBuilderUtils';
 import { AutomationHistories } from './AutomationHistories';
 import ConnectionLine from './edges/connectionLine';
-import PrimaryEdge from './edges/primary';
-import ActionNode from './nodes/Action';
-import TriggerNode from './nodes/Trigger';
+import PrimaryEdge from './edges/PrimaryEdge';
+import ActionNode from './nodes/ActionNode';
+import TriggerNode from './nodes/TriggerNode';
+import { AutomationProvider } from '@/automations/components/builder/hooks/useAutomation';
+import { PlaceHolderNode } from '@/automations/components/builder/nodes/PlaceHolderNode';
 
 const nodeTypes = {
   trigger: TriggerNode as any,
   action: ActionNode as any,
+  scratch: PlaceHolderNode,
 };
 const edgeTypes = {
   primary: PrimaryEdge,
 };
-const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
+const Builder = ({
+  reactFlowInstance,
+  setReactFlowInstance,
+}: {
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
+  setReactFlowInstance: OnInit<Node<NodeData>, Edge<EdgeProps>>;
+}) => {
   const {
+    theme,
     resetNodes,
     reactFlowWrapper,
     nodes,
@@ -61,10 +76,7 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
   }, [JSON.stringify(triggers), JSON.stringify(actions)]);
 
   return (
-    <div
-      className="flex flex-column grow h-full relative"
-      ref={reactFlowWrapper}
-    >
+    <div className="h-full" ref={reactFlowWrapper}>
       <ReactFlow
         ref={editorWrapper}
         nodes={nodes}
@@ -80,53 +92,77 @@ const Editor = ({ reactFlowInstance, setReactFlowInstance }: any) => {
         onInit={setReactFlowInstance}
         onDragOver={onDragOver}
         fitView
-        style={{ backgroundColor: '#F7F9FB' }}
         connectionLineComponent={ConnectionLine}
         onNodeDragStop={onNodeDragStop}
+        colorMode={theme}
+        minZoom={0.1}
       >
         <Controls />
         <Background />
         <MiniMap pannable position="top-left" />
       </ReactFlow>
+    </div>
+  );
+};
+
+const AutomationBuilderWrapper = ({
+  activeTab,
+  reactFlowInstance,
+  setReactFlowInstance,
+}: {
+  activeTab: 'builder' | 'history';
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
+  setReactFlowInstance: OnInit<Node<NodeData>, Edge<EdgeProps>>;
+}) => {
+  if (activeTab === 'history') {
+    return <AutomationHistories />;
+  }
+
+  return (
+    <div className="relative h-full flex flex-col grow">
+      <Builder
+        reactFlowInstance={reactFlowInstance}
+        setReactFlowInstance={setReactFlowInstance}
+      />
       <AutomationBuilderSidebar />
     </div>
   );
 };
 
-export default ({ detail }: { detail?: IAutomation }) => {
-  const [activeNodeId] = useQueryState('activeNodeId');
-  const [activeTabQueryParam] = useQueryState<'builder' | 'history'>(
-    'activeTab',
-  );
+export const AutomationBuilder = ({ detail }: { detail?: IAutomation }) => {
+  const [queryParams] = useMultiQueryState<{
+    activeNodeId: string;
+    activeTab: 'builder' | 'history';
+  }>(['activeNodeId', 'activeTab']);
+  const { activeNodeId, activeTab } = queryParams;
+
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
   const form = useForm<TAutomationProps>({
     resolver: zodResolver(automationBuilderFormSchema),
     defaultValues: {
       isMinimized: activeNodeId ? false : true,
-      activeTab: activeTabQueryParam || 'builder',
+      activeTab: activeTab || 'builder',
       detail: deepCleanNulls(detail),
     },
   });
 
-  const activeTab = form.watch('activeTab');
+  const activeBulderTab = form.watch('activeTab');
 
   return (
-    <ReactFlowProvider>
-      <AutomationBuilderDnDProvider>
-        <FormProvider {...form}>
-          <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
-
-          {activeTab === 'history' ? (
-            <AutomationHistories />
-          ) : (
-            <Editor
+    <AutomationProvider>
+      <ReactFlowProvider>
+        <AutomationBuilderDnDProvider>
+          <FormProvider {...form}>
+            <AutomationBuilderHeader reactFlowInstance={reactFlowInstance} />
+            <AutomationBuilderWrapper
+              activeTab={activeBulderTab}
               reactFlowInstance={reactFlowInstance}
               setReactFlowInstance={setReactFlowInstance}
             />
-          )}
-        </FormProvider>
-      </AutomationBuilderDnDProvider>
-    </ReactFlowProvider>
+          </FormProvider>
+        </AutomationBuilderDnDProvider>
+      </ReactFlowProvider>
+    </AutomationProvider>
   );
 };

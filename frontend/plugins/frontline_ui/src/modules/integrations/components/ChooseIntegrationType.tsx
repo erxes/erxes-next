@@ -20,13 +20,13 @@ export const ChooseIntegrationType = () => {
         Integrations
       </Collapsible.TriggerButton>
       <Collapsible.Content className="pl-1 flex flex-col gap-1 py-1 overflow-hidden">
-        <ChooseIntegrationTypeContent open={open} />
+        <ChooseIntegrationTypeContent />
       </Collapsible.Content>
     </Collapsible>
   );
 };
 
-const ChooseIntegrationTypeContent = ({ open }: { open: boolean }) => {
+const ChooseIntegrationTypeContent = () => {
   const { integrationTypes, loading } = useUsedIntegrationTypes();
 
   if (loading) return <Skeleton className="w-32 h-4 mt-1" />;

@@ -56,7 +56,7 @@ const ProductsInlineEffectComponent = ({
   const { updateProducts, products } = useProductsInlineContext();
   const { products: detailMissingProducts } = useProductsInline({
     variables: {
-      _ids: productIdsWithNoDetails,
+      ids: productIdsWithNoDetails,
     },
   });
 

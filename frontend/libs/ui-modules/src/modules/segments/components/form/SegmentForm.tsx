@@ -112,7 +112,7 @@ const SegmentMetadataForm = ({
   );
 };
 
-const renderContent = ({
+const SegmentFormContent = ({
   form,
   contentType,
 }: {
@@ -282,7 +282,9 @@ export function SegmentForm({
           segment={segment}
           isTemporary={isTemporary}
         />
-        <div className="pb-4">{renderContent({ form, contentType })}</div>
+        <div className="pb-4">
+          <SegmentFormContent form={form} contentType={contentType} />
+        </div>
         <Button
           variant="secondary"
           className={cn(

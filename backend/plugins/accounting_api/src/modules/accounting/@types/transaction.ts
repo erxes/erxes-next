@@ -3,12 +3,14 @@ import { Document } from 'mongoose';
 export interface IFollowsForTr {
   type: string;
   id: string;
+  subId?: string;
 }
 export interface ITrDetail {
   _id?: string;
   accountId: string;
   originId?: string;
   followType?: string;
+  originSubId?: string;
   followInfos?: any;
   follows?: IFollowsForTr[];
 
@@ -41,6 +43,7 @@ export interface ITransaction {
   ptrStatus?: string;
   originId?: string;
   followType?: string;
+  originSubId?: string;
   followInfos?: any;
   follows?: IFollowsForTr[];
   preTrId?: string;
@@ -95,11 +98,13 @@ export interface IHiddenTransaction extends Document {
   ptrStatus: string;
   originId?: string,
   followType?: string,
+  originSubId?: string,
   follows?: IFollowsForTr[]
   details: {
     _id: string;
     originId?: string;
     followType?: string;
+    originSubId?: string;
     follows?: IFollowsForTr[];
 
     side: string;
