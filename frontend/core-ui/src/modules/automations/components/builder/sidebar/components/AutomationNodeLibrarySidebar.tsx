@@ -37,7 +37,7 @@ const TabsContent = ({
     return (
       <Card
         key={index}
-        className={`hover:shadow-md transition-shadow cursor-pointer border-accent hover:border-${color} cursor-grab hover:bg-accent transition-colors mb-2 w-[500px]`}
+        className={`hover:shadow-md transition-shadow cursor-pointer border-accent hover:border-${color} cursor-grab hover:bg-accent transition-colors mb-2 w-[350px] sm:w-[500px]`}
         draggable
         onDragStart={(event) => onDragStart(event, nodeType, item)}
       >

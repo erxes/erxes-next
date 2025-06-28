@@ -109,7 +109,7 @@ const handleUpdatedDocument = ({
           queueName: 'afterProcess',
           jobName: 'onDocumentUpdated',
           subdomain,
-          data: payload,
+          data: { ...payload, contentType },
         });
       }
     }
@@ -146,7 +146,7 @@ const handleCreateDocument = ({
           queueName: 'afterProcess',
           jobName: 'onDocumentCreated',
           subdomain,
-          data: payload,
+          data: { ...payload, contentType },
         });
       }
     }

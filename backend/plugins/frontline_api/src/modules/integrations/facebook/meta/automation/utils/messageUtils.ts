@@ -2,6 +2,10 @@ import { getEnv, sendWorkerQueue } from 'erxes-api-shared/utils';
 import { generateModels, IModels } from '~/connectionResolvers';
 import { IFacebookConversationMessageDocument } from '@/integrations/facebook/@types/conversationMessages';
 import { IFacebookConversation } from '@/integrations/facebook/@types/conversations';
+import {
+  TBotConfigMessageButton,
+  TBotData,
+} from '~/modules/integrations/facebook/meta/automation/types/automationTypes';
 
 export const triggerFacebookAutomation = async (
   subdomain: string,
@@ -26,10 +30,10 @@ export const triggerFacebookAutomation = async (
     }
   }
 
-  // if (adData) {
-  //   target.adData = adData;
-  //   type = "facebook:ads";
-  // }
+  if (adData) {
+    target.adData = adData;
+    type = 'facebook:ads';
+  }
 
   sendWorkerQueue('automations', 'trigger').add('trigger', {
     subdomain,
@@ -67,13 +71,38 @@ export const generatePayloadString = (
 };
 
 export const generateBotData = (
-  subdomain,
-  { type, buttons, text, cards, quickReplies, image },
+  subdomain: string,
+  {
+    type,
+    buttons,
+    text,
+    cards,
+    quickReplies,
+    image,
+  }: {
+    type: string;
+    buttons: TBotConfigMessageButton[];
+    text: string;
+    cards: {
+      _id: string;
+      title: string;
+      subtitle: string;
+      label: string;
+      image: string;
+      buttons: TBotConfigMessageButton[];
+    }[];
+    quickReplies: {
+      _id: string;
+      text: string;
+      image_url?: string;
+    }[];
+    image: string;
+  },
 ) => {
-  let botData: any[] = [];
+  let botData: TBotData[] = [];
 
-  const generateButtons = (buttons: any[]) => {
-    return buttons.map((btn: any) => ({
+  const generateButtons = (buttons: TBotConfigMessageButton[]) => {
+    return buttons.map((btn) => ({
       title: btn.text,
       url: btn.link || null,
       type: btn.link ? 'openUrl' : null,

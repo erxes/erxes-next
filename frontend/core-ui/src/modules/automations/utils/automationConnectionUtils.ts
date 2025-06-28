@@ -80,6 +80,7 @@ export const connectionHandler = (
               optConnect.optionalConnectId !== optionalConnectId,
           );
         }
+        console.log({ updatedOptionalConnects });
 
         sourceAction.config = {
           ...sourceConfig,

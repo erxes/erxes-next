@@ -1,9 +1,8 @@
 import { useCustomTriggerContent } from '@/automations/components/builder/sidebar/hooks/useCustomTriggerContent';
 import { useDefaultTriggerContent } from '@/automations/components/builder/sidebar/hooks/useDefaultTriggerContent';
-import { SegmentForm } from 'ui-modules';
-import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { NodeData } from '@/automations/types';
 import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
+import { SegmentForm } from 'ui-modules';
 
 type Props = { activeNode: NodeData };
 

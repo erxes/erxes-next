@@ -7,22 +7,20 @@ import { ColumnDef } from '@tanstack/table-core';
 import dayjs from 'dayjs';
 import {
   Badge,
-  isEnabled,
   RecordTable,
   RecordTableCellDisplay,
   RelativeDateDisplay,
 } from 'erxes-ui';
 import {
   getAutomationTypes,
-  IAction,
   IAutomationHistory,
-  ITrigger,
+  IAutomationsActionConfigConstants,
+  IAutomationsTriggerConfigConstants,
 } from 'ui-modules';
-import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const automationHistoriesColumns = (constants: {
-  triggersConst: ITrigger[];
-  actionsConst: IAction[];
+  triggersConst: IAutomationsTriggerConfigConstants[];
+  actionsConst: IAutomationsActionConfigConstants[];
 }): ColumnDef<IAutomationHistory>[] => [
   {
     id: 'more',

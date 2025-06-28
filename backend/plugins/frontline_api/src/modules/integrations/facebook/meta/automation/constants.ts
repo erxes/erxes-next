@@ -1,3 +1,5 @@
+import { AutomationConstants } from 'erxes-api-shared/core-modules/automations/types';
+
 export const facebookConstants = {
   actions: [
     {
@@ -5,7 +7,6 @@ export const facebookConstants = {
       icon: 'IconBrandMessenger',
       label: 'Send Facebook Message',
       description: 'Send Facebook Message',
-      isAvailable: true,
       isAvailableOptionalConnect: true,
     },
     {
@@ -13,7 +14,6 @@ export const facebookConstants = {
       icon: 'IconBubbleFilled',
       label: 'Send Facebook Comment',
       description: 'Send Facebook Comments',
-      isAvailable: true,
     },
   ],
   triggers: [

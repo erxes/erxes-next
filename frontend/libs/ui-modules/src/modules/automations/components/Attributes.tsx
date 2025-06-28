@@ -23,6 +23,7 @@ type Props = {
   onlySet?: boolean;
   trigger?: React.ReactNode;
   ref?: any;
+  buttonText?: string;
 };
 
 type QueryResponse = {
@@ -108,6 +109,7 @@ export const Attributes = ({
   onSelect,
   onlySet,
   ref,
+  buttonText,
 }: Props) => {
   const { selectOptions = [], selectionConfig } = selectedField || {};
   const { data, loading } = useQuery<QueryResponse>(
@@ -164,7 +166,7 @@ export const Attributes = ({
       >
         {trigger || (
           <Button variant="link">
-            Add <IconChevronDown />
+            {buttonText} <IconChevronDown />
           </Button>
         )}
       </Combobox.TriggerBase>

@@ -71,7 +71,16 @@ export const useReactFlowEditor = ({
   });
 
   const onConnection = (info: any) => {
-    connectionHandler(triggers, actions, info, info.targetId, []);
+    const { triggers: updatedTriggers, actions: updatedActions } =
+      connectionHandler(triggers, actions, info, info.targetId, []);
+    setValue('detail.triggers', updatedTriggers);
+    setValue(
+      'detail.actions',
+      updatedActions.map((action) => ({
+        ...action,
+        config: action.config || {},
+      })),
+    );
   };
 
   const onConnect = useCallback(

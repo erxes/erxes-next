@@ -24,6 +24,8 @@ export const useCustomTriggerContent = (activeNode: NodeData) => {
   const onSaveTriggerConfig = (config: any) => {
     setValue(`detail.triggers.${activeNode.nodeIndex}.config`, config);
     setQueryParams({ activeNodeId: null });
+    setValue('isMinimized', true);
+
     toast({
       title: 'Trigger configuration added successfully.',
     });

@@ -7,11 +7,17 @@ import { Background, ConnectionMode, Controls, ReactFlow } from '@xyflow/react';
 import dayjs from 'dayjs';
 import { Badge, Label, Separator, Tooltip } from 'erxes-ui';
 import { useWatch } from 'react-hook-form';
-import { IAction, IAutomationHistory, ITrigger } from 'ui-modules';
+import {
+  IAction,
+  IAutomationHistory,
+  IAutomationsTriggerConfigConstants,
+  IAutomationsActionConfigConstants,
+  ITrigger,
+} from 'ui-modules';
 import PrimaryEdge from '../../edges/PrimaryEdge';
 import ActionNode from '../../nodes/ActionNode';
 import TriggerNode from '../../nodes/TriggerNode';
-import { generateActionResult } from './AutomationHistoryByTable';
+import { ExecutionActionResult } from './AutomationHistoryByTable';
 
 const nodeTypes = {
   trigger: TriggerNode as any,
@@ -41,7 +47,7 @@ const useBeforeTitleContent = (history: IAutomationHistory) => {
       const action = history?.actions?.find((a) => a.actionId === id);
       status = action?.result?.error ? 'error' : action ? 'success' : 'unknown';
       createdAt = action?.createdAt;
-      content = action ? generateActionResult(action) : '';
+      content = action ? <ExecutionActionResult action={action} /> : '';
     }
 
     if (status === 'unknown') {
@@ -60,7 +66,7 @@ const useBeforeTitleContent = (history: IAutomationHistory) => {
               <Icon className="w-4 h-4" />
             </div>
           </Tooltip.Trigger>
-          <Tooltip.Content className="bg-foreground flex flex-col gap-2">
+          <Tooltip.Content className=" flex flex-col gap-2">
             {createdAt && (
               <Label>{dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}</Label>
             )}
@@ -80,7 +86,10 @@ export const AutomationHistoryByFlow = ({
   history,
 }: {
   history: IAutomationHistory;
-  constants: { triggersConst: ITrigger[]; actionsConst: IAction[] };
+  constants: {
+    triggersConst: IAutomationsTriggerConfigConstants[];
+    actionsConst: IAutomationsActionConfigConstants[];
+  };
 }) => {
   const { triggers = [], actions = [] } = useWatch({ name: 'detail' }) || {};
 

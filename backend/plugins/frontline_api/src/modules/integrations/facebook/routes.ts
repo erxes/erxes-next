@@ -34,7 +34,6 @@ router.get('/get-post', async (req, res) => {
 });
 
 router.get('/get-status', async (req, res) => {
-  console.log('asdkahsvj');
   try {
     await facebookGetStatus(req, res);
   } catch (err) {

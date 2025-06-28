@@ -14,6 +14,10 @@ import {
   getData,
   sendMessage,
 } from './utils';
+import { TBotConfigMessage } from '~/modules/integrations/facebook/meta/automation/types/automationTypes';
+import { AutomationExecutionSetWaitCondition } from 'erxes-api-shared/core-modules/automations/types';
+import { IFacebookConversationDocument } from '~/modules/integrations/facebook/@types/conversations';
+import { IFacebookCustomerDocument } from '~/modules/integrations/facebook/@types/customers';
 
 export const checkMessageTrigger = async (
   subdomain: string,
@@ -76,19 +80,34 @@ export const checkMessageTrigger = async (
   }
 };
 
-export const actionCreateMessage = async (
-  models: IModels,
-  subdomain: string,
-  action: IAction,
-  execution: IAutomationExecutionDocument,
-) => {
+export const actionCreateMessage = async ({
+  models,
+  subdomain,
+  action,
+  execution,
+}: {
+  models: IModels;
+  subdomain: string;
+  action: IAction;
+  execution: IAutomationExecutionDocument;
+}) => {
   const {
     target,
     triggerType,
     triggerConfig,
     _id: executionId,
   } = execution || {};
-  const { config } = action || {};
+  const { config } = (action || {}) as {
+    config: {
+      botId: string;
+      messages: TBotConfigMessage[];
+      optionalConnects: {
+        sourceId: string;
+        actionId: string;
+        optionalConnectId: string;
+      }[];
+    };
+  };
   const [_pluginName, moduleName, collectionType] = splitType(triggerType);
 
   if (
@@ -119,25 +138,18 @@ export const actionCreateMessage = async (
     );
 
     if (!messages?.length) {
-      return 'There are no generated messages to send.';
+      throw new Error('There are no generated messages to send.');
     }
 
     for (const { botData, inputData, ...message } of messages) {
-      let resp;
+      const sendReplyResult = await sendMessage(models, bot, {
+        senderId,
+        recipientId,
+        integration,
+        message,
+      });
 
-      try {
-        resp = await sendMessage(models, bot, {
-          senderId,
-          recipientId,
-          integration,
-          message,
-        });
-      } catch (error) {
-        debugError(error.message);
-        throw new Error(error.message);
-      }
-
-      if (!resp) {
+      if (!sendReplyResult) {
         throw new Error('Something went wrong to send this message');
       }
 
@@ -146,7 +158,7 @@ export const actionCreateMessage = async (
           conversationId: conversation._id,
           content: '<p>Bot Message</p>',
           internal: false,
-          mid: resp.message_id,
+          mid: sendReplyResult.message_id,
           botId,
           botData,
           fromBot: true,
@@ -167,15 +179,34 @@ export const actionCreateMessage = async (
     }
     return {
       result,
-      objToWait: generateObjectToWait({
-        messages: config?.messages || [],
+      waitCondition: generateConditionWaitToAction({
+        config,
         conversation,
         customer,
-        optionalConnects,
       }),
     };
   } catch (error) {
     debugError(error.message);
     throw new Error(error.message);
   }
+};
+
+const generateConditionWaitToAction = ({
+  config,
+  customer,
+  conversation,
+}: {
+  config: any;
+  conversation: IFacebookConversationDocument;
+  customer: IFacebookCustomerDocument;
+}): AutomationExecutionSetWaitCondition => {
+  return {
+    type: 'checkObject',
+    propertyName: 'payload.btnId',
+    expectedState: {
+      conversationId: conversation._id,
+      customerId: customer.erxesApiId,
+    },
+    shouldCheckOptionalConnect: true,
+  };
 };

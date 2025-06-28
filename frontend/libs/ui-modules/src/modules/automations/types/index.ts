@@ -59,7 +59,7 @@ export type ITrigger<TConfig = any> = {
 };
 
 export interface IAutomationHistoryAction {
-  createdAt?: Date;
+  createdAt: Date;
   actionId: string;
   actionType: string;
   actionConfig?: any;

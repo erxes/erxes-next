@@ -24,16 +24,14 @@ export const receiveMessage = async (
     );
     const { recipient, from, timestamp, channelData } = activity;
     let { message, postback } = channelData;
-    const pageId = recipient.id,
-      userId = from.id,
-      kind = INTEGRATION_KINDS.MESSENGER,
-      mid = channelData.message?.mid || postback?.mid,
-      attachments = channelData.message?.attachments;
+    const pageId = recipient.id;
+    const userId = from.id;
+    const kind = INTEGRATION_KINDS.MESSENGER;
+    const mid = channelData.message?.mid || postback?.mid;
+    const attachments = channelData.message?.attachments;
 
     let text = activity.text || message?.text;
     let adData;
-
-    console.log(JSON.stringify(channelData));
 
     if (!text && !message && !!postback) {
       text = postback.title;
@@ -46,11 +44,10 @@ export const receiveMessage = async (
         message.payload = postback.payload;
       }
     }
-    console.log({ message });
 
-    // if (message.quick_reply) {
-    //   message.payload = message.quick_reply.payload;
-    // }
+    if (message?.quick_reply) {
+      message.payload = message.quick_reply.payload;
+    }
 
     const customer = await getOrCreateCustomer(
       models,
@@ -70,7 +67,6 @@ export const receiveMessage = async (
 
     const bot = await checkIsBot(models, message, recipient.id);
     const botId = bot?._id;
-    console.log({ botId, bot });
 
     // create conversation
     if (!conversation) {
@@ -100,7 +96,6 @@ export const receiveMessage = async (
       }
       conversation.content = text || '';
     }
-    console.log({ conversation });
 
     const formattedAttachments = (attachments || [])
       .filter((att) => att.type !== 'fallback')
@@ -149,7 +144,6 @@ export const receiveMessage = async (
         mid: mid,
       },
     );
-    console.log({ conversationMessage });
     if (!conversationMessage) {
       try {
         const created = await models.FacebookConversationMessages.create({
@@ -180,7 +174,6 @@ export const receiveMessage = async (
         );
 
         conversationMessage = created;
-        console.log({ subdomain, fabkjdsvaksdv: 'dasdkasvm' });
 
         await triggerFacebookAutomation(subdomain, {
           conversationMessage: conversationMessage.toObject(),

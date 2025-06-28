@@ -16,17 +16,29 @@ import { IconGripVertical, IconX } from '@tabler/icons-react';
 import { Button, Card, cn, Input, Label } from 'erxes-ui';
 import { TBotMessageButton } from '../states/replyMessageActionForm';
 import { generateAutomationElementId } from 'ui-modules';
+import React from 'react';
 
 export const FacebookMessageButtonsGenerator = ({
   buttons = [],
   setButtons,
   addButtonText = '+ Add button',
   limit,
+  ContentBeforeInput,
 }: {
   buttons: { disableRemoveButton?: boolean } & TBotMessageButton[];
   setButtons: (buttons: TBotMessageButton[]) => void;
   addButtonText?: string;
   limit: number;
+  ContentBeforeInput?: ({
+    button,
+    handleChangeButton,
+  }: {
+    button: {
+      disableRemoveButton?: boolean;
+      image_url?: string;
+    } & TBotMessageButton;
+    handleChangeButton: (button: TBotMessageButton) => void;
+  }) => React.ReactNode;
 }) => {
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -81,6 +93,7 @@ export const FacebookMessageButtonsGenerator = ({
               button={button}
               handleChangeButton={handleChangeButton}
               onRemovButton={() => onRemovButton(index)}
+              ContentBeforeInput={ContentBeforeInput}
             />
           ))}
         </SortableContext>
@@ -101,10 +114,21 @@ const FacebookMessageButton = ({
   button,
   handleChangeButton,
   onRemovButton,
+  ContentBeforeInput,
 }: {
   button: { disableRemoveButton?: boolean } & TBotMessageButton;
   handleChangeButton: (button: TBotMessageButton) => void;
   onRemovButton: () => void;
+  ContentBeforeInput?: ({
+    button,
+    handleChangeButton,
+  }: {
+    button: {
+      disableRemoveButton?: boolean;
+      image_url?: string;
+    } & TBotMessageButton;
+    handleChangeButton: (button: TBotMessageButton) => void;
+  }) => React.ReactNode;
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: button._id });
@@ -166,6 +190,12 @@ const FacebookMessageButton = ({
       >
         <IconGripVertical className="w-4 h-4" />
       </div>
+      {ContentBeforeInput ? (
+        <ContentBeforeInput
+          button={button}
+          handleChangeButton={handleChangeButton}
+        />
+      ) : null}
       <div className="flex-1 border rounded-lg p-2 flex items-center">
         {button?.isEditing ? (
           <Input

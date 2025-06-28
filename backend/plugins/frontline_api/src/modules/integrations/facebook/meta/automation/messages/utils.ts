@@ -3,32 +3,50 @@ import moment from 'moment';
 import { IModels } from '~/connectionResolvers';
 import { pConversationClientMessageInserted } from '@/inbox/graphql/resolvers/mutations/widget';
 import { receiveInboxMessage } from '@/inbox/receiveMessage';
-import { IFacebookConversation } from '@/integrations/facebook/@types/conversations';
-import { IFacebookCustomer } from '@/integrations/facebook/@types/customers';
+import {
+  IFacebookConversation,
+  IFacebookConversationDocument,
+} from '@/integrations/facebook/@types/conversations';
+import {
+  IFacebookCustomer,
+  IFacebookCustomerDocument,
+} from '@/integrations/facebook/@types/customers';
 import { IFacebookBotDocument } from '@/integrations/facebook/db/definitions/bots';
 import { debugError } from '@/integrations/facebook/debuggers';
-import { ISendMessageData } from '@/integrations/facebook/meta/automation/types/automationTypes';
+import {
+  ISendMessageData,
+  TAttachmentMessage,
+  TBotConfigMessage,
+  TBotConfigMessageButton,
+  TFacebookMessageButton,
+  TGenericTemplateMessage,
+  TQuickRepliesMessage,
+  TQuickReplyMessage,
+  TTemplateMessage,
+  TTextInputMessage,
+} from '@/integrations/facebook/meta/automation/types/automationTypes';
 import {
   generateBotData,
   generatePayloadString,
   getUrl,
 } from '@/integrations/facebook/meta/automation/utils/messageUtils';
 import { sendReply } from '@/integrations/facebook/utils';
+import { IFacebookIntegrationDocument } from '~/modules/integrations/facebook/@types/integrations';
 
 export const generateMessages = async (
   subdomain: string,
-  config: any,
+  config: { messages: TBotConfigMessage[] },
   conversation: IFacebookConversation,
   customer: IFacebookCustomer,
   executionId: string,
 ) => {
   let { messages = [] } = config || {};
 
-  const generateButtons = (buttons: any[] = []) => {
-    const generatedButtons: any = [];
+  const generateButtons = (buttons: TBotConfigMessageButton[] = []) => {
+    const generatedButtons: TFacebookMessageButton[] = [];
 
     for (const button of buttons) {
-      const obj: any = {
+      const obj: TFacebookMessageButton = {
         type: 'postback',
         title: (button.text || '').trim(),
         payload: generatePayloadString(
@@ -59,14 +77,20 @@ export const generateMessages = async (
     const quickRepliesMessage = messages.splice(quickRepliesIndex, 1)[0];
     messages.push(quickRepliesMessage);
   }
-  const generatedMessages: any[] = [];
+  const generatedMessages: (
+    | TTextInputMessage
+    | TTemplateMessage
+    | TGenericTemplateMessage
+    | TAttachmentMessage
+    | TQuickRepliesMessage
+  )[] = [];
 
   for (const {
     type,
-    buttons,
-    text,
+    buttons = [],
+    text = '',
     cards = [],
-    quickReplies,
+    quickReplies = [],
     image = '',
     video = '',
     audio = '',
@@ -121,25 +145,28 @@ export const generateMessages = async (
           },
         },
         botData,
-      });
+      } as TGenericTemplateMessage);
     }
 
-    if (type === 'quickReplies') {
+    if (type === 'quickReplies' && quickReplies.length) {
       generatedMessages.push({
-        text: text || '',
-        quick_replies: quickReplies.map((quickReply) => ({
-          content_type: 'text',
-          title: quickReply?.text || '',
-          image_url: quickReply?.image_url
-            ? getUrl(subdomain, quickReply?.image_url)
-            : '',
-          payload: generatePayloadString(
-            conversation,
-            quickReply,
-            customer?.erxesApiId || '',
-            executionId,
-          ),
-        })),
+        text: text,
+        quick_replies: quickReplies.map(
+          (quickReply: { _id: string; text: string; image_url?: string }) => ({
+            content_type: 'text',
+            title: quickReply?.text || '',
+
+            payload: generatePayloadString(
+              conversation,
+              quickReply,
+              customer?.erxesApiId || '',
+              executionId,
+            ),
+            ...(quickReply.image_url && {
+              image_url: getUrl(subdomain, quickReply.image_url),
+            }),
+          }),
+        ),
         botData,
       });
     }
@@ -150,7 +177,7 @@ export const generateMessages = async (
       url &&
         generatedMessages.push({
           attachment: {
-            type,
+            type: type as 'image' | 'audio' | 'video',
             payload: {
               url: getUrl(subdomain, url),
             },
@@ -162,14 +189,19 @@ export const generateMessages = async (
 
   return generatedMessages;
 };
+
 export const generateObjectToWait = ({
   messages = [],
   optionalConnects = [],
   conversation,
   customer,
 }: {
-  messages: any[];
-  optionalConnects: any[];
+  messages: TBotConfigMessage[];
+  optionalConnects: {
+    sourceId: string;
+    actionId: string;
+    optionalConnectId: string;
+  }[];
   conversation: { _id: string } & IFacebookConversation;
   customer: IFacebookCustomer;
 }) => {
@@ -180,39 +212,41 @@ export const generateObjectToWait = ({
   };
   let propertyName = 'payload.btnId';
 
-  if (messages.some((msg) => msg.type === 'input')) {
-    const inputMessageConfig =
-      messages.find((msg) => msg.type === 'input')?.input || {};
+  // if (messages.some((msg) => msg.type === 'input')) {
+  //   const inputMessageConfig = messages.find(
+  //     (msg) => msg.type === 'input',
+  //   )?.input;
+  //   if (inputMessageConfig) {
+  //     if (inputMessageConfig?.type === 'day') {
+  //       obj.startWaitingDate = moment()
+  //         .add(inputMessageConfig?.value || 0, 'day')
+  //         .toDate();
+  //     }
 
-    if (inputMessageConfig.timeType === 'day') {
-      obj.startWaitingDate = moment()
-        .add(inputMessageConfig.value || 0, 'day')
-        .toDate();
-    }
+  //     if (inputMessageConfig?.type === 'hour') {
+  //       obj.startWaitingDate = moment()
+  //         .add(inputMessageConfig?.value || 0, 'hour')
+  //         .toDate();
+  //     }
+  //     if (inputMessageConfig?.type === 'minute') {
+  //       obj.startWaitingDate = moment()
+  //         .add(inputMessageConfig?.value || 0, 'minute')
+  //         .toDate();
+  //     }
+  //   }
 
-    if (inputMessageConfig.timeType === 'hour') {
-      obj.startWaitingDate = moment()
-        .add(inputMessageConfig.value || 0, 'hour')
-        .toDate();
-    }
-    if (inputMessageConfig.timeType === 'minute') {
-      obj.startWaitingDate = moment()
-        .add(inputMessageConfig.value || 0, 'minute')
-        .toDate();
-    }
+  //   const actionIdIfNotReply =
+  //     optionalConnects.find(
+  //       (connect) => connect?.optionalConnectId === 'ifNotReply',
+  //     )?.actionId || null;
 
-    const actionIdIfNotReply =
-      optionalConnects.find(
-        (connect) => connect?.optionalConnectId === 'ifNotReply',
-      )?.actionId || null;
+  //   obj.waitingActionId = actionIdIfNotReply;
 
-    obj.waitingActionId = actionIdIfNotReply;
-
-    propertyName = 'botId';
-  } else {
-    obj.startWaitingDate = moment().add(24, 'hours').toDate();
-    obj.waitingActionId = null;
-  }
+  //   propertyName = 'botId';
+  // } else {
+  //   obj.startWaitingDate = moment().add(24, 'hours').toDate();
+  //   obj.waitingActionId = null;
+  // }
 
   return {
     ...obj,
@@ -224,31 +258,22 @@ export const generateObjectToWait = ({
 };
 
 export const sendMessage = async (
-  models,
+  models: IModels,
   bot: IFacebookBotDocument,
   { senderId, recipientId, integration, message, tag }: ISendMessageData,
   isLoop?: boolean,
 ) => {
-  try {
-    // Try sending 'typing_on' but ignore if it fails
-    try {
-      await sendReply(
-        models,
-        'me/messages',
-        {
-          recipient: { id: senderId },
-          sender_action: 'typing_on',
-          tag,
-        },
-        recipientId,
-        integration.erxesApiId,
-      );
-    } catch (typingError) {
-      console.warn(`typing_on failed: ${typingError.message}`);
-    }
+  await trySendTypingOn(
+    models,
+    senderId,
+    recipientId,
+    integration.erxesApiId,
+    tag,
+  );
 
+  try {
     // Send the actual message
-    const resp = await sendReply(
+    return await sendReply(
       models,
       'me/messages',
       {
@@ -259,17 +284,16 @@ export const sendMessage = async (
       recipientId,
       integration.erxesApiId,
     );
-
-    return resp;
   } catch (error) {
-    if (
+    const shouldRetryWithTag =
       error.message.includes(
         'This message is sent outside of allowed window',
       ) &&
       bot?.tag &&
-      !isLoop
-    ) {
-      await sendMessage(
+      !isLoop;
+
+    if (shouldRetryWithTag) {
+      return await sendMessage(
         models,
         bot,
         {
@@ -288,6 +312,30 @@ export const sendMessage = async (
   }
 };
 
+async function trySendTypingOn(
+  models: IModels,
+  senderId: string,
+  recipientId: string,
+  erxesApiId: string,
+  tag?: string,
+) {
+  try {
+    await sendReply(
+      models,
+      'me/messages',
+      {
+        recipient: { id: senderId },
+        sender_action: 'typing_on',
+        tag,
+      },
+      recipientId,
+      erxesApiId,
+    );
+  } catch (err) {
+    console.warn(`[sendTypingOn] failed: ${err.message}`);
+  }
+}
+
 export const getData = async (
   models: IModels,
   subdomain: string,
@@ -295,10 +343,10 @@ export const getData = async (
   target: any,
   config: any,
 ): Promise<{
-  conversation: any;
-  integration: any;
-  customer: any;
-  bot: any;
+  conversation: IFacebookConversationDocument;
+  integration: IFacebookIntegrationDocument;
+  customer: IFacebookCustomerDocument;
+  bot: IFacebookBotDocument;
   recipientId: string;
   senderId: string;
   botId: string;

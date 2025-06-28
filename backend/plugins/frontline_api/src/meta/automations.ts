@@ -15,7 +15,7 @@ export default {
     triggers: [...facebookConstants.triggers],
     bots: [...facebookConstants.bots],
   },
-  receiveActions: async ({ subdomain }, { data: { moduleName, ...args } }) => {
+  receiveActions: async ({ subdomain }, { moduleName, ...args }) => {
     const models = await generateModels(subdomain);
     const context = { models, subdomain };
 
@@ -23,10 +23,7 @@ export default {
       ...args,
     });
   },
-  checkCustomTrigger: async (
-    { subdomain },
-    { data: { moduleName, ...props } },
-  ) => {
+  checkCustomTrigger: async ({ subdomain }, { moduleName, ...props }) => {
     const models = await generateModels(subdomain);
     const context = { models, subdomain };
 

@@ -68,7 +68,7 @@ export const AutomationBuilderHeader = ({
           </Button>
         </PageHeader.End>
       </PageHeader>
-      <PageSubHeader className="flex items-center justify-between">
+      <PageSubHeader className="hidden sm:flex items-center justify-between">
         <div className="flex items-center space-x-2 gap-8">
           <Form.Field
             control={control}
@@ -132,6 +132,79 @@ export const AutomationBuilderHeader = ({
               )}
             />
 
+            <Button
+              variant="secondary"
+              onClick={() => setValue('isMinimized', !isMinimized)}
+            >
+              <IconCategory2 />
+              {`${isMinimized ? 'Show Menu' : 'Hide Menu'}`}
+            </Button>
+          </div>
+        )}
+      </PageSubHeader>
+      <PageSubHeader className="sm:hidden flex flex-col gap-2">
+        <div className="flex flex-row justify-between items-center">
+          <Form.Field
+            control={control}
+            name="detail.name"
+            render={({ field, fieldState }) => (
+              <Form.Item>
+                <Input
+                  placeholder={
+                    fieldState.error
+                      ? fieldState.error.message
+                      : 'Automation name'
+                  }
+                  className={'w-64'}
+                  {...field}
+                />
+              </Form.Item>
+            )}
+          />
+          <Tabs defaultValue={activeTab}>
+            <Tabs.List size="sm" className="h-8 ">
+              <Tabs.Trigger
+                size="sm"
+                value="builder"
+                className="h-8 py-2 px-6"
+                onClick={() => toggleTabs('builder')}
+              >
+                Builder
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                size="sm"
+                value="history"
+                className="h-8 py-2 px-6"
+                onClick={() => toggleTabs('history')}
+              >
+                History
+              </Tabs.Trigger>
+            </Tabs.List>
+          </Tabs>
+        </div>
+
+        {activeTab === 'builder' && (
+          <div className="flex flex-row justify-between items-center">
+            <Form.Field
+              control={control}
+              name="detail.status"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Control>
+                    <div className="flex items-center space-x-2">
+                      <Label htmlFor="mode">InActive</Label>
+                      <Switch
+                        id="mode"
+                        onCheckedChange={(open) =>
+                          field.onChange(open ? 'active' : 'draft')
+                        }
+                        checked={field.value === 'active'}
+                      />
+                    </div>
+                  </Form.Control>
+                </Form.Item>
+              )}
+            />
             <Button
               variant="secondary"
               onClick={() => setValue('isMinimized', !isMinimized)}

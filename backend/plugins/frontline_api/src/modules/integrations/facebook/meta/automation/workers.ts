@@ -17,6 +17,7 @@ import {
   ICheckTriggerData,
   IReplacePlaceholdersData,
 } from '@/integrations/facebook/meta/automation/types/automationTypes';
+import { AutomationWorkers } from 'erxes-api-shared/core-modules/automations/types';
 
 const getItems = async (
   subdomain: string,
@@ -46,16 +47,15 @@ export const facebookAutomationWorkers = {
       triggerType,
     }: IAutomationReceiveActionData,
   ) => {
-    console.log({ actionType, collectionType, daskhvdas: 'dads' });
     if (actionType === 'create') {
       switch (collectionType) {
         case 'messages':
-          return await actionCreateMessage(
+          return await actionCreateMessage({
             models,
             subdomain,
             action,
             execution,
-          );
+          });
         case 'comments':
           return await actionCreateComment(
             models,
@@ -65,7 +65,7 @@ export const facebookAutomationWorkers = {
           );
 
         default:
-          return;
+          return { result: null };
       }
     }
 
@@ -77,19 +77,21 @@ export const facebookAutomationWorkers = {
         execution,
         triggerType,
       );
-      return setProperty({
-        models,
-        subdomain,
-        getRelatedValue,
-        module,
-        rules,
-        execution,
-        relatedItems,
-        triggerType,
-      });
+      return {
+        result: await setProperty({
+          models,
+          subdomain,
+          getRelatedValue,
+          module,
+          rules,
+          execution,
+          relatedItems,
+          triggerType,
+        }),
+      };
     }
 
-    return;
+    return { result: null };
   },
   replacePlaceHolders: async (
     { subdomain }: IAutomationWorkerContext,

@@ -10,6 +10,8 @@ import { TriggerConfigContent } from './trigger/components/TriggerConfigContent'
 import { AutomationBotsRecordTable } from './bots/components/automationBotsRecordTable';
 import { AutomationHistoryName } from '~/widgets/automations/modules/facebook/components/AutomationHistoryName';
 import { AutomationHistoryResult } from '~/widgets/automations/modules/facebook/components/AutomationHistoryResult';
+import { CommentTriggerForm } from '~/widgets/automations/modules/facebook/components/trigger/components/CommentTriggerForm';
+import { CommentActionForm } from '~/widgets/automations/modules/facebook/components/action/components/CommentActionForm';
 
 export const FacebookRemoteEntry = (props: AutomationRemoteEntryProps) => {
   const { componentType = '' } = props;
@@ -68,6 +70,8 @@ function renderActionForm(props: AutomationRemoteEntryTypes['ActionForm']) {
     case 'messages':
       return <MessageActionForm {...props} />;
     // Add other cases as needed
+    case 'comments':
+      return <CommentActionForm {...props} />;
     default:
       return null;
   }
@@ -78,10 +82,14 @@ function renderTriggerForm(props: AutomationRemoteEntryTypes['TriggerForm']) {
   const [_pluginName, _moduleName, contentType] =
     getAutomationTypes(triggerType);
 
+  console.log({ contentType });
+
   switch (contentType) {
     case 'messages':
       return <MessageTriggerForm {...props} />;
     // Add other cases as needed
+    case 'comments':
+      return <CommentTriggerForm {...props} />;
     default:
       return null;
   }

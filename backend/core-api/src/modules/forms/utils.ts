@@ -95,7 +95,7 @@ export const fieldsCombinedByContentType = async (
   //   [],
   // );
 
-  const [pluginName, moduleType] = splitType(contentType);
+  const [pluginName, moduleType, collectionType] = splitType(contentType);
 
   let fields = await sendTRPCMessage({
     pluginName,
@@ -107,6 +107,7 @@ export const fieldsCombinedByContentType = async (
       usageType,
       config: config || {},
       type: moduleType,
+      collectionType,
     },
     defaultValue: [],
   });
