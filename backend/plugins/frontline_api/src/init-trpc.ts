@@ -6,6 +6,7 @@ import { IModels } from './connectionResolvers';
 import { inboxTrpcRouter } from './modules/inbox/trpc/inbox';
 import { integrationTrpcRouter } from './modules/integrations/trpc/integration';
 import { z } from 'zod';
+import { generateFacebookFields } from '~/modules/integrations/facebook/fieldUtils';
 
 export type FrontlineTRPCContext = ITRPCContext<{ models: IModels }>;
 
@@ -19,7 +20,7 @@ export const appRouter = t.mergeRouters(
       getFieldList: t.procedure
         .input(
           z.object({
-            type: z.string(),
+            moduleType: z.string(),
             collectionType: z.string().optional(),
             segmentId: z.string().optional(),
             usageType: z.string().optional(),
@@ -27,9 +28,11 @@ export const appRouter = t.mergeRouters(
           }),
         )
         .query(async ({ ctx, input }) => {
-          const { subdomain } = ctx;
-          const { type } = input;
-          console.log({ input });
+          const { models } = ctx;
+          const { moduleType } = input;
+          if (moduleType === 'facebook') {
+            return await generateFacebookFields(models, input);
+          }
 
           return [];
         }),

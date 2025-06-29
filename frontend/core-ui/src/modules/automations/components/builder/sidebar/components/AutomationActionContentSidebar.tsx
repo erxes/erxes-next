@@ -1,14 +1,14 @@
 import { ErrorState } from '@/automations/utils/ErrorState';
-import { Card, Form, Spinner, toast } from 'erxes-ui';
-import { Suspense } from 'react';
+import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
+import { Button, Card, Form, Spinner, toast } from 'erxes-ui';
+import { Suspense, useRef } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
-import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { getAutomationTypes } from 'ui-modules';
 import { coreActionNames } from '../../nodes/actions/CoreActions';
-import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
+import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
 
 export const AutomationActionContentSidebar = () => {
+  const formRef = useRef<{ submit: () => void }>(null);
   const {
     currentIndex,
     Component,
@@ -38,24 +38,32 @@ export const AutomationActionContentSidebar = () => {
     };
 
     return (
-      <Suspense fallback={<Spinner />}>
-        <ErrorBoundary
-          FallbackComponent={({ resetErrorBoundary }) => (
-            <ErrorState onRetry={resetErrorBoundary} />
-          )}
-        >
-          <RenderPluginsComponentWrapper
-            pluginName={pluginName}
-            moduleName={moduleName}
-            props={{
-              componentType: 'actionForm',
-              type: currentAction?.type,
-              currentAction,
-              onSaveActionConfig,
-            }}
-          />
-        </ErrorBoundary>
-      </Suspense>
+      <div className="flex flex-col h-full">
+        <div className="flex-1 width-auto">
+          <Suspense fallback={<Spinner />}>
+            <ErrorBoundary
+              FallbackComponent={({ resetErrorBoundary }) => (
+                <ErrorState onRetry={resetErrorBoundary} />
+              )}
+            >
+              <RenderPluginsComponentWrapper
+                pluginName={pluginName}
+                moduleName={moduleName}
+                props={{
+                  formRef: formRef,
+                  componentType: 'actionForm',
+                  type: currentAction?.type,
+                  currentAction,
+                  onSaveActionConfig,
+                }}
+              />
+            </ErrorBoundary>
+          </Suspense>
+        </div>
+        <div className="p-2 flex justify-end border-t bg-white">
+          <Button onClick={() => formRef.current?.submit()}>Save</Button>
+        </div>
+      </div>
     );
   }
 

@@ -80,7 +80,6 @@ export const connectionHandler = (
               optConnect.optionalConnectId !== optionalConnectId,
           );
         }
-        console.log({ updatedOptionalConnects });
 
         sourceAction.config = {
           ...sourceConfig,
@@ -147,7 +146,6 @@ export const generateConnect = (
   // if (sourceWorkflow && info.targetId) {
   //   info.workflowId = sourceWorkflow.workflowId;
   // }
-  console.log({ info });
 
   return info;
 };

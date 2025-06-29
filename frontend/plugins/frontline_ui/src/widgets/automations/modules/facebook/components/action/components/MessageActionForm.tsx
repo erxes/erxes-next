@@ -42,8 +42,10 @@ import {
   generateAutomationElementId,
 } from 'ui-modules';
 import { FacebookInputMessage } from '~/widgets/automations/modules/facebook/components/action/components/FacebookInputMessage';
+import { useEffect, useImperativeHandle } from 'react';
 
 export const MessageActionForm = ({
+  formRef,
   currentAction,
   onSaveActionConfig,
 }: AutomationActionFormProps<TMessageActionForm>) => {
@@ -51,8 +53,24 @@ export const MessageActionForm = ({
     resolver: zodResolver(replyMessageFormSchema),
     defaultValues: { ...(currentAction?.config || {}) },
   });
-
   const { control, watch, setValue, setError, handleSubmit } = form;
+
+  useImperativeHandle(formRef, () => ({
+    submit: () => {
+      handleSubmit(onSaveActionConfig, () => {
+        toast({
+          title: 'There is some error in the form',
+          variant: 'destructive',
+        });
+      })();
+    },
+  }));
+
+  useEffect(() => {
+    if (currentAction?.config) {
+      form.reset({ ...currentAction.config });
+    }
+  }, [currentAction?.config, form]);
 
   const messages = watch('messages') || [];
   const addMessage = (type: MessageActionTypeNames) => {
@@ -71,7 +89,7 @@ export const MessageActionForm = ({
   };
 
   return (
-    <div className="w-[670px]  flex flex-col h-full">
+    <div className="w-[670px] ">
       <div className="flex flex-row gap-2 items-center px-6 py-2">
         <Label>Message Sequence</Label>
         <Badge variant="secondary">{`${messages.length} messages`}</Badge>
@@ -96,26 +114,11 @@ export const MessageActionForm = ({
           ),
         )}
       </div>
-      <div className="flex-1 overflow-x-auto px-6 py-2">
-        <FacebookMessages
-          messages={messages}
-          control={control}
-          setValue={setValue}
-        />
-      </div>
-      <div className="p-2 flex justify-end border-t bg-white">
-        <Button
-          onClick={handleSubmit(onSaveActionConfig, (prop) => {
-            console.log(prop);
-            toast({
-              title: 'There is some error on field of form',
-              variant: 'destructive',
-            });
-          })}
-        >
-          Save
-        </Button>
-      </div>
+      <FacebookMessages
+        messages={messages}
+        control={control}
+        setValue={setValue}
+      />
     </div>
   );
 };

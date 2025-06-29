@@ -1,5 +1,5 @@
 import { IconComponentNamesType } from 'erxes-ui';
-import React from 'react';
+import React, { RefObject } from 'react';
 
 export type IActionProps = {
   currentActionIndex: number;
@@ -92,6 +92,9 @@ export type BaseAutomationRemoteProps = {
 
 export type AutomationTriggerFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
+    formRef: RefObject<{
+      submit: () => void;
+    }>;
     componentType: 'triggerForm';
     activeTrigger: ITrigger<TConfig>;
     onSaveTriggerConfig: (config: TConfig) => void;
@@ -99,6 +102,9 @@ export type AutomationTriggerFormProps<TConfig = any> =
 
 export type AutomationActionFormProps<TConfig = any> =
   BaseAutomationRemoteProps & {
+    formRef: RefObject<{
+      submit: () => void;
+    }>;
     componentType: 'actionForm';
     currentAction: IAction<TConfig>;
     onSaveActionConfig: (config: TConfig) => void;

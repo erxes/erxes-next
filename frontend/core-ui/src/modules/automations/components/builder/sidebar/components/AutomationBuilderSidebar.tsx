@@ -51,12 +51,7 @@ export const AutomationBuilderSidebar = () => {
     if (isMinimized && awaitingToConnectNodeId) {
       setValue('isMinimized', false);
     }
-  }, [
-    activeNode,
-    queryParams.activeNodeId,
-    isMinimized,
-    awaitingToConnectNodeId,
-  ]);
+  }, [activeNode, queryParams.activeNodeId, awaitingToConnectNodeId]);
 
   if (isMinimized) {
     return null;

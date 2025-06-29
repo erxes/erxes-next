@@ -184,10 +184,9 @@ export async function startPlugin(
     next();
   });
 
-  // // Error handling middleware
+  // Error handling middleware
   // app.use((error: any, _req: any, res: any) => {
-  //   // const msg = filterXSS(error.message);
-  //   const msg = error.message;
+  //   const msg = filterXSS(error.message);
 
   //   // debugError(`Error: ${msg}`);
 

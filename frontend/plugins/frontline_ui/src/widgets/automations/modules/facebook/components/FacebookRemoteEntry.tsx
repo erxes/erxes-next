@@ -82,8 +82,6 @@ function renderTriggerForm(props: AutomationRemoteEntryTypes['TriggerForm']) {
   const [_pluginName, _moduleName, contentType] =
     getAutomationTypes(triggerType);
 
-  console.log({ contentType });
-
   switch (contentType) {
     case 'messages':
       return <MessageTriggerForm {...props} />;

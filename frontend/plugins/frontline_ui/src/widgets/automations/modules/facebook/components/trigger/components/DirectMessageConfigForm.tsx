@@ -137,7 +137,7 @@ const DirectMessageCondition = ({
 
 type Props = {
   conditions: TMessageTriggerFormDirectMessage;
-  botId: TMessageTriggerForm['botId'];
+  // botId: TMessageTriggerForm['botId'];
   onConditionChange: (
     fieldName: 'persistentMenuIds' | 'conditions',
     fieldValue:
@@ -148,7 +148,7 @@ type Props = {
 
 export const DirectMessageConfigForm = ({
   conditions = [],
-  botId,
+  // botId,
   onConditionChange,
 }: Props) => {
   const onRemoveCondition = (id: string) => {
