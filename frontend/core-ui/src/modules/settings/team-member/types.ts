@@ -19,8 +19,8 @@ export enum EStatus {
 export interface IUser {
   _id: string;
   details: IUsersDetails;
-  status: EStatus;
   email: string;
+  status: EStatus;
   employeeId: string;
   isActive: boolean;
   positionIds: string[];

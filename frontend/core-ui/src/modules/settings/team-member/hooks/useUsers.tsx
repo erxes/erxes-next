@@ -14,21 +14,23 @@ import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../constants/teamMemberCursorSes
 export const USERS_PER_PAGE = 30;
 
 type IUsersQuery = ICursorListResponse<
-  IUser & { details: IUsersDetails & { __typename: string } }
+  IUser & { details?: IUsersDetails & { __typename?: string } }
 >;
 
 const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
   const { cursor } = useRecordTableCursor({
     sessionKey: TEAM_MEMBER_CURSOR_SESSION_KEY,
   });
-  const [{ branchIds, departmentIds, unitId, searchValue, isActive }] =
-    useMultiQueryState([
-      'branchIds',
-      'departmentIds',
-      'unitId',
-      'searchValue',
-      'isActive',
-    ]);
+  const [
+    { branchIds, departmentIds, unitId, searchValue, isActive, brandIds },
+  ] = useMultiQueryState([
+    'branchIds',
+    'departmentIds',
+    'unitId',
+    'searchValue',
+    'isActive',
+    'brandIds',
+  ]);
 
   const { data, loading, error, fetchMore } = useQuery<IUsersQuery>(
     queries.GET_USERS_QUERY,
@@ -42,6 +44,7 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
         cursor,
         searchValue: searchValue ?? undefined,
         isActive: isActive ?? undefined,
+        brandIds: brandIds ?? undefined,
         ...options?.variables,
       },
       onError(error) {
@@ -50,7 +53,7 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
     },
   );
 
-  const { list: users, totalCount, pageInfo } = data?.users || {};
+  const { list = [], totalCount = 0, pageInfo } = data?.users || {};
 
   const handleFetchMore = ({
     direction,
@@ -90,8 +93,8 @@ const useUsers = (options?: QueryHookOptions<IUsersQuery>) => {
 
   return {
     loading,
-    users: users?.map((user) => {
-      const detailData = user?.details || {};
+    users: list?.map(({ details, ...user }) => {
+      const { __typename, ...detailData } = details || {};
       return {
         ...user,
         details: detailData,

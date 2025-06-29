@@ -101,12 +101,12 @@ export const InviteRow = ({
             render={({ field }) => (
               <Form.Item>
                 <Form.Control>
-                  <SelectUsersGroup
+                  {/* <SelectUsersGroup
                     name={field.name}
                     onValueChange={field.onChange}
                     value={field.value}
                     className="rounded-none focus-visible:relative focus-visible:z-10 shadow-none"
-                  />
+                  /> */}
                 </Form.Control>
               </Form.Item>
             )}
