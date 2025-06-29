@@ -1,3 +1,6 @@
+import { USERS_GROUP_FORM_SCHEAMA } from '@/settings/permission/schema/usersGroup';
+import { z } from 'zod';
+
 export interface IPermission {
   _id: string;
   module?: string;
@@ -29,3 +32,5 @@ export interface IUsersGroup {
   }[];
   description: string;
 }
+
+export type IUsersGroupFormSchema = z.infer<typeof USERS_GROUP_FORM_SCHEAMA>;

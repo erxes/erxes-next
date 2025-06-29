@@ -7,7 +7,7 @@ export const SETTINGS_ROUTES = {
 };
 
 export const PERMISSIONS = {
-  '/settings/structures/permissions?moduleName=branches': 'branches',
-  '/settings/structures/permissions?moduleName=departments': 'departments',
-  '/settings/structures/permissions?moduleName=units': 'units',
+  '/settings/structures/permissions?module=branches': 'branches',
+  '/settings/structures/permissions?module=departments': 'departments',
+  '/settings/structures/permissions?module=units': 'units',
 };

@@ -13,7 +13,7 @@ export const useUsersGroup = (
   >(GET_USERS_GROUP, {
     ...options,
     variables: {
-      perPage: USERS_GROUPS_PER_PAGE,
+      limit: USERS_GROUPS_PER_PAGE,
       ...options?.variables,
     },
   });

@@ -1,20 +1,48 @@
-import { IconPlus, IconUserFilled } from '@tabler/icons-react';
-import { is } from 'date-fns/locale';
+import { UsersGroupModal } from '@/settings/permission/components/UsersGroupModal';
+import {
+  IconCopy,
+  IconEdit,
+  IconPlus,
+  IconTrashFilled,
+  IconUserFilled,
+} from '@tabler/icons-react';
 import {
   Button,
   cn,
   ScrollArea,
   Sidebar,
+  Skeleton,
+  Spinner,
   TextOverflowTooltip,
-  useFilterContext,
+  useConfirm,
   useQueryState,
 } from 'erxes-ui';
-import React from 'react';
-import { IUserGroup, useUsersGroup } from 'ui-modules';
+import { motion } from 'framer-motion';
+import {
+  IUserGroup,
+  useRemoveUsersGroups,
+  useUsersGroup,
+  useUsersGroupsCopy,
+} from 'ui-modules';
 
 export const UsersGroupSidebar = () => {
   const { usersGroups, loading, error } = useUsersGroup();
-  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  if (loading) {
+    return (
+      <Sidebar collapsible="none" className="flex-none border-r">
+        <UsersGroupSidebarHeader />
+        <Sidebar.Group>
+          <Sidebar.GroupContent>
+            <Sidebar.Menu>
+              <Skeleton className="w-full" />
+            </Sidebar.Menu>
+          </Sidebar.GroupContent>
+        </Sidebar.Group>
+      </Sidebar>
+    );
+  }
+
   if (error) {
     return (
       <Sidebar collapsible="none" className="flex-none border-r">
@@ -38,7 +66,7 @@ export const UsersGroupSidebar = () => {
         <Sidebar.GroupContent>
           <Sidebar.Menu>
             <ScrollArea>
-              <div className="max-w-[--sidebar-width] max-h-[calc(100dvh-4.75rem)] pr-8">
+              <div className="max-w-[--sidebar-width] max-h-[calc(100dvh-4.75rem)] flex flex-col gap-3 pr-8">
                 {usersGroups.map((group) => (
                   <UsersGroupSidebarItem
                     key={group._id}
@@ -66,12 +94,14 @@ export const UsersGroupSidebarHeader = () => {
               <span className="text-xs font-semibold text-accent-foreground">
                 Users Groups
               </span>
-              <Button
-                variant="ghost"
-                className="text-xs font-semibold text-accent-foreground"
-              >
-                <IconPlus />
-              </Button>
+              <UsersGroupModal.Create>
+                <Button
+                  variant="ghost"
+                  className="text-xs font-semibold text-accent-foreground"
+                >
+                  <IconPlus />
+                </Button>
+              </UsersGroupModal.Create>
             </div>
           </Sidebar.MenuItem>
         </Sidebar.Menu>
@@ -87,15 +117,15 @@ export const UsersGroupSidebarItem = ({
   to: string;
   group: IUserGroup;
 }) => {
-  const [groupId, setgroupId] = useQueryState<string>('groupId');
+  const [groupId, setGroupId] = useQueryState<string>('groupId');
   const isActive = groupId === to;
   return (
     <Sidebar.MenuItem className="w-full">
       <Sidebar.MenuButton
         isActive={isActive}
-        className="h-full gap-3 flex-col items-start p-3"
+        className="h-full gap-3 flex-col items-start p-3 relative group"
         onClick={() => {
-          setgroupId(to);
+          setGroupId(to);
         }}
       >
         <span className="flex flex-col gap-2 w-full">
@@ -123,7 +153,65 @@ export const UsersGroupSidebarItem = ({
           <IconUserFilled size={16} />
           {group.members?.length || 0} members
         </span>
+        <motion.div
+          initial={{ x: 5, opacity: 0 }}
+          whileHover={{ x: 0, opacity: 1 }}
+          exit={{ x: 5, opacity: 0 }}
+          transition={{ type: 'spring', ease: 'linear', duration: 0.5 }}
+          className="size-full group-hover:bg-gradient-to-r from-transparent to-accent absolute inset-0 hidden items-center justify-end gap-1 pr-3 group-hover:flex z-10"
+        >
+          <CopyButton group={group} />
+          <UsersGroupModal.Edit groupId={group._id}>
+            <Button
+              variant={'secondary'}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-background h-7 w-7 flex items-center justify-center border border-accent-foreground"
+            >
+              <IconEdit />
+            </Button>
+          </UsersGroupModal.Edit>
+          <RemoveButton group={group} />
+        </motion.div>
       </Sidebar.MenuButton>
     </Sidebar.MenuItem>
+  );
+};
+
+const RemoveButton = ({ group }: { group: IUserGroup }) => {
+  const { removeUsersGroup, loading } = useRemoveUsersGroups();
+  const { confirm } = useConfirm();
+  return (
+    <Button
+      disabled={loading}
+      variant={'secondary'}
+      onClick={(e) => {
+        e.stopPropagation();
+        confirm({
+          message: `Are you sure you want to remove the group '${group.name}'`,
+          options: { confirmationValue: 'delete' },
+        }).then(() => removeUsersGroup(group._id));
+      }}
+      className="bg-background h-7 w-7 flex items-center justify-center border border-accent-foreground"
+    >
+      {loading ? <Spinner size={'small'} /> : <IconTrashFilled />}
+    </Button>
+  );
+};
+
+const CopyButton = ({ group }: { group: IUserGroup }) => {
+  const { usersGroupsCopy, loading } = useUsersGroupsCopy();
+
+  return (
+    <Button
+      disabled={loading}
+      variant={'secondary'}
+      onClick={(e) => {
+        e.stopPropagation();
+        usersGroupsCopy(group._id);
+      }}
+      className="bg-background h-7 w-7 flex items-center justify-center border border-accent-foreground"
+    >
+      {loading ? <Spinner size={'small'} /> : <IconCopy />}
+    </Button>
   );
 };

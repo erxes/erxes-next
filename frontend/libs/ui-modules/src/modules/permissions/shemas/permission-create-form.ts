@@ -7,4 +7,5 @@ export const PERMISSION_FORM_SCHEMA = z.object({
     .min(1, 'At least one action is required'),
   userIds: z.array(z.string()).optional(),
   groupIds: z.array(z.string()).optional(),
+  allowed: z.boolean().default(true),
 });

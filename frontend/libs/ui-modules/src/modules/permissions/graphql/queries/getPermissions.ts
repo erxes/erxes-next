@@ -42,3 +42,27 @@ export const GET_PERMISSIONS = gql`
     }
   }
 `;
+
+export const GET_PERMISSION_MODULES = gql`
+  query PermissionModules {
+    permissionModules {
+      actions {
+        description
+        module
+        name
+      }
+      description
+      name
+    }
+  }
+`;
+
+export const GET_PERMISSION_ACTIONS = gql`
+  query PermissionActions {
+    permissionActions {
+      name
+      description
+      module
+    }
+  }
+`;

@@ -1,4 +1,3 @@
-import { PermissionTable } from '@/settings/permission/components/PermissionTable';
 import { PageSubHeader } from 'erxes-ui';
 import { Permissions } from 'ui-modules';
 
@@ -6,7 +5,7 @@ const Permission = () => {
   return (
     <div className="w-full overflow-hidden flex flex-col">
       <PageSubHeader>
-        <Permissions.Filter />
+        <Permissions.Filter shouldHide={false} />
       </PageSubHeader>
       <Permissions.RecordTable />
     </div>
