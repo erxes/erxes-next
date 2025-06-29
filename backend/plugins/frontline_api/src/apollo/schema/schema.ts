@@ -23,17 +23,25 @@ import {
   types as FacebookTypes,
 } from '@/integrations/facebook/graphql/schema/facebook';
 
+import {
+  mutations as CallMutations,
+  queries as CallQueries,
+  types as CallTypes,
+} from '@/integrations/call/graphql/schema/call';
+
 export const types = `
     ${ChannelsTypes}
     ${ConversationsTypes}
     ${IntegrationsTypes}
     ${FacebookTypes}
+    ${CallTypes}
   `;
 export const queries = `
     ${ChannelsQueries}
     ${ConversationsQueries}
     ${IntegrationsQueries}
     ${FacebookQueries}
+    ${CallQueries}
   `;
 
 export const mutations = `
@@ -41,5 +49,6 @@ export const mutations = `
    ${ConversationsMutations}
    ${IntegrationsMutations}
    ${FacebookMutations}
+   ${CallMutations}
 `;
 export default { types, queries, mutations };

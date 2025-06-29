@@ -15,8 +15,10 @@
     "aws-sdk": "^2.1692.0",
     "debug": "^4.4.0",
     "erxes-api-shared": "workspace:^",
+    "fast-xml-parser": "^5.2.5",
     "fbgraph": "^1.4.4",
     "moment-timezone": "^0.5.48",
+    "redlock": "5.0.0-beta.2",
     "string-strip-html": "^13.4.12",
     "strip-html": "^1.0.2"
   }
