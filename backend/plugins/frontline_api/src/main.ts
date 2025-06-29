@@ -4,6 +4,7 @@ import { appRouter } from '~/init-trpc';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
 import { router } from '~/routes';
+import { initializeCallQueueMonitoring } from '~/modules/integrations/call/worker/callDashboard';
 
 startPlugin({
   name: 'frontline',
@@ -23,6 +24,9 @@ startPlugin({
   ),
 
   expressRouter: router,
+  onServerInit: async (app) => {
+    await initializeCallQueueMonitoring();
+  },
 
   apolloServerContext: async (subdomain, context) => {
     const models = await generateModels(subdomain);
