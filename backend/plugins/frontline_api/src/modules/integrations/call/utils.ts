@@ -141,7 +141,9 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     CALL_API_EXPIRY = '86400', // Default 24h for regular users
     CALL_CRON_API_EXPIRY = '604800', // Default 7d for cron
   } = process.env;
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  //disable on production !!!
+  // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
   // Validate credentials
   if (!isCron && (!CALL_API_USER || !CALL_API_PASSWORD)) {
     throw new Error('Regular API credentials missing!');
