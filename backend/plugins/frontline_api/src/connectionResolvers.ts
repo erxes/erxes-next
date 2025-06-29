@@ -98,6 +98,11 @@ import { ICallConfigDocument } from '~/modules/integrations/call/@types/config';
 import { ICallHistoryDocument } from '~/modules/integrations/call/@types/histories';
 import { ICallCustomer } from '~/modules/integrations/call/@types/customers';
 import { ICallIntegrationDocument } from '~/modules/integrations/call/@types/integrations';
+import { IFacebookBotDocument } from '~/modules/integrations/facebook/db/definitions/bots';
+import {
+  IFacebookBotModel,
+  loadFacebookBotClass,
+} from '~/modules/integrations/facebook/db/models/Bots';
 
 export interface IModels {
   Channels: IChannelModel;
@@ -122,6 +127,7 @@ export interface IModels {
   CallConfigs: ICallConfigModel;
   CallOperators: ICallOperatorModel;
   CallCdrs: ICallCdrModel;
+  FacebookBots: IFacebookBotModel;
 }
 
 export interface IContext extends IMainContext {
@@ -229,6 +235,11 @@ export const loadClasses = (
     'calls_cdr',
     loadCallCdrClass(models),
   );
+  models.FacebookBots = db.model<IFacebookBotDocument, IFacebookBotModel>(
+    'facebook_messengers_bots',
+    loadFacebookBotClass(models),
+  );
+
   return models;
 };
 

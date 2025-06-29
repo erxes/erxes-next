@@ -4,7 +4,7 @@ import { Button } from 'erxes-ui';
 import { DndContext, useDraggable } from '@dnd-kit/core';
 import { createContext, useContext, useMemo, memo, useCallback } from 'react';
 import { useAtom } from 'jotai';
-import { callWidgetPositionState } from '@/integrations/call/states/callWidgetPositionState';
+import { callWidgetPositionState } from '@/integrations/call/states/callWidgetStates';
 
 // Memoize context to prevent recreating on every render
 const DragContext = createContext<{

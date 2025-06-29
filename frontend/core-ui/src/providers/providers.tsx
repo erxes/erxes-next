@@ -11,6 +11,7 @@ import { OrganizationProviderEffect } from '@/organization/providers/Organizatio
 import { WidgetsComponent } from '@/widgets/components/WidgetsComponent';
 import { useRelationWidgetsModules } from '@/widgets/hooks/useRelationWidgetsModules';
 import { RelationWidgetProvider } from 'ui-modules';
+import { IconsProvider } from 'erxes-ui';
 
 export const Providers = () => {
   return (
@@ -18,14 +19,16 @@ export const Providers = () => {
       <OrganizationProviderEffect />
       <UserProviderEffect />
       <PluginConfigsProvidersEffect />
-      <RelationWidgetProvider
-        RelationWidget={WidgetsComponent}
-        relationWidgetsModules={useRelationWidgetsModules()}
-      >
-        <Suspense fallback={<div>Loading...</div>}>
-          <Outlet />
-        </Suspense>
-      </RelationWidgetProvider>
+      <IconsProvider>
+        <RelationWidgetProvider
+          RelationWidget={WidgetsComponent}
+          relationWidgetsModules={useRelationWidgetsModules()}
+        >
+          <Suspense fallback={<div>Loading...</div>}>
+            <Outlet />
+          </Suspense>
+        </RelationWidgetProvider>
+      </IconsProvider>
     </ApolloProvider>
   );
 };

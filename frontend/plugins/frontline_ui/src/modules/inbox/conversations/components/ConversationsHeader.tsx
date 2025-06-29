@@ -1,9 +1,12 @@
 import { Button, cn, Skeleton } from 'erxes-ui';
 import { useConversationListContext } from '../hooks/useConversationListContext';
-import { useAtom } from 'jotai';
-import { selectMainFilterState } from '@/inbox/states/inboxLayoutState';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  inboxLayoutState,
+  selectMainFilterState,
+} from '@/inbox/states/inboxLayoutState';
 import { IconArrowLeft, IconUserFilled } from '@tabler/icons-react';
-import { ConversationFilterBar } from '@/inbox/conversations/components/Filter';
+import { ConversationFilterBar } from '@/inbox/conversations/components/ConversationsFilter';
 
 export const ConversationsHeader = ({
   children,
@@ -27,7 +30,7 @@ export const ConversationsHeader = ({
         </Button>
         <Button variant="ghost" className="w-full justify-start px-2">
           <IconUserFilled />
-          <div className="mr-auto">Team Inbox</div>
+          Team Inbox
           <ConversationCount />
         </Button>
         {children}
@@ -47,10 +50,12 @@ export const ConversationsHeader = ({
 
 export const ConversationCount = ({ className }: { className?: string }) => {
   const { totalCount, loading } = useConversationListContext();
+
   return (
     <span
       className={cn(
-        'text-muted-foreground inline-flex items-center gap-1 ml-2 text-sm font-medium',
+        'text-muted-foreground inline-flex items-center gap-1 ml-2 text-sm font-medium ml-auto',
+
         className,
       )}
     >

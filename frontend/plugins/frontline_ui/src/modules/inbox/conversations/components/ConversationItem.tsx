@@ -9,7 +9,12 @@ import {
 } from 'erxes-ui';
 import { useConversationContext } from '../hooks/useConversationContext';
 import { useIntegrationInline } from '@/integrations/hooks/useIntegrations';
-import { BrandsInline, currentUserState, CustomersInline } from 'ui-modules';
+import {
+  BrandsInline,
+  currentUserState,
+  CustomersInline,
+  TagBadge,
+} from 'ui-modules';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { activeConversationState } from '../states/activeConversationState';
 import { ConversationIntegrationBadge } from '@/integrations/components/IntegrationBadge';
@@ -27,7 +32,7 @@ export const ConversationItem = ({
 }) => {
   const inboxLayout = useAtomValue(inboxLayoutState);
 
-  const { createdAt, updatedAt, customer, integrationId } =
+  const { createdAt, updatedAt, customer, integrationId, tagIds } =
     useConversationContext();
 
   const { integration } = useIntegrationInline({
@@ -43,7 +48,7 @@ export const ConversationItem = ({
         className="p-4 pl-6 h-auto overflow-hidden flex-col items-start cursor-pointer"
         onConversationSelect={onConversationSelect}
       >
-        <CustomersInline.Provider customers={[customer]}>
+        <CustomersInline.Provider customers={customer ? [customer] : []}>
           <div className="flex w-full gap-3 leading-tight">
             <ConversationSelector />
             <div className="flex-1 space-y-1 truncate">
@@ -56,10 +61,17 @@ export const ConversationItem = ({
               </div>
             </div>
             <div className="ml-auto text-accent-foreground font-medium">
-              <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+              {createdAt && (
+                <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+              )}
             </div>
           </div>
           <ConversationItemContent />
+          {tagIds &&
+            tagIds.length > 0 &&
+            tagIds.map((tagId) => (
+              <TagBadge key={tagId} tagId={tagId} variant="secondary" />
+            ))}
         </CustomersInline.Provider>
       </ConversationContainer>
     );
@@ -67,7 +79,7 @@ export const ConversationItem = ({
 
   return (
     <ConversationContainer onConversationSelect={onConversationSelect}>
-      <CustomersInline.Provider customers={[customer]}>
+      <CustomersInline.Provider customers={customer ? [customer] : []}>
         <ConversationSelector />
         <CustomersInline.Title className="w-56 truncate flex-none text-foreground" />
         <ConversationItemContent />
@@ -75,9 +87,11 @@ export const ConversationItem = ({
           to <BrandsInline brandIds={[brandId || '']} />
         </div>
         <div className="w-32 text-right flex-none">
-          <RelativeDateDisplay value={updatedAt || createdAt}>
-            <RelativeDateDisplay.Value value={updatedAt || createdAt} />
-          </RelativeDateDisplay>
+          {createdAt && (
+            <RelativeDateDisplay value={updatedAt || createdAt}>
+              <RelativeDateDisplay.Value value={updatedAt || createdAt} />
+            </RelativeDateDisplay>
+          )}
         </div>
       </CustomersInline.Provider>
     </ConversationContainer>
@@ -86,6 +100,7 @@ export const ConversationItem = ({
 
 export const ConversationItemContent = () => {
   const { content } = useConversationContext();
+  if (!content) return null;
   return (
     <div className="truncate w-full h-4 [&_*]:text-sm [&_*]:leading-tight [&_*]:font-medium">
       <BlockEditorReadOnly content={content} />
@@ -106,7 +121,7 @@ const ConversationContainer = ({
     conversationId: string;
   }>(['conversationId']);
   const setActiveConversation = useSetAtom(activeConversationState);
-  const conversation = useConversationContext();
+  const { loading, integration, ...conversation } = useConversationContext();
   const { _id, readUserIds } = conversation || {};
   const currentUser = useAtomValue(currentUserState);
   const isRead = readUserIds?.includes(currentUser?._id || '');
@@ -125,7 +140,7 @@ const ConversationContainer = ({
       )}
       asChild
       onClick={() => {
-        setActiveConversation(conversation);
+        conversation && setActiveConversation(conversation);
         setValues({
           conversationId: _id,
         });
@@ -172,7 +187,7 @@ const ConversationCheckbox = () => {
         checked={isChecked}
         className="absolute transition-opacity duration-200 opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100 z-10"
         onClick={(e) => e.stopPropagation()}
-        onCheckedChange={() => setSelectConversations(_id)}
+        onCheckedChange={() => setSelectConversations(_id || '')}
       />
       <ConversationCheckedEffect
         isChecked={isChecked}
@@ -193,8 +208,8 @@ const ConversationCheckedEffect = ({
   const selectConversations = useAtomValue(selectConversationsState);
 
   useEffect(() => {
-    if (isChecked !== selectConversations.includes(_id)) {
-      setIsChecked(selectConversations.includes(_id));
+    if (isChecked !== selectConversations.includes(_id || '')) {
+      setIsChecked(selectConversations.includes(_id || ''));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectConversations]);

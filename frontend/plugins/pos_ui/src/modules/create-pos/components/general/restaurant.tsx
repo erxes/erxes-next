@@ -33,10 +33,10 @@ export const RestaurantForm: React.FC<RestaurantFormProps> = ({
     setSearchParams(newParams);
   };
 
-  const handleBrandChange = (brandId: string) => {
+  const handleBrandChange = (brandId: string | string[]) => {
     if (isReadOnly) return;
-
-    form.setValue('scopeBrandIds', brandId ? [brandId] : []);
+    const singleBrandId = Array.isArray(brandId) ? brandId[0] : brandId;
+    form.setValue('scopeBrandIds', singleBrandId ? [singleBrandId] : []);
   };
 
   const handleBranchChange = (branchId: string | string[] | undefined) => {

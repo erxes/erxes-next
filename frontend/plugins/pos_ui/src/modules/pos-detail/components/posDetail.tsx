@@ -8,6 +8,7 @@ import { usePosEdit } from '@/hooks/usePosEdit';
 import {
   type BasicInfoFormValues,
   basicInfoSchema,
+  FinanceConfigFormValues,
   type PermissionFormValues,
   permissionSchema,
 } from '@/create-pos/components/formSchema';
@@ -64,6 +65,20 @@ export const PosEdit = () => {
       adminIds: [],
       cashierIds: [],
       permissionConfig: {},
+    },
+  });
+
+  const financeForm = useForm<FinanceConfigFormValues>({
+    defaultValues: {
+      isSyncErkhet: false,
+      checkErkhet: false,
+      checkInventories: false,
+      userEmail: '',
+      beginBillNumber: '',
+      defaultPay: '',
+      account: '',
+      location: '',
+      getRemainder: false,
     },
   });
 
@@ -214,7 +229,7 @@ export const PosEdit = () => {
       </PosEditTabContent>
 
       <PosEditTabContent value="finance">
-        <FinanceConfigForm posDetail={posDetail} />
+        <FinanceConfigForm form={financeForm} posDetail={posDetail} />
       </PosEditTabContent>
 
       <PosEditTabContent value="delivery">

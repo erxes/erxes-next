@@ -7,7 +7,7 @@ import { Form, Input, Upload, Editor } from 'erxes-ui';
 import { BrandField } from '@/products/add-products/components/BrandField';
 import { ProductFormValues } from './formSchema';
 import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
-import { SelectCompanies } from 'ui-modules';
+import { SelectCompany } from 'ui-modules';
 
 export const ProductAddMoreFields = ({
   form,
@@ -101,7 +101,7 @@ export const ProductAddMoreFields = ({
             <Form.Item className="flex flex-col">
               <Form.Label>VENDOR</Form.Label>
               <Form.Control>
-                <SelectCompanies
+                <SelectCompany
                   value={field.value}
                   onValueChange={field.onChange}
                 />

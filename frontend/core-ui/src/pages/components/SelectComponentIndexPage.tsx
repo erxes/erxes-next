@@ -1,7 +1,7 @@
 import {
-  SelectCompanies,
-  SelectCustomers,
-  SelectProducts,
+  SelectCompany,
+  SelectCustomer,
+  SelectProduct,
   SelectMember,
   SelectTags,
   SelectBrand,
@@ -192,13 +192,13 @@ export const SelectComponentIndexPage = () => {
               label="Company Select"
               description="Search and select companies"
             >
-              <SelectCompanies value={companyId} onValueChange={setCompanyId} />
+              <SelectCompany value={companyId} onValueChange={setCompanyId} />
             </SelectContainer>
             <SelectContainer
               label="Customer Select"
               description="Search and select customers"
             >
-              <SelectCustomers
+              <SelectCustomer
                 value={customerId}
                 onValueChange={setCustomerId}
               />
@@ -229,13 +229,13 @@ export const SelectComponentIndexPage = () => {
               label="Product Select"
               description="Browse and select products"
             >
-              <SelectProducts value={productId} onValueChange={setProductId} />
+              <SelectProduct value={productId} onValueChange={setProductId} />
             </SelectContainer>
             <SelectContainer
               label="Product Select"
               description="Browse and select products"
             >
-              <SelectProducts value={productId} onValueChange={setProductId} />
+              <SelectProduct value={productId} onValueChange={setProductId} />
             </SelectContainer>
           </SelectContainerGroup>
         </div>

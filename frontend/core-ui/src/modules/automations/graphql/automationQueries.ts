@@ -19,7 +19,7 @@ const COMMON_USER_FIELDS = `
       }
 `;
 
-export const AUTOMATOMATION_CONSTANTS = gql`
+export const AUTOMATION_CONSTANTS = gql`
   query automationConstants {
     automationConstants
   }
@@ -126,6 +126,5 @@ query AutomationHistories($automationId: String!,${GQL_CURSOR_PARAM_DEFS}, $page
     totalCount
      ${GQL_PAGE_INFO}
   }
-  automationConstants
 }
 `;
