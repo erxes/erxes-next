@@ -1,8 +1,13 @@
 import { cn } from 'erxes-ui/lib/utils';
-import { Input } from 'erxes-ui/components';
-import { forwardRef } from 'react';
+import { Badge, Input } from 'erxes-ui/components';
+import { forwardRef, useEffect, useState } from 'react';
+import {
+  RecordTableCellContent,
+  RecordTableCellTrigger,
+  RecordTablePopover,
+} from 'erxes-ui/modules/record-table';
 
-export const FullNameRoot = forwardRef<
+export const FullNameContainer = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
@@ -10,7 +15,7 @@ export const FullNameRoot = forwardRef<
     <div ref={ref} {...props} className={cn('flex -space-x-px', className)} />
   );
 });
-FullNameRoot.displayName = 'FullNameRoot';
+FullNameContainer.displayName = 'FullNameContainer';
 
 export const FullNameInput = forwardRef<
   HTMLInputElement,
@@ -65,7 +70,79 @@ const LastNameInput = forwardRef<
 });
 LastNameInput.displayName = 'LastNameInput';
 
+interface FullNameProps
+  extends React.ComponentProps<typeof RecordTablePopover> {
+  firstName: string;
+  lastName: string;
+  onClose?: (firstName: string, lastName: string) => void;
+  onClick?: (e: React.MouseEvent) => void;
+}
+
+export const FullNameRoot = ({
+  firstName,
+  lastName,
+  onClose,
+  onClick,
+  ...props
+}: FullNameProps) => {
+  const [firstNameState, setFirstNameState] = useState<string>('');
+  const [lastNameState, setLastNameState] = useState<string>('');
+
+  useEffect(() => {
+    setFirstNameState(firstName);
+    setLastNameState(lastName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <RecordTablePopover
+      scope={props.scope}
+      open={props.open}
+      onOpenChange={(open) => {
+        props.onOpenChange?.(open);
+        if (!open) {
+          onClose?.(firstNameState, lastNameState);
+        }
+      }}
+      {...props}
+    >
+      <RecordTableCellTrigger>
+        <Badge
+          variant="secondary"
+          onClick={(e) => {
+            onClick?.(e);
+          }}
+        >
+          {firstName || lastName ? (
+            <span>
+              {firstName} {lastName}
+            </span>
+          ) : (
+            <span className="text-muted-foreground">Unnamed customer</span>
+          )}
+        </Badge>
+      </RecordTableCellTrigger>
+      <RecordTableCellContent className="w-72" asChild>
+        <FullNameField.Container>
+          <FullNameField.FirstName
+            value={firstNameState || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setFirstNameState(e.target.value);
+            }}
+          />
+          <FullNameField.LastName
+            value={lastNameState || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setLastNameState(e.target.value);
+            }}
+          />
+        </FullNameField.Container>
+      </RecordTableCellContent>
+    </RecordTablePopover>
+  );
+};
+
 const FullNameField = Object.assign(FullNameRoot, {
+  Container: FullNameContainer,
   Input: FullNameInput,
   FirstName: FirstNameInput,
   LastName: LastNameInput,

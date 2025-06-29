@@ -1,27 +1,27 @@
-import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
-import { followTrDocsState } from '../../../states/trStates';
-import { getSingleJournalByAccount, getTempId } from '../../utils';
-import { IAccount, JournalEnum } from '@/settings/account/types/Account';
-import { IconTrashX } from '@tabler/icons-react';
-import { INV_INCOME_EXPENSE_TYPES, TR_SIDES } from '@/transactions/types/constants';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
 import { SelectAccount } from '@/settings/account/components/SelectAccount';
-import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
-import { useWatch } from 'react-hook-form';
+import { IAccount, JournalEnum } from '@/settings/account/types/Account';
+import { INV_INCOME_EXPENSE_TYPES, TR_SIDES } from '@/transactions/types/constants';
+import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
+import { IconTrashX } from '@tabler/icons-react';
 import {
+  Button,
+  cn,
   Form,
   Input,
-  Select,
-  cn,
   InputNumber,
   RecordTableCellContent,
   RecordTableCellTrigger,
   RecordTableHotKeyControl,
   RecordTablePopover,
+  Select,
   Table,
-  Button,
 } from 'erxes-ui';
+import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
+import { useWatch } from 'react-hook-form';
+import { followTrDocsState } from '../../../states/trStates';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
+import { getSingleJournalByAccount, getTempId } from '../../utils';
 
 export const ExpenseRow = ({
   form,

@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { Form, Input, Select } from "erxes-ui";
+import { Form, Input, Select } from 'erxes-ui';
 import { BasicInfoFormValues } from '../formSchema';
-import { ALLOW_TYPES } from '~/modules/constants';
-import { IPosDetail } from '~/modules/pos-detail/types/IPos';
+import { ALLOW_TYPES } from '@/constants';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 import { SelectBranches, SelectBrand, SelectDepartments } from 'ui-modules';
 
 interface EcommerceFormProps {
@@ -14,13 +14,14 @@ interface EcommerceFormProps {
   isReadOnly?: boolean;
 }
 
-export const EcommerceForm: React.FC<EcommerceFormProps> = ({ 
-  form, 
+export const EcommerceForm: React.FC<EcommerceFormProps> = ({
+  form,
   isReadOnly = false,
 }) => {
-  const handleBrandChange = (brandId: string) => {
+  const handleBrandChange = (brandId: string | string[]) => {
     if (isReadOnly) return;
-    form.setValue('scopeBrandIds', brandId ? [brandId] : []);
+    const singleBrandId = Array.isArray(brandId) ? brandId[0] : brandId;
+    form.setValue('scopeBrandIds', singleBrandId ? [singleBrandId] : []);
     form.trigger('scopeBrandIds');
   };
 
@@ -31,38 +32,43 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
     form.trigger('branchId');
   };
 
-  const handleDepartmentChange = (departmentId: string | string[] | undefined) => {
+  const handleDepartmentChange = (
+    departmentId: string | string[] | undefined,
+  ) => {
     if (isReadOnly) return;
-    const singleDepartmentId = Array.isArray(departmentId) ? departmentId[0] : departmentId;
+    const singleDepartmentId = Array.isArray(departmentId)
+      ? departmentId[0]
+      : departmentId;
     form.setValue('departmentId', singleDepartmentId || '');
     form.trigger('departmentId');
   };
 
   const handleAllowTypesChange = (value: string, index: number) => {
     if (isReadOnly) return;
-    
+
     const currentTypes = form.getValues('allowTypes') || [];
     const newTypes = [...currentTypes];
-    
-    if (value === "NULL" || value === "") {
+
+    if (value === 'NULL' || value === '') {
       newTypes.splice(index, 1);
     } else {
-      newTypes[index] = value as "eat" | "take" | "delivery";
+      newTypes[index] = value as 'eat' | 'take' | 'delivery';
     }
-    
-    const cleanTypes = newTypes.filter((type, idx, arr) => 
-      type && arr.indexOf(type) === idx
+
+    const cleanTypes = newTypes.filter(
+      (type, idx, arr) => type && arr.indexOf(type) === idx,
     );
-    
+
     form.setValue('allowTypes', cleanTypes);
     form.trigger('allowTypes');
   };
 
   const scopeBrandIds = form.watch('scopeBrandIds') || [];
-  const selectedBrandId = Array.isArray(scopeBrandIds) && scopeBrandIds.length > 0 
-    ? scopeBrandIds[0] 
-    : '';
-  
+  const selectedBrandId =
+    Array.isArray(scopeBrandIds) && scopeBrandIds.length > 0
+      ? scopeBrandIds[0]
+      : '';
+
   const allowTypes = form.watch('allowTypes') || [];
   const branchId = form.watch('branchId') || '';
   const departmentId = form.watch('departmentId') || '';
@@ -102,7 +108,9 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     DESCRIPTION <span className="text-red-500">*</span>
                   </Form.Label>
-                  <p className="text-sm font-medium text-[#71717A]">What is description?</p>
+                  <p className="text-sm font-medium text-[#71717A]">
+                    What is description?
+                  </p>
                   <Form.Control>
                     <Input
                       {...field}
@@ -117,7 +125,7 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                 </Form.Item>
               )}
             />
-            
+
             <Form.Field
               control={form.control}
               name="scopeBrandIds"
@@ -126,7 +134,9 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                   <Form.Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
                     BRANDS
                   </Form.Label>
-                  <p className="text-sm text-gray-500">Which specific Brand does this integration belong to?</p>
+                  <p className="text-sm text-gray-500">
+                    Which specific Brand does this integration belong to?
+                  </p>
                   <Form.Control>
                     <SelectBrand
                       value={selectedBrandId}
@@ -153,22 +163,29 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
                 <Form.Control>
                   <div className="grid grid-cols-3 gap-3">
                     {Array.from({ length: 6 }, (_, index) => {
-                      const currentValue = allowTypes[index] || "";
-                      
+                      const currentValue = allowTypes[index] || '';
+
                       return (
                         <div key={index} className="flex flex-col">
-                          <Select 
-                            onValueChange={(value) => handleAllowTypesChange(value, index)}
-                            value={currentValue || "NULL"}
+                          <Select
+                            onValueChange={(value) =>
+                              handleAllowTypesChange(value, index)
+                            }
+                            value={currentValue || 'NULL'}
                             disabled={isReadOnly}
                           >
                             <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                              <Select.Value placeholder={`Select Type ${index + 1}`} />
+                              <Select.Value
+                                placeholder={`Select Type ${index + 1}`}
+                              />
                             </Select.Trigger>
                             <Select.Content>
                               <Select.Item value="NULL">NULL</Select.Item>
                               {ALLOW_TYPES.map((type) => (
-                                <Select.Item key={type.value} value={type.value}>
+                                <Select.Item
+                                  key={type.value}
+                                  value={type.value}
+                                >
                                   {type.label}
                                 </Select.Item>
                               ))}

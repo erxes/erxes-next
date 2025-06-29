@@ -3,12 +3,7 @@ import { useQuery, QueryHookOptions, OperationVariables } from '@apollo/client';
 import { BRANDS_QUERY, GET_BRAND_BY_ID } from '../graphql/queries/BrandsQuery';
 
 import { IBrand } from '../types/brand';
-import {
-  EnumCursorDirection,
-  ICursorListResponse,
-  mergeCursorData,
-  validateFetchMore,
-} from 'erxes-ui';
+import { EnumCursorDirection, ICursorListResponse } from 'erxes-ui';
 
 const BRANDS_PER_PAGE = 20;
 
@@ -20,8 +15,7 @@ export const useBrands = (
   >(BRANDS_QUERY, {
     ...options,
     variables: {
-      perPage: BRANDS_PER_PAGE,
-      page: 1,
+      limit: BRANDS_PER_PAGE,
       ...options?.variables,
     },
   });

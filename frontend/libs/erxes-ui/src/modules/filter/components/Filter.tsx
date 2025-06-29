@@ -9,6 +9,7 @@ import {
   Input,
   Kbd,
   Popover,
+  Tooltip,
 } from 'erxes-ui/components';
 import {
   IconFilter2,
@@ -78,17 +79,24 @@ const FilterTrigger = React.forwardRef<
   }
 >(({ isFiltered, ...props }, ref) => {
   return (
-    <Popover.Trigger asChild>
-      <Button
-        ref={ref}
-        variant="ghost"
-        size={isFiltered ? 'icon' : 'default'}
-        {...props}
-      >
-        <IconFilter2 className="w-4 h-4" />
-        {!isFiltered && 'Filter'}
-      </Button>
-    </Popover.Trigger>
+    <Tooltip.Provider>
+      <Tooltip delayDuration={0}>
+        <Tooltip.Trigger asChild>
+          <Popover.Trigger asChild>
+            <Button
+              ref={ref}
+              variant="ghost"
+              size={isFiltered ? 'icon' : 'default'}
+              {...props}
+            >
+              <IconFilter2 className="w-4 h-4" />
+              {!isFiltered && 'Filter'}
+            </Button>
+          </Popover.Trigger>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Filter</Tooltip.Content>
+      </Tooltip>
+    </Tooltip.Provider>
   );
 });
 
@@ -163,6 +171,28 @@ const FilterItem = React.forwardRef<
       {children}
       <IconChevronRight className="w-4 h-4 ml-auto" />
     </Command.Item>
+  );
+});
+
+const FilterCommandItem = React.forwardRef<
+  React.ComponentRef<typeof Command.Item>,
+  React.ComponentPropsWithoutRef<typeof Command.Item>
+>(({ className, onSelect, ...props }, ref) => {
+  const { id } = useFilterContext();
+  const setOpen = useSetAtom(openPopoverState(id));
+
+  const handleSelect = (value: string) => {
+    setOpen(false);
+    onSelect?.(value);
+  };
+
+  return (
+    <Command.Item
+      ref={ref}
+      className={cn('h-8', className)}
+      onSelect={(value) => handleSelect(value)}
+      {...props}
+    />
   );
 });
 
@@ -449,6 +479,7 @@ export const Filter = Object.assign(FilterProvider, {
   Trigger: FilterTrigger,
   Popover: FilterPopover,
   Item: FilterItem,
+  CommandItem: FilterCommandItem,
   View: FilterView,
   SearchValueTrigger: FilterSearchValueTrigger,
   SearchValueBarItem: FilterSearchValueBarItem,

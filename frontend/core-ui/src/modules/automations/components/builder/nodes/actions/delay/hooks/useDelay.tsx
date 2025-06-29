@@ -1,12 +1,13 @@
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import { ChangeEvent } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 export const useDelay = (currentActionIndex: number) => {
   const configField: `detail.actions.${number}.config` = `detail.actions.${currentActionIndex}.config`;
-  const { control, watch, setValue } = useFormContext<TAutomationProps>();
+  const { control, setValue } = useFormContext<TAutomationProps>();
 
-  const { value, type } = watch(configField) || {};
+  const { value, type } =
+    useWatch<TAutomationProps>({ control, name: configField }) || {};
 
   const handleValueChange = (
     e: ChangeEvent<HTMLInputElement>,

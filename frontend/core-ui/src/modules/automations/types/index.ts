@@ -1,3 +1,6 @@
+import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
+import { EdgeProps, Edge, Node, ReactFlowInstance } from '@xyflow/react';
+import { UseFormSetValue } from 'react-hook-form';
 import { IAction, ITrigger } from 'ui-modules';
 
 export interface AutomationConstants {
@@ -17,13 +20,20 @@ export type NodeData = {
   nodeType: 'trigger' | 'action';
   icon?: React.ReactNode;
   description?: string;
-  type?: string;
+  type: string;
   category?: string;
   config?: Record<string, any>;
   configurable?: boolean;
   outputs?: number;
   color?: string;
   error?: string;
+  isCustom?: boolean;
+  nextActionId?: string;
+  actionId?: string;
+  beforeTitleContent?: (
+    id: string,
+    type: 'action' | 'trigger',
+  ) => React.ReactNode;
 };
 
 export interface IAutomationDoc {
@@ -79,3 +89,20 @@ export interface IAutomationHistory {
   startWaitingDate?: Date;
   waitingActionId?: string;
 }
+
+export type AutomationDropHandlerParams = {
+  event: React.DragEvent<HTMLDivElement>;
+  reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
+  triggers: any[];
+  actions: any[];
+};
+
+export type TDraggingNode = {
+  nodeType: 'trigger' | 'action';
+  type: string;
+  label: string;
+  description: string;
+  icon: string;
+  isCustom?: boolean;
+  awaitingToConnectNodeId?: string;
+};

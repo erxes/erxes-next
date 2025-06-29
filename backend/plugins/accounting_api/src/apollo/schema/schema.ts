@@ -8,6 +8,7 @@ import { mutations as ctaxRowMutations, queries as ctaxRowQueries, types as ctax
 import extendTypes from '@/accounting/graphql/schemas/extendTypes';
 import { mutations as transactionMutations, queries as transactionQueries, types as transactionTypes } from '@/accounting/graphql/schemas/transactionCommon';
 import { mutations as vatRowMutations, queries as vatRowQueries, types as vatRowTypes } from '@/accounting/graphql/schemas/vatRow';
+import { mutations as accInventoryMutations, queries as accInventoryQueries, types as accInventoryTypes } from '@/accounting/graphql/schemas/inventories';
 
 export const types = `
   enum CacheControlScope {
@@ -30,6 +31,7 @@ export const types = `
   ${ctaxRowTypes()}
   ${accountingsConfigTypes}
   ${transactionTypes()}
+  ${accInventoryTypes}
 `;
 
 export const queries = `
@@ -38,6 +40,7 @@ export const queries = `
   ${vatRowQueries}
   ${ctaxRowQueries}
   ${transactionQueries}
+  ${accInventoryQueries}
 `;
 
 export const mutations = `
@@ -46,6 +49,7 @@ export const mutations = `
   ${vatRowMutations}
   ${ctaxRowMutations}
   ${transactionMutations}
+  ${accInventoryMutations}
 `;
 
 export default { types, queries, mutations };

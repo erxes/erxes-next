@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
-import { Button, Input } from "erxes-ui"
-import { Upload } from "erxes-ui"
-import { useSearchParams } from "react-router-dom"
-import { IconUpload } from "@tabler/icons-react"
-import { useState, useEffect } from "react"
-import { UiConfigFormValues } from "../formSchema"
-import { IPosDetail } from "~/modules/pos-detail/types/IPos"
+import { Button, Form, Input, Upload } from 'erxes-ui';
+import { useSearchParams } from 'react-router-dom';
+import { IconUpload } from '@tabler/icons-react';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { UiConfigFormValues } from '../formSchema';
+import { IPosDetail } from '@/pos-detail/types/IPos';
 
 interface AppearanceFormProps {
   posDetail?: IPosDetail;
@@ -14,55 +14,66 @@ interface AppearanceFormProps {
   onSubmit?: (data: UiConfigFormValues) => Promise<void>;
 }
 
-export default function AppearanceForm({ 
-  posDetail, 
-  isReadOnly = false, 
-  onSubmit 
+interface AppearanceFormData {
+  logoImage: string;
+  backgroundColor: string;
+  textColor: string;
+  accentColor: string;
+  fontFamily: string;
+  showLogo: boolean;
+}
+
+export default function AppearanceForm({
+  posDetail,
+  isReadOnly = false,
+  onSubmit,
 }: AppearanceFormProps) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [formData, setFormData] = useState({
-    logoImage: "",
-    backgroundColor: "#FFFFFF",
-    textColor: "#000000",
-    accentColor: "#6366F1",
-    fontFamily: "Inter",
-    showLogo: true,
-  })
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const form = useForm<AppearanceFormData>({
+    defaultValues: {
+      logoImage: '',
+      backgroundColor: '#FFFFFF',
+      textColor: '#000000',
+      accentColor: '#6366F1',
+      fontFamily: 'Inter',
+      showLogo: true,
+    },
+  });
 
   useEffect(() => {
     if (posDetail?.uiOptions) {
-      setFormData({
-        logoImage: posDetail.uiOptions.logoImage || "",
-        backgroundColor: posDetail.uiOptions.backgroundColor || "#FFFFFF",
-        textColor: posDetail.uiOptions.textColor || "#000000",
-        accentColor: posDetail.uiOptions.accentColor || "#6366F1",
-        fontFamily: posDetail.uiOptions.fontFamily || "Inter",
+      form.reset({
+        logoImage: posDetail.uiOptions.logoImage || '',
+        backgroundColor: posDetail.uiOptions.backgroundColor || '#FFFFFF',
+        textColor: posDetail.uiOptions.textColor || '#000000',
+        accentColor: posDetail.uiOptions.accentColor || '#6366F1',
+        fontFamily: posDetail.uiOptions.fontFamily || 'Inter',
         showLogo: posDetail.uiOptions.showLogo ?? true,
-      })
+      });
+    } else {
+      form.reset({
+        logoImage: '',
+        backgroundColor: '#FFFFFF',
+        textColor: '#000000',
+        accentColor: '#6366F1',
+        fontFamily: 'Inter',
+        showLogo: true,
+      });
     }
-  }, [posDetail])
+  }, [posDetail]);
 
-  const handleInputChange = (field: keyof typeof formData, value: string | boolean) => {
-    if (isReadOnly) return
-    setFormData({
-      ...formData,
-      [field]: value,
-    })
-  }
-
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault()
-    
+  const handleSubmit = async (data: AppearanceFormData) => {
     if (onSubmit) {
       try {
         await onSubmit({
           uiOptions: {
             colors: {
-              bodyColor: formData.backgroundColor,
-              headerColor: formData.accentColor,
-              footerColor: formData.textColor,
+              bodyColor: data.backgroundColor,
+              headerColor: data.accentColor,
+              footerColor: data.textColor,
             },
-            logo: formData.logoImage,
+            logo: data.logoImage,
             bgImage: '',
             favIcon: '',
             receiptIcon: '',
@@ -73,139 +84,189 @@ export default function AppearanceForm({
           beginNumber: '',
           maxSkipNumber: 0,
           checkRemainder: false,
-        })
+        });
       } catch (error) {
-        console.error("Appearance form submission failed:", error)
+        console.error('Appearance form submission failed:', error);
       }
     } else {
-      console.log("Appearance form submitted:", formData)
-      const newParams = new URLSearchParams(searchParams)
-      newParams.set("tab", "screen")
-      setSearchParams(newParams)
+      console.log('Appearance form submitted:', data);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('tab', 'screen');
+      setSearchParams(newParams);
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="p-3">
-      <div className="space-y-8">
-        <div className="space-y-4">
-          <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">Logo and favicon</h2>
-          <p className="text-[#A1A1AA] text-xs font-semibold uppercase">Main logo</p>
-          <div className="mb-5">
-            <label className="block mb-2 font-medium text-[#71717A]">Image can be shown on the top of the post also</label>
-            <Upload.Root 
-              value={formData.logoImage} 
-              onChange={(value) => handleInputChange("logoImage", typeof value === 'string' ? value : '')} 
-              className="h-[128px]"
-            >
-              <Upload.Preview className="hidden" />
-              <Upload.Button
-                size="sm"
-                variant="secondary"
-                type="button"
-                className="w-full h-[128px] flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
-                disabled={isReadOnly}
-              >
-                <div className="flex flex-col gap-3 justify-center">
-                <div className="flex justify-center">
-                 <IconUpload />
-                </div>
-                    <Button disabled={isReadOnly}>Upload</Button>
-                    <span className="font-medium text-sm">Upload Image</span>
-                </div>
-              </Upload.Button>
-            </Upload.Root>
+    <div className="p-3">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              Logo and favicon
+            </h2>
+            <p className="text-[#A1A1AA] text-xs font-semibold uppercase">
+              Main logo
+            </p>
+            
+            <Form.Field
+              control={form.control}
+              name="logoImage"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label className="block mb-2 font-medium text-[#71717A]">
+                    Image can be shown on the top of the post also
+                  </Form.Label>
+                  <Form.Control>
+                    <Upload.Root
+                      value={field.value}
+                      onChange={(fileInfo) => {
+                        if (typeof fileInfo === 'string') {
+                          field.onChange(fileInfo);
+                        } else if ('url' in fileInfo) {
+                          field.onChange(fileInfo.url);
+                        }
+                      }}
+                      className="h-[128px]"
+                    >
+                      <Upload.Preview className="hidden" />
+                      <Upload.Button
+                        size="sm"
+                        variant="secondary"
+                        type="button"
+                        className="w-full h-[128px] flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                        disabled={isReadOnly}
+                      >
+                        <div className="flex flex-col gap-3 justify-center">
+                          <div className="flex justify-center">
+                            <IconUpload />
+                          </div>
+                          <Button disabled={isReadOnly}>Upload</Button>
+                          <span className="font-medium text-sm">Upload Image</span>
+                        </div>
+                      </Upload.Button>
+                    </Upload.Root>
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
           </div>
-        </div>
 
-        <div className="space-y-4">
-          <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">Main colors</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <label className="text-[#A1A1AA] text-xs font-semibold">Primary</label>
-              <div className="flex items-center">
-                <Input
-                  type="color"
-                  value={formData.backgroundColor}
-                  onChange={(e) => handleInputChange("backgroundColor", e.target.value)}
-                  className="w-10 h-10 p-1 mr-2"
-                  disabled={isReadOnly}
-                  readOnly={isReadOnly}
-                />
-                <Input
-                  type="text"
-                  value={formData.backgroundColor}
-                  onChange={(e) => handleInputChange("backgroundColor", e.target.value)}
-                  className="flex-1"
-                  disabled={isReadOnly}
-                  readOnly={isReadOnly}
-                />
-              </div>
-            </div>
+          <div className="space-y-4">
+            <h2 className="text-[#4F46E5] text-lg font-semibold uppercase">
+              Main colors
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Form.Field
+                control={form.control}
+                name="backgroundColor"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-[#A1A1AA] text-xs font-semibold">
+                      Primary
+                    </Form.Label>
+                    <Form.Control>
+                      <div className="flex items-center">
+                        <Input
+                          type="color"
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="w-10 h-10 p-1 mr-2"
+                          disabled={isReadOnly}
+                          readOnly={isReadOnly}
+                        />
+                        <Input
+                          type="text"
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="flex-1"
+                          disabled={isReadOnly}
+                          readOnly={isReadOnly}
+                        />
+                      </div>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
 
-            <div className="space-y-2">
-              <label className="text-[#A1A1AA] text-xs font-semibold">Secondary</label>
-              <div className="flex items-center">
-                <Input
-                  type="color"
-                  value={formData.textColor}
-                  onChange={(e) => handleInputChange("textColor", e.target.value)}
-                  className="w-10 h-10 p-1 mr-2"
-                  disabled={isReadOnly}
-                  readOnly={isReadOnly}
-                />
-                <Input
-                  type="text"
-                  value={formData.textColor}
-                  onChange={(e) => handleInputChange("textColor", e.target.value)}
-                  className="flex-1"
-                  disabled={isReadOnly}
-                  readOnly={isReadOnly}
-                />
-              </div>
-            </div>
+              <Form.Field
+                control={form.control}
+                name="textColor"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-[#A1A1AA] text-xs font-semibold">
+                      Secondary
+                    </Form.Label>
+                    <Form.Control>
+                      <div className="flex items-center">
+                        <Input
+                          type="color"
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="w-10 h-10 p-1 mr-2"
+                          disabled={isReadOnly}
+                          readOnly={isReadOnly}
+                        />
+                        <Input
+                          type="text"
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="flex-1"
+                          disabled={isReadOnly}
+                          readOnly={isReadOnly}
+                        />
+                      </div>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
 
-            <div className="space-y-2">
-              <label className="text-[#A1A1AA] text-xs font-semibold">Third</label>
-              <div className="flex items-center">
-                <Input
-                  type="color"
-                  value={formData.accentColor}
-                  onChange={(e) => handleInputChange("accentColor", e.target.value)}
-                  className="w-10 h-10 p-1 mr-2"
-                  disabled={isReadOnly}
-                  readOnly={isReadOnly}
-                />
-                <Input
-                  type="text"
-                  value={formData.accentColor}
-                  onChange={(e) => handleInputChange("accentColor", e.target.value)}
-                  className="flex-1"
-                  disabled={isReadOnly}
-                  readOnly={isReadOnly}
-                />
-              </div>
+              <Form.Field
+                control={form.control}
+                name="accentColor"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-[#A1A1AA] text-xs font-semibold">
+                      Third
+                    </Form.Label>
+                    <Form.Control>
+                      <div className="flex items-center">
+                        <Input
+                          type="color"
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="w-10 h-10 p-1 mr-2"
+                          disabled={isReadOnly}
+                          readOnly={isReadOnly}
+                        />
+                        <Input
+                          type="text"
+                          value={field.value}
+                          onChange={field.onChange}
+                          className="flex-1"
+                          disabled={isReadOnly}
+                          readOnly={isReadOnly}
+                        />
+                      </div>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
             </div>
           </div>
-        </div>
-      </div>
-      
-      {!isReadOnly && (
-        <div className="flex justify-between mt-12 pt-6 border-t">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              const newParams = new URLSearchParams(searchParams)
-              newParams.set("tab", "product")
-              setSearchParams(newParams)
-            }}
-          >
-            Cancel
-          </Button>
-          <Button type="submit">Next step</Button>
-        </div>
-      )}
-    </form>
-  )
+
+          {!isReadOnly && (
+            <div className="flex justify-end space-x-2">
+              <Button type="submit">
+                Save Changes
+              </Button>
+            </div>
+          )}
+        </form>
+      </Form>
+    </div>
+  );
 }

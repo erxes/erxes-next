@@ -7,7 +7,7 @@ export interface IConversation {
   content: string;
   createdAt: string;
   updatedAt: string;
-  customer?: ICustomerInline;
+  customer: ICustomerInline;
   customerId?: string;
   integrationId?: string;
   brandId?: string;
@@ -30,6 +30,7 @@ export interface IMessage {
 }
 
 export enum ConversationStatus {
+  NEW = '',
   OPEN = 'open',
   CLOSED = 'closed',
 }

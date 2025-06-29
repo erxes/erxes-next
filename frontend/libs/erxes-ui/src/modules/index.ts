@@ -1,7 +1,6 @@
 export * from './blocks';
 export * from './hotkey';
 export * from './select-tree';
-export * from './inline-cell';
 export * from './record-table';
 export * from './record-field';
 export * from './filter';
@@ -10,3 +9,4 @@ export * from './inputs';
 export * from './display';
 export * from './layout';
 export * from './preview/components/Preview';
+export * from './icons';

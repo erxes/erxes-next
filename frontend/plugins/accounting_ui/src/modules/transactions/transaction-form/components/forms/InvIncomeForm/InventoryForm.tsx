@@ -1,11 +1,11 @@
 import { AccountingHotkeyScope } from '@/types/AccountingHotkeyScope';
+import { Checkbox, RecordTableHotkeyProvider, Table, useSetHotkeyScope } from 'erxes-ui';
+import { useRef } from 'react';
+import { useFieldArray, useWatch } from 'react-hook-form';
+import { ITransactionGroupForm } from '../../../types/JournalForms';
 import { AddDetailRowButton } from './AddInventoryRow';
 import { InventoryRow } from './InventoryRow';
-import { ITransactionGroupForm } from '../../../types/JournalForms';
-import { Checkbox, RecordTableHotkeyProvider, Table, useSetHotkeyScope } from 'erxes-ui';
 import { RemoveButton } from './RemoveButton';
-import { useFieldArray, useWatch } from 'react-hook-form';
-import { useRef } from 'react';
 
 export const InventoryForm = ({
   form,

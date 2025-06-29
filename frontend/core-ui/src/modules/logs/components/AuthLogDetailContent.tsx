@@ -48,7 +48,7 @@ const getClientInfo = (headers: any) => {
   };
 };
 
-const auth = ({ payload, createdAt }: ILogDoc) => {
+export const AuthLogDetailContent = ({ payload, createdAt }: ILogDoc) => {
   const { headers } = payload || {};
 
   const {
@@ -107,5 +107,3 @@ const auth = ({ payload, createdAt }: ILogDoc) => {
     </>
   );
 };
-
-export default auth;
