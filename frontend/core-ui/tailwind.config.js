@@ -8,8 +8,8 @@ module.exports = {
       __dirname,
       '{src,pages,components,app,modules}/**/*!(*.stories|*.spec).{ts,tsx,html}',
     ),
-    'frontend/libs/erxes-ui/src/**/!(*.stories|*.spec).tsx',
-    'frontend/libs/ui-modules/src/**/!(*.stories|*.spec).tsx',
+    'frontend/libs/erxes-ui/src/**/*!(*.stories|*.spec).tsx',
+    'frontend/libs/ui-modules/src/**/*!(*.stories|*.spec).tsx',
     ...(process.env.ENABLED_PLUGINS?.split(',').map((p) => {
       return `frontend/plugins/${p}_ui/src/**/!(*.stories|*.spec).tsx`;
     }) || ['frontend/plugins/*_ui/src/**/!(*.stories|*.spec).tsx']),

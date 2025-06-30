@@ -105,7 +105,13 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   return null;
 };
 
-export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
+export const MembersInlineAvatar = ({
+  className,
+  containerClassName,
+  ...props
+}: AvatarProps & {
+  containerClassName?: string;
+}) => {
   const { members, loading, memberIds } = useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
 

@@ -1,5 +1,6 @@
 export * from './accordion';
 export * from './alert-dialog';
+export * from './alert';
 export * from './avatar';
 export * from './badge';
 export * from './breadcrumb';
@@ -43,3 +44,4 @@ export * from './tooltip';
 export * from './upload';
 export * from './choicebox-group';
 export * from './stepper';
+export * from './color-picker';
