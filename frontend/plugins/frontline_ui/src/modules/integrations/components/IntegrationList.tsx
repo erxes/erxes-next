@@ -48,7 +48,7 @@ export const IntegrationCard = ({
   return (
     <Link to={`/settings/inbox/integrations/${integrationType}`}>
       <Command.Primitive.Item asChild key={integrationType}>
-        <Card className="h-auto p-3 flex flex-col gap-2 rounded-lg">
+        <Card className="h-full p-3 flex flex-col gap-2 rounded-lg">
           <IntegrationIntro integration={integration} />
         </Card>
       </Command.Primitive.Item>

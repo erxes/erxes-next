@@ -11,6 +11,8 @@ import { integrationCollapsibleState } from '@/integrations/state/integrationCol
 import { IIntegration } from '@/integrations/types/Integration';
 import { IconCheck } from '@tabler/icons-react';
 
+// TODO: remove this component if we not use it
+
 export const ChooseIntegration = () => {
   const [open, setOpen] = useAtom(integrationCollapsibleState);
 

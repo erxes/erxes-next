@@ -13,9 +13,15 @@ import { SelectMember } from 'ui-modules';
 import { useQueryState } from 'erxes-ui';
 import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
 import { ConversationStatus } from '@/inbox/types/Conversation';
-import { ChannelTag } from '@/inbox/channel/components/ChannelTag';
+import {
+  IntegrationTypeFilterBar,
+  IntegrationTypeFilterItem,
+  IntegrationTypeFilterView,
+} from '@/integrations/components/IntegrationTypeFilter';
+import { useAtomValue } from 'jotai';
+import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 
-export const FilterConversations = () => {
+export const FilterConversationsPopover = () => {
   const [status, setStatus] = useQueryState<ConversationStatus>('status');
   const [unassigned, setUnassigned] = useQueryState<boolean>('unassigned');
   const [awaitingResponse, setAwaitingResponse] =
@@ -34,7 +40,7 @@ export const FilterConversations = () => {
               variant="secondary"
               className="bg-background"
             />
-            <Command.List>
+            <Command.List className="max-h-none">
               <Filter.CommandItem onSelect={() => setStatus(null)}>
                 <IconSquare />
                 Unresolved
@@ -76,6 +82,7 @@ export const FilterConversations = () => {
               </Filter.CommandItem>
               <Command.Separator className="my-1" />
               <SelectChannel.FilterItem />
+              <IntegrationTypeFilterItem />
               <Command.Separator className="my-1" />
               <Filter.Item value="created">
                 <IconCalendarPlus />
@@ -89,6 +96,7 @@ export const FilterConversations = () => {
         <Filter.View filterKey="created">
           <Filter.DateView filterKey="created" />
         </Filter.View>
+        <IntegrationTypeFilterView />
       </Combobox.Content>
     </Filter.Popover>
   );
@@ -104,9 +112,10 @@ export const ConversationFilterBar = ({
   const [awaitingResponse] = useQueryState<boolean>('awaitingResponse');
   const [participated] = useQueryState<boolean>('participated');
   const [created] = useQueryState<Date>('created');
+  const inboxLayout = useAtomValue(inboxLayoutState);
 
   return (
-    <Filter.Bar>
+    <Filter.Bar className={inboxLayout === 'list' ? 'pl-2' : 'pt-1'}>
       <Filter.Dialog>
         <Filter.DialogDateView filterKey="created" />
       </Filter.Dialog>
@@ -156,7 +165,8 @@ export const ConversationFilterBar = ({
           <Filter.BarClose filterKey="participated" />
         </Filter.BarItem>
       )}
-      <ChannelTag />
+      <SelectChannel.FilterBar iconOnly />
+      <IntegrationTypeFilterBar iconOnly />
       {children}
     </Filter.Bar>
   );

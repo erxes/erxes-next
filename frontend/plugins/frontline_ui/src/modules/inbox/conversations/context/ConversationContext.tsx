@@ -3,7 +3,7 @@ import { IConversation } from '@/inbox/types/Conversation';
 import { IIntegration } from '@/integrations/types/Integration';
 
 export const ConversationContext = createContext<
-  Partial<IConversation> & {
+  IConversation & {
     loading?: boolean;
     integration?: IIntegration;
   }

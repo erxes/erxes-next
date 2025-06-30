@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button, Input, Label, Select } from 'erxes-ui';
+import { Button, Input, Label, Select, Form } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
 import { paymentMethodsAtom } from '../../states/posCategory';
@@ -37,6 +37,7 @@ export default function EcommercePaymentsForm({
   });
 
   const form = externalForm || internalForm;
+  const { control, setValue, getValues, formState: { errors } } = form;
 
   const [newPaymentMethod, setNewPaymentMethod] = useState<PaymentMethod>({
     type: '',
@@ -102,11 +103,11 @@ export default function EcommercePaymentsForm({
     const updatedPaymentMethods = [...paymentMethods, paymentType];
     setPaymentMethods(updatedPaymentMethods);
 
-    form.setValue('paymentTypes', updatedPaymentMethods);
+    setValue('paymentTypes', updatedPaymentMethods);
 
     if (onFormSubmit) {
       onFormSubmit({
-        paymentIds: form.getValues('paymentIds'),
+        paymentIds: getValues('paymentIds'),
         paymentTypes: updatedPaymentMethods,
       });
     }
@@ -124,238 +125,237 @@ export default function EcommercePaymentsForm({
     updatedMethods.splice(index, 1);
     setPaymentMethods(updatedMethods);
 
-    form.setValue('paymentTypes', updatedMethods);
+    setValue('paymentTypes', updatedMethods);
 
     if (onFormSubmit) {
       onFormSubmit({
-        paymentIds: form.getValues('paymentIds'),
+        paymentIds: getValues('paymentIds'),
         paymentTypes: updatedMethods,
       });
     }
   };
 
-  const safeDisplayValue = (value: any): string => {
-    if (value === null || value === undefined) {
-      return '';
-    }
-    if (typeof value === 'string') {
-      return value;
-    }
-    if (typeof value === 'object') {
-      return JSON.stringify(value);
-    }
-    return String(value);
-  };
-
-  const {
-    formState: { errors },
-  } = form;
-
   return (
     <div className="p-3">
-      <div className="space-y-6">
-        <div className="space-y-1">
-          <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
-            PAYMENTS
-          </Label>
-          <p className="text-sm text-gray-500">
-            Select payments that you want to use
-          </p>
-          <div>
-            <Select>
-              <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                <Select.Value placeholder="Choose payments" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="cash">Cash</Select.Item>
-                <Select.Item value="card">Card</Select.Item>
-                <Select.Item value="mobile">Mobile Payment</Select.Item>
-              </Select.Content>
-            </Select>
-          </div>
-        </div>
+      <Form {...form}>
+        <div className="space-y-6">
+          {/* Standard Payments Section */}
+          <div className="space-y-4">
+            <h2 className="text-indigo-600 text-xl font-medium uppercase">PAYMENTS</h2>
+            <p className="text-sm text-gray-500">
+              Select payments that you want to use
+            </p>
+            
+            <Form.Field
+              control={control}
+              name="paymentIds"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Control>
+                    <Select
+                      value={field.value?.[0] || ''}
+                      onValueChange={(value) => field.onChange([value])}
+                    >
+                      <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                        <Select.Value placeholder="Choose payments" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        <Select.Item value="cash">Cash</Select.Item>
+                        <Select.Item value="card">Card</Select.Item>
+                        <Select.Item value="mobile">Mobile Payment</Select.Item>
+                      </Select.Content>
+                    </Select>
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
 
-        <div className="space-y-1">
-          <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
-            ERXES APP TOKEN
-          </Label>
-          <Input
-            value={appToken}
-            onChange={(e) => setAppToken(e.target.value)}
-            className="h-10"
-            placeholder="Enter your Erxes app token"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-sm text-indigo-600 font-medium uppercase">
-            OTHER PAYMENTS
-          </Label>
-          <p className="text-sm text-gray-500">
-            Type is must latin, some default types: golomtCard, khaanCard,
-            TDBCard
-            <br />
-            Хэрэв тухайн талбэрт ебаримт хавлагүй бол: "skipEbarimt: true",
-            Харилцагч сонгосон үед л харагдах бол: "mustCustomer: true", Харав
-            хуваах боломжгүй бол: "notSplit: true" Үрэдчилж төлсөн төлбөрөөр
-            <br />
-            (Татвар тооцсон) бол: "preTax: true
-          </p>
-        </div>
-
-        <div className="">
-          <div className="p-4 flex justify-end">
-            <Button
-              type="button"
-              onClick={handleAddPaymentMethod}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
-            >
-              <IconPlus size={16} />
-              Add payments method
-            </Button>
-          </div>
-
-          {paymentMethods.map((method: PaymentMethod, index: number) => (
-            <div
-              key={method._id || index}
-              className="grid grid-cols-4 gap-4 mb-2"
-            >
-              <div>
-                <Label className="text-xs text-gray-500">Type</Label>
-                <div className="font-medium">{method.type}</div>
-              </div>
-              <div>
-                <Label className="text-xs text-gray-500">Title</Label>
-                <div className="font-medium flex items-center gap-2">
-                  {method.icon && (
-                    <PaymentIcon iconType={method.icon} size={16} />
-                  )}
-                  {method.title}
-                </div>
-              </div>
-              <div>
-                <Label className="text-xs text-gray-500">Icon</Label>
-                <div className="font-medium flex items-center gap-2">
-                  {method.icon && (
-                    <PaymentIcon iconType={method.icon} size={16} />
-                  )}
-                  {method.icon}
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-xs text-gray-500">Config</Label>
-                  <div className="font-medium">{method.config}</div>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleRemovePaymentMethod(index)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <IconTrash size={16} />
-                </Button>
-              </div>
-            </div>
-          ))}
-
-          <div className="grid grid-cols-4 gap-4">
-            <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Type *</Label>
-              <Input
-                value={newPaymentMethod.type}
-                onChange={(e) => handleInputChange('type', e.target.value)}
-                className="h-10"
-                placeholder="e.g. golomtCard, khaanCard, TDBCard"
-              />
-            </div>
-            <div>
-              <Label className="text-xs text-gray-500 mb-1 block">
-                Title *
+            <div className="space-y-2">
+              <Label className="text-sm text-[#A1A1AA] uppercase font-semibold">
+                ERXES APP TOKEN
               </Label>
               <Input
-                value={newPaymentMethod.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                value={appToken}
+                onChange={(e) => setAppToken(e.target.value)}
                 className="h-10"
-                placeholder="e.g. Visa, Mastercard"
+                placeholder="Enter your Erxes app token"
               />
             </div>
-            <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Icon</Label>
-              <Select
-                value={newPaymentMethod.icon}
-                onValueChange={(value: string) =>
-                  handleInputChange('icon', value)
-                }
+          </div>
+
+          {/* Other Payments Section */}
+          <div className="space-y-4">
+            <h2 className="text-indigo-600 text-xl font-medium uppercase">OTHER PAYMENTS</h2>
+            <p className="text-sm text-gray-500">
+              Type is must latin, some default types: golomtCard, khaanCard, TDBCard
+              <br />
+              Хэрэв тухайн талбэрт ебаримт хавлагүй бол: "skipEbarimt: true",
+              Харилцагч сонгосон үед л харагдах бол: "mustCustomer: true", Харав
+              хуваах боломжгүй бол: "notSplit: true" Үрэдчилж төлсөн төлбөрөөр
+              <br />
+              (Татвар тооцсон) бол: "preTax: true
+            </p>
+
+            <div className="flex justify-end mb-4">
+              <Button
+                type="button"
+                onClick={handleAddPaymentMethod}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-2"
               >
-                <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
-                  <Select.Value placeholder="Select icon" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="credit-card">
-                    <div className="flex items-center gap-2">
-                      <PaymentIcon iconType="credit-card" size={16} />
-                      Credit Card
-                    </div>
-                  </Select.Item>
-                  <Select.Item value="cash">
-                    <div className="flex items-center gap-2">
-                      <PaymentIcon iconType="cash" size={16} />
-                      Cash
-                    </div>
-                  </Select.Item>
-                  <Select.Item value="bank">
-                    <div className="flex items-center gap-2">
-                      <PaymentIcon iconType="bank" size={16} />
-                      Bank
-                    </div>
-                  </Select.Item>
-                  <Select.Item value="mobile">
-                    <div className="flex items-center gap-2">
-                      <PaymentIcon iconType="mobile" size={16} />
-                      Mobile
-                    </div>
-                  </Select.Item>
-                  <Select.Item value="visa">
-                    <div className="flex items-center gap-2">
-                      <PaymentIcon iconType="visa" size={16} />
-                      Visa
-                    </div>
-                  </Select.Item>
-                  <Select.Item value="mastercard">
-                    <div className="flex items-center gap-2">
-                      <PaymentIcon iconType="mastercard" size={16} />
-                      Mastercard
-                    </div>
-                  </Select.Item>
-                  <Select.Item value="sign-alt">
-                    <div className="flex items-center gap-2">
-                      <PaymentIcon iconType="sign-alt" size={16} />
-                      Sign Alt
-                    </div>
-                  </Select.Item>
-                </Select.Content>
-              </Select>
+                <IconPlus size={16} />
+                Add payments method
+              </Button>
             </div>
-            <div>
-              <Label className="text-xs text-gray-500 mb-1 block">Config</Label>
-              <Input
-                value={newPaymentMethod.config}
-                onChange={(e) => handleInputChange('config', e.target.value)}
-                className="h-10"
-                placeholder="e.g. skipEbarimt: true, mustCustomer: true"
-              />
+
+            {/* Display existing payment methods */}
+            {paymentMethods.map((method: PaymentMethod, index: number) => (
+              <div
+                key={method._id || index}
+                className="grid grid-cols-4 gap-4 mb-2"
+              >
+                <div>
+                  <Label className="text-xs text-gray-500">Type</Label>
+                  <div className="font-medium">{method.type}</div>
+                </div>
+                <div>
+                  <Label className="text-xs text-gray-500">Title</Label>
+                  <div className="font-medium flex items-center gap-2">
+                    {method.icon && (
+                      <PaymentIcon iconType={method.icon} size={16} />
+                    )}
+                    {method.title}
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-xs text-gray-500">Icon</Label>
+                  <div className="font-medium flex items-center gap-2">
+                    {method.icon && (
+                      <PaymentIcon iconType={method.icon} size={16} />
+                    )}
+                    {method.icon}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-xs text-gray-500">Config</Label>
+                    <div className="font-medium">{method.config}</div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemovePaymentMethod(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <IconTrash size={16} />
+                  </Button>
+                </div>
+              </div>
+            ))}
+
+            {/* Add new payment method form */}
+            <div className="grid grid-cols-4 gap-4">
+              <div>
+                <Label className="text-xs text-gray-500 mb-1 block">Type *</Label>
+                <Input
+                  value={newPaymentMethod.type}
+                  onChange={(e) => handleInputChange('type', e.target.value)}
+                  className="h-10"
+                  placeholder="e.g. golomtCard, khaanCard, TDBCard"
+                />
+              </div>
+              <div>
+                <Label className="text-xs text-gray-500 mb-1 block">
+                  Title *
+                </Label>
+                <Input
+                  value={newPaymentMethod.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
+                  className="h-10"
+                  placeholder="e.g. Visa, Mastercard"
+                />
+              </div>
+              <div>
+                <Label className="text-xs text-gray-500 mb-1 block">Icon</Label>
+                <Select
+                  value={newPaymentMethod.icon}
+                  onValueChange={(value: string) =>
+                    handleInputChange('icon', value)
+                  }
+                >
+                  <Select.Trigger className="w-full h-10 px-3 text-left justify-between">
+                    <Select.Value placeholder="Select icon" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="credit-card">
+                      <div className="flex items-center gap-2">
+                        <PaymentIcon iconType="credit-card" size={16} />
+                        Credit Card
+                      </div>
+                    </Select.Item>
+                    <Select.Item value="cash">
+                      <div className="flex items-center gap-2">
+                        <PaymentIcon iconType="cash" size={16} />
+                        Cash
+                      </div>
+                    </Select.Item>
+                    <Select.Item value="bank">
+                      <div className="flex items-center gap-2">
+                        <PaymentIcon iconType="bank" size={16} />
+                        Bank
+                      </div>
+                    </Select.Item>
+                    <Select.Item value="mobile">
+                      <div className="flex items-center gap-2">
+                        <PaymentIcon iconType="mobile" size={16} />
+                        Mobile
+                      </div>
+                    </Select.Item>
+                    <Select.Item value="visa">
+                      <div className="flex items-center gap-2">
+                        <PaymentIcon iconType="visa" size={16} />
+                        Visa
+                      </div>
+                    </Select.Item>
+                    <Select.Item value="mastercard">
+                      <div className="flex items-center gap-2">
+                        <PaymentIcon iconType="mastercard" size={16} />
+                        Mastercard
+                      </div>
+                    </Select.Item>
+                    <Select.Item value="sign-alt">
+                      <div className="flex items-center gap-2">
+                        <PaymentIcon iconType="sign-alt" size={16} />
+                        Sign Alt
+                      </div>
+                    </Select.Item>
+                  </Select.Content>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs text-gray-500 mb-1 block">Config</Label>
+                <Input
+                  value={newPaymentMethod.config}
+                  onChange={(e) => handleInputChange('config', e.target.value)}
+                  className="h-10"
+                  placeholder="e.g. skipEbarimt: true, mustCustomer: true"
+                />
+              </div>
             </div>
+
+            <Form.Field
+              control={control}
+              name="paymentTypes"
+              render={() => (
+                <Form.Item>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
           </div>
         </div>
-
-        {errors.paymentTypes && (
-          <div className="text-red-500 text-sm">
-            {errors.paymentTypes.message}
-          </div>
-        )}
-      </div>
+      </Form>
     </div>
   );
 }
