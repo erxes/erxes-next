@@ -1,18 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Sheet, Textarea, toast } from 'erxes-ui';
+import { Button, Form, Textarea, toast } from 'erxes-ui';
 import { useImperativeHandle } from 'react';
 import { useForm } from 'react-hook-form';
-import { AutomationActionFormProps } from 'ui-modules';
-import { Attributes } from 'ui-modules';
-import { z } from 'zod';
+import { Attributes, AutomationActionFormProps } from 'ui-modules';
 import { InputTextCounter } from '~/widgets/automations/modules/facebook/components/action/components/InputTextCounter';
-
-const formSchema = z.object({
-  text: z.string(),
-  attachments: z.any().optional(),
-});
-
-type TCommentActionForm = z.infer<typeof formSchema>;
+import {
+  commentActionFormSchema,
+  TCommentActionForm,
+} from '~/widgets/automations/modules/facebook/components/action/states/replyCommentActionForm';
 
 export const CommentActionForm = ({
   formRef,
@@ -20,7 +15,7 @@ export const CommentActionForm = ({
   onSaveActionConfig,
 }: AutomationActionFormProps) => {
   const form = useForm<TCommentActionForm>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(commentActionFormSchema),
     defaultValues: { ...(currentAction?.config || {}) },
   });
   const { control } = form;

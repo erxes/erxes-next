@@ -14,7 +14,21 @@ const formSchema = z.object({
   postId: z.string(),
   checkContent: z.any().optional(),
   onlyFirstLevel: z.boolean().optional(),
-  conditions: z.any(),
+  conditions: z
+    .array(
+      z.object({
+        _id: z.string(),
+        operator: z.string(),
+        keywords: z.array(
+          z.object({
+            _id: z.string(),
+            text: z.string(),
+            isEditing: z.boolean().optional(),
+          }),
+        ),
+      }),
+    )
+    .optional(),
 });
 
 const POST_TYPES = [
@@ -148,7 +162,7 @@ export const CommentTriggerForm = ({
               name="conditions"
               render={({ field }) => (
                 <DirectMessageConfigForm
-                  conditions={field.value}
+                  conditions={field.value || []}
                   onConditionChange={(_, values) => field.onChange(values)}
                 />
               )}

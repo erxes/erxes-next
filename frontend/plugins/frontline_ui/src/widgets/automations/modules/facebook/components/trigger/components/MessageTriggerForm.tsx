@@ -62,7 +62,6 @@ const renderActiveItemContent = ({
             return (
               <DirectMessageConfigForm
                 conditions={currentCondition?.conditions || []}
-                botId={formState.botId}
                 onConditionChange={onConditionItemChange}
               />
             );

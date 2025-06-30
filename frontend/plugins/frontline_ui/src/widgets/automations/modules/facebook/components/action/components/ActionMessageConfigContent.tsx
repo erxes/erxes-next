@@ -1,12 +1,12 @@
 import { IconChevronDown, IconLink } from '@tabler/icons-react';
 import { Button, Collapsible, readFile } from 'erxes-ui';
 import { Link } from 'react-router';
-import { REPLY_MESSAGE_ACTION_BUTTONS } from '../../action/constants/ReplyMessage';
-import { TBotMessage } from '../../action/states/replyMessageActionForm';
+import { REPLY_MESSAGE_ACTION_BUTTONS } from '../constants/ReplyMessage';
+import { TBotMessage } from '../states/replyMessageActionForm';
 import { AutomationActionNodeConfigProps } from 'ui-modules';
 import { TMessageTriggerForm } from '~/widgets/automations/modules/facebook/components/trigger/states/messageTriggerFormSchema';
 
-export const ActionConfigContent = ({
+export const ActionMessageConfigContent = ({
   config,
   trigger,
   OptionConnectHandle,
