@@ -607,13 +607,13 @@ const saveCallHistory = async (models, history) => {
 };
 
 const processCustomerAndConversation = async (
-  models,
+  models: IModels,
   history,
   cdr,
   result,
   subdomain,
 ) => {
-  let customer = await models.Customers.findOne({
+  let customer = await models.CallCustomers.findOne({
     primaryPhone: history.customerPhone,
   });
   if (!customer || !customer.erxesApiId) {
@@ -624,19 +624,19 @@ const processCustomerAndConversation = async (
   }
 
   try {
-    const data = {
-      action: 'create-or-update-conversation',
-      payload: JSON.stringify({
-        customerId: customer?.erxesApiId,
-        integrationId: result.inboxId,
-        content: history.callType || '',
-        conversationId: history.timeStamp,
-        updatedAt: history.callStartTime,
-        createdAt: history.callStartTime,
-      }),
-    };
+    const payload = JSON.stringify({
+      customerId: customer?.erxesApiId,
+      integrationId: result.inboxId,
+      content: history.callType || '',
+      conversationId: history.timeStamp,
+      updatedAt: history.callStartTime,
+      createdAt: history.callStartTime,
+    });
 
-    const apiConversationResponse = await receiveInboxMessage(subdomain, data);
+    const apiConversationResponse = await createOrUpdateErxesConversation(
+      subdomain,
+      payload,
+    );
 
     if (apiConversationResponse.status === 'success') {
       await models.CallHistory.updateOne(
@@ -936,144 +936,22 @@ export const toCamelCase = (obj) => {
   return camelCaseObj;
 };
 
-export const determinePrimaryPhone = (params) => {
-  const { userfield, dst, src, action_type } = params;
-  if (userfield === 'Outbound' && !action_type?.includes('FOLLOWME')) {
-    return dst;
-  }
-  return src;
-};
-
-export const determineExtension = (params) => {
-  const {
-    userfield,
-    src,
-    dst,
-    action_type,
-    action_owner,
-    lastapp,
-    dstchannel_ext,
-    dstanswer,
-    channel_ext,
-    new_src,
-  } = params;
-
-  if (userfield === 'Outbound') {
-    if (!action_type?.includes('FOLLOWME')) {
-      return channel_ext || new_src || src;
-    }
-  }
-
-  if (userfield === 'Inbound') {
-    if (lastapp === 'Queue') {
-      return dstanswer || dstchannel_ext || dst;
-    }
-  }
-};
-
-export const extractOperatorId = (params) => {
-  const { userfield, dst, src, lastapp, action_type } = params;
-
-  if (lastapp !== 'Queue') {
-    return null;
-  }
-
-  const match = action_type?.match(/FOLLOWME\[(\d+)\]/);
-  if (match && match[1]) {
-    return match[1];
-  }
-
-  return userfield === 'Inbound' ? dst : src;
-};
-
-export const getConversationContent = async (models: IModels, cdrParams) => {
-  const disposition = cdrParams.disposition;
-
-  if (!cdrParams.uniqueid) {
-    return 'uniqueId байхгүй';
-  }
-
-  const relatedCdrs = await models.CallCdrs.find({
-    uniqueid: cdrParams.uniqueid,
-  });
-  if (relatedCdrs) {
-    const answered = relatedCdrs.some(
-      (cdr) =>
-        cdr.disposition?.toLowerCase() === 'answered' &&
-        cdr.lastapp !== 'ForkCDR' &&
-        !cdr.actionType?.includes('IVR'),
-    );
-
-    if (answered) return 'ANSWERED';
-  }
-
-  if (cdrParams.userfield === 'Outbound') return 'OUTBOUND';
-  if (
-    cdrParams.action_type?.includes('IVR') &&
-    cdrParams.disposition?.toLowerCase() === 'answered' &&
-    cdrParams.userfield?.toLowerCase() === 'inbound'
-  ) {
-    return 'IVR';
-  }
-
-  switch (disposition) {
-    case 'ANSWERED':
-      return disposition;
-    case 'NO ANSWER':
-      return disposition;
-    case 'BUSY':
-      return disposition;
-    case 'FAILED':
-      return disposition;
-    default:
-      return 'MISSED';
-  }
-};
-
 export function validateArgs(data: any): void {
   if (!data?.erxesApiConversationId) {
     throw new Error('Conversation ID is required.');
   }
 }
 
-export function selectRelevantCdr(histories: any[]): any | null {
-  if (!Array.isArray(histories) || histories.length === 0) return null;
+export const createOrUpdateErxesConversation = async (subdomain, payload) => {
+  const apiResponse = await updateErxesConversation(subdomain, payload);
+  return apiResponse;
+};
 
-  const answered = histories.find(
-    (h) =>
-      h.disposition === 'ANSWERED' && h.billsec > 0 && h.lastapp === 'Queue',
-  );
-  if (answered) {
-    return 'ANSWERED';
-  }
-  const ivr = histories.find(
-    (h) =>
-      h.disposition === 'ANSWERED' &&
-      h.billsec > 0 &&
-      h.lastapp !== 'ForkCDR' &&
-      h.actionType.includes('IVR'),
-  );
+const updateErxesConversation = async (subdomain, payload) => {
+  const data = {
+    action: 'create-or-update-conversation',
+    payload,
+  };
 
-  const noAnswer = histories.find(
-    (h) =>
-      h.disposition === 'NO ANSWER' && h.billsec === 0 && h.lastapp === 'Queue',
-  );
-
-  if (noAnswer) {
-    return 'NO ANSWER';
-  }
-  return answered || noAnswer || ivr || histories[histories.length - 1] || null;
-}
-
-export const calculateFileDir = (doc) => {
-  let fileDir = 'monitor';
-
-  if (
-    ['QUEUE', 'TRANSFER'].some((substring) =>
-      doc?.action_type?.includes(substring),
-    )
-  ) {
-    fileDir = 'queue';
-  }
-  return fileDir;
+  return await receiveInboxMessage(subdomain, data);
 };

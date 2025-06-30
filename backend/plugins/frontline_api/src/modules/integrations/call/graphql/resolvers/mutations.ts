@@ -1,6 +1,6 @@
 import {
+  createOrUpdateErxesConversation,
   findIntegration,
-  generateToken,
   getRecordUrl,
   sendToGrandStream,
 } from '../../utils';
@@ -15,7 +15,6 @@ import {
   ICallHistoryEdit,
 } from '~/modules/integrations/call/@types/histories';
 import { graphqlPubsub, sendTRPCMessage } from 'erxes-api-shared/utils';
-import { receiveInboxMessage } from '~/modules/inbox/receiveMessage';
 
 export interface ISession {
   sessionCode: string;
@@ -198,21 +197,18 @@ const callsMutations = {
 
         // Update conversation via API
         try {
-          const data = {
-            action: 'create-or-update-conversation',
-            payload: JSON.stringify({
-              customerId: customer?.erxesApiId,
-              integrationId: integration.inboxId,
-              content: doc.callType || '',
-              conversationId: history.conversationId,
-              updatedAt: new Date(),
-              owner: '',
-            }),
-          };
+          const payload = JSON.stringify({
+            customerId: customer?.erxesApiId,
+            integrationId: integration.inboxId,
+            content: doc.callType || '',
+            conversationId: history.conversationId,
+            updatedAt: new Date(),
+            owner: '',
+          });
 
-          const apiConversationResponse = await receiveInboxMessage(
+          const apiConversationResponse = await createOrUpdateErxesConversation(
             subdomain,
-            data,
+            payload,
           );
 
           if (apiConversationResponse.status === 'success') {

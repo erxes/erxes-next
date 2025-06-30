@@ -1,6 +1,7 @@
 import { IModels } from '~/connectionResolvers';
 import {
   cfRecordUrl,
+  createOrUpdateErxesConversation,
   getPureDate,
   sendToGrandStream,
   toCamelCase,
@@ -149,14 +150,11 @@ export const getOrCreateCdr = async (
         owner: operatorPhone || '',
       };
 
-      const data = {
-        action: 'create-or-update-conversation',
-        payload: JSON.stringify(conversationPayload),
-      };
+      const payload = JSON.stringify(conversationPayload);
 
-      const apiConversationResponse = await receiveInboxMessage(
+      const apiConversationResponse = await createOrUpdateErxesConversation(
         subdomain,
-        data,
+        payload,
       );
 
       if (apiConversationResponse.status === 'success') {

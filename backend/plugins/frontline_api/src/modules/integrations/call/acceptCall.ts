@@ -1,6 +1,6 @@
 import { IModels } from '~/connectionResolvers';
 import { getOrCreateCustomer } from './store';
-import { findIntegration } from './utils';
+import { createOrUpdateErxesConversation, findIntegration } from './utils';
 import { receiveInboxMessage } from '~/modules/inbox/receiveMessage';
 import { graphqlPubsub } from 'erxes-api-shared/utils';
 
@@ -88,19 +88,19 @@ const acceptCall = async (
   }
 
   try {
-    const data = {
-      action: 'create-or-update-conversation',
-      payload: JSON.stringify({
-        customerId: customer?.erxesApiId,
-        integrationId: integration.inboxId,
-        content: params.callType || '',
-        conversationId: history.conversationId,
-        updatedAt: new Date(),
-        owner: type === 'addHistory' ? user?.details?.operatorPhone : '',
-      }),
-    };
+    const payload = JSON.stringify({
+      customerId: customer?.erxesApiId,
+      integrationId: integration.inboxId,
+      content: params.callType || '',
+      conversationId: history.conversationId,
+      updatedAt: new Date(),
+      owner: type === 'addHistory' ? user?.details?.operatorPhone : '',
+    });
 
-    const apiConversationResponse = await receiveInboxMessage(subdomain, data);
+    const apiConversationResponse = await createOrUpdateErxesConversation(
+      subdomain,
+      payload,
+    );
 
     if (apiConversationResponse.status === 'success') {
       history.erxesApiId = apiConversationResponse.data._id;

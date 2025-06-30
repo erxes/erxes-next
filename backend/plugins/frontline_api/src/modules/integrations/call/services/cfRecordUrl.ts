@@ -66,15 +66,6 @@ interface LogData {
   pid: number;
   [key: string]: any;
 }
-
-interface MemoryUsage {
-  rss: number;
-  heapTotal: number;
-  heapUsed: number;
-  external: number;
-  arrayBuffers: number;
-}
-
 // Error codes enum for better type safety
 enum ErrorCodes {
   INVALID_PARAMS = 'INVALID_PARAMS',
@@ -92,7 +83,6 @@ enum ErrorCodes {
   PROCESSING_FAILED = 'PROCESSING_FAILED',
 }
 
-// Domain-specific errors for better error handling and monitoring
 class RecordUrlError extends Error {
   public readonly code: ErrorCodes;
   public readonly details: ErrorDetails;
@@ -138,13 +128,10 @@ const CONFIG = {
   },
 } as const;
 
-/**
- * Processes audio record files by fetching from GrandStream API and uploading to cloud storage
- */
 export const cfRecordUrl = async (
   params: CfRecordUrlParams,
-  user: any, // Replace with your actual user type
-  models: any, // Replace with your actual models type
+  user: any,
+  models: any,
   subdomain: string,
 ): Promise<string> => {
   const logger = createLogger('cfRecordUrl');
@@ -174,7 +161,6 @@ export const cfRecordUrl = async (
       logger,
     });
 
-    // Upload to cloud storage
     const uploadResult = await uploadToCloudStorage({
       buffer: audioBuffer,
       fileName,
@@ -226,9 +212,6 @@ export const cfRecordUrl = async (
   }
 };
 
-/**
- * Validates input parameters and extracts filename
- */
 const validateAndParseParams = (params: CfRecordUrlParams): ValidatedParams => {
   if (!params || typeof params !== 'object') {
     throw new RecordUrlError(
