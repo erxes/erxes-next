@@ -3,18 +3,17 @@ import { IFacebookBotDocument } from '~/modules/integrations/facebook/db/definit
 import { graphRequest } from '~/modules/integrations/facebook/utils';
 
 export default {
-  async account(bot: IFacebookBotDocument, _args, { models }: IContext) {
-    console.log({ bot });
-    return models.FacebookAccounts.findOne({ _id: bot.accountId }).select({
+  async account(
+    { accountId }: IFacebookBotDocument,
+    _args,
+    { models }: IContext,
+  ) {
+    return models.FacebookAccounts.findOne({ _id: accountId }).select({
       name: 1,
     });
   },
 
-  async page(
-    { token, pageId }: IFacebookBotDocument,
-    _args,
-    { models }: IContext,
-  ) {
+  async page({ token, pageId }: IFacebookBotDocument, _args) {
     try {
       const response: any = await graphRequest.get(
         `/${pageId}?fields=name`,
