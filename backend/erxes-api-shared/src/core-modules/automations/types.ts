@@ -75,7 +75,7 @@ export interface AutomationWorkers {
       targetId?: string;
       expectedState: Record<string, any>;
       propertyName: string;
-      expectedStateConjuction: 'every' | 'some';
+      expectedStateConjunction: 'every' | 'some';
     };
   }>;
 
@@ -162,7 +162,7 @@ export type AutomationExecutionSetWaitCondition =
       targetId?: string;
       expectedState: Record<string, any>;
       propertyName: string;
-      expectedStateConjuction?: 'every' | 'some';
+      expectedStateConjunction?: 'every' | 'some';
       timeout?: Date;
     }
   | { type: 'isInSegment'; targetId: string; segmentId: string };

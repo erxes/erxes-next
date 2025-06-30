@@ -29,13 +29,6 @@ const useActionButton = (accountId?: string) => {
     setStep(activeStep + 1);
   };
 
-  console.log({
-    activeStep,
-    dbashj: !selectedAccountId || !selectedPageId,
-    selectedAccountId,
-    selectedPageId,
-  });
-
   return {
     text: isLastStep ? 'Save' : 'Next step',
     disabled:

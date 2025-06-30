@@ -1,6 +1,6 @@
 import type { Job } from 'bullmq';
-import { excutePrevActionWorker } from '@/bullmq/actions/executePrevAction';
-import { playWaitingActionWorker } from '@/bullmq/actions/platWait';
+import { executePrevActionWorker } from '@/bullmq/actions/executePrevAction';
+import { playWaitingActionWorker } from '@/bullmq/actions/playWait';
 import { setActionWaitHandler } from '@/bullmq/actions/setWait';
 import { generateModels, IModels } from '@/connectionResolver';
 type ActionName = 'play' | 'wait' | 'executePrevAction';
@@ -11,7 +11,7 @@ const actionHandlers: Record<
 > = {
   play: playWaitingActionWorker,
   wait: setActionWaitHandler,
-  executePrevAction: excutePrevActionWorker,
+  executePrevAction: executePrevActionWorker,
 };
 
 export const actionHandlerWorker = async (job: Job) => {

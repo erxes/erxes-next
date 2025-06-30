@@ -30,10 +30,8 @@ export const generateAutomationElementId = (
 
   let newId = generateId();
 
-  if (checkIds?.length) {
-    if (checkIds.includes(newId)) {
-      newId = generateAutomationElementId(checkIds);
-    }
+  if (checkIds?.length && checkIds.includes(newId)) {
+    newId = generateAutomationElementId(checkIds);
   }
   return newId;
 };

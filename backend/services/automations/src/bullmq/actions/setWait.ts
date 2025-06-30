@@ -99,7 +99,7 @@ export const setExecutionWaitAction = async (
     const {
       propertyName,
       expectedState,
-      expectedStateConjuction = 'every',
+      expectedStateConjunction = 'every',
       contentType,
       shouldCheckOptionalConnect,
       targetId,
@@ -132,7 +132,7 @@ export const setExecutionWaitAction = async (
       conditionConfig: {
         propertyName,
         expectedState,
-        expectedStateConjuction,
+        expectedStateConjunction,
         contentType,
         shouldCheckOptionalConnect,
         targetId,

@@ -28,7 +28,7 @@ export const useFacebookBotSave = () => {
     save({ variables: values })
       .then(() => {
         toast({
-          title: 'Save successfull',
+          title: 'Save successful',
         });
       })
       .catch((error) =>

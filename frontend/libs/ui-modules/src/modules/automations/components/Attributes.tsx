@@ -127,15 +127,15 @@ const RenderAttributes = ({
   customAttributions?: any[];
   onSelect: (value: string) => void;
 }) => {
-  const { groupAttrubutes, loading } = useAttributes({
+  const { groupAttributes, loading } = useAttributes({
     contentType,
     attrConfig,
     customAttributions,
   });
 
-  return Object.entries(groupAttrubutes || {}).map(([key, attributions]) => {
+  return Object.entries(groupAttributes || {}).map(([key, attributions]) => {
     let groupName = key;
-    const groupDetail = (groupAttrubutes[key] || []).find(
+    const groupDetail = (groupAttributes[key] || []).find(
       ({ group }: any) => group === key,
     )?.groupDetail;
 

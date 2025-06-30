@@ -34,7 +34,7 @@ export const executeWaitingAction = async (
     throw new Error('Automation waiting action not found');
   }
 
-  const responseActionId = waitingAction.responseActionId;
+  const { responseActionId } = waitingAction || {};
 
   return await executeActions(
     subdomain,

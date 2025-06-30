@@ -22,19 +22,19 @@ export const useAttributes = ({
     {
       variables: {
         contentType,
-        config: attrConfig ? attrConfig : undefined,
+        config: attrConfig || undefined,
       },
     },
   );
 
   const { fieldsCombinedByContentType: fields = [] } = data || {};
 
-  const groupAttrubutes = groupFieldsByType(
+  const groupAttributes = groupFieldsByType(
     (fields || []).concat(customAttributions || []),
   );
 
   return {
     loading,
-    groupAttrubutes,
+    groupAttributes,
   };
 };

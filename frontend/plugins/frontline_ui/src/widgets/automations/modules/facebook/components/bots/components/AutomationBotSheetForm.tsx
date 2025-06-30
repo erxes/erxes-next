@@ -84,7 +84,7 @@ export const AutomationBotSheetForm = () => {
   const [facebookBotId, setFacebookBotId] =
     useQueryState<string>('facebookBotId');
   const [isOpen, setOpen] = useState(false);
-  const isOpenSecondaySheet = useAtomValue(isOpenFacebookBotSecondarySheet);
+  const isOpenSecondarySheet = useAtomValue(isOpenFacebookBotSecondarySheet);
 
   useEffect(() => {
     if (facebookBotId) {
@@ -111,7 +111,7 @@ export const AutomationBotSheetForm = () => {
         </Sheet.Trigger>
         <Sheet.View
           className={cn('transition-all duration-300 ease-in-out', {
-            'sm:max-w-lg h-[calc(100dvh-4rem)] inset-y-8': isOpenSecondaySheet,
+            'sm:max-w-lg h-[calc(100dvh-4rem)] inset-y-8': isOpenSecondarySheet,
           })}
         >
           {isOpen && <AutomationBotForm facebookBotId={facebookBotId} />}
@@ -148,7 +148,7 @@ const FacebookBotFormContent = ({
             {isOpenAccountSheet && (
               <FacebookBotPageSelectorSteps
                 accountId={accountId}
-                step={!accountId ? 1 : 2}
+                step={accountId ? 2 : 1}
               />
             )}
           </Sheet.View>

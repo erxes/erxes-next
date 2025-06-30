@@ -7,7 +7,7 @@ import { executeActions } from '@/executions/executeActions';
 // Final job interfaces
 type IExecutePrevActionJobData = IJobData<{ query: any }>;
 
-export const excutePrevActionWorker = async (
+export const executePrevActionWorker = async (
   models: IModels,
   { data: { subdomain, data } }: Job<IExecutePrevActionJobData>,
 ) => {

@@ -12,13 +12,13 @@ const handleCheckObjectCondition = async (
 ) => {
   const {
     expectedState = {},
-    expectedStateConjuction = 'every',
+    expectedStateConjunction = 'every',
     propertyName,
     shouldCheckOptionalConnect = false,
   } = waitingAction.conditionConfig || {};
 
   const isMatch = Object.keys(expectedState)[
-    expectedStateConjuction === 'some' ? 'some' : 'every'
+    expectedStateConjunction === 'some' ? 'some' : 'every'
   ]((key) => target[key] === expectedState[key]);
 
   if (!shouldCheckOptionalConnect) {

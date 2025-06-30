@@ -42,7 +42,7 @@ export const handleCreateAction = async (
       contentType,
       propertyName,
       expectedState,
-      expectedStateConjuction = 'every',
+      expectedStateConjunction = 'every',
       shouldCheckOptionalConnect = false,
       targetId,
     } = waitCondition || {};
@@ -58,7 +58,7 @@ export const handleCreateAction = async (
         contentType: contentType || action.type,
         propertyName,
         expectedState,
-        expectedStateConjuction,
+        expectedStateConjunction,
         shouldCheckOptionalConnect,
         targetId,
       },

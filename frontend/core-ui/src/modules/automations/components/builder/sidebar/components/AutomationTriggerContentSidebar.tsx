@@ -30,7 +30,7 @@ const CustomTriggerContent = ({ activeNode }: Props) => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 width-auto">
+      <div className="flex-1 w-auto">
         <RenderPluginsComponentWrapper
           pluginName={pluginName}
           moduleName={moduleName}
