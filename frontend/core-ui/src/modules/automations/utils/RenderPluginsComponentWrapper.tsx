@@ -39,7 +39,7 @@ export const RenderPluginsComponentWrapper = ({
       >
         <RenderPluginsComponent
           pluginName={`${pluginName}_ui`}
-          remoteModuleName="automations"
+          remoteModuleName="automationsWidget"
           moduleName={moduleName}
           props={props}
         />

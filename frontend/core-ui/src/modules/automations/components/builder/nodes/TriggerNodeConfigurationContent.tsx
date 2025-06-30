@@ -1,6 +1,5 @@
 import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 import { getAutomationTypes } from 'ui-modules';
-import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const TriggerNodeConfigurationContent = ({
   type,
