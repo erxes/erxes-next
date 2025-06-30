@@ -112,7 +112,7 @@ export const actionCreateMessage = async ({
 
   if (
     moduleName !== 'facebook' &&
-    !['messages', 'comments', 'ads'].includes(triggerType)
+    !['messages', 'comments', 'ads'].includes(collectionType)
   ) {
     throw new Error('Unsupported trigger type');
   }

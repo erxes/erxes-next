@@ -48,7 +48,8 @@ export const FacebookBotPageSelectorSteps = ({
   step: number;
   accountId?: string;
 }) => {
-  const { onClick, disabled, text, activeStep, setStep } = useActionButton();
+  const { onClick, disabled, text, activeStep, setStep } =
+    useActionButton(accountId);
 
   useEffect(() => {
     setStep(step);
