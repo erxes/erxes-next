@@ -21,7 +21,10 @@ export const AddErxesMessengerSheet = () => {
         </Sheet.Trigger>
       </div>
 
-      <Sheet.View className="gap-0 flex-col flex sm:max-w-none md:w-[calc(100vw-theme(spacing.4))]">
+      <Sheet.View
+        className="gap-0 flex-col flex sm:max-w-none md:w-[calc(100vw-theme(spacing.4))]"
+        aria-describedby=""
+      >
         <Sheet.Header>
           <Sheet.Title>Add Erxes Messenger</Sheet.Title>
           <Sheet.Close />

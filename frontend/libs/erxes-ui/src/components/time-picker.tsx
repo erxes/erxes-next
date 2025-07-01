@@ -49,7 +49,7 @@ function DateSegment({ className, ...props }: DateSegmentProps) {
     <DateSegmentRac
       className={composeRenderProps(className, (className) =>
         cn(
-          'text-foreground data-[focused=true]:bg-primary data-[invalid=true]:data-[focused=true]:bg-destructive data-[focused=true]:data-[placeholder=true]:text-primary-foreground data-[focused=true]:text-foreground data-[invalid=true]:data-[placeholder=true]:text-destructive data-[invalid=true]:text-destructive data-[placeholder=true]:text-accent-foreground data-[type=literal]:text-accent-foreground inline rounded p-0.5 caret-transparent outline-hidden data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50 data-[invalid=true]:data-[focused=true]:text-primary-foreground data-[type=literal]:px-0 data-[focused=true]:outline-none',
+          'text-foreground data-[focused=true]:bg-primary data-[invalid=true]:data-[focused=true]:bg-destructive data-[focused=true]:data-[placeholder=true]:text-primary-foreground data-[focused=true]:text-primary-foreground data-[invalid=true]:data-[placeholder=true]:text-destructive data-[invalid=true]:text-destructive data-[placeholder=true]:text-accent-foreground data-[type=literal]:text-accent-foreground inline rounded p-0.5 caret-transparent outline-hidden data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50 data-[invalid=true]:data-[focused=true]:text-primary-foreground data-[type=literal]:px-0 data-[focused=true]:outline-none',
           className,
         ),
       )}
