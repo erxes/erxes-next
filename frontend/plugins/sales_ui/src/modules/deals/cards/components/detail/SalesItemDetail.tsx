@@ -14,7 +14,7 @@ export const SalesItemDetail = () => {
   const [open, setOpen] = useQueryState<string>('salesItemId');
 
   const { deal, loading: dealLoading } = useDealDetail();
-  console.log('ccc', deal, dealLoading);
+
   return (
     <>
       <div />

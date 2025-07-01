@@ -1,11 +1,21 @@
-import { Button, Form, Input, toast } from 'erxes-ui';
+import {
+  Button,
+  Form,
+  Input,
+  Popover,
+  cn,
+  toast,
+  useQueryState,
+} from 'erxes-ui';
 import {
   ChecklistFormType,
   checklistFormSchema,
 } from './constants/checklistFormSchema';
 
+import { IconLoader } from '@tabler/icons-react';
 import { useChecklistsAdd } from '@/deals/cards/hooks/useChecklists';
 import { useForm } from 'react-hook-form';
+import { useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const ChecklistForm = () => {
@@ -14,13 +24,18 @@ const ChecklistForm = () => {
   });
 
   const { checklistsAdd, loading } = useChecklistsAdd();
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const onSubmit = (data: ChecklistFormType) => {
     checklistsAdd({
-      variables: data,
+      variables: {
+        ...data,
+      },
       onCompleted: () => {
         toast({ title: 'Success!' });
         form.reset();
+
+        closeRef.current?.click();
       },
       onError: (error) =>
         toast({
@@ -57,18 +72,24 @@ const ChecklistForm = () => {
         </div>
 
         <div className="flex justify-end flex-shrink-0 gap-3">
-          <Button
-            type="button"
-            variant="ghost"
-            className="bg-background hover:bg-background/90"
-          >
-            Cancel
-          </Button>
+          <Popover.Close ref={closeRef}>
+            <Button
+              type="button"
+              variant="ghost"
+              className="bg-background hover:bg-background/90"
+            >
+              Cancel
+            </Button>
+          </Popover.Close>
           <Button
             type="submit"
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
+            className={cn(
+              loading
+                ? 'bg-primary/50 text-primary-foreground'
+                : 'bg-primary text-primary-foreground hover:bg-primary/90',
+            )}
           >
-            Save
+            {loading ? <IconLoader className="w-4 h-4 animate-spin" /> : 'Save'}
           </Button>
         </div>
       </form>
