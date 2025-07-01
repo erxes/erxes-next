@@ -797,6 +797,12 @@ importers:
         specifier: ^0.2.3
         version: 0.2.3
 
+  backend/plugins/finance_api:
+    dependencies:
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+
   backend/plugins/frontline_api:
     dependencies:
       aws-sdk:

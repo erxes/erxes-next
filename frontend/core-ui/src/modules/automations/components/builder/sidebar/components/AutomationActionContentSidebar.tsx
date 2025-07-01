@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { getAutomationTypes } from 'ui-modules';
-import { coreActionNames } from '../../nodes/actions/CoreActions';
+// import { coreActionNames } from '../../nodes/actions/CoreActions';
 
 export const AutomationActionContentSidebar = () => {
   const {
@@ -21,7 +21,8 @@ export const AutomationActionContentSidebar = () => {
     return <Card.Content>Something went wrong</Card.Content>;
   }
 
-  const isCoreAction = coreActionNames.includes(currentAction?.type || '');
+  // const isCoreAction = coreActionNames.includes(currentAction?.type || '');
+  const isCoreAction = false;
 
   if (!isCoreAction) {
     const [pluginName, moduleName] = getAutomationTypes(
