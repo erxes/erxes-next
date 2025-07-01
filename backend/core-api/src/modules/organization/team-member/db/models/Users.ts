@@ -1,26 +1,26 @@
 import * as bcrypt from 'bcryptjs';
+import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
-import * as crypto from 'crypto';
 
-import { redis } from 'erxes-api-shared/utils';
 import {
   USER_ROLES,
-  userSchema,
   userMovemmentSchema,
+  userSchema,
 } from 'erxes-api-shared/core-modules';
+import { redis } from 'erxes-api-shared/utils';
 
 import { saveValidatedToken } from '@/auth/utils';
-import { IModels } from '~/connectionResolvers';
 import {
-  IUser,
-  IDetail,
-  ILink,
-  IUserMovementDocument,
-  IUserDocument,
-  IEmailSignature,
   IAppDocument,
+  IDetail,
+  IEmailSignature,
+  ILink,
+  IUser,
+  IUserDocument,
+  IUserMovementDocument,
 } from 'erxes-api-shared/core-types';
+import { IModels } from '~/connectionResolvers';
 
 import { USER_MOVEMENT_STATUSES } from 'erxes-api-shared/core-modules';
 
@@ -321,6 +321,10 @@ export const loadUserClass = (models: IModels) => {
 
       // Checking duplicated email
       await models.Users.checkDuplication({ email });
+
+      if (!(await models.UsersGroups.findOne({ _id: groupId }))) {
+        throw new Error('Invalid group');
+      }
 
       const { token, expires } = await User.generateToken();
 
