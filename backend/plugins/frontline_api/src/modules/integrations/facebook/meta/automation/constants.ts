@@ -1,5 +1,3 @@
-import { AutomationConstants } from 'erxes-api-shared/core-modules/automations/types';
-
 export const facebookConstants = {
   actions: [
     {

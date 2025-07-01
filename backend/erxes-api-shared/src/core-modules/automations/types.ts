@@ -63,7 +63,7 @@ export interface AutomationWorkers {
       actionType: string;
       triggerType: string;
       action: IAction;
-      execution: IAutomationExecution;
+      execution: { _id: string } & IAutomationExecution;
     },
   ) => Promise<{
     result: any;

@@ -1,11 +1,11 @@
+import { IFacebookConversationMessage } from '@/integrations/facebook/@types/conversationMessages';
+import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 import {
   IAction,
-  IAutomationExecutionDocument,
+  IAutomationExecution,
   ITrigger,
 } from 'erxes-api-shared/core-modules';
 import { IModels } from '~/connectionResolvers';
-import { IFacebookConversationMessage } from '@/integrations/facebook/@types/conversationMessages';
-import { IFacebookIntegrationDocument } from '@/integrations/facebook/@types/integrations';
 
 export type IAutomationWorkerContext = {
   models: IModels;
@@ -14,7 +14,7 @@ export type IAutomationWorkerContext = {
 
 export type IAutomationReceiveActionData = {
   action: IAction;
-  execution: IAutomationExecutionDocument;
+  execution: { _id: string } & IAutomationExecution;
   actionType: string;
   collectionType: string;
   triggerType: string;

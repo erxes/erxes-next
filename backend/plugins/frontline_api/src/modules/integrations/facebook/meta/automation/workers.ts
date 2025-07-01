@@ -1,9 +1,4 @@
 import {
-  replacePlaceHolders,
-  setProperty,
-} from 'erxes-api-shared/core-modules';
-import { generateModels, IModels } from '~/connectionResolvers';
-import {
   actionCreateComment,
   checkCommentTrigger,
 } from '@/integrations/facebook/meta/automation/comments';
@@ -12,12 +7,16 @@ import {
   checkMessageTrigger,
 } from '@/integrations/facebook/meta/automation/messages';
 import {
-  IAutomationWorkerContext,
   IAutomationReceiveActionData,
+  IAutomationWorkerContext,
   ICheckTriggerData,
   IReplacePlaceholdersData,
 } from '@/integrations/facebook/meta/automation/types/automationTypes';
-import { AutomationWorkers } from 'erxes-api-shared/core-modules/automations/types';
+import {
+  replacePlaceHolders,
+  setProperty,
+} from 'erxes-api-shared/core-modules';
+import { generateModels, IModels } from '~/connectionResolvers';
 
 const getItems = async (
   subdomain: string,

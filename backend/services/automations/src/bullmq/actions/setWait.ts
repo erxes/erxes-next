@@ -2,7 +2,7 @@ import type { Job } from 'bullmq';
 import { sendWorkerQueue } from 'erxes-api-shared/utils';
 import moment from 'moment';
 import { IModels } from '@/connectionResolver';
-import { AutomationExecutionSetWaitCondition } from 'erxes-api-shared/core-modules/automations/types';
+import { AutomationExecutionSetWaitCondition } from 'erxes-api-shared/core-modules';
 
 export const setActionWaitHandler = async (
   models: IModels,

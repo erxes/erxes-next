@@ -1,7 +1,7 @@
-import { AutomationConfigs } from 'erxes-api-shared/core-modules/automations/types';
 import { generateModels } from '~/connectionResolvers';
 import { facebookConstants } from '@/integrations/facebook/meta/automation/constants';
 import { facebookAutomationWorkers } from '@/integrations/facebook/meta/automation/workers';
+import { AutomationConfigs } from 'erxes-api-shared/core-modules';
 
 const modules = {
   facebook: facebookAutomationWorkers,
