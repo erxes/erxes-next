@@ -1,16 +1,16 @@
+import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { useAutomationTrigger } from '@/automations/components/builder/hooks/useAutomationTrigger';
 import {
   coreActionNames,
   coreActions,
 } from '@/automations/components/builder/nodes/actions/CoreActions';
-import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
 import { NodeData } from '@/automations/types';
+import { RenderPluginsComponentWrapper } from '@/automations/utils/RenderPluginsComponentWrapper';
 import { Handle, Position } from '@xyflow/react';
 import {
   AutomationActionNodeConfigProps,
   getAutomationTypes,
 } from 'ui-modules';
-import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const useActionNodeConfiguration = (data: NodeData) => {
   const { id, type = '', config } = data || {};
@@ -35,9 +35,8 @@ export const useActionNodeConfiguration = (data: NodeData) => {
       actionsConst.find(({ type: actionType }) => actionType === type) || {};
 
     Component = (
-      <RenderPluginsComponent
-        pluginName={`${pluginName}_ui`}
-        remoteModuleName="automations"
+      <RenderPluginsComponentWrapper
+        pluginName={pluginName}
         moduleName={moduleName}
         props={{
           ...actionNodeProps,

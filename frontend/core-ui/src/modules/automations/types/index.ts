@@ -1,12 +1,16 @@
-import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
-import { EdgeProps, Edge, Node, ReactFlowInstance } from '@xyflow/react';
-import { UseFormSetValue } from 'react-hook-form';
-import { IAction, ITrigger } from 'ui-modules';
+import { STATUSES_BADGE_VARIABLES } from '@/automations/constants';
+import { Edge, EdgeProps, Node, ReactFlowInstance } from '@xyflow/react';
+import {
+  IAction,
+  IAutomationsActionConfigConstants,
+  IAutomationsTriggerConfigConstants,
+  ITrigger,
+} from 'ui-modules';
 
 export interface AutomationConstants {
-  triggersConst: ITrigger[];
+  triggersConst: IAutomationsTriggerConfigConstants[];
   triggerTypesConst: string[];
-  actionsConst: any[];
+  actionsConst: IAutomationsActionConfigConstants[];
   propertyTypesConst: Array<{ value: string; label: string }>;
 }
 export interface ConstantsQueryResponse {
@@ -63,37 +67,14 @@ export interface IAutomation extends IAutomationDoc {
   _id: string;
 }
 
-export interface IAutomationHistoryAction {
-  createdAt?: Date;
-  actionId: string;
-  actionType: string;
-  actionConfig?: any;
-  nextActionId?: string;
-  result?: any;
-}
-
-export interface IAutomationHistory {
-  _id: string;
-  createdAt: Date;
-  modifiedAt?: Date;
-  automationId: string;
-  triggerId: string;
-  triggerType: string;
-  triggerConfig?: any;
-  nextActionId?: string;
-  targetId: string;
-  target: any;
-  status: string;
-  description: string;
-  actions?: IAutomationHistoryAction[];
-  startWaitingDate?: Date;
-  waitingActionId?: string;
-}
-
 export type AutomationDropHandlerParams = {
+  /** The drag event triggered when an item is dropped onto the drop target. */
   event: React.DragEvent<HTMLDivElement>;
+  /** Instance of React Flow to interact with the flow canvas and nodes. */
   reactFlowInstance: ReactFlowInstance<Node<NodeData>, Edge<EdgeProps>>;
+  /** List of trigger definitions available for automation. */
   triggers: any[];
+  /** List of action definitions available for automation. */
   actions: any[];
 };
 
@@ -106,3 +87,5 @@ export type TDraggingNode = {
   isCustom?: boolean;
   awaitingToConnectNodeId?: string;
 };
+export type StatusBadgeValue =
+  (typeof STATUSES_BADGE_VARIABLES)[keyof typeof STATUSES_BADGE_VARIABLES];

@@ -260,6 +260,16 @@ import {
   IconWand,
   IconWorld,
   IconX,
+  IconBubbleFilled,
+  IconBrandMessenger,
+  IconSpeakerphone,
+  IconSitemap,
+  IconHourglass,
+  IconJumpRope,
+  IconMailFast,
+  IconUsersGroup,
+  IconBuilding,
+  IconForms,
 } from '@tabler/icons-react';
 
 export const ALL_ICONS = {
@@ -524,4 +534,14 @@ export const ALL_ICONS = {
   IconWand,
   IconWorld,
   IconX,
+  IconBubbleFilled,
+  IconBrandMessenger,
+  IconSpeakerphone,
+  IconSitemap,
+  IconHourglass,
+  IconJumpRope,
+  IconMailFast,
+  IconUsersGroup,
+  IconBuilding,
+  IconForms,
 };

@@ -1,19 +1,19 @@
+import { AutomationConstants } from 'erxes-api-shared/core-modules/automations/types';
+
 export const facebookConstants = {
   actions: [
     {
       type: 'frontline:facebook.messages.create',
-      icon: 'BrandMessenger',
+      icon: 'IconBrandMessenger',
       label: 'Send Facebook Message',
       description: 'Send Facebook Message',
-      isAvailable: true,
       isAvailableOptionalConnect: true,
     },
     {
       type: 'frontline:facebook.comments.create',
-      icon: 'BubbleFilled',
+      icon: 'IconBubbleFilled',
       label: 'Send Facebook Comment',
       description: 'Send Facebook Comments',
-      isAvailable: true,
     },
   ],
   triggers: [
@@ -23,7 +23,7 @@ export const facebookConstants = {
         'frontline:facebook.messages.create',
         'frontline:facebook.comments.create',
       ],
-      icon: 'BrandMessenger',
+      icon: 'IconBrandMessenger',
       label: 'Facebook Message',
       description:
         'Start with a blank workflow that enrolls and is triggered off facebook messages',
@@ -32,7 +32,7 @@ export const facebookConstants = {
         {
           type: 'getStarted',
           label: 'Get Started',
-          icon: 'IconBrandMessengerFilled',
+          icon: 'IconBrandMessenger',
 
           description: 'User click on get started on the messenger',
         },
@@ -52,7 +52,7 @@ export const facebookConstants = {
     },
     {
       type: 'frontline:facebook.comments',
-      icon: 'BubbleFilled',
+      icon: 'IconBubbleFilled',
       label: 'Facebook Comments',
       description:
         'Start with a blank workflow that enrolls and is triggered off facebook comments',
@@ -64,7 +64,7 @@ export const facebookConstants = {
     },
     {
       type: 'frontline:facebook.ads',
-      icon: 'Speakerphone',
+      icon: 'IconSpeakerphone',
       label: 'Facebook Ads Message',
       description:
         'Start with a blank workflow that enrolls and is triggered off clicked send message on facebook ads',

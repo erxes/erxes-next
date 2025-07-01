@@ -9,7 +9,7 @@ export const LogStatusFilter = () => {
   const [status, setStatus] = useQueryState<string>('status');
 
   return (
-    <Command shouldFilter={false} onSelect={(e) => e.currentTarget}>
+    <Command shouldFilter={false}>
       <Command.List className="p-1 ">
         <Combobox.Empty />
         {[

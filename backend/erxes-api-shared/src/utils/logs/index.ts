@@ -104,18 +104,25 @@ export interface AfterProcessConfigs {
     args: { userId: string; email: string; result: string },
   ) => void;
   onAfterApiRequest?: (context: IContext, args: any) => void;
-  onDocumentUpdated?: (
+  onDocumentUpdated?: <TDocument = any>(
     context: IContext,
     args: {
-      fullDocument: any;
-      prevDocument: any;
+      contentType: string;
+      fullDocument: TDocument;
+      prevDocument: TDocument;
       updateDescription: {
         updatedFields: { [key: string]: any };
         removedFields: string[];
       };
     },
   ) => void;
-  onDocumentCreated?: (context: IContext, args: any) => void;
+  onDocumentCreated?: <TDocument = any>(
+    context: IContext,
+    args: {
+      contentType: string;
+      fullDocument: TDocument;
+    },
+  ) => void;
 }
 
 export const startAfterProcess = async (

@@ -140,7 +140,7 @@ export default startAutomations('core', {
         triggerType,
       );
 
-      return setProperty({
+      const result = await setProperty({
         models,
         subdomain,
         getRelatedValue,
@@ -150,8 +150,9 @@ export default startAutomations('core', {
         relatedItems,
         triggerType,
       });
+      return { result };
     }
-    return 'Hello World Core';
+    return { result: 'Hello World Core' };
   },
   replacePlaceHolders: async ({ subdomain }, { data }) => {
     const { target, config, relatedValueProps } = data || {};

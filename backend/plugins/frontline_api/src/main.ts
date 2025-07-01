@@ -1,10 +1,16 @@
 import { startPlugin } from 'erxes-api-shared/utils';
 import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/init-trpc';
+import { afterProcess } from '~/meta/afterProcess';
+import { facebookAfterProcessWorkers } from '~/modules/integrations/facebook/meta/afterProcess/afterProcessWorkers';
+import { router } from '~/routes';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
-import { router } from '~/routes';
 import automations from './meta/automations';
+
+const handler = {
+  facebook: facebookAfterProcessWorkers.onDocumentCreated,
+};
 
 startPlugin({
   name: 'frontline',
@@ -45,21 +51,6 @@ startPlugin({
 
   meta: {
     automations,
-    // afterProcess: {
-    //   rules: [
-    //     { type: 'updatedDocument', contentTypes: ['core:user'] },
-    //     { type: 'afterAuth', types: ['login'] },
-    //     { type: 'afterMutation', mutationNames: ['usersEdit'] },
-    //   ],
-    //   onDocumentUpdated: async ({ subdomain }, data) => {
-    //     // do logic
-    //   },
-    //   onAfterAuth: async (context, data) => {
-    //     // do logic
-    //   },
-    //   onAfterMutation: (context, args) => {
-    //     // do logic
-    //   },
-    // },
+    afterProcess,
   },
 });

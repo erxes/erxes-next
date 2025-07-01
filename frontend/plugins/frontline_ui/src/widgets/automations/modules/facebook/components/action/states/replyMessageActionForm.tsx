@@ -36,6 +36,7 @@ export const replyMessageFormSchema = z.object({
           z.object({
             _id: z.string(),
             text: z.string(),
+            image_url: z.string().optional(),
             isEditing: z.boolean().default(false).optional(),
           }),
         )

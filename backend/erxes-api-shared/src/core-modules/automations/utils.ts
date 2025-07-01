@@ -9,7 +9,7 @@ import {
 import { sendTRPCMessage } from '../../utils/trpc';
 
 export const splitType = (type: string) => {
-  return type.replace('.', ':').split(':');
+  return type.replace(/\./g, ':').split(':');
 };
 
 const processDatePlaceholders = (value: string): string => {

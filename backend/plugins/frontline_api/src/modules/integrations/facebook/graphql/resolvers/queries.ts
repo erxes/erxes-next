@@ -2,6 +2,8 @@ import { IContext } from '~/connectionResolvers';
 import {
   getPageList,
   fetchPagesPostsList,
+  fetchPagePosts,
+  fetchPagePost,
 } from '@/integrations/facebook/utils';
 import {
   IKind,
@@ -525,5 +527,24 @@ export const facebookQueries = {
 
   async facebookMessengerBot(_root, { _id }, { models }: IContext) {
     return await models.FacebookBots.findOne({ _id });
+  },
+
+  async facebookGetBotPosts(_root, { botId }, { models }: IContext) {
+    const bot = await models.FacebookBots.findOne({ _id: botId });
+
+    if (!bot) {
+      throw new Error('Bot not found');
+    }
+
+    return await fetchPagesPostsList(bot.pageId, bot.token, 20);
+  },
+  async facebookGetBotPost(_root, { botId, postId }, { models }: IContext) {
+    const bot = await models.FacebookBots.findOne({ _id: botId });
+
+    if (!bot) {
+      throw new Error('Bot not found');
+    }
+
+    return await fetchPagePost(postId, bot.token);
   },
 };

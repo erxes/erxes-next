@@ -53,3 +53,14 @@ export const PROPERTY_OPERATOR = {
     },
   ],
 };
+
+export const STATUSES_BADGE_VARIABLES = {
+  active: 'default',
+  waiting: 'secondary',
+  error: 'destructive',
+  missed: 'warning',
+  complete: 'success',
+} as const;
+
+export const AUTOMATION_HISTORIES_CURSOR_SESSION_KEY =
+  'automation-histories-cursor';

@@ -10,6 +10,10 @@ import {
   useEffect,
   useState,
 } from 'react';
+import {
+  IAutomationsActionConfigConstants,
+  IAutomationsTriggerConfigConstants,
+} from 'ui-modules';
 
 type QueryTypes = Record<string, unknown>;
 
@@ -28,8 +32,8 @@ interface AutomationContextType {
   setAwaitingToConnectNodeId: Dispatch<SetStateAction<string>>;
   queryParams: QueryValues<AutomationQueryParams>;
   setQueryParams: (values: QueryValues<AutomationQueryParams>) => void;
-  triggersConst: any[];
-  actionsConst: any[];
+  triggersConst: IAutomationsTriggerConfigConstants[];
+  actionsConst: IAutomationsActionConfigConstants[];
   loading: boolean;
   error: any;
   refetch: () => void;

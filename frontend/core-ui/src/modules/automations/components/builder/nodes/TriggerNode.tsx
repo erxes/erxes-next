@@ -2,7 +2,7 @@ import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOu
 import { NodeData } from '@/automations/types';
 import { IconAdjustmentsAlt, IconSunElectricity } from '@tabler/icons-react';
 import { Node } from '@xyflow/react';
-import { cn } from 'erxes-ui';
+import { cn, IconComponent, IconComponentNamesType } from 'erxes-ui';
 import { memo } from 'react';
 import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeDropdownActions';
@@ -26,7 +26,7 @@ const TriggerNodeContent = ({ data }: { data: NodeData }) => {
   return (
     <div className="p-3">
       <div className="flex items-center gap-2 text-primary/90 pb-2">
-        <IconAdjustmentsAlt className="w-4 h-4" />
+        <IconAdjustmentsAlt className="size-4" />
         <p className="text-sm font-semibold">Configuration</p>
       </div>
       <div className="rounded border bg-muted overflow-x-auto text-muted-foreground text-xs font-mono">
@@ -59,9 +59,12 @@ const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
           <div className="flex items-center gap-2 text-primary">
             {beforeTitleContent && beforeTitleContent(id, 'trigger')}
             <div
-              className={`h-6 w-6 rounded-full flex items-center justify-center`}
+              className={`size-6 rounded-full flex items-center justify-center`}
             >
-              <IconSunElectricity />
+              <IconComponent
+                className="size-4"
+                name={data.icon as IconComponentNamesType}
+              />
             </div>
             <div>
               <p className="font-medium ">{data.label}</p>

@@ -10,6 +10,7 @@ import {
 import express from 'express';
 import * as http from 'http';
 import { initMQWorkers } from './bullmq';
+import { debugError, debugInfo } from '@/debuuger';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS, PORT } = process.env;
 
@@ -72,9 +73,9 @@ process.stdin.resume();
 async function leaveServiceDiscovery() {
   try {
     await leaveErxesGateway('automations', port);
-    console.log('Left from service discovery');
+    debugInfo('Left from service discovery');
   } catch (e) {
-    console.error(e);
+    debugError(e);
   }
 }
 
@@ -89,7 +90,7 @@ async function closeHttpServer() {
       });
     });
   } catch (e) {
-    console.error(e);
+    debugError(e);
   }
 }
 
