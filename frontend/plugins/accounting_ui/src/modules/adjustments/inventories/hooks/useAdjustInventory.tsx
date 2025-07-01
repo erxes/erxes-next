@@ -1,8 +1,8 @@
-import { TR_RECORDS_QUERY } from '../graphql/transactionQueries';
+import { TR_RECORDS_QUERY } from '../graphql/adjustInventoryQueries';
 import { OperationVariables, useQuery } from '@apollo/client';
-import { ACC_TRS__PER_PAGE } from '../types/constants';
+import { ACC_TRS__PER_PAGE } from '../../../transactions/types/constants';
 
-export const useTrRecords = (options?: OperationVariables) => {
+export const useAdjustInventories = (options?: OperationVariables) => {
   const { data, loading, error, fetchMore } = useQuery(
     TR_RECORDS_QUERY,
     {
