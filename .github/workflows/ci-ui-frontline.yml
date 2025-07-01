@@ -1,0 +1,60 @@
+name: CI plugin-frontline_ui
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/plugins/frontline_ui/**'
+      - 'frontend/libs/**'
+      - '.github/workflows/ci-ui-frontline.yml'
+  pull_request:
+    paths:
+      - 'frontend/plugins/frontline_ui/**'
+      - 'frontend/libs/**'
+      - '.github/workflows/ci-ui-frontline.yml'
+
+permissions:
+  actions: read
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  frontline_ui-ci:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_R2_ENDPOINT: https://7c8392aff8ac4518aa06dfa4b6337ef2.r2.cloudflarestorage.com
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Frontline UI
+        run: |
+          export NX_DAEMON=false
+          pnpm nx build frontend/plugins/frontline_ui
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Sync to Cloudflare R2
+        run: |
+          aws s3 sync frontend/plugins/frontline_ui/dist s3://erxes-next/latest/frontline_ui/ \
+            --endpoint-url ${{ env.CLOUDFLARE_R2_ENDPOINT }}
