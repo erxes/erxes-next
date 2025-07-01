@@ -23,6 +23,10 @@ permissions:
 jobs:
   frontline_ui-ci:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,15 +49,7 @@ jobs:
           export NX_DAEMON=false
           pnpm nx build frontline_ui
 
-      - name: Configure AWS credentials (Cloudflare R2)
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: auto
-
       - name: Sync to Cloudflare R2
         run: |
           aws s3 sync dist/frontend/plugins/frontline_ui s3://erxes-next/latest/frontline_ui/ \
-            --endpoint-url https://7c8392aff8ac4518aa06dfa4b6337ef2.r2.cloudflarestorage.com \
-            --acl public-read
+            --endpoint-url https://7c8392aff8ac4518aa06dfa4b6337ef2.r2.cloudflarestorage.com
