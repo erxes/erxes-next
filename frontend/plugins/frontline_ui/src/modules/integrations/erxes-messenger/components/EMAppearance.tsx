@@ -1,38 +1,34 @@
-import { Button, ColorPicker, Form, Label, Upload } from 'erxes-ui';
-import { useAtom } from 'jotai';
+import { Button, ColorPicker, Form, Upload } from 'erxes-ui';
 import {
   erxesMessengerSetupAppearanceAtom,
   erxesMessengerSetupStepAtom,
 } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
-import { EMAPEARANCE_SCHEMA } from '@/integrations/erxes-messenger/constants/emAppearanceSchema';
+import { EMAPPEARANCE_SCHEMA } from '@/integrations/erxes-messenger/constants/emAppearanceSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   EMLayout,
   EMLayoutPreviousStepButton,
 } from '@/integrations/erxes-messenger/components/EMLayout';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 
 export const EMAppearance = () => {
-  const [appearance, setAppearance] = useAtom(
-    erxesMessengerSetupAppearanceAtom,
-  );
-  const [step, setStep] = useAtom(erxesMessengerSetupStepAtom);
-  const form = useForm<z.infer<typeof EMAPEARANCE_SCHEMA>>({
-    defaultValues: {
-      brandColor: appearance?.brandColor,
-      logo: appearance?.logo,
-    },
-    resolver: zodResolver(EMAPEARANCE_SCHEMA),
+  const setAppearance = useSetAtom(erxesMessengerSetupAppearanceAtom);
+  const setStep = useSetAtom(erxesMessengerSetupStepAtom);
+  const form = useForm<z.infer<typeof EMAPPEARANCE_SCHEMA>>({
+    resolver: zodResolver(EMAPPEARANCE_SCHEMA),
   });
 
-  const onSubmit = (data: z.infer<typeof EMAPEARANCE_SCHEMA>) => {
+  const onSubmit = (data: z.infer<typeof EMAPPEARANCE_SCHEMA>) => {
     setAppearance(data);
-    setStep(step + 1);
+    setStep((prev) => prev + 1);
   };
 
   return (
     <Form {...form}>
+      <EMAppearanceEffectComponent form={form} />
       <form
         className="flex-auto flex flex-col"
         onSubmit={form.handleSubmit(onSubmit)}
@@ -100,4 +96,19 @@ export const EMAppearance = () => {
       </form>
     </Form>
   );
+};
+
+export const EMAppearanceEffectComponent = ({
+  form,
+}: {
+  form: UseFormReturn<z.infer<typeof EMAPPEARANCE_SCHEMA>>;
+}) => {
+  const appearance = useAtomValue(erxesMessengerSetupAppearanceAtom);
+
+  useEffect(() => {
+    form.reset(appearance);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return null;
 };

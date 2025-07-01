@@ -6,7 +6,7 @@ import { IMaskInput } from 'react-imask';
 
 export const ColorPicker = React.forwardRef<
   React.ElementRef<typeof Combobox.Trigger>,
-  React.ComponentPropsWithoutRef<typeof Combobox.Trigger> & {
+  Omit<React.ComponentPropsWithoutRef<typeof Combobox.Trigger>, 'value'> & {
     value?: string;
     onValueChange?: (value: string) => void;
   }
@@ -78,7 +78,7 @@ export const ColorPicker = React.forwardRef<
             <IMaskInput
               mask={/^[0-9A-Fa-f]+$/}
               className={cn(inputVariants(), 'pl-9')}
-              value={value}
+              value={(value || '').replace('#', '')}
               onAccept={(value) => onValueChange?.('#' + value)}
             />
           </div>

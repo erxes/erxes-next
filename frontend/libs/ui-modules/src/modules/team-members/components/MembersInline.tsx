@@ -123,7 +123,7 @@ export const MembersInlineAvatar = ({
 
   if (loading)
     return (
-      <div className="flex -space-x-1.5">
+      <div className={cn('flex -space-x-1.5', containerClassName)}>
         {memberIds?.map((memberId) => (
           <Avatar key={memberId} className={cn('bg-background', className)}>
             <Avatar.Fallback />

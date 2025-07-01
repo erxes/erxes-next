@@ -6,6 +6,7 @@ import { EMAppearance } from '@/integrations/erxes-messenger/components/EMAppear
 import { EMGreeting } from '@/integrations/erxes-messenger/components/EMGreeting';
 import { EMIntro } from '@/integrations/erxes-messenger/components/EMIntro';
 import { useAtomValue } from 'jotai';
+import { EmHoursAvailability } from '@/integrations/erxes-messenger/components/EmHoursAvailability';
 
 export const AddErxesMessengerSheet = () => {
   const step = useAtomValue(erxesMessengerSetupStepAtom);
@@ -30,6 +31,7 @@ export const AddErxesMessengerSheet = () => {
             {step === 1 && <EMAppearance />}
             {step === 2 && <EMGreeting />}
             {step === 3 && <EMIntro />}
+            {step === 4 && <EmHoursAvailability />}
           </Resizable.Panel>
           <Resizable.Handle />
           <Resizable.Panel className="flex flex-col h-full" defaultSize={60}>

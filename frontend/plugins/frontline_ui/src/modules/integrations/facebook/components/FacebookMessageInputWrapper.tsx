@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FACEBOOK_TAG_FORM_SCHEMA } from '../constants/FbTagSchema';
 import { z } from 'zod';
+import { FACEBOOK_MESSAGE_WINDOW_HOURS } from '@/integrations/facebook/constants/FbMessageWindow';
 
 export const FacebookTaggingForm = () => {
   const setExtraInfo = useSetAtom(messageExtraInfoState);
@@ -88,7 +89,8 @@ export const FacebookMessageInputWrapper = ({
   }
 
   const isNotIn24Hours =
-    differenceInHours(new Date(), new Date(lastMessageDate || '')) > 24;
+    differenceInHours(new Date(), new Date(lastMessageDate || '')) >
+    FACEBOOK_MESSAGE_WINDOW_HOURS;
 
   if (lastMessageDate && isNotIn24Hours && !extraInfo?.tag) {
     return (

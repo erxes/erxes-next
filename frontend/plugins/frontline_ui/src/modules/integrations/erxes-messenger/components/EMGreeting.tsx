@@ -3,17 +3,18 @@ import {
   EMLayoutPreviousStepButton,
 } from '@/integrations/erxes-messenger/components/EMLayout';
 import { Button, Input, Form } from 'erxes-ui';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import { EMGREETING_SCHEMA } from '@/integrations/erxes-messenger/constants/emGreetingSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SelectMember } from 'ui-modules';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import {
   erxesMessengerSetupGreetingAtom,
   erxesMessengerSetupStepAtom,
 } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
+import { useEffect } from 'react';
 
 export const EMGreeting = () => {
   const form = useForm<z.infer<typeof EMGREETING_SCHEMA>>({
@@ -34,6 +35,7 @@ export const EMGreeting = () => {
 
   return (
     <Form {...form}>
+      <EMGreetingEffectComponent form={form} />
       <form
         className="flex-auto flex flex-col"
         onSubmit={form.handleSubmit(onSubmit)}
@@ -115,7 +117,7 @@ export const EMGreeting = () => {
               <Form.Label>Social Links</Form.Label>
               {fields.map((field, index) => {
                 return (
-                  <div className="flex gap-2">
+                  <div className="flex gap-2" key={field.id}>
                     <Form.Field
                       key={field.id}
                       name={`links.${index}.url`}
@@ -163,4 +165,19 @@ export const EMGreeting = () => {
       </form>
     </Form>
   );
+};
+
+const EMGreetingEffectComponent = ({
+  form,
+}: {
+  form: UseFormReturn<z.infer<typeof EMGREETING_SCHEMA>>;
+}) => {
+  const greeting = useAtomValue(erxesMessengerSetupGreetingAtom);
+
+  useEffect(() => {
+    form.reset(greeting);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return null;
 };

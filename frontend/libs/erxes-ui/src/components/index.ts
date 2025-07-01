@@ -37,6 +37,7 @@ export * from './table';
 export * from './tabs';
 export * from './text-overflow';
 export * from './textarea';
+export * from './time-picker';
 export * from './toaster';
 export * from './toggle';
 export * from './toggle-group';
