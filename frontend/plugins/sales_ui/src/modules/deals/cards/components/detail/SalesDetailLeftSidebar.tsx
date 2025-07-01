@@ -71,7 +71,7 @@ export const SalesDetailTabContent = ({
   value: string;
 }) => {
   return (
-    <Tabs.Content value={value} className="flex-auto overflow-hidden">
+    <Tabs.Content value={value} className="flex-auto overflow-auto">
       {children}
     </Tabs.Content>
   );

@@ -1,21 +1,17 @@
 import { Button, Collapsible, Spinner, cn, useConfirm } from 'erxes-ui';
 import { IChecklist, IChecklistItem } from '@/deals/types/checklists';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
 import {
   useChecklistItemsAdd,
   useChecklistItemsReorder,
   useChecklistsRemove,
 } from '@/deals/cards/hooks/useChecklists';
 
+import ChecklistItemAdd from './ChecklistItemAdd';
 import ChecklistItemContent from './ChecklistItemContent';
 import CircularProgressbar from '@/deals/components/common/CircularProgressbar';
+import { IconTrash } from '@tabler/icons-react';
 import SortableList from '@/deals/components/common/SortableList';
 import { useState } from 'react';
-
-// import {
-//   useChecklistItemsAdd,
-//   useChecklists,
-// } from '@/deals/cards/hooks/useChecklists';
 
 const ChecklistItem = ({ item }: { item: IChecklist }) => {
   const [open, setOpen] = useState(false);
@@ -31,10 +27,8 @@ const ChecklistItem = ({ item }: { item: IChecklist }) => {
     useChecklistsRemove();
   const { confirm } = useConfirm();
 
-  // Calculate completed percentage for progress bar
   const checkedCount = items.filter((i) => i.isChecked).length;
 
-  // Add multiple items from textarea, split by newline
   const handleAdd = () => {
     const lines = newItem
       .split('\n')
@@ -60,7 +54,6 @@ const ChecklistItem = ({ item }: { item: IChecklist }) => {
     }
   };
 
-  // For keyboard enter submit on textarea
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -102,27 +95,42 @@ const ChecklistItem = ({ item }: { item: IChecklist }) => {
       });
     });
   };
-  console.log('aaa', item);
+
   return (
-    <Collapsible className="checklists" open={open} onOpenChange={setOpen}>
-      <Collapsible.TriggerButton className="flex items-center justify-between gap-2">
+    <Collapsible
+      className="checklists mb-4 bg-accent rounded-lg hover:rounded-lg"
+      open={open}
+      onOpenChange={setOpen}
+    >
+      <Collapsible.TriggerButton className="flex items-center justify-between gap-2 h-full p-2">
         <div className="flex items-center gap-2 flex-1">
           <Collapsible.TriggerIcon className="group-data-[state=open]/checklists:rotate-180" />
-          {item.title}
+          <h4 className="text-sm">{item.title}</h4>
           <CircularProgressbar
             value={checkedCount}
             max={items.length || 1}
             size={20}
+            className="ml-2"
             strokeWidth={3}
           />
         </div>
         <div className="flex items-center gap-2">
-          <button
-            // onClick={() => onToggleHideChecked(item._id)}
-            className="text-xs px-2 py-1 rounded hover:bg-gray-100 border text-gray-600"
-          >
-            {hideChecked ? 'Show All' : 'Hide Checked'}
-          </button>
+          {open && (
+            <Button
+              variant="outline"
+              size="sm"
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setHideChecked(!hideChecked);
+              }}
+            >
+              {hideChecked
+                ? `Show checked items (${checkedCount})`
+                : 'Hide Completed Items'}
+            </Button>
+          )}
 
           <Button
             variant="destructive"
@@ -139,9 +147,11 @@ const ChecklistItem = ({ item }: { item: IChecklist }) => {
         </div>
       </Collapsible.TriggerButton>
 
-      <Collapsible.Content className="flex flex-col gap-1 py-1 pl-1">
+      <Collapsible.Content
+        className={cn(open && 'flex flex-col gap-1 py-1 pl-2 bg-white')}
+      >
         <SortableList
-          items={items}
+          items={hideChecked ? items.filter((i) => !i.isChecked) : items}
           onReorder={(items) => onReorderItems(items)}
           itemKey="_id"
           className="flex flex-col gap-1"
@@ -154,51 +164,14 @@ const ChecklistItem = ({ item }: { item: IChecklist }) => {
           )}
         />
 
-        {adding ? (
-          <div className="flex flex-col gap-2 p-2">
-            <textarea
-              className="border border-gray-300 rounded px-2 py-1 text-sm w-full resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              placeholder="Enter items, each on a new line"
-              value={newItem}
-              onChange={(e) => setNewItem(e.target.value)}
-              onKeyDown={handleKeyDown}
-              rows={3}
-              autoFocus
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={handleAdd}
-                className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
-              >
-                Add
-              </button>
-              <button
-                onClick={() => {
-                  setAdding(false);
-                  setNewItem('');
-                }}
-                className="px-3 py-1 rounded border hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div
-            className="flex items-center gap-1 p-2 cursor-pointer hover:bg-gray-100 select-none"
-            onClick={() => setAdding(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setAdding(true);
-              }
-            }}
-          >
-            <IconPlus size={14} />
-            Add an item
-          </div>
-        )}
+        <ChecklistItemAdd
+          adding={adding}
+          setAdding={setAdding}
+          newItem={newItem}
+          setNewItem={setNewItem}
+          handleAdd={handleAdd}
+          handleKeyDown={handleKeyDown}
+        />
       </Collapsible.Content>
     </Collapsible>
   );

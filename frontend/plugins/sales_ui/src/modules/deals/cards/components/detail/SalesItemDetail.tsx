@@ -28,8 +28,8 @@ export const SalesItemDetail = () => {
           }}
         >
           <SalesItemDetailHeader deal={deal || ({} as IDeal)} />
-          <Sheet.Content>
-            <div className="flex h-full flex-auto overflow-auto">
+          <Sheet.Content className="overflow-hidden">
+            <div className="flex h-full flex-auto overflow-hidden">
               <div className="flex flex-col flex-auto min-h-full overflow-hidden">
                 <Resizable.PanelGroup
                   direction="horizontal"

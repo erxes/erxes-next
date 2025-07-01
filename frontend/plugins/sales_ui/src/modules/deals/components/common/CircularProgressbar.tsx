@@ -1,14 +1,16 @@
 import React from 'react';
+import { cn } from 'erxes-ui';
 
 interface CircularProgressBarProps {
-  value: number; // Current value (e.g. 3)
-  max: number; // Maximum value (e.g. 10)
-  size?: number; // Diameter in px
-  strokeWidth?: number; // Stroke width in px
+  value: number;
+  max: number;
+  size?: number;
+  strokeWidth?: number;
   showText?: boolean;
   textColor?: string;
   progressColor?: string;
   trackColor?: string;
+  className?: string;
 }
 
 const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
@@ -18,8 +20,9 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
   strokeWidth = 8,
   showText = true,
   textColor = 'text-black',
-  progressColor = '#4f46e5', // indigo-600
-  trackColor = '#e5e7eb', // gray-200
+  progressColor = '#4f46e5',
+  trackColor = '#e5e7eb',
+  className,
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -27,7 +30,7 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
   const offset = circumference * (1 - progress);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className={cn('flex items-center gap-2', className)}>
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size}>
           <circle

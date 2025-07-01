@@ -17,7 +17,6 @@ const ChecklistItemContent = ({
   const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
   const { salesChecklistItemsEdit } = useChecklistItemsEdit();
 
-  // Toggle checkbox state
   const toggleChecked = (id: string) => {
     setItems((prev) =>
       prev.map((item) =>
@@ -26,7 +25,6 @@ const ChecklistItemContent = ({
     );
   };
 
-  // Remove an item by index
   const handleRemove = (index: number) => {
     setItems((prev) => prev.filter((_, i) => i !== index));
   };
@@ -45,9 +43,9 @@ const ChecklistItemContent = ({
   return (
     <div
       key={item._id}
-      className="border-b border-gray-200 pointer-events-auto flex items-center justify-between p-2 gap-2 group relative"
+      className="border-b border-gray-100 pointer-events-auto flex items-center justify-between p-1 gap-2 group relative"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 text-xs">
         <div
           onPointerDown={(e) => e.stopPropagation()}
           onPointerUp={(e) => e.stopPropagation()}
@@ -59,7 +57,7 @@ const ChecklistItemContent = ({
           />
         </div>
         <span
-          className={`text-sm ${
+          className={`text-xs ${
             item.isChecked ? 'line-through text-gray-400' : ''
           } select-none`}
         >
@@ -67,7 +65,6 @@ const ChecklistItemContent = ({
         </span>
       </div>
 
-      {/* Hover menu */}
       <div className="relative">
         <button
           onClick={(e) => {
