@@ -23,7 +23,7 @@ export const InboxLayout = ({
       direction="horizontal"
       className="flex-1 overflow-hidden"
     >
-      <Resizable.Panel minSize={20} defaultSize={30}>
+      <Resizable.Panel minSize={20} maxSize={35} defaultSize={30}>
         {inboxLayout === 'list'
           ? mainFilters
           : showConversations

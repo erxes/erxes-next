@@ -1,5 +1,5 @@
 import { IconX } from '@tabler/icons-react';
-import { Button, Separator, Sheet } from 'erxes-ui';
+import { Button, Sheet } from 'erxes-ui';
 import React, { useState } from 'react';
 import IntegrationSteps from './IntegrationSteps';
 import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../../constants/integrations';

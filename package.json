@@ -117,6 +117,7 @@
     "node-fetch": "^2.6.7",
     "nodemailer": "^6.9.10",
     "react": "18.3.1",
+    "react-aria-components": "^1.10.1",
     "react-day-picker": "^9.5.0",
     "react-dom": "18.3.1",
     "react-error-boundary": "^5.0.0",
