@@ -5,6 +5,7 @@ import {
   IContractTypeFilterQueryParams,
 } from '~/modules/saving/@types/contractTypes';
 import { FilterQuery } from 'mongoose';
+import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 
 const generateFilter = async (
   params: IContractTypeFilterQueryParams,
@@ -104,5 +105,7 @@ const contractTypeQueries = {
     return models.ContractTypes.getContractType({ _id });
   },
 };
+
+moduleRequireLogin(contractTypeQueries);
 
 export default contractTypeQueries;

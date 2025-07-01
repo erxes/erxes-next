@@ -3,6 +3,7 @@ import {
   IContractType,
   IContractTypeDocument,
 } from '~/modules/saving/@types/contractTypes';
+import { moduleRequireLogin } from 'erxes-api-shared/core-modules';
 
 const contractTypeMutations = {
   savingsContractTypesAdd: async (
@@ -42,5 +43,7 @@ const contractTypeMutations = {
     return await models.ContractTypes.removeContractTypes(contractTypeIds);
   },
 };
+
+moduleRequireLogin(contractTypeMutations);
 
 export default contractTypeMutations;
