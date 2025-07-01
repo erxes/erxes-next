@@ -220,21 +220,18 @@ const commonParams = `
   sortDirection: $sortDirection
 `;
 
-export const TRANSACTIONS_QUERY = gql`
-  query AccTransactions(${trsFilterParamDefs}, ${commonParamDefs}) {
-    accTransactions(${trsFilterParams}, ${commonParams}) {
+export const ADJUST_INVENTORIES_QUERY = gql`
+  query AdjustInventories(${trRecsFilterParamDefs}, ${commonParamDefs}) {
+    AdjustInventories(${trRecsFilterParams}, ${commonParams}) {
       ${commonTransactionFields}
-      ptrInfo
     }
-    accTransactionsCount(${trsFilterParams})
+    AdjustInventoriesCount(${trRecsFilterParams})
   }
-`;
-
-export const TR_RECORDS_QUERY = gql`
-  query AccTrRecords(${trRecsFilterParamDefs}, ${commonParamDefs}) {
-    accTrRecords(${trRecsFilterParams}, ${commonParams}) {
+`
+export const ADJUST_INVENTORY_DETAIL_QUERY = gql`
+  query AdjustInventoryDetail($_id: String!) {
+    AdjustInventoryDetail(_id: $_id) {
       ${commonTransactionFields}
     }
-    accTrRecordsCount(${trRecsFilterParams})
   }
 `;
