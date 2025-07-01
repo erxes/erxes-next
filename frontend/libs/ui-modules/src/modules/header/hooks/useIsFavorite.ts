@@ -2,9 +2,9 @@ import { useQuery } from '@apollo/client';
 import { IS_FAVORITE } from '../graphql/queries/isFavorite';
 
 export const useIsFavorite = ({ path }: { path: string }) => {
-  const { data, refetch } = useQuery(IS_FAVORITE, {
+  const { data } = useQuery(IS_FAVORITE, {
     variables: { type: 'module', path },
   });
 
-  return { isFavorite: data?.isFavorite, refetch };
+  return { isFavorite: data?.isFavorite };
 };
