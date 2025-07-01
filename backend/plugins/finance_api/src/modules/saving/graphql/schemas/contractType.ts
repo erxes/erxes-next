@@ -38,7 +38,7 @@ const queryParams = `
 
 export const queries = `
   savingsContractTypesMain(${queryParams}): SavingContractTypesListResponse
-  savingsContractTypes(${queryParams}): [SavingContractType]
+  savingsContractTypes(${queryParams}): SavingContractTypesListResponse
   savingsContractTypeDetail(_id: String!): SavingContractType
 `;
 
