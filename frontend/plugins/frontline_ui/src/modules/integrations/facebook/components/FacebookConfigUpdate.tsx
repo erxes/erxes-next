@@ -17,7 +17,7 @@ import { INTEGRATIONS } from '@/integrations/constants/integrations';
 import { IntegrationType } from '@/types/Integration';
 import { useFacebookGetConfigs } from '../hooks/useFacebookGetConfigs';
 import { useEffect } from 'react';
-import { getPluginAssetsUrl } from 'ui-modules';
+import { getPluginAssetsUrl } from 'erxes-ui';
 
 export const FacebookConfigUpdateCollapse = () => {
   return (
