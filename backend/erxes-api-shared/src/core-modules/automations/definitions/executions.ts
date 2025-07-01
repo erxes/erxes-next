@@ -1,4 +1,3 @@
-import { schemaWrapper } from '../../../utils';
 import { Document, Schema } from 'mongoose';
 
 export interface IAutomationExecAction {
