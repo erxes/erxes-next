@@ -2,6 +2,7 @@ import { IOrderInput } from '../core-types';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import { randomAlphanumeric } from './random';
+import { random } from '@/utils/string';
 
 export const getEnv = ({
   name,
@@ -205,7 +206,7 @@ export const checkUserIds = (
 };
 
 const generateRandomEmail = () => {
-  return randomAlphanumeric(15) + '@gmail.com';
+  return random('Aa', 15) + '@gmail.com';
 };
 
 export const getUniqueValue = async (
