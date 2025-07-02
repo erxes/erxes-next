@@ -9,7 +9,7 @@ export interface ICallIntegration {
   inboxId: string;
   wsServer: string;
   phone: string;
-  operators: [CallOperator];
+  operators: CallOperator[];
   token: string;
   queues: [string];
   queueNames: [string];

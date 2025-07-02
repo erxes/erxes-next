@@ -1,4 +1,4 @@
-import { selectRelevantCdr, validateArgs } from './utils';
+import { validateArgs } from './utils';
 
 import { removeCustomers } from './helpers';
 import { generateModels } from '~/connectionResolvers';
@@ -7,6 +7,7 @@ import {
   removeIntegration,
   updateIntegration,
 } from '~/modules/integrations/call/helpers';
+import { selectRelevantCdr } from '~/modules/integrations/call/services/cdrUtils';
 
 export async function callCreateIntegration({ subdomain, data }) {
   try {

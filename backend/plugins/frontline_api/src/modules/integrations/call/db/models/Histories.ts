@@ -107,13 +107,11 @@ export const loadCallHistoryClass = (models: IModels) => {
           integration,
         );
 
-        const histories = await models.CallHistory.find(historyFilter)
+        return await models.CallHistory.find(historyFilter)
           .sort({ modifiedAt: -1 })
           .skip(filterOptions.skip || CALL_HISTORY_CONSTANTS.DEFAULT_SKIP)
           .limit(filterOptions.limit || CALL_HISTORY_CONSTANTS.DEFAULT_LIMIT)
           .lean();
-
-        return histories;
       } catch (error) {
         console.error('Error retrieving call histories:', error);
         throw error;
@@ -160,9 +158,7 @@ export const loadCallHistoryClass = (models: IModels) => {
           modifiedAt: new Date(),
         };
 
-        const newCallHistory = await models.CallHistory.create(callHistoryData);
-
-        return newCallHistory;
+        return await models.CallHistory.create(callHistoryData);
       } catch (error) {
         console.error('Error creating call history:', error);
         throw error;
@@ -313,7 +309,7 @@ export const loadCallHistoryClass = (models: IModels) => {
     ): FilterQuery<ICallHistoryDocument> {
       const filter: FilterQuery<ICallHistoryDocument> = {};
 
-      filter.extentionNumber = operator.gsUsername;
+      filter.extensionNumber = operator.gsUsername;
 
       if (
         filterOptions.callStatus ===
@@ -322,7 +318,7 @@ export const loadCallHistoryClass = (models: IModels) => {
         filter.callStatus = {
           $eq: CALL_HISTORY_CONSTANTS.CALL_STATUS.CANCELLED,
         };
-        delete filter.extentionNumber;
+        delete filter.extensionNumber;
         filter.operatorPhone = integration.phone;
       }
 
@@ -343,7 +339,7 @@ export const loadCallHistoryClass = (models: IModels) => {
     ): FilterQuery<ICallHistoryDocument> {
       const filter: FilterQuery<ICallHistoryDocument> = {};
 
-      filter.extentionNumber = operator.gsUsername;
+      filter.extensionNumber = operator.gsUsername;
 
       if (
         filterOptions.callStatus === CALL_HISTORY_CONSTANTS.CALL_STATUS.MISSED

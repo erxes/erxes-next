@@ -59,7 +59,7 @@ const callQueries = {
     if (operator) {
       return operator.status;
     }
-    return 'unAvailable';
+    return 'UnAvailable';
   },
 
   async callExtensionList(
@@ -184,7 +184,7 @@ const callQueries = {
       }
       return [];
     } catch (error) {
-      console.error('Error parsing response as XML:', error.message, xmlData);
+      console.error('Error parsing response as XML:', error.message);
       return [];
     }
   },

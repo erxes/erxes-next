@@ -70,7 +70,7 @@ export const types = `
     createdBy: String
     modifiedBy: String
     customer: Customer
-    extentionNumber: String
+    extensionNumber: String
     conversationId: String
     recordUrl: String
   }

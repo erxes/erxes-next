@@ -17,7 +17,7 @@ export interface ICallHistory {
   endedBy: string;
   queueName: string;
   inboxIntegrationId: string;
-  extentionNumber: string;
+  extensionNumber: string;
 }
 
 export interface ICallHistoryArgs {
@@ -57,7 +57,7 @@ export interface ICallHistoryFilterOptions {
 export interface ICallHistoryCreate {
   customerPhone: string;
   operatorPhone: string;
-  extentionNumber: string;
+  extensionNumber: string;
   callType: 'incoming' | 'outgoing';
   callStatus: 'cancelled' | 'missed' | 'connected';
   duration?: number;

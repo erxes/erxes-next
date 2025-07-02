@@ -1,6 +1,6 @@
 import { IModels } from '~/connectionResolvers';
 import { graphqlPubsub, sendTRPCMessage } from 'erxes-api-shared/utils';
-import { debugFacebook } from '@/integrations/facebook/debuggers';
+import { debugCall } from '@/integrations/call/debuggers';
 import {
   determineExtension,
   determinePrimaryPhone,
@@ -12,7 +12,7 @@ import { getOrCreateCustomer } from '~/modules/integrations/call/store';
 import { createOrUpdateErxesConversation } from '~/modules/integrations/call/utils';
 
 export const receiveCdr = async (models: IModels, subdomain, params) => {
-  debugFacebook(`Request to get post data with: ${JSON.stringify(params)}`);
+  debugCall(`Request to get post data with: ${JSON.stringify(params)}`);
 
   const integration = await models.CallIntegrations.findOne({
     $or: [
@@ -20,7 +20,7 @@ export const receiveCdr = async (models: IModels, subdomain, params) => {
       { dstTrunk: params.dst_trunk_name },
     ],
   });
-  if (!integration) throw new Error('Integration not found');
+  if (!integration) return;
 
   const inboxId = integration.inboxId;
 
@@ -86,7 +86,7 @@ export const receiveCdr = async (models: IModels, subdomain, params) => {
       createdAt: { $gte: oneMinuteBefore, $lte: oneMinuteAfter },
     } as any;
     if (extension) {
-      historySelector.extentionNumber = extension;
+      historySelector.extensionNumber = extension;
     }
 
     const callHistory = await models.CallHistory.findOne({

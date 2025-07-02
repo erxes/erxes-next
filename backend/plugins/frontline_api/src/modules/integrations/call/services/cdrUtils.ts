@@ -142,16 +142,12 @@ export const determineExtension = (params) => {
     new_src,
   } = params;
 
-  if (userfield === 'Outbound') {
-    if (!action_type?.includes('FOLLOWME')) {
-      return channel_ext || new_src || src;
-    }
+  if (userfield === 'Outbound' && !action_type?.includes('FOLLOWME')) {
+    return channel_ext || new_src || src;
   }
 
-  if (userfield === 'Inbound') {
-    if (lastapp === 'Queue') {
-      return dstanswer || dstchannel_ext || dst;
-    }
+  if (userfield === 'Inbound' && lastapp === 'Queue') {
+    return dstanswer || dstchannel_ext || dst;
   }
 };
 
@@ -171,10 +167,10 @@ export const extractOperatorId = (params) => {
 };
 
 export const getConversationContent = async (models: IModels, cdrParams) => {
-  const disposition = cdrParams.disposition;
+  const { disposition } = cdrParams;
 
   if (!cdrParams.uniqueid) {
-    return 'uniqueId байхгүй';
+    return 'uniqueId not found';
   }
 
   const relatedCdrs = await models.CallCdrs.find({

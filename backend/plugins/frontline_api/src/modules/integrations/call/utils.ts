@@ -53,7 +53,7 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
     isAddExtention,
     isGetExtension,
     isCronRunning,
-    extentionNumber: extension,
+    extensionNumber: extension,
   } = args;
 
   if (retryCount <= 0) {
@@ -66,7 +66,7 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
 
   const { wsServer = '' } = integration;
   const operator = integration.operators.find((op) => op.userId === user?._id);
-  const extentionNumber = isCronRunning
+  const extensionNumber = isCronRunning
     ? extension
     : operator?.gsUsername || '1001';
 
@@ -85,7 +85,7 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
       request: {
         ...data.request,
         cookie,
-        ...(isAddExtention && { extension: extentionNumber }),
+        ...(isAddExtention && { extension: extensionNumber }),
       },
     }),
   };
@@ -117,12 +117,12 @@ export const sendToGrandStream = async (models: IModels, args, user) => {
         )) as any;
       }
       if (isGetExtension) {
-        return { response, extentionNumber };
+        return { response, extensionNumber };
       }
       return response;
     }
     if (isGetExtension) {
-      return { res, extentionNumber };
+      return { res, extensionNumber };
     }
 
     return res;
@@ -142,7 +142,8 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     CALL_CRON_API_EXPIRY = '604800', // Default 7d for cron
   } = process.env;
   //disable on production !!!
-  // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  if (process.env.NODE_ENV !== 'production')
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   // Validate credentials
   if (!isCron && (!CALL_API_USER || !CALL_API_PASSWORD)) {
@@ -184,10 +185,10 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
 
     const data = await challengeResponse.json();
     const { challenge } = data?.response;
-    const hashedPassword = crypto
-      .createHash('md5')
-      .update(challenge + apiPassword)
-      .digest('hex');
+
+    const bcrypt = require('bcrypt');
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(challenge + apiPassword, saltRounds);
 
     const loginResponse = await sendRequest(`https://${wsServer}/api`, {
       method: 'POST',
@@ -246,7 +247,7 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
   let operator = operatorPhone || history.operatorPhone;
   const fetchRecordUrl = async (retryCount) => {
     try {
-      const { response, extentionNumber } = await sendToGrandStream(
+      const { response, extensionNumber } = await sendToGrandStream(
         models,
         {
           path: 'api',
@@ -260,7 +261,7 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
               sord: 'asc',
             },
           },
-          extentionNumber: history.extentionNumber,
+          extensionNumber: history.extensionNumber,
           integrationId: inboxIntegrationId,
           retryCount,
           isConvertToJson: true,
@@ -276,7 +277,7 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
       }
 
       const extension = queues.find((queueItem) =>
-        queueItem.members.split(',').includes(extentionNumber),
+        queueItem.members.split(',').includes(extensionNumber),
       )?.extension;
       const tz = 'Asia/Ulaanbaatar';
       const startDate = (
@@ -287,15 +288,15 @@ export const getRecordUrl = async (params, user, models, subdomain) => {
       ).format('YYYY-MM-DD');
 
       let caller = customerPhone;
-      let callee = extentionNumber || extension || operator;
+      let callee = extensionNumber || extension || operator;
 
       if (transferredCallStatus === 'remote') {
-        callee = extentionNumber || extension;
+        callee = extensionNumber || extension;
       }
 
       let fileDir = 'monitor';
       if (callType === 'outgoing') {
-        caller = extentionNumber;
+        caller = extensionNumber;
         callee = customerPhone;
       }
       const startTime = isCronRunning
@@ -586,7 +587,7 @@ const createHistoryObject = (cdr, result) => {
     callStatus: cdr.disposition === 'ANSWERED' ? 'connected' : 'missed',
     timeStamp: cdr.cdr ? parseInt(cdr.cdr) : 0,
     createdAt: cdr.start ? new Date(cdr.start) : new Date(),
-    extentionNumber: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src,
+    extensionNumber: cdr.userfield === 'Inbound' ? cdr.dst : cdr.src,
     inboxIntegrationId: result.inboxId,
     recordFiles: cdr.recordfiles,
     queueName: cdr.lastdata ? cdr.lastdata.split(',')[0] : '',
@@ -700,7 +701,7 @@ export const getUrl = (subdomain) => {
   }
 
   if (VERSION === 'saas') {
-    return `https://${subdomain}.api.erxes.io/api/upload-file`;
+    return `https://${domain}/api/upload-file`;
   }
 
   return `${domain}/gateway/pl:core/upload-file`;

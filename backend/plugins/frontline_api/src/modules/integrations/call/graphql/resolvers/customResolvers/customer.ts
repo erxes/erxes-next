@@ -1,7 +1,7 @@
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 
 export default {
-  async customer({ customerPhone }, {}, {}) {
+  async customer({ customerPhone }, _context, _user) {
     if (!customerPhone) {
       return null;
     }

@@ -22,11 +22,11 @@ export const loadCallOperatorClass = (models: IModels) => {
       return operator;
     }
     public static async updateOperator(userId: string, status: string) {
-      const operator = await models.CallOperators.updateOne(
+      const operator = await models.CallOperators.findOneAndUpdate(
         { userId: userId },
         { $set: { status: status } },
+        { new: true },
       );
-
       return operator;
     }
   }

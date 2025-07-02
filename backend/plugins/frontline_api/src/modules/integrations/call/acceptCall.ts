@@ -17,9 +17,9 @@ const acceptCall = async (
     (operator) => operator.userId === user?._id,
   );
   params.operatorPhone = integration.phone;
-  params.extentionNumber = operator?.gsUsername || '';
+  params.extensionNumber = operator?.gsUsername || '';
   const {
-    extentionNumber,
+    extensionNumber,
     operatorPhone,
     customerPhone,
     callStartTime,
@@ -51,7 +51,7 @@ const acceptCall = async (
       createdBy: user._id,
       updatedBy: user._id,
       callDuration: 0,
-      extentionNumber,
+      extensionNumber,
       queueName: queue,
       timeStamp,
     };

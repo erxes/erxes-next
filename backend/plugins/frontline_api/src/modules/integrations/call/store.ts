@@ -17,8 +17,12 @@ export const getOrCreateCustomer = async (
   callAccount: any,
 ) => {
   const { inboxIntegrationId, primaryPhone } = callAccount;
+
+  if (typeof primaryPhone !== 'string') {
+    throw new Error('Invalid primaryPhone: must be a string');
+  }
   let customer = await models.CallCustomers.findOne({
-    primaryPhone,
+    primaryPhone: { $eq: primaryPhone },
     status: 'completed',
   });
   if (!customer) {

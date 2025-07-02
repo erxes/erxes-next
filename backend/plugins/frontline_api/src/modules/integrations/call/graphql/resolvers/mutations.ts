@@ -150,7 +150,7 @@ const callsMutations = {
         timeStamp: doc.timeStamp,
       });
       if (cancelledCall) {
-        return 'Already exists this history';
+        return 'This history already exists';
       }
       const integration = await findIntegration(subdomain, {
         inboxIntegrationId: doc.inboxIntegrationId,
@@ -179,7 +179,7 @@ const callsMutations = {
 
         const history = new models.CallHistory({
           ...doc,
-          extentionNumber: operator.gsUsername,
+          extensionNumber: operator.gsUsername,
           operatorPhone: integration.phone,
           createdAt: new Date(),
           createdBy: doc.endedBy ? user._id : null,
@@ -304,7 +304,7 @@ const callsMutations = {
       (operator) => operator.userId === user?._id,
     );
 
-    const extentionNumber = operator?.gsUsername || '1001';
+    const extensionNumber = operator?.gsUsername || '1001';
 
     const queueData = (await sendToGrandStream(
       models,
@@ -316,7 +316,7 @@ const callsMutations = {
           request: {
             action: 'pauseUnpauseQueueAgent',
             operatetype: status,
-            interface: extentionNumber,
+            interface: extensionNumber,
           },
         },
         integrationId: integrationId,
@@ -327,21 +327,19 @@ const callsMutations = {
       user,
     )) as any;
 
-    if (queueData && queueData.response) {
-      const { need_apply } = queueData?.response;
-      if (need_apply) {
-        const operator = await models.CallOperators.getOperator(user._id);
-        if (operator) {
-          await models.CallOperators.updateOperator(user._id, status);
-        } else if (!operator) {
-          await models.CallOperators.create({
-            userId: user._id,
-            status,
-            extension: extentionNumber,
-          });
-        }
-        return need_apply;
+    if (queueData?.response) {
+      const { need_apply } = queueData.response;
+      const operator = await models.CallOperators.getOperator(user._id);
+      if (operator) {
+        await models.CallOperators.updateOperator(user._id, status);
+      } else if (!operator) {
+        await models.CallOperators.create({
+          userId: user._id,
+          status,
+          extension: extensionNumber,
+        });
       }
+      return need_apply;
     }
     return 'failed';
   },
@@ -369,7 +367,7 @@ const callsMutations = {
 
     const {
       response: listBridgedChannelsResponse,
-      extentionNumber: extension,
+      extensionNumber: extension,
     } = await sendToGrandStream(models, listBridgedChannelsPayload, user);
     let channel = '';
     if (listBridgedChannelsResponse?.response) {

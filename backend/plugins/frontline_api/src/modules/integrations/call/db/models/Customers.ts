@@ -23,7 +23,7 @@ export interface ICallCustomerModel extends Model<ICustomerDocument> {
 export const loadCallCustomerClass = (models: IModels) => {
   class Customer {
     public static async checkDuplication(
-      primaryPhone: string,
+      primaryPhone: string | number,
       idsToExclude?: string[] | string,
     ) {
       const query = {} as any;
@@ -31,10 +31,9 @@ export const loadCallCustomerClass = (models: IModels) => {
 
       // Adding exclude operator to the query
       if (idsToExclude) {
-        query._id =
-          idsToExclude instanceof Array
-            ? { $nin: idsToExclude }
-            : { $ne: idsToExclude };
+        query._id = Array.isArray(idsToExclude)
+          ? { $nin: idsToExclude }
+          : { $ne: idsToExclude };
       }
 
       if (!primaryPhone) {

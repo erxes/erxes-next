@@ -89,8 +89,7 @@ async function processQueueState(
 }
 
 async function processCallQueueMonitoring(): Promise<void> {
-  console.log(getEnv({ name: 'CALL_CRON_ENABLED' }), 'getEnv({ name:  })');
-  if (!getEnv({ name: 'CALL_CRON_ENABLED' })) {
+  if (!getEnv({ name: 'CALL_DASHBOARD_ENABLED' })) {
     console.log('Call monitoring disabled or not in OS version');
     return;
   }
@@ -198,9 +197,9 @@ export async function initializeCallQueueMonitoring(): Promise<{
   const callMonitorQueue = new Queue<QueueJobData>(QUEUE_NAMES.CALL_MONITOR, {
     connection: redisConnection,
     defaultJobOptions: {
-      removeOnComplete: 5, // Keep last 5 completed jobs
-      removeOnFail: 10, // Keep last 10 failed jobs
-      attempts: 1, // Retry failed jobs 1 times
+      removeOnComplete: 5,
+      removeOnFail: 10,
+      attempts: 1,
       backoff: {
         type: 'exponential',
         delay: 2000,
@@ -211,7 +210,7 @@ export async function initializeCallQueueMonitoring(): Promise<{
   await callMonitorQueue.upsertJobScheduler(
     `${JOB_NAMES.MONITOR_QUEUES}-${'os'}`,
     {
-      every: 3000, // 3 seconds
+      every: 3000,
     },
     {
       name: JOB_NAMES.MONITOR_QUEUES,
@@ -303,7 +302,7 @@ export async function triggerCallQueueMonitoring(): Promise<Job<QueueJobData>> {
     connection: redisConnection,
   });
 
-  const job = await queue.add(
+  return await queue.add(
     JOB_NAMES.MONITOR_QUEUES,
     {
       jobType: 'call-queue-monitor',
@@ -312,8 +311,6 @@ export async function triggerCallQueueMonitoring(): Promise<Job<QueueJobData>> {
       priority: 10,
     },
   );
-
-  return job;
 }
 
 export async function getCallQueueMetrics(): Promise<{

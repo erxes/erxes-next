@@ -29,12 +29,6 @@ export const loadCallIntegrationClass = (models: IModels) => {
         return [];
       }
 
-      if (integrationId) {
-        const a = integrations.map((integration: ICallIntegration) => {
-          return integration.inboxId === integrationId;
-        });
-      }
-
       const filteredIntegration = integrations.map((item: ICallIntegration) => {
         let integration = item;
 

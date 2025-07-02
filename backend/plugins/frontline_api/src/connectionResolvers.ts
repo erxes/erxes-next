@@ -214,6 +214,7 @@ export const loadClasses = (
     ICallIntegrationDocument,
     ICallIntegrationModel
   >('calls_integrations', loadCallIntegrationClass(models));
+
   models.CallCustomers = db.model<ICallCustomer, ICallCustomerModel>(
     'calls_customers',
     loadCallCustomerClass(models),

@@ -17,7 +17,10 @@ export const configSchema = new Schema({
 export interface ICallConfigModel extends Model<ICallConfigDocument> {
   getConfig(code: string): Promise<ICallConfigDocument>;
   updateConfigs(configsMap): Promise<void>;
-  createOrUpdateConfig({ code, value }: ICallConfig): ICallConfigDocument;
+  createOrUpdateConfig({
+    code,
+    value,
+  }: ICallConfig): Promise<ICallConfigDocument>;
 }
 
 export const loadCallConfigClass = (models: IModels) => {
@@ -43,7 +46,7 @@ export const loadCallConfigClass = (models: IModels) => {
       value,
     }: {
       code: string;
-      value: string[];
+      value: any;
     }) {
       const obj = await models.CallConfigs.findOne({ code });
 

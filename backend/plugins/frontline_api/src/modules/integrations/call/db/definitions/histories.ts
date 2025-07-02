@@ -38,7 +38,7 @@ export const callHistorySchema = new Schema({
   createdAt: field({ type: Date, label: 'created date', default: new Date() }),
   createdBy: field({ type: String, label: 'created By' }),
   modifiedBy: field({ type: String, label: 'updated By' }),
-  extentionNumber: field({ type: String, label: 'extention number' }),
+  extensionNumber: field({ type: String, label: 'extention number' }),
   conversationId: field({ type: String, label: 'erxes conversation id' }),
   inboxIntegrationId: field({ type: String, label: 'erxes integration id' }),
   recordUrl: field({ type: String, label: 'record url' }),
