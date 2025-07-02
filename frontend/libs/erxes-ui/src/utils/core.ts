@@ -18,17 +18,10 @@ export const readImage = (
   }
 
   if (REACT_APP_IMAGE_CDN_URL) {
-    let url = `${REACT_APP_IMAGE_CDN_URL}`;
+    let url = `${REACT_APP_IMAGE_CDN_URL}/width=${width || 500}`;
 
-    url = url + `width=${width || 500}`;
-
-    if (format) {
-      url = url + `,format=${format}`;
-    }
-
-    if (quality) {
-      url = url + `,quality=${quality}`;
-    }
+    url += format ? `,format=${format}` : '';
+    url += quality ? `,quality=${quality}` : '';
 
     return `${url}/${REACT_APP_API_URL}/read-file?key=${encodeURIComponent(
       value,
