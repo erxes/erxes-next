@@ -34,7 +34,6 @@ const getApi = (): string => {
 };
 
 const cdnUrl = () => {
-  console.log(process.env);
   return (
     window.env?.REACT_APP_IMAGE_CDN_URL ?? process.env.REACT_APP_IMAGE_CDN_URL
   );
