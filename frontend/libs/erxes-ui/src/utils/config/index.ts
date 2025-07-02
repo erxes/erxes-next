@@ -33,7 +33,15 @@ const getApi = (): string => {
   return memoizedApiUrl;
 };
 
+const cdnUrl = () => {
+  console.log(process.env);
+  return (
+    window.env?.REACT_APP_IMAGE_CDN_URL ?? process.env.REACT_APP_IMAGE_CDN_URL
+  );
+};
+
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const REACT_APP_API_URL = getApi();
+const REACT_APP_IMAGE_CDN_URL = cdnUrl();
 
-export { NODE_ENV, REACT_APP_API_URL };
+export { NODE_ENV, REACT_APP_API_URL, REACT_APP_IMAGE_CDN_URL };

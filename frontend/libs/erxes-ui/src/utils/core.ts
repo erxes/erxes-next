@@ -1,10 +1,12 @@
-import { REACT_APP_API_URL } from 'erxes-ui/utils';
+import { REACT_APP_API_URL, REACT_APP_IMAGE_CDN_URL } from 'erxes-ui/utils';
 import { isValidURL } from 'erxes-ui/utils/urlParser';
 
-export const readFile = (
+export const readImage = (
   value: string,
   width?: number,
-  inline?: boolean
+  inline?: boolean,
+  format?: string,
+  quality?: number,
 ): string => {
   if (
     !value ||
@@ -15,6 +17,24 @@ export const readFile = (
     return value;
   }
 
+  if (REACT_APP_IMAGE_CDN_URL) {
+    let url = `${REACT_APP_IMAGE_CDN_URL}`;
+
+    url = url + `width=${width || 500}`;
+
+    if (format) {
+      url = url + `,format=${format}`;
+    }
+
+    if (quality) {
+      url = url + `,quality=${quality}`;
+    }
+
+    return `${url}/${REACT_APP_API_URL}/read-file?key=${encodeURIComponent(
+      value,
+    )}`;
+  }
+
   let url = `${REACT_APP_API_URL}/read-file?key=${encodeURIComponent(value)}`;
 
   if (width) {
@@ -23,6 +43,10 @@ export const readFile = (
 
   if (inline) {
     url += `&inline=${inline}`;
+  }
+
+  if (format) {
+    url += `&format=${format}`;
   }
 
   return url;
