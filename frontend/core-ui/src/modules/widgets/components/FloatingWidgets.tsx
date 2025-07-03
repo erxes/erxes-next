@@ -6,6 +6,7 @@ export const FloatingWidgets = () => {
 
   return modules.map((module) => (
     <RenderPluginsComponent
+      key={module.name}
       pluginName={`${module.pluginName}_ui`}
       remoteModuleName="floatingWidget"
       moduleName={module.name}

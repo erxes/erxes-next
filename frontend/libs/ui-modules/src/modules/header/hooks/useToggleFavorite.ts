@@ -6,14 +6,14 @@ import { useLocation } from 'react-router-dom';
 export const useToggleFavorite = () => {
   const { pathname } = useLocation();
 
-  const { isFavorite, refetch } = useIsFavorite({ path: pathname });
+  const { isFavorite } = useIsFavorite({ path: pathname });
+
   const [toggleFavoriteMutation] = useMutation(TOGGLE_FAVORITE);
 
   const toggleFavorite = () => {
     toggleFavoriteMutation({
       variables: { type: 'module', path: pathname },
-    }).then(() => {
-      refetch();
+      refetchQueries: ['isFavorite', 'getFavoritesByCurrentUser'],
     });
   };
 
