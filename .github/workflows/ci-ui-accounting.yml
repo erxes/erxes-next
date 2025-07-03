@@ -50,6 +50,7 @@ jobs:
           pnpm nx build accounting_ui
 
       - name: Sync to Cloudflare R2
+        if: github.event_name == 'push' && ( github.ref == 'refs/heads/main' )
         run: |
           aws s3 sync dist/frontend/plugins/accounting_ui s3://erxes-next/latest/accounting_ui/ \
             --endpoint-url https://7c8392aff8ac4518aa06dfa4b6337ef2.r2.cloudflarestorage.com
