@@ -1,5 +1,4 @@
 import { MutationHookOptions, useMutation } from '@apollo/client';
-
 import { EDIT_CUSTOMERS } from '../graphql/mutations/editCustomers';
 
 export const useCustomerEdit = () => {

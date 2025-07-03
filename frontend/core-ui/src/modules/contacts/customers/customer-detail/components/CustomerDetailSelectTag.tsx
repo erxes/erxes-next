@@ -16,7 +16,7 @@ export const CustomerDetailSelectTag = ({
       <Label asChild>
         <legend>Tags</legend>
       </Label>
-      <SelectTags
+      <SelectTags.Provider
         tagType="core:customer"
         value={tagIds}
         options={(newSelectedTagIds) => ({
@@ -47,7 +47,7 @@ export const CustomerDetailSelectTag = ({
             <SelectTags.Content />
           </Combobox.Content>
         </Popover>
-      </SelectTags>
+      </SelectTags.Provider>
     </fieldset>
   );
 };

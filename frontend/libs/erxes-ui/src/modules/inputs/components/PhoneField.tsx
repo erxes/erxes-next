@@ -39,13 +39,15 @@ export const PhoneFieldsProvider = ({
   children,
   recordId,
   onValueChange,
+  onValidationStatusChange
 }: {
   children: React.ReactNode;
   recordId: string;
   onValueChange: (phones: TPhones) => void;
+  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
 }) => {
   return (
-    <PhoneFieldsContext.Provider value={{ recordId, onValueChange }}>
+    <PhoneFieldsContext.Provider value={{ recordId, onValueChange, onValidationStatusChange }}>
       {children}
     </PhoneFieldsContext.Provider>
   );

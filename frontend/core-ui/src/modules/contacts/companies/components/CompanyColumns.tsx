@@ -5,9 +5,9 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import type { ColumnDef } from '@tanstack/react-table';
-
 import {
   Avatar,
+  Badge,
   EmailDisplay,
   EmailListField,
   Input,
@@ -20,6 +20,7 @@ import {
   RecordTableCellTrigger,
   RecordTablePopover,
   TextOverflowTooltip,
+  useQueryState,
 } from 'erxes-ui';
 import { useCompaniesEdit } from '@/contacts/companies/hooks/useCompaniesEdit';
 import { TCompany } from '@/contacts/types/companyType';
@@ -27,13 +28,10 @@ import { ContactsHotKeyScope } from '@/contacts/types/ContactsHotKeyScope';
 import { ApolloError } from '@apollo/client';
 import { useToast } from 'erxes-ui';
 import { SelectMember, SelectTags } from 'ui-modules';
+import { useSetAtom } from 'jotai';
+import { renderingCompanyDetailAtom } from '@/contacts/states/companyDetailStates';
 
 export const companyColumns: ColumnDef<TCompany>[] = [
-  {
-    id: 'more',
-    cell: () => <RecordTable.MoreButton className="w-full h-full" />,
-    size: 33,
-  },
   RecordTable.checkboxColumn as ColumnDef<TCompany>,
   {
     id: 'avatar',
@@ -65,9 +63,17 @@ export const companyColumns: ColumnDef<TCompany>[] = [
     ),
     cell: ({ cell }) => {
       const { primaryName } = cell.row.original;
+      const setRenderingCompanyDetail = useSetAtom(renderingCompanyDetailAtom);
+      const [, setCompanyDetail] = useQueryState('companyId');
       return (
         <RecordTablePopover>
-          <RecordTableCellTrigger>{primaryName}</RecordTableCellTrigger>
+          <RecordTableCellTrigger>
+            <Badge variant="secondary" onClick={(e) => {
+              e.stopPropagation();
+              setRenderingCompanyDetail(true);
+              setCompanyDetail(cell.row.original._id);
+            }}>{primaryName}</Badge>
+          </RecordTableCellTrigger>
           <RecordTableCellContent className="min-w-72">
             <Input value={primaryName || ''} />
           </RecordTableCellContent>
@@ -221,7 +227,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
                       });
                     },
                   },
-                  ['primaryPhone', 'phones', 'emailValidationStatus'],
+                  ['primaryPhone', 'phones'],
                 );
               }}
             />

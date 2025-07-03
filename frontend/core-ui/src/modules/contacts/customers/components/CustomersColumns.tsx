@@ -138,6 +138,9 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       return (
         <RecordTablePopover
           scope={ContactsHotKeyScope.CustomersPage + '.' + _id + '.Emails'}
+          scopeOptions={{
+            preventDefault: false,
+          }}
         >
           <RecordTableCellTrigger>
             <EmailDisplay emails={_emails} />
@@ -145,6 +148,23 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           <RecordTableCellContent className="w-72">
             <EmailListField
               recordId={_id}
+              onValidationStatusChange={(status) => {
+                customersEdit(
+                  {
+                    variables: {
+                      _id,
+                      emailValidationStatus: status === 'verified' ? 'valid' : 'invalid',
+                    },
+                    onError: (e: ApolloError) => {
+                      toast({
+                        title: 'Error',
+                        description: e.message,
+                      });
+                    },
+                  },
+                  ['emailValidationStatus'],
+                );
+              }}
               onValueChange={(newEmails) => {
                 const primaryEmail = newEmails.find((email) => email.isPrimary);
                 let newEmailValidationStatus;
@@ -169,7 +189,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                       });
                     },
                   },
-                  ['primaryEmail', 'emails', 'emailValidationStatus'],
+                  ['primaryEmail', 'emails'],
                 );
               }}
               emails={_emails}
@@ -248,7 +268,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
                       });
                     },
                   },
-                  ['primaryPhone', 'phones', 'emailValidationStatus'],
+                  ['primaryPhone', 'phones'],
                 );
               }}
             />

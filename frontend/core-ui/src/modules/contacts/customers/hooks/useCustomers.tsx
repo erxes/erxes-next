@@ -17,64 +17,70 @@ import { useIsCustomerLeadSessionKey } from './useCustomerLeadSessionKey';
 
 const CUSTOMERS_PER_PAGE = 30;
 
+
+export const useCustomersVariables = (variables?: QueryHookOptions<ICursorListResponse<ICustomer>>['variables']) => {
+  const { isLead } = useIsCustomerLeadSessionKey();
+  const [{ searchValue, tags, created, updated, lastSeen, brand, birthday }] =
+  useMultiQueryState<{
+    searchValue: string;
+    tags: string[];
+    created: string;
+    updated: string;
+    lastSeen: string;
+    brand: string;
+    birthday: string;
+  }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen', 'brand', 'birthday']);
+const { sessionKey } = useIsCustomerLeadSessionKey();
+
+const { cursor } = useRecordTableCursor({
+  sessionKey,
+});
+
+const customersQueryVariables = {
+  limit: CUSTOMERS_PER_PAGE,
+  orderBy: {
+    createdAt: -1,
+  },
+  cursor,
+  searchValue: searchValue || undefined,
+  tagIds: tags || undefined,
+  brandIds: brand ? [brand] : undefined,
+  dateFilters: JSON.stringify({
+    createdAt: {
+      gte: parseDateRangeFromString(created)?.from,
+      lte: parseDateRangeFromString(created)?.to,
+    },
+    updatedAt: {
+      gte: parseDateRangeFromString(updated)?.from,
+      lte: parseDateRangeFromString(updated)?.to,
+    },
+    lastSeenAt: {
+      gte: parseDateRangeFromString(lastSeen)?.from,
+      lte: parseDateRangeFromString(lastSeen)?.to,
+    },
+    birthDate: {
+      gte: parseDateRangeFromString(birthday)?.from,
+      lte: parseDateRangeFromString(birthday)?.to,
+    }
+  }),
+  type: isLead ? 'lead' : 'customer',
+  ...variables,
+};
+return {customersQueryVariables};
+}
+
+
 export const useCustomers = (
   options?: QueryHookOptions<ICursorListResponse<ICustomer>>,
 ) => {
-  const { isLead } = useIsCustomerLeadSessionKey();
+
   const setCustomerTotalCount = useSetAtom(customerTotalCountAtom);
   // Customer Filter implementation
-  const [{ searchValue, tags, created, updated, lastSeen, brand, birthday }] =
-    useMultiQueryState<{
-      searchValue: string;
-      tags: string[];
-      created: string;
-      updated: string;
-      lastSeen: string;
-      brand: string;
-      birthday: string;
-    }>(['searchValue', 'tags', 'created', 'updated', 'lastSeen', 'brand', 'birthday']);
-  const { sessionKey } = useIsCustomerLeadSessionKey();
-
-  const { cursor } = useRecordTableCursor({
-    sessionKey,
-  });
-  
-  const customersQueryVariables = {
-    limit: CUSTOMERS_PER_PAGE,
-    orderBy: {
-      createdAt: -1,
-    },
-    cursor,
-    searchValue,
-    tagIds: tags,
-    brandIds: [brand],
-    dateFilters: JSON.stringify({
-      createdAt: {
-        gte: parseDateRangeFromString(created)?.from,
-        lte: parseDateRangeFromString(created)?.to,
-      },
-      updatedAt: {
-        gte: parseDateRangeFromString(updated)?.from,
-        lte: parseDateRangeFromString(updated)?.to,
-      },
-      lastSeenAt: {
-        gte: parseDateRangeFromString(lastSeen)?.from,
-        lte: parseDateRangeFromString(lastSeen)?.to,
-      },
-      birthDate: {
-        gte: parseDateRangeFromString(birthday)?.from,
-        lte: parseDateRangeFromString(birthday)?.to,
-      }
-    }),
-    type: isLead ? 'lead' : 'customer',
-    ...options?.variables,
-  };
-
   const { data, loading, fetchMore } = useQuery<ICursorListResponse<ICustomer>>(
     GET_CUSTOMERS,
     {
       ...options,
-      variables: customersQueryVariables,
+      variables: useCustomersVariables(options?.variables)?.customersQueryVariables,
     },
   );
 
@@ -123,6 +129,5 @@ export const useCustomers = (
     handleFetchMore,
     pageInfo,
     totalCount,
-    customersQueryVariables,
   };
 };
