@@ -1,10 +1,10 @@
-import { TR_RECORDS_QUERY } from '../graphql/adjustInventoryQueries';
+import { ADJUST_INVENTORIES_QUERY } from '../graphql/adjustInventoryQueries';
 import { OperationVariables, useQuery } from '@apollo/client';
 import { ACC_TRS__PER_PAGE } from '../../../transactions/types/constants';
 
 export const useAdjustInventories = (options?: OperationVariables) => {
   const { data, loading, error, fetchMore } = useQuery(
-    TR_RECORDS_QUERY,
+    ADJUST_INVENTORIES_QUERY,
     {
       ...options,
       variables: {
@@ -14,20 +14,20 @@ export const useAdjustInventories = (options?: OperationVariables) => {
       },
     }
   );
-  const { accTrRecords, accTrRecordsCount } = data || {};
+  const { adjustInventories, adjustInventoriesCount } = data || {};
 
   const handleFetchMore = () => {
-    if (accTrRecords?.length < accTrRecordsCount) {
+    if (adjustInventories?.length < adjustInventoriesCount) {
       fetchMore({
         variables: {
           perPage: ACC_TRS__PER_PAGE,
-          page: Math.ceil(accTrRecords?.length / ACC_TRS__PER_PAGE) + 1,
+          page: Math.ceil(adjustInventories?.length / ACC_TRS__PER_PAGE) + 1,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           return {
             ...prev,
             ...fetchMoreResult,
-            accTrRecords: [...prev.accTrRecords, ...fetchMoreResult.accTrRecords],
+            adjustInventories: [...prev.adjustInventories, ...fetchMoreResult.adjustInventories],
           };
         },
       });
@@ -35,8 +35,8 @@ export const useAdjustInventories = (options?: OperationVariables) => {
   };
 
   return {
-    trRecords: data?.accTrRecords,
-    totalCount: data?.accTrRecordsCount,
+    adjustInventories: data?.adjustInventories,
+    totalCount: data?.adjustInventoriesCount,
     loading,
     error,
     handleFetchMore,

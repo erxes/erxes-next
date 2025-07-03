@@ -18,7 +18,8 @@ import {
   VatRows as QueriesVatRows,
   CtaxRows as QueriesCtaxRows,
   Transactions as QueriesTransactions,
-  Inventories as QueriesInventories
+  Inventories as QueriesInventories,
+  AdjustInventories as QueriesAdjustInventories,
 } from '@/accounting/graphql/resolvers/queries';
 
 const resolvers: any = {
@@ -43,6 +44,7 @@ const resolvers: any = {
     ...QueriesCtaxRows,
     ...QueriesTransactions,
     ...QueriesInventories,
+    ...QueriesAdjustInventories,
   },
 };
 

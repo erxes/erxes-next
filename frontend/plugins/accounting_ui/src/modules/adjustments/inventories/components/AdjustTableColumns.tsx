@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { Cell, ColumnDef } from '@tanstack/react-table';
-import { ITrRecord } from '../types/AdjustInventory';
+import { IAdjustInventory } from '../types/AdjustInventory';
+import { Link } from 'react-router-dom';
 import {
-  useQueryState,
   RecordTable,
   Input,
   RecordTablePopover,
@@ -41,18 +41,16 @@ const DateCell = ({ getValue }: any) => {
 const TransactionMoreColumnCell = ({
   cell,
 }: {
-  cell: Cell<ITrRecord, unknown>;
+  cell: Cell<IAdjustInventory, unknown>;
 }) => {
-  const [, setOpen] = useQueryState('transaction_id');
   const { _id } = cell.row.original;
 
   return (
-    <RecordTable.MoreButton
-      className="w-full h-full"
-      onClick={() => {
-        setOpen(_id);
-      }}
-    />
+    <Link
+      to={`/accounting/adjustment/inventory/edit?id=${_id}`}
+    >
+      <RecordTable.MoreButton className="w-full h-full" />
+    </Link>
   );
 };
 
@@ -62,9 +60,8 @@ const transactionMoreColumn = {
   size: 33,
 };
 
-export const adjustTableColumns: ColumnDef<ITrRecord>[] = [
+export const adjustTableColumns: ColumnDef<IAdjustInventory>[] = [
   transactionMoreColumn,
-  RecordTable.checkboxColumn as ColumnDef<ITrRecord>,
   {
     id: 'date',
     header: () => <RecordTable.InlineHead icon={IconCalendar} label="Date" />,

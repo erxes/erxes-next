@@ -1,209 +1,50 @@
 import { gql } from '@apollo/client';
 
-const followTrType = `
-  type
-  id
-`;
-
-export const commonTrDetailFields = `
+export const adjustInventoryFields = `
   _id
-  accountId
-  transactionId
-  originId
-  followType
-  originSubId
-  followInfos
-  follows {
-    ${followTrType}
-  }
-
-  side
-  amount
-  currencyAmount
-  customRate
-  assignedUserId
-
-  productId
-  count
-  unitPrice
-`;
-
-export const commonTransactionFields = `
-  _id
-  ptrId
-  parentId
-  number
-  ptrStatus
   createdAt
+  createdBy
   updatedAt
+  modifiedBy
 
   date
   description
   status
-  journal
-  originId
-  followType
-  originSubId
-  follows {
-    ${followTrType}
-  }
-
-  branchId
-  departmentId
-  customerType
-  customerId
-  assignedUserIds
-
-  branch {
-    _id
-    code
-    title
-  }
-
-  department {
-    _id
-    code
-    title
-  }
-
-  details {
-    ${commonTrDetailFields}
-    account {
-      _id
-      code
-      name
-      currency
-      kind
-      journal
-    }
-  }
-  shortDetail {
-    ${commonTrDetailFields}
-    account {
-      _id
-      code
-      name
-      currency
-    }
-  }
-  sumDt
-  sumCt
-  createdBy
-  modifiedBy
-
-  followTrs {
-    _id
-    ptrId
-    parentId
-    number
-    ptrStatus
-    details {
-      ${commonTrDetailFields}
-    }
-    shortDetail {
-      ${commonTrDetailFields}
-    }
-    sumDt
-    sumCt
-  }
-
-  hasVat
-  vatRowId
-  afterVat
-  isHandleVat
-  vatAmount
-  vatRow {
-    _id
-    number
-    name
-    percent
-  }
-
-  hasCtax
-  ctaxRowId
-  isHandleCtax
-  ctaxAmount
-  ctaxRow {
-    _id
-    number
-    name
-    percent
-  }
-
-  extraData
-
-  permission
+  error
+  warning
+  beginDate
+  successDate
+  checkedDate
 `;
 
-const trsFilterParamDefs = `
-  $ids: [String],
-  $excludeIds: Boolean,
-  $status: String,
-  $searchValue: String,
-  $number: String,
-
-  $accountIds: [String],
-  $accountType: String,
-  $accountExcludeIds: Boolean,
-  $accountStatus: String,
-  $accountCategoryId: String,
-  $accountSearchValue: String,
-  $accountBrand: String,
-  $accountIsOutBalance: Boolean,
-  $accountBranchId: String,
-  $accountDepartmentId: String,
-  $accountCurrency: String,
-  $accountJournal: String,
-
-  $brandId: String,
-  $isOutBalance: Boolean,
-  $branchId: String,
-  $departmentId: String,
-  $currency: String,
-  $journal: String,
-  $statuses: [String],
+const adjustInvFilterParamDefs = `
+  $startDate: Date
+  $endDate: Date
+  $description: String
+  $status: String
+  $error: String
+  $warning: String
+  $startBeginDate: Date
+  $endBeginDate: Date
+  $startSuccessDate: Date
+  $endSuccessDate: Date
+  $startCheckedDate: Date
+  $endCheckedDate: Date
 `;
 
-const trRecsFilterParamDefs = `
-  ${trsFilterParamDefs},
-  $groupRule: [String],
-  $folded: Boolean,
-`;
-
-const trsFilterParams = `
-  ids: $ids,
-  excludeIds: $excludeIds,
-  status: $status,
-  searchValue: $searchValue,
-  number: $number,
-
-  accountIds: $accountIds,
-  accountType: $accountType,
-  accountExcludeIds: $accountExcludeIds,
-  accountStatus: $accountStatus,
-  accountCategoryId: $accountCategoryId,
-  accountSearchValue: $accountSearchValue,
-  accountBrand: $accountBrand,
-  accountIsOutBalance: $accountIsOutBalance,
-  accountBranchId: $accountBranchId,
-  accountDepartmentId: $accountDepartmentId,
-  accountCurrency: $accountCurrency,
-  accountJournal: $accountJournal,
-
-  brandId: $brandId,
-  isOutBalance: $isOutBalance,
-  branchId: $branchId,
-  departmentId: $departmentId,
-  currency: $currency,
-  journal: $journal,
-  statuses: $statuses,
-`;
-
-const trRecsFilterParams = `
-  ${trsFilterParams}
-
-  groupRule: $groupRule,
-  folded: $folded,
+const adjustInvFilterParams = `
+  startDate: $startDate
+  endDate: $endDate
+  description: $description
+  status: $status
+  error: $error
+  warning: $warning
+  startBeginDate: $startBeginDate
+  endBeginDate: $endBeginDate
+  startSuccessDate: $startSuccessDate
+  endSuccessDate: $endSuccessDate
+  startCheckedDate: $startCheckedDate
+  endCheckedDate: $endCheckedDate
 `;
 
 const commonParamDefs = `
@@ -221,17 +62,17 @@ const commonParams = `
 `;
 
 export const ADJUST_INVENTORIES_QUERY = gql`
-  query AdjustInventories(${trRecsFilterParamDefs}, ${commonParamDefs}) {
-    AdjustInventories(${trRecsFilterParams}, ${commonParams}) {
-      ${commonTransactionFields}
+  query AdjustInventories(${adjustInvFilterParamDefs}, ${commonParamDefs}) {
+    adjustInventories(${adjustInvFilterParams}, ${commonParams}) {
+      ${adjustInventoryFields}
     }
-    AdjustInventoriesCount(${trRecsFilterParams})
+    adjustInventoriesCount(${adjustInvFilterParams})
   }
 `
 export const ADJUST_INVENTORY_DETAIL_QUERY = gql`
   query AdjustInventoryDetail($_id: String!) {
-    AdjustInventoryDetail(_id: $_id) {
-      ${commonTransactionFields}
+    adjustInventoryDetail(_id: $_id) {
+      ${adjustInventoryFields}
     }
   }
 `;

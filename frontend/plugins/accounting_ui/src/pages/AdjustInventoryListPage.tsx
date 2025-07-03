@@ -1,5 +1,5 @@
 import { AdjustTable } from '@/adjustments/inventories/components/AdjustTable';
-import { AddTransaction } from '@/transactions/components/AddTransaction';
+import { Link } from 'react-router-dom';
 import { AccountingLayout } from '@/layout/components/Layout';
 import { Button } from 'erxes-ui';
 import { IconPlus } from '@tabler/icons-react';
@@ -13,12 +13,13 @@ export const AdjustInventoryListPage = () => {
       <AdjustmentHeader>
         <div className="px-3">
           <TransactionsFilter />
-          <AddTransaction>
+          <Link to={`/accounting/adjustment/inventory/create`}>
             <Button>
               <IconPlus />
               Add Inventory Adjustment
             </Button>
-          </AddTransaction>
+          </Link>
+
         </div>
       </AdjustmentHeader>
       <TransactionsFilterBar />

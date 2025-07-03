@@ -5,6 +5,7 @@ import VatRows from './vatRows';
 import CtaxRows from './ctaxRows';
 import Transactions from './transactionsCommon';
 import Inventories from './inventories';
+import AdjustInventories from './adjustInventories';
 
 export {
   Accounts,
@@ -14,4 +15,5 @@ export {
   CtaxRows,
   Transactions,
   Inventories,
+  AdjustInventories
 };

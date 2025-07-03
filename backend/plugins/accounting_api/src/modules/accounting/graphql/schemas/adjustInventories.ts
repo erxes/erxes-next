@@ -63,17 +63,17 @@ const adjustInvParams = `
 `;
 
 export const queries = `
-  AdjustInventories(
+  adjustInventories(
     ${AdjustInventoriesQueryParams},
     page: Int,
     perPage: Int,
     sortField: String
     sortDirection: Int    
   ): [AdjustInventory]
-  AdjustInventoriesCount(${AdjustInventoriesQueryParams}): Int
-  AdjustInventoryDetail(_id: String): AdjustInventory
-  AdjustInventoryDetails(_id: String): [AdjustInvDetail]
-  AdjustInventoryDetailsCount(_id: String): Int
+  adjustInventoriesCount(${AdjustInventoriesQueryParams}): Int
+  adjustInventoryDetail(_id: String): AdjustInventory
+  adjustInventoryDetails(_id: String): [AdjustInvDetail]
+  adjustInventoryDetailsCount(_id: String): Int
 `;
 
 export const mutations = `

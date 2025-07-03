@@ -1,15 +1,15 @@
-import { useAdjustInventories } from '../hooks/useAdjustInventory';
+import { useAdjustInventories } from '../hooks/useAdjustInventories';
 import { adjustTableColumns } from './AdjustTableColumns';
 import { RecordTable } from 'erxes-ui';
 
 export const AdjustTable = () => {
-  const { trRecords, loading, totalCount, handleFetchMore } =
+  const { adjustInventories, loading, totalCount, handleFetchMore } =
     useAdjustInventories();
 
   return (
     <RecordTable.Provider
       columns={adjustTableColumns}
-      data={trRecords || []}
+      data={adjustInventories || []}
       stickyColumns={[]}
       className='m-3'
     >
@@ -18,7 +18,7 @@ export const AdjustTable = () => {
           <RecordTable.Header />
           <RecordTable.Body>
             <RecordTable.RowList />
-            {!loading && totalCount > trRecords?.length && (
+            {!loading && totalCount > adjustInventories?.length && (
               <RecordTable.RowSkeleton rows={4} handleInView={handleFetchMore} />
             )}
           </RecordTable.Body>
