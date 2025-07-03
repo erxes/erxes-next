@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { toast } from 'erxes-ui/hooks';
 import { REACT_APP_API_URL } from 'erxes-ui/utils';
+import { useToast } from 'erxes-ui/hooks';
 
 type FileInfo = {
   name: string;
@@ -44,6 +44,7 @@ type RemoveProps = {
 export const useUpload = () => {
   const [status, setStatus] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useToast();
 
   const upload = ({
     files,
@@ -133,10 +134,11 @@ export const useUpload = () => {
                 if (!response.ok) {
                   setStatus(false);
 
-                  return afterUpload({
-                    status: 'error',
-                    response,
-                    fileInfo,
+                  return toast({
+                    title: 'Error uploading file',
+                    description:
+                      'Failed to upload file please check your file upload config',
+                    variant: 'destructive',
                   });
                 }
 

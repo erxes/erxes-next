@@ -242,17 +242,16 @@ export const TagList = ({
   );
 };
 
-export const SelectTagsValue = ({
-  placeholder,
-}: {
-  placeholder?: string;
-}) => {
+export const SelectTagsValue = ({ placeholder }: { placeholder?: string }) => {
   const { selectedTags, mode } = useSelectTagsContext();
 
   if (selectedTags?.length > 1) return <>{selectedTags.length} tags selected</>;
 
   return (
-    <TagList placeholder={placeholder === undefined ? 'Select tags' : placeholder} renderAsPlainText={mode === 'single'} />
+    <TagList
+      placeholder={placeholder === undefined ? 'Select tags' : placeholder}
+      renderAsPlainText={mode === 'single'}
+    />
   );
 };
 
@@ -289,7 +288,7 @@ export const SelectTagsInlineCell = ({
     >
       <RecordTablePopover open={open} onOpenChange={setOpen} scope={scope}>
         <RecordTableCellTrigger>
-          <SelectTagsValue placeholder=""/>
+          <SelectTagsValue placeholder="" />
         </RecordTableCellTrigger>
         <RecordTableCellContent className="min-w-72">
           <SelectTagsContent />
