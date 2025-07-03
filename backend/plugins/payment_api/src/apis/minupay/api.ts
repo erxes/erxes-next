@@ -1,9 +1,10 @@
-import { IModels } from '../../connectionResolver';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
-import { IInvoiceDocument } from '../../models/definitions/invoices';
-import redis from '../../redis';
-import { BaseAPI } from '../base';
-import { ITransactionDocument } from '../../models/definitions/transactions';
+import { IModels } from '~/connectionResolvers';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
+import { IInvoiceDocument } from '~/modules/payment/@types/invoices';
+
+import { BaseAPI } from '~/apis/base';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
+import { redis } from 'erxes-api-shared/utils';
 
 export const minupayCallbackHandler = async (models: IModels, data: any) => {
   const { identifier } = data;

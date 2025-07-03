@@ -1,9 +1,9 @@
 import fetch from 'node-fetch';
 import { BaseAPI } from '../base';
-import { IModels } from '../../connectionResolver';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import redis from '../../redis';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
+import { IModels } from '~/connectionResolvers';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
+import { redis } from 'erxes-api-shared/utils';
 
 export const storepayCallbackHandler = async (
   models: IModels,

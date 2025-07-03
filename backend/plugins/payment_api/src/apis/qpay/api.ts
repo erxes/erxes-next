@@ -1,10 +1,9 @@
-import { IModels } from '../../connectionResolver';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import redis from '@erxes/api-utils/src/redis';
-import { BaseAPI } from '../base';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
+import { IModels } from '~/connectionResolvers';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
+import { BaseAPI } from '~/apis/base';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
 import { IQpayInvoice } from '../types';
-import { IPaymentDocument } from '../../models/definitions/payments';
+import { redis } from 'erxes-api-shared/utils';
 
 export const qpayCallbackHandler = async (models: IModels, data: any) => {
   const { _id } = data;

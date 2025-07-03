@@ -1,9 +1,7 @@
-import { IModels } from '../../connectionResolver';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import redis from '@erxes/api-utils/src/redis';
+import { IModels } from '~/connectionResolvers';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
 import Stripe from 'stripe';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
-import transaction from '../../graphql/resolvers/transaction';
 
 export const stripeCallbackHandler = async (models: IModels, data: any) => {
   const { type } = data;

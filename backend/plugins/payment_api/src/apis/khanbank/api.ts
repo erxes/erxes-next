@@ -1,7 +1,8 @@
-import { IModels } from '../../connectionResolver';
-import { sendCommonMessage } from '../../messageBroker';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import { PAYMENT_STATUS } from '../constants';
+
+import { IModels } from '~/connectionResolvers';
+
+import { PAYMENT_STATUS } from '~/constants';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
 
 export const khanbankCallbackHandler = async (
   models: IModels,
@@ -64,41 +65,42 @@ export class KhanbankAPI {
   }
 
   async createInvoice(_transaction: ITransactionDocument) {
+    // TODO: implement this after plugin communication is implemented
     try {
-      const account = await sendCommonMessage('khanbank', {
-        subdomain: this.subdomain,
-        action: 'accountInfo',
-        data: { configId: this.configId, accountNumber: this.accountNumber },
-        isRPC: true,
-        defaultValue: null,
-      });
+      // const account = await sendCommonMessage('khanbank', {
+      //   subdomain: this.subdomain,
+      //   action: 'accountInfo',
+      //   data: { configId: this.configId, accountNumber: this.accountNumber },
+      //   isRPC: true,
+      //   defaultValue: null,
+      // });
 
-      return { accountNumber: this.accountNumber, ibanAcctNo: this.ibanAcctNo, ...account };
+      // return { accountNumber: this.accountNumber, ibanAcctNo: this.ibanAcctNo, ...account };
     } catch (e) {
       return { error: e.message };
     }
   }
 
-  private async check(transaction) {
+  private async check(transaction: ITransactionDocument) {
     try {
 
-      const transactionResponse = await sendCommonMessage('khanbank', {
-        subdomain: this.subdomain,
-        action: 'findTransaction',
-        data: {
-          configId: this.configId,
-          accountNumber: this.accountNumber,
-          type: 'income',
-          description: transaction.description,
-          record: transaction.response.lastRecord,
-        },
-        isRPC: true,
-        defaultValue: null,
-      });
+      // const transactionResponse = await sendCommonMessage('khanbank', {
+      //   subdomain: this.subdomain,
+      //   action: 'findTransaction',
+      //   data: {
+      //     configId: this.configId,
+      //     accountNumber: this.accountNumber,
+      //     type: 'income',
+      //     description: transaction.description,
+      //     record: transaction.response.lastRecord,
+      //   },
+      //   isRPC: true,
+      //   defaultValue: null,
+      // });
 
-      if (transactionResponse) {
-        return PAYMENT_STATUS.PAID;
-      }
+      // if (transactionResponse) {
+      //   return PAYMENT_STATUS.PAID;
+      // }
 
       return PAYMENT_STATUS.PENDING;
     } catch (e) {

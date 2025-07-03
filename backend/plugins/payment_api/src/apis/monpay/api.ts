@@ -1,9 +1,9 @@
 import * as QRCode from 'qrcode';
 
-import { IModels } from '../../connectionResolver';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import { BaseAPI } from '../base';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
+import { IModels } from '~/connectionResolvers';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
+import { BaseAPI } from '~/apis/base';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
 import { IMonpayInvoice } from '../types';
 
 export const monpayCallbackHandler = async (models: IModels, data: any) => {

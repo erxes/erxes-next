@@ -24,6 +24,7 @@ export interface IModels {
 
 export interface IContext extends IMainContext {
   models: IModels;
+  subdomain: string;
 }
 
 export const loadClasses = (db: mongoose.Connection): IModels => {

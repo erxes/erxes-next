@@ -2,7 +2,7 @@ import { IOrderInput } from '../core-types';
 import dayjs from 'dayjs';
 import mongoose from 'mongoose';
 import { randomAlphanumeric } from './random';
-import { random } from '@/utils/string';
+import { random } from './string';
 
 export const getEnv = ({
   name,

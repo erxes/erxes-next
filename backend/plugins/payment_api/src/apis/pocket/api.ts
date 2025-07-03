@@ -1,11 +1,11 @@
 import fetch from 'node-fetch';
 import * as QRCode from 'qrcode';
-import { IModels } from '../../connectionResolver';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import redis from '../../redis';
-import { BaseAPI } from '../base';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
+import { IModels } from '~/connectionResolvers';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
+import { BaseAPI } from '~/apis/base';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
 import { IPocketInvoice } from '../types';
+import { redis } from 'erxes-api-shared/utils';
 
 export const pocketCallbackHandler = async (models: IModels, data: any) => {
   const { paymentId, invoiceId } = data;

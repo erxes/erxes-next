@@ -1,9 +1,9 @@
-import { IModels } from '../../connectionResolver';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
-import redis from '../../redis';
-import { BaseAPI } from '../base';
+import { IModels } from '~/connectionResolvers';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
+import { redis } from 'erxes-api-shared/utils';
+import { BaseAPI } from '~/apis/base';
 import { IQpayInvoice } from '../types';
-import { ITransactionDocument } from '../../models/definitions/transactions';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
 
 export const wechatCallbackHandler = async (models: IModels, data: any) => {
   const { _id } = data;

@@ -1,7 +1,8 @@
 import fetch, { Response } from 'node-fetch';
 import type { RequestInit, HeadersInit } from 'node-fetch';
-import redis from '../../redis';
+
 import { meta } from './api';
+import { redis } from 'erxes-api-shared/utils';
 
 interface AuthResponse {
   access_token: string;

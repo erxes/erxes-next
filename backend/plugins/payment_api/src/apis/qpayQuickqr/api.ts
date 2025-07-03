@@ -1,7 +1,6 @@
-import { IModels } from '../../connectionResolver';
-import { IInvoiceDocument } from '../../models/definitions/invoices';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
+import { IModels } from '~/connectionResolvers';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
 import { VendorBaseAPI } from './vendorBase';
 
 export type QPayMerchantConfig = {

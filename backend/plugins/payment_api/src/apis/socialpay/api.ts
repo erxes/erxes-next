@@ -1,12 +1,12 @@
 import * as crypto from 'crypto';
 import * as QRCode from 'qrcode';
 
-import { IModels } from '../../connectionResolver';
-import { PAYMENTS, PAYMENT_STATUS } from '../constants';
-import { ITransactionDocument } from '../../models/definitions/transactions';
-import { BaseAPI } from '../base';
+import { IModels } from '~/connectionResolvers';
+import { PAYMENTS, PAYMENT_STATUS } from '~/constants';
+import { ITransactionDocument } from '~/modules/payment/@types/transactions';
+import { BaseAPI } from '~/apis/base';
 import { ISocialPayInvoice } from '../types';
-import { randomAlphanumeric } from '@erxes/api-utils/src/random';
+import { random } from 'erxes-api-shared/utils';
 
 export const hmac256 = (key, message) => {
   const hash = crypto.createHmac('sha256', key).update(message);
@@ -69,7 +69,7 @@ export class SocialPayAPI extends BaseAPI {
   }
 
   async authorize() {
-    const invoiceId = randomAlphanumeric(10);
+    const invoiceId = random('aA0',10);
     try {
       const data: ISocialPayInvoice = {
         amount: '0',

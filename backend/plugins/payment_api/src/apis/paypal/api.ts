@@ -1,7 +1,7 @@
-import { IModels } from '../../connectionResolver';
-import { PAYMENTS } from '../constants';
-import { BaseAPI } from '../base';
-import redis from '../../redis';
+import { IModels } from '~/connectionResolvers';
+import { PAYMENTS } from '~/constants';
+import { BaseAPI } from '~/apis/base';
+import { redis } from 'erxes-api-shared/utils';
 
 export const paypalCallbackHandler = async (models: IModels, data: any) => {
   const { paymentId, PayerID } = data;
