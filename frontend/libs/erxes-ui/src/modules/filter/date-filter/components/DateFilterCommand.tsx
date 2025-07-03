@@ -49,15 +49,6 @@ export const DateFilterCommand = ({
         >
           Custom {value} date or timeframe
         </Command.Item>
-        {/* <Command.Item
-          className="h-8"
-          value="no-due-date"
-          onSelect={() => {
-            onSelect(null);
-          }}
-        >
-          No {value} date
-        </Command.Item> */}
       </Command.List>
     </Command>
   );

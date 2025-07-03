@@ -1,8 +1,8 @@
 'use client';
-import { Input, Label, Select, Switch } from 'erxes-ui';
+import { Input, Label, Select, Switch, Form } from 'erxes-ui';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { IPosDetail } from '@/pos-detail/types/IPos';
 import { options } from '@/constants';
 import { FinanceConfigFormValues } from '~/modules/create-pos/components/formSchema';
@@ -63,179 +63,223 @@ export default function FinanceConfigForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="p-3">
-      <div className="space-y-8">
-        <div className="space-y-4">
-          <h2 className="text-indigo-600 text-xl font-medium">MAIN</h2>
+    <div className="p-3">
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-indigo-600 text-xl font-medium">MAIN</h2>
 
-          <div className="flex flex-col gap-3">
-            <span className="text-gray-600">IS SYNC ERKHET</span>
-            <Controller
-              name="isSyncErkhet"
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  className="scale-150 w-7"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={isReadOnly}
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-indigo-600 text-xl font-medium">REMAINDER</h2>
-
-          <div className="flex flex-col gap-3">
-            <span className="text-gray-600">CHECK ERKHET</span>
-            <Controller
-              name="checkErkhet"
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  className="scale-150 w-7"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={isReadOnly}
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <span className="text-gray-600">CHECK INVENTORIES</span>
-            <Controller
-              name="checkInventories"
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  className="scale-150 w-7"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={isReadOnly}
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        {isSyncErkhet && (
-          <div className="space-y-6">
-            <h2 className="text-indigo-600 text-xl font-medium">OTHER</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <Label className="text-sm text-gray-500">USER EMAIL</Label>
-                <Controller
-                  name="userEmail"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      type="email"
-                      {...field}
-                      placeholder="Enter email"
-                      disabled={isReadOnly}
-                      readOnly={isReadOnly}
-                    />
-                  )}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm text-gray-500">
-                  BEGIN BILL NUMBER
-                </Label>
-                <Controller
-                  name="beginBillNumber"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Enter bill number"
-                      disabled={isReadOnly}
-                      readOnly={isReadOnly}
-                    />
-                  )}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm text-gray-500">DEFAULTPAY</Label>
-                <Controller
-                  name="defaultPay"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={isReadOnly}
-                    >
-                      <Select.Trigger>
-                        <Select.Value placeholder="Select..." />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {options.map((option) => (
-                          <Select.Item key={option.value} value={option.value}>
-                            {option.label}
-                          </Select.Item>
-                        ))}
-                      </Select.Content>
-                    </Select>
-                  )}
-                />
-              </div>
+              <Form.Field
+                control={control}
+                name="isSyncErkhet"
+                render={({ field }) => (
+                  <Form.Item>
+                    <div className="flex flex-col gap-3">
+                      <Form.Label className="text-gray-600">IS SYNC ERKHET</Form.Label>
+                      <Form.Control>
+                        <Switch
+                          className="scale-150 w-7"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={isReadOnly}
+                        />
+                      </Form.Control>
+                    </div>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label className="text-sm text-gray-500">ACCOUNT</Label>
-                <Controller
-                  name="account"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Enter account"
-                      disabled={isReadOnly}
-                      readOnly={isReadOnly}
-                    />
-                  )}
-                />
-              </div>
+            <div className="space-y-4">
+              <h2 className="text-indigo-600 text-xl font-medium">REMAINDER</h2>
 
-              <div className="space-y-2">
-                <Label className="text-sm text-gray-500">LOCATION</Label>
-                <Controller
-                  name="location"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Enter location"
-                      disabled={isReadOnly}
-                      readOnly={isReadOnly}
-                    />
-                  )}
-                />
-              </div>
+              <Form.Field
+                control={control}
+                name="checkErkhet"
+                render={({ field }) => (
+                  <Form.Item>
+                    <div className="flex flex-col gap-3">
+                      <Form.Label className="text-gray-600">CHECK ERKHET</Form.Label>
+                      <Form.Control>
+                        <Switch
+                          className="scale-150 w-7"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={isReadOnly}
+                        />
+                      </Form.Control>
+                    </div>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+
+              <Form.Field
+                control={control}
+                name="checkInventories"
+                render={({ field }) => (
+                  <Form.Item>
+                    <div className="flex flex-col gap-3">
+                      <Form.Label className="text-gray-600">CHECK INVENTORIES</Form.Label>
+                      <Form.Control>
+                        <Switch
+                          className="scale-150 w-7"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={isReadOnly}
+                        />
+                      </Form.Control>
+                    </div>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
             </div>
-          </div>
-        )}
-      </div>
 
-      {!isReadOnly && onSubmit && (
-        <div className="mt-8 flex justify-end">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded disabled:opacity-50"
-          >
-            {isSubmitting ? 'Saving...' : posDetail ? 'Update' : 'Save'}
-          </button>
-        </div>
-      )}
-    </form>
+            {isSyncErkhet && (
+              <div className="space-y-6">
+                <h2 className="text-indigo-600 text-xl font-medium">OTHER</h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Form.Field
+                    control={control}
+                    name="userEmail"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <div className="space-y-2">
+                          <Form.Label className="text-sm text-gray-500">USER EMAIL</Form.Label>
+                          <Form.Control>
+                            <Input
+                              type="email"
+                              {...field}
+                              placeholder="Enter email"
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </Form.Control>
+                        </div>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
+
+                  <Form.Field
+                    control={control}
+                    name="beginBillNumber"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <div className="space-y-2">
+                          <Form.Label className="text-sm text-gray-500">
+                            BEGIN BILL NUMBER
+                          </Form.Label>
+                          <Form.Control>
+                            <Input
+                              {...field}
+                              placeholder="Enter bill number"
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </Form.Control>
+                        </div>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
+
+                  <Form.Field
+                    control={control}
+                    name="defaultPay"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <div className="space-y-2">
+                          <Form.Label className="text-sm text-gray-500">DEFAULTPAY</Form.Label>
+                          <Form.Control>
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                              disabled={isReadOnly}
+                            >
+                              <Select.Trigger>
+                                <Select.Value placeholder="Select..." />
+                              </Select.Trigger>
+                              <Select.Content>
+                                {options.map((option) => (
+                                  <Select.Item key={option.value} value={option.value}>
+                                    {option.label}
+                                  </Select.Item>
+                                ))}
+                              </Select.Content>
+                            </Select>
+                          </Form.Control>
+                        </div>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Form.Field
+                    control={control}
+                    name="account"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <div className="space-y-2">
+                          <Form.Label className="text-sm text-gray-500">ACCOUNT</Form.Label>
+                          <Form.Control>
+                            <Input
+                              {...field}
+                              placeholder="Enter account"
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </Form.Control>
+                        </div>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
+
+                  <Form.Field
+                    control={control}
+                    name="location"
+                    render={({ field }) => (
+                      <Form.Item>
+                        <div className="space-y-2">
+                          <Form.Label className="text-sm text-gray-500">LOCATION</Form.Label>
+                          <Form.Control>
+                            <Input
+                              {...field}
+                              placeholder="Enter location"
+                              disabled={isReadOnly}
+                              readOnly={isReadOnly}
+                            />
+                          </Form.Control>
+                        </div>
+                        <Form.Message />
+                      </Form.Item>
+                    )}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {!isReadOnly && onSubmit && (
+            <div className="mt-8 flex justify-end">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded disabled:opacity-50"
+              >
+                {isSubmitting ? 'Saving...' : posDetail ? 'Update' : 'Save'}
+              </button>
+            </div>
+          )}
+        </form>
+      </Form>
+    </div>
   );
 }

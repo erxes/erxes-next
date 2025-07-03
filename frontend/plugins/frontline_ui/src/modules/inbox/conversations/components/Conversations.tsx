@@ -10,6 +10,7 @@ import {
   Button,
   EnumCursorDirection,
   EnumCursorMode,
+  Filter,
   isUndefinedOrNull,
   parseDateRangeFromString,
   Separator,
@@ -17,13 +18,13 @@ import {
 } from 'erxes-ui';
 
 import { ConversationsHeader } from '@/inbox/conversations/components/ConversationsHeader';
-import { ConversationFilter } from './ConversationFilter';
 import { CONVERSATIONS_LIMIT } from '@/inbox/constants/conversationsConstants';
 import { ConversationItem } from './ConversationItem';
 import { useEffect, useRef, useState } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { refetchNewMessagesState } from '@/inbox/conversations/states/newMessagesCountState';
 import { conversationsContainerScrollState } from '@/inbox/conversations/states/conversationsContainerScrollState';
+import { ConversationActions } from './ConversationActions';
 
 export const Conversations = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,24 +65,24 @@ export const Conversations = () => {
     }
   }, [refetchNewMessages]);
 
-  const { channelId, integrationType, unassigned, status, date } =
+  const { channelId, integrationType, unassigned, status, created } =
     useNonNullMultiQueryState<{
       channelId: string;
       integrationType: string;
       unassigned: string;
       status: string;
-      date: string;
       conversationId: string;
+      created: string;
     }>([
       'channelId',
       'integrationType',
       'unassigned',
       'status',
-      'date',
       'conversationId',
+      'created',
     ]);
 
-  const parsedDate = parseDateRangeFromString(date || '');
+  const parsedDate = parseDateRangeFromString(created || '');
 
   const { totalCount, conversations, handleFetchMore, loading, pageInfo } =
     useConversations({
@@ -106,9 +107,11 @@ export const Conversations = () => {
       }}
     >
       <div className="flex flex-col h-full overflow-hidden w-full">
-        <ConversationsHeader>
-          <ConversationFilter />
-        </ConversationsHeader>
+        <Filter id="conversations">
+          <ConversationsHeader>
+            <ConversationActions />
+          </ConversationsHeader>
+        </Filter>
         <Separator />
         <div className="h-full w-full overflow-y-auto" ref={containerRef}>
           {conversations?.map((conversation: IConversation) => (

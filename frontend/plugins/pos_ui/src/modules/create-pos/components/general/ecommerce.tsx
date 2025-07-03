@@ -18,9 +18,10 @@ export const EcommerceForm: React.FC<EcommerceFormProps> = ({
   form,
   isReadOnly = false,
 }) => {
-  const handleBrandChange = (brandId: string) => {
+  const handleBrandChange = (brandId: string | string[]) => {
     if (isReadOnly) return;
-    form.setValue('scopeBrandIds', brandId ? [brandId] : []);
+    const singleBrandId = Array.isArray(brandId) ? brandId[0] : brandId;
+    form.setValue('scopeBrandIds', singleBrandId ? [singleBrandId] : []);
     form.trigger('scopeBrandIds');
   };
 

@@ -194,13 +194,7 @@ export const MessageTriggerForm = ({
           </div>
 
           <div className="p-2 flex justify-end border-t bg-white">
-            <Button
-              onClick={handleSubmit(onSaveTriggerConfig, (prop) =>
-                console.log(prop),
-              )}
-            >
-              Save
-            </Button>
+            <Button onClick={handleSubmit(onSaveTriggerConfig)}>Save</Button>
           </div>
         </div>
       </div>

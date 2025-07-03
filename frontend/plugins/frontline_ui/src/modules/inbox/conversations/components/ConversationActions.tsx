@@ -1,27 +1,27 @@
 import { IconCheckbox } from '@tabler/icons-react';
-import { Button, Checkbox, CommandBar, Filter, Separator } from 'erxes-ui';
+import { Button, Checkbox, CommandBar, Separator } from 'erxes-ui';
 import { useAtom } from 'jotai';
 import { useConversationListContext } from '@/inbox/conversations/hooks/useConversationListContext';
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ReplaceAssignee } from '@/inbox/conversations/components/ReplaceAssignee';
 import { selectConversationsState } from '@/inbox/conversations/states/selectConversationsState';
-import { FilterConversations } from '@/inbox/conversations/components/Filter';
+import { FilterConversationsPopover } from '@/inbox/conversations/components/ConversationsFilter';
 import { ConversationTag } from './ConversationTag';
 import { ConversationDisplay } from './ConversationDisplay';
 import { ConversationRefetch } from './ConversationRefetch';
 
-export const ConversationFilter = () => {
+export const ConversationActions = () => {
   return (
-    <Filter id="inbox-filter-dropdown">
+    <>
       <div className="flex items-center gap-1">
         <ConversationSelectAll />
         <ConversationRefetch />
-        <FilterConversations />
+        <FilterConversationsPopover />
         <ConversationDisplay />
       </div>
       <ConversationsCommandBar />
-    </Filter>
+    </>
   );
 };
 

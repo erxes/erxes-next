@@ -9,7 +9,7 @@ import { Button, PageContainer, Spinner } from 'erxes-ui';
 
 import { InboxSettingsTopbar } from '../settings/components/InboxSettingsTopbar';
 import { InboxSettingsSidebar } from '../settings/components/Sidebar';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { PageHeader, PageHeaderEnd, PageHeaderStart } from 'ui-modules';
 import { IconMailFilled } from '@tabler/icons-react';
 import { FrontlinePaths } from '@/types/FrontlinePaths';
@@ -39,6 +39,12 @@ export const IntegrationConfigPage = lazy(() =>
   })),
 );
 
+export const ErxesMessengerPreview = lazy(() =>
+  import('~/pages/ErxesMessengerPreview').then((module) => ({
+    default: module.ErxesMessengerPreview,
+  })),
+);
+
 const InboxSettings = () => {
   const [integrations, setIntegrations] =
     useState<Record<string, IIntegrationItem>>(INTEGRATIONS);
@@ -53,51 +59,60 @@ const InboxSettings = () => {
         setOtherIntegrations,
       }}
     >
-      <div className="flex flex-auto w-full overflow-hidden">
-        <InboxSettingsSidebar />
-        <PageContainer className="flex-1">
-          <PageHeader>
-            <PageHeaderStart>
-              <Button variant={'ghost'} className="font-semibold">
-                <IconMailFilled className="w-4 h-4 text-accent-foreground" />
-                Team inbox
-              </Button>
-            </PageHeaderStart>
-            <PageHeaderEnd>
-              <InboxSettingsTopbar />
-            </PageHeaderEnd>
-          </PageHeader>
-
-          <Suspense
-            fallback={
-              <div className="flex justify-center items-center h-full">
-                <Spinner />
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center h-full">
+            <Spinner />
+          </div>
+        }
+      >
+        <Routes>
+          <Route
+            element={
+              <div className="flex flex-auto w-full overflow-hidden">
+                <InboxSettingsSidebar />
+                <PageContainer className="flex-1">
+                  <PageHeader>
+                    <PageHeaderStart>
+                      <Button variant={'ghost'} className="font-semibold">
+                        <IconMailFilled className="w-4 h-4 text-accent-foreground" />
+                        Team inbox
+                      </Button>
+                    </PageHeaderStart>
+                    <PageHeaderEnd>
+                      <InboxSettingsTopbar />
+                    </PageHeaderEnd>
+                  </PageHeader>
+                  <Outlet />
+                </PageContainer>
               </div>
             }
           >
-            <Routes>
-              <Route
-                path="/"
-                element={<Navigate to="integrations" replace />}
-              />
-              <Route
-                path={FrontlinePaths.Integrations}
-                element={<IntegrationSettingsPage />}
-              />
-              <Route
-                path={FrontlinePaths.IntegrationDetail}
-                element={<IntegrationDetailPage />}
-              />
-              <Route
-                path={FrontlinePaths.IntegrationConfig}
-                element={<IntegrationConfigPage />}
-              />
-              <Route path="channels" element={<ChannelsSettingsPage />} />
-            </Routes>
-            <InboxPageChangeEffect />
-          </Suspense>
-        </PageContainer>
-      </div>
+            <Route path="/" element={<Navigate to="integrations" replace />} />
+            <Route
+              path={FrontlinePaths.Integrations}
+              element={<IntegrationSettingsPage />}
+            />
+            <Route
+              path={FrontlinePaths.IntegrationDetail}
+              element={<IntegrationDetailPage />}
+            />
+            <Route
+              path={FrontlinePaths.IntegrationConfig}
+              element={<IntegrationConfigPage />}
+            />
+            <Route
+              path={FrontlinePaths.Channels}
+              element={<ChannelsSettingsPage />}
+            />
+          </Route>
+          <Route
+            path={FrontlinePaths.ErxesMessengerPreview}
+            element={<ErxesMessengerPreview />}
+          />
+        </Routes>
+        <InboxPageChangeEffect />
+      </Suspense>
     </IntegrationContext.Provider>
   );
 };

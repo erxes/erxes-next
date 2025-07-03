@@ -11,7 +11,7 @@ import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
 
 import { Button, Dialog } from 'erxes-ui/components';
 import { useUpload } from 'erxes-ui/hooks';
-import { readFile } from 'erxes-ui/utils/core';
+import { readImage } from 'erxes-ui/utils/core';
 
 import { cn } from '../lib/utils';
 import { ButtonProps } from './button';
@@ -78,7 +78,7 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
             <Dialog.Overlay className="fixed inset-0 bg-accent" />
             <Dialog.Content className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] max-w-none w-auto bg-transparent border-0 p-0">
               <img
-                src={readFile(url)}
+                src={readImage(url)}
                 alt="Focused view"
                 className="max-h-[90vh] max-w-[90vw] object-contain"
               />
@@ -160,7 +160,7 @@ const UploadPreview = React.forwardRef<
           ) : url ? (
             <img
               className="h-full w-full object-cover absolute"
-              src={readFile(url)}
+              src={readImage(url)}
               alt="Preview of uploaded"
             />
           ) : (

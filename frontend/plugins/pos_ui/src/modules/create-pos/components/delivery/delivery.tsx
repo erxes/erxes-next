@@ -1,5 +1,5 @@
 'use client';
-import { Label, Select } from 'erxes-ui';
+import { Form, Select } from 'erxes-ui';
 import { SelectMember, SelectProduct } from 'ui-modules';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,7 +33,7 @@ const DeliveryConfigForm = forwardRef<
   const internalForm = useForm<DeliveryConfigFormValues>({
     resolver: zodResolver(deliveryConfigSchema),
     defaultValues: {
-      board: '',
+      boardId: '',
       pipeline: '',
       stage: '',
       watchedUsers: '',
@@ -41,11 +41,11 @@ const DeliveryConfigForm = forwardRef<
       deliveryProduct: '',
       watchedUserIds: [],
       assignedUserIds: [],
-      deliveryConfig: {},
     },
   });
 
   const form = externalForm || internalForm;
+
   useEffect(() => {
     if (posDetail?.deliveryConfig) {
       const deliveryConfig = posDetail.deliveryConfig;
@@ -65,7 +65,7 @@ const DeliveryConfigForm = forwardRef<
       setSelectedAssignedUserId(assignedUserId);
 
       form.reset({
-        board: deliveryConfig.stage?.board || deliveryConfig.board || '',
+        boardId: deliveryConfig.stage?.board || deliveryConfig.board || '',
         pipeline:
           deliveryConfig.stage?.pipeline || deliveryConfig.pipeline || '',
         stage: deliveryConfig.stage?.stage || deliveryConfig.stage || '',
@@ -77,7 +77,6 @@ const DeliveryConfigForm = forwardRef<
           '',
         watchedUserIds: watchedUserId ? [watchedUserId] : [],
         assignedUserIds: assignedUserId ? [assignedUserId] : [],
-        deliveryConfig: deliveryConfig,
       });
     }
   }, [posDetail, form]);
@@ -97,7 +96,7 @@ const DeliveryConfigForm = forwardRef<
               : [],
             deliveryConfig: {
               stage: {
-                board: formData.board || '',
+                board: formData.boardId || '',
                 pipeline: formData.pipeline || '',
                 stage: formData.stage || '',
               },
@@ -134,7 +133,7 @@ const DeliveryConfigForm = forwardRef<
       assignedUserIds: selectedAssignedUserId ? [selectedAssignedUserId] : [],
       deliveryConfig: {
         stage: {
-          board: formData.board || '',
+          board: formData.boardId || '',
           pipeline: formData.pipeline || '',
           stage: formData.stage || '',
         },
@@ -167,13 +166,6 @@ const DeliveryConfigForm = forwardRef<
     getFormData,
   }));
 
-  const handleSelectChange = (
-    field: keyof DeliveryConfigFormValues,
-    value: string,
-  ) => {
-    form.setValue(field, value, { shouldValidate: true });
-  };
-
   const handleWatchedUserChange = (value: string | string[]) => {
     const userId = Array.isArray(value) ? value[0] : value;
     const finalUserId = userId || '';
@@ -190,149 +182,182 @@ const DeliveryConfigForm = forwardRef<
     form.setValue('assignedUsers', finalUserId, { shouldValidate: true });
   };
 
-  const handleDeliveryProductChange = (value: string) => {
-    form.setValue('deliveryProduct', value, { shouldValidate: true });
+  const handleDeliveryProductChange = (value: string | string[]) => {
+    const productId = Array.isArray(value) ? value[0] : value;
+    form.setValue('deliveryProduct', productId, { shouldValidate: true });
   };
 
   return (
     <div className="p-3">
-      <div className="space-y-8">
-        <div className="space-y-4">
-          <h2 className="text-indigo-600 text-xl font-medium">STAGE</h2>
+      <Form {...form}>
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-indigo-600 text-xl font-medium">STAGE</h2>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">BOARD</Label>
-              <Select
-                value={form.watch('board') || ''}
-                onValueChange={(value) => handleSelectChange('board', value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Choose board" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="board1">Board 1</Select.Item>
-                  <Select.Item value="board2">Board 2</Select.Item>
-                  <Select.Item value="board3">Board 3</Select.Item>
-                </Select.Content>
-              </Select>
-              {form.formState.errors.board && (
-                <p className="text-red-500 text-sm mt-1">
-                  {form.formState.errors.board.message}
-                </p>
-              )}
+            <div className="grid grid-cols-3 gap-4">
+              <Form.Field
+                control={form.control}
+                name="boardId"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-sm text-gray-500">
+                      BOARD
+                    </Form.Label>
+                    <Form.Control>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <Select.Trigger>
+                          <Select.Value placeholder="Choose board" />
+                        </Select.Trigger>
+                        <Select.Content>
+                          <Select.Item value="board1">Board 1</Select.Item>
+                          <Select.Item value="board2">Board 2</Select.Item>
+                          <Select.Item value="board3">Board 3</Select.Item>
+                        </Select.Content>
+                      </Select>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+
+              <Form.Field
+                control={form.control}
+                name="pipeline"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-sm text-gray-500">
+                      PIPELINE
+                    </Form.Label>
+                    <Form.Control>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <Select.Trigger>
+                          <Select.Value placeholder="Choose pipeline" />
+                        </Select.Trigger>
+                        <Select.Content>
+                          <Select.Item value="pipeline1">Pipeline 1</Select.Item>
+                          <Select.Item value="pipeline2">Pipeline 2</Select.Item>
+                          <Select.Item value="pipeline3">Pipeline 3</Select.Item>
+                        </Select.Content>
+                      </Select>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+
+              <Form.Field
+                control={form.control}
+                name="stage"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-sm text-gray-500">
+                      STAGE
+                    </Form.Label>
+                    <Form.Control>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <Select.Trigger>
+                          <Select.Value placeholder="Choose stage" />
+                        </Select.Trigger>
+                        <Select.Content>
+                          <Select.Item value="stage1">Stage 1</Select.Item>
+                          <Select.Item value="stage2">Stage 2</Select.Item>
+                          <Select.Item value="stage3">Stage 3</Select.Item>
+                        </Select.Content>
+                      </Select>
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
             </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">PIPELINE</Label>
-              <Select
-                value={form.watch('pipeline') || ''}
-                onValueChange={(value) => handleSelectChange('pipeline', value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Choose pipeline" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="pipeline1">Pipeline 1</Select.Item>
-                  <Select.Item value="pipeline2">Pipeline 2</Select.Item>
-                  <Select.Item value="pipeline3">Pipeline 3</Select.Item>
-                </Select.Content>
-              </Select>
-              {form.formState.errors.pipeline && (
-                <p className="text-red-500 text-sm mt-1">
-                  {form.formState.errors.pipeline.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">STAGE</Label>
-              <Select
-                value={form.watch('stage') || ''}
-                onValueChange={(value) => handleSelectChange('stage', value)}
-              >
-                <Select.Trigger>
-                  <Select.Value placeholder="Choose stage" />
-                </Select.Trigger>
-                <Select.Content>
-                  <Select.Item value="stage1">Stage 1</Select.Item>
-                  <Select.Item value="stage2">Stage 2</Select.Item>
-                  <Select.Item value="stage3">Stage 3</Select.Item>
-                </Select.Content>
-              </Select>
-              {form.formState.errors.stage && (
-                <p className="text-red-500 text-sm mt-1">
-                  {form.formState.errors.stage.message}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex flex-col gap-3">
-            <h2 className="text-indigo-600 text-xl font-medium">DEAL USER</h2>
-            <p className="text-[#A1A1AA] text-xs font-semibold">
-              USER ASSIGNMENTS
-            </p>
           </div>
 
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">WATCHED USERS</Label>
-              <p className="text-gray-600">Select watched team member</p>
-              <div>
-                <SelectMember
-                  value={selectedWatchedUserId || undefined}
-                  onValueChange={handleWatchedUserChange}
-                  className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
-                />
-                {form.formState.errors.watchedUsers && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {form.formState.errors.watchedUsers.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm text-gray-500">ASSIGNED USERS</Label>
-              <p className="text-gray-600">Select assigned team member</p>
-              <div>
-                <SelectMember
-                  value={selectedAssignedUserId || undefined}
-                  onValueChange={handleAssignedUserChange}
-                  className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
-                />
-                {form.formState.errors.assignedUsers && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {form.formState.errors.assignedUsers.message}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-indigo-600 text-xl font-medium">
-            DELIVERY PRODUCT
-          </h2>
-
-          <div className="space-y-2">
-            <SelectProduct
-              value={form.watch('deliveryProduct') || ''}
-              onValueChange={handleDeliveryProductChange}
-              className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
-            />
-            {form.formState.errors.deliveryProduct && (
-              <p className="text-red-500 text-sm mt-1">
-                {form.formState.errors.deliveryProduct.message}
+            <div className="flex flex-col gap-3">
+              <h2 className="text-indigo-600 text-xl font-medium">DEAL USER</h2>
+              <p className="text-[#A1A1AA] text-xs font-semibold">
+                USER ASSIGNMENTS
               </p>
-            )}
+            </div>
+
+            <div className="space-y-4">
+              <Form.Field
+                control={form.control}
+                name="watchedUsers"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-sm text-gray-500">
+                      WATCHED USERS
+                    </Form.Label>
+                    <p className="text-gray-600">Select watched team member</p>
+                    <Form.Control>
+                      <SelectMember
+                        value={selectedWatchedUserId || undefined}
+                        onValueChange={handleWatchedUserChange}
+                        className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                      />
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+
+              <Form.Field
+                control={form.control}
+                name="assignedUsers"
+                render={({ field }) => (
+                  <Form.Item>
+                    <Form.Label className="text-sm text-gray-500">
+                      ASSIGNED USERS
+                    </Form.Label>
+                    <p className="text-gray-600">Select assigned team member</p>
+                    <Form.Control>
+                      <SelectMember
+                        value={selectedAssignedUserId || undefined}
+                        onValueChange={handleAssignedUserChange}
+                        className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                      />
+                    </Form.Control>
+                    <Form.Message />
+                  </Form.Item>
+                )}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-indigo-600 text-xl font-medium">
+              DELIVERY PRODUCT
+            </h2>
+
+            <Form.Field
+              control={form.control}
+              name="deliveryProduct"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Control>
+                    <SelectProduct
+                      value={field.value}
+                      onValueChange={handleDeliveryProductChange}
+                      className="w-full h-10 justify-start border border-gray-300 bg-white hover:bg-gray-50"
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
           </div>
         </div>
-      </div>
+      </Form>
     </div>
   );
 });
