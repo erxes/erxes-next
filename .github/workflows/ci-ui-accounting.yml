@@ -1,18 +1,18 @@
-name: CI plugin-frontline_ui
+name: CI plugin-accounting_ui
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'frontend/plugins/frontline_ui/**'
+      - 'frontend/plugins/accounting_ui/**'
       - 'frontend/libs/**'
-      - '.github/workflows/ci-ui-frontline.yml'
+      - '.github/workflows/ci-ui-accounting.yml'
   pull_request:
     paths:
-      - 'frontend/plugins/frontline_ui/**'
+      - 'frontend/plugins/accounting_ui/**'
       - 'frontend/libs/**'
-      - '.github/workflows/ci-ui-frontline.yml'
+      - '.github/workflows/ci-ui-accounting.yml'
 
 permissions:
   actions: read
@@ -21,7 +21,7 @@ permissions:
   id-token: write
 
 jobs:
-  frontline_ui-ci:
+  accounting_ui-ci:
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -44,12 +44,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build Frontline UI
+      - name: Build accounting UI
         run: |
           export NX_DAEMON=false
-          pnpm nx build frontline_ui
+          pnpm nx build accounting_ui
 
       - name: Sync to Cloudflare R2
+        if: github.event_name == 'push' && ( github.ref == 'refs/heads/main' )
         run: |
-          aws s3 sync dist/frontend/plugins/frontline_ui s3://erxes-next/latest/frontline_ui/ \
+          aws s3 sync dist/frontend/plugins/accounting_ui s3://erxes-next/latest/accounting_ui/ \
             --endpoint-url https://7c8392aff8ac4518aa06dfa4b6337ef2.r2.cloudflarestorage.com
