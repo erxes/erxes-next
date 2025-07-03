@@ -22,12 +22,15 @@ import { AssignMemberInEditor } from 'ui-modules';
 import { useConversationMessageAdd } from '../hooks/useConversationMessageAdd';
 import { Block } from '@blocknote/core';
 import { InboxHotkeyScope } from '@/inbox/types/InboxHotkeyScope';
+import { useAtomValue } from 'jotai';
+import { messageExtraInfoState } from '../states/messageExtraInfoState';
 
 export const MessageInput = () => {
   const [conversationId] = useQueryState('conversationId');
   const [isInternalNote, setIsInternalNote] = useState(false);
   const [content, setContent] = useState<Block[]>();
   const [mentionedUserIds, setMentionedUserIds] = useState<string[]>([]);
+  const messageExtraInfo = useAtomValue(messageExtraInfoState);
   const editor = useBlockEditor();
   const { addConversationMessage, loading } = useConversationMessageAdd();
   const {
@@ -58,6 +61,7 @@ export const MessageInput = () => {
         content: sendContent,
         mentionedUserIds,
         internal: isInternalNote,
+        extraInfo: messageExtraInfo,
       },
       onCompleted: () => {
         setContent(undefined);
@@ -107,7 +111,6 @@ export const MessageInput = () => {
           <Button size="icon" variant="outline" className="size-8">
             <IconPaperclip />
           </Button>
-
           <Button
             size="lg"
             className="ml-auto"

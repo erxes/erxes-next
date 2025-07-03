@@ -54,6 +54,7 @@ export const CallWidgetDraggable = memo(
           ref={setNodeRef}
           style={style}
         />
+
         {children}
       </DragContext.Provider>
     );

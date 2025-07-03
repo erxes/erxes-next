@@ -29,7 +29,7 @@ import {
   SexCode,
   SexDisplay,
   SexField,
-  readFile,
+  readImage,
   useQueryState,
   useToast,
 } from 'erxes-ui';
@@ -51,7 +51,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar size="lg">
-            <Avatar.Image src={readFile(cell.getValue() as string)} />
+            <Avatar.Image src={readImage(cell.getValue() as string)} />
             <Avatar.Fallback>
               {firstName?.charAt(0) || lastName?.charAt(0) || '-'}
             </Avatar.Fallback>
