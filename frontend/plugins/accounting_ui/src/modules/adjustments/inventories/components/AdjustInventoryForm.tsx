@@ -13,6 +13,7 @@ import {
 } from 'erxes-ui';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { adjustInventorySchema } from '../types/adjustInventorySchema';
+import { useAdjustInventoryAdd } from '../hooks/useAdjustInventoryAdd';
 
 
 export const AdjustInventoryForm = () => {
@@ -25,7 +26,10 @@ export const AdjustInventoryForm = () => {
     },
   });
 
+  const { addAdjustInventory } = useAdjustInventoryAdd();
   const onSubmit = (data: TAdjustInventoryForm) => {
+    console.log(data, 'aaaaaaaaaaaaaaaa')
+    addAdjustInventory({ variables: { ...data } })
     // if (id) {
     //   updateTransaction({
     //     variables: { parentId, trDocs },
@@ -86,7 +90,7 @@ export const AdjustInventoryForm = () => {
         <Button
           variant="secondary"
           className="text-destructive"
-          // onClick={handleDelete}
+        // onClick={handleDelete}
         >
           <IconTrashX />
           {`Delete`}
@@ -94,27 +98,4 @@ export const AdjustInventoryForm = () => {
       </form>
     </Form>
   );
-
-  // return (
-  //   <Form {...form}>
-  //     <form
-  //       onSubmit={form.handleSubmit(handleSubmit)}
-  //       className="py-4 grid grid-cols-2 gap-5"
-  //     >
-
-
-  //       <Dialog.Footer className="col-span-2 mt-4">
-  //         <Dialog.Close asChild>
-  //           <Button variant="outline" type="button" size="lg">
-  //             Cancel
-  //           </Button>
-  //         </Dialog.Close>
-  //         <Button type="submit" size="lg" disabled={loading}>
-  //           {loading && <Spinner />}
-  //           Save Account
-  //         </Button>
-  //       </Dialog.Footer>
-  //     </form>
-  //   </Form>
-  // );
 };
