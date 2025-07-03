@@ -1,4 +1,4 @@
-import { TrJournalEnum } from '@/transactions/types/constants';
+import { JournalEnum } from '@/settings/account/types/Account';
 import { fixNum } from 'erxes-ui/lib';
 import { useEffect } from 'react';
 import { useWatch } from 'react-hook-form';
@@ -29,13 +29,13 @@ export const InvIncomeForm = ({
         <AccountField
           form={form}
           index={index}
-          filter={{ journals: [TrJournalEnum.INVENTORY] }}
+          filter={{ journals: [JournalEnum.INVENTORY] }}
           allDetails={true}
         />
         <CustomerFields form={form} index={index} />
-        <AssignToField form={form} index={index} />
         <BranchField form={form} index={index} />
         <DepartmentField form={form} index={index} />
+        <AssignToField form={form} index={index} />
         <DescriptionField form={form} index={index} />
         <VatForm form={form} journalIndex={index} isWithTax={false} isSameSide={true} />
         <CtaxForm form={form} journalIndex={index} isWithTax={false} isSameSide={true} />
