@@ -1,0 +1,38 @@
+import { z } from 'zod';
+
+export const EM_CONFIG_SCHEMA = z.object({
+  integrationName: z.string().min(1, 'Integration name is required'),
+  brandId: z.string(),
+  channelIds: z.array(z.string()),
+  botSetup: z
+    .object({
+      greetingMessage: z.string().optional(),
+      persistentMenu: z
+        .array(
+          z.object({
+            title: z.string().optional(),
+            type: z.enum(['button', 'link']).optional(),
+          }),
+        )
+        .optional(),
+      generate: z.boolean().optional(),
+    })
+    .optional(),
+  cloudflareCallSetup: z
+    .object({
+      header: z.string().optional(),
+      description: z.string().optional(),
+      secondPageHeader: z.string().optional(),
+      secondPageDescription: z.string().optional(),
+      callRouting: z
+        .array(
+          z.object({
+            name: z.string().optional(),
+            operatorIds: z.array(z.string()).optional(),
+          }),
+        )
+        .optional(),
+      turnOn: z.boolean().optional(),
+    })
+    .optional(),
+});

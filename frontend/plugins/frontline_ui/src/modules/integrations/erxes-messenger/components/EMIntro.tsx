@@ -1,38 +1,44 @@
 import { Button, Collapsible, Label, Textarea } from 'erxes-ui';
 import { EMLayout, EMLayoutPreviousStepButton } from './EMLayout';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EMINTRO_SCHEMA } from '@/integrations/erxes-messenger/constants/emIntroSchema';
 import { Form } from 'erxes-ui';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import {
   erxesMessengerSetupIntroAtom,
   erxesMessengerSetupStepAtom,
 } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
-import { useEffect } from 'react';
+import { EMFormValueEffectComponent } from '@/integrations/erxes-messenger/components/EMFormValueEffect';
 
 export const EMIntro = () => {
   const form = useForm<z.infer<typeof EMINTRO_SCHEMA>>({
     resolver: zodResolver(EMINTRO_SCHEMA),
+    defaultValues: {
+      welcomeMessage: '',
+      awayMessage: '',
+      thankyouMessage: '',
+    },
   });
 
-  const setIntro = useSetAtom(erxesMessengerSetupIntroAtom);
   const setStep = useSetAtom(erxesMessengerSetupStepAtom);
 
-  const onSubmit = (data: z.infer<typeof EMINTRO_SCHEMA>) => {
-    setIntro(data);
+  const onSubmit = () => {
     setStep((prev) => prev + 1);
   };
 
   return (
     <Form {...form}>
+      <EMFormValueEffectComponent
+        form={form}
+        atom={erxesMessengerSetupIntroAtom}
+      />
       <form
         className="flex-auto flex flex-col"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <EMIntroEffectComponent form={form} />
         <EMLayout
           title="Intro"
           actions={
@@ -56,7 +62,8 @@ export const EMIntro = () => {
                       <Form.Label>Welcome message</Form.Label>
                       <Form.Control>
                         <Textarea
-                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
                           placeholder="Enter welcome message"
                         />
                       </Form.Control>
@@ -78,7 +85,11 @@ export const EMIntro = () => {
                     <Form.Item>
                       <Form.Label>Away message</Form.Label>
                       <Form.Control>
-                        <Textarea {...field} placeholder="Enter away message" />
+                        <Textarea
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Enter away message"
+                        />
                       </Form.Control>
                       <Form.Message />
                     </Form.Item>
@@ -91,7 +102,8 @@ export const EMIntro = () => {
                       <Form.Label>Thank you message</Form.Label>
                       <Form.Control>
                         <Textarea
-                          {...field}
+                          value={field.value}
+                          onChange={field.onChange}
                           placeholder="Enter thank you message"
                         />
                       </Form.Control>
@@ -106,19 +118,4 @@ export const EMIntro = () => {
       </form>
     </Form>
   );
-};
-
-const EMIntroEffectComponent = ({
-  form,
-}: {
-  form: UseFormReturn<z.infer<typeof EMINTRO_SCHEMA>>;
-}) => {
-  const intro = useAtomValue(erxesMessengerSetupIntroAtom);
-
-  useEffect(() => {
-    form.reset(intro);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return null;
 };

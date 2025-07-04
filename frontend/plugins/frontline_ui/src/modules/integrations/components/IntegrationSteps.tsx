@@ -12,7 +12,7 @@ export const IntegrationSteps = ({
   description: string;
 }) => {
   return (
-    <div className="p-5 flex flex-col gap-3">
+    <div className="p-5 flex flex-col gap-3 flex-none">
       <div className="flex items-center gap-2">
         <Badge className="rounded-xl text-xs font-mono">STEP {step}</Badge>
         <h2 className="text-primary font-semibold text-base">{title}</h2>
