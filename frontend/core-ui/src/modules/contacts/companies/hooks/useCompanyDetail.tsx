@@ -5,7 +5,7 @@ import { useSetAtom } from 'jotai';
 import { useQueryState } from 'erxes-ui';
 
 export const useCompanyDetail = (operationVariables?: OperationVariables) => {
-  const [_id] = useQueryState('contactId');
+  const [_id] = useQueryState('companyId');
   const setRendering = useSetAtom(renderingCompanyDetailAtom);
   const { data, loading } = useQuery(GET_COMPANY_DETAIL, {
     variables: {

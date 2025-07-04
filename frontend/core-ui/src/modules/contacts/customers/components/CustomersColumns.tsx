@@ -91,6 +91,7 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
           lastName={lastName}
           onClose={onSave}
           closeOnEnter
+          withBadge
           onClick={(e) => {
             e.stopPropagation();
             setDetailOpen(_id);

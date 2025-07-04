@@ -76,6 +76,7 @@ interface FullNameProps
   lastName: string;
   onClose?: (firstName: string, lastName: string) => void;
   onClick?: (e: React.MouseEvent) => void;
+  withBadge?: boolean;
 }
 
 export const FullNameRoot = ({
@@ -83,6 +84,7 @@ export const FullNameRoot = ({
   lastName,
   onClose,
   onClick,
+  withBadge = false,
   ...props
 }: FullNameProps) => {
   const [firstNameState, setFirstNameState] = useState<string>('');
@@ -106,20 +108,32 @@ export const FullNameRoot = ({
       {...props}
     >
       <RecordTableCellTrigger>
-        <Badge
-          variant="secondary"
-          onClick={(e) => {
-            onClick?.(e);
-          }}
-        >
-          {firstName || lastName ? (
-            <span>
-              {firstName} {lastName}
-            </span>
-          ) : (
-            <span className="text-muted-foreground">Unnamed customer</span>
-          )}
-        </Badge>
+        {withBadge ? (
+          <Badge
+            variant="secondary"
+            onClick={(e) => {
+              onClick?.(e);
+            }}
+          >
+            {firstName || lastName ? (
+              <span>
+                {firstName} {lastName}
+              </span>
+            ) : (
+              <span className="text-muted-foreground">Unnamed customer</span>
+            )}
+          </Badge>
+        ) : firstName || lastName ? (
+          <span
+            onClick={(e) => {
+              onClick?.(e);
+            }}
+          >
+            {firstName} {lastName}
+          </span>
+        ) : (
+          <span className="text-muted-foreground">Unnamed customer</span>
+        )}
       </RecordTableCellTrigger>
       <RecordTableCellContent className="w-72" asChild>
         <FullNameField.Container>

@@ -9,7 +9,7 @@ export const CompanyDetailSheet = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [open, setOpen] = useQueryState<string>('contactId');
+  const [open, setOpen] = useQueryState<string>('companyId');
   const { goBackToPreviousHotkeyScope } = usePreviousHotkeyScope();
 
   const activeTab = useAtomValue(renderingCompanyDetailAtom);
