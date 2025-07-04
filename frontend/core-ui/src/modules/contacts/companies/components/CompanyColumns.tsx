@@ -13,7 +13,7 @@ import {
   Input,
   PhoneDisplay,
   PhoneListField,
-  readFile,
+  readImage,
   RecordTable,
   RecordTableCellContent,
   RecordTableCellDisplay,
@@ -42,7 +42,7 @@ export const companyColumns: ColumnDef<TCompany>[] = [
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar>
-            <Avatar.Image src={readFile(cell.getValue() as string)} />
+            <Avatar.Image src={readImage(cell.getValue() as string)} />
             <Avatar.Fallback>
               {primaryName?.charAt(0) ||
                 primaryEmail?.charAt(0) ||

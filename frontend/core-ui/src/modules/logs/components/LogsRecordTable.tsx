@@ -1,6 +1,15 @@
 import { IconArchive, IconChartPie } from '@tabler/icons-react';
-import { Label, PageSubHeader, RecordTable, Skeleton, Spinner } from 'erxes-ui';
+import {
+  Label,
+  PageSubHeader,
+  RecordTable,
+  Skeleton,
+  Breadcrumb,
+  Button,
+  Separator,
+} from 'erxes-ui';
 import { PageHeader } from 'ui-modules';
+
 import { LOGS_CURSOR_SESSION_KEY } from '../constants/logFilter';
 import { useLogs } from '../hooks/useLogs';
 import { logColumns } from './LogColumns';
@@ -16,16 +25,21 @@ export const LogsRecordTable = () => {
     hasPreviousPage,
   } = useLogs();
 
-  if (loading) {
-    return <Spinner />;
-  }
-
   return (
-    <div className="flex flex-col h-full p-3 pt-0">
+    <div className="flex flex-col h-full pt-0">
       <PageHeader className="p-3 mx-0" separatorClassName="mb-0">
         <PageHeader.Start>
-          <IconChartPie className="w-5 h-5" />
-          <span className="font-medium">System Logs</span>
+          <Breadcrumb>
+            <Breadcrumb.List className="gap-1">
+              <Breadcrumb.Item>
+                <Button variant="ghost">
+                  <IconChartPie className="w-5 h-5" />
+                  System Logs
+                </Button>
+              </Breadcrumb.Item>
+            </Breadcrumb.List>
+          </Breadcrumb>
+          <Separator.Inline />
         </PageHeader.Start>
       </PageHeader>
       <PageSubHeader>
@@ -36,7 +50,7 @@ export const LogsRecordTable = () => {
             : loading && <Skeleton className="w-20 h-4 inline-block mt-1.5" />}
         </div>
       </PageSubHeader>
-      <RecordTable.Provider columns={logColumns} data={list} className="mt-1.5">
+      <RecordTable.Provider columns={logColumns} data={list} className="m-3">
         <RecordTable.CursorProvider
           hasPreviousPage={hasPreviousPage}
           hasNextPage={hasNextPage}
@@ -59,7 +73,8 @@ export const LogsRecordTable = () => {
                   </td>
                 </tr>
               )}
-              {loading && <RecordTable.RowSkeleton rows={40} />}
+
+              {!loading && <RecordTable.RowSkeleton rows={40} />}
               <RecordTable.RowList />
               <RecordTable.CursorForwardSkeleton
                 handleFetchMore={handleFetchMore}

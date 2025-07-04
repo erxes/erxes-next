@@ -7,8 +7,10 @@ import { Link } from 'react-router-dom';
 
 export const AccountingHeader = ({
   children,
+  leftChildren
 }: {
   children?: React.ReactNode;
+  leftChildren?: React.ReactNode;
 }) => {
   return (
     <PageHeader>
@@ -22,6 +24,9 @@ export const AccountingHeader = ({
                   Transactions
                 </Link>
               </Button>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {leftChildren}
             </Breadcrumb.Item>
           </Breadcrumb.List>
         </Breadcrumb>

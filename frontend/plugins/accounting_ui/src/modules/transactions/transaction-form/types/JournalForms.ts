@@ -7,6 +7,7 @@ import {
   transactionGroupSchema,
   transactionInvIncomeSchema,
   transactionInvOutSchema,
+  transactionInvSaleSchema,
   transactionMainSchema,
   transactionPayableSchema,
   transactionReceivableSchema,
@@ -26,6 +27,7 @@ export type TTaxJournal = z.infer<typeof transactionTaxSchema>;
 
 export type TInvIncomeJournal = z.infer<typeof transactionInvIncomeSchema>;
 export type TInvOutJournal = z.infer<typeof transactionInvOutSchema>;
+export type TInvSaleJournal = z.infer<typeof transactionInvSaleSchema>;
 export type TInvDetail = z.infer<typeof invDetailSchema>;
 
 export type ITransactionGroupForm = UseFormReturn<TAddTransactionGroup>;

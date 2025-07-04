@@ -11,7 +11,7 @@ export const INTEGRATIONS = {
     name: 'Facebook Messenger',
     description:
       'Connect and manage Facebook Messages right from your Team Inbox',
-    img: '/images/integrations/facebook-messenger.png',
+    img: '/fb.svg',
   },
   [IntegrationType.CALL]: {
     name: 'Call',

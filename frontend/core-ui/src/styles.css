@@ -27,6 +27,7 @@
     --sidebar-background: 0 0% 98%; /* gray/1 */
     --shadow: 0, 0%, 0%, 0.05;
     --baby-blue: 226, 100%, 94%; /* blue/3 */
+    --spacing: 0.25rem;
   }
   .dark {
     --background: 0 0% 9%; /* primary/white */

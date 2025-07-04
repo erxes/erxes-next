@@ -1,4 +1,3 @@
-import React from 'react';
 import { Badge, cn } from 'erxes-ui';
 
 type TProps = {
