@@ -8,6 +8,7 @@ export const TOUR_STATUS_TYPES = [
   { label: 'running', value: 'running' },
   { label: 'completed', value: 'completed' },
   { label: 'scheduled', value: 'scheduled' },
+  { label: 'unscheduled', value: 'unscheduled' },
   { label: 'cancelled', value: 'cancelled' },
 ];
 
