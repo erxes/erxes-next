@@ -1,6 +1,5 @@
 import * as jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
-import * as crypto from 'crypto';
 import FormData from 'form-data';
 import momentTz from 'moment-timezone';
 
@@ -142,8 +141,9 @@ export const getOrSetCallCookie = async (wsServer, isCron) => {
     CALL_CRON_API_EXPIRY = '604800', // Default 7d for cron
   } = process.env;
   //disable on production !!!
-  if (process.env.NODE_ENV !== 'production')
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  // if (process.env.NODE_ENV !== 'production') {
+  //   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  // }
 
   // Validate credentials
   if (!isCron && (!CALL_API_USER || !CALL_API_PASSWORD)) {
@@ -689,12 +689,28 @@ const handleRecordUrl = async (cdr, history, result, models, subdomain) => {
     console.log(`Failed to process record URL: ${error.message}`);
   }
 };
+const isValidSubdomain = (subdomain) => {
+  // Зөвхөн үсэг, тоо, зураас, 1-63 тэмдэгт
+  const subdomainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
+  return subdomainRegex.test(subdomain);
+};
 
 export const getUrl = (subdomain) => {
   const VERSION = getEnv({ name: 'VERSION' });
   const NODE_ENV = getEnv({ name: 'NODE_ENV' });
 
+  if (!isValidSubdomain(subdomain)) {
+    throw new Error('Invalid subdomain format');
+  }
+
   const domain = getDomain(subdomain);
+  if (
+    subdomain.includes('../') ||
+    subdomain.includes('..\\') ||
+    subdomain.includes('/')
+  ) {
+    throw new Error('Invalid characters in subdomain');
+  }
 
   if (NODE_ENV !== 'production') {
     return `${domain}/pl:core/upload-file`;

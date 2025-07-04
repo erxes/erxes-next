@@ -6,15 +6,7 @@ import { generateModels } from '~/connectionResolvers';
 import { debugError } from '~/modules/inbox/utils';
 import { receiveCdr } from '~/modules/integrations/call/services/cdrServices';
 
-const rawBodySaver = (req, _res, buf, encoding) => {
-  if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding || 'utf8');
-
-    if (req.headers.fromcore === 'true') {
-      req.rawBody = req.rawBody.replace(/\//g, '\\/');
-    }
-  }
-};
+import express from 'express';
 
 const generateApiKeyHash = (plainKey) => {
   return crypto.createHash('sha256').update(plainKey).digest('hex');
@@ -72,15 +64,10 @@ const authenticateAPI = async (req, res, next) => {
 
 const initCallApp = async (app) => {
   app.use(
-    bodyParser.urlencoded({
-      limit: '10mb',
-      verify: rawBodySaver,
-      extended: true,
+    express.json({
+      limit: '15mb',
     }),
   );
-  app.use(bodyParser.json({ limit: '10mb', verify: rawBodySaver }));
-
-  app.use(bodyParser.raw({ limit: '10mb', verify: rawBodySaver, type: '*/*' }));
 
   app.use((_req, _res, next) => {
     next();
