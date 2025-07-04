@@ -244,6 +244,23 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
             <PhoneListField
               recordId={_id}
               phones={phones}
+              onValidationStatusChange={(status : 'verified' | 'unverified')=>{
+                customersEdit(
+                  {
+                    variables: {
+                      _id,
+                      phoneValidationStatus: status === 'verified' ? 'valid' : 'invalid',
+                    },
+                    onError: (e: ApolloError) => {
+                      toast({
+                        title: 'Error',
+                        description: e.message,
+                      });
+                    },
+                  },
+                  ['phoneValidationStatus'],
+                );
+              }}
               onValueChange={(newPhones) => {
                 const primaryPhone = newPhones.find((phone) => phone.isPrimary);
                 let newPhoneValidationStatus;

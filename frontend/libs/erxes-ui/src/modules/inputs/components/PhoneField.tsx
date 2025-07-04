@@ -57,10 +57,12 @@ export const PhoneListField = ({
   recordId,
   phones,
   onValueChange,
+  onValidationStatusChange,
 }: {
   recordId: string;
   phones: TPhones;
   onValueChange: (phones: TPhones) => void;
+  onValidationStatusChange?: (status: 'verified' | 'unverified') => void;
 }) => {
   const setPhones = useSetAtom(phonesFamilyState(recordId));
   const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
@@ -74,7 +76,7 @@ export const PhoneListField = ({
   }, [phones, setPhones]);
 
   return (
-    <PhoneFieldsProvider recordId={recordId} onValueChange={onValueChange}>
+    <PhoneFieldsProvider recordId={recordId} onValueChange={onValueChange} onValidationStatusChange={onValidationStatusChange}>
       <div className="p-1 space-y-1">
         <PhoneList />
       </div>
@@ -136,7 +138,7 @@ const PhoneOptions = ({
   status,
   isPrimary,
 }: IPhoneField & { isPrimary?: boolean }) => {
-  const { recordId, onValueChange } = usePhoneFields();
+  const { recordId, onValueChange, onValidationStatusChange } = usePhoneFields();
   const phones = useAtomValue(phonesFamilyState(recordId));
   const setEditingPhone = useSetAtom(editingPhoneFamilyState(recordId));
   const setShowPhoneInput = useSetAtom(showPhoneInputFamilyState(recordId));
@@ -154,14 +156,7 @@ const PhoneOptions = ({
     setEditingPhone(phone || null);
   };
   const handleVerificationChange = (value: string) => {
-    onValueChange?.(
-      phones.map((e) => {
-        if (e.phone === phone) {
-          return { ...e, status: value as 'verified' | 'unverified' };
-        }
-        return e;
-      }),
-    );
+    onValidationStatusChange?.(value as 'verified' | 'unverified');
   };
   const handleDeleteClick = () => {
     onValueChange?.(phones.filter((e) => e.phone !== phone));
