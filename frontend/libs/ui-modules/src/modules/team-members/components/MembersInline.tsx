@@ -105,7 +105,13 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   return null;
 };
 
-export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
+export const MembersInlineAvatar = ({
+  className,
+  containerClassName,
+  ...props
+}: AvatarProps & {
+  containerClassName?: string;
+}) => {
   const { members, loading, memberIds } = useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
 
@@ -117,7 +123,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
 
   if (loading)
     return (
-      <div className="flex -space-x-1.5">
+      <div className={cn('flex -space-x-1.5', containerClassName)}>
         {memberIds?.map((memberId) => (
           <Avatar key={memberId} className={cn('bg-background', className)}>
             <Avatar.Fallback />

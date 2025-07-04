@@ -1,13 +1,13 @@
-import { getTomorrow } from 'erxes-api-shared/utils';
+import { getPureDate, getTomorrow } from 'erxes-api-shared/utils';
 import { IModels, IContext } from '~/connectionResolvers';
 import { IAdjustInventory, ADJ_INV_STATUSES } from '@/accounting/@types/adjustInventory';
 import { TR_STATUSES } from '@/accounting/@types/constants';
 import { calcInvTrs, fixInvTrs } from '../../../utils/inventories';
 
 const checkValidDate = async (models: IModels, adjustInventory: IAdjustInventory) => {
-  const date = adjustInventory.date;
+  const date = getPureDate(adjustInventory.date);
+  const afterAdjInvs = await models.AdjustInventories.find({ date: { $gte: date }, status: ADJ_INV_STATUSES.PUBLISH }).lean();
 
-  const afterAdjInvs = await models.AdjustInventories.find({ date: { gte: date }, status: ADJ_INV_STATUSES.PUBLISH }).lean();
   if (afterAdjInvs.length) {
     throw new Error('Үүнээс хойш батлагдсан тохируулга байгаа учир энэ огноонд тохируулга үүсгэх шаардлагагүй.');
   }
