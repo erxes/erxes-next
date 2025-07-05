@@ -50,7 +50,7 @@ export const EMFormResetEffectComponent = ({
   }, [reset, atomValue]);
 
   useEffect(() => {
-    if (persistValueTaken || typeof atomValue === 'undefined') {
+    if (persistValueTaken) {
       return;
     }
     setPersistValueTaken(true);

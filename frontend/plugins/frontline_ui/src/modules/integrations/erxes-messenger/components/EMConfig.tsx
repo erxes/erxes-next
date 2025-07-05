@@ -20,13 +20,11 @@ import {
 import { SelectBrand, SelectMember } from 'ui-modules';
 import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
 import { IconPlus, IconQuestionMark, IconTrash } from '@tabler/icons-react';
-import {
-  erxesMessengerSetupConfigAtom,
-  resetErxesMessengerSetupAtom,
-} from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
+import { erxesMessengerSetupConfigAtom } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
 import { EMFormValueEffectComponent } from '@/integrations/erxes-messenger/components/EMFormValueEffect';
 import { useCreateMessenger } from '@/integrations/erxes-messenger/hooks/useCreateMessenger';
 import { useSetAtom } from 'jotai';
+import { resetErxesMessengerSetupAtom } from '@/integrations/erxes-messenger/states/EMSetupResetState';
 
 type EMConfigFormValues = z.infer<typeof EM_CONFIG_SCHEMA>;
 
@@ -34,7 +32,7 @@ export const EMConfig = () => {
   const form = useForm<EMConfigFormValues>({
     resolver: zodResolver(EM_CONFIG_SCHEMA),
     defaultValues: {
-      integrationName: '',
+      name: '',
       brandId: '',
     },
   });
@@ -78,10 +76,10 @@ export const EMConfig = () => {
               </Collapsible.TriggerButton>
               <Collapsible.Content className="p-2 space-y-6">
                 <Form.Field
-                  name="integrationName"
+                  name="name"
                   render={({ field }) => (
                     <Form.Item>
-                      <Form.Label>Integration Name</Form.Label>
+                      <Form.Label>Name</Form.Label>
                       <Form.Control>
                         <Input {...field} />
                       </Form.Control>
@@ -140,7 +138,7 @@ export const EMConfig = () => {
                 />
                 <PersistentMenu form={form} />
                 <Form.Field
-                  name="botSetup.hideMessengerDuringOfflineHours"
+                  name="botSetup.botCheck"
                   render={({ field }) => (
                     <Form.Item>
                       <div className="flex items-center gap-3">

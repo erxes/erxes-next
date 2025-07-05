@@ -31,7 +31,7 @@ export const EMHoursAvailability = () => {
   const form = useForm<EMHoursAvailabilityFormValues>({
     resolver: zodResolver(EMHOURS_SCHEMA),
     defaultValues: {
-      availabilitySwitchType: 'manual',
+      availabilityMethod: 'manual',
       isOnline: false,
       timezone: detectTimeZone(),
       responseRate: EnumResponseRate.MINUTES,
@@ -65,7 +65,7 @@ export const EMHoursAvailability = () => {
         >
           <div className="p-4 pt-0 space-y-6 overflow-auto styled-scroll flex-1">
             <Form.Field
-              name="availabilitySwitchType"
+              name="availabilityMethod"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">
@@ -201,12 +201,12 @@ export const EMHoursTimeTable = ({
 }: {
   form: UseFormReturn<z.infer<typeof EMHOURS_SCHEMA>>;
 }) => {
-  const availabilitySwitchType = useWatch({
+  const availabilityMethod = useWatch({
     control: form.control,
-    name: 'availabilitySwitchType',
+    name: 'availabilityMethod',
   });
 
-  if (availabilitySwitchType === 'manual') {
+  if (availabilityMethod === 'manual') {
     return (
       <Form.Field
         name="isOnline"

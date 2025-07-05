@@ -4,11 +4,11 @@ import {
   SAVE_EM_CONFIGS_MUTATION,
   SAVE_EM_APPEARANCE_MUTATION,
 } from '../graphql/mutations/createEmMessengerMutations';
-import { erxesMessengerCreateAtom } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
 import { toast } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { z } from 'zod';
 import { EM_CONFIG_SCHEMA } from '@/integrations/erxes-messenger/constants/emConfigSchema';
+import { erxesMessengerSetupValuesAtom } from '@/integrations/erxes-messenger/states/EMStateValues';
 
 export const useCreateMessenger = () => {
   const [createMessengerMutation, { loading: createLoading }] = useMutation(
@@ -20,7 +20,7 @@ export const useCreateMessenger = () => {
   const [saveAppearanceMutation, { loading: saveAppearanceLoading }] =
     useMutation(SAVE_EM_APPEARANCE_MUTATION);
 
-  const readVariables = useAtomValue(erxesMessengerCreateAtom);
+  const readVariables = useAtomValue(erxesMessengerSetupValuesAtom);
 
   const createMessenger = (
     configFormValues: z.infer<typeof EM_CONFIG_SCHEMA>,

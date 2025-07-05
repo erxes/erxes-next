@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const EM_CONFIG_SCHEMA = z.object({
-  integrationName: z.string().min(1, 'Integration name is required'),
+  name: z.string().min(1, 'Name is required'),
   brandId: z.string(),
   channelIds: z.array(z.string()),
   botSetup: z
@@ -15,7 +15,7 @@ export const EM_CONFIG_SCHEMA = z.object({
           }),
         )
         .optional(),
-      generate: z.boolean().optional(),
+      botCheck: z.boolean().optional(),
     })
     .optional(),
   cloudflareCallSetup: z

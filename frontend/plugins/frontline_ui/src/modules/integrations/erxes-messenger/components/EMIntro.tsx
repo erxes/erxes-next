@@ -17,9 +17,9 @@ export const EMIntro = () => {
   const form = useForm<z.infer<typeof EMINTRO_SCHEMA>>({
     resolver: zodResolver(EMINTRO_SCHEMA),
     defaultValues: {
-      welcomeMessage: '',
-      awayMessage: '',
-      thankyouMessage: '',
+      welcome: '',
+      away: '',
+      thank: '',
     },
   });
 
@@ -56,7 +56,7 @@ export const EMIntro = () => {
               </Collapsible.TriggerButton>
               <Collapsible.Content className="p-4">
                 <Form.Field
-                  name="welcomeMessage"
+                  name="welcome"
                   render={({ field }) => (
                     <Form.Item>
                       <Form.Label>Welcome message</Form.Label>
@@ -80,7 +80,7 @@ export const EMIntro = () => {
               </Collapsible.TriggerButton>
               <Collapsible.Content className="p-4 space-y-4">
                 <Form.Field
-                  name="awayMessage"
+                  name="away"
                   render={({ field }) => (
                     <Form.Item>
                       <Form.Label>Away message</Form.Label>
@@ -96,7 +96,7 @@ export const EMIntro = () => {
                   )}
                 />
                 <Form.Field
-                  name="thankyouMessage"
+                  name="thank"
                   render={({ field }) => (
                     <Form.Item>
                       <Form.Label>Thank you message</Form.Label>

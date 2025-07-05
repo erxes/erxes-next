@@ -20,11 +20,11 @@ export const EMSettings = () => {
   const form = useForm<EMSettingsFormValues>({
     resolver: zodResolver(EM_SETTINGS_SCHEMA),
     defaultValues: {
-      defaultLanguage: 'en-US',
-      requireAuthentication: false,
+      languageCode: 'en-US',
+      requireAuth: false,
       showChat: true,
       showLauncher: true,
-      forceLogout: false,
+      forceLogoutWhenResolve: false,
       notifyCustomer: false,
       showVideoCallRequest: false,
     },
@@ -59,7 +59,7 @@ export const EMSettings = () => {
         >
           <div className="p-4 pt-0 space-y-6 overflow-auto styled-scroll flex-1">
             <Form.Field
-              name="defaultLanguage"
+              name="languageCode"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label>Default language</Form.Label>
@@ -75,7 +75,7 @@ export const EMSettings = () => {
               )}
             />
             <Form.Field
-              name="requireAuthentication"
+              name="requireAuth"
               render={({ field }) => (
                 <Form.Item>
                   <div className="flex items-center gap-3">
@@ -145,7 +145,7 @@ export const EMSettings = () => {
               )}
             />
             <Form.Field
-              name="forceLogout"
+              name="forceLogoutWhenResolve"
               render={({ field }) => (
                 <Form.Item>
                   <div className="flex items-center gap-3">

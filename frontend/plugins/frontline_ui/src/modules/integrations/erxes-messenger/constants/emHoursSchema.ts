@@ -9,7 +9,7 @@ export const ONLINE_HOURS_SCHEMA = z.object({
 });
 
 export const EMHOURS_SCHEMA = z.object({
-  availabilitySwitchType: z.enum(['manual', 'auto']),
+  availabilityMethod: z.enum(['manual', 'auto']),
   isOnline: z.boolean().optional(),
   onlineHours: z.record(z.nativeEnum(Weekday), ONLINE_HOURS_SCHEMA).optional(),
   responseRate: z.nativeEnum(EnumResponseRate),
