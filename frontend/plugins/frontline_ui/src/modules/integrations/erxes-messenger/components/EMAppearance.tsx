@@ -3,7 +3,7 @@ import {
   erxesMessengerSetupAppearanceAtom,
   erxesMessengerSetupStepAtom,
 } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { EMAPPEARANCE_SCHEMA } from '@/integrations/erxes-messenger/constants/emAppearanceSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,24 +11,30 @@ import {
   EMLayout,
   EMLayoutPreviousStepButton,
 } from '@/integrations/erxes-messenger/components/EMLayout';
-import { useAtomValue, useSetAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useSetAtom } from 'jotai';
+import { EMFormValueEffectComponent } from '@/integrations/erxes-messenger/components/EMFormValueEffect';
 
 export const EMAppearance = () => {
-  const setAppearance = useSetAtom(erxesMessengerSetupAppearanceAtom);
   const setStep = useSetAtom(erxesMessengerSetupStepAtom);
   const form = useForm<z.infer<typeof EMAPPEARANCE_SCHEMA>>({
     resolver: zodResolver(EMAPPEARANCE_SCHEMA),
+    defaultValues: {
+      color: '#000',
+      textColor: '#fff',
+      logo: '',
+    },
   });
 
-  const onSubmit = (data: z.infer<typeof EMAPPEARANCE_SCHEMA>) => {
-    setAppearance(data);
+  const onSubmit = () => {
     setStep((prev) => prev + 1);
   };
 
   return (
     <Form {...form}>
-      <EMAppearanceEffectComponent form={form} />
+      <EMFormValueEffectComponent
+        form={form}
+        atom={erxesMessengerSetupAppearanceAtom}
+      />
       <form
         className="flex-auto flex flex-col"
         onSubmit={form.handleSubmit(onSubmit)}
@@ -44,7 +50,7 @@ export const EMAppearance = () => {
         >
           <div className="space-y-6 p-4 pt-0">
             <Form.Field
-              name="brandColor"
+              name="color"
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label>Brand color</Form.Label>
@@ -53,10 +59,24 @@ export const EMAppearance = () => {
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value);
-                        setAppearance((prev) => ({
-                          ...prev,
-                          brandColor: value,
-                        }));
+                      }}
+                      className="w-24"
+                    />
+                  </Form.Control>
+                  <Form.Message />
+                </Form.Item>
+              )}
+            />
+            <Form.Field
+              name="textColor"
+              render={({ field }) => (
+                <Form.Item>
+                  <Form.Label>Text color</Form.Label>
+                  <Form.Control>
+                    <ColorPicker
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
                       }}
                       className="w-24"
                     />
@@ -77,10 +97,6 @@ export const EMAppearance = () => {
                       onChange={(fileInfo) => {
                         if ('url' in fileInfo) {
                           field.onChange(fileInfo.url);
-                          setAppearance((prev) => ({
-                            ...prev,
-                            logo: fileInfo.url,
-                          }));
                         }
                       }}
                     >
@@ -96,19 +112,4 @@ export const EMAppearance = () => {
       </form>
     </Form>
   );
-};
-
-export const EMAppearanceEffectComponent = ({
-  form,
-}: {
-  form: UseFormReturn<z.infer<typeof EMAPPEARANCE_SCHEMA>>;
-}) => {
-  const appearance = useAtomValue(erxesMessengerSetupAppearanceAtom);
-
-  useEffect(() => {
-    form.reset(appearance);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return null;
 };

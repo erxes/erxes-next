@@ -110,10 +110,12 @@ export const ChannelsInlineTitle = () => {
 
   return (
     <Tooltip.Provider>
-      <Tooltip.Trigger>{`${channels.length} channels`}</Tooltip.Trigger>
-      <Tooltip.Content>
-        {channels.map((channel) => channel.name).join(', ')}
-      </Tooltip.Content>
+      <Tooltip>
+        <Tooltip.Trigger>{`${channels.length} channels`}</Tooltip.Trigger>
+        <Tooltip.Content>
+          {channels.map((channel) => channel.name).join(', ')}
+        </Tooltip.Content>
+      </Tooltip>
     </Tooltip.Provider>
   );
 };

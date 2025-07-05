@@ -48,8 +48,10 @@ export const ErxesMessengerPreview = () => {
               e.preventDefault();
             }}
           >
-            {erxesMessengerSetupStep === 1 && <EMPreviewMessages />}
-            {erxesMessengerSetupStep === 2 && <EMPreviewIntro />}
+            {[1, 3, 5, 6].includes(erxesMessengerSetupStep) && (
+              <EMPreviewMessages />
+            )}
+            {[2, 4].includes(erxesMessengerSetupStep) && <EMPreviewIntro />}
           </Popover.Content>
         </Popover>
       </div>

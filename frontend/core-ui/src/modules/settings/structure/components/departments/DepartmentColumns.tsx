@@ -141,7 +141,7 @@ export const DepartmentColumns: ColumnDef<IDepartmentListItem>[] = [
     cell: ({ cell }) => {
       return (
         <RecordTableCellDisplay>
-          <MembersInline.Provider memberIds={cell.getValue() as string[]} />
+          <MembersInline.Provider memberIds={[cell.getValue() as string]} />
         </RecordTableCellDisplay>
       );
     },

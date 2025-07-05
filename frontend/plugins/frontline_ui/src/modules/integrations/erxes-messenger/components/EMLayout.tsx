@@ -15,11 +15,11 @@ export const EMLayout = ({
   const step = useAtomValue(erxesMessengerSetupStepAtom);
   return (
     <>
-      <Sheet.Content className="grow">
+      <Sheet.Content className="grow overflow-hidden flex flex-col">
         <IntegrationSteps
           step={step}
           title={title}
-          stepsLength={7}
+          stepsLength={6}
           description=""
         />
         {children}

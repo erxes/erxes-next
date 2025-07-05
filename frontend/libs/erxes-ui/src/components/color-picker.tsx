@@ -40,7 +40,10 @@ export const ColorPicker = React.forwardRef<
         {...props}
       >
         <div
-          className={cn('h-full w-full rounded', !value && 'bg-primary')}
+          className={cn(
+            'h-full w-full rounded shadow-inner',
+            !value && 'bg-primary',
+          )}
           style={{ backgroundColor: value }}
         />
         <IconChevronDown />

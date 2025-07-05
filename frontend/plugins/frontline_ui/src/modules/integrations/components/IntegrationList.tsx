@@ -1,9 +1,10 @@
 import { IconSearch } from '@tabler/icons-react';
-import { Card, Command, Input } from 'erxes-ui';
+import { Card, Command, getPluginAssetsUrl, Input, Skeleton } from 'erxes-ui';
 import { INTEGRATIONS } from '../constants/integrations';
 import { Link } from 'react-router-dom';
 import { IntegrationLogo } from './IntegrationLogo';
 import { IntegrationType } from '@/types/Integration';
+import { gql, useQuery } from '@apollo/client';
 
 export const IntegrationList = () => {
   return (
@@ -46,20 +47,25 @@ export const IntegrationCard = ({
   integrationType: IntegrationType;
 }) => {
   return (
-    <Link to={`/settings/inbox/integrations/${integrationType}`}>
-      <Command.Primitive.Item asChild key={integrationType}>
+    <Command.Primitive.Item asChild key={integrationType}>
+      <Link to={`/settings/inbox/integrations/${integrationType}`}>
         <Card className="h-full p-3 flex flex-col gap-2 rounded-lg">
-          <IntegrationIntro integration={integration} />
+          <IntegrationIntro
+            integration={integration}
+            integrationType={integrationType}
+          />
         </Card>
-      </Command.Primitive.Item>
-    </Link>
+      </Link>
+    </Command.Primitive.Item>
   );
 };
 
 export const IntegrationIntro = ({
   integration,
+  integrationType,
 }: {
   integration?: (typeof INTEGRATIONS)[keyof typeof INTEGRATIONS];
+  integrationType: IntegrationType;
 }) => {
   if (!integration) {
     return null;
@@ -68,17 +74,47 @@ export const IntegrationIntro = ({
   return (
     <>
       <div className="flex gap-2">
-        <IntegrationLogo img={integration.img} name={integration.name} />
+        <IntegrationLogo
+          img={getPluginAssetsUrl('frontline', integration.img)}
+          name={integration.name}
+        />
         <h6 className="font-semibold text-sm self-center">
           {integration.name}
         </h6>
         <div className="text-xs text-muted-foreground font-mono ml-auto">
-          (0)
+          <IntegrationCount kind={integrationType} />
         </div>
       </div>
       <div className="text-sm text-muted-foreground font-medium">
         {integration.description}
       </div>
     </>
+  );
+};
+
+const IntegrationCount = ({ kind }: { kind: string }) => {
+  const { data, loading } = useQuery(
+    gql`
+      query IntegrationsTotalCount($kind: String) {
+        integrationsTotalCount(kind: $kind) {
+          total
+        }
+      }
+    `,
+    {
+      variables: {
+        kind,
+      },
+    },
+  );
+
+  return (
+    <div className="text-xs text-muted-foreground font-mono ml-auto flex">
+      {loading ? (
+        <Skeleton className="w-3 h-4" />
+      ) : (
+        `(${data?.integrationsTotalCount?.total})`
+      )}
+    </div>
   );
 };

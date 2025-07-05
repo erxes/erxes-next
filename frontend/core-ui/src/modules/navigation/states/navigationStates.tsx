@@ -1,8 +1,7 @@
 import { atom } from 'jotai';
-import { PLUGINS } from '@/navigation/constants/plugins';
 
 export interface Plugin {
-  handle: keyof typeof PLUGINS;
+  handle: string;
   pinned: boolean;
 }
 

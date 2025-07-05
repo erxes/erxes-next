@@ -1,9 +1,8 @@
 import {
   SelectIntegrationTypeContext,
   useSelectIntegrationTypeContext,
-} from '@/integrations/context/SelectIntegrationTypeContext';
+} from '@/integrations/constants/context/SelectIntegrationTypeContext';
 import { useUsedIntegrationTypes } from '@/integrations/hooks/useUsedIntegrationTypes';
-import { IIntegrationType } from '@/integrations/types/Integration';
 import { IconPlug } from '@tabler/icons-react';
 import {
   Filter,
