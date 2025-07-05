@@ -66,11 +66,11 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => {
-      const { firstName, lastName } = cell.row.original.details;
+      const { firstName, lastName, avatar } = cell.row.original.details;
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar size="lg">
-            <Avatar.Image src={readImage(cell.getValue() as string)} />
+            <Avatar.Image src={readImage(avatar, 200)} />
             <Avatar.Fallback>
               {firstName?.charAt(0) || lastName?.charAt(0) || '-'}
             </Avatar.Fallback>
