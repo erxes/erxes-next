@@ -7,6 +7,7 @@ import {
   TCashJournal,
   TInvIncomeJournal,
   TInvOutJournal,
+  TInvSaleJournal,
   TMainJournal,
   TPayableJournal,
   TReceivableJournal,
@@ -149,7 +150,32 @@ export const INV_OUT_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TInv
     journal: TrJournalEnum.INV_OUT,
     details: !doc?.details.length ? [{
       ...trDetailWrapper(),
-      side: TR_SIDES.DEBIT,
+      side: TR_SIDES.CREDIT,
+      productId: '',
+      count: 0,
+      unitPrice: 0,
+      amount: 0,
+    }] : doc?.details.map(det => ({
+      ...trDetailWrapper(det),
+      side: TR_SIDES.CREDIT,
+      productId: det.productId || '',
+      product: det.product,
+      count: det.count ?? 0,
+      unitPrice: det.unitPrice ?? 0,
+      amount: det.amount ?? 0,
+    }))
+  }
+};
+
+export const INV_SALE_JOURNAL_DEFAULT_VALUES = (doc?: ITransaction): Partial<TInvSaleJournal> => {
+  return {
+    ...trDataWrapper(doc),
+    journal: TrJournalEnum.INV_SALE,
+    invAccountId: '',
+    costAccountId: '',
+    details: !doc?.details.length ? [{
+      ...trDetailWrapper(),
+      side: TR_SIDES.CREDIT,
       productId: '',
       count: 0,
       unitPrice: 0,
@@ -195,6 +221,9 @@ export const JOURNALS_BY_JOURNAL = (journal: string, doc?: ITransaction | any) =
 
     case TrJournalEnum.INV_OUT:
       return INV_OUT_JOURNAL_DEFAULT_VALUES(doc);
+
+    case TrJournalEnum.INV_SALE:
+      return INV_SALE_JOURNAL_DEFAULT_VALUES(doc);
 
     default: // MAIN
       return MAIN_JOURNAL_DEFAULT_VALUES(doc);

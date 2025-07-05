@@ -9,7 +9,8 @@ import {
   Accounts as MutationsAccount,
   VatRows as MutationsVatRow,
   CtaxRows as MutationsCtaxRow,
-  Transactions as MutationsTransactions
+  Transactions as MutationsTransactions,
+  AdjustInventories as MutationsAdjustInventories
 } from '@/accounting/graphql/resolvers/mutations';
 import {
   AccountingConfigs as QueriesAccountingConfig,
@@ -35,6 +36,7 @@ const resolvers: any = {
     ...MutationsVatRow,
     ...MutationsCtaxRow,
     ...MutationsTransactions,
+    ...MutationsAdjustInventories,
   },
   Query: {
     ...QueriesAccount,
