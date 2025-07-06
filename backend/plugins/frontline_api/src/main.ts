@@ -2,15 +2,10 @@ import { startPlugin } from 'erxes-api-shared/utils';
 import { typeDefs } from '~/apollo/typeDefs';
 import { appRouter } from '~/init-trpc';
 import { afterProcess } from '~/meta/afterProcess';
-import { facebookAfterProcessWorkers } from '~/modules/integrations/facebook/meta/afterProcess/afterProcessWorkers';
 import { router } from '~/routes';
 import resolvers from './apollo/resolvers';
 import { generateModels } from './connectionResolvers';
 import automations from './meta/automations';
-
-const handler = {
-  facebook: facebookAfterProcessWorkers.onDocumentCreated,
-};
 
 startPlugin({
   name: 'frontline',
@@ -52,5 +47,31 @@ startPlugin({
   meta: {
     automations,
     afterProcess,
+    notificationModules: [
+      {
+        name: 'conversations',
+        description: 'Conversations',
+        icon: 'IconComment',
+        types: [
+          { name: 'conversationAddMessage', text: 'Message added' },
+          { name: 'conversationAssigneeChange', text: 'Assignee changed' },
+          { name: 'conversationCreated', text: 'Conversation created' },
+          { name: 'conversationParticipantAdded', text: 'Participant added' },
+          { name: 'conversationStateChange', text: 'State changed' },
+          { name: 'conversationTagged', text: 'Conversation tagged' },
+        ],
+      },
+      {
+        name: 'channels',
+        description: 'Channels',
+        icon: 'IconDeviceLaptop',
+        types: [
+          {
+            name: 'channelMembersChange',
+            text: 'Members change',
+          },
+        ],
+      },
+    ],
   },
 });

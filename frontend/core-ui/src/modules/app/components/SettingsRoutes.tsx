@@ -70,6 +70,13 @@ const AutomationSettingsRoutes = lazy(() =>
     default: module.AutomationSettingsRoutes,
   })),
 );
+const NotificationSettingsRoutes = lazy(() =>
+  import('@/notification/settings/components/NotificationsRoutes').then(
+    (module) => ({
+      default: module.NotificationSettingsRoutes,
+    }),
+  ),
+);
 
 export function SettingsRoutes() {
   return (
@@ -116,6 +123,10 @@ export function SettingsRoutes() {
         <Route
           path={SettingsWorkspacePath.AutomationsCatchAll}
           element={<AutomationSettingsRoutes />}
+        />
+        <Route
+          path={SettingsWorkspacePath.NotificationCatchAll}
+          element={<NotificationSettingsRoutes />}
         />
         {getPluginsSettingsRoutes()}
       </Routes>

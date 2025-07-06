@@ -1,8 +1,8 @@
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
 import { NodeData } from '@/automations/types';
-import { IconAdjustmentsAlt, IconSunElectricity } from '@tabler/icons-react';
+import { IconAdjustmentsAlt } from '@tabler/icons-react';
 import { Node } from '@xyflow/react';
-import { cn, IconComponent, IconComponentNamesType } from 'erxes-ui';
+import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
 import { ErrorState } from '../../../utils/ErrorState';
 import { NodeDropdownActions } from './NodeDropdownActions';
@@ -61,10 +61,7 @@ const TriggerNode = ({ data, selected, id }: Node<NodeData>) => {
             <div
               className={`size-6 rounded-full flex items-center justify-center`}
             >
-              <IconComponent
-                className="size-4"
-                name={data.icon as IconComponentNamesType}
-              />
+              <IconComponent className="size-4" name={data.icon} />
             </div>
             <div>
               <p className="font-medium ">{data.label}</p>

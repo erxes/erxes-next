@@ -270,6 +270,7 @@ import {
   IconUsersGroup,
   IconBuilding,
   IconForms,
+  IconDeviceLaptop,
 } from '@tabler/icons-react';
 
 export const ALL_ICONS = {
@@ -544,4 +545,5 @@ export const ALL_ICONS = {
   IconUsersGroup,
   IconBuilding,
   IconForms,
+  IconDeviceLaptop,
 };

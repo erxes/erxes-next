@@ -1,4 +1,3 @@
-import { IconComponentNamesType } from 'erxes-ui';
 import React, { RefObject } from 'react';
 
 export type IActionProps = {
@@ -161,7 +160,7 @@ export type AutomationRemoteEntryTypes = {
 
 export type IAutomationsTriggerConfigConstants = {
   type: string;
-  icon: IconComponentNamesType;
+  icon: string;
   label: string;
   description: string;
   isCustom?: boolean;
@@ -176,7 +175,7 @@ export type IAutomationsTriggerConfigConstants = {
 
 export type IAutomationsActionConfigConstants = {
   type: string;
-  icon: IconComponentNamesType;
+  icon: string;
   label: string;
   description: string;
   isAvailableOptionalConnect?: boolean;

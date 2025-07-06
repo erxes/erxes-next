@@ -18,6 +18,8 @@ import { tagQueries } from '@/tags/graphql/queries';
 import { automationQueries } from '@/automations/graphql/resolvers/queries';
 import { logQueries } from '@/logs/graphql/resolvers/queries';
 
+import { notificationQueries } from '@/notifications/graphql/resolver/queries';
+
 export const queries = {
   ...contactQueries,
   ...authQueries,
@@ -38,4 +40,5 @@ export const queries = {
   ...documentQueries,
   ...automationQueries,
   ...logQueries,
+  ...notificationQueries,
 };

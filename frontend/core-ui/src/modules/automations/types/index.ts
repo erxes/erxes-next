@@ -22,7 +22,7 @@ export type NodeData = {
   nodeIndex: number;
   label: string;
   nodeType: 'trigger' | 'action';
-  icon?: React.ReactNode;
+  icon?: string;
   description?: string;
   type: string;
   category?: string;

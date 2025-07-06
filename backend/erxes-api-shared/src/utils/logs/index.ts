@@ -93,6 +93,14 @@ export type IAfterProcessRule =
   | AfterAPIRequest
   | AfterAuth;
 
+export type TAfterProcessRule = {
+  AfterMutation: AfterMutation;
+  CreateDocument: CreateDocument;
+  UpdatedDocument: UpdatedDocument;
+  AfterAPIRequest: AfterAPIRequest;
+  AfterAuth: AfterAuth;
+};
+
 export interface AfterProcessConfigs {
   rules: IAfterProcessRule[];
   onAfterMutation?: (

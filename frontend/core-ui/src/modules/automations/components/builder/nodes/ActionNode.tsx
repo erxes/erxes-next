@@ -1,7 +1,7 @@
 import { NodeOutputHandler } from '@/automations/components/builder/nodes/NodeOutputHandler';
-import { IconAdjustmentsAlt, IconMessage } from '@tabler/icons-react';
+import { IconAdjustmentsAlt } from '@tabler/icons-react';
 import { Handle, NodeProps, Position } from '@xyflow/react';
-import { cn, IconComponentNamesType, IconComponent } from 'erxes-ui';
+import { cn, IconComponent } from 'erxes-ui';
 import { memo } from 'react';
 import { NodeData } from '../../../types';
 import { ErrorState } from '../../../utils/ErrorState';
@@ -120,10 +120,7 @@ const ActionNode = ({ data, selected, id }: NodeProps<any>) => {
             <div
               className={`size-6 rounded-full bg-success/10  flex items-center justify-center`}
             >
-              <IconComponent
-                className="size-4"
-                name={data.icon as IconComponentNamesType}
-              />
+              <IconComponent className="size-4" name={data.icon} />
             </div>
             <span className="font-medium">{data.label}</span>
           </div>

@@ -1,4 +1,3 @@
-import { splitType } from 'erxes-api-shared/core-modules';
 import { IAfterProcessRule } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import { IFacebookIntegrationDocument } from '~/modules/integrations/facebook/@types/integrations';
@@ -7,17 +6,16 @@ export const facebookAfterProcessWorkers = {
   rules: [
     {
       type: 'createdDocument',
-      contentTypes: ['frontline:facebook.integrations'],
+      contentTypes: ['frontline:facebook.integration'],
     },
   ] as IAfterProcessRule[],
-  onDocumentCreated: async (
-    models: IModels,
-    collectionType: 'integrations',
-    data: { contentType: string; fullDocument: IFacebookIntegrationDocument },
-  ) => {
-    const fullDocument = data?.fullDocument || {};
+  createdDocument: {
+    integration: async (
+      models: IModels,
+      data: { fullDocument: IFacebookIntegrationDocument },
+    ) => {
+      const fullDocument = data?.fullDocument || {};
 
-    if (collectionType === 'integrations') {
       const {
         facebookPageIds = [],
         accountId,
@@ -37,6 +35,6 @@ export const facebookAfterProcessWorkers = {
           },
         );
       }
-    }
+    },
   },
 };

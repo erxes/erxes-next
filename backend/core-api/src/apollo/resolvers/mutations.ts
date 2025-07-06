@@ -16,6 +16,7 @@ import { relationsMutations } from '@/relations/graphql/mutations';
 import { segmentMutations } from '@/segments/graphql/resolvers/mutations';
 import { tagMutations } from '@/tags/graphql/mutations';
 import { automationMutations } from '@/automations/graphql/resolvers/mutations';
+import { notificationMutations } from '~/modules/notifications/graphql/resolver/mutations';
 
 export const mutations = {
   ...contactMutations,
@@ -36,4 +37,5 @@ export const mutations = {
   ...usersGroupMutations,
   ...documentMutations,
   ...automationMutations,
+  ...notificationMutations,
 };

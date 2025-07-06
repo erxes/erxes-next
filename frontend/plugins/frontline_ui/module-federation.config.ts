@@ -22,6 +22,8 @@ const config: ModuleFederationConfig = {
     './ticketSettings': './src/modules/ticket/Settings.tsx',
     './automationsWidget':
       './src/widgets/automations/components/AutomationRemoteEntry.tsx',
+    './notificationWidget':
+      './src/widgets/notifications/NotificationRemoteEntries.tsx',
     './relationWidget': './src/widgets/RelationWidget.tsx',
     './floatingWidget': './src/widgets/FloatingWidget.tsx',
   },

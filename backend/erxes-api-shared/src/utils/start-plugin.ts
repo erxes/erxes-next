@@ -29,7 +29,11 @@ import { wrapApolloMutations } from './apollo/wrapperMutations';
 import { extractUserFromHeader } from './headers';
 import { AfterProcessConfigs, logHandler, startAfterProcess } from './logs';
 import { closeMongooose } from './mongo';
-import { joinErxesGateway, leaveErxesGateway } from './service-discovery';
+import {
+  initializePluginConfig,
+  joinErxesGateway,
+  leaveErxesGateway,
+} from './service-discovery';
 import { createTRPCContext } from './trpc';
 import { getSubdomain } from './utils';
 
@@ -39,6 +43,7 @@ type IMeta = {
   automations?: AutomationConfigs;
   segments?: SegmentConfigs;
   afterProcess?: AfterProcessConfigs;
+  notificationModules?: any[];
 };
 
 type ApiHandler = {
@@ -276,7 +281,8 @@ export async function startPlugin(
   );
 
   if (configs.meta) {
-    const { automations, segments, afterProcess } = configs.meta || {};
+    const { automations, segments, afterProcess, notificationModules } =
+      configs.meta || {};
 
     if (automations) {
       await startAutomations(configs.name, automations);
@@ -288,6 +294,14 @@ export async function startPlugin(
 
     if (afterProcess) {
       await startAfterProcess(configs.name, afterProcess);
+    }
+
+    if (notificationModules) {
+      await initializePluginConfig(
+        configs.name,
+        'notificationModules',
+        notificationModules,
+      );
     }
   } // end configs.meta if
 

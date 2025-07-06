@@ -9,10 +9,18 @@ import {
   IconCategory,
   IconAffiliate,
   IconReport,
+  IconMailbox,
 } from '@tabler/icons-react';
 import { IUIConfig } from 'erxes-ui';
 
 export const CORE_MODULES: IUIConfig['modules'] = [
+  {
+    name: 'My inbox',
+    icon: IconMailbox,
+    path: 'my-inbox',
+    hasSettings: true,
+    hasRelationWidget: true,
+  },
   {
     name: 'contacts',
     icon: IconBookmarks,
