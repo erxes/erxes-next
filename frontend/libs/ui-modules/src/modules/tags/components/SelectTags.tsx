@@ -67,7 +67,6 @@ export const SelectTagsProvider = ({
       });
     }
   };
-
   return (
     <SelectTagsContext.Provider
       value={{
@@ -218,7 +217,7 @@ export const TagList = ({
   }
 
   return (
-    <>
+    <div className="flex flex-wrap gap-2 w-full">
       {selectedTagIds.map((tagId) => (
         <TagBadge
           key={tagId}
@@ -229,6 +228,9 @@ export const TagList = ({
           onCompleted={(tag) => {
             if (!tag) return;
             if (selectedTagIds.includes(tag._id)) {
+              setSelectedTags(selectedTags.filter((t) => t._id !== tag._id));
+            }
+            if (!selectedTags.includes(tag)) {
               setSelectedTags([...selectedTags, tag]);
             }
           }}
@@ -238,7 +240,7 @@ export const TagList = ({
           {...props}
         />
       ))}
-    </>
+    </div>
   );
 };
 
@@ -315,7 +317,7 @@ export const SelectTagsDetail = React.forwardRef<
       targetIds,
       tagType,
       value,
-      mode,
+      mode = 'multiple',
       options,
       ...props
     },
@@ -331,13 +333,15 @@ export const SelectTagsDetail = React.forwardRef<
         {...{ targetIds, tagType, value, mode, options }}
       >
         <PopoverScoped open={open} onOpenChange={setOpen} scope={scope}>
-          <Combobox.Trigger ref={ref} {...props}>
-            <SelectTagsValue />
-          </Combobox.Trigger>
+          <Combobox.TriggerBase ref={ref} {...props} className="w-min text-sm font-medium">
+            Add Tags
+            <IconPlus className='text-lg' />
+          </Combobox.TriggerBase>
           <Combobox.Content>
             <SelectTagsContent />
           </Combobox.Content>
         </PopoverScoped>
+        <TagList/>
       </SelectTagsProvider>
     );
   },

@@ -3,11 +3,16 @@ import { CUSTOMER_DETAIL } from '@/contacts/customers/customer-detail/graphql/qu
 import { renderingCustomerDetailAtom } from '@/contacts/states/customerDetailStates';
 import { useSetAtom } from 'jotai';
 import { useQueryState } from 'erxes-ui';
+import { ICustomerDetail } from 'ui-modules';
+
+interface IUseCustomerDetailResponseData {
+    customerDetail: ICustomerDetail;
+}
 
 export const useCustomerDetail = (operationVariables?: OperationVariables) => {
   const [_id] = useQueryState('contactId');
   const setRendering = useSetAtom(renderingCustomerDetailAtom);
-  const { data, loading } = useQuery(CUSTOMER_DETAIL, {
+  const { data, loading } = useQuery<IUseCustomerDetailResponseData>(CUSTOMER_DETAIL, {
     variables: {
       _id,
     },

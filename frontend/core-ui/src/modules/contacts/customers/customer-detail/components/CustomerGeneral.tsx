@@ -7,22 +7,27 @@ import { CustomerDetailAssignedTo } from '@/contacts/customers/customer-detail/c
 
 export const CustomerGeneral = () => {
   const { customerDetail, loading } = useCustomerDetail();
-  const { primaryEmail, primaryPhone, tagIds, ownerId, code, score, _id } =
-    customerDetail || {};
 
   if (loading) {
     return <Skeleton className="w-full h-full" />;
   }
+  //To do: not found component
+  if (!customerDetail) {
+    return <div>Customer not found</div>;
+  }
+
+  const { primaryEmail, primaryPhone, tagIds, ownerId, code, _id } =
+    customerDetail;
 
   return (
     <>
       <div className="py-8 space-y-6">
-        <CustomerDetailSelectTag tagIds={tagIds} customerId={_id} />
+        <CustomerDetailSelectTag tagIds={tagIds || []} customerId={_id} />
         <CustomerDetailAssignedTo ownerId={ownerId} />
         <div className="px-8 space-y-6 font-medium">
           <DataListItem label="Code">
             <TextFieldCustomer
-              value={code}
+              value={code || ''}
               placeholder="Add Code"
               className="text-sm"
               field="code"
@@ -31,15 +36,15 @@ export const CustomerGeneral = () => {
           </DataListItem>
           <DataListItem label="Primary Email">{primaryEmail}</DataListItem>
           <DataListItem label="Primary Phone">{primaryPhone}</DataListItem>
-          <DataListItem label="Score">
+          {/* <DataListItem label="Score">
             <TextFieldCustomer
-              value={score}
+              value={score || ''}
               placeholder="Add Score"
               className="text-sm"
               field="score"
               _id={_id}
-            />
-          </DataListItem>
+            />  
+          </DataListItem> */}
         </div>
       </div>
     </>

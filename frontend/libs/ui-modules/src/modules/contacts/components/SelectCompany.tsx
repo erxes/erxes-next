@@ -13,6 +13,7 @@ import {
   RecordTableCellContent,
   RecordTableCellTrigger,
 } from 'erxes-ui';
+import { IconPlus } from '@tabler/icons-react';
 
 interface SelectCompanyProviderProps {
   children: React.ReactNode;
@@ -213,10 +214,68 @@ const SelectCompanyValue = () => {
   );
 };
 
+// const SelectCompanyList = () => {
+//   const { companyIds, companies, setCompanies } = useSelectCompanyContext();
+//   return (
+//     <Badge></Badge>
+//   );
+// };
+
+const SelectCompanyBadgesView = () => {
+  const { companyIds, companies, setCompanies } = useSelectCompanyContext();
+  return (
+    <CompaniesInline.Badges
+      companyIds={companyIds}
+      companies={companies}
+      updateCompanies={setCompanies}
+    />
+  );
+};
+
+const SelectCompanyDetail = ({
+  onValueChange,
+  className,
+  mode = 'single',
+  ...props
+}: Omit<React.ComponentProps<typeof SelectCompanyProvider>, 'children'> & {
+  className?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <SelectCompanyProvider
+      onValueChange={(value) => {
+        if (mode === 'single') {
+          setOpen(false);
+        }
+        onValueChange?.(value);
+      }}
+      mode={mode}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          className={cn('w-min inline-flex text-sm font-medium', className)}
+          variant="outline"
+        >
+          Add Companies 
+          <IconPlus className="text-lg"/>
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectCompany.Content />
+        </Combobox.Content>
+      </Popover>
+      <SelectCompanyBadgesView/>
+    </SelectCompanyProvider>
+  );
+};
+
 export const SelectCompany = Object.assign(SelectCompanyRoot, {
   Provider: SelectCompanyProvider,
   Content: SelectCompanyContent,
   Item: SelectCompanyCommandItem,
   InlineCell: SelectCompanyInlineCell,
   Value: SelectCompanyValue,
+  Badges: SelectCompanyBadgesView,
+  Detail: SelectCompanyDetail,
 });

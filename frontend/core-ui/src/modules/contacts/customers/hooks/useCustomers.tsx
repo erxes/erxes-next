@@ -1,6 +1,6 @@
 import { QueryHookOptions, useQuery } from '@apollo/client';
 import { GET_CUSTOMERS } from '@/contacts/customers/graphql/queries/getCustomers';
-import { ICustomer } from '@/contacts/types/customerType';
+import { ICustomer } from 'ui-modules';
 import {
   useRecordTableCursor,
   mergeCursorData,

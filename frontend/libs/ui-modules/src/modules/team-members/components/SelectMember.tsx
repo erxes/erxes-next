@@ -17,7 +17,7 @@ import {
 } from '../contexts/SelectMemberContext';
 
 import { IUser } from '../types/TeamMembers';
-import { IconUser } from '@tabler/icons-react';
+import { IconPlus, IconUser } from '@tabler/icons-react';
 import { MembersInline } from './MembersInline';
 import React from 'react';
 import { currentUserState } from 'ui-modules/states';
@@ -326,6 +326,48 @@ export const SelectMemberFormItem = ({
   );
 };
 
+export const SelectMemberDetail = ({
+  onValueChange,
+  className,
+  size,
+  placeholder,
+  ...props
+}: Omit<React.ComponentProps<typeof SelectMemberProvider>, 'children'> & {
+  className?: string;
+  size?: 'lg';
+  placeholder?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  console.log(value)
+  return (
+    <SelectMemberProvider
+      onValueChange={(value) => {
+        onValueChange?.(value);
+        setOpen(false);
+      }}
+      {...props}
+    >
+      <Popover open={open} onOpenChange={setOpen}>
+        <Combobox.TriggerBase
+          className={cn('w-min inline-flex text-sm font-medium ', className)}
+          variant={props.value ? "ghost" : "outline"}
+        >
+          {!props.value ? (
+            <>
+              Add Owner <IconPlus />
+            </>
+          ) : (
+            <SelectMemberValue size={size} />
+          )}
+        </Combobox.TriggerBase>
+        <Combobox.Content>
+          <SelectMemberContent />
+        </Combobox.Content>
+      </Popover>
+    </SelectMemberProvider>
+  );
+};
+
 export const SelectMemberRoot = ({
   onValueChange,
   className,
@@ -370,4 +412,5 @@ export const SelectMember = Object.assign(SelectMemberRoot, {
   FilterBar: SelectMemberFilterBar,
   InlineCell: SelectMemberInlineCell,
   FormItem: SelectMemberFormItem,
+  Detail: SelectMemberDetail,
 });

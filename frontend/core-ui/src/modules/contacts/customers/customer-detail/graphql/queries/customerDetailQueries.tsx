@@ -25,6 +25,12 @@ export const CUSTOMER_DETAIL = gql`
       primaryPhone
       score
       code
+      companies {
+        _id
+        avatar
+        primaryName
+      }
+      __typename
     }
   }
 `;
