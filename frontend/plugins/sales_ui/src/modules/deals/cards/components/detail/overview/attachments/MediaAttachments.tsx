@@ -1,4 +1,4 @@
-import { Button, Dialog, Spinner, readImage, useConfirm } from 'erxes-ui';
+import { Button, Dialog, Spinner, readImage } from 'erxes-ui';
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -9,44 +9,15 @@ import {
 import { useEffect, useState } from 'react';
 
 import { IAttachment } from '@/deals/types/attachments';
-import { removeTypename } from '@/deals/utils/common';
 import { useAttachmentContext } from './AttachmentContext';
 import { useDealsContext } from '@/deals/context/DealContext';
 
 const MediaAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [removingUrl, setRemovingUrl] = useState<string | null>(null);
 
-  const { editDeals, loading } = useDealsContext();
-  const { removeAttachment } = useAttachmentContext();
-  const { confirm } = useConfirm();
-
-  const handleRemoveImage = (e: React.MouseEvent, attachment: IAttachment) => {
-    e.stopPropagation();
-    // Call your mutation here
-    confirm({
-      message: `Are you sure you want to delete ${attachment.name}?`,
-    }).then(() => {
-      setRemovingUrl(attachment.url);
-
-      editDeals({
-        variables: {
-          attachments: attachments
-            .filter((att) => att.url !== attachment.url)
-            .map((att) => removeTypename(att)),
-        },
-      })
-        .then(() => {
-          // Optionally update local state after successful mutation
-          removeAttachment(attachment.url);
-          setRemovingUrl(null);
-        })
-        .catch(() => {
-          setRemovingUrl(null);
-        });
-    });
-  };
+  const { loading } = useDealsContext();
+  const { handleRemoveImage, removingUrl } = useAttachmentContext();
 
   const currentAttachment = attachments[currentIndex];
 

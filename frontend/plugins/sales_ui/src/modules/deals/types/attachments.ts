@@ -9,6 +9,7 @@ export type IAttachment = {
 export type AttachmentContextType = {
   attachments: IAttachment[];
   addAttachment: (attachment: IAttachment) => void;
-  removeAttachment: (url: string) => void;
+  handleRemoveImage: (e: React.MouseEvent, attachment: IAttachment) => void;
   resetAttachments: () => void;
+  removingUrl: string | null;
 };
