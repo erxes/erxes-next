@@ -10,7 +10,7 @@ export interface IIntegrationDetail extends IIntegration {
   brandId: string;
   isActive: boolean;
   healthStatus: {
-    status: 'success' | 'page-token' | 'account-token';
+    status: 'healthy' | string;
   };
 }
 
