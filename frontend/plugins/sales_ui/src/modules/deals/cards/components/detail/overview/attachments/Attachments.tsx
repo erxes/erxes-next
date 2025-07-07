@@ -17,8 +17,8 @@ const fileTypes = [
 // const videoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
 
 const Attachments = () => {
-  const { attachments, removeAttachment } = useAttachmentContext();
-  console.log('aaaa', attachments);
+  const { attachments } = useAttachmentContext();
+
   if (attachments.length === 0) {
     return null;
   }
@@ -29,7 +29,6 @@ const Attachments = () => {
   const fileAttachments = attachments.filter((attachment) =>
     fileTypes.includes(attachment.type),
   );
-  console.log('fff', fileAttachments, fileAttachments.length > 0);
   // const audioAttachments = attachments.filter((attachment) =>
   //   audioTypes.includes(attachment.type),
   // );

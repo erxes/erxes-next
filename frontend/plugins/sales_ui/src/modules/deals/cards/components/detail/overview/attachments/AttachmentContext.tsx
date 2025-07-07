@@ -1,5 +1,5 @@
 import { AttachmentContextType, IAttachment } from '@/deals/types/attachments';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const AttachmentContext = createContext<AttachmentContextType | null>(null);
 
@@ -15,10 +15,17 @@ export const useAttachmentContext = () => {
 
 export const AttachmentProvider = ({
   children,
+  initialAttachments = [],
 }: {
   children: React.ReactNode;
+  initialAttachments?: IAttachment[];
 }) => {
-  const [attachments, setAttachments] = useState<IAttachment[]>([]);
+  const [attachments, setAttachments] =
+    useState<IAttachment[]>(initialAttachments);
+
+  useEffect(() => {
+    setAttachments(initialAttachments);
+  }, [initialAttachments]);
 
   const addAttachment = (attachment: IAttachment) => {
     setAttachments((prev) => [...prev, attachment]);

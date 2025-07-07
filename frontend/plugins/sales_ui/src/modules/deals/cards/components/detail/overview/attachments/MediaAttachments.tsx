@@ -1,18 +1,52 @@
+import { Button, Dialog, Spinner, readImage, useConfirm } from 'erxes-ui';
 import {
   IconChevronLeft,
   IconChevronRight,
+  IconTrash,
   IconX,
   IconZoomIn,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
-import { Dialog } from 'erxes-ui';
 import { IAttachment } from '@/deals/types/attachments';
-import { readFile } from 'erxes-ui/utils/core';
+import { removeTypename } from '@/deals/utils/common';
+import { useAttachmentContext } from './AttachmentContext';
+import { useDealsContext } from '@/deals/context/DealContext';
 
 const MediaAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [removingUrl, setRemovingUrl] = useState<string | null>(null);
+
+  const { editDeals, loading } = useDealsContext();
+  const { removeAttachment } = useAttachmentContext();
+  const { confirm } = useConfirm();
+
+  const handleRemoveImage = (e: React.MouseEvent, attachment: IAttachment) => {
+    e.stopPropagation();
+    // Call your mutation here
+    confirm({
+      message: `Are you sure you want to delete ${attachment.name}?`,
+    }).then(() => {
+      setRemovingUrl(attachment.url);
+
+      editDeals({
+        variables: {
+          attachments: attachments
+            .filter((att) => att.url !== attachment.url)
+            .map((att) => removeTypename(att)),
+        },
+      })
+        .then(() => {
+          // Optionally update local state after successful mutation
+          removeAttachment(attachment.url);
+          setRemovingUrl(null);
+        })
+        .catch(() => {
+          setRemovingUrl(null);
+        });
+    });
+  };
 
   const currentAttachment = attachments[currentIndex];
 
@@ -55,12 +89,27 @@ const MediaAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
             >
               <img
                 className="w-full h-full object-cover"
-                src={readFile(attachment.url)}
+                src={readImage(attachment.url)}
                 alt={attachment.name}
               />
               <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
-                <IconZoomIn size={28} className="text-white" />
+                {loading && removingUrl === attachment.url ? (
+                  <Spinner />
+                ) : (
+                  <IconZoomIn size={28} className="text-white" />
+                )}
               </div>
+
+              <Button
+                variant="ghost"
+                onClick={(e) => {
+                  handleRemoveImage(e, attachment);
+                }}
+                className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1.5 shadow-md z-10"
+                aria-label={`Remove image ${attachment.name}`}
+              >
+                <IconTrash size={16} />
+              </Button>
             </div>
           ))}
         </div>
@@ -115,7 +164,7 @@ const MediaAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
             </button>
 
             <img
-              src={readFile(currentAttachment.url)}
+              src={readImage(currentAttachment.url)}
               alt={currentAttachment.name}
               className="max-w-[90vw] max-h-[90vh] object-contain rounded shadow-lg"
             />

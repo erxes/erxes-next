@@ -57,15 +57,15 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
       ...options?.variables,
       _id,
     },
-    // refetchQueries: [
-    //   {
-    //     query: GET_CHECKLISTS,
-    //     variables: {
-    //       ...options?.variables,
-    //       contentTypeId,
-    //     },
-    //   },
-    // ],
+    refetchQueries: [
+      {
+        query: GET_DEAL_DETAIL,
+        variables: {
+          ...options?.variables,
+          _id,
+        },
+      },
+    ],
     awaitRefetchQueries: true,
   });
 

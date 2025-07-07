@@ -92,104 +92,139 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
 UploadRoot.displayName = 'UploadRoot';
 
 type UploadPreviewPropsExtended = React.ComponentPropsWithoutRef<'div'> & {
-  onUploadStart?: () => void;
-  onUploadEnd?: () => void;
+  onUploadStart?: (fileCount?: number) => void;
+  onUploadProgress?: () => void;
+  onAllUploadsComplete?: () => void;
 };
 const UploadPreview = React.forwardRef<
   HTMLDivElement,
   UploadPreviewPropsExtended
->(({ className, onUploadStart, onUploadEnd, ...props }, ref) => {
-  const { isLoading, upload } = useUpload();
-
-  const uploadContext = useContext(UploadContext);
-
-  if (!uploadContext) {
-    throw new Error('UploadContext must be used within an UploadRoot');
-  }
-
-  const {
-    url,
-    multiple,
-    onChange,
-    setPreviewUrl,
-    fileInputRef,
-    previewRef,
-    handleThumbnailClick,
-    ImageFocus,
-  } = uploadContext;
-
-  const handleFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { files } = event.target;
-
-      if (previewRef.current) {
-        URL.revokeObjectURL(previewRef.current);
-      }
-
-      onUploadStart?.();
-
-      upload({
-        files,
-
-        afterUpload: ({ response, fileInfo }) => {
-          onChange && onChange({ url: response, ...fileInfo });
-          onUploadEnd?.();
-        },
-
-        afterRead: ({ result }) => {
-          setPreviewUrl(result);
-        },
-      });
+>(
+  (
+    {
+      className,
+      onUploadStart,
+      onUploadProgress,
+      onAllUploadsComplete,
+      ...props
     },
-    [previewRef, upload, onChange, setPreviewUrl, onUploadStart, onUploadEnd],
-  );
+    ref,
+  ) => {
+    const { isLoading, upload } = useUpload();
 
-  return (
-    <>
-      <div className={cn('relative inline-flex', className)}>
-        <Button
-          type="button"
-          variant="outline"
-          className="relative size-16 overflow-hidden"
-          onClick={!url ? handleThumbnailClick : ImageFocus}
-          aria-label={url ? 'Change image' : 'Upload image'}
-        >
-          {isLoading ? (
-            <div
-              className="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full dark:text-gray-500"
-              role="status"
-              aria-label="loading"
-            >
-              <span className="sr-only">Loading...</span>
-            </div>
-          ) : url ? (
-            <img
-              className="h-full w-full object-cover absolute"
-              src={readImage(url)}
-              alt="Preview of uploaded"
-            />
-          ) : (
-            <div aria-hidden="true">
-              <IconUserCircle className="opacity-60" size={16} />
-            </div>
-          )}
-        </Button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-          // accept="image/*"
-          // aria-label="Upload image file"
-          multiple={multiple}
-        />
-      </div>
-      <div className="sr-only" aria-live="polite" role="status">
-        {url ? 'Image uploaded and preview available' : 'No image uploaded'}
-      </div>
-    </>
-  );
-});
+    const uploadContext = useContext(UploadContext);
+
+    if (!uploadContext) {
+      throw new Error('UploadContext must be used within an UploadRoot');
+    }
+
+    const {
+      url,
+      multiple,
+      onChange,
+      setPreviewUrl,
+      fileInputRef,
+      previewRef,
+      handleThumbnailClick,
+      ImageFocus,
+    } = uploadContext;
+
+    const totalFilesCountRef = useRef(0);
+    const finishedFilesCountRef = useRef(0);
+
+    const handleFileChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { files } = event.target;
+
+        if (!files || files.length === 0) return;
+
+        if (previewRef.current) {
+          URL.revokeObjectURL(previewRef.current);
+        }
+
+        totalFilesCountRef.current = files.length;
+        finishedFilesCountRef.current = 0;
+
+        onUploadStart?.(files.length || 0);
+
+        upload({
+          files,
+
+          afterUpload: ({ response, fileInfo }) => {
+            onChange && onChange({ url: response, ...fileInfo });
+
+            finishedFilesCountRef.current += 1;
+            onUploadProgress?.();
+
+            if (finishedFilesCountRef.current === totalFilesCountRef.current) {
+              // All files uploaded, fire batch upload end (once)
+              onAllUploadsComplete?.();
+            }
+          },
+
+          afterRead: ({ result }) => {
+            setPreviewUrl(result);
+          },
+        });
+      },
+      [
+        previewRef,
+        upload,
+        onChange,
+        setPreviewUrl,
+        onUploadStart,
+        onUploadProgress,
+        onAllUploadsComplete,
+      ],
+    );
+
+    return (
+      <>
+        <div className={cn('relative inline-flex', className)}>
+          <Button
+            type="button"
+            variant="outline"
+            className="relative size-16 overflow-hidden"
+            onClick={!url ? handleThumbnailClick : ImageFocus}
+            aria-label={url ? 'Change image' : 'Upload image'}
+          >
+            {isLoading ? (
+              <div
+                className="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-gray-600 rounded-full dark:text-gray-500"
+                role="status"
+                aria-label="loading"
+              >
+                <span className="sr-only">Loading...</span>
+              </div>
+            ) : url ? (
+              <img
+                className="h-full w-full object-cover absolute"
+                src={readImage(url)}
+                alt="Preview of uploaded"
+              />
+            ) : (
+              <div aria-hidden="true">
+                <IconUserCircle className="opacity-60" size={16} />
+              </div>
+            )}
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+            // accept="image/*"
+            // aria-label="Upload image file"
+            multiple={multiple}
+          />
+        </div>
+        <div className="sr-only" aria-live="polite" role="status">
+          {url ? 'Image uploaded and preview available' : 'No image uploaded'}
+        </div>
+      </>
+    );
+  },
+);
 
 UploadPreview.displayName = 'UploadPreview';
 

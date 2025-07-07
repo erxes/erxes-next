@@ -1,7 +1,7 @@
 import { IBranch, ICompany, ICustomer, IDepartment, ITag, IUser } from "ui-modules";
 import { IPipeline, IPipelineLabel } from "./pipelines";
 
-import { IAttachment } from "erxes-ui";
+import { IAttachment } from "./attachments";
 import { IStage } from "./stages";
 
 export interface IItem {
