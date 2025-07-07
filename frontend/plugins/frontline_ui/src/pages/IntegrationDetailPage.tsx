@@ -47,6 +47,14 @@ const CallIntegrationDetail = lazy(() =>
   ),
 );
 
+const CallIntegrationActions = lazy(() =>
+  import('@/integrations/call/components/CallIntegrationDetail').then(
+    (module) => ({
+      default: module.CallIntegrationActions,
+    }),
+  ),
+);
+
 export const IntegrationDetailPage = () => {
   const { integrationType } = useParams();
 
@@ -94,7 +102,7 @@ export const IntegrationDetailPage = () => {
               <FacebookIntegrationActions cell={cell} />
             )}
             {integrationType === IntegrationType.CALL && (
-              <Button variant="outline">Add</Button>
+              <CallIntegrationActions cell={cell} />
             )}
           </>
         )}

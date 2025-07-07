@@ -172,7 +172,7 @@ export const integrationTypeColumns = ({
     header: () => <RecordTable.InlineHead label="Actions" />,
     cell: ({ cell }) => {
       return (
-        <div className="flex items-center justify-center gap-1 [&>button]:px-2">
+        <div className="flex items-center justify-center gap-1.5">
           <Actions cell={cell} />
           <ArchiveIntegration
             _id={cell.row.original._id}

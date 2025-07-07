@@ -1,73 +1,24 @@
-import { useAtom } from 'jotai';
-import { callAddSheetAtom } from '../states/callAddSheetAtom';
-import { Button, Checkbox, Form, Input, Sheet } from 'erxes-ui';
 import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { Button, Sheet, Form, Input, Checkbox } from 'erxes-ui';
+import { useFieldArray, UseFormReturn } from 'react-hook-form';
+import { CALL_INTEGRATION_FORM_SCHEMA } from '@/integrations/call/constants/callIntegrationAddSchema';
 import { z } from 'zod';
-import { CALL_INTEGRATION_ADD_SCHEMA } from '@/integrations/call/constants/callIntegrationAddSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SelectBrand } from 'ui-modules';
+import { SelectBrand, SelectMember } from 'ui-modules';
 import { SelectChannel } from '@/inbox/channel/components/SelectChannel';
+import { useAtomValue } from 'jotai';
+import { callEditSheetAtom } from '@/integrations/call/states/callEditSheetAtom';
 
-export const CallAddSheet = () => {
-  const [callAddSheet, setCallAddSheet] = useAtom(callAddSheetAtom);
-
-  return (
-    <Sheet open={callAddSheet} onOpenChange={setCallAddSheet}>
-      <Sheet.Trigger asChild>
-        <Button>
-          <IconPlus />
-          Add Call
-        </Button>
-      </Sheet.Trigger>
-      <Sheet.View className="sm:max-w-3xl">
-        <CallAdd />
-      </Sheet.View>
-    </Sheet>
-  );
-};
-
-export const CallAddLayout = ({
-  children,
-  actions,
+export const CallIntegrationForm = ({
+  form,
+  onSubmit,
 }: {
-  children: React.ReactNode;
-  actions: React.ReactNode;
+  form: UseFormReturn<z.infer<typeof CALL_INTEGRATION_FORM_SCHEMA>>;
+  onSubmit: (data: z.infer<typeof CALL_INTEGRATION_FORM_SCHEMA>) => void;
 }) => {
-  return (
-    <>
-      <Sheet.Header>
-        <Sheet.Title>Add Call</Sheet.Title>
-        <Sheet.Close />
-      </Sheet.Header>
-      <Sheet.Content className="overflow-auto p-4 styled-scroll">
-        <div className="grid grid-cols-2 gap-4">{children}</div>
-      </Sheet.Content>
-      <Sheet.Footer>
-        <Sheet.Close asChild>
-          <Button className="mr-auto text-muted-foreground" variant="ghost">
-            Cancel
-          </Button>
-        </Sheet.Close>
-        {actions}
-      </Sheet.Footer>
-    </>
-  );
-};
-
-export const CallAdd = () => {
-  const form = useForm<z.infer<typeof CALL_INTEGRATION_ADD_SCHEMA>>({
-    resolver: zodResolver(CALL_INTEGRATION_ADD_SCHEMA),
-  });
-
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'operators',
   });
-
-  const onSubmit = (data: z.infer<typeof CALL_INTEGRATION_ADD_SCHEMA>) => {
-    console.log(data);
-  };
 
   return (
     <Form {...form}>
@@ -75,7 +26,7 @@ export const CallAdd = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col flex-auto overflow-hidden"
       >
-        <CallAddLayout
+        <CallIntegrationFormLayout
           actions={
             <Button type="submit" onClick={() => form.handleSubmit(onSubmit)}>
               Save
@@ -164,7 +115,20 @@ export const CallAdd = () => {
             >
               <div className="flex gap-4 w-full">
                 <Form.Field
-                  name={`operators.${index}.username`}
+                  name={`operators.${index}.userId`}
+                  render={({ field }) => (
+                    <Form.Item className="flex-auto">
+                      <Form.Label>Operator</Form.Label>
+                      <SelectMember.FormItem
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      />
+                      <Form.Message />
+                    </Form.Item>
+                  )}
+                />
+                <Form.Field
+                  name={`operators.${index}.gsUsername`}
                   render={({ field }) => (
                     <Form.Item className="flex-auto">
                       <Form.Label>Username</Form.Label>
@@ -176,7 +140,7 @@ export const CallAdd = () => {
                   )}
                 />
                 <Form.Field
-                  name={`operators.${index}.password`}
+                  name={`operators.${index}.gsPassword`}
                   render={({ field }) => (
                     <Form.Item className="flex-auto">
                       <Form.Label>Password</Form.Label>
@@ -217,17 +181,46 @@ export const CallAdd = () => {
             variant="secondary"
             onClick={() =>
               append({
-                username: '',
-                password: '',
-                isForwarding: false,
+                gsUsername: '',
+                gsPassword: '',
+                gsForwardAgent: false,
               })
             }
           >
             <IconPlus />
             Add Operator
           </Button>
-        </CallAddLayout>
+        </CallIntegrationFormLayout>
       </form>
     </Form>
+  );
+};
+
+export const CallIntegrationFormLayout = ({
+  children,
+  actions,
+}: {
+  children: React.ReactNode;
+  actions: React.ReactNode;
+}) => {
+  const callEditSheet = useAtomValue(callEditSheetAtom);
+  return (
+    <>
+      <Sheet.Header>
+        <Sheet.Title>{callEditSheet ? 'Edit Call' : 'Add Call'}</Sheet.Title>
+        <Sheet.Close />
+      </Sheet.Header>
+      <Sheet.Content className="overflow-auto p-4 styled-scroll">
+        <div className="grid grid-cols-2 gap-4">{children}</div>
+      </Sheet.Content>
+      <Sheet.Footer>
+        <Sheet.Close asChild>
+          <Button className="mr-auto text-muted-foreground" variant="ghost">
+            Cancel
+          </Button>
+        </Sheet.Close>
+        {actions}
+      </Sheet.Footer>
+    </>
   );
 };

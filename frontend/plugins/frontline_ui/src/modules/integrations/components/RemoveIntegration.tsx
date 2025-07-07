@@ -39,6 +39,7 @@ export const RemoveIntegration = ({
           removeIntegration({ variables: { id: _id } });
         })
       }
+      size="icon"
       disabled={loading}
     >
       {loading ? <Spinner size="small" /> : <IconTrash />}

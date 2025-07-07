@@ -5,6 +5,7 @@ import {
   Tooltip,
   cn,
   isUndefinedOrNull,
+  readImage,
 } from 'erxes-ui';
 import {
   MembersInlineContext,
@@ -108,6 +109,7 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
 export const MembersInlineAvatar = ({
   className,
   containerClassName,
+  size,
   ...props
 }: AvatarProps & {
   containerClassName?: string;
@@ -141,7 +143,7 @@ export const MembersInlineAvatar = ({
         <Tooltip delayDuration={100} key={member._id}>
           <Tooltip.Trigger asChild>
             <Avatar
-              size="lg"
+              size={size || 'lg'}
               {...props}
               className={cn(className, 'items-center justify-center')}
             >
@@ -164,10 +166,10 @@ export const MembersInlineAvatar = ({
               members.length > 1 && 'ring-2 ring-background',
               className,
             )}
-            size="lg"
+            size={size || 'lg'}
             {...props}
           >
-            <Avatar.Image src={avatar} />
+            <Avatar.Image src={readImage(avatar as string, 200)} />
             <Avatar.Fallback>{fullName?.charAt(0) || ''}</Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>
@@ -193,7 +195,7 @@ export const MembersInlineAvatar = ({
           <Tooltip.Trigger asChild>
             <Avatar
               className={cn('ring-2 ring-background bg-background', className)}
-              size="lg"
+              size={size || 'lg'}
               {...props}
             >
               <Avatar.Fallback className="bg-primary/10 text-primary">

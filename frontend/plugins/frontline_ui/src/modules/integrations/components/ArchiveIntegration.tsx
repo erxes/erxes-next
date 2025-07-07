@@ -30,6 +30,7 @@ export const ArchiveIntegration = ({
   return (
     <Button
       variant={'outline'}
+      size="icon"
       onClick={() =>
         confirm({
           message: `Are you sure you want to archive "${name}" integration?`,
