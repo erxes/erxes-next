@@ -17,7 +17,7 @@ export const AddContractTypeForm = ({
 }: {
   onOpenChange: (open: boolean) => void;
 }) => {
-  const { contractTypesAdd, loading: editLoading } = useAddContractType();
+  const { contractTypesAdd, loading } = useAddContractType();
 
   const form = useForm<ContractTypeFormValues>({
     resolver: zodResolver(contractTypeFormSchema),
@@ -86,9 +86,9 @@ export const AddContractTypeForm = ({
           <Button
             type="submit"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
-            disabled={editLoading}
+            disabled={loading}
           >
-            {editLoading ? 'Saving...' : 'Save'}
+            {loading ? 'Saving...' : 'Save'}
           </Button>
         </Sheet.Footer>
       </form>

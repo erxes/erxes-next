@@ -6,7 +6,9 @@ import { productsQueries } from '@/products/graphql';
 const PRODUCTS_PAGE_SIZE = 30;
 
 export const useRemoveProducts = () => {
-  const [_removeProducts, { loading }] = useMutation(productsRemoveMutation.productRemove);
+  const [_removeProducts, { loading }] = useMutation(
+    productsRemoveMutation.productRemove,
+  );
 
   const removeProducts = (
     productIds: string[],
@@ -28,7 +30,10 @@ export const useRemoveProducts = () => {
                 list: productsMain.list.filter(
                   (product: IProduct) => !productIds.includes(product._id),
                 ),
-                totalCount: Math.max(0, productsMain.totalCount - productIds.length),
+                totalCount: Math.max(
+                  0,
+                  productsMain.totalCount - productIds.length,
+                ),
               },
             }),
           );

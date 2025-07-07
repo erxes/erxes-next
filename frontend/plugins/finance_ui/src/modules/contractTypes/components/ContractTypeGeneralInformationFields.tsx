@@ -21,7 +21,6 @@ export const ContractTypeGeneralInformationFields = ({
 }: {
   form: UseFormReturn<ContractTypeFormValues>;
 }) => {
-  //   console.log({ form: form?.getFieldState('number') });
   return (
     <>
       <div className="grid grid-cols-2 gap-4 py-4">

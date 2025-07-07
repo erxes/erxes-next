@@ -9,15 +9,11 @@ export const CodeField = ({
 }: {
   control: Control<ContractTypeFormValues>;
 }) => {
-  console.log({ control });
-
   return (
     <Form.Field
       control={control}
       name="code"
       render={({ field }) => {
-        console.log({ field });
-
         return (
           <Form.Item>
             <Form.Label>Code</Form.Label>

@@ -2,26 +2,22 @@ import { IconHash, IconLabel, IconLabelFilled } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
 import {
   RecordTable,
+  Input,
   RecordTableCellContent,
   RecordTableCellDisplay,
   RecordTableCellTrigger,
   RecordTableTree,
-} from 'erxes-ui/modules';
+} from 'erxes-ui';
 import { useMemo } from 'react';
-import { contractTypes_PER_PAGE } from '~/modules/contractTypes/hooks/addContractType';
 import { useContractTypes } from '~/modules/contractTypes/hooks/useContractTypes';
 import { IContractType } from '~/modules/contractTypes/types';
 import { RecordTablePopover } from 'erxes-ui/modules';
 import { ContractTypeMoreColumn } from '~/modules/contractTypes/components/ContractTypeMoreColumn';
-import { Input } from 'react-aria-components';
 import { TextOverflowTooltip } from 'erxes-ui/components';
+import { ContractTypeCommandBar } from '~/modules/contractTypes/components/ContractTypeCommandBar';
 
 export const ContractTypesRecordTable = () => {
   const { contractTypes, loading } = useContractTypes();
-
-  //   const types = contractTypes?.map((category: IContractType) => ({
-  //     ...category,
-  //   }));
 
   const contractTypeObject = useMemo(() => {
     return contractTypes?.reduce(
@@ -45,13 +41,12 @@ export const ContractTypesRecordTable = () => {
             <RecordTable.Header />
             <RecordTable.Body>
               <RecordTable.RowList Row={RecordTableTree.Row} />
-              {loading && (
-                <RecordTable.RowSkeleton rows={contractTypes_PER_PAGE} />
-              )}
+              {loading && <RecordTable.RowSkeleton rows={40} />}
             </RecordTable.Body>
           </RecordTable>
         </RecordTable.Scroll>
       </RecordTableTree>
+      <ContractTypeCommandBar />
     </RecordTable.Provider>
   );
 };

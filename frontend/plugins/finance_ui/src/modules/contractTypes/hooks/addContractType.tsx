@@ -14,8 +14,6 @@ interface AddContractTypeResult {
   contractTypesAdd: IContractType;
 }
 
-export const contractTypes_PER_PAGE = 30;
-
 export function useAddContractType(
   options?: MutationHookOptions<AddContractTypeResult, any>,
 ) {
@@ -25,10 +23,9 @@ export function useAddContractType(
       {
         ...options,
         update: (cache: ApolloCache<any>, { data }) => {
-          const queryVariables = { perPage: contractTypes_PER_PAGE };
           const existingData = cache.readQuery<contractTypeData>({
             query: contractTypeQueries.contractTypesMain,
-            variables: queryVariables,
+            variables: {},
           });
           if (
             !existingData ||
@@ -38,7 +35,7 @@ export function useAddContractType(
             return;
           cache.writeQuery<contractTypeData>({
             query: contractTypeQueries.contractTypesMain,
-            variables: queryVariables,
+            variables: {},
             data: {
               contractTypesMain: {
                 ...existingData.contractTypesMain,
