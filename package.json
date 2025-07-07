@@ -72,6 +72,7 @@
     "aws-sdk": "^2.1692.0",
     "axios": "^1.6.0",
     "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
     "bullMQAdapter": "link:@bull-board/api/bullMQAdapter",
     "bullmq": "^5.40.0",
     "class-variance-authority": "^0.7.0",

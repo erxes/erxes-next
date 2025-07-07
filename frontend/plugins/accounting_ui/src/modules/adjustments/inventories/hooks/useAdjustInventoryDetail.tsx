@@ -2,7 +2,7 @@ import { useQuery, OperationVariables } from '@apollo/client';
 import { ADJUST_INVENTORY_DETAIL_QUERY } from '../graphql/adjustInventoryQueries';
 import { IAdjustInventory } from '../types/AdjustInventory';
 
-export const useTransactionDetail = (options?: OperationVariables) => {
+export const useAdjustInventoryDetail = (options?: OperationVariables) => {
   const { data, loading, error } = useQuery<
     { accTransactionDetail: IAdjustInventory[] },
     OperationVariables
