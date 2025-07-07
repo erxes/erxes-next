@@ -66,7 +66,8 @@ export const teamMemberColumns: ColumnDef<IUser>[] = [
     accessorKey: 'avatar',
     header: () => <RecordTable.InlineHead icon={IconUser} label="" />,
     cell: ({ cell }) => {
-      const { firstName, lastName, avatar } = cell.row.original.details;
+      const { details } = cell.row.original;
+      const { firstName, lastName, avatar } = details || {};
       return (
         <div className="flex items-center justify-center h-8">
           <Avatar size="lg">

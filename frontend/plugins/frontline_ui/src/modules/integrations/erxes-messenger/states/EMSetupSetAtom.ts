@@ -6,6 +6,7 @@ import {
   erxesMessengerSetupHoursAtom,
   erxesMessengerSetupIntroAtom,
   erxesMessengerSetupSettingsAtom,
+  erxesMessengerSetupStepAtom,
   settedIntegrationDetailAtom,
 } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
 import { MessengerSetupPayload } from '@/integrations/erxes-messenger/types/EMStateTypes';
@@ -54,7 +55,7 @@ export const erxesMessengerSetSetupAtom = atom(
       );
 
       const greetings = {
-        supporterUsers: payload?.messengerData?.supporterIds,
+        supporterIds: payload?.messengerData?.supporterIds,
         title:
           (payload?.messengerData?.messages || {})[
             payload?.languageCode || DEFAULT_LANGUAGE
@@ -119,6 +120,7 @@ export const erxesMessengerSetSetupAtom = atom(
       };
       set(erxesMessengerSetupIntroAtom, intro);
       set(settedIntegrationDetailAtom, true);
+      set(erxesMessengerSetupStepAtom, 1);
     } catch (error) {
       console.error('Error setting up messenger configuration:', error);
       // Optionally, you could throw the error or set an error state

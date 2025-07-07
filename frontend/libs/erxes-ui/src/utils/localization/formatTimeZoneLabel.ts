@@ -1,5 +1,5 @@
 import { formatInTimeZone } from 'date-fns-tz';
-import { enUS } from 'date-fns/locale/en-US';
+import { enUS } from 'date-fns/locale';
 
 /**
  * Formats a IANA time zone to a select option label.

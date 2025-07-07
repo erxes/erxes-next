@@ -3,7 +3,7 @@ import {
   erxesMessengerSetupHoursAtom,
 } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
 import { IconPlus, IconX } from '@tabler/icons-react';
-import { Avatar, Button, Popover, Separator } from 'erxes-ui';
+import { Avatar, Button, Popover, readImage, Separator } from 'erxes-ui';
 import { MembersInline, useMembersInlineContext } from 'ui-modules';
 import { useAtomValue } from 'jotai';
 import { EMGreetingAvatar } from '@/integrations/erxes-messenger/components/EMGreeting';
@@ -14,7 +14,7 @@ export const ActiveUsers = () => {
     <div className="flex items-center gap-2">
       {members.map((member) => (
         <Avatar key={member._id} size="xl">
-          <Avatar.Image src={member.details?.avatar} />
+          <Avatar.Image src={readImage(member.details?.avatar || '', 200)} />
           <Avatar.Fallback>
             {member.details?.fullName?.charAt(0) || ''}
           </Avatar.Fallback>
@@ -63,7 +63,7 @@ export const EMPreviewIntro = () => {
         <p className="text-sm text-primary-foreground/80 mt-3 mb-5">
           {greeting?.message || 'Welcome to Erxes Messenger'}
         </p>
-        <MembersInline.Provider memberIds={greeting?.supporterUsers || []}>
+        <MembersInline.Provider memberIds={greeting?.supporterIds || []}>
           <ActiveUsers />
         </MembersInline.Provider>
       </div>

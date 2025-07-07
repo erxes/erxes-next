@@ -21,7 +21,8 @@ export const ArchiveIntegration = ({
     },
     onError(e) {
       toast({
-        title: 'Integration archived',
+        title: 'Failed to archive integration',
+        description: e?.message,
         variant: 'destructive',
       });
     },

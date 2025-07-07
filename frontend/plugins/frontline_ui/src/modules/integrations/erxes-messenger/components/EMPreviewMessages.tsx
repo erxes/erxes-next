@@ -65,9 +65,7 @@ export const EMPreviewMessages = () => {
         <div className="flex items-end gap-2">
           <MembersInline.Provider
             memberIds={
-              greeting?.supporterUsers?.length
-                ? [greeting?.supporterUsers[0]]
-                : []
+              greeting?.supporterIds?.length ? [greeting?.supporterIds[0]] : []
             }
           >
             <MembersInline.Avatar size="xl" />

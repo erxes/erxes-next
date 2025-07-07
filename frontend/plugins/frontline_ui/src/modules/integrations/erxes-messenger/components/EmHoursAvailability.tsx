@@ -111,7 +111,10 @@ export const EMHoursAvailability = () => {
                       value={field.value}
                     >
                       {Object.values(EnumResponseRate).map((rate) => (
-                        <Form.Item className="flex items-center gap-3 space-y-0">
+                        <Form.Item
+                          className="flex items-center gap-3 space-y-0"
+                          key={rate}
+                        >
                           <Form.Control>
                             <RadioGroup.Item value={rate} />
                           </Form.Control>

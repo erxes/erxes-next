@@ -28,7 +28,7 @@ export const LanguageSelect = React.forwardRef<
             {Object.entries(INTL_LANGUAGES).map(([language, code]) => (
               <Command.Item
                 key={code}
-                value={code + language}
+                value={`${code}|${language}`}
                 onSelect={() => {
                   onValueChange(code);
                   setOpen(false);

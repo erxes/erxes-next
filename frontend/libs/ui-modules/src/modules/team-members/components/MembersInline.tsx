@@ -30,7 +30,7 @@ export const MembersInlineRoot = ({
   memberIds?: string[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
-  size?: 'lg';
+  size?: AvatarProps['size'];
 }) => {
   return (
     <MembersInlineProvider
@@ -93,7 +93,13 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   });
 
   useEffect(() => {
-    const newMembers = [...members].filter((m) => memberIds?.includes(m._id));
+    const newMembers = [...members].filter(
+      (m) => memberIds?.includes(m._id) && m._id !== memberId,
+    );
+    if (newMembers.some((m) => m._id === memberId)) {
+      updateMembers?.(newMembers);
+      return;
+    }
     if (userDetail) {
       updateMembers?.([...newMembers, { ...userDetail, _id: memberId }]);
     }

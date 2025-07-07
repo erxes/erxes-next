@@ -18,9 +18,10 @@ export const RemoveIntegration = ({
         variant: 'default',
       });
     },
-    onError() {
+    onError(e) {
       toast({
-        title: 'Integration removed',
+        title: 'Failed to remove integration',
+        description: e?.message,
         variant: 'destructive',
       });
     },

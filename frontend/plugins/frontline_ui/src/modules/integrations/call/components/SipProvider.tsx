@@ -19,7 +19,10 @@ import { useAtom } from 'jotai';
 import { callConfigAtom, callInfoAtom } from '../states/sipStates';
 import { getPluginAssetsUrl } from 'erxes-ui';
 import { ICallConfigDoc } from '@/integrations/call/types/callTypes';
-import { extractPhoneNumberFromCounterpart } from '@/integrations/call/utils/callUtils';
+import {
+  extractPhoneNumberFromCounterpart,
+  parseCallDirection,
+} from '@/integrations/call/utils/callUtils';
 
 // Context for SIP functionality
 const SipContext = createContext<SipContextValue | null>(null);
@@ -86,6 +89,7 @@ const SipProvider = ({
   const ringbackToneRef = useRef<HTMLAudioElement | null>(null);
   const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
   const loggerRef = useRef<any>(() => console);
+  const isInitializedRef = useRef(false);
 
   // Configure debug logging
   const reconfigureDebug = useCallback(() => {
@@ -283,7 +287,7 @@ const SipProvider = ({
     return sipState.rtcSession?._audioMuted || false;
   }, [sipState.rtcSession]);
 
-  const isHolded = useCallback(() => {
+  const isHeld = useCallback(() => {
     return {
       localHold: sipState.rtcSession?._localHold,
       remoteHold: sipState.rtcSession?._remoteHold,
@@ -527,10 +531,7 @@ const SipProvider = ({
             return;
           }
           if (sipState.callDirection) {
-            direction = sipState.callDirection.split(
-              '/',
-            )[1] as CallDirectionEnum;
-            direction = direction.toLowerCase() as CallDirectionEnum;
+            direction = parseCallDirection(sipState.callDirection);
           }
           if (sipState.callCounterpart) {
             customerPhone = extractPhoneNumberFromCounterpart(
@@ -570,10 +571,7 @@ const SipProvider = ({
           }
 
           if (sipState.callDirection) {
-            direction = sipState.callDirection.split(
-              '/',
-            )[1] as CallDirectionEnum;
-            direction = direction.toLowerCase() as CallDirectionEnum;
+            direction = parseCallDirection(sipState.callDirection);
           }
           if (sipState.callCounterpart) {
             customerPhone = extractPhoneNumberFromCounterpart(
@@ -649,10 +647,7 @@ const SipProvider = ({
             return;
           }
           if (sipState.callDirection) {
-            direction = sipState.callDirection.split(
-              '/',
-            )[1] as CallDirectionEnum;
-            direction = direction.toLowerCase() as CallDirectionEnum;
+            direction = parseCallDirection(sipState.callDirection);
           }
           if (sipState.callCounterpart) {
             customerPhone = extractPhoneNumberFromCounterpart(
@@ -692,7 +687,7 @@ const SipProvider = ({
             return;
           }
 
-          //check this code
+          // Retry playback after 2 s: handles browsers that don’t return a Promise from play() or silently block the initial play call
           setTimeout(() => {
             remoteAudioRef.current?.play();
           }, 2000);
@@ -747,7 +742,7 @@ const SipProvider = ({
   useEffect(() => {
     if (
       sipState.sipStatus === SipStatusEnum.REGISTERED &&
-      callInfo?.isUnRegistered
+      callInfo?.isUnregistered
     ) {
       unregisterSip();
     }
@@ -796,8 +791,12 @@ const SipProvider = ({
   }, [callUserIntegration, setCallConfig]);
 
   useEffect(() => {
-    reinitializeJsSIP();
-  }, [host, port, pathname, user, password, autoRegister, reinitializeJsSIP]);
+    if (!isInitializedRef.current) {
+      reinitializeJsSIP();
+      isInitializedRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [host, port, pathname, user, password, autoRegister]);
 
   // Create context value
   const contextValue = {
@@ -839,7 +838,7 @@ const SipProvider = ({
     mute,
     unmute,
     sendDtmf,
-    isHolded,
+    isHeld,
     hold,
     unhold,
   };

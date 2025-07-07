@@ -352,7 +352,7 @@ const CallRouting = ({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'cloudflareCallSetup.callRouting',
+    name: 'cloudflareCallsSetup.callRouting',
   });
 
   return (

@@ -5,7 +5,7 @@ export interface ICallConfig {
   wsServer: string;
   operators: JSON;
   token: string;
-  queues: [string];
+  queues: string[];
 }
 export interface ICallConfigDoc extends ICallConfig {
   isAvailable: boolean;

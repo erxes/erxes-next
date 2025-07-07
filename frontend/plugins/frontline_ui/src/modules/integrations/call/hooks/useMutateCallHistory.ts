@@ -43,7 +43,7 @@ export const useMutateCallHistory = () => {
       updateHistoryMutation({
         variables: {
           id: historyId,
-          timeStamp: parseInt(timeStamp.toString()),
+          timeStamp: parseInt(timeStamp.toString(), 10),
           callStartTime,
           callEndTime,
           callDuration: duration,
@@ -80,7 +80,7 @@ export const useMutateCallHistory = () => {
             callEndTime,
             callDuration: duration,
             callStatus,
-            inboxIntegrationId: config?.inboxId || '',
+            inboxIntegrationId: config?.inboxId,
             customerPhone,
             callType: direction,
             endedBy,
@@ -125,7 +125,7 @@ export const useMutateCallHistory = () => {
         callType: direction,
         callStatus,
         customerPhone,
-        inboxIntegrationId: config?.inboxId || '',
+        inboxIntegrationId: config?.inboxId,
         callStartTime,
         queueName,
       },

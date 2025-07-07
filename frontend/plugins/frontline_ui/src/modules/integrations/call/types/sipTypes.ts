@@ -137,7 +137,7 @@ export interface SipContextValue {
   mute: () => void;
   unmute: () => void;
   sendDtmf: (tones: string) => void;
-  isHolded: () => {
+  isHeld: () => {
     localHold: boolean;
     remoteHold: boolean;
   };

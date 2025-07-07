@@ -181,6 +181,7 @@ export const CallIntegrationForm = ({
             variant="secondary"
             onClick={() =>
               append({
+                userId: undefined,
                 gsUsername: '',
                 gsPassword: '',
                 gsForwardAgent: false,

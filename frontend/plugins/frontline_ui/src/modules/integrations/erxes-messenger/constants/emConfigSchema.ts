@@ -18,7 +18,7 @@ export const EM_CONFIG_SCHEMA = z.object({
       botCheck: z.boolean().optional(),
     })
     .optional(),
-  cloudflareCallSetup: z
+  cloudflareCallsSetup: z
     .object({
       header: z.string().optional(),
       description: z.string().optional(),

@@ -12,23 +12,16 @@ export const ErxesMessengerPreview = () => {
   const erxesMessengerSetupStep = useAtomValue(erxesMessengerSetupStepAtom);
 
   useLayoutEffect(() => {
-    if (hexToHsl(appearance?.brandColor)) {
+    if (hexToHsl(appearance?.color)) {
       document.documentElement.style.setProperty(
         '--primary',
-        hexToHsl(appearance?.brandColor) || '',
+        hexToHsl(appearance?.color) || '',
       );
     }
   }, [appearance]);
 
   return (
-    <div
-      className="bg-sidebar h-dvh flex items-end justify-end p-5"
-      style={
-        {
-          '--primary': hexToHsl(appearance?.brandColor || ''),
-        } as React.CSSProperties
-      }
-    >
+    <div className="bg-sidebar h-dvh flex items-end justify-end p-5">
       <div>
         <Popover defaultOpen>
           <Popover.Trigger asChild>

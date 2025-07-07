@@ -9,6 +9,6 @@ export const callConfigAtom = atomWithStorage<ICallConfigDoc | null>(
 );
 
 export const callInfoAtom = atomWithStorage<{
-  isUnRegistered?: boolean;
+  isUnregistered?: boolean;
   isRegistered?: boolean;
 } | null>('callInfo', null, undefined, { getOnInit: true });
