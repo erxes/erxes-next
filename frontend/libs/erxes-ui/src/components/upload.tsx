@@ -1,20 +1,18 @@
+import { Button, Dialog } from 'erxes-ui/components';
+import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
 import React, {
-  createContext,
   MutableRefObject,
+  createContext,
   useCallback,
   useContext,
   useRef,
   useState,
 } from 'react';
 
-import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
-
-import { Button, Dialog } from 'erxes-ui/components';
-import { useUpload } from 'erxes-ui/hooks';
-import { readFile } from 'erxes-ui/utils/core';
-
-import { cn } from '../lib/utils';
 import { ButtonProps } from './button';
+import { cn } from '../lib/utils';
+import { readFile } from 'erxes-ui/utils/core';
+import { useUpload } from 'erxes-ui/hooks';
 
 type IUploadContext = {
   url: string | undefined;
@@ -93,10 +91,14 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
 
 UploadRoot.displayName = 'UploadRoot';
 
+type UploadPreviewPropsExtended = React.ComponentPropsWithoutRef<'div'> & {
+  onUploadStart?: () => void;
+  onUploadEnd?: () => void;
+};
 const UploadPreview = React.forwardRef<
   HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => {
+  UploadPreviewPropsExtended
+>(({ className, onUploadStart, onUploadEnd, ...props }, ref) => {
   const { isLoading, upload } = useUpload();
 
   const uploadContext = useContext(UploadContext);
@@ -124,11 +126,14 @@ const UploadPreview = React.forwardRef<
         URL.revokeObjectURL(previewRef.current);
       }
 
+      onUploadStart?.();
+
       upload({
         files,
 
         afterUpload: ({ response, fileInfo }) => {
           onChange && onChange({ url: response, ...fileInfo });
+          onUploadEnd?.();
         },
 
         afterRead: ({ result }) => {
@@ -136,7 +141,7 @@ const UploadPreview = React.forwardRef<
         },
       });
     },
-    [previewRef, upload, onChange, setPreviewUrl],
+    [previewRef, upload, onChange, setPreviewUrl, onUploadStart, onUploadEnd],
   );
 
   return (
@@ -174,8 +179,8 @@ const UploadPreview = React.forwardRef<
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
-          accept="image/*"
-          aria-label="Upload image file"
+          // accept="image/*"
+          // aria-label="Upload image file"
           multiple={multiple}
         />
       </div>
