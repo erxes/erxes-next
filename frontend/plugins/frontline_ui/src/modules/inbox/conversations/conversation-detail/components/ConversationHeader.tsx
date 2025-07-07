@@ -10,7 +10,7 @@ import { inboxLayoutState } from '@/inbox/states/inboxLayoutState';
 import { IntegrationActions } from '@/integrations/components/IntegrationActions';
 
 export const ConversationHeader = () => {
-  const { customerId, loading } = useConversationContext();
+  const { customerId, loading, customer } = useConversationContext();
   const [, setConversationId] = useQueryState<string>('conversationId');
   const view = useAtomValue(inboxLayoutState);
 
@@ -30,6 +30,7 @@ export const ConversationHeader = () => {
           )}
           {!loading ? (
             <CustomersInline
+              customers={customer ? [customer] : []}
               customerIds={customerId ? [customerId] : []}
               className="text-sm text-foreground flex-none"
             />

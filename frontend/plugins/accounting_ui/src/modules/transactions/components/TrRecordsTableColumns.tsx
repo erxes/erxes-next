@@ -14,7 +14,7 @@ import {
   RecordTableCellDisplay,
 } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
-import { renderingTransactionDetailState } from '../states/renderingTransactionContactingDetailStates';
+import { renderingTransactionDetailState } from '../states/renderingTransactionDetailStates';
 import { IconMoneybag, IconFile, IconCalendar } from '@tabler/icons-react';
 import { useState } from 'react';
 
@@ -187,7 +187,7 @@ export const trRecordColumns: ColumnDef<ITrRecord>[] = [
     header: () => <RecordTable.InlineHead icon={IconCalendar} label="Date" />,
     accessorKey: 'date',
     cell: ({ getValue, row }) => <DateCell getValue={getValue} row={row} />,
-    size: 80,
+    size: 100,
   },
   {
     id: 'description',

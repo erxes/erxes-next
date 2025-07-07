@@ -1,4 +1,3 @@
-import { TrJournalEnum } from '@/transactions/types/constants';
 import { ITransactionGroupForm } from '../../../types/JournalForms';
 import {
   AccountField,
@@ -9,6 +8,7 @@ import {
 } from '../../GeneralFormFields';
 import { CustomerFields } from '../../helpers/CustomerFields';
 import { InventoryForm } from './InventoryForm';
+import { JournalEnum } from '@/settings/account/types/Account';
 
 export const InvOutForm = ({
   form,
@@ -23,13 +23,13 @@ export const InvOutForm = ({
         <AccountField
           form={form}
           index={index}
-          filter={{ journals: [TrJournalEnum.INVENTORY] }}
+          filter={{ journals: [JournalEnum.INVENTORY] }}
           allDetails={true}
         />
         <CustomerFields form={form} index={index} />
-        <AssignToField form={form} index={index} />
         <BranchField form={form} index={index} />
         <DepartmentField form={form} index={index} />
+        <AssignToField form={form} index={index} />
         <DescriptionField form={form} index={index} />
       </div>
 

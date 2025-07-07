@@ -2,7 +2,7 @@ import { IconSelector } from '@tabler/icons-react';
 import { currentUserState } from 'ui-modules';
 import { Avatar, DropdownMenu, Sidebar, useIsMobile } from 'erxes-ui';
 
-import { readFile } from 'erxes-ui';
+import { readImage } from 'erxes-ui';
 
 import { SelectLanguages } from './SelectLanguages';
 import { ThemeSelector } from './ThemeSelector';
@@ -28,7 +28,7 @@ export function User() {
             >
               <Avatar className="h-8 w-8 rounded-full">
                 <Avatar.Image
-                  src={readFile(userDetail?.avatar || '')}
+                  src={readImage(userDetail?.avatar || '')}
                   alt={userDetail?.fullName || ''}
                 />
                 <Avatar.Fallback className="rounded-lg">
@@ -56,7 +56,7 @@ export function User() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <Avatar.Image
-                    src={readFile(userDetail?.avatar || '')}
+                    src={readImage(userDetail?.avatar || '')}
                     alt={userDetail?.fullName || ''}
                   />
                   <Avatar.Fallback className="rounded-lg">

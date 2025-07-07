@@ -8,7 +8,7 @@ import {
   IconPhoneFilled,
   IconPhonePause,
 } from '@tabler/icons-react';
-import { Button, Separator } from 'erxes-ui';
+import { Button, DropdownMenu, Separator } from 'erxes-ui';
 import { CustomersInline } from 'ui-modules';
 import {
   CallWidgetDraggableRoot,
@@ -16,6 +16,7 @@ import {
 } from '@/integrations/call/components/CallWidgetDraggable';
 import { useAtom, useSetAtom } from 'jotai';
 import {
+  callWidgetPositionState,
   expandWidgetState,
   showNumbersState,
 } from '@/integrations/call/states/callWidgetStates';
@@ -92,13 +93,7 @@ export const CallWidgetContent = ({
                 >
                   <IconPhonePause />
                 </Button>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="size-9 bg-muted [&_svg]:size-5 ml-auto"
-                >
-                  <IconDots />
-                </Button>
+                <CallWidgetMoreActions />
               </div>
               <Button
                 variant="secondary"
@@ -113,6 +108,31 @@ export const CallWidgetContent = ({
       </div>
       {expandWidget && <CallNumberInput />}
     </div>
+  );
+};
+
+export const CallWidgetMoreActions = () => {
+  const setPositionState = useSetAtom(callWidgetPositionState);
+  return (
+    <DropdownMenu>
+      <DropdownMenu.Trigger asChild>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="size-9 bg-muted [&_svg]:size-5 ml-auto"
+        >
+          <IconDots />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item>Call history</DropdownMenu.Item>
+        <DropdownMenu.Item>Settings</DropdownMenu.Item>
+        <DropdownMenu.Item>Hide</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => setPositionState({ x: 0, y: 0 })}>
+          Reset position
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
   );
 };
 

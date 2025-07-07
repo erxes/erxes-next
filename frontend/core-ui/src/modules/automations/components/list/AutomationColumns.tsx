@@ -5,7 +5,7 @@ import {
   Badge,
   cn,
   RecordTable,
-  readFile,
+  readImage,
   RecordTableCellContent,
   RecordTableCellDisplay,
   RecordTableCellTrigger,
@@ -131,7 +131,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
         <RecordTableCellDisplay>
           <Avatar className="h-6 w-6 rounded-full">
             <Avatar.Image
-              src={readFile(details?.avatar)}
+              src={readImage(details?.avatar)}
               alt={details?.fullName || ''}
             />
             <Avatar.Fallback className="rounded-lg text-black">
@@ -154,7 +154,7 @@ export const automationColumns: ColumnDef<IAutomation>[] = [
         <RecordTableCellDisplay>
           <Avatar className="h-6 w-6 rounded-full">
             <Avatar.Image
-              src={readFile(details?.avatar)}
+              src={readImage(details?.avatar)}
               alt={details?.fullName || ''}
             />
             <Avatar.Fallback className="rounded-lg text-black">
