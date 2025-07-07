@@ -12,14 +12,6 @@ export const ContractTypeCommandBar = () => {
     setRefreshKey((prev) => prev + 1);
   };
 
-  console.log(
-    2222,
-    table
-      .getSelectedRowModel()
-      .rows.map((row) => row.original._id)
-      .join(','),
-  );
-
   return (
     <CommandBar
       key={refreshKey}

@@ -1,17 +1,9 @@
-import { IconHash, IconLabel, IconLabelFilled } from '@tabler/icons-react';
+import { IconLabel } from '@tabler/icons-react';
 import { ColumnDef } from '@tanstack/table-core';
-import {
-  RecordTable,
-  Input,
-  RecordTableCellContent,
-  RecordTableCellDisplay,
-  RecordTableCellTrigger,
-  RecordTableTree,
-} from 'erxes-ui';
+import { RecordTable, RecordTableCellDisplay, RecordTableTree } from 'erxes-ui';
 import { useMemo } from 'react';
 import { useContractTypes } from '~/modules/contractTypes/hooks/useContractTypes';
 import { IContractType } from '~/modules/contractTypes/types';
-import { RecordTablePopover } from 'erxes-ui/modules';
 import { ContractTypeMoreColumn } from '~/modules/contractTypes/components/ContractTypeMoreColumn';
 import { TextOverflowTooltip } from 'erxes-ui/components';
 import { ContractTypeCommandBar } from '~/modules/contractTypes/components/ContractTypeCommandBar';

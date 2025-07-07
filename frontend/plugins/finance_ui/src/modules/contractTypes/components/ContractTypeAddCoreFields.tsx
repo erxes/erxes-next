@@ -85,7 +85,11 @@ export const VacancyField = ({
         <Form.Item>
           <Form.Label>Vacancy</Form.Label>
           <Form.Control>
-            <Input type="number" {...field} />
+            <Input
+              type="number"
+              {...field}
+              onChange={(e) => field.onChange(Number(e.target.value))}
+            />
           </Form.Control>
           <Form.Message />
         </Form.Item>
@@ -180,7 +184,11 @@ export const InterestRateField = ({
         <Form.Item>
           <Form.Label>Interest Rate</Form.Label>
           <Form.Control>
-            <Input {...field} />
+            <Input
+              type="number"
+              {...field}
+              onChange={(e) => field.onChange(Number(e.target.value))}
+            />
           </Form.Control>
           <Form.Message />
         </Form.Item>
@@ -202,7 +210,11 @@ export const CloseInterestRateField = ({
         <Form.Item>
           <Form.Label>Close Interest Rate</Form.Label>
           <Form.Control>
-            <Input {...field} />
+            <Input
+              type="number"
+              {...field}
+              onChange={(e) => field.onChange(Number(e.target.value))}
+            />
           </Form.Control>
           <Form.Message />
         </Form.Item>
