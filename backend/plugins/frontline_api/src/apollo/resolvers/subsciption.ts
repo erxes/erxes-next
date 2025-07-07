@@ -46,6 +46,26 @@ const customerConnectionChanged = `
   }
 `;
 
+const callReceived = `
+subscription phoneCallReceived($userId: String) {
+  phoneCallReceived(userId: $userId) 
+  }`;
+
+const callWaitingReceived = `
+subscription waitingCallReceived($extension: String) {
+  waitingCallReceived(extension: $extension)
+  }`;
+
+const callTalkingReceived = `
+subscription talkingCallReceived($extension: String) {
+  talkingCallReceived(extension: $extension)
+  }`;
+
+const callAgentReceived = `
+subscription agentCallReceived($extension: String) {
+  agentCallReceived(extension: $extension)
+  }`;
+
 export default {
   conversationChanged,
   conversationMessageInserted,
@@ -53,4 +73,8 @@ export default {
   conversationClientTypingStatusChanged,
   conversationExternalIntegrationMessageInserted,
   customerConnectionChanged,
+  callReceived,
+  callTalkingReceived,
+  callWaitingReceived,
+  callAgentReceived,
 };
