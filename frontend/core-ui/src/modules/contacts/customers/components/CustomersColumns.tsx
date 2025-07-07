@@ -296,35 +296,35 @@ export const customersColumns: ColumnDef<ICustomer>[] = [
     },
     size: 250,
   },
-  {
-    id: 'tagIds',
-    accessorKey: 'tagIds',
-    header: () => <RecordTable.InlineHead label="Tags" icon={IconTags} />,
-    cell: ({ cell }) => {
-      return (
-        <SelectTags.InlineCell
-          tagType="core:customer"
-          mode="multiple"
-          value={cell.row.original.tagIds}
-          targetIds={[cell.row.original._id]}
-          options={(newSelectedTagIds) => ({
-            update: (cache) => {
-              cache.modify({
-                id: cache.identify({
-                  __typename: 'Customer',
-                  _id: cell.row.original._id,
-                }),
-                fields: {
-                  tagIds: () => newSelectedTagIds,
-                },
-              });
-            },
-          })}
-        />
-      );
-    },
-    size: 360,
-  },
+  // {
+  //   id: 'tagIds',
+  //   accessorKey: 'tagIds',
+  //   header: () => <RecordTable.InlineHead label="Tags" icon={IconTags} />,
+  //   cell: ({ cell }) => {
+  //     return (
+  //       <SelectTags.InlineCell
+  //         tagType="core:customer"
+  //         mode="multiple"
+  //         value={cell.row.original.tagIds}
+  //         targetIds={[cell.row.original._id]}
+  //         options={(newSelectedTagIds) => ({
+  //           update: (cache) => {
+  //             cache.modify({
+  //               id: cache.identify({
+  //                 __typename: 'Customer',
+  //                 _id: cell.row.original._id,
+  //               }),
+  //               fields: {
+  //                 tagIds: () => newSelectedTagIds,
+  //               },
+  //             });
+  //           },
+  //         })}
+  //       />
+  //     );
+  //   },
+  //   size: 360,
+  // },
   {
     id: 'sex',
     accessorKey: 'sex',
