@@ -5,7 +5,11 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useAutomationActionContentSidebar } from '../hooks/useAutomationActionContentSidebar';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 import { getAutomationTypes } from 'ui-modules';
-// import { coreActionNames } from '../../nodes/actions/CoreActions';
+// <<<<<<< HEAD
+// // import { coreActionNames } from '../../nodes/actions/CoreActions';
+// =======
+// import { coreActionNames } from '../../nodes/actions/coreActions';
+// >>>>>>> 80e3b712fc651c2c48aaed206808d3f4a668a000
 
 export const AutomationActionContentSidebar = () => {
   const {

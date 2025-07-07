@@ -17,7 +17,7 @@ import {
   RelativeDateDisplay,
 } from 'erxes-ui';
 import { LogDetailDialog } from './LogDetail';
-import { readFile } from 'erxes-ui';
+import { readImage } from 'erxes-ui';
 import { IUser } from '@/settings/team-member/types';
 
 const statusInfos = {
@@ -129,7 +129,7 @@ export const logColumns: ColumnDef<any>[] = [
         <RecordTableCellDisplay>
           <Avatar className="h-6 w-6 rounded-full">
             <Avatar.Image
-              src={readFile(details?.avatar)}
+              src={readImage(details?.avatar)}
               alt={details?.fullName || ''}
             />
             <Avatar.Fallback className="rounded-lg text-black">

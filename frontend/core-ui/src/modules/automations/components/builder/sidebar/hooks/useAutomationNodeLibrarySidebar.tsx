@@ -1,5 +1,9 @@
 import { useAutomation } from '@/automations/components/builder/hooks/useAutomation';
-// import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
+// <<<<<<< HEAD
+// // import { coreActionNames } from '@/automations/components/builder/nodes/actions/CoreActions';
+// =======
+// import { coreActionNames } from '@/automations/components/builder/nodes/actions/coreActions';
+// >>>>>>> 80e3b712fc651c2c48aaed206808d3f4a668a000
 import { TAutomationProps } from '@/automations/utils/AutomationFormDefinitions';
 import React, { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';

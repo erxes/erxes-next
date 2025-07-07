@@ -1,5 +1,4 @@
-import { IconSandbox } from '@tabler/icons-react';
-
+import { IconCategory, IconSandbox } from '@tabler/icons-react';
 
 import { IUIConfig } from 'erxes-ui/types';
 
@@ -14,6 +13,13 @@ export const CONFIG: IUIConfig = {
       hasSettings: true,
       hasRelationWidget: false,
       hasFloatingWidget: false,
+      submenus: [
+        {
+          name: 'contract types',
+          path: 'saving/contactTypes',
+          icon: IconCategory,
+        },
+      ],
     },
   ],
 };

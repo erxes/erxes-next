@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const contractTypeFields = gql`
+export const contractTypeFields = `
   _id
   code
   name
@@ -22,31 +22,27 @@ export const contractTypeFields = gql`
   productType
   limitPercentage
 `;
+
 const listParamsDef = `
-  $page: Int
-  $perPage: Int
   $ids: [String]
   $searchValue: String
-  $sortField: String
-  $sortDirection: Int
   $isDeposit: Boolean
   $productType: String
 `;
 
 const listParamsValue = `
-  page: $page
-  perPage: $perPage
   ids: $ids
   searchValue: $searchValue
-  sortField: $sortField
-  sortDirection: $sortDirection
   isDeposit: $isDeposit
   productType: $productType
 `;
-const contractTypes = `
+
+const contractTypes = gql`
   query SavingsContractTypes(${listParamsDef}) {
     savingsContractTypes(${listParamsValue}) {
-      ${contractTypeFields}
+      list {
+        ${contractTypeFields}
+      }
     }
   }
 `;

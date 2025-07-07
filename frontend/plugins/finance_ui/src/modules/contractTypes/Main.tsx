@@ -7,11 +7,18 @@ const IndexPage = lazy(() =>
   })),
 );
 
+const ContactTypePage = lazy(() =>
+  import('~/pages/saving/ContactTypePage').then((module) => ({
+    default: module.ContactTypePage,
+  })),
+);
+
 const contractTypesMain = () => {
   return (
     <Suspense fallback={<div />}>
       <Routes>
         <Route path="/" element={<IndexPage />} />
+        <Route path="/contactTypes" element={<ContactTypePage />} />
       </Routes>
     </Suspense>
   );
