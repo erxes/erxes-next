@@ -17,21 +17,11 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
-  "nxCloudId": "6729920cd7d2354eb0f6a7f5",
+
   "dependencyGraph": {
     "inputs": [
       {
-        "project": "erxes-api-utils",
-        "target": "build",
-        "inputs": ["default", "^production"]
-      },
-      {
-        "project": "erxes-core-types",
-        "target": "build",
-        "inputs": ["default", "^production"]
-      },
-      {
-        "project": "erxes-api-modules",
+        "project": "erxes-api-shared",
         "target": "build",
         "inputs": ["default", "^production"]
       }
@@ -110,8 +100,7 @@
       "remote": {
         "style": "tailwind",
         "linter": "eslint",
-        "bundler": "rspack",
-        "e2eTestRunner": "cypress"
+        "bundler": "rspack"
       },
       "component": {
         "style": "tailwind"

@@ -1,9 +1,13 @@
-import { TeamMember } from '~/modules/settings/team-member/components/TeamMember';
+import { TeamMember } from '@/settings/team-member/components/TeamMember';
+import { PageContainer, useQueryState } from 'erxes-ui';
+import { MemberDetail } from '@/settings/team-member/details/components/MemberDetail';
 
 export function TeamMemberPage() {
+  const [userId] = useQueryState('user_id');
   return (
-    <section className="mx-auto flex w-full h-screen relative">
+    <PageContainer>
       <TeamMember />
-    </section>
+      {!!userId && <MemberDetail />}
+    </PageContainer>
   );
 }

@@ -12,14 +12,14 @@ import { FILE_MIME_TYPES } from '@/settings/file-upload/constants/serviceData';
 import { SERVICE_FIELDS } from '@/settings/file-upload/constants/uploadServiceFields';
 import { useConfig } from '@/settings/file-upload/hook/useConfigs';
 import { useFileUploadForm } from '@/settings/file-upload/hook/useFileUploadForm';
-import { TConfig, UploadConfigFormT } from '@/settings/file-upload/types';
+import { UploadConfigFormT } from '@/settings/file-upload/types';
 
 type Option = {
   label: string;
   value: string;
 };
 
-const modifiedArray: Option[] = FILE_MIME_TYPES.map(
+const fileMimeTypesOptions: Option[] = FILE_MIME_TYPES.map(
   ({ label, extension, value }) => ({
     label: `${label} (${extension})`,
     value: value,
@@ -41,19 +41,70 @@ const FileUpload = () => {
   }, [form.watch('UPLOAD_SERVICE_TYPE')]);
 
   const onSubmit = (data: UploadConfigFormT) => {
-    const updatedConfigs = configs.reduce((acc: any, config: TConfig) => {
-      acc[config.code] = data[config.code] ?? config.value;
-      return acc;
-    }, {} as Record<string, any>);
+    const updatedConfigs: Record<string, any> = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key === 'UPLOAD_FILE_TYPES' || key === 'WIDGETS_UPLOAD_FILE_TYPES') {
+        const selectedOptions = value as Option[];
+        const mimeTypes = selectedOptions?.map((option) => option.value) ?? [];
+        updatedConfigs[key] = mimeTypes.join(',');
+      } else {
+        updatedConfigs[key] = value;
+      }
+    });
+
     updateConfig(updatedConfigs);
   };
 
   useEffect(() => {
-    if (configs !== undefined) {
-      const values = configs.reduce((acc: any, config: any) => {
-        acc[config.code] = config.value;
-        return acc;
-      }, {});
+    if (!configs) {
+      form.reset();
+    } else {
+      const values = configs.reduce(
+        (
+          acc: { [key: string]: any },
+          config: { code: string; value?: string },
+        ) => {
+          if (
+            config.code === 'UPLOAD_FILE_TYPES' ||
+            config.code === 'WIDGETS_UPLOAD_FILE_TYPES'
+          ) {
+            if (Array.isArray(config.value)) {
+              acc[config.code] = config.value.map((mime: string) => {
+                const found = FILE_MIME_TYPES.find(
+                  (item) => item.value === mime,
+                );
+                return found
+                  ? {
+                      label: `${found.label} (${found.extension})`,
+                      value: found.value,
+                    }
+                  : { label: mime, value: mime };
+              });
+            } else {
+              const selectedMimeTypes = JSON.stringify(config.value || '')
+                .split(',')
+                .filter(Boolean)
+                .map((mime: string) => {
+                  const found = FILE_MIME_TYPES.find(
+                    (item) => item.value === mime,
+                  );
+                  return found
+                    ? {
+                        label: `${found.label} (${found.extension})`,
+                        value: found.value,
+                      }
+                    : { label: mime, value: mime };
+                });
+              acc[config.code] = selectedMimeTypes;
+            }
+          } else {
+            acc[config.code] = config.value;
+          }
+          return acc;
+        },
+        {},
+      );
 
       form.reset({
         ...values,
@@ -61,13 +112,20 @@ const FileUpload = () => {
     }
   }, [configs, form]);
 
+  if (!configs || isLoading) {
+    return null;
+  }
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-y-6"
       >
-        <FileUploadMainFields form={form} modifiedArray={modifiedArray} />
+        <FileUploadMainFields
+          form={form}
+          fileMimeTypesOptions={fileMimeTypesOptions}
+        />
         <Label>Upload Service Type</Label>
 
         <UploadServiceRadioGroup selected={selected} form={form} />

@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { useState } from 'react';
 
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import * as TabsPrimitive from '@radix-ui/react-tabs';
-import { IconCheck, IconCircle } from '@tabler/icons-react';
+import { IconCheck } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
 
@@ -16,7 +14,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      'flex cursor-default gap-2 select-none items-center rounded-sm font-medium px-2 py-1.5 outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+      'flex cursor-default gap-2 select-none items-center rounded-sm font-medium text-sm px-2 py-1.5 outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
       inset && 'pl-8',
       className,
     )}
@@ -35,7 +33,7 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-background p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+      'z-50 min-w-[8rem] overflow-hidden rounded-md text-sm bg-background p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
       className,
     )}
     {...props}
@@ -53,7 +51,7 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 min-w-[300px] overflow-hidden rounded-lg border bg-background p-1 shadow-md',
+        'z-50 min-w-[300px] overflow-hidden rounded-lg bg-background p-1 shadow-lg',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className,
       )}
@@ -112,7 +110,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      'relative flex cursor-default select-none items-center rounded-sm font-medium py-1.5 pl-2 pr-8 outline-none transition-colors focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[state=checked]:text-primary',
+      'relative flex cursor-default select-none items-center rounded-sm font-medium py-1.5 pl-2 pr-8 outline-none transition-colors focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[state=checked]:text-primary [&>svg]:size-4 [&>svg]:shrink-0 gap-2',
       className,
     )}
     {...props}
@@ -170,84 +168,6 @@ const DropdownMenuShortcut = ({
 };
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
-type DropdownMenuTabsContextType = {
-  value: string;
-  setValue: (value: string) => void;
-};
-
-const DropdownMenuTabsContext =
-  React.createContext<DropdownMenuTabsContextType | null>(null);
-
-function useDropdownMenuTabs() {
-  const context = React.useContext(DropdownMenuTabsContext);
-  if (!context) {
-    throw new Error(
-      'useDropdownMenuTabs must be used within a DropdownMenuTabsProvider.',
-    );
-  }
-  return context;
-}
-
-const DropdownMenuTabs = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
->(({ className, ...props }, ref) => {
-  const [value, setValue] = useState('root');
-  return (
-    <DropdownMenuTabsContext.Provider value={{ value, setValue }}>
-      <TabsPrimitive.Root
-        ref={ref}
-        className={cn(className)}
-        {...props}
-        value={value}
-        onValueChange={setValue}
-      />
-    </DropdownMenuTabsContext.Provider>
-  );
-});
-DropdownMenuTabs.displayName = TabsPrimitive.Root.displayName;
-const DropdownMenuTabsTrigger = React.forwardRef<
-  React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
-    value?: string;
-  }
->(({ className, value = 'root', ...props }, ref) => {
-  const { setValue } = useDropdownMenuTabs();
-  return (
-    <DropdownMenuPrimitive.Sub>
-      <DropdownMenuSubTrigger
-        ref={ref}
-        className={cn(
-          'data-[state=open]:bg-background data-[state=open]:hover:bg-accent',
-          className,
-        )}
-        {...props}
-        onClick={() => setValue(value)}
-      />
-    </DropdownMenuPrimitive.Sub>
-  );
-});
-DropdownMenuTabsTrigger.displayName =
-  DropdownMenuPrimitive.SubTrigger.displayName;
-
-const DropdownMenuTabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
-  Omit<
-    React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>,
-    'value'
-  > & {
-    value?: string;
-  }
->(({ className, value = 'root', ...props }, ref) => (
-  <TabsPrimitive.Content
-    value={value}
-    ref={ref}
-    className={cn(className)}
-    {...props}
-  />
-));
-DropdownMenuTabsContent.displayName = TabsPrimitive.Content.displayName;
-
 export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Group: DropdownMenuPrimitive.Group,
@@ -263,7 +183,4 @@ export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Label: DropdownMenuLabel,
   Shortcut: DropdownMenuShortcut,
   Separator: DropdownMenuSeparator,
-  Tabs: DropdownMenuTabs,
-  TabsTrigger: DropdownMenuTabsTrigger,
-  TabsContent: DropdownMenuTabsContent,
 });

@@ -317,7 +317,6 @@ backend/
 ├── core-api/           # Core API service
 ├── gateway/           # API Gateway
 ├── libs/              # Shared libraries
-└── mq-dashboard/      # Message Queue Dashboard
 ```
 
 ## Core API Service
@@ -345,12 +344,12 @@ query GetMainConfigs {
   getMainConfigs {
     MainCurrency
     HasVat
-    VatAccountPayable
-    VatAccountReceivable
-    VatAfterAccountPayable
-    VatAfterAccountReceivable
+    VatPayableAccount
+    VatReceivableAccount
+    VatAfterPayableAccount
+    VatAfterReceivableAccount
     HasCtax
-    CtaxAccountPayable
+    CtaxPayableAccount
   }
 }
 
@@ -371,12 +370,12 @@ mutation UpdateMainConfigs($input: MainConfigsInput!) {
   updateMainConfigs(input: $input) {
     MainCurrency
     HasVat
-    VatAccountPayable
-    VatAccountReceivable
-    VatAfterAccountPayable
-    VatAfterAccountReceivable
+    VatPayableAccount
+    VatReceivableAccount
+    VatAfterPayableAccount
+    VatAfterReceivableAccount
     HasCtax
-    CtaxAccountPayable
+    CtaxPayableAccount
   }
 }
 ```
@@ -389,12 +388,12 @@ mutation UpdateMainConfigs($input: MainConfigsInput!) {
 interface MainConfigs {
   MainCurrency: string;
   HasVat: boolean;
-  VatAccountPayable?: string;
-  VatAccountReceivable?: string;
-  VatAfterAccountPayable?: string;
-  VatAfterAccountReceivable?: string;
+  VatPayableAccount?: string;
+  VatReceivableAccount?: string;
+  VatAfterPayableAccount?: string;
+  VatAfterReceivableAccount?: string;
   HasCtax: boolean;
-  CtaxAccountPayable?: string;
+  CtaxPayableAccount?: string;
 }
 ```
 
@@ -478,8 +477,6 @@ pnpm dev:core-api
 # Start gateway
 pnpm dev:gateway
 
-# Start MQ dashboard
-pnpm dev:mq-dashboard
 ```
 
 ## Testing

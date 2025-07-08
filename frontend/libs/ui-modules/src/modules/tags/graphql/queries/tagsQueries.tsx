@@ -4,36 +4,53 @@ export const TAGS_QUERY = gql`
   query Tags(
     $type: String
     $searchValue: String
-    $page: Int
-    $perPage: Int
     $parentId: String
+    $cursor: String
+    $limit: Int
+    $direction: CURSOR_DIRECTION
     $tagIds: [String]
   ) {
     tags(
       type: $type
       searchValue: $searchValue
-      page: $page
-      perPage: $perPage
       parentId: $parentId
       tagIds: $tagIds
+      cursor: $cursor
+      limit: $limit
+      direction: $direction
     ) {
-      _id
-      colorCode
-      name
-      order
-      parentId
-      totalObjectCount
+      list {
+        _id
+        colorCode
+        name
+        order
+        parentId
+        totalObjectCount
+        objectCount
+        type
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
     }
-    tagsQueryCount(type: $type, searchValue: $searchValue)
   }
 `;
 
-export const TAG_BY_IDS_QUERY = gql`
-  query TagsByIds($tagIds: [String]) {
-    tags(tagIds: $tagIds) {
+export const TAG_BADGE_QUERY = gql`
+  query TagBadge($id: String!) {
+    tagDetail(_id: $id) {
       _id
-      colorCode
       name
     }
+  }
+`;
+
+export const TAGS_TYPES = gql`
+  query TagsTypes {
+    tagsGetTypes
   }
 `;

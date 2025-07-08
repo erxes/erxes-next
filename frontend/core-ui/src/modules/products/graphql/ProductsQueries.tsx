@@ -1,64 +1,60 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
-const products = gql`
-  query Products(
+const productsMain = gql`
+  query ProductsMain(
     $type: String
-    $categoryId: String
+    $categoryIds: [String]
     $searchValue: String
     $vendorId: String
-    $brand: String
-    $tag: String
+    $brandIds: [String]
+    $tagIds: [String]
     $segment: String
     $segmentData: String
-    $page: Int
-    $perPage: Int
     $sortField: String
     $sortDirection: Int
+     ${GQL_CURSOR_PARAM_DEFS}
   ) {
-    products(
+    productsMain(
       type: $type
-      categoryId: $categoryId
+      categoryIds: $categoryIds
       searchValue: $searchValue
       vendorId: $vendorId
-      brand: $brand
-      tag: $tag
+      brandIds: $brandIds
+      tagIds: $tagIds
       segment: $segment
       segmentData: $segmentData
-      page: $page
-      perPage: $perPage
       sortField: $sortField
       sortDirection: $sortDirection
+      ${GQL_CURSOR_PARAMS}
     ) {
-      _id
-      attachment {
-        url
-      }
-      categoryId
-      code
-      createdAt
-      customFieldsData
-      description
-      tagIds
-      name
-      shortName
-      uom
-      unitPrice
-      type
-      vendor {
+      list {
         _id
-        primaryName
-      }
+        attachment {
+          url
+        }
+        categoryId
+        code
+        createdAt
+        customFieldsData
+        description
+        tagIds
+        name
+        shortName
+        uom
+        unitPrice
+        type
+        vendor {
+          _id
+            primaryName
+          }
+        }
+        ${GQL_PAGE_INFO}
     }
-    productsTotalCount(
-      type: $type
-      categoryId: $categoryId
-      searchValue: $searchValue
-      vendorId: $vendorId
-      brand: $brand
-      tag: $tag
-      segment: $segment
-      segmentData: $segmentData
-    )
   }
 `;
 
@@ -89,8 +85,21 @@ const productTags = gql`
   }
 `;
 
+const productCategoryDetail = gql`
+  query productCategoryDetail($_id: String) {
+    productCategoryDetail(_id: $_id) {
+      _id
+      code
+      name
+      productCount
+      __typename
+  }
+}
+`
+
 export const productsQueries = {
-  products,
+  productsMain,
   productCategories,
   productTags,
+  productCategoryDetail,
 };

@@ -133,7 +133,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-[0.8rem] text-muted-foreground', className)}
+      className={cn('text-xs text-accent-foreground', className)}
       {...props}
     />
   );
@@ -147,7 +147,7 @@ const FormMessage = React.forwardRef<
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
 
-  if (!body) {
+  if (!body || body === 'undefined') {
     return null;
   }
 
@@ -155,7 +155,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn('text-[0.8rem] font-medium text-destructive', className)}
+      className={cn('text-xs', error && 'text-destructive', className)}
       {...props}
     >
       {body}

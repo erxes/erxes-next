@@ -1,5 +1,5 @@
-import { CurrencyCode } from "erxes-ui/types/CurrencyCode";
-import { UseFormReturn } from "react-hook-form";
+import { CurrencyCode } from 'erxes-ui';
+import { UseFormReturn } from 'react-hook-form';
 import { ApolloError } from '@apollo/client';
 
 export interface ProductAttachment {

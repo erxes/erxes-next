@@ -1,48 +1,28 @@
-import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { IconCaretUpFilled } from '@tabler/icons-react';
-import { Collapsible, Sidebar, cn } from 'erxes-ui';
-import { CORE_PLUGINS } from '~/plugins/constants/core-plugins.constants';
-import { pluginsConfigState } from 'ui-modules';
-import { PluginItem } from '@/navigation/types/MenuItemType';
-import { useAtom } from 'jotai';
-import { useMemo } from 'react';
-import { MainNavigationButton } from './MainNavigationBar';
+import { Collapsible, Sidebar, IUIConfig, cn } from 'erxes-ui';
+import { usePluginsModules } from '../hooks/usePluginsModules';
+import { NavigationButton } from './NavigationButton';
+import { Icon } from '@tabler/icons-react';
 
 export function SidebarNavigation() {
-  const { t } = useTranslation();
-  const [pluginsMetaData] = useAtom(pluginsConfigState);
-
-  // Memoize plugins array to prevent unnecessary recalculations
-  const plugins = useMemo(() => {
-    const allPlugins = [...CORE_PLUGINS] as PluginItem[];
-
-    if (pluginsMetaData) {
-      Object.entries(pluginsMetaData).forEach(([key, data]) => {
-        allPlugins.push({
-          path: `${key}`,
-          name: data.name,
-          icon: data.icon,
-        });
-      });
-    }
-
-    return allPlugins;
-  }, [pluginsMetaData]);
+  const modules = usePluginsModules();
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
       <Sidebar.Group>
         <Sidebar.GroupLabel asChild>
-          <Collapsible.Trigger>
-            {t('nav.' + 'plugins')}{' '}
-            <IconCaretUpFilled className="size-3.5 ml-1 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+          <Collapsible.Trigger className="flex items-center gap-2">
+            <IconCaretUpFilled className="size-3.5 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+            <span className="font-sans text-xs font-semibold normal-case">
+              Modules
+            </span>
           </Collapsible.Trigger>
         </Sidebar.GroupLabel>
         <Collapsible.Content>
           <Sidebar.GroupContent className="pt-2">
             <Sidebar.Menu>
-              {plugins.map((item: PluginItem) => {
+              {modules.map((item) => {
                 return <SidebarNavigationItem key={item.name} {...item} />;
               })}
             </Sidebar.Menu>
@@ -58,9 +38,8 @@ export function SidebarNavigationItem({
   icon,
   path,
   submenus,
-}: PluginItem) {
-  const { t } = useTranslation();
-  const pathname = useLocation().pathname;
+}: IUIConfig['modules'][number]) {
+  const { pathname } = useLocation();
   const Icon = icon;
   const pathWithoutUi = path.replace('_ui', '');
   const isActive = pathname.includes(pathWithoutUi);
@@ -68,24 +47,34 @@ export function SidebarNavigationItem({
   return (
     <Collapsible asChild open={isActive} className="group/collapsible">
       <Sidebar.MenuItem key={name}>
-        <MainNavigationButton
+        <NavigationButton
           pathname={pathWithoutUi}
-          name={t('nav.' + name)}
-          icon={Icon}
+          name={name}
+          icon={Icon as Icon}
         />
         {submenus && submenus.length > 0 && (
           <Collapsible.Content asChild>
             <Sidebar.Sub>
               {submenus.map((submenu) => {
+                const SubIcon = submenu.icon;
+                const isSubmenuActive = pathname.includes(submenu.path);
                 return (
                   <Sidebar.SubItem key={submenu.name}>
                     <Sidebar.SubButton
                       asChild
-                      isActive={pathname.includes(submenu.path)}
+                      isActive={isSubmenuActive}
                       className="w-full"
                     >
                       <Link to={submenu.path}>
-                        <span>{t('nav.contactsSub.' + submenu.name)}</span>
+                        {SubIcon && (
+                          <SubIcon
+                            className={cn(
+                              'text-accent-foreground',
+                              isSubmenuActive && 'text-primary',
+                            )}
+                          />
+                        )}
+                        <span className="capitalize">{submenu.name}</span>
                       </Link>
                     </Sidebar.SubButton>
                   </Sidebar.SubItem>

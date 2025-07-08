@@ -1,12 +1,15 @@
 import { useForm } from 'react-hook-form';
-import { TUserForm } from '@/settings/team-member/types';
+import { TUserDetailForm, TUserForm } from '@/settings/team-member/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { USER_SCHEMA } from '@/settings/team-member/schema/users';
+import {
+  USER_DETAIL_SCHEMA,
+  USER_SUBMIT_SCHEMA,
+} from '@/settings/team-member/schema/users';
 
-const useUserForm = () => {
+const useUsersSubmitForm = () => {
   const methods = useForm<TUserForm>({
     mode: 'onBlur',
-    resolver: zodResolver(USER_SCHEMA),
+    resolver: zodResolver(USER_SUBMIT_SCHEMA),
     defaultValues: {
       entries: Array.from({ length: 1 }, () => ({
         email: undefined,
@@ -24,4 +27,19 @@ const useUserForm = () => {
   };
 };
 
-export { useUserForm };
+const useUsersForm = () => {
+  const methods = useForm<TUserDetailForm>({
+    mode: 'onBlur',
+    resolver: zodResolver(USER_DETAIL_SCHEMA),
+    defaultValues: {
+      email: '',
+      username: '',
+      positionIds: [],
+    },
+  });
+  return {
+    methods,
+  };
+};
+
+export { useUsersSubmitForm, useUsersForm };

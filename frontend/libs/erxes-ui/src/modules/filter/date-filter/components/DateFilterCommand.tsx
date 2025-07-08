@@ -1,7 +1,7 @@
 import { Combobox, Command } from 'erxes-ui/components';
 import { FIXED_DATES } from '../constants/dateTypes';
 import { cn } from 'erxes-ui/lib/utils';
-import { getDisplayValue } from '../utlis/getDisplayValue';
+import { getDisplayValue } from '../utils/getDisplayValue';
 import { useFilterContext } from '../../hooks/useFilterContext';
 
 export const DateFilterCommand = ({
@@ -22,7 +22,6 @@ export const DateFilterCommand = ({
         placeholder={value.charAt(0).toUpperCase() + value.slice(1) + ' date'}
         focusOnMount={focusOnMount}
       />
-      <Command.Separator />
       <Command.List>
         {FIXED_DATES.map((date) => (
           <Command.Item
@@ -50,15 +49,6 @@ export const DateFilterCommand = ({
         >
           Custom {value} date or timeframe
         </Command.Item>
-        {/* <Command.Item
-          className="h-8"
-          value="no-due-date"
-          onSelect={() => {
-            onSelect(null);
-          }}
-        >
-          No {value} date
-        </Command.Item> */}
       </Command.List>
     </Command>
   );

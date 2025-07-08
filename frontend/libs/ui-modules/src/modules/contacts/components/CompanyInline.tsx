@@ -1,6 +1,11 @@
 import React from 'react';
-import { Avatar, avatarVariants, cn, Skeleton } from 'erxes-ui';
-import { Slot } from '@radix-ui/react-slot';
+import {
+  Avatar,
+  avatarVariants,
+  cn,
+  Skeleton,
+  TextOverflowTooltip,
+} from 'erxes-ui';
 import { ICompany } from '../types/Company';
 import { useCompanyInline } from '../hooks/useCompanyInline';
 import { CompanyInlineContext } from '../contexts/CompanyInlineContext';
@@ -19,7 +24,10 @@ const CompanyInlineRoot = React.forwardRef<
       <span
         ref={ref}
         {...props}
-        className={cn('inline-flex items-center gap-2', props.className)}
+        className={cn(
+          'inline-flex items-center gap-2 overflow-hidden',
+          props.className,
+        )}
       >
         <CompanyInlineAvatar {...avatarProps} />
         <CompanyInlineTitle />
@@ -74,7 +82,7 @@ const CompanyInlineAvatar = React.forwardRef<
   return (
     <Avatar {...props} ref={ref}>
       <Avatar.Image src={avatar} />
-      <Avatar.Fallback colorSeed={_id}>
+      <Avatar.Fallback>
         {primaryName?.charAt(0) || primaryEmail?.charAt(0) || ''}
       </Avatar.Fallback>
     </Avatar>
@@ -85,20 +93,18 @@ CompanyInlineAvatar.displayName = 'CompanyInlineAvatar';
 
 export const CompanyInlineTitle = React.forwardRef<
   HTMLSpanElement,
-  Omit<React.ComponentPropsWithoutRef<'span'>, 'children'> & {
-    asChild?: boolean;
-  }
->(({ asChild, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<'span'>
+>((props, ref) => {
   const { primaryName, primaryEmail, loading } = useCompanyInlineContext();
 
   if (loading) return <Skeleton className="w-20 h-4" />;
 
-  const Comp = asChild ? Slot : 'span';
-
   return (
-    <Comp ref={ref} {...props}>
-      {primaryName || primaryEmail}
-    </Comp>
+    <TextOverflowTooltip
+      value={primaryName || primaryEmail}
+      {...props}
+      ref={ref}
+    />
   );
 });
 

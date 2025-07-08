@@ -1,38 +1,42 @@
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconChevronLeft, IconLoader } from '@tabler/icons-react';
+import { IconChevronLeft, IconLoader2 } from '@tabler/icons-react';
 import { z } from 'zod';
 
-import { Button, Form, Input, Tabs } from 'erxes-ui';
+import { Button, Combobox, Form, Input, Popover, Separator } from 'erxes-ui';
 
-import { useAtom, useSetAtom } from 'jotai';
-import { ITag } from '../types/Tag';
-import { newTagNameState } from '../states/newTagNameState';
 import { useTagsAdd } from '../hooks/useTagsAdd';
-import { SelectSingleTag } from './SelectSingleTag';
+import { SelectTags } from './SelectTags';
+import { useSelectTagsContext } from '../hooks/useSelectTagsContext';
+import { useEffect, useRef, useState } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(1),
   parentId: z.string().optional(),
 });
 
-export const CreateTagForm = ({
-  tagType,
-  onCompleted,
-}: {
-  tagType: string;
-  onCompleted?: (tag: ITag) => void;
-}) => {
-  const [name] = useAtom(newTagNameState);
+export const CreateTagForm = () => {
+  const [open, setOpen] = useState(false);
+  const { newTagName, tagType, onSelect, setNewTagName } =
+    useSelectTagsContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name,
+      name: newTagName,
       parentId: '',
     },
   });
   const { addTag, loading } = useTagsAdd();
+
+  const selectParentRef =
+    useRef<React.ElementRef<typeof Combobox.Trigger>>(null);
+
+  useEffect(() => {
+    if (selectParentRef.current) {
+      selectParentRef.current.focus();
+    }
+  }, [selectParentRef]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     addTag({
@@ -41,50 +45,71 @@ export const CreateTagForm = ({
         type: tagType,
       },
       onCompleted({ tagsAdd }) {
-        if (onCompleted) {
-          onCompleted({
-            _id: tagsAdd._id,
-            ...values,
-            order: tagsAdd.order,
-          });
-        }
+        setNewTagName('');
+        onSelect({
+          _id: tagsAdd._id,
+          ...values,
+          order: tagsAdd.order,
+        });
       },
     });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
-        <Form.Field
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Label>Name</Form.Label>
-              <Input {...field} />
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-        <Form.Field
-          control={form.control}
-          name="parentId"
-          render={({ field }) => (
-            <Form.Item>
-              <Form.Label>Parent Tag</Form.Label>
-              <SelectSingleTag
-                value={field.value}
-                onValueChange={field.onChange}
-                className="flex"
-                tagType={tagType}
-              />
-              <Form.Message />
-            </Form.Item>
-          )}
-        />
-        <Button type="submit" className="w-full !mt-4" disabled={loading}>
-          {loading ? <IconLoader className="w-4 h-4 animate-spin" /> : 'Create'}
-        </Button>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-3 p-3 pb-10">
+          <Form.Field
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <Form.Item>
+                <Form.Label>Name</Form.Label>
+                <Input {...field} />
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+          <Form.Field
+            control={form.control}
+            name="parentId"
+            render={({ field }) => (
+              <Form.Item className="mb-2">
+                <Form.Label>Parent Tag</Form.Label>
+                <SelectTags
+                  tagType={tagType}
+                  value={field.value}
+                  onValueChange={(tag) => {
+                    field.onChange(tag);
+                    setOpen(false);
+                  }}
+                >
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <Form.Control>
+                      <Combobox.Trigger ref={selectParentRef}>
+                        <SelectTags.Value />
+                      </Combobox.Trigger>
+                    </Form.Control>
+                    <Combobox.Content>
+                      <SelectTags.Command disableCreateOption />
+                    </Combobox.Content>
+                  </Popover>
+                </SelectTags>
+                <Form.Message />
+              </Form.Item>
+            )}
+          />
+        </div>
+        <Separator />
+        <div className="p-3">
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <IconLoader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              'Create'
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );
@@ -92,30 +117,26 @@ export const CreateTagForm = ({
 
 export function SelectTagCreateContainer({
   children,
-  onBack,
 }: {
   children: React.ReactNode;
-  onBack: () => void;
 }) {
-  const setName = useSetAtom(newTagNameState);
+  const { setNewTagName } = useSelectTagsContext();
   return (
-    <Tabs.Content value="create" asChild>
-      <div className=" p-2 overflow-auto">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setName('');
-              onBack();
-            }}
-            size="icon"
-          >
-            <IconChevronLeft className="w-4 h-4" />
-          </Button>
-          <h6 className="text-sm font-medium">Create new tag</h6>
-        </div>
-        {children}
+    <div className="overflow-auto">
+      <div className="flex items-center font-medium p-1">
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setNewTagName('');
+          }}
+          className="pl-1 gap-1"
+        >
+          <IconChevronLeft />
+          <h6>Create new tag</h6>
+        </Button>
       </div>
-    </Tabs.Content>
+      <Separator />
+      {children}
+    </div>
   );
 }

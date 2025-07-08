@@ -38,7 +38,10 @@ const CommandDialog = ({
   return (
     <Dialog {...props}>
       <Dialog.Content
-        className={cn('overflow-hidden p-0', dialogContentClassName)}
+        className={cn(
+          'overflow-hidden p-0 rounded-lg border-0',
+          dialogContentClassName,
+        )}
       >
         <CommandRoot className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
@@ -49,7 +52,7 @@ const CommandDialog = ({
 };
 
 const commanInputVariants = cva(
-  'flex h-9 w-full rounded-md p-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+  'flex h-9 w-full rounded-md p-3 text-sm font-medium outline-none placeholder:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -136,7 +139,7 @@ const CommandList = React.forwardRef<
   <CommandPrimitive.List
     ref={ref}
     className={cn(
-      'max-h-[300px] overflow-y-auto overflow-x-hidden p-1',
+      'max-h-[300px] overflow-y-auto overflow-x-hidden p-1 [&>div]:focus-within:outline-none focus-within:outline-none',
       className,
     )}
     {...props}
@@ -165,7 +168,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground',
+      'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-accent-foreground',
       className,
     )}
     {...props}
@@ -193,7 +196,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-8',
+      'relative flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[disabled=true]:opacity-50 [&>svg]:pointer-events-none [&>svg]:size-4 [&>svg]:shrink-0 h-8',
       className,
     )}
     {...props}
@@ -227,4 +230,5 @@ export const Command = Object.assign(CommandRoot, {
   Item: CommandItem,
   Shortcut: CommandShortcut,
   Separator: CommandSeparator,
+  Primitive: CommandPrimitive,
 });

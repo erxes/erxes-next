@@ -7,7 +7,7 @@ export function InviteTeamMember() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Trigger asChild className="ml-auto">
+      <Dialog.Trigger asChild>
         <Button>
           <IconPlus />
           Invite team members

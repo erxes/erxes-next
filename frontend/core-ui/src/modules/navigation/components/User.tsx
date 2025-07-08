@@ -1,19 +1,15 @@
-import { IconBell, IconLogout, IconSelector } from '@tabler/icons-react';
+import { IconSelector } from '@tabler/icons-react';
 import { currentUserState } from 'ui-modules';
 import { Avatar, DropdownMenu, Sidebar, useIsMobile } from 'erxes-ui';
 
-import { readFile } from 'erxes-ui/utils/core';
+import { readImage } from 'erxes-ui';
 
 import { SelectLanguages } from './SelectLanguages';
 import { ThemeSelector } from './ThemeSelector';
-
-import { useAuth } from '@/auth/hooks/useAuth';
 import { useAtomValue } from 'jotai';
-
+import { Link } from 'react-router-dom';
 export function User() {
   const isMobile = useIsMobile();
-
-  const { handleLogout } = useAuth();
 
   const currentUser = useAtomValue(currentUserState);
 
@@ -32,16 +28,16 @@ export function User() {
             >
               <Avatar className="h-8 w-8 rounded-full">
                 <Avatar.Image
-                  src={readFile(userDetail.avatar)}
-                  alt={userDetail.fullName}
+                  src={readImage(userDetail?.avatar || '')}
+                  alt={userDetail?.fullName || ''}
                 />
                 <Avatar.Fallback className="rounded-lg">
-                  {userDetail.fullName.split('')[0]}
+                  {userDetail?.fullName?.split('')[0]}
                 </Avatar.Fallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {userDetail.fullName}
+                  {userDetail?.fullName}
                 </span>
                 <span className="truncate text-xs text-accent-foreground font-medium">
                   {currentUser.email}
@@ -60,35 +56,30 @@ export function User() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <Avatar.Image
-                    src={readFile(userDetail.avatar)}
-                    alt={userDetail.fullName}
+                    src={readImage(userDetail?.avatar || '')}
+                    alt={userDetail?.fullName || ''}
                   />
                   <Avatar.Fallback className="rounded-lg">
-                    {userDetail.fullName.split('')[0]}
+                    {userDetail?.fullName?.split('')[0]}
                   </Avatar.Fallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {userDetail.fullName}
+                    {userDetail?.fullName}
                   </span>
                   <span className="truncate text-xs">{currentUser.email}</span>
                 </div>
               </div>
             </DropdownMenu.Label>
             <DropdownMenu.Separator />
+            <DropdownMenu.Item>
+              <Link to="/settings/profile" className="text-sm">
+                My profile
+              </Link>
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
             <ThemeSelector />
             <SelectLanguages />
-            <DropdownMenu.Group>
-              <DropdownMenu.Item>
-                <IconBell />
-                Notifications
-              </DropdownMenu.Item>
-            </DropdownMenu.Group>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item onClick={() => handleLogout()}>
-              <IconLogout />
-              Log out
-            </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu>
       </Sidebar.MenuItem>

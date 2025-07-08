@@ -1,11 +1,11 @@
-import { ITag } from 'erxes-core-types';
-import { IContext } from '../../../connectionResolvers';
+import { ITag } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const tagMutations = {
   /**
    * Creates a new tag
    */
-  async tagsAdd(_root: undefined, doc: ITag, { models }: IContext) {
+  async tagsAdd(_parent: undefined, doc: ITag, { models }: IContext) {
     return await models.Tags.createTag(doc);
   },
 
@@ -13,29 +13,81 @@ export const tagMutations = {
    * Edits a tag
    */
   async tagsEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & ITag,
+    { models, __ }: IContext,
+  ) {
+    return await models.Tags.updateTag(_id, __(doc));
+  },
+
+  /**
+   * Attach a tag
+   */
+  async tagsTag(
+    _parent: undefined,
+    {
+      type,
+      targetIds,
+      tagIds,
+    }: { type: string; targetIds: string[]; tagIds: string[] },
     { models }: IContext,
   ) {
-    return await models.Tags.updateTag(_id, doc);
+    const [serviceName, contentType] = type.split(':');
+
+    if (!serviceName || !contentType) {
+      throw new Error(
+        `Invalid type format: expected "service:content", got "${type}"`,
+      );
+    }
+
+    const existingTagsCount = await models.Tags.countDocuments({
+      _id: { $in: tagIds },
+      type,
+    });
+
+    if (existingTagsCount !== tagIds.length) {
+      throw new Error('Tag not found.');
+    }
+
+    if (serviceName === 'core') {
+      const modelMap = {
+        customer: models.Customers,
+        user: models.Users,
+        company: models.Companies,
+        form: models.Forms,
+        product: models.Products,
+        automation: models.Automations,
+      };
+
+      const model = modelMap[contentType];
+
+      if (!model) {
+        throw new Error(`Unknown content type: ${contentType}`);
+      }
+
+      return await model.updateMany(
+        { _id: { $in: targetIds } },
+        { $set: { tagIds } },
+      );
+    }
   },
 
   /**
    * Removes a tag
    */
   async tagsRemove(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
-    return await models.Tags.removeTag(_id);
+    return models.Tags.removeTag(_id);
   },
 
   /**
    * Merge tags
    */
   async tagsMerge(
-    _root: undefined,
+    _parent: undefined,
     { sourceId, destId }: { sourceId: string; destId: string },
     { models }: IContext,
   ) {

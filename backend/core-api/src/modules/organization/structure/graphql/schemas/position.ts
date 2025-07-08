@@ -1,4 +1,4 @@
-import { commonParams } from './CommonTypeDefs';
+import { commonParams } from './commonTypeDefs';
 
 export const PositionTypes = `
     type Position @key(fields: "_id") @cacheControl(maxAge: 3){
@@ -14,10 +14,11 @@ export const PositionTypes = `
         userIds: [String]
         userCount: Int
     }
+
     type PositionListQueryResponse {
         list:[Position]
         totalCount: Int
-        totalUsersCount:Int
+        pageInfo: PageInfo
     }
 `;
 const commonPositionParams = `

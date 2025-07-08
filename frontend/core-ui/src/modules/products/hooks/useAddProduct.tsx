@@ -2,10 +2,13 @@ import { useMutation, ApolloCache, MutationHookOptions } from '@apollo/client';
 import { productsMutations } from '@/products/graphql/ProductsMutations';
 import { productsQueries } from '@/products/graphql';
 import { IProduct } from '@/products/types/productTypes';
+import { PRODUCTS_PER_PAGE } from './useProducts';
 
 interface ProductData {
-  products: IProduct[];
-  productsTotalCount: number;
+  productsMain: {
+    list: IProduct[];
+    totalCount: number;
+  };
 }
 
 interface AddProductResult {
@@ -21,21 +24,23 @@ export function useAddProduct(
       ...options,
       update: (cache: ApolloCache<any>, { data }) => {
         try {
-          const queryVariables = { perPage: 30 };
+          const queryVariables = { perPage: PRODUCTS_PER_PAGE };
           const existingData = cache.readQuery<ProductData>({
-            query: productsQueries.products,
+            query: productsQueries.productsMain,
             variables: queryVariables,
           });
 
-          if (!existingData || !existingData.products || !data?.productsAdd)
+          if (!existingData || !existingData.productsMain || !data?.productsAdd)
             return;
           cache.writeQuery<ProductData>({
-            query: productsQueries.products,
+            query: productsQueries.productsMain,
             variables: queryVariables,
             data: {
-              ...(existingData || []),
-              products: [data.productsAdd, ...existingData.products],
-              productsTotalCount: existingData.productsTotalCount + 1,
+              productsMain: {
+                ...existingData.productsMain,
+                list: [...existingData.productsMain.list, data.productsAdd],
+                totalCount: existingData.productsMain.totalCount + 1,
+              },
             },
           });
         } catch (e) {

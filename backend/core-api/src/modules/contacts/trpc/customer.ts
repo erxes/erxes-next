@@ -1,69 +1,227 @@
 import { initTRPC } from '@trpc/server';
-import { generateModels } from '../../../connectionResolvers';
-import { customerTRPCSchema, customerDocumentTRPCSchema } from 'erxes-api-rpc';
 import { z } from 'zod';
+import { CoreTRPCContext } from '~/init-trpc';
+import { AWS_EMAIL_STATUSES, EMAIL_VALIDATION_STATUSES } from '../constants';
+import { createOrUpdate } from '../utils';
 
-const t = initTRPC.create();
+const t = initTRPC.context<CoreTRPCContext>().create();
 
 export const customerRouter = t.router({
-  customer: t.router({
-    list: t.procedure
-      .input(generateModels)
-      .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .query(async ({ input }) => {
-        const { ...rest } = input;
+  customers: t.router({
+    find: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
 
-        const query = { ...rest };
+      return models.Customers.find(query).lean();
+    }),
 
-        const models = await generateModels('os');
+    findOne: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
 
-        const sda = {
-          _id: 'dHDg9dxhfWq5GpH9Y9sUM',
-          state: 'visitor',
-          avatar: null,
-          firstName: 'adsda',
-          lastName: 'sadasd',
-          middleName: '',
-          sex: 0,
-          primaryEmail: 'asdasd@gmail.com',
-          emails: ['asdasd@gmail.com'],
-          emailValidationStatus: 'valid',
-          primaryPhone: '99126730',
-          phones: ['99126730'],
-          addresses: [],
-          phoneValidationStatus: 'unknown',
-          status: 'Active',
-          description: '',
-        };
+      const defaultFilter = { status: { $ne: 'deleted' } };
 
-        return null;
+      if (query.customerPrimaryEmail) {
+        defaultFilter['$or'] = [
+          { emails: { $in: [query.customerPrimaryEmail] } },
+          { primaryEmail: query.customerPrimaryEmail },
+        ];
+      }
+
+      if (query.customerPrimaryPhone) {
+        defaultFilter['$or'] = [
+          { phones: { $in: [query.customerPrimaryPhone] } },
+          { primaryPhone: query.customerPrimaryPhone },
+        ];
+      }
+
+      if (query.customerCode) {
+        defaultFilter['code'] = query.customerCode;
+      }
+
+      if (query._id) {
+        defaultFilter['_id'] = query._id;
+      }
+
+      return models.Customers.findOne(defaultFilter).lean();
+    }),
+
+    findActiveCustomers: t.procedure
+      .input(z.any())
+      .query(async ({ ctx, input }) => {
+        const { query, fields, skip, limit } = input;
+        const { models } = ctx;
+
+        return models.Customers.findActiveCustomers(query, fields, skip, limit);
       }),
 
-    get: t.procedure
-      .output(z.union([customerDocumentTRPCSchema, z.null()]))
-      .query(async () => {
-        return null;
+    getCustomerName: t.procedure
+      .input(z.any())
+      .query(async ({ ctx, input }) => {
+        const { customer } = input;
+        const { models } = ctx;
+
+        return models.Customers.getCustomerName(customer);
       }),
 
-    create: t.procedure
-      .input(customerTRPCSchema)
-      .output(z.union([customerDocumentTRPCSchema, z.null()]))
-      .mutation(async () => {
-        return null;
+    getWidgetCustomer: t.procedure
+      .input(z.any())
+      .query(async ({ ctx, input }) => {
+        const { _id } = input;
+        const { models } = ctx;
+
+        return models.Customers.getWidgetCustomer(_id);
       }),
 
-    update: t.procedure
-      .input(customerDocumentTRPCSchema)
-      .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .mutation(async () => {
-        return null;
+    count: t.procedure.input(z.any()).query(async ({ ctx, input }) => {
+      const { query } = input;
+      const { models } = ctx;
+
+      return models.Customers.countDocuments(query);
+    }),
+
+    createCustomer: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { doc } = input;
+        const { models } = ctx;
+
+        return models.Customers.createCustomer(doc);
       }),
 
-    delete: t.procedure
-      .input(customerDocumentTRPCSchema)
-      .output(z.union([z.array(customerDocumentTRPCSchema), z.null()]))
-      .mutation(async () => {
-        return null;
+    updateCustomer: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { _id, doc } = input;
+        const { models } = ctx;
+
+        return models.Customers.updateCustomer(_id, doc);
+      }),
+
+    updateOne: t.procedure.input(z.any()).mutation(async ({ ctx, input }) => {
+      const { query, doc } = input;
+      const { models } = ctx;
+
+      return models.Customers.updateOne(query, doc);
+    }),
+
+    updateMany: t.procedure
+      .input(
+        z.object({
+          selector: z.record(z.any()),
+          modifier: z.record(z.any()),
+        }),
+      )
+      .mutation(async ({ ctx, input }) => {
+        const { models } = ctx;
+        const { selector, modifier } = input;
+        return await models.Customers.updateMany(selector, modifier);
+      }),
+
+    removeCustomers: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { _ids } = input;
+        const { models } = ctx;
+
+        return models.Customers.removeCustomers(_ids);
+      }),
+
+    markCustomerAsActive: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { _id } = input;
+        const { models } = ctx;
+
+        return models.Customers.markCustomerAsActive(_id);
+      }),
+
+    createMessengerCustomer: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { doc, customData } = input;
+        const { models } = ctx;
+
+        return models.Customers.createMessengerCustomer({
+          doc,
+          customData,
+        });
+      }),
+
+    updateMessengerCustomer: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { _id, doc, customData } = input;
+        const { models } = ctx;
+
+        return models.Customers.updateMessengerCustomer({
+          _id,
+          doc,
+          customData,
+        });
+      }),
+
+    saveVisitorContactInfo: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { params } = input;
+        const { models } = ctx;
+
+        return models.Customers.saveVisitorContactInfo(params);
+      }),
+
+    updateLocation: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { customerId, browserInfo } = input;
+        const { models } = ctx;
+
+        return models.Customers.updateLocation(customerId, browserInfo);
+      }),
+
+    updateSession: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { customerId } = input;
+        const { models } = ctx;
+
+        return models.Customers.updateSession(customerId);
+      }),
+
+    setUnsubscribed: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { customerIds = [], status, _id } = input;
+        const { models } = ctx;
+
+        const update: any = { isSubscribed: 'No' };
+
+        if (status === AWS_EMAIL_STATUSES.BOUNCE) {
+          update.emailValidationStatus = EMAIL_VALIDATION_STATUSES.INVALID;
+        }
+
+        if (_id && status) {
+          return models.Customers.updateOne({ _id }, { $set: update });
+        }
+
+        if (customerIds.length > 0 && !status) {
+          return models.Customers.updateMany(
+            { _id: { $in: customerIds } },
+            { $set: update },
+          );
+        }
+      }),
+
+    createOrUpdate: t.procedure
+      .input(z.any())
+      .mutation(async ({ ctx, input }) => {
+        const { doc } = input;
+        const { models } = ctx;
+
+        return createOrUpdate({
+          collection: models.Customers,
+          data: doc,
+        });
       }),
   }),
 });

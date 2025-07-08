@@ -25,7 +25,7 @@ export const ComboboxTriggerBase = React.forwardRef<
         {...props}
         type="button"
         className={cn(
-          'flex truncate h-8 rounded pl-3 focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-medium text-left',
+          'flex truncate h-8 rounded pl-3 transition-[color,box-shadow] focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent justify-between overflow-hidden font-normal text-left w-full',
           (!props.variant || props.variant === 'outline') && 'shadow-xs',
           props.size === 'lg' && 'gap-2',
           className,
@@ -74,16 +74,24 @@ export const ComboboxTriggerIcon = React.forwardRef<
 export const ComboboxValue = React.forwardRef<
   HTMLSpanElement,
   React.ComponentPropsWithoutRef<typeof TextOverflowTooltip> & {
-    className?: string;
     placeholder?: string;
+    loading?: boolean;
   }
->(({ value, className, placeholder, ...props }, ref) => {
+>(({ value, className, placeholder, loading, ...props }, ref) => {
+  if (loading) {
+    return <Skeleton className="w-full flex-1 h-4" />;
+  }
+
   return (
     <TextOverflowTooltip
       ref={ref}
       {...props}
       value={value || placeholder || ''}
-      className={cn('text-left', !value && 'text-accent-foreground', className)}
+      className={cn(
+        'text-left',
+        !value && 'text-accent-foreground/70',
+        className,
+      )}
     />
   );
 });
@@ -98,8 +106,12 @@ export const ComboboxContent = React.forwardRef<
     <Popover.Content
       ref={ref}
       align="start"
+      sideOffset={8}
       {...props}
-      className={cn('p-0 min-w-[--radix-popper-anchor-width]', className)}
+      className={cn(
+        'p-0 min-w-72 w-[--radix-popper-anchor-width] max-w-96',
+        className,
+      )}
     />
   );
 });
@@ -121,7 +133,7 @@ export const ComboboxCheck = React.forwardRef<
       ref={ref}
       size={16}
       strokeWidth={2}
-      className={cn('size-4 text-muted-foreground ml-auto', className)}
+      className={cn('size-4 text-primary ml-auto', className)}
       {...props}
     />
   );
@@ -141,7 +153,7 @@ export const ComboboxFetchMore = React.forwardRef<
     onChange: (inView) => inView && fetchMore(),
   });
 
-  if (currentLength >= totalCount) {
+  if (currentLength >= totalCount || !totalCount || currentLength === 0) {
     return null;
   }
 
@@ -151,8 +163,8 @@ export const ComboboxFetchMore = React.forwardRef<
       {...props}
       className={cn(className)}
     >
-      <IconLoader className="w-4 h-4 animate-spin text-muted-foreground mr-1" />
       Load more...
+      <IconLoader className="w-4 h-4 animate-spin text-muted-foreground ml-auto" />
     </Command.Item>
   );
 });
@@ -169,7 +181,7 @@ const ComboboxEmpty = React.forwardRef<
   return (
     <Command.Empty ref={ref} {...props} className={cn(className)}>
       {loading ? (
-        <div className="flex flex-col gap-2 items-start">
+        <div className="flex flex-col gap-2 items-start p-4">
           <Skeleton className="w-2/3 h-4" />
           <Skeleton className="w-full h-4" />
           <Skeleton className="w-32 h-4" />

@@ -24,7 +24,7 @@ export const productCategoryDetail = gql`
         links
         location
         mergedIds
-        modifiedAt
+        updatedAt
         names
         ownerId
         parentCompanyId

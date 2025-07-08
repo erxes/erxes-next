@@ -1,33 +1,41 @@
 import { RecordTable } from 'erxes-ui';
 
-import { columns } from '@/products/components/columns';
-import { ProductCommandBar } from '@/products/components/ProductCommandBar';
+import { productColumns } from '@/products/components/ProductColumns';
+import { ProductCommandBar } from '@/products/components/product-command-bar/ProductCommandBar';
 import { useProducts } from '@/products/hooks/useProducts';
-import { productMoreColumn } from './ProductMoreColumn';
+import { PRODUCTS_CURSOR_SESSION_KEY } from '@/products/constants/productsCursorSessionKey';
 export const ProductsRecordTable = () => {
-  const { products, handleFetchMore, loading, totalCount } = useProducts();
+  const { productsMain, handleFetchMore, loading, pageInfo } = useProducts();
+
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
+
   return (
     <RecordTable.Provider
-      columns={columns}
-      data={products || []}
-      handleReachedBottom={handleFetchMore}
-      className="mt-1.5"
-      stickyColumns={['name']}
-      moreColumn={productMoreColumn}
+      columns={productColumns}
+      data={productsMain || []}
+      className="m-3"
+      stickyColumns={['more', 'checkbox', 'name']}
     >
-      <RecordTable>
-        <RecordTable.Header />
-        {!loading && (
+      <RecordTable.CursorProvider
+        hasPreviousPage={hasPreviousPage}
+        hasNextPage={hasNextPage}
+        dataLength={productsMain?.length}
+        sessionKey={PRODUCTS_CURSOR_SESSION_KEY}
+      >
+        <RecordTable>
+          <RecordTable.Header />
           <RecordTable.Body>
-            {totalCount > products?.length && (
-              <RecordTable.RowSkeleton
-                rows={4}
-                handleReachedBottom={handleFetchMore}
-              />
-            )}
+            <RecordTable.CursorBackwardSkeleton
+              handleFetchMore={handleFetchMore}
+            />
+            {loading && <RecordTable.RowSkeleton rows={40} />}
+            <RecordTable.RowList />
+            <RecordTable.CursorForwardSkeleton
+              handleFetchMore={handleFetchMore}
+            />
           </RecordTable.Body>
-        )}
-      </RecordTable>
+        </RecordTable>
+      </RecordTable.CursorProvider>
       <ProductCommandBar />
     </RecordTable.Provider>
   );

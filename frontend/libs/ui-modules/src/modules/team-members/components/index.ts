@@ -1,3 +1,3 @@
-export * from './MemberInline';
-export * from './AssignMember';
 export * from './AssigMemberInEditor';
+export * from './MembersInline';
+export * from './SelectMember';

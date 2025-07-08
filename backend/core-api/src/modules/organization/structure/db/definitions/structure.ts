@@ -1,9 +1,12 @@
-import { mongoStringRandomId, mongooseSchemaWrapper } from 'erxes-api-utils';
+import {
+  STRUCTURE_STATUSES,
+  attachmentSchema,
+} from 'erxes-api-shared/core-modules';
+import { mongooseStringRandomId, schemaWrapper } from 'erxes-api-shared/utils';
 import { Schema } from 'mongoose';
-import { STRUCTURE_STATUSES, attachmentSchema } from 'erxes-api-modules';
 
 const commonSchemaFields = {
-  id: mongoStringRandomId,
+  id: mongooseStringRandomId,
   title: { type: String },
   code: { type: String, unique: true },
   updatedBy: { type: String },
@@ -31,7 +34,7 @@ const contactInfoSchema = {
   image: { type: attachmentSchema, optional: true },
 };
 
-export const structureSchema = mongooseSchemaWrapper(
+export const structureSchema = schemaWrapper(
   new Schema({
     description: { type: String, optional: true },
     supervisorId: { type: String, optional: true },
@@ -40,7 +43,7 @@ export const structureSchema = mongooseSchemaWrapper(
   }),
 );
 
-export const departmentSchema = mongooseSchemaWrapper(
+export const departmentSchema = schemaWrapper(
   new Schema({
     description: { type: String, optional: true },
     supervisorId: { type: String, optional: true },
@@ -56,7 +59,7 @@ export const departmentSchema = mongooseSchemaWrapper(
   }),
 );
 
-export const unitSchema = mongooseSchemaWrapper(
+export const unitSchema = schemaWrapper(
   new Schema({
     description: { type: String, optional: true },
     departmentId: { type: String, optional: true },
@@ -66,7 +69,7 @@ export const unitSchema = mongooseSchemaWrapper(
   }),
 );
 
-export const branchSchema = mongooseSchemaWrapper(
+export const branchSchema = schemaWrapper(
   new Schema({
     parentId: { type: String, optional: true },
     ...contactInfoSchema,
@@ -83,7 +86,7 @@ export const branchSchema = mongooseSchemaWrapper(
   }),
 );
 
-export const positionSchema = mongooseSchemaWrapper(
+export const positionSchema = schemaWrapper(
   new Schema({
     ...commonSchemaFields,
     parentId: { type: String, optional: true },
@@ -96,3 +99,8 @@ export const positionSchema = mongooseSchemaWrapper(
     },
   }),
 );
+
+branchSchema.index({ _id: 1, createdAt: 1, parentId: 1 });
+departmentSchema.index({ _id: 1, createdAt: 1, parentId: 1 });
+unitSchema.index({ _id: 1, createdAt: 1 });
+positionSchema.index({ _id: 1, createdAt: 1, parentId: 1 });

@@ -5,6 +5,9 @@ import {
 import { useAtomCallback } from 'jotai/utils';
 import { useCallback } from 'react';
 import { internalHotkeysEnabledScopesState } from '../states/internal/internalHotkeysEnabledScopeState';
+import { logDebug } from 'erxes-ui/utils/logDebug';
+
+export const DEBUG_HOTKEY_SCOPE = true;
 
 export const useScopedHotKeysCallback = (
   dependencies?: OptionsOrDependencyArray,
@@ -36,10 +39,37 @@ export const useScopedHotKeysCallback = (
         const currentHotkeyScopes = get(internalHotkeysEnabledScopesState);
 
         if (!currentHotkeyScopes.includes(scope)) {
+          if (DEBUG_HOTKEY_SCOPE) {
+            logDebug(
+              `DEBUG: %cI can't call hotkey (${
+                hotkeysEvent.keys
+              }) because I'm in scope [${scope}] and the active scopes are : [${currentHotkeyScopes.join(
+                ', ',
+              )}]`,
+              'color: gray; ',
+            );
+          }
           return;
         }
 
+        if (DEBUG_HOTKEY_SCOPE) {
+          logDebug(
+            `DEBUG: %cI can call hotkey (${
+              hotkeysEvent.keys
+            }) because I'm in scope [${scope}] and the active scopes are : [${currentHotkeyScopes.join(
+              ', ',
+            )}]`,
+            'color: green;',
+          );
+        }
+
         if (preventDefault === true) {
+          if (DEBUG_HOTKEY_SCOPE) {
+            logDebug(
+              `DEBUG: %cI prevent default for hotkey (${hotkeysEvent.keys})`,
+              'color: gray;',
+            );
+          }
           keyboardEvent.stopPropagation();
           keyboardEvent.preventDefault();
           keyboardEvent.stopImmediatePropagation();

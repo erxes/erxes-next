@@ -1,10 +1,11 @@
-export const types = `
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
 
-  type Customer {
+export const types = `
+  type Customer @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String
-     state: String
+    state: String
     createdAt: Date
-    modifiedAt: Date
+    updatedAt: Date
     avatar: String
     integrationId: String
     firstName: String
@@ -40,7 +41,7 @@ export const types = `
     code: String
     emailValidationStatus: String
     phoneValidationStatus: String
-
+    status: String
     isOnline: Boolean
     lastSeenAt: Date
     sessionCount: Int
@@ -50,14 +51,18 @@ export const types = `
     links: JSON
     companies: [Company]
     getTags: [Tag]
+
+    cursor: String
   }
 
   type CustomersListResponse {
     list: [Customer],
-    totalCount: Float,
+    pageInfo: PageInfo
+    totalCount: Int,
   }
 
 `;
+
 export const conformityQueryFields = `
   conformityMainType: String
   conformityMainTypeId: String
@@ -65,23 +70,27 @@ export const conformityQueryFields = `
   conformityIsRelated: Boolean
   conformityIsSaved: Boolean
 `;
+
 const queryParams = `
- page: Int
-  perPage: Int
   segment: String
   type: String
-  tag: String
   ids: [String]
   excludeIds: Boolean
-  tags: [String]
-  excludeTags: [String]
+
+  tagIds: [String]
+  excludeTagIds: [String]
   tagWithRelated: Boolean
+
+  brandIds: [String]
+
+  integrationIds: [String]
+  integrationTypes: [String]
+
+  formIds: [String]
+
   searchValue: String
   autoCompletion: Boolean
   autoCompletionType: String
-  brand: String
-  integration: String
-  form: String
   startDate: String
   endDate: String
   leadStatus: String
@@ -92,12 +101,16 @@ const queryParams = `
   dateFilters: String
   segmentData: String
   emailValidationStatus:String
+  status: CONTACT_STATUS
+
   ${conformityQueryFields}
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `
   customers(${queryParams}): CustomersListResponse
   customerDetail(_id: String!): Customer
+  contactsLogs(action: String, content:JSON, contentType: String): JSON
 `;
 
 const fields = `
@@ -131,4 +144,11 @@ export const mutations = `
   customersAdd(state: String, ${fields}): Customer
   customersEdit(_id: String!, ${fields}): Customer
   customersRemove(customerIds: [String]): [String]
+
+  customersMerge(customerIds: [String], customerFields: JSON): Customer
+  customersVerify(verificationType:String!): String
+
+  customersChangeState(_id: String!, value: String!): Customer
+  customersChangeVerificationStatus(customerIds: [String], type: String!, status: String!): [Customer]
+  customersChangeStateBulk(_ids: [String]!, value: String!): JSON
 `;

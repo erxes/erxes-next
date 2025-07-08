@@ -11,13 +11,14 @@ import { IconTrash, IconUpload, IconUserCircle } from '@tabler/icons-react';
 
 import { Button, Dialog } from 'erxes-ui/components';
 import { useUpload } from 'erxes-ui/hooks';
-import { readFile } from 'erxes-ui/utils/core';
+import { readImage } from 'erxes-ui/utils/core';
 
-import { ButtonProps } from './button';
 import { cn } from '../lib/utils';
+import { ButtonProps } from './button';
 
 type IUploadContext = {
   url: string | undefined;
+  multiple?: boolean;
   onChange: (value: any) => void;
   setPreviewUrl: (previewUrl: string | undefined) => void;
   previewRef: MutableRefObject<string | null>;
@@ -33,11 +34,12 @@ const UploadContext = createContext<IUploadContext | null>(null);
 type UploadPreviewProps = {
   value: string;
   onChange: (value: { url: string; fileInfo: any }) => void;
+  multiple?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
   ({ className, ...props }, ref) => {
-    const { value, onChange } = props;
+    const { value, onChange, multiple } = props;
 
     const previewRef = useRef<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +62,7 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
       <UploadContext.Provider
         value={{
           url,
+          multiple,
           onChange,
           fileInputRef,
           previewRef,
@@ -72,10 +75,10 @@ const UploadRoot = React.forwardRef<HTMLDivElement, UploadPreviewProps>(
       >
         <Dialog open={isImageFocused} onOpenChange={setIsImageFocused}>
           <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+            <Dialog.Overlay className="fixed inset-0 bg-accent" />
             <Dialog.Content className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] max-w-none w-auto bg-transparent border-0 p-0">
               <img
-                src={readFile(url)}
+                src={readImage(url)}
                 alt="Focused view"
                 className="max-h-[90vh] max-w-[90vw] object-contain"
               />
@@ -104,6 +107,7 @@ const UploadPreview = React.forwardRef<
 
   const {
     url,
+    multiple,
     onChange,
     setPreviewUrl,
     fileInputRef,
@@ -114,14 +118,14 @@ const UploadPreview = React.forwardRef<
 
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files;
+      const { files } = event.target;
 
       if (previewRef.current) {
         URL.revokeObjectURL(previewRef.current);
       }
 
       upload({
-        files: file,
+        files,
 
         afterUpload: ({ response, fileInfo }) => {
           onChange && onChange({ url: response, ...fileInfo });
@@ -156,7 +160,7 @@ const UploadPreview = React.forwardRef<
           ) : url ? (
             <img
               className="h-full w-full object-cover absolute"
-              src={readFile(url)}
+              src={readImage(url)}
               alt="Preview of uploaded"
             />
           ) : (
@@ -172,6 +176,7 @@ const UploadPreview = React.forwardRef<
           className="hidden"
           accept="image/*"
           aria-label="Upload image file"
+          multiple={multiple}
         />
       </div>
       <div className="sr-only" aria-live="polite" role="status">

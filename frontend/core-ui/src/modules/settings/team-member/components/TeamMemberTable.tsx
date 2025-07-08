@@ -1,47 +1,47 @@
-import { RecordTable } from 'erxes-ui/modules/record-table';
-import { Skeleton } from 'erxes-ui';
-import {
-  USERS_PER_PAGE,
-  useUsers,
-} from '@/settings/team-member/hooks/useUsers';
+import { RecordTable } from 'erxes-ui';
+import { useUsers } from '@/settings/team-member/hooks/useUsers';
 import { teamMemberColumns } from '@/settings/team-member/components/record/TeamMemberColumns';
-import { teamMemberMoreColumn } from '@/settings/team-member/components/record/TeamMemberMoreColumn';
+import { TEAM_MEMBER_CURSOR_SESSION_KEY } from '../constants/teamMemberCursorSessionKey';
 
 const TeamMemberTable = () => {
-  const { users, totalCount, handleFetchMore, loading, error } = useUsers({
-    page: 1,
-    perPage: USERS_PER_PAGE,
-  });
-  if (loading) {
-    return <Skeleton className="w-full h-full" />;
-  }
+  const { users, handleFetchMore, loading, error, pageInfo } = useUsers();
+  const { hasPreviousPage, hasNextPage } = pageInfo || {};
+
   if (error) {
     return (
       <div className="text-destructive">
-        Error loading permissions: {error.message}
+        Error loading members: {error.message}
       </div>
     );
   }
+
   return (
     <RecordTable.Provider
       columns={teamMemberColumns}
       data={users || []}
-      stickyColumns={['avatar', 'firstName']}
-      handleReachedBottom={handleFetchMore}
-      className="mt-1.5"
-      moreColumn={teamMemberMoreColumn}
+      stickyColumns={['more', 'avatar', 'firstName', 'lastName']}
+      className="m-3"
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          {!loading && totalCount > users?.length && (
-            <RecordTable.RowSkeleton
-              rows={4}
-              handleReachedBottom={handleFetchMore}
+      <RecordTable.CursorProvider
+        hasPreviousPage={hasPreviousPage}
+        hasNextPage={hasNextPage}
+        dataLength={users?.length}
+        sessionKey={TEAM_MEMBER_CURSOR_SESSION_KEY}
+      >
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <RecordTable.CursorBackwardSkeleton
+              handleFetchMore={handleFetchMore}
             />
-          )}
-        </RecordTable.Body>
-      </RecordTable>
+            {loading && <RecordTable.RowSkeleton rows={40} />}
+            <RecordTable.RowList />
+            <RecordTable.CursorForwardSkeleton
+              handleFetchMore={handleFetchMore}
+            />
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.CursorProvider>
     </RecordTable.Provider>
   );
 };

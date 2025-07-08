@@ -8,25 +8,34 @@ import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { retryGetProxyTargets } from './proxy/targets';
-import { startRouter, stopRouter } from './apollo-router';
-import userMiddleware from './middlewares/userMiddleware';
-import { initMQWorkers } from './mq/workers/workers';
+import { retryGetProxyTargets } from '~/proxy/targets';
+import { startRouter, stopRouter } from '~/apollo-router';
+import userMiddleware from '~/middlewares/userMiddleware';
+import { initMQWorkers } from '~/mq/workers/workers';
 import {
-  applyProxiesToGraphql,
+  applyProxiesCoreless,
   applyProxyToCore,
   proxyReq,
-} from './proxy/middleware';
+} from '~/proxy/middleware';
 
-import { getService, getServices, redis } from 'erxes-api-utils';
-import { applyGraphqlLimiters } from './middlewares/graphql-limiter';
+import { getPlugin, isDev, redis } from 'erxes-api-shared/utils';
+import { applyGraphqlLimiters } from '~/middlewares/graphql-limiter';
+import {
+  startSubscriptionServer,
+  stopSubscriptionServer,
+} from './subscription';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
-const domain = process.env.DOMAIN ?? 'http://localhost:3001';
+const { DOMAIN } = process.env;
 
 const corsOptions = {
   credentials: true,
-  origin: [domain],
+  origin: [
+    ...(DOMAIN ? [DOMAIN] : []),
+    ...(isDev ? ['http://localhost:3001'] : []),
+  ],
 };
 
 const myQueue = new Queue('gateway-service-discovery', {
@@ -54,11 +63,33 @@ app.use(userMiddleware);
 
 app.use('/bullmq-board', serverAdapter.getRouter());
 
+app.get('/health', async (_req, res) => {
+  res.end('ok');
+});
+
+app.get('/locales/:lng', async (req, res) => {
+  try {
+    const lngJson = fs.readFileSync(
+      path.join(__dirname, `./locales/${req.params.lng}`),
+    );
+    res.json(JSON.parse(lngJson.toString()));
+  } catch {
+    res.status(500).send('Error fetching services');
+  }
+});
 app.use('/pl:serviceName', async (req, res) => {
   try {
     const serviceName: string = req.params.serviceName.replace(':', '');
+    const path = req.path;
 
-    const service = await getService(serviceName);
+    // Forbid access to trpc endpoints
+    if (path.startsWith('/trpc')) {
+      return res.status(403).json({
+        error: 'Access to trpc endpoints through plugin proxy is forbidden',
+      });
+    }
+
+    const service = await getPlugin(serviceName);
 
     const targetUrl = service.address;
 
@@ -102,12 +133,14 @@ async function start() {
 
     // Apply the initial proxy middleware
     applyGraphqlLimiters(app);
-    applyProxiesToGraphql(app);
+    applyProxiesCoreless(app);
     applyProxyToCore(app, global.currentTargets);
 
     // Start the HTTP server
     httpServer = http.createServer(app);
     await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
+
+    await startSubscriptionServer(httpServer);
     console.log(`Server is running at http://localhost:${port}/`);
   } catch (error) {
     console.error('Error starting the server:', error);
@@ -119,8 +152,10 @@ async function start() {
 (['SIGINT', 'SIGTERM'] as NodeJS.Signals[]).forEach((signal) => {
   process.on(signal, async () => {
     console.log(`Exiting on signal ${signal}`);
+
     try {
       stopRouter(signal);
+      await stopSubscriptionServer();
       if (httpServer) {
         await new Promise((resolve) => httpServer.close(resolve));
       }

@@ -2,14 +2,14 @@ import { spawn, ChildProcess, execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'yaml';
-import { retryGetProxyTargets } from '../proxy/targets';
 import {
   dirTempPath,
   routerConfigPath,
   routerPath,
   supergraphPath,
-} from './paths';
-import supergraphCompose from './supergraph-compose';
+} from '~/apollo-router/paths';
+import supergraphCompose from '~/apollo-router/supergraph-compose';
+import { isDev } from 'erxes-api-shared/utils';
 
 const {
   DOMAIN,
@@ -32,8 +32,7 @@ export const stopRouter = (signal: NodeJS.Signals) => {
     console.error(e);
   }
 };
-
-export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 1024;
+export const apolloRouterPort = Number(APOLLO_ROUTER_PORT) || 50_000;
 
 const downloadRouter = async () => {
   if (NODE_ENV === 'production') {
@@ -97,6 +96,7 @@ const createRouterConfig = async () => {
       allow_credentials: true,
       origins: [
         DOMAIN ? DOMAIN : 'http://localhost:3001',
+        ...(isDev ? ['http://localhost:3001'] : []),
         ...(ALLOWED_DOMAINS || '').split(','),
         'https://studio.apollographql.com',
       ].filter((x) => typeof x === 'string'),
@@ -144,23 +144,4 @@ export const startRouter = async (proxy) => {
     ],
     { stdio: 'inherit' },
   );
-};
-
-export const updateApolloRouter = async () => {
-  try {
-    const newTargets = await retryGetProxyTargets();
-
-    // Check if the targets have changed
-    if (JSON.stringify(newTargets) !== JSON.stringify(global.currentTargets)) {
-      console.log('Proxy targets updated, applying changes...');
-
-      // Update the targets and apply the new proxy middleware
-      global.currentTargets = newTargets;
-
-      // Restart the router with updated targets
-      await startRouter(global.currentTargets);
-    }
-  } catch (error) {
-    console.error('Error updating proxy targets:', error);
-  }
 };

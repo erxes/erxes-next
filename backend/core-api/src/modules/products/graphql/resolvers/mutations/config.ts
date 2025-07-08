@@ -1,11 +1,11 @@
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
 export const configMutations = {
   /**
    * Create or update config object
    */
   async productsConfigsUpdate(
-    _root: undefined,
+    _parent: undefined,
     { configsMap },
     { models }: IContext,
   ) {

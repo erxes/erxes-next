@@ -1,4 +1,4 @@
-import { commonParams } from './CommonTypeDefs';
+import { commonParams } from './commonTypeDefs';
 
 const commonUnitParams = `
     title: String
@@ -26,7 +26,7 @@ export const UnitTypes = `
     type UnitListQueryResponse {
         list:[Unit]
         totalCount: Int
-        totalUsersCount:Int
+        pageInfo: PageInfo
     }
     
 `;

@@ -1,11 +1,12 @@
 import type { StorybookConfig } from '@storybook/react-webpack5';
 
 const config: StorybookConfig = {
-  stories: ['../src/lib/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
+  stories: ['../src/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'],
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@nx/react/plugins/storybook',
+    'storybook-addon-react-router-v6',
   ],
   framework: {
     name: '@storybook/react-webpack5',

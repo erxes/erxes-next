@@ -40,11 +40,36 @@ const USERS_CONFIRM_INVITATION = gql`
   }
 `;
 
+const USERS_INLINE_EDIT = gql`
+  mutation usersEdit(
+    $_id: String!
+    $username: String
+    $email: String
+    $details: UserDetails
+    $employeeId: String
+    $positionIds: [String]
+    $links: JSON
+  ) {
+    usersEdit(
+      _id: $_id
+      username: $username
+      email: $email
+      details: $details
+      employeeId: $employeeId
+      positionIds: $positionIds
+      links: $links
+    ) {
+      _id
+    }
+  }
+`;
+
 const mutations = {
   USERS_CONFIRM_INVITATION,
   USERS_INVITE,
   USERS_RESEND_INVITATION,
   USERS_SET_ACTIVE_STATUS,
+  USERS_INLINE_EDIT,
 };
 
 export default mutations;

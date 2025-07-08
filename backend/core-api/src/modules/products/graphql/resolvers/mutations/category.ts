@@ -1,5 +1,5 @@
-import { IProductCategory } from 'erxes-core-types';
-import { IContext } from '../../../../../connectionResolvers';
+import { IProductCategory } from 'erxes-api-shared/core-types';
+import { IContext } from '~/connectionResolvers';
 
 export const categoryMutations = {
   /**
@@ -7,7 +7,7 @@ export const categoryMutations = {
    * @param {Object} doc Product category document
    */
   async productCategoriesAdd(
-    _root: undefined,
+    _parent: undefined,
     doc: IProductCategory,
     { models }: IContext,
   ) {
@@ -20,7 +20,7 @@ export const categoryMutations = {
    * @param {Object} param2.doc ProductCategory info
    */
   async productCategoriesEdit(
-    _root: undefined,
+    _parent: undefined,
     { _id, ...doc }: { _id: string } & IProductCategory,
     { models }: IContext,
   ) {
@@ -33,7 +33,7 @@ export const categoryMutations = {
    */
 
   async productCategoriesRemove(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {

@@ -18,7 +18,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import { checkboxColumn } from 'erxes-ui/modules/record-table/components/CheckboxColumn';
 import RecordTableContainer from 'erxes-ui/modules/record-table/components/RecordTableContainer';
 import { RecordTableDnDProvider } from 'erxes-ui/modules/record-table/components/RecordTableDnDProvider';
 import { IRecordTableContext } from 'erxes-ui/modules/record-table/types/recordTableTypes';
@@ -29,7 +28,7 @@ export function useRecordTable() {
   const context = useContext(RecordTableContext);
   if (!context) {
     throw new Error(
-      'useRecordTable must be used within a RecordTableProvider.'
+      'useRecordTable must be used within a RecordTableProvider.',
     );
   }
   return context;
@@ -40,9 +39,7 @@ interface RecordTableProviderProps extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<any>[];
   data: any[];
   tableOptions?: TableOptions<any>;
-  handleReachedBottom?: () => void;
   stickyColumns?: string[];
-  moreColumn?: ColumnDef<any>;
 }
 
 export const RecordTableProvider = forwardRef<
@@ -55,28 +52,22 @@ export const RecordTableProvider = forwardRef<
       columns,
       data,
       tableOptions,
-      handleReachedBottom,
       className,
       stickyColumns,
-      moreColumn,
       ...restProps
     },
-    ref
+    ref,
   ) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
-      columns.map((c) => c.id || '')
+      columns.map((c) => c.id || ''),
     );
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
     const table = useReactTable({
       data,
-      columns: [
-        ...(moreColumn ? [moreColumn] : []),
-        checkboxColumn,
-        ...columns
-      ],
+      columns,
       defaultColumn: {
         maxSize: 800,
       },
@@ -84,7 +75,7 @@ export const RecordTableProvider = forwardRef<
       state: {
         columnOrder,
         columnPinning: {
-          left: ['more', 'checkbox', ...(stickyColumns || [])],
+          left: stickyColumns,
         },
         sorting,
         columnFilters,
@@ -102,7 +93,6 @@ export const RecordTableProvider = forwardRef<
       <RecordTableContext.Provider
         value={{
           table,
-          handleReachedBottom,
         }}
       >
         <RecordTableDnDProvider setColumnOrder={setColumnOrder}>
@@ -117,7 +107,7 @@ export const RecordTableProvider = forwardRef<
         </RecordTableDnDProvider>
       </RecordTableContext.Provider>
     );
-  }
+  },
 );
 
 RecordTableProvider.displayName = 'RecordTableProvider';

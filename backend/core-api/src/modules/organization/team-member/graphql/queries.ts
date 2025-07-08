@@ -1,12 +1,12 @@
-import { IContext } from '../../../../connectionResolvers';
-import { USER_ROLES } from 'erxes-api-modules';
-import { IUserDocument } from 'erxes-core-types';
-import { IModels } from '../../../../connectionResolvers';
-import { paginate } from 'erxes-api-utils';
+import { USER_ROLES } from 'erxes-api-shared/core-modules';
+import {
+  ICursorPaginateParams,
+  IUserDocument,
+} from 'erxes-api-shared/core-types';
+import { cursorPaginate } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
 
-interface IListArgs {
-  page?: number;
-  perPage?: number;
+type IListArgs = {
   sortDirection?: number;
   sortField?: string;
   searchValue?: string;
@@ -25,16 +25,11 @@ interface IListArgs {
   unitId?: string;
   segment?: string;
   segmentData?: string;
-}
+};
 
 const NORMAL_USER_SELECTOR = { role: { $ne: USER_ROLES.SYSTEM } };
 
-const queryBuilder = async (
-  models: IModels,
-  params: IListArgs,
-  subdomain: string,
-  user: IUserDocument,
-) => {
+const queryBuilder = async (params: IListArgs) => {
   const {
     searchValue,
     isActive,
@@ -44,13 +39,7 @@ const queryBuilder = async (
     excludeIds,
     brandIds,
     departmentId,
-    unitId,
     branchId,
-    isAssignee,
-    departmentIds,
-    branchIds,
-    segment,
-    segmentData,
   } = params;
 
   const selector: any = {
@@ -111,14 +100,14 @@ export const userQueries = {
   async usersTotalCount(
     _parent: undefined,
     args: IListArgs,
-    { models, subdomain, user }: IContext,
+    { models }: IContext,
   ) {
     const selector = {
-      ...(await queryBuilder(models, args, subdomain, user)),
+      ...(await queryBuilder(args)),
       ...NORMAL_USER_SELECTOR,
     };
 
-    return models.Users.find(selector).countDocuments();
+    return models.Users.countDocuments(selector);
   },
 
   async userDetail(
@@ -132,13 +121,31 @@ export const userQueries = {
   async allUsers(
     _parent: undefined,
     {
+      searchValue,
       isActive,
       ids,
       assignedToMe,
-    }: { isActive: boolean; ids: string[]; assignedToMe: string },
+    }: {
+      searchValue: string;
+      isActive: boolean;
+      ids: string[];
+      assignedToMe: string;
+    },
     { user, models }: IContext,
   ) {
-    const selector: { isActive?: boolean; _id?: any } = {};
+    const selector: any = {};
+
+    if (searchValue) {
+      const fields = [
+        { email: new RegExp(`.*${searchValue}.*`, 'i') },
+        { employeeId: new RegExp(`.*${searchValue}.*`, 'i') },
+        { username: new RegExp(`.*${searchValue}.*`, 'i') },
+        { 'details.fullName': new RegExp(`.*${searchValue}.*`, 'i') },
+        { 'details.position': new RegExp(`.*${searchValue}.*`, 'i') },
+      ];
+
+      selector.$or = fields;
+    }
 
     if (isActive) {
       selector.isActive = true;
@@ -157,21 +164,20 @@ export const userQueries = {
 
   async users(
     _parent: undefined,
-    args: IListArgs,
-    { models, subdomain, user }: IContext,
+    args: IListArgs & ICursorPaginateParams,
+    { models }: IContext,
   ) {
     const selector = {
-      ...(await queryBuilder(models, args, subdomain, user)),
+      ...(await queryBuilder(args)),
       ...NORMAL_USER_SELECTOR,
     };
 
-    const { sortField, sortDirection } = args;
+    const { list, totalCount, pageInfo } = await cursorPaginate<IUserDocument>({
+      model: models.Users,
+      params: args,
+      query: selector,
+    });
 
-    const sort =
-      sortField && sortDirection
-        ? { [sortField]: sortDirection }
-        : { username: 1 };
-
-    return paginate(models.Users.find(selector).sort(sort as any), args);
+    return { list, totalCount, pageInfo };
   },
 };

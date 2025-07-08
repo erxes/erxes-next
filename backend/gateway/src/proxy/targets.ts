@@ -1,4 +1,4 @@
-import { getService, getServices } from 'erxes-api-utils';
+import { getPlugin, getPlugins } from 'erxes-api-shared/utils';
 import retry from '../util/retry';
 import fetch from 'node-fetch';
 
@@ -13,11 +13,13 @@ const { MAX_PLUGIN_RETRY } = process.env;
 const maxPluginRetry = Number(MAX_PLUGIN_RETRY) || Number.MAX_SAFE_INTEGER;
 
 async function getProxyTarget(name: string): Promise<ErxesProxyTarget> {
-  const service = await getService(name);
+  const service = await getPlugin(name);
 
   if (!service.address) {
     throw new Error(`Plugin ${name} has no address value in service discovery`);
   }
+
+  console.log(`${name} address: ${service.address}`);
 
   return {
     name,
@@ -44,9 +46,9 @@ async function ensureGraphqlEndpointIsUp({
 }: ErxesProxyTarget): Promise<void> {
   if (!address) return;
 
-  const endponit = `${address}/graphql`;
+  const endpoint = `${address}/graphql`;
 
-  const res = await fetch(endponit, {
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,7 +70,7 @@ async function ensureGraphqlEndpointIsUp({
   }
 
   throw new Error(
-    `Plugin ${name}'s graphql endpoint ${endponit} is not ready yet`,
+    `Plugin ${name}'s graphql endpoint ${endpoint} is not ready yet`,
   );
 }
 
@@ -87,11 +89,15 @@ async function retryEnsureGraphqlEndpointIsUp(target: ErxesProxyTarget) {
 }
 
 export async function retryGetProxyTargets(): Promise<ErxesProxyTarget[]> {
+  const SERVICES = ['automations', 'logs'];
+
   try {
-    const serviceNames = await getServices();
+    const serviceNames = await getPlugins();
 
     const proxyTargets: ErxesProxyTarget[] = await Promise.all(
-      serviceNames.map(retryGetProxyTarget),
+      serviceNames
+        .filter((servicename) => !SERVICES.includes(servicename))
+        .map(retryGetProxyTarget),
     );
 
     await Promise.all(proxyTargets.map(retryEnsureGraphqlEndpointIsUp));

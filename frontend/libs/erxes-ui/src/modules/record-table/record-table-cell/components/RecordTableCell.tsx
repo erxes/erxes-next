@@ -10,11 +10,12 @@ export const RecordTableCell = React.forwardRef<
   React.HTMLAttributes<HTMLTableCellElement> & { cell: Cell<any, unknown> }
 >(({ children, className, cell, style, ...props }, ref) => {
   const { column } = cell;
+
   return (
     <Table.Cell
       ref={ref}
       className={cn(
-        'bg-background whitespace-nowrap h-8 border-r group-data-[state=selected]/table-row:bg-primary/10 group-hover/table-row:bg-muted p-0 transition-colors overflow-hidden',
+        'p-0 transition-colors isolate',
         column.getIsPinned() === 'left' && 'sticky z-[1]',
         column.getIsPinned() === 'right' && 'sticky z-[1]',
         className,

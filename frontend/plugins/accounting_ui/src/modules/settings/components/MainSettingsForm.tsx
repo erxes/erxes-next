@@ -2,9 +2,7 @@ import {
   Button,
   Checkbox,
   Collapsible,
-  CurrencyCode,
   Form,
-  SelectCurrency,
 } from 'erxes-ui';
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form';
 import {
@@ -12,7 +10,7 @@ import {
   TMainSettings,
 } from '../constants/mainSettingsSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SelectAccount } from '@/account/components/SelectAccount';
+import { SelectAccount } from '@/settings/account/components/SelectAccount';
 import { useMainConfigs } from '../hooks/useMainConfigs';
 import { useEffect } from 'react';
 import { useUpdateConfig } from '../hooks/useUpdateConfig';
@@ -68,20 +66,7 @@ export const MainSettingsForm = () => {
           </Collapsible.TriggerButton>
 
           <Collapsible.Content className="pt-4 grid grid-cols-2 gap-4">
-            <Form.Field
-              control={form.control}
-              name="MainCurrency"
-              render={({ field }) => (
-                <Form.Item>
-                  <Form.Label htmlFor="mainCurrency">MAIN CURRENCY</Form.Label>
-                  <SelectCurrency
-                    value={field.value as CurrencyCode}
-                    onChange={(value) => field.onChange(value)}
-                    className="w-full"
-                  />
-                </Form.Item>
-              )}
-            />
+
           </Collapsible.Content>
         </Collapsible>
         <Collapsible defaultOpen>
@@ -136,64 +121,64 @@ export const VatFormFields = ({
         <>
           <Form.Field
             control={form.control}
-            name="VatAccountPayable"
+            name="VatPayableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAccountPayable">
+                <Form.Label htmlFor="VatPayableAccount">
                   Vat account payable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
-                  journal="tax"
+                  onValueChange={field.onChange}
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name="VatAccountReceivable"
+            name="VatReceivableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAccountReceivable">
+                <Form.Label htmlFor="VatReceivableAccount">
                   Vat account receivable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
-                  journal="tax"
+                  onValueChange={field.onChange}
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name="VatAfterAccountPayable"
+            name="VatAfterPayableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAfterAccountPayable">
+                <Form.Label htmlFor="VatAfterPayableAccount">
                   Vat after account payable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
-                  journal="tax"
+                  onValueChange={field.onChange}
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
           />
           <Form.Field
             control={form.control}
-            name="VatAfterAccountReceivable"
+            name="VatAfterReceivableAccount"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label htmlFor="vatAfterAccountReceivable">
+                <Form.Label htmlFor="VatAfterReceivableAccount">
                   Vat after account receivable
                 </Form.Label>
                 <SelectAccount
                   value={field.value}
-                  onChange={field.onChange}
-                  journal="tax"
+                  onValueChange={field.onChange}
+                  defaultFilter={{ journals: ["tax"] }}
                 />
               </Form.Item>
             )}
@@ -230,14 +215,14 @@ export const CtaxFormFields = ({
       {HasCtax && (
         <Form.Field
           control={form.control}
-          name="CtaxAccountPayable"
+          name="CtaxPayableAccount"
           render={({ field }) => (
             <Form.Item>
               <Form.Label>Ctax account payable</Form.Label>
               <SelectAccount
                 value={field.value}
-                onChange={field.onChange}
-                journal="tax"
+                onValueChange={field.onChange}
+                defaultFilter={{ journals: ["tax"] }}
               />
             </Form.Item>
           )}

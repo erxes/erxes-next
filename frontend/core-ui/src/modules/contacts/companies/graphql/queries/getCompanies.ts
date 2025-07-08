@@ -1,17 +1,19 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
 export const GET_COMPANIES = gql`
-  query companiesMain(
-    $page: Int
-    $perPage: Int
+  query companies(
     $segment: String
-    $tag: String
+    $tagIds: [String]
     $ids: [String]
     $excludeIds: Boolean
     $searchValue: String
     $autoCompletion: Boolean
     $autoCompletionType: String
-    $brand: String
     $sortField: String
     $sortDirection: Int
     $dateFilters: String
@@ -21,18 +23,16 @@ export const GET_COMPANIES = gql`
     $relType: String
     $isRelated: Boolean
     $isSaved: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
-    companiesMain(
-      page: $page
-      perPage: $perPage
+    companies(
       segment: $segment
-      tag: $tag
+      tagIds: $tagIds
       ids: $ids
       excludeIds: $excludeIds
       searchValue: $searchValue
       autoCompletion: $autoCompletion
       autoCompletionType: $autoCompletionType
-      brand: $brand
       sortField: $sortField
       sortDirection: $sortDirection
       dateFilters: $dateFilters
@@ -42,6 +42,7 @@ export const GET_COMPANIES = gql`
       conformityRelType: $relType
       conformityIsRelated: $isRelated
       conformityIsSaved: $isSaved
+      ${GQL_CURSOR_PARAMS}
     ) {
       list {
         _id
@@ -60,21 +61,11 @@ export const GET_COMPANIES = gql`
         primaryPhone
         businessType
         links
-        owner {
-          _id
-          details {
-            fullName
-          }
-        }
+        ownerId
         tagIds
-        getTags {
-          _id
-          name
-          colorCode
-        }
         score
       }
-      totalCount
+      ${GQL_PAGE_INFO}
     }
   }
 `;

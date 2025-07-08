@@ -1,7 +1,42 @@
 import { initTRPC } from '@trpc/server';
 
-import { customerRouter } from './modules/contacts/trpc/customer';
+import { ITRPCContext } from 'erxes-api-shared/utils';
 
-const t = initTRPC.create();
+import { conformityTrpcRouter } from '~/modules/conformities/trpc/conformity';
+import { contactTrpcRouter } from '~/modules/contacts/trpc';
+import { exchangeRateTrpcRouter } from '~/modules/exchangeRates/trpc/exchangeRate';
+import { brandTrpcRouter } from '~/modules/organization/brand/trpc/brand';
+import { configTrpcRouter } from '~/modules/organization/settings/trpc/config';
+import { structureTrpcRouter } from '~/modules/organization/structure/trpc';
+import { userTrpcRouter } from '~/modules/organization/team-member/trpc/user';
+import { productTrpcRouter } from '~/modules/products/trpc';
+import { relationTrpcRouter } from '~/modules/relations/trpc/relation';
+import { tagTrpcRouter } from '~/modules/tags/trpc/tag';
+import { formsTrpcRouter } from './modules/forms/trpc';
+import { permissionTrpcRouter } from './modules/permissions/trpc';
+import { segmentsTRPCRouter } from './modules/segments/trpc';
+import { automationsRouter } from './modules/automations/trpc/automations';
+import { IModels } from './connectionResolvers';
 
-export const appRouter = t.mergeRouters(customerRouter);
+export type CoreTRPCContext = ITRPCContext<{ models: IModels }>;
+
+const t = initTRPC.context<CoreTRPCContext>().create({});
+
+export const appRouter = t.mergeRouters(
+  configTrpcRouter,
+  formsTrpcRouter,
+  contactTrpcRouter,
+  conformityTrpcRouter,
+  relationTrpcRouter,
+  userTrpcRouter,
+  structureTrpcRouter,
+  productTrpcRouter,
+  brandTrpcRouter,
+  tagTrpcRouter,
+  exchangeRateTrpcRouter,
+  permissionTrpcRouter,
+  segmentsTRPCRouter,
+  automationsRouter,
+);
+
+export type AppRouter = typeof appRouter;

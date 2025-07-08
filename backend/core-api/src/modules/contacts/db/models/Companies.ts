@@ -1,12 +1,25 @@
-import { IModels } from '../../../../connectionResolvers';
-import { IUserDocument } from 'erxes-core-types';
-import { validSearchText } from 'erxes-api-utils';
+import { companySchema } from '@/contacts/db/definitions/company';
+import {
+  ICompany,
+  ICompanyDocument,
+  ICustomField,
+  IUserDocument,
+} from 'erxes-api-shared/core-types';
+import { validSearchText } from 'erxes-api-shared/utils';
 import { Model } from 'mongoose';
-import { ICompany, ICompanyDocument, ICustomField } from 'erxes-core-types';
-import { companySchema } from '../definitions/company';
+import { IModels } from '~/connectionResolvers';
 
 export interface ICompanyModel extends Model<ICompanyDocument> {
   getCompany(_id: string): Promise<ICompanyDocument>;
+  getCompanyName(company: ICompany): string;
+
+  findActiveCompanies(
+    query,
+    fields?,
+    skip?,
+    limit?,
+  ): Promise<ICompanyDocument[]>;
+
   createCompany(doc: ICompany, user?: IUserDocument): Promise<ICompanyDocument>;
   updateCompany(_id: string, doc: ICompany): Promise<ICompanyDocument>;
   removeCompanies(_ids: string[]): Promise<{ n: number; ok: number }>;
@@ -32,6 +45,31 @@ export const loadCompanyClass = (models: IModels) => {
     }
 
     /**
+     * Retrieve company name
+     */
+    public static getCompanyName(company: ICompany) {
+      return (
+        company.primaryName ||
+        company.primaryEmail ||
+        company.primaryPhone ||
+        'Unknown'
+      );
+    }
+
+    /**
+     * Retreive active companies
+     */
+    public static async findActiveCompanies(query, fields?, skip?, limit?) {
+      return models.Companies.find(
+        { ...query, status: { $ne: 'deleted' } },
+        fields,
+      )
+        .skip(skip || 0)
+        .limit(limit || 0)
+        .lean();
+    }
+
+    /**
      * Create a company
      */
     public static async createCompany(doc: ICompany, user: any) {
@@ -44,10 +82,16 @@ export const loadCompanyClass = (models: IModels) => {
 
       this.fixListFields(doc, doc.trackedData);
 
+      if (doc.customFieldsData) {
+        doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+          doc.customFieldsData,
+        );
+      }
+
       const company = await models.Companies.create({
         ...doc,
         createdAt: new Date(),
-        modifiedAt: new Date(),
+        updatedAt: new Date(),
         searchText: this.fillSearchText(doc),
       });
 
@@ -65,13 +109,20 @@ export const loadCompanyClass = (models: IModels) => {
 
       this.fixListFields(doc, doc.trackedData, company);
 
+      // clean custom field values
+      if (doc.customFieldsData) {
+        doc.customFieldsData = await models.Fields.prepareCustomFieldsData(
+          doc.customFieldsData,
+        );
+      }
+
       const searchText = this.fillSearchText(
         Object.assign({}, company, doc) as ICompany,
       );
 
       await models.Companies.updateOne(
         { _id },
-        { $set: { ...doc, searchText, modifiedAt: new Date() } },
+        { $set: { ...doc, searchText, updatedAt: new Date() } },
       );
 
       return models.Companies.findOne({ _id });

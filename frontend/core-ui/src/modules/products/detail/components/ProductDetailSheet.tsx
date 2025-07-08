@@ -1,11 +1,10 @@
 import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 import { Button, cn, Sheet, useSetHotkeyScope } from 'erxes-ui';
 import { renderingProductDetailAtom } from '../../states/productDetailStates';
-import { PageHotkeyScope } from '@/types/PageHotkeyScope';
-import { ContactHotKeyScope } from '@/contacts/types/ContactHotKeyScope';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { useSearchParams } from 'react-router-dom';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 
 export const ProductDetailSheet = ({
   children,
@@ -20,7 +19,7 @@ export const ProductDetailSheet = ({
 
   useEffect(() => {
     if (productId) {
-      setHotkeyScope(ContactHotKeyScope.CustomerEditSheet);
+      setHotkeyScope(ProductHotKeyScope.ProductEditSheet);
     }
   }, [productId, setHotkeyScope]);
 
@@ -34,7 +33,7 @@ export const ProductDetailSheet = ({
     setSearchParams(newSearchParams);
 
     if (!newProductId) {
-      setHotkeyScope(PageHotkeyScope.ProductsPage);
+      setHotkeyScope(ProductHotKeyScope.ProductsPage);
     }
   };
 
@@ -44,11 +43,11 @@ export const ProductDetailSheet = ({
       onOpenChange={(isOpen) => {
         if (!isOpen) {
           setOpen(null);
-          setHotkeyScope(PageHotkeyScope.ProductsPage);
+          setHotkeyScope(ProductHotKeyScope.ProductsPage);
         }
       }}
     >
-      <Sheet.Content
+      <Sheet.View
         className={cn(
           'p-0 md:max-w-screen-2xl flex flex-col gap-0 transition-all duration-100 ease-out overflow-hidden flex-none',
           !!activeTab && 'md:w-[calc(100vw-theme(spacing.4))]',
@@ -65,7 +64,7 @@ export const ProductDetailSheet = ({
           </Sheet.Description>
         </Sheet.Header>
         {children}
-      </Sheet.Content>
+      </Sheet.View>
     </Sheet>
   );
 };

@@ -2,30 +2,24 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { IconUpload } from '@tabler/icons-react';
 
-import { Form, Input, Upload, BlockEditor, BLOCK_SCHEMA } from 'erxes-ui';
+import { Form, Input, Upload, Editor } from 'erxes-ui';
 
 import { BrandField } from '@/products/add-products/components/BrandField';
 import { ProductFormValues } from './formSchema';
-import { VendorField } from './vendorField';
-import { useCreateBlockNote } from '@blocknote/react';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
+import { SelectCompany } from 'ui-modules';
 
 export const ProductAddMoreFields = ({
   form,
 }: {
   form: UseFormReturn<ProductFormValues>;
 }) => {
-  const descriptionEditor = useCreateBlockNote({
-    schema: BLOCK_SCHEMA,
-  });
-  const barcodeDescriptionEditor = useCreateBlockNote({
-    schema: BLOCK_SCHEMA,
-  });
   return (
     <>
       <div className="flex items-center my-4">
-        <div className="flex-1 border-t border-muted-foreground" />
+        <div className="flex-1 border-t" />
         <Form.Label className="mx-2">More Info</Form.Label>
-        <div className="flex-1 border-t border-muted-foreground" />
+        <div className="flex-1 border-t" />
       </div>
       <Form.Field
         control={form.control}
@@ -34,32 +28,16 @@ export const ProductAddMoreFields = ({
           <Form.Item className="mb-5">
             <Form.Label>DESCRIPTION</Form.Label>
             <Form.Control>
-              <BlockEditor
+              <Editor
+                initialContent={field.value}
                 onChange={field.onChange}
-                editor={descriptionEditor}
-                className=" h-28 rounded-md border overflow-auto"
+                scope={ProductHotKeyScope.ProductAddSheetDescriptionField}
               />
             </Form.Control>
             <Form.Message className="text-destructive" />
           </Form.Item>
         )}
       />
-      <Form.Field
-        control={form.control}
-        name="shortName"
-        render={({ field }) => (
-          <Form.Item className="flex flex-col mb-5">
-            <Form.Label>SHORT NAME</Form.Label>
-            <div className="flex flex-col">
-              <Form.Control>
-                <Input className="rounded-md h-8" {...field} />
-              </Form.Control>
-              <Form.Message className="text-destructive" />
-            </div>
-          </Form.Item>
-        )}
-      />
-
       <Form.Field
         control={form.control}
         name="barcodes"
@@ -69,7 +47,7 @@ export const ProductAddMoreFields = ({
             <div className="flex flex-col">
               <Form.Control>
                 <Input
-                  className="rounded-md h-8"
+                  className="h-8 rounded-md"
                   {...field}
                   onChange={(e) => field.onChange([e.target.value])}
                 />
@@ -86,10 +64,12 @@ export const ProductAddMoreFields = ({
           <Form.Item className="mb-5">
             <Form.Label>BARCODE DESCRIPTION</Form.Label>
             <Form.Control>
-              <BlockEditor
+              <Editor
+                initialContent={field.value}
                 onChange={field.onChange}
-                editor={barcodeDescriptionEditor}
-                className=" h-28 rounded-md border overflow-auto"
+                scope={
+                  ProductHotKeyScope.ProductAddSheetBarcodeDescriptionField
+                }
               />
             </Form.Control>
             <Form.Message className="text-destructive" />
@@ -105,8 +85,8 @@ export const ProductAddMoreFields = ({
               <Form.Label>BRAND</Form.Label>
               <Form.Control>
                 <BrandField
-                  values={field.value || []}
-                  onChange={field.onChange}
+                  value={field.value?.[0] || ''}
+                  onChange={(brandId) => field.onChange([brandId])}
                 />
               </Form.Control>
               <Form.Message className="text-destructive" />
@@ -121,7 +101,10 @@ export const ProductAddMoreFields = ({
             <Form.Item className="flex flex-col">
               <Form.Label>VENDOR</Form.Label>
               <Form.Control>
-                <VendorField {...field} />
+                <SelectCompany
+                  value={field.value}
+                  onValueChange={field.onChange}
+                />
               </Form.Control>
               <Form.Message className="text-destructive" />
             </Form.Item>
@@ -141,10 +124,10 @@ export const ProductAddMoreFields = ({
                   size="sm"
                   variant="secondary"
                   type="button"
-                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                  className="flex flex-col items-center justify-center w-full h-20 border border-dashed text-muted-foreground"
                 >
                   <IconUpload />
-                  <span className="font-medium text-sm">Primary upload</span>
+                  <span className="text-sm font-medium">Primary upload</span>
                 </Upload.Button>
               </Upload.Root>
             </Form.Control>
@@ -165,10 +148,10 @@ export const ProductAddMoreFields = ({
                   size="sm"
                   variant="secondary"
                   type="button"
-                  className="w-full h-20 flex flex-col items-center justify-center border border-dashed border-muted-foreground text-muted-foreground"
+                  className="flex flex-col items-center justify-center w-full h-20 border border-dashed text-muted-foreground"
                 >
                   <IconUpload />
-                  <span className="font-medium text-sm">Secondary upload</span>
+                  <span className="text-sm font-medium">Secondary upload</span>
                 </Upload.Button>
               </Upload.Root>
             </Form.Control>

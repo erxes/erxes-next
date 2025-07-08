@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GET_USER_DETAIL = gql`
   query GET_USER_DETAIL($_id: String) {
-    GET_USER_DETAIL(_id: $_id) {
+    userDetail(_id: $_id) {
       _id
       username
       email
@@ -16,7 +16,13 @@ export const GET_USER_DETAIL = gql`
         firstName
         middleName
         lastName
+        employeeId
+        position
+        operatorPhone
+        birthDate
+        workStartedDate
       }
+      positionIds
       links
       getNotificationByEmail
     }

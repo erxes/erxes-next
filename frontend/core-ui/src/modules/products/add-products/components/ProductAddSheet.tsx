@@ -1,37 +1,64 @@
 import { IconPlus } from '@tabler/icons-react';
 
-import { Button, Sheet } from 'erxes-ui';
+import {
+  Button,
+  Kbd,
+  Sheet,
+  usePreviousHotkeyScope,
+  useScopedHotkeys,
+  useSetHotkeyScope,
+} from 'erxes-ui';
+import { useState } from 'react';
+import { AddProductForm } from './AddProductForm';
+import { ProductHotKeyScope } from '@/products/types/ProductsHotKeyScope';
 
-interface ProductAddSheetProps {
-  children: React.ReactNode;
-  onOpenChange?: (open: boolean) => void;
-  open?: boolean;
-}
-export const ProductAddSheet = ({
-  children,
-  onOpenChange,
-  open,
-}: ProductAddSheetProps) => {
+export const ProductAddSheet = () => {
+  const setHotkeyScope = useSetHotkeyScope();
+  const [open, setOpen] = useState<boolean>(false);
+  const { setHotkeyScopeAndMemorizePreviousScope } = usePreviousHotkeyScope();
+
+  const onOpen = () => {
+    setOpen(true);
+    setHotkeyScopeAndMemorizePreviousScope(ProductHotKeyScope.ProductAddSheet);
+  };
+
+  const onClose = () => {
+    setHotkeyScope(ProductHotKeyScope.ProductsPage);
+    setOpen(false);
+  };
+
+  useScopedHotkeys(`c`, () => onOpen(), ProductHotKeyScope.ProductsPage);
+  useScopedHotkeys(`esc`, () => onClose(), ProductHotKeyScope.ProductAddSheet);
+
   return (
-    <Sheet onOpenChange={onOpenChange} open={open} modal>
+    <Sheet
+      onOpenChange={(open) => (open ? onOpen() : onClose())}
+      open={open}
+      modal
+    >
       <Sheet.Trigger asChild>
         <Button>
           <IconPlus />
           Add product
+          <Kbd>C</Kbd>
         </Button>
       </Sheet.Trigger>
-      <Sheet.Content className="sm:max-w-lg p-0">{children}</Sheet.Content>
+      <Sheet.View
+        className="sm:max-w-lg p-0"
+        onEscapeKeyDown={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <AddProductForm onOpenChange={setOpen} />
+      </Sheet.View>
     </Sheet>
   );
 };
 
 export const ProductAddSheetHeader = () => {
   return (
-    <Sheet.Header className="p-5">
-      <Sheet.Title>Create new product or service</Sheet.Title>
-      <Sheet.Description>
-        Create and configure your products & services
-      </Sheet.Description>
+    <Sheet.Header className="border-b gap-3">
+      <Sheet.Title>Create product</Sheet.Title> <Sheet.Close />
     </Sheet.Header>
   );
 };

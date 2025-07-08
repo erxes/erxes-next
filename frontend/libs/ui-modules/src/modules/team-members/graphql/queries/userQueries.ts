@@ -1,38 +1,74 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_PAGE_INFO,
+  GQL_CURSOR_PARAMS,
+} from 'erxes-ui';
 
 export const GET_USERS = gql`
-  query Users($page: Int, $perPage: Int, $searchValue: String, $ids: [String]) {
+  query Users(
+    $searchValue: String
+    $ids: [String]
+    $excludeIds: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
+  ) {
     users(
-      page: $page
-      perPage: $perPage
       searchValue: $searchValue
       ids: $ids
+      excludeIds: $excludeIds
+      ${GQL_CURSOR_PARAMS}
     ) {
-      _id
-      details {
-        avatar
-        fullName
+      list {
+        _id
+        details {
+          avatar
+          fullName
+        }
       }
+      ${GQL_PAGE_INFO}
     }
-    usersTotalCount(searchValue: $searchValue, ids: $ids)
   }
 `;
 
 export const GET_USERS_GROUP = gql`
-  query usersGroups($page: Int, $perPage: Int) {
-    usersGroups(page: $page, perPage: $perPage) {
-      _id
-      name
-      description
-      members {
+  query usersGroups($searchValue: String, $orderBy: JSON, ${GQL_CURSOR_PARAM_DEFS}) {
+    usersGroups(searchValue: $searchValue, orderBy: $orderBy,${GQL_CURSOR_PARAMS}) {
+      list {
         _id
-        details {
-          fullName
-          avatar
+        name
+        description
+        members {
+          _id
+          details {
+            fullName
+            avatar
+          }
         }
       }
+      ${GQL_PAGE_INFO}
     }
-    usersGroupsTotalCount
+  }
+`;
+
+export const GET_USER_INLINE_DETAIL = gql`
+  query userDetail($_id: String) {
+    userDetail(_id: $_id) {
+      _id
+      username
+      email
+      status
+      details {
+        avatar
+        fullName
+        shortName
+        position
+        workStartedDate
+        firstName
+        middleName
+        lastName
+      }
+      employeeId
+    }
   }
 `;
 

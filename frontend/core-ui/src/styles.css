@@ -16,6 +16,9 @@
     --accent: 240 3% 96%;
     --accent-foreground: 240 3% 66%;
     --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --warning: 25 80% 63%;
     --scroll: 240 5% 83%;
     --border: 240 6% 90%; /* gray/3 */
     --input: 240 6% 90%; /* gray/3 */
@@ -23,6 +26,8 @@
     --radius: 0.5rem;
     --sidebar-background: 0 0% 98%; /* gray/1 */
     --shadow: 0, 0%, 0%, 0.05;
+    --baby-blue: 226, 100%, 94%; /* blue/3 */
+    --spacing: 0.25rem;
   }
   .dark {
     --background: 0 0% 9%; /* primary/white */
@@ -34,6 +39,10 @@
     --muted-foreground: 0 2% 64%; /* grey/6 */
     --accent: 240 3% 13%; /* grey/2 */
     --accent-foreground: 240 3% 43%; /* grey/5 */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --warning: 25 80% 63%;
     --scroll: 240 5% 26%; /* grey/4 */
     --border: 240 6% 19%; /* gray/3 */
     --input: 240 6% 19%; /* gray/3 */
@@ -41,6 +50,7 @@
     --radius: 0.5rem;
     --sidebar-background: 0 0% 11%; /* gray/1 */
     --shadow: 0, 0%, 100%, 0.05;
+    --baby-blue: 226, 100%, 94%; /* blue/3 */
   }
 }
 
@@ -89,5 +99,8 @@
     /* Custom scrollbar for IE, Edge and Firefox */
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .block-child > * {
+    @apply block !important;
   }
 }

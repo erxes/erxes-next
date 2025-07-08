@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const conformityQueryFields = `
   conformityMainType: String
   conformityMainTypeId: String
@@ -5,11 +7,12 @@ export const conformityQueryFields = `
   conformityIsRelated: Boolean
   conformityIsSaved: Boolean
 `;
+
 export const types = `
-  type Company {
+  type Company @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id:String
     createdAt: Date
-    modifiedAt: Date
+    updatedAt: Date
     avatar: String
 
     size: Int
@@ -28,7 +31,7 @@ export const types = `
     primaryPhone: String
     primaryAddress: JSON
     addresses: [JSON]
-
+    status: String
     businessType: String
     description: String
     isSubscribed: String
@@ -47,21 +50,22 @@ export const types = `
     code: String
     location: String
     score: Float
+
+    cursor: String
   }
 
   type CompaniesListResponse {
     list: [Company],
-    totalCount: Float,
+    pageInfo: PageInfo
+    totalCount: Int,
   }
 `;
 
 const queryParams = `
-  page: Int
-  perPage: Int
   segment: String
-  tag: String
-  tags: [String]
-  excludeTags: [String]
+
+  tagIds: [String]
+  excludeTagIds: [String]
   tagWithRelated: Boolean
   ids: [String]
   excludeIds: Boolean
@@ -70,15 +74,17 @@ const queryParams = `
   autoCompletionType: String
   sortField: String
   sortDirection: Int
-  brand: String
   dateFilters: String
   segmentData: String
+
+  status: CONTACT_STATUS
   ${conformityQueryFields}
+  ${GQL_CURSOR_PARAM_DEFS}
 `;
 
 export const queries = `
-  companiesMain(${queryParams}): CompaniesListResponse
-  companies(${queryParams}): [Company]
+  companies(${queryParams}): CompaniesListResponse
+  companyDetail(_id: String!): Company
 `;
 
 const mutationParams = `

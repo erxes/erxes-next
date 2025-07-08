@@ -1,45 +1,82 @@
-import { useQuery, OperationVariables } from '@apollo/client';
+import {
+  EnumCursorDirection,
+  ICursorListResponse,
+  mergeCursorData,
+  validateFetchMore,
+} from 'erxes-ui';
 import { GET_ASSIGNED_MEMBER, GET_USERS } from '../graphql/queries/userQueries';
+import { OperationVariables, QueryHookOptions, useQuery } from '@apollo/client';
 
-export const useUsers = (options?: OperationVariables) => {
-  const USERS_PER_PAGE = 30;
-  const { data, loading, fetchMore, error } = useQuery(GET_USERS, {
+import { IUser } from '../types/TeamMembers';
+
+const USERS_LIMIT = 30;
+
+export const useUsers = (
+  options?: QueryHookOptions<ICursorListResponse<IUser>>,
+) => {
+  const { data, loading, fetchMore, error } = useQuery<
+    ICursorListResponse<IUser>
+  >(GET_USERS, {
     ...options,
     variables: {
-      perPage: USERS_PER_PAGE,
+      limit: USERS_LIMIT,
       ...options?.variables,
     },
   });
-  const users = data?.users || [];
-  const totalCount = data?.usersTotalCount;
+
+  const { list = [], totalCount = 0, pageInfo } = data?.users || {};
 
   const handleFetchMore = () => {
-    if (totalCount <= users?.length) return;
+    if (
+      !validateFetchMore({ direction: EnumCursorDirection.FORWARD, pageInfo })
+    )
+      return;
+
     fetchMore({
       variables: {
-        ...options?.variables,
-        page: Math.ceil((users?.length || 1) / USERS_PER_PAGE) + 1,
-        perPage: USERS_PER_PAGE,
+        direction: EnumCursorDirection.FORWARD,
+        cursor: pageInfo?.endCursor,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
+
         return Object.assign({}, prev, {
-          users: [...(prev.users || []), ...fetchMoreResult.users],
+          users: mergeCursorData({
+            direction: EnumCursorDirection.FORWARD,
+            fetchMoreResult: fetchMoreResult.users,
+            prevResult: prev.users,
+          }),
         });
       },
     });
   };
 
   return {
-    users,
+    users: list,
     loading,
     handleFetchMore,
     error,
     totalCount,
+    pageInfo,
   };
 };
 
 export const useAssignedMember = (options?: OperationVariables) => {
   const { data, loading, error } = useQuery(GET_ASSIGNED_MEMBER, options);
   return { details: data?.userDetail?.details, loading, error };
+};
+
+export interface IUserInlineData {
+  userDetail: IUser;
+}
+
+export const useMemberInline = (
+  options?: QueryHookOptions<IUserInlineData>,
+) => {
+  const { data, loading, error } = useQuery<IUserInlineData>(
+    GET_ASSIGNED_MEMBER,
+    options,
+  );
+  const { userDetail } = data || {};
+  return { userDetail, loading, error };
 };

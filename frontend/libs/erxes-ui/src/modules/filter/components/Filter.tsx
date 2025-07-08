@@ -7,10 +7,17 @@ import {
   Command,
   Dialog,
   Input,
+  Kbd,
   Popover,
+  Tooltip,
 } from 'erxes-ui/components';
-import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react';
-import { useQueryState, useRemoveQueryStateByKey } from 'erxes-ui/hooks';
+import {
+  IconFilter2,
+  IconChevronRight,
+  IconSearch,
+  IconX,
+} from '@tabler/icons-react';
+import { useRemoveQueryStateByKey } from 'erxes-ui/hooks';
 import { Except } from 'type-fest';
 import { cn } from 'erxes-ui/lib';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
@@ -21,15 +28,20 @@ import {
   openPopoverState,
 } from '../states/filterStates';
 import { FilterDialogDateView } from '../date-filter/components/DialogDateView';
-import { getDisplayValue } from '../date-filter/utlis/getDisplayValue';
+import { getDisplayValue } from '../date-filter/utils/getDisplayValue';
 import { DateFilterCommand } from '../date-filter/components/DateFilterCommand';
+import { usePreviousHotkeyScope } from 'erxes-ui/modules/hotkey/hooks/usePreviousHotkeyScope';
+import { useScopedHotkeys } from 'erxes-ui/modules/hotkey/hooks/useScopedHotkeys';
+import { useFilterQueryState } from '../hooks/useFilterQueryState';
 
 const FilterProvider = ({
   children,
   id,
+  sessionKey,
 }: {
   children: React.ReactNode;
   id: string;
+  sessionKey?: string;
 }) => {
   const setOpen = useSetAtom(openPopoverState(id));
   const setView = useSetAtom(filterPopoverViewState(id));
@@ -47,6 +59,7 @@ const FilterProvider = ({
     <FilterContext.Provider
       value={{
         id,
+        sessionKey,
         resetFilterState,
         setOpen,
         setView,
@@ -61,24 +74,56 @@ const FilterProvider = ({
 
 const FilterTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentPropsWithoutRef<typeof Button>
->((props, ref) => {
+  React.ComponentPropsWithoutRef<typeof Button> & {
+    isFiltered?: boolean;
+  }
+>(({ isFiltered, ...props }, ref) => {
   return (
-    <Popover.Trigger asChild>
-      <Button ref={ref} variant="outline" {...props}>
-        <IconAdjustmentsHorizontal className="w-4 h-4" />
-        Filter
-      </Button>
-    </Popover.Trigger>
+    <Tooltip.Provider>
+      <Tooltip delayDuration={0}>
+        <Tooltip.Trigger asChild>
+          <Popover.Trigger asChild>
+            <Button
+              ref={ref}
+              variant="ghost"
+              size={isFiltered ? 'icon' : 'default'}
+              {...props}
+            >
+              <IconFilter2 className="w-4 h-4" />
+              {!isFiltered && 'Filter'}
+            </Button>
+          </Popover.Trigger>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Filter</Tooltip.Content>
+      </Tooltip>
+    </Tooltip.Provider>
   );
 });
 
-const FilterPopover = (
-  props: React.ComponentPropsWithoutRef<typeof Popover>,
-) => {
+const FilterPopover = ({
+  scope,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Popover> & {
+  scope: string;
+}) => {
   const { id } = useFilterContext();
   const [open, setOpen] = useAtom(openPopoverState(id));
   const setView = useSetAtom(filterPopoverViewState(id));
+  const {
+    setHotkeyScopeAndMemorizePreviousScope,
+    goBackToPreviousHotkeyScope,
+  } = usePreviousHotkeyScope();
+
+  useScopedHotkeys(`f`, () => setOpen(true), scope);
+
+  useEffect(() => {
+    if (open) {
+      setHotkeyScopeAndMemorizePreviousScope(scope + '.FilterPopover');
+    } else {
+      goBackToPreviousHotkeyScope();
+    }
+  }, [open]);
+
   return (
     <Popover
       open={open}
@@ -124,7 +169,30 @@ const FilterItem = React.forwardRef<
       {...props}
     >
       {children}
+      <IconChevronRight className="w-4 h-4 ml-auto" />
     </Command.Item>
+  );
+});
+
+const FilterCommandItem = React.forwardRef<
+  React.ComponentRef<typeof Command.Item>,
+  React.ComponentPropsWithoutRef<typeof Command.Item>
+>(({ className, onSelect, ...props }, ref) => {
+  const { id } = useFilterContext();
+  const setOpen = useSetAtom(openPopoverState(id));
+
+  const handleSelect = (value: string) => {
+    setOpen(false);
+    onSelect?.(value);
+  };
+
+  return (
+    <Command.Item
+      ref={ref}
+      className={cn('h-8', className)}
+      onSelect={(value) => handleSelect(value)}
+      {...props}
+    />
   );
 });
 
@@ -160,10 +228,7 @@ const FilterBar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn(
-        'flex-none bg-sidebar p-3 border-b flex gap-3 items-center',
-        className,
-      )}
+      className={cn('flex flex-wrap items-center gap-2 flex-1', className)}
       {...props}
     />
   );
@@ -193,7 +258,7 @@ const FilterBarName = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'bg-background rounded-l [&>svg]:size-4 flex items-center px-2 gap-2',
+        'bg-background rounded-l [&>svg]:size-4 flex items-center px-2 gap-2 w-fit',
         className,
       )}
       {...props}
@@ -214,7 +279,11 @@ const FilterBarButton = React.forwardRef<
     <Button
       ref={ref}
       variant="ghost"
-      className={cn('rounded-none bg-background focus-visible:z-10', className)}
+      className={cn(
+        'rounded-none focus-visible:z-10 max-w-72 transition-[color,box-shadow] focus-visible:shadow-focus outline-none focus-visible:outline-none focus-visible:outline-offset-0 focus-visible:outline-transparent',
+        !props.variant && 'bg-background',
+        className,
+      )}
       onClick={() => {
         if (inDialog) {
           setDialogView(filterKey ?? 'root');
@@ -233,13 +302,16 @@ const FilterBarCloseButton = React.forwardRef<
   }
 >(({ className, filterKey, ...props }, ref) => {
   const removeQuery = useRemoveQueryStateByKey();
-
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      className={cn('rounded-l-none bg-background', className)}
+      className={cn(
+        'rounded-l-none',
+        !props.variant && 'bg-background',
+        className,
+      )}
       onClick={() => removeQuery(filterKey ?? '')}
       {...props}
     >
@@ -249,10 +321,13 @@ const FilterBarCloseButton = React.forwardRef<
 });
 
 const FilterDialogStringView = ({ filterKey }: { filterKey: string }) => {
-  const { id, setDialogView, setOpenDialog } = useFilterContext();
+  const { id, setDialogView, setOpenDialog, sessionKey } = useFilterContext();
   const dialogView = useAtomValue(filterDialogViewState(id));
   const [dialogSearch, setDialogSearch] = useState('');
-  const [query, setQuery] = useQueryState<string>(dialogView);
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
 
   useEffect(() => {
     if (query) {
@@ -300,7 +375,7 @@ const FilterDialogStringView = ({ filterKey }: { filterKey: string }) => {
 const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
   const { resetFilterState } = useFilterContext();
 
-  const [query, setQuery] = useQueryState<string>(filterKey);
+  const [query, setQuery] = useFilterQueryState<string>(filterKey, filterKey);
 
   return (
     <DateFilterCommand
@@ -315,13 +390,28 @@ const FilterPopoverDateView = ({ filterKey }: { filterKey: string }) => {
   );
 };
 
-export const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
-  const [query, setQuery] = useQueryState<string>(filterKey);
+const FilterBarDate = React.forwardRef<
+  React.ComponentRef<typeof Button>,
+  React.ComponentPropsWithoutRef<typeof Button> & {
+    filterKey: string;
+  }
+>(({ filterKey, className, ...props }, ref) => {
+  const { sessionKey } = useFilterContext();
+  const [query, setQuery] = useFilterQueryState<string>(
+    filterKey,
+    sessionKey ?? '',
+  );
   const [open, setOpen] = useState(false);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
-        <Button variant="ghost" className="rounded-none h-7 bg-background">
+        <Button
+          ref={ref}
+          variant="ghost"
+          className={cn('rounded-none h-7 bg-background', className)}
+          {...props}
+        >
           {getDisplayValue(query ?? '')}
         </Button>
       </Popover.Trigger>
@@ -337,13 +427,62 @@ export const FilterBarDate = ({ filterKey }: { filterKey: string }) => {
       </Combobox.Content>
     </Popover>
   );
+});
+
+const FilterCommandInput = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentPropsWithoutRef<typeof Command.Input>
+>(({ className, ...props }, ref) => {
+  return (
+    <div className="relative">
+      <Command.Input ref={ref} className={cn('pr-8', className)} {...props} />
+      <Kbd
+        className="absolute right-2 top-1/2 -translate-y-1/2"
+        variant="foreground"
+      >
+        F
+      </Kbd>
+    </div>
+  );
+});
+
+const FilterSearchValueTrigger = () => (
+  <Filter.Item value="searchValue" inDialog>
+    <IconSearch />
+    Search
+  </Filter.Item>
+);
+const FilterSearchValueBarItem = () => {
+  const [searchValue] = useFilterQueryState<string>('searchValue');
+
+  if (!searchValue) {
+    return null;
+  }
+
+  return (
+    <Filter.BarItem>
+      <Filter.BarItem>
+        <Filter.BarName>
+          <IconSearch />
+          Search
+        </Filter.BarName>
+        <Filter.BarButton filterKey="searchValue" inDialog>
+          {searchValue}
+        </Filter.BarButton>
+        <Filter.BarClose filterKey="searchValue" />
+      </Filter.BarItem>
+    </Filter.BarItem>
+  );
 };
 
 export const Filter = Object.assign(FilterProvider, {
   Trigger: FilterTrigger,
   Popover: FilterPopover,
   Item: FilterItem,
+  CommandItem: FilterCommandItem,
   View: FilterView,
+  SearchValueTrigger: FilterSearchValueTrigger,
+  SearchValueBarItem: FilterSearchValueBarItem,
   Dialog: FilterDialog,
   DialogStringView: FilterDialogStringView,
   DialogDateView: FilterDialogDateView,
@@ -354,4 +493,5 @@ export const Filter = Object.assign(FilterProvider, {
   BarButton: FilterBarButton,
   BarClose: FilterBarCloseButton,
   Date: FilterBarDate,
+  CommandInput: FilterCommandInput,
 });

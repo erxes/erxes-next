@@ -1,31 +1,59 @@
 import { Route } from 'react-router';
-import { getInstance } from '@module-federation/enhanced/runtime';
 
-import { PluginMainPage } from '~/plugins/components/PluginMainPage';
-import { PluginSettingsPage } from '~/plugins/components/PluginSettingsPage';
+import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
+import { pluginsConfigState } from 'ui-modules';
+import { useAtom } from 'jotai';
 
 export const getPluginsRoutes = () => {
-  const instance = getInstance();
-  const remotes = instance?.options.remotes ?? [];
+  const [pluginsMetaData] = useAtom(pluginsConfigState);
+  const plugins = Object.values(pluginsMetaData || {});
 
-  return remotes.map((remote) => (
+  const allModules = plugins.flatMap((plugin) =>
+    plugin.modules.map((module) => ({
+      ...module,
+      pluginName: plugin.name,
+    })),
+  );
+
+  return allModules.map((module) => (
     <Route
-      key={remote.name}
-      path={`/${remote.name.replace('_ui', '')}/*`}
-      element={<PluginMainPage pluginName={remote.name} />}
+      key={module.name}
+      path={`/${module.path}/*`}
+      element={
+        <RenderPluginsComponent
+          moduleName={module.name}
+          pluginName={`${module.pluginName}_ui`}
+          remoteModuleName={module.name}
+        />
+      }
     />
   ));
 };
 
 export const getPluginsSettingsRoutes = () => {
-  const instance = getInstance();
-  const remotes = instance?.options.remotes ?? [];
+  const [pluginsMetaData] = useAtom(pluginsConfigState);
+  const plugins = Object.values(pluginsMetaData || {});
 
-  return remotes.map((plugin) => (
+  const settingsModules = plugins.flatMap((plugin) =>
+    plugin.modules
+      .filter((module) => module.hasSettings)
+      .map((module) => ({
+        ...module,
+        pluginName: plugin.name,
+      })),
+  );
+
+  return settingsModules.map((module) => (
     <Route
-      key={plugin.name}
-      path={`/${plugin.name.replace('_ui', '')}/*`}
-      element={<PluginSettingsPage pluginName={plugin.name} />}
+      key={module.name}
+      path={`/${module.path}/*`}
+      element={
+        <RenderPluginsComponent
+          moduleName={module.name}
+          pluginName={`${module.pluginName}_ui`}
+          remoteModuleName={`${module.name}Settings`}
+        />
+      }
     />
   ));
 };

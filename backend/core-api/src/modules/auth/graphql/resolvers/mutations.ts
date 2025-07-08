@@ -1,5 +1,5 @@
-import { authCookieOptions, getEnv } from 'erxes-api-utils';
-import { IContext } from '../../../../connectionResolvers';
+import { authCookieOptions, getEnv, logHandler } from 'erxes-api-shared/utils';
+import { IContext } from '~/connectionResolvers';
 
 type LoginParams = {
   email: string;
@@ -14,23 +14,45 @@ export const authMutations = {
   async login(
     _parent: undefined,
     args: LoginParams,
-    { res, requestInfo, models, subdomain }: IContext,
+    { req, res, requestInfo, models, subdomain }: IContext,
   ) {
-    const response = await models.Users.login(args);
+    return await logHandler(
+      async () => {
+        const response = await models.Users.login(args);
 
-    const { token } = response;
+        const { token } = response;
 
-    const sameSite = getEnv({ name: 'SAME_SITE' });
-    const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
+        const sameSite = getEnv({ name: 'SAME_SITE' });
+        const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
-    const cookieOptions: any = { secure: requestInfo.secure };
-    if (sameSite && sameSite === 'none' && res.req.headers.origin !== DOMAIN) {
-      cookieOptions.sameSite = sameSite;
-    }
+        const cookieOptions: any = { secure: requestInfo.secure };
+        if (
+          sameSite &&
+          sameSite === 'none' &&
+          res.req.headers.origin !== DOMAIN
+        ) {
+          cookieOptions.sameSite = sameSite;
+        }
 
-    res.cookie('auth-token', token, authCookieOptions(cookieOptions));
+        res.cookie('auth-token', token, authCookieOptions(cookieOptions));
 
-    return 'loggedIn';
+        return 'loggedIn';
+      },
+      {
+        subdomain,
+        source: 'auth',
+        action: 'login',
+        userId: (await models.Users.findOne({ email: args.email }).lean())?._id,
+        payload: {
+          headers: req.headers,
+          email: args?.email,
+          method: 'email/password',
+        },
+      },
+      null,
+      null,
+      true,
+    );
   },
   /*
    * logout
@@ -38,14 +60,25 @@ export const authMutations = {
   async logout(
     _parent: undefined,
     _args: undefined,
-    { res, user, requestInfo, models }: IContext,
+    { req, res, user, requestInfo, models, subdomain }: IContext,
   ) {
-    const logout = await models.Users.logout(
-      user,
-      requestInfo.cookies['auth-token'],
+    await logHandler(
+      async () => {
+        const logout = await models.Users.logout(
+          user,
+          requestInfo.cookies['auth-token'],
+        );
+        res.clearCookie('auth-token');
+        return logout;
+      },
+      {
+        subdomain,
+        source: 'auth',
+        action: 'logout',
+        userId: user._id,
+        payload: { headers: req.headers, email: user?.email },
+      },
     );
-    res.clearCookie('auth-token');
-    return logout;
   },
 
   /*
@@ -62,6 +95,8 @@ export const authMutations = {
     const DOMAIN = getEnv({ name: 'DOMAIN', subdomain });
 
     const link = `${DOMAIN}/reset-password?token=${token}`;
+
+    console.log(subdomain, models, DOMAIN, link);
 
     // await utils.sendEmail(
     //   subdomain,
@@ -92,7 +127,11 @@ export const authMutations = {
     return models.Users.resetPassword(args);
   },
 
-  async loginWithGoogle(_root, _params, { models, subdomain }: IContext) {
+  async loginWithGoogle(
+    _parent: undefined,
+    _params: undefined,
+    { models, subdomain }: IContext,
+  ) {
     try {
       return null;
     } catch (e) {

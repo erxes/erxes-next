@@ -1,5 +1,5 @@
 export const types = `
-  type ProductCategory {
+  type ProductCategory @key(fields: "_id") @cacheControl(maxAge: 3) {
     _id: String!
     name: String
     description: String
@@ -26,7 +26,7 @@ const queryParams = `
   searchValue: String, 
   status: String, 
   meta: String, 
-  brand: String
+  brandIds: [String]
 `;
 
 export const queries = `

@@ -6,23 +6,24 @@ import { z } from 'zod';
 export const profileValidationSchema = z
   .object({
     details: z.object({
-      avatar: z.any(),
+      avatar: z.string().optional().nullable(),
       firstName: z.string(),
       lastName: z.string(),
-      middleName: z.string(),
-      shortName: z.string(),
-      operatorPhone: z.string(),
-      birthDate: z.date().or(z.string()),
-      workStartedDate: z.date().or(z.string()),
-      position: z.string(),
-      location: z.string(),
+      middleName: z.string().optional(),
+      shortName: z.string().optional(),
+      operatorPhone: z.string().optional(),
+      birthDate: z.date().or(z.string()).optional(),
+      workStartedDate: z.date().or(z.string()).optional(),
+      position: z.string().optional(),
+      location: z.string().optional(),
+      employeeId: z.string().optional().nullable(),
     }),
     links: z
       .object({
         facebook: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?facebook\.com\/[A-Za-z0-9._-]+$/, {
+          .regex(/^https:\/\/(www\.)?facebook\.com\/((profile\.php\?id=\d+)|([A-Za-z0-9._-]+))\/?$/, {
             message: 'Invalid Facebook URL',
           })
           .optional()
@@ -30,8 +31,8 @@ export const profileValidationSchema = z
         twitter: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?twitter\.com\/[A-Za-z0-9._-]+$/, {
-            message: 'Invalid Twitter URL',
+          .regex(/^https:\/\/(www\.)?(twitter\.com|x\.com)\/[A-Za-z0-9._-]+\/?$/, {
+            message: 'Invalid Twitter/X URL',
           })
           .optional()
           .or(z.literal('')),
@@ -43,7 +44,7 @@ export const profileValidationSchema = z
         discord: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?discord\.(com|gg)\/[A-Za-z0-9]+$/, {
+          .regex(/^https:\/\/(www\.)?discord\.(com|gg)\/[A-Za-z0-9-]+\/?$/, {
             message: 'Invalid Discord URL',
           })
           .optional()
@@ -51,7 +52,7 @@ export const profileValidationSchema = z
         gitHub: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?github\.com\/[A-Za-z0-9._-]+$/, {
+          .regex(/^https:\/\/(www\.)?github\.com\/[A-Za-z0-9._-]+\/?$/, {
             message: 'Invalid GitHub URL',
           })
           .optional()
@@ -59,7 +60,7 @@ export const profileValidationSchema = z
         instagram: z
           .string()
           .url()
-          .regex(/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._-]+$/, {
+          .regex(/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._-]+\/?$/, {
             message: 'Invalid Instagram URL',
           })
           .optional()
@@ -68,8 +69,7 @@ export const profileValidationSchema = z
       .optional(),
     username: z.string(),
     email: z.string().trim().email('Email must be a valid email'),
-    employeeId: z.string(),
-    positionIds: z.array(z.string()),
+    positionIds: z.array(z.string()).optional(),
   })
   .required();
 
@@ -89,6 +89,7 @@ const useProfileForm = () => {
         workStartedDate: undefined,
         position: '',
         location: '',
+        employeeId: '',
       },
       links: {
         facebook: '',
@@ -100,7 +101,6 @@ const useProfileForm = () => {
       },
       username: '',
       email: '',
-      employeeId: '',
       positionIds: [],
     },
     resolver: zodResolver(profileValidationSchema),

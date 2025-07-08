@@ -1,7 +1,7 @@
-import { IContext } from '../../../../../../connectionResolvers';
+import { IContext } from '~/connectionResolvers';
 
-import { IModels } from '../../../../../../connectionResolvers';
-import { IPositionDocument } from '../../../@types/structure';
+import { IModels } from '~/connectionResolvers';
+import { IPositionDocument } from '@/organization/structure/@types/structure';
 
 const getAllChildrenIds = async (models: IModels, parentId: string) => {
   const pipeline = [
@@ -30,7 +30,11 @@ export default {
     return models.Positions.findOne({ _id });
   },
 
-  async users(position: IPositionDocument, _args, { models }: IContext) {
+  async users(
+    position: IPositionDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     const allChildrenIds = await getAllChildrenIds(models, position._id);
 
     return models.Users.findUsers({
@@ -39,19 +43,35 @@ export default {
     });
   },
 
-  async parent(position: IPositionDocument, _args, { models }: IContext) {
+  async parent(
+    position: IPositionDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     return models.Positions.findOne({ _id: position.parentId });
   },
 
-  async children(position: IPositionDocument, _args, { models }: IContext) {
+  async children(
+    position: IPositionDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     return models.Positions.find({ parentId: position._id });
   },
 
-  async supervisor(position: IPositionDocument, _args, { models }: IContext) {
+  async supervisor(
+    position: IPositionDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     return models.Users.findOne({ _id: position.supervisorId, isActive: true });
   },
 
-  async userIds(position: IPositionDocument, _args, { models }: IContext) {
+  async userIds(
+    position: IPositionDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     const allChildrenIds = await getAllChildrenIds(models, position._id);
 
     const positionedUsers = await models.Users.findUsers({
@@ -62,12 +82,16 @@ export default {
     const userIds = positionedUsers.map((user) => user._id);
     return userIds;
   },
-  async userCount(position: IPositionDocument, _args, { models }: IContext) {
+  async userCount(
+    position: IPositionDocument,
+    _args: undefined,
+    { models }: IContext,
+  ) {
     const allChildrenIds = await getAllChildrenIds(models, position._id);
 
-    return await models.Users.find({
+    return await models.Users.countDocuments({
       positionIds: { $in: [position._id, ...allChildrenIds] },
       isActive: true,
-    }).countDocuments();
+    });
   },
 };

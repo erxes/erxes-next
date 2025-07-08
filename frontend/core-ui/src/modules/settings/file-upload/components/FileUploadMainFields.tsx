@@ -6,24 +6,23 @@ import { UploadConfigFormT } from '@/settings/file-upload/types';
 
 export function FileUploadMainFields({
   form,
-  modifiedArray,
+  fileMimeTypesOptions,
 }: {
   form: UseFormReturn<UploadConfigFormT>;
-  modifiedArray: any[];
+  fileMimeTypesOptions: any[];
 }) {
   return (
     <div className="grid grid-cols-1 gap-4">
       <Form.Item className="w-full">
         <Form.Field
           name="UPLOAD_FILE_TYPES"
-          key={'UPLOAD_FILE_TYPES'}
           control={form.control}
           render={({ field }: { field: any }) => (
             <div className="space-y-2">
               <Form.Label>Upload File Types</Form.Label>
               <MultipleSelector
                 {...field}
-                options={modifiedArray}
+                options={fileMimeTypesOptions}
                 placeholder="Select option"
                 hideClearAllButton
                 hidePlaceholderWhenSelected
@@ -39,14 +38,13 @@ export function FileUploadMainFields({
       <Form.Item>
         <Form.Field
           name="WIDGETS_UPLOAD_FILE_TYPES"
-          key={'WIDGETS_UPLOAD_FILE_TYPES'}
           control={form.control}
           render={({ field }: { field: any }) => (
             <div className="space-y-2">
               <Form.Label>Upload File Types of Widget</Form.Label>
               <MultipleSelector
                 {...field}
-                options={modifiedArray}
+                options={fileMimeTypesOptions}
                 placeholder="Select option"
                 hideClearAllButton
                 hidePlaceholderWhenSelected
@@ -62,7 +60,6 @@ export function FileUploadMainFields({
       <Form.Field
         control={form.control}
         name="FILE_SYSTEM_PUBLIC"
-        key="FILE_SYSTEM_PUBLIC"
         render={({ field }: { field: any }) => (
           <Form.Item>
             <Form.Label>Bucket file system type</Form.Label>

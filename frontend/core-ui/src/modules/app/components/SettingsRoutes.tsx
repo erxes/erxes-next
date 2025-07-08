@@ -1,13 +1,14 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 
 import {
   SettingsPath,
   SettingsWorkspacePath,
 } from '@/types/paths/SettingsPath';
 import { SettingsExperiencePage } from '~/pages/settings/account/ExperiencePage';
-import { getPluginsSettingsRoutes } from '../hooks/usePluginsRouter';
+import { getPluginsSettingsRoutes } from '@/app/hooks/usePluginsRouter';
 import { Skeleton } from 'erxes-ui';
+import { SettingsPageEffect } from '@/settings/components/SettingsPageEffect';
 
 const SettingsProfile = lazy(() =>
   import('~/pages/settings/account/ProfilePage').then((module) => ({
@@ -35,11 +36,49 @@ const TeamMemberSettings = lazy(() =>
     default: module.TeamMemberPage,
   })),
 );
+const StructureSettings = lazy(() =>
+  import('~/pages/settings/workspace/structure/StructureSettingsPage').then(
+    (module) => ({
+      default: module.StructureSettingsPage,
+    }),
+  ),
+);
+
+const TagsSettings = lazy(() =>
+  import('~/pages/settings/workspace/tags/TagsSettingPage').then((module) => ({
+    default: module.TagsSettingPage,
+  })),
+);
+
+const ProductsSettingsRoutes = lazy(() =>
+  import('@/products/settings/components/ProductSettingsRoutes').then(
+    (module) => ({
+      default: module.ProductsSettingRoutes,
+    }),
+  ),
+);
+const BrandsSettingsRoutes = lazy(() =>
+  import('~/pages/settings/workspace/BrandsPage').then((module) => ({
+    default: module.BrandsPage,
+  })),
+);
+
+const AutomationSettingsRoutes = lazy(() =>
+  import(
+    '@/automations/components/settings/components/AutomationSettingsRoutes'
+  ).then((module) => ({
+    default: module.AutomationSettingsRoutes,
+  })),
+);
 
 export function SettingsRoutes() {
   return (
     <Suspense fallback={<Skeleton />}>
       <Routes>
+        <Route
+          path="/"
+          element={<Navigate to={`${SettingsPath.Profile}`} replace />}
+        />
         <Route path={SettingsPath.Profile} element={<SettingsProfile />} />
         <Route
           path={SettingsPath.Experience}
@@ -61,9 +100,26 @@ export function SettingsRoutes() {
           path={SettingsWorkspacePath.TeamMember}
           element={<TeamMemberSettings />}
         />
-
+        <Route
+          path={SettingsWorkspacePath.StructureCatchAll}
+          element={<StructureSettings />}
+        />
+        <Route path={SettingsWorkspacePath.Tags} element={<TagsSettings />} />
+        <Route
+          path={SettingsWorkspacePath.Brands}
+          element={<BrandsSettingsRoutes />}
+        />
+        <Route
+          path={SettingsWorkspacePath.ProductsCatchAll}
+          element={<ProductsSettingsRoutes />}
+        />
+        <Route
+          path={SettingsWorkspacePath.AutomationsCatchAll}
+          element={<AutomationSettingsRoutes />}
+        />
         {getPluginsSettingsRoutes()}
       </Routes>
+      <SettingsPageEffect />
     </Suspense>
   );
 }

@@ -1,4 +1,9 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAMS,
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
 
 export const GET_BRANCHES = gql`
   query branches(
@@ -10,7 +15,7 @@ export const GET_BRANCHES = gql`
     $status: String
     $withoutUserFilter: Boolean
   ) {
-    branches(
+    branchesMain(
       ids: $ids
       excludeIds: $excludeIds
       perPage: $perPage
@@ -23,6 +28,7 @@ export const GET_BRANCHES = gql`
       code
       title
       parentId
+      order
     }
   }
 `;
@@ -34,6 +40,36 @@ export const GET_BRANCH_BY_ID = gql`
       title
       code
       order
+    }
+  }
+`;
+
+export const GET_BRANCHES_MAIN = gql`
+  query BranchesMain(
+    $ids: [String]
+    $excludeIds: Boolean
+    $searchValue: String
+    $status: String
+    $withoutUserFilter: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
+  ) {
+    branchesMain(
+      ids: $ids
+      excludeIds: $excludeIds
+      ${GQL_CURSOR_PARAMS}
+      searchValue: $searchValue
+      status: $status
+      withoutUserFilter: $withoutUserFilter
+    ) {
+      list {
+        _id
+        title
+        code
+        order
+        userCount
+      }
+      totalCount
+      ${GQL_PAGE_INFO}
     }
   }
 `;

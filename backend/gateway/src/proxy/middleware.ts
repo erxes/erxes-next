@@ -2,8 +2,8 @@ import { Express } from 'express';
 
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
 
-import { apolloRouterPort } from '../apollo-router';
-import { ErxesProxyTarget } from '../proxy/targets';
+import { apolloRouterPort } from '~/apollo-router';
+import { ErxesProxyTarget } from '~/proxy/targets';
 
 const { NODE_ENV } = process.env;
 
@@ -17,7 +17,10 @@ const forbid = (_req, res) => {
   res.status(403).send();
 };
 
-export function applyProxiesToGraphql(app: Express) {
+export async function applyProxiesCoreless(
+  app: Express,
+  // targets: ErxesProxyTarget[],
+) {
   app.use(
     '^/graphql',
     createProxyMiddleware({
@@ -37,7 +40,7 @@ export function applyProxyToCore(app: Express, targets: ErxesProxyTarget[]) {
     throw new Error('core service not found');
   }
 
-  app.use('/rpc', forbid);
+  app.use('/trpc', forbid);
   app.use(
     '/',
     createProxyMiddleware({

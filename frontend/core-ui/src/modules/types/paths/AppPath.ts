@@ -9,10 +9,18 @@ export enum AppPath {
   Index = '/',
   Settings = 'settings',
   SettingsCatchAll = `/${Settings}/*`,
+
   Products = 'products',
   ProductsCatchAll = `/${Products}/*`,
+
   Contacts = 'contacts',
   ContactsCatchAll = `/${Contacts}/*`,
+  Segments = 'segments',
+  SegmentsCatchAll = `/${Segments}/*`,
+  Automations = 'automations',
+  AutoamtionsCatchAll = `/${Automations}/*`,
+  Logs = 'logs',
+  LogsCatchAll = `/${Logs}/*`,
   Marketplace = 'marketplace',
   MarketplaceCatchAll = `/${Marketplace}/*`,
 
@@ -20,4 +28,8 @@ export enum AppPath {
 
   NotFoundWildcard = '/*',
   NotFound = '/not-found',
+
+  //dev
+  Components = 'components',
+  ComponentsCatchAll = `/${Components}/*`,
 }

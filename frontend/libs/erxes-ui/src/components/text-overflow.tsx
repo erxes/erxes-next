@@ -11,7 +11,7 @@ export const TextOverflowTooltip = forwardRef<
   HTMLSpanElement,
   TextOverflowTooltipProps
 >(({ value, className }, forwardedRef) => {
-  const innerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLSpanElement>(null);
   const textRef = forwardedRef || innerRef;
   const [isOverflowing, setIsOverflowing] = useState(false);
 
@@ -29,18 +29,20 @@ export const TextOverflowTooltip = forwardRef<
   }, [value, textRef]);
 
   return (
-    <Tooltip>
-      <Tooltip.Trigger asChild>
-        <span ref={textRef} className={cn('truncate w-full', className)}>
-          {value}
-        </span>
-      </Tooltip.Trigger>
-      {isOverflowing && (
-        <Tooltip.Content>
-          <span>{value}</span>
-        </Tooltip.Content>
-      )}
-    </Tooltip>
+    <Tooltip.Provider>
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <span ref={textRef} className={cn('truncate w-full', className)}>
+            {value}
+          </span>
+        </Tooltip.Trigger>
+        {isOverflowing && (
+          <Tooltip.Content>
+            <span>{value}</span>
+          </Tooltip.Content>
+        )}
+      </Tooltip>
+    </Tooltip.Provider>
   );
 });
 

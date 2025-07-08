@@ -53,30 +53,43 @@ const DialogContent = React.forwardRef<
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
+const DialogCombinedHeader = ({
+  title,
+  description,
+  hideClose,
+}: {
+  title: string;
+  description: string;
+  hideClose?: boolean;
+}) => (
+  <Dialog.Header>
+    <Dialog.Title>{title}</Dialog.Title>
+    <Dialog.Description className="sr-only">{description}</Dialog.Description>
+    {!hideClose && (
+      <Dialog.Close asChild>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="absolute right-4 top-3"
+        >
+          <IconX />
+        </Button>
+      </Dialog.Close>
+    )}
+  </Dialog.Header>
+);
+
 const DialogContentCombined = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-    title: string;
-    description: string;
-    hideClose?: boolean;
-  }
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
+    React.ComponentPropsWithoutRef<typeof DialogCombinedHeader>
 >(({ className, children, title, description, hideClose, ...props }, ref) => (
   <DialogContent ref={ref} className={cn(className)} {...props}>
-    <Dialog.Header>
-      <Dialog.Title>{title}</Dialog.Title>
-      <Dialog.Description className="sr-only">{description}</Dialog.Description>
-      {!hideClose && (
-        <Dialog.Close asChild>
-          <Button
-            variant="secondary"
-            size="icon"
-            className="absolute right-4 top-3"
-          >
-            <IconX />
-          </Button>
-        </Dialog.Close>
-      )}
-    </Dialog.Header>
+    <DialogCombinedHeader
+      title={title}
+      description={description}
+      hideClose={hideClose}
+    />
     {children}
   </DialogContent>
 ));
@@ -103,7 +116,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
+      'flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:space-x-2',
       className,
     )}
     {...props}
@@ -132,7 +145,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('text-sm text-accent-foreground', className)}
     {...props}
   />
 ));
@@ -144,6 +157,7 @@ export const Dialog = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogTrigger,
   Close: DialogClose,
   Content: DialogContent,
+  HeaderCombined: DialogCombinedHeader,
   ContentCombined: DialogContentCombined,
   Header: DialogHeader,
   Footer: DialogFooter,

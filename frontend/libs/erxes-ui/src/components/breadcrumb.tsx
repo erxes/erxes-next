@@ -4,6 +4,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { IconChevronRight, IconDots } from '@tabler/icons-react';
 
 import { cn } from '../lib/utils';
+import { Separator } from './separator';
 
 const BreadcrumbRoot = React.forwardRef<
   HTMLElement,
@@ -20,7 +21,7 @@ const BreadcrumbList = React.forwardRef<
   <ol
     ref={ref}
     className={cn(
-      'flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5',
+      'flex flex-wrap items-center break-words text-sm gap-1',
       className,
     )}
     {...props}
@@ -81,10 +82,10 @@ const BreadcrumbSeparator = ({
   <li
     role="presentation"
     aria-hidden="true"
-    className={cn('[&>svg]:w-3.5 [&>svg]:h-3.5', className)}
+    className={cn('h-3', className)}
     {...props}
   >
-    {children ?? <IconChevronRight />}
+    {children ?? <Separator.Inline />}
   </li>
 );
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';

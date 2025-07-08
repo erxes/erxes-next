@@ -1,15 +1,14 @@
-import { escapeRegExp, paginate } from 'erxes-api-utils';
-import { IProductDocument } from 'erxes-core-types';
+import { IProductDocument } from 'erxes-api-shared/core-types';
+import { cursorPaginate, defaultPaginate, escapeRegExp } from 'erxes-api-shared/utils';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { IContext } from '../../../../../connectionResolvers';
+import { IContext, IModels } from '~/connectionResolvers';
 
-import { IModels } from '../../../../../connectionResolvers';
-import { IProductParams } from '../../../@types/product';
-import { PRODUCT_STATUSES } from '../../../constants';
+import { IProductParams } from '@/products/@types/product';
+import { PRODUCT_STATUSES } from '@/products/constants';
 import {
   getSimilaritiesProducts,
   getSimilaritiesProductsCount,
-} from '../../../utils';
+} from '@/products/utils';
 
 const generateFilter = async (
   models: IModels,
@@ -18,11 +17,13 @@ const generateFilter = async (
 ) => {
   const {
     type,
-    categoryId,
+    categoryIds,
     searchValue,
     vendorId,
-    brand,
-    tag,
+    brandIds,
+    tagIds,
+    excludeTagIds,
+    tagWithRelated,
     ids,
     excludeIds,
     image,
@@ -42,10 +43,11 @@ const generateFilter = async (
     filter.type = type;
   }
 
-  if (categoryId) {
-    const categories = await models.ProductCategories.getChildCategories([
-      categoryId,
-    ]);
+  if (categoryIds) {
+    const categories = await models.ProductCategories.getChildCategories(
+      categoryIds,
+    );
+
     const catIds = categories.map((c) => c._id);
     andFilters.push({ categoryId: { $in: catIds } });
   } else {
@@ -62,8 +64,32 @@ const generateFilter = async (
     filter._id = { [excludeIds ? '$nin' : '$in']: ids };
   }
 
-  if (tag) {
-    filter.tagIds = { $in: [tag] };
+  if (tagIds) {
+    const baseTagIds: Set<string> = new Set(tagIds);
+
+    if (tagWithRelated) {
+      const tagObjs = await models.Tags.find({ _id: { $in: tagIds } }).lean();
+
+      for (const tag of tagObjs) {
+        (tag.relatedIds || []).forEach((id) => baseTagIds.add(id));
+      }
+    }
+
+    andFilters.push({ tagIds: { $in: Array.from(baseTagIds) } });
+  }
+
+  if (excludeTagIds?.length) {
+    const baseTagIds: Set<string> = new Set(excludeTagIds);
+
+    if (tagWithRelated) {
+      const tagObjs = await models.Tags.find({ _id: { $in: excludeTagIds } }).lean();
+
+      for (const tag of tagObjs) {
+        (tag.relatedIds || []).forEach((id) => baseTagIds.add(id));
+      }
+    }
+
+    andFilters.push({ tagIds: { $nin: Array.from(baseTagIds) } });
   }
 
   // search =========
@@ -94,8 +120,8 @@ const generateFilter = async (
     filter.vendorId = vendorId;
   }
 
-  if (brand) {
-    filter.scopeBrandIds = { $in: [brand] };
+  if (brandIds) {
+    filter.scopeBrandIds = { $in: brandIds };
   }
 
   if (image) {
@@ -110,26 +136,32 @@ export const productQueries = {
   /**
    * Products list
    */
-  async products(
-    _root: undefined,
+  async productsMain(
+    _parent: undefined,
     params: IProductParams,
     { commonQuerySelector, models }: IContext,
   ) {
     const filter = await generateFilter(models, commonQuerySelector, params);
 
-    const { sortField, sortDirection, page, perPage, ids, excludeIds } = params;
-
-    const paginationArgs = { page, perPage };
-
-    if (
-      ids &&
-      ids.length &&
-      !excludeIds &&
-      ids.length > (paginationArgs.perPage || 20)
-    ) {
-      paginationArgs.page = 1;
-      paginationArgs.perPage = ids.length;
+    if (!params.orderBy) {
+      params.orderBy = { code: 1 }
     }
+
+    return await cursorPaginate({
+      model: models.Products,
+      params,
+      query: filter,
+    });
+  },
+
+  async products(
+    _parent: undefined,
+    params: IProductParams,
+    { commonQuerySelector, models }: IContext,
+  ) {
+    const filter = await generateFilter(models, commonQuerySelector, params);
+
+    const { sortField, sortDirection } = params;
 
     let sort: { [key: string]: SortOrder } = { code: 1 };
 
@@ -140,18 +172,18 @@ export const productQueries = {
     if (params.groupedSimilarity) {
       return await getSimilaritiesProducts(models, filter, sort, {
         groupedSimilarity: params.groupedSimilarity,
-        ...paginationArgs,
       });
     }
 
-    return await paginate(
-      models.Products.find(filter).sort(sort).lean(),
-      paginationArgs,
-    );
+    return await defaultPaginate(
+      models.Products.find(filter).sort(sort),
+      {
+        ...params,
+      });
   },
 
   async productDetail(
-    _root: undefined,
+    _parent: undefined,
     { _id }: { _id: string },
     { models }: IContext,
   ) {
@@ -159,7 +191,7 @@ export const productQueries = {
   },
 
   async productsTotalCount(
-    _root: undefined,
+    _parent: undefined,
     params: IProductParams,
     { commonQuerySelector, models }: IContext,
   ) {
@@ -171,11 +203,11 @@ export const productQueries = {
       });
     }
 
-    return await models.Products.find(filter).countDocuments();
+    return await models.Products.countDocuments(filter);
   },
 
   async productSimilarities(
-    _root: undefined,
+    _parent: undefined,
     { _id, groupedSimilarity },
     { models }: IContext,
   ) {
@@ -185,12 +217,12 @@ export const productQueries = {
       const getRegex = (str) => {
         return ['*', '.', '_'].includes(str)
           ? new RegExp(
-              `^${str
-                .replace(/\./g, '\\.')
-                .replace(/\*/g, '.')
-                .replace(/_/g, '.')}.*`,
-              'igu',
-            )
+            `^${str
+              .replace(/\./g, '\\.')
+              .replace(/\*/g, '.')
+              .replace(/_/g, '.')}.*`,
+            'igu',
+          )
           : new RegExp(`.*${escapeRegExp(str)}.*`, 'igu');
       };
 
@@ -332,5 +364,20 @@ export const productQueries = {
       products: await models.Products.find(filters).sort({ code: 1 }),
       groups,
     };
+  },
+
+  async productCountByTags(_root, _params, { models }: IContext) {
+    const counts = {};
+
+    const tags = await models.Tags.find({ type: 'core:product' }).lean();
+
+    for (const tag of tags) {
+      counts[tag._id] = await models.Products.find({
+        tagIds: tag._id,
+        status: { $ne: PRODUCT_STATUSES.DELETED },
+      }).countDocuments();
+    }
+
+    return counts;
   },
 };

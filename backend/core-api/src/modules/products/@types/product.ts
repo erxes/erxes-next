@@ -1,16 +1,18 @@
-import { IListParams } from 'erxes-core-types';
+import {
+  ICursorPaginateParams,
+  IListParams,
+} from 'erxes-api-shared/core-types';
 
-export interface IProductParams extends IListParams {
+export interface IProductParams extends IListParams, ICursorPaginateParams {
   ids?: string[];
   excludeIds?: boolean;
   type?: string;
   status?: string;
-  categoryId?: string;
+  categoryIds?: string[];
   vendorId?: string;
-  brand?: string;
-  tag: string;
-  tags?: string[];
-  excludeTags?: string[];
+  brandIds?: string[];
+  tagIds?: string[];
+  excludeTagIds?: string[];
   tagWithRelated?: boolean;
   sortField?: string;
   sortDirection?: number;

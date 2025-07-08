@@ -1,8 +1,22 @@
-import { authQueries } from '../../modules/auth/graphql/resolvers/queries';
-import { contactQueries } from '../../modules/contacts/graphql/resolvers/queries';
-import { userQueries } from '../../modules/organization/team-member/graphql/queries';
-import { productQueries } from '../../modules/products/graphql/resolvers/queries';
-import { tagQueries } from '../../modules/tags/graphql/queries';
+import { appQueries } from '@/apps/graphql/queries';
+import { authQueries } from '@/auth/graphql/resolvers/queries';
+import { contactQueries } from '@/contacts/graphql/resolvers/queries';
+import { documentQueries } from '@/documents/graphql/queries';
+import { exchangeRateQueries } from '@/exchangeRates/graphql/resolvers';
+import { queries as formQueries } from '@/forms/graphql/resolvers';
+import { brandQueries } from '@/organization/brand/graphql/queries';
+import { organizationConfigQueries } from '@/organization/settings/graphql/configs/queries';
+import { favoriteQueries } from '@/organization/settings/graphql/favorites/queries';
+import { structureQueries } from '@/organization/structure/graphql/resolvers/queries';
+import { userQueries } from '@/organization/team-member/graphql/queries';
+import { permissionQueries } from '@/permissions/graphql/resolvers/queries/permission';
+import { usersGroupQueries } from '@/permissions/graphql/resolvers/queries/userGroup';
+import { productQueries } from '@/products/graphql/resolvers/queries';
+import { relationsQueries } from '@/relations/graphql/queries';
+import { segmentQueries } from '@/segments/graphql/resolvers';
+import { tagQueries } from '@/tags/graphql/queries';
+import { automationQueries } from '@/automations/graphql/resolvers/queries';
+import { logQueries } from '@/logs/graphql/resolvers/queries';
 
 export const queries = {
   ...contactQueries,
@@ -10,4 +24,18 @@ export const queries = {
   ...userQueries,
   ...tagQueries,
   ...productQueries,
+  ...appQueries,
+  ...formQueries,
+  ...segmentQueries,
+  ...relationsQueries,
+  ...favoriteQueries,
+  ...structureQueries,
+  ...brandQueries,
+  ...organizationConfigQueries,
+  ...exchangeRateQueries,
+  ...permissionQueries,
+  ...usersGroupQueries,
+  ...documentQueries,
+  ...automationQueries,
+  ...logQueries,
 };

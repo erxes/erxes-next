@@ -22,7 +22,7 @@ export const MAIL_CONFIG_FIELDS: TFormData = {
       name: 'COMPANY_EMAIL_TEMPLATE',
       inputType: 'editor',
       label: 'Template',
-      description: 'Your email will be sent with Erxes email template.',
+      description: 'Your email will be sent with erxes email template.',
     },
     {
       name: 'DEFAULT_EMAIL_SERVICE',

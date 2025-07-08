@@ -1,29 +1,41 @@
 import { gql } from '@apollo/client';
+import {
+  GQL_CURSOR_PARAM_DEFS,
+  GQL_CURSOR_PARAMS,
+  GQL_PAGE_INFO,
+} from 'erxes-ui';
+
+const DEPARTMENTS_FIELDS = `
+  _id
+  title
+  code
+  parentId
+  order
+  userCount
+`;
 
 export const GET_DEPARTMENTS = gql`
   query departments(
     $ids: [String]
     $excludeIds: Boolean
-    $perPage: Int
-    $page: Int
     $searchValue: String
     $status: String
     $withoutUserFilter: Boolean
+    ${GQL_CURSOR_PARAM_DEFS}
   ) {
-    departments(
+    departmentsMain(
       ids: $ids
       excludeIds: $excludeIds
-      perPage: $perPage
-      page: $page
+      ${GQL_CURSOR_PARAMS}
       searchValue: $searchValue
       status: $status
       withoutUserFilter: $withoutUserFilter
+
     ) {
-      _id
-      code
-      title
-      parentId
-      order
+      list{
+        ${DEPARTMENTS_FIELDS}
+      }
+      ${GQL_PAGE_INFO}
     }
   }
 `;

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Plus, X } from 'lucide-react';
+import { IconPlus, IconX } from '@tabler/icons-react';
 import { useApolloClient } from '@apollo/client';
 import { useProductTags } from '@/products/hooks/useProductTags';
 import { AlertDialog, Button, useToast } from 'erxes-ui';
 import { useProductsEdit } from '../../hooks/useProductsEdit';
 import { TagsManagerProps } from '../types/tagsTypes';
-import { useRemoveTag } from '@/tags/hooks/useRemoveTag';
+import { useRemoveTag } from '@/settings/tags/hooks/useRemoveTag';
 import { CreateTagForm, ITag } from 'ui-modules';
 
 export function TagsManager({
@@ -127,7 +127,7 @@ export function TagsManager({
         onClick={() => setShowTagCreator(!showTagCreator)}
         disabled={isEditingTags}
       >
-        <Plus className="h-4 w-4" />
+        <IconPlus className="h-4 w-4" />
         <span>Add tag</span>
       </Button>
 
@@ -159,7 +159,7 @@ export function TagsManager({
                 disabled={isEditingTags || removeLoading}
                 type="button"
               >
-                <X className="h-4 w-4" />
+                <IconX className="h-4 w-4" />
                 <span className="sr-only">Remove {tagName}</span>
               </button>
             </div>

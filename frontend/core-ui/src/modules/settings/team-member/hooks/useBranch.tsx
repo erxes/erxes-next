@@ -1,5 +1,6 @@
 import { OperationVariables, useQuery } from '@apollo/client';
 import { queries } from '@/settings/team-member/graphql';
+import { IBranch } from '@/settings/team-member/types';
 
 export type TBranch = {
   _id: string;
@@ -9,16 +10,17 @@ export type TBranch = {
 };
 
 const useBranch = (options?: OperationVariables) => {
-  const { data, loading } = useQuery(queries.GET_BRANCHES_QUERY, {
-    ...options,
-    onError(error) {
-      console.error(error.message);
+  const { data, loading } = useQuery<{ branches: IBranch[] }>(
+    queries.GET_BRANCHES_QUERY,
+    {
+      ...options,
+      onError(error) {
+        console.error(error.message);
+      },
     },
-  });
+  );
 
-  const { branches } = data || [];
-
-  return { branches, loading };
+  return { branches: data?.branches, loading };
 };
 
 export { useBranch };
