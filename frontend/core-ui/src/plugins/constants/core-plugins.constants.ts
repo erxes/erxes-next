@@ -17,7 +17,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     name: 'contacts',
     icon: IconBookmarks,
     path: 'contacts',
-    hasSettings: true,
+    hasSettings: false,
     hasRelationWidget: true,
     submenus: [
       {
@@ -65,7 +65,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     name: 'segments',
     icon: IconChartPie,
     path: 'segments',
-    hasSettings: true,
+    hasSettings: false,
     hasRelationWidget: true,
   },
   {
@@ -79,7 +79,7 @@ export const CORE_MODULES: IUIConfig['modules'] = [
     name: 'logs',
     icon: IconReport,
     path: 'logs',
-    hasSettings: true,
+    hasSettings: false,
     hasRelationWidget: true,
   },
 ];

@@ -1,13 +1,12 @@
-import { erxesMessengerSetupGreetingAtom } from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
 import {
-  IconBrandFacebook,
-  IconBrandInstagram,
-  IconPlus,
-  IconX,
-} from '@tabler/icons-react';
-import { Avatar, Button, Popover, Separator } from 'erxes-ui';
+  erxesMessengerSetupGreetingAtom,
+  erxesMessengerSetupHoursAtom,
+} from '@/integrations/erxes-messenger/states/erxesMessengerSetupStates';
+import { IconPlus, IconX } from '@tabler/icons-react';
+import { Avatar, Button, Popover, readImage, Separator } from 'erxes-ui';
 import { MembersInline, useMembersInlineContext } from 'ui-modules';
 import { useAtomValue } from 'jotai';
+import { EMGreetingAvatar } from '@/integrations/erxes-messenger/components/EMGreeting';
 
 export const ActiveUsers = () => {
   const { members } = useMembersInlineContext();
@@ -15,7 +14,7 @@ export const ActiveUsers = () => {
     <div className="flex items-center gap-2">
       {members.map((member) => (
         <Avatar key={member._id} size="xl">
-          <Avatar.Image src={member.details?.avatar} />
+          <Avatar.Image src={readImage(member.details?.avatar || '', 200)} />
           <Avatar.Fallback>
             {member.details?.fullName?.charAt(0) || ''}
           </Avatar.Fallback>
@@ -27,6 +26,7 @@ export const ActiveUsers = () => {
 
 export const EMPreviewIntro = () => {
   const greeting = useAtomValue(erxesMessengerSetupGreetingAtom);
+  const hours = useAtomValue(erxesMessengerSetupHoursAtom);
   return (
     <>
       <div className="bg-primary text-primary-foreground p-6 pb-16 pt-4">
@@ -40,12 +40,22 @@ export const EMPreviewIntro = () => {
           </Button>
         </Popover.Close>
         <div className="flex items-center gap-1 text-accent mb-2">
-          <Button variant="ghost" size="icon" className="size-6">
-            <IconBrandFacebook />
-          </Button>
-          <Button variant="ghost" size="icon" className="size-6">
-            <IconBrandInstagram />
-          </Button>
+          {greeting?.links?.map(
+            (link) =>
+              !!link && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-6"
+                  asChild
+                  key={link.url}
+                >
+                  <a href={link.url} target="_blank" rel="noreferrer">
+                    <EMGreetingAvatar url={link.url} />
+                  </a>
+                </Button>
+              ),
+          )}
         </div>
         <h1 className="text-2xl font-semibold">
           {greeting?.title || 'Welcome'}
@@ -53,7 +63,7 @@ export const EMPreviewIntro = () => {
         <p className="text-sm text-primary-foreground/80 mt-3 mb-5">
           {greeting?.message || 'Welcome to Erxes Messenger'}
         </p>
-        <MembersInline.Provider memberIds={greeting?.supporterUsers || []}>
+        <MembersInline.Provider memberIds={greeting?.supporterIds || []}>
           <ActiveUsers />
         </MembersInline.Provider>
       </div>
@@ -68,7 +78,12 @@ export const EMPreviewIntro = () => {
           <div className="flex items-center bg-muted text-muted-foreground p-2 rounded-full">
             <IconPlus className="size-5" strokeWidth={1.5} />
           </div>
-          <div className="flex flex-col gap-1">Start new conversation</div>
+          <div className="flex flex-col gap-1">
+            <span>Start new conversation</span>
+            <span className="text-xs font-normal text-accent-foreground">
+              Our usual response time is a few {hours?.responseRate}.
+            </span>
+          </div>
         </Button>
         <Separator />
       </div>

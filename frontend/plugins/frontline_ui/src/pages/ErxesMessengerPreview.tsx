@@ -12,23 +12,16 @@ export const ErxesMessengerPreview = () => {
   const erxesMessengerSetupStep = useAtomValue(erxesMessengerSetupStepAtom);
 
   useLayoutEffect(() => {
-    if (hexToHsl(appearance?.brandColor)) {
+    if (hexToHsl(appearance?.color)) {
       document.documentElement.style.setProperty(
         '--primary',
-        hexToHsl(appearance?.brandColor) || '',
+        hexToHsl(appearance?.color) || '',
       );
     }
   }, [appearance]);
 
   return (
-    <div
-      className="bg-sidebar h-dvh flex items-end justify-end p-5"
-      style={
-        {
-          '--primary': hexToHsl(appearance?.brandColor || ''),
-        } as React.CSSProperties
-      }
-    >
+    <div className="bg-sidebar h-dvh flex items-end justify-end p-5">
       <div>
         <Popover defaultOpen>
           <Popover.Trigger asChild>
@@ -48,8 +41,10 @@ export const ErxesMessengerPreview = () => {
               e.preventDefault();
             }}
           >
-            {erxesMessengerSetupStep === 1 && <EMPreviewMessages />}
-            {erxesMessengerSetupStep === 2 && <EMPreviewIntro />}
+            {[1, 3, 5, 6].includes(erxesMessengerSetupStep) && (
+              <EMPreviewMessages />
+            )}
+            {[2, 4].includes(erxesMessengerSetupStep) && <EMPreviewIntro />}
           </Popover.Content>
         </Popover>
       </div>
