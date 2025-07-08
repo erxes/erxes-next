@@ -12,7 +12,7 @@ const LogsIndexPage = lazy(() =>
 
 export const LogRoutes = () => {
   return (
-    <Suspense fallback={<>Logs</>}>
+    <Suspense>
       <Routes>
         <Route path={LogsPath.Index} element={<LogsIndexPage />} />
       </Routes>

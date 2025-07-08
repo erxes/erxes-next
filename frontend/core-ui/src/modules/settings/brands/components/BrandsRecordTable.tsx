@@ -1,4 +1,4 @@
-import { RecordTable, useMultiQueryState } from 'erxes-ui';
+import { RecordTable } from 'erxes-ui';
 import { brandsColumns } from './BrandsColumns';
 import { BrandsCommandBar } from './BrandsCommandBar';
 import { useBrands } from '../hooks/useBrands';
@@ -13,13 +13,15 @@ export function BrandsRecordTable() {
       stickyColumns={['more', 'checkbox', 'name']}
       className="m-3"
     >
-      <RecordTable>
-        <RecordTable.Header />
-        <RecordTable.Body>
-          <RecordTable.RowList />
-          {loading && <RecordTable.RowSkeleton rows={30} />}
-        </RecordTable.Body>
-      </RecordTable>
+      <RecordTable.Scroll>
+        <RecordTable>
+          <RecordTable.Header />
+          <RecordTable.Body>
+            <RecordTable.RowList />
+            {loading && <RecordTable.RowSkeleton rows={30} />}
+          </RecordTable.Body>
+        </RecordTable>
+      </RecordTable.Scroll>
       <BrandsCommandBar />
     </RecordTable.Provider>
   );

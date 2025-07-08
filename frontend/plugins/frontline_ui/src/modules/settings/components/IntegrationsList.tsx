@@ -1,12 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Cell, ColumnDef } from '@tanstack/table-core';
+import { ColumnDef } from '@tanstack/table-core';
 import { useIntegrations } from '../hooks/useIntegrations';
-import {
-  IBrand,
-  IIntegrationColumnDef,
-  IIntegrationItem,
-} from '../types/integration';
+import { IIntegrationColumnDef, IIntegrationItem } from '../types/integration';
 import {
   Badge,
   Button,
@@ -26,8 +22,6 @@ import { INTEGRATIONS, OTHER_INTEGRATIONS } from '../constants/integrations';
 import { useIntegrationsCounts } from '../hooks/useIntegrationsCounts';
 import { AddIntegration } from './add-integration/AddIntegration';
 
-const INTEGRATION_PER_PAGE = 30;
-
 export const IntegrationsList = () => {
   const params = useParams();
   const integrationsList: Record<string, IIntegrationItem> = {
@@ -44,12 +38,15 @@ export const IntegrationsList = () => {
     },
     skip: !params?.kind,
   });
+
   if (loading) {
     return <Skeleton className="w-full h-auto aspect-[9/2]" />;
   }
+
   if (error) {
     return <code>{error.message}</code>;
   }
+
   if (integrations.length) {
     return (
       <div className="w-full h-auto flex flex-col gap-3">
@@ -72,6 +69,7 @@ export const IntegrationsList = () => {
       </div>
     );
   }
+
   return (
     <div className="rounded-md border border-dashed border-sidebar-border bg-sidebar p-3 gap-3 flex flex-col items-center justify-center w-full h-auto aspect-[9/2]">
       <IconHexagonPlusFilled size={30} className="text-accent-foreground" />

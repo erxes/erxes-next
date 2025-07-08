@@ -19,6 +19,11 @@ import {
   facebookRepairIntegrations,
   facebookCreateIntegrations,
 } from '@/integrations/facebook/messageBroker';
+import {
+  callCreateIntegration,
+  callRemoveIntergration,
+  callUpdateIntegration,
+} from '~/modules/integrations/call/messageBroker';
 
 interface IntegrationParams {
   integrationId: string;
@@ -52,6 +57,8 @@ export const sendCreateIntegration = async (
     switch (serviceName) {
       case 'facebook':
         return await facebookCreateIntegrations({ subdomain, data });
+      case 'calls':
+        return await callCreateIntegration({ subdomain, data });
 
       case 'instagram':
         // TODO: Implement Instagram integration
@@ -80,7 +87,8 @@ export const sendUpdateIntegration = async (
     switch (serviceName) {
       case 'facebook':
         return await facebookUpdateIntegrations({ subdomain, data });
-
+      case 'calls':
+        return await callUpdateIntegration({ subdomain, data });
       case 'instagram':
         break;
 
@@ -106,7 +114,8 @@ export const sendRemoveIntegration = async (
     switch (serviceName) {
       case 'facebook':
         return await facebookRemoveIntegrations({ subdomain, data });
-
+      case 'calls':
+        return await callRemoveIntergration({ subdomain, data });
       case 'instagram':
         break;
 
@@ -492,7 +501,6 @@ export const integrationMutations = {
     }
 
     const serviceName = integration.kind.split('-')[0];
-
     await sendUpdateIntegration(subdomain, serviceName, {
       kind,
       integrationId: integration._id,

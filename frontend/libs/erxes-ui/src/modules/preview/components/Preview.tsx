@@ -15,7 +15,7 @@ const PreviewProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <PreviewContext.Provider value={{ resizablePanelRef }}>
-      <div className="flex flex-col">{children}</div>
+      {children}
     </PreviewContext.Provider>
   );
 };
@@ -45,14 +45,17 @@ export const PreviewToolbar = ({ path }: { path?: string }) => {
         <IconDeviceMobileFilled className="h-3.5 w-3.5" />
         <span>Mobile</span>
       </ToggleGroup.Item>
-      <Separator.Inline />
+
       {path && (
-        <Button variant="ghost" asChild title="Open in New Tab">
-          <Link to={path} target="_blank">
-            <span>Open in New Tab</span>
-            <IconWindowMaximize className="h-3.5 w-3.5" />
-          </Link>
-        </Button>
+        <>
+          <Separator.Inline />
+          <Button variant="ghost" asChild title="Open in New Tab">
+            <Link to={path} target="_blank">
+              <span>Open in New Tab</span>
+              <IconWindowMaximize className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </>
       )}
     </ToggleGroup>
   );
@@ -61,29 +64,28 @@ export const PreviewToolbar = ({ path }: { path?: string }) => {
 export const View = React.forwardRef<
   React.ElementRef<typeof Resizable.PanelGroup>,
   {
-    height: number;
     iframeSrc: string;
   } & Omit<React.ComponentProps<typeof Resizable.PanelGroup>, 'direction'>
->(({ height, iframeSrc, ...props }, ref) => {
+>(({ iframeSrc, ...props }, ref) => {
   const { resizablePanelRef } = usePreviewContext();
   return (
     <Resizable.PanelGroup
-      className="relative z-10"
+      className="relative z-10 flex-auto"
       direction="horizontal"
       {...props}
       ref={ref}
     >
       <Resizable.Panel
         ref={resizablePanelRef}
-        className="relative aspect-[4/2.5] rounded-xl border bg-background md:aspect-auto"
         defaultSize={100}
         minSize={30}
+        className="h-full"
       >
         <iframe
           src={iframeSrc}
           width="100%"
-          height={height}
           title="Button Primary Story"
+          className="h-full"
         />
       </Resizable.Panel>
       <Resizable.Handle className="relative hidden w-3 bg-transparent p-0 after:absolute after:right-0 after:top-1/2 after:h-8 after:w-[6px] after:-translate-y-1/2 after:translate-x-[-1px] after:rounded-full after:bg-border after:transition-all after:hover:h-10 md:block" />

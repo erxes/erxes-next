@@ -458,7 +458,7 @@ export const MultipleSelector = React.forwardRef<
       >
         <div
           className={cn(
-            'relative min-h-8 rounded shadow-xs text-sm transition-shadow focus-within:outline-none focus-within:shadow-focus has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
+            'relative min-h-8 rounded shadow-xs transition-[color,box-shadow] text-sm focus-within:outline-none focus-within:shadow-focus has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
             {
               'p-1': selected.length !== 0,
               'cursor-text': !disabled && selected.length !== 0,

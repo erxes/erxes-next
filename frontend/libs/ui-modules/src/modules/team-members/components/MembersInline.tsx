@@ -5,6 +5,7 @@ import {
   Tooltip,
   cn,
   isUndefinedOrNull,
+  readImage,
 } from 'erxes-ui';
 import {
   MembersInlineContext,
@@ -29,7 +30,7 @@ export const MembersInlineRoot = ({
   memberIds?: string[];
   placeholder?: string;
   updateMembers?: (members: IUser[]) => void;
-  size?: 'lg';
+  size?: AvatarProps['size'];
 }) => {
   return (
     <MembersInlineProvider
@@ -92,7 +93,13 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   });
 
   useEffect(() => {
-    const newMembers = [...members].filter((m) => memberIds?.includes(m._id));
+    const newMembers = [...members].filter(
+      (m) => memberIds?.includes(m._id) && m._id !== memberId,
+    );
+    if (newMembers.some((m) => m._id === memberId)) {
+      updateMembers?.(newMembers);
+      return;
+    }
     if (userDetail) {
       updateMembers?.([...newMembers, { ...userDetail, _id: memberId }]);
     }
@@ -105,7 +112,14 @@ const MemberInlineEffectComponent = ({ memberId }: { memberId: string }) => {
   return null;
 };
 
-export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
+export const MembersInlineAvatar = ({
+  className,
+  containerClassName,
+  size,
+  ...props
+}: AvatarProps & {
+  containerClassName?: string;
+}) => {
   const { members, loading, memberIds } = useMembersInlineContext();
   const currentUser = useAtomValue(currentUserState) as IUser;
 
@@ -117,7 +131,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
 
   if (loading)
     return (
-      <div className="flex -space-x-1.5">
+      <div className={cn('flex -space-x-1.5', containerClassName)}>
         {memberIds?.map((memberId) => (
           <Avatar key={memberId} className={cn('bg-background', className)}>
             <Avatar.Fallback />
@@ -135,7 +149,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
         <Tooltip delayDuration={100} key={member._id}>
           <Tooltip.Trigger asChild>
             <Avatar
-              size="lg"
+              size={size || 'lg'}
               {...props}
               className={cn(className, 'items-center justify-center')}
             >
@@ -158,10 +172,10 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
               members.length > 1 && 'ring-2 ring-background',
               className,
             )}
-            size="lg"
+            size={size || 'lg'}
             {...props}
           >
-            <Avatar.Image src={avatar} />
+            <Avatar.Image src={readImage(avatar as string, 200)} />
             <Avatar.Fallback>{fullName?.charAt(0) || ''}</Avatar.Fallback>
           </Avatar>
         </Tooltip.Trigger>
@@ -187,7 +201,7 @@ export const MembersInlineAvatar = ({ className, ...props }: AvatarProps) => {
           <Tooltip.Trigger asChild>
             <Avatar
               className={cn('ring-2 ring-background bg-background', className)}
-              size="lg"
+              size={size || 'lg'}
               {...props}
             >
               <Avatar.Fallback className="bg-primary/10 text-primary">

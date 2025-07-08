@@ -8,7 +8,6 @@ import { type SubmitHandler } from 'react-hook-form';
 import { TChannelForm } from '@/settings/types/channel';
 import React from 'react';
 import { useChannelsEdit } from '@/settings/hooks/useChannelsEdit';
-import { describe } from 'node:test';
 import { ApolloError } from '@apollo/client';
 
 export function ChannelDetailSheet() {
@@ -21,7 +20,7 @@ export function ChannelDetailSheet() {
     methods: { handleSubmit, reset },
   } = useChannelForm();
 
-  const { channel, loading } = useChannelById({
+  const { channel } = useChannelById({
     variables: {
       id,
     },

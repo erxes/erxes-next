@@ -1,3 +1,5 @@
+export const ACC_TRS__PER_PAGE = 20;
+
 export enum TrJournalEnum {
   MAIN = 'main',
   CASH = 'cash',
@@ -9,6 +11,7 @@ export enum TrJournalEnum {
   TAX = 'tax',
   INV_INCOME = 'invIncome',
   INV_OUT = 'invOut',
+  INV_SALE = 'invSale',
 }
 
 export const TR_JOURNAL_LABELS = {
@@ -22,6 +25,7 @@ export const TR_JOURNAL_LABELS = {
   [TrJournalEnum.TAX]: 'Tax',
   [TrJournalEnum.INV_INCOME]: 'Inventory Income',
   [TrJournalEnum.INV_OUT]: 'Inventory Out',
+  [TrJournalEnum.INV_SALE]: 'Inventory Sale',
 };
 
 export const TR_SIDES = {

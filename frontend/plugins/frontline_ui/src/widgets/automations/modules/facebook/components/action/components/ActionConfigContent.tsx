@@ -1,5 +1,5 @@
 import { IconChevronDown, IconLink } from '@tabler/icons-react';
-import { Button, Collapsible, readFile } from 'erxes-ui';
+import { Button, Collapsible, readImage } from 'erxes-ui';
 import { Link } from 'react-router';
 import { REPLY_MESSAGE_ACTION_BUTTONS } from '../../action/constants/ReplyMessage';
 import { TBotMessage } from '../../action/states/replyMessageActionForm';
@@ -178,7 +178,7 @@ const ActionConfigMessageCard = ({
           {image_url ? (
             <img
               className="w-6 h-6 rounded-full mr-2"
-              src={readFile(image_url)}
+              src={readImage(image_url)}
               alt={image_url}
             />
           ) : null}
