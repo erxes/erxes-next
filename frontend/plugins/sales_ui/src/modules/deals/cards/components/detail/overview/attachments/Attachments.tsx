@@ -38,11 +38,11 @@ const Attachments = () => {
 
   return (
     <div className="flex flex-col">
-      {mediaAttachments.length > 0 && (
-        <MediaAttachments attachments={mediaAttachments} />
-      )}
       {fileAttachments.length > 0 && (
         <FileAttachments attachments={fileAttachments} />
+      )}
+      {mediaAttachments.length > 0 && (
+        <MediaAttachments attachments={mediaAttachments} />
       )}
     </div>
   );

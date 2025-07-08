@@ -13,7 +13,7 @@ import { useDealDetail } from '@/deals/cards/hooks/useDeals';
 export const SalesItemDetail = () => {
   const [open, setOpen] = useQueryState<string>('salesItemId');
 
-  const { deal, loading: dealLoading } = useDealDetail();
+  const { deal } = useDealDetail();
 
   return (
     <>
