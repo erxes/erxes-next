@@ -1,5 +1,5 @@
 import { IconPlus, IconTrash } from '@tabler/icons-react';
-import { Button, Sheet, Form, Input, Checkbox } from 'erxes-ui';
+import { Button, Sheet, Form, Input, Checkbox, Spinner } from 'erxes-ui';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { CALL_INTEGRATION_FORM_SCHEMA } from '@/integrations/call/constants/callIntegrationAddSchema';
 import { z } from 'zod';
@@ -11,9 +11,11 @@ import { callEditSheetAtom } from '@/integrations/call/states/callEditSheetAtom'
 export const CallIntegrationForm = ({
   form,
   onSubmit,
+  loading,
 }: {
   form: UseFormReturn<z.infer<typeof CALL_INTEGRATION_FORM_SCHEMA>>;
   onSubmit: (data: z.infer<typeof CALL_INTEGRATION_FORM_SCHEMA>) => void;
+  loading?: boolean;
 }) => {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -23,12 +25,19 @@ export const CallIntegrationForm = ({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit, (error) => {
+          console.log(error);
+        })}
         className="flex flex-col flex-auto overflow-hidden"
       >
         <CallIntegrationFormLayout
           actions={
-            <Button type="submit" onClick={() => form.handleSubmit(onSubmit)}>
+            <Button
+              type="submit"
+              onClick={() => form.handleSubmit(onSubmit)}
+              disabled={loading}
+            >
+              {loading && <Spinner size="small" />}
               Save
             </Button>
           }
@@ -46,7 +55,7 @@ export const CallIntegrationForm = ({
             )}
           />
           <Form.Field
-            name="phoneNumber"
+            name="phone"
             render={({ field }) => (
               <Form.Item>
                 <Form.Label>Phone Number</Form.Label>
@@ -95,12 +104,13 @@ export const CallIntegrationForm = ({
             )}
           />
           <Form.Field
-            name="channelId"
+            name="channelIds"
             render={({ field }) => (
               <Form.Item>
-                <Form.Label>Select channel</Form.Label>
+                <Form.Label>Select channels</Form.Label>
                 <SelectChannel.FormItem
                   value={field.value}
+                  mode="multiple"
                   onValueChange={(val) => field.onChange(val)}
                 />
                 <Form.Message />
@@ -117,7 +127,7 @@ export const CallIntegrationForm = ({
                 <Form.Field
                   name={`operators.${index}.userId`}
                   render={({ field }) => (
-                    <Form.Item className="flex-auto">
+                    <Form.Item className="flex-auto w-1/3">
                       <Form.Label>Operator</Form.Label>
                       <SelectMember.FormItem
                         value={field.value}
@@ -154,21 +164,21 @@ export const CallIntegrationForm = ({
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="bg-destructive/20 text-destructive mt-6 size-8 hover:bg-destructive/30"
+                  className="bg-destructive/20 text-destructive mt-6 size-8 ,hover:bg-destructive/30"
                   onClick={() => remove(index)}
                 >
                   <IconTrash />
                 </Button>
               </div>
               <Form.Field
-                name={`operators.${index}.isForwarding`}
+                name={`operators.${index}.gsForwardAgent`}
                 render={({ field }) => (
                   <Form.Item className="mt-4">
                     <div className="flex gap-2 items-center">
                       <Form.Control>
                         <Checkbox {...field} />
                       </Form.Control>
-                      <Form.Label>Is Forwarding</Form.Label>
+                      <Form.Label variant="peer">Is forwarding</Form.Label>
                     </div>
                     <Form.Message />
                   </Form.Item>
