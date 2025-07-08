@@ -47,7 +47,12 @@ export const CallIntegrationEdit = () => {
         details: {
           phone: data.phone,
           wsServer: data.websocketServer,
-          queues: data.queues?.split(',') || [],
+          queues: data.queues
+            ? data.queues
+                .split(',')
+                .map((q) => q.trim())
+                .filter((q) => q.length > 0)
+            : [],
           operators: data.operators,
         },
       },
@@ -71,7 +76,12 @@ export const CallIntegrationEdit = () => {
   };
 
   useEffect(() => {
-    if (integrationDetail && !loading) {
+    if (
+      integrationDetail &&
+      !loading &&
+      !callLoading &&
+      callsIntegrationDetail
+    ) {
       form.reset({
         name: integrationDetail.name || '',
         phone: callsIntegrationDetail?.phone || '',
@@ -84,7 +94,7 @@ export const CallIntegrationEdit = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [integrationDetail, loading]);
+  }, [integrationDetail, callsIntegrationDetail, callLoading, loading]);
 
   if (loading || callLoading) {
     return <Spinner className="h-full" />;
