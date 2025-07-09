@@ -2,7 +2,6 @@ import { Button, Dialog, Spinner, readImage } from 'erxes-ui';
 import {
   IconChevronLeft,
   IconChevronRight,
-  IconTrash,
   IconX,
   IconZoomIn,
 } from '@tabler/icons-react';
@@ -43,7 +42,7 @@ const MediaAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
   }, [open, attachments.length]);
 
   return (
-    <div className="p-4">
+    <div className="py-4 px-8">
       <h4 className="uppercase text-sm text-gray-500 pb-4">
         Media Attachments
       </h4>
@@ -51,7 +50,7 @@ const MediaAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
         <div className="overflow-x-auto flex gap-4">
           {attachments.map((attachment, index) => (
             <div
-              className="group relative w-36 h-36 rounded-lg border border-gray-200 shadow-md overflow-hidden shrink-0 cursor-zoom-in"
+              className="group relative w-36 h-36 rounded-lg border border-gray-200 shadow-md shrink-0 cursor-zoom-in"
               key={attachment.url}
               onClick={() => {
                 setCurrentIndex(index);
@@ -76,10 +75,10 @@ const MediaAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
                 onClick={(e) => {
                   handleRemoveImage(e, attachment);
                 }}
-                className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1.5 shadow-md z-10"
+                className="absolute top-0 right-[-10px] bg-red-400 hover:bg-red-600 text-white rounded-full p-1 w-6 h-6 shadow-md z-10"
                 aria-label={`Remove image ${attachment.name}`}
               >
-                <IconTrash size={16} />
+                <IconX size={12} />
               </Button>
             </div>
           ))}

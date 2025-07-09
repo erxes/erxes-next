@@ -1,12 +1,4 @@
-import {
-  Button,
-  Form,
-  Input,
-  Popover,
-  cn,
-  toast,
-  useQueryState,
-} from 'erxes-ui';
+import { Button, Form, Input, Popover, cn, toast } from 'erxes-ui';
 import {
   ChecklistFormType,
   checklistFormSchema,

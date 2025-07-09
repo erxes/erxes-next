@@ -102,6 +102,7 @@ export const commonListFields = `
       fullName
     }
   }
+  assignedUserIds
   labels {
     _id
     name
@@ -233,3 +234,4 @@ export const GET_ITEMS_COUNT_BY_ASSIGNED_USER = gql`
     salesItemsCountByAssignedUser(pipelineId: $pipelineId, type: $type, stackBy: $stackBy)
   }
 `;
+  

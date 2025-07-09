@@ -1,8 +1,4 @@
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons-react';
 
 import { Button } from 'erxes-ui';
 import { IAttachment } from '@/deals/types/attachments';
@@ -14,7 +10,7 @@ const FileAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
   const { loading } = useDealsContext();
 
   return (
-    <div className="p-4">
+    <div className="py-4 px-8">
       <h4 className="uppercase text-sm text-gray-500 pb-4">File Attachments</h4>
       <div className="relative">
         <div className="overflow-x-auto flex gap-4">
@@ -28,10 +24,10 @@ const FileAttachments = ({ attachments }: { attachments: IAttachment[] }) => {
                 variant="ghost"
                 disabled={loading && removingUrl === attachment.url}
                 onClick={(e) => handleRemoveImage(e, attachment)}
-                className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1.5 shadow-md z-10"
+                className="absolute top-0 right-[-10px] bg-red-400 hover:bg-red-600 text-white rounded-full p-1 w-6 h-6 shadow-md z-10"
                 aria-label={`Remove image ${attachment.name}`}
               >
-                <IconTrash size={16} />
+                <IconX size={12} />
               </Button>
             </div>
           ))}

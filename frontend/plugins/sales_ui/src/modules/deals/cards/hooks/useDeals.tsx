@@ -14,8 +14,7 @@ import {
   useMutation,
   useQuery,
 } from '@apollo/client';
-
-import { useQueryState } from 'erxes-ui';
+import { toast, useQueryState } from 'erxes-ui';
 
 export const useDeals = (options?: QueryHookOptions<{ deals: IDealList }>) => {
   const { data, loading, error } = useQuery<{ deals: IDealList }>(GET_DEALS, {
@@ -67,6 +66,19 @@ export function useDealsEdit(options?: MutationHookOptions<any, any>) {
       },
     ],
     awaitRefetchQueries: true,
+    onCompleted: () => {
+      toast({
+        title: 'Successfully updated a  deal',
+        variant: 'default',
+      });
+    },
+    onError: (err) => {
+      toast({
+        title: 'Error',
+        description: err.message || 'Update failed',
+        variant: 'destructive',
+      });
+    },
   });
 
   return {
