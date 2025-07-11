@@ -7,6 +7,7 @@ import automationsResolvers from '@/automations/graphql/resolvers/customResolver
 import userResolvers from '@/organization/team-member/graphql/customResolver';
 import brandResolvers from '@/organization/brand/graphql/customResolver/brand';
 import tagResolvers from '@/tags/graphql/customResolvers';
+import notificationResolvers from '@/notifications/graphql/customResolvers';
 
 export const customResolvers = {
   ...contactResolvers,
@@ -18,4 +19,5 @@ export const customResolvers = {
   ...userResolvers,
   ...brandResolvers,
   ...tagResolvers,
+  ...notificationResolvers,
 };

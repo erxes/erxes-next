@@ -27,13 +27,11 @@ export const conversationAfterProcessWorkers = {
       };
     },
   ) => {
-    console.log('frontline', data);
     const { collectionName, fullDocument, updateDescription } = data || {};
     const { updatedFields } = updateDescription || {};
 
     if (collectionName === 'conversations') {
       if (updatedFields.status === 'closed') {
-        console.log('yeah ');
         sendNotification(subdomain, {
           title: 'Conversation Resolved',
           message: `changed conversation status to ${(

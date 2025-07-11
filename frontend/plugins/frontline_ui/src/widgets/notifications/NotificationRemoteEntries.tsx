@@ -3,13 +3,15 @@ import { lazy, Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 
 const ConversationDetailRemoteEntry = lazy(() =>
-  import('./my-inbox/NotificationConversationDetail').then((module) => ({
-    default: module.NotificationConversationDetail,
-  })),
+  import('./my-inbox/components/NotificationConversationDetail').then(
+    (module) => ({
+      default: module.NotificationConversationDetail,
+    }),
+  ),
 );
 
 const NotificationChannelContent = lazy(() =>
-  import('./my-inbox/NotificationChannelContent').then((module) => ({
+  import('./my-inbox/components/NotificationChannelContent').then((module) => ({
     default: module.NotificationChannelContent,
   })),
 );

@@ -1,3 +1,5 @@
+import { IUser } from 'ui-modules';
+
 export type INotification = {
   _id: string;
   title: string;
@@ -5,6 +7,7 @@ export type INotification = {
   type: 'info' | 'success' | 'warning' | 'error';
 
   fromUserId?: string;
+  fromUser: IUser;
 
   contentType: string; // 'frontline:conversation', 'sales:deal', etc.
   contentTypeId?: string; // target object ID

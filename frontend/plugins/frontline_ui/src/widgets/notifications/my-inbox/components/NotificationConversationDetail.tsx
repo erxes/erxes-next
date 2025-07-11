@@ -2,10 +2,13 @@ import { ConversationDetail } from '@/inbox/conversations/conversation-detail/co
 import { IconExternalLink } from '@tabler/icons-react';
 import { Button, useQueryState } from 'erxes-ui';
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import { PageHeader, PageHeaderEnd } from 'ui-modules';
 
 export const NotificationConversationDetail = ({ contentTypeId }: any) => {
+  const portalTarget = document.getElementById('notifications-actions-slot');
+
   const [conversationId, setConversationId] =
     useQueryState<string>('conversationId');
 
@@ -17,16 +20,18 @@ export const NotificationConversationDetail = ({ contentTypeId }: any) => {
 
   return (
     <div className="flex flex-col h-full">
-      <PageHeader>
-        <PageHeaderEnd>
-          <Button variant="outline" asChild>
-            <Link to={`/inbox?conversationId=${contentTypeId}`}>
-              Go to Conversation
-              <IconExternalLink />
-            </Link>
-          </Button>
-        </PageHeaderEnd>
-      </PageHeader>
+      {portalTarget &&
+        createPortal(
+          <>
+            <Button variant="outline" asChild>
+              <Link to={`/inbox?conversationId=${contentTypeId}`}>
+                Go to Conversation
+                <IconExternalLink />
+              </Link>
+            </Button>
+          </>,
+          portalTarget,
+        )}
       <ConversationDetail />
     </div>
   );

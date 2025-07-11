@@ -43,8 +43,6 @@ export const afterProcess = {
 
     const [_, moduleName, collectionType] = splitType(contentType);
 
-    console.log({ moduleName, collectionType });
-
     try {
       const handler =
         afterProcessModules[moduleName]?.updatedDocument?.[collectionType];

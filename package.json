@@ -134,6 +134,7 @@
     "rimraf": "^6.0.1",
     "sha256": "^0.2.0",
     "strip": "^3.0.0",
+    "strip-ansi": "^6.0.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "ts-key-enum": "^3.0.13",

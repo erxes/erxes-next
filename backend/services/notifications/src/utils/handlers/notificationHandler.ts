@@ -9,7 +9,6 @@ export const handleCreateNotification = async (
   job: Job<INotificationJobData>,
 ) => {
   const { subdomain, data } = job.data;
-  console.log({ subdomain, data }, 'dasjbdkashjbdvkjsav');
 
   try {
     const models = await generateModels(subdomain);
@@ -39,8 +38,6 @@ export const handleCreateNotification = async (
           userId,
         });
 
-        console.log({ userSettings: userSettings?.toObject() });
-
         // if (!shouldCreateNotification(null, userSettings, data)) {
         //   debugInfo(`Notification skipped for user ${userId} due to settings`);
         //   continue;
@@ -69,14 +66,16 @@ export const handleCreateNotification = async (
         });
 
         notificationId = notification._id;
-        console.log(notification.toObject());
 
         // Send GraphQL subscription for real-time updates
-        graphqlPubsub.publish('notificationInserted', {
-          notificationInserted: {
-            ...notification.toObject(),
+        graphqlPubsub.publish(
+          `notificationInserted:${subdomain}:${'OQgac3z4G3I2LW9QPpAtL'}`,
+          {
+            notificationInserted: {
+              ...notification.toObject(),
+            },
           },
-        });
+        );
 
         results.push({ userId, inApp: true, notificationId });
         debugInfo(`In-app notification created for user ${userId}`);

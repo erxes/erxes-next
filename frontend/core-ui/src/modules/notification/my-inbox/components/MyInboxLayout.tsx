@@ -13,7 +13,7 @@ export const MyInboxLayout = ({
     direction="horizontal"
     className="flex-1 overflow-hidden"
   >
-    <Resizable.Panel minSize={20} defaultSize={30}>
+    <Resizable.Panel minSize={20} defaultSize={30} className="hidden sm:flex">
       <Notifications />
     </Resizable.Panel>
     <Resizable.Handle />

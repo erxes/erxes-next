@@ -160,10 +160,6 @@ export async function startPlugin(
   }
 
   if (configs.hasSubscriptions) {
-    console.log(
-      'configs.subscriptionPluginPath',
-      configs.subscriptionPluginPath,
-    );
     app.get('/subscriptionPlugin.js', async (_req, res) => {
       res.sendFile(path.join(configs.subscriptionPluginPath));
     });

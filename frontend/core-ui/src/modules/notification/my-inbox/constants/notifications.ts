@@ -19,9 +19,19 @@ export const NOTIFICATION_TYPE_COLORS = {
   error: 'text-destructive',
 };
 
+export const NOTIFICATION_TYPE_VARIANTS = {
+  info: 'secondary',
+  success: 'success',
+  warning: 'warning',
+  error: 'destructive',
+};
+
 export const NOTIFICATION_PRIORITY_COLORS = {
   low: 'bg-accent-foreground',
   medium: 'bg-success',
   high: 'bg-warning',
   urgent: 'bg-destructive',
 };
+
+export const AUTOMATION_HISTORIES_CURSOR_SESSION_KEY =
+  'automation-histories-cursor';

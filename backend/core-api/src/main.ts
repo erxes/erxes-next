@@ -20,6 +20,7 @@ import { generateModels } from './connectionResolvers';
 import { moduleObjects } from './meta/permission';
 import { tags } from './meta/tags';
 import './segments';
+import * as path from 'path';
 
 const { DOMAIN, CLIENT_PORTAL_DOMAINS, ALLOWED_DOMAINS } = process.env;
 
@@ -54,6 +55,20 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(router);
 
+app.get('/subscriptionPlugin.js', async (_req, res) => {
+  const apolloSubscriptionPath = path.join(
+    require('path').resolve(
+      __dirname,
+      'apollo',
+      process.env.NODE_ENV === 'production'
+        ? 'subscription.js'
+        : 'subscription.ts',
+    ),
+  );
+
+  res.sendFile(apolloSubscriptionPath);
+});
+
 app.use(
   '/trpc',
   trpcExpress.createExpressMiddleware({
@@ -81,7 +96,7 @@ httpServer.listen(port, async () => {
   await joinErxesGateway({
     name: 'core',
     port,
-    hasSubscriptions: false,
+    hasSubscriptions: true,
     meta: {
       permissions: moduleObjects,
       tags,

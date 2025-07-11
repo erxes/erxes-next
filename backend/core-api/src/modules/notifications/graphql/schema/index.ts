@@ -1,3 +1,5 @@
+import { GQL_CURSOR_PARAM_DEFS } from 'erxes-api-shared/utils';
+
 export const types = `
 
 type NotificationModuleType {
@@ -12,7 +14,7 @@ type NotificationModule {
     types:[NotificationModuleType]
 }
 
-type NotificationType {
+type NotificationPluginType {
     pluginName:String,
     modules:[NotificationModule]
 }
@@ -43,6 +45,7 @@ type Notification {
     message: String,
     type: String,
     fromUserId: String,
+    fromUser:User,
     contentType: String,
     contentTypeId: String,
     priority: String,
@@ -50,12 +53,48 @@ type Notification {
     createdAt: Date,
     isRead: Boolean
 }
+
+type NotificationsList {
+    list:[Notification]
+    totalCount: Int
+    pageInfo: PageInfo
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationStatus {
+    READ
+    UNREAD
+    ALL
+}
+
+enum NotificationType {
+    INFO
+    SUCCESS
+    WARNING
+    ERROR
+}
+`;
+
+const NOTIFICATIONS_QUERIES_PARAMS = `
+    status:NotificationStatus,
+    priority:NotificationPriority,
+    type:NotificationType,
+    fromDate:String,
+    endDate:String,
+    module:String,
 `;
 
 export const queries = `
-    pluginsNotifications:[NotificationType]
-    notifications:[Notification]
-    notification(_id:String!):Notification
+    pluginsNotifications:[NotificationPluginType]
+    notifications(${GQL_CURSOR_PARAM_DEFS},${NOTIFICATIONS_QUERIES_PARAMS}):NotificationsList
+    notificationDetail(_id:String!):Notification
+    unreadNotificationsCount:Int
     userNotificationSettings: JSON
     organizationNotificationConfigs: JSON
     organizationNotificationConfig(contentType: String!, action: String!): JSON

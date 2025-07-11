@@ -365,6 +365,9 @@ importers:
       strip:
         specifier: ^3.0.0
         version: 3.0.0
+      strip-ansi:
+        specifier: ^6.0.1
+        version: 6.0.1
       tailwind-merge:
         specifier: ^2.5.4
         version: 2.6.0
@@ -862,6 +865,25 @@ importers:
       erxes-api-shared:
         specifier: workspace:^
         version: link:../../erxes-api-shared
+
+  backend/services/notifications:
+    dependencies:
+      aws-sdk:
+        specifier: ^2.1498.0
+        version: 2.1692.0
+      bullmq:
+        specifier: ^5.0.0
+        version: 5.40.4
+      erxes-api-shared:
+        specifier: workspace:^
+        version: link:../../erxes-api-shared
+      nodemailer:
+        specifier: ^6.9.8
+        version: 6.9.10
+    devDependencies:
+      '@types/nodemailer':
+        specifier: ^6.4.14
+        version: 6.4.17
 
   frontend/libs/erxes-ui: {}
 
@@ -5171,6 +5193,9 @@ packages:
 
   '@types/node@18.16.9':
     resolution: {integrity: sha512-IeB32oIV4oGArLrd7znD2rkHQ6EDCM+2Sr76dJnrHwv9OHBTTM6nuDLK9bmikXzPa0ZlWMWtRGo/Uw4mrzQedA==}
+
+  '@types/nodemailer@6.4.17':
+    resolution: {integrity: sha512-I9CCaIp6DTldEg7vyUTZi8+9Vo0hi1/T8gv3C89yk1rSAAzoKQ8H8ki/jBYJSFoH/BisgLP8tkZMlQ91CIquww==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -18858,6 +18883,10 @@ snapshots:
   '@types/node@16.9.1': {}
 
   '@types/node@18.16.9': {}
+
+  '@types/nodemailer@6.4.17':
+    dependencies:
+      '@types/node': 18.16.9
 
   '@types/normalize-package-data@2.4.4': {}
 
