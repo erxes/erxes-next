@@ -1,10 +1,10 @@
 import React, {
-  useState,
   useEffect,
   useRef,
   useCallback,
   createContext,
   useContext,
+  useMemo,
 } from 'react';
 import * as JsSIP from 'jssip';
 import {
@@ -16,28 +16,21 @@ import {
   SipContextValue,
 } from '../types/sipTypes';
 import { useAtom } from 'jotai';
-import { callConfigAtom, callInfoAtom } from '../states/sipStates';
+import {
+  callConfigAtom,
+  callInfoAtom,
+  sipStateAtom,
+} from '../states/sipStates';
 import { getPluginAssetsUrl } from 'erxes-ui';
 import { ICallConfigDoc } from '@/integrations/call/types/callTypes';
 import {
   extractPhoneNumberFromCounterpart,
+  logger,
   parseCallDirection,
 } from '@/integrations/call/utils/callUtils';
 
 // Context for SIP functionality
 const SipContext = createContext<SipContextValue | null>(null);
-
-interface SipState {
-  sipStatus: SipStatusEnum;
-  sipErrorType: SipErrorTypeEnum | null;
-  sipErrorMessage: string | null;
-  callStatus: CallStatusEnum;
-  callDirection: CallDirectionEnum | null;
-  callCounterpart: string | null;
-  groupName: string | null;
-  callId: string | null;
-  rtcSession: any;
-}
 
 const SipProvider = ({
   host = null,
@@ -47,13 +40,11 @@ const SipProvider = ({
   password,
   autoRegister = true,
   autoAnswer = false,
-  iceRestart = true,
   sessionTimersExpires = 3600,
   extraHeaders = { register: [], invite: [] },
   iceServers = [],
   debug = false,
   children,
-  callUserIntegration,
   createSession,
   updateHistory,
   addHistory,
@@ -61,17 +52,7 @@ const SipProvider = ({
   const [callConfig, setCallConfig] = useAtom(callConfigAtom);
   const [callInfo, setCallInfo] = useAtom(callInfoAtom);
   // State
-  const [sipState, setSipState] = useState<SipState>({
-    sipStatus: SipStatusEnum.DISCONNECTED,
-    sipErrorType: null,
-    sipErrorMessage: null,
-    rtcSession: null,
-    callStatus: CallStatusEnum.IDLE,
-    callDirection: null,
-    callCounterpart: null,
-    groupName: '',
-    callId: null,
-  });
+  const [sipState, setSipState] = useAtom(sipStateAtom);
 
   const setPersistentStates = useCallback(
     (isRegistered: boolean, isAvailable: boolean) => {
@@ -88,17 +69,16 @@ const SipProvider = ({
   const uaRef = useRef<any>(null);
   const ringbackToneRef = useRef<HTMLAudioElement | null>(null);
   const remoteAudioRef = useRef<HTMLAudioElement | null>(null);
-  const loggerRef = useRef<any>(() => console);
-  const isInitializedRef = useRef(false);
+  const loggerRef = useRef<any>(logger);
 
   // Configure debug logging
   const reconfigureDebug = useCallback(() => {
     if (debug) {
       JsSIP.debug.enable('JsSIP:*');
-      loggerRef.current = console;
+      loggerRef.current = logger;
     } else {
       JsSIP.debug.disable();
-      loggerRef.current = () => console;
+      loggerRef.current = logger;
     }
   }, [debug]);
 
@@ -274,6 +254,7 @@ const SipProvider = ({
       extraHeaders.invite,
       iceServers,
       sessionTimersExpires,
+      setSipState,
     ],
   );
 
@@ -495,7 +476,9 @@ const SipProvider = ({
           const delimiterPosition = foundUri.indexOf(';') || null;
           const fromParameters = rtcRequest.from._parameters;
           const groupName = fromParameters['x-gs-group-name'] || '';
-
+          if (debug) {
+            loggerRef.current.debug('UA "newRTCSession" event', foundUri);
+          }
           setSipState((prev) => ({
             ...prev,
             callDirection: CallDirectionEnum.INCOMING,
@@ -703,11 +686,11 @@ const SipProvider = ({
           answerCall();
         }
         // used orignator === 'local' to check if the call is outgoing instead of sipState.callDirection === 'outgoing'
-        if (originator === 'local') {
-          setTimeout(() => {
-            remoteAudioRef.current?.play();
-          }, 2000);
-        }
+        // if (originator === 'local') {
+        //   setTimeout(() => {
+        //     remoteAudioRef.current?.play();
+        //   }, 2000);
+        // }
       },
     );
 
@@ -718,24 +701,25 @@ const SipProvider = ({
     }
     ua.start();
   }, [
-    host,
-    port,
-    user,
-    extraHeaders.register,
-    pathname,
-    password,
-    autoRegister,
-    setPersistentStates,
-    sipState.rtcSession,
-    sipState.callDirection,
-    sipState.callCounterpart,
-    sipState.groupName,
-    autoAnswer,
-    stopRingbackTone,
-    updateHistory,
-    playHangupTone,
     addHistory,
     answerCall,
+    autoAnswer,
+    autoRegister,
+    extraHeaders.register,
+    host,
+    password,
+    pathname,
+    playHangupTone,
+    port,
+    setPersistentStates,
+    setSipState,
+    sipState.callCounterpart,
+    sipState.callDirection,
+    sipState.groupName,
+    sipState.rtcSession,
+    stopRingbackTone,
+    updateHistory,
+    user,
   ]);
 
   // Initialize audio element and JsSIP on mount
@@ -774,6 +758,7 @@ const SipProvider = ({
         uaRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Handle prop changes
@@ -783,65 +768,45 @@ const SipProvider = ({
     }
   }, [debug, reconfigureDebug]);
 
-  useEffect(() => {
-    if (!callUserIntegration) {
-      return;
-    }
-    setCallConfig(callUserIntegration);
-  }, [callUserIntegration, setCallConfig]);
-
-  useEffect(() => {
-    if (!isInitializedRef.current) {
-      reinitializeJsSIP();
-      isInitializedRef.current = true;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [host, port, pathname, user, password, autoRegister]);
-
   // Create context value
-  const contextValue = {
-    sip: {
-      host,
-      port,
-      pathname,
-      user,
-      password,
-      autoRegister,
-      autoAnswer,
-      iceRestart,
-      sessionTimersExpires,
-      extraHeaders,
-      iceServers,
-      debug,
-      status: sipState.sipStatus,
-      errorType: sipState.sipErrorType,
-      errorMessage: sipState.sipErrorMessage,
-      callUserIntegration,
+  const contextValue = useMemo(
+    () => ({
+      sip: {
+        createSession,
+        updateHistory,
+        addHistory,
+      },
+      registerSip,
+      unregisterSip,
+      answerCall,
+      startCall,
+      stopCall,
+      isMuted,
+      mute,
+      unmute,
+      sendDtmf,
+      isHeld,
+      hold,
+      unhold,
+    }),
+    [
       createSession,
       updateHistory,
       addHistory,
-    },
-    call: {
-      id: sipState.rtcSession?._id,
-      status: sipState.callStatus,
-      direction: sipState.callDirection,
-      counterpart: sipState.callCounterpart,
-      startTime: sipState.rtcSession?._start_time?.toString(),
-      groupName: sipState.groupName,
-    },
-    registerSip,
-    unregisterSip,
-    answerCall,
-    startCall,
-    stopCall,
-    isMuted,
-    mute,
-    unmute,
-    sendDtmf,
-    isHeld,
-    hold,
-    unhold,
-  };
+      registerSip,
+      unregisterSip,
+      answerCall,
+      startCall,
+      stopCall,
+      isMuted,
+      mute,
+      unmute,
+      sendDtmf,
+      isHeld,
+      hold,
+      unhold,
+    ],
+  );
 
   return (
     <SipContext.Provider value={contextValue}>{children}</SipContext.Provider>

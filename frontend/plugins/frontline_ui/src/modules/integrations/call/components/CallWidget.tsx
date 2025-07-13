@@ -22,6 +22,8 @@ import {
 } from '@/integrations/call/states/callWidgetStates';
 import { CallNumberInput } from '@/integrations/call/components/CallNumberInput';
 import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
+import { ISipState } from '@/integrations/call/types/sipTypes';
+import { sipStateAtom } from '@/integrations/call/states/sipStates';
 
 // Static customer data to prevent recreating array
 const MOCK_CUSTOMERS = [
@@ -39,6 +41,7 @@ export const CallWidgetContent = ({
   children: React.ReactNode;
 }) => {
   const [expandWidget, setExpandWidget] = useAtom(expandWidgetState);
+  const [sipState] = useAtom<ISipState>(sipStateAtom);
 
   return (
     <div className="flex items-stretch overflow-hidden flex-1">
@@ -60,6 +63,8 @@ export const CallWidgetContent = ({
           <>
             <Separator />
             <div className="px-3 py-5 flex-auto h-full">
+              {sipState.sipStatus},{sipState.callDirection},
+              {sipState.callCounterpart},{sipState.callId},{sipState.callStatus}
               <CustomersInline.Provider customers={MOCK_CUSTOMERS}>
                 <div className="flex items-center gap-2">
                   <CustomersInline.Avatar size="xl" />
