@@ -44,6 +44,7 @@ export const NotificationContainer = ({
         id === _id && 'bg-primary/10 text-foreground hover:bg-primary/10',
       )}
       onClick={handleClick}
+      asChild
     >
       {children}
     </Button>

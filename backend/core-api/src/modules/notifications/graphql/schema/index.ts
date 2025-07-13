@@ -88,6 +88,7 @@ const NOTIFICATIONS_QUERIES_PARAMS = `
     fromDate:String,
     endDate:String,
     module:String,
+    fromUserId:String
 `;
 
 export const queries = `

@@ -9,6 +9,7 @@ import {
   EnumCursorDirection,
   ICursorListResponse,
   mergeCursorData,
+  parseDateRangeFromString,
   sendDesktopNotification,
   useMultiQueryState,
   validateFetchMore,
@@ -25,18 +26,38 @@ type NotificationsQueryResponse = ICursorListResponse<INotification>;
 
 const NOTIFICATIONS_LIMIT = 15;
 
+const generateOrderBy = (orderBy: 'new' | 'old' | 'priority' | null) => {
+  const orderByObject: any = {};
+  if (orderBy === 'old') {
+    orderByObject.orderBy = { createdAt: 1 };
+  } else if (orderBy === 'priority') {
+    orderByObject.orderBy = { priority: -1 };
+  }
+
+  return orderByObject;
+};
+
 export const useNotifications = () => {
   const currentUser = useAtomValue(currentUserState) as IUser;
 
-  const [{ status, priority, type, fromDate, endDate, module }] =
+  const [{ status, priority, type, createdAt, module, orderBy, fromUserId }] =
     useMultiQueryState<{
       status: 'read' | 'unread' | 'all';
       priority: 'low' | 'medium' | 'high' | 'urgent';
       type: 'info' | 'success' | 'warning' | 'error';
-      fromDate: string;
-      endDate: string;
+      createdAt: string;
       module: string;
-    }>(['status', 'priority', 'type', 'fromDate', 'endDate', 'module']);
+      orderBy: 'new' | 'old' | 'priority';
+      fromUserId: string;
+    }>([
+      'status',
+      'priority',
+      'type',
+      'createdAt',
+      'module',
+      'orderBy',
+      'fromUserId',
+    ]);
 
   const { data, loading, subscribeToMore, refetch, fetchMore } =
     useQuery<NotificationsQueryResponse>(NOTIFICATIONS, {
@@ -45,9 +66,11 @@ export const useNotifications = () => {
         status: status?.toUpperCase() || 'UNREAD',
         priority: priority?.toUpperCase(),
         type: type?.toUpperCase(),
-        fromDate,
-        endDate,
-        module,
+        fromDate: parseDateRangeFromString(createdAt)?.from,
+        endDate: parseDateRangeFromString(createdAt)?.to,
+        fromUserId,
+        // module,
+        ...generateOrderBy(orderBy),
       },
     });
 
@@ -82,7 +105,7 @@ export const useNotifications = () => {
       },
     });
   };
-
+  // useEffect is used for GraphQL pubsub subscription
   useEffect(() => {
     const unsubscribe = subscribeToMore<NotificationInsertedData>({
       document: gql(NOTIFICATION_SUBSCRIPTION),
@@ -90,7 +113,6 @@ export const useNotifications = () => {
         userId: currentUser ? currentUser._id : null,
       },
       updateQuery: (prev, { subscriptionData: { data } }) => {
-        console.log({ data });
         const { notificationInserted } = data;
         const { title, message } = notificationInserted;
 

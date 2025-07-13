@@ -16,7 +16,7 @@ export const useUnreadNotificationCount = () => {
     unreadNotificationsCount: number;
   }>(UNREAD_NOTIFICATIONS_COUNT);
 
-  const { unreadNotificationsCount } = data || {};
+  const { unreadNotificationsCount = 0 } = data || {};
 
   useEffect(() => {
     const unsubscribe = subscribeToMore<{
@@ -26,11 +26,7 @@ export const useUnreadNotificationCount = () => {
       variables: {
         userId: currentUser ? currentUser._id : null,
       },
-      updateQuery: (prev, { subscriptionData: { data } }) => {
-        console.log({ data });
-        const { notificationInserted } = data;
-        const { title, message } = notificationInserted;
-
+      updateQuery: () => {
         refetch();
       },
     });

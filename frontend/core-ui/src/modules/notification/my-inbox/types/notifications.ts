@@ -24,3 +24,5 @@ export type INotification = {
   createdAt: string;
   expiresAt?: string; // Auto-cleanup old notifications
 };
+
+export type SetAtom<Args extends unknown[], Result> = (...args: Args) => Result;

@@ -39,7 +39,8 @@ const NOTIFICATIONS_LIST_PARAMS = `
   $type: NotificationType,
   $fromDate: String,
   $endDate: String,
-  $module: String
+  $module: String,
+  $fromUserId:String
 `;
 
 const NOTIFICATIONS_LIST_PARAMS_DEF = `
@@ -53,7 +54,8 @@ const NOTIFICATIONS_LIST_PARAMS_DEF = `
   type: $type,
   fromDate: $fromDate,
   endDate: $endDate,
-  module: $module
+  module: $module,
+  fromUserId: $fromUserId
 `;
 
 export const NOTIFICATIONS = gql`

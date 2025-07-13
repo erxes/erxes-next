@@ -8,29 +8,31 @@ import {
 import { IContext } from '~/connectionResolvers';
 
 const generateNotificationsFilter = (params: {
-  status: 'UNREAD' | 'READ' | 'ALL';
-  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
-  type: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+  status: 'unread' | 'read' | 'all';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  type: 'low' | 'medium' | 'high' | 'urgent';
   fromDate: string;
   endDate: string;
   module: string;
+  fromUserId: string;
 }) => {
+  const { status = '', priority, type } = params || {};
   const filter: any = {};
 
-  if (params?.status === 'READ') {
+  if (status?.toLowerCase() === 'read') {
     filter.isRead = true;
   }
 
-  if (params?.status === 'UNREAD') {
+  if (status?.toLowerCase() === 'unread') {
     filter.isRead = false;
   }
 
-  if (params?.priority) {
-    filter.priority = params.priority;
+  if (priority) {
+    filter.priority = priority.toLowerCase();
   }
 
-  if (params?.type) {
-    filter.type = params.type;
+  if (type) {
+    filter.type = type.toLowerCase();
   }
 
   if (params?.fromDate) {
@@ -43,6 +45,10 @@ const generateNotificationsFilter = (params: {
 
   if (params?.module) {
     filter.contentType = { $regex: `^[^:]+:${params.module}\\.` };
+  }
+
+  if (params?.fromUserId) {
+    filter.fromUserId = params.fromUserId;
   }
 
   return filter;
@@ -85,7 +91,7 @@ export const notificationQueries = {
         model: models.Notifications,
         params: {
           ...params,
-          orderBy: { createdAt: -1 },
+          orderBy: params?.orderBy || { createdAt: -1 },
         },
         query: { ...filter, userId: user._id },
       });

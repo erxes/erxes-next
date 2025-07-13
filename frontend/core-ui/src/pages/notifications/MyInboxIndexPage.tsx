@@ -1,12 +1,19 @@
 import { PageHeader } from 'ui-modules';
-import { Breadcrumb, Separator, Button } from 'erxes-ui';
+import { Breadcrumb, Separator, Button, Sheet } from 'erxes-ui';
 import { Link } from 'react-router';
-import { IconMailbox, IconSettings } from '@tabler/icons-react';
+import {
+  IconLayoutSidebarLeftExpand,
+  IconMailbox,
+  IconNotification,
+  IconSettings,
+} from '@tabler/icons-react';
 import { MyInboxLayout } from '@/notification/my-inbox/components/MyInboxLayout';
 import { Notifications } from '@/notification/my-inbox/components/Notifications';
 import { NotificationContent } from '@/notification/my-inbox/components/NotificationContent';
+import { useState } from 'react';
 
 export const MyInboxIndexPage = () => {
+  const [isOpenMenu, setOpenMenu] = useState(false);
   return (
     <>
       <PageHeader>
@@ -27,6 +34,21 @@ export const MyInboxIndexPage = () => {
           <PageHeader.FavoriteToggleButton />
         </PageHeader.Start>
         <PageHeader.End>
+          <Sheet open={isOpenMenu} onOpenChange={setOpenMenu}>
+            <Sheet.Trigger asChild>
+              <Button variant="outline" size="icon" className="w-fit sm:hidden">
+                <IconNotification />
+                Open Notifications
+              </Button>
+            </Sheet.Trigger>
+            <Sheet.View side="left">
+              {isOpenMenu && (
+                <Sheet.Content>
+                  <Notifications />
+                </Sheet.Content>
+              )}
+            </Sheet.View>
+          </Sheet>
           <Button variant="outline" asChild>
             <Link to="/settings/notification">
               <IconSettings />

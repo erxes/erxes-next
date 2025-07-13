@@ -1,4 +1,4 @@
-import { useNotificationsListContext } from '@/notification/my-inbox/components/NotificationsListContext';
+import { useNotificationsListContext } from '@/notification/my-inbox/context/NotificationsListContext';
 import { selectedNotificationsState } from '@/notification/my-inbox/states/notificationState';
 import { Checkbox } from 'erxes-ui';
 import { useAtom } from 'jotai';
@@ -35,6 +35,7 @@ export const NotificationsSelectAll = () => {
 
   return (
     <Checkbox
+      disabled={!notifications?.length}
       checked={isAllSelected ? true : isSomeSelected ? 'indeterminate' : false}
       onCheckedChange={handleCheckboxChange}
       className="mx-2"

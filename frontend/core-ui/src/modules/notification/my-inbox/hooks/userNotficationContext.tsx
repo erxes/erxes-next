@@ -1,4 +1,4 @@
-import { NotificationContext } from '@/notification/my-inbox/components/NotificationContext';
+import { NotificationContext } from '@/notification/my-inbox/context/NotificationContext';
 import { useContext } from 'react';
 
 export const useNotificationContext = () => {
