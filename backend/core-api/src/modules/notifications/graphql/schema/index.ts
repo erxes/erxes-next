@@ -82,6 +82,7 @@ enum NotificationType {
 `;
 
 const NOTIFICATIONS_QUERIES_PARAMS = `
+    ids:[String],
     status:NotificationStatus,
     priority:NotificationPriority,
     type:NotificationType,
@@ -102,6 +103,8 @@ export const queries = `
 `;
 
 export const mutations = `
+    archiveNotification(_id:String!):String
+    archiveNotifications(ids:[String],archiveAll:Boolean,filters:JSON):String
     editUserNotificationSettings(userSettings:JSON): JSON
     editOrganizationNotificationConfigs(configs: JSON!): JSON
 `;

@@ -1,8 +1,36 @@
+import { graphqlPubsub } from 'erxes-api-shared/utils';
 import { AnyBulkWriteOperation } from 'mongoose';
 import { IContext } from '~/connectionResolvers';
+import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
 // import { BulkWriteOperation } from 'mongodb';
 
 export const notificationMutations = {
+  async archiveNotification(_root, { _id }, { models, user }: IContext) {
+    await models.Notifications.updateOne({ _id }, { isArchived: true });
+
+    graphqlPubsub.publish(`notificationRead:${user._id}`, {
+      notificationRead: { userId: user._id },
+    });
+
+    return 'removed successfully';
+  },
+  async archiveNotifications(
+    _root,
+    { ids, archiveAll, filters },
+    { models, user }: IContext,
+  ) {
+    const selector = archiveAll
+      ? { ...generateNotificationsFilter(filters) }
+      : { _id: { $in: ids } };
+
+    await models.Notifications.updateMany(selector, { isArchived: true });
+
+    graphqlPubsub.publish(`notificationRead:${user._id}`, {
+      notificationRead: { userId: user._id },
+    });
+
+    return 'removed successfully';
+  },
   async editUserNotificationSettings(
     _root,
     { userSettings },

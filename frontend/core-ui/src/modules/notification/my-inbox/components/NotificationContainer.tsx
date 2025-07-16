@@ -38,12 +38,19 @@ export const NotificationContainer = ({
       variant={isRead ? 'secondary' : 'ghost'}
       size="lg"
       className={cn(
-        'flex rounded-none h-10 justify-start px-4 gap-3 hover:bg-primary/5 hover:text-foreground w-full',
+        'flex rounded-none h-10 justify-start px-4 gap-3 hover:bg-primary/5 hover:text-foreground w-full focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/70',
         className,
         isRead && 'font-medium text-muted-foreground',
         id === _id && 'bg-primary/10 text-foreground hover:bg-primary/10',
       )}
       onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+      tabIndex={0}
       asChild
     >
       {children}

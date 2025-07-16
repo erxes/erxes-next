@@ -23,7 +23,7 @@ export const NotificationsSelectAll = () => {
   const isSomeSelected = selectedNotifications.length > 0;
 
   const handleCheckboxChange = (checked: boolean) => {
-    if (checked) {
+    if (checked && !isSomeSelected) {
       const notificationIds = notifications.map(
         (notification) => notification._id,
       );

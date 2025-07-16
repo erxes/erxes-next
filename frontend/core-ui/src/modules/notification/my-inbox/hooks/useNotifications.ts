@@ -1,5 +1,6 @@
 import { NOTIFICATIONS } from '@/notification/my-inbox/graphql/notificationsQueries';
 import {
+  NOTIFICATION_ARCHIVED,
   NOTIFICATION_READ,
   NOTIFICATION_SUBSCRIPTION,
 } from '@/notification/my-inbox/graphql/notificationSubscriptions';
@@ -16,6 +17,7 @@ import {
 } from 'erxes-ui';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
+import { useParams } from 'react-router';
 import strip from 'strip-ansi';
 import { currentUserState, IPageInfo, IUser } from 'ui-modules';
 type NotificationInsertedData = {
@@ -129,7 +131,16 @@ export const useNotifications = () => {
       },
     });
 
+    const notificationArchived = subscribeToMore({
+      document: gql(NOTIFICATION_ARCHIVED),
+      variables: { userId: currentUser ? currentUser._id : null },
+      updateQuery: () => {
+        refetch();
+      },
+    });
+
     return () => {
+      notificationArchived();
       notificationRead();
       unsubscribe();
     };
@@ -141,5 +152,6 @@ export const useNotifications = () => {
     handleFetchMore,
     totalCount,
     pageInfo,
+    refetch,
   };
 };

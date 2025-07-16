@@ -8,7 +8,7 @@ import {
   INotification,
   SetAtom,
 } from '@/notification/my-inbox/types/notifications';
-import { IconInboxOff, IconLoader, IconMailboxOff } from '@tabler/icons-react';
+import { IconLoader, IconMailboxOff } from '@tabler/icons-react';
 import { Button, EnumCursorDirection, isUndefinedOrNull } from 'erxes-ui';
 import { useAtom, useAtomValue } from 'jotai';
 import {
@@ -33,8 +33,14 @@ export const Notifications = () => {
 
   const [rerendered, setRerendered] = useState(false);
 
-  const { notifications, loading, handleFetchMore, pageInfo, totalCount } =
-    useNotifications();
+  const {
+    notifications,
+    loading,
+    handleFetchMore,
+    pageInfo,
+    totalCount,
+    refetch,
+  } = useNotifications();
 
   const [ref] = useInView({
     onChange(inView) {
@@ -74,7 +80,7 @@ export const Notifications = () => {
     >
       <div className="flex flex-col h-full overflow-hidden w-full">
         <NotificationSidebarToolbar />
-        <NotificationsCommandBar />
+        <NotificationsCommandBar refetch={refetch} />
         <NotificationList
           inViewRef={ref}
           containerRef={containerRef}
@@ -129,7 +135,11 @@ const NotificationList = ({
   }
 
   return (
-    <div className="h-full w-full overflow-y-auto" ref={containerRef}>
+    <div
+      className="h-full w-full overflow-y-auto"
+      ref={containerRef}
+      tabIndex={0}
+    >
       {notifications.map((notification) => (
         <NotificationItem
           key={notification._id}

@@ -27,16 +27,36 @@ export const conversationAfterProcessWorkers = {
       };
     },
   ) => {
-    const { collectionName, fullDocument, updateDescription } = data || {};
+    const { collectionName, fullDocument, updateDescription, prevDocument } =
+      data || {};
     const { updatedFields } = updateDescription || {};
 
     if (collectionName === 'conversations') {
       if (updatedFields.status === 'closed') {
         sendNotification(subdomain, {
           title: 'Conversation Resolved',
-          message: `changed conversation status to ${(
+          message: `The conversation has been marked as ${
             fullDocument.status || ''
-          ).toUpperCase()}`,
+          }.`,
+          type: 'info',
+          fromUserId: fullDocument.closedUserId,
+          userIds: conversationNotifReceivers(
+            fullDocument,
+            fullDocument?.closedUserId || '',
+          ),
+          contentType: 'frontline:inbox.conversation',
+          contentTypeId: fullDocument._id,
+          action: 'resolved',
+          priority: 'medium',
+        });
+      }
+
+      if (updatedFields.status === 'open' && prevDocument.status === 'closed') {
+        sendNotification(subdomain, {
+          title: 'Conversation Reopened',
+          message: `The conversation has been reopened and is now ${
+            fullDocument.status || ''
+          }.`,
           type: 'info',
           fromUserId: fullDocument.closedUserId,
           userIds: conversationNotifReceivers(

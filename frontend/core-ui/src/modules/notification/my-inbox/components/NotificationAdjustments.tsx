@@ -15,10 +15,9 @@ import {
 
 export const NotificationAdjustments = () => {
   const { loading } = useNotificationsListContext();
-  const [{ sort, orderBy }, setQueries] = useMultiQueryState<{
+  const [{ orderBy }, setQueries] = useMultiQueryState<{
     orderBy: string;
-    sort: number;
-  }>(['orderBy', 'sort']);
+  }>(['orderBy']);
 
   return (
     <Popover>
@@ -47,34 +46,6 @@ export const NotificationAdjustments = () => {
             </Select.Content>
           </Select>
         </div>
-
-        {!['new', 'old'].includes(orderBy || '') && (
-          <div className="flex items-center justify-between space-x-4">
-            <Label htmlFor="sort-toggle">Sort</Label>
-            <Toggle
-              id="sort-toggle"
-              variant="outline"
-              className="flex items-center gap-1 px-3 py-1.5 h-8"
-              pressed={sort === -1}
-              onPressedChange={() => setQueries({ sort: sort === -1 ? 1 : -1 })}
-              disabled={loading}
-            >
-              {loading ? (
-                'Resolving'
-              ) : sort === -1 ? (
-                <>
-                  <IconSortDescending className="w-4 h-4" />
-                  <span>Descending</span>
-                </>
-              ) : (
-                <>
-                  <IconSortAscending className="w-4 h-4" />
-                  <span>Ascending</span>
-                </>
-              )}
-            </Toggle>
-          </div>
-        )}
       </Popover.Content>
     </Popover>
   );

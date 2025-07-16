@@ -108,7 +108,7 @@ const NotificationAvatar = () => {
         className={cn(
           'flex flex-row gap-4 w-full items-center transition-all',
           isSelected ? 'text-primary' : 'text-foreground',
-          'group-hover:translate-x-8',
+          'group-hover:translate-x-8  group-focus-within:translate-x-8',
           {
             'translate-x-8': isCheckedNotificaton,
           },
@@ -182,7 +182,8 @@ const NotificationCheckbox = ({ _id }: { _id: string }) => {
   return (
     <div
       className={cn('h-full flex items-center p-2 ', {
-        'opacity-0 group-hover:opacity-100 transition-opacity': !isChecked,
+        'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity':
+          !isChecked,
       })}
     >
       <Checkbox

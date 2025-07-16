@@ -6,53 +6,7 @@ import {
   graphqlPubsub,
 } from 'erxes-api-shared/utils';
 import { IContext } from '~/connectionResolvers';
-
-const generateNotificationsFilter = (params: {
-  status: 'unread' | 'read' | 'all';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  type: 'low' | 'medium' | 'high' | 'urgent';
-  fromDate: string;
-  endDate: string;
-  module: string;
-  fromUserId: string;
-}) => {
-  const { status = '', priority, type } = params || {};
-  const filter: any = {};
-
-  if (status?.toLowerCase() === 'read') {
-    filter.isRead = true;
-  }
-
-  if (status?.toLowerCase() === 'unread') {
-    filter.isRead = false;
-  }
-
-  if (priority) {
-    filter.priority = priority.toLowerCase();
-  }
-
-  if (type) {
-    filter.type = type.toLowerCase();
-  }
-
-  if (params?.fromDate) {
-    filter.createdAt = { $gte: params.fromDate };
-  }
-
-  if (params?.endDate) {
-    filter.createdAt = { ...(filter.createdAt || {}), $lte: params.endDate };
-  }
-
-  if (params?.module) {
-    filter.contentType = { $regex: `^[^:]+:${params.module}\\.` };
-  }
-
-  if (params?.fromUserId) {
-    filter.fromUserId = params.fromUserId;
-  }
-
-  return filter;
-};
+import { generateNotificationsFilter } from '~/modules/notifications/graphql/resolver/utils';
 
 export const notificationQueries = {
   async pluginsNotifications() {
@@ -86,6 +40,17 @@ export const notificationQueries = {
   async notifications(_root, params, { models, user }: IContext) {
     const filter = generateNotificationsFilter(params);
 
+    let prioritized: INotificationDocument[] = [];
+
+    if (params?.ids?.length) {
+      const idsCount = params.ids.length;
+      params.limit -= idsCount;
+      prioritized = await models.Notifications.find({
+        _id: { $in: params.ids },
+        userId: user._id,
+      });
+    }
+
     const { list, totalCount, pageInfo } =
       await cursorPaginate<INotificationDocument>({
         model: models.Notifications,
@@ -93,12 +58,12 @@ export const notificationQueries = {
           ...params,
           orderBy: params?.orderBy || { createdAt: -1 },
         },
-        query: { ...filter, userId: user._id },
+        query: { ...filter, userId: user._id, isArchived: { $ne: true } },
       });
 
     return {
-      list,
-      totalCount,
+      list: [...prioritized, ...list],
+      totalCount: totalCount + (params?.ids?.length || 0),
       pageInfo,
     };
 

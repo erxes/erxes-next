@@ -137,7 +137,7 @@ export const NotificationSettings = () => {
             isDisabled={isDisabledAllNotification}
             className="flex-1 overflow-auto"
           >
-            <div className="mx-auto max-w-2xl">
+            <div className="mx-auto max-w-3xl">
               {pluginsNotifications.map(({ pluginName, modules }) => (
                 <PluginNotificationContent
                   key={pluginName}

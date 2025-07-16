@@ -29,6 +29,7 @@ const NOTIFICATION_FIELDS = `
 `;
 
 const NOTIFICATIONS_LIST_PARAMS = `
+  $ids:[String]
   $limit: Int,
   $cursor: String,
   $cursorMode: CURSOR_MODE,
@@ -44,6 +45,7 @@ const NOTIFICATIONS_LIST_PARAMS = `
 `;
 
 const NOTIFICATIONS_LIST_PARAMS_DEF = `
+  ids: $ids,
   limit: $limit,
   cursor: $cursor,
   cursorMode: $cursorMode,

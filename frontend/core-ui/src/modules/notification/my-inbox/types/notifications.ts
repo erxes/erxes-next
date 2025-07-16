@@ -26,3 +26,12 @@ export type INotification = {
 };
 
 export type SetAtom<Args extends unknown[], Result> = (...args: Args) => Result;
+
+export enum MyInboxHotkeyScope {
+  MainPage = 'my-inbox-main-filter',
+  NotificationsContainer = 'my-inbox-notifications-container',
+}
+
+export enum NotificationsPaths {
+  MainPage = '/my-inbox',
+}

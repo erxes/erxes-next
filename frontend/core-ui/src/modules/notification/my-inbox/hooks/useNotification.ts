@@ -11,6 +11,7 @@ export const useNotification = () => {
   );
 
   return {
+    id,
     notification: data?.notificationDetail,
     loading,
   };

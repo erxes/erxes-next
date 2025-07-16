@@ -3,6 +3,7 @@ export default {
   typeDefs: `
             notificationInserted(userId: String): Notification
             notificationRead(userId: String): JSON
+            notificationArchived(userId: String): JSON
 		`,
   generateResolvers: (graphqlPubsub) => {
     return {
@@ -38,6 +39,10 @@ export default {
       notificationRead: {
         subscribe: (_, { userId }) =>
           graphqlPubsub.asyncIterator(`notificationRead:${userId}`),
+      },
+      notificationArchived: {
+        subscribe: (_, { userId }) =>
+          graphqlPubsub.asyncIterator(`notificationArchived:${userId}`),
       },
     };
   },

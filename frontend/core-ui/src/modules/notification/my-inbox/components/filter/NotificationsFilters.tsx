@@ -1,10 +1,11 @@
 import { NotificationFilterMenu } from '@/notification/my-inbox/components/filter/NotificationFilterMenu';
 import { NotificationFilterViews } from '@/notification/my-inbox/components/filter/NotificationFilterViews';
+import { MyInboxHotkeyScope } from '@/notification/my-inbox/types/notifications';
 import { Combobox, Filter } from 'erxes-ui';
 export const NotificationsFilters = () => {
   return (
-    <Filter id="my-inbox-main-filter">
-      <Filter.Popover scope="my-inbox-main-filter">
+    <Filter id={MyInboxHotkeyScope.MainPage}>
+      <Filter.Popover scope={MyInboxHotkeyScope.MainPage}>
         <Filter.Trigger isFiltered />
         <Combobox.Content>
           <NotificationFilterMenu />

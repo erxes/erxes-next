@@ -1,4 +1,4 @@
-import { Command, Filter, useQueryState } from 'erxes-ui';
+import { Command, Filter, ToggleGroup, useQueryState } from 'erxes-ui';
 import {
   IconCalendar,
   IconCheck,
@@ -25,24 +25,36 @@ export const NotificationFilterMenu = () => {
           className="bg-background"
         />
         <Command.List>
-          <Filter.CommandItem onSelect={() => setStatus('unread')}>
-            <IconEyeCheck />
-            Unread notifications
-            {[null, 'unread'].includes(status) && (
-              <IconCheck className="ml-auto" />
-            )}
-          </Filter.CommandItem>
-          <Filter.CommandItem onSelect={() => setStatus('read')}>
-            <IconEyeCancel />
-            Read notifications
-            {status === 'read' && <IconCheck className="ml-auto" />}
-          </Filter.CommandItem>
-
-          <Filter.CommandItem onSelect={() => setStatus('all')}>
-            <IconEyeSearch />
-            All notifications
-            {status === 'all' && <IconCheck className="ml-auto" />}
-          </Filter.CommandItem>
+          <ToggleGroup
+            type="single"
+            value={status || 'unread'}
+            onValueChange={(value) => setStatus(value)}
+          >
+            <ToggleGroup.Item
+              aria-label="Toggle unread"
+              value="unread"
+              className="flex-1"
+            >
+              <IconEyeCheck />
+              Unread
+            </ToggleGroup.Item>
+            <ToggleGroup.Item
+              aria-label="Toggle Read"
+              value="read"
+              className="flex-1"
+            >
+              <IconEyeCancel />
+              Read
+            </ToggleGroup.Item>
+            <ToggleGroup.Item
+              aria-label="Toggle all"
+              value="all"
+              className="flex-1"
+            >
+              <IconEyeSearch />
+              All
+            </ToggleGroup.Item>
+          </ToggleGroup>
         </Command.List>
         <Command.Separator className="my-1" />
         <Command.List className="p-1">

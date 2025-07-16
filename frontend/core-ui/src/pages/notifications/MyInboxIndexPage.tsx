@@ -1,21 +1,20 @@
-import { PageHeader } from 'ui-modules';
-import { Breadcrumb, Separator, Button, Sheet } from 'erxes-ui';
-import { Link } from 'react-router';
+import { MyInboxLayout } from '@/notification/my-inbox/components/MyInboxLayout';
+import { NotificationContent } from '@/notification/my-inbox/components/NotificationContent';
+import { Notifications } from '@/notification/my-inbox/components/Notifications';
 import {
-  IconLayoutSidebarLeftExpand,
   IconMailbox,
   IconNotification,
   IconSettings,
 } from '@tabler/icons-react';
-import { MyInboxLayout } from '@/notification/my-inbox/components/MyInboxLayout';
-import { Notifications } from '@/notification/my-inbox/components/Notifications';
-import { NotificationContent } from '@/notification/my-inbox/components/NotificationContent';
+import { Breadcrumb, Button, Separator, Sheet } from 'erxes-ui';
 import { useState } from 'react';
+import { Link } from 'react-router';
+import { PageHeader } from 'ui-modules';
 
 export const MyInboxIndexPage = () => {
   const [isOpenMenu, setOpenMenu] = useState(false);
   return (
-    <>
+    <div tabIndex={0} className="flex flex-col h-full">
       <PageHeader>
         <PageHeader.Start>
           <Breadcrumb>
@@ -61,6 +60,6 @@ export const MyInboxIndexPage = () => {
         Notifications={Notifications}
         NotificationContent={NotificationContent}
       />
-    </>
+    </div>
   );
 };

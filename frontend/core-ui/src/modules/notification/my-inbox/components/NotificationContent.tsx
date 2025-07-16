@@ -1,17 +1,17 @@
 import { NoNotificationSelected } from '@/notification/my-inbox/components/NoNotificationSelected';
 import { NotificationContentSkeleton } from '@/notification/my-inbox/components/NotificationContentSkeleton';
-import { Notifications } from '@/notification/my-inbox/components/Notifications';
+import { useArchiveNotification } from '@/notification/my-inbox/hooks/useArchiveNotification';
 import { useNotification } from '@/notification/my-inbox/hooks/useNotification';
-import {
-  IconLayoutSidebarLeftExpand,
-  IconNotificationOff,
-} from '@tabler/icons-react';
-import { Button, Sheet } from 'erxes-ui';
+import { IconNotificationOff } from '@tabler/icons-react';
+import { Button, cn } from 'erxes-ui';
+import { ErrorBoundary } from 'react-error-boundary';
 import { PageHeader } from 'ui-modules';
 import { RenderPluginsComponent } from '~/plugins/components/RenderPluginsComponent';
 
 export const NotificationContent = () => {
   const { notification, loading } = useNotification();
+  const { loading: archiveLoading, archiveNotification } =
+    useArchiveNotification();
 
   if (loading) {
     return <NotificationContentSkeleton />;
@@ -29,10 +29,21 @@ export const NotificationContent = () => {
     <div className="flex flex-col h-full">
       <PageHeader className="sm:justify-end flex items-center gap-2 flex-none pr-8">
         <PageHeader.End>
-          <Button variant="outline">
-            <IconNotificationOff /> Delete Notification
+          <Button
+            variant="outline"
+            disabled={archiveLoading}
+            onClick={() => archiveNotification(notification._id)}
+            className={cn({ 'animate-pulse': archiveLoading })}
+          >
+            <IconNotificationOff /> Archive
           </Button>
-          <div id="notifications-actions-slot" className="flex gap-2" />
+          <ErrorBoundary
+            FallbackComponent={({ error }) => (
+              <p className="text-destructive font-semibold">{error?.message}</p>
+            )}
+          >
+            <div id="notifications-actions-slot" className="flex gap-2" />
+          </ErrorBoundary>
         </PageHeader.End>
       </PageHeader>
 

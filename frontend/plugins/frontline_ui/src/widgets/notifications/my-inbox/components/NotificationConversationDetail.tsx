@@ -1,14 +1,11 @@
 import { ConversationDetail } from '@/inbox/conversations/conversation-detail/components/ConversationDetail';
 import { IconExternalLink } from '@tabler/icons-react';
 import { Button, useQueryState } from 'erxes-ui';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
-import { PageHeader, PageHeaderEnd } from 'ui-modules';
 
 export const NotificationConversationDetail = ({ contentTypeId }: any) => {
-  const portalTarget = document.getElementById('notifications-actions-slot');
-
   const [conversationId, setConversationId] =
     useQueryState<string>('conversationId');
 
@@ -16,23 +13,36 @@ export const NotificationConversationDetail = ({ contentTypeId }: any) => {
     if (conversationId !== contentTypeId) {
       setConversationId(contentTypeId);
     }
-  }, [contentTypeId, conversationId]);
+  }, [contentTypeId, conversationId, setConversationId]);
 
   return (
     <div className="flex flex-col h-full">
-      {portalTarget &&
-        createPortal(
-          <>
-            <Button variant="outline" asChild>
-              <Link to={`/inbox?conversationId=${contentTypeId}`}>
-                Go to Conversation
-                <IconExternalLink />
-              </Link>
-            </Button>
-          </>,
-          portalTarget,
-        )}
+      <NotificationActionsSlot />
       <ConversationDetail />
     </div>
   );
+};
+
+const NotificationActionsSlot = () => {
+  const [conversationId] = useQueryState<string>('conversationId');
+  const portalTarget =
+    typeof window !== 'undefined'
+      ? document.getElementById('notifications-actions-slot')
+      : null;
+
+  const memoizedPortal = useMemo(() => {
+    if (!conversationId || !portalTarget) return null;
+
+    return createPortal(
+      <Button variant="outline" asChild>
+        <Link to={`/inbox?conversationId=${conversationId}`}>
+          Go to Conversation
+          <IconExternalLink />
+        </Link>
+      </Button>,
+      portalTarget,
+    );
+  }, [conversationId, portalTarget]);
+
+  return memoizedPortal;
 };
