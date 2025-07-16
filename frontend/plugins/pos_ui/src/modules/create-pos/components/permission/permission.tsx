@@ -217,7 +217,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />
@@ -239,7 +238,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />
@@ -314,7 +312,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />
@@ -336,7 +333,6 @@ const PermissionForm = forwardRef<PermissionFormRef, PermissionFormProps>(
                         </Form.Label>
                         <Form.Control>
                           <Switch
-                            className="scale-150 w-7"
                             checked={field.value || false}
                             onCheckedChange={field.onChange}
                           />
